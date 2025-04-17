@@ -37,9 +37,10 @@
 				"roughness": 3
 			},
 			"offset": {
-				"amount": 12,
-				"octave": 0.3,
-				"roughness": 2
+				"octave": 0.2,
+				"roughness": 4,
+				"min": 6,
+				"max": 12
 			}
 		}
 	},

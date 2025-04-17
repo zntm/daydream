@@ -67,33 +67,57 @@ function WorldData(_world_height) constructor
     {
         var _humidity = _surface.humidity;
         var _heat = _surface.heat;
+        var _offset = _surface.offset;
         
         ___surface_biome_octave_humidity = _humidity.octave;
         ___surface_biome_octave_heat = _heat.octave;
+        ___surface_biome_octave_offset = _offset.octave;
         
-        ___surface_biome_value = (_heat.roughness << 8) | _humidity.roughness;
+        show_debug_message(_offset)
+        
+        ___surface_biome_value = (_offset.max << 32) | (_offset.min << 24) | (_offset.roughness << 16) | (_heat.roughness << 8) | _humidity.roughness;
         
         return self;
     }
     
-    static get_surface_biome_humidity_octave = function(_surface)
+    static get_surface_biome_humidity_octave = function()
     {
         return ___surface_biome_octave_humidity;
     }
     
-    static get_surface_biome_humidity_roughness = function(_surface)
+    static get_surface_biome_humidity_roughness = function()
     {
         return ___surface_biome_value & 0xff;
     }
     
-    static get_surface_biome_heat_octave = function(_surface)
+    static get_surface_biome_offset_min = function()
+    {
+        return (___surface_biome_value >> 24) & 0xff;
+    }
+    
+    static get_surface_biome_offset_max = function()
+    {
+        return (___surface_biome_value >> 32) & 0xff;
+    }
+    
+    static get_surface_biome_heat_octave = function()
     {
         return ___surface_biome_octave_heat;
     }
     
-    static get_surface_biome_heat_roughness = function(_surface)
+    static get_surface_biome_heat_roughness = function()
     {
         return (___surface_biome_value >> 8) & 0xff;
+    }
+    
+    static get_surface_biome_offset_octave = function()
+    {
+        return ___surface_biome_octave_offset;
+    }
+    
+    static get_surface_biome_offset_roughness = function()
+    {
+        return (___surface_biome_value >> 16) & 0xff;
     }
     
     static set_surface = function(_start, _offset)

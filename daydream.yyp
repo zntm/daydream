@@ -68,7 +68,6 @@
     {"$GMIncludedFile":"","%Name":"data.json","CopyToMask":-1,"filePath":"datafiles/resources/music/phantasia","name":"data.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"item.json","CopyToMask":-1,"filePath":"datafiles/resources/schema","name":"item.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"data.json","CopyToMask":-1,"filePath":"datafiles/resources/world/playground","name":"data.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
-    {"$GMIncludedFile":"","%Name":"map.bmp","CopyToMask":-1,"filePath":"datafiles/resources/world/playground","name":"map.bmp","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"map.png","CopyToMask":-1,"filePath":"datafiles/resources/world/playground","name":"map.png","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
   ],
   "isEcma":false,
@@ -82,7 +81,7 @@
     {"id":{"name":"obj_Control_Background","path":"objects/obj_Control_Background/obj_Control_Background.yy",},},
     {"id":{"name":"obj_Control","path":"objects/obj_Control/obj_Control.yy",},},
     {"id":{"name":"obj_Player","path":"objects/obj_Player/obj_Player.yy",},},
-    {"id":{"name":"Room1","path":"rooms/Room1/Room1.yy",},},
+    {"id":{"name":"rm_World","path":"rooms/rm_World/rm_World.yy",},},
     {"id":{"name":"___init___","path":"scripts/___init___/___init___.yy",},},
     {"id":{"name":"BiomeData","path":"scripts/BiomeData/BiomeData.yy",},},
     {"id":{"name":"buffer_load_json","path":"scripts/buffer_load_json/buffer_load_json.yy",},},
@@ -127,6 +126,7 @@
     {"id":{"name":"worldgen_get_heat","path":"scripts/worldgen_get_heat/worldgen_get_heat.yy",},},
     {"id":{"name":"worldgen_get_humidity","path":"scripts/worldgen_get_humidity/worldgen_get_humidity.yy",},},
     {"id":{"name":"worldgen_get_surface_height","path":"scripts/worldgen_get_surface_height/worldgen_get_surface_height.yy",},},
+    {"id":{"name":"worldgen_get_surface_offset","path":"scripts/worldgen_get_surface_offset/worldgen_get_surface_offset.yy",},},
     {"id":{"name":"worldgen_get_tile_base","path":"scripts/worldgen_get_tile_base/worldgen_get_tile_base.yy",},},
     {"id":{"name":"worldgen_get_tile_foliage","path":"scripts/worldgen_get_tile_foliage/worldgen_get_tile_foliage.yy",},},
     {"id":{"name":"worldgen_get_tile_wall","path":"scripts/worldgen_get_tile_wall/worldgen_get_tile_wall.yy",},},
@@ -138,7 +138,7 @@
   "resourceType":"GMProject",
   "resourceVersion":"2.0",
   "RoomOrderNodes":[
-    {"roomId":{"name":"Room1","path":"rooms/Room1/Room1.yy",},},
+    {"roomId":{"name":"rm_World","path":"rooms/rm_World/rm_World.yy",},},
   ],
   "templateType":"game",
   "TextureGroups":[
