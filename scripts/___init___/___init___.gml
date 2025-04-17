@@ -1,4 +1,12 @@
+enum VERSION_VALUE {
+    MAJOR = 2025,
+    MINOR = 0,
+    PATCH = 0
+}
+
 #macro DATAFILES_RESOURCES (((GM_build_type == "run") ? $"{filename_dir(GM_project_filename)}/datafiles/" : "") + "resources")
+
+#region Chunk
 
 #macro TILE_EMPTY 0
 
@@ -32,6 +40,8 @@ global.tile_connected_index = [
      0, -1,
     -1, -1,
 ];
+
+#endregion
 
 surface_depth_disable(true);
 

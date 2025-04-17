@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"render_gui_vignette",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"render_gui_vignette",
+  "parent":{
+    "name":"GUI",
+    "path":"folders/Scripts/Render/GUI.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
