@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"buffer_load_json",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"buffer_load_json",
+  "parent":{
+    "name":"Buffer",
+    "path":"folders/Scripts/Buffer.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"noise_free",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"noise_free",
+  "parent":{
+    "name":"Noise",
+    "path":"folders/Scripts/Noise.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

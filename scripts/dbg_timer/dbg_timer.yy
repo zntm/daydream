@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"dbg_timer",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"dbg_timer",
+  "parent":{
+    "name":"Debug",
+    "path":"folders/Scripts/Debug.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

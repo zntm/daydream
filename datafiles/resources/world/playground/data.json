@@ -1,0 +1,77 @@
+{
+	"world_height": 1024,
+	"vignette": {
+		"start": 768,
+		"end": 1024,
+		"colour": "#000000"
+	},
+	"time": {
+		"length": 54000,
+		"diurnal": {
+			"dawn": {
+				"start": 0,
+				"end": 3600
+			},
+			"day": {
+				"start": 3600,
+				"end": 22000
+			},
+			"dusk": {
+				"start": 22000,
+				"end": 33000
+			},
+			"night": {
+				"start": 33000,
+				"end": 54000
+			}
+		}
+	},
+	"biome": {
+		"surface": {
+			"heat": {
+				"octave": 7.4,
+				"roughness": 1
+			},
+			"humidity": {
+				"octave": 9.2,
+				"roughness": 3
+			},
+			"offset": {
+				"amount": 12,
+				"octave": 0.3,
+				"roughness": 2
+			}
+		}
+	},
+	"surface": {
+		"start": 512,
+		"offset": {
+			"octave": 2.4,
+			"roughness": 6,
+			"min": 40,
+			"max": 96
+		}
+	},
+	"cave": {
+		"start": {
+			"octave": 0.65,
+			"roughness": 6,
+			"min": 12,
+			"max": 32
+		},
+		"system": [
+			{
+				"range": {
+					"min": 512,
+					"max": 1000
+				},
+				"threshold": {
+					"octave": 0.52,
+					"roughness": 5,
+					"min": 88,
+					"max": 110
+				}
+			}
+		]
+	}
+}

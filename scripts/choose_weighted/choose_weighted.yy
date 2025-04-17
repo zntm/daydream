@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"choose_weighted",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"choose_weighted",
+  "parent":{
+    "name":"Random",
+    "path":"folders/Scripts/Random.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -1,0 +1,40 @@
+{
+    "type": {
+        "type": [ "array", "string" ],
+        "function": "set_type",
+        "default_value": "solid"
+    },
+    "sprite": {
+        "edge_padding": {
+            "type": "number",
+            "function": "set_edge_padding",
+            "min": 0
+        }
+    },
+    "is_connected": {
+        "type": "bool",
+        "function": "set_is_connected",
+        "default_value": true
+    },
+    "is_obstructable": {
+        "type": "bool",
+        "function": "set_is_obstructable",
+        "default_value": false,
+        "conditions": {
+            "type": "untouchable"
+        }
+    },
+    "is_obstructing": {
+        "type": "bool",
+        "function": "set_is_obstructing",
+        "default_value": false,
+        "conditions": {
+            "type": "solid"
+        }
+    },
+    "is_tile": {
+        "type": "bool",
+        "function": "set_is_tile",
+        "default_value": false
+    }
+}

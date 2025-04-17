@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"render_connected_tile_part",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"render_connected_tile_part",
+  "parent":{
+    "name":"Draw",
+    "path":"folders/Scripts/Render/Draw.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
