@@ -30,7 +30,7 @@ function BiomeData(_name, _type) constructor
     
     static get_map_colour = function()
     {
-        return ___map_colour;
+        return self[$ "___map_colour"];
     }
     
     static set_sky_colour = function(_sky_colour)
@@ -83,6 +83,22 @@ function BiomeData(_name, _type) constructor
         return ___light_colour[$ _diurnal];
     }
     
+    static set_tile = function(_data)
+    {
+        ___tile_base = _data.base;
+        ___tile_wall = _data.wall;
+    }
+    
+    static get_tile_base = function()
+    {
+        return ___tile_base;
+    }
+    
+    static get_tile_wall = function()
+    {
+        return ___tile_wall;
+    }
+    
     static set_tile_top_layer = function(_data)
     {
         ___tile_top_layer_base = _data.base;
@@ -113,17 +129,6 @@ function BiomeData(_name, _type) constructor
     static get_tile_sub_layer_wall = function()
     {
         return ___tile_sub_layer_wall;
-    }
-    
-    static set_tile_bottom_layer = function(_data)
-    {
-        ___tile_bottom_layer_base = _data.base;
-        ___tile_bottom_layer_wall = _data.wall;
-    }
-    
-    static get_tile_bottom_layer_base = function()
-    {
-        return ___tile_bottom_layer_base;
     }
     
     static get_tile_bottom_layer_wall = function()

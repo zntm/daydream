@@ -48,6 +48,8 @@ function init_world(_directory, _namespace = "phantasia", _type = 0)
         
         var _biome = _json.biome;
         
+        
+        _world_data.set_cave_biome(_biome.cave);
         _world_data.set_surface_biome(_biome.surface);
         
         var _surface = _json.surface;

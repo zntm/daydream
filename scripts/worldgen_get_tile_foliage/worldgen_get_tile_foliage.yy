@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"worldgen_get_tile_foliage",
   "parent":{
-    "name":"World Generation",
-    "path":"folders/Scripts/World Generation.yy",
+    "name":"Tile",
+    "path":"folders/Scripts/World Generation/Tile.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

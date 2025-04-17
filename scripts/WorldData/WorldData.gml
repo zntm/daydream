@@ -63,6 +63,83 @@ function WorldData(_world_height) constructor
         return (___time_diurnal[$ _time_diurnal] >> 16) & 0xffff;
     }
     
+    static set_cave_biome = function(_cave)
+    {
+        static __transition_type = {
+            "linear": WORLDGEN_CAVE_TRANSITION_TYPE.LINEAR,
+            "random": WORLDGEN_CAVE_TRANSITION_TYPE.RANDOM
+        }
+        var _default = _cave[$ "default"];
+        var _default_length = array_length(_default);
+        
+        ___cave_biome_default = array_create(_default_length);
+        ___cave_biome_default_length = _default_length;
+        
+        for (var i = 0; i < _default_length; ++i)
+        {
+            var _data = _default[i];
+            
+            var _transition = _data.transition;
+            
+            ___cave_biome_default[@ i] = {
+                ___id: _data.id,
+                ___range: (_data[$ "end"] << 16) | _data.start,
+                ___transition_value: (__transition_type[$ _transition.type] << 8) | _transition.amplitude,
+                ___transition_octave: _transition.octave
+            }
+        }
+        
+        var _noise = _cave.noise;
+        
+        ___cave_biome_noise_octave = _noise.octave;
+        ___cave_biome_noise_roughness = _noise.roughness;
+        
+        var _options = _cave.options;
+        var _options_length = array_length(_options);
+        
+        ___cave_biome_options = array_create(_options_length);
+        
+        for (var i = 0; i < _options_length; ++i)
+        {
+            
+        }
+    }
+    
+    static get_default_cave_id = function(_index)
+    {
+        return ___cave_biome_default[_index].___id;
+    }
+    
+    static get_default_cave_start = function(_index)
+    {
+        return ___cave_biome_default[_index].___range & 0xffff;
+    }
+    
+    static get_default_cave_end = function(_index)
+    {
+        return (___cave_biome_default[_index].___range >> 16) & 0xffff;
+    }
+    
+    static get_default_cave_transition_amplitude = function(_index)
+    {
+        return ___cave_biome_default[_index].___transition_value & 0xff;
+    }
+    
+    static get_default_cave_transition_octave = function(_index)
+    {
+        return ___cave_biome_default[_index].___transition_octave;
+    }
+    
+    static get_default_cave_transition_type = function(_index)
+    {
+        return (___cave_biome_default[_index].___transition_value >> 8) & 0xff;
+    }
+    
+    static get_default_cave_length = function(_index)
+    {
+        return ___cave_biome_default_length;
+    }
+    
     static set_surface_biome = function(_surface)
     {
         var _humidity = _surface.humidity;
@@ -72,8 +149,6 @@ function WorldData(_world_height) constructor
         ___surface_biome_octave_humidity = _humidity.octave;
         ___surface_biome_octave_heat = _heat.octave;
         ___surface_biome_octave_offset = _offset.octave;
-        
-        show_debug_message(_offset)
         
         ___surface_biome_value = (_offset.max << 32) | (_offset.min << 24) | (_offset.roughness << 16) | (_heat.roughness << 8) | _humidity.roughness;
         

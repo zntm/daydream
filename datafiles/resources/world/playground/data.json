@@ -31,17 +31,20 @@
 			"default": [
 				{
 					"id": "phantasia:caverns",
-					"range": {
-						"min": 0,
-						"max": 1024
-					},
+					"start": 0,
+					"end": 1024,
 					"transition": {
 						"type": "random",
 						"amplitude": 12,
 						"octave": 0.5
 					}
 				}
-			]
+			],
+			"noise": {
+				"octave": 4,
+				"roughness": 2
+			},
+			"options": []
 		},
 		"surface": {
 			"heat": {
@@ -55,8 +58,8 @@
 			"offset": {
 				"octave": 0.2,
 				"roughness": 4,
-				"min": 6,
-				"max": 12
+				"min": 14,
+				"max": 24
 			}
 		}
 	},

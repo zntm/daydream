@@ -22,5 +22,5 @@ function worldgen_get_heat(_x, _y, _seed)
     var _local_x = ((_x % WORLDGEN_HEAT_NOISE_SIZE) + WORLDGEN_HEAT_NOISE_SIZE) % WORLDGEN_HEAT_NOISE_SIZE;
     var _local_y = ((_y % WORLDGEN_HEAT_NOISE_SIZE) + WORLDGEN_HEAT_NOISE_SIZE) % WORLDGEN_HEAT_NOISE_SIZE;
     
-    return round(_buffer.get(_local_x, _local_y) * WORLDGEN_SIZE_HEAT);
+    return round(_buffer.get(_local_x, _local_y));
 }

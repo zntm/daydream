@@ -1,6 +1,5 @@
 {
     "background": "phantasia:greenia",
-    "map_colour": "#32B559",
     "sky_colour": {
         "dawn": {
             "base": "#180738",
@@ -26,22 +25,12 @@
         "night": "#141B35"
     },
 	"tile": {
-		"top_layer": {
-			"base": {
-				"id": "phantasia:grass_block"
-			},
-			"wall": {
-				"id": "phantasia:dirt_wall"
-			}
-		},
-		"sub_layer": {
-            "base": {
-                "id": "phantasia:dirt"
-            },
-            "wall": {
-                "id": "phantasia:dirt_wall"
-            }
-		}
+        "base": {
+            "id": "phantasia:stone"
+        },
+        "wall": {
+            "id": "phantasia:stone_wall"
+        }
 	},
     "foliage": {
         "chance": 0.1,
@@ -49,17 +38,17 @@
             {
                 "id": "phantasia:blue_bells",
                 "weight": 2,
-                "placeable_on": [ "phantasia:grass_block" ]
+                "placeable_on": [ "phantasia:stone" ]
             },
             {
                 "id": "phantasia:daisy",
                 "weight": 3,
-                "placeable_on": [ "phantasia:grass_block" ]
+                "placeable_on": [ "phantasia:stone" ]
             },
             {
                 "id": "phantasia:globeflower",
                 "weight": 1,
-                "placeable_on": [ "phantasia:grass_block" ]
+                "placeable_on": [ "phantasia:stone" ]
             }
         ]
     }

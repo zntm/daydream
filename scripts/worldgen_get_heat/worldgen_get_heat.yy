@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"worldgen_get_heat",
   "parent":{
-    "name":"World Generation",
-    "path":"folders/Scripts/World Generation.yy",
+    "name":"Biome",
+    "path":"folders/Scripts/World Generation/Biome.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

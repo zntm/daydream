@@ -22,5 +22,5 @@ function worldgen_get_humidity(_x, _y, _seed)
     var _local_x = ((_x % WORLDGEN_HUMIDITY_NOISE_SIZE) + WORLDGEN_HUMIDITY_NOISE_SIZE) % WORLDGEN_HUMIDITY_NOISE_SIZE;
     var _local_y = ((_y % WORLDGEN_HUMIDITY_NOISE_SIZE) + WORLDGEN_HUMIDITY_NOISE_SIZE) % WORLDGEN_HUMIDITY_NOISE_SIZE;
     
-    return round(_buffer.get(_local_x, _local_y) * WORLDGEN_HUMIDITY_NOISE_SIZE);
+    return round(_buffer.get(_local_x, _local_y));
 }
