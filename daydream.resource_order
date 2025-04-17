@@ -39,7 +39,6 @@
     {"name":"obj_Player","order":3,"path":"objects/obj_Player/obj_Player.yy",},
     {"name":"rm_World","order":1,"path":"rooms/rm_World/rm_World.yy",},
     {"name":"buffer_load_json","order":1,"path":"scripts/buffer_load_json/buffer_load_json.yy",},
-    {"name":"carbasa_draw","order":3,"path":"scripts/carbasa_draw/carbasa_draw.yy",},
     {"name":"carbasa_sort","order":2,"path":"scripts/carbasa_sort/carbasa_sort.yy",},
     {"name":"CarbasaSprite","order":1,"path":"scripts/CarbasaSprite/CarbasaSprite.yy",},
     {"name":"chance_seeded","order":1,"path":"scripts/chance_seeded/chance_seeded.yy",},

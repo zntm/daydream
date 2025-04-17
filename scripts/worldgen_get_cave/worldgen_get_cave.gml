@@ -17,7 +17,11 @@ function worldgen_get_cave(_x, _y, _surface_height, _seed)
     
     if (_buffer_start == undefined)
     {
-        _buffer_start = new Noise(_x2 * WORLDGEN_CAVE_NOISE_SIZE, 0x1ff9, WORLDGEN_CAVE_NOISE_SIZE, 1, _world_data.get_cave_start_max() - _world_data.get_cave_start_min(), _world_data.get_cave_start_octave(), _world_data.get_cave_start_roughness(), _seed);
+        var _amplitude = _world_data.get_cave_start_max() - _world_data.get_cave_start_min();
+        var _octave = _world_data.get_cave_start_octave();
+        var _roughness = _world_data.get_cave_start_roughness();
+        
+        _buffer_start = new Noise(_x2 * WORLDGEN_CAVE_NOISE_SIZE, 0x1ff9, WORLDGEN_CAVE_NOISE_SIZE, 1, _amplitude, _octave, _roughness, _seed);
         
         global.worldgen_noise_cave_start[$ _index_start] = _buffer_start;
     }
@@ -40,7 +44,10 @@ function worldgen_get_cave(_x, _y, _surface_height, _seed)
         
         if (_buffer == undefined)
         {
-            _buffer = new Noise(_x2 * WORLDGEN_CAVE_NOISE_SIZE, _y2 * WORLDGEN_CAVE_NOISE_SIZE, WORLDGEN_CAVE_NOISE_SIZE, WORLDGEN_CAVE_NOISE_SIZE, 255, _world_data.get_cave_system_threshold_octave(i), _world_data.get_cave_system_threshold_roughness(i), _seed);
+            var _octave = _world_data.get_cave_system_threshold_octave(i);
+            var _roughness = _world_data.get_cave_system_threshold_roughness(i);
+            
+            _buffer = new Noise(_x2 * WORLDGEN_CAVE_NOISE_SIZE, _y2 * WORLDGEN_CAVE_NOISE_SIZE, WORLDGEN_CAVE_NOISE_SIZE, WORLDGEN_CAVE_NOISE_SIZE, 255, _octave, _roughness, _seed);
             
             global.worldgen_noise_cave[$ _index] = _buffer;
         }

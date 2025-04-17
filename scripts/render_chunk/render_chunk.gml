@@ -58,7 +58,7 @@ function render_chunk(_uv, _inst, _z)
             {
                 var _edge_padding = _data.get_edge_padding();
                 
-                render_connected_tile(_buffer, _uv, _surface_width, _surface_height, _item_id, _index, 0, _edge_padding, _draw_x, _draw_y, _xscale, _yscale, _rotation, c_white, 1);
+                render_connected_tile(_buffer, _uv, _surface_width, _surface_height, _item_id, _index, _tile.get_index_offset(), _edge_padding, _draw_x, _draw_y, _xscale, _yscale, _rotation, c_white, 1);
                 
                 continue;
             }

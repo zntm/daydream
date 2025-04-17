@@ -11,7 +11,7 @@ function init_biome(_directory, _namespace = "phantasia", _type = 0)
     {
         var _file = _files_cave[i];
         
-        dbg_timer("init_data_biome_surface");
+        dbg_timer("init_data_biome_cave");
         
         var _json = buffer_load_json($"{_directory}/cave/{_file}");
         
@@ -32,7 +32,7 @@ function init_biome(_directory, _namespace = "phantasia", _type = 0)
         
         delete _json;
         
-        dbg_timer("init_data_biome_surface", $"[Init] Loaded Surface Biome: \'{_file}\'");
+        dbg_timer("init_data_biome_cave", $"[Init] Loaded Cave Biome: \'{_file}\'");
     }
     
     #endregion
