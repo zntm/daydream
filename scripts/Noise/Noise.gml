@@ -38,7 +38,7 @@ function Noise(_xoffset, _yoffset, _xsize, _ysize, _amplitude, _octave, _roughne
     shader_set_uniform_f(__u_offset, _xoffset, _yoffset); 
     shader_set_uniform_i(__u_roughness, _roughness); 
     
-    draw_rectangle_colour(0, 0, _xsize, _ysize, c_red, c_red, c_red, c_red, false);
+    draw_sprite_ext(spr_Square, 0, 0, 0, _xsize, _ysize, 0, c_red, 1);
     
     surface_reset_target();
     shader_reset();

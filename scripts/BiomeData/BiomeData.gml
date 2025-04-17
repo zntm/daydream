@@ -131,11 +131,6 @@ function BiomeData(_name, _type) constructor
         return ___tile_sub_layer_wall;
     }
     
-    static get_tile_bottom_layer_wall = function()
-    {
-        return ___tile_bottom_layer_wall;
-    }
-    
     static set_tile_foliage = function(_chance, _tile)
     {
         ___tile_foliage_chance = _chance;

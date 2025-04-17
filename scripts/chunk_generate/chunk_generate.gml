@@ -1,5 +1,8 @@
 function chunk_generate()
 {
+    static __cave_bit = array_create(CHUNK_SIZE);
+    static __surface_height = array_create(CHUNK_SIZE);
+    
     var _world_xstart = floor(x / CHUNK_SIZE_DIMENSION) * CHUNK_SIZE;
     var _world_ystart = floor(y / CHUNK_SIZE_DIMENSION) * CHUNK_SIZE;
     
@@ -14,6 +17,28 @@ function chunk_generate()
         
         var _surface_height = worldgen_get_surface_height(_world_x, _world_seed);
         
+        __surface_height[@ i] = _surface_height;
+        
+        var _cave_bit = 0;
+        
+        for (var j = 0; j < CHUNK_SIZE + 1; ++j)
+        {
+            var _world_y = _world_ystart + j;
+            
+            _cave_bit |= worldgen_get_cave(_world_x, _world_y, _surface_height, _world_seed) << j;
+        }
+        
+        __cave_bit[@ i] = _cave_bit;
+    }
+    
+    for (var i = 0; i < CHUNK_SIZE; ++i)
+    {
+        var _world_x = _world_xstart + i;
+        
+        var _surface_height = __surface_height[i];
+        
+        var _cave_bit = __cave_bit[i];
+        
         for (var j = 0; j < CHUNK_SIZE; ++j)
         {
             var _world_y = _world_ystart + j;
@@ -23,7 +48,7 @@ function chunk_generate()
             
             if (_world_y >= _surface_height)
             {
-                if (!worldgen_get_cave(_world_x, _world_y, _surface_height, _world_seed))
+                if ((_cave_bit & (1 << j)) == 0)
                 {
                     var _tile_base = worldgen_get_tile_base(_world_x, _world_y, _surface_biome, _cave_biome, _surface_height, _world_seed);
                     
@@ -47,7 +72,7 @@ function chunk_generate()
             
             if (_world_y >= _surface_height - 1)
             {
-                if (_world_y == _surface_height - 1) || ((worldgen_get_cave(_world_x, _world_y, _surface_height, _world_seed)) && (!worldgen_get_cave(_world_x, _world_y + 1, _surface_height, _world_seed)))
+                if (_world_y == _surface_height - 1) || ((_cave_bit & (1 << j)) && ((_cave_bit & (1 << (j + 1)))) == 0)
                 {
                     var _tile_foliage = worldgen_get_tile_foliage(_world_x, _world_y, _surface_biome, _cave_biome, worldgen_get_tile_base(_world_x, _world_y + 1, _surface_biome, _cave_biome, _surface_height, _world_seed), _surface_height, _world_seed);
                     

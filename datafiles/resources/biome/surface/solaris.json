@@ -1,0 +1,66 @@
+{
+    "background": "phantasia:solaris",
+    "map_colour": "#32B559",
+    "sky_colour": {
+        "dawn": {
+            "base": "#180738",
+            "gradient": "#2A1504"
+        },
+        "day": {
+            "base": "#5F91FE",
+            "gradient": "#244FE9"
+        },
+        "dusk": {
+            "base": "#C4502D",
+            "gradient": "#DA651C"
+        },
+        "night": {
+            "base": "#000019",
+            "gradient": "#020008"
+        }
+    },
+    "light_colour": {
+        "dawn": "#C68B69",
+        "day": "#FFFFFF",
+        "dusk": "#C68B69",
+        "night": "#141B35"
+    },
+	"tile": {
+		"top_layer": {
+			"base": {
+				"id": "phantasia:sand"
+			},
+			"wall": {
+				"id": "phantasia:dirt_wall"
+			}
+		},
+		"sub_layer": {
+            "base": {
+                "id": "phantasia:sand"
+            },
+            "wall": {
+                "id": "phantasia:dirt_wall"
+            }
+		}
+	},
+    "foliage": {
+        "chance": 0.1,
+        "tile": [
+            {
+                "id": "phantasia:blue_bells",
+                "weight": 2,
+                "placeable_on": [ "phantasia:sand" ]
+            },
+            {
+                "id": "phantasia:daisy",
+                "weight": 3,
+                "placeable_on": [ "phantasia:sand" ]
+            },
+            {
+                "id": "phantasia:globeflower",
+                "weight": 1,
+                "placeable_on": [ "phantasia:sand" ]
+            }
+        ]
+    }
+}
