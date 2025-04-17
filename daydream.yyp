@@ -80,7 +80,7 @@
   "isEcma":false,
   "LibraryEmitters":[],
   "MetaData":{
-    "IDEVersion":"2024.13.0.190",
+    "IDEVersion":"2024.13.1.193",
   },
   "name":"daydream",
   "resources":[
@@ -102,6 +102,7 @@
     {"id":{"name":"choose_weighted","path":"scripts/choose_weighted/choose_weighted.yy",},},
     {"id":{"name":"chunk_generate_tile_base","path":"scripts/chunk_generate_tile_base/chunk_generate_tile_base.yy",},},
     {"id":{"name":"chunk_generate","path":"scripts/chunk_generate/chunk_generate.yy",},},
+    {"id":{"name":"control_chunk_activity","path":"scripts/control_chunk_activity/control_chunk_activity.yy",},},
     {"id":{"name":"control_chunk","path":"scripts/control_chunk/control_chunk.yy",},},
     {"id":{"name":"dbg_log","path":"scripts/dbg_log/dbg_log.yy",},},
     {"id":{"name":"dbg_timer","path":"scripts/dbg_timer/dbg_timer.yy",},},
@@ -124,6 +125,7 @@
     {"id":{"name":"render_connected_tile_part","path":"scripts/render_connected_tile_part/render_connected_tile_part.yy",},},
     {"id":{"name":"render_connected_tile","path":"scripts/render_connected_tile/render_connected_tile.yy",},},
     {"id":{"name":"render_gui_vignette","path":"scripts/render_gui_vignette/render_gui_vignette.yy",},},
+    {"id":{"name":"render_pipeline","path":"scripts/render_pipeline/render_pipeline.yy",},},
     {"id":{"name":"render_tile","path":"scripts/render_tile/render_tile.yy",},},
     {"id":{"name":"string_pad_start","path":"scripts/string_pad_start/string_pad_start.yy",},},
     {"id":{"name":"tile_get","path":"scripts/tile_get/tile_get.yy",},},

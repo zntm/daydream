@@ -54,7 +54,7 @@ function chunk_generate()
                     
                     if (_tile_base != TILE_EMPTY)
                     {
-                        chunk[@ (CHUNK_DEPTH_DEFAULT << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_tile_base);
+                        chunk[@ (CHUNK_DEPTH_DEFAULT << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_tile_base.id);
                         
                         chunk_surface_display |= 1 << CHUNK_DEPTH_DEFAULT;
                     }
@@ -64,7 +64,7 @@ function chunk_generate()
                 
                 if (_tile_wall != TILE_EMPTY)
                 {
-                    chunk[@ (CHUNK_DEPTH_WALL << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_tile_wall);
+                    chunk[@ (CHUNK_DEPTH_WALL << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_tile_wall.id);
                     
                     chunk_surface_display |= 1 << CHUNK_DEPTH_WALL;
                 }
@@ -74,13 +74,15 @@ function chunk_generate()
             {
                 if (_world_y == _surface_height - 1) || ((_cave_bit & (1 << j)) && ((_cave_bit & (1 << (j + 1)))) == 0)
                 {
-                    var _tile_foliage = worldgen_get_tile_foliage(_world_x, _world_y, _surface_biome, _cave_biome, worldgen_get_tile_base(_world_x, _world_y + 1, _surface_biome, _cave_biome, _surface_height, _world_seed), _surface_height, _world_seed);
+                    var _tile_base = worldgen_get_tile_base(_world_x, _world_y + 1, _surface_biome, _cave_biome, _surface_height, _world_seed);
+                    
+                    var _tile_foliage = worldgen_get_tile_foliage(_world_x, _world_y, _surface_biome, _cave_biome, _tile_base, _surface_height, _world_seed);
                     
                     if (_tile_foliage != TILE_EMPTY)
                     {
                         var _z = (chance_seeded(0.5, _world_seed + _world_x + _world_y) ? CHUNK_DEPTH_FOLIAGE_FRONT : CHUNK_DEPTH_FOLIAGE_BACK);
                         
-                        chunk[@ (_z << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_tile_foliage)
+                        chunk[@ (_z << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_tile_foliage.id)
                             .set_xscale(choose(-1, 1));
                         
                         chunk_surface_display |= 1 << _z;

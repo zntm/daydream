@@ -6,9 +6,9 @@ function worldgen_get_tile_foliage(_x, _y, _surface_biome, _cave_biome, _top_til
     {
         var _tile = choose_weighted(_foliage.get_tile_foliage_tile());
         
-        if (array_contains(_tile.placeable_on, _top_tile))
+        if (array_contains(_tile.placeable_on, _top_tile.id))
         {
-            return _tile.id;
+            return _tile;
         }
     }
     

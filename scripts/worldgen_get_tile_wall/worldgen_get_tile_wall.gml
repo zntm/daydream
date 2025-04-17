@@ -7,13 +7,13 @@ function worldgen_get_tile_wall(_x, _y, _surface_biome, _cave_biome, _surface_he
     
     if (_cave_biome != undefined)
     {
-        return global.biome_data[$ _cave_biome].get_tile_wall().id;
+        return global.biome_data[$ _cave_biome].get_tile_wall();
     }
     
     if (_y == _surface_height)
     {
-        return global.biome_data[$ _surface_biome].get_tile_top_layer_wall().id;
+        return global.biome_data[$ _surface_biome].get_tile_top_layer_wall();
     }
     
-    return global.biome_data[$ _surface_biome].get_tile_sub_layer_wall().id;
+    return global.biome_data[$ _surface_biome].get_tile_sub_layer_wall();
 }
