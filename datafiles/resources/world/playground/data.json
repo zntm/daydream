@@ -27,6 +27,22 @@
 		}
 	},
 	"biome": {
+		"cave": {
+			"default": [
+				{
+					"id": "phantasia:caverns",
+					"range": {
+						"min": 0,
+						"max": 1024
+					},
+					"transition": {
+						"type": "random",
+						"amplitude": 12,
+						"octave": 0.5
+					}
+				}
+			]
+		},
 		"surface": {
 			"heat": {
 				"octave": 7.4,
