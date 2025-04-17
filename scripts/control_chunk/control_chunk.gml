@@ -17,7 +17,7 @@ function control_chunk(_player_x, _player_y, _camera_x, _camera_y, _camera_width
             var _x = (round(_player_x / CHUNK_SIZE_DIMENSION) * CHUNK_SIZE_DIMENSION) + (i * CHUNK_SIZE_DIMENSION);
             var _y = (round(_player_y / CHUNK_SIZE_DIMENSION) * CHUNK_SIZE_DIMENSION) + (j * CHUNK_SIZE_DIMENSION);
             
-            if (_y < 0) || (_y >= _world_height * CHUNK_SIZE_DIMENSION) continue;
+            if (_y < 0) || (_y >= _world_height * TILE_SIZE) continue;
             
             var _inst = instance_position(_x, _y, obj_Chunk);
             
@@ -35,7 +35,7 @@ function control_chunk(_player_x, _player_y, _camera_x, _camera_y, _camera_width
             var _x = (round(_player_x / CHUNK_SIZE_DIMENSION) * CHUNK_SIZE_DIMENSION) + (i * CHUNK_SIZE_DIMENSION);
             var _y = (round(_player_y / CHUNK_SIZE_DIMENSION) * CHUNK_SIZE_DIMENSION) + (j * CHUNK_SIZE_DIMENSION);
             
-            if (_y < 0) || (_y >= _world_height * CHUNK_SIZE_DIMENSION) continue;
+            if (_y < 0) || (_y >= _world_height * TILE_SIZE) continue;
             
             var _inst = instance_position(_x, _y, obj_Chunk);
             
