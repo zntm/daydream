@@ -21,6 +21,18 @@ function BiomeData(_name, _type) constructor
         return ___type;
     }
     
+    static set_background = function(_background)
+    {
+        ___background = _background;
+        
+        return self;
+    }
+    
+    static get_background = function()
+    {
+        return self[$ "___background"];
+    }
+    
     static set_map_colour = function(_map_colour)
     {
         ___map_colour = hex_parse(_map_colour);

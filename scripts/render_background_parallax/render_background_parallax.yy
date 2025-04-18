@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"render_background_parallax",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"render_background_parallax",
+  "parent":{
+    "name":"Background",
+    "path":"folders/Scripts/Render/Background.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -24,5 +24,5 @@ function worldgen_get_surface_height(_x, _seed)
     
     var _local_x = ((_x % WORLDGEN_SURFACE_HEIGHT_NOISE_SIZE) + WORLDGEN_SURFACE_HEIGHT_NOISE_SIZE) % WORLDGEN_SURFACE_HEIGHT_NOISE_SIZE;
     
-    return round(_world_data.get_surface_start() + _world_data.get_surface_offset_min() - _buffer.get(_local_x, 0));
+    return _world_data.get_surface_start() + _world_data.get_surface_offset_min() - round(_buffer.get(_local_x, 0));
 }

@@ -1,5 +1,7 @@
 function init(_namespace)
 {
+    init_background($"{DATAFILES_RESOURCES}/background", _namespace);
+    
     init_music($"{DATAFILES_RESOURCES}/music", _namespace);
     
     init_item($"{DATAFILES_RESOURCES}/item", _namespace);

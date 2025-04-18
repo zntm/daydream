@@ -19,6 +19,8 @@ function init_biome(_directory, _namespace = "phantasia", _type = 0)
         
         var _biome_data = new BiomeData(_file, BIOME_TYPE.CAVE);
         
+        _biome_data.set_background(_json.background);
+        
         _biome_data.set_sky_colour(_json.sky_colour);
         _biome_data.set_light_colour(_json.light_colour);
         
@@ -53,6 +55,8 @@ function init_biome(_directory, _namespace = "phantasia", _type = 0)
         _file = string_delete(_file, string_length(_file) - 4, 5);
         
         var _biome_data = new BiomeData(_file, BIOME_TYPE.SURFACE);
+        
+        _biome_data.set_background(_json.background);
         
         _biome_data.set_map_colour(_json.map_colour);
         _biome_data.set_sky_colour(_json.sky_colour);

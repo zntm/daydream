@@ -16,7 +16,7 @@ function worldgen_get_heat(_x, _y, _seed)
     {
         var _octave = _world_data.get_surface_biome_heat_octave();
         var _roughness = _world_data.get_surface_biome_heat_roughness();
-    
+        
         _buffer = new Noise(_x2 * WORLDGEN_HEAT_NOISE_SIZE, _y2 * WORLDGEN_HEAT_NOISE_SIZE, WORLDGEN_HEAT_NOISE_SIZE, WORLDGEN_HEAT_NOISE_SIZE, WORLDGEN_SIZE_HEAT, _octave, _roughness, _seed);
         
         global.worldgen_noise_heat[$ _index] = _buffer;

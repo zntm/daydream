@@ -105,6 +105,8 @@ function init_world(_directory, _namespace = "phantasia", _type = 0)
         
         buffer_delete(__biome_map_buffer);
         
+        show_debug_message(_surface_biome_map)
+        
         _world_data.set_surface_biome_map(_surface_biome_map);
         
         #endregion

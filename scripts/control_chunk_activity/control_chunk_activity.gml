@@ -25,22 +25,7 @@ function control_chunk_activity(_camera_x, _camera_y, _camera_width, _camera_hei
         {
             if (!rectangle_in_rectangle(_x5, _y5, _x6, _y6, _x3, _y3, _x4, _y4))
             {
-                if (chunk_surface_display)
-                {
-                    for (var _z = 0; _z < CHUNK_DEPTH; ++_z)
-                    {
-                        var _vertex_buffer = chunk_vertex_buffer[_z];
-                        
-                        if (vertex_buffer_exists(_vertex_buffer))
-                        {
-                            _collect = true;
-                            
-                            vertex_delete_buffer(_vertex_buffer);
-                        }
-                    }
-                }
-                
-                instance_destroy();
+                chunk_clear(id);
                 
                 continue;
             }
