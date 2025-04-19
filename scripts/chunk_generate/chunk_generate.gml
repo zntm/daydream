@@ -56,7 +56,7 @@ function chunk_generate()
                     {
                         chunk[@ (CHUNK_DEPTH_DEFAULT << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_tile_base.id);
                         
-                        chunk_surface_display |= 1 << CHUNK_DEPTH_DEFAULT;
+                        chunk_display |= 1 << CHUNK_DEPTH_DEFAULT;
                     }
                 }
                 
@@ -66,7 +66,7 @@ function chunk_generate()
                 {
                     chunk[@ (CHUNK_DEPTH_WALL << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_tile_wall.id);
                     
-                    chunk_surface_display |= 1 << CHUNK_DEPTH_WALL;
+                    chunk_display |= 1 << CHUNK_DEPTH_WALL;
                 }
             }
             
@@ -85,7 +85,7 @@ function chunk_generate()
                         chunk[@ (_z << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_tile_foliage.id)
                             .set_xscale(choose(-1, 1));
                         
-                        chunk_surface_display |= 1 << _z;
+                        chunk_display |= 1 << _z;
                     }
                 }
             }

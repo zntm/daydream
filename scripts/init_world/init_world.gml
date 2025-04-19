@@ -23,8 +23,9 @@ function init_world(_directory, _namespace = "phantasia", _type = 0)
     
     var _biome_data = global.biome_data;
     
-
-    
+    var _names = struct_get_names(_biome_data);
+    var _names_length = array_length(_names);
+     
     var _files = file_read_directory(_directory);
     var _files_length = array_length(_files);
     
@@ -61,9 +62,6 @@ function init_world(_directory, _namespace = "phantasia", _type = 0)
         _world_data.set_cave(_cave.start, _cave.system);
         
         #region Biome Map
-        
-        var _names = struct_get_names(_biome_data);
-        var _names_length = array_length(_names);
         
         var _sprite = sprite_add($"{_directory}/{_file}/map.png", 1, false, false, 0, 0);
         
@@ -104,8 +102,6 @@ function init_world(_directory, _namespace = "phantasia", _type = 0)
         }
         
         buffer_delete(__biome_map_buffer);
-        
-        show_debug_message(_surface_biome_map)
         
         _world_data.set_surface_biome_map(_surface_biome_map);
         

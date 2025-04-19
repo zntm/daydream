@@ -46,8 +46,8 @@ function render_chunk(_uv, _inst, _z)
                 }
             }
             
-            var _draw_x = _inst.x + (_x * TILE_SIZE);
-            var _draw_y = _inst.y + (_y * TILE_SIZE);
+            var _draw_x = _x * TILE_SIZE;
+            var _draw_y = _y * TILE_SIZE;
             
             var _xscale = _tile.get_xscale();
             var _yscale = _tile.get_yscale();
@@ -66,8 +66,6 @@ function render_chunk(_uv, _inst, _z)
             render_tile(_buffer, _uv, _surface_width, _surface_height, _item_id, _index + _tile.get_index_offset(), _draw_x, _draw_y, _xscale, _yscale, _rotation, c_white, 1);
         }
     }
-    
-    _inst.chunk_render |= 1 << _z;
     
     _inst.chunk_vertex_buffer[@ _z] = _buffer;
     

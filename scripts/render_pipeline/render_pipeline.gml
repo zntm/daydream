@@ -1,16 +1,18 @@
-// Script assets have changed for v2.3.0 see
-// https://help.yoyogames.com/hc/en-us/articles/360005277377 for more information
 function render_pipeline()
 {
+    static __u_offset = shader_get_uniform(shd_Chunk, "u_offset");
+    
     var _texture = global.carbasa_surface_texture[$ "item"];
     
     for (var _z = 0; _z < CHUNK_DEPTH; ++_z)
     {
         var _bitmask = 1 << _z;
         
+        shader_set(shd_Chunk);
+        
         with (obj_Chunk)
         {
-            if (!is_in_view) || ((chunk_surface_display & _bitmask) == 0) continue;
+            if (!is_in_view) || ((chunk_display & _bitmask) == 0) continue;
             
             if (!vertex_buffer_exists(chunk_vertex_buffer[_z]))
             {
@@ -19,10 +21,14 @@ function render_pipeline()
             
             var _buffer = chunk_vertex_buffer[_z];
             
-            if (chunk_render & _bitmask) && (vertex_buffer_exists(_buffer))
+            if (vertex_buffer_exists(_buffer))
             {
+                shader_set_uniform_f(__u_offset, x, y);
+                
                 vertex_submit(_buffer, pr_trianglelist, _texture);
             }
         }
+        
+        shader_reset();
     }
 }

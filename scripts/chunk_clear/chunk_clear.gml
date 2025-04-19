@@ -1,6 +1,6 @@
 function chunk_clear(_inst)
 {
-    if (_inst.chunk_surface_display)
+    if (_inst.chunk_display)
     {
         for (var _z = 0; _z < CHUNK_DEPTH; ++_z)
         {

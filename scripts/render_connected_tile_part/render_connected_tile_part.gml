@@ -1,7 +1,5 @@
-function render_connected_tile_part(_buffer, _uv, _surface_width, _surface_height, _cos, _sin, _name, _index, _left, _top, _width, _height, _x, _y, _xscale, _yscale, _rotation, _colour, _alpha)
+function render_connected_tile_part(_buffer, _uv, _surface_width, _surface_height, _cos, _sin, _sprite, _left, _top, _width, _height, _x, _y, _xscale, _yscale, _rotation, _colour, _alpha)
 {
-    var _sprite = global.carbasa_page_position[$ "item"][global.carbasa_page[$ "item"][$ _name].sprite[_index]];
-    
     var _v0 = (_sprite.get_x() + _left) / _surface_width;
     var _v1 = (_sprite.get_y() + _top)  / _surface_height;
     var _v2 = _v0 + (_width  / _surface_width);
@@ -10,17 +8,17 @@ function render_connected_tile_part(_buffer, _uv, _surface_width, _surface_heigh
     var _a = _xscale * _width;
     var _b = _yscale * _height;
     
-    var _ax = _x + (00 * _cos) - (00 * _sin);
-    var _ay = _y + (00 * _sin) + (00 * _cos);
+    var _ax = _x;
+    var _ay = _y;
     
-    var _bx = _x + (_a * _cos) - (00 * _sin);
-    var _by = _y + (_a * _sin) + (00 * _cos);
+    var _bx = _x + (_a * _cos);
+    var _by = _y + (_a * _sin);
     
-    var _cx = _x + (00 * _cos) - (_b * _sin);
-    var _cy = _y + (00 * _sin) + (_b * _cos);
+    var _cx = _ax - (_b * _sin);
+    var _cy = _ay + (_b * _cos);
     
-    var _dx = _x + (_a * _cos) - (_b * _sin);
-    var _dy = _y + (_a * _sin) + (_b * _cos);
+    var _dx = _bx - (_b * _sin);
+    var _dy = _by + (_b * _cos);
     
     // Triangle 1
     vertex_colour(_buffer, _colour, _alpha);

@@ -1,8 +1,15 @@
 global.carbasa_page          = {}
 global.carbasa_page_position = {}
 
+vertex_format_begin();
+
+vertex_format_add_colour();
+vertex_format_add_position();
+vertex_format_add_texcoord();
+
+global.carbasa_page_vertex_format = vertex_format_end();
+
 global.carbasa_page_vertex_buffer = {}
-global.carbasa_page_vertex_format = {}
 
 global.carbasa_surface         = {}
 global.carbasa_surface_texture = {}
@@ -19,14 +26,6 @@ function carbasa_sprite_add(_page, _sprite, _name)
         global.carbasa_surface_size[$ _page] = (256 << 16) | 256;
         
         global.carbasa_page_vertex_buffer[$ _page] = vertex_create_buffer();
-        
-        vertex_format_begin();
-        
-        vertex_format_add_colour();
-        vertex_format_add_position();
-        vertex_format_add_texcoord();
-        
-        global.carbasa_page_vertex_format[$ _page] = vertex_format_end();
     }
     else if (global.carbasa_page[$ _page][$ _name] != undefined) exit;
     
@@ -90,7 +89,7 @@ function carbasa_sprite_add(_page, _sprite, _name)
     
     var _buffer = global.carbasa_page_vertex_buffer[$ _page];
     
-    vertex_begin(_buffer, global.carbasa_page_vertex_format[$ _page]);
+    vertex_begin(_buffer, global.carbasa_page_vertex_format);
     
     var _uv = texture_get_uvs(global.carbasa_surface_texture[$ _page]);
     

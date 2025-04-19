@@ -2,8 +2,7 @@ chunk = array_create(CHUNK_SIZE * CHUNK_SIZE * CHUNK_DEPTH, TILE_EMPTY);
 
 chunk_vertex_buffer = array_create(CHUNK_DEPTH, -1);
 
-chunk_surface_display = 0;
-chunk_render = 0;
+chunk_display = 0;
 
 is_generated = false;
 is_in_view = false;

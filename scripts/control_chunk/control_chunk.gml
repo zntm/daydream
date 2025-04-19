@@ -47,7 +47,7 @@ function control_chunk(_player_x, _player_y, _camera_x, _camera_y, _camera_width
             
             for (var _tile_z = 0; _tile_z < CHUNK_DEPTH; ++_tile_z)
             {
-                if ((_inst.chunk_surface_display & (1 << _tile_z)) == 0) continue;
+                if ((_inst.chunk_display & (1 << _tile_z)) == 0) continue;
                 
                 for (var _tile_y = 0; _tile_y < CHUNK_SIZE; ++_tile_y)
                 {
