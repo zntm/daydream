@@ -1,0 +1,23 @@
+{
+    "type": "parallax",
+    "layers": [
+        {
+            "xoffset": 660,
+            "yoffset": 693,
+            "width": 1320,
+            "height": 693
+        },
+        {
+            "xoffset": 660,
+            "yoffset": 328,
+            "width": 1320,
+            "height": 328
+        },
+        {
+            "xoffset": 660,
+            "yoffset": 601,
+            "width": 1320,
+            "height": 601
+        }
+    ]
+}
