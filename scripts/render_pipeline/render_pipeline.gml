@@ -1,4 +1,4 @@
-function render_pipeline()
+function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
 {
     static __u_offset = shader_get_uniform(shd_Chunk, "u_offset");
     
@@ -10,6 +10,37 @@ function render_pipeline()
         
         shader_set(shd_Chunk);
         
+        var _a = ceil(_camera_width  / (2 * CHUNK_SIZE_DIMENSION)) + 1;
+        var _b = ceil(_camera_height / (2 * CHUNK_SIZE_DIMENSION)) + 1;
+        
+        for (var i = -_a; i < _a; ++i)
+        {
+            for (var j = -_b; j < _b; ++j)
+            {
+                var _x = (round((_camera_x + (_camera_width  / 2)) / CHUNK_SIZE_DIMENSION) * CHUNK_SIZE_DIMENSION) + (i * CHUNK_SIZE_DIMENSION);
+                var _y = (round((_camera_y + (_camera_height / 2)) / CHUNK_SIZE_DIMENSION) * CHUNK_SIZE_DIMENSION) + (j * CHUNK_SIZE_DIMENSION);
+                
+                var _inst = instance_position(_x, _y, obj_Chunk);
+                
+                if (!instance_exists(_inst)) || (!_inst.is_generated) || ((_inst.chunk_display & _bitmask) == 0) continue;
+                
+                if (!vertex_buffer_exists(_inst.chunk_vertex_buffer[_z]))
+                {
+                    render_chunk(global.carbasa_surface_uv[$ "item"], _inst, _z);
+                }
+                
+                var _buffer = _inst.chunk_vertex_buffer[_z];
+                
+                if (vertex_buffer_exists(_buffer))
+                {
+                    shader_set_uniform_f(__u_offset, _inst.x, _inst.y);
+                    
+                    vertex_submit(_buffer, pr_trianglelist, _texture);
+                }
+            }
+        }
+        
+        /*
         with (obj_Chunk)
         {
             if (!is_in_view) || ((chunk_display & _bitmask) == 0) continue;
@@ -28,10 +59,11 @@ function render_pipeline()
                 vertex_submit(_buffer, pr_trianglelist, _texture);
             }
         }
-        
+        */
         shader_reset();
     }
     
+    /*
     with (obj_Chunk)
     {
         if (!chunk_display) continue;
@@ -44,4 +76,5 @@ function render_pipeline()
             true
         )
     }
+    */
 }

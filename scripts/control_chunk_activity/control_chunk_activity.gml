@@ -19,19 +19,14 @@ function control_chunk_activity(_camera_x, _camera_y, _camera_width, _camera_hei
         var _x6 = _x5 + CHUNK_SIZE_DIMENSION;
         var _y6 = _y5 + CHUNK_SIZE_DIMENSION;
         
-        var _is_in_view = rectangle_in_rectangle(_x5, _y5, _x6, _y6, _x1, _y1, _x2, _y2);
-        
-        if (!_is_in_view)
+        if (!rectangle_in_rectangle(_x3, _y3, _x4, _y4, _x5, _y5, _x6, _y6))
         {
-            if (!rectangle_in_rectangle(_x5, _y5, _x6, _y6, _x3, _y3, _x4, _y4))
-            {
-                chunk_clear(id);
-                
-                continue;
-            }
+            chunk_clear(id);
+            
+            _collect = true;
+            
+            continue;
         }
-        
-        is_in_view = _is_in_view;
     }
     
     if (_collect)

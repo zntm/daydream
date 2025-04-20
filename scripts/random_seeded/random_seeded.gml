@@ -11,7 +11,7 @@ function random_seeded(_seed)
     
     if (_seed & ((1 << 43) | (1 << 27) | (1 << 19)))
     {
-        _seed ^= 0xfb7d_f099_23de_b9a1;
+        _seed ^= 0x23de_b9a1;
     }
     
     return (_seed & 0x7fff_ffff) / 0x7fff_ffff;
