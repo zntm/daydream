@@ -39,8 +39,8 @@ function render_pipeline()
         draw_rectangle(
             x - (TILE_SIZE / 2),
             y - (TILE_SIZE / 2),
-            x - (TILE_SIZE / 2) + CHUNK_SIZE_DIMENSION,
-            y - (TILE_SIZE / 2) + CHUNK_SIZE_DIMENSION,
+            x - (TILE_SIZE / 2) + CHUNK_SIZE_DIMENSION - 1,
+            y - (TILE_SIZE / 2) + CHUNK_SIZE_DIMENSION - 1,
             true
         )
     }

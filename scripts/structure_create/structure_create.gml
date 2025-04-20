@@ -48,11 +48,8 @@ function structure_create(_x, _y, _id, _seed, _force_surface)
         x += (_structure_data.get_placement_xoffset() - 0) * TILE_SIZE;
         y += (_structure_data.get_placement_yoffset() - 1) * TILE_SIZE;
         
-        structure_relative_xstart = ceil(bbox_left / TILE_SIZE);
-        structure_relative_ystart = ceil(bbox_top  / TILE_SIZE);
-        
-        // var _structure_xstart = _world_x - ceil(_inst.bbox_left / TILE_SIZE);
-        // var _structure_ystart = _world_y - ceil(_inst.bbox_top  / TILE_SIZE);
+        structure_xrelative = ceil(bbox_left / TILE_SIZE);
+        structure_yrelative = ceil(bbox_top  / TILE_SIZE);
         
         structure_id = _id;
         

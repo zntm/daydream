@@ -69,8 +69,8 @@ function chunk_generate()
             var _function = _natural_structure_data[$ _data.get_data()[$ "function"]].get_function();
             
             _inst.data = _function(
-                round(_inst.bbox_left / TILE_SIZE),
-                round(_inst.bbox_top  / TILE_SIZE),
+                _inst.structure_xrelative,
+                _inst.structure_yrelative,
                 _inst.image_xscale,
                 _inst.image_yscale,
                 _world_seed,
@@ -98,6 +98,8 @@ function chunk_generate()
             
             var _inst_y = _world_y * TILE_SIZE;
             
+            var _skip_layer = 0;
+            
             if (position_meeting(_inst_x, _inst_y, obj_Structure))
             {
                 var _structure_length = instance_position_list(_inst_x, _inst_y, obj_Structure, __structure_list, false);
@@ -122,8 +124,8 @@ function chunk_generate()
                     
                     var _rectangle = _xscale * _yscale;
                     
-                    var _structure_x = _world_x - ceil(_inst.bbox_left / TILE_SIZE);
-                    var _structure_y = _world_y - ceil(_inst.bbox_top  / TILE_SIZE);
+                    var _structure_x = _world_x - _inst.structure_xrelative;
+                    var _structure_y = _world_y - _inst.structure_yrelative;
                     
                     var _structure_id = _inst.structure_id;
                     var _data = _inst.data;
@@ -134,10 +136,9 @@ function chunk_generate()
                     {
                         var _tile = _data[_structure_index_xy + (m * _rectangle)];
                         
-                        if (_tile == TILE_STRUCTURE_VOID)
-                        {
-                            _tile = TILE_EMPTY;
-                        }
+                        if (_tile == TILE_STRUCTURE_VOID) continue;
+                        
+                        _skip_layer |= 1 << m;
                         
                         chunk[@ (m << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = _tile;
                         
@@ -152,8 +153,6 @@ function chunk_generate()
                         instance_destroy(_inst);
                     }
                 }
-                
-                continue;
             }
             
             var _surface_biome = worldgen_get_biome_surface(_world_x, _world_y, _surface_height, _world_seed);
@@ -161,7 +160,7 @@ function chunk_generate()
             
             if (_world_y >= _surface_height)
             {
-                if ((_cave_bit & (1 << j)) == 0)
+                if ((_skip_layer & (1 << CHUNK_DEPTH_DEFAULT)) == 0) && ((_cave_bit & (1 << j)) == 0)
                 {
                     var _tile_base = worldgen_get_tile_base(_world_x, _world_y, _surface_biome, _cave_biome, _surface_height, _world_seed);
                     
@@ -175,7 +174,7 @@ function chunk_generate()
                 
                 var _tile_wall = worldgen_get_tile_wall(_world_x, _world_y, _surface_biome, _cave_biome, _surface_height, _world_seed);
                 
-                if (_tile_wall != TILE_EMPTY)
+                if ((_skip_layer & (1 << CHUNK_DEPTH_WALL)) == 0) && (_tile_wall != TILE_EMPTY)
                 {
                     chunk[@ (CHUNK_DEPTH_WALL << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_tile_wall.id);
                     
@@ -183,7 +182,9 @@ function chunk_generate()
                 }
             }
             
-            if (_world_y >= _surface_height - 1)
+            var _z = (chance_seeded(0.5, _world_seed + _world_x + _world_y) ? CHUNK_DEPTH_FOLIAGE_FRONT : CHUNK_DEPTH_FOLIAGE_BACK);
+            
+            if ((_skip_layer & (1 << _z)) == 0) && (_world_y >= _surface_height - 1)
             {
                 if (_world_y == _surface_height - 1) || ((_cave_bit & (1 << j)) && ((_cave_bit & (1 << (j + 1)))) == 0)
                 {
@@ -193,8 +194,6 @@ function chunk_generate()
                     
                     if (_tile_foliage != TILE_EMPTY)
                     {
-                        var _z = (chance_seeded(0.5, _world_seed + _world_x + _world_y) ? CHUNK_DEPTH_FOLIAGE_FRONT : CHUNK_DEPTH_FOLIAGE_BACK);
-                        
                         chunk[@ (_z << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_tile_foliage.id)
                             .set_xscale(choose(-1, 1));
                         

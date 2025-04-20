@@ -11,4 +11,7 @@ global.world = {
 
 obj_Player.y = global.world_data[$ global.world.dimension].get_surface_start() * TILE_SIZE;
 
-global.structure_surface = {}
+global.structure_range_surface = {
+    min:  infinity,
+    max: -infinity
+}

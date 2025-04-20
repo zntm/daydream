@@ -22,7 +22,7 @@ var _camera_y = camera_get_view_y(view_camera[0]);
 var _camera_width  = camera_get_view_width(view_camera[0]);
 var _camera_height = camera_get_view_height(view_camera[0]);
 
-control_structure_surface(floor(_camera_x / TILE_SIZE) - (CHUNK_SIZE * 16), ceil((_camera_x + _camera_width) / TILE_SIZE) + (CHUNK_SIZE * 16));
+control_structure_surface(floor(_camera_x / TILE_SIZE) - (CHUNK_SIZE * 32), ceil((_camera_x + _camera_width) / TILE_SIZE) + (CHUNK_SIZE * 32));
 
 control_chunk(_player_x, _player_y, _camera_x, _camera_y, _camera_width, _camera_height);
 
