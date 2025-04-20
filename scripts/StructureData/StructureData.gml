@@ -1,0 +1,87 @@
+enum STRUCTURE_PLACEMENT_TYPE {
+    FLOOR,
+    CEILING
+}
+
+function StructureData(_width, _height, _placement, _is_persistent, _is_natural) constructor
+{
+    ___value = (_is_persistent << 17) | (_is_natural << 16) | (_height << 8) | _width;
+    
+    static get_width = function()
+    {
+        return ___value & 0xff;
+    }
+    
+    static get_height = function()
+    {
+        return (___value >> 8) & 0xff;
+    }
+    
+    static is_natural = function()
+    {
+        return !!((___value >> 16) & 1);
+    }
+    
+    static is_persistent = function()
+    {
+        return !!((___value >> 17) & 1);
+    }
+    
+    static __structure_placement_type = {
+        "floor": STRUCTURE_PLACEMENT_TYPE.FLOOR,
+        "ceiling": STRUCTURE_PLACEMENT_TYPE.CEILING
+    }
+    
+    var _placement_offset = _placement.offset;
+    
+    ___placement_value = (_placement_offset.y << 16) | (_placement_offset.x << 8) | __structure_placement_type[$ _placement.type];
+    
+    static get_placement_type = function()
+    {
+        return ___placement_value & 0xff;
+    }
+    
+    static get_placement_xoffset = function()
+    {
+        return (___placement_value >> 8) & 0xff;
+    }
+    
+    static get_placement_yoffset = function()
+    {
+        return (___placement_value >> 16) & 0xff;
+    }
+    
+    static set_arguments = function(_array)
+    {
+        parameter = _array;
+        
+        return self;
+    }
+    
+    static set_data = function(_function)
+    {
+        ___data = _function;
+        
+        return self;
+    }
+    
+    static get_data = function()
+    {
+        return ___data;
+    }
+}
+
+#macro STRUCTURE_VOID undefined
+
+global.structure_data = {}
+
+function init_structure(_directory, _namespace = "phantasia", _type = 0)
+{
+    /*
+    if (_type & INIT_TYPE.RESET)
+    {
+        init_data_reset("structure_data");
+    }
+    */
+    init_structure_recursive(_directory, _namespace, undefined);
+}

@@ -1,0 +1,22 @@
+{
+	"width": 5,
+	"height": 5,
+	"placement": {
+		"type": "floor",
+		"offset": {
+			"x": 0,
+			"y": 2
+		}
+	},
+	"data": {
+		"function": "phantasia:clump",
+		"parameter": {
+			"tile_base": {
+				"id": "phantasia:moss"
+			},
+			"tile_wall": {
+				"id": "phantasia:moss_wall"
+			}
+		}
+	}
+}

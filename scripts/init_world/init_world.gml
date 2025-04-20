@@ -33,7 +33,7 @@ function init_world(_directory, _namespace = "phantasia", _type = 0)
     {
         var _file = _files[i];
         
-        dbg_timer("init_data_world");
+        dbg_timer("init_world");
         
         var _json = json_parse(buffer_load_text($"{_directory}/{_file}/data.json"));
         
@@ -111,6 +111,6 @@ function init_world(_directory, _namespace = "phantasia", _type = 0)
         
         delete _json;
         
-        dbg_timer("init_data_world", $"[Init] Loaded World: \'{_file}\'");
+        dbg_timer("init_world", $"[Init] Loaded World: \'{_file}\'");
     }
 }

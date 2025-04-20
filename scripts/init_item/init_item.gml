@@ -9,7 +9,7 @@ function init_item(_directory, _namespace)
     {
         var _file = _files[i];
         
-        dbg_timer("init_data_item");
+        dbg_timer("init_item");
         
         var _json = buffer_load_json($"{_directory}/{_file}/data.json");
         
@@ -33,6 +33,6 @@ function init_item(_directory, _namespace)
         
         delete _json;
         
-        dbg_timer("init_data_item", $"[Init] Loaded Item: \'{_file}\'");
+        dbg_timer("init_item", $"[Init] Loaded Item: \'{_file}\'");
     }
 }

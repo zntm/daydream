@@ -11,13 +11,13 @@ function init_biome(_directory, _namespace = "phantasia", _type = 0)
     {
         var _file = _files_cave[i];
         
-        dbg_timer("init_data_biome_cave");
+        dbg_timer("init_biome_cave");
         
         var _json = buffer_load_json($"{_directory}/cave/{_file}");
         
-        _file = string_delete(_file, string_length(_file) - 4, 5);
+        var _name = string_delete(_file, string_length(_file) - 4, 5);
         
-        var _biome_data = new BiomeData(_file, BIOME_TYPE.CAVE);
+        var _biome_data = new BiomeData(_name, BIOME_TYPE.CAVE);
         
         _biome_data.set_background(_json.background);
         
@@ -30,11 +30,11 @@ function init_biome(_directory, _namespace = "phantasia", _type = 0)
         
         _biome_data.set_tile_foliage(_foliage.chance, _foliage.tile);
         
-        global.biome_data[$ $"{_namespace}:{_file}"] = _biome_data;
+        global.biome_data[$ $"{_namespace}:{_name}"] = _biome_data;
         
         delete _json;
         
-        dbg_timer("init_data_biome_cave", $"[Init] Loaded Cave Biome: \'{_file}\'");
+        dbg_timer("init_biome_cave", $"[Init] Loaded Cave Biome: \'{_name}\'");
     }
     
     #endregion
@@ -48,13 +48,13 @@ function init_biome(_directory, _namespace = "phantasia", _type = 0)
     {
         var _file = _files_surface[i];
         
-        dbg_timer("init_data_biome_surface");
+        dbg_timer("init_biome_surface");
         
         var _json = buffer_load_json($"{_directory}/surface/{_file}");
         
-        _file = string_delete(_file, string_length(_file) - 4, 5);
+        var _name = string_delete(_file, string_length(_file) - 4, 5);
         
-        var _biome_data = new BiomeData(_file, BIOME_TYPE.SURFACE);
+        var _biome_data = new BiomeData(_name, BIOME_TYPE.SURFACE);
         
         _biome_data.set_background(_json.background);
         
@@ -71,11 +71,11 @@ function init_biome(_directory, _namespace = "phantasia", _type = 0)
         
         _biome_data.set_tile_foliage(_foliage.chance, _foliage.tile);
         
-        global.biome_data[$ $"{_namespace}:{_file}"] = _biome_data;
+        global.biome_data[$ $"{_namespace}:{_name}"] = _biome_data;
         
         delete _json;
         
-        dbg_timer("init_data_biome_surface", $"[Init] Loaded Surface Biome: \'{_file}\'");
+        dbg_timer("init_biome_surface", $"[Init] Loaded Surface Biome: \'{_name}\'");
     }
     
     #endregion

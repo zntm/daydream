@@ -7,7 +7,7 @@ function init_background(_directory, _namespace = "phantasia", _type = 0)
 	
 	for (var i = 0; i < _files_length; ++i)
 	{
-		dbg_timer("init_data_background");
+		dbg_timer("init_background");
 		
 		var _file = _files[i];
         
@@ -28,12 +28,13 @@ function init_background(_directory, _namespace = "phantasia", _type = 0)
 			
 			sprite_set_offset(_sprite, _layer.xoffset, _layer.yoffset);
 			
-            _background_data.add_sprite(_sprite);
-            _background_data.set_sprite_size(j, _layer.width, _layer.height);
+            _background_data.add_sprite(_sprite, _layer.width, _layer.height);
 		}
         
         global.background_data[$ $"{_namespace}:{_file}"] = _background_data;
+        
+        delete _json;
 		
-		dbg_timer("init_data_background", $"[Init] Loaded Background: \'{_file}\' ({_background_length})");
+		dbg_timer("init_background", $"[Init] Loaded Background: \'{_file}\' ({_background_length})");
 	}
 }

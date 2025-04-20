@@ -18,14 +18,14 @@ function BackgroundData(_type) constructor
     }
     
     ___sprite = [];
-    ___sprite_width  = [];
-    ___sprite_height = [];
+    ___sprite_size = [];
     
     ___sprite_length = 0;
     
-    static add_sprite = function(_sprite)
+    static add_sprite = function(_sprite, _width, _height)
     {
         array_push(___sprite, _sprite);
+        array_push(___sprite_size, (_height << 16) | _width);
         
         ++___sprite_length;
         
@@ -37,22 +37,14 @@ function BackgroundData(_type) constructor
         return ___sprite[_index];
     }
     
-    static set_sprite_size = function(_index, _width, _height)
-    {
-        ___sprite_width[@ _index]  = _width;
-        ___sprite_height[@ _index] = _height;
-        
-        return self;
-    }
-    
     static get_sprite_width = function(_index)
     {
-        return ___sprite_width[_index];
+        return ___sprite_size[_index] & 0xffff;
     }
     
     static get_sprite_height = function(_index)
     {
-        return ___sprite_height[_index];
+        return (___sprite_size[_index] >> 16) & 0xffff;
     }
     
     static get_sprite_length = function()

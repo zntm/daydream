@@ -9,7 +9,7 @@ function init_music(_directory, _namespace = "phantasia", _type = 0)
     {
         var _file = _files[i];
         
-        dbg_timer("init_data_biome_surface");
+        dbg_timer("init_biome_surface");
         
         var _name = $"{_namespace}:{_file}";
         
@@ -20,6 +20,6 @@ function init_music(_directory, _namespace = "phantasia", _type = 0)
         
         delete _json;
         
-        dbg_timer("init_data_biome_surface", $"[Init] Loaded Music: \'{_file}\'");
+        dbg_timer("init_biome_surface", $"[Init] Loaded Music: \'{_file}\'");
     }
 }
