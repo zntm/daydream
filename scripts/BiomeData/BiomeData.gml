@@ -99,6 +99,8 @@ function BiomeData(_name, _type) constructor
     {
         ___tile_base = _data.base;
         ___tile_wall = _data.wall;
+        
+        return self;
     }
     
     static get_tile_base = function()
@@ -115,6 +117,8 @@ function BiomeData(_name, _type) constructor
     {
         ___tile_top_layer_base = _data.base;
         ___tile_top_layer_wall = _data.wall;
+        
+        return self;
     }
     
     static get_tile_top_layer_base = function()
@@ -131,6 +135,8 @@ function BiomeData(_name, _type) constructor
     {
         ___tile_sub_layer_base = _data.base;
         ___tile_sub_layer_wall = _data.wall;
+        
+        return self;
     }
     
     static get_tile_sub_layer_base = function()
@@ -143,19 +149,39 @@ function BiomeData(_name, _type) constructor
         return ___tile_sub_layer_wall;
     }
     
-    static set_tile_foliage = function(_chance, _tile)
+    static set_tile_foliage = function(_foliage)
     {
-        ___tile_foliage_chance = _chance;
-        ___tile_foliage_tile = choose_weighted_parse(_tile);
+        ___tile_foliage = _foliage;
+        ___tile_foliage_length = array_length(_foliage);
+        
+        return self;
     }
     
-    static get_tile_foliage_chance = function()
+    static get_tile_foliage = function(_index)
     {
-        return ___tile_foliage_chance;
+        return ___tile_foliage[_index];
     }
     
-    static get_tile_foliage_tile = function()
+    static get_tile_foliage_length = function()
     {
-        return ___tile_foliage_tile;
+        return self[$ "___tile_foliage_length"] ?? 0;
+    }
+    
+    static set_structure = function(_structure)
+    {
+        ___structure = _structure;
+        ___structure_length = array_length(_structure);
+        
+        return self;
+    }
+    
+    static get_structure = function(_index)
+    {
+        return ___structure[_index];
+    }
+    
+    static get_structure_length = function()
+    {
+        return self[$ "___structure_length"] ?? 0;
     }
 }

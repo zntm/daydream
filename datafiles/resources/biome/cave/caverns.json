@@ -32,24 +32,22 @@
             "id": "phantasia:stone_wall"
         }
 	},
-    "foliage": {
-        "chance": 0.1,
-        "tile": [
-            {
-                "id": "phantasia:blue_bells",
-                "weight": 2,
-                "placeable_on": [ "phantasia:stone" ]
-            },
-            {
-                "id": "phantasia:daisy",
-                "weight": 3,
-                "placeable_on": [ "phantasia:stone" ]
-            },
-            {
-                "id": "phantasia:globeflower",
-                "weight": 1,
-                "placeable_on": [ "phantasia:stone" ]
-            }
-        ]
-    }
+    "foliage": [
+        {
+            "id": "phantasia:blue_bells",
+            "chance": 0.08,
+            "placeable_on": [ "phantasia:stone" ]
+        },
+        {
+            "id": "phantasia:daisy",
+            "chance": 0.08,
+            "placeable_on": [ "phantasia:stone" ]
+        },
+        {
+            "id": "phantasia:globeflower",
+            "chance": 0.08,
+            "placeable_on": [ "phantasia:stone" ]
+        }
+    ],
+    "structure": []
 }

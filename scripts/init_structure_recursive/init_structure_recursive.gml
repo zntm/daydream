@@ -38,10 +38,11 @@ function init_structure_recursive(_directory, _namespace, _id)
                 var _json = buffer_load_json(_subdirectory);
                 var _data = _json.data;
                 
-                var _parameter = _natural_structure_data[$ _data[$ "function"]].get_parser(_data[$ "parameter"]);
+                var _parameter = (_natural_structure_data[$ _data[$ "function"]].get_parser())(_data[$ "parameter"]);
                 
                 global.structure_data[$ $"{_namespace}:{string_delete(_name, string_length(_name) - 4, 5)}"] = new StructureData(_json.width, _json.height, _json.placement, false, true)
-                    .set_arguments(_parameter);
+                    .set_parameter(_parameter)
+                    .set_data(_data);
                 
                 delete _json;
                 
@@ -91,7 +92,7 @@ function init_structure_recursive(_directory, _namespace, _id)
                     {
                         for (var m = CHUNK_DEPTH - 1; m >= 0; --m)
                         {
-                            _data[@ _index_xy + (m * _rectangle)] = STRUCTURE_VOID;
+                            _data[@ _index_xy + (m * _rectangle)] = TILE_STRUCTURE_VOID;
                         }
                         
                         continue;

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"control_structure_surface",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"control_structure_surface",
+  "parent":{
+    "name":"Control",
+    "path":"folders/Scripts/Control.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

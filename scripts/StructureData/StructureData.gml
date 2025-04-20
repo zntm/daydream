@@ -51,11 +51,16 @@ function StructureData(_width, _height, _placement, _is_persistent, _is_natural)
         return (___placement_value >> 16) & 0xff;
     }
     
-    static set_arguments = function(_array)
+    static set_parameter = function(_array)
     {
-        parameter = _array;
+        ___parameter = _array;
         
         return self;
+    }
+    
+    static get_parameter = function()
+    {
+        return ___parameter;
     }
     
     static set_data = function(_function)
@@ -70,8 +75,6 @@ function StructureData(_width, _height, _placement, _is_persistent, _is_natural)
         return ___data;
     }
 }
-
-#macro STRUCTURE_VOID undefined
 
 global.structure_data = {}
 

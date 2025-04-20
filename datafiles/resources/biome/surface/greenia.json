@@ -43,24 +43,28 @@
             }
 		}
 	},
-    "foliage": {
-        "chance": 0.1,
-        "tile": [
-            {
-                "id": "phantasia:blue_bells",
-                "weight": 2,
-                "placeable_on": [ "phantasia:grass_block" ]
-            },
-            {
-                "id": "phantasia:daisy",
-                "weight": 3,
-                "placeable_on": [ "phantasia:grass_block" ]
-            },
-            {
-                "id": "phantasia:globeflower",
-                "weight": 1,
-                "placeable_on": [ "phantasia:grass_block" ]
-            }
-        ]
-    }
+    "foliage": [
+        {
+            "id": "phantasia:blue_bells",
+            "chance": 0.08,
+            "placeable_on": [ "phantasia:grass_block" ]
+        },
+        {
+            "id": "phantasia:daisy",
+            "chance": 0.08,
+            "placeable_on": [ "phantasia:grass_block" ]
+        },
+        {
+            "id": "phantasia:globeflower",
+            "chance": 0.08,
+            "placeable_on": [ "phantasia:grass_block" ]
+        }
+    ],
+    "structure": [
+        {
+            "id": "phantasia:moss_clump",
+            "chance": 0.1,
+            "placeable_on": [ "phantasia:grass_block" ]
+        }
+    ]
 }

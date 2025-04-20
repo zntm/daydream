@@ -31,4 +31,17 @@ function render_pipeline()
         
         shader_reset();
     }
+    
+    with (obj_Chunk)
+    {
+        if (!chunk_display) continue;
+        
+        draw_rectangle(
+            x - (TILE_SIZE / 2),
+            y - (TILE_SIZE / 2),
+            x - (TILE_SIZE / 2) + CHUNK_SIZE_DIMENSION,
+            y - (TILE_SIZE / 2) + CHUNK_SIZE_DIMENSION,
+            true
+        )
+    }
 }

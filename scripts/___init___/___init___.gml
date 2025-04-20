@@ -9,6 +9,7 @@ enum VERSION_VALUE {
 #region Chunk
 
 #macro TILE_EMPTY 0
+#macro TILE_STRUCTURE_VOID -1
 
 #macro TILE_SIZE_BIT 4
 #macro TILE_SIZE (1 << TILE_SIZE_BIT)

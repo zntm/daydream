@@ -28,7 +28,7 @@ function NaturalStructureData() constructor
 }
 
 enum NATURAL_STRUCTURE_CLUMP {
-    USE_STRUCTURE_VOID,
+    USE_TILE_STRUCTURE_VOID,
     TILE_BASE,
     TILE_WALL,
     LENGTH
@@ -39,7 +39,7 @@ global.natural_structure_data[$ "phantasia:clump"] = new NaturalStructureData()
     {
         var _data = array_create(NATURAL_STRUCTURE_CLUMP.LENGTH);
         
-        _data[@ NATURAL_STRUCTURE_CLUMP.USE_STRUCTURE_VOID] = _parameter[$ "use_structure_void"] ?? true;
+        _data[@ NATURAL_STRUCTURE_CLUMP.USE_TILE_STRUCTURE_VOID] = _parameter[$ "use_TILE_STRUCTURE_VOID"] ?? true;
         
         _data[@ NATURAL_STRUCTURE_CLUMP.TILE_BASE] = _parameter.tile_base;
         _data[@ NATURAL_STRUCTURE_CLUMP.TILE_WALL] = _parameter.tile_wall;
@@ -49,13 +49,12 @@ global.natural_structure_data[$ "phantasia:clump"] = new NaturalStructureData()
     .set_function(function(_x, _y, _width, _height, _seed, _parameter, _item_data)
     {
         var _rectangle = _width * _height;
-        var _data = array_create(_rectangle * CHUNK_DEPTH, (_parameter[NATURAL_STRUCTURE_CLUMP.USE_STRUCTURE_VOID] ? STRUCTURE_VOID : TILE_EMPTY));
+        var _data = array_create(_rectangle * CHUNK_DEPTH, (_parameter[NATURAL_STRUCTURE_CLUMP.USE_TILE_STRUCTURE_VOID] ? TILE_STRUCTURE_VOID : TILE_EMPTY));
         
         var _width_last  = _width  - 1;
         var _height_last = _height - 1;
         
         var _depth_base = _rectangle * CHUNK_DEPTH_DEFAULT;
-        
         var _depth_wall = _rectangle * CHUNK_DEPTH_WALL;
         
         var _tile_wall = _parameter[NATURAL_STRUCTURE_CLUMP.TILE_WALL];
@@ -88,7 +87,7 @@ global.natural_structure_data[$ "phantasia:clump"] = new NaturalStructureData()
         
         var _has_side = false;
         
-        if (chance(0.5))
+        if (chance_seeded(0.5, _seed - ((_x + _y) * 8)))
         {
             _data[@ 1 + (2 * 5) + _depth_base] = new Tile(_tile_base_id, _item_data)
                 .set_variant(_tile_base_variant);
@@ -96,7 +95,7 @@ global.natural_structure_data[$ "phantasia:clump"] = new NaturalStructureData()
             _has_side += 1;
         }
         
-        if (chance(0.5))
+        if (chance_seeded(0.5, _seed - ((_x + _y) * 4)))
         {
             _data[@ 3 + (2 * 5) + _depth_base] = new Tile(_tile_base_id, _item_data)
                 .set_variant(_tile_base_variant);
@@ -104,7 +103,7 @@ global.natural_structure_data[$ "phantasia:clump"] = new NaturalStructureData()
             _has_side += 1;
         }
         
-        if (_has_side == 2) || ((_has_side == 1) && (chance(0.5)))
+        if (_has_side == 2) || ((_has_side == 1) && (chance_seeded(0.5, _seed - ((_x + _y) * 2))))
         {
             _data[@ 2 + (1 * 5) + _depth_base] = new Tile(_tile_base_id, _item_data)
                 .set_variant(_tile_base_variant);

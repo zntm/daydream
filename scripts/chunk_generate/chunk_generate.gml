@@ -3,8 +3,23 @@ function chunk_generate()
     static __cave_bit = array_create(CHUNK_SIZE);
     static __surface_height = array_create(CHUNK_SIZE);
     
+    static __structure_sort = function(_a, _b)
+    {
+        return ((_a.x * 0xffff) + _a.y) - ((_b.x * 0xffff) + _b.y);
+    }
+    
+    static __structure_list_rectangle = ds_list_create();
+    static __structure_list = ds_list_create();
+    
+    static __structure_array = [];
+    
     var _world_xstart = floor(x / CHUNK_SIZE_DIMENSION) * CHUNK_SIZE;
     var _world_ystart = floor(y / CHUNK_SIZE_DIMENSION) * CHUNK_SIZE;
+    
+    var _item_data = global.item_data;
+    
+    var _natural_structure_data = global.natural_structure_data;
+    var _structure_data = global.structure_data;
     
     var _world = global.world;
     
@@ -13,7 +28,7 @@ function chunk_generate()
     
     for (var i = 0; i < CHUNK_SIZE; ++i)
     {
-        var _world_x = _world_xstart + i;
+        var _world_x = chunk_xstart + i;
         
         var _surface_height = worldgen_get_surface_height(_world_x, _world_seed);
         
@@ -23,7 +38,7 @@ function chunk_generate()
         
         for (var j = 0; j < CHUNK_SIZE + 1; ++j)
         {
-            var _world_y = _world_ystart + j;
+            var _world_y = chunk_ystart + j;
             
             _cave_bit |= worldgen_get_cave(_world_x, _world_y, _surface_height, _world_seed) << j;
         }
@@ -31,9 +46,47 @@ function chunk_generate()
         __cave_bit[@ i] = _cave_bit;
     }
     
+    var _structure_rectangle_length = collision_rectangle_list(
+        x - (TILE_SIZE / 2),
+        y - (TILE_SIZE / 2),
+        x - (TILE_SIZE / 2) + CHUNK_SIZE_DIMENSION,
+        y - (TILE_SIZE / 2) + CHUNK_SIZE_DIMENSION,
+        obj_Structure,
+        false,
+        true,
+        __structure_list_rectangle,
+        false
+    );
+    
+    for (var i = 0; i < _structure_rectangle_length; ++i)
+    {
+        var _inst = __structure_list_rectangle[| i];
+        
+        if (_inst[$ "data"] == undefined)
+        {
+            var _data = _structure_data[$ _inst.structure_id];
+            
+            var _function = _natural_structure_data[$ _data.get_data()[$ "function"]].get_function();
+            
+            _inst.data = _function(
+                round(_inst.bbox_left / TILE_SIZE),
+                round(_inst.bbox_top  / TILE_SIZE),
+                _inst.image_xscale,
+                _inst.image_yscale,
+                _world_seed,
+                _data.get_parameter(),
+                _item_data
+            );
+        }
+    }
+    
+    ds_list_clear(__structure_list_rectangle);
+    
     for (var i = 0; i < CHUNK_SIZE; ++i)
     {
-        var _world_x = _world_xstart + i;
+        var _world_x = chunk_xstart + i;
+        
+        var _inst_x = _world_x * TILE_SIZE;
         
         var _surface_height = __surface_height[i];
         
@@ -41,7 +94,67 @@ function chunk_generate()
         
         for (var j = 0; j < CHUNK_SIZE; ++j)
         {
-            var _world_y = _world_ystart + j;
+            var _world_y = chunk_ystart + j;
+            
+            var _inst_y = _world_y * TILE_SIZE;
+            
+            if (position_meeting(_inst_x, _inst_y, obj_Structure))
+            {
+                var _structure_length = instance_position_list(_inst_x, _inst_y, obj_Structure, __structure_list, false);
+                
+                for (var l = 0; l < _structure_length; ++l)
+                {
+                    __structure_array[@ l] = __structure_list[| l];
+                }
+                
+                ds_list_clear(__structure_list);
+                
+                array_resize(__structure_array, _structure_length);
+                
+                array_sort(__structure_array, __structure_sort);
+                
+                for (var l = 0; l < _structure_length; ++l)
+                {
+                    var _inst = __structure_array[l];
+                    
+                    var _xscale = _inst.image_xscale;
+                    var _yscale = _inst.image_yscale;
+                    
+                    var _rectangle = _xscale * _yscale;
+                    
+                    var _structure_x = _world_x - ceil(_inst.bbox_left / TILE_SIZE);
+                    var _structure_y = _world_y - ceil(_inst.bbox_top  / TILE_SIZE);
+                    
+                    var _structure_id = _inst.structure_id;
+                    var _data = _inst.data;
+                    
+                    var _structure_index_xy = _structure_x + (_structure_y * _xscale);
+                    
+                    for (var m = CHUNK_DEPTH - 1; m >= 0; --m)
+                    {
+                        var _tile = _data[_structure_index_xy + (m * _rectangle)];
+                        
+                        if (_tile == TILE_STRUCTURE_VOID)
+                        {
+                            _tile = TILE_EMPTY;
+                        }
+                        
+                        chunk[@ (m << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = _tile;
+                        
+                        if (_tile != TILE_EMPTY)
+                        {
+                            chunk_display |= 1 << m;
+                        }
+                    }
+                    
+                    if (++_inst.count >= _rectangle)
+                    {
+                        instance_destroy(_inst);
+                    }
+                }
+                
+                continue;
+            }
             
             var _surface_biome = worldgen_get_biome_surface(_world_x, _world_y, _surface_height, _world_seed);
             var _cave_biome = worldgen_get_biome_cave(_world_x, _world_y, _surface_height, _world_seed);
