@@ -19,7 +19,5 @@ call_later(8, time_source_units_frames, function()
 {
     init("phantasia");
     
-    show_debug_message(global.splash_data)
-    
     room_goto(rm_World);
 }, -1);

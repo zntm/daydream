@@ -3,6 +3,8 @@ function chunk_generate()
     static __cave_bit = array_create(CHUNK_SIZE);
     static __surface_height = array_create(CHUNK_SIZE);
     
+    var _surface_height_max = 0;
+    
     static __structure_sort = function(_a, _b)
     {
         return ((_a.x * 0xffff) + _a.y) - ((_b.x * 0xffff) + _b.y);
@@ -34,6 +36,8 @@ function chunk_generate()
         
         __surface_height[@ i] = _surface_height;
         
+        _surface_height_max = min(_surface_height_max, _surface_height);
+        
         var _cave_bit = 0;
         
         for (var j = 0; j < CHUNK_SIZE + 1; ++j)
@@ -57,6 +61,8 @@ function chunk_generate()
         __structure_list_rectangle,
         false
     );
+    
+    if (_structure_rectangle_length <= 0) && (_surface_height_max > chunk_ystart + CHUNK_SIZE - 1) exit;
     
     for (var i = 0; i < _structure_rectangle_length; ++i)
     {

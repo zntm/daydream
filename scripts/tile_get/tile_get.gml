@@ -12,8 +12,9 @@ function tile_get(_x, _y, _z)
     
     if (!instance_exists(_inst))
     {
+        return tile_predict(_x, _y, _z);
         // TODO: Replace with prediction system
-        _inst = instance_create_layer(_chunk_x, _chunk_y, "Instances", obj_Chunk);
+        // _inst = instance_create_layer(_chunk_x, _chunk_y, "Instances", obj_Chunk);
     }
     
 	return _inst.chunk[tile_index(_x, _y, _z)];

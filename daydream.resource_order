@@ -73,6 +73,7 @@
     {"name":"tile_get","order":2,"path":"scripts/tile_get/tile_get.yy",},
     {"name":"tile_index","order":3,"path":"scripts/tile_index/tile_index.yy",},
     {"name":"tile_place","order":1,"path":"scripts/tile_place/tile_place.yy",},
+    {"name":"tile_predict","order":4,"path":"scripts/tile_predict/tile_predict.yy",},
     {"name":"vertex_buffer_exists","order":2,"path":"scripts/vertex_buffer_exists/vertex_buffer_exists.yy",},
     {"name":"worldgen_get_biome_surface","order":1,"path":"scripts/worldgen_get_biome_surface/worldgen_get_biome_surface.yy",},
     {"name":"worldgen_get_cave","order":2,"path":"scripts/worldgen_get_cave/worldgen_get_cave.yy",},

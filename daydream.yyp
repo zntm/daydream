@@ -156,6 +156,7 @@
     {"id":{"name":"tile_get","path":"scripts/tile_get/tile_get.yy",},},
     {"id":{"name":"tile_index","path":"scripts/tile_index/tile_index.yy",},},
     {"id":{"name":"tile_place","path":"scripts/tile_place/tile_place.yy",},},
+    {"id":{"name":"tile_predict","path":"scripts/tile_predict/tile_predict.yy",},},
     {"id":{"name":"Tile","path":"scripts/Tile/Tile.yy",},},
     {"id":{"name":"vertex_buffer_exists","path":"scripts/vertex_buffer_exists/vertex_buffer_exists.yy",},},
     {"id":{"name":"WorldData","path":"scripts/WorldData/WorldData.yy",},},
