@@ -4,7 +4,8 @@ enum VERSION_VALUE {
     PATCH = 0
 }
 
-#macro DATAFILES_RESOURCES (((GM_build_type == "run") ? $"{filename_dir(GM_project_filename)}/datafiles/" : "") + "resources")
+#macro PROGRAM_NAME "Daydream"
+#macro PROGRAM_DIRECTORY_RESOURCES (((GM_build_type == "run") ? $"{filename_dir(GM_project_filename)}/datafiles/" : "") + "resources")
 
 #region Chunk
 

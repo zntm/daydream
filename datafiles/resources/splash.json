@@ -1,0 +1,48 @@
+{
+    "1_1": [
+        "Happy new years!",
+        "New year, same old game!"
+    ],
+    "2_14": [
+        "143!",
+        "Love is in the air!",
+        "Happy Valentine's Day!",
+        "sqrt(-1) love you!"
+    ],
+    "3_14": [
+        "Happy Pi Day!",
+        "Totally irrational!"
+    ],
+    "4_1": [
+        "April Fools!",
+        "Kerprank'd!"
+    ],
+    "6_1": [
+        "Happy Pride Month!",
+        "Love is love!"
+    ],
+    "10_31": [
+        "boo",
+        "Happy Halloween!",
+        "Trick or Treat!"
+    ],
+    "12_25": [
+        "Merry Christmas!",
+        "Most wonderful time of the year!",
+        "'tis the season!"
+    ],
+    "12_31": [
+        "Purchasing fireworks...",
+        "See you next year!"
+    ],
+    "default": [
+        "A whole new world!",
+        "Break a leg!",
+        "It's a game!",
+        "May contain fractals.",
+        "Turing complete!",
+        "Wilder than ever!",
+        "Yes, sir!",
+        "You are valid!"
+    ]
+}
