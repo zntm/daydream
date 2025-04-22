@@ -35,7 +35,8 @@ function render_chunk(_uv, _inst, _z)
             var _index = _tile.get_index();
             
             var _data = _item_data[$ _item_id];
-            
+            /*
+            BUG: For some reason having this causes a buffer error
             if (_z == CHUNK_DEPTH_WALL) && (_index == 0b111_11_111) && (_data.is_obstructable())
             {
                 var _default_tile = _inst.chunk[(CHUNK_DEPTH_DEFAULT << (CHUNK_SIZE_BIT * 2)) | (_y << CHUNK_SIZE_BIT) | _x];
@@ -47,7 +48,7 @@ function render_chunk(_uv, _inst, _z)
                     if (_default_tile_data.has_type(ITEM_TYPE_BIT.SOLID)) && (_default_tile_data.is_tile()) && (_default_tile_data.is_obstructing()) continue;
                 }
             }
-            
+            */
             var _draw_x = _x * TILE_SIZE;
             var _draw_y = _y * TILE_SIZE;
             

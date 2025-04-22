@@ -34,35 +34,36 @@ function render_tile(_buffer, _uv, _surface_width, _surface_height, _name, _inde
     var _dx = _x + (_xw * _cos) - (_yh * _sin);
     var _dy = _y + (_xw * _sin) + (_yh * _cos);
     
+    
     // Triangle 1
     vertex_colour(_buffer, _colour, _alpha);
     vertex_position(_buffer, _ax, _ay);
     vertex_texcoord(_buffer, _v0, _v1);
-    vertex_float4(_buffer, _index, _.number, _.width, _.height);
+    vertex_float4(_buffer, _index, _.number, _.width, global.item_data[$ _name].get_animation_type());
     
     vertex_colour(_buffer, _colour, _alpha);
     vertex_position(_buffer, _bx, _by);
     vertex_texcoord(_buffer, _v2, _v1);
-    vertex_float4(_buffer, _index, _.number, _.width, _.height);
+    vertex_float4(_buffer, _index, _.number, _.width, global.item_data[$ _name].get_animation_type());
     
     vertex_colour(_buffer, _colour, _alpha);
     vertex_position(_buffer, _cx, _cy);
     vertex_texcoord(_buffer, _v0, _v3);
-    vertex_float4(_buffer, _index, _.number, _.width, _.height);
+    vertex_float4(_buffer, _index, _.number, _.width, global.item_data[$ _name].get_animation_type());
     
     // Triangle 2
     vertex_colour(_buffer, _colour, _alpha);
     vertex_position(_buffer, _bx, _by);
     vertex_texcoord(_buffer, _v2, _v1);
-    vertex_float4(_buffer, _index, _.number, _.width, _.height);
+    vertex_float4(_buffer, _index, _.number, _.width, global.item_data[$ _name].get_animation_type());
     
     vertex_colour(_buffer, _colour, _alpha);
     vertex_position(_buffer, _cx, _cy);
     vertex_texcoord(_buffer, _v0, _v3);
-    vertex_float4(_buffer, _index, _.number, _.width, _.height);
+    vertex_float4(_buffer, _index, _.number, _.width, global.item_data[$ _name].get_animation_type());
     
     vertex_colour(_buffer, _colour, _alpha);
     vertex_position(_buffer, _dx, _dy);
     vertex_texcoord(_buffer, _v2, _v3);
-    vertex_float4(_buffer, _index, _.number, _.width, _.height);
+    vertex_float4(_buffer, _index, _.number, _.width, global.item_data[$ _name].get_animation_type());
 }

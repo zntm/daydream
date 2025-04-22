@@ -12,7 +12,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
         
         shader_set(shd_Chunk);
         shader_set_uniform_f(__u_texture_size, texture_get_texel_width(_texture), texture_get_texel_height(_texture));
-        shader_set_uniform_f(__u_time, global.world.time / 1000);
+        shader_set_uniform_f(__u_time, round(global.world.time / 4));
         
         var _a = ceil(_camera_width  / (2 * CHUNK_SIZE_DIMENSION)) + 1;
         var _b = ceil(_camera_height / (2 * CHUNK_SIZE_DIMENSION)) + 1;

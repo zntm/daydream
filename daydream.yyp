@@ -119,7 +119,6 @@
     {"id":{"name":"choose_weighted_parse","path":"scripts/choose_weighted_parse/choose_weighted_parse.yy",},},
     {"id":{"name":"choose_weighted","path":"scripts/choose_weighted/choose_weighted.yy",},},
     {"id":{"name":"chunk_clear","path":"scripts/chunk_clear/chunk_clear.yy",},},
-    {"id":{"name":"chunk_generate_tile_base","path":"scripts/chunk_generate_tile_base/chunk_generate_tile_base.yy",},},
     {"id":{"name":"chunk_generate","path":"scripts/chunk_generate/chunk_generate.yy",},},
     {"id":{"name":"control_chunk_activity","path":"scripts/control_chunk_activity/control_chunk_activity.yy",},},
     {"id":{"name":"control_chunk","path":"scripts/control_chunk/control_chunk.yy",},},

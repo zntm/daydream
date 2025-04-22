@@ -6,7 +6,6 @@
         "length": 5,
         "edge_padding": 8
     },
-    "is_connected": true,
     "is_obstructing": true,
     "is_tile": true
 }

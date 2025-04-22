@@ -17,10 +17,12 @@ function init_item(_directory, _namespace)
         
         _item_data.set_type(_json.type);
         
+        _item_data.set_animation_type(_json[$ "animation_type"]);
+        
         _item_data.set_is_tile(_json[$ "is_tile"]);
         
-        _item_data.set_is_connected(_json[$ "is_connected"]);
         _item_data.set_is_obstructing(_json[$ "is_obstructing"]);
+        _item_data.set_is_obstructable(_json[$ "is_obstructable"]);
         
         var _sprite_data = _json.sprite;
         var _sprite = sprite_add($"{_directory}/{_file}/sprite.png", _sprite_data.length, false, false, _sprite_data.xoffset, _sprite_data.yoffset);

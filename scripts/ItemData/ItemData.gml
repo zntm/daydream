@@ -11,11 +11,16 @@ enum ITEM_TYPE_BIT {
 }
 
 enum ITEM_BOOLEAN {
-    IS_CONNECTED,
     IS_OBSTRUCTING,
     IS_OBSTRUCTABLE,
     IS_TILE,
     IS_PLANT
+}
+
+enum TILE_ANIMATION_TYPE {
+    DEFAULT,
+    CONNECTED,
+    INCREMENT
 }
 
 function ItemData() constructor
@@ -76,21 +81,6 @@ function ItemData() constructor
     
     ___boolean = 0;
     
-    static set_is_connected = function(_is_connected)
-    {
-        if (_is_connected)
-        {
-            ___boolean |= 1 << ITEM_BOOLEAN.IS_CONNECTED;
-        }
-        
-        return self;
-    }
-    
-    static is_connected = function()
-    {
-        return !!(___boolean & (1 << ITEM_BOOLEAN.IS_CONNECTED));
-    }
-    
     static set_is_obstructable = function(_is_obstructable)
     {
         if (_is_obstructable)
@@ -126,6 +116,8 @@ function ItemData() constructor
         if (_is_tile)
         {
             ___boolean |= 1 << ITEM_BOOLEAN.IS_TILE;
+            
+            set_animation_type("connected");
         }
         
         return self;
@@ -137,4 +129,22 @@ function ItemData() constructor
     }
     
     #endregion
+    
+    static set_animation_type = function(_type)
+    {
+        static __animation_type = {
+            "default": TILE_ANIMATION_TYPE.DEFAULT,
+            "connected": TILE_ANIMATION_TYPE.CONNECTED,
+            "increment": TILE_ANIMATION_TYPE.INCREMENT
+        }
+        
+        ___animation_type = __animation_type[$ _type];
+        
+        return self;
+    }
+    
+    static get_animation_type = function()
+    {
+        return self[$ "___animation_type"] ?? TILE_ANIMATION_TYPE.DEFAULT;
+    }
 }
