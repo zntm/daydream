@@ -1,12 +1,12 @@
 function carbasa_sort(_page)
 {
     var _data = global.carbasa_page_position[$ _page];
-    
+    /*
     array_sort(_data, function(a, b)
     {
-        return b.get_height() - a.get_height();
+        return ((b.get_height() * 2048) + b.get_width()) - ((a.get_height() * 2048) + a.get_width());
     });
-    
+    */
     var _length = array_length(_data);
     
     var current_x = 0;
@@ -36,10 +36,10 @@ function carbasa_sort(_page)
         _data[@ i].set_position(current_x, current_y);
         
         // Update current position
-        current_x += w + 1;
-        if (h + 1 > current_row_height)
+        current_x += w;
+        if (h >= current_row_height)
         {
-            current_row_height = h + 1;
+            current_row_height = h;
         }
         
         _width  = max(_width,  current_x + w);

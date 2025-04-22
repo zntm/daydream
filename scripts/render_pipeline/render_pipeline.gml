@@ -1,6 +1,8 @@
 function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
 {
     static __u_offset = shader_get_uniform(shd_Chunk, "u_offset");
+    static __u_texture_size = shader_get_uniform(shd_Chunk, "u_textureSize");
+    static __u_time = shader_get_uniform(shd_Chunk, "u_time");
     
     var _texture = global.carbasa_surface_texture[$ "item"];
     
@@ -9,6 +11,8 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
         var _bitmask = 1 << _z;
         
         shader_set(shd_Chunk);
+        shader_set_uniform_f(__u_texture_size, texture_get_texel_width(_texture), texture_get_texel_height(_texture));
+        shader_set_uniform_f(__u_time, global.world.time / 1000);
         
         var _a = ceil(_camera_width  / (2 * CHUNK_SIZE_DIMENSION)) + 1;
         var _b = ceil(_camera_height / (2 * CHUNK_SIZE_DIMENSION)) + 1;
@@ -40,30 +44,9 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
             }
         }
         
-        /*
-        with (obj_Chunk)
-        {
-            if (!is_in_view) || ((chunk_display & _bitmask) == 0) continue;
-            
-            if (!vertex_buffer_exists(chunk_vertex_buffer[_z]))
-            {
-                render_chunk(global.carbasa_surface_uv[$ "item"], id, _z);
-            }
-            
-            var _buffer = chunk_vertex_buffer[_z];
-            
-            if (vertex_buffer_exists(_buffer))
-            {
-                shader_set_uniform_f(__u_offset, x, y);
-                
-                vertex_submit(_buffer, pr_trianglelist, _texture);
-            }
-        }
-        */
         shader_reset();
     }
     
-    /*
     with (obj_Chunk)
     {
         if (!chunk_display) continue;
@@ -76,5 +59,4 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
             true
         )
     }
-    */
 }

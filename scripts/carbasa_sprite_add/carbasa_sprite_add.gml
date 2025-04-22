@@ -87,9 +87,9 @@ function carbasa_sprite_add(_page, _sprite, _name)
     surface_set_target(_surface);
     draw_clear_alpha(c_black, 0);
     
-    var _buffer = global.carbasa_page_vertex_buffer[$ _page];
+    // var _buffer = global.carbasa_page_vertex_buffer[$ _page];
     
-    vertex_begin(_buffer, global.carbasa_page_vertex_format);
+    // vertex_begin(_buffer, global.carbasa_page_vertex_format);
     
     var _uv = texture_get_uvs(global.carbasa_surface_texture[$ _page]);
     
@@ -120,8 +120,9 @@ function carbasa_sprite_add(_page, _sprite, _name)
         var _xoffset2 = _.get_xoffset();
         var _yoffset2 = _.get_yoffset();
         
-        draw_sprite(_sprite2, _index, _x + _xoffset2, _yoffset2);
+        draw_sprite(_sprite2, _index, _x + _xoffset2, _y + _yoffset2);
         
+        /*
         var _sprite_width  = _.get_width();
         var _sprite_height = _.get_height();
         
@@ -155,9 +156,10 @@ function carbasa_sprite_add(_page, _sprite, _name)
         vertex_colour(_buffer, c_white, 1);
         vertex_position(_buffer, _sprite_width, _sprite_height);
         vertex_texcoord(_buffer, _v2, _v3);
+        */
     }
     
-    vertex_end(_buffer);
+    // vertex_end(_buffer);
     
     surface_reset_target();
 }

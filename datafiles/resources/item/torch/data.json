@@ -1,0 +1,9 @@
+{
+    "type": "untouchable",
+    "sprite": {
+        "xoffset": 8,
+        "yoffset": 8,
+        "length": 6
+    },
+    "is_tile": false
+}

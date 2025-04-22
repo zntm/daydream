@@ -4,6 +4,8 @@ vertex_format_add_colour();
 vertex_format_add_position();
 vertex_format_add_texcoord();
 
+vertex_format_add_custom(vertex_type_float4, vertex_usage_texcoord);
+
 global.chunk_format_perspective = vertex_format_end();
 
 function render_chunk(_uv, _inst, _z)

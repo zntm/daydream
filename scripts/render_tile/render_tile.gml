@@ -1,6 +1,8 @@
 function render_tile(_buffer, _uv, _surface_width, _surface_height, _name, _index, _x, _y, _xscale, _yscale, _rotation, _colour, _alpha)
 {
-    var _sprite = global.carbasa_page_position[$ "item"][global.carbasa_page[$ "item"][$ _name].sprite[_index]];
+    var _ = global.carbasa_page[$ "item"][$ _name];
+    
+    var _sprite = global.carbasa_page_position[$ "item"][_.sprite[0]];
     
     var _width  = _sprite.get_width();
     var _height = _sprite.get_height();
@@ -36,25 +38,31 @@ function render_tile(_buffer, _uv, _surface_width, _surface_height, _name, _inde
     vertex_colour(_buffer, _colour, _alpha);
     vertex_position(_buffer, _ax, _ay);
     vertex_texcoord(_buffer, _v0, _v1);
+    vertex_float4(_buffer, _index, _.number, _.width, _.height);
     
     vertex_colour(_buffer, _colour, _alpha);
     vertex_position(_buffer, _bx, _by);
     vertex_texcoord(_buffer, _v2, _v1);
+    vertex_float4(_buffer, _index, _.number, _.width, _.height);
     
     vertex_colour(_buffer, _colour, _alpha);
     vertex_position(_buffer, _cx, _cy);
     vertex_texcoord(_buffer, _v0, _v3);
+    vertex_float4(_buffer, _index, _.number, _.width, _.height);
     
     // Triangle 2
     vertex_colour(_buffer, _colour, _alpha);
     vertex_position(_buffer, _bx, _by);
     vertex_texcoord(_buffer, _v2, _v1);
+    vertex_float4(_buffer, _index, _.number, _.width, _.height);
     
     vertex_colour(_buffer, _colour, _alpha);
     vertex_position(_buffer, _cx, _cy);
     vertex_texcoord(_buffer, _v0, _v3);
+    vertex_float4(_buffer, _index, _.number, _.width, _.height);
     
     vertex_colour(_buffer, _colour, _alpha);
     vertex_position(_buffer, _dx, _dy);
     vertex_texcoord(_buffer, _v2, _v3);
+    vertex_float4(_buffer, _index, _.number, _.width, _.height);
 }

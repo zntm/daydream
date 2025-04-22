@@ -48,3 +48,5 @@ if (mouse_check_button(mb_left))
 }
 
 control_chunk_activity(_camera_x, _camera_y, _camera_width, _camera_height);
+
+++global.world.time;
