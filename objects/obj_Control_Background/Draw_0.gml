@@ -15,6 +15,25 @@ draw_sprite_ext(
     1
 );
 
+draw_sprite_general(
+    spr_Glow_Corner,
+    0,
+    0,
+    0,
+    128,
+    1,
+    camera_get_view_x(view_camera[0]),
+    camera_get_view_y(view_camera[0]) + camera_get_view_height(view_camera[0]),
+    camera_get_view_height(view_camera[0]) / 128,
+    camera_get_view_width(view_camera[0]),
+    90,
+    _in_biome_data.get_sky_colour_gradient("day"),
+    _in_biome_data.get_sky_colour_gradient("day"),
+    _in_biome_data.get_sky_colour_gradient("day"),
+    _in_biome_data.get_sky_colour_gradient("day"),
+    1
+);
+
 var _camera_x = camera_get_view_x(view_camera[0]);
 var _camera_y = camera_get_view_y(view_camera[0]);
 

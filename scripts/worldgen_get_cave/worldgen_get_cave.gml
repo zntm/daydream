@@ -26,6 +26,11 @@ function worldgen_get_cave(_x, _y, _surface_height, _seed)
         global.worldgen_noise_cave_start[$ _index_start] = _buffer_start;
     }
     
+    if (_y < _surface_height)
+    {
+        return true;
+    }
+    
     if (_y <= _surface_height + _world_data.get_cave_start_min() + _buffer_start.get(_local_x, 0))
     {
         return false;

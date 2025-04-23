@@ -12,26 +12,7 @@ function tile_predict(_x, _y, _z)
         var _structure_xrelative = _inst.structure_xrelative;
         var _structure_yrelative = _inst.structure_yrelative;
         
-        var _data = _inst[$ "data"];
-        
-        if (_data == undefined)
-        {
-            var _structure_data = global.structure_data[$ _inst.structure_id];
-            
-            var _function = global.natural_structure_data[$ _structure_data.get_data()[$ "function"]].get_function();
-            
-            _data = _function(
-                _structure_xrelative,
-                _structure_yrelative,
-                _xscale,
-                _yscale,
-                _world_seed,
-                _structure_data.get_parameter(),
-                global.item_data
-            );
-            
-            _inst.data = _data;
-        }
+        var _data = structure_generate(_inst, _world_seed, global.item_data, global.structure_data, global.natural_structure_data);
         
         var _structure_x = _x - _structure_xrelative;
         var _structure_y = _y - _structure_yrelative;
@@ -55,7 +36,7 @@ function tile_predict(_x, _y, _z)
         {
             if (!worldgen_get_cave(_x, _y, _surface_height, _world_seed))
             {
-                var _tile_base = worldgen_get_tile_base(_x, _y, _surface_biome, _cave_biome, _surface_height, _world_seed);
+                var _tile_base = worldgen_get_tile_base(_x, _y, _surface_biome, _cave_biome, _surface_height, worldgen_get_cave(_x, _y - 1, _surface_height, _world_seed), _world_seed);
                 
                 if (_tile_base != TILE_EMPTY)
                 {
@@ -81,9 +62,9 @@ function tile_predict(_x, _y, _z)
     
     if (_z == _z2) && (_y >= _surface_height - 1)
     {
-        if (_y == _surface_height - 1) && (worldgen_get_cave(_x, _y, _surface_height, _world_seed)) && (!worldgen_get_cave(_x, _y + 1, _surface_height, _world_seed))
+        if (worldgen_get_cave(_x, _y, _surface_height, _world_seed)) && (!worldgen_get_cave(_x, _y + 1, _surface_height, _world_seed))
         {
-            var _tile_base = worldgen_get_tile_base(_x, _y + 1, _surface_biome, _cave_biome, _surface_height, _world_seed);
+            var _tile_base = worldgen_get_tile_base(_x, _y + 1, _surface_biome, _cave_biome, _surface_height, worldgen_get_cave(_x, _y - 1, _surface_height, _world_seed), _world_seed);
             
             var _tile_foliage = worldgen_get_tile_foliage(_x, _y, _surface_biome, _cave_biome, _tile_base, _surface_height, _world_seed);
             

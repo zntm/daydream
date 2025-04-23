@@ -17,13 +17,13 @@ function structure_create(_x, _y, _id, _seed, _force_surface)
     
     if (_force_surface)
     {
-        _x = _x - (round(_width  / 2) * TILE_SIZE);
-        _y = _y - (round(_height / 2) * TILE_SIZE);
+        _x = _x - (ceil(_width  / 2) * TILE_SIZE);
+        _y = _y - (ceil(_height / 2) * TILE_SIZE);
     }
     else
     {
-        _x = _x + (round(_width  / 2) * TILE_SIZE);
-        _y = _y + (round(_height / 2) * TILE_SIZE);
+        _x = _x + (ceil(_width  / 2) * TILE_SIZE);
+        _y = _y + (ceil(_height / 2) * TILE_SIZE);
     }
     
     with (instance_create_layer(_x, _y, "Instances", obj_Structure))

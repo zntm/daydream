@@ -58,8 +58,8 @@
 			"offset": {
 				"octave": 0.2,
 				"roughness": 4,
-				"min": 14,
-				"max": 24
+				"min": 22,
+				"max": 34
 			}
 		}
 	},

@@ -40,9 +40,9 @@ function chunk_generate()
         
         var _cave_bit = 0;
         
-        for (var j = 0; j < CHUNK_SIZE + 1; ++j)
+        for (var j = 0; j < CHUNK_SIZE + 2; ++j)
         {
-            var _world_y = chunk_ystart + j;
+            var _world_y = chunk_ystart + j - 1;
             
             _cave_bit |= worldgen_get_cave(_world_x, _world_y, _surface_height, _world_seed) << j;
         }
@@ -66,24 +66,7 @@ function chunk_generate()
     
     for (var i = 0; i < _structure_rectangle_length; ++i)
     {
-        var _inst = __structure_list_rectangle[| i];
-        
-        if (_inst[$ "data"] == undefined)
-        {
-            var _data = _structure_data[$ _inst.structure_id];
-            
-            var _function = _natural_structure_data[$ _data.get_data()[$ "function"]].get_function();
-            
-            _inst.data = _function(
-                _inst.structure_xrelative,
-                _inst.structure_yrelative,
-                _inst.image_xscale,
-                _inst.image_yscale,
-                _world_seed,
-                _data.get_parameter(),
-                _item_data
-            );
-        }
+        structure_generate(__structure_list_rectangle[| i], _world_seed, _item_data, _structure_data, _natural_structure_data);
     }
     
     ds_list_clear(__structure_list_rectangle);
@@ -150,6 +133,8 @@ function chunk_generate()
                         
                         if (_tile != TILE_EMPTY)
                         {
+                            ++tile_count[@ m];
+                            
                             chunk_display |= 1 << m;
                         }
                     }
@@ -166,12 +151,14 @@ function chunk_generate()
             
             if (_world_y >= _surface_height)
             {
-                if ((_skip_layer & (1 << CHUNK_DEPTH_DEFAULT)) == 0) && ((_cave_bit & (1 << j)) == 0)
+                if ((_skip_layer & (1 << CHUNK_DEPTH_DEFAULT)) == 0) && ((_cave_bit & (1 << (j + 1))) == 0)
                 {
-                    var _tile_base = worldgen_get_tile_base(_world_x, _world_y, _surface_biome, _cave_biome, _surface_height, _world_seed);
+                    var _tile_base = worldgen_get_tile_base(_world_x, _world_y, _surface_biome, _cave_biome, _surface_height, _cave_bit & (1 << j), _world_seed);
                     
                     if (_tile_base != TILE_EMPTY)
                     {
+                        ++tile_count[@ CHUNK_DEPTH_DEFAULT];
+                        
                         chunk[@ (CHUNK_DEPTH_DEFAULT << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_tile_base.id);
                         
                         chunk_display |= 1 << CHUNK_DEPTH_DEFAULT;
@@ -182,6 +169,8 @@ function chunk_generate()
                 
                 if ((_skip_layer & (1 << CHUNK_DEPTH_WALL)) == 0) && (_tile_wall != TILE_EMPTY)
                 {
+                    ++tile_count[@ CHUNK_DEPTH_WALL];
+                    
                     chunk[@ (CHUNK_DEPTH_WALL << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_tile_wall.id);
                     
                     chunk_display |= 1 << CHUNK_DEPTH_WALL;
@@ -192,14 +181,16 @@ function chunk_generate()
             
             if ((_skip_layer & (1 << _z)) == 0) && (_world_y >= _surface_height - 1)
             {
-                if (_world_y == _surface_height - 1) || ((_cave_bit & (1 << j)) && ((_cave_bit & (1 << (j + 1)))) == 0)
+                if (_world_y == _surface_height - 1) || ((_cave_bit & (1 << (j + 1))) && ((_cave_bit & (1 << (j + 2)))) == 0)
                 {
-                    var _tile_base = worldgen_get_tile_base(_world_x, _world_y + 1, _surface_biome, _cave_biome, _surface_height, _world_seed);
+                    var _tile_base = worldgen_get_tile_base(_world_x, _world_y + 1, _surface_biome, _cave_biome, _surface_height, _cave_bit & (1 << j), _world_seed);
                     
                     var _tile_foliage = worldgen_get_tile_foliage(_world_x, _world_y, _surface_biome, _cave_biome, _tile_base, _surface_height, _world_seed);
                     
                     if (_tile_foliage != TILE_EMPTY)
                     {
+                        ++tile_count[@ _z];
+                        
                         chunk[@ (_z << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_tile_foliage.id)
                             .set_xscale(choose(-1, 1));
                         

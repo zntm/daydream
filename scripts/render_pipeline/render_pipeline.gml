@@ -6,12 +6,15 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
     
     var _texture = global.carbasa_surface_texture[$ "item"];
     
+    var _texel_width  = texture_get_texel_width(_texture);
+    var _texel_height = texture_get_texel_height(_texture);
+    
     for (var _z = 0; _z < CHUNK_DEPTH; ++_z)
     {
         var _bitmask = 1 << _z;
         
         shader_set(shd_Chunk);
-        shader_set_uniform_f(__u_texture_size, texture_get_texel_width(_texture), texture_get_texel_height(_texture));
+        shader_set_uniform_f(__u_texture_size, _texel_width, _texel_height);
         shader_set_uniform_f(__u_time, round(global.world.time / 4));
         
         var _a = ceil(_camera_width  / (2 * CHUNK_SIZE_DIMENSION)) + 1;
@@ -26,21 +29,18 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 
                 var _inst = instance_position(_x, _y, obj_Chunk);
                 
-                if (!instance_exists(_inst)) || (!_inst.is_generated) || ((_inst.chunk_display & _bitmask) == 0) continue;
-                
-                if (!vertex_buffer_exists(_inst.chunk_vertex_buffer[_z]))
-                {
-                    render_chunk(global.carbasa_surface_uv[$ "item"], _inst, _z);
-                }
+                if (!instance_exists(_inst)) || (!_inst.is_generated) || ((_inst.chunk_display & _bitmask) == 0) || (_inst.tile_count[_z] <= 0) continue;
                 
                 var _buffer = _inst.chunk_vertex_buffer[_z];
                 
-                if (vertex_buffer_exists(_buffer))
+                if (!vertex_buffer_exists(_buffer))
                 {
-                    shader_set_uniform_f(__u_offset, _inst.x, _inst.y);
-                    
-                    vertex_submit(_buffer, pr_trianglelist, _texture);
+                    _buffer = render_chunk(global.carbasa_surface_uv[$ "item"], _inst, _z);
                 }
+                
+                shader_set_uniform_f(__u_offset, _inst.x, _inst.y);
+                
+                vertex_submit(_buffer, pr_trianglelist, _texture);
             }
         }
         

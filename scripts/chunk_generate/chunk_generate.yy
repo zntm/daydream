@@ -6,7 +6,7 @@
   "name":"chunk_generate",
   "parent":{
     "name":"Chunk",
-    "path":"folders/Scripts/Chunk.yy",
+    "path":"folders/Scripts/World Generation/Chunk.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
