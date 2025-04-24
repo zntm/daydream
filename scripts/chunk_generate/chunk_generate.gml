@@ -15,9 +15,6 @@ function chunk_generate()
     
     static __structure_array = [];
     
-    var _world_xstart = floor(x / CHUNK_SIZE_DIMENSION) * CHUNK_SIZE;
-    var _world_ystart = floor(y / CHUNK_SIZE_DIMENSION) * CHUNK_SIZE;
-    
     var _item_data = global.item_data;
     
     var _natural_structure_data = global.natural_structure_data;

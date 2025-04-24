@@ -38,8 +38,6 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                     _buffer = render_chunk(global.carbasa_surface_uv[$ "item"], _inst, _z);
                 }
                 
-                shader_set_uniform_f(__u_offset, _inst.x, _inst.y);
-                
                 vertex_submit(_buffer, pr_trianglelist, _texture);
             }
         }

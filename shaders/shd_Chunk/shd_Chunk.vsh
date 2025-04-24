@@ -8,14 +8,13 @@ attribute vec4 in_TextureFrameData;
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-uniform vec2 u_offset;
 uniform vec2 u_textureSize;
 
 uniform float u_time;
 
 void main()
 {
-    gl_Position = gm_Matrices[MATRIX_WORLD_VIEW_PROJECTION] * vec4(in_Position.x + u_offset.x, in_Position.y + u_offset.y, 0.0, 1.0);
+    gl_Position = gm_Matrices[MATRIX_WORLD_VIEW_PROJECTION] * vec4(in_Position.x, in_Position.y, 0.0, 1.0);
     
     v_vColour = in_Colour;
     

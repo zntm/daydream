@@ -21,6 +21,9 @@ function render_chunk(_uv, _inst, _z)
     var _surface_width  = (_size >>  0) & 0xffff;
     var _surface_height = (_size >> 16) & 0xffff;
     
+    var _xstart = _inst.x;
+    var _ystart = _inst.y;
+    
     for (var _x = 0; _x < CHUNK_SIZE; ++_x)
     {
         for (var _y = 0; _y < CHUNK_SIZE; ++_y)
@@ -34,8 +37,8 @@ function render_chunk(_uv, _inst, _z)
             
             var _data = _item_data[$ _item_id];
             
-            var _draw_x = _x * TILE_SIZE;
-            var _draw_y = _y * TILE_SIZE;
+            var _draw_x = _xstart + (_x * TILE_SIZE);
+            var _draw_y = _ystart + (_y * TILE_SIZE);
             
             var _xscale = _tile.get_xscale();
             var _yscale = _tile.get_yscale();
