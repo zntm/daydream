@@ -1,15 +1,13 @@
 {
   "$GMObject":"",
-  "%Name":"obj_Player",
-  "eventList":[
-    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":1,"eventType":3,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
-  ],
+  "%Name":"obj_Parent_Light",
+  "eventList":[],
   "managed":true,
-  "name":"obj_Player",
+  "name":"obj_Parent_Light",
   "overriddenProperties":[],
   "parent":{
-    "name":"Gameplay",
-    "path":"folders/Objects/Gameplay.yy",
+    "name":"Light",
+    "path":"folders/Objects/Gameplay/Light.yy",
   },
   "parentObjectId":null,
   "persistent":false,
@@ -29,10 +27,7 @@
   "resourceType":"GMObject",
   "resourceVersion":"2.0",
   "solid":false,
-  "spriteId":{
-    "name":"spr_Null_0",
-    "path":"sprites/spr_Null_0/spr_Null_0.yy",
-  },
+  "spriteId":null,
   "spriteMaskId":null,
   "visible":true,
 }

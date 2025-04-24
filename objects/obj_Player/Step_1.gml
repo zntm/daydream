@@ -18,4 +18,4 @@ if (keyboard_check(ord("D")))
     x += TILE_SIZE * 2;
 }
 
-camera_set_view_pos(view_camera[0], obj_Player.x - (camera_get_view_width(view_camera[0]) / 2), obj_Player.y - (camera_get_view_height(view_camera[0]) / 2));
+control_camera_pos(obj_Player.x - (global.camera_width / 2), obj_Player.y - (global.camera_height / 2));

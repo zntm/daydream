@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"control_camera_pos",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"control_camera_pos",
+  "parent":{
+    "name":"Camera",
+    "path":"folders/Scripts/Control/Camera.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

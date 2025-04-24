@@ -12,6 +12,20 @@ global.world = {
 
 obj_Player.y = global.world_data[$ global.world.dimension].get_surface_start() * TILE_SIZE;
 
+global.camera_width  = camera_get_view_width(view_camera[0]);
+global.camera_height = camera_get_view_height(view_camera[0]);
+
+var _camera_x = obj_Player.x - (global.camera_width  / 2);
+var _camera_y = obj_Player.y - (global.camera_height / 2);
+
+global.camera_x = _camera_x;
+global.camera_y = _camera_y;
+
+global.camera_x_real = _camera_x;
+global.camera_y_real = _camera_y;
+
+control_camera_pos(_camera_x, _camera_y);
+
 global.structure_range_surface = {
     min:  infinity,
     max: -infinity

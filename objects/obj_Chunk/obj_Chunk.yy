@@ -8,8 +8,8 @@
   "name":"obj_Chunk",
   "overriddenProperties":[],
   "parent":{
-    "name":"Objects",
-    "path":"folders/Objects.yy",
+    "name":"Gameplay",
+    "path":"folders/Objects/Gameplay.yy",
   },
   "parentObjectId":null,
   "persistent":false,
