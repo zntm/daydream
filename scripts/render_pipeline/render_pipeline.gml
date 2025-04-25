@@ -3,6 +3,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
     static __u_offset = shader_get_uniform(shd_Chunk, "u_offset");
     static __u_texture_size = shader_get_uniform(shd_Chunk, "u_textureSize");
     static __u_time = shader_get_uniform(shd_Chunk, "u_time");
+    static __u_skew = shader_get_uniform(shd_Chunk, "u_skew");
     
     var _texture = global.carbasa_surface_texture[$ "item"];
     
@@ -29,7 +30,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 
                 var _inst = instance_position(_x, _y, obj_Chunk);
                 
-                if (!instance_exists(_inst)) || (!_inst.is_generated) || ((_inst.chunk_display & _bitmask) == 0) || (_inst.tile_count[_z] <= 0) continue;
+                if (!instance_exists(_inst)) || (!_inst.is_generated) || ((_inst.chunk_display & _bitmask) == 0) || (_inst.chunk_count[_z] <= 0) continue;
                 
                 var _buffer = _inst.chunk_vertex_buffer[_z];
                 
@@ -37,6 +38,8 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 {
                     _buffer = render_chunk(global.carbasa_surface_uv[$ "item"], _inst, _z);
                 }
+                
+                shader_set_uniform_f_array(__u_skew, _inst.chunk_skew);
                 
                 vertex_submit(_buffer, pr_trianglelist, _texture);
             }

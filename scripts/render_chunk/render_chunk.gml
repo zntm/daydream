@@ -1,12 +1,17 @@
 vertex_format_begin();
 
-vertex_format_add_colour();
-vertex_format_add_position();
-vertex_format_add_texcoord();
+vertex_format_add_colour();   // 4
+vertex_format_add_position(); // 4 * 2
+vertex_format_add_texcoord(); // 4 * 2
 
-vertex_format_add_custom(vertex_type_float4, vertex_usage_texcoord);
+vertex_format_add_custom(vertex_type_float4, vertex_usage_texcoord); // 4 * 4
 
 global.chunk_format_perspective = vertex_format_end();
+
+global.cos = array_create_ext(360, function(_index)
+{
+    return dcos(_index);
+});
 
 function render_chunk(_uv, _inst, _z)
 {
@@ -50,6 +55,15 @@ function render_chunk(_uv, _inst, _z)
                 var _edge_padding = _data.get_edge_padding();
                 
                 render_connected_tile(_buffer, _uv, _surface_width, _surface_height, _item_id, _index, _tile.get_index_offset(), _edge_padding, _draw_x, _draw_y, _xscale, _yscale, _rotation, c_white, 1);
+                
+                continue;
+            }
+            
+            if (_data.is_foliage())
+            {
+                var _skew = _tile.get_skew();
+                
+                render_tile_foliage(_buffer, _uv, (_z << (CHUNK_SIZE_BIT * 2)) | (_y << CHUNK_SIZE_BIT) | _x, _surface_width, _surface_height, _item_id, _index + _tile.get_index_offset(), _draw_x, _draw_y, _xscale, _yscale, _skew, _rotation, c_white, 1);
                 
                 continue;
             }

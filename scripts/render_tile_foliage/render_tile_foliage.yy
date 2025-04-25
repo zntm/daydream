@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"control_chunk_activity",
+  "%Name":"render_tile_foliage",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"control_chunk_activity",
+  "name":"render_tile_foliage",
   "parent":{
-    "name":"Chunk",
-    "path":"folders/Scripts/Control/Chunk.yy",
+    "name":"Draw",
+    "path":"folders/Scripts/Render/Draw.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

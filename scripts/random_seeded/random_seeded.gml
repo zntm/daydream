@@ -1,4 +1,4 @@
-function random_seeded(_seed)
+function random_seeded(_value, _seed)
 {
     _seed ^= 0x8807_23bb;
     
@@ -14,5 +14,5 @@ function random_seeded(_seed)
         _seed ^= 0x23de_b9a1;
     }
     
-    return (_seed & 0x7fff_ffff) / 0x7fff_ffff;
+    return ((_seed & 0x7fff_ffff) / 0x7fff_ffff) * _value;
 }

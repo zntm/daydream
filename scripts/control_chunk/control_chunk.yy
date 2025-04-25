@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"control_chunk",
   "parent":{
-    "name":"Control",
-    "path":"folders/Scripts/Control.yy",
+    "name":"Chunk",
+    "path":"folders/Scripts/Control/Chunk.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

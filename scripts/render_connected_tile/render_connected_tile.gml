@@ -29,10 +29,7 @@ function render_connected_tile(_buffer, _uv, _surface_width, _surface_height, _n
         return 0;
     }
     
-    static __cos = array_create_ext(360, function(_index)
-    {
-        return dcos(_index);
-    });
+    static __cos = global.cos;
     
     var _cos = __cos[_rotation];
     var _sin = __cos[(_rotation + 90) % 360];

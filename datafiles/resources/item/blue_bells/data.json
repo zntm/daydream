@@ -5,5 +5,5 @@
         "yoffset": 10,
         "length": 1
     },
-    "is_tile": false
+    "is_foliage": true
 }

@@ -14,13 +14,14 @@ enum ITEM_BOOLEAN {
     IS_OBSTRUCTING,
     IS_OBSTRUCTABLE,
     IS_TILE,
-    IS_PLANT
+    IS_FOLIAGE
 }
 
 enum TILE_ANIMATION_TYPE {
     DEFAULT,
     CONNECTED,
-    INCREMENT
+    INCREMENT,
+    FOLIAGE
 }
 
 function ItemData() constructor
@@ -128,6 +129,23 @@ function ItemData() constructor
         return !!(___boolean & (1 << ITEM_BOOLEAN.IS_TILE));
     }
     
+    static set_is_foliage = function(_is_foliage)
+    {
+        if (_is_foliage)
+        {
+            ___boolean |= 1 << ITEM_BOOLEAN.IS_FOLIAGE;
+            
+            set_animation_type("foliage");
+        }
+        
+        return self;
+    }
+    
+    static is_foliage = function()
+    {
+        return !!(___boolean & (1 << ITEM_BOOLEAN.IS_FOLIAGE));
+    }
+    
     #endregion
     
     static set_animation_type = function(_type)
@@ -135,7 +153,8 @@ function ItemData() constructor
         static __animation_type = {
             "default": TILE_ANIMATION_TYPE.DEFAULT,
             "connected": TILE_ANIMATION_TYPE.CONNECTED,
-            "increment": TILE_ANIMATION_TYPE.INCREMENT
+            "increment": TILE_ANIMATION_TYPE.INCREMENT,
+            "foliage": TILE_ANIMATION_TYPE.FOLIAGE
         }
         
         ___animation_type = __animation_type[$ _type];

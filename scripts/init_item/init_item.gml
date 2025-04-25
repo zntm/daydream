@@ -20,6 +20,7 @@ function init_item(_directory, _namespace)
         _item_data.set_animation_type(_json[$ "animation_type"]);
         
         _item_data.set_is_tile(_json[$ "is_tile"]);
+        _item_data.set_is_foliage(_json[$ "is_foliage"]);
         
         _item_data.set_is_obstructing(_json[$ "is_obstructing"]);
         _item_data.set_is_obstructable(_json[$ "is_obstructable"]);

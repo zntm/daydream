@@ -3,6 +3,9 @@ var _in_biome_data = global.biome_data[$ in_biome.id];
 var _player_x = obj_Player.x;
 var _player_y = obj_Player.y;
 
+var _sky_colour_base = _in_biome_data.get_sky_colour_base("day");
+var _sky_colour_gradient = _in_biome_data.get_sky_colour_gradient("day");
+
 draw_sprite_ext(
     spr_Square,
     0,
@@ -11,7 +14,7 @@ draw_sprite_ext(
     camera_get_view_width(view_camera[0]),
     camera_get_view_height(view_camera[0]),
     0,
-    _in_biome_data.get_sky_colour_base("day"),
+    _sky_colour_base,
     1
 );
 
@@ -27,10 +30,10 @@ draw_sprite_general(
     camera_get_view_height(view_camera[0]) / 128,
     camera_get_view_width(view_camera[0]),
     90,
-    _in_biome_data.get_sky_colour_gradient("day"),
-    _in_biome_data.get_sky_colour_gradient("day"),
-    _in_biome_data.get_sky_colour_gradient("day"),
-    _in_biome_data.get_sky_colour_gradient("day"),
+    _sky_colour_gradient,
+    _sky_colour_gradient,
+    _sky_colour_gradient,
+    _sky_colour_gradient,
     1
 );
 
