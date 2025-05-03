@@ -1,4 +1,4 @@
-function render_tile_foliage(_buffer, _uv, _chunk_index, _surface_width, _surface_height, _name, _index, _x, _y, _xscale, _yscale, _skew, _rotation, _colour, _alpha)
+function render_tile_foliage(_buffer, _uv, _chunk_index, _surface_width, _surface_height, _name, _index, _x, _y, _xscale, _yscale, _rotation, _colour, _alpha)
 {
     var _ = global.carbasa_page[$ "item"][$ _name];
     
@@ -24,12 +24,10 @@ function render_tile_foliage(_buffer, _uv, _chunk_index, _surface_width, _surfac
     var _cos = __cos[_rotation];
     var _sin = __cos[(_rotation + 90) % 360];
     
-    var _x_skewed = _x + _skew;
-    
-    var _ax = _x_skewed + (_xoffset * _cos) - (_yoffset * _sin);
+    var _ax = _x + (_xoffset * _cos) - (_yoffset * _sin);
     var _ay = _y + (_xoffset * _sin) + (_yoffset * _cos);
     
-    var _bx = _x_skewed + (_xw * _cos) - (_yoffset * _sin);
+    var _bx = _x + (_xw * _cos) - (_yoffset * _sin);
     var _by = _y + (_xw * _sin) + (_yoffset * _cos);
     
     var _cx = _x + (_xoffset * _cos) - (_yh * _sin);

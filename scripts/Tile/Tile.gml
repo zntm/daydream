@@ -88,35 +88,5 @@ function Tile(_item_id, _item_data = global.item_data) constructor
         return (___value >> 24) & 0b111111111;
     }
     
-    static set_skew = function(_skew)
-    {
-        ___skew = _skew;
-        
-        return self;
-    }
-    
-    static get_skew = function()
-    {
-        return self[$ "___skew"];
-    }
-    
-    static set_skew_to = function(_skew_to)
-    {
-        ___skew_to = _skew_to;
-        
-        return self;
-    }
-    
-    static get_skew_to = function()
-    {
-        return self[$ "___skew_to"];
-    }
-    
     set_scale(1, 1);
-    
-    if (_item_data[$ _item_id].is_foliage())
-    {
-        set_skew(0);
-        set_skew_to(0);
-    }
 }

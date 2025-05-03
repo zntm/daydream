@@ -37,18 +37,16 @@ function control_chunk_foliage(_player_x, _player_y, _camera_x, _camera_y, _came
                         
                         if (chance(0.1))
                         {
-                            _tile.set_skew_to(random_range(0, _wind) * (TILE_SIZE / 2));
+                            _inst.chunk_skew_to[@ (CHUNK_DEPTH_FOLIAGE_BACK << (CHUNK_SIZE_BIT * 2)) | (m << CHUNK_SIZE_BIT) | l] = random_range(0, _wind) * (TILE_SIZE / 2);
                             
                             continue;
                         }
                         
-                        var _skew = _tile.get_skew();
-                        var _skew_to = _tile.get_skew_to();
+                        var _skew = _inst.chunk_skew[(CHUNK_DEPTH_FOLIAGE_BACK << (CHUNK_SIZE_BIT * 2)) | (m << CHUNK_SIZE_BIT) | l];
+                        var _skew_to = _inst.chunk_skew_to[(CHUNK_DEPTH_FOLIAGE_BACK << (CHUNK_SIZE_BIT * 2)) | (m << CHUNK_SIZE_BIT) | l];
                         
                         if (_skew != _skew_to)
                         {
-                            _tile.set_skew(lerp(_skew, _skew_to, 0.1));
-                            
                             _inst.chunk_skew[@ (CHUNK_DEPTH_FOLIAGE_BACK << (CHUNK_SIZE_BIT * 2)) | (m << CHUNK_SIZE_BIT) | l] = lerp(_skew, _skew_to, 0.1);
                         }
                     }
@@ -67,18 +65,16 @@ function control_chunk_foliage(_player_x, _player_y, _camera_x, _camera_y, _came
                         
                         if (chance(0.1))
                         {
-                            _tile.set_skew_to(random_range(0, _wind) * (TILE_SIZE / 2));
+                            _inst.chunk_skew_to[@ (CHUNK_DEPTH_FOLIAGE_FRONT << (CHUNK_SIZE_BIT * 2)) | (m << CHUNK_SIZE_BIT) | l] = random_range(0, _wind) * (TILE_SIZE / 2);
                             
                             continue;
                         }
                         
-                        var _skew = _tile.get_skew();
-                        var _skew_to = _tile.get_skew_to();
+                        var _skew = _inst.chunk_skew[(CHUNK_DEPTH_FOLIAGE_FRONT << (CHUNK_SIZE_BIT * 2)) | (m << CHUNK_SIZE_BIT) | l];
+                        var _skew_to = _inst.chunk_skew_to[(CHUNK_DEPTH_FOLIAGE_FRONT << (CHUNK_SIZE_BIT * 2)) | (m << CHUNK_SIZE_BIT) | l];
                         
                         if (_skew != _skew_to)
                         {
-                            _tile.set_skew(lerp(_skew, _skew_to, 0.1));
-                            
                             _inst.chunk_skew[@ (CHUNK_DEPTH_FOLIAGE_FRONT << (CHUNK_SIZE_BIT * 2)) | (m << CHUNK_SIZE_BIT) | l] = lerp(_skew, _skew_to, 0.1);
                         }
                     }

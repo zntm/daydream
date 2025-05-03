@@ -29,6 +29,41 @@ function render_connected_tile(_buffer, _uv, _surface_width, _surface_height, _n
         return 0;
     }
     
+    if (_index == 0b111_11_111)
+    {
+        render_tile(_buffer, _uv, _surface_width, _surface_height, _name, 0, _x, _y, _xscale, _yscale, _rotation, _colour, _alpha)
+        
+        exit;
+    }
+    
+    if (_index == 0b010_11_010)
+    {
+        render_tile(_buffer, _uv, _surface_width, _surface_height, _name, 3, _x, _y, _xscale, _yscale, _rotation, _colour, _alpha)
+        
+        exit;
+    }
+    
+    if (_index == 0b000_00_000)
+    {
+        render_tile(_buffer, _uv, _surface_width, _surface_height, _name, 4, _x, _y, _xscale, _yscale, _rotation, _colour, _alpha)
+        
+        exit;
+    }
+    
+    if ((_index & 0b010_11_010) == 0b010_00_010)
+    {
+        render_tile(_buffer, _uv, _surface_width, _surface_height, _name, 1, _x, _y, _xscale, _yscale, _rotation, _colour, _alpha)
+        
+        exit;
+    }
+    
+    if ((_index & 0b010_11_010) == 0b000_11_000)
+    {
+        render_tile(_buffer, _uv, _surface_width, _surface_height, _name, 2, _x, _y, _xscale, _yscale, _rotation, _colour, _alpha)
+        
+        exit;
+    }
+    
     static __cos = global.cos;
     
     var _cos = __cos[_rotation];
