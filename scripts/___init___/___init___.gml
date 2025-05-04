@@ -44,8 +44,3 @@ global.tile_connected_index = [
 ];
 
 #endregion
-
-surface_depth_disable(true);
-
-gpu_set_zwriteenable(false);
-gpu_set_ztestenable(false);

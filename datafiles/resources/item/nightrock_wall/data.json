@@ -6,6 +6,15 @@
         "length": 5,
         "edge_padding": 8
     },
+    "harvest": {
+        "hardness": 8,
+        "level": 0
+    },
+    "drop": {
+        "item": {
+            "id": "phantasia:nightrock_wall"
+        }
+    },
     "is_obstructing": true,
     "is_tile": true
 }

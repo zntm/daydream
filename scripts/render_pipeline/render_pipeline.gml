@@ -48,6 +48,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
         shader_reset();
     }
     
+    /*
     with (obj_Chunk)
     {
         if (!chunk_display) continue;
@@ -60,4 +61,5 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
             true
         )
     }
+    */
 }

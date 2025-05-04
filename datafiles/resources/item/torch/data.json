@@ -5,6 +5,15 @@
         "yoffset": 8,
         "length": 6
     },
+    "harvest": {
+        "hardness": 8,
+        "level": 0
+    },
+    "drop": {
+        "item": {
+            "id": "phantasia:torch"
+        }
+    },
     "animation_type": "increment",
     "is_tile": false
 }

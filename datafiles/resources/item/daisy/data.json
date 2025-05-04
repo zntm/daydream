@@ -5,5 +5,14 @@
         "yoffset": 10,
         "length": 1
     },
+    "harvest": {
+        "hardness": 8,
+        "level": 0
+    },
+    "drop": {
+        "item": {
+            "id": "phantasia:daisy"
+        }
+    },
     "is_foliage": true
 }

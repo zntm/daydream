@@ -78,6 +78,64 @@ function ItemData() constructor
         return self[$ "___edge_padding"];
     }
     
+    static set_harvest = function(_data)
+    {
+        ___harvest_value = (_data.level << 16) | _data.hardness;
+        
+        return self;
+    }
+    
+    static get_harvest_hardness = function()
+    {
+        return ___harvest_value & 0xffff;
+    }
+    
+    static get_hardvest_level = function()
+    {
+        return (___harvest_value >> 16) & 0xff;
+    }
+    
+    static set_drop = function(_drop)
+    {
+        var _drop_chance = _drop[$ "chance"];
+        
+        if (_drop_chance != undefined)
+        {
+            ___drop_chance = _drop_chance;
+        }
+        
+        var _drop_item = _drop[$ "item"];
+        
+        if (_drop_item != undefined)
+        {
+            ___drop_item = _drop_item;
+        }
+        
+        var _drop_loot = _drop[$ "loot"];
+        
+        if (_drop_loot != undefined)
+        {
+            ___drop_loot = _drop_loot;
+        }
+        
+        return self;
+    }
+    
+    static get_drop_chance = function()
+    {
+        return self[$ "___drop_chance"] ?? 1;
+    }
+    
+    static get_drop_item = function()
+    {
+        return self[$ "___drop_item"];
+    }
+    
+    static get_drop_loot = function()
+    {
+        return self[$ "___drop_loot"];
+    }
+    
     #region Boolean
     
     ___boolean = 0;
