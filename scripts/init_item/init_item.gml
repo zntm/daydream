@@ -26,7 +26,21 @@ function init_item(_directory, _namespace)
         _item_data.set_is_foliage(_json[$ "is_foliage"]);
         
         var _sprite_data = _json.sprite;
-        var _sprite = sprite_add($"{_directory}/{_file}/sprite.png", _sprite_data.length, false, false, _sprite_data.xoffset, _sprite_data.yoffset);
+        
+        var _sprite_xoffset = _sprite_data.xoffset;
+        var _sprite_yoffset = _sprite_data.yoffset;
+        
+        var _sprite = sprite_add($"{_directory}/{_file}/sprite.png", _sprite_data.length, false, false, _sprite_xoffset, _sprite_yoffset);
+        
+        var _collision_box = _json[$ "collision_box"];
+        
+        _item_data.set_collision_box(_collision_box ?? {
+            left: _sprite_xoffset,
+            top:  _sprite_yoffset,
+            right:  sprite_get_width(_sprite),
+            bottom: sprite_get_height(_sprite),
+            type: "rectangle"
+        });
         
         _item_data.set_edge_padding(_sprite_data[$ "edge_padding"]);
         

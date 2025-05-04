@@ -1,12 +1,14 @@
 enum ITEM_TYPE {
     DEFAULT,
     SOLID,
+    PLATFORM,
     UNTOUCHABLE
 }
 
 enum ITEM_TYPE_BIT {
     DEFAULT     = 1 << ITEM_TYPE.DEFAULT,
     SOLID       = 1 << ITEM_TYPE.SOLID,
+    PLATFORM    = 1 << ITEM_TYPE.PLATFORM,
     UNTOUCHABLE = 1 << ITEM_TYPE.UNTOUCHABLE
 }
 
@@ -22,12 +24,18 @@ enum TILE_ANIMATION_TYPE {
     FOLIAGE
 }
 
+enum TILE_COLLISION_BOX_TYPE {
+    RECTANGLE,
+    TRIANGLE
+}
+
 function ItemData() constructor
 {
     static __item_type = {
-        "default":     ITEM_TYPE_BIT.DEFAULT,
-        "solid":       ITEM_TYPE_BIT.SOLID,
-        "untouchable": ITEM_TYPE_BIT.UNTOUCHABLE
+        "default":     ITEM_TYPE.DEFAULT,
+        "solid":       ITEM_TYPE.SOLID,
+        "platform":    ITEM_TYPE.PLATFORM,
+        "untouchable": ITEM_TYPE.UNTOUCHABLE
     }
 
     ___type = 0;
@@ -144,6 +152,45 @@ function ItemData() constructor
     static get_drop_loot = function()
     {
         return self[$ "___drop_loot"];
+    }
+    
+    static set_collision_box = function(_collision_box)
+    {
+        static __collision_box_type = {
+            "rectangle": TILE_COLLISION_BOX_TYPE.RECTANGLE,
+            "triangle": TILE_COLLISION_BOX_TYPE.TRIANGLE
+        }
+        
+        ___colliison_box = (__collision_box_type[$ _collision_box.type] << 32) | ((_collision_box.bottom + 0x80) << 24) | ((_collision_box.right + 0x80) << 16) | ((_collision_box.top + 0x80) << 8) | (_collision_box.left + 0x80);
+        
+        delete _collision_box;
+        
+        return self;
+    }
+    
+    static get_collision_box_left = function()
+    {
+        return ((___colliison_box >> 0) & 0xff) - 0x80;
+    }
+    
+    static get_collision_box_top = function()
+    {
+        return ((___colliison_box >> 8) & 0xff) - 0x80;
+    }
+    
+    static get_collision_box_right = function()
+    {
+        return ((___colliison_box >> 16) & 0xff) - 0x80;
+    }
+    
+    static get_collision_box_bottom = function()
+    {
+        return ((___colliison_box >> 24) & 0xff) - 0x80;
+    }
+    
+    static get_collision_box_type = function()
+    {
+        return (___colliison_box >> 32) & 0xff;
     }
     
     #region Boolean
