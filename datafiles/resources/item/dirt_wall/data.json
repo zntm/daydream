@@ -15,6 +15,5 @@
             "id": "phantasia:dirt_wall"
         }
     },
-    "is_obstructable": true,
     "is_tile": true
 }

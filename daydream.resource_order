@@ -3,6 +3,7 @@
     {"name":"Data","order":1,"path":"folders/Data.yy",},
     {"name":"Background Data","order":5,"path":"folders/Data/Background Data.yy",},
     {"name":"Biome Data","order":6,"path":"folders/Data/Biome Data.yy",},
+    {"name":"Rarity Data","order":9,"path":"folders/Data/Rarity Data.yy",},
     {"name":"Item Data","order":2,"path":"folders/Data/Item Data.yy",},
     {"name":"Music Data","order":3,"path":"folders/Data/Music Data.yy",},
     {"name":"SFX Data","order":4,"path":"folders/Data/SFX Data.yy",},

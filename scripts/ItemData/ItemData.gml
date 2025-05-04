@@ -11,8 +11,6 @@ enum ITEM_TYPE_BIT {
 }
 
 enum ITEM_BOOLEAN {
-    IS_OBSTRUCTING,
-    IS_OBSTRUCTABLE,
     IS_TILE,
     IS_FOLIAGE
 }
@@ -26,16 +24,16 @@ enum TILE_ANIMATION_TYPE {
 
 function ItemData() constructor
 {
+    static __item_type = {
+        "default":     ITEM_TYPE_BIT.DEFAULT,
+        "solid":       ITEM_TYPE_BIT.SOLID,
+        "untouchable": ITEM_TYPE_BIT.UNTOUCHABLE
+    }
+
     ___type = 0;
     
     static set_type = function(_value)
     {
-        static __item_type = {
-            "default":     ITEM_TYPE_BIT.DEFAULT,
-            "solid":       ITEM_TYPE_BIT.SOLID,
-            "untouchable": ITEM_TYPE_BIT.UNTOUCHABLE
-        }
-        
         if (typeof(_value) == "string")
         {
             ___type |= __item_type[$ _value];
@@ -78,9 +76,16 @@ function ItemData() constructor
         return self[$ "___edge_padding"];
     }
     
-    static set_harvest = function(_data)
+    static set_harvest = function(_harvest)
     {
-        ___harvest_value = (_data.level << 16) | _data.hardness;
+        ___harvest_value = (_harvest.level << 16) | _harvest.hardness;
+        
+        var _harvest_type = _harvest[$ "type"];
+        
+        if (_harvest_type != undefined)
+        {
+            ___harvest_type = __item_type[$ _harvest_type];
+        }
         
         return self;
     }
@@ -93,6 +98,11 @@ function ItemData() constructor
     static get_hardvest_level = function()
     {
         return (___harvest_value >> 16) & 0xff;
+    }
+    
+    static get_hardvest_type = function()
+    {
+        return self[$ "___harvest_type"];
     }
     
     static set_drop = function(_drop)
@@ -139,36 +149,6 @@ function ItemData() constructor
     #region Boolean
     
     ___boolean = 0;
-    
-    static set_is_obstructable = function(_is_obstructable)
-    {
-        if (_is_obstructable)
-        {
-            ___boolean |= 1 << ITEM_BOOLEAN.IS_OBSTRUCTABLE;
-        }
-        
-        return self;
-    }
-    
-    static is_obstructable = function()
-    {
-        return !!(___boolean & (1 << ITEM_BOOLEAN.IS_OBSTRUCTABLE));
-    }
-    
-    static set_is_obstructing = function(_is_obstructing)
-    {
-        if (_is_obstructing)
-        {
-            ___boolean |= 1 << ITEM_BOOLEAN.IS_OBSTRUCTING;
-        }
-        
-        return self;
-    }
-    
-    static is_obstructing = function()
-    {
-        return !!(___boolean & (1 << ITEM_BOOLEAN.IS_OBSTRUCTING));
-    }
     
     static set_is_tile = function(_is_tile)
     {
