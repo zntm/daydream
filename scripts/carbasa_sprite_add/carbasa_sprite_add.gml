@@ -87,10 +87,6 @@ function carbasa_sprite_add(_page, _sprite, _name)
     surface_set_target(_surface);
     draw_clear_alpha(c_black, 0);
     
-    // var _buffer = global.carbasa_page_vertex_buffer[$ _page];
-    
-    // vertex_begin(_buffer, global.carbasa_page_vertex_format);
-    
     var _uv = texture_get_uvs(global.carbasa_surface_texture[$ _page]);
     
     global.carbasa_surface_uv[$ _page] = _uv;
@@ -121,45 +117,14 @@ function carbasa_sprite_add(_page, _sprite, _name)
         var _yoffset2 = _.get_yoffset();
         
         draw_sprite(_sprite2, _index, _x + _xoffset2, _y + _yoffset2);
-        
-        /*
-        var _sprite_width  = _.get_width();
-        var _sprite_height = _.get_height();
-        
-        var _v0 = _uv0 + ((_x / _surface_width)  * _uv_width);
-        var _v1 = _uv1 + ((_y / _surface_height) * _uv_height);
-        var _v2 = _v0  + ((_sprite_width  / _surface_width)  * _uv_width);
-        var _v3 = _v1  + ((_sprite_height / _surface_height) * _uv_height);
-        
-        // Triangle 1
-        vertex_colour(_buffer, c_white, 1);
-        vertex_position(_buffer, 0, 0);
-        vertex_texcoord(_buffer, _v0, _v1);
-        
-        vertex_colour(_buffer, c_white, 1);
-        vertex_position(_buffer, _sprite_width, 0);
-        vertex_texcoord(_buffer, _v2, _v1);
-        
-        vertex_colour(_buffer, c_white, 1);
-        vertex_position(_buffer, 0, _sprite_height);
-        vertex_texcoord(_buffer, _v0, _v3);
-        
-        // Triangle 2
-        vertex_colour(_buffer, c_white, 1);
-        vertex_position(_buffer, _sprite_width, 0);
-        vertex_texcoord(_buffer, _v2, _v1);
-        
-        vertex_colour(_buffer, c_white, 1);
-        vertex_position(_buffer, 0, _sprite_height);
-        vertex_texcoord(_buffer, _v0, _v3);
-        
-        vertex_colour(_buffer, c_white, 1);
-        vertex_position(_buffer, _sprite_width, _sprite_height);
-        vertex_texcoord(_buffer, _v2, _v3);
-        */
     }
     
-    // vertex_end(_buffer);
-    
     surface_reset_target();
+    
+    if (!buffer_exists(global.carbasa_surface_buffer))
+    {
+        global.carbasa_surface_buffer[$ _page] = buffer_create(0xff, buffer_grow, 1);
+    }
+    
+    buffer_get_surface(global.carbasa_surface_buffer[$ _page], global.carbasa_surface[$ _page], 0);
 }

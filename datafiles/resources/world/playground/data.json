@@ -74,10 +74,10 @@
 	},
 	"cave": {
 		"start": {
-			"octave": 0.65,
+			"octave": 0.45,
 			"roughness": 6,
-			"min": 12,
-			"max": 32
+			"min": 6,
+			"max": 22
 		},
 		"system": [
 			{

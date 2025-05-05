@@ -1,7 +1,5 @@
 function control_chunk_foliage(_player_x, _player_y, _camera_x, _camera_y, _camera_width, _camera_height)
 {
-    var _tile_connected_index = global.tile_connected_index;
-    
     var _item_data = global.item_data;
     
     var _a = ceil(_camera_width  / (2 * CHUNK_SIZE_DIMENSION)) + 1;
