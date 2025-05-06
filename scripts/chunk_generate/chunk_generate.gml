@@ -178,9 +178,9 @@ function chunk_generate()
             
             if ((_skip_layer & (1 << _z)) == 0) && (_world_y >= _surface_height - 1)
             {
-                if (_world_y == _surface_height - 1) || ((_cave_bit & (1 << (j + 1))) && ((_cave_bit & (1 << (j + 2)))) == 0)
+                if ((_world_y == _surface_height - 1) || (_cave_bit & (1 << (j + 1)))) && (((_cave_bit & (1 << (j + 2)))) == 0)
                 {
-                    var _tile_base = worldgen_get_tile_base(_world_x, _world_y + 1, _surface_biome, _cave_biome, _surface_height, _cave_bit & (1 << j), _world_seed);
+                    var _tile_base = worldgen_get_tile_base(_world_x, _world_y + j, _surface_biome, _cave_biome, _surface_height, _cave_bit & (1 << (j + 1)), _world_seed);
                     
                     var _tile_foliage = worldgen_get_tile_foliage(_world_x, _world_y, _surface_biome, _cave_biome, _tile_base, _surface_height, _world_seed);
                     

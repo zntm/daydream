@@ -17,7 +17,7 @@ function worldgen_get_humidity(_x, _y, _seed)
         var _octave = _world_data.get_surface_biome_humidity_octave();
         var _roughness = _world_data.get_surface_biome_humidity_roughness();
         
-        _buffer = new Noise(_x2 * WORLDGEN_HUMIDITY_NOISE_SIZE, _y2 * WORLDGEN_HUMIDITY_NOISE_SIZE, WORLDGEN_HUMIDITY_NOISE_SIZE, WORLDGEN_HUMIDITY_NOISE_SIZE, WORLDGEN_SIZE_HUMIDITY, _octave, _roughness, _seed);
+        _buffer = new Noise(_x2 * WORLDGEN_HUMIDITY_NOISE_SIZE, _y2 * WORLDGEN_HUMIDITY_NOISE_SIZE, WORLDGEN_HUMIDITY_NOISE_SIZE, WORLDGEN_HUMIDITY_NOISE_SIZE, WORLDGEN_SIZE_HUMIDITY, _octave, _roughness, _seed - 0x7fda);
         
         global.worldgen_noise_humidity[$ _index] = _buffer;
     }

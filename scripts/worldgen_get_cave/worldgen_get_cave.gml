@@ -31,7 +31,7 @@ function worldgen_get_cave(_x, _y, _surface_height, _seed)
         return true;
     }
     
-    if (_y <= _surface_height + _world_data.get_cave_start_min() + _buffer_start.get(_local_x, 0))
+    if (_y < _surface_height + _world_data.get_cave_start_min() + _buffer_start.get(_local_x, 0))
     {
         return false;
     }
@@ -52,7 +52,7 @@ function worldgen_get_cave(_x, _y, _surface_height, _seed)
             var _octave = _world_data.get_cave_system_threshold_octave(i);
             var _roughness = _world_data.get_cave_system_threshold_roughness(i);
             
-            _buffer = new Noise(_x2 * WORLDGEN_CAVE_NOISE_SIZE, _y2 * WORLDGEN_CAVE_NOISE_SIZE, WORLDGEN_CAVE_NOISE_SIZE, WORLDGEN_CAVE_NOISE_SIZE, 255, _octave, _roughness, _seed);
+            _buffer = new Noise(_x2 * WORLDGEN_CAVE_NOISE_SIZE, _y2 * WORLDGEN_CAVE_NOISE_SIZE, WORLDGEN_CAVE_NOISE_SIZE, WORLDGEN_CAVE_NOISE_SIZE, 255, _octave, _roughness, _seed - (i * 512));
             
             global.worldgen_noise_cave[$ _index] = _buffer;
         }

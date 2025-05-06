@@ -7,8 +7,8 @@ function tile_meeting(_x, _y, _z = CHUNK_DEPTH_DEFAULT, _type = ITEM_TYPE.SOLID 
 	
 	var _item_data = global.item_data;
 	
-	var _xscale = abs(image_xscale);
-	var _yscale = abs(image_yscale);
+	var _xscale = abs(image_xscale / 8);
+	var _yscale = abs(image_yscale / 8);
     
     var _collision_box = entity_value.collision_box;
     
@@ -18,8 +18,8 @@ function tile_meeting(_x, _y, _z = CHUNK_DEPTH_DEFAULT, _type = ITEM_TYPE.SOLID 
     var _x1 = _x - (_xscale * (_collision_width  / 2));
     var _y1 = _y - (_yscale * _collision_height);
     
-    var _x2 = _x1 + (_xscale * _collision_width)  - 1;
-    var _y2 = _y1 + (_yscale * _collision_height) - 1;
+    var _x2 = _x1 - 1 + (_xscale * _collision_width);
+    var _y2 = _y  - 1;
     
 	var _xstart = floor(_x1 / TILE_SIZE) - 1;
 	var _ystart = floor(_y1 / TILE_SIZE) - 1;

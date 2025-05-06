@@ -48,11 +48,11 @@
 		},
 		"surface": {
 			"heat": {
-				"octave": 7.4,
+				"octave": 0.42,
 				"roughness": 1
 			},
 			"humidity": {
-				"octave": 9.2,
+				"octave": 0.82,
 				"roughness": 3
 			},
 			"offset": {
@@ -74,10 +74,10 @@
 	},
 	"cave": {
 		"start": {
-			"octave": 0.45,
-			"roughness": 6,
-			"min": 6,
-			"max": 22
+			"octave": 0.62,
+			"roughness": 2,
+			"min": 0,
+			"max": 12
 		},
 		"system": [
 			{
@@ -86,10 +86,22 @@
 					"max": 1000
 				},
 				"threshold": {
-					"octave": 0.52,
-					"roughness": 5,
-					"min": 88,
-					"max": 110
+					"octave": 0.64,
+					"roughness": 3,
+					"min": 118,
+					"max": 126
+				}
+			},
+			{
+				"range": {
+					"min": 600,
+					"max": 1000
+				},
+				"threshold": {
+					"octave": 0.66,
+					"roughness": 1,
+					"min": 116,
+					"max": 130
 				}
 			}
 		]
