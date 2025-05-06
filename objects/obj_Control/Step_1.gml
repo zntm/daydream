@@ -17,6 +17,4 @@ for (var i = 0; i < _length; ++i)
         
         global.carbasa_surface_uv[$ _page] = texture_get_uvs(global.carbasa_surface_texture[$ _page]);
     }
-    
-    show_debug_message(global.carbasa_surface[$ _page])
 }

@@ -32,22 +32,6 @@
             "id": "phantasia:stone_wall"
         }
 	},
-    "foliage": [
-        {
-            "id": "phantasia:blue_bells",
-            "chance": 0.08,
-            "placeable_on": [ "phantasia:stone" ]
-        },
-        {
-            "id": "phantasia:daisy",
-            "chance": 0.08,
-            "placeable_on": [ "phantasia:stone" ]
-        },
-        {
-            "id": "phantasia:globeflower",
-            "chance": 0.08,
-            "placeable_on": [ "phantasia:stone" ]
-        }
-    ],
+    "foliage": [],
     "structure": []
 }

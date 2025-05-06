@@ -10,11 +10,16 @@ function tile_meeting(_x, _y, _z = CHUNK_DEPTH_DEFAULT, _type = ITEM_TYPE.SOLID 
 	var _xscale = abs(image_xscale);
 	var _yscale = abs(image_yscale);
     
-    var _x1 = _x - (_xscale * sprite_get_xoffset(sprite_index));
-    var _y1 = _y - (_yscale * sprite_get_yoffset(sprite_index));
+    var _collision_box = entity_value.collision_box;
     
-    var _x2 = _x1 + (_xscale * sprite_get_bbox_right(sprite_index))  - 1;
-    var _y2 = _y1 + (_yscale * sprite_get_bbox_bottom(sprite_index)) - 1;
+    var _collision_width  = _collision_box.width;
+    var _collision_height = _collision_box.height;
+    
+    var _x1 = _x - (_xscale * (_collision_width  / 2));
+    var _y1 = _y - (_yscale * _collision_height);
+    
+    var _x2 = _x1 + (_xscale * _collision_width)  - 1;
+    var _y2 = _y1 + (_yscale * _collision_height) - 1;
     
 	var _xstart = floor(_x1 / TILE_SIZE) - 1;
 	var _ystart = floor(_y1 / TILE_SIZE) - 1;
@@ -29,7 +34,7 @@ function tile_meeting(_x, _y, _z = CHUNK_DEPTH_DEFAULT, _type = ITEM_TYPE.SOLID 
 			return false;
 		}
 		
-		var _ytile = j * TILE_SIZE;
+		var _tile_y = j * TILE_SIZE;
 		
 		for (var i = _xstart; i <= _xend; ++i)
 		{
@@ -41,7 +46,7 @@ function tile_meeting(_x, _y, _z = CHUNK_DEPTH_DEFAULT, _type = ITEM_TYPE.SOLID 
             
 			if (!_data.has_type(_type)) continue;
 			
-			var _xtile = i * TILE_SIZE;
+			var _tile_x = i * TILE_SIZE;
             
 			var _tile_xoffset = _tile.get_xoffset();
 			var _tile_yoffset = _tile.get_yoffset();
@@ -49,8 +54,8 @@ function tile_meeting(_x, _y, _z = CHUNK_DEPTH_DEFAULT, _type = ITEM_TYPE.SOLID 
 			var _tile_xscale = _tile.get_xscale();
 			var _tile_yscale = _tile.get_yscale();
 			
-            var _x3 = _xtile + ((_data.get_collision_box_left() + _tile_xoffset) * _tile_xscale);
-            var _y3 = _ytile + ((_data.get_collision_box_top()  + _tile_yoffset) * _tile_yscale);
+            var _x3 = _tile_x + ((_data.get_collision_box_left() + _tile_xoffset) * _tile_xscale);
+            var _y3 = _tile_y + ((_data.get_collision_box_top()  + _tile_yoffset) * _tile_yscale);
             
             var _x4 = _x3 + (_data.get_collision_box_right()  * _tile_xscale);
             var _y4 = _y3 + (_data.get_collision_box_bottom() * _tile_yscale);

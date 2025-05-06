@@ -55,8 +55,13 @@
             "placeable_on": [ "phantasia:grass_block" ]
         },
         {
-            "id": "phantasia:torch",
+            "id": "phantasia:globeflower",
             "chance": 0.08,
+            "placeable_on": [ "phantasia:grass_block" ]
+        },
+        {
+            "id": "phantasia:torch",
+            "chance": 0.02,
             "placeable_on": [ "phantasia:grass_block" ]
         }
     ],

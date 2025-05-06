@@ -10,6 +10,7 @@ with (obj_Player)
 {
     draw_sprite_ext(sprite_index, 0, x, y, image_xscale, image_yscale, image_angle, (tile_meeting(x, y) ? c_red : c_white), 1);
 }
+
 /*
 with (obj_Parent_Light)
 {
