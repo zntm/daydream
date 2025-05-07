@@ -6,7 +6,7 @@
   "name":"Noise",
   "parent":{
     "name":"Noise",
-    "path":"folders/Scripts/Noise.yy",
+    "path":"folders/Scripts/Math/Noise.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -1,3 +1,6 @@
+// global.delta_time = (delta_time / 1_000_000) * 60;
+global.delta_time = (delta_time / 1_000_000) * 60;
+
 var _player_x = obj_Player.x;
 var _player_y = obj_Player.y;
 
@@ -15,6 +18,8 @@ if (keyboard_check_pressed(vk_f11))
 {
     window_set_fullscreen(!window_get_fullscreen());
 }
+
+control_game_tick();
 
 var _camera_x = global.camera_x_real;
 var _camera_y = global.camera_y_real;

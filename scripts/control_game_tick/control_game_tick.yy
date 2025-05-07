@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"chance",
+  "%Name":"control_game_tick",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"chance",
+  "name":"control_game_tick",
   "parent":{
-    "name":"Random",
-    "path":"folders/Scripts/Math/Random.yy",
+    "name":"Control",
+    "path":"folders/Scripts/Control.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

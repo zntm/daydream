@@ -1,6 +1,6 @@
-#macro CAMERA_SPEED 0.2
+#macro CAMERA_SPEED 0.08
 
-function control_camera_pos(_x, _y, _force = false)
+function control_camera_pos(_x, _y, _force = false, _delta_time = global.delta_time)
 {
     var _camera_x, _camera_y;
     
@@ -11,8 +11,8 @@ function control_camera_pos(_x, _y, _force = false)
     }
     else
     {
-    	_camera_x = lerp(global.camera_x, _x, CAMERA_SPEED);
-        _camera_y = lerp(global.camera_y, _y, CAMERA_SPEED);
+    	_camera_x = lerp_delta(global.camera_x, _x, CAMERA_SPEED, _delta_time);
+        _camera_y = lerp_delta(global.camera_y, _y, CAMERA_SPEED, _delta_time);
     }
     
     global.camera_x = _camera_x;

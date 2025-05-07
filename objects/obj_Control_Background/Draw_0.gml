@@ -3,16 +3,22 @@ var _in_biome_data = global.biome_data[$ in_biome.id];
 var _player_x = obj_Player.x;
 var _player_y = obj_Player.y;
 
+var _camera_x = global.camera_x;
+var _camera_y = global.camera_y;
+
+var _camera_width  = global.camera_width;
+var _camera_height = global.camera_height;
+
 var _sky_colour_base = _in_biome_data.get_sky_colour_base("day");
 var _sky_colour_gradient = _in_biome_data.get_sky_colour_gradient("day");
 
 draw_sprite_ext(
     spr_Square,
     0,
-    camera_get_view_x(view_camera[0]),
-    camera_get_view_y(view_camera[0]),
-    camera_get_view_width(view_camera[0]),
-    camera_get_view_height(view_camera[0]),
+    _camera_x,
+    _camera_y,
+    _camera_width,
+    _camera_height,
     0,
     _sky_colour_base,
     1
@@ -25,10 +31,10 @@ draw_sprite_general(
     0,
     128,
     1,
-    camera_get_view_x(view_camera[0]),
-    camera_get_view_y(view_camera[0]) + camera_get_view_height(view_camera[0]),
-    camera_get_view_height(view_camera[0]) / 128,
-    camera_get_view_width(view_camera[0]),
+    _camera_x,
+    _camera_y + _camera_height,
+    _camera_height / 128,
+    _camera_width,
     90,
     _sky_colour_gradient,
     _sky_colour_gradient,
@@ -36,12 +42,6 @@ draw_sprite_general(
     _sky_colour_gradient,
     1
 );
-
-var _camera_x = camera_get_view_x(view_camera[0]);
-var _camera_y = camera_get_view_y(view_camera[0]);
-
-var _camera_width  = camera_get_view_width(view_camera[0]);
-var _camera_height = camera_get_view_height(view_camera[0]);
 
 var _background_data = global.background_data;
 

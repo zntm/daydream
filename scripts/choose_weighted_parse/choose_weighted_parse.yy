@@ -6,7 +6,7 @@
   "name":"choose_weighted_parse",
   "parent":{
     "name":"Random",
-    "path":"folders/Scripts/Random.yy",
+    "path":"folders/Scripts/Math/Random.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

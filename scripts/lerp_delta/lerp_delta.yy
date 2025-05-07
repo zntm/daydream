@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"chance",
+  "%Name":"lerp_delta",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"chance",
+  "name":"lerp_delta",
   "parent":{
-    "name":"Random",
-    "path":"folders/Scripts/Math/Random.yy",
+    "name":"Math",
+    "path":"folders/Scripts/Math.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
