@@ -8,8 +8,6 @@ function chunk_clear(_inst)
             
             if (vertex_buffer_exists(_vertex_buffer))
             {
-                _collect = true;
-                
                 vertex_delete_buffer(_vertex_buffer);
             }
         }
