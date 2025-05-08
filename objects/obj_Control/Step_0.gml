@@ -1,4 +1,3 @@
-// global.delta_time = (delta_time / 1_000_000) * 60;
 global.delta_time = (delta_time / 1_000_000) * 60;
 
 var _player_x = obj_Player.x;

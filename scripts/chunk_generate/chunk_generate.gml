@@ -86,7 +86,7 @@ function chunk_generate()
             
             var _skip_layer = 0;
             
-            if (position_meeting(_inst_x, _inst_y, obj_Structure))
+            if (_structure_rectangle_length > 0) && (position_meeting(_inst_x, _inst_y, obj_Structure))
             {
                 var _structure_length = instance_position_list(_inst_x, _inst_y, obj_Structure, __structure_list, false);
                 

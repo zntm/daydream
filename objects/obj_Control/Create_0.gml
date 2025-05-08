@@ -13,7 +13,7 @@ global.world = {
     wind: random_range(-1, 1)
 }
 
-obj_Player.y = (worldgen_get_surface_height(0, global.world.seed) - 0.5) * TILE_SIZE;
+obj_Player.y = (worldgen_get_surface_height(0, global.world.seed) - 1.5) * TILE_SIZE;
 
 global.camera_width  = camera_get_view_width(view_camera[0]);
 global.camera_height = camera_get_view_height(view_camera[0]);
@@ -33,6 +33,8 @@ global.structure_range_surface = {
     min:  infinity,
     max: -infinity
 }
+
+game_set_speed(display_get_frequency(), gamespeed_fps);
 
 var _splash_data = global.splash_data;
 var _splash_current_date = _splash_data[$ $"{current_month}_{current_day}"];

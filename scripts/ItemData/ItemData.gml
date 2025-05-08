@@ -32,10 +32,10 @@ enum TILE_COLLISION_BOX_TYPE {
 function ItemData() constructor
 {
     static __item_type = {
-        "default":     ITEM_TYPE.DEFAULT,
-        "solid":       ITEM_TYPE.SOLID,
-        "platform":    ITEM_TYPE.PLATFORM,
-        "untouchable": ITEM_TYPE.UNTOUCHABLE
+        "default":     ITEM_TYPE_BIT.DEFAULT,
+        "solid":       ITEM_TYPE_BIT.SOLID,
+        "platform":    ITEM_TYPE_BIT.PLATFORM,
+        "untouchable": ITEM_TYPE_BIT.UNTOUCHABLE
     }
 
     ___type = 0;

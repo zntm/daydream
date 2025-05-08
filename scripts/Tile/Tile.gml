@@ -119,5 +119,6 @@ function Tile(_item_id, _item_data = global.item_data) constructor
         return (___value >> 32) & 0b111111111;
     }
     
+    set_offset(0, 0);
     set_scale(1, 1);
 }

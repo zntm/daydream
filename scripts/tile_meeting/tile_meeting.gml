@@ -1,4 +1,4 @@
-function tile_meeting(_x, _y, _z = CHUNK_DEPTH_DEFAULT, _type = ITEM_TYPE.SOLID | ITEM_TYPE.PLATFORM, _world_height = global.world_data[$ global.world.dimension].get_world_height())
+function tile_meeting(_x, _y, _z = CHUNK_DEPTH_DEFAULT, _type = ITEM_TYPE_BIT.SOLID | ITEM_TYPE_BIT.PLATFORM, _world_height = global.world_data[$ global.world.dimension].get_world_height())
 {
 	if (_y < 0) || (_y >= (_world_height * TILE_SIZE))
 	{
@@ -7,19 +7,19 @@ function tile_meeting(_x, _y, _z = CHUNK_DEPTH_DEFAULT, _type = ITEM_TYPE.SOLID 
 	
 	var _item_data = global.item_data;
 	
-	var _xscale = abs(image_xscale / 8);
-	var _yscale = abs(image_yscale / 8);
-    
     var _collision_box = entity_value.collision_box;
     
     var _collision_width  = _collision_box.width;
     var _collision_height = _collision_box.height;
     
-    var _x1 = _x - (_xscale * (_collision_width  / 2));
+	var _xscale = abs(image_xscale / 4);
+	var _yscale = abs(image_yscale / 4);
+    
+    var _x1 = _x - (_xscale * _collision_width);
     var _y1 = _y - (_yscale * _collision_height);
     
-    var _x2 = _x1 - 1 + (_xscale * _collision_width);
-    var _y2 = _y  - 1;
+    var _x2 = _x - 1 + (_xscale * _collision_width);
+    var _y2 = _y - 1;
     
 	var _xstart = floor(_x1 / TILE_SIZE) - 1;
 	var _ystart = floor(_y1 / TILE_SIZE) - 1;
@@ -54,8 +54,8 @@ function tile_meeting(_x, _y, _z = CHUNK_DEPTH_DEFAULT, _type = ITEM_TYPE.SOLID 
 			var _tile_xscale = _tile.get_xscale();
 			var _tile_yscale = _tile.get_yscale();
 			
-            var _x3 = _tile_x + ((_data.get_collision_box_left() + _tile_xoffset) * _tile_xscale);
-            var _y3 = _tile_y + ((_data.get_collision_box_top()  + _tile_yoffset) * _tile_yscale);
+            var _x3 = _tile_x + ((_tile_xoffset - _data.get_collision_box_left()) * _tile_xscale);
+            var _y3 = _tile_y + ((_tile_yoffset - _data.get_collision_box_top())  * _tile_yscale);
             
             var _x4 = _x3 + (_data.get_collision_box_right()  * _tile_xscale);
             var _y4 = _y3 + (_data.get_collision_box_bottom() * _tile_yscale);

@@ -1,30 +1,50 @@
 function control_player(_tick)
 {
-    if (keyboard_check(ord("W")))
+    xvelocity = lerp(xvelocity, (keyboard_check(ord("D")) - keyboard_check(ord("A"))) * 4 * _tick, 0.05);
+    yvelocity = lerp(yvelocity, (keyboard_check(ord("S")) - keyboard_check(ord("W"))) * 4 * _tick, 0.05);
+    
+    var _xsign = sign(xvelocity);
+    var _ysign = sign(yvelocity);
+    
+    for (var i = abs(xvelocity); i > 0; i -= 1)
     {
-        // y -= TILE_SIZE * 2 * _tick;
+        var _offset = min(i, 1) * _xsign;
+        
+        if (tile_meeting(x + _offset, y)) break;
+        
+        x += _offset;
     }
     
-    if (keyboard_check(ord("A")))
+    for (var i = abs(yvelocity); i > 0; i -= 1)
     {
-        // x -= TILE_SIZE * 2 * _tick;
+        var _offset = min(i, 1) * _ysign;
+        
+        if (tile_meeting(x, y + _offset)) break;
+        
+        y += _offset;
     }
     
-    if (keyboard_check(ord("S")))
+    /*
+    for (var i = abs(xvelocity * (image_xscale / 8)); i > 0; i -= entity_value.collision_box.width)
     {
-        // y += TILE_SIZE * 2 * _tick;
+        var _offset = min(i, entity_value.collision_box.width) * _xsign;
+        
+        if (tile_meeting(x + _offset, y)) break;
+        
+        x += _offset;
     }
     
-    if (keyboard_check(ord("D")))
+    for (var i = abs(yvelocity * (image_yscale / 8)); i > 0; i -= entity_value.collision_box.height)
     {
-        // x += TILE_SIZE * 2 * _tick;
+        var _offset = min(i, entity_value.collision_box.height) * _ysign;
+        
+        if (tile_meeting(x, y + _offset)) break;
+        
+        y += _offset;
     }
-    
-    xvelocity = lerp(xvelocity, (keyboard_check(ord("D")) - keyboard_check(ord("A"))) * 8 * _tick, 0.1);
-    yvelocity = lerp(yvelocity, (keyboard_check(ord("S")) - keyboard_check(ord("W"))) * 8 * _tick, 0.1);
-    
+    *\/
     x += xvelocity;
     y += yvelocity;
-    
+    */
     control_camera_pos(x - (global.camera_width / 2), y - (global.camera_height / 2), false, _tick);
 }
