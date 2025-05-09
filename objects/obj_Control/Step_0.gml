@@ -18,6 +18,15 @@ if (keyboard_check_pressed(vk_f11))
     window_set_fullscreen(!window_get_fullscreen());
 }
 
+with (obj_Player)
+{
+    key_left  = (keyboard_check(ord("A"))) || (keyboard_check(vk_left));
+    key_right = (keyboard_check(ord("D"))) || (keyboard_check(vk_right));
+    
+    key_jump  = (keyboard_check(ord("W"))) || (keyboard_check(vk_space)) || (keyboard_check(vk_up));
+    key_jump_pressed = (keyboard_check_pressed(ord("W"))) || (keyboard_check_pressed(vk_space)) || (keyboard_check_pressed(vk_up));
+}
+
 control_game_tick();
 
 var _camera_x = global.camera_x_real;

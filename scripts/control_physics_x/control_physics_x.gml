@@ -31,18 +31,18 @@ function control_physics_x(_collision = true, _world_height = global.world_data[
     var _distance = abs(_xvelocity);
     var _direction = sign(_xvelocity);
     
-    if (__tile_meeting(x + _distance, y, _world_height))
+    var _size = abs(image_xscale * 8);
+    
+    if (__tile_meeting(x + _direction, y, _world_height))
     {
         xvelocity = 0;
         
-        return false;
+        return true;
     }
-    
-    var _size = image_xscale * 8;
     
     if (!_collision) || ((_distance <= _size) && (!__tile_meeting(x + _xvelocity, y, _world_height)))
     {
-        x += _distance;
+        x += _xvelocity;
         
         return false;
     }
@@ -51,23 +51,27 @@ function control_physics_x(_collision = true, _world_height = global.world_data[
     {
         var _tick = _direction * min(i, _size);
         
-        if (!__tile_meeting(x + _tick, y, _world_height))
+        if (i > _size) && (!__tile_meeting(x + _tick, y, _world_height))
         {
             x += _tick;
             
             continue;
         }
         
-        for (var j = abs(min(_size, _tick)); j > 0; --j)
+        for (var j = abs(_tick); j > 0; j -= 1)
         {
-            var _offset = min(j, 1) * _direction;
+            var _offset = _direction * min(j, 1);
             
-            if (__tile_meeting(x + _offset, y, _world_height))
+            if (!__tile_meeting(x + _offset, y, _world_height))
             {
-                return true;
+                x += _offset;
+                
+                continue;
             }
             
-            x += _offset;
+            xvelocity = 0;
+            
+            return true;
         }
         
         break;

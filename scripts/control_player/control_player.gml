@@ -1,5 +1,7 @@
 function control_player(_tick)
 {
+    control_physics(_tick, id);
+    /*
     xvelocity = lerp(xvelocity, (keyboard_check(ord("D")) - keyboard_check(ord("A"))) * 4 * _tick, 0.05);
     yvelocity = lerp(yvelocity, (keyboard_check(ord("S")) - keyboard_check(ord("W"))) * 4 * _tick, 0.05);
     
