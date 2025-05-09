@@ -44,3 +44,11 @@ global.tile_connected_index = [
 ];
 
 #endregion
+
+#region Physics
+
+#macro PHYSICS_GLOBAL_GRAVITY 0.65
+#macro PHYSICS_GLOBAL_TERMINAL_YVELOCITY 24
+#macro PHYSICS_GLOBAL_THRESHOLD_NUDGE 3
+
+#endregion
