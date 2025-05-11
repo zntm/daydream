@@ -2,14 +2,22 @@ enum ITEM_TYPE {
     DEFAULT,
     SOLID,
     PLATFORM,
-    UNTOUCHABLE
+    UNTOUCHABLE,
+    SWORD,
+    PICKAXE,
+    AXE,
+    SHOVEL
 }
 
 enum ITEM_TYPE_BIT {
     DEFAULT     = 1 << ITEM_TYPE.DEFAULT,
     SOLID       = 1 << ITEM_TYPE.SOLID,
     PLATFORM    = 1 << ITEM_TYPE.PLATFORM,
-    UNTOUCHABLE = 1 << ITEM_TYPE.UNTOUCHABLE
+    UNTOUCHABLE = 1 << ITEM_TYPE.UNTOUCHABLE,
+    SWORD       = 1 << ITEM_TYPE.SWORD,
+    PICKAXE     = 1 << ITEM_TYPE.PICKAXE,
+    AXE         = 1 << ITEM_TYPE.AXE,
+    SHOVEL      = 1 << ITEM_TYPE.SHOVEL
 }
 
 enum ITEM_BOOLEAN {
@@ -35,7 +43,11 @@ function ItemData() constructor
         "default":     ITEM_TYPE_BIT.DEFAULT,
         "solid":       ITEM_TYPE_BIT.SOLID,
         "platform":    ITEM_TYPE_BIT.PLATFORM,
-        "untouchable": ITEM_TYPE_BIT.UNTOUCHABLE
+        "untouchable": ITEM_TYPE_BIT.UNTOUCHABLE,
+        "sword":       ITEM_TYPE_BIT.SWORD,
+        "pickaxe":     ITEM_TYPE_BIT.PICKAXE,
+        "axe":         ITEM_TYPE_BIT.AXE,
+        "shovel":      ITEM_TYPE_BIT.SHOVEL,
     }
 
     ___type = 0;
@@ -229,6 +241,52 @@ function ItemData() constructor
     static is_foliage = function()
     {
         return !!(___boolean & (1 << ITEM_BOOLEAN.IS_FOLIAGE));
+    }
+    
+    static set_durability = function(_durability)
+    {
+        ___durability = _durability;
+        
+        return self;
+    }
+    
+    static get_durability = function()
+    {
+        return self[$ "___durability"] ?? 0;
+    }
+    
+    #endregion
+    
+    #region Inventory
+    
+    static set_item_inventory_length = function(_length)
+    {
+        if (_length != undefined)
+        {
+            ___item_inventory_length = _length;
+        }
+        
+        return self;
+    }
+    
+    static get_item_inventory_length = function()
+    {
+        return self[$ "___item_inventory_length"] ?? 0;
+    }
+    
+    static set_tile_inventory_length = function(_length)
+    {
+        if (_length != undefined)
+        {
+            ___tile_inventory_length = _length;
+        }
+        
+        return self;
+    }
+    
+    static get_tile_inventory_length = function()
+    {
+        return self[$ "___tile_inventory_length"] ?? 0;
     }
     
     #endregion

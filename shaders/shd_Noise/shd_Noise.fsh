@@ -21,7 +21,14 @@ float random(in vec2 st, in float seed)
 
 float random(vec2 st, in float seed)
 {
-    return fract((fract(fract(st.x * 1699.121724) / fract(st.y * 123.3575)) * 39.33124) - seed);
+    float y = fract(st.y * 123.35975);
+    
+    if (st.y == 0.0)
+    {
+        y = -st.x * 389.33211;
+    }
+    
+    return fract((fract(fract(st.x * 169.121724) / y) * 219.33124) - seed);
 }
 
 const vec2 v_10 = vec2(1.0, 0.0);
@@ -63,7 +70,7 @@ float fractal(in vec2 st, in float seed)
     return value;
 }
 
-#define SCALE_FACTOR (3.0 / 256.0)
+const float SCALE_FACTOR = 3.0 / 256.0;
 
 void main()
 {

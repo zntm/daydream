@@ -15,6 +15,48 @@ global.world = {
 
 obj_Player.y = (worldgen_get_surface_height(0, global.world.seed) - 1.5) * TILE_SIZE;
 
+surface_inventory = {
+    tooltip: {
+        surface: 0,
+        surface_width: 0,
+        surface_height: 0,
+        type: "",
+        index: -1
+    },
+    hotbar: {
+        surface_item: -1,
+        surface_slot: -1
+    },
+    base: {
+        surface_item: -1,
+        surface_slot: -1
+    },
+    armor_helmet: {
+        surface_item: -1,
+        surface_slot: -1
+    },
+    armor_breastplate: {
+        surface_item: -1,
+        surface_slot: -1
+    },
+    armor_leggings: {
+        surface_item: -1,
+        surface_slot: -1
+    },
+    accessory: {
+        surface_item: -1,
+        surface_slot: -1
+    },
+    craftable: {
+        surface_item: -1,
+        surface_slot: -1
+    },
+    container: {
+        surface_item: -1,
+        surface_slot: -1
+    }
+}
+
 global.camera_width  = camera_get_view_width(view_camera[0]);
 global.camera_height = camera_get_view_height(view_camera[0]);
 
@@ -26,6 +68,12 @@ global.camera_y = _camera_y;
 
 global.camera_x_real = _camera_x;
 global.camera_y_real = _camera_y;
+
+var _gui_width  = display_get_width();
+var _gui_height = display_get_height();
+
+global.gui_width  = _gui_width;
+global.gui_height = _gui_height;
 
 control_camera_pos(_camera_x, _camera_y);
 
