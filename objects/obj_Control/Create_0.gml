@@ -1,5 +1,13 @@
 randomize();
 
+is_opened_inventory = false;
+
+enum SURFACE_REFRESH_BOOLEAN {
+    INVENTORY = 1
+}
+
+surface_refresh = SURFACE_REFRESH_BOOLEAN.INVENTORY;
+
 show_debug_overlay(true);
 
 global.delta_time = 1;
@@ -14,6 +22,8 @@ global.world = {
 }
 
 obj_Player.y = (worldgen_get_surface_height(0, global.world.seed) - 1.5) * TILE_SIZE;
+
+global.inventory_selected_hotbar = 0;
 
 surface_inventory = {
     tooltip: {
@@ -57,11 +67,17 @@ surface_inventory = {
     }
 }
 
-global.camera_width  = camera_get_view_width(view_camera[0]);
-global.camera_height = camera_get_view_height(view_camera[0]);
+var _camera_width  = camera_get_view_width(view_camera[0]);
+var _camera_height = camera_get_view_height(view_camera[0]);
 
-var _camera_x = obj_Player.x - (global.camera_width  / 2);
-var _camera_y = obj_Player.y - (global.camera_height / 2);
+var _camera_x = obj_Player.x - (_camera_width  / 2);
+var _camera_y = obj_Player.y - (_camera_height / 2);
+
+var _gui_width  = window_get_width();
+var _gui_height = window_get_height();
+
+global.camera_width  = _camera_width;
+global.camera_height = _camera_height;
 
 global.camera_x = _camera_x;
 global.camera_y = _camera_y;
@@ -69,11 +85,11 @@ global.camera_y = _camera_y;
 global.camera_x_real = _camera_x;
 global.camera_y_real = _camera_y;
 
-var _gui_width  = display_get_width();
-var _gui_height = display_get_height();
-
 global.gui_width  = _gui_width;
 global.gui_height = _gui_height;
+
+global.gui_mouse_x = 0;
+global.gui_mouse_y = 0;
 
 control_camera_pos(_camera_x, _camera_y);
 
@@ -81,6 +97,11 @@ global.structure_range_surface = {
     min:  infinity,
     max: -infinity
 }
+
+window_width  = window_get_width();
+window_height = window_get_height();
+
+init_inventory_instance();
 
 game_set_speed(display_get_frequency(), gamespeed_fps);
 

@@ -57,3 +57,36 @@ global.tile_connected_index = [
 #macro PHYSICS_GLOBAL_JUMP_HEIGHT 1.31
 
 #endregion
+
+#macro GUI_SAFE_ZONE_X 24
+#macro GUI_SAFE_ZONE_Y 24
+
+global.inventory = {
+    base:              array_create(INVENTORY_LENGTH.BASE, INVENTORY_EMPTY),
+    armor_helmet:      array_create(1, INVENTORY_EMPTY),
+    armor_breastplate: array_create(1, INVENTORY_EMPTY),
+    armor_leggings:    array_create(1, INVENTORY_EMPTY),
+    accessory:         array_create(INVENTORY_LENGTH.ACCESSORY, INVENTORY_EMPTY),
+    craftable: [],
+    container: []
+}
+
+global.inventory_length = {
+    base:              INVENTORY_LENGTH.BASE,
+    armor_helmet:      1,
+    armor_breastplate: 1,
+    armor_leggings:    1,
+    accessory:         INVENTORY_LENGTH.ACCESSORY,
+    craftable:         0,
+    container:         0
+}
+
+global.inventory_instance = {
+    base:              array_create(INVENTORY_LENGTH.BASE, noone),
+    armor_helmet:      array_create(1, noone),
+    armor_breastplate: array_create(1, noone),
+    armor_leggings:    array_create(1, noone),
+    accessory:         array_create(INVENTORY_LENGTH.ACCESSORY, noone),
+    craftable: [],
+    container: []
+}

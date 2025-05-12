@@ -13,7 +13,7 @@ varying vec4 v_vColour;
 uniform vec2 u_textureSize;
 
 uniform float u_time;
-uniform float u_skew[CHUNK_SIZE * CHUNK_SIZE * CHUNK_DEPTH];
+uniform float u_skew[CHUNK_SIZE * CHUNK_SIZE * 2];
 
 void main()
 {

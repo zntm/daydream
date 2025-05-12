@@ -19,7 +19,11 @@ function Tile(_item_id, _item_data = global.item_data) constructor
         return self[$ "___variant"];
     }
     
-    ___value = 0;
+    // set_offset(0, 0);
+    // set_scale(1, 1);
+    // ___value = 0;
+    
+    ___value = (9 << 28) | (9 << 24) | (8 << 4) | (8 << 0);
     
     static set_offset = function(_xoffset, _yoffset)
     {
@@ -118,7 +122,4 @@ function Tile(_item_id, _item_data = global.item_data) constructor
     {
         return (___value >> 32) & 0b111111111;
     }
-    
-    set_offset(0, 0);
-    set_scale(1, 1);
 }

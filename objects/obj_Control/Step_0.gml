@@ -13,9 +13,25 @@ if (keyboard_check_pressed(vk_escape))
     game_end();
 }
 
+if (keyboard_check_pressed(ord("E")))
+{
+    is_opened_inventory = !is_opened_inventory;
+}
+
 if (keyboard_check_pressed(vk_f11))
 {
     window_set_fullscreen(!window_get_fullscreen());
+}
+
+var _window_width  = window_get_width();
+var _window_height = window_get_height();
+
+if (window_width != _window_width) || (window_height != _window_height)
+{
+    window_width  = _window_width;
+    window_height = _window_height;
+    
+    surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY;
 }
 
 with (obj_Player)

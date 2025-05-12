@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"hex_parse",
+  "%Name":"gui_xanchor",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"hex_parse",
+  "name":"gui_xanchor",
   "parent":{
-    "name":"Math",
-    "path":"folders/Scripts/Math.yy",
+    "name":"GUI",
+    "path":"folders/Scripts/GUI.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

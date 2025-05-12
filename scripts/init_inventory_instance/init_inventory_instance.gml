@@ -171,7 +171,7 @@ function init_inventory_instance()
 	var _gui_height = global.gui_height;
 	
 	var _inventory = global.inventory;
-	var _inventory_instances = global.inventory_instances;
+	var _inventory_instance = global.inventory_instance;
 	
 	var _inventory_names = struct_get_names(_inventory);
 	var _inventory_names_length = array_length(_inventory_names);
@@ -179,7 +179,7 @@ function init_inventory_instance()
 	for (var i = 0; i < _inventory_names_length; ++i)
 	{
 		var _inventory_name = _inventory_names[i];
-		var _i = _inventory_instances[$ _inventory_name];
+		var _i = _inventory_instance[$ _inventory_name];
 		
 		var _inventory_length = array_length(_i);
 		
@@ -203,21 +203,21 @@ function init_inventory_instance()
                     _inst.yoffset = (j div INVENTORY_LENGTH.ROW) * INVENTORY_SLOT_DIMENSION_SCALED;
                 }
 				
-				_inst.slot_type = SLOT_TYPE.BASE;
+				_inst.slot_type = INVENTORY_SLOT_TYPE.BASE;
 			}
 			else if (_inventory_name == "armor_helmet")
 			{
                 _inst.xoffset = 0;
                 _inst.yoffset = 0;
 				
-				_inst.slot_type = SLOT_TYPE.ARMOR_HELMET;
+				_inst.slot_type = INVENTORY_SLOT_TYPE.ARMOR_HELMET;
 			}
 			else if (_inventory_name == "armor_breastplate")
 			{
                 _inst.xoffset = 0;
                 _inst.yoffset = 0;
 				
-				_inst.slot_type = SLOT_TYPE.ARMOR_BREASTPLATE;
+				_inst.slot_type = INVENTORY_SLOT_TYPE.ARMOR_BREASTPLATE;
 				
 			}
 			else if (_inventory_name == "armor_leggings")
@@ -225,20 +225,20 @@ function init_inventory_instance()
                 _inst.xoffset = 0;
                 _inst.yoffset = 0;
 				
-				_inst.slot_type = SLOT_TYPE.ARMOR_LEGGINGS;
+				_inst.slot_type = INVENTORY_SLOT_TYPE.ARMOR_LEGGINGS;
 			}
 			else if (_inventory_name == "accessory")
 			{
                 _inst.xoffset = 0;
                 _inst.yoffset = INVENTORY_SLOT_DIMENSION_SCALED * j;
                 
-				_inst.slot_type = SLOT_TYPE.ACCESSORY;
+				_inst.slot_type = INVENTORY_SLOT_TYPE.ACCESSORY;
 			}
             
             _inst.inventory_type = _inventory_name;
             _inst.inventory_index = j;
             
-            global.inventory_instances[$ _inventory_name][@ j] = _inst;
+            global.inventory_instance[$ _inventory_name][@ j] = _inst;
             
             instance_deactivate_object(_inst);
 		}

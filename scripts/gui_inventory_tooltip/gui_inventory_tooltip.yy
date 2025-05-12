@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"hex_parse",
+  "%Name":"gui_inventory_tooltip",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"hex_parse",
+  "name":"gui_inventory_tooltip",
   "parent":{
-    "name":"Math",
-    "path":"folders/Scripts/Math.yy",
+    "name":"GUI",
+    "path":"folders/Scripts/GUI.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

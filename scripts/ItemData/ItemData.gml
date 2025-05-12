@@ -37,6 +37,16 @@ enum TILE_COLLISION_BOX_TYPE {
     TRIANGLE
 }
 
+enum INVENTORY_SLOT_TYPE {
+    BASE              = 1 << 0,
+    ARMOR_HELMET      = 1 << 1,
+    ARMOR_BREASTPLATE = 1 << 2,
+    ARMOR_LEGGINGS    = 1 << 3,
+    ACCESSORY         = 1 << 4,
+    CONTAINER         = 1 << 5,
+    CRAFTABLE         = 1 << 6
+}
+
 function ItemData() constructor
 {
     static __item_type = {
