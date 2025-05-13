@@ -39,7 +39,10 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                     _buffer = render_chunk(global.carbasa_surface_uv[$ "item"], _inst, _z);
                 }
                 
-                shader_set_uniform_f_array(__u_skew, _inst.chunk_skew);
+                if (_bitmask & ((1 << CHUNK_DEPTH_FOLIAGE_BACK) | (1 << CHUNK_DEPTH_FOLIAGE_FRONT)))
+                {
+                    shader_set_uniform_f_array(__u_skew, _inst.chunk_skew);
+                }
                 
                 vertex_submit(_buffer, pr_trianglelist, _texture);
             }
@@ -48,7 +51,6 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
         shader_reset();
     }
     
-    /*
     with (obj_Chunk)
     {
         if (!chunk_display) continue;
@@ -59,7 +61,15 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
             x - (TILE_SIZE / 2) + CHUNK_SIZE_DIMENSION - 1,
             y - (TILE_SIZE / 2) + CHUNK_SIZE_DIMENSION - 1,
             true
-        )
+        );
+        
+        for (var i = 0; i < CHUNK_DEPTH; ++i)
+        {
+            draw_text(
+                x - (TILE_SIZE / 2) + (i * 16),
+                y - (TILE_SIZE / 2),
+                vertex_buffer_exists(chunk_vertex_buffer[i])
+            );
+        }
     }
-    */
 }

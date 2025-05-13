@@ -31,6 +31,13 @@ if (window_width != _window_width) || (window_height != _window_height)
     window_width  = _window_width;
     window_height = _window_height;
     
+    room_set_viewport(room, 0, true, 0, 0, window_width, window_height);
+    
+    if (view_wport[0] != surface_get_width(application_surface)) || (view_hport[0] != surface_get_height(application_surface))
+    {
+        surface_resize(application_surface, view_wport[0], view_hport[0]);
+    }
+    
     surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY;
 }
 

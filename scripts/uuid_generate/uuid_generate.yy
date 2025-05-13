@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"uuid_generate",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"uuid_generate",
+  "parent":{
+    "name":"String",
+    "path":"folders/Scripts/String.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
