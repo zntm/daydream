@@ -21,7 +21,7 @@ global.world = {
     wind: random_range(-1, 1)
 }
 
-obj_Player.y = (worldgen_get_surface_height(0, global.world.seed) - 1.5) * TILE_SIZE;
+obj_Player.y = (worldgen_get_surface_height(0, global.world.seed) - 1) * TILE_SIZE;
 
 global.inventory_selected_hotbar = 0;
 

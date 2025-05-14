@@ -1,5 +1,6 @@
 {
     "1_1": [
+        "20XX",
         "Happy new years!",
         "New year, same old game!"
     ],
@@ -9,47 +10,114 @@
         "Happy Valentine's Day!",
         "sqrt(-1) love you!"
     ],
+    "3_8": [
+        "Empowered and unstoppable!",
+        "Girlboss!",
+        "Here's to strong women!"
+    ],
     "3_14": [
+        "Easy as pi!",
         "Happy Pi Day!",
         "Totally irrational!"
     ],
+    "3_17": [
+        "At the end of the rainbow!",
+        "Feelin' lucky?",
+        "Wearing all green!"
+    ],
     "4_1": [
         "April Fools!",
-        "Kerprank'd!"
+        "Kerprank'd!",
+        "Reality is an illusion!",
+        "*whoopie cushion noises*"
+    ],
+    "4_22": [
+        "Love your planet!",
+        "Planting trees!",
+        "Recycled pixels!"
     ],
     "6_1": [
+        "Be proud of who you are!",
         "Celebrating diversity!",
         "Happy Pride Month!",
         "Love is love!",
-        "Rainbows everywhere!"
+        "Rainbows everywhere!",
+        "Very colorful!",
+        "<3"
+    ],
+    "9_21": [
+        "Keeping it peaceful!",
+        "Peace, love, and pixels!"
     ],
     "10_31": [
         "boo",
         "Did you see it?",
         "Happy Halloween!",
+        "Prepare your pumpkins!",
+        "Spooky!",
         "Trick or Treat!"
     ],
+    "11_25": [
+        "Happy Birthday Zhen!",
+        "Party mode activated!"
+    ],
     "12_25": [
+        "Ho ho ho!",
         "Merry Christmas!",
         "Most wonderful time of the year!",
+        "Unwraping the joy!",
         "'tis the season!"
     ],
     "12_31": [
+        "Counting down to midnight!",
         "Purchasing fireworks...",
         "See you next year!"
     ],
     "default": [
         "A whole new world!",
+        "Boom!",
         "Break a leg!",
         "Built different!",
+        "Compiled with love!",
+        "Doing things the hard way!",
+        "Don't try this at home!",
+        "Enter the splash zone!",
+        "Endless possibilities!",
+        "Fire in the hole!",
+        "Free of charge forever!",
+        "Graphics may vary!",
+        "Guess what?",
+        "Hello, world!",
+        "Indie!",
         "It's a game!",
+        "Join the chaos!",
+        "Kaboom!",
+        "Knowledge is power!",
+        "Made in GameMaker!",
         "May contain fractals.",
+        "mewo",
+        "More in the works!",
+        "Music by Oh Eight!",
+        "Music by Skies!",
+        "Not enough content!",
+        "One! Two! Pandemonium!",
+        "Procedurally generated!",
+        "Quantum computing!",
+        "So many splash texts!",
+        "Stay hydrated!",
         "Stay safe!",
         "Stay strong!",
         "Technoblade never dies!",
         "Turing complete!",
+        "Unexpected behaviors!",
+        "Voxel-free!",
+        "What's up doc?",
+        "Where the magic happens!",
         "Wilder than ever!",
+        "X marks the spot!",
         "Yes, sir!",
-        "You are valid!"
+        "You are valid!",
+        "Zero bugs found!*",
+        "...or is it?"
     ]
 }

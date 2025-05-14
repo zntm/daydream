@@ -32,8 +32,8 @@ coyote_time = 0;
 
 ylast = 0;
 
-key_left = false;
-key_right = false;
+input_left = false;
+input_right = false;
 
-key_jump = false;
-key_jump_pressed = false;
+input_jump = false;
+input_jump_pressed = false;

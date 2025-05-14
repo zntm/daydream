@@ -8,5 +8,7 @@ function control_game_tick()
         {
             control_player(_tick);
         }
+        
+        global.world.time += _tick / 4;
     }
 }

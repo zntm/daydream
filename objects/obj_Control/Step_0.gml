@@ -1,3 +1,5 @@
+if (!window_has_focus()) exit;
+
 global.delta_time = (delta_time / 1_000_000) * 240;
 
 var _player_x = obj_Player.x;
@@ -26,16 +28,16 @@ if (keyboard_check_pressed(vk_f11))
 var _window_width  = window_get_width();
 var _window_height = window_get_height();
 
-if (window_width != _window_width) || (window_height != _window_height)
+if ((_window_width > 0) && (_window_height > 0)) && ((window_width != _window_width) || (window_height != _window_height))
 {
     window_width  = _window_width;
     window_height = _window_height;
     
     room_set_viewport(room, 0, true, 0, 0, window_width, window_height);
     
-    if (view_wport[0] != surface_get_width(application_surface)) || (view_hport[0] != surface_get_height(application_surface))
+    if (window_width != surface_get_width(application_surface)) || (window_height != surface_get_height(application_surface))
     {
-        surface_resize(application_surface, view_wport[0], view_hport[0]);
+        surface_resize(application_surface, window_width, window_height);
     }
     
     surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY;
@@ -43,11 +45,11 @@ if (window_width != _window_width) || (window_height != _window_height)
 
 with (obj_Player)
 {
-    key_left  = (keyboard_check(ord("A"))) || (keyboard_check(vk_left));
-    key_right = (keyboard_check(ord("D"))) || (keyboard_check(vk_right));
+    input_left  = (keyboard_check(ord("A"))) || (keyboard_check(vk_left));
+    input_right = (keyboard_check(ord("D"))) || (keyboard_check(vk_right));
     
-    key_jump  = (keyboard_check(ord("W"))) || (keyboard_check(vk_space)) || (keyboard_check(vk_up));
-    key_jump_pressed = (keyboard_check_pressed(ord("W"))) || (keyboard_check_pressed(vk_space)) || (keyboard_check_pressed(vk_up));
+    input_jump  = (keyboard_check(ord("W"))) || (keyboard_check(vk_space)) || (keyboard_check(vk_up));
+    input_jump_pressed = (keyboard_check_pressed(ord("W"))) || (keyboard_check_pressed(vk_space)) || (keyboard_check_pressed(vk_up));
 }
 
 control_game_tick();
@@ -89,5 +91,3 @@ if (mouse_check_button(mb_left))
 }
 
 control_chunk_activity(_camera_x, _camera_y, _camera_width, _camera_height);
-
-++global.world.time;

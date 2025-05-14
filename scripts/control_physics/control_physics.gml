@@ -2,7 +2,7 @@ function control_physics(_tick, _id)
 {
     with (_id)
     {
-        var _direction = key_right - key_left;
+        var _direction = input_right - input_left;
         
         if (_direction != 0)
         {
@@ -28,16 +28,16 @@ function control_physics(_tick, _id)
             }
         }
         
-        if (key_jump_pressed)
+        if (input_jump_pressed)
         {
             ++jump_count;
             
-            key_jump_pressed = false;
+            input_jump_pressed = false;
             
             jump_pressed = 0;
         }
         
-        if (!key_jump)
+        if (!input_jump)
         {
             jump_pressed = 0;
         }
@@ -48,7 +48,7 @@ function control_physics(_tick, _id)
         {
             jump_pressed = infinity;
         }
-        else if (key_jump)
+        else if (input_jump)
         {
             if (tile_meeting(x, y - 1))
             {
