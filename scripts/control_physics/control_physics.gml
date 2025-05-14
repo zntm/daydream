@@ -11,7 +11,7 @@ function control_physics(_tick, _id)
         
         var _physics = entity_value.physics;
         
-        xvelocity = lerp_delta(xvelocity, _direction * _physics.movement_speed, 0.08, _tick);
+        xvelocity = lerp_delta(xvelocity, _direction * _physics.movement_speed, 0.4, _tick);
         
         control_physics_x();
         

@@ -1,6 +1,6 @@
 if (!window_has_focus()) exit;
 
-global.delta_time = (delta_time / 1_000_000) * 240;
+global.delta_time = (delta_time / 1_000_000) * 60;
 
 var _player_x = obj_Player.x;
 var _player_y = obj_Player.y;
