@@ -13,7 +13,7 @@
   "overriddenProperties":[],
   "parent":{
     "name":"Control",
-    "path":"folders/Objects/Control.yy",
+    "path":"folders/Objects/Gameplay/Control.yy",
   },
   "parentObjectId":null,
   "persistent":false,

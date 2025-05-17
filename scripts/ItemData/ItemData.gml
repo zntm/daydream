@@ -180,7 +180,7 @@ function ItemData() constructor
     {
         static __collision_box_type = {
             "rectangle": TILE_COLLISION_BOX_TYPE.RECTANGLE,
-            "triangle": TILE_COLLISION_BOX_TYPE.TRIANGLE
+            "triangle":  TILE_COLLISION_BOX_TYPE.TRIANGLE
         }
         
         ___colliison_box = (__collision_box_type[$ _collision_box.type] << 32) | ((_collision_box.bottom + 0x80) << 24) | ((_collision_box.right + 0x80) << 16) | ((_collision_box.top + 0x80) << 8) | (_collision_box.left + 0x80);
@@ -304,10 +304,10 @@ function ItemData() constructor
     static set_animation_type = function(_type)
     {
         static __animation_type = {
-            "default": TILE_ANIMATION_TYPE.DEFAULT,
+            "default":   TILE_ANIMATION_TYPE.DEFAULT,
             "connected": TILE_ANIMATION_TYPE.CONNECTED,
             "increment": TILE_ANIMATION_TYPE.INCREMENT,
-            "foliage": TILE_ANIMATION_TYPE.FOLIAGE
+            "foliage":   TILE_ANIMATION_TYPE.FOLIAGE
         }
         
         ___animation_type = __animation_type[$ _type];
