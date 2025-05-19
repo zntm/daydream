@@ -12,7 +12,8 @@ entity_value = {
         gravity: 0.52,
         movement_speed: 1.9,
         jump_time: 12,
-        jump_height: 3.7
+        jump_height: 7.7,
+        jump_count_max: 1
     }
 }
 

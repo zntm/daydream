@@ -7,6 +7,8 @@ enum VERSION_VALUE {
 #macro PROGRAM_NAME "Phantasia"
 #macro PROGRAM_DIRECTORY_RESOURCES (((GM_build_type == "run") ? $"{filename_dir(GM_project_filename)}/datafiles/" : "") + "resources")
 
+#macro GAME_TICK 60
+
 #region Chunk
 
 #macro TILE_EMPTY 0

@@ -1,6 +1,27 @@
 if (!window_has_focus()) exit;
 
-global.delta_time = (delta_time / 1_000_000) * 60;
+var _names  = struct_get_names(global.carbasa_surface_buffer);
+var _length = array_length(_names);
+
+for (var i = 0; i < _length; ++i)
+{
+    var _page = _names[i];
+    
+    if (!surface_exists(global.carbasa_surface[$ _page]))
+    {
+        var _size = global.carbasa_surface_size[$ _page];
+        
+        global.carbasa_surface[$ _page] = surface_create(_size & 0xffff, (_size >> 16) & 0xffff);
+        
+        buffer_set_surface(global.carbasa_surface_buffer[$ _page], global.carbasa_surface[$ _page], 0);
+        
+        global.carbasa_surface_texture[$ _page] = surface_get_texture(global.carbasa_surface[$ _page]);
+        
+        global.carbasa_surface_uv[$ _page] = texture_get_uvs(global.carbasa_surface_texture[$ _page]);
+    }
+}
+
+global.delta_time = (delta_time / 1_000_000)// * GAME_TICK;
 
 var _player_x = obj_Player.x;
 var _player_y = obj_Player.y;
@@ -43,13 +64,15 @@ if ((_window_width > 0) && (_window_height > 0)) && ((window_width != _window_wi
     surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY;
 }
 
+var _settings = global.settings;
+
 with (obj_Player)
 {
-    input_left  = (keyboard_check(ord("A"))) || (keyboard_check(vk_left));
-    input_right = (keyboard_check(ord("D"))) || (keyboard_check(vk_right));
+    input_left  = keyboard_check(_settings.key_left);
+    input_right = keyboard_check(_settings.key_right);
     
-    input_jump  = (keyboard_check(ord("W"))) || (keyboard_check(vk_space)) || (keyboard_check(vk_up));
-    input_jump_pressed = (keyboard_check_pressed(ord("W"))) || (keyboard_check_pressed(vk_space)) || (keyboard_check_pressed(vk_up));
+    input_jump  = keyboard_check(_settings.key_jump);
+    input_jump_pressed = keyboard_check_pressed(_settings.key_jump);
 }
 
 control_game_tick();

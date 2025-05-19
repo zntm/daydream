@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"file_read_directory",
+  "%Name":"ParticleData",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"file_read_directory",
+  "name":"ParticleData",
   "parent":{
-    "name":"File",
-    "path":"folders/Scripts/File.yy",
+    "name":"Particle Data",
+    "path":"folders/Data/Particle Data.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

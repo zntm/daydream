@@ -49,16 +49,16 @@ function control_physics_x(_collision = true, _world_height = global.world_data[
     
     for (var i = _distance; i > 0; i -= _size)
     {
-        var _tick = _direction * min(i, _size);
+        var _dt = _direction * min(i, _size);
         
-        if (i > _size) && (!__tile_meeting(x + _tick, y, _world_height))
+        if (i > _size) && (!__tile_meeting(x + _dt, y, _world_height))
         {
-            x += _tick;
+            x += _dt;
             
             continue;
         }
         
-        for (var j = abs(_tick); j > 0; j -= 1)
+        for (var j = abs(_dt); j > 0; j -= 1)
         {
             var _offset = _direction * min(j, 1);
             

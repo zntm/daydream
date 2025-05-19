@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"file_read_directory",
+  "%Name":"number_format_thousandths",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"file_read_directory",
+  "name":"number_format_thousandths",
   "parent":{
-    "name":"File",
-    "path":"folders/Scripts/File.yy",
+    "name":"Math",
+    "path":"folders/Scripts/Math.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

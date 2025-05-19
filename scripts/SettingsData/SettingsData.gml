@@ -71,7 +71,7 @@ function SettingsData(_type, _default_value) constructor
         
         for (var i = 0; i < argument_count; ++i)
         {
-            array_push(___values, string(argument[i]));
+            array_push(___values, argument[i]);
         }
         
         return self;

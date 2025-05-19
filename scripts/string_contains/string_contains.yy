@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"file_read_directory",
+  "%Name":"string_contains",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"file_read_directory",
+  "name":"string_contains",
   "parent":{
-    "name":"File",
-    "path":"folders/Scripts/File.yy",
+    "name":"String",
+    "path":"folders/Scripts/String.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

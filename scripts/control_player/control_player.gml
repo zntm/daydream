@@ -1,9 +1,9 @@
-function control_player(_tick)
+function control_player(_dt)
 {
-    control_physics(_tick, id);
+    control_physics(_dt, id);
     /*
-    xvelocity = lerp(xvelocity, (keyboard_check(ord("D")) - keyboard_check(ord("A"))) * 4 * _tick, 0.05);
-    yvelocity = lerp(yvelocity, (keyboard_check(ord("S")) - keyboard_check(ord("W"))) * 4 * _tick, 0.05);
+    xvelocity = lerp(xvelocity, (keyboard_check(ord("D")) - keyboard_check(ord("A"))) * 4 * _dt, 0.05);
+    yvelocity = lerp(yvelocity, (keyboard_check(ord("S")) - keyboard_check(ord("W"))) * 4 * _dt, 0.05);
     
     var _xsign = sign(xvelocity);
     var _ysign = sign(yvelocity);
@@ -48,5 +48,5 @@ function control_player(_tick)
     x += xvelocity;
     y += yvelocity;
     */
-    control_camera_pos(x - (global.camera_width / 2), y - (global.camera_height / 2), false, _tick);
+    control_camera_pos(x - (global.camera_width / 2), y - (global.camera_height / 2), false, _dt);
 }

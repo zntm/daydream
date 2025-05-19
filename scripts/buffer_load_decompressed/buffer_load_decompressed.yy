@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"file_read_directory",
+  "%Name":"buffer_load_decompressed",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"file_read_directory",
+  "name":"buffer_load_decompressed",
   "parent":{
-    "name":"File",
-    "path":"folders/Scripts/File.yy",
+    "name":"Buffer",
+    "path":"folders/Scripts/Buffer.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

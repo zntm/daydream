@@ -1,4 +1,4 @@
-function control_physics_y(_gravity = PHYSICS_GLOBAL_GRAVITY, _collision = true, _nudge = true, _world_height = global.world_data[$ global.world.dimension].get_world_height())
+function control_physics_y(_dt, _gravity = PHYSICS_GLOBAL_GRAVITY, _collision = true, _nudge = true, _world_height = global.world_data[$ global.world.dimension].get_world_height())
 {
     static __tile_meeting = function(_x, _y, _direction, _world_height)
     {
@@ -19,10 +19,12 @@ function control_physics_y(_gravity = PHYSICS_GLOBAL_GRAVITY, _collision = true,
         return true;
     }
     
-    yvelocity = clamp(yvelocity + _gravity, -PHYSICS_GLOBAL_TERMINAL_YVELOCITY, PHYSICS_GLOBAL_TERMINAL_YVELOCITY);
+    yvelocity = clamp(yvelocity + (_gravity * _dt), -PHYSICS_GLOBAL_TERMINAL_YVELOCITY, PHYSICS_GLOBAL_TERMINAL_YVELOCITY);
     
-    var _distance = abs(yvelocity);
-    var _direction = sign(yvelocity);
+    var _yvelocity = yvelocity// * _dt;
+    
+    var _distance = abs(_yvelocity);
+    var _direction = sign(_yvelocity);
     
     var _size = abs(image_yscale * 8);
     
@@ -33,9 +35,9 @@ function control_physics_y(_gravity = PHYSICS_GLOBAL_GRAVITY, _collision = true,
         return true;
     }
     
-    if (!_collision) || ((_distance <= _size) && (!__tile_meeting(x, y + yvelocity, _direction, _world_height)))
+    if (!_collision) || ((_distance <= _size) && (!__tile_meeting(x, y + _yvelocity, _direction, _world_height)))
     {
-        y += yvelocity;
+        y += _yvelocity;
         
         return false;
     }
@@ -51,7 +53,7 @@ function control_physics_y(_gravity = PHYSICS_GLOBAL_GRAVITY, _collision = true,
             continue;
         }
         
-        if (_nudge) && (yvelocity < 0)
+        if (_nudge) && (_yvelocity < 0)
         {
             var _nudged = false;
             

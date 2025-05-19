@@ -17,7 +17,7 @@ function init_structure_recursive(_directory, _namespace, _id)
         
         if (directory_exists(_subdirectory))
         {
-            init_structure_recursive(_, _namespace, _name);
+            init_structure_recursive(_subdirectory, _namespace, _name);
             
             continue;
         }

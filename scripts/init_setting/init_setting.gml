@@ -5,11 +5,13 @@ global.settings_data_category = {}
 
 function init_setting(_category, _type, _setting)
 {
+    global.settings_data[$ _type] = _setting;
+    
     global.settings_data_category[$ _category] ??= [];
     
     array_push(global.settings_data_category[$ _category], _type);
     
-    global.settings_data[$ _type] = _setting;
+    global.settings[$ _type] = _setting.get_default_value();
 }
 
 #region General
@@ -18,11 +20,11 @@ init_setting("general", "discord_rpc", new SettingsData(SETTINGS_TYPE.SWITCH, tr
     .set_on_press(function(_name, _value) {
     }));
 
-init_setting("general", "toast_notification", new SettingsData(SETTINGS_TYPE.SWITCH, true));
+init_setting("general", "menu_toast", new SettingsData(SETTINGS_TYPE.SWITCH, true));
 
-init_setting("general", "profanity_filter", new SettingsData(SETTINGS_TYPE.SWITCH, true));
+init_setting("general", "menu_profanity_filter", new SettingsData(SETTINGS_TYPE.SWITCH, true));
 
-init_setting("general", "skip_warning", new SettingsData(SETTINGS_TYPE.SWITCH, false));
+init_setting("general", "menu_skip_epilepsy", new SettingsData(SETTINGS_TYPE.SWITCH, false));
 
 #endregion
 
@@ -30,28 +32,27 @@ init_setting("general", "skip_warning", new SettingsData(SETTINGS_TYPE.SWITCH, f
 
 init_setting("graphics", "display_background", new SettingsData(SETTINGS_TYPE.SWITCH, true));
 
-init_setting("graphics", "particles", new SettingsData(SETTINGS_TYPE.ARROW, SETTINGS_LEVEL.MAX)
-    .add_values(SETTINGS_LEVEL.NONE, SETTINGS_LEVEL.MIN, SETTINGS_LEVEL.MAX));
-
-init_setting("graphics", "weather", new SettingsData(SETTINGS_TYPE.ARROW, SETTINGS_LEVEL.MAX)
-    .add_values(SETTINGS_LEVEL.NONE, SETTINGS_LEVEL.MIN, SETTINGS_LEVEL.MAX));
-
 init_setting("graphics", "display_coloured_lighting", new SettingsData(SETTINGS_TYPE.SWITCH, true));
 
-init_setting("graphics", "window_gui_size", new SettingsData(SETTINGS_TYPE.ARROW, "960x540")
-    .add_values("960x540", "1280x720", "1366x768", "1920x1080"));
+init_setting("graphics", "particles", new SettingsData(SETTINGS_TYPE.ARROW, 2)
+    .add_values(SETTINGS_LEVEL.NONE, SETTINGS_LEVEL.MIN, SETTINGS_LEVEL.MAX));
+
+init_setting("graphics", "weather", new SettingsData(SETTINGS_TYPE.ARROW, 2)
+    .add_values(SETTINGS_LEVEL.NONE, SETTINGS_LEVEL.MIN, SETTINGS_LEVEL.MAX));
+
+init_setting("graphics", "window_gui_size", new SettingsData(SETTINGS_TYPE.SLIDER, 1));
 
 init_setting("graphics", "window_fullscreen", new SettingsData(SETTINGS_TYPE.SWITCH, false)
     .set_on_press(function(_name, _value)
     {
     }));
 
-init_setting("graphics", "borderless", new SettingsData(false, SETTINGS_TYPE.SWITCH)
+init_setting("graphics", "window_borderless", new SettingsData(false, SETTINGS_TYPE.SWITCH)
     .set_on_press(function(_name, _value)
     {
     }));
 
-init_setting("graphics", "vsync", new SettingsData(false, SETTINGS_TYPE.SWITCH)
+init_setting("graphics", "window_vsync", new SettingsData(true, SETTINGS_TYPE.SWITCH)
     .set_on_press(function(_name, _value)
     {
     }));
@@ -62,17 +63,17 @@ init_setting("graphics", "vsync", new SettingsData(false, SETTINGS_TYPE.SWITCH)
 
 init_setting("controls", "key_left",       new SettingsData(SETTINGS_TYPE.HOTKEY, ord("A")));
 
-init_setting("controls", "key_right",      new SettingsData(SETTINGS_TYPE.HOTKEY, ord("W")));
+init_setting("controls", "key_right",      new SettingsData(SETTINGS_TYPE.HOTKEY, ord("D")));
 
 init_setting("controls", "key_jump",       new SettingsData(SETTINGS_TYPE.HOTKEY, vk_space));
 
-init_setting("controls", "key_climb_up",   new SettingsData(SETTINGS_TYPE.HOTKEY, ord("Q")));
+init_setting("controls", "key_climb_up",   new SettingsData(SETTINGS_TYPE.HOTKEY, ord("W")));
 
-init_setting("controls", "key_climb_down", new SettingsData(SETTINGS_TYPE.HOTKEY, ord("A")));
+init_setting("controls", "key_climb_down", new SettingsData(SETTINGS_TYPE.HOTKEY, ord("S")));
 
 init_setting("controls", "key_pause",      new SettingsData(SETTINGS_TYPE.HOTKEY, vk_escape));
 
-init_setting("controls", "key_inventory",  new SettingsData(SETTINGS_TYPE.HOTKEY, ord("Q")));
+init_setting("controls", "key_inventory",  new SettingsData(SETTINGS_TYPE.HOTKEY, ord("E")));
 
 init_setting("controls", "key_drop",       new SettingsData(SETTINGS_TYPE.HOTKEY, ord("Q")));
 
@@ -92,10 +93,31 @@ init_setting("audio", "audio_music", new SettingsData(SETTINGS_TYPE.SLIDER, 1)
 
 init_setting("audio", "audio_sfx", new SettingsData(SETTINGS_TYPE.SLIDER, 1));
 
-init_setting("audio", "audio_blocks", new SettingsData(SETTINGS_TYPE.SLIDER, 1));
+init_setting("audio", "audio_tile", new SettingsData(SETTINGS_TYPE.SLIDER, 1));
 
 init_setting("audio", "audio_creature_passive", new SettingsData(SETTINGS_TYPE.SLIDER, 1));
 
 init_setting("audio", "audio_creature_hostile", new SettingsData(SETTINGS_TYPE.SLIDER, 1));
 
 #endregion
+
+if (file_exists("settings.dat"))
+{
+    var _buffer = buffer_load_decompressed("settings.dat");
+    
+    var _version_major = buffer_read(_buffer, buffer_u8);
+    var _version_minor = buffer_read(_buffer, buffer_u8);
+    var _version_patch = buffer_read(_buffer, buffer_u8);
+    var _version_type  = buffer_read(_buffer, buffer_u8);
+    
+    var _length = buffer_read(_buffer, buffer_u16);
+    
+    repeat (_length)
+    {
+        var _name = buffer_read(_buffer, buffer_string);
+        
+        global.settings[$ _name] = buffer_read(_buffer, buffer_f32);
+    }
+    
+    buffer_delete(_buffer);
+}

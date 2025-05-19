@@ -1,4 +1,4 @@
-function control_physics(_tick, _id)
+function control_physics(_dt, _id)
 {
     with (_id)
     {
@@ -11,7 +11,7 @@ function control_physics(_tick, _id)
         
         var _physics = entity_value.physics;
         
-        xvelocity = lerp_delta(xvelocity, _direction * _physics.movement_speed, 0.4, _tick);
+        xvelocity = lerp_delta(xvelocity, _direction * _physics.movement_speed, 0.4, _dt);
         
         control_physics_x();
         
@@ -19,7 +19,7 @@ function control_physics(_tick, _id)
         {
             if (!tile_meeting(x, y + 1))
             {
-                coyote_time += _tick;
+                coyote_time += _dt;
             }
             
             if (coyote_time > PHYSICS_GLOBAL_COYOTE_TIME)
@@ -44,7 +44,7 @@ function control_physics(_tick, _id)
         
         var _jump_time = _physics.jump_time;
         
-        if (jump_count > 2)
+        if (jump_count > _physics.jump_count_max)
         {
             jump_pressed = infinity;
         }
@@ -56,23 +56,20 @@ function control_physics(_tick, _id)
             }
             else if (jump_pressed < _jump_time)
             {
-                jump_pressed = min(jump_pressed + _tick, _jump_time);
+                jump_pressed += _dt;
             }
         }
         
-        if (jump_pressed < _jump_time)
+        if (jump_pressed >= _jump_time)
         {
-            if (jump_pressed > 0)
-            {
-                yvelocity = -_physics.jump_height * (1 - power(jump_pressed / _jump_time, 3.1));
-            }
+            jump_pressed = infinity;
         }
-        else
+        else if (jump_pressed > 0)
         {
-            jump_presed = infinity;
+            yvelocity = -_physics.jump_height * _dt;
         }
         
-        control_physics_y(_physics.gravity * _tick);
+        control_physics_y(_dt, _physics.gravity);
         
         if (tile_meeting(x, y + 1))
         {

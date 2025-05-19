@@ -142,5 +142,6 @@ if (_hp > 0)// && (is_opened_gui) && (!is_opened_menu)
 draw_text(16, 16,
     $"FPS: {fps}\n" +
     $"X/Y: {_player_x}/{_player_y}\n" +
-    $"Num: {instance_number(obj_Chunk)}\n"
+    $"Num: {instance_number(obj_Chunk)}\n" +
+    $"Num: {obj_Player.yvelocity}\n"
 );

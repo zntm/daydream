@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"file_read_directory",
+  "%Name":"unix_to_datetime",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"file_read_directory",
+  "name":"unix_to_datetime",
   "parent":{
-    "name":"File",
-    "path":"folders/Scripts/File.yy",
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

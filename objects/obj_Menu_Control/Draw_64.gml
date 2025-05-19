@@ -186,7 +186,7 @@ for (var i = 0; i < _length; ++i)
                     break;
                 }
                 
-                if (_selectable) && (active) && ((area == -1) || (point_in_rectangle(_xoffset + mouse_x, _yoffset + mouse_y, area[0], area[1], area[2], area[3]))) && (mouse_check_button_pressed(mb_left))
+                if (_selectable) && (active) && ((area == undefined) || (point_in_rectangle(_xoffset + mouse_x, _yoffset + mouse_y, area[0], area[1], area[2], area[3]))) && (mouse_check_button_pressed(mb_left))
                 {
                     sfx_play("phantasia:menu.button.press", global.settings_value.sfx);
                     
@@ -199,7 +199,7 @@ for (var i = 0; i < _length; ++i)
             {
                 mouse_in_bbox = false;
                 
-                if (on_hold == -1)
+                if (on_hold == undefined)
                 {
                     selected = false;
                 }
@@ -283,7 +283,7 @@ for (var i = 0; i < _length; ++i)
                 draw_sprite_ext(icon, icon_index, _x, _y + (MENU_BUTTON_INFO_ICON_YOFFSET * _ymultiplier), icon_xscale * _xmultiplier, icon_yscale * _ymultiplier, 0, _colour, 1);
             }
             
-            if (on_draw != -1) && (x >= 0) && (x < room_width)
+            if (on_draw != undefined) && (x >= 0) && (x < room_width)
             {
                 on_draw(_xoffset + x, _yoffset + y + (_edge_offset / _ymultiplier), id, _xmultiplier, _ymultiplier, _colour);
             }
@@ -313,7 +313,7 @@ for (var i = 0; i < _length; ++i)
                 break;
             }
             
-            if (_selectable) && (active) && ((area == -1) || (point_in_rectangle(_xoffset + mouse_x, _yoffset + mouse_y, area[0], area[1], area[2], area[3]))) && (mouse_check_button_pressed(mb_left))
+            if (_selectable) && (active) && ((area == undefined) || (point_in_rectangle(_xoffset + mouse_x, _yoffset + mouse_y, area[0], area[1], area[2], area[3]))) && (mouse_check_button_pressed(mb_left))
             {
                 sfx_play("phantasia:menu.button.press", global.settings_value.sfx);
                 
@@ -378,7 +378,7 @@ for (var i = 0; i < _length; ++i)
     
     with (obj_Menu_Anchor)
     {
-        if (surface_index != i) || (on_draw == -1) continue;
+        if (surface_index != i) || (on_draw == undefined) continue;
         
         on_draw(_xoffset + x + _surface_height_offset, _yoffset + y, id, _xmultiplier, _ymultiplier);
     }
