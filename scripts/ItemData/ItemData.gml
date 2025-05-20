@@ -21,8 +21,8 @@ enum ITEM_TYPE_BIT {
 }
 
 enum ITEM_BOOLEAN {
-    IS_TILE,
-    IS_FOLIAGE
+    IS_TILE    = 1 << 0,
+    IS_FOLIAGE = 1 << 1
 }
 
 enum TILE_ANIMATION_TYPE {
@@ -223,7 +223,7 @@ function ItemData() constructor
     {
         if (_is_tile)
         {
-            ___boolean |= 1 << ITEM_BOOLEAN.IS_TILE;
+            ___boolean |= ITEM_BOOLEAN.IS_TILE;
             
             set_animation_type("connected");
         }
@@ -233,14 +233,14 @@ function ItemData() constructor
     
     static is_tile = function()
     {
-        return !!(___boolean & (1 << ITEM_BOOLEAN.IS_TILE));
+        return !!(___boolean & ITEM_BOOLEAN.IS_TILE);
     }
     
     static set_is_foliage = function(_is_foliage)
     {
         if (_is_foliage)
         {
-            ___boolean |= 1 << ITEM_BOOLEAN.IS_FOLIAGE;
+            ___boolean |= ITEM_BOOLEAN.IS_FOLIAGE;
             
             set_animation_type("foliage");
         }
@@ -250,7 +250,7 @@ function ItemData() constructor
     
     static is_foliage = function()
     {
-        return !!(___boolean & (1 << ITEM_BOOLEAN.IS_FOLIAGE));
+        return !!(___boolean & ITEM_BOOLEAN.IS_FOLIAGE);
     }
     
     static set_durability = function(_durability)

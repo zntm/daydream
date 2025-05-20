@@ -11,7 +11,7 @@ function control_physics(_dt, _id)
         
         var _physics = entity_value.physics;
         
-        xvelocity = lerp_delta(xvelocity, _direction * _physics.movement_speed, 0.4, _dt);
+        xvelocity = lerp_delta(xvelocity, _direction * _physics.movement_speed, 0.3, _dt);
         
         control_physics_x();
         
@@ -60,13 +60,15 @@ function control_physics(_dt, _id)
             }
         }
         
+        var _is_jumping = false;
+        
         if (jump_pressed >= _jump_time)
         {
             jump_pressed = infinity;
         }
         else if (jump_pressed > 0)
         {
-            yvelocity = -_physics.jump_height * _dt;
+            yvelocity = -_physics.jump_height * _dt * (1 - power(jump_pressed / _jump_time, _physics.jump_falloff));
         }
         
         control_physics_y(_dt, _physics.gravity);

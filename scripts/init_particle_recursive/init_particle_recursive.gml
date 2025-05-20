@@ -10,8 +10,6 @@ function init_particle_recursive(_directory, _namespace, _id)
         var _file = _files[i];
         var _subdirectory = $"{_directory}/{_file}";
         
-        show_debug_message(_subdirectory)
-        
         var _name = ((_id == undefined) ? _file : $"{_id}/{_file}");
         
         if (!file_exists($"{_subdirectory}/data.json"))
@@ -41,7 +39,9 @@ function init_particle_recursive(_directory, _namespace, _id)
         
         global.particle_data[$ $"{_namespace}:{_file}"] = new ParticleData(_sprite)
             .set_sprite_offset(_sprite_xoffset, _sprite_yoffset)
-            .set_speed(_json[$ "xspeed"], _json[$ "yspeed"])
+            .set_velocity(_json[$ "xvelocity"], _json[$ "yvelocity"])
+            .set_velocity_on_collision(_json[$ "xvelocity_on_collision"], _json[$ "yvelocity_on_collision"])
+            .set_gravity(_json[$ "gravity"])
             .set_collision_box(_json[$ "collision_box"]);
         
         /*

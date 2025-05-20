@@ -26,7 +26,6 @@ function control_player(_dt)
         y += _offset;
     }
     
-    /*
     for (var i = abs(xvelocity * (image_xscale / 8)); i > 0; i -= entity_value.collision_box.width)
     {
         var _offset = min(i, entity_value.collision_box.width) * _xsign;
@@ -44,7 +43,7 @@ function control_player(_dt)
         
         y += _offset;
     }
-    *\/
+    
     x += xvelocity;
     y += yvelocity;
     */

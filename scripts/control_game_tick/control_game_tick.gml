@@ -4,8 +4,6 @@ function control_game_tick()
     {
         var _dt = min(1, _delta_time);
         
-        show_debug_message($"{_delta_time}: {_dt}")
-        
         with (obj_Player)
         {
             control_player(_dt);

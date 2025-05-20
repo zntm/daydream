@@ -73,8 +73,8 @@ var _camera_height = camera_get_view_height(view_camera[0]);
 var _camera_x = obj_Player.x - (_camera_width  / 2);
 var _camera_y = obj_Player.y - (_camera_height / 2);
 
-var _gui_width  = window_get_width();
-var _gui_height = window_get_height();
+var _gui_width  = display_get_width();
+var _gui_height = display_get_height();
 
 global.camera_width  = _camera_width;
 global.camera_height = _camera_height;
