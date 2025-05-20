@@ -1,53 +1,48 @@
 function carbasa_sort(_page)
 {
     var _data = global.carbasa_page_position[$ _page];
-    /*
-    array_sort(_data, function(a, b)
-    {
-        return ((b.get_height() * 2048) + b.get_width()) - ((a.get_height() * 2048) + a.get_width());
-    });
-    */
+    
     var _length = array_length(_data);
     
-    var current_x = 0;
-    var current_y = 0;
-    var current_row_height = 0;
+    var _current_x = 0;
+    var _current_y = 0;
+    var _current_row_height = 0;
     
     var _width = 64;
     var _height = 64;
     
     for (var i = 0; i < _length; ++i)
     {
-        var sprite = _data[i];
+        var _sprite = _data[i];
         
-        var w = sprite.get_width();
-        var h = sprite.get_height();
+        var _w = _sprite.get_width();
+        var _h = _sprite.get_height();
         
-        // Check if we need to move to a new row
-        if (current_x + w >= 2048)
+        if (_current_x + _w >= 2048)
         {
-            current_y += current_row_height;
-            current_x = 0;
-            current_row_height = 0;
+            _current_x = 0;
+            _current_y += _current_row_height;
+            
+            _current_row_height = 0;
         }
         
-        global.carbasa_page[$ _page][$ sprite.get_name()].sprite[@ sprite.get_index()] = i;
+        global.carbasa_page[$ _page][$ _sprite.get_name()].sprite[@ _sprite.get_index()] = i;
         
-        _data[@ i].set_position(current_x, current_y);
+        _data[@ i].set_position(_current_x, _current_y);
         
-        // Update current position
-        current_x += w;
-        if (h >= current_row_height)
+        _current_x += _w;
+        
+        if (_h >= _current_row_height)
         {
-            current_row_height = h;
+            _current_row_height = _h;
         }
         
-        _width  = max(_width,  current_x + w);
-        _height = max(_height, current_y + h);
+        _width  = max(_width,  _current_x + _w);
+        _height = max(_height, _current_y + _h);
         
-        if (current_y + h >= 2048)
+        if (_current_y + _h >= 2048)
         {
-            throw "Too much textures"
+            throw "Too much textures";
         }
     }
     
