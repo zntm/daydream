@@ -5,9 +5,12 @@ enum VERSION_VALUE {
 }
 
 #macro PROGRAM_NAME "Phantasia"
-#macro PROGRAM_DIRECTORY_RESOURCES (((GM_build_type == "run") ? $"{filename_dir(GM_project_filename)}/datafiles/" : "") + "resources")
 
 #macro GAME_TICK 60
+
+#macro SITE_BLUESKY "https://bsky.app/profile/phantasiagame.bsky.social"
+#macro SITE_DISCORD "https://discord.gg/PjdKzPZUKK"
+#macro SITE_TWITTER "https://x.com/PhantasiaGame"
 
 #region Chunk
 

@@ -133,6 +133,8 @@
     {"id":{"name":"rm_Init","path":"rooms/rm_Init/rm_Init.yy",},},
     {"id":{"name":"rm_World","path":"rooms/rm_World/rm_World.yy",},},
     {"id":{"name":"___init___","path":"scripts/___init___/___init___.yy",},},
+    {"id":{"name":"___init_exception___","path":"scripts/___init_exception___/___init_exception___.yy",},},
+    {"id":{"name":"___init_fs___","path":"scripts/___init_fs___/___init_fs___.yy",},},
     {"id":{"name":"array_choose","path":"scripts/array_choose/array_choose.yy",},},
     {"id":{"name":"BackgroundData","path":"scripts/BackgroundData/BackgroundData.yy",},},
     {"id":{"name":"BiomeData","path":"scripts/BiomeData/BiomeData.yy",},},
