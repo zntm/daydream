@@ -15,7 +15,9 @@ function tile_place(_x, _y, _z, _tile)
         _inst = instance_create_layer(_chunk_x, _chunk_y, "Instances", obj_Chunk);
     }
     
-	_inst.chunk[@ tile_index(_x, _y, _z)] = _tile;
+    var _index = tile_index(_x, _y, _z);
+    
+	_inst.chunk[@ _index] = _tile;
     
     var _vertex_buffer = _inst.chunk_vertex_buffer[_z];
     
@@ -27,5 +29,16 @@ function tile_place(_x, _y, _z, _tile)
     if (_tile != TILE_EMPTY)
     {
         _inst.chunk_display |= 1 << _z;
+        
+        ++_inst.chunk_count[@ _z];
+    }
+    else if (_inst.chunk[_index] != TILE_EMPTY)
+    {
+        var _bitmask = 1 << _z;
+        
+        if (--_inst.chunk_count[@ _z] <= 0) && (_inst.chunk_display & _bitmask)
+        {
+            _inst.chunk_display ^= _bitmask;
+        }
     }
 }

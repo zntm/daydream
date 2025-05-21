@@ -45,9 +45,7 @@ function render_tile(_buffer, _uv, _surface_width, _surface_height, _name, _inde
     
     var _dx = _x + _e - _h;
     var _dy = _y + _f + _g;
-
-    var _page_width = _.width;
-
+    
     var _number = _.number;
     
     var _animation_type = global.item_data[$ _name].get_animation_type();
@@ -56,31 +54,31 @@ function render_tile(_buffer, _uv, _surface_width, _surface_height, _name, _inde
     vertex_colour(_buffer, _colour, _alpha);
     vertex_position(_buffer, _ax, _ay);
     vertex_texcoord(_buffer, _v0, _v1);
-    vertex_float4(_buffer, _index, _number, _page_width, _animation_type);
+    vertex_float4(_buffer, _index, _number, _width, _animation_type);
     
     vertex_colour(_buffer, _colour, _alpha);
     vertex_position(_buffer, _bx, _by);
     vertex_texcoord(_buffer, _v2, _v1);
-    vertex_float4(_buffer, _index, _number, _page_width, _animation_type);
+    vertex_float4(_buffer, _index, _number, _width, _animation_type);
     
     vertex_colour(_buffer, _colour, _alpha);
     vertex_position(_buffer, _cx, _cy);
     vertex_texcoord(_buffer, _v0, _v3);
-    vertex_float4(_buffer, _index, _number, _page_width, _animation_type);
+    vertex_float4(_buffer, _index, _number, _width, _animation_type);
     
     // Triangle 2
     vertex_colour(_buffer, _colour, _alpha);
     vertex_position(_buffer, _bx, _by);
     vertex_texcoord(_buffer, _v2, _v1);
-    vertex_float4(_buffer, _index, _number, _page_width, _animation_type);
+    vertex_float4(_buffer, _index, _number, _width, _animation_type);
     
     vertex_colour(_buffer, _colour, _alpha);
     vertex_position(_buffer, _cx, _cy);
     vertex_texcoord(_buffer, _v0, _v3);
-    vertex_float4(_buffer, _index, _number, _page_width, _animation_type);
+    vertex_float4(_buffer, _index, _number, _width, _animation_type);
     
     vertex_colour(_buffer, _colour, _alpha);
     vertex_position(_buffer, _dx, _dy);
     vertex_texcoord(_buffer, _v2, _v3);
-    vertex_float4(_buffer, _index, _number, _page_width, _animation_type);
+    vertex_float4(_buffer, _index, _number, _width, _animation_type);
 }

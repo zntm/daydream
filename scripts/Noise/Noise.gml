@@ -15,7 +15,7 @@ function Noise(_xoffset, _yoffset, _xsize, _ysize, _amplitude, _octave, _roughne
     surface_set_target(_surface);
     shader_set(shd_Noise);
     
-    shader_set_uniform_f(__u_noise, _octave, _seed / 0x2109);
+    shader_set_uniform_f(__u_noise, _octave, _seed / 0x8109);
     shader_set_uniform_f(__u_offset, _xoffset, _yoffset); 
     shader_set_uniform_i(__u_roughness, _roughness); 
     

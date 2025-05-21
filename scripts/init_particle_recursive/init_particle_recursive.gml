@@ -44,41 +44,6 @@ function init_particle_recursive(_directory, _namespace, _id)
             .set_gravity(_json[$ "gravity"])
             .set_collision_box(_json[$ "collision_box"]);
         
-        /*
-        var _xspeed_on_collision = _json[$ "xspeed_on_collision"];
-        var _yspeed_on_collision = _json[$ "yspeed_on_collision"];
-        
-        var _destroy_on_collision = _json[$ "destroy_on_collision"] ?? false;
-        
-        var _requires_sunlight = _json[$ "requires_sunlight"] ?? false;
-        
-        global.particle_data[$ $"{_namespace}:{_file}"] = {
-            sprite:   _sprite,
-            boolean: (_requires_sunlight << 5) | (_destroy_on_collision << 4) | ((_json[$ "additive"] ?? false) << 3) | ((_json[$ "stretch_animation"] ?? false) << 2) | (((_json[$ "collision"] ?? true) || (_destroy_on_collision) || (_xspeed_on_collision != undefined) || (_yspeed_on_collision != undefined)) << 1) | (_json[$ "fade_out"] ?? false),
-            
-            xspeed: _json[$ "xspeed"] ?? 0,
-            yspeed: _json[$ "yspeed"] ?? 0,
-            
-            scale:   _json[$ "scale"] ?? 1,
-            gravity: _json[$ "gravity"] ?? PHYSICS_GLOBAL_GRAVITY,
-            
-            rotation: _json[$ "rotation"] ?? 0,
-            lifetime: _json.lifetime,
-            
-            xspeed_on_collision: _xspeed_on_collision,
-            yspeed_on_collision: _yspeed_on_collision,
-            
-            animation_speed: _json[$ "animation_speed"] ?? 1,
-            
-            sprite_xoffset: _sprite_xoffset,
-            sprite_yoffset: _sprite_yoffset,
-            
-            bbox_left: _bbox_left,
-            bbox_top: _bbox_top,
-            bbox_right: _bbox_right,
-            bbox_bottom: _bbox_bottom,
-        }
-        */
         delete _json;
         
         dbg_timer("init_particle", $"[Init] Loaded Particle: \'{_file}\'");
