@@ -21,7 +21,7 @@ for (var i = 0; i < _length; ++i)
     }
 }
 
-global.delta_time = (delta_time / 1_000_000)// * GAME_TICK;
+global.delta_time = delta_time / 1_000_000;
 
 var _player_x = obj_Player.x;
 var _player_y = obj_Player.y;

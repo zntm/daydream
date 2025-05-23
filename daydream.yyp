@@ -235,6 +235,7 @@
     {"id":{"name":"worldgen_get_tile_foliage","path":"scripts/worldgen_get_tile_foliage/worldgen_get_tile_foliage.yy",},},
     {"id":{"name":"worldgen_get_tile_wall","path":"scripts/worldgen_get_tile_wall/worldgen_get_tile_wall.yy",},},
     {"id":{"name":"xorshift","path":"scripts/xorshift/xorshift.yy",},},
+    {"id":{"name":"shd_Background","path":"shaders/shd_Background/shd_Background.yy",},},
     {"id":{"name":"shd_Chunk","path":"shaders/shd_Chunk/shd_Chunk.yy",},},
     {"id":{"name":"shd_Noise","path":"shaders/shd_Noise/shd_Noise.yy",},},
     {"id":{"name":"spr_Glow_Corner","path":"sprites/spr_Glow_Corner/spr_Glow_Corner.yy",},},

@@ -24,48 +24,61 @@ function render_tile_foliage(_buffer, _uv, _chunk_index, _surface_width, _surfac
     var _cos = __cos[_rotation];
     var _sin = __cos[(_rotation + 90) % 360];
     
-    var _ax = _x + (_xoffset * _cos) - (_yoffset * _sin);
-    var _ay = _y + (_xoffset * _sin) + (_yoffset * _cos);
+    var _a = _xoffset * _cos;
+    var _b = _xoffset * _sin;
+    var _c = _yoffset * _cos;
+    var _d = _yoffset * _sin;
     
-    var _bx = _x + (_xw * _cos) - (_yoffset * _sin);
-    var _by = _y + (_xw * _sin) + (_yoffset * _cos);
+    var _e = _xw * _cos;
+    var _f = _xw * _sin;
+    var _g = _yh * _cos;
+    var _h = _yh * _sin;
     
-    var _cx = _x + (_xoffset * _cos) - (_yh * _sin);
-    var _cy = _y + (_xoffset * _sin) + (_yh * _cos);
+    var _ax = _x + _a - _d;
+    var _ay = _y + _b + _c;
     
-    var _dx = _x + (_xw * _cos) - (_yh * _sin);
-    var _dy = _y + (_xw * _sin) + (_yh * _cos);
+    var _bx = _x + _e - _d;
+    var _by = _y + _f + _c;
     
+    var _cx = _x + _a - _h;
+    var _cy = _y + _b + _g;
+    
+    var _dx = _x + _e - _h;
+    var _dy = _y + _f + _g;
+    
+    var _number = _.number;
+    
+    var _animation_type = global.item_data[$ _name].get_animation_type();
     
     // Triangle 1
     vertex_colour(_buffer, _colour, _alpha);
     vertex_position(_buffer, _ax, _ay);
     vertex_texcoord(_buffer, _v0, _v1);
-    vertex_float4(_buffer, _index, _.number, _chunk_index, global.item_data[$ _name].get_animation_type());
+    vertex_float4(_buffer, _index, _number, _chunk_index, _animation_type);
     
     vertex_colour(_buffer, _colour, _alpha);
     vertex_position(_buffer, _bx, _by);
     vertex_texcoord(_buffer, _v2, _v1);
-    vertex_float4(_buffer, _index, _.number, _chunk_index, global.item_data[$ _name].get_animation_type());
+    vertex_float4(_buffer, _index, _number, _chunk_index, _animation_type);
     
     vertex_colour(_buffer, _colour, _alpha);
     vertex_position(_buffer, _cx, _cy);
     vertex_texcoord(_buffer, _v0, _v3);
-    vertex_float4(_buffer, _index, _.number, _.width, TILE_ANIMATION_TYPE.DEFAULT);
+    vertex_float4(_buffer, _index, _number, _width, TILE_ANIMATION_TYPE.DEFAULT);
     
     // Triangle 2
     vertex_colour(_buffer, _colour, _alpha);
     vertex_position(_buffer, _bx, _by);
     vertex_texcoord(_buffer, _v2, _v1);
-    vertex_float4(_buffer, _index, _.number, _chunk_index, global.item_data[$ _name].get_animation_type());
+    vertex_float4(_buffer, _index, _number, _chunk_index, _animation_type);
     
     vertex_colour(_buffer, _colour, _alpha);
     vertex_position(_buffer, _cx, _cy);
     vertex_texcoord(_buffer, _v0, _v3);
-    vertex_float4(_buffer, _index, _.number, _.width, TILE_ANIMATION_TYPE.DEFAULT);
+    vertex_float4(_buffer, _index, _number, _width, TILE_ANIMATION_TYPE.DEFAULT);
     
     vertex_colour(_buffer, _colour, _alpha);
     vertex_position(_buffer, _dx, _dy);
     vertex_texcoord(_buffer, _v2, _v3);
-    vertex_float4(_buffer, _index, _.number, _.width, TILE_ANIMATION_TYPE.DEFAULT);
+    vertex_float4(_buffer, _index, _number, _width, TILE_ANIMATION_TYPE.DEFAULT);
 }

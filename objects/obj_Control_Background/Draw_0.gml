@@ -43,6 +43,10 @@ draw_sprite_general(
     1
 );
 
+shader_set(shd_Background);
+
+shader_set_uniform_f(shader_get_uniform(shd_Background, "u_colour"), ((_sky_colour_base >> 0) & 0xff) / 0xff, ((_sky_colour_base >> 8) & 0xff) / 0xff, ((_sky_colour_base >> 16) & 0xff) / 0xff);
+
 var _background_data = global.background_data;
 
 var _in_biome_background = _background_data[$ _in_biome_data.get_background()];
@@ -50,6 +54,8 @@ var _in_biome_background_length = _in_biome_background.get_sprite_length();
 
 for (var i = 0; i < _in_biome_background_length; ++i)
 {
+    shader_set_uniform_f(shader_get_uniform(shd_Background, "u_strength"), 0.1 * (_in_biome_background_length - i + 1));
+    
     var _sprite_width  = _in_biome_background.get_sprite_width(i);
     var _sprite_height = _in_biome_background.get_sprite_height(i);
     
@@ -59,3 +65,5 @@ for (var i = 0; i < _in_biome_background_length; ++i)
     
     render_background_parallax(_in_biome_background.get_sprite(i), _player_x + _xoffset, _camera_y + _camera_height, _sprite_width, _sprite_height, _xsize, 0, c_white, 1);
 }
+
+shader_reset();

@@ -60,13 +60,11 @@ function control_physics(_dt, _id)
             }
         }
         
-        var _is_jumping = false;
-        
         if (jump_pressed >= _jump_time)
         {
             jump_pressed = infinity;
         }
-        else if (jump_pressed > 0)
+        else if (jump_pressed < _jump_time) && (jump_pressed > 0)
         {
             yvelocity = -_physics.jump_height * _dt * (1 - power(jump_pressed / _jump_time, _physics.jump_falloff));
         }
