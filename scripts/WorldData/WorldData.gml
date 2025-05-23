@@ -63,6 +63,44 @@ function WorldData(_world_height) constructor
         return (___time_diurnal[$ _time_diurnal] >> 16) & 0xffff;
     }
     
+    static set_celestial = function(_sprite, _data)
+    {
+        ___celestial_sprite = _sprite;
+        ___celestial_data = _data;
+        
+        ___celestial_names = struct_get_names(_data);
+        ___celestial_length = array_length(___celestial_names);
+        
+        return self;
+    }
+    
+    static get_celestial_name = function(_time)
+    {
+        for (var i = 0; i < ___celestial_length; ++i)
+        {
+            var _name = ___celestial_names[i];
+            
+            var _data = ___celestial_data[$ _name];
+            
+            if (_time >= _data.start) && (_time < _data[$ "end"])
+            {
+                return _name;
+            }
+        }
+        
+        return undefined;
+    }
+    
+    static get_celestial_data = function(_name)
+    {
+        return ___celestial_data[$ _name];
+    }
+    
+    static get_celestial_sprite = function(_name)
+    {
+        return ___celestial_sprite[$ _name];
+    }
+    
     static set_cave_biome = function(_cave)
     {
         static __transition_type = {

@@ -26,6 +26,16 @@
 			}
 		}
 	},
+	"celestial": {
+		"sun": {
+			"start": 0,
+			"end": 22000
+		},
+		"moon": {
+			"start": 22000,
+			"end": 54000
+		}
+	},
 	"biome": {
 		"cave": {
 			"default": [

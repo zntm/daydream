@@ -17,7 +17,6 @@ function tile_place(_x, _y, _z, _tile)
     
     var _index = tile_index(_x, _y, _z);
     
-    
     if (_tile != TILE_EMPTY)
     {
         _inst.chunk_display |= 1 << _z;

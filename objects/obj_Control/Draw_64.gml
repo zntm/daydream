@@ -143,5 +143,5 @@ draw_text(16, 16,
     $"FPS: {fps}\n" +
     $"X/Y: {_player_x}/{_player_y}\n" +
     $"Num: {instance_number(obj_Chunk)}\n" +
-    $"Num: {obj_Player.yvelocity}\n"
+    $"Time: {global.world.time}"
 );

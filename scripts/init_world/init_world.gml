@@ -47,8 +47,25 @@ function init_world(_directory, _namespace = "phantasia", _type = 0)
         
         _world_data.set_time(_time.length, _time.diurnal);
         
-        var _biome = _json.biome;
+        var _celestial = {}
         
+        var _files_celestial = file_read_directory($"{_directory}/{_file}/celestial");
+        var _files_celestial_length = array_length(_files_celestial);
+        
+        for (var j = 0; j < _files_celestial_length; ++j)
+        {
+            var _file_celestial = _files_celestial[j];
+            
+            var _sprite = sprite_add($"{_directory}/{_file}/celestial/{_file_celestial}", 1, false, false, 0, 0);
+            
+            sprite_set_offset(_sprite, round(sprite_get_width(_sprite) / 2), sprite_get_height(_sprite) / 2);
+            
+            _celestial[$ string_delete(_file_celestial, string_length(_file_celestial) - 3, 4)] = _sprite;
+        }
+        
+        _world_data.set_celestial(_celestial, _json[$ "celestial"]);
+        
+        var _biome = _json.biome;
         
         _world_data.set_cave_biome(_biome.cave);
         _world_data.set_surface_biome(_biome.surface);

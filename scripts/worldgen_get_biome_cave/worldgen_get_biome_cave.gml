@@ -38,7 +38,7 @@ function worldgen_get_biome_cave(_x, _y, _surface_height, _seed)
 		*/
 		if (_type == "phantasia:random")
 		{
-			if (_y >= _end + random_seeded(_world_data.get_default_cave_transition_amplitude(i), _seed + (_x * 244))) continue;
+			if (_y >= _end + random_seeded(_world_data.get_default_cave_transition_amplitude(i), _seed + ((_x + (i << 11)) * 244))) continue;
 			
 			return _world_data.get_default_cave_id(i);
 		}

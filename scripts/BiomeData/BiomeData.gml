@@ -95,6 +95,21 @@ function BiomeData(_name, _type) constructor
         return ___light_colour[$ _diurnal];
     }
     
+    static set_music = function(_music)
+    {
+        if (_music != undefined)
+        {
+            ___music = _music;
+        }
+        
+        return self;
+    }
+    
+    static get_music = function(_music)
+    {
+        return self[$ "___music"];
+    }
+    
     static set_tile = function(_data)
     {
         ___tile_base = _data.base;

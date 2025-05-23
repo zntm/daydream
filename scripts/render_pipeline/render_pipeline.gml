@@ -52,27 +52,4 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
         
         shader_reset();
     }
-    /*
-    with (obj_Chunk)
-    {
-        if (!chunk_display) continue;
-        
-        draw_rectangle(
-            x - (TILE_SIZE / 2),
-            y - (TILE_SIZE / 2),
-            x - (TILE_SIZE / 2) + CHUNK_SIZE_DIMENSION - 1,
-            y - (TILE_SIZE / 2) + CHUNK_SIZE_DIMENSION - 1,
-            true
-        );
-        
-        for (var i = 0; i < CHUNK_DEPTH; ++i)
-        {
-            draw_text(
-                x - (TILE_SIZE / 2) + (i * 16),
-                y - (TILE_SIZE / 2),
-                vertex_buffer_exists(chunk_vertex_buffer[i])
-            );
-        }
-    }
-    */
 }

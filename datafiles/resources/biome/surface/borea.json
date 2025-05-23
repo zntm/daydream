@@ -25,6 +25,9 @@
         "dusk": "#C68B69",
         "night": "#141B35"
     },
+    "music": [
+        "phantasia:fall"
+    ],
 	"tile": {
 		"top_layer": {
 			"base": {

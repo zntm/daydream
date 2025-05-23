@@ -24,6 +24,8 @@ function init_biome(_directory, _namespace = "phantasia", _type = 0)
         _biome_data.set_sky_colour(_json.sky_colour);
         _biome_data.set_light_colour(_json.light_colour);
         
+        _biome_data.set_music(_json[$ "music"]);
+        
         _biome_data.set_tile(_json.tile);
         _biome_data.set_tile_foliage(_json.foliage);
         
@@ -60,6 +62,8 @@ function init_biome(_directory, _namespace = "phantasia", _type = 0)
         _biome_data.set_map_colour(_json.map_colour);
         _biome_data.set_sky_colour(_json.sky_colour);
         _biome_data.set_light_colour(_json.light_colour);
+        
+        _biome_data.set_music(_json[$ "music"]);
         
         var _tile = _json.tile;
         
