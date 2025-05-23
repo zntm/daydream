@@ -71,6 +71,9 @@ with (obj_Player)
     input_left  = keyboard_check(_settings.key_left);
     input_right = keyboard_check(_settings.key_right);
     
+    input_climb_up   = keyboard_check(_settings.key_climb_up);
+    input_climb_down = keyboard_check(_settings.key_climb_down);
+    
     input_jump  = keyboard_check(_settings.key_jump);
     input_jump_pressed = keyboard_check_pressed(_settings.key_jump);
 }

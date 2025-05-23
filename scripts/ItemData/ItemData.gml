@@ -106,6 +106,57 @@ function ItemData() constructor
         return self[$ "___edge_padding"];
     }
     
+    static set_animation_type = function(_type)
+    {
+        static __animation_type = {
+            "default":   TILE_ANIMATION_TYPE.DEFAULT,
+            "connected": TILE_ANIMATION_TYPE.CONNECTED,
+            "increment": TILE_ANIMATION_TYPE.INCREMENT,
+            "foliage":   TILE_ANIMATION_TYPE.FOLIAGE
+        }
+        
+        ___animation_type = __animation_type[$ _type];
+        
+        return self;
+    }
+    
+    static get_animation_type = function()
+    {
+        return self[$ "___animation_type"] ?? TILE_ANIMATION_TYPE.DEFAULT;
+    }
+    
+    static set_placement = function(_placement)
+    {
+        if (_placement != undefined)
+        {
+            var _index = _placement[$ "index"];
+            
+            if (_index != undefined)
+            {
+                ___placement_index = init_smart_value(_index);
+            }
+            
+            var _index_offset = _placement[$ "index_offset"];
+            
+            if (_index_offset != undefined)
+            {
+                ___placement_index_offset = init_smart_value(_index_offset);
+            }
+        }
+        
+        return self;
+    }
+    
+    static get_placement_index = function()
+    {
+        return self[$ "___placement_index"] ?? 0;
+    }
+    
+    static get_placement_index_offset = function()
+    {
+        return self[$ "___placement_index_offset"] ?? 0;
+    }
+    
     static set_harvest = function(_harvest)
     {
         ___harvest_value = (_harvest.level << 16) | _harvest.hardness;
@@ -137,25 +188,28 @@ function ItemData() constructor
     
     static set_drop = function(_drop)
     {
-        var _drop_chance = _drop[$ "chance"];
-        
-        if (_drop_chance != undefined)
+        if (_drop != undefined)
         {
-            ___drop_chance = _drop_chance;
-        }
-        
-        var _drop_item = _drop[$ "item"];
-        
-        if (_drop_item != undefined)
-        {
-            ___drop_item = _drop_item;
-        }
-        
-        var _drop_loot = _drop[$ "loot"];
-        
-        if (_drop_loot != undefined)
-        {
-            ___drop_loot = _drop_loot;
+            var _drop_chance = _drop[$ "chance"];
+            
+            if (_drop_chance != undefined)
+            {
+                ___drop_chance = _drop_chance;
+            }
+            
+            var _drop_item = _drop[$ "item"];
+            
+            if (_drop_item != undefined)
+            {
+                ___drop_item = _drop_item;
+            }
+            
+            var _drop_loot = _drop[$ "loot"];
+            
+            if (_drop_loot != undefined)
+            {
+                ___drop_loot = _drop_loot;
+            }
         }
         
         return self;
@@ -300,23 +354,4 @@ function ItemData() constructor
     }
     
     #endregion
-    
-    static set_animation_type = function(_type)
-    {
-        static __animation_type = {
-            "default":   TILE_ANIMATION_TYPE.DEFAULT,
-            "connected": TILE_ANIMATION_TYPE.CONNECTED,
-            "increment": TILE_ANIMATION_TYPE.INCREMENT,
-            "foliage":   TILE_ANIMATION_TYPE.FOLIAGE
-        }
-        
-        ___animation_type = __animation_type[$ _type];
-        
-        return self;
-    }
-    
-    static get_animation_type = function()
-    {
-        return self[$ "___animation_type"] ?? TILE_ANIMATION_TYPE.DEFAULT;
-    }
 }

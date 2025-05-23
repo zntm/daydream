@@ -156,7 +156,9 @@ function chunk_generate()
                     {
                         ++chunk_count[@ CHUNK_DEPTH_DEFAULT];
                         
-                        chunk[@ (CHUNK_DEPTH_DEFAULT << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_tile_base.id);
+                        chunk[@ (CHUNK_DEPTH_DEFAULT << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_tile_base.id)
+                        .set_index(smart_value(_item_data[$ _tile_base.id].get_placement_index()))
+                        .set_index_offset(smart_value(_item_data[$ _tile_base.id].get_placement_index_offset()));
                         
                         chunk_display |= 1 << CHUNK_DEPTH_DEFAULT;
                     }
@@ -168,7 +170,9 @@ function chunk_generate()
                 {
                     ++chunk_count[@ CHUNK_DEPTH_WALL];
                     
-                    chunk[@ (CHUNK_DEPTH_WALL << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_tile_wall.id);
+                    chunk[@ (CHUNK_DEPTH_WALL << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_tile_wall.id)
+                        .set_index(smart_value(_item_data[$ _tile_wall.id].get_placement_index()))
+                        .set_index_offset(smart_value(_item_data[$ _tile_wall.id].get_placement_index_offset()));
                     
                     chunk_display |= 1 << CHUNK_DEPTH_WALL;
                 }
@@ -189,7 +193,9 @@ function chunk_generate()
                         ++chunk_count[@ _z];
                         
                         chunk[@ (_z << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_tile_foliage.id)
-                            .set_xscale(choose(-1, 1));
+                            .set_xscale(choose(-1, 1))
+                            .set_index(smart_value(_item_data[$ _tile_foliage.id].get_placement_index()))
+                            .set_index_offset(smart_value(_item_data[$ _tile_foliage.id].get_placement_index_offset()));
                         
                         chunk_display |= 1 << _z;
                     }

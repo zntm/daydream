@@ -1,7 +1,7 @@
 function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
 {
     static __u_offset = shader_get_uniform(shd_Chunk, "u_offset");
-    static __u_texture_size = shader_get_uniform(shd_Chunk, "u_textureSize");
+    static __u_texture_size = shader_get_uniform(shd_Chunk, "u_texture_size");
     static __u_time = shader_get_uniform(shd_Chunk, "u_time");
     static __u_skew = shader_get_uniform(shd_Chunk, "u_skew");
     
@@ -50,7 +50,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
         
         shader_reset();
     }
-    
+    /*
     with (obj_Chunk)
     {
         if (!chunk_display) continue;
@@ -72,4 +72,5 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
             );
         }
     }
+    */
 }

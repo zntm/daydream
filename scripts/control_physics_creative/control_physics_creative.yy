@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"control_physics_creative",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"control_physics_creative",
+  "parent":{
+    "name":"Physics",
+    "path":"folders/Scripts/Control/Physics.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

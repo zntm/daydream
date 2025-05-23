@@ -45,18 +45,8 @@
 	},
     "foliage": [
         {
-            "id": "phantasia:blue_bells",
-            "chance": 0.08,
-            "placeable_on": [ "phantasia:sand" ]
-        },
-        {
-            "id": "phantasia:daisy",
-            "chance": 0.08,
-            "placeable_on": [ "phantasia:sand" ]
-        },
-        {
-            "id": "phantasia:globeflower",
-            "chance": 0.08,
+            "id": "phantasia:dead_bush",
+            "chance": 0.12,
             "placeable_on": [ "phantasia:sand" ]
         }
     ],

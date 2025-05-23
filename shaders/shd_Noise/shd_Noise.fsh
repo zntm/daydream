@@ -10,25 +10,11 @@ uniform vec2 u_noise;
 uniform vec2 u_offset;
 uniform int u_roughness;
 
-/*
 const vec2 random_offset = vec2(12.9898, 78.233);
 
 float random(in vec2 st, in float seed)
 {
     return fract(sin(dot(st.xy, random_offset)) * (43758.5453123 + seed));
-}
-*/
-
-float random(vec2 st, in float seed)
-{
-    float y = fract(st.y * 123.35975);
-    
-    if (st.y == 0.0)
-    {
-        y = -st.x * 389.33211;
-    }
-    
-    return fract((fract(fract(st.x * 169.121724) / y) * 219.33124) - seed);
 }
 
 const vec2 v_10 = vec2(1.0, 0.0);

@@ -1,0 +1,18 @@
+{
+    "type": "untouchable",
+    "sprite": {
+        "xoffset": 6,
+        "yoffset": 10,
+        "length": 1
+    },
+    "harvest": {
+        "hardness": 8,
+        "level": 0
+    },
+    "drop": {
+        "item": {
+            "id": "phantasia:rose"
+        }
+    },
+    "is_foliage": true
+}

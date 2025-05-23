@@ -19,6 +19,8 @@ function init_item(_directory, _namespace)
         
         _item_data.set_animation_type(_json[$ "animation_type"]);
         
+        _item_data.set_placement(_json[$ "placement"]);
+        
         _item_data.set_harvest(_json[$ "harvest"]);
         _item_data.set_drop(_json[$ "drop"]);
         
