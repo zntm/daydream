@@ -12,7 +12,6 @@ function chunk_clear(_inst)
             }
         }
         
-        
         for (var i = 0; i < CHUNK_SIZE * CHUNK_SIZE * CHUNK_DEPTH; ++i)
         {
             var _tile = _inst.chunk[i];

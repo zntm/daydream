@@ -73,8 +73,10 @@ var _camera_height = camera_get_view_height(view_camera[0]);
 var _camera_x = obj_Player.x - (_camera_width  / 2);
 var _camera_y = obj_Player.y - (_camera_height / 2);
 
-var _gui_width  = display_get_width();
-var _gui_height = display_get_height();
+var _gui_scale = 1;
+
+var _gui_width  = round(_gui_scale * window_get_width());
+var _gui_height = round(_gui_scale * window_get_height());
 
 global.camera_width  = _camera_width;
 global.camera_height = _camera_height;
@@ -84,6 +86,8 @@ global.camera_y = _camera_y;
 
 global.camera_x_real = _camera_x;
 global.camera_y_real = _camera_y;
+
+global.gui_scale = _gui_scale;
 
 global.gui_width  = _gui_width;
 global.gui_height = _gui_height;
@@ -101,6 +105,8 @@ global.structure_range_surface = {
 
 window_width  = window_get_width();
 window_height = window_get_height();
+
+window_focus = true;
 
 init_inventory_instance();
 

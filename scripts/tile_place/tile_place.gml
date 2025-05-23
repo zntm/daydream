@@ -19,26 +19,21 @@ function tile_place(_x, _y, _z, _tile)
     
 	_inst.chunk[@ _index] = _tile;
     
-    var _vertex_buffer = _inst.chunk_vertex_buffer[_z];
-    
-    if (vertex_buffer_exists(_vertex_buffer))
-    {
-        vertex_delete_buffer(_vertex_buffer);
-    }
-    
     if (_tile != TILE_EMPTY)
     {
         _inst.chunk_display |= 1 << _z;
         
         ++_inst.chunk_count[@ _z];
     }
-    else if (_inst.chunk[_index] != TILE_EMPTY)
+    else if (_inst.chunk[_index] != TILE_EMPTY) && (--_inst.chunk_count[@ _z] <= 0)
     {
-        var _bitmask = 1 << _z;
-        
-        if (--_inst.chunk_count[@ _z] <= 0) && (_inst.chunk_display & _bitmask)
-        {
-            _inst.chunk_display ^= _bitmask;
-        }
+        _inst.chunk_display ^= 1 << _z;
+    }
+    
+    var _vertex_buffer = _inst.chunk_vertex_buffer[_z];
+    
+    if (vertex_buffer_exists(_vertex_buffer))
+    {
+        vertex_delete_buffer(_vertex_buffer);
     }
 }

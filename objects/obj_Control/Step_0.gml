@@ -1,24 +1,16 @@
-if (!window_has_focus()) exit;
+var _window_focus = window_has_focus();
 
-var _names  = struct_get_names(global.carbasa_surface_buffer);
-var _length = array_length(_names);
-
-for (var i = 0; i < _length; ++i)
+if (!_window_focus)
 {
-    var _page = _names[i];
+    window_focus = false;
     
-    if (!surface_exists(global.carbasa_surface[$ _page]))
-    {
-        var _size = global.carbasa_surface_size[$ _page];
-        
-        global.carbasa_surface[$ _page] = surface_create(_size & 0xffff, (_size >> 16) & 0xffff);
-        
-        buffer_set_surface(global.carbasa_surface_buffer[$ _page], global.carbasa_surface[$ _page], 0);
-        
-        global.carbasa_surface_texture[$ _page] = surface_get_texture(global.carbasa_surface[$ _page]);
-        
-        global.carbasa_surface_uv[$ _page] = texture_get_uvs(global.carbasa_surface_texture[$ _page]);
-    }
+    exit;
+}
+else if (!window_focus)
+{
+    window_focus = true;
+    
+    carbasa_repair_all();
 }
 
 global.delta_time = delta_time / 1_000_000;
@@ -61,6 +53,13 @@ if ((_window_width > 0) && (_window_height > 0)) && ((window_width != _window_wi
         surface_resize(application_surface, window_width, window_height);
     }
     
+    carbasa_repair_all();
+    
+    var _gui_scale = global.gui_scale;
+    
+    global.gui_width  = round(_gui_scale * _window_width);
+    global.gui_height = round(_gui_scale * _window_height);
+    
     surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY;
 }
 
@@ -74,7 +73,7 @@ with (obj_Player)
     input_climb_up   = keyboard_check(_settings.key_climb_up);
     input_climb_down = keyboard_check(_settings.key_climb_down);
     
-    input_jump  = keyboard_check(_settings.key_jump);
+    input_jump = keyboard_check(_settings.key_jump);
     input_jump_pressed = keyboard_check_pressed(_settings.key_jump);
 }
 

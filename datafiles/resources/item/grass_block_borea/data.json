@@ -1,0 +1,19 @@
+{
+    "type": "solid",
+    "sprite": {
+        "xoffset": 8,
+        "yoffset": 8,
+        "length": 5,
+        "edge_padding": 8
+    },
+    "harvest": {
+        "hardness": 8,
+        "level": 0
+    },
+    "drop": {
+        "item": {
+            "id": "phantasia:dirt"
+        }
+    },
+    "is_tile": true
+}

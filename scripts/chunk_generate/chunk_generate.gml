@@ -143,11 +143,11 @@ function chunk_generate()
                 }
             }
             
-            var _surface_biome = worldgen_get_biome_surface(_world_x, _world_y, _surface_height, _world_seed);
-            var _cave_biome = worldgen_get_biome_cave(_world_x, _world_y, _surface_height, _world_seed);
-            
             if (_world_y >= _surface_height)
             {
+                var _surface_biome = worldgen_get_biome_surface(_world_x, _world_y, _surface_height, _world_seed);
+                var _cave_biome = worldgen_get_biome_cave(_world_x, _world_y, _surface_height, _world_seed);
+                
                 if ((_skip_layer & (1 << CHUNK_DEPTH_DEFAULT)) == 0) && ((_cave_bit & (1 << (j + 1))) == 0)
                 {
                     var _tile_base = worldgen_get_tile_base(_world_x, _world_y, _surface_biome, _cave_biome, _surface_height, _cave_bit & (1 << j), _world_seed);
@@ -157,8 +157,8 @@ function chunk_generate()
                         ++chunk_count[@ CHUNK_DEPTH_DEFAULT];
                         
                         chunk[@ (CHUNK_DEPTH_DEFAULT << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_tile_base.id)
-                        .set_index(smart_value(_item_data[$ _tile_base.id].get_placement_index()))
-                        .set_index_offset(smart_value(_item_data[$ _tile_base.id].get_placement_index_offset()));
+                            .set_index(smart_value(_item_data[$ _tile_base.id].get_placement_index()))
+                            .set_index_offset(smart_value(_item_data[$ _tile_base.id].get_placement_index_offset()));
                         
                         chunk_display |= 1 << CHUNK_DEPTH_DEFAULT;
                     }
@@ -178,13 +178,16 @@ function chunk_generate()
                 }
             }
             
-            var _z = (chance_seeded(0.5, _world_seed + _world_x + _world_y) ? CHUNK_DEPTH_FOLIAGE_FRONT : CHUNK_DEPTH_FOLIAGE_BACK);
+            var _z = ((xorshift(_world_seed ^ (_world_x * (_world_y + _surface_height))) & 1) ? CHUNK_DEPTH_FOLIAGE_FRONT : CHUNK_DEPTH_FOLIAGE_BACK);
             
             if ((_skip_layer & (1 << _z)) == 0) && (_world_y >= _surface_height - 1)
             {
+                var _surface_biome = worldgen_get_biome_surface(_world_x, _world_y + 1, _surface_height, _world_seed);
+                var _cave_biome = worldgen_get_biome_cave(_world_x, _world_y + 1, _surface_height, _world_seed);
+                
                 if ((_world_y == _surface_height - 1) || (_cave_bit & (1 << (j + 1)))) && (((_cave_bit & (1 << (j + 2)))) == 0)
                 {
-                    var _tile_base = worldgen_get_tile_base(_world_x, _world_y + j, _surface_biome, _cave_biome, _surface_height, _cave_bit & (1 << (j + 1)), _world_seed);
+                    var _tile_base = worldgen_get_tile_base(_world_x, _world_y + 1, _surface_biome, _cave_biome, _surface_height, true, _world_seed);
                     
                     var _tile_foliage = worldgen_get_tile_foliage(_world_x, _world_y, _surface_biome, _cave_biome, _tile_base, _surface_height, _world_seed);
                     
@@ -193,7 +196,7 @@ function chunk_generate()
                         ++chunk_count[@ _z];
                         
                         chunk[@ (_z << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_tile_foliage.id)
-                            .set_xscale(choose(-1, 1))
+                            .set_xscale((xorshift(_world_seed + _world_x - _world_y) & 1) ? -1 : 1)
                             .set_index(smart_value(_item_data[$ _tile_foliage.id].get_placement_index()))
                             .set_index_offset(smart_value(_item_data[$ _tile_foliage.id].get_placement_index_offset()));
                         

@@ -65,6 +65,8 @@
     {"name":"buffer_load_json","order":2,"path":"scripts/buffer_load_json/buffer_load_json.yy",},
     {"name":"buffer_load_text","order":1,"path":"scripts/buffer_load_text/buffer_load_text.yy",},
     {"name":"buffer_save_compressed","order":3,"path":"scripts/buffer_save_compressed/buffer_save_compressed.yy",},
+    {"name":"carbasa_repair_page","order":4,"path":"scripts/carbasa_repair_page/carbasa_repair_page.yy",},
+    {"name":"carbasa_repair","order":3,"path":"scripts/carbasa_repair/carbasa_repair.yy",},
     {"name":"carbasa_sort","order":2,"path":"scripts/carbasa_sort/carbasa_sort.yy",},
     {"name":"CarbasaSprite","order":1,"path":"scripts/CarbasaSprite/CarbasaSprite.yy",},
     {"name":"chance_seeded","order":1,"path":"scripts/chance_seeded/chance_seeded.yy",},

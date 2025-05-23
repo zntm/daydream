@@ -3,7 +3,7 @@
     "sprite": {
         "xoffset": 8,
         "yoffset": 5,
-        "length": 2
+        "length": 3
     },
     "harvest": {
         "hardness": 8,
@@ -14,7 +14,7 @@
             "type": "irandom",
             "values": {
                 "min": 0,
-                "max": 1
+                "max": 2
             }
         }
     }

@@ -5,6 +5,8 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
     static __u_time = shader_get_uniform(shd_Chunk, "u_time");
     static __u_skew = shader_get_uniform(shd_Chunk, "u_skew");
     
+    carbasa_repair_page("item");
+    
     var _texture = global.carbasa_surface_texture[$ "item"];
     
     var _texel_width  = texture_get_texel_width(_texture);
