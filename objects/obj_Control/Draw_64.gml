@@ -1,5 +1,3 @@
-if (!window_focus) exit;
-
 var _player_x = obj_Player.x;
 var _player_y = obj_Player.y;
 

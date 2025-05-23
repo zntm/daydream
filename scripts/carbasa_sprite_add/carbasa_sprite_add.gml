@@ -4,16 +4,6 @@ global.carbasa_page_position = {}
 #macro CARBASA_PAGE_INIT_SIZE 256
 #macro CARBASA_PAGE_MAX_SIZE  2048
 
-vertex_format_begin();
-
-vertex_format_add_colour();
-vertex_format_add_position();
-vertex_format_add_texcoord();
-
-global.carbasa_page_vertex_format = vertex_format_end();
-
-global.carbasa_page_vertex_buffer = {}
-
 global.carbasa_surface         = {}
 global.carbasa_surface_texture = {}
 global.carbasa_surface_uv = {}
@@ -27,8 +17,6 @@ function carbasa_sprite_add(_page, _sprite, _name)
         global.carbasa_page[$ _page] = {}
         global.carbasa_page_position[$ _page] = [];
         global.carbasa_surface_size[$ _page] = (CARBASA_PAGE_INIT_SIZE << 16) | CARBASA_PAGE_INIT_SIZE;
-        
-        global.carbasa_page_vertex_buffer[$ _page] = vertex_create_buffer();
     }
     else if (global.carbasa_page[$ _page][$ _name] != undefined) exit;
     

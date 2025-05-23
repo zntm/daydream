@@ -17,7 +17,6 @@ function tile_place(_x, _y, _z, _tile)
     
     var _index = tile_index(_x, _y, _z);
     
-	_inst.chunk[@ _index] = _tile;
     
     if (_tile != TILE_EMPTY)
     {
@@ -25,10 +24,12 @@ function tile_place(_x, _y, _z, _tile)
         
         ++_inst.chunk_count[@ _z];
     }
-    else if (_inst.chunk[_index] != TILE_EMPTY) && (--_inst.chunk_count[@ _z] <= 0)
+    else if (_inst.chunk[_index] != TILE_EMPTY) && (--_inst.chunk_count[_z] <= 0)
     {
         _inst.chunk_display ^= 1 << _z;
     }
+    
+    _inst.chunk[@ _index] = _tile;
     
     var _vertex_buffer = _inst.chunk_vertex_buffer[_z];
     
