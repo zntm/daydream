@@ -11,5 +11,7 @@ void main()
 {
     vec4 base = texture2D(gm_BaseTexture, v_vTexcoord);
     
-    gl_FragColor = v_vColour * mix(base, vec4(u_colour, 1.0), (1.0 - v_vTexcoord.y) * u_strength);
+    vec3 colour = mix(base.rgb, u_colour, (1.0 - v_vTexcoord.y) * u_strength);
+    
+    gl_FragColor = v_vColour * vec4(colour.rgb, base.a);
 }

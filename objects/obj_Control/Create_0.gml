@@ -12,8 +12,6 @@ show_debug_overlay(true);
 
 global.delta_time = 1;
 
-audio_play_sound(global.music_data[$ "phantasia:phantasia"].get_audio(), 0, true);
-
 global.world = {
     seed: random_get_seed(),
     dimension: "phantasia:playground",

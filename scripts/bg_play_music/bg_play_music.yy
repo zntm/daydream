@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"bg_get_biome",
+  "%Name":"bg_play_music",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"bg_get_biome",
+  "name":"bg_play_music",
   "parent":{
     "name":"Background",
     "path":"folders/Scripts/Background.yy",

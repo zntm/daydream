@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"bg_get_biome",
+  "%Name":"render_background_celestial",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"bg_get_biome",
+  "name":"render_background_celestial",
   "parent":{
     "name":"Background",
-    "path":"folders/Scripts/Background.yy",
+    "path":"folders/Scripts/Render/Background.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
