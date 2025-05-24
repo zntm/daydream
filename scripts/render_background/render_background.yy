@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"render_background",
   "parent":{
-    "name":"Render",
-    "path":"folders/Scripts/Render.yy",
+    "name":"Background",
+    "path":"folders/Scripts/Render/Background.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

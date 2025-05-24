@@ -17,6 +17,18 @@ function BackgroundData(_type) constructor
         return ___type;
     }
     
+    static set_blend = function(_blend)
+    {
+        ___blend = _blend;
+        
+        return self;
+    }
+    
+    static get_blend = function()
+    {
+        return ___blend;
+    }
+    
     ___sprite = [];
     ___sprite_size = [];
     

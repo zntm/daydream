@@ -11,7 +11,7 @@ function control_camera_pos(_x, _y, _force = false, _delta_time = global.delta_t
     }
     else
     {
-    	_camera_x = lerp_delta(global.camera_x, _x, CAMERA_SPEED, _delta_time);
+        _camera_x = lerp_delta(global.camera_x, _x, CAMERA_SPEED, _delta_time);
         _camera_y = lerp_delta(global.camera_y, _y, CAMERA_SPEED, _delta_time);
     }
     

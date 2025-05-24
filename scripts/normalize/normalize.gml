@@ -5,10 +5,10 @@
 function normalize(_value, _min, _max)
 {
     /*
-	if (!DEVELOPER_MODE)
+    if (!DEVELOPER_MODE)
     {
         gml_pragma("forceinline");
     }
-	*/
-	return clamp((_value - _min) / (_max - _min), 0, 1);
+    */
+    return clamp((_value - _min) / (_max - _min), 0, 1);
 }

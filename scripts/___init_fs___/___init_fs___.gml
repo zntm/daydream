@@ -10,25 +10,25 @@
 
 if (!directory_exists(PROGRAM_DIRECTORY_CRASH_LOGS))
 {
-	directory_create(PROGRAM_DIRECTORY_CRASH_LOGS);
+    directory_create(PROGRAM_DIRECTORY_CRASH_LOGS);
 }
 
 if (!directory_exists(PROGRAM_DIRECTORY_PLAYERS))
 {
-	directory_create(PROGRAM_DIRECTORY_PLAYERS);
+    directory_create(PROGRAM_DIRECTORY_PLAYERS);
 }
 
 if (!directory_exists(PROGRAM_DIRECTORY_SCREENSHOTS))
 {
-	directory_create(PROGRAM_DIRECTORY_SCREENSHOTS);
+    directory_create(PROGRAM_DIRECTORY_SCREENSHOTS);
 }
 
 if (!directory_exists(PROGRAM_DIRECTORY_STRUCTURES))
 {
-	directory_create(PROGRAM_DIRECTORY_STRUCTURES);
+    directory_create(PROGRAM_DIRECTORY_STRUCTURES);
 }
 
 if (!directory_exists(PROGRAM_DIRECTORY_WORLDS))
 {
-	directory_create(PROGRAM_DIRECTORY_WORLDS);
+    directory_create(PROGRAM_DIRECTORY_WORLDS);
 }

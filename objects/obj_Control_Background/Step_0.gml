@@ -43,7 +43,9 @@ else
         }
         */
         
-        if (!array_contains(_in_biome_data.get_music(), music_current_id))
+        var _music = _in_biome_data.get_music();
+        
+        if (_music != undefined) && (!array_contains(_music, music_current_id))
         {
             if (music_current != undefined)
             {

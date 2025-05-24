@@ -57,26 +57,23 @@ function render_background()
     
     var _in_biome_background = _in_biome_data.get_background();
     var _in_biome_background_data = _background_data[$ _in_biome_data.get_background()];
+    
+    var _in_biome_background_blend  = _in_biome_background_data.get_blend();
     var _in_biome_background_length = _in_biome_background_data.get_sprite_length();
     
     var _in_biome_transition_background = _in_biome_transition_data.get_background();
     var _in_biome_transition_background_data = _background_data[$ _in_biome_transition_data.get_background()];
+    
+    var _in_biome_transition_background_blend  = _in_biome_transition_background_data.get_blend();
     var _in_biome_transition_background_length = _in_biome_transition_background_data.get_sprite_length();
     
     if (in_biome_transition_value <= 0) || (_in_biome_background == _in_biome_background_data)
     {
         for (var i = 0; i < _in_biome_background_length; ++i)
         {
-            shader_set_uniform_f(__u_strength, 0.1 * (_in_biome_background_length - i + 1));
+            shader_set_uniform_f(__u_strength, _in_biome_background_blend * (_in_biome_background_length - i + 1));
             
-            var _sprite_width  = _in_biome_background_data.get_sprite_width(i);
-            var _sprite_height = _in_biome_background_data.get_sprite_height(i);
-            
-            var _xoffset = (_player_x * (i + 1) * 0.05) % _sprite_width;
-            
-            var _xsize = ceil(_camera_width / _sprite_width) + 1;
-            
-            render_background_parallax(_in_biome_background_data.get_sprite(i), _player_x + _xoffset, _camera_y + _camera_height, _sprite_width, _sprite_height, _xsize, 0, c_white, 1);
+            render_background_parallax(_in_biome_background_data, i, _player_x, _camera_y, _camera_width, _camera_height, c_white, 1);
         }
     }
     else
@@ -85,30 +82,18 @@ function render_background()
         
         for (var i = 0; i < _length; ++i)
         {
-            shader_set_uniform_f(__u_strength, 0.1 * (_length - i + 1));
-            
             if (i < _in_biome_background_length)
             {
-                var _sprite_width  = _in_biome_background_data.get_sprite_width(i);
-                var _sprite_height = _in_biome_background_data.get_sprite_height(i);
+                shader_set_uniform_f(__u_strength, _in_biome_background_blend * (_length - i + 1));
                 
-                var _xoffset = (_player_x * (i + 1) * 0.05) % _sprite_width;
-                
-                var _xsize = ceil(_camera_width / _sprite_width) + 1;
-                
-                render_background_parallax(_in_biome_background_data.get_sprite(i), _player_x + _xoffset, _camera_y + _camera_height, _sprite_width, _sprite_height, _xsize, 0, c_white, 1 - in_biome_transition_value);
+                render_background_parallax(_in_biome_background_data, i, _player_x, _camera_y, _camera_width, _camera_height, c_white, 1 - in_biome_transition_value);
             }
             
             if (i < _in_biome_transition_background_length)
             {
-                var _sprite_width  = _in_biome_transition_background_data.get_sprite_width(i);
-                var _sprite_height = _in_biome_transition_background_data.get_sprite_height(i);
+                shader_set_uniform_f(__u_strength, _in_biome_transition_background_blend * (_length - i + 1));
                 
-                var _xoffset = (_player_x * (i + 1) * 0.05) % _sprite_width;
-                
-                var _xsize = ceil(_camera_width / _sprite_width) + 1;
-                
-                render_background_parallax(_in_biome_transition_background_data.get_sprite(i), _player_x + _xoffset, _camera_y + _camera_height, _sprite_width, _sprite_height, _xsize, 0, c_white, in_biome_transition_value);
+                render_background_parallax(_in_biome_transition_background_data, i, _player_x, _camera_y, _camera_width, _camera_height, c_white, in_biome_transition_value);
             }
         }
     }

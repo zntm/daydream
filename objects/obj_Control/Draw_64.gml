@@ -45,15 +45,15 @@ if (_hp > 0)// && (is_opened_gui) && (!is_opened_menu)
     
     if (is_opened_inventory)
     {
-    	var _inventory = global.inventory;
-    	var _inventory_instance = global.inventory_instance;
-    	var _inventory_length = global.inventory_length;
-    	
-    	var _inventory_names = struct_get_names(_inventory);
-    	var _inventory_names_length = array_length(_inventory_names);
-    	
-    	for (var i = 0; i < _inventory_names_length; ++i)
-    	{
+        var _inventory = global.inventory;
+        var _inventory_instance = global.inventory_instance;
+        var _inventory_length = global.inventory_length;
+        
+        var _inventory_names = struct_get_names(_inventory);
+        var _inventory_names_length = array_length(_inventory_names);
+        
+        for (var i = 0; i < _inventory_names_length; ++i)
+        {
             var _name = _inventory_names[i];
             
             var _data = _gui_inventory[$ _name];

@@ -11,10 +11,10 @@
 #macro INVENTORY_EMPTY -1
 
 enum INVENTORY_LENGTH {
-	BASE	  = 50,
-	ROW	      = 10,
-	ARMOR	  = 3,
-	ACCESSORY = 6,
+    BASE      = 50,
+    ROW          = 10,
+    ARMOR      = 3,
+    ACCESSORY = 6,
 }
 
 enum GUI_ANCHOR {
@@ -167,73 +167,73 @@ global.gui_inventory = {
 
 function init_inventory_instance()
 {
-	var _gui_width  = global.gui_width;
-	var _gui_height = global.gui_height;
-	
-	var _inventory = global.inventory;
-	var _inventory_instance = global.inventory_instance;
-	
-	var _inventory_names = struct_get_names(_inventory);
-	var _inventory_names_length = array_length(_inventory_names);
-	
-	for (var i = 0; i < _inventory_names_length; ++i)
-	{
-		var _inventory_name = _inventory_names[i];
-		var _i = _inventory_instance[$ _inventory_name];
-		
-		var _inventory_length = array_length(_i);
-		
-		for (var j = 0; j < _inventory_length; ++j)
-		{
+    var _gui_width  = global.gui_width;
+    var _gui_height = global.gui_height;
+    
+    var _inventory = global.inventory;
+    var _inventory_instance = global.inventory_instance;
+    
+    var _inventory_names = struct_get_names(_inventory);
+    var _inventory_names_length = array_length(_inventory_names);
+    
+    for (var i = 0; i < _inventory_names_length; ++i)
+    {
+        var _inventory_name = _inventory_names[i];
+        var _i = _inventory_instance[$ _inventory_name];
+        
+        var _inventory_length = array_length(_i);
+        
+        for (var j = 0; j < _inventory_length; ++j)
+        {
             var _inst = instance_create_layer(0, 0, "Instances", obj_Inventory);
             
             _inst.image_xscale = INVENTORY_SLOT_SCALE;
             _inst.image_yscale = INVENTORY_SLOT_SCALE;
-			
-			if (_inventory_name == "base")
-			{
-				if (j >= INVENTORY_LENGTH.ROW)
-				{
+            
+            if (_inventory_name == "base")
+            {
+                if (j >= INVENTORY_LENGTH.ROW)
+                {
                     _inst.xoffset = INVENTORY_BACKPACK_XOFFSET + ((j mod INVENTORY_LENGTH.ROW) * INVENTORY_SLOT_DIMENSION_SCALED);
                     _inst.yoffset = INVENTORY_BACKPACK_YOFFSET + ((j div INVENTORY_LENGTH.ROW) * INVENTORY_SLOT_DIMENSION_SCALED);
-				}
+                }
                 else
                 {
                     _inst.xoffset = (j mod INVENTORY_LENGTH.ROW) * INVENTORY_SLOT_DIMENSION_SCALED;
                     _inst.yoffset = (j div INVENTORY_LENGTH.ROW) * INVENTORY_SLOT_DIMENSION_SCALED;
                 }
-				
-				_inst.slot_type = INVENTORY_SLOT_TYPE.BASE;
-			}
-			else if (_inventory_name == "armor_helmet")
-			{
+                
+                _inst.slot_type = INVENTORY_SLOT_TYPE.BASE;
+            }
+            else if (_inventory_name == "armor_helmet")
+            {
                 _inst.xoffset = 0;
                 _inst.yoffset = 0;
-				
-				_inst.slot_type = INVENTORY_SLOT_TYPE.ARMOR_HELMET;
-			}
-			else if (_inventory_name == "armor_breastplate")
-			{
+                
+                _inst.slot_type = INVENTORY_SLOT_TYPE.ARMOR_HELMET;
+            }
+            else if (_inventory_name == "armor_breastplate")
+            {
                 _inst.xoffset = 0;
                 _inst.yoffset = 0;
-				
-				_inst.slot_type = INVENTORY_SLOT_TYPE.ARMOR_BREASTPLATE;
-				
-			}
-			else if (_inventory_name == "armor_leggings")
-			{
+                
+                _inst.slot_type = INVENTORY_SLOT_TYPE.ARMOR_BREASTPLATE;
+                
+            }
+            else if (_inventory_name == "armor_leggings")
+            {
                 _inst.xoffset = 0;
                 _inst.yoffset = 0;
-				
-				_inst.slot_type = INVENTORY_SLOT_TYPE.ARMOR_LEGGINGS;
-			}
-			else if (_inventory_name == "accessory")
-			{
+                
+                _inst.slot_type = INVENTORY_SLOT_TYPE.ARMOR_LEGGINGS;
+            }
+            else if (_inventory_name == "accessory")
+            {
                 _inst.xoffset = 0;
                 _inst.yoffset = INVENTORY_SLOT_DIMENSION_SCALED * j;
                 
-				_inst.slot_type = INVENTORY_SLOT_TYPE.ACCESSORY;
-			}
+                _inst.slot_type = INVENTORY_SLOT_TYPE.ACCESSORY;
+            }
             
             _inst.inventory_type = _inventory_name;
             _inst.inventory_index = j;
@@ -241,6 +241,6 @@ function init_inventory_instance()
             global.inventory_instance[$ _inventory_name][@ j] = _inst;
             
             instance_deactivate_object(_inst);
-		}
-	}
+        }
+    }
 }
