@@ -29,13 +29,19 @@ function WorldData(_world_height) constructor
         return (___vignette >> 32) & 0xffffff;
     }
     
-    static set_time = function(_time_length, _time_diurnal)
+    static set_time = function(_time)
     {
-        ___time_length = _time_length;
-        ___time_diurnal = {}
+        var _time_diurnal = _time.diurnal;
         
         var _names = struct_get_names(_time_diurnal);
         var _length = array_length(_names);
+        
+        ___time_length = _time.length;
+        ___time_start = _time.start;
+        
+        ___time_diurnal = {}
+        ___time_diurnal_names = _names;
+        ___time_diurnal_length = _length;
         
         for (var i = 0; i < _length; ++i)
         {
@@ -48,9 +54,24 @@ function WorldData(_world_height) constructor
         return self;
     }
     
+    static get_time_start = function()
+    {
+        return ___time_start;
+    }
+    
     static get_time_length = function()
     {
         return ___time_length;
+    }
+    
+    static get_time_diurnal_name = function(_index)
+    {
+        return ___time_diurnal_names[_index];
+    }
+    
+    static get_time_diurnal_length = function()
+    {
+        return ___time_diurnal_length;
     }
     
     static get_time_diurnal_start = function(_time_diurnal)
@@ -80,7 +101,7 @@ function WorldData(_world_height) constructor
         {
             var _name = ___celestial_names[i];
             
-            var _data = ___celestial_data[$ _name];
+            var _data = get_celestial_data(_name);
             
             if (_time >= _data.start) && (_time < _data[$ "end"])
             {

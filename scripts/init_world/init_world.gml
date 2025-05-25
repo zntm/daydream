@@ -43,9 +43,7 @@ function init_world(_directory, _namespace = "phantasia", _type = 0)
         
         _world_data.set_vignette(_vignette.start, _vignette[$ "end"], _vignette.colour);
         
-        var _time = _json.time;
-        
-        _world_data.set_time(_time.length, _time.diurnal);
+        _world_data.set_time(_json.time);
         
         var _celestial = {}
         

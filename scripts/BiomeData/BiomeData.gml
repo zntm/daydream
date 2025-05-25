@@ -47,10 +47,12 @@ function BiomeData(_name, _type) constructor
     
     static set_sky_colour = function(_sky_colour)
     {
-        ___sky_colour = {}
-        
         var _names = struct_get_names(_sky_colour);
         var _length = array_length(_names);
+        
+        ___sky_colour = {}
+        ___sky_colour_names = _names;
+        ___sky_colour_length = _length;
         
         for (var i = 0; i < _length; ++i)
         {

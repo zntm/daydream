@@ -7,6 +7,7 @@
 	},
 	"time": {
 		"length": 54000,
+		"start": 3600,
 		"diurnal": {
 			"dawn": {
 				"start": 0,

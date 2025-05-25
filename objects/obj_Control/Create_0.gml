@@ -12,10 +12,12 @@ show_debug_overlay(true);
 
 global.delta_time = 1;
 
+var _world_data = global.world_data[$ "phantasia:playground"];
+
 global.world = {
     seed: random_get_seed(),
     dimension: "phantasia:playground",
-    time: 0,
+    time: _world_data.get_time_start(),
     wind: random_range(-1, 1)
 }
 
