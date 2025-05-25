@@ -4,21 +4,21 @@
     "layers": [
         {
             "xoffset": 660,
-            "yoffset": 472,
+            "yoffset": 471,
             "width": 1320,
-            "height": 472
+            "height": 471
         },
         {
             "xoffset": 660,
-            "yoffset": 433,
+            "yoffset": 432,
             "width": 1320,
-            "height": 433
+            "height": 432
         },
         {
             "xoffset": 660,
-            "yoffset": 330,
+            "yoffset": 355,
             "width": 1320,
-            "height": 330
+            "height": 355
         }
     ]
 }
