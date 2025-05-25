@@ -22,7 +22,7 @@ if (keyboard_check_pressed(ord("R")))
 {
     room_restart();
 }
-
+/*
 var _world_data = global.world_data[$ global.world.dimension];
 
 if (keyboard_check(ord("C")))
@@ -37,7 +37,7 @@ if (keyboard_check(ord("C")))
     
     obj_Control_Background.refresh += 1;
 }
-
+*/
 
 if (keyboard_check_pressed(vk_escape))
 {

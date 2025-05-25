@@ -30,7 +30,7 @@ function init_particle_recursive(_directory, _namespace, _id)
         
         var _json = buffer_load_json($"{_subdirectory}/data.json");
         
-        var _sprite = sprite_add($"{_subdirectory}/sprite.png", (_json[$ "frames"] ?? 1), false, false, 0, 0);
+        var _sprite = sprite_add($"{_subdirectory}/sprite.png", _json[$ "frames"] ?? 1, false, false, 0, 0);
         
         var _sprite_xoffset = round(sprite_get_width(_sprite)  / 2);
         var _sprite_yoffset = round(sprite_get_height(_sprite) / 2);
