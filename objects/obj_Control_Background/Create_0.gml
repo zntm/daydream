@@ -11,3 +11,8 @@ music_current_id = "";
 
 music_pool = [];
 music_pool_length = 0;
+
+sky_colour_base = c_black;
+sky_colour_gradient = c_black;
+
+refresh = 0;

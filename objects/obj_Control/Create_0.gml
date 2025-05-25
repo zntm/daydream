@@ -18,6 +18,7 @@ global.world = {
     seed: random_get_seed(),
     dimension: "phantasia:playground",
     time: _world_data.get_time_start(),
+    day: 0,
     wind: random_range(-1, 1)
 }
 

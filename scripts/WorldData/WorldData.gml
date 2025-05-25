@@ -36,7 +36,7 @@ function WorldData(_world_height) constructor
         var _names = struct_get_names(_time_diurnal);
         var _length = array_length(_names);
         
-        ___time_length = _time.length;
+        ___time_length = 0;
         ___time_start = _time.start;
         
         ___time_diurnal = {}
@@ -48,7 +48,12 @@ function WorldData(_world_height) constructor
             var _name = _names[i];
             var _data = _time_diurnal[$ _name];
             
-            ___time_diurnal[$ _name] = (_data[$ "end"] << 16) | _data.start;
+            var _start = _data.start;
+            var _end   = _data[$ "end"];
+            
+            ___time_diurnal[$ _name] = (_end << 16) | _start;
+            
+            ___time_length = max(___time_length, _end);
         }
         
         return self;

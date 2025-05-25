@@ -23,9 +23,19 @@ if (keyboard_check_pressed(ord("R")))
     room_restart();
 }
 
+var _world_data = global.world_data[$ global.world.dimension];
+
 if (keyboard_check(ord("C")))
 {
-    global.world.time += 1000
+    global.world.time += 1000;
+    
+    if (global.world.time >= _world_data.get_time_length())
+    {
+        global.world.day += floor(global.world.time / _world_data.get_time_length());
+        global.world.time %= _world_data.get_time_length();
+    }
+    
+    obj_Control_Background.refresh += 1;
 }
 
 

@@ -6,24 +6,23 @@
 		"colour": "#000000"
 	},
 	"time": {
-		"length": 54000,
-		"start": 3600,
+		"start": 800,
 		"diurnal": {
 			"dawn": {
 				"start": 0,
-				"end": 3600
+				"end": 800
 			},
 			"day": {
-				"start": 3600,
-				"end": 22000
+				"start": 800,
+				"end": 5600
 			},
 			"dusk": {
-				"start": 22000,
-				"end": 33000
+				"start": 5600,
+				"end": 7800
 			},
 			"night": {
-				"start": 33000,
-				"end": 54000
+				"start": 7800,
+				"end": 1200
 			}
 		}
 	},

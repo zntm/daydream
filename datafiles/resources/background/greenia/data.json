@@ -1,6 +1,6 @@
 {
     "type": "parallax",
-    "blend": 0.1,
+    "blend": 0.35,
     "layers": [
         {
             "xoffset": 660,
