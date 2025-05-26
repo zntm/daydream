@@ -25,6 +25,7 @@ function init_item(_directory, _namespace)
         _item_data.set_drop(_json[$ "drop"]);
         
         _item_data.set_is_tile(_json[$ "is_tile"]);
+        _item_data.set_is_wall(_json[$ "is_wall"]);
         _item_data.set_is_foliage(_json[$ "is_foliage"]);
         
         var _sprite_data = _json.sprite;

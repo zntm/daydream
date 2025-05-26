@@ -115,9 +115,9 @@ if (global.world.time % 8 == 0)
 var _tile_x = round(mouse_x / TILE_SIZE);
 var _tile_y = round(mouse_y / TILE_SIZE);
 
-if (mouse_check_button(mb_right)) && (tile_get(_tile_x, _tile_y, CHUNK_DEPTH_DEFAULT) == TILE_EMPTY)
+if (mouse_check_button(mb_right))
 {
-    tile_place(_tile_x, _tile_y, CHUNK_DEPTH_DEFAULT, new Tile("phantasia:dirt"));
+    player_place(_tile_x, _tile_y);
 }
 
 if (mouse_check_button(mb_left))

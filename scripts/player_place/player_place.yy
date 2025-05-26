@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"unix_to_datetime",
+  "%Name":"player_place",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"unix_to_datetime",
+  "name":"player_place",
   "parent":{
-    "name":"Math",
-    "path":"folders/Scripts/Math.yy",
+    "name":"Player",
+    "path":"folders/Scripts/Entity/Player.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

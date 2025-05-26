@@ -15,5 +15,6 @@
             "id": "phantasia:stone_wall"
         }
     },
-    "is_tile": true
+    "is_tile": true,
+    "is_wall": true
 }

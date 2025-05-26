@@ -48,7 +48,7 @@ function render_tile_foliage(_buffer, _uv, _chunk_index, _surface_width, _surfac
     
     var _number = _.number;
     
-    var _animation_type = global.item_data[$ _name].get_animation_type();
+    var _animation_type = (_width << 8) | global.item_data[$ _name].get_animation_type();
     
     // Triangle 1
     vertex_colour(_buffer, _colour, _alpha);

@@ -1,7 +1,29 @@
 {
-    "dirt": [
+    "placeable_dry_plant_on": [
+        "phantasia:dirt",
+        "phantasia:grass_block",
+        "phantasia:grass_block_borea",
+        "phantasia:sand"
+    ],
+    "placeable_plant_on": [
         "phantasia:dirt",
         "phantasia:grass_block",
         "phantasia:grass_block_borea"
+    ],
+    "placement_requirement_dry_plant": [
+        {
+            "xoffset": 0,
+            "yoffset": 1,
+            "z": "default",
+            "id": "#phantasia:placeable_dry_plant_on"
+        }
+    ],
+    "placement_requirement_plant": [
+        {
+            "xoffset": 0,
+            "yoffset": 1,
+            "z": "default",
+            "id": "#phantasia:placeable_plant_on"
+        }
     ]
 }

@@ -9,6 +9,9 @@
         "hardness": 8,
         "level": 0
     },
+    "placement": {
+        "requirement": "#phantasia:placement_requirement_plant"
+    },
     "drop": {
         "item": {
             "id": "phantasia:blue_bells"

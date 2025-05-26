@@ -22,7 +22,8 @@ enum ITEM_TYPE_BIT {
 
 enum ITEM_BOOLEAN {
     IS_TILE    = 1 << 0,
-    IS_FOLIAGE = 1 << 1
+    IS_WALL    = 1 << 1,
+    IS_FOLIAGE = 1 << 2
 }
 
 enum TILE_ANIMATION_TYPE {
@@ -142,6 +143,13 @@ function ItemData() constructor
             {
                 ___placement_index_offset = init_smart_value(_index_offset);
             }
+            
+            var _requirement = _placement[$ "requirement"];
+            
+            if (_requirement != undefined)
+            {
+                ___placement_requirement = _requirement;
+            }
         }
         
         return self;
@@ -155,6 +163,11 @@ function ItemData() constructor
     static get_placement_index_offset = function()
     {
         return self[$ "___placement_index_offset"] ?? 0;
+    }
+    
+    static get_placement_requirement = function()
+    {
+        return self[$ "___placement_requirement"];
     }
     
     static set_harvest = function(_harvest)
@@ -288,6 +301,21 @@ function ItemData() constructor
     static is_tile = function()
     {
         return !!(___boolean & ITEM_BOOLEAN.IS_TILE);
+    }
+    
+    static set_is_wall = function(_is_wall)
+    {
+        if (_is_wall)
+        {
+            ___boolean |= ITEM_BOOLEAN.IS_WALL;
+        }
+        
+        return self;
+    }
+    
+    static is_wall = function()
+    {
+        return !!(___boolean & ITEM_BOOLEAN.IS_WALL);
     }
     
     static set_is_foliage = function(_is_foliage)

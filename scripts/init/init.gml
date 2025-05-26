@@ -4,6 +4,8 @@ function init(_namespace)
     
     init_rarity($"{PROGRAM_DIRECTORY_RESOURCES}\\rarity.json", _namespace);
     
+    init_tag($"{PROGRAM_DIRECTORY_RESOURCES}\\tag.json", _namespace);
+    
     init_particle_recursive($"{PROGRAM_DIRECTORY_RESOURCES}\\particle", _namespace);
     
     init_background($"{PROGRAM_DIRECTORY_RESOURCES}\\background", _namespace);
