@@ -133,14 +133,17 @@ if (refresh >= 1) || (in_biome_transition_value > 0)
                 var _transition_colour_gradient_from = _in_biome_transition_data.get_sky_colour_gradient(_name_from);
                 var _transition_colour_gradient_to   = _in_biome_transition_data.get_sky_colour_gradient(_name_to);
                 
-                var _colour_base     = merge_colour(_colour_base_from,     _colour_base_to,     _t);
-                var _colour_gradient = merge_colour(_colour_gradient_from, _colour_gradient_to, _t);
-                
-                var _transition_colour_base     = merge_colour(_transition_colour_base_from, _transition_colour_base_to, _t);
-                var _transition_colour_gradient = merge_colour(_transition_colour_gradient_from, _transition_colour_gradient_to, _t);
-                
-                sky_colour_base     = merge_colour(_colour_base,     _transition_colour_base,     in_biome_transition_value);
-                sky_colour_gradient = merge_colour(_colour_gradient, _transition_colour_gradient, in_biome_transition_value);
+                if (_transition_colour_base_from != _transition_colour_gradient_from) || (_transition_colour_base_to != _transition_colour_gradient_to)
+                {
+                    var _colour_base     = merge_colour(_colour_base_from,     _colour_base_to,     _t);
+                    var _colour_gradient = merge_colour(_colour_gradient_from, _colour_gradient_to, _t);
+                    
+                    var _transition_colour_base     = merge_colour(_transition_colour_base_from, _transition_colour_base_to, _t);
+                    var _transition_colour_gradient = merge_colour(_transition_colour_gradient_from, _transition_colour_gradient_to, _t);
+                    
+                    sky_colour_base     = merge_colour(_colour_base,     _transition_colour_base,     in_biome_transition_value);
+                    sky_colour_gradient = merge_colour(_colour_gradient, _transition_colour_gradient, in_biome_transition_value);
+                }
             }
             
             break;

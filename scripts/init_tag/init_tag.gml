@@ -1,6 +1,6 @@
-global.rarity_data = {}
+global.tag_data = {}
 
-function init_rarity(_directory, _namespace = "phantasia", _type = 0)
+function init_tag(_directory, _namespace = "phantasia", _type = 0)
 {
     if (!file_exists(_directory)) exit;
     
@@ -13,6 +13,6 @@ function init_rarity(_directory, _namespace = "phantasia", _type = 0)
     {
         var _name = _names[i];
         
-        global.rarity_data[$ $"{_namespace}:{_name}"] = hex_parse(_data[$ _name]);
+        global.tag_data[$ $"#{_namespace}:{_name}"] = _data[$ _name];
     }
 }

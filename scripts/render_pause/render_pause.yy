@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"render_pause",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"render_pause",
+  "parent":{
+    "name":"Render",
+    "path":"folders/Scripts/Render.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

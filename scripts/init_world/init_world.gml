@@ -8,7 +8,7 @@ global.world_data = {}
 
 function init_world(_directory, _namespace = "phantasia", _type = 0)
 {
-    static __biome_map_buffer = -1;
+    static __biome_map_buffer  = -1;
     static __biome_map_surface = -1;
     
     if (!buffer_exists(__biome_map_buffer))

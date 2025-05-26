@@ -55,13 +55,13 @@ function render_background()
     var _background_data = global.background_data;
     
     var _in_biome_background = _in_biome_data.get_background();
-    var _in_biome_background_data = _background_data[$ _in_biome_data.get_background()];
+    var _in_biome_background_data = _background_data[$ _in_biome_background];
     
     var _in_biome_background_blend  = _in_biome_background_data.get_blend();
     var _in_biome_background_length = _in_biome_background_data.get_sprite_length();
     
     var _in_biome_transition_background = _in_biome_transition_data.get_background();
-    var _in_biome_transition_background_data = _background_data[$ _in_biome_transition_data.get_background()];
+    var _in_biome_transition_background_data = _background_data[$ _in_biome_transition_background];
     
     var _in_biome_transition_background_blend  = _in_biome_transition_background_data.get_blend();
     var _in_biome_transition_background_length = _in_biome_transition_background_data.get_sprite_length();

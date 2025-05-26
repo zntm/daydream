@@ -56,6 +56,11 @@ function WorldData(_world_height) constructor
             ___time_length = max(___time_length, _end);
         }
         
+        array_sort(___time_diurnal_names, function(_a, _b)
+        {
+            return get_time_diurnal_start(_a) > get_time_diurnal_start(_b);
+        });
+        
         return self;
     }
     

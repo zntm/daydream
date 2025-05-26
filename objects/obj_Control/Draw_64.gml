@@ -10,16 +10,24 @@ var _camera_height = global.camera_height;
 var _gui_width  = global.gui_width;
 var _gui_height = global.gui_height;
 
+if (game_boolean & GAME_BOOLEAN.IS_PAUSED)
+{
+    render_pause();
+    render_gui_vignette(_player_y, _gui_width, _gui_height);
+    
+    exit;
+}
+
+render_gui_vignette(_player_y, _gui_width, _gui_height);
+
 var _gui_multiplier_x = _gui_width  / _camera_width;
 var _gui_multiplier_y = _gui_height / _camera_height;
 
-var _gui_mouse_x = (window_mouse_get_x() / window_get_width())  * _gui_width;
-var _gui_mouse_y = (window_mouse_get_y() / window_get_height()) * _gui_height;
+var _gui_mouse_x = (window_mouse_get_x() / window_width)  * _gui_width;
+var _gui_mouse_y = (window_mouse_get_y() / window_height) * _gui_height;
 
 global.gui_mouse_x = _gui_mouse_x;
 global.gui_mouse_y = _gui_mouse_y;
-
-render_gui_vignette(_player_y, _gui_width, _gui_height);
 
 var _hp     = obj_Player.hp;
 var _hp_max = obj_Player.hp_max;

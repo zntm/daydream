@@ -8,6 +8,14 @@ enum SURFACE_REFRESH_BOOLEAN {
 
 surface_refresh = SURFACE_REFRESH_BOOLEAN.INVENTORY;
 
+enum GAME_BOOLEAN {
+    IS_PAUSED = 1
+}
+
+game_boolean = 0;
+
+surface_pause = -1;
+
 show_debug_overlay(true);
 
 global.delta_time = 1;
@@ -68,6 +76,11 @@ surface_inventory = {
     }
 }
 
+window_width  = window_get_width();
+window_height = window_get_height();
+
+window_focus = true;
+
 var _camera_width  = camera_get_view_width(view_camera[0]);
 var _camera_height = camera_get_view_height(view_camera[0]);
 
@@ -76,8 +89,8 @@ var _camera_y = obj_Player.y - (_camera_height / 2);
 
 var _gui_scale = 1;
 
-var _gui_width  = round(_gui_scale * window_get_width());
-var _gui_height = round(_gui_scale * window_get_height());
+var _gui_width  = round(_gui_scale * window_width);
+var _gui_height = round(_gui_scale * window_height);
 
 global.camera_width  = _camera_width;
 global.camera_height = _camera_height;
@@ -103,11 +116,6 @@ global.structure_range_surface = {
     min:  infinity,
     max: -infinity
 }
-
-window_width  = window_get_width();
-window_height = window_get_height();
-
-window_focus = true;
 
 init_inventory_instance();
 

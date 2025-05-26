@@ -3,20 +3,20 @@
     "map_colour": "#F4AF66",
     "sky_colour": {
         "dawn": {
-            "base": "#262435",
-            "gradient": "#332530"
+            "base": "#292231",
+            "gradient": "#37232C"
         },
         "day": {
-            "base": "#B5A9A6",
-            "gradient": "#7F705C"
+            "base": "#D3BEA9",
+            "gradient": "#936E63"
         },
         "dusk": {
-            "base": "#C1684D",
-            "gradient": "#A5735C"
+            "base": "#C66448",
+            "gradient": "#AC6F56"
         },
         "night": {
-            "base": "#16131F",
-            "gradient": "#100B16"
+            "base": "#17121D",
+            "gradient": "#110A14"
         }
     },
     "light_colour": {

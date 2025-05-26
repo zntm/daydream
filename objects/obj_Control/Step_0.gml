@@ -3,6 +3,7 @@ var _window_focus = window_has_focus();
 if (!_window_focus)
 {
     window_focus = false;
+    game_boolean |= GAME_BOOLEAN.IS_PAUSED;
     
     exit;
 }
@@ -13,6 +14,13 @@ else if (!window_focus)
     carbasa_repair_all();
 }
 
+if (keyboard_check_pressed(vk_escape))
+{
+    game_boolean ^= GAME_BOOLEAN.IS_PAUSED;
+}
+
+if (game_boolean & GAME_BOOLEAN.IS_PAUSED) exit;
+
 global.delta_time = delta_time / 1_000_000;
 
 var _player_x = obj_Player.x;
@@ -22,26 +30,20 @@ if (keyboard_check_pressed(ord("R")))
 {
     room_restart();
 }
-/*
 var _world_data = global.world_data[$ global.world.dimension];
 
 if (keyboard_check(ord("C")))
 {
-    global.world.time += 1000;
+    global.world.time += 1;
     
     if (global.world.time >= _world_data.get_time_length())
     {
         global.world.day += floor(global.world.time / _world_data.get_time_length());
+        
         global.world.time %= _world_data.get_time_length();
     }
     
     obj_Control_Background.refresh += 1;
-}
-*/
-
-if (keyboard_check_pressed(vk_escape))
-{
-    game_end();
 }
 
 if (keyboard_check_pressed(ord("E")))
