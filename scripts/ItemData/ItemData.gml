@@ -92,6 +92,16 @@ function ItemData() constructor
         return !!(___type & _type);
     }
     
+    static set_sprite = function(_sprite)
+    {
+        ___sprite = _sprite;
+    }
+    
+    static get_sprite = function()
+    {
+        return ___sprite;
+    }
+    
     static set_edge_padding = function(_edge_padding)
     {
         if (is_tile())
@@ -197,6 +207,18 @@ function ItemData() constructor
     static get_hardvest_type = function()
     {
         return self[$ "___harvest_type"];
+    }
+    
+    static set_durability = function(_durability)
+    {
+        ___durability = _durability;
+        
+        return self;
+    }
+    
+    static get_durability = function(_durability)
+    {
+        return self[$ "___durability"] ?? 0;
     }
     
     static set_drop = function(_drop)
@@ -350,6 +372,18 @@ function ItemData() constructor
     #endregion
     
     #region Inventory
+    
+    static set_inventory_scale = function(_scale)
+    {
+        ___inventory_scale = _scale;
+        
+        return self;
+    }
+    
+    static get_inventory_scale = function(_scale)
+    {
+        return self[$ "___inventory_scale"] ?? 1;
+    }
     
     static set_item_inventory_length = function(_length)
     {

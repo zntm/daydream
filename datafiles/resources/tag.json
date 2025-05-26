@@ -1,4 +1,25 @@
 {
+    "gui_durability_bar": {
+        "base_colour": "#36383F",
+        "threshold": [
+            {
+                "colour": "#50D850",
+                "min_percentage": 1
+            },
+            {
+                "colour": "#EFBB43",
+                "min_percentage": 0.4
+            },
+            {
+                "colour": "#B51C31",
+                "min_percentage": 0.2
+            },
+            {
+                "colour": "#4C0909",
+                "min_percentage": 0.1
+            }
+        ]
+    },
     "placeable_dry_plant_on": [
         "phantasia:dirt",
         "phantasia:grass_block",

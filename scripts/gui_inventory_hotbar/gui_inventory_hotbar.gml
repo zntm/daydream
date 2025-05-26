@@ -122,7 +122,7 @@ function gui_inventory_hotbar(_gui_multiplier_x, _gui_multiplier_y)
         var _x = _gui_multiplier_x * INVENTORY_GUI_SURFACE_PADDING;
         var _y = _gui_multiplier_y * (INVENTORY_GUI_SURFACE_PADDING + INVENTORY_SLOT_DIMENSION_SCALED + 1);
         
-        draw_text_transformed(_x, _y, loca_translate(loca_item_name(_item_holding)), _gui_multiplier_x * GUI_INVENTORY_STRING_SCALE, _gui_multiplier_y * GUI_INVENTORY_STRING_SCALE, 0);
+        draw_text_transformed(_x, _y, _item_holding, _gui_multiplier_x * GUI_INVENTORY_STRING_SCALE, _gui_multiplier_y * GUI_INVENTORY_STRING_SCALE, 0);
         // draw_text();
     }
     

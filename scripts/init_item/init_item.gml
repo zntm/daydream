@@ -24,6 +24,8 @@ function init_item(_directory, _namespace)
         _item_data.set_harvest(_json[$ "harvest"]);
         _item_data.set_drop(_json[$ "drop"]);
         
+        _item_data.set_durability(_json[$ "durability"]);
+        
         _item_data.set_is_tile(_json[$ "is_tile"]);
         _item_data.set_is_wall(_json[$ "is_wall"]);
         _item_data.set_is_foliage(_json[$ "is_foliage"]);
@@ -34,6 +36,8 @@ function init_item(_directory, _namespace)
         var _sprite_yoffset = _sprite_data.yoffset;
         
         var _sprite = sprite_add($"{_directory}/{_file}/sprite.png", _sprite_data.length, false, false, _sprite_xoffset, _sprite_yoffset);
+        
+        _item_data.set_sprite(_sprite);
         
         var _collision_box = _json[$ "collision_box"];
         

@@ -1,5 +1,5 @@
 {
-    "type": "shovel",
+    "type": "pickaxe",
     "sprite": {
         "xoffset": 16,
         "yoffset": 16,
@@ -8,5 +8,9 @@
     "harvest": {
         "hardness": 1,
         "level": 0
+    },
+    "durability": {
+        "amount": 73,
+        "bar": "#phantasia:gui_durability_bar"
     }
 }

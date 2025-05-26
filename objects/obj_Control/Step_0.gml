@@ -120,6 +120,15 @@ if (global.world.time % 8 == 0)
 var _tile_x = round(mouse_x / TILE_SIZE);
 var _tile_y = round(mouse_y / TILE_SIZE);
 
+var _mouse_wheel = mouse_wheel_down() - mouse_wheel_up();
+
+if (_mouse_wheel != 0)
+{
+    global.inventory_selected_hotbar = (global.inventory_selected_hotbar + _mouse_wheel + INVENTORY_LENGTH.ROW) % INVENTORY_LENGTH.ROW;
+    
+    surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY;
+}
+
 if (mouse_check_button(mb_right))
 {
     player_place(_tile_x, _tile_y);

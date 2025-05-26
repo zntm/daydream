@@ -12,8 +12,8 @@
 
 enum INVENTORY_LENGTH {
     BASE      = 50,
-    ROW          = 10,
-    ARMOR      = 3,
+    ROW       = 10,
+    ARMOR     = 3,
     ACCESSORY = 6,
 }
 
