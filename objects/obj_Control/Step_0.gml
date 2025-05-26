@@ -17,6 +17,11 @@ else if (!window_focus)
 if (keyboard_check_pressed(vk_escape))
 {
     game_boolean ^= GAME_BOOLEAN.IS_PAUSED;
+    
+    if (surface_refresh & SURFACE_REFRESH_BOOLEAN.PAUSE)
+    {
+        surface_refresh ^= SURFACE_REFRESH_BOOLEAN.PAUSE;
+    }
 }
 
 if (game_boolean & GAME_BOOLEAN.IS_PAUSED) exit;

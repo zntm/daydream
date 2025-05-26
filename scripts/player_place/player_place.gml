@@ -20,7 +20,7 @@ function player_place(_x, _y)
         }
         else if (_data.is_foliage())
         {
-            if (tile_get(_x, _y, CHUNK_DEPTH_DEFAULT)) exit;
+            if (tile_get(_x, _y, CHUNK_DEPTH_DEFAULT) != TILE_EMPTY) exit;
             
             _z = choose(CHUNK_DEPTH_FOLIAGE_BACK, CHUNK_DEPTH_FOLIAGE_FRONT);
         }
@@ -97,7 +97,7 @@ function player_place(_x, _y)
             {
                 var _tile_data = _item_data[$ _tile];
                 
-                if (_types != undefined)
+                if (is_array(_types))
                 {
                     var _types_length = array_length(_types);
                     

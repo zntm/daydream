@@ -3,7 +3,8 @@ randomize();
 is_opened_inventory = false;
 
 enum SURFACE_REFRESH_BOOLEAN {
-    INVENTORY = 1
+    INVENTORY = 1 << 0,
+    PAUSE     = 1 << 1
 }
 
 surface_refresh = SURFACE_REFRESH_BOOLEAN.INVENTORY;
@@ -14,7 +15,7 @@ enum GAME_BOOLEAN {
 
 game_boolean = 0;
 
-surface_pause = -1;
+surface_pause = [ -1, -1 ];
 
 show_debug_overlay(true);
 

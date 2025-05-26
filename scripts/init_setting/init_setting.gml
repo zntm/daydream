@@ -34,6 +34,8 @@ init_setting("graphics", "display_background", new SettingsData(SETTINGS_TYPE.SW
 
 init_setting("graphics", "display_coloured_lighting", new SettingsData(SETTINGS_TYPE.SWITCH, true));
 
+init_setting("graphics", "display_blur", new SettingsData(SETTINGS_TYPE.SLIDER, 1));
+
 init_setting("graphics", "particles", new SettingsData(SETTINGS_TYPE.ARROW, 2)
     .add_values(SETTINGS_LEVEL.NONE, SETTINGS_LEVEL.MIN, SETTINGS_LEVEL.MAX));
 

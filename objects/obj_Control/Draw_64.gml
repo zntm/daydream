@@ -12,7 +12,21 @@ var _gui_height = global.gui_height;
 
 if (game_boolean & GAME_BOOLEAN.IS_PAUSED)
 {
-    render_pause();
+    if ((surface_refresh & SURFACE_REFRESH_BOOLEAN.PAUSE) == 0)
+    {
+        surface_refresh |= SURFACE_REFRESH_BOOLEAN.PAUSE;
+        
+        render_pause();
+    }
+    
+    draw_surface(application_surface, 0, 0);
+    
+    gpu_set_texfilter(true);
+    
+    draw_surface_ext(surface_pause[@ 1], 0, 0, 4, 4, 0, c_white, global.settings.display_blur);
+    
+    gpu_set_texfilter(false);
+    
     render_gui_vignette(_player_y, _gui_width, _gui_height);
     
     exit;
