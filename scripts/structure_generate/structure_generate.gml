@@ -4,7 +4,9 @@ function structure_generate(_inst, _seed, _item_data, _structure_data, _natural_
      
     if (_data == undefined)
     {
-        var _function = _natural_structure_data[$ _structure_data[$ _inst.structure_id].get_data()[$ "function"]].get_function();
+        _data = _structure_data[$ _inst.structure_id];
+        
+        var _function = _natural_structure_data[$ _data.get_data()[$ "function"]].get_function();
         
         _data = _function(
             _inst.structure_xrelative,

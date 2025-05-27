@@ -23,7 +23,9 @@ function control_structure_surface(_xstart, _xend)
         {
             var _structure = _surface_biome.get_structure(j);
             
-            if (!chance_seeded(_structure.chance, ceil(_world_seed / 4) - _x + ((j + 1) * 512))) continue;
+            // show_debug_message($"{_x}: {random_seeded(1, _world_seed / (_x + (j * 216)))} {_world_seed / (_x + (j * 216))}")
+            
+            if (!chance_seeded(_structure.chance, ((_world_seed & 0xf) * 108_929) + (_world_seed >> 4) - (((_world_seed & 0xff) + _x + j) * 25_216))) continue;
             
             structure_create(_x2, _y2, _structure.id, _world_seed, true);
         }

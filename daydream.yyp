@@ -283,6 +283,7 @@
     {"id":{"name":"spr_Inventory_Slot_Icon","path":"sprites/spr_Inventory_Slot_Icon/spr_Inventory_Slot_Icon.yy",},},
     {"id":{"name":"spr_Inventory_Slot","path":"sprites/spr_Inventory_Slot/spr_Inventory_Slot.yy",},},
     {"id":{"name":"spr_Inventory_Tooltip","path":"sprites/spr_Inventory_Tooltip/spr_Inventory_Tooltip.yy",},},
+    {"id":{"name":"spr_Mouse","path":"sprites/spr_Mouse/spr_Mouse.yy",},},
     {"id":{"name":"spr_Null_0","path":"sprites/spr_Null_0/spr_Null_0.yy",},},
     {"id":{"name":"spr_Square","path":"sprites/spr_Square/spr_Square.yy",},},
     {"id":{"name":"spr_Vignette_Corner","path":"sprites/spr_Vignette_Corner/spr_Vignette_Corner.yy",},},

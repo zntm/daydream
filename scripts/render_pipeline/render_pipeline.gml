@@ -12,13 +12,15 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
     var _texel_width  = texture_get_texel_width(_texture);
     var _texel_height = texture_get_texel_height(_texture);
     
+    var _animation_index = round(global.world.time / 4);
+    
     for (var _z = 0; _z < CHUNK_DEPTH; ++_z)
     {
         var _bitmask = 1 << _z;
         
         shader_set(shd_Chunk);
         shader_set_uniform_f(__u_texture_size, _texel_width, _texel_height);
-        shader_set_uniform_f(__u_time, round(global.world.time / 4));
+        shader_set_uniform_f(__u_time, _animation_index);
         
         var _a = ceil(_camera_width  / (2 * CHUNK_SIZE_DIMENSION)) + 1;
         var _b = ceil(_camera_height / (2 * CHUNK_SIZE_DIMENSION)) + 1;
@@ -51,5 +53,13 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
         }
         
         shader_reset();
+        
+        if (_z == CHUNK_DEPTH_DEFAULT)
+        {
+            with (obj_Player)
+            {
+                draw_sprite_ext(sprite_index, 0, x, y, image_xscale, image_yscale, image_angle, c_white, 1);
+            }
+        }
     }
 }

@@ -218,7 +218,7 @@ function ItemData() constructor
             var _bar = _durability.bar;
             
             ___durability_bar        = _bar;
-            ___durability_bar_length = array_length(tag_get(_bar).threshold);
+            ___durability_bar_length = array_length(tag_get(_bar).data);
         }
         
         return self;

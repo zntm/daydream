@@ -1,7 +1,7 @@
 {
     "gui_durability_bar": {
         "base_colour": "#36383F",
-        "threshold": [
+        "data": [
             {
                 "colour": "#50D850",
                 "min_percentage": 1

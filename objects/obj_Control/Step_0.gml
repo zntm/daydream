@@ -108,7 +108,7 @@ var _camera_y = global.camera_y_real;
 var _camera_width  = global.camera_width;
 var _camera_height = global.camera_height;
 
-// control_structure_surface(floor(_camera_x / TILE_SIZE) - (CHUNK_SIZE * 32), ceil((_camera_x + _camera_width) / TILE_SIZE) + (CHUNK_SIZE * 32));
+control_structure_surface(round(_camera_x / TILE_SIZE) - (CHUNK_SIZE * 8), round((_camera_x + _camera_width) / TILE_SIZE) + (CHUNK_SIZE * 8));
 
 control_chunk(_player_x, _player_y, _camera_x, _camera_y, _camera_width, _camera_height);
 

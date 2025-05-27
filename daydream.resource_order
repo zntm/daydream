@@ -50,7 +50,7 @@
     {"name":"Sequences","order":10,"path":"folders/Sequences.yy",},
     {"name":"Shaders","order":6,"path":"folders/Shaders.yy",},
     {"name":"Sprites","order":4,"path":"folders/Sprites.yy",},
-    {"name":"Inventory","order":5,"path":"folders/Sprites/Inventory.yy",},
+    {"name":"Inventory","order":6,"path":"folders/Sprites/Inventory.yy",},
   ],
   "ResourceOrderSettings":[
     {"name":"obj_Chunk","order":2,"path":"objects/obj_Chunk/obj_Chunk.yy",},
@@ -150,6 +150,7 @@
     {"name":"spr_Inventory_Slot_Icon","order":2,"path":"sprites/spr_Inventory_Slot_Icon/spr_Inventory_Slot_Icon.yy",},
     {"name":"spr_Inventory_Slot","order":1,"path":"sprites/spr_Inventory_Slot/spr_Inventory_Slot.yy",},
     {"name":"spr_Inventory_Tooltip","order":3,"path":"sprites/spr_Inventory_Tooltip/spr_Inventory_Tooltip.yy",},
+    {"name":"spr_Mouse","order":5,"path":"sprites/spr_Mouse/spr_Mouse.yy",},
     {"name":"spr_Square","order":1,"path":"sprites/spr_Square/spr_Square.yy",},
     {"name":"spr_Vignette_Corner","order":4,"path":"sprites/spr_Vignette_Corner/spr_Vignette_Corner.yy",},
   ],

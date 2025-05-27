@@ -12,6 +12,10 @@ enum VERSION_VALUE {
 #macro SITE_DISCORD "https://discord.gg/PjdKzPZUKK"
 #macro SITE_TWITTER "https://x.com/PhantasiaGame"
 
+cursor_sprite = spr_Mouse;
+
+window_set_cursor(cr_none);
+
 #region Chunk
 
 #macro TILE_EMPTY 0

@@ -3,8 +3,6 @@
 
 #macro GUI_INVENTORY_STRING_SCALE 0.5
 
-#macro GUI_INVENTORY_DURABILITY_PADDING 2
-
 function gui_inventory(_gui_multiplier_x, _gui_multiplier_y)
 {
     var _item_data = global.item_data;
@@ -67,8 +65,8 @@ function gui_inventory(_gui_multiplier_x, _gui_multiplier_y)
         {
             var _id = _[global.inventory_selected_hotbar];
             
-            var _x = (INVENTORY_GUI_SURFACE_PADDING + _id.xoffset) / INVENTORY_SLOT_SCALE;
-            var _y = (INVENTORY_GUI_SURFACE_PADDING + _id.yoffset) / INVENTORY_SLOT_SCALE;
+            var _x = (GUI_INVENTORY_SURFACE_PADDING + _id.xoffset) / INVENTORY_SLOT_SCALE;
+            var _y = (GUI_INVENTORY_SURFACE_PADDING + _id.yoffset) / INVENTORY_SLOT_SCALE;
             
             draw_sprite_ext(spr_Square, 0, _x - 2, _y - 2, 20, 20, 0, INVENTORY_OUTLINE_COLOUR, 1);
         }
@@ -77,8 +75,8 @@ function gui_inventory(_gui_multiplier_x, _gui_multiplier_y)
         {
             var _id = _[j];
             
-            var _x = (INVENTORY_GUI_SURFACE_PADDING + _id.xoffset) / INVENTORY_SLOT_SCALE;
-            var _y = (INVENTORY_GUI_SURFACE_PADDING + _id.yoffset) / INVENTORY_SLOT_SCALE;
+            var _x = (GUI_INVENTORY_SURFACE_PADDING + _id.xoffset) / INVENTORY_SLOT_SCALE;
+            var _y = (GUI_INVENTORY_SURFACE_PADDING + _id.yoffset) / INVENTORY_SLOT_SCALE;
             
             draw_sprite_ext(_sprite, 0, _x, _y, 1, 1, 0, c_white, 1);
             
@@ -92,8 +90,8 @@ function gui_inventory(_gui_multiplier_x, _gui_multiplier_y)
         {
             var _id = _[global.inventory_selected_hotbar];
             
-            var _x = (INVENTORY_GUI_SURFACE_PADDING + _id.xoffset) / INVENTORY_SLOT_SCALE;
-            var _y = (INVENTORY_GUI_SURFACE_PADDING + _id.yoffset) / INVENTORY_SLOT_SCALE;
+            var _x = (GUI_INVENTORY_SURFACE_PADDING + _id.xoffset) / INVENTORY_SLOT_SCALE;
+            var _y = (GUI_INVENTORY_SURFACE_PADDING + _id.yoffset) / INVENTORY_SLOT_SCALE;
             
             draw_sprite_ext(spr_Inventory_Hotbar, 0, _x, _y, 1, 1, 0, c_white, 1);
         }
@@ -127,8 +125,8 @@ function gui_inventory(_gui_multiplier_x, _gui_multiplier_y)
             var _xoffset = _id.xoffset;
             var _yoffset = _id.yoffset;
             
-            var _x = _gui_multiplier_x * ((INVENTORY_GUI_SURFACE_PADDING + (INVENTORY_SLOT_DIMENSION_SCALED / 2)) + _xoffset);
-            var _y = _gui_multiplier_y * ((INVENTORY_GUI_SURFACE_PADDING + (INVENTORY_SLOT_DIMENSION_SCALED / 2)) + _yoffset);
+            var _x = _gui_multiplier_x * ((GUI_INVENTORY_SURFACE_PADDING + (INVENTORY_SLOT_DIMENSION_SCALED / 2)) + _xoffset);
+            var _y = _gui_multiplier_y * ((GUI_INVENTORY_SURFACE_PADDING + (INVENTORY_SLOT_DIMENSION_SCALED / 2)) + _yoffset);
             
             var _inventory_scale = _data.get_inventory_scale();
             
@@ -155,8 +153,8 @@ function gui_inventory(_gui_multiplier_x, _gui_multiplier_y)
             
             var _id = _[j];
             
-            var _x = _gui_multiplier_x * (GUI_INVENTORY_AMOUNT_XOFFSET + (INVENTORY_GUI_SURFACE_PADDING + (INVENTORY_SLOT_DIMENSION_SCALED / 2)) + _id.xoffset);
-            var _y = _gui_multiplier_y * (GUI_INVENTORY_AMOUNT_YOFFSET + (INVENTORY_GUI_SURFACE_PADDING + (INVENTORY_SLOT_DIMENSION_SCALED / 2)) + _id.yoffset);
+            var _x = _gui_multiplier_x * (GUI_INVENTORY_AMOUNT_XOFFSET + (GUI_INVENTORY_SURFACE_PADDING + (INVENTORY_SLOT_DIMENSION_SCALED / 2)) + _id.xoffset);
+            var _y = _gui_multiplier_y * (GUI_INVENTORY_AMOUNT_YOFFSET + (GUI_INVENTORY_SURFACE_PADDING + (INVENTORY_SLOT_DIMENSION_SCALED / 2)) + _id.yoffset);
             
             draw_text_transformed_colour(_x, _y, _amount, _gui_multiplier_x * GUI_INVENTORY_STRING_SCALE, _gui_multiplier_y * GUI_INVENTORY_STRING_SCALE, 0, c_white, c_white, c_white, c_white, 1);
         }

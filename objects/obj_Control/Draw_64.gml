@@ -32,13 +32,13 @@ if (game_boolean & GAME_BOOLEAN.IS_PAUSED)
     exit;
 }
 
-render_gui_vignette(_player_y, _gui_width, _gui_height);
+var _gui_mouse_x = (window_mouse_get_x() / window_width)  * _gui_width;
+var _gui_mouse_y = (window_mouse_get_y() / window_height) * _gui_height;
 
 var _gui_multiplier_x = _gui_width  / _camera_width;
 var _gui_multiplier_y = _gui_height / _camera_height;
 
-var _gui_mouse_x = (window_mouse_get_x() / window_width)  * _gui_width;
-var _gui_mouse_y = (window_mouse_get_y() / window_height) * _gui_height;
+render_gui_vignette(_player_y, _gui_width, _gui_height);
 
 global.gui_mouse_x = _gui_mouse_x;
 global.gui_mouse_y = _gui_mouse_y;
@@ -83,8 +83,8 @@ if (_hp > 0)// && (is_opened_gui) && (!is_opened_menu)
             
             var _anchor_type = _data.anchor_type;
             
-            var _x = _gui_multiplier_x * (gui_xanchor(_anchor_type, _camera_width)  + _data.surface_xoffset - INVENTORY_GUI_SURFACE_PADDING);
-            var _y = _gui_multiplier_y * (gui_yanchor(_anchor_type, _camera_height) + _data.surface_yoffset - INVENTORY_GUI_SURFACE_PADDING);
+            var _x = _gui_multiplier_x * (gui_xanchor(_anchor_type, _camera_width)  + _data.surface_xoffset - GUI_INVENTORY_SURFACE_PADDING);
+            var _y = _gui_multiplier_y * (gui_yanchor(_anchor_type, _camera_height) + _data.surface_yoffset - GUI_INVENTORY_SURFACE_PADDING);
             
             var _surface_slot = _surface_inventory.surface_slot;
             
@@ -136,8 +136,8 @@ if (_hp > 0)// && (is_opened_gui) && (!is_opened_menu)
         
         var _anchor_type = _data.anchor_type;
         
-        var _x = _gui_multiplier_x * (gui_xanchor(_anchor_type, _camera_width)  + _data.surface_xoffset - INVENTORY_GUI_SURFACE_PADDING);
-        var _y = _gui_multiplier_y * (gui_yanchor(_anchor_type, _camera_height) + _data.surface_yoffset - INVENTORY_GUI_SURFACE_PADDING);
+        var _x = _gui_multiplier_x * (gui_xanchor(_anchor_type, _camera_width)  + _data.surface_xoffset - GUI_INVENTORY_SURFACE_PADDING);
+        var _y = _gui_multiplier_y * (gui_yanchor(_anchor_type, _camera_height) + _data.surface_yoffset - GUI_INVENTORY_SURFACE_PADDING);
         
         var _surface_slot = _surface_inventory.surface_slot;
         

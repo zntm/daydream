@@ -1,4 +1,4 @@
 function chance_seeded(_chance, _seed)
 {
-    return (random_seeded(1, _seed) < _chance);
+    return ((xorshift(_seed) & 0x7f) / 0x7f < _chance);
 }

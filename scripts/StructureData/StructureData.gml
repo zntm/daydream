@@ -60,7 +60,7 @@ function StructureData(_width, _height, _placement, _is_persistent, _is_natural)
     
     static get_parameter = function()
     {
-        return ___parameter;
+        return self[$ "___parameter"];
     }
     
     static set_data = function(_function)
