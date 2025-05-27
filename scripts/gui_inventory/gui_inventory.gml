@@ -137,7 +137,7 @@ function gui_inventory(_gui_multiplier_x, _gui_multiplier_y)
             
             draw_sprite_ext(_data.get_sprite(), 0, _x, _y, _xscale, _yscale, 0, c_white, 1);
             
-            if (_data.get_durability() > 0)
+            if (_data.get_durability_amount() > 0)
             {
                 gui_inventory_durability(_xoffset, _yoffset, _item.get_durability(), _data, _gui_multiplier_x, _gui_multiplier_y);
             }

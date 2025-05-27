@@ -199,26 +199,44 @@ function ItemData() constructor
         return ___harvest_value & 0xffff;
     }
     
-    static get_hardvest_level = function()
+    static get_harvest_level = function()
     {
         return (___harvest_value >> 16) & 0xff;
     }
     
-    static get_hardvest_type = function()
+    static get_harvest_type = function()
     {
         return self[$ "___harvest_type"];
     }
     
     static set_durability = function(_durability)
     {
-        ___durability = _durability;
+        if (_durability != undefined)
+        {
+            ___durability_amount = _durability.amount;
+            
+            var _bar = _durability.bar;
+            
+            ___durability_bar        = _bar;
+            ___durability_bar_length = array_length(tag_get(_bar).threshold);
+        }
         
         return self;
     }
     
-    static get_durability = function(_durability)
+    static get_durability_amount = function()
     {
-        return self[$ "___durability"] ?? 0;
+        return self[$ "___durability_amount"] ?? 0;
+    }
+    
+    static get_durability_bar = function()
+    {
+        return self[$ "___durability_bar"];
+    }
+    
+    static get_durability_bar_length = function()
+    {
+        return self[$ "___durability_bar_length"];
     }
     
     static set_drop = function(_drop)
@@ -355,18 +373,6 @@ function ItemData() constructor
     static is_foliage = function()
     {
         return !!(___boolean & ITEM_BOOLEAN.IS_FOLIAGE);
-    }
-    
-    static set_durability = function(_durability)
-    {
-        ___durability = _durability;
-        
-        return self;
-    }
-    
-    static get_durability = function()
-    {
-        return self[$ "___durability"] ?? 0;
     }
     
     #endregion
