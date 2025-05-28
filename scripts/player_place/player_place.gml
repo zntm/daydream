@@ -68,8 +68,6 @@ function player_place(_x, _y)
             "untouchable": ITEM_TYPE_BIT.UNTOUCHABLE
         }
         
-        _requirements = tag_get(_requirements);
-        
         var _length = array_length(_requirements);
         
         for (var i = 0; i < _length; ++i)
@@ -86,8 +84,6 @@ function player_place(_x, _y)
             
             if (_id != undefined)
             {
-                _id = tag_get(_requirement.id);
-                
                 if (is_array(_id)) ? (!array_contains(_id, _tile)) : (_id != _tile) exit;
             }
             

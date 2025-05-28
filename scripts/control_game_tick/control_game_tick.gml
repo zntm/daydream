@@ -11,6 +11,11 @@ function control_game_tick()
             control_player(_dt);
         }
         
+        with (obj_Item_Drop)
+        {
+            control_physics(_dt, id);
+        }
+        
         global.world.time += _dt / GAME_TICK;
         
         if (global.world.time >= _time_length)

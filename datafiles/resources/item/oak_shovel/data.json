@@ -5,6 +5,7 @@
         "yoffset": 16,
         "length": 1
     },
+    "inventory": "#phantasia:item_data_inventory_tool",
     "harvest": {
         "hardness": 1,
         "level": 0

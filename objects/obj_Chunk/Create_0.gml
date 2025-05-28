@@ -14,4 +14,6 @@ is_generated = false;
 chunk_xstart = floor(x / CHUNK_SIZE);
 chunk_ystart = floor(y / CHUNK_SIZE);
 
+control_structure(chunk_xstart, chunk_ystart);
+
 chunk_generate();

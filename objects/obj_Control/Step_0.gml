@@ -56,6 +56,11 @@ if (keyboard_check_pressed(ord("E")))
     is_opened_inventory = !is_opened_inventory;
 }
 
+if (keyboard_check_pressed(ord("F")))
+{
+    spawn_item_drop(_player_x, _player_y, new Inventory("phantasia:dirt"));
+}
+
 if (keyboard_check_pressed(vk_f11))
 {
     window_set_fullscreen(!window_get_fullscreen());
@@ -107,8 +112,6 @@ var _camera_y = global.camera_y_real;
 
 var _camera_width  = global.camera_width;
 var _camera_height = global.camera_height;
-
-control_structure_surface(round(_camera_x / TILE_SIZE) - (CHUNK_SIZE * 8), round((_camera_x + _camera_width) / TILE_SIZE) + (CHUNK_SIZE * 8));
 
 control_chunk(_player_x, _player_y, _camera_x, _camera_y, _camera_width, _camera_height);
 

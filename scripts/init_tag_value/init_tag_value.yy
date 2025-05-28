@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"tag_get",
+  "%Name":"init_tag_value",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"tag_get",
+  "name":"init_tag_value",
   "parent":{
     "name":"Tag Data",
     "path":"folders/Data/Tag Data.yy",

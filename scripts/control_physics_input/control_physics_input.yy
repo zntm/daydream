@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"spawn_item_drop",
+  "%Name":"control_physics_input",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"spawn_item_drop",
+  "name":"control_physics_input",
   "parent":{
-    "name":"Entity",
-    "path":"folders/Scripts/Entity.yy",
+    "name":"Physics",
+    "path":"folders/Scripts/Control/Physics.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

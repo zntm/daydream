@@ -95,11 +95,34 @@ function ItemData() constructor
     static set_sprite = function(_sprite)
     {
         ___sprite = _sprite;
+        ___sprite_size = (sprite_get_height(_sprite) << 24) | (sprite_get_width(_sprite) << 16) | ((sprite_get_yoffset(_sprite) + 0x80) << 8) | (sprite_get_xoffset(_sprite) + 0x80);
+        
+        return self;
     }
     
     static get_sprite = function()
     {
         return ___sprite;
+    }
+    
+    static get_sprite_xoffset = function()
+    {
+        return (___sprite_size & 0xff) - 0x80;
+    }
+    
+    static get_sprite_yoffset = function()
+    {
+        return ((___sprite_size >> 8) & 0xff) - 0x80;
+    }
+    
+    static get_sprite_width = function()
+    {
+        return (___sprite_size >> 16) & 0xff;
+    }
+    
+    static get_sprite_height = function()
+    {
+        return (___sprite_size >> 24) & 0xff;
     }
     
     static set_edge_padding = function(_edge_padding)
@@ -115,6 +138,30 @@ function ItemData() constructor
     static get_edge_padding = function()
     {
         return self[$ "___edge_padding"];
+    }
+    
+    static set_inventory = function(_inventory)
+    {
+        _inventory = init_tag_value(_inventory);
+        
+        ___inventory_value = (_inventory.size << 32) | (_inventory.index << 16) | _inventory.max;
+        
+        return self;
+    }
+    
+    static get_inventory_max = function()
+    {
+        return ___inventory_value & 0xffff;
+    }
+    
+    static get_inventory_index = function()
+    {
+        return (___inventory_value >> 16) & 0xffff;
+    }
+    
+    static get_inventory_size = function()
+    {
+        return (___inventory_value >> 32) & 0xffff;
     }
     
     static set_animation_type = function(_type)
@@ -182,13 +229,29 @@ function ItemData() constructor
     
     static set_harvest = function(_harvest)
     {
+        _harvest = init_tag_value(_harvest);
+        
         ___harvest_value = (_harvest.level << 16) | _harvest.hardness;
         
-        var _harvest_type = _harvest[$ "type"];
+        var _type = _harvest[$ "type"];
         
-        if (_harvest_type != undefined)
+        if (_type != undefined)
         {
-            ___harvest_type = __item_type[$ _harvest_type];
+            ___harvest_type = __item_type[$ _type];
+        }
+        
+        var _particle = _harvest[$ "particle"];
+        
+        if (_particle != undefined)
+        {
+            var _length = array_length(_particle);
+            
+            for (var i = 0; i < _length; ++i)
+            {
+                _particle[@ i] = hex_parse(_particle[i]);
+            }
+            
+            ___harvest_particle = _particle;
         }
         
         return self;
@@ -209,16 +272,23 @@ function ItemData() constructor
         return self[$ "___harvest_type"];
     }
     
+    static get_harvest_particle = function()
+    {
+        return self[$ "___harvest_particle"];
+    }
+    
     static set_durability = function(_durability)
     {
         if (_durability != undefined)
         {
+            _durability = init_tag_value(_durability);
+            
             ___durability_amount = _durability.amount;
             
             var _bar = _durability.bar;
             
             ___durability_bar        = _bar;
-            ___durability_bar_length = array_length(tag_get(_bar).data);
+            ___durability_bar_length = array_length(_bar.data);
         }
         
         return self;

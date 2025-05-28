@@ -7,6 +7,8 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
     
     carbasa_repair_page("item");
     
+    var _item_data = global.item_data;
+    
     var _texture = global.carbasa_surface_texture[$ "item"];
     
     var _texel_width  = texture_get_texel_width(_texture);
@@ -59,6 +61,21 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
             with (obj_Player)
             {
                 draw_sprite_ext(sprite_index, 0, x, y, image_xscale, image_yscale, image_angle, c_white, 1);
+            }
+            
+            with (obj_Item_Drop)
+            {
+                var _data = _item_data[$ item.get_item_id()];
+                
+                var _collision_box = entity_value.collision_box;
+                
+                var _sprite = _data.get_sprite();
+                var _index  = _data.get_inventory_index();
+                
+                var _xscale = _data.get_sprite_width()  / _collision_box.width;
+                var _yscale = _data.get_sprite_height() / _collision_box.height;
+                
+                draw_sprite_ext(_sprite, _index, x, y - (_data.get_sprite_yoffset() * image_yscale / 2), _xscale, _yscale, image_angle, c_white, 1);
             }
         }
     }

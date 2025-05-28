@@ -5,9 +5,13 @@
         "yoffset": 5,
         "length": 1
     },
+    "inventory": "#phantasia:item_data_inventory_default",
     "harvest": {
         "hardness": 8,
-        "level": 0
+        "level": 0,
+        "particle": [
+            "#FFFFFF"
+        ]
     },
     "placement": {
         "requirement": "#phantasia:placement_requirement_plant"

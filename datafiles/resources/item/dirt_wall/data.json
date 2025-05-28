@@ -6,9 +6,13 @@
         "length": 5,
         "edge_padding": 8
     },
+    "inventory": "#phantasia:item_data_inventory_tile",
     "harvest": {
         "hardness": 8,
-        "level": 0
+        "level": 0,
+        "particle": [
+            "#FFFFFF"
+        ]
     },
     "drop": {
         "item": {

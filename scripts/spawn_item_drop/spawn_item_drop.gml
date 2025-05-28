@@ -2,22 +2,31 @@ function spawn_item_drop(_x, _y, _item, _direction = 0, _xvelocity = 0, _yveloci
 {
     if (_item == INVENTORY_EMPTY) exit;
     
+    static __sprite_width  = sprite_get_width(spr_Hitbox);
+    static __sprite_height = sprite_get_height(spr_Hitbox);
+    
     var _data = global.item_data[$ _item.get_item_id()];
     
     if (_data == undefined) exit;
     
     with (instance_create_layer(_x, _y, "Instances", obj_Item_Drop))
     {
+        var _size = _data.get_inventory_size();
+        
         entity_value = {
             collision_box: {
-                width:  8,
-                height: 8
+                width:  _size,
+                height: _size
+            },
+            physics: {
+                gravity: 0.15
             }
         }
         
-        image_xscale = entity_value.collision_box.width  / 8;
-        image_yscale = entity_value.collision_box.height / 8;
+        image_xscale = _size / __sprite_width;
+        image_yscale = _size / __sprite_height;
         
+        image_index = _data.get_inventory_index();
         image_speed = 0;
         
         xdirection = _direction;

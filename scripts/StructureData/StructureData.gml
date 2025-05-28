@@ -28,13 +28,13 @@ function StructureData(_width, _height, _placement, _is_persistent, _is_natural)
     }
     
     static __structure_placement_type = {
-        "floor": STRUCTURE_PLACEMENT_TYPE.FLOOR,
+        "floor":   STRUCTURE_PLACEMENT_TYPE.FLOOR,
         "ceiling": STRUCTURE_PLACEMENT_TYPE.CEILING
     }
     
     var _placement_offset = _placement.offset;
     
-    ___placement_value = (_placement_offset.y << 16) | (_placement_offset.x << 8) | __structure_placement_type[$ _placement.type];
+    ___placement_value = ((_placement_offset.y + 0x80) << 16) | ((_placement_offset.x + 0x80) << 8) | __structure_placement_type[$ _placement.type];
     
     static get_placement_type = function()
     {
@@ -43,12 +43,12 @@ function StructureData(_width, _height, _placement, _is_persistent, _is_natural)
     
     static get_placement_xoffset = function()
     {
-        return (___placement_value >> 8) & 0xff;
+        return ((___placement_value >> 8) & 0xff) - 0x80;
     }
     
     static get_placement_yoffset = function()
     {
-        return (___placement_value >> 16) & 0xff;
+        return ((___placement_value >> 16) & 0xff) - 0x80;
     }
     
     static set_parameter = function(_array)

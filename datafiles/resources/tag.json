@@ -20,6 +20,21 @@
             }
         ]
     },
+    "item_data_inventory_default": {
+        "max": 999,
+        "index": 0,
+        "size": 10
+    },
+    "item_data_inventory_tile": {
+        "max": 999,
+        "index": 4,
+        "size": 10
+    },
+    "item_data_inventory_tool": {
+        "max": 1,
+        "index": 0,
+        "size": 18
+    },
     "placeable_dry_plant_on": [
         "phantasia:dirt",
         "phantasia:grass_block",

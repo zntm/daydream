@@ -1,3 +1,5 @@
+gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_src_alpha, bm_one);
+
 var _player_x = obj_Player.x;
 var _player_y = obj_Player.y;
 
@@ -28,6 +30,8 @@ if (game_boolean & GAME_BOOLEAN.IS_PAUSED)
     gpu_set_texfilter(false);
     
     render_gui_vignette(_player_y, _gui_width, _gui_height);
+    
+    gpu_set_blendmode(bm_normal);
     
     exit;
 }
@@ -167,3 +171,5 @@ draw_text(16, 16,
     $"Num: {instance_number(obj_Chunk)}\n" +
     $"Time: {global.world.time}"
 );
+
+gpu_set_blendmode(bm_normal);

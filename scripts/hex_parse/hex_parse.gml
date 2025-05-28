@@ -1,6 +1,11 @@
 function hex_parse(_string, _throw = true)
 {
-    if (!string_starts_with(_string, "#")) || (string_length(_string) != 7)
+    if (is_numeric(_string))
+    {
+        return clamp(_string, 0, 0xffffff);
+    }
+    
+    if (!is_string(_string)) || (!string_starts_with(_string, "#")) || (string_length(_string) != 7)
     {
         if (!_throw)
         {

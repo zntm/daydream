@@ -4,15 +4,15 @@
 	"placement": {
 		"type": "floor",
 		"offset": {
-			"x": 0,
-			"y": 3
+			"x": -2,
+			"y": -4
 		}
 	},
 	"data": {
 		"function": "phantasia:clump",
 		"parameter": {
 			"tile_base": {
-				"id": "phantasia:stone"
+				"id": "phantasia:sand"
 			},
 			"tile_wall": {
 				"id": "phantasia:stone_wall"

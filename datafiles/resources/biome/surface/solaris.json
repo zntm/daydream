@@ -52,6 +52,5 @@
             "chance": 0.12,
             "placeable_on": [ "phantasia:sand" ]
         }
-    ],
-    "structure": []
+    ]
 }

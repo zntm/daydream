@@ -57,12 +57,5 @@
             "chance": 0.11,
             "placeable_on": [ "phantasia:grass_block_borea" ]
         }
-    ],
-    "structure": [
-        {
-            "id": "phantasia:moss_clump",
-            "chance": 0.1,
-            "placeable_on": [ "phantasia:grass_block" ]
-        }
     ]
 }

@@ -14,7 +14,7 @@ function gui_inventory_durability(_xoffset, _yoffset, _durability, _data, _gui_m
     var _xscale = _gui_multiplier_x * INVENTORY_SLOT_SCALE * (INVENTORY_SLOT_DIMENSION - (GUI_INVENTORY_DURABILITY_PADDING * 2));
     var _yscale = _gui_multiplier_y * INVENTORY_SLOT_SCALE * 1;
     
-    var _durability_bar = tag_get(_data.get_durability_bar());
+    var _durability_bar = _data.get_durability_bar();
     
     draw_sprite_ext(spr_Square, 0, _x, _y, _xscale, _yscale, 0, hex_parse(_durability_bar.base_colour), 1);
     
