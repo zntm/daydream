@@ -6,14 +6,14 @@ function render_connected_tile(_buffer, _uv, _surface_width, _surface_height, _n
         
         var _bit_c = _bit_a | _bit_b;
         
-        if ((_index & _bit_c) == 0)
+        if !(_index & _bit_c)
         {
             return 4;
         }
         
         if ((_index & _bit_c) == _bit_c)
         {
-            return (((_index & _bit_corner) == 0) ? 3 : 0);
+            return (!(_index & _bit_corner) ? 3 : 0);
         }
         
         if (~_index & _bit_a)

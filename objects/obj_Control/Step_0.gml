@@ -3,7 +3,7 @@ var _window_focus = window_has_focus();
 if (!_window_focus)
 {
     window_focus = false;
-    game_boolean |= GAME_BOOLEAN.IS_PAUSED;
+    is_opened |= IS_OPENED_BOOLEAN.PAUSE;
     
     exit;
 }
@@ -16,7 +16,7 @@ else if (!window_focus)
 
 if (keyboard_check_pressed(vk_escape))
 {
-    game_boolean ^= GAME_BOOLEAN.IS_PAUSED;
+    is_opened ^= IS_OPENED_BOOLEAN.PAUSE;
     
     if (surface_refresh & SURFACE_REFRESH_BOOLEAN.PAUSE)
     {
@@ -24,7 +24,7 @@ if (keyboard_check_pressed(vk_escape))
     }
 }
 
-if (game_boolean & GAME_BOOLEAN.IS_PAUSED) exit;
+if (is_opened & IS_OPENED_BOOLEAN.PAUSE) exit;
 
 global.delta_time = delta_time / 1_000_000;
 

@@ -1,3 +1,5 @@
+#macro GUI_PAUSE_BLUR_RESIZE 4
+
 function render_pause()
 {
     static __u_direction  = shader_get_uniform(shd_Separable_Blur, "u_direction");
@@ -6,8 +8,8 @@ function render_pause()
     static __u_radius     = shader_get_uniform(shd_Separable_Blur, "u_radius");
     static __u_sigma      = shader_get_uniform(shd_Separable_Blur, "u_sigma");
     
-    var _width  = ceil(window_width  / 4);
-    var _height = ceil(window_height / 4);
+    var _width  = ceil(window_width  / GUI_PAUSE_BLUR_RESIZE);
+    var _height = ceil(window_height / GUI_PAUSE_BLUR_RESIZE);
     
     if (!surface_exists(surface_pause[@ 0]))
     {
@@ -28,7 +30,7 @@ function render_pause()
     shader_set_uniform_i(__u_radius, 3);
     shader_set_uniform_f(__u_sigma, 32);
     
-    draw_surface_ext(application_surface, 0, 0, 1 / 4, 1 / 4, 0, c_white, 1);
+    draw_surface_ext(application_surface, 0, 0, 1 / GUI_PAUSE_BLUR_RESIZE, 1 / GUI_PAUSE_BLUR_RESIZE, 0, c_white, 1);
     
     shader_reset();
     

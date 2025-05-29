@@ -20,7 +20,7 @@ function player_place(_x, _y)
         }
         else if (_data.is_foliage())
         {
-            if (tile_get(_x, _y, CHUNK_DEPTH_DEFAULT) != TILE_EMPTY) exit;
+            if (tile_get(_x, _y, CHUNK_DEPTH_DEFAULT) != TILE_EMPTY) || (tile_get(_x, _y, CHUNK_DEPTH_FOLIAGE_BACK) != TILE_EMPTY) || (tile_get(_x, _y, CHUNK_DEPTH_FOLIAGE_FRONT) != TILE_EMPTY) exit;
             
             _z = choose(CHUNK_DEPTH_FOLIAGE_BACK, CHUNK_DEPTH_FOLIAGE_FRONT);
         }
@@ -76,11 +76,16 @@ function player_place(_x, _y)
             
             var _tile = tile_get(_x + _requirement.xoffset, _y + _requirement.yoffset, __z[$ _requirement.z]);
             
-            if (_tile == TILE_EMPTY) exit;
+            var _id = _requirement[$ "id"];
+            
+            if (_tile == TILE_EMPTY)
+            {
+                if (_id == "air") continue;
+                
+                exit;
+            }
             
             _tile = _tile.get_item_id();
-            
-            var _id = _requirement[$ "id"];
             
             if (_id != undefined)
             {
@@ -107,5 +112,12 @@ function player_place(_x, _y)
         }
     }
     
-    tile_place(_x, _y, _z, new Tile(_item_id));
+    var _tile = new Tile(_item_id);
+    
+    if (_data.is_foliage())
+    {
+        _tile.set_xscale((xorshift(global.world.time) & 1) ? -1 : 1);
+    }
+    
+    tile_place(_x, _y, _z, _tile);
 }

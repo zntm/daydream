@@ -3,10 +3,11 @@ function render_background()
     static __u_colour = shader_get_uniform(shd_Background, "u_colour");
     static __u_strength = shader_get_uniform(shd_Background, "u_strength");
     
+    var _biome_data = global.biome_data;
     var _world_data = global.world_data[$ global.world.dimension];
     
-    var _in_biome_data = global.biome_data[$ in_biome];
-    var _in_biome_transition_data = global.biome_data[$ in_biome_transition];
+    var _in_biome_data = _biome_data[$ in_biome];
+    var _in_biome_transition_data = _biome_data[$ in_biome_transition];
     
     var _player_x = obj_Player.x;
     var _player_y = obj_Player.y;

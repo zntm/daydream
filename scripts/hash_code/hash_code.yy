@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"hash_code",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"hash_code",
+  "parent":{
+    "name":"Math",
+    "path":"folders/Scripts/Math.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

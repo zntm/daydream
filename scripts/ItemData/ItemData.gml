@@ -187,6 +187,8 @@ function ItemData() constructor
     {
         if (_placement != undefined)
         {
+            _placement = init_tag_value(_placement);
+            
             var _index = _placement[$ "index"];
             
             if (_index != undefined)

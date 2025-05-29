@@ -36,7 +36,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 
                 var _inst = instance_position(_x, _y, obj_Chunk);
                 
-                if (!instance_exists(_inst)) || (!_inst.is_generated) || ((_inst.chunk_display & _bitmask) == 0) || (_inst.chunk_count[_z] <= 0) continue;
+                if (!instance_exists(_inst)) || (!_inst.is_generated) || !(_inst.chunk_display & _bitmask) || (_inst.chunk_count[_z] <= 0) continue;
                 
                 var _buffer = _inst.chunk_vertex_buffer[_z];
                 

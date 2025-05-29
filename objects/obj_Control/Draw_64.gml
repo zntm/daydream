@@ -12,9 +12,9 @@ var _camera_height = global.camera_height;
 var _gui_width  = global.gui_width;
 var _gui_height = global.gui_height;
 
-if (game_boolean & GAME_BOOLEAN.IS_PAUSED)
+if (is_opened & IS_OPENED_BOOLEAN.PAUSE)
 {
-    if ((surface_refresh & SURFACE_REFRESH_BOOLEAN.PAUSE) == 0)
+    if !(surface_refresh & SURFACE_REFRESH_BOOLEAN.PAUSE)
     {
         surface_refresh |= SURFACE_REFRESH_BOOLEAN.PAUSE;
         
@@ -25,7 +25,7 @@ if (game_boolean & GAME_BOOLEAN.IS_PAUSED)
     
     gpu_set_texfilter(true);
     
-    draw_surface_ext(surface_pause[@ 1], 0, 0, 4, 4, 0, c_white, global.settings.display_blur);
+    draw_surface_ext(surface_pause[@ 1], 0, 0, GUI_PAUSE_BLUR_RESIZE, GUI_PAUSE_BLUR_RESIZE, 0, c_white, global.settings.display_blur);
     
     gpu_set_texfilter(false);
     
@@ -50,7 +50,7 @@ global.gui_mouse_y = _gui_mouse_y;
 var _hp     = obj_Player.hp;
 var _hp_max = obj_Player.hp_max;
 
-if (_hp > 0)// && (is_opened_gui) && (!is_opened_menu)
+if (_hp > 0) && (is_opened & IS_OPENED_BOOLEAN.GUI) && !(is_opened & IS_OPENED_BOOLEAN.MENU)
 {
     if (surface_refresh & SURFACE_REFRESH_BOOLEAN.INVENTORY)
     {

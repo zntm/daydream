@@ -7,13 +7,18 @@ enum SURFACE_REFRESH_BOOLEAN {
     PAUSE     = 1 << 1
 }
 
-surface_refresh = SURFACE_REFRESH_BOOLEAN.INVENTORY;
+surface_refresh =
+    SURFACE_REFRESH_BOOLEAN.INVENTORY;
 
-enum GAME_BOOLEAN {
-    IS_PAUSED = 1
+enum IS_OPENED_BOOLEAN {
+    PAUSE = 1 << 0,
+    GUI   = 1 << 1,
+    MENU  = 1 << 2,
 }
 
-game_boolean = 0;
+is_opened =
+    IS_OPENED_BOOLEAN.GUI  |
+    IS_OPENED_BOOLEAN.MENU;
 
 surface_pause = [ -1, -1 ];
 

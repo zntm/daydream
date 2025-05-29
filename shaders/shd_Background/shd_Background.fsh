@@ -1,6 +1,9 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
+uniform sampler2D u_textures[64];
+uniform float u_texture_length;
+
 uniform vec3 u_colour;
 uniform float u_strength;
 
