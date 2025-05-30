@@ -8,7 +8,7 @@
     "inventory": "#phantasia:item_data_inventory_tool",
     "harvest": {
         "hardness": 1,
-        "level": 0
+        "level": 1
     },
     "durability": {
         "amount": 65,

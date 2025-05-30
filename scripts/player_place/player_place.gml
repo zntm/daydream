@@ -120,4 +120,6 @@ function player_place(_x, _y)
     }
     
     tile_place(_x, _y, _z, _tile);
+    
+    cooldown_build = 0.15;
 }

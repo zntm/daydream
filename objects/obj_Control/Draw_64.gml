@@ -69,7 +69,7 @@ if (_hp > 0) && (is_opened & IS_OPENED_BOOLEAN.GUI) && !(is_opened & IS_OPENED_B
     */
     var _gui_inventory = global.gui_inventory;
     
-    if (is_opened_inventory)
+    if (is_opened & IS_OPENED_BOOLEAN.INVENTORY)
     {
         var _inventory = global.inventory;
         var _inventory_instance = global.inventory_instance;
@@ -169,7 +169,8 @@ draw_text(16, 16,
     $"FPS: {fps}\n" +
     $"X/Y: {_player_x}/{_player_y}\n" +
     $"Num: {instance_number(obj_Chunk)}\n" +
-    $"Time: {global.world.time}"
+    $"Time: {global.world.time}\n" +
+    $"Harvest: {harvest_amount}"
 );
 
 gpu_set_blendmode(bm_normal);

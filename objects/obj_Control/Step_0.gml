@@ -26,7 +26,9 @@ if (keyboard_check_pressed(vk_escape))
 
 if (is_opened & IS_OPENED_BOOLEAN.PAUSE) exit;
 
-global.delta_time = delta_time / 1_000_000;
+var _delta_time = delta_time / 1_000_000;
+
+global.delta_time = _delta_time;
 
 var _player_x = obj_Player.x;
 var _player_y = obj_Player.y;
@@ -53,7 +55,7 @@ if (keyboard_check(ord("C")))
 
 if (keyboard_check_pressed(ord("E")))
 {
-    is_opened_inventory = !is_opened_inventory;
+    is_opened ^= IS_OPENED_BOOLEAN.INVENTORY;
 }
 
 if (keyboard_check_pressed(ord("F")))
@@ -132,22 +134,24 @@ if (_mouse_wheel != 0)
     surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY;
 }
 
-if (mouse_check_button(mb_right))
+if (cooldown_build <= 0) && (mouse_check_button(mb_right))
 {
     player_place(_tile_x, _tile_y);
 }
-
-if (mouse_check_button(mb_left))
+else
 {
-    for (var i = CHUNK_DEPTH - 1; i >= 0; --i)
-    {
-        if (tile_get(_tile_x, _tile_y, i) != TILE_EMPTY)
-        {
-            tile_place(_tile_x, _tile_y, i, TILE_EMPTY);
-            
-            break;
-        }
-    }
+    cooldown_build = max(0, cooldown_build - _delta_time);
+}
+
+if (cooldown_harvest <= 0) && (mouse_check_button(mb_left))
+{
+    player_mine(_tile_x, _tile_y);
+}
+else
+{
+    harvest_amount = 0;
+    
+    cooldown_harvest = max(0, cooldown_harvest - _delta_time);
 }
 
 control_chunk_activity(_camera_x, _camera_y, _camera_width, _camera_height);

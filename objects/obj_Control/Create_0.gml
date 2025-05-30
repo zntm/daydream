@@ -1,7 +1,5 @@
 randomize();
 
-is_opened_inventory = false;
-
 enum SURFACE_REFRESH_BOOLEAN {
     INVENTORY = 1 << 0,
     PAUSE     = 1 << 1
@@ -11,14 +9,23 @@ surface_refresh =
     SURFACE_REFRESH_BOOLEAN.INVENTORY;
 
 enum IS_OPENED_BOOLEAN {
-    PAUSE = 1 << 0,
-    GUI   = 1 << 1,
-    MENU  = 1 << 2,
+    PAUSE     = 1 << 0,
+    GUI       = 1 << 1,
+    INVENTORY = 1 << 2,
+    MENU      = 1 << 3
 }
 
 is_opened =
-    IS_OPENED_BOOLEAN.GUI  |
-    IS_OPENED_BOOLEAN.MENU;
+    IS_OPENED_BOOLEAN.GUI;
+
+harvest_x = 0;
+harvest_y = 0;
+harvest_z = 0;
+
+harvest_amount = 0;
+
+cooldown_build = 0;
+cooldown_harvest = 0;
 
 surface_pause = [ -1, -1 ];
 

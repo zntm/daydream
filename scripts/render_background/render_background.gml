@@ -51,7 +51,7 @@ function render_background()
     
     shader_set(shd_Background);
     
-    shader_set_uniform_f(__u_colour, ((sky_colour_base >> 0) & 0xff) / 0xff, ((sky_colour_base >> 8) & 0xff) / 0xff, ((sky_colour_base >> 16) & 0xff) / 0xff);
+    shader_set_uniform_f(__u_colour, (sky_colour_base & 0xff) / 0xff, ((sky_colour_base >> 8) & 0xff) / 0xff, ((sky_colour_base >> 16) & 0xff) / 0xff);
     
     var _background_data = global.background_data;
     
