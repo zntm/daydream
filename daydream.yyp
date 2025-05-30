@@ -283,6 +283,7 @@
     {"id":{"name":"shd_Noise","path":"shaders/shd_Noise/shd_Noise.yy",},},
     {"id":{"name":"shd_Separable_Blur","path":"shaders/shd_Separable_Blur/shd_Separable_Blur.yy",},},
     {"id":{"name":"spr_Glow_Corner","path":"sprites/spr_Glow_Corner/spr_Glow_Corner.yy",},},
+    {"id":{"name":"spr_Harvest","path":"sprites/spr_Harvest/spr_Harvest.yy",},},
     {"id":{"name":"spr_Hitbox","path":"sprites/spr_Hitbox/spr_Hitbox.yy",},},
     {"id":{"name":"spr_Inventory_Hotbar","path":"sprites/spr_Inventory_Hotbar/spr_Inventory_Hotbar.yy",},},
     {"id":{"name":"spr_Inventory_Slot_Icon","path":"sprites/spr_Inventory_Slot_Icon/spr_Inventory_Slot_Icon.yy",},},

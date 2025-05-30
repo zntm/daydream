@@ -150,6 +150,7 @@
     {"name":"shd_Noise","order":1,"path":"shaders/shd_Noise/shd_Noise.yy",},
     {"name":"shd_Separable_Blur","order":4,"path":"shaders/shd_Separable_Blur/shd_Separable_Blur.yy",},
     {"name":"spr_Glow_Corner","order":3,"path":"sprites/spr_Glow_Corner/spr_Glow_Corner.yy",},
+    {"name":"spr_Harvest","order":7,"path":"sprites/spr_Harvest/spr_Harvest.yy",},
     {"name":"spr_Hitbox","order":2,"path":"sprites/spr_Hitbox/spr_Hitbox.yy",},
     {"name":"spr_Inventory_Slot_Icon","order":2,"path":"sprites/spr_Inventory_Slot_Icon/spr_Inventory_Slot_Icon.yy",},
     {"name":"spr_Inventory_Slot","order":1,"path":"sprites/spr_Inventory_Slot/spr_Inventory_Slot.yy",},
