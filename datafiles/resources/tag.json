@@ -35,6 +35,13 @@
         "index": 0,
         "size": 18
     },
+    "harvest_particle_frequency": {
+        "type": "irandom",
+        "values": {
+            "min": 2,
+            "max": 6
+        }
+    },
     "placeable_dry_plant_on": [
         "phantasia:dirt",
         "phantasia:grass_block",

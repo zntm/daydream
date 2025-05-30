@@ -29,11 +29,11 @@
 	"celestial": {
 		"sun": {
 			"start": 0,
-			"end": 22000
+			"end": 890
 		},
 		"moon": {
-			"start": 22000,
-			"end": 54000
+			"start": 890,
+			"end": 1200
 		}
 	},
 	"biome": {

@@ -30,7 +30,7 @@ function control_physics_y(_dt, _gravity = PHYSICS_GLOBAL_GRAVITY, _collision = 
     var _distance = abs(_yvelocity);
     var _direction = sign(_yvelocity);
     
-    var _size = abs(image_yscale * 8);
+    var _size = abs(image_yscale) * 8;
     
     if (__tile_meeting(x, y + _direction, _direction, _world_height))
     {

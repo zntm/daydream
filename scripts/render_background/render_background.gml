@@ -1,4 +1,4 @@
-function render_background()
+function render_background(_camera_x, _camera_y, _camera_width, _camera_height)
 {
     static __u_colour = shader_get_uniform(shd_Background, "u_colour");
     static __u_strength = shader_get_uniform(shd_Background, "u_strength");
@@ -11,43 +11,6 @@ function render_background()
     
     var _player_x = obj_Player.x;
     var _player_y = obj_Player.y;
-    
-    var _camera_x = global.camera_x;
-    var _camera_y = global.camera_y;
-    
-    var _camera_width  = global.camera_width;
-    var _camera_height = global.camera_height;
-    
-    draw_sprite_ext(
-        spr_Square,
-        0,
-        _camera_x,
-        _camera_y,
-        _camera_width,
-        _camera_height,
-        0,
-        sky_colour_base,
-        1
-    );
-    
-    draw_sprite_general(
-        spr_Glow_Corner,
-        0,
-        0,
-        0,
-        128,
-        1,
-        _camera_x,
-        _camera_y + _camera_height,
-        _camera_height / 128,
-        _camera_width,
-        90,
-        sky_colour_gradient,
-        sky_colour_gradient,
-        sky_colour_gradient,
-        sky_colour_gradient,
-        1
-    );
     
     shader_set(shd_Background);
     

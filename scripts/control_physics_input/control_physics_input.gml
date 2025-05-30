@@ -68,18 +68,5 @@ function control_physics_input(_dt, _id)
         {
             yvelocity = -_physics.jump_height * _dt * (1 - power(jump_pressed / _jump_time, _physics.jump_falloff));
         }
-        
-        if (tile_meeting(x, y + 1))
-        {
-            jump_pressed = 0;
-            
-            jump_count = 0;
-            coyote_time = 0;
-        }
-        
-        if (tile_meeting(x, y - 1))
-        {
-            jump_pressed = infinity;
-        }
     }
 }

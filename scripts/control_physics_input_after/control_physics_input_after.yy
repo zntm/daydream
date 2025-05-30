@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"control_physics_input_after",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"control_physics_input_after",
+  "parent":{
+    "name":"Physics",
+    "path":"folders/Scripts/Control/Physics.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

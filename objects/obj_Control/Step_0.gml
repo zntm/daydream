@@ -140,7 +140,7 @@ if (cooldown_build <= 0) && (mouse_check_button(mb_right))
 }
 else
 {
-    cooldown_build = max(0, cooldown_build - _delta_time);
+    cooldown_build -= _delta_time;
 }
 
 if (cooldown_harvest <= 0) && (mouse_check_button(mb_left))
@@ -151,7 +151,7 @@ else
 {
     harvest_amount = 0;
     
-    cooldown_harvest = max(0, cooldown_harvest - _delta_time);
+    cooldown_harvest -= _delta_time;
 }
 
 control_chunk_activity(_camera_x, _camera_y, _camera_width, _camera_height);

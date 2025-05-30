@@ -7,11 +7,13 @@
     },
     "inventory": "#phantasia:item_data_inventory_default",
     "harvest": {
-        "hardness": 8,
-        "level": 0,
-        "particle": [
-            "#FFFFFF"
-        ]
+        "hardness": 0.38,
+        "particle": {
+            "colour": [
+                "#FFFFFF"
+            ],
+            "frequency": "#harvest_particle_frequency"
+        }
     },
     "drop": {
         "item": {

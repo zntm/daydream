@@ -10,9 +10,12 @@
     "harvest": {
         "hardness": 8,
         "level": 0,
-        "particle": [
-            "#FFFFFF"
-        ]
+        "particle": {
+            "colour": [
+                "#FFFFFF"
+            ],
+            "frequency": "#harvest_particle_frequency"
+        }
     },
     "drop": {
         "item": {

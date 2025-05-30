@@ -65,7 +65,7 @@ function ItemData() constructor
     
     static set_type = function(_value)
     {
-        if (typeof(_value) == "string")
+        if (is_string(_value))
         {
             ___type |= __item_type[$ _value];
         }
@@ -233,27 +233,63 @@ function ItemData() constructor
     {
         _harvest = init_tag_value(_harvest);
         
-        ___harvest_value = (_harvest.level << 16) | _harvest.hardness;
+        var _hardness = _harvest[$ "hardness"];
+        
+        if (_hardness != undefined)
+        {
+            ___harvest_hardness = _hardness;
+        }
+        
+        var _level = _harvest[$ "level"];
+        
+        if (_level != undefined)
+        {
+            ___harvest_level = _level;
+        }
         
         var _type = _harvest[$ "type"];
         
         if (_type != undefined)
         {
-            ___harvest_type = __item_type[$ _type];
+            if (is_string(_type))
+            {
+                ___harvest_type |= __item_type[$ _type];
+            }
+            else
+            {
+                var _length = array_length(_type);
+                
+                for (var i = 0; i < _length; ++i)
+                {
+                    ___harvest_type |= __item_type[$ _type[i]];
+                }
+            }
         }
         
         var _particle = _harvest[$ "particle"];
         
         if (_particle != undefined)
         {
-            var _length = array_length(_particle);
+            var _colour = _particle[$ "colour"];
             
-            for (var i = 0; i < _length; ++i)
+            if (_colour != undefined)
             {
-                _particle[@ i] = hex_parse(_particle[i]);
+                var _length = array_length(_colour);
+                
+                ___harvest_particle_colour = array_create(_length);
+                
+                for (var i = 0; i < _length; ++i)
+                {
+                    ___harvest_particle_colour[@ i] = hex_parse(_colour[i]);
+                }
             }
             
-            ___harvest_particle = _particle;
+            var _frequency = _particle[$ "frequency"];
+            
+            if (_frequency != undefined)
+            {
+                ___harvest_particle_frequency = init_smart_value(_frequency);
+            }
         }
         
         return self;
@@ -261,22 +297,32 @@ function ItemData() constructor
     
     static get_harvest_hardness = function()
     {
-        return ___harvest_value & 0xffff;
+        return self[$ "___harvest_hardness"];
     }
     
     static get_harvest_level = function()
     {
-        return (___harvest_value >> 16) & 0xff;
+        return self[$ "___harvest_level"] ?? 0;
     }
     
     static get_harvest_type = function()
     {
-        return self[$ "___harvest_type"];
+        return self[$ "___harvest_type"] ?? 0;
     }
     
-    static get_harvest_particle = function()
+    static get_harvest_particle_colour = function()
     {
-        return self[$ "___harvest_particle"];
+        return self[$ "___harvest_particle_colour"];
+    }
+    
+    static get_harvest_particle_frequency = function()
+    {
+        return self[$ "___harvest_particle_frequency"];
+    }
+    
+    static has_harvest_type = function(_type)
+    {
+        return !!(get_harvest_type() & _type);
     }
     
     static set_durability = function(_durability)
@@ -371,7 +417,7 @@ function ItemData() constructor
     
     static get_collision_box_left = function()
     {
-        return ((___colliison_box >> 0) & 0xff) - 0x80;
+        return (___colliison_box & 0xff) - 0x80;
     }
     
     static get_collision_box_top = function()
