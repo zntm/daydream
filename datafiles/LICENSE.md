@@ -161,7 +161,7 @@ By submitting contributions to the Source Code or Assets, the contributor ("Cont
 
 ## 6. Termination
 
-In the event that all Authors of the Software, Source Code, or Assets were to become completely unavailable to maintain (e.g., no longer interacting with the Game, or providing updates such as bugfixes and updates) the Software for a period exceeding two years, this license shall automatically convert to a Public Domain status.
+In the event that all Authors of the Software, Source Code, or Assets were to become completely unavailable to maintain the Software (e.g., no longer interacting with the Game or providing updates such as bugfixes and changes) for a period exceeding two years, this license shall automatically convert to a Public Domain status.
 
 ## 7. Disclaimer of Warranty
 
