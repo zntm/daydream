@@ -45,9 +45,13 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                     _buffer = render_chunk(global.carbasa_surface_uv[$ "item"], _inst, _z);
                 }
                 
-                if (_bitmask & ((1 << CHUNK_DEPTH_FOLIAGE_BACK) | (1 << CHUNK_DEPTH_FOLIAGE_FRONT)))
+                if (_bitmask & (1 << CHUNK_DEPTH_FOLIAGE_BACK))
                 {
-                    shader_set_uniform_f_array(__u_skew, _inst.chunk_skew);
+                    shader_set_uniform_f_array(__u_skew, _inst.chunk_skew_back);
+                }
+                else if (_bitmask & (1 << CHUNK_DEPTH_FOLIAGE_FRONT))
+                {
+                    shader_set_uniform_f_array(__u_skew, _inst.chunk_skew_front);
                 }
                 
                 vertex_submit(_buffer, pr_trianglelist, _texture);
@@ -76,8 +80,6 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 var _yscale = 8 / _collision_box.height;
                 
                 draw_sprite_ext(_sprite, _index, x, y - (_data.get_sprite_yoffset() * _yscale), _xscale, _yscale, image_angle, c_white, 1);
-                
-                draw_sprite_ext(sprite_index, 0, x, y, image_xscale, image_yscale, 0, c_white, 0.2);
             }
         }
     }

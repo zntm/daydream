@@ -1,7 +1,10 @@
 chunk = array_create(CHUNK_SIZE * CHUNK_SIZE * CHUNK_DEPTH, TILE_EMPTY);
 
-chunk_skew = array_create(CHUNK_SIZE * CHUNK_SIZE, 0);
-chunk_skew_to = array_create(CHUNK_SIZE * CHUNK_SIZE, 0);
+chunk_skew_back = array_create(CHUNK_SIZE * CHUNK_SIZE, 0);
+chunk_skew_back_to = array_create(CHUNK_SIZE * CHUNK_SIZE, 0);
+
+chunk_skew_front = array_create(CHUNK_SIZE * CHUNK_SIZE, 0);
+chunk_skew_front_to = array_create(CHUNK_SIZE * CHUNK_SIZE, 0);
 
 chunk_vertex_buffer = array_create(CHUNK_DEPTH, -1);
 
