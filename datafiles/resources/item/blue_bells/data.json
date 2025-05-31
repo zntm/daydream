@@ -19,9 +19,11 @@
         "requirement": "#phantasia:placement_requirement_plant"
     },
     "drop": {
-        "item": {
-            "id": "phantasia:blue_bells"
-        }
+        "item": [
+            {
+                "id": "phantasia:blue_bells"
+            }
+        ]
     },
     "is_foliage": true
 }

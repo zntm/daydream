@@ -121,6 +121,7 @@
     {"$GMIncludedFile":"","%Name":"sprite.png","CopyToMask":-1,"filePath":"datafiles/resources/item/stone","name":"sprite.png","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"data.json","CopyToMask":-1,"filePath":"datafiles/resources/item/torch","name":"data.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"sprite.png","CopyToMask":-1,"filePath":"datafiles/resources/item/torch","name":"sprite.png","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"LICENSE.md","CopyToMask":-1,"filePath":"datafiles/resources","name":"LICENSE.md","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"audio.ogg","CopyToMask":-1,"filePath":"datafiles/resources/music/fall","name":"audio.ogg","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"data.json","CopyToMask":-1,"filePath":"datafiles/resources/music/fall","name":"data.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"audio.ogg","CopyToMask":-1,"filePath":"datafiles/resources/music/phantasia","name":"audio.ogg","resourceType":"GMIncludedFile","resourceVersion":"2.0",},

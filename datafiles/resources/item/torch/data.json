@@ -16,9 +16,11 @@
         }
     },
     "drop": {
-        "item": {
-            "id": "phantasia:torch"
-        }
+        "item": [
+            {
+                "id": "phantasia:torch"
+            }
+        ]
     },
     "animation_type": "increment",
     "is_tile": false

@@ -373,6 +373,7 @@ function ItemData() constructor
             if (_drop_item != undefined)
             {
                 ___drop_item = _drop_item;
+                ___drop_item_length = array_length(_drop_item);
             }
             
             var _drop_loot = _drop[$ "loot"];
@@ -380,6 +381,25 @@ function ItemData() constructor
             if (_drop_loot != undefined)
             {
                 ___drop_loot = _drop_loot;
+            }
+            
+            var _drop_tool = _drop[$ "tool"];
+            
+            if (_drop_tool != undefined)
+            {
+                if (is_string(_drop_tool))
+                {
+                    ___drop_tool |= __item_type[$ _drop_tool];
+                }
+                else
+                {
+                    var _length = array_length(_drop_tool);
+                    
+                    for (var i = 0; i < _length; ++i)
+                    {
+                        ___drop_tool |= __item_type[$ _drop_tool[i]];
+                    }
+                }
             }
         }
         
@@ -391,14 +411,26 @@ function ItemData() constructor
         return self[$ "___drop_chance"] ?? 1;
     }
     
-    static get_drop_item = function()
+    static get_drop_item = function(_index)
     {
-        return self[$ "___drop_item"];
+        var _item = self[$ "___drop_item"];
+        
+        return ((_item != undefined) ? _item[_index] : undefined);
+    }
+    
+    static get_drop_item_length = function()
+    {
+        return self[$ "___drop_item_length"] ?? 0;
     }
     
     static get_drop_loot = function()
     {
         return self[$ "___drop_loot"];
+    }
+    
+    static get_drop_tool = function()
+    {
+        return self[$ "___drop_tool"];
     }
     
     static set_collision_box = function(_collision_box)

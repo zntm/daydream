@@ -19,9 +19,11 @@
         "requirement": "#phantasia:placement_requirement_plant"
     },
     "drop": {
-        "item": {
-            "id": "phantasia:globeflower"
-        }
+        "item": [
+            {
+                "id": "phantasia:globeflower"
+            }
+        ]
     },
     "is_foliage": true
 }

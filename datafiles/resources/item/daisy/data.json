@@ -19,9 +19,11 @@
         "requirement": "#phantasia:placement_requirement_plant"
     },
     "drop": {
-        "item": {
-            "id": "phantasia:daisy"
-        }
+        "item": [
+            {
+                "id": "phantasia:daisy"
+            }
+        ]
     },
     "is_foliage": true
 }

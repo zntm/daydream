@@ -24,7 +24,7 @@ void main()
         vec2 offset = float(i) * u_blur_size * u_texel_size;
         float weight = gaussian(float(i), u_sigma);
         
-        colour += texture2D(gm_BaseTexture, v_vTexcoord + (u_direction * offset)) * weight;
+        colour += texture2D(gm_BaseTexture, clamp(v_vTexcoord + (u_direction * offset), 0.0, 1.0)) * weight;
         total_weight += weight;
     }
     

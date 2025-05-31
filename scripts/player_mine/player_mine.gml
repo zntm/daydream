@@ -66,7 +66,7 @@ function player_mine(_x, _y)
     {
         tile_place(_x, _y, _z, TILE_EMPTY);
         
-        if (_item != INVENTORY_EMPTY) && (_data2.get_durability_amount() > 0)
+        if (_item != INVENTORY_EMPTY)
         {
             _item.add_durability(-1);
             
@@ -76,6 +76,24 @@ function player_mine(_x, _y)
             }
             
             surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY;
+        }
+        
+        var _drop_tool = _data.get_drop_tool();
+        
+        if (!_drop_tool) || (_drop_tool & _data2.get_type())
+        {
+            var _drop_length = _data.get_drop_item_length();
+            
+            for (var i = 0; i < _drop_length; ++i)
+            {
+                var _drop_item = _data.get_drop_item(i);
+                
+                var _chance = _drop_item[$ "chance"];
+                
+                if (_chance != undefined) && (!chance(_chance)) continue;
+                
+                spawn_item_drop(_x * TILE_SIZE, _y * TILE_SIZE, new Inventory(_drop_item.id, _drop_item[$ "amount"] ?? 1));
+            }
         }
         
         harvest_amount = 0;

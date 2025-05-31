@@ -72,10 +72,12 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 var _sprite = _data.get_sprite();
                 var _index  = _data.get_inventory_index();
                 
-                var _xscale = _data.get_sprite_width()  / _collision_box.width;
-                var _yscale = _data.get_sprite_height() / _collision_box.height;
+                var _xscale = 8 / _collision_box.width;
+                var _yscale = 8 / _collision_box.height;
                 
-                draw_sprite_ext(_sprite, _index, x, y - (_data.get_sprite_yoffset() * image_yscale / 2), _xscale, _yscale, image_angle, c_white, 1);
+                draw_sprite_ext(_sprite, _index, x, y - (_data.get_sprite_yoffset() * _yscale), _xscale, _yscale, image_angle, c_white, 1);
+                
+                draw_sprite_ext(sprite_index, 0, x, y, image_xscale, image_yscale, 0, c_white, 0.2);
             }
         }
     }
