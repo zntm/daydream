@@ -1,6 +1,6 @@
 # Phantasia's Daydream
 
-Version 1.0, July 2025
+Version 1.0, June 2025
 
 Copyright (c) 2025 Phantasia's Daydream. All rights reserved.
 
