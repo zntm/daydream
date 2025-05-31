@@ -2,6 +2,8 @@
 
 Version 1.0, June 2025
 
+**This license may be updated. Always refer to the latest official version for current terms.**
+
 Copyright (c) 2025 Phantasia's Daydream. All rights reserved.
 
 This License Agreement is made between the author(s) of the Software and any person or entity who obtains a copy of this Software and/or its associated files.
@@ -42,7 +44,9 @@ This license is a custom agreement written by the author and is not based on any
 
 - **Commercial Use** refers to use involving any financial gain, such as donations, selling the Software, distributing modified versions for profit, or using the Assets in monetized content.
 
-## 1.1. Exemptions
+- **Significant Changes** refers to the substantial alterations, additions, or modifications to the Software, Source Code, or Assets that fundamentally transform the original work into a distinct new creation or a significantly enhanced version, going beyond minor tweaks, bug fixes, or simple recompilations. Such changes typically involve extensive new content, fundamental re-engineering, or the creation of a distinctly different user experience compared to the original.
+
+### 1.1. Exemptions
 
 Exemptions apply when a specific part of the Software is explicitly marked as not owned by the Author. These parts are not covered under this license.
 
@@ -56,17 +60,17 @@ This section outlines what the Licensee is allowed to do with the Software, Sour
 
 Any part of the Software or Source Code not created by the Author is not bound to this license and may be disregarded from Public Usage and Private Usage clauses.
 
-## 2.1 Public Usage
+### 2.1. Public Usage
 
 The Software may be showcased or discussed in public media (e.g., streams, videos, articles). Modified versions of the Source Code may be published publicly provided that:
 
 - Proper credit is given to the original Author.
 - A link to the official Software or repository is included.
-- The published version is not sold or monetized unless it contains significant changes or has been approved by the Author.
+- The published version is not sold or monetized unless it contains Significant Changes or has been approved by the Author.
 - Assets require explicit permission for public commercial use.
 - Usage does not involve malicious, misleading, or harmful intent.
 
-## 2.2 Private Usage
+### 2.2. Private Usage
 
 The Software may be copied for personal use or for contributing to its development. The Licensee may modify and share the Source Code privately provided that:
 
@@ -78,7 +82,7 @@ The Software may be copied for personal use or for contributing to its developme
 
 This section defines how the Licensee may publish works based on the Software, and the requirements for crediting the original Author.
 
-## 3.1 Publishing Modified Works
+### 3.1. Publishing Modified Works
 
 Modified versions of the Source Code may be published, provided that:
 
@@ -90,7 +94,7 @@ Modified versions of the Source Code may be published, provided that:
     - Include significant original contributions, or
     - Be explicitly approved by the Author.
 
-## 3.2 Attribution Requirements
+### 3.2. Attribution Requirements
 
 Whenever the Software, Source Code, or any derived work is shared, the following must be included:
 
@@ -99,14 +103,29 @@ Whenever the Software, Source Code, or any derived work is shared, the following
 - A visible link to the official game or source repository (when possible).
 - A note indicating any modifications made, if applicable.
 
-## 3.3 Derivative Works
+### 3.3. Derivative Works
 
 Derivative works such as fan art, fan games, remixes, or adaptations are allowed under the following conditions:
 
-- The work must not be sold or monetized without explicit permission from the Author if it includes any part from the original Source Code or Assets.
 - Credit must be given clearly when using any original ideas from the Game.
 - Original Assets may not be reused without permission.
 - Fan works must not misrepresent themselves as official or cause harm to the reputation of the original Game or its Author.
+
+### 3.4. Sub-Licensing
+
+The Licensee shall not sub-license, lease, rent, or otherwise transfer rights to the Source Code or Assets, whether partially or fully, to any third party in under any circumstances.
+
+### 3.5. Takedown Requests
+
+The Author reserves the right to request that the Licensee stop using, including, or distributing any portion of the Source Code or Assets in their project, either partially or entirely.
+
+If such a request is made, the Licensee will be given at least 30 days' notice to update their software and remove the specified content to comply with the request.
+
+This 30-day countdown begins once the Author sends the takedown request.
+
+Unless the Author grants an exception, the Licensee must publicly release an updated version of their project that fulfills the request within the 30-day period. If no update is made, the Author may request the removal of any existing versions that still contain the specified content.
+
+Failing to comply within this timeframe without a granted exception will be considered a violation of this license.
 
 Fan works that do not use any original Assets (e.g., drawings or cosplay) do not require permission or attribution, though credit is appreciated.
 
@@ -114,25 +133,25 @@ Fan works that do not use any original Assets (e.g., drawings or cosplay) do not
 
 This section lists what the Licensee cannot do under this license.
 
-## 4.1 Commercial Use of Assets
+### 4.1 Commercial Use of Assets
 
 Assets may not be used commercially without explicit permission from the Author. This includes selling, monetizing, or using Assets in profit-driven projects.
 
-## 4.2 Publishing Without Significant Changes
+### 4.2 Publishing Without Significant Changes
 
-Publishing the Software or Source Code as-is for commercial purposes is prohibited. Commercial releases require significant original modifications or approval by the Author.
+Publishing the Software or Source Code as-is for commercial purposes is prohibited. Commercial releases require Significant Changes or approval by the Author.
 
-## 4.3 Malicious or Harmful Use
+### 4.3 Malicious or Harmful Use
 
-The Software, Source Code, or Assets cannot be used for any malicious, misleading, or harmful activities. This includes hacking, spreading disinformation, or creating any sort of harmful content.
+The Software, Source Code, or Assets cannot be used for any malicious, misleading, or harmful activities. This includes hacking, spreading misinformation or disinformation, or creating any sort of harmful content.
 
-## 4.4 Misrepresentation
+### 4.4 Misrepresentation
 
 Licensees must not claim ownership of the original Software or Assets. Modified works must clearly state their differences and acknowledge the original Author.
 
 ## 5. Contributions
 
-By submitting contributions to the Sourece Code or Assets, the contributor ("Contributor") agrees to the following terms:
+By submitting contributions to the Source Code or Assets, the contributor ("Contributor") agrees to the following terms:
 
 - **License Compatibility**: The Contributor agrees that any contributions submitted will be licensed under the same terms as this License Agreement, and the Author may incorporate them under this license.
 
@@ -142,7 +161,7 @@ By submitting contributions to the Sourece Code or Assets, the contributor ("Con
 
 ## 6. Termination
 
-In the event that all Authors of the Software, Source Code, or Assets were to become completely unreachable for a period exceeding two years, this license shall automatically convert to a Public Domain status.
+In the event that all Authors of the Software, Source Code, or Assets were to become completely unavailable to maintain (e.g., no longer interacting with the Game, or providing updates such as bugfixes and updates) the Software for a period exceeding two years, this license shall automatically convert to a Public Domain status.
 
 ## 7. Disclaimer of Warranty
 
