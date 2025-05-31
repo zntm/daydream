@@ -80,7 +80,7 @@ function player_mine(_x, _y)
         
         var _drop_tool = _data.get_drop_tool();
         
-        if (!_drop_tool) || (_drop_tool & _data2.get_type())
+        if (!_drop_tool) || ((_item != INVENTORY_EMPTY) && (_drop_tool & _data2.get_type()))
         {
             var _drop_length = _data.get_drop_item_length();
             

@@ -7,7 +7,7 @@ Copyright (c) 2025 Phantasia's Daydream. All rights reserved.
 This License Agreement is made between the author(s) of the Software and any person or entity who obtains a copy of this Software and/or its associated files.
 
 By using the Software, the Licensee agrees to be bound by the terms and conditions of this Agreement.
-`
+
 ## 0. Summary
 
 This license allows nearly all personal uses, including public showcases with credit and private sharing of modified source code from official sources.
@@ -73,3 +73,77 @@ The Software may be copied for personal use or for contributing to its developme
 - Credit is retained within the Source Code or documentation.
 - The modified version is not publicly distributed or sold.
 - Usage does not involve malicious, misleading, or harmful intent.
+
+## 3. Publishing and Attribution
+
+This section defines how the Licensee may publish works based on the Software, and the requirements for crediting the original Author.
+
+## 3.1 Publishing Modified Works
+
+Modified versions of the Source Code may be published, provided that:
+
+- Proper credit is given to the original Author in both the project and its documentation.
+- A clear notice is included stating the project is based on or derived from the Software.
+- A link to the official Software or repository is included.
+- The Licensee does not misrepresent the origin of the Software.
+- Commercial publishing of modified versions must either:
+    - Include significant original contributions, or
+    - Be explicitly approved by the Author.
+
+## 3.2 Attribution Requirements
+
+Whenever the Software, Source Code, or any derived work is shared, the following must be included:
+
+- The name of the Game.
+- Credit the Author as the original creator.
+- A visible link to the official game or source repository (when possible).
+- A note indicating any modifications made, if applicable.
+
+## 3.3 Derivative Works
+
+Derivative works such as fan art, fan games, remixes, or adaptations are allowed under the following conditions:
+
+- The work must not be sold or monetized without explicit permission from the Author if it includes any part from the original Source Code or Assets.
+- Credit must be given clearly when using any original ideas from the Game.
+- Original Assets may not be reused without permission.
+- Fan works must not misrepresent themselves as official or cause harm to the reputation of the original Game or its Author.
+
+Fan works that do not use any original Assets (e.g., drawings or cosplay) do not require permission or attribution, though credit is appreciated.
+
+## 4. Restrictions
+
+This section lists what the Licensee cannot do under this license.
+
+## 4.1 Commercial Use of Assets
+
+Assets may not be used commercially without explicit permission from the Author. This includes selling, monetizing, or using Assets in profit-driven projects.
+
+## 4.2 Publishing Without Significant Changes
+
+Publishing the Software or Source Code as-is for commercial purposes is prohibited. Commercial releases require significant original modifications or approval by the Author.
+
+## 4.3 Malicious or Harmful Use
+
+The Software, Source Code, or Assets cannot be used for any malicious, misleading, or harmful activities. This includes hacking, spreading disinformation, or creating any sort of harmful content.
+
+## 4.4 Misrepresentation
+
+Licensees must not claim ownership of the original Software or Assets. Modified works must clearly state their differences and acknowledge the original Author.
+
+## 5. Contributions
+
+By submitting contributions to the Sourece Code or Assets, the contributor ("Contributor") agrees to the following terms:
+
+- **License Compatibility**: The Contributor agrees that any contributions submitted will be licensed under the same terms as this License Agreement, and the Author may incorporate them under this license.
+
+- **License Grant**: The Contributor grants the Author a perpetual, irrevocable, worldwide, non-exclusive, royalty-free license to use, reproduce, modify, adapt, publish, translate, create derivative works from, distribute, perform, and display the contributions, in whole or in part, through any form, medium, or technology now known or developed in the future. The Author is also allowed to sublicense these contributions as part of the Software.
+
+- **Warranty of Rights**: The Contributor represents and warrants that they have full rights to submit the contributions and that such contributions do not infringe on any third-party rights or violate any laws.
+
+## 6. Termination
+
+In the event that all Authors of the Software, Source Code, or Assets were to become completely unreachable for a period exceeding two years, this license shall automatically convert to a Public Domain status.
+
+## 7. Disclaimer of Warranty
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
