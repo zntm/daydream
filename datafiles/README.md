@@ -1,6 +1,6 @@
 # ❤️ Phantasia
 
-> **License:** [Phantasia's Daydream License](./LICENSE)  
+> **License:** [Phantasia's Daydream License](./LICENSE.md)  
 > **Version:** 1.0 (June 2025)
 
 ---
