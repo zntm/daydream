@@ -1,21 +1,10 @@
 function control_physics_item_drop(_dt)
 {
-    var _delta_time = global.delta_time;
-    
-    time_life -= _delta_time;
-    
-    if (time_life <= 0)
-    {
-        delete item;
-        
-        instance_destroy();
-        
-        exit;
-    }
+    var _time = _dt / GAME_TICK;
     
     if (time_pickup > 0)
     {
-        time_pickup -= _delta_time;
+        time_pickup -= _time;
         
         if (tile_meeting(x, y + 1))
         {

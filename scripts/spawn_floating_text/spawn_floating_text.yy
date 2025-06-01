@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"spawn_item_drop",
+  "%Name":"spawn_floating_text",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"spawn_item_drop",
+  "name":"spawn_floating_text",
   "parent":{
     "name":"Spawn",
     "path":"folders/Scripts/Entity/Spawn.yy",

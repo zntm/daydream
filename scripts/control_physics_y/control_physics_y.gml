@@ -27,6 +27,13 @@ function control_physics_y(_dt, _gravity = PHYSICS_GLOBAL_GRAVITY, _collision = 
     
     yvelocity = clamp(yvelocity + _acceleration, -PHYSICS_GLOBAL_TERMINAL_YVELOCITY, PHYSICS_GLOBAL_TERMINAL_YVELOCITY);
     
+    if (!_collision)
+    {
+        y += _yvelocity;
+        
+        return false;
+    }
+    
     var _distance = abs(_yvelocity);
     var _direction = sign(_yvelocity);
     
@@ -39,7 +46,7 @@ function control_physics_y(_dt, _gravity = PHYSICS_GLOBAL_GRAVITY, _collision = 
         return true;
     }
     
-    if (!_collision) || ((_distance <= _size) && (!__tile_meeting(x, y + _yvelocity, _direction, _world_height)))
+    if ((_distance <= _size) && (!__tile_meeting(x, y + _yvelocity, _direction, _world_height)))
     {
         y += _yvelocity;
         

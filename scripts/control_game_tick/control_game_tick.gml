@@ -16,6 +16,11 @@ function control_game_tick()
             control_item_drop(_dt);
         }
         
+        with (obj_Floating_Text)
+        {
+            control_floating_text(_dt);
+        }
+        
         global.world.time += _dt / GAME_TICK;
         
         if (global.world.time >= _time_length)
