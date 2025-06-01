@@ -1,8 +1,8 @@
-function control_physics(_dt, _id)
+function control_physics(_dt, _id, _gravity = undefined)
 {
     with (_id)
     {
         control_physics_x();
-        control_physics_y(_dt, entity_value.physics.gravity);
+        control_physics_y(_dt, _gravity ?? entity_value.physics.gravity);
     }
 }

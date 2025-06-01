@@ -1,4 +1,4 @@
-function spawn_item_drop(_x, _y, _item, _direction = 0, _xvelocity = 0, _yvelocity = 0, _time_pickup = 20, _time_life = 0)
+function spawn_item_drop(_x, _y, _item, _direction = 0, _xvelocity = 0, _yvelocity = 0, _time_pickup = 1.5, _time_life = 60 * 15)
 {
     if (_item == INVENTORY_EMPTY) exit;
     
@@ -26,7 +26,7 @@ function spawn_item_drop(_x, _y, _item, _direction = 0, _xvelocity = 0, _yveloci
         image_index = _data.get_inventory_index();
         image_speed = 0;
         
-        xdirection = _direction;
+        inst = noone;
         
         xvelocity = _xvelocity;
         yvelocity = _yvelocity;

@@ -1,4 +1,4 @@
-# Phantasia's Daydream
+# Phantasia's Daydream License
 
 Version 1.0, June 2025
 

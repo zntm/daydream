@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"control_player",
+  "%Name":"control_item_drop",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"control_player",
+  "name":"control_item_drop",
   "parent":{
-    "name":"Control",
-    "path":"folders/Scripts/Control.yy",
+    "name":"Entity",
+    "path":"folders/Scripts/Control/Entity.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

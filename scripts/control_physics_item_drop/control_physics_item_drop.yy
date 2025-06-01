@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"control_physics_item_drop",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"control_physics_item_drop",
+  "parent":{
+    "name":"Entity",
+    "path":"folders/Scripts/Control/Physics/Entity.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

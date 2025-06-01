@@ -13,7 +13,7 @@ function control_game_tick()
         
         with (obj_Item_Drop)
         {
-            control_physics(_dt, id);
+            control_item_drop(_dt);
         }
         
         global.world.time += _dt / GAME_TICK;
