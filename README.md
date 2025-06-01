@@ -27,7 +27,7 @@ A heartfelt thank you to everyone who helped bring this world to life!
 
 - **cyanflower**
     - [Bluesky](https://bsky.app/profile/cyanflower.bsky.social)
-- **KazooTheChat**
+- **KazooTheCat**
     - [Bluesky](https://bsky.app/profile/claireverywhere.bsky.social)
 - **lettucenotcabb1**
     - [X](https://x.com/lettucenotcabb1)
