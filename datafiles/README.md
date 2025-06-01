@@ -11,7 +11,6 @@
 
 The game offers endless procedural worlds and lost stories are hidden within the lands. Explore, defeat powerful entities, unleash kindness or chaos, and find hidden rare items to become the strongest being in all of Playground!
 
-
 ## 📜 License
 
 Phantasia © 2025 by Zhen is licensed under Phantasia's Daydream - see the LICENSE.md file for details
