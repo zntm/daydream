@@ -15,8 +15,11 @@ function control_item_drop(_dt)
     
     if (time_pickup <= 0) && (instance_exists(inst)) && (place_meeting(x, y, inst))
     {
-        spawn_floating_text(x, y, "TEST", 0, -2.4);
+        item = inventory_give(x, y, item);
         
-        instance_destroy();
+        if (item == undefined) || (item.get_amount() <= 0)
+        {
+            instance_destroy();
+        }
     }
 }

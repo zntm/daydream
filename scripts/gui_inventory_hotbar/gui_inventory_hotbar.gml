@@ -20,7 +20,7 @@ function gui_inventory_hotbar(_gui_multiplier_x, _gui_multiplier_y)
         surface_inventory.hotbar.surface_slot = _surface_slot;
     }
     
-    var _sprite = _inventory_data.sprite;
+    var _sprite_inventory = _inventory_data.sprite;
     
     surface_set_target(_surface_slot);
     draw_clear_alpha(c_black, 0);
@@ -49,7 +49,7 @@ function gui_inventory_hotbar(_gui_multiplier_x, _gui_multiplier_y)
         var _x = (GUI_INVENTORY_SURFACE_PADDING + _id.xoffset) / INVENTORY_SLOT_SCALE;
         var _y = (GUI_INVENTORY_SURFACE_PADDING + _id.yoffset) / INVENTORY_SLOT_SCALE;
         
-        draw_sprite_ext(_sprite, 0, _x, _y, 1, 1, 0, c_white, 1);
+        draw_sprite_ext(_sprite_inventory, 0, _x, _y, 1, 1, 0, c_white, 1);
     }
     
     draw_sprite_ext(spr_Inventory_Hotbar, 0, _x2, _y2, 1, 1, 0, c_white, 1);
@@ -84,12 +84,15 @@ function gui_inventory_hotbar(_gui_multiplier_x, _gui_multiplier_y)
         var _x = _gui_multiplier_x * ((GUI_INVENTORY_SURFACE_PADDING + (INVENTORY_SLOT_DIMENSION_SCALED / 2)) + _xoffset);
         var _y = _gui_multiplier_y * ((GUI_INVENTORY_SURFACE_PADDING + (INVENTORY_SLOT_DIMENSION_SCALED / 2)) + _yoffset);
         
+        var _sprite = _data.get_sprite();
+        var _index  = _data.get_inventory_index();
+        
         var _inventory_scale = _data.get_inventory_scale();
         
         var _xscale = _gui_multiplier_x * _inventory_scale;
         var _yscale = _gui_multiplier_y * _inventory_scale;
         
-        draw_sprite_ext(_data.get_sprite(), 0, _x, _y, _xscale, _yscale, 0, c_white, 1);
+        draw_sprite_ext(_sprite, _index, _x, _y, _xscale, _yscale, 0, c_white, 1);
         
         if (_data.get_durability_amount() > 0)
         {

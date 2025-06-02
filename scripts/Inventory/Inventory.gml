@@ -1,31 +1,31 @@
 function Inventory(_item, _amount = 1) constructor
 {
-    item_id = _item;
+    ___item_id = _item;
     
     static get_item_id = function()
     {
-        return item_id;
+        return ___item_id;
     }
     
-    amount = _amount;
+    ___amount = _amount;
     
     static set_amount = function(_amount)
     {
-        amount = _amount;
+        ___amount = _amount;
         
         return self;
     }
     
     static add_amount = function(_amount)
     {
-        amount += _amount;
+        ___amount += _amount;
         
         return self;
     }
     
     static get_amount = function()
     {
-        return self[$ "amount"];
+        return self[$ "___amount"];
     }
     
     var _data = global.item_data[$ get_item_id()];
