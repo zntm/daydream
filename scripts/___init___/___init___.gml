@@ -96,3 +96,34 @@ global.inventory_instance = {
     craftable: [],
     container: []
 }
+
+global.attire_elements = [
+    "body",
+    "headwear",
+    "hair",
+    "eyes",
+    "face",
+    "shirt",
+    "shirt_detail",
+    "pants",
+    "footwear"
+];
+
+global.attire_elements_ordered = [
+    "body",
+    "body_arm_right",
+    [ "shirt", 0 ],
+    [ "shirt_detail", 0 ],
+    "body_legs",
+    "eyes",
+    "headwear",
+    "face",
+    "hair", 
+    "pants",
+    [ "shirt", 1 ],
+    [ "shirt_detail", 1 ],
+    "body_arm_left",
+    [ "shirt", 2 ],
+    [ "shirt_detail", 2 ],
+    "footwear"
+];

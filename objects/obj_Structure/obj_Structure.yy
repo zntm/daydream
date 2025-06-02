@@ -28,8 +28,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"spr_Null_0",
-    "path":"sprites/spr_Null_0/spr_Null_0.yy",
+    "name":"spr_Null",
+    "path":"sprites/spr_Null/spr_Null.yy",
   },
   "spriteMaskId":null,
   "visible":false,

@@ -1,6 +1,7 @@
 {
   "FolderOrderSettings":[
     {"name":"Data","order":3,"path":"folders/Data.yy",},
+    {"name":"Attire Data","order":13,"path":"folders/Data/Attire Data.yy",},
     {"name":"Background Data","order":5,"path":"folders/Data/Background Data.yy",},
     {"name":"Biome Data","order":6,"path":"folders/Data/Biome Data.yy",},
     {"name":"Item Data","order":2,"path":"folders/Data/Item Data.yy",},
@@ -51,8 +52,8 @@
     {"name":"Sequences","order":10,"path":"folders/Sequences.yy",},
     {"name":"Shaders","order":6,"path":"folders/Shaders.yy",},
     {"name":"Sprites","order":4,"path":"folders/Sprites.yy",},
-    {"name":"Menu","order":6,"path":"folders/Sprites/Menu.yy",},
     {"name":"Inventory","order":7,"path":"folders/Sprites/Inventory.yy",},
+    {"name":"Menu","order":6,"path":"folders/Sprites/Menu.yy",},
   ],
   "ResourceOrderSettings":[
     {"name":"obj_Chunk","order":2,"path":"objects/obj_Chunk/obj_Chunk.yy",},
@@ -104,6 +105,7 @@
     {"name":"gui_yanchor","order":5,"path":"scripts/gui_yanchor/gui_yanchor.yy",},
     {"name":"hash_code","order":4,"path":"scripts/hash_code/hash_code.yy",},
     {"name":"hex_parse","order":5,"path":"scripts/hex_parse/hex_parse.yy",},
+    {"name":"init_attire","order":1,"path":"scripts/init_attire/init_attire.yy",},
     {"name":"init_background","order":1,"path":"scripts/init_background/init_background.yy",},
     {"name":"init_biome","order":1,"path":"scripts/init_biome/init_biome.yy",},
     {"name":"init_inventory_instance","order":8,"path":"scripts/init_inventory_instance/init_inventory_instance.yy",},
