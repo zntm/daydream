@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"array_choose",
+  "%Name":"player_build",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"array_choose",
+  "name":"player_build",
   "parent":{
-    "name":"Functions",
-    "path":"folders/Scripts/Functions.yy",
+    "name":"Player",
+    "path":"folders/Scripts/Entity/Player.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

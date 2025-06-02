@@ -136,7 +136,7 @@ if (_mouse_wheel != 0)
 
 if (cooldown_build <= 0) && (mouse_check_button(mb_right))
 {
-    player_place(_tile_x, _tile_y);
+    player_build(_tile_x, _tile_y);
 }
 else
 {
@@ -145,7 +145,7 @@ else
 
 if (cooldown_harvest <= 0) && (mouse_check_button(mb_left))
 {
-    player_mine(_tile_x, _tile_y);
+    player_harvest(_tile_x, _tile_y);
 }
 else
 {

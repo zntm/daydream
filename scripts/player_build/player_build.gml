@@ -1,4 +1,4 @@
-function player_place(_x, _y)
+function player_build(_x, _y)
 {
     var _item_data = global.item_data;
     
@@ -120,6 +120,13 @@ function player_place(_x, _y)
     }
     
     tile_place(_x, _y, _z, _tile);
+    
+    var _sfx = _data.get_sfx_build();
+    
+    if (_sfx != undefined)
+    {
+        sfx_diegetic_play(x, y, _x * TILE_SIZE, _y * TILE_SIZE, _sfx);
+    }
     
     cooldown_build = 0.15;
 }

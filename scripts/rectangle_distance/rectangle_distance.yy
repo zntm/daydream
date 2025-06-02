@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"array_choose",
+  "%Name":"rectangle_distance",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"array_choose",
+  "name":"rectangle_distance",
   "parent":{
-    "name":"Functions",
-    "path":"folders/Scripts/Functions.yy",
+    "name":"Math",
+    "path":"folders/Scripts/Math.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -447,6 +447,52 @@ function ItemData() constructor
         return self;
     }
     
+    static set_sfx = function(_sfx)
+    {
+        if (_sfx != undefined)
+        {
+            _sfx = init_tag_value(_sfx);
+            
+            var _build = _sfx[$ "build"];
+            
+            if (_build != undefined)
+            {
+                ___sfx_build = _build;
+            }
+            
+            var _harvest = _sfx[$ "harvest"];
+            
+            if (_harvest != undefined)
+            {
+                ___sfx_harvest = _harvest;
+            }
+            
+            var _step = _sfx[$ "step"];
+            
+            if (_step != undefined)
+            {
+                ___sfx_step = _step;
+            }
+        }
+        
+        return self;
+    }
+    
+    static get_sfx_build = function()
+    {
+        return self[$ "___sfx_build"];
+    }
+    
+    static get_sfx_harvest = function()
+    {
+        return self[$ "___sfx_harvest"];
+    }
+    
+    static get_sfx_step = function()
+    {
+        return self[$ "___sfx_step"];
+    }
+    
     static get_collision_box_left = function()
     {
         return (___colliison_box & 0xff) - 0x80;

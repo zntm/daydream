@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"array_choose",
+  "%Name":"sfx_diegetic_floodfill",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"array_choose",
+  "name":"sfx_diegetic_floodfill",
   "parent":{
-    "name":"Functions",
-    "path":"folders/Scripts/Functions.yy",
+    "name":"SFX",
+    "path":"folders/Scripts/SFX.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

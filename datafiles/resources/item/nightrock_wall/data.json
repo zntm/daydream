@@ -14,7 +14,7 @@
             "colour": [
                 "#FFFFFF"
             ],
-            "frequency": "#harvest_particle_frequency"
+            "frequency": "#phantasia:harvest_particle_frequency"
         }
     },
     "drop": {

@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"player_mine",
+  "%Name":"sfx_diegetic_play",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"player_mine",
+  "name":"sfx_diegetic_play",
   "parent":{
-    "name":"Player",
-    "path":"folders/Scripts/Entity/Player.yy",
+    "name":"SFX",
+    "path":"folders/Scripts/SFX.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

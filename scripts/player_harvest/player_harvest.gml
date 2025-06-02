@@ -1,4 +1,4 @@
-function player_mine(_x, _y)
+function player_harvest(_x, _y)
 {
     var _tile = TILE_EMPTY;
     

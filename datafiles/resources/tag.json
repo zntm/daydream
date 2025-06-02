@@ -68,5 +68,20 @@
             "z": "default",
             "id": "#phantasia:placeable_plant_on"
         }
-    ]
+    ],
+    "sfx_dirt": {
+        "build": "phantasia:tile/dirt/harvest",
+        "harvest": "phantasia:tile/dirt/harvest",
+        "step": "phantasia:tile/dirt/step"
+    },
+    "sfx_grass_block": {
+        "build": "phantasia:tile/grass_block/build",
+        "harvest": "phantasia:tile/grass_block/harvest",
+        "step": "phantasia:tile/grass/step"
+    },
+    "sfx_foliage": {
+        "build": "phantasia:tile/grass/step",
+        "harvest": "phantasia:tile/grass/step",
+        "step": "phantasia:tile/grass/step"
+    }
 }
