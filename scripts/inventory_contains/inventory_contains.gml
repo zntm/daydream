@@ -1,4 +1,4 @@
-function inventory_includes(_item, _amount, _inventory, _length)
+function inventory_contains(_item, _amount, _inventory, _length)
 {
 	var _count = 0;
 	
