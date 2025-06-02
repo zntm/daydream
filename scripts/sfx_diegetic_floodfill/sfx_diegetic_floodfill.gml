@@ -1,7 +1,7 @@
 function sfx_diegetic_floodfill(_x, _y, _level, _item_data, _world_height)
 {
-	if (_level >= 8) || (global.sfx_diegetic_floodfill_amount >= 32) exit;
-	
+    if (_level >= 8) || (global.sfx_diegetic_floodfill_amount >= 32) exit;
+    
     var _xinst = _x * TILE_SIZE;
     var _yinst = _y * TILE_SIZE;
     
@@ -34,10 +34,10 @@ function sfx_diegetic_floodfill(_x, _y, _level, _item_data, _world_height)
         else exit;
     }
 
-	++_level;
-	
-	sfx_diegetic_floodfill(_x - 1, _y, _level, _item_data, _world_height);
-	sfx_diegetic_floodfill(_x, _y - 1, _level, _item_data, _world_height);
-	sfx_diegetic_floodfill(_x + 1, _y, _level, _item_data, _world_height);
-	sfx_diegetic_floodfill(_x, _y + 1, _level, _item_data, _world_height);
+    ++_level;
+    
+    sfx_diegetic_floodfill(_x - 1, _y, _level, _item_data, _world_height);
+    sfx_diegetic_floodfill(_x, _y - 1, _level, _item_data, _world_height);
+    sfx_diegetic_floodfill(_x + 1, _y, _level, _item_data, _world_height);
+    sfx_diegetic_floodfill(_x, _y + 1, _level, _item_data, _world_height);
 }

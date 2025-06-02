@@ -20,8 +20,8 @@ function sfx_diegetic_play(_x1, _y1, _x2, _y2, _id, _pitch_offset = 0.2, _gain =
     
     var _item_data = global.item_data;
     
-	var __audio_emitter = audio_emitter_create();
-	var __audio_bus = audio_bus_create();
+    var __audio_emitter = audio_emitter_create();
+    var __audio_bus = audio_bus_create();
     
     __audio_bus.effects[@ SFX_DIEGETIC_EFFECT_INDEX.REVERB] = audio_effect_create(AudioEffectType.Reverb1);
     __audio_bus.effects[@ SFX_DIEGETIC_EFFECT_INDEX.LPF]    = audio_effect_create(AudioEffectType.LPF2);
@@ -30,19 +30,19 @@ function sfx_diegetic_play(_x1, _y1, _x2, _y2, _id, _pitch_offset = 0.2, _gain =
     
     var _x1tile = round(_x1 / TILE_SIZE);
     var _y1tile = round(_y1 / TILE_SIZE);
-	
+    
     var _x2tile = round(_x2 / TILE_SIZE);
     var _y2tile = round(_y2 / TILE_SIZE);
     
     #region Reverb
     /*
-	if (!collision_rectangle(_x2 - SFX_DIEGETIC_PADDING, _y2 - SFX_DIEGETIC_PADDING, _x2 + SFX_DIEGETIC_PADDING, _y2 + SFX_DIEGETIC_PADDING, obj_Light_Sun, false, true))
-	{
+    if (!collision_rectangle(_x2 - SFX_DIEGETIC_PADDING, _y2 - SFX_DIEGETIC_PADDING, _x2 + SFX_DIEGETIC_PADDING, _y2 + SFX_DIEGETIC_PADDING, obj_Light_Sun, false, true))
+    {
         global.sfx_diegetic_floodfill_amount = 0;
         
         dbg_timer("sfx_reverb");
         
-		sfx_diegetic_floodfill(_x2tile, _y2tile, 0, _item_data, _world_height);
+        sfx_diegetic_floodfill(_x2tile, _y2tile, 0, _item_data, _world_height);
         
         var _names = struct_get_names(global.sfx_diegetic_floodfill_position);
         var _length = array_length(_names);
@@ -55,7 +55,7 @@ function sfx_diegetic_play(_x1, _y1, _x2, _y2, _id, _pitch_offset = 0.2, _gain =
         __audio_bus.effects[@ SFX_DIEGETIC_EFFECT_INDEX.REVERB].mix = global.sfx_diegetic_floodfill_amount / 64;
         
         dbg_timer("sfx_reverb", $"Calculated sound effect reverb for {_id} ({global.sfx_diegetic_floodfill_amount}).");
-	}
+    }
     else*/
     {
         __audio_bus.effects[@ SFX_DIEGETIC_EFFECT_INDEX.REVERB].mix = 0;
@@ -78,7 +78,7 @@ function sfx_diegetic_play(_x1, _y1, _x2, _y2, _id, _pitch_offset = 0.2, _gain =
     }
     
     #endregion
-	
+    
     audio_emitter_position(__audio_emitter, _x1 - _x2, _y1 - _y2, 0);
     
     return audio_play_sound_ext({

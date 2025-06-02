@@ -8,46 +8,46 @@
 /// @arg {Real} y2 The coordinate of the bottom part of the rectangle
 function rectangle_distance(px, py, x1, y1, x2, y2)
 {
-	static __values = undefined;
-	
-	if (__init == undefined)
-	{
+    static __values = undefined;
+    
+    if (__init == undefined)
+    {
         __values = array_create(1024 * 1024);
-		
-		for (var i = 0; i < 1024; ++i)
-		{
-			for (var j = 0; j < 1024; ++j)
-			{
-				__values[@ i | (j << 10)] = sqrt((i * i) + (j * j));
-			}
-		}
-	}
-	
-	var _x1 = x1 - px;
-	var _x2 = px - x2;
-	var _x = ((_x1 > _x2) ? _x1 : _x2);
-	
-	var _y1 = y1 - py;
-	var _y2 = py - y2;
-	var _y = ((_y1 > _y2) ? _y1 : _y2);
-	
-	if (_x <= 0)
-	{
-		return ((_y < 0) ? 0 : _y);
-	}
-	
-	if (_y <= 0)
-	{
-		return ((_x < 0) ? 0 : _x);
-	}
-	
-	var _a = abs(_x >> 0);
-	var _b = abs(_y >> 0);
-	
-	if ((_a | _b) < 1024)
-	{
-		return __values[_a | (_b << 10)];
-	}
-	
-	return sqrt((_a * _a) + (_b * _b));
+        
+        for (var i = 0; i < 1024; ++i)
+        {
+            for (var j = 0; j < 1024; ++j)
+            {
+                __values[@ i | (j << 10)] = sqrt((i * i) + (j * j));
+            }
+        }
+    }
+    
+    var _x1 = x1 - px;
+    var _x2 = px - x2;
+    var _x = ((_x1 > _x2) ? _x1 : _x2);
+    
+    var _y1 = y1 - py;
+    var _y2 = py - y2;
+    var _y = ((_y1 > _y2) ? _y1 : _y2);
+    
+    if (_x <= 0)
+    {
+        return ((_y < 0) ? 0 : _y);
+    }
+    
+    if (_y <= 0)
+    {
+        return ((_x < 0) ? 0 : _x);
+    }
+    
+    var _a = abs(_x >> 0);
+    var _b = abs(_y >> 0);
+    
+    if ((_a | _b) < 1024)
+    {
+        return __values[_a | (_b << 10)];
+    }
+    
+    return sqrt((_a * _a) + (_b * _b));
 }

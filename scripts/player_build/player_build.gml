@@ -26,7 +26,7 @@ function player_build(_x, _y)
         }
         else
         {
-        	_z = CHUNK_DEPTH_DEFAULT;
+            _z = CHUNK_DEPTH_DEFAULT;
         }
     }
     else exit;
