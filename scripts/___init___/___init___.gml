@@ -60,7 +60,7 @@ global.tile_connected_index = [
 #macro PHYSICS_GLOBAL_TERMINAL_YVELOCITY 24
 #macro PHYSICS_GLOBAL_THRESHOLD_NUDGE 3
 
-#macro PHYSICS_GLOBAL_COYOTE_TIME 8
+#macro PHYSICS_GLOBAL_time_coyote 8
 
 #endregion
 

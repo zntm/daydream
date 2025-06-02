@@ -1,6 +1,6 @@
 function control_item_drop(_dt)
 {
-    time_life -= _dt;
+    time_life -= _dt / GAME_TICK;
     
     if (time_life <= 0)
     {

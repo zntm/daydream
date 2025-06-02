@@ -7,7 +7,7 @@ function control_physics_input_after(_dt, _id)
             jump_pressed = 0;
             
             jump_count = 0;
-            coyote_time = 0;
+            time_coyote = 0;
         }
         
         if (tile_meeting(x, y - 1))

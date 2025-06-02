@@ -19,10 +19,10 @@ function control_physics_input(_dt, _id)
         {
             if (!_on_ground)
             {
-                coyote_time += _dt;
+                time_coyote += _dt;
             }
             
-            if (coyote_time > PHYSICS_GLOBAL_COYOTE_TIME)
+            if (time_coyote > PHYSICS_GLOBAL_time_coyote)
             {
                 jump_count = 1;
             }

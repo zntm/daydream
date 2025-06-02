@@ -24,6 +24,8 @@ harvest_z = 0;
 
 harvest_amount = 0;
 
+time_respawn = 0;
+
 cooldown_build = 0;
 cooldown_harvest = 0;
 
