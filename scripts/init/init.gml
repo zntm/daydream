@@ -29,5 +29,5 @@ call_later(8, time_source_units_frames, function()
 {
     init("phantasia");
     
-    room_goto(rm_World);
+    room_goto(rm_Menu_Warning_Epilepsy);
 }, -1);

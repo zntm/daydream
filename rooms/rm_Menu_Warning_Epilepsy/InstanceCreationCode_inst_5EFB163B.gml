@@ -1,0 +1,1 @@
+transition_speed = -MENU_TRANSITION_FADE_SPEED;

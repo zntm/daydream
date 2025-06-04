@@ -54,6 +54,12 @@ global.tile_connected_index = [
 
 #endregion
 
+#region Menu
+
+#macro MENU_TRANSITION_FADE_SPEED 0.88
+
+#endregion
+
 #region Physics
 
 #macro PHYSICS_GLOBAL_GRAVITY 3.7
