@@ -60,7 +60,7 @@ function ItemData() constructor
         "axe":         ITEM_TYPE_BIT.AXE,
         "shovel":      ITEM_TYPE_BIT.SHOVEL,
     }
-
+    
     ___type = 0;
     
     static set_type = function(_value)

@@ -1,4 +1,4 @@
-function AttireData(_name, _index, _type, _icon) constructor
+function AttireData() constructor
 {
     static set_icon = function(_icon)
     {

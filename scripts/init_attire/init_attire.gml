@@ -107,15 +107,34 @@ function init_attire(_directory, _namespace = "phantasia", _type = 0)
         
         global.attire_data[$ _file] = [ undefined ];
         
-        for (var j = !directory_exists($"{_directory}/{_file}/0"); directory_exists($"{_directory}/{_file}/{j}"); ++j)
+        for (var j = ((directory_exists($"{_directory}/{_file}/0")) ? 0 : 1); directory_exists($"{_directory}/{_file}/{j}"); ++j)
         {
             dbg_timer("init_attire");
             
             var _directory2 = $"{_directory}/{_file}/{j}";
             
-            global.attire_data[$ _file][@ j] = new AttireData(_file, j, _type, $"{_directory2}/icon.png")
-                .set_sprite_colour(__init(_file, j, "colour", $"{_directory2}/colour"))
-                .set_sprite_white(__init(_file, j, "white", $"{_directory2}/white"));
+            var _data = new AttireData();
+            
+            if (file_exists($"{_directory2}/icon.png"))
+            {
+                var _icon = sprite_add($"{_directory2}/icon.png", 1, false, false, 0, 0);
+                
+                sprite_set_offset(_icon, round(sprite_get_xoffset(_icon) / 2), round(sprite_get_yoffset(_icon) / 2));
+                
+                _data.set_icon(_icon);
+            }
+            
+            if (file_exists($"{_directory2}/colour.png"))
+            {
+                _data.set_sprite_colour(__init(_file, j, "colour", $"{_directory2}/colour"));
+            }
+            
+            if (file_exists($"{_directory2}/white.png"))
+            {
+                _data.set_sprite_white(__init(_file, j, "white", $"{_directory2}/white"));
+            }
+            
+            global.attire_data[$ _file][@ j] = _data;
             
             dbg_timer("init_attire", $"Loaded Attire Type: '{_file}', Index: '{j}'");
         }
