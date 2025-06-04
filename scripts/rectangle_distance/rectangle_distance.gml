@@ -10,7 +10,7 @@ function rectangle_distance(px, py, x1, y1, x2, y2)
 {
     static __values = undefined;
     
-    if (__init == undefined)
+    if (__values == undefined)
     {
         __values = array_create(1024 * 1024);
         

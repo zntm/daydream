@@ -30,8 +30,6 @@ function inventory_give(_x, _y, _item, _text = true)
                     
                     _item = undefined;
                     
-                    // _item.set_amount(0);
-                    
                     _pickup_amount += _amount;
                     
                     break;
@@ -75,8 +73,6 @@ function inventory_give(_x, _y, _item, _text = true)
             }
         }
     }
-    
-    // inventory_refresh_craftable(true);
     
     if (_pickup_amount > 0)
     {

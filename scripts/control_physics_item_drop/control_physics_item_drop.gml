@@ -47,7 +47,7 @@ function control_physics_item_drop(_dt)
         exit;
     }
     
-    var _speed = 6.4 * _dt;
+    var _speed = 5.2;
     
     xvelocity = lerp_delta(xvelocity, sign(_inst_x - x) * _speed, 0.02, _dt);
     yvelocity = lerp_delta(yvelocity, sign(_inst_y - y) * _speed, 0.02, _dt);
