@@ -6,7 +6,7 @@ if (!instance_exists(obj_Menu_Fade))
 {
     transition += _delta_time;
     
-    if (transition > 4) || (keyboard_check_pressed(vk_anykey))
+    if (transition > transition_seconds) || (keyboard_check_pressed(vk_anykey))
     {
         var _transition_room = transition_room;
         

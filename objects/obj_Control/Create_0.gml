@@ -29,6 +29,7 @@ time_respawn = 0;
 cooldown_build = 0;
 cooldown_harvest = 0;
 
+surface_harvest = -1;
 surface_pause = [ -1, -1 ];
 
 show_debug_overlay(true);

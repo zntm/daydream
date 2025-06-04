@@ -95,6 +95,8 @@ init_setting("audio", "audio_music", new SettingsData(SETTINGS_TYPE.SLIDER, 1)
 
 init_setting("audio", "audio_sfx", new SettingsData(SETTINGS_TYPE.SLIDER, 1));
 
+init_setting("audio", "audio_ui", new SettingsData(SETTINGS_TYPE.SLIDER, 1));
+
 init_setting("audio", "audio_tile", new SettingsData(SETTINGS_TYPE.SLIDER, 1));
 
 init_setting("audio", "audio_creature_passive", new SettingsData(SETTINGS_TYPE.SLIDER, 1));

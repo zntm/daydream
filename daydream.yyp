@@ -358,6 +358,7 @@
     {"id":{"name":"render_connected_tile_part","path":"scripts/render_connected_tile_part/render_connected_tile_part.yy",},},
     {"id":{"name":"render_connected_tile","path":"scripts/render_connected_tile/render_connected_tile.yy",},},
     {"id":{"name":"render_gui_vignette","path":"scripts/render_gui_vignette/render_gui_vignette.yy",},},
+    {"id":{"name":"render_harvest","path":"scripts/render_harvest/render_harvest.yy",},},
     {"id":{"name":"render_pause","path":"scripts/render_pause/render_pause.yy",},},
     {"id":{"name":"render_pipeline","path":"scripts/render_pipeline/render_pipeline.yy",},},
     {"id":{"name":"render_tile_foliage","path":"scripts/render_tile_foliage/render_tile_foliage.yy",},},

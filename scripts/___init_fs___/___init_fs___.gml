@@ -1,4 +1,4 @@
-#macro PROGRAM_DIRECTORY_RESOURCES (((GM_build_type == "run") ? $"{filename_dir(GM_project_filename)}/datafiles/" : "") + "resources")
+#macro PROGRAM_DIRECTORY_RESOURCES ((GM_build_type == "run") ? $"{filename_dir(GM_project_filename)}/datafiles/resources" : "resources")
 
 #macro PROGRAM_DIRECTORY_APPDATA     $"{environment_get_variable("LOCALAPPDATA")}/{game_project_name}"
 
