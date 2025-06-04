@@ -33,7 +33,7 @@ surface_pause = [ -1, -1 ];
 
 show_debug_overlay(true);
 
-global.delta_time = 1;
+global.delta_time = delta_time / 1_000_000;
 
 var _world_data = global.world_data[$ "phantasia:playground"];
 
