@@ -1,4 +1,4 @@
-function control_chunk_foliage(_player_x, _player_y, _camera_x, _camera_y, _camera_width, _camera_height)
+function control_chunk_foliage(_dt, _player_x, _player_y, _camera_x, _camera_y, _camera_width, _camera_height)
 {
     var _item_data = global.item_data;
     
@@ -23,7 +23,10 @@ function control_chunk_foliage(_player_x, _player_y, _camera_x, _camera_y, _came
             
             if (!instance_exists(_inst)) || (!_inst.is_generated) continue;
             
-            if (_inst.chunk_display & (1 << CHUNK_DEPTH_FOLIAGE_BACK)) && (_inst.chunk_count[CHUNK_DEPTH_FOLIAGE_BACK] > 0)
+            var _chunk_display = _inst.chunk_display;
+            var _chunk_count   = _inst.chunk_count;
+            
+            if (_chunk_display & (1 << CHUNK_DEPTH_FOLIAGE_BACK)) && (_chunk_count[CHUNK_DEPTH_FOLIAGE_BACK] > 0)
             {
                 for (var l = 0; l < CHUNK_SIZE; ++l)
                 {
@@ -45,13 +48,13 @@ function control_chunk_foliage(_player_x, _player_y, _camera_x, _camera_y, _came
                         
                         if (_skew != _skew_to)
                         {
-                            _inst.chunk_skew_back[@ (m << CHUNK_SIZE_BIT) | l] = lerp(_skew, _skew_to, 0.1);
+                            _inst.chunk_skew_back[@ (m << CHUNK_SIZE_BIT) | l] = lerp_delta(_skew, _skew_to, 0.95, _dt);
                         }
                     }
                 }
             }
             
-            if (_inst.chunk_display & (1 << CHUNK_DEPTH_FOLIAGE_FRONT)) && (_inst.chunk_count[CHUNK_DEPTH_FOLIAGE_FRONT] > 0)
+            if (_chunk_display & (1 << CHUNK_DEPTH_FOLIAGE_FRONT)) && (_chunk_count[CHUNK_DEPTH_FOLIAGE_FRONT] > 0)
             {
                 for (var l = 0; l < CHUNK_SIZE; ++l)
                 {
@@ -73,7 +76,7 @@ function control_chunk_foliage(_player_x, _player_y, _camera_x, _camera_y, _came
                         
                         if (_skew != _skew_to)
                         {
-                            _inst.chunk_skew_front[@ (m << CHUNK_SIZE_BIT) | l] = lerp(_skew, _skew_to, 0.1);
+                            _inst.chunk_skew_front[@ (m << CHUNK_SIZE_BIT) | l] = lerp_delta(_skew, _skew_to, 0.95, _dt);
                         }
                     }
                 }

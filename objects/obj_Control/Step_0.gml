@@ -117,9 +117,13 @@ var _camera_height = global.camera_height;
 
 control_chunk(_player_x, _player_y, _camera_x, _camera_y, _camera_width, _camera_height);
 
-if (global.world.time % 8 == 0)
+time_foliage += _delta_time;
+
+if (time_foliage >= 0.04)
 {
-    control_chunk_foliage(_player_x, _player_y, _camera_x, _camera_y, _camera_width, _camera_height);
+    time_foliage %= 0.04;
+    
+    control_chunk_foliage(_delta_time, _player_x, _player_y, _camera_x, _camera_y, _camera_width, _camera_height);
 }
 
 var _tile_x = round(mouse_x / TILE_SIZE);

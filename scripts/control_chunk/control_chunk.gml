@@ -66,7 +66,6 @@ function control_chunk(_player_x, _player_y, _camera_x, _camera_y, _camera_width
                             var _x2 = _tile_x + _tile_connected_index[_index + 0];
                             var _y2 = _tile_y + _tile_connected_index[_index + 1];
                             
-                            // var _ = _chunk[(_tile_z << (CHUNK_SIZE_BIT * 2)) | (_y2 << CHUNK_SIZE_BIT) | _x2];
                             var _ = tile_get(_inst.chunk_xstart + _x2, _inst.chunk_ystart + _y2, _tile_z);
                             
                             if (_ != TILE_EMPTY)

@@ -14,7 +14,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
     var _texel_width  = texture_get_texel_width(_texture);
     var _texel_height = texture_get_texel_height(_texture);
     
-    var _animation_index = round(global.world.time / 4);
+    var _animation_index = round(global.world.time * 8);
     
     for (var _z = 0; _z < CHUNK_DEPTH; ++_z)
     {
