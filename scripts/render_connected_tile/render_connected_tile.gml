@@ -1,4 +1,4 @@
-function render_connected_tile(_buffer, _uv, _surface_width, _surface_height, _name, _index, _index_offset, _padding, _x, _y, _xscale, _yscale, _rotation, _colour, _alpha)
+function render_connected_tile(_buffer, _uv, _surface_width, _surface_height, _data, _name, _index, _index_offset, _padding, _x, _y, _xscale, _yscale, _rotation, _colour, _alpha)
 {
     static __corner_index = function(_index, _bit_a, _bit_b, _bit_corner)
     {
@@ -43,21 +43,23 @@ function render_connected_tile(_buffer, _uv, _surface_width, _surface_height, _n
         exit;
     }
     
-    if (_index == 0b000_00_000)
+    var _index2 = _index & 0b010_11_010;
+    
+    if (_index2 == 0b000_00_000)
     {
         render_tile(_buffer, _uv, _surface_width, _surface_height, _name, 4, _x, _y, _xscale, _yscale, _rotation, _colour, _alpha);
         
         exit;
     }
     
-    if ((_index & 0b010_11_010) == 0b010_00_010)
+    if (_index2 == 0b010_00_010)
     {
         render_tile(_buffer, _uv, _surface_width, _surface_height, _name, 1, _x, _y, _xscale, _yscale, _rotation, _colour, _alpha);
         
         exit;
     }
     
-    if ((_index & 0b010_11_010) == 0b000_11_000)
+    if (_index2 == 0b000_11_000)
     {
         render_tile(_buffer, _uv, _surface_width, _surface_height, _name, 2, _x, _y, _xscale, _yscale, _rotation, _colour, _alpha);
         
@@ -95,7 +97,7 @@ function render_connected_tile(_buffer, _uv, _surface_width, _surface_height, _n
     var _width_half  = _width  / 2;
     var _height_half = _height / 2;
     
-    var _animation_type = global.item_data[$ _name].get_animation_type();
+    var _animation_type = _data.get_animation_type();
     
     if (_padding < _height_half)
     {
@@ -103,13 +105,13 @@ function render_connected_tile(_buffer, _uv, _surface_width, _surface_height, _n
         var _t_x = (_edge_x1 * _cos) - (_corner_y1 * _sin);
         var _t_y = (_edge_x1 * _sin) + (_corner_y1 * _cos);
         
-        render_connected_tile_part(_buffer, _animation_type, _surface_width, _surface_height, _cos, _sin, _sprite, _sprite_data, _index_offset + ((~_index & 0b010_00_000) ? 2 : 0), _padding, 0, _width - (_padding * 2), _padding, _x + _t_x, _y + _t_y, _xscale, _yscale, _colour, _alpha);
+        render_connected_tile_part(_buffer, _animation_type, _surface_width, _surface_height, _cos, _sin, _sprite, _sprite_data, _index_offset + ((_index & ~0b010_00_000) ? 2 : 0), _padding, 0, _width - (_padding * 2), _padding, _x + _t_x, _y + _t_y, _xscale, _yscale, _colour, _alpha);
         
         // Bottom
         var _b_x = (_edge_x1 * _cos) - (_edge_y2 * _sin);
         var _b_y = (_edge_x1 * _sin) + (_edge_y2 * _cos);
         
-        render_connected_tile_part(_buffer, _animation_type, _surface_width, _surface_height, _cos, _sin, _sprite, _sprite_data, _index_offset + ((~_index & 0b000_00_010) ? 2 : 0), _padding, _height - _padding, _width - (_padding * 2), _padding, _x + _b_x, _y + _b_y, _xscale, _yscale, _colour, _alpha);
+        render_connected_tile_part(_buffer, _animation_type, _surface_width, _surface_height, _cos, _sin, _sprite, _sprite_data, _index_offset + ((_index & ~0b000_00_010) ? 2 : 0), _padding, _height - _padding, _width - (_padding * 2), _padding, _x + _b_x, _y + _b_y, _xscale, _yscale, _colour, _alpha);
     }
     
     if (_padding < _width_half)
@@ -118,13 +120,13 @@ function render_connected_tile(_buffer, _uv, _surface_width, _surface_height, _n
         var _r_x = (_edge_x2 * _cos) - (_edge_y1 * _sin);
         var _r_y = (_edge_x2 * _sin) + (_edge_y1 * _cos);
         
-        render_connected_tile_part(_buffer, _animation_type, _surface_width, _surface_height, _cos, _sin, _sprite, _sprite_data, _index_offset + ((~_index & 0b000_01_000) ? 1 : 0), _width - _padding, _padding, _padding, _height - (_padding * 2), _x + _r_x, _y + _r_y, _xscale, _yscale, _colour, _alpha);
+        render_connected_tile_part(_buffer, _animation_type, _surface_width, _surface_height, _cos, _sin, _sprite, _sprite_data, _index_offset + ((_index & ~0b000_01_000) ? 1 : 0), _width - _padding, _padding, _padding, _height - (_padding * 2), _x + _r_x, _y + _r_y, _xscale, _yscale, _colour, _alpha);
         
         // Left
         var _l_x = (_corner_x1 * _cos) - (_edge_y1 * _sin);
         var _l_y = (_corner_x1 * _sin) + (_edge_y1 * _cos);
         
-        render_connected_tile_part(_buffer, _animation_type, _surface_width, _surface_height, _cos, _sin, _sprite, _sprite_data, _index_offset + ((_index & 0b000_10_000) ? 1 : 0), 0, _padding, _padding, _height - (_padding * 2), _x + _l_x, _y + _l_y, _xscale, _yscale, _colour, _alpha);
+        render_connected_tile_part(_buffer, _animation_type, _surface_width, _surface_height, _cos, _sin, _sprite, _sprite_data, _index_offset + ((_index & ~0b000_10_000) ? 1 : 0), 0, _padding, _padding, _height - (_padding * 2), _x + _l_x, _y + _l_y, _xscale, _yscale, _colour, _alpha);
     }
     
     // Top Left

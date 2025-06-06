@@ -12,11 +12,11 @@ function control_structure(_x, _y)
         
         for (var j = max(_surface_height - 1, _y - WORLDGEN_STRUCTURE_OFFSET); j <= _y + WORLDGEN_STRUCTURE_OFFSET; ++j)
         {
+            if (worldgen_get_cave(i, j, _surface_height, _world_seed)) continue;
+            
             var _data = _biome_data[$ bg_get_biome(i, j)];
             
             var _length = _data.get_structure_length();
-            
-            if (worldgen_get_cave(i, j, _surface_height, _world_seed)) continue;
             
             for (var l = 0; l < _length; ++l)
             {

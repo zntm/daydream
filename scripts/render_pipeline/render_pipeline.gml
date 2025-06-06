@@ -21,6 +21,12 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
     
     var _animation_index = round(global.world.time * 8);
     
+    var _xstart = round((_camera_x + (_camera_width  / 2)) / CHUNK_SIZE_DIMENSION) * CHUNK_SIZE_DIMENSION;
+    var _ystart = round((_camera_y + (_camera_height / 2)) / CHUNK_SIZE_DIMENSION) * CHUNK_SIZE_DIMENSION;
+    
+    var _a = ceil(_camera_width  / (2 * CHUNK_SIZE_DIMENSION)) + 1;
+    var _b = ceil(_camera_height / (2 * CHUNK_SIZE_DIMENSION)) + 1;
+    
     for (var _z = 0; _z < CHUNK_DEPTH; ++_z)
     {
         var _bitmask = 1 << _z;
@@ -29,15 +35,13 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
         shader_set_uniform_f(__u_texture_size, _texel_width, _texel_height);
         shader_set_uniform_f(__u_time, _animation_index);
         
-        var _a = ceil(_camera_width  / (2 * CHUNK_SIZE_DIMENSION)) + 1;
-        var _b = ceil(_camera_height / (2 * CHUNK_SIZE_DIMENSION)) + 1;
-        
         for (var i = -_a; i < _a; ++i)
         {
+            var _x = _xstart + (i * CHUNK_SIZE_DIMENSION);
+            
             for (var j = -_b; j < _b; ++j)
             {
-                var _x = (round((_camera_x + (_camera_width  / 2)) / CHUNK_SIZE_DIMENSION) * CHUNK_SIZE_DIMENSION) + (i * CHUNK_SIZE_DIMENSION);
-                var _y = (round((_camera_y + (_camera_height / 2)) / CHUNK_SIZE_DIMENSION) * CHUNK_SIZE_DIMENSION) + (j * CHUNK_SIZE_DIMENSION);
+                var _y = _ystart + (j * CHUNK_SIZE_DIMENSION);
                 
                 var _inst = instance_position(_x, _y, obj_Chunk);
                 

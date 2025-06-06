@@ -20,35 +20,39 @@ function render_connected_tile_part(_buffer, _animation_type, _surface_width, _s
     var _dx = _bx - (_b * _sin);
     var _dy = _by + (_b * _cos);
     
+    var _number = _sprite.number;
+    
+    var _w = _sprite.width;
+    
     // Triangle 1
     vertex_colour(_buffer, _colour, _alpha);
     vertex_position(_buffer, _ax, _ay);
     vertex_texcoord(_buffer, _v0, _v1);
-    vertex_float4(_buffer, _index, _sprite.number, _sprite.width, _animation_type);
+    vertex_float4(_buffer, _index, _number, _w, _animation_type);
     
     vertex_colour(_buffer, _colour, _alpha);
     vertex_position(_buffer, _bx, _by);
     vertex_texcoord(_buffer, _v2, _v1);
-    vertex_float4(_buffer, _index, _sprite.number, _sprite.width, _animation_type);
+    vertex_float4(_buffer, _index, _number, _w, _animation_type);
     
     vertex_colour(_buffer, _colour, _alpha);
     vertex_position(_buffer, _cx, _cy);
     vertex_texcoord(_buffer, _v0, _v3);
-    vertex_float4(_buffer, _index, _sprite.number, _sprite.width, _animation_type);
+    vertex_float4(_buffer, _index, _number, _w, _animation_type);
     
     // Triangle 2
     vertex_colour(_buffer, _colour, _alpha);
     vertex_position(_buffer, _bx, _by);
     vertex_texcoord(_buffer, _v2, _v1);
-    vertex_float4(_buffer, _index, _sprite.number, _sprite.width, _animation_type);
+    vertex_float4(_buffer, _index, _number, _w, _animation_type);
     
     vertex_colour(_buffer, _colour, _alpha);
     vertex_position(_buffer, _cx, _cy);
     vertex_texcoord(_buffer, _v0, _v3);
-    vertex_float4(_buffer, _index, _sprite.number, _sprite.width, _animation_type);
+    vertex_float4(_buffer, _index, _number, _w, _animation_type);
     
     vertex_colour(_buffer, _colour, _alpha);
     vertex_position(_buffer, _dx, _dy);
     vertex_texcoord(_buffer, _v2, _v3);
-    vertex_float4(_buffer, _index, _sprite.number, _sprite.width, _animation_type);
+    vertex_float4(_buffer, _index, _number, _w, _animation_type);
 }

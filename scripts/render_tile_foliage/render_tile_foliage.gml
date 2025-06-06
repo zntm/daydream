@@ -1,4 +1,4 @@
-function render_tile_foliage(_buffer, _uv, _chunk_index, _surface_width, _surface_height, _name, _index, _x, _y, _xscale, _yscale, _rotation, _colour, _alpha)
+function render_tile_foliage(_buffer, _uv, _chunk_index, _surface_width, _surface_height, _data, _name, _index, _x, _y, _xscale, _yscale, _rotation, _colour, _alpha)
 {
     var _ = global.carbasa_page[$ "item"][$ _name];
     
@@ -48,7 +48,7 @@ function render_tile_foliage(_buffer, _uv, _chunk_index, _surface_width, _surfac
     
     var _number = _.number;
     
-    var _animation_type = (_width << 8) | global.item_data[$ _name].get_animation_type();
+    var _animation_type = (_width << 8) | _data.get_animation_type();
     
     // Triangle 1
     vertex_colour(_buffer, _colour, _alpha);
