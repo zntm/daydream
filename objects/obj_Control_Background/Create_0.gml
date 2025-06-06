@@ -22,4 +22,6 @@ music_pool_length = 0;
 sky_colour_base = c_black;
 sky_colour_gradient = c_black;
 
-refresh = 0;
+bg_sky_colour(_in_biome_data, _in_biome_data);
+
+time_refresh = 0;

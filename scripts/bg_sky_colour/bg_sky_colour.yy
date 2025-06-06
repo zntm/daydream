@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"bg_sky_colour",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"bg_sky_colour",
+  "parent":{
+    "name":"Background",
+    "path":"folders/Scripts/Background.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

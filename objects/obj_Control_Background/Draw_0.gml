@@ -1,3 +1,5 @@
+if (obj_Control.window_width <= 0) || (obj_Control.window_height <= 0) exit;
+
 var _camera_x = global.camera_x;
 var _camera_y = global.camera_y;
 

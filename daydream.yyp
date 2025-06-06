@@ -264,6 +264,7 @@
     {"id":{"name":"BackgroundData","path":"scripts/BackgroundData/BackgroundData.yy",},},
     {"id":{"name":"bg_get_biome","path":"scripts/bg_get_biome/bg_get_biome.yy",},},
     {"id":{"name":"bg_play_music","path":"scripts/bg_play_music/bg_play_music.yy",},},
+    {"id":{"name":"bg_sky_colour","path":"scripts/bg_sky_colour/bg_sky_colour.yy",},},
     {"id":{"name":"BiomeData","path":"scripts/BiomeData/BiomeData.yy",},},
     {"id":{"name":"buffer_load_decompressed","path":"scripts/buffer_load_decompressed/buffer_load_decompressed.yy",},},
     {"id":{"name":"buffer_load_json","path":"scripts/buffer_load_json/buffer_load_json.yy",},},
