@@ -142,8 +142,6 @@ function ItemData() constructor
     
     static set_inventory = function(_inventory)
     {
-        _inventory = init_tag_value(_inventory);
-        
         ___inventory_value = (_inventory.size << 32) | (_inventory.index << 16) | _inventory.max;
         
         return self;
@@ -187,8 +185,6 @@ function ItemData() constructor
     {
         if (_placement != undefined)
         {
-            _placement = init_tag_value(_placement);
-            
             var _index = _placement[$ "index"];
             
             if (_index != undefined)
@@ -231,8 +227,6 @@ function ItemData() constructor
     
     static set_harvest = function(_harvest)
     {
-        _harvest = init_tag_value(_harvest);
-        
         var _hardness = _harvest[$ "hardness"];
         
         if (_hardness != undefined)
@@ -329,8 +323,6 @@ function ItemData() constructor
     {
         if (_durability != undefined)
         {
-            _durability = init_tag_value(_durability);
-            
             ___durability_amount = _durability.amount;
             
             var _bar = _durability.bar;
@@ -451,8 +443,6 @@ function ItemData() constructor
     {
         if (_sfx != undefined)
         {
-            _sfx = init_tag_value(_sfx);
-            
             var _build = _sfx[$ "build"];
             
             if (_build != undefined)

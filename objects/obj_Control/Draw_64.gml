@@ -1,3 +1,5 @@
+if (window_width <= 0) || (window_height <= 0) exit;
+
 gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_src_alpha, bm_one);
 
 var _player_x = obj_Player.x;
@@ -14,7 +16,7 @@ var _gui_height = global.gui_height;
 
 if (is_opened & IS_OPENED_BOOLEAN.PAUSE)
 {
-    if !(surface_refresh & SURFACE_REFRESH_BOOLEAN.PAUSE)
+    if !(surface_refresh & SURFACE_REFRESH_BOOLEAN.PAUSE) || (!surface_exists(surface_pause[0])) || (!surface_exists(surface_pause[1]))
     {
         surface_refresh |= SURFACE_REFRESH_BOOLEAN.PAUSE;
         
@@ -115,8 +117,8 @@ if (_hp > 0) && (is_opened & IS_OPENED_BOOLEAN.GUI) && !(is_opened & IS_OPENED_B
             draw_sprite_ext(
                 spr_Inventory_Tooltip,
                 0,
-                global.gui_mouse_x - (GUI_INVENTORY_TOOLTIP_BG_PADDING * _gui_multiplier_x),
-                global.gui_mouse_y - (GUI_INVENTORY_TOOLTIP_BG_PADDING * _gui_multiplier_y),
+                _gui_mouse_x - (GUI_INVENTORY_TOOLTIP_BG_PADDING * _gui_multiplier_x),
+                _gui_mouse_y - (GUI_INVENTORY_TOOLTIP_BG_PADDING * _gui_multiplier_y),
                 (((_.surface_width  + (GUI_INVENTORY_TOOLTIP_BG_PADDING * 2)) / 7)) * _gui_multiplier_x,
                 (((_.surface_height + (GUI_INVENTORY_TOOLTIP_BG_PADDING * 2)) / 7)) * _gui_multiplier_y,
                 0,

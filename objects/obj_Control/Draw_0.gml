@@ -1,3 +1,5 @@
+if (window_width <= 0) || (window_height <= 0) exit;
+
 gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_src_alpha, bm_one);
 
 var _camera_x = global.camera_x;

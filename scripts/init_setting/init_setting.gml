@@ -63,21 +63,21 @@ init_setting("graphics", "window_vsync", new SettingsData(true, SETTINGS_TYPE.SW
 
 #region Conrols
 
-init_setting("controls", "key_left",       new SettingsData(SETTINGS_TYPE.HOTKEY, ord("A")));
+init_setting("controls", "input_keyboard_left",       new SettingsData(SETTINGS_TYPE.HOTKEY, ord("A")));
 
-init_setting("controls", "key_right",      new SettingsData(SETTINGS_TYPE.HOTKEY, ord("D")));
+init_setting("controls", "input_keyboard_right",      new SettingsData(SETTINGS_TYPE.HOTKEY, ord("D")));
 
-init_setting("controls", "key_jump",       new SettingsData(SETTINGS_TYPE.HOTKEY, vk_space));
+init_setting("controls", "input_keyboard_jump",       new SettingsData(SETTINGS_TYPE.HOTKEY, vk_space));
 
-init_setting("controls", "key_climb_up",   new SettingsData(SETTINGS_TYPE.HOTKEY, ord("W")));
+init_setting("controls", "input_keyboard_climb_up",   new SettingsData(SETTINGS_TYPE.HOTKEY, ord("W")));
 
-init_setting("controls", "key_climb_down", new SettingsData(SETTINGS_TYPE.HOTKEY, ord("S")));
+init_setting("controls", "input_keyboard_climb_down", new SettingsData(SETTINGS_TYPE.HOTKEY, ord("S")));
 
-init_setting("controls", "key_pause",      new SettingsData(SETTINGS_TYPE.HOTKEY, vk_escape));
+init_setting("controls", "input_keyboard_pause",      new SettingsData(SETTINGS_TYPE.HOTKEY, vk_escape));
 
-init_setting("controls", "key_inventory",  new SettingsData(SETTINGS_TYPE.HOTKEY, ord("E")));
+init_setting("controls", "input_keyboard_inventory",  new SettingsData(SETTINGS_TYPE.HOTKEY, ord("E")));
 
-init_setting("controls", "key_drop",       new SettingsData(SETTINGS_TYPE.HOTKEY, ord("Q")));
+init_setting("controls", "input_keyboard_drop",       new SettingsData(SETTINGS_TYPE.HOTKEY, ord("Q")));
 
 #endregion
 
