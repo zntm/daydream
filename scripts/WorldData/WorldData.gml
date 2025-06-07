@@ -138,6 +138,7 @@ function WorldData(_world_height) constructor
             "linear": WORLDGEN_CAVE_TRANSITION_TYPE.LINEAR,
             "random": WORLDGEN_CAVE_TRANSITION_TYPE.RANDOM
         }
+        
         var _default = _cave[$ "default"];
         var _default_length = array_length(_default);
         

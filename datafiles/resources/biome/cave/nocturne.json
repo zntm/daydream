@@ -1,0 +1,37 @@
+{
+    "background": "phantasia:solaris",
+    "sky_colour": {
+        "dawn": {
+            "base": "#180738",
+            "gradient": "#2A1504"
+        },
+        "day": {
+            "base": "#5F91FE",
+            "gradient": "#244FE9"
+        },
+        "dusk": {
+            "base": "#C4502D",
+            "gradient": "#DA651C"
+        },
+        "night": {
+            "base": "#000019",
+            "gradient": "#020008"
+        }
+    },
+    "light_colour": {
+        "dawn": "#C68B69",
+        "day": "#FFFFFF",
+        "dusk": "#C68B69",
+        "night": "#141B35"
+    },
+	"tile": {
+        "base": {
+            "id": "phantasia:nightrock"
+        },
+        "wall": {
+            "id": "phantasia:nightrock_wall"
+        }
+	},
+    "foliage": [],
+    "structure": []
+}

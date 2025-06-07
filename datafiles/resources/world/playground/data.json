@@ -40,13 +40,23 @@
 		"cave": {
 			"default": [
 				{
-					"id": "phantasia:caverns",
+					"id": "phantasia:nocturne",
+					"start": 768,
+					"end": 1024,
+					"transition": {
+						"type": "random",
+						"amplitude": 22,
+						"octave": 0.5
+					}
+				},
+				{
+					"id": "phantasia:halora",
 					"start": 0,
 					"end": 1024,
 					"transition": {
 						"type": "random",
-						"amplitude": 12,
-						"octave": 0.5
+						"amplitude": 0,
+						"octave": 0
 					}
 				}
 			],
