@@ -15,4 +15,9 @@ if (harvest_amount > 0)
     render_harvest(_camera_x, _camera_y, _camera_width, _camera_height);
 }
 
+with (obj_Inventory)
+{
+    draw_sprite(spr_Glow_Corner, 0, x, y);
+}
+
 gpu_set_blendmode(bm_normal);

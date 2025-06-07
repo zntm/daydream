@@ -72,11 +72,6 @@ global.delta_time = _delta_time;
 var _player_x = obj_Player.x;
 var _player_y = obj_Player.y;
 
-if (keyboard_check_pressed(global.settings.input_keyboard_inventory))
-{
-    is_opened ^= IS_OPENED_BOOLEAN.INVENTORY;
-}
-
 if (keyboard_check_pressed(ord("F")))
 {
     spawn_item_drop(_player_x, _player_y, new Inventory("phantasia:dirt"));
@@ -128,6 +123,8 @@ if (_mouse_wheel != 0)
     
     surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY;
 }
+
+control_inventory();
 
 if (cooldown_build <= 0) && (mouse_check_button(mb_right))
 {

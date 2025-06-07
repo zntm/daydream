@@ -52,6 +52,10 @@ obj_Player.y = (worldgen_get_surface_height(0, global.world.seed) - 1) * TILE_SI
 global.inventory.base[@ 0] = new Inventory("phantasia:oak_pickaxe");
 
 global.inventory_selected_hotbar = 0;
+global.inventory_selected_backpack = {
+    index: -1,
+    type: undefined
+}
 global.inventory_selected_hover = noone;
 
 surface_inventory = {

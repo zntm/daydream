@@ -1,0 +1,33 @@
+{
+    "type": "untouchable",
+    "sprite": {
+        "xoffset": 8,
+        "yoffset": 16,
+        "length": 4
+    },
+    "inventory": {
+        "max": 999,
+        "index": 0,
+        "size": 10
+    },
+    "harvest": {
+        "hardness": 0.18,
+        "particle": {
+            "colour": [
+                "#FFFFFF"
+            ],
+            "frequency": "#phantasia:harvest_particle_frequency"
+        }
+    },
+    "placement": {
+        "index": {
+            "type": "irandom",
+            "values": {
+                "min": 0,
+                "max": 3
+            }
+        }
+    },
+    "sfx": "#phantasia:sfx_foliage",
+    "is_foliage": true
+}

@@ -32,5 +32,5 @@
     "path":"sprites/spr_Inventory_Slot/spr_Inventory_Slot.yy",
   },
   "spriteMaskId":null,
-  "visible":true,
+  "visible":false,
 }

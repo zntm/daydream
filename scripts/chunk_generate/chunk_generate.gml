@@ -124,7 +124,14 @@ function chunk_generate()
                         
                         if (_tile == TILE_STRUCTURE_VOID) continue;
                         
-                        _skip_layer |= 1 << m;
+                        if (m == CHUNK_DEPTH_FOLIAGE_BACK) || (m == CHUNK_DEPTH_FOLIAGE_FRONT)
+                        {
+                            _skip_layer |= (1 << CHUNK_DEPTH_DEFAULT) | (1 << CHUNK_DEPTH_FOLIAGE_BACK) | (1 << CHUNK_DEPTH_FOLIAGE_FRONT);
+                        }
+                        else
+                        {
+                        	_skip_layer |= 1 << m;
+                        }
                         
                         chunk[@ (m << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = _tile;
                         
