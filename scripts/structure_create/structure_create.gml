@@ -5,14 +5,14 @@ function structure_create(_x, _y, _id, _seed)
     var _width  = _structure_data.get_width();
     var _height = _structure_data.get_height();
     
-    if (_width & 1 == 0)
+    if !(_width & 1)
     {
-        _x -= (TILE_SIZE / 2);
+        _x -= TILE_SIZE / 2;
     }
     
-    if (_height & 1 == 0)
+    if !(_height & 1)
     {
-        _y -= (TILE_SIZE / 2);
+        _y -= TILE_SIZE / 2;
     }
     
     _x += (ceil(_width  / 2) + _structure_data.get_placement_xoffset()) * TILE_SIZE;

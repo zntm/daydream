@@ -12,10 +12,10 @@
 		"function": "phantasia:clump",
 		"parameter": {
 			"tile_base": {
-				"id": "phantasia:sand"
+				"id": "phantasia:moss"
 			},
 			"tile_wall": {
-				"id": "phantasia:stone_wall"
+				"id": "phantasia:moss_wall"
 			}
 		}
 	}

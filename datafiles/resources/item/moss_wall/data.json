@@ -1,0 +1,30 @@
+{
+    "type": "untouchable",
+    "sprite": {
+        "xoffset": 8,
+        "yoffset": 8,
+        "length": 5,
+        "edge_padding": 8
+    },
+    "inventory": "#phantasia:item_data_inventory_tile",
+    "harvest": {
+        "hardness": 0.26,
+        "level": 0,
+        "particle": {
+            "colour": [
+                "#FFFFFF"
+            ],
+            "frequency": "#phantasia:harvest_particle_frequency"
+        }
+    },
+    "drop": {
+        "item": [
+            {
+                "id": "phantasia:moss_wall"
+            }
+        ]
+    },
+    "sfx": "#phantasia:sfx_foliage",
+    "is_tile": true,
+    "is_wall": true
+}

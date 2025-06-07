@@ -48,7 +48,7 @@
 	},
     "foliage": [
         {
-            "id": "phantasia:blue_bells",
+            "id": "phantasia:bluebells",
             "chance": 0.12,
             "placeable_on": [ "phantasia:grass_block_borea" ]
         },
