@@ -1,0 +1,40 @@
+{
+    "type": "untouchable",
+    "sprite": {
+        "xoffset": 7,
+        "yoffset": 6,
+        "length": 5
+    },
+    "inventory": {
+        "max": 999,
+        "index": 0,
+        "size": 10
+    },
+    "harvest": {
+        "hardness": 0.18,
+        "particle": {
+            "colour": [
+                "#FFFFFF"
+            ],
+            "frequency": "#phantasia:harvest_particle_frequency"
+        }
+    },
+    "placement": {
+        "index": {
+            "type": "irandom",
+            "values": {
+                "min": 1,
+                "max": 4
+            }
+        }
+    },
+    "drop": {
+        "item": [
+            {
+                "id": "phantasia:rock"
+            }
+        ]
+    },
+    "sfx": "#phantasia:sfx_foliage",
+    "is_foliage": true
+}

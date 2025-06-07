@@ -32,6 +32,12 @@
             "id": "phantasia:nightrock_wall"
         }
 	},
-    "foliage": [],
+    "foliage": [
+        {
+            "id": "phantasia:rock",
+            "chance": 0.03,
+            "placeable_on": [ "phantasia:grass_block" ]
+        }
+    ],
     "structure": []
 }

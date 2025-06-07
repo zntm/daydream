@@ -51,6 +51,11 @@
             "id": "phantasia:dead_bush",
             "chance": 0.12,
             "placeable_on": [ "phantasia:sand" ]
+        },
+        {
+            "id": "phantasia:rock",
+            "chance": 0.04,
+            "placeable_on": [ "phantasia:sand" ]
         }
     ]
 }

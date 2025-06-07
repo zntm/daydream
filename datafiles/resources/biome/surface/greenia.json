@@ -49,17 +49,22 @@
     "foliage": [
         {
             "id": "phantasia:globeflower",
-            "chance": 0.09,
+            "chance": 0.05,
             "placeable_on": [ "phantasia:grass_block" ]
         },
         {
-            "id": "phantasia:torch",
-            "chance": 0.01,
+            "id": "phantasia:rock",
+            "chance": 0.03,
             "placeable_on": [ "phantasia:grass_block" ]
         },
         {
             "id": "phantasia:rose",
             "chance": 0.07,
+            "placeable_on": [ "phantasia:grass_block" ]
+        },
+        {
+            "id": "phantasia:dendrobium",
+            "chance": 0.04,
             "placeable_on": [ "phantasia:grass_block" ]
         }
     ],

@@ -53,6 +53,11 @@
             "placeable_on": [ "phantasia:grass_block_borea" ]
         },
         {
+            "id": "phantasia:rock",
+            "chance": 0.03,
+            "placeable_on": [ "phantasia:grass_block_borea" ]
+        },
+        {
             "id": "phantasia:daisy",
             "chance": 0.11,
             "placeable_on": [ "phantasia:grass_block_borea" ]

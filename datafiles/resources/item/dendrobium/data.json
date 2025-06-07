@@ -1,0 +1,30 @@
+{
+    "type": "untouchable",
+    "sprite": {
+        "xoffset": 10,
+        "yoffset": 10,
+        "length": 1
+    },
+    "inventory": "#phantasia:item_data_inventory_default",
+    "harvest": {
+        "hardness": 0.38,
+        "particle": {
+            "colour": [
+                "#FFFFFF"
+            ],
+            "frequency": "#phantasia:harvest_particle_frequency"
+        }
+    },
+    "placement": {
+        "requirement": "#phantasia:placement_requirement_plant"
+    },
+    "drop": {
+        "item": [
+            {
+                "id": "phantasia:dendrobium"
+            }
+        ]
+    },
+    "sfx": "#phantasia:sfx_foliage",
+    "is_foliage": true
+}
