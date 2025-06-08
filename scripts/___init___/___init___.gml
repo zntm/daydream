@@ -74,7 +74,11 @@ global.tile_connected_index = [
 #macro GUI_SAFE_ZONE_Y 24
 
 global.inventory = {
-    mouse: INVENTORY_EMPTY,
+    mouse: {
+        item: INVENTORY_EMPTY,
+        type:  "",
+        index: -1
+    },
     base:              array_create(INVENTORY_LENGTH.BASE, INVENTORY_EMPTY),
     armor_helmet:      array_create(1, INVENTORY_EMPTY),
     armor_breastplate: array_create(1, INVENTORY_EMPTY),

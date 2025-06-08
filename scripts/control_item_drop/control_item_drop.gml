@@ -21,7 +21,7 @@ function control_item_drop(_dt)
     {
         image_angle = point_direction(x, y, x + xvelocity, y + yvelocity);
     }
-    
+    /*
     var _item_id = item.get_item_id();
     var _amount = item.get_amount();
     
@@ -58,7 +58,7 @@ function control_item_drop(_dt)
             }
         }
     }
-    
+    */
     if (time_pickup <= 0) && (instance_exists(inst)) && (place_meeting(x, y, inst))
     {
         item = inventory_give(x, y, item);

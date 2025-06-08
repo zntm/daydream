@@ -3,6 +3,7 @@ function render_background(_camera_x, _camera_y, _camera_width, _camera_height)
     static __u_colour = shader_get_uniform(shd_Background, "u_colour");
     static __u_strength = shader_get_uniform(shd_Background, "u_strength");
     
+    var _background_data = global.background_data;
     var _biome_data = global.biome_data;
     var _world_data = global.world_data[$ global.world.dimension];
     
@@ -15,8 +16,6 @@ function render_background(_camera_x, _camera_y, _camera_width, _camera_height)
     shader_set(shd_Background);
     
     shader_set_uniform_f(__u_colour, (sky_colour_base & 0xff) / 0xff, ((sky_colour_base >> 8) & 0xff) / 0xff, ((sky_colour_base >> 16) & 0xff) / 0xff);
-    
-    var _background_data = global.background_data;
     
     var _in_biome_background = _in_biome_data.get_background();
     var _in_biome_background_data = _background_data[$ _in_biome_background];

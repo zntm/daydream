@@ -56,6 +56,7 @@ global.inventory_selected_backpack = {
     index: -1,
     type: undefined
 }
+
 global.inventory_selected_hover = noone;
 
 surface_inventory = {

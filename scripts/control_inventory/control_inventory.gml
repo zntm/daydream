@@ -21,8 +21,6 @@ function control_inventory()
     
     var _inst = instance_position(mouse_x, mouse_y, obj_Inventory);
     
-    var _mouse = mouse_check_button(mb_left) || mouse_check_button(mb_right);
-    
     if (mouse_check_button_pressed(mb_right))
     {
         if (instance_exists(_inst))
@@ -41,6 +39,9 @@ function control_inventory()
                 
                 global.inventory.mouse.item = variable_clone(_item).set_amount(ceil(_amount / 2));
                 
+                global.inventory.mouse.type  = _type;
+                global.inventory.mouse.index = _index;
+                
                 var _amount2 = floor(_amount / 2);
                 
                 if (_amount2 <= 0)
@@ -58,29 +59,68 @@ function control_inventory()
     }
     else if (mouse_check_button_released(mb_right))
     {
-        var _inventory_selected_backpack = global.inventory_selected_backpack;
-        
-        var _type = _inventory_selected_backpack.type;
-        var _index = _inventory_selected_backpack.index;
-        
-        if (_index != -1)
+        if (instance_exists(_inst))
         {
-            global.inventory[$ _type][@ _index] = global.inventory.mouse;
-            global.inventory_selected_backpack.index = -1;
+            var _type  = _inst.inventory_type;
+            var _index = _inst.inventory_index;
             
-            if (instance_exists(_inst))
+            var _item = global.inventory[$ _type][_index];
+            
+            if (_item != INVENTORY_EMPTY)
             {
-                inventory_switch(_type, _index, _inst.inventory_type, _inst.inventory_index); 
+                var _item2 = global.inventory.mouse.item;
+                
+                var _item_id = _item.get_item_id();
+                
+                if (_item_id == _item2.get_item_id())
+                {
+                    var _data = global.item_data[$ _item_id];
+                    
+                    var _inventory_max = _data.get_inventory_max();
+                    
+                    var _amount  = _item.get_amount();
+                    var _amount2 = _item2.get_amount();
+                    
+                    if (_amount + _amount2 <= _inventory_max)
+                    {
+                        global.inventory[$ _type][@ _index].add_amount(_amount2);
+                        
+                        delete _item2;
+                        
+                        global.inventory.mouse.item = INVENTORY_EMPTY;
+                    }
+                    else
+                    {
+                        global.inventory[$ _type][@ _index].set_amount(_inventory_max);
+                        
+                        _item2.add_amount(_amount - _inventory_max);
+                        
+                        inventory_give(0, 0, _item2, false);
+                    }
+                }
+                else
+                {
+                	inventory_give(0, 0, _item2, false);
+                }
+            }
+            else
+            {
+            	global.inventory[$ _type][@ _index] = global.inventory.mouse.item;
             }
         }
         else
         {
             var _item = global.inventory.mouse;
             
-            global.inventory[$ _type][_index]
+            global.inventory[$ _item.type][_item.index].add_amount(_item.item.get_amount());
             
-        	delete _item;
+        	delete _item.item;
+            
+            global.inventory.mouse.item = INVENTORY_EMPTY;
         }
+        
+        global.inventory.mouse.type  = "";
+        global.inventory.mouse.index = -1;
         
         surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY;
     }
@@ -99,8 +139,11 @@ function control_inventory()
                 global.inventory_selected_backpack.type  = _type;
                 global.inventory_selected_backpack.index = _index;
                 
-                global.inventory.mouse = _item;
                 global.inventory[$ _type][@ _index] = INVENTORY_EMPTY;
+                global.inventory.mouse.item = _item;
+                
+                global.inventory.mouse.type  = _type;
+                global.inventory.mouse.index = _index;
                 
                 surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY;
             }
@@ -108,22 +151,68 @@ function control_inventory()
     }
     else if (mouse_check_button_released(mb_left))
     {
-        var _inventory_selected_backpack = global.inventory_selected_backpack;
-        
-        var _index = _inventory_selected_backpack.index;
-        
-        if (_index != -1)
+        if (instance_exists(_inst))
         {
-            var _type = _inventory_selected_backpack.type;
+            var _type  = _inst.inventory_type;
+            var _index = _inst.inventory_index;
             
-            global.inventory[$ _type][@ _index] = global.inventory.mouse;
-            global.inventory_selected_backpack.index = -1;
+            var _item = global.inventory[$ _type][_index];
             
-            if (instance_exists(_inst))
+            if (_item != INVENTORY_EMPTY)
             {
-                inventory_switch(_type, _index, _inst.inventory_type, _inst.inventory_index); 
+                var _item2 = global.inventory.mouse.item;
+                
+                var _item_id = _item.get_item_id();
+                
+                if (_item_id == _item2.get_item_id())
+                {
+                    var _data = global.item_data[$ _item_id];
+                    
+                    var _inventory_max = _data.get_inventory_max();
+                    
+                    var _amount  = _item.get_amount();
+                    var _amount2 = _item2.get_amount();
+                    
+                    if (_amount + _amount2 <= _inventory_max)
+                    {
+                        global.inventory[$ _type][@ _index].add_amount(_amount2);
+                        
+                        delete _item2;
+                        
+                        global.inventory.mouse.item = INVENTORY_EMPTY;
+                    }
+                    else
+                    {
+                        global.inventory[$ _type][@ _index].set_amount(_inventory_max);
+                        
+                        _item2.add_amount(_amount - _inventory_max);
+                        
+                        inventory_give(0, 0, _item2, false);
+                    }
+                }
+                else
+                {
+                	inventory_give(0, 0, _item2, false);
+                }
+            }
+            else
+            {
+            	global.inventory[$ _type][@ _index] = global.inventory.mouse.item;
             }
         }
+        else
+        {
+            var _item = global.inventory.mouse;
+            
+            global.inventory[$ _item.type][_item.index].add_amount(_item.item.get_amount());
+            
+        	delete _item.item;
+            
+            global.inventory.mouse.item = INVENTORY_EMPTY;
+        }
+        
+        global.inventory.mouse.type  = "";
+        global.inventory.mouse.index = -1;
         
         surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY;
     }
