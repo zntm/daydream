@@ -38,7 +38,7 @@ function carbasa_sprite_add(_page, _sprite, _name)
     
     for (var i = 0; i < _number; ++i)
     {
-        array_push(global.carbasa_page_position[$ _page], new CarbasaSprite(_page, _name, _sprite, i, _xoffset, _yoffset, _width, _height));
+        array_push(global.carbasa_page_position[$ _page], new CarbasaSprite(_page, _name, _sprite, i, _number, _xoffset, _yoffset, _width, _height));
     }
     
     carbasa_sort(_page);

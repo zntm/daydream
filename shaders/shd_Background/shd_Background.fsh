@@ -10,5 +10,5 @@ void main()
     
     vec3 colour = mix(base.rgb, u_colour, clamp((1.0 - v_vTexcoord.y) * u_strength, 0.0, 1.0));
     
-    gl_FragColor = v_vColour * vec4(colour.rgb, base.a);
+    gl_FragColor = vec4(colour.rgb, base.a) * v_vColour;
 }

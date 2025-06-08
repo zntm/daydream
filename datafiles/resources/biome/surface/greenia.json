@@ -26,7 +26,7 @@
         "night": "#141B35"
     },
     "music": [
-        "phantasia:fall"
+        "phantasia:someday_it_will_rain"
     ],
 	"tile": {
 		"top_layer": {
@@ -49,12 +49,12 @@
     "foliage": [
         {
             "id": "phantasia:short_grass",
-            "chance": 0.06,
+            "chance": 0.26,
             "placeable_on": "#phantasia:placeable_plant_on"
         },
         {
             "id": "phantasia:tall_grass",
-            "chance": 0.01,
+            "chance": 0.04,
             "placeable_on": "#phantasia:placeable_plant_on"
         },
         {

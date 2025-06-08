@@ -87,7 +87,7 @@ global.natural_structure_data[$ "phantasia:clump"] = new NaturalStructureData()
         
         var _has_side = false;
         
-        if (chance_seeded(0.5, _seed - ((_x + _y) * 8)))
+        if (xorshift(_seed - ((_x + _y) * 8)) & 1)
         {
             _data[@ 1 + (2 * 5) + _depth_base] = new Tile(_tile_base_id, _item_data)
                 .set_variant(_tile_base_variant);
@@ -95,7 +95,7 @@ global.natural_structure_data[$ "phantasia:clump"] = new NaturalStructureData()
             _has_side += 1;
         }
         
-        if (chance_seeded(0.5, _seed - ((_x + _y) * 4)))
+        if (xorshift(_seed - ((_x + _y) * 4)) & 1)
         {
             _data[@ 3 + (2 * 5) + _depth_base] = new Tile(_tile_base_id, _item_data)
                 .set_variant(_tile_base_variant);
@@ -103,7 +103,7 @@ global.natural_structure_data[$ "phantasia:clump"] = new NaturalStructureData()
             _has_side += 1;
         }
         
-        if (_has_side == 2) || ((_has_side == 1) && (chance_seeded(0.5, _seed - ((_x + _y) * 2))))
+        if (_has_side == 2) || ((_has_side == 1) && (xorshift(_seed - ((_x + _y) * 2)) & 1))
         {
             _data[@ 2 + (1 * 5) + _depth_base] = new Tile(_tile_base_id, _item_data)
                 .set_variant(_tile_base_variant);

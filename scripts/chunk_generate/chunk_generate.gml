@@ -124,7 +124,7 @@ function chunk_generate()
                         
                         if (_tile == TILE_STRUCTURE_VOID) continue;
                         
-                        if (m == CHUNK_DEPTH_FOLIAGE_BACK) || (m == CHUNK_DEPTH_FOLIAGE_FRONT)
+                        if ((1 << m) & ((1 << CHUNK_DEPTH_DEFAULT) | (1 << CHUNK_DEPTH_FOLIAGE_BACK) | (1 << CHUNK_DEPTH_FOLIAGE_FRONT)))
                         {
                             _skip_layer |= (1 << CHUNK_DEPTH_DEFAULT) | (1 << CHUNK_DEPTH_FOLIAGE_BACK) | (1 << CHUNK_DEPTH_FOLIAGE_FRONT);
                         }

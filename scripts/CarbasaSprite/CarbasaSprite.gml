@@ -1,4 +1,4 @@
-function CarbasaSprite(_page, _name, _sprite, _index, _xoffset, _yoffset, _width, _height) constructor
+function CarbasaSprite(_page, _name, _sprite, _index, _number, _xoffset, _yoffset, _width, _height) constructor
 {
     ___page = _page;
     ___name = _name;
@@ -34,6 +34,13 @@ function CarbasaSprite(_page, _name, _sprite, _index, _xoffset, _yoffset, _width
     static get_index = function()
     {
         return ___index;
+    }
+    
+    ___number = _number;
+    
+    static get_number = function()
+    {
+        return ___number;
     }
     
     static set_position = function(_x, _y)

@@ -48,7 +48,7 @@ function init_item(_directory, _namespace)
         
         _item_data.set_edge_padding(_sprite_data[$ "edge_padding"]);
         
-        carbasa_sprite_add($"item", _sprite, $"{_namespace}:{_file}");
+        carbasa_sprite_add("item", _sprite, $"{_namespace}:{_file}");
         
         global.item_data[$ $"{_namespace}:{_file}"] = _item_data;
         

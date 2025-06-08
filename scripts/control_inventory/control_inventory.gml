@@ -8,6 +8,10 @@ function control_inventory()
         {
             instance_activate_object(obj_Inventory);
         }
+        else
+        {
+        	instance_deactivate_object(obj_Inventory);
+        }
         
         surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY;
     }
