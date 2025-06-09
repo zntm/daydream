@@ -28,9 +28,13 @@ function init_background(_directory, _namespace = "phantasia", _type = 0)
             
             var _sprite = sprite_add($"{_directory}/{_file}/sprite/{_background[j]}", 1, false, false, 0, 0);
             
-            sprite_set_offset(_sprite, _layer.xoffset, _layer.yoffset);
+            var _xoffset = _layer.xoffset;
+            var _yoffset = _layer.yoffset;
+            
+            sprite_set_offset(_sprite, _xoffset, _yoffset);
             
             _background_data.add_sprite(_sprite, _layer.width, _layer.height);
+            _background_data.set_sprite_offset(_xoffset, _yoffset);
         }
         
         global.background_data[$ $"{_namespace}:{_file}"] = _background_data;

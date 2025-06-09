@@ -49,6 +49,25 @@ function BackgroundData(_type) constructor
         return ___sprite[_index];
     }
     
+    ___sprite_offset = [];
+    
+    static set_sprite_offset = function(_xoffset, _yoffset)
+    {
+        array_push(___sprite_offset, ((_yoffset + 0x8000) << 16) | (_xoffset + 0x8000));
+        
+        return self;
+    }
+    
+    static get_sprite_xoffset = function(_index)
+    {
+        return (___sprite_offset[_index] & 0xffff) - 0x8000;
+    }
+    
+    static get_sprite_yoffset = function(_index)
+    {
+        return ((___sprite_offset[_index] >> 16) & 0xffff) - 0x8000;
+    }
+    
     static get_sprite_width = function(_index)
     {
         return ___sprite_size[_index] & 0xffff;
