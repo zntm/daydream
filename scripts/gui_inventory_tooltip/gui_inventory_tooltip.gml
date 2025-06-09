@@ -18,8 +18,7 @@ function gui_inventory_tooltip(_gui_multiplier_x, _gui_multiplier_y)
     
     var _inst = global.inventory_selected_hover;
     
-    var _type;
-    var _index;
+    var _item;
     
     if (!instance_exists(_inst))
     {
@@ -40,14 +39,12 @@ function gui_inventory_tooltip(_gui_multiplier_x, _gui_multiplier_y)
     
     if (_item == INVENTORY_EMPTY) exit;
     
-    var _variant = _item.get_variant();
-    
     var _data = global.item_data[$ _item.get_item_id()];
     
-    var _item_name = loca_item_name(_item);
-    var _item_description = loca_item_description(_item);
+    var _item_name = _item.get_item_id()//loca_item_name(_item);
+    var _item_description = _item.get_item_id()//loca_item_description(_item);
     
-    var _sprite = _data.get_sprite(_variant);
+    var _sprite = _data.get_sprite();
     
     var _inventory_scale = _data.get_inventory_scale();
     

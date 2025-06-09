@@ -15,8 +15,8 @@ function structure_create(_x, _y, _id, _seed)
         _y -= TILE_SIZE / 2;
     }
     
-    _x += (ceil(_width  / 2) + _structure_data.get_placement_xoffset()) * TILE_SIZE;
-    _y += (ceil(_height / 2) + _structure_data.get_placement_yoffset()) * TILE_SIZE;
+    _x += (round(_width  / 2) + _structure_data.get_placement_xoffset()) * TILE_SIZE;
+    _y += (round(_height / 2) + _structure_data.get_placement_yoffset()) * TILE_SIZE;
     
     with (instance_create_layer(_x, _y, "Instances", obj_Structure))
     {
