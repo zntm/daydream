@@ -1,8 +1,8 @@
 function control_item_drop(_dt)
 {
-    time_life -= _dt / GAME_TICK;
+    timer_life -= _dt / GAME_TICK;
     
-    if (time_life <= 0)
+    if (timer_life <= 0)
     {
         delete item;
         
@@ -59,7 +59,7 @@ function control_item_drop(_dt)
         }
     }
     */
-    if (time_pickup <= 0) && (instance_exists(inst)) && (place_meeting(x, y, inst))
+    if (timer_pickup <= 0) && (instance_exists(inst)) && (place_meeting(x, y, inst))
     {
         item = inventory_give(x, y, item);
         

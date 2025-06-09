@@ -2,9 +2,9 @@ function control_physics_item_drop(_dt)
 {
     var _time = _dt / GAME_TICK;
     
-    if (time_pickup > 0)
+    if (timer_pickup > 0)
     {
-        time_pickup -= _time;
+        timer_pickup -= _time;
         
         if (tile_meeting(x, y + 1))
         {

@@ -39,3 +39,5 @@ input_right = false;
 
 input_jump = false;
 input_jump_pressed = false;
+
+timer_sfx_step = 0;

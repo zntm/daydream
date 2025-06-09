@@ -24,8 +24,8 @@ harvest_z = 0;
 
 harvest_amount = 0;
 
-time_respawn = 0;
-time_foliage = 0;
+timer_respawn = 0;
+timer_foliage_sway = 0;
 
 cooldown_build = 0;
 cooldown_harvest = 0;

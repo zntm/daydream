@@ -30,6 +30,6 @@ function spawn_floating_text(_x, _y, _text, _xvelocity = 0, _yvelocity = 0, _xsc
         
         rotation = _rotation;
         
-        time_life = 0.56;
+        timer_life = 0.56;
     }
 }

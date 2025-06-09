@@ -103,11 +103,11 @@ var _camera_height = global.camera_height;
 
 control_chunk(_player_x, _player_y, _camera_x, _camera_y, _camera_width, _camera_height);
 
-time_foliage += _delta_time;
+timer_foliage_sway += _delta_time;
 
-if (time_foliage >= 0.04)
+if (timer_foliage_sway >= 0.04)
 {
-    time_foliage %= 0.04;
+    timer_foliage_sway %= 0.04;
     
     control_chunk_foliage(_delta_time, _player_x, _player_y, _camera_x, _camera_y, _camera_width, _camera_height);
 }

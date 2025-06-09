@@ -24,4 +24,4 @@ sky_colour_gradient = c_black;
 
 bg_sky_colour(_in_biome_data, _in_biome_data);
 
-time_refresh = 0;
+timer_refresh = 0;
