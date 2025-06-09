@@ -125,7 +125,7 @@ function player_build(_x, _y)
     
     if (_sfx != undefined)
     {
-        sfx_diegetic_play(x, y, _x * TILE_SIZE, _y * TILE_SIZE, _sfx);
+        sfx_diegetic_play(_x * TILE_SIZE, _y * TILE_SIZE, _sfx);
     }
     
     cooldown_build = 0.15;

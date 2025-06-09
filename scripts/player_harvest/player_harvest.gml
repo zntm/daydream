@@ -66,7 +66,7 @@ function player_harvest(_x, _y)
     {
         tile_place(_x, _y, _z, TILE_EMPTY);
         
-        if (_item != INVENTORY_EMPTY)
+        if (_item != INVENTORY_EMPTY) && (_data2.get_durability_amount() > 0)
         {
             _item.add_durability(-1);
             

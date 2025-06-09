@@ -17,7 +17,8 @@ Phantasia © 2025 by Zhen is licensed under Phantasia's Daydream - see the LICEN
 
 ## 💝 Acknowledgements
 
-- [NekoPresence](https://github.com/nkrapivin/NekoPresence)
+- [Adobe® Audition® Sound Effects](https://www.adobe.com/products/audition/offers/adobeauditiondlcsfx.html)
 - [execute_shell_simple for GameMaker](https://yellowafterlife.itch.io/gamemaker-execute-shell-simple)
+- [NekoPresence](https://github.com/nkrapivin/NekoPresence)
 
-###### Last Updated @ June 1, 2025
+###### Last Updated @ June 9, 2025

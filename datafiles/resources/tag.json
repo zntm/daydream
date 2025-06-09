@@ -83,5 +83,10 @@
         "build": "phantasia:tile/grass/step",
         "harvest": "phantasia:tile/grass/step",
         "step": "phantasia:tile/grass/step"
+    },
+    "sfx_stone": {
+        "build": "phantasia:tile/stone/build",
+        "harvest": "phantasia:tile/stone/harvest",
+        "step": "phantasia:tile/stone/step"
     }
 }

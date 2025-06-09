@@ -24,5 +24,6 @@
             }
         ]
     },
+    "sfx": "#phantasia:sfx_stone",
     "is_tile": true
 }
