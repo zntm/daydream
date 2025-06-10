@@ -15,7 +15,7 @@
 function gui_inventory_tooltip(_gui_multiplier_x, _gui_multiplier_y)
 {
     var _surface_data = surface_inventory.tooltip;
-    
+    /*
     var _inst = global.inventory_selected_hover;
     
     var _item;
@@ -32,10 +32,36 @@ function gui_inventory_tooltip(_gui_multiplier_x, _gui_multiplier_y)
         _type  = _inst.inventory_type;
         _index = _inst.inventory_index;
     }
+    */
     
-    if (_index == -1) || ((_surface_data.type == _index) && (_surface_data.index == _index)) exit;
+    var _item = INVENTORY_EMPTY;
+    var _type, _index;
     
-    var _item = global.inventory[$ _type][_index];
+    var _inventory_mouse = global.inventory.mouse;
+    
+    var _mouse_type  = _inventory_mouse.type;
+    var _mouse_index = _inventory_mouse.index;
+    
+    if (_mouse_index == -1)
+    {
+        var _inst = instance_position(mouse_x, mouse_y, obj_Inventory);
+        
+        if (!instance_exists(_inst)) exit;
+        
+        _type  = _inst.inventory_type;
+        _index = _inst.inventory_index;
+        
+    	_item = global.inventory[$ _type][_index];
+    }
+    else
+    {
+        _type  = _mouse_type;
+        _index = _mouse_index;
+        
+        _item = _inventory_mouse.item;
+    }
+    
+    // if (_index == -1) || ((_surface_data.type == _index) && (_surface_data.index == _index)) exit;
     
     if (_item == INVENTORY_EMPTY) exit;
     
@@ -120,8 +146,8 @@ function gui_inventory_tooltip(_gui_multiplier_x, _gui_multiplier_y)
     
     draw_sprite_ext(_sprite, 0, _sprite_x, _sprite_y, _sprite_xscale, _sprite_yscale, 0, c_white, 1);
     
-    var _rarity = _data.get_rarity();
-    var _rarity_colour = global.rarity_data[$ ((_rarity != undefined) ? _rarity : "phantasia:common")];
+    // var _rarity = _data.get_rarity();
+    var _rarity_colour = c_white // global.rarity_data[$ ((_rarity != undefined) ? _rarity : "phantasia:common")];
     
     draw_text_transformed_colour(_name_x, _name_y, _item_name, _gui_multiplier_x, _gui_multiplier_y, 0, _rarity_colour, _rarity_colour, _rarity_colour, _rarity_colour, 1);
     

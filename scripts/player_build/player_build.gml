@@ -2,7 +2,12 @@ function player_build(_x, _y)
 {
     var _item_data = global.item_data;
     
-    var _item_id = "phantasia:rose";
+    var _inventory_selected_hotbar = global.inventory_selected_hotbar;
+    var _item = global.inventory.base[_inventory_selected_hotbar];
+    
+    if (_item == INVENTORY_EMPTY) exit;
+    
+    var _item_id = _item.get_item_id();
     
     var _data = _item_data[$ _item_id];
     
@@ -61,12 +66,7 @@ function player_build(_x, _y)
             "default": CHUNK_DEPTH_DEFAULT
         }
         
-        static __item_type = {
-            "default":     ITEM_TYPE_BIT.DEFAULT,
-            "solid":       ITEM_TYPE_BIT.SOLID,
-            "platform":    ITEM_TYPE_BIT.PLATFORM,
-            "untouchable": ITEM_TYPE_BIT.UNTOUCHABLE
-        }
+        static __item_type = global.item_type;
         
         var _length = array_length(_requirements);
         
@@ -116,10 +116,14 @@ function player_build(_x, _y)
     
     if (_data.is_foliage())
     {
-        _tile.set_xscale((xorshift(global.world.time) & 1) ? -1 : 1);
+        _tile.set_xscale((xorshift(round(global.world.time)) & 1) ? -1 : 1);
     }
     
     tile_place(_x, _y, _z, _tile);
+    
+    inventory_item_decrement("base", _inventory_selected_hotbar);
+    
+    surface_inventory |= SURFACE_REFRESH_BOOLEAN.INVENTORY;
     
     var _sfx = _data.get_sfx_build();
     

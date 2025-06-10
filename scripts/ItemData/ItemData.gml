@@ -20,6 +20,17 @@ enum ITEM_TYPE_BIT {
     SHOVEL      = 1 << ITEM_TYPE.SHOVEL
 }
 
+global.item_type = {
+    "default":     ITEM_TYPE_BIT.DEFAULT,
+    "solid":       ITEM_TYPE_BIT.SOLID,
+    "platform":    ITEM_TYPE_BIT.PLATFORM,
+    "untouchable": ITEM_TYPE_BIT.UNTOUCHABLE,
+    "sword":       ITEM_TYPE_BIT.SWORD,
+    "pickaxe":     ITEM_TYPE_BIT.PICKAXE,
+    "axe":         ITEM_TYPE_BIT.AXE,
+    "shovel":      ITEM_TYPE_BIT.SHOVEL,
+}
+
 enum ITEM_BOOLEAN {
     IS_TILE    = 1 << 0,
     IS_WALL    = 1 << 1,
@@ -50,16 +61,7 @@ enum INVENTORY_SLOT_TYPE {
 
 function ItemData() constructor
 {
-    static __item_type = {
-        "default":     ITEM_TYPE_BIT.DEFAULT,
-        "solid":       ITEM_TYPE_BIT.SOLID,
-        "platform":    ITEM_TYPE_BIT.PLATFORM,
-        "untouchable": ITEM_TYPE_BIT.UNTOUCHABLE,
-        "sword":       ITEM_TYPE_BIT.SWORD,
-        "pickaxe":     ITEM_TYPE_BIT.PICKAXE,
-        "axe":         ITEM_TYPE_BIT.AXE,
-        "shovel":      ITEM_TYPE_BIT.SHOVEL,
-    }
+    static __item_type = global.item_type;
     
     ___type = 0;
     

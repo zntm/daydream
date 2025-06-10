@@ -1,5 +1,10 @@
 function control_inventory()
 {
+    static __keyboard_hotbar_ord = array_create_ext(INVENTORY_LENGTH.ROW, function(_index)
+    {
+        return ord(string((_index + 1) % INVENTORY_LENGTH.ROW));
+    });
+    
     if (keyboard_check_pressed(global.settings.input_keyboard_inventory))
     {
         is_opened ^= IS_OPENED_BOOLEAN.INVENTORY;
@@ -12,6 +17,39 @@ function control_inventory()
         {
         	instance_deactivate_object(obj_Inventory);
         }
+        
+        surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY;
+    }
+    
+    for (var i = 0; i < INVENTORY_LENGTH.ROW; ++i)
+    {
+        if (keyboard_check_pressed(__keyboard_hotbar_ord[i]))
+        {
+            surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY;
+            
+            if (is_opened & IS_OPENED_BOOLEAN.INVENTORY) && (keyboard_check(vk_shift))
+            {
+                var _inst = instance_position(mouse_x, mouse_y, obj_Inventory);
+                
+                if (instance_exists(_inst))
+                {
+                    inventory_switch(_inst.inventory_type, _inst.inventory_index, "base", i); 
+                    
+                    break;
+                }
+            }
+            
+            global.inventory_selected_hotbar = i;
+            
+            break;
+        }
+    }
+    
+    var _mouse_wheel = mouse_wheel_down() - mouse_wheel_up();
+    
+    if (_mouse_wheel != 0)
+    {
+        global.inventory_selected_hotbar = (global.inventory_selected_hotbar + _mouse_wheel + INVENTORY_LENGTH.ROW) % INVENTORY_LENGTH.ROW;
         
         surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY;
     }

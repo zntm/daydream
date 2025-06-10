@@ -61,11 +61,9 @@ global.inventory_selected_hover = noone;
 
 surface_inventory = {
     tooltip: {
-        surface: 0,
+        surface: -1,
         surface_width: 0,
-        surface_height: 0,
-        type: "",
-        index: -1
+        surface_height: 0
     },
     hotbar: {
         surface_item: -1,
