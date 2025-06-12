@@ -65,7 +65,37 @@ function SettingsData(_type, _default_value) constructor
         return self[$ "___on_update"];
     }
     
-    static add_values = function()
+    static set_range = function(_min, _max)
+    {
+        ___range_min = _min;
+        ___range_max = _max;
+        
+        return self;
+    }
+    
+    static get_range_min = function()
+    {
+        return self[$ "___range_min"] ?? 0;
+    }
+    
+    static get_range_max = function()
+    {
+        return self[$ "___range_max"] ?? 0;
+    }
+    
+    static set_step = function(_step)
+    {
+        ___step = _step;
+        
+        return self;
+    }
+    
+    static get_step = function()
+    {
+        return self[$ "___step"];
+    }
+    
+    static ads_values = function()
     {
         self[$ "___values"] ??= [];
         

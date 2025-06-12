@@ -122,6 +122,8 @@
     {"name":"init_item","order":1,"path":"scripts/init_item/init_item.yy",},
     {"name":"init_music","order":1,"path":"scripts/init_music/init_music.yy",},
     {"name":"init_setting","order":1,"path":"scripts/init_setting/init_setting.yy",},
+    {"name":"init_sfx_asset","order":1,"path":"scripts/init_sfx_asset/init_sfx_asset.yy",},
+    {"name":"init_sfx","order":2,"path":"scripts/init_sfx/init_sfx.yy",},
     {"name":"init_structure_recursive","order":2,"path":"scripts/init_structure_recursive/init_structure_recursive.yy",},
     {"name":"init_tag_value","order":1,"path":"scripts/init_tag_value/init_tag_value.yy",},
     {"name":"init_world","order":1,"path":"scripts/init_world/init_world.yy",},

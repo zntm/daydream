@@ -22,13 +22,17 @@ function sfx_diegetic_play(_x, _y, _id, _pitch_offset = 0.2, _gain = global.sett
     var _item_data = global.item_data;
     
     var _audio_emitter = audio_emitter_create();
-    var _audio_bus = audio_bus_create();
+    // var _audio_bus = audio_bus_create();
     
     // _audio_bus.effects[@ SFX_DIEGETIC_EFFECT_INDEX.REVERB] = audio_effect_create(AudioEffectType.Reverb1);
     // _audio_bus.effects[@ SFX_DIEGETIC_EFFECT_INDEX.LPF]    = audio_effect_create(AudioEffectType.LPF2);
     
-    audio_emitter_bus(_audio_emitter, _audio_bus);
-    audio_emitter_falloff(_audio_emitter, TILE_SIZE * 6, TILE_SIZE * 16, 1);
+    // audio_emitter_bus(_audio_emitter, _audio_bus);
+    
+    var _falloff_reference = _data.get_falloff_reference();
+    var _falloff_max = _data.get_falloff_max();
+    
+    audio_emitter_falloff(_audio_emitter, _falloff_reference, _falloff_max, 1);
     audio_emitter_position(_audio_emitter, _x, _y, 0);
     /*
     var _x1tile = round(_x1 / TILE_SIZE);
@@ -36,9 +40,9 @@ function sfx_diegetic_play(_x, _y, _id, _pitch_offset = 0.2, _gain = global.sett
     
     var _x2tile = round(_x2 / TILE_SIZE);
     var _y2tile = round(_y2 / TILE_SIZE);
-    */
+    
     #region Reverb
-    /*
+    
     if (!collision_rectangle(_x2 - SFX_DIEGETIC_PADDING, _y2 - SFX_DIEGETIC_PADDING, _x2 + SFX_DIEGETIC_PADDING, _y2 + SFX_DIEGETIC_PADDING, obj_Light_Sun, false, true))
     {
         global.sfx_diegetic_floodfill_amount = 0;
@@ -63,11 +67,11 @@ function sfx_diegetic_play(_x, _y, _id, _pitch_offset = 0.2, _gain = global.sett
     {
         _audio_bus.effects[@ SFX_DIEGETIC_EFFECT_INDEX.REVERB].mix = 0;
     }
-    */
+    
     #endregion
     
     #region Low-Pass Filter
-    /*
+    
     var _tile  = tile_get(_x1tile, _y1tile, CHUNK_DEPTH_LIQUID);
     var _tile2 = tile_get(_x2tile, _y2tile, CHUNK_DEPTH_LIQUID);
     
@@ -79,12 +83,12 @@ function sfx_diegetic_play(_x, _y, _id, _pitch_offset = 0.2, _gain = global.sett
     {
         _audio_bus.effects[@ SFX_DIEGETIC_EFFECT_INDEX.LPF].bypass = 1;
     }
-    */
-    #endregion
     
+    #endregion
+    */
     return audio_play_sound_ext({
         emitter: _audio_emitter,
-        sound: ((is_array(_data)) ? _sfx_data[$ array_choose(_data)] : _data),
+        sound: array_choose(_data.get_asset()),
         pitch: random_range(1 - _pitch_offset, 1 + _pitch_offset),
         gain: clamp(global.settings.audio_master * _gain, 0, 1)
     });

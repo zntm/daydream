@@ -36,11 +36,9 @@ init_setting("graphics", "display_coloured_lighting", new SettingsData(SETTINGS_
 
 init_setting("graphics", "display_blur", new SettingsData(SETTINGS_TYPE.SLIDER, 1));
 
-init_setting("graphics", "particles", new SettingsData(SETTINGS_TYPE.ARROW, 2)
-    .add_values(SETTINGS_LEVEL.NONE, SETTINGS_LEVEL.MIN, SETTINGS_LEVEL.MAX));
+init_setting("graphics", "particles", new SettingsData(SETTINGS_TYPE.ARROW, 1));
 
-init_setting("graphics", "weather", new SettingsData(SETTINGS_TYPE.ARROW, 2)
-    .add_values(SETTINGS_LEVEL.NONE, SETTINGS_LEVEL.MIN, SETTINGS_LEVEL.MAX));
+init_setting("graphics", "weather", new SettingsData(SETTINGS_TYPE.ARROW, 1));
 
 init_setting("graphics", "window_gui_size", new SettingsData(SETTINGS_TYPE.SLIDER, 1));
 

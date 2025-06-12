@@ -8,7 +8,7 @@ function init(_namespace)
     
     init_attire($"{PROGRAM_DIRECTORY_RESOURCES}\\attire", _namespace);
     
-    init_sfx_recursive($"{PROGRAM_DIRECTORY_RESOURCES}\\sfx", _namespace);
+    init_sfx($"{PROGRAM_DIRECTORY_RESOURCES}\\sfx", _namespace);
     
     init_particle_recursive($"{PROGRAM_DIRECTORY_RESOURCES}\\particle", _namespace);
     

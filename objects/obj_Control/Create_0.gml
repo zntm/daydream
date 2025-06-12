@@ -135,11 +135,6 @@ global.gui_mouse_y = 0;
 control_camera_pos(_camera_x, _camera_y);
 camera_set_view_size(view_camera[0], _camera_width, _camera_height);
 
-global.structure_range_surface = {
-    min:  infinity,
-    max: -infinity
-}
-
 init_inventory_instance();
 
 game_set_speed(display_get_frequency(), gamespeed_fps);

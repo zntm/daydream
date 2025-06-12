@@ -1,0 +1,129 @@
+{
+    "sfx.explosion.large": {
+        "asset": [
+            "phantasia:explosion/large0",
+            "phantasia:explosion/large1"
+        ],
+        "falloff": "#phantasia:sfx_data_falloff_default",
+        "subtitle": "phantasia:sfx.explosion.large"
+    },
+    "sfx.explosion.small": {
+        "asset": [
+            "phantasia:explosion/small0",
+            "phantasia:explosion/small1"
+        ],
+        "falloff": "#phantasia:sfx_data_falloff_default",
+        "subtitle": "phantasia:sfx.explosion.small"
+    },
+    "tile.dirt.harvest": {
+        "asset": [
+            "phantasia:tile/dirt/harvest0",
+            "phantasia:tile/dirt/harvest1",
+            "phantasia:tile/dirt/harvest2"
+        ],
+        "falloff": "#phantasia:sfx_data_falloff_default",
+        "subtitle": "phantasia:sfx.tile.generic.harvest"
+    },
+    "tile.dirt.step": {
+        "asset": [
+            "phantasia:tile/dirt/step0",
+            "phantasia:tile/dirt/step1",
+            "phantasia:tile/dirt/step2",
+            "phantasia:tile/dirt/step3"
+        ],
+        "falloff": "#phantasia:sfx_data_falloff_default",
+        "subtitle": "phantasia:sfx.tile.generic.step"
+    },
+    "tile.grass.step": {
+        "asset": [
+            "phantasia:tile/grass/step0",
+            "phantasia:tile/grass/step1",
+            "phantasia:tile/grass/step2",
+            "phantasia:tile/grass/step3"
+        ],
+        "falloff": "#phantasia:sfx_data_falloff_default",
+        "subtitle": "phantasia:sfx.tile.generic.step"
+    },
+    "tile.grass_block.build": {
+        "asset": [
+            "phantasia:tile/grass_block/build0",
+            "phantasia:tile/grass_block/build1",
+            "phantasia:tile/grass_block/build2"
+        ],
+        "falloff": "#phantasia:sfx_data_falloff_default",
+        "subtitle": "phantasia:sfx.tile.generic.build"
+    },
+    "tile.grass_block.harvest": {
+        "asset": [
+            "phantasia:tile/grass_block/harvest0",
+            "phantasia:tile/grass_block/harvest1",
+            "phantasia:tile/grass_block/harvest2",
+            "phantasia:tile/grass_block/harvest3"
+        ],
+        "falloff": "#phantasia:sfx_data_falloff_default",
+        "subtitle": "phantasia:sfx.tile.generic.harvest"
+    },
+    "tile.leaves.step": {
+        "asset": [
+            "phantasia:tile/leaves/step0",
+            "phantasia:tile/leaves/step1",
+            "phantasia:tile/leaves/step2",
+            "phantasia:tile/leaves/step3"
+        ],
+        "falloff": "#phantasia:sfx_data_falloff_default",
+        "subtitle": "phantasia:sfx.tile.generic.step"
+    },
+    "tile.stone.build": {
+        "asset": [
+            "phantasia:tile/stone/build0",
+            "phantasia:tile/stone/build1",
+            "phantasia:tile/stone/build2"
+        ],
+        "falloff": "#phantasia:sfx_data_falloff_default",
+        "subtitle": "phantasia:sfx.tile.generic.build"
+    },
+    "tile.stone.harvest": {
+        "asset": [
+            "phantasia:tile/stone/harvest0",
+            "phantasia:tile/stone/harvest1",
+            "phantasia:tile/stone/harvest2"
+        ],
+        "falloff": "#phantasia:sfx_data_falloff_default",
+        "subtitle": "phantasia:sfx.tile.generic.harvest"
+    },
+    "tile.stone.step": {
+        "asset": [
+            "phantasia:tile/stone/step0",
+            "phantasia:tile/stone/step1",
+            "phantasia:tile/stone/step2",
+            "phantasia:tile/stone/step3",
+            "phantasia:tile/stone/step4"
+        ],
+        "falloff": "#phantasia:sfx_data_falloff_default",
+        "subtitle": "phantasia:sfx.tile.generic.step"
+    },
+    "tile.wood.harvest": {
+        "asset": [
+            "phantasia:tile/wood/harvest0",
+            "phantasia:tile/wood/harvest1",
+            "phantasia:tile/wood/harvest2",
+            "phantasia:tile/wood/harvest3",
+            "phantasia:tile/wood/harvest4"
+        ],
+        "falloff": "#phantasia:sfx_data_falloff_default",
+        "subtitle": "phantasia:sfx.tile.generic.harvest"
+    },
+    "tile.wood.step": {
+        "asset": [
+            "phantasia:tile/wood/step0",
+            "phantasia:tile/wood/step1",
+            "phantasia:tile/wood/step2",
+            "phantasia:tile/wood/step3",
+            "phantasia:tile/wood/step4",
+            "phantasia:tile/wood/step5",
+            "phantasia:tile/wood/step6"
+        ],
+        "falloff": "#phantasia:sfx_data_falloff_default",
+        "subtitle": "phantasia:sfx.tile.generic.step"
+    }
+}
