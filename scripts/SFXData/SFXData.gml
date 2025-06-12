@@ -23,20 +23,23 @@ function SFXData() constructor
     
     static set_falloff = function(_falloff)
     {
-        ___falloff_reference = _falloff.reference;
-        ___falloff_max = _falloff.max;
+        if (_falloff != undefined)
+        {
+            ___falloff_reference = _falloff.reference;
+            ___falloff_max = _falloff.max;
+        }
         
         return self;
     }
     
     static get_falloff_reference = function()
     {
-        return ___falloff_reference;
+        return self[$ "___falloff_reference"] ?? (TILE_SIZE * 8);
     }
     
     static get_falloff_max = function()
     {
-        return ___falloff_max;
+        return self[$ "___falloff_max"] ?? (TILE_SIZE * 16);
     }
     
     static set_subtitle = function(_subtitle)

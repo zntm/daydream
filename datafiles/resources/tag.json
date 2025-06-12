@@ -69,10 +69,6 @@
             "id": "#phantasia:placeable_plant_on"
         }
     ],
-    "sfx_data_falloff_default": {
-        "reference": 96,
-        "max": 256
-    },
     "sfx_dirt": {
         "build": "phantasia:tile.dirt.harvest",
         "harvest": "phantasia:tile.dirt.harvest",

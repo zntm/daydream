@@ -14,7 +14,7 @@ function init_sfx(_directory, _namespace)
         
         global.sfx_data[$ $"{_namespace}:{_name}"] = new SFXData()
             .set_asset(_data.asset)
-            .set_falloff(_data.falloff)
+            .set_falloff(_data[$ "falloff"])
             .set_subtitle(_data[$ "subtitle"]);
     }
     
