@@ -18,6 +18,8 @@ function init(_namespace)
     
     init_item($"{PROGRAM_DIRECTORY_RESOURCES}\\item", _namespace);
     
+    init_crafting($"{PROGRAM_DIRECTORY_RESOURCES}\\crafting.json", _namespace);
+    
     init_structure($"{PROGRAM_DIRECTORY_RESOURCES}\\structure", _namespace);
     
     init_biome($"{PROGRAM_DIRECTORY_RESOURCES}\\biome", _namespace);

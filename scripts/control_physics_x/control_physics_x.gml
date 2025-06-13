@@ -11,7 +11,7 @@ function control_physics_x(_collision = true, _world_height = global.world_data[
             return false;
         }
         
-        return !global.item_data[$ _tile.get_item_id()].has_type(ITEM_TYPE_BIT.PLATFORM);
+        return !global.item_data[$ _tile.get_id()].has_type(ITEM_TYPE_BIT.PLATFORM);
     }
     
     var _xvelocity = xvelocity;

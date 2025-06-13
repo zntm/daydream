@@ -37,10 +37,10 @@ function render_chunk(_uv, _inst, _z)
             
             if (_tile == TILE_EMPTY) continue;
             
-            var _item_id = _tile.get_item_id();
+            var _id = _tile.get_id();
             var _index = _tile.get_index();
             
-            var _data = _item_data[$ _item_id];
+            var _data = _item_data[$ _id];
             
             var _draw_x = _xstart + (_x * TILE_SIZE);
             var _draw_y = _ystart + (_y * TILE_SIZE);
@@ -54,19 +54,19 @@ function render_chunk(_uv, _inst, _z)
             {
                 var _edge_padding = _data.get_edge_padding();
                 
-                render_connected_tile(_buffer, _uv, _surface_width, _surface_height, _data, _item_id, _index, _tile.get_index_offset(), _edge_padding, _draw_x, _draw_y, _xscale, _yscale, _rotation, c_white, 1);
+                render_connected_tile(_buffer, _uv, _surface_width, _surface_height, _data, _id, _index, _tile.get_index_offset(), _edge_padding, _draw_x, _draw_y, _xscale, _yscale, _rotation, c_white, 1);
                 
                 continue;
             }
             
             if (_data.is_foliage())
             {
-                render_tile_foliage(_buffer, _uv, (_y << CHUNK_SIZE_BIT) | _x, _surface_width, _surface_height, _data, _item_id, _index + _tile.get_index_offset(), _draw_x, _draw_y, _xscale, _yscale, _rotation, c_white, 1);
+                render_tile_foliage(_buffer, _uv, (_y << CHUNK_SIZE_BIT) | _x, _surface_width, _surface_height, _data, _id, _index + _tile.get_index_offset(), _draw_x, _draw_y, _xscale, _yscale, _rotation, c_white, 1);
                 
                 continue;
             }
             
-            render_tile(_buffer, _uv, _surface_width, _surface_height, _item_id, _index + _tile.get_index_offset(), _draw_x, _draw_y, _xscale, _yscale, _rotation, c_white, 1);
+            render_tile(_buffer, _uv, _surface_width, _surface_height, _id, _index + _tile.get_index_offset(), _draw_x, _draw_y, _xscale, _yscale, _rotation, c_white, 1);
         }
     }
     

@@ -1,0 +1,24 @@
+{
+	"phantasia:dirt_wall": [
+		{
+			"amount": 3,
+			"ingredients": [
+				{
+					"id": "phantasia:dirt",
+					"amount": 2
+				}
+			]
+		}
+	],
+	"phantasia:moss_wall": [
+		{
+			"amount": 3,
+			"ingredients": [
+				{
+					"id": "phantasia:moss",
+					"amount": 2
+				}
+			]
+		}
+	]
+}

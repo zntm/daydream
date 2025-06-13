@@ -28,7 +28,7 @@ function player_harvest(_x, _y)
     
     var _item_data = global.item_data;
     
-    var _data = _item_data[$ _tile.get_item_id()];
+    var _data = _item_data[$ _tile.get_id()];
     
     var _harvest_hardness = _data.get_harvest_hardness();
     
@@ -48,7 +48,7 @@ function player_harvest(_x, _y)
     
     if (_item != INVENTORY_EMPTY)
     {
-        _data2 = _item_data[$ _item.get_item_id()];
+        _data2 = _item_data[$ _item.get_id()];
         
         _item_type = _data2.get_type();
         

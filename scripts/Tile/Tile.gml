@@ -1,10 +1,10 @@
-function Tile(_item_id, _item_data = global.item_data) constructor
+function Tile(_id, _item_data = global.item_data) constructor
 {
-    ___item_id = _item_id;
+    ___id = _id;
     
-    static get_item_id = function()
+    static get_id = function()
     {
-        return self[$ "___item_id"];
+        return self[$ "___id"];
     }
     
     static set_variant = function(_variant)

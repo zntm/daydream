@@ -17,10 +17,10 @@ function inventory_switch(_a_type, _a_index, _b_type, _b_index)
         exit;
     }
     
-    var _item_id_a = _item_a.get_item_id();
-    var _item_id_b = _item_b.get_item_id();
+    var _id_a = _item_a.get_id();
+    var _id_b = _item_b.get_id();
     
-    if (_item_id_a != _item_id_b)
+    if (_id_a != _id_b)
     {
         global.inventory[$ _a_type][@ _a_index] = _item_b;
         global.inventory[$ _b_type][@ _b_index] = _item_a;
@@ -28,7 +28,7 @@ function inventory_switch(_a_type, _a_index, _b_type, _b_index)
         exit;
     }
     
-    var _data = _item_data[$ _item_id_a];
+    var _data = _item_data[$ _id_a];
     
     var _inventory_max = _data.get_inventory_max();
     

@@ -55,7 +55,7 @@ function control_chunk(_player_x, _player_y, _camera_x, _camera_y, _camera_width
                     {
                         var _tile = _chunk[(_tile_z << (CHUNK_SIZE_BIT * 2)) | (_tile_y << CHUNK_SIZE_BIT) | _tile_x];
                         
-                        if (_tile == TILE_EMPTY) || (!_item_data[$ _tile.get_item_id()].is_tile()) continue;
+                        if (_tile == TILE_EMPTY) || (!_item_data[$ _tile.get_id()].is_tile()) continue;
                         
                         var _bit = 0;
                         

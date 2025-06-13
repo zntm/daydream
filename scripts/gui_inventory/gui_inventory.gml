@@ -120,7 +120,7 @@ function gui_inventory(_gui_multiplier_x, _gui_multiplier_y)
             
             var _id = _[j];
             
-            var _data = _item_data[$ _item.get_item_id()];
+            var _data = _item_data[$ _item.get_id()];
             
             var _xoffset = _id.xoffset;
             var _yoffset = _id.yoffset;

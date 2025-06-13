@@ -112,11 +112,11 @@ function control_inventory()
             {
                 var _item2 = global.inventory.mouse.item;
                 
-                var _item_id = _item.get_item_id();
+                var _id = _item.get_id();
                 
-                if (_item_id == _item2.get_item_id())
+                if (_id == _item2.get_id())
                 {
-                    var _data = global.item_data[$ _item_id];
+                    var _data = global.item_data[$ _id];
                     
                     var _inventory_max = _data.get_inventory_max();
                     
@@ -204,11 +204,11 @@ function control_inventory()
             {
                 var _item2 = global.inventory.mouse.item;
                 
-                var _item_id = _item.get_item_id();
+                var _id = _item.get_id();
                 
-                if (_item_id == _item2.get_item_id())
+                if (_id == _item2.get_id())
                 {
-                    var _data = global.item_data[$ _item_id];
+                    var _data = global.item_data[$ _id];
                     
                     var _inventory_max = _data.get_inventory_max();
                     

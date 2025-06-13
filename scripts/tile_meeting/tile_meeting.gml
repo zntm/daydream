@@ -42,7 +42,7 @@ function tile_meeting(_x, _y, _z = CHUNK_DEPTH_DEFAULT, _type = ITEM_TYPE_BIT.SO
             
             if (_tile == TILE_EMPTY) continue;
             
-            var _data = _item_data[$ _tile.get_item_id()];
+            var _data = _item_data[$ _tile.get_id()];
             
             if (!_data.has_type(_type)) continue;
             

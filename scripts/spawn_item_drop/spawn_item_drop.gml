@@ -2,7 +2,7 @@ function spawn_item_drop(_x, _y, _item, _direction = 0, _xvelocity = 0, _yveloci
 {
     if (_item == INVENTORY_EMPTY) exit;
     
-    var _data = global.item_data[$ _item.get_item_id()];
+    var _data = global.item_data[$ _item.get_id()];
     
     if (_data == undefined) exit;
     

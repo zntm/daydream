@@ -7,9 +7,9 @@ function player_build(_x, _y)
     
     if (_item == INVENTORY_EMPTY) exit;
     
-    var _item_id = _item.get_item_id();
+    var _id = _item.get_id();
     
-    var _data = _item_data[$ _item_id];
+    var _data = _item_data[$ _id];
     
     var _z = -1;
     
@@ -76,20 +76,20 @@ function player_build(_x, _y)
             
             var _tile = tile_get(_x + _requirement.xoffset, _y + _requirement.yoffset, __z[$ _requirement.z]);
             
-            var _id = _requirement[$ "id"];
+            var _requirement_id = _requirement[$ "id"];
             
             if (_tile == TILE_EMPTY)
             {
-                if (_id == "air") continue;
+                if (_requirement_id == "air") continue;
                 
                 exit;
             }
             
-            _tile = _tile.get_item_id();
+            _tile = _tile.get_id();
             
-            if (_id != undefined)
+            if (_requirement_id != undefined)
             {
-                if (is_array(_id)) ? (!array_contains(_id, _tile)) : (_id != _tile) exit;
+                if (is_array(_requirement_id)) ? (!array_contains(_requirement_id, _tile)) : (_requirement_id != _tile) exit;
             }
             
             var _types = _requirement[$ "type"];
@@ -112,7 +112,7 @@ function player_build(_x, _y)
         }
     }
     
-    var _tile = new Tile(_item_id);
+    var _tile = new Tile(_id);
     
     if (_data.is_foliage())
     {

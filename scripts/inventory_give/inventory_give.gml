@@ -1,13 +1,13 @@
 function inventory_give(_x, _y, _item, _text = true)
 {
-    var _item_id = _item.get_item_id();
+    var _id = _item.get_id();
     var _amount = _item.get_amount();
     
     // var _state = _item.get_state();
     
     var _pickup_amount = 0;
     
-    var _data = global.item_data[$ _item_id];
+    var _data = global.item_data[$ _id];
     var _inventory_max = _data.get_inventory_max();
     
     var _length = global.inventory_length.base;
@@ -16,7 +16,7 @@ function inventory_give(_x, _y, _item, _text = true)
     {
         var _inventory = global.inventory.base[i];
         
-        if (_inventory != INVENTORY_EMPTY) && (_inventory.get_item_id() == _item_id)
+        if (_inventory != INVENTORY_EMPTY) && (_inventory.get_id() == _id)
         {
             var _amount2 = _inventory.get_amount();
             
@@ -80,7 +80,7 @@ function inventory_give(_x, _y, _item, _text = true)
         
         if (_text)
         {
-            var _loca = _item_id//loca_translate($"{_[0]}:item.{_[1]}.name");
+            var _loca = _id//loca_translate($"{_[0]}:item.{_[1]}.name");
             
             if (_pickup_amount > 1)
             {

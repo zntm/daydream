@@ -8,9 +8,9 @@ function inventory_contains(_item, _amount, _inventory, _length)
         
         if (_slot == INVENTORY_EMPTY) continue;
         
-        var _item_id = _slot.get_item_id();
+        var _id = _slot.get_id();
         
-        if (is_array(_item) ? (!array_contains(_item, _item_id)) : (_item_id != _item)) continue;
+        if (is_array(_item) ? (!array_contains(_item, _id)) : (_id != _item)) continue;
         
         _count += _slot.get_amount();
         

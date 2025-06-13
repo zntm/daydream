@@ -9,7 +9,7 @@ function control_physics_y(_dt, _gravity = PHYSICS_GLOBAL_GRAVITY, _collision = 
             return false;
         }
         
-        var _data = global.item_data[$ _tile.get_item_id()];
+        var _data = global.item_data[$ _tile.get_id()];
         
         if (_data.has_type(ITEM_TYPE_BIT.PLATFORM))
         {

@@ -1,10 +1,10 @@
 function Inventory(_item, _amount = 1) constructor
 {
-    ___item_id = _item;
+    ___id = _item;
     
-    static get_item_id = function()
+    static get_id = function()
     {
-        return ___item_id;
+        return ___id;
     }
     
     ___amount = _amount;
@@ -28,7 +28,7 @@ function Inventory(_item, _amount = 1) constructor
         return self[$ "___amount"];
     }
     
-    var _data = global.item_data[$ get_item_id()];
+    var _data = global.item_data[$ get_id()];
     
     var _durability = round(_data.get_durability_amount() / 2);
     

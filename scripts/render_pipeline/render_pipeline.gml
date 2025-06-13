@@ -78,7 +78,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
             
             with (obj_Item_Drop)
             {
-                var _data = _item_data[$ item.get_item_id()];
+                var _data = _item_data[$ item.get_id()];
                 
                 var _collision_box = entity_value.collision_box;
                 

@@ -22,10 +22,10 @@ function control_item_drop(_dt)
         image_angle = point_direction(x, y, x + xvelocity, y + yvelocity);
     }
     /*
-    var _item_id = item.get_item_id();
+    var _id = item.get_id();
     var _amount = item.get_amount();
     
-    var _data = global.item_data[$ _item_id];
+    var _data = global.item_data[$ _id];
     
     var _inventory_max = _data.get_inventory_max();
     
@@ -37,7 +37,7 @@ function control_item_drop(_dt)
         {
             var _item = _inst.item;
             
-            if (_item_id == _item.get_item_id())
+            if (_id == _item.get_id())
             {
                 var _amount2 = _item.get_amount();
                 
