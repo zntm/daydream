@@ -7,18 +7,6 @@ function Tile(_id, _item_data = global.item_data) constructor
         return self[$ "___id"];
     }
     
-    static set_variant = function(_variant)
-    {
-        ___variant = _variant;
-        
-        return self;
-    }
-    
-    static get_variant = function()
-    {
-        return self[$ "___variant"];
-    }
-    
     // set_offset(0, 0);
     // set_scale(1, 1);
     // ___value = 0;
@@ -121,5 +109,41 @@ function Tile(_id, _item_data = global.item_data) constructor
     static get_rotation = function()
     {
         return (___value >> 32) & 0b111111111;
+    }
+    
+    static set_instance_light = function(_id)
+    {
+        ___instance_light = _id;
+        
+        return self;
+    }
+    
+    static get_instance_light = function()
+    {
+        return self[$ "___instance_light"] ?? noone;
+    }
+    
+    static set_instance_crafting_station = function(_id)
+    {
+        ___instance_crafting_station = _id;
+        
+        return self;
+    }
+    
+    static get_instance_crafting_station = function()
+    {
+        return self[$ "___instance_crafting_station"] ?? noone;
+    }
+    
+    static set_instance_container = function(_id)
+    {
+        ___instance_container = _id;
+        
+        return self;
+    }
+    
+    static get_instance_container = function()
+    {
+        return self[$ "___instance_container"] ?? noone;
     }
 }

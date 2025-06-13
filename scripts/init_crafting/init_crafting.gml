@@ -26,7 +26,7 @@ function init_crafting(_directory, _prefix = "phantasia", _type = 0)
             var _recipe = _recipes[j];
             
             _data.add_recipe(new CraftingRecipe(_recipe[$ "amount"])
-    			.set_stations(_recipe[$ "stations"])
+    			.set_crafting_stations(_recipe[$ "crafting_stations"])
     			.set_ingredients(_recipe.ingredients));
         }
         

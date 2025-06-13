@@ -72,41 +72,37 @@ global.natural_structure_data[$ "phantasia:clump"] = new NaturalStructureData()
                 
                 if (_is_edge_x) && (_is_edge_y) continue;
                 
-                _data[@ i + (j * _width) + _depth_wall] = new Tile(_tile_wall_id, _item_data)
-                    .set_variant(_tile_wall_variant);
+                _data[@ i + (j * _width) + _depth_wall] = new Tile(_tile_wall_id, _item_data);
             }
         }
         
         var _tile_base = _parameter[NATURAL_STRUCTURE_CLUMP.TILE_BASE];
         
         var _tile_base_id = _tile_base.id;
-        var _tile_base_variant = _tile_base[$ "variant"];
         
-        _data[@ 2 + (2 * 5) + _depth_base] = new Tile(_tile_base_id, _item_data)
-            .set_variant(_tile_base_variant);
+        _data[@ 2 + (2 * 5) + _depth_base] = new Tile(_tile_base_id, _item_data);
         
         var _has_side = false;
         
-        if (xorshift(_seed - ((_x + _y) * 8)) & 1)
+        var _xorshift = xorshift(_seed - ((_x + _y) * 8));
+        
+        if (_xorshift & 0b1)
         {
-            _data[@ 1 + (2 * 5) + _depth_base] = new Tile(_tile_base_id, _item_data)
-                .set_variant(_tile_base_variant);
+            _data[@ 1 + (2 * 5) + _depth_base] = new Tile(_tile_base_id, _item_data);
             
             _has_side += 1;
         }
         
-        if (xorshift(_seed - ((_x + _y) * 4)) & 1)
+        if (_xorshift & 0b01)
         {
-            _data[@ 3 + (2 * 5) + _depth_base] = new Tile(_tile_base_id, _item_data)
-                .set_variant(_tile_base_variant);
+            _data[@ 3 + (2 * 5) + _depth_base] = new Tile(_tile_base_id, _item_data);
             
             _has_side += 1;
         }
         
-        if (_has_side == 2) || ((_has_side == 1) && (xorshift(_seed - ((_x + _y) * 2)) & 1))
+        if (_has_side == 2) || ((_has_side == 1) && (_xorshift & 0b001))
         {
-            _data[@ 2 + (1 * 5) + _depth_base] = new Tile(_tile_base_id, _item_data)
-                .set_variant(_tile_base_variant);
+            _data[@ 2 + (1 * 5) + _depth_base] = new Tile(_tile_base_id, _item_data);
         }
         
         return _data;

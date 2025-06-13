@@ -1,4 +1,7 @@
 {
+    "crafting_station_workbench": [
+        "phantasia:oak_workbench"
+    ],
     "gui_durability_bar": {
         "base_colour": "#36383F",
         "data": [
@@ -93,5 +96,10 @@
         "build": "phantasia:tile.stone.build",
         "harvest": "phantasia:tile.stone.harvest",
         "step": "phantasia:tile.stone.step"
+    },
+    "sfx_wood": {
+        "build": "phantasia:tile.wood.harvest",
+        "harvest": "phantasia:tile.wood.harvest",
+        "step": "phantasia:tile.wood.step"
     }
 }

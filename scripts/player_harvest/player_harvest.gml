@@ -12,7 +12,7 @@ function player_harvest(_x, _y)
         
         if (_x != harvest_x) || (_y != harvest_y) || (_z != harvest_z)
         {
-            obj_Player.timer_sfx_harvest = 0;
+            obj_Player.timer_sfx_harvest = 0.28;
             
             harvest_amount = 0;
             
@@ -68,9 +68,9 @@ function player_harvest(_x, _y)
     
     obj_Player.timer_sfx_harvest += _delta_time;
     
-    if (obj_Player.timer_sfx_harvest > 0.2)
+    if (obj_Player.timer_sfx_harvest > 0.28)
     {
-        obj_Player.timer_sfx_harvest %= 0.2;
+        obj_Player.timer_sfx_harvest %= 0.28;
         
         sfx_diegetic_play(obj_Player.audio_emitter, _x * TILE_SIZE, _y * TILE_SIZE, _data.get_sfx_harvest());
     }

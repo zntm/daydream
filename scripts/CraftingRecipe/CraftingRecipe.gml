@@ -7,35 +7,37 @@ function CraftingRecipe(_amount = 1) constructor
         return ___amount;
     }
     
-	static set_stations = function(_stations)
+	static set_crafting_stations = function(_crafting_stations)
 	{
-		if (_stations != undefined)
+		if (_crafting_stations != undefined)
 		{
-    		if (!is_array(_stations))
+    		if (!is_array(_crafting_stations))
     		{
-    			___stations = [ _stations ];
-    			___stations_length = 1;
+    			___crafting_stations = [ _crafting_stations ];
+    			___crafting_stations_length = 1;
     			
-    			if (!array_contains(global.crafting_stations, _stations))
+    			if (!array_contains(global.crafting_stations, _crafting_stations))
     			{
-    				array_push(global.crafting_stations, _stations);
+    				array_push(global.crafting_stations, _crafting_stations);
+                    
+                    global.item_data[$ _crafting_stations].set_is_crafting_station(true); 
     			}
     			
     			return self;
     		}
     		
-            ___stations = _stations;
-    		___stations_length = array_length(_stations);
+            ___crafting_stations = _crafting_stations;
+    		___crafting_stations_length = array_length(_crafting_stations);
     		
-    		for (var i = 0; i < ___stations_length; ++i)
+    		for (var i = 0; i < ___crafting_stations_length; ++i)
     		{
-    			var _station = _stations[i];
+    			var _station = _crafting_stations[i];
     			
     			if (!array_contains(global.crafting_stations, _station))
                 {
                     array_push(global.crafting_stations, _station);
                     
-                    global.item_data[$ _station].set_is_crafting_station();
+                    global.item_data[$ _station].set_is_crafting_station(true);
                 }
     		}
 		}
@@ -43,14 +45,14 @@ function CraftingRecipe(_amount = 1) constructor
 		return self;
 	}
     
-    static get_stations = function()
+    static get_crafting_stations = function()
     {
-        return self[$ "___stations"];
+        return self[$ "___crafting_stations"];
     }
     
-    static get_stations_length = function()
+    static get_crafting_stations_length = function()
     {
-        return self[$ "___stations_length"] ?? 0;
+        return self[$ "___crafting_stations_length"] ?? 0;
     }
 	
 	static set_ingredients = function(_ingredients)

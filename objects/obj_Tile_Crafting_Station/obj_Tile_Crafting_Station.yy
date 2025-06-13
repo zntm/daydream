@@ -1,9 +1,9 @@
 {
   "$GMObject":"",
-  "%Name":"obj_Tile_Instance",
+  "%Name":"obj_Tile_Crafting_Station",
   "eventList":[],
   "managed":true,
-  "name":"obj_Tile_Instance",
+  "name":"obj_Tile_Crafting_Station",
   "overriddenProperties":[],
   "parent":{
     "name":"Gameplay",
@@ -29,5 +29,5 @@
   "solid":false,
   "spriteId":null,
   "spriteMaskId":null,
-  "visible":true,
+  "visible":false,
 }

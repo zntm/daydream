@@ -248,6 +248,8 @@ function ItemData() constructor
         
         if (_type != undefined)
         {
+            self[$ "___harvest_type"] ??= 0;
+            
             if (is_string(_type))
             {
                 ___harvest_type |= __item_type[$ _type];
@@ -382,6 +384,8 @@ function ItemData() constructor
             
             if (_drop_tool != undefined)
             {
+                self[$ "___drop_tool"] ??= 0;
+                
                 if (is_string(_drop_tool))
                 {
                     ___drop_tool |= __item_type[$ _drop_tool];

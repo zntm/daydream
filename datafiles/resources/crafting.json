@@ -7,7 +7,8 @@
 					"id": "phantasia:dirt",
 					"amount": 2
 				}
-			]
+			],
+			"crafting_stations": "#phantasia:crafting_station_workbench"
 		}
 	],
 	"phantasia:moss_wall": [

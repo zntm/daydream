@@ -8,21 +8,23 @@
     },
     "inventory": "#phantasia:item_data_inventory_tile",
     "harvest": {
-        "hardness": 0.36,
-        "level": 0,
+        "hardness": 0.46,
+        "level": 2,
         "particle": {
             "colour": [
                 "#FFFFFF"
             ],
             "frequency": "#phantasia:harvest_particle_frequency"
-        }
+        },
+        "type": "pickaxe"
     },
     "drop": {
         "item": [
             {
                 "id": "phantasia:nightrock"
             }
-        ]
+        ],
+        "tool": "pickaxe"
     },
     "sfx": "#phantasia:sfx_stone",
     "is_tile": true

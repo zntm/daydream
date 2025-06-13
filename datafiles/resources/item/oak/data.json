@@ -1,28 +1,28 @@
 {
     "type": "untouchable",
     "sprite": {
-        "xoffset": 8,
+        "xoffset": 14,
         "yoffset": 8,
         "length": 6
     },
-    "inventory": "#phantasia:item_data_inventory_default",
+    "inventory": "#phantasia:item_data_inventory_tile",
     "harvest": {
-        "hardness": 0.38,
+        "hardness": 0.56,
+        "level": 1,
         "particle": {
             "colour": [
                 "#FFFFFF"
             ],
             "frequency": "#phantasia:harvest_particle_frequency"
-        }
+        },
+        "type": "axe"
     },
     "drop": {
         "item": [
             {
-                "id": "phantasia:torch"
+                "id": "phantasia:oak"
             }
         ]
     },
-    "animation_type": "increment",
-    "sfx": "#phantasia:sfx_wood",
-    "is_tile": false
+    "sfx": "#phantasia:sfx_wood"
 }

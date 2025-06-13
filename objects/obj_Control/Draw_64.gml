@@ -202,3 +202,13 @@ draw_text(16, 16,
 );
 
 gpu_set_blendmode(bm_normal);
+
+with (obj_Player)
+{
+    var _ = instance_nearest(obj_Player.x, obj_Player.y, obj_Tile_Crafting_Station);
+    
+    if (instance_exists(_))
+    {
+        draw_text(128, 128, point_distance(x, y, _.x, _.y))
+    }
+}
