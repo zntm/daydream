@@ -12,6 +12,8 @@ function player_harvest(_x, _y)
         
         if (_x != harvest_x) || (_y != harvest_y) || (_z != harvest_z)
         {
+            obj_Player.timer_sfx_harvest = 0;
+            
             harvest_amount = 0;
             
             cooldown_harvest = 0.1;
@@ -60,11 +62,24 @@ function player_harvest(_x, _y)
     
     if (_data.get_harvest_level() > _item_level) exit;
     
-    harvest_amount += _item_hardness * global.delta_time;
+    var _delta_time = global.delta_time;
+    
+    harvest_amount += _item_hardness * _delta_time;
+    
+    obj_Player.timer_sfx_harvest += _delta_time;
+    
+    if (obj_Player.timer_sfx_harvest > 0.2)
+    {
+        obj_Player.timer_sfx_harvest %= 0.2;
+        
+        sfx_diegetic_play(obj_Player.audio_emitter, _x * TILE_SIZE, _y * TILE_SIZE, _data.get_sfx_harvest());
+    }
     
     if (harvest_amount >= _harvest_hardness)
     {
         tile_place(_x, _y, _z, TILE_EMPTY);
+        
+        sfx_diegetic_play(obj_Player.audio_emitter, _x * TILE_SIZE, _y * TILE_SIZE, _data.get_sfx_harvest());
         
         if (_item != INVENTORY_EMPTY) && (_data2.get_durability_amount() > 0)
         {

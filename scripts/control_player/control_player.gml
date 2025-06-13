@@ -7,11 +7,11 @@ function control_player(_dt)
     
     if ((input_left) || (input_right)) && (tile_meeting(x, y + 1))
     {
-        timer_sfx_step -= _dt / GAME_TICK;
+        timer_sfx_step += _dt / GAME_TICK;
         
-        if (timer_sfx_step <= 0)
+        if (timer_sfx_step >= 0.28)
         {
-            timer_sfx_step = 0.28;
+            timer_sfx_step = 0;
             
             var _tile_x = round(x / TILE_SIZE);
             var _tile_y = round(y / TILE_SIZE);
@@ -44,13 +44,13 @@ function control_player(_dt)
             }
             else
             {
-                timer_sfx_step = 0;
+                timer_sfx_step = 0.28;
             }
         }
     }
     else
     {
-        timer_sfx_step = 0;
+        timer_sfx_step = 0.28;
     }
     
     control_physics_input_after(_dt, id);

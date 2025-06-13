@@ -72,11 +72,6 @@ global.delta_time = _delta_time;
 var _player_x = obj_Player.x;
 var _player_y = obj_Player.y;
 
-if (keyboard_check_pressed(ord("F")))
-{
-    spawn_item_drop(_player_x, _player_y, new Inventory("phantasia:dirt"));
-}
-
 var _world_data = global.world_data[$ global.world.dimension];
 
 var _settings = global.settings;
@@ -132,6 +127,8 @@ if (cooldown_harvest <= 0) && (mouse_check_button(mb_left))
 }
 else
 {
+    obj_Player.timer_sfx_harvest += _delta_time;
+    
     harvest_amount = 0;
     
     cooldown_harvest -= _delta_time;
