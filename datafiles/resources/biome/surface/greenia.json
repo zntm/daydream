@@ -48,7 +48,7 @@
 	},
     "foliage": [
         {
-            "id": "phantasia:oak_workbench",
+            "id": "phantasia:short_grass",
             "chance": 0.26,
             "placeable_on": "#phantasia:placeable_plant_on"
         },
