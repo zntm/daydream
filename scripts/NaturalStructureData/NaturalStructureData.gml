@@ -84,23 +84,23 @@ global.natural_structure_data[$ "phantasia:clump"] = new NaturalStructureData()
         
         var _has_side = false;
         
-        var _xorshift = xorshift(_seed - ((_x + _y) * 8));
+        var _xorshift = xorshift(round(_seed / 0x8fb9) - ((_x + _y) * 1_143));
         
-        if (_xorshift & 0b1)
+        if (_xorshift & 0b001)
         {
             _data[@ 1 + (2 * 5) + _depth_base] = new Tile(_tile_base_id, _item_data);
             
             _has_side += 1;
         }
         
-        if (_xorshift & 0b01)
+        if (_xorshift & 0b010)
         {
             _data[@ 3 + (2 * 5) + _depth_base] = new Tile(_tile_base_id, _item_data);
             
             _has_side += 1;
         }
         
-        if (_has_side == 2) || ((_has_side == 1) && (_xorshift & 0b001))
+        if (_has_side == 2) || ((_has_side == 1) && (_xorshift & 0b100))
         {
             _data[@ 2 + (1 * 5) + _depth_base] = new Tile(_tile_base_id, _item_data);
         }
