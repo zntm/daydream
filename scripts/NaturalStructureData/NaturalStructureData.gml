@@ -84,7 +84,7 @@ global.natural_structure_data[$ "phantasia:clump"] = new NaturalStructureData()
         
         var _has_side = false;
         
-        var _xorshift = xorshift(round(_seed / 0x8fb9) - ((_x + _y) * 1_143));
+        var _xorshift = xorshift(round(_seed / 0x8fb9) - ((_x * 1_143) + (_y * 3_209)));
         
         if (_xorshift & 0b001)
         {

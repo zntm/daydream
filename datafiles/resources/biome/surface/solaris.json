@@ -26,7 +26,8 @@
         "night": "#141B35"
     },
     "music": [
-        "phantasia:dune"
+        "phantasia:dune",
+        "phantasia:field_of_concourse"
     ],
 	"tile": {
 		"top_layer": {
