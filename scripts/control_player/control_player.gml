@@ -40,7 +40,7 @@ function control_player(_dt)
             
             if (_tile != TILE_EMPTY)
             {
-                sfx_diegetic_play(x, y, global.item_data[$ _tile.get_id()].get_sfx_step());
+                sfx_diegetic_play(audio_emitter, x, y, global.item_data[$ _tile.get_id()].get_sfx_step());
             }
             else
             {

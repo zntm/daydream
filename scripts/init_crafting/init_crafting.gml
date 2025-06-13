@@ -32,7 +32,7 @@ function init_crafting(_directory, _prefix = "phantasia", _type = 0)
         
         global.crafting_data[$ _name] = _data;
         
-        array_push(global.crafting_names, _name);
+        array_push(global.crafting_data_names, _name);
     }
     
 	delete _json;

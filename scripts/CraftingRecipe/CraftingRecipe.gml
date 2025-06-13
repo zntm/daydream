@@ -34,6 +34,8 @@ function CraftingRecipe(_amount = 1) constructor
     			if (!array_contains(global.crafting_stations, _station))
                 {
                     array_push(global.crafting_stations, _station);
+                    
+                    global.item_data[$ _station].set_is_crafting_station();
                 }
     		}
 		}

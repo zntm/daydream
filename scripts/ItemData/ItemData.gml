@@ -32,9 +32,10 @@ global.item_type = {
 }
 
 enum ITEM_BOOLEAN {
-    IS_TILE    = 1 << 0,
-    IS_WALL    = 1 << 1,
-    IS_FOLIAGE = 1 << 2
+    IS_TILE             = 1 << 0,
+    IS_WALL             = 1 << 1,
+    IS_FOLIAGE          = 1 << 2,
+    IS_CRAFTING_STATION = 1 << 3
 }
 
 enum TILE_ANIMATION_TYPE {
@@ -561,6 +562,21 @@ function ItemData() constructor
     static is_foliage = function()
     {
         return !!(___boolean & ITEM_BOOLEAN.IS_FOLIAGE);
+    }
+    
+    static set_is_crafting_station = function(_is_crafting_station)
+    {
+        if (_is_crafting_station)
+        {
+            ___boolean |= ITEM_BOOLEAN.IS_CRAFTING_STATION;
+        }
+        
+        return self;
+    }
+    
+    static is_crafting_station = function()
+    {
+        return !!(___boolean & ITEM_BOOLEAN.IS_CRAFTING_STATION);
     }
     
     #endregion

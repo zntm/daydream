@@ -11,7 +11,7 @@ audio_listener_orientation(0, 0, 1, 0, -1, 0);
 global.sfx_diegetic_floodfill_amount = 0;
 global.sfx_diegetic_floodfill_position = {}
 
-function sfx_diegetic_play(_x, _y, _id, _pitch_offset = 0.2, _gain = global.settings.audio_sfx, _world_height = global.world_data[$ global.world.dimension].get_world_height())
+function sfx_diegetic_play(_emitter, _x, _y, _id, _pitch_offset = 0.2, _gain = global.settings.audio_sfx, _world_height = global.world_data[$ global.world.dimension].get_world_height())
 {
     var _sfx_data = global.sfx_data;
     
@@ -21,7 +21,7 @@ function sfx_diegetic_play(_x, _y, _id, _pitch_offset = 0.2, _gain = global.sett
     
     var _item_data = global.item_data;
     
-    var _audio_emitter = audio_emitter_create();
+    // var _audio_emitter = audio_emitter_create();
     // var _audio_bus = audio_bus_create();
     
     // _audio_bus.effects[@ SFX_DIEGETIC_EFFECT_INDEX.REVERB] = audio_effect_create(AudioEffectType.Reverb1);
@@ -32,8 +32,9 @@ function sfx_diegetic_play(_x, _y, _id, _pitch_offset = 0.2, _gain = global.sett
     var _falloff_reference = _data.get_falloff_reference();
     var _falloff_max = _data.get_falloff_max();
     
-    audio_emitter_falloff(_audio_emitter, _falloff_reference, _falloff_max, 1);
-    audio_emitter_position(_audio_emitter, _x, _y, 0);
+    audio_emitter_falloff(_emitter, _falloff_reference, _falloff_max, 1);
+    audio_emitter_position(_emitter, _x, _y, 0);
+    
     /*
     var _x1tile = round(_x1 / TILE_SIZE);
     var _y1tile = round(_y1 / TILE_SIZE);
@@ -87,7 +88,7 @@ function sfx_diegetic_play(_x, _y, _id, _pitch_offset = 0.2, _gain = global.sett
     #endregion
     */
     return audio_play_sound_ext({
-        emitter: _audio_emitter,
+        emitter: _emitter,
         sound: array_choose(_data.get_asset()),
         pitch: random_range(1 - _pitch_offset, 1 + _pitch_offset),
         gain: clamp(global.settings.audio_master * _gain, 0, 1)

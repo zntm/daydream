@@ -41,3 +41,11 @@ input_jump = false;
 input_jump_pressed = false;
 
 timer_sfx_step = 0;
+
+audio_emitter = audio_emitter_create();
+audio_bus = audio_bus_create();
+
+audio_bus.effects[@ SFX_DIEGETIC_EFFECT_INDEX.REVERB] = audio_effect_create(AudioEffectType.Reverb1);
+audio_bus.effects[@ SFX_DIEGETIC_EFFECT_INDEX.LPF]    = audio_effect_create(AudioEffectType.LPF2);
+
+audio_emitter_bus(audio_emitter, audio_bus);
