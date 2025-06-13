@@ -75,6 +75,7 @@
     {"name":"obj_Neko_Presence","order":2,"path":"objects/obj_Neko_Presence/obj_Neko_Presence.yy",},
     {"name":"obj_Player","order":3,"path":"objects/obj_Player/obj_Player.yy",},
     {"name":"obj_Structure","order":5,"path":"objects/obj_Structure/obj_Structure.yy",},
+    {"name":"obj_Tile_Instance","order":9,"path":"objects/obj_Tile_Instance/obj_Tile_Instance.yy",},
     {"name":"rm_Menu_Warning_Beta","order":1,"path":"rooms/rm_Menu_Warning_Beta/rm_Menu_Warning_Beta.yy",},
     {"name":"rm_World","order":3,"path":"rooms/rm_World/rm_World.yy",},
     {"name":"___init_exception___","order":196,"path":"scripts/___init_exception___/___init_exception___.yy",},

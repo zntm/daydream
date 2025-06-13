@@ -12,13 +12,13 @@ function CraftingData() constructor
         return self;
     }
     
-    static get_all_recipes = function()
+    static get_recipes = function()
     {
         return ___recipes;
     }
     
-    static get_recipe = function(_index)
+    static get_recipes_length = function()
     {
-        return ___recipes[_index];
+        return ___recipes_length;
     }
 }

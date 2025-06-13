@@ -56,12 +56,69 @@
         ],
         "subtitle": "phantasia:sfx.tile.generic.harvest"
     },
+    "tile.gravel.harvest": {
+        "asset": [
+            "phantasia:tile/gravel/harvest0",
+            "phantasia:tile/gravel/harvest1",
+            "phantasia:tile/gravel/harvest2",
+            "phantasia:tile/gravel/harvest3",
+            "phantasia:tile/gravel/harvest4",
+            "phantasia:tile/gravel/harvest5"
+        ],
+        "subtitle": "phantasia:sfx.tile.generic.harvest"
+    },
+    "tile.gravel.step": {
+        "asset": [
+            "phantasia:tile/gravel/step0",
+            "phantasia:tile/gravel/step1",
+            "phantasia:tile/gravel/step2",
+            "phantasia:tile/gravel/step3",
+            "phantasia:tile/gravel/step4"
+        ],
+        "subtitle": "phantasia:sfx.tile.generic.step"
+    },
     "tile.leaves.step": {
         "asset": [
             "phantasia:tile/leaves/step0",
             "phantasia:tile/leaves/step1",
             "phantasia:tile/leaves/step2",
             "phantasia:tile/leaves/step3"
+        ],
+        "subtitle": "phantasia:sfx.tile.generic.step"
+    },
+    "tile.mud.harvest": {
+        "asset": [
+            "phantasia:tile/mud/harvest0",
+            "phantasia:tile/mud/harvest1",
+            "phantasia:tile/mud/harvest2",
+            "phantasia:tile/mud/harvest3"
+        ],
+        "subtitle": "phantasia:sfx.tile.generic.harvest"
+    },
+    "tile.mud.step": {
+        "asset": [
+            "phantasia:tile/mud/step0",
+            "phantasia:tile/mud/step1",
+            "phantasia:tile/mud/step2",
+            "phantasia:tile/mud/step3"
+        ],
+        "subtitle": "phantasia:sfx.tile.generic.step"
+    },
+    "tile.sand.harvest": {
+        "asset": [
+            "phantasia:tile/sand/harvest0",
+            "phantasia:tile/sand/harvest1",
+            "phantasia:tile/sand/harvest2",
+            "phantasia:tile/sand/harvest3"
+        ],
+        "subtitle": "phantasia:sfx.tile.generic.harvest"
+    },
+    "tile.sand.step": {
+        "asset": [
+            "phantasia:tile/sand/step0",
+            "phantasia:tile/sand/step1",
+            "phantasia:tile/sand/step2",
+            "phantasia:tile/sand/step3"
         ],
         "subtitle": "phantasia:sfx.tile.generic.step"
     },

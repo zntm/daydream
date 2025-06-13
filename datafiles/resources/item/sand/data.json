@@ -24,5 +24,6 @@
             }
         ]
     },
+    "sfx": "#phantasia:sfx_sand",
     "is_tile": true
 }
