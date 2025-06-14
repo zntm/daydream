@@ -59,8 +59,12 @@ if (_hp > 0) && (is_opened & IS_OPENED_BOOLEAN.GUI) && !(is_opened & IS_OPENED_B
         surface_refresh ^= SURFACE_REFRESH_BOOLEAN.INVENTORY;
         
         gui_inventory(_gui_multiplier_x, _gui_multiplier_y);
-        gui_inventory_craftable(_gui_multiplier_x, _gui_multiplier_y);
         gui_inventory_hotbar(_gui_multiplier_x, _gui_multiplier_y);
+        
+        if (is_opened & IS_OPENED_BOOLEAN.INVENTORY)
+        {
+            gui_inventory_craftable(_gui_multiplier_x, _gui_multiplier_y);
+        }
     }
     /*
     gui_effects();

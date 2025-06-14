@@ -3,8 +3,8 @@ global.crafting_stations = [];
 
 function init_crafting(_directory, _prefix = "phantasia", _type = 0)
 {
-	var _item_data = global.item_data;
-	
+    var _item_data = global.item_data;
+    
     var _json = init_tag_value(buffer_load_json(_directory).data);
     
     var _length = array_length(_json);
@@ -18,5 +18,5 @@ function init_crafting(_directory, _prefix = "phantasia", _type = 0)
             .set_ingredients(_data.ingredients));
     }
     
-	delete _json;
+    delete _json;
 }

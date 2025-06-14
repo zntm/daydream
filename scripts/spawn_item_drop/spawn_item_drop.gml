@@ -1,4 +1,4 @@
-function spawn_item_drop(_x, _y, _item, _direction = 0, _xvelocity = 0, _yvelocity = 0, _timer_pickup = 1.5, _timer_life = 60 * 15)
+function spawn_item_drop(_x, _y, _item, _direction = 0, _xvelocity = 0, _yvelocity = 0, _timer_pickup = 0.85, _timer_life = 60 * 15)
 {
     if (_item == INVENTORY_EMPTY) exit;
     

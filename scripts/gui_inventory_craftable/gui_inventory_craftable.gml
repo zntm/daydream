@@ -1,10 +1,15 @@
 function gui_inventory_craftable(_gui_multiplier_x, _gui_multiplier_y)
 {
+    var _crafting_data = global.crafting_data;
     var _item_data = global.item_data;
+    
     var _inventory_data = global.gui_inventory.craftable;
     
-    var _inventory = global.inventory.base;
-    var _inventory_instance = global.inventory_instance.base;
+    var _inventory_instance = global.inventory_instance.craftable;
+    
+    var _length = array_length(_inventory_instance);
+    
+    if (_length <= 0) exit;
     
     var _surface_width  = _inventory_data.surface_width;
     var _surface_height = _inventory_data.surface_height;
@@ -28,23 +33,16 @@ function gui_inventory_craftable(_gui_multiplier_x, _gui_multiplier_y)
     var _outline = _inventory_data.outline;
     var _outline_length = array_length(_outline);
     
-    for (var j = 0; j < _outline_length; ++j)
+    for (var i = 0; i < _outline_length; ++i)
     {
-        var _ = _outline[j];
+        var _ = _outline[i];
         
         draw_sprite_ext(spr_Square, 0, _.xoffset, _.yoffset, _.width, _.height, 0, _.colour, 1);
     }
     
-    var _id2 = _inventory_instance[global.inventory_selected_craftable];
-    
-    var _x2 = (GUI_INVENTORY_SURFACE_PADDING + _id2.xoffset) / INVENTORY_SLOT_SCALE;
-    var _y2 = (GUI_INVENTORY_SURFACE_PADDING + _id2.yoffset) / INVENTORY_SLOT_SCALE;
-    
-    draw_sprite_ext(spr_Square, 0, _x2 - 1 - INVENTORY_OUTLINE_THICKNESS, _y2 - 1 - INVENTORY_OUTLINE_THICKNESS, 18 + (INVENTORY_OUTLINE_THICKNESS * 2), 18 + (INVENTORY_OUTLINE_THICKNESS * 2), 0, INVENTORY_OUTLINE_COLOUR, 1);
-    
-    for (var j = 0; j < INVENTORY_LENGTH.ROW; ++j)
+    for (var i = 0; i < _length; ++i)
     {
-        var _id = _inventory_instance[j];
+        var _id = _inventory_instance[i];
         
         var _x = (GUI_INVENTORY_SURFACE_PADDING + _id.xoffset) / INVENTORY_SLOT_SCALE;
         var _y = (GUI_INVENTORY_SURFACE_PADDING + _id.yoffset) / INVENTORY_SLOT_SCALE;
@@ -62,17 +60,14 @@ function gui_inventory_craftable(_gui_multiplier_x, _gui_multiplier_y)
         
         surface_inventory.craftable.surface_item = _surface_item;
     }
-
+    
     surface_set_target(_surface_item);
     draw_clear_alpha(c_black, 0);
     
-    for (var j = 0; j < INVENTORY_LENGTH.ROW; ++j)
+    for (var i = 0; i < _length; ++i)
     {
-        var _item = _inventory[j];
-        
-        if (_item == INVENTORY_EMPTY) continue;
-        
-        var _id = _inventory_instance[j];
+        var _id = _inventory_instance[i];
+        var _item = _crafting_data[_id.index];
         
         var _data = _item_data[$ _item.get_id()];
         
@@ -93,17 +88,14 @@ function gui_inventory_craftable(_gui_multiplier_x, _gui_multiplier_y)
         draw_sprite_ext(_sprite, _index, _x, _y, _xscale, _yscale, 0, c_white, 1);
     }
     
-    for (var j = 0; j < INVENTORY_LENGTH.ROW; ++j)
+    for (var i = 0; i < _length; ++i)
     {
-        var _item = _inventory[j];
-        
-        if (_item == INVENTORY_EMPTY) continue;
+        var _id = _inventory_instance[i];
+        var _item = _crafting_data[_id.index];
         
         var _amount = _item.get_amount();
         
         if (_amount <= 1) continue;
-        
-        var _id = _inventory_instance[j];
         
         var _x = _gui_multiplier_x * (GUI_INVENTORY_AMOUNT_XOFFSET + (GUI_INVENTORY_SURFACE_PADDING + (INVENTORY_SLOT_DIMENSION_SCALED / 2)) + _id.xoffset);
         var _y = _gui_multiplier_y * (GUI_INVENTORY_AMOUNT_YOFFSET + (GUI_INVENTORY_SURFACE_PADDING + (INVENTORY_SLOT_DIMENSION_SCALED / 2)) + _id.yoffset);

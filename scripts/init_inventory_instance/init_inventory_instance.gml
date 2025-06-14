@@ -66,8 +66,8 @@ global.gui_inventory = {
             },
             {
                 colour: INVENTORY_OUTLINE_COLOUR,
-                xoffset: GUI_INVENTORY_SURFACE_PADDING + INVENTORY_BACKPACK_XOFFSET - 1 - (INVENTORY_SLOT_DIMENSION / 2),
-                yoffset: GUI_INVENTORY_SURFACE_PADDING + INVENTORY_BACKPACK_YOFFSET - 1,
+                xoffset: GUI_INVENTORY_SURFACE_PADDING + INVENTORY_BACKPACK_XOFFSET - INVENTORY_OUTLINE_THICKNESS - (INVENTORY_SLOT_DIMENSION / 2),
+                yoffset: GUI_INVENTORY_SURFACE_PADDING + INVENTORY_BACKPACK_YOFFSET - INVENTORY_OUTLINE_THICKNESS,
                 width:  (INVENTORY_OUTLINE_THICKNESS * 2) + (INVENTORY_SLOT_DIMENSION * INVENTORY_LENGTH.ROW),
                 height: (INVENTORY_OUTLINE_THICKNESS * 2) + (INVENTORY_SLOT_DIMENSION * ((INVENTORY_LENGTH.BASE - INVENTORY_LENGTH.ROW) div INVENTORY_LENGTH.ROW))
             }
@@ -151,15 +151,18 @@ global.gui_inventory = {
     },
     craftable: {
         anchor_type: GUI_ANCHOR.TOP_LEFT,
-        surface_xoffset: (GUI_INVENTORY_SURFACE_PADDING * 2) + INVENTORY_BACKPACK_YOFFSET + (INVENTORY_SLOT_DIMENSION_SCALED * INVENTORY_LENGTH.ROW),
-        surface_yoffset: (GUI_INVENTORY_SURFACE_PADDING * 2) + INVENTORY_BACKPACK_YOFFSET + (INVENTORY_SLOT_DIMENSION_SCALED * INVENTORY_LENGTH.ROW),
+        sprite: spr_Inventory_Slot,
+        icon: spr_Inventory_Slot_Icon,
+        icon_index: 0,
+        surface_xoffset: INVENTORY_BACKPACK_XOFFSET,
+        surface_yoffset: (INVENTORY_BACKPACK_YOFFSET * 2) + (INVENTORY_SLOT_DIMENSION_SCALED * (INVENTORY_LENGTH.BASE div INVENTORY_LENGTH.ROW)),
         surface_width: 0,
         surface_height: 0,
         outline: [
             {
                 colour: INVENTORY_OUTLINE_COLOUR,
                 xoffset: GUI_INVENTORY_SURFACE_PADDING - INVENTORY_OUTLINE_THICKNESS - (INVENTORY_SLOT_DIMENSION / 2),
-                yoffset: GUI_INVENTORY_SURFACE_PADDING + INVENTORY_BACKPACK_YOFFSET - 1,
+                yoffset: GUI_INVENTORY_SURFACE_PADDING - INVENTORY_OUTLINE_THICKNESS - (INVENTORY_SLOT_DIMENSION / 2),
                 width:  0,
                 height: 0
             }

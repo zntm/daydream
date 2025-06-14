@@ -13,7 +13,7 @@ function control_inventory()
         {
             instance_activate_object(obj_Inventory);
             
-            inventory_refresh_craftable();
+            inventory_refresh_crafting_station(true);
         }
         else
         {
@@ -25,10 +25,15 @@ function control_inventory()
                 }
             }
             
-        	instance_deactivate_object(obj_Inventory);
+            instance_deactivate_object(obj_Inventory);
         }
         
         surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY;
+    }
+    
+    if (is_opened & IS_OPENED_BOOLEAN.INVENTORY)
+    {
+        inventory_refresh_crafting_station();
     }
     
     for (var i = 0; i < INVENTORY_LENGTH.ROW; ++i)
@@ -102,7 +107,7 @@ function control_inventory()
                 }
                 else
                 {
-                	_item.set_amount(_amount2);
+                    _item.set_amount(_amount2);
                 }
                 
                 surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY;
@@ -152,12 +157,12 @@ function control_inventory()
                 }
                 else
                 {
-                	inventory_give(0, 0, _item2, false);
+                    inventory_give(0, 0, _item2, false);
                 }
             }
             else
             {
-            	global.inventory[$ _type][@ _index] = global.inventory.mouse.item;
+                global.inventory[$ _type][@ _index] = global.inventory.mouse.item;
             }
         }
         else
@@ -166,7 +171,7 @@ function control_inventory()
             
             global.inventory[$ _item.type][_item.index].add_amount(_item.item.get_amount());
             
-        	delete _item.item;
+            delete _item.item;
             
             global.inventory.mouse.item = INVENTORY_EMPTY;
         }
@@ -244,12 +249,12 @@ function control_inventory()
                 }
                 else
                 {
-                	inventory_give(0, 0, _item2, false);
+                    inventory_give(0, 0, _item2, false);
                 }
             }
             else
             {
-            	global.inventory[$ _type][@ _index] = global.inventory.mouse.item;
+                global.inventory[$ _type][@ _index] = global.inventory.mouse.item;
             }
         }
         else
@@ -258,7 +263,7 @@ function control_inventory()
             
             global.inventory[$ _item.type][_item.index].add_amount(_item.item.get_amount());
             
-        	delete _item.item;
+            delete _item.item;
             
             global.inventory.mouse.item = INVENTORY_EMPTY;
         }

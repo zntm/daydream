@@ -33,7 +33,6 @@ function gui_inventory_tooltip(_gui_multiplier_x, _gui_multiplier_y)
         _index = _inst.inventory_index;
     }
     */
-    
     var _item = INVENTORY_EMPTY;
     var _type, _index;
     
@@ -51,7 +50,7 @@ function gui_inventory_tooltip(_gui_multiplier_x, _gui_multiplier_y)
         _type  = _inst.inventory_type;
         _index = _inst.inventory_index;
         
-    	_item = global.inventory[$ _type][_index];
+        _item = global.inventory[$ _type][_index];
     }
     else
     {
@@ -146,8 +145,8 @@ function gui_inventory_tooltip(_gui_multiplier_x, _gui_multiplier_y)
     
     draw_sprite_ext(_sprite, 0, _sprite_x, _sprite_y, _sprite_xscale, _sprite_yscale, 0, c_white, 1);
     
-    // var _rarity = _data.get_rarity();
-    var _rarity_colour = c_white // global.rarity_data[$ ((_rarity != undefined) ? _rarity : "phantasia:common")];
+    var _rarity = _data.get_rarity();
+    var _rarity_colour = ((_data.get_rarity() != undefined) ? (global.rarity_data[$ _rarity] ?? c_white) : c_white);
     
     draw_text_transformed_colour(_name_x, _name_y, _item_name, _gui_multiplier_x, _gui_multiplier_y, 0, _rarity_colour, _rarity_colour, _rarity_colour, _rarity_colour, 1);
     

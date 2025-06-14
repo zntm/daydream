@@ -84,7 +84,7 @@ function chunk_generate()
             
             var _inst_y = _world_y * TILE_SIZE;
             
-            var _skip_layer = 0;
+            var _skip_z = 0;
             
             if (_structure_rectangle_length > 0) && (position_meeting(_inst_x, _inst_y, obj_Structure))
             {
@@ -126,11 +126,11 @@ function chunk_generate()
                         
                         if ((1 << m) & ((1 << CHUNK_DEPTH_DEFAULT) | (1 << CHUNK_DEPTH_FOLIAGE_BACK) | (1 << CHUNK_DEPTH_FOLIAGE_FRONT)))
                         {
-                            _skip_layer |= (1 << CHUNK_DEPTH_DEFAULT) | (1 << CHUNK_DEPTH_FOLIAGE_BACK) | (1 << CHUNK_DEPTH_FOLIAGE_FRONT);
+                            _skip_z |= (1 << CHUNK_DEPTH_DEFAULT) | (1 << CHUNK_DEPTH_FOLIAGE_BACK) | (1 << CHUNK_DEPTH_FOLIAGE_FRONT);
                         }
                         else
                         {
-                        	_skip_layer |= 1 << m;
+                            _skip_z |= 1 << m;
                         }
                         
                         chunk[@ (m << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = _tile;
@@ -155,7 +155,7 @@ function chunk_generate()
                 var _surface_biome = worldgen_get_biome_surface(_world_x, _world_y, _surface_height, _world_seed);
                 var _cave_biome = worldgen_get_biome_cave(_world_x, _world_y, _surface_height, _world_seed);
                 
-                if !(_skip_layer & (1 << CHUNK_DEPTH_DEFAULT)) && !(_cave_bit & (1 << (j + 1)))
+                if !(_skip_z & (1 << CHUNK_DEPTH_DEFAULT)) && !(_cave_bit & (1 << (j + 1)))
                 {
                     var _tile_base = worldgen_get_tile_base(_world_x, _world_y, _surface_biome, _cave_biome, _surface_height, _cave_bit & (1 << j), _world_seed);
                     
@@ -173,7 +173,7 @@ function chunk_generate()
                 
                 var _tile_wall = worldgen_get_tile_wall(_world_x, _world_y, _surface_biome, _cave_biome, _surface_height, _world_seed);
                 
-                if !(_skip_layer & (1 << CHUNK_DEPTH_WALL)) && (_tile_wall != TILE_EMPTY)
+                if !(_skip_z & (1 << CHUNK_DEPTH_WALL)) && (_tile_wall != TILE_EMPTY)
                 {
                     ++chunk_count[@ CHUNK_DEPTH_WALL];
                     
@@ -187,7 +187,7 @@ function chunk_generate()
             
             var _z = ((xorshift(_world_seed ^ (_world_x * (_world_y + _surface_height))) & 1) ? CHUNK_DEPTH_FOLIAGE_FRONT : CHUNK_DEPTH_FOLIAGE_BACK);
             
-            if !(_skip_layer & (1 << _z)) && (_world_y >= _surface_height - 1)
+            if !(_skip_z & (1 << _z)) && (_world_y >= _surface_height - 1)
             {
                 var _surface_biome = worldgen_get_biome_surface(_world_x, _world_y + 1, _surface_height, _world_seed);
                 var _cave_biome = worldgen_get_biome_cave(_world_x, _world_y + 1, _surface_height, _world_seed);

@@ -2,8 +2,6 @@ global.rarity_data = {}
 
 function init_rarity(_directory, _namespace = "phantasia", _type = 0)
 {
-    if (!file_exists(_directory)) exit;
-    
     var _data = buffer_load_json(_directory);
     
     var _names  = struct_get_names(_data);

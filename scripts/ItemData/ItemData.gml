@@ -95,6 +95,21 @@ function ItemData() constructor
         return !!(___type & _type);
     }
     
+    static set_rarity = function(_rarity)
+    {
+        if (_rarity != undefined)
+        {
+            ___rarity = _rarity;
+        }
+        
+        return self;
+    }
+    
+    static get_rarity = function()
+    {
+        return self[$ "___rarity"];
+    }
+    
     static set_sprite = function(_sprite)
     {
         ___sprite = _sprite;
