@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"inventory_refresh_craftable",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"inventory_refresh_craftable",
+  "parent":{
+    "name":"Craftable",
+    "path":"folders/Scripts/Inventory/Craftable.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -84,7 +84,6 @@ global.inventory = {
     armor_breastplate: array_create(1, INVENTORY_EMPTY),
     armor_leggings:    array_create(1, INVENTORY_EMPTY),
     accessory:         array_create(INVENTORY_LENGTH.ACCESSORY, INVENTORY_EMPTY),
-    craftable: [],
     container: []
 }
 
@@ -94,7 +93,6 @@ global.inventory_names = [
     "armor_breastplate",
     "armor_leggings",
     "accessory",
-    "craftable",
     "container",
 ];
 
@@ -104,7 +102,6 @@ global.inventory_length = {
     armor_breastplate: 1,
     armor_leggings:    1,
     accessory:         INVENTORY_LENGTH.ACCESSORY,
-    craftable:         0,
     container:         0
 }
 

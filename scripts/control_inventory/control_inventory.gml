@@ -12,9 +12,19 @@ function control_inventory()
         if (is_opened & IS_OPENED_BOOLEAN.INVENTORY)
         {
             instance_activate_object(obj_Inventory);
+            
+            inventory_refresh_craftable();
         }
         else
         {
+            with (obj_Inventory)
+            {
+                if (inventory_type == "craftable")
+                {
+                    instance_destroy();
+                }
+            }
+            
         	instance_deactivate_object(obj_Inventory);
         }
         

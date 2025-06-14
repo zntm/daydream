@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"CraftingRecipe",
+  "%Name":"gui_inventory_craftable",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"CraftingRecipe",
+  "name":"gui_inventory_craftable",
   "parent":{
-    "name":"Crafting Data",
-    "path":"folders/Data/Crafting Data.yy",
+    "name":"GUI",
+    "path":"folders/Scripts/GUI.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

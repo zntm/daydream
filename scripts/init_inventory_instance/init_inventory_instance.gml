@@ -150,11 +150,20 @@ global.gui_inventory = {
         ]
     },
     craftable: {
-        anchor_type: GUI_ANCHOR.BOTTOM_LEFT,
-        surface_xoffset: 0,
-        surface_yoffset: 0,
+        anchor_type: GUI_ANCHOR.TOP_LEFT,
+        surface_xoffset: (GUI_INVENTORY_SURFACE_PADDING * 2) + INVENTORY_BACKPACK_YOFFSET + (INVENTORY_SLOT_DIMENSION_SCALED * INVENTORY_LENGTH.ROW),
+        surface_yoffset: (GUI_INVENTORY_SURFACE_PADDING * 2) + INVENTORY_BACKPACK_YOFFSET + (INVENTORY_SLOT_DIMENSION_SCALED * INVENTORY_LENGTH.ROW),
         surface_width: 0,
-        surface_height: 0
+        surface_height: 0,
+        outline: [
+            {
+                colour: INVENTORY_OUTLINE_COLOUR,
+                xoffset: GUI_INVENTORY_SURFACE_PADDING - INVENTORY_OUTLINE_THICKNESS - (INVENTORY_SLOT_DIMENSION / 2),
+                yoffset: GUI_INVENTORY_SURFACE_PADDING + INVENTORY_BACKPACK_YOFFSET - 1,
+                width:  0,
+                height: 0
+            }
+        ]
     },
     container: {
         anchor_type: GUI_ANCHOR.TOP_LEFT,
@@ -235,7 +244,7 @@ function init_inventory_instance()
                 _inst.slot_type = INVENTORY_SLOT_TYPE.ACCESSORY;
             }
             
-            _inst.inventory_type = _inventory_name;
+            _inst.inventory_type  = _inventory_name;
             _inst.inventory_index = j;
             
             global.inventory_instance[$ _inventory_name][@ j] = _inst;

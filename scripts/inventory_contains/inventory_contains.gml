@@ -1,5 +1,7 @@
-function inventory_contains(_item, _amount, _inventory, _length)
+function inventory_contains(_item, _amount, _inventory, _length = undefined)
 {
+    _length ??= array_length(_inventory);
+    
     var _count = 0;
     
     for (var i = 0; i < _length; ++i)
