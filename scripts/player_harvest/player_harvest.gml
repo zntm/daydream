@@ -90,7 +90,7 @@ function player_harvest(_x, _y)
                 inventory_delete("base", _inventory_selected_hotbar);
             }
             
-            surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY;
+            surface_refresh |= ((is_opened & IS_OPENED_BOOLEAN.INVENTORY) ? SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK : SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR);
         }
         
         var _drop_tool = _data.get_drop_tool();

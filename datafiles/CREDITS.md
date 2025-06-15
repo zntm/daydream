@@ -27,10 +27,9 @@ A heartfelt thank you to everyone who helped bring this world to life!
 
 ## 🎧 Composers
 
-- **GlydeGameDev**
-    - [X](https://x.com/GlydeGameDev)
-- **LonelyChicken12**
-    - [X](https://x.com/LonelyChicken12)
+- **Oh Eight**
+    - [Spotify](https://open.spotify.com/artist/4Qy9vonwtmMGF2jaOLm7Mz)
+    - [YouTube](https://www.youtube.com/@oheight)
 - **Skies**
     - [Spotify](https://open.spotify.com/artist/5DgNMSlcQgjzpzILh3M2LL)
 

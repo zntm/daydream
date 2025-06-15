@@ -54,17 +54,25 @@ var _hp_max = obj_Player.hp_max;
 
 if (_hp > 0) && (is_opened & IS_OPENED_BOOLEAN.GUI) && !(is_opened & IS_OPENED_BOOLEAN.MENU)
 {
-    if (surface_refresh & SURFACE_REFRESH_BOOLEAN.INVENTORY)
+    if (surface_refresh & SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR)
     {
-        surface_refresh ^= SURFACE_REFRESH_BOOLEAN.INVENTORY;
+        surface_refresh ^= SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR;
+        
+        gui_inventory_hotbar(_gui_multiplier_x, _gui_multiplier_y);
+    }
+    
+    if (surface_refresh & SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK)
+    {
+        surface_refresh ^= SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK;
         
         gui_inventory(_gui_multiplier_x, _gui_multiplier_y);
-        gui_inventory_hotbar(_gui_multiplier_x, _gui_multiplier_y);
+    }
+    
+    if (surface_refresh & SURFACE_REFRESH_BOOLEAN.INVENTORY_CRAFTABLE)
+    {
+        surface_refresh ^= SURFACE_REFRESH_BOOLEAN.INVENTORY_CRAFTABLE;
         
-        if (is_opened & IS_OPENED_BOOLEAN.INVENTORY)
-        {
-            gui_inventory_craftable(_gui_multiplier_x, _gui_multiplier_y);
-        }
+        gui_inventory_craftable(_gui_multiplier_x, _gui_multiplier_y);
     }
     /*
     gui_effects();
@@ -145,8 +153,8 @@ if (_hp > 0) && (is_opened & IS_OPENED_BOOLEAN.GUI) && !(is_opened & IS_OPENED_B
                 0,
                 _gui_mouse_x - (GUI_INVENTORY_TOOLTIP_BG_PADDING * _gui_multiplier_x),
                 _gui_mouse_y - (GUI_INVENTORY_TOOLTIP_BG_PADDING * _gui_multiplier_y),
-                (((_.surface_width  + (GUI_INVENTORY_TOOLTIP_BG_PADDING * 2)) / 7)) * _gui_multiplier_x,
-                (((_.surface_height + (GUI_INVENTORY_TOOLTIP_BG_PADDING * 2)) / 7)) * _gui_multiplier_y,
+                (((_.surface_width  + (GUI_INVENTORY_TOOLTIP_BG_PADDING * 2)) / sprite_get_width(spr_Inventory_Tooltip)))  * _gui_multiplier_x,
+                (((_.surface_height + (GUI_INVENTORY_TOOLTIP_BG_PADDING * 2)) / sprite_get_height(spr_Inventory_Tooltip))) * _gui_multiplier_y,
                 0,
                 c_white,
                 1

@@ -123,7 +123,7 @@ function player_build(_x, _y)
     
     inventory_item_decrement("base", _inventory_selected_hotbar);
     
-    surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY;
+    surface_refresh |= ((is_opened & IS_OPENED_BOOLEAN.INVENTORY) ? SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK : SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR);
     
     var _sfx = _data.get_sfx_build();
     

@@ -1,12 +1,16 @@
 randomize();
 
 enum SURFACE_REFRESH_BOOLEAN {
-    INVENTORY = 1 << 0,
-    PAUSE     = 1 << 1
+    PAUSE               = 1 << 0,
+    INVENTORY_HOTBAR    = 1 << 1,
+    INVENTORY_BACKPACK  = 1 << 2,
+    INVENTORY_CRAFTABLE = 1 << 3,
 }
 
 surface_refresh =
-    SURFACE_REFRESH_BOOLEAN.INVENTORY;
+    SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR   |
+    SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK |
+    SURFACE_REFRESH_BOOLEAN.INVENTORY_CRAFTABLE;
 
 enum IS_OPENED_BOOLEAN {
     PAUSE     = 1 << 0,
@@ -56,6 +60,14 @@ global.inventory_selected_backpack = {
     index: -1,
     type: undefined
 }
+
+enum INVENTORY_MOUSE_SELECT_TYPE {
+    NONE,
+    LEFT,
+    RIGHT
+}
+
+inventory_mouse_select_type = INVENTORY_MOUSE_SELECT_TYPE.NONE;
 
 global.inventory_selected_hover = noone;
 

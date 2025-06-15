@@ -24,7 +24,10 @@ if (window_width != _window_width) || (window_height != _window_height)
         global.gui_width  = round(_gui_scale * _window_width);
         global.gui_height = round(_gui_scale * _window_height);
         
-        surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY;
+        surface_refresh |=
+            SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR   |
+            SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK |
+            SURFACE_REFRESH_BOOLEAN.INVENTORY_CRAFTABLE;
     }
     else
     {

@@ -63,6 +63,8 @@ function control_item_drop(_dt)
     {
         item = inventory_give(x, y, item);
         
+        inventory_refresh_craftable();
+        
         if (item == undefined) || (item.get_amount() <= 0)
         {
             instance_destroy();
