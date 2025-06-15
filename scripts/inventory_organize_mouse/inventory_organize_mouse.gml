@@ -11,6 +11,8 @@ function inventory_organize_mouse(_inst)
             
             if (_item != INVENTORY_EMPTY)
             {
+                sfx_play("phantasia:item.collect");
+                
                 inventory_mouse_select_type = INVENTORY_MOUSE_SELECT_TYPE.RIGHT;
                 
                 global.inventory_selected_backpack.type  = _type;
@@ -40,6 +42,8 @@ function inventory_organize_mouse(_inst)
     }
     else if (mouse_check_button_released(mb_right)) && (inventory_mouse_select_type == INVENTORY_MOUSE_SELECT_TYPE.RIGHT)
     {
+        sfx_play("phantasia:item.collect");
+        
         if (instance_exists(_inst)) && (_inst.slot_type != INVENTORY_SLOT_TYPE.CRAFTABLE)
         {
             var _type  = _inst.inventory_type;
@@ -119,6 +123,8 @@ function inventory_organize_mouse(_inst)
             
             if (_item != INVENTORY_EMPTY)
             {
+                sfx_play("phantasia:item.collect");
+                
                 inventory_mouse_select_type = INVENTORY_MOUSE_SELECT_TYPE.LEFT;
                 
                 global.inventory_selected_backpack.type  = _type;
@@ -136,6 +142,8 @@ function inventory_organize_mouse(_inst)
     }
     else if (mouse_check_button_released(mb_left)) && (inventory_mouse_select_type == INVENTORY_MOUSE_SELECT_TYPE.LEFT)
     {
+        sfx_play("phantasia:item.collect");
+        
         if (instance_exists(_inst)) && (_inst.slot_type != INVENTORY_SLOT_TYPE.CRAFTABLE)
         {
             var _type  = _inst.inventory_type;

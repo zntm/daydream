@@ -1,8 +1,6 @@
 enum SETTINGS_TYPE {
     SWITCH,
-    // Left and right arrow to switch between values
     ARROW,
-    // Creates a slider from 0 to 1
     SLIDER,
     HOTKEY
 }

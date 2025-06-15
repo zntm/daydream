@@ -42,6 +42,18 @@ function SFXData() constructor
         return self[$ "___falloff_max"] ?? (TILE_SIZE * 16);
     }
     
+    static set_pitch = function(_pitch)
+    {
+        ___pitch = init_smart_value(_pitch);
+        
+        return self;
+    }
+    
+    static get_pitch = function()
+    {
+        return ___pitch;
+    }
+    
     static set_subtitle = function(_subtitle)
     {
         if (_subtitle != undefined)
@@ -55,17 +67,5 @@ function SFXData() constructor
     static get_subtitle = function()
     {
         return self[$ "___subtitle"];
-    }
-    
-    static set_pitch = function(_pitch)
-    {
-        ___pitch = init_smart_value(_pitch);
-        
-        return self;
-    }
-    
-    static get_pitch = function()
-    {
-        return ___pitch;
     }
 }

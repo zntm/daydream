@@ -24,7 +24,7 @@ if (ev_type == "DiscordReady")
     sprite_add(np_get_avatar_url(async_load[? "user_id"], async_load[? "avatar"]), 1, false, false, 0, 0);
 }
 */
-if (async_load[? "event_type"] != "DiscordReady") || (!global.settings.discord_rpc) exit;
+if (!global.settings.discord_rpc) || (async_load[? "event_type"] != "DiscordReady") exit;
 
 np_setpresence("this is a state", "this is some details", "", "");
 

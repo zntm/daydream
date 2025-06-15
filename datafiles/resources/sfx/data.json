@@ -1,5 +1,5 @@
 {
-    "sfx.explosion.large": {
+    "explosion.large": {
         "asset": [
             "phantasia:explosion/large0",
             "phantasia:explosion/large1"
@@ -7,13 +7,22 @@
         "pitch": "#phantasia:sfx_data_pitch",
         "subtitle": "phantasia:sfx.explosion.large"
     },
-    "sfx.explosion.small": {
+    "explosion.small": {
         "asset": [
             "phantasia:explosion/small0",
             "phantasia:explosion/small1"
         ],
         "pitch": "#phantasia:sfx_data_pitch",
         "subtitle": "phantasia:sfx.explosion.small"
+    },
+    "item.collect": {
+        "asset": [
+            "phantasia:item/collect0",
+            "phantasia:item/collect1",
+            "phantasia:item/collect2"
+        ],
+        "pitch": 1,
+        "subtitle": "phantasia:sfx.item.collect"
     },
     "tile.dirt.harvest": {
         "asset": [

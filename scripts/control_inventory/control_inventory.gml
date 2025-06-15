@@ -52,7 +52,7 @@ function control_inventory()
                     
                     if (instance_exists(_inst))
                     {
-                        surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK;
+                        sfx_play("phantasia:item.collect");
                         
                         inventory_switch(_inst.inventory_type, _inst.inventory_index, "base", i); 
                         

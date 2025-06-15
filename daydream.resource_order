@@ -161,6 +161,7 @@
     {"name":"render_tile_foliage","order":3,"path":"scripts/render_tile_foliage/render_tile_foliage.yy",},
     {"name":"render_tile","order":2,"path":"scripts/render_tile/render_tile.yy",},
     {"name":"sfx_diegetic_floodfill","order":1,"path":"scripts/sfx_diegetic_floodfill/sfx_diegetic_floodfill.yy",},
+    {"name":"sfx_play","order":2,"path":"scripts/sfx_play/sfx_play.yy",},
     {"name":"smart_value","order":1,"path":"scripts/smart_value/smart_value.yy",},
     {"name":"spawn_item_drop","order":1,"path":"scripts/spawn_item_drop/spawn_item_drop.yy",},
     {"name":"string_pad_start","order":1,"path":"scripts/string_pad_start/string_pad_start.yy",},

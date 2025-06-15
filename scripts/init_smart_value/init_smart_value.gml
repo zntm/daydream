@@ -1,5 +1,4 @@
 enum SMART_VALUE_TYPE {
-    CONSTANT,
     CHOOSE,
     CHOOSE_WEIGHTED,
     RANDOM,
@@ -17,10 +16,7 @@ function init_smart_value(_value)
     
     if (!is_struct(_value))
     {
-        return [
-            SMART_VALUE_TYPE.CONSTANT,
-            _value
-        ];
+        return _value;
     }
     
     var _type = __type[$ _value.type];
@@ -56,4 +52,6 @@ function init_smart_value(_value)
             _values.max,
         ];
     }
+    
+    return _value;
 }

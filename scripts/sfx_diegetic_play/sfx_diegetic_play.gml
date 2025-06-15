@@ -21,14 +21,6 @@ function sfx_diegetic_play(_emitter, _x, _y, _id, _gain = global.settings.audio_
     
     var _item_data = global.item_data;
     
-    // var _audio_emitter = audio_emitter_create();
-    // var _audio_bus = audio_bus_create();
-    
-    // _audio_bus.effects[@ SFX_DIEGETIC_EFFECT_INDEX.REVERB] = audio_effect_create(AudioEffectType.Reverb1);
-    // _audio_bus.effects[@ SFX_DIEGETIC_EFFECT_INDEX.LPF]    = audio_effect_create(AudioEffectType.LPF2);
-    
-    // audio_emitter_bus(_audio_emitter, _audio_bus);
-    
     var _falloff_reference = _data.get_falloff_reference();
     var _falloff_max = _data.get_falloff_max();
     
