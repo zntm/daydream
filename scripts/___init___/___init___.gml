@@ -1,8 +1,6 @@
-enum VERSION_VALUE {
-    MAJOR = 2025,
-    MINOR = 0,
-    PATCH = 0
-}
+#macro PROGRAM_VERSION_MAJOR current_year
+#macro PROGRAM_VERSION_MINOR current_month
+#macro PROGRAM_VERSION_PATCH 0
 
 #macro PROGRAM_NAME "Phantasia"
 
@@ -84,7 +82,7 @@ global.inventory = {
     armor_breastplate: array_create(1, INVENTORY_EMPTY),
     armor_leggings:    array_create(1, INVENTORY_EMPTY),
     accessory:         array_create(INVENTORY_LENGTH.ACCESSORY, INVENTORY_EMPTY),
-    container: []
+    container:         []
 }
 
 global.inventory_names = [

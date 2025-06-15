@@ -27,7 +27,8 @@
     },
     "music": [
         "phantasia:dune",
-        "phantasia:field_of_concourse"
+        "phantasia:field_of_concourse",
+        "phantasia:tense"
     ],
 	"tile": {
 		"top_layer": {

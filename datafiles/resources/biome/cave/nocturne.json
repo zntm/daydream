@@ -24,6 +24,9 @@
         "dusk": "#C68B69",
         "night": "#141B35"
     },
+    "music": [
+        "phantasia:behind"
+    ],
 	"tile": {
         "base": {
             "id": "phantasia:nightrock"

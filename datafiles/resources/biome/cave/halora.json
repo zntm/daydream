@@ -24,6 +24,10 @@
         "dusk": "#C68B69",
         "night": "#141B35"
     },
+    "music": [
+        "phantasia:12_hours_at_ease",
+        "phantasia:behind"
+    ],
 	"tile": {
         "base": {
             "id": "phantasia:stone"
