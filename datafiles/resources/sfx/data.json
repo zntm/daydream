@@ -4,6 +4,7 @@
             "phantasia:explosion/large0",
             "phantasia:explosion/large1"
         ],
+        "pitch": "#phantasia:sfx_data_pitch",
         "subtitle": "phantasia:sfx.explosion.large"
     },
     "sfx.explosion.small": {
@@ -11,6 +12,7 @@
             "phantasia:explosion/small0",
             "phantasia:explosion/small1"
         ],
+        "pitch": "#phantasia:sfx_data_pitch",
         "subtitle": "phantasia:sfx.explosion.small"
     },
     "tile.dirt.harvest": {
@@ -19,6 +21,7 @@
             "phantasia:tile/dirt/harvest1",
             "phantasia:tile/dirt/harvest2"
         ],
+        "pitch": "#phantasia:sfx_data_pitch",
         "subtitle": "phantasia:sfx.tile.generic.harvest"
     },
     "tile.dirt.step": {
@@ -28,6 +31,7 @@
             "phantasia:tile/dirt/step2",
             "phantasia:tile/dirt/step3"
         ],
+        "pitch": "#phantasia:sfx_data_pitch",
         "subtitle": "phantasia:sfx.tile.generic.step"
     },
     "tile.grass.step": {
@@ -37,6 +41,7 @@
             "phantasia:tile/grass/step2",
             "phantasia:tile/grass/step3"
         ],
+        "pitch": "#phantasia:sfx_data_pitch",
         "subtitle": "phantasia:sfx.tile.generic.step"
     },
     "tile.grass_block.build": {
@@ -45,6 +50,7 @@
             "phantasia:tile/grass_block/build1",
             "phantasia:tile/grass_block/build2"
         ],
+        "pitch": "#phantasia:sfx_data_pitch",
         "subtitle": "phantasia:sfx.tile.generic.build"
     },
     "tile.grass_block.harvest": {
@@ -54,6 +60,7 @@
             "phantasia:tile/grass_block/harvest2",
             "phantasia:tile/grass_block/harvest3"
         ],
+        "pitch": "#phantasia:sfx_data_pitch",
         "subtitle": "phantasia:sfx.tile.generic.harvest"
     },
     "tile.gravel.harvest": {
@@ -65,6 +72,7 @@
             "phantasia:tile/gravel/harvest4",
             "phantasia:tile/gravel/harvest5"
         ],
+        "pitch": "#phantasia:sfx_data_pitch",
         "subtitle": "phantasia:sfx.tile.generic.harvest"
     },
     "tile.gravel.step": {
@@ -75,6 +83,7 @@
             "phantasia:tile/gravel/step3",
             "phantasia:tile/gravel/step4"
         ],
+        "pitch": "#phantasia:sfx_data_pitch",
         "subtitle": "phantasia:sfx.tile.generic.step"
     },
     "tile.leaves.step": {
@@ -84,6 +93,7 @@
             "phantasia:tile/leaves/step2",
             "phantasia:tile/leaves/step3"
         ],
+        "pitch": "#phantasia:sfx_data_pitch",
         "subtitle": "phantasia:sfx.tile.generic.step"
     },
     "tile.mud.harvest": {
@@ -93,6 +103,7 @@
             "phantasia:tile/mud/harvest2",
             "phantasia:tile/mud/harvest3"
         ],
+        "pitch": "#phantasia:sfx_data_pitch",
         "subtitle": "phantasia:sfx.tile.generic.harvest"
     },
     "tile.mud.step": {
@@ -102,6 +113,7 @@
             "phantasia:tile/mud/step2",
             "phantasia:tile/mud/step3"
         ],
+        "pitch": "#phantasia:sfx_data_pitch",
         "subtitle": "phantasia:sfx.tile.generic.step"
     },
     "tile.sand.harvest": {
@@ -111,6 +123,7 @@
             "phantasia:tile/sand/harvest2",
             "phantasia:tile/sand/harvest3"
         ],
+        "pitch": "#phantasia:sfx_data_pitch",
         "subtitle": "phantasia:sfx.tile.generic.harvest"
     },
     "tile.sand.step": {
@@ -120,6 +133,7 @@
             "phantasia:tile/sand/step2",
             "phantasia:tile/sand/step3"
         ],
+        "pitch": "#phantasia:sfx_data_pitch",
         "subtitle": "phantasia:sfx.tile.generic.step"
     },
     "tile.stone.build": {
@@ -128,6 +142,7 @@
             "phantasia:tile/stone/build1",
             "phantasia:tile/stone/build2"
         ],
+        "pitch": "#phantasia:sfx_data_pitch",
         "subtitle": "phantasia:sfx.tile.generic.build"
     },
     "tile.stone.harvest": {
@@ -136,6 +151,7 @@
             "phantasia:tile/stone/harvest1",
             "phantasia:tile/stone/harvest2"
         ],
+        "pitch": "#phantasia:sfx_data_pitch",
         "subtitle": "phantasia:sfx.tile.generic.harvest"
     },
     "tile.stone.step": {
@@ -146,6 +162,7 @@
             "phantasia:tile/stone/step3",
             "phantasia:tile/stone/step4"
         ],
+        "pitch": "#phantasia:sfx_data_pitch",
         "subtitle": "phantasia:sfx.tile.generic.step"
     },
     "tile.wood.harvest": {
@@ -156,6 +173,7 @@
             "phantasia:tile/wood/harvest3",
             "phantasia:tile/wood/harvest4"
         ],
+        "pitch": "#phantasia:sfx_data_pitch",
         "subtitle": "phantasia:sfx.tile.generic.harvest"
     },
     "tile.wood.step": {
@@ -168,6 +186,7 @@
             "phantasia:tile/wood/step5",
             "phantasia:tile/wood/step6"
         ],
+        "pitch": "#phantasia:sfx_data_pitch",
         "subtitle": "phantasia:sfx.tile.generic.step"
     }
 }

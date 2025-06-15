@@ -72,6 +72,13 @@
             "id": "#phantasia:placeable_plant_on"
         }
     ],
+    "sfx_data_pitch": {
+        "type": "random",
+        "values": {
+            "min": 0.8,
+            "max": 1.2
+        }
+    },
     "sfx_dirt": {
         "build": "phantasia:tile.dirt.harvest",
         "harvest": "phantasia:tile.dirt.harvest",

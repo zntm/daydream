@@ -11,7 +11,7 @@ audio_listener_orientation(0, 0, 1, 0, -1, 0);
 global.sfx_diegetic_floodfill_amount = 0;
 global.sfx_diegetic_floodfill_position = {}
 
-function sfx_diegetic_play(_emitter, _x, _y, _id, _pitch_offset = 0.2, _gain = global.settings.audio_sfx, _world_height = global.world_data[$ global.world.dimension].get_world_height())
+function sfx_diegetic_play(_emitter, _x, _y, _id, _gain = global.settings.audio_sfx, _world_height = global.world_data[$ global.world.dimension].get_world_height())
 {
     var _sfx_data = global.sfx_data;
     
@@ -90,7 +90,7 @@ function sfx_diegetic_play(_emitter, _x, _y, _id, _pitch_offset = 0.2, _gain = g
     return audio_play_sound_ext({
         emitter: _emitter,
         sound: array_choose(_data.get_asset()),
-        pitch: random_range(1 - _pitch_offset, 1 + _pitch_offset),
+        pitch: smart_value(_data.get_pitch()),
         gain: clamp(global.settings.audio_master * _gain, 0, 1)
     });
 }
