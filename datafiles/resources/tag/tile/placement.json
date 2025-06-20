@@ -1,0 +1,29 @@
+{
+    "dry_plant_on": [
+        "phantasia:dirt",
+        "phantasia:grass_block",
+        "phantasia:grass_block_borea",
+        "phantasia:sand"
+    ],
+    "plant_on": [
+        "phantasia:dirt",
+        "phantasia:grass_block",
+        "phantasia:grass_block_borea"
+    ],
+    "requirement_dry_plant": [
+        {
+            "xoffset": 0,
+            "yoffset": 1,
+            "z": "default",
+            "id": "#phantasia:tile/placement/dry_plant_on"
+        }
+    ],
+    "requirement_plant": [
+        {
+            "xoffset": 0,
+            "yoffset": 1,
+            "z": "default",
+            "id": "#phantasia:tile/placement/plant_on"
+        }
+    ]
+}

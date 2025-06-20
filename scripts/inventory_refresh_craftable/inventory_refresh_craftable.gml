@@ -17,17 +17,22 @@ function inventory_refresh_craftable()
         
         if (_crafting_stations != undefined)
         {
-            var _count = 0;
+            var _crafting_stations_distance = global.crafting_stations_distance;
+            
+            var _continue = true;
             var _crafting_stations_length = _data.get_crafting_stations_length();
             
             for (var j = 0; j < _crafting_stations_length; ++j)
             {
-                if (_crafting_stations[j] > TILE_SIZE * 4) break;
-                
-                ++_count;
+                if (_crafting_stations_distance[$ _crafting_stations[j]] <= TILE_SIZE * 4)
+                {
+                    _continue = false;
+                    
+                    break;
+                }
             }
             
-            if (_count != _crafting_stations_length) continue;
+            if (_continue) continue;
         }
         
         var _ingredients = _data.get_ingredients();

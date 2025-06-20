@@ -14,6 +14,8 @@ cursor_sprite = spr_Mouse;
 
 window_set_cursor(cr_none);
 
+gml_pragma("MarkTagAsUsed", "include_me");
+
 #region Chunk
 
 #macro TILE_EMPTY 0

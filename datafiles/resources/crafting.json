@@ -1,8 +1,19 @@
 {
 	"data": [
 		{
+			"id": "phantasia:oak_workbench",
+			"amount": 1,
+			"ingredients": [
+				{
+					"id": "phantasia:oak",
+					"amount": 4
+				}
+			]
+		},
+		{
 			"id": "phantasia:dirt_wall",
 			"amount": 3,
+			"crafting_stations": [ "phantasia:oak_workbench" ],
 			"ingredients": [
 				{
 					"id": "phantasia:dirt",

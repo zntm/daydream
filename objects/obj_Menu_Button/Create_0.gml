@@ -2,6 +2,8 @@ text = -1;
 icon = -1;
 icon_index = 0;
 
+index = 0;
+
 icon_xscale = 1;
 icon_yscale = 1;
 
@@ -14,10 +16,13 @@ on_press   = undefined;
 on_draw        = undefined;
 on_draw_behind = undefined;
 
-selected       = false;
-active         = true;
-mouse_in_bbox  = false;
-visible_button = true;
+enum MENU_BUTTON_BOOLEAN {
+    IS_SELECTED       = 1 << 0,
+    IS_BUTTON_VISIBLE = 1 << 1
+}
+
+boolean =
+    MENU_BUTTON_BOOLEAN.IS_BUTTON_VISIBLE;
 
 area = undefined;
 
