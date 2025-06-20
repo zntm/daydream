@@ -31,6 +31,9 @@ harvest_amount = 0;
 timer_respawn = 0;
 timer_foliage_sway = 0;
 
+timer_crafting_max = 0.3;
+timer_crafting = timer_crafting_max;
+
 cooldown_build = 0;
 cooldown_harvest = 0;
 

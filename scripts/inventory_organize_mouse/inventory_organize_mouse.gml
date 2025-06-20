@@ -212,26 +212,37 @@ function inventory_organize_mouse(_inst)
     {
         if (instance_exists(_inst)) && (_inst.slot_type == INVENTORY_SLOT_TYPE.CRAFTABLE)
         {
-            var _item = global.crafting_data[_inst.index];
-            var _item2 = global.inventory.mouse.item;
+            timer_crafting += global.delta_time;
             
-            var _id = _item.get_id();
-            var _amount = _item.get_amount();
-            
-            if (_item2 != INVENTORY_EMPTY)
+            if (timer_crafting >= timer_crafting_max)
             {
-                if (_item2.get_id() == _id) && (_amount + _item2.get_amount() <= global.item_data[$ _id].get_inventory_max())
+                timer_crafting %= timer_crafting_max;
+                
+                timer_crafting_max = max(timer_crafting_max - 0.04, 0.08);
+                
+                sfx_play("phantasia:item.collect");
+                
+                var _item = global.crafting_data[_inst.index];
+                var _item2 = global.inventory.mouse.item;
+                
+                var _id = _item.get_id();
+                var _amount = _item.get_amount();
+                
+                if (_item2 != INVENTORY_EMPTY)
                 {
-                    global.inventory.mouse.item.add_amount(_amount);
+                    if (_item2.get_id() == _id) && (_amount + _item2.get_amount() <= global.item_data[$ _id].get_inventory_max())
+                    {
+                        global.inventory.mouse.item.add_amount(_amount);
+                        
+                        inventory_mouse_select_type = INVENTORY_MOUSE_SELECT_TYPE.CRAFTING;
+                    }
+                }
+                else
+                {
+                	global.inventory.mouse.item = new Inventory(_id, _amount);
                     
                     inventory_mouse_select_type = INVENTORY_MOUSE_SELECT_TYPE.CRAFTING;
                 }
-            }
-            else
-            {
-            	global.inventory.mouse.item = new Inventory(_id, _amount);
-                
-                inventory_mouse_select_type = INVENTORY_MOUSE_SELECT_TYPE.CRAFTING;
             }
         }
     }
@@ -240,7 +251,7 @@ function inventory_organize_mouse(_inst)
         sfx_play("phantasia:item.collect");
         
         if (instance_exists(_inst)) && (_inst.slot_type != INVENTORY_SLOT_TYPE.CRAFTABLE)
-        {
+        { 
             var _type  = _inst.inventory_type;
             var _index = _inst.inventory_index;
             
@@ -291,7 +302,8 @@ function inventory_organize_mouse(_inst)
             inventory_give(0, 0, global.inventory.mouse.item, false);
         }
         
-        show_debug_message(global.inventory.mouse.item)
+        timer_crafting_max = 0.3;
+        timer_crafting = timer_crafting_max;
         
         inventory_mouse_select_type = INVENTORY_MOUSE_SELECT_TYPE.NONE;
         
