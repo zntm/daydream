@@ -43,7 +43,7 @@ function gui_inventory_tooltip(_gui_multiplier_x, _gui_multiplier_y)
     
     if (_mouse_index == -1)
     {
-        var _inst = instance_position(mouse_x, mouse_y, obj_Inventory);
+        var _inst = global.inventory_selected_hover;
         
         if (!instance_exists(_inst)) exit;
         

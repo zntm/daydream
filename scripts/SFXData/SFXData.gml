@@ -44,14 +44,17 @@ function SFXData() constructor
     
     static set_pitch = function(_pitch)
     {
-        ___pitch = init_smart_value(_pitch);
+        if (_pitch != undefined)
+        {
+            ___pitch = init_smart_value(_pitch);
+        }
         
         return self;
     }
     
     static get_pitch = function()
     {
-        return ___pitch;
+        return self[$ "___pitch"] ?? 1;
     }
     
     static set_subtitle = function(_subtitle)

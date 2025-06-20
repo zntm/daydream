@@ -64,7 +64,8 @@ global.inventory_selected_backpack = {
 enum INVENTORY_MOUSE_SELECT_TYPE {
     NONE,
     LEFT,
-    RIGHT
+    RIGHT,
+    CRAFTING
 }
 
 inventory_mouse_select_type = INVENTORY_MOUSE_SELECT_TYPE.NONE;

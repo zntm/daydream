@@ -48,12 +48,15 @@ function inventory_refresh_craftable()
         
         var _inst = instance_create_layer(0, 0, "Instances", obj_Inventory);
         
+        _inst.image_xscale = INVENTORY_SLOT_SCALE;
+        _inst.image_yscale = INVENTORY_SLOT_SCALE;
+        
         _inst.index = i;
         
         _inst.xoffset = 0;
         _inst.yoffset = INVENTORY_SLOT_DIMENSION_SCALED * _offset;
         
-        _inst.slot_type = INVENTORY_SLOT_TYPE.ARMOR_HELMET;
+        _inst.slot_type = INVENTORY_SLOT_TYPE.CRAFTABLE;
         
         _inst.inventory_type  = "craftable";
         _inst.inventory_index = _offset;

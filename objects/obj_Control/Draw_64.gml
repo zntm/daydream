@@ -141,7 +141,7 @@ if (_hp > 0) && (is_opened & IS_OPENED_BOOLEAN.GUI) && !(is_opened & IS_OPENED_B
         {
             draw_surface(_surface_item, _x, _y);
         }
-        
+        /*
         gui_inventory_tooltip(_gui_multiplier_x, _gui_multiplier_y);
         
         if (instance_exists(global.inventory_selected_hover))
@@ -167,7 +167,7 @@ if (_hp > 0) && (is_opened & IS_OPENED_BOOLEAN.GUI) && !(is_opened & IS_OPENED_B
                 draw_surface(_surface, _gui_mouse_x, _gui_mouse_y);
             }
         }
-        
+        */
         /*
         gui_inventory_tooltip(_gui_multiplier_x, _gui_multiplier_y);
         

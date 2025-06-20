@@ -26,8 +26,6 @@
     {"$GMFolder":"","%Name":"Tag Data","folderPath":"folders/Data/Tag Data.yy","name":"Tag Data","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"World Data","folderPath":"folders/Data/World Data.yy","name":"World Data","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Extensions","folderPath":"folders/Extensions.yy","name":"Extensions","resourceType":"GMFolder","resourceVersion":"2.0",},
-    {"$GMFolder":"","%Name":"Fonts","folderPath":"folders/Fonts.yy","name":"Fonts","resourceType":"GMFolder","resourceVersion":"2.0",},
-    {"$GMFolder":"","%Name":"Notes","folderPath":"folders/Notes.yy","name":"Notes","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Objects","folderPath":"folders/Objects.yy","name":"Objects","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Gameplay","folderPath":"folders/Objects/Gameplay.yy","name":"Gameplay","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Control","folderPath":"folders/Objects/Gameplay/Control.yy","name":"Control","resourceType":"GMFolder","resourceVersion":"2.0",},

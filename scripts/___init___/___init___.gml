@@ -91,7 +91,7 @@ global.inventory_names = [
     "armor_breastplate",
     "armor_leggings",
     "accessory",
-    "container",
+    "container"
 ];
 
 global.inventory_length = {
@@ -109,9 +109,19 @@ global.inventory_instance = {
     armor_breastplate: array_create(1, noone),
     armor_leggings:    array_create(1, noone),
     accessory:         array_create(INVENTORY_LENGTH.ACCESSORY, noone),
-    craftable: [],
-    container: []
+    container: [],
+    craftable: []
 }
+
+global.inventory_instance_names = [
+    "base",
+    "armor_helmet",
+    "armor_breastplate",
+    "armor_leggings",
+    "accessory",
+    "container",
+    "craftable"
+];
 
 global.attire_elements = [
     "body",

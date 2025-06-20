@@ -29,6 +29,15 @@ function control_inventory()
                 }
             }
             
+            var _item = global.inventory.mouse.item;
+            
+            if (_item != INVENTORY_EMPTY)
+            {
+                inventory_give(0, 0, _item, false);
+                
+                global.inventory.mouse.item = INVENTORY_EMPTY;
+            }
+            
             instance_deactivate_object(obj_Inventory);
         }
     }
