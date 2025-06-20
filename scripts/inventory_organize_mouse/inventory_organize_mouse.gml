@@ -222,7 +222,9 @@ function inventory_organize_mouse(_inst)
                 
                 sfx_play("phantasia:item.collect");
                 
-                var _item = global.crafting_data[_inst.index];
+                var _index = _inst.index;
+                
+                var _item = global.crafting_data[_index];
                 var _item2 = global.inventory.mouse.item;
                 
                 var _id = _item.get_id();
@@ -243,6 +245,20 @@ function inventory_organize_mouse(_inst)
                     
                     inventory_mouse_select_type = INVENTORY_MOUSE_SELECT_TYPE.CRAFTING;
                 }
+                
+                inventory_craft_clear(_index);
+                
+                with (obj_Inventory)
+                {
+                    if (inventory_type == "craftable")
+                    {
+                        instance_destroy();
+                    }
+                }
+                
+                inventory_refresh_craftable();
+                
+                surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK;
             }
         }
     }

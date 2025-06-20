@@ -130,6 +130,7 @@
     {"name":"init_tag_value","order":1,"path":"scripts/init_tag_value/init_tag_value.yy",},
     {"name":"init_world","order":1,"path":"scripts/init_world/init_world.yy",},
     {"name":"inventory_contains","order":4,"path":"scripts/inventory_contains/inventory_contains.yy",},
+    {"name":"inventory_craft_clear","order":11,"path":"scripts/inventory_craft_clear/inventory_craft_clear.yy",},
     {"name":"inventory_delete","order":2,"path":"scripts/inventory_delete/inventory_delete.yy",},
     {"name":"inventory_drop","order":3,"path":"scripts/inventory_drop/inventory_drop.yy",},
     {"name":"inventory_give","order":5,"path":"scripts/inventory_give/inventory_give.yy",},

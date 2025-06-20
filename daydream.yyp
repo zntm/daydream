@@ -432,6 +432,7 @@
     {"id":{"name":"init_world","path":"scripts/init_world/init_world.yy",},},
     {"id":{"name":"init","path":"scripts/init/init.yy",},},
     {"id":{"name":"inventory_contains","path":"scripts/inventory_contains/inventory_contains.yy",},},
+    {"id":{"name":"inventory_craft_clear","path":"scripts/inventory_craft_clear/inventory_craft_clear.yy",},},
     {"id":{"name":"inventory_delete","path":"scripts/inventory_delete/inventory_delete.yy",},},
     {"id":{"name":"inventory_drop","path":"scripts/inventory_drop/inventory_drop.yy",},},
     {"id":{"name":"inventory_give","path":"scripts/inventory_give/inventory_give.yy",},},
