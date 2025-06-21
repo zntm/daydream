@@ -1,4 +1,4 @@
-function sfx_play(_id, _gain = global.settings.audio_sfx)
+function sfx_play(_id, _gain = 1)
 {
     var _sfx_data = global.sfx_data;
     

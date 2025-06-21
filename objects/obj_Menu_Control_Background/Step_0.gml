@@ -1,0 +1,1 @@
+offset += global.delta_time * 8;

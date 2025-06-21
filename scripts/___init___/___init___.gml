@@ -12,6 +12,8 @@
 
 cursor_sprite = spr_Mouse;
 
+randomize();
+
 window_set_cursor(cr_none);
 
 gml_pragma("MarkTagAsUsed", "include_me");

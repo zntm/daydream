@@ -68,9 +68,7 @@ else
 
 if (is_opened & IS_OPENED_BOOLEAN.PAUSE) exit;
 
-var _delta_time = delta_time / 1_000_000;
-
-global.delta_time = _delta_time;
+var _delta_time = global.delta_time;
 
 var _player_x = obj_Player.x;
 var _player_y = obj_Player.y;

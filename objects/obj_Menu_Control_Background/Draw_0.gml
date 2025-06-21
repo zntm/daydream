@@ -1,0 +1,1 @@
+render_menu_background(biome_id, colour);

@@ -65,6 +65,21 @@ function BiomeData(_name, _type) constructor
         return self;
     }
     
+    static get_sky_colour = function()
+    {
+        return ___sky_colour;
+    }
+    
+    static get_sky_colour_names = function()
+    {
+        return ___sky_colour_names;
+    }
+    
+    static get_sky_colour_length = function()
+    {
+        return ___sky_colour_length;
+    }
+    
     static get_sky_colour_base = function(_diurnal)
     {
         return ___sky_colour[$ _diurnal] & 0xffffff;
