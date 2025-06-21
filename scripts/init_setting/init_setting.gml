@@ -28,6 +28,17 @@ init_setting("general", "menu_profanity_filter", new SettingsData(SETTINGS_TYPE.
 
 init_setting("general", "menu_skip_epilepsy", new SettingsData(SETTINGS_TYPE.SWITCH, false));
 
+init_setting("accessibility", "global_refresh_rate", new SettingsData(SETTINGS_TYPE.ARROW, 0));
+
+init_setting("accessibility", "global_localization", new SettingsData(SETTINGS_TYPE.ARROW, 0)
+    .add_values(array_map(_loca, function(_value)
+    {
+        return string_split(_value, ". ")[1];
+    }))
+    .set_on_update(function(_name, _value)
+    {
+    }));
+
 #endregion
 
 #region Graphics
@@ -38,9 +49,9 @@ init_setting("graphics", "display_coloured_lighting", new SettingsData(SETTINGS_
 
 init_setting("graphics", "display_blur", new SettingsData(SETTINGS_TYPE.SLIDER, 1));
 
-init_setting("graphics", "visual_strength_particles", new SettingsData(SETTINGS_TYPE.SLIDER, 1));
+init_setting("graphics", "display_strength_particles", new SettingsData(SETTINGS_TYPE.SLIDER, 1));
 
-init_setting("graphics", "visual_strength_weather", new SettingsData(SETTINGS_TYPE.SLIDER, 1));
+init_setting("graphics", "display_strength_weather", new SettingsData(SETTINGS_TYPE.SLIDER, 1));
 
 init_setting("graphics", "window_gui_size", new SettingsData(SETTINGS_TYPE.SLIDER, 1));
 
@@ -105,19 +116,6 @@ init_setting("audio", "audio_creature_hostile", new SettingsData(SETTINGS_TYPE.S
 
 #endregion
 
-#region Accessibility
-
-init_setting("accessibility", "loca", new SettingsData(SETTINGS_TYPE.ARROW, 0)
-    .add_values(array_map(_loca, function(_value)
-    {
-        return string_split(_value, ". ")[1];
-    }))
-    .set_on_update(function(_name, _value)
-    {
-    }));
-
-#endregion
-
 if (file_exists("settings.dat"))
 {
     var _buffer = buffer_load_decompressed("settings.dat");
@@ -139,4 +137,4 @@ if (file_exists("settings.dat"))
     buffer_delete(_buffer);
 }
 
-init_loca($"{PROGRAM_DIRECTORY_RESOURCES}\\loca\\{_loca[global.settings.loca]}", "phantasia");
+init_loca($"{PROGRAM_DIRECTORY_RESOURCES}\\loca\\{_loca[global.settings.global_localization]}", "phantasia");
