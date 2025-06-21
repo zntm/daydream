@@ -15,6 +15,15 @@
         "pitch": "#phantasia:sfx_data_pitch",
         "subtitle": "phantasia:sfx.explosion.small"
     },
+    "generic.screenshot": {
+        "asset": [
+            "phantasia:generic/screenshot0",
+            "phantasia:generic/screenshot1",
+            "phantasia:generic/screenshot2"
+        ],
+        "pitch": 1,
+        "subtitle": "phantasia:sfx.generic.screenshot"
+    },
     "item.collect": {
         "asset": [
             "phantasia:item/collect0",
@@ -23,6 +32,20 @@
         ],
         "pitch": 1,
         "subtitle": "phantasia:sfx.item.collect"
+    },
+    "menu.key": {
+        "asset": [
+            "phantasia:menu/key"
+        ],
+        "pitch": 1,
+        "subtitle": "phantasia:sfx.menu.key"
+    },
+    "menu.sweep": {
+        "asset": [
+            "phantasia:menu/sweep"
+        ],
+        "pitch": 1,
+        "subtitle": "phantasia:sfx.menu.sweep"
     },
     "tile.dirt.harvest": {
         "asset": [

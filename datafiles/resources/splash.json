@@ -2,13 +2,15 @@
     "1_1": [
         "20XX",
         "Happy new years!",
+        "New year, new glitches!",
         "New year, same old game!"
     ],
     "2_14": [
         "143!",
         "Love is in the air!",
         "Happy Valentine's Day!",
-        "sqrt(-1) love you!"
+        "sqrt(-1) love you!",
+        "Will you be my Player 2?"
     ],
     "3_8": [
         "Empowered and unstoppable!",
@@ -33,21 +35,46 @@
     ],
     "4_22": [
         "Love your planet!",
+        "One world. Many chunks.",
+        "Pixel roots run deep!",
         "Planting trees!",
         "Recycled pixels!"
+    ],
+    "5_4": [
+        "May the 4th be with you!",
+        "Use the source, Luke.",
+        "The splash text awakens."
     ],
     "6_1": [
         "Be proud of who you are!",
         "Celebrating diversity!",
         "Happy Pride Month!",
         "Love is love!",
+        "Made with pride!",
         "Rainbows everywhere!",
         "Very colorful!",
         "<3"
     ],
+    "8_8": [
+        "meow",
+        "mewo"
+    ],
+    "9_13": [
+        "0b100000000",
+        "0x100",
+        "In a world of 1s and 0s, be infinite.",
+        "Not the bugs!",
+        "return 0;",
+        "Unlike gender, numbers are binary!"
+    ],
     "9_21": [
         "Keeping it peaceful!",
         "Peace, love, and pixels!"
+    ],
+    "10_10": [
+        "It's okay to pause.",
+        "Rest is productive.",
+        "You matter, always."
     ],
     "10_31": [
         "boo",
@@ -62,6 +89,7 @@
         "Party mode activated!"
     ],
     "12_25": [
+        "100% more tubular bells!",
         "Ho ho ho!",
         "Merry Christmas!",
         "Most wonderful time of the year!",
@@ -70,15 +98,20 @@
     ],
     "12_31": [
         "Counting down to midnight!",
+        "Deleting old bugs...",
         "Purchasing fireworks...",
         "See you next year!"
     ],
-    "default": [
+    "generic": [
         "A whole new world!",
+        "Auto-saving reality...",
+        "Based and splashpilled.",
         "Boom!",
         "Break a leg!",
         "Built different!",
+        "Can you?",
         "Compiled with love!",
+        "Defying expectations!",
         "Doing things the hard way!",
         "Don't try this at home!",
         "Enter the splash zone!",
@@ -90,25 +123,38 @@
         "Hello, world!",
         "Indie!",
         "It's a game!",
+        "It's dangerous to go alone!",
+        "i forgor",
         "Join the chaos!",
+        "Just one more splash...",
+        "Just pure vibes.",
         "Kaboom!",
         "Knowledge is power!",
+        "Let 'em cook...",
+        "Love everyone!",
         "Made in GameMaker!",
         "May contain fractals.",
-        "mewo",
         "More in the works!",
         "Music by Oh Eight!",
         "Music by Skies!",
         "Not enough content!",
         "One! Two! Pandemonium!",
+        "Optimized for chaos!",
         "Procedurally generated!",
+        "Pure chaos!",
         "Quantum computing!",
+        "Recharging imagination...",
+        "Respawning creativity!",
+        "Rewriting the laws of nature.",
+        "Rewriting the laws of physics.",
+        "Reusing old jokes!",
         "So many splash texts!",
         "Stay hydrated!",
         "Stay safe!",
         "Stay strong!",
         "Technoblade never dies!",
         "Turing complete!",
+        "Under heavy development!",
         "Unexpected behaviors!",
         "Voxel-free!",
         "What's up doc?",

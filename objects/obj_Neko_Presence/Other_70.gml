@@ -24,9 +24,12 @@ if (ev_type == "DiscordReady")
     sprite_add(np_get_avatar_url(async_load[? "user_id"], async_load[? "avatar"]), 1, false, false, 0, 0);
 }
 */
-if (!global.settings.discord_rpc) || (async_load[? "event_type"] != "DiscordReady") exit;
+if (global.settings.discord_rpc) && (async_load[? "event_type"] == "DiscordReady")
+{
+    
+}
 
-np_setpresence("this is a state", "this is some details", "", "");
+// np_setpresence("this is a state", "this is some details", "", "");
 
 // np_setpresence_more("Small image text", "Large image text", false);
 
