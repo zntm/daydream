@@ -1,0 +1,19 @@
+{
+    "name": "Japanese",
+    "locale_code": "ja_jp",
+    "item.daisy.name": "デイジー",
+    "item.dirt_wall.name": "土壁",
+    "item.dirt.name": "土",
+    "item.stone_wall.name": "石の壁",
+    "item.stone.name": "石",
+    "menu.title.settings": "設定",
+    "menu.title.credits": "クレジット",
+    "gui.death.header": "死んだ！",
+    "gui.death.message": "{0} 秒後にリスポーン...",
+    "gui.item_damage": "{0} 近接ダメージ",
+    "gui.item_damage.melee": "{0} 遠距離ダメージ",
+    "gui.item_damage.range": "{0} 魔法ダメージ",
+    "gui.item_defense": "{0} 防御",
+    "gui.item_is_material": "素材",
+    "gui.item_is_throwable": "投擲可能"
+}

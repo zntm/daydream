@@ -1,0 +1,8 @@
+{
+    "name": "Traditional Chinese",
+    "locale_code": "zh_tw",
+    "item.dirt_wall.name": "污垢牆",
+    "item.dirt.name": "污垢",
+    "item.stone_wall.name": "石牆",
+    "item.stone.name": "石"
+}

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"___init_global___",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"___init_global___",
+  "parent":{
+    "name":"daydream",
+    "path":"daydream.yyp",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

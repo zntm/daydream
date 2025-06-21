@@ -93,7 +93,7 @@ function SettingsData(_type, _default_value) constructor
         return self[$ "___step"];
     }
     
-    static ads_values = function()
+    static add_values = function()
     {
         self[$ "___values"] ??= [];
         

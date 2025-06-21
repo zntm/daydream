@@ -14,6 +14,8 @@ function init_setting(_category, _type, _setting)
     global.settings[$ _type] = _setting.get_default_value();
 }
 
+var _loca = file_read_directory($"{PROGRAM_DIRECTORY_RESOURCES}\\loca");
+
 #region General
 
 init_setting("general", "discord_rpc", new SettingsData(SETTINGS_TYPE.SWITCH, true)
@@ -123,3 +125,5 @@ if (file_exists("settings.dat"))
     
     buffer_delete(_buffer);
 }
+
+init_loca($"{PROGRAM_DIRECTORY_RESOURCES}\\loca\\{_loca[0]}", "phantasia");

@@ -1,0 +1,8 @@
+{
+    "name": "Filipino",
+    "locale_code": "tl_ph",
+    "item.dirt_wall.name": "Pader na Dumi",
+    "item.dirt.name": "Lupa",
+    "item.stone_wall.name": "Pader na Bato",
+    "item.stone.name": "Bato"
+}

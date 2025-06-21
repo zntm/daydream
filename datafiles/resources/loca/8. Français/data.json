@@ -1,0 +1,8 @@
+{
+    "name": "Français",
+    "locale_code": "fr_fr",
+    "item.dirt_wall.name": "Mur de Terre",
+    "item.dirt.name": "Terre",
+    "item.stone_wall.name": "Mur de Pierres",
+    "item.stone.name": "Pierre"
+}

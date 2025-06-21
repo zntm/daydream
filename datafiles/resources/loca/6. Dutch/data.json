@@ -1,0 +1,8 @@
+{
+    "name": "Dutch",
+    "locale_code": "nl_nl",
+    "item.dirt_wall.name": "Aarden Muur",
+    "item.dirt.name": "Aarde",
+    "item.stone_wall.name": "Stenen Muur",
+    "item.stone.name": "Steen"
+}
