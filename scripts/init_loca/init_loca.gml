@@ -1,6 +1,8 @@
 global.loca_font = fnt_Default;
 global.loca_data = {}
 
+init_loca_effect(fnt_Default);
+
 function init_loca(_directory, _namespace)
 {
 	if (global.loca_font != fnt_Default)
@@ -21,16 +23,16 @@ function init_loca(_directory, _namespace)
         var _data = json_parse(buffer_load_text($"{_directory}\\font.json"));
         
 		global.loca_font = font_add($"{_directory}\\font.ttf", _data.size, false, false, _data.first, _data.last);
-		 
-		font_enable_sdf(global.loca_font, true);
+        
+        font_enable_sdf(global.loca_font, true);
 	}
 	else if (file_exists($"{_directory}\\font.otf"))
 	{
         var _data = json_parse(buffer_load_text($"{_directory}\\font.json"));
         
 		global.loca_font = font_add($"{_directory}\\font.otf", _data.size, false, false, _data.first, _data.last);
-		
-		font_enable_sdf(global.loca_font, true);
+        
+        font_enable_sdf(global.loca_font, true);
 	}
 	else
 	{

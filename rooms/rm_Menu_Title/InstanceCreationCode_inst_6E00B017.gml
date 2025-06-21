@@ -1,3 +1,3 @@
 index = 3;
 
-text = "Exit";
+text = loca_translate("phantasia:menu.title.exit");

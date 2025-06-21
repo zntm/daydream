@@ -13,7 +13,7 @@ on_draw = function()
     
     draw_set_align(fa_middle, fa_center);
     
-    draw_text_transformed_colour(x + (sprite_get_width(spr_Menu_Title) * 2 / 2), y + (sprite_get_height(spr_Menu_Title) * 2), splash_text, 1, 1, 12, MENU_TITLE_SPLASH_COLOUR, MENU_TITLE_SPLASH_COLOUR, MENU_TITLE_SPLASH_COLOUR, MENU_TITLE_SPLASH_COLOUR, 1);
+    draw_text_transformed_colour(x + (sprite_get_width(spr_Menu_Title) * 2 / 2), y + (sprite_get_height(spr_Menu_Title) * 2), splash_text, FONT_SCALE, FONT_SCALE, 12, MENU_TITLE_SPLASH_COLOUR, MENU_TITLE_SPLASH_COLOUR, MENU_TITLE_SPLASH_COLOUR, MENU_TITLE_SPLASH_COLOUR, 1);
     
     draw_set_align(_halign, _valign);
 }

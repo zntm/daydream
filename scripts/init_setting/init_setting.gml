@@ -3,15 +3,15 @@ global.settings = {}
 global.settings_data = {}
 global.settings_data_category = {}
 
-function init_setting(_category, _type, _setting)
+function init_setting(_category, _type, _data)
 {
-    global.settings_data[$ _type] = _setting;
+    global.settings_data[$ _type] = _data;
     
     global.settings_data_category[$ _category] ??= [];
     
     array_push(global.settings_data_category[$ _category], _type);
     
-    global.settings[$ _type] = _setting.get_default_value();
+    global.settings[$ _type] = _data.get_default_value();
 }
 
 var _loca = file_read_directory($"{PROGRAM_DIRECTORY_RESOURCES}\\loca");
@@ -38,9 +38,9 @@ init_setting("graphics", "display_coloured_lighting", new SettingsData(SETTINGS_
 
 init_setting("graphics", "display_blur", new SettingsData(SETTINGS_TYPE.SLIDER, 1));
 
-init_setting("graphics", "particles", new SettingsData(SETTINGS_TYPE.ARROW, 1));
+init_setting("graphics", "visual_strength_particles", new SettingsData(SETTINGS_TYPE.SLIDER, 1));
 
-init_setting("graphics", "weather", new SettingsData(SETTINGS_TYPE.ARROW, 1));
+init_setting("graphics", "visual_strength_weather", new SettingsData(SETTINGS_TYPE.SLIDER, 1));
 
 init_setting("graphics", "window_gui_size", new SettingsData(SETTINGS_TYPE.SLIDER, 1));
 
@@ -105,6 +105,19 @@ init_setting("audio", "audio_creature_hostile", new SettingsData(SETTINGS_TYPE.S
 
 #endregion
 
+#region Accessibility
+
+init_setting("accessibility", "loca", new SettingsData(SETTINGS_TYPE.ARROW, 0)
+    .add_values(array_map(_loca, function(_value)
+    {
+        return string_split(_value, ". ")[1];
+    }))
+    .set_on_update(function(_name, _value)
+    {
+    }));
+
+#endregion
+
 if (file_exists("settings.dat"))
 {
     var _buffer = buffer_load_decompressed("settings.dat");
@@ -126,4 +139,4 @@ if (file_exists("settings.dat"))
     buffer_delete(_buffer);
 }
 
-init_loca($"{PROGRAM_DIRECTORY_RESOURCES}\\loca\\{_loca[0]}", "phantasia");
+init_loca($"{PROGRAM_DIRECTORY_RESOURCES}\\loca\\{_loca[global.settings.loca]}", "phantasia");

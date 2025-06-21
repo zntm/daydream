@@ -1,3 +1,3 @@
 index = 1;
 
-text = "Settings";
+text = loca_translate("phantasia:menu.title.settings");

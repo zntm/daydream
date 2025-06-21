@@ -80,14 +80,14 @@ function inventory_give(_x, _y, _item, _text = true)
         
         if (_text)
         {
-            var _loca = _id//loca_translate($"{_[0]}:item.{_[1]}.name");
-            
             if (_pickup_amount > 1)
             {
-                _loca += $" ({_pickup_amount})";
+                spawn_floating_text(_x, _y, string(loca_translate("phantasia:gui.item_tooltip.header.amount"), _id, _pickup_amount), 0, -2.4);
             }
-            
-            spawn_floating_text(_x, _y, _loca, 0, -2.4);
+            else
+            {
+            	spawn_floating_text(_x, _y, string(loca_translate("phantasia:gui.item_tooltip.header"), _id), 0, -2.4);
+            }
         }
     }
     

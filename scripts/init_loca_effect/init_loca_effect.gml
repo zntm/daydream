@@ -8,7 +8,7 @@ function init_loca_effect()
     
 	static __clear = {
 		outlineEnable: true,
-		outlineDistance: 2,
+		outlineDistance: 4,
 		outlineColour: #000000
 	}
 	

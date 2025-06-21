@@ -1,4 +1,4 @@
 index = 0;
 
-text = "Play";
+text = loca_translate("phantasia:menu.title.play");
 icon = spr_Null;

@@ -44,6 +44,8 @@
 #macro GUI_SAFE_ZONE_X 24
 #macro GUI_SAFE_ZONE_Y 24
 
+#macro FONT_SCALE 0.42
+
 #region Menu
 
 #macro MENU_BUTTON_COLOUR c_white

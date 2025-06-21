@@ -152,6 +152,7 @@
     {"name":"Inventory","order":1,"path":"scripts/Inventory/Inventory.yy",},
     {"name":"is_array_choose","order":1,"path":"scripts/is_array_choose/is_array_choose.yy",},
     {"name":"lerp_delta","order":6,"path":"scripts/lerp_delta/lerp_delta.yy",},
+    {"name":"loca_translate","order":2,"path":"scripts/loca_translate/loca_translate.yy",},
     {"name":"NaturalStructureData","order":1,"path":"scripts/NaturalStructureData/NaturalStructureData.yy",},
     {"name":"noise_free","order":1,"path":"scripts/noise_free/noise_free.yy",},
     {"name":"normalize","order":7,"path":"scripts/normalize/normalize.yy",},

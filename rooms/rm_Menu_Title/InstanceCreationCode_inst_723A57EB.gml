@@ -7,11 +7,12 @@ on_draw = function()
     
     if (PROGRAM_VERSION_PATCH > 0)
     {
-        draw_text(x, y, $"v{PROGRAM_VERSION_MAJOR}.{PROGRAM_VERSION_MINOR}.{PROGRAM_VERSION_PATCH}");
+        show_debug_message()
+        draw_text_transformed(x, y, string(loca_translate("phantasia:menu.title.version.patch"), PROGRAM_VERSION_MAJOR, PROGRAM_VERSION_MINOR, PROGRAM_VERSION_PATCH), FONT_SCALE, FONT_SCALE, 0);
     }
     else
     {
-    	draw_text(x, y, $"v{PROGRAM_VERSION_MAJOR}.{PROGRAM_VERSION_MINOR}");
+        draw_text_transformed(x, y, string(loca_translate("phantasia:menu.title.version"), PROGRAM_VERSION_MAJOR, PROGRAM_VERSION_MINOR), FONT_SCALE, FONT_SCALE, 0);
     }
     
     draw_set_align(_halign, _valign);

@@ -1,3 +1,3 @@
 index = 2;
 
-text = "Credits";
+text = loca_translate("phantasia:menu.title.credits");

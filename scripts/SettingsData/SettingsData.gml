@@ -105,6 +105,11 @@ function SettingsData(_type, _default_value) constructor
         return self;
     }
     
+    static get_value = function(_index)
+    {
+        return self[$ "___values"][_index];
+    }
+    
     static get_values = function()
     {
         return self[$ "___values"];

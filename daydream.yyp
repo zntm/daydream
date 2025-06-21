@@ -480,6 +480,7 @@
     {"id":{"name":"is_array_choose","path":"scripts/is_array_choose/is_array_choose.yy",},},
     {"id":{"name":"ItemData","path":"scripts/ItemData/ItemData.yy",},},
     {"id":{"name":"lerp_delta","path":"scripts/lerp_delta/lerp_delta.yy",},},
+    {"id":{"name":"loca_translate","path":"scripts/loca_translate/loca_translate.yy",},},
     {"id":{"name":"menu_init_button_depth","path":"scripts/menu_init_button_depth/menu_init_button_depth.yy",},},
     {"id":{"name":"MusicData","path":"scripts/MusicData/MusicData.yy",},},
     {"id":{"name":"NaturalStructureData","path":"scripts/NaturalStructureData/NaturalStructureData.yy",},},
