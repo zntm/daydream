@@ -7,9 +7,14 @@ function worldgen_get_tile_foliage(_x, _y, _surface_biome, _cave_biome, _top_til
     {
         var _tile = _foliage.get_tile_foliage(i);
         
-        if (chance_seeded(_tile.chance, _seed * ((_x ^ _y) + (i * 859))) && (array_contains(_tile.placeable_on, _top_tile.id)))
+        if (chance_seeded(_tile.chance, _seed * ((_x ^ _y) + (i * 859))))
         {
-            return _tile;
+            var _placeable_on = _tile.placeable_on;
+            
+            if (_placeable_on != undefined) || (array_contains(_placeable_on, _top_tile.id))
+            {
+                return _tile;
+            }
         }
     }
     

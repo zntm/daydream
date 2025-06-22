@@ -53,7 +53,14 @@ function init_loca(_directory, _namespace)
     {
         var _name = _names2[i];
         
-        global.loca_data[$ $"{_namespace}:{_name}"] = _json[$ _name];
+        if (_name != "name") && (_name != "locale_code")
+        {
+            global.loca_data[$ $"{_namespace}:{_name}"] = _json[$ _name];
+        }
+        else
+        {
+            global.loca_data[$ _name] = _json[$ _name];
+        }
     }
     
     delete _json;

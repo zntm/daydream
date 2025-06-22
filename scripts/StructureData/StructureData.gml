@@ -1,35 +1,40 @@
 enum STRUCTURE_PLACEMENT_TYPE {
     FLOOR,
-    CEILING
+    CEILING,
+    INSIDE
 }
 
 function StructureData(_width, _height, _placement, _is_persistent, _is_natural) constructor
 {
-    ___value = (_is_persistent << 17) | (_is_natural << 16) | (_height << 8) | _width;
+    ___width  = _width;
+    ___height = _height;
+    
+    ___value = (_is_persistent << 1) | _is_natural;
     
     static get_width = function()
     {
-        return ___value & 0xff;
+        return ___width;
     }
     
     static get_height = function()
     {
-        return (___value >> 8) & 0xff;
+        return ___height;
     }
     
     static is_natural = function()
     {
-        return !!((___value >> 16) & 1);
+        return !!(___value & (1 << 0));
     }
     
     static is_persistent = function()
     {
-        return !!((___value >> 17) & 1);
+        return !!(___value & (1 << 1));
     }
     
     static __structure_placement_type = {
         "floor":   STRUCTURE_PLACEMENT_TYPE.FLOOR,
-        "ceiling": STRUCTURE_PLACEMENT_TYPE.CEILING
+        "ceiling": STRUCTURE_PLACEMENT_TYPE.CEILING,
+        "inside":  STRUCTURE_PLACEMENT_TYPE.INSIDE
     }
     
     var _placement_offset = _placement.offset;

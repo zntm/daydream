@@ -40,11 +40,6 @@ for (var i = 0; i < _number; ++i)
             if (boolean & MENU_BUTTON_BOOLEAN.IS_SELECTED)
             {
                 boolean ^= MENU_BUTTON_BOOLEAN.IS_SELECTED;
-                
-                if (on_select_release != undefined)
-                {
-                    on_select_release();
-                }
             }
         }
     }

@@ -43,5 +43,10 @@
             "placeable_on": [ "phantasia:stone" ]
         }
     ],
-    "structure": []
+    "structure": [
+        {
+            "id": "phantasia:ore/coal",
+            "chance": 0.0008
+        }
+    ]
 }

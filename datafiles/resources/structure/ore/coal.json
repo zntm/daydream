@@ -1,0 +1,42 @@
+{
+	"width": {
+        "type": "irandom",
+        "values": {
+            "min": 2,
+            "max": 6
+        }
+	},
+	"height": {
+        "type": "irandom",
+        "values": {
+            "min": 2,
+            "max": 6
+        }
+	},
+	"placement": {
+		"type": "inside",
+		"offset": {
+			"x": 0,
+			"y": 0
+		}
+	},
+	"data": {
+		"function": "phantasia:ore",
+		"parameter": {
+			"tile": {
+				"id": "phantasia:coal_ore"
+			},
+			"chance": 0.25,
+			"clumpiness": 0.6,
+			"roundedness": 0.4,
+			"min_depth": 480,
+			"max_depth": 760,
+			"vein_size_min": 2,
+			"vein_size_max": 5,
+			"density": 0.7,
+			"scatter": 0.3,
+			"avoid_surface": true,
+			"surface_buffer": 2
+		}
+	}
+}

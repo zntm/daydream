@@ -4,5 +4,11 @@
     "item.dirt_wall.name": "Aarden Muur",
     "item.dirt.name": "Aarde",
     "item.stone_wall.name": "Stenen Muur",
-    "item.stone.name": "Steen"
+    "item.stone.name": "Steen",
+    "gui.item.defense": "{0} Verdediging",
+    "gui.armor": "Pantser",
+    "gui.armor.helmet": "Helm",
+    "gui.armor.breastplate": "Borstplaat",
+    "gui.armor.leggings": "Beenstukken",
+    "gui.armor.accessory": "Accessoire"
 }

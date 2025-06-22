@@ -245,64 +245,67 @@ function ItemData() constructor
     
     static set_harvest = function(_harvest)
     {
-        var _hardness = _harvest[$ "hardness"];
-        
-        if (_hardness != undefined)
+        if (_harvest != undefined)
         {
-            ___harvest_hardness = _hardness;
-        }
-        
-        var _level = _harvest[$ "level"];
-        
-        if (_level != undefined)
-        {
-            ___harvest_level = _level;
-        }
-        
-        var _type = _harvest[$ "type"];
-        
-        if (_type != undefined)
-        {
-            self[$ "___harvest_type"] ??= 0;
+            var _hardness = _harvest[$ "hardness"];
             
-            if (is_string(_type))
+            if (_hardness != undefined)
             {
-                ___harvest_type |= __item_type[$ _type];
+                ___harvest_hardness = _hardness;
             }
-            else
+            
+            var _level = _harvest[$ "level"];
+            
+            if (_level != undefined)
             {
-                var _length = array_length(_type);
+                ___harvest_level = _level;
+            }
+            
+            var _type = _harvest[$ "type"];
+            
+            if (_type != undefined)
+            {
+                self[$ "___harvest_type"] ??= 0;
                 
-                for (var i = 0; i < _length; ++i)
+                if (is_string(_type))
                 {
-                    ___harvest_type |= __item_type[$ _type[i]];
+                    ___harvest_type |= __item_type[$ _type];
                 }
-            }
-        }
-        
-        var _particle = _harvest[$ "particle"];
-        
-        if (_particle != undefined)
-        {
-            var _colour = _particle[$ "colour"];
-            
-            if (_colour != undefined)
-            {
-                var _length = array_length(_colour);
-                
-                ___harvest_particle_colour = array_create(_length);
-                
-                for (var i = 0; i < _length; ++i)
+                else
                 {
-                    ___harvest_particle_colour[@ i] = hex_parse(_colour[i]);
+                    var _length = array_length(_type);
+                    
+                    for (var i = 0; i < _length; ++i)
+                    {
+                        ___harvest_type |= __item_type[$ _type[i]];
+                    }
                 }
             }
             
-            var _frequency = _particle[$ "frequency"];
+            var _particle = _harvest[$ "particle"];
             
-            if (_frequency != undefined)
+            if (_particle != undefined)
             {
-                ___harvest_particle_frequency = init_smart_value(_frequency);
+                var _colour = _particle[$ "colour"];
+                
+                if (_colour != undefined)
+                {
+                    var _length = array_length(_colour);
+                    
+                    ___harvest_particle_colour = array_create(_length);
+                    
+                    for (var i = 0; i < _length; ++i)
+                    {
+                        ___harvest_particle_colour[@ i] = hex_parse(_colour[i]);
+                    }
+                }
+                
+                var _frequency = _particle[$ "frequency"];
+                
+                if (_frequency != undefined)
+                {
+                    ___harvest_particle_frequency = init_smart_value(_frequency);
+                }
             }
         }
         

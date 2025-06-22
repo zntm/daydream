@@ -1,0 +1,1 @@
+text = loca_translate("phantasia:menu.create_player.title");

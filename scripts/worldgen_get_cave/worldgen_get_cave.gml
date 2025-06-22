@@ -6,10 +6,6 @@ function worldgen_get_cave(_x, _y, _surface_height, _seed)
 {
     var _world_data = global.world_data[$ global.world.dimension];
     
-    var _x2 = floor(_x / WORLDGEN_CAVE_NOISE_SIZE);
-    
-    var _local_x = ((_x % WORLDGEN_CAVE_NOISE_SIZE) + WORLDGEN_CAVE_NOISE_SIZE) % WORLDGEN_CAVE_NOISE_SIZE;
-    
     if (_y < _surface_height)
     {
         return true;
@@ -20,8 +16,10 @@ function worldgen_get_cave(_x, _y, _surface_height, _seed)
         return false;
     }
     
+    var _x2 = floor(_x / WORLDGEN_CAVE_NOISE_SIZE);
     var _y2 = floor(_y / WORLDGEN_CAVE_NOISE_SIZE);
     
+    var _local_x = ((_x % WORLDGEN_CAVE_NOISE_SIZE) + WORLDGEN_CAVE_NOISE_SIZE) % WORLDGEN_CAVE_NOISE_SIZE;
     var _local_y = ((_y % WORLDGEN_CAVE_NOISE_SIZE) + WORLDGEN_CAVE_NOISE_SIZE) % WORLDGEN_CAVE_NOISE_SIZE;
     
     var _system_length = _world_data.get_cave_system_length();

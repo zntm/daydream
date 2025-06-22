@@ -16,10 +16,17 @@
     "menu.title.exit": "Schließen",
     "menu.warning.beta.header": "Offene Beta!",
     "menu.warning.epilepsy.description": "Dieses Spiel enthält schnell blinkende Lichter und laute Geräusche! Nur mit vorsicht spielen.",
-    "gui.item_damage": "{0} Schaden",
-    "gui.item_damage.melee": "{0} Nahkampfschaden",
-    "gui.item_damage.range": "{0} Fernkampfschaden",
-    "gui.item_defense": "{0} Abwehr",
-    "gui.item_is_material": "Material",
-    "gui.item_is_throwable": "Werfbar"
+    "menu.players.title": "Spieler",
+    "menu.worlds.title": "Welten",
+    "gui.item.defense": "{0} Abwehr",
+    "gui.item.is_material": "Material",
+    "gui.item.is_throwable": "Werfbar",
+    "gui.item.damage": "{0} Schaden",
+    "gui.item.damage.melee": "{0} Nahkampfschaden",
+    "gui.item.damage.range": "{0} Fernkampfschaden",
+    "gui.armor": "Rüstung",
+    "gui.armor.helmet": "Helm",
+    "gui.armor.breastplate": "Brustplatte",
+    "gui.armor.leggings": "Leggings",
+    "gui.armor.accessory": "Zusatz"
 }

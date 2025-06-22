@@ -1,0 +1,31 @@
+{
+    "type": "solid",
+    "sprite": {
+        "xoffset": 8,
+        "yoffset": 8,
+        "length": 5,
+        "edge_padding": 8
+    },
+    "inventory": "#phantasia:item/generic/inventory_tile",
+    "harvest": {
+        "hardness": 0.58,
+        "level": 1,
+        "particle": {
+            "colour": [
+                "#FFFFFF"
+            ],
+            "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
+        },
+        "type": "pickaxe"
+    },
+    "drop": {
+        "item": [
+            {
+                "id": "phantasia:coal"
+            }
+        ],
+        "tool": "pickaxe"
+    },
+    "sfx": "#phantasia:tile/sfx/stone",
+    "is_tile": true
+}

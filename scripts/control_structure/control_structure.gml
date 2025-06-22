@@ -22,7 +22,7 @@ function control_structure(_x, _y)
             {
                 var _structure = _data.get_structure(l);
                 
-                var _chance_seed = ((_world_seed & 0xf) * 18_929) + (_world_seed >> 4) + (i * 11) + (j * 64) + (l * 45);
+                var _chance_seed = ((_world_seed & 0xf) * 18_929) + (_world_seed >> 4) + (i * 93) + (j * 189) + (l * 45);
                 
                 if (!chance_seeded(_structure.chance, _chance_seed)) continue;
                 
@@ -40,6 +40,13 @@ function control_structure(_x, _y)
                 else if (_placement_type == STRUCTURE_PLACEMENT_TYPE.CEILING)
                 {
                     if (worldgen_get_cave(i, j + 1, _surface_height, _world_seed))
+                    {
+                        structure_create(i * TILE_SIZE, j * TILE_SIZE, _structure.id, _world_seed);
+                    }
+                }
+                else if (_placement_type == STRUCTURE_PLACEMENT_TYPE.INSIDE)
+                {
+                    if (!worldgen_get_cave(i, j, _surface_height, _world_seed))
                     {
                         structure_create(i * TILE_SIZE, j * TILE_SIZE, _structure.id, _world_seed);
                     }

@@ -23,7 +23,7 @@ function control_physics_creative(_dt, _id)
                 {
                     var _offset2 = min(j, 1) * _xsign;
                     
-                    if (tile_meeting(x + _offset2, y)) break;
+                    // if (tile_meeting(x + _offset2, y)) break;
                     
                     x += _offset2;
                 }
@@ -44,7 +44,7 @@ function control_physics_creative(_dt, _id)
                 {
                     var _offset2 = min(j, 1) * _ysign;
                     
-                    if (tile_meeting(x, y + _offset2)) break;
+                    // if (tile_meeting(x, y + _offset2)) break;
                     
                     y += _offset2;
                 }

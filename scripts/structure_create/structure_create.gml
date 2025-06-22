@@ -2,8 +2,8 @@ function structure_create(_x, _y, _id, _seed)
 {
     var _structure_data = global.structure_data[$ _id];
     
-    var _width  = _structure_data.get_width();
-    var _height = _structure_data.get_height();
+    var _width  = smart_value(_structure_data.get_width());
+    var _height = smart_value(_structure_data.get_height());
     
     if !(_width & 1)
     {
