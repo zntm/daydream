@@ -4,7 +4,7 @@ function init(_namespace)
     
     init_rarity($"{PROGRAM_DIRECTORY_RESOURCES}\\rarity.json", _namespace);
     
-    init_tag($"{PROGRAM_DIRECTORY_RESOURCES}\\tag.json", _namespace);
+    init_tag_recursive($"{PROGRAM_DIRECTORY_RESOURCES}\\tag", _namespace);
     
     init_attire($"{PROGRAM_DIRECTORY_RESOURCES}\\attire", _namespace);
     

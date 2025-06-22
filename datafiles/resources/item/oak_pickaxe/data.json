@@ -5,13 +5,13 @@
         "yoffset": 16,
         "length": 1
     },
-    "inventory": "#phantasia:item_data_inventory_tool",
+    "inventory": "#phantasia:item/generic/inventory_tool",
     "harvest": {
         "hardness": 1,
         "level": 1
     },
     "durability": {
         "amount": 73,
-        "bar": "#phantasia:gui_durability_bar"
+        "bar": "#phantasia:item/generic/durability_bar"
     }
 }

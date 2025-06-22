@@ -5,18 +5,18 @@
         "yoffset": 5,
         "length": 1
     },
-    "inventory": "#phantasia:item_data_inventory_default",
+    "inventory": "#phantasia:item/generic/inventory_default",
     "harvest": {
         "hardness": 0.38,
         "particle": {
             "colour": [
                 "#FFFFFF"
             ],
-            "frequency": "#phantasia:harvest_particle_frequency"
+            "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
         }
     },
     "placement": {
-        "requirement": "#phantasia:placement_requirement_plant"
+        "requirement": "#phantasia:tile/placeable/requirement_plant"
     },
     "drop": {
         "item": [
@@ -25,6 +25,6 @@
             }
         ]
     },
-    "sfx": "#phantasia:sfx_foliage",
+    "sfx": "#phantasia:tile/sfx/foliage",
     "is_foliage": true
 }

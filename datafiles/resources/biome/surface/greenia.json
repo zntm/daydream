@@ -52,39 +52,39 @@
         {
             "id": "phantasia:short_grass",
             "chance": 0.26,
-            "placeable_on": "#phantasia:placeable_plant_on"
+            "placeable_on": "#phantasia:tile/placeable/plant_on"
         },
         {
             "id": "phantasia:tall_grass",
             "chance": 0.04,
-            "placeable_on": "#phantasia:placeable_plant_on"
+            "placeable_on": "#phantasia:tile/placeable/plant_on"
         },
         {
             "id": "phantasia:globeflower",
             "chance": 0.05,
-            "placeable_on": "#phantasia:placeable_plant_on"
+            "placeable_on": "#phantasia:tile/placeable/plant_on"
         },
         {
             "id": "phantasia:rock",
             "chance": 0.03,
-            "placeable_on": "#phantasia:placeable_plant_on"
+            "placeable_on": "#phantasia:tile/placeable/plant_on"
         },
         {
             "id": "phantasia:rose",
             "chance": 0.07,
-            "placeable_on": "#phantasia:placeable_plant_on"
+            "placeable_on": "#phantasia:tile/placeable/plant_on"
         },
         {
             "id": "phantasia:dendrobium",
             "chance": 0.04,
-            "placeable_on": "#phantasia:placeable_plant_on"
+            "placeable_on": "#phantasia:tile/placeable/plant_on"
         }
     ],
     "structure": [
         {
             "id": "phantasia:moss_clump",
             "chance": 0.008,
-            "placeable_on": "#phantasia:placeable_plant_on"
+            "placeable_on": "#phantasia:tile/placeable/plant_on"
         }
     ]
 }

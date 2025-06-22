@@ -16,7 +16,7 @@
             "colour": [
                 "#FFFFFF"
             ],
-            "frequency": "#phantasia:harvest_particle_frequency"
+            "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
         }
     },
     "placement": {
@@ -35,6 +35,6 @@
             }
         ]
     },
-    "sfx": "#phantasia:sfx_stone",
+    "sfx": "#phantasia:tile/sfx/stone",
     "is_foliage": true
 }

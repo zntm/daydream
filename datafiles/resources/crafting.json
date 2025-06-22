@@ -13,7 +13,7 @@
 		{
 			"id": "phantasia:dirt_wall",
 			"amount": 3,
-			"crafting_stations": [ "phantasia:oak_workbench" ],
+			"crafting_stations": "#phantasia:tile/generic/workbench",
 			"ingredients": [
 				{
 					"id": "phantasia:dirt",
@@ -24,6 +24,7 @@
 		{
 			"id": "phantasia:moss_wall",
 			"amount": 3,
+			"crafting_stations": "#phantasia:tile/generic/workbench",
 			"ingredients": [
 				{
 					"id": "phantasia:moss",

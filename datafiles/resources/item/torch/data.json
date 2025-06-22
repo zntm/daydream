@@ -5,14 +5,14 @@
         "yoffset": 8,
         "length": 6
     },
-    "inventory": "#phantasia:item_data_inventory_default",
+    "inventory": "#phantasia:item/generic/inventory_default",
     "harvest": {
         "hardness": 0.38,
         "particle": {
             "colour": [
                 "#FFFFFF"
             ],
-            "frequency": "#phantasia:harvest_particle_frequency"
+            "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
         }
     },
     "drop": {
@@ -23,6 +23,6 @@
         ]
     },
     "animation_type": "increment",
-    "sfx": "#phantasia:sfx_wood",
+    "sfx": "#phantasia:tile/sfx/wood",
     "is_tile": false
 }

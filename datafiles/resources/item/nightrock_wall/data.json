@@ -6,7 +6,7 @@
         "length": 5,
         "edge_padding": 8
     },
-    "inventory": "#phantasia:item_data_inventory_tile",
+    "inventory": "#phantasia:item/generic/inventory_tile",
     "harvest": {
         "hardness": 0.46,
         "level": 2,
@@ -14,7 +14,7 @@
             "colour": [
                 "#FFFFFF"
             ],
-            "frequency": "#phantasia:harvest_particle_frequency"
+            "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
         },
         "type": "pickaxe"
     },
@@ -26,6 +26,6 @@
         ],
         "tool": "pickaxe"
     },
-    "sfx": "#phantasia:sfx_stone",
+    "sfx": "#phantasia:tile/sfx/stone",
     "is_tile": true
 }
