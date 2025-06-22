@@ -71,9 +71,9 @@ function inventory_refresh_craftable()
         ++_offset;
     }
     
-    if (obj_Control.is_opened & IS_OPENED_BOOLEAN.INVENTORY)
+    if (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.INVENTORY)
     {
-        obj_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_CRAFTABLE;
+        obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_CRAFTABLE;
     }
     
     global.gui_inventory.craftable.surface_width  = (GUI_INVENTORY_SURFACE_PADDING * 2) + INVENTORY_SLOT_DIMENSION_SCALED;

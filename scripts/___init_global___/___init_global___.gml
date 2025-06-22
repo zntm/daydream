@@ -91,3 +91,10 @@ global.tile_connected_index = [
      0, -1,
     -1, -1,
 ];
+
+global.window_width  = window_get_width();
+global.window_height = window_get_height();
+
+global.window_focus = true;
+
+global.delta_time = delta_time / 1_000_000;

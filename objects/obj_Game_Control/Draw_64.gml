@@ -1,4 +1,7 @@
-if (window_width <= 0) || (window_height <= 0) exit;
+var _window_width  = global.window_width;
+var _window_height = global.window_height;
+
+if (_window_width <= 0) || (_window_height <= 0) exit;
 
 gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_src_alpha, bm_one);
 
@@ -38,8 +41,8 @@ if (is_opened & IS_OPENED_BOOLEAN.PAUSE)
     exit;
 }
 
-var _gui_mouse_x = (window_mouse_get_x() / window_width)  * _gui_width;
-var _gui_mouse_y = (window_mouse_get_y() / window_height) * _gui_height;
+var _gui_mouse_x = (window_mouse_get_x() / _window_width)  * _gui_width;
+var _gui_mouse_y = (window_mouse_get_y() / _window_height) * _gui_height;
 
 var _gui_multiplier_x = _gui_width  / _camera_width;
 var _gui_multiplier_y = _gui_height / _camera_height;
@@ -228,22 +231,4 @@ if (_hp > 0) && (is_opened & IS_OPENED_BOOLEAN.GUI) && !(is_opened & IS_OPENED_B
     */
 }
 
-draw_text(16, 16,
-    $"FPS: {fps}\n" +
-    $"X/Y: {_player_x}/{_player_y}\n" +
-    $"Num: {instance_number(obj_Chunk)}\n" +
-    $"Time: {global.world.time}\n" +
-    $"Harvest: {harvest_amount}"
-);
-
 gpu_set_blendmode(bm_normal);
-
-with (obj_Player)
-{
-    var _ = instance_nearest(obj_Player.x, obj_Player.y, obj_Tile_Crafting_Station);
-    
-    if (instance_exists(_))
-    {
-        draw_text(128, 128, point_distance(x, y, _.x, _.y))
-    }
-}

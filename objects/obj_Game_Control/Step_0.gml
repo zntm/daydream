@@ -1,3 +1,4 @@
+/*
 var _window_focus = window_has_focus();
 
 var _window_width  = window_get_width();
@@ -65,6 +66,7 @@ else
         window_set_fullscreen(!window_get_fullscreen());
     }
 }
+*/
 
 if (is_opened & IS_OPENED_BOOLEAN.PAUSE) exit;
 

@@ -11,15 +11,17 @@ for (var i = 0; i < glow_length; ++i)
 
 gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_src_alpha, bm_one);
 
-var _header_height = string_height(text_header) * 4;
-var _description_height = string_height(text_description);
+var _loca_font_scale = global.loca_font_scale;
+
+var _header_height      = string_height(text_header)      * _loca_font_scale * 4;
+var _description_height = string_height(text_description) * _loca_font_scale;
 
 var _x = (room_width  / 2);
 var _y = (room_height / 2) - ((_header_height + _description_height + 8) / 4);
 
 draw_set_align(fa_center, fa_middle);
 
-draw_text_transformed(_x, _y, text_header, 4, 4, 0);
-draw_text_transformed(_x, _y + (_header_height / 2) + 8, text_description, 1, 1, 0);
+render_text(_x, _y, text_header, 4, 4);
+render_text(_x, _y + (_header_height / 2) + 8, text_description);
 
 gpu_set_blendmode(bm_normal);

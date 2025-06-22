@@ -97,7 +97,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
     
     with (obj_Floating_Text)
     {
-        draw_text_ext_transformed_colour(x, y, text, 0, 255, image_xscale, image_yscale, image_angle, image_blend, image_blend, image_blend, image_blend, power(timer_life, 1 / 4));
+        render_text(x, y, text, 0, 255, image_xscale, image_yscale, image_angle, image_blend, power(timer_life, 1 / 4));
     }
     
     draw_set_align(fa_left, fa_top);

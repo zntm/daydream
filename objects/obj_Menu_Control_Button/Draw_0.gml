@@ -6,6 +6,8 @@ with (obj_Menu_Anchor)
     }
 }
 
+var _loca_font_scale = global.loca_font_scale;
+
 var _halign = draw_get_halign();
 var _valign = draw_get_valign();
 
@@ -59,26 +61,26 @@ with (obj_Menu_Button)
     { 
         if (boolean & MENU_BUTTON_BOOLEAN.IS_SELECTED)
         {
-            draw_sprite_ext(icon, icon_index, x - (string_width(text) * FONT_SCALE / 2), y + _asset_offset, 1, 1, 0, c_ltgray, 1);
+            draw_sprite_ext(icon, icon_index, x - (string_width(text) * _loca_font_scale / 2), y + _asset_offset, 1, 1, 0, c_ltgray, 1);
             
-            draw_text_transformed_colour(x + (sprite_get_width(icon) / 2), y + _asset_offset, text, FONT_SCALE, FONT_SCALE, 0, c_ltgray, c_ltgray, c_ltgray, c_ltgray, 1);
+            render_text(x + (sprite_get_width(icon) / 2), y + _asset_offset, text, 1, 1, 0, c_ltgray, 1);
         }
         else
         {
-            draw_sprite_ext(icon, icon_index, x - (string_width(text) * FONT_SCALE / 2), y, 1, 1, 0, c_white, 1);
+            draw_sprite_ext(icon, icon_index, x - (string_width(text) * _loca_font_scale / 2), y, 1, 1, 0, c_white, 1);
             
-            draw_text_transformed_colour(x + (sprite_get_width(icon) / 2), y, text, FONT_SCALE, FONT_SCALE, 0, c_white, c_white, c_white, c_white, 1);
+            render_text(x + (sprite_get_width(icon) / 2), y, text, 1, 1, 0, c_white, 1);
         }
     }
     else if (text != undefined)
     {
         if (boolean & MENU_BUTTON_BOOLEAN.IS_SELECTED)
         {
-            draw_text_transformed_colour(x, y + _asset_offset, text, FONT_SCALE, FONT_SCALE, 0, c_ltgray, c_ltgray, c_ltgray, c_ltgray, 1);
+            render_text(x, y + _asset_offset, text, 1, 1, 0, c_ltgray, 1);
         }
         else
         {
-        	draw_text_transformed_colour(x, y, text, FONT_SCALE, FONT_SCALE, 0, c_white, c_white, c_white, c_white, 1);
+        	render_text(x, y, text, 1, 1, 0, c_white, 1);
         }
     }
     else if (icon != undefined)

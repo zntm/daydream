@@ -137,4 +137,6 @@ if (file_exists("settings.dat"))
     buffer_delete(_buffer);
 }
 
+audio_set_master_gain(0, global.settings.audio_master);
+
 init_loca($"{PROGRAM_DIRECTORY_RESOURCES}\\loca\\{_loca[global.settings.global_localization]}", "phantasia");

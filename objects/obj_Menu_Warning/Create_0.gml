@@ -17,8 +17,8 @@ for (var i = 0; i < glow_length; ++i)
     glow[@ i] = {
         x: _x + random_range(-112, 112),
         y: _y + random_range(-112, 112),
-        xvelocity: random_range(-24, 24),
-        yvelocity: random_range(-24, 24),
+        xvelocity: random_range(-28, 28),
+        yvelocity: random_range(-28, 28),
         scale: random_range(2, 4),
         colour: make_colour_hsv(
             _hue + irandom_range(-32, 32),

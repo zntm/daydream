@@ -148,7 +148,7 @@ function gui_inventory_tooltip(_gui_multiplier_x, _gui_multiplier_y)
     var _rarity = _data.get_rarity();
     var _rarity_colour = ((_data.get_rarity() != undefined) ? (global.rarity_data[$ _rarity] ?? c_white) : c_white);
     
-    draw_text_transformed_colour(_name_x, _name_y, _item_name, _gui_multiplier_x, _gui_multiplier_y, 0, _rarity_colour, _rarity_colour, _rarity_colour, _rarity_colour, 1);
+    render_text(_name_x, _name_y, _item_name, _gui_multiplier_x, _gui_multiplier_y, 0, _rarity_colour);
     
     draw_set_valign(fa_top);
     
@@ -160,7 +160,7 @@ function gui_inventory_tooltip(_gui_multiplier_x, _gui_multiplier_y)
         var _description_xscale = _gui_multiplier_x * GUI_INVENTORY_STRING_SCALE;
         var _description_yscale = _gui_multiplier_y * GUI_INVENTORY_STRING_SCALE;
         
-        draw_text_transformed_colour(_description_x, _description_y, _item_description, _description_xscale, _description_yscale, 0, c_white, c_white, c_white, c_white, 1);
+        render_text(_description_x, _description_y, _item_description, _description_xscale, _description_yscale);
     }
     
     surface_reset_target();

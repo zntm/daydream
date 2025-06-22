@@ -1,1 +1,0 @@
-global.delta_time = delta_time / 1_000_000;

@@ -100,7 +100,7 @@ function gui_inventory_craftable(_gui_multiplier_x, _gui_multiplier_y)
         var _x = _gui_multiplier_x * (GUI_INVENTORY_AMOUNT_XOFFSET + (GUI_INVENTORY_SURFACE_PADDING + (INVENTORY_SLOT_DIMENSION_SCALED / 2)) + _id.xoffset);
         var _y = _gui_multiplier_y * (GUI_INVENTORY_AMOUNT_YOFFSET + (GUI_INVENTORY_SURFACE_PADDING + (INVENTORY_SLOT_DIMENSION_SCALED / 2)) + _id.yoffset);
         
-        draw_text_transformed_colour(_x, _y, _amount, _gui_multiplier_x * GUI_INVENTORY_STRING_SCALE, _gui_multiplier_y * GUI_INVENTORY_STRING_SCALE, 0, c_white, c_white, c_white, c_white, 1);
+        render_text(_x, _y, _amount, _gui_multiplier_x * GUI_INVENTORY_STRING_SCALE, _gui_multiplier_y * GUI_INVENTORY_STRING_SCALE);
     }
     
     surface_reset_target();
