@@ -46,7 +46,7 @@
     "structure": [
         {
             "id": "phantasia:ore/coal",
-            "chance": 0.0008
+            "chance": 0.004
         }
     ]
 }

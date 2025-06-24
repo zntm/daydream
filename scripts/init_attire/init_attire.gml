@@ -1,4 +1,12 @@
+#macro ATTIRE_COLOUR_BASE_AMOUNT 6
+#macro ATTIRE_COLOUR_OUTLINE_AMOUNT 2
+
+#macro ATTIRE_COLOUR_AMOUNT (ATTIRE_COLOUR_BASE_AMOUNT * ATTIRE_COLOUR_OUTLINE_AMOUNT)
+
+#macro ATTIRE_COLOUR_WHITE_INDEX 0
+
 global.attire_data = {}
+global.attire_colour_data = [];
 
 function init_attire(_directory, _namespace = "phantasia", _type = 0)
 {
@@ -105,6 +113,8 @@ function init_attire(_directory, _namespace = "phantasia", _type = 0)
     {
         var _file = _files[i];
         
+        if (!directory_exists($"{_directory}/{_file}")) continue; 
+        
         global.attire_data[$ _file] = [ undefined ];
         
         for (var j = ((directory_exists($"{_directory}/{_file}/0")) ? 0 : 1); directory_exists($"{_directory}/{_file}/{j}"); ++j)
@@ -139,4 +149,35 @@ function init_attire(_directory, _namespace = "phantasia", _type = 0)
             dbg_timer("init_attire", $"Loaded Attire Type: '{_file}', Index: '{j}'");
         }
     }
+    
+    var _sprite = sprite_add($"{_directory}\\colour.png", 1, false, false, 0, 0);
+    
+    var _sprite_width  = sprite_get_width(_sprite);
+    var _sprite_height = sprite_get_height(_sprite);
+    
+    var _surface = surface_create(_sprite_width, _sprite_height);
+    var _buffer = buffer_create(_sprite_width * _sprite_height * 4, buffer_fixed, 1);
+    
+    surface_set_target(_surface);
+    
+    draw_sprite(_sprite, 0, 0, 0);
+    
+    surface_reset_target();
+    
+    buffer_get_surface(_buffer, _surface, 0);
+    buffer_seek(_buffer, buffer_seek_start, 0);
+    
+    global.attire_colour_data = array_create(_sprite_width * _sprite_height);
+    
+    for (var i = 0; i < _sprite_height; ++i)
+    {
+        for (var j = 0; j < _sprite_width; ++j)
+        {
+            global.attire_colour_data[@ (i * ATTIRE_COLOUR_AMOUNT) + j] = buffer_read(_buffer, buffer_u32) & 0xffffff;
+        }
+    }
+    
+    sprite_delete(_sprite);
+    surface_free(_surface);
+    buffer_delete(_buffer);
 }

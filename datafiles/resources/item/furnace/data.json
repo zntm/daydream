@@ -3,12 +3,11 @@
     "sprite": {
         "xoffset": 8,
         "yoffset": 8,
-        "length": 5,
-        "edge_padding": 8
+        "length": 1
     },
     "inventory": "#phantasia:item/generic/inventory_tile",
     "harvest": {
-        "hardness": 0.48,
+        "hardness": 0.4,
         "level": 1,
         "particle": {
             "colour": [
@@ -21,12 +20,10 @@
     "drop": {
         "item": [
             {
-                "id": "phantasia:stone_wall"
+                "id": "phantasia:furnace"
             }
         ],
         "tool": "pickaxe"
     },
-    "sfx": "#phantasia:tile/sfx/stone",
-    "is_tile": true,
-    "is_wall": true
+    "sfx": "#phantasia:tile/sfx/stone"
 }

@@ -25,16 +25,15 @@ function Noise(_xoffset, _yoffset, _xsize, _ysize, _amplitude, _octave, _roughne
     shader_reset();
     
     buffer_get_surface(_buffer, _surface, 0);
+    buffer_seek(_buffer, buffer_seek_start, 0);
     
     ___noise = array_create(___xsize * ___ysize);
     
-    for (var i = 0; i < _xsize; ++i)
+    for (var i = 0; i < _ysize; ++i)
     {
-        for (var j = 0; j < _ysize; ++j)
+        for (var j = 0; j < _xsize; ++j)
         {
-            var _index = (j * _xsize) + i;
-            
-            ___noise[@ _index] = buffer_peek(_buffer, _index, buffer_u8) * ___amplitude;
+            ___noise[@ (i * _xsize) + j] = buffer_read(_buffer, buffer_u8) * ___amplitude;
         }
     }
     
