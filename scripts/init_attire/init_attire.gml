@@ -167,13 +167,15 @@ function init_attire(_directory, _namespace = "phantasia", _type = 0)
     buffer_get_surface(_buffer, _surface, 0);
     buffer_seek(_buffer, buffer_seek_start, 0);
     
-    global.attire_colour_data = array_create(_sprite_width * _sprite_height);
+    global.attire_colour_data = array_create(_sprite_height);
     
     for (var i = 0; i < _sprite_height; ++i)
     {
+        global.attire_colour_data[@ i] = array_create(_sprite_width);
+        
         for (var j = 0; j < _sprite_width; ++j)
         {
-            global.attire_colour_data[@ (i * ATTIRE_COLOUR_AMOUNT) + j] = buffer_read(_buffer, buffer_u32) & 0xffffff;
+            global.attire_colour_data[@ i][@ j] = buffer_read(_buffer, buffer_u32) & 0xffffff;
         }
     }
     
