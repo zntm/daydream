@@ -397,6 +397,7 @@
     {"id":{"name":"rm_Menu_Create_Player","path":"rooms/rm_Menu_Create_Player/rm_Menu_Create_Player.yy",},},
     {"id":{"name":"rm_Menu_Create_World","path":"rooms/rm_Menu_Create_World/rm_Menu_Create_World.yy",},},
     {"id":{"name":"rm_Menu_Players","path":"rooms/rm_Menu_Players/rm_Menu_Players.yy",},},
+    {"id":{"name":"rm_Menu_Settings","path":"rooms/rm_Menu_Settings/rm_Menu_Settings.yy",},},
     {"id":{"name":"rm_Menu_Title","path":"rooms/rm_Menu_Title/rm_Menu_Title.yy",},},
     {"id":{"name":"rm_Menu_Warning_Beta","path":"rooms/rm_Menu_Warning_Beta/rm_Menu_Warning_Beta.yy",},},
     {"id":{"name":"rm_Menu_Warning_Epilepsy","path":"rooms/rm_Menu_Warning_Epilepsy/rm_Menu_Warning_Epilepsy.yy",},},
@@ -614,6 +615,7 @@
     {"roomId":{"name":"rm_Menu_Worlds","path":"rooms/rm_Menu_Worlds/rm_Menu_Worlds.yy",},},
     {"roomId":{"name":"rm_Menu_Create_Player","path":"rooms/rm_Menu_Create_Player/rm_Menu_Create_Player.yy",},},
     {"roomId":{"name":"rm_Menu_Create_World","path":"rooms/rm_Menu_Create_World/rm_Menu_Create_World.yy",},},
+    {"roomId":{"name":"rm_Menu_Settings","path":"rooms/rm_Menu_Settings/rm_Menu_Settings.yy",},},
   ],
   "templateType":"game",
   "TextureGroups":[

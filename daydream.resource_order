@@ -84,6 +84,7 @@
     {"name":"rm_Menu_Create_Player","order":3,"path":"rooms/rm_Menu_Create_Player/rm_Menu_Create_Player.yy",},
     {"name":"rm_Menu_Create_World","order":5,"path":"rooms/rm_Menu_Create_World/rm_Menu_Create_World.yy",},
     {"name":"rm_Menu_Players","order":2,"path":"rooms/rm_Menu_Players/rm_Menu_Players.yy",},
+    {"name":"rm_Menu_Settings","order":6,"path":"rooms/rm_Menu_Settings/rm_Menu_Settings.yy",},
     {"name":"rm_Menu_Title","order":1,"path":"rooms/rm_Menu_Title/rm_Menu_Title.yy",},
     {"name":"rm_Menu_Warning_Beta","order":1,"path":"rooms/rm_Menu_Warning_Beta/rm_Menu_Warning_Beta.yy",},
     {"name":"rm_Menu_Worlds","order":4,"path":"rooms/rm_Menu_Worlds/rm_Menu_Worlds.yy",},
