@@ -101,7 +101,7 @@ function menu_control_textbox()
 			
 			if (on_update != undefined)
 			{
-				on_update(x, y, id, text, keyboard_string);
+				on_update();
 			}
 			
 			// sfx_play("phantasia:menu.textbox.press", global.settings_value.sfx);

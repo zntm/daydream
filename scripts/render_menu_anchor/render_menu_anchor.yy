@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"render_menu_anchor",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"render_menu_anchor",
+  "parent":{
+    "name":"Menu",
+    "path":"folders/Scripts/Render/Menu.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

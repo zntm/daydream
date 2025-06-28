@@ -1,7 +1,6 @@
 placeholder = loca_translate("menu.generic.textbox.enter_name");
 
-// TODO: replace with global player var
-var _text = "";
+var _text = global.menu_player_data.name;
 
 if (_text != "")
 {
@@ -14,6 +13,13 @@ else
         text = menu_textbox_randomize_player_name();
     }
     until (string_length(text) <= text_length);
+    
+    global.menu_player_data.name = text;
 }
 
 text_display = text;
+
+on_update = function()
+{
+    global.menu_player_data.name = text;
+}

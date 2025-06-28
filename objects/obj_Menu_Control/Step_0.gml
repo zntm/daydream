@@ -70,6 +70,8 @@ for (var i = 0; i < _number; ++i)
                         {
                             on_select();
                         }
+                        
+                        keyboard_string = text;
                     }
                     
                     if (on_select_hold != undefined)
