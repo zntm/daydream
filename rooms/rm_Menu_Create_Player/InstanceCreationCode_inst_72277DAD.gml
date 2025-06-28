@@ -1,0 +1,1 @@
+placeholder = loca_translate("menu.generic.textbox.enter_name");

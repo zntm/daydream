@@ -1,3 +1,5 @@
+gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_src_alpha, bm_one);
+
 with (obj_Menu_Anchor)
 {
     if (on_draw != undefined)
@@ -96,4 +98,43 @@ with (obj_Menu_Button)
     }
 }
 
+with (obj_Menu_Textbox)
+{
+    if (boolean & MENU_BUTTON_BOOLEAN.IS_BUTTON_VISIBLE)
+    {
+        if (boolean & MENU_BUTTON_BOOLEAN.IS_SELECTED)
+        {
+            var _button_width  = (image_xscale / 2 * 16) + 2;
+            var _button_height = (image_yscale / 2 * 16) + 2;
+            
+            draw_sprite_stretched_ext(spr_Menu_Button_Select, 0, x - (_button_width / 2), y - (_button_height / 2), _button_width, _button_height, c_white, 1);
+            
+            draw_sprite_ext(sprite_index, 1, x, y, image_xscale, image_yscale, 0, c_white, 1);
+        }
+        else
+        {
+            if (boolean & MENU_BUTTON_BOOLEAN.IS_HOVER)
+            {
+                var _button_width  = (image_xscale / 2 * 16) + 2;
+                var _button_height = (image_yscale / 2 * 16) + 2;
+                
+                draw_sprite_stretched_ext(spr_Menu_Button_Select, 0, x - (_button_width / 2), y - (_button_height / 2), _button_width, _button_height, c_white, 1);
+            }
+            
+            draw_sprite_ext(sprite_index, 0, x, y, image_xscale, image_yscale, 0, c_white, 1);
+        }
+    }
+    
+    if (text_display != "")
+    {
+        render_text(x, y, text_display, 1, 1, 0, c_white, 1);
+    }
+    else if (placeholder != undefined)
+    {
+        render_text(x, y, placeholder, 1, 1, 0, c_white, 0.25);
+    }
+}
+
 draw_set_align(_halign, _valign);
+
+gpu_set_blendmode(bm_normal);

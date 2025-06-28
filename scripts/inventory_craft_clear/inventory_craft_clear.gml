@@ -1,4 +1,4 @@
-function e(_index)
+function inventory_craft_clear(_index)
 {
 	var _data = global.crafting_data[_index];
 	

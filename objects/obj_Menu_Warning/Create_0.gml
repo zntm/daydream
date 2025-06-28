@@ -28,4 +28,4 @@ for (var i = 0; i < glow_length; ++i)
     }
 }
 
-transition = 0;
+timer = 0;

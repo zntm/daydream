@@ -1,5 +1,7 @@
 function render_menu_background(_id, _colour)
 {
+    gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_src_alpha, bm_one);
+    
     static __u_colour = shader_get_uniform(shd_Background, "u_colour");
     static __u_strength = shader_get_uniform(shd_Background, "u_strength");
     
@@ -13,6 +15,8 @@ function render_menu_background(_id, _colour)
     
     if (global.settings.display_background)
     {
+        var _offset = global.menu_background_offset;
+        
         var _light_colour = _biome_data.get_light_colour(_colour);
         
         var _background = _biome_data.get_background();
@@ -29,9 +33,11 @@ function render_menu_background(_id, _colour)
         {
             shader_set_uniform_f(__u_strength, _background_blend * (1 - ((i + 1) / _background_length)));
             
-            render_background_parallax(_background_data, i, offset, 0, 0, 0, room_width, room_height, _light_colour, 1);
+            render_background_parallax(_background_data, i, _offset, 0, 0, 0, room_width, room_height, _light_colour, 1);
         }
         
         shader_reset();
     }
+    
+    gpu_set_blendmode(bm_normal);
 }

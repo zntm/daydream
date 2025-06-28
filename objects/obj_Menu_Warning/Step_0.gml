@@ -4,9 +4,9 @@ global.delta_time = _delta_time;
 
 if (!instance_exists(obj_Menu_Fade))
 {
-    transition += _delta_time;
+    timer += _delta_time;
     
-    if (transition > transition_seconds) || (keyboard_check_pressed(vk_anykey))
+    if (timer > transition_seconds) || (keyboard_check_pressed(vk_anykey))
     {
         var _transition_room = transition_room;
         
@@ -24,6 +24,6 @@ for (var i = 0; i < glow_length; ++i)
 {
     var _glow = glow[i];
     
-    glow[@ i].x += _glow.xvelocity * _delta_time;
-    glow[@ i].y += _glow.yvelocity * _delta_time;
+    _glow.x += _glow.xvelocity * _delta_time;
+    _glow.y += _glow.yvelocity * _delta_time;
 }

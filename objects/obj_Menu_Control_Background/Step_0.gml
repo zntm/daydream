@@ -1,1 +1,1 @@
-offset += global.delta_time * 8;
+global.menu_background_offset += global.delta_time * 8;

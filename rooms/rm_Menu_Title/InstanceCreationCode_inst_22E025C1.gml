@@ -1,7 +1,7 @@
 var _splash_data = global.splash_data;
 var _splash_current_date = _splash_data[$ $"{current_month}_{current_day}"];
 
-splash_text = array_choose(((chance(0.1)) && (_splash_current_date != undefined)) ? _splash_current_date : _splash_data.generic);
+text = array_choose(((chance(0.1)) && (_splash_current_date != undefined)) ? _splash_current_date : _splash_data.generic);
 
 on_draw = function()
 {
@@ -13,7 +13,7 @@ on_draw = function()
     
     draw_set_align(fa_middle, fa_center);
     
-    render_text(x + (sprite_get_width(spr_Menu_Title) * 2 / 2), y + (sprite_get_height(spr_Menu_Title) * 2), splash_text, 1, 1, 12, MENU_TITLE_SPLASH_COLOUR);
+    render_text(x + (sprite_get_width(spr_Menu_Title) * 2 / 2), y + (sprite_get_height(spr_Menu_Title) * 2), text, 1, 1, 12, MENU_TITLE_SPLASH_COLOUR);
     
     draw_set_align(_halign, _valign);
 }

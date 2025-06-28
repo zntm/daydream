@@ -1,1 +1,1 @@
-render_menu_background(biome_id, colour);
+render_menu_background(global.menu_background_id, global.menu_background_colour);

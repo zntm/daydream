@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"menu_init_button_depth",
+  "%Name":"menu_control_textbox",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"menu_init_button_depth",
+  "name":"menu_control_textbox",
   "parent":{
     "name":"Menu",
     "path":"folders/Scripts/Menu.yy",

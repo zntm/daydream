@@ -26,7 +26,7 @@ init_setting("general", "menu_toast", new SettingsData(SETTINGS_TYPE.SWITCH, tru
 
 init_setting("general", "menu_profanity_filter", new SettingsData(SETTINGS_TYPE.SWITCH, true));
 
-init_setting("general", "menu_skip_epilepsy", new SettingsData(SETTINGS_TYPE.SWITCH, false));
+init_setting("general", "menu_skip_epilepsy", new SettingsData(SETTINGS_TYPE.SWITCH, true));
 
 init_setting("accessibility", "global_refresh_rate", new SettingsData(SETTINGS_TYPE.ARROW, 0));
 

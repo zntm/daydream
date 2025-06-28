@@ -31,5 +31,6 @@ call_later(8, time_source_units_frames, function()
 {
     init("phantasia");
     
+    menu_refresh_background();
     room_goto((global.settings.menu_skip_epilepsy) ? rm_Menu_Title : rm_Menu_Warning_Epilepsy);
 }, -1);

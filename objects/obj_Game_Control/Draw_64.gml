@@ -144,60 +144,13 @@ if (_hp > 0) && (is_opened & IS_OPENED_BOOLEAN.GUI) && !(is_opened & IS_OPENED_B
         {
             draw_surface(_surface_item, _x, _y);
         }
-        /*
-        gui_inventory_tooltip(_gui_multiplier_x, _gui_multiplier_y);
         
-        if (instance_exists(global.inventory_selected_hover))
-        {
-            var _ = surface_inventory.tooltip;
-            
-            draw_sprite_ext(
-                spr_Inventory_Tooltip,
-                0,
-                _gui_mouse_x - (GUI_INVENTORY_TOOLTIP_BG_PADDING * _gui_multiplier_x),
-                _gui_mouse_y - (GUI_INVENTORY_TOOLTIP_BG_PADDING * _gui_multiplier_y),
-                (((_.surface_width  + (GUI_INVENTORY_TOOLTIP_BG_PADDING * 2)) / sprite_get_width(spr_Inventory_Tooltip)))  * _gui_multiplier_x,
-                (((_.surface_height + (GUI_INVENTORY_TOOLTIP_BG_PADDING * 2)) / sprite_get_height(spr_Inventory_Tooltip))) * _gui_multiplier_y,
-                0,
-                c_white,
-                1
-            );
-            
-            var _surface = _.surface;
-            
-            if (surface_exists(_surface))
-            {
-                draw_surface(_surface, _gui_mouse_x, _gui_mouse_y);
-            }
-        }
-        */
-        /*
-        gui_inventory_tooltip(_gui_multiplier_x, _gui_multiplier_y);
+        var _inst = global.inventory_selected_hover;
         
-        if (instance_exists(global.inventory_selected_hover))
+        if (_inst.slot_type != INVENTORY_SLOT_TYPE.CRAFTABLE)
         {
-            var _ = surface_inventory.tooltip;
-            
-            draw_sprite_ext(
-                spr_Inventory_Tooltip,
-                0,
-                _gui_mouse_x - (GUI_INVENTORY_TOOLTIP_BG_PADDING * _gui_multiplier_x),
-                _gui_mouse_y - (GUI_INVENTORY_TOOLTIP_BG_PADDING * _gui_multiplier_y),
-                (((_.surface_width  + (GUI_INVENTORY_TOOLTIP_BG_PADDING * 2)) / 7)) * _gui_multiplier_x,
-                (((_.surface_height + (GUI_INVENTORY_TOOLTIP_BG_PADDING * 2)) / 7)) * _gui_multiplier_y,
-                0,
-                c_white,
-                1
-            );
-            
-            var _surface = _.surface;
-            
-            if (surface_exists(_surface))
-            {
-                draw_surface(_.surface, _gui_mouse_x, _gui_mouse_y);
-            }
+            gui_inventory_tooltip(_gui_multiplier_x, _gui_multiplier_y);
         }
-        */
     }
     else
     {
