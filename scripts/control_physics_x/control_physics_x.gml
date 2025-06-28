@@ -1,6 +1,6 @@
 #macro PHYSICS_GLOBAL_SLIPPERINESS 0.2
 
-function control_physics_x(_collision = true, _world_height = global.world_data[$ global.world.dimension].get_world_height())
+function control_physics_x(_dt, _collision = true, _world_height = global.world_data[$ global.world.dimension].get_world_height())
 {
     static __tile_meeting = function(_x, _y, _world_height)
     {
@@ -14,7 +14,7 @@ function control_physics_x(_collision = true, _world_height = global.world_data[
         return !global.item_data[$ _tile.get_id()].has_type(ITEM_TYPE_BIT.PLATFORM);
     }
     
-    var _xvelocity = xvelocity;
+    var _xvelocity = xvelocity * _dt;
     /*
     if (object_index != obj_Item_Drop) && (knockback_time > 0)
     {
@@ -49,16 +49,16 @@ function control_physics_x(_collision = true, _world_height = global.world_data[
     
     for (var i = _distance; i > 0; i -= _size)
     {
-        var _dt = _direction * min(i, _size);
+        var _tick = _direction * min(i, _size);
         
-        if (i > _size) && (!__tile_meeting(x + _dt, y, _world_height))
+        if (i > _size) && (!__tile_meeting(x + _tick, y, _world_height))
         {
-            x += _dt;
+            x += _tick;
             
             continue;
         }
         
-        for (var j = abs(_dt); j > 0; j -= 1)
+        for (var j = abs(_tick); j > 0; j -= 1)
         {
             var _offset = _direction * min(j, 1);
             

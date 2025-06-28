@@ -19,13 +19,13 @@ function control_physics_y(_dt, _gravity = PHYSICS_GLOBAL_GRAVITY, _collision = 
         return true;
     }
     
-    var _acceleration = _gravity * _dt / 2;
+    var _acceleration = _gravity * _dt;
     
     yvelocity = clamp(yvelocity + _acceleration, -PHYSICS_GLOBAL_TERMINAL_YVELOCITY, PHYSICS_GLOBAL_TERMINAL_YVELOCITY);
     
-    var _yvelocity = yvelocity;
+    var _yvelocity = yvelocity * _dt;
     
-    yvelocity = clamp(yvelocity + _acceleration, -PHYSICS_GLOBAL_TERMINAL_YVELOCITY, PHYSICS_GLOBAL_TERMINAL_YVELOCITY);
+    // yvelocity = clamp(yvelocity + _acceleration, -PHYSICS_GLOBAL_TERMINAL_YVELOCITY, PHYSICS_GLOBAL_TERMINAL_YVELOCITY);
     
     if (!_collision)
     {

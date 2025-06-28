@@ -1,4 +1,4 @@
-function menu_refresh_background()
+function menu_refresh_values()
 {
     static __filter = function(_value)
     {

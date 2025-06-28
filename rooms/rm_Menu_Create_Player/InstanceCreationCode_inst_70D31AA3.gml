@@ -1,0 +1,1 @@
+text = loca_translate($"menu.create_player.attire.{global.attire_elements[global.menu_index_attire]}");

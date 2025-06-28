@@ -9,7 +9,7 @@ if (_text != "")
 }
 else
 {
-    text = string(irandom(-0x8000_0000, 0x7fff_ffff));
+    text = string(irandom_range(-0x8000_0000, 0x7fff_ffff));
 }
 
 text_display = text;

@@ -4,7 +4,7 @@ on_select_release = function()
 {
     with (inst_8ABD565)
     {
-        text = string(irandom(-0x8000_0000, 0x7fff_ffff));
+        text = string(irandom_range(-0x8000_0000, 0x7fff_ffff));
         text_display = text;
     }
 }

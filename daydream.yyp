@@ -504,7 +504,7 @@
     {"id":{"name":"lerp_delta","path":"scripts/lerp_delta/lerp_delta.yy",},},
     {"id":{"name":"loca_translate","path":"scripts/loca_translate/loca_translate.yy",},},
     {"id":{"name":"menu_control_textbox","path":"scripts/menu_control_textbox/menu_control_textbox.yy",},},
-    {"id":{"name":"menu_refresh_background","path":"scripts/menu_refresh_background/menu_refresh_background.yy",},},
+    {"id":{"name":"menu_refresh_values","path":"scripts/menu_refresh_values/menu_refresh_values.yy",},},
     {"id":{"name":"menu_textbox_randomize_player_name","path":"scripts/menu_textbox_randomize_player_name/menu_textbox_randomize_player_name.yy",},},
     {"id":{"name":"menu_textbox_randomize_world_name","path":"scripts/menu_textbox_randomize_world_name/menu_textbox_randomize_world_name.yy",},},
     {"id":{"name":"MusicData","path":"scripts/MusicData/MusicData.yy",},},
