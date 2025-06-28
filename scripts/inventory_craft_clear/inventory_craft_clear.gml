@@ -11,19 +11,19 @@ function inventory_craft_clear(_index)
         
 		var _id = _ingredient.id;
 		var _amount = _ingredient.amount;
-		
+        
 		for (var j = 0; j < global.inventory_length.base; ++j)
 		{
-			var _ = global.inventory.base[j];
+			var _item = global.inventory.base[j];
 			
-			if (_ == INVENTORY_EMPTY) || (is_array(_id) ? (!array_contains(_id, _.get_id())) : (_id != _.get_id())) continue;
+			if (_item == INVENTORY_EMPTY) || ((is_array(_id)) ? (!array_contains(_id, _item.get_id())) : (_id != _item.get_id())) continue;
 			
-			var _amount2 = _.get_amount();
+			var _amount2 = _item.get_amount();
 			
 			if (_amount2 > _amount)
 			{
-				global.inventory.base[@ j].add_amount(-_amount);
-				
+				_item.add_amount(-_amount);
+                
 				break;
 			}
 			
