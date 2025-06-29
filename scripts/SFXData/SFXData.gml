@@ -57,6 +57,21 @@ function SFXData() constructor
         return self[$ "___pitch"] ?? 1;
     }
     
+    static set_gain = function(_gain)
+    {
+        if (_gain != undefined)
+        {
+            ___gain = init_smart_value(_gain);
+        }
+        
+        return self;
+    }
+    
+    static get_gain = function()
+    {
+        return self[$ "___gain"] ?? 1;
+    }
+    
     static set_subtitle = function(_subtitle)
     {
         if (_subtitle != undefined)

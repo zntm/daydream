@@ -9,6 +9,6 @@ function sfx_play(_id, _gain = 1)
     return audio_play_sound_ext({
         sound: array_choose(_data.get_asset()),
         pitch: smart_value(_data.get_pitch()),
-        gain: _gain
+        gain: _gain * _data.get_gain()
     });
 }

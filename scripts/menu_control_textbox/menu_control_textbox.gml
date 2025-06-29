@@ -99,6 +99,8 @@ function menu_control_textbox()
             text = keyboard_string;
             text_display = text;
 			
+            sfx_play("phantasia:menu.key");
+            
 			if (on_update != undefined)
 			{
 				on_update();

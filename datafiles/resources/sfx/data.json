@@ -37,14 +37,29 @@
         "asset": [
             "phantasia:menu/key"
         ],
-        "pitch": 1,
+        "pitch": "#phantasia:sfx/generic/pitch_default",
         "subtitle": "phantasia:sfx.menu.key"
+    },
+    "menu.button.deselect": {
+        "asset": [
+            "phantasia:menu/button/deselect"
+        ],
+        "pitch": 1,
+        "gain": 0.125,
+        "subtitle": "phantasia:sfx.menu.button.deselect"
+    },
+    "menu.button.select": {
+        "asset": [
+            "phantasia:menu/button/select"
+        ],
+        "pitch": 1,
+        "subtitle": "phantasia:sfx.menu.button.select"
     },
     "menu.sweep": {
         "asset": [
             "phantasia:menu/sweep"
         ],
-        "pitch": 1,
+        "pitch": "#phantasia:sfx/generic/pitch_default",
         "subtitle": "phantasia:sfx.menu.sweep"
     },
     "tile.dirt.harvest": {

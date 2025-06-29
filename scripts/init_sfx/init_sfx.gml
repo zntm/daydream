@@ -16,6 +16,7 @@ function init_sfx(_directory, _namespace)
             .set_asset(_data.asset)
             .set_falloff(_data[$ "falloff"])
             .set_pitch(_data.pitch)
+            .set_gain(_data[$ "gain"])
             .set_subtitle(_data[$ "subtitle"]);
     }
     
