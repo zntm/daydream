@@ -35,8 +35,20 @@
             "gain": 0.6
         },
         {
+            "id": "phantasia:ornaments_of_the_sky",
+            "gain": 0.5
+        },
+        {
+            "id": "phantasia:sol_y_luna",
+            "gain": 0.5
+        },
+        {
             "id": "phantasia:tense",
             "gain": 0.6
+        },
+        {
+            "id": "phantasia:winter_2012",
+            "gain": 0.7
         }
     ],
 	"tile": {

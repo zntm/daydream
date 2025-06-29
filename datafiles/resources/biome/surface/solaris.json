@@ -35,6 +35,14 @@
             "gain": 0.4
         },
         {
+            "id": "phantasia:oasis",
+            "gain": 0.4
+        },
+        {
+            "id": "phantasia:sol_y_luna",
+            "gain": 0.5
+        },
+        {
             "id": "phantasia:tense",
             "gain": 0.5
         }

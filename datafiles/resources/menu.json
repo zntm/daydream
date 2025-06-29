@@ -9,9 +9,21 @@
             "gain": 0.4
         },
         {
+            "id": "phantasia:ornaments_of_the_sky",
+            "gain": 0.5
+        },
+        {
             "id": "phantasia:phantasia",
             "gain": 0.6,
-            "weight": 3
+            "weight": 2
+        },
+        {
+            "id": "phantasia:red_apple",
+            "gain": 0.4
+        },
+        {
+            "id": "phantasia:sol_y_luna",
+            "gain": 0.5
         },
         {
             "id": "phantasia:someday_it_will_rain",

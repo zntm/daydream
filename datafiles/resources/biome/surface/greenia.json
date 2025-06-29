@@ -35,6 +35,14 @@
             "gain": 0.7
         },
         {
+            "id": "phantasia:red_apple",
+            "gain": 0.6
+        },
+        {
+            "id": "phantasia:soft_hour",
+            "gain": 0.6
+        },
+        {
             "id": "phantasia:someday_it_will_rain",
             "gain": 0.7
         }
