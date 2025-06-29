@@ -27,6 +27,8 @@ function init(_namespace)
     init_biome($"{PROGRAM_DIRECTORY_RESOURCES}\\biome", _namespace);
     
     init_world($"{PROGRAM_DIRECTORY_RESOURCES}\\world", _namespace);
+    
+    init_menu($"{PROGRAM_DIRECTORY_RESOURCES}\\menu.json");
 }
 
 call_later(8, time_source_units_frames, function()
