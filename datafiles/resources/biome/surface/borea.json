@@ -26,9 +26,18 @@
         "night": "#141B35"
     },
     "music": [
-        "phantasia:12_hours_at_ease",
-        "phantasia:fall",
-        "phantasia:tense"
+        {
+            "id": "phantasia:12_hours_at_ease",
+            "gain": 0.6
+        },
+        {
+            "id": "phantasia:fall",
+            "gain": 0.6
+        },
+        {
+            "id": "phantasia:tense",
+            "gain": 0.6
+        }
     ],
 	"tile": {
 		"top_layer": {

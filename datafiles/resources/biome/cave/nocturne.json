@@ -25,7 +25,10 @@
         "night": "#141B35"
     },
     "music": [
-        "phantasia:behind"
+        {
+            "id": "phantasia:behind",
+            "gain": 0.4
+        }
     ],
 	"tile": {
         "base": {

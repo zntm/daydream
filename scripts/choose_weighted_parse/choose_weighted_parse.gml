@@ -11,7 +11,7 @@ function choose_weighted_parse(_array)
         var _index = i * 2;
         
         _result[@ _index + 0] = _data;
-        _result[@ _index + 1] = _data.weight;
+        _result[@ _index + 1] = _data[$ "weight"] ?? 1;
     }
     
     return _result;

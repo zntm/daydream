@@ -29,7 +29,6 @@ function menu_refresh_instance_player_colour()
         
         _inst.y = _inst.ystart;
         
-        _inst.text = string(_index);
-        _inst.text_display = _inst.text;
+        _inst.icon = spr_Menu_Attire_Colour;
     }
 }

@@ -26,9 +26,18 @@
         "night": "#141B35"
     },
     "music": [
-        "phantasia:field_of_concourse",
-        "phantasia:liminal",
-        "phantasia:someday_it_will_rain"
+        {
+            "id": "phantasia:field_of_concourse",
+            "gain": 0.7
+        },
+        {
+            "id": "phantasia:liminal",
+            "gain": 0.7
+        },
+        {
+            "id": "phantasia:someday_it_will_rain",
+            "gain": 0.7
+        }
     ],
 	"tile": {
 		"top_layer": {

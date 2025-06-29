@@ -1,0 +1,121 @@
+{
+	"data": [
+		{
+			"header": "lead_developer",
+			"colour": "#D2B5FF",
+			"entries": [
+				{
+					"name": "Zhen",
+					"youtube": "zntm",
+					"twitter": "zhntm",
+					"bluesky": "zntm.bsky.social"
+				}
+			]
+		},
+		{
+			"header": "artist",
+			"colour": "#FFCEE7",
+			"entries": [
+				{
+					"name": "cyanflower",
+					"bluesky": "cyanflower.bsky.social"
+				},
+				{
+					"name": "KazooTheCat",
+					"bluesky": "claireeverywhere.bsky.social"
+				},
+				{
+					"name": "NHJ",
+					"bluesky": "nhj03.bsky.social",
+					"twitter": "NHJ__NHJ"
+				},
+				{
+					"name": "NetBa",
+					"bluesky": "netba.bsky.social",
+					"twitter": "NetBa_Art"
+				},
+				{
+					"name": "lettucenotcabbage",
+					"twitter": "lettucenotcabb"
+				},
+				{
+					"name": "voxelotl",
+					"bluesky": "voxelotl.bsky.social",
+					"twitter": "voxelvoxel_"
+				}
+			]
+		},
+		{
+			"header": "composer",
+			"colour": "#D8F4FF",
+			"entries": [
+				{
+					"name": "GlydeOut",
+					"youtube": "GreetingsCultist",
+					"twitter": "GlydeGameDev"
+				},
+				{
+					"name": "LonelyChicken",
+					"twitter": "LonelyChicken12"
+				},
+				{
+					"name": "Oh Eight",
+					"youtube": "oheight"
+				},
+				"Skies"
+			]
+		},
+		{
+			"header": "translation_es",
+			"colour": "#FFEBB2",
+			"entries": [
+				"vikkithecat",
+				"Artemisia"
+			]
+		},
+		{
+			"header": "playtester",
+			"colour": "#53626B",
+			"entries": [
+				"zenuss",
+				"abyssaltheking",
+				"fordivinity",
+				"Jay-Ar",
+				"licensedfunnyman",
+				"iammefr",
+				"srisrid",
+				"wanterwither",
+				"anxieteaplushbee",
+				"ceasingbonsai17",
+				"emjaycrowe",
+				"greetingscultist",
+				"hunvich",
+				"hyfa",
+				"jarviscrompz",
+				"void_4736",
+				"tamtixx",
+				"kksxx",
+				"Yuiayyy"
+			]
+		},
+		{
+			"header": "special_thanks",
+			"colour": "#904443",
+			"entries": [
+				"zenuss",
+				"pieusername",
+				"nisanunu",
+				"Jay-Ar",
+				"anxieteaplushbee"
+			]
+		},
+		{
+			"header": "fonts",
+			"colour": "#E9F1FA",
+			"entries": [
+				"Sriracha",
+				"Noto Sans JP"
+			]
+		}
+	]
+}

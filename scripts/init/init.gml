@@ -1,5 +1,7 @@
 function init(_namespace)
 {
+    init_credit($"{PROGRAM_DIRECTORY_RESOURCES}\\credit\\data.json");
+    
     init_splash($"{PROGRAM_DIRECTORY_RESOURCES}\\splash.json");
     
     init_rarity($"{PROGRAM_DIRECTORY_RESOURCES}\\rarity.json", _namespace);
