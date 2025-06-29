@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"menu_refresh_background",
+  "%Name":"menu_refresh_value_player_save",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"menu_refresh_background",
+  "name":"menu_refresh_value_player_save",
   "parent":{
     "name":"Menu",
     "path":"folders/Scripts/Menu.yy",

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"menu_refresh_instance_player_colour",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"menu_refresh_instance_player_colour",
+  "parent":{
+    "name":"Menu",
+    "path":"folders/Scripts/Menu.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

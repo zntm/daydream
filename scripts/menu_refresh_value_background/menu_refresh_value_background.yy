@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"menu_refresh_attire",
+  "%Name":"menu_refresh_value_background",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"menu_refresh_attire",
+  "name":"menu_refresh_value_background",
   "parent":{
     "name":"Menu",
     "path":"folders/Scripts/Menu.yy",

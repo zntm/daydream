@@ -179,6 +179,8 @@ function init_attire(_directory, _namespace = "phantasia", _type = 0)
         }
     }
     
+    global.attire_colour_white_data = array_shift(global.attire_colour_data);
+    
     sprite_delete(_sprite);
     surface_free(_surface);
     buffer_delete(_buffer);

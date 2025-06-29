@@ -3,7 +3,7 @@ global.menu_background_colour = c_black;
 
 global.menu_background_offset = 0;
 
-function menu_refresh_background()
+function menu_refresh_value_background()
 {
     static __filter = function(_value)
     {

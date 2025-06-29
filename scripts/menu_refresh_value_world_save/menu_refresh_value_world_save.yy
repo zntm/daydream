@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"menu_refresh_values",
+  "%Name":"menu_refresh_value_world_save",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"menu_refresh_values",
+  "name":"menu_refresh_value_world_save",
   "parent":{
     "name":"Menu",
     "path":"folders/Scripts/Menu.yy",

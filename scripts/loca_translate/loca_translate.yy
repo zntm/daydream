@@ -6,7 +6,7 @@
   "name":"loca_translate",
   "parent":{
     "name":"Loca Data",
-    "path":"folders/Data/Loca Data.yy",
+    "path":"folders/Loca Data.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
