@@ -25,12 +25,12 @@ function control_camera_pos(_x, _y, _force = false, _delta_time = global.delta_t
 }
 
 function camera_set_view_pos_subpixel(_cam, _x, _y) {
-	var	_sw = surface_get_width(application_surface),
-		_vw = camera_get_view_width(_cam),
-		_ratio = _vw/_sw;
+    var    _sw = surface_get_width(application_surface),
+        _vw = camera_get_view_width(_cam),
+        _ratio = _vw/_sw;
 
-	_x = round(_x/_ratio)*_ratio;
-	_y = round(_y/_ratio)*_ratio;
+    _x = round(_x/_ratio)*_ratio;
+    _y = round(_y/_ratio)*_ratio;
 
-	camera_set_view_pos(_cam,_x,_y);
+    camera_set_view_pos(_cam,_x,_y);
 }

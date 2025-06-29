@@ -86,7 +86,7 @@ function inventory_give(_x, _y, _item, _text = true)
             }
             else
             {
-            	spawn_floating_text(_x, _y, string(loca_translate("phantasia:gui.item_tooltip.header"), _id), 0, -2.4);
+                spawn_floating_text(_x, _y, string(loca_translate("phantasia:gui.item_tooltip.header"), _id), 0, -2.4);
             }
         }
     }

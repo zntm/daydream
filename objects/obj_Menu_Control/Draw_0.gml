@@ -82,7 +82,7 @@ with (obj_Menu_Button)
         }
         else
         {
-        	render_text(x, y, text, 1, 1, 0, c_white, 1);
+            render_text(x, y, text, 1, 1, 0, c_white, 1);
         }
     }
     else if (icon != undefined)
@@ -93,7 +93,7 @@ with (obj_Menu_Button)
         }
         else
         {
-        	draw_sprite_ext(icon, icon_index, x, y, 1, 1, 0, c_white, 1);
+            draw_sprite_ext(icon, icon_index, x, y, 1, 1, 0, c_white, 1);
         }
     }
 }

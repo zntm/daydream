@@ -241,7 +241,7 @@ function inventory_organize_mouse(_inst)
                 }
                 else
                 {
-                	global.inventory.mouse.item = new Inventory(_id, _amount);
+                    global.inventory.mouse.item = new Inventory(_id, _amount);
                     
                     inventory_mouse_select_type = INVENTORY_MOUSE_SELECT_TYPE.CRAFTING;
                 }

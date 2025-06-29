@@ -24,7 +24,7 @@ function inventory_refresh_crafting_station(_refresh = false)
         }
         else
         {
-        	_refresh = true;
+            _refresh = true;
         }
     }
     
