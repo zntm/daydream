@@ -43,5 +43,5 @@ function init_tag_recursive(_directory, _namespace, _id)
         }
     }
     
-    global.tag_data = init_tag_value(global.tag_data);
+    global.tag_data = tag_value_parse(global.tag_data);
 }

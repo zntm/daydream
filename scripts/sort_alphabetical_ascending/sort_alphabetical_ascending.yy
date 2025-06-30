@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"file_save_player_game",
+  "%Name":"sort_alphabetical_ascending",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"file_save_player_game",
+  "name":"sort_alphabetical_ascending",
   "parent":{
-    "name":"Save",
-    "path":"folders/Scripts/File/Save.yy",
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

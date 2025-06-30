@@ -11,7 +11,7 @@ function init_item(_directory, _namespace)
         
         dbg_timer("init_item");
         
-        var _json = init_tag_value(buffer_load_json($"{_directory}/{_file}/data.json"));
+        var _json = tag_value_parse(buffer_load_json($"{_directory}/{_file}/data.json"));
         
         var _item_data = new ItemData();
         

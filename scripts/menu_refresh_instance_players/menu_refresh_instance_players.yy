@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"menu_refresh_instance_player_attire",
+  "%Name":"menu_refresh_instance_players",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"menu_refresh_instance_player_attire",
+  "name":"menu_refresh_instance_players",
   "parent":{
     "name":"Instance",
     "path":"folders/Scripts/Menu/Refresh/Instance.yy",

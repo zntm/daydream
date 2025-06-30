@@ -13,7 +13,7 @@ function init_biome(_directory, _namespace = "phantasia", _type = 0)
         
         dbg_timer("init_biome_cave");
         
-        var _json = init_tag_value(buffer_load_json($"{_directory}/cave/{_file}"));
+        var _json = tag_value_parse(buffer_load_json($"{_directory}/cave/{_file}"));
         
         var _name = string_delete(_file, string_length(_file) - 4, 5);
         
@@ -51,7 +51,7 @@ function init_biome(_directory, _namespace = "phantasia", _type = 0)
         
         dbg_timer("init_biome_surface");
         
-        var _json = init_tag_value(buffer_load_json($"{_directory}/surface/{_file}"));
+        var _json = tag_value_parse(buffer_load_json($"{_directory}/surface/{_file}"));
         
         var _name = string_delete(_file, string_length(_file) - 4, 5);
         

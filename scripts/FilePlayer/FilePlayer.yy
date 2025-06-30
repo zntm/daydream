@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"init_tag_value",
+  "%Name":"FilePlayer",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"init_tag_value",
+  "name":"FilePlayer",
   "parent":{
-    "name":"Tag Data",
-    "path":"folders/Data/Tag Data.yy",
+    "name":"File",
+    "path":"folders/Scripts/File.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

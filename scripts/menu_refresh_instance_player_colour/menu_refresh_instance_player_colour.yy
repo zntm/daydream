@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"menu_refresh_instance_player_colour",
   "parent":{
-    "name":"Menu",
-    "path":"folders/Scripts/Menu.yy",
+    "name":"Instance",
+    "path":"folders/Scripts/Menu/Refresh/Instance.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"menu_refresh_value_background",
   "parent":{
-    "name":"Menu",
-    "path":"folders/Scripts/Menu.yy",
+    "name":"Value",
+    "path":"folders/Scripts/Menu/Refresh/Value.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

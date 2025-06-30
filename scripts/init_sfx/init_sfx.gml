@@ -2,7 +2,7 @@ function init_sfx(_directory, _namespace)
 {
     init_sfx_asset($"{_directory}/asset", _namespace);
     
-    var _json = init_tag_value(buffer_load_json($"{_directory}/data.json"));
+    var _json = tag_value_parse(buffer_load_json($"{_directory}/data.json"));
     
     var _names  = struct_get_names(_json);
     var _length = array_length(_names);

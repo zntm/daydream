@@ -1,6 +1,6 @@
 global.tag_value = {}
 
-function init_tag_value(_data)
+function tag_value_parse(_data)
 {
     if (!is_string(_data))
     {
@@ -12,7 +12,7 @@ function init_tag_value(_data)
             
             for (var i = 0; i < _length; ++i)
             {
-                _tag_data[@ i] = init_tag_value(_data[i]);
+                _tag_data[@ i] = tag_value_parse(_data[i]);
             }
             
             return _tag_data;
@@ -28,7 +28,7 @@ function init_tag_value(_data)
             {
                 var _name = _names[i];
                 
-                _tag_data[$ _name] = init_tag_value(_data[$ _name]);
+                _tag_data[$ _name] = tag_value_parse(_data[$ _name]);
             }
             
             return _tag_data;
@@ -62,7 +62,7 @@ function init_tag_value(_data)
         
         for (var i = 0; i < _length; ++i)
         {
-            _tag_data[@ i] = init_tag_value(_tag_data[i]);
+            _tag_data[@ i] = tag_value_parse(_tag_data[i]);
         }
     }
     else if (is_struct(_tag_data))
@@ -74,7 +74,7 @@ function init_tag_value(_data)
         {
             var _name = _names[i];
             
-            _tag_data[$ _name] = init_tag_value(_tag_data[$ _name]);
+            _tag_data[$ _name] = tag_value_parse(_tag_data[$ _name]);
         }
     }
     

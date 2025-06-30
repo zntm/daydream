@@ -5,7 +5,7 @@ function init_crafting(_directory, _prefix = "phantasia", _type = 0)
 {
     var _item_data = global.item_data;
     
-    var _json = init_tag_value(buffer_load_json(_directory).data);
+    var _json = tag_value_parse(buffer_load_json(_directory).data);
     
     var _length = array_length(_json);
     

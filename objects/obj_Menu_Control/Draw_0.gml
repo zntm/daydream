@@ -96,6 +96,11 @@ with (obj_Menu_Button)
             draw_sprite_ext(icon, icon_index, x, y, 1, 1, 0, c_white, 1);
         }
     }
+    
+    if (on_draw != undefined)
+    {
+        on_draw(x, y + _asset_offset);
+    }
 }
 
 with (obj_Menu_Textbox)
