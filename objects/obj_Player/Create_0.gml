@@ -10,7 +10,7 @@ entity_value = {
     eye_level: 8,
     physics: {
         gravity: 0.72,
-        movement_speed: 13.1,
+        movement_speed: 3.1,
         jump_time: 12,
         jump_height: 28.5,
         jump_count_max: 1,

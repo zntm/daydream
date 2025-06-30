@@ -17,15 +17,20 @@ function menu_refresh_instance_players()
         draw_set_align(_halign, _valign);
     }
     
+    static __on_select_release = function()
+    {
+        var _data = global.file_players[index];
+        
+        global.player_save_data = _data.get_attire();
+        
+        room_goto(rm_Menu_Worlds);
+    }
+    
     var _a = file_read_directory(PROGRAM_DIRECTORY_PLAYERS);
     var _b = global.file_players_uuid;
     
     if (!array_equals(_a, _b))
     {
-        show_debug_message("TEST")
-        show_debug_message(_a)
-        show_debug_message(_b)
-        
         file_load_players();
     }
     
@@ -47,6 +52,7 @@ function menu_refresh_instance_players()
             index = i;
             
             on_draw = method(id, __on_draw);
+            on_select_release = method(id, __on_select_release);
         }
     }
 }

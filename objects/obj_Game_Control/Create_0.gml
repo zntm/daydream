@@ -1,5 +1,7 @@
 randomize();
 
+audio_stop_all();
+
 enum SURFACE_REFRESH_BOOLEAN {
     PAUSE               = 1 << 0,
     INVENTORY_HOTBAR    = 1 << 1,

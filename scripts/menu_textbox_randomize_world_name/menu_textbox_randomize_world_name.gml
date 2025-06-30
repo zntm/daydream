@@ -3,7 +3,7 @@
 
 #macro MENU_RANDOM_WORLD_NAME_PLACE_SYNONYM choose("Area", "Borough", "Dimension", "District", "Domain", "Edge", "Expanse", "Frontier", "Frontline", "Horizon", "Kingdom", "Land", "Lands", "Netherworld", "Outlands", "Outskirts", "Paradise", "Partition", "Periphery", "Place", "Plane", "Province", "Quarter", "Realm", "Region", "Rim", "Sanctuary", "Sector", "Sphere", "Territory", "Turf", "Universe", "Void", "Wilds", "World", "Zone")
 
-function menu_random_world_name()
+function menu_textbox_randomize_world_name()
 {
     randomize();
     
