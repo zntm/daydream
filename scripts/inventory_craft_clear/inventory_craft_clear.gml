@@ -22,7 +22,7 @@ function inventory_craft_clear(_index)
             
             if (_amount2 > _amount)
             {
-                _item.add_amount(-_amount);
+                global.inventory.base[@ j].add_amount(-_amount);
                 
                 break;
             }

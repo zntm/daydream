@@ -1,6 +1,13 @@
+enum VERISON_TYPE {
+    ALPHA,
+    BETA,
+    RELEASE
+}
+
 #macro PROGRAM_VERSION_MAJOR current_year
 #macro PROGRAM_VERSION_MINOR current_month
 #macro PROGRAM_VERSION_PATCH 0
+#macro PROGRAM_VERSION_TYPE VERISON_TYPE.ALPHA
 
 #macro PROGRAM_NAME "Phantasia"
 
