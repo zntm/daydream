@@ -19,7 +19,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
     var _texel_width  = texture_get_texel_width(_texture);
     var _texel_height = texture_get_texel_height(_texture);
     
-    var _animation_index = round(global.world.time * 8);
+    var _animation_index = round(global.world_save_data.time * 8);
     
     var _xstart = round((_camera_x + (_camera_width  / 2)) / CHUNK_SIZE_DIMENSION) * CHUNK_SIZE_DIMENSION;
     var _ystart = round((_camera_y + (_camera_height / 2)) / CHUNK_SIZE_DIMENSION) * CHUNK_SIZE_DIMENSION;

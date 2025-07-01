@@ -4,7 +4,7 @@ global.worldgen_noise_cave = {}
 
 function worldgen_get_cave(_x, _y, _surface_height, _seed)
 {
-    var _world_data = global.world_data[$ global.world.dimension];
+    var _world_data = global.world_data[$ global.world_save_data.dimension];
     
     if (_y < _surface_height)
     {

@@ -13,7 +13,7 @@ function worldgen_get_biome_cave(_x, _y, _surface_height, _seed)
         return undefined;
     }
     
-    var _world_data = global.world_data[$ global.world.dimension];
+    var _world_data = global.world_data[$ global.world_save_data.dimension];
     
     var _default_length = _world_data.get_default_cave_length();
     

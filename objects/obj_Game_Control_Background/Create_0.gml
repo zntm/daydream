@@ -1,4 +1,4 @@
-var _in_biome = bg_get_biome(round(obj_Player.x / TILE_SIZE), clamp(round(obj_Player.y / TILE_SIZE), 0, global.world_data[$ global.world.dimension].get_world_height() - 1));
+var _in_biome = bg_get_biome(round(obj_Player.x / TILE_SIZE), clamp(round(obj_Player.y / TILE_SIZE), 0, global.world_data[$ global.world_save_data.dimension].get_world_height() - 1));
 var _in_biome_data = global.biome_data[$ _in_biome];
 
 in_biome = _in_biome;

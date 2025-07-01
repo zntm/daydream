@@ -8,7 +8,6 @@ global.world_save_data = {
     weather_storm: 0
 }
 
-
 function menu_refresh_value_world_save()
 {
     global.world_save_data.name = "";

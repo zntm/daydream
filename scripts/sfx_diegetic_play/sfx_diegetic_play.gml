@@ -11,7 +11,7 @@ audio_listener_orientation(0, 0, 1, 0, -1, 0);
 global.sfx_diegetic_floodfill_amount = 0;
 global.sfx_diegetic_floodfill_position = {}
 
-function sfx_diegetic_play(_emitter, _x, _y, _id, _gain = global.settings.audio_sfx, _world_height = global.world_data[$ global.world.dimension].get_world_height())
+function sfx_diegetic_play(_emitter, _x, _y, _id, _gain = global.settings.audio_sfx, _world_height = global.world_data[$ global.world_save_data.dimension].get_world_height())
 {
     var _sfx_data = global.sfx_data;
     

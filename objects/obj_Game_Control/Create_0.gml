@@ -10,8 +10,8 @@ enum SURFACE_REFRESH_BOOLEAN {
 }
 
 surface_refresh =
-    SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR   |
-    SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK |
+    SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR    |
+    SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK  |
     SURFACE_REFRESH_BOOLEAN.INVENTORY_CRAFTABLE;
 
 enum IS_OPENED_BOOLEAN {
@@ -46,7 +46,7 @@ show_debug_overlay(true);
 
 var _world_data = global.world_data[$ "phantasia:playground"];
 
-global.world = {
+global.world_save_data = {
     seed: random_get_seed(),
     dimension: "phantasia:playground",
     time: _world_data.get_time_start(),
@@ -54,7 +54,7 @@ global.world = {
     wind: random_range(-1, 1)
 }
 
-obj_Player.y = (worldgen_get_surface_height(0, global.world.seed) - 1) * TILE_SIZE;
+obj_Player.y = (worldgen_get_surface_height(0, global.world_save_data.seed) - 1) * TILE_SIZE;
 
 global.inventory.base[@ 0] = new Inventory("phantasia:oak_pickaxe");
 
@@ -159,7 +159,7 @@ obj_Control.on_window_resize = function()
     global.gui_width  = round(_gui_scale * global.window_width);
     global.gui_height = round(_gui_scale * global.window_height);
     
-    obj_Control.surface_refresh |=
+    obj_Game_Control.surface_refresh |=
         SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR    |
         SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK  |
         SURFACE_REFRESH_BOOLEAN.INVENTORY_CRAFTABLE;
@@ -169,5 +169,11 @@ obj_Control.on_window_focus = carbasa_repair_all;
 
 obj_Control.on_window_unfocus = function()
 {
-    obj_Control.is_opened |= IS_OPENED_BOOLEAN.PAUSE;
+    obj_Game_Control.is_opened |= IS_OPENED_BOOLEAN.PAUSE;
+    
+    obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.PAUSE;
+    
+    control_instance_pause();
 }
+
+control_instance_unpause();

@@ -1,10 +1,10 @@
 function bg_get_biome(_x, _y)
 {
-    var _world = global.world;
+    var _world_save_data = global.world_save_data;
     
-    var _seed = _world.seed;
+    var _seed = _world_save_data.seed;
      
-    var _world_data = global.world_data[$ _world.dimension];
+    var _world_data = global.world_data[$ _world_save_data.dimension];
     
     var _surface_height = worldgen_get_surface_height(_x, _seed);
     

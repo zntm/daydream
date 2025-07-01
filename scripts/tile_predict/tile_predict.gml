@@ -1,6 +1,6 @@
 function tile_predict(_x, _y, _z)
 {
-    var _world_seed = global.world.seed;
+    var _world_seed = global.world_save_data.seed;
     
     var _inst = instance_position(_x * TILE_SIZE, _y * TILE_SIZE, obj_Structure);
     

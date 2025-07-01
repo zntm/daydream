@@ -5,10 +5,10 @@ function control_chunk_foliage(_dt, _player_x, _player_y, _camera_x, _camera_y, 
     var _a = ceil(_camera_width  / (2 * CHUNK_SIZE_DIMENSION)) + 1;
     var _b = ceil(_camera_height / (2 * CHUNK_SIZE_DIMENSION)) + 1;
     
-    var _world_data = global.world_data[$ global.world.dimension];
+    var _world_data = global.world_data[$ global.world_save_data.dimension];
     var _world_height = _world_data.get_world_height();
     
-    var _wind = clamp(global.world.wind + random_range(-0.25, 0.25), -1, 1);
+    var _wind = clamp(global.world_save_data.wind + random_range(-0.25, 0.25), -1, 1);
     
     for (var i = -_a; i < _a; ++i)
     {

@@ -20,10 +20,10 @@ function chunk_generate()
     var _natural_structure_data = global.natural_structure_data;
     var _structure_data = global.structure_data;
     
-    var _world = global.world;
+    var _world_save_data = global.world_save_data;
     
-    var _world_data = global.world_data[$ _world.dimension];
-    var _world_seed = _world.seed;
+    var _world_data = global.world_data[$ _world_save_data.dimension];
+    var _world_seed = _world_save_data.seed;
     
     for (var i = 0; i < CHUNK_SIZE; ++i)
     {

@@ -10,7 +10,7 @@ function worldgen_get_heat(_x, _y, _seed)
     var _index = $"{_x2}_{_y2}";
     var _buffer = global.worldgen_noise_heat[$ _index];
     
-    var _world_data = global.world_data[$ global.world.dimension];
+    var _world_data = global.world_data[$ global.world_save_data.dimension];
     
     if (_buffer == undefined)
     {

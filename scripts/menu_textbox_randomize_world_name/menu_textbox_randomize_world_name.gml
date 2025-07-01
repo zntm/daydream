@@ -160,7 +160,7 @@ function menu_textbox_randomize_world_name()
     
     if (chance(0.03))
     {
-        text = $"{global.player.name}'";
+        text = $"{global.player_save_data.name}'";
         
         if (!string_ends_with(text, "s")) && (!string_ends_with(text, "z")) && (!string_ends_with(text, "x"))
         {
@@ -174,7 +174,7 @@ function menu_textbox_randomize_world_name()
         
         text += $" {MENU_RANDOM_WORLD_NAME_PLACE_SYNONYM}";
         
-        global.world.name = text;
+        global.world_save_data.name = text;
         
         exit;
     }

@@ -43,6 +43,10 @@
             "gain": 0.5
         },
         {
+            "id": "phantasia:soliloquy",
+            "gain": 0.3
+        },
+        {
             "id": "phantasia:tense",
             "gain": 0.6
         },

@@ -1,10 +1,13 @@
 gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_src_alpha, bm_one);
 
+var _render_xoffset = xoffset;
+var _render_yoffset = yoffset;
+
 with (obj_Menu_Anchor)
 {
     if (on_draw != undefined)
     {
-        on_draw();
+        on_draw(_render_xoffset, _render_yoffset);
     }
 }
 
@@ -17,6 +20,11 @@ draw_set_align(fa_center, fa_middle);
 
 with (obj_Menu_Button)
 {
+    var _x = _render_xoffset + x;
+    var _y = _render_yoffset + y;
+    
+    if (_x < -256) || (_y < -256) continue;
+    
     var _asset = asset_get_index($"{sprite_get_name(sprite_index)}_Edge");
     
     var _asset_exists = sprite_exists(_asset);
@@ -29,15 +37,15 @@ with (obj_Menu_Button)
             var _button_width  = (image_xscale * 16) + 2;
             var _button_height = (image_yscale * 16) + 2;
             
-            draw_sprite_stretched_ext(spr_Menu_Button_Select, 0, x - (_button_width / 2), y - (_button_height / 2) + _asset_offset, _button_width, _button_height, c_white, 1);
+            draw_sprite_stretched_ext(spr_Menu_Button_Select, 0, _x - (_button_width / 2), _y - (_button_height / 2) + _asset_offset, _button_width, _button_height, c_white, 1);
             
             if (_asset_exists)
             {
-                draw_sprite_ext(sprite_index, 1, x, y + _asset_offset, image_xscale, image_yscale, 0, c_white, 1);
+                draw_sprite_ext(sprite_index, 1, _x, _y + _asset_offset, image_xscale, image_yscale, 0, c_white, 1);
             }
             else
             {
-                draw_sprite_ext(sprite_index, 1, x, y, image_xscale, image_yscale, 0, c_white, 1);
+                draw_sprite_ext(sprite_index, 1, _x, _y, image_xscale, image_yscale, 0, c_white, 1);
             }
         }
         else
@@ -47,15 +55,15 @@ with (obj_Menu_Button)
                 var _button_width  = (image_xscale * 16) + 2;
                 var _button_height = (image_yscale * 16) + 2;
                 
-                draw_sprite_stretched_ext(spr_Menu_Button_Select, 0, x - (_button_width / 2), y - (_button_height / 2), _button_width, _button_height + _asset_offset, c_white, 1);
+                draw_sprite_stretched_ext(spr_Menu_Button_Select, 0, _x - (_button_width / 2), _y - (_button_height / 2), _button_width, _button_height + _asset_offset, c_white, 1);
             }
             
             if (_asset_exists)
             {
-                draw_sprite_ext(_asset, 0, x, y + (sprite_get_height(sprite_index) * image_yscale / 2), image_xscale, 1, 0, c_white, 1);
+                draw_sprite_ext(_asset, 0, _x, _y + (sprite_get_height(sprite_index) * image_yscale / 2), image_xscale, 1, 0, c_white, 1);
             }
             
-            draw_sprite_ext(sprite_index, 0, x, y, image_xscale, image_yscale, 0, c_white, 1);
+            draw_sprite_ext(sprite_index, 0, _x, _y, image_xscale, image_yscale, 0, c_white, 1);
         }
     }
     
@@ -63,48 +71,51 @@ with (obj_Menu_Button)
     { 
         if (boolean & MENU_BUTTON_BOOLEAN.IS_SELECTED)
         {
-            draw_sprite_ext(icon, icon_index, x - (string_width(text) * _loca_font_scale / 2), y + _asset_offset, 1, 1, 0, c_ltgray, 1);
+            draw_sprite_ext(icon, icon_index, _x - (string_width(text) * _loca_font_scale / 2), _y + _asset_offset, 1, 1, 0, c_ltgray, 1);
             
-            render_text(x + (sprite_get_width(icon) / 2), y + _asset_offset, text, 1, 1, 0, c_ltgray, 1);
+            render_text(_x + (sprite_get_width(icon) / 2), _y + _asset_offset, text, 1, 1, 0, c_ltgray, 1);
         }
         else
         {
-            draw_sprite_ext(icon, icon_index, x - (string_width(text) * _loca_font_scale / 2), y, 1, 1, 0, c_white, 1);
+            draw_sprite_ext(icon, icon_index, _x - (string_width(text) * _loca_font_scale / 2), _y, 1, 1, 0, c_white, 1);
             
-            render_text(x + (sprite_get_width(icon) / 2), y, text, 1, 1, 0, c_white, 1);
+            render_text(_x + (sprite_get_width(icon) / 2), _y, text, 1, 1, 0, c_white, 1);
         }
     }
     else if (text != undefined)
     {
         if (boolean & MENU_BUTTON_BOOLEAN.IS_SELECTED)
         {
-            render_text(x, y + _asset_offset, text, 1, 1, 0, c_ltgray, 1);
+            render_text(_x, _y + _asset_offset, text, 1, 1, 0, c_ltgray, 1);
         }
         else
         {
-            render_text(x, y, text, 1, 1, 0, c_white, 1);
+            render_text(_x, _y, text, 1, 1, 0, c_white, 1);
         }
     }
     else if (icon != undefined)
     {
         if (boolean & MENU_BUTTON_BOOLEAN.IS_SELECTED)
         {
-            draw_sprite_ext(icon, icon_index, x, y + _asset_offset, 1, 1, 0, c_ltgray, 1);
+            draw_sprite_ext(icon, icon_index, _x, _y + _asset_offset, 1, 1, 0, c_ltgray, 1);
         }
         else
         {
-            draw_sprite_ext(icon, icon_index, x, y, 1, 1, 0, c_white, 1);
+            draw_sprite_ext(icon, icon_index, _x, _y, 1, 1, 0, c_white, 1);
         }
     }
     
     if (on_draw != undefined)
     {
-        on_draw(x, y + _asset_offset);
+        on_draw(_x, _y + _asset_offset);
     }
 }
 
 with (obj_Menu_Textbox)
 {
+    var _x = _render_xoffset + x;
+    var _y = _render_yoffset + y;
+    
     if (boolean & MENU_BUTTON_BOOLEAN.IS_BUTTON_VISIBLE)
     {
         if (boolean & MENU_BUTTON_BOOLEAN.IS_SELECTED)
@@ -112,9 +123,9 @@ with (obj_Menu_Textbox)
             var _button_width  = (image_xscale / 2 * 16) + 2;
             var _button_height = (image_yscale / 2 * 16) + 2;
             
-            draw_sprite_stretched_ext(spr_Menu_Button_Select, 0, x - (_button_width / 2), y - (_button_height / 2), _button_width, _button_height, c_white, 1);
+            draw_sprite_stretched_ext(spr_Menu_Button_Select, 0, _x - (_button_width / 2), _y - (_button_height / 2), _button_width, _button_height, c_white, 1);
             
-            draw_sprite_ext(sprite_index, 1, x, y, image_xscale, image_yscale, 0, c_white, 1);
+            draw_sprite_ext(sprite_index, 1, _x, _y, image_xscale, image_yscale, 0, c_white, 1);
         }
         else
         {
@@ -123,20 +134,20 @@ with (obj_Menu_Textbox)
                 var _button_width  = (image_xscale / 2 * 16) + 2;
                 var _button_height = (image_yscale / 2 * 16) + 2;
                 
-                draw_sprite_stretched_ext(spr_Menu_Button_Select, 0, x - (_button_width / 2), y - (_button_height / 2), _button_width, _button_height, c_white, 1);
+                draw_sprite_stretched_ext(spr_Menu_Button_Select, 0, _x - (_button_width / 2), _y - (_button_height / 2), _button_width, _button_height, c_white, 1);
             }
             
-            draw_sprite_ext(sprite_index, 0, x, y, image_xscale, image_yscale, 0, c_white, 1);
+            draw_sprite_ext(sprite_index, 0, _x, _y, image_xscale, image_yscale, 0, c_white, 1);
         }
     }
     
     if (text_display != "")
     {
-        render_text(x, y, text_display, 1, 1, 0, c_white, 1);
+        render_text(_x, _y, text_display, 1, 1, 0, c_white, 1);
     }
     else if (placeholder != undefined)
     {
-        render_text(x, y, placeholder, 1, 1, 0, c_white, 0.25);
+        render_text(_x, _y, placeholder, 1, 1, 0, c_white, 0.25);
     }
 }
 

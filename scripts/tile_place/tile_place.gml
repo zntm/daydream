@@ -1,6 +1,6 @@
 function tile_place(_x, _y, _z, _tile)
 {
-    if (_y < 0) || (_y >= global.world_data[$ global.world.dimension].get_world_height())
+    if (_y < 0) || (_y >= global.world_data[$ global.world_save_data.dimension].get_world_height())
     {
         return TILE_EMPTY;
     }

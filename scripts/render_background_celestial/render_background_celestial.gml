@@ -1,9 +1,9 @@
 function render_background_celestial(_camera_x, _camera_y, _camera_width, _camera_height)
 {
-    var _world = global.world;
-    var _world_time = _world.time;
+    var _world_save_data = global.world_save_data;
+    var _world_time = _world_save_data.time;
     
-    var _world_data = global.world_data[$ _world.dimension];
+    var _world_data = global.world_data[$ _world_save_data.dimension];
     
     var _celestial_name = _world_data.get_celestial_name(_world_time);
     

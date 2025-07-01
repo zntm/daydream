@@ -2,7 +2,7 @@ global.worldgen_noise_cave_start = {}
 
 function worldgen_get_cave_start(_x, _seed)
 {
-    var _world_data = global.world_data[$ global.world.dimension];
+    var _world_data = global.world_data[$ global.world_save_data.dimension];
     
     var _x2 = floor(_x / WORLDGEN_CAVE_NOISE_SIZE);
     

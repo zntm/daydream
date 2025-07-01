@@ -2,7 +2,7 @@ function control_game_tick()
 {
     var _delta_time = global.delta_time;
     
-    var _time_length = global.world_data[$ global.world.dimension].get_time_length();
+    var _time_length = global.world_data[$ global.world_save_data.dimension].get_time_length();
     
     for (var _dt = GAME_TICK * _delta_time; _delta_time > 0; _delta_time -= 1)
     {
@@ -23,13 +23,13 @@ function control_game_tick()
             control_floating_text(_tick);
         }
         
-        global.world.time += _dt / GAME_TICK;
+        global.world_save_data.time += _dt / GAME_TICK;
         
-        if (global.world.time >= _time_length)
+        if (global.world_save_data.time >= _time_length)
         {
-            global.world.time %= _time_length;
+            global.world_save_data.time %= _time_length;
             
-            ++global.world.day;
+            ++global.world_save_data.day;
         }
     }
 }

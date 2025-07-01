@@ -9,7 +9,7 @@ function worldgen_get_surface_offset(_x, _seed)
     var _index = string(_x2);
     var _buffer = global.worldgen_noise_surface_offset[$ _index];
     
-    var _world_data = global.world_data[$ global.world.dimension];
+    var _world_data = global.world_data[$ global.world_save_data.dimension];
     
     if (_buffer == undefined)
     {

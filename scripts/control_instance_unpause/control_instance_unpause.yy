@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"control_instance_unpause",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"control_instance_unpause",
+  "parent":{
+    "name":"Control",
+    "path":"folders/Scripts/Control.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

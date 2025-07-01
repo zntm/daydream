@@ -6,7 +6,7 @@ function control_structure(_x, _y)
 {
     var _biome_data = global.biome_data;
     
-    var _world_seed = global.world.seed;
+    var _world_seed = global.world_save_data.seed;
     
     for (var i = _x - WORLDGEN_STRUCTURE_OFFSET; i <= _x + WORLDGEN_STRUCTURE_OFFSET; ++i)
     {

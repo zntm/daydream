@@ -1,0 +1,1 @@
+text = loca_translate("menu.pause.resume");

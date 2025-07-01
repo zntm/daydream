@@ -1,6 +1,6 @@
 function worldgen_get_biome_surface(_x, _y, _surface_height, _seed)
 {
-    var _surface_biome_map = global.world_data[$ global.world.dimension].get_surface_biome_map();
+    var _surface_biome_map = global.world_data[$ global.world_save_data.dimension].get_surface_biome_map();
     
     _y = max(_y, _surface_height + 8);
     

@@ -30,7 +30,7 @@ if (is_opened & IS_OPENED_BOOLEAN.PAUSE)
     
     gpu_set_texfilter(true);
     
-    draw_surface_ext(surface_pause[@ 1], 0, 0, GUI_PAUSE_BLUR_RESIZE, GUI_PAUSE_BLUR_RESIZE, 0, c_white, global.settings.display_blur);
+    draw_surface_ext(surface_pause[@ 1], 0, 0, GUI_PAUSE_BLUR_RESIZE * (_camera_width / _gui_width), GUI_PAUSE_BLUR_RESIZE * (_camera_height / _gui_height), 0, c_white, global.settings.display_blur);
     
     gpu_set_texfilter(false);
     
