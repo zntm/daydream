@@ -10,55 +10,58 @@ var _in_biome_transition_data = _biome_data[$ _in_biome];
 #macro BACKGROUND_TRANSITION_SPEED 4.8
 #macro BACKGROUND_MUSIC_FADE_TIME (1000 * 8)
 
-if (in_biome_transition_value <= 0)
+if !(obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.PAUSE)
 {
-    var _type = _in_biome_transition_data.get_type();
-    
-    if (in_biome != _in_biome)
+    if (in_biome_transition_value <= 0)
     {
-        in_biome_transition = _in_biome;
+        var _type = _in_biome_transition_data.get_type();
         
-        in_biome_transition_value = BACKGROUND_TRANSITION_SPEED * _delta_time;
+        if (in_biome != _in_biome)
+        {
+            in_biome_transition = _in_biome;
+            
+            in_biome_transition_value = BACKGROUND_TRANSITION_SPEED * _delta_time;
+        }
     }
-}
-else
-{
-    in_biome_transition_value += BACKGROUND_TRANSITION_SPEED * _delta_time;
-    
-    if (in_biome_transition_value >= 1)
+    else
     {
-        in_biome_transition_value = 0;
+        in_biome_transition_value += BACKGROUND_TRANSITION_SPEED * _delta_time;
         
-        /*
-        if (!instance_exists(obj_Toast))
+        if (in_biome_transition_value >= 1)
         {
-            spawn_toast(GAME_FPS * 8, toast_biome);
-        }
-        */
-        
-        if (music_current != undefined)
-        {
-            audio_sound_gain(music_current, 0, BACKGROUND_MUSIC_FADE_TIME);
+            in_biome_transition_value = 0;
             
-            if (!array_contains(music_pool, music_current))
+            /*
+            if (!instance_exists(obj_Toast))
             {
-                music_pool[@ music_pool_length++] = music_current;
+                spawn_toast(GAME_FPS * 8, toast_biome);
             }
-        }
-        
-        var _music = _in_biome_transition_data.get_music();
-        
-        if (_music != undefined) && (!array_contains(_music, music_current_id))
-        {
-            var _music_transition = _biome_data[$ in_biome_transition].get_music();
+            */
             
-            if (_music_transition != undefined)
+            if (music_current != undefined)
             {
-                bg_play_music(array_choose(_music_transition));
+                audio_sound_gain(music_current, 0, BACKGROUND_MUSIC_FADE_TIME);
+                
+                if (!array_contains(music_pool, music_current))
+                {
+                    music_pool[@ music_pool_length++] = music_current;
+                }
             }
+            
+            var _music = _in_biome_transition_data.get_music();
+            
+            if (_music != undefined) && (!array_contains(_music, music_current_id))
+            {
+                var _music_transition = _biome_data[$ in_biome_transition].get_music();
+                
+                if (_music_transition != undefined)
+                {
+                    bg_play_music(array_choose(_music_transition));
+                }
+            }
+            
+            in_biome = in_biome_transition;
         }
-        
-        in_biome = in_biome_transition;
     }
 }
 
@@ -75,10 +78,48 @@ if (timer_refresh >= 1) || (in_biome_transition_value > 0)
         if (audio_sound_get_gain(_audio) <= 0)
         {
             audio_stop_sound(_audio);
+            
             array_delete(music_pool, i, 1);
             
             --i;
             --music_pool_length;
+        }
+    }
+    
+    if (!audio_is_playing(music_current))
+    {
+        music_current_id = "";
+        
+        if (music_current != undefined)
+        {
+            if (in_biome_transition_value <= 0)
+            {
+                var _music = _in_biome_data.get_music();
+                
+                if (_music != undefined)
+                {
+                    var _music_transition = _biome_data[$ in_biome].get_music();
+                    
+                    if (_music_transition != undefined)
+                    {
+                        bg_play_music(array_choose(_music_transition));
+                    }
+                }
+            }
+            else
+            {
+                var _music = _in_biome_transition_data.get_music();
+                
+                if (_music != undefined)
+                {
+                    var _music_transition = _biome_data[$ in_biome_transition].get_music();
+                    
+                    if (_music_transition != undefined)
+                    {
+                        bg_play_music(array_choose(_music_transition));
+                    }
+                }
+            }
         }
     }
     

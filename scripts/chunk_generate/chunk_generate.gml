@@ -203,7 +203,6 @@ function chunk_generate()
                         ++chunk_count[@ _z];
                         
                         chunk[@ (_z << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_tile_foliage.id)
-                            .set_xscale((xorshift(_world_seed + _world_x - _world_y) & 1) ? -1 : 1)
                             .set_index(smart_value(_item_data[$ _tile_foliage.id].get_placement_index()))
                             .set_index_offset(smart_value(_item_data[$ _tile_foliage.id].get_placement_index_offset()));
                         

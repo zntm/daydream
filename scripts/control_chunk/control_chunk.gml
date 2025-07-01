@@ -117,6 +117,13 @@ function control_chunk(_player_x, _player_y, _camera_x, _camera_y, _camera_width
                                 }
                             }
                         }
+                        else if (_data.is_foliage())
+                        {
+                            if (_xorshift1 & (1 << _tile_x))
+                            {
+                                _tile.set_xscale(-1);
+                            }
+                        }
                     }
                 }
             }
