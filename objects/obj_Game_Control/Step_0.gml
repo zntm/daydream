@@ -1,3 +1,15 @@
+if (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.EXIT)
+{
+    chunk_saved_count_max = instance_number(obj_Chunk);
+    
+    if (chunk_saved_count >= chunk_saved_count_max)
+    {
+        room_goto(rm_Menu_Title)
+    }
+    
+    exit;
+}
+
 /*
 var _window_focus = window_has_focus();
 

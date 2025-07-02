@@ -600,6 +600,7 @@
     {"id":{"name":"spawn_floating_text","path":"scripts/spawn_floating_text/spawn_floating_text.yy",},},
     {"id":{"name":"spawn_item_drop","path":"scripts/spawn_item_drop/spawn_item_drop.yy",},},
     {"id":{"name":"string_contains","path":"scripts/string_contains/string_contains.yy",},},
+    {"id":{"name":"string_get_seed","path":"scripts/string_get_seed/string_get_seed.yy",},},
     {"id":{"name":"string_pad_start","path":"scripts/string_pad_start/string_pad_start.yy",},},
     {"id":{"name":"structure_create","path":"scripts/structure_create/structure_create.yy",},},
     {"id":{"name":"structure_generate","path":"scripts/structure_generate/structure_generate.yy",},},

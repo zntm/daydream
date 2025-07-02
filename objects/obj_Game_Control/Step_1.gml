@@ -1,3 +1,5 @@
+if (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.EXIT) exit;
+
 if (global.window_width <= 0) || (global.window_height <= 0)
 {
     is_opened |= IS_OPENED_BOOLEAN.PAUSE;

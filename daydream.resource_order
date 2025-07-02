@@ -205,6 +205,7 @@
     {"name":"sort_alphabetical_ascending","order":20,"path":"scripts/sort_alphabetical_ascending/sort_alphabetical_ascending.yy",},
     {"name":"sort_alphabetical_descending","order":21,"path":"scripts/sort_alphabetical_descending/sort_alphabetical_descending.yy",},
     {"name":"spawn_item_drop","order":1,"path":"scripts/spawn_item_drop/spawn_item_drop.yy",},
+    {"name":"string_get_seed","order":3,"path":"scripts/string_get_seed/string_get_seed.yy",},
     {"name":"string_pad_start","order":1,"path":"scripts/string_pad_start/string_pad_start.yy",},
     {"name":"structure_create","order":8,"path":"scripts/structure_create/structure_create.yy",},
     {"name":"tag_value_parse","order":1,"path":"scripts/tag_value_parse/tag_value_parse.yy",},

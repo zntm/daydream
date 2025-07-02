@@ -12,4 +12,9 @@ function control_instance_unpause()
     {
         y = -1000;
     }
+    
+    with (obj_Menu_Textbox)
+    {
+        y = -1000;
+    }
 }

@@ -1,1 +1,1 @@
-text = loca_translate("phantasia:mmenu.settings.title");
+text = loca_translate("phantasia:menu.settings.title");

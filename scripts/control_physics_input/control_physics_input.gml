@@ -54,17 +54,13 @@ function control_physics_input(_dt, _id)
             {
                 jump_pressed = infinity;
             }
-            else if (jump_pressed < _jump_time)
+            else
             {
                 jump_pressed += _dt;
             }
         }
         
-        if (jump_pressed >= _jump_time)
-        {
-            jump_pressed = infinity;
-        }
-        else if (jump_pressed < _jump_time) && (jump_pressed > 0)
+        if (jump_pressed > 0) && (jump_pressed < _jump_time)
         {
             yvelocity = -_physics.jump_height * _dt * (1 - power(jump_pressed / _jump_time, _physics.jump_falloff));
         }

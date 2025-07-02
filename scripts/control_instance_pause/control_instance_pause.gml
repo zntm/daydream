@@ -17,4 +17,10 @@ function control_instance_pause()
         x = _camera_x + xstart;
         y = _camera_y + ystart;
     }
+    
+    with (obj_Menu_Textbox)
+    {
+        x = _camera_x + xstart;
+        y = _camera_y + ystart;
+    }
 }

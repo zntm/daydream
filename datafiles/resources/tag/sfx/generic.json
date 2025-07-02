@@ -2,8 +2,8 @@
     "pitch_default": {
         "type": "random",
         "values": {
-            "min": 0.8,
-            "max": 1.2
+            "min": 0.9,
+            "max": 1.1
         }
     }
 }

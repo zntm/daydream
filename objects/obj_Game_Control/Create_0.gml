@@ -18,7 +18,8 @@ enum IS_OPENED_BOOLEAN {
     PAUSE     = 1 << 0,
     GUI       = 1 << 1,
     INVENTORY = 1 << 2,
-    MENU      = 1 << 3
+    MENU      = 1 << 3,
+    EXIT      = 1 << 4
 }
 
 is_opened =
@@ -44,8 +45,13 @@ surface_pause = [ -1, -1 ];
 
 show_debug_overlay(true);
 
-var _world_data = global.world_data[$ "phantasia:playground"];
+var _world_save_data = global.world_save_data;
 
+show_debug_message(_world_save_data)
+
+var _world_data = global.world_data[$ _world_save_data.dimension];
+
+/*
 global.world_save_data = {
     seed: random_get_seed(),
     dimension: "phantasia:playground",
@@ -53,8 +59,23 @@ global.world_save_data = {
     day: 0,
     wind: random_range(-1, 1)
 }
+*/
 
-obj_Player.y = (worldgen_get_surface_height(0, global.world_save_data.seed) - 1) * TILE_SIZE;
+if (!directory_exists($"{PROGRAM_DIRECTORY_WORLDS}/{_world_save_data.uuid}"))
+{
+    global.world_save_data.time = _world_data.get_time_start();
+    global.world_save_data.weather_wind = 0x7f;
+    
+    var _seed = _world_save_data.seed;
+    var _surface_height = worldgen_get_surface_height(0, _seed);
+    
+    obj_Player.y = (_surface_height - 1) * TILE_SIZE;
+    
+    while (worldgen_get_cave(0, round(obj_Player.y / TILE_SIZE) + 1, _surface_height, _seed))
+    {
+        obj_Player.y += TILE_SIZE;
+    }
+}
 
 global.inventory.base[@ 0] = new Inventory("phantasia:oak_pickaxe");
 
@@ -114,6 +135,9 @@ surface_inventory = {
         surface_slot: -1
     }
 }
+
+chunk_saved_count = 0;
+chunk_saved_count_max = 0;
 
 var _camera_width  = camera_get_view_width(view_camera[0]);
 var _camera_height = camera_get_view_height(view_camera[0]);

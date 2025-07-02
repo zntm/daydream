@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"string_get_seed",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"string_get_seed",
+  "parent":{
+    "name":"String",
+    "path":"folders/Scripts/String.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

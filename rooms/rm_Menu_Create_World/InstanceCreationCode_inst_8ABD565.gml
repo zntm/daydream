@@ -1,7 +1,7 @@
 placeholder = loca_translate("menu.create_world.textbox.enter_seed");
 
 // TODO: replace with global world var
-var _text = "";
+var _text = global.world_save_data.seed;
 
 if (_text != "")
 {
