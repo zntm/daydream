@@ -47,19 +47,7 @@ show_debug_overlay(true);
 
 var _world_save_data = global.world_save_data;
 
-show_debug_message(_world_save_data)
-
 var _world_data = global.world_data[$ _world_save_data.dimension];
-
-/*
-global.world_save_data = {
-    seed: random_get_seed(),
-    dimension: "phantasia:playground",
-    time: _world_data.get_time_start(),
-    day: 0,
-    wind: random_range(-1, 1)
-}
-*/
 
 if (!directory_exists($"{PROGRAM_DIRECTORY_WORLDS}/{_world_save_data.uuid}"))
 {
@@ -201,3 +189,6 @@ obj_Control.on_window_unfocus = function()
 }
 
 control_instance_unpause();
+
+inst_664AF3B4.x = -1000;
+inst_664AF3B4.y = -1000;

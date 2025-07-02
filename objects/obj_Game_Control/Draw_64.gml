@@ -17,31 +17,7 @@ var _camera_height = global.camera_height;
 var _gui_width  = global.gui_width;
 var _gui_height = global.gui_height;
 
-if (is_opened & IS_OPENED_BOOLEAN.EXIT)
-{
-    if !(surface_refresh & SURFACE_REFRESH_BOOLEAN.PAUSE) || (!surface_exists(surface_pause[0])) || (!surface_exists(surface_pause[1]))
-    {
-        surface_refresh |= SURFACE_REFRESH_BOOLEAN.PAUSE;
-        
-        render_pause();
-    }
-    
-    draw_surface(application_surface, 0, 0);
-    
-    gpu_set_texfilter(true);
-    
-    draw_surface_ext(surface_pause[@ 1], 0, 0, GUI_PAUSE_BLUR_RESIZE * (_camera_width / _gui_width), GUI_PAUSE_BLUR_RESIZE * (_camera_height / _gui_height), 0, c_white, global.settings.display_blur);
-    
-    gpu_set_texfilter(false);
-    
-    render_gui_vignette(_player_y, _gui_width, _gui_height);
-    
-    gpu_set_blendmode(bm_normal);
-    
-    exit;
-}
-
-if (is_opened & IS_OPENED_BOOLEAN.PAUSE)
+if (is_opened & (IS_OPENED_BOOLEAN.PAUSE | IS_OPENED_BOOLEAN.EXIT))
 {
     if !(surface_refresh & SURFACE_REFRESH_BOOLEAN.PAUSE) || (!surface_exists(surface_pause[0])) || (!surface_exists(surface_pause[1]))
     {

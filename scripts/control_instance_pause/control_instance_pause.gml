@@ -6,21 +6,15 @@ function control_instance_pause()
     obj_Menu_Control_Render.xoffset = -_camera_x;
     obj_Menu_Control_Render.yoffset = -_camera_y;
     
-    with (obj_Menu_Anchor)
-    {
-        x = _camera_x + xstart;
-        y = _camera_y + ystart;
-    }
+    inst_629EFD9E.x = _camera_x + inst_629EFD9E.xstart;
+    inst_629EFD9E.y = _camera_y + inst_629EFD9E.ystart;
     
-    with (obj_Menu_Button)
-    {
-        x = _camera_x + xstart;
-        y = _camera_y + ystart;
-    }
+    inst_13FA255D.x = _camera_x + inst_13FA255D.xstart;
+    inst_13FA255D.y = _camera_y + inst_13FA255D.ystart;
     
-    with (obj_Menu_Textbox)
-    {
-        x = _camera_x + xstart;
-        y = _camera_y + ystart;
-    }
+    inst_7A620B98.x = _camera_x + inst_7A620B98.xstart;
+    inst_7A620B98.y = _camera_y + inst_7A620B98.ystart;
+    
+    inst_284F3DC8.x = _camera_x + inst_284F3DC8.xstart;
+    inst_284F3DC8.y = _camera_y + inst_284F3DC8.ystart;
 }

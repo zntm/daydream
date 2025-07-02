@@ -258,6 +258,7 @@
     {"name":"spr_Menu_Button_Warning_Edge","order":7,"path":"sprites/spr_Menu_Button_Warning_Edge/spr_Menu_Button_Warning_Edge.yy",},
     {"name":"spr_Menu_Button_Warning","order":6,"path":"sprites/spr_Menu_Button_Warning/spr_Menu_Button_Warning.yy",},
     {"name":"spr_Menu_Indent","order":1,"path":"sprites/spr_Menu_Indent/spr_Menu_Indent.yy",},
+    {"name":"spr_Menu_Square","order":4,"path":"sprites/spr_Menu_Square/spr_Menu_Square.yy",},
     {"name":"spr_Mouse","order":5,"path":"sprites/spr_Mouse/spr_Mouse.yy",},
     {"name":"spr_Square","order":1,"path":"sprites/spr_Square/spr_Square.yy",},
     {"name":"spr_Vignette_Corner","order":4,"path":"sprites/spr_Vignette_Corner/spr_Vignette_Corner.yy",},

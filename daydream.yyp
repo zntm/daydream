@@ -662,6 +662,7 @@
     {"id":{"name":"spr_Menu_Button_Warning_Edge","path":"sprites/spr_Menu_Button_Warning_Edge/spr_Menu_Button_Warning_Edge.yy",},},
     {"id":{"name":"spr_Menu_Button_Warning","path":"sprites/spr_Menu_Button_Warning/spr_Menu_Button_Warning.yy",},},
     {"id":{"name":"spr_Menu_Indent","path":"sprites/spr_Menu_Indent/spr_Menu_Indent.yy",},},
+    {"id":{"name":"spr_Menu_Square","path":"sprites/spr_Menu_Square/spr_Menu_Square.yy",},},
     {"id":{"name":"spr_Menu_Title","path":"sprites/spr_Menu_Title/spr_Menu_Title.yy",},},
     {"id":{"name":"spr_Mouse","path":"sprites/spr_Mouse/spr_Mouse.yy",},},
     {"id":{"name":"spr_Null","path":"sprites/spr_Null/spr_Null.yy",},},
