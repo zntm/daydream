@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"init_smart_value",
+  "%Name":"smart_value_parse",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"init_smart_value",
+  "name":"smart_value_parse",
   "parent":{
     "name":"Smart Value",
     "path":"folders/Scripts/Math/Smart Value.yy",

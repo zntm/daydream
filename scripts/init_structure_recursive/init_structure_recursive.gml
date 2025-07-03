@@ -40,8 +40,8 @@ function init_structure_recursive(_directory, _namespace, _id)
                 
                 var _parameter = (_natural_structure_data[$ _data[$ "function"]].get_parser())(_data[$ "parameter"]);
                 
-                var _width  = init_smart_value(_json.width);
-                var _height = init_smart_value(_json.height);
+                var _width  = smart_value_parse(_json.width);
+                var _height = smart_value_parse(_json.height);
                 
                 global.structure_data[$ $"{_namespace}:{string_delete(_name, string_length(_name) - 4, 5)}"] = new StructureData(_width, _height, _json.placement, false, true)
                     .set_parameter(_parameter)

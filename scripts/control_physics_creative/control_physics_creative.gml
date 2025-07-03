@@ -8,10 +8,8 @@ function control_physics_creative(_dt, _id)
         var _xsign = sign(xvelocity);
         var _ysign = sign(yvelocity);
         
-        var _collision_box = attribute.collision_box;
-        
-        var _collision_box_width  = _collision_box.width;
-        var _collision_box_height = _collision_box.height;
+        var _collision_box_width  = attribute.get_collision_box_width();
+        var _collision_box_height = attribute.get_collision_box_height();
         
         for (var i = abs(xvelocity); i > 0; i -= _collision_box_width)
         {

@@ -10,15 +10,12 @@ function spawn_item_drop(_x, _y, _item, _direction = 0, _xvelocity = 0, _yveloci
     {
         var _size = _data.get_inventory_size();
         
-        attribute = {
-            collision_box: {
+        attribute = new Attribute()
+            .set_collision_box({
                 width:  _size,
                 height: _size
-            },
-            physics: {
-                gravity: 0.15
-            }
-        }
+            })
+            .set_gravity(0.15);
         
         image_xscale = _size / 8;
         image_yscale = _size / 8;

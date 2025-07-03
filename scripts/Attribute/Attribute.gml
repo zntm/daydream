@@ -1,5 +1,15 @@
-function Attributes() constructor
+function Attribute() constructor
 {
+    static set_boolean = function(_boolean)
+    {
+        if (_boolean != undefined)
+        {
+            ___boolean = _boolean;
+        }
+        
+        return self;
+    }
+    
     static set_collision_box = function(_collision_box)
     {
         if (_collision_box != undefined)
@@ -10,9 +20,14 @@ function Attributes() constructor
         return self;
     }
     
-    static get_collision_box = function()
+    static get_collision_box_width = function()
     {
-        return self[$ "___collision_box"];
+        return self[$ "___collision_box"].width;
+    }
+    
+    static get_collision_box_height = function()
+    {
+        return self[$ "___collision_box"].height;
     }
     
     static set_hit_box = function(_hit_box)
@@ -25,9 +40,14 @@ function Attributes() constructor
         return self;
     }
     
-    static get_hit_box = function()
+    static get_hit_box_width = function()
     {
-        return self[$ "___hit_box"];
+        return self[$ "___hit_box"].width;
+    }
+    
+    static get_hit_box_height = function()
+    {
+        return self[$ "___hit_box"].height;
     }
     
     static set_eye_level = function(_eye_level)
@@ -73,6 +93,21 @@ function Attributes() constructor
     static get_jump_count_max = function()
     {
         return self[$ "___jump_count_max"] ?? 1;
+    }
+    
+    static set_jump_falloff = function(_jump_falloff)
+    {
+        if (_jump_falloff != undefined)
+        {
+            ___jump_falloff = _jump_falloff;
+        }
+        
+        return self;
+    }
+    
+    static get_jump_falloff = function()
+    {
+        return self[$ "___jump_falloff"] ?? 2.2;
     }
     
     static set_jump_height = function(_jump_height)

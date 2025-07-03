@@ -1,25 +1,7 @@
-attribute = {
-    collision_box: {
-        width:  16,
-        height: 32
-    },
-    hit_box: {
-        width:  16 - 2,
-        height: 32 - 2
-    },
-    eye_level: 8,
-    physics: {
-        gravity: 0.72,
-        movement_speed: 3.1,
-        jump_time: 12,
-        jump_height: 28.5,
-        jump_count_max: 1,
-        jump_falloff: 2.2
-    }
-}
+attribute = global.attribute_player;
 
-image_xscale = attribute.collision_box.width  / 8;
-image_yscale = attribute.collision_box.height / 8;
+image_xscale = attribute.get_collision_box_width()  / 8;
+image_yscale = attribute.get_collision_box_height() / 8;
 
 hp = 100;
 hp_max = 100;

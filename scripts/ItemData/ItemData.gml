@@ -207,14 +207,14 @@ function ItemData() constructor
             
             if (_index != undefined)
             {
-                ___placement_index = init_smart_value(_index);
+                ___placement_index = smart_value_parse(_index);
             }
             
             var _index_offset = _placement[$ "index_offset"];
             
             if (_index_offset != undefined)
             {
-                ___placement_index_offset = init_smart_value(_index_offset);
+                ___placement_index_offset = smart_value_parse(_index_offset);
             }
             
             var _requirement = _placement[$ "requirement"];
@@ -304,7 +304,7 @@ function ItemData() constructor
                 
                 if (_frequency != undefined)
                 {
-                    ___harvest_particle_frequency = init_smart_value(_frequency);
+                    ___harvest_particle_frequency = smart_value_parse(_frequency);
                 }
             }
         }

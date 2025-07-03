@@ -46,7 +46,7 @@ function SFXData() constructor
     {
         if (_pitch != undefined)
         {
-            ___pitch = init_smart_value(_pitch);
+            ___pitch = smart_value_parse(_pitch);
         }
         
         return self;
@@ -61,7 +61,7 @@ function SFXData() constructor
     {
         if (_gain != undefined)
         {
-            ___gain = init_smart_value(_gain);
+            ___gain = smart_value_parse(_gain);
         }
         
         return self;

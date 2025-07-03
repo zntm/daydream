@@ -98,3 +98,20 @@ global.window_height = window_get_height();
 global.window_focus = true;
 
 global.delta_time = delta_time / 1_000_000;
+
+global.attribute_player = new Attribute()
+    .set_collision_box({
+        width:  16,
+        height: 32
+    })
+    .set_hit_box({
+        width:  14,
+        height: 31
+    })
+    .set_eye_level(8)
+    .set_gravity(0.72)
+    .set_jump_count_max(1)
+    .set_jump_falloff(2.2)
+    .set_jump_height(28.5)
+    .set_jump_time(12)
+    .set_movement_speed(3.1);

@@ -11,9 +11,7 @@ function control_physics_input(_dt, _id)
         
         var _on_ground = tile_meeting(x, y + 1);
         
-        var _physics = attribute.physics;
-        
-        xvelocity = lerp_delta(xvelocity, _direction * _physics.movement_speed, 0.3, _dt);
+        xvelocity = lerp_delta(xvelocity, _direction * attribute.get_movement_speed(), 0.3, _dt);
         
         if (jump_count == 0)
         {
@@ -42,9 +40,9 @@ function control_physics_input(_dt, _id)
             jump_pressed = 0;
         }
         
-        var _jump_time = _physics.jump_time;
+        var _jump_time = attribute.get_jump_time();
         
-        if (jump_count > _physics.jump_count_max)
+        if (jump_count > attribute.get_jump_count_max())
         {
             jump_pressed = infinity;
         }
@@ -62,7 +60,7 @@ function control_physics_input(_dt, _id)
         
         if (jump_pressed > 0) && (jump_pressed < _jump_time)
         {
-            yvelocity = -_physics.jump_height * _dt * (1 - power(jump_pressed / _jump_time, _physics.jump_falloff));
+            yvelocity = -attribute.get_jump_height() * _dt * (1 - power(jump_pressed / _jump_time, attribute.get_jump_falloff()));
         }
     }
 }

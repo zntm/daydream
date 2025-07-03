@@ -90,7 +90,7 @@ function init_creature(_directory, _namespace = "phantasia")
         
         dbg_timer("init_creature");
         
-        var _json = buffer_load_json($"{_directory}/{_file}/data.json");
+        var _json = smart_value_parse(buffer_load_json($"{_directory}/{_file}/data.json"));
         
         var _type = _json.type;
         
@@ -112,35 +112,27 @@ function init_creature(_directory, _namespace = "phantasia")
         _data.set_sprite_idle_emissive(__sprite_add($"{_directory}/{_file}/sprite/idle_emissive", _frames_idle, _xorigin, _yorigin));
         _data.set_sprite_moving_emissive(__sprite_add($"{_directory}/{_file}/sprite/moving_emissive", _frames_moving, _xorigin, _yorigin));
         
-        _data.set_bbox(_sprite.bbox);
+        var _attribute = _json.attribute;
         
-        var _attributes = _json.attribute;
-        
-        var _attribute = new Attributes();
-        
-        /*
-        var _a = new Attributes();
-        var _attributes = _json.attribute;
-        var _attributes_names = struct_get_names(_attributes);
-        var _attributes_length = array_length(_attributes_names);
-        
-        for (var j = 0; j < _attributes_length; ++j)
-        {
-            var _name = _attributes_names[j];
-            var _value = _attributes[$ _name];
-            
-            if (_value == undefined) continue;
-            
-            _a[$ _name] = _value;
-        }
-        
-        _data.sfx = _[$ "sfx"];
-        */
+        _data.set_attribute(new Attribute()
+            .set_boolean(_attribute[$ "boolean"])
+            .set_collision_box(_attribute[$ "collision_box"])
+            .set_hit_box(_attribute[$ "hit_box"])
+            .set_eye_level(_attribute[$ "eye_level"])
+            .set_gravity(_attribute[$ "gravity"])
+            .set_jump_count_max(_attribute[$ "jump_count_max"])
+            .set_jump_falloff(_attribute[$ "jump_falloff"])
+            .set_jump_height(_attribute[$ "jump_height"])
+            .set_jump_time(_attribute[$ "jump_time"])
+            .set_movement_speed(_attribute[$ "movement_speed"])
+        );
         
         _data.set_drop(_json[$ "drop"]);
         
         global.creature_data[$ $"{_namespace}:{_file}"] = _data;
         
         dbg_timer("init_creature", $"[Init] Loaded Creature: '{_file}'");
+        
+        delete _json;
     }
 }

@@ -5,7 +5,7 @@ enum SMART_VALUE_TYPE {
     IRANDOM
 }
 
-function init_smart_value(_value)
+function smart_value_parse(_value)
 {
     static __type = {
         "choose":          SMART_VALUE_TYPE.CHOOSE,
