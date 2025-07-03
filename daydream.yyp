@@ -459,6 +459,7 @@
     {"id":{"name":"___init_macro___","path":"scripts/___init_macro___/___init_macro___.yy",},},
     {"id":{"name":"array_choose","path":"scripts/array_choose/array_choose.yy",},},
     {"id":{"name":"AttireData","path":"scripts/AttireData/AttireData.yy",},},
+    {"id":{"name":"Attribute","path":"scripts/Attribute/Attribute.yy",},},
     {"id":{"name":"audio_array_is_playing","path":"scripts/audio_array_is_playing/audio_array_is_playing.yy",},},
     {"id":{"name":"BackgroundData","path":"scripts/BackgroundData/BackgroundData.yy",},},
     {"id":{"name":"bg_get_biome","path":"scripts/bg_get_biome/bg_get_biome.yy",},},

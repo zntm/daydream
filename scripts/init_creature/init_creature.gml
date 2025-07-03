@@ -114,6 +114,10 @@ function init_creature(_directory, _namespace = "phantasia")
         
         _data.set_bbox(_sprite.bbox);
         
+        var _attributes = _json.attribute;
+        
+        var _attribute = new Attributes();
+        
         /*
         var _a = new Attributes();
         var _attributes = _json.attribute;

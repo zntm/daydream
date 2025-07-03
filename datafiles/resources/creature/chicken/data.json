@@ -8,10 +8,6 @@
         "frames": {
             "idle": 1,
             "moving": 8
-        },
-        "bbox": {
-            "width": 16,
-            "height": 16
         }
     },
     "drop": [
@@ -33,10 +29,23 @@
         }
     ],
     "attribute": {
+        "boolean": [
+            "phantasia:fall_damage_resistant"
+        ],
+        "collision_box": {
+            "width": 16,
+            "height": 16
+        },
+        "hit_box": {
+            "width": 14,
+            "height": 15
+        },
         "eye_level": 3,
-        "movement_speed": 0.5,
-        "gravity": 0.1,
-        "jump_height": 1.1,
-        "is_fall_damage_resistant": 1
+        "gravity": 0.44,
+        "jump_count_max": 1,
+        "jump_falloff": 2.2,
+        "jump_height": 28.5,
+        "jump_time": 12,
+        "movement_speed": 1.4
     }
 }
