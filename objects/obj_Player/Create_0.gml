@@ -1,4 +1,4 @@
-entity_value = {
+attribute = {
     collision_box: {
         width:  16,
         height: 32
@@ -18,8 +18,8 @@ entity_value = {
     }
 }
 
-image_xscale = entity_value.collision_box.width  / 8;
-image_yscale = entity_value.collision_box.height / 8;
+image_xscale = attribute.collision_box.width  / 8;
+image_yscale = attribute.collision_box.height / 8;
 
 hp = 100;
 hp_max = 100;

@@ -1,7 +1,7 @@
 global.crafting_data = [];
 global.crafting_stations = [];
 
-function init_crafting(_directory, _prefix = "phantasia", _type = 0)
+function init_crafting(_directory, _namespace = "phantasia", _type = 0)
 {
     var _item_data = global.item_data;
     

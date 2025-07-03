@@ -151,6 +151,7 @@
     {"name":"init_background","order":1,"path":"scripts/init_background/init_background.yy",},
     {"name":"init_biome","order":1,"path":"scripts/init_biome/init_biome.yy",},
     {"name":"init_crafting","order":2,"path":"scripts/init_crafting/init_crafting.yy",},
+    {"name":"init_creature","order":1,"path":"scripts/init_creature/init_creature.yy",},
     {"name":"init_inventory_instance","order":10,"path":"scripts/init_inventory_instance/init_inventory_instance.yy",},
     {"name":"init_item","order":1,"path":"scripts/init_item/init_item.yy",},
     {"name":"init_loca_effect","order":1,"path":"scripts/init_loca_effect/init_loca_effect.yy",},

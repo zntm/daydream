@@ -78,6 +78,8 @@ function chunk_generate()
         
         var _cave_bit = __cave_bit[i];
         
+        var _xorshift = xorshift(_world_seed ^ ((_world_x + chunk_ystart) * _surface_height));
+        
         for (var j = 0; j < CHUNK_SIZE; ++j)
         {
             var _world_y = chunk_ystart + j;
@@ -194,7 +196,7 @@ function chunk_generate()
                 }
             }
             
-            var _z = ((xorshift(_world_seed ^ (_world_x * (_world_y + _surface_height))) & 1) ? CHUNK_DEPTH_FOLIAGE_FRONT : CHUNK_DEPTH_FOLIAGE_BACK);
+            var _z = ((_xorshift & (1 << _world_y)) ? CHUNK_DEPTH_FOLIAGE_FRONT : CHUNK_DEPTH_FOLIAGE_BACK);
             
             if !(_skip_z & (1 << _z)) && (_world_y >= _surface_height - 1)
             {

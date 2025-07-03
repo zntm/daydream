@@ -80,7 +80,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
             {
                 var _data = _item_data[$ item.get_id()];
                 
-                var _collision_box = entity_value.collision_box;
+                var _collision_box = attribute.collision_box;
                 
                 var _sprite = _data.get_sprite();
                 var _index  = _data.get_inventory_index();

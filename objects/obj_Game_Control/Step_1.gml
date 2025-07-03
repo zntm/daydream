@@ -23,6 +23,6 @@ else if (keyboard_check_pressed(global.settings.input_keyboard_pause))
     }
     else
     {
-    	control_instance_unpause();
+        control_instance_unpause();
     }
 }

@@ -1,0 +1,42 @@
+{
+    "hp": 14,
+    "type": {
+        "hostility": "passive",
+        "movement": "ground"
+    },
+    "sprite": {
+        "frames": {
+            "idle": 1,
+            "moving": 8
+        },
+        "bbox": {
+            "width": 16,
+            "height": 16
+        }
+    },
+    "drop": [
+        {
+            "id": "phantasia:raw_chicken",
+            "amount": 1,
+            "chance": 1
+        },
+        {
+            "id": "phantasia:feather",
+            "amount": {
+                "type": "irandom",
+                "values": {
+                    "min": 1,
+                    "max": 3
+                }
+            },
+            "chance": 1
+        }
+    ],
+    "attribute": {
+        "eye_level": 3,
+        "movement_speed": 0.5,
+        "gravity": 0.1,
+        "jump_height": 1.1,
+        "is_fall_damage_resistant": 1
+    }
+}

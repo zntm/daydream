@@ -10,7 +10,7 @@ function spawn_item_drop(_x, _y, _item, _direction = 0, _xvelocity = 0, _yveloci
     {
         var _size = _data.get_inventory_size();
         
-        entity_value = {
+        attribute = {
             collision_box: {
                 width:  _size,
                 height: _size

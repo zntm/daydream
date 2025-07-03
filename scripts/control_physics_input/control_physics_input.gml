@@ -11,7 +11,7 @@ function control_physics_input(_dt, _id)
         
         var _on_ground = tile_meeting(x, y + 1);
         
-        var _physics = entity_value.physics;
+        var _physics = attribute.physics;
         
         xvelocity = lerp_delta(xvelocity, _direction * _physics.movement_speed, 0.3, _dt);
         

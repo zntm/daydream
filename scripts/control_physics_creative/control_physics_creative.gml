@@ -8,7 +8,7 @@ function control_physics_creative(_dt, _id)
         var _xsign = sign(xvelocity);
         var _ysign = sign(yvelocity);
         
-        var _collision_box = entity_value.collision_box;
+        var _collision_box = attribute.collision_box;
         
         var _collision_box_width  = _collision_box.width;
         var _collision_box_height = _collision_box.height;

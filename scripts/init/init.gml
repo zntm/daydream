@@ -29,6 +29,8 @@ function init(_namespace)
     init_world($"{PROGRAM_DIRECTORY_RESOURCES}\\world", _namespace);
     
     init_menu($"{PROGRAM_DIRECTORY_RESOURCES}\\menu.json");
+    
+    init_creature($"{PROGRAM_DIRECTORY_RESOURCES}\\creature", _namespace);
 }
 
 call_later(8, time_source_units_frames, function()
