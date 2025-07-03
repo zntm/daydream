@@ -2,7 +2,10 @@ function Attributes() constructor
 {
     static set_collision_box = function(_collision_box)
     {
-        ___collision_box = _collision_box;
+        if (_collision_box != undefined)
+        {
+            ___collision_box = _collision_box;
+        }
         
         return self;
     }
@@ -14,7 +17,10 @@ function Attributes() constructor
     
     static set_hit_box = function(_hit_box)
     {
-        ___hit_box = _hit_box;
+        if (_hit_box != undefined)
+        {
+            ___hit_box = _hit_box;
+        }
         
         return self;
     }
@@ -26,7 +32,10 @@ function Attributes() constructor
     
     static set_eye_level = function(_eye_level)
     {
-        ___eye_level = _eye_level;
+        if (_eye_level != undefined)
+        {
+            ___eye_level = _eye_level;
+        }
         
         return self;
     }
@@ -38,7 +47,10 @@ function Attributes() constructor
     
     static set_gravity = function(_gravity)
     {
-        ___gravity = _gravity;
+        if (_gravity != undefined)
+        {
+            ___gravity = _gravity;
+        }
         
         return self;
     }
@@ -50,7 +62,10 @@ function Attributes() constructor
     
     static set_jump_count_max = function(_jump_count_max)
     {
-        ___jump_count_max = _jump_count_max;
+        if (_jump_count_max != undefined)
+        {
+            ___jump_count_max = _jump_count_max;
+        }
         
         return self;
     }
@@ -62,7 +77,10 @@ function Attributes() constructor
     
     static set_jump_height = function(_jump_height)
     {
-        ___jump_height = _jump_height;
+        if (_jump_height != undefined)
+        {
+            ___jump_height = _jump_height;
+        }
         
         return self;
     }
@@ -71,10 +89,13 @@ function Attributes() constructor
     {
         return self[$ "___jump_height"] ?? 28.5;
     }
-    
+
     static set_jump_time = function(_jump_time)
     {
-        ___jump_time = _jump_time;
+        if (_jump_time != undefined)
+        {
+            ___jump_time = _jump_time;
+        }
         
         return self;
     }
@@ -86,7 +107,10 @@ function Attributes() constructor
     
     static set_movement_speed = function(_speed)
     {
-        ___movement_speed = _speed;
+        if (_speed != undefined)
+        {
+            ___movement_speed = _speed;
+        }
         
         return self;
     }
