@@ -90,7 +90,7 @@ function init_creature(_directory, _namespace = "phantasia")
         
         dbg_timer("init_creature");
         
-        var _json = smart_value_parse(buffer_load_json($"{_directory}/{_file}/data.json"));
+        var _json = buffer_load_json($"{_directory}/{_file}/data.json");
         
         var _type = _json.type;
         

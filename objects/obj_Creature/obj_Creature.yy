@@ -1,9 +1,9 @@
 {
   "$GMObject":"",
-  "%Name":"obj_Entity",
+  "%Name":"obj_Creature",
   "eventList":[],
   "managed":true,
-  "name":"obj_Entity",
+  "name":"obj_Creature",
   "overriddenProperties":[],
   "parent":{
     "name":"Gameplay",

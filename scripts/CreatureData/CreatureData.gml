@@ -180,7 +180,20 @@ function CreatureData(_namespace, _id, _hp, _hostility_type, _movement_type) con
     {
         if (_drop != undefined)
         {
-            ___drop = _drop;
+            self[$ "___drop"] ??= [];
+            
+            var _length = array_length(_drop);
+            
+            for (var i = 0; i < _length; ++i)
+            {
+                var _data = _drop[i];
+                
+                array_push(___drop, {
+                    id: _data.id,
+                    amount: smart_value_parse(_data.amount),
+                    chance: _data.chance    
+                })
+            }
         }
         
         return self;
