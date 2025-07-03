@@ -16,6 +16,10 @@ if (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.EXIT)
         break;
     }
     
+    var _world_save_data = global.world_save_data;
+    
+    file_save_world_global(_world_save_data);
+    
     ++chunk_saved_count;
     
     exit;
