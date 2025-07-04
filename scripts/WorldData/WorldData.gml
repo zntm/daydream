@@ -1,5 +1,19 @@
-function WorldData(_world_height) constructor
+function WorldData(_namespace, _id, _world_height) constructor
 {
+    ___namespace = _namespace;
+    
+    static get_namespace = function()
+    {
+        return ___namespace;
+    }
+    
+    ___id = _id;
+    
+    static get_id = function()
+    {
+        return ___id;
+    }
+    
     ___world_height = _world_height;
     
     static get_world_height = function()

@@ -37,7 +37,7 @@ function init_world(_directory, _namespace = "phantasia", _type = 0)
         
         var _json = tag_value_parse(buffer_load_json($"{_directory}/{_file}/data.json"));
         
-        var _world_data = new WorldData(_json.world_height);
+        var _world_data = new WorldData(_namespace, _file, _json.world_height);
         
         var _vignette = _json.vignette;
         

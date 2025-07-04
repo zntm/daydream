@@ -111,6 +111,27 @@ function Tile(_id, _item_data = global.item_data) constructor
         return (___value >> 32) & 0b111111111;
     }
     
+    var _data = _item_data[$ get_id()];
+    
+    var _inventory_length = _data.get_tile_inventory_length();
+    
+    if (_inventory_length > 0)
+    {
+        ___inventory = array_create(_inventory_length, INVENTORY_EMPTY);
+    }
+    
+    static set_inventory = function(_inventory)
+    {
+        ___inventory = _inventory;
+        
+        return self;
+    }
+    
+    static get_inventory = function()
+    {
+        return self[$ "___inventory"];
+    }
+    
     static set_instance_light = function(_id)
     {
         ___instance_light = _id;

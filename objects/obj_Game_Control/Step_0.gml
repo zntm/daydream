@@ -1,26 +1,28 @@
 if (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.EXIT)
 {
+    var _world_save_data = global.world_save_data;
+    
     chunk_saved_count_max = instance_number(obj_Chunk);
     
     if (chunk_saved_count >= chunk_saved_count_max)
     {
+        audio_stop_all();
+        
+        file_save_world_global(_world_save_data);
+        
         room_goto(rm_Menu_Title);
         
         exit;
     }
     
+    ++chunk_saved_count;
+    
     with (obj_Chunk)
     {
-        instance_destroy();
+        file_save_chunk(_world_save_data, id);
         
-        break;
+        instance_destroy();
     }
-    
-    var _world_save_data = global.world_save_data;
-    
-    file_save_world_global(_world_save_data);
-    
-    ++chunk_saved_count;
     
     exit;
 }

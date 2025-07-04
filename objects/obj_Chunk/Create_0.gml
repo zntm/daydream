@@ -17,6 +17,9 @@ is_generated = false;
 chunk_xstart = floor(x / CHUNK_SIZE);
 chunk_ystart = floor(y / CHUNK_SIZE);
 
+xcenter = x - (TILE_SIZE / 2) + (CHUNK_SIZE_DIMENSION / 2);
+ycenter = y - (TILE_SIZE / 2) + (CHUNK_SIZE_DIMENSION / 2);
+
 control_structure(chunk_xstart, chunk_ystart);
 
 chunk_generate();
