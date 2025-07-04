@@ -24,6 +24,7 @@ function menu_refresh_instance_players()
         global.player_save_data = _data.get_attire();
         
         menu_refresh_value_world_save();
+        menu_refresh_instance_worlds();
         
         room_goto(rm_Menu_Worlds);
     }

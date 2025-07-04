@@ -33,4 +33,9 @@ A heartfelt thank you to everyone who helped bring this world to life!
 - **Skies**
     - [Spotify](https://open.spotify.com/artist/5DgNMSlcQgjzpzILh3M2LL)
 
-###### Last Updated @ June 1, 2025
+## 💝 Acknowledgements
+
+- **DarkNightPrincess**
+    - [Player Sound Effects](https://www.youtube.com/@voicedsoundeffects/videos)
+
+###### Last Updated @ July 4, 2025

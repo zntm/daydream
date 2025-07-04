@@ -245,5 +245,31 @@
         ],
         "pitch": "#phantasia:sfx/generic/pitch_default",
         "subtitle": "phantasia:sfx.tile.generic.step"
+    },
+    "voice.female.hurt": {
+        "asset": [
+            "phantasia:voice/female/hurt0",
+            "phantasia:voice/female/hurt1",
+            "phantasia:voice/female/hurt2"
+        ],
+        "pitch": "#phantasia:sfx/generic/pitch_default",
+        "subtitle": "phantasia:sfx.voice.hurt"
+    },
+    "voice.female.idle_weak": {
+        "asset": [
+            "phantasia:voice/female/idle_weak0",
+            "phantasia:voice/female/idle_weak1"
+        ],
+        "pitch": "#phantasia:sfx/generic/pitch_default",
+        "subtitle": "phantasia:sfx.voice.idle_weak"
+    },
+    "voice.female.idle": {
+        "asset": [
+            "phantasia:voice/female/idle0",
+            "phantasia:voice/female/idle1",
+            "phantasia:voice/female/idle2"
+        ],
+        "pitch": "#phantasia:sfx/generic/pitch_default",
+        "subtitle": "phantasia:sfx.voice.idle"
     }
 }

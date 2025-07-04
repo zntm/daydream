@@ -2,7 +2,7 @@ function menu_refresh_instance_worlds()
 {
     static __on_draw = function(_x, _y)
     {
-        var _data = global.file_players[index];
+        var _data = global.file_worlds[index];
         
         var _halign = draw_get_halign();
         var _valign = draw_get_valign();
@@ -19,29 +19,25 @@ function menu_refresh_instance_worlds()
     
     static __on_select_release = function()
     {
-        var _data = global.file_players[index];
+        global.world_save_data = global.file_worlds[index];
         
-        global.player_save_data = _data.get_attire();
-        
-        menu_refresh_value_world_save();
-        
-        room_goto(rm_Menu_Worlds);
+        room_goto(rm_World);
     }
     
-    var _a = file_read_directory(PROGRAM_DIRECTORY_PLAYERS);
-    var _b = global.file_players_uuid;
+    var _a = file_read_directory(PROGRAM_DIRECTORY_WORLDS);
+    var _b = global.file_worlds_uuid;
     
     if (!array_equals(_a, _b))
     {
-        file_load_players();
+        file_load_worlds();
     }
     
-    var _players = global.file_players;
-    var _players_length = array_length(_players);
+    var _worlds = global.file_worlds;
+    var _worlds_length = array_length(_worlds);
     
-    for (var i = 0; i < _players_length; ++i)
+    for (var i = 0; i < _worlds_length; ++i)
     {
-        var _player = _players[i];
+        var _world = _worlds[i];
         
         var _xoffset = floor(i % 4) * 208;
         var _yoffset = floor(i / 4) * 160;
