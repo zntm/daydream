@@ -17,7 +17,7 @@ on_select_release = function()
     
     var _attire = global.player_save_data.attire;
     
-    file_save_player_global($"{PROGRAM_DIRECTORY_PLAYERS}/{_uuid}", _name, _attire, 100, 100, -1);
+    file_save_player_global($"{PROGRAM_DIRECTORY_PLAYERS}/{_uuid}", _name, _attire, 100, 100, {});
     
     array_insert(global.file_players, 0, new FilePlayer(_uuid, _name, date_current_datetime())
         .set_version(PROGRAM_VERSION_MAJOR, PROGRAM_VERSION_MINOR, PROGRAM_VERSION_PATCH, PROGRAM_VERSION_TYPE)
