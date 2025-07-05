@@ -31,10 +31,14 @@ function control_creature_spawn(_dt)
                 
                 if (chance(_creature.chance))
                 {
+                    var _attribute = _creature_data.get_attribute();
                     var _can_spawn = false;
                     
                     with (obj_Game_Control_Spawn_Check)
                     {
+                        image_xscale = _attribute.get_collision_box_width()  / 8;
+                        image_yscale = _attribute.get_collision_box_height() / 8;
+                        
                         _can_spawn = !tile_meeting(_x, _y);
                     }
                     
