@@ -8,6 +8,8 @@ function control_game_tick()
     {
         var _tick = min(1, _dt);
         
+        control_creature_spawn(_tick);
+        
         with (obj_Player)
         {
             control_player(_tick);

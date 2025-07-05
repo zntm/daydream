@@ -203,11 +203,13 @@ function BiomeData(_name, _type) constructor
     {
         if (_creature != undefined)
         {
-            ___creature_interval = _creature.interval;
-            ___creature_spawn = [];
-            
             var _spawn = _creature.spawn;
             var _length = array_length(_spawn);
+            
+            ___creature_spawn_interval = _creature.interval;
+            
+            ___creature_spawn = [];
+            ___creature_spawn_length = _length;
             
             for (var i = 0; i < _length; ++i)
             {
@@ -217,7 +219,8 @@ function BiomeData(_name, _type) constructor
                     id: _.id,
                     amount: smart_value_parse(_.amount),
                     chance: _[$ "chance"] ?? 1,
-                    diurnal: _[$ "diurnal"]
+                    time: _[$ "time"],
+                    tile: _[$ "tile"]
                 }
             }
         }
@@ -225,14 +228,19 @@ function BiomeData(_name, _type) constructor
         return self;
     }
     
-    static get_creature_interval = function()
+    static get_creature_spawn_interval = function()
     {
-        return self[$ "___creature_interval"] ?? 0;
+        return self[$ "___creature_spawn_interval"] ?? 0;
     }
     
     static get_creature_spawn = function()
     {
         return self[$ "___creature_spawn"];
+    }
+    
+    static get_creature_spawn_length = function()
+    {
+        return self[$ "___creature_spawn_length"] ?? 0;
     }
     
     static set_structure = function(_structure)

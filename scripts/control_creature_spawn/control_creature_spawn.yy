@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"control_creature_spawn",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"control_creature_spawn",
+  "parent":{
+    "name":"Control",
+    "path":"folders/Scripts/Control.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

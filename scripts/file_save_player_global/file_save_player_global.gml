@@ -56,7 +56,8 @@ function file_save_player_global(_directory, _player_name, _player_attire, _play
             continue;
         }
         
-        buffer_write(_buffer, buffer_u8, (_effect.has_particle << 7) | _effect.level);
+        buffer_write(_buffer, buffer_u8, _effect.has_particle);
+        buffer_write(_buffer, buffer_u8, _effect.level);
         buffer_write(_buffer, buffer_f32, _effect.timer);
         
         buffer_poke(_buffer, _seek, buffer_u32, buffer_tell(_buffer));

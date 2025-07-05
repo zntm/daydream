@@ -29,6 +29,8 @@ function init_biome(_directory, _namespace = "phantasia", _type = 0)
         _biome_data.set_tile(_json.tile);
         _biome_data.set_tile_foliage(_json.foliage);
         
+        _biome_data.set_creature(_json[$ "creature"]);
+        
         _biome_data.set_structure(_json[$ "structure"]);
         
         global.biome_data[$ $"{_namespace}:{_name}"] = _biome_data;
@@ -70,6 +72,8 @@ function init_biome(_directory, _namespace = "phantasia", _type = 0)
         _biome_data.set_tile_top_layer(_tile.top_layer);
         _biome_data.set_tile_sub_layer(_tile.sub_layer);
         _biome_data.set_tile_foliage(_json.foliage);
+        
+        _biome_data.set_creature(_json[$ "creature"]);
         
         _biome_data.set_structure(_json[$ "structure"]);
         

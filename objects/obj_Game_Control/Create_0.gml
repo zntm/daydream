@@ -192,3 +192,5 @@ control_instance_unpause();
 
 inst_664AF3B4.x = -1000;
 inst_664AF3B4.y = -1000;
+
+timer_creature_spawn = 0;

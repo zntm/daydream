@@ -78,11 +78,11 @@
                     }
                 },
                 "chance": 0.1,
-                "diurnal": [
-                    "dawn",
-                    "day",
-                    "dusk"
-                ]
+                "time": {
+                    "min": 0,
+                    "max": 890
+                },
+                "tile": "#phantasia:tile/creature_spawn/animal"
             }
         ]
     },
