@@ -21,10 +21,16 @@ function menu_refresh_instance_players()
     {
         var _data = global.file_players[index];
         
-        global.player_save_data = _data.get_attire();
+        global.player_save_data.name = _data.get_name();
+        
+        global.player_save_data.hp = _data.get_hp();
+        global.player_save_data.hp_max = _data.get_hp_max();
+        
+        global.player_save_data.attire = _data.get_attire();
+        
+        global.player_save_data.uuid = _data.get_uuid();
         
         menu_refresh_value_world_save();
-        menu_refresh_instance_worlds();
         
         room_goto(rm_Menu_Worlds);
     }

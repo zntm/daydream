@@ -149,7 +149,7 @@ global.gui_inventory = {
             }
         ]
     },
-    craftable: {
+    _craftable: {
         anchor_type: GUI_ANCHOR.TOP_LEFT,
         sprite: spr_Inventory_Slot,
         icon: spr_Inventory_Slot_Icon,
@@ -168,7 +168,7 @@ global.gui_inventory = {
             }
         ]
     },
-    container: {
+    _container: {
         anchor_type: GUI_ANCHOR.TOP_LEFT,
         surface_xoffset: 0,
         surface_yoffset: 0,

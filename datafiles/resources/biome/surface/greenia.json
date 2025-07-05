@@ -67,7 +67,7 @@
 	},
     "creature": {
         "interval": 14,
-        "data": [
+        "spawn": [
             {
                 "id": "phantasia:chicken",
                 "amount": {

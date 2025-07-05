@@ -19,7 +19,20 @@ function menu_refresh_instance_worlds()
     
     static __on_select_release = function()
     {
-        global.world_save_data = global.file_worlds[index];
+        var _data = global.file_worlds[index];
+        
+        global.world_save_data.name = _data.get_name();
+        global.world_save_data.seed = _data.get_seed();
+        
+        global.world_save_data.dimension = _data.get_dimension();
+        
+        global.world_save_data.time = _data.get_time();
+        global.world_save_data.day  = _data.get_day();
+        
+        global.world_save_data.weather_wind  = _data.get_weather_wind();
+        global.world_save_data.weather_storm = _data.get_weather_storm();
+        
+        global.world_save_data.uuid = _data.get_uuid();
         
         room_goto(rm_World);
     }

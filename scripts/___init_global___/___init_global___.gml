@@ -9,7 +9,7 @@ global.inventory = {
     armor_breastplate: array_create(1, INVENTORY_EMPTY),
     armor_leggings:    array_create(1, INVENTORY_EMPTY),
     accessory:         array_create(INVENTORY_LENGTH.ACCESSORY, INVENTORY_EMPTY),
-    container:         []
+    _container:         []
 }
 
 global.inventory_names = [
@@ -18,7 +18,7 @@ global.inventory_names = [
     "armor_breastplate",
     "armor_leggings",
     "accessory",
-    "container"
+    "_container"
 ];
 
 global.inventory_length = {
@@ -27,7 +27,7 @@ global.inventory_length = {
     armor_breastplate: 1,
     armor_leggings:    1,
     accessory:         INVENTORY_LENGTH.ACCESSORY,
-    container:         0
+    _container:         0
 }
 
 global.inventory_instance = {
@@ -36,8 +36,8 @@ global.inventory_instance = {
     armor_breastplate: array_create(1, noone),
     armor_leggings:    array_create(1, noone),
     accessory:         array_create(INVENTORY_LENGTH.ACCESSORY, noone),
-    container: [],
-    craftable: []
+    _container: [],
+    _craftable: []
 }
 
 global.inventory_instance_names = [
@@ -46,8 +46,8 @@ global.inventory_instance_names = [
     "armor_breastplate",
     "armor_leggings",
     "accessory",
-    "container",
-    "craftable"
+    "_container",
+    "_craftable"
 ];
 
 global.attire_elements = [

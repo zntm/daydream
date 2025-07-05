@@ -250,7 +250,7 @@ function inventory_organize_mouse(_inst)
                 
                 with (obj_Inventory)
                 {
-                    if (inventory_type == "craftable")
+                    if (inventory_type == "_craftable")
                     {
                         instance_destroy();
                     }

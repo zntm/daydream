@@ -114,11 +114,11 @@ surface_inventory = {
         surface_item: -1,
         surface_slot: -1
     },
-    craftable: {
+    _craftable: {
         surface_item: -1,
         surface_slot: -1
     },
-    container: {
+    _container: {
         surface_item: -1,
         surface_slot: -1
     }

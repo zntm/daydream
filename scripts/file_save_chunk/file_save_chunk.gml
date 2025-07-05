@@ -12,7 +12,7 @@ function file_save_chunk(_world_save_data, _inst)
     var _region_x = floor(_chunk_x / CHUNK_REGION_SIZE);
     var _region_y = floor(_chunk_y / CHUNK_REGION_SIZE);
     
-    var _directory = $"{PROGRAM_DIRECTORY_WORLDS}/{_world_save_data.uuid}/dimension/{_world_data.get_namespace()}/{_world_data.get_id()}/{_region_x} {_region_y}.dat";
+    var _directory = $"{PROGRAM_DIRECTORY_WORLDS}/{_world_save_data.uuid}/dimension/{_world_data.get_namespace()}/{_world_data.get_id()}/chunk/{_region_x} {_region_y}.dat";
     
     var _map;
     
@@ -108,7 +108,7 @@ function file_save_chunk(_world_save_data, _inst)
         buffer_write(_buffer, buffer_f64, _.xvelocity);
         buffer_write(_buffer, buffer_f64, _.yvelocity);
         
-        // file_save_snippet_item(_buffer, _item_data, _.item);
+        file_save_snippet_item(_buffer, _.item, _item_data);
         
         buffer_poke(_buffer, _next, buffer_u32, buffer_tell(_buffer));
         
@@ -136,6 +136,15 @@ function file_save_chunk(_world_save_data, _inst)
         
         buffer_write(_buffer, buffer_u32, 0);
         
+        buffer_write(_buffer, buffer_u16, _.hp);
+        buffer_write(_buffer, buffer_u16, _.hp_max);
+        
+        buffer_write(_buffer, buffer_f64, _.x);
+        buffer_write(_buffer, buffer_f64, _.y);
+        
+        buffer_write(_buffer, buffer_f64, _.xvelocity);
+        buffer_write(_buffer, buffer_f64, _.yvelocity);
+        
         buffer_poke(_buffer, _next, buffer_u32, buffer_tell(_buffer));
         
         instance_destroy(_);
@@ -148,6 +157,24 @@ function file_save_chunk(_world_save_data, _inst)
     
     ds_map_add(_map, $"{_chunk_relative_x}_{_chunk_relative_y}", _buffer);
     ds_map_secure_save(_map, _directory);
+    
+    for (var i = 0; i < CHUNK_REGION_SIZE; ++i)
+    {
+        for (var j = 0; j < CHUNK_REGION_SIZE; ++j)
+        {
+            if (ds_map_exists(_map, $"{i}_{j}"))
+            {
+                var _buffer2 = _map[? $"{i}_{j}"];
+                
+                if (buffer_exists(_buffer2))
+                {
+                    buffer_delete(_buffer2);
+                }
+            }
+        }
+    }
+    
+    ds_map_destroy(_map);
     
     buffer_delete(_buffer);
 }

@@ -123,8 +123,8 @@ if (_hp > 0) && (is_opened & IS_OPENED_BOOLEAN.GUI) && !(is_opened & IS_OPENED_B
             }
         }
         
-        var _data = _gui_inventory.craftable;
-        var _surface_inventory = surface_inventory.craftable;
+        var _data = _gui_inventory._craftable;
+        var _surface_inventory = surface_inventory._craftable;
         
         var _anchor_type = _data.anchor_type;
         

@@ -1,6 +1,6 @@
 function inventory_refresh_craftable()
 {
-    array_resize(global.inventory_instance.craftable, 0);
+    array_resize(global.inventory_instance._craftable, 0);
     
     var _inventory = global.inventory.base;
     
@@ -63,10 +63,10 @@ function inventory_refresh_craftable()
         
         _inst.slot_type = INVENTORY_SLOT_TYPE.CRAFTABLE;
         
-        _inst.inventory_type  = "craftable";
+        _inst.inventory_type  = "_craftable";
         _inst.inventory_index = _offset;
         
-        global.inventory_instance.craftable[@ _offset] = _inst;
+        global.inventory_instance._craftable[@ _offset] = _inst;
         
         ++_offset;
     }
@@ -76,9 +76,9 @@ function inventory_refresh_craftable()
         obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_CRAFTABLE;
     }
     
-    global.gui_inventory.craftable.surface_width  = (GUI_INVENTORY_SURFACE_PADDING * 2) + INVENTORY_SLOT_DIMENSION_SCALED;
-    global.gui_inventory.craftable.surface_height = (GUI_INVENTORY_SURFACE_PADDING * 2) + (INVENTORY_SLOT_DIMENSION_SCALED * _offset);
+    global.gui_inventory._craftable.surface_width  = (GUI_INVENTORY_SURFACE_PADDING * 2) + INVENTORY_SLOT_DIMENSION_SCALED;
+    global.gui_inventory._craftable.surface_height = (GUI_INVENTORY_SURFACE_PADDING * 2) + (INVENTORY_SLOT_DIMENSION_SCALED * _offset);
     
-    global.gui_inventory.craftable.outline[@ 0].width  = (INVENTORY_OUTLINE_THICKNESS * 2) + INVENTORY_SLOT_DIMENSION;
-    global.gui_inventory.craftable.outline[@ 0].height = (INVENTORY_OUTLINE_THICKNESS * 2) + (INVENTORY_SLOT_DIMENSION * _offset);
+    global.gui_inventory._craftable.outline[@ 0].width  = (INVENTORY_OUTLINE_THICKNESS * 2) + INVENTORY_SLOT_DIMENSION;
+    global.gui_inventory._craftable.outline[@ 0].height = (INVENTORY_OUTLINE_THICKNESS * 2) + (INVENTORY_SLOT_DIMENSION * _offset);
 }

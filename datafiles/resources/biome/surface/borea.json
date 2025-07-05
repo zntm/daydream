@@ -73,6 +73,10 @@
             }
 		}
 	},
+    "creature": {
+        "interval": 1,
+        "spawn": []
+    },
     "foliage": [
         {
             "id": "phantasia:short_grass_borea",

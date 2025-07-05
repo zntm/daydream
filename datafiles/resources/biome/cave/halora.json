@@ -42,6 +42,10 @@
             "id": "phantasia:stone_wall"
         }
 	},
+    "creature": {
+        "interval": 1,
+        "spawn": []
+    },
     "foliage": [
         {
             "id": "phantasia:rock",

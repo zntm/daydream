@@ -199,6 +199,42 @@ function BiomeData(_name, _type) constructor
         return self[$ "___tile_foliage_length"] ?? 0;
     }
     
+    static set_creature = function(_creature)
+    {
+        if (_creature != undefined)
+        {
+            ___creature_interval = _creature.interval;
+            ___creature_spawn = [];
+            
+            var _spawn = _creature.spawn;
+            var _length = array_length(_spawn);
+            
+            for (var i = 0; i < _length; ++i)
+            {
+                var _ = _spawn[i];
+                
+                ___creature_spawn[@ i] = {
+                    id: _.id,
+                    amount: smart_value_parse(_.amount),
+                    chance: _[$ "chance"] ?? 1,
+                    diurnal: _[$ "diurnal"]
+                }
+            }
+        }
+        
+        return self;
+    }
+    
+    static get_creature_interval = function()
+    {
+        return self[$ "___creature_interval"] ?? 0;
+    }
+    
+    static get_creature_spawn = function()
+    {
+        return self[$ "___creature_spawn"];
+    }
+    
     static set_structure = function(_structure)
     {
         ___structure = _structure;

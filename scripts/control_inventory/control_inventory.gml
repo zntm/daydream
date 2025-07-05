@@ -23,7 +23,7 @@ function control_inventory()
             
             with (obj_Inventory)
             {
-                if (inventory_type == "craftable")
+                if (inventory_type == "_craftable")
                 {
                     instance_destroy();
                 }

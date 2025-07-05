@@ -40,13 +40,15 @@ function file_load_players()
             var _attire_name = buffer_read(_buffer, buffer_string);
             var _attire_colour = buffer_read(_buffer, buffer_u16);
             
-            _attire[$ _attire_name] = _attire_colour;
+            _attire[$ _attire_name] = {}
+            
+            _attire[$ _attire_name].colour = _attire_colour;
             
             if (_attire_name != "body")
             {
                 var _attire_index = buffer_read(_buffer, buffer_u16);
                 
-                _attire[$ _attire_name] = _attire_index;
+                _attire[$ _attire_name].index = _attire_index;
             }
         }
         

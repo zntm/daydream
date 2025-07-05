@@ -3,9 +3,9 @@ function gui_inventory_craftable(_gui_multiplier_x, _gui_multiplier_y)
     var _crafting_data = global.crafting_data;
     var _item_data = global.item_data;
     
-    var _inventory_data = global.gui_inventory.craftable;
+    var _inventory_data = global.gui_inventory._craftable;
     
-    var _inventory_instance = global.inventory_instance.craftable;
+    var _inventory_instance = global.inventory_instance._craftable;
     
     var _length = array_length(_inventory_instance);
     
@@ -14,7 +14,7 @@ function gui_inventory_craftable(_gui_multiplier_x, _gui_multiplier_y)
     var _surface_width  = _inventory_data.surface_width;
     var _surface_height = _inventory_data.surface_height;
     
-    var _surface_inventory = surface_inventory.craftable;
+    var _surface_inventory = surface_inventory._craftable;
     
     var _surface_slot = _surface_inventory.surface_slot;
     
@@ -22,7 +22,7 @@ function gui_inventory_craftable(_gui_multiplier_x, _gui_multiplier_y)
     {
         _surface_slot = surface_create(ceil(_surface_width / INVENTORY_SLOT_SCALE), ceil(_surface_height / INVENTORY_SLOT_SCALE));
         
-        surface_inventory.craftable.surface_slot = _surface_slot;
+        surface_inventory._craftable.surface_slot = _surface_slot;
     }
     
     var _sprite_inventory = _inventory_data.sprite;
@@ -58,7 +58,7 @@ function gui_inventory_craftable(_gui_multiplier_x, _gui_multiplier_y)
     {
         _surface_item = surface_create(ceil(_surface_width * _gui_multiplier_x), ceil(_surface_height * _gui_multiplier_y));
         
-        surface_inventory.craftable.surface_item = _surface_item;
+        surface_inventory._craftable.surface_item = _surface_item;
     }
     
     surface_set_target(_surface_item);
