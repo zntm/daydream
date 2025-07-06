@@ -71,6 +71,11 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
         
         if (_z == CHUNK_DEPTH_DEFAULT)
         {
+            with (obj_Creature)
+            {
+                draw_sprite_ext(sprite_index, 0, x, y, image_xscale, image_yscale, image_angle, c_white, 1);
+            }
+            
             with (obj_Player)
             {
                 draw_sprite_ext(sprite_index, 0, x, y, image_xscale, image_yscale, image_angle, c_white, 1);

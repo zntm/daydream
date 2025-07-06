@@ -21,6 +21,18 @@ function WorldData(_namespace, _id, _world_height) constructor
         return ___world_height & 0xffff;
     }
     
+    static set_spawn_interval = function(_spawn_interval)
+    {
+        ___spawn_interval = _spawn_interval;
+        
+        return self;
+    }
+    
+    static get_spawn_interval = function()
+    {
+        return ___spawn_interval;
+    }
+    
     static set_vignette = function(_start, _end, _colour)
     {
         ___vignette = (hex_parse(_colour) << 32) | (_end << 16) | _start;

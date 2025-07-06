@@ -38,10 +38,7 @@
             "id": "phantasia:nightrock_wall"
         }
 	},
-    "creature": {
-        "interval": 1,
-        "spawn": []
-    },
+    "creature": [],
     "foliage": [
         {
             "id": "phantasia:rock",

@@ -65,10 +65,7 @@
             }
 		}
 	},
-    "creature": {
-        "interval": 1,
-        "spawn": []
-    },
+    "creature": [],
     "foliage": [
         {
             "id": "phantasia:dead_bush",
