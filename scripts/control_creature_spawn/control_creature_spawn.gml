@@ -1,5 +1,7 @@
 function control_creature_spawn(_dt)
 {
+    // TODO: CLEANUP USING STATIC FUNCTIONS
+    
     timer_creature_spawn += _dt / GAME_TICK;
     
     var _camera_x = global.camera_x;
@@ -44,12 +46,32 @@ function control_creature_spawn(_dt)
                         image_xscale = _attribute.get_collision_box_width()  / 8;
                         image_yscale = _attribute.get_collision_box_height() / 8;
                         
-                        _can_spawn = !tile_meeting(_x, _y);
+                        _can_spawn = (!tile_meeting(_x, _y)) && (tile_meeting(_x, _y + 1));
                     }
                     
                     if (_can_spawn)
                     {
-                        spawn_creature(_x, _y, _id);
+                        var _tile = _creature.tile;
+                        
+                        if (_tile == undefined)
+                        {
+                            repeat (smart_value(_creature.amount))
+                            {
+                                spawn_creature(_x, _y, _id);
+                            }
+                        }
+                        else
+                        {
+                        	var _tile2 = tile_get(round(_x / TILE_SIZE), round(_y / TILE_SIZE), CHUNK_DEPTH_DEFAULT);
+                            
+                            if (_tile2 != TILE_EMPTY) && (array_contains(_tile, _tile2.get_id()))
+                            {
+                                repeat (smart_value(_creature.amount))
+                                {
+                                    spawn_creature(_x, _y, _id);
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -92,12 +114,32 @@ function control_creature_spawn(_dt)
                         image_xscale = _attribute.get_collision_box_width()  / 8;
                         image_yscale = _attribute.get_collision_box_height() / 8;
                         
-                        _can_spawn = !tile_meeting(_x, _y);
+                        _can_spawn = (!tile_meeting(_x, _y)) && (tile_meeting(_x, _y + 1));
                     }
                     
                     if (_can_spawn)
                     {
-                        spawn_creature(_x, _y, _id);
+                        var _tile = _creature.tile;
+                        
+                        if (_tile == undefined)
+                        {
+                            repeat (smart_value(_creature.amount))
+                            {
+                                spawn_creature(_x, _y, _id);
+                            }
+                        }
+                        else
+                        {
+                        	var _tile2 = tile_get(round(_x / TILE_SIZE), round(_y / TILE_SIZE), CHUNK_DEPTH_DEFAULT);
+                            
+                            if (_tile2 != TILE_EMPTY) && (array_contains(_tile, _tile2.get_id()))
+                            {
+                                repeat (smart_value(_creature.amount))
+                                {
+                                    spawn_creature(_x, _y, _id);
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -140,12 +182,32 @@ function control_creature_spawn(_dt)
                         image_xscale = _attribute.get_collision_box_width()  / 8;
                         image_yscale = _attribute.get_collision_box_height() / 8;
                         
-                        _can_spawn = !tile_meeting(_x, _y);
+                        _can_spawn = (!tile_meeting(_x, _y)) && (tile_meeting(_x, _y + 1));
                     }
                     
                     if (_can_spawn)
                     {
-                        spawn_creature(_x, _y, _id);
+                        var _tile = _creature.tile;
+                        
+                        if (_tile == undefined)
+                        {
+                            repeat (smart_value(_creature.amount))
+                            {
+                                spawn_creature(_x, _y, _id);
+                            }
+                        }
+                        else
+                        {
+                        	var _tile2 = tile_get(round(_x / TILE_SIZE), round(_y / TILE_SIZE), CHUNK_DEPTH_DEFAULT);
+                            
+                            if (_tile2 != TILE_EMPTY) && (array_contains(_tile, _tile2.get_id()))
+                            {
+                                repeat (smart_value(_creature.amount))
+                                {
+                                    spawn_creature(_x, _y, _id);
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -188,12 +250,32 @@ function control_creature_spawn(_dt)
                         image_xscale = _attribute.get_collision_box_width()  / 8;
                         image_yscale = _attribute.get_collision_box_height() / 8;
                         
-                        _can_spawn = !tile_meeting(_x, _y);
+                        _can_spawn = (!tile_meeting(_x, _y)) && (tile_meeting(_x, _y + 1));
                     }
                     
                     if (_can_spawn)
                     {
-                        spawn_creature(_x, _y, _id);
+                        var _tile = _creature.tile;
+                        
+                        if (_tile == undefined)
+                        {
+                            repeat (smart_value(_creature.amount))
+                            {
+                                spawn_creature(_x, _y, _id);
+                            }
+                        }
+                        else
+                        {
+                        	var _tile2 = tile_get(round(_x / TILE_SIZE), round(_y / TILE_SIZE), CHUNK_DEPTH_DEFAULT);
+                            
+                            if (_tile2 != TILE_EMPTY) && (array_contains(_tile, _tile2.get_id()))
+                            {
+                                repeat (smart_value(_creature.amount))
+                                {
+                                    spawn_creature(_x, _y, _id);
+                                }
+                            }
+                        }
                     }
                 }
             }
