@@ -1,11 +1,11 @@
 function control_creature_spawn(_dt)
 {
-    static __spawn = function(_world_time, _tile_x, _tile_y)
+    static __spawn = function(_world_time, _tile_x, _tile_y, _biome_data, _creature_data)
     {
         var _x = (_tile_x * TILE_SIZE);
         var _y = (_tile_y * TILE_SIZE) - (TILE_SIZE / 2);
         
-        var _biome = global.biome_data[$ bg_get_biome(_tile_x, _tile_y)];
+        var _biome = _biome_data[$ bg_get_biome(_tile_x, _tile_y)];
         
         var _spawn = _biome.get_creature();
         var _spawn_length = _biome.get_creature_length();
@@ -22,9 +22,8 @@ function control_creature_spawn(_dt)
             
             if (_time != undefined) && ((_world_time < _time.min) || (_world_time >= _time.max)) continue;
             
-            var _creature_data = global.creature_data[$ _id];
+            var _attribute = _creature_data[$ _id].get_attribute();
             
-            var _attribute = _creature_data.get_attribute();
             var _can_spawn = false;
             
             with (obj_Game_Control_Spawn_Check)
@@ -79,6 +78,9 @@ function control_creature_spawn(_dt)
     
     if (timer_creature_spawn < _spawn_interval) exit;
     
+    var _biome_data = global.biome_data;
+    var _creature_data = global.creature_data;
+    
     timer_creature_spawn -= _spawn_interval;
     
     var _world_time = _world_save_data.time;
@@ -103,10 +105,10 @@ function control_creature_spawn(_dt)
         var _tile_x2 = round((_camera_x + _camera_width)  / TILE_SIZE) + i;
         var _tile_y2 = round((_camera_y + _camera_height) / TILE_SIZE) + i;
         
-        __spawn_horizontal(_world_time, _tile_y1, _tile_xstart, _tile_xend);
-        __spawn_vertical(_world_time, _tile_x1, _tile_ystart, _tile_yend);
+        __spawn_horizontal(_world_time, _tile_y1, _tile_xstart, _tile_xend, _biome_data, _creature_data);
+        __spawn_vertical(_world_time, _tile_x1, _tile_ystart, _tile_yend, _biome_data, _creature_data);
         
-        __spawn_horizontal(_world_time, _tile_y2, _tile_xstart, _tile_xend);
-        __spawn_vertical(_world_time, _tile_x2, _tile_ystart, _tile_yend);
+        __spawn_horizontal(_world_time, _tile_y2, _tile_xstart, _tile_xend, _biome_data, _creature_data);
+        __spawn_vertical(_world_time, _tile_x2, _tile_ystart, _tile_yend, _biome_data, _creature_data);
     }
 }
