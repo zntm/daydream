@@ -54,19 +54,19 @@ function control_creature_spawn(_dt)
         }
     }
     
-    static __spawn_horizontal = function(_world_time, _tile_y, _tile_xstart, _tile_xend)
+    static __spawn_horizontal = function(_world_time, _tile_y, _tile_xstart, _tile_xend, _biome_data, _creature_data)
     {
         for (var _tile_x = _tile_xstart; _tile_x <= _tile_xend; ++_tile_x)
         {
-            control_creature_spawn.__spawn(_world_time, _tile_x, _tile_y);
+            control_creature_spawn.__spawn(_world_time, _tile_x, _tile_y, _biome_data, _creature_data);
         }
     }
     
-    static __spawn_vertical = function(_world_time, _tile_x, _tile_ystart, _tile_yend)
+    static __spawn_vertical = function(_world_time, _tile_x, _tile_ystart, _tile_yend, _biome_data, _creature_data)
     {
         for (var _tile_y = _tile_ystart; _tile_y <= _tile_yend; ++_tile_y)
         {
-            control_creature_spawn.__spawn(_world_time, _tile_x, _tile_y);
+            control_creature_spawn.__spawn(_world_time, _tile_x, _tile_y, _biome_data, _creature_data);
         }
     }
     

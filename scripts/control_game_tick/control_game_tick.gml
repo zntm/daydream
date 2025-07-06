@@ -15,6 +15,11 @@ function control_game_tick()
             control_player(_tick);
         }
         
+        with (obj_Creature)
+        {
+            control_creature(_tick);
+        }
+        
         with (obj_Item_Drop)
         {
             control_item_drop(_tick);

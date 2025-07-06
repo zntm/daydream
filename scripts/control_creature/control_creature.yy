@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"control_creature",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"control_creature",
+  "parent":{
+    "name":"Entity",
+    "path":"folders/Scripts/Control/Entity.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

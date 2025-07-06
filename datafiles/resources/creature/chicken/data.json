@@ -46,6 +46,6 @@
         "jump_falloff": 2.2,
         "jump_height": 28.5,
         "jump_time": 12,
-        "movement_speed": 1.4
+        "movement_speed": 0.5
     }
 }

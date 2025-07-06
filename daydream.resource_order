@@ -122,6 +122,7 @@
     {"name":"control_chunk_activity","order":1,"path":"scripts/control_chunk_activity/control_chunk_activity.yy",},
     {"name":"control_chunk_foliage","order":2,"path":"scripts/control_chunk_foliage/control_chunk_foliage.yy",},
     {"name":"control_creature_spawn","order":9,"path":"scripts/control_creature_spawn/control_creature_spawn.yy",},
+    {"name":"control_creature","order":3,"path":"scripts/control_creature/control_creature.yy",},
     {"name":"control_game_tick","order":5,"path":"scripts/control_game_tick/control_game_tick.yy",},
     {"name":"control_instance_pause","order":7,"path":"scripts/control_instance_pause/control_instance_pause.yy",},
     {"name":"control_instance_unpause","order":8,"path":"scripts/control_instance_unpause/control_instance_unpause.yy",},

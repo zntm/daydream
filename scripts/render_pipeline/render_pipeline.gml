@@ -5,6 +5,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
     static __u_time = shader_get_uniform(shd_Chunk, "u_time");
     static __u_skew = shader_get_uniform(shd_Chunk, "u_skew");
     
+    var _creature_data = global.creature_data;
     var _item_data = global.item_data;
     
     var _texture = global.carbasa_surface_texture[$ "item"];
@@ -73,7 +74,33 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
         {
             with (obj_Creature)
             {
-                draw_sprite_ext(sprite_index, 0, x, y, image_xscale, image_yscale, image_angle, c_white, 1);
+                var _data = _creature_data[$ _id];
+                
+                var _xscale = attribute.get_collision_box_width()  / (8 * 2);
+                var _yscale = attribute.get_collision_box_height() / (8 * 2);
+                
+                if (input_left) || (input_right)
+                {
+                    draw_sprite_ext(_data.get_sprite_moving(), 0, x, y, _xscale, _yscale, image_angle, c_white, 1);
+                    
+                    var _emissive = _data.get_sprite_moving_emissive();
+                    
+                    if (_emissive != undefined)
+                    {
+                        draw_sprite_ext(_emissive, 0, x, y, _xscale, _yscale, image_angle, c_white, 1);
+                    }
+                }
+                else
+                {
+                    draw_sprite_ext(_data.get_sprite_idle(), 0, x, y, _xscale, _yscale, image_angle, c_white, 1);
+                    
+                    var _emissive = _data.get_sprite_idle_emissive();
+                    
+                    if (_emissive != undefined)
+                    {
+                        draw_sprite_ext(_emissive, 0, x, y, _xscale, _yscale, image_angle, c_white, 1);
+                    }
+                }
             }
             
             with (obj_Player)
