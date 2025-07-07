@@ -95,7 +95,7 @@ function CreatureData(_namespace, _id, _hp, _hostility_type, _movement_type) con
     
     static get_sprite_moving = function(_variant)
     {
-        return __get_sprite("___sprite_moving", _variant) ?? get_sprite_idle();
+        return __get_sprite("___sprite_moving", _variant) ?? get_sprite_idle(_variant);
     }
     
     static set_sprite_idle_emissive = function(_sprite)
