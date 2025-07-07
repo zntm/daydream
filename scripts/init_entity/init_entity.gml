@@ -2,8 +2,9 @@ function init_entity(_hp, _hp_max, _attribute)
 {
     attribute = _attribute;
     
-    image_xscale = _attribute.get_collision_box_width()  / 8;
-    image_yscale = _attribute.get_collision_box_height() / 8;
+    entity_scale = 1;
+    
+    entity_set_scale(1);
     
     hp = _hp;
     hp_max = _hp_max;

@@ -51,6 +51,23 @@ function CreatureData(_namespace, _id, _hp, _hostility_type, _movement_type) con
         return ___type & 0xf;
     }
     
+    static __get_sprite = function(_name, _variant)
+    {
+        var _sprite = self[$ _name];
+        
+        if (_variant != undefined)
+        {
+            return ((_sprite != undefined) ? _sprite[$ _variant] : undefined);
+        }
+        
+        if (is_struct(_sprite))
+        {
+            return _sprite[$ _variant ?? "generic"];
+        }
+        
+        return self[$ _name];
+    }
+    
     static set_sprite_idle = function(_sprite)
     {
         if (_sprite != undefined)
@@ -61,9 +78,9 @@ function CreatureData(_namespace, _id, _hp, _hostility_type, _movement_type) con
         return self;
     }
     
-    static get_sprite_idle = function()
+    static get_sprite_idle = function(_variant)
     {
-        return self[$ "___sprite_idle"];
+        return __get_sprite("___sprite_idle", _variant);
     }
     
     static set_sprite_moving = function(_sprite)
@@ -76,9 +93,9 @@ function CreatureData(_namespace, _id, _hp, _hostility_type, _movement_type) con
         return self;
     }
     
-    static get_sprite_moving = function()
+    static get_sprite_moving = function(_variant)
     {
-        return self[$ "___sprite_moving"] ?? get_sprite_idle();
+        return __get_sprite("___sprite_moving", _variant) ?? get_sprite_idle();
     }
     
     static set_sprite_idle_emissive = function(_sprite)
@@ -91,9 +108,9 @@ function CreatureData(_namespace, _id, _hp, _hostility_type, _movement_type) con
         return self;
     }
     
-    static get_sprite_idle_emissive = function()
+    static get_sprite_idle_emissive = function(_variant)
     {
-        return self[$ "___sprite_idle_emissive"];
+        return __get_sprite("___sprite_idle_emissive", _variant);
     }
     
     static set_sprite_moving_emissive = function(_sprite)
@@ -106,9 +123,9 @@ function CreatureData(_namespace, _id, _hp, _hostility_type, _movement_type) con
         return self;
     }
     
-    static get_sprite_moving_emissive = function()
+    static get_sprite_moving_emissive = function(_variant)
     {
-        return self[$ "___sprite_moving_emissive"];
+        return __get_sprite("___sprite_moving_emissive", _variant);
     }
     
     static set_bbox = function(_bbox)

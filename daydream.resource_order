@@ -142,6 +142,7 @@
     {"name":"dbg_timer","order":1,"path":"scripts/dbg_timer/dbg_timer.yy",},
     {"name":"draw_set_align","order":2,"path":"scripts/draw_set_align/draw_set_align.yy",},
     {"name":"draw_vignette","order":1,"path":"scripts/draw_vignette/draw_vignette.yy",},
+    {"name":"entity_set_scale","order":4,"path":"scripts/entity_set_scale/entity_set_scale.yy",},
     {"name":"file_load_worlds","order":1,"path":"scripts/file_load_worlds/file_load_worlds.yy",},
     {"name":"file_read_directory","order":4,"path":"scripts/file_read_directory/file_read_directory.yy",},
     {"name":"file_save_chunk","order":1,"path":"scripts/file_save_chunk/file_save_chunk.yy",},

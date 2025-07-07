@@ -47,9 +47,11 @@ function control_creature_spawn(_dt)
                 if (_tile2 == TILE_EMPTY) || (!array_contains(_tile, _tile2.get_id())) continue;
             }
             
+            var _variant = _creature.variant;
+            
             repeat (smart_value(_creature.amount))
             {
-                spawn_creature(_x, _y, _id);
+                spawn_creature(_x, _y, _id, _variant);
             }
         }
     }

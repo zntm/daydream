@@ -1,0 +1,34 @@
+{
+    "hp": 22,
+    "type": {
+        "hostility": "passive",
+        "movement": "ground"
+    },
+    "sprite": {
+        "frames": {
+            "idle": 1,
+            "moving": 6
+        }
+    },
+    "drop": [],
+    "attribute": {
+        "boolean": [
+            "phantasia:fall_damage_resistant"
+        ],
+        "collision_box": {
+            "width": 26,
+            "height": 20
+        },
+        "hit_box": {
+            "width": 22,
+            "height": 19
+        },
+        "eye_level": 3,
+        "gravity": 0.3,
+        "jump_count_max": 1,
+        "jump_falloff": 2.2,
+        "jump_height": 11.8,
+        "jump_time": 10,
+        "movement_speed": 0.5
+    }
+}

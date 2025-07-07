@@ -29,18 +29,23 @@ function init_creature(_directory, _namespace = "phantasia")
             return undefined;
         }
         
-        var _array = [];
+        var _data = {}
         
-        for (var i = 0; file_exists($"{_directory}/{i}.png"); ++i)
+        var _files = file_read_directory(_directory);
+        var _files_length = array_length(_files);
+        
+        for (var i = 0; i < _files_length; ++i)
         {
-            var _sprite = sprite_add($"{_directory}/{i}.png", _frames, false, false, 0, 0);
+            var _file = _files[i];
+            
+            var _sprite = sprite_add($"{_directory}/{_file}", _frames, false, false, 0, 0);
             
             sprite_set_offset(_sprite, _xorigin ?? (sprite_get_width(_sprite) / 2), _yorigin ?? sprite_get_height(_sprite));
             
-            array_push(_array, _sprite);
+            _data[$ string_delete(_file, string_length(_file) - 3, 4)] = _sprite;
         }
         
-        return _array;
+        return _data;
     }
     /*
     static __sprite_delete = function(_name, _sprite)

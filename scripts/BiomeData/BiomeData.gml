@@ -217,7 +217,8 @@ function BiomeData(_name, _type) constructor
                     amount: smart_value_parse(_.amount),
                     chance: _[$ "chance"] ?? 1,
                     time: _[$ "time"],
-                    tile: _[$ "tile"]
+                    tile: _[$ "tile"],
+                    variant: smart_value_parse(_[$ "variant"])
                 }
             }
         }

@@ -74,16 +74,18 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
         {
             with (obj_Creature)
             {
+                var _variant = id[$ "variant"];
+                
                 var _data = _creature_data[$ _id];
                 
-                var _xscale = attribute.get_collision_box_width()  / (8 * 2) * sign(image_xscale);
-                var _yscale = attribute.get_collision_box_height() / (8 * 2);
+                var _xscale = entity_scale * sign(image_xscale);
+                var _yscale = entity_scale;
                 
                 if (yvelocity == 0) && ((input_left) || (input_right))
                 {
-                    draw_sprite_ext(_data.get_sprite_moving(), _animation_index, x, y, _xscale, _yscale, image_angle, c_white, 1);
+                    draw_sprite_ext(_data.get_sprite_moving(_variant), _animation_index, x, y, _xscale, _yscale, image_angle, c_white, 1);
                     
-                    var _emissive = _data.get_sprite_moving_emissive();
+                    var _emissive = _data.get_sprite_moving_emissive(_variant);
                     
                     if (_emissive != undefined)
                     {
@@ -92,9 +94,9 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 }
                 else
                 {
-                    draw_sprite_ext(_data.get_sprite_idle(), _animation_index, x, y, _xscale, _yscale, image_angle, c_white, 1);
+                    draw_sprite_ext(_data.get_sprite_idle(_variant), _animation_index, x, y, _xscale, _yscale, image_angle, c_white, 1);
                     
-                    var _emissive = _data.get_sprite_idle_emissive();
+                    var _emissive = _data.get_sprite_idle_emissive(_variant);
                     
                     if (_emissive != undefined)
                     {
