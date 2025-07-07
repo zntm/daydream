@@ -684,6 +684,8 @@
     {"id":{"name":"xorshift","path":"scripts/xorshift/xorshift.yy",},},
     {"id":{"name":"shd_Background","path":"shaders/shd_Background/shd_Background.yy",},},
     {"id":{"name":"shd_Chunk","path":"shaders/shd_Chunk/shd_Chunk.yy",},},
+    {"id":{"name":"shd_Colour_Replace","path":"shaders/shd_Colour_Replace/shd_Colour_Replace.yy",},},
+    {"id":{"name":"shd_Colourblind","path":"shaders/shd_Colourblind/shd_Colourblind.yy",},},
     {"id":{"name":"shd_Noise","path":"shaders/shd_Noise/shd_Noise.yy",},},
     {"id":{"name":"shd_Separable_Blur","path":"shaders/shd_Separable_Blur/shd_Separable_Blur.yy",},},
     {"id":{"name":"spr_Control","path":"sprites/spr_Control/spr_Control.yy",},},

@@ -28,7 +28,5 @@ void main()
         total_weight += weight;
     }
     
-    colour /= total_weight;
-    
-    gl_FragColor = v_vColour * colour;
+    gl_FragColor = v_vColour * (colour / total_weight);
 }
