@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"ai_fall_detection",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"ai_fall_detection",
+  "parent":{
+    "name":"AI",
+    "path":"folders/Scripts/Entity/Creature/AI.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

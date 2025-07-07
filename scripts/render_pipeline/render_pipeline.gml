@@ -79,7 +79,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 var _xscale = attribute.get_collision_box_width()  / (8 * 2) * sign(image_xscale);
                 var _yscale = attribute.get_collision_box_height() / (8 * 2);
                 
-                if (input_left) || (input_right)
+                if (yvelocity != 0) && (input_left) || (input_right)
                 {
                     draw_sprite_ext(_data.get_sprite_moving(), 0, x, y, _xscale, _yscale, image_angle, c_white, 1);
                     

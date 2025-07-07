@@ -147,7 +147,7 @@ function file_save_chunk(_world_save_data, _inst)
         
         buffer_write(_buffer, buffer_f64, _._id);
         
-        var _inventory = _[ $"inventory"];
+        var _inventory = _[$ "inventory"];
         
         if (_inventory != undefined)
         {
@@ -166,7 +166,7 @@ function file_save_chunk(_world_save_data, _inst)
         }
         else
         {
-        	buffer_write(_buffer, buffer_u8, 0);
+            buffer_write(_buffer, buffer_u8, 0);
         }
         
         buffer_poke(_buffer, _next, buffer_u32, buffer_tell(_buffer));
