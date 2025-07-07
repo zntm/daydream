@@ -76,7 +76,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
             {
                 var _data = _creature_data[$ _id];
                 
-                var _xscale = attribute.get_collision_box_width()  / (8 * 2);
+                var _xscale = attribute.get_collision_box_width()  / (8 * 2) * sign(image_xscale);
                 var _yscale = attribute.get_collision_box_height() / (8 * 2);
                 
                 if (input_left) || (input_right)

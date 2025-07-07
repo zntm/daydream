@@ -145,9 +145,31 @@ function file_save_chunk(_world_save_data, _inst)
         buffer_write(_buffer, buffer_f64, _.xvelocity);
         buffer_write(_buffer, buffer_f64, _.yvelocity);
         
-        buffer_poke(_buffer, _next, buffer_u32, buffer_tell(_buffer));
+        buffer_write(_buffer, buffer_f64, _._id);
         
-        instance_destroy(_);
+        var _inventory = _[ $"inventory"];
+        
+        if (_inventory != undefined)
+        {
+            var _inventory_length = array_length(_inventory);
+            
+            buffer_write(_buffer, buffer_u8, _inventory_length);
+            
+            if (_inventory_length > 0)
+            {
+                file_save_snippet_inventory(_buffer, _inventory, _inventory_length, _item_data);
+            }
+            
+            buffer_poke(_buffer, _next, buffer_u32, buffer_tell(_buffer));
+            
+            instance_destroy(_);
+        }
+        else
+        {
+        	buffer_write(_buffer, buffer_u8, 0);
+        }
+        
+        buffer_poke(_buffer, _next, buffer_u32, buffer_tell(_buffer));
     }
     
     buffer_compress(_buffer, 0, buffer_tell(_buffer));
