@@ -79,26 +79,26 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 var _xscale = attribute.get_collision_box_width()  / (8 * 2) * sign(image_xscale);
                 var _yscale = attribute.get_collision_box_height() / (8 * 2);
                 
-                if (yvelocity != 0) && (input_left) || (input_right)
+                if (yvelocity == 0) && ((input_left) || (input_right))
                 {
-                    draw_sprite_ext(_data.get_sprite_moving(), 0, x, y, _xscale, _yscale, image_angle, c_white, 1);
+                    draw_sprite_ext(_data.get_sprite_moving(), _animation_index, x, y, _xscale, _yscale, image_angle, c_white, 1);
                     
                     var _emissive = _data.get_sprite_moving_emissive();
                     
                     if (_emissive != undefined)
                     {
-                        draw_sprite_ext(_emissive, 0, x, y, _xscale, _yscale, image_angle, c_white, 1);
+                        draw_sprite_ext(_emissive, _animation_index, x, y, _xscale, _yscale, image_angle, c_white, 1);
                     }
                 }
                 else
                 {
-                    draw_sprite_ext(_data.get_sprite_idle(), 0, x, y, _xscale, _yscale, image_angle, c_white, 1);
+                    draw_sprite_ext(_data.get_sprite_idle(), _animation_index, x, y, _xscale, _yscale, image_angle, c_white, 1);
                     
                     var _emissive = _data.get_sprite_idle_emissive();
                     
                     if (_emissive != undefined)
                     {
-                        draw_sprite_ext(_emissive, 0, x, y, _xscale, _yscale, image_angle, c_white, 1);
+                        draw_sprite_ext(_emissive, _animation_index, x, y, _xscale, _yscale, image_angle, c_white, 1);
                     }
                 }
             }
