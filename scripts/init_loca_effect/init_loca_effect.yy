@@ -6,7 +6,7 @@
   "name":"init_loca_effect",
   "parent":{
     "name":"Loca Data",
-    "path":"folders/Loca Data.yy",
+    "path":"folders/Data/Loca Data.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

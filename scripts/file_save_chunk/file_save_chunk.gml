@@ -145,7 +145,11 @@ function file_save_chunk(_world_save_data, _inst)
         buffer_write(_buffer, buffer_f64, _.xvelocity);
         buffer_write(_buffer, buffer_f64, _.yvelocity);
         
+        buffer_write(_buffer, buffer_f64, _.entity_scale);
+        
+        buffer_write(_buffer, buffer_string, _.uuid);
         buffer_write(_buffer, buffer_string, _._id);
+        buffer_write(_buffer, buffer_string, _[$ "variant"] ?? "");
         
         var _inventory = _[$ "inventory"];
         

@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"init_credit",
   "parent":{
-    "name":"Credut Data",
-    "path":"folders/Data/Credut Data.yy",
+    "name":"Credit Data",
+    "path":"folders/Data/Credit Data.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

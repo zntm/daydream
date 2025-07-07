@@ -56,10 +56,6 @@ function file_save_player_global(_directory, _player_name, _player_attire, _play
             continue;
         }
         
-        show_debug_message(_player_effects)
-        show_debug_message(_effects_names)
-        show_debug_message(_effects_length)
-        
         buffer_write(_buffer, buffer_u8, _effect.has_particle);
         buffer_write(_buffer, buffer_u8, _effect.level);
         buffer_write(_buffer, buffer_f32, _effect.timer);

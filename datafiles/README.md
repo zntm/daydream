@@ -1,7 +1,7 @@
 # ❤️ Phantasia
 
 > **License:** [Phantasia's Daydream License](./LICENSE.md)  
-> **Version:** 1.0 (June 2025)
+> **Version:** 1.0 (July 2025)
 
 ---
 
@@ -20,5 +20,6 @@ Phantasia © 2025 by Zhen is licensed under Phantasia's Daydream - see the LICEN
 - [Adobe® Audition® Sound Effects](https://www.adobe.com/products/audition/offers/adobeauditiondlcsfx.html)
 - [execute_shell_simple for GameMaker](https://yellowafterlife.itch.io/gamemaker-execute-shell-simple)
 - [NekoPresence](https://github.com/nkrapivin/NekoPresence)
+- [window_taskbar for GameMaker](https://yellowafterlife.itch.io/gamemaker-window-taskbar)
 
-###### Last Updated @ June 9, 2025
+###### Last Updated @ July 7, 2025
