@@ -1,0 +1,96 @@
+{
+    "background": "phantasia:myrenia",
+    "map_colour": "#8C8C6C",
+    "sky_colour": {
+        "dawn": {
+            "base": "#687A8E",
+            "gradient": "#384E60"
+        },
+        "day": {
+            "base": "#B9CCC4",
+            "gradient": "#95B5BB"
+        },
+        "dusk": {
+            "base": "#725F59",
+            "gradient": "#4C3626"
+        },
+        "night": {
+            "base": "#1C2E38",
+            "gradient": "#141F27"
+        }
+    },
+    "light_colour": {
+        "dawn": "#C68B69",
+        "day": "#FFFFFF",
+        "dusk": "#C68B69",
+        "night": "#141B35"
+    },
+    "music": [
+        {
+            "id": "phantasia:12_hours_at_ease",
+            "gain": 0.7
+        },
+        {
+            "id": "phantasia:limerick",
+            "gain": 0.7
+        },
+        {
+            "id": "phantasia:ornaments_of_the_sky",
+            "gain": 0.7
+        },
+        {
+            "id": "phantasia:soliloquy",
+            "gain": 0.6
+        },
+        {
+            "id": "phantasia:sol_y_luna",
+            "gain": 0.6
+        },
+        {
+            "id": "phantasia:tense",
+            "gain": 0.7
+        }
+    ],
+	"tile": {
+		"top_layer": {
+			"base": {
+				"id": "phantasia:grass_block_myrenia"
+			},
+			"wall": {
+				"id": "phantasia:dirt_wall"
+			}
+		},
+		"sub_layer": {
+            "base": {
+                "id": "phantasia:dirt"
+            },
+            "wall": {
+                "id": "phantasia:dirt_wall"
+            }
+		}
+	},
+    "creature": [],
+    "foliage": [
+        {
+            "id": "phantasia:short_grass_myrenia",
+            "chance": 0.26,
+            "placeable_on": "#phantasia:tile/placeable/plant_on"
+        },
+        {
+            "id": "phantasia:tall_grass_myrenia",
+            "chance": 0.04,
+            "placeable_on": "#phantasia:tile/placeable/plant_on"
+        },
+        {
+            "id": "phantasia:rock",
+            "chance": 0.03,
+            "placeable_on": "#phantasia:tile/placeable/plant_on"
+        },
+        {
+            "id": "phantasia:lilybell",
+            "chance": 0.03,
+            "placeable_on": "#phantasia:tile/placeable/plant_on"
+        }
+    ],
+    "structure": []
+}

@@ -1,0 +1,29 @@
+{
+    "type": "solid",
+    "sprite": {
+        "xoffset": 8,
+        "yoffset": 8,
+        "length": 5,
+        "edge_padding": 8
+    },
+    "inventory": "#phantasia:item/generic/inventory_tile",
+    "harvest": {
+        "hardness": 0.36,
+        "level": 0,
+        "particle": {
+            "colour": [
+                "#FFFFFF"
+            ],
+            "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
+        }
+    },
+    "drop": {
+        "item": [
+            {
+                "id": "phantasia:dirt"
+            }
+        ]
+    },
+    "sfx": "#phantasia:tile/sfx/grass_block",
+    "is_tile": true
+}

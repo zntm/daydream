@@ -1,0 +1,30 @@
+{
+    "type": "untouchable",
+    "sprite": {
+        "xoffset": 10,
+        "yoffset": 6,
+        "length": 1
+    },
+    "inventory": "#phantasia:item/generic/inventory_default",
+    "harvest": {
+        "hardness": 0.38,
+        "particle": {
+            "colour": [
+                "#FFFFFF"
+            ],
+            "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
+        }
+    },
+    "placement": {
+        "requirement": "#phantasia:tile/placeable/requirement_plant"
+    },
+    "drop": {
+        "item": [
+            {
+                "id": "phantasia:lilybell"
+            }
+        ]
+    },
+    "sfx": "#phantasia:tile/sfx/foliage",
+    "is_foliage": true
+}
