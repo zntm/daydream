@@ -163,3 +163,96 @@ global.natural_structure_data[$ "phantasia:ore"] = new NaturalStructureData()
         
         return _data;
     });
+
+enum NATURAL_STRUCTURE_TREE_GENERIC {
+    USE_STRUCTURE_VOID,
+    TILE_WOOD,
+    TILE_LEAVES,
+    INDEX,
+    INDEX_TOP,
+    INDEX_BOTTOM,
+    LENGTH
+}
+
+global.natural_structure_data[$ "phantasia:tree/generic"] = new NaturalStructureData()
+    .set_parser(function(_parameter)
+    {
+        var _item_data = global.item_data;
+        
+        var _data = array_create(NATURAL_STRUCTURE_TREE_GENERIC.LENGTH);
+        
+        _data[@ NATURAL_STRUCTURE_TREE_GENERIC.USE_STRUCTURE_VOID] = _parameter[$ "use_structure_void"] ?? true;
+        
+        _data[@ NATURAL_STRUCTURE_TREE_GENERIC.TILE_WOOD]   = _parameter.tile_wood;
+        _data[@ NATURAL_STRUCTURE_TREE_GENERIC.TILE_LEAVES] = _parameter.tile_leaves;
+        
+        var _index = _parameter.index;
+        
+        _data[@ NATURAL_STRUCTURE_TREE_GENERIC.INDEX] = smart_value_parse(_index);
+        
+        _data[@ NATURAL_STRUCTURE_TREE_GENERIC.INDEX_TOP]    = smart_value_parse(_parameter[$ "index_top"])    ?? _index;
+        _data[@ NATURAL_STRUCTURE_TREE_GENERIC.INDEX_BOTTOM] = smart_value_parse(_parameter[$ "index_bottom"]) ?? _index;
+        
+        return _data;
+    })
+    .set_function(function(_x, _y, _width, _height, _seed, _parameter, _item_data)
+    {
+        var _rectangle = _width * _height;
+        var _data = array_create(_rectangle * CHUNK_DEPTH, (_parameter[NATURAL_STRUCTURE_TREE_GENERIC.USE_STRUCTURE_VOID] ? TILE_STRUCTURE_VOID : TILE_EMPTY));
+        
+        var _width_half = floor(_width / 2);
+        
+        var _depth_wood   = _rectangle * CHUNK_DEPTH_TREE;
+        var _depth_leaves = _depth_wood + _rectangle;
+        
+        var _tile_leaves = _parameter[NATURAL_STRUCTURE_TREE_GENERIC.TILE_LEAVES];
+        
+        var _tile_leaves_id = _tile_leaves.id;
+        
+        for (var i = 1; i < _width - 1; ++i)
+        {
+            _data[@ i + _depth_leaves] = new Tile(_tile_leaves_id, _item_data);
+            _data[@ i + (1 * _width) + _depth_leaves] = new Tile(_tile_leaves_id, _item_data)
+                .set_yscale(1)
+                //.set_index_offset(16);
+        }
+        
+        for (var i = 0; i < _width; ++i)
+        {
+            _data[@ i + (2 * _width) + _depth_leaves] = new Tile(_tile_leaves_id, _item_data);
+            _data[@ i + (3 * _width) + _depth_leaves] = new Tile(_tile_leaves_id, _item_data)
+                .set_yscale(1)
+                //.set_index_offset(16);
+        }
+        
+        var _tile_wood = _parameter[NATURAL_STRUCTURE_TREE_GENERIC.TILE_WOOD];
+        
+        var _tile_wood_id = _tile_wood.id;
+        var _tile_wood_variant = _tile_wood[$ "variant"];
+        
+        var _index = _parameter[NATURAL_STRUCTURE_TREE_GENERIC.INDEX];
+        
+        var _index_top    = _parameter[NATURAL_STRUCTURE_TREE_GENERIC.INDEX_TOP];
+        var _index_bottom = _parameter[NATURAL_STRUCTURE_TREE_GENERIC.INDEX_BOTTOM];
+        
+        for (var i = 0; i < _height; ++i)
+        {
+            if (i == 0)
+            {
+                _data[@ _width_half + (i * _width) + _depth_wood] = new Tile(_tile_wood_id, _item_data)
+                    .set_index(smart_value(_index_top));
+            }
+            else if (i == _height - 1)
+            {
+                _data[@ _width_half + (i * _width) + _depth_wood] = new Tile(_tile_wood_id, _item_data)
+                    .set_index(smart_value(_index_bottom));
+            }
+            else
+            {
+                _data[@ _width_half + (i * _width) + _depth_wood] = new Tile(_tile_wood_id, _item_data)
+                    .set_index(smart_value(_index));
+            }
+        }
+        
+        return _data;
+    });

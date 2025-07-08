@@ -4,7 +4,7 @@ function control_game_tick()
     
     var _time_length = global.world_data[$ global.world_save_data.dimension].get_time_length();
     
-    for (var _dt = GAME_TICK * _delta_time; _delta_time > 0; _delta_time -= 1)
+    for (var _dt = GAME_TICK * _delta_time; _dt > 0; _dt -= 1)
     {
         var _tick = min(1, _dt);
         

@@ -136,6 +136,11 @@
             "id": "phantasia:moss_clump",
             "chance": 0.008,
             "placeable_on": "#phantasia:tile/placeable/plant_on"
+        },
+        {
+            "id": "phantasia:tree/oak",
+            "chance": 0.08,
+            "placeable_on": "#phantasia:tile/placeable/plant_on"
         }
     ]
 }

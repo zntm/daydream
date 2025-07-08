@@ -39,21 +39,24 @@ function StructureData(_width, _height, _placement, _is_persistent, _is_natural)
     
     var _placement_offset = _placement.offset;
     
-    ___placement_value = ((_placement_offset.y + 0x80) << 16) | ((_placement_offset.x + 0x80) << 8) | __structure_placement_type[$ _placement.type];
+    ___placement_value = __structure_placement_type[$ _placement.type];
+    
+    ___placement_xoffset = _placement_offset.x;
+    ___placement_yoffset = _placement_offset.y;
     
     static get_placement_type = function()
     {
-        return ___placement_value & 0xff;
+        return ___placement_value;
     }
     
     static get_placement_xoffset = function()
     {
-        return ((___placement_value >> 8) & 0xff) - 0x80;
+        return ___placement_xoffset;
     }
     
     static get_placement_yoffset = function()
     {
-        return ((___placement_value >> 16) & 0xff) - 0x80;
+        return ___placement_yoffset;
     }
     
     static set_parameter = function(_array)

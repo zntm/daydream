@@ -3,7 +3,8 @@ function control_player(_dt)
     audio_listener_position(x, y, 0);
     
     control_physics_input(_dt, id);
-    control_physics_creative(_dt, id);
+    
+    control_physics(_dt, id);
     
     control_entity_sfx(_dt);
     

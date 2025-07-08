@@ -1,0 +1,37 @@
+{
+	"width": 5,
+	"height": {
+        "type": "irandom",
+        "values": {
+            "min": 6,
+            "max": 9
+        }
+    },
+	"placement": {
+		"type": "floor",
+		"offset": {
+			"x": -2,
+			"y": "-height"
+		}
+	},
+	"data": {
+		"function": "phantasia:tree/generic",
+		"parameter": {
+			"tile_wood": {
+				"id": "phantasia:oak"
+			},
+			"tile_leaves": {
+				"id": "phantasia:oak_leaves"
+			},
+			"index": {
+                "type": "irandom",
+                "values": {
+                    "min": 1,
+                    "max": 3
+                }
+            },
+			"index_top": 4,
+			"index_bottom": 5
+		}
+	}
+}

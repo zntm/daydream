@@ -26,28 +26,24 @@ function control_physics_input(_dt, _id)
             }
         }
         
-        if (input_jump_pressed)
-        {
-            ++jump_count;
-            
-            input_jump_pressed = false;
-            
-            jump_pressed = 0;
-        }
-        
-        if (!input_jump)
-        {
-            jump_pressed = 0;
-        }
-        
         var _jump_time = attribute.get_jump_time();
         
         if (jump_count > attribute.get_jump_count_max())
         {
             jump_pressed = infinity;
         }
-        else if (input_jump)
+        
+        if (input_jump)
         {
+            if (input_jump_pressed)
+            {
+                ++jump_count;
+                
+                input_jump_pressed = false;
+                
+                jump_pressed = 0;
+            }
+            
             if (tile_meeting(x, y - 1))
             {
                 jump_pressed = infinity;
@@ -55,12 +51,16 @@ function control_physics_input(_dt, _id)
             else
             {
                 jump_pressed += _dt;
+                
+                if (jump_pressed > 0) && (jump_pressed < _jump_time)
+                {
+                    yvelocity = -attribute.get_jump_height() * _dt * (1 - power(jump_pressed / _jump_time, attribute.get_jump_falloff()));
+                }
             }
         }
-        
-        if (jump_pressed > 0) && (jump_pressed < _jump_time)
+        else
         {
-            yvelocity = -attribute.get_jump_height() * _dt * (1 - power(jump_pressed / _jump_time, attribute.get_jump_falloff()));
+        	jump_pressed = 0;
         }
     }
 }

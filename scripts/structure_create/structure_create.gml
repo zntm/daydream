@@ -15,8 +15,45 @@ function structure_create(_x, _y, _id, _seed)
         _y -= TILE_SIZE / 2;
     }
     
-    _x += (round(_width  / 2) + _structure_data.get_placement_xoffset()) * TILE_SIZE;
-    _y += (round(_height / 2) + _structure_data.get_placement_yoffset()) * TILE_SIZE;
+    var _xoffset = _structure_data.get_placement_xoffset();
+    var _yoffset = _structure_data.get_placement_yoffset();
+    
+    if (_xoffset == "width")
+    {
+        _xoffset = _width;
+    }
+    else if (_xoffset == "-width")
+    {
+        _xoffset = -_width;
+    }
+    else if (_xoffset == "height")
+    {
+        _xoffset = _height;
+    }
+    else if (_xoffset == "-height")
+    {
+        _xoffset = -_height;
+    }
+    
+    if (_yoffset == "height")
+    {
+        _yoffset = _width;
+    }
+    else if (_yoffset == "-width")
+    {
+        _yoffset = -_width;
+    }
+    else if (_yoffset == "height")
+    {
+        _yoffset = _height;
+    }
+    else if (_yoffset == "-height")
+    {
+        _yoffset = -_height;
+    }
+    
+    _x += (ceil(_width  / 2) + _xoffset) * TILE_SIZE;
+    _y += (ceil(_height / 2) + _yoffset) * TILE_SIZE;
     
     with (instance_create_layer(_x, _y, "Instances", obj_Structure))
     {
