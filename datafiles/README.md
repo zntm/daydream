@@ -23,4 +23,4 @@ Phantasia © 2025 by Zhen is licensed under Phantasia's Daydream - see the LICEN
 - [NekoPresence](https://github.com/nkrapivin/NekoPresence)
 - [window_taskbar for GameMaker](https://yellowafterlife.itch.io/gamemaker-window-taskbar)
 
-###### Last Updated @ July 7, 2025
+###### Last Updated @ July 9, 2025
