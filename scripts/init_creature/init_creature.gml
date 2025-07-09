@@ -140,6 +140,4 @@ function init_creature(_directory, _namespace = "phantasia")
         
         delete _json;
     }
-    
-    show_debug_message(json_stringify(global.creature_data, true))
 }

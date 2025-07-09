@@ -32,36 +32,7 @@ function file_save_player_global(_directory, _player_name, _player_attire, _play
     buffer_write(_buffer, buffer_u16, _player_hp);
     buffer_write(_buffer, buffer_u16, _player_hp_max);
     
-    var _effects_names  = struct_get_names(_player_effects);
-    var _effects_length = array_length(_effects_names);
-    
-    buffer_write(_buffer, buffer_u16, _effects_length);
-    
-    for (var i = 0; i < _effects_length; ++i)
-    {
-        var _name = _effects_names[i];
-        
-        buffer_write(_buffer, buffer_string, _name);
-        
-        var _seek = buffer_tell(_buffer);
-        
-        buffer_write(_buffer, buffer_u32, 0);
-        
-        var _effect = _player_effects[$ _name];
-        
-        if (_effect == undefined)
-        {
-            buffer_write(_buffer, buffer_u8, 0);
-            
-            continue;
-        }
-        
-        buffer_write(_buffer, buffer_u8, _effect.has_particle);
-        buffer_write(_buffer, buffer_u8, _effect.level);
-        buffer_write(_buffer, buffer_f32, _effect.timer);
-        
-        buffer_poke(_buffer, _seek, buffer_u32, buffer_tell(_buffer));
-    }
+    file_save_snippet_effects(_buffer, _player_effects);
     
     buffer_write(_buffer, buffer_u8, _hotbar);
     

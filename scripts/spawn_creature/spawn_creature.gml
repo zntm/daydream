@@ -16,7 +16,5 @@ function spawn_creature(_x, _y, _id, _variant)
         }
         
         init_entity(_hp, _hp, _data.get_attribute());
-        
-        uuid = uuid_generate(random_get_seed());
     }
 }

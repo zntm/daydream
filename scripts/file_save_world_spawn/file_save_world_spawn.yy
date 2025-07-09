@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"file_save_chunk",
+  "%Name":"file_save_world_spawn",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"file_save_chunk",
+  "name":"file_save_world_spawn",
   "parent":{
     "name":"Save",
     "path":"folders/Scripts/File/Save.yy",

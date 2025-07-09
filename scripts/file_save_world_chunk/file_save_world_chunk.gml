@@ -1,6 +1,6 @@
 #macro CHUNK_REGION_SIZE 8
 
-function file_save_chunk(_world_save_data, _inst)
+function file_save_world_chunk(_world_save_data, _inst)
 {
     var _creature_data = global.creature_data;
     var _item_data = global.item_data;
@@ -31,14 +31,14 @@ function file_save_chunk(_world_save_data, _inst)
     
     var _buffer = buffer_create(0xff, buffer_grow, 1);
     
-    var _chunk_display = _inst.chunk_display;
-    
     buffer_write(_buffer, buffer_u16, PROGRAM_VERSION_MAJOR);
     buffer_write(_buffer, buffer_u16, PROGRAM_VERSION_MINOR);
     buffer_write(_buffer, buffer_u16, PROGRAM_VERSION_PATCH);
     buffer_write(_buffer, buffer_u16, PROGRAM_VERSION_TYPE);
     
     buffer_write(_buffer, buffer_f64, datetime_to_unix());
+    
+    var _chunk_display = _inst.chunk_display;
     
     buffer_write(_buffer, buffer_u16, (_inst.is_generated << CHUNK_DEPTH) | _chunk_display);
     
@@ -102,11 +102,7 @@ function file_save_chunk(_world_save_data, _inst)
         buffer_write(_buffer, buffer_f64, _.timer_pickup);
         buffer_write(_buffer, buffer_f64, _.timer_life);
         
-        buffer_write(_buffer, buffer_f64, _.x);
-        buffer_write(_buffer, buffer_f64, _.y);
-        
-        buffer_write(_buffer, buffer_f64, _.xvelocity);
-        buffer_write(_buffer, buffer_f64, _.yvelocity);
+        file_save_snippet_position(_buffer, _);
         
         file_save_snippet_item(_buffer, _.item, _item_data);
         
@@ -139,17 +135,15 @@ function file_save_chunk(_world_save_data, _inst)
         buffer_write(_buffer, buffer_u16, _.hp);
         buffer_write(_buffer, buffer_u16, _.hp_max);
         
-        buffer_write(_buffer, buffer_f64, _.x);
-        buffer_write(_buffer, buffer_f64, _.y);
-        
-        buffer_write(_buffer, buffer_f64, _.xvelocity);
-        buffer_write(_buffer, buffer_f64, _.yvelocity);
-        
         buffer_write(_buffer, buffer_f64, _.entity_scale);
         
         buffer_write(_buffer, buffer_string, _.uuid);
         buffer_write(_buffer, buffer_string, _._id);
         buffer_write(_buffer, buffer_string, _[$ "variant"] ?? "");
+        
+        file_save_snippet_position(_buffer, _);
+        
+        file_save_snippet_effects(_buffer, _[$ "effects"]);
         
         var _inventory = _[$ "inventory"];
         
@@ -165,8 +159,6 @@ function file_save_chunk(_world_save_data, _inst)
             }
             
             buffer_poke(_buffer, _next, buffer_u32, buffer_tell(_buffer));
-            
-            instance_destroy(_);
         }
         else
         {
@@ -174,6 +166,8 @@ function file_save_chunk(_world_save_data, _inst)
         }
         
         buffer_poke(_buffer, _next, buffer_u32, buffer_tell(_buffer));
+        
+        instance_destroy(_);
     }
     
     buffer_compress(_buffer, 0, buffer_tell(_buffer));

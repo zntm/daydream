@@ -1,6 +1,7 @@
-function init_entity(_hp, _hp_max, _attribute)
+function init_entity(_hp, _hp_max, _attribute, _uuid = uuid_generate(irandom(0xffff_ffff)))
 {
     attribute = _attribute;
+    uuid = _uuid;
     
     entity_scale = 1;
     

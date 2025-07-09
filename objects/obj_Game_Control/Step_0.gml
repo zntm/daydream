@@ -15,6 +15,11 @@ if (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.EXIT)
         
         file_save_world_global(_world_save_data);
         
+        with (obj_Player)
+        {
+            file_save_world_spawn(_world_save_data, id);
+        }
+        
         window_progress(window_progress_none);
         
         room_goto(rm_Menu_Title);
@@ -28,7 +33,7 @@ if (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.EXIT)
     
     with (obj_Chunk)
     {
-        file_save_chunk(_world_save_data, id);
+        file_save_world_chunk(_world_save_data, id);
         
         instance_destroy();
     }
