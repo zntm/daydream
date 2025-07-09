@@ -34,5 +34,7 @@ function init_entity(_hp, _hp_max, _attribute)
         cutoff: 20_000
     });
     
+    timer_sfx_step = 0;
+    
     audio_emitter_bus(audio_emitter, audio_bus);
 }

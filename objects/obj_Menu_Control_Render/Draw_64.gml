@@ -71,15 +71,15 @@ with (obj_Menu_Button)
     { 
         if (boolean & MENU_BUTTON_BOOLEAN.IS_SELECTED)
         {
-            draw_sprite_ext(icon, icon_index, _x - (string_width(text) * _loca_font_scale / 2), _y + _asset_offset, 1, 1, 0, c_ltgray, 1);
+            draw_sprite_ext(icon, icon_index, _x - (string_width(text) * _loca_font_scale / 2), _y + _asset_offset, icon_xscale, icon_yscale, 0, c_ltgray, 1);
             
-            render_text(_x + (sprite_get_width(icon) / 2), _y + _asset_offset, text, 1, 1, 0, c_ltgray, 1);
+            render_text(_x + (sprite_get_width(icon) * icon_xscale / 2), _y + _asset_offset, text, 1, 1, 0, c_ltgray, 1);
         }
         else
         {
-            draw_sprite_ext(icon, icon_index, _x - (string_width(text) * _loca_font_scale / 2), _y, 1, 1, 0, c_white, 1);
+            draw_sprite_ext(icon, icon_index, _x - (string_width(text) * _loca_font_scale / 2), _y, icon_xscale, icon_yscale, 0, c_white, 1);
             
-            render_text(_x + (sprite_get_width(icon) / 2), _y, text, 1, 1, 0, c_white, 1);
+            render_text(_x + (sprite_get_width(icon) * icon_xscale / 2), _y, text, 1, 1, 0, c_white, 1);
         }
     }
     else if (text != undefined)
@@ -97,11 +97,11 @@ with (obj_Menu_Button)
     {
         if (boolean & MENU_BUTTON_BOOLEAN.IS_SELECTED)
         {
-            draw_sprite_ext(icon, icon_index, _x, _y + _asset_offset, 1, 1, 0, c_ltgray, 1);
+            draw_sprite_ext(icon, icon_index, _x, _y + _asset_offset, icon_xscale, icon_yscale, 0, c_ltgray, 1);
         }
         else
         {
-            draw_sprite_ext(icon, icon_index, _x, _y, 1, 1, 0, c_white, 1);
+            draw_sprite_ext(icon, icon_index, _x, _y, icon_xscale, icon_yscale, 0, c_white, 1);
         }
     }
     

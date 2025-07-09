@@ -1,5 +1,8 @@
 icon = spr_Icon_Random;
 
+icon_xscale = 1.5;
+icon_yscale = 1.5;
+
 on_select_release = function()
 {
     with (inst_72277DAD)

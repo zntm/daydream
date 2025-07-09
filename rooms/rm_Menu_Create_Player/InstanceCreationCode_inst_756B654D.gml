@@ -1,5 +1,8 @@
 icon = spr_Icon_Arrow_Left;
 
+icon_xscale = 1.5;
+icon_yscale = 1.5;
+
 on_select_release = function()
 {
     var _length = ceil(array_length(global.attire_colour_data) / 6);

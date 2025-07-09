@@ -263,6 +263,7 @@
     {"name":"spr_Icon_Arrow_Left","order":1,"path":"sprites/spr_Icon_Arrow_Left/spr_Icon_Arrow_Left.yy",},
     {"name":"spr_Icon_Arrow_Right","order":2,"path":"sprites/spr_Icon_Arrow_Right/spr_Icon_Arrow_Right.yy",},
     {"name":"spr_Icon_Arrow_Up","order":3,"path":"sprites/spr_Icon_Arrow_Up/spr_Icon_Arrow_Up.yy",},
+    {"name":"spr_Icon_Folder","order":6,"path":"sprites/spr_Icon_Folder/spr_Icon_Folder.yy",},
     {"name":"spr_Icon_Prohibited","order":5,"path":"sprites/spr_Icon_Prohibited/spr_Icon_Prohibited.yy",},
     {"name":"spr_Icon_Random","order":4,"path":"sprites/spr_Icon_Random/spr_Icon_Random.yy",},
     {"name":"spr_Inventory_Slot_Icon","order":2,"path":"sprites/spr_Inventory_Slot_Icon/spr_Inventory_Slot_Icon.yy",},

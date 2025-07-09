@@ -173,6 +173,27 @@
         "pitch": "#phantasia:sfx/generic/pitch_default",
         "subtitle": "phantasia:sfx.tile.generic.step"
     },
+    "tile.nightrock.harvest": {
+        "asset": [
+            "phantasia:tile/nightrock/harvest0",
+            "phantasia:tile/nightrock/harvest1",
+            "phantasia:tile/nightrock/harvest2"
+        ],
+        "gain": 0.7,
+        "pitch": "#phantasia:sfx/generic/pitch_default",
+        "subtitle": "phantasia:sfx.tile.generic.harvest"
+    },
+    "tile.nightrock.step": {
+        "asset": [
+            "phantasia:tile/nightrock/step0",
+            "phantasia:tile/nightrock/step1",
+            "phantasia:tile/nightrock/step2",
+            "phantasia:tile/nightrock/step3",
+            "phantasia:tile/nightrock/step4"
+        ],
+        "pitch": "#phantasia:sfx/generic/pitch_default",
+        "subtitle": "phantasia:sfx.tile.generic.step"
+    },
     "tile.sand.harvest": {
         "asset": [
             "phantasia:tile/sand/harvest0",
