@@ -76,6 +76,11 @@
             "id": "phantasia:rock",
             "chance": 0.04,
             "placeable_on": [ "phantasia:sand" ]
+        },
+        {
+            "id": "phantasia:twig",
+            "chance": 0.05,
+            "placeable_on": [ "phantasia:sand" ]
         }
     ]
 }

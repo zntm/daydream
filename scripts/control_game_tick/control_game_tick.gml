@@ -30,7 +30,7 @@ function control_game_tick()
             control_floating_text(_tick);
         }
         
-        global.world_save_data.time += _dt / GAME_TICK;
+        global.world_save_data.time += _tick / GAME_TICK;
         
         if (global.world_save_data.time >= _time_length)
         {

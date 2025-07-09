@@ -55,17 +55,17 @@ function CreatureData(_namespace, _id, _hp, _hostility_type, _movement_type) con
     {
         var _sprite = self[$ _name];
         
-        if (_variant != undefined)
-        {
-            return ((_sprite != undefined) ? _sprite[$ _variant] : undefined);
-        }
-        
         if (is_struct(_sprite))
         {
-            return _sprite[$ _variant ?? "generic"];
+            if (_variant != undefined)
+            {
+                return _sprite[$ _variant] ?? _sprite[$ "generic"];
+            }
+            
+            return _sprite[$ "generic"];
         }
         
-        return self[$ _name];
+        return _sprite;
     }
     
     static set_sprite_idle = function(_sprite)

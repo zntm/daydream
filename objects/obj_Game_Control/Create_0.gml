@@ -65,7 +65,8 @@ if (!directory_exists($"{PROGRAM_DIRECTORY_WORLDS}/{_world_save_data.uuid}"))
     }
 }
 
-global.inventory.base[@ 0] = new Inventory("phantasia:oak_pickaxe");
+global.inventory.base[@ 0] = new Inventory("phantasia:rock", 2);
+global.inventory.base[@ 1] = new Inventory("phantasia:twig", 2);
 
 global.inventory_selected_hotbar = 0;
 global.inventory_selected_backpack = {

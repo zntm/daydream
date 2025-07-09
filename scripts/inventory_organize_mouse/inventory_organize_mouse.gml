@@ -258,7 +258,7 @@ function inventory_organize_mouse(_inst)
                 
                 inventory_refresh_craftable();
                 
-                surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK;
+                surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK | SURFACE_REFRESH_BOOLEAN.INVENTORY_CRAFTABLE;
             }
         }
     }

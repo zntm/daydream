@@ -5,12 +5,12 @@ function structure_create(_x, _y, _id, _seed)
     var _width  = smart_value(_structure_data.get_width());
     var _height = smart_value(_structure_data.get_height());
     
-    if !(_width & 1)
+    if (_width & 1)
     {
         _x -= TILE_SIZE / 2;
     }
     
-    if !(_height & 1)
+    if (_height & 1)
     {
         _y -= TILE_SIZE / 2;
     }

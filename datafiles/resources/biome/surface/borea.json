@@ -75,6 +75,22 @@
 	},
     "creature": [
         {
+            "id": "phantasia:chicken",
+            "amount": {
+                "type": "irandom",
+                "values": {
+                    "min": 1,
+                    "max": 3
+                }
+            },
+            "chance": 0.03,
+            "time": {
+                "min": 0,
+                "max": 890
+            },
+            "tile": "#phantasia:tile/creature_spawn/animal"
+        },
+        {
             "id": "phantasia:fox",
             "variant": "brown",
             "amount": {
@@ -110,7 +126,12 @@
         },
         {
             "id": "phantasia:rock",
-            "chance": 0.03,
+            "chance": 0.04,
+            "placeable_on": "#phantasia:tile/placeable/plant_on"
+        },
+        {
+            "id": "phantasia:twig",
+            "chance": 0.05,
             "placeable_on": "#phantasia:tile/placeable/plant_on"
         },
         {

@@ -117,7 +117,12 @@
         },
         {
             "id": "phantasia:rock",
-            "chance": 0.03,
+            "chance": 0.04,
+            "placeable_on": "#phantasia:tile/placeable/plant_on"
+        },
+        {
+            "id": "phantasia:twig",
+            "chance": 0.05,
             "placeable_on": "#phantasia:tile/placeable/plant_on"
         },
         {
@@ -139,7 +144,7 @@
         },
         {
             "id": "phantasia:tree/oak",
-            "chance": 0.08,
+            "chance": 0.02,
             "placeable_on": "#phantasia:tile/placeable/plant_on"
         }
     ]

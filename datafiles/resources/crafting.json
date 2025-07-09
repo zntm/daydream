@@ -1,6 +1,20 @@
 {
 	"data": [
 		{
+			"id": "phantasia:hatchet",
+			"amount": 1,
+			"ingredients": [
+				{
+					"id": "phantasia:twig",
+					"amount": 2
+				},
+				{
+					"id": "phantasia:rock",
+					"amount": 2
+				}
+			]
+		},
+		{
 			"id": "phantasia:oak_workbench",
 			"amount": 1,
 			"ingredients": [

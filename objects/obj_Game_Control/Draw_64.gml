@@ -17,6 +17,8 @@ var _camera_height = global.camera_height;
 var _gui_width  = global.gui_width;
 var _gui_height = global.gui_height;
 
+var _gui_scale = global.gui_scale;
+
 if (is_opened & (IS_OPENED_BOOLEAN.PAUSE | IS_OPENED_BOOLEAN.EXIT))
 {
     if !(surface_refresh & SURFACE_REFRESH_BOOLEAN.PAUSE) || (!surface_exists(surface_pause[0])) || (!surface_exists(surface_pause[1]))
@@ -30,7 +32,7 @@ if (is_opened & (IS_OPENED_BOOLEAN.PAUSE | IS_OPENED_BOOLEAN.EXIT))
     
     gpu_set_texfilter(true);
     
-    draw_surface_ext(surface_pause[@ 1], 0, 0, GUI_PAUSE_BLUR_RESIZE * (_camera_width / _gui_width), GUI_PAUSE_BLUR_RESIZE * (_camera_height / _gui_height), 0, c_white, global.settings.display_blur);
+    draw_surface_ext(surface_pause[@ 1], 0, 0, GUI_PAUSE_BLUR_RESIZE * _gui_scale, GUI_PAUSE_BLUR_RESIZE * _gui_scale, 0, c_white, global.settings.display_blur);
     
     gpu_set_texfilter(false);
     
@@ -43,9 +45,6 @@ if (is_opened & (IS_OPENED_BOOLEAN.PAUSE | IS_OPENED_BOOLEAN.EXIT))
 
 var _gui_mouse_x = (window_mouse_get_x() / _window_width)  * _gui_width;
 var _gui_mouse_y = (window_mouse_get_y() / _window_height) * _gui_height;
-
-var _gui_multiplier_x = _gui_width  / _camera_width;
-var _gui_multiplier_y = _gui_height / _camera_height;
 
 render_gui_vignette(_player_y, _gui_width, _gui_height);
 
@@ -61,21 +60,21 @@ if (_hp > 0) && (is_opened & IS_OPENED_BOOLEAN.GUI) && !(is_opened & IS_OPENED_B
     {
         surface_refresh ^= SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR;
         
-        gui_inventory_hotbar(_gui_multiplier_x, _gui_multiplier_y);
+        gui_inventory_hotbar(_gui_scale, _gui_scale);
     }
     
     if (surface_refresh & SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK)
     {
         surface_refresh ^= SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK;
         
-        gui_inventory(_gui_multiplier_x, _gui_multiplier_y);
+        gui_inventory(_gui_scale, _gui_scale);
     }
     
     if (surface_refresh & SURFACE_REFRESH_BOOLEAN.INVENTORY_CRAFTABLE)
     {
         surface_refresh ^= SURFACE_REFRESH_BOOLEAN.INVENTORY_CRAFTABLE;
         
-        gui_inventory_craftable(_gui_multiplier_x, _gui_multiplier_y);
+        gui_inventory_craftable(_gui_scale, _gui_scale);
     }
     /*
     gui_effects();
@@ -105,14 +104,14 @@ if (_hp > 0) && (is_opened & IS_OPENED_BOOLEAN.GUI) && !(is_opened & IS_OPENED_B
             
             var _anchor_type = _data.anchor_type;
             
-            var _x = _gui_multiplier_x * (gui_xanchor(_anchor_type, _camera_width)  + _data.surface_xoffset - GUI_INVENTORY_SURFACE_PADDING);
-            var _y = _gui_multiplier_y * (gui_yanchor(_anchor_type, _camera_height) + _data.surface_yoffset - GUI_INVENTORY_SURFACE_PADDING);
+            var _x = _gui_scale * (gui_xanchor(_anchor_type, _camera_width)  + _data.surface_xoffset - GUI_INVENTORY_SURFACE_PADDING);
+            var _y = _gui_scale * (gui_yanchor(_anchor_type, _camera_height) + _data.surface_yoffset - GUI_INVENTORY_SURFACE_PADDING);
             
             var _surface_slot = _surface_inventory.surface_slot;
             
             if (surface_exists(_surface_slot))
             {
-                draw_surface_ext(_surface_slot, _x, _y, _gui_multiplier_x * INVENTORY_SLOT_SCALE, _gui_multiplier_y * INVENTORY_SLOT_SCALE, 0, c_white, 1);
+                draw_surface_ext(_surface_slot, _x, _y, _gui_scale * INVENTORY_SLOT_SCALE, _gui_scale * INVENTORY_SLOT_SCALE, 0, c_white, 1);
             }
             
             var _surface_item = _surface_inventory.surface_item;
@@ -128,14 +127,14 @@ if (_hp > 0) && (is_opened & IS_OPENED_BOOLEAN.GUI) && !(is_opened & IS_OPENED_B
         
         var _anchor_type = _data.anchor_type;
         
-        var _x = _gui_multiplier_x * (gui_xanchor(_anchor_type, _camera_width)  + _data.surface_xoffset - GUI_INVENTORY_SURFACE_PADDING);
-        var _y = _gui_multiplier_y * (gui_yanchor(_anchor_type, _camera_height) + _data.surface_yoffset - GUI_INVENTORY_SURFACE_PADDING);
+        var _x = _gui_scale * (gui_xanchor(_anchor_type, _camera_width)  + _data.surface_xoffset - GUI_INVENTORY_SURFACE_PADDING);
+        var _y = _gui_scale * (gui_yanchor(_anchor_type, _camera_height) + _data.surface_yoffset - GUI_INVENTORY_SURFACE_PADDING);
         
         var _surface_slot = _surface_inventory.surface_slot;
         
         if (surface_exists(_surface_slot))
         {
-            draw_surface_ext(_surface_slot, _x, _y, _gui_multiplier_x * INVENTORY_SLOT_SCALE, _gui_multiplier_y * INVENTORY_SLOT_SCALE, 0, c_white, 1);
+            draw_surface_ext(_surface_slot, _x, _y, _gui_scale * INVENTORY_SLOT_SCALE, _gui_scale * INVENTORY_SLOT_SCALE, 0, c_white, 1);
         }
         
         var _surface_item = _surface_inventory.surface_item;
@@ -149,7 +148,7 @@ if (_hp > 0) && (is_opened & IS_OPENED_BOOLEAN.GUI) && !(is_opened & IS_OPENED_B
         
         if (instance_exists(_inst)) && (_inst.slot_type != INVENTORY_SLOT_TYPE.CRAFTABLE)
         {
-            gui_inventory_tooltip(_gui_multiplier_x, _gui_multiplier_y);
+            gui_inventory_tooltip(_gui_scale, _gui_scale);
         }
     }
     else
@@ -159,14 +158,14 @@ if (_hp > 0) && (is_opened & IS_OPENED_BOOLEAN.GUI) && !(is_opened & IS_OPENED_B
         
         var _anchor_type = _data.anchor_type;
         
-        var _x = _gui_multiplier_x * (gui_xanchor(_anchor_type, _camera_width)  + _data.surface_xoffset - GUI_INVENTORY_SURFACE_PADDING);
-        var _y = _gui_multiplier_y * (gui_yanchor(_anchor_type, _camera_height) + _data.surface_yoffset - GUI_INVENTORY_SURFACE_PADDING);
+        var _x = _gui_scale * (gui_xanchor(_anchor_type, _camera_width)  + _data.surface_xoffset - GUI_INVENTORY_SURFACE_PADDING);
+        var _y = _gui_scale * (gui_yanchor(_anchor_type, _camera_height) + _data.surface_yoffset - GUI_INVENTORY_SURFACE_PADDING);
         
         var _surface_slot = _surface_inventory.surface_slot;
         
         if (surface_exists(_surface_slot))
         {
-            draw_surface_ext(_surface_slot, _x, _y, _gui_multiplier_x * INVENTORY_SLOT_SCALE, _gui_multiplier_y * INVENTORY_SLOT_SCALE, 0, c_white, 1);
+            draw_surface_ext(_surface_slot, _x, _y, _gui_scale * INVENTORY_SLOT_SCALE, _gui_scale * INVENTORY_SLOT_SCALE, 0, c_white, 1);
         }
         
         var _surface_item = _surface_inventory.surface_item;

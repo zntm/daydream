@@ -22,8 +22,8 @@ function control_inventory_position()
         
         var _anchor_type = _data.anchor_type;
         
-        var _anchor_x = _camera_x + _data.surface_xoffset + gui_yanchor(_anchor_type, _camera_width);
-        var _anchor_y = _camera_y + _data.surface_yoffset + gui_xanchor(_anchor_type, _camera_height);
+        var _anchor_x = _camera_x + _data.surface_xoffset + gui_xanchor(_anchor_type, _camera_width);
+        var _anchor_y = _camera_y + _data.surface_yoffset + gui_yanchor(_anchor_type, _camera_height);
         
         var _inventory = _inventory_instance[$ _inventory_name];
         
