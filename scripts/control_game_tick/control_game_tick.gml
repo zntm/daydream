@@ -1,12 +1,14 @@
 function control_game_tick()
 {
-    var _delta_time = global.delta_time;
+    var _dt = GAME_TICK * global.delta_time;
+    
+    global.tick_accumulator += _dt;
     
     var _time_length = global.world_data[$ global.world_save_data.dimension].get_time_length();
     
-    for (var _dt = GAME_TICK * _delta_time; _dt > 0; _dt -= 1)
+    while (global.tick_accumulator > 0)
     {
-        var _tick = min(1, _dt);
+        var _tick = min(1, global.tick_accumulator);
         
         control_creature_spawn(_tick);
         
@@ -38,5 +40,7 @@ function control_game_tick()
             
             ++global.world_save_data.day;
         }
+        
+        global.tick_accumulator = max(0, global.tick_accumulator - 1);
     }
 }
