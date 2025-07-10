@@ -12,7 +12,17 @@
 		"offset": {
 			"x": -2,
 			"y": "-height"
-		}
+		},
+		"if_clear": [
+			{
+				"offset": {
+					"x": -2,
+					"y": "-height"
+				},
+				"width": "width",
+				"height": 4
+			}
+		]
 	},
 	"data": {
 		"function": "phantasia:tree/generic",

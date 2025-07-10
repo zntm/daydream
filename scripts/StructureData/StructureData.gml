@@ -31,6 +31,11 @@ function StructureData(_width, _height, _placement, _is_persistent, _is_natural)
         return !!(___value & (1 << 1));
     }
     
+    static has_if_clear = function()
+    {
+        return !!(___value & (1 << 2));
+    }
+    
     static __structure_placement_type = {
         "floor":   STRUCTURE_PLACEMENT_TYPE.FLOOR,
         "ceiling": STRUCTURE_PLACEMENT_TYPE.CEILING,
@@ -43,6 +48,29 @@ function StructureData(_width, _height, _placement, _is_persistent, _is_natural)
     
     ___placement_xoffset = _placement_offset.x;
     ___placement_yoffset = _placement_offset.y;
+    
+    var _if_clear = _placement[$ "if_clear"];
+    
+    if (_if_clear != undefined)
+    {
+        ___placement_if_clear_length = array_length(_if_clear);
+        ___placement_if_clear = array_create(___placement_if_clear_length);
+        
+        for (var i = 0; i < ___placement_if_clear_length; ++i)
+        {
+            var _data = _if_clear[i];
+            var _offset = _data.offset;
+            
+            ___placement_if_clear[@ i] = {
+                xoffset: _offset.x,
+                yoffset: _offset.y,
+                width:  _data.width,
+                height: _data.height
+            }
+        }
+        
+        ___value |= 1 << 2;
+    }
     
     static get_placement_type = function()
     {
@@ -57,6 +85,16 @@ function StructureData(_width, _height, _placement, _is_persistent, _is_natural)
     static get_placement_yoffset = function()
     {
         return ___placement_yoffset;
+    }
+    
+    static get_placement_if_clear = function()
+    {
+        return ___placement_if_clear;
+    }
+    
+    static get_placement_if_clear_length = function()
+    {
+        return ___placement_if_clear_length;
     }
     
     static set_parameter = function(_array)
