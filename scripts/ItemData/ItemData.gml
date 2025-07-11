@@ -549,10 +549,10 @@ function ItemData() constructor
     static set_properties = function(_properties)
     {
         static __item_properties = {
-            "phantasia:is_tile":             set_is_tile,
-            "phantasia:is_wall":             set_is_wall,
-            "phantasia:is_foliage":          set_is_foliage,
-            "phantasia:is_transparent":      set_is_transparent
+            "phantasia:is_tile":        set_is_tile,
+            "phantasia:is_wall":        set_is_wall,
+            "phantasia:is_foliage":     set_is_foliage,
+            "phantasia:is_transparent": set_is_transparent
         }
         
         if (_properties != undefined)
