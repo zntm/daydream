@@ -75,7 +75,7 @@
 	},
     "creature": [
         {
-            "id": "phantasia:chicken",
+            "id": "phantasia:bunny",
             "variant": {
                 "type": "choose_weighted",
                 "values": [
