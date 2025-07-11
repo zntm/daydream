@@ -54,8 +54,10 @@ function control_creature_spawn(_dt)
                 spawn_creature(_x, _y, _id, _variant);
             }
             
-            break;
+            return true;
         }
+        
+        return false;
     }
     
     static __spawn_horizontal = function(_world_time, _tile_y, _tile_xstart, _tile_xend, _biome_data, _creature_data)
@@ -109,10 +111,22 @@ function control_creature_spawn(_dt)
         var _tile_x2 = round((_camera_x + _camera_width)  / TILE_SIZE) + i;
         var _tile_y2 = round((_camera_y + _camera_height) / TILE_SIZE) + i;
         
-        __spawn_horizontal(_world_time, _tile_y1, _tile_xstart, _tile_xend, _biome_data, _creature_data);
-        __spawn_vertical(_world_time, _tile_x1, _tile_ystart, _tile_yend, _biome_data, _creature_data);
+        var _spawned = false;
         
-        __spawn_horizontal(_world_time, _tile_y2, _tile_xstart, _tile_xend, _biome_data, _creature_data);
-        __spawn_vertical(_world_time, _tile_x2, _tile_ystart, _tile_yend, _biome_data, _creature_data);
+        _spawned = __spawn_horizontal(_world_time, _tile_y1, _tile_xstart, _tile_xend, _biome_data, _creature_data);
+        
+        if (_spawned) break;
+        
+        _spawned = __spawn_vertical(_world_time, _tile_x1, _tile_ystart, _tile_yend, _biome_data, _creature_data);
+        
+        if (_spawned) break;
+        
+        _spawned = __spawn_horizontal(_world_time, _tile_y2, _tile_xstart, _tile_xend, _biome_data, _creature_data);
+        
+        if (_spawned) break;
+        
+        _spawned = __spawn_vertical(_world_time, _tile_x2, _tile_ystart, _tile_yend, _biome_data, _creature_data);
+        
+        if (_spawned) break;
     }
 }
