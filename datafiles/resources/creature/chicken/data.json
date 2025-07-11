@@ -44,7 +44,7 @@
         "gravity": 0.3,
         "jump_count_max": 1,
         "jump_falloff": 2.2,
-        "jump_height": 11.8,
+        "jump_height": 4.6,
         "jump_time": 10,
         "movement_speed": 0.5
     }

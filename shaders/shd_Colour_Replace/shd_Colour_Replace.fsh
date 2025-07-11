@@ -4,8 +4,8 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-uniform int match[64];
-uniform int replace[64];
+uniform int match[256];
+uniform int replace[256];
 uniform int amount;
 
 const float range = 1.0 / 255.0;

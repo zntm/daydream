@@ -23,6 +23,8 @@ function chunk_generate()
     var _world_save_data = global.world_save_data;
     
     var _world_data = global.world_data[$ _world_save_data.dimension];
+    var _world_height = _world_data.get_world_height();
+    
     var _world_seed = _world_save_data.seed;
     
     for (var i = 0; i < CHUNK_SIZE; ++i)
@@ -75,6 +77,8 @@ function chunk_generate()
         var _inst_x = _world_x * TILE_SIZE;
         
         var _surface_height = __surface_height[i];
+        
+        var _sunlight_y = _world_height // chunk_ystart + CHUNK_SIZE - 1;
         
         var _cave_bit = __cave_bit[i];
         
@@ -143,6 +147,13 @@ function chunk_generate()
                             
                             chunk_display |= 1 << m;
                         }
+                        
+                        var _ = _item_data[$ _tile.get_id()];
+                        
+                        if (_.has_type(ITEM_TYPE_BIT.SOLID))
+                        {
+                            _sunlight_y = min(_sunlight_y, _world_y);
+                        }
                     }
                     
                     if (++_inst.count >= _rectangle)
@@ -173,6 +184,11 @@ function chunk_generate()
                             .set_index_offset(smart_value(_data.get_placement_index_offset()));
                         
                         chunk_display |= 1 << CHUNK_DEPTH_DEFAULT;
+                        
+                        if (_data.has_type(ITEM_TYPE_BIT.SOLID))
+                        {
+                            _sunlight_y = min(_sunlight_y, _world_y);
+                        }
                     }
                 }
                 
@@ -224,6 +240,13 @@ function chunk_generate()
                     }
                 }
             }
+        }
+        
+        if (!ds_map_exists(global.sunlight_y, _world_x)) || (global.sunlight_y[? _world_x] > _sunlight_y)
+        {
+            global.sunlight_y[? _world_x] = _sunlight_y;
+            
+            obj_Game_Control.game_refresh |= GAME_REFRESH_BOOLEAN.SUNLIGHT_CLUSTER;
         }
     }
 }

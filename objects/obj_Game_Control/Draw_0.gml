@@ -19,8 +19,3 @@ if (harvest_amount > 0)
 }
 
 gpu_set_blendmode(bm_normal);
-
-with (obj_Inventory)
-{
-    draw_sprite(spr_Glow_Corner, 0, x, y)
-}

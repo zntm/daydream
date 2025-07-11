@@ -22,6 +22,30 @@ if (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.EXIT)
         
         window_progress(window_progress_none);
         
+        var _names = struct_get_names(surface_inventory);
+        var _length = array_length(_names);
+        
+        for (var i = 0; i < _length; ++i)
+        {
+            var _name = _names[i];
+            var _data = surface_inventory[$ _name];
+            
+            if (surface_exists(_data[$ "surface"] ?? -1))
+            {
+                surface_free(_data.surface);
+            }
+            
+            if (surface_exists(_data[$ "surface_slot"] ?? -1))
+            {
+                surface_free(_data.surface_slot);
+            }
+            
+            if (surface_exists(_data[$ "surface_item"] ?? -1))
+            {
+                surface_free(_data.surface_item);
+            }
+        }
+        
         room_goto(rm_Menu_Title);
         
         exit;
@@ -64,7 +88,7 @@ with (obj_Player)
     input_jump_pressed = keyboard_check_pressed(_settings.input_keyboard_jump);
 }
 
-control_game_tick();
+control_game_tick(_delta_time);
 
 var _camera_x = global.camera_x_real;
 var _camera_y = global.camera_y_real;
@@ -73,6 +97,13 @@ var _camera_width  = global.camera_width;
 var _camera_height = global.camera_height;
 
 control_chunk(_player_x, _player_y, _camera_x, _camera_y, _camera_width, _camera_height);
+
+if (game_refresh & GAME_REFRESH_BOOLEAN.SUNLIGHT_CLUSTER)
+{
+    game_refresh ^= GAME_REFRESH_BOOLEAN.SUNLIGHT_CLUSTER;
+    
+    control_light_clusterize();
+}
 
 timer_foliage_sway += _delta_time;
 

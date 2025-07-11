@@ -146,9 +146,12 @@ if (_hp > 0) && (is_opened & IS_OPENED_BOOLEAN.GUI) && !(is_opened & IS_OPENED_B
         
         var _inst = global.inventory_selected_hover;
         
-        if (instance_exists(_inst)) && (_inst.slot_type != INVENTORY_SLOT_TYPE.CRAFTABLE)
+        if (instance_exists(_inst))
         {
-            gui_inventory_tooltip(_gui_scale, _gui_scale);
+            if (_inst.slot_type != INVENTORY_SLOT_TYPE.CRAFTABLE)
+            {
+                gui_inventory_tooltip(_gui_scale, _gui_scale);
+            }
         }
     }
     else

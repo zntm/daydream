@@ -112,6 +112,6 @@ global.attribute_player = new Attribute()
     .set_gravity(0.72)
     .set_jump_count_max(1)
     .set_jump_falloff(2.2)
-    .set_jump_height(20.2)
+    .set_jump_height(8.2)
     .set_jump_time(12)
     .set_movement_speed(3.1);

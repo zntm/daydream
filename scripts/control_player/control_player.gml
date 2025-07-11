@@ -4,6 +4,11 @@ function control_player(_dt)
     
     control_physics_input(_dt, id);
     
+    if (xvelocity != 0) || (yvelocity != 0)
+    {
+        obj_Game_Control.game_refresh |= GAME_REFRESH_BOOLEAN.SUNLIGHT_CLUSTER;
+    }
+    
     control_physics(_dt, id);
     
     control_entity_sfx(_dt);

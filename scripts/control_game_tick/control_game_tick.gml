@@ -1,12 +1,12 @@
-function control_game_tick()
+function control_game_tick(_delta_time)
 {
-    var _dt = GAME_TICK * global.delta_time;
+    var _dt = GAME_TICK * _delta_time;
     
     global.tick_accumulator += _dt;
     
     var _time_length = global.world_data[$ global.world_save_data.dimension].get_time_length();
     
-    while (global.tick_accumulator > 0)
+    while (global.tick_accumulator >= 1)
     {
         var _tick = min(1, global.tick_accumulator);
         
@@ -41,6 +41,8 @@ function control_game_tick()
             ++global.world_save_data.day;
         }
         
-        global.tick_accumulator = max(0, global.tick_accumulator - 1);
+        global.tick_accumulator -= 1;
+        
+        // global.tick_accumulator = max(0, global.tick_accumulator - 1);
     }
 }
