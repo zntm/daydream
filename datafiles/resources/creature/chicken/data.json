@@ -33,7 +33,7 @@
             "phantasia:fall_damage_resistant"
         ],
         "collision_box": {
-            "width": 16,
+            "width": 10,
             "height": 16
         },
         "hit_box": {

@@ -6,10 +6,10 @@ function spawn_item_drop(_x, _y, _item, _direction = 0, _xvelocity = 0, _yveloci
     
     if (_data == undefined) exit;
     
-    with (instance_create_layer(_x, _y, "Instances", obj_Item_Drop))
+    var _size = _data.get_inventory_size();
+    
+    with (instance_create_layer(_x, _y + (_size / 2), "Instances", obj_Item_Drop))
     {
-        var _size = _data.get_inventory_size();
-        
         attribute = new Attribute()
             .set_collision_box({
                 width:  _size,

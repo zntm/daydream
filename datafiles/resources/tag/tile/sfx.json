@@ -14,6 +14,11 @@
         "harvest": "phantasia:tile.grass.step",
         "step": "phantasia:tile.grass.harvest"
     },
+    "nightrock": {
+        "build": "phantasia:tile.nightrock.build",
+        "harvest": "phantasia:tile.nightrock.harvest",
+        "step": "phantasia:tile.nightrock.step"
+    },
     "sand": {
         "build": "phantasia:tile.sand.harvest",
         "harvest": "phantasia:tile.sand.harvest",

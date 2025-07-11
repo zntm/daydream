@@ -29,9 +29,5 @@
         ],
         "tool": "pickaxe"
     },
-    "sfx": {
-        "build": "phantasia:tile.nightrock.harvest",
-        "harvest": "phantasia:tile.nightrock.harvest",
-        "step": "phantasia:tile.nightrock.step"
-    }
+    "sfx": "#phantasia:tile/sfx/nightrock"
 }
