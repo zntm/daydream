@@ -72,6 +72,19 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
         
         if (_z == CHUNK_DEPTH_DEFAULT)
         {
+            with (obj_Item_Drop)
+            {
+                var _data = _item_data[$ item.get_id()];
+                
+                var _sprite = _data.get_sprite();
+                var _index  = _data.get_inventory_index();
+                
+                var _xscale = 8 / attribute.get_collision_box_width();
+                var _yscale = 8 / attribute.get_collision_box_height();
+                
+                draw_sprite_ext(_sprite, _index, x, y - (_data.get_sprite_yoffset() * _yscale), _xscale, _yscale, image_angle, c_white, 1);
+            }
+            
             with (obj_Creature)
             {
                 var _variant = id[$ "variant"];
@@ -108,19 +121,6 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
             with (obj_Player)
             {
                 draw_sprite_ext(sprite_index, 0, x, y, image_xscale, image_yscale, image_angle, c_white, 1);
-            }
-            
-            with (obj_Item_Drop)
-            {
-                var _data = _item_data[$ item.get_id()];
-                
-                var _sprite = _data.get_sprite();
-                var _index  = _data.get_inventory_index();
-                
-                var _xscale = 8 / attribute.get_collision_box_width();
-                var _yscale = 8 / attribute.get_collision_box_height();
-                
-                draw_sprite_ext(_sprite, _index, x, y - (_data.get_sprite_yoffset() * _yscale), _xscale, _yscale, image_angle, c_white, 1);
             }
         }
     }

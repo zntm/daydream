@@ -83,6 +83,39 @@
             "tile": "#phantasia:tile/creature_spawn/animal"
         },
         {
+            "id": "phantasia:bunny",
+            "variant": {
+                "type": "choose_weighted",
+                "values": [
+                    {
+                        "value": "generic",
+                        "weight": 3
+                    },
+                    {
+                        "value": "spotted",
+                        "weight": 1
+                    },
+                    {
+                        "value": "white",
+                        "weight": 2
+                    }
+                ]
+            },
+            "amount": {
+                "type": "irandom",
+                "values": {
+                    "min": 1,
+                    "max": 2
+                }
+            },
+            "chance": 0.8,
+            "time": {
+                "min": 0,
+                "max": 890
+            },
+            "tile": "#phantasia:tile/creature_spawn/animal"
+        },
+        {
             "id": "phantasia:fox",
             "amount": {
                 "type": "irandom",

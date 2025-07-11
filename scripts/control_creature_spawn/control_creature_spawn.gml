@@ -53,6 +53,8 @@ function control_creature_spawn(_dt)
             {
                 spawn_creature(_x, _y, _id, _variant);
             }
+            
+            break;
         }
     }
     

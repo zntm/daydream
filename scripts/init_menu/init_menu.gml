@@ -14,7 +14,7 @@ function init_menu(_directory)
     
     for (var i = 0; i < _music_length; ++i)
     {
-        var _id = _music[i].id;
+        var _id = _music[i].value.id;
         
         array_push(global.menu_data.music_audio, _music_data[$ _id].get_audio());
     }

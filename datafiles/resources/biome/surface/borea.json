@@ -76,6 +76,19 @@
     "creature": [
         {
             "id": "phantasia:chicken",
+            "variant": {
+                "type": "choose_weighted",
+                "values": [
+                    {
+                        "value": "spotted",
+                        "weight": 1
+                    },
+                    {
+                        "value": "black",
+                        "weight": 2
+                    }
+                ]
+            },
             "amount": {
                 "type": "irandom",
                 "values": {
