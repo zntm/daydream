@@ -6,6 +6,9 @@
         "length": 4
     },
     "inventory": "#phantasia:item/generic/inventory_default",
+    "properties": [
+        "phantasia:is_foliage"
+    ],
     "harvest": {
         "hardness": 0.14,
         "particle": {
@@ -31,6 +34,5 @@
             }
         ]
     },
-    "sfx": "#phantasia:tile/sfx/wood",
-    "is_foliage": true
+    "sfx": "#phantasia:tile/sfx/wood"
 }

@@ -6,6 +6,9 @@
         "length": 6
     },
     "inventory": "#phantasia:item/generic/inventory_default",
+    "properties": [
+        "phantasia:is_tile"
+    ],
     "harvest": {
         "hardness": 0.38,
         "particle": {
@@ -23,6 +26,5 @@
         ]
     },
     "animation_type": "increment",
-    "sfx": "#phantasia:tile/sfx/wood",
-    "is_tile": false
+    "sfx": "#phantasia:tile/sfx/wood"
 }

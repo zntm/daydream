@@ -105,10 +105,10 @@
                 "type": "irandom",
                 "values": {
                     "min": 1,
-                    "max": 2
+                    "max": 4
                 }
             },
-            "chance": 0.8,
+            "chance": 0.01,
             "time": {
                 "min": 0,
                 "max": 890

@@ -9,26 +9,17 @@
     "inventory": "#phantasia:item/generic/inventory_tile",
     "properties": [
         "phantasia:is_tile",
-        "phantasia:is_wall"
+        "phantasia:is_transparent"
     ],
     "harvest": {
-        "hardness": 0.48,
+        "hardness": 0.2,
         "level": 1,
         "particle": {
             "colour": [
                 "#FFFFFF"
             ],
             "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
-        },
-        "type": "pickaxe"
-    },
-    "drop": {
-        "item": [
-            {
-                "id": "phantasia:stone_wall"
-            }
-        ],
-        "tool": "pickaxe"
+        }
     },
     "sfx": "#phantasia:tile/sfx/stone"
 }

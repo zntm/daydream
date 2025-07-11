@@ -5,11 +5,10 @@
         "yoffset": 16,
         "length": 4
     },
-    "inventory": {
-        "max": 999,
-        "index": 0,
-        "size": 10
-    },
+    "inventory": "#phantasia:item/generic/inventory_default",
+    "properties": [
+        "phantasia:is_foliage"
+    ],
     "harvest": {
         "hardness": 0.18,
         "particle": {
@@ -28,6 +27,5 @@
             }
         }
     },
-    "sfx": "#phantasia:tile/sfx/foliage",
-    "is_foliage": true
+    "sfx": "#phantasia:tile/sfx/foliage"
 }

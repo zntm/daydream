@@ -18,14 +18,12 @@ function init_item(_directory, _namespace)
         _item_data.set_type(_json.type);
         _item_data.set_rarity(_json[$ "rarity"]);
         _item_data.set_inventory(_json.inventory);
+        _item_data.set_properties(_json[$ "properties"]);
         _item_data.set_animation_type(_json[$ "animation_type"]);
         _item_data.set_placement(_json[$ "placement"]);
         _item_data.set_harvest(_json[$ "harvest"]);
         _item_data.set_drop(_json[$ "drop"]);
         _item_data.set_durability(_json[$ "durability"]);
-        _item_data.set_is_tile(_json[$ "is_tile"]);
-        _item_data.set_is_wall(_json[$ "is_wall"]);
-        _item_data.set_is_foliage(_json[$ "is_foliage"]);
         _item_data.set_sfx(_json[$ "sfx"]);
         
         var _sprite_data = _json.sprite;

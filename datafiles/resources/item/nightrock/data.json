@@ -7,6 +7,9 @@
         "edge_padding": 8
     },
     "inventory": "#phantasia:item/generic/inventory_tile",
+    "properties": [
+        "phantasia:is_tile"
+    ],
     "harvest": {
         "hardness": 0.46,
         "level": 2,
@@ -30,6 +33,5 @@
         "build": "phantasia:tile.nightrock.harvest",
         "harvest": "phantasia:tile.nightrock.harvest",
         "step": "phantasia:tile.nightrock.step"
-    },
-    "is_tile": true
+    }
 }

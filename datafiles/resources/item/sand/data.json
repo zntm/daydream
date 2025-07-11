@@ -7,6 +7,9 @@
         "edge_padding": 8
     },
     "inventory": "#phantasia:item/generic/inventory_tile",
+    "properties": [
+        "phantasia:is_tile"
+    ],
     "harvest": {
         "hardness": 0.36,
         "level": 0,
@@ -24,6 +27,5 @@
             }
         ]
     },
-    "sfx": "#phantasia:tile/sfx/sand",
-    "is_tile": true
+    "sfx": "#phantasia:tile/sfx/sand"
 }

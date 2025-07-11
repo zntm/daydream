@@ -7,6 +7,9 @@
         "edge_padding": 8
     },
     "inventory": "#phantasia:item/generic/inventory_tile",
+    "properties": [
+        "phantasia:is_tile"
+    ],
     "harvest": {
         "hardness": 0.58,
         "level": 1,
@@ -26,6 +29,5 @@
         ],
         "tool": "pickaxe"
     },
-    "sfx": "#phantasia:tile/sfx/stone",
-    "is_tile": true
+    "sfx": "#phantasia:tile/sfx/stone"
 }

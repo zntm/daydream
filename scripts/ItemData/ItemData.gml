@@ -31,11 +31,20 @@ global.item_type = {
     "shovel":      ITEM_TYPE_BIT.SHOVEL,
 }
 
-enum ITEM_BOOLEAN {
+enum ITEM_PROPERTIES_BOOLEAN {
     IS_TILE             = 1 << 0,
     IS_WALL             = 1 << 1,
     IS_FOLIAGE          = 1 << 2,
-    IS_CRAFTING_STATION = 1 << 3
+    IS_CRAFTING_STATION = 1 << 3,
+    IS_TRANSPARENT      = 1 << 4
+}
+
+global.item_properties = {
+    "phantasia:is_tile":             ITEM_PROPERTIES_BOOLEAN.IS_TILE,
+    "phantasia:is_wall":             ITEM_PROPERTIES_BOOLEAN.IS_WALL,
+    "phantasia:is_foliage":          ITEM_PROPERTIES_BOOLEAN.IS_FOLIAGE,
+    "phantasia:is_crafting_station": ITEM_PROPERTIES_BOOLEAN.IS_CRAFTING_STATION,
+    "phantasia:is_transparent":      ITEM_PROPERTIES_BOOLEAN.IS_TRANSPARENT
 }
 
 enum TILE_ANIMATION_TYPE {
@@ -535,13 +544,35 @@ function ItemData() constructor
     
     #region Boolean
     
-    ___boolean = 0;
+    ___properties = 0;
+    
+    static set_properties = function(_properties)
+    {
+        static __item_properties = {
+            "phantasia:is_tile":             set_is_tile,
+            "phantasia:is_wall":             set_is_wall,
+            "phantasia:is_foliage":          set_is_foliage,
+            "phantasia:is_transparent":      set_is_transparent
+        }
+        
+        if (_properties != undefined)
+        {
+            var _length = array_length(_properties);
+            
+            for (var i = 0; i < _length; ++i)
+            {
+                __item_properties[$ _properties[i]](true);
+            }
+        }
+        
+        return self;
+    }
     
     static set_is_tile = function(_is_tile)
     {
         if (_is_tile)
         {
-            ___boolean |= ITEM_BOOLEAN.IS_TILE;
+            ___properties |= ITEM_PROPERTIES_BOOLEAN.IS_TILE;
             
             set_animation_type("connected");
         }
@@ -551,14 +582,14 @@ function ItemData() constructor
     
     static is_tile = function()
     {
-        return !!(___boolean & ITEM_BOOLEAN.IS_TILE);
+        return !!(___properties & ITEM_PROPERTIES_BOOLEAN.IS_TILE);
     }
     
     static set_is_wall = function(_is_wall)
     {
         if (_is_wall)
         {
-            ___boolean |= ITEM_BOOLEAN.IS_WALL;
+            ___properties |= ITEM_PROPERTIES_BOOLEAN.IS_WALL;
         }
         
         return self;
@@ -566,14 +597,14 @@ function ItemData() constructor
     
     static is_wall = function()
     {
-        return !!(___boolean & ITEM_BOOLEAN.IS_WALL);
+        return !!(___properties & ITEM_PROPERTIES_BOOLEAN.IS_WALL);
     }
     
     static set_is_foliage = function(_is_foliage)
     {
         if (_is_foliage)
         {
-            ___boolean |= ITEM_BOOLEAN.IS_FOLIAGE;
+            ___properties |= ITEM_PROPERTIES_BOOLEAN.IS_FOLIAGE;
             
             set_animation_type("foliage");
         }
@@ -583,14 +614,14 @@ function ItemData() constructor
     
     static is_foliage = function()
     {
-        return !!(___boolean & ITEM_BOOLEAN.IS_FOLIAGE);
+        return !!(___properties & ITEM_PROPERTIES_BOOLEAN.IS_FOLIAGE);
     }
     
     static set_is_crafting_station = function(_is_crafting_station)
     {
         if (_is_crafting_station)
         {
-            ___boolean |= ITEM_BOOLEAN.IS_CRAFTING_STATION;
+            ___properties |= ITEM_PROPERTIES_BOOLEAN.IS_CRAFTING_STATION;
         }
         
         return self;
@@ -598,7 +629,22 @@ function ItemData() constructor
     
     static is_crafting_station = function()
     {
-        return !!(___boolean & ITEM_BOOLEAN.IS_CRAFTING_STATION);
+        return !!(___properties & ITEM_PROPERTIES_BOOLEAN.IS_CRAFTING_STATION);
+    }
+    
+    static set_is_transparent = function(_is_transparent)
+    {
+        if (_is_transparent)
+        {
+            ___properties |= ITEM_PROPERTIES_BOOLEAN.IS_TRANSPARENT;
+        }
+        
+        return self;
+    }
+    
+    static is_transparent = function()
+    {
+        return !!(___properties & ITEM_PROPERTIES_BOOLEAN.IS_TRANSPARENT);
     }
     
     #endregion
