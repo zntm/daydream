@@ -17,6 +17,7 @@ function init_item(_directory, _namespace)
         
         _item_data.set_type(_json.type);
         _item_data.set_rarity(_json[$ "rarity"]);
+        _item_data.set_inventory(_json[$ "inventory"]);
         // _item_data.set_properties(_json[$ "properties"]);
         _item_data.set_animation_type(_json[$ "animation_type"]);
         _item_data.set_placement(_json[$ "placement"]);

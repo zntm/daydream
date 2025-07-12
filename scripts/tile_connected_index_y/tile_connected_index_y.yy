@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"tile_connected_index_y",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"tile_connected_index_y",
+  "parent":{
+    "name":"Tile",
+    "path":"folders/Scripts/Tile.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

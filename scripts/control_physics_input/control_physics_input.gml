@@ -60,7 +60,7 @@ function control_physics_input(_dt, _id)
         }
         else
         {
-        	jump_pressed = infinity;
+            jump_pressed = infinity;
         }
     }
 }

@@ -85,37 +85,12 @@ function control_chunk(_player_x, _player_y, _camera_x, _camera_y, _camera_width
                                 }
                             }
                             
-                            _tile.set_index(_bit);
+                            var _index_x = tile_connected_index_x(_bit, _xorshift_seed_start + _inst.chunk_xstart + _tile_x);
+                            var _index_y = tile_connected_index_y(_bit, _xorshift_seed_start + _inst.chunk_ystart + _tile_y);
                             
-                            if
-                            (_bit == 0b000_00_000) ||
-                            (_bit == 0b111_11_111)
-                            {
-                                if (_xorshift1 & (1 << _tile_x))
-                                {
-                                    _tile.set_xscale(-1);
-                                }
-                                
-                                if (_xorshift2 & (1 << _tile_x))
-                                {
-                                    _tile.set_yscale(-1);
-                                }
-                            }
-                            
-                            if
-                            (_bit == 0b111_00_000) ||
-                            (_bit == 0b000_11_000) ||
-                            (_bit == 0b000_00_111) ||
-                            (_bit == 0b111_11_000) ||
-                            (_bit == 0b000_11_111) ||
-                            (_bit == 0b111_00_111) ||
-                            (_bit == 0b111_11_111)
-                            {
-                                if ((_xorshift1 ^ _xorshift2) & (1 << _tile_x))
-                                {
-                                    _tile.set_xscale(-1);
-                                }
-                            }
+                            _tile
+                                .set_index(_bit)
+                                .set_scale(_index_x, _index_y);
                         }
                         else if (_data.is_foliage())
                         {

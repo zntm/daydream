@@ -42,6 +42,7 @@ enum ITEM_PROPERTIES_BOOLEAN {
 enum TILE_ANIMATION_TYPE {
     DEFAULT,
     CONNECTED,
+    CONNECTED_TO_SELF,
     INCREMENT,
     FOLIAGE
 }
@@ -159,6 +160,8 @@ function ItemData() constructor
         return self[$ "___edge_padding"];
     }
     
+    ___inventory_value = 0;
+    
     static set_inventory = function(_inventory)
     {
         ___inventory_value = (_inventory.size << 32) | (_inventory.index << 16) | _inventory.max;
@@ -184,10 +187,11 @@ function ItemData() constructor
     static set_animation_type = function(_type)
     {
         static __animation_type = {
-            "default":   TILE_ANIMATION_TYPE.DEFAULT,
-            "connected": TILE_ANIMATION_TYPE.CONNECTED,
-            "increment": TILE_ANIMATION_TYPE.INCREMENT,
-            "foliage":   TILE_ANIMATION_TYPE.FOLIAGE
+            "default":           TILE_ANIMATION_TYPE.DEFAULT,
+            "connected":         TILE_ANIMATION_TYPE.CONNECTED,
+            "connected_to_self": TILE_ANIMATION_TYPE.CONNECTED_TO_SELF,
+            "increment":         TILE_ANIMATION_TYPE.INCREMENT,
+            "foliage":           TILE_ANIMATION_TYPE.FOLIAGE
         }
         
         ___animation_type = __animation_type[$ _type];

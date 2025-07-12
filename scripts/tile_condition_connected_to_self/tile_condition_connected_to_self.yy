@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"tile_condition_connected_to_self",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"tile_condition_connected_to_self",
+  "parent":{
+    "name":"Connected",
+    "path":"folders/Scripts/Tile/Connected.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

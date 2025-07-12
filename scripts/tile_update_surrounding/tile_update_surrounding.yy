@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"tile_update_surrounding",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"tile_update_surrounding",
+  "parent":{
+    "name":"Tile",
+    "path":"folders/Scripts/Tile.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

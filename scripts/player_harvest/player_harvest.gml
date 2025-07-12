@@ -79,6 +79,8 @@ function player_harvest(_x, _y)
     {
         tile_place(_x, _y, _z, TILE_EMPTY);
         
+        tile_update_surrounding(_x, _y, _z, 1, 1);
+        
         sfx_diegetic_play(obj_Player.audio_emitter, _x * TILE_SIZE, _y * TILE_SIZE, _data.get_sfx_harvest());
         
         if (_item != INVENTORY_EMPTY) && (_data2.get_durability_amount() > 0)
