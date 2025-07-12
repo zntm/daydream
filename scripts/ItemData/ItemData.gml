@@ -542,7 +542,7 @@ function ItemData() constructor
         return (___colliison_box >> 32) & 0xff;
     }
     
-    #region Boolean
+    #region Properties
     
     ___properties = 0;
     

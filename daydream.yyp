@@ -291,6 +291,8 @@
     {"$GMIncludedFile":"","%Name":"sprite.png","CopyToMask":-1,"filePath":"datafiles/resources/item/torch","name":"sprite.png","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"data.json","CopyToMask":-1,"filePath":"datafiles/resources/item/twig","name":"data.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"sprite.png","CopyToMask":-1,"filePath":"datafiles/resources/item/twig","name":"sprite.png","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"data.json","CopyToMask":-1,"filePath":"datafiles/resources/item/wheat_seeds","name":"data.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"sprite.png","CopyToMask":-1,"filePath":"datafiles/resources/item/wheat_seeds","name":"sprite.png","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"data.json","CopyToMask":-1,"filePath":"datafiles/resources/loca/1. English (American)","name":"data.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"data.json","CopyToMask":-1,"filePath":"datafiles/resources/loca/10. Simplified Chinese","name":"data.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"data.json","CopyToMask":-1,"filePath":"datafiles/resources/loca/11. Filipino","name":"data.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},

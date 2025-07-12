@@ -84,6 +84,8 @@ function control_creature_spawn(_dt)
     
     if (timer_creature_spawn < _spawn_interval) exit;
     
+    randomize();
+    
     var _biome_data = global.biome_data;
     var _creature_data = global.creature_data;
     
