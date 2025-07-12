@@ -39,14 +39,6 @@ enum ITEM_PROPERTIES_BOOLEAN {
     IS_TRANSPARENT      = 1 << 4
 }
 
-global.item_properties = {
-    "phantasia:is_tile":             ITEM_PROPERTIES_BOOLEAN.IS_TILE,
-    "phantasia:is_wall":             ITEM_PROPERTIES_BOOLEAN.IS_WALL,
-    "phantasia:is_foliage":          ITEM_PROPERTIES_BOOLEAN.IS_FOLIAGE,
-    "phantasia:is_crafting_station": ITEM_PROPERTIES_BOOLEAN.IS_CRAFTING_STATION,
-    "phantasia:is_transparent":      ITEM_PROPERTIES_BOOLEAN.IS_TRANSPARENT
-}
-
 enum TILE_ANIMATION_TYPE {
     DEFAULT,
     CONNECTED,
@@ -545,28 +537,6 @@ function ItemData() constructor
     #region Properties
     
     ___properties = 0;
-    
-    static set_properties = function(_properties)
-    {
-        static __item_properties = {
-            "phantasia:is_tile":        set_is_tile,
-            "phantasia:is_wall":        set_is_wall,
-            "phantasia:is_foliage":     set_is_foliage,
-            "phantasia:is_transparent": set_is_transparent
-        }
-        
-        if (_properties != undefined)
-        {
-            var _length = array_length(_properties);
-            
-            for (var i = 0; i < _length; ++i)
-            {
-                __item_properties[$ _properties[i]](true);
-            }
-        }
-        
-        return self;
-    }
     
     static set_is_tile = function(_is_tile)
     {

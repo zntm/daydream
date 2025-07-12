@@ -1,8 +1,3 @@
-#macro MENU_WORLD_NAME_RANDOM_ONCE  choose("Once", "Thrice", "Twice")
-#macro MENU_WORLD_NAME_RANDOM_START choose("The", "Thy", choose("Galloping", "Infinity", MENU_WORLD_NAME_RANDOM_ONCE, "Whispering") + ", in the")
-
-#macro MENU_RANDOM_WORLD_NAME_PLACE_SYNONYM choose("Area", "Borough", "Dimension", "District", "Domain", "Edge", "Expanse", "Frontier", "Frontline", "Horizon", "Kingdom", "Land", "Lands", "Netherworld", "Outlands", "Outskirts", "Paradise", "Partition", "Periphery", "Place", "Plane", "Province", "Quarter", "Realm", "Region", "Rim", "Sanctuary", "Sector", "Sphere", "Territory", "Turf", "Universe", "Void", "Wilds", "World", "Zone")
-
 function menu_textbox_randomize_world_name()
 {
     randomize();
@@ -172,7 +167,7 @@ function menu_textbox_randomize_world_name()
             text += $" {_adjective}";
         }
         
-        text += $" {MENU_RANDOM_WORLD_NAME_PLACE_SYNONYM}";
+        text += $" {MENU_WORLD_NAME_PLACE}";
         
         global.world_save_data.name = text;
         
@@ -240,9 +235,9 @@ function menu_textbox_randomize_world_name()
     );
     
     #endregion
-        
+    
     #region Preposition
-        
+    
     var _preposition = choose(
         "above",
         "against",
@@ -345,7 +340,7 @@ function menu_textbox_randomize_world_name()
     
     #endregion
     
-    var _name;
+    var _name = "";
     
     var _v1 = irandom(3);
     
@@ -380,11 +375,11 @@ function menu_textbox_randomize_world_name()
     }
     else if (_v2 == 3)
     {
-        _name = $"{MENU_WORLD_NAME_RANDOM_START} {MENU_RANDOM_WORLD_NAME_PLACE_SYNONYM} of {_name}";
+        _name = $"{MENU_WORLD_NAME_RANDOM_START} {MENU_WORLD_NAME_PLACE} of {_name}";
     }
     else if (_v2 == 1) && (irandom(1))
     {
-        _name = $"{MENU_WORLD_NAME_RANDOM_START} {choose("Chronicle", "Epilogue", "Fable", "History", "Legend", "Myth", "Narrative", "Report", "Saga", "Spiel", "Story", "Tale")} of the {_name}";
+        _name = $"{MENU_WORLD_NAME_RANDOM_START} {MENU_WORLD_NAME_STORY} of the {_name}";
     }
 
     return _name;

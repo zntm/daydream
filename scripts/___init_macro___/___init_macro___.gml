@@ -51,4 +51,10 @@
 
 #macro MENU_TITLE_SPLASH_COLOUR #FFDC54
 
+#macro MENU_WORLD_NAME_RANDOM_ONCE  choose("Once", "Thrice", "Twice")
+#macro MENU_WORLD_NAME_RANDOM_START choose("The", "Thy", $"{choose("Galloping", "Infinity", MENU_WORLD_NAME_RANDOM_ONCE, "Whispering")}, in the")
+
+#macro MENU_WORLD_NAME_PLACE choose("Area", "Borough", "Dimension", "District", "Domain", "Edge", "Expanse", "Frontier", "Frontline", "Horizon", "Kingdom", "Land", "Lands", "Netherworld", "Outlands", "Outskirts", "Paradise", "Partition", "Periphery", "Place", "Plane", "Province", "Quarter", "Realm", "Region", "Rim", "Sanctuary", "Sector", "Sphere", "Territory", "Turf", "Universe", "Void", "Wilds", "World", "Zone")
+#macro MENU_WORLD_NAME_STORY choose("Chronicle", "Epilogue", "Fable", "History", "Legend", "Myth", "Narrative", "Report", "Saga", "Spiel", "Story", "Tale")
+
 #endregion

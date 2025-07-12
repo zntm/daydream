@@ -2,6 +2,13 @@ global.item_data = {}
 
 function init_item(_directory, _namespace)
 {
+    static __item_properties = {
+        "phantasia:is_tile":             "set_is_tile",
+        "phantasia:is_wall":             "set_is_wall",
+        "phantasia:is_foliage":          "set_is_foliage",
+        "phantasia:is_transparent":      "set_is_transparent"
+    }
+    
     var _files = file_read_directory(_directory);
     var _files_length = array_length(_files);
     
@@ -18,13 +25,40 @@ function init_item(_directory, _namespace)
         _item_data.set_type(_json.type);
         _item_data.set_rarity(_json[$ "rarity"]);
         _item_data.set_inventory(_json.inventory);
-        _item_data.set_properties(_json[$ "properties"]);
+        // _item_data.set_properties(_json[$ "properties"]);
         _item_data.set_animation_type(_json[$ "animation_type"]);
         _item_data.set_placement(_json[$ "placement"]);
         _item_data.set_harvest(_json[$ "harvest"]);
         _item_data.set_drop(_json[$ "drop"]);
         _item_data.set_durability(_json[$ "durability"]);
         _item_data.set_sfx(_json[$ "sfx"]);
+        
+        var _properties = _json[$ "properties"];
+        
+        if (_properties != undefined)
+        {
+            var _length = array_length(_properties);
+            
+            if (array_contains(_properties, "phantasia:is_tile"))
+            {
+                _item_data.set_is_tile(true);
+            }
+            
+            if (array_contains(_properties, "phantasia:is_wall"))
+            {
+                _item_data.set_is_wall(true);
+            }
+            
+            if (array_contains(_properties, "phantasia:is_foliage"))
+            {
+                _item_data.set_is_foliage(true);
+            }
+            
+            if (array_contains(_properties, "phantasia:is_transparent"))
+            {
+                _item_data.set_is_transparent(true);
+            }
+        }
         
         var _sprite_data = _json.sprite;
         
