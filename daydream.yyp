@@ -544,6 +544,7 @@
     {"id":{"name":"buffer_load_json","path":"scripts/buffer_load_json/buffer_load_json.yy",},},
     {"id":{"name":"buffer_load_text","path":"scripts/buffer_load_text/buffer_load_text.yy",},},
     {"id":{"name":"buffer_save_compressed","path":"scripts/buffer_save_compressed/buffer_save_compressed.yy",},},
+    {"id":{"name":"camera_set_view_pos_subpixel","path":"scripts/camera_set_view_pos_subpixel/camera_set_view_pos_subpixel.yy",},},
     {"id":{"name":"carbasa_repair_page","path":"scripts/carbasa_repair_page/carbasa_repair_page.yy",},},
     {"id":{"name":"carbasa_repair","path":"scripts/carbasa_repair/carbasa_repair.yy",},},
     {"id":{"name":"carbasa_sort","path":"scripts/carbasa_sort/carbasa_sort.yy",},},

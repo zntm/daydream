@@ -381,6 +381,6 @@ function menu_textbox_randomize_world_name()
     {
         _name = $"{MENU_WORLD_NAME_RANDOM_START} {MENU_WORLD_NAME_STORY} of the {_name}";
     }
-
+    
     return _name;
 }

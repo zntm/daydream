@@ -179,6 +179,11 @@ obj_Control.on_window_resize = function()
     {
         obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR;
     }
+    
+    if (is_opened & IS_OPENED_BOOLEAN.PAUSE)
+    {
+        obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.PAUSE;
+    }
 }
 
 obj_Control.on_window_focus = function()
