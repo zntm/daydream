@@ -12,6 +12,8 @@ function chunk_clear(_inst)
             }
         }
         
+        file_save_world_chunk(global.world_save_data, id);
+        
         for (var i = 0; i < CHUNK_SIZE * CHUNK_SIZE * CHUNK_DEPTH; ++i)
         {
             var _tile = _inst.chunk[i];

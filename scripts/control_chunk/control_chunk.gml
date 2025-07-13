@@ -1,7 +1,5 @@
 function control_chunk(_player_x, _player_y, _camera_x, _camera_y, _camera_width, _camera_height)
 {
-    var _tile_connected_index = global.tile_connected_index;
-    
     var _item_data = global.item_data;
     
     var _a = ceil(_camera_width  / (2 * CHUNK_SIZE_DIMENSION)) + 1;
@@ -54,7 +52,6 @@ function control_chunk(_player_x, _player_y, _camera_x, _camera_y, _camera_width
                 for (var _tile_y = 0; _tile_y < CHUNK_SIZE; ++_tile_y)
                 {
                     var _xorshift1 = xorshift(_xorshift_seed_start + ((_inst.chunk_ystart + _tile_z + _tile_y) * 2_452));
-                    var _xorshift2 = xorshift(_xorshift_seed_start - ((_inst.chunk_ystart + _tile_z + _tile_y) * 2_202));
                     
                     for (var _tile_x = 0; _tile_x < CHUNK_SIZE; ++_tile_x)
                     {
@@ -64,41 +61,12 @@ function control_chunk(_player_x, _player_y, _camera_x, _camera_y, _camera_width
                         
                         var _data = _item_data[$ _tile.get_id()];
                         
-                        tile_instance_create(_inst.chunk_xstart + _tile_x, _inst.chunk_ystart + _tile_y, _tile_z, _tile);
+                        var _world_x = _inst.chunk_xstart + _tile_x;
+                        var _world_y = _inst.chunk_ystart + _tile_y;
                         
-                        if (_data.is_tile())
-                        {
-                            var _bit = 0;
-                            
-                            for (var l = 0; l < 8; ++l)
-                            {
-                                var _index = l * 2;
-                                
-                                var _x2 = _tile_x + _tile_connected_index[_index + 0];
-                                var _y2 = _tile_y + _tile_connected_index[_index + 1];
-                                
-                                var _ = tile_get(_inst.chunk_xstart + _x2, _inst.chunk_ystart + _y2, _tile_z);
-                                
-                                if (_ != TILE_EMPTY)
-                                {
-                                    _bit |= 1 << l;
-                                }
-                            }
-                            
-                            var _index_x = tile_connected_index_x(_bit, _xorshift_seed_start + _inst.chunk_xstart + _tile_x);
-                            var _index_y = tile_connected_index_y(_bit, _xorshift_seed_start + _inst.chunk_ystart + _tile_y);
-                            
-                            _tile
-                                .set_index(_bit)
-                                .set_scale(_index_x, _index_y);
-                        }
-                        else if (_data.is_foliage())
-                        {
-                            if (_xorshift1 & (1 << _tile_x))
-                            {
-                                _tile.set_xscale(-1);
-                            }
-                        }
+                        tile_instance_create(_world_x, _world_y, _tile_z, _tile);
+                        
+                        tile_connect(_world_x, _world_y, _tile_z, _tile);
                     }
                 }
             }

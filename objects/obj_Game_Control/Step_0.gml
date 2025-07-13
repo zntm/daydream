@@ -57,7 +57,7 @@ if (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.EXIT)
     
     with (obj_Chunk)
     {
-        file_save_world_chunk(_world_save_data, id);
+        chunk_clear(id);
         
         instance_destroy();
     }
@@ -118,6 +118,8 @@ var _tile_x = round(mouse_x / TILE_SIZE);
 var _tile_y = round(mouse_y / TILE_SIZE);
 
 control_inventory();
+
+control_chunk_clear(_camera_x, _camera_y, _camera_width, _camera_height);
 
 if (cooldown_build <= 0) && (mouse_check_button(mb_right))
 {

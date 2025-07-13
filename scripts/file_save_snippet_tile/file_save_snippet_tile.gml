@@ -15,7 +15,16 @@ function file_save_snippet_tile(_buffer, _tile, _item_data)
     
     buffer_write(_buffer, buffer_u32, 0);
     
-    buffer_write(_buffer, buffer_u32, _tile.___value);
+    buffer_write(_buffer, buffer_s8, _tile.get_xoffset());
+    buffer_write(_buffer, buffer_s8, _tile.get_yoffset());
+    
+    buffer_write(_buffer, buffer_s8, _tile.get_xscale());
+    buffer_write(_buffer, buffer_s8, _tile.get_yscale());
+    
+    buffer_write(_buffer, buffer_u8, _tile.get_index());
+    buffer_write(_buffer, buffer_u8, _tile.get_index_offset());
+    
+    buffer_write(_buffer, buffer_u16, _tile.get_rotation());
     
     var _data = _item_data[$ _id];
     
@@ -24,7 +33,7 @@ function file_save_snippet_tile(_buffer, _tile, _item_data)
     buffer_write(_buffer, buffer_u8, _inventory_length);
     
     if (_inventory_length > 0)
-    {/*
+    {
         var _inventory = _tile.get_inventory();
         
         var _is_loot = is_string(_inventory);
@@ -49,7 +58,7 @@ function file_save_snippet_tile(_buffer, _tile, _item_data)
                 
                 file_save_snippet_inventory(_buffer, _inventory, _inventory_length, _item_data);
             }
-        }*/
+        }
     }
     
     buffer_poke(_buffer, _seek, buffer_u32, buffer_tell(_buffer));
