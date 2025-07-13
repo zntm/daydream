@@ -7,9 +7,9 @@ function file_save_snippet_item(_buffer, _item, _item_data)
         exit;
     }
     
-    var _item_id = _item.get_id();
+    var _id = _item.get_id();
     
-    buffer_write(_buffer, buffer_string, _item_id);
+    buffer_write(_buffer, buffer_string, _id);
     
     var _seek = buffer_tell(_buffer);
     
@@ -17,11 +17,10 @@ function file_save_snippet_item(_buffer, _item, _item_data)
     
     buffer_write(_buffer, buffer_u16, _item.get_amount());
     
-    var _data = _item_data[$ _item_id];
+    var _data = _item_data[$ _id];
     
-    var _has_durability = (_data.get_durability_amount() > 0);
+    buffer_write(_buffer, buffer_u16, _item.get_durability() ?? 0);
     
-    buffer_write(_buffer, buffer_u16, (_has_durability << 15) | (_item.get_durability() ?? 0));
     /*
     var _charm_length = _data.get_charm_length();
     

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"file_load_snippet_position",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"file_load_snippet_position",
+  "parent":{
+    "name":"Snippet",
+    "path":"folders/Scripts/File/Load/Snippet.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
