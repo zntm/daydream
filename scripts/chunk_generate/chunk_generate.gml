@@ -229,7 +229,7 @@ function chunk_generate()
                 }
             }
             
-            var _z = ((_xorshift & (1 << _world_y)) ? CHUNK_DEPTH_FOLIAGE_FRONT : CHUNK_DEPTH_FOLIAGE_BACK);
+            var _z = ((_xorshift & (1 << j)) ? CHUNK_DEPTH_FOLIAGE_FRONT : CHUNK_DEPTH_FOLIAGE_BACK);
             
             if !(_skip_z & (1 << _z)) && (_world_y >= _surface_height - 1)
             {

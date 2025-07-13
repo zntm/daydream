@@ -8,9 +8,7 @@ function tile_connected_index_y(_index, _seed)
     (_index == 0b010_01_010) ||
     (_index == 0b111_11_111)
     {
-        var _xorshift = xorshift(_seed);
-        
-        if (_xorshift & 1)
+        if (xorshift(_seed) & 1)
         {
             return -1;
         }

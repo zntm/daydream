@@ -51,8 +51,6 @@ function control_chunk(_player_x, _player_y, _camera_x, _camera_y, _camera_width
                 
                 for (var _tile_y = 0; _tile_y < CHUNK_SIZE; ++_tile_y)
                 {
-                    var _xorshift1 = xorshift(_xorshift_seed_start + ((_inst.chunk_ystart + _tile_z + _tile_y) * 2_452));
-                    
                     for (var _tile_x = 0; _tile_x < CHUNK_SIZE; ++_tile_x)
                     {
                         var _tile = _chunk[(_tile_z << (CHUNK_SIZE_BIT * 2)) | (_tile_y << CHUNK_SIZE_BIT) | _tile_x];
