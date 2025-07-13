@@ -72,21 +72,6 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 }
                 
                 vertex_submit(_buffer, pr_trianglelist, _texture);
-                /*
-                if (_z == CHUNK_DEPTH_DEFAULT)
-                {
-                    show_debug_message(_inst.chunk_covered)
-                    
-                    for (var l = 0; l < CHUNK_SIZE; ++l)
-                    {
-                        for (var m = 0; m < CHUNK_SIZE; ++m)
-                        {
-                            if (_inst.chunk_covered[l] & (1 << m))
-                            draw_sprite(spr_Null, 0, _x + (l * TILE_SIZE), _y + (m * TILE_SIZE))
-                        }
-                    }
-                }
-                */
             }
         }
         
@@ -147,14 +132,17 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
         }
     }
     
+    var _surface_lighting_width  = ceil(_camera_width / 2);
+    var _surface_lighting_height = ceil(_camera_height / 2);
+    
     if (!surface_exists(surface_lighting))
     {
-        surface_lighting = surface_create(_camera_width, _camera_height);
+        surface_lighting = surface_create(_surface_lighting_width, _surface_lighting_height);
     }
     
     surface_set_target(surface_lighting);
     
-    draw_sprite_ext(spr_Square, 0, 0, 0, _camera_width, _camera_height, 0, c_black, 1);
+    draw_sprite_ext(spr_Square, 0, 0, 0, _surface_lighting_width, _surface_lighting_height, 0, c_black, 1);
     
     gpu_set_blendmode(bm_subtract);
     
@@ -183,12 +171,12 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 {
                     if !(_inst.chunk_covered[l] & (1 << m))
                     {
-                        var _x2 = _x + (l * TILE_SIZE) - _camera_x;
-                        var _y2 = _y + (m * TILE_SIZE) - _camera_y;
+                        var _x2 = (_x + (l * TILE_SIZE) - _camera_x) / 2;
+                        var _y2 = (_y + (m * TILE_SIZE) - _camera_y) / 2;
                         
-                        if (rectangle_in_rectangle(0, 0, _camera_width, _camera_height, _x2 - 128, _y2 - 128, _x2 + 128, _y2 + 128))
+                        if (rectangle_in_rectangle(0, 0, _surface_lighting_width, _surface_lighting_height, _x2 - 64, _y2 - 64, _x2 + 64, _y2 + 64))
                         {
-                            draw_glow(_x2, _y2, 1, c_white, 1);
+                            draw_glow(_x2, _y2, 0.5, c_white, 1);
                         }
                     }
                 }
@@ -198,14 +186,20 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
     
     with (obj_Player)
     {
-        draw_glow(x - _camera_x, y - _camera_y, 1, c_white, 1);
+        draw_glow((x - _camera_x) / 2, (y - _camera_y) / 2, 0.5, c_white, 1);
     }
-    
-    gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_src_alpha, bm_one);
     
     surface_reset_target();
     
-    draw_surface(surface_lighting, _camera_x, _camera_y);
+    gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_src_alpha, bm_one);
+    
+    draw_surface_ext(surface_lighting, _camera_x, _camera_y, 2, 2, 0, c_white, 1);
+    
+    gpu_set_blendmode_ext(bm_dest_color, bm_zero);
+    
+    draw_sprite_ext(spr_Square, 0, _camera_x, _camera_y, _camera_width + _camera_width, _camera_y + _camera_height, 0, obj_Game_Control_Background.light_colour, 1);
+    
+    gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_src_alpha, bm_one);
     
     draw_set_align(fa_center, fa_middle);
     
