@@ -21,14 +21,14 @@ function file_load_world_chunk(_world_save_data, _inst)
     var _chunk_relative_x = ((_chunk_x % CHUNK_REGION_SIZE) + CHUNK_REGION_SIZE) % CHUNK_REGION_SIZE;
     var _chunk_relative_y = ((_chunk_y % CHUNK_REGION_SIZE) + CHUNK_REGION_SIZE) % CHUNK_REGION_SIZE;
     
-    if !(buffer_peek(_buffer, _chunk_relative_x * 4, buffer_u32) & (1 << _chunk_relative_y))
+    var _bit = buffer_peek(_buffer, _chunk_relative_x * 4, buffer_u32);
+    
+    if !(_bit & (1 << _chunk_relative_y))
     {
         return false;
     }
     
-    var _seek = (CHUNK_REGION_SIZE * 4) + (((_chunk_relative_y * CHUNK_REGION_SIZE) + _chunk_relative_x) * 0xffff);
-    
-    buffer_seek(_buffer, buffer_seek_start, _seek);
+    buffer_poke(_buffer, _chunk_relative_x * 4, buffer_u32, _bit | (1 << _chunk_relative_y));
     
     var _version_major = buffer_read(_buffer, buffer_u16);
     var _version_minor = buffer_read(_buffer, buffer_u16);
@@ -36,6 +36,10 @@ function file_load_world_chunk(_world_save_data, _inst)
     var _version_type = buffer_read(_buffer, buffer_u16);
     
     var _datetime = unix_to_datetime(buffer_read(_buffer, buffer_f64));
+    
+    var _seek = (CHUNK_REGION_SIZE * 4) + (((_chunk_relative_y * CHUNK_REGION_SIZE) + _chunk_relative_x) * (1 << 16));
+    
+    buffer_seek(_buffer, buffer_seek_start, _seek);
     
     _inst.is_generated = buffer_read(_buffer, buffer_bool);
     

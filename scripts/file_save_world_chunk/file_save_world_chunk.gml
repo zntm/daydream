@@ -35,16 +35,16 @@ function file_save_world_chunk(_world_save_data, _inst)
     
     buffer_poke(_buffer, _chunk_relative_x * 4, buffer_u32, buffer_peek(_buffer, _chunk_relative_x * 4, buffer_u32) | (1 << _chunk_relative_y));
     
-    var _seek = (CHUNK_REGION_SIZE * 4) + (((_chunk_relative_y * CHUNK_REGION_SIZE) + _chunk_relative_x) * 0xffff);
-    
-    buffer_seek(_buffer, buffer_seek_start, _seek);
-    
     buffer_write(_buffer, buffer_u16, PROGRAM_VERSION_MAJOR);
     buffer_write(_buffer, buffer_u16, PROGRAM_VERSION_MINOR);
     buffer_write(_buffer, buffer_u16, PROGRAM_VERSION_PATCH);
     buffer_write(_buffer, buffer_u16, PROGRAM_VERSION_TYPE);
     
     buffer_write(_buffer, buffer_f64, datetime_to_unix());
+    
+    var _seek = (CHUNK_REGION_SIZE * 4) + (((_chunk_relative_y * CHUNK_REGION_SIZE) + _chunk_relative_x) * (1 << 16));
+    
+    buffer_seek(_buffer, buffer_seek_start, _seek);
     
     var _chunk_display = _inst.chunk_display;
     

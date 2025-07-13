@@ -11,7 +11,10 @@
     "name":"Gameplay",
     "path":"folders/Objects/Gameplay.yy",
   },
-  "parentObjectId":null,
+  "parentObjectId":{
+    "name":"obj_Parent_Light",
+    "path":"objects/obj_Parent_Light/obj_Parent_Light.yy",
+  },
   "persistent":false,
   "physicsAngularDamping":0.1,
   "physicsDensity":0.5,

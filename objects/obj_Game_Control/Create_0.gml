@@ -82,6 +82,8 @@ inventory_mouse_select_type = INVENTORY_MOUSE_SELECT_TYPE.NONE;
 
 global.inventory_selected_hover = noone;
 
+surface_lighting = -1;
+
 surface_inventory = {
     tooltip: {
         surface: -1,

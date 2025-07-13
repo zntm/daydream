@@ -154,6 +154,11 @@ function chunk_generate()
                         {
                             _sunlight_y = min(_sunlight_y, _world_y);
                         }
+                        
+                        if (_.has_type(ITEM_TYPE_BIT.SOLID | ITEM_TYPE_BIT.UNTOUCHABLE)) && (!_.is_transparent())
+                        {
+                            chunk_covered[@ i] |= 1 << j;
+                        }
                     }
                     
                     if (++_inst.count >= _rectangle)
@@ -190,6 +195,11 @@ function chunk_generate()
                         {
                             _sunlight_y = min(_sunlight_y, _world_y);
                         }
+                        
+                        if (_data.has_type(ITEM_TYPE_BIT.SOLID | ITEM_TYPE_BIT.UNTOUCHABLE)) && (!_data.is_transparent())
+                        {
+                            chunk_covered[@ i] |= 1 << j;
+                        }
                     }
                 }
                 
@@ -210,6 +220,11 @@ function chunk_generate()
                             .set_index_offset(smart_value(_data.get_placement_index_offset()));
                         
                         chunk_display |= 1 << CHUNK_DEPTH_WALL;
+                        
+                        if (_data.has_type(ITEM_TYPE_BIT.SOLID | ITEM_TYPE_BIT.UNTOUCHABLE)) && (!_data.is_transparent())
+                        {
+                            chunk_covered[@ i] |= 1 << j;
+                        }
                     }
                 }
             }
