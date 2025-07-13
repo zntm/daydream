@@ -597,6 +597,8 @@
     {"id":{"name":"file_load_snippet_item","path":"scripts/file_load_snippet_item/file_load_snippet_item.yy",},},
     {"id":{"name":"file_load_snippet_position","path":"scripts/file_load_snippet_position/file_load_snippet_position.yy",},},
     {"id":{"name":"file_load_snippet_tile","path":"scripts/file_load_snippet_tile/file_load_snippet_tile.yy",},},
+    {"id":{"name":"file_load_world_chunk","path":"scripts/file_load_world_chunk/file_load_world_chunk.yy",},},
+    {"id":{"name":"file_load_world_spawn","path":"scripts/file_load_world_spawn/file_load_world_spawn.yy",},},
     {"id":{"name":"file_load_worlds","path":"scripts/file_load_worlds/file_load_worlds.yy",},},
     {"id":{"name":"file_read_directory","path":"scripts/file_read_directory/file_read_directory.yy",},},
     {"id":{"name":"file_save_player_global","path":"scripts/file_save_player_global/file_save_player_global.yy",},},

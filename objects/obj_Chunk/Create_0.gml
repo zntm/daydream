@@ -22,4 +22,11 @@ ycenter = y - (TILE_SIZE / 2) + (CHUNK_SIZE_DIMENSION / 2);
 
 control_structure(chunk_xstart, chunk_ystart);
 
-chunk_generate();
+var _world_save_data = global.world_save_data;
+
+var _is_loaded = file_load_world_chunk(_world_save_data, id);
+
+if (!_is_loaded)
+{
+	chunk_generate();
+}

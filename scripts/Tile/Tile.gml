@@ -104,6 +104,8 @@ function Tile(_id, _item_data = global.item_data) constructor
         _rotation = ((_rotation % 360) + 360) % 360;
         
         ___value = (___value & 0b000000000_1111_1111_11111111_11111111_1111_1111) | (_rotation << 32);
+        
+        return self;
     }
     
     static get_rotation = function()

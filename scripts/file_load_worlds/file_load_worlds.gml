@@ -20,34 +20,40 @@ function file_load_worlds()
         
         if (!directory_exists($"{PROGRAM_DIRECTORY_WORLDS}/{_file}")) continue;
         
-        var _buffer = buffer_load_decompressed($"{PROGRAM_DIRECTORY_WORLDS}/{_file}/global.dat");
-        
-        var _version_major = buffer_read(_buffer, buffer_u16);
-        var _version_minor = buffer_read(_buffer, buffer_u16);
-        var _version_patch = buffer_read(_buffer, buffer_u16);
-        var _version_type  = buffer_read(_buffer, buffer_u16);
-        
-        var _last_opened = unix_to_datetime(buffer_read(_buffer, buffer_f64));
-        
-        var _name = buffer_read(_buffer, buffer_string);
-        var _seed = buffer_read(_buffer, buffer_f64);
-        
-        var _dimension = buffer_read(_buffer, buffer_string);
-        
-        var _time = buffer_read(_buffer, buffer_f64);
-        var _day = buffer_read(_buffer, buffer_f64);
-        
-        var _weather_wind  = buffer_read(_buffer, buffer_u8);
-        var _weather_storm = buffer_read(_buffer, buffer_u8);
-        
-        buffer_delete(_buffer);
-        
-        array_push(global.file_worlds_uuid, _file);
-        
-        array_push(global.file_worlds, new FileWorld(_file, _name, _seed, _last_opened)
-            .set_dimension(_dimension)
-            .set_time(_time, _day)
-            .set_weather(_weather_wind, _weather_storm));
+        try
+        {
+            var _buffer = buffer_load_decompressed($"{PROGRAM_DIRECTORY_WORLDS}/{_file}/global.dat");
+            
+            var _version_major = buffer_read(_buffer, buffer_u16);
+            var _version_minor = buffer_read(_buffer, buffer_u16);
+            var _version_patch = buffer_read(_buffer, buffer_u16);
+            var _version_type  = buffer_read(_buffer, buffer_u16);
+            
+            var _last_opened = unix_to_datetime(buffer_read(_buffer, buffer_f64));
+            
+            var _name = buffer_read(_buffer, buffer_string);
+            var _seed = buffer_read(_buffer, buffer_f64);
+            
+            var _dimension = buffer_read(_buffer, buffer_string);
+            
+            var _time = buffer_read(_buffer, buffer_f64);
+            var _day = buffer_read(_buffer, buffer_f64);
+            
+            var _weather_wind  = buffer_read(_buffer, buffer_u8);
+            var _weather_storm = buffer_read(_buffer, buffer_u8);
+            
+            buffer_delete(_buffer);
+            
+            array_push(global.file_worlds_uuid, _file);
+            
+            array_push(global.file_worlds, new FileWorld(_file, _name, _seed, _last_opened)
+                .set_dimension(_dimension)
+                .set_time(_time, _day)
+                .set_weather(_weather_wind, _weather_storm));
+        }
+        catch (_error)
+        {
+        }
     }
     
     array_sort(global.file_worlds, __sort);

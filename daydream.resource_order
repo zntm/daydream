@@ -152,6 +152,8 @@
     {"name":"file_load_snippet_inventory","order":1,"path":"scripts/file_load_snippet_inventory/file_load_snippet_inventory.yy",},
     {"name":"file_load_snippet_item","order":2,"path":"scripts/file_load_snippet_item/file_load_snippet_item.yy",},
     {"name":"file_load_snippet_position","order":3,"path":"scripts/file_load_snippet_position/file_load_snippet_position.yy",},
+    {"name":"file_load_world_chunk","order":3,"path":"scripts/file_load_world_chunk/file_load_world_chunk.yy",},
+    {"name":"file_load_world_spawn","order":4,"path":"scripts/file_load_world_spawn/file_load_world_spawn.yy",},
     {"name":"file_load_worlds","order":2,"path":"scripts/file_load_worlds/file_load_worlds.yy",},
     {"name":"file_read_directory","order":4,"path":"scripts/file_read_directory/file_read_directory.yy",},
     {"name":"file_save_player_global","order":3,"path":"scripts/file_save_player_global/file_save_player_global.yy",},

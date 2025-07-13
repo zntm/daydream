@@ -9,7 +9,7 @@ function control_player(_dt)
         obj_Game_Control.game_refresh |= GAME_REFRESH_BOOLEAN.SUNLIGHT_CLUSTER;
     }
     
-    control_physics(_dt, id);
+    control_physics_creative(_dt, id);
     
     control_entity_sfx(_dt);
     

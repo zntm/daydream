@@ -14,22 +14,30 @@ function file_save_world_chunk(_world_save_data, _inst)
     
     var _directory = $"{PROGRAM_DIRECTORY_WORLDS}/{_world_save_data.uuid}/dimension/{_world_data.get_namespace()}/{_world_data.get_id()}/chunk/{_region_x} {_region_y}.dat";
     
-    var _map;
+    var _buffer;
     
     if (file_exists(_directory))
     {
-        var _buffer = buffer_load(_directory);
-        
-        _map = ds_map_secure_load_buffer(_buffer);
-        
-        buffer_delete(_buffer);
+        _buffer = buffer_load_decompressed(_directory);
     }
     else
     {
-        _map = ds_map_create();
+        _buffer = buffer_create(0xff, buffer_grow, 1);
+        
+        for (var i = 0; i < CHUNK_REGION_SIZE; ++i)
+        {
+            buffer_write(_buffer, buffer_u32, 0);
+        }
     }
     
-    var _buffer = buffer_create(0xff, buffer_grow, 1);
+    var _chunk_relative_x = ((_chunk_x % CHUNK_REGION_SIZE) + CHUNK_REGION_SIZE) % CHUNK_REGION_SIZE;
+    var _chunk_relative_y = ((_chunk_y % CHUNK_REGION_SIZE) + CHUNK_REGION_SIZE) % CHUNK_REGION_SIZE;
+    
+    buffer_poke(_buffer, _chunk_relative_x * 4, buffer_u32, buffer_peek(_buffer, _chunk_relative_x * 4, buffer_u32) | (1 << _chunk_relative_y));
+    
+    var _seek = (CHUNK_REGION_SIZE * 4) + (((_chunk_relative_y * CHUNK_REGION_SIZE) + _chunk_relative_x) * 0xffff);
+    
+    buffer_seek(_buffer, buffer_seek_start, _seek);
     
     buffer_write(_buffer, buffer_u16, PROGRAM_VERSION_MAJOR);
     buffer_write(_buffer, buffer_u16, PROGRAM_VERSION_MINOR);
@@ -40,15 +48,19 @@ function file_save_world_chunk(_world_save_data, _inst)
     
     var _chunk_display = _inst.chunk_display;
     
+    buffer_write(_buffer, buffer_bool, _inst.is_generated);
     buffer_write(_buffer, buffer_u16, (_inst.is_generated << CHUNK_DEPTH) | _chunk_display);
     
     if (_chunk_display)
     {
         var _chunk = _inst.chunk;
+        var _chunk_count = _inst.chunk_count;
         
         for (var i = 0; i < CHUNK_DEPTH; ++i)
         {
-            if ((_chunk_display & (1 << i)) == 0) continue;
+            if !(_chunk_display & (1 << i)) continue;
+            
+            buffer_write(_buffer, buffer_u16, _chunk_count[i]);
             
             var _index_z = i << (CHUNK_SIZE_BIT + CHUNK_SIZE_BIT);
             
@@ -170,31 +182,7 @@ function file_save_world_chunk(_world_save_data, _inst)
         instance_destroy(_);
     }
     
-    buffer_compress(_buffer, 0, buffer_tell(_buffer));
-    
-    var _chunk_relative_x = ((_chunk_x % CHUNK_REGION_SIZE) + CHUNK_REGION_SIZE) % CHUNK_REGION_SIZE;
-    var _chunk_relative_y = ((_chunk_y % CHUNK_REGION_SIZE) + CHUNK_REGION_SIZE) % CHUNK_REGION_SIZE;
-    
-    ds_map_add(_map, $"{_chunk_relative_x}_{_chunk_relative_y}", _buffer);
-    ds_map_secure_save(_map, _directory);
-    
-    for (var i = 0; i < CHUNK_REGION_SIZE; ++i)
-    {
-        for (var j = 0; j < CHUNK_REGION_SIZE; ++j)
-        {
-            if (ds_map_exists(_map, $"{i}_{j}"))
-            {
-                var _buffer2 = _map[? $"{i}_{j}"];
-                
-                if (buffer_exists(_buffer2))
-                {
-                    buffer_delete(_buffer2);
-                }
-            }
-        }
-    }
-    
-    ds_map_destroy(_map);
+    buffer_save_compressed(_buffer, _directory);
     
     buffer_delete(_buffer);
 }
