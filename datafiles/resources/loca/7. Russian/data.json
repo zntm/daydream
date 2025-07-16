@@ -5,12 +5,12 @@
     "item.dead_bush.name": "Мертвый Буш",
     "item.dirt_wall.name": "Земляная Cтена",
     "item.dirt.name": "Земля",
+    "item.oak_leaves.name": "Дуба Листья",
     "item.oak_pickaxe.name": "Дубовая Кирка",
-    "item.oak_shovel.name": "Дубовая Лопата",
     "item.rose.name": "Роза",
     "item.stone_wall.name": "Каменная Cтена",
     "item.stone.name": "Камень",
     "item.torch.name": "Факел",
-    "menu.title.settings": "Настройки",
-    "menu.title.credits": "Титры"
+    "menu.title.credits": "Титры",
+    "menu.settings.title": "Настройки"
 }

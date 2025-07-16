@@ -48,9 +48,6 @@ var _gui_mouse_y = (window_mouse_get_y() / _window_height) * _gui_height;
 
 render_gui_vignette(_player_y, _gui_width, _gui_height);
 
-global.gui_mouse_x = _gui_mouse_x;
-global.gui_mouse_y = _gui_mouse_y;
-
 var _hp     = obj_Player.hp;
 var _hp_max = obj_Player.hp_max;
 

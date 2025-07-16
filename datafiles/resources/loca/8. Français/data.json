@@ -3,6 +3,7 @@
     "locale_code": "fr_fr",
     "item.dirt_wall.name": "Mur de Terre",
     "item.dirt.name": "Terre",
+    "item.oak_leaves.name": "Feuilles de Chêne",
     "item.stone_wall.name": "Mur de Pierres",
     "item.stone.name": "Pierre"
 }
