@@ -1,1 +1,1 @@
-text = loca_translate("settings.category.audio");
+text = loca_translate("phantasia:settings.category.audio");

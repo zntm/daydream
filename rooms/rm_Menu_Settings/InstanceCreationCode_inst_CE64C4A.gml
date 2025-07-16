@@ -1,1 +1,1 @@
-text = loca_translate("settings.category.controls");
+text = loca_translate("phantasia:settings.category.controls");
