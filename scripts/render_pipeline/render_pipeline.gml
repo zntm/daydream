@@ -132,7 +132,10 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
         }
     }
     
-    render_lighting(_a, _b, _xstart, _ystart, _camera_x, _camera_y, _camera_width, _camera_height);
+    if (harvest_amount > 0)
+    {
+        render_harvest(_camera_x, _camera_y, _camera_width, _camera_height);
+    }
     
     draw_set_align(fa_center, fa_middle);
     
@@ -142,4 +145,6 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
     }
     
     draw_set_align(fa_left, fa_top);
+    
+    render_lighting(_a, _b, _xstart, _ystart, _camera_x, _camera_y, _camera_width, _camera_height);
 }

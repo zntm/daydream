@@ -141,7 +141,10 @@ function render_lighting(_a, _b, _xstart, _ystart, _camera_x, _camera_y, _camera
         gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_src_alpha, bm_one);
     }
     
-    draw_surface_ext(surface_lighting, _surface_x - RENDER_LIGHTING_PADDING + (RENDER_LIGHTING_PADDING / 2), _surface_y - RENDER_LIGHTING_PADDING + (RENDER_LIGHTING_PADDING / 2), RENDER_LIGHTING_RESIZE, RENDER_LIGHTING_RESIZE, 0, c_white, 1);
+    if (surface_exists(surface_lighting))
+    {
+        draw_surface_ext(surface_lighting, _surface_x - RENDER_LIGHTING_PADDING - (RENDER_LIGHTING_PADDING / 2), _surface_y - RENDER_LIGHTING_PADDING - (RENDER_LIGHTING_PADDING / 2), RENDER_LIGHTING_RESIZE, RENDER_LIGHTING_RESIZE, 0, c_white, 1);
+    }
     /*
     gpu_set_tex_filter(true);
     

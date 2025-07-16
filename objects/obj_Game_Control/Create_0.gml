@@ -7,13 +7,15 @@ enum SURFACE_REFRESH_BOOLEAN {
     INVENTORY_HOTBAR    = 1 << 1,
     INVENTORY_BACKPACK  = 1 << 2,
     INVENTORY_CRAFTABLE = 1 << 3,
-    LIGHTING            = 1 << 4,
+    HP                  = 1 << 4,
+    LIGHTING            = 1 << 5,
 }
 
 surface_refresh =
     SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR    |
     SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK  |
     SURFACE_REFRESH_BOOLEAN.INVENTORY_CRAFTABLE |
+    SURFACE_REFRESH_BOOLEAN.HP                  |
     SURFACE_REFRESH_BOOLEAN.LIGHTING;
 
 enum IS_OPENED_BOOLEAN {
@@ -129,6 +131,8 @@ surface_inventory = {
     }
 }
 
+surface_hp = -1;
+
 chunk_saved_count = 0;
 chunk_saved_count_max = 0;
 
@@ -187,10 +191,9 @@ obj_Control.on_window_resize = function()
         obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR;
     }
     
-    if (is_opened & IS_OPENED_BOOLEAN.PAUSE)
-    {
-        obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.PAUSE;
-    }
+    obj_Game_Control.surface_refresh |= 
+        SURFACE_REFRESH_BOOLEAN.HP |
+        SURFACE_REFRESH_BOOLEAN.LIGHTING;
 }
 
 obj_Control.on_window_focus = function()
@@ -207,6 +210,10 @@ obj_Control.on_window_focus = function()
     {
         obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR;
     }
+    
+    obj_Game_Control.surface_refresh |= 
+        SURFACE_REFRESH_BOOLEAN.HP |
+        SURFACE_REFRESH_BOOLEAN.LIGHTING;
 }
 
 obj_Control.on_window_unfocus = function()

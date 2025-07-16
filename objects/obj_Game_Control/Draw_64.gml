@@ -76,14 +76,32 @@ if (_hp > 0) && (is_opened & IS_OPENED_BOOLEAN.GUI) && !(is_opened & IS_OPENED_B
         
         gui_inventory_craftable(_gui_scale, _gui_scale);
     }
-    /*
-    gui_effects();
+    
+    // gui_effects();
+    
+    if (surface_refresh & SURFACE_REFRESH_BOOLEAN.HP)
+    {
+        surface_refresh ^= SURFACE_REFRESH_BOOLEAN.HP;
+        
+        gui_hp(_hp, _hp_max);
+    }
     
     if (surface_exists(surface_hp))
     {
-        draw_surface(surface_hp, 0, 0);
+        var _x = _gui_scale * (gui_xanchor(GUI_ANCHOR.TOP_RIGHT, _camera_width)  - (13 * min(GUI_HP_ROW_LENGTH, ceil(_hp_max / GUI_HP_PER_SPRITE))));
+        var _y = _gui_scale * (gui_yanchor(GUI_ANCHOR.TOP_RIGHT, _camera_height));
+        
+        var _header = string(loca_translate("phantasia:gui.hp.header"), _hp, _hp_max);
+        
+        draw_set_halign(fa_right);
+        
+        render_text(_x + (surface_get_width(surface_hp) * _gui_scale), _y, _header, _gui_scale * 0.75, _gui_scale * 0.75);
+        
+        draw_set_halign(fa_left);
+        
+        draw_surface_ext(surface_hp, _x, _y + (string_height(_header) * global.loca_font_scale * 0.75), _gui_scale, _gui_scale, 0, c_white, 1);
     }
-    */
+    
     var _gui_inventory = global.gui_inventory;
     
     if (is_opened & IS_OPENED_BOOLEAN.INVENTORY)

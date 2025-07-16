@@ -50,8 +50,8 @@ function render_harvest(_camera_x, _camera_y, _camera_width, _camera_height)
     
     var _index_harvest = round(__index_max * _progress);
     
-    var _harvest_width  = floor(_width  / 2);
-    var _harvest_height = floor(_height / 2);
+    var _harvest_width  = ceil(_width  / 2);
+    var _harvest_height = ceil(_height / 2);
     
     for (var i = -_harvest_width; i <= _harvest_width; ++i)
     {
