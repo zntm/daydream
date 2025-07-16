@@ -7,12 +7,14 @@ enum SURFACE_REFRESH_BOOLEAN {
     INVENTORY_HOTBAR    = 1 << 1,
     INVENTORY_BACKPACK  = 1 << 2,
     INVENTORY_CRAFTABLE = 1 << 3,
+    LIGHTING            = 1 << 4,
 }
 
 surface_refresh =
     SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR    |
     SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK  |
-    SURFACE_REFRESH_BOOLEAN.INVENTORY_CRAFTABLE;
+    SURFACE_REFRESH_BOOLEAN.INVENTORY_CRAFTABLE |
+    SURFACE_REFRESH_BOOLEAN.LIGHTING;
 
 enum IS_OPENED_BOOLEAN {
     PAUSE     = 1 << 0,
@@ -83,6 +85,9 @@ inventory_mouse_select_type = INVENTORY_MOUSE_SELECT_TYPE.NONE;
 global.inventory_selected_hover = noone;
 
 surface_lighting = -1;
+
+surface_lighting_x = 0;
+surface_lighting_y = 0;
 
 surface_inventory = {
     tooltip: {
@@ -221,27 +226,3 @@ inst_664AF3B4.y = -1000;
 timer_creature_spawn = 0;
 
 global.tick_accumulator = 0;
-
-#macro SUNLIGHT_PADDING 8
-
-var _sunlight_length = ceil(_camera_width / TILE_SIZE) + (SUNLIGHT_PADDING * 2);
-
-var _world_height = _world_data.get_world_height();
-
-global.sunlight_y = ds_map_create();
-global.sunlight_inst = array_create(_sunlight_length);
-
-for (var i = 0; i < _sunlight_length; ++i)
-{
-    var _id = instance_create_layer(0, 0, "Instances", obj_Light_Sun);
-    
-    _id.image_yscale = _world_height;
-    
-    global.sunlight_inst[@ i] = _id;
-}
-
-enum GAME_REFRESH_BOOLEAN {
-    SUNLIGHT_CLUSTER = 1 << 0
-}
-
-game_refresh = 0;

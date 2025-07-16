@@ -62,11 +62,11 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                     _buffer = render_chunk(global.carbasa_surface_uv[$ "item"], _inst, _z);
                 }
                 
-                if (_bitmask & (1 << CHUNK_DEPTH_FOLIAGE_BACK))
+                if (_z == CHUNK_DEPTH_FOLIAGE_BACK)
                 {
                     shader_set_uniform_f_array(__u_skew, _inst.chunk_skew_back);
                 }
-                else if (_bitmask & (1 << CHUNK_DEPTH_FOLIAGE_FRONT))
+                else if (_z == CHUNK_DEPTH_FOLIAGE_FRONT)
                 {
                     shader_set_uniform_f_array(__u_skew, _inst.chunk_skew_front);
                 }
@@ -132,74 +132,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
         }
     }
     
-    var _surface_lighting_width  = ceil(_camera_width / 2);
-    var _surface_lighting_height = ceil(_camera_height / 2);
-    
-    if (!surface_exists(surface_lighting))
-    {
-        surface_lighting = surface_create(_surface_lighting_width, _surface_lighting_height);
-    }
-    
-    surface_set_target(surface_lighting);
-    
-    draw_sprite_ext(spr_Square, 0, 0, 0, _surface_lighting_width, _surface_lighting_height, 0, c_black, 1);
-    
-    gpu_set_blendmode(bm_subtract);
-    
-    for (var i = -_a; i < _a; ++i)
-    {
-        var _x = _xstart + (i * CHUNK_SIZE_DIMENSION);
-        
-        for (var j = -_b; j < _b; ++j)
-        {
-            var _y = _ystart + (j * CHUNK_SIZE_DIMENSION);
-            
-            var _inst = instance_position(_x, _y, obj_Chunk);
-            
-            if (!instance_exists(_inst)) || (!_inst.is_generated) /*|| !(_inst.chunk_display)*/ continue;
-            
-            var _xcenter = _inst.xcenter;
-            var _ycenter = _inst.ycenter;
-            
-            var _light = instance_nearest(_xcenter, _ycenter, obj_Parent_Light);
-            
-            if (!instance_exists(_light)) || (rectangle_distance(_light.x, _light.y, _xcenter - (CHUNK_SIZE_DIMENSION / 2), _ycenter - (CHUNK_SIZE_DIMENSION / 2), _xcenter + (CHUNK_SIZE_DIMENSION / 2), _ycenter + (CHUNK_SIZE_DIMENSION / 2)) >= (CHUNK_SIZE_DIMENSION * 3)) continue;
-            
-            for (var l = 0; l < CHUNK_SIZE; ++l)
-            {
-                for (var m = 0; m < CHUNK_SIZE; ++m)
-                {
-                    if !(_inst.chunk_covered[l] & (1 << m))
-                    {
-                        var _x2 = (_x + (l * TILE_SIZE) - _camera_x) / 2;
-                        var _y2 = (_y + (m * TILE_SIZE) - _camera_y) / 2;
-                        
-                        if (rectangle_in_rectangle(0, 0, _surface_lighting_width, _surface_lighting_height, _x2 - 64, _y2 - 64, _x2 + 64, _y2 + 64))
-                        {
-                            draw_glow(_x2, _y2, 0.5, c_white, 1);
-                        }
-                    }
-                }
-            }
-        }
-    }
-    
-    with (obj_Player)
-    {
-        draw_glow((x - _camera_x) / 2, (y - _camera_y) / 2, 0.5, c_white, 1);
-    }
-    
-    surface_reset_target();
-    
-    gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_src_alpha, bm_one);
-    
-    draw_surface_ext(surface_lighting, _camera_x, _camera_y, 2, 2, 0, c_white, 1);
-    
-    gpu_set_blendmode_ext(bm_dest_color, bm_zero);
-    
-    draw_sprite_ext(spr_Square, 0, _camera_x, _camera_y, _camera_width + _camera_width, _camera_y + _camera_height, 0, obj_Game_Control_Background.light_colour, 1);
-    
-    gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_src_alpha, bm_one);
+    render_lighting(_a, _b, _xstart, _ystart, _camera_x, _camera_y, _camera_width, _camera_height);
     
     draw_set_align(fa_center, fa_middle);
     

@@ -124,11 +124,4 @@ if (timer_refresh >= 1) || (in_biome_transition_value > 0)
     }
     
     bg_sky_colour(_in_biome_data, _in_biome_transition_data);
-    
-    var _light_colour = light_colour;
-    
-    with (obj_Light_Sun)
-    {
-        image_blend = _light_colour;
-    }
 }

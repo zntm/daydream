@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"control_light_clusterize",
+  "%Name":"render_lighting",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"control_light_clusterize",
+  "name":"render_lighting",
   "parent":{
-    "name":"Control",
-    "path":"folders/Scripts/Control.yy",
+    "name":"Render",
+    "path":"folders/Scripts/Render.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

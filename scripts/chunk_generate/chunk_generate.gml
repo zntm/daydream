@@ -78,8 +78,6 @@ function chunk_generate()
         
         var _surface_height = __surface_height[i];
         
-        var _sunlight_y = _world_height // chunk_ystart + CHUNK_SIZE - 1;
-        
         var _cave_bit = __cave_bit[i];
         
         var _xorshift = xorshift(_world_seed ^ ((_world_x + chunk_ystart) * _surface_height));
@@ -150,11 +148,6 @@ function chunk_generate()
                         
                         var _ = _item_data[$ _tile.get_id()];
                         
-                        if (_.has_type(ITEM_TYPE_BIT.SOLID))
-                        {
-                            _sunlight_y = min(_sunlight_y, _world_y);
-                        }
-                        
                         if (_.has_type(ITEM_TYPE_BIT.SOLID | ITEM_TYPE_BIT.UNTOUCHABLE)) && (!_.is_transparent())
                         {
                             chunk_covered[@ i] |= 1 << j;
@@ -190,11 +183,6 @@ function chunk_generate()
                             .set_index_offset(smart_value(_data.get_placement_index_offset()));
                         
                         chunk_display |= 1 << CHUNK_DEPTH_DEFAULT;
-                        
-                        if (_data.has_type(ITEM_TYPE_BIT.SOLID))
-                        {
-                            _sunlight_y = min(_sunlight_y, _world_y);
-                        }
                         
                         if (_data.has_type(ITEM_TYPE_BIT.SOLID | ITEM_TYPE_BIT.UNTOUCHABLE)) && (!_data.is_transparent())
                         {
@@ -260,11 +248,6 @@ function chunk_generate()
             }
         }
         
-        if (!ds_map_exists(global.sunlight_y, _world_x)) || (global.sunlight_y[? _world_x] > _sunlight_y)
-        {
-            global.sunlight_y[? _world_x] = _sunlight_y;
-            
-            obj_Game_Control.game_refresh |= GAME_REFRESH_BOOLEAN.SUNLIGHT_CLUSTER;
-        }
+        obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.LIGHTING;
     }
 }

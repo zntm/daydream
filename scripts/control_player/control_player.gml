@@ -6,7 +6,7 @@ function control_player(_dt)
     
     if (xvelocity != 0) || (yvelocity != 0)
     {
-        obj_Game_Control.game_refresh |= GAME_REFRESH_BOOLEAN.SUNLIGHT_CLUSTER;
+        obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.LIGHTING;
     }
     
     control_physics_creative(_dt, id);

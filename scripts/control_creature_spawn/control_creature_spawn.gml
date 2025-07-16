@@ -36,7 +36,7 @@ function control_creature_spawn(_dt)
                 _can_spawn = !tile_meeting(_x, _y);
             }
             
-            if (!_can_spawn) continue;
+            if (!_can_spawn) || (tile_get(_tile_x, _tile_y, CHUNK_DEPTH_WALL) != TILE_EMPTY) continue;
             
             var _tile = _creature.tile;
             

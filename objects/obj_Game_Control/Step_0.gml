@@ -98,13 +98,6 @@ var _camera_height = global.camera_height;
 
 control_chunk(_player_x, _player_y, _camera_x, _camera_y, _camera_width, _camera_height);
 
-if (game_refresh & GAME_REFRESH_BOOLEAN.SUNLIGHT_CLUSTER)
-{
-    game_refresh ^= GAME_REFRESH_BOOLEAN.SUNLIGHT_CLUSTER;
-    
-    control_light_clusterize();
-}
-
 timer_foliage_sway += _delta_time;
 
 if (timer_foliage_sway >= 0.04)

@@ -1,5 +1,8 @@
 chunk = array_create(CHUNK_SIZE * CHUNK_SIZE * CHUNK_DEPTH, TILE_EMPTY);
+
 chunk_covered = array_create(CHUNK_SIZE);
+chunk_covered_surface = -1;
+chunk_covered_surface_refresh = true;
 
 chunk_skew_back = array_create(CHUNK_SIZE * CHUNK_SIZE, 0);
 chunk_skew_back_to = array_create(CHUNK_SIZE * CHUNK_SIZE, 0);
@@ -12,9 +15,6 @@ chunk_vertex_buffer = array_create(CHUNK_DEPTH, -1);
 chunk_count = array_create(CHUNK_DEPTH, 0);
 
 chunk_display = 0;
-
-surface_light = -1;
-surface_light_refresh = true;
 
 is_generated = false;
 
