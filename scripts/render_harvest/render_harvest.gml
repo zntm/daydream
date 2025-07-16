@@ -1,4 +1,5 @@
 #macro RENDER_HARVEST_OFFSET 2
+#macro RENDER_HARVEST_PADDING 16
 
 function render_harvest(_camera_x, _camera_y, _camera_width, _camera_height)
 {
@@ -10,8 +11,8 @@ function render_harvest(_camera_x, _camera_y, _camera_width, _camera_height)
     var _width  = ceil(_data.get_sprite_width()  / TILE_SIZE);
     var _height = ceil(_data.get_sprite_height() / TILE_SIZE);
     
-    var _surface_width  = _width * TILE_SIZE;
-    var _surface_height = _height * TILE_SIZE;
+    var _surface_width  = (_width  * TILE_SIZE) + (RENDER_HARVEST_PADDING * 2);
+    var _surface_height = (_height * TILE_SIZE) + (RENDER_HARVEST_PADDING * 2);
     
     if (!surface_exists(surface_harvest))
     {
@@ -31,7 +32,16 @@ function render_harvest(_camera_x, _camera_y, _camera_width, _camera_height)
     
     var _sprite = _data.get_sprite();
     
-    var _index = _data.get_inventory_index();
+    var _index = 0;
+    
+    if (_data.is_tile())
+    {
+        _index = _data.get_inventory_index();
+    }
+    else
+    {
+    	_index = _tile.get_index() + _tile.get_index_offset();
+    }
     
     var _xscale = _tile.get_xscale();
     var _yscale = _tile.get_yscale();
@@ -39,8 +49,8 @@ function render_harvest(_camera_x, _camera_y, _camera_width, _camera_height)
     var _xoffset = _data.get_sprite_xoffset() * abs(_xscale);
     var _yoffset = _data.get_sprite_yoffset() * abs(_yscale);
     
-    var _xstart = _xoffset - (TILE_SIZE / 2) + random_range(-_offset, _offset);
-    var _ystart = _yoffset - (TILE_SIZE / 2) + random_range(-_offset, _offset);
+    var _xstart = _xoffset - (TILE_SIZE / 2) + RENDER_HARVEST_PADDING + random_range(-_offset, _offset);
+    var _ystart = _yoffset - (TILE_SIZE / 2) + RENDER_HARVEST_PADDING + random_range(-_offset, _offset);
     
     var _rotation = _tile.get_rotation();
     
@@ -69,5 +79,5 @@ function render_harvest(_camera_x, _camera_y, _camera_width, _camera_height)
     
     surface_reset_target();
     
-    draw_surface(surface_harvest, (harvest_x * TILE_SIZE) - _xoffset, (harvest_y * TILE_SIZE) - _yoffset);
+    draw_surface(surface_harvest, (harvest_x * TILE_SIZE) - RENDER_HARVEST_PADDING - _xoffset, (harvest_y * TILE_SIZE) - RENDER_HARVEST_PADDING - _yoffset);
 }

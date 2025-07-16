@@ -542,6 +542,28 @@ function ItemData() constructor
     
     ___properties = 0;
     
+    static set_properties = function(_properties)
+    {
+        static __properties = {
+            "phantasia:is_tile":        ITEM_PROPERTIES_BOOLEAN.IS_TILE,
+            "phantasia:is_wall":        ITEM_PROPERTIES_BOOLEAN.IS_WALL,
+            "phantasia:is_foliage":     ITEM_PROPERTIES_BOOLEAN.IS_FOLIAGE,
+            "phantasia:is_transparent": ITEM_PROPERTIES_BOOLEAN.IS_TRANSPARENT
+        }
+        
+        if (_properties != undefined)
+        {
+            var _length = array_length(_properties);
+            
+            for (var i = 0; i < _length; ++i)
+            {
+                ___properties |= __properties[$ _properties[i]];
+            }
+        }
+        
+        return self;
+    }
+    
     static set_is_tile = function(_is_tile)
     {
         if (_is_tile)

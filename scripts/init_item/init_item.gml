@@ -30,8 +30,6 @@ function init_item(_directory, _namespace)
         
         if (_properties != undefined)
         {
-            var _length = array_length(_properties);
-            
             if (array_contains(_properties, "phantasia:is_tile"))
             {
                 _item_data.set_is_tile(true);
