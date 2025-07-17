@@ -2,8 +2,61 @@ enum PARTICLE_BOOLEAN {
     HAS_COLLISION = 1 << 0
 }
 
-function ParticleData(_sprite) constructor
+enum PARTICLE_PROPERTIES_BOOLEAN {
+    IS_FADE_OUT            = 1 << 0,
+    IS_STRETCHED_ANIMATION = 1 << 1
+}
+
+function ParticleData(_sprite, _sprite_data) constructor
 {
+    ___sprite = _sprite;
+    ___sprite_speed = smart_value_parse(_sprite_data);
+    
+    static get_sprite = function()
+    {
+        return ___sprite;
+    }
+    
+    static get_sprite_speed = function()
+    {
+        return ___sprite_speed;
+    }
+    
+    ___properties = 0;
+    
+    static set_properties = function(_properties)
+    {
+        static __properties = {
+            "phantasia:is_fade_out":          PARTICLE_PROPERTIES_BOOLEAN.IS_FADE_OUT,
+            "phantasia:is_stretch_animation": PARTICLE_PROPERTIES_BOOLEAN.IS_STRETCHED_ANIMATION,
+        }
+        
+        if (_properties != undefined)
+        {
+            var _length = array_length(_properties);
+            
+            for (var i = 0; i < _length; ++i)
+            {
+                var _property = _properties[i];
+                
+                ___properties |= __properties[$ _property];
+            }
+        }
+        
+        return self;
+    }
+    
+    static get_is_fade_out = function()
+    {
+        return !!(___properties & PARTICLE_PROPERTIES_BOOLEAN.IS_FADE_OUT);
+    }
+    
+    static get_is_stretch_animation = function()
+    {
+        return !!(___properties & PARTICLE_PROPERTIES_BOOLEAN.IS_STRETCHED_ANIMATION);
+    }
+    
+    /*
     ___sprite = _sprite;
     
     static get_sprite = function()
@@ -131,4 +184,5 @@ function ParticleData(_sprite) constructor
     {
         return ((___colliison_box >> 24) & 0xff) - 0x80;
     }
+    */
 }

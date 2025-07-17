@@ -349,6 +349,8 @@
     {"$GMIncludedFile":"","%Name":"data.json","CopyToMask":-1,"filePath":"datafiles/resources/music/yellowish","name":"data.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"data.json","CopyToMask":-1,"filePath":"datafiles/resources/particle/explosion","name":"data.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"sprite.png","CopyToMask":-1,"filePath":"datafiles/resources/particle/explosion","name":"sprite.png","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"data.json","CopyToMask":-1,"filePath":"datafiles/resources/particle/leaf/oak","name":"data.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"sprite.png","CopyToMask":-1,"filePath":"datafiles/resources/particle/leaf/oak","name":"sprite.png","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"rarity.json","CopyToMask":-1,"filePath":"datafiles/resources","name":"rarity.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"large0.ogg","CopyToMask":-1,"filePath":"datafiles/resources/sfx/asset/explosion","name":"large0.ogg","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"large1.ogg","CopyToMask":-1,"filePath":"datafiles/resources/sfx/asset/explosion","name":"large1.ogg","resourceType":"GMIncludedFile","resourceVersion":"2.0",},

@@ -7,9 +7,6 @@ var _window_height = window_get_height();
 
 if (global.window_width != _window_width) || (global.window_height != _window_height)
 {
-    global.window_width  = _window_width;
-    global.window_height = _window_height;
-    
     if (_window_width > 0) && (_window_height > 0)
     {
         room_set_viewport(room, 0, true, 0, 0, _window_width, _window_height);
@@ -24,6 +21,14 @@ if (global.window_width != _window_width) || (global.window_height != _window_he
             on_window_resize();
         }
     }
+    
+    if (!window_get_fullscreen()) && (global.window_width == display_get_width()) && (global.window_height == display_get_height())
+    {
+        window_center();
+    }
+    
+    global.window_width  = _window_width;
+    global.window_height = _window_height;
 }
 else
 {
@@ -49,10 +54,5 @@ else
     if (keyboard_check_pressed(vk_f11))
     {
         window_set_fullscreen(!window_get_fullscreen());
-        
-        if (on_window_resize != undefined)
-        {
-            on_window_resize();
-        }
     }
 }

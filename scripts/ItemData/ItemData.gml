@@ -64,12 +64,12 @@ enum INVENTORY_SLOT_TYPE {
 
 function ItemData() constructor
 {
-    static __item_type = global.item_type;
-    
     ___type = 0;
     
     static set_type = function(_value)
     {
+        static __item_type = global.item_type;
+        
         if (is_string(_value))
         {
             ___type |= __item_type[$ _value];
@@ -250,6 +250,8 @@ function ItemData() constructor
     
     static set_harvest = function(_harvest)
     {
+        static __item_type = global.item_type;
+        
         if (_harvest != undefined)
         {
             var _hardness = _harvest[$ "hardness"];
@@ -379,6 +381,8 @@ function ItemData() constructor
     
     static set_drop = function(_drop)
     {
+        static __item_type = global.item_type;
+        
         if (_drop != undefined)
         {
             var _drop_chance = _drop[$ "chance"];
@@ -545,10 +549,10 @@ function ItemData() constructor
     static set_properties = function(_properties)
     {
         static __properties = {
-            "phantasia:is_tile":        ITEM_PROPERTIES_BOOLEAN.IS_TILE,
-            "phantasia:is_wall":        ITEM_PROPERTIES_BOOLEAN.IS_WALL,
-            "phantasia:is_foliage":     ITEM_PROPERTIES_BOOLEAN.IS_FOLIAGE,
-            "phantasia:is_transparent": ITEM_PROPERTIES_BOOLEAN.IS_TRANSPARENT
+            "phantasia:is_tile":        set_is_tile,
+            "phantasia:is_wall":        set_is_wall,
+            "phantasia:is_foliage":     set_is_foliage,
+            "phantasia:is_transparent": set_is_transparent
         }
         
         if (_properties != undefined)
@@ -557,7 +561,9 @@ function ItemData() constructor
             
             for (var i = 0; i < _length; ++i)
             {
-                ___properties |= __properties[$ _properties[i]];
+                var _property = _properties[i];
+                
+                __properties[$ _property](true);
             }
         }
         

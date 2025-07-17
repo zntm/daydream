@@ -137,14 +137,17 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
         render_harvest(_camera_x, _camera_y, _camera_width, _camera_height);
     }
     
-    draw_set_align(fa_center, fa_middle);
-    
-    with (obj_Floating_Text)
+    if (instance_exists(obj_Floating_Text))
     {
-        render_text(x, y, text, 0, 255, image_xscale, image_yscale, image_angle, image_blend, power(timer_life, 1 / 4));
+        draw_set_align(fa_center, fa_middle);
+        
+        with (obj_Floating_Text)
+        {
+            render_text(x, y, text, 0, 255, image_xscale, image_yscale, image_angle, image_blend, power(timer_life, 1 / 4));
+        }
+        
+        draw_set_align(fa_left, fa_top);
     }
-    
-    draw_set_align(fa_left, fa_top);
     
     render_lighting(_a, _b, _xstart, _ystart, _camera_x, _camera_y, _camera_width, _camera_height);
 }

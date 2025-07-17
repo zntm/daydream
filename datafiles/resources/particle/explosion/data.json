@@ -1,4 +1,17 @@
 {
-    "frames": 4,
-    "gravity": 0
+    "sprite": {
+        "length": 10
+    },
+    "properties": [
+        "phantasia:is_stretch_animation"
+    ],
+    "lifetime": {
+        "value": {
+            "type": "irandom",
+            "value": {
+                "min": 48,
+                "max": 90
+            }
+        }
+    }
 }
