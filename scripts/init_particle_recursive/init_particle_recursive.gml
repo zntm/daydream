@@ -37,9 +37,14 @@ function init_particle_recursive(_directory, _namespace, _id)
         var _sprite_xoffset = round(sprite_get_width(_sprite)  / 2);
         var _sprite_yoffset = round(sprite_get_height(_sprite) / 2);
         
+        sprite_set_offset(_sprite, _sprite_xoffset, _sprite_yoffset);
+        
         var _particle_data = new ParticleData(_sprite, _sprite_data);
         
-        sprite_set_offset(_sprite, _sprite_xoffset, _sprite_yoffset);
+        _particle_data.set_properties(_json[$ "properties"]);
+        _particle_data.set_lifetime(_json.lifetime);
+        _particle_data.set_physics(_json[$ "physics"]);
+        
         /*
         global.particle_data[$ $"{_namespace}:{string_delete(_name, string_length(_name) - 4, 5)}"] = new ParticleData(_sprite)
             .set_sprite_offset(_sprite_xoffset, _sprite_yoffset)
@@ -52,4 +57,6 @@ function init_particle_recursive(_directory, _namespace, _id)
         
         dbg_timer("init_particle", $"[Init] Loaded Particle: \'{string_delete(_name, string_length(_name) - 4, 5)}\'");
     }
+    
+    show_debug_message(json_stringify(global.particle_data, true))
 }

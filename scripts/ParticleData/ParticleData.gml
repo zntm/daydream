@@ -7,10 +7,32 @@ enum PARTICLE_PROPERTIES_BOOLEAN {
     IS_STRETCHED_ANIMATION = 1 << 1
 }
 
+enum PARTICLE_MOVEMENT_TYPE {
+    NUMBER,
+    REFERENCE
+}
+
 function ParticleData(_sprite, _sprite_data) constructor
 {
+    static __set_value = function(_name, _value)
+    {
+        if (_value != undefined)
+        {
+            self[$ _name] = _value;
+        }
+    }
+    
+    static __set_smart_value = function(_name, _value)
+    {
+        if (_value != undefined)
+        {
+            self[$ _name] = smart_value_parse(_value);
+        }
+    }
+    
     ___sprite = _sprite;
-    ___sprite_speed = smart_value_parse(_sprite_data);
+    
+    __set_smart_value("___sprite_speed", _sprite_data[$ "speed"]);
     
     static get_sprite = function()
     {
@@ -21,6 +43,8 @@ function ParticleData(_sprite, _sprite_data) constructor
     {
         return ___sprite_speed;
     }
+    
+    #region Properties
     
     ___properties = 0;
     
@@ -54,6 +78,82 @@ function ParticleData(_sprite, _sprite_data) constructor
     static get_is_stretch_animation = function()
     {
         return !!(___properties & PARTICLE_PROPERTIES_BOOLEAN.IS_STRETCHED_ANIMATION);
+    }
+    
+    #endregion
+    
+    static set_lifetime = function(_lifetime)
+    {
+        ___lifetime = smart_value_parse(_lifetime);
+        
+        return self;
+    }
+    
+    static get_lifetime = function()
+    {
+        return ___lifetime;
+    }
+    
+    static set_physics = function(_physics)
+    {
+        if (_physics != undefined)
+        {
+            __set_value("___gravity", _physics[$ "gravity"]);
+            
+            var _speed = _physics[$ "speed"];
+            
+            if (_speed != undefined)
+            {
+                var _x = _speed[$ "x"];
+                
+                if (_x != undefined)
+                {
+                    var _type = _x.type;
+                    
+                    if (_type == "reference")
+                    {
+                        __set_value("___xspeed_type", PARTICLE_MOVEMENT_TYPE.REFERENCE);
+                        __set_value("___xspeed", _x.value);
+                    }
+                    else if (_type == "number")
+                    {
+                        __set_value("___xspeed_type", PARTICLE_MOVEMENT_TYPE.NUMBER);
+                    	__set_smart_value("___xspeed", _x.value);
+                    }
+                    
+                    __set_smart_value("___xspeed", _x[$ "offset"]);
+                    __set_smart_value("___xspeed", _x[$ "multiplier"]);
+                }
+                
+                var _y = _speed[$ "y"];
+                
+                if (_y != undefined)
+                {
+                    var _type = _y.type;
+                    
+                    if (_type == "reference")
+                    {
+                        __set_value("___yspeed_type", PARTICLE_MOVEMENT_TYPE.REFERENCE);
+                        __set_value("___yspeed", _y.value);
+                    }
+                    else if (_type == "number")
+                    {
+                        __set_value("___yspeed_type", PARTICLE_MOVEMENT_TYPE.NUMBER);
+                    	__set_smart_value("___yspeed", _y.value);
+                    }
+                    
+                    __set_smart_value("___yspeed", _y[$ "offset"]);
+                    __set_smart_value("___yspeed", _y[$ "multiplier"]);
+                }
+            }
+        }
+        
+        return self;
+    }
+    
+    static get_gravity = function()
+    {
+        return self[$ "___gravity"] ?? 0;
     }
     
     /*

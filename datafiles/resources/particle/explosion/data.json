@@ -6,12 +6,10 @@
         "phantasia:is_stretch_animation"
     ],
     "lifetime": {
-        "value": {
-            "type": "irandom",
-            "value": {
-                "min": 48,
-                "max": 90
-            }
+        "type": "irandom",
+        "values": {
+            "min": 48,
+            "max": 90
         }
     }
 }
