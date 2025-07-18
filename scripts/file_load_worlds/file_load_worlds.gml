@@ -39,8 +39,8 @@ function file_load_worlds()
             var _time = buffer_read(_buffer, buffer_f64);
             var _day = buffer_read(_buffer, buffer_f64);
             
-            var _weather_wind  = buffer_read(_buffer, buffer_u8);
-            var _weather_storm = buffer_read(_buffer, buffer_u8);
+            var _weather_wind  = buffer_read(_buffer, buffer_f32);
+            var _weather_storm = buffer_read(_buffer, buffer_f32);
             
             buffer_delete(_buffer);
             

@@ -56,7 +56,9 @@ var _world_data = global.world_data[$ _world_save_data.dimension];
 if (!directory_exists($"{PROGRAM_DIRECTORY_WORLDS}/{_world_save_data.uuid}"))
 {
     global.world_save_data.time = _world_data.get_time_start();
-    global.world_save_data.weather_wind = 0x7f;
+    
+    global.world_save_data.weather_wind  = 0;
+    global.world_save_data.weather_storm = 0;
     
     var _seed = _world_save_data.seed;
     var _surface_height = worldgen_get_surface_height(0, _seed);

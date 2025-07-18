@@ -43,6 +43,7 @@ function spawn_particle(_x, _y, _id)
         }
         
         rotation = smart_value(_data.get_rotation());
+        rotation_increment = smart_value(_data.get_rotation_increment());
         
         image_angle = rotation;
         

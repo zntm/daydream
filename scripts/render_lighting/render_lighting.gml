@@ -78,10 +78,10 @@ function render_lighting(_a, _b, _xstart, _ystart, _camera_x, _camera_y, _camera
                     
                     for (var m = 0; m < CHUNK_SIZE; ++m)
                     {
+                        _is_drawn = false;
+                        
                         if !(_data & (1 << m))
                         {
-                            _is_drawn = false;
-                            
                             ++_length;
                             
                             continue;

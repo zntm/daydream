@@ -10,11 +10,6 @@ enum PARTICLE_MOVEMENT_TYPE {
     REFERENCE
 }
 
-enum PARTICLE_ROTATION_TYPE {
-    CONSTANT,
-    INCREMENT
-}
-
 function ParticleData(_sprite, _sprite_data) constructor
 {
     static __set_value = function(_name, _value)
@@ -166,17 +161,7 @@ function ParticleData(_sprite, _sprite_data) constructor
             
             if (_rotation != undefined)
             {
-                var _type = _rotation[$ "type"];
-                
-                if (_type == "increment")
-                {
-                    __set_value("___rotation_type", PARTICLE_ROTATION_TYPE.INCREMENT);
-                }
-                else// if (_type == "constant")
-                {
-                    __set_value("___rotation_type", PARTICLE_ROTATION_TYPE.CONSTANT);
-                }
-                
+                __set_smart_value("___rotation_increment", _rotation[$ "increment"]);
                 __set_smart_value("___rotation", _rotation.value);
             }
             
@@ -286,9 +271,9 @@ function ParticleData(_sprite, _sprite_data) constructor
         return self[$ "___scale"] ?? 1;
     }
     
-    static get_rotation_type = function()
+    static get_rotation_increment = function()
     {
-        return self[$ "___rotation_type"] ?? PARTICLE_ROTATION_TYPE.CONSTANT;
+        return self[$ "___rotation_increment"] ?? 0;
     }
     
     static get_rotation = function()

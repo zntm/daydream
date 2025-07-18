@@ -17,8 +17,8 @@ function file_save_world_global(_world_save_data)
     buffer_write(_buffer, buffer_f64, _world_save_data.time);
     buffer_write(_buffer, buffer_u64, _world_save_data.day);
     
-    buffer_write(_buffer, buffer_u8, _world_save_data.weather_wind);
-    buffer_write(_buffer, buffer_u8, _world_save_data.weather_storm);
+    buffer_write(_buffer, buffer_f32, _world_save_data.weather_wind);
+    buffer_write(_buffer, buffer_f32, _world_save_data.weather_storm);
     
     buffer_save_compressed(_buffer, $"{PROGRAM_DIRECTORY_WORLDS}/{_world_save_data.uuid}/global.dat");
     

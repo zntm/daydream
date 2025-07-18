@@ -57,18 +57,8 @@ function init_particle_recursive(_directory, _namespace, _id)
         
         global.particle_data[$ $"{_namespace}:{_name}"] = _particle_data; 
         
-        /*
-        global.particle_data[$ $"{_namespace}:{string_delete(_name, string_length(_name) - 4, 5)}"] = new ParticleData(_sprite)
-            .set_sprite_offset(_sprite_xoffset, _sprite_yoffset)
-            .set_velocity(_json[$ "xvelocity"], _json[$ "yvelocity"])
-            .set_velocity_on_collision(_json[$ "xvelocity_on_collision"], _json[$ "yvelocity_on_collision"])
-            .set_gravity(_json[$ "gravity"])
-            .set_collision_box(_json[$ "collision_box"]);
-        */
         delete _json;
         
         dbg_timer("init_particle", $"[Init] Loaded Particle: \'{string_delete(_name, string_length(_name) - 4, 5)}\'");
     }
-    
-    show_debug_message(json_stringify(global.particle_data, true))
 }

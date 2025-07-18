@@ -104,10 +104,7 @@ with (obj_Particle)
         y += yvelocity;
     }
     
-    if (_data.get_rotation_type() == PARTICLE_ROTATION_TYPE.INCREMENT)
-    {
-        image_angle += rotation * _delta_time;
-    }
+    image_angle += rotation_increment * _delta_time;
 }
 
 var _camera_x = global.camera_x_real;
