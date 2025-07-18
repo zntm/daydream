@@ -14,40 +14,52 @@ function Attribute() constructor
     {
         if (_collision_box != undefined)
         {
-            ___collision_box = _collision_box;
+            ___collision_box_width  = _collision_box.width;
+            ___collision_box_height = _collision_box.height;
         }
         
         return self;
     }
     
+    static has_collision_box = function()
+    {
+        return (self[$ "___collision_box_width"] != undefined);
+    }
+    
     static get_collision_box_width = function()
     {
-        return self[$ "___collision_box"].width;
+        return self[$ "___collision_box_width"];
     }
     
     static get_collision_box_height = function()
     {
-        return self[$ "___collision_box"].height;
+        return self[$ "___collision_box_height"];
     }
     
     static set_hit_box = function(_hit_box)
     {
         if (_hit_box != undefined)
         {
-            ___hit_box = _hit_box;
+            ___hit_box_width  = _hit_box.width;
+            ___hit_box_height = _hit_box.height
         }
         
         return self;
     }
     
+    static has_hit_box = function()
+    {
+        return (self[$ "___hit_box_width"] != undefined);
+    }    
+    
     static get_hit_box_width = function()
     {
-        return self[$ "___hit_box"].width;
+        return self[$ "___hit_box_width"];
     }
     
     static get_hit_box_height = function()
     {
-        return self[$ "___hit_box"].height;
+        return self[$ "___hit_box_height"];
     }
     
     static set_eye_level = function(_eye_level)
@@ -77,7 +89,7 @@ function Attribute() constructor
     
     static get_gravity = function()
     {
-        return self[$ "___gravity"] ?? 0.72;
+        return self[$ "___gravity"] ?? 0;
     }
     
     static set_jump_count_max = function(_jump_count_max)

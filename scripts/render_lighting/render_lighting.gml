@@ -72,12 +72,16 @@ function render_lighting(_a, _b, _xstart, _ystart, _camera_x, _camera_y, _camera
                         continue;
                     }
                     
+                    var _is_drawn = false;
+                    
                     var _length = 0;
                     
                     for (var m = 0; m < CHUNK_SIZE; ++m)
                     {
                         if !(_data & (1 << m))
                         {
+                            _is_drawn = false;
+                            
                             ++_length;
                             
                             continue;
@@ -85,6 +89,8 @@ function render_lighting(_a, _b, _xstart, _ystart, _camera_x, _camera_y, _camera
                         
                         if (_length > 0)
                         {
+                            _is_drawn = true;
+                            
                             var _x2 = (_x + (RENDER_LIGHTING_PADDING + l * TILE_SIZE) - _surface_x) / RENDER_LIGHTING_RESIZE;
                             var _y2 = (_y + RENDER_LIGHTING_PADDING + (m * TILE_SIZE) - _surface_y) / RENDER_LIGHTING_RESIZE;
                             
@@ -94,6 +100,17 @@ function render_lighting(_a, _b, _xstart, _ystart, _camera_x, _camera_y, _camera
                             }
                             
                             _length = 0;
+                        }
+                    }
+                    
+                    if (!_is_drawn)
+                    {
+                        var _x2 = (_x + (RENDER_LIGHTING_PADDING + l * TILE_SIZE) - _surface_x) / RENDER_LIGHTING_RESIZE;
+                        var _y2 = (_y + RENDER_LIGHTING_PADDING + (m * TILE_SIZE) - _surface_y) / RENDER_LIGHTING_RESIZE;
+                        
+                        if (rectangle_in_rectangle(0, 0, _surface_lighting_width, _surface_lighting_height, _x2 - 8, _y2 - (CHUNK_SIZE * 16) - 8, _x2 + 8, _y2 + 8))
+                        {
+                            draw_sprite_ext(spr_Light, 0, _x2, _y2 + 8, 1, _length, 0, c_white, 1);
                         }
                     }
                 }

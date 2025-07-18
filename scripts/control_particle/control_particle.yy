@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"control_particle",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"control_particle",
+  "parent":{
+    "name":"Entity",
+    "path":"folders/Scripts/Control/Entity.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

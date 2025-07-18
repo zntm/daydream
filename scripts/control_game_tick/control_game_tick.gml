@@ -17,6 +17,11 @@ function control_game_tick(_delta_time)
             control_player(_tick);
         }
         
+        with (obj_Particle)
+        {
+            control_particle(_tick);
+        }
+        
         with (obj_Creature)
         {
             control_creature(_tick);

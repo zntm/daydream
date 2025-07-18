@@ -113,8 +113,6 @@ function ParticleData(_sprite, _sprite_data) constructor
     {
         if (_physics != undefined)
         {
-            __set_value("___gravity", _physics[$ "gravity"]);
-            
             var _speed = _physics[$ "speed"];
             
             if (_speed != undefined)
@@ -336,5 +334,17 @@ function ParticleData(_sprite, _sprite_data) constructor
     static get_on_collision_yspeed_multiplier = function()
     {
         return self[$ "___on_collision_yspeed_multiplier"] ?? 1;
+    }
+    
+    static set_attribute = function(_attributes)
+    {
+        ___attributes = _attributes;
+        
+        return self;
+    }
+    
+    static get_attribute = function(_attributes)
+    {
+        return self[$ "___attributes"];
     }
 }

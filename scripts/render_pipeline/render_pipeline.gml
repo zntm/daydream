@@ -7,6 +7,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
     
     var _creature_data = global.creature_data;
     var _item_data = global.item_data;
+    var _particle_data = global.particle_data;
     
     var _texture = global.carbasa_surface_texture[$ "item"];
     
@@ -79,6 +80,15 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
         
         if (_z == CHUNK_DEPTH_DEFAULT)
         {
+            with (obj_Particle)
+            {
+                var _data = _particle_data[$ _id];
+                
+                var _sprite = _data.get_sprite();
+                
+                draw_sprite_ext(_sprite, 0, x, y, entity_scale, entity_scale, image_angle, c_white, image_alpha * (_data.is_fade_out() ? timer_life / timer_life_max : 1));
+            }
+            
             with (obj_Item_Drop)
             {
                 var _data = _item_data[$ item.get_id()];

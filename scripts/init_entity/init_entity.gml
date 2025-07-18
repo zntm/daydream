@@ -1,17 +1,13 @@
 function init_entity(_hp, _hp_max, _attribute, _uuid = uuid_generate(irandom(0xffff_ffff)))
 {
     attribute = _attribute;
+    
+    init_entity_physics(1);
+    
     uuid = _uuid;
-    
-    entity_scale = 1;
-    
-    entity_set_scale(1);
     
     hp = _hp;
     hp_max = _hp_max;
-    
-    xvelocity = 0;
-    yvelocity = 0;
     
     jump_pressed = 0;
     jump_count = 0;

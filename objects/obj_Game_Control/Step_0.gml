@@ -86,9 +86,29 @@ with (obj_Player)
     
     input_jump = keyboard_check(_settings.input_keyboard_jump);
     input_jump_pressed = keyboard_check_pressed(_settings.input_keyboard_jump);
+    
+    if (chance(0.1))spawn_particle(x, y - 16, "phantasia:leaf/oak");
 }
 
 control_game_tick(_delta_time);
+
+var _particle_data = global.particle_data;
+
+with (obj_Particle)
+{
+    var _data = _particle_data[$ _id];
+    
+    if (!attribute.has_collision_box())
+    {
+        x += xvelocity;
+        y += yvelocity;
+    }
+    
+    if (_data.get_rotation_type() == PARTICLE_ROTATION_TYPE.INCREMENT)
+    {
+        image_angle = rotation * _delta_time;
+    }
+}
 
 var _camera_x = global.camera_x_real;
 var _camera_y = global.camera_y_real;

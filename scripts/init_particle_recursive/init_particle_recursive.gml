@@ -32,7 +32,7 @@ function init_particle_recursive(_directory, _namespace, _id)
         
         var _sprite_data = _json.sprite;
         
-        var _sprite = sprite_add($"{_subdirectory}/sprite.png", _sprite_data[$ "frames"] ?? 1, false, false, 0, 0);
+        var _sprite = sprite_add($"{_subdirectory}/sprite.png", _sprite_data[$ "length"] ?? 1, false, false, 0, 0);
         
         var _sprite_xoffset = round(sprite_get_width(_sprite)  / 2);
         var _sprite_yoffset = round(sprite_get_height(_sprite) / 2);
@@ -44,6 +44,16 @@ function init_particle_recursive(_directory, _namespace, _id)
         _particle_data.set_properties(_json[$ "properties"]);
         _particle_data.set_lifetime(_json.lifetime);
         _particle_data.set_physics(_json[$ "physics"]);
+        
+        var _attribute = _json[$ "attribute"];
+        
+        if (_attribute != undefined)
+        {
+            _particle_data.set_attribute(new Attribute()
+                .set_collision_box(_attribute[$ "collision_box"])
+                .set_gravity(_attribute[$ "gravity"])
+            );
+        }
         
         global.particle_data[$ $"{_namespace}:{_name}"] = _particle_data; 
         
