@@ -279,6 +279,7 @@
     {"name":"shd_Chunk","order":2,"path":"shaders/shd_Chunk/shd_Chunk.yy",},
     {"name":"shd_Colour_Replace","order":5,"path":"shaders/shd_Colour_Replace/shd_Colour_Replace.yy",},
     {"name":"shd_Colourblind","order":6,"path":"shaders/shd_Colourblind/shd_Colourblind.yy",},
+    {"name":"shd_Lighting","order":7,"path":"shaders/shd_Lighting/shd_Lighting.yy",},
     {"name":"shd_Noise","order":1,"path":"shaders/shd_Noise/shd_Noise.yy",},
     {"name":"shd_Separable_Blur","order":4,"path":"shaders/shd_Separable_Blur/shd_Separable_Blur.yy",},
     {"name":"spr_Control","order":10,"path":"sprites/spr_Control/spr_Control.yy",},

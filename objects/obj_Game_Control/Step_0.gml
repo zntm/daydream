@@ -86,8 +86,6 @@ with (obj_Player)
     
     input_jump = keyboard_check(_settings.input_keyboard_jump);
     input_jump_pressed = keyboard_check_pressed(_settings.input_keyboard_jump);
-    
-    if (chance(0.1))spawn_particle(x, y - 16, "phantasia:leaf/oak");
 }
 
 control_game_tick(_delta_time);

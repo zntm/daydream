@@ -42,10 +42,9 @@ function spawn_particle(_x, _y, _id)
             yvelocity = smart_value(_data.get_yspeed());
         }
         
-        rotation = smart_value(_data.get_rotation());
         rotation_increment = smart_value(_data.get_rotation_increment());
         
-        image_angle = rotation;
+        image_angle = smart_value(_data.get_rotation());
         
         timer_life = smart_value(_data.get_lifetime());
         timer_life_max = timer_life;

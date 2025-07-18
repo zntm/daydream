@@ -86,7 +86,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 
                 var _sprite = _data.get_sprite();
                 
-                draw_sprite_ext(_sprite, 0, x, y, entity_scale, entity_scale, image_angle, c_white, image_alpha * (_data.is_fade_out() ? timer_life / timer_life_max : 1));
+                draw_sprite_ext(_sprite, 0, x, y, entity_scale, entity_scale, image_angle, image_blend, image_alpha * (_data.is_fade_out() ? timer_life / timer_life_max : 1));
             }
             
             with (obj_Item_Drop)
@@ -99,7 +99,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 var _xscale = 8 / attribute.get_collision_box_width();
                 var _yscale = 8 / attribute.get_collision_box_height();
                 
-                draw_sprite_ext(_sprite, _index, x, y - (_data.get_sprite_yoffset() * _yscale), _xscale, _yscale, image_angle, c_white, 1);
+                draw_sprite_ext(_sprite, _index, x, y - (_data.get_sprite_yoffset() * _yscale), _xscale, _yscale, image_angle, image_blend, 1);
             }
             
             with (obj_Creature)

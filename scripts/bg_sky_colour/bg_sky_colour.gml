@@ -30,7 +30,8 @@ function bg_sky_colour(_in_biome_data, _in_biome_transition_data)
         var _light_colour_from = _in_biome_data.get_light_colour(_name_from);
         var _light_colour_to   = _in_biome_data.get_light_colour(_name_to);
         
-        var _t = normalize(_world_time, _start_from, _end_from);
+        var _t  = min(1, normalize(_world_time, _start_from, _end_from));
+        var _t2 = min(1, in_biome_transition_value);
         
         if (in_biome_transition_value <= 0)
         {
@@ -55,8 +56,8 @@ function bg_sky_colour(_in_biome_data, _in_biome_transition_data)
                 var _transition_sky_colour_base     = merge_colour(_transition_sky_colour_base_from,     _transition_sky_colour_base_to,     _t);
                 var _transition_sky_colour_gradient = merge_colour(_transition_sky_colour_gradient_from, _transition_sky_colour_gradient_to, _t);
                 
-                sky_colour_base     = merge_colour(_sky_colour_base,     _transition_sky_colour_base,     in_biome_transition_value);
-                sky_colour_gradient = merge_colour(_sky_colour_gradient, _transition_sky_colour_gradient, in_biome_transition_value);
+                sky_colour_base     = merge_colour(_sky_colour_base,     _transition_sky_colour_base,     _t2);
+                sky_colour_gradient = merge_colour(_sky_colour_gradient, _transition_sky_colour_gradient, _t2);
             }
             
             var _transition_light_colour_from = _in_biome_transition_data.get_light_colour(_name_from);
@@ -67,7 +68,7 @@ function bg_sky_colour(_in_biome_data, _in_biome_transition_data)
                 var _light_colour            = merge_colour(_light_colour_from,            _light_colour_to,            _t);
                 var _transition_light_colour = merge_colour(_transition_light_colour_from, _transition_light_colour_to, _t);
                 
-                light_colour = merge_colour(_light_colour, _transition_light_colour, in_biome_transition_value);
+                light_colour = merge_colour(_light_colour, _transition_light_colour, _t2);
             }
         }
         

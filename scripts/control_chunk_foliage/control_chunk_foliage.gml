@@ -32,8 +32,14 @@ function control_chunk_foliage(_dt, _player_x, _player_y, _camera_x, _camera_y, 
             {
                 for (var l = 0; l < CHUNK_SIZE; ++l)
                 {
+                    var _chunk_covered = _inst.chunk_covered[l];
+                    
+                    if (!_chunk_covered) continue;
+                    
                     for (var m = 0; m < CHUNK_SIZE; ++m)
                     {
+                        if !(_chunk_covered & (1 << m)) continue;
+                        
                         var _tile = _inst.chunk[(CHUNK_DEPTH_FOLIAGE_BACK << (CHUNK_SIZE_BIT * 2)) | (m << CHUNK_SIZE_BIT) | l];
                         
                         if (_tile == TILE_EMPTY) || (!_item_data[$ _tile.get_id()].is_foliage()) continue;
@@ -60,8 +66,14 @@ function control_chunk_foliage(_dt, _player_x, _player_y, _camera_x, _camera_y, 
             {
                 for (var l = 0; l < CHUNK_SIZE; ++l)
                 {
+                    var _chunk_covered = _inst.chunk_covered[l];
+                    
+                    if (!_chunk_covered) continue;
+                    
                     for (var m = 0; m < CHUNK_SIZE; ++m)
                     {
+                        if !(_chunk_covered & (1 << m)) continue;
+                        
                         var _tile = _inst.chunk[(CHUNK_DEPTH_FOLIAGE_FRONT << (CHUNK_SIZE_BIT * 2)) | (m << CHUNK_SIZE_BIT) | l];
                         
                         if (_tile == TILE_EMPTY) || (!_item_data[$ _tile.get_id()].is_foliage()) continue;

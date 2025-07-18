@@ -17,6 +17,9 @@ chunk_count = array_create(CHUNK_DEPTH, 0);
 chunk_display = 0;
 
 is_generated = false;
+is_surface_lighting_refresh = true;
+
+surface_lighting = -1;
 
 chunk_xstart = floor(x / CHUNK_SIZE);
 chunk_ystart = floor(y / CHUNK_SIZE);
