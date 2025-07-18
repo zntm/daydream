@@ -106,7 +106,7 @@ with (obj_Particle)
     
     if (_data.get_rotation_type() == PARTICLE_ROTATION_TYPE.INCREMENT)
     {
-        image_angle = rotation * _delta_time;
+        image_angle += rotation * _delta_time;
     }
 }
 
