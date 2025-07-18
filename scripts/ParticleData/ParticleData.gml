@@ -1,15 +1,18 @@
-enum PARTICLE_BOOLEAN {
-    HAS_COLLISION = 1 << 0
-}
-
 enum PARTICLE_PROPERTIES_BOOLEAN {
-    IS_FADE_OUT            = 1 << 0,
-    IS_STRETCHED_ANIMATION = 1 << 1
+    IS_DESTROY_ON_COLLISION = 1 << 0,
+    IS_FADE_OUT             = 1 << 1,
+    HAS_COLLISION           = 1 << 2,
+    HAS_STRETCHED_ANIMATION = 1 << 3
 }
 
 enum PARTICLE_MOVEMENT_TYPE {
-    NUMBER,
+    CONSTANT,
     REFERENCE
+}
+
+enum PARTICLE_ROTATION_TYPE {
+    CONSTANT,
+    INCREMENT
 }
 
 function ParticleData(_sprite, _sprite_data) constructor
@@ -51,8 +54,10 @@ function ParticleData(_sprite, _sprite_data) constructor
     static set_properties = function(_properties)
     {
         static __properties = {
-            "phantasia:is_fade_out":          PARTICLE_PROPERTIES_BOOLEAN.IS_FADE_OUT,
-            "phantasia:is_stretch_animation": PARTICLE_PROPERTIES_BOOLEAN.IS_STRETCHED_ANIMATION,
+            "phantasia:is_destroy_on_collision": PARTICLE_PROPERTIES_BOOLEAN.IS_DESTROY_ON_COLLISION,
+            "phantasia:is_fade_out":             PARTICLE_PROPERTIES_BOOLEAN.IS_FADE_OUT,
+            "phantasia:has_collision":           PARTICLE_PROPERTIES_BOOLEAN.HAS_COLLISION,
+            "phantasia:has_stretch_animation":   PARTICLE_PROPERTIES_BOOLEAN.HAS_STRETCHED_ANIMATION
         }
         
         if (_properties != undefined)
@@ -70,14 +75,24 @@ function ParticleData(_sprite, _sprite_data) constructor
         return self;
     }
     
-    static get_is_fade_out = function()
+    static is_destroy_on_collision = function()
+    {
+        return !!(___properties & PARTICLE_PROPERTIES_BOOLEAN.IS_DESTROY_ON_COLLISION);
+    }
+    
+    static is_fade_out = function()
     {
         return !!(___properties & PARTICLE_PROPERTIES_BOOLEAN.IS_FADE_OUT);
     }
     
-    static get_is_stretch_animation = function()
+    static has_collision = function()
     {
-        return !!(___properties & PARTICLE_PROPERTIES_BOOLEAN.IS_STRETCHED_ANIMATION);
+        return !!(___properties & PARTICLE_PROPERTIES_BOOLEAN.HAS_COLLISION);
+    }
+    
+    static has_stretch_animation = function()
+    {
+        return !!(___properties & PARTICLE_PROPERTIES_BOOLEAN.HAS_STRETCHED_ANIMATION);
     }
     
     #endregion
@@ -108,42 +123,114 @@ function ParticleData(_sprite, _sprite_data) constructor
                 
                 if (_x != undefined)
                 {
-                    var _type = _x.type;
+                    var _type = _x[$ "type"];
                     
                     if (_type == "reference")
                     {
                         __set_value("___xspeed_type", PARTICLE_MOVEMENT_TYPE.REFERENCE);
                         __set_value("___xspeed", _x.value);
                     }
-                    else if (_type == "number")
+                    else// if (_type == "number")
                     {
-                        __set_value("___xspeed_type", PARTICLE_MOVEMENT_TYPE.NUMBER);
+                        __set_value("___xspeed_type", PARTICLE_MOVEMENT_TYPE.CONSTANT);
                     	__set_smart_value("___xspeed", _x.value);
                     }
                     
-                    __set_smart_value("___xspeed", _x[$ "offset"]);
-                    __set_smart_value("___xspeed", _x[$ "multiplier"]);
+                    __set_smart_value("___xspeed_offset", _x[$ "offset"]);
+                    __set_smart_value("___xspeed_multiplier", _x[$ "multiplier"]);
                 }
                 
                 var _y = _speed[$ "y"];
                 
                 if (_y != undefined)
                 {
-                    var _type = _y.type;
+                    var _type = _y[$ "type"];
                     
                     if (_type == "reference")
                     {
                         __set_value("___yspeed_type", PARTICLE_MOVEMENT_TYPE.REFERENCE);
                         __set_value("___yspeed", _y.value);
                     }
-                    else if (_type == "number")
+                    else// if (_type == "number")
                     {
-                        __set_value("___yspeed_type", PARTICLE_MOVEMENT_TYPE.NUMBER);
+                        __set_value("___yspeed_type", PARTICLE_MOVEMENT_TYPE.CONSTANT);
                     	__set_smart_value("___yspeed", _y.value);
                     }
                     
-                    __set_smart_value("___yspeed", _y[$ "offset"]);
-                    __set_smart_value("___yspeed", _y[$ "multiplier"]);
+                    __set_smart_value("___yspeed_offset", _y[$ "offset"]);
+                    __set_smart_value("___yspeed_multiplier", _y[$ "multiplier"]);
+                }
+            }
+            
+            __set_smart_value("___scale", _physics[$ "scale"]);
+            
+            var _rotation = _physics[$ "rotation"];
+            
+            if (_rotation != undefined)
+            {
+                var _type = _rotation[$ "type"];
+                
+                if (_type == "increment")
+                {
+                    __set_value("___rotation_type", PARTICLE_ROTATION_TYPE.INCREMENT);
+                }
+                else// if (_type == "constant")
+                {
+                    __set_value("___rotation_type", PARTICLE_ROTATION_TYPE.CONSTANT);
+                }
+                
+                __set_smart_value("___rotation", _rotation.value);
+            }
+            
+            var _on_collision = _physics[$ "on_collision"];
+            
+            if (_on_collision != undefined)
+            {
+                var _on_collision_speed = _on_collision[$ "speed"];
+                
+                if (_on_collision_speed != undefined)
+                {
+                    var _x = _on_collision_speed[$ "x"];
+                    
+                    if (_x != undefined)
+                    {
+                        var _type = _x[$ "type"];
+                        
+                        if (_type == "reference")
+                        {
+                            __set_value("___on_collision_xspeed_type", PARTICLE_MOVEMENT_TYPE.REFERENCE);
+                            __set_value("___on_collision_xspeed", _x.value);
+                        }
+                        else// if (_type == "number")
+                        {
+                            __set_value("___on_collision_xspeed_type", PARTICLE_MOVEMENT_TYPE.CONSTANT);
+                        	__set_smart_value("___on_collision_xspeed", _x.value);
+                        }
+                        
+                        __set_smart_value("___on_collision_xspeed_offset", _x[$ "offset"]);
+                        __set_smart_value("___on_collision_xspeed_multiplier", _x[$ "multiplier"]);
+                    }
+                    
+                    var _y = _on_collision_speed[$ "y"];
+                    
+                    if (_y != undefined)
+                    {
+                        var _type = _y[$ "type"];
+                        
+                        if (_type == "reference")
+                        {
+                            __set_value("___on_collision_yspeed_type", PARTICLE_MOVEMENT_TYPE.REFERENCE);
+                            __set_value("___on_collision_yspeed", _y.value);
+                        }
+                        else// if (_type == "number")
+                        {
+                            __set_value("___on_collision_yspeed_type", PARTICLE_MOVEMENT_TYPE.CONSTANT);
+                        	__set_smart_value("___on_collision_yspeed", _y.value);
+                        }
+                        
+                        __set_smart_value("___on_collision_yspeed_offset", _y[$ "offset"]);
+                        __set_smart_value("___on_collision_yspeed_multiplier", _y[$ "multiplier"]);
+                    }
                 }
             }
         }
@@ -156,133 +243,98 @@ function ParticleData(_sprite, _sprite_data) constructor
         return self[$ "___gravity"] ?? 0;
     }
     
-    /*
-    ___sprite = _sprite;
-    
-    static get_sprite = function()
+    static get_xspeed_type = function()
     {
-        return ___sprite;
+        return self[$ "___xspeed_type"] ?? PARTICLE_MOVEMENT_TYPE.CONSTANT;
     }
     
-    static set_sprite_offset = function(_sprite_xoffset, _sprite_yoffset)
+    static get_xspeed = function()
     {
-        ___sprite_offset = ((_sprite_yoffset + 0x80) << 8) | (_sprite_xoffset + 0x80);
-        
-        return self;
+        return self[$ "___xspeed"] ?? 0;
     }
     
-    static get_sprite_xoffset = function()
+    static get_xspeed_offset = function()
     {
-        return (___sprite_offset & 0xff) - 0x80;
+        return self[$ "___xspeed_offset"] ?? 0;
     }
     
-    static get_sprite_yoffset = function()
+    static get_xspeed_multiplier = function()
     {
-        return ((___sprite_offset >> 8) & 0xff) - 0x80;
+        return self[$ "___xspeed_multiplier"] ?? 1;
     }
     
-    static set_velocity = function(_xvelocity, _yvelocity)
+    static get_yspeed_type = function()
     {
-        if (_xvelocity != undefined)
-        {
-            ___xvelocity = _xvelocity;
-        }
-        
-        if (_yvelocity != undefined)
-        {
-            ___yvelocity = _yvelocity;
-        }
-        
-        return self;
+        return self[$ "___yspeed_type"] ?? PARTICLE_MOVEMENT_TYPE.CONSTANT;
     }
     
-    static get_xvelocity = function()
+    static get_yspeed = function()
     {
-        return self[$ "___xvelocity"] ?? 0;
+        return self[$ "___yspeed"] ?? 0;
     }
     
-    static get_yvelocity = function()
+    static get_yspeed_offset = function()
     {
-        return self[$ "___yvelocity"] ?? 0;
+        return self[$ "___yspeed_offset"] ?? 0;
     }
     
-    static set_velocity_on_collision = function(_xvelocity, _yvelocity)
+    static get_yspeed_multiplier = function()
     {
-        if (_xvelocity != undefined)
-        {
-            ___xvelocity_on_collision = _xvelocity;
-        }
-        
-        if (_yvelocity != undefined)
-        {
-            ___yvelocity_on_collision = _yvelocity;
-        }
-        
-        return self;
+        return self[$ "___yspeed_multiplier"] ?? 1;
     }
     
-    static get_xvelocity_on_collision = function()
+    static get_scale = function()
     {
-        return self[$ "___xvelocity_on_collision"] ?? 0;
+        return self[$ "___scale"] ?? 1;
     }
     
-    static get_yvelocity_on_collision = function()
+    static get_rotation_type = function()
     {
-        return self[$ "___yvelocity_on_collision"] ?? 0;
+        return self[$ "___rotation_type"] ?? PARTICLE_ROTATION_TYPE.CONSTANT;
     }
     
-    static set_gravity = function(_gravity)
+    static get_rotation = function()
     {
-        if (_gravity != undefined)
-        {
-            ___gravity = _gravity;
-        }
-        
-        return self;
+        return self[$ "___rotation"] ?? 0;
     }
     
-    static get_gravity = function()
+    static get_on_collision_xspeed_type = function()
     {
-        return self[$ "___gravity"] ?? 0;
+        return self[$ "___on_collision_xspeed_type"] ?? PARTICLE_MOVEMENT_TYPE.CONSTANT;
     }
     
-    ___boolean = 0;
-    
-    static has_collision = function()
+    static get_on_collision_xspeed = function()
     {
-        return !!(___boolean & PARTICLE_BOOLEAN.HAS_COLLISION);
+        return self[$ "___on_collision_xspeed"] ?? 0;
     }
     
-    static set_collision_box = function(_collision_box)
+    static get_on_collision_xspeed_offset = function()
     {
-        if (_collision_box != undefined)
-        {
-            ___boolean |= PARTICLE_BOOLEAN.HAS_COLLISION;
-            
-            ___colliison_box = ((_collision_box.bottom + 0x80) << 24) | ((_collision_box.right + 0x80) << 16) | ((_collision_box.top + 0x80) << 8) | (_collision_box.left + 0x80);
-        }
-        
-        return self;
+        return self[$ "___on_collision_xspeed_offset"] ?? 0;
     }
     
-    static get_collision_box_left = function()
+    static get_on_collision_xspeed_multiplier = function()
     {
-        return ((___colliison_box >> 0) & 0xff) - 0x80;
+        return self[$ "___on_collision_xspeed_multiplier"] ?? 1;
     }
     
-    static get_collision_box_top = function()
+    static get_on_collision_yspeed_type = function()
     {
-        return ((___colliison_box >> 8) & 0xff) - 0x80;
+        return self[$ "___on_collision_yspeed_type"] ?? PARTICLE_MOVEMENT_TYPE.CONSTANT;
     }
     
-    static get_collision_box_right = function()
+    static get_on_collision_yspeed = function()
     {
-        return ((___colliison_box >> 16) & 0xff) - 0x80;
+        return self[$ "___on_collision_yspeed"] ?? 0;
     }
     
-    static get_collision_box_bottom = function()
+    static get_on_collision_yspeed_offset = function()
     {
-        return ((___colliison_box >> 24) & 0xff) - 0x80;
+        return self[$ "___on_collision_yspeed_offset"] ?? 0;
     }
-    */
+    
+    static get_on_collision_yspeed_multiplier = function()
+    {
+        return self[$ "___on_collision_yspeed_multiplier"] ?? 1;
+    }
 }

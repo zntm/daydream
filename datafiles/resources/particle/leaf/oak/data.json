@@ -51,12 +51,10 @@
             }
         },
         "scale": {
-            "value": {
-                "type": "random",
-                "values": {
-                    "min": 0.5,
-                    "max": 1
-                }
+            "type": "random",
+            "values": {
+                "min": 0.5,
+                "max": 1
             }
         },
         "rotation": {
@@ -70,11 +68,13 @@
             }
         },
         "on_collision": {
-            "xspeed": {
-                "value": 0
-            },
-            "yspeed": {
-                "value": 0
+            "speed": {
+                "x": {
+                    "value": 0
+                },
+                "y": {
+                    "value": 0
+                }
             }
         }
     }

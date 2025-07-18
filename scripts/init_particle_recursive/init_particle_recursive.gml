@@ -23,9 +23,9 @@ function init_particle_recursive(_directory, _namespace, _id)
         
         if (_id != undefined)
         {
-            global.particle_data[$ _id] ??= [];
+            global.particle_data[$ $"{_namespace}:{_id}"] ??= [];
             
-            array_push(global.particle_data[$ _id], _name);
+            array_push(global.particle_data[$ $"{_namespace}:{_id}"], $"{_namespace}:{_name}");
         }
         
         var _json = buffer_load_json($"{_subdirectory}/data.json");
@@ -44,6 +44,8 @@ function init_particle_recursive(_directory, _namespace, _id)
         _particle_data.set_properties(_json[$ "properties"]);
         _particle_data.set_lifetime(_json.lifetime);
         _particle_data.set_physics(_json[$ "physics"]);
+        
+        global.particle_data[$ $"{_namespace}:{_name}"] = _particle_data; 
         
         /*
         global.particle_data[$ $"{_namespace}:{string_delete(_name, string_length(_name) - 4, 5)}"] = new ParticleData(_sprite)

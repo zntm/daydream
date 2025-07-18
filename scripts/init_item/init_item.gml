@@ -55,6 +55,4 @@ function init_item(_directory, _namespace)
         
         dbg_timer("init_item", $"[Init] Loaded Item: \'{_file}\'");
     }
-    
-    show_debug_message(json_stringify(global.item_data, true))
 }

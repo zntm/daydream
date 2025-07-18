@@ -3,13 +3,22 @@
         "length": 10
     },
     "properties": [
-        "phantasia:is_stretch_animation"
+        "phantasia:has_stretch_animation"
     ],
     "lifetime": {
         "type": "irandom",
         "values": {
             "min": 48,
             "max": 90
+        }
+    },
+    "physics": {
+        "scale": {
+            "type": "random",
+            "values": {
+                "min": 0.9,
+                "max": 1.1
+            }
         }
     }
 }
