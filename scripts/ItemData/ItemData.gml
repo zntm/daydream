@@ -696,4 +696,32 @@ function ItemData() constructor
     }
     
     #endregion
+    
+    static set_on_random_tick = function(_data)
+    {
+        if (_data != undefined)
+        {
+            ___on_random_tick_function = _data[$ "function"];
+            ___on_random_tick_parameter = _data[$ "parameter"];
+            
+            ___on_random_tick_chance = _data[$ "chance"] ?? 1;
+        }
+        
+        return self;
+    }
+    
+    static get_on_random_tick_function = function()
+    {
+        return self[$ "___on_random_tick_function"];
+    }
+    
+    static get_on_random_tick_parameter = function()
+    {
+        return self[$ "___on_random_tick_parameter"];
+    }
+    
+    static get_on_random_tick_chance = function()
+    {
+        return self[$ "___on_random_tick_chance"] ?? 0;
+    }
 }

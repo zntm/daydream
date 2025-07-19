@@ -20,5 +20,11 @@
             "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
         }
     },
-    "sfx": "#phantasia:tile/sfx/foliage"
+    "sfx": "#phantasia:tile/sfx/foliage",
+    "on_random_tick": {
+		"function": "phantasia:spawn_particle",
+		"parameter": {
+			"id": "phantasia:leaf/oak"
+		}
+    }
 }

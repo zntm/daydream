@@ -664,6 +664,7 @@
     {"id":{"name":"Inventory","path":"scripts/Inventory/Inventory.yy",},},
     {"id":{"name":"is_array_choose","path":"scripts/is_array_choose/is_array_choose.yy",},},
     {"id":{"name":"ItemData","path":"scripts/ItemData/ItemData.yy",},},
+    {"id":{"name":"ItemFunction","path":"scripts/ItemFunction/ItemFunction.yy",},},
     {"id":{"name":"lerp_delta","path":"scripts/lerp_delta/lerp_delta.yy",},},
     {"id":{"name":"loca_translate","path":"scripts/loca_translate/loca_translate.yy",},},
     {"id":{"name":"menu_control_textbox","path":"scripts/menu_control_textbox/menu_control_textbox.yy",},},

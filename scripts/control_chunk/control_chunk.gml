@@ -8,9 +8,9 @@ function control_chunk(_player_x, _player_y, _camera_x, _camera_y, _camera_width
     var _world_data = global.world_data[$ global.world_save_data.dimension];
     var _world_height = _world_data.get_world_height();
     
-    for (var i = -_a; i < _a; ++i)
+    for (var i = -_a; i <= _a; ++i)
     {
-        for (var j = -_b; j < _b; ++j)
+        for (var j = -_b; j <= _b; ++j)
         {
             var _x = (round(_player_x / CHUNK_SIZE_DIMENSION) * CHUNK_SIZE_DIMENSION) + (i * CHUNK_SIZE_DIMENSION);
             var _y = (round(_player_y / CHUNK_SIZE_DIMENSION) * CHUNK_SIZE_DIMENSION) + (j * CHUNK_SIZE_DIMENSION);

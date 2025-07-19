@@ -37,11 +37,11 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
         shader_set_uniform_f(__u_texture_size, _texel_width, _texel_height);
         shader_set_uniform_f(__u_time, _animation_index);
         
-        for (var i = -_a; i < _a; ++i)
+        for (var i = -_a; i <= _a; ++i)
         {
             var _x = _xstart + (i * CHUNK_SIZE_DIMENSION);
             
-            for (var j = -_b; j < _b; ++j)
+            for (var j = -_b; j <= _b; ++j)
             {
                 var _y = _ystart + (j * CHUNK_SIZE_DIMENSION);
                 

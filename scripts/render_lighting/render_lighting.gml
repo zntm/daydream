@@ -15,11 +15,11 @@ function render_lighting(_a, _b, _xstart, _ystart, _camera_x, _camera_y, _camera
     {
         surface_refresh ^= SURFACE_REFRESH_BOOLEAN.LIGHTING;
         
-        for (var i = -_a; i < _a; ++i)
+        for (var i = -_a; i <= _a; ++i)
         {
             var _x = _xstart + (i * CHUNK_SIZE_DIMENSION);
             
-            for (var j = -_b; j < _b; ++j)
+            for (var j = -_b; j <= _b; ++j)
             {
                 var _y = _ystart + (j * CHUNK_SIZE_DIMENSION);
                 
@@ -72,11 +72,11 @@ function render_lighting(_a, _b, _xstart, _ystart, _camera_x, _camera_y, _camera
         surface_set_target(surface_lighting);
         draw_clear_alpha(c_black, 1);
         
-        for (var i = -_a; i < _a; ++i)
+        for (var i = -_a; i <= _a; ++i)
         {
             var _x = _xstart + (i * CHUNK_SIZE_DIMENSION);
             
-            for (var j = -_b; j < _b; ++j)
+            for (var j = -_b; j <= _b; ++j)
             {
                 var _y = _ystart + (j * CHUNK_SIZE_DIMENSION);
                 
