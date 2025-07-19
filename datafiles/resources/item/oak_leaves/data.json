@@ -3,7 +3,7 @@
     "sprite": {
         "xoffset": 8,
         "yoffset": 8,
-        "length": 5,
+        "length": 10,
         "edge_padding": 8
     },
     "inventory": "#phantasia:item/generic/inventory_tile",

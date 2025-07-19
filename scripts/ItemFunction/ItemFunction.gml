@@ -1,6 +1,6 @@
 global.item_function = {}
 
-global.item_function[$ "phantasia:spawn_particle"] = function(_x, _y, _parameter)
+global.item_function[$ "phantasia:spawn_particle"] = function(_dt, _x, _y, _parameter)
 {
     var _offset = _parameter[$ "offset"];
     

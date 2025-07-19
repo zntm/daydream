@@ -22,8 +22,8 @@ on_window_resize = function()
         SURFACE_REFRESH_BOOLEAN.HP |
         SURFACE_REFRESH_BOOLEAN.LIGHTING;
     
-    var _chunk_in_view = chunk_in_view;
-    var _chunk_in_view_length = chunk_in_view_length;
+    var _chunk_in_view = obj_Game_Control.chunk_in_view;
+    var _chunk_in_view_length = obj_Game_Control.chunk_in_view_length;
     
     for (var i = 0; i < _chunk_in_view_length; ++i)
     {

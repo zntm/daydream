@@ -1,4 +1,4 @@
-#macro CAMERA_SPEED 0.3
+#macro CAMERA_SPEED 0.2
 
 function control_camera_pos(_x, _y, _force = false, _delta_time = global.delta_time)
 {

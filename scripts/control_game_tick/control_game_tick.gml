@@ -41,13 +41,13 @@ function control_game_tick(_delta_time)
                 
                 var _data = _item_data[$ _tile.get_id()];
                 
-                if (!chance(_data.get_on_random_tick_chance())) continue;
+                if (!chance(_data.get_on_random_tick_chance() * _tick)) continue;
                 
                 var _function = _data.get_on_random_tick_function();
                 
                 if (_function != undefined)
                 {
-                    _item_function[$ _function](_inst.chunk_xstart + _x2, _inst.chunk_ystart + _y2, _data.get_on_random_tick_parameter());
+                    _item_function[$ _function](_tick, _inst.chunk_xstart + _x2, _inst.chunk_ystart + _y2, _data.get_on_random_tick_parameter());
                 }
             }
         }

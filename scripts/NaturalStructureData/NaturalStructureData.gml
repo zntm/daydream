@@ -214,7 +214,7 @@ global.natural_structure_data[$ "phantasia:tree/generic"] = new NaturalStructure
             _data[@ i + _depth_leaves] = new Tile(_tile_leaves_id, _item_data);
             _data[@ i + (1 * _width) + _depth_leaves] = new Tile(_tile_leaves_id, _item_data)
                 .set_yscale(1)
-                //.set_index_offset(16);
+                .set_index_offset(5);
         }
         
         for (var i = 0; i < _width; ++i)
@@ -222,7 +222,7 @@ global.natural_structure_data[$ "phantasia:tree/generic"] = new NaturalStructure
             _data[@ i + (2 * _width) + _depth_leaves] = new Tile(_tile_leaves_id, _item_data);
             _data[@ i + (3 * _width) + _depth_leaves] = new Tile(_tile_leaves_id, _item_data)
                 .set_yscale(1)
-                //.set_index_offset(16);
+                .set_index_offset(5);
         }
         
         var _tile_wood = _parameter[NATURAL_STRUCTURE_TREE_GENERIC.TILE_WOOD];
