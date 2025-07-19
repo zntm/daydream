@@ -33,7 +33,7 @@ function menu_refresh_value_player_save()
     global.player_save_data.attire.face.index  = 0;
     global.player_save_data.attire.face.colour = 8;
     
-    global.player_save_data.attire.hair.index  = 0;
+    global.player_save_data.attire.hair.index  = 1;
     global.player_save_data.attire.hair.colour = 44;
     
     global.player_save_data.attire.pants.index  = 0;

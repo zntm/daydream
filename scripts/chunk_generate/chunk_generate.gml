@@ -148,7 +148,7 @@ function chunk_generate()
                         
                         var _ = _item_data[$ _tile.get_id()];
                         
-                        if (_.has_type(ITEM_TYPE_BIT.SOLID | ITEM_TYPE_BIT.UNTOUCHABLE)) && (!_.is_transparent())
+                        if ((1 << m) & ((1 << CHUNK_DEPTH_DEFAULT) | (1 << CHUNK_DEPTH_WALL))) && (_.has_type(ITEM_TYPE_BIT.SOLID | ITEM_TYPE_BIT.UNTOUCHABLE)) && (!_.is_transparent())
                         {
                             chunk_covered[@ i] |= 1 << j;
                         }

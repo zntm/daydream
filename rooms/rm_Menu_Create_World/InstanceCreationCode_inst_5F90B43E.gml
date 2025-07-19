@@ -15,7 +15,7 @@ else
     {
         text = menu_textbox_randomize_world_name();
     }
-    until (string_length(text) <= text_length);
+    until (string(text) != "undefined") && (string_length(text) <= text_length);
 }
 
 text_display = text;

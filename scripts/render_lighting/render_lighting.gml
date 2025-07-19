@@ -36,6 +36,8 @@ function render_lighting(_a, _b, _xstart, _ystart, _camera_x, _camera_y, _camera
                         _inst.surface_lighting = surface_create(CHUNK_SIZE + RENDER_LIGHTING_PADDING, CHUNK_SIZE + RENDER_LIGHTING_PADDING, surface_r8unorm);
                     }
                     
+                    gpu_set_blendmode(bm_add);
+                    
                     surface_set_target(_inst.surface_lighting);
                     draw_clear_alpha(c_black, 1);
                     
@@ -58,6 +60,8 @@ function render_lighting(_a, _b, _xstart, _ystart, _camera_x, _camera_y, _camera
                     }
                     
                     surface_reset_target();
+                    
+                    gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_src_alpha, bm_one);
                 }
             }
         }

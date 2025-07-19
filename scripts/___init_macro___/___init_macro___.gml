@@ -58,3 +58,6 @@
 #macro MENU_WORLD_NAME_STORY choose("Chronicle", "Epilogue", "Fable", "History", "Legend", "Myth", "Narrative", "Report", "Saga", "Spiel", "Story", "Tale")
 
 #endregion
+
+#macro ATTIRE_ELEMENTS_LENGTH 9
+#macro ATTIRE_ELEMENTS_ORDERED_LENGTH 16

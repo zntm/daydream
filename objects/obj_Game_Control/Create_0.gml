@@ -63,7 +63,7 @@ if (!directory_exists($"{PROGRAM_DIRECTORY_WORLDS}/{_world_save_data.uuid}"))
     var _seed = _world_save_data.seed;
     var _surface_height = worldgen_get_surface_height(0, _seed);
     
-    obj_Player.y = (_surface_height - 1) * TILE_SIZE;
+    obj_Player.y = ((_surface_height - 1) * TILE_SIZE) + (TILE_SIZE / 2);
     
     while (worldgen_get_cave(0, round(obj_Player.y / TILE_SIZE) + 1, _surface_height, _seed))
     {

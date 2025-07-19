@@ -90,7 +90,7 @@ function init_attire(_directory, _namespace = "phantasia", _type = 0)
         
         if (file_exists($"{_directory}.png"))
         {
-            return sprite_add($"{_directory}.png", __get_index(_name), false, false, 16, 24);
+            return sprite_add($"{_directory}.png", __get_index(_name), false, false, 16, 32);
         }
         
         if (directory_exists(_directory))
@@ -99,7 +99,7 @@ function init_attire(_directory, _namespace = "phantasia", _type = 0)
             
             for (var i = 0; file_exists($"{_directory}/{i}.png"); ++i)
             {
-                array_push(_array, sprite_add($"{_directory}/{i}.png", __get_index(_name, i), false, false, 16, 24));
+                array_push(_array, sprite_add($"{_directory}/{i}.png", __get_index(_name, i), false, false, 16, 32));
             }
             
             return _array;
@@ -134,15 +134,8 @@ function init_attire(_directory, _namespace = "phantasia", _type = 0)
                 _data.set_icon(_icon);
             }
             
-            if (file_exists($"{_directory2}/colour.png"))
-            {
-                _data.set_sprite_colour(__init(_file, j, "colour", $"{_directory2}/colour"));
-            }
-            
-            if (file_exists($"{_directory2}/white.png"))
-            {
-                _data.set_sprite_white(__init(_file, j, "white", $"{_directory2}/white"));
-            }
+            _data.set_sprite_colour(__init(_file, j, "colour", $"{_directory2}/colour"));
+            _data.set_sprite_white(__init(_file, j, "white", $"{_directory2}/white"));
             
             global.attire_data[$ _file][@ j] = _data;
             
@@ -184,4 +177,6 @@ function init_attire(_directory, _namespace = "phantasia", _type = 0)
     sprite_delete(_sprite);
     surface_free(_surface);
     buffer_delete(_buffer);
+    
+    show_debug_message(json_stringify(global.attire_data, true))
 }

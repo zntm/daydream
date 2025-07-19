@@ -10,18 +10,16 @@ global.item_function[$ "phantasia:spawn_particle"] = function(_x, _y, _parameter
         
         if (_xoffset != undefined)
         {
-            _x += smart_value(smart_value_parse(_xoffset));
+            _x += smart_value(_xoffset);
         }
         
         var _yoffset = _offset[$ "y"];
         
         if (_yoffset != undefined)
         {
-            _y += smart_value(smart_value_parse(_yoffset));
+            _y += smart_value(_yoffset);
         }
     }
     
-    show_debug_message($"{_x} {_y} {smart_value(smart_value_parse(_parameter.id))}")
-    
-    spawn_particle(_x * TILE_SIZE, _y * TILE_SIZE, smart_value(smart_value_parse(_parameter.id)));
+    spawn_particle(_x * TILE_SIZE, _y * TILE_SIZE, smart_value(_parameter.id));
 }

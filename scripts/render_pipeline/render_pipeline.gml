@@ -137,7 +137,8 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
             
             with (obj_Player)
             {
-                draw_sprite_ext(sprite_index, 0, x, y, image_xscale, image_yscale, image_angle, c_white, 1);
+                render_attire();
+                // draw_sprite_ext(sprite_index, 0, x, y, image_xscale, image_yscale, image_angle, c_white, 1);
             }
         }
     }

@@ -702,7 +702,19 @@ function ItemData() constructor
         if (_data != undefined)
         {
             ___on_random_tick_function = _data[$ "function"];
-            ___on_random_tick_parameter = _data[$ "parameter"];
+            ___on_random_tick_parameter = {}
+            
+            var _parameter = _data[$ "parameter"];
+            
+            var _parameter_names = struct_get_names(_parameter);
+            var _parameter_length = array_length(_parameter_names)
+            
+            for (var i = 0; i < _parameter_length; ++i)
+            {
+                var _name = _parameter_names[i];
+                
+                ___on_random_tick_parameter[$ _name] = smart_value_parse(_parameter[$ _name]);
+            }
             
             ___on_random_tick_chance = _data[$ "chance"] ?? 1;
         }
