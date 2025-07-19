@@ -11,10 +11,30 @@ function menu_refresh_instance_player_attire()
     
     static __on_select_release = function()
     {
-        global.player_save_data[$ global.attire_elements[global.menu_player_attire_index]].index = index;
+        static __inst = [
+            inst_3A828A0C,
+            inst_797ECDFE,
+            inst_2E54B2A7,
+            inst_33DF38CC,
+            inst_62096C9C,
+            inst_165E7BCC
+        ];
+        
+        for (var i = 0; i < 6; ++i)
+        {
+            __inst[@ i].sprite_index = spr_Menu_Button_Main;
+        }
+        
+        sprite_index = spr_Menu_Button_Secondary;
+        
+        global.player_save_data.attire[$ global.attire_elements[global.menu_player_attire_index]].index = index;
+        
+        menu_refresh_instance_player_colour();
     }
     
-    var _attire_data = global.attire_data[$ global.attire_elements[global.menu_player_attire_index]];
+    var _name = global.attire_elements[global.menu_player_attire_index];
+    
+    var _attire_data = global.attire_data[$ _name];
     var _attire_data_length = array_length(_attire_data);
     
     if (_attire_data_length <= 6)
@@ -27,6 +47,8 @@ function menu_refresh_instance_player_attire()
         inst_548C85BE.y = inst_548C85BE.ystart;
         inst_5F2060E.y = inst_5F2060E.ystart;
     }
+    
+    var _current_index = global.player_save_data.attire[$ _name][$ "index"];
     
     var _start_index = global.menu_player_attire_page * 6;
     
@@ -42,6 +64,8 @@ function menu_refresh_instance_player_attire()
             
             continue;
         }
+        
+        _inst.sprite_index = ((_index == _current_index) ? spr_Menu_Button_Secondary : spr_Menu_Button_Main);
         
         _inst.y = _inst.ystart;
         
