@@ -9,6 +9,11 @@ function menu_refresh_instance_player_attire()
         inst_165E7BCC
     ];
     
+    static __on_select_release = function()
+    {
+        global.player_save_data[$ global.attire_elements[global.menu_player_attire_index]].index = index;
+    }
+    
     var _attire_data = global.attire_data[$ global.attire_elements[global.menu_player_attire_index]];
     var _attire_data_length = array_length(_attire_data);
     
@@ -40,8 +45,15 @@ function menu_refresh_instance_player_attire()
         
         _inst.y = _inst.ystart;
         
+        _inst.index = _index;
+        
         var _data = _attire_data[_index];
         
         _inst.icon = ((_data != undefined) ? _data.get_icon() : spr_Icon_Prohibited);
+        
+        _inst.icon_xscale = 1.5;
+        _inst.icon_yscale = 1.5;
+        
+        _inst.on_select_release = method(_inst, __on_select_release);
     }
 }

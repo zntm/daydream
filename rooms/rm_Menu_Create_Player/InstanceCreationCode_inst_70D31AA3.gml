@@ -1,4 +1,4 @@
-text = loca_translate($"menu.create_player.attire.{global.attire_elements[global.menu_player_attire_index]}");
+text = loca_translate($"phantasia:menu.create_player.attire.{global.attire_elements[global.menu_player_attire_index]}");
 
 halign = fa_center;
 valign = fa_middle;

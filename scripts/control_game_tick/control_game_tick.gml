@@ -89,7 +89,5 @@ function control_game_tick(_delta_time)
         }
         
         global.tick_accumulator -= 1;
-        
-        // global.tick_accumulator = max(0, global.tick_accumulator - 1);
     }
 }

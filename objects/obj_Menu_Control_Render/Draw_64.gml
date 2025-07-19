@@ -107,7 +107,14 @@ with (obj_Menu_Button)
     
     if (on_draw != undefined)
     {
-        on_draw(_x, _y + _asset_offset);
+        if (boolean & MENU_BUTTON_BOOLEAN.IS_SELECTED)
+        {
+            on_draw(_x, _y + _asset_offset, c_ltgray);
+        }
+        else
+        {
+        	on_draw(_x, _y, c_white);
+        }
     }
 }
 

@@ -1,4 +1,4 @@
-placeholder = loca_translate("menu.generic.textbox.enter_name");
+placeholder = loca_translate("phantasia:menu.generic.textbox.enter_name");
 
 var _text = global.player_save_data.name;
 

@@ -1,18 +1,22 @@
 function menu_refresh_instance_players()
 {
-    static __on_draw = function(_x, _y)
+    static __on_draw = function(_x, _y, _colour)
     {
         var _data = global.file_players[index];
         
         var _halign = draw_get_halign();
         var _valign = draw_get_valign();
         
-        draw_set_align(fa_left, fa_top);
+        draw_set_align(fa_left, fa_center);
         
-        render_text(_x, _y - 64, _data.get_name());
-        render_text(_x, _y - 32, date_datetime_string(_data.get_last_opened()));
+        render_text(_x, _y - 10, string(loca_translate("phantasia:gui.hp.header"), _data.get_hp(), _data.get_hp_max()), 1, 1, 0, _colour, 1);
         
-        render_text(_x, _y, date_datetime_string(_data.get_last_opened()));
+        draw_set_valign(fa_top);
+        
+        render_text(_x - 84, _y + 20, _data.get_name(), 1, 1, 0, _colour, 1);
+        render_text(_x - 84, _y + 20 + 24, date_datetime_string(_data.get_last_opened()), 0.75, 0.75, 0, _colour, 1);
+        
+        render_attire(_data.get_attire(), 0, _x - 56, _y + 24, 3, 3);
         
         draw_set_align(_halign, _valign);
     }

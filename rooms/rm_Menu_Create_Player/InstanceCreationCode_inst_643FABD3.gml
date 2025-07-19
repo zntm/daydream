@@ -9,7 +9,7 @@ on_select_release = function()
     
     global.menu_player_attire_index = (global.menu_player_attire_index + 1) % _length;
     
-    inst_70D31AA3.text = loca_translate($"menu.create_player.attire.{global.attire_elements[global.menu_player_attire_index]}");
+    inst_70D31AA3.text = loca_translate($"phantasia:menu.create_player.attire.{global.attire_elements[global.menu_player_attire_index]}");
     
     menu_refresh_instance_player_attire();
     menu_refresh_instance_player_colour();

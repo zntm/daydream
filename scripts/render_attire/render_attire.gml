@@ -1,4 +1,4 @@
-function render_attire()
+function render_attire(_attire, _index, _x, _y, _xscale, _yscale)
 {
     static __sprite_body = {
         body:           spr_Attire_Base_Body,
@@ -29,8 +29,6 @@ function render_attire()
     var _colour_data  = global.attire_colour_data;
     var _colour_white = global.attire_colour_white_data;
     
-    var _attire = global.player_save_data.attire;
-    
     var _colour_body = _colour_data[_attire.body.colour];
     
     var _attire_elements = global.attire_elements_ordered;
@@ -43,7 +41,7 @@ function render_attire()
         
         if (_sprite_body != undefined)
         {
-            __draw_body(_sprite_body, 0, x, y, entity_scale, entity_scale, image_angle, _colour_white, _colour_body);
+            __draw_body(_sprite_body, _index, _x, _y, _xscale, _yscale, image_angle, _colour_white, _colour_body);
             
             continue;
         }
@@ -72,11 +70,11 @@ function render_attire()
             {
                 if (!is_array(_sprite_colour))
                 {
-                    __draw_body(_sprite_colour, 0, x, y, entity_scale, entity_scale, image_angle, _colour_white, _colour_data[_part_colour]);
+                    __draw_body(_sprite_colour, _index, _x, _y, _xscale, _yscale, image_angle, _colour_white, _colour_data[_part_colour]);
                 }
                 else if (_element_index < _.get_sprite_colour_length())
                 {
-                    __draw_body(_sprite_colour[_element_index], 0, x, y, entity_scale, entity_scale, image_angle, _colour_white, _colour_data[_part_colour]);
+                    __draw_body(_sprite_colour[_element_index], _index, _x, _y, _xscale, _yscale, image_angle, _colour_white, _colour_data[_part_colour]);
                 }
             }
             
@@ -86,11 +84,11 @@ function render_attire()
             {
                 if (!is_array(_sprite_white))
                 {
-                    draw_sprite_ext(_sprite_white, 0, x, y, entity_scale, entity_scale, image_angle, _colour_white, 1);
+                    draw_sprite_ext(_sprite_white, _index, _x, _y, _xscale, _yscale, image_angle, c_white, 1);
                 }
                 else if (_element_index < _.get_sprite_white_length())
                 {
-                    draw_sprite_ext(_sprite_white[_element_index], 0, x, y, entity_scale, entity_scale, image_angle, _colour_white, 1);
+                    draw_sprite_ext(_sprite_white[_element_index], _index, _x, _y, _xscale, _yscale, image_angle, c_white, 1);
                 }
             }
             
@@ -114,14 +112,14 @@ function render_attire()
         
         if (_sprite_colour != undefined)
         {
-            __draw_body(_sprite_colour, 0, x, y, entity_scale, entity_scale, image_angle, _colour_white, _colour_data[_part_colour]);
+            __draw_body(_sprite_colour, _index, _x, _y, _xscale, _yscale, image_angle, _colour_white, _colour_data[_part_colour]);
         }
         
         var _sprite_white = _.get_sprite_white();
         
         if (_sprite_white != undefined)
         {
-            draw_sprite_ext(_sprite_white, 0, x, y, entity_scale, entity_scale, image_angle, c_white, 1);
+            draw_sprite_ext(_sprite_white, _index, _x, _y, _xscale, _yscale, image_angle, c_white, 1);
         }
     }
 }
