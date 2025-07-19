@@ -62,13 +62,11 @@ function file_save_world_chunk(_world_save_data, _inst)
             
             buffer_write(_buffer, buffer_u16, _chunk_count[i]);
             
-            var _index_z = i << (CHUNK_SIZE_BIT + CHUNK_SIZE_BIT);
-            
             for (var j = 0; j < CHUNK_SIZE; ++j)
             {
                 for (var l = 0; l < CHUNK_SIZE; ++l)
                 {
-                    var _tile = _chunk[_index_z | (j << CHUNK_SIZE_BIT) | l];
+                    var _tile = _chunk[tile_index(l, j, i)];
                     
                     file_save_snippet_tile(_buffer, _tile, _item_data);
                     

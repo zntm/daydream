@@ -178,3 +178,9 @@ inst_664AF3B4.y = -1000;
 timer_creature_spawn = 0;
 
 global.tick_accumulator = 0;
+
+chunk_in_view_x = infinity;
+chunk_in_view_y = infinity;
+
+chunk_in_view = [];
+chunk_in_view_length = 0;

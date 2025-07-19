@@ -23,12 +23,6 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
     
     var _animation_index = round(global.world_save_data.time * 8);
     
-    var _xstart = round((_camera_x + (_camera_width  / 2)) / CHUNK_SIZE_DIMENSION) * CHUNK_SIZE_DIMENSION;
-    var _ystart = round((_camera_y + (_camera_height / 2)) / CHUNK_SIZE_DIMENSION) * CHUNK_SIZE_DIMENSION;
-    
-    var _a = ceil(_camera_width  / (2 * CHUNK_SIZE_DIMENSION)) + 1;
-    var _b = ceil(_camera_height / (2 * CHUNK_SIZE_DIMENSION)) + 1;
-    
     for (var _z = 0; _z < CHUNK_DEPTH; ++_z)
     {
         var _bitmask = 1 << _z;
@@ -37,43 +31,36 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
         shader_set_uniform_f(__u_texture_size, _texel_width, _texel_height);
         shader_set_uniform_f(__u_time, _animation_index);
         
-        for (var i = -_a; i <= _a; ++i)
+        for (var i = 0; i < chunk_in_view_length; ++i)
         {
-            var _x = _xstart + (i * CHUNK_SIZE_DIMENSION);
+            var _inst = chunk_in_view[i];
             
-            for (var j = -_b; j <= _b; ++j)
+            if (!_inst.is_generated) || !(_inst.chunk_display & _bitmask) || (_inst.chunk_count[_z] <= 0) continue;
+            
+            var _xcenter = _inst.xcenter;
+            var _ycenter = _inst.ycenter;
+            
+            var _light = instance_nearest(_xcenter, _ycenter, obj_Parent_Light);
+            
+            if (!instance_exists(_light)) || (rectangle_distance(_light.x, _light.y, _xcenter - (CHUNK_SIZE_DIMENSION / 2), _ycenter - (CHUNK_SIZE_DIMENSION / 2), _xcenter + (CHUNK_SIZE_DIMENSION / 2), _ycenter + (CHUNK_SIZE_DIMENSION / 2)) >= (CHUNK_SIZE_DIMENSION * 3)) continue;
+            
+            var _buffer = _inst.chunk_vertex_buffer[_z];
+            
+            if (!vertex_buffer_exists(_buffer))
             {
-                var _y = _ystart + (j * CHUNK_SIZE_DIMENSION);
-                
-                var _inst = instance_position(_x, _y, obj_Chunk);
-                
-                if (!instance_exists(_inst)) || (!_inst.is_generated) || !(_inst.chunk_display & _bitmask) || (_inst.chunk_count[_z] <= 0) continue;
-                
-                var _xcenter = _inst.xcenter;
-                var _ycenter = _inst.ycenter;
-                
-                var _light = instance_nearest(_xcenter, _ycenter, obj_Parent_Light);
-                
-                if (!instance_exists(_light)) || (rectangle_distance(_light.x, _light.y, _xcenter - (CHUNK_SIZE_DIMENSION / 2), _ycenter - (CHUNK_SIZE_DIMENSION / 2), _xcenter + (CHUNK_SIZE_DIMENSION / 2), _ycenter + (CHUNK_SIZE_DIMENSION / 2)) >= (CHUNK_SIZE_DIMENSION * 3)) continue;
-                
-                var _buffer = _inst.chunk_vertex_buffer[_z];
-                
-                if (!vertex_buffer_exists(_buffer))
-                {
-                    _buffer = render_chunk(global.carbasa_surface_uv[$ "item"], _inst, _z);
-                }
-                
-                if (_z == CHUNK_DEPTH_FOLIAGE_BACK)
-                {
-                    shader_set_uniform_f_array(__u_skew, _inst.chunk_skew_back);
-                }
-                else if (_z == CHUNK_DEPTH_FOLIAGE_FRONT)
-                {
-                    shader_set_uniform_f_array(__u_skew, _inst.chunk_skew_front);
-                }
-                
-                vertex_submit(_buffer, pr_trianglelist, _texture);
+                _buffer = render_chunk(global.carbasa_surface_uv[$ "item"], _inst, _z);
             }
+            
+            if (_z == CHUNK_DEPTH_FOLIAGE_BACK)
+            {
+                shader_set_uniform_f_array(__u_skew, _inst.chunk_skew_back);
+            }
+            else if (_z == CHUNK_DEPTH_FOLIAGE_FRONT)
+            {
+                shader_set_uniform_f_array(__u_skew, _inst.chunk_skew_front);
+            }
+            
+            vertex_submit(_buffer, pr_trianglelist, _texture);
         }
         
         shader_reset();
@@ -160,5 +147,5 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
         draw_set_align(fa_left, fa_top);
     }
     
-    render_lighting(_a, _b, _xstart, _ystart, _camera_x, _camera_y, _camera_width, _camera_height);
+    render_lighting(_camera_x, _camera_y, _camera_width, _camera_height);
 }

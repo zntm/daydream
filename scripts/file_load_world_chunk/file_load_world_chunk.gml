@@ -28,8 +28,6 @@ function file_load_world_chunk(_world_save_data, _inst)
         return false;
     }
     
-    buffer_poke(_buffer, _chunk_relative_x * 4, buffer_u32, _bit | (1 << _chunk_relative_y));
-    
     var _version_major = buffer_read(_buffer, buffer_u16);
     var _version_minor = buffer_read(_buffer, buffer_u16);
     var _version_patch = buffer_read(_buffer, buffer_u16);

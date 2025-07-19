@@ -586,6 +586,7 @@
     {"id":{"name":"control_physics_y","path":"scripts/control_physics_y/control_physics_y.yy",},},
     {"id":{"name":"control_physics","path":"scripts/control_physics/control_physics.yy",},},
     {"id":{"name":"control_player","path":"scripts/control_player/control_player.yy",},},
+    {"id":{"name":"control_refresh_chunk_in_view","path":"scripts/control_refresh_chunk_in_view/control_refresh_chunk_in_view.yy",},},
     {"id":{"name":"control_structure","path":"scripts/control_structure/control_structure.yy",},},
     {"id":{"name":"CraftingData","path":"scripts/CraftingData/CraftingData.yy",},},
     {"id":{"name":"CreatureData","path":"scripts/CreatureData/CreatureData.yy",},},

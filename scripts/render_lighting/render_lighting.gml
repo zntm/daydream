@@ -3,7 +3,7 @@
 #macro RENDER_LIGHTING_RESIZE 16
 #macro RENDER_LIGHTING_PADDING 16
 
-function render_lighting(_a, _b, _xstart, _ystart, _camera_x, _camera_y, _camera_width, _camera_height)
+function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
 {
     var _surface_lighting_width  = ceil(_camera_width  / RENDER_LIGHTING_RESIZE) + (RENDER_LIGHTING_PADDING * 2);
     var _surface_lighting_height = ceil(_camera_height / RENDER_LIGHTING_RESIZE) + (RENDER_LIGHTING_PADDING * 2);
@@ -15,55 +15,45 @@ function render_lighting(_a, _b, _xstart, _ystart, _camera_x, _camera_y, _camera
     {
         surface_refresh ^= SURFACE_REFRESH_BOOLEAN.LIGHTING;
         
-        for (var i = -_a; i <= _a; ++i)
+        for (var i = 0; i < chunk_in_view_length; ++i)
         {
-            var _x = _xstart + (i * CHUNK_SIZE_DIMENSION);
+            var _inst = chunk_in_view[i];
             
-            for (var j = -_b; j <= _b; ++j)
+            if (!_inst.is_generated) || (!_inst.is_surface_lighting_refresh) continue;
+            
+            _inst.is_surface_lighting_refresh = false;
+            
+            if (!surface_exists(_inst.surface_lighting))
             {
-                var _y = _ystart + (j * CHUNK_SIZE_DIMENSION);
+                _inst.surface_lighting = surface_create(CHUNK_SIZE + RENDER_LIGHTING_PADDING, CHUNK_SIZE + RENDER_LIGHTING_PADDING, surface_r8unorm);
+            }
+            
+            gpu_set_blendmode(bm_add);
+            
+            surface_set_target(_inst.surface_lighting);
+            draw_clear_alpha(c_black, 1);
+            
+            var _chunk_covered = _inst.chunk_covered;
+            
+            for (var l = 0; l < CHUNK_SIZE; ++l)
+            {
+                var _data = _chunk_covered[l];
                 
-                var _inst = instance_position(_x, _y, obj_Chunk);
-                
-                if (!instance_exists(_inst)) || (!_inst.is_generated) continue;
-                
-                if (_inst.is_surface_lighting_refresh)
+                for (var m = 0; m < CHUNK_SIZE; ++m)
                 {
-                    _inst.is_surface_lighting_refresh = false;
-                    
-                    if (!surface_exists(_inst.surface_lighting))
+                    if !(_data & (1 << m))
                     {
-                        _inst.surface_lighting = surface_create(CHUNK_SIZE + RENDER_LIGHTING_PADDING, CHUNK_SIZE + RENDER_LIGHTING_PADDING, surface_r8unorm);
-                    }
-                    
-                    gpu_set_blendmode(bm_add);
-                    
-                    surface_set_target(_inst.surface_lighting);
-                    draw_clear_alpha(c_black, 1);
-                    
-                    var _chunk_covered = _inst.chunk_covered;
-                    
-                    for (var l = 0; l < CHUNK_SIZE; ++l)
-                    {
-                        var _data = _chunk_covered[l];
+                        var _x2 = (RENDER_LIGHTING_PADDING / 2) + l;
+                        var _y2 = (RENDER_LIGHTING_PADDING / 2) + m;
                         
-                        for (var m = 0; m < CHUNK_SIZE; ++m)
-                        {
-                            if !(_data & (1 << m))
-                            {
-                                var _x2 = (RENDER_LIGHTING_PADDING / 2) + l;
-                                var _y2 = (RENDER_LIGHTING_PADDING / 2) + m;
-                                
-                                draw_sprite_ext(spr_Light, 0, _x2, _y2, 1, 1, 0, c_white, 1);
-                            }
-                        }
+                        draw_sprite_ext(spr_Light, 0, _x2, _y2, 1, 1, 0, c_white, 1);
                     }
-                    
-                    surface_reset_target();
-                    
-                    gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_src_alpha, bm_one);
                 }
             }
+            
+            surface_reset_target();
+            
+            gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_src_alpha, bm_one);
         }
         
         if (!surface_exists(surface_lighting))
@@ -76,25 +66,18 @@ function render_lighting(_a, _b, _xstart, _ystart, _camera_x, _camera_y, _camera
         surface_set_target(surface_lighting);
         draw_clear_alpha(c_black, 1);
         
-        for (var i = -_a; i <= _a; ++i)
+        for (var i = 0; i < chunk_in_view_length; ++i)
         {
-            var _x = _xstart + (i * CHUNK_SIZE_DIMENSION);
+            var _inst = chunk_in_view[i];
             
-            for (var j = -_b; j <= _b; ++j)
+            if (!_inst.is_generated) continue;
+            
+            if (surface_exists(_inst.surface_lighting))
             {
-                var _y = _ystart + (j * CHUNK_SIZE_DIMENSION);
+                var _x2 = ((_inst.x - _surface_x) / RENDER_LIGHTING_RESIZE) - (RENDER_LIGHTING_PADDING / 2);
+                var _y2 = ((_inst.y - _surface_y) / RENDER_LIGHTING_RESIZE) - (RENDER_LIGHTING_PADDING / 2);
                 
-                var _inst = instance_position(_x, _y, obj_Chunk);
-                
-                if (!instance_exists(_inst)) || (!_inst.is_generated) continue;
-                
-                if (surface_exists(_inst.surface_lighting))
-                {
-                    var _x2 = ((_x - _surface_x) / RENDER_LIGHTING_RESIZE) - (RENDER_LIGHTING_PADDING / 2);
-                    var _y2 = ((_y - _surface_y) / RENDER_LIGHTING_RESIZE) - (RENDER_LIGHTING_PADDING / 2);
-                    
-                    draw_surface(_inst.surface_lighting, _x2, _y2 + 8);
-                }
+                draw_surface(_inst.surface_lighting, _x2, _y2 + 8);
             }
         }
         

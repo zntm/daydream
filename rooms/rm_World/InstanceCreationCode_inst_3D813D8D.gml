@@ -21,6 +21,16 @@ on_window_resize = function()
     obj_Game_Control.surface_refresh |= 
         SURFACE_REFRESH_BOOLEAN.HP |
         SURFACE_REFRESH_BOOLEAN.LIGHTING;
+    
+    var _chunk_in_view = chunk_in_view;
+    var _chunk_in_view_length = chunk_in_view_length;
+    
+    for (var i = 0; i < _chunk_in_view_length; ++i)
+    {
+        var _inst = _chunk_in_view[i];
+        
+        _inst.is_surface_lighting_refresh = true;
+    }
 }
 
 on_window_focus = function()
