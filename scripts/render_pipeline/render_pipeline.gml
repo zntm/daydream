@@ -124,7 +124,14 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
             
             with (obj_Player)
             {
-                render_attire(global.player_save_data.attire, 0, x, y, entity_scale * sign(image_xscale), entity_scale);
+                if (yvelocity == 0) && ((input_left) || (input_right))
+                {
+                    render_attire(global.player_save_data.attire, (_animation_index * 2) % 8, x, y, entity_scale * sign(image_xscale), entity_scale);
+                }
+                else
+                {
+                	render_attire(global.player_save_data.attire, 0, x, y, entity_scale * sign(image_xscale), entity_scale);
+                }
             }
         }
     }

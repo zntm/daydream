@@ -167,6 +167,16 @@
             "id": "phantasia:dendrobium",
             "chance": 0.04,
             "placeable_on": "#phantasia:tile/placeable/plant_on"
+        },
+        {
+            "id": "phantasia:dandelion",
+            "chance": 0.03,
+            "placeable_on": "#phantasia:tile/placeable/plant_on"
+        },
+        {
+            "id": "phantasia:seeding_dandelion",
+            "chance": 0.01,
+            "placeable_on": "#phantasia:tile/placeable/plant_on"
         }
     ],
     "structure": [

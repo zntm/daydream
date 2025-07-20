@@ -1,4 +1,4 @@
-function render_attire(_attire, _index, _x, _y, _xscale, _yscale)
+function render_attire(_attire, _index, _x, _y, _xscale, _yscale, _is_blinking = false, _index_arm = undefined)
 {
     static __sprite_body = {
         body:           spr_Attire_Base_Body,
@@ -41,10 +41,12 @@ function render_attire(_attire, _index, _x, _y, _xscale, _yscale)
         
         if (_sprite_body != undefined)
         {
-            __draw_body(_sprite_body, _index, _x, _y, _xscale, _yscale, image_angle, _colour_white, _colour_body);
+            __draw_body(_sprite_body, ((_index_arm != undefined) && (_element == "body_arm_left") ? _index_arm : _index), _x, _y, _xscale, _yscale, image_angle, _colour_white, _colour_body);
             
             continue;
         }
+        
+        if (_is_blinking) && (_element == "eyes") continue;
         
         if (is_array(_element))
         {
@@ -91,35 +93,35 @@ function render_attire(_attire, _index, _x, _y, _xscale, _yscale)
                     draw_sprite_ext(_sprite_white[_element_index], _index, _x, _y, _xscale, _yscale, image_angle, c_white, 1);
                 }
             }
+        }
+        else
+        {
+            var _data = _attire_data[$ _element];
             
-            continue;
-        }
-        
-        var _data = _attire_data[$ _element];
-        
-        if (_data == undefined) continue;
-        
-        var _part = _attire[$ _element];
-        
-        var _part_index  = _part.index;
-        var _part_colour = _part.colour;
-        
-        var _ = _data[_part_index];
-        
-        if (_ == undefined) continue;
-        
-        var _sprite_colour = _.get_sprite_colour();
-        
-        if (_sprite_colour != undefined)
-        {
-            __draw_body(_sprite_colour, _index, _x, _y, _xscale, _yscale, image_angle, _colour_white, _colour_data[_part_colour]);
-        }
-        
-        var _sprite_white = _.get_sprite_white();
-        
-        if (_sprite_white != undefined)
-        {
-            draw_sprite_ext(_sprite_white, _index, _x, _y, _xscale, _yscale, image_angle, c_white, 1);
+            if (_data == undefined) continue;
+            
+            var _part = _attire[$ _element];
+            
+            var _part_index  = _part.index;
+            var _part_colour = _part.colour;
+            
+            var _ = _data[_part_index];
+            
+            if (_ == undefined) continue;
+            
+            var _sprite_colour = _.get_sprite_colour();
+            
+            if (_sprite_colour != undefined)
+            {
+                __draw_body(_sprite_colour, _index, _x, _y, _xscale, _yscale, image_angle, _colour_white, _colour_data[_part_colour]);
+            }
+            
+            var _sprite_white = _.get_sprite_white();
+            
+            if (_sprite_white != undefined)
+            {
+                draw_sprite_ext(_sprite_white, _index, _x, _y, _xscale, _yscale, image_angle, c_white, 1);
+            }
         }
     }
 }

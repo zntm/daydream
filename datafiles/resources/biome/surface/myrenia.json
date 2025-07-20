@@ -95,6 +95,16 @@
             "id": "phantasia:lilybell",
             "chance": 0.03,
             "placeable_on": "#phantasia:tile/placeable/plant_on"
+        },
+        {
+            "id": "phantasia:dandelion",
+            "chance": 0.02,
+            "placeable_on": "#phantasia:tile/placeable/plant_on"
+        },
+        {
+            "id": "phantasia:seeding_dandelion",
+            "chance": 0.01,
+            "placeable_on": "#phantasia:tile/placeable/plant_on"
         }
     ],
     "structure": []

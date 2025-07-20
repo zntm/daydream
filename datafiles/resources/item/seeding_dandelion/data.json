@@ -1,0 +1,38 @@
+{
+    "type": "untouchable",
+    "sprite": {
+        "xoffset": 4,
+        "yoffset": 3,
+        "length": 1
+    },
+    "inventory": "#phantasia:item/generic/inventory_default",
+    "properties": [
+        "phantasia:is_foliage"
+    ],
+    "harvest": {
+        "hardness": 0.38,
+        "particle": {
+            "colour": [
+                "#FFFFFF"
+            ],
+            "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
+        }
+    },
+    "placement": {
+        "requirement": "#phantasia:tile/placeable/requirement_plant"
+    },
+    "drop": {
+        "item": [
+            {
+                "id": "phantasia:seeding_dandelion"
+            }
+        ]
+    },
+    "sfx": "#phantasia:tile/sfx/foliage",
+    "on_random_tick": {
+		"function": "phantasia:spawn_particle",
+		"parameter": {
+			"id": "phantasia:seeding_dandelion"
+		}
+    }
+}
