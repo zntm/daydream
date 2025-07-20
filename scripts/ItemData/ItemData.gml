@@ -353,7 +353,7 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     
     static get_harvest_particle_frequency = function()
     {
-        return self[$ "___harvest_particle_frequency"];
+        return self[$ "___harvest_particle_frequency"] ?? 0;
     }
     
     static has_harvest_type = function(_type)
@@ -719,7 +719,7 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
             var _parameter = _data[$ "parameter"];
             
             var _parameter_names = struct_get_names(_parameter);
-            var _parameter_length = array_length(_parameter_names)
+            var _parameter_length = array_length(_parameter_names);
             
             for (var i = 0; i < _parameter_length; ++i)
             {

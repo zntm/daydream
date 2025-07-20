@@ -15,9 +15,7 @@
         "hardness": 0.46,
         "level": 2,
         "particle": {
-            "colour": [
-                "#FFFFFF"
-            ],
+            "colour": "#phantasia:tile/particle_colour/nightrock",
             "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
         },
         "type": "pickaxe"

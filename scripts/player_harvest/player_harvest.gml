@@ -1,4 +1,4 @@
-function player_harvest(_x, _y)
+function player_harvest(_dt, _x, _y)
 {
     var _tile = TILE_EMPTY;
     
@@ -62,17 +62,22 @@ function player_harvest(_x, _y)
     
     if (_data.get_harvest_level() > _item_level) exit;
     
-    var _delta_time = global.delta_time;
+    harvest_amount += _item_hardness * _dt;
     
-    harvest_amount += _item_hardness * _delta_time;
-    
-    obj_Player.timer_sfx_harvest += _delta_time;
+    obj_Player.timer_sfx_harvest += _dt;
     
     if (obj_Player.timer_sfx_harvest > 0.28)
     {
         obj_Player.timer_sfx_harvest %= 0.28;
         
         sfx_diegetic_play(obj_Player.audio_emitter, _x * TILE_SIZE, _y * TILE_SIZE, _data.get_sfx_harvest());
+        
+        var _particle_colour = _data.get_harvest_particle_colour();
+        
+        repeat (round(smart_value(_data.get_harvest_particle_frequency()) / 2))
+        {
+            spawn_particle(_x * TILE_SIZE, _y * TILE_SIZE, "phantasia:tile/harvest", is_array_choose(_particle_colour));
+        }
     }
     
     if (harvest_amount >= _harvest_hardness)
@@ -111,6 +116,13 @@ function player_harvest(_x, _y)
                 
                 spawn_item_drop(_x * TILE_SIZE, _y * TILE_SIZE, new Inventory(_drop_item.id, _drop_item[$ "amount"] ?? 1));
             }
+        }
+        
+        var _particle_colour = _data.get_harvest_particle_colour();
+        
+        repeat (smart_value(_data.get_harvest_particle_frequency()))
+        {
+            spawn_particle(_x * TILE_SIZE, _y * TILE_SIZE, "phantasia:tile/harvest", is_array_choose(_particle_colour));
         }
         
         harvest_amount = 0;

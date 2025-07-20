@@ -1,4 +1,4 @@
-function spawn_particle(_x, _y, _id)
+function spawn_particle(_x, _y, _id, _colour = c_white)
 {
     var _data = global.particle_data[$ _id];
     
@@ -8,7 +8,14 @@ function spawn_particle(_x, _y, _id)
         
         attribute = _data.get_attribute();
         
-        init_entity_physics(smart_value(_data.get_scale()));
+        if (attribute.has_collision_box())
+        {
+            init_entity_physics(smart_value(_data.get_scale()));
+        }
+        else
+        {
+        	entity_scale = smart_value(_data.get_scale());
+        }
         
         if (_data.get_xspeed_type() == PARTICLE_MOVEMENT_TYPE.REFERENCE)
         {
@@ -45,6 +52,7 @@ function spawn_particle(_x, _y, _id)
         rotation_increment = smart_value(_data.get_rotation_increment());
         
         image_angle = smart_value(_data.get_rotation());
+        image_blend = _colour;
         
         timer_life = smart_value(_data.get_lifetime());
         timer_life_max = timer_life;

@@ -68,6 +68,7 @@ if (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.EXIT)
 if (is_opened & IS_OPENED_BOOLEAN.PAUSE) exit;
 
 var _delta_time = global.delta_time;
+var _dt = GAME_TICK * _delta_time;
 
 var _player_x = obj_Player.x;
 var _player_y = obj_Player.y;
@@ -98,11 +99,13 @@ with (obj_Particle)
     
     if (!attribute.has_collision_box())
     {
-        x += xvelocity;
-        y += yvelocity;
+        x += xvelocity * _dt;
+        y += yvelocity * _dt;
+        
+        yvelocity += attribute.get_gravity() * _dt;
     }
     
-    image_angle += rotation_increment * _delta_time;
+    image_angle += rotation_increment * _dt;
 }
 
 var _camera_x = global.camera_x_real;
@@ -131,7 +134,7 @@ control_chunk_clear(_camera_x, _camera_y, _camera_width, _camera_height);
 
 if (cooldown_build <= 0) && (mouse_check_button(mb_right))
 {
-    player_build(_tile_x, _tile_y);
+    player_build(_delta_time, _tile_x, _tile_y);
 }
 else
 {
@@ -140,7 +143,7 @@ else
 
 if (cooldown_harvest <= 0) && (mouse_check_button(mb_left))
 {
-    player_harvest(_tile_x, _tile_y);
+    player_harvest(_delta_time, _tile_x, _tile_y);
 }
 else
 {

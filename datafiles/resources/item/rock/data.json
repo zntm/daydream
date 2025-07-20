@@ -9,9 +9,7 @@
     "harvest": {
         "hardness": 0.18,
         "particle": {
-            "colour": [
-                "#FFFFFF"
-            ],
+            "colour": "#phantasia:tile/particle_colour/stone",
             "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
         }
     },

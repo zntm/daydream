@@ -14,9 +14,7 @@
         "hardness": 0.36,
         "level": 0,
         "particle": {
-            "colour": [
-                "#FFFFFF"
-            ],
+            "colour": "#phantasia:tile/particle_colour/dirt",
             "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
         }
     },

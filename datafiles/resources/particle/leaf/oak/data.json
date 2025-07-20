@@ -40,7 +40,7 @@
                 }
             },
             "y": {
-                "type": "number",
+                "type": "constant",
                 "value": {
                     "type": "random",
                     "values": {

@@ -2,8 +2,8 @@
     "harvest_particle_frequency": {
         "type": "irandom",
         "values": {
-            "min": 2,
-            "max": 6
+            "min": 4,
+            "max": 10
         }
     },
     "workbench": [

@@ -14,9 +14,7 @@
         "hardness": 0.58,
         "level": 1,
         "particle": {
-            "colour": [
-                "#FFFFFF"
-            ],
+            "colour": "#phantasia:tile/particle_colour/stone",
             "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
         },
         "type": "pickaxe"

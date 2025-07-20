@@ -16,7 +16,8 @@
         "level": 1,
         "particle": {
             "colour": [
-                "#FFFFFF"
+                "#474F6E",
+                "#323856"
             ],
             "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
         }

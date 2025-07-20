@@ -1,4 +1,4 @@
-function player_build(_x, _y)
+function player_build(_dt, _x, _y)
 {
     var _item_data = global.item_data;
     
