@@ -28,13 +28,18 @@ if (is_opened & (IS_OPENED_BOOLEAN.PAUSE | IS_OPENED_BOOLEAN.EXIT))
         render_pause();
     }
     
-    // draw_surface(application_surface, 0, 0);
+    draw_surface(application_surface, 0, 0);
     
-    gpu_set_texfilter(true);
+    var _display_blur = global.settings.display_blur;
     
-    draw_surface_stretched_ext(surface_pause[@ 1], 0, 0, _gui_width + GUI_PAUSE_BLUR_RESIZE, _gui_height + GUI_PAUSE_BLUR_RESIZE, c_white, global.settings.display_blur);
-    
-    gpu_set_texfilter(false);
+    if (_display_blur > 0)
+    {
+        gpu_set_texfilter(true);
+        
+        draw_surface_stretched_ext(surface_pause[@ 1], 0, 0, _gui_width + GUI_PAUSE_BLUR_RESIZE, _gui_height + GUI_PAUSE_BLUR_RESIZE, c_white, _display_blur);
+        
+        gpu_set_texfilter(false);
+    }
     
     render_gui_vignette(_player_y, _gui_width, _gui_height);
     

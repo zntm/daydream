@@ -155,3 +155,10 @@ else
 }
 
 control_chunk_activity(_camera_x, _camera_y, _camera_width, _camera_height);
+
+if (keyboard_check_pressed(vk_f2))
+{
+    sfx_play("phantasia:menu.screenshot");
+    
+    surface_save(application_surface, $"{PROGRAM_DIRECTORY_SCREENSHOTS}/{datetime_to_unix()}.png");
+}

@@ -55,6 +55,15 @@
         "pitch": 1,
         "subtitle": "phantasia:sfx.menu.button.select"
     },
+    "menu.screenshot": {
+        "asset": [
+            "phantasia:menu/screenshot/0",
+            "phantasia:menu/screenshot/1",
+            "phantasia:menu/screenshot/2"
+        ],
+        "pitch": "#phantasia:sfx/generic/pitch_default",
+        "subtitle": "phantasia:sfx.menu.screenshot"
+    },
     "menu.sweep": {
         "asset": [
             "phantasia:menu/sweep"
