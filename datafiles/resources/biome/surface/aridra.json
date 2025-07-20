@@ -1,5 +1,5 @@
 {
-    "background": "phantasia:solaris",
+    "background": "phantasia:aridra",
     "map_colour": "#F4AF66",
     "sky_colour": {
         "dawn": {
@@ -53,7 +53,7 @@
 				"id": "phantasia:sand"
 			},
 			"wall": {
-				"id": "phantasia:dirt_wall"
+				"id": "phantasia:sandstone_wall"
 			}
 		},
 		"sub_layer": {
@@ -61,7 +61,7 @@
                 "id": "phantasia:sand"
             },
             "wall": {
-                "id": "phantasia:dirt_wall"
+                "id": "phantasia:sandstone_wall"
             }
 		}
 	},

@@ -1,5 +1,5 @@
 {
-    "background": "phantasia:myrenia",
+    "background": "phantasia:myr",
     "map_colour": "#8C8C6C",
     "sky_colour": {
         "dawn": {
@@ -54,7 +54,7 @@
 	"tile": {
 		"top_layer": {
 			"base": {
-				"id": "phantasia:grass_block_myrenia"
+				"id": "phantasia:grass_block_myr"
 			},
 			"wall": {
 				"id": "phantasia:dirt_wall"
@@ -72,12 +72,12 @@
     "creature": [],
     "foliage": [
         {
-            "id": "phantasia:short_grass_myrenia",
+            "id": "phantasia:short_grass_myr",
             "chance": 0.26,
             "placeable_on": "#phantasia:tile/placeable/plant_on"
         },
         {
-            "id": "phantasia:tall_grass_myrenia",
+            "id": "phantasia:tall_grass_myr",
             "chance": 0.04,
             "placeable_on": "#phantasia:tile/placeable/plant_on"
         },
@@ -107,5 +107,11 @@
             "placeable_on": "#phantasia:tile/placeable/plant_on"
         }
     ],
-    "structure": []
+    "structure": [
+        {
+            "id": "phantasia:moss_clump",
+            "chance": 0.01,
+            "placeable_on": "#phantasia:tile/placeable/plant_on"
+        }
+    ]
 }

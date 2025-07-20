@@ -1,0 +1,34 @@
+{
+    "type": "untouchable",
+    "sprite": {
+        "xoffset": 8,
+        "yoffset": 8,
+        "length": 5,
+        "edge_padding": 8
+    },
+    "inventory": "#phantasia:item/generic/inventory_tile",
+    "properties": [
+        "phantasia:is_tile",
+        "phantasia:is_wall"
+    ],
+    "harvest": {
+        "hardness": 0.48,
+        "level": 1,
+        "particle": {
+            "colour": [
+                "#FFFFFF"
+            ],
+            "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
+        },
+        "type": "pickaxe"
+    },
+    "drop": {
+        "item": [
+            {
+                "id": "phantasia:sandstone_wall"
+            }
+        ],
+        "tool": "pickaxe"
+    },
+    "sfx": "#phantasia:tile/sfx/stone"
+}
