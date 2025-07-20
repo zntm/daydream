@@ -2,11 +2,17 @@ global.delta_time = delta_time / 1_000_000;
 
 var _window_focus = window_has_focus();
 
+var _old_window_width  = global.window_width;
+var _old_window_height = global.window_height;
+
 var _window_width  = window_get_width();
 var _window_height = window_get_height();
 
-if (global.window_width != _window_width) || (global.window_height != _window_height)
+if (_old_window_width != _window_width) || (_old_window_height != _window_height)
 {
+    global.window_width  = _window_width;
+    global.window_height = _window_height;
+    
     if (_window_width > 0) && (_window_height > 0)
     {
         room_set_viewport(room, 0, true, 0, 0, _window_width, _window_height);
@@ -22,13 +28,10 @@ if (global.window_width != _window_width) || (global.window_height != _window_he
         }
     }
     
-    if (!window_get_fullscreen()) && (global.window_width == display_get_width()) && (global.window_height == display_get_height())
+    if (!window_get_fullscreen()) && (_old_window_width == display_get_width()) && (_old_window_height == display_get_height())
     {
         window_center();
     }
-    
-    global.window_width  = _window_width;
-    global.window_height = _window_height;
 }
 else
 {

@@ -8,8 +8,8 @@ function render_pause()
     static __u_radius     = shader_get_uniform(shd_Separable_Blur, "u_radius");
     static __u_sigma      = shader_get_uniform(shd_Separable_Blur, "u_sigma");
     
-    var _width  = ceil(global.window_width  / GUI_PAUSE_BLUR_RESIZE);
-    var _height = ceil(global.window_height / GUI_PAUSE_BLUR_RESIZE);
+    var _width  = ceil(global.gui_width  / GUI_PAUSE_BLUR_RESIZE);
+    var _height = ceil(global.gui_height / GUI_PAUSE_BLUR_RESIZE);
     
     if (!surface_exists(surface_pause[@ 0]))
     {

@@ -6,6 +6,9 @@ function control_instance_pause()
     obj_Menu_Control_Render.xoffset = -_camera_x;
     obj_Menu_Control_Render.yoffset = -_camera_y;
     
+    obj_Menu_Control_Render.xscale = global.window_width  / global.camera_width;
+    obj_Menu_Control_Render.yscale = global.window_height / global.camera_height;
+    
     inst_629EFD9E.x = _camera_x + inst_629EFD9E.xstart;
     inst_629EFD9E.y = _camera_y + inst_629EFD9E.ystart;
     

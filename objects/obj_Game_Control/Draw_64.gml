@@ -28,11 +28,11 @@ if (is_opened & (IS_OPENED_BOOLEAN.PAUSE | IS_OPENED_BOOLEAN.EXIT))
         render_pause();
     }
     
-    draw_surface(application_surface, 0, 0);
+    // draw_surface(application_surface, 0, 0);
     
     gpu_set_texfilter(true);
     
-    draw_surface_ext(surface_pause[@ 1], 0, 0, GUI_PAUSE_BLUR_RESIZE * _gui_scale, GUI_PAUSE_BLUR_RESIZE * _gui_scale, 0, c_white, global.settings.display_blur);
+    draw_surface_stretched_ext(surface_pause[@ 1], 0, 0, _gui_width + GUI_PAUSE_BLUR_RESIZE, _gui_height + GUI_PAUSE_BLUR_RESIZE, c_white, global.settings.display_blur);
     
     gpu_set_texfilter(false);
     
@@ -85,8 +85,8 @@ if (_hp > 0) && (is_opened & IS_OPENED_BOOLEAN.GUI) && !(is_opened & IS_OPENED_B
     
     if (surface_exists(surface_hp))
     {
-        var _x = _gui_scale * (gui_xanchor(GUI_ANCHOR.TOP_RIGHT, _camera_width)  - (13 * min(GUI_HP_ROW_LENGTH, ceil(_hp_max / GUI_HP_PER_SPRITE))));
-        var _y = _gui_scale * (gui_yanchor(GUI_ANCHOR.TOP_RIGHT, _camera_height));
+        var _x = _gui_scale * (gui_xanchor(GUI_ANCHOR.TOP_RIGHT, _gui_width)  - (13 * min(GUI_HP_ROW_LENGTH, ceil(_hp_max / GUI_HP_PER_SPRITE))));
+        var _y = _gui_scale * (gui_yanchor(GUI_ANCHOR.TOP_RIGHT, _gui_height));
         
         var _header = string(loca_translate("phantasia:gui.hp.header"), _hp, _hp_max);
         
@@ -119,8 +119,8 @@ if (_hp > 0) && (is_opened & IS_OPENED_BOOLEAN.GUI) && !(is_opened & IS_OPENED_B
             
             var _anchor_type = _data.anchor_type;
             
-            var _x = _gui_scale * (gui_xanchor(_anchor_type, _camera_width)  + _data.surface_xoffset - GUI_INVENTORY_SURFACE_PADDING);
-            var _y = _gui_scale * (gui_yanchor(_anchor_type, _camera_height) + _data.surface_yoffset - GUI_INVENTORY_SURFACE_PADDING);
+            var _x = _gui_scale * (gui_xanchor(_anchor_type, _gui_width)  + _data.surface_xoffset - GUI_INVENTORY_SURFACE_PADDING);
+            var _y = _gui_scale * (gui_yanchor(_anchor_type, _gui_height) + _data.surface_yoffset - GUI_INVENTORY_SURFACE_PADDING);
             
             var _surface_slot = _surface_inventory.surface_slot;
             
@@ -142,8 +142,8 @@ if (_hp > 0) && (is_opened & IS_OPENED_BOOLEAN.GUI) && !(is_opened & IS_OPENED_B
         
         var _anchor_type = _data.anchor_type;
         
-        var _x = _gui_scale * (gui_xanchor(_anchor_type, _camera_width)  + _data.surface_xoffset - GUI_INVENTORY_SURFACE_PADDING);
-        var _y = _gui_scale * (gui_yanchor(_anchor_type, _camera_height) + _data.surface_yoffset - GUI_INVENTORY_SURFACE_PADDING);
+        var _x = _gui_scale * (gui_xanchor(_anchor_type, _gui_width)  + _data.surface_xoffset - GUI_INVENTORY_SURFACE_PADDING);
+        var _y = _gui_scale * (gui_yanchor(_anchor_type, _gui_height) + _data.surface_yoffset - GUI_INVENTORY_SURFACE_PADDING);
         
         var _surface_slot = _surface_inventory.surface_slot;
         
@@ -176,8 +176,8 @@ if (_hp > 0) && (is_opened & IS_OPENED_BOOLEAN.GUI) && !(is_opened & IS_OPENED_B
         
         var _anchor_type = _data.anchor_type;
         
-        var _x = _gui_scale * (gui_xanchor(_anchor_type, _camera_width)  + _data.surface_xoffset - GUI_INVENTORY_SURFACE_PADDING);
-        var _y = _gui_scale * (gui_yanchor(_anchor_type, _camera_height) + _data.surface_yoffset - GUI_INVENTORY_SURFACE_PADDING);
+        var _x = _gui_scale * (gui_xanchor(_anchor_type, _gui_width)  + _data.surface_xoffset - GUI_INVENTORY_SURFACE_PADDING);
+        var _y = _gui_scale * (gui_yanchor(_anchor_type, _gui_height) + _data.surface_yoffset - GUI_INVENTORY_SURFACE_PADDING);
         
         var _surface_slot = _surface_inventory.surface_slot;
         
