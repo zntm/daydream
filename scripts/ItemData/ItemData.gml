@@ -62,22 +62,8 @@ enum INVENTORY_SLOT_TYPE {
     CRAFTABLE         = 1 << 6
 }
 
-function ItemData(_namespace, _id) constructor
+function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
 {
-    ___namespace = _namespace;
-    
-    static get_namespace = function()
-    {
-        return ___namespace;
-    }
-    
-    ___id = _id;
-    
-    static get_id = function()
-    {
-        return ___id;
-    }
-    
     ___type = 0;
     
     static set_type = function(_value)

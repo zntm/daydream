@@ -9,22 +9,8 @@ enum CREATURE_MOVEMENT_TYPE {
     SWIM
 }
 
-function CreatureData(_namespace, _id, _hp, _hostility_type, _movement_type) constructor
+function CreatureData(_namespace, _id, _hp, _hostility_type, _movement_type) : ParentData(_namespace, _id) constructor
 {
-    ___namespace = _namespace;
-    
-    static get_namespace = function()
-    {
-        return ___namespace;
-    }
-    
-    ___id = _id;
-    
-    static get_id = function()
-    {
-        return ___id;
-    }
-    
     ___hp = _hp;
     
     static get_hp = function(_hp)

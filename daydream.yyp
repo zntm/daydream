@@ -685,6 +685,7 @@
     {"id":{"name":"Noise","path":"scripts/Noise/Noise.yy",},},
     {"id":{"name":"normalize","path":"scripts/normalize/normalize.yy",},},
     {"id":{"name":"number_format_thousandths","path":"scripts/number_format_thousandths/number_format_thousandths.yy",},},
+    {"id":{"name":"ParentData","path":"scripts/ParentData/ParentData.yy",},},
     {"id":{"name":"ParticleData","path":"scripts/ParticleData/ParticleData.yy",},},
     {"id":{"name":"player_build","path":"scripts/player_build/player_build.yy",},},
     {"id":{"name":"player_harvest","path":"scripts/player_harvest/player_harvest.yy",},},
