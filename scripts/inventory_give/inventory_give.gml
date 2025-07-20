@@ -80,13 +80,15 @@ function inventory_give(_x, _y, _item, _text = true)
         
         if (_text)
         {
+            var _loca = loca_translate($"{_data.get_namespace()}:item.{_data.get_id()}.name");
+            
             if (_pickup_amount > 1)
             {
-                spawn_floating_text(_x, _y, string(loca_translate("phantasia:gui.item_tooltip.header.amount"), _id, _pickup_amount), 0, -2.4);
+                spawn_floating_text(_x, _y, string(loca_translate("phantasia:gui.item_tooltip.header.amount"), _loca, _pickup_amount), 0, -3.4);
             }
             else
             {
-                spawn_floating_text(_x, _y, string(loca_translate("phantasia:gui.item_tooltip.header"), _id), 0, -2.4);
+            	spawn_floating_text(_x, _y, string(loca_translate("phantasia:gui.item_tooltip.header"), _loca), 0, -3.4);
             }
         }
     }

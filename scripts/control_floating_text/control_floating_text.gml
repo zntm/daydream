@@ -20,7 +20,7 @@ function control_floating_text(_dt)
     var _string_width  = string_width(text) / 2;
     var _string_height = string_height(text);
     
-    if (!rectangle_in_rectangle(x - _string_width, y - _string_height, x + _string_width, y, _camera_x, _camera_y, _camera_x + _camera_width, _camera_y + _camera_height))
+    if (!rectangle_in_rectangle(x - _string_width, y - _string_height, x + _string_width, y + _string_height, _camera_x, _camera_y, _camera_x + _camera_width, _camera_y + _camera_height))
     {
         instance_destroy();
         

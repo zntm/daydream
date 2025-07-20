@@ -13,7 +13,7 @@ function init_item(_directory, _namespace)
         
         var _json = tag_value_parse(buffer_load_json($"{_directory}/{_file}/data.json"));
         
-        var _item_data = new ItemData();
+        var _item_data = new ItemData(_namespace, _file);
         
         _item_data.set_type(_json.type);
         _item_data.set_rarity(_json[$ "rarity"]);
