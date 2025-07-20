@@ -112,7 +112,7 @@ function player_build(_x, _y)
         }
     }
     
-    var _tile = new Tile(_id);
+    var _tile = new Tile(_data.get_placement_id() ?? _id);
     
     if (_data.is_foliage())
     {

@@ -228,6 +228,13 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
             {
                 ___placement_requirement = _requirement;
             }
+            
+            var _id = _placement[$ "id"];
+            
+            if (_id != undefined)
+            {
+                ___placement_id = _id;
+            }
         }
         
         return self;
@@ -246,6 +253,11 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     static get_placement_requirement = function()
     {
         return self[$ "___placement_requirement"];
+    }
+    
+    static get_placement_id = function()
+    {
+        return self[$ "___placement_id"];
     }
     
     static set_harvest = function(_harvest)
