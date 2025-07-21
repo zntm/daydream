@@ -45,10 +45,10 @@ function CreatureData(_namespace, _id, _hp, _hostility_type, _movement_type) : P
         {
             if (_variant != undefined)
             {
-                return _sprite[$ _variant] ?? _sprite[$ "generic"];
+                return _sprite[$ _variant] ?? _sprite[$ "default"];
             }
             
-            return _sprite[$ "generic"];
+            return _sprite[$ "default"];
         }
         
         return _sprite;

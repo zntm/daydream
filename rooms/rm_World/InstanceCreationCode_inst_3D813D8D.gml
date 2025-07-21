@@ -3,10 +3,6 @@ on_window_resize = function()
     carbasa_repair_all();
     
     var _gui_scale = global.gui_scale;
-    /*
-    global.gui_width  = round(_gui_scale * global.window_width);
-    global.gui_height = round(_gui_scale * global.window_height);
-    */
     
     var _gui_width  = round(_gui_scale * global.window_width);
     var _gui_height = round(_gui_scale * global.window_height);
@@ -37,7 +33,7 @@ on_window_resize = function()
     {
         var _inst = _chunk_in_view[i];
         
-        _inst.is_surface_lighting_refresh = true;
+        _inst.boolean |= CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH;
     }
 }
 
