@@ -19,16 +19,14 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
         {
             var _inst = chunk_in_view[i];
             
-            if (!_inst.is_generated) || (!_inst.is_surface_lighting_refresh) continue;
+            if !(_inst.boolean & CHUNK_BOOLEAN.GENERATED) || !(_inst.boolean & CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH) continue;
             
-            _inst.is_surface_lighting_refresh = false;
+            _inst.boolean ^= CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH;
             
             if (!surface_exists(_inst.surface_lighting))
             {
                 _inst.surface_lighting = surface_create(CHUNK_SIZE + RENDER_LIGHTING_PADDING, CHUNK_SIZE + RENDER_LIGHTING_PADDING, surface_r8unorm);
             }
-            
-            gpu_set_blendmode(bm_add);
             
             surface_set_target(_inst.surface_lighting);
             draw_clear_alpha(c_black, 1);
@@ -52,8 +50,6 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
             }
             
             surface_reset_target();
-            
-            gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_src_alpha, bm_one);
         }
         
         if (!surface_exists(surface_lighting))
@@ -70,7 +66,7 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
         {
             var _inst = chunk_in_view[i];
             
-            if (!_inst.is_generated) continue;
+            if !(_inst.boolean & CHUNK_BOOLEAN.GENERATED) continue;
             
             if (surface_exists(_inst.surface_lighting))
             {

@@ -16,7 +16,7 @@ function control_chunk_foliage(_dt, _player_x, _player_y, _camera_x, _camera_y, 
     {
         var _inst = chunk_in_view[i];
         
-        if (!instance_exists(_inst)) || (!_inst.is_generated) continue;
+        if (!instance_exists(_inst)) || !(_inst.boolean & CHUNK_BOOLEAN.GENERATED) continue;
         
         var _chunk_display = _inst.chunk_display;
         var _chunk_count   = _inst.chunk_count;
@@ -37,7 +37,7 @@ function control_chunk_foliage(_dt, _player_x, _player_y, _camera_x, _camera_y, 
                     
                     if (_tile == TILE_EMPTY) || (!_item_data[$ _tile.get_id()].is_foliage()) continue;
                     
-                    if (chance(0.1))
+                    if (chance(0.1 * _dt * GAME_TICK))
                     {
                         _inst.chunk_skew_back_to[@ (m << CHUNK_SIZE_BIT) | l] = random_range(0, _wind) * (TILE_SIZE / 2);
                         

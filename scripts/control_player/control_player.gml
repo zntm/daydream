@@ -32,7 +32,7 @@ function control_player(_dt)
             obj_Game_Control.chunk_in_view_x = _xstart;
             obj_Game_Control.chunk_in_view_y = _ystart;
             
-            control_refresh_chunk_in_view();
+            control_update_chunk_in_view();
         }
     }
 }

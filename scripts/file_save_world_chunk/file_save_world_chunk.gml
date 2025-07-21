@@ -48,8 +48,10 @@ function file_save_world_chunk(_world_save_data, _inst)
     
     var _chunk_display = _inst.chunk_display;
     
-    buffer_write(_buffer, buffer_bool, _inst.is_generated);
-    buffer_write(_buffer, buffer_u16, (_inst.is_generated << CHUNK_DEPTH) | _chunk_display);
+    var _is_generated = !!(_inst.boolean & CHUNK_BOOLEAN.GENERATED);
+    
+    buffer_write(_buffer, buffer_bool, _is_generated);
+    buffer_write(_buffer, buffer_u16, _chunk_display);
     
     if (_chunk_display)
     {

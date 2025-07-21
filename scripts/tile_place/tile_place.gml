@@ -14,7 +14,7 @@ function tile_place(_x, _y, _z, _tile)
     {
         _inst = instance_create_layer(_chunk_x, _chunk_y, "Instances", obj_Chunk);
         
-        control_refresh_chunk_in_view();
+        control_update_chunk_in_view();
     }
     
     var _index = tile_index(_x, _y, _z);

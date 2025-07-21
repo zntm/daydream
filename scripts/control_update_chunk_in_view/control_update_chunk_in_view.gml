@@ -1,4 +1,4 @@
-function control_refresh_chunk_in_view()
+function control_update_chunk_in_view()
 {
     var _world_height = global.world_data[$ global.world_save_data.dimension].get_world_height();
     

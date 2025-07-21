@@ -19,12 +19,7 @@ function spawn_particle(_x, _y, _id, _colour = c_white)
         
         if (_data.get_xspeed_type() == PARTICLE_MOVEMENT_TYPE.REFERENCE)
         {
-            var _xspeed = _data.get_xspeed();
-            
-            if (_xspeed == "phantasia:weather_wind")
-            {
-                _xspeed = global.world_save_data.weather_wind;
-            }
+            var _xspeed = world_get_reference(_data.get_xspeed());
             
             xvelocity = (smart_value(_xspeed) + smart_value(_data.get_xspeed_offset())) * smart_value(_data.get_xspeed_multiplier());
         }
@@ -35,12 +30,7 @@ function spawn_particle(_x, _y, _id, _colour = c_white)
         
         if (_data.get_yspeed_type() == PARTICLE_MOVEMENT_TYPE.REFERENCE)
         {
-            var _yspeed = _data.get_yspeed();
-            
-            if (_yspeed == "phantasia:weather_wind")
-            {
-                _yspeed = global.world_save_data.weather_wind;
-            }
+            var _yspeed = world_get_reference(_data.get_yspeed());
             
             yvelocity = (smart_value(_yspeed) + smart_value(_data.get_yspeed_offset())) * smart_value(_data.get_yspeed_multiplier());
         }

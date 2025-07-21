@@ -39,7 +39,7 @@ function file_load_world_chunk(_world_save_data, _inst)
     
     buffer_seek(_buffer, buffer_seek_start, _seek);
     
-    _inst.is_generated = buffer_read(_buffer, buffer_bool);
+    _inst.boolean |= ((buffer_read(_buffer, buffer_bool)) ? CHUNK_BOOLEAN.GENERATED : 0);
     
     var _chunk_display = buffer_read(_buffer, buffer_u16);
     

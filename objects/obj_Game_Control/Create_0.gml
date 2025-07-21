@@ -160,16 +160,10 @@ global.camera_y_real = _camera_y;
 
 global.gui_scale = _gui_scale;
 
-global.gui_width  = _gui_width;
-global.gui_height = _gui_height;
-
-display_set_gui_size(_gui_width, _gui_height);
+control_update_gui_size(_gui_width, _gui_height);
 
 control_camera_pos(_camera_x, _camera_y);
 camera_set_view_size(view_camera[0], _camera_width, _camera_height);
-
-obj_Menu_Control_Render.xscale = global.window_width  / global.camera_width;
-obj_Menu_Control_Render.yscale = global.window_height / global.camera_height;
 
 init_inventory_instance();
 

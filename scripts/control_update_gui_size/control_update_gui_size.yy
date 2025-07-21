@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"control_refresh_chunk_in_view",
+  "%Name":"control_update_gui_size",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"control_refresh_chunk_in_view",
+  "name":"control_update_gui_size",
   "parent":{
     "name":"Control",
     "path":"folders/Scripts/Control.yy",

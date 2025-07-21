@@ -16,8 +16,13 @@ chunk_count = array_create(CHUNK_DEPTH, 0);
 
 chunk_display = 0;
 
-is_generated = false;
-is_surface_lighting_refresh = true;
+enum CHUNK_BOOLEAN {
+    GENERATED                = 1 << 0,
+    SURFACE_LIGHTING_REFRESH = 1 << 1
+}
+
+boolean =
+    CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH;
 
 surface_lighting = -1;
 

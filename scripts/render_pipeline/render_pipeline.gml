@@ -35,7 +35,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
         {
             var _inst = chunk_in_view[i];
             
-            if (!_inst.is_generated) || !(_inst.chunk_display & _bitmask) || (_inst.chunk_count[_z] <= 0) continue;
+            if !(_inst.boolean & CHUNK_BOOLEAN.GENERATED) || !(_inst.chunk_display & _bitmask) || (_inst.chunk_count[_z] <= 0) continue;
             
             var _xcenter = _inst.xcenter;
             var _ycenter = _inst.ycenter;

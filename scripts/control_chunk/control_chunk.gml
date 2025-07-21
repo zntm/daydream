@@ -39,18 +39,16 @@ function control_chunk(_player_x, _player_y, _camera_x, _camera_y, _camera_width
     
     if (_refresh)
     {
-        control_refresh_chunk_in_view();
+        control_update_chunk_in_view();
     }
-    
-    var _xorshift_seed_start = ceil(global.world_save_data.seed / 0x8000);
     
     for (var i = 0; i < chunk_in_view_length; ++i)
     {
         var _inst = chunk_in_view[i];
         
-        if (_inst.is_generated) continue;
+        if (_inst.boolean & CHUNK_BOOLEAN.GENERATED) continue;
         
-        _inst.is_generated = true;
+        _inst.boolean |= CHUNK_BOOLEAN.GENERATED;
         
         var _chunk = _inst.chunk;
         
