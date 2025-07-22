@@ -47,5 +47,19 @@
         "jump_height": 4.6,
         "jump_time": 10,
         "movement_speed": 0.5
+    },
+    "sfx": {
+        "interval": {
+            "type": "random",
+            "values": {
+                "min": 2,
+                "max": 6
+            }
+        },
+        "id": {
+            "death": "phantasia:creature.chicken.hurt",
+            "hurt": "phantasia:creature.chicken.hurt",
+            "idle": "phantasia:creature.chicken.idle"
+        }
     }
 }
