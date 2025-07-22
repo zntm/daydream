@@ -4,7 +4,41 @@ function control_player(_dt)
     
     control_physics_input(_dt, id);
     
+    var _on_ground = tile_meeting(x, y + 1);
+    
     control_physics_creative(_dt, id);
+    
+    if (y > ylast)
+    {
+        if (!_on_ground) && (tile_meeting(x, y + 1))
+        {
+            var _difference = y - ylast;
+            
+            var _value = floor(1 * (power(round(_difference / TILE_SIZE) / 0.8, 1.25) - 12));
+            
+            if (_value >= 0)
+            {
+                obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.HP;
+                
+                hp -= _value;
+                
+                ylast = y;
+                
+                spawn_floating_text(x, y, _value, 0, -3.9);
+                /*
+                ylast = y;
+                
+                hp_add(id, -_value, DAMAGE_TYPE.FALL);
+                
+                return true;
+                */
+            }
+        }
+    }
+    else
+    {
+        ylast = y;
+    }
     
     var _refresh = (xvelocity != 0) || (yvelocity != 0);
     
@@ -16,10 +50,12 @@ function control_player(_dt)
     
     if (hp < hp_max)
     {
-        timer_regeneration -= (_dt / GAME_TICK) * (1 + (saturation * 0.08));
+        timer_regeneration -= (_dt / GAME_TICK) * (1 + min(0.68, saturation * 0.08));
         
         if (timer_regeneration <= 0)
         {
+            obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.HP;
+            
             timer_regeneration = 2.4;
             
             ++hp;
@@ -47,7 +83,7 @@ function control_player(_dt)
         if (_xstart != obj_Game_Control.chunk_in_view_x) || (_ystart != obj_Game_Control.chunk_in_view_y)
         {
             obj_Game_Control.chunk_in_view_x = _xstart;
-            obj_Game_Control.chunk_in_view_y = _ystart;
+            obj_Game_Control.chunk_in_view_y = _ystart;                                              
             
             control_update_chunk_in_view();
         }

@@ -1,4 +1,23 @@
 {
+    "creature.chicken.hurt": {
+        "asset": [
+            "phantasia:creature/chicken/hurt0",
+            "phantasia:creature/chicken/hurt1",
+            "phantasia:creature/chicken/hurt2",
+            "phantasia:creature/chicken/hurt3"
+        ],
+        "pitch": "#phantasia:sfx/generic/pitch_default",
+        "subtitle": "phantasia:sfx.creature.chicken.hurt"
+    },
+    "creature.chicken.idle": {
+        "asset": [
+            "phantasia:creature/chicken/idle0",
+            "phantasia:creature/chicken/idle1",
+            "phantasia:creature/chicken/idle2"
+        ],
+        "pitch": "#phantasia:sfx/generic/pitch_default",
+        "subtitle": "phantasia:sfx.creature.chicken.idle"
+    },
     "explosion.large": {
         "asset": [
             "phantasia:explosion/large0",

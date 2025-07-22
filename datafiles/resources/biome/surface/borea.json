@@ -119,6 +119,23 @@
                 "max": 890
             },
             "tile": "#phantasia:tile/creature_spawn/animal"
+        },
+        {
+            "id": "phantasia:chicken",
+            "variant": "cold",
+            "amount": {
+                "type": "irandom",
+                "values": {
+                    "min": 1,
+                    "max": 2
+                }
+            },
+            "chance": 0.02,
+            "time": {
+                "min": 0,
+                "max": 890
+            },
+            "tile": "#phantasia:tile/creature_spawn/animal"
         }
     ],
     "foliage": [

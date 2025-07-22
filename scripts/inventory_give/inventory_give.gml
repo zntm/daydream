@@ -84,11 +84,11 @@ function inventory_give(_x, _y, _item, _text = true)
             
             if (_pickup_amount > 1)
             {
-                spawn_floating_text(_x, _y, string(loca_translate("phantasia:gui.item_tooltip.header.amount"), _loca, _pickup_amount), 0, -3.4);
+                spawn_floating_text(_x, _y, string(loca_translate("phantasia:gui.item_tooltip.header.amount"), _loca, _pickup_amount), 0, -3.9);
             }
             else
             {
-            	spawn_floating_text(_x, _y, string(loca_translate("phantasia:gui.item_tooltip.header"), _loca), 0, -3.4);
+            	spawn_floating_text(_x, _y, string(loca_translate("phantasia:gui.item_tooltip.header"), _loca), 0, -3.9);
             }
         }
     }

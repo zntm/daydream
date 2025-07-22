@@ -1,5 +1,7 @@
 function spawn_floating_text(_x, _y, _text, _xvelocity = 0, _yvelocity = 0, _xscale = 0.5, _yscale = 0.5, _rotation = 0, _colour = c_white)
 {
+    _text = string(_text);
+    
     var _camera_x = global.camera_x;
     var _camera_y = global.camera_y;
     

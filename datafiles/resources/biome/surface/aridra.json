@@ -65,7 +65,19 @@
             }
 		}
 	},
-    "creature": [],
+    "creature": [
+        {
+            "id": "phantasia:chicken",
+            "variant": "warm",
+            "amount": 1,
+            "chance": 0.01,
+            "time": {
+                "min": 0,
+                "max": 890
+            },
+            "tile": "#phantasia:tile/creature_spawn/animal"
+        }
+    ],
     "foliage": [
         {
             "id": "phantasia:dead_bush",
