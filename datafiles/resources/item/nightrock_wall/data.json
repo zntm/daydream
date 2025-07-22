@@ -20,13 +20,13 @@
         },
         "type": "pickaxe"
     },
-    "drop": {
-        "item": [
-            {
-                "id": "phantasia:nightrock_wall"
+    "drop": [
+        {
+            "id": "phantasia:nightrock_wall",
+            "condition": {
+                "tool": "pickaxe"
             }
-        ],
-        "tool": "pickaxe"
-    },
+        }
+    ],
     "sfx": "#phantasia:tile/sfx/nightrock"
 }

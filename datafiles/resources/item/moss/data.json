@@ -18,12 +18,10 @@
             "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
         }
     },
-    "drop": {
-        "item": [
-            {
-                "id": "phantasia:moss"
-            }
-        ]
-    },
+    "drop": [
+        {
+            "id": "phantasia:moss"
+        }
+    ],
     "sfx": "#phantasia:tile/sfx/foliage"
 }

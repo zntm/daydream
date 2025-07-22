@@ -19,12 +19,10 @@
     "placement": {
         "requirement": "#phantasia:tile/placeable/requirement_plant"
     },
-    "drop": {
-        "item": [
-            {
-                "id": "phantasia:dendrobium"
-            }
-        ]
-    },
+    "drop": [
+        {
+            "id": "phantasia:dendrobium"
+        }
+    ],
     "sfx": "#phantasia:tile/sfx/foliage"
 }

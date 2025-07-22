@@ -100,22 +100,30 @@ function player_harvest(_dt, _x, _y)
             surface_refresh |= ((is_opened & IS_OPENED_BOOLEAN.INVENTORY) ? SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK : SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR);
         }
         
-        var _drop_tool = _data.get_drop_tool();
+        var _drop_length = _data.get_drop_length();
         
-        if (!_drop_tool) || ((_item != INVENTORY_EMPTY) && (_drop_tool & _data2.get_type()))
+        for (var i = 0; i < _drop_length; ++i)
         {
-            var _drop_length = _data.get_drop_item_length();
+            var _drop_item = _data.get_drop(i);
             
-            for (var i = 0; i < _drop_length; ++i)
+            var _chance = _drop_item[$ "chance"];
+            
+            if (_chance != undefined) && (!chance(_chance)) continue;
+            
+            var _condition = _drop_item[$ "condition"];
+            
+            if (_condition != undefined)
             {
-                var _drop_item = _data.get_drop_item(i);
+                var _tool = _condition[$ "tool"];
                 
-                var _chance = _drop_item[$ "chance"];
+                if (_tool != undefined) && ((_item == INVENTORY_EMPTY) || !(_tool & _data2.get_type())) continue;
                 
-                if (_chance != undefined) && (!chance(_chance)) continue;
+                var _index = _condition[$ "index"];
                 
-                spawn_item_drop(_x * TILE_SIZE, _y * TILE_SIZE, new Inventory(_drop_item.id, _drop_item[$ "amount"] ?? 1));
+                if (_index != undefined) && (_tile.get_index() != _index) continue;
             }
+            
+            spawn_item_drop(_x * TILE_SIZE, _y * TILE_SIZE, new Inventory(_drop_item.id, _drop_item[$ "amount"] ?? 1));
         }
         
         var _particle_colour = _data.get_harvest_particle_colour();

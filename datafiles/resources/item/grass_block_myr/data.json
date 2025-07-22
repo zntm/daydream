@@ -18,12 +18,10 @@
             "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
         }
     },
-    "drop": {
-        "item": [
-            {
-                "id": "phantasia:dirt"
-            }
-        ]
-    },
+    "drop": [
+        {
+            "id": "phantasia:dirt"
+        }
+    ],
     "sfx": "#phantasia:tile/sfx/grass_block"
 }

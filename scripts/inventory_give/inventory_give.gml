@@ -3,8 +3,6 @@ function inventory_give(_x, _y, _item, _text = true)
     var _id = _item.get_id();
     var _amount = _item.get_amount();
     
-    // var _state = _item.get_state();
-    
     var _pickup_amount = 0;
     
     var _data = global.item_data[$ _id];

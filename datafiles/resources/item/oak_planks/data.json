@@ -18,12 +18,10 @@
         },
         "type": "axe"
     },
-    "drop": {
-        "item": [
-            {
-                "id": "phantasia:oak_planks"
-            }
-        ]
-    },
+    "drop": [
+        {
+            "id": "phantasia:oak_planks"
+        }
+    ],
     "sfx": "#phantasia:tile/sfx/wood"
 }

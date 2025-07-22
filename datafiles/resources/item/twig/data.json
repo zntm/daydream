@@ -22,12 +22,10 @@
             }
         }
     },
-    "drop": {
-        "item": [
-            {
-                "id": "phantasia:twig"
-            }
-        ]
-    },
+    "drop": [
+        {
+            "id": "phantasia:twig"
+        }
+    ],
     "sfx": "#phantasia:tile/sfx/wood"
 }

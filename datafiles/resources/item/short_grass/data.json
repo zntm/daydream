@@ -25,13 +25,11 @@
             }
         }
     },
-    "drop": {
-        "item": [
-            {
-                "id": "phantasia:wheat_seeds",
-                "chance": 0.02
-            }
-        ]
-    },
+    "drop": [
+        {
+            "id": "phantasia:wheat_seeds",
+            "chance": 0.02
+        }
+    ],
     "sfx": "#phantasia:tile/sfx/foliage"
 }

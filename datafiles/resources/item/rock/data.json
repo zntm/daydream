@@ -22,12 +22,10 @@
             }
         }
     },
-    "drop": {
-        "item": [
-            {
-                "id": "phantasia:rock"
-            }
-        ]
-    },
+    "drop": [
+        {
+            "id": "phantasia:rock"
+        }
+    ],
     "sfx": "#phantasia:tile/sfx/stone"
 }

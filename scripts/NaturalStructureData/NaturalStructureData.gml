@@ -256,3 +256,63 @@ global.natural_structure_data[$ "phantasia:tree/generic"] = new NaturalStructure
         
         return _data;
     });
+
+enum NATURAL_STRUCTURE_TALL_PLANT {
+    USE_STRUCTURE_VOID,
+    TILE_TOP,
+    INDEX_TOP,
+    TILE_MIDDLE,
+    INDEX_MIDDLE,
+    TILE_BOTTOM,
+    INDEX_BOTTOM,
+    LENGTH
+}
+
+global.natural_structure_data[$ "phantasia:tall_plant"] = new NaturalStructureData()
+    .set_parser(function(_parameter)
+    {
+        var _data = array_create(NATURAL_STRUCTURE_TALL_PLANT.LENGTH);
+        
+        _data[@ NATURAL_STRUCTURE_TALL_PLANT.USE_STRUCTURE_VOID] = _parameter[$ "use_structure_void"] ?? true;
+        
+        var _tile_top = _parameter.tile_top;
+        var _index_top = _tile_top[$ "index"];
+        
+        _data[@ NATURAL_STRUCTURE_TALL_PLANT.TILE_TOP] = _tile_top.id;
+        _data[@ NATURAL_STRUCTURE_TALL_PLANT.INDEX_TOP] = ((_index_top != undefined) ? smart_value_parse(_index_top) : 0);
+        
+        var _tile_middle = _parameter.tile_middle;
+        var _index_middle = _tile_middle[$ "index"];
+        
+        _data[@ NATURAL_STRUCTURE_TALL_PLANT.TILE_MIDDLE] = _tile_middle.id;
+        _data[@ NATURAL_STRUCTURE_TALL_PLANT.INDEX_MIDDLE] = ((_index_middle != undefined) ? smart_value_parse(_index_middle) : 0);
+        
+        var _tile_bottom = _parameter.tile_bottom;
+        var _index_bottom = _tile_bottom[$ "index"];
+        
+        _data[@ NATURAL_STRUCTURE_TALL_PLANT.TILE_BOTTOM] = _tile_bottom.id;
+        _data[@ NATURAL_STRUCTURE_TALL_PLANT.INDEX_BOTTOM] = ((_index_bottom != undefined) ? smart_value_parse(_index_bottom) : 0);
+        
+        return _data;
+    })
+    .set_function(function(_x, _y, _width, _height, _seed, _parameter, _item_data)
+    {
+        var _rectangle = _width * _height;
+        var _data = array_create(_rectangle * CHUNK_DEPTH, (_parameter[NATURAL_STRUCTURE_TALL_PLANT.USE_STRUCTURE_VOID] ? TILE_STRUCTURE_VOID : TILE_EMPTY));
+        
+        var _depth = _rectangle * CHUNK_DEPTH_FOLIAGE;
+        
+        _data[@ 0 + (0 * _width) + _depth] = new Tile(_parameter[NATURAL_STRUCTURE_TALL_PLANT.TILE_TOP], _item_data)
+            .set_index(smart_value(_parameter[NATURAL_STRUCTURE_TALL_PLANT.INDEX_TOP]));
+        
+        _data[@ 0 + ((_height - 1) * _width) + _depth] = new Tile(_parameter[NATURAL_STRUCTURE_TALL_PLANT.TILE_BOTTOM], _item_data)
+            .set_index(smart_value(_parameter[NATURAL_STRUCTURE_TALL_PLANT.INDEX_BOTTOM]));
+        
+        for (var i = 1; i < _height - 1; ++i)
+        {
+            _data[@ 0 + (i * _width) + _depth] = new Tile(_parameter[NATURAL_STRUCTURE_TALL_PLANT.TILE_MIDDLE], _item_data)
+                .set_index(smart_value(_parameter[NATURAL_STRUCTURE_TALL_PLANT.INDEX_MIDDLE]));
+        }
+        
+        return _data;
+    });

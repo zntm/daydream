@@ -15,13 +15,13 @@
         },
         "type": "pickaxe"
     },
-    "drop": {
-        "item": [
-            {
-                "id": "phantasia:furnace"
+    "drop": [
+        {
+            "id": "phantasia:furnace",
+            "condition": {
+                "tool": "pickaxe"
             }
-        ],
-        "tool": "pickaxe"
-    },
+        }
+    ],
     "sfx": "#phantasia:tile/sfx/stone"
 }

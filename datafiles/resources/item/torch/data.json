@@ -13,13 +13,11 @@
             "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
         }
     },
-    "drop": {
-        "item": [
-            {
-                "id": "phantasia:torch"
-            }
-        ]
-    },
+    "drop": [
+        {
+            "id": "phantasia:torch"
+        }
+    ],
     "animation_type": "increment",
     "sfx": "#phantasia:tile/sfx/wood"
 }

@@ -15,12 +15,10 @@
         },
         "type": "axe"
     },
-    "drop": {
-        "item": [
-            {
-                "id": "phantasia:oak_workbench"
-            }
-        ]
-    },
+    "drop": [
+        {
+            "id": "phantasia:oak_workbench"
+        }
+    ],
     "sfx": "#phantasia:tile/sfx/wood"
 }

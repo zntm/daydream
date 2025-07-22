@@ -186,6 +186,11 @@
             "placeable_on": "#phantasia:tile/placeable/plant_on"
         },
         {
+            "id": "phantasia:sunflower",
+            "chance": 0.01,
+            "placeable_on": "#phantasia:tile/placeable/plant_on"
+        },
+        {
             "id": "phantasia:tree/oak",
             "chance": 0.06,
             "placeable_on": "#phantasia:tile/placeable/plant_on"

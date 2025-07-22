@@ -19,12 +19,10 @@
     "placement": {
         "requirement": "#phantasia:tile/placeable/requirement_plant"
     },
-    "drop": {
-        "item": [
-            {
-                "id": "phantasia:rose"
-            }
-        ]
-    },
+    "drop": [
+        {
+            "id": "phantasia:rose"
+        }
+    ],
     "sfx": "#phantasia:tile/sfx/foliage"
 }

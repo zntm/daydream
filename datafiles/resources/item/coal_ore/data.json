@@ -19,13 +19,13 @@
         },
         "type": "pickaxe"
     },
-    "drop": {
-        "item": [
-            {
-                "id": "phantasia:coal"
+    "drop": [
+        {
+            "id": "phantasia:coal",
+            "condition": {
+                "tool": "pickaxe"
             }
-        ],
-        "tool": "pickaxe"
-    },
+        }
+    ],
     "sfx": "#phantasia:tile/sfx/stone"
 }

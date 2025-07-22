@@ -2,13 +2,10 @@
     "type": "untouchable",
     "sprite": {
         "xoffset": 9,
-        "yoffset": 10,
-        "length": 1
+        "yoffset": 8,
+        "length": 4
     },
     "inventory": "#phantasia:item/generic/inventory_default",
-    "properties": [
-        "phantasia:is_foliage"
-    ],
     "harvest": {
         "hardness": 0.38,
         "particle": {
@@ -21,7 +18,10 @@
     },
     "drop": [
         {
-            "id": "phantasia:bluebells"
+            "id": "phantasia:sunflower",
+            "condition": {
+                "index": 3
+            }
         }
     ],
     "sfx": "#phantasia:tile/sfx/foliage"
