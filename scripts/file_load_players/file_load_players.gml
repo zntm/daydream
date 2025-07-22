@@ -55,6 +55,8 @@ function file_load_players()
         var _hp = buffer_read(_buffer, buffer_u16);
         var _hp_max = buffer_read(_buffer, buffer_u16);
         
+        var _saturation = buffer_read(_buffer, buffer_u16);
+        
         var _effects = {}
         
         var _effects_length = buffer_read(_buffer, buffer_u16);

@@ -14,6 +14,23 @@ function control_player(_dt)
     
     control_camera_pos(x - (global.camera_width / 2), y - (global.camera_height / 2), false, _dt);
     
+    if (hp < hp_max)
+    {
+        timer_regeneration -= (_dt / GAME_TICK) * (1 + (saturation * 0.08));
+        
+        if (timer_regeneration <= 0)
+        {
+            timer_regeneration = 2.4;
+            
+            ++hp;
+            
+            if (saturation > 0)
+            {
+                --saturation;
+            }
+        }
+    }
+    
     if (_refresh)
     {
         obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.LIGHTING;
