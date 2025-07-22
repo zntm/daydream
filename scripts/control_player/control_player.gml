@@ -16,7 +16,7 @@ function control_player(_dt)
             
             var _value = floor(1 * (power(round(_difference / TILE_SIZE) / 0.8, 1.25) - 12));
             
-            if (_value >= 0)
+            if (_value > 0)
             {
                 obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.HP;
                 
