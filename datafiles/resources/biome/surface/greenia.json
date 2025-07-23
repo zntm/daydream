@@ -186,8 +186,8 @@
             "placeable_on": "#phantasia:tile/placeable/plant_on"
         },
         {
-            "id": "phantasia:sunflower",
-            "chance": 0.05,
+            "id": "phantasia:tall_foliage/sunflower",
+            "chance": 0.04,
             "placeable_on": "#phantasia:tile/placeable/plant_on"
         },
         {

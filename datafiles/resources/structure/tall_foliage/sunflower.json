@@ -1,0 +1,50 @@
+{
+	"width": 1,
+	"height": {
+        "type": "irandom",
+        "values": {
+            "min": 3,
+            "max": 6
+        }
+    },
+	"placement": {
+		"type": "floor",
+		"offset": {
+			"x": 0,
+			"y": "-height"
+		},
+		"if_clear": [
+			{
+				"offset": {
+					"x": 1,
+					"y": "-height"
+				},
+				"width": "width",
+				"height": "height"
+			}
+		]
+	},
+	"data": {
+		"function": "phantasia:tall_foliage",
+		"parameter": {
+			"tile_top": {
+				"id": "phantasia:sunflower",
+                "index": 0
+			},
+			"tile_middle": {
+                "id": "phantasia:sunflower",
+                "index": {
+                    "type": "choose",
+                    "values": [
+                        2,
+                        3
+                    ]
+                }
+            },
+            "tile_bottom": {
+                "id": "phantasia:sunflower",
+                "index": 1
+            }
+		}
+	}
+}

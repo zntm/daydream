@@ -25,24 +25,21 @@
 		]
 	},
 	"data": {
-		"function": "phantasia:tall_plant",
+		"function": "phantasia:tall_foliage",
 		"parameter": {
 			"tile_top": {
-				"id": "phantasia:sunflower",
-                "index": 0
+				"id": "phantasia:cattail",
+                "index": 2
 			},
 			"tile_middle": {
-                "id": "phantasia:sunflower",
+                "id": "phantasia:cattail",
                 "index": {
                     "type": "choose",
-                    "values": [
-                        2,
-                        3
-                    ]
+                    "values": 1
                 }
             },
             "tile_bottom": {
-                "id": "phantasia:sunflower",
+                "id": "phantasia:cattail",
                 "index": 1
             }
 		}

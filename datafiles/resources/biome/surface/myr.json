@@ -110,6 +110,11 @@
     "structure": [
         {
             "id": "phantasia:moss_clump",
+            "chance": 0.02,
+            "placeable_on": "#phantasia:tile/placeable/plant_on"
+        },
+        {
+            "id": "phantasia:tall_foliage/cattail",
             "chance": 0.01,
             "placeable_on": "#phantasia:tile/placeable/plant_on"
         }
