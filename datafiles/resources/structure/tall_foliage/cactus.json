@@ -1,0 +1,75 @@
+{
+	"width": 1,
+	"height": {
+        "type": "irandom",
+        "values": {
+            "min": 4,
+            "max": 8
+        }
+    },
+	"placement": {
+		"type": "floor",
+		"offset": {
+			"x": 0,
+			"y": "-height"
+		},
+		"if_clear": [
+			{
+				"offset": {
+					"x": 1,
+					"y": "-height"
+				},
+				"width": "width",
+				"height": "height"
+			}
+		]
+	},
+	"data": {
+		"function": "phantasia:tall_foliage",
+		"parameter": {
+			"tile_crown": {
+				"id": {
+					"type": "choose_weighted",
+					"values": [
+						{
+							"value": null,
+							"weight": 3
+						},
+						{
+							"value": "phantasia:cactus_flower",
+							"weight": 2
+						}
+					]
+				}
+			},
+			"tile_top": {
+				"id": "phantasia:cactus",
+                "index": 5
+			},
+			"tile_middle": {
+                "id": "phantasia:cactus",
+                "index": {
+                    "type": "choose",
+                    "values": [
+                        1,
+                        2,
+						3,
+						4
+                    ]
+                }
+            },
+            "tile_bottom": {
+                "id": "phantasia:cactus",
+                "index": {
+                    "type": "choose",
+                    "values": [
+                        1,
+                        2,
+						3,
+						4
+                    ]
+                }
+            }
+		}
+	}
+}

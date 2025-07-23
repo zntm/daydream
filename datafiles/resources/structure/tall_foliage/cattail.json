@@ -33,10 +33,7 @@
 			},
 			"tile_middle": {
                 "id": "phantasia:cattail",
-                "index": {
-                    "type": "choose",
-                    "values": 1
-                }
+                "index": 1
             },
             "tile_bottom": {
                 "id": "phantasia:cattail",

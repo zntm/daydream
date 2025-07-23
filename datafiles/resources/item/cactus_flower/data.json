@@ -1,0 +1,23 @@
+{
+    "type": "untouchable",
+    "sprite": {
+        "xoffset": 6,
+        "yoffset": -1,
+        "length": 1
+    },
+    "inventory": "#phantasia:item/generic/inventory_tile",
+    "harvest": {
+        "hardness": 0.38,
+        "level": 1,
+        "particle": {
+            "colour": "#phantasia:tile/particle_colour/plant",
+            "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
+        }
+    },
+    "drop": [
+        {
+            "id": "phantasia:cactus_flower"
+        }
+    ],
+    "sfx": "#phantasia:tile/sfx/foliage"
+}

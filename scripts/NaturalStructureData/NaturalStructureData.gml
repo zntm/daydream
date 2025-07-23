@@ -283,7 +283,7 @@ global.natural_structure_data[$ "phantasia:tall_foliage"] = new NaturalStructure
         {
             var _index_crown = _tile_crown[$ "index"];
             
-            _data[@ NATURAL_STRUCTURE_TALL_FOLIAGE.TILE_CROWN] = _tile_crown.id;
+            _data[@ NATURAL_STRUCTURE_TALL_FOLIAGE.TILE_CROWN] = smart_value_parse(_tile_crown.id);
             _data[@ NATURAL_STRUCTURE_TALL_FOLIAGE.INDEX_CROWN] = ((_index_crown != undefined) ? smart_value_parse(_index_crown) : 0);
         }
         else
@@ -295,19 +295,19 @@ global.natural_structure_data[$ "phantasia:tall_foliage"] = new NaturalStructure
         var _tile_top = _parameter.tile_top;
         var _index_top = _tile_top[$ "index"];
         
-        _data[@ NATURAL_STRUCTURE_TALL_FOLIAGE.TILE_TOP] = _tile_top.id;
+        _data[@ NATURAL_STRUCTURE_TALL_FOLIAGE.TILE_TOP] = smart_value_parse(_tile_top.id);
         _data[@ NATURAL_STRUCTURE_TALL_FOLIAGE.INDEX_TOP] = ((_index_top != undefined) ? smart_value_parse(_index_top) : 0);
         
         var _tile_middle = _parameter.tile_middle;
         var _index_middle = _tile_middle[$ "index"];
         
-        _data[@ NATURAL_STRUCTURE_TALL_FOLIAGE.TILE_MIDDLE] = _tile_middle.id;
+        _data[@ NATURAL_STRUCTURE_TALL_FOLIAGE.TILE_MIDDLE] = smart_value_parse(_tile_middle.id);
         _data[@ NATURAL_STRUCTURE_TALL_FOLIAGE.INDEX_MIDDLE] = ((_index_middle != undefined) ? smart_value_parse(_index_middle) : 0);
         
         var _tile_bottom = _parameter.tile_bottom;
         var _index_bottom = _tile_bottom[$ "index"];
         
-        _data[@ NATURAL_STRUCTURE_TALL_FOLIAGE.TILE_BOTTOM] = _tile_bottom.id;
+        _data[@ NATURAL_STRUCTURE_TALL_FOLIAGE.TILE_BOTTOM] = smart_value_parse(_tile_bottom.id);
         _data[@ NATURAL_STRUCTURE_TALL_FOLIAGE.INDEX_BOTTOM] = ((_index_bottom != undefined) ? smart_value_parse(_index_bottom) : 0);
         
         return _data;
@@ -321,7 +321,7 @@ global.natural_structure_data[$ "phantasia:tall_foliage"] = new NaturalStructure
         
         var _offset = 0;
         
-        var _tile_crown = _parameter[NATURAL_STRUCTURE_TALL_FOLIAGE.TILE_CROWN];
+        var _tile_crown = smart_value(_parameter[NATURAL_STRUCTURE_TALL_FOLIAGE.TILE_CROWN]);
         
         if (_tile_crown != undefined)
         {
@@ -331,15 +331,15 @@ global.natural_structure_data[$ "phantasia:tall_foliage"] = new NaturalStructure
                 .set_index(smart_value(_parameter[NATURAL_STRUCTURE_TALL_FOLIAGE.INDEX_CROWN]));
         }
         
-        _data[@ 0 + (_offset * _width) + _depth] = new Tile(_parameter[NATURAL_STRUCTURE_TALL_FOLIAGE.TILE_TOP], _item_data)
+        _data[@ 0 + (_offset * _width) + _depth] = new Tile(smart_value(_parameter[NATURAL_STRUCTURE_TALL_FOLIAGE.TILE_TOP]), _item_data)
             .set_index(smart_value(_parameter[NATURAL_STRUCTURE_TALL_FOLIAGE.INDEX_TOP]));
         
-        _data[@ 0 + ((_offset + _height - 1) * _width) + _depth] = new Tile(_parameter[NATURAL_STRUCTURE_TALL_FOLIAGE.TILE_BOTTOM], _item_data)
+        _data[@ 0 + ((_offset + _height - 1) * _width) + _depth] = new Tile(smart_value(_parameter[NATURAL_STRUCTURE_TALL_FOLIAGE.TILE_BOTTOM]), _item_data)
             .set_index(smart_value(_parameter[NATURAL_STRUCTURE_TALL_FOLIAGE.INDEX_BOTTOM]));
         
         for (var i = _offset + 1; i < _height - 1; ++i)
         {
-            _data[@ 0 + (i * _width) + _depth] = new Tile(_parameter[NATURAL_STRUCTURE_TALL_FOLIAGE.TILE_MIDDLE], _item_data)
+            _data[@ 0 + (i * _width) + _depth] = new Tile(smart_value(_parameter[NATURAL_STRUCTURE_TALL_FOLIAGE.TILE_MIDDLE]), _item_data)
                 .set_index(smart_value(_parameter[NATURAL_STRUCTURE_TALL_FOLIAGE.INDEX_MIDDLE]));
         }
         
