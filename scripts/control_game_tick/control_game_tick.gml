@@ -41,6 +41,24 @@ function control_game_tick(_delta_time)
                 
                 var _data = _item_data[$ _tile.get_id()];
                 
+                var _on_random_tick = _data.get_on_random_tick();
+                var _on_random_tick_length = _data.get_on_random_tick_length();
+                
+                for (var j = 0; j < _on_random_tick_length; ++j)
+                {
+                    var _ = _on_random_tick[j];
+                    
+                    if (!chance(_.chance * _tick)) continue;
+                    
+                    var _function = _[$ "function"];
+                    
+                    if (_function != undefined)
+                    {
+                        _item_function[$ _function](_tick, _inst.chunk_xstart + _x2, _inst.chunk_ystart + _y2, _[$ "parameter"]);
+                    }
+                }
+                
+                /*
                 if (!chance(_data.get_on_random_tick_chance() * _tick)) continue;
                 
                 var _function = _data.get_on_random_tick_function();
@@ -49,6 +67,7 @@ function control_game_tick(_delta_time)
                 {
                     _item_function[$ _function](_tick, _inst.chunk_xstart + _x2, _inst.chunk_ystart + _y2, _data.get_on_random_tick_parameter());
                 }
+                */
             }
         }
         

@@ -133,6 +133,7 @@ function init_creature(_directory, _namespace = "phantasia")
         );
         
         _data.set_drop(_json[$ "drop"]);
+        _data.set_sfx(_json[$ "sfx"]);
         
         global.creature_data[$ $"{_namespace}:{_file}"] = _data;
         

@@ -218,4 +218,40 @@ function CreatureData(_namespace, _id, _hp, _hostility_type, _movement_type) : P
     {
         return self[$ "___attributes"];
     }
+    
+    static set_sfx = function(_sfx)
+    {
+        if (_sfx != undefined)
+        {
+            ___sfx_interval = smart_value_parse(_sfx.interval);
+            
+            var _id = _sfx.id;
+            
+            ___sfx_death = _id[$ "death"];
+            ___sfx_hurt = _id[$ "hurt"];
+            ___sfx_idle = _id[$ "idle"];
+        }
+        
+        return self;
+    }
+    
+    static get_sfx_interval = function()
+    {
+        return self[$ "___sfx_interval"];
+    }
+    
+    static get_sfx_death = function()
+    {
+        return self[$ "___sfx_death"];
+    }
+    
+    static get_sfx_hurt = function()
+    {
+        return self[$ "___sfx_hurt"];
+    }
+    
+    static get_sfx_idle = function()
+    {
+        return self[$ "___sfx_idle"];
+    }
 }

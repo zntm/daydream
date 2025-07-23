@@ -717,39 +717,47 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     {
         if (_data != undefined)
         {
-            ___on_random_tick_function = _data[$ "function"];
-            ___on_random_tick_parameter = {}
+            var _length = array_length(_data);
             
-            var _parameter = _data[$ "parameter"];
+            ___on_random_tick = array_create(_length);
+            ___on_random_tick_length = _length;
             
-            var _parameter_names = struct_get_names(_parameter);
-            var _parameter_length = array_length(_parameter_names);
-            
-            for (var i = 0; i < _parameter_length; ++i)
+            for (var i = 0; i < _length; ++i)
             {
-                var _name = _parameter_names[i];
+                var _ = _data[i];
                 
-                ___on_random_tick_parameter[$ _name] = smart_value_parse(_parameter[$ _name]);
+                var _parameters = {}
+                
+                var _parameter = _[$ "parameter"];
+                
+                var _parameter_names = struct_get_names(_parameter);
+                var _parameter_length = array_length(_parameter_names);
+                
+                for (var j = 0; j < _parameter_length; ++j)
+                {
+                    var _name = _parameter_names[j];
+                    
+                    _parameters[$ _name] = smart_value_parse(_parameter[$ _name]);
+                }
+                
+                ___on_random_tick[@ i] = {
+                    "function": _[$ "function"],
+                    "parameter": _parameters,
+                    chance: _[$ "chance"] ?? 1
+                }
             }
-            
-            ___on_random_tick_chance = _data[$ "chance"] ?? 1;
         }
         
         return self;
     }
     
-    static get_on_random_tick_function = function()
+    static get_on_random_tick = function()
     {
-        return self[$ "___on_random_tick_function"];
+        return self[$ "___on_random_tick"];
     }
     
-    static get_on_random_tick_parameter = function()
+    static get_on_random_tick_length = function()
     {
-        return self[$ "___on_random_tick_parameter"];
-    }
-    
-    static get_on_random_tick_chance = function()
-    {
-        return self[$ "___on_random_tick_chance"] ?? 0;
+        return self[$ "___on_random_tick_length"];
     }
 }

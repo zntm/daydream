@@ -22,10 +22,12 @@
         }
     },
     "sfx": "#phantasia:tile/sfx/foliage",
-    "on_random_tick": {
-		"function": "phantasia:spawn_particle",
-		"parameter": {
-			"id": "phantasia:leaf/oak"
-		}
-    }
+    "on_random_tick": [
+        {
+            "function": "phantasia:spawn_particle",
+            "parameter": {
+                "id": "phantasia:leaf/oak"
+            }
+        }
+    ]
 }
