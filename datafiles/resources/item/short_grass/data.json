@@ -15,7 +15,8 @@
         "particle": {
             "colour": "#phantasia:tile/particle_colour/grass",
             "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
-        }
+        },
+        "requirement": "#phantasia:tile/placeable/requirement_plant"
     },
     "placement": {
         "index": {

@@ -1,9 +1,9 @@
 {
     "type": "untouchable",
     "sprite": {
-        "xoffset": 8,
-        "yoffset": 16,
-        "length": 4
+        "xoffset": 5,
+        "yoffset": -2,
+        "length": 3
     },
     "inventory": "#phantasia:item/generic/inventory_default",
     "properties": [
@@ -13,17 +13,17 @@
     "harvest": {
         "hardness": 0.18,
         "particle": {
-            "colour": "#phantasia:tile/particle_colour/grass_myr",
+            "colour": "#phantasia:tile/particle_colour/sand",
             "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
         },
-        "requirement": "#phantasia:tile/placeable/requirement_plant"
+        "requirement": "#phantasia:tile/placeable/requirement_dry_plant"
     },
     "placement": {
         "index": {
             "type": "irandom",
             "values": {
                 "min": 0,
-                "max": 3
+                "max": 2
             }
         }
     },

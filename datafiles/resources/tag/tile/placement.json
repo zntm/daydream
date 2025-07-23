@@ -3,12 +3,17 @@
         "phantasia:dirt",
         "phantasia:grass_block",
         "phantasia:grass_block_borea",
-        "phantasia:sand"
+        "phantasia:grass_block_myr",
+        "phantasia:moss",
+        "phantasia:sand",
+        "phantasia:sandstone"
     ],
     "plant_on": [
         "phantasia:dirt",
         "phantasia:grass_block",
-        "phantasia:grass_block_borea"
+        "phantasia:grass_block_borea",
+        "phantasia:grass_block_myr",
+        "phantasia:moss"
     ],
     "requirement_dry_plant": [
         {
