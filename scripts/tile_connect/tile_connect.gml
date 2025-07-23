@@ -29,7 +29,7 @@ function tile_connect(_x, _y, _z, _tile)
         var _seed = round(global.world_save_data.seed + (_x * 97.27) + (_y * 48.23) - (_z * 11.91));
         
         var _index_x = (((_seed & 0b01) && (_data.can_flip_on_x())) ? tile_connected_index_x(_value) : 1);
-        var _index_y = (((_seed & 0b10) && (_data.can_flip_on_x())) ? tile_connected_index_y(_value) : 1);
+        var _index_y = (((_seed & 0b10) && (_data.can_flip_on_y())) ? tile_connected_index_y(_value) : 1);
         
         _tile
             .set_index(_value)
@@ -52,7 +52,7 @@ function tile_connect(_x, _y, _z, _tile)
         var _seed = round(global.world_save_data.seed + (_x * 97.27) + (_y * 48.23) - (_z * 11.91));
         
         var _index_x = (((_seed & 0b01) && (_data.can_flip_on_x())) ? tile_connected_index_x(_value) : 1);
-        var _index_y = (((_seed & 0b10) && (_data.can_flip_on_x())) ? tile_connected_index_y(_value) : 1);
+        var _index_y = (((_seed & 0b10) && (_data.can_flip_on_y())) ? tile_connected_index_y(_value) : 1);
         
         _tile
             .set_index(_value)

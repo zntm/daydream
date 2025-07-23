@@ -8,7 +8,7 @@ vertex_format_add_custom(vertex_type_float4, vertex_usage_texcoord);
 
 global.chunk_format_perspective = vertex_format_end();
 
-global.cos = array_create_ext(360, function(_index)
+global.render_cos = array_create_ext(360, function(_index)
 {
     return dcos(_index);
 });
@@ -21,6 +21,9 @@ function render_chunk(_uv, _inst, _z)
     
     vertex_begin(_buffer, global.chunk_format_perspective);
     
+    var _page = global.carbasa_page[$ "item"];
+    var _position = global.carbasa_page_position[$ "item"];
+    
     var _size = global.carbasa_surface_size[$ "item"];
     
     var _surface_width  = (_size >>  0) & 0xffff;
@@ -29,11 +32,13 @@ function render_chunk(_uv, _inst, _z)
     var _xstart = _inst.x;
     var _ystart = _inst.y;
     
+    var _chunk = _inst.chunk;
+    
     for (var _x = 0; _x < CHUNK_SIZE; ++_x)
     {
         for (var _y = 0; _y < CHUNK_SIZE; ++_y)
         {
-            var _tile = _inst.chunk[(_z << (CHUNK_SIZE_BIT * 2)) | (_y << CHUNK_SIZE_BIT) | _x];
+            var _tile = _chunk[(_z << (CHUNK_SIZE_BIT * 2)) | (_y << CHUNK_SIZE_BIT) | _x];
             
             if (_tile == TILE_EMPTY) continue;
             
@@ -54,19 +59,19 @@ function render_chunk(_uv, _inst, _z)
             {
                 var _edge_padding = _data.get_edge_padding();
                 
-                render_connected_tile(_buffer, _uv, _surface_width, _surface_height, _data, _id, _index, _tile.get_index_offset(), _edge_padding, _draw_x, _draw_y, _xscale, _yscale, _rotation, c_white, 1);
+                render_connected_tile(_buffer, _data, _page, _position, _uv, _surface_width, _surface_height, _id, _index, _tile.get_index_offset(), _edge_padding, _draw_x, _draw_y, _xscale, _yscale, _rotation, c_white, 1);
                 
                 continue;
             }
             
             if (_data.is_foliage())
             {
-                render_tile_foliage(_buffer, _uv, (_y << CHUNK_SIZE_BIT) | _x, _surface_width, _surface_height, _data, _id, _index + _tile.get_index_offset(), _draw_x, _draw_y, _xscale, _yscale, _rotation, c_white, 1);
+                render_tile_foliage(_buffer, _data, _page, _position, _uv, (_y << CHUNK_SIZE_BIT) | _x, _surface_width, _surface_height, _id, _index + _tile.get_index_offset(), _draw_x, _draw_y, _xscale, _yscale, _rotation, c_white, 1);
                 
                 continue;
             }
             
-            render_tile(_buffer, _uv, _surface_width, _surface_height, _id, _index + _tile.get_index_offset(), _draw_x, _draw_y, _xscale, _yscale, _rotation, c_white, 1);
+            render_tile(_buffer, _data, _page, _position, _uv, _surface_width, _surface_height, _id, _index + _tile.get_index_offset(), _draw_x, _draw_y, _xscale, _yscale, _rotation, c_white, 1);
         }
     }
     

@@ -1,8 +1,8 @@
-function render_tile_foliage(_buffer, _uv, _chunk_index, _surface_width, _surface_height, _data, _name, _index, _x, _y, _xscale, _yscale, _rotation, _colour, _alpha)
+function render_tile_foliage(_buffer, _data, _page, _position, _uv, _chunk_index, _surface_width, _surface_height, _name, _index, _x, _y, _xscale, _yscale, _rotation, _colour, _alpha)
 {
-    var _ = global.carbasa_page[$ "item"][$ _name];
+    var _ = _page[$ _name];
     
-    var _sprite = global.carbasa_page_position[$ "item"][_.sprite[0]];
+    var _sprite = _position[_.sprite[0]];
     
     var _width  = _sprite.get_width();
     var _height = _sprite.get_height();
@@ -19,7 +19,7 @@ function render_tile_foliage(_buffer, _uv, _chunk_index, _surface_width, _surfac
     var _xw = (_xscale * _width)  + _xoffset;
     var _yh = (_yscale * _height) + _yoffset;
     
-    static __cos = global.cos;
+    static __cos = global.render_cos;
     
     var _cos = __cos[_rotation];
     var _sin = __cos[(_rotation + 90) % 360];
