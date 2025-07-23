@@ -2,8 +2,8 @@ function control_physics_creative(_dt, _id)
 {
     with (_id)
     {
-        xvelocity = lerp_delta(xvelocity, (input_right      - input_left)     * 6.65, 0.35, _dt);
-        yvelocity = lerp_delta(yvelocity, (input_climb_down - input_climb_up) * 6.65, 0.35, _dt);
+        xvelocity = lerp_delta(xvelocity, (input_right      - input_left)     * 8.65, 0.25, _dt);
+        yvelocity = lerp_delta(yvelocity, (input_climb_down - input_climb_up) * 8.65, 0.25, _dt);
         
         var _xsign = sign(xvelocity);
         var _ysign = sign(yvelocity);

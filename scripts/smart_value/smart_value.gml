@@ -26,4 +26,6 @@ function smart_value(_value)
     {
         return irandom_range(_value[1], _value[2]);
     }
+    
+    return _value;
 }

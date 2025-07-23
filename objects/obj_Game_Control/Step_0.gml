@@ -97,13 +97,18 @@ with (obj_Creature)
 {
     var _data = _creature_data[$ _id];
     
-    timer_sfx_idle -= _dt;
+    var _interval = _data.get_sfx_interval();
     
-    if (timer_sfx_idle <= 0)
+    if (_interval != undefined)
     {
-        sfx_diegetic_play(audio_emitter, x, y, smart_value(_data.get_sfx_idle()));
+        timer_sfx_idle -= _delta_time;
         
-        timer_sfx_idle = smart_value(_data.get_sfx_interval());
+        if (timer_sfx_idle <= 0)
+        {
+            sfx_diegetic_play(audio_emitter, x, y, smart_value(_data.get_sfx_idle()));
+            
+            timer_sfx_idle = smart_value(_interval);
+        }
     }
 }
 

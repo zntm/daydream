@@ -96,7 +96,7 @@
                     "max": 3
                 }
             },
-            "chance": 0.03,
+            "chance": 0.1,
             "time": {
                 "min": 0,
                 "max": 890
@@ -113,7 +113,7 @@
                     "max": 3
                 }
             },
-            "chance": 0.03,
+            "chance": 0.1,
             "time": {
                 "min": 0,
                 "max": 890
@@ -130,7 +130,7 @@
                     "max": 2
                 }
             },
-            "chance": 0.02,
+            "chance": 0.12,
             "time": {
                 "min": 0,
                 "max": 890
