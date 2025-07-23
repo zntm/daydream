@@ -26,10 +26,10 @@ function tile_connect(_x, _y, _z, _tile)
             _value |= tile_condition_connected(_x2, _y2, _z, _id, _data, _item_data, _world_height) << l;
         }
         
-        var _seed = (round(global.world_save_data.seed / 0x800) + (_x * 97) + (_y * 116) + (_z * 278)) ^ 0x7f91_d88c;
+        var _seed = round((global.world_save_data.seed + (_x * 97.27) + (_y * 48.23) - (_z * 11.91)) / 0x800);
         
-        var _index_x = tile_connected_index_x(_value, _seed);
-        var _index_y = tile_connected_index_y(_value, (_seed * 193) + _value + (_x * 97) + round(_y * 116.34) + 1);
+        var _index_x = ((_data.can_flip_on_x()) ? tile_connected_index_x(_value, _seed)      : 1);
+        var _index_y = ((_data.can_flip_on_y()) ? tile_connected_index_y(_value, _seed >> 1) : 1);
         
         _tile
             .set_index(_value)
@@ -49,10 +49,10 @@ function tile_connect(_x, _y, _z, _tile)
             _value |= tile_condition_connected_to_self(_x2, _y2, _z, _id, _data, _item_data, _world_height) << l;
         }
         
-        var _seed = (round(global.world_save_data.seed / 0x800) + (_x * 97) + (_y * 116) + (_z * 278)) ^ 0x7f91_d88c;
+        var _seed = round((global.world_save_data.seed + (_x * 97.27) + (_y * 48.23) - (_z * 11.91)) / 0x800);
         
-        var _index_x = tile_connected_index_x(_value, _seed);
-        var _index_y = tile_connected_index_y(_value, (_seed * 193) + _value + (_x * 97) + round(_y * 116.34) + 1);
+        var _index_x = ((_data.can_flip_on_x()) ? tile_connected_index_x(_value, _seed)      : 1);
+        var _index_y = ((_data.can_flip_on_y()) ? tile_connected_index_y(_value, _seed >> 1) : 1);
         
         _tile
             .set_index(_value)

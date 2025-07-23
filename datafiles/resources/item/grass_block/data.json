@@ -8,11 +8,11 @@
     },
     "inventory": "#phantasia:item/generic/inventory_tile",
     "properties": [
-        "phantasia:is_tile"
+        "phantasia:is_tile",
+        "phantasia:can_flip_on_x"
     ],
     "harvest": {
         "hardness": 0.36,
-        "level": 0,
         "particle": {
             "colour": "#phantasia:tile/particle_colour/dirt",
             "frequency": "#phantasia:tile/generic/harvest_particle_frequency"

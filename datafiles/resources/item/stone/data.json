@@ -8,7 +8,9 @@
     },
     "inventory": "#phantasia:item/generic/inventory_tile",
     "properties": [
-        "phantasia:is_tile"
+        "phantasia:is_tile",
+        "phantasia:can_flip_on_x",
+        "phantasia:can_flip_on_y"
     ],
     "harvest": {
         "hardness": 0.48,

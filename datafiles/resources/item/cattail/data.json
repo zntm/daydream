@@ -1,15 +1,11 @@
 {
     "type": "untouchable",
     "sprite": {
-        "xoffset": 10,
-        "yoffset": 6,
-        "length": 1
+        "xoffset": 4,
+        "yoffset": 8,
+        "length": 3
     },
     "inventory": "#phantasia:item/generic/inventory_default",
-    "properties": [
-        "phantasia:is_foliage",
-        "phantasia:can_flip_on_x"
-    ],
     "harvest": {
         "hardness": 0.38,
         "particle": {
@@ -22,7 +18,10 @@
     },
     "drop": [
         {
-            "id": "phantasia:lilybell"
+            "id": "phantasia:cattail",
+            "condition": {
+                "index": 2
+            }
         }
     ],
     "sfx": "#phantasia:tile/sfx/foliage"

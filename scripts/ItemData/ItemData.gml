@@ -36,7 +36,9 @@ enum ITEM_PROPERTIES_BOOLEAN {
     IS_WALL             = 1 << 1,
     IS_FOLIAGE          = 1 << 2,
     IS_CRAFTING_STATION = 1 << 3,
-    IS_TRANSPARENT      = 1 << 4
+    IS_TRANSPARENT      = 1 << 4,
+    CAN_FLIP_ON_X       = 1 << 5,
+    CAN_FLIP_ON_Y       = 1 << 6
 }
 
 enum TILE_ANIMATION_TYPE {
@@ -397,51 +399,6 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
         
         if (_drop != undefined)
         {
-            /*
-            var _drop_chance = _drop[$ "chance"];
-            
-            if (_drop_chance != undefined)
-            {
-                ___drop_chance = _drop_chance;
-            }
-            
-            var _drop_item = _drop[$ "item"];
-            
-            if (_drop_item != undefined)
-            {
-                ___drop_item = _drop_item;
-                ___drop_item_length = array_length(_drop_item);
-            }
-            
-            var _drop_loot = _drop[$ "loot"];
-            
-            if (_drop_loot != undefined)
-            {
-                ___drop_loot = _drop_loot;
-            }
-            
-            var _drop_tool = _drop[$ "tool"];
-            
-            if (_drop_tool != undefined)
-            {
-                self[$ "___drop_tool"] ??= 0;
-                
-                if (is_string(_drop_tool))
-                {
-                    ___drop_tool |= __item_type[$ _drop_tool];
-                }
-                else
-                {
-                    var _length = array_length(_drop_tool);
-                    
-                    for (var i = 0; i < _length; ++i)
-                    {
-                        ___drop_tool |= __item_type[$ _drop_tool[i]];
-                    }
-                }
-            }
-            */
-            
             var _length = array_length(_drop);
             
             ___drop = [];
@@ -568,7 +525,9 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
             "phantasia:is_tile":        set_is_tile,
             "phantasia:is_wall":        set_is_wall,
             "phantasia:is_foliage":     set_is_foliage,
-            "phantasia:is_transparent": set_is_transparent
+            "phantasia:is_transparent": set_is_transparent,
+            "phantasia:can_flip_on_x":  set_can_flip_on_x,
+            "phantasia:can_flip_on_y":  set_can_flip_on_y
         }
         
         if (_properties != undefined)
@@ -663,6 +622,36 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     static is_transparent = function()
     {
         return !!(___properties & ITEM_PROPERTIES_BOOLEAN.IS_TRANSPARENT);
+    }
+    
+    static set_can_flip_on_x = function(_can_flip_on_x)
+    {
+        if (_can_flip_on_x)
+        {
+            ___properties |= ITEM_PROPERTIES_BOOLEAN.CAN_FLIP_ON_X;
+        }
+        
+        return self;
+    }
+    
+    static can_flip_on_x = function()
+    {
+        return !!(___properties & ITEM_PROPERTIES_BOOLEAN.CAN_FLIP_ON_X);
+    }
+    
+    static set_can_flip_on_y = function(_can_flip_on_y)
+    {
+        if (_can_flip_on_y)
+        {
+            ___properties |= ITEM_PROPERTIES_BOOLEAN.CAN_FLIP_ON_Y;
+        }
+        
+        return self;
+    }
+    
+    static can_flip_on_y = function()
+    {
+        return !!(___properties & ITEM_PROPERTIES_BOOLEAN.CAN_FLIP_ON_Y);
     }
     
     #endregion

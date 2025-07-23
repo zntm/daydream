@@ -178,7 +178,7 @@ function chunk_generate()
                         ++chunk_count[@ CHUNK_DEPTH_DEFAULT];
                         
                         chunk[@ (CHUNK_DEPTH_DEFAULT << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_id)
-                            .set_xscale((_xorshift & (1 << (CHUNK_SIZE + j))) ? 1 : -1)
+                            // .set_xscale(((_data.can_flip_on_x()) && (_xorshift & (1 << (CHUNK_SIZE + j)))) ? -1 : 1)
                             .set_index(smart_value(_data.get_placement_index()))
                             .set_index_offset(smart_value(_data.get_placement_index_offset()));
                         
@@ -203,7 +203,7 @@ function chunk_generate()
                         ++chunk_count[@ CHUNK_DEPTH_WALL];
                         
                         chunk[@ (CHUNK_DEPTH_WALL << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_id)
-                            .set_xscale((_xorshift & (1 << (CHUNK_SIZE + j))) ? 1 : -1)
+                            // .set_xscale(((_data.can_flip_on_x()) && (_xorshift & (1 << (CHUNK_SIZE + j)))) ? -1 : 1)
                             .set_index(smart_value(_data.get_placement_index()))
                             .set_index_offset(smart_value(_data.get_placement_index_offset()));
                         
@@ -238,7 +238,7 @@ function chunk_generate()
                         ++chunk_count[@ _z];
                         
                         chunk[@ (_z << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_id)
-                            .set_xscale((_xorshift & (1 << (CHUNK_SIZE + j))) ? 1 : -1)
+                            .set_xscale(((_data.can_flip_on_x()) && (_xorshift & (1 << (CHUNK_SIZE + j)))) ? -1 : 1)
                             .set_index(smart_value(_data.get_placement_index()))
                             .set_index_offset(smart_value(_data.get_placement_index_offset()));
                         

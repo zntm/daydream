@@ -13,11 +13,11 @@ function render_menu_background(_id, _colour)
     draw_sprite_ext(spr_Square, 0, 0, 0, room_width, room_height, 0, _sky_colour_base, 1);
     draw_sprite_general(spr_Glow_Corner, 0, 0, 0, 128, 1, 0, room_height, room_height / 128, room_width, 90, _sky_colour_gradient, _sky_colour_gradient, _sky_colour_gradient, _sky_colour_gradient, 1);
     
+    var _light_colour = _biome_data.get_light_colour(_colour);
+    
     if (global.settings.display_background)
     {
         var _offset = global.menu_background_offset;
-        
-        var _light_colour = _biome_data.get_light_colour(_colour);
         
         var _background = _biome_data.get_background();
         var _background_data = global.background_data[$ _background];
@@ -33,11 +33,15 @@ function render_menu_background(_id, _colour)
         {
             shader_set_uniform_f(__u_strength, _background_blend * (1 - ((i + 1) / _background_length)));
             
-            render_background_parallax(_background_data, i, _offset, 0, 0, 0, room_width, room_height, _light_colour, 1);
+            render_background_parallax(_background_data, i, _offset, 0, 0, 0, room_width, room_height, c_white, 1);
         }
         
         shader_reset();
     }
+    
+    gpu_set_blendmode_ext(bm_dest_color, bm_zero);
+    
+    draw_sprite_ext(spr_Square, 0, 0, 0, room_width, room_height, 0, _light_colour, 1);
     
     gpu_set_blendmode(bm_normal);
 }

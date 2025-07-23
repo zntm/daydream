@@ -7,7 +7,8 @@
     },
     "inventory": "#phantasia:item/generic/inventory_default",
     "properties": [
-        "phantasia:is_foliage"
+        "phantasia:is_foliage",
+        "phantasia:can_flip_on_x"
     ],
     "harvest": {
         "hardness": 0.18,

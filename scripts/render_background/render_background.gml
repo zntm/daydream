@@ -34,7 +34,7 @@ function render_background(_camera_x, _camera_y, _camera_width, _camera_height)
         {
             shader_set_uniform_f(__u_strength, _in_biome_background_blend * (1 - ((i + 1) / _in_biome_background_length)));
             
-            render_background_parallax(_in_biome_background_data, i, _player_x, _camera_y, _camera_x, _camera_y, _camera_width, _camera_height, light_colour, 1);
+            render_background_parallax(_in_biome_background_data, i, _player_x, _camera_y, _camera_x, _camera_y, _camera_width, _camera_height, c_white, 1);
         }
     }
     else
@@ -47,14 +47,14 @@ function render_background(_camera_x, _camera_y, _camera_width, _camera_height)
             {
                 shader_set_uniform_f(__u_strength, _in_biome_background_blend * (1 - ((i + 1) / _in_biome_background_length)));
                 
-                render_background_parallax(_in_biome_background_data, i, _player_x, _camera_y, _camera_x, _camera_y, _camera_width, _camera_height, light_colour, 1 - in_biome_transition_value);
+                render_background_parallax(_in_biome_background_data, i, _player_x, _camera_y, _camera_x, _camera_y, _camera_width, _camera_height, c_white, 1 - in_biome_transition_value);
             }
             
             if (i < _in_biome_transition_background_length)
             {
                 shader_set_uniform_f(__u_strength, _in_biome_transition_background_blend * (1 - ((i + 1) / _in_biome_transition_background_length)));
                 
-                render_background_parallax(_in_biome_transition_background_data, i, _player_x, _camera_y, _camera_x, _camera_y, _camera_width, _camera_height, light_colour, in_biome_transition_value);
+                render_background_parallax(_in_biome_transition_background_data, i, _player_x, _camera_y, _camera_x, _camera_y, _camera_width, _camera_height, c_white, in_biome_transition_value);
             }
         }
     }
