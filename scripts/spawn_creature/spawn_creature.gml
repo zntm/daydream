@@ -16,5 +16,7 @@ function spawn_creature(_x, _y, _id, _variant)
         }
         
         init_entity(_hp, _hp, _data.get_attribute());
+        
+        timer_sfx_idle = smart_value(_data.get_sfx_interval());
     }
 }

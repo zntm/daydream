@@ -91,6 +91,22 @@ with (obj_Player)
 
 control_game_tick(_delta_time);
 
+var _creature_data = global.creature_data;
+
+with (obj_Creature)
+{
+    var _data = _creature_data[$ _id];
+    
+    timer_sfx_idle -= _dt;
+    
+    if (timer_sfx_idle <= 0)
+    {
+        sfx_diegetic_play(audio_emitter, x, y, smart_value(_data.get_sfx_idle()));
+        
+        timer_sfx_idle = smart_value(_data.get_sfx_interval());
+    }
+}
+
 var _particle_data = global.particle_data;
 
 with (obj_Particle)

@@ -742,7 +742,7 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
                 
                 ___on_random_tick[@ i] = {
                     "function": _[$ "function"],
-                    "parameter": _parameters,
+                    parameter: _parameters,
                     chance: _[$ "chance"] ?? 1
                 }
             }
