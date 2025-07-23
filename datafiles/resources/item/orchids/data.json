@@ -1,0 +1,29 @@
+{
+    "type": "untouchable",
+    "sprite": {
+        "xoffset": 6,
+        "yoffset": 9,
+        "length": 1
+    },
+    "inventory": "#phantasia:item/generic/inventory_default",
+    "properties": [
+        "phantasia:is_foliage",
+        "phantasia:can_flip_on_x"
+    ],
+    "harvest": {
+        "hardness": 0.38,
+        "particle": {
+            "colour": "#phantasia:tile/particle_colour/plant",
+            "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
+        }
+    },
+    "placement": {
+        "requirement": "#phantasia:tile/placeable/requirement_plant"
+    },
+    "drop": [
+        {
+            "id": "phantasia:orchids"
+        }
+    ],
+    "sfx": "#phantasia:tile/sfx/foliage"
+}
