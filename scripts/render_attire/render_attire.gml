@@ -64,6 +64,8 @@ function render_attire(_attire, _index, _x, _y, _xscale, _yscale, _is_blinking =
             
             var _ = _data[_part_index];
             
+            var _image_index_arm = ((_index_arm != undefined) && ((_element_name == "shirt") || (_element_name == "shirt_detail")) && (_element_index == 2) ? _index_arm : _index);
+            
             if (_ == undefined) continue;
             
             var _sprite_colour = _.get_sprite_colour();
@@ -72,11 +74,11 @@ function render_attire(_attire, _index, _x, _y, _xscale, _yscale, _is_blinking =
             {
                 if (!is_array(_sprite_colour))
                 {
-                    __draw_body(_sprite_colour, _index, _x, _y, _xscale, _yscale, image_angle, _colour_white, _colour_data[_part_colour]);
+                    __draw_body(_sprite_colour, _image_index_arm, _x, _y, _xscale, _yscale, image_angle, _colour_white, _colour_data[_part_colour]);
                 }
                 else if (_element_index < _.get_sprite_colour_length())
                 {
-                    __draw_body(_sprite_colour[_element_index], _index, _x, _y, _xscale, _yscale, image_angle, _colour_white, _colour_data[_part_colour]);
+                    __draw_body(_sprite_colour[_element_index], _image_index_arm, _x, _y, _xscale, _yscale, image_angle, _colour_white, _colour_data[_part_colour]);
                 }
             }
             
@@ -86,11 +88,11 @@ function render_attire(_attire, _index, _x, _y, _xscale, _yscale, _is_blinking =
             {
                 if (!is_array(_sprite_white))
                 {
-                    draw_sprite_ext(_sprite_white, _index, _x, _y, _xscale, _yscale, image_angle, c_white, 1);
+                    draw_sprite_ext(_sprite_white, _image_index_arm, _x, _y, _xscale, _yscale, image_angle, c_white, 1);
                 }
                 else if (_element_index < _.get_sprite_white_length())
                 {
-                    draw_sprite_ext(_sprite_white[_element_index], _index, _x, _y, _xscale, _yscale, image_angle, c_white, 1);
+                    draw_sprite_ext(_sprite_white[_element_index], _image_index_arm, _x, _y, _xscale, _yscale, image_angle, c_white, 1);
                 }
             }
         }

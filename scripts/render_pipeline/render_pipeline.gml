@@ -126,11 +126,16 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
             {
                 if (yvelocity == 0) && ((input_left) || (input_right))
                 {
-                    render_attire(global.player_save_data.attire, (_animation_index * 2) % 8, x, y, entity_scale * sign(image_xscale), entity_scale);
+                    var _index_body = (_animation_index * 2) % 8;
+                    var _index_arm = ((timer_attack > 0) ? round(lerp(13, 8, timer_attack / 0.3)) : _index_body);
+                    
+                    render_attire(global.player_save_data.attire, _index_body, x, y, entity_scale * sign(image_xscale), entity_scale, false, _index_arm);
                 }
                 else
                 {
-                	render_attire(global.player_save_data.attire, 0, x, y, entity_scale * sign(image_xscale), entity_scale);
+                    var _index_arm = ((timer_attack > 0) ? round(lerp(13, 8, timer_attack / 0.3)) : 0);
+                    
+                	render_attire(global.player_save_data.attire, 0, x, y, entity_scale * sign(image_xscale), entity_scale, false, _index_arm);
                 }
             }
         }

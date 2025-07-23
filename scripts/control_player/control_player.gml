@@ -67,6 +67,15 @@ function control_player(_dt)
         }
     }
     
+    if (timer_attack > 0)
+    {
+        timer_attack = max(0, timer_attack - (_dt / GAME_TICK));
+    }
+    else if (mouse_check_button(mb_left))
+    {
+        timer_attack = 0.3;
+    }
+    
     if (_refresh)
     {
         obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.LIGHTING;
