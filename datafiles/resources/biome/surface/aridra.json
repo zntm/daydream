@@ -98,7 +98,7 @@
     "structure": [
         {
             "id": "phantasia:tall_foliage/cactus",
-            "chance": 0.1,
+            "chance": 0.06,
             "placeable_on": "#phantasia:tile/placeable/plant_on"
         }
     ]
