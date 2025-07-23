@@ -33,11 +33,11 @@
 					"values": [
 						{
 							"value": null,
-							"weight": 3
+							"weight": 9
 						},
 						{
 							"value": "phantasia:cactus_flower",
-							"weight": 2
+							"weight": 1
 						}
 					]
 				}

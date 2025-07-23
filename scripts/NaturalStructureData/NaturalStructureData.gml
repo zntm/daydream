@@ -334,7 +334,7 @@ global.natural_structure_data[$ "phantasia:tall_foliage"] = new NaturalStructure
         _data[@ 0 + (_offset * _width) + _depth] = new Tile(smart_value(_parameter[NATURAL_STRUCTURE_TALL_FOLIAGE.TILE_TOP]), _item_data)
             .set_index(smart_value(_parameter[NATURAL_STRUCTURE_TALL_FOLIAGE.INDEX_TOP]));
         
-        _data[@ 0 + ((_offset + _height - 1) * _width) + _depth] = new Tile(smart_value(_parameter[NATURAL_STRUCTURE_TALL_FOLIAGE.TILE_BOTTOM]), _item_data)
+        _data[@ 0 + ((_height - 1) * _width) + _depth] = new Tile(smart_value(_parameter[NATURAL_STRUCTURE_TALL_FOLIAGE.TILE_BOTTOM]), _item_data)
             .set_index(smart_value(_parameter[NATURAL_STRUCTURE_TALL_FOLIAGE.INDEX_BOTTOM]));
         
         for (var i = _offset + 1; i < _height - 1; ++i)
