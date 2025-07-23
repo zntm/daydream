@@ -18,7 +18,9 @@
             "colour": "#phantasia:tile/particle_colour/plank_oak",
             "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
         },
-        "type": "axe"
+        "condition": {
+            "id": "#phantasia:item/type/axe"
+        }
     },
     "drop": [
         {

@@ -36,12 +36,12 @@ function player_harvest(_dt, _x, _y)
     
     if (_harvest_hardness == undefined) exit;
     
-    var _harvest_type = _data.get_harvest_type();
-    
     var _data2 = undefined;
     
     var _inventory_selected_hotbar = global.inventory_selected_hotbar;
     var _item = global.inventory.base[_inventory_selected_hotbar];
+    
+    var _id = undefined;
     
     var _item_type = 0;
     
@@ -50,14 +50,18 @@ function player_harvest(_dt, _x, _y)
     
     if (_item != INVENTORY_EMPTY)
     {
-        _data2 = _item_data[$ _item.get_id()];
+        _id = _item.get_id();
+        
+        _data2 = _item_data[$ _id];
         
         _item_type = _data2.get_type();
         
         _item_hardness = _data2.get_harvest_hardness();
         _item_level = _data2.get_harvest_level();
         
-        if (_harvest_type) && (!_data.has_harvest_type(_item_type)) exit;
+        var _harvest_condition_id = _data.get_harvest_condition_id();
+        
+        if (_harvest_condition_id != undefined) && (!array_contains(_harvest_condition_id, _id)) exit;
     }
     
     if (_data.get_harvest_level() > _item_level) exit;
@@ -114,9 +118,9 @@ function player_harvest(_dt, _x, _y)
             
             if (_condition != undefined)
             {
-                var _tool = _condition[$ "tool"];
+                var _tool = _condition[$ "id"];
                 
-                if (_tool != undefined) && ((_item == INVENTORY_EMPTY) || !(_tool & _data2.get_type())) continue;
+                if (_tool != undefined) && (!array_contains(_tool.id, _id)) continue;
                 
                 var _index = _condition[$ "index"];
                 

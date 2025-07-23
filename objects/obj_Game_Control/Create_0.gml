@@ -69,6 +69,14 @@ if (!directory_exists($"{PROGRAM_DIRECTORY_WORLDS}/{_world_save_data.uuid}"))
     {
         obj_Player.y += TILE_SIZE;
     }
+    
+    control_camera_pos(obj_Player.x, obj_Player.y, true);
+    
+    obj_Player.ylast = obj_Player.y;
+}
+else
+{
+	file_load_world_spawn(global.world_save_data, obj_Player);
 }
 
 global.inventory_selected_hotbar = 0;

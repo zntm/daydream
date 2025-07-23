@@ -282,25 +282,11 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
                 ___harvest_level = _level;
             }
             
-            var _type = _harvest[$ "type"];
+            var _condition = _harvest[$ "condition"];
             
-            if (_type != undefined)
+            if (_condition != undefined)
             {
-                self[$ "___harvest_type"] ??= 0;
-                
-                if (is_string(_type))
-                {
-                    ___harvest_type |= __item_type[$ _type];
-                }
-                else
-                {
-                    var _length = array_length(_type);
-                    
-                    for (var i = 0; i < _length; ++i)
-                    {
-                        ___harvest_type |= __item_type[$ _type[i]];
-                    }
-                }
+                ___harvest_condition_id = _condition[$ "id"];
             }
             
             var _particle = _harvest[$ "particle"];
@@ -343,9 +329,9 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
         return self[$ "___harvest_level"] ?? 0;
     }
     
-    static get_harvest_type = function()
+    static get_harvest_condition_id = function()
     {
-        return self[$ "___harvest_type"] ?? 0;
+        return self[$ "___harvest_condition_id"]
     }
     
     static get_harvest_particle_colour = function()
@@ -358,9 +344,9 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
         return self[$ "___harvest_particle_frequency"] ?? 0;
     }
     
-    static has_harvest_type = function(_type)
+    static has_harvest_condition = function(_type)
     {
-        return !!(get_harvest_type() & _type);
+        return !!(get_harvest_condition() & _type);
     }
     
     static set_durability = function(_durability)

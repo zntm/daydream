@@ -19,13 +19,15 @@
             "colour": "#phantasia:tile/particle_colour/nightrock",
             "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
         },
-        "type": "pickaxe"
+        "condition": {
+            "id": "#phantasia:item/type/pickaxe"
+        }
     },
     "drop": [
         {
             "id": "phantasia:nightrock",
             "condition": {
-                "tool": "pickaxe"
+                "id": "#phantasia:item/type/pickaxe"
             }
         }
     ],
