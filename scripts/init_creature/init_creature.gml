@@ -130,6 +130,8 @@ function init_creature(_directory, _namespace = "phantasia")
             .set_jump_height(_attribute[$ "jump_height"])
             .set_jump_time(_attribute[$ "jump_time"])
             .set_movement_speed(_attribute[$ "movement_speed"])
+            .set_regeneration_amount(_attribute[$ "regeneration_amount"])
+            .set_regeneration_time(_attribute[$ "regeneration_time"])
         );
         
         _data.set_drop(_json[$ "drop"]);

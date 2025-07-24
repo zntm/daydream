@@ -4,9 +4,27 @@ function control_player(_dt)
     
     control_physics_input(_dt, id);
     
+    if (timer_attack > 0)
+    {
+        timer_attack = max(0, timer_attack - (_dt / GAME_TICK));
+    }
+    else if (mouse_check_button(mb_left))
+    {
+        timer_attack = 0.3;
+    }
+    else
+    {
+        var _direction = input_right - input_left;
+        
+        if (_direction != 0) && (timer_attack <= 0)
+        {
+            image_xscale = abs(image_xscale) * _direction;
+        }
+    }
+    
     var _on_ground = tile_meeting(x, y + 1);
     
-    control_physics_creative(_dt, id);
+    control_physics(_dt, id);
     
     if (y > ylast)
     {
@@ -48,32 +66,11 @@ function control_player(_dt)
     
     control_camera_pos(x - (global.camera_width / 2), y - (global.camera_height / 2), false, _dt);
     
-    if (hp < hp_max)
-    {
-        timer_regeneration -= (_dt / GAME_TICK) * (1 + min(0.68, saturation * 0.08));
-        
-        if (timer_regeneration <= 0)
-        {
-            obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.HP;
-            
-            timer_regeneration = 2.4;
-            
-            ++hp;
-            
-            if (saturation > 0)
-            {
-                --saturation;
-            }
-        }
-    }
+    var _is_regenerated = control_entity_regeneration(_dt / GAME_TICK);
     
-    if (timer_attack > 0)
+    if (_is_regenerated)
     {
-        timer_attack = max(0, timer_attack - (_dt / GAME_TICK));
-    }
-    else if (mouse_check_button(mb_left))
-    {
-        timer_attack = 0.3;
+        obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.HP;
     }
     
     if (_refresh)

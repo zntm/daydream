@@ -166,4 +166,28 @@ function Attribute() constructor
     {
         return self[$ "___movement_speed"] ?? 3.1;
     }
+    
+    static set_regeneration_amount = function(_amount)
+    {
+        ___regeneration_amount = _amount;
+        
+        return self;
+    }
+    
+    static get_regeneration_amount = function()
+    {
+        return self[$ "___regeneration_amount"] ?? 1;
+    }
+    
+    static set_regeneration_time = function(_time)
+    {
+        ___regeneration_time = _time;
+        
+        return self;
+    }
+    
+    static get_regeneration_time = function()
+    {
+        return self[$ "___regeneration_time"];
+    }
 }

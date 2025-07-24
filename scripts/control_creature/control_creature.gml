@@ -32,16 +32,21 @@ function control_creature(_dt)
         }
     }
     
-    if (!input_jump) && ((input_left) || (input_right))
+    var _direction = input_right - input_left;
+    
+    if (_direction != 0)
     {
-        var _direction = input_right - input_left;
+        image_xscale = abs(image_xscale) * _direction;
         
-        var _xto = x + (_direction * attribute.get_collision_box_width());
-        
-        if (tile_meeting(x, y + 1)) && (tile_meeting(_xto, y - 1)) && (ai_fall_detection(_xto, y - (TILE_SIZE * 2), -attribute.get_collision_box_height(), 2) >= 2)
+        if (!input_jump)
         {
-            input_jump = true;
-            input_jump_pressed = true;
+            var _xto = x + (_direction * attribute.get_collision_box_width());
+            
+            if (tile_meeting(x, y + 1)) && (tile_meeting(_xto, y - 1)) && (ai_fall_detection(_xto, y - (TILE_SIZE * 2), -attribute.get_collision_box_height(), 2) >= 2)
+            {
+                input_jump = true;
+                input_jump_pressed = true;
+            }
         }
     }
     
@@ -51,6 +56,8 @@ function control_creature(_dt)
     control_entity_sfx(_dt);
     
     control_physics_input_after(_dt, id);
+    
+    control_entity_regeneration(_dt / GAME_TICK);
     
     if (input_jump) && (chance(0.4 * _dt))
     {

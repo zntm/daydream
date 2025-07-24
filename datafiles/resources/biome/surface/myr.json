@@ -120,7 +120,7 @@
         },
         {
             "id": "phantasia:tall_foliage/cattail",
-            "chance": 0.01,
+            "chance": 0.08,
             "placeable_on": "#phantasia:tile/placeable/plant_on"
         }
     ]
