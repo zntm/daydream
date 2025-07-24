@@ -36,8 +36,9 @@ function player_build(_dt, _x, _y)
     }
     else exit;
     
-    if (tile_get(_x, _y, _z) != TILE_EMPTY) exit;
+    if (tile_get(_x, _y, _z) != TILE_EMPTY) || (!tile_placement_requirement(_x, _y, _z, _item)) exit;
     
+    /*
     var _requirements = _data.get_placement_requirement();
     
     if (_requirements == undefined)
@@ -111,7 +112,7 @@ function player_build(_dt, _x, _y)
             }
         }
     }
-    
+    */
     var _tile = new Tile(_data.get_placement_id() ?? _id);
     
     if (_data.is_foliage())

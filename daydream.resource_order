@@ -266,6 +266,7 @@
     {"name":"tile_instance_create","order":2,"path":"scripts/tile_instance_create/tile_instance_create.yy",},
     {"name":"tile_meeting","order":7,"path":"scripts/tile_meeting/tile_meeting.yy",},
     {"name":"tile_place","order":3,"path":"scripts/tile_place/tile_place.yy",},
+    {"name":"tile_placement_requirement","order":13,"path":"scripts/tile_placement_requirement/tile_placement_requirement.yy",},
     {"name":"tile_predict","order":6,"path":"scripts/tile_predict/tile_predict.yy",},
     {"name":"tile_update_surrounding","order":9,"path":"scripts/tile_update_surrounding/tile_update_surrounding.yy",},
     {"name":"tile_update","order":8,"path":"scripts/tile_update/tile_update.yy",},
