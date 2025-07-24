@@ -15,8 +15,7 @@
         "particle": {
             "colour": "#phantasia:tile/particle_colour/sand",
             "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
-        },
-        "requirement": "#phantasia:tile/placement/requirement_dry_plant"
+        }
     },
     "placement": {
         "index": {
@@ -25,7 +24,8 @@
                 "min": 0,
                 "max": 2
             }
-        }
+        },
+        "requirement": "#phantasia:tile/placement/requirement_dry_plant"
     },
     "sfx": "#phantasia:tile/sfx/foliage"
 }

@@ -1,4 +1,4 @@
-function tile_harvest_drop(_x, _y, _z, _tile, _harvest_id)
+function tile_harvest_drop(_x, _y, _z, _tile, _harvest_id = INVENTORY_EMPTY)
 {
     var _item_data = global.item_data;
     
@@ -20,7 +20,7 @@ function tile_harvest_drop(_x, _y, _z, _tile, _harvest_id)
         {
             var _tool = _condition[$ "id"];
             
-            if (_tool != undefined) && (!array_contains(_tool.id, _harvest_id)) continue;
+            if (_tool != undefined) && (!array_contains(_tool, _harvest_id)) continue;
             
             var _index = _condition[$ "index"];
             

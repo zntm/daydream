@@ -15,20 +15,34 @@
         "phantasia:grass_block_myr",
         "phantasia:moss"
     ],
-    "requirement_dry_plant": [
-        {
-            "xoffset": 0,
-            "yoffset": 1,
-            "z": "default",
-            "id": "#phantasia:tile/placement/dry_plant_on"
-        }
+    "sunflower_plant_on": [
+        "phantasia:dirt",
+        "phantasia:grass_block",
+        "phantasia:grass_block_borea",
+        "phantasia:grass_block_myr",
+        "phantasia:moss",
+        "phantasia:sunflower"
     ],
-    "requirement_plant": [
-        {
-            "xoffset": 0,
-            "yoffset": 1,
-            "z": "default",
-            "id": "#phantasia:tile/placement/plant_on"
-        }
-    ]
+    "requirement_dry_plant": {
+        "condition": "every",
+        "values": [
+            {
+                "xoffset": 0,
+                "yoffset": 1,
+                "z": "default",
+                "id": "#phantasia:tile/placement/dry_plant_on"
+            }
+        ]
+    },
+    "requirement_plant": {
+        "condition": "every",
+        "values": [
+            {
+                "xoffset": 0,
+                "yoffset": 1,
+                "z": "default",
+                "id": "#phantasia:tile/placement/plant_on"
+            }
+        ]
+    }
 }

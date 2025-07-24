@@ -785,6 +785,7 @@
     {"id":{"name":"tile_place","path":"scripts/tile_place/tile_place.yy",},},
     {"id":{"name":"tile_placement_requirement","path":"scripts/tile_placement_requirement/tile_placement_requirement.yy",},},
     {"id":{"name":"tile_predict","path":"scripts/tile_predict/tile_predict.yy",},},
+    {"id":{"name":"tile_update_placement_requirement","path":"scripts/tile_update_placement_requirement/tile_update_placement_requirement.yy",},},
     {"id":{"name":"tile_update_surrounding","path":"scripts/tile_update_surrounding/tile_update_surrounding.yy",},},
     {"id":{"name":"tile_update","path":"scripts/tile_update/tile_update.yy",},},
     {"id":{"name":"Tile","path":"scripts/Tile/Tile.yy",},},

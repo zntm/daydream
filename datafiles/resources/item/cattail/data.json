@@ -14,7 +14,23 @@
         }
     },
     "placement": {
-        "requirement": "#phantasia:tile/placement/requirement_plant"
+        "requirement": {
+            "condition": "every",
+            "values": [
+                {
+                    "xoffset": 0,
+                    "yoffset": 1,
+                    "z": "default",
+                    "id": "#phantasia:tile/placement/plant_on"
+                },
+                {
+                    "xoffset": 0,
+                    "yoffset": -1,
+                    "z": "z",
+                    "id": "phantasia:cattail"
+                }
+            ]
+        }
     },
     "drop": [
         {

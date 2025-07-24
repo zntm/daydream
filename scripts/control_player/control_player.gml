@@ -77,8 +77,8 @@ function control_player(_dt)
     {
         obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.LIGHTING;
         
-        var _camera_x = global.camera_x_real;
-        var _camera_y = global.camera_y_real;
+        var _camera_x = global.camera_x;
+        var _camera_y = global.camera_y;
         
         var _camera_width  = global.camera_width;
         var _camera_height = global.camera_height;
