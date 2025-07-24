@@ -17,15 +17,13 @@ function tile_update(_x, _y, _z)
     
     if (_tile == TILE_EMPTY) exit;
     
-    show_debug_message($"g: {_x} {_y} {_z}")
-    
-    if (!tile_update_placement_requirement(_z, _y, _z, _tile))
+    if (!tile_update_placement_condition(_x, _y, _z, _tile))
     {
+        tile_harvest_drop(_x, _y, _z, _tile);
+        
         tile_place(_x, _y, _z, TILE_EMPTY);
         
         tile_update_surrounding(_x, _y, _z);
-        
-        tile_harvest_drop(_x, _y, _z, _tile);
         
         var _data = global.item_data[$ _tile.get_id()];
         

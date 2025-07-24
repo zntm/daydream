@@ -86,6 +86,8 @@ function player_harvest(_dt, _x, _y)
     
     if (harvest_amount >= _harvest_hardness)
     {
+        tile_harvest_drop(_x, _y, _z, _tile);
+        
         tile_place(_x, _y, _z, TILE_EMPTY);
         
         tile_update_surrounding(_x, _y, _z, 1, 1);
@@ -103,36 +105,6 @@ function player_harvest(_dt, _x, _y)
             
             surface_refresh |= ((is_opened & IS_OPENED_BOOLEAN.INVENTORY) ? SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK : SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR);
         }
-        
-        tile_harvest_drop(_x, _y, _z, _tile);
-        
-        /*
-        var _drop_length = _data.get_drop_length();
-        
-        for (var i = 0; i < _drop_length; ++i)
-        {
-            var _drop_item = _data.get_drop(i);
-            
-            var _chance = _drop_item[$ "chance"];
-            
-            if (_chance != undefined) && (!chance(_chance)) continue;
-            
-            var _condition = _drop_item[$ "condition"];
-            
-            if (_condition != undefined)
-            {
-                var _tool = _condition[$ "id"];
-                
-                if (_tool != undefined) && (!array_contains(_tool.id, _id)) continue;
-                
-                var _index = _condition[$ "index"];
-                
-                if (_index != undefined) && (_tile.get_index() != _index) continue;
-            }
-            
-            spawn_item_drop(_x * TILE_SIZE, _y * TILE_SIZE, new Inventory(_drop_item.id, _drop_item[$ "amount"] ?? 1));
-        }
-        */
         
         var _particle_colour = _data.get_harvest_particle_colour();
         

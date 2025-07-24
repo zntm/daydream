@@ -1,9 +1,6 @@
 function tile_place(_x, _y, _z, _tile)
 {
-    if (_y < 0) || (_y >= global.world_data[$ global.world_save_data.dimension].get_world_height())
-    {
-        return TILE_EMPTY;
-    }
+    if (_y < 0) || (_y >= global.world_data[$ global.world_save_data.dimension].get_world_height()) exit;
     
     var _chunk_x = floor(_x / CHUNK_SIZE) * CHUNK_SIZE_DIMENSION;
     var _chunk_y = floor(_y / CHUNK_SIZE) * CHUNK_SIZE_DIMENSION;
@@ -28,6 +25,11 @@ function tile_place(_x, _y, _z, _tile)
     else if (_inst.chunk[_index] != TILE_EMPTY) && (--_inst.chunk_count[_z] <= 0)
     {
         _inst.chunk_display ^= 1 << _z;
+    }
+    
+    if (_inst.chunk[_index] != TILE_EMPTY)
+    {
+        delete _inst.chunk[_index];
     }
     
     _inst.chunk[@ _index] = _tile;

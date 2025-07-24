@@ -1,10 +1,10 @@
-function tile_placement_requirement(_x, _y, _z, _item)
+function tile_placement_condition(_x, _y, _z, _item)
 {
     var _item_data = global.item_data;
     
     var _data = _item_data[$ _item.get_id()];
     
-    var _requirements = _data.get_placement_requirement();
+    var _requirements = _data.get_placement_condition();
     
     if (_requirements == undefined)
     {
@@ -41,22 +41,19 @@ function tile_placement_requirement(_x, _y, _z, _item)
                 return false;
             }
         }
+        
+        return true;
     }
     else
     {
-        static __z = {
-            "wall": CHUNK_DEPTH_WALL,
-            "default": CHUNK_DEPTH_DEFAULT
-        }
-        
         static __item_type = global.item_type;
         
         var _requirement_values = _requirements.values;
-        var _requirement_condition = _requirements.condition;
+        var _requirement_condition = _requirements.type;
         
         var _met = 0;
         
-        var _length = array_length(_requirement_values);
+        var _length = _requirements.values_length;
         
         for (var i = 0; i < _length; ++i)
         {
@@ -64,7 +61,7 @@ function tile_placement_requirement(_x, _y, _z, _item)
             
             var _z2 = _requirement.z;
             
-            var _tile = tile_get(_x + _requirement.xoffset, _y + _requirement.yoffset, ((_z2 == "z") ? _z : __z[$ _z2]));
+            var _tile = tile_get(_x + _requirement.xoffset, _y + _requirement.yoffset, ((_z2 == "z") ? _z : _z2));
             
             if (_tile == TILE_EMPTY) continue;
             
@@ -111,14 +108,14 @@ function tile_placement_requirement(_x, _y, _z, _item)
             }
         }
         
-        if (_requirement_condition == "every")
+        if (_requirement_condition == TILE_PLACEMENT_CONDITION_TYPE.EVERY)
         {
             if (_met >= _length)
             {
                 return true;
             }
         }
-        else if (_requirement_condition == "some")
+        else// if (_requirement_condition == TILE_PLACEMENT_CONDITION_TYPE.SOME)
         {
             if (_met > 0)
             {
@@ -127,5 +124,5 @@ function tile_placement_requirement(_x, _y, _z, _item)
         }
     }
     
-    return true;
+    return false;
 }

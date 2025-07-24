@@ -45,6 +45,11 @@ enum TILE_COLLISION_BOX_TYPE {
     TRIANGLE
 }
 
+enum TILE_PLACEMENT_CONDITION_TYPE {
+    EVERY,
+    SOME
+}
+
 enum INVENTORY_SLOT_TYPE {
     BASE              = 1 << 0,
     ARMOR_HELMET      = 1 << 1,
@@ -199,6 +204,13 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     
     static set_placement = function(_placement)
     {
+        static __chunk_depth = global.chunk_depth;
+        
+        static __condition_type = {
+            "every": TILE_PLACEMENT_CONDITION_TYPE.EVERY,
+            "some":  TILE_PLACEMENT_CONDITION_TYPE.SOME
+        }
+        
         if (_placement != undefined)
         {
             var _index = _placement[$ "index"];
@@ -215,11 +227,45 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
                 ___placement_index_offset = smart_value_parse(_index_offset);
             }
             
-            var _requirement = _placement[$ "requirement"];
+            var _condition = _placement[$ "condition"];
             
-            if (_requirement != undefined)
+            if (_condition != undefined)
             {
-                ___placement_requirement = _requirement;
+                var _values = _condition.values;
+                var _values_length = array_length(_values);
+                
+                ___placement_condition = {
+                    type: __condition_type[$ _condition[$ "type"] ?? "every"],
+                    values: [],
+                    values_length: _values_length
+                }
+                
+                for (var i = 0; i < _values_length; ++i)
+                {
+                    var _value = _values[i];
+                    
+                    var _z = _value.z;
+                    
+                    var _data = {
+                        id: _value.id,
+                        z: __chunk_depth[$ _z] ?? _z
+                    }
+                    
+                    var _offset = _value[$ "offset"];
+                    
+                    if (_offset != undefined)
+                    {
+                        _data.xoffset = _offset[$ "x"] ?? 0;
+                        _data.yoffset = _offset[$ "y"] ?? 0;
+                    }
+                    else
+                    {
+                        _data.xoffset = 0;
+                        _data.yoffset = 0;
+                    }
+                    
+                    ___placement_condition.values[@ i] = _data;
+                }
             }
             
             var _id = _placement[$ "id"];
@@ -243,9 +289,9 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
         return self[$ "___placement_index_offset"] ?? 0;
     }
     
-    static get_placement_requirement = function()
+    static get_placement_condition = function()
     {
-        return self[$ "___placement_requirement"];
+        return self[$ "___placement_condition"];
     }
     
     static get_placement_id = function()

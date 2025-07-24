@@ -92,6 +92,24 @@ global.tile_connected_index = [
     -1, -1,
 ];
 
+global.chunk_depth = {
+    "default": 3,
+    "wall": 0
+}
+
+/*
+#macro CHUNK_DEPTH_DEFAULT       3
+#macro CHUNK_DEPTH_WALL          0
+#macro CHUNK_DEPTH_TREE_BACK     2
+#macro CHUNK_DEPTH_TREE_FRONT    5
+#macro CHUNK_DEPTH_TREE          choose(CHUNK_DEPTH_TREE_BACK, CHUNK_DEPTH_TREE_FRONT)
+#macro CHUNK_DEPTH_FOLIAGE_BACK  1
+#macro CHUNK_DEPTH_FOLIAGE_FRONT 4
+#macro CHUNK_DEPTH_FOLIAGE       choose(CHUNK_DEPTH_FOLIAGE_BACK, CHUNK_DEPTH_FOLIAGE_FRONT)
+#macro CHUNK_DEPTH_LIQUID        7
+
+ */
+
 global.window_width  = window_get_width();
 global.window_height = window_get_height();
 

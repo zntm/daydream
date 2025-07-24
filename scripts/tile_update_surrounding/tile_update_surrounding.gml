@@ -1,4 +1,4 @@
-function tile_update_surrounding(_x, _y, _z, _xoffset = 1, _yoffset = 1)
+function tile_update_surrounding(_x, _y, _z, _xoffset = 2, _yoffset = 2)
 {
     var _xstart = _x - _xoffset;
     var _ystart = _y - _yoffset;

@@ -36,7 +36,7 @@ function player_build(_dt, _x, _y)
     }
     else exit;
     
-    if (tile_get(_x, _y, _z) != TILE_EMPTY) || (!tile_placement_requirement(_x, _y, _z, _item)) exit;
+    if (tile_get(_x, _y, _z) != TILE_EMPTY) || (!tile_placement_condition(_x, _y, _z, _item)) exit;
     
     var _tile = new Tile(_data.get_placement_id() ?? _id);
     

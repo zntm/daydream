@@ -14,7 +14,7 @@
         }
     },
     "placement": {
-        "requirement": {
+        "condition": {
             "condition": "every",
             "values": [
                 {

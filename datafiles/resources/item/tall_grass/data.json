@@ -25,7 +25,7 @@
                 "max": 3
             }
         },
-        "requirement": "#phantasia:tile/placement/requirement_plant"
+        "condition": "#phantasia:tile/placement/condition_plant"
     },
     "drop": [
         {
