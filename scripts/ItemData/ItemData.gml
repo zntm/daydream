@@ -3,10 +3,7 @@ enum ITEM_TYPE {
     SOLID,
     PLATFORM,
     UNTOUCHABLE,
-    SWORD,
-    PICKAXE,
-    AXE,
-    SHOVEL
+    TOOL
 }
 
 enum ITEM_TYPE_BIT {
@@ -14,10 +11,7 @@ enum ITEM_TYPE_BIT {
     SOLID       = 1 << ITEM_TYPE.SOLID,
     PLATFORM    = 1 << ITEM_TYPE.PLATFORM,
     UNTOUCHABLE = 1 << ITEM_TYPE.UNTOUCHABLE,
-    SWORD       = 1 << ITEM_TYPE.SWORD,
-    PICKAXE     = 1 << ITEM_TYPE.PICKAXE,
-    AXE         = 1 << ITEM_TYPE.AXE,
-    SHOVEL      = 1 << ITEM_TYPE.SHOVEL
+    TOOL        = 1 << ITEM_TYPE.TOOL
 }
 
 global.item_type = {
@@ -25,10 +19,7 @@ global.item_type = {
     "solid":       ITEM_TYPE_BIT.SOLID,
     "platform":    ITEM_TYPE_BIT.PLATFORM,
     "untouchable": ITEM_TYPE_BIT.UNTOUCHABLE,
-    "sword":       ITEM_TYPE_BIT.SWORD,
-    "pickaxe":     ITEM_TYPE_BIT.PICKAXE,
-    "axe":         ITEM_TYPE_BIT.AXE,
-    "shovel":      ITEM_TYPE_BIT.SHOVEL,
+    "tool":        ITEM_TYPE_BIT.TOOL
 }
 
 enum ITEM_PROPERTIES_BOOLEAN {
