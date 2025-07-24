@@ -177,6 +177,4 @@ function init_attire(_directory, _namespace = "phantasia", _type = 0)
     sprite_delete(_sprite);
     surface_free(_surface);
     buffer_delete(_buffer);
-    
-    show_debug_message(json_stringify(global.attire_data, true))
 }

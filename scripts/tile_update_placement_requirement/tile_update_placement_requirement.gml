@@ -81,8 +81,6 @@ function tile_update_placement_condition(_x, _y, _z, _item)
         }
     }
     
-    show_debug_message($"{_z} {_requirement_condition} {_met} {_length}")
-    
     if (_requirement_condition == TILE_PLACEMENT_CONDITION_TYPE.EVERY)
     {
         if (_met >= _length)
