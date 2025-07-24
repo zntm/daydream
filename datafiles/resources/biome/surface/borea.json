@@ -142,32 +142,32 @@
         {
             "id": "phantasia:short_grass_borea",
             "chance": 0.06,
-            "placeable_on": "#phantasia:tile/placeable/plant_on"
+            "placeable_on": "#phantasia:tile/placement/plant_on"
         },
         {
             "id": "phantasia:tall_grass_borea",
             "chance": 0.01,
-            "placeable_on": "#phantasia:tile/placeable/plant_on"
+            "placeable_on": "#phantasia:tile/placement/plant_on"
         },
         {
             "id": "phantasia:bluebells",
             "chance": 0.12,
-            "placeable_on": "#phantasia:tile/placeable/plant_on"
+            "placeable_on": "#phantasia:tile/placement/plant_on"
         },
         {
             "id": "phantasia:rock",
             "chance": 0.04,
-            "placeable_on": "#phantasia:tile/placeable/plant_on"
+            "placeable_on": "#phantasia:tile/placement/plant_on"
         },
         {
             "id": "phantasia:twig",
             "chance": 0.05,
-            "placeable_on": "#phantasia:tile/placeable/plant_on"
+            "placeable_on": "#phantasia:tile/placement/plant_on"
         },
         {
             "id": "phantasia:daisy",
             "chance": 0.11,
-            "placeable_on": "#phantasia:tile/placeable/plant_on"
+            "placeable_on": "#phantasia:tile/placement/plant_on"
         }
     ]
 }

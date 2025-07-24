@@ -17,5 +17,27 @@ function tile_update(_x, _y, _z)
     
     if (_tile == TILE_EMPTY) exit;
     
+    if (!tile_placement_requirement(_z, _y, _z, _tile))
+    {
+        tile_place(_x, _y, _z, TILE_EMPTY);
+        
+        tile_update_surrounding(_x, _y, _z, 1, 1);
+        
+        tile_harvest_drop(_x, _y, _z, _tile, INVENTORY_EMPTY);
+        
+        var _data = global.item_data[$ _tile.get_id()];
+        
+        var _particle_colour = _data.get_harvest_particle_colour();
+        
+        repeat (smart_value(_data.get_harvest_particle_frequency()))
+        {
+            spawn_particle(_x * TILE_SIZE, _y * TILE_SIZE, "phantasia:tile/harvest", is_array_choose(_particle_colour));
+        }
+        
+        delete _tile;
+        
+        exit;
+    }
+    
     tile_connect(_x, _y, _z, _tile);
 }

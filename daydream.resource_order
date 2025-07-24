@@ -262,6 +262,7 @@
     {"name":"tile_connected_index_x","order":10,"path":"scripts/tile_connected_index_x/tile_connected_index_x.yy",},
     {"name":"tile_connected_index_y","order":11,"path":"scripts/tile_connected_index_y/tile_connected_index_y.yy",},
     {"name":"tile_get","order":4,"path":"scripts/tile_get/tile_get.yy",},
+    {"name":"tile_harvest_drop","order":14,"path":"scripts/tile_harvest_drop/tile_harvest_drop.yy",},
     {"name":"tile_index","order":5,"path":"scripts/tile_index/tile_index.yy",},
     {"name":"tile_instance_create","order":2,"path":"scripts/tile_instance_create/tile_instance_create.yy",},
     {"name":"tile_meeting","order":7,"path":"scripts/tile_meeting/tile_meeting.yy",},

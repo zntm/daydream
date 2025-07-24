@@ -778,6 +778,7 @@
     {"id":{"name":"tile_connected_index_x","path":"scripts/tile_connected_index_x/tile_connected_index_x.yy",},},
     {"id":{"name":"tile_connected_index_y","path":"scripts/tile_connected_index_y/tile_connected_index_y.yy",},},
     {"id":{"name":"tile_get","path":"scripts/tile_get/tile_get.yy",},},
+    {"id":{"name":"tile_harvest_drop","path":"scripts/tile_harvest_drop/tile_harvest_drop.yy",},},
     {"id":{"name":"tile_index","path":"scripts/tile_index/tile_index.yy",},},
     {"id":{"name":"tile_instance_create","path":"scripts/tile_instance_create/tile_instance_create.yy",},},
     {"id":{"name":"tile_meeting","path":"scripts/tile_meeting/tile_meeting.yy",},},

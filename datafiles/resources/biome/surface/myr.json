@@ -74,54 +74,54 @@
         {
             "id": "phantasia:short_grass_myr",
             "chance": 0.26,
-            "placeable_on": "#phantasia:tile/placeable/plant_on"
+            "placeable_on": "#phantasia:tile/placement/plant_on"
         },
         {
             "id": "phantasia:tall_grass_myr",
             "chance": 0.04,
-            "placeable_on": "#phantasia:tile/placeable/plant_on"
+            "placeable_on": "#phantasia:tile/placement/plant_on"
         },
         {
             "id": "phantasia:rock",
             "chance": 0.04,
-            "placeable_on": "#phantasia:tile/placeable/plant_on"
+            "placeable_on": "#phantasia:tile/placement/plant_on"
         },
         {
             "id": "phantasia:twig",
             "chance": 0.05,
-            "placeable_on": "#phantasia:tile/placeable/plant_on"
+            "placeable_on": "#phantasia:tile/placement/plant_on"
         },
         {
             "id": "phantasia:lilybell",
             "chance": 0.03,
-            "placeable_on": "#phantasia:tile/placeable/plant_on"
+            "placeable_on": "#phantasia:tile/placement/plant_on"
         },
         {
             "id": "phantasia:orchids",
             "chance": 0.04,
-            "placeable_on": "#phantasia:tile/placeable/plant_on"
+            "placeable_on": "#phantasia:tile/placement/plant_on"
         },
         {
             "id": "phantasia:dandelion",
             "chance": 0.02,
-            "placeable_on": "#phantasia:tile/placeable/plant_on"
+            "placeable_on": "#phantasia:tile/placement/plant_on"
         },
         {
             "id": "phantasia:seeding_dandelion",
             "chance": 0.01,
-            "placeable_on": "#phantasia:tile/placeable/plant_on"
+            "placeable_on": "#phantasia:tile/placement/plant_on"
         }
     ],
     "structure": [
         {
             "id": "phantasia:moss_clump",
             "chance": 0.02,
-            "placeable_on": "#phantasia:tile/placeable/plant_on"
+            "placeable_on": "#phantasia:tile/placement/plant_on"
         },
         {
             "id": "phantasia:tall_foliage/cattail",
             "chance": 0.08,
-            "placeable_on": "#phantasia:tile/placeable/plant_on"
+            "placeable_on": "#phantasia:tile/placement/plant_on"
         }
     ]
 }

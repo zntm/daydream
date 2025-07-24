@@ -25,7 +25,7 @@
                 "max": 2
             }
         },
-        "requirement": "#phantasia:tile/placeable/requirement_dry_plant"
+        "requirement": "#phantasia:tile/placement/requirement_dry_plant"
     },
     "sfx": "#phantasia:tile/sfx/foliage"
 }

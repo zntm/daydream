@@ -82,12 +82,12 @@
         {
             "id": "phantasia:short_grass_dry",
             "chance": 0.14,
-            "placeable_on": "#phantasia:tile/placeable/dry_plant_on"
+            "placeable_on": "#phantasia:tile/placement/dry_plant_on"
         },
         {
             "id": "phantasia:tall_grass_dry",
             "chance": 0.06,
-            "placeable_on": "#phantasia:tile/placeable/dry_plant_on"
+            "placeable_on": "#phantasia:tile/placement/dry_plant_on"
         },
         {
             "id": "phantasia:dead_bush",
@@ -109,7 +109,7 @@
         {
             "id": "phantasia:tall_foliage/cactus",
             "chance": 0.06,
-            "placeable_on": "#phantasia:tile/placeable/plant_on"
+            "placeable_on": "#phantasia:tile/placement/plant_on"
         }
     ]
 }

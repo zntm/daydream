@@ -18,7 +18,7 @@
         }
     },
     "placement": {
-        "requirement": "#phantasia:tile/placeable/requirement_plant"
+        "requirement": "#phantasia:tile/placement/requirement_plant"
     },
     "drop": [
         {

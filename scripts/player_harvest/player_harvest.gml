@@ -104,6 +104,9 @@ function player_harvest(_dt, _x, _y)
             surface_refresh |= ((is_opened & IS_OPENED_BOOLEAN.INVENTORY) ? SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK : SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR);
         }
         
+        tile_harvest_drop(_x, _y, _z, _tile);
+        
+        /*
         var _drop_length = _data.get_drop_length();
         
         for (var i = 0; i < _drop_length; ++i)
@@ -129,6 +132,7 @@ function player_harvest(_dt, _x, _y)
             
             spawn_item_drop(_x * TILE_SIZE, _y * TILE_SIZE, new Inventory(_drop_item.id, _drop_item[$ "amount"] ?? 1));
         }
+        */
         
         var _particle_colour = _data.get_harvest_particle_colour();
         
