@@ -3,8 +3,8 @@
 	"height": {
         "type": "irandom",
         "values": {
-            "min": 8,
-            "max": 11
+            "min": 9,
+            "max": 12
         }
     },
 	"placement": {

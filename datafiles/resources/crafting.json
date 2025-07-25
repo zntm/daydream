@@ -1,15 +1,33 @@
 {
 	"data": [
 		{
-			"id": "phantasia:hatchet",
+			"id": "phantasia:birch_workbench",
 			"amount": 1,
 			"ingredients": [
 				{
-					"id": "phantasia:twig",
-					"amount": 2
-				},
+					"id": "phantasia:birch",
+					"amount": 4
+				}
+			]
+		},
+		{
+			"id": "phantasia:birch_planks",
+			"amount": 3,
+			"crafting_stations": "#phantasia:tile/generic/workbench",
+			"ingredients": [
 				{
-					"id": "phantasia:rock",
+					"id": "phantasia:birch",
+					"amount": 1
+				}
+			]
+		},
+		{
+			"id": "phantasia:birch_planks_wall",
+			"amount": 3,
+			"crafting_stations": "#phantasia:tile/generic/workbench",
+			"ingredients": [
+				{
+					"id": "phantasia:birch_planks",
 					"amount": 2
 				}
 			]
@@ -21,6 +39,28 @@
 				{
 					"id": "phantasia:oak",
 					"amount": 4
+				}
+			]
+		},
+		{
+			"id": "phantasia:oak_planks",
+			"amount": 3,
+			"crafting_stations": "#phantasia:tile/generic/workbench",
+			"ingredients": [
+				{
+					"id": "phantasia:oak",
+					"amount": 1
+				}
+			]
+		},
+		{
+			"id": "phantasia:oak_planks_wall",
+			"amount": 3,
+			"crafting_stations": "#phantasia:tile/generic/workbench",
+			"ingredients": [
+				{
+					"id": "phantasia:oak_planks",
+					"amount": 2
 				}
 			]
 		},
@@ -42,6 +82,34 @@
 			"ingredients": [
 				{
 					"id": "phantasia:moss",
+					"amount": 2
+				}
+			]
+		},
+		{
+			"id": "phantasia:torch",
+			"amount": 6,
+			"ingredients": [
+				{
+					"id": "#phantasia:item/generic/wood",
+					"amount": 1
+				},
+				{
+					"id": "phantasia:coal",
+					"amount": 1
+				}
+			]
+		},
+		{
+			"id": "phantasia:hatchet",
+			"amount": 1,
+			"ingredients": [
+				{
+					"id": "phantasia:twig",
+					"amount": 2
+				},
+				{
+					"id": "phantasia:rock",
 					"amount": 2
 				}
 			]
