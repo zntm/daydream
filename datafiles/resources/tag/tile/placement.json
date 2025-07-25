@@ -15,14 +15,6 @@
         "phantasia:grass_block_myr",
         "phantasia:moss"
     ],
-    "sunflower_plant_on": [
-        "phantasia:dirt",
-        "phantasia:grass_block",
-        "phantasia:grass_block_borea",
-        "phantasia:grass_block_myr",
-        "phantasia:moss",
-        "phantasia:sunflower"
-    ],
     "condition_dry_plant": {
         "type": "every",
         "values": [

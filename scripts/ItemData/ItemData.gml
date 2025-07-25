@@ -247,7 +247,7 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
                     var _z = _value.z;
                     
                     var _data = {
-                        id: _value.id,
+                        id: smart_value_parse(_value.id),
                         z: __chunk_depth[$ _z] ?? _z
                     }
                     

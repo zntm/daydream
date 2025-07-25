@@ -31,14 +31,14 @@ function render_connected_tile(_buffer, _item_data, _page, _position, _uv, _surf
     
     if (_index == 0b111_11_111)
     {
-        render_tile(_buffer, _item_data, _page, _position, _uv, _surface_width, _surface_height, _name, 0, _x, _y, _xscale, _yscale, _rotation, _colour, _alpha);
+        render_tile(_buffer, _item_data, _page, _position, _uv, _surface_width, _surface_height, _name, _index_offset, _x, _y, _xscale, _yscale, _rotation, _colour, _alpha);
         
         exit;
     }
     
     if (_index == 0b010_11_010)
     {
-        render_tile(_buffer, _item_data, _page, _position, _uv, _surface_width, _surface_height, _name, 3, _x, _y, _xscale, _yscale, _rotation, _colour, _alpha);
+        render_tile(_buffer, _item_data, _page, _position, _uv, _surface_width, _surface_height, _name, _index_offset + 3, _x, _y, _xscale, _yscale, _rotation, _colour, _alpha);
         
         exit;
     }
@@ -47,21 +47,21 @@ function render_connected_tile(_buffer, _item_data, _page, _position, _uv, _surf
     
     if (_index2 == 0b000_00_000)
     {
-        render_tile(_buffer, _item_data, _page, _position, _uv, _surface_width, _surface_height, _name, 4, _x, _y, _xscale, _yscale, _rotation, _colour, _alpha);
+        render_tile(_buffer, _item_data, _page, _position, _uv, _surface_width, _surface_height, _name, _index_offset + 4, _x, _y, _xscale, _yscale, _rotation, _colour, _alpha);
         
         exit;
     }
     
     if (_index2 == 0b010_00_010)
     {
-        render_tile(_buffer, _item_data, _page, _position, _uv, _surface_width, _surface_height, _name, 1, _x, _y, _xscale, _yscale, _rotation, _colour, _alpha);
+        render_tile(_buffer, _item_data, _page, _position, _uv, _surface_width, _surface_height, _name, _index_offset + 1, _x, _y, _xscale, _yscale, _rotation, _colour, _alpha);
         
         exit;
     }
     
     if (_index2 == 0b000_11_000)
     {
-        render_tile(_buffer, _item_data, _page, _position, _uv, _surface_width, _surface_height, _name, 2, _x, _y, _xscale, _yscale, _rotation, _colour, _alpha);
+        render_tile(_buffer, _item_data, _page, _position, _uv, _surface_width, _surface_height, _name, _index_offset + 2, _x, _y, _xscale, _yscale, _rotation, _colour, _alpha);
         
         exit;
     }

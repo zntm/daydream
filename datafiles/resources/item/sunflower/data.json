@@ -23,7 +23,13 @@
                         "y": 1
                     },
                     "z": "default",
-                    "id": "#phantasia:tile/placement/sunflower_plant_on"
+                    "id": {
+                        "type": "concat",
+                        "values": [
+                            "#phantasia:tile/placement/plant_on",
+                            "phantasia:sunflower"
+                        ]
+                    }
                 },
                 {
                     "offset": {
