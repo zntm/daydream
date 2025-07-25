@@ -14,5 +14,3 @@ var _camera_height = global.camera_height;
 render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height);
 
 gpu_set_blendmode(bm_normal);
-
-draw_surface_ext(global.carbasa_surface.item, mouse_x, mouse_y, 0.2, 0.2, 0, c_white, 1);

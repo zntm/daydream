@@ -53,9 +53,6 @@ function carbasa_sprite_add(_page, _sprite, _name)
     if (!surface_exists(_surface))
     {
         _surface = surface_create(_surface_width, _surface_height);
-        
-        global.carbasa_surface[$ _page] = _surface;
-        global.carbasa_surface_texture[$ _page] = surface_get_texture(_surface);
     }
     else if (surface_get_width(_surface) != _surface_width) || (surface_get_height(_surface) != _surface_height)
     {
@@ -70,25 +67,12 @@ function carbasa_sprite_add(_page, _sprite, _name)
         surface_free(_surface);
         
         _surface = _temp;
-        
-        global.carbasa_surface[$ _page] = _surface;
-        global.carbasa_surface_texture[$ _page] = surface_get_texture(_surface);
     }
+    
+    global.carbasa_surface[$ _page] = _surface;
     
     surface_set_target(_surface);
     draw_clear_alpha(c_black, 0);
-    
-    var _uv = texture_get_uvs(global.carbasa_surface_texture[$ _page]);
-    
-    global.carbasa_surface_uv[$ _page] = _uv;
-    
-    var _uv0 = _uv[0];
-    var _uv1 = _uv[1];
-    var _uv2 = _uv[2];
-    var _uv3 = _uv[3];
-    
-    var _uv_width  = _uv2 - _uv0;
-    var _uv_height = _uv3 - _uv1;
     
     var _data = global.carbasa_page_position[$ _page];
     
@@ -108,9 +92,14 @@ function carbasa_sprite_add(_page, _sprite, _name)
         var _yoffset2 = _.get_yoffset();
         
         draw_sprite(_sprite2, _index, _x + _xoffset2, _y + _yoffset2);
+        
+        show_debug_message($"{_.get_name()} {_sprite2} :: {_index} :: {_x} {_y} :: {_xoffset2} {_yoffset2}")
     }
     
     surface_reset_target();
+    
+    global.carbasa_surface_texture[$ _page] = surface_get_texture(_surface);
+    global.carbasa_surface_uv[$ _page] = texture_get_uvs(global.carbasa_surface_texture[$ _page]); 
     
     if (!buffer_exists(global.carbasa_surface_buffer))
     {

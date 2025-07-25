@@ -56,4 +56,7 @@ function init_item(_directory, _namespace)
         
         dbg_timer("init_item", $"[Init] Loaded Item: \'{_file}\'");
     }
+    
+    show_debug_message(json_stringify(global.carbasa_page_position.item, 1))
+    show_debug_message($"{global.carbasa_surface_size.item & 0xffff} {(global.carbasa_surface_size.item >> 16) & 0xffff}")
 }

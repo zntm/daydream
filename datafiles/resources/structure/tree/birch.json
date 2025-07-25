@@ -10,13 +10,13 @@
 	"placement": {
 		"type": "floor",
 		"offset": {
-			"x": -2,
+			"x": -3,
 			"y": "-height"
 		},
 		"if_clear": [
 			{
 				"offset": {
-					"x": -2,
+					"x": -3,
 					"y": "-height"
 				},
 				"width": "width",

@@ -53,12 +53,12 @@ function CarbasaSprite(_page, _name, _sprite, _index, _number, _xoffset, _yoffse
     
     static get_x = function()
     {
-        return ___x;
+        return self[$ "___x"] ?? 0;
     }
     
     static get_y = function()
     {
-        return ___y;
+        return self[$ "___y"] ?? 0;
     }
     
     ___width = _width;
