@@ -34,10 +34,16 @@
 			"tile_middle": {
                 "id": "phantasia:sunflower",
                 "index": {
-                    "type": "choose",
+                    "type": "choose_weighted",
                     "values": [
-                        2,
-                        3
+                        {
+							"weight": 1,
+							"value": 2
+						},
+						{
+							"weight": 3,
+							"value": 3
+						}
                     ]
                 }
             },

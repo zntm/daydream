@@ -87,6 +87,39 @@
 			]
 		},
 		{
+			"id": "phantasia:nightrock_wall",
+			"amount": 3,
+			"crafting_stations": "#phantasia:tile/generic/workbench",
+			"ingredients": [
+				{
+					"id": "phantasia:nightrock",
+					"amount": 2
+				}
+			]
+		},
+		{
+			"id": "phantasia:sandstone_wall",
+			"amount": 3,
+			"crafting_stations": "#phantasia:tile/generic/workbench",
+			"ingredients": [
+				{
+					"id": "phantasia:sandstone",
+					"amount": 2
+				}
+			]
+		},
+		{
+			"id": "phantasia:stone_wall",
+			"amount": 3,
+			"crafting_stations": "#phantasia:tile/generic/workbench",
+			"ingredients": [
+				{
+					"id": "phantasia:stone",
+					"amount": 2
+				}
+			]
+		},
+		{
 			"id": "phantasia:torch",
 			"amount": 6,
 			"ingredients": [
