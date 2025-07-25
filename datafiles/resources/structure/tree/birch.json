@@ -1,10 +1,10 @@
 {
-	"width": 5,
+	"width": 7,
 	"height": {
         "type": "irandom",
         "values": {
-            "min": 6,
-            "max": 9
+            "min": 8,
+            "max": 11
         }
     },
 	"placement": {
@@ -28,10 +28,10 @@
 		"function": "phantasia:tree/generic",
 		"parameter": {
 			"tile_wood": {
-				"id": "phantasia:oak"
+				"id": "phantasia:birch"
 			},
 			"tile_leaves": {
-				"id": "phantasia:oak_leaves"
+				"id": "phantasia:birch_leaves"
 			},
 			"index": {
                 "type": "irandom",
@@ -44,19 +44,26 @@
 			"index_bottom": 5,
 			"layers": [
 				{
-					"width": 3,
+					"width": 5,
 					"index_offset": 0
 				},
 				{
-					"width": 3,
+					"width": 5,
 					"scale": {
 						"y": 1
 					},
 					"index_offset": 5
 				},
 				{
-					"width": 5,
+					"width": 7,
 					"index_offset": 0
+				},
+				{
+					"width": 7,
+					"scale": {
+						"y": 1
+					},
+					"index_offset": 5
 				},
 				{
 					"width": 5,

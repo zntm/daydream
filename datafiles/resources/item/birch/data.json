@@ -1,0 +1,29 @@
+{
+    "type": "untouchable",
+    "sprite": {
+        "xoffset": 12,
+        "yoffset": 8,
+        "length": 6
+    },
+    "inventory": "#phantasia:item/generic/inventory_tile",
+    "harvest": {
+        "hardness": 0.56,
+        "level": 1,
+        "particle": {
+            "colour": [
+                "#4F5263",
+                "#3E4051"
+            ],
+            "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
+        },
+        "condition": {
+            "id": "#phantasia:item/type/axe"
+        }
+    },
+    "drop": [
+        {
+            "id": "phantasia:birch"
+        }
+    ],
+    "sfx": "#phantasia:tile/sfx/wood"
+}

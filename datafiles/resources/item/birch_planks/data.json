@@ -1,0 +1,31 @@
+{
+    "type": "solid",
+    "sprite": {
+        "xoffset": 8,
+        "yoffset": 8,
+        "length": 1
+    },
+    "inventory": "#phantasia:item/generic/inventory_tile",
+    "properties": [
+        "phantasia:is_tile",
+        "phantasia:can_flip_on_x",
+        "phantasia:can_flip_on_y"
+    ],
+    "harvest": {
+        "hardness": 0.44,
+        "level": 1,
+        "particle": {
+            "colour": "#phantasia:tile/particle_colour/plank_birch",
+            "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
+        },
+        "condition": {
+            "id": "#phantasia:item/type/axe"
+        }
+    },
+    "drop": [
+        {
+            "id": "phantasia:birch_planks"
+        }
+    ],
+    "sfx": "#phantasia:tile/sfx/wood"
+}

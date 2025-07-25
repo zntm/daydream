@@ -2,7 +2,8 @@ enum SMART_VALUE_TYPE {
     CHOOSE,
     CHOOSE_WEIGHTED,
     RANDOM,
-    IRANDOM
+    IRANDOM,
+    CONCAT
 }
 
 function smart_value_parse(_value)
@@ -12,6 +13,7 @@ function smart_value_parse(_value)
         "choose_weighted": SMART_VALUE_TYPE.CHOOSE_WEIGHTED,
         "random":          SMART_VALUE_TYPE.RANDOM,
         "irandom":         SMART_VALUE_TYPE.IRANDOM,
+        "concat":          SMART_VALUE_TYPE.CONCAT
     }
     
     if (!is_struct(_value))
@@ -50,6 +52,33 @@ function smart_value_parse(_value)
             _type,
             _values.min,
             _values.max,
+        ];
+    }
+    
+    if (_type == SMART_VALUE_TYPE.CONCAT)
+    {
+        var _data = [];
+        
+        var _values = _value.values;
+        var _values_length = array_length(_values);
+        
+        for (var i = 0; i < _values_length; ++i)
+        {
+            var _ = _values[i];
+            
+            if (is_array(_))
+            {
+                _data = array_concat(_data, _);
+            }
+            else
+            {
+            	array_push(_data, _);
+            }
+        }
+        
+        return [
+            _type,
+            _data
         ];
     }
     

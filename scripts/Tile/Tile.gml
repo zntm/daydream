@@ -46,21 +46,32 @@ function Tile(_id, _item_data = global.item_data) constructor
     
     static set_scale = function(_xscale, _yscale)
     {
-        ___value = (___value & 0b111111111_0000_0000_11111111_11111111_1111_1111) | ((_yscale + 8) << 28) | ((_xscale + 8) << 24);
+        // ___value = (___value & 0b111111111_0000_0000_11111111_11111111_1111_1111) | ((_yscale + 8) << 28) | ((_xscale + 8) << 24);
+        
+        set_xscale(_xscale);
+        set_xscale(_yscale);
         
         return self;
     }
     
     static set_xscale = function(_xscale)
     {
-        ___value = (___value & 0b111111111_1111_0000_11111111_11111111_1111_1111) | ((_xscale + 8) << 24);
+        if (_xscale != undefined)
+        {
+            ___value = (___value & 0b111111111_1111_0000_11111111_11111111_1111_1111) | ((_xscale + 8) << 24);
+        }
         
         return self;
     }
     
     static set_yscale = function(_yscale)
     {
-        ___value = (___value & 0b111111111_0000_1111_11111111_11111111_1111_1111) | ((_yscale + 8) << 28);
+        if (_yscale != undefined)
+        {
+            ___value = (___value & 0b111111111_1111_0000_11111111_11111111_1111_1111) | ((_yscale + 8) << 24);
+        }
+        
+        // ___value = (___value & 0b111111111_0000_1111_11111111_11111111_1111_1111) | ((_yscale + 8) << 28);
         
         return self;
     }
@@ -89,7 +100,10 @@ function Tile(_id, _item_data = global.item_data) constructor
     
     static set_index_offset = function(_index)
     {
-        ___value = (___value & 0b111111111_1111_1111_00000000_11111111_1111_1111) | (_index << 16);
+        if (_index != undefined)
+        {
+            ___value = (___value & 0b111111111_1111_1111_00000000_11111111_1111_1111) | (_index << 16);
+        }
         
         return self;
     }
