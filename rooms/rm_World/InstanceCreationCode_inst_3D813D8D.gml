@@ -61,7 +61,10 @@ on_window_unfocus = function()
 {
     obj_Game_Control.is_opened |= IS_OPENED_BOOLEAN.PAUSE;
     
-    obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.PAUSE;
+    if (obj_Game_Control.surface_refresh & SURFACE_REFRESH_BOOLEAN.PAUSE)
+    {
+        obj_Game_Control.surface_refresh ^= SURFACE_REFRESH_BOOLEAN.PAUSE;
+    }
     
     control_instance_pause();
 }
