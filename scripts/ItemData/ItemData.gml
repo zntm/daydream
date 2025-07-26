@@ -747,42 +747,51 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     
     #endregion
     
+    static __set_function = function(_data)
+    {
+        var _length = array_length(_data);
+        
+        var _function = array_create(_length);
+        
+        for (var i = 0; i < _length; ++i)
+        {
+            var _ = _data[i];
+            
+            var _parameters = {}
+            
+            var _parameter = _[$ "parameter"];
+            
+            var _parameter_names = struct_get_names(_parameter);
+            var _parameter_length = array_length(_parameter_names);
+            
+            for (var j = 0; j < _parameter_length; ++j)
+            {
+                var _name = _parameter_names[j];
+                
+                _parameters[$ _name] = smart_value_parse(_parameter[$ _name]);
+            }
+            
+            var _repeat = _[$ "repeat"];
+            
+            _function[@ i] = {
+                "function": _[$ "function"],
+                parameter: _parameters,
+                chance: _[$ "chance"] ?? 1,
+                "repeat": ((_repeat != undefined) ? smart_value_parse(_repeat) : 1)
+            }
+        }
+        
+        return _function;
+    }
+    
     static set_on_random_tick = function(_data)
     {
         if (_data != undefined)
         {
             var _length = array_length(_data);
             
-            ___on_random_tick = array_create(_length);
+            ___on_random_tick = __set_function(_data);
             ___on_random_tick_length = _length;
-            
-            for (var i = 0; i < _length; ++i)
-            {
-                var _ = _data[i];
-                
-                var _parameters = {}
-                
-                var _parameter = _[$ "parameter"];
-                
-                var _parameter_names = struct_get_names(_parameter);
-                var _parameter_length = array_length(_parameter_names);
-                
-                for (var j = 0; j < _parameter_length; ++j)
-                {
-                    var _name = _parameter_names[j];
-                    
-                    _parameters[$ _name] = smart_value_parse(_parameter[$ _name]);
-                }
-                
-                var _repeat = _[$ "repeat"];
-                
-                ___on_random_tick[@ i] = {
-                    "function": _[$ "function"],
-                    parameter: _parameters,
-                    chance: _[$ "chance"] ?? 1,
-                    "repeat": ((_repeat != undefined) ? smart_value_parse(_repeat) : 1)
-                }
-            }
         }
         
         return self;
