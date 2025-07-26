@@ -6,6 +6,8 @@ function control_entity_sfx(_dt)
     {
         audio_effect_lowpass = lerp_delta(audio_effect_lowpass, audio_effect_lowpass_to, 0.1, _dt);
         audio_effect_reverb  = lerp_delta(audio_effect_reverb,  audio_effect_reverb_to,  0.1, _dt);
+        
+        audio_emitter_bus(audio_emitter, global.audio_bus[$ $"{round(audio_effect_lowpass * 7)}_{round(audio_effect_reverb * 7)}"]);
     }
     else
     {
@@ -45,7 +47,10 @@ function control_entity_sfx(_dt)
             }
         }
         
-        audio_emitter_bus(audio_emitter, global.audio_bus[$ $"{round(min(1, _total_lowpass / 32) * 7)}_{round(min(1, _total_reverb / 32) * 7)}"]);
+        var _l = min(1, _total_lowpass / 32);
+        var _r = min(1, _total_reverb  / 32);
+        
+        audio_emitter_bus(audio_emitter, global.audio_bus[$ $"{round(_l * 7)}_{round(min(1, _r) * 7)}"]);
         
         audio_effect_lowpass = _total_lowpass;
         audio_effect_lowpass_to = _total_lowpass;
