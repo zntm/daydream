@@ -21,11 +21,11 @@ function sfx_diegetic_play(_emitter, _x, _y, _id, _gain = global.settings.audio_
     
     var _item_data = global.item_data;
     
-    var _falloff_reference = _data.get_falloff_reference();
-    var _falloff_max = _data.get_falloff_max();
+    // var _falloff_reference = _data.get_falloff_reference();
+    // var _falloff_max = _data.get_falloff_max();
     
-    audio_emitter_falloff(_emitter, _falloff_reference, _falloff_max, 1);
-    audio_emitter_position(_emitter, _x, _y, 0);
+    // audio_emitter_falloff(_emitter, _falloff_reference, _falloff_max, 1);
+    // audio_emitter_position(_emitter, _x, _y, 0);
     
     /*
     var _x1tile = round(_x1 / TILE_SIZE);

@@ -24,5 +24,9 @@
             "id": "phantasia:dirt"
         }
     ],
-    "sfx": "#phantasia:tile/sfx/dirt"
+    "sfx": "#phantasia:tile/sfx/dirt",
+    "audio_properties": {
+        "lowpass": 0.1,
+        "reverb": 0.1    
+    }
 }

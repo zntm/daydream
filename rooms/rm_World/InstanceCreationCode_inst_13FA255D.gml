@@ -1,4 +1,4 @@
-text = loca_translate("menu.pause.resume");
+text = loca_translate("phantasia:menu.pause.resume");
 
 on_select_release = function()
 {

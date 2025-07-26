@@ -27,5 +27,9 @@
             "id": "phantasia:oak_planks"
         }
     ],
-    "sfx": "#phantasia:tile/sfx/wood"
+    "sfx": "#phantasia:tile/sfx/wood",
+    "audio_properties": {
+        "lowpass": 0.1,
+        "reverb": 0.1    
+    }
 }

@@ -14,7 +14,7 @@ function tile_place(_x, _y, _z, _tile)
         control_update_chunk_in_view();
     }
     
-    var _index = tile_index(_x, _y, _z);
+    var _index = tile_index_xyz(_x, _y, _z);
     
     if (_tile != TILE_EMPTY)
     {

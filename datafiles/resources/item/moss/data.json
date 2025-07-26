@@ -24,5 +24,9 @@
             "id": "phantasia:moss"
         }
     ],
-    "sfx": "#phantasia:tile/sfx/foliage"
+    "sfx": "#phantasia:tile/sfx/foliage",
+    "audio_properties": {
+        "lowpass": 0.1,
+        "reverb": 0.1    
+    }
 }

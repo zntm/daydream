@@ -23,5 +23,9 @@
             "id": "phantasia:dirt"
         }
     ],
-    "sfx": "#phantasia:tile/sfx/grass_block"
+    "sfx": "#phantasia:tile/sfx/grass_block",
+    "audio_properties": {
+        "lowpass": 0.1,
+        "reverb": 0.1    
+    }
 }

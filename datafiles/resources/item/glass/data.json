@@ -22,5 +22,9 @@
             "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
         }
     },
-    "sfx": "#phantasia:tile/sfx/stone"
+    "sfx": "#phantasia:tile/sfx/stone",
+    "audio_properties": {
+        "lowpass": 0.1,
+        "reverb": 0.1    
+    }
 }

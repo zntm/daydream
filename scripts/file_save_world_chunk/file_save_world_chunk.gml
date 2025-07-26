@@ -68,7 +68,7 @@ function file_save_world_chunk(_world_save_data, _inst)
             {
                 for (var l = 0; l < CHUNK_SIZE; ++l)
                 {
-                    var _tile = _chunk[tile_index(l, j, i)];
+                    var _tile = _chunk[tile_index_xyz(l, j, i)];
                     
                     file_save_snippet_tile(_buffer, _tile, _item_data);
                     

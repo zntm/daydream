@@ -31,5 +31,9 @@
             }
         }
     ],
-    "sfx": "#phantasia:tile/sfx/nightrock"
+    "sfx": "#phantasia:tile/sfx/nightrock",
+    "audio_properties": {
+        "lowpass": 0.1,
+        "reverb": 0.1    
+    }
 }

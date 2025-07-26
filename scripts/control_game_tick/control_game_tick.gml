@@ -35,7 +35,7 @@ function control_game_tick(_delta_time)
                 
                 if !(_inst.chunk_display & _bitmask) || (_inst.chunk_count[_z] <= 0) continue;
                 
-                var _tile = _inst.chunk[tile_index(_x2, _y2, _z)];
+                var _tile = _inst.chunk[tile_index_xyz(_x2, _y2, _z)];
                 
                 if (_tile == TILE_EMPTY) continue;
                 
@@ -50,11 +50,17 @@ function control_game_tick(_delta_time)
                     
                     if (!chance(_.chance * _tick)) continue;
                     
-                    var _function = _[$ "function"];
+                    var _id = _[$ "function"];
                     
-                    if (_function != undefined)
+                    if (_id != undefined)
                     {
-                        _item_function[$ _function](_tick, _inst.chunk_xstart + _x2, _inst.chunk_ystart + _y2, _z, _[$ "parameter"]);
+                        var _function = _item_function[$ _id];
+                        var _parameter = _[$ "parameter"];
+                        
+                        repeat (smart_value(_[$ "repeat"]))
+                        {
+                            _function(_tick, _inst.chunk_xstart + _x2, _inst.chunk_ystart + _y2, _z, _parameter);
+                        }
                     }
                 }
             }

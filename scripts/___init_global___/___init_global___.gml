@@ -97,18 +97,42 @@ global.chunk_depth = {
     "wall": 0
 }
 
-/*
-#macro CHUNK_DEPTH_DEFAULT       3
-#macro CHUNK_DEPTH_WALL          0
-#macro CHUNK_DEPTH_TREE_BACK     2
-#macro CHUNK_DEPTH_TREE_FRONT    5
-#macro CHUNK_DEPTH_TREE          choose(CHUNK_DEPTH_TREE_BACK, CHUNK_DEPTH_TREE_FRONT)
-#macro CHUNK_DEPTH_FOLIAGE_BACK  1
-#macro CHUNK_DEPTH_FOLIAGE_FRONT 4
-#macro CHUNK_DEPTH_FOLIAGE       choose(CHUNK_DEPTH_FOLIAGE_BACK, CHUNK_DEPTH_FOLIAGE_FRONT)
-#macro CHUNK_DEPTH_LIQUID        7
+global.audio_effect_reverb = array_create(8);
 
- */
+for (var i = 0; i < 8; ++i)
+{
+    var _reverb = audio_effect_create(AudioEffectType.Reverb1);
+    
+    _reverb.size = i / 7;
+    
+    global.audio_effect_reverb[@ i] = _reverb;
+}
+
+global.audio_effect_lpf2 = array_create(8);
+
+for (var i = 0; i < 8; ++i)
+{
+    var _lpf2 = audio_effect_create(AudioEffectType.LPF2);
+    
+    _lpf2.cutoff = lerp(28_000, 600, i / 7);
+    
+    global.audio_effect_lpf2[@ i] = _lpf2;
+}
+
+global.audio_bus = {}
+
+for (var i = 0; i < 8; ++i)
+{
+    for (var j = 0; j < 8; ++j)
+    {
+        var _audio_bus = audio_bus_create();
+        
+        _audio_bus.effects[@ 0] = global.audio_effect_lpf2[i];
+        _audio_bus.effects[@ 1] = global.audio_effect_reverb[j];
+        
+        global.audio_bus[$ $"{i}_{j}"] = _audio_bus;
+    }
+}
 
 global.window_width  = window_get_width();
 global.window_height = window_get_height();

@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"tile_index",
+  "%Name":"tile_audio_emitter",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"tile_index",
+  "name":"tile_audio_emitter",
   "parent":{
     "name":"Tile",
     "path":"folders/Scripts/Tile.yy",

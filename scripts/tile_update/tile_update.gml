@@ -11,7 +11,7 @@ function tile_update(_x, _y, _z)
     
     if (!instance_exists(_inst)) exit;
     
-    var _index = tile_index(_x, _y, _z);
+    var _index = tile_index_xyz(_x, _y, _z);
     
     var _tile = _inst.chunk[_index];
     

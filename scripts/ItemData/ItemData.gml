@@ -513,6 +513,28 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
         return self[$ "___sfx_step"];
     }
     
+    static set_audio_properties = function(_audio_properties)
+    {
+        if (_audio_properties != undefined)
+        {
+            ___audio_properties_lowpass = _audio_properties[$ "lowpass"];
+            ___audio_properties_reverb  = _audio_properties[$ "reverb"];
+            
+        }
+        
+        return self;
+    }
+    
+    static get_audio_property_lowpass = function()
+    {
+        return self[$ "___audio_properties_reverb"] ?? 0;
+    }
+    
+    static get_audio_property_reverb = function()
+    {
+        return self[$ "___audio_properties_reverb"] ?? 0;
+    }
+    
     static get_collision_box_left = function()
     {
         return (___colliison_box & 0xff) - 0x80;
@@ -752,10 +774,13 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
                     _parameters[$ _name] = smart_value_parse(_parameter[$ _name]);
                 }
                 
+                var _repeat = _[$ "repeat"];
+                
                 ___on_random_tick[@ i] = {
                     "function": _[$ "function"],
                     parameter: _parameters,
-                    chance: _[$ "chance"] ?? 1
+                    chance: _[$ "chance"] ?? 1,
+                    "repeat": ((_repeat != undefined) ? smart_value_parse(_repeat) : 1)
                 }
             }
         }

@@ -23,6 +23,16 @@ function chunk_clear(_inst)
                 delete _tile;
             }
         }
+        
+        for (var i = 0; i < CHUNK_SIZE * CHUNK_SIZE; ++i)
+        {
+            var _tile = _inst.chunk_audio_emitter[i];
+            
+            if (audio_emitter_exists(_tile))
+            {
+                audio_emitter_free(_tile);
+            }
+        }
     }
     
     instance_destroy(_inst);
