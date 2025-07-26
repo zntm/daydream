@@ -33,7 +33,7 @@
     ],
     "sfx": "#phantasia:tile/sfx/stone",
     "audio_properties": {
-        "lowpass": 0.1,
-        "reverb": 0.1    
+        "lowpass": 0,
+        "reverb": 0.6    
     }
 }

@@ -25,17 +25,14 @@ function init_entity(_hp, _hp_max, _attribute, _uuid = uuid_generate(irandom(0xf
     input_jump_pressed = false;
     
     audio_emitter = audio_emitter_create();
-    audio_bus     = audio_bus_create();
     
-    audio_bus.effects[@ SFX_DIEGETIC_EFFECT_INDEX.REVERB] = audio_effect_create(AudioEffectType.Reverb1, {
-        mix: 0
-    });
+    timer_audio_effect = 0;
     
-    audio_bus.effects[@ SFX_DIEGETIC_EFFECT_INDEX.LPF] = audio_effect_create(AudioEffectType.LPF2, {
-        cutoff: 20_000
-    });
+    audio_effect_lowpass = 0;
+    audio_effect_reverb  = 0;
+
+    audio_effect_lowpass_to = 0;
+    audio_effect_reverb_to  = 0;
     
     timer_sfx_step = 0;
-    
-    audio_emitter_bus(audio_emitter, audio_bus);
 }
