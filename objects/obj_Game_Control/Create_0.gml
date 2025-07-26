@@ -183,6 +183,7 @@ inst_664AF3B4.x = -1000;
 inst_664AF3B4.y = -1000;
 
 timer_creature_spawn = 0;
+timer_respawn = 0;
 
 global.tick_accumulator = 0;
 

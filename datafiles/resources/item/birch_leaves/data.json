@@ -29,6 +29,13 @@
             "parameter": {
                 "id": "phantasia:leaf/birch"
             }
+        },
+        {
+            "function": "phantasia:sfx_play",
+            "parameter": {
+                "id": "phantasia:tile.leaves.rustle"
+            },
+            "chance": 0.04
         }
     ]
 }

@@ -1,6 +1,6 @@
 global.item_function = {}
 
-global.item_function[$ "phantasia:spawn_particle"] = function(_dt, _x, _y, _parameter)
+global.item_function[$ "phantasia:spawn_particle"] = function(_dt, _x, _y, _z, _parameter)
 {
     var _offset = _parameter[$ "offset"];
     
@@ -22,4 +22,18 @@ global.item_function[$ "phantasia:spawn_particle"] = function(_dt, _x, _y, _para
     }
     
     spawn_particle(_x * TILE_SIZE, _y * TILE_SIZE, smart_value(_parameter.id));
+}
+
+global.item_function[$ "phantasia:sfx_play"] = function(_dt, _x, _y, _z, _parameter)
+{
+    sfx_play(_parameter.id);
+    // sfx_diegetic_play(obj_Player.audio_emitter, _x * TILE_SIZE, _y * TILE_SIZE, _parameter.id);
+}
+
+global.item_function[$ "phantasia:tile_grow_crop"] = function(_dt, _x, _y, _z, _parameter)
+{
+}
+
+global.item_function[$ "phantasia:tile_place"] = function(_dt, _x, _y, _z, _parameter)
+{
 }

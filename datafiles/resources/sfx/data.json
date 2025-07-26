@@ -171,6 +171,22 @@
         "pitch": "#phantasia:sfx/generic/pitch_default",
         "subtitle": "phantasia:sfx.tile.generic.step"
     },
+    "tile.leaves.rustle": {
+        "asset": [
+            "phantasia:tile/leaves/rustle0",
+            "phantasia:tile/leaves/rustle1",
+            "phantasia:tile/leaves/rustle2",
+            "phantasia:tile/leaves/rustle3",
+            "phantasia:tile/leaves/rustle4",
+            "phantasia:tile/leaves/rustle5",
+            "phantasia:tile/leaves/rustle6",
+            "phantasia:tile/leaves/rustle7",
+            "phantasia:tile/leaves/rustle8",
+            "phantasia:tile/leaves/rustle9"
+        ],
+        "pitch": "#phantasia:sfx/generic/pitch_default",
+        "subtitle": "phantasia:sfx.tile.leaves.rustle"
+    },
     "tile.leaves.step": {
         "asset": [
             "phantasia:tile/leaves/step0",

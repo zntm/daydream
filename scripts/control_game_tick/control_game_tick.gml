@@ -54,7 +54,7 @@ function control_game_tick(_delta_time)
                     
                     if (_function != undefined)
                     {
-                        _item_function[$ _function](_tick, _inst.chunk_xstart + _x2, _inst.chunk_ystart + _y2, _[$ "parameter"]);
+                        _item_function[$ _function](_tick, _inst.chunk_xstart + _x2, _inst.chunk_ystart + _y2, _z, _[$ "parameter"]);
                     }
                 }
             }
