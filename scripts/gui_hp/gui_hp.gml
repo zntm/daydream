@@ -16,9 +16,16 @@ function gui_hp(_hp, _hp_max)
 	surface_set_target(surface_hp);
 	draw_clear_alpha(c_black, 0);
     
+    var _hp_clamped = max(_hp, GUI_HP_PER_SPRITE / 2);
+    
 	for (var i = 0; i < _length; ++i)
 	{
-		draw_sprite_ext(spr_GUI_HP, 2, (i % GUI_HP_ROW_LENGTH) * 13, floor(i / GUI_HP_ROW_LENGTH) * 12, 1, 1, 0, c_white, 1);
+        var _index = clamp(ceil((_hp_clamped - (i * GUI_HP_PER_SPRITE)) / (GUI_HP_PER_SPRITE / 2)), 0, 2);
+        
+        var _x = (i % GUI_HP_ROW_LENGTH) * 13;
+        var _y = floor(i / GUI_HP_ROW_LENGTH) * 12;
+        
+		draw_sprite_ext(spr_GUI_HP, _index, _x, _y, 1, 1, 0, c_white, 1);
 	}
     
     surface_reset_target();
