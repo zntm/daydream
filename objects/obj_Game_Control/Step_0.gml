@@ -2,8 +2,6 @@ if (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.EXIT)
 {
     var _world_save_data = global.world_save_data;
     
-    chunk_saved_count_max = instance_number(obj_Chunk);
-    
     if (chunk_saved_count >= chunk_saved_count_max)
     {
         audio_stop_all();

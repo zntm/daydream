@@ -5,6 +5,8 @@ on_select_release = function()
     obj_Game_Control.is_opened |= IS_OPENED_BOOLEAN.EXIT;
     obj_Game_Control.is_opened ^= IS_OPENED_BOOLEAN.PAUSE;
     
+    obj_Game_Control.chunk_saved_count_max = instance_number(obj_Chunk);
+    
     inst_629EFD9E.y = -1000;
     
     inst_13FA255D.y = -1000;

@@ -46,7 +46,7 @@ function control_chunk(_player_x, _player_y, _camera_x, _camera_y, _camera_width
     {
         var _inst = chunk_in_view[i];
         
-        if (_inst.boolean & CHUNK_BOOLEAN.GENERATED) continue;
+        if (!instance_exists(_inst)) || (_inst.boolean & CHUNK_BOOLEAN.GENERATED) continue;
         
         _inst.boolean |= CHUNK_BOOLEAN.GENERATED;
         

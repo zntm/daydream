@@ -92,8 +92,6 @@ function carbasa_sprite_add(_page, _sprite, _name)
         var _yoffset2 = _.get_yoffset();
         
         draw_sprite(_sprite2, _index, _x + _xoffset2, _y + _yoffset2);
-        
-        show_debug_message($"{_.get_name()} {_sprite2} :: {_index} :: {_x} {_y} :: {_xoffset2} {_yoffset2}")
     }
     
     surface_reset_target();

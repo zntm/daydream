@@ -23,7 +23,7 @@ function control_game_tick(_delta_time)
         {
             var _inst = chunk_in_view[i];
             
-            if !(_inst.boolean & CHUNK_BOOLEAN.GENERATED) continue;
+            if (!instance_exists(_inst)) || !(_inst.boolean & CHUNK_BOOLEAN.GENERATED) continue;
             
             repeat (4)
             {

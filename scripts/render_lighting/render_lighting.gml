@@ -19,7 +19,7 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
         {
             var _inst = chunk_in_view[i];
             
-            if !(_inst.boolean & CHUNK_BOOLEAN.GENERATED) || !(_inst.boolean & CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH) continue;
+            if (!instance_exists(_inst)) || !(_inst.boolean & CHUNK_BOOLEAN.GENERATED) || !(_inst.boolean & CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH) continue;
             
             _inst.boolean ^= CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH;
             
@@ -66,7 +66,7 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
         {
             var _inst = chunk_in_view[i];
             
-            if !(_inst.boolean & CHUNK_BOOLEAN.GENERATED) continue;
+            if (!instance_exists(_inst)) || !(_inst.boolean & CHUNK_BOOLEAN.GENERATED) continue;
             
             if (surface_exists(_inst.surface_lighting))
             {

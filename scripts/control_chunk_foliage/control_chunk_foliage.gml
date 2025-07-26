@@ -16,7 +16,7 @@ function control_chunk_foliage(_dt, _player_x, _player_y, _camera_x, _camera_y, 
     {
         var _inst = chunk_in_view[i];
         
-        if (!instance_exists(_inst)) || !(_inst.boolean & CHUNK_BOOLEAN.GENERATED) continue;
+        if (!instance_exists(_inst)) || (!instance_exists(_inst)) || !(_inst.boolean & CHUNK_BOOLEAN.GENERATED) continue;
         
         var _chunk_display = _inst.chunk_display;
         var _chunk_count   = _inst.chunk_count;

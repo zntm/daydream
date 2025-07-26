@@ -69,7 +69,7 @@ function tile_placement_condition(_x, _y, _z, _item)
             
             if (_requirement_id != undefined)
             {
-                if ((is_array(_requirement_id)) ? (array_contains(_requirement_id, _tile.get_id())) : (_requirement_id == _tile.get_id()))
+                if (is_array(_requirement_id)) ? (array_contains(_requirement_id, _tile.get_id())) : (_requirement_id == _tile.get_id())
                 {
                     ++_met;
                     
@@ -115,7 +115,7 @@ function tile_placement_condition(_x, _y, _z, _item)
                 return true;
             }
         }
-        else// if (_requirement_condition == TILE_PLACEMENT_CONDITION_TYPE.SOME)
+        else if (_requirement_condition == TILE_PLACEMENT_CONDITION_TYPE.SOME)
         {
             if (_met > 0)
             {

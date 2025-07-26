@@ -33,6 +33,8 @@ on_window_resize = function()
     {
         var _inst = _chunk_in_view[i];
         
+        if (!instance_exists(_inst)) continue;
+        
         _inst.boolean |= CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH;
     }
 }
