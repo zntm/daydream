@@ -21,68 +21,17 @@ function sfx_diegetic_play(_emitter, _x, _y, _id, _gain = global.settings.audio_
     
     var _item_data = global.item_data;
     
-    // var _falloff_reference = _data.get_falloff_reference();
-    // var _falloff_max = _data.get_falloff_max();
+    var _falloff_reference = _data.get_falloff_reference();
+    var _falloff_max = _data.get_falloff_max();
     
-    // audio_emitter_falloff(_emitter, _falloff_reference, _falloff_max, 1);
-    // audio_emitter_position(_emitter, _x, _y, 0);
+    var _distance = point_distance(obj_Player.x, obj_Player.y, _x, _y);
     
-    /*
-    var _x1tile = round(_x1 / TILE_SIZE);
-    var _y1tile = round(_y1 / TILE_SIZE);
+    var _falloff_gain = 1 - normalize(_distance, _falloff_reference, _falloff_max);
     
-    var _x2tile = round(_x2 / TILE_SIZE);
-    var _y2tile = round(_y2 / TILE_SIZE);
-    
-    #region Reverb
-    
-    if (!collision_rectangle(_x2 - SFX_DIEGETIC_PADDING, _y2 - SFX_DIEGETIC_PADDING, _x2 + SFX_DIEGETIC_PADDING, _y2 + SFX_DIEGETIC_PADDING, obj_Light_Sun, false, true))
-    {
-        global.sfx_diegetic_floodfill_amount = 0;
-        
-        dbg_timer("sfx_reverb");
-        
-        sfx_diegetic_floodfill(_x2tile, _y2tile, 0, _item_data, _world_height);
-        
-        var _names = struct_get_names(global.sfx_diegetic_floodfill_position);
-        var _length = array_length(_names);
-        
-        for (var i = 0; i < _length; ++i)
-        {
-            struct_remove(global.sfx_diegetic_floodfill_position, _names[i]);
-        }
-        
-        _audio_bus.effects[@ SFX_DIEGETIC_EFFECT_INDEX.REVERB].mix = global.sfx_diegetic_floodfill_amount / 64;
-        
-        dbg_timer("sfx_reverb", $"Calculated sound effect reverb for {_id} ({global.sfx_diegetic_floodfill_amount}).");
-    }
-    else
-    {
-        _audio_bus.effects[@ SFX_DIEGETIC_EFFECT_INDEX.REVERB].mix = 0;
-    }
-    
-    #endregion
-    
-    #region Low-Pass Filter
-    
-    var _tile  = tile_get(_x1tile, _y1tile, CHUNK_DEPTH_LIQUID);
-    var _tile2 = tile_get(_x2tile, _y2tile, CHUNK_DEPTH_LIQUID);
-    
-    /*if ((_tile != TILE_EMPTY) && (_item_data[$ _tile].has_type(ITEM_TYPE_BIT.LIQUID))) || ((_tile2 != TILE_EMPTY) && (_item_data[$ _tile2].has_type(ITEM_TYPE_BIT.LIQUID)))
-    {
-        _audio_bus.effects[@ SFX_DIEGETIC_EFFECT_INDEX.LPF].bypass = 0;
-    }
-    else
-    {
-        _audio_bus.effects[@ SFX_DIEGETIC_EFFECT_INDEX.LPF].bypass = 1;
-    }
-    
-    #endregion
-    */
     return audio_play_sound_ext({
         emitter: _emitter,
         sound: array_choose(_data.get_asset()),
         pitch: smart_value(_data.get_pitch()),
-        gain: _gain
+        gain: _gain * _falloff_gain
     });
 }

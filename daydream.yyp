@@ -782,7 +782,6 @@
     {"id":{"name":"render_tile_foliage","path":"scripts/render_tile_foliage/render_tile_foliage.yy",},},
     {"id":{"name":"render_tile","path":"scripts/render_tile/render_tile.yy",},},
     {"id":{"name":"SettingsData","path":"scripts/SettingsData/SettingsData.yy",},},
-    {"id":{"name":"sfx_diegetic_floodfill","path":"scripts/sfx_diegetic_floodfill/sfx_diegetic_floodfill.yy",},},
     {"id":{"name":"sfx_diegetic_play","path":"scripts/sfx_diegetic_play/sfx_diegetic_play.yy",},},
     {"id":{"name":"sfx_play","path":"scripts/sfx_play/sfx_play.yy",},},
     {"id":{"name":"SFXData","path":"scripts/SFXData/SFXData.yy",},},

@@ -103,7 +103,10 @@ for (var i = 0; i < 8; ++i)
 {
     var _reverb = audio_effect_create(AudioEffectType.Reverb1);
     
-    _reverb.size = i / 7;
+    var _t = i / 7;
+    
+    _reverb.mix  = _t;
+    _reverb.size = _t;
     
     global.audio_effect_reverb[@ i] = _reverb;
 }

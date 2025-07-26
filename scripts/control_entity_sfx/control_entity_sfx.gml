@@ -45,14 +45,7 @@ function control_entity_sfx(_dt)
             }
         }
         
-        if (_total_lowpass > 0) || (_total_reverb > 0)
-        {
-            audio_emitter_bus(audio_emitter, global.audio_bus[$ $"{round((_total_lowpass / 32) * 7)}_{round((_total_reverb / 32) * 7)}"]);
-        }
-        else
-        {
-        	audio_emitter_bus(audio_emitter, audio_bus_main);
-        }
+        audio_emitter_bus(audio_emitter, global.audio_bus[$ $"{round(min(1, _total_lowpass / 32) * 7)}_{round(min(1, _total_reverb / 32) * 7)}"]);
         
         audio_effect_lowpass = _total_lowpass;
         audio_effect_lowpass_to = _total_lowpass;
