@@ -25,6 +25,6 @@
     "sfx": "#phantasia:tile/sfx/stone",
     "audio_properties": {
         "lowpass": 0,
-        "reverb": 0    
+        "reverb": 0
     }
 }

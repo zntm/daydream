@@ -30,6 +30,6 @@
     "sfx": "#phantasia:tile/sfx/wood",
     "audio_properties": {
         "lowpass": 0,
-        "reverb": 0    
+        "reverb": 0
     }
 }

@@ -26,6 +26,6 @@
     "sfx": "#phantasia:tile/sfx/grass_block",
     "audio_properties": {
         "lowpass": 0,
-        "reverb": 0    
+        "reverb": 0
     }
 }
