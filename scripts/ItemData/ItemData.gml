@@ -527,7 +527,7 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     
     static get_audio_property_lowpass = function()
     {
-        return self[$ "___audio_properties_reverb"] ?? 0;
+        return self[$ "___audio_properties_lowpass"] ?? 0;
     }
     
     static get_audio_property_reverb = function()
