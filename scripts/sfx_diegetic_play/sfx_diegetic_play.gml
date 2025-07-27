@@ -28,6 +28,8 @@ function sfx_diegetic_play(_emitter, _x, _y, _id, _gain = global.settings.audio_
     
     var _falloff_gain = 1 - normalize(_distance, _falloff_reference, _falloff_max);
     
+    if (_falloff_gain <= 0) exit;
+    
     return audio_play_sound_ext({
         emitter: _emitter,
         sound: array_choose(_data.get_asset()),

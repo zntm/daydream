@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"tile_met_custom_placement_condition",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"tile_met_custom_placement_condition",
+  "parent":{
+    "name":"Tile",
+    "path":"folders/Scripts/Tile.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
