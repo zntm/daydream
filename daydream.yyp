@@ -749,6 +749,7 @@
     {"id":{"name":"menu_refresh_instance_player_attire","path":"scripts/menu_refresh_instance_player_attire/menu_refresh_instance_player_attire.yy",},},
     {"id":{"name":"menu_refresh_instance_player_colour","path":"scripts/menu_refresh_instance_player_colour/menu_refresh_instance_player_colour.yy",},},
     {"id":{"name":"menu_refresh_instance_players","path":"scripts/menu_refresh_instance_players/menu_refresh_instance_players.yy",},},
+    {"id":{"name":"menu_refresh_instance_settings","path":"scripts/menu_refresh_instance_settings/menu_refresh_instance_settings.yy",},},
     {"id":{"name":"menu_refresh_instance_worlds","path":"scripts/menu_refresh_instance_worlds/menu_refresh_instance_worlds.yy",},},
     {"id":{"name":"menu_refresh_value_background","path":"scripts/menu_refresh_value_background/menu_refresh_value_background.yy",},},
     {"id":{"name":"menu_refresh_value_player_save","path":"scripts/menu_refresh_value_player_save/menu_refresh_value_player_save.yy",},},

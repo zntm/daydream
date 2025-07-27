@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"menu_refresh_instance_settings",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"menu_refresh_instance_settings",
+  "parent":{
+    "name":"Instance",
+    "path":"folders/Scripts/Menu/Refresh/Instance.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -36,9 +36,21 @@ with (obj_Menu_Button)
     var _asset_exists = sprite_exists(_asset);
     var _asset_offset = ((_asset_exists) ? sprite_get_height(_asset) : 0);
     
+    if (on_draw_behind != undefined)
+    {
+        if (boolean & (MENU_BUTTON_BOOLEAN.IS_SELECTED | MENU_BUTTON_BOOLEAN.IS_HOLDING))
+        {
+            on_draw_behind(_x, _y + _asset_offset, c_ltgray);
+        }
+        else
+        {
+        	on_draw_behind(_x, _y, c_white);
+        }
+    }    
+    
     if (boolean & MENU_BUTTON_BOOLEAN.IS_BUTTON_VISIBLE)
     {
-        if (boolean & MENU_BUTTON_BOOLEAN.IS_SELECTED)
+        if (boolean & (MENU_BUTTON_BOOLEAN.IS_SELECTED | MENU_BUTTON_BOOLEAN.IS_HOLDING))
         {
             var _button_width  = (_xscale * 16) + 2;
             var _button_height = (_yscale * 16) + 2;
@@ -75,7 +87,7 @@ with (obj_Menu_Button)
     
     if (text != undefined) && (icon != undefined)
     { 
-        if (boolean & MENU_BUTTON_BOOLEAN.IS_SELECTED)
+        if (boolean & (MENU_BUTTON_BOOLEAN.IS_SELECTED | MENU_BUTTON_BOOLEAN.IS_HOLDING))
         {
             draw_sprite_ext(icon, icon_index, _x - (string_width(text) * _loca_font_scale / 2), _y + _asset_offset, _render_xscale * icon_xscale, _render_yscale * icon_yscale, 0, c_ltgray, 1);
             
@@ -90,7 +102,7 @@ with (obj_Menu_Button)
     }
     else if (text != undefined)
     {
-        if (boolean & MENU_BUTTON_BOOLEAN.IS_SELECTED)
+        if (boolean & (MENU_BUTTON_BOOLEAN.IS_SELECTED | MENU_BUTTON_BOOLEAN.IS_HOLDING))
         {
             render_text(_x, _y + _asset_offset, text, _render_xscale, _render_yscale, 0, c_ltgray, 1);
         }
@@ -101,7 +113,7 @@ with (obj_Menu_Button)
     }
     else if (icon != undefined)
     {
-        if (boolean & MENU_BUTTON_BOOLEAN.IS_SELECTED)
+        if (boolean & (MENU_BUTTON_BOOLEAN.IS_SELECTED | MENU_BUTTON_BOOLEAN.IS_HOLDING))
         {
             draw_sprite_ext(icon, icon_index, _x, _y + _asset_offset, _render_xscale * icon_xscale, _render_yscale * icon_yscale, 0, c_ltgray, 1);
         }
@@ -113,7 +125,7 @@ with (obj_Menu_Button)
     
     if (on_draw != undefined)
     {
-        if (boolean & MENU_BUTTON_BOOLEAN.IS_SELECTED)
+        if (boolean & (MENU_BUTTON_BOOLEAN.IS_SELECTED | MENU_BUTTON_BOOLEAN.IS_HOLDING))
         {
             on_draw(_x, _y + _asset_offset, c_ltgray);
         }
@@ -136,7 +148,7 @@ with (obj_Menu_Textbox)
     
     if (boolean & MENU_BUTTON_BOOLEAN.IS_BUTTON_VISIBLE)
     {
-        if (boolean & MENU_BUTTON_BOOLEAN.IS_SELECTED)
+        if (boolean & (MENU_BUTTON_BOOLEAN.IS_SELECTED | MENU_BUTTON_BOOLEAN.IS_HOLDING))
         {
             var _button_width  = (_xscale / 2 * 16) + 2;
             var _button_height = (_yscale / 2 * 16) + 2;
@@ -147,7 +159,7 @@ with (obj_Menu_Textbox)
         }
         else
         {
-            if (boolean & MENU_BUTTON_BOOLEAN.IS_HOVER)
+            if (boolean & (MENU_BUTTON_BOOLEAN.IS_SELECTED | MENU_BUTTON_BOOLEAN.IS_HOLDING))
             {
                 var _button_width  = (_xscale / 2 * 16) + 2;
                 var _button_height = (_yscale / 2 * 16) + 2;

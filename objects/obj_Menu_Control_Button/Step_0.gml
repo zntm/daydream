@@ -6,11 +6,16 @@ for (var i = 0; i < _number; ++i)
     
     with (obj_Menu_Button)
     {
-        if (index != i) continue;
+        if (index != i) || (boolean & MENU_BUTTON_BOOLEAN.IS_HOLDING) continue;
         
         if (point_in_rectangle(mouse_x, mouse_y, bbox_left, bbox_top, bbox_right, bbox_bottom))
         {
             boolean |= MENU_BUTTON_BOOLEAN.IS_HOVER;
+            
+            if (mouse_check_button_pressed(mb_left))
+            {
+                boolean |= MENU_BUTTON_BOOLEAN.IS_HOLDING;
+            }
             
             if (mouse_check_button(mb_left))
             {
@@ -26,11 +31,6 @@ for (var i = 0; i < _number; ++i)
                     {
                         on_select();
                     }
-                }
-                
-                if (on_select_hold != undefined)
-                {
-                    on_select_hold();
                 }
             }
         }
@@ -54,7 +54,7 @@ for (var i = 0; i < _number; ++i)
     {
         with (obj_Menu_Textbox)
         {
-            if (index != i) continue;
+            if (index != i) || (boolean & MENU_BUTTON_BOOLEAN.IS_HOLDING) continue;
             
             if (point_in_rectangle(mouse_x, mouse_y, bbox_left, bbox_top, bbox_right, bbox_bottom))
             {
@@ -75,11 +75,6 @@ for (var i = 0; i < _number; ++i)
                         
                         keyboard_string = text;
                     }
-                    
-                    if (on_select_hold != undefined)
-                    {
-                        on_select_hold();
-                    }
                 }
             }
             else
@@ -89,6 +84,45 @@ for (var i = 0; i < _number; ++i)
                     boolean ^= MENU_BUTTON_BOOLEAN.IS_HOVER;
                 }
             }
+        }
+    }
+}
+
+with (obj_Menu_Button)
+{
+    if (boolean & MENU_BUTTON_BOOLEAN.IS_HOLDING) && (on_select_hold != undefined)
+    {
+        on_select_hold();
+    }
+}
+
+with (obj_Menu_Textbox)
+{
+    if (boolean & MENU_BUTTON_BOOLEAN.IS_HOLDING) && (on_select_hold != undefined)
+    {
+        on_select_hold();
+    }
+}
+
+if (mouse_check_button_released(mb_left))
+{
+    with (obj_Menu_Button)
+    {
+        if (boolean & MENU_BUTTON_BOOLEAN.IS_SELECTED)
+        {
+            sfx_play("phantasia:menu.button.deselect");
+            
+            boolean ^= MENU_BUTTON_BOOLEAN.IS_SELECTED;
+            
+            if (on_select_release != undefined)
+            {
+                on_select_release();
+            }
+        }
+        
+        if (boolean & MENU_BUTTON_BOOLEAN.IS_HOLDING)
+        {
+            boolean ^= MENU_BUTTON_BOOLEAN.IS_HOLDING;
         }
     }
 }
@@ -114,24 +148,6 @@ if (mouse_check_button_pressed(mb_left))
 if (keyboard_check_pressed(vk_escape))
 {
     with (obj_Menu_Textbox)
-    {
-        if (boolean & MENU_BUTTON_BOOLEAN.IS_SELECTED)
-        {
-            sfx_play("phantasia:menu.button.deselect");
-            
-            boolean ^= MENU_BUTTON_BOOLEAN.IS_SELECTED;
-            
-            if (on_select_release != undefined)
-            {
-                on_select_release();
-            }
-        }
-    }
-}
-
-if (mouse_check_button_released(mb_left))
-{
-    with (obj_Menu_Button)
     {
         if (boolean & MENU_BUTTON_BOOLEAN.IS_SELECTED)
         {

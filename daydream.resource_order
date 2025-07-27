@@ -217,6 +217,7 @@
     {"name":"menu_control_textbox","order":1,"path":"scripts/menu_control_textbox/menu_control_textbox.yy",},
     {"name":"menu_refresh_instance_player_attire","order":2,"path":"scripts/menu_refresh_instance_player_attire/menu_refresh_instance_player_attire.yy",},
     {"name":"menu_refresh_instance_player_colour","order":3,"path":"scripts/menu_refresh_instance_player_colour/menu_refresh_instance_player_colour.yy",},
+    {"name":"menu_refresh_instance_settings","order":4,"path":"scripts/menu_refresh_instance_settings/menu_refresh_instance_settings.yy",},
     {"name":"menu_refresh_instance_worlds","order":1,"path":"scripts/menu_refresh_instance_worlds/menu_refresh_instance_worlds.yy",},
     {"name":"menu_refresh_value_player_save","order":1,"path":"scripts/menu_refresh_value_player_save/menu_refresh_value_player_save.yy",},
     {"name":"menu_refresh_value_world_save","order":2,"path":"scripts/menu_refresh_value_world_save/menu_refresh_value_world_save.yy",},
