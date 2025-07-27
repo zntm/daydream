@@ -211,6 +211,8 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
             "some":  TILE_PLACEMENT_CONDITION_TYPE.SOME
         }
         
+        static __item_type = global.item_type;
+        
         if (_placement != undefined)
         {
             var _index = _placement[$ "index"];
@@ -263,6 +265,25 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
                         _data.xoffset = 0;
                         _data.yoffset = 0;
                     }
+                    
+                    var _type = 0;
+                    var _types = _value[$ "type"];
+                    
+                    if (is_array(_types))
+                    {
+                        var _types_length = array_length(_types);
+                        
+                        for (var j = 0; j < _types_length; ++j)
+                        {
+                            __type |= __item_type[$ _types[j]];
+                        }
+                    }
+                    else
+                    {
+                        _type = __item_type[$ _types];
+                    }
+                    
+                    _data.type = _type;
                     
                     ___placement_condition.values[@ i] = _data;
                 }

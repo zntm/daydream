@@ -81,27 +81,9 @@ function tile_placement_condition(_x, _y, _z, _item)
             
             if (_types != undefined)
             {
-                var _tile_data = _item_data[$ _tile.get_id()];
-                
-                if (is_array(_types))
-                {
-                    var _types_length = array_length(_types);
-                    
-                    for (var j = 0; j < _types_length; ++j)
-                    {
-                        if (_tile_data.has_type(__item_type[$ _types[j]]))
-                        {
-                            ++_met;
-                            
-                            continue;
-                        }
-                    }
-                }
-                else if (_tile_data.has_type(__item_type[$ _types]))
+                if (_item_data[$ _tile.get_id()].has_type(_types))
                 {
                     ++_met;
-                    
-                    continue;
                 }
                 
                 continue;
