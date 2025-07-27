@@ -10,7 +10,7 @@ with (obj_Menu_Anchor)
 {
     if (on_draw != undefined)
     {
-        on_draw(_render_xoffset, _render_yoffset);
+        on_draw(_render_xoffset, _render_yoffset, _render_xscale, _render_yscale);
     }
 }
 
