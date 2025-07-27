@@ -17,8 +17,6 @@ function tile_update_surrounding(_x, _y, _z, _xoffset = 2, _yoffset = 2)
             
             for (var l = 0; l < CHUNK_DEPTH; ++l)
             {
-                // if (i == _x) && (j == _y) && (l == _z) continue;
-                
                 tile_update(i, j, l);
                 
                 if (instance_exists(_inst))
