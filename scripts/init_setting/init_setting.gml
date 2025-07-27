@@ -97,11 +97,18 @@ init_setting("controls", "input_keyboard_drop",       new SettingsData(SETTINGS_
 init_setting("audio", "audio_master", new SettingsData(SETTINGS_TYPE.SLIDER, 1)
     .set_on_update(function(_name, _value)
     {
+        audio_master_gain(_value);
     }));
 
 init_setting("audio", "audio_music", new SettingsData(SETTINGS_TYPE.SLIDER, 1)
     .set_on_update(function(_name, _value)
     {
+        var _music = global.menu_music;
+        
+        if (audio_is_playing(_music))
+        {
+            audio_sound_gain(_music, global.menu_music_gain * _value, 0);
+        }
     }));
 
 init_setting("audio", "audio_sfx", new SettingsData(SETTINGS_TYPE.SLIDER, 1));

@@ -137,6 +137,9 @@ for (var i = 0; i < 8; ++i)
     }
 }
 
+global.menu_music = -1;
+global.menu_music_gain = 0;
+
 global.window_width  = window_get_width();
 global.window_height = window_get_height();
 

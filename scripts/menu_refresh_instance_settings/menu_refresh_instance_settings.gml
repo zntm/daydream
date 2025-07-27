@@ -80,12 +80,30 @@ function menu_refresh_instance_settings()
             
             static __slider_on_select_hold = function()
             {
-                x = clamp(mouse_x + xoffset, slider_x_min, slider_x_max);
+                var _x = mouse_x + xoffset;
+                
+                x = clamp(_x, slider_x_min, slider_x_max);
+                
+                var _t = normalize(_x, slider_x_min, slider_x_max);
+                
+                if (global.settings[$ name] != _t)
+                {
+                    var _on_update = global.settings_data[$ name].get_on_update();
+                    
+                    if (_on_update != undefined)
+                    {
+                        _on_update(name, _t);
+                    }
+                }
+                
+                global.settings[$ name] = _t;
             }
             
             with (instance_create_layer(64, _y, "Instances", obj_Menu_Button))
             {
                 is_setting = true;
+                
+                name = _name;
                 
                 slider_x_min = room_width - 64 - 256;
                 slider_x_max = room_width - 64;
