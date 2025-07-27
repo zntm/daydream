@@ -1,6 +1,6 @@
 {
 	"world_height": 1024,
-	"spawn_interval": 12,
+	"spawn_interval": 14,
 	"vignette": {
 		"start": 768,
 		"end": 1024,
