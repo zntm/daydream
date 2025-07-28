@@ -21,6 +21,7 @@ Phantasia © 2025 by Zhen is licensed under Phantasia's Daydream - see the LICEN
 - [Enderscape](https://github.com/they-made-enderscape/enderscape)
 - [execute_shell_simple for GameMaker](https://yellowafterlife.itch.io/gamemaker-execute-shell-simple)
 - [NekoPresence](https://github.com/nkrapivin/NekoPresence)
+- [Voice Acted Sound Effects](https://www.youtube.com/@voicedsoundeffects)
 - [window_taskbar for GameMaker](https://yellowafterlife.itch.io/gamemaker-window-taskbar)
 
-###### Last Updated @ July 9, 2025
+###### Last Updated @ July 28, 2025

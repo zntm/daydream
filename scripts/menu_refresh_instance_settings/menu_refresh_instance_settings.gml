@@ -15,9 +15,12 @@ function menu_refresh_instance_settings()
         render_text(x, y + 24, loca_translate($"phantasia:settings.{name}.description"), 0.75, 0.75, 0, c_ltgray, 0.5);
     }
     
+    var _layer = layer_get_id("Settings");
+    
     with (all)
     {
-        if (id[$ "is_setting"])
+        // if (id[$ "is_setting"])
+        if (layer == _layer)
         {
             instance_destroy();
         }
@@ -45,7 +48,7 @@ function menu_refresh_instance_settings()
         
         var _y = inst_981AC84.y + (64 * i);
         
-        with (instance_create_layer(64, _y, "Instances", obj_Menu_Anchor))
+        with (instance_create_layer(64, _y, "Settings", obj_Menu_Anchor))
         {
             is_setting = true;
             
@@ -98,7 +101,7 @@ function menu_refresh_instance_settings()
                 global.settings[$ name] = _t;
             }
             
-            with (instance_create_layer(64, _y, "Instances", obj_Menu_Button))
+            with (instance_create_layer(64, _y, "Settings", obj_Menu_Button))
             {
                 is_setting = true;
                 
@@ -142,7 +145,7 @@ function menu_refresh_instance_settings()
                 global.settings[$ name] = _value;
             }
             
-            with (instance_create_layer(64, _y, "Instances", obj_Menu_Button))
+            with (instance_create_layer(64, _y, "Settings", obj_Menu_Button))
             {
                 is_setting = true;
                 
