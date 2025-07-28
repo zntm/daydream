@@ -26,8 +26,8 @@ function control_entity_sfx(_dt)
             var _tile_x = round(x / TILE_SIZE);
             var _tile_y = round(y / TILE_SIZE);
             
-            var _tile_x_to = _tile_x + round(_xoffset * 16);
-            var _tile_y_to = _tile_y + round(_yoffset * 16);
+            var _tile_x_to = round(_xoffset * 16);
+            var _tile_y_to = round(_yoffset * 16);
             
             for (var j = 0; j < 16; ++j)
             {
