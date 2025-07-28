@@ -1,37 +1,35 @@
 function menu_refresh_instance_settings()
 {
-    static __inst = [
-        inst_3189C1C2,
-        inst_136769C8,
-        inst_CE64C4A,
-        inst_375A3A5D
-    ];
-    
-    static __text = function()
+    static __text = function(_x, _y, _xscale, _yscale)
     {
         var _data = global.settings_data[$ name];
         
-        render_text(x, y, loca_translate($"phantasia:settings.{name}.name"));
-        render_text(x, y + 24, loca_translate($"phantasia:settings.{name}.description"), 0.75, 0.75, 0, c_ltgray, 0.5);
+        var _x2 = x * _xscale;
+        var _y2 = y * _yscale;
+        
+        render_text(_x2, _y2, loca_translate($"phantasia:settings.{name}.name"), _xscale, _yscale);
+        render_text(_x2, _y2 + (24 * _yscale), loca_translate($"phantasia:settings.{name}.description"), _xscale * 0.75, _yscale * 0.75, 0, c_ltgray, 0.5);
     }
-    
-    var _layer = layer_get_id("Settings");
     
     with (all)
     {
-        // if (id[$ "is_setting"])
-        if (layer == _layer)
+        if (id[$ "is_setting"])
         {
             instance_destroy();
+            
+            continue;
+        }
+        
+        if (id[$ "category"] != undefined)
+        {
+            sprite_index = spr_Menu_Button_Main;
         }
     }
     
-    for (var i = 0; i < 4; ++i)
-    {
-        __inst[@ i].sprite_index = spr_Menu_Button_Main;
-    }
-    
     sprite_index = spr_Menu_Button_Secondary;
+    
+    var _menu_settings_xoffset = global.menu_settings_xoffset;
+    var _menu_settings_yoffset = global.menu_settings_yoffset;
     
     var _settings = global.settings;
     var _settings_data = global.settings_data;
@@ -46,7 +44,8 @@ function menu_refresh_instance_settings()
         
         var _value = _settings[$ _name];
         
-        var _y = inst_981AC84.y + (64 * i);
+        // var _y = inst_981AC84.y + (64 * i);
+        var _y = 192 + (64 * i);
         
         with (instance_create_layer(64, _y, "Settings", obj_Menu_Anchor))
         {
@@ -68,11 +67,11 @@ function menu_refresh_instance_settings()
         }
         else if (_type == SETTINGS_TYPE.SLIDER)
         {
-            static __slider_on_draw_behind = function()
+            static __slider_on_draw_behind = function(_x, _y, _xscale, _yscale)
             {
-                var _xscale = slider_x_max - slider_x_min;
+                var _width = (slider_x_max - slider_x_min) * _xscale;
                 
-                draw_sprite_ext(spr_Menu_Indent, 0, slider_x_min + (_xscale / 2), y, _xscale / 8, 16 / 8, 0, c_white, 1); 
+                draw_sprite_ext(spr_Menu_Indent, 0, ((slider_x_min - global.menu_settings_xoffset) * _xscale) + (_width / 2), (y - global.menu_settings_yoffset) * _yscale, _width / 8, 16 / 8, 0, c_white, 1); 
             }
             
             static __slider_on_select = function()
@@ -101,14 +100,14 @@ function menu_refresh_instance_settings()
                 global.settings[$ name] = _t;
             }
             
-            with (instance_create_layer(64, _y, "Settings", obj_Menu_Button))
+            with (instance_create_layer(_menu_settings_xoffset + 64, _menu_settings_yoffset + _y, "Settings", obj_Menu_Button))
             {
                 is_setting = true;
                 
                 name = _name;
                 
-                slider_x_min = room_width - 64 - 256;
-                slider_x_max = room_width - 64;
+                slider_x_min = _menu_settings_xoffset + room_width - 64 - 256;
+                slider_x_max = _menu_settings_xoffset + room_width - 64;
                 
                 image_yscale = 2;
                 
@@ -124,9 +123,9 @@ function menu_refresh_instance_settings()
         }
         else if (_type == SETTINGS_TYPE.SWITCH)
         {
-            static __switch_on_draw_behind = function()
+            static __switch_on_draw_behind = function(_x, _y, _xscale, _yscale)
             {
-                draw_sprite_ext(spr_Menu_Indent, 0, room_width - 64 - 16, y, 32 / 8, 16 / 8, 0, c_white, 1); 
+                draw_sprite_ext(spr_Menu_Indent, 0, (room_width - 64 - 16) * _xscale, (y - global.menu_settings_yoffset) * _yscale, 32 / 8, 16 / 8, 0, c_white, 1); 
             }
             
             static __slider_on_select_release = function()
@@ -145,7 +144,7 @@ function menu_refresh_instance_settings()
                 global.settings[$ name] = _value;
             }
             
-            with (instance_create_layer(64, _y, "Settings", obj_Menu_Button))
+            with (instance_create_layer(_menu_settings_xoffset + 64, _menu_settings_yoffset + _y, "Settings", obj_Menu_Button))
             {
                 is_setting = true;
                 
@@ -153,7 +152,7 @@ function menu_refresh_instance_settings()
                 
                 image_yscale = 2;
                 
-                x = ((_value) ? room_width - 64 : room_width - 64 - 32);
+                x = _menu_settings_xoffset + ((_value) ? room_width - 64 : room_width - 64 - 32);
                 
                 on_select_release = method(id, __slider_on_select_release);
                 

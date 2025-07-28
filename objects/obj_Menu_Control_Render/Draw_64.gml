@@ -40,11 +40,11 @@ with (obj_Menu_Button)
     {
         if (boolean & (MENU_BUTTON_BOOLEAN.IS_SELECTED | MENU_BUTTON_BOOLEAN.IS_HOLDING))
         {
-            on_draw_behind(_x, _y + _asset_offset, c_ltgray);
+            on_draw_behind(_x, _y + _asset_offset, _render_xscale, _render_yscale, c_ltgray);
         }
         else
         {
-        	on_draw_behind(_x, _y, c_white);
+        	on_draw_behind(_x, _y, _render_xscale, _render_yscale, c_white);
         }
     }    
     
