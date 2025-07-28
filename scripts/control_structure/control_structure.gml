@@ -59,15 +59,19 @@ function control_structure(_x, _y)
         }
     }
     
-    for (var i = _x - WORLDGEN_STRUCTURE_OFFSET; i <= _x + WORLDGEN_STRUCTURE_OFFSET; ++i)
+    var _xstart = floor((_x - WORLDGEN_STRUCTURE_OFFSET) / CHUNK_SIZE);
+    var _xend   = floor((_x + WORLDGEN_STRUCTURE_OFFSET) / CHUNK_SIZE);
+    
+    for (var i = _xstart; i <= _xend; ++i)
     {
         var _surface_height = worldgen_get_surface_height(i, _world_seed);
         
-        for (var j = max(_surface_height - 1, _y - WORLDGEN_STRUCTURE_OFFSET); j <= _y + WORLDGEN_STRUCTURE_OFFSET; ++j)
+        var _ystart = floor(max(_surface_height - 1, _y - WORLDGEN_STRUCTURE_OFFSET) / CHUNK_SIZE);
+        var _yend   = floor((_y + WORLDGEN_STRUCTURE_OFFSET) / CHUNK_SIZE);
+        
+        for (var j = _ystart; j <= _yend; ++j)
         {
-            var _index = $"{floor(i / CHUNK_SIZE)}_{floor(j / CHUNK_SIZE)}";
-            
-            global.worldgen_structure[$ _index] = true;
+            global.worldgen_structure[$ $"{i}_{j}"] = true;
         }
     }
 }
