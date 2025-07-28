@@ -97,13 +97,15 @@ global.chunk_depth = {
     "wall": 0
 }
 
+#macro AUDIO_EFFECT_SIZE 16
+
 global.audio_effect_reverb = array_create(8);
 
-for (var i = 0; i < 8; ++i)
+for (var i = 0; i < AUDIO_EFFECT_SIZE; ++i)
 {
     var _reverb = audio_effect_create(AudioEffectType.Reverb1);
     
-    var _t = i / 7;
+    var _t = i / (AUDIO_EFFECT_SIZE - 1);
     
     _reverb.mix  = _t;
     _reverb.size = _t;
@@ -113,20 +115,20 @@ for (var i = 0; i < 8; ++i)
 
 global.audio_effect_lpf2 = array_create(8);
 
-for (var i = 0; i < 8; ++i)
+for (var i = 0; i < AUDIO_EFFECT_SIZE; ++i)
 {
     var _lpf2 = audio_effect_create(AudioEffectType.LPF2);
     
-    _lpf2.cutoff = lerp(28_000, 600, i / 7);
+    _lpf2.cutoff = lerp(28_000, 600, i / (AUDIO_EFFECT_SIZE - 1));
     
     global.audio_effect_lpf2[@ i] = _lpf2;
 }
 
 global.audio_bus = {}
 
-for (var i = 0; i < 8; ++i)
+for (var i = 0; i < AUDIO_EFFECT_SIZE; ++i)
 {
-    for (var j = 0; j < 8; ++j)
+    for (var j = 0; j < AUDIO_EFFECT_SIZE; ++j)
     {
         var _audio_bus = audio_bus_create();
         
