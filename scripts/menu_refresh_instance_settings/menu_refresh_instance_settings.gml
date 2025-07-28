@@ -62,7 +62,6 @@ function menu_refresh_instance_settings()
         }
         else if (_type == SETTINGS_TYPE.HOTKEY)
         {
-            
         }
         else if (_type == SETTINGS_TYPE.SLIDER)
         {
@@ -111,6 +110,7 @@ function menu_refresh_instance_settings()
                 image_yscale = 2;
                 
                 xoffset = 0;
+                
                 x = lerp(slider_x_min, slider_x_max, _value);
                 
                 on_select = method(id, __slider_on_select);
@@ -121,7 +121,41 @@ function menu_refresh_instance_settings()
         }
         else if (_type == SETTINGS_TYPE.SWITCH)
         {
+            static __switch_on_draw_behind = function()
+            {
+                draw_sprite_ext(spr_Menu_Indent, 0, room_width - 64 - 16, y, 32 / 8, 16 / 8, 0, c_white, 1); 
+            }
             
+            static __slider_on_select_release = function()
+            {
+                var _value = !global.settings[$ name];
+                
+                x = ((_value) ? room_width - 64 : room_width - 64 - 32);
+                
+                var _on_update = global.settings_data[$ name].get_on_update();
+                
+                if (_on_update != undefined)
+                {
+                    _on_update(name, _value);
+                }
+                
+                global.settings[$ name] = _value;
+            }
+            
+            with (instance_create_layer(64, _y, "Instances", obj_Menu_Button))
+            {
+                is_setting = true;
+                
+                name = _name;
+                
+                image_yscale = 2;
+                
+                x = ((_value) ? room_width - 64 : room_width - 64 - 32);
+                
+                on_select_release = method(id, __slider_on_select_release);
+                
+                on_draw_behind = method(id, __switch_on_draw_behind);
+            }
         }
     }
 }
