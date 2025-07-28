@@ -20,14 +20,11 @@ function control_entity_sfx(_dt)
         {
             var _angle = (i / 32) * 360;
             
-            var _xoffset =  dcos(_angle);
-            var _yoffset = -dsin(_angle);
-            
             var _tile_x = round(x / TILE_SIZE);
             var _tile_y = round(y / TILE_SIZE);
             
-            var _tile_x_to = round(_xoffset * 16);
-            var _tile_y_to = round(_yoffset * 16);
+            var _tile_x_to =  round(dcos(_angle) * 16);
+            var _tile_y_to = -round(dsin(_angle) * 16);
             
             for (var j = 0; j < 16; ++j)
             {
