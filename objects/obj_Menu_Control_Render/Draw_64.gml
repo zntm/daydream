@@ -46,7 +46,7 @@ with (obj_Menu_Button)
         {
         	on_draw_behind(_x, _y, _render_xscale, _render_yscale, c_white);
         }
-    }    
+    }
     
     if (boolean & MENU_BUTTON_BOOLEAN.IS_BUTTON_VISIBLE)
     {

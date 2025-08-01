@@ -10,6 +10,8 @@ on_select_release = function()
     global.menu_settings_xoffset = _camera_x;
     global.menu_settings_yoffset = _camera_y;
     
+    layer_set_visible("Menu_Pause", false);
+    
     layer_set_visible("Menu_Settings", true);
     layer_set_visible("Settings", true);
     

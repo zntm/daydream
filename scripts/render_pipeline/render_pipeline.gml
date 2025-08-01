@@ -18,6 +18,8 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
         _texture = global.carbasa_surface_texture[$ "item"];
     }
     
+    var _uv = global.carbasa_surface_uv[$ "item"];
+    
     var _texel_width  = texture_get_texel_width(_texture);
     var _texel_height = texture_get_texel_height(_texture);
     
@@ -40,15 +42,32 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
             var _xcenter = _inst.xcenter;
             var _ycenter = _inst.ycenter;
             
-            var _light = instance_nearest(_xcenter, _ycenter, obj_Parent_Light);
+            var _check_light = true;
             
-            if (!instance_exists(_light)) || (rectangle_distance(_light.x, _light.y, _xcenter - (CHUNK_SIZE_DIMENSION / 2), _ycenter - (CHUNK_SIZE_DIMENSION / 2), _xcenter + (CHUNK_SIZE_DIMENSION / 2), _ycenter + (CHUNK_SIZE_DIMENSION / 2)) >= (CHUNK_SIZE_DIMENSION * 3)) continue;
+            var _chunk_covered = _inst.chunk_covered;
+            
+            for (var j = 0; j < CHUNK_SIZE; ++j)
+            {
+                if (_chunk_covered[j] != ((1 << CHUNK_SIZE) - 1))
+                {
+                    _check_light = false;
+                    
+                    break;
+                }
+            }
+            
+            if (_check_light)
+            {
+                var _light = instance_nearest(_xcenter, _ycenter, obj_Parent_Light);
+                
+                if (!instance_exists(_light)) || (rectangle_distance(_light.x, _light.y, _xcenter - (CHUNK_SIZE_DIMENSION / 2), _ycenter - (CHUNK_SIZE_DIMENSION / 2), _xcenter + (CHUNK_SIZE_DIMENSION / 2), _ycenter + (CHUNK_SIZE_DIMENSION / 2)) >= (CHUNK_SIZE_DIMENSION * 1.5)) continue;
+            }
             
             var _buffer = _inst.chunk_vertex_buffer[_z];
             
             if (!vertex_buffer_exists(_buffer))
             {
-                _buffer = render_chunk(global.carbasa_surface_uv[$ "item"], _inst, _z);
+                _buffer = render_chunk(_uv, _inst, _z);
             }
             
             if (_z == CHUNK_DEPTH_FOLIAGE_BACK)
