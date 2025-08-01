@@ -10,12 +10,25 @@ uniform vec2 u_noise;
 uniform vec2 u_offset;
 uniform int u_roughness;
 
-const vec2 RANDOM_DOT = vec2(12.9898, 78.233);
+const vec2 RANDOM_DOT = vec2(6.9818, 7.137);
 
+/*
 float random(in vec2 st)
 {
-    return fract(sin(dot(st.xy, RANDOM_DOT)) * 43758.5453123);
+    return fract(cos(dot(st.xy, RANDOM_DOT)) * 4.54193);
 }
+
+const vec3 RANDOM_VEC3 = vec3(0.1031, 0.11369, 0.13787);
+
+float random(in vec2 p)
+{
+    vec3 v = fract(vec3(p.x, p.y, p.x) * RANDOM_VEC3);
+    
+    v += dot(v, v.yzx + 33.33);
+    
+    return fract((v.x + v.y) * v.z);
+}
+*/
 
 const vec2 V_10 = vec2(1.0, 0.0);
 const vec2 V_01 = vec2(0.0, 1.0);
@@ -25,41 +38,42 @@ const vec2 V_11 = vec2(1.0, 1.0);
 // https://www.shadertoy.com/view/4dS3Wd
 float noise(in vec2 st, in float seed)
 {
-    vec2 i = floor(st);
+    vec2 i = floor(st) + seed;
     vec2 f = fract(st);
     
-    i += seed;
-    
+    /*
     float a = random(i);
     float b = random(i + V_10);
     float c = random(i + V_01);
     float d = random(i + V_11);
+    */
+    
+    float a = fract(cos(dot(st.xy,        RANDOM_DOT)) * 4.54193);
+    float b = fract(cos(dot(st.xy + V_10, RANDOM_DOT)) * 3.98117);
+    float c = fract(cos(dot(st.xy + V_01, RANDOM_DOT)) * 1.31079);
+    float d = fract(cos(dot(st.xy + V_11, RANDOM_DOT)) * 7.22007);
     
     vec2 u = f * f * (3.0 - (2.0 * f));
     
-    float x = 1.0 - u.x;
-    float y = 1.0 - u.y;
+    float nx0 = mix(a, b, u.x);
+    float nx1 = mix(c, d, u.x);
     
-    return
-        (a * x   * y)   +
-        (b * y   * u.x) +
-        (c * x   * u.y) +
-        (d * u.x * u.y);
+    return mix(nx0, nx1, u.y);
 }
+
+const vec3 FRACTCAL_BATCH_MULTIPLIER = vec3(2.0, 2.0, 0.5);
 
 float fractal(in vec2 st, in float seed)
 {
     float value = 0.0;
     
-    float amplitude = 0.5;
-    float frequency = 0.0;
+    vec3 batch = vec3(st.x, st.y, 0.5);
     
     for (int i = 0; i < u_roughness; ++i)
     {
-        value += amplitude * noise(st, seed);
+        value += batch.z * noise(batch.xy, seed);
         
-        st *= 2.0;
-        amplitude *= 0.5;
+        batch *= FRACTCAL_BATCH_MULTIPLIER;
     }
     
     return value;
