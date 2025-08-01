@@ -1,5 +1,30 @@
 function structure_create(_x, _y, _id, _seed)
 {
+    static __size = function(_v, _width, _height)
+    {
+        if (_v == "width")
+        {
+            return _width;
+        }
+        
+        if (_v == "-width")
+        {
+            return -_width;
+        }
+        
+        if (_v == "height")
+        {
+            return _height;
+        }
+        
+        if (_v == "-height")
+        {
+            return -_height;
+        }
+        
+        return _v;
+    }
+    
     var _structure_data = global.structure_data[$ _id];
     
     var _width  = smart_value(_structure_data.get_width());
@@ -20,224 +45,40 @@ function structure_create(_x, _y, _id, _seed)
         var _if_clear = _structure_data.get_placement_if_clear();
         var _if_clear_length = _structure_data.get_placement_if_clear_length();
         
+        var _tile_x = round(_x / TILE_SIZE);
+        var _tile_y = round(_y / TILE_SIZE);
+        
         for (var i = 0; i < _if_clear_length; ++i)
         {
             var _data = _if_clear[i];
             
-            var _if_clear_width  = _data.width;
-            var _if_clear_height = _data.height;
+            var _if_clear_width  = __size(_data.width,  _width, _height);
+            var _if_clear_height = __size(_data.height, _width, _height);
             
-            if (_if_clear_width == "width")
-            {
-                _if_clear_width = _width;
-            }
-            else if (_if_clear_width == "-width")
-            {
-                _if_clear_width = -_width;
-            }
-            else if (_if_clear_width == "height")
-            {
-                _if_clear_width = _height;
-            }
-            else if (_if_clear_width == "-height")
-            {
-                _if_clear_width = -_height;
-            }
+            var _abs_if_clear_width  = abs(_if_clear_width);
+            var _abs_if_clear_height = abs(_if_clear_height);
             
-            if (_if_clear_height == "width")
-            {
-                _if_clear_height = _width;
-            }
-            else if (_if_clear_height == "-width")
-            {
-                _if_clear_height = -_width;
-            }
-            else if (_if_clear_height == "height")
-            {
-                _if_clear_height = _height;
-            }
-            else if (_if_clear_height == "-height")
-            {
-                _if_clear_height = -_height;
-            }
-            
-            var _xoffset = _data.xoffset;
-            var _yoffset = _data.yoffset;
-            
-            if (_xoffset == "width")
-            {
-                _xoffset = _if_clear_width;
-            }
-            else if (_xoffset == "-width")
-            {
-                _xoffset = -_if_clear_width;
-            }
-            else if (_xoffset == "height")
-            {
-                _xoffset = _if_clear_height;
-            }
-            else if (_xoffset == "-height")
-            {
-                _xoffset = -_if_clear_height;
-            }
-            
-            if (_yoffset == "width")
-            {
-                _yoffset = _if_clear_width;
-            }
-            else if (_yoffset == "-width")
-            {
-                _yoffset = -_if_clear_width;
-            }
-            else if (_yoffset == "height")
-            {
-                _yoffset = _if_clear_height;
-            }
-            else if (_yoffset == "-height")
-            {
-                _yoffset = -_if_clear_height;
-            }
+            var _xoffset = __size(_data.xoffset, _abs_if_clear_width, _abs_if_clear_height);
+            var _yoffset = __size(_data.yoffset, _abs_if_clear_width, _abs_if_clear_height);
             
             for (var j = 0; j < _if_clear_width; ++j)
             {
-                var _x2 = round(_x / TILE_SIZE) + j + _xoffset;
+                var _x2 = _tile_x + j + _xoffset;
                 
                 var _surface_height = worldgen_get_surface_height(_x2, _seed);
                 
                 for (var l = 0; l < _if_clear_height; ++l)
                 {
-                    var _y2 = round(_y / TILE_SIZE) + l + _yoffset;
+                    var _y2 = _tile_y + l + _yoffset;
                     
                     if (!worldgen_get_cave(_x2, _y2, _surface_height, _seed)) exit;
                 }
             }
         }
-        /*
-        var _if_clear_width  = _structure_data.get_placement_if_clear_width();
-        var _if_clear_height = _structure_data.get_placement_if_clear_height();
-        
-        if (_if_clear_width == "width")
-        {
-            _if_clear_width = _width;
-        }
-        else if (_if_clear_width == "-width")
-        {
-            _if_clear_width = -_width;
-        }
-        else if (_if_clear_width == "height")
-        {
-            _if_clear_width = _height;
-        }
-        else if (_if_clear_width == "-height")
-        {
-            _if_clear_width = -_height;
-        }
-        
-        if (_if_clear_height == "width")
-        {
-            _if_clear_height = _width;
-        }
-        else if (_if_clear_height == "-width")
-        {
-            _if_clear_height = -_width;
-        }
-        else if (_if_clear_height == "height")
-        {
-            _if_clear_height = _height;
-        }
-        else if (_if_clear_height == "-height")
-        {
-            _if_clear_height = -_height;
-        }
-        
-        var _xoffset = _structure_data.get_placement_if_clear_xoffset();
-        var _yoffset = _structure_data.get_placement_if_clear_yoffset();
-        
-        if (_xoffset == "width")
-        {
-            _xoffset = _if_clear_width;
-        }
-        else if (_xoffset == "-width")
-        {
-            _xoffset = -_if_clear_width;
-        }
-        else if (_xoffset == "height")
-        {
-            _xoffset = _if_clear_height;
-        }
-        else if (_xoffset == "-height")
-        {
-            _xoffset = -_if_clear_height;
-        }
-        
-        if (_yoffset == "width")
-        {
-            _yoffset = _if_clear_width;
-        }
-        else if (_yoffset == "-width")
-        {
-            _yoffset = -_if_clear_width;
-        }
-        else if (_yoffset == "height")
-        {
-            _yoffset = _if_clear_height;
-        }
-        else if (_yoffset == "-height")
-        {
-            _yoffset = -_if_clear_height;
-        }
-        
-        for (var i = 0; i < _if_clear_width; ++i)
-        {
-            var _x2 = round(_x / TILE_SIZE) + i + _xoffset;
-            
-            var _surface_height = worldgen_get_surface_height(_x2, _seed);
-            
-            for (var j = 0; j < _if_clear_height; ++j)
-            {
-                var _y2 = round(_y / TILE_SIZE) + j + _yoffset;
-                
-                if (!worldgen_get_cave(_x2, _y2, _surface_height, _seed)) exit;
-            }
-        }*/
     }
      
-    var _xoffset = _structure_data.get_placement_xoffset();
-    var _yoffset = _structure_data.get_placement_yoffset();
-    
-    if (_xoffset == "width")
-    {
-        _xoffset = _width;
-    }
-    else if (_xoffset == "-width")
-    {
-        _xoffset = -_width;
-    }
-    else if (_xoffset == "height")
-    {
-        _xoffset = _height;
-    }
-    else if (_xoffset == "-height")
-    {
-        _xoffset = -_height;
-    }
-    
-    if (_yoffset == "width")
-    {
-        _yoffset = _width;
-    }
-    else if (_yoffset == "-width")
-    {
-        _yoffset = -_width;
-    }
-    else if (_yoffset == "height")
-    {
-        _yoffset = _height;
-    }
-    else if (_yoffset == "-height")
-    {
-        _yoffset = -_height;
-    }
+    var _xoffset = __size(_structure_data.get_placement_xoffset(), _width, _height);
+    var _yoffset = __size(_structure_data.get_placement_yoffset(), _width, _height);
     
     _x += (ceil(_width  / 2) + _xoffset) * TILE_SIZE;
     _y += (ceil(_height / 2) + _yoffset) * TILE_SIZE;
