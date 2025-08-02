@@ -12,24 +12,6 @@ uniform int u_roughness;
 
 const vec2 RANDOM_DOT = vec2(6.9818, 7.137);
 
-/*
-float random(in vec2 st)
-{
-    return fract(cos(dot(st.xy, RANDOM_DOT)) * 4.54193);
-}
-
-const vec3 RANDOM_VEC3 = vec3(0.1031, 0.11369, 0.13787);
-
-float random(in vec2 p)
-{
-    vec3 v = fract(vec3(p.x, p.y, p.x) * RANDOM_VEC3);
-    
-    v += dot(v, v.yzx + 33.33);
-    
-    return fract((v.x + v.y) * v.z);
-}
-*/
-
 const vec2 V_10 = vec2(1.0, 0.0);
 const vec2 V_01 = vec2(0.0, 1.0);
 const vec2 V_11 = vec2(1.0, 1.0);
@@ -39,20 +21,13 @@ const vec2 V_11 = vec2(1.0, 1.0);
 float noise(in vec2 st, in float seed)
 {
     vec2 i = floor(st) + seed;
+    
+    float a = fract(cos(dot(i,        RANDOM_DOT)) * 4.54193);
+    float b = fract(cos(dot(i + V_10, RANDOM_DOT)) * 4.54193);
+    float c = fract(cos(dot(i + V_01, RANDOM_DOT)) * 4.54193);
+    float d = fract(cos(dot(i + V_11, RANDOM_DOT)) * 4.54193);
+    
     vec2 f = fract(st);
-    
-    /*
-    float a = random(i);
-    float b = random(i + V_10);
-    float c = random(i + V_01);
-    float d = random(i + V_11);
-    */
-    
-    float a = fract(cos(dot(st.xy,        RANDOM_DOT)) * 4.54193);
-    float b = fract(cos(dot(st.xy + V_10, RANDOM_DOT)) * 3.98117);
-    float c = fract(cos(dot(st.xy + V_01, RANDOM_DOT)) * 1.31079);
-    float d = fract(cos(dot(st.xy + V_11, RANDOM_DOT)) * 7.22007);
-    
     vec2 u = f * f * (3.0 - (2.0 * f));
     
     float nx0 = mix(a, b, u.x);
