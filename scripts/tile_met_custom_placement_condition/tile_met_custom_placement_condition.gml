@@ -2,6 +2,8 @@ function tile_met_custom_placement_condition(_x, _y, _z, _placement_condition)
 {
     static __item_type = global.item_type;
     
+    var _item_data = global.item_data;
+    
     var _requirement_values = _placement_condition.values;
     var _requirement_condition = _placement_condition.type;
     
@@ -35,7 +37,7 @@ function tile_met_custom_placement_condition(_x, _y, _z, _placement_condition)
         
         if (_types != undefined)
         {
-            if (global.item_data[$ _tile.get_id()].has_type(_types))
+            if (_item_data[$ _tile.get_id()].has_type(_types))
             {
                 ++_met;
             }
