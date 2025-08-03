@@ -3,12 +3,13 @@ randomize();
 audio_stop_all();
 
 enum SURFACE_REFRESH_BOOLEAN {
-    PAUSE               = 1 << 0,
-    INVENTORY_HOTBAR    = 1 << 1,
-    INVENTORY_BACKPACK  = 1 << 2,
-    INVENTORY_CRAFTABLE = 1 << 3,
-    HP                  = 1 << 4,
-    LIGHTING            = 1 << 5,
+    GENERATING_WORLD    = 1 << 0,
+    PAUSE               = 1 << 1,
+    INVENTORY_HOTBAR    = 1 << 2,
+    INVENTORY_BACKPACK  = 1 << 3,
+    INVENTORY_CRAFTABLE = 1 << 4,
+    HP                  = 1 << 5,
+    LIGHTING            = 1 << 6,
 }
 
 surface_refresh =

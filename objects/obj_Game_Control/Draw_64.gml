@@ -24,6 +24,34 @@ var _gui_scale_height = _gui_scale * (_gui_height / 540);
 
 if (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.GENERATING_WORLD)
 {
+    if !(surface_refresh & SURFACE_REFRESH_BOOLEAN.GENERATING_WORLD) || (!surface_exists(surface_pause[0])) || (!surface_exists(surface_pause[1]))
+    {
+        surface_refresh |= SURFACE_REFRESH_BOOLEAN.GENERATING_WORLD;
+        
+        render_pause();
+    }
+    
+    var _display_blur = global.settings.display_blur;
+    
+    if (_display_blur > 0)
+    {
+        gpu_set_texfilter(true);
+        
+        draw_surface_stretched_ext(surface_pause[@ 1], 0, 0, _gui_width + GUI_PAUSE_BLUR_RESIZE, _gui_height + GUI_PAUSE_BLUR_RESIZE, c_white, _display_blur);
+        
+        gpu_set_texfilter(false);
+    }
+    
+    
+    var _halign = draw_get_halign();
+    var _valign = draw_get_valign();
+    
+    draw_set_align(fa_center, fa_middle);
+    
+    render_text(_gui_width / 2, _gui_height / 2, "Loading world...", 2 * _gui_scale, 2 * _gui_scale);
+    
+    draw_set_align(_halign, _valign);
+    
     exit;
 }
 
