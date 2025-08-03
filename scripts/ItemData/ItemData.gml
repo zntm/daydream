@@ -827,4 +827,25 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     {
         return self[$ "___on_random_tick_length"];
     }
+    
+    static set_container = function(_container)
+    {
+        if (_container != undefined)
+        {
+            ___container_length = _container.length;
+            ___container_invalid = _container[$ "invalid"];
+        }
+        
+        return self;
+    }
+    
+    static get_container_length = function()
+    {
+        return self[$ "___container_length"] ?? 0;
+    }
+    
+    static get_container_invalid = function()
+    {
+        return self[$ "___container_invalid"];
+    }
 }

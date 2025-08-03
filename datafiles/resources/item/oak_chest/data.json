@@ -1,0 +1,29 @@
+{
+    "type": "untouchable",
+    "sprite": {
+        "xoffset": 8,
+        "yoffset": 8,
+        "length": 1
+    },
+    "inventory": "#phantasia:item/generic/inventory_tile",
+    "harvest": {
+        "hardness": 0.44,
+        "level": 1,
+        "particle": {
+            "colour": "#phantasia:tile/particle_colour/plank_oak",
+            "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
+        },
+        "condition": {
+            "id": "#phantasia:item/type/axe"
+        }
+    },
+    "drop": [
+        {
+            "id": "phantasia:oak_chest"
+        }
+    ],
+    "container": {
+        "length": 30
+    },
+    "sfx": "#phantasia:tile/sfx/wood"
+}
