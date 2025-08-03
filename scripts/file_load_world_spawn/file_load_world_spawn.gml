@@ -1,8 +1,8 @@
-function file_load_world_spawn(_world_save_data, _inst)
+function file_load_world_spawn(_world_save_data, _inst, _uuid = _inst.uuid)
 {
     var _world_data = global.world_data[$ _world_save_data.dimension];
     
-    var _directory = $"{PROGRAM_DIRECTORY_WORLDS}/{_world_save_data.uuid}/dimension/{_world_data.get_namespace()}/{_world_data.get_id()}/spawn/{_inst.uuid}.dat";
+    var _directory = $"{PROGRAM_DIRECTORY_WORLDS}/{_world_save_data.uuid}/dimension/{_world_data.get_namespace()}/{_world_data.get_id()}/spawn/{_uuid}.dat";
     
     if (!file_exists(_directory)) exit;
     

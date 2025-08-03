@@ -55,31 +55,32 @@ var _world_save_data = global.world_save_data;
 
 var _world_data = global.world_data[$ _world_save_data.dimension];
 
+// TODO: Fix this, make it prettier
+var _seed = _world_save_data.seed;
+var _surface_height = worldgen_get_surface_height(0, _seed);
+
+obj_Player.y = ((_surface_height - 1) * TILE_SIZE) + (TILE_SIZE / 2);
+
+while (worldgen_get_cave(0, round(obj_Player.y / TILE_SIZE) + 1, _surface_height, _seed))
+{
+    obj_Player.y += TILE_SIZE;
+}
+
 if (!directory_exists($"{PROGRAM_DIRECTORY_WORLDS}/{_world_save_data.uuid}"))
 {
     global.world_save_data.time = _world_data.get_time_start();
     
     global.world_save_data.weather_wind  = 0;
     global.world_save_data.weather_storm = 0;
-    
-    var _seed = _world_save_data.seed;
-    var _surface_height = worldgen_get_surface_height(0, _seed);
-    
-    obj_Player.y = ((_surface_height - 1) * TILE_SIZE) + (TILE_SIZE / 2);
-    
-    while (worldgen_get_cave(0, round(obj_Player.y / TILE_SIZE) + 1, _surface_height, _seed))
-    {
-        obj_Player.y += TILE_SIZE;
-    }
-    
-    control_camera_pos(obj_Player.x, obj_Player.y, true);
-    
-    obj_Player.ylast = obj_Player.y;
 }
 else
 {
 	file_load_world_spawn(global.world_save_data, obj_Player, global.player_save_data.uuid);
 }
+
+control_camera_pos(obj_Player.x, obj_Player.y, true);
+
+obj_Player.ylast = obj_Player.y;
 
 global.inventory_selected_hotbar = 0;
 global.inventory_selected_backpack = {
