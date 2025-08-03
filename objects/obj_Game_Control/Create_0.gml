@@ -78,7 +78,7 @@ if (!directory_exists($"{PROGRAM_DIRECTORY_WORLDS}/{_world_save_data.uuid}"))
 }
 else
 {
-	file_load_world_spawn(global.world_save_data, obj_Player);
+	file_load_world_spawn(global.world_save_data, obj_Player, global.player_save_data.uuid);
 }
 
 global.inventory_selected_hotbar = 0;
