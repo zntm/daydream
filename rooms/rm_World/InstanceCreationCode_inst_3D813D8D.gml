@@ -61,6 +61,8 @@ on_window_focus = function()
 
 on_window_unfocus = function()
 {
+    if (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.GENERATING_WORLD) exit;
+    
     obj_Game_Control.is_opened |= IS_OPENED_BOOLEAN.PAUSE;
     
     if (obj_Game_Control.surface_refresh & SURFACE_REFRESH_BOOLEAN.PAUSE)
