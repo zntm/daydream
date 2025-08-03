@@ -22,6 +22,11 @@ var _gui_scale = global.gui_scale;
 var _gui_scale_width  = _gui_scale * (_gui_width  / 960);
 var _gui_scale_height = _gui_scale * (_gui_height / 540);
 
+if (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.GENERATING_WORLD)
+{
+    exit;
+}
+
 if (is_opened & (IS_OPENED_BOOLEAN.PAUSE | IS_OPENED_BOOLEAN.EXIT))
 {
     if !(surface_refresh & SURFACE_REFRESH_BOOLEAN.PAUSE) || (!surface_exists(surface_pause[0])) || (!surface_exists(surface_pause[1]))

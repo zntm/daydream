@@ -5,9 +5,8 @@
 
 precision mediump float;
 
-// amplitude, octave
-uniform vec2 u_noise;
-uniform vec2 u_offset;
+// x offset, y offset, amplitude, octave
+uniform vec4 u_noise;
 uniform int u_roughness;
 
 const vec2 RANDOM_DOT = vec2(6.9818, 7.137);
@@ -58,9 +57,9 @@ const float SCALE_FACTOR = 3.0 / 256.0;
 
 void main()
 {
-    vec2 st = (gl_FragCoord.xy + u_offset) * (SCALE_FACTOR / u_noise.x);
+    vec2 st = (gl_FragCoord.xy + u_noise.xy) * (SCALE_FACTOR / u_noise.z);
     
-    float colour = fractal(st, u_noise.y);
+    float colour = fractal(st, u_noise.w);
     
     gl_FragColor = vec4(colour, 0.0, 0.0, 1.0);
 }
