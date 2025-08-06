@@ -56,6 +56,45 @@ function Inventory(_item, _amount = 1) constructor
         return self[$ "___durability"];
     }
     
+    static set_component = function(_name, _value)
+    {
+        self[$ "___component"] ??= {}
+        self[$ "___component_length"] ??= 0;
+        
+        ___component[$ _name] = _name;
+        
+        return self;
+    }
+    
+    static get_component = function(_name)
+    {
+        var _component = self[$ "___component"];
+        
+        if (_component == undefined)
+        {
+            return undefined;
+        }
+        
+        return _component[$ _name];
+    }
+    
+    static get_component_names = function(_name)
+    {
+        var _component = self[$ "___component"];
+        
+        if (_component == undefined)
+        {
+            return undefined;
+        }
+        
+        return struct_get_names(_component);
+    }
+    
+    static get_component_length = function()
+    {
+        return self[$ "___component_length"] ?? 0;
+    }
+    
     var _inventory_length = _data.get_item_inventory_length();
     
     if (_inventory_length > 0)

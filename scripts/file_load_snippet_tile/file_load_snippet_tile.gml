@@ -27,6 +27,8 @@ function file_load_snippet_tile(_buffer, _item_data)
         .set_index_offset(_index_offset)
         .set_rotation(_rotation);
     
+    file_load_snippet_component(_buffer, _tile);
+    
     var _inventory_length = buffer_read(_buffer, buffer_u8);
     
     if (_inventory_length > 0)

@@ -20,6 +20,8 @@ function file_load_snippet_item(_buffer, _item_data)
         _item.set_durability(_durability);
     }
     
+    file_load_snippet_component(_buffer, _item);
+    
     var _inventory_length = buffer_read(_buffer, buffer_u8);
     
     if (_inventory_length > 0)

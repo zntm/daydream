@@ -57,6 +57,12 @@ function file_save_world_chunk(_world_save_data, _inst)
     {
         var _chunk = _inst.chunk;
         var _chunk_count = _inst.chunk_count;
+        var _chunk_covered = _inst.chunk_covered;
+        
+        for (var i = 0; i < CHUNK_SIZE; ++i)
+        {
+            buffer_write(_buffer, buffer_u16, _chunk_covered[i]);
+        }
         
         for (var i = 0; i < CHUNK_DEPTH; ++i)
         {

@@ -47,6 +47,11 @@ function file_load_world_chunk(_world_save_data, _inst)
     
     if (_chunk_display)
     {
+        for (var i = 0; i < CHUNK_SIZE; ++i)
+        {
+            _inst.chunk_covered[@ i] = buffer_read(_buffer, buffer_u16);
+        }
+        
         for (var i = 0; i < CHUNK_DEPTH; ++i)
         {
             if !(_chunk_display & (1 << i)) continue;

@@ -21,6 +21,8 @@ function file_save_snippet_item(_buffer, _item, _item_data)
     
     buffer_write(_buffer, buffer_u16, _item.get_durability() ?? 0);
     
+    file_save_snippet_component(_buffer, _item);
+    
     /*
     var _charm_length = _data.get_charm_length();
     

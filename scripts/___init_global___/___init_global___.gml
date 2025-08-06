@@ -139,6 +139,16 @@ for (var i = 0; i < AUDIO_EFFECT_SIZE; ++i)
     }
 }
 
+enum FILE_COMPONENT_TYPE {
+    NUMBER,
+    STRING
+}
+
+global.file_component_type = {
+    "number": FILE_COMPONENT_TYPE.NUMBER,
+    "string": FILE_COMPONENT_TYPE.STRING
+}
+
 global.menu_music = -1;
 global.menu_music_gain = 0;
 

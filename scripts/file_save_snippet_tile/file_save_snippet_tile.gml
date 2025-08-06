@@ -26,6 +26,8 @@ function file_save_snippet_tile(_buffer, _tile, _item_data)
     
     buffer_write(_buffer, buffer_u16, _tile.get_rotation());
     
+    file_save_snippet_component(_buffer, _tile);
+    
     var _data = _item_data[$ _id];
     
     var _inventory_length = _data.get_tile_inventory_length();

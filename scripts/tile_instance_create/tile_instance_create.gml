@@ -24,6 +24,25 @@ function tile_instance_create(_x, _y, _z, _tile)
         }
     }
     
+    if (_data.get_container_length() > 0)
+    {
+        with (instance_create_layer(_x * TILE_SIZE, _y * TILE_SIZE, "Instances", obj_Tile_Container))
+        {
+            sprite_index = _data.get_sprite();
+            
+            image_index = _tile.get_index() + _tile.get_index_offset();
+            image_angle = _tile.get_rotation();
+            
+            tile_x = _x;
+            tile_y = _y;
+            tile_z = _z;
+            
+            tile_id = _id;
+            
+            _tile.set_instance_container(id);
+        }
+    }
+    
     /*
     var _tag_crafting_station = _data.get_tag_tile_crafting_station();
     

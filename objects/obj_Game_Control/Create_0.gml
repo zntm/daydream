@@ -89,6 +89,8 @@ global.inventory_selected_backpack = {
     type: undefined
 }
 
+global.inventory.base[@ 0] = new Inventory("phantasia:oak_chest");
+
 enum INVENTORY_MOUSE_SELECT_TYPE {
     NONE,
     LEFT,

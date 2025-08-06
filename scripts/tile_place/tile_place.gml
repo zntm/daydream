@@ -16,20 +16,36 @@ function tile_place(_x, _y, _z, _tile)
     
     var _index = tile_index_xyz(_x, _y, _z);
     
+    var _tile_before = _inst.chunk[_index];
+    
     if (_tile != TILE_EMPTY)
     {
         _inst.chunk_display |= 1 << _z;
         
         ++_inst.chunk_count[@ _z];
     }
-    else if (_inst.chunk[_index] != TILE_EMPTY) && (--_inst.chunk_count[_z] <= 0)
+    else if (_tile_before != TILE_EMPTY) && (--_inst.chunk_count[_z] <= 0)
     {
         _inst.chunk_display ^= 1 << _z;
     }
     
-    if (_inst.chunk[_index] != TILE_EMPTY)
+    if (_tile_before != TILE_EMPTY)
     {
-        delete _inst.chunk[_index];
+        var _instance_crafting_station = _tile_before.get_instance_crafting_station();
+        
+        if (instance_exists(_instance_crafting_station))
+        {
+            instance_destroy(_instance_crafting_station);
+        }
+        
+        var _instance_container = _tile_before.get_instance_container();
+        
+        if (instance_exists(_instance_container))
+        {
+            instance_destroy(_instance_container);
+        }
+        
+        delete _tile_before;
     }
     
     _inst.chunk[@ _index] = _tile;
