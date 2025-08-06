@@ -31,9 +31,20 @@ function control_chunk_foliage(_dt, _player_x, _player_y, _camera_x, _camera_y, 
                 
                 for (var m = 0; m < CHUNK_SIZE; ++m)
                 {
-                    if !(_chunk_covered & (1 << m)) continue;
-                    
                     var _tile = _inst.chunk[(CHUNK_DEPTH_FOLIAGE_BACK << (CHUNK_SIZE_BIT * 2)) | (m << CHUNK_SIZE_BIT) | l];
+                    
+                    if (_chunk_covered & (1 << m))
+                    {
+                        if (_tile != TILE_EMPTY)
+                        {
+                            var _skew = _inst.chunk_skew_back[(m << CHUNK_SIZE_BIT) | l];
+                            var _skew_to = _inst.chunk_skew_back_to[(m << CHUNK_SIZE_BIT) | l];
+                            
+                            _inst.chunk_skew_back[@ (m << CHUNK_SIZE_BIT) | l] = lerp_delta(_skew, _skew_to, 0.95, _dt);
+                        }
+                        
+                        continue;
+                    }
                     
                     if (_tile == TILE_EMPTY) || (!_item_data[$ _tile.get_id()].is_foliage()) continue;
                     
@@ -65,9 +76,20 @@ function control_chunk_foliage(_dt, _player_x, _player_y, _camera_x, _camera_y, 
                 
                 for (var m = 0; m < CHUNK_SIZE; ++m)
                 {
-                    if !(_chunk_covered & (1 << m)) continue;
-                    
                     var _tile = _inst.chunk[(CHUNK_DEPTH_FOLIAGE_FRONT << (CHUNK_SIZE_BIT * 2)) | (m << CHUNK_SIZE_BIT) | l];
+                    
+                    if (_chunk_covered & (1 << m))
+                    {
+                        if (_tile != TILE_EMPTY)
+                        {
+                            var _skew = _inst.chunk_skew_front[(m << CHUNK_SIZE_BIT) | l];
+                            var _skew_to = _inst.chunk_skew_front_to[(m << CHUNK_SIZE_BIT) | l];
+                            
+                            _inst.chunk_skew_front[@ (m << CHUNK_SIZE_BIT) | l] = lerp_delta(_skew, _skew_to, 0.95, _dt);
+                        }
+                        
+                        continue;
+                    }
                     
                     if (_tile == TILE_EMPTY) || (!_item_data[$ _tile.get_id()].is_foliage()) continue;
                     
