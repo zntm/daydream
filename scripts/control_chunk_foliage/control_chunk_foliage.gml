@@ -37,7 +37,7 @@ function control_chunk_foliage(_dt, _player_x, _player_y, _camera_x, _camera_y, 
                     
                     if (_tile == TILE_EMPTY) || (!_item_data[$ _tile.get_id()].is_foliage()) continue;
                     
-                    if (chance(0.1 * _dt))
+                    if (chance(0.1))
                     {
                         _inst.chunk_skew_back_to[@ (m << CHUNK_SIZE_BIT) | l] = random_range(0, _wind) * (TILE_SIZE / 2);
                         
@@ -71,7 +71,7 @@ function control_chunk_foliage(_dt, _player_x, _player_y, _camera_x, _camera_y, 
                     
                     if (_tile == TILE_EMPTY) || (!_item_data[$ _tile.get_id()].is_foliage()) continue;
                     
-                    if (chance(0.1 * _dt))
+                    if (chance(0.1))
                     {
                         _inst.chunk_skew_front_to[@ (m << CHUNK_SIZE_BIT) | l] = random_range(0, _wind) * (TILE_SIZE / 2);
                         
