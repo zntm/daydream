@@ -261,5 +261,5 @@ if (keyboard_check_pressed(vk_f2))
 {
     sfx_play("phantasia:menu.screenshot");
     
-    surface_save(application_surface, $"{PROGRAM_DIRECTORY_SCREENSHOTS}/{datetime_to_unix()}.png");
+    surface_save(application_surface, $"{PROGRAM_DIRECTORY_SCREENSHOTS}/{round(datetime_to_unix())}.png");
 }
