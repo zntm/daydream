@@ -25,6 +25,13 @@ function control_game_tick(_delta_time)
             
             if (!instance_exists(_inst)) || !(_inst.boolean & CHUNK_BOOLEAN.GENERATED) continue;
             
+            var _chunk_xstart = _inst.chunk_xstart;
+            var _chunk_ystart = _inst.chunk_ystart;
+            
+            var _chunk = _inst.chunk;
+            var _chunk_count = _inst.chunk_count;
+            var _chunk_display = _inst.chunk_display;
+            
             repeat (4)
             {
                 var _x2 = irandom(CHUNK_SIZE - 1);
@@ -33,9 +40,9 @@ function control_game_tick(_delta_time)
                 var _z = irandom(CHUNK_DEPTH - 1);
                 var _bitmask = 1 << _z;
                 
-                if !(_inst.chunk_display & _bitmask) || (_inst.chunk_count[_z] <= 0) continue;
+                if !(_chunk_display & _bitmask) || (_chunk_count[_z] <= 0) continue;
                 
-                var _tile = _inst.chunk[tile_index_xyz(_x2, _y2, _z)];
+                var _tile = _chunk[tile_index_xyz(_x2, _y2, _z)];
                 
                 if (_tile == TILE_EMPTY) continue;
                 
@@ -59,7 +66,7 @@ function control_game_tick(_delta_time)
                         
                         repeat (smart_value(_[$ "repeat"]))
                         {
-                            _function(_tick, _inst.chunk_xstart + _x2, _inst.chunk_ystart + _y2, _z, _parameter);
+                            _function(_tick, _chunk_xstart + _x2, _chunk_ystart + _y2, _z, _parameter);
                         }
                     }
                 }
