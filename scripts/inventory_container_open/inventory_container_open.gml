@@ -1,6 +1,6 @@
 function inventory_container_open(_x, _y, _inst)
 {
-    obj_Game_Control.is_opened |= IS_OPENED_BOOLEAN.INVENTORY_CONTAINER;
+    obj_Game_Control.is_opened |= IS_OPENED_BOOLEAN.INVENTORY | IS_OPENED_BOOLEAN.INVENTORY_CONTAINER;
     
     var _tile_x = _inst.tile_x;
     var _tile_y = _inst.tile_y;
