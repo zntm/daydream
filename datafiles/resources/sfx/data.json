@@ -197,6 +197,27 @@
         "pitch": "#phantasia:sfx/generic/pitch_default",
         "subtitle": "phantasia:sfx.tile.generic.step"
     },
+    "tile.metal.harvest": {
+        "asset": [
+            "phantasia:tile/metal/harvest0",
+            "phantasia:tile/metal/harvest1",
+            "phantasia:tile/metal/harvest2",
+            "phantasia:tile/metal/harvest3"
+        ],
+        "pitch": "#phantasia:sfx/generic/pitch_default",
+        "subtitle": "phantasia:sfx.tile.generic.harvest"
+    },
+    "tile.metal.step": {
+        "asset": [
+            "phantasia:tile/metal/step0",
+            "phantasia:tile/metal/step1",
+            "phantasia:tile/metal/step2",
+            "phantasia:tile/metal/step3",
+            "phantasia:tile/metal/step4"
+        ],
+        "pitch": "#phantasia:sfx/generic/pitch_default",
+        "subtitle": "phantasia:sfx.tile.generic.step"
+    },
     "tile.mud.harvest": {
         "asset": [
             "phantasia:tile/mud/harvest0",
@@ -283,6 +304,28 @@
             "phantasia:tile/stone/step2",
             "phantasia:tile/stone/step3",
             "phantasia:tile/stone/step4"
+        ],
+        "pitch": "#phantasia:sfx/generic/pitch_default",
+        "subtitle": "phantasia:sfx.tile.generic.step"
+    },
+    "tile.twig.harvest": {
+        "asset": [
+            "phantasia:tile/twig/harvest0",
+            "phantasia:tile/twig/harvest1",
+            "phantasia:tile/twig/harvest2",
+            "phantasia:tile/twig/harvest3"
+        ],
+        "pitch": "#phantasia:sfx/generic/pitch_default",
+        "subtitle": "phantasia:sfx.tile.generic.harvest"
+    },
+    "tile.twig.step": {
+        "asset": [
+            "phantasia:tile/twig/step0",
+            "phantasia:tile/twig/step1",
+            "phantasia:tile/twig/step2",
+            "phantasia:tile/twig/step3",
+            "phantasia:tile/twig/step4",
+            "phantasia:tile/twig/step5"
         ],
         "pitch": "#phantasia:sfx/generic/pitch_default",
         "subtitle": "phantasia:sfx.tile.generic.step"

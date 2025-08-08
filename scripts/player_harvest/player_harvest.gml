@@ -10,7 +10,7 @@ function player_harvest(_dt, _x, _y)
         
         if (_tile == TILE_EMPTY) continue;
         
-        if (_x != harvest_x) || (_y != harvest_y) || (_z != harvest_z)
+        if (_x != tile_harvest_x) || (_y != tile_harvest_y) || (_z != tile_harvest_z)
         {
             obj_Player.timer_sfx_harvest = 0.28;
             
@@ -19,9 +19,9 @@ function player_harvest(_dt, _x, _y)
             cooldown_harvest = 0.1;
         }
         
-        harvest_x = _x;
-        harvest_y = _y;
-        harvest_z = _z;
+        tile_harvest_x = _x;
+        tile_harvest_y = _y;
+        tile_harvest_z = _z;
         
         break;
     }

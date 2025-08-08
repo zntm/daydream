@@ -32,7 +32,7 @@ function file_save_player_global(_directory, _player_name, _player_attire, _play
     buffer_write(_buffer, buffer_u16, _player_hp);
     buffer_write(_buffer, buffer_u16, _player_hp_max);
     
-    buffer_write(_buffer, buffer_u16, _player_hp_max);
+    buffer_write(_buffer, buffer_u16, _player_saturation);
     
     file_save_snippet_effects(_buffer, _player_effects);
     

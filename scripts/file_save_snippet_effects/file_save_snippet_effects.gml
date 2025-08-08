@@ -31,11 +31,10 @@ function file_save_snippet_effects(_buffer, _effects)
             continue;
         }
         
-        buffer_write(_buffer, buffer_u8, _effect.has_particle);
         buffer_write(_buffer, buffer_u8, _effect.level);
-        buffer_write(_buffer, buffer_f32, _effect.timer);
+        buffer_write(_buffer, buffer_u64, _effect.boolean);
+        buffer_write(_buffer, buffer_f64, _effect.time);
         
         buffer_poke(_buffer, _seek, buffer_u32, buffer_tell(_buffer));
     }
-    
 }

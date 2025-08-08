@@ -20,21 +20,26 @@ surface_refresh =
     SURFACE_REFRESH_BOOLEAN.LIGHTING;
 
 enum IS_OPENED_BOOLEAN {
-    GENERATING_WORLD = 1 << 0,
-    GUI              = 1 << 1,
-    INVENTORY        = 1 << 2,
-    PAUSE            = 1 << 3,
-    MENU             = 1 << 4,
-    EXIT             = 1 << 5
+    GENERATING_WORLD    = 1 << 0,
+    GUI                 = 1 << 1,
+    INVENTORY           = 1 << 2,
+    INVENTORY_CONTAINER = 1 << 3,
+    PAUSE               = 1 << 4,
+    MENU                = 1 << 5,
+    EXIT                = 1 << 6
 }
 
 is_opened =
     IS_OPENED_BOOLEAN.GENERATING_WORLD |
     IS_OPENED_BOOLEAN.GUI;
 
-harvest_x = 0;
-harvest_y = 0;
-harvest_z = 0;
+tile_container_x = 0;
+tile_container_y = 0;
+tile_container_z = 0;
+
+tile_harvest_x = 0;
+tile_harvest_y = 0;
+tile_harvest_z = 0;
 
 harvest_amount = 0;
 

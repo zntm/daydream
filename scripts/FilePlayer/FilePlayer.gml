@@ -90,6 +90,6 @@ function FilePlayer(_uuid, _name, _last_opened) constructor
     
     static get_effects = function()
     {
-        return self[$ "___effects"] ?? -1;
+        return self[$ "___effects"];
     }
 }

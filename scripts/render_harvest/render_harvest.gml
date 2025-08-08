@@ -5,7 +5,7 @@ function render_harvest(_camera_x, _camera_y, _camera_width, _camera_height)
 {
     static __index_max = (sprite_get_number(spr_Harvest) - 1);
     
-    var _tile = tile_get(harvest_x, harvest_y, harvest_z);
+    var _tile = tile_get(tile_harvest_x, tile_harvest_y, tile_harvest_z);
     var _data = global.item_data[$ _tile.get_id()];
     
     var _width  = ceil(_data.get_sprite_width()  / TILE_SIZE);
@@ -79,5 +79,5 @@ function render_harvest(_camera_x, _camera_y, _camera_width, _camera_height)
     
     surface_reset_target();
     
-    draw_surface(surface_harvest, (harvest_x * TILE_SIZE) - RENDER_HARVEST_PADDING - _xoffset, (harvest_y * TILE_SIZE) - RENDER_HARVEST_PADDING - _yoffset);
+    draw_surface(surface_harvest, (tile_harvest_x * TILE_SIZE) - RENDER_HARVEST_PADDING - _xoffset, (tile_harvest_y * TILE_SIZE) - RENDER_HARVEST_PADDING - _yoffset);
 }

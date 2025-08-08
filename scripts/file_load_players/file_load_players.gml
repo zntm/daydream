@@ -57,28 +57,7 @@ function file_load_players()
         
         var _saturation = buffer_read(_buffer, buffer_u16);
         
-        var _effects = {}
-        
-        var _effects_length = buffer_read(_buffer, buffer_u16);
-        
-        for (var j = 0; j < _effects_length; ++j)
-        {
-            var _effect_name = buffer_read(_buffer, buffer_string);
-            
-            var _next = buffer_read(_buffer, buffer_u32);
-            
-            var _effect_level = buffer_read(_buffer, buffer_u8);
-            
-            if (_effect_level <= 0) continue;
-            
-            var _effect_timer = buffer_read(_buffer, buffer_f32);
-            
-            _effects[$ _effect_name] = {
-                level: _effect_level & 0x7f,
-                timer: _effect_timer,
-                has_particle: !!(_effect_level & 0x80)
-            }
-        }
+        var _effects = file_load_snippet_effects(_buffer);
         
         buffer_delete(_buffer);
         
