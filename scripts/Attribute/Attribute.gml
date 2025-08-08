@@ -1,13 +1,35 @@
+enum ATTRIBUTE_BOOLEAN {
+    IS_FALL_DAMAGE_RESISTANT = 1 << 0,
+    HAS_REGENERATION         = 1 << 1
+}
+
 function Attribute() constructor
 {
     static set_boolean = function(_boolean)
     {
+        static __boolean = {
+            "phantasia:is_fall_damage_resistant": ATTRIBUTE_BOOLEAN.IS_FALL_DAMAGE_RESISTANT,
+            "phantasia:has_regeneration": ATTRIBUTE_BOOLEAN.HAS_REGENERATION
+        }
+        
+        ___boolean = 0;
+        
         if (_boolean != undefined)
         {
-            ___boolean = _boolean;
+            var _length = array_length(_boolean);
+            
+            for (var i = 0; i < _length; ++i)
+            {
+                ___boolean |= __boolean[$ _boolean[i]];
+            }
         }
         
         return self;
+    }
+    
+    static has_boolean = function(_boolean)
+    {
+        return !!((self[$ "___boolean"] ?? 0) & _boolean);
     }
     
     static set_collision_box = function(_collision_box)

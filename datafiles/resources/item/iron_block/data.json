@@ -1,0 +1,42 @@
+{
+    "type": "solid",
+    "sprite": {
+        "xoffset": 8,
+        "yoffset": 8,
+        "length": 5,
+        "edge_padding": 8
+    },
+    "inventory": "#phantasia:item/generic/inventory_tile",
+    "properties": [
+        "phantasia:is_tile",
+        "phantasia:can_flip_on_x",
+        "phantasia:can_flip_on_y"
+    ],
+    "harvest": {
+        "hardness": 0.78,
+        "level": 1,
+        "particle": {
+            "colour": [
+                "#2A2D42",
+                "#262A3B"
+            ],
+            "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
+        },
+        "condition": {
+            "id": "#phantasia:item/type/pickaxe"
+        }
+    },
+    "drop": [
+        {
+            "id": "phantasia:iron_block",
+            "condition": {
+                "id": "#phantasia:item/type/pickaxe"
+            }
+        }
+    ],
+    "sfx": "#phantasia:tile/sfx/metal",
+    "audio_properties": {
+        "lowpass": 0,
+        "reverb": 0.6
+    }
+}

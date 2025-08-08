@@ -30,7 +30,7 @@
     ],
     "attribute": {
         "boolean": [
-            "phantasia:fall_damage_resistant"
+            "phantasia:is_fall_damage_resistant"
         ],
         "collision_box": {
             "width": 10,

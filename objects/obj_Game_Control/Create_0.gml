@@ -41,7 +41,7 @@ tile_harvest_x = 0;
 tile_harvest_y = 0;
 tile_harvest_z = 0;
 
-harvest_amount = 0;
+timer_harvest = 0;
 
 timer_respawn = 0;
 timer_foliage_sway = 0;

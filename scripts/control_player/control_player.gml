@@ -66,7 +66,12 @@ function control_player(_dt)
     
     control_camera_pos(x - (global.camera_width / 2), y - (global.camera_height / 2), false, _dt);
     
-    var _is_regenerated = control_entity_regeneration(_dt / GAME_TICK);
+    var _is_regenerated = false;
+    
+    if (attribute.has_boolean(ATTRIBUTE_BOOLEAN.HAS_REGENERATION))
+    {
+        _is_regenerated = control_entity_regeneration(_dt / GAME_TICK);
+    }
     
     if (_is_regenerated)
     {

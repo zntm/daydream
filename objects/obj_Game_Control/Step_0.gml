@@ -250,7 +250,7 @@ else
 {
     obj_Player.timer_sfx_harvest += _delta_time;
     
-    harvest_amount = 0;
+    timer_harvest = 0;
     
     cooldown_harvest -= _delta_time;
 }

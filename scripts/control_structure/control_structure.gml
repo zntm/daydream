@@ -32,6 +32,19 @@ function control_structure(_x, _y)
                     
                     if (!chance_seeded(_structure.chance, _chance_seed)) continue;
                     
+                    var _range = _structure[$ "range"];
+                    
+                    if (_range != undefined)
+                    {
+                        var _min = _range[$ "min"];
+                        
+                        if (_min != undefined) && (j < _min) continue;
+                        
+                        var _max = _range[$ "max"];
+                        
+                        if (_max != undefined) && (j >= _max) continue;
+                    }
+                    
                     var _ = global.structure_data[$ _structure.id];
                     
                     var _placement_type = _.get_placement_type();

@@ -53,7 +53,18 @@
     "structure": [
         {
             "id": "phantasia:ore/coal",
-            "chance": 0.004
+            "chance": 0.004,
+            "range": {
+                "max": 768
+            }
+        },
+        {
+            "id": "phantasia:ore/iron",
+            "chance": 0.001,
+            "range": {
+                "min": 640,
+                "max": 768
+            }
         }
     ]
 }

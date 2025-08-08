@@ -42,7 +42,7 @@ function control_creature(_dt)
         {
             var _xto = x + (_direction * attribute.get_collision_box_width());
             
-            if (tile_meeting(x, y + 1)) && (tile_meeting(_xto, y - 1)) && (ai_fall_detection(_xto, y - (TILE_SIZE * 2), -attribute.get_collision_box_height(), 2) >= 2)
+            if (tile_meeting(x, y + 1)) && (tile_meeting(_xto, y - 1)) && (entity_ai_fall_detection(_xto, y - (TILE_SIZE * 2), -attribute.get_collision_box_height(), 2) >= 2)
             {
                 input_jump = true;
                 input_jump_pressed = true;
@@ -57,7 +57,10 @@ function control_creature(_dt)
     
     control_physics_input_after(_dt, id);
     
-    control_entity_regeneration(_dt / GAME_TICK);
+    if (attribute.has_boolean(ATTRIBUTE_BOOLEAN.HAS_REGENERATION))
+    {
+        control_entity_regeneration(_dt / GAME_TICK);
+    }
     
     if (input_jump) && (chance(0.4 * _dt))
     {

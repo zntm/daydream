@@ -14,7 +14,7 @@ function player_harvest(_dt, _x, _y)
         {
             obj_Player.timer_sfx_harvest = 0.28;
             
-            harvest_amount = 0;
+            timer_harvest = 0;
             
             cooldown_harvest = 0.1;
         }
@@ -66,7 +66,7 @@ function player_harvest(_dt, _x, _y)
     
     if (_data.get_harvest_level() > _item_level) exit;
     
-    harvest_amount += _item_hardness * _dt;
+    timer_harvest += _item_hardness * _dt;
     
     obj_Player.timer_sfx_harvest += _dt;
     
@@ -84,7 +84,7 @@ function player_harvest(_dt, _x, _y)
         }
     }
     
-    if (harvest_amount >= _harvest_hardness)
+    if (timer_harvest >= _harvest_hardness)
     {
         tile_harvest_drop(_x, _y, _z, _tile);
         
@@ -113,7 +113,7 @@ function player_harvest(_dt, _x, _y)
             spawn_particle(_x * TILE_SIZE, _y * TILE_SIZE, "phantasia:tile/harvest", is_array_choose(_particle_colour));
         }
         
-        harvest_amount = 0;
+        timer_harvest = 0;
         
         if (_item_hardness < _harvest_hardness)
         {
