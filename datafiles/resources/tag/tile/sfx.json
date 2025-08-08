@@ -14,6 +14,11 @@
         "harvest": "phantasia:tile.grass.step",
         "step": "phantasia:tile.grass.harvest"
     },
+    "metal": {
+        "build": "phantasia:tile.metal.harvest",
+        "harvest": "phantasia:tile.metal.harvest",
+        "step": "phantasia:tile.metal.step"
+    },
     "nightrock": {
         "build": "phantasia:tile.nightrock.build",
         "harvest": "phantasia:tile.nightrock.harvest",
@@ -28,6 +33,11 @@
         "build": "phantasia:tile.stone.build",
         "harvest": "phantasia:tile.stone.harvest",
         "step": "phantasia:tile.stone.step"
+    },
+    "twig": {
+        "build": "phantasia:tile.twig.harvest",
+        "harvest": "phantasia:tile.twig.harvest",
+        "step": "phantasia:tile.twig.step"
     },
     "wood": {
         "build": "phantasia:tile.wood.harvest",
