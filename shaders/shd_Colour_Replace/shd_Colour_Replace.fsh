@@ -26,11 +26,9 @@ void main()
         {
             float re = float(u_replace[i]);
             
-            base.rgb = vec3(
-                floor(mod(re,           256.0)) / 255.0,
-                floor(mod(re / 256.0,   256.0)) / 255.0,
-                floor(mod(re / 65536.0, 256.0)) / 255.0
-            );
+            base.r = floor(mod(re,           256.0)) / 255.0;
+            base.g = floor(mod(re / 256.0,   256.0)) / 255.0;
+            base.b = floor(mod(re / 65536.0, 256.0)) / 255.0;
             
             break;
         }
