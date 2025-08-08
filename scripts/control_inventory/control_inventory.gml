@@ -16,16 +16,6 @@ function control_inventory()
             instance_activate_object(obj_Inventory);
             
             inventory_refresh_crafting_station(true);
-            
-            var _player_x = obj_Player.x;
-            var _player_y = obj_Player.y;
-            
-            var _inst = instance_nearest(_player_x, _player_y, obj_Tile_Container);
-            
-            if (instance_exists(_inst)) && (point_distance(_player_x, _player_y, _inst.x, _inst.y) <= TILE_SIZE * 6)
-            {
-                inventory_container_open(_player_x, _player_y, _inst);
-            }
         }
         else
         {
@@ -51,6 +41,18 @@ function control_inventory()
             instance_deactivate_object(obj_Inventory);
             
             inventory_container_close();
+        }
+    }
+    else if (mouse_check_button_pressed(mb_right))
+    {
+        var _player_x = obj_Player.x;
+        var _player_y = obj_Player.y;
+        
+        var _inst = instance_nearest(_player_x, _player_y, obj_Tile_Container);
+        
+        if (instance_exists(_inst)) && (point_distance(_player_x, _player_y, _inst.x, _inst.y) <= TILE_SIZE * 6)
+        {
+            inventory_container_open(_player_x, _player_y, _inst);
         }
     }
     
