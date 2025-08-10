@@ -108,6 +108,9 @@ global.natural_structure_data[$ "phantasia:clump"] = new NaturalStructureData()
 enum NATURAL_STRUCTURE_ORE {
     USE_TILE_STRUCTURE_VOID,
     TILE,
+    THRESHOLD,
+    CLUMPINESS,
+    ROUNDEDNESS,
     LENGTH
 }
 
@@ -119,6 +122,9 @@ global.natural_structure_data[$ "phantasia:ore"] = new NaturalStructureData()
         _data[@ NATURAL_STRUCTURE_ORE.USE_TILE_STRUCTURE_VOID] = _parameter[$ "use_structure_void"] ?? true;
         
         _data[@ NATURAL_STRUCTURE_ORE.TILE] = _parameter.tile;
+        _data[@ NATURAL_STRUCTURE_ORE.THRESHOLD] = _parameter[$ "threshold"];
+        _data[@ NATURAL_STRUCTURE_ORE.CLUMPINESS]  = clamp(_parameter.clumpiness,  0, 1);
+        _data[@ NATURAL_STRUCTURE_ORE.ROUNDEDNESS] = clamp(_parameter.roundedness, 0, 1);
         
         return _data;
     })
@@ -128,6 +134,10 @@ global.natural_structure_data[$ "phantasia:ore"] = new NaturalStructureData()
         
         var _rectangle = _width * _height;
         var _data = array_create(_rectangle * CHUNK_DEPTH, (_parameter[NATURAL_STRUCTURE_ORE.USE_TILE_STRUCTURE_VOID] ? TILE_STRUCTURE_VOID : TILE_EMPTY));
+        
+        var _threshold = _data[NATURAL_STRUCTURE_ORE.THRESHOLD];
+        var _clumpiness = _data[NATURAL_STRUCTURE_ORE.CLUMPINESS];
+        var _roundedness = _data[NATURAL_STRUCTURE_ORE.ROUNDEDNESS];
         
         for (var i = 0; i < _width; ++i)
         {
@@ -146,18 +156,73 @@ global.natural_structure_data[$ "phantasia:ore"] = new NaturalStructureData()
         
         var _depth = _rectangle * CHUNK_DEPTH_DEFAULT;
         
-        var _tile = _parameter[NATURAL_STRUCTURE_ORE.TILE];
+        var _tile    = _parameter[NATURAL_STRUCTURE_ORE.TILE];
         var _tile_id = _tile.id;
         
         for (var i = 0; i < _width; ++i)
         {
-            var _cave = __cave[i];
-            
             for (var j = 0; j < _height; ++j)
             {
-                if (_cave & (1 << j)) continue;
+                // Skip if cave here
+                if (__cave[i] & (1 << j)) continue;
                 
-                _data[@ i + (j * _width) + _depth] = new Tile(_tile_id, _item_data);
+                // Base ore placement chance
+                var _ore_chance = random(1);
+                
+                // Increase chance if near another ore (clumpiness effect)
+                if (_clumpiness > 0)
+                {
+                    var _neighbors = 0;
+                    
+                    for (var _nx = -1; _nx <= 1; ++_nx)
+                    {
+                        for (var _ny = -1; _ny <= 1; ++_ny)
+                        {
+                            if (_nx == 0) && (_ny == 0) continue;
+                            
+                            var _ix = i + _nx;
+                            var _iy = j + _ny;
+                            
+                            if (_ix >= 0) && (_ix < _width) && (_iy >= 0) && (_iy < _height)
+                            {
+                                ++_neighbors;
+                            }
+                        }
+                    }
+                    
+                    _ore_chance += (_neighbors / 8) * _clumpiness;
+                }
+                
+                if (_roundedness > 0)
+                {
+                    var _avg_noise = 0;
+                    var _count = 0;
+                    
+                    for (var _nx = -1; _nx <= 1; ++_nx)
+                    {
+                        for (var _ny = -1; _ny <= 1; ++_ny)
+                        {
+                            if (_nx == 0) && (_ny == 0) continue;
+                            
+                            var _ix = i + _nx;
+                            var _iy = j + _ny;
+                            
+                            if (_ix >= 0) && (_ix < _width) && (_iy >= 0) && (_iy < _height)
+                            {
+                                _avg_noise += random(1);
+                                
+                                ++_count;
+                            }
+                        }
+                    }
+                    
+                    _ore_chance = lerp(_ore_chance, _avg_noise / _count, _roundedness);
+                }
+                
+                if (_ore_chance > _threshold)
+                {
+                    _data[@ i + (j * _width) + _depth] = new Tile(_tile_id, _item_data);
+                }
             }
         }
         

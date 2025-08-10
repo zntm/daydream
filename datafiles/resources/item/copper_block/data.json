@@ -11,7 +11,7 @@
         "phantasia:is_tile"
     ],
     "harvest": {
-        "hardness": 0.78,
+        "hardness": 0.68,
         "level": 1,
         "particle": {
             "colour": [
@@ -26,7 +26,7 @@
     },
     "drop": [
         {
-            "id": "phantasia:iron_block",
+            "id": "phantasia:copper_block",
             "condition": {
                 "id": "#phantasia:item/type/pickaxe"
             }

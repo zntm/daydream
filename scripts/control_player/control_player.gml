@@ -24,7 +24,7 @@ function control_player(_dt)
     
     var _on_ground = tile_meeting(x, y + 1);
     
-    control_physics(_dt, id);
+    control_physics_creative(_dt, id);
     
     if (y > ylast)
     {
@@ -43,13 +43,6 @@ function control_player(_dt)
                 ylast = y;
                 
                 spawn_floating_text(x, y, _value, 0, -3.9);
-                /*
-                ylast = y;
-                
-                hp_add(id, -_value, DAMAGE_TYPE.FALL);
-                
-                return true;
-                */
             }
         }
     }
