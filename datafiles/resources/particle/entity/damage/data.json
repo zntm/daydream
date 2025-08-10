@@ -1,0 +1,49 @@
+{
+    "sprite": {
+        "length": 3
+    },
+    "properties": [
+        "phantasia:has_stretch_animation"
+    ],
+    "lifetime": {
+        "type": "irandom",
+        "values": {
+            "min": 0.5,
+            "max": 1
+        }
+    },
+    "physics": {
+        "speed": {
+            "x": {
+                "type": "constant",
+                "value": {
+                    "type": "random",
+                    "values": {
+                        "min": -1,
+                        "max": 1
+                    }
+                }
+            },
+            "y": {
+                "type": "constant",
+                "value": {
+                    "type": "random",
+                    "values": {
+                        "min": -1.6,
+                        "max": -0.4
+                    }
+                }
+            }
+        },
+        "scale": {
+            "type": "random",
+            "values": {
+                "min": 0.9,
+                "max": 1.1
+            }
+        }
+    },
+    "attribute": {
+        "gravity": 0.1
+    }
+}

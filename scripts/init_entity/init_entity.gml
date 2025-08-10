@@ -12,6 +12,7 @@ function init_entity(_hp, _hp_max, _attribute, _uuid = uuid_generate(irandom(0xf
     saturation = 0;
     
     timer_regeneration = 0;
+    timer_immunity = 0;
     
     jump_pressed = 0;
     jump_count = 0;

@@ -18,11 +18,15 @@ function control_player(_dt)
         {
             var _data = global.item_data[$ _item.get_id()];
             
+            var _id = id;
+            
             if (!instance_exists(inst_item))
             {
                 inst_item = instance_create_layer(x, y, "Instances", obj_Tool);
                 
                 inst_item.sprite_index = _data.get_sprite();
+                
+                inst_item.inst_owner = _id;
             }
         }
     }
@@ -65,7 +69,6 @@ function control_player(_dt)
             x = _x - 0  + (lengthdir_x(_sprite_width,  _angle) * _direction);
             y = _y - 24 + (lengthdir_y(_sprite_height, _angle));
             
-            image_angle = _angle;
             image_angle = _angle;
         }
     }
@@ -131,9 +134,14 @@ function control_player(_dt)
         if (_xstart != obj_Game_Control.chunk_in_view_x) || (_ystart != obj_Game_Control.chunk_in_view_y)
         {
             obj_Game_Control.chunk_in_view_x = _xstart;
-            obj_Game_Control.chunk_in_view_y = _ystart;                                              
+            obj_Game_Control.chunk_in_view_y = _ystart;
             
             control_update_chunk_in_view();
         }
     }
+    
+    if (keyboard_check_pressed(ord("P")))
+{
+    spawn_creature(x, y, "phantasia:bunny")
+}
 }

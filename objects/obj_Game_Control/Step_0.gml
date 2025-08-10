@@ -198,7 +198,7 @@ with (obj_Particle)
 {
     var _data = _particle_data[$ _id];
     
-    if (!attribute.has_collision_box())
+    if (attribute != undefined) && (!attribute.has_collision_box())
     {
         x += xvelocity * _dt;
         y += yvelocity * _dt;

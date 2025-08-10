@@ -8,7 +8,7 @@ function spawn_particle(_x, _y, _id, _colour = c_white)
         
         attribute = _data.get_attribute();
         
-        if (attribute.has_collision_box())
+        if (attribute != undefined) && (attribute.has_collision_box())
         {
             init_entity_physics(smart_value(_data.get_scale()));
         }

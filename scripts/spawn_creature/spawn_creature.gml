@@ -23,5 +23,8 @@ function spawn_creature(_x, _y, _id, _variant)
         {
             timer_sfx_idle = smart_value(_interval);
         }
+        
+        inst_predator = noone;
+        timer_panic = 0;
     }
 }

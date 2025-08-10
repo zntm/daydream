@@ -1,8 +1,9 @@
 enum PARTICLE_PROPERTIES_BOOLEAN {
-    IS_DESTROY_ON_COLLISION = 1 << 0,
-    IS_FADE_OUT             = 1 << 1,
-    HAS_COLLISION           = 1 << 2,
-    HAS_STRETCHED_ANIMATION = 1 << 3
+    IS_ADDITIVE             = 1 << 0,
+    IS_DESTROY_ON_COLLISION = 1 << 1,
+    IS_FADE_OUT             = 1 << 2,
+    HAS_COLLISION           = 1 << 3,
+    HAS_STRETCHED_ANIMATION = 1 << 4
 }
 
 enum PARTICLE_MOVEMENT_TYPE {
@@ -29,12 +30,18 @@ function ParticleData(_sprite, _sprite_data) constructor
     }
     
     ___sprite = _sprite;
+    ___sprite_number = sprite_get_number(_sprite);
     
     __set_smart_value("___sprite_speed", _sprite_data[$ "speed"]);
     
     static get_sprite = function()
     {
         return ___sprite;
+    }
+    
+    static get_sprite_number = function()
+    {
+        return ___sprite_number;
     }
     
     static get_sprite_speed = function()
@@ -49,6 +56,7 @@ function ParticleData(_sprite, _sprite_data) constructor
     static set_properties = function(_properties)
     {
         static __properties = {
+            "phantasia:is_additive":             PARTICLE_PROPERTIES_BOOLEAN.IS_ADDITIVE,
             "phantasia:is_destroy_on_collision": PARTICLE_PROPERTIES_BOOLEAN.IS_DESTROY_ON_COLLISION,
             "phantasia:is_fade_out":             PARTICLE_PROPERTIES_BOOLEAN.IS_FADE_OUT,
             "phantasia:has_collision":           PARTICLE_PROPERTIES_BOOLEAN.HAS_COLLISION,
@@ -68,6 +76,11 @@ function ParticleData(_sprite, _sprite_data) constructor
         }
         
         return self;
+    }
+    
+    static is_additive = function()
+    {
+        return !!(___properties & PARTICLE_PROPERTIES_BOOLEAN.IS_ADDITIVE);
     }
     
     static is_destroy_on_collision = function()

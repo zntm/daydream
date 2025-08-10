@@ -50,7 +50,7 @@ function control_creature(_dt)
         }
     }
     
-    control_physics_input(_dt, id);
+    control_physics_input(_dt, id, ((timer_panic > 0) ? 1.5 : 1));
     control_physics(_dt, id);
     
     control_entity_sfx(_dt);

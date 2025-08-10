@@ -11,7 +11,7 @@ function control_particle(_dt)
     
     var _data = global.particle_data[$ _id];
     
-    if (attribute.has_collision_box())
+    if (attribute != undefined) && (attribute.has_collision_box())
     {
         control_physics_x(_dt);
         control_physics_y(_dt, attribute.get_gravity());
