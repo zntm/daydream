@@ -16,17 +16,21 @@ function control_player(_dt)
         
         if (_item != INVENTORY_EMPTY)
         {
-            var _data = global.item_data[$ _item.get_id()];
+            var _id = _item.get_id();
             
-            var _id = id;
+            var _data = global.item_data[$ _id];
+            
+            var _inst = id;
             
             if (!instance_exists(inst_item))
             {
                 inst_item = instance_create_layer(x, y, "Instances", obj_Tool);
                 
+                inst_item._id = _id;
+                
                 inst_item.sprite_index = _data.get_sprite();
                 
-                inst_item.inst_owner = _id;
+                inst_item.inst_owner = _inst;
             }
         }
     }

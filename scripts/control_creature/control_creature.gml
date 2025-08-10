@@ -8,6 +8,9 @@ function control_creature(_dt)
         
         if (instance_exists(_inst))
         {
+            var _item_damage = global.item_data[$ _inst._id].get_item_damage();
+                _item_damage = round(_item_damage * random_range(0.9, 1.1));
+            
             timer_immunity = 4;
             
             inst_predator = _inst.inst_owner;
@@ -15,6 +18,17 @@ function control_creature(_dt)
             repeat (irandom_range(8, 14))
             {
                 spawn_particle(x - irandom_range(-TILE_SIZE / 2, TILE_SIZE / 2), y - irandom_range(-TILE_SIZE / 2, TILE_SIZE / 2), "phantasia:entity/damage");
+            }
+            
+            hp -= _item_damage;
+            
+            spawn_floating_text(x, y, _item_damage, 0, -3.9);
+            
+            if (hp <= 0)
+            {
+                instance_destroy();
+                
+                exit;
             }
         }
     }

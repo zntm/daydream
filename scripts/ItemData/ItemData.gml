@@ -202,6 +202,21 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
         return self[$ "___animation_type"] ?? TILE_ANIMATION_TYPE.DEFAULT;
     }
     
+    static set_item = function(_data)
+    {
+        if (_data != undefined)
+        {
+            ___item_damage = _data[$ "damage"];
+        }
+        
+        return self;
+    }
+    
+    static get_item_damage = function()
+    {
+        return self[$ "___item_damage"] ?? 1;
+    }
+    
     static set_placement = function(_placement)
     {
         static __chunk_depth = global.chunk_depth;
