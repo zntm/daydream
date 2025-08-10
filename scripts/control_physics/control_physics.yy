@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"control_physics",
   "parent":{
-    "name":"daydream",
-    "path":"daydream.yyp",
+    "name":"Physics",
+    "path":"folders/Scripts/Control/Physics.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
