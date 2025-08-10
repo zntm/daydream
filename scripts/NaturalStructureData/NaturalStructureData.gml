@@ -135,9 +135,9 @@ global.natural_structure_data[$ "phantasia:ore"] = new NaturalStructureData()
         var _rectangle = _width * _height;
         var _data = array_create(_rectangle * CHUNK_DEPTH, (_parameter[NATURAL_STRUCTURE_ORE.USE_TILE_STRUCTURE_VOID] ? TILE_STRUCTURE_VOID : TILE_EMPTY));
         
-        var _threshold = _data[NATURAL_STRUCTURE_ORE.THRESHOLD];
-        var _clumpiness = _data[NATURAL_STRUCTURE_ORE.CLUMPINESS];
-        var _roundedness = _data[NATURAL_STRUCTURE_ORE.ROUNDEDNESS];
+        var _threshold   = clamp(_parameter[NATURAL_STRUCTURE_ORE.THRESHOLD],  0, 1);
+        var _clumpiness  = clamp(_parameter[NATURAL_STRUCTURE_ORE.CLUMPINESS],  0, 1);
+        var _roundedness = clamp(_parameter[NATURAL_STRUCTURE_ORE.ROUNDEDNESS], 0, 1);
         
         for (var i = 0; i < _width; ++i)
         {
@@ -163,13 +163,10 @@ global.natural_structure_data[$ "phantasia:ore"] = new NaturalStructureData()
         {
             for (var j = 0; j < _height; ++j)
             {
-                // Skip if cave here
                 if (__cave[i] & (1 << j)) continue;
                 
-                // Base ore placement chance
                 var _ore_chance = random(1);
                 
-                // Increase chance if near another ore (clumpiness effect)
                 if (_clumpiness > 0)
                 {
                     var _neighbors = 0;
@@ -183,7 +180,7 @@ global.natural_structure_data[$ "phantasia:ore"] = new NaturalStructureData()
                             var _ix = i + _nx;
                             var _iy = j + _ny;
                             
-                            if (_ix >= 0) && (_ix < _width) && (_iy >= 0) && (_iy < _height)
+                            if (_ix >= 0) && (_ix < _width) && (_iy >= 0) && (_iy < _height) && (_data[_ix + (_iy * _width) + _depth] != TILE_EMPTY)
                             {
                                 ++_neighbors;
                             }
@@ -202,8 +199,6 @@ global.natural_structure_data[$ "phantasia:ore"] = new NaturalStructureData()
                     {
                         for (var _ny = -1; _ny <= 1; ++_ny)
                         {
-                            if (_nx == 0) && (_ny == 0) continue;
-                            
                             var _ix = i + _nx;
                             var _iy = j + _ny;
                             
