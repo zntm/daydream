@@ -4,27 +4,68 @@ function control_player(_dt)
     
     control_physics_input(_dt, id);
     
+    var _on_ground = tile_meeting(x, y + 1);
+    
+    control_physics_creative(_dt, id);
+    
+    if (timer_attack <= 0) && (mouse_check_button(mb_left))
+    {
+        timer_attack = 0.3;
+        
+        var _item = global.inventory.base[global.inventory_selected_hotbar];
+        
+        if (_item != INVENTORY_EMPTY)
+        {
+            var _data = global.item_data[$ _item.get_id()];
+            
+            if (!instance_exists(inst_item))
+            {
+                inst_item = instance_create_layer(x, y, "Instances", obj_Tool);
+                
+                inst_item.sprite_index = _data.get_sprite();
+                inst_item.angle = 0;
+            }
+        }
+    }
+    
     if (timer_attack > 0)
     {
         timer_attack = max(0, timer_attack - (_dt / GAME_TICK));
     }
-    else if (mouse_check_button(mb_left))
-    {
-        timer_attack = 0.3;
-    }
-    else
+    
+    if (timer_attack <= 0)
     {
         var _direction = input_right - input_left;
         
-        if (_direction != 0) && (timer_attack <= 0)
+        if (_direction != 0)
         {
             image_xscale = abs(image_xscale) * _direction;
         }
+        
+        if (instance_exists(inst_item))
+        {
+            instance_destroy(inst_item);
+        }
     }
-    
-    var _on_ground = tile_meeting(x, y + 1);
-    
-    control_physics_creative(_dt, id);
+    else if (instance_exists(inst_item))
+    {
+        var _x = x;
+        var _y = y;
+        
+        var _direction = sign(image_xscale);
+        
+        var _t = (0.3 - timer_attack) / 0.3;
+        
+        with (inst_item)
+        {
+            angle = (45 * cos(_t * pi)) + 15;
+            
+            x = _x - 0  + (lengthdir_x(32, angle) * _direction);
+            y = _y - 24 + (lengthdir_y(32, angle));
+            
+            image_angle = angle;
+        }
+    }
     
     if (y > ylast)
     {

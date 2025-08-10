@@ -30,9 +30,11 @@ function init_entity(_hp, _hp_max, _attribute, _uuid = uuid_generate(irandom(0xf
     
     audio_effect_lowpass = 0;
     audio_effect_reverb  = 0;
-
+    
     audio_effect_lowpass_to = 0;
     audio_effect_reverb_to  = 0;
     
     timer_sfx_step = 0;
+    
+    inst_item = noone;
 }

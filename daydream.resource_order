@@ -98,6 +98,7 @@
     {"name":"obj_Structure","order":6,"path":"objects/obj_Structure/obj_Structure.yy",},
     {"name":"obj_Tile_Container","order":11,"path":"objects/obj_Tile_Container/obj_Tile_Container.yy",},
     {"name":"obj_Tile_Crafting_Station","order":10,"path":"objects/obj_Tile_Crafting_Station/obj_Tile_Crafting_Station.yy",},
+    {"name":"obj_Tool","order":12,"path":"objects/obj_Tool/obj_Tool.yy",},
     {"name":"rm_Menu_Create_Player","order":3,"path":"rooms/rm_Menu_Create_Player/rm_Menu_Create_Player.yy",},
     {"name":"rm_Menu_Create_World","order":5,"path":"rooms/rm_Menu_Create_World/rm_Menu_Create_World.yy",},
     {"name":"rm_Menu_Players","order":2,"path":"rooms/rm_Menu_Players/rm_Menu_Players.yy",},

@@ -635,6 +635,7 @@
     {"id":{"name":"obj_Structure","path":"objects/obj_Structure/obj_Structure.yy",},},
     {"id":{"name":"obj_Tile_Container","path":"objects/obj_Tile_Container/obj_Tile_Container.yy",},},
     {"id":{"name":"obj_Tile_Crafting_Station","path":"objects/obj_Tile_Crafting_Station/obj_Tile_Crafting_Station.yy",},},
+    {"id":{"name":"obj_Tool","path":"objects/obj_Tool/obj_Tool.yy",},},
     {"id":{"name":"rm_Init","path":"rooms/rm_Init/rm_Init.yy",},},
     {"id":{"name":"rm_Menu_Create_Player","path":"rooms/rm_Menu_Create_Player/rm_Menu_Create_Player.yy",},},
     {"id":{"name":"rm_Menu_Create_World","path":"rooms/rm_Menu_Create_World/rm_Menu_Create_World.yy",},},

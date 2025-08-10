@@ -143,6 +143,11 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
             
             with (obj_Player)
             {
+                if (instance_exists(inst_item))
+                {
+                    draw_sprite_ext(inst_item.sprite_index, 0, inst_item.x, inst_item.y, inst_item.image_xscale, inst_item.image_yscale, inst_item.image_angle, c_white, 1);
+                }
+                
                 if (yvelocity == 0) && ((input_left) || (input_right))
                 {
                     var _index_body = (_animation_index * 2) % 8;
