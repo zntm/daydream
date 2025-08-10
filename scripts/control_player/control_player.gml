@@ -23,7 +23,6 @@ function control_player(_dt)
                 inst_item = instance_create_layer(x, y, "Instances", obj_Tool);
                 
                 inst_item.sprite_index = _data.get_sprite();
-                inst_item.angle = 0;
             }
         }
     }
@@ -58,12 +57,16 @@ function control_player(_dt)
         
         with (inst_item)
         {
-            angle = (45 * cos(_t * pi)) + 15;
+            var _sprite_width  = sprite_get_width(sprite_index);
+            var _sprite_height = sprite_get_width(sprite_index);
             
-            x = _x - 0  + (lengthdir_x(32, angle) * _direction);
-            y = _y - 24 + (lengthdir_y(32, angle));
+            var _angle = (45 * cos(_t * pi)) + 15;
             
-            image_angle = angle;
+            x = _x - 0  + (lengthdir_x(_sprite_width,  _angle) * _direction);
+            y = _y - 24 + (lengthdir_y(_sprite_height, _angle));
+            
+            image_angle = _angle;
+            image_angle = _angle;
         }
     }
     
@@ -71,9 +74,9 @@ function control_player(_dt)
     {
         if (!_on_ground) && (tile_meeting(x, y + 1))
         {
-            var _difference = y - ylast;
+            var _difference = max(0, y - ylast - 8);
             
-            var _value = floor(1 * (power(round(_difference / TILE_SIZE) / 0.8, 1.25) - 12));
+            var _value = floor(power(round(_difference / TILE_SIZE) * 1.25, 1.25));
             
             if (_value > 0)
             {

@@ -1,4 +1,4 @@
-function render_attire(_attire, _index, _x, _y, _xscale, _yscale, _is_blinking = false, _index_arm = undefined)
+function render_attire(_attire, _index, _x, _y, _xscale, _yscale, _is_blinking = false, _index_arm = undefined, _item = noone)
 {
     static __sprite_body = {
         body:           spr_Attire_Base_Body,
@@ -36,6 +36,11 @@ function render_attire(_attire, _index, _x, _y, _xscale, _yscale, _is_blinking =
     for (var i = 0; i < ATTIRE_ELEMENTS_ORDERED_LENGTH; ++i)
     {
         var _element = _attire_elements[i];
+        
+        if (instance_exists(_item)) && (_element == "body_arm_left")
+        {
+            draw_sprite_ext(_item.sprite_index, 0, _item.x, _item.y, _item.image_xscale, _item.image_yscale, _item.image_angle, c_white, 1);
+        }
         
         var _sprite_body = __sprite_body[$ _element];
         

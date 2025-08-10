@@ -28,8 +28,7 @@ function control_structure(_x, _y)
                 {
                     var _structure = _data.get_structure(l);
                     
-                    // var _chance_seed = (((_world_seed & 0xff) * 18_929) ^ (_world_seed >> 8)) ^ (((i + j) * 18_938)) + ((l + 1) * 450_111);
-                    var _chance_seed = ((_world_seed & 0xff) + 2_129) ^ (abs(_world_seed) >> 8) ^ (i * 1_497) ^ (j * 693) ^ ((l + 1) * 450_111);
+                    var _chance_seed = (_world_seed & 0xffff) ^ (abs(_world_seed) >> 16) ^ (i * 1_497.931) ^ (j * 693.571) ^ ((l + 1) * 341.113);
                     
                     if (!chance_seeded(_structure.chance, _chance_seed)) continue;
                     
