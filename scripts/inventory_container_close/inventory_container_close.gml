@@ -1,6 +1,6 @@
 function inventory_container_close()
 {
-    if (obj_Game_Control.is_opened | IS_OPENED_BOOLEAN.INVENTORY_CONTAINER) exit;
+    if (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.INVENTORY_CONTAINER) exit;
     
     var _x = obj_Game_Control.tile_container_x;
     var _y = obj_Game_Control.tile_container_y;
