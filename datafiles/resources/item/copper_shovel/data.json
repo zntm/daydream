@@ -1,0 +1,20 @@
+{
+    "type": "tool",
+    "sprite": {
+        "xoffset": 16,
+        "yoffset": 16,
+        "length": 1
+    },
+    "inventory": "#phantasia:item/generic/inventory_tool",
+    "item": {
+        "damage": 3
+    },
+    "harvest": {
+        "hardness": 1,
+        "level": 2
+    },
+    "durability": {
+        "amount": 125,
+        "bar": "#phantasia:item/generic/durability_bar"
+    }
+}

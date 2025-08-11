@@ -73,7 +73,7 @@ function control_player(_dt)
             x = _x - 0  + (lengthdir_x(_sprite_width,  _angle) * _direction);
             y = _y - 24 + (lengthdir_y(_sprite_height, _angle));
             
-            image_angle = _angle;
+            image_angle = _angle * _direction;
         }
     }
     

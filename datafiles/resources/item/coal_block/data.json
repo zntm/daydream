@@ -8,13 +8,11 @@
     },
     "inventory": "#phantasia:item/generic/inventory_tile",
     "properties": [
-        "phantasia:is_tile",
-        "phantasia:can_flip_on_x",
-        "phantasia:can_flip_on_y"
+        "phantasia:is_tile"
     ],
     "harvest": {
-        "hardness": 0.78,
-        "level": 2,
+        "hardness": 0.58,
+        "level": 1,
         "particle": {
             "colour": "#phantasia:tile/particle_colour/stone",
             "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
@@ -25,7 +23,7 @@
     },
     "drop": [
         {
-            "id": "phantasia:raw_iron",
+            "id": "phantasia:coal_block",
             "condition": {
                 "id": "#phantasia:item/type/pickaxe"
             }

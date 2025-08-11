@@ -12,7 +12,7 @@
     ],
     "harvest": {
         "hardness": 0.78,
-        "level": 1,
+        "level": 2,
         "particle": {
             "colour": [
                 "#2A2D42",
