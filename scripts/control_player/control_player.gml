@@ -63,12 +63,12 @@ function control_player(_dt)
         
         var _t = (0.3 - timer_attack) / 0.3;
         
+        var _angle = (45 * cos(_t * pi)) + 15;
+        
         with (inst_item)
         {
             var _sprite_width  = sprite_get_width(sprite_index);
-            var _sprite_height = sprite_get_width(sprite_index);
-            
-            var _angle = (45 * cos(_t * pi)) + 15;
+            var _sprite_height = sprite_get_height(sprite_index);
             
             x = _x - 0  + (lengthdir_x(_sprite_width,  _angle) * _direction);
             y = _y - 24 + (lengthdir_y(_sprite_height, _angle));
