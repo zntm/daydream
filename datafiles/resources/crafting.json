@@ -69,7 +69,7 @@
 		{
 			"id": "phantasia:iron",
 			"amount": 1,
-			"crafting_stations": "#phantasia:tile/generic/furnace",
+			"crafting_stations": "phantasia:furnace",
 			"ingredients": [
 				{
 					"id": "phantasia:raw_iron",
@@ -146,7 +146,7 @@
 		{
 			"id": "phantasia:copper",
 			"amount": 1,
-			"crafting_stations": "#phantasia:tile/generic/furnace",
+			"crafting_stations": "phantasia:furnace",
 			"ingredients": [
 				{
 					"id": "phantasia:raw_copper",

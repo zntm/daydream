@@ -143,9 +143,4 @@ function control_player(_dt)
             control_update_chunk_in_view();
         }
     }
-    
-    if (keyboard_check_pressed(ord("P")))
-{
-    spawn_creature(x, y, "phantasia:bunny")
-}
 }
