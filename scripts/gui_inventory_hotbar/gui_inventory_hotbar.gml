@@ -94,9 +94,9 @@ function gui_inventory_hotbar(_gui_multiplier_x, _gui_multiplier_y)
         
         draw_sprite_ext(_sprite, _index, _x, _y, _xscale, _yscale, 0, c_white, 1);
         
-        if (_data.get_durability_amount() > 0)
+        if (_data.get_item_durability_amount() > 0)
         {
-            gui_inventory_durability(_xoffset, _yoffset, _item.get_durability(), _data, _gui_multiplier_x, _gui_multiplier_y);
+            gui_inventory_durability(_xoffset, _yoffset, _item.get_item_durability(), _data, _gui_multiplier_x, _gui_multiplier_y);
         }
     }
     

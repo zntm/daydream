@@ -1,6 +1,182 @@
 {
 	"data": [
 		{
+			"id": "phantasia:iron_sword",
+			"amount": 1,
+			"crafting_stations": "#phantasia:tile/generic/workbench",
+			"ingredients": [
+				{
+					"id": "phantasia:iron",
+					"amount": 12
+				}
+			]
+		},
+		{
+			"id": "phantasia:iron_pickaxe",
+			"amount": 1,
+			"crafting_stations": "#phantasia:tile/generic/workbench",
+			"ingredients": [
+				{
+					"id": "phantasia:iron",
+					"amount": 10
+				}
+			]
+		},
+		{
+			"id": "phantasia:iron_axe",
+			"amount": 1,
+			"crafting_stations": "#phantasia:tile/generic/workbench",
+			"ingredients": [
+				{
+					"id": "phantasia:iron",
+					"amount": 10
+				}
+			]
+		},
+		{
+			"id": "phantasia:iron_shovel",
+			"amount": 1,
+			"crafting_stations": "#phantasia:tile/generic/workbench",
+			"ingredients": [
+				{
+					"id": "phantasia:iron",
+					"amount": 8
+				}
+			]
+		},
+		{
+			"id": "phantasia:iron_block",
+			"amount": 1,
+			"crafting_stations": "#phantasia:tile/generic/workbench",
+			"ingredients": [
+				{
+					"id": "phantasia:iron",
+					"amount": 8
+				}
+			]
+		},
+		{
+			"id": "phantasia:iron",
+			"amount": 8,
+			"crafting_stations": "#phantasia:tile/generic/workbench",
+			"ingredients": [
+				{
+					"id": "phantasia:iron_block",
+					"amount": 1
+				}
+			]
+		},
+		{
+			"id": "phantasia:iron",
+			"amount": 1,
+			"crafting_stations": "#phantasia:tile/generic/furnace",
+			"ingredients": [
+				{
+					"id": "phantasia:raw_iron",
+					"amount": 1
+				}
+			]
+		},
+		{
+			"id": "phantasia:copper_sword",
+			"amount": 1,
+			"crafting_stations": "#phantasia:tile/generic/workbench",
+			"ingredients": [
+				{
+					"id": "phantasia:copper",
+					"amount": 12
+				}
+			]
+		},
+		{
+			"id": "phantasia:copper_pickaxe",
+			"amount": 1,
+			"crafting_stations": "#phantasia:tile/generic/workbench",
+			"ingredients": [
+				{
+					"id": "phantasia:copper",
+					"amount": 10
+				}
+			]
+		},
+		{
+			"id": "phantasia:copper_axe",
+			"amount": 1,
+			"crafting_stations": "#phantasia:tile/generic/workbench",
+			"ingredients": [
+				{
+					"id": "phantasia:copper",
+					"amount": 10
+				}
+			]
+		},
+		{
+			"id": "phantasia:copper_shovel",
+			"amount": 1,
+			"crafting_stations": "#phantasia:tile/generic/workbench",
+			"ingredients": [
+				{
+					"id": "phantasia:copper",
+					"amount": 8
+				}
+			]
+		},
+		{
+			"id": "phantasia:copper_block",
+			"amount": 1,
+			"crafting_stations": "#phantasia:tile/generic/workbench",
+			"ingredients": [
+				{
+					"id": "phantasia:copper",
+					"amount": 8
+				}
+			]
+		},
+		{
+			"id": "phantasia:copper",
+			"amount": 8,
+			"crafting_stations": "#phantasia:tile/generic/workbench",
+			"ingredients": [
+				{
+					"id": "phantasia:copper_block",
+					"amount": 1
+				}
+			]
+		},
+		{
+			"id": "phantasia:copper",
+			"amount": 1,
+			"crafting_stations": "#phantasia:tile/generic/furnace",
+			"ingredients": [
+				{
+					"id": "phantasia:raw_copper",
+					"amount": 1
+				}
+			]
+		},
+		{
+			"id": "phantasia:coal_block",
+			"amount": 1,
+			"crafting_stations": "#phantasia:tile/generic/workbench",
+			"ingredients": [
+				{
+					"id": "phantasia:coal",
+					"amount": 8
+				}
+			]
+		},
+		{
+			"id": "phantasia:coal",
+			"amount": 8,
+			"crafting_stations": "#phantasia:tile/generic/workbench",
+			"ingredients": [
+				{
+					"id": "phantasia:coal_block",
+					"amount": 1
+				}
+			]
+		},
+		{
 			"id": "phantasia:birch_workbench",
 			"amount": 1,
 			"ingredients": [

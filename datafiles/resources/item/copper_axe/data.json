@@ -7,14 +7,14 @@
     },
     "inventory": "#phantasia:item/generic/inventory_tool",
     "item": {
-        "damage": 4
+        "damage": 4,
+        "durability": {
+            "amount": 133,
+            "bar": "#phantasia:item/generic/durability_bar"
+        }
     },
     "harvest": {
         "hardness": 1,
         "level": 2
-    },
-    "durability": {
-        "amount": 133,
-        "bar": "#phantasia:item/generic/durability_bar"
     }
 }

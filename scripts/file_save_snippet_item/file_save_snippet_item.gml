@@ -19,7 +19,7 @@ function file_save_snippet_item(_buffer, _item, _item_data)
     
     var _data = _item_data[$ _id];
     
-    buffer_write(_buffer, buffer_u16, _item.get_durability() ?? 0);
+    buffer_write(_buffer, buffer_u16, _item.get_item_durability() ?? 0);
     
     file_save_snippet_component(_buffer, _item);
     

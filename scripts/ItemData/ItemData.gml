@@ -207,6 +207,18 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
         if (_data != undefined)
         {
             ___item_damage = _data[$ "damage"];
+            
+            var _durability = _data[$ "durability"];
+            
+            if (_durability != undefined)
+            {
+                ___item_durability_amount = _durability.amount;
+                
+                var _bar = _durability.bar;
+                
+                ___item_durability_bar        = _bar;
+                ___item_durability_bar_length = array_length(_bar.data);
+            }
         }
         
         return self;
@@ -215,6 +227,21 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     static get_item_damage = function()
     {
         return self[$ "___item_damage"] ?? 1;
+    }
+    
+    static get_item_durability_amount = function()
+    {
+        return self[$ "___item_durability_amount"] ?? 0;
+    }
+    
+    static get_item_durability_bar = function()
+    {
+        return self[$ "___item_durability_bar"];
+    }
+    
+    static get_item_durability_bar_length = function()
+    {
+        return self[$ "___item_durability_bar_length"];
     }
     
     static set_placement = function(_placement)
@@ -420,36 +447,6 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     static has_harvest_condition = function(_type)
     {
         return !!(get_harvest_condition() & _type);
-    }
-    
-    static set_durability = function(_durability)
-    {
-        if (_durability != undefined)
-        {
-            ___durability_amount = _durability.amount;
-            
-            var _bar = _durability.bar;
-            
-            ___durability_bar        = _bar;
-            ___durability_bar_length = array_length(_bar.data);
-        }
-        
-        return self;
-    }
-    
-    static get_durability_amount = function()
-    {
-        return self[$ "___durability_amount"] ?? 0;
-    }
-    
-    static get_durability_bar = function()
-    {
-        return self[$ "___durability_bar"];
-    }
-    
-    static get_durability_bar_length = function()
-    {
-        return self[$ "___durability_bar_length"];
     }
     
     static set_drop = function(_drop)

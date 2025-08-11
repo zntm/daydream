@@ -7,10 +7,10 @@
     },
     "inventory": "#phantasia:item/generic/inventory_tool",
     "item": {
-        "damage": 5
-    },
-    "durability": {
-        "amount": 162,
-        "bar": "#phantasia:item/generic/durability_bar"
+        "damage": 5,
+        "durability": {
+            "amount": 162,
+            "bar": "#phantasia:item/generic/durability_bar"
+        }
     }
 }

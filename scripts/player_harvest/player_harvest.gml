@@ -94,11 +94,11 @@ function player_harvest(_dt, _x, _y)
         
         sfx_diegetic_play(obj_Player.audio_emitter, _x * TILE_SIZE, _y * TILE_SIZE, _data.get_sfx_harvest());
         
-        if (_item != INVENTORY_EMPTY) && (_data2.get_durability_amount() > 0)
+        if (_item != INVENTORY_EMPTY) && (_data2.get_item_durability_amount() > 0)
         {
             _item.add_durability(-1);
             
-            if (_item.get_durability() <= 0)
+            if (_item.get_item_durability() <= 0)
             {
                 inventory_delete("base", _inventory_selected_hotbar);
             }
