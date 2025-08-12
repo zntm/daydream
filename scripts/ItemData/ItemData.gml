@@ -207,7 +207,15 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
         if (_data != undefined)
         {
             ___item_damage = _data[$ "damage"];
-            
+
+            var _consumable = _data[$ "consumable"];
+
+            if (_consumable != undefined)
+            {
+                ___item_consumable_hp = _consumable.hp;
+                ___item_consumable_saturation = _consumable.saturation;
+            }
+
             var _durability = _data[$ "durability"];
             
             if (_durability != undefined)
@@ -227,6 +235,16 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     static get_item_damage = function()
     {
         return self[$ "___item_damage"] ?? 1;
+    }
+
+    static set_item_consumable_hp = function()
+    {
+        return self[$ "___item_consumable_hp"];
+    }
+
+    static set_item_consumable_saturation = function()
+    {
+        return self[$ "___item_consumable_saturation"];
     }
     
     static get_item_durability_amount = function()

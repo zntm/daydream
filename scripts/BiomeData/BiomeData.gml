@@ -5,15 +5,8 @@ enum BIOME_TYPE {
     CAVE
 }
 
-function BiomeData(_name, _type) constructor
+function BiomeData(_namespace, _id, _type) : ParentData(_namespace, _id) constructor
 {
-    ___name = _name;
-    
-    static get_name = function()
-    {
-        return ___name;
-    }
-    
     ___type = _type;
     
     static get_type = function()

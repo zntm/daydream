@@ -17,7 +17,7 @@ function init_biome(_directory, _namespace = "phantasia", _type = 0)
         
         var _name = string_delete(_file, string_length(_file) - 4, 5);
         
-        var _biome_data = new BiomeData(_name, BIOME_TYPE.CAVE);
+        var _biome_data = new BiomeData(_namespace, _name, BIOME_TYPE.CAVE);
         
         _biome_data.set_background(_json.background);
         
