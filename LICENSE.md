@@ -1,12 +1,12 @@
 # Phantasia's Daydream License
 
-Version 1.0, August 2025
+Version 1.0 — August 2025
 
 **This license may be updated. Always refer to the latest official version for current terms.**
 
 Copyright (c) 2025 Phantasia's Daydream. All rights reserved.
 
-This License Agreement is made between the author(s) of the Software and any person or entity who obtains a copy of this Software and/or its associated files.
+This License Agreement is made between the Author(s) of the Software and any individual or entity ("Licensee") who obtains a copy of the Software or its associated files.
 
 By using the Software, the Licensee agrees to be bound by the terms and conditions of this Agreement.
 
@@ -14,7 +14,7 @@ By using the Software, the Licensee agrees to be bound by the terms and conditio
 
 This license allows nearly all personal uses, including public showcases with credit and private sharing of modified source code from official sources.
 
-The license protects the user's rights while offering open development flexibility, such as allowing code modification and non-commercial publishing, or commercial publishing of the source code or software if it includes significant modifications or has been approved by the author.
+The license protects the user's rights while offering open development flexibility, such as allowing code modification and non-commercial publishing, or commercial publishing of the Source Code or Software if it includes Significant Changes or has been approved by the Author.
 
 Public use of the full game is allowed with proper credit and links. Assets require permission for public commercial use, with exceptions.
 
@@ -50,19 +50,19 @@ This license is a custom agreement written by the author and is not based on any
 
 Exemptions apply when a specific part of the Software is explicitly marked as not owned by the Author. These parts are not covered under this license.
 
-    Any part of the "Source Code" or "Assets" does not fall under this license if it is clearly stated that the Author did not create it.
+    Any part of the Source Code or Assets does not fall under this license if clearly stated as not created by the Author.
 
     This may be indicated within the code itself, in comments or metadata, or elsewhere within the Game or Software (e.g., credits, or documentation).
 
 ## 2. Usage
 
-This section outlines what the Licensee is allowed to do with the Software, Source Code, and Assets both publicly and privately-under the terms of this license.
+This section outlines what the Licensee is allowed to do with the Software, Source Code, and Assets both publicly and privately — under the terms of this license.
 
 Any part of the Software or Source Code not created by the Author is not bound to this license and may be disregarded from Public Usage and Private Usage clauses.
 
 ### 2.1. Public Usage
 
-The Software may be showcased or discussed in public media (e.g., streams, videos, articles). Modified versions of the Source Code may be published publicly provided that:
+The Software may be showcased or discussed in public media (e.g., streams, videos, articles). Modified versions of the Source Code may be made publicly available (e.g., open-source repositories, community forums) provided that:
 
 - Proper credit is given to the original Author.
 - A link to the official Software or repository is included.
@@ -113,17 +113,11 @@ Derivative works such as fan art, fan games, remixes, or adaptations are allowed
 
 ### 3.4. Sub-Licensing
 
-The Licensee shall not sub-license, lease, rent, or otherwise transfer rights to the Source Code or Assets, whether partially or fully, to any third party in under any circumstances.
+The Licensee shall not sub-license, lease, rent, or otherwise transfer rights to the Source Code or Assets, whether partially or fully, to any third party in any form or under any circumstances.
 
 ### 3.5. Takedown Requests
 
-The Author reserves the right to request that the Licensee stop using, including, or distributing any portion of the Source Code or Assets in their project, either partially or entirely.
-
-If such a request is made, the Licensee will be given at least 30 days' notice to update their software and remove the specified content to comply with the request.
-
-This 30-day countdown begins once the Author sends the takedown request.
-
-Unless the Author grants an exception, the Licensee must publicly release an updated version of their project that fulfills the request within the 30-day period. If no update is made, the Author may request the removal of any existing versions that still contain the specified content.
+If the Author requests removal of specific Source Code or Assets, the Licensee must comply within 30 days from the date of request. Unless an exception is granted, the Licensee must either update the work to remove the specified content or remove the work entirely.
 
 Failing to comply within this timeframe without a granted exception will be considered a violation of this license.
 
@@ -139,7 +133,7 @@ Assets may not be used commercially without explicit permission from the Author.
 
 ### 4.2 Publishing Without Significant Changes
 
-Publishing the Software or Source Code as-is for commercial purposes is prohibited. Commercial releases require Significant Changes or approval by the Author.
+Publishing the unmodified Software or Source Code for commercial purposes is prohibited. Commercial releases require Significant Changes or approval by the Author.
 
 ### 4.3 Malicious or Harmful Use
 
@@ -161,7 +155,7 @@ By submitting contributions to the Source Code or Assets, the contributor ("Cont
 
 ## 6. Termination
 
-In the event that all Authors of the Software, Source Code, or Assets were to become completely unavailable to maintain the Software (e.g., no longer interacting with the Game or providing updates such as bugfixes and changes) for a period exceeding two years, this license shall automatically convert to a Public Domain status.
+In the event that all Authors of the Software, Source Code, or Assets were to become completely unavailable to maintain the Software (e.g., no longer interacting with the Game or providing updates such as bugfixes and changes) for a period exceeding two years, this license shall automatically release the Software, Source Code, and Assets into the Public Domain, allowing unrestricted use, modification, and distribution by anyone.
 
 ## 7. Disclaimer of Warranty
 
