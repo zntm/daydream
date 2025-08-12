@@ -55,8 +55,8 @@ function init_chunk_audio_emitter(_value, _index)
     
     return _audio_emitter;
 }
- */
-
+*/
+/*
 chunk_audio_emitter = array_create(CHUNK_SIZE * CHUNK_SIZE);
 
 for (var i = 0; i < CHUNK_SIZE; ++i)
