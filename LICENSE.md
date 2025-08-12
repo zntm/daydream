@@ -1,6 +1,6 @@
 # Phantasia's Daydream License
 
-Version 1.0, June 2025
+Version 1.0, August 2025
 
 **This license may be updated. Always refer to the latest official version for current terms.**
 
