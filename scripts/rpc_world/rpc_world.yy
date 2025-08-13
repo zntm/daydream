@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"rpc_world",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"rpc_world",
+  "parent":{
+    "name":"RPC",
+    "path":"folders/Scripts/RPC.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
