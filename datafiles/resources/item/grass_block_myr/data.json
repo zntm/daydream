@@ -27,5 +27,38 @@
     "audio_properties": {
         "lowpass": 0,
         "reverb": 0
-    }
+    },
+    "on_random_tick": [
+        {
+            "function": [
+                {
+                    "id": "phantasia:tile_place",
+                    "parameter": {
+                        "z": "default",
+                        "id": "phantasia:grass_block_myr",
+                        "condition": [
+                            {
+                                "z": "default",
+                                "id": "phantasia:dirt"
+                            },
+                            {
+                                "offset": {
+                                    "y": -1,
+                                    "z": "default"
+                                },
+                                "id": "empty"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "id": "phantasia:sfx_play",
+                    "parameter": {
+                        "id": "#phantasia:tile/sfx/grass_block"
+                    }
+                }
+            ],
+            "chance": 0.001
+        }
+    ]
 }

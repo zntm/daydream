@@ -1,6 +1,8 @@
 #region Chunk
 
 #macro TILE_EMPTY 0
+#macro TILE_EMPTY_ID "empty"
+
 #macro TILE_STRUCTURE_VOID -1
 
 #macro TILE_SIZE_BIT 4
