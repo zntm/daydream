@@ -49,27 +49,13 @@ global.item_function[$ "phantasia:tile_place"] = function(_dt, _x, _y, _z, _para
         {
             var _ = _condition[i];
             
-            var _x2 = _.x;
-            var _y2 = _.y;
+            var _xoffset = _[$ "x"];
             
-            var _offset = _[$ "offset"];
+            var _x2 = (_xoffset != undefined) ? (_x + smart_value(_xoffset)) : _x;
             
-            if (_offset != undefined)
-            {
-                var _xoffset = _offset[$ "x"];
-                
-                if (_xoffset != undefined)
-                {
-                    _x2 = smart_value(_xoffset);
-                }
-                
-                var _yoffset = _offset[$ "y"];
-                
-                if (_yoffset != undefined)
-                {
-                    _y2 = smart_value(_yoffset);
-                }
-            }
+            var _yoffset = _[$ "y"];
+            
+            var _y2 = (_yoffset != undefined) ? (_y + smart_value(_yoffset)) : _y;
             
             var _tile = tile_get(_x2, _y2, __chunk_depth[$ _.z]);
             
@@ -83,31 +69,26 @@ global.item_function[$ "phantasia:tile_place"] = function(_dt, _x, _y, _z, _para
         }
     }
     
-    var _x2 = _parameter.x;
-    var _y2 = _parameter.y;
+    var _xoffset = _parameter[$ "x"];
     
-    var _offset = _parameter[$ "offset"];
+    var _x2 = (_xoffset != undefined) ? (_x + smart_value(_xoffset)) : _x;
     
-    if (_offset != undefined)
-    {
-        var _xoffset = _offset[$ "x"];
-        
-        if (_xoffset != undefined)
-        {
-            _x2 = smart_value(_xoffset);
-        }
-        
-        var _yoffset = _offset[$ "y"];
-        
-        if (_yoffset != undefined)
-        {
-            _y2 = smart_value(_yoffset);
-        }
-    }
+    var _yoffset = _parameter[$ "y"];
+    
+    var _y2 = (_yoffset != undefined) ? (_y + smart_value(_yoffset)) : _y;
     
     var _z2 = __chunk_depth[$ _parameter.z];
     
-    tile_place(_x2, _y2, _z2, new Tile(smart_value(_parameter.id)));
+    var _id = smart_value(_parameter.id);
+    
+    if (_id != TILE_EMPTY_ID)
+    {
+        tile_place(_x2, _y2, _z2, new Tile(_id));
+    }
+    else
+    {
+        tile_place(_x2, _y2, _z2, TILE_EMPTY_ID);
+    }
     
     tile_update_surrounding(_x2, _y2, _z2);
 }

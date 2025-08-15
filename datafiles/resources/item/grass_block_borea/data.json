@@ -34,29 +34,14 @@
                 {
                     "id": "phantasia:tile_place",
                     "parameter": {
+                        "x": "#phantasia:tile/on_random_tick/condition/generic/x",
+                        "y": "#phantasia:tile/on_random_tick/condition/generic/y",
                         "z": "default",
                         "id": "phantasia:grass_block_borea",
-                        "condition": [
-                            {
-                                "z": "default",
-                                "id": "phantasia:dirt"
-                            },
-                            {
-                                "offset": {
-                                    "y": -1,
-                                    "z": "default"
-                                },
-                                "id": "empty"
-                            }
-                        ]
+                        "condition": "#phantasia:tile/on_random_tick/condition/grass_block/dirt_and_empty_above"
                     }
                 },
-                {
-                    "id": "phantasia:sfx_play",
-                    "parameter": {
-                        "id": "phantasia:tile/grass/step"
-                    }
-                }
+                "#phantasia:tile/on_random_tick/grass_block/sfx_play"
             ],
             "chance": 0.001
         }

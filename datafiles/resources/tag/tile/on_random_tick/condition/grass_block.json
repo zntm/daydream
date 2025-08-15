@@ -1,0 +1,15 @@
+{
+    "dirt_and_empty_above": [
+        {
+            "z": "default",
+            "id": "phantasia:dirt"
+        },
+        {
+            "offset": {
+                "y": -1,
+                "z": "default"
+            },
+            "id": "empty"
+        }
+    ]
+}

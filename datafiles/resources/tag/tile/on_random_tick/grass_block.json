@@ -1,0 +1,8 @@
+{
+    "sfx_play": {
+        "id": "phantasia:sfx_play",
+        "parameter": {
+            "id": "phantasia:tile/grass/step"
+        }
+    }
+}

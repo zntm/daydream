@@ -21,6 +21,8 @@ function smart_value_parse(_value)
         return _value;
     }
     
+    show_debug_message(_value)
+    
     var _type = __type[$ _value.type];
     
     if (_type == SMART_VALUE_TYPE.CHOOSE)
