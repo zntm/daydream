@@ -25,17 +25,25 @@
     "sfx": "#phantasia:tile/sfx/foliage",
     "on_random_tick": [
         {
-            "function": "phantasia:spawn_particle",
-            "parameter": {
-                "id": "phantasia:leaf/oak"
-            }
+            "function": [
+                {
+                    "id": "phantasia:spawn_particle",
+                    "parameter": {
+                        "id": "phantasia:leaf/oak"
+                    }
+                }
+            ]
         },
         {
-            "function": "phantasia:sfx_play",
-            "parameter": {
-                "id": "phantasia:tile.leaves.rustle"
-            },
-            "chance": 0.04
+            "function": [
+                {
+                    "id": "phantasia:sfx_play",
+                    "parameter": {
+                        "id": "phantasia:tile.leaves.rustle"
+                    }
+                }
+            ],
+            "chance": 0.01
         }
     ]
 }

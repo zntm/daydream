@@ -808,27 +808,38 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
         {
             var _ = _data[i];
             
-            var _parameters = {}
+            var _f = _[$ "function"];
+            var _f_length = array_length(_f);
             
-            var _parameter = _[$ "parameter"];
+            _function[@ i] = [
+                _[$ "chance"] ?? 1,
+                _f_length
+            ];
             
-            var _parameter_names = struct_get_names(_parameter);
-            var _parameter_length = array_length(_parameter_names);
-            
-            for (var j = 0; j < _parameter_length; ++j)
+            for (var j = 0; j < _f_length; ++j)
             {
-                var _name = _parameter_names[j];
+                var _a = _f[j];
                 
-                _parameters[$ _name] = smart_value_parse(_parameter[$ _name]);
-            }
-            
-            var _repeat = _[$ "repeat"];
-            
-            _function[@ i] = {
-                "function": _[$ "function"],
-                parameter: _parameters,
-                chance: _[$ "chance"] ?? 1,
-                "repeat": ((_repeat != undefined) ? smart_value_parse(_repeat) : 1)
+                var _parameter = _a[$ "parameter"];
+                var _parameters = {}
+                
+                var _parameter_names = struct_get_names(_parameter);
+                var _parameter_length = array_length(_parameter_names);
+                
+                for (var l = 0; l < _parameter_length; ++l)
+                {
+                    var _name = _parameter_names[l];
+                    
+                    _parameters[$ _name] = smart_value_parse(_parameter[$ _name]);
+                }
+                
+                var _repeat = _[$ "repeat"];
+                
+                _function[@ i][@ 2] = [
+                    _a.id,
+                    _parameters,
+                    ((_repeat != undefined) ? smart_value_parse(_repeat) : 1)
+                ];
             }
         }
         
@@ -839,9 +850,10 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     {
         if (_data != undefined)
         {
-            var _length = array_length(_data);
+            var _ = __set_function(_data);
+            var _length = array_length(_);
             
-            ___on_random_tick = __set_function(_data);
+            ___on_random_tick = _;
             ___on_random_tick_length = _length;
         }
         
