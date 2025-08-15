@@ -114,7 +114,8 @@
             "phantasia:tile/grass/harvest0",
             "phantasia:tile/grass/harvest1",
             "phantasia:tile/grass/harvest2",
-            "phantasia:tile/grass/harvest3"
+            "phantasia:tile/grass/harvest3",
+            "phantasia:tile/grass/harvest4"
         ],
         "pitch": "#phantasia:sfx/generic/pitch_default",
         "subtitle": "phantasia:sfx.tile.generic.step"
@@ -124,7 +125,12 @@
             "phantasia:tile/grass/step0",
             "phantasia:tile/grass/step1",
             "phantasia:tile/grass/step2",
-            "phantasia:tile/grass/step3"
+            "phantasia:tile/grass/step3",
+            "phantasia:tile/grass/step4",
+            "phantasia:tile/grass/step5",
+            "phantasia:tile/grass/step6",
+            "phantasia:tile/grass/step7",
+            "phantasia:tile/grass/step8"
         ],
         "pitch": "#phantasia:sfx/generic/pitch_default",
         "subtitle": "phantasia:sfx.tile.generic.step"
@@ -133,7 +139,8 @@
         "asset": [
             "phantasia:tile/grass_block/build0",
             "phantasia:tile/grass_block/build1",
-            "phantasia:tile/grass_block/build2"
+            "phantasia:tile/grass_block/build2",
+            "phantasia:tile/grass_block/build3"
         ],
         "pitch": "#phantasia:sfx/generic/pitch_default",
         "subtitle": "phantasia:sfx.tile.generic.build"
@@ -143,7 +150,8 @@
             "phantasia:tile/grass_block/harvest0",
             "phantasia:tile/grass_block/harvest1",
             "phantasia:tile/grass_block/harvest2",
-            "phantasia:tile/grass_block/harvest3"
+            "phantasia:tile/grass_block/harvest3",
+            "phantasia:tile/grass_block/harvest4"
         ],
         "pitch": "#phantasia:sfx/generic/pitch_default",
         "subtitle": "phantasia:sfx.tile.generic.harvest"

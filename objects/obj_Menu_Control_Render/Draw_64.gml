@@ -23,10 +23,10 @@ draw_set_align(fa_center, fa_middle);
 
 with (obj_Menu_Button)
 {
+    if (!rectangle_in_rectangle(0, 0, room_width, room_height, bbox_left + _render_xoffset, bbox_top + _render_yoffset, bbox_right + _render_xoffset, bbox_bottom + _render_yoffset)) continue;
+    
     var _x = (_render_xoffset + x) * _render_xscale;
     var _y = (_render_yoffset + y) * _render_yscale;
-    
-    if (_x < -256) || (_y < -256) continue;
     
     var _xscale = image_xscale * _render_xscale;
     var _yscale = image_yscale * _render_yscale;
@@ -138,10 +138,10 @@ with (obj_Menu_Button)
 
 with (obj_Menu_Textbox)
 {
+    if (!rectangle_in_rectangle(0, 0, room_width, room_height, bbox_left + _render_xoffset, bbox_top + _render_yoffset, bbox_right + _render_xoffset, bbox_bottom + _render_yoffset)) continue;
+    
     var _x = (_render_xoffset + x) * _render_xscale;
     var _y = (_render_yoffset + y) * _render_yscale;
-    
-    if (_x < -256) || (_y < -256) continue;
     
     var _xscale = image_xscale * _render_xscale;
     var _yscale = image_yscale * _render_yscale;
