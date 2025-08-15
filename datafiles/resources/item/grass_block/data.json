@@ -54,7 +54,7 @@
                 {
                     "id": "phantasia:sfx_play",
                     "parameter": {
-                        "id": "#phantasia:tile/sfx/grass_block"
+                        "id": "phantasia:tile/grass/step"
                     }
                 }
             ],
