@@ -1,6 +1,83 @@
 {
 	"data": [
 		{
+			"id": "phantasia:gold_sword",
+			"amount": 1,
+			"crafting_stations": "#phantasia:tile/generic/workbench",
+			"ingredients": [
+				{
+					"id": "phantasia:gold",
+					"amount": 12
+				}
+			]
+		},
+		{
+			"id": "phantasia:gold_pickaxe",
+			"amount": 1,
+			"crafting_stations": "#phantasia:tile/generic/workbench",
+			"ingredients": [
+				{
+					"id": "phantasia:gold",
+					"amount": 10
+				}
+			]
+		},
+		{
+			"id": "phantasia:gold_axe",
+			"amount": 1,
+			"crafting_stations": "#phantasia:tile/generic/workbench",
+			"ingredients": [
+				{
+					"id": "phantasia:gold",
+					"amount": 10
+				}
+			]
+		},
+		{
+			"id": "phantasia:gold_shovel",
+			"amount": 1,
+			"crafting_stations": "#phantasia:tile/generic/workbench",
+			"ingredients": [
+				{
+					"id": "phantasia:gold",
+					"amount": 8
+				}
+			]
+		},
+		{
+			"id": "phantasia:gold_block",
+			"amount": 1,
+			"crafting_stations": "#phantasia:tile/generic/workbench",
+			"ingredients": [
+				{
+					"id": "phantasia:gold",
+					"amount": 8
+				}
+			]
+		},
+		{
+			"id": "phantasia:gold",
+			"amount": 8,
+			"crafting_stations": "#phantasia:tile/generic/workbench",
+			"ingredients": [
+				{
+					"id": "phantasia:gold_block",
+					"amount": 1
+				}
+			]
+		},
+		{
+			"id": "phantasia:gold",
+			"amount": 1,
+			"crafting_stations": "phantasia:furnace",
+			"ingredients": [
+				{
+					"id": "phantasia:raw_gold",
+					"amount": 1
+				}
+			]
+		},
+		{
 			"id": "phantasia:iron_sword",
 			"amount": 1,
 			"crafting_stations": "#phantasia:tile/generic/workbench",

@@ -56,7 +56,7 @@ function init_chunk_audio_emitter(_value, _index)
     return _audio_emitter;
 }
 */
-/*
+
 chunk_audio_emitter = array_create(CHUNK_SIZE * CHUNK_SIZE);
 
 for (var i = 0; i < CHUNK_SIZE; ++i)
@@ -70,7 +70,7 @@ for (var i = 0; i < CHUNK_SIZE; ++i)
         
         audio_emitter_position(_audio_emitter, _x, _y, 0);
         
-        chunk_audio_emitter[@ tile_index_xy(i, j)] = _audio_emitter
+        chunk_audio_emitter[@ tile_index_xy(i, j)] = _audio_emitter;
     }
 }
 
