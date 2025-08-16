@@ -222,6 +222,7 @@
     {"name":"ItemFunction","order":2,"path":"scripts/ItemFunction/ItemFunction.yy",},
     {"name":"lerp_delta","order":6,"path":"scripts/lerp_delta/lerp_delta.yy",},
     {"name":"loca_translate","order":2,"path":"scripts/loca_translate/loca_translate.yy",},
+    {"name":"menu_anchor_position","order":4,"path":"scripts/menu_anchor_position/menu_anchor_position.yy",},
     {"name":"menu_control_textbox","order":1,"path":"scripts/menu_control_textbox/menu_control_textbox.yy",},
     {"name":"menu_refresh_instance_player_attire","order":2,"path":"scripts/menu_refresh_instance_player_attire/menu_refresh_instance_player_attire.yy",},
     {"name":"menu_refresh_instance_player_colour","order":3,"path":"scripts/menu_refresh_instance_player_colour/menu_refresh_instance_player_colour.yy",},

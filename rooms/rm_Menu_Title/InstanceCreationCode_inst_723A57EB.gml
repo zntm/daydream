@@ -1,3 +1,5 @@
+menu_anchor_position(x, y, GUI_ANCHOR.BOTTOM_RIGHT, room_width, room_height);
+
 on_draw = function()
 {
     var _halign = draw_get_halign();

@@ -14,10 +14,7 @@
         "hardness": 0.78,
         "level": 2,
         "particle": {
-            "colour": [
-                "#2A2D42",
-                "#262A3B"
-            ],
+            "colour": "#phantasia:tile/particle_colour/iron",
             "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
         },
         "condition": {

@@ -1,3 +1,5 @@
+menu_anchor_position(x, y, GUI_ANCHOR.TOP, room_width, room_height);
+
 var _splash_data = global.splash_data;
 var _splash_current_date = _splash_data[$ $"{current_month}_{current_day}"];
 

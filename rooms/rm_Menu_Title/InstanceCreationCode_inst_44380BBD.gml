@@ -1,5 +1,4 @@
-x = gui_xanchor(GUI_ANCHOR.MIDDLE, room_width,  1);
-y = gui_yanchor(GUI_ANCHOR.MIDDLE, room_height, 1) + 66;
+menu_anchor_position(x, y, GUI_ANCHOR.MIDDLE, room_width, room_height);
 
 index = 1;
 

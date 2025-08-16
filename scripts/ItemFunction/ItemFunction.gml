@@ -61,7 +61,7 @@ global.item_function[$ "phantasia:tile_place"] = function(_dt, _x, _y, _z, _para
             
             var _id = _.id;
             
-            if (_id == TILE_EMPTY_ID) 
+            if (_id == TILE_EMPTY_ID)
             {
                 if (_tile != TILE_EMPTY) exit;
             }
