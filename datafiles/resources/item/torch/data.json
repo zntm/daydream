@@ -19,5 +19,18 @@
         }
     ],
     "animation_type": "increment",
-    "sfx": "#phantasia:tile/sfx/wood"
+    "sfx": "#phantasia:tile/sfx/wood",
+    "on_random_tick": [
+        {
+            "function": [
+                {
+                    "id": "phantasia:sfx_play",
+                    "parameter": {
+                        "id": "phantasia:tile.fire.ambient"
+                    }
+                }
+            ],
+            "chance": 0.1
+        }
+    ]
 }

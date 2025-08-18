@@ -109,6 +109,28 @@
         "pitch": "#phantasia:sfx/generic/pitch_default",
         "subtitle": "phantasia:sfx.tile.generic.step"
     },
+    "tile.firt.ambient": {
+        "asset": [
+            "phantasia:tile/dirt/ambient0",
+            "phantasia:tile/dirt/ambient1",
+            "phantasia:tile/dirt/ambient2",
+            "phantasia:tile/dirt/ambient3",
+            "phantasia:tile/dirt/ambient4",
+            "phantasia:tile/dirt/ambient5",
+            "phantasia:tile/dirt/ambient6",
+            "phantasia:tile/dirt/ambient7",
+            "phantasia:tile/dirt/ambient8",
+            "phantasia:tile/dirt/ambient9",
+            "phantasia:tile/dirt/ambient10",
+            "phantasia:tile/dirt/ambient11",
+            "phantasia:tile/dirt/ambient12",
+            "phantasia:tile/dirt/ambient13",
+            "phantasia:tile/dirt/ambient14",
+            "phantasia:tile/dirt/ambient15"
+        ],
+        "pitch": "#phantasia:sfx/generic/pitch_default",
+        "subtitle": "phantasia:sfx.tile.fire.ambient"
+    },
     "tile.grass.harvest": {
         "asset": [
             "phantasia:tile/grass/harvest0",

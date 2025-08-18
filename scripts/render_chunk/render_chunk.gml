@@ -38,7 +38,7 @@ function render_chunk(_uv, _inst, _z)
     {
         for (var _y = 0; _y < CHUNK_SIZE; ++_y)
         {
-            var _tile = _chunk[(_z << (CHUNK_SIZE_BIT * 2)) | (_y << CHUNK_SIZE_BIT) | _x];
+            var _tile = _chunk[tile_index_xyz(_x, _y, _z)];
             
             if (_tile == TILE_EMPTY) continue;
             
@@ -66,7 +66,7 @@ function render_chunk(_uv, _inst, _z)
             
             if (_data.is_foliage())
             {
-                render_tile_foliage(_buffer, _data, _page, _position, _uv, (_y << CHUNK_SIZE_BIT) | _x, _surface_width, _surface_height, _id, _index + _tile.get_index_offset(), _draw_x, _draw_y, _xscale, _yscale, _rotation, c_white, 1);
+                render_tile_foliage(_buffer, _data, _page, _position, _uv, tile_index_xy(_x, _y), _surface_width, _surface_height, _id, _index + _tile.get_index_offset(), _draw_x, _draw_y, _xscale, _yscale, _rotation, c_white, 1);
                 
                 continue;
             }
