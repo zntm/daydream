@@ -13,8 +13,8 @@ function render_tile(_buffer, _item_data, _page, _position, _uv, _surface_width,
     var _v2 = _v0 + (_width  / _surface_width);
     var _v3 = _v1 + (_height / _surface_height);
     
-    var _xoffset = _xscale * -_sprite.get_xoffset();
-    var _yoffset = _yscale * -_sprite.get_yoffset();
+    var _xoffset = -_xscale * _sprite.get_xoffset();
+    var _yoffset = -_yscale * _sprite.get_yoffset();
     
     var _xw = (_xscale * _width)  + _xoffset;
     var _yh = (_yscale * _height) + _yoffset;

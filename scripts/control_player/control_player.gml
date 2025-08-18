@@ -83,9 +83,9 @@ function control_player(_dt)
     {
         if (!_on_ground) && (tile_meeting(x, y + 1))
         {
-            var _difference = max(0, y - ylast - 8);
+            var _difference = max(0, y - ylast - 10);
             
-            var _value = floor(power(round(_difference / TILE_SIZE) * 1.25, 1.25));
+            var _value = floor(power(floor(_difference / TILE_SIZE) * 0.62, 1.25));
             
             if (_value > 0)
             {

@@ -43,74 +43,200 @@ function control_creature(_dt)
         }
     }
     
-    if (timer_immunity > 0)
+    var _target = instance_nearest(x, y, obj_Player);
+    
+    if (_data.get_hostility_type() == CREATURE_HOSTILITY_TYPE.HOSTILE)
     {
-        var _direction = x - inst_predator.x;
-        
-        if (chance(0.1 * _dt))
+        if (point_distance(x, y, _target.x, _target.y) <= (TILE_SIZE * 16))
         {
-            if (_direction > 0)
+            var _direction = sign(_target.x - x);
+            
+            if (chance(0.1 * _dt))
             {
-                input_left  = false;
-                input_right = true;
-            }
-            else
-            {
-                input_left  = true;
-                input_right = false;
-            }
-        }
-    }
-    else if (chance(0.01 * _dt))
-    {
-        if (chance(0.2))
-        {
-            if (input_left) || (input_right)
-            {
-                input_left = input_right;
-                input_right = !input_left;
-            }
-            else
-            {
-                if (chance(0.5))
+                if (_direction > 0)
                 {
-                    input_left = true;
-                    input_right = false;
+                    input_left  = false;
+                    input_right = true;
                 }
                 else
                 {
-                    input_left = false;
-                    input_right = true;
+                    input_left  = true;
+                    input_right = false;
+                }
+                
+                if (_target.y < y) && (_direction != 0)
+                {
+                    image_xscale = abs(image_xscale) * _direction;
+                    
+                    if (!input_jump)
+                    {
+                        var _xto = x + (_direction * attribute.get_collision_box_width());
+                        
+                        if (tile_meeting(x, y + 1)) && (tile_meeting(_xto, y - 1)) && (entity_ai_fall_detection(_xto, y - (TILE_SIZE * 2), -attribute.get_collision_box_height(), 2) >= 2)
+                        {
+                            input_jump = true;
+                            input_jump_pressed = true;
+                        }
+                    }
                 }
             }
         }
-        else
+        else if (chance(0.01 * _dt))
         {
-            input_left = false;
-            input_right = false;
+            if (chance(0.2))
+            {
+                if (input_left) || (input_right)
+                {
+                    input_left = input_right;
+                    input_right = !input_left;
+                }
+                else
+                {
+                    if (chance(0.5))
+                    {
+                        input_left = true;
+                        input_right = false;
+                    }
+                    else
+                    {
+                        input_left = false;
+                        input_right = true;
+                    }
+                }
+            }
+            else
+            {
+                input_left = false;
+                input_right = false;
+            }
+            
+            var _direction = input_right - input_left;
+            
+            if (_direction != 0)
+            {
+                image_xscale = abs(image_xscale) * _direction;
+                
+                if (!input_jump)
+                {
+                    var _xto = x + (_direction * attribute.get_collision_box_width());
+                    
+                    if (tile_meeting(x, y + 1)) && (tile_meeting(_xto, y - 1)) && (entity_ai_fall_detection(_xto, y - (TILE_SIZE * 2), -attribute.get_collision_box_height(), 2) >= 2)
+                    {
+                        input_jump = true;
+                        input_jump_pressed = true;
+                    }
+                }
+            }
         }
     }
-    
-    var _direction = input_right - input_left;
-    
-    if (_direction != 0)
+    else
     {
-        image_xscale = abs(image_xscale) * _direction;
-        
-        if (!input_jump)
+        if (timer_immunity > 0)
         {
-            var _xto = x + (_direction * attribute.get_collision_box_width());
+            var _direction = x - inst_predator.x;
             
-            if (tile_meeting(x, y + 1)) && (tile_meeting(_xto, y - 1)) && (entity_ai_fall_detection(_xto, y - (TILE_SIZE * 2), -attribute.get_collision_box_height(), 2) >= 2)
+            if (chance(0.1 * _dt))
             {
-                input_jump = true;
-                input_jump_pressed = true;
+                if (_direction > 0)
+                {
+                    input_left  = false;
+                    input_right = true;
+                }
+                else
+                {
+                    input_left  = true;
+                    input_right = false;
+                }
+            }
+        }
+        else if (chance(0.01 * _dt))
+        {
+            if (chance(0.2))
+            {
+                if (input_left) || (input_right)
+                {
+                    input_left = input_right;
+                    input_right = !input_left;
+                }
+                else
+                {
+                    if (chance(0.5))
+                    {
+                        input_left = true;
+                        input_right = false;
+                    }
+                    else
+                    {
+                        input_left = false;
+                        input_right = true;
+                    }
+                }
+            }
+            else
+            {
+                input_left = false;
+                input_right = false;
+            }
+        }
+        
+        var _direction = input_right - input_left;
+        
+        if (_direction != 0)
+        {
+            image_xscale = abs(image_xscale) * _direction;
+            
+            if (!input_jump)
+            {
+                var _xto = x + (_direction * attribute.get_collision_box_width());
+                
+                if (tile_meeting(x, y + 1)) && (tile_meeting(_xto, y - 1)) && (entity_ai_fall_detection(_xto, y - (TILE_SIZE * 2), -attribute.get_collision_box_height(), 2) >= 2)
+                {
+                    input_jump = true;
+                    input_jump_pressed = true;
+                }
             }
         }
     }
     
+    var _on_ground = tile_meeting(x, y + 1);
+    
     control_physics_input(_dt, id, ((timer_panic > 0) ? 1.5 : 1));
     control_physics(_dt, id);
+    
+    if (y > ylast)
+    {
+        if (!_on_ground) && (tile_meeting(x, y + 1))
+        {
+            var _difference = max(0, y - ylast - 10);
+            
+            var _value = floor(power(floor(_difference / TILE_SIZE) * 0.62, 1.25));
+            
+            if (_value > 0)
+            {
+                hp -= _value;
+                
+                ylast = y;
+                
+                repeat (irandom_range(8, 14))
+                {
+                    spawn_particle(x - irandom_range(-TILE_SIZE / 2, TILE_SIZE / 2), y - irandom_range(-TILE_SIZE / 2, TILE_SIZE / 2), "phantasia:entity/damage");
+                }
+                
+                spawn_floating_text(x, y, _value, 0, -3.9);
+                
+                if (hp <= 0)
+                {
+                    instance_destroy();
+                    
+                    exit;
+                }
+            }
+        }
+    }
+    else
+    {
+        ylast = y;
+    }
     
     control_entity_sfx(_dt);
     

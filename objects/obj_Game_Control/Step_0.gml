@@ -169,6 +169,11 @@ with (obj_Player)
     input_jump_pressed = keyboard_check_pressed(_settings.input_keyboard_jump);
 }
 
+if (keyboard_check_pressed(ord("P")))
+{
+    spawn_creature(obj_Player.x, obj_Player.y, "phantasia:zombie");
+}
+
 control_game_tick(_delta_time);
 
 var _creature_data = global.creature_data;
