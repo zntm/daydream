@@ -19,6 +19,27 @@ function control_game_tick(_delta_time)
     {
         var _tick = min(1, global.tick_accumulator);
         
+        if (timer_respawn > 0)
+        {
+            timer_respawn -= _tick / GAME_TICK;
+            
+            if (timer_respawn <= 0)
+            {
+                obj_Player.x = obj_Player.xspawn;
+                obj_Player.y = obj_Player.yspawn;
+                
+                obj_Player.xvelocity = 0;
+                obj_Player.yvelocity = 0;
+                
+                obj_Player.hp = obj_Player.hp_max;
+                
+                _camera_x = obj_Player.x - (_camera_width  / 2);
+                _camera_y = obj_Player.y - (_camera_height / 2);
+                
+                control_camera_pos(_camera_x, _camera_y, true);
+            }
+        }
+        
         for (var i = 0; i < chunk_in_view_length; ++i)
         {
             var _inst = chunk_in_view[i];

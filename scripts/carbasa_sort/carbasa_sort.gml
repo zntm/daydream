@@ -18,7 +18,10 @@ function carbasa_sort(_page)
         var _w = _sprite.get_width();
         var _h = _sprite.get_height();
         
-        if (_current_x + (_w * (_sprite.get_number() + 2)) + 1 >= CARBASA_PAGE_MAX_SIZE)
+        var _name = _sprite.get_name();
+        var _index = _sprite.get_index();
+        
+        if (_current_x + ((_w - _index) * _sprite.get_number()) >= CARBASA_PAGE_MAX_SIZE)
         {
             _current_x = 0;
             _current_y += _current_row_height;
@@ -26,9 +29,9 @@ function carbasa_sort(_page)
             _current_row_height = 0;
         }
         
-        global.carbasa_page[$ _page][$ _sprite.get_name()].sprite[@ _sprite.get_index()] = i;
+        global.carbasa_page[$ _page][$ _name].sprite[@ _index] = i;
         
-        _data[@ i].set_position(_current_x, _current_y);
+        _sprite.set_position(_current_x, _current_y);
         
         _current_x += _w;
         

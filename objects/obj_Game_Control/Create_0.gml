@@ -72,6 +72,9 @@ while (worldgen_get_cave(0, round(obj_Player.y / TILE_SIZE) + 1, _surface_height
     obj_Player.y += TILE_SIZE;
 }
 
+obj_Player.xspawn = obj_Player.x;
+obj_Player.yspawn = obj_Player.y;
+
 if (!directory_exists($"{PROGRAM_DIRECTORY_WORLDS}/{_world_save_data.uuid}"))
 {
     global.world_save_data.time = _world_data.get_time_start();

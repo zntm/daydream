@@ -53,6 +53,8 @@ function carbasa_sprite_add(_page, _sprite, _name)
     if (!surface_exists(_surface))
     {
         _surface = surface_create(_surface_width, _surface_height);
+        
+        global.carbasa_surface[$ _page] = _surface;
     }
     else if (surface_get_width(_surface) != _surface_width) || (surface_get_height(_surface) != _surface_height)
     {
@@ -67,9 +69,9 @@ function carbasa_sprite_add(_page, _sprite, _name)
         surface_free(_surface);
         
         _surface = _temp;
+        
+        global.carbasa_surface[$ _page] = _surface;
     }
-    
-    global.carbasa_surface[$ _page] = _surface;
     
     surface_set_target(_surface);
     draw_clear_alpha(c_black, 0);
@@ -83,15 +85,12 @@ function carbasa_sprite_add(_page, _sprite, _name)
         var _ = _data[i];
         
         var _sprite2 = _.get_sprite();
-        var _index  = _.get_index();
+        var _index   = _.get_index();
         
-        var _x = _.get_x();
-        var _y = _.get_y();
+        var _x = _.get_x() + _.get_xoffset();
+        var _y = _.get_y() + _.get_yoffset();
         
-        var _xoffset2 = _.get_xoffset();
-        var _yoffset2 = _.get_yoffset();
-        
-        draw_sprite(_sprite2, _index, _x + _xoffset2, _y + _yoffset2);
+        draw_sprite(_sprite2, _index, _x, _y);
     }
     
     surface_reset_target();

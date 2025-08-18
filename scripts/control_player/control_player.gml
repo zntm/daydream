@@ -1,5 +1,7 @@
 function control_player(_dt)
 {
+    if (hp <= 0) exit;
+    
     audio_listener_position(x, y, 0);
     
     control_physics_input(_dt, id);
@@ -94,6 +96,13 @@ function control_player(_dt)
                 ylast = y;
                 
                 spawn_floating_text(x, y, _value, 0, -3.9);
+                
+                if (hp <= 0)
+                {
+                    obj_Game_Control.timer_respawn = 3;
+                    
+                    exit;
+                }
             }
         }
     }

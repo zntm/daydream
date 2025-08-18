@@ -1,0 +1,23 @@
+{
+    "type": "untouchable",
+    "sprite": {
+        "xoffset": 12,
+        "yoffset": 24,
+        "length": 21
+    },
+    "inventory": "#phantasia:item/generic/inventory_default",
+    "harvest": {
+        "hardness": 0.38,
+        "particle": {
+            "colour": "#phantasia:tile/particle_colour/wood",
+            "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
+        }
+    },
+    "drop": [
+        {
+            "id": "phantasia:campfire"
+        }
+    ],
+    "animation_type": "increment",
+    "sfx": "#phantasia:tile/sfx/wood"
+}

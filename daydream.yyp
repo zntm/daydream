@@ -248,6 +248,8 @@
     {"$GMIncludedFile":"","%Name":"sprite.png","CopyToMask":-1,"filePath":"datafiles/resources/item/cactus_flower","name":"sprite.png","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"data.json","CopyToMask":-1,"filePath":"datafiles/resources/item/cactus","name":"data.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"sprite.png","CopyToMask":-1,"filePath":"datafiles/resources/item/cactus","name":"sprite.png","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"data.json","CopyToMask":-1,"filePath":"datafiles/resources/item/campfire","name":"data.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"sprite.png","CopyToMask":-1,"filePath":"datafiles/resources/item/campfire","name":"sprite.png","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"data.json","CopyToMask":-1,"filePath":"datafiles/resources/item/cattail","name":"data.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"sprite.png","CopyToMask":-1,"filePath":"datafiles/resources/item/cattail","name":"sprite.png","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"data.json","CopyToMask":-1,"filePath":"datafiles/resources/item/coal_block","name":"data.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
