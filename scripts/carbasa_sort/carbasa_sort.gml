@@ -23,10 +23,19 @@ function carbasa_sort(_page)
         
         if (_current_x + ((_w - _index) * _sprite.get_number()) >= CARBASA_PAGE_MAX_SIZE)
         {
+            if (_current_y + _h >= CARBASA_PAGE_MAX_SIZE)
+            {
+                throw "Too much textures";
+            }
+            
             _current_x = 0;
             _current_y += _current_row_height;
             
-            _current_row_height = 0;
+            _current_row_height = _h;
+        }
+        else if (_h >= _current_row_height)
+        {
+            _current_row_height = _h;
         }
         
         global.carbasa_page[$ _page][$ _name].sprite[@ _index] = i;
@@ -35,18 +44,8 @@ function carbasa_sort(_page)
         
         _current_x += _w;
         
-        if (_h >= _current_row_height)
-        {
-            _current_row_height = _h;
-        }
-        
         _width  = max(_width,  _current_x + _w);
         _height = max(_height, _current_y + _h);
-        
-        if (_current_y + _h >= CARBASA_PAGE_MAX_SIZE)
-        {
-            throw "Too much textures";
-        }
     }
     
     global.carbasa_surface_size[$ _page] = (power(2, ceil(log2(_height))) << 16) | power(2, ceil(log2(_width)));

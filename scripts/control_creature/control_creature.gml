@@ -8,21 +8,17 @@ function control_creature(_dt)
         
         if (instance_exists(_inst))
         {
-            var _item_damage = global.item_data[$ _inst._id].get_item_damage();
-                _item_damage = round(_item_damage * random_range(0.9, 1.1));
-            
-            timer_immunity = 4;
-            
-            inst_predator = _inst.inst_owner;
+            var _damage = global.item_data[$ _inst._id].get_item_damage();
+                _damage = round(_damage * random_range(0.9, 1.1));
             
             repeat (irandom_range(8, 14))
             {
-                spawn_particle(x - irandom_range(-TILE_SIZE / 2, TILE_SIZE / 2), y - irandom_range(-TILE_SIZE / 2, TILE_SIZE / 2), "phantasia:entity/damage");
+                spawn_particle(random_range(bbox_left, bbox_right), random_range(bbox_top, bbox_bottom), "phantasia:entity/damage");
             }
             
-            hp -= _item_damage;
+            hp -= _damage;
             
-            spawn_floating_text(x, y, _item_damage, 0, -3.9);
+            spawn_floating_text(x, y, _damage, 0, -3.9);
             
             if (hp <= 0)
             {
@@ -30,6 +26,13 @@ function control_creature(_dt)
                 
                 exit;
             }
+            
+            timer_immunity = 1;
+            
+            inst_predator = _inst.inst_owner;
+            
+                xvelocity = sign(x - _inst.x) * 5.2;
+                yvelocity = sign(y - _inst.y) * 0.6;
         }
     }
     
@@ -219,7 +222,7 @@ function control_creature(_dt)
                 
                 repeat (irandom_range(8, 14))
                 {
-                    spawn_particle(x - irandom_range(-TILE_SIZE / 2, TILE_SIZE / 2), y - irandom_range(-TILE_SIZE / 2, TILE_SIZE / 2), "phantasia:entity/damage");
+                    spawn_particle(random_range(bbox_left, bbox_right), random_range(bbox_top, bbox_bottom), "phantasia:entity/damage");
                 }
                 
                 spawn_floating_text(x, y, _value, 0, -3.9);

@@ -77,6 +77,7 @@
   ],
   "ResourceOrderSettings":[
     {"name":"execute_shell_simple_ext","order":1,"path":"extensions/execute_shell_simple_ext/execute_shell_simple_ext.yy",},
+    {"name":"OpenSimplexNoise","order":3,"path":"extensions/OpenSimplexNoise/OpenSimplexNoise.yy",},
     {"name":"window_taskbar","order":2,"path":"extensions/window_taskbar/window_taskbar.yy",},
     {"name":"obj_Chunk","order":2,"path":"objects/obj_Chunk/obj_Chunk.yy",},
     {"name":"obj_Creature","order":4,"path":"objects/obj_Creature/obj_Creature.yy",},
@@ -233,7 +234,6 @@
     {"name":"menu_textbox_randomize_player_name","order":2,"path":"scripts/menu_textbox_randomize_player_name/menu_textbox_randomize_player_name.yy",},
     {"name":"menu_textbox_randomize_world_name","order":3,"path":"scripts/menu_textbox_randomize_world_name/menu_textbox_randomize_world_name.yy",},
     {"name":"NaturalStructureData","order":1,"path":"scripts/NaturalStructureData/NaturalStructureData.yy",},
-    {"name":"noise_free","order":1,"path":"scripts/noise_free/noise_free.yy",},
     {"name":"normalize","order":7,"path":"scripts/normalize/normalize.yy",},
     {"name":"number_format_thousandths","order":8,"path":"scripts/number_format_thousandths/number_format_thousandths.yy",},
     {"name":"ParentData","order":1,"path":"scripts/ParentData/ParentData.yy",},
@@ -306,7 +306,6 @@
     {"name":"shd_Colour_Replace","order":5,"path":"shaders/shd_Colour_Replace/shd_Colour_Replace.yy",},
     {"name":"shd_Colourblind","order":6,"path":"shaders/shd_Colourblind/shd_Colourblind.yy",},
     {"name":"shd_Lighting","order":7,"path":"shaders/shd_Lighting/shd_Lighting.yy",},
-    {"name":"shd_Noise","order":1,"path":"shaders/shd_Noise/shd_Noise.yy",},
     {"name":"shd_Separable_Blur","order":4,"path":"shaders/shd_Separable_Blur/shd_Separable_Blur.yy",},
     {"name":"spr_Attire_Base_Arm_Left","order":1,"path":"sprites/spr_Attire_Base_Arm_Left/spr_Attire_Base_Arm_Left.yy",},
     {"name":"spr_Attire_Base_Arm_Right","order":2,"path":"sprites/spr_Attire_Base_Arm_Right/spr_Attire_Base_Arm_Right.yy",},

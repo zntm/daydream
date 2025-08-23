@@ -47,7 +47,7 @@
 					"transition": {
 						"type": "random",
 						"amplitude": 22,
-						"octave": 0.5
+						"octaves": 2
 					}
 				},
 				{
@@ -57,28 +57,24 @@
 					"transition": {
 						"type": "random",
 						"amplitude": 0,
-						"octave": 0
+						"octaves": 0
 					}
 				}
 			],
 			"noise": {
-				"octave": 4,
-				"roughness": 2
+				"octaves": 4
 			},
 			"options": []
 		},
 		"surface": {
 			"heat": {
-				"octave": 0.42,
-				"roughness": 1
+				"octaves": 1
 			},
 			"humidity": {
-				"octave": 0.82,
-				"roughness": 3
+				"octaves": 1
 			},
 			"offset": {
-				"octave": 0.2,
-				"roughness": 4,
+				"octaves": 2,
 				"min": 22,
 				"max": 34
 			}
@@ -87,16 +83,14 @@
 	"surface": {
 		"start": 512,
 		"offset": {
-			"octave": 2.4,
-			"roughness": 6,
+			"octaves": 4,
 			"min": 40,
 			"max": 96
 		}
 	},
 	"cave": {
 		"start": {
-			"octave": 0.62,
-			"roughness": 2,
+			"octaves": 2,
 			"min": 0,
 			"max": 12
 		},
@@ -107,10 +101,9 @@
 					"max": 1000
 				},
 				"threshold": {
-					"octave": 0.49,
-					"roughness": 3,
-					"min": 118,
-					"max": 124
+					"octaves": 4,
+					"min": 50,
+					"max": 60
 				}
 			},
 			{
@@ -119,8 +112,7 @@
 					"max": 1000
 				},
 				"threshold": {
-					"octave": 0.58,
-					"roughness": 2,
+					"octaves": 4,
 					"min": 116,
 					"max": 130
 				}

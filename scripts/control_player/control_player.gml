@@ -2,6 +2,47 @@ function control_player(_dt)
 {
     if (hp <= 0) exit;
     
+    if (timer_immunity <= 0)
+    {
+        var _inst = instance_place(x, y, obj_Creature);
+        
+        if (instance_exists(_inst))
+        {
+            var _data = global.creature_data[$ _inst._id];
+            
+            if (_data.get_hostility_type() == CREATURE_HOSTILITY_TYPE.HOSTILE)
+            {
+                var _damage = 1;
+                
+                repeat (irandom_range(8, 14))
+                {
+                    spawn_particle(random_range(bbox_left, bbox_right), random_range(bbox_top, bbox_bottom), "phantasia:entity/damage");
+                }
+                
+                hp -= _damage;
+                
+                spawn_floating_text(x, y, _damage, 0, -3.9);
+                
+                if (hp <= 0)
+                {
+                    instance_destroy();
+                    
+                    exit;
+                }
+                
+                timer_immunity = 1;
+                
+                xvelocity = sign(x - _inst.x) * 5.2;
+                yvelocity = sign(y - _inst.y) * 0.6;
+            }
+        }
+    }
+    
+    if (timer_immunity > 0)
+    {
+        timer_immunity = max(0, timer_immunity - (_dt / GAME_TICK));
+    }
+    
     audio_listener_position(x, y, 0);
     
     control_physics_input(_dt, id);

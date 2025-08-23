@@ -42,7 +42,7 @@ function worldgen_get_biome_cave(_x, _y, _surface_height, _seed)
         /*
         if (_type == "phantasia:linear")
         {
-            if (_y >= _range_max + (noise(_x, _y, _world_data.get_default_cave_transition_octave(i), _seed - (1024 * i)) * _world_data.get_default_cave_transition_amplitude(i))) continue;
+            if (_y >= _range_max + (noise(_x, _y, _world_data.get_default_cave_transition_octaves(i), _seed - (1024 * i)) * _world_data.get_default_cave_transition_amplitude(i))) continue;
             
             return _world_data.get_default_cave_id(i);
         }
