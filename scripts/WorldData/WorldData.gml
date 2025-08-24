@@ -174,7 +174,6 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         var _noise = _cave.noise;
         
         ___cave_biome_noise_octaves = _noise.octaves;
-        ___cave_biome_noise_roughness = _noise.roughness;
         
         var _options = _cave.options;
         var _options_length = array_length(_options);
@@ -232,7 +231,7 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         ___surface_biome_octaves_heat = _heat.octaves;
         ___surface_biome_octaves_offset = _offset.octaves;
         
-        ___surface_biome_value = (_offset.max << 32) | (_offset.min << 24) | (_offset.roughness << 16) | (_heat.roughness << 8) | _humidity.roughness;
+        ___surface_biome_value = (_offset.max << 8) | (_offset.min << 0);
         
         return self;
     }
@@ -242,19 +241,14 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         return ___surface_biome_octaves_humidity;
     }
     
-    static get_surface_biome_humidity_roughness = function()
-    {
-        return ___surface_biome_value & 0xff;
-    }
-    
     static get_surface_biome_offset_min = function()
     {
-        return (___surface_biome_value >> 24) & 0xff;
+        return (___surface_biome_value >> 0) & 0xff;
     }
     
     static get_surface_biome_offset_max = function()
     {
-        return (___surface_biome_value >> 32) & 0xff;
+        return (___surface_biome_value >> 8) & 0xff;
     }
     
     static get_surface_biome_heat_octaves = function()
@@ -262,24 +256,14 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         return ___surface_biome_octaves_heat;
     }
     
-    static get_surface_biome_heat_roughness = function()
-    {
-        return (___surface_biome_value >> 8) & 0xff;
-    }
-    
     static get_surface_biome_offset_octaves = function()
     {
         return ___surface_biome_octaves_offset;
     }
     
-    static get_surface_biome_offset_roughness = function()
-    {
-        return (___surface_biome_value >> 16) & 0xff;
-    }
-    
     static set_surface = function(_start, _offset)
     {
-        ___surface_value = (_offset.roughness << 48) | (_offset.max << 32) | (_offset.min << 16) | _start;
+        ___surface_value = (_offset.max << 32) | (_offset.min << 16) | _start;
         ___surface_octaves = _offset.octaves;
         
         return self;
@@ -300,11 +284,6 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         return (___surface_value >> 32) & 0xffff;
     }
     
-    static get_surface_offset_roughness = function()
-    {
-        return (___surface_value >> 48) & 0xff;
-    }
-    
     static get_surface_offset_octaves = function()
     {
         return ___surface_octaves;
@@ -317,7 +296,7 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         var _min = _start.min;
         var _max = _start.max;
         
-        ___cave_value = (_system_length << 40) | (_start.roughness << 32) | (_max << 16) | _min;
+        ___cave_value = (_system_length << 32) | (_max << 16) | _min;
         ___cave_start_amplitude = _max - _min;
         ___cave_start_octaves = _start.octaves;
         
@@ -331,7 +310,7 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
             var _threshold = _data.threshold;
             
             ___cave_system[@ i] = {
-                ___value: (_threshold.roughness << 48) | (_threshold.max << 40) | (_threshold.min << 32) | (_range.max << 16) | _range.min,
+                ___value: (_threshold.max << 40) | (_threshold.min << 32) | (_range.max << 16) | _range.min,
                 ___octaves: _threshold.octaves
             }
         }
@@ -354,14 +333,9 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         return ___cave_start_amplitude;
     }
     
-    static get_cave_start_roughness = function()
-    {
-        return (___cave_value >> 32) & 0xffff;
-    }
-    
     static get_cave_system_length = function()
     {
-        return (___cave_value >> 40) & 0xffff;
+        return (___cave_value >> 32) & 0xffff;
     }
     
     static get_cave_start_octaves = function()
@@ -387,11 +361,6 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
     static get_cave_system_threshold_max = function(_index)
     {
         return (___cave_system[_index].___value >> 40) & 0xff;
-    }
-    
-    static get_cave_system_threshold_roughness = function(_index)
-    {
-        return (___cave_system[_index].___value >> 48) & 0xff;
     }
     
     static get_cave_system_threshold_octaves = function(_index)

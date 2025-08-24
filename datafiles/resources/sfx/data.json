@@ -52,6 +52,22 @@
         "pitch": 1,
         "subtitle": "phantasia:sfx.item.collect"
     },
+    "item.swing": {
+        "asset": [
+            "phantasia:item/swing0",
+            "phantasia:item/swing1",
+            "phantasia:item/swing2",
+            "phantasia:item/swing3",
+            "phantasia:item/swing4",
+            "phantasia:item/swing5",
+            "phantasia:item/swing6",
+            "phantasia:item/swing7",
+            "phantasia:item/swing8"
+        ],
+        "gain": 0.8,
+        "pitch": "#phantasia:sfx/generic/pitch_default",
+        "subtitle": "phantasia:sfx.item.collect"
+    },
     "menu.key": {
         "asset": [
             "phantasia:menu/key"

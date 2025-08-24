@@ -5,5 +5,5 @@ function worldgen_get_surface_height(_x, _seed)
     var _amplitude = _world_data.get_surface_offset_max();
     var _octaves = _world_data.get_surface_offset_octaves();
     
-    return _world_data.get_surface_start() + _world_data.get_surface_offset_min() - round(open_simplex_noise_3d(_x / 64, 0, 16, _amplitude, _octaves));
+    return _world_data.get_surface_start() + _world_data.get_surface_offset_min() - round(open_simplex_noise(_x / 64, 0xffff + 40, _amplitude, _octaves));
 }

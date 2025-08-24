@@ -12,9 +12,13 @@ function control_structure(_x, _y)
     {
         var _surface_height = worldgen_get_surface_height(i, _world_seed);
         
+        var _tile_x = floor(i / CHUNK_SIZE);
+        
         for (var j = max(_surface_height - 1, _y - WORLDGEN_STRUCTURE_OFFSET); j <= _y + WORLDGEN_STRUCTURE_OFFSET; ++j)
         {
-            var _index = $"{floor(i / CHUNK_SIZE)}_{floor(j / CHUNK_SIZE)}";
+            var _tile_y = floor(j / CHUNK_SIZE);
+            
+            var _index = $"{_tile_x}_{_tile_y}";
             
             if (global.worldgen_structure[$ _index] != undefined) continue;
             

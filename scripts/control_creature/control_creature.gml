@@ -31,8 +31,8 @@ function control_creature(_dt)
             
             inst_predator = _inst.inst_owner;
             
-                xvelocity = sign(x - _inst.x) * 5.2;
-                yvelocity = sign(y - _inst.y) * 0.6;
+            xvelocity = sign(x - _inst.x) * 5.2;
+            yvelocity = sign(y - _inst.y) * 0.6;
         }
     }
     
