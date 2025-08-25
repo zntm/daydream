@@ -55,6 +55,8 @@ function control_player(_dt)
     
     if (timer_attack <= 0) && (mouse_check_button(mb_left))
     {
+        sfx_diegetic_play(obj_Player.audio_emitter, obj_Player.x, obj_Player.y, "phantasia:item.swing");
+        
         timer_attack = 0.3;
         
         var _item = global.inventory.base[global.inventory_selected_hotbar];
@@ -74,6 +76,9 @@ function control_player(_dt)
                 inst_item._id = _id;
                 
                 inst_item.sprite_index = _data.get_sprite();
+                
+                inst_item.image_index = _data.get_inventory_index();
+                inst_item.image_speed = 0;
                 
                 inst_item.inst_owner = _inst;
             }

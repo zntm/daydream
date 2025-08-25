@@ -52,6 +52,14 @@
         "pitch": 1,
         "subtitle": "phantasia:sfx.item.collect"
     },
+    "item.eat": {
+        "asset": [
+            "phantasia:item/eat0",
+            "phantasia:item/eat1"
+        ],
+        "pitch": "#phantasia:sfx/generic/pitch_default",
+        "subtitle": "phantasia:sfx.item.collect"
+    },
     "item.swing": {
         "asset": [
             "phantasia:item/swing0",

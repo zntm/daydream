@@ -13,6 +13,9 @@
             "cooldown": {
                 "id": "phantasia:food",
                 "second": 1
+            },
+            "sfx": {
+                "id": "phantasia:item.eat"
             }
         }
     }

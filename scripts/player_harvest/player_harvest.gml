@@ -56,7 +56,7 @@ function player_harvest(_dt, _x, _y)
         
         _item_type = _data2.get_type();
         
-        _item_hardness = _data2.get_harvest_hardness();
+        _item_hardness = _data2.get_harvest_hardness() ?? 1;
         _item_level = _data2.get_harvest_level();
         
         var _harvest_condition_id = _data.get_harvest_condition_id();

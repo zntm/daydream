@@ -129,6 +129,13 @@ function control_game_tick(_delta_time)
                         inventory_delete("base", _inventory_selected_hotbar);
                         
                         obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR | SURFACE_REFRESH_BOOLEAN.HP;
+                        
+                        var _sfx = _data.get_item_consumable_sfx_id();
+                        
+                        if (_sfx != undefined)
+                        {
+                            sfx_diegetic_play(obj_Player.audio_emitter, obj_Player.x, obj_Player.y, _sfx);
+                        }
                     }
                 }
             }

@@ -502,6 +502,8 @@
     {"$GMIncludedFile":"","%Name":"collect0.ogg","CopyToMask":-1,"filePath":"datafiles/resources/sfx/asset/item","name":"collect0.ogg","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"collect1.ogg","CopyToMask":-1,"filePath":"datafiles/resources/sfx/asset/item","name":"collect1.ogg","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"collect2.ogg","CopyToMask":-1,"filePath":"datafiles/resources/sfx/asset/item","name":"collect2.ogg","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"eat0.ogg","CopyToMask":-1,"filePath":"datafiles/resources/sfx/asset/item","name":"eat0.ogg","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"eat1.ogg","CopyToMask":-1,"filePath":"datafiles/resources/sfx/asset/item","name":"eat1.ogg","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"swing0.ogg","CopyToMask":-1,"filePath":"datafiles/resources/sfx/asset/item","name":"swing0.ogg","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"swing1.ogg","CopyToMask":-1,"filePath":"datafiles/resources/sfx/asset/item","name":"swing1.ogg","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"swing2.ogg","CopyToMask":-1,"filePath":"datafiles/resources/sfx/asset/item","name":"swing2.ogg","resourceType":"GMIncludedFile","resourceVersion":"2.0",},

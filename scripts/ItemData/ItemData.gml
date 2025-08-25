@@ -222,6 +222,13 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
                     ___item_consumable_cooldown_id = _cooldown.id;
                     ___item_consumable_cooldown_second = _cooldown.second;
                 }
+                
+                var _sfx = _consumable[$ "sfx"];
+                
+                if (_sfx != undefined)
+                {
+                    ___item_consumable_sfx_id = _sfx.id;
+                }
             }
             
             var _durability = _data[$ "durability"];
@@ -263,6 +270,11 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     static get_item_consumable_cooldown_second = function()
     {
         return self[$ "___item_consumable_cooldown_second"];
+    }
+    
+    static get_item_consumable_sfx_id = function()
+    {
+        return self[$ "___item_consumable_sfx_id"];
     }
     
     static get_item_durability_amount = function()
