@@ -34,6 +34,8 @@ function control_player(_dt)
                 
                 xvelocity = sign(x - _inst.x) * 5.2;
                 yvelocity = sign(y - _inst.y) * 0.6;
+                
+                obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.HP;
             }
         }
     }

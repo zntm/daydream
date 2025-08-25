@@ -25,8 +25,8 @@ function control_game_tick(_delta_time)
             
             if (timer_respawn <= 0)
             {
-                obj_Player.x = obj_Player.xspawn;
-                obj_Player.y = obj_Player.yspawn;
+                obj_Player.x = obj_Player.spawn_x;
+                obj_Player.y = obj_Player.spawn_y;
                 
                 obj_Player.xvelocity = 0;
                 obj_Player.yvelocity = 0;
@@ -103,6 +103,45 @@ function control_game_tick(_delta_time)
         with (obj_Player)
         {
             control_player(_tick);
+        }
+        
+        if (mouse_check_button(mb_right))
+        {
+            var _inventory_selected_hotbar = global.inventory_selected_hotbar;
+            var _item_holding = global.inventory.base[_inventory_selected_hotbar];
+            
+            if (_item_holding != INVENTORY_EMPTY)
+            {
+                var _data = _item_data[$ _item_holding.get_id()];
+                var _hp = _data.get_item_consumable_hp();
+                
+                if (obj_Player.hp < obj_Player.hp_max) && (_hp != undefined)
+                {
+                    var _cooldown_id = _data.get_item_consumable_cooldown_id();
+                    
+                    if (_cooldown_id != undefined)
+                    {
+                        obj_Player.hp = min(obj_Player.hp_max, obj_Player.hp + _hp);
+                        obj_Player.saturation += _data.get_item_consumable_saturation();
+                        
+                        item_cooldown[$ _cooldown_id] = _data.get_item_consumable_cooldown_second();
+                        
+                        inventory_delete("base", _inventory_selected_hotbar);
+                        
+                        obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR | SURFACE_REFRESH_BOOLEAN.HP;
+                    }
+                }
+            }
+        }
+        
+        var _item_cooldown_names  = struct_get_names(item_cooldown);
+        var _item_cooldown_length = array_length(_item_cooldown_names);
+        
+        for (var j = 0; j < _item_cooldown_length; ++j)
+        {
+            var _name = _item_cooldown_names[j];
+            
+            item_cooldown[$ _name] = max(0, item_cooldown[$ _name] - (_tick / GAME_TICK));
         }
         
         with (obj_Particle)

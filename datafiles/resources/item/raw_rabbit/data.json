@@ -9,7 +9,11 @@
     "item": {
         "consumable": {
             "hp": 2,
-            "saturation": 4
+            "saturation": 4,
+            "cooldown": {
+                "id": "phantasia:food",
+                "second": 1
+            }
         }
     }
 }

@@ -72,8 +72,8 @@ while (worldgen_get_cave(0, round(obj_Player.y / TILE_SIZE) + 1, _surface_height
     obj_Player.y += TILE_SIZE;
 }
 
-obj_Player.xspawn = obj_Player.x;
-obj_Player.yspawn = obj_Player.y;
+obj_Player.spawn_x = obj_Player.x;
+obj_Player.spawn_y = obj_Player.y;
 
 if (!directory_exists($"{PROGRAM_DIRECTORY_WORLDS}/{_world_save_data.uuid}"))
 {
@@ -97,7 +97,7 @@ global.inventory_selected_backpack = {
     type: undefined
 }
 
-global.inventory.base[@ 0] = new Inventory("phantasia:oak_chest");
+global.inventory.base[@ 0] = new Inventory("phantasia:cooked_chicken");
 
 enum INVENTORY_MOUSE_SELECT_TYPE {
     NONE,
@@ -208,3 +208,5 @@ chunk_in_view = [];
 chunk_in_view_length = 0;
 
 open_simplex_noise_seed(global.world_save_data.seed);
+
+item_cooldown = {}
