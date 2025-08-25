@@ -480,6 +480,7 @@
     {"$GMIncludedFile":"","%Name":"sprite.png","CopyToMask":-1,"filePath":"datafiles/resources/particle/seeding_dandelion","name":"sprite.png","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"data.json","CopyToMask":-1,"filePath":"datafiles/resources/particle/tile/harvest","name":"data.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"sprite.png","CopyToMask":-1,"filePath":"datafiles/resources/particle/tile/harvest","name":"sprite.png","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"sprite.png","CopyToMask":-1,"filePath":"datafiles/resources/projectile/swing","name":"sprite.png","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"rarity.json","CopyToMask":-1,"filePath":"datafiles/resources","name":"rarity.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"hurt0.ogg","CopyToMask":-1,"filePath":"datafiles/resources/sfx/asset/creature/chicken","name":"hurt0.ogg","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"hurt1.ogg","CopyToMask":-1,"filePath":"datafiles/resources/sfx/asset/creature/chicken","name":"hurt1.ogg","resourceType":"GMIncludedFile","resourceVersion":"2.0",},

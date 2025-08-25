@@ -18,7 +18,7 @@ function worldgen_get_cave(_x, _y, _surface_height, _seed)
     {
         var _octaves = _world_data.get_cave_system_threshold_octaves(i);
         
-        var _noise = open_simplex_noise(_x / 64, (_y / 64) + (0xffff + 8), 0xff, _octaves);
+        var _noise = open_simplex_noise(_x / 64, (_y / 64) + ((0xffff * (i + 1)) + 8), 0xff, _octaves);
         
         if (_noise >= _world_data.get_cave_system_threshold_min(i)) && (_noise < _world_data.get_cave_system_threshold_max(i))
         {

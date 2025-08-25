@@ -150,8 +150,8 @@ with (obj_Menu_Textbox)
     {
         if (boolean & (MENU_BUTTON_BOOLEAN.IS_SELECTED | MENU_BUTTON_BOOLEAN.IS_HOLDING))
         {
-            var _button_width  = (_xscale / 2 * 16) + 2;
-            var _button_height = (_yscale / 2 * 16) + 2;
+            var _button_width  = ((_xscale / 2) * 16) + 2;
+            var _button_height = ((_yscale / 2) * 16) + 2;
             
             draw_sprite_stretched_ext(spr_Menu_Button_Select, 0, _x - (_button_width / 2), _y - (_button_height / 2), _button_width, _button_height, c_white, 1);
             
@@ -161,8 +161,8 @@ with (obj_Menu_Textbox)
         {
             if (boolean & (MENU_BUTTON_BOOLEAN.IS_SELECTED | MENU_BUTTON_BOOLEAN.IS_HOLDING))
             {
-                var _button_width  = (_xscale / 2 * 16) + 2;
-                var _button_height = (_yscale / 2 * 16) + 2;
+                var _button_width  = ((_xscale / 2) * 16) + 2;
+                var _button_height = ((_yscale / 2) * 16) + 2;
                 
                 draw_sprite_stretched_ext(spr_Menu_Button_Select, 0, _x - (_button_width / 2), _y - (_button_height / 2), _button_width, _button_height, c_white, 1);
             }

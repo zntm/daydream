@@ -1,6 +1,6 @@
 #macro WORLDGEN_STRUCTURE_OFFSET (CHUNK_SIZE * 8)
 
-global.worldgen_structure = {}
+global.worldgen_structure = ds_map_create();
 
 function control_structure(_x, _y)
 {
@@ -14,13 +14,20 @@ function control_structure(_x, _y)
         
         var _tile_x = floor(i / CHUNK_SIZE);
         
+        if (!ds_map_exists(global.worldgen_structure, i))
+        {
+            global.worldgen_structure[? i] = ds_map_create();
+        }
+        
+        var _ds = global.worldgen_structure[? i];
+        
         for (var j = max(_surface_height - 1, _y - WORLDGEN_STRUCTURE_OFFSET); j <= _y + WORLDGEN_STRUCTURE_OFFSET; ++j)
         {
             var _tile_y = floor(j / CHUNK_SIZE);
             
-            var _index = $"{_tile_x}_{_tile_y}";
+            if (ds_map_exists(_ds, j)) continue;
             
-            if (global.worldgen_structure[$ _index] != undefined) continue;
+            global.worldgen_structure[? i][? j] = true;
             
             if (!worldgen_get_cave(i, j, _surface_height, _world_seed))
             {
@@ -88,7 +95,7 @@ function control_structure(_x, _y)
         
         for (var j = _ystart; j <= _yend; ++j)
         {
-            global.worldgen_structure[$ $"{i}_{j}"] = true;
+            global.worldgen_structure[? i][? j] = true;
         }
     }
 }
