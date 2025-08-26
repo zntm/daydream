@@ -1,7 +1,7 @@
 {
     "type": "tool",
     "sprite": {
-        "xoffset": 14,
+        "xoffset": 16,
         "yoffset": 16,
         "length": 1
     },
@@ -15,6 +15,6 @@
     },
     "harvest": {
         "hardness": 1,
-        "level": 1
+        "level": 3
     }
 }

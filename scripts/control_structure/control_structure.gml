@@ -31,7 +31,7 @@ function control_structure(_x, _y)
             
             if (!worldgen_get_cave(i, j, _surface_height, _world_seed))
             {
-                var _data = _biome_data[$ bg_get_biome(i, j)];
+                var _data = _biome_data[$ bg_get_biome(i, j, _surface_height)];
                 
                 var _length = _data.get_structure_length();
                 

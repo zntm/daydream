@@ -1,0 +1,19 @@
+{
+    "type": "default",
+    "sprite": {
+        "xoffset": 6,
+        "yoffset": 5,
+        "length": 1
+    },
+    "inventory": "#phantasia:item/generic/inventory_default",
+    "item": {
+        "armor": {
+            "defense": 6,
+            "type": "helmet"
+        },
+        "durability": {
+            "amount": 494,
+            "bar": "#phantasia:item/generic/durability_bar"
+        }
+    }
+}

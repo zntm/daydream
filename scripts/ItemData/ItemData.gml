@@ -3,7 +3,8 @@ enum ITEM_TYPE {
     SOLID,
     PLATFORM,
     UNTOUCHABLE,
-    TOOL
+    TOOL,
+    ACCESSORY
 }
 
 enum ITEM_TYPE_BIT {
@@ -11,7 +12,8 @@ enum ITEM_TYPE_BIT {
     SOLID       = 1 << ITEM_TYPE.SOLID,
     PLATFORM    = 1 << ITEM_TYPE.PLATFORM,
     UNTOUCHABLE = 1 << ITEM_TYPE.UNTOUCHABLE,
-    TOOL        = 1 << ITEM_TYPE.TOOL
+    TOOL        = 1 << ITEM_TYPE.TOOL,
+    ACCESSORY   = 1 << ITEM_TYPE.ACCESSORY
 }
 
 global.item_type = {
@@ -19,7 +21,15 @@ global.item_type = {
     "solid":       ITEM_TYPE_BIT.SOLID,
     "platform":    ITEM_TYPE_BIT.PLATFORM,
     "untouchable": ITEM_TYPE_BIT.UNTOUCHABLE,
-    "tool":        ITEM_TYPE_BIT.TOOL
+    "tool":        ITEM_TYPE_BIT.TOOL,
+    "accessory":   ITEM_TYPE_BIT.ACCESSORY
+}
+
+global.item_armor_type = {
+    helmet: INVENTORY_SLOT_TYPE.ARMOR_HELMET,
+    breastplate: INVENTORY_SLOT_TYPE.ARMOR_BREASTPLATE,
+    leggings: INVENTORY_SLOT_TYPE.ARMOR_LEGGINGS,
+    accessory: INVENTORY_SLOT_TYPE.ACCESSORY
 }
 
 enum ITEM_PROPERTIES_BOOLEAN {
@@ -204,6 +214,8 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     
     static set_item = function(_data)
     {
+        static __item_armor_type = global.item_armor_type;
+        
         if (_data != undefined)
         {
             ___item_damage = _data[$ "damage"];
@@ -241,6 +253,33 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
                 
                 ___item_durability_bar        = _bar;
                 ___item_durability_bar_length = array_length(_bar.data);
+            }
+            
+            var _armor = _data[$ "armor"];
+            
+            if (_armor != undefined)
+            {
+                ___item_armor_type = __item_armor_type[$ _armor.type];
+                ___item_armor_defense = _armor[$ "defense"];
+                
+                var _attribute = _armor[$ "attribute"];
+                
+                if (_attribute != undefined)
+                {
+                    ___item_armor_attribute = new Attribute()
+                        .set_boolean(_attribute[$ "boolean"])
+                        .set_collision_box(_attribute[$ "collision_box"])
+                        .set_hit_box(_attribute[$ "hit_box"])
+                        .set_eye_level(_attribute[$ "eye_level"])
+                        .set_gravity(_attribute[$ "gravity"])
+                        .set_jump_count_max(_attribute[$ "jump_count_max"])
+                        .set_jump_falloff(_attribute[$ "jump_falloff"])
+                        .set_jump_height(_attribute[$ "jump_height"])
+                        .set_jump_time(_attribute[$ "jump_time"])
+                        .set_movement_speed(_attribute[$ "movement_speed"])
+                        .set_regeneration_amount(_attribute[$ "regeneration_amount"])
+                        .set_regeneration_time(_attribute[$ "regeneration_time"]);
+                }
             }
         }
         
@@ -280,6 +319,21 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     static get_item_durability_amount = function()
     {
         return self[$ "___item_durability_amount"] ?? 0;
+    }
+       
+    static get_item_armor_type = function()
+    {
+        return self[$ "___item_armor_type"];
+    }
+    
+    static get_item_armor_defense = function()
+    {
+        return self[$ "___item_armor_defense"];
+    }
+    
+    static get_item_armor_attribute = function()
+    {
+        return self[$ "___item_armor_attribute"];
     }
     
     static get_item_durability_bar = function()

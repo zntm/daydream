@@ -13,8 +13,8 @@
         "phantasia:can_flip_on_y"
     ],
     "harvest": {
-        "hardness": 0.68,
-        "level": 1,
+        "hardness": 0.88,
+        "level": 3,
         "particle": {
             "colour": "#phantasia:tile/particle_colour/stone",
             "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
@@ -25,7 +25,7 @@
     },
     "drop": [
         {
-            "id": "phantasia:raw_copper",
+            "id": "phantasia:raw_gold",
             "condition": {
                 "id": "#phantasia:item/type/pickaxe"
             }
@@ -34,6 +34,6 @@
     "sfx": "#phantasia:tile/sfx/stone",
     "audio_properties": {
         "lowpass": 0,
-        "reverb": 0
+        "reverb": 0.6
     }
 }

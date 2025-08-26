@@ -1,0 +1,37 @@
+{
+    "type": "solid",
+    "sprite": {
+        "xoffset": 8,
+        "yoffset": 8,
+        "length": 5,
+        "edge_padding": 8
+    },
+    "inventory": "#phantasia:item/generic/inventory_tile",
+    "properties": [
+        "phantasia:is_tile"
+    ],
+    "harvest": {
+        "hardness": 0.98,
+        "level": 4,
+        "particle": {
+            "colour": "#phantasia:tile/particle_colour/platinum",
+            "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
+        },
+        "condition": {
+            "id": "#phantasia:item/type/pickaxe"
+        }
+    },
+    "drop": [
+        {
+            "id": "phantasia:platinum_block",
+            "condition": {
+                "id": "#phantasia:item/type/pickaxe"
+            }
+        }
+    ],
+    "sfx": "#phantasia:tile/sfx/metal",
+    "audio_properties": {
+        "lowpass": 0,
+        "reverb": 0.6
+    }
+}

@@ -1,12 +1,12 @@
-function bg_get_biome(_x, _y)
+function bg_get_biome(_x, _y, _surface_height = undefined)
 {
     var _world_save_data = global.world_save_data;
     
     var _seed = _world_save_data.seed;
+    
+    _surface_height ??= worldgen_get_surface_height(_x, _seed);
      
     var _world_data = global.world_data[$ _world_save_data.dimension];
-    
-    var _surface_height = worldgen_get_surface_height(_x, _seed);
     
     if (_y > _surface_height + worldgen_get_cave_start(_x, _seed))
     {

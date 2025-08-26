@@ -1,7 +1,7 @@
 {
     "type": "tool",
     "sprite": {
-        "xoffset": 14,
+        "xoffset": 16,
         "yoffset": 16,
         "length": 1
     },
@@ -12,9 +12,5 @@
             "amount": 367,
             "bar": "#phantasia:item/generic/durability_bar"
         }
-    },
-    "harvest": {
-        "hardness": 1,
-        "level": 1
     }
 }

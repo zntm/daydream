@@ -27,7 +27,9 @@ function worldgen_get_biome_cave(_x, _y, _surface_height, _seed)
         
         if (_type == WORLDGEN_CAVE_TRANSITION_TYPE.RANDOM)
         {
-            if (_y < _start + random_seeded(_world_data.get_default_cave_transition_amplitude(i), _seed + ((((_x * _y) + (i << 9)) * 244) * ((_y & 0xf) * 188)))) continue;
+            var _ = _seed + ((((_x * _y) + (i << 9)) * 244) * ((_y & 0xf) * 188));
+            
+            if (_y < round(_start + random_seeded(_world_data.get_default_cave_transition_amplitude(i), _))) continue;
             
             return _world_data.get_default_cave_id(i);
         }
