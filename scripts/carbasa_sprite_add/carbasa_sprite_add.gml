@@ -2,7 +2,7 @@ global.carbasa_page          = {}
 global.carbasa_page_position = {}
 
 #macro CARBASA_PAGE_INIT_SIZE 256
-#macro CARBASA_PAGE_MAX_SIZE  2048
+#macro CARBASA_PAGE_MAX_SIZE  4096
 
 global.carbasa_surface         = {}
 global.carbasa_surface_texture = {}

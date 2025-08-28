@@ -21,7 +21,7 @@ function carbasa_sort(_page)
         var _name = _sprite.get_name();
         var _index = _sprite.get_index();
         
-        if (_current_x + ((_w - _index) * _sprite.get_number()) >= CARBASA_PAGE_MAX_SIZE)
+        if (_current_x + ((_sprite.get_number() - _index) * _w) >= CARBASA_PAGE_MAX_SIZE)
         {
             if (_current_y + _h >= CARBASA_PAGE_MAX_SIZE)
             {

@@ -111,7 +111,7 @@ function control_player(_dt)
         
         var _direction = sign(image_xscale);
         
-        var _t = (0.3 - timer_attack) / 0.3;
+        var _t = power((0.3 - timer_attack) / 0.3, 1 / 4);
         
         var _angle = (45 * cos(_t * pi)) + 15;
         
