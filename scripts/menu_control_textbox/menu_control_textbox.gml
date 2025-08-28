@@ -5,7 +5,7 @@ function menu_control_textbox()
     with (obj_Menu_Textbox)
     {
         if !(boolean & MENU_BUTTON_BOOLEAN.IS_SELECTED) continue;
-        /*
+        
         if (keyboard_check(vk_control))
         {
             var _text_length = string_length(text);
@@ -14,7 +14,7 @@ function menu_control_textbox()
             // Copy Text
             if (keyboard_check_pressed(ord("C"))) && (_text_not_empty)
             {
-                sfx_play("phantasia:menu.textbox.copy", global.settings_value.sfx);
+                sfx_play("phantasia:menu.key", global.settings.audio_sfx);
                 
                 clipboard_set_text(text);
                 
@@ -24,7 +24,7 @@ function menu_control_textbox()
             // Cut Text
             if (keyboard_check_pressed(ord("X"))) && (_text_not_empty)
             {
-                sfx_play("phantasia:menu.textbox.cut", global.settings_value.sfx);
+                sfx_play("phantasia:menu.key", global.settings.audio_sfx);
                 
                 clipboard_set_text(text);
                 
@@ -43,7 +43,7 @@ function menu_control_textbox()
                 
                 if (keyboard_check(vk_shift))
                 {
-                    sfx_play("phantasia:menu.textbox.paste_override", global.settings_value.sfx);
+                    sfx_play("phantasia:menu.key", global.settings.audio_sfx);
                     
                     text = _text;
                     
@@ -54,7 +54,7 @@ function menu_control_textbox()
                 }
                 else
                 {
-                    sfx_play("phantasia:menu.textbox.paste", global.settings_value.sfx);
+                    sfx_play("phantasia:menu.key", global.settings.audio_sfx);
                     
                     text += _text;
                     
@@ -74,7 +74,7 @@ function menu_control_textbox()
             // Clear Text
             if (keyboard_check_pressed(vk_delete) || keyboard_check_pressed(vk_backspace))
             {
-                sfx_play("phantasia:menu.textbox.clear", global.settings_value.sfx);
+                sfx_play("phantasia:menu.key", global.settings.audio_sfx);
                 
                 text = "";
                 keyboard_string = "";
@@ -86,7 +86,7 @@ function menu_control_textbox()
         }
         
         keyboard_string = string_filter(keyboard_string, __filter);
-        */
+        
         if (text != keyboard_string)
         {
             if (string_length(keyboard_string) > text_length)
@@ -99,14 +99,12 @@ function menu_control_textbox()
             text = keyboard_string;
             text_display = text;
             
-            sfx_play("phantasia:menu.key");
-            
             if (on_update != undefined)
             {
                 on_update();
             }
             
-            // sfx_play("phantasia:menu.textbox.press", global.settings_value.sfx);
+            sfx_play("phantasia:menu.key", global.settings.audio_sfx);
         }
         
         exit;

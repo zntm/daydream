@@ -1,8 +1,8 @@
 {
     "type": "default",
     "sprite": {
-        "xoffset": 8,
-        "yoffset": 4,
+        "xoffset": 6,
+        "yoffset": 6,
         "length": 1
     },
     "inventory": "#phantasia:item/generic/inventory_default"

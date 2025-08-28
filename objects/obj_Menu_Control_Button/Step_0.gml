@@ -1,3 +1,5 @@
+var _menu_layer = menu_layer;
+
 var _number = instance_number(obj_Menu_Button);
 
 for (var i = 0; i < _number; ++i)
@@ -6,12 +8,11 @@ for (var i = 0; i < _number; ++i)
     
     with (obj_Menu_Button)
     {
-        if (boolean & (MENU_BUTTON_BOOLEAN.IS_SELECTED | MENU_BUTTON_BOOLEAN.IS_HOLDING))
-        {
-            _has_selected = true;
-            
-            break;
-        }
+        if (_menu_layer != menu_layer) || !(boolean & (MENU_BUTTON_BOOLEAN.IS_SELECTED | MENU_BUTTON_BOOLEAN.IS_HOLDING)) continue;
+        
+        _has_selected = true;
+        
+        break;
     }
     
     if (!_has_selected)
@@ -20,7 +21,7 @@ for (var i = 0; i < _number; ++i)
         {
             if (index != i) || (boolean & MENU_BUTTON_BOOLEAN.IS_HOLDING) continue;
             
-            if (point_in_rectangle(mouse_x, mouse_y, bbox_left, bbox_top, bbox_right, bbox_bottom))
+            if (_menu_layer == menu_layer) && (point_in_rectangle(mouse_x, mouse_y, bbox_left, bbox_top, bbox_right, bbox_bottom))
             {
                 boolean |= MENU_BUTTON_BOOLEAN.IS_HOVER;
                 
@@ -64,7 +65,7 @@ for (var i = 0; i < _number; ++i)
         {
             if (index != i) || (boolean & MENU_BUTTON_BOOLEAN.IS_HOLDING) continue;
             
-            if (point_in_rectangle(mouse_x, mouse_y, bbox_left, bbox_top, bbox_right, bbox_bottom))
+            if (_menu_layer == menu_layer) && (point_in_rectangle(mouse_x, mouse_y, bbox_left, bbox_top, bbox_right, bbox_bottom))
             {
                 boolean |= MENU_BUTTON_BOOLEAN.IS_HOVER;
                 

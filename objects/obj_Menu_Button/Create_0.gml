@@ -10,6 +10,8 @@ icon_yscale = 1;
 
 surface_index = 0;
 
+menu_layer = 0;
+
 on_select = undefined;
 on_select_hold = undefined;
 on_select_release = undefined;

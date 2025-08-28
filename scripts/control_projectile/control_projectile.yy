@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"control_projectile",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"control_projectile",
+  "parent":{
+    "name":"Control",
+    "path":"folders/Scripts/Control.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
