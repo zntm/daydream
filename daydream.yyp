@@ -931,6 +931,8 @@
     {"id":{"name":"loca_translate","path":"scripts/loca_translate/loca_translate.yy",},},
     {"id":{"name":"menu_anchor_position","path":"scripts/menu_anchor_position/menu_anchor_position.yy",},},
     {"id":{"name":"menu_control_textbox","path":"scripts/menu_control_textbox/menu_control_textbox.yy",},},
+    {"id":{"name":"menu_popup_create","path":"scripts/menu_popup_create/menu_popup_create.yy",},},
+    {"id":{"name":"menu_popup_destroy","path":"scripts/menu_popup_destroy/menu_popup_destroy.yy",},},
     {"id":{"name":"menu_refresh_instance_player_attire","path":"scripts/menu_refresh_instance_player_attire/menu_refresh_instance_player_attire.yy",},},
     {"id":{"name":"menu_refresh_instance_player_colour","path":"scripts/menu_refresh_instance_player_colour/menu_refresh_instance_player_colour.yy",},},
     {"id":{"name":"menu_refresh_instance_players","path":"scripts/menu_refresh_instance_players/menu_refresh_instance_players.yy",},},

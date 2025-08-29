@@ -41,20 +41,7 @@ on_select_release = function()
         
         menu_layer = 1;
         
-        on_select_release = function()
-        {
-            var _inst = obj_Menu_Control_Button.menu_popup[obj_Menu_Control_Button.menu_layer - 1];
-            var _length = array_length(_inst);
-            
-            for (var i = 0; i < _length; ++i)
-            {
-                instance_destroy(_inst[i]);
-            }
-            
-            array_delete(obj_Menu_Control_Button.menu_popup, obj_Menu_Control_Button.menu_layer - 1, 1);
-            
-            --obj_Menu_Control_Button.menu_layer;
-        }
+        on_select_release = menu_popup_destroy;
     }
     
     var _inst_yes = instance_create_layer(548, 300, "Instances", obj_Menu_Button);
@@ -74,11 +61,9 @@ on_select_release = function()
         }
     }
     
-    obj_Menu_Control_Button.menu_popup[obj_Menu_Control_Button.menu_layer] = [
+    menu_popup_create([
         _inst_header,
         _inst_no,
         _inst_yes
-    ];
-    
-    ++obj_Menu_Control_Button.menu_layer;
+    ]);
 }

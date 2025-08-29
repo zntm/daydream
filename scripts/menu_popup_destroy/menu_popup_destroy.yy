@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"menu_popup_destroy",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"menu_popup_destroy",
+  "parent":{
+    "name":"Refresh",
+    "path":"folders/Scripts/Menu/Refresh.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

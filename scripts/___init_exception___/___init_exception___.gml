@@ -81,7 +81,7 @@ exception_unhandled_handler(function(_exception)
         $"{_secret}"
     );
     
-    buffer_save(_buffer, $"{PROGRAM_DIRECTORY_crash_log}/{_exception.script} (Line {_exception.line}).md");
+    buffer_save(_buffer, $"{PROGRAM_DIRECTORY_CRASH_LOG}/{_exception.script} (Line {_exception.line}).md");
     
     buffer_delete(_buffer);
     

@@ -6,7 +6,53 @@ on_select_release = function()
 {
     var _name = inst_72277DAD.text;
     
-    if (_name == "") exit;
+    if (_name == "")
+    {
+        var _inst_header = instance_create_layer(480, 224, "Instances", obj_Menu_Anchor);
+        
+        with (_inst_header)
+        {
+            text = loca_translate("phantasia:menu.create_player.error.empty_name");
+            
+            menu_layer = 1;
+            
+            on_draw = function(_x, _y, _xscale, _yscale)
+            {
+                var _x2 = x * _xscale;
+                var _y2 = y * _yscale;
+                
+                var _halign = draw_get_halign();
+                var _valign = draw_get_valign();
+                
+                draw_set_align(fa_center, fa_middle);
+                
+                render_text(_x2, _y2, text, _xscale, _yscale);
+                
+                draw_set_align(_halign, _valign);
+            }
+        }
+        
+        var _inst_close = instance_create_layer(480, 300, "Instances", obj_Menu_Button);
+        
+        with (_inst_close)
+        {
+            text = loca_translate("phantasia:menu.generic.close");
+            
+            image_xscale = 17;
+            image_yscale = 3;
+            
+            menu_layer = 1;
+            
+            on_select_release = menu_popup_destroy;
+        }
+        
+        menu_popup_create([
+            _inst_header,
+            _inst_close
+        ]);
+        
+        exit;
+    }
     
     var _uuid = "";
     var _index = datetime_to_unix();

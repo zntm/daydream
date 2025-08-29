@@ -85,7 +85,7 @@ function menu_control_textbox()
             }
         }
         
-        keyboard_string = string_filter(keyboard_string, __filter);
+        // keyboard_string = string_filter(keyboard_string, __filter);
         
         if (text != keyboard_string)
         {

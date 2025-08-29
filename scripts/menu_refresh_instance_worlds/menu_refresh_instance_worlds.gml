@@ -19,7 +19,71 @@ function menu_refresh_instance_worlds()
     
     static __on_select_release = function()
     {
-        var _data = global.file_worlds[index];
+        var _data = global.file_players[index];
+        
+        var _uuid = _data.get_uuid();
+        
+        if (!directory_exists($"{PROGRAM_DIRECTORY_WORLDS}/{_uuid}"))
+        {
+            var _inst_header = instance_create_layer(480, 224, "Instances", obj_Menu_Anchor);
+            
+            with (_inst_header)
+            {
+                text = loca_translate("phantasia:menu.worlds.error.not_existing");
+                
+                menu_layer = 1;
+                
+                on_draw = function(_x, _y, _xscale, _yscale)
+                {
+                    var _x2 = x * _xscale;
+                    var _y2 = y * _yscale;
+                    
+                    var _halign = draw_get_halign();
+                    var _valign = draw_get_valign();
+                    
+                    draw_set_align(fa_center, fa_middle);
+                    
+                    render_text(_x2, _y2, text, _xscale, _yscale);
+                    
+                    draw_set_align(_halign, _valign);
+                }
+            }
+            
+            var _inst_close = instance_create_layer(480, 300, "Instances", obj_Menu_Button);
+            
+            with (_inst_close)
+            {
+                text = loca_translate("phantasia:menu.generic.close");
+                
+                image_xscale = 17;
+                image_yscale = 3;
+                
+                menu_layer = 1;
+                
+                on_select_release = function()
+                {
+                    menu_popup_destroy();
+                    file_load_worlds();
+                    
+                    with (obj_Menu_Button)
+                    {
+                        if (id[$ "is_option"])
+                        {
+                            instance_destroy();
+                        }
+                    }
+                    
+                    menu_refresh_instance_worlds();
+                }
+            }
+            
+            menu_popup_create([
+                _inst_header,
+                _inst_close
+            ]);
+            
+            exit;
+        }
         
         global.world_save_data.name = _data.get_name();
         global.world_save_data.seed = _data.get_seed();
@@ -32,7 +96,7 @@ function menu_refresh_instance_worlds()
         global.world_save_data.weather_wind  = _data.get_weather_wind();
         global.world_save_data.weather_storm = _data.get_weather_storm();
         
-        global.world_save_data.uuid = _data.get_uuid();
+        global.world_save_data.uuid = _uuid;
         
         room_goto(rm_World);
     }
@@ -59,6 +123,8 @@ function menu_refresh_instance_worlds()
         {
             image_xscale = 12;
             image_yscale = 9;
+            
+            is_option = true;
             
             index = i;
             
