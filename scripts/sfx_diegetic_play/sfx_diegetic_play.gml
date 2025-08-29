@@ -19,21 +19,19 @@ function sfx_diegetic_play(_emitter, _x, _y, _id, _gain = global.settings.audio_
     
     if (_data == undefined) exit;
     
-    var _item_data = global.item_data;
-    
     var _falloff_reference = _data.get_falloff_reference();
     var _falloff_max = _data.get_falloff_max();
     
     var _distance = point_distance(obj_Player.x, obj_Player.y, _x, _y);
     
-    var _falloff_gain = 1 - normalize(_distance, _falloff_reference, _falloff_max);
+    _gain = _gain * (1 - normalize(_distance, _falloff_reference, _falloff_max));
     
-    if (_falloff_gain <= 0) exit;
+    if (_gain <= 0) exit;
     
     return audio_play_sound_ext({
         emitter: _emitter,
         sound: array_choose(_data.get_asset()),
         pitch: smart_value(_data.get_pitch()),
-        gain: _gain * _falloff_gain
+        gain: _gain
     });
 }
