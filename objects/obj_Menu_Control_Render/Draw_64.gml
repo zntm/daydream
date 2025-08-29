@@ -17,7 +17,7 @@ for (var i = 0; i <= obj_Menu_Control_Button.menu_layer; ++i)
 {
     if (i != 0)
     {
-        draw_sprite_ext(spr_Square, 0, 0, 0, room_width, room_height, 0, c_black, 0.25);
+        draw_sprite_ext(spr_Square, 0, 0, 0, room_width, room_height, 0, c_black, 0.5);
     }
     
     with (obj_Menu_Anchor)

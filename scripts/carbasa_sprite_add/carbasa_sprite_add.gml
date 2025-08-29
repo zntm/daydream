@@ -6,9 +6,9 @@ global.carbasa_page_position = {}
 
 global.carbasa_surface         = {}
 global.carbasa_surface_texture = {}
-global.carbasa_surface_uv = {}
-global.carbasa_surface_size   = {}
-global.carbasa_surface_buffer = {}
+global.carbasa_surface_uv      = {}
+global.carbasa_surface_size    = {}
+global.carbasa_surface_buffer  = {}
 
 function carbasa_sprite_add(_page, _sprite, _name)
 {

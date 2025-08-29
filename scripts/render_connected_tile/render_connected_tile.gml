@@ -66,19 +66,19 @@ function render_connected_tile(_buffer, _item_data, _page, _position, _uv, _surf
         exit;
     }
     
-    static __cos = global.render_cos;
+    static __render_cos = global.render_cos;
     
-    var _cos = __cos[_rotation];
-    var _sin = __cos[(_rotation + 90) % 360];
+    var _cos = __render_cos[_rotation];
+    var _sin = __render_cos[(_rotation + 90) % 360];
     
     var _sprite = _page[$ _name];
     var _sprite_data = _position[_sprite.sprite[0]];
     
-    var _xoffset = -_sprite_data.get_xoffset();
-    var _yoffset = -_sprite_data.get_yoffset();
+    var _xoffset = -_sprite.xoffset;
+    var _yoffset = -_sprite.yoffset;
     
-    var _width  = _sprite_data.get_width();
-    var _height = _sprite_data.get_height();
+    var _width  = _sprite.width;
+    var _height = _sprite.height;
     
     var _edge_x1 = _xscale * (_xoffset + _padding);
     var _edge_y1 = _yscale * (_yoffset + _padding);

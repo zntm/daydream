@@ -4,8 +4,8 @@ function render_tile(_buffer, _item_data, _page, _position, _uv, _surface_width,
     
     var _sprite = _position[_.sprite[0]];
     
-    var _width  = _sprite.get_width();
-    var _height = _sprite.get_height();
+    var _width  = _.width;
+    var _height = _.height;
     
     var _v0 = _sprite.get_x() / _surface_width;
     var _v1 = _sprite.get_y() / _surface_height;
@@ -13,16 +13,16 @@ function render_tile(_buffer, _item_data, _page, _position, _uv, _surface_width,
     var _v2 = _v0 + (_width  / _surface_width);
     var _v3 = _v1 + (_height / _surface_height);
     
-    var _xoffset = -_xscale * _sprite.get_xoffset();
-    var _yoffset = -_yscale * _sprite.get_yoffset();
+    var _xoffset = -_xscale * _.xoffset;
+    var _yoffset = -_yscale * _.yoffset;
     
     var _xw = (_xscale * _width)  + _xoffset;
     var _yh = (_yscale * _height) + _yoffset;
     
-    static __cos = global.render_cos;
+    static __render_cos = global.render_cos;
     
-    var _cos = __cos[_rotation];
-    var _sin = __cos[(_rotation + 90) % 360];
+    var _cos = __render_cos[_rotation];
+    var _sin = __render_cos[(_rotation + 90) % 360];
     
     var _a = _xoffset * _cos;
     var _b = _xoffset * _sin;
