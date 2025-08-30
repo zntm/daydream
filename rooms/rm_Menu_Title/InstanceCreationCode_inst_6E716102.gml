@@ -6,4 +6,5 @@ text = loca_translate("phantasia:menu.title.credits");
 
 on_select_release = function()
 {
+    room_goto(rm_Menu_Credits);
 }

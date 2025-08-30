@@ -761,6 +761,7 @@
     {"id":{"name":"obj_Menu_Control_Button","path":"objects/obj_Menu_Control_Button/obj_Menu_Control_Button.yy",},},
     {"id":{"name":"obj_Menu_Control_Render","path":"objects/obj_Menu_Control_Render/obj_Menu_Control_Render.yy",},},
     {"id":{"name":"obj_Menu_Control","path":"objects/obj_Menu_Control/obj_Menu_Control.yy",},},
+    {"id":{"name":"obj_Menu_Credits","path":"objects/obj_Menu_Credits/obj_Menu_Credits.yy",},},
     {"id":{"name":"obj_Menu_Fade","path":"objects/obj_Menu_Fade/obj_Menu_Fade.yy",},},
     {"id":{"name":"obj_Menu_Textbox","path":"objects/obj_Menu_Textbox/obj_Menu_Textbox.yy",},},
     {"id":{"name":"obj_Menu_Warning","path":"objects/obj_Menu_Warning/obj_Menu_Warning.yy",},},
@@ -775,6 +776,7 @@
     {"id":{"name":"rm_Init","path":"rooms/rm_Init/rm_Init.yy",},},
     {"id":{"name":"rm_Menu_Create_Player","path":"rooms/rm_Menu_Create_Player/rm_Menu_Create_Player.yy",},},
     {"id":{"name":"rm_Menu_Create_World","path":"rooms/rm_Menu_Create_World/rm_Menu_Create_World.yy",},},
+    {"id":{"name":"rm_Menu_Credits","path":"rooms/rm_Menu_Credits/rm_Menu_Credits.yy",},},
     {"id":{"name":"rm_Menu_Players","path":"rooms/rm_Menu_Players/rm_Menu_Players.yy",},},
     {"id":{"name":"rm_Menu_Settings","path":"rooms/rm_Menu_Settings/rm_Menu_Settings.yy",},},
     {"id":{"name":"rm_Menu_Title","path":"rooms/rm_Menu_Title/rm_Menu_Title.yy",},},
@@ -1094,6 +1096,7 @@
     {"roomId":{"name":"rm_Menu_Create_Player","path":"rooms/rm_Menu_Create_Player/rm_Menu_Create_Player.yy",},},
     {"roomId":{"name":"rm_Menu_Create_World","path":"rooms/rm_Menu_Create_World/rm_Menu_Create_World.yy",},},
     {"roomId":{"name":"rm_Menu_Settings","path":"rooms/rm_Menu_Settings/rm_Menu_Settings.yy",},},
+    {"roomId":{"name":"rm_Menu_Credits","path":"rooms/rm_Menu_Credits/rm_Menu_Credits.yy",},},
   ],
   "templateType":"game",
   "TextureGroups":[

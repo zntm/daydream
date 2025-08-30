@@ -1,4 +1,4 @@
-global.credits_data = [];
+global.credit_data = [];
 
 function init_credit(_directory)
 {
@@ -14,14 +14,15 @@ function init_credit(_directory)
         
         var _colour = _data[$ "colour"];
         
-        global.credits_data[@ i] = {
-            header: _data.header,
-            colour: ((_colour != undefined) ? hex_parse(_colour) : c_white),
-            entries: []
-        }
-        
         var _entries = _data.entries;
         var _entries_length = array_length(_entries);
+        
+        global.credit_data[@ i] = {
+            header: _data.header,
+            colour: ((_colour != undefined) ? hex_parse(_colour) : c_white),
+            entries: [],
+            entries_length: _entries_length
+        }
         
         for (var j = 0; j < _entries_length; ++j)
         {
@@ -29,13 +30,13 @@ function init_credit(_directory)
             
             if (typeof(_entry) == "string")
             {
-                array_push(global.credits_data[@ i].entries, {
+                array_push(global.credit_data[@ i].entries, {
                     name: _entry
                 });
             }
             else
             {
-                array_push(global.credits_data[@ i].entries, _entry);
+                array_push(global.credit_data[@ i].entries, _entry);
             }
         }
         
