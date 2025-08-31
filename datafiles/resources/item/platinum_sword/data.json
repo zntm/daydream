@@ -12,5 +12,18 @@
             "amount": 1239,
             "bar": "#phantasia:item/generic/durability_bar"
         }
-    }
+    },
+    "on_attack": [
+        {
+            "function": [
+                {
+                    "id": "phantasia:spawn_projectile",
+                    "parameter": {
+                        "id": "phantasia:swing",
+                        "damage": 4
+                    }
+                }
+            ]
+        }
+    ]
 }

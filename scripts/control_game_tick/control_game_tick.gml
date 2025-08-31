@@ -74,7 +74,7 @@ function control_game_tick(_delta_time)
                 
                 for (var j = 0; j < _on_random_tick_length; ++j)
                 {
-                    function_execute(_on_random_tick[j], _chunk_xstart + _x2, _chunk_ystart + _y2, _z, _tick);
+                    function_execute(_on_random_tick[j], (_chunk_xstart + _x2) * TILE_SIZE, (_chunk_ystart + _y2) * TILE_SIZE, _z, 1, 1, _tick);
                 }
             }
         }

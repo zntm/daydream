@@ -2,7 +2,7 @@ function spawn_projectile(_x, _y, _id, _damage)
 {
     var _data = global.projectile_data[$ _id];
     
-    with (instance_create_layer(_x, _y, "Instances", obj_Particle))
+    with (instance_create_layer(_x, _y, "Instances", obj_Projectile))
     {
         id._id = _id;
         damage = _damage;

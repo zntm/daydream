@@ -27,6 +27,8 @@ function init_item(_directory, _namespace)
         _item_data.set_sfx(_json[$ "sfx"]);
         _item_data.set_audio_properties(_json[$ "audio_properties"]);
         _item_data.set_on_random_tick(_json[$ "on_random_tick"]);
+        _item_data.set_on_attack(_json[$ "on_attack"]);
+        _item_data.set_on_use(_json[$ "on_use"]);
         _item_data.set_container(_json[$ "container"]);
         
         var _sprite_data = _json.sprite;

@@ -30,6 +30,7 @@ function init_projectile(_directory, _namespace = "phantasia")
         var _attribute = _json.attribute;
         
         _data.set_attribute(new Attribute()
+            .set_collision_box(_attribute[$ "collision_box"])
             .set_hit_box(_attribute[$ "hit_box"])
             .set_gravity(_attribute[$ "gravity"])
         );

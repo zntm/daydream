@@ -82,6 +82,14 @@ function control_player(_dt)
                 
                 inst_item.inst_owner = _inst;
             }
+            
+            var _on_attack = _data.get_on_attack();
+            var _on_attack_length = _data.get_on_attack_length();
+            
+            for (var j = 0; j < _on_attack_length; ++j)
+            {
+                function_execute(_on_attack[j], round(x / TILE_SIZE), round(y / TILE_SIZE), CHUNK_DEPTH_DEFAULT, sign(image_xscale), sign(image_yscale), _dt);
+            }
         }
     }
     

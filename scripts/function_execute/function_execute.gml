@@ -1,4 +1,4 @@
-function function_execute(_function, _x, _y, _z, _dt)
+function function_execute(_function, _x, _y, _z, _xscale, _yscale, _dt)
 {
     if (!chance(_function[0] * _dt)) exit;
     
@@ -15,7 +15,7 @@ function function_execute(_function, _x, _y, _z, _dt)
         
         repeat (smart_value(_[2]))
         {
-            _f(_dt, _x, _y, _z, _parameter);
+            _f(_dt, _x, _y, _z, _xscale, _yscale, _parameter);
         }
     }
 }

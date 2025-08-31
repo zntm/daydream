@@ -906,6 +906,54 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
         return self[$ "___on_random_tick_length"];
     }
     
+    static set_on_attack = function(_data)
+    {
+        if (_data != undefined)
+        {
+            var _ = function_parse(_data);
+            var _length = array_length(_);
+            
+            ___on_attack = _;
+            ___on_attack_length = _length;
+        }
+        
+        return self;
+    }
+    
+    static get_on_attack = function()
+    {
+        return self[$ "___on_attack"];
+    }
+    
+    static get_on_attack_length = function()
+    {
+        return self[$ "___on_attack_length"];
+    }
+    
+    static set_on_use = function(_data)
+    {
+        if (_data != undefined)
+        {
+            var _ = function_parse(_data);
+            var _length = array_length(_);
+            
+            ___on_use = _;
+            ___on_use_length = _length;
+        }
+        
+        return self;
+    }
+    
+    static get_on_use = function()
+    {
+        return self[$ "___on_use"];
+    }
+    
+    static get_on_use_length = function()
+    {
+        return self[$ "___on_use_length"];
+    }
+    
     static set_container = function(_container)
     {
         if (_container != undefined)

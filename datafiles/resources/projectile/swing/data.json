@@ -14,9 +14,13 @@
         }
     },
     "attribute": {
+        "collision_box": {
+            "width": 32,
+            "height": 64
+        },
         "hit_box": {
-            "width": 16,
-            "height": 32
+            "width": 32,
+            "height": 64
         }
     }
 }
