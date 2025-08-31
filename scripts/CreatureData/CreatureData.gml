@@ -114,24 +114,6 @@ function CreatureData(_namespace, _id, _hp, _hostility_type, _movement_type) : P
         return __get_sprite("___sprite_moving_emissive", _variant);
     }
     
-    static set_bbox = function(_bbox)
-    {
-        ___bbox_width  = _bbox.width;
-        ___bbox_height = _bbox.height;
-        
-        return self;
-    }
-    
-    static get_bbox_width = function()
-    {
-        return ___bbox_width;
-    }
-    
-    static get_bbox_height = function()
-    {
-        return ___bbox_height;
-    }
-    
     static set_light_colour = function(_colour)
     {
         ___light_colour = _colour;

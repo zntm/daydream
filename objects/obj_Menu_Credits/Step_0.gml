@@ -3,7 +3,7 @@ if (keyboard_check_pressed(vk_escape))
     room_goto(rm_Menu_Title);
 }
 
-var _delta_time = (delta_time / 1_000_000) * game_get_speed(gamespeed_fps);
+var _delta_time = global.delta_time * game_get_speed(gamespeed_fps);
 
 var _string_height = font_get_size(draw_get_font()) + 8;
 

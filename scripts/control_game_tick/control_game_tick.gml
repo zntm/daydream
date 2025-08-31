@@ -74,26 +74,7 @@ function control_game_tick(_delta_time)
                 
                 for (var j = 0; j < _on_random_tick_length; ++j)
                 {
-                    var _random_tick = _on_random_tick[j];
-                    
-                    if (!chance(_random_tick[0] * _tick)) continue;
-                    
-                    var _random_tick_length = _random_tick[1];
-                    
-                    var _ = _random_tick[2];
-                    
-                    var _id = _[0];
-                    
-                    if (_id != undefined)
-                    {
-                        var _function = _item_function[$ _id];
-                        var _parameter = _[1];
-                        
-                        repeat (smart_value(_[2]))
-                        {
-                            _function(_tick, _chunk_xstart + _x2, _chunk_ystart + _y2, _z, _parameter);
-                        }
-                    }
+                    function_execute(_on_random_tick[j], _chunk_xstart + _x2, _chunk_ystart + _y2, _z, _tick);
                 }
             }
         }

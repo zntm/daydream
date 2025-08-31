@@ -24,6 +24,33 @@ global.item_function[$ "phantasia:spawn_particle"] = function(_dt, _x, _y, _z, _
     spawn_particle(_x * TILE_SIZE, _y * TILE_SIZE, smart_value(_parameter.id));
 }
 
+global.item_function[$ "phantasia:spawn_projectile"] = function(_dt, _x, _y, _z, _parameter)
+{
+    var _offset = _parameter[$ "offset"];
+    
+    if (_offset != undefined)
+    {
+        var _xoffset = _offset[$ "x"];
+        
+        if (_xoffset != undefined)
+        {
+            _x += smart_value(_xoffset);
+        }
+        
+        var _yoffset = _offset[$ "y"];
+        
+        if (_yoffset != undefined)
+        {
+            _y += smart_value(_yoffset);
+        }
+    }
+    
+    var _id = smart_value(_parameter.id);
+    var _damage = smart_value(_parameter.damage);
+    
+    spawn_projectile(_x * TILE_SIZE, _y * TILE_SIZE, _id, _damage);
+}
+
 global.item_function[$ "phantasia:sfx_play"] = function(_dt, _x, _y, _z, _parameter)
 {
     var _audio_emitter = tile_audio_emitter(_x, _y);

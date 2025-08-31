@@ -1,0 +1,22 @@
+{
+    "sprite": {
+        "xoffset": 8,
+        "yoffset": 16,
+        "length": 4
+    },
+    "lifetime": 2,
+    "physics": {
+        "speed": {
+            "x": {
+                "type": "constant",
+                "value": 4
+            }
+        }
+    },
+    "attribute": {
+        "hit_box": {
+            "width": 16,
+            "height": 32
+        }
+    }
+}

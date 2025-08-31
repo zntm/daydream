@@ -5,7 +5,7 @@ var _valign = draw_get_valign();
 
 draw_set_align(fa_center, fa_middle);
 
-var _delta_time = (delta_time / 1_000_000) * game_get_speed(gamespeed_fps);
+var _delta_time = global.delta_time * game_get_speed(gamespeed_fps);
 
 var _hue = hue;
 var _sat = sat;

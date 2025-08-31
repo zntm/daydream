@@ -43,20 +43,6 @@ if (!_is_loaded)
 	chunk_generate();
 }
 
-/*
-function init_chunk_audio_emitter(_value, _index)
-{
-    var _audio_emitter = audio_emitter_create();
-    
-    var _x = (chunk_xstart + (_index                     & (CHUNK_SIZE - 1))) * TILE_SIZE;
-    var _y = (chunk_ystart + ((_index >> CHUNK_SIZE_BIT) & (CHUNK_SIZE - 1))) * TILE_SIZE;
-    
-    audio_emitter_position(_audio_emitter, _x, _y, 0);
-    
-    return _audio_emitter;
-}
-*/
-
 chunk_audio_emitter = array_create(CHUNK_SIZE * CHUNK_SIZE);
 
 for (var i = 0; i < CHUNK_SIZE; ++i)
@@ -73,5 +59,3 @@ for (var i = 0; i < CHUNK_SIZE; ++i)
         chunk_audio_emitter[@ tile_index_xy(i, j)] = _audio_emitter;
     }
 }
-
-// chunk_audio_emitter = array_create_ext(CHUNK_SIZE * CHUNK_SIZE, method(id, init_chunk_audio_emitter));
