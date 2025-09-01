@@ -1,4 +1,4 @@
-function spawn_projectile(_x, _y, _id, _damage)
+function spawn_projectile(_x, _y, _id, _damage, _xscale = 1, _yscale = 1)
 {
     var _data = global.projectile_data[$ _id];
     
@@ -22,29 +22,34 @@ function spawn_projectile(_x, _y, _id, _damage)
         {
             var _xspeed = world_get_reference(_data.get_xspeed());
             
-            xvelocity = (smart_value(_xspeed) + smart_value(_data.get_xspeed_offset())) * smart_value(_data.get_xspeed_multiplier());
+            xvelocity = _xscale * (smart_value(_xspeed) + smart_value(_data.get_xspeed_offset())) * smart_value(_data.get_xspeed_multiplier());
         }
         else
         {
-            xvelocity = smart_value(_data.get_xspeed());
+            xvelocity = _xscale * smart_value(_data.get_xspeed());
         }
         
         if (_data.get_yspeed_type() == PARTICLE_MOVEMENT_TYPE.REFERENCE)
         {
             var _yspeed = world_get_reference(_data.get_yspeed());
             
-            yvelocity = (smart_value(_yspeed) + smart_value(_data.get_yspeed_offset())) * smart_value(_data.get_yspeed_multiplier());
+            yvelocity = _yscale * (smart_value(_yspeed) + smart_value(_data.get_yspeed_offset())) * smart_value(_data.get_yspeed_multiplier());
         }
         else
         {
-            yvelocity = smart_value(_data.get_yspeed());
+            yvelocity = _yscale * smart_value(_data.get_yspeed());
         }
         
         rotation_increment = smart_value(_data.get_rotation_increment());
+        
+        image_xscale = _xscale;
+        image_yscale = _yscale;
         
         image_angle = smart_value(_data.get_rotation());
         
         timer_life = smart_value(_data.get_lifetime());
         timer_life_max = timer_life;
+        
+        return id;
     }
 }

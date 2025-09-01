@@ -13,8 +13,6 @@ function init_projectile(_directory, _namespace = "phantasia")
         
         var _json = buffer_load_json($"{_directory}/{_file}/data.json");
         
-        var _data = new ProjectileData(_namespace, _file);
-        
         var _sprite_data = _json.sprite;
         
         var _sprite_xoffset = _sprite_data.xoffset;
@@ -22,8 +20,11 @@ function init_projectile(_directory, _namespace = "phantasia")
         
         var _sprite = sprite_add($"{_directory}/{_file}/sprite.png", _sprite_data.length, false, false, _sprite_xoffset, _sprite_yoffset);
         
+        var _data = new ProjectileData(_namespace, _file, _sprite, _sprite_data);
+        
         _data.set_sprite(_sprite);
         
+        _data.set_properties(_json[$ "properties"]);
         _data.set_lifetime(_json.lifetime);
         _data.set_physics(_json[$ "physics"]);
         

@@ -83,7 +83,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 var _data = _creature_data[$ _id];
                 
                 var _xscale = entity_scale * sign(image_xscale);
-                var _yscale = entity_scale;
+                var _yscale = entity_scale * sign(image_yscale);
                 
                 if (yvelocity == 0) && ((input_left) || (input_right))
                 {
@@ -111,18 +111,21 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
             
             with (obj_Player)
             {
+                var _xscale = entity_scale * sign(image_xscale);
+                var _yscale = entity_scale * sign(image_yscale);
+                
                 if (yvelocity == 0) && ((input_left) || (input_right))
                 {
                     var _index_body = (_animation_index * 2) % 8;
                     var _index_arm = ((timer_attack > 0) ? round(lerp(13, 8, timer_attack / 0.3)) : _index_body);
                     
-                    render_attire(global.player_save_data.attire, _index_body, x, y, entity_scale * sign(image_xscale), entity_scale, false, _index_arm, inst_item);
+                    render_attire(global.player_save_data.attire, _index_body, x, y, _xscale, _yscale, false, _index_arm, inst_item);
                 }
                 else
                 {
                     var _index_arm = ((timer_attack > 0) ? round(lerp(13, 8, timer_attack / 0.3)) : 0);
                     
-                	render_attire(global.player_save_data.attire, 0, x, y, entity_scale * sign(image_xscale), entity_scale, false, _index_arm, inst_item);
+                	render_attire(global.player_save_data.attire, 0, x, y, _xscale, _yscale, false, _index_arm, inst_item);
                 }
             }
             /*
@@ -158,16 +161,16 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 var _sprite = _data.get_sprite();
                 
                 var _index = 0;
-                /*
+                
                 if (_data.has_stretch_animation())
                 {
                     _index = floor(_data.get_sprite_number() * (1 - (timer_life / timer_life_max)));
                 }
                 
-                draw_sprite_ext(_sprite, _index, x, y, entity_scale, entity_scale, image_angle, image_blend, image_alpha * (_data.is_fade_out() ? timer_life / timer_life_max : 1));
-                */
+                var _xscale = entity_scale * sign(image_xscale);
+                var _yscale = entity_scale * sign(image_yscale);
                 
-                draw_sprite_ext(_sprite, _index, x, y, entity_scale, entity_scale, image_angle, image_blend, image_alpha);
+                draw_sprite_ext(_sprite, _index, x, y, _xscale, _yscale, image_angle, image_blend, image_alpha);
             }
             
             with (obj_Particle)

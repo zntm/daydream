@@ -153,7 +153,7 @@
     {"name":"control_physics_y","order":3,"path":"scripts/control_physics_y/control_physics_y.yy",},
     {"name":"control_physics","order":1,"path":"scripts/control_physics/control_physics.yy",},
     {"name":"control_player","order":3,"path":"scripts/control_player/control_player.yy",},
-    {"name":"control_projectile","order":12,"path":"scripts/control_projectile/control_projectile.yy",},
+    {"name":"control_projectile","order":7,"path":"scripts/control_projectile/control_projectile.yy",},
     {"name":"control_structure","order":6,"path":"scripts/control_structure/control_structure.yy",},
     {"name":"control_update_chunk_in_view","order":10,"path":"scripts/control_update_chunk_in_view/control_update_chunk_in_view.yy",},
     {"name":"control_update_gui_size","order":11,"path":"scripts/control_update_gui_size/control_update_gui_size.yy",},

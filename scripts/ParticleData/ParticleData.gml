@@ -11,7 +11,7 @@ enum PARTICLE_MOVEMENT_TYPE {
     REFERENCE
 }
 
-function ParticleData(_sprite, _sprite_data) constructor
+function ParticleData(_namespace, _id, _sprite, _sprite_data) : ParentData(_namespace, _id) constructor
 {
     static __set_value = function(_name, _value)
     {

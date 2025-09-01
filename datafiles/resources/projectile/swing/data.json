@@ -4,12 +4,15 @@
         "yoffset": 16,
         "length": 4
     },
-    "lifetime": 2,
+    "properties": [
+        "phantasia:has_stretch_animation"
+    ],
+    "lifetime": 0.25,
     "physics": {
         "speed": {
             "x": {
                 "type": "constant",
-                "value": 4
+                "value": 14
             }
         }
     },

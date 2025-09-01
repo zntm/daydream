@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"control_projectile",
   "parent":{
-    "name":"Control",
-    "path":"folders/Scripts/Control.yy",
+    "name":"Entity",
+    "path":"folders/Scripts/Control/Entity.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

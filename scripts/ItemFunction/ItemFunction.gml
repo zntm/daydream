@@ -48,7 +48,7 @@ global.item_function[$ "phantasia:spawn_projectile"] = function(_dt, _x, _y, _z,
     var _id = smart_value(_parameter.id);
     var _damage = smart_value(_parameter.damage);
     
-    spawn_projectile(_x * TILE_SIZE, _y * TILE_SIZE, _id, _damage);
+    spawn_projectile(_x * TILE_SIZE, _y * TILE_SIZE, _id, _damage, _xscale, _yscale);
 }
 
 global.item_function[$ "phantasia:sfx_play"] = function(_dt, _x, _y, _z, _xscale, _yscale, _parameter)

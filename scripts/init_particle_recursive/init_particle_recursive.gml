@@ -39,7 +39,7 @@ function init_particle_recursive(_directory, _namespace, _id)
         
         sprite_set_offset(_sprite, _sprite_xoffset, _sprite_yoffset);
         
-        var _particle_data = new ParticleData(_sprite, _sprite_data);
+        var _particle_data = new ParticleData(_namespace, _id, _sprite, _sprite_data);
         
         _particle_data.set_properties(_json[$ "properties"]);
         _particle_data.set_lifetime(_json.lifetime);

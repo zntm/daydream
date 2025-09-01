@@ -1,4 +1,17 @@
-function ProjectileData(_namespace, _id) : ParentData(_namespace, _id) constructor
+enum PROJECTILE_PROPERTIES_BOOLEAN {
+    IS_ADDITIVE             = 1 << 0,
+    IS_DESTROY_ON_COLLISION = 1 << 1,
+    IS_FADE_OUT             = 1 << 2,
+    HAS_COLLISION           = 1 << 3,
+    HAS_STRETCHED_ANIMATION = 1 << 4
+}
+
+enum PROJECTILE_MOVEMENT_TYPE {
+    CONSTANT,
+    REFERENCE
+}
+
+function ProjectileData(_namespace, _id, _sprite, _sprite_data) : ParentData(_namespace, _id) constructor
 {
     static __set_value = function(_name, _value)
     {
@@ -23,10 +36,80 @@ function ProjectileData(_namespace, _id) : ParentData(_namespace, _id) construct
         return self;
     }
     
+    ___sprite_number = sprite_get_number(_sprite);
+    
+    __set_smart_value("___sprite_speed", _sprite_data[$ "speed"]);
+    
     static get_sprite = function()
     {
         return ___sprite;
     }
+    
+    static get_sprite_number = function()
+    {
+        return ___sprite_number;
+    }
+    
+    static get_sprite_speed = function()
+    {
+        return ___sprite_speed;
+    }
+    
+    #region Properties
+    
+    ___properties = 0;
+    
+    static set_properties = function(_properties)
+    {
+        static __properties = {
+            "phantasia:is_additive":             PROJECTILE_PROPERTIES_BOOLEAN.IS_ADDITIVE,
+            "phantasia:is_destroy_on_collision": PROJECTILE_PROPERTIES_BOOLEAN.IS_DESTROY_ON_COLLISION,
+            "phantasia:is_fade_out":             PROJECTILE_PROPERTIES_BOOLEAN.IS_FADE_OUT,
+            "phantasia:has_collision":           PROJECTILE_PROPERTIES_BOOLEAN.HAS_COLLISION,
+            "phantasia:has_stretch_animation":   PROJECTILE_PROPERTIES_BOOLEAN.HAS_STRETCHED_ANIMATION
+        }
+        
+        if (_properties != undefined)
+        {
+            var _length = array_length(_properties);
+            
+            for (var i = 0; i < _length; ++i)
+            {
+                var _property = _properties[i];
+                
+                ___properties |= __properties[$ _property];
+            }
+        }
+        
+        return self;
+    }
+    
+    static is_additive = function()
+    {
+        return !!(___properties & PROJECTILE_PROPERTIES_BOOLEAN.IS_ADDITIVE);
+    }
+    
+    static is_destroy_on_collision = function()
+    {
+        return !!(___properties & PROJECTILE_PROPERTIES_BOOLEAN.IS_DESTROY_ON_COLLISION);
+    }
+    
+    static is_fade_out = function()
+    {
+        return !!(___properties & PROJECTILE_PROPERTIES_BOOLEAN.IS_FADE_OUT);
+    }
+    
+    static has_collision = function()
+    {
+        return !!(___properties & PROJECTILE_PROPERTIES_BOOLEAN.HAS_COLLISION);
+    }
+    
+    static has_stretch_animation = function()
+    {
+        return !!(___properties & PROJECTILE_PROPERTIES_BOOLEAN.HAS_STRETCHED_ANIMATION);
+    }
+    
+    #endregion
     
     static set_lifetime = function(_lifetime)
     {
@@ -56,12 +139,12 @@ function ProjectileData(_namespace, _id) : ParentData(_namespace, _id) construct
                     
                     if (_type == "reference")
                     {
-                        __set_value("___xspeed_type", PARTICLE_MOVEMENT_TYPE.REFERENCE);
+                        __set_value("___xspeed_type", PROJECTILE_MOVEMENT_TYPE.REFERENCE);
                         __set_value("___xspeed", _x.value);
                     }
                     else// if (_type == "number")
                     {
-                        __set_value("___xspeed_type", PARTICLE_MOVEMENT_TYPE.CONSTANT);
+                        __set_value("___xspeed_type", PROJECTILE_MOVEMENT_TYPE.CONSTANT);
                     	__set_smart_value("___xspeed", _x.value);
                     }
                     
@@ -77,12 +160,12 @@ function ProjectileData(_namespace, _id) : ParentData(_namespace, _id) construct
                     
                     if (_type == "reference")
                     {
-                        __set_value("___yspeed_type", PARTICLE_MOVEMENT_TYPE.REFERENCE);
+                        __set_value("___yspeed_type", PROJECTILE_MOVEMENT_TYPE.REFERENCE);
                         __set_value("___yspeed", _y.value);
                     }
                     else// if (_type == "number")
                     {
-                        __set_value("___yspeed_type", PARTICLE_MOVEMENT_TYPE.CONSTANT);
+                        __set_value("___yspeed_type", PROJECTILE_MOVEMENT_TYPE.CONSTANT);
                     	__set_smart_value("___yspeed", _y.value);
                     }
                     
@@ -117,12 +200,12 @@ function ProjectileData(_namespace, _id) : ParentData(_namespace, _id) construct
                         
                         if (_type == "reference")
                         {
-                            __set_value("___on_collision_xspeed_type", PARTICLE_MOVEMENT_TYPE.REFERENCE);
+                            __set_value("___on_collision_xspeed_type", PROJECTILE_MOVEMENT_TYPE.REFERENCE);
                             __set_value("___on_collision_xspeed", _x.value);
                         }
                         else// if (_type == "number")
                         {
-                            __set_value("___on_collision_xspeed_type", PARTICLE_MOVEMENT_TYPE.CONSTANT);
+                            __set_value("___on_collision_xspeed_type", PROJECTILE_MOVEMENT_TYPE.CONSTANT);
                         	__set_smart_value("___on_collision_xspeed", _x.value);
                         }
                         
@@ -138,12 +221,12 @@ function ProjectileData(_namespace, _id) : ParentData(_namespace, _id) construct
                         
                         if (_type == "reference")
                         {
-                            __set_value("___on_collision_yspeed_type", PARTICLE_MOVEMENT_TYPE.REFERENCE);
+                            __set_value("___on_collision_yspeed_type", PROJECTILE_MOVEMENT_TYPE.REFERENCE);
                             __set_value("___on_collision_yspeed", _y.value);
                         }
                         else// if (_type == "number")
                         {
-                            __set_value("___on_collision_yspeed_type", PARTICLE_MOVEMENT_TYPE.CONSTANT);
+                            __set_value("___on_collision_yspeed_type", PROJECTILE_MOVEMENT_TYPE.CONSTANT);
                         	__set_smart_value("___on_collision_yspeed", _y.value);
                         }
                         
@@ -164,7 +247,7 @@ function ProjectileData(_namespace, _id) : ParentData(_namespace, _id) construct
     
     static get_xspeed_type = function()
     {
-        return self[$ "___xspeed_type"] ?? PARTICLE_MOVEMENT_TYPE.CONSTANT;
+        return self[$ "___xspeed_type"] ?? PROJECTILE_MOVEMENT_TYPE.CONSTANT;
     }
     
     static get_xspeed = function()
@@ -184,7 +267,7 @@ function ProjectileData(_namespace, _id) : ParentData(_namespace, _id) construct
     
     static get_yspeed_type = function()
     {
-        return self[$ "___yspeed_type"] ?? PARTICLE_MOVEMENT_TYPE.CONSTANT;
+        return self[$ "___yspeed_type"] ?? PROJECTILE_MOVEMENT_TYPE.CONSTANT;
     }
     
     static get_yspeed = function()
@@ -219,7 +302,7 @@ function ProjectileData(_namespace, _id) : ParentData(_namespace, _id) construct
     
     static get_on_collision_xspeed_type = function()
     {
-        return self[$ "___on_collision_xspeed_type"] ?? PARTICLE_MOVEMENT_TYPE.CONSTANT;
+        return self[$ "___on_collision_xspeed_type"] ?? PROJECTILE_MOVEMENT_TYPE.CONSTANT;
     }
     
     static get_on_collision_xspeed = function()
@@ -239,7 +322,7 @@ function ProjectileData(_namespace, _id) : ParentData(_namespace, _id) construct
     
     static get_on_collision_yspeed_type = function()
     {
-        return self[$ "___on_collision_yspeed_type"] ?? PARTICLE_MOVEMENT_TYPE.CONSTANT;
+        return self[$ "___on_collision_yspeed_type"] ?? PROJECTILE_MOVEMENT_TYPE.CONSTANT;
     }
     
     static get_on_collision_yspeed = function()

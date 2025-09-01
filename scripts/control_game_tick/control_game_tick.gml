@@ -132,6 +132,11 @@ function control_game_tick(_delta_time)
             item_cooldown[$ _name] = max(0, item_cooldown[$ _name] - (_tick / GAME_TICK));
         }
         
+        with (obj_Projectile)
+        {
+            control_projectile(_tick);
+        }
+        
         with (obj_Particle)
         {
             control_particle(_tick);
