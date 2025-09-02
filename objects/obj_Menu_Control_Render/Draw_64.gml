@@ -12,9 +12,7 @@ var _halign = draw_get_halign();
 var _valign = draw_get_valign();
 
 draw_set_align(fa_center, fa_middle);
-
-draw_surface_ext(global.carbasa_surface.item, mouse_x, mouse_y, 1, 1, 0, c_white, 1)
-
+\
 for (var i = 0; i <= obj_Menu_Control_Button.menu_layer; ++i)
 {
     if (i != 0)
