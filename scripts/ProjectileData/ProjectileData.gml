@@ -36,6 +36,8 @@ function ProjectileData(_namespace, _id, _sprite, _sprite_data) : ParentData(_na
         return self;
     }
     
+    ___sprite_xoffset = sprite_get_xoffset(_sprite);
+    ___sprite_yoffset = sprite_get_yoffset(_sprite);
     ___sprite_number = sprite_get_number(_sprite);
     
     __set_smart_value("___sprite_speed", _sprite_data[$ "speed"]);
@@ -43,6 +45,16 @@ function ProjectileData(_namespace, _id, _sprite, _sprite_data) : ParentData(_na
     static get_sprite = function()
     {
         return ___sprite;
+    }
+    
+    static get_sprite_xoffset = function()
+    {
+        return ___sprite_xoffset;
+    }
+    
+    static get_sprite_yoffset = function()
+    {
+        return ___sprite_yoffset;
     }
     
     static get_sprite_number = function()

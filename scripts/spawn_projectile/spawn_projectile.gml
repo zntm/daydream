@@ -11,11 +11,15 @@ function spawn_projectile(_x, _y, _id, _damage, _xscale = 1, _yscale = 1)
         
         if (attribute != undefined) && (attribute.has_collision_box())
         {
-            init_entity_physics(smart_value(_data.get_scale()));
+            var _scale = smart_value(_data.get_scale());
+            
+            init_entity_physics(_xscale * _scale, _yscale * _scale);
         }
         else
         {
-        	entity_scale = smart_value(_data.get_scale());
+            var _scale = smart_value(_data.get_scale());
+            
+            entity_set_scale(_xscale * _scale, _yscale * _scale);
         }
         
         if (_data.get_xspeed_type() == PARTICLE_MOVEMENT_TYPE.REFERENCE)
@@ -41,9 +45,6 @@ function spawn_projectile(_x, _y, _id, _damage, _xscale = 1, _yscale = 1)
         }
         
         rotation_increment = smart_value(_data.get_rotation_increment());
-        
-        image_xscale = _xscale;
-        image_yscale = _yscale;
         
         image_angle = smart_value(_data.get_rotation());
         

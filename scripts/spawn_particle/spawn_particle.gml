@@ -14,7 +14,10 @@ function spawn_particle(_x, _y, _id, _colour = c_white)
         }
         else
         {
-        	entity_scale = smart_value(_data.get_scale());
+            var _scale = smart_value(_data.get_scale());
+            
+        	entity_xscale = _scale;
+        	entity_yscale = _scale;
         }
         
         if (_data.get_xspeed_type() == PARTICLE_MOVEMENT_TYPE.REFERENCE)

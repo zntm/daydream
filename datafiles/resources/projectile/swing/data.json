@@ -1,7 +1,7 @@
 {
     "sprite": {
-        "xoffset": 8,
-        "yoffset": 16,
+        "xoffset": 16,
+        "yoffset": 32,
         "length": 4
     },
     "properties": [

@@ -1,8 +1,6 @@
-function init_entity_physics(_scale = 1)
+function init_entity_physics(_xscale = 1, _yscale = _xscale)
 {
-    entity_scale = 1;
-    
-    entity_set_scale(_scale);
+    entity_set_scale(_xscale, _yscale);
     
     xvelocity = 0;
     yvelocity = 0;
