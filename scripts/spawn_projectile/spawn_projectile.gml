@@ -13,14 +13,17 @@ function spawn_projectile(_x, _y, _id, _damage, _xscale = 1, _yscale = 1)
         {
             var _scale = smart_value(_data.get_scale());
             
-            init_entity_physics(_xscale * _scale, _yscale * _scale);
+            init_entity_physics(_scale, _scale);
         }
         else
         {
             var _scale = smart_value(_data.get_scale());
             
-            entity_set_scale(_xscale * _scale, _yscale * _scale);
+            entity_set_scale(_scale, _scale);
         }
+        
+        image_xscale *= _xscale;
+        image_yscale *= _yscale;
         
         if (_data.get_xspeed_type() == PARTICLE_MOVEMENT_TYPE.REFERENCE)
         {

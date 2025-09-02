@@ -12,7 +12,7 @@ function file_save_world_chunk(_world_save_data, _inst)
     var _region_x = floor(_chunk_x / CHUNK_REGION_SIZE);
     var _region_y = floor(_chunk_y / CHUNK_REGION_SIZE);
     
-    var _directory = $"{PROGRAM_DIRECTORY_WORLDS}/{_world_save_data.uuid}/dimension/{_world_data.get_namespace()}/{_world_data.get_id()}/chunk/{_region_x} {_region_y}.dat";
+    var _directory = $"{PROGRAM_DIRECTORY_WORLDS}/{_world_save_data.uuid}/dimension/{_world_data.get_namespace()}/{_world_data.get_id()}/region/{_region_x} {_region_y}.dat";
     
     var _buffer;
     
@@ -26,14 +26,14 @@ function file_save_world_chunk(_world_save_data, _inst)
         
         for (var i = 0; i < CHUNK_REGION_SIZE; ++i)
         {
-            buffer_write(_buffer, buffer_u32, 0);
+            buffer_write(_buffer, buffer_u64, 0);
         }
     }
     
     var _chunk_relative_x = ((_chunk_x % CHUNK_REGION_SIZE) + CHUNK_REGION_SIZE) % CHUNK_REGION_SIZE;
     var _chunk_relative_y = ((_chunk_y % CHUNK_REGION_SIZE) + CHUNK_REGION_SIZE) % CHUNK_REGION_SIZE;
     
-    buffer_poke(_buffer, _chunk_relative_x * 4, buffer_u32, buffer_peek(_buffer, _chunk_relative_x * 4, buffer_u32) | (1 << _chunk_relative_y));
+    buffer_poke(_buffer, _chunk_relative_x * 4, buffer_u64, buffer_peek(_buffer, _chunk_relative_x * 4, buffer_u32) | (1 << _chunk_relative_y));
     
     buffer_write(_buffer, buffer_u16, PROGRAM_VERSION_MAJOR);
     buffer_write(_buffer, buffer_u16, PROGRAM_VERSION_MINOR);

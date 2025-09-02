@@ -9,7 +9,7 @@ function file_load_world_chunk(_world_save_data, _inst)
     var _region_x = floor(_chunk_x / CHUNK_REGION_SIZE);
     var _region_y = floor(_chunk_y / CHUNK_REGION_SIZE);
     
-    var _directory = $"{PROGRAM_DIRECTORY_WORLDS}/{_world_save_data.uuid}/dimension/{_world_data.get_namespace()}/{_world_data.get_id()}/chunk/{_region_x} {_region_y}.dat";
+    var _directory = $"{PROGRAM_DIRECTORY_WORLDS}/{_world_save_data.uuid}/dimension/{_world_data.get_namespace()}/{_world_data.get_id()}/region/{_region_x} {_region_y}.dat";
     
     if (!file_exists(_directory))
     {
@@ -21,7 +21,7 @@ function file_load_world_chunk(_world_save_data, _inst)
     var _chunk_relative_x = ((_chunk_x % CHUNK_REGION_SIZE) + CHUNK_REGION_SIZE) % CHUNK_REGION_SIZE;
     var _chunk_relative_y = ((_chunk_y % CHUNK_REGION_SIZE) + CHUNK_REGION_SIZE) % CHUNK_REGION_SIZE;
     
-    var _bit = buffer_peek(_buffer, _chunk_relative_x * 4, buffer_u32);
+    var _bit = buffer_peek(_buffer, _chunk_relative_x * 4, buffer_u64);
     
     if !(_bit & (1 << _chunk_relative_y))
     {
@@ -39,7 +39,10 @@ function file_load_world_chunk(_world_save_data, _inst)
     
     buffer_seek(_buffer, buffer_seek_start, _seek);
     
-    _inst.boolean |= ((buffer_read(_buffer, buffer_bool)) ? CHUNK_BOOLEAN.GENERATED : 0);
+    if (buffer_read(_buffer, buffer_bool))
+    {
+        _inst.boolean |= CHUNK_BOOLEAN.GENERATED;
+    }
     
     var _chunk_display = buffer_read(_buffer, buffer_u16);
     

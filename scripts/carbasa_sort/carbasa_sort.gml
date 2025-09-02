@@ -1,5 +1,32 @@
 function carbasa_sort(_page)
 {
+    static __sort = function(_a, _b)
+    {
+        var _a_height = _a.get_height();
+        var _b_height = _b.get_height();
+        
+        var _a_position_index = _a.get_position_index();
+        var _b_position_index = _b.get_position_index();
+        
+        var _a_index = _a.get_index();
+        var _b_index = _b.get_index();
+        
+        var _a_a = (_a_height * 0xffffff) + ((_a_position_index - _a_index + 1) * 0xfff);
+        var _b_a = (_b_height * 0xffffff) + ((_b_position_index - _b_index + 1) * 0xfff);
+        
+        if (_a_a == _b_a)
+        {
+            return _a_index - _b_index;
+        }
+        
+        return
+            ((_b_height * 0xffffff) + ((_b_position_index + 1) * 0xfff) + ((_b.get_number() - _b_index) * 0xff)) -
+            ((_a_height * 0xffffff) + ((_a_position_index + 1) * 0xfff) + ((_a.get_number() - _a_index) * 0xff));
+        
+    }
+    
+    array_sort(global.carbasa_page_position[$ _page], __sort);
+    
     var _data = global.carbasa_page_position[$ _page];
     
     var _length = array_length(_data);
