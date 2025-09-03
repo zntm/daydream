@@ -131,7 +131,14 @@ function control_player(_dt)
             x = _x - 0  + (lengthdir_x(_sprite_width,  _angle) * _direction);
             y = _y - 24 + (lengthdir_y(_sprite_height, _angle));
             
-            image_angle = _angle * _direction;
+            if (_direction > 0)
+            {
+                image_angle = _angle - ((global.item_data[$ id._id].has_type(ITEM_TYPE_BIT.TOOL)) ? 45 : 90);
+            }
+            else
+            {
+            	image_angle = 180 - _angle + ((global.item_data[$ id._id].has_type(ITEM_TYPE_BIT.TOOL)) ? 45 : 90);
+            }
         }
     }
     

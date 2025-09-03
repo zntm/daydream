@@ -16,7 +16,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
     {
         carbasa_repair_page("item");
         
-        _texture = global.carbasa_surface_texture[$ "item"];
+        _texture = global.carbasa_surface_texture[$ "item"] ?? pointer_null;
     }
     
     var _uv = global.carbasa_surface_uv[$ "item"];
@@ -128,7 +128,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 	render_attire(global.player_save_data.attire, 0, x, y, _xscale, _yscale, false, _index_arm, inst_item);
                 }
             }
-            /*
+            
             gpu_set_blendmode(bm_add);
             
             with (obj_Particle)
@@ -149,14 +149,34 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 draw_sprite_ext(_sprite, _index, x, y, entity_scale, entity_scale, image_angle, image_blend, image_alpha * (_data.is_fade_out() ? timer_life / timer_life_max : 1));
             }
             
+            with (obj_Projectile)
+            {
+                var _data = _projectile_data[$ _id];
+                
+                if (!_data.is_additive()) continue;
+                
+                var _sprite = _data.get_sprite();
+                
+                var _index = 0;
+                
+                if (_data.has_stretch_animation())
+                {
+                    _index = floor(_data.get_sprite_number() * (1 - (timer_life / timer_life_max)));
+                }
+                
+                var _xscale = entity_xscale * sign(image_xscale);
+                var _yscale = entity_yscale * sign(image_yscale);
+                
+                draw_sprite_ext(_sprite, _index, x + (_xscale * (_data.get_sprite_xoffset() - (attribute.get_collision_box_width() / 2))), y + (_yscale * (_data.get_sprite_yoffset() - attribute.get_collision_box_height())), _xscale, _yscale, image_angle, image_blend, image_alpha);
+            }
+            
             gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_src_alpha, bm_one);
-            */
             
             with (obj_Projectile)
             {
                 var _data = _projectile_data[$ _id];
                 
-                // if (_data.is_additive()) continue;
+                if (_data.is_additive()) continue;
                 
                 var _sprite = _data.get_sprite();
                 
@@ -177,7 +197,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
             {
                 var _data = _particle_data[$ _id];
                 
-                // if (_data.is_additive()) continue;
+                if (_data.is_additive()) continue;
                 
                 var _sprite = _data.get_sprite();
                 
