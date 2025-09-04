@@ -176,6 +176,11 @@ if (keyboard_check_pressed(ord("P")))
 
 control_game_tick(_delta_time);
 
+with (obj_Floating_Text)
+{
+    control_floating_text(_dt);
+}
+
 var _creature_data = global.creature_data;
 
 with (obj_Creature)

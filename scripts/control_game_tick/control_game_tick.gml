@@ -152,11 +152,6 @@ function control_game_tick(_delta_time)
             control_item_drop(_tick);
         }
         
-        with (obj_Floating_Text)
-        {
-            control_floating_text(_tick);
-        }
-        
         global.world_save_data.time += _tick / GAME_TICK;
         
         if (global.world_save_data.time >= _time_length)
