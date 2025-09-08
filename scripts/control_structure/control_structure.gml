@@ -19,6 +19,8 @@ function control_structure(_x, _y)
             global.worldgen_structure[? i] = ds_map_create();
         }
         
+        var _cave_start = worldgen_get_cave_start(i, _world_seed);
+        
         var _ds = global.worldgen_structure[? i];
         
         for (var j = max(_surface_height - 1, _y - WORLDGEN_STRUCTURE_OFFSET); j <= _y + WORLDGEN_STRUCTURE_OFFSET; ++j)
@@ -29,7 +31,7 @@ function control_structure(_x, _y)
             
             global.worldgen_structure[? i][? j] = true;
             
-            if (!worldgen_get_cave(i, j, _surface_height, _world_seed))
+            if (!worldgen_get_cave(i, j, _surface_height, _cave_start, _world_seed))
             {
                 var _data = _biome_data[$ bg_get_biome(i, j, _surface_height)];
                 
@@ -62,14 +64,14 @@ function control_structure(_x, _y)
                     
                     if (_placement_type == STRUCTURE_PLACEMENT_TYPE.FLOOR)
                     {
-                        if (worldgen_get_cave(i, j - 1, _surface_height, _world_seed))
+                        if (worldgen_get_cave(i, j - 1, _surface_height, _cave_start, _world_seed))
                         {
                             structure_create(i * TILE_SIZE, j * TILE_SIZE, _structure.id, _world_seed);
                         }
                     }
                     else if (_placement_type == STRUCTURE_PLACEMENT_TYPE.CEILING)
                     {
-                        if (worldgen_get_cave(i, j + 1, _surface_height, _world_seed))
+                        if (worldgen_get_cave(i, j + 1, _surface_height, _cave_start, _world_seed))
                         {
                             structure_create(i * TILE_SIZE, j * TILE_SIZE, _structure.id, _world_seed);
                         }

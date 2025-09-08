@@ -67,7 +67,9 @@ var _surface_height = worldgen_get_surface_height(0, _seed);
 
 obj_Player.y = ((_surface_height - 1) * TILE_SIZE) + (TILE_SIZE / 2);
 
-while (worldgen_get_cave(0, round(obj_Player.y / TILE_SIZE) + 1, _surface_height, _seed))
+var _cave_start = worldgen_get_cave_start(0, _seed);
+
+while (worldgen_get_cave(0, round(obj_Player.y / TILE_SIZE) + 1, _surface_height, _cave_start, _seed))
 {
     obj_Player.y += TILE_SIZE;
 }
@@ -111,9 +113,6 @@ inventory_mouse_select_type = INVENTORY_MOUSE_SELECT_TYPE.NONE;
 global.inventory_selected_hover = noone;
 
 surface_lighting = -1;
-
-surface_lighting_x = 0;
-surface_lighting_y = 0;
 
 surface_inventory = {
     tooltip: {

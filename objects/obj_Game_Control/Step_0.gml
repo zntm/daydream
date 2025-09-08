@@ -60,14 +60,14 @@ if (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.GENERATING_WORLD)
             {
                 for (var _tile_x = 0; _tile_x < CHUNK_SIZE; ++_tile_x)
                 {
-                    var _tile = _chunk[(_tile_z << (CHUNK_SIZE_BIT * 2)) | (_tile_y << CHUNK_SIZE_BIT) | _tile_x];
+                    var _world_x = _inst.chunk_xstart + _tile_x;
+                    var _world_y = _inst.chunk_ystart + _tile_y;
+                    
+                    var _tile = _chunk[tile_index_xyz(_world_x, _world_y, _tile_z)];
                     
                     if (_tile == TILE_EMPTY) continue;
                     
                     var _data = _item_data[$ _tile.get_id()];
-                    
-                    var _world_x = _inst.chunk_xstart + _tile_x;
-                    var _world_y = _inst.chunk_ystart + _tile_y;
                     
                     tile_instance_create(_world_x, _world_y, _tile_z, _tile);
                     

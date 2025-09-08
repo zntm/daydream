@@ -32,6 +32,7 @@ function chunk_generate()
         var _world_x = chunk_xstart + i;
         
         var _surface_height = worldgen_get_surface_height(_world_x, _world_seed);
+        var _cave_start = worldgen_get_cave_start(_world_x, _world_seed);
         
         __surface_height[@ i] = _surface_height;
         
@@ -43,7 +44,7 @@ function chunk_generate()
         {
             var _world_y = chunk_ystart + j - 1;
             
-            _cave_bit |= worldgen_get_cave(_world_x, _world_y, _surface_height, _world_seed) << j;
+            _cave_bit |= worldgen_get_cave(_world_x, _world_y, _surface_height, _cave_start, _world_seed) << j;
         }
         
         __cave_bit[@ i] = _cave_bit;

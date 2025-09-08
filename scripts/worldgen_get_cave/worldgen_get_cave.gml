@@ -1,4 +1,4 @@
-function worldgen_get_cave(_x, _y, _surface_height, _seed)
+function worldgen_get_cave(_x, _y, _surface_height, _cave_start, _seed)
 {
     var _world_data = global.world_data[$ global.world_save_data.dimension];
     
@@ -7,7 +7,7 @@ function worldgen_get_cave(_x, _y, _surface_height, _seed)
         return true;
     }
     
-    if (_y < _surface_height + _world_data.get_cave_start_min() + worldgen_get_cave_start(_x, _seed))
+    if (_y < _surface_height + _world_data.get_cave_start_min() + _cave_start)
     {
         return false;
     }

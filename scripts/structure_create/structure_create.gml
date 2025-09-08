@@ -66,12 +66,13 @@ function structure_create(_x, _y, _id, _seed)
                 var _x2 = _tile_x + j + _xoffset;
                 
                 var _surface_height = worldgen_get_surface_height(_x2, _seed);
+                var _cave_start = worldgen_get_cave_start(_x2, _seed);
                 
                 for (var l = 0; l < _if_clear_height; ++l)
                 {
                     var _y2 = _tile_y + l + _yoffset;
                     
-                    if (!worldgen_get_cave(_x2, _y2, _surface_height, _seed)) exit;
+                    if (!worldgen_get_cave(_x2, _y2, _surface_height, _cave_start, _seed)) exit;
                 }
             }
         }
