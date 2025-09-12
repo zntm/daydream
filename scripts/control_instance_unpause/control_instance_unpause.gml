@@ -10,4 +10,14 @@ function control_instance_unpause()
     inst_7A620B98.y = -1000;
     
     inst_284F3DC8.y = -1000;
+    
+    var _layer = layer_get_id("Settings");
+    
+    with (all)
+    {
+        if (layer == _layer)
+        {
+            instance_destroy();
+        }
+    }
 }

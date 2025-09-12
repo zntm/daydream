@@ -10,10 +10,13 @@ on_select_release = function()
     global.menu_settings_xoffset = _camera_x;
     global.menu_settings_yoffset = _camera_y;
     
-    layer_set_visible("Menu_Pause", false);
+    instance_deactivate_layer("Menu_Pause");
     
-    layer_set_visible("Menu_Settings", true);
-    layer_set_visible("Settings", true);
+    instance_activate_layer("Menu_Settings");
+    instance_activate_layer("Settings");
+    
+    inst_1ECBE071.x = _camera_x + inst_1ECBE071.xstart;
+    inst_1ECBE071.y = _camera_y + inst_1ECBE071.ystart;
     
     inst_7CD74435.x = _camera_x + inst_7CD74435.xstart;
     inst_7CD74435.y = _camera_y + inst_7CD74435.ystart;

@@ -209,3 +209,5 @@ chunk_in_view_length = 0;
 open_simplex_noise_seed(global.world_save_data.seed);
 
 item_cooldown = {}
+
+menu_instance = [];

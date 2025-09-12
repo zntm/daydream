@@ -7,8 +7,15 @@ function menu_refresh_instance_settings()
         var _x2 = x * _xscale;
         var _y2 = y * _yscale;
         
+        var _halign = draw_get_halign();
+        var _valign = draw_get_valign();
+        
+        draw_set_align(fa_left, fa_middle);
+        
         render_text(_x2, _y2, loca_translate($"phantasia:settings.{name}.name"), _xscale, _yscale);
         render_text(_x2, _y2 + (24 * _yscale), loca_translate($"phantasia:settings.{name}.description"), _xscale * 0.75, _yscale * 0.75, 0, c_ltgray, 0.5);
+        
+        draw_set_align(_halign, _valign);
     }
     
     with (all)
