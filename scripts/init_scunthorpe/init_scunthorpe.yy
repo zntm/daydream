@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"init_scunthorpe",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"init_scunthorpe",
+  "parent":{
+    "name":"Scunthorpe",
+    "path":"folders/Scripts/Scunthorpe.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
