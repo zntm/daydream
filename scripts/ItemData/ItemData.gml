@@ -782,6 +782,7 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
         }
         
         return self;
+        return self;
     }
     
     static is_crafting_station = function()
@@ -952,6 +953,26 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     static get_on_use_length = function()
     {
         return self[$ "___on_use_length"];
+    }
+    
+    static set_light = function(_light)
+    {
+        if (_light != undefined)
+        {
+            ___light = hex_parse(_light);
+        }
+        
+        return self;
+    }
+    
+    static get_light = function()
+    {
+        return self[$ "___light"];
+    }
+    
+    static has_light = function()
+    {
+        return (self[$ "___light"] != undefined);
     }
     
     static set_container = function(_container)

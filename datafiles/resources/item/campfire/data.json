@@ -18,6 +18,7 @@
             "id": "phantasia:campfire"
         }
     ],
+    "light": "#EAC7A6",
     "animation_type": "increment",
     "sfx": "#phantasia:tile/sfx/wood",
     "on_random_tick": [

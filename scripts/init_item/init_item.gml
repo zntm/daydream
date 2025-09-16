@@ -29,6 +29,7 @@ function init_item(_directory, _namespace)
         _item_data.set_on_random_tick(_json[$ "on_random_tick"]);
         _item_data.set_on_attack(_json[$ "on_attack"]);
         _item_data.set_on_use(_json[$ "on_use"]);
+        _item_data.set_light(_json[$ "light"]);
         _item_data.set_container(_json[$ "container"]);
         
         var _sprite_data = _json.sprite;

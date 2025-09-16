@@ -49,6 +49,8 @@ function player_build(_dt, _x, _y)
     
     tile_update_surrounding(_x, _y, _z, 1, 1);
     
+    tile_instance_create(_x, _y, _z, _tile);
+    
     inventory_item_decrement("base", _inventory_selected_hotbar);
     
     surface_refresh |= ((is_opened & IS_OPENED_BOOLEAN.INVENTORY) ? SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK : SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR);

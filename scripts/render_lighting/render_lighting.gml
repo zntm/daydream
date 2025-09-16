@@ -54,13 +54,15 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
         
         if (!surface_exists(surface_lighting))
         {
-            surface_lighting = surface_create(_surface_lighting_width, _surface_lighting_height, surface_r8unorm);
+            surface_lighting = surface_create(_surface_lighting_width, _surface_lighting_height);
         }
         
         gpu_set_blendmode(bm_add);
         
         surface_set_target(surface_lighting);
         draw_clear_alpha(c_black, 1);
+        
+        shader_set(shd_Lighting);
         
         for (var i = 0; i < chunk_in_view_length; ++i)
         {
@@ -77,6 +79,8 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
             }
         }
         
+        shader_reset();
+        
         with (obj_Player)
         {
             var _x = ((x + RENDER_LIGHTING_PADDING - _surface_x) / RENDER_LIGHTING_RESIZE);
@@ -90,7 +94,7 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
             var _x = ((x + RENDER_LIGHTING_PADDING - _surface_x) / RENDER_LIGHTING_RESIZE);
             var _y = ((y + RENDER_LIGHTING_PADDING - _surface_y) / RENDER_LIGHTING_RESIZE);
             
-            draw_sprite_ext(spr_Light, 0, _x, _y, 1, 1, 0, c_white, 1);
+            draw_sprite_ext(spr_Light, 0, _x, _y + 8, 1, 1, 0, image_blend, 1);
         }
         
         surface_reset_target();
@@ -102,8 +106,6 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
     
     if (surface_exists(surface_lighting))
     {
-        shader_set(shd_Lighting);
-        
         draw_surface_ext(surface_lighting, _surface_x - RENDER_LIGHTING_PADDING - (RENDER_LIGHTING_PADDING / 2) + TILE_SIZE, _surface_y - RENDER_LIGHTING_PADDING - (RENDER_LIGHTING_PADDING / 2) + TILE_SIZE, RENDER_LIGHTING_RESIZE, RENDER_LIGHTING_RESIZE, 0, c_white, 1);
         /*
         gpu_set_tex_filter(true);
@@ -112,7 +114,6 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
         
         gpu_set_tex_filter(false);
         */
-        shader_reset();
     }
     
     draw_sprite_ext(spr_Square, 0, _camera_x, _camera_y, _camera_width + _camera_width, _camera_y + _camera_height, 0, obj_Game_Control_Background.light_colour, 1);

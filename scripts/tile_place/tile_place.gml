@@ -45,6 +45,13 @@ function tile_place(_x, _y, _z, _tile)
             instance_destroy(_instance_container);
         }
         
+        var _instance_light = _tile_before.get_instance_light();
+        
+        if (instance_exists(_instance_light))
+        {
+            instance_destroy(_instance_light);
+        }
+        
         delete _tile_before;
     }
     

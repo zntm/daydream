@@ -99,7 +99,7 @@ global.inventory_selected_backpack = {
     type: undefined
 }
 
-global.inventory.base[@ 0] = new Inventory("phantasia:platinum_sword");
+global.inventory.base[@ 0] = new Inventory("phantasia:torch");
 
 enum INVENTORY_MOUSE_SELECT_TYPE {
     NONE,
