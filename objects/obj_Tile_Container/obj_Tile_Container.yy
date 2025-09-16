@@ -6,8 +6,8 @@
   "name":"obj_Tile_Container",
   "overriddenProperties":[],
   "parent":{
-    "name":"Gameplay",
-    "path":"folders/Objects/Gameplay.yy",
+    "name":"Tile",
+    "path":"folders/Objects/Gameplay/Tile.yy",
   },
   "parentObjectId":null,
   "persistent":false,

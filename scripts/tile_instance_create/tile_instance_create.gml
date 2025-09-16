@@ -44,27 +44,6 @@ function tile_instance_create(_x, _y, _z, _tile)
     }
     
     /*
-    var _tag_crafting_station = _data.get_tag_tile_crafting_station();
-    
-    if (array_contains(global.crafting_stations, _item_id)) || ((_tag_crafting_station != undefined) && (array_contains_ext(global.crafting_stations, _tag_crafting_station)))
-    {
-        with (instance_create_layer(_x * TILE_SIZE, _y * TILE_SIZE, "Instances", obj_Tile_Station))
-        {
-            sprite_index = _data.get_sprite(_tile.get_variant());
-            
-            position_x = _x;
-            position_y = _y;
-            position_z = _z;
-            
-            item_id = _item_id;
-            
-            tag = _tag_crafting_station;
-            
-            tile_set(_x, _y, _z, "instance.station", id);
-        }
-    }
-    
-    /*
     if (_data[$ "___colour_offset_bloom"] != undefined)
     {
         with (instance_create_layer(_x * TILE_SIZE, _y * TILE_SIZE, "Instances", obj_Tile_Light))
@@ -118,22 +97,6 @@ function tile_instance_create(_x, _y, _z, _tile)
             on_interaction = _instance[$ "on_interaction"];
             
             tile_set(_x, _y, _z, "instance.instance", id);
-        }
-    }
-    
-    if (_data.has_type(ITEM_TYPE_BIT.CONTAINER))
-    {
-        with (instance_create_layer(_x * TILE_SIZE, _y * TILE_SIZE, "Instances", obj_Tile_Container))
-        {
-            sprite_index = _data.get_sprite(_tile.get_variant());
-            
-            position_x = _x;
-            position_y = _y;
-            position_z = _z;
-            
-            item_id = _item_id;
-            
-            tile_set(_x, _y, _z, "instance.container", id);
         }
     }
     */

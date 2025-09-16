@@ -85,6 +85,14 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
             draw_sprite_ext(spr_Light, 0, _x, _y + 8, 1, 1, 0, c_white, 1);
         }
         
+        with (obj_Tile_Light)
+        {
+            var _x = ((x + RENDER_LIGHTING_PADDING - _surface_x) / RENDER_LIGHTING_RESIZE);
+            var _y = ((y + RENDER_LIGHTING_PADDING - _surface_y) / RENDER_LIGHTING_RESIZE);
+            
+            draw_sprite_ext(spr_Light, 0, _x, _y, 1, 1, 0, c_white, 1);
+        }
+        
         surface_reset_target();
         
         gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_src_alpha, bm_one);
@@ -96,14 +104,14 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
     {
         shader_set(shd_Lighting);
         
-        draw_surface_ext(surface_lighting, _surface_x - RENDER_LIGHTING_PADDING - (RENDER_LIGHTING_PADDING / 2), _surface_y - RENDER_LIGHTING_PADDING - (RENDER_LIGHTING_PADDING / 2), RENDER_LIGHTING_RESIZE, RENDER_LIGHTING_RESIZE, 0, c_white, 1);
-        
+        draw_surface_ext(surface_lighting, _surface_x - RENDER_LIGHTING_PADDING - (RENDER_LIGHTING_PADDING / 2) + TILE_SIZE, _surface_y - RENDER_LIGHTING_PADDING - (RENDER_LIGHTING_PADDING / 2) + TILE_SIZE, RENDER_LIGHTING_RESIZE, RENDER_LIGHTING_RESIZE, 0, c_white, 1);
+        /*
         gpu_set_tex_filter(true);
         
         draw_surface_ext(surface_lighting, _camera_x - RENDER_LIGHTING_PADDING, _camera_y - RENDER_LIGHTING_PADDING, RENDER_LIGHTING_RESIZE, RENDER_LIGHTING_RESIZE, 0, c_white, 1);
         
         gpu_set_tex_filter(false);
-        
+        */
         shader_reset();
     }
     

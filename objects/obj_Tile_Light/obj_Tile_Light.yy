@@ -1,9 +1,9 @@
 {
   "$GMObject":"",
-  "%Name":"obj_Tile_Crafting_Station",
+  "%Name":"obj_Tile_Light",
   "eventList":[],
   "managed":true,
-  "name":"obj_Tile_Crafting_Station",
+  "name":"obj_Tile_Light",
   "overriddenProperties":[],
   "parent":{
     "name":"Tile",
@@ -29,5 +29,5 @@
   "solid":false,
   "spriteId":null,
   "spriteMaskId":null,
-  "visible":false,
+  "visible":true,
 }
