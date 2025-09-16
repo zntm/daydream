@@ -18,7 +18,7 @@
             "id": "phantasia:torch"
         }
     ],
-    "light": "#00FF00",
+    "light": "#D89172",
     "animation_type": "increment",
     "sfx": "#phantasia:tile/sfx/wood",
     "on_random_tick": [
