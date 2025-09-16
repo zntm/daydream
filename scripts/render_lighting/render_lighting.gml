@@ -86,7 +86,7 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
             var _x = ((x + RENDER_LIGHTING_PADDING - _surface_x) / RENDER_LIGHTING_RESIZE);
             var _y = ((y + RENDER_LIGHTING_PADDING - _surface_y) / RENDER_LIGHTING_RESIZE);
             
-            draw_sprite_ext(spr_Light, 0, _x, _y + 8, 1, 1, 0, c_white, 1);
+            draw_sprite_ext(spr_Light, 0, _x, _y + 8 - 1, 1, 1, 0, c_white, 1);
         }
         
         with (obj_Tile_Light)
