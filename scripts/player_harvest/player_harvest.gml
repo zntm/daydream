@@ -92,6 +92,11 @@ function player_harvest(_dt, _x, _y)
         
         tile_update_surrounding(_x, _y, _z, 1, 1);
         
+        if (_data.has_light())
+        {
+            obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.LIGHTING;
+        }
+        
         sfx_diegetic_play(obj_Player.audio_emitter, _x * TILE_SIZE, _y * TILE_SIZE, _data.get_sfx_harvest());
         
         if (_item != INVENTORY_EMPTY) && (_data2.get_item_durability_amount() > 0)
