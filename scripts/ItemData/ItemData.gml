@@ -931,28 +931,52 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
         return self[$ "___on_attack_length"];
     }
     
-    static set_on_use = function(_data)
+    static set_on_item_use = function(_data)
     {
         if (_data != undefined)
         {
             var _ = function_parse(_data);
             var _length = array_length(_);
             
-            ___on_use = _;
-            ___on_use_length = _length;
+            ___on_item_use = _;
+            ___on_item_use_length = _length;
         }
         
         return self;
     }
     
-    static get_on_use = function()
+    static get_on_item_use = function()
     {
-        return self[$ "___on_use"];
+        return self[$ "___on_item_use"];
     }
     
-    static get_on_use_length = function()
+    static get_on_item_use_length = function()
     {
-        return self[$ "___on_use_length"];
+        return self[$ "___on_item_use_length"];
+    }
+    
+    static set_on_tile_use = function(_data)
+    {
+        if (_data != undefined)
+        {
+            var _ = function_parse(_data);
+            var _length = array_length(_);
+            
+            ___on_tile_use = _;
+            ___on_tile_use_length = _length;
+        }
+        
+        return self;
+    }
+    
+    static get_on_tile_use = function()
+    {
+        return self[$ "___on_tile_use"];
+    }
+    
+    static get_on_tile_use_length = function()
+    {
+        return self[$ "___on_tile_use_length"];
     }
     
     static set_light = function(_light)

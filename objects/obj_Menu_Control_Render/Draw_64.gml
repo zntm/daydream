@@ -143,6 +143,67 @@ for (var i = 0; i <= obj_Menu_Control_Button.menu_layer; ++i)
         }
     }
     
+    with (obj_Menu_Dropdown)
+    {
+        if (menu_layer != i) || (!rectangle_in_rectangle(0, 0, room_width, room_height, bbox_left + _render_xoffset, bbox_top + _render_yoffset, bbox_right + _render_xoffset, bbox_bottom + _render_yoffset)) continue;
+        
+        var _x = (_render_xoffset + x) * _render_xscale;
+        var _y = (_render_yoffset + y) * _render_yscale;
+        
+        var _xscale = image_xscale * _render_xscale;
+        var _yscale = image_yscale * _render_yscale;
+        
+        var _choices_length = array_length(choices);
+        
+        if (boolean & MENU_BUTTON_BOOLEAN.IS_BUTTON_VISIBLE)
+        {
+            if (boolean & (MENU_BUTTON_BOOLEAN.IS_SELECTED | MENU_BUTTON_BOOLEAN.IS_HOLDING))
+            {
+                var _button_width  = ((_xscale / 2) * 16) + 2;
+                var _button_height = ((_yscale / 2) * 16) + 2;
+                
+                draw_sprite_stretched_ext(spr_Menu_Button_Select, 0, _x - (_button_width / 2), _y - (_button_height / 2), _button_width, _button_height, c_white, 1);
+                
+                draw_sprite_ext(sprite_index, 1, _x, _y, _xscale, _yscale, 0, c_white, 1);
+            }
+            else
+            {
+                if (boolean & (MENU_BUTTON_BOOLEAN.IS_SELECTED | MENU_BUTTON_BOOLEAN.IS_HOLDING))
+                {
+                    var _button_width  = ((_xscale / 2) * 16) + 2;
+                    var _button_height = ((_yscale / 2) * 16) + 2;
+                    
+                    draw_sprite_stretched_ext(spr_Menu_Button_Select, 0, _x - (_button_width / 2), _y - (_button_height / 2), _button_width, _button_height, c_white, 1);
+                }
+                
+                draw_sprite_ext(sprite_index, 0, _x, _y, _xscale, _yscale, 0, c_white, 1);
+            }
+            
+            if (boolean & MENU_BUTTON_BOOLEAN.IS_SELECTED) && (_choices_length > 0)
+            {
+                var _button_width  = (_xscale / 2) * 16;
+                var _button_height = (_yscale / 2) * 16;
+                
+                for (var j = 0; j < _choices_length; ++j)
+                {
+                    draw_sprite_ext(sprite_index, 0, _x, _y + ((j + 1) * _button_height), _xscale, _yscale, 0, c_white, 1);
+                    
+                    render_text(_x, _y + ((j + 1) * _button_height), choices[j], _render_xscale, _render_yscale, 0, c_white, 1);
+                }
+            }
+        }
+        
+        if (_choices_length > 0) && (choice_index < _choices_length)
+        {
+            var _choice = choices[choice_index];
+            
+            if (_choice != "")
+            {
+                render_text(_x, _y, _choice, _render_xscale, _render_yscale, 0, c_white, 1);
+            }
+        }
+    }
+    
     with (obj_Menu_Textbox)
     {
         if (menu_layer != i) || (!rectangle_in_rectangle(0, 0, room_width, room_height, bbox_left + _render_xoffset, bbox_top + _render_yoffset, bbox_right + _render_xoffset, bbox_bottom + _render_yoffset)) continue;
