@@ -14,9 +14,21 @@ function control_player(_dt)
             {
                 var _damage = 1;
                 
-                repeat (irandom_range(8, 14))
+                if (chance(0.05))
                 {
-                    spawn_particle(random_range(bbox_left, bbox_right), random_range(bbox_top, bbox_bottom), "phantasia:entity/damage");
+                    _damage = round(_damage * 1.25);
+                    
+                    repeat (irandom_range(8, 14))
+                    {
+                        spawn_particle(random_range(bbox_left, bbox_right), random_range(bbox_top, bbox_bottom), "phantasia:entity/damage_critical");
+                    }
+                }
+                else
+                {
+                    repeat (irandom_range(8, 14))
+                    {
+                        spawn_particle(random_range(bbox_left, bbox_right), random_range(bbox_top, bbox_bottom), "phantasia:entity/damage");
+                    }
                 }
                 
                 hp -= _damage;

@@ -43,11 +43,6 @@ function tile_instance_create(_x, _y, _z, _tile)
         }
     }
     
-    if (_id == "phantasia:torch")
-    {
-        show_debug_message(_data)
-    }
-    
     if (_data.has_light())
     {
         with (instance_create_layer((_x * TILE_SIZE) + _tile.get_xoffset(), (_y * TILE_SIZE) + _tile.get_yoffset(), "Instances", obj_Tile_Light))
