@@ -15,6 +15,25 @@ on_select_release = function()
         }
     }
     
-    instance_deactivate_layer("Menu_Settings");
-    instance_activate_layer("Menu_Pause");
+    with (obj_Menu_Anchor)
+    {
+        y = -1000;
+    }
+    
+    with (obj_Menu_Button)
+    {
+        y = -1000;
+    }
+    
+    with (obj_Menu_Dropdown)
+    {
+        y = -1000;
+    }
+    
+    with (obj_Menu_Textbox)
+    {
+        y = -1000;
+    }
+    
+    control_instance_pause();
 }

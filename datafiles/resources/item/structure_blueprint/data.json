@@ -3,8 +3,7 @@
     "sprite": {
         "xoffset": 8,
         "yoffset": 8,
-        "length": 5,
-        "edge_padding": 8
+        "length": 1
     },
     "inventory": "#phantasia:item/generic/inventory_tile",
     "harvest": {
@@ -27,8 +26,16 @@
         }
     ],
     "sfx": "#phantasia:tile/sfx/stone",
-    "audio_properties": {
-        "lowpass": 0,
-        "reverb": 0.6
-    }
+    "on_tile_use": [
+        {
+            "function": [
+                {
+                    "id": "phantasia:open_menu",
+                    "parameter": {
+                        "id": "Menu_Structure_Blueprint"
+                    }
+                }
+            ]
+        }
+    ]
 }

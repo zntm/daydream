@@ -10,25 +10,36 @@ on_select_release = function()
     global.menu_settings_xoffset = _camera_x;
     global.menu_settings_yoffset = _camera_y;
     
-    instance_deactivate_layer("Menu_Pause");
+    with (obj_Menu_Anchor)
+    {
+        y = -1000;
+    }
     
-    instance_activate_layer("Menu_Settings");
-    instance_activate_layer("Settings");
+    with (obj_Menu_Button)
+    {
+        y = -1000;
+    }
     
-    inst_1ECBE071.x = _camera_x + inst_1ECBE071.xstart;
-    inst_1ECBE071.y = _camera_y + inst_1ECBE071.ystart;
+    with (obj_Menu_Dropdown)
+    {
+        y = -1000;
+    }
     
-    inst_7CD74435.x = _camera_x + inst_7CD74435.xstart;
-    inst_7CD74435.y = _camera_y + inst_7CD74435.ystart;
+    with (obj_Menu_Textbox)
+    {
+        y = -1000;
+    }
     
-    inst_704AF147.x = _camera_x + inst_704AF147.xstart;
-    inst_704AF147.y = _camera_y + inst_704AF147.ystart;
+    var _layer = layer_get_id("Menu_Settings");
     
-    inst_209DCB50.x = _camera_x + inst_209DCB50.xstart;
-    inst_209DCB50.y = _camera_y + inst_209DCB50.ystart;
-    
-    inst_2C1ECBCE.x = _camera_x + inst_2C1ECBCE.xstart;
-    inst_2C1ECBCE.y = _camera_y + inst_2C1ECBCE.ystart;
+    with (all)
+    {
+        if (layer == _layer)
+        {
+            x = _camera_x + xstart;
+            y = _camera_y + ystart;
+        }
+    }
     
     with (inst_7CD74435)
     {

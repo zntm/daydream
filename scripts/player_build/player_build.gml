@@ -11,13 +11,9 @@ function player_build(_dt, _x, _y)
     
     var _data = _item_data[$ _id];
     
-    var _z = -1;
+    var _z = CHUNK_DEPTH_DEFAULT;
     
-    if (_data.has_type(ITEM_TYPE_BIT.SOLID | ITEM_TYPE_BIT.PLATFORM))
-    {
-        _z = CHUNK_DEPTH_DEFAULT;
-    }
-    else if (_data.has_type(ITEM_TYPE_BIT.UNTOUCHABLE))
+    if (_data.has_type(ITEM_TYPE_BIT.UNTOUCHABLE))
     {
         if (_data.is_wall())
         {
@@ -29,12 +25,8 @@ function player_build(_dt, _x, _y)
             
             _z = choose(CHUNK_DEPTH_FOLIAGE_BACK, CHUNK_DEPTH_FOLIAGE_FRONT);
         }
-        else
-        {
-            _z = CHUNK_DEPTH_DEFAULT;
-        }
     }
-    else exit;
+    else if !(_data.has_type(ITEM_TYPE_BIT.SOLID | ITEM_TYPE_BIT.PLATFORM)) exit;
     
     if (tile_get(_x, _y, _z) != TILE_EMPTY) || (!tile_placement_condition(_x, _y, _z, _item)) exit;
     

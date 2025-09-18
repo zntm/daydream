@@ -65,7 +65,7 @@ function control_player(_dt)
     
     control_physics_creative(_dt, id);
     
-    if (timer_attack <= 0) && (mouse_check_button(mb_left))
+    if !(obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.MENU) && (timer_attack <= 0) && (mouse_check_button(mb_left))
     {
         sfx_diegetic_play(obj_Player.audio_emitter, obj_Player.x, obj_Player.y, "phantasia:item.swing");
         

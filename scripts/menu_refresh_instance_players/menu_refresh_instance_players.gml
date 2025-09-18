@@ -9,7 +9,10 @@ function menu_refresh_instance_players()
         
         draw_set_align(fa_left, fa_center);
         
-        render_text(_x, _y - 10, string(loca_translate("phantasia:gui.hp.header"), _data.get_hp(), _data.get_hp_max()), 1, 1, 0, _colour, 1);
+        var _hp = _data.get_hp();
+        var _hp_max = _data.get_hp_max();
+        
+        render_text(_x, _y - 10, string(loca_translate("phantasia:gui.hp.header"), _hp, _hp_max), 1, 1, 0, _colour, 1);
         
         draw_set_valign(fa_top);
         

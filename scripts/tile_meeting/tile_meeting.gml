@@ -58,18 +58,24 @@ function tile_meeting(_x, _y, _z = CHUNK_DEPTH_DEFAULT, _type = ITEM_TYPE_BIT.SO
             var _x4 = _x3 + (_data.get_collision_box_right()  * _tile_xscale);
             var _y4 = _y3 + (_data.get_collision_box_bottom() * _tile_yscale);
             
+            var _x5 = min(_x3, _x4);
+            var _y5 = min(_y3, _y4);
+            
+            var _x6 = max(_x3, _x4);
+            var _y6 = max(_y3, _y4);
+            
             var _collision_box_type = _data.get_collision_box_type();
             
             if (_collision_box_type == TILE_COLLISION_BOX_TYPE.RECTANGLE)
             {
-                if (rectangle_in_rectangle(_x1, _y1, _x2, _y2, min(_x3, _x4), min(_y3, _y4), max(_x3, _x4), max(_y3, _y4)))
+                if (rectangle_in_rectangle(_x1, _y1, _x2, _y2, _x5, _y5, _x6, _y6))
                 {
                     return _tile;
                 }
             }
             else if (_collision_box_type == TILE_COLLISION_BOX_TYPE.TRIANGLE)
             {
-                if (rectangle_in_triangle(_x1, _y1, _x2, _y2, min(_x3, _x4), min(_y3, _y4), max(_x3, _x4), min(_y3, _y4), max(_x3, _x4), max(_y3, _y4)))
+                if (rectangle_in_triangle(_x1, _y1, _x2, _y2, _x5, _y5, _x6, _y5, _x6, _y6))
                 {
                     return _tile;
                 }

@@ -1,7 +1,7 @@
+var _item_data = global.item_data;
+
 if (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.GENERATING_WORLD)
 {
-    var _item_data = global.item_data;
-    
     var _camera_x = global.camera_x_real;
     var _camera_y = global.camera_y_real;
     
@@ -159,14 +159,28 @@ var _settings = global.settings;
 
 with (obj_Player)
 {
-    input_left  = keyboard_check(_settings.input_keyboard_left);
-    input_right = keyboard_check(_settings.input_keyboard_right);
-    
-    input_climb_up   = keyboard_check(_settings.input_keyboard_climb_up);
-    input_climb_down = keyboard_check(_settings.input_keyboard_climb_down);
-    
-    input_jump = keyboard_check(_settings.input_keyboard_jump);
-    input_jump_pressed = keyboard_check_pressed(_settings.input_keyboard_jump);
+    if (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.MENU)
+    {
+        input_left  = false;
+        input_right = false;
+        
+        input_climb_up   = false;
+        input_climb_down = false;
+        
+        input_jump = false;
+        input_jump_pressed = false;
+    }
+    else
+    {
+        input_left  = keyboard_check(_settings.input_keyboard_left);
+        input_right = keyboard_check(_settings.input_keyboard_right);
+        
+        input_climb_up   = keyboard_check(_settings.input_keyboard_climb_up);
+        input_climb_down = keyboard_check(_settings.input_keyboard_climb_down);
+        
+        input_jump = keyboard_check(_settings.input_keyboard_jump);
+        input_jump_pressed = keyboard_check_pressed(_settings.input_keyboard_jump);
+    }
 }
 
 if (keyboard_check_pressed(ord("P")))
@@ -243,26 +257,52 @@ control_inventory();
 
 control_chunk_clear(_camera_x, _camera_y, _camera_width, _camera_height);
 
-if (cooldown_build <= 0) && (mouse_check_button(mb_right))
+if !(is_opened & IS_OPENED_BOOLEAN.MENU)
 {
-    player_build(_delta_time, _tile_x, _tile_y);
-}
-else
-{
-    cooldown_build -= _delta_time;
-}
-
-if (cooldown_harvest <= 0) && (mouse_check_button(mb_left))
-{
-    player_harvest(_delta_time, _tile_x, _tile_y);
-}
-else
-{
-    obj_Player.timer_sfx_harvest += _delta_time;
+    if (mouse_check_button_pressed(mb_right))
+    {
+        for (var i = CHUNK_DEPTH - 1; i >= 0; --i)
+        {
+            var _tile = tile_get(_tile_x, _tile_y, i);
+            
+            if (_tile != TILE_EMPTY)
+            {
+                var _data = _item_data[$ _tile.get_id()];
+                
+                var _on_tile_use = _data.get_on_tile_use();
+                var _on_tile_use_length = _data.get_on_tile_use_length();
+                
+                for (var j = 0; j < _on_tile_use_length; ++j)
+                {
+                    function_execute(_on_tile_use[j], _tile_x * TILE_SIZE, _tile_y * TILE_SIZE, i, 1, 1, 1);
+                }
+                
+                break;
+            }
+        }
+    }
     
-    timer_harvest = 0;
+    if (cooldown_build <= 0) && (mouse_check_button(mb_right))
+    {
+        player_build(_delta_time, _tile_x, _tile_y);
+    }
+    else
+    {
+        cooldown_build -= _delta_time;
+    }
     
-    cooldown_harvest -= _delta_time;
+    if (cooldown_harvest <= 0) && (mouse_check_button(mb_left))
+    {
+        player_harvest(_delta_time, _tile_x, _tile_y);
+    }
+    else
+    {
+        obj_Player.timer_sfx_harvest += _delta_time;
+        
+        timer_harvest = 0;
+        
+        cooldown_harvest -= _delta_time;
+    }
 }
 
 control_chunk_activity(_camera_x, _camera_y, _camera_width, _camera_height);

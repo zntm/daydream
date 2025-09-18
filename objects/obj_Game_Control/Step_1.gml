@@ -4,6 +4,31 @@ if (global.window_width <= 0) || (global.window_height <= 0)
 {
     is_opened |= IS_OPENED_BOOLEAN.PAUSE;
     
+    with (obj_Menu_Anchor)
+    {
+        y = -1000;
+    }
+    
+    with (obj_Menu_Button)
+    {
+        y = -1000;
+    }
+    
+    with (obj_Menu_Dropdown)
+    {
+        y = -1000;
+    }
+    
+    with (obj_Menu_Textbox)
+    {
+        y = -1000;
+    }
+    
+    if (is_opened & IS_OPENED_BOOLEAN.MENU)
+    {
+        is_opened ^= IS_OPENED_BOOLEAN.MENU;
+    }
+    
     if (surface_refresh & SURFACE_REFRESH_BOOLEAN.PAUSE)
     {
         surface_refresh ^= SURFACE_REFRESH_BOOLEAN.PAUSE;
@@ -13,19 +38,46 @@ if (global.window_width <= 0) || (global.window_height <= 0)
 }
 else if (keyboard_check_pressed(global.settings.input_keyboard_pause))
 {
-    is_opened ^= IS_OPENED_BOOLEAN.PAUSE;
-    
-    if (is_opened & IS_OPENED_BOOLEAN.PAUSE)
+    with (obj_Menu_Anchor)
     {
-        if (surface_refresh & SURFACE_REFRESH_BOOLEAN.PAUSE)
-        {
-            surface_refresh ^= SURFACE_REFRESH_BOOLEAN.PAUSE;
-        }
-        
-        control_instance_pause();
+        y = -1000;
+    }
+    
+    with (obj_Menu_Button)
+    {
+        y = -1000;
+    }
+    
+    with (obj_Menu_Dropdown)
+    {
+        y = -1000;
+    }
+    
+    with (obj_Menu_Textbox)
+    {
+        y = -1000;
+    }
+    
+    if (is_opened & IS_OPENED_BOOLEAN.MENU)
+    {
+        is_opened ^= IS_OPENED_BOOLEAN.MENU;
     }
     else
     {
-        control_instance_unpause();
+        is_opened ^= IS_OPENED_BOOLEAN.PAUSE;
+        
+        if (is_opened & IS_OPENED_BOOLEAN.PAUSE)
+        {
+            if (surface_refresh & SURFACE_REFRESH_BOOLEAN.PAUSE)
+            {
+                surface_refresh ^= SURFACE_REFRESH_BOOLEAN.PAUSE;
+            }
+            
+            control_instance_pause();
+        }
+        else
+        {
+            control_instance_unpause();
+        }
     }
 }

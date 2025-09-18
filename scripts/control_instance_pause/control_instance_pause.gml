@@ -9,15 +9,14 @@ function control_instance_pause()
     obj_Menu_Control_Render.xscale = global.window_width  / global.camera_width;
     obj_Menu_Control_Render.yscale = global.window_height / global.camera_height;
     
-    inst_629EFD9E.x = _camera_x + inst_629EFD9E.xstart;
-    inst_629EFD9E.y = _camera_y + inst_629EFD9E.ystart;
+    var _layer = layer_get_id("Menu_Pause");
     
-    inst_13FA255D.x = _camera_x + inst_13FA255D.xstart;
-    inst_13FA255D.y = _camera_y + inst_13FA255D.ystart;
-    
-    inst_7A620B98.x = _camera_x + inst_7A620B98.xstart;
-    inst_7A620B98.y = _camera_y + inst_7A620B98.ystart;
-    
-    inst_284F3DC8.x = _camera_x + inst_284F3DC8.xstart;
-    inst_284F3DC8.y = _camera_y + inst_284F3DC8.ystart;
+    with (all)
+    {
+        if (layer == _layer)
+        {
+            x = _camera_x + xstart;
+            y = _camera_y + ystart;
+        }
+    }
 }

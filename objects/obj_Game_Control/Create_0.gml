@@ -99,7 +99,7 @@ global.inventory_selected_backpack = {
     type: undefined
 }
 
-global.inventory.base[@ 0] = new Inventory("phantasia:torch");
+global.inventory.base[@ 0] = new Inventory("phantasia:structure_blueprint");
 
 enum INVENTORY_MOUSE_SELECT_TYPE {
     NONE,
@@ -211,3 +211,23 @@ open_simplex_noise_seed(global.world_save_data.seed);
 item_cooldown = {}
 
 menu_instance = [];
+
+with (obj_Menu_Anchor)
+{
+    y = -1000;
+}
+
+with (obj_Menu_Button)
+{
+    y = -1000;
+}
+
+with (obj_Menu_Dropdown)
+{
+    y = -1000;
+}
+
+with (obj_Menu_Textbox)
+{
+    y = -1000;
+}

@@ -7,13 +7,25 @@ on_select_release = function()
     
     obj_Game_Control.chunk_saved_count_max = instance_number(obj_Chunk);
     
-    inst_629EFD9E.y = -1000;
+    with (obj_Menu_Anchor)
+    {
+        y = -1000;
+    }
     
-    inst_13FA255D.y = -1000;
+    with (obj_Menu_Button)
+    {
+        y = -1000;
+    }
     
-    inst_7A620B98.y = -1000;
+    with (obj_Menu_Dropdown)
+    {
+        y = -1000;
+    }
     
-    inst_284F3DC8.y = -1000;
+    with (obj_Menu_Textbox)
+    {
+        y = -1000;
+    }
     
     obj_Menu_Control_Render.xoffset = 0;
     obj_Menu_Control_Render.yoffset = 0;

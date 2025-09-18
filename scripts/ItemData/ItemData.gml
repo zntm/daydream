@@ -782,7 +782,6 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
         }
         
         return self;
-        return self;
     }
     
     static is_crafting_station = function()
