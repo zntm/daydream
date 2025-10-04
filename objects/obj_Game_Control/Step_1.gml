@@ -27,6 +27,16 @@ if (global.window_width <= 0) || (global.window_height <= 0)
     if (is_opened & IS_OPENED_BOOLEAN.MENU)
     {
         is_opened ^= IS_OPENED_BOOLEAN.MENU;
+        
+        var _layer = layer_get_id("Menu_Item");
+        
+        with (all)
+        {
+            if (layer == _layer)
+            {
+                instance_destroy();
+            }
+        }
     }
     
     if (surface_refresh & SURFACE_REFRESH_BOOLEAN.PAUSE)
@@ -61,6 +71,16 @@ else if (keyboard_check_pressed(global.settings.input_keyboard_pause))
     if (is_opened & IS_OPENED_BOOLEAN.MENU)
     {
         is_opened ^= IS_OPENED_BOOLEAN.MENU;
+        
+        var _layer = layer_get_id("Menu_Item");
+        
+        with (all)
+        {
+            if (layer == _layer)
+            {
+                instance_destroy();
+            }
+        }
     }
     else
     {

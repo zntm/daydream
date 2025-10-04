@@ -49,7 +49,7 @@ function Tile(_id, _item_data = global.item_data) constructor
         // ___value = (___value & 0b111111111_0000_0000_11111111_11111111_1111_1111) | ((_yscale + 8) << 28) | ((_xscale + 8) << 24);
         
         set_xscale(_xscale);
-        set_xscale(_yscale);
+        set_yscale(_yscale);
         
         return self;
     }

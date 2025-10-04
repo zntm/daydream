@@ -25,6 +25,34 @@
             }
         }
     ],
+    "tile": {
+        "components": {
+            "structure_id": {
+                "type": "string",
+                "max": 128
+            },
+            "xscale": {
+                "type": "integer",
+                "min": -128,
+                "max": 127
+            },
+            "yscale": {
+                "type": "integer",
+                "min": -128,
+                "max": 127
+            },
+            "xoffset": {
+                "type": "integer",
+                "min": -128,
+                "max": 127
+            },
+            "yoffset": {
+                "type": "integer",
+                "min": -128,
+                "max": 127
+            }
+        }
+    },
     "sfx": "#phantasia:tile/sfx/stone",
     "on_tile_use": [
         {
@@ -32,7 +60,89 @@
                 {
                     "id": "phantasia:open_menu",
                     "parameter": {
-                        "id": "Menu_Structure_Blueprint"
+                        "data": [
+                            {
+                                "type": "button",
+                                "x": 32,
+                                "y": 32,
+                                "xscale": 3,
+                                "yscale": 3,
+                                "icon": "phantasia:arrow_left",
+                                "function": "exit"
+                            },
+                            {
+                                "type": "anchor",
+                                "x": 480,
+                                "y": 84,
+                                "text": "Structure ID"
+                            },
+                            {
+                                "type": "textbox-string",
+                                "x": 480,
+                                "y": 132,
+                                "xscale": 17,
+                                "yscale": 3,
+                                "placeholder": "Placeholder",
+                                "variable": "structure_id"
+                            },
+                            {
+                                "type": "anchor",
+                                "x": 480,
+                                "y": 200,
+                                "text": "Offset"
+                            },
+                            {
+                                "type": "textbox-number",
+                                "x": 416,
+                                "y": 248,
+                                "xscale": 8,
+                                "yscale": 3,
+                                "placeholder": "X",
+                                "variable": "xoffset"
+                            },
+                            {
+                                "type": "textbox-number",
+                                "x": 544,
+                                "y": 248,
+                                "xscale": 8,
+                                "yscale": 3,
+                                "placeholder": "Y",
+                                "variable": "yoffset"
+                            },
+                            {
+                                "type": "anchor",
+                                "x": 480,
+                                "y": 316,
+                                "text": "Scale"
+                            },
+                            {
+                                "type": "textbox-number",
+                                "x": 416,
+                                "y": 364,
+                                "xscale": 8,
+                                "yscale": 3,
+                                "placeholder": "X",
+                                "variable": "xscale"
+                            },
+                            {
+                                "type": "textbox-number",
+                                "x": 544,
+                                "y": 364,
+                                "xscale": 8,
+                                "yscale": 3,
+                                "placeholder": "Y",
+                                "variable": "yscale"
+                            },
+                            {
+                                "type": "button",
+                                "x": 480,
+                                "y": 480,
+                                "xscale": 17,
+                                "yscale": 3,
+                                "text": "Export",
+                                "function": "phantasia:export_structure"
+                            }
+                        ]
                     }
                 }
             ]

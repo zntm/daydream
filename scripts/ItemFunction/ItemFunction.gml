@@ -8,8 +8,6 @@ global.item_function[$ "phantasia:open_menu"] = function(_dt, _x, _y, _z, _xscal
 {
     obj_Game_Control.is_opened |= IS_OPENED_BOOLEAN.MENU;
     
-    var _layer = layer_get_id(_parameter.id);
-    
     var _camera_x = global.camera_x;
     var _camera_y = global.camera_y;
     
@@ -19,6 +17,71 @@ global.item_function[$ "phantasia:open_menu"] = function(_dt, _x, _y, _z, _xscal
     obj_Menu_Control_Render.xscale = global.window_width  / global.camera_width;
     obj_Menu_Control_Render.yscale = global.window_height / global.camera_height;
     
+    var _layer = layer_get_id("Menu_Item");
+    
+    var _data = _parameter.data;
+    
+    var _length = array_length(_data);
+    
+    for (var i = 0; i < _length; ++i)
+    {
+        var _ = _data[i];
+        
+        var _type = _.type;
+        
+        if (_type == "button")
+        {
+            var _inst = instance_create_layer(_camera_x + _.x, _camera_y + _.y, _layer, obj_Menu_Button);
+            
+            with (_inst)
+            {
+                image_xscale = _[$ "xscale"] ?? 1;
+                image_yscale = _[$ "yscale"] ?? 1;
+                
+                text = _[$ "text"];
+            }
+        }
+        else if (_type == "textbox-number")
+        {
+            var _inst = instance_create_layer(_camera_x + _.x, _camera_y + _.y, _layer, obj_Menu_Textbox);
+            
+            with (_inst)
+            {
+                image_xscale = (_[$ "xscale"] ?? 1) * 2;
+                image_yscale = (_[$ "yscale"] ?? 1) * 2;
+                
+                placeholder = _[$ "placeholder"];
+            }	
+        }
+        else if (_type == "textbox-string")
+        {
+            var _inst = instance_create_layer(_camera_x + _.x, _camera_y + _.y, _layer, obj_Menu_Textbox);
+            
+            with (_inst)
+            {
+                image_xscale = (_[$ "xscale"] ?? 1) * 2;
+                image_yscale = (_[$ "yscale"] ?? 1) * 2;
+                
+                placeholder = _[$ "placeholder"];
+            }
+        }
+        else if (_type == "anchor")
+        {
+            var _inst = instance_create_layer(_camera_x + _.x, _camera_y + _.y, _layer, obj_Menu_Anchor);
+            
+            with (_inst)
+            {
+                text = _.text;
+                
+                image_xscale = (_[$ "xscale"] ?? 1) * 2;
+                image_yscale = (_[$ "yscale"] ?? 1) * 2;
+                
+                on_draw = render_menu_title;
+            }
+        }
+    }
+    
+    /*
     with (all)
     {
         if (layer == _layer)
@@ -26,7 +89,7 @@ global.item_function[$ "phantasia:open_menu"] = function(_dt, _x, _y, _z, _xscal
             x = _camera_x + xstart;
             y = _camera_y + ystart;
         }
-    }
+    }*/
 }
 
 global.item_function[$ "phantasia:spawn_particle"] = function(_dt, _x, _y, _z, _xscale, _yscale, _parameter)

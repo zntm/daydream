@@ -25,6 +25,14 @@
             }
         }
     ],
+    "tile": {
+        "components": {
+            "loot_id": {
+                "type": "string",
+                "max": 128
+            }
+        }
+    },
     "sfx": "#phantasia:tile/sfx/stone",
     "on_tile_use": [
         {
@@ -32,7 +40,26 @@
                 {
                     "id": "phantasia:open_menu",
                     "parameter": {
-                        "id": "Menu_Loot_Blueprint"
+                        "data": [
+                            {
+                                "type": "button",
+                                "x": 32,
+                                "y": 32,
+                                "xscale": 3,
+                                "yscale": 3,
+                                "icon": "phantasia:arrow_left",
+                                "function": "exit"
+                            },
+                            {
+                                "type": "textbox-string",
+                                "x": 480,
+                                "y": 172,
+                                "xscale": 17,
+                                "yscale": 3,
+                                "placeholder": "ID",
+                                "variable": "loot_id"
+                            }
+                        ]
                     }
                 }
             ]
