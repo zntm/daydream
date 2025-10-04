@@ -68,7 +68,7 @@
                                 "xscale": 3,
                                 "yscale": 3,
                                 "icon": "phantasia:arrow_left",
-                                "function": "exit"
+                                "on_select_release": "exit"
                             },
                             {
                                 "type": "anchor",
@@ -83,7 +83,7 @@
                                 "xscale": 17,
                                 "yscale": 3,
                                 "placeholder": "Placeholder",
-                                "variable": "structure_id"
+                                "component": "structure_id"
                             },
                             {
                                 "type": "anchor",
@@ -93,21 +93,21 @@
                             },
                             {
                                 "type": "textbox-number",
-                                "x": 416,
+                                "x": 408,
                                 "y": 248,
                                 "xscale": 8,
                                 "yscale": 3,
                                 "placeholder": "X",
-                                "variable": "xoffset"
+                                "component": "xoffset"
                             },
                             {
                                 "type": "textbox-number",
-                                "x": 544,
+                                "x": 552,
                                 "y": 248,
                                 "xscale": 8,
                                 "yscale": 3,
                                 "placeholder": "Y",
-                                "variable": "yoffset"
+                                "component": "yoffset"
                             },
                             {
                                 "type": "anchor",
@@ -117,21 +117,21 @@
                             },
                             {
                                 "type": "textbox-number",
-                                "x": 416,
+                                "x": 408,
                                 "y": 364,
                                 "xscale": 8,
                                 "yscale": 3,
                                 "placeholder": "X",
-                                "variable": "xscale"
+                                "component": "xscale"
                             },
                             {
                                 "type": "textbox-number",
-                                "x": 544,
+                                "x": 552,
                                 "y": 364,
                                 "xscale": 8,
                                 "yscale": 3,
                                 "placeholder": "Y",
-                                "variable": "yscale"
+                                "component": "yscale"
                             },
                             {
                                 "type": "button",
@@ -140,7 +140,7 @@
                                 "xscale": 17,
                                 "yscale": 3,
                                 "text": "Export",
-                                "function": "phantasia:export_structure"
+                                "on_select_release": "phantasia:export_structure"
                             }
                         ]
                     }

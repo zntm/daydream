@@ -4,6 +4,10 @@ global.item_function[$ "phantasia:explode"] = function(_dt, _x, _y, _z, _xscale,
 {
 }
 
+global.item_function[$ "phantasia:export_structure"] = function(_dt, _x, _y, _z, _xscale, _yscale, _parameter)
+{
+}
+
 global.item_function[$ "phantasia:open_menu"] = function(_dt, _x, _y, _z, _xscale, _yscale, _parameter)
 {
     obj_Game_Control.is_opened |= IS_OPENED_BOOLEAN.MENU;
@@ -16,6 +20,8 @@ global.item_function[$ "phantasia:open_menu"] = function(_dt, _x, _y, _z, _xscal
     
     obj_Menu_Control_Render.xscale = global.window_width  / global.camera_width;
     obj_Menu_Control_Render.yscale = global.window_height / global.camera_height;
+    
+    var _tile = tile_get(_x, _y, _z);
     
     var _layer = layer_get_id("Menu_Item");
     
@@ -39,6 +45,12 @@ global.item_function[$ "phantasia:open_menu"] = function(_dt, _x, _y, _z, _xscal
                 image_yscale = _[$ "yscale"] ?? 1;
                 
                 text = _[$ "text"];
+                
+                tile_x = _x;
+                tile_y = _y;
+                tile_z = _z;
+                
+                on_select_release = _[$ "on_select_release"];
             }
         }
         else if (_type == "textbox-number")
@@ -51,6 +63,19 @@ global.item_function[$ "phantasia:open_menu"] = function(_dt, _x, _y, _z, _xscal
                 image_yscale = (_[$ "yscale"] ?? 1) * 2;
                 
                 placeholder = _[$ "placeholder"];
+                
+                var _component = _[$ "component"];
+                
+                if (_component != undefined)
+                {
+                    text = string(_tile.get_component(_component));
+                }
+                
+                tile_x = _x;
+                tile_y = _y;
+                tile_z = _z;
+                
+                tile_component = _component;
             }	
         }
         else if (_type == "textbox-string")
@@ -63,6 +88,19 @@ global.item_function[$ "phantasia:open_menu"] = function(_dt, _x, _y, _z, _xscal
                 image_yscale = (_[$ "yscale"] ?? 1) * 2;
                 
                 placeholder = _[$ "placeholder"];
+                
+                var _component = _[$ "component"];
+                
+                if (_component != undefined)
+                {
+                    text = string(_tile.get_component(_component));
+                }
+                
+                tile_x = _x;
+                tile_y = _y;
+                tile_z = _z;
+                
+                tile_component = _component;
             }
         }
         else if (_type == "anchor")

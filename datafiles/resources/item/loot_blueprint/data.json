@@ -48,7 +48,7 @@
                                 "xscale": 3,
                                 "yscale": 3,
                                 "icon": "phantasia:arrow_left",
-                                "function": "exit"
+                                "on_select_release": "exit"
                             },
                             {
                                 "type": "textbox-string",
@@ -57,7 +57,7 @@
                                 "xscale": 17,
                                 "yscale": 3,
                                 "placeholder": "ID",
-                                "variable": "loot_id"
+                                "component": "loot_id"
                             }
                         ]
                     }

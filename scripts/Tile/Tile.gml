@@ -146,6 +146,11 @@ function Tile(_id, _item_data = global.item_data) constructor
             return undefined;
         }
         
+        if (_name == undefined)
+        {
+            return undefined;
+        }
+        
         return _component[$ _name];
     }
     
