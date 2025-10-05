@@ -70,7 +70,6 @@ global.item_function[$ "phantasia:open_menu"] = function(_dt, _x, _y, _z, _xscal
         
         try
         {
-            show_debug_message(text);
             var _ = real(text);
             
             if (_ % 1 == 0)
