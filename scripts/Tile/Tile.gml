@@ -7,6 +7,8 @@ function Tile(_id, _item_data = global.item_data) constructor
         return self[$ "___id"];
     }
     
+    var _data = _item_data[$ _id];
+    
     // set_offset(0, 0);
     // set_scale(1, 1);
     // ___value = 0;
@@ -129,49 +131,94 @@ function Tile(_id, _item_data = global.item_data) constructor
     
     static set_component = function(_name, _value)
     {
-        self[$ "___component"] ??= {}
-        self[$ "___component_length"] ??= 0;
+        self[$ "___components"] ??= {}
         
-        ___component[$ _name] = _name;
+        var _data = global.item_data[$ get_id()];
+        
+        var _component = _data.get_component(_name);
+        var _type = _component.type;
+        
+        if (_type == "string")
+        {
+            var _max = _component[$ "max"];
+            
+            if (_max != undefined) && (string_length(_value) > _max)
+            {
+                _value = string_copy(_value, 1, _max);
+            }
+        }
+        else if (_type == "integer")
+        {
+            _value = floor(_value);
+            
+            var _min = _component[$ "min"];
+            
+            if (_min != undefined) && (_value < _min)
+            {
+                _value = _min;
+            }
+            
+            var _max = _component[$ "max"];
+            
+            if (_max != undefined) && (_value > _max)
+            {
+                _value = _max;
+            }
+        }
+        else if (_type == "float")
+        {
+            var _min = _component[$ "min"];
+            
+            if (_min != undefined) && (_value < _min)
+            {
+                _value = _min;
+            }
+            
+            var _max = _component[$ "max"];
+            
+            if (_max != undefined) && (_value > _max)
+            {
+                _value = _max;
+            }
+        }
+        
+        ___components[$ _name] = _value;
         
         return self;
     }
     
+    var _components_length = _data.get_components_length();
+    
+    if (_components_length > 0)
+    {
+        var _names = _data.get_components_names();
+        
+        for (var i = 0; i < _components_length; ++i)
+        {
+            var _name = _names[i];
+            
+            var _ = _data.get_component(_name);
+            
+            set_component(_name, _[$ "default"]);
+        }
+    }
+    
     static get_component = function(_name)
     {
-        var _component = self[$ "___component"];
-        
-        if (_component == undefined)
+        if (_name == undefined)
         {
             return undefined;
         }
         
-        if (_name == undefined)
+        var _component = self[$ "___components"];
+        
+        if (_component == undefined)
         {
             return undefined;
         }
         
         return _component[$ _name];
     }
-    
-    static get_component_names = function(_name)
-    {
-        var _component = self[$ "___component"];
-        
-        if (_component == undefined)
-        {
-            return undefined;
-        }
-        
-        return struct_get_names(_component);
-    }
-    
-    static get_component_length = function()
-    {
-        return self[$ "___component_length"] ?? 0;
-    }
-    
-    var _data = _item_data[$ get_id()];
     
     var _inventory_length = _data.get_tile_inventory_length();
     

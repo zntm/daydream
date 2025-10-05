@@ -25,32 +25,35 @@
             }
         }
     ],
-    "tile": {
-        "components": {
-            "structure_id": {
-                "type": "string",
-                "max": 128
-            },
-            "xscale": {
-                "type": "integer",
-                "min": -128,
-                "max": 127
-            },
-            "yscale": {
-                "type": "integer",
-                "min": -128,
-                "max": 127
-            },
-            "xoffset": {
-                "type": "integer",
-                "min": -128,
-                "max": 127
-            },
-            "yoffset": {
-                "type": "integer",
-                "min": -128,
-                "max": 127
-            }
+    "components": {
+        "id": {
+            "type": "string",
+            "default": "namespace:id",
+            "max": 128
+        },
+        "xscale": {
+            "type": "integer",
+            "default": 1,
+            "min": 1,
+            "max": 255
+        },
+        "yscale": {
+            "type": "integer",
+            "default": 1,
+            "min": 0,
+            "max": 255
+        },
+        "xoffset": {
+            "type": "integer",
+            "default": 0,
+            "min": -128,
+            "max": 127
+        },
+        "yoffset": {
+            "type": "integer",
+            "default": 0,
+            "min": -128,
+            "max": 127
         }
     },
     "sfx": "#phantasia:tile/sfx/stone",
@@ -83,7 +86,7 @@
                                 "xscale": 17,
                                 "yscale": 3,
                                 "placeholder": "Placeholder",
-                                "component": "structure_id"
+                                "component": "id"
                             },
                             {
                                 "type": "anchor",

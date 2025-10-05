@@ -274,7 +274,7 @@ if !(is_opened & IS_OPENED_BOOLEAN.MENU)
                 
                 for (var j = 0; j < _on_tile_use_length; ++j)
                 {
-                    function_execute(_on_tile_use[j], _tile_x * TILE_SIZE, _tile_y * TILE_SIZE, i, 1, 1, 1);
+                    function_execute(_on_tile_use[j], _tile_x, _tile_y, i, 1, 1, 1);
                 }
                 
                 break;

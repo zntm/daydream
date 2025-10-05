@@ -4,8 +4,15 @@ global.item_function[$ "phantasia:explode"] = function(_dt, _x, _y, _z, _xscale,
 {
 }
 
-global.item_function[$ "phantasia:export_structure"] = function(_dt, _x, _y, _z, _xscale, _yscale, _parameter)
+global.item_function[$ "phantasia:export_structure"] = function()
 {
+    var _tile = tile_get(tile_x, tile_y, tile_z);
+    
+    var _xoffset = _tile.get_component("xoffset");
+    var _yoffset = _tile.get_component("yoffset");
+    
+    var _xscale = _tile.get_component("xscale");
+    var _yscale = _tile.get_component("yscale");
 }
 
 global.item_function[$ "phantasia:open_menu"] = function(_dt, _x, _y, _z, _xscale, _yscale, _parameter)
@@ -89,6 +96,7 @@ global.item_function[$ "phantasia:open_menu"] = function(_dt, _x, _y, _z, _xscal
                 if (_component != undefined)
                 {
                     text = string(_tile.get_component(_component));
+                    text_display = text;
                 }
                 
                 tile_x = _x;
@@ -114,6 +122,7 @@ global.item_function[$ "phantasia:open_menu"] = function(_dt, _x, _y, _z, _xscal
                 if (_component != undefined)
                 {
                     text = string(_tile.get_component(_component));
+                    text_display = text;
                 }
                 
                 tile_x = _x;
@@ -138,16 +147,6 @@ global.item_function[$ "phantasia:open_menu"] = function(_dt, _x, _y, _z, _xscal
             }
         }
     }
-    
-    /*
-    with (all)
-    {
-        if (layer == _layer)
-        {
-            x = _camera_x + xstart;
-            y = _camera_y + ystart;
-        }
-    }*/
 }
 
 global.item_function[$ "phantasia:spawn_particle"] = function(_dt, _x, _y, _z, _xscale, _yscale, _parameter)

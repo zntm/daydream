@@ -25,12 +25,11 @@
             }
         }
     ],
-    "tile": {
-        "components": {
-            "loot_id": {
-                "type": "string",
-                "max": 128
-            }
+    "components": {
+        "id": {
+            "type": "string",
+            "default": "namespace:id",
+            "max": 128
         }
     },
     "sfx": "#phantasia:tile/sfx/stone",
@@ -57,7 +56,7 @@
                                 "xscale": 17,
                                 "yscale": 3,
                                 "placeholder": "ID",
-                                "component": "loot_id"
+                                "component": "id"
                             }
                         ]
                     }

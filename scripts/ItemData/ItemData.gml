@@ -1018,4 +1018,41 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     {
         return self[$ "___container_invalid"];
     }
+    
+    static set_components = function(_components)
+    {
+        if (_components != undefined)
+        {
+            var _names = struct_get_names(_components);
+            var _length = array_length(_names);
+            
+            ___components = {}
+            ___components_names = _names;
+            ___components_length = _length;
+            
+            for (var i = 0; i < _length; ++i)
+            {
+                var _name = _names[i];
+                
+                ___components[$ _name] = _components[$ _name];
+            }
+        }
+        
+        return self;
+    }
+    
+    static get_component = function(_name)
+    {
+        return ___components[$ _name];
+    }
+    
+    static get_components_names = function()
+    {
+        return self[$ "___components_names"];
+    }
+    
+    static get_components_length = function()
+    {
+        return self[$ "___components_length"] ?? 0;
+    }
 }

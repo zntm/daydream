@@ -32,6 +32,7 @@ function init_item(_directory, _namespace)
         _item_data.set_on_tile_use(_json[$ "on_tile_use"]);
         _item_data.set_light(_json[$ "light"]);
         _item_data.set_container(_json[$ "container"]);
+        _item_data.set_components(_json[$ "components"]);
         
         var _sprite_data = _json.sprite;
         
