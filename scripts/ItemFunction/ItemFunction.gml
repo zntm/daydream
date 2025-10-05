@@ -10,6 +10,21 @@ global.item_function[$ "phantasia:export_structure"] = function(_dt, _x, _y, _z,
 
 global.item_function[$ "phantasia:open_menu"] = function(_dt, _x, _y, _z, _xscale, _yscale, _parameter)
 {
+    static __exit = function()
+    {
+        obj_Game_Control.is_opened ^= IS_OPENED_BOOLEAN.MENU;
+        
+        var _layer = layer_get_id("Menu_Item");
+        
+        with (all)
+        {
+            if (layer == _layer)
+            {
+                instance_destroy();
+            }
+        }
+    }
+    
     obj_Game_Control.is_opened |= IS_OPENED_BOOLEAN.MENU;
     
     var _camera_x = global.camera_x;
@@ -50,7 +65,12 @@ global.item_function[$ "phantasia:open_menu"] = function(_dt, _x, _y, _z, _xscal
                 tile_y = _y;
                 tile_z = _z;
                 
-                on_select_release = _[$ "on_select_release"];
+                var _on_select_release = _[$ "on_select_release"];
+                
+                if (_on_select_release != undefined)
+                {
+                    on_select_release = ((_on_select_release == "exit") ? __exit : method(id, global.item_function[$ _on_select_release]));
+                }
             }
         }
         else if (_type == "textbox-number")
