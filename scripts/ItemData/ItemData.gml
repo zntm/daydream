@@ -346,6 +346,32 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
         return self[$ "___item_durability_bar_length"];
     }
     
+    static set_tile = function(_tile)
+    {
+        if (_tile != undefined)
+        {
+            var _render_state = _tile[$ "render_state"];
+            
+            if (_render_state != undefined)
+            {
+                ___render_state = _render_state;
+                ___render_state_length = array_length(_render_state);
+            }
+        }
+        
+        return self;
+    }
+    
+    static get_render_state = function()
+    {
+        return self[$ "___render_state"];
+    }
+    
+    static get_render_state_length = function()
+    {
+        return self[$ "___render_state_length"] ?? 0;
+    }
+    
     static set_placement = function(_placement)
     {
         static __chunk_depth = global.chunk_depth;

@@ -7,6 +7,8 @@ chunk_covered = array_create(CHUNK_SIZE);
 chunk_covered_surface = -1;
 chunk_covered_surface_refresh = true;
 
+chunk_render_state = [];
+
 chunk_skew_back = array_create(CHUNK_SIZE * CHUNK_SIZE, 0);
 chunk_skew_back_to = array_create(CHUNK_SIZE * CHUNK_SIZE, 0);
 

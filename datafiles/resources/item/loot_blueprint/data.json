@@ -25,6 +25,16 @@
             }
         }
     ],
+    "tile": {
+        "render_state": [
+            {
+                "id": "phantasia:blueprint/structure"
+            },
+            {
+                "id": "phantasia:blueprint/id"
+            }
+        ]
+    },
     "components": {
         "id": {
             "type": "string",

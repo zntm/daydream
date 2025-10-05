@@ -231,4 +231,28 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
     }
     
     render_lighting(_camera_x, _camera_y, _camera_width, _camera_height);
+    
+    var _render_state = global.render_state;
+    
+    with (obj_Chunk)
+    {
+        var _length = array_length(chunk_render_state);
+        
+        for (var i = 0; i < _length; ++i)
+        {
+            var _ = chunk_render_state[i];
+            
+            var _x = _.x;
+            var _y = _.y;
+            var _z = _.z;
+            
+            var _data = _.data;
+            var _data_length = array_length(_data);
+            
+            for (var j = 0; j < _data_length; ++j)
+            {
+                _render_state[$ _data[j].id](_x, _y, _z);
+            }
+        }
+    }
 }

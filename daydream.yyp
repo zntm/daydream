@@ -991,6 +991,7 @@
     {"id":{"name":"render_text","path":"scripts/render_text/render_text.yy",},},
     {"id":{"name":"render_tile_foliage","path":"scripts/render_tile_foliage/render_tile_foliage.yy",},},
     {"id":{"name":"render_tile","path":"scripts/render_tile/render_tile.yy",},},
+    {"id":{"name":"RenderState","path":"scripts/RenderState/RenderState.yy",},},
     {"id":{"name":"rpc_menu","path":"scripts/rpc_menu/rpc_menu.yy",},},
     {"id":{"name":"rpc_world","path":"scripts/rpc_world/rpc_world.yy",},},
     {"id":{"name":"SettingsData","path":"scripts/SettingsData/SettingsData.yy",},},

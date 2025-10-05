@@ -23,10 +23,37 @@ function tile_place(_x, _y, _z, _tile)
         _inst.chunk_display |= 1 << _z;
         
         ++_inst.chunk_count[@ _z];
+        
+        var _data = global.item_data[$ _tile.get_id()];    
+        
+        if (_data.get_render_state_length() > 0)
+        {
+            array_push(_inst.chunk_render_state, {
+                x: _x,
+                y: _y,
+                z: _z,
+                data: _data.get_render_state()
+            });
+        }
     }
     else if (_tile_before != TILE_EMPTY) && (--_inst.chunk_count[_z] <= 0)
     {
         _inst.chunk_display ^= 1 << _z;
+        
+        var _render_state = _inst.chunk_render_state;
+        var _length = array_length(_render_state);
+        
+        for (var i = 0; i < _length; ++i)
+        {
+            var _ = _render_state[i];
+            
+            if (_.x == _x) && (_.y == _y) && (_.z == _z)
+            {
+                array_delete(_render_state, i, 1);
+                
+                break;
+            }
+        }
     }
     
     if (_tile_before != TILE_EMPTY)
