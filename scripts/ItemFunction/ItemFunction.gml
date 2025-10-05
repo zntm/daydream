@@ -15,11 +15,111 @@ global.item_function[$ "phantasia:export_structure"] = function()
     var _yscale = _tile.get_component("yscale");
 }
 
+enum MENU_TEXTBOX_TYPE {
+    INTEGER,
+    FLOAT,
+    STRING
+}
+
 global.item_function[$ "phantasia:open_menu"] = function(_dt, _x, _y, _z, _xscale, _yscale, _parameter)
 {
+    static __update_float = function()
+    {
+        var _tile = tile_get(tile_x, tile_y, tile_z);
+        var _data = global.item_data[$ _tile.get_id()];
+        
+        var _component = _data.get_component(tile_component);
+        
+        var _min = _component[$ "min"];
+        var _max = _component[$ "max"];
+        
+        try
+        {
+            var _ = real(text);
+            
+            if (_min != undefined) && (_ < _min)
+            {
+                _ = _min;
+            }
+            
+            if (_max != undefined) && (_ > _max)
+            {
+                _ = _max;
+            }
+            
+            _tile.set_component(tile_component, _);
+        }
+        catch (_error)
+        {
+            var _default = _component[$ "default"];
+            
+            _tile.set_component(tile_component, _default);
+        }
+    }
+    
+    static __update_integer = function()
+    {
+        var _tile = tile_get(tile_x, tile_y, tile_z);
+        var _data = global.item_data[$ _tile.get_id()];
+        
+        var _component = _data.get_component(tile_component);
+        
+        var _min = _component[$ "min"];
+        var _max = _component[$ "max"];
+        var _default = _component[$ "default"];
+        
+        try
+        {
+            show_debug_message(text);
+            var _ = real(text);
+            
+            if (_ % 1 == 0)
+            {
+                if (_min != undefined) && (_ < _min)
+                {
+                    _ = _min;
+                }
+                
+                if (_max != undefined) && (_ > _max)
+                {
+                    _ = _max;
+                }
+                
+                _tile.set_component(tile_component, _);
+            }
+            else
+            {
+                _tile.set_component(tile_component, _default);
+            }
+        }
+        catch (_error)
+        {
+            _tile.set_component(tile_component, _default);
+        }
+    }
+    
+    static __update_string = function()
+    {
+        var _tile = tile_get(tile_x, tile_y, tile_z);
+        var _data = global.item_data[$ _tile.get_id()];
+        
+        if (text == "")
+        {
+            var _default = _data.get_component(tile_component)[$ "default"];
+            
+            _tile.set_component(tile_component, _default);
+        }
+        else
+        {
+        	_tile.set_component(tile_component, text);
+        }
+    }
+    
     static __exit = function()
     {
         obj_Game_Control.is_opened ^= IS_OPENED_BOOLEAN.MENU;
+        
+        var _item_data = global.item_data;
         
         var _layer = layer_get_id("Menu_Item");
         
@@ -80,7 +180,7 @@ global.item_function[$ "phantasia:open_menu"] = function(_dt, _x, _y, _z, _xscal
                 }
             }
         }
-        else if (_type == "textbox-number")
+        else if (_type == "textbox-float")
         {
             var _inst = instance_create_layer(_camera_x + _.x, _camera_y + _.y, _layer, obj_Menu_Textbox);
             
@@ -104,6 +204,40 @@ global.item_function[$ "phantasia:open_menu"] = function(_dt, _x, _y, _z, _xscal
                 tile_z = _z;
                 
                 tile_component = _component;
+                
+                type = MENU_TEXTBOX_TYPE.FLOAT;
+                
+                on_update = method(id, __update_float);
+            }	
+        }
+        else if (_type == "textbox-integer")
+        {
+            var _inst = instance_create_layer(_camera_x + _.x, _camera_y + _.y, _layer, obj_Menu_Textbox);
+            
+            with (_inst)
+            {
+                image_xscale = (_[$ "xscale"] ?? 1) * 2;
+                image_yscale = (_[$ "yscale"] ?? 1) * 2;
+                
+                placeholder = _[$ "placeholder"];
+                
+                var _component = _[$ "component"];
+                
+                if (_component != undefined)
+                {
+                    text = string(_tile.get_component(_component));
+                    text_display = text;
+                }
+                
+                tile_x = _x;
+                tile_y = _y;
+                tile_z = _z;
+                
+                tile_component = _component;
+                
+                type = MENU_TEXTBOX_TYPE.INTEGER;
+                
+                on_update = method(id, __update_integer);
             }	
         }
         else if (_type == "textbox-string")
@@ -130,6 +264,10 @@ global.item_function[$ "phantasia:open_menu"] = function(_dt, _x, _y, _z, _xscal
                 tile_z = _z;
                 
                 tile_component = _component;
+                
+                text_length = _[$ "max"] ?? 24;
+                
+                on_update = method(id, __update_string);
             }
         }
         else if (_type == "anchor")
