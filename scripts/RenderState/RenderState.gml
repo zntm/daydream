@@ -13,8 +13,8 @@ global.render_state[$ "phantasia:blueprint/structure"] = function(_x, _y, _z)
     var _x1 = ((_x + _xoffset) * TILE_SIZE) - (TILE_SIZE / 2);
     var _y1 = ((_y + _yoffset) * TILE_SIZE) - (TILE_SIZE / 2);
     
-    var _x2 = ((_x + _xoffset + _xscale) * TILE_SIZE) - (TILE_SIZE / 2);
-    var _y2 = ((_y + _yoffset + _yscale) * TILE_SIZE) - (TILE_SIZE / 2);
+    var _x2 = ((_x + _xoffset + _xscale) * TILE_SIZE) - (TILE_SIZE / 2) - 1;
+    var _y2 = ((_y + _yoffset + _yscale) * TILE_SIZE) - (TILE_SIZE / 2) - 1;
     
     draw_rectangle_colour(_x1, _y1, _x2, _y2, c_red, c_yellow, c_lime, c_aqua, true);
 }
