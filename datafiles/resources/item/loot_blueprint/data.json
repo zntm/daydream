@@ -28,10 +28,7 @@
     "tile": {
         "render_state": [
             {
-                "id": "phantasia:blueprint/structure"
-            },
-            {
-                "id": "phantasia:blueprint/id"
+                "id": "phantasia:blueprint/overlay"
             }
         ]
     },
@@ -39,7 +36,12 @@
         "id": {
             "type": "string",
             "default": "namespace:id",
-            "max": 128
+            "max": 80
+        },
+        "turns_into": {
+            "type": "string",
+            "default": "namespace:id",
+            "max": 80
         }
     },
     "sfx": "#phantasia:tile/sfx/stone",
@@ -52,21 +54,44 @@
                         "data": [
                             {
                                 "type": "button",
-                                "x": 32,
-                                "y": 32,
+                                "x": 56,
+                                "y": 56,
                                 "xscale": 3,
                                 "yscale": 3,
                                 "icon": "phantasia:arrow_left",
                                 "on_select_release": "exit"
                             },
                             {
+                                "type": "anchor",
+                                "x": 480,
+                                "y": 160,
+                                "text": "Loot ID"
+                            },
+                            {
                                 "type": "textbox-string",
                                 "x": 480,
-                                "y": 172,
+                                "y": 192,
                                 "xscale": 17,
                                 "yscale": 3,
-                                "placeholder": "ID",
+                                "placeholder": "Loot Table ID",
+                                "max": 80,
                                 "component": "id"
+                            },
+                            {
+                                "type": "anchor",
+                                "x": 480,
+                                "y": 224,
+                                "text": "Turns into:"
+                            },
+                            {
+                                "type": "textbox-string",
+                                "x": 480,
+                                "y": 256,
+                                "xscale": 17,
+                                "yscale": 3,
+                                "placeholder": "Item ID",
+                                "max": 80,
+                                "component": "turns_into"
                             }
                         ]
                     }

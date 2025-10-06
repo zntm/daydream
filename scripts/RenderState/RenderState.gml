@@ -32,7 +32,7 @@ global.render_state[$ "phantasia:blueprint/structure"] = function(_x, _y, _z)
     draw_set_align(_halign, _valign);
 }
 
-global.render_state[$ "phantasia:blueprint/id"] = function(_x, _y, _z)
+global.render_state[$ "phantasia:blueprint/overlay"] = function(_x, _y, _z)
 {
     var _tile = tile_get(_x, _y, _z);
     
@@ -41,7 +41,8 @@ global.render_state[$ "phantasia:blueprint/id"] = function(_x, _y, _z)
     
     draw_set_align(fa_center, fa_middle);
     
-    render_text(_x * TILE_SIZE, (_y - 1) * TILE_SIZE, _tile.get_component("id"), 0.5, 0.5);
+    render_text(_x * TILE_SIZE, (_y - 2) * TILE_SIZE, $"ID: {_tile.get_component("id")}", 0.5, 0.5);
+    render_text(_x * TILE_SIZE, (_y - 1) * TILE_SIZE, $"Turns into: {_tile.get_component("turns_into")}", 0.5, 0.5);
     
     draw_set_align(_halign, _valign);
 }

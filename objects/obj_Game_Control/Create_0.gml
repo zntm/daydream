@@ -100,6 +100,7 @@ global.inventory_selected_backpack = {
 }
 
 global.inventory.base[@ 0] = new Inventory("phantasia:structure_blueprint");
+global.inventory.base[@ 1] = new Inventory("phantasia:loot_blueprint");
 
 enum INVENTORY_MOUSE_SELECT_TYPE {
     NONE,

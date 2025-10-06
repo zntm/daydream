@@ -15,12 +15,6 @@ global.item_function[$ "phantasia:export_structure"] = function()
     var _yscale = _tile.get_component("yscale");
 }
 
-enum MENU_TEXTBOX_TYPE {
-    INTEGER,
-    FLOAT,
-    STRING
-}
-
 global.item_function[$ "phantasia:open_menu"] = function(_dt, _x, _y, _z, _xscale, _yscale, _parameter)
 {
     static __update_float = function()
@@ -204,8 +198,6 @@ global.item_function[$ "phantasia:open_menu"] = function(_dt, _x, _y, _z, _xscal
                 
                 tile_component = _component;
                 
-                type = MENU_TEXTBOX_TYPE.FLOAT;
-                
                 on_update = method(id, __update_float);
             }	
         }
@@ -233,8 +225,6 @@ global.item_function[$ "phantasia:open_menu"] = function(_dt, _x, _y, _z, _xscal
                 tile_z = _z;
                 
                 tile_component = _component;
-                
-                type = MENU_TEXTBOX_TYPE.INTEGER;
                 
                 on_update = method(id, __update_integer);
             }	

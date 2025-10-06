@@ -31,7 +31,7 @@
                 "id": "phantasia:blueprint/structure"
             },
             {
-                "id": "phantasia:blueprint/id"
+                "id": "phantasia:blueprint/overlay"
             }
         ]
     },
@@ -39,7 +39,12 @@
         "id": {
             "type": "string",
             "default": "namespace:id",
-            "max": 128
+            "max": 80
+        },
+        "turns_into": {
+            "type": "string",
+            "default": "namespace:id",
+            "max": 80
         },
         "xscale": {
             "type": "integer",
@@ -76,8 +81,8 @@
                         "data": [
                             {
                                 "type": "button",
-                                "x": 32,
-                                "y": 32,
+                                "x": 56,
+                                "y": 56,
                                 "xscale": 3,
                                 "yscale": 3,
                                 "icon": "phantasia:arrow_left",
@@ -96,6 +101,7 @@
                                 "xscale": 17,
                                 "yscale": 3,
                                 "placeholder": "Placeholder",
+                                "max": 80,
                                 "component": "id"
                             },
                             {
