@@ -8,10 +8,7 @@ function file_load_world_spawn(_world_save_data, _inst, _uuid = _inst.uuid)
     
     var _buffer = buffer_load_decompressed(_directory);
     
-    var _version_major = buffer_read(_buffer, buffer_u16);
-    var _version_minor = buffer_read(_buffer, buffer_u16);
-    var _version_patch = buffer_read(_buffer, buffer_u16);
-    var _version_type = buffer_read(_buffer, buffer_u16);
+    var _version = buffer_read(_buffer, buffer_u32);
     
     file_load_snippet_position(_buffer, _inst);
     

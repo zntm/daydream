@@ -35,10 +35,7 @@ function file_save_world_chunk(_world_save_data, _inst)
     
     buffer_poke(_buffer, _chunk_relative_x * 4, buffer_u64, buffer_peek(_buffer, _chunk_relative_x * 4, buffer_u32) | (1 << _chunk_relative_y));
     
-    buffer_write(_buffer, buffer_u16, PROGRAM_VERSION_MAJOR);
-    buffer_write(_buffer, buffer_u16, PROGRAM_VERSION_MINOR);
-    buffer_write(_buffer, buffer_u16, PROGRAM_VERSION_PATCH);
-    buffer_write(_buffer, buffer_u16, PROGRAM_VERSION_TYPE);
+    buffer_write(_buffer, buffer_u32, PROGRAM_VERSION_NUMBER);
     
     buffer_write(_buffer, buffer_f64, datetime_to_unix());
     

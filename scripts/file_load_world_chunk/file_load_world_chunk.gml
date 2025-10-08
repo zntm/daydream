@@ -28,10 +28,7 @@ function file_load_world_chunk(_world_save_data, _inst)
         return false;
     }
     
-    var _version_major = buffer_read(_buffer, buffer_u16);
-    var _version_minor = buffer_read(_buffer, buffer_u16);
-    var _version_patch = buffer_read(_buffer, buffer_u16);
-    var _version_type = buffer_read(_buffer, buffer_u16);
+    var _version = buffer_read(_buffer, buffer_u32);
     
     var _datetime = unix_to_datetime(buffer_read(_buffer, buffer_f64));
     

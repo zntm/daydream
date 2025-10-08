@@ -28,34 +28,16 @@ function FileWorld(_uuid, _name, _seed, _last_opened) constructor
         return ___last_opened;
     }
     
-    static set_version = function(_major, _minor, _patch, _type)
+    static set_version = function(_version)
     {
-        ___version_major = _major;
-        ___version_minor = _minor;
-        ___version_patch = _patch;
-        ___version_type  = _type;
+        ___version = _version;
         
         return self;
     }
     
-    static get_version_major = function()
+    static get_version = function()
     {
-        return ___version_major;
-    }
-    
-    static get_version_minor = function()
-    {
-        return ___version_minor;
-    }
-    
-    static get_version_patch = function()
-    {
-        return ___version_patch;
-    }
-    
-    static get_version_type = function()
-    {
-        return ___version_type;
+        return ___Version;
     }
     
     static set_dimension = function(_dimension)

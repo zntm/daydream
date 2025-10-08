@@ -22,10 +22,7 @@ function file_save_player_inventory(_player_save_data)
         
         var _buffer = buffer_create(0xff * _length, buffer_grow, 1);
         
-        buffer_write(_buffer, buffer_u16, PROGRAM_VERSION_MAJOR);
-        buffer_write(_buffer, buffer_u16, PROGRAM_VERSION_MINOR);
-        buffer_write(_buffer, buffer_u16, PROGRAM_VERSION_PATCH);
-        buffer_write(_buffer, buffer_u16, PROGRAM_VERSION_TYPE);
+        buffer_write(_buffer, buffer_u32, PROGRAM_VERSION_NUMBER);
         
         file_save_snippet_inventory(_buffer, _v, _length, _item_data);
         

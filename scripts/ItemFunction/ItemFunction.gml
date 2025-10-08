@@ -6,6 +6,8 @@ global.item_function[$ "phantasia:explode"] = function(_dt, _x, _y, _z, _xscale,
 
 global.item_function[$ "phantasia:export_structure"] = function()
 {
+    var _item_data = global.item_data;
+    
     var _tile = tile_get(tile_x, tile_y, tile_z);
     
     var _xoffset = _tile.get_component("xoffset");
@@ -13,6 +15,44 @@ global.item_function[$ "phantasia:export_structure"] = function()
     
     var _xscale = _tile.get_component("xscale");
     var _yscale = _tile.get_component("yscale");
+    
+    var _x1 = tile_x + _xoffset;
+    var _y1 = tile_y + _yoffset;
+    
+    var _x2 = tile_x + _xscale - 1;
+    var _y2 = tile_y + _yscale - 1;
+    
+    var _buffer = buffer_create(0xffff, buffer_grow, 1);
+    
+    buffer_write(_buffer, buffer_u32, PROGRAM_VERSION_NUMBER);
+    
+    for (var _x = _x1; _x <= _x2; ++_x)
+    {
+        for (var _y = _y1; _y <= _y2; ++_y)
+        {
+            var _tile_default = tile_get(_x, _y, CHUNK_DEPTH_DEFAULT);
+            
+            if (_tile_default != TILE_EMPTY) && (_tile_default.get_id() == "phantasia:void_blueprint")
+            {
+                buffer_write(_buffer, buffer_bool, true);
+                
+                continue;
+            }
+            
+            buffer_write(_buffer, buffer_bool, false);
+            
+            for (var _z = 0; _z < CHUNK_DEPTH; ++_z)
+            {
+                var _ = ((_z == CHUNK_DEPTH_DEFAULT) ? _tile_default : tile_get(_x, _y, _z));
+                
+                file_save_snippet_tile(_buffer, _, _item_data);
+            }
+        }
+    }
+    
+    buffer_save_compressed(_buffer, $"{PROGRAM_DIRECTORY_STRUCTURES}/{_tile.get_component("id")}.dat");
+    
+    buffer_delete(_buffer);
 }
 
 global.item_function[$ "phantasia:open_menu"] = function(_dt, _x, _y, _z, _xscale, _yscale, _parameter)

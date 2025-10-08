@@ -24,10 +24,7 @@ function file_load_players()
         
         var _buffer = buffer_load_decompressed($"{PROGRAM_DIRECTORY_PLAYERS}/{_file}/global.dat");
         
-        var _version_major = buffer_read(_buffer, buffer_u16);
-        var _version_minor = buffer_read(_buffer, buffer_u16);
-        var _version_patch = buffer_read(_buffer, buffer_u16);
-        var _version_type  = buffer_read(_buffer, buffer_u16);
+        var _version = buffer_read(_buffer, buffer_u32);
         
         var _last_opened = unix_to_datetime(buffer_read(_buffer, buffer_f64));
         
@@ -64,7 +61,7 @@ function file_load_players()
         array_push(global.file_players_uuid, _file);
         
         array_push(global.file_players, new FilePlayer(_file, _name, _last_opened)
-            .set_version(_version_major, _version_minor, _version_patch, _version_type)
+            .set_version(_version)
             .set_attire(_attire)
             .set_hp(_hp, _hp_max)
             .set_effects(_effects));

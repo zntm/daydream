@@ -2,10 +2,7 @@ function file_save_world_global(_world_save_data)
 {
     var _buffer = buffer_create(0xff, buffer_grow, 1);
     
-    buffer_write(_buffer, buffer_u16, PROGRAM_VERSION_MAJOR);
-    buffer_write(_buffer, buffer_u16, PROGRAM_VERSION_MINOR);
-    buffer_write(_buffer, buffer_u16, PROGRAM_VERSION_PATCH);
-    buffer_write(_buffer, buffer_u16, PROGRAM_VERSION_TYPE);
+    buffer_write(_buffer, buffer_u32, PROGRAM_VERSION_NUMBER);
     
     buffer_write(_buffer, buffer_f64, datetime_to_unix());
     
