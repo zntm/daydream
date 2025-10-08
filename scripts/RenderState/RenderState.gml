@@ -46,3 +46,15 @@ global.render_state[$ "phantasia:blueprint/overlay"] = function(_x, _y, _z)
     
     draw_set_align(_halign, _valign);
 }
+
+global.render_state[$ "phantasia:debug/render_when_held"] = function(_x, _y, _z)
+{
+    var _tile = tile_get(_x, _y, _z);
+    
+    var _item = global.inventory.base[global.inventory_selected_hotbar];
+    
+    if (_item != INVENTORY_EMPTY) && (_item.get_id() == _tile.get_id())
+    {
+        draw_sprite_ext(global.item_data[$ _tile.get_id()].get_sprite(), _tile.get_index() + _tile.get_index_offset(), _x * TILE_SIZE, _y * TILE_SIZE, 1, 1, 0, c_white, lerp(0.25, 0.75, (dsin(global.world_save_data.time * 32) + 1) / 2));
+    }
+}

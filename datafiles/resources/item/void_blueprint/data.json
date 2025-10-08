@@ -1,0 +1,37 @@
+{
+    "type": "untouchable",
+    "sprite": {
+        "xoffset": 8,
+        "yoffset": 8,
+        "length": 1
+    },
+    "inventory": "#phantasia:item/generic/inventory_tile",
+    "harvest": {
+        "hardness": 0.48,
+        "level": 1,
+        "particle": {
+            "colour": "#phantasia:tile/particle_colour/stone",
+            "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
+        },
+        "condition": {
+            "id": "#phantasia:item/type/pickaxe"
+        }
+    },
+    "drop": [
+        {
+            "id": "phantasia:void_blueprint",
+            "condition": {
+                "id": "#phantasia:item/type/pickaxe"
+            }
+        }
+    ],
+    "tile": {
+        "is_visible": false,
+        "render_state": [
+            {
+                "id": "phantasia:debug/render_when_held"
+            }
+        ]
+    },
+    "sfx": "#phantasia:tile/sfx/stone"
+}

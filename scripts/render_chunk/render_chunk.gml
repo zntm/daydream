@@ -47,6 +47,8 @@ function render_chunk(_uv, _inst, _z)
             
             var _data = _item_data[$ _id];
             
+            if (!_data.get_tile_is_visible()) continue;
+            
             var _draw_x = _xstart + (_x * TILE_SIZE);
             var _draw_y = _ystart + (_y * TILE_SIZE);
             

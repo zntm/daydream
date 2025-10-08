@@ -44,6 +44,7 @@ function file_load_worlds()
             array_push(global.file_worlds_uuid, _file);
             
             array_push(global.file_worlds, new FileWorld(_file, _name, _seed, _last_opened)
+                .set_version(_version)
                 .set_dimension(_dimension)
                 .set_time(_time, _day)
                 .set_weather(_weather_wind, _weather_storm));

@@ -350,6 +350,8 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     {
         if (_tile != undefined)
         {
+            ___tile_is_visible = _tile[$ "is_visible"];
+            
             var _render_state = _tile[$ "render_state"];
             
             if (_render_state != undefined)
@@ -360,6 +362,11 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
         }
         
         return self;
+    }
+    
+    static get_tile_is_visible = function()
+    {
+        return self[$ "___tile_is_visible"] ?? true;
     }
     
     static get_render_state = function()
