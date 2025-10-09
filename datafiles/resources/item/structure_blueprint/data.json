@@ -100,7 +100,7 @@
                                 "y": 132,
                                 "xscale": 17,
                                 "yscale": 3,
-                                "placeholder": "Placeholder",
+                                "placeholder": "ID",
                                 "max": 80,
                                 "component": "id"
                             },
