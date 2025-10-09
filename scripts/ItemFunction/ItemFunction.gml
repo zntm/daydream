@@ -26,6 +26,9 @@ global.item_function[$ "phantasia:export_structure"] = function()
     
     buffer_write(_buffer, buffer_u32, PROGRAM_VERSION_NUMBER);
     
+    buffer_write(_buffer, buffer_u8, _xscale);
+    buffer_write(_buffer, buffer_u8, _yscale);
+    
     for (var _x = _x1; _x <= _x2; ++_x)
     {
         for (var _y = _y1; _y <= _y2; ++_y)

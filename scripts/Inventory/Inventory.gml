@@ -78,7 +78,7 @@ function Inventory(_item, _amount = 1) constructor
         return _component[$ _name];
     }
     
-    static get_component_names = function(_name)
+    static get_components_names = function(_name)
     {
         var _component = self[$ "___component"];
         
@@ -90,7 +90,7 @@ function Inventory(_item, _amount = 1) constructor
         return struct_get_names(_component);
     }
     
-    static get_component_length = function()
+    static get_components_length = function()
     {
         return self[$ "___component_length"] ?? 0;
     }

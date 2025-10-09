@@ -38,7 +38,7 @@
     "components": {
         "id": {
             "type": "string",
-            "default": "namespace:id",
+            "default": "id",
             "max": 80
         },
         "turns_into": {
