@@ -6,7 +6,9 @@ function spawn_creature(_x, _y, _id, _variant)
     
     var _hp = _data.get_hp();
     
-    with (instance_create_layer(_x, _y, "Instances", obj_Creature))
+    var _inst = instance_create_layer(_x, _y, "Instances", obj_Creature);
+    
+    with (_inst)
     {
         id._id = _id;
         
@@ -27,4 +29,6 @@ function spawn_creature(_x, _y, _id, _variant)
         inst_predator = noone;
         timer_panic = 0;
     }
+    
+    return _inst;
 }

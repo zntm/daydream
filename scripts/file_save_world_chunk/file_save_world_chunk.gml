@@ -116,9 +116,9 @@ function file_save_world_chunk(_world_save_data, _inst)
         buffer_write(_buffer, buffer_f64, _.timer_pickup);
         buffer_write(_buffer, buffer_f64, _.timer_life);
         
-        file_save_snippet_position(_buffer, _);
-        
         file_save_snippet_item(_buffer, _.item, _item_data);
+        
+        file_save_snippet_position(_buffer, _);
         
         buffer_poke(_buffer, _next, buffer_u32, buffer_tell(_buffer));
         
@@ -146,6 +146,9 @@ function file_save_world_chunk(_world_save_data, _inst)
         
         buffer_write(_buffer, buffer_u32, 0);
         
+        buffer_write(_buffer, buffer_string, _._id);
+        buffer_write(_buffer, buffer_string, _[$ "variant"] ?? "");
+        
         buffer_write(_buffer, buffer_u16, _.hp);
         buffer_write(_buffer, buffer_u16, _.hp_max);
         
@@ -153,8 +156,6 @@ function file_save_world_chunk(_world_save_data, _inst)
         buffer_write(_buffer, buffer_f64, _.entity_yscale);
         
         buffer_write(_buffer, buffer_string, _.uuid);
-        buffer_write(_buffer, buffer_string, _._id);
-        buffer_write(_buffer, buffer_string, _[$ "variant"] ?? "");
         
         file_save_snippet_position(_buffer, _);
         
@@ -172,8 +173,6 @@ function file_save_world_chunk(_world_save_data, _inst)
             {
                 file_save_snippet_inventory(_buffer, _inventory, _inventory_length, _item_data);
             }
-            
-            buffer_poke(_buffer, _next, buffer_u32, buffer_tell(_buffer));
         }
         else
         {

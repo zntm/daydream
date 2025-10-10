@@ -68,6 +68,57 @@ function file_load_world_chunk(_world_save_data, _inst)
         }
     }
     
+    var _length_item = buffer_read(_buffer, buffer_u32);
+    
+    for (var i = 0; i < _length_item; ++i)
+    {
+        var _next = buffer_read(_buffer, buffer_u32);
+        
+        var _timer_pickup = buffer_read(_buffer, buffer_f64);
+        var _timer_life = buffer_read(_buffer, buffer_f64);
+        
+        var _item = file_load_snippet_item(_buffer, _item_data);
+        
+        var _inst_item = spawn_item_drop(0, 0, _item);
+        
+        file_load_snippet_position(_buffer, _inst_item);
+    }
+    
+    var _length_creature = buffer_read(_buffer, buffer_u32);
+    
+    for (var i = 0; i < _length_creature; ++i)
+    {
+        var _next = buffer_read(_buffer, buffer_u32);
+        
+        var _id = buffer_read(_buffer, buffer_string);
+        var _variant = buffer_read(_buffer, buffer_string);
+        
+        var _inst_creature = spawn_creature(0, 0, _id, ((_variant != "") ? _variant : undefined));
+        
+        _inst_creature.hp = buffer_read(_buffer, buffer_u16);
+        _inst_creature.hp_max = buffer_read(_buffer, buffer_u16);
+        
+        var _xscale = buffer_read(_buffer, buffer_f64);
+        var _yscale = buffer_read(_buffer, buffer_f64);
+        
+        with (_inst_creature)
+        {
+            entity_set_scale(_xscale, _yscale);
+        }
+        
+        _inst_creature.uuid = buffer_read(_buffer, buffer_string);
+        
+        file_load_snippet_position(_buffer, _inst_creature);
+        file_load_snippet_effects(_buffer, _inst_creature);
+        
+        var _inventory_length = buffer_read(_buffer, buffer_u8);
+        
+        if (_inventory_length > 0)
+        {
+            _inst_creature.inventory = file_load_snippet_inventory(_buffer, _inventory_length, _item_data);
+        }
+    }
+    
     buffer_delete(_buffer);
     
     return true;
