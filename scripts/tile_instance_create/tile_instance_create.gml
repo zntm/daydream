@@ -63,24 +63,4 @@ function tile_instance_create(_x, _y, _z, _tile)
             _tile.set_instance_light(id);
         }
     }
-    /*
-    var _instance = _data.get_instance();
-    
-    if (_instance != undefined)
-    {
-        with (instance_create_layer(_x * TILE_SIZE, _y * TILE_SIZE, "Instances", obj_Tile_Instance))
-        {
-            sprite_index = _data.get_sprite(_tile.get_variant());
-            
-            position_x = _x;
-            position_y = _y;
-            position_z = _z;
-            
-            on_draw = _instance[$ "on_draw"];
-            on_interaction = _instance[$ "on_interaction"];
-            
-            tile_set(_x, _y, _z, "instance.instance", id);
-        }
-    }
-    */
 }

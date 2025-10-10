@@ -754,6 +754,7 @@
   "name":"daydream",
   "resources":[
     {"id":{"name":"execute_shell_simple_ext","path":"extensions/execute_shell_simple_ext/execute_shell_simple_ext.yy",},},
+    {"id":{"name":"Extensions","path":"extensions/Extensions/Extensions.yy",},},
     {"id":{"name":"NekoPresence","path":"extensions/NekoPresence/NekoPresence.yy",},},
     {"id":{"name":"OpenSimplexNoise","path":"extensions/OpenSimplexNoise/OpenSimplexNoise.yy",},},
     {"id":{"name":"window_taskbar","path":"extensions/window_taskbar/window_taskbar.yy",},},
@@ -1021,8 +1022,6 @@
     {"id":{"name":"tile_condition_connected_to_self","path":"scripts/tile_condition_connected_to_self/tile_condition_connected_to_self.yy",},},
     {"id":{"name":"tile_condition_connected","path":"scripts/tile_condition_connected/tile_condition_connected.yy",},},
     {"id":{"name":"tile_connect","path":"scripts/tile_connect/tile_connect.yy",},},
-    {"id":{"name":"tile_connected_index_x","path":"scripts/tile_connected_index_x/tile_connected_index_x.yy",},},
-    {"id":{"name":"tile_connected_index_y","path":"scripts/tile_connected_index_y/tile_connected_index_y.yy",},},
     {"id":{"name":"tile_get","path":"scripts/tile_get/tile_get.yy",},},
     {"id":{"name":"tile_harvest_drop","path":"scripts/tile_harvest_drop/tile_harvest_drop.yy",},},
     {"id":{"name":"tile_index_xy","path":"scripts/tile_index_xy/tile_index_xy.yy",},},
