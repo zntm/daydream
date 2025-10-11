@@ -43,14 +43,14 @@ function tile_point_meeting(_x, _y, _z = CHUNK_DEPTH_DEFAULT, _type = ITEM_TYPE_
     
     if (_collision_box_type == TILE_COLLISION_BOX_TYPE.RECTANGLE)
     {
-        if (point_in_rectangle(_x, _y, min(_x3, _x4), min(_y3, _y4), max(_x3, _x4), max(_y3, _y4)))
+        if (point_in_rectangle(_x, _y, _x3, _y3, _x4, _y4))
         {
             return _tile;
         }
     }
     else if (_collision_box_type == TILE_COLLISION_BOX_TYPE.TRIANGLE)
     {
-        if (point_in_triangle(_x, _y, min(_x3, _x4), min(_y3, _y4), max(_x3, _x4), min(_y3, _y4), max(_x3, _x4), max(_y3, _y4)))
+        if (point_in_triangle(_x, _y, _x3, _y3, _x4, _y3, _x3, _y4))
         {
             return _tile;
         }
