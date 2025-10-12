@@ -110,15 +110,14 @@ function chunk_generate()
                 {
                     var _inst = __structure_array[l];
                     
+                    var _structure_x = _world_x - _inst.structure_xrelative;
+                    var _structure_y = _world_y - _inst.structure_yrelative;
+                    
                     var _xscale = _inst.image_xscale;
                     var _yscale = _inst.image_yscale;
                     
                     var _rectangle = _xscale * _yscale;
                     
-                    var _structure_x = _world_x - _inst.structure_xrelative;
-                    var _structure_y = _world_y - _inst.structure_yrelative;
-                    
-                    var _structure_id = _inst.structure_id;
                     var _data = _inst.data;
                     
                     var _structure_index_xy = _structure_x + (_structure_y * _xscale);

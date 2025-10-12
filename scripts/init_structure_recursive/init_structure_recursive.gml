@@ -55,26 +55,22 @@ function init_structure_recursive(_directory, _namespace, _id)
             continue;
         }
         
-        /*
-        if (string_ends_with(_, ".dat"))
+        if (string_ends_with(_subdirectory, ".dat"))
         {
             dbg_timer("init_structure");
             
             if (_id != undefined)
             {
-                global.structure[$ $"{_namespace}:{_id}"] ??= [];
+                global.structure_data[$ $"{_namespace}:{_id}"] ??= [];
                 
-                array_push(global.structure[$ $"{_namespace}:{_id}"], $"{_namespace}:{string_delete(_name, string_length(_name) - 3, 4)}");
+                array_push(global.structure_data[$ $"{_namespace}:{_id}"], $"{_namespace}:{string_delete(_name, string_length(_name) - 3, 4)}");
             }
             
-            var _buffer = buffer_load_decompressed(_);
+            var _json = buffer_load_json($"{_subdirectory}.json");
             
-            var _version_major = buffer_read(_buffer, buffer_u8);
-            var _version_minor = buffer_read(_buffer, buffer_u8);
-            var _version_patch = buffer_read(_buffer, buffer_u8);
-            var _version_type  = buffer_read(_buffer, buffer_u8);
+            var _buffer = buffer_load_decompressed(_subdirectory);
             
-            var _json = json_parse(buffer_load_text(_ + ".json"));
+            var _version = buffer_read(_buffer, buffer_u32);
             
             var _width  = buffer_read(_buffer, buffer_s32);
             var _height = buffer_read(_buffer, buffer_s32);
@@ -83,17 +79,15 @@ function init_structure_recursive(_directory, _namespace, _id)
             
             var _data = array_create(_rectangle * CHUNK_DEPTH, TILE_EMPTY);
             
-            for (var j = 0; j < _height; ++j)
+            for (var j = 0; j < _width; ++j)
             {
-                var _index_y = j * _width;
-                
-                for (var l = 0; l < _width; ++l)
+                for (var l = 0; l < _height; ++l)
                 {
-                    var _index_xy = l + _index_y;
+                    var _index_xy = (l * _width) + j;
                     
                     if (buffer_read(_buffer, buffer_bool))
                     {
-                        for (var m = CHUNK_DEPTH - 1; m >= 0; --m)
+                        for (var m = 0; m < CHUNK_DEPTH; ++m)
                         {
                             _data[@ _index_xy + (m * _rectangle)] = TILE_STRUCTURE_VOID;
                         }
@@ -101,9 +95,9 @@ function init_structure_recursive(_directory, _namespace, _id)
                         continue;
                     }
                     
-                    for (var m = CHUNK_DEPTH - 1; m >= 0; --m)
+                    for (var m = 0; m < CHUNK_DEPTH; ++m)
                     {
-                        var _tile = file_load_snippet_tile(_buffer, j, l, m, _item, fixer);
+                        var _tile = file_load_snippet_tile(_buffer, _item_data);
                         
                         if (_tile != undefined)
                         {
@@ -115,7 +109,8 @@ function init_structure_recursive(_directory, _namespace, _id)
             
             buffer_delete(_buffer);
             
-            global.structure[$ $"{_namespace}:{string_delete(_name, string_length(_name) - 3, 4)}"] = new StructureData(true, _width, _height, _json.placement, false).set();
+            global.structure_data[$ $"{_namespace}:{string_delete(_name, string_length(_name) - 3, 4)}"] = new StructureData(_width, _height, _json.placement, false, true)
+                .set_data(_data);
             
             delete _json;
             
@@ -123,6 +118,5 @@ function init_structure_recursive(_directory, _namespace, _id)
             
             continue;
         }
-        */
     }
 }

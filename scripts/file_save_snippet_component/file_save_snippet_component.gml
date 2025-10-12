@@ -20,6 +20,8 @@ function file_save_snippet_component(_buffer, _tile)
             
             var _component = _data.get_component(_name);
             
+            show_debug_message(typeof(_component));
+            
             var _type = __file_component_type[$ typeof(_component)];
             
             buffer_write(_buffer, buffer_u8, _type);

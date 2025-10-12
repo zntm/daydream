@@ -12,7 +12,7 @@ global.item_function[$ "phantasia:export_structure"] = function()
     
     var _id = _tile.get_component("id");
     
-    if (!file_exists($"{PROGRAM_DIRECTORY_STRUCTURES}/{_id}.dat"))
+    if (file_exists($"{PROGRAM_DIRECTORY_STRUCTURES}/{_id}.dat"))
     {
         var _camera_x = global.camera_x;
         var _camera_y = global.camera_y;
