@@ -6,6 +6,7 @@ function control_structure(_x, _y)
 {
     var _biome_data = global.biome_data;
     var _world_data = global.world_data[$ global.world_save_data.dimension];
+    var _structure_data = global.structure_data;
     
     var _world_seed = global.world_save_data.seed;
     
@@ -78,7 +79,7 @@ function control_structure(_x, _y)
                     if (_max != undefined) && (j >= _max) continue;
                 }
                 
-                var _placement_type = global.structure_data[$ _structure.id].get_placement_type();
+                var _placement_type = _structure_data[$ _structure.id].get_placement_type();
                 
                 if (_queue & 0b100)
                 {
