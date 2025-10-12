@@ -230,7 +230,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
         draw_set_align(fa_left, fa_top);
     }
     
-    render_lighting(_camera_x, _camera_y, _camera_width, _camera_height);
+    // render_lighting(_camera_x, _camera_y, _camera_width, _camera_height);
     
     var _render_state = global.render_state;
     
