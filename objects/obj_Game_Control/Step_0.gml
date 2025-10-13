@@ -311,5 +311,18 @@ if (keyboard_check_pressed(vk_f2))
 {
     sfx_play("phantasia:menu.screenshot");
     
-    surface_save(application_surface, $"{PROGRAM_DIRECTORY_SCREENSHOTS}/{round(datetime_to_unix())}.png");
+    var _window_width  = global.window_width;
+    var _window_height = global.window_height;
+    
+    var _surface = surface_create(_window_width, _window_height);
+    
+    surface_set_target(_surface);
+    
+    draw_surface_stretched(application_surface, 0, 0, _window_width, _window_height);
+    
+    surface_reset_target();
+    
+    surface_save(_surface, $"{PROGRAM_DIRECTORY_SCREENSHOTS}/{round(datetime_to_unix())}.png");
+    
+    surface_free(_surface);
 }

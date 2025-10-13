@@ -721,8 +721,6 @@
     {"$GMIncludedFile":"","%Name":"idle1.ogg","CopyToMask":-1,"filePath":"datafiles/resources/sfx/asset/voice/female","name":"idle1.ogg","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"data.json","CopyToMask":-1,"filePath":"datafiles/resources/sfx","name":"data.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"splash.json","CopyToMask":-1,"filePath":"datafiles/resources","name":"splash.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
-    {"$GMIncludedFile":"","%Name":"id.dat","CopyToMask":-1,"filePath":"datafiles/resources/structure","name":"id.dat","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
-    {"$GMIncludedFile":"","%Name":"id.dat.json","CopyToMask":-1,"filePath":"datafiles/resources/structure","name":"id.dat.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"moss_clump.json","CopyToMask":-1,"filePath":"datafiles/resources/structure","name":"moss_clump.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"coal.json","CopyToMask":-1,"filePath":"datafiles/resources/structure/ore","name":"coal.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"copper.json","CopyToMask":-1,"filePath":"datafiles/resources/structure/ore","name":"copper.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
