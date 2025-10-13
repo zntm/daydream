@@ -14,7 +14,7 @@ function init_setting(_category, _type, _data)
     global.settings[$ _type] = _data.get_default_value();
 }
 
-var _loca = file_read_directory($"{PROGRAM_DIRECTORY_RESOURCES}\\loca");
+var _loca = file_read_directory($"{PROGRAM_DIRECTORY_DATA}\\loca");
 
 #region General
 
@@ -143,4 +143,4 @@ if (file_exists("settings.dat"))
 
 audio_set_master_gain(0, global.settings.audio_master);
 
-init_loca($"{PROGRAM_DIRECTORY_RESOURCES}\\loca\\{_loca[global.settings.global_localization]}", "phantasia");
+init_loca($"{PROGRAM_DIRECTORY_DATA}\\loca\\{_loca[global.settings.global_localization]}", "phantasia");
