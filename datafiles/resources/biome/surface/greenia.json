@@ -192,7 +192,12 @@
         },
         {
             "id": "phantasia:tree/oak",
-            "chance": 0.05,
+            "chance": 0.1,
+            "placeable_on": "#phantasia:tile/placement/plant_on"
+        },
+        {
+            "id": "phantasia:tree/birch",
+            "chance": 0.07,
             "placeable_on": "#phantasia:tile/placement/plant_on"
         }
     ]

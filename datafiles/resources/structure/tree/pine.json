@@ -1,0 +1,41 @@
+{
+	"width": 9,
+	"height": {
+        "type": "irandom",
+        "values": {
+            "min": 9,
+            "max": 14
+        }
+    },
+	"placement": {
+		"type": "floor",
+		"offset": {
+			"x": -4,
+			"y": "-height"
+		},
+		"if_clear": [
+			{
+				"offset": {
+					"x": -4,
+					"y": "-height"
+				},
+				"width": "width",
+				"height": 4
+			}
+		]
+	},
+	"data": {
+		"function": "phantasia:tree/coniferous",
+		"parameter": {
+			"tile_wood": {
+				"id": "phantasia:pine"
+			},
+			"tile_leaves": {
+				"id": "phantasia:pine_leaves"
+			},
+			"index": 1,
+			"index_top": 2,
+			"index_bottom": 3
+		}
+	}
+}
