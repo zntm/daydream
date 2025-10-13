@@ -1,0 +1,49 @@
+{
+    "type": "untouchable",
+    "sprite": {
+        "xoffset": 8,
+        "yoffset": 8,
+        "length": 10,
+        "edge_padding": 8
+    },
+    "inventory": "#phantasia:item/generic/inventory_tile",
+    "properties": [
+        "phantasia:is_tile",
+        "phantasia:can_flip_on_x",
+        "phantasia:can_flip_on_y"
+    ],
+    "harvest": {
+        "hardness": 0.18,
+        "particle": {
+            "colour": [
+                "#122D2B",
+                "#0B2021"
+            ],
+            "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
+        }
+    },
+    "sfx": "#phantasia:tile/sfx/foliage",
+    "on_random_tick": [
+        {
+            "function": [
+                {
+                    "id": "phantasia:spawn_particle",
+                    "parameter": {
+                        "id": "phantasia:leaf/pine"
+                    }
+                }
+            ]
+        },
+        {
+            "function": [
+                {
+                    "id": "phantasia:sfx_play",
+                    "parameter": {
+                        "id": "phantasia:tile.leaves.rustle"
+                    }
+                }
+            ],
+            "chance": 0.01
+        }
+    ]
+}
