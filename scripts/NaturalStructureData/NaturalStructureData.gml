@@ -132,10 +132,12 @@ global.natural_structure_data[$ "phantasia:ore"] = new NaturalStructureData()
     {
         static __cave = [];
         
+        var _world_seed = global.world_save_data.seed;
+        
         var _rectangle = _width * _height;
         var _data = array_create(_rectangle * CHUNK_DEPTH, (_parameter[NATURAL_STRUCTURE_ORE.USE_TILE_STRUCTURE_VOID] ? TILE_STRUCTURE_VOID : TILE_EMPTY));
         
-        var _threshold   = clamp(_parameter[NATURAL_STRUCTURE_ORE.THRESHOLD],  0, 1);
+        var _threshold   = clamp(_parameter[NATURAL_STRUCTURE_ORE.THRESHOLD],   0, 1);
         var _clumpiness  = clamp(_parameter[NATURAL_STRUCTURE_ORE.CLUMPINESS],  0, 1);
         var _roundedness = clamp(_parameter[NATURAL_STRUCTURE_ORE.ROUNDEDNESS], 0, 1);
         
@@ -144,9 +146,24 @@ global.natural_structure_data[$ "phantasia:ore"] = new NaturalStructureData()
             __cave[@ i] = 0;
             
             var _surface_height = worldgen_get_surface_height(_x + i, _seed);
+            
+            if (_y + _height < _surface_height) continue;
+            
+            var j = 0;
+            
+            while (_y + j < _surface_height) && (j < _height)
+            {
+                ++j;
+            }
+            
+            if (j > 0)
+            {
+                __cave[@ i] = (1 << j) - 1;
+            }
+            
             var _cave_start = worldgen_get_cave_start(_x + i, _seed);
             
-            for (var j = 0; j < _height; ++j)
+            for (; j < _height; ++j)
             {
                 if (worldgen_get_cave(_x + i, _y + j, _surface_height, _cave_start, _seed))
                 {
@@ -162,11 +179,13 @@ global.natural_structure_data[$ "phantasia:ore"] = new NaturalStructureData()
         
         for (var i = 0; i < _width; ++i)
         {
+            var _cave = __cave[i];
+            
             for (var j = 0; j < _height; ++j)
             {
-                if (__cave[i] & (1 << j)) continue;
+                if (_cave & (1 << j)) continue;
                 
-                var _ore_chance = random(1);
+                var _ore_chance = random_seeded(1, _world_seed ^ (_x * 223.991) ^ (_y * 769.113));
                 
                 if (_clumpiness > 0)
                 {
@@ -174,14 +193,17 @@ global.natural_structure_data[$ "phantasia:ore"] = new NaturalStructureData()
                     
                     for (var _nx = -1; _nx <= 1; ++_nx)
                     {
+                        var _ix = i + _nx;
+                        
+                        if (_ix < 0) || (_ix >= _width) continue;
+                        
                         for (var _ny = -1; _ny <= 1; ++_ny)
                         {
                             if (_nx == 0) && (_ny == 0) continue;
                             
-                            var _ix = i + _nx;
                             var _iy = j + _ny;
                             
-                            if (_ix >= 0) && (_ix < _width) && (_iy >= 0) && (_iy < _height) && (_data[_ix + (_iy * _width) + _depth] != TILE_EMPTY)
+                            if (_iy >= 0) && (_iy < _height) && (_data[_ix + (_iy * _width) + _depth] != TILE_EMPTY)
                             {
                                 ++_neighbors;
                             }
@@ -193,26 +215,29 @@ global.natural_structure_data[$ "phantasia:ore"] = new NaturalStructureData()
                 
                 if (_roundedness > 0)
                 {
-                    var _avg_noise = 0;
+                    var _average_noise = 0;
                     var _count = 0;
                     
                     for (var _nx = -1; _nx <= 1; ++_nx)
                     {
+                        var _ix = i + _nx;
+                        
+                        if (_ix < 0) || (_ix >= _width) continue;
+                        
                         for (var _ny = -1; _ny <= 1; ++_ny)
                         {
-                            var _ix = i + _nx;
                             var _iy = j + _ny;
                             
-                            if (_ix >= 0) && (_ix < _width) && (_iy >= 0) && (_iy < _height)
+                            if (_iy >= 0) && (_iy < _height)
                             {
-                                _avg_noise += random(1);
+                                _average_noise += random_seeded(1, _world_seed ^ (_ix * 187.573) ^ (_iy * 333.159));
                                 
                                 ++_count;
                             }
                         }
                     }
                     
-                    _ore_chance = lerp(_ore_chance, _avg_noise / _count, _roundedness);
+                    _ore_chance = lerp(_ore_chance, _average_noise / _count, _roundedness);
                 }
                 
                 if (_ore_chance > _threshold)
@@ -318,23 +343,6 @@ global.natural_structure_data[$ "phantasia:tree/generic"] = new NaturalStructure
             
             _offset += _layer_height;
         }
-        /*
-        for (var i = 1; i < _width - 1; ++i)
-        {
-            _data[@ i + _depth_leaves] = new Tile(_tile_leaves_id, _item_data);
-            _data[@ i + (1 * _width) + _depth_leaves] = new Tile(_tile_leaves_id, _item_data)
-                .set_yscale(1)
-                .set_index_offset(5);
-        }
-        
-        for (var i = 0; i < _width; ++i)
-        {
-            _data[@ i + (2 * _width) + _depth_leaves] = new Tile(_tile_leaves_id, _item_data);
-            _data[@ i + (3 * _width) + _depth_leaves] = new Tile(_tile_leaves_id, _item_data)
-                .set_yscale(1)
-                .set_index_offset(5);
-        }
-        */
         
         var _tile_wood = _parameter[NATURAL_STRUCTURE_TREE_GENERIC.TILE_WOOD];
         
