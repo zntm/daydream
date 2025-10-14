@@ -61,14 +61,24 @@ function structure_create(_x, _y, _id, _seed)
             var _xoffset = __size(_data.xoffset, _abs_if_clear_width, _abs_if_clear_height);
             var _yoffset = __size(_data.yoffset, _abs_if_clear_width, _abs_if_clear_height);
             
-            for (var j = 0; j < _if_clear_width; ++j)
+            for (var j = 0; j < _abs_if_clear_width; ++j)
             {
                 var _x2 = _tile_x + j + _xoffset;
                 
                 var _surface_height = worldgen_get_surface_height(_x2, _seed);
+                
+                if (_tile_y + _abs_if_clear_height + _yoffset < _surface_height) continue;
+                
+                var l = 0;
+                
+                while (_tile_y + l + _yoffset < _surface_height) && (l < _abs_if_clear_height)
+                {
+                    ++l;
+                }
+                
                 var _cave_start = worldgen_get_cave_start(_x2, _seed);
                 
-                for (var l = 0; l < _if_clear_height; ++l)
+                for (; l < _abs_if_clear_height; ++l)
                 {
                     var _y2 = _tile_y + l + _yoffset;
                     
