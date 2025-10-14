@@ -410,6 +410,9 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
             
             if (_condition != undefined)
             {
+                ___placement_condition = _condition;
+                
+                /*
                 var _values = _condition.values;
                 var _values_length = array_length(_values);
                 
@@ -463,7 +466,7 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
                     _data.type = _type;
                     
                     ___placement_condition.values[@ i] = _data;
-                }
+                }*/
             }
             
             var _id = _placement[$ "id"];

@@ -76,10 +76,7 @@ function smart_value_parse(_value)
             }
         }
         
-        return [
-            _type,
-            _data
-        ];
+        return _data;
     }
     
     return _value;

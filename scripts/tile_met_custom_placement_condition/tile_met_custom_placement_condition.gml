@@ -1,65 +1,103 @@
-function tile_met_custom_placement_condition(_x, _y, _z, _placement_condition)
+function tile_met_custom_placement_condition(_x, _y, _z, _condition, _item_data = global.item_data)
 {
-    static __item_type = global.item_type;
+    var _condition_type = _condition.type;
     
-    var _item_data = global.item_data;
+    var _condition_values = _condition.values;
+    var _condition_values_length = array_length(_condition_values);
     
-    var _requirement_values = _placement_condition.values;
-    var _requirement_condition = _placement_condition.type;
+    var _condition_amount = 0;
     
-    var _met = 0;
-    
-    var _length = _placement_condition.values_length;
-    
-    for (var i = 0; i < _length; ++i)
+    for (var i = 0; i < _condition_values_length; ++i)
     {
-        var _requirement = _requirement_values[i];
+        var _value = _condition_values[i];
         
-        var _z2 = _requirement.z;
+        var _c = _value[$ "condition"];
         
-        var _tile = tile_get(_x + _requirement.xoffset, _y + _requirement.yoffset, ((_z2 == "z") ? _z : _z2));
-        
-        if (_tile == TILE_EMPTY) continue;
-        
-        var _requirement_id = _requirement[$ "id"];
-        
-        if (_requirement_id != undefined)
+        if (_c != undefined)
         {
-            if (is_array(_requirement_id)) ? (array_contains(_requirement_id, _tile.get_id())) : (_requirement_id == _tile.get_id())
+            _condition_amount += tile_met_custom_placement_condition(_x, _y, _z, _c, _item_data);
+            
+            continue;
+        }
+        
+        var _xoffset = 0;
+        var _yoffset = 0;
+        
+        var _offset = _value[$ "offset"];
+        
+        if (_offset != undefined)
+        {
+            _xoffset = _offset[$ "x"] ?? 0;
+            _yoffset = _offset[$ "y"] ?? 0;
+        }
+        
+        var _z2 = _value.z;
+        
+        if (_z2 == "default")
+        {
+            _z2 = CHUNK_DEPTH_DEFAULT;
+        }
+        
+        if (_z2 == "wall")
+        {
+            _z2 = CHUNK_DEPTH_WALL;
+        }
+        
+        if (_z2 == "z")
+        {
+            _z2 = _z;
+        }
+        
+        var _tile = tile_get(_x + _xoffset, _y + _yoffset, ((_z2 == "z") ? _z : _z2));
+        
+        var _id = smart_value_parse(_value[$ "id"]);
+        
+        if (_tile == TILE_EMPTY)
+        {
+            if (_id != undefined)
             {
-                ++_met;
+                show_debug_message($"1: {_id}");
+                
+                if (is_array(_id)) ? (array_contains(_id, TILE_EMPTY_ID)) : (_id == TILE_EMPTY_ID)
+                {
+                    ++_condition_amount;
+                }
             }
             
             continue;
         }
         
-        var _types = _requirement[$ "type"];
-        
-        if (_types != undefined)
+        if (_id != undefined)
         {
-            if (_item_data[$ _tile.get_id()].has_type(_types))
+            show_debug_message($"2: {_id} {_tile.get_id()}");
+            
+            if (is_array(_id)) ? (array_contains(_id, _tile.get_id())) : (_id == _tile.get_id())
             {
-                ++_met;
+                ++_condition_amount;
+            }
+            
+            continue;
+        }
+        
+        var _type = _value[$ "type"];
+        
+        if (_type != undefined)
+        {
+            if (_item_data[$ _tile.get_id()].has_type(_type))
+            {
+                ++_condition_amount;
             }
             
             continue;
         }
     }
     
-    if (_requirement_condition == TILE_PLACEMENT_CONDITION_TYPE.EVERY)
+    show_debug_message($"{_condition_type} {_condition_amount} {_condition_values_length}")
+    
+    if (_condition_type == "every")
     {
-        if (_met >= _length)
-        {
-            return true;
-        }
-    }
-    else
-    {
-        if (_met > 0)
-        {
-            return true;
-        }
+        return (_condition_amount == _condition_values_length);
     }
     
-    return false;
+    return (_condition_amount > 0);
 }
