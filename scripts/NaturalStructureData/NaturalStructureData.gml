@@ -185,7 +185,7 @@ global.natural_structure_data[$ "phantasia:ore"] = new NaturalStructureData()
             {
                 if (_cave & (1 << j)) continue;
                 
-                var _ore_chance = random_seeded(1, _world_seed ^ (_x * 223.991) ^ (_y * 769.113));
+                var _ore_chance = random_seeded(1, _world_seed + (_x * 223.991) + (_y * 769.113));
                 
                 if (_clumpiness > 0)
                 {
@@ -230,7 +230,7 @@ global.natural_structure_data[$ "phantasia:ore"] = new NaturalStructureData()
                             
                             if (_iy >= 0) && (_iy < _height)
                             {
-                                _average_noise += random_seeded(1, _world_seed ^ (_ix * 187.573) ^ (_iy * 333.159));
+                                _average_noise += random_seeded(1, _world_seed + (_ix * 187.573) + (_iy * 333.159));
                                 
                                 ++_count;
                             }
