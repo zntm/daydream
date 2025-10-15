@@ -375,69 +375,86 @@ global.natural_structure_data[$ "phantasia:tree/generic"] = new NaturalStructure
         return _data;
     });
 
+enum NATURAL_STRUCTURE_TREE_CONIFEROUS {
+    USE_STRUCTURE_VOID,
+    TILE_WOOD,
+    TILE_LEAVES,
+    INDEX,
+    INDEX_TOP,
+    INDEX_BOTTOM,
+    CONE_STEEPNESS,
+    CONE_ROUDNESS,
+    CONE_WIDTH,
+    CONE_OFFSET,
+    LENGTH
+}
+
 global.natural_structure_data[$ "phantasia:tree/coniferous"] = new NaturalStructureData()
     .set_parser(function(_parameter)
     {
         var _item_data = global.item_data;
         
-        var _data = array_create(NATURAL_STRUCTURE_TREE_GENERIC.LENGTH);
+        var _data = array_create(NATURAL_STRUCTURE_TREE_CONIFEROUS.LENGTH);
         
-        _data[@ NATURAL_STRUCTURE_TREE_GENERIC.USE_STRUCTURE_VOID] = _parameter[$ "use_structure_void"] ?? true;
+        _data[@ NATURAL_STRUCTURE_TREE_CONIFEROUS.USE_STRUCTURE_VOID] = _parameter[$ "use_structure_void"] ?? true;
         
-        _data[@ NATURAL_STRUCTURE_TREE_GENERIC.TILE_WOOD]   = _parameter.tile_wood;
-        _data[@ NATURAL_STRUCTURE_TREE_GENERIC.TILE_LEAVES] = _parameter.tile_leaves;
+        _data[@ NATURAL_STRUCTURE_TREE_CONIFEROUS.TILE_WOOD]   = _parameter.tile_wood;
+        _data[@ NATURAL_STRUCTURE_TREE_CONIFEROUS.TILE_LEAVES] = _parameter.tile_leaves;
         
         var _index = _parameter.index;
         
-        _data[@ NATURAL_STRUCTURE_TREE_GENERIC.INDEX] = smart_value_parse(_index);
+        _data[@ NATURAL_STRUCTURE_TREE_CONIFEROUS.INDEX] = smart_value_parse(_index);
         
-        _data[@ NATURAL_STRUCTURE_TREE_GENERIC.INDEX_TOP]    = smart_value_parse(_parameter[$ "index_top"])    ?? _index;
-        _data[@ NATURAL_STRUCTURE_TREE_GENERIC.INDEX_BOTTOM] = smart_value_parse(_parameter[$ "index_bottom"]) ?? _index;
+        _data[@ NATURAL_STRUCTURE_TREE_CONIFEROUS.INDEX_TOP]    = smart_value_parse(_parameter[$ "index_top"])    ?? _index;
+        _data[@ NATURAL_STRUCTURE_TREE_CONIFEROUS.INDEX_BOTTOM] = smart_value_parse(_parameter[$ "index_bottom"]) ?? _index;
+        
+        _data[@ NATURAL_STRUCTURE_TREE_CONIFEROUS.CONE_STEEPNESS] = smart_value_parse(_parameter[$ "cone_steepness"]) ?? 0.25;
+        _data[@ NATURAL_STRUCTURE_TREE_CONIFEROUS.CONE_ROUDNESS]  = smart_value_parse(_parameter[$ "cone_roundness"]) ?? 1;
+        _data[@ NATURAL_STRUCTURE_TREE_CONIFEROUS.CONE_WIDTH]     = smart_value_parse(_parameter[$ "cone_width"]) ?? 1;
+        _data[@ NATURAL_STRUCTURE_TREE_CONIFEROUS.CONE_OFFSET]    = smart_value_parse(_parameter[$ "cone_offset"]) ?? 0;
         
         return _data;
     })
     .set_function(function(_x, _y, _width, _height, _seed, _parameter, _item_data)
     {
-        var _n = random_range(0.1, 0.3);
-        var _l = random_range(1, 3);
-        var _g = 1;
-        var _curve2_offset = random_range(-0.2, 0);
+        var _cone_steepness = smart_value(_parameter[NATURAL_STRUCTURE_TREE_CONIFEROUS.CONE_STEEPNESS]);
+        var _cone_roundness = smart_value(_parameter[NATURAL_STRUCTURE_TREE_CONIFEROUS.CONE_ROUDNESS]);
+        var _cone_width     = smart_value(_parameter[NATURAL_STRUCTURE_TREE_CONIFEROUS.CONE_WIDTH]);
+        var _cone_offset    = smart_value(_parameter[NATURAL_STRUCTURE_TREE_CONIFEROUS.CONE_OFFSET]);
         
         var _rectangle = _width * _height;
-        var _data = array_create(_rectangle * CHUNK_DEPTH, (_parameter[NATURAL_STRUCTURE_TREE_GENERIC.USE_STRUCTURE_VOID] ? TILE_STRUCTURE_VOID : TILE_EMPTY));
+        var _data = array_create(_rectangle * CHUNK_DEPTH, (_parameter[NATURAL_STRUCTURE_TREE_CONIFEROUS.USE_STRUCTURE_VOID] ? TILE_STRUCTURE_VOID : TILE_EMPTY));
         
         var _width_half = floor(_width / 2);
         
         var _depth_wood   = _rectangle * CHUNK_DEPTH_TREE;
         var _depth_leaves = _depth_wood + _rectangle;
         
-        var _tile_wood = _parameter[NATURAL_STRUCTURE_TREE_GENERIC.TILE_WOOD];
-        
+        var _tile_wood = _parameter[NATURAL_STRUCTURE_TREE_CONIFEROUS.TILE_WOOD];
         var _tile_wood_id = _tile_wood.id;
         
-        var _tile_leaves = _parameter[NATURAL_STRUCTURE_TREE_GENERIC.TILE_LEAVES];
-        
+        var _tile_leaves = _parameter[NATURAL_STRUCTURE_TREE_CONIFEROUS.TILE_LEAVES];
         var _tile_leaves_id = _tile_leaves.id;
         
-        var _index = _parameter[NATURAL_STRUCTURE_TREE_GENERIC.INDEX];
+        var _index = _parameter[NATURAL_STRUCTURE_TREE_CONIFEROUS.INDEX];
         
-        var _index_top    = _parameter[NATURAL_STRUCTURE_TREE_GENERIC.INDEX_TOP];
-        var _index_bottom = _parameter[NATURAL_STRUCTURE_TREE_GENERIC.INDEX_BOTTOM];
+        var _index_top    = _parameter[NATURAL_STRUCTURE_TREE_CONIFEROUS.INDEX_TOP];
+        var _index_bottom = _parameter[NATURAL_STRUCTURE_TREE_CONIFEROUS.INDEX_BOTTOM];
         
         var _ = floor(_width / 2);
         
         for (var i = 1; i <= _; ++i)
         {
-            var _x2 = (i / _) * _g;
+            var _x2 = (i / _) * _cone_width;
             
-            var _a1 = 1 - power(1 - _x2, _l);
-            var _a2 = 1 - power(_x2, 1 / _n);
+            var _a1 = 1 - power(1 - _x2, _cone_roundness);
+            var _a2 = 1 - power(_x2, 1 / _cone_steepness);
             
             for (var j = 0; j < _height; ++j)
             {
-                var _y2 = ((j + 1) / _height);
+                var _y2 = (j + 1) / _height;
                 
-                if (_a1 <= _y2) && (_y2 <= _a2 - _curve2_offset)
+                if (_a1 <= _y2) && (_y2 <= _a2 - _cone_offset)
                 {
                     _data[@ (_ + i) + (j * _width) + _depth_leaves] = new Tile(_tile_leaves_id, _item_data);
                     _data[@ (_ - i) + (j * _width) + _depth_leaves] = new Tile(_tile_leaves_id, _item_data);
@@ -445,11 +462,11 @@ global.natural_structure_data[$ "phantasia:tree/coniferous"] = new NaturalStruct
             }
         }
         
-        var _a2 = 1 - power(0, 1 / _n) - _curve2_offset;
+        var _a2 = 1 - power(0, 1 / _cone_steepness) - _cone_offset;
         
         for (var i = 0; i < _height; ++i)
         {
-            var _y2 = ((i + 1) / _height);
+            var _y2 = (i + 1) / _height;
             
             if (_y2 <= _a2)
             {
