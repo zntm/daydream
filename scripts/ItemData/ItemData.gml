@@ -394,9 +394,7 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
                 
                 if (_condition != undefined)
                 {
-                    show_debug_message(_value);
-                    
-                    _values[@ i].condition = __condition(_condition);
+                    _data.values[@ i].condition = __condition(_condition);
                     
                     continue;
                 }
@@ -423,11 +421,11 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
                         }
                     }
                     
-                    _values[@ i].id = _id;
+                    _data.values[@ i].id = _id;
                 }
             }
             
-            return _values;
+            return _data;
         }
         
         static __chunk_depth = global.chunk_depth;
@@ -459,68 +457,12 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
             
             if (_condition != undefined)
             {
-                ___placement_condition = __condition(_condition);
+                ___placement_condition = __condition(tag_value_parse(_condition));
                 
                 if (get_id() == "sunflower")
                 {
                     show_debug_message(___placement_condition);
                 }
-                
-                /*
-                var _values = _condition.values;
-                var _values_length = array_length(_values);
-                
-                ___placement_condition = {
-                    type: __condition_type[$ _condition[$ "type"] ?? "every"],
-                    values: [],
-                    values_length: _values_length
-                }
-                
-                for (var i = 0; i < _values_length; ++i)
-                {
-                    var _value = _values[i];
-                    
-                    var _z = _value.z;
-                    
-                    var _data = {
-                        id: smart_value_parse(_value.id),
-                        z: __chunk_depth[$ _z] ?? _z
-                    }
-                    
-                    var _offset = _value[$ "offset"];
-                    
-                    if (_offset != undefined)
-                    {
-                        _data.xoffset = _offset[$ "x"] ?? 0;
-                        _data.yoffset = _offset[$ "y"] ?? 0;
-                    }
-                    else
-                    {
-                        _data.xoffset = 0;
-                        _data.yoffset = 0;
-                    }
-                    
-                    var _type = 0;
-                    var _types = _value[$ "type"];
-                    
-                    if (is_array(_types))
-                    {
-                        var _types_length = array_length(_types);
-                        
-                        for (var j = 0; j < _types_length; ++j)
-                        {
-                            __type |= __item_type[$ _types[j]];
-                        }
-                    }
-                    else
-                    {
-                        _type = __item_type[$ _types];
-                    }
-                    
-                    _data.type = _type;
-                    
-                    ___placement_condition.values[@ i] = _data;
-                }*/
             }
             
             var _id = _placement[$ "id"];
