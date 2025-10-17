@@ -458,11 +458,6 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
             if (_condition != undefined)
             {
                 ___placement_condition = __condition(tag_value_parse(_condition));
-                
-                if (get_id() == "sunflower")
-                {
-                    show_debug_message(___placement_condition);
-                }
             }
             
             var _id = _placement[$ "id"];

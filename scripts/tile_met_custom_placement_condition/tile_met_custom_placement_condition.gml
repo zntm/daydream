@@ -100,8 +100,6 @@ function tile_met_custom_placement_condition(_x, _y, _z, _condition, _item_data 
         }
     }
     
-    show_debug_message($"{_condition_type} {_condition_amount} {_condition_values_length}")
-    
     if (_condition_type == "every")
     {
         return (_condition_amount == _condition_values_length);

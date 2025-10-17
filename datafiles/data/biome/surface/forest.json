@@ -1,6 +1,6 @@
 {
-    "background": "phantasia:borea",
-    "map_colour": "#097A67",
+    "background": "phantasia:forest",
+    "map_colour": "#32B559",
     "sky_colour": {
         "dawn": {
             "base": "#180738",
@@ -27,38 +27,30 @@
     },
     "music": [
         {
-            "id": "phantasia:12_hours_at_ease",
+            "id": "phantasia:field_of_concourse",
+            "gain": 0.7
+        },
+        {
+            "id": "phantasia:liminal",
+            "gain": 0.7
+        },
+        {
+            "id": "phantasia:red_apple",
             "gain": 0.6
         },
         {
-            "id": "phantasia:fall",
+            "id": "phantasia:soft_hour",
             "gain": 0.6
         },
         {
-            "id": "phantasia:ornaments_of_the_sky",
-            "gain": 0.5
-        },
-        {
-            "id": "phantasia:sol_y_luna",
-            "gain": 0.5
-        },
-        {
-            "id": "phantasia:soliloquy",
-            "gain": 0.3
-        },
-        {
-            "id": "phantasia:tense",
-            "gain": 0.6
-        },
-        {
-            "id": "phantasia:winter_2012",
+            "id": "phantasia:someday_it_will_rain",
             "gain": 0.7
         }
     ],
 	"tile": {
 		"top_layer": {
 			"base": {
-				"id": "phantasia:grass_block_borea"
+				"id": "phantasia:grass_block"
 			},
 			"wall": {
 				"id": "phantasia:dirt_wall"
@@ -75,16 +67,36 @@
 	},
     "creature": [
         {
+            "id": "phantasia:chicken",
+            "amount": {
+                "type": "irandom",
+                "values": {
+                    "min": 1,
+                    "max": 3
+                }
+            },
+            "chance": 0.03,
+            "time": {
+                "min": 0,
+                "max": 890
+            },
+            "tile": "#phantasia:tile/creature_spawn/animal"
+        },
+        {
             "id": "phantasia:bunny",
             "variant": {
                 "type": "choose_weighted",
                 "values": [
                     {
+                        "value": "generic",
+                        "weight": 3
+                    },
+                    {
                         "value": "spotted",
                         "weight": 1
                     },
                     {
-                        "value": "black",
+                        "value": "white",
                         "weight": 2
                     }
                 ]
@@ -93,10 +105,10 @@
                 "type": "irandom",
                 "values": {
                     "min": 1,
-                    "max": 3
+                    "max": 4
                 }
             },
-            "chance": 0.03,
+            "chance": 0.01,
             "time": {
                 "min": 0,
                 "max": 890
@@ -105,7 +117,6 @@
         },
         {
             "id": "phantasia:fox",
-            "variant": "brown",
             "amount": {
                 "type": "irandom",
                 "values": {
@@ -114,23 +125,6 @@
                 }
             },
             "chance": 0.03,
-            "time": {
-                "min": 0,
-                "max": 890
-            },
-            "tile": "#phantasia:tile/creature_spawn/animal"
-        },
-        {
-            "id": "phantasia:chicken",
-            "variant": "cold",
-            "amount": {
-                "type": "irandom",
-                "values": {
-                    "min": 1,
-                    "max": 2
-                }
-            },
-            "chance": 0.02,
             "time": {
                 "min": 0,
                 "max": 890
@@ -140,18 +134,18 @@
     ],
     "foliage": [
         {
-            "id": "phantasia:short_grass_borea",
-            "chance": 0.06,
+            "id": "phantasia:short_grass",
+            "chance": 0.26,
             "placeable_on": "#phantasia:tile/placement/plant_on"
         },
         {
-            "id": "phantasia:tall_grass_borea",
-            "chance": 0.01,
+            "id": "phantasia:tall_grass",
+            "chance": 0.04,
             "placeable_on": "#phantasia:tile/placement/plant_on"
         },
         {
-            "id": "phantasia:bluebells",
-            "chance": 0.12,
+            "id": "phantasia:globeflower",
+            "chance": 0.05,
             "placeable_on": "#phantasia:tile/placement/plant_on"
         },
         {
@@ -165,15 +159,45 @@
             "placeable_on": "#phantasia:tile/placement/plant_on"
         },
         {
-            "id": "phantasia:daisy",
-            "chance": 0.11,
+            "id": "phantasia:rose",
+            "chance": 0.07,
+            "placeable_on": "#phantasia:tile/placement/plant_on"
+        },
+        {
+            "id": "phantasia:dendrobium",
+            "chance": 0.04,
+            "placeable_on": "#phantasia:tile/placement/plant_on"
+        },
+        {
+            "id": "phantasia:dandelion",
+            "chance": 0.03,
+            "placeable_on": "#phantasia:tile/placement/plant_on"
+        },
+        {
+            "id": "phantasia:seeding_dandelion",
+            "chance": 0.01,
             "placeable_on": "#phantasia:tile/placement/plant_on"
         }
     ],
-    "structures": [
+    "structure": [
         {
-            "id": "phantasia:tree/pine",
-            "chance": 0.14,
+            "id": "phantasia:moss_clump",
+            "chance": 0.008,
+            "placeable_on": "#phantasia:tile/placement/plant_on"
+        },
+        {
+            "id": "phantasia:tall_foliage/sunflower",
+            "chance": 0.04,
+            "placeable_on": "#phantasia:tile/placement/plant_on"
+        },
+        {
+            "id": "phantasia:tree/oak",
+            "chance": 0.1,
+            "placeable_on": "#phantasia:tile/placement/plant_on"
+        },
+        {
+            "id": "phantasia:tree/birch",
+            "chance": 0.07,
             "placeable_on": "#phantasia:tile/placement/plant_on"
         }
     ]

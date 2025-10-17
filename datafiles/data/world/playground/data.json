@@ -41,7 +41,7 @@
 		"cave": {
 			"default": [
 				{
-					"id": "phantasia:nocturne",
+					"id": "phantasia:depths",
 					"start": 768,
 					"end": 1024,
 					"transition": {
@@ -51,7 +51,7 @@
 					}
 				},
 				{
-					"id": "phantasia:halora",
+					"id": "phantasia:chasm",
 					"start": 0,
 					"end": 1024,
 					"transition": {
