@@ -18,7 +18,7 @@ function file_save_snippet_component(_buffer, _tile)
             
             buffer_write(_buffer, buffer_string, _name);
             
-            var _component = _data.get_component(_name);
+            var _component = _tile.get_component(_name);
             
             show_debug_message(typeof(_component));
             

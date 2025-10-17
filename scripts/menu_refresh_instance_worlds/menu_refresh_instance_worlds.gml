@@ -19,9 +19,11 @@ function menu_refresh_instance_worlds()
     
     static __on_select_release = function()
     {
-        var _data = global.file_players[index];
+        var _data = global.file_worlds[index];
         
         var _uuid = _data.get_uuid();
+        
+        show_debug_message(_uuid);
         
         if (!directory_exists($"{PROGRAM_DIRECTORY_WORLDS}/{_uuid}"))
         {

@@ -8,7 +8,7 @@ function file_save_world_spawn(_world_save_data, _inst)
     
     file_save_snippet_position(_buffer, _inst);
     
-    buffer_save_compressed(_buffer, $"{PROGRAM_DIRECTORY_WORLDS}/{_world_save_data.uuid}/dimension/{_world_data.get_namespace()}/{_world_data.get_id()}/spawn/{_inst.uuid}.dat");
+    buffer_save_compressed(_buffer, $"{PROGRAM_DIRECTORY_WORLDS}/{_world_save_data.uuid}/dim/{_world_data.get_namespace()}/{_world_data.get_id()}/spawn_{_inst.uuid}.dat");
     
     buffer_delete(_buffer);
 }
