@@ -191,7 +191,7 @@
             "placeable_on": "#phantasia:tile/placement/plant_on"
         },
         {
-            "id": "phantasia:tree/oak",
+            "id": "phantasia:tree/pine",
             "chance": 0.1,
             "placeable_on": "#phantasia:tile/placement/plant_on"
         },

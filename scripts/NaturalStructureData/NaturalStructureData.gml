@@ -454,23 +454,83 @@ global.natural_structure_data[$ "phantasia:tree/coniferous"] = new NaturalStruct
             {
                 var _y2 = (j + 1) / _height;
                 
-                if (_a1 <= _y2) && (_y2 <= _a2 - _cone_offset)
+                if (_a1 <= _y2) && (_y2 <= _a2 + _cone_offset)
                 {
-                    _data[@ (_ + i) + (j * _width) + _depth_leaves] = new Tile(_tile_leaves_id, _item_data);
-                    _data[@ (_ - i) + (j * _width) + _depth_leaves] = new Tile(_tile_leaves_id, _item_data);
+                    var _y2_next = (j + 2) / _height;
+                    
+                    var _count_current = 0;
+                    var _count_next = 0;
+                    
+                    for (var l = 1; l <= _; ++l)
+                    {
+                        var _x3 = (l / _) * _cone_width;
+                        
+                        var _b1 = 1 - power(1 - _x3, _cone_roundness);
+                        var _b2 = 1 - power(_x3, 1 / _cone_steepness);
+                        
+                        if (_b1 <= _y2) && (_y2 <= _b2 + _cone_offset)
+                        {
+                            ++_count_current;
+                        }
+                        
+                        if (_b1 <= _y2_next) && (_y2_next <= _b2 + _cone_offset)
+                        {
+                            ++_count_next;
+                        }
+                    }
+                    
+                    var _t1 = new Tile(_tile_leaves_id, _item_data);
+                    var _t2 = new Tile(_tile_leaves_id, _item_data);
+                    
+                    if (_count_current != _count_next)
+                    {
+                        _t1.set_index_offset(5);
+                        _t2.set_index_offset(5);
+                    }
+                    
+                    _data[@ (_ + i) + (j * _width) + _depth_leaves] = _t1;
+                    _data[@ (_ - i) + (j * _width) + _depth_leaves] = _t2;
                 }
             }
         }
-        
-        var _a2 = 1 - power(0, 1 / _cone_steepness) - _cone_offset;
         
         for (var i = 0; i < _height; ++i)
         {
             var _y2 = (i + 1) / _height;
             
-            if (_y2 <= _a2)
+            if (_y2 <= 1 + _cone_offset)
             {
-                _data[@ _ + (i * _width) + _depth_leaves] = new Tile(_tile_leaves_id, _item_data);
+                var _t = new Tile(_tile_leaves_id, _item_data);
+                
+                var _y2_next = (i + 2) / _height;
+                
+                var _count_current = 0;
+                var _count_next = 0;
+                
+                for (var l = 1; l <= _; ++l)
+                {
+                    var _x3 = (l / _) * _cone_width;
+                    
+                    var _b1 = 1 - power(1 - _x3, _cone_roundness);
+                    var _b2 = 1 - power(_x3, 1 / _cone_steepness);
+                    
+                    if (_b1 <= _y2) && (_y2 <= _b2 + _cone_offset)
+                    {
+                        ++_count_current;
+                    }
+                    
+                    if (_b1 <= _y2_next) && (_y2_next <= _b2 + _cone_offset)
+                    {
+                        ++_count_next;
+                    }
+                }
+                
+                if (_count_current != _count_next)
+                {
+                    _t.set_index_offset(5);
+                }
+                
+                _data[@ _ + (i * _width) + _depth_leaves] = _t;
             }
             
             if (i == 0)
