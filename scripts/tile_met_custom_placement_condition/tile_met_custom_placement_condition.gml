@@ -52,13 +52,6 @@ function tile_met_custom_placement_condition(_x, _y, _z, _condition, _item_data 
         
         var _id = _value[$ "id"];
         
-        show_debug_message(_id);
-        /*
-        if (_id == "id")
-        {
-            _id = tile_get(_x, _y, _z)
-        }*/
-        
         if (_tile == TILE_EMPTY)
         {
             if (_id != undefined)
