@@ -13,50 +13,7 @@
             "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
         }
     },
-    "placement": {
-        "condition": {
-            "type": "every",
-            "values": [
-                {
-                    "condition": {
-                        "type": "some",
-                        "values": [
-                            {
-                                "offset": {
-                                    "x": 0,
-                                    "y": 1
-                                },
-                                "z": "default",
-                                "id": "#phantasia:tile/placement/plant_on"
-                            },
-                            {
-                                "offset": {
-                                    "x": 0,
-                                    "y": 1
-                                },
-                                "z": "z",
-                                "id": "phantasia:sunflower"
-                            }
-                        ]
-                    }
-                },
-                {
-                    "offset": {
-                        "x": 0,
-                        "y": -1
-                    },
-                    "z": "z",
-                    "id": {
-                        "type": "concat",
-                        "values": [
-                            "empty",
-                            "phantasia:sunflower"
-                        ]
-                    }
-                }
-            ]
-        }
-    },
+    "placement": "#phantasia:tile/placement/condition_tall_plant",
     "drop": [
         {
             "id": "phantasia:sunflower",

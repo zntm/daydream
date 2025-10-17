@@ -50,15 +50,24 @@ function tile_met_custom_placement_condition(_x, _y, _z, _condition, _item_data 
         
         var _tile = tile_get(_x + _xoffset, _y + _yoffset, ((_z2 == "z") ? _z : _z2));
         
-        var _id = smart_value_parse(_value[$ "id"]);
+        var _id = _value[$ "id"];
+        
+        show_debug_message(_id);
+        /*
+        if (_id == "id")
+        {
+            _id = tile_get(_x, _y, _z)
+        }*/
         
         if (_tile == TILE_EMPTY)
         {
             if (_id != undefined)
             {
-                show_debug_message($"1: {_id}");
-                
                 if (is_array(_id)) ? (array_contains(_id, TILE_EMPTY_ID)) : (_id == TILE_EMPTY_ID)
+                {
+                    ++_condition_amount;
+                }
+                else if (_value[$ "is_not"])
                 {
                     ++_condition_amount;
                 }
@@ -69,9 +78,11 @@ function tile_met_custom_placement_condition(_x, _y, _z, _condition, _item_data 
         
         if (_id != undefined)
         {
-            show_debug_message($"2: {_id} {_tile.get_id()}");
-            
             if (is_array(_id)) ? (array_contains(_id, _tile.get_id())) : (_id == _tile.get_id())
+            {
+                ++_condition_amount;
+            }
+            else if (_value[$ "is_not"])
             {
                 ++_condition_amount;
             }
@@ -84,6 +95,10 @@ function tile_met_custom_placement_condition(_x, _y, _z, _condition, _item_data 
         if (_type != undefined)
         {
             if (_item_data[$ _tile.get_id()].has_type(_type))
+            {
+                ++_condition_amount;
+            }
+            else if (_value[$ "is_not"])
             {
                 ++_condition_amount;
             }

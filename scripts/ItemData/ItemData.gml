@@ -381,6 +381,55 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     
     static set_placement = function(_placement)
     {
+        function __condition(_data)
+        {
+            var _values = _data.values;
+            var _values_length = array_length(_values);
+            
+            for (var i = 0; i < _values_length; ++i)
+            {
+                var _value = _values[i];
+                
+                var _condition = _value[$ "condition"];
+                
+                if (_condition != undefined)
+                {
+                    show_debug_message(_value);
+                    
+                    _values[@ i].condition = __condition(_condition);
+                    
+                    continue;
+                }
+                
+                var _id = _value[$ "id"];
+                
+                if (_id != undefined)
+                {
+                    _id = smart_value_parse(_id);
+                    
+                    if (_id == "id")
+                    {
+                        _id = $"{get_namespace()}:{get_id()}";
+                    }
+                    else if (is_array(_id))
+                    {
+                        var _ = get_id();
+                        
+                        var _index = array_get_index(_id, "id");
+                        
+                        if (_index > -1)
+                        {
+                            _id[@ _index] = $"{get_namespace()}:{_}";
+                        }
+                    }
+                    
+                    _values[@ i].id = _id;
+                }
+            }
+            
+            return _values;
+        }
+        
         static __chunk_depth = global.chunk_depth;
         
         static __condition_type = {
@@ -410,7 +459,12 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
             
             if (_condition != undefined)
             {
-                ___placement_condition = _condition;
+                ___placement_condition = __condition(_condition);
+                
+                if (get_id() == "sunflower")
+                {
+                    show_debug_message(___placement_condition);
+                }
                 
                 /*
                 var _values = _condition.values;

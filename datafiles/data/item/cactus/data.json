@@ -18,19 +18,44 @@
     },
     "placement": {
         "condition": {
-            "condition": "every",
+            "type": "every",
             "values": [
                 {
-                    "xoffset": 0,
-                    "yoffset": 1,
-                    "z": "default",
-                    "id": "#phantasia:tile/placement/dry_plant_on"
+                    "condition": {
+                        "type": "some",
+                        "values": [
+                            {
+                                "offset": {
+                                    "x": 0,
+                                    "y": 1
+                                },
+                                "z": "default",
+                                "id": "phantasia:sand"
+                            },
+                            {
+                                "offset": {
+                                    "x": 0,
+                                    "y": 1
+                                },
+                                "z": "z",
+                                "id": "id"
+                            }
+                        ]
+                    }
                 },
                 {
-                    "xoffset": 0,
-                    "yoffset": -1,
+                    "offset": {
+                        "x": 0,
+                        "y": -1
+                    },
                     "z": "z",
-                    "id": "phantasia:cactus"
+                    "id": {
+                        "type": "concat",
+                        "values": [
+                            "empty",
+                            "id"
+                        ]
+                    }
                 }
             ]
         }
