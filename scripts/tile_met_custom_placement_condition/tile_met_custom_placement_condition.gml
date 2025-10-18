@@ -37,8 +37,7 @@ function tile_met_custom_placement_condition(_x, _y, _z, _condition, _item_data 
         {
             _z2 = CHUNK_DEPTH_DEFAULT;
         }
-        
-        if (_z2 == "wall")
+        else if (_z2 == "wall")
         {
             _z2 = CHUNK_DEPTH_WALL;
         }

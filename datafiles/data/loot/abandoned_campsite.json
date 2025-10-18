@@ -1,45 +1,43 @@
-{
-    "data": [
-        {
-            "entries": [
-                {
-                    "value": {
-                        "id": "phantasia:coal",
-                        "amount": {
-                            "type": "irandom",
-                            "values": {
-                                "min": 2,
-                                "max": 4
-                            }
+[
+    {
+        "entries": [
+            {
+                "item": {
+                    "id": "phantasia:coal",
+                    "amount": {
+                        "type": "irandom",
+                        "values": {
+                            "min": 2,
+                            "max": 4
                         }
-                    },
-                    "weight": 1
+                    }
                 },
-                {
-                    "value": {
-                        "id": "phantasia:twig",
-                        "amount": {
-                            "type": "irandom",
-                            "values": {
-                                "min": 1,
-                                "max": 2
-                            }
+                "weight": 1
+            },
+            {
+                "item": {
+                    "id": "phantasia:twig",
+                    "amount": {
+                        "type": "irandom",
+                        "values": {
+                            "min": 1,
+                            "max": 2
                         }
-                    },
-                    "weight": 1
+                    }
                 },
-                {
-                    "value": null,
-                    "weight": 2
-                }
-            ],
-            "amount": {
-                "type": "irandom",
-                "values": {
-                    "min": 2,
-                    "max": 5
-                }
+                "weight": 1
+            },
+            {
+                "value": null,
+                "weight": 2
+            }
+        ],
+        "rolls": {
+            "type": "irandom",
+            "values": {
+                "min": 3,
+                "max": 8
             }
         }
-    ]
-}
+    }
+]

@@ -1,122 +1,122 @@
 {
-	"world_height": 1024,
-	"spawn_interval": 14,
-	"vignette": {
-		"start": 768,
-		"end": 1024,
-		"colour": "#000000"
-	},
-	"time": {
-		"start": 180,
-		"diurnal": {
-			"dawn": {
-				"start": 0,
-				"end": 240
-			},
-			"day": {
-				"start": 240,
-				"end": 820
-			},
-			"dusk": {
-				"start": 820,
-				"end": 890
-			},
-			"night": {
-				"start": 890,
-				"end": 1200
-			}
-		}
-	},
-	"celestial": {
-		"sun": {
-			"start": 0,
-			"end": 890
-		},
-		"moon": {
-			"start": 890,
-			"end": 1200
-		}
-	},
-	"biome": {
-		"cave": {
-			"default": [
-				{
-					"id": "phantasia:depths",
-					"start": 768,
-					"end": 1024,
-					"transition": {
-						"type": "random",
-						"amplitude": 22,
-						"octaves": 2
-					}
-				},
-				{
-					"id": "phantasia:chasm",
-					"start": 0,
-					"end": 1024,
-					"transition": {
-						"type": "random",
-						"amplitude": 0,
-						"octaves": 0
-					}
-				}
-			],
-			"noise": {
-				"octaves": 4
-			},
-			"options": []
-		},
-		"surface": {
-			"heat": {
-				"octaves": 1
-			},
-			"humidity": {
-				"octaves": 1
-			},
-			"offset": {
-				"octaves": 2,
-				"min": 22,
-				"max": 34
-			}
-		}
-	},
-	"surface": {
-		"start": 512,
-		"offset": {
-			"octaves": 4,
-			"min": 40,
-			"max": 96
-		}
-	},
-	"cave": {
-		"start": {
-			"octaves": 2,
-			"min": 0,
-			"max": 12
-		},
-		"system": [
-			{
-				"range": {
-					"min": 512,
-					"max": 1000
-				},
-				"threshold": {
-					"octaves": 4,
-					"min": 50,
-					"max": 60
-				}
-			},
-			{
-				"range": {
-					"min": 600,
-					"max": 1000
-				},
-				"threshold": {
-					"octaves": 4,
-					"min": 116,
-					"max": 130
-				}
-			}
-		]
-	}
+    "world_height": 1024,
+    "spawn_interval": 14,
+    "vignette": {
+        "start": 768,
+        "end": 1024,
+        "colour": "#000000"
+    },
+    "time": {
+        "start": 180,
+        "diurnal": {
+            "dawn": {
+                "start": 0,
+                "end": 240
+            },
+            "day": {
+                "start": 240,
+                "end": 820
+            },
+            "dusk": {
+                "start": 820,
+                "end": 890
+            },
+            "night": {
+                "start": 890,
+                "end": 1200
+            }
+        }
+    },
+    "celestial": {
+        "sun": {
+            "start": 0,
+            "end": 890
+        },
+        "moon": {
+            "start": 890,
+            "end": 1200
+        }
+    },
+    "biome": {
+        "cave": {
+            "default": [
+                {
+                    "id": "phantasia:depths",
+                    "start": 768,
+                    "end": 1024,
+                    "transition": {
+                        "type": "random",
+                        "amplitude": 22,
+                        "octaves": 2
+                    }
+                },
+                {
+                    "id": "phantasia:chasm",
+                    "start": 0,
+                    "end": 1024,
+                    "transition": {
+                        "type": "random",
+                        "amplitude": 0,
+                        "octaves": 0
+                    }
+                }
+            ],
+            "noise": {
+                "octaves": 4
+            },
+            "options": []
+        },
+        "surface": {
+            "heat": {
+                "octaves": 1
+            },
+            "humidity": {
+                "octaves": 1
+            },
+            "offset": {
+                "octaves": 2,
+                "min": 22,
+                "max": 34
+            }
+        }
+    },
+    "surface": {
+        "start": 512,
+        "offset": {
+            "octaves": 4,
+            "min": 40,
+            "max": 96
+        }
+    },
+    "cave": {
+        "start": {
+            "octaves": 2,
+            "min": 0,
+            "max": 12
+        },
+        "system": [
+            {
+                "range": {
+                    "min": 512,
+                    "max": 1000
+                },
+                "threshold": {
+                    "octaves": 4,
+                    "min": 50,
+                    "max": 60
+                }
+            },
+            {
+                "range": {
+                    "min": 600,
+                    "max": 1000
+                },
+                "threshold": {
+                    "octaves": 4,
+                    "min": 116,
+                    "max": 130
+                }
+            }
+        ]
+    }
 }

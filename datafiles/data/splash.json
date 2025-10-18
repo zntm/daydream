@@ -17,11 +17,7 @@
         "Girlboss!",
         "Here's to strong women!"
     ],
-    "3_14": [
-        "Easy as pi!",
-        "Happy Pi Day!",
-        "Totally irrational!"
-    ],
+    "3_14": ["Easy as pi!", "Happy Pi Day!", "Totally irrational!"],
     "3_17": [
         "At the end of the rainbow!",
         "Feelin' lucky?",
@@ -55,10 +51,7 @@
         "Very colorful!",
         "<3"
     ],
-    "8_8": [
-        "meow",
-        "mewo"
-    ],
+    "8_8": ["meow", "mewo"],
     "9_13": [
         "0b100000000",
         "0x100",
@@ -67,10 +60,7 @@
         "return 0;",
         "Unlike gender, numbers are binary!"
     ],
-    "9_21": [
-        "Keeping it peaceful!",
-        "Peace, love, and pixels!"
-    ],
+    "9_21": ["Keeping it peaceful!", "Peace, love, and pixels!"],
     "10_10": [
         "It's okay to pause.",
         "Rest is productive.",
@@ -84,10 +74,7 @@
         "Spooky!",
         "Trick or Treat!"
     ],
-    "11_25": [
-        "Happy Birthday Zhen!",
-        "Party mode activated!"
-    ],
+    "11_25": ["Happy Birthday Zhen!", "Party mode activated!"],
     "12_25": [
         "100% more tubular bells!",
         "Ho ho ho!",

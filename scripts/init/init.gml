@@ -33,6 +33,8 @@ function init(_namespace)
     init_menu($"{PROGRAM_DIRECTORY_DATA}\\menu.json");
     
     init_creature($"{PROGRAM_DIRECTORY_DATA}\\creature", _namespace);
+    
+    init_loot($"{PROGRAM_DIRECTORY_DATA}\\loot", _namespace);
 }
 
 call_later(8, time_source_units_frames, function()

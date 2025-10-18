@@ -1,13 +1,13 @@
 # ❤️ Phantasia
 
-> **License:** [Phantasia's Daydream License](./LICENSE.md)  
+> **License:** [Phantasia's Daydream License](./LICENSE.md)
 > **Version:** 1.0 (August 2025)
 
 ---
 
 ## ✨ About the Game
 
-**Phantasia** is a 2D adventure-survival-sandbox game which features infinite procedural generated worlds and interconnected systems, all built with performance and scalability in mind. 
+**Phantasia** is a 2D adventure-survival-sandbox game which features infinite procedural generated worlds and interconnected systems, all built with performance and scalability in mind.
 
 ## 🛠️ Credits
 
