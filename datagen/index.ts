@@ -1,9 +1,10 @@
 import { readdirSync } from "fs";
 import { join } from "path";
+import { parseArgs } from "util";
 
 export class DatagenReturnData {
-    private destination: string;
-    private data: any;
+    public destination: string;
+    public data: any;
 
     constructor(destination: string, data: any) {
         this.destination = destination;
@@ -11,10 +12,20 @@ export class DatagenReturnData {
     }
 }
 
-readdirSync(join(__dirname, "./datagen")).forEach(async (dir: string) => {
-    const datagen = (await import(`./datagen/${dir}`)).default;
+const exportData = (data: DatagenReturnData) => {
+    const file = Bun.file(join(__dirname, data.destination));
 
-    const file = Bun.file(join(__dirname, datagen.destination));
+    Bun.write(file, JSON.stringify(data.data, null, "    "));
+};
 
-    Bun.write(file, JSON.stringify(datagen.data, null, "    "));
-});
+readdirSync(join(__dirname, "./src"))
+    .filter((dir) => dir.endsWith(".ts"))
+    .forEach(async (dir: string) => {
+        const datagen = (await import(`./src/${dir}`)).default;
+
+        if (Array.isArray(datagen)) {
+            datagen.forEach(exportData);
+        } else {
+            exportData(datagen);
+        }
+    });

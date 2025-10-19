@@ -2,7 +2,7 @@ import {
     CraftingIngredient,
     CraftingRecipe,
     IngredientAmount,
-} from "../crafting";
+} from "../craftingRecipes";
 
 import compactMaterialRecipe from "./compactMaterialRecipe";
 

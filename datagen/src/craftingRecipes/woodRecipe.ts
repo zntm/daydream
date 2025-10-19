@@ -3,7 +3,7 @@ import {
     CraftingRecipe,
     IngredientAmount,
     RecipeAmount,
-} from "../crafting";
+} from "../craftingRecipes";
 
 import blockWallRecipe from "./blockWallRecipe";
 

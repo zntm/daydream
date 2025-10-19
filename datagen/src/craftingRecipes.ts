@@ -54,11 +54,11 @@ export enum IngredientAmount {
     Wall = 3,
 }
 
-import compactMaterialRecipe from "./crafting/compactMaterialRecipe";
-import tieredEquipmentRecipe from "./crafting/tieredEquipmentRecipe";
-import woodRecipe from "./crafting/woodRecipe";
+import compactMaterialRecipe from "./craftingRecipes/compactMaterialRecipe";
+import tieredEquipmentRecipe from "./craftingRecipes/tieredEquipmentRecipe";
+import woodRecipe from "./craftingRecipes/woodRecipe";
 
-export default new DatagenReturnData("generated/data/json/crafting.json", [
+export default new DatagenReturnData("generated/json/crafting.json", [
     ...tieredEquipmentRecipe(
         "phantasia",
         "gold",

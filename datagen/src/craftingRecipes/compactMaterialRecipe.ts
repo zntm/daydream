@@ -2,7 +2,7 @@ import {
     CraftingIngredient,
     CraftingRecipe,
     IngredientAmount,
-} from "../crafting";
+} from "../craftingRecipes";
 
 export default (
     material: string,

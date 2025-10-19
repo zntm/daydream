@@ -1,0 +1,22 @@
+{
+    "type": "default",
+    "sprite": {
+        "xoffset": 6,
+        "yoffset": 7,
+        "length": 1
+    },
+    "inventory": "#phantasia:item/generic/inventory_default",
+    "item": {
+        "consumable": {
+            "hp": 8,
+            "saturation": 4,
+            "cooldown": {
+                "id": "phantasia:food",
+                "second": 1
+            },
+            "sfx": {
+                "id": "phantasia:sound.eat"
+            }
+        }
+    }
+}
