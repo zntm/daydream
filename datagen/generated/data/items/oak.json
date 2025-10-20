@@ -1,7 +1,6 @@
 {
-    "type": "untouchable",
-    "sprite": "phantasia:block/oak",
     "inventory": "#phantasia:item/generic/inventory_tile",
+    "sprite": "phantasia:block/oak",
     "tile": {
         "drop": [
             {
@@ -25,5 +24,6 @@
         "sfx": {
             "id": "#phantasia:tile/sfx/wood"
         }
-    }
+    },
+    "type": "untouchable"
 }

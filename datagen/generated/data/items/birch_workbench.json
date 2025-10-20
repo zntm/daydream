@@ -1,7 +1,6 @@
 {
-    "type": "untouchable",
-    "sprite": "phantasia:block/birch_workbench",
     "inventory": "#phantasia:item/generic/inventory_tile",
+    "sprite": "phantasia:block/birch_workbench",
     "tile": {
         "drop": [
             {
@@ -22,5 +21,6 @@
         "sfx": {
             "id": "#phantasia:tile/sfx/wood"
         }
-    }
+    },
+    "type": "untouchable"
 }

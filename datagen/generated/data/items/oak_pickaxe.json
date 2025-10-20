@@ -1,6 +1,4 @@
 {
-    "type": "tool",
-    "sprite": "phantasia:item/oak_pickaxe",
     "inventory": "#phantasia:item/generic/inventory_tool",
     "item": {
         "durability": {
@@ -11,5 +9,7 @@
             "hardness": 1,
             "level": 1
         }
-    }
+    },
+    "sprite": "phantasia:item/oak_pickaxe",
+    "type": "tool"
 }

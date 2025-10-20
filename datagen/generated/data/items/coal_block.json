@@ -1,10 +1,9 @@
 {
-    "type": "solid",
-    "sprite": "phantasia:block/coal_block",
     "inventory": "#phantasia:item/generic/inventory_default",
     "properties": [
         "phantasia:is_tile"
     ],
+    "sprite": "phantasia:block/coal_block",
     "tile": {
         "drop": [
             {
@@ -27,5 +26,6 @@
             }
         },
         "sfx": "#phantasia:tile/sfx/stone"
-    }
+    },
+    "type": "solid"
 }

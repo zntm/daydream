@@ -14,6 +14,10 @@ export class DatagenReturnData {
 const exportData = (data: DatagenReturnData) => {
     const file = Bun.file(join(__dirname, data.destination));
 
+    if (typeof data.data === "object" && !Array.isArray(data.data)) {
+        data.data = Object.fromEntries(Object.entries(data.data).sort());
+    }
+
     Bun.write(file, JSON.stringify(data.data, null, "    "));
 };
 
@@ -29,8 +33,6 @@ readdirSync(join(__dirname, "./src"))
 
             return;
         }
-
-        console.log(datagen);
 
         if (Array.isArray(datagen)) {
             datagen.forEach(exportData);

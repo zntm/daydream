@@ -1,12 +1,11 @@
 {
-    "type": "solid",
-    "sprite": "phantasia:block/coal_ore",
     "inventory": "#phantasia:item/generic/inventory_default",
     "properties": [
         "phantasia:can_flip",
         "phantasia:can_mirror",
         "phantasia:is_tile"
     ],
+    "sprite": "phantasia:block/coal_ore",
     "tile": {
         "drop": [
             {
@@ -29,5 +28,6 @@
             }
         },
         "sfx": "#phantasia:tile/sfx/stone"
-    }
+    },
+    "type": "solid"
 }

@@ -1,4 +1,35 @@
 {
+    "10_10": [
+        "It's okay to pause.",
+        "Rest is productive.",
+        "You matter, always."
+    ],
+    "10_31": [
+        "boo",
+        "Did you see it?",
+        "Happy Halloween!",
+        "Prepare your pumpkins!",
+        "Spooky!",
+        "Trick or Treat!"
+    ],
+    "11_25": [
+        "Happy Birthday Zhen!",
+        "Party mode activated!"
+    ],
+    "12_25": [
+        "100% more tubular bells!",
+        "Ho ho ho!",
+        "Merry Christmas!",
+        "Most wonderful time of the year!",
+        "Unwraping the joy!",
+        "'tis the season!"
+    ],
+    "12_31": [
+        "Counting down to midnight!",
+        "Deleting old bugs...",
+        "Purchasing fireworks...",
+        "See you next year!"
+    ],
     "1_1": [
         "20XX",
         "Happy new years!",
@@ -12,11 +43,6 @@
         "sqrt(-1) love you!",
         "Will you be my Player 2?"
     ],
-    "3_8": [
-        "Empowered and unstoppable!",
-        "Girlboss!",
-        "Here's to strong women!"
-    ],
     "3_14": [
         "Easy as pi!",
         "Happy Pi Day!",
@@ -26,6 +52,11 @@
         "At the end of the rainbow!",
         "Feelin' lucky?",
         "Wearing all green!"
+    ],
+    "3_8": [
+        "Empowered and unstoppable!",
+        "Girlboss!",
+        "Here's to strong women!"
     ],
     "4_1": [
         "April Fools!",
@@ -70,37 +101,6 @@
     "9_21": [
         "Keeping it peaceful!",
         "Peace, love, and pixels!"
-    ],
-    "10_10": [
-        "It's okay to pause.",
-        "Rest is productive.",
-        "You matter, always."
-    ],
-    "10_31": [
-        "boo",
-        "Did you see it?",
-        "Happy Halloween!",
-        "Prepare your pumpkins!",
-        "Spooky!",
-        "Trick or Treat!"
-    ],
-    "11_25": [
-        "Happy Birthday Zhen!",
-        "Party mode activated!"
-    ],
-    "12_25": [
-        "100% more tubular bells!",
-        "Ho ho ho!",
-        "Merry Christmas!",
-        "Most wonderful time of the year!",
-        "Unwraping the joy!",
-        "'tis the season!"
-    ],
-    "12_31": [
-        "Counting down to midnight!",
-        "Deleting old bugs...",
-        "Purchasing fireworks...",
-        "See you next year!"
     ],
     "generic": [
         "A whole new world!",

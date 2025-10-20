@@ -1,12 +1,11 @@
 {
-    "type": "untouchable",
-    "sprite": "phantasia:block/birch_leaves",
     "inventory": "#phantasia:item/generic/inventory_tile",
     "properties": [
         "phantasia:can_flip",
         "phantasia:can_mirror",
         "phantasia:is_tile"
     ],
+    "sprite": "phantasia:block/birch_leaves",
     "tile": {
         "drop": [
             {
@@ -30,5 +29,6 @@
         "sfx": {
             "id": "#phantasia:tile/sfx/wood"
         }
-    }
+    },
+    "type": "untouchable"
 }

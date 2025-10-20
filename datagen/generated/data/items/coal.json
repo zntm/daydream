@@ -1,5 +1,5 @@
 {
-    "type": "default",
+    "inventory": "#phantasia:item/generic/inventory_default",
     "sprite": "phantasia:item/coal",
-    "inventory": "#phantasia:item/generic/inventory_default"
+    "type": "default"
 }

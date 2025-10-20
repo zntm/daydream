@@ -1,6 +1,4 @@
 {
-    "type": "default",
-    "sprite": "phantasia:item/apple",
     "inventory": "#phantasia:item/generic/inventory_default",
     "item": {
         "consumable": {
@@ -14,5 +12,7 @@
                 "id": "phantasia:sound.eat"
             }
         }
-    }
+    },
+    "sprite": "phantasia:item/apple",
+    "type": "default"
 }
