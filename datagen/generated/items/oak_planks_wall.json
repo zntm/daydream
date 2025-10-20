@@ -1,21 +1,21 @@
 {
     "type": "untouchable",
-    "sprite": "phantasia:block/birch",
+    "sprite": "phantasia:block/oak_planks_wall",
     "inventory": "#phantasia:item/generic/inventory_tile",
+    "properties": [
+        "is_tile"
+    ],
     "tile": {
         "drop": [
             {
-                "id": "phantasia:birch"
+                "id": "phantasia:oak_planks_wall"
             }
         ],
         "harvest": {
-            "hardness": 0.56,
+            "hardness": 0.44,
             "level": 1,
             "particle": {
-                "colour": [
-                    "#4F5263",
-                    "#3E4051"
-                ],
+                "colour": "#phantasia:tile/particle_colour/plank_oak",
                 "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
             },
             "condition": {

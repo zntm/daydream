@@ -7,16 +7,23 @@ export class Item {
     public type: string;
     public sprite: string | ItemSprite;
     public inventory: string | ItemInventory;
-    public item?: any;
+    public properties?: any;
 
     constructor(
         type: string,
         sprite: string | ItemSprite,
         inventory: string | ItemInventory,
+        properties?: any,
     ) {
         this.type = type;
         this.sprite = sprite;
         this.inventory = inventory;
+
+        if (properties !== undefined) {
+            this.properties = Array.isArray(properties)
+                ? properties
+                : [properties];
+        }
     }
 }
 
@@ -58,6 +65,16 @@ export class ItemCooldown {
 
 export class ItemInventory {}
 
+export class ItemHarvest {
+    private hardness: number;
+    private level: number;
+
+    constructor(hardness: number, level: number) {
+        this.hardness = hardness;
+        this.level = level;
+    }
+}
+
 export class ItemSoundEffect {
     private id: string;
     private gain?: number;
@@ -81,10 +98,16 @@ export class ItemDurability {
     }
 }
 
+export enum ItemType {
+    Default = "default",
+    Solid = "solid",
+    Untouchable = "untouchable",
+    Tool = "tool",
+}
+
 export default [
     consumableItem(
         "apple",
-        new ItemSprite(6, 7, 1),
         "#phantasia:item/generic/inventory_default",
         new ItemConsumable(
             8,
@@ -93,5 +116,22 @@ export default [
             new ItemSoundEffect("phantasia:sound.eat"),
         ),
     ),
-    ...woodItems("birch", new ItemSprite(12, 8), ["#4F5263", "#3E4051"]),
+    ...woodItems(
+        "birch",
+        ["#051417", "#041013"],
+        ["#4F5263", "#3E4051"],
+        "#phantasia:tile/particle_colour/plank_birch",
+    ),
+    ...woodItems(
+        "oak",
+        ["#122D2B", "#0B2021"],
+        ["#3B160A", "#2D0B04"],
+        "#phantasia:tile/particle_colour/plank_oak",
+    ),
+    ...woodItems(
+        "pine",
+        ["#122D2B", "#0B2021"],
+        ["#381D1E", "#301A1C"],
+        "#phantasia:tile/particle_colour/plank_pine",
+    ),
 ];

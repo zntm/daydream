@@ -1,36 +1,58 @@
 import { DatagenReturnData } from "../../index";
-import { Item, ItemSprite, ItemInventory, ItemDurability } from "../items";
-
-export class ToolItem extends Item {
-    constructor(
-        type: string,
-        sprite: string | ItemSprite,
-        inventory: string | ItemInventory,
-    ) {
-        super(type, sprite, inventory);
-    }
-
-    setItemDurability(durability: ItemDurability) {
-        this.item ??= {};
-        this.item.durability = durability;
-
-        return this;
-    }
-}
+import {
+    Item,
+    ItemInventory,
+    ItemDurability,
+    ItemType,
+    ItemHarvest,
+} from "../items";
 
 export default (
     id: string,
-    sprite: string | ItemSprite,
+    harvestHardness: number,
+    harvestLevel: number,
     durabilityAmount: number,
     durabilityBar: string,
-) =>
-    new DatagenReturnData(
+) => {
+    class ToolItem extends Item {
+        private item?: {
+            harvest?: ItemHarvest;
+            durability?: ItemDurability;
+        };
+
+        constructor(
+            type: string,
+            sprite: string,
+            inventory: string | ItemInventory,
+        ) {
+            super(type, sprite, inventory);
+        }
+
+        setItemDurability(durability: ItemDurability) {
+            this.item ??= {};
+            this.item.durability = durability;
+
+            return this;
+        }
+
+        setItemHarvest(harvest: ItemHarvest) {
+            this.item ??= {};
+            this.item.harvest = harvest;
+
+            return this;
+        }
+    }
+
+    return new DatagenReturnData(
         `generated/items/${id}.json`,
         new ToolItem(
-            "default",
-            sprite,
+            ItemType.Tool,
+            `phantasia:item/${id}`,
             "#phantasia:item/generic/inventory_tool",
-        ).setItemDurability(
-            new ItemDurability(durabilityAmount, durabilityBar),
-        ),
+        )
+            .setItemDurability(
+                new ItemDurability(durabilityAmount, durabilityBar),
+            )
+            .setItemHarvest(new ItemHarvest(harvestHardness, harvestLevel)),
     );
+};

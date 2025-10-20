@@ -62,14 +62,20 @@ export class ItemTileSFX {
     }
 }
 
+export enum ItemTileProperties {
+    CanMirror = "can_mirror",
+    CanFlip = "can_flip",
+    IsTile = "is_tile",
+}
+
 export default (
     id: string,
     type: string,
-    sprite: string | ItemSprite,
     inventory: string | ItemInventory,
-    drop: string | ItemTileDrop[],
-    harvest: ItemTileHarvest,
-    sfx: string | ItemTileSFX,
+    properties?: ItemTileProperties | ItemTileProperties[],
+    drop?: string | ItemTileDrop[],
+    harvest?: ItemTileHarvest,
+    sfx?: string | ItemTileSFX,
 ) => {
     class TileItem extends Item {
         private tile: {
@@ -82,26 +88,33 @@ export default (
             type: string,
             sprite: string | ItemSprite,
             inventory: string | ItemInventory,
+            properties?: ItemTileProperties | ItemTileProperties[],
         ) {
-            super(type, sprite, inventory);
+            super(type, sprite, inventory, properties);
 
             this.tile = {};
         }
 
-        setTileDrop(drop: string | ItemTileDrop[]) {
-            this.tile.drop = drop;
+        setTileDrop(drop?: string | ItemTileDrop[]) {
+            if (drop) {
+                this.tile.drop = drop;
+            }
 
             return this;
         }
 
-        setTileHarvest(harvest: string | ItemTileHarvest) {
-            this.tile.harvest = harvest;
+        setTileHarvest(harvest?: string | ItemTileHarvest) {
+            if (harvest) {
+                this.tile.harvest = harvest;
+            }
 
             return this;
         }
 
-        setTileSFX(sfx: string | ItemTileSFX) {
-            this.tile.sfx = sfx;
+        setTileSFX(sfx?: string | ItemTileSFX) {
+            if (sfx) {
+                this.tile.sfx = sfx;
+            }
 
             return this;
         }
@@ -109,7 +122,7 @@ export default (
 
     return new DatagenReturnData(
         `generated/items/${id}.json`,
-        new TileItem(type, sprite, inventory)
+        new TileItem(type, `phantasia:block/${id}`, inventory, properties)
             .setTileDrop(drop)
             .setTileHarvest(harvest)
             .setTileSFX(sfx),

@@ -1,0 +1,15 @@
+{
+    "type": "tool",
+    "sprite": "phantasia:item/oak_pickaxe",
+    "inventory": "#phantasia:item/generic/inventory_tool",
+    "item": {
+        "durability": {
+            "amount": 73,
+            "bar": "#phantasia:item/generic/inventory_tool"
+        },
+        "harvest": {
+            "hardness": 1,
+            "level": 1
+        }
+    }
+}

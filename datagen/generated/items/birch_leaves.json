@@ -1,20 +1,25 @@
 {
     "type": "untouchable",
-    "sprite": "phantasia:block/birch",
+    "sprite": "phantasia:block/birch_leaves",
     "inventory": "#phantasia:item/generic/inventory_tile",
+    "properties": [
+        "can_flip",
+        "can_mirror",
+        "is_tile"
+    ],
     "tile": {
         "drop": [
             {
-                "id": "phantasia:birch"
+                "id": "phantasia:birch_leaves"
             }
         ],
         "harvest": {
-            "hardness": 0.56,
+            "hardness": 0.44,
             "level": 1,
             "particle": {
                 "colour": [
-                    "#4F5263",
-                    "#3E4051"
+                    "#051417",
+                    "#041013"
                 ],
                 "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
             },

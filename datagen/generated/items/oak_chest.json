@@ -1,21 +1,18 @@
 {
     "type": "untouchable",
-    "sprite": "phantasia:block/birch",
+    "sprite": "phantasia:block/oak_chest",
     "inventory": "#phantasia:item/generic/inventory_tile",
     "tile": {
         "drop": [
             {
-                "id": "phantasia:birch"
+                "id": "phantasia:oak_chest"
             }
         ],
         "harvest": {
             "hardness": 0.56,
             "level": 1,
             "particle": {
-                "colour": [
-                    "#4F5263",
-                    "#3E4051"
-                ],
+                "colour": "#phantasia:tile/particle_colour/plank_oak",
                 "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
             },
             "condition": {

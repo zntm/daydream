@@ -1,10 +1,6 @@
 {
     "type": "default",
-    "sprite": {
-        "xoffset": 6,
-        "yoffset": 7,
-        "length": 1
-    },
+    "sprite": "phantasia:item/apple",
     "inventory": "#phantasia:item/generic/inventory_default",
     "item": {
         "consumable": {
