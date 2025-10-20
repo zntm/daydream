@@ -1,6 +1,6 @@
 import { DatagenReturnData } from "../index";
 
-export default new DatagenReturnData("generated/json/menu.json", {
+export default new DatagenReturnData("generated/data/json/menu.json", {
     "1_1": [
         "20XX",
         "Happy new years!",

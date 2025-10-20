@@ -44,7 +44,7 @@ export default (
     }
 
     return new DatagenReturnData(
-        `generated/items/${id}.json`,
+        `generated/data/items/${id}.json`,
         new ToolItem(
             ItemType.Tool,
             `phantasia:item/${id}`,

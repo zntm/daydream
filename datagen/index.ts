@@ -20,8 +20,15 @@ const exportData = (data: DatagenReturnData) => {
 
 readdirSync(join(__dirname, "./src"))
     .filter((dir) => dir.endsWith(".ts"))
-    .forEach(async (dir: string) => {
-        const datagen = (await import(`./src/${dir}`)).default;
+    .forEach((dir: string) => {
+        const { default: datagen } = import.meta.require(`./src/${dir}`);
+
+        if (!datagen) {
+            console.error(`Datagen function not found in ${dir}`);
+            return;
+        }
+
+        console.log(datagen);
 
         if (Array.isArray(datagen)) {
             datagen.forEach(exportData);

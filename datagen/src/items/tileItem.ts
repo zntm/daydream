@@ -1,5 +1,11 @@
 import { DatagenReturnData } from "../../index";
-import { Item, ItemSprite, ItemInventory, ItemDurability } from "../items";
+import {
+    Item,
+    ItemSprite,
+    ItemInventory,
+    ItemDurability,
+    ItemHarvest,
+} from "../items";
 
 export class ItemTileParticle {
     private colour: string | string[];
@@ -33,11 +39,9 @@ export class ItemTileDrop {
     }
 }
 
-export class ItemTileHarvest {
-    private hardness: number;
-    private level: number;
+export class ItemTileHarvest extends ItemHarvest {
     private particle: ItemTileParticle;
-    private condition: ItemTileCondition;
+    private condition?: ItemTileCondition;
 
     constructor(
         hardness: number,
@@ -45,8 +49,8 @@ export class ItemTileHarvest {
         particle: ItemTileParticle,
         condition: ItemTileCondition,
     ) {
-        this.hardness = hardness;
-        this.level = level;
+        super(hardness, level);
+
         this.particle = particle;
         this.condition = condition;
     }
@@ -121,7 +125,7 @@ export default (
     }
 
     return new DatagenReturnData(
-        `generated/items/${id}.json`,
+        `generated/data/items/${id}.json`,
         new TileItem(type, `phantasia:block/${id}`, inventory, properties)
             .setTileDrop(drop)
             .setTileHarvest(harvest)

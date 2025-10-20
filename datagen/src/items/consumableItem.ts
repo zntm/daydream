@@ -28,7 +28,7 @@ export default (
     }
 
     return new DatagenReturnData(
-        `generated/items/${id}.json`,
+        `generated/data/items/${id}.json`,
         new ConsumableItem(
             "default",
             `phantasia:item/${id}`,

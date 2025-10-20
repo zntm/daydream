@@ -58,7 +58,7 @@ import compactMaterialRecipe from "./craftingRecipes/compactMaterialRecipe";
 import tieredEquipmentRecipe from "./craftingRecipes/tieredEquipmentRecipe";
 import woodRecipe from "./craftingRecipes/woodRecipe";
 
-export default new DatagenReturnData("generated/json/crafting.json", [
+export default new DatagenReturnData("generated/data/json/crafting.json", [
     ...tieredEquipmentRecipe(
         "phantasia",
         "gold",

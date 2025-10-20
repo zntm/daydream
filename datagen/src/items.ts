@@ -1,8 +1,5 @@
 import { DatagenReturnData } from "../index";
 
-import consumableItem from "./items/consumableItem";
-import woodItems from "./items/woodItems";
-
 export class Item {
     public type: string;
     public sprite: string | ItemSprite;
@@ -104,6 +101,11 @@ export enum ItemType {
     Untouchable = "untouchable",
     Tool = "tool",
 }
+
+const { default: consumableItem } = import.meta.require(
+    "./items/consumableItem",
+);
+const { default: woodItems } = import.meta.require("./items/woodItems");
 
 export default [
     consumableItem(
