@@ -5,15 +5,18 @@ import {
     ItemDurability,
     ItemType,
 } from "../items";
-import tileItem, {
+
+const {
+    default: tileItem,
     ItemTileCondition,
     ItemTileDrop,
     ItemTileHarvest,
     ItemTileParticle,
     ItemTileProperties,
     ItemTileSFX,
-} from "./tileItem";
-import toolItem from "./toolItem";
+} = import.meta.require("./tileItem");
+
+const { default: toolItem } = import.meta.require("./toolItem");
 
 export default (
     id: string,
@@ -36,6 +39,7 @@ export default (
             ),
             new ItemTileCondition("#phantasia:item/type/axe"),
         ),
+        undefined,
         new ItemTileSFX("#phantasia:tile/sfx/wood"),
     ),
     tileItem(
@@ -53,6 +57,7 @@ export default (
             ),
             new ItemTileCondition("#phantasia:item/type/axe"),
         ),
+        undefined,
         new ItemTileSFX("#phantasia:tile/sfx/wood"),
     ),
     tileItem(
@@ -74,6 +79,7 @@ export default (
             ),
             new ItemTileCondition("#phantasia:item/type/axe"),
         ),
+        undefined,
         new ItemTileSFX("#phantasia:tile/sfx/wood"),
     ),
     toolItem(
@@ -98,6 +104,7 @@ export default (
             ),
             new ItemTileCondition("#phantasia:item/type/axe"),
         ),
+        undefined,
         new ItemTileSFX("#phantasia:tile/sfx/wood"),
     ),
     tileItem(
@@ -115,6 +122,7 @@ export default (
             ),
             new ItemTileCondition("#phantasia:item/type/axe"),
         ),
+        undefined,
         new ItemTileSFX("#phantasia:tile/sfx/wood"),
     ),
 
@@ -140,6 +148,7 @@ export default (
             ),
             new ItemTileCondition("#phantasia:item/type/axe"),
         ),
+        undefined,
         new ItemTileSFX("#phantasia:tile/sfx/wood"),
     ),
 ];

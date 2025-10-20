@@ -31,11 +31,18 @@ export class ItemTileDrop {
     private id: string;
     private amount?: number;
     private chance?: number;
+    private condition?: ItemTileCondition;
 
     constructor(id: string, amount?: number, chance?: number) {
         this.id = id;
         this.amount = amount;
         this.chance = chance;
+    }
+
+    setCondition(condition: ItemTileCondition) {
+        this.condition = condition;
+
+        return this;
     }
 }
 
@@ -47,12 +54,15 @@ export class ItemTileHarvest extends ItemHarvest {
         hardness: number,
         level: number,
         particle: ItemTileParticle,
-        condition: ItemTileCondition,
+        condition?: ItemTileCondition,
     ) {
         super(hardness, level);
 
         this.particle = particle;
-        this.condition = condition;
+
+        if (condition) {
+            this.condition = condition;
+        }
     }
 }
 
@@ -66,10 +76,32 @@ export class ItemTileSFX {
     }
 }
 
+export class ItemTilePlacement {
+    private condition?: string | ItemTilePlacementCondition;
+    private index?: string | number;
+
+    setCondition(condition: string | ItemTilePlacementCondition) {
+        this.condition = condition;
+    }
+
+    setIndex(index: string | number) {
+        this.index = index;
+    }
+}
+
+export class ItemTilePlacementCondition {
+    private id: string;
+
+    constructor(condition: string) {
+        this.id = condition;
+    }
+}
+
 export enum ItemTileProperties {
-    CanMirror = "can_mirror",
-    CanFlip = "can_flip",
-    IsTile = "is_tile",
+    CanMirror = "phantasia:can_mirror",
+    CanFlip = "phantasia:can_flip",
+    IsFoliage = "phantasia:is_foliage",
+    IsTile = "phantasia:is_tile",
 }
 
 export default (
@@ -79,12 +111,14 @@ export default (
     properties?: ItemTileProperties | ItemTileProperties[],
     drop?: string | ItemTileDrop[],
     harvest?: ItemTileHarvest,
+    placement?: string | ItemTilePlacement,
     sfx?: string | ItemTileSFX,
 ) => {
     class TileItem extends Item {
         private tile: {
             drop?: string | ItemTileDrop[];
             harvest?: string | ItemTileHarvest;
+            placement?: string | ItemTilePlacement;
             sfx?: string | ItemTileSFX;
         };
 
@@ -115,6 +149,14 @@ export default (
             return this;
         }
 
+        setTilePlacement(placement?: string | ItemTilePlacement) {
+            if (placement) {
+                this.tile.placement = placement;
+            }
+
+            return this;
+        }
+
         setTileSFX(sfx?: string | ItemTileSFX) {
             if (sfx) {
                 this.tile.sfx = sfx;
@@ -129,6 +171,7 @@ export default (
         new TileItem(type, `phantasia:block/${id}`, inventory, properties)
             .setTileDrop(drop)
             .setTileHarvest(harvest)
+            .setTilePlacement(placement)
             .setTileSFX(sfx),
     );
 };

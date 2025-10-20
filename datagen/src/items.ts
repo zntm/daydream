@@ -20,6 +20,8 @@ export class Item {
             this.properties = Array.isArray(properties)
                 ? properties
                 : [properties];
+
+            this.properties.sort();
         }
     }
 }
@@ -105,6 +107,19 @@ export enum ItemType {
 const { default: consumableItem } = import.meta.require(
     "./items/consumableItem",
 );
+
+const { default: oreItems } = import.meta.require("./items/oreItems");
+
+const {
+    default: tileItem,
+    ItemTileCondition,
+    ItemTileDrop,
+    ItemTileHarvest,
+    ItemTileParticle,
+    ItemTilePlacement,
+    ItemTileProperties,
+} = import.meta.require("./items/tileItem");
+
 const { default: woodItems } = import.meta.require("./items/woodItems");
 
 export default [
@@ -117,23 +132,140 @@ export default [
             new ItemCooldown("phantasia:food", 1),
             new ItemSoundEffect("phantasia:sound.eat"),
         ),
+        // Flowers
+        ...[
+            "bluebells",
+            "daisy",
+            "dandelion",
+            "globeflower",
+            "lilybell",
+            "orchids",
+            "rose",
+        ].map((id: string) =>
+            tileItem(
+                id,
+                ItemType.Untouchable,
+                "#phantasia:item/generic/inventory_default",
+                ItemTileProperties.IsFoliage,
+                [new ItemTileDrop(`phantasia:${id}`)],
+                new ItemTileHarvest(
+                    0.38,
+                    0,
+                    new ItemTileParticle(
+                        "#phantasia:tile/particle_colour/plant",
+                        "#phantasia:tile/generic/harvest_particle_frequency",
+                    ),
+                ),
+                new ItemTilePlacement().setCondition(
+                    "#phantasia:tile/particle_colour/plant",
+                ),
+            ),
+        ),
+        // Grass
+        ...["", "borea", "dry", "myr"]
+            .map((id: string) => {
+                id = id !== "" ? `${id}_grass` : "grass";
+
+                return ["short", "tall"].map((type: string) =>
+                    tileItem(
+                        `${type}_${id}`,
+                        ItemType.Untouchable,
+                        "#phantasia:item/generic/inventory_default",
+                        ItemTileProperties.IsFoliage,
+                        [new ItemTileDrop(`phantasia:${type}_${id}`)],
+                        new ItemTileHarvest(
+                            0.38,
+                            0,
+                            new ItemTileParticle(
+                                "#phantasia:tile/particle_colour/plant",
+                                "#phantasia:tile/generic/harvest_particle_frequency",
+                            ),
+                        ),
+                        new ItemTilePlacement().setCondition(
+                            "#phantasia:tile/particle_colour/plant",
+                        ),
+                    ),
+                );
+            })
+            .flat(),
     ),
-    ...woodItems(
-        "birch",
-        ["#051417", "#041013"],
-        ["#4F5263", "#3E4051"],
-        "#phantasia:tile/particle_colour/plank_birch",
-    ),
-    ...woodItems(
-        "oak",
-        ["#122D2B", "#0B2021"],
-        ["#3B160A", "#2D0B04"],
-        "#phantasia:tile/particle_colour/plank_oak",
-    ),
-    ...woodItems(
-        "pine",
-        ["#122D2B", "#0B2021"],
-        ["#381D1E", "#301A1C"],
-        "#phantasia:tile/particle_colour/plank_pine",
-    ),
+    // Ore
+    ...[
+        {
+            id: "coal",
+            harvestLevel: 0,
+            blockHarvest: new ItemTileHarvest(
+                0.58,
+                1,
+                new ItemTileParticle(
+                    "#phantasia:tile/particle_colour/stone",
+                    "#phantasia:tile/generic/harvest_particle_frequency",
+                ),
+                new ItemTileCondition("#phantasia:item/type/pickaxe"),
+            ),
+            blockSFX: "#phantasia:tile/sfx/stone",
+            oreHarvest: new ItemTileHarvest(
+                0.38,
+                0,
+                new ItemTileParticle(
+                    "#phantasia:tile/particle_colour/stone",
+                    "#phantasia:tile/generic/harvest_particle_frequency",
+                ),
+                new ItemTileCondition("#phantasia:item/type/pickaxe"),
+            ),
+            oreSFX: "#phantasia:tile/sfx/stone",
+        },
+    ]
+        .map(
+            ({
+                id,
+                harvestLevel,
+                blockHarvest,
+                blockSFX,
+                oreHarvest,
+                oreSFX,
+            }) =>
+                oreItems(
+                    id,
+                    harvestLevel,
+                    ItemTileProperties.IsTile,
+                    blockHarvest,
+                    blockSFX,
+                    [
+                        ItemTileProperties.CanFlip,
+                        ItemTileProperties.CanMirror,
+                        ItemTileProperties.IsTile,
+                    ],
+                    oreHarvest,
+                    oreSFX,
+                ),
+        )
+        .flat(),
+    // Wood
+    ...[
+        {
+            id: "birch",
+            leavesParticleId: ["#051417", "#041013"],
+            logParticleId: ["#4F5263", "#3E4051"],
+        },
+        {
+            id: "oak",
+            leavesParticleId: ["#122D2B", "#0B2021"],
+            logParticleId: ["#3B160A", "#2D0B04"],
+        },
+        {
+            id: "pine",
+            leavesParticleId: ["#122D2B", "#0B2021"],
+            logParticleId: ["#381D1E", "#301A1C"],
+        },
+    ]
+        .map(({ id, leavesParticleId, logParticleId }): any =>
+            woodItems(
+                id,
+                leavesParticleId,
+                logParticleId,
+                `#phantasia:tile/particle_colour/plank_${id}`,
+            ),
+        )
+        .flat(),
 ];

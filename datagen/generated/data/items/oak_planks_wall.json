@@ -3,7 +3,7 @@
     "sprite": "phantasia:block/oak_planks_wall",
     "inventory": "#phantasia:item/generic/inventory_tile",
     "properties": [
-        "is_tile"
+        "phantasia:is_tile"
     ],
     "tile": {
         "drop": [

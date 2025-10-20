@@ -3,7 +3,7 @@
     "sprite": "phantasia:block/birch_planks",
     "inventory": "#phantasia:item/generic/inventory_tile",
     "properties": [
-        "is_tile"
+        "phantasia:is_tile"
     ],
     "tile": {
         "drop": [

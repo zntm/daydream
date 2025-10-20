@@ -1,0 +1,23 @@
+{
+    "type": "untouchable",
+    "sprite": "phantasia:block/short_dry_grass",
+    "inventory": "#phantasia:item/generic/inventory_default",
+    "properties": [
+        "phantasia:is_foliage"
+    ],
+    "tile": {
+        "drop": [
+            {
+                "id": "phantasia:short_dry_grass"
+            }
+        ],
+        "harvest": {
+            "hardness": 0.38,
+            "level": 0,
+            "particle": {
+                "colour": "#phantasia:tile/particle_colour/plant",
+                "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
+            }
+        }
+    }
+}
