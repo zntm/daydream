@@ -1,5 +1,104 @@
 [
     {
+        "id": "phantasia:cooked_chicken",
+        "amount": 8,
+        "crafting_stations": "phantasia:furnace",
+        "ingredients": [
+            {
+                "id": "phantasia:raw_chicken",
+                "amount": 1
+            }
+        ]
+    },
+    {
+        "id": "phantasia:cooked_rabbit",
+        "amount": 8,
+        "crafting_stations": "phantasia:furnace",
+        "ingredients": [
+            {
+                "id": "phantasia:raw_rabbit",
+                "amount": 1
+            }
+        ]
+    },
+    {
+        "id": "phantasia:platinum_sword",
+        "amount": 1,
+        "crafting_stations": "#phantasia:tile/generic/workbench",
+        "ingredients": [
+            {
+                "id": "phantasia:platinum",
+                "amount": 12
+            }
+        ]
+    },
+    {
+        "id": "phantasia:platinum_pickaxe",
+        "amount": 1,
+        "crafting_stations": "#phantasia:tile/generic/workbench",
+        "ingredients": [
+            {
+                "id": "phantasia:platinum",
+                "amount": 10
+            }
+        ]
+    },
+    {
+        "id": "phantasia:platinum_axe",
+        "amount": 1,
+        "crafting_stations": "#phantasia:tile/generic/workbench",
+        "ingredients": [
+            {
+                "id": "phantasia:platinum",
+                "amount": 10
+            }
+        ]
+    },
+    {
+        "id": "phantasia:platinum_shovel",
+        "amount": 1,
+        "crafting_stations": "#phantasia:tile/generic/workbench",
+        "ingredients": [
+            {
+                "id": "phantasia:platinum",
+                "amount": 8
+            }
+        ]
+    },
+    {
+        "id": "phantasia:platinum_block",
+        "amount": 1,
+        "crafting_stations": "#phantasia:tile/generic/workbench",
+        "ingredients": [
+            {
+                "id": "phantasia:platinum",
+                "amount": 8
+            }
+        ]
+    },
+    {
+        "id": "phantasia:platinum",
+        "amount": 8,
+        "crafting_stations": "#phantasia:tile/generic/workbench",
+        "ingredients": [
+            {
+                "id": "phantasia:platinum_block",
+                "amount": 1
+            }
+        ]
+    },
+    {
+        "id": "phantasia:platinum",
+        "amount": 1,
+        "crafting_stations": "phantasia:furnace",
+        "ingredients": [
+            {
+                "id": "phantasia:raw_platinum",
+                "amount": 1
+            }
+        ]
+    },
+    {
         "id": "phantasia:gold_sword",
         "amount": 1,
         "crafting_stations": "#phantasia:tile/generic/workbench",
@@ -343,7 +442,7 @@
                 "amount": 2
             },
             {
-                "id": "phantasia:oak",
+                "id": "phantasia:iron",
                 "amount": 2
             }
         ]

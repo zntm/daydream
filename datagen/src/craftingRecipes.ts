@@ -54,52 +54,47 @@ export enum IngredientAmount {
     Wall = 3,
 }
 
-import compactMaterialRecipe from "./craftingRecipes/compactMaterialRecipe";
-import tieredEquipmentRecipe from "./craftingRecipes/tieredEquipmentRecipe";
-import woodRecipe from "./craftingRecipes/woodRecipe";
+import compactMaterialRecipes from "./craftingRecipes/compactMaterialRecipes";
+import tieredEquipmentRecipes from "./craftingRecipes/tieredEquipmentRecipes";
+import woodRecipes from "./craftingRecipes/woodRecipes";
 
 export default new DatagenReturnData("generated/data/json/crafting.json", [
-    ...tieredEquipmentRecipe(
-        "phantasia",
-        "gold",
-        "#phantasia:tile/generic/workbench",
-        "phantasia:furnace",
+    // Cookable Consumable
+    ...["chicken", "rabbit"].map((id) =>
+        new CraftingRecipe(
+            `phantasia:cooked_${id}`,
+            IngredientAmount.MaterialCompact,
+        )
+            .setCraftingStations("phantasia:furnace")
+            .setIngredients(new CraftingIngredient(`phantasia:raw_${id}`)),
     ),
-    ...tieredEquipmentRecipe(
-        "phantasia",
-        "iron",
-        "#phantasia:tile/generic/workbench",
-        "phantasia:furnace",
-    ),
-    ...tieredEquipmentRecipe(
-        "phantasia",
-        "copper",
-        "#phantasia:tile/generic/workbench",
-        "phantasia:furnace",
-    ),
-    ...compactMaterialRecipe(
+    // Tiered Equipment
+    ...["platinum", "gold", "iron", "copper"]
+        .map((id) =>
+            tieredEquipmentRecipes(
+                "phantasia",
+                id,
+                "#phantasia:tile/generic/workbench",
+                "phantasia:furnace",
+            ),
+        )
+        .flat(),
+    ...compactMaterialRecipes(
         "phantasia:coal",
         "phantasia:coal_block",
         "#phantasia:tile/generic/workbench",
     ),
-    ...woodRecipe(
-        "phantasia",
-        "birch",
-        "phantasia:iron",
-        "#phantasia:tile/generic/workbench",
-    ),
-    ...woodRecipe(
-        "phantasia",
-        "oak",
-        "phantasia:oak",
-        "#phantasia:tile/generic/workbench",
-    ),
-    ...woodRecipe(
-        "phantasia",
-        "pine",
-        "phantasia:iron",
-        "#phantasia:tile/generic/workbench",
-    ),
+    // Wood
+    ...["birch", "oak", "pine"]
+        .map((id) =>
+            woodRecipes(
+                "phantasia",
+                id,
+                "phantasia:iron",
+                "#phantasia:tile/generic/workbench",
+            ),
+        )
+        .flat(),
     ...[
         "phantasia:dirt",
         "phantasia:nightrock",

@@ -1,0 +1,18 @@
+{
+    "inventory": "#phantasia:item/generic/inventory_default",
+    "item": {
+        "consumable": {
+            "hp": 6,
+            "saturation": 4,
+            "cooldown": {
+                "id": "phantasia:food",
+                "second": 1
+            },
+            "sfx": {
+                "id": "phantasia:sound.eat"
+            }
+        }
+    },
+    "sprite": "phantasia:item/cooked_rabbit",
+    "type": "default"
+}

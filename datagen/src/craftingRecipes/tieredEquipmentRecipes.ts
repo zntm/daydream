@@ -2,47 +2,23 @@ import {
     CraftingIngredient,
     CraftingRecipe,
     IngredientAmount,
-    RecipeAmount,
 } from "../craftingRecipes";
 
-import blockWallRecipe from "./blockWallRecipe";
-
-export enum WoodRecipeAmount {
-    Planks = 3,
-}
-
-export enum WoodIngredientAmount {
-    Workbench = 4,
-    Chest = 2,
-    ChestFrame = 2,
-    PlanksWall = 2,
-}
+import compactMaterialRecipe from "./compactMaterialRecipes";
 
 export default (
     namespace: string,
     material: string,
-    chestFrame: string,
     workbench: string | string[],
+    furnace: string,
 ) => {
     return [
-        new CraftingRecipe(`${namespace}:${material}_workbench`)
+        new CraftingRecipe(`${namespace}:${material}_sword`)
             .setCraftingStations(workbench)
             .setIngredients(
                 new CraftingIngredient(
                     `${namespace}:${material}`,
-                    WoodIngredientAmount.Workbench,
-                ),
-            ),
-        new CraftingRecipe(`${namespace}:${material}_chest`)
-            .setCraftingStations(workbench)
-            .setIngredients(
-                new CraftingIngredient(
-                    `${namespace}:${material}`,
-                    WoodIngredientAmount.Chest,
-                ),
-                new CraftingIngredient(
-                    chestFrame,
-                    WoodIngredientAmount.ChestFrame,
+                    IngredientAmount.Sword,
                 ),
             ),
         new CraftingRecipe(`${namespace}:${material}_pickaxe`)
@@ -53,6 +29,14 @@ export default (
                     IngredientAmount.Pickaxe,
                 ),
             ),
+        new CraftingRecipe(`${namespace}:${material}_axe`)
+            .setCraftingStations(workbench)
+            .setIngredients(
+                new CraftingIngredient(
+                    `${namespace}:${material}`,
+                    IngredientAmount.Axe,
+                ),
+            ),
         new CraftingRecipe(`${namespace}:${material}_shovel`)
             .setCraftingStations(workbench)
             .setIngredients(
@@ -61,12 +45,15 @@ export default (
                     IngredientAmount.Shovel,
                 ),
             ),
-        ...blockWallRecipe(
+        ...compactMaterialRecipe(
             `${namespace}:${material}`,
-            `${namespace}:${material}_planks`,
-            WoodRecipeAmount.Planks,
-            `${namespace}:${material}_planks_wall`,
+            `${namespace}:${material}_block`,
             workbench,
         ),
+        new CraftingRecipe(`${namespace}:${material}`)
+            .setCraftingStations(furnace)
+            .setIngredients(
+                new CraftingIngredient(`${namespace}:raw_${material}`),
+            ),
     ];
 };

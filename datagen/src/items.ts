@@ -108,6 +108,10 @@ const { default: consumableItem } = import.meta.require(
     "./items/consumableItem",
 );
 
+const { default: cookableConsumableItems } = import.meta.require(
+    "./items/cookableConsumableItems",
+);
+
 const { default: oreItems } = import.meta.require("./items/oreItems");
 
 const {
@@ -132,63 +136,100 @@ export default [
             new ItemCooldown("phantasia:food", 1),
             new ItemSoundEffect("phantasia:sound.eat"),
         ),
-        // Flowers
-        ...[
-            "bluebells",
-            "daisy",
-            "dandelion",
-            "globeflower",
-            "lilybell",
-            "orchids",
-            "rose",
-        ].map((id: string) =>
-            tileItem(
-                id,
-                ItemType.Untouchable,
-                "#phantasia:item/generic/inventory_default",
-                ItemTileProperties.IsFoliage,
-                [new ItemTileDrop(`phantasia:${id}`)],
-                new ItemTileHarvest(
-                    0.38,
-                    0,
-                    new ItemTileParticle(
-                        "#phantasia:tile/particle_colour/plant",
-                        "#phantasia:tile/generic/harvest_particle_frequency",
-                    ),
-                ),
-                new ItemTilePlacement().setCondition(
+    ),
+    // Cookable Consumables
+    ...[
+        {
+            id: "chicken",
+            rawConsumable: new ItemConsumable(
+                4,
+                2,
+                new ItemCooldown("phantasia:food", 1),
+                new ItemSoundEffect("phantasia:sound.eat"),
+            ),
+            cookedConsumable: new ItemConsumable(
+                8,
+                8,
+                new ItemCooldown("phantasia:food", 1),
+                new ItemSoundEffect("phantasia:sound.eat"),
+            ),
+        },
+        {
+            id: "rabbit",
+            rawConsumable: new ItemConsumable(
+                3,
+                2,
+                new ItemCooldown("phantasia:food", 1),
+                new ItemSoundEffect("phantasia:sound.eat"),
+            ),
+            cookedConsumable: new ItemConsumable(
+                6,
+                4,
+                new ItemCooldown("phantasia:food", 1),
+                new ItemSoundEffect("phantasia:sound.eat"),
+            ),
+        },
+    ]
+        .map(({ id, rawConsumable, cookedConsumable }) =>
+            cookableConsumableItems(id, rawConsumable, cookedConsumable),
+        )
+        .flat(),
+    // Flowers
+    ...[
+        "bluebells",
+        "daisy",
+        "dandelion",
+        "globeflower",
+        "lilybell",
+        "orchids",
+        "rose",
+    ].map((id: string) =>
+        tileItem(
+            id,
+            ItemType.Untouchable,
+            "#phantasia:item/generic/inventory_default",
+            ItemTileProperties.IsFoliage,
+            [new ItemTileDrop(`phantasia:${id}`)],
+            new ItemTileHarvest(
+                0.38,
+                0,
+                new ItemTileParticle(
                     "#phantasia:tile/particle_colour/plant",
+                    "#phantasia:tile/generic/harvest_particle_frequency",
                 ),
             ),
+            new ItemTilePlacement().setCondition(
+                "#phantasia:tile/particle_colour/plant",
+            ),
         ),
-        // Grass
-        ...["", "borea", "dry", "myr"]
-            .map((id: string) => {
-                id = id !== "" ? `${id}_grass` : "grass";
+    ),
+    // Grass
+    ...["", "borea", "dry", "myr"]
+        .map((id: string) => {
+            id = id !== "" ? `${id}_grass` : "grass";
 
-                return ["short", "tall"].map((type: string) =>
-                    tileItem(
-                        `${type}_${id}`,
-                        ItemType.Untouchable,
-                        "#phantasia:item/generic/inventory_default",
-                        ItemTileProperties.IsFoliage,
-                        [new ItemTileDrop(`phantasia:${type}_${id}`)],
-                        new ItemTileHarvest(
-                            0.38,
-                            0,
-                            new ItemTileParticle(
-                                "#phantasia:tile/particle_colour/plant",
-                                "#phantasia:tile/generic/harvest_particle_frequency",
-                            ),
-                        ),
-                        new ItemTilePlacement().setCondition(
+            return ["short", "tall"].map((type: string) =>
+                tileItem(
+                    `${type}_${id}`,
+                    ItemType.Untouchable,
+                    "#phantasia:item/generic/inventory_default",
+                    ItemTileProperties.IsFoliage,
+                    [new ItemTileDrop(`phantasia:${type}_${id}`)],
+                    new ItemTileHarvest(
+                        0.38,
+                        0,
+                        new ItemTileParticle(
                             "#phantasia:tile/particle_colour/plant",
+                            "#phantasia:tile/generic/harvest_particle_frequency",
                         ),
                     ),
-                );
-            })
-            .flat(),
-    ),
+                    new ItemTilePlacement().setCondition(
+                        "#phantasia:tile/particle_colour/plant",
+                    ),
+                ),
+            );
+        })
+        .flat(),
     // Ore
     ...[
         {
@@ -215,6 +256,106 @@ export default [
             ),
             oreSFX: "#phantasia:tile/sfx/stone",
         },
+        {
+            id: "copper",
+            harvestLevel: 0,
+            blockHarvest: new ItemTileHarvest(
+                0.68,
+                1,
+                new ItemTileParticle(
+                    "#phantasia:tile/particle_colour/stone",
+                    "#phantasia:tile/generic/harvest_particle_frequency",
+                ),
+                new ItemTileCondition("#phantasia:item/type/pickaxe"),
+            ),
+            blockSFX: "#phantasia:tile/sfx/stone",
+            oreHarvest: new ItemTileHarvest(
+                0.42,
+                0,
+                new ItemTileParticle(
+                    "#phantasia:tile/particle_colour/stone",
+                    "#phantasia:tile/generic/harvest_particle_frequency",
+                ),
+                new ItemTileCondition("#phantasia:item/type/pickaxe"),
+            ),
+            oreSFX: "#phantasia:tile/sfx/stone",
+            hasRawItem: true,
+        },
+        {
+            id: "iron",
+            harvestLevel: 0,
+            blockHarvest: new ItemTileHarvest(
+                0.78,
+                1,
+                new ItemTileParticle(
+                    "#phantasia:tile/particle_colour/stone",
+                    "#phantasia:tile/generic/harvest_particle_frequency",
+                ),
+                new ItemTileCondition("#phantasia:item/type/pickaxe"),
+            ),
+            blockSFX: "#phantasia:tile/sfx/stone",
+            oreHarvest: new ItemTileHarvest(
+                0.48,
+                0,
+                new ItemTileParticle(
+                    "#phantasia:tile/particle_colour/stone",
+                    "#phantasia:tile/generic/harvest_particle_frequency",
+                ),
+                new ItemTileCondition("#phantasia:item/type/pickaxe"),
+            ),
+            oreSFX: "#phantasia:tile/sfx/stone",
+            hasRawItem: true,
+        },
+        {
+            id: "gold",
+            harvestLevel: 0,
+            blockHarvest: new ItemTileHarvest(
+                0.88,
+                1,
+                new ItemTileParticle(
+                    "#phantasia:tile/particle_colour/stone",
+                    "#phantasia:tile/generic/harvest_particle_frequency",
+                ),
+                new ItemTileCondition("#phantasia:item/type/pickaxe"),
+            ),
+            blockSFX: "#phantasia:tile/sfx/stone",
+            oreHarvest: new ItemTileHarvest(
+                0.56,
+                0,
+                new ItemTileParticle(
+                    "#phantasia:tile/particle_colour/stone",
+                    "#phantasia:tile/generic/harvest_particle_frequency",
+                ),
+                new ItemTileCondition("#phantasia:item/type/pickaxe"),
+            ),
+            oreSFX: "#phantasia:tile/sfx/stone",
+            hasRawItem: true,
+        },
+        {
+            id: "platinum",
+            harvestLevel: 0,
+            blockHarvest: new ItemTileHarvest(
+                0.98,
+                1,
+                new ItemTileParticle(
+                    "#phantasia:tile/particle_colour/stone",
+                    "#phantasia:tile/generic/harvest_particle_frequency",
+                ),
+                new ItemTileCondition("#phantasia:item/type/pickaxe"),
+            ),
+            blockSFX: "#phantasia:tile/sfx/stone",
+            oreHarvest: new ItemTileHarvest(
+                0.72,
+                0,
+                new ItemTileParticle(
+                    "#phantasia:tile/particle_colour/stone",
+                    "#phantasia:tile/generic/harvest_particle_frequency",
+                ),
+                new ItemTileCondition("#phantasia:item/type/pickaxe"),
+            ),
+            oreSFX: "#phantasia:tile/sfx/stone",
+            hasRawItem: true,
+        },
     ]
         .map(
             ({
@@ -224,6 +365,7 @@ export default [
                 blockSFX,
                 oreHarvest,
                 oreSFX,
+                hasRawItem,
             }) =>
                 oreItems(
                     id,
@@ -238,6 +380,7 @@ export default [
                     ],
                     oreHarvest,
                     oreSFX,
+                    hasRawItem,
                 ),
         )
         .flat(),
