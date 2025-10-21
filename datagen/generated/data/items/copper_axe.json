@@ -1,0 +1,16 @@
+{
+    "inventory": "#phantasia:item/generic/inventory_tool",
+    "item": {
+        "durability": {
+            "amount": 133,
+            "bar": "#phantasia:item/generic/inventory_tool"
+        },
+        "damage": 4,
+        "harvest": {
+            "hardness": 1.12,
+            "level": 2
+        }
+    },
+    "sprite": "phantasia:item/copper_axe",
+    "type": "tool"
+}

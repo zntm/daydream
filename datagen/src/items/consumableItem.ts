@@ -1,8 +1,14 @@
 import { DatagenReturnData } from "../../index";
-import { Item, ItemSprite, ItemConsumable, ItemInventory } from "../items";
+import {
+    Item,
+    ItemSprite,
+    ItemConsumable,
+    ItemInventory,
+    ItemType,
+} from "../items";
 
 export default (
-    id: string,
+    id: ItemType,
     inventory: string | ItemInventory,
     consumable: ItemConsumable,
 ) => {
@@ -12,7 +18,7 @@ export default (
         };
 
         constructor(
-            type: string,
+            type: ItemType,
             sprite: string | ItemSprite,
             inventory: string | ItemInventory,
         ) {
@@ -30,7 +36,7 @@ export default (
     return new DatagenReturnData(
         `generated/data/items/${id}.json`,
         new ConsumableItem(
-            "default",
+            ItemType.Default,
             `phantasia:item/${id}`,
             inventory,
         ).setItemConsumable(consumable),

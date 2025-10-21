@@ -16,6 +16,7 @@ const {
     ItemTileSFX,
 } = import.meta.require("./tileItem");
 
+const { default: blockWallItems } = import.meta.require("./blockWallItems");
 const { default: toolItem } = import.meta.require("./toolItem");
 
 export default (
@@ -84,17 +85,15 @@ export default (
     ),
     toolItem(
         `${id}_pickaxe`,
-        1,
-        1,
         73,
         "#phantasia:item/generic/inventory_tool",
+        undefined,
+        1,
+        1,
     ),
-    tileItem(
+    ...blockWallItems(
         `${id}_planks`,
-        ItemType.Solid,
-        "#phantasia:item/generic/inventory_tile",
-        ItemTileProperties.IsTile,
-        [new ItemTileDrop(`phantasia:${id}_planks`)],
+        [ItemTileProperties.IsTile],
         new ItemTileHarvest(
             0.44,
             1,
@@ -104,34 +103,15 @@ export default (
             ),
             new ItemTileCondition("#phantasia:item/type/axe"),
         ),
-        undefined,
-        new ItemTileSFX("#phantasia:tile/sfx/wood"),
+        "#phantasia:tile/sfx/wood",
     ),
-    tileItem(
-        `${id}_planks_wall`,
-        ItemType.Untouchable,
-        "#phantasia:item/generic/inventory_tile",
-        ItemTileProperties.IsTile,
-        [new ItemTileDrop(`phantasia:${id}_planks_wall`)],
-        new ItemTileHarvest(
-            0.44,
-            1,
-            new ItemTileParticle(
-                plankParticleId,
-                "#phantasia:tile/generic/harvest_particle_frequency",
-            ),
-            new ItemTileCondition("#phantasia:item/type/axe"),
-        ),
-        undefined,
-        new ItemTileSFX("#phantasia:tile/sfx/wood"),
-    ),
-
     toolItem(
         `${id}_shovel`,
-        1,
-        1,
         65,
         "#phantasia:item/generic/inventory_tool",
+        undefined,
+        1,
+        1,
     ),
     tileItem(
         `${id}_workbench`,

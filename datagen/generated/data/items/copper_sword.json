@@ -1,0 +1,12 @@
+{
+    "inventory": "#phantasia:item/generic/inventory_tool",
+    "item": {
+        "durability": {
+            "amount": 162,
+            "bar": "#phantasia:item/generic/inventory_tool"
+        },
+        "damage": 5
+    },
+    "sprite": "phantasia:item/copper_sword",
+    "type": "tool"
+}

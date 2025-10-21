@@ -5,6 +5,7 @@ import {
     ItemInventory,
     ItemDurability,
     ItemHarvest,
+    ItemType,
 } from "../items";
 
 export class ItemTileParticle {
@@ -102,11 +103,12 @@ export enum ItemTileProperties {
     CanFlip = "phantasia:can_flip",
     IsFoliage = "phantasia:is_foliage",
     IsTile = "phantasia:is_tile",
+    IsWall = "phantasia:is_wall",
 }
 
 export default (
     id: string,
-    type: string,
+    type: ItemType,
     inventory: string | ItemInventory,
     properties?: ItemTileProperties | ItemTileProperties[],
     drop?: string | ItemTileDrop[],
@@ -123,7 +125,7 @@ export default (
         };
 
         constructor(
-            type: string,
+            type: ItemType,
             sprite: string | ItemSprite,
             inventory: string | ItemInventory,
             properties?: ItemTileProperties | ItemTileProperties[],

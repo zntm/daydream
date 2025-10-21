@@ -1,13 +1,13 @@
 import { DatagenReturnData } from "../index";
 
 export class Item {
-    public type: string;
+    public type: ItemType;
     public sprite: string | ItemSprite;
     public inventory: string | ItemInventory;
     public properties?: any;
 
     constructor(
-        type: string,
+        type: ItemType,
         sprite: string | ItemSprite,
         inventory: string | ItemInventory,
         properties?: any,
@@ -62,15 +62,28 @@ export class ItemCooldown {
     }
 }
 
+export class ItemDurability {
+    private amount: number;
+    private bar: string;
+
+    constructor(amount: number, bar: string) {
+        this.amount = amount;
+        this.bar = bar;
+    }
+}
+
 export class ItemInventory {}
 
 export class ItemHarvest {
     private hardness: number;
-    private level: number;
+    private level?: number;
 
-    constructor(hardness: number, level: number) {
+    constructor(hardness: number, level?: number) {
         this.hardness = hardness;
-        this.level = level;
+
+        if (level !== undefined) {
+            this.level = level;
+        }
     }
 }
 
@@ -87,22 +100,17 @@ export class ItemSoundEffect {
     }
 }
 
-export class ItemDurability {
-    private amount: number;
-    private bar: string;
-
-    constructor(amount: number, bar: string) {
-        this.amount = amount;
-        this.bar = bar;
-    }
-}
-
 export enum ItemType {
     Default = "default",
     Solid = "solid",
     Untouchable = "untouchable",
+    Accessory = "accessory",
     Tool = "tool",
 }
+
+const { default: blockWallItems } = import.meta.require(
+    "./items/blockWallItems",
+);
 
 const { default: consumableItem } = import.meta.require(
     "./items/consumableItem",
@@ -113,6 +121,10 @@ const { default: cookableConsumableItems } = import.meta.require(
 );
 
 const { default: oreItems } = import.meta.require("./items/oreItems");
+
+const { default: tieredEquipmentItems } = import.meta.require(
+    "./items/tieredEquipmentItems",
+);
 
 const {
     default: tileItem,
@@ -137,6 +149,101 @@ export default [
             new ItemSoundEffect("phantasia:sound.eat"),
         ),
     ),
+    // Block Wall
+    ...[
+        {
+            id: "dirt",
+            properties: [
+                ItemTileProperties.CanFlip,
+                ItemTileProperties.CanMirror,
+                ItemTileProperties.IsTile,
+            ],
+            harvest: new ItemTileHarvest(
+                0.36,
+                0,
+                new ItemTileParticle(
+                    "#phantasia:tile/particle_colour/dirt",
+                    "#phantasia:tile/generic/harvest_particle_frequency",
+                ),
+            ),
+            sfx: "#phantasia:tile/sfx/dirt",
+        },
+        {
+            id: "moss",
+            properties: [
+                ItemTileProperties.CanFlip,
+                ItemTileProperties.CanMirror,
+                ItemTileProperties.IsTile,
+            ],
+            harvest: new ItemTileHarvest(
+                0.26,
+                0,
+                new ItemTileParticle(
+                    "#phantasia:tile/particle_colour/stone",
+                    "#phantasia:tile/generic/harvest_particle_frequency",
+                ),
+            ),
+            sfx: "#phantasia:tile/sfx/grass",
+        },
+        {
+            id: "sandstone",
+            properties: [
+                ItemTileProperties.CanFlip,
+                ItemTileProperties.CanMirror,
+                ItemTileProperties.IsTile,
+            ],
+            harvest: new ItemTileHarvest(
+                0.22,
+                0,
+                new ItemTileParticle(
+                    "#phantasia:tile/particle_colour/sand",
+                    "#phantasia:tile/generic/harvest_particle_frequency",
+                ),
+                new ItemTileCondition("#phantasia:item/type/pickaxe"),
+            ),
+            sfx: "#phantasia:tile/sfx/stone",
+        },
+        {
+            id: "stone",
+            properties: [
+                ItemTileProperties.CanFlip,
+                ItemTileProperties.CanMirror,
+                ItemTileProperties.IsTile,
+            ],
+            harvest: new ItemTileHarvest(
+                0.36,
+                0,
+                new ItemTileParticle(
+                    "#phantasia:tile/particle_colour/stone",
+                    "#phantasia:tile/generic/harvest_particle_frequency",
+                ),
+                new ItemTileCondition("#phantasia:item/type/pickaxe"),
+            ),
+            sfx: "#phantasia:tile/sfx/stone",
+        },
+        {
+            id: "nightrock",
+            properties: [
+                ItemTileProperties.CanFlip,
+                ItemTileProperties.CanMirror,
+                ItemTileProperties.IsTile,
+            ],
+            harvest: new ItemTileHarvest(
+                0.52,
+                0,
+                new ItemTileParticle(
+                    "#phantasia:tile/particle_colour/nightrock",
+                    "#phantasia:tile/generic/harvest_particle_frequency",
+                ),
+                new ItemTileCondition("#phantasia:item/type/pickaxe"),
+            ),
+            sfx: "#phantasia:tile/sfx/stone",
+        },
+    ]
+        .map(({ id, properties, harvest, sfx }) =>
+            blockWallItems(id, properties, harvest, sfx),
+        )
+        .flat(),
     // Cookable Consumables
     ...[
         {
@@ -230,6 +337,27 @@ export default [
             );
         })
         .flat(),
+    // Grass Block
+    ...["", "taiga", "swamp"].map((id) => {
+        id = id !== "" ? `grass_block_${id}` : "grass_block";
+
+        return tileItem(
+            id,
+            ItemType.Untouchable,
+            "#phantasia:item/generic/inventory_default",
+            [ItemTileProperties.CanMirror, ItemTileProperties.IsTile],
+            [new ItemTileDrop(`phantasia:dirt`)],
+            new ItemTileHarvest(
+                0.36,
+                0,
+                new ItemTileParticle(
+                    "#phantasia:tile/particle_colour/dirt",
+                    "#phantasia:tile/generic/harvest_particle_frequency",
+                ),
+            ),
+            "#phantasia/tile/sfx/dirt",
+        );
+    }),
     // Ore
     ...[
         {
@@ -381,6 +509,90 @@ export default [
                     oreHarvest,
                     oreSFX,
                     hasRawItem,
+                ),
+        )
+        .flat(),
+    // Tiered Equipment
+    ...[
+        {
+            id: "copper",
+            helmet: { defense: 2, durability: 100 },
+            breastplate: { defense: 4, durability: 136 },
+            leggings: { defense: 3, durability: 108 },
+            sword: { damage: 5, durability: 162 },
+            pickaxe: { damage: 4, durability: 141 },
+            axe: { damage: 4, durability: 133 },
+            shovel: { damage: 3, durability: 125 },
+            harvest: {
+                hardness: 1.12,
+                level: 2,
+            },
+        },
+        {
+            id: "iron",
+            helmet: { defense: 4, durability: 277 },
+            breastplate: { defense: 7, durability: 308 },
+            leggings: { defense: 5, durability: 244 },
+            sword: { damage: 7, durability: 367 },
+            pickaxe: { damage: 6, durability: 319 },
+            axe: { damage: 6, durability: 300 },
+            shovel: { damage: 4, durability: 283 },
+            harvest: {
+                hardness: 1.19,
+                level: 3,
+            },
+        },
+        {
+            id: "gold",
+            helmet: { defense: 6, durability: 494 },
+            breastplate: { defense: 11, durability: 671 },
+            leggings: { defense: 8, durability: 531 },
+            sword: { damage: 8, durability: 799 },
+            pickaxe: { damage: 7, durability: 695 },
+            axe: { damage: 7, durability: 653 },
+            shovel: { damage: 5, durability: 616 },
+            harvest: {
+                hardness: 1.25,
+                level: 4,
+            },
+        },
+        {
+            id: "platinum",
+            helmet: { defense: 7, durability: 766 },
+            breastplate: { defense: 13, durability: 1041 },
+            leggings: { defense: 9, durability: 823 },
+            sword: { damage: 13, durability: 1239 },
+            pickaxe: { damage: 11, durability: 1078 },
+            axe: { damage: 10, durability: 1012 },
+            shovel: { damage: 7, durability: 955 },
+            harvest: {
+                hardness: 1.31,
+                level: 5,
+            },
+        },
+    ]
+        .map(
+            ({
+                id,
+                helmet,
+                breastplate,
+                leggings,
+                sword,
+                pickaxe,
+                axe,
+                shovel,
+                harvest,
+            }) =>
+                tieredEquipmentItems(
+                    id,
+                    helmet,
+                    breastplate,
+                    leggings,
+                    sword,
+                    pickaxe,
+                    axe,
+                    shovel,
+                    harvest,
                 ),
         )
         .flat(),

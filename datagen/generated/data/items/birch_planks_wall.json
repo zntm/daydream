@@ -1,7 +1,8 @@
 {
     "inventory": "#phantasia:item/generic/inventory_tile",
     "properties": [
-        "phantasia:is_tile"
+        "phantasia:is_tile",
+        "phantasia:is_wall"
     ],
     "sprite": "phantasia:block/birch_planks_wall",
     "tile": {
@@ -21,9 +22,7 @@
                 "id": "#phantasia:item/type/axe"
             }
         },
-        "sfx": {
-            "id": "#phantasia:tile/sfx/wood"
-        }
+        "sfx": "#phantasia:tile/sfx/wood"
     },
     "type": "untouchable"
 }

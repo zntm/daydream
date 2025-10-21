@@ -1,27 +1,26 @@
 {
     "inventory": "#phantasia:item/generic/inventory_tile",
     "properties": [
+        "phantasia:can_flip",
+        "phantasia:can_mirror",
         "phantasia:is_tile"
     ],
-    "sprite": "phantasia:block/pine_planks",
+    "sprite": "phantasia:block/dirt",
     "tile": {
         "drop": [
             {
-                "id": "phantasia:pine_planks"
+                "id": "phantasia:dirt"
             }
         ],
         "harvest": {
-            "hardness": 0.44,
-            "level": 1,
+            "hardness": 0.36,
+            "level": 0,
             "particle": {
-                "colour": "#phantasia:tile/particle_colour/plank_pine",
+                "colour": "#phantasia:tile/particle_colour/dirt",
                 "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
-            },
-            "condition": {
-                "id": "#phantasia:item/type/axe"
             }
         },
-        "sfx": "#phantasia:tile/sfx/wood"
+        "sfx": "#phantasia:tile/sfx/dirt"
     },
     "type": "solid"
 }

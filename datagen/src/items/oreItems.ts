@@ -82,11 +82,3 @@ export default (
 
     return data;
 };
-
-/*
-    inventory: string | ItemInventory,
-    properties?: ItemTileProperties | ItemTileProperties[],
-    drop?: string | ItemTileDrop[],
-    harvest?: ItemTileHarvest,
-    placement?: string | ItemTilePlacement,
-    sfx?: string | ItemTileSFX,*/

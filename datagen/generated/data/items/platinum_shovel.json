@@ -1,0 +1,16 @@
+{
+    "inventory": "#phantasia:item/generic/inventory_tool",
+    "item": {
+        "durability": {
+            "amount": 955,
+            "bar": "#phantasia:item/generic/inventory_tool"
+        },
+        "damage": 7,
+        "harvest": {
+            "hardness": 1.31,
+            "level": 5
+        }
+    },
+    "sprite": "phantasia:item/platinum_shovel",
+    "type": "tool"
+}

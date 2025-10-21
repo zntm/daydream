@@ -1,0 +1,25 @@
+{
+    "inventory": "#phantasia:item/generic/inventory_default",
+    "properties": [
+        "phantasia:can_mirror",
+        "phantasia:is_tile"
+    ],
+    "sprite": "phantasia:block/grass_block_taiga",
+    "tile": {
+        "drop": [
+            {
+                "id": "phantasia:dirt"
+            }
+        ],
+        "harvest": {
+            "hardness": 0.36,
+            "level": 0,
+            "particle": {
+                "colour": "#phantasia:tile/particle_colour/dirt",
+                "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
+            }
+        },
+        "placement": "#phantasia/tile/sfx/dirt"
+    },
+    "type": "untouchable"
+}
