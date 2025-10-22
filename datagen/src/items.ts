@@ -1,4 +1,9 @@
-import { DatagenReturnData } from "../index";
+import {
+    DatagenReturnData,
+    SmartValue,
+    SmartValueRandom,
+    SmartValueType,
+} from "../index";
 
 export class Item {
     public type: ItemType;
@@ -136,9 +141,19 @@ const {
     ItemTileProperties,
 } = import.meta.require("./items/tileItem");
 
+const { default: toolItem } = import.meta.require("./items/toolItem");
+
 const { default: woodItems } = import.meta.require("./items/woodItems");
 
 export default [
+    toolItem(
+        "hatchet",
+        68,
+        "#phantasia:item/generic/inventory_tool",
+        undefined,
+        1,
+        1,
+    ),
     consumableItem(
         "apple",
         "#phantasia:item/generic/inventory_default",
@@ -148,6 +163,71 @@ export default [
             new ItemCooldown("phantasia:food", 1),
             new ItemSoundEffect("phantasia:sound.eat"),
         ),
+    ),
+    tileItem(
+        "twig",
+        ItemType.Untouchable,
+        "#phantasia:item/generic/inventory_default",
+        [ItemTileProperties.CanMirror],
+        [new ItemTileDrop("phantasia:twig")],
+        new ItemTileHarvest(
+            0.11,
+            0,
+            new ItemTileParticle(
+                "#phantasia:tile/particle_colour/twig",
+                "#phantasia:tile/generic/harvest_particle_frequency",
+            ),
+        ),
+        new ItemTilePlacement().setIndex(
+            new SmartValue(
+                SmartValueType.IntRandom,
+                new SmartValueRandom(1, 3),
+            ),
+        ),
+        "#phantasia:tile/sfx/wood",
+    ),
+    tileItem(
+        "rock",
+        ItemType.Untouchable,
+        "#phantasia:item/generic/inventory_default",
+        [ItemTileProperties.CanMirror],
+        [new ItemTileDrop("phantasia:rock")],
+        new ItemTileHarvest(
+            0.11,
+            0,
+            new ItemTileParticle(
+                "#phantasia:tile/particle_colour/stone",
+                "#phantasia:tile/generic/harvest_particle_frequency",
+            ),
+        ),
+        new ItemTilePlacement().setIndex(
+            new SmartValue(
+                SmartValueType.IntRandom,
+                new SmartValueRandom(1, 4),
+            ),
+        ),
+        undefined,
+        "#phantasia:tile/sfx/stone",
+    ),
+    tileItem(
+        "dead_bush",
+        ItemType.Untouchable,
+        "#phantasia:item/generic/inventory_default",
+        [ItemTileProperties.CanMirror, ItemTileProperties.IsFoliage],
+        [new ItemTileDrop("phantasia:twig")],
+        new ItemTileHarvest(
+            0.38,
+            0,
+            new ItemTileParticle(
+                "#phantasia:tile/particle_colour/twig",
+                "#phantasia:tile/generic/harvest_particle_frequency",
+            ),
+        ),
+        new ItemTilePlacement().setCondition(
+            "#phantasia:tile/placement/condition_dry_plant",
+        ),
+        undefined,
+        "#phantasia:tile/sfx/wood",
     ),
     // Block Wall
     ...[
@@ -295,7 +375,7 @@ export default [
             id,
             ItemType.Untouchable,
             "#phantasia:item/generic/inventory_default",
-            ItemTileProperties.IsFoliage,
+            [ItemTileProperties.CanMirror, ItemTileProperties.IsFoliage],
             [new ItemTileDrop(`phantasia:${id}`)],
             new ItemTileHarvest(
                 0.38,
@@ -306,21 +386,24 @@ export default [
                 ),
             ),
             new ItemTilePlacement().setCondition(
-                "#phantasia:tile/particle_colour/plant",
+                "#phantasia:tile/placement/condition_plant",
             ),
         ),
     ),
     // Grass
     ...["", "borea", "dry", "myr"]
         .map((id: string) => {
-            id = id !== "" ? `${id}_grass` : "grass";
+            id = id !== "" ? `grass_${id}` : "grass";
 
             return ["short", "tall"].map((type: string) =>
                 tileItem(
                     `${type}_${id}`,
                     ItemType.Untouchable,
                     "#phantasia:item/generic/inventory_default",
-                    ItemTileProperties.IsFoliage,
+                    [
+                        ItemTileProperties.CanMirror,
+                        ItemTileProperties.IsFoliage,
+                    ],
                     [new ItemTileDrop(`phantasia:${type}_${id}`)],
                     new ItemTileHarvest(
                         0.38,
@@ -331,7 +414,7 @@ export default [
                         ),
                     ),
                     new ItemTilePlacement().setCondition(
-                        "#phantasia:tile/particle_colour/plant",
+                        "#phantasia:tile/placement/condition_plant",
                     ),
                 ),
             );

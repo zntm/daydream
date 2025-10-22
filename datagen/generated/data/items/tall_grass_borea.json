@@ -4,11 +4,11 @@
         "phantasia:can_mirror",
         "phantasia:is_foliage"
     ],
-    "sprite": "phantasia:block/globeflower",
+    "sprite": "phantasia:block/tall_grass_borea",
     "tile": {
         "drop": [
             {
-                "id": "phantasia:globeflower"
+                "id": "phantasia:tall_grass_borea"
             }
         ],
         "harvest": {

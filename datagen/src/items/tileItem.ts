@@ -90,13 +90,73 @@ export class ItemTilePlacement {
     }
 }
 
-export class ItemTilePlacementCondition {
-    private id: string;
+enum ItemTilePlacementConditionType {
+    Every = "every",
+    Some = "some",
+}
 
-    constructor(condition: string) {
-        this.id = condition;
+export class ItemTilePlacementCondition {
+    private type: ItemTilePlacementConditionType;
+    private values: Array<
+        | { condition: ItemTilePlacementCondition }
+        | ItemTilePlacementConditionValue
+    >;
+
+    constructor(
+        type: ItemTilePlacementConditionType,
+        values: Array<
+            | { condition: ItemTilePlacementCondition }
+            | ItemTilePlacementConditionValue
+        >,
+    ) {
+        this.type = type;
+        this.values = values;
     }
 }
+
+export class ItemTilePlacementConditionValue {
+    private xoffset: number;
+    private yoffset: number;
+    private z: string;
+    private id?: string | string[];
+    private type?: ItemType[];
+
+    constructor(xoffset: number, yoffset: number, z: string) {
+        this.xoffset = xoffset;
+        this.yoffset = yoffset;
+        this.z = z;
+    }
+
+    setId(id: string | string[]) {
+        this.id = id;
+
+        return this;
+    }
+
+    setType(type: ItemType[]) {
+        this.type = type;
+
+        return this;
+    }
+}
+/*
+const _ = new ItemTilePlacementCondition(ItemTilePlacementConditionType.Every, [
+    {
+        condition: new ItemTilePlacementCondition(
+            ItemTilePlacementConditionType.Some,
+            [
+                new ItemTilePlacementConditionValue(0, 1, "default").setId(
+                    "#phantasia:tile/placement/plant_on",
+                ),
+                new ItemTilePlacementConditionValue(0, 1, "default").setId(
+                    "$ID",
+                ),
+            ],
+        ),
+    },
+    new ItemTilePlacementConditionValue(0, -1, "z").setId(["$EMPTY", "$ID"]),
+]);
+*/
 
 export enum ItemTileProperties {
     CanMirror = "phantasia:can_mirror",

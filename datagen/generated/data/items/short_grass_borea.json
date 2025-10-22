@@ -1,13 +1,14 @@
 {
     "inventory": "#phantasia:item/generic/inventory_default",
     "properties": [
+        "phantasia:can_mirror",
         "phantasia:is_foliage"
     ],
-    "sprite": "phantasia:block/tall_myr_grass",
+    "sprite": "phantasia:block/short_grass_borea",
     "tile": {
         "drop": [
             {
-                "id": "phantasia:tall_myr_grass"
+                "id": "phantasia:short_grass_borea"
             }
         ],
         "harvest": {

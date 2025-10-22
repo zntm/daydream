@@ -11,6 +11,46 @@ export class DatagenReturnData {
     }
 }
 
+export enum SmartValueType {
+    FloatRandom,
+    IntRandom,
+    Choose,
+    ChooseWeighted,
+}
+
+export class SmartValueRandom {
+    min: number;
+    max: number;
+
+    constructor(min: number, max: number) {
+        this.min = min;
+        this.max = max;
+    }
+}
+
+export class SmartValueChooseWeightedOption {
+    value: any;
+    weight: number;
+
+    constructor(value: any, weight: number) {
+        this.value = value;
+        this.weight = weight;
+    }
+}
+
+export class SmartValue {
+    constructor(
+        public type: SmartValueType,
+        public values:
+            | SmartValueRandom
+            | any[]
+            | SmartValueChooseWeightedOption[],
+    ) {
+        this.type = type;
+        this.values = values;
+    }
+}
+
 const exportData = (data: DatagenReturnData) => {
     const file = Bun.file(join(__dirname, data.destination));
 

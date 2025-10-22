@@ -8,7 +8,7 @@ import {
 } from "../items";
 
 export default (
-    id: ItemType,
+    id: string,
     durabilityAmount: number,
     durabilityBar: string,
     damage?: number,

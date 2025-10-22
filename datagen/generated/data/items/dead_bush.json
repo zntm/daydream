@@ -1,20 +1,21 @@
 {
     "inventory": "#phantasia:item/generic/inventory_default",
     "properties": [
+        "phantasia:can_mirror",
         "phantasia:is_foliage"
     ],
-    "sprite": "phantasia:block/short_dry_grass",
+    "sprite": "phantasia:block/dead_bush",
     "tile": {
         "drop": [
             {
-                "id": "phantasia:short_dry_grass"
+                "id": "phantasia:twig"
             }
         ],
         "harvest": {
             "hardness": 0.38,
             "level": 0,
             "particle": {
-                "colour": "#phantasia:tile/particle_colour/plant",
+                "colour": "#phantasia:tile/particle_colour/twig",
                 "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
             }
         }

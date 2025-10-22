@@ -1,20 +1,20 @@
 {
     "inventory": "#phantasia:item/generic/inventory_default",
     "properties": [
-        "phantasia:is_foliage"
+        "phantasia:can_mirror"
     ],
-    "sprite": "phantasia:block/short_myr_grass",
+    "sprite": "phantasia:block/rock",
     "tile": {
         "drop": [
             {
-                "id": "phantasia:short_myr_grass"
+                "id": "phantasia:rock"
             }
         ],
         "harvest": {
-            "hardness": 0.38,
+            "hardness": 0.11,
             "level": 0,
             "particle": {
-                "colour": "#phantasia:tile/particle_colour/plant",
+                "colour": "#phantasia:tile/particle_colour/stone",
                 "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
             }
         }
