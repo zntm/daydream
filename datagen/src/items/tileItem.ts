@@ -6,6 +6,8 @@ import {
     ItemDurability,
     ItemHarvest,
     ItemType,
+    ItemComponent,
+    ItemFunction,
 } from "../items";
 
 export class ItemTileParticle {
@@ -25,6 +27,16 @@ export class ItemTileCondition {
     constructor(id: string, level?: number) {
         this.id = id;
         this.level = level;
+    }
+}
+
+export class ItemTileDropCondition {
+    private index?: number;
+
+    setIndex(index: number) {
+        this.index = index;
+
+        return this;
     }
 }
 
@@ -83,14 +95,18 @@ export class ItemTilePlacement {
 
     setCondition(condition: string | ItemTilePlacementCondition) {
         this.condition = condition;
+
+        return this;
     }
 
     setIndex(index: string | number) {
         this.index = index;
+
+        return this;
     }
 }
 
-enum ItemTilePlacementConditionType {
+export enum ItemTilePlacementConditionType {
     Every = "every",
     Some = "some",
 }
@@ -139,24 +155,6 @@ export class ItemTilePlacementConditionValue {
         return this;
     }
 }
-/*
-const _ = new ItemTilePlacementCondition(ItemTilePlacementConditionType.Every, [
-    {
-        condition: new ItemTilePlacementCondition(
-            ItemTilePlacementConditionType.Some,
-            [
-                new ItemTilePlacementConditionValue(0, 1, "default").setId(
-                    "#phantasia:tile/placement/plant_on",
-                ),
-                new ItemTilePlacementConditionValue(0, 1, "default").setId(
-                    "$ID",
-                ),
-            ],
-        ),
-    },
-    new ItemTilePlacementConditionValue(0, -1, "z").setId(["$EMPTY", "$ID"]),
-]);
-*/
 
 export enum ItemTileProperties {
     CanMirror = "phantasia:can_mirror",
@@ -175,6 +173,13 @@ export default (
     harvest?: ItemTileHarvest,
     placement?: string | ItemTilePlacement,
     sfx?: string | ItemTileSFX,
+    components?: [
+        {
+            key: string;
+            component: ItemComponent;
+        },
+    ],
+    onUse?: ItemFunction[],
 ) => {
     class TileItem extends Item {
         private tile: {
@@ -182,6 +187,10 @@ export default (
             harvest?: string | ItemTileHarvest;
             placement?: string | ItemTilePlacement;
             sfx?: string | ItemTileSFX;
+            components?: {
+                [key: string]: ItemComponent;
+            };
+            on_use?: ItemFunction[];
         };
 
         constructor(
@@ -226,14 +235,39 @@ export default (
 
             return this;
         }
+
+        addComponent(key: string, value: ItemComponent) {
+            this.tile.components ??= {};
+            this.tile.components[key] = value;
+
+            return this;
+        }
+
+        addOnUse(value: ItemFunction[]) {
+            this.tile.on_use ??= value;
+
+            return this;
+        }
     }
 
-    return new DatagenReturnData(
-        `generated/data/items/${id}.json`,
-        new TileItem(type, `phantasia:block/${id}`, inventory, properties)
-            .setTileDrop(drop)
-            .setTileHarvest(harvest)
-            .setTilePlacement(placement)
-            .setTileSFX(sfx),
+    const tile = new TileItem(
+        type,
+        `phantasia:block/${id}`,
+        inventory,
+        properties,
+    )
+        .setTileDrop(drop)
+        .setTileHarvest(harvest)
+        .setTilePlacement(placement)
+        .setTileSFX(sfx);
+
+    components?.forEach(({ key, component }) =>
+        tile.addComponent(key, component),
     );
+
+    if (onUse) {
+        tile.addOnUse(onUse);
+    }
+
+    return new DatagenReturnData(`generated/data/items/${id}.json`, tile);
 };

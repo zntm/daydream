@@ -1,26 +1,25 @@
 {
     "inventory": "#phantasia:item/generic/inventory_default",
     "properties": [
-        "phantasia:can_mirror",
         "phantasia:is_foliage"
     ],
-    "sprite": "phantasia:block/lilybell",
+    "sprite": "phantasia:block/cactus_flower",
     "tile": {
         "drop": [
             {
-                "id": "phantasia:lilybell"
+                "id": "phantasia:cactus_flower"
             }
         ],
         "harvest": {
             "hardness": 0.38,
             "level": 0,
             "particle": {
-                "colour": "#phantasia:tile/particle_colour/plant",
+                "colour": "#phantasia:tile/particle_colour/twig",
                 "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
             }
         },
         "placement": {
-            "condition": "#phantasia:tile/placement/condition_plant"
+            "condition": "#phantasia:tile/placement/condition_dry_plant"
         },
         "sfx": "#phantasia:tile/sfx/leaves"
     },

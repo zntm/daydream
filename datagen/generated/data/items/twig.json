@@ -18,6 +18,15 @@
                 "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
             }
         },
+        "placement": {
+            "index": {
+                "type": 1,
+                "values": {
+                    "min": 1,
+                    "max": 3
+                }
+            }
+        },
         "sfx": "#phantasia:tile/sfx/wood"
     },
     "type": "untouchable"

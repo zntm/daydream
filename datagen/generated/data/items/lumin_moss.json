@@ -5,18 +5,18 @@
         "phantasia:can_mirror",
         "phantasia:is_tile"
     ],
-    "sprite": "phantasia:block/moss",
+    "sprite": "phantasia:block/lumin_moss",
     "tile": {
         "drop": [
             {
-                "id": "phantasia:moss"
+                "id": "phantasia:lumin_moss"
             }
         ],
         "harvest": {
             "hardness": 0.26,
             "level": 0,
             "particle": {
-                "colour": "#phantasia:tile/particle_colour/moss",
+                "colour": "#phantasia:tile/particle_colour/lumin_moss",
                 "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
             }
         },

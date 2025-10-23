@@ -1,0 +1,62 @@
+{
+    "inventory": "#phantasia:item/generic/inventory_default",
+    "properties": [
+        "phantasia:can_mirror"
+    ],
+    "sprite": "phantasia:block/sunflower",
+    "tile": {
+        "drop": [
+            {
+                "id": "sunflower",
+                "condition": {
+                    "index": 0
+                }
+            }
+        ],
+        "harvest": {
+            "hardness": 0.38,
+            "level": 0,
+            "particle": {
+                "colour": "#phantasia:tile/particle_colour/plant",
+                "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
+            }
+        },
+        "placement": {
+            "condition": {
+                "type": "every",
+                "values": [
+                    {
+                        "condition": {
+                            "type": "some",
+                            "values": [
+                                {
+                                    "xoffset": 0,
+                                    "yoffset": 1,
+                                    "z": "default",
+                                    "id": "#phantasia:tile/placement/plant_on"
+                                },
+                                {
+                                    "xoffset": 0,
+                                    "yoffset": 1,
+                                    "z": "default",
+                                    "id": "$ID"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "xoffset": 0,
+                        "yoffset": -1,
+                        "z": "z",
+                        "id": [
+                            "$EMPTY",
+                            "$ID"
+                        ]
+                    }
+                ]
+            }
+        },
+        "sfx": "#phantasia:tile/sfx/leaves"
+    },
+    "type": "untouchable"
+}

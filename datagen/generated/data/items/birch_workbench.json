@@ -8,7 +8,7 @@
             }
         ],
         "harvest": {
-            "hardness": 0.56,
+            "hardness": 0.36,
             "level": 1,
             "particle": {
                 "colour": "#phantasia:tile/particle_colour/plank_birch",

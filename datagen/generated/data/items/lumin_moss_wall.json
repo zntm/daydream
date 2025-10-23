@@ -3,24 +3,25 @@
     "properties": [
         "phantasia:can_flip",
         "phantasia:can_mirror",
-        "phantasia:is_tile"
+        "phantasia:is_tile",
+        "phantasia:is_wall"
     ],
-    "sprite": "phantasia:block/moss",
+    "sprite": "phantasia:block/lumin_moss_wall",
     "tile": {
         "drop": [
             {
-                "id": "phantasia:moss"
+                "id": "phantasia:lumin_moss_wall"
             }
         ],
         "harvest": {
             "hardness": 0.26,
             "level": 0,
             "particle": {
-                "colour": "#phantasia:tile/particle_colour/moss",
+                "colour": "#phantasia:tile/particle_colour/lumin_moss",
                 "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
             }
         },
         "sfx": "#phantasia:tile/sfx/grass"
     },
-    "type": "solid"
+    "type": "untouchable"
 }

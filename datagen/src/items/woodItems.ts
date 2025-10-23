@@ -120,7 +120,7 @@ export default (
         undefined,
         [new ItemTileDrop(`phantasia:${id}_workbench`)],
         new ItemTileHarvest(
-            0.56,
+            0.36,
             1,
             new ItemTileParticle(
                 plankParticleId,

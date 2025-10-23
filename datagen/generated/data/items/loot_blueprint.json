@@ -1,0 +1,49 @@
+{
+    "inventory": "#phantasia:item/generic/inventory_default",
+    "sprite": "phantasia:block/loot_blueprint",
+    "tile": {
+        "sfx": "#phantasia:tile/sfx/stone",
+        "components": {
+            "id": {
+                "type": "string",
+                "default_value": "id",
+                "max_length": 80
+            },
+            "turns_into": {
+                "type": "string",
+                "default_value": "turns_into",
+                "max_length": 80
+            }
+        },
+        "on_use": [
+            {
+                "id": "phantasia:open_menu",
+                "parameters": [
+                    {
+                        "type": "button",
+                        "x": 56,
+                        "y": 56,
+                        "on_select_release": "exit"
+                    },
+                    {
+                        "type": "anchor",
+                        "x": 480,
+                        "y": 84,
+                        "text": "phantasia:tile.structure_blueprint.structure_id"
+                    },
+                    {
+                        "type": "textbox_string",
+                        "x": 480,
+                        "y": 132,
+                        "width": 17,
+                        "height": 3,
+                        "placeholder": "ID",
+                        "max_length": 80,
+                        "component": "id"
+                    }
+                ]
+            }
+        ]
+    },
+    "type": "solid"
+}

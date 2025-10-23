@@ -43,6 +43,67 @@ export class ItemSprite {
     }
 }
 
+export enum ItemComponentType {
+    Boolean = "boolean",
+    Float = "float",
+    Integer = "integer",
+    String = "string",
+}
+
+export class ItemComponent {
+    private type: ItemComponentType;
+    private default_value: string | number;
+
+    constructor(type: ItemComponentType, default_value: string | number) {
+        this.type = type;
+        this.default_value = default_value;
+    }
+}
+
+export class ItemStringComponent extends ItemComponent {
+    private max_length?: number;
+
+    constructor(default_value: string | number, max_length?: number) {
+        super(ItemComponentType.String, default_value);
+
+        this.max_length = max_length;
+    }
+}
+
+export class ItemFloatComponent extends ItemComponent {
+    private min_value?: number;
+    private max_value?: number;
+
+    constructor(
+        default_value: string | number,
+        min_value?: number,
+        max_value?: number,
+    ) {
+        super(ItemComponentType.Float, default_value);
+
+        this.min_value = min_value;
+        this.max_value = max_value;
+    }
+}
+
+export class ItemIntegerComponent extends ItemComponent {
+    private min_value?: number;
+    private max_value?: number;
+
+    constructor(
+        default_value: string | number,
+        min_value?: number,
+        max_value?: number,
+    ) {
+        super(ItemComponentType.Integer, default_value);
+
+        this.min_value = min_value;
+        this.max_value = max_value;
+    }
+}
+
+export class ItemBooleanComponent extends ItemComponent {}
+
 export class ItemConsumable {
     private hp: number;
     private saturation: number;
@@ -105,6 +166,155 @@ export class ItemSoundEffect {
     }
 }
 
+export class ItemFunction {
+    private id: string;
+    private parameters?: any[];
+
+    constructor(id: string, parameters?: any[]) {
+        this.id = id;
+
+        if (parameters !== undefined) {
+            this.parameters = parameters;
+        }
+    }
+}
+
+export enum ItemFunctionDataType {
+    Anchor = "anchor",
+    Button = "button",
+    Checkbox = "checkbox",
+    Dropdown = "dropdown",
+    TextboxFloat = "textbox_float",
+    TextboxInteger = "textbox_integer",
+    TextboxString = "textbox_string",
+}
+
+export class ItemFunctionData {
+    private type: ItemFunctionDataType;
+    private x: number;
+    private y: number;
+
+    constructor(type: ItemFunctionDataType, x: number, y: number) {
+        this.type = type;
+        this.x = x;
+        this.y = y;
+    }
+}
+
+export class ItemFunctionAnchorData extends ItemFunctionData {
+    private text: string;
+
+    constructor(x: number, y: number, text: string) {
+        super(ItemFunctionDataType.Anchor, x, y);
+
+        this.text = text;
+    }
+}
+
+export class ItemFunctionButtonData extends ItemFunctionData {
+    private width?: number;
+    private height?: number;
+    private text?: string;
+    private icon?: string;
+    private on_select_release?: string;
+
+    constructor(x: number, y: number, width?: number, height?: number) {
+        super(ItemFunctionDataType.Button, x, y);
+
+        this.width = width;
+        this.height = height;
+    }
+
+    setText(text: string) {
+        this.text = text;
+
+        return this;
+    }
+
+    setIcon(icon: string) {
+        this.icon = icon;
+
+        return this;
+    }
+
+    setOnSelectRelease(on_select_release: string) {
+        this.on_select_release = on_select_release;
+
+        return this;
+    }
+}
+
+class ItemFunctionTextboxNumberData extends ItemFunctionData {
+    private width?: number;
+    private height?: number;
+    private placeholder?: string;
+    private minNumber?: number;
+    private maxNumber?: number;
+    private component?: string;
+
+    constructor(x: number, y: number, width?: number, height?: number) {
+        super(ItemFunctionDataType.TextboxString, x, y);
+
+        this.width = width;
+        this.height = height;
+    }
+
+    setPlaceholder(placeholder: string) {
+        this.placeholder = placeholder;
+
+        return this;
+    }
+
+    setRange(minNumber: number, maxNumber: number) {
+        this.minNumber = minNumber;
+        this.maxNumber = maxNumber;
+
+        return this;
+    }
+
+    setComponent(component: string) {
+        this.component = component;
+
+        return this;
+    }
+}
+
+export class ItemFunctionTextboxFloatData extends ItemFunctionTextboxNumberData {}
+export class ItemFunctionTextboxIntegerData extends ItemFunctionTextboxNumberData {}
+
+export class ItemFunctionTextboxStringData extends ItemFunctionData {
+    private width?: number;
+    private height?: number;
+    private placeholder?: string;
+    private max_length?: number;
+    private component?: string;
+
+    constructor(x: number, y: number, width?: number, height?: number) {
+        super(ItemFunctionDataType.TextboxString, x, y);
+
+        this.width = width;
+        this.height = height;
+    }
+
+    setPlaceholder(placeholder: string) {
+        this.placeholder = placeholder;
+
+        return this;
+    }
+
+    setMaxLength(max_length: number) {
+        this.max_length = max_length;
+
+        return this;
+    }
+
+    setComponent(component: string) {
+        this.component = component;
+
+        return this;
+    }
+}
+
 export enum ItemType {
     Default = "default",
     Solid = "solid",
@@ -135,9 +345,13 @@ const {
     default: tileItem,
     ItemTileCondition,
     ItemTileDrop,
+    ItemTileDropCondition,
     ItemTileHarvest,
     ItemTileParticle,
     ItemTilePlacement,
+    ItemTilePlacementCondition,
+    ItemTilePlacementConditionType,
+    ItemTilePlacementConditionValue,
     ItemTileProperties,
 } = import.meta.require("./items/tileItem");
 
@@ -154,6 +368,14 @@ export default [
         1,
         1,
     ),
+    new DatagenReturnData(
+        "generated/data/items/feather.json",
+        new Item(
+            ItemType.Default,
+            "phantasia:item/feather",
+            "#phantasia:item/generic/inventory_default",
+        ),
+    ),
     consumableItem(
         "apple",
         "#phantasia:item/generic/inventory_default",
@@ -163,6 +385,113 @@ export default [
             new ItemCooldown("phantasia:food", 1),
             new ItemSoundEffect("phantasia:sound.eat"),
         ),
+    ),
+    ...[
+        {
+            id: "cactus",
+            particleColour: ["#113402", "#032802"],
+        },
+        {
+            id: "cattail",
+            particleColour: "#phantasia:tile/particle_colour/plant",
+            dropCondition: new ItemTileDropCondition().setIndex(2),
+        },
+        {
+            id: "sunflower",
+            particleColour: "#phantasia:tile/particle_colour/plant",
+            dropCondition: new ItemTileDropCondition().setIndex(0),
+        },
+    ].map(({ id, particleColour, dropCondition }) =>
+        tileItem(
+            id,
+            ItemType.Untouchable,
+            "#phantasia:item/generic/inventory_default",
+            [ItemTileProperties.CanMirror],
+            [new ItemTileDrop(id).setCondition(dropCondition)],
+            new ItemTileHarvest(
+                0.38,
+                0,
+                new ItemTileParticle(
+                    particleColour,
+                    "#phantasia:tile/generic/harvest_particle_frequency",
+                ),
+            ),
+            new ItemTilePlacement().setCondition(
+                new ItemTilePlacementCondition(
+                    ItemTilePlacementConditionType.Every,
+                    [
+                        {
+                            condition: new ItemTilePlacementCondition(
+                                ItemTilePlacementConditionType.Some,
+                                [
+                                    new ItemTilePlacementConditionValue(
+                                        0,
+                                        1,
+                                        "default",
+                                    ).setId(
+                                        "#phantasia:tile/placement/plant_on",
+                                    ),
+                                    new ItemTilePlacementConditionValue(
+                                        0,
+                                        1,
+                                        "default",
+                                    ).setId("$ID"),
+                                ],
+                            ),
+                        },
+                        new ItemTilePlacementConditionValue(0, -1, "z").setId([
+                            "$EMPTY",
+                            "$ID",
+                        ]),
+                    ],
+                ),
+            ),
+            "#phantasia:tile/sfx/leaves",
+        ),
+    ),
+    tileItem(
+        "furnace",
+        ItemType.Untouchable,
+        "#phantasia:item/generic/inventory_default",
+        undefined,
+        [
+            new ItemTileDrop("phantasia:item/furnace").setCondition(
+                new ItemTileCondition("#phantasia:item/type/pickaxe", 1),
+            ),
+        ],
+        new ItemTileHarvest(
+            0.36,
+            0,
+            new ItemTileParticle(
+                "#phantasia:tile/particle_colour/stone",
+                "#phantasia:tile/generic/harvest_particle_frequency",
+            ),
+            new ItemTileCondition("#phantasia:item/type/pickaxe"),
+        ),
+        undefined,
+        "#phantasia:tile/sfx/stone",
+    ),
+    tileItem(
+        "glass",
+        ItemType.Untouchable,
+        "#phantasia:item/generic/inventory_default",
+        undefined,
+        [
+            new ItemTileDrop("phantasia:item/glass").setCondition(
+                new ItemTileCondition("#phantasia:item/type/pickaxe", 1),
+            ),
+        ],
+        new ItemTileHarvest(
+            0.08,
+            0,
+            new ItemTileParticle(
+                "#phantasia:tile/particle_colour/stone",
+                "#phantasia:tile/generic/harvest_particle_frequency",
+            ),
+            new ItemTileCondition("#phantasia:item/type/pickaxe"),
+        ),
+        undefined,
+        "#phantasia:tile/sfx/stone",
     ),
     tileItem(
         "twig",
@@ -206,8 +535,26 @@ export default [
                 new SmartValueRandom(1, 4),
             ),
         ),
-        undefined,
         "#phantasia:tile/sfx/stone",
+    ),
+    tileItem(
+        "cactus_flower",
+        ItemType.Untouchable,
+        "#phantasia:item/generic/inventory_default",
+        [ItemTileProperties.IsFoliage],
+        [new ItemTileDrop("phantasia:cactus_flower")],
+        new ItemTileHarvest(
+            0.38,
+            0,
+            new ItemTileParticle(
+                "#phantasia:tile/particle_colour/twig",
+                "#phantasia:tile/generic/harvest_particle_frequency",
+            ),
+        ),
+        new ItemTilePlacement().setCondition(
+            "#phantasia:tile/placement/condition_dry_plant",
+        ),
+        "#phantasia:tile/sfx/leaves",
     ),
     tileItem(
         "dead_bush",
@@ -226,7 +573,6 @@ export default [
         new ItemTilePlacement().setCondition(
             "#phantasia:tile/placement/condition_dry_plant",
         ),
-        undefined,
         "#phantasia:tile/sfx/wood",
     ),
     // Block Wall
@@ -249,6 +595,23 @@ export default [
             sfx: "#phantasia:tile/sfx/dirt",
         },
         {
+            id: "lumin_moss",
+            properties: [
+                ItemTileProperties.CanFlip,
+                ItemTileProperties.CanMirror,
+                ItemTileProperties.IsTile,
+            ],
+            harvest: new ItemTileHarvest(
+                0.26,
+                0,
+                new ItemTileParticle(
+                    "#phantasia:tile/particle_colour/lumin_moss",
+                    "#phantasia:tile/generic/harvest_particle_frequency",
+                ),
+            ),
+            sfx: "#phantasia:tile/sfx/grass",
+        },
+        {
             id: "moss",
             properties: [
                 ItemTileProperties.CanFlip,
@@ -259,7 +622,7 @@ export default [
                 0.26,
                 0,
                 new ItemTileParticle(
-                    "#phantasia:tile/particle_colour/stone",
+                    "#phantasia:tile/particle_colour/moss",
                     "#phantasia:tile/generic/harvest_particle_frequency",
                 ),
             ),
@@ -366,6 +729,7 @@ export default [
         "bluebells",
         "daisy",
         "dandelion",
+        "dendrobium",
         "globeflower",
         "lilybell",
         "orchids",
@@ -388,10 +752,11 @@ export default [
             new ItemTilePlacement().setCondition(
                 "#phantasia:tile/placement/condition_plant",
             ),
+            "#phantasia:tile/sfx/leaves",
         ),
     ),
     // Grass
-    ...["", "borea", "dry", "myr"]
+    ...["", "dry", "swamp", "taiga"]
         .map((id: string) => {
             id = id !== "" ? `grass_${id}` : "grass";
 
@@ -416,6 +781,7 @@ export default [
                     new ItemTilePlacement().setCondition(
                         "#phantasia:tile/placement/condition_plant",
                     ),
+                    "#phantasia:tile/sfx/leaves",
                 ),
             );
         })
@@ -706,4 +1072,125 @@ export default [
             ),
         )
         .flat(),
+    tileItem(
+        "loot_blueprint",
+        ItemType.Solid,
+        "#phantasia:item/generic/inventory_default",
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        "#phantasia:tile/sfx/stone",
+        [
+            {
+                key: "id",
+                component: new ItemStringComponent("id", 80),
+            },
+            {
+                key: "turns_into",
+                component: new ItemStringComponent("turns_into", 80),
+            },
+        ],
+        [
+            new ItemFunction("phantasia:open_menu", [
+                new ItemFunctionButtonData(56, 56).setOnSelectRelease("exit"),
+                // ID
+                new ItemFunctionAnchorData(
+                    480,
+                    84,
+                    "phantasia:tile.structure_blueprint.structure_id",
+                ),
+                new ItemFunctionTextboxStringData(480, 132, 17, 3)
+                    .setComponent("id")
+                    .setPlaceholder("ID")
+                    .setMaxLength(80),
+            ]),
+        ],
+    ),
+    tileItem(
+        "structure_blueprint",
+        ItemType.Solid,
+        "#phantasia:item/generic/inventory_default",
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        "#phantasia:tile/sfx/stone",
+        [
+            {
+                key: "id",
+                component: new ItemStringComponent("id", 80),
+            },
+            {
+                key: "turns_into",
+                component: new ItemStringComponent("turns_into", 80),
+            },
+            {
+                key: "xoffset",
+                component: new ItemIntegerComponent("xoffset", -128, 127),
+            },
+            {
+                key: "yoffset",
+                component: new ItemIntegerComponent("yoffset", -128, 127),
+            },
+            {
+                key: "xscale",
+                component: new ItemIntegerComponent("xscale", 1, 255),
+            },
+            {
+                key: "yscale",
+                component: new ItemIntegerComponent("yscale", 1, 255),
+            },
+        ],
+        [
+            new ItemFunction("phantasia:open_menu", [
+                new ItemFunctionButtonData(56, 56).setOnSelectRelease("exit"),
+                // ID
+                new ItemFunctionAnchorData(
+                    480,
+                    84,
+                    "phantasia:tile.structure_blueprint.structure_id",
+                ),
+                new ItemFunctionTextboxStringData(480, 132, 17, 3)
+                    .setComponent("id")
+                    .setPlaceholder("ID")
+                    .setMaxLength(80),
+                // Offset
+                new ItemFunctionAnchorData(
+                    480,
+                    248,
+                    "phantasia:tile.structure_blueprint.offset",
+                ),
+                new ItemFunctionTextboxIntegerData(408, 552, 17, 3)
+                    .setComponent("xoffset")
+                    .setPlaceholder(
+                        "phantasia:tile.structure_blueprint.xoffset",
+                    )
+                    .setRange(-128, 127),
+                new ItemFunctionTextboxIntegerData(408, 552, 17, 3)
+                    .setComponent("yoffset")
+                    .setPlaceholder(
+                        "phantasia:tile.structure_blueprint.yoffset",
+                    )
+                    .setRange(-128, 127),
+                // Scale
+                new ItemFunctionAnchorData(
+                    480,
+                    316,
+                    "phantasia:tile.structure_blueprint.scale",
+                ),
+                new ItemFunctionTextboxIntegerData(408, 552, 17, 3)
+                    .setComponent("xscale")
+                    .setPlaceholder("phantasia:tile.structure_blueprint.xscale")
+                    .setRange(1, 255),
+                new ItemFunctionTextboxIntegerData(408, 552, 17, 3)
+                    .setComponent("yscale")
+                    .setPlaceholder("phantasia:tile.structure_blueprint.yscale")
+                    .setRange(1, 255),
+                new ItemFunctionButtonData(480, 480, 17, 3)
+                    .setText("Export")
+                    .setOnSelectRelease("phantasia:export_structure"),
+            ]),
+        ],
+    ),
 ];

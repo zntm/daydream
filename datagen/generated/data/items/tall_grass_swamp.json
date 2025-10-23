@@ -4,11 +4,11 @@
         "phantasia:can_mirror",
         "phantasia:is_foliage"
     ],
-    "sprite": "phantasia:block/lilybell",
+    "sprite": "phantasia:block/tall_grass_swamp",
     "tile": {
         "drop": [
             {
-                "id": "phantasia:lilybell"
+                "id": "phantasia:tall_grass_swamp"
             }
         ],
         "harvest": {

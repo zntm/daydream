@@ -18,7 +18,11 @@
                 "colour": "#phantasia:tile/particle_colour/plant",
                 "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
             }
-        }
+        },
+        "placement": {
+            "condition": "#phantasia:tile/placement/condition_plant"
+        },
+        "sfx": "#phantasia:tile/sfx/leaves"
     },
     "type": "untouchable"
 }
