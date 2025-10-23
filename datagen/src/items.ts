@@ -129,6 +129,18 @@ export class ItemCooldown {
     }
 }
 
+export class ItemDrop {
+    private id: string;
+    private amount?: number | SmartValue;
+    private chance?: number;
+
+    constructor(id: string, amount?: number | SmartValue, chance?: number) {
+        this.id = id;
+        this.amount = amount;
+        this.chance = chance;
+    }
+}
+
 export class ItemDurability {
     private amount: number;
     private bar: string;
@@ -693,7 +705,7 @@ export default [
             ),
         },
         {
-            id: "rabbit",
+            id: "bunny",
             rawConsumable: new ItemConsumable(
                 3,
                 2,

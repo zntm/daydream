@@ -1,6 +1,7 @@
 import { DatagenReturnData } from "../../index";
 import {
     Item,
+    ItemDrop,
     ItemSprite,
     ItemInventory,
     ItemDurability,
@@ -40,16 +41,11 @@ export class ItemTileDropCondition {
     }
 }
 
-export class ItemTileDrop {
-    private id: string;
-    private amount?: number;
-    private chance?: number;
+export class ItemTileDrop extends ItemDrop {
     private condition?: ItemTileCondition;
 
     constructor(id: string, amount?: number, chance?: number) {
-        this.id = id;
-        this.amount = amount;
-        this.chance = chance;
+        super(id, amount, chance);
     }
 
     setCondition(condition: ItemTileCondition) {

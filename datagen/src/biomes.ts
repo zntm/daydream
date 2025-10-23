@@ -1,6 +1,7 @@
-import { join } from "path";
 import { SmartValue, Sound } from "../index";
+import { join } from "path";
 import { readdirSync } from "fs";
+
 export class Biome {
     private background: string;
     private map_colour: string;

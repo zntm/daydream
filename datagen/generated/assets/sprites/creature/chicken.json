@@ -1,0 +1,37 @@
+{
+    "attribute": {
+        "collision_box_width": 10,
+        "collision_box_height": 16,
+        "hit_box_width": 14,
+        "hit_box_height": 15,
+        "eye_level": 3,
+        "gravity": 0.3,
+        "jump_falloff": 2.2,
+        "jump_height": 4.6,
+        "jump_time": 10,
+        "movement_speed": 0.4,
+        "boolean": [
+            "phantasia:is_fall_damage_resistant"
+        ]
+    },
+    "drops": [
+        {
+            "id": "phantasia:raw_chicken"
+        },
+        {
+            "id": "phantasia:feather",
+            "amount": {
+                "type": 1,
+                "values": {
+                    "min": 1,
+                    "max": 3
+                }
+            },
+            "chance": 0.7
+        }
+    ],
+    "hostility_type": "passive",
+    "hp": 12,
+    "movement_type": "ground",
+    "sprite": "phantasia:creature/chicken"
+}
