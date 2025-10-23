@@ -51,6 +51,19 @@ export class SmartValue {
     }
 }
 
+export class Sound {
+    private id: string;
+    private gain?: number;
+
+    constructor(id: string, gain?: number) {
+        this.id = id;
+
+        if (gain !== undefined) {
+            this.gain = gain;
+        }
+    }
+}
+
 const exportData = (data: DatagenReturnData) => {
     const file = Bun.file(join(__dirname, data.destination));
 

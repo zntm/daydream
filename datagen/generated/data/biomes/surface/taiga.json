@@ -1,0 +1,176 @@
+{
+    "background": "phantasia:taiga",
+    "creatures": [
+        {
+            "id": "phantasia:bunny",
+            "variant": {
+                "type": 3,
+                "values": [
+                    {
+                        "value": "black",
+                        "weight": 1
+                    },
+                    {
+                        "value": "spotted",
+                        "weight": 2
+                    }
+                ]
+            },
+            "amount": {
+                "type": 1,
+                "values": {
+                    "min": 1,
+                    "max": 4
+                }
+            },
+            "chance": 0.01,
+            "time_range": {
+                "min": 0,
+                "max": 890
+            },
+            "tile": "#phantasia:tile/creature_spawn/animal"
+        },
+        {
+            "id": "phantasia:fox",
+            "variant": "cold",
+            "amount": {
+                "type": 1,
+                "values": {
+                    "min": 1,
+                    "max": 3
+                }
+            },
+            "chance": 0.03
+        }
+    ],
+    "foliage": [
+        {
+            "id": "phantasia:short_grass_taiga",
+            "chance": 0.26,
+            "generate_on": "phantasia/tile/placement/plant_on"
+        },
+        {
+            "id": "phantasia:tall_grass_taiga",
+            "chance": 0.04,
+            "generate_on": "phantasia/tile/placement/plant_on"
+        },
+        {
+            "id": "phantasia:rock",
+            "chance": 0.04,
+            "generate_on": "phantasia/tile/placement/plant_on"
+        },
+        {
+            "id": "phantasia:twig",
+            "chance": 0.05,
+            "generate_on": "phantasia/tile/placement/plant_on"
+        },
+        {
+            "id": "phantasia:bluebells",
+            "chance": 0.05,
+            "generate_on": "phantasia/tile/placement/plant_on"
+        },
+        {
+            "id": "phantasia:daisy",
+            "chance": 0.07,
+            "generate_on": "phantasia/tile/placement/plant_on"
+        },
+        {
+            "id": "phantasia:seeding_dandelion",
+            "chance": 0.02,
+            "generate_on": "phantasia/tile/placement/plant_on"
+        }
+    ],
+    "light_colour": {
+        "dawn": "#C4502D",
+        "day": "#5F91FE",
+        "dusk": "#C4502D",
+        "night": "#000019"
+    },
+    "map_colour": "#097A67",
+    "music": [
+        {
+            "id": "phantasia:12_hours_at_ease",
+            "gain": 0.6
+        },
+        {
+            "id": "phantasia:fall",
+            "gain": 0.6
+        },
+        {
+            "id": "phantasia:ornaments_of_the_sky",
+            "gain": 0.5
+        },
+        {
+            "id": "phantasia:sol_y_luna",
+            "gain": 0.5
+        },
+        {
+            "id": "phantasia:soliloquy",
+            "gain": 0.4
+        },
+        {
+            "id": "phantasia:tense",
+            "gain": 0.6
+        },
+        {
+            "id": "phantasia:winter_2012",
+            "gain": 0.7
+        }
+    ],
+    "sky_colour": {
+        "dawn": {
+            "base": "#180738",
+            "gradient": "#2A1504"
+        },
+        "day": {
+            "base": "#5F91FE",
+            "gradient": "#244FE9"
+        },
+        "dusk": {
+            "base": "#C4502D",
+            "gradient": "#DA651C"
+        },
+        "night": {
+            "base": "#000019",
+            "gradient": "#020008"
+        }
+    },
+    "structures": [
+        {
+            "id": "phantasia:moss_clump",
+            "chance": 0.006,
+            "generate_on": "phantasia/tile/placement/plant_on"
+        },
+        {
+            "id": "phantasia:tree/pine",
+            "chance": 0.14,
+            "generate_on": "phantasia/tile/placement/plant_on"
+        }
+    ],
+    "tile": {
+        "top_layer": {
+            "base": {
+                "id": "phantasia:grass_block_taiga"
+            },
+            "wall": {
+                "id": "phantasia:dirt_wall"
+            }
+        },
+        "middle_layer": {
+            "base": {
+                "id": "phantasia:dirt"
+            },
+            "wall": {
+                "id": "phantasia:dirt_wall"
+            }
+        },
+        "bottom_layer": {
+            "base": {
+                "id": "phantasia:stone"
+            },
+            "wall": {
+                "id": "phantasia:stone_wall"
+            }
+        }
+    }
+}

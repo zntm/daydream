@@ -3,6 +3,7 @@ import {
     SmartValue,
     SmartValueRandom,
     SmartValueType,
+    Sound,
 } from "../index";
 
 export class Item {
@@ -149,19 +150,6 @@ export class ItemHarvest {
 
         if (level !== undefined) {
             this.level = level;
-        }
-    }
-}
-
-export class ItemSoundEffect {
-    private id: string;
-    private gain?: number;
-
-    constructor(id: string, gain?: number) {
-        this.id = id;
-
-        if (gain !== undefined) {
-            this.gain = gain;
         }
     }
 }
@@ -383,7 +371,7 @@ export default [
             8,
             4,
             new ItemCooldown("phantasia:food", 1),
-            new ItemSoundEffect("phantasia:sound.eat"),
+            new Sound("phantasia:sound.eat"),
         ),
     ),
     ...[
@@ -695,13 +683,13 @@ export default [
                 4,
                 2,
                 new ItemCooldown("phantasia:food", 1),
-                new ItemSoundEffect("phantasia:sound.eat"),
+                new Sound("phantasia:sound.eat"),
             ),
             cookedConsumable: new ItemConsumable(
                 8,
                 8,
                 new ItemCooldown("phantasia:food", 1),
-                new ItemSoundEffect("phantasia:sound.eat"),
+                new Sound("phantasia:sound.eat"),
             ),
         },
         {
@@ -710,13 +698,13 @@ export default [
                 3,
                 2,
                 new ItemCooldown("phantasia:food", 1),
-                new ItemSoundEffect("phantasia:sound.eat"),
+                new Sound("phantasia:sound.eat"),
             ),
             cookedConsumable: new ItemConsumable(
                 6,
                 4,
                 new ItemCooldown("phantasia:food", 1),
-                new ItemSoundEffect("phantasia:sound.eat"),
+                new Sound("phantasia:sound.eat"),
             ),
         },
     ]
