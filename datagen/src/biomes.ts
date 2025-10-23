@@ -89,10 +89,8 @@ export class BiomeCreature {
     private variant?: string | SmartValue;
     private amount: number | SmartValue;
     private chance: number;
-    private time_range?: {
-        min: number;
-        max: number;
-    };
+    private time_range_min?: number;
+    private time_range_max?: number;
     private tile?: string | string[];
 
     constructor(id: string, amount: number | SmartValue, chance: number) {
@@ -114,10 +112,8 @@ export class BiomeCreature {
     }
 
     setTimeRange(min: number, max: number) {
-        this.time_range = {
-            min,
-            max,
-        };
+        this.time_range_min = min;
+        this.time_range_max = max;
 
         return this;
     }
@@ -127,6 +123,8 @@ export class BiomeFeature {
     private id: string;
     private chance: number;
     private generate_on?: string | string[];
+    private range_min?: number;
+    private range_max?: number;
 
     constructor(id: string, chance: number) {
         this.id = id;
@@ -135,6 +133,13 @@ export class BiomeFeature {
 
     setGenerateOn(placeableOn: string | string[]) {
         this.generate_on = placeableOn;
+
+        return this;
+    }
+
+    setRange(range_min?: number, range_max?: number) {
+        this.range_min = range_min;
+        this.range_max = range_max;
 
         return this;
     }

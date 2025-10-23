@@ -9,7 +9,6 @@ import {
 import {
     Biome,
     BiomeCreature,
-    BiomeFeature,
     BiomeFoliage,
     BiomeSkyColor,
     BiomeStructure,

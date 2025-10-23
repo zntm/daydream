@@ -1,0 +1,106 @@
+{
+    "background": "phantasia:depths",
+    "foliage": [
+        {
+            "id": "phantasia:rock",
+            "chance": 0.07,
+            "generate_on": [
+                "phantasia:stone"
+            ]
+        },
+        {
+            "id": "phantasia:twig",
+            "chance": 0.0007,
+            "generate_on": [
+                "phantasia:stone"
+            ]
+        }
+    ],
+    "light_colour": {
+        "dawn": "#C4502D",
+        "day": "#5F91FE",
+        "dusk": "#C4502D",
+        "night": "#000019"
+    },
+    "map_colour": "#32B559",
+    "music": [
+        {
+            "id": "phantasia:12_hours_at_ease",
+            "gain": 0.7
+        },
+        {
+            "id": "phantasia:behind",
+            "gain": 0.6
+        }
+    ],
+    "sky_colour": {
+        "dawn": {
+            "base": "#180738",
+            "gradient": "#2A1504"
+        },
+        "day": {
+            "base": "#5F91FE",
+            "gradient": "#244FE9"
+        },
+        "dusk": {
+            "base": "#C4502D",
+            "gradient": "#DA651C"
+        },
+        "night": {
+            "base": "#000019",
+            "gradient": "#020008"
+        }
+    },
+    "structures": [
+        {
+            "id": "phantasia:ore/coal",
+            "chance": 0.003,
+            "range_min": 0,
+            "range_max": 768
+        },
+        {
+            "id": "phantasia:ore/copper",
+            "chance": 0.003,
+            "range_min": 0,
+            "range_max": 768
+        },
+        {
+            "id": "phantasia:ore/iron",
+            "chance": 0.003,
+            "range_min": 640,
+            "range_max": 768
+        },
+        {
+            "id": "phantasia:ore/iron",
+            "chance": 0.003,
+            "range_min": 712,
+            "range_max": 768
+        }
+    ],
+    "tile": {
+        "top_layer": {
+            "base": {
+                "id": "phantasia:nightrock"
+            },
+            "wall": {
+                "id": "phantasia:nightrock_wall"
+            }
+        },
+        "middle_layer": {
+            "base": {
+                "id": "phantasia:nightrock"
+            },
+            "wall": {
+                "id": "phantasia:nightrock_wall"
+            }
+        },
+        "bottom_layer": {
+            "base": {
+                "id": "phantasia:nightrock"
+            },
+            "wall": {
+                "id": "phantasia:nightrock_wall"
+            }
+        }
+    }
+}

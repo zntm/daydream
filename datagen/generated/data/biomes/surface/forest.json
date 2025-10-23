@@ -11,10 +11,8 @@
                 }
             },
             "chance": 0.03,
-            "time_range": {
-                "min": 0,
-                "max": 890
-            },
+            "time_range_min": 0,
+            "time_range_max": 890,
             "tile": "#phantasia:tile/creature_spawn/animal"
         },
         {
@@ -44,10 +42,8 @@
                 }
             },
             "chance": 0.01,
-            "time_range": {
-                "min": 0,
-                "max": 890
-            },
+            "time_range_min": 0,
+            "time_range_max": 890,
             "tile": "#phantasia:tile/creature_spawn/animal"
         },
         {
