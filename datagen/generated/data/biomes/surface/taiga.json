@@ -4,7 +4,7 @@
         {
             "id": "phantasia:bunny",
             "variant": {
-                "type": 3,
+                "type": "smart_value:choose_weighted",
                 "values": [
                     {
                         "value": "black",
@@ -17,7 +17,7 @@
                 ]
             },
             "amount": {
-                "type": 1,
+                "type": "smart_value:irandom",
                 "values": {
                     "min": 1,
                     "max": 4
@@ -32,7 +32,7 @@
             "id": "phantasia:fox",
             "variant": "cold",
             "amount": {
-                "type": 1,
+                "type": "smart_value:irandom",
                 "values": {
                     "min": 1,
                     "max": 3

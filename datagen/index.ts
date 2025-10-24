@@ -13,10 +13,10 @@ export class DatagenReturnData {
 }
 
 export enum SmartValueType {
-    FloatRandom,
-    IntRandom,
-    Choose,
-    ChooseWeighted,
+    FloatRandom = "smart_value:random",
+    IntRandom = "smart_value:irandom",
+    Choose = "smart_value:choose",
+    ChooseWeighted = "smart_value:choose_weighted",
 }
 
 export class SmartValueRandom {

@@ -1,0 +1,40 @@
+{
+    "function": {
+        "id": "phantasia:tree/generic",
+        "parameters": {
+            "tile_top": {
+                "id": "phantasia:cattail",
+                "index": 2
+            },
+            "tile_middle": {
+                "id": "phantasia:cattail",
+                "index": 1
+            },
+            "tile_bottom": {
+                "id": "phantasia:cattail",
+                "index": 1
+            }
+        }
+    },
+    "height": {
+        "type": "smart_value:irandom",
+        "values": {
+            "min": 3,
+            "max": 6
+        }
+    },
+    "placement": {
+        "type": "floor",
+        "xoffset": 0,
+        "yoffset": "-height",
+        "clearance_condition": [
+            {
+                "xoffset": 0,
+                "yoffset": "-height",
+                "width": 1,
+                "height": "height"
+            }
+        ]
+    },
+    "width": 1
+}
