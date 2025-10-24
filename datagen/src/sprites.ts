@@ -1,6 +1,6 @@
+import { DatagenReturnData } from "../index";
 import { Dirent, readdirSync } from "fs";
 import { join } from "path";
-import { DatagenReturnData } from "..";
 
 export class SpriteAsset {
     private width: number;
@@ -28,9 +28,8 @@ export default readdirSync(join(__dirname, "./sprites"), {
     recursive: true,
     withFileTypes: true,
 })
+    .filter((file: Dirent) => !file.isDirectory())
     .map((file: Dirent) => {
-        if (file.isDirectory()) return;
-
         let [name, width, height, length, edgePadding]: any = file.name
             .replace(/\.[a-z]+$/, "")
             .split(",");

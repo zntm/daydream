@@ -1,5 +1,6 @@
 import { readdirSync } from "fs";
 import { join } from "path";
+import { inspect } from "util";
 
 export class DatagenReturnData {
     public destination: string;
@@ -76,10 +77,22 @@ const exportData = (data: DatagenReturnData) => {
 
 readdirSync(join(__dirname, "./src"))
     .filter((dir) => dir.endsWith(".ts"))
-    .forEach((dir: string) => {
+    .forEach(async (dir: string) => {
         console.log(`Processing: '${dir}'`);
 
-        const { default: datagen } = import.meta.require(`./src/${dir}`);
+        let { default: datagen } = await import(`./src/${dir}`);
+
+        if (inspect(datagen).includes("pending")) {
+            (await Promise.all(datagen)).map((d) => {
+                if (Array.isArray(d)) {
+                    d.forEach(exportData);
+                } else {
+                    exportData(d);
+                }
+            });
+
+            return;
+        }
 
         if (!datagen) {
             console.error(`Datagen function not found in ${dir}`);
