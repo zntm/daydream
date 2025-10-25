@@ -1,0 +1,118 @@
+{
+    "biome": {
+        "cave": {
+            "default": [
+                {
+                    "id": "phantasia:depths",
+                    "start": 768,
+                    "end": 1024,
+                    "transition": {
+                        "type": "random",
+                        "min": 2,
+                        "max": 22,
+                        "octaves": 4
+                    }
+                },
+                {
+                    "id": "phantasia:chasm",
+                    "start": 0,
+                    "end": 800,
+                    "transition": {
+                        "type": "random",
+                        "octaves": 0
+                    }
+                }
+            ],
+            "noise": {
+                "octaves": 4
+            },
+            "options": []
+        },
+        "surface": {
+            "heat": {
+                "octaves": 1
+            },
+            "humidity": {
+                "octaves": 1
+            },
+            "offset": {
+                "min": 22,
+                "max": 34,
+                "octaves": 2
+            }
+        }
+    },
+    "cave": {
+        "start": {
+            "min": 12,
+            "max": 2,
+            "octaves": 0
+        },
+        "system": [
+            {
+                "range_min": 512,
+                "range_max": 1000,
+                "threshold": {
+                    "min": 50,
+                    "max": 60,
+                    "octaves": 4
+                }
+            },
+            {
+                "range_min": 600,
+                "range_max": 1000,
+                "threshold": {
+                    "min": 116,
+                    "max": 130,
+                    "octaves": 4
+                }
+            }
+        ]
+    },
+    "celestial": {
+        "sun": {
+            "time_start": 0,
+            "time_end": 890
+        },
+        "moon": {
+            "time_start": 890,
+            "time_end": 1200
+        }
+    },
+    "spawn_interval": 14,
+    "surface": {
+        "start": 512,
+        "noise_offset": {
+            "min": 40,
+            "max": 96,
+            "octaves": 4
+        }
+    },
+    "time": {
+        "start": 180,
+        "diurnal": {
+            "dawn": {
+                "time_start": 0,
+                "time_end": 240
+            },
+            "day": {
+                "time_start": 240,
+                "time_end": 820
+            },
+            "dusk": {
+                "time_start": 820,
+                "time_end": 890
+            },
+            "night": {
+                "time_start": 890,
+                "time_end": 1200
+            }
+        }
+    },
+    "vignette": {
+        "ystart": 768,
+        "yend": 1024,
+        "colour": "#000000"
+    },
+    "world_height": 1024
+}
