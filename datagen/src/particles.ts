@@ -51,7 +51,7 @@ export class Particle {
     private lifetime?: number | string | SmartValue;
     private physics?: EntityPhysics;
     private attribute?: Attribute;
-    private on_collision?: PartileFunction;
+    private on_collision?: ParticleFunction;
 
     constructor(
         sprite: string | ItemSprite,
