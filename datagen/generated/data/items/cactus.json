@@ -3,7 +3,7 @@
     "properties": [
         "phantasia:can_mirror"
     ],
-    "sprite": "phantasia:block/cactus",
+    "sprite": "phantasia:item/cactus",
     "tile": {
         "drop": [
             {

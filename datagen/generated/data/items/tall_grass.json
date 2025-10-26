@@ -4,7 +4,7 @@
         "phantasia:can_mirror",
         "phantasia:is_foliage"
     ],
-    "sprite": "phantasia:block/tall_grass",
+    "sprite": "phantasia:item/tall_grass",
     "tile": {
         "drop": [
             {

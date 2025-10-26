@@ -3,7 +3,7 @@
     "properties": [
         "phantasia:is_foliage"
     ],
-    "sprite": "phantasia:block/cactus_flower",
+    "sprite": "phantasia:item/cactus_flower",
     "tile": {
         "drop": [
             {

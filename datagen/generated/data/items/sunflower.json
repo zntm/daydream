@@ -3,7 +3,7 @@
     "properties": [
         "phantasia:can_mirror"
     ],
-    "sprite": "phantasia:block/sunflower",
+    "sprite": "phantasia:item/sunflower",
     "tile": {
         "drop": [
             {

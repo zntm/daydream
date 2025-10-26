@@ -4,7 +4,7 @@
         "phantasia:is_tile",
         "phantasia:is_wall"
     ],
-    "sprite": "phantasia:block/pine_planks_wall",
+    "sprite": "phantasia:item/pine_planks_wall",
     "tile": {
         "drop": [
             {

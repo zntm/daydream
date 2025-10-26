@@ -1,6 +1,6 @@
 {
     "inventory": "#phantasia:item/generic/inventory_tile",
-    "sprite": "phantasia:block/pine",
+    "sprite": "phantasia:item/pine",
     "tile": {
         "drop": [
             {

@@ -6,7 +6,7 @@
         "phantasia:is_tile",
         "phantasia:is_wall"
     ],
-    "sprite": "phantasia:block/lumin_moss_wall",
+    "sprite": "phantasia:item/lumin_moss_wall",
     "tile": {
         "drop": [
             {

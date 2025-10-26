@@ -1,6 +1,6 @@
 {
     "inventory": "#phantasia:item/generic/inventory_default",
-    "sprite": "phantasia:block/loot_blueprint",
+    "sprite": "phantasia:item/loot_blueprint",
     "tile": {
         "sfx": "#phantasia:tile/sfx/stone",
         "components": {

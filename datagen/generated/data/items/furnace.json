@@ -1,6 +1,6 @@
 {
     "inventory": "#phantasia:item/generic/inventory_default",
-    "sprite": "phantasia:block/furnace",
+    "sprite": "phantasia:item/furnace",
     "tile": {
         "drop": [
             {

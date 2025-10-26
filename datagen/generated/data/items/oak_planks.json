@@ -3,7 +3,7 @@
     "properties": [
         "phantasia:is_tile"
     ],
-    "sprite": "phantasia:block/oak_planks",
+    "sprite": "phantasia:item/oak_planks",
     "tile": {
         "drop": [
             {

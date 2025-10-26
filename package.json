@@ -13,6 +13,7 @@
     "datagen": "bun run datagen/index.ts"
   },
   "dependencies": {
+    "exifreader": "^4.32.0",
     "music-metadata": "^11.9.0"
   }
 }

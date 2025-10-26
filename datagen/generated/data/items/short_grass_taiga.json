@@ -4,7 +4,7 @@
         "phantasia:can_mirror",
         "phantasia:is_foliage"
     ],
-    "sprite": "phantasia:block/short_grass_taiga",
+    "sprite": "phantasia:item/short_grass_taiga",
     "tile": {
         "drop": [
             {

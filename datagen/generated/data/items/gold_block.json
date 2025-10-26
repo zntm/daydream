@@ -3,7 +3,7 @@
     "properties": [
         "phantasia:is_tile"
     ],
-    "sprite": "phantasia:block/gold_block",
+    "sprite": "phantasia:item/gold_block",
     "tile": {
         "drop": [
             {

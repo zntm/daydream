@@ -1,6 +1,6 @@
 {
     "inventory": "#phantasia:item/generic/inventory_tile",
-    "sprite": "phantasia:block/oak_chest",
+    "sprite": "phantasia:item/oak_chest",
     "tile": {
         "drop": [
             {

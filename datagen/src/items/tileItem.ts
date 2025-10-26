@@ -248,7 +248,7 @@ export default (
 
     const tile = new TileItem(
         type,
-        `phantasia:block/${id}`,
+        `phantasia:item/${id}`,
         inventory,
         properties,
     )

@@ -6,7 +6,7 @@
         "phantasia:is_tile",
         "phantasia:is_wall"
     ],
-    "sprite": "phantasia:block/sandstone_wall",
+    "sprite": "phantasia:item/sandstone_wall",
     "tile": {
         "drop": [
             {

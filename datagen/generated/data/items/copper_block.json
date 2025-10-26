@@ -3,7 +3,7 @@
     "properties": [
         "phantasia:is_tile"
     ],
-    "sprite": "phantasia:block/copper_block",
+    "sprite": "phantasia:item/copper_block",
     "tile": {
         "drop": [
             {

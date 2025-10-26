@@ -4,7 +4,7 @@
         "phantasia:can_mirror",
         "phantasia:is_foliage"
     ],
-    "sprite": "phantasia:block/bluebells",
+    "sprite": "phantasia:item/bluebells",
     "tile": {
         "drop": [
             {

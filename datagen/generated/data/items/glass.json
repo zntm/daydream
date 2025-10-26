@@ -1,6 +1,6 @@
 {
     "inventory": "#phantasia:item/generic/inventory_default",
-    "sprite": "phantasia:block/glass",
+    "sprite": "phantasia:item/glass",
     "tile": {
         "drop": [
             {

@@ -1,6 +1,6 @@
 {
     "inventory": "#phantasia:item/generic/inventory_tile",
-    "sprite": "phantasia:block/birch_workbench",
+    "sprite": "phantasia:item/birch_workbench",
     "tile": {
         "drop": [
             {

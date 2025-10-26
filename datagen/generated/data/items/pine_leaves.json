@@ -5,7 +5,7 @@
         "phantasia:can_mirror",
         "phantasia:is_tile"
     ],
-    "sprite": "phantasia:block/pine_leaves",
+    "sprite": "phantasia:item/pine_leaves",
     "tile": {
         "drop": [
             {

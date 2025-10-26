@@ -3,7 +3,7 @@
     "properties": [
         "phantasia:can_mirror"
     ],
-    "sprite": "phantasia:block/twig",
+    "sprite": "phantasia:item/twig",
     "tile": {
         "drop": [
             {

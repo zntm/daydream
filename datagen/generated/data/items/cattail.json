@@ -3,7 +3,7 @@
     "properties": [
         "phantasia:can_mirror"
     ],
-    "sprite": "phantasia:block/cattail",
+    "sprite": "phantasia:item/cattail",
     "tile": {
         "drop": [
             {

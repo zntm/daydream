@@ -5,7 +5,7 @@
         "phantasia:can_mirror",
         "phantasia:is_tile"
     ],
-    "sprite": "phantasia:block/platinum_ore",
+    "sprite": "phantasia:item/platinum_ore",
     "tile": {
         "drop": [
             {

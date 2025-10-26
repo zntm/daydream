@@ -4,7 +4,7 @@
         "phantasia:can_mirror",
         "phantasia:is_foliage"
     ],
-    "sprite": "phantasia:block/dead_bush",
+    "sprite": "phantasia:item/dead_bush",
     "tile": {
         "drop": [
             {

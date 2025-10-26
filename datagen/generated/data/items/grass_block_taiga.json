@@ -4,7 +4,7 @@
         "phantasia:can_mirror",
         "phantasia:is_tile"
     ],
-    "sprite": "phantasia:block/grass_block_taiga",
+    "sprite": "phantasia:item/grass_block_taiga",
     "tile": {
         "drop": [
             {

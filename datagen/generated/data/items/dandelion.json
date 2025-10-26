@@ -4,7 +4,7 @@
         "phantasia:can_mirror",
         "phantasia:is_foliage"
     ],
-    "sprite": "phantasia:block/dandelion",
+    "sprite": "phantasia:item/dandelion",
     "tile": {
         "drop": [
             {

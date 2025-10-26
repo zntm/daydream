@@ -5,7 +5,7 @@
         "phantasia:can_mirror",
         "phantasia:is_tile"
     ],
-    "sprite": "phantasia:block/moss",
+    "sprite": "phantasia:item/moss",
     "tile": {
         "drop": [
             {
