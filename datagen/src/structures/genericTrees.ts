@@ -23,7 +23,8 @@ class StructureParameter {
     private layers: Array<{
         width: number;
         index_offset: number;
-        scale?: { y: number };
+        xscale?: number;
+        yscale?: number;
     }>;
 
     constructor(
@@ -35,7 +36,8 @@ class StructureParameter {
         layers: Array<{
             width: number;
             index_offset: number;
-            scale?: { y: number };
+            xscale?: number;
+            yscale?: number;
         }>,
     ) {
         this.tile_wood = tileWood;
@@ -78,9 +80,9 @@ export default [
                     5,
                     [
                         { width: 5, index_offset: 0 },
-                        { width: 5, scale: { y: 1 }, index_offset: 5 },
+                        { width: 5, yscale: 1, index_offset: 5 },
                         { width: 7, index_offset: 0 },
-                        { width: 7, scale: { y: 1 }, index_offset: 5 },
+                        { width: 7, yscale: 1, index_offset: 5 },
                     ],
                 ),
             ),
@@ -116,9 +118,9 @@ export default [
                     5,
                     [
                         { width: 3, index_offset: 0 },
-                        { width: 3, scale: { y: 1 }, index_offset: 5 },
+                        { width: 3, yscale: 1, index_offset: 5 },
                         { width: 5, index_offset: 0 },
-                        { width: 5, scale: { y: 1 }, index_offset: 5 },
+                        { width: 5, yscale: 1, index_offset: 5 },
                     ],
                 ),
             ),

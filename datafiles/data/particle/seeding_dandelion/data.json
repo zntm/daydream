@@ -9,9 +9,7 @@
         },
         "length": 1
     },
-    "properties": [
-        "phantasia:is_fade_out"
-    ],
+    "properties": ["phantasia:is_fade_out"],
     "lifetime": {
         "type": "irandom",
         "values": {

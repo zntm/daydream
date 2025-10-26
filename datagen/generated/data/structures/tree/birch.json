@@ -24,9 +24,7 @@
                 },
                 {
                     "width": 5,
-                    "scale": {
-                        "y": 1
-                    },
+                    "yscale": 1,
                     "index_offset": 5
                 },
                 {
@@ -35,9 +33,7 @@
                 },
                 {
                     "width": 7,
-                    "scale": {
-                        "y": 1
-                    },
+                    "yscale": 1,
                     "index_offset": 5
                 }
             ]
