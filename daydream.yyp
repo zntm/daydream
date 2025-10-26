@@ -1022,6 +1022,7 @@
     {"id":{"name":"SFXData","path":"scripts/SFXData/SFXData.yy",},},
     {"id":{"name":"smart_value_parse","path":"scripts/smart_value_parse/smart_value_parse.yy",},},
     {"id":{"name":"smart_value","path":"scripts/smart_value/smart_value.yy",},},
+    {"id":{"name":"SmartValue","path":"scripts/SmartValue/SmartValue.yy",},},
     {"id":{"name":"sort_alphabetical_ascending","path":"scripts/sort_alphabetical_ascending/sort_alphabetical_ascending.yy",},},
     {"id":{"name":"sort_alphabetical_descending","path":"scripts/sort_alphabetical_descending/sort_alphabetical_descending.yy",},},
     {"id":{"name":"spawn_creature","path":"scripts/spawn_creature/spawn_creature.yy",},},

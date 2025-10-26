@@ -273,6 +273,7 @@
     {"name":"rpc_world","order":1,"path":"scripts/rpc_world/rpc_world.yy",},
     {"name":"sfx_play","order":2,"path":"scripts/sfx_play/sfx_play.yy",},
     {"name":"smart_value","order":1,"path":"scripts/smart_value/smart_value.yy",},
+    {"name":"SmartValue","order":2,"path":"scripts/SmartValue/SmartValue.yy",},
     {"name":"sort_alphabetical_ascending","order":22,"path":"scripts/sort_alphabetical_ascending/sort_alphabetical_ascending.yy",},
     {"name":"sort_alphabetical_descending","order":23,"path":"scripts/sort_alphabetical_descending/sort_alphabetical_descending.yy",},
     {"name":"spawn_floating_text","order":1,"path":"scripts/spawn_floating_text/spawn_floating_text.yy",},
