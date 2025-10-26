@@ -79,7 +79,7 @@ export class Particle {
         return this;
     }
 
-    setOnCollision(on_collision: PartileFunction) {
+    setOnCollision(on_collision: ParticleFunction) {
         this.on_collision = on_collision;
 
         return this;
