@@ -77,7 +77,7 @@ export class Noise {
     }
 }
 
-const exportData = (data: DatagenReturnData) => {
+const _exportData = (data: DatagenReturnData) => {
     const file = Bun.file(join(__dirname, data.destination));
 
     if (typeof data.data === "object" && !Array.isArray(data.data)) {
@@ -87,6 +87,14 @@ const exportData = (data: DatagenReturnData) => {
     Bun.write(file, JSON.stringify(data.data, null, "    "));
 };
 
+const exportData = (data: DatagenReturnData | DatagenReturnData[]) => {
+    if (Array.isArray(data)) {
+        data.forEach(_exportData);
+    } else {
+        _exportData(data);
+    }
+};
+
 readdirSync(join(__dirname, "./src"))
     .filter((dir) => dir.endsWith(".ts"))
     .forEach(async (dir: string) => {
@@ -94,29 +102,19 @@ readdirSync(join(__dirname, "./src"))
 
         let { default: datagen } = await import(`./src/${dir}`);
 
-        if (inspect(datagen).includes("pending")) {
-            (await Promise.all(datagen)).map((d) => {
-                if (Array.isArray(d)) {
-                    d.forEach(exportData);
-                } else {
-                    exportData(d);
-                }
-            });
-
-            return;
-        }
-
         if (!datagen) {
             console.error(`Datagen function not found in ${dir}`);
 
             return;
         }
 
-        if (Array.isArray(datagen)) {
-            datagen.forEach(exportData);
-        } else {
-            exportData(datagen);
+        if (inspect(datagen).includes("pending")) {
+            (await Promise.all(datagen)).map(exportData);
+
+            return;
         }
+
+        exportData(datagen);
 
         console.log(`Finished processing: '${dir}'`);
     });

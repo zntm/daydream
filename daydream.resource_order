@@ -1,6 +1,7 @@
 {
   "FolderOrderSettings":[
     {"name":"Data","order":5,"path":"folders/Data.yy",},
+    {"name":"Asset Data","order":22,"path":"folders/Data/Asset Data.yy",},
     {"name":"Attire Data","order":10,"path":"folders/Data/Attire Data.yy",},
     {"name":"Background Data","order":7,"path":"folders/Data/Background Data.yy",},
     {"name":"Biome Data","order":6,"path":"folders/Data/Biome Data.yy",},

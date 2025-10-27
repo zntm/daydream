@@ -1,5 +1,7 @@
 function init(_namespace)
 {
+    init_assets(PROGRAM_DIRECTORY_ASSETS, _namespace);
+    
     init_credit($"{PROGRAM_DIRECTORY_DATA}\\credit\\data.json");
     
     init_splash($"{PROGRAM_DIRECTORY_DATA}\\splash.json");

@@ -3,7 +3,7 @@ import * as ExifReader from "exifreader";
 import { Dirent, readdirSync } from "fs";
 import { join } from "path";
 
-export class SpriteAsset {
+export class Sprite {
     private xoffset: number;
     private yoffset: number;
     private length: number;
@@ -17,22 +17,23 @@ export class SpriteAsset {
 
     setIsTile() {
         this.is_tile = true;
-
         return this;
     }
 }
 
-const getXOffset = (value: string, exif: ExifReader.Tags) => {
+const getXOffset = (value: string, length: number, exif: ExifReader.Tags) => {
     if (value === "0" || value === "-l") {
         return 0;
     }
 
+    const imageWidth = exif["Image Width"]?.value ?? 0;
+
     if (value === "-c") {
-        return Math.floor((exif["Image Width"]?.value ?? 0) / 2);
+        return Math.floor(imageWidth / (length * 2));
     }
 
     if (value === "-r") {
-        return Math.floor(exif["Image Width"]?.value ?? 0);
+        return Math.floor(imageWidth / length);
     }
 
     return parseInt(value);
@@ -43,102 +44,142 @@ const getYOffset = (value: string, exif: ExifReader.Tags) => {
         return 0;
     }
 
+    const imageHeight = exif["Image Height"]?.value ?? 0;
+
     if (value === "-m") {
-        return Math.floor((exif["Image Height"]?.value ?? 0) / 2);
+        return Math.floor(imageHeight / 2);
     }
 
     if (value === "-b") {
-        return Math.floor(exif["Image Height"]?.value ?? 0);
+        return Math.floor(imageHeight);
     }
 
     return parseInt(value);
 };
 
-export default readdirSync(join(__dirname, "./sprites"), {
+const getMetadata = async (sourcePath: string) => {
+    const f = Bun.file(sourcePath);
+    const arrayBuffer = await f.arrayBuffer();
+    const exif = ExifReader.load(arrayBuffer);
+    return { exif, arrayBuffer };
+};
+
+const sequentialRegex = /^(\d+)(.*)\.png$/;
+
+const sourceImageDir = join(__dirname, "./sprites");
+const destImageDir = join(__dirname, "../generated/assets/sprites");
+
+const allFiles = readdirSync(sourceImageDir, {
     recursive: true,
     withFileTypes: true,
-})
-    .filter((file: Dirent) => !file.isDirectory())
-    .map(async (file: Dirent) => {
-        let [name, xoffset, yoffset, length]: any = file.name
-            .replace(/\.[a-z]+$/, "")
-            .split(" ");
+}).filter((file) => !file.isDirectory() && file.name.endsWith(".png"));
 
-        const f = Bun.file(`${file.parentPath}\\${file.name}`);
+const individualFiles: Dirent[] = [];
 
-        const arrayBuffer = await f.arrayBuffer();
-        const exif = ExifReader.load(arrayBuffer);
+const imageGroups = new Map<string, Dirent[]>();
 
-        xoffset = getXOffset(xoffset, exif) ?? 0;
-        yoffset = getYOffset(yoffset, exif) ?? 0;
+for (const file of allFiles) {
+    const match = file.name.match(sequentialRegex);
+    const relDir = file.parentPath.replace(sourceImageDir, "").substring(1);
 
-        const data = new SpriteAsset(
-            xoffset,
-            yoffset,
-            length !== undefined ? parseInt(length) : undefined,
-        );
+    if (match) {
+        const groupKey = relDir;
 
-        if (name.startsWith("#")) {
-            name = name.substring(1);
-
-            data.setIsTile();
+        if (!imageGroups.has(groupKey)) {
+            imageGroups.set(groupKey, []);
         }
 
-        const dir = `${file.parentPath.substring(
-            join(__dirname, "./").length,
-        )}/${name}.png`;
+        imageGroups.get(groupKey)!.push(file);
+    } else {
+        individualFiles.push(file);
+    }
+}
 
-        Bun.write(join(__dirname, `../generated/assets/${dir}`), arrayBuffer, {
-            createPath: true,
+const individualPromises = individualFiles.map(async (file) => {
+    const sourcePath = join(file.parentPath, file.name);
+    const relDir = file.parentPath.replace(sourceImageDir, "").substring(1);
+
+    let [name, xoffsetStr, yoffsetStr, lengthStr]: any = file.name
+        .replace(/\.png$/, "")
+        .split(" ");
+
+    const { exif, arrayBuffer } = await getMetadata(sourcePath);
+
+    const isTile = name.startsWith("#");
+
+    let length = lengthStr !== undefined ? parseInt(lengthStr) : 1;
+    if (isTile) {
+        length *= 5;
+    }
+
+    const xoffset = getXOffset(xoffsetStr, length, exif) ?? 0;
+    const yoffset = getYOffset(yoffsetStr, exif) ?? 0;
+
+    const data = new Sprite(xoffset, yoffset, length);
+
+    if (isTile) {
+        name = name.substring(1);
+        data.setIsTile();
+    }
+
+    const outputFileName = `${name}.png`;
+    const destFilePath = join(destImageDir, relDir, outputFileName);
+    const jsonPath = join(
+        "generated/assets/sprites",
+        relDir,
+        `${name}.png.json`,
+    ).replace(/\\/g, "/");
+
+    Bun.write(destFilePath, arrayBuffer, { createPath: true }).catch((error) =>
+        console.error(`Error writing file ${destFilePath}: ${error}`),
+    );
+
+    return new DatagenReturnData(jsonPath, data);
+});
+
+const groupPromises = Array.from(imageGroups.entries()).map(
+    async ([groupKey, files]) => {
+        const destGroupDir = join(destImageDir, groupKey);
+
+        files.sort((a, b) => {
+            const aNum = parseInt(a.name.match(sequentialRegex)![1] ?? "0");
+            const bNum = parseInt(b.name.match(sequentialRegex)![1] ?? "0");
+            return aNum - bNum;
         });
 
-        return new DatagenReturnData(`generated/assets/${dir}.json`, data);
-    });
+        const fileProcessingPromises = files.map(async (file) => {
+            const sourcePath = join(file.parentPath, file.name);
 
-/*
-export default readdirSync(join(__dirname, "./sprites"), {
-    recursive: true,
-    withFileTypes: true,
-})
-    .filter((file: Dirent) => !file.isDirectory())
-    .map((file: Dirent) => {
-        let [name, width, height, length, edgePadding]: any = file.name
-            .replace(/\.[a-z]+$/, "")
-            .split(" ");
+            const parts = file.name.replace(/\.png$/, "").split(" ");
+            const [indexStr, xoffsetStr, yoffsetStr, lengthStr] = parts;
 
-        width = parseInt(width.trim());
-        height = parseInt(height.trim());
+            const { exif, arrayBuffer } = await getMetadata(sourcePath);
 
-        length = length !== undefined ? parseInt(length.trim()) : 1;
+            const length = lengthStr ? parseInt(lengthStr) : 1;
+            const xoffset = getXOffset(xoffsetStr ?? "", length, exif) ?? 0;
+            const yoffset = getYOffset(yoffsetStr ?? "", exif) ?? 0;
 
-        if (edgePadding) {
-            edgePadding = parseInt(edgePadding.trim());
-        }
+            const newOutputFileName = `${indexStr}.png`;
+            const destPath = join(destGroupDir, newOutputFileName);
 
-        const dir = `${file.parentPath.substring(
-            join(__dirname, "./").length,
-        )}\\${name}${file.name.replace(/^[a-zA-Z0-9\,\ ]+/g, "")}`;
+            await Bun.write(destPath, arrayBuffer, { createPath: true }).catch(
+                (error) =>
+                    console.error(`Error writing file ${destPath}: ${error}`),
+            );
 
-        const f = Bun.file(`${file.parentPath}\\${file.name}`);
+            return new Sprite(xoffset, yoffset, length);
+        });
 
-        f.arrayBuffer()
-            .then((arrayBuffer) => {
-                Bun.write(
-                    join(__dirname, `../generated/assets/${dir}`),
-                    arrayBuffer,
-                    {
-                        createPath: true,
-                    },
-                );
-            })
-            .catch((error) => {
-                console.error(`Error writing file ${dir}: ${error}`);
-            });
+        const spriteDataArray = await Promise.all(fileProcessingPromises);
 
         return new DatagenReturnData(
-            `generated/assets/${dir}.json`,
-            new SpriteAsset(width, height, length, edgePadding),
+            join("generated/assets/sprites", `${groupKey}.png.json`).replace(
+                /\\/g,
+                "/",
+            ),
+            spriteDataArray,
         );
-    })
-    .filter((data) => data !== undefined);
-    */
+    },
+);
+
+export default [...individualPromises, ...groupPromises];

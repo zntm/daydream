@@ -149,7 +149,7 @@ const groupPromises = Array.from(sfxGroups.entries()).map(
         const durationData = await Promise.all(fileProcessingPromises);
 
         return new DatagenReturnData(
-            join("generated/assets/sounds", `${groupKey}.json`),
+            join("generated/assets/sounds", `${groupKey}.ogg.json`),
             durationData,
         );
     },
