@@ -128,7 +128,7 @@ const individualPromises = individualFiles.map(async (file) => {
         "generated/assets/sprites",
         relDir,
         `${name}.png.json`,
-    ).replace(/\\/g, "/");
+    );
 
     Bun.write(destFilePath, arrayBuffer, { createPath: true }).catch((error) =>
         console.error(`Error writing file ${destFilePath}: ${error}`),
@@ -173,10 +173,7 @@ const groupPromises = Array.from(imageGroups.entries()).map(
         const spriteDataArray = await Promise.all(fileProcessingPromises);
 
         return new DatagenReturnData(
-            join("generated/assets/sprites", `${groupKey}.png.json`).replace(
-                /\\/g,
-                "/",
-            ),
+            join("generated/assets/sprites", `${groupKey}.png.json`),
             spriteDataArray,
         );
     },

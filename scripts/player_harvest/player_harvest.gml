@@ -32,9 +32,9 @@ function player_harvest(_dt, _x, _y)
     
     var _data = _item_data[$ _tile.get_id()];
     
-    var _harvest_hardness = _data.get_harvest_hardness();
+    var _harvest_hardness = _data.get_tile_harvest_hardness();
     
-    if (_harvest_hardness == undefined) exit;
+    if (_harvest_hardness < 0) exit;
     
     var _data2 = undefined;
     
@@ -56,15 +56,15 @@ function player_harvest(_dt, _x, _y)
         
         _item_type = _data2.get_type();
         
-        _item_hardness = _data2.get_harvest_hardness() ?? 1;
-        _item_level = _data2.get_harvest_level();
+        _item_hardness = _data2.get_item_harvest_hardness() ?? 1;
+        _item_level = _data2.get_item_harvest_level();
         
-        var _harvest_condition_id = _data.get_harvest_condition_id();
+        var _harvest_condition_id = _data.get_tile_harvest_condition_id();
         
         if (_harvest_condition_id != undefined) && (!array_contains(_harvest_condition_id, _id)) exit;
     }
     
-    if (_data.get_harvest_level() > _item_level) exit;
+    if (_data.get_tile_harvest_level() > _item_level) exit;
     
     timer_harvest += _item_hardness * _dt;
     
@@ -76,9 +76,9 @@ function player_harvest(_dt, _x, _y)
         
         sfx_diegetic_play(obj_Player.audio_emitter, _x * TILE_SIZE, _y * TILE_SIZE, _data.get_sfx_harvest());
         
-        var _particle_colour = _data.get_harvest_particle_colour();
+        var _particle_colour = _data.get_tile_harvest_particle_colour();
         
-        repeat (round(smart_value(_data.get_harvest_particle_frequency()) / 2))
+        repeat (round(smart_value(_data.get_tile_harvest_particle_frequency()) / 2))
         {
             spawn_particle(_x * TILE_SIZE, _y * TILE_SIZE, "phantasia:tile/harvest", is_array_choose(_particle_colour));
         }
@@ -111,9 +111,9 @@ function player_harvest(_dt, _x, _y)
             surface_refresh |= ((is_opened & IS_OPENED_BOOLEAN.INVENTORY) ? SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK : SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR);
         }
         
-        var _particle_colour = _data.get_harvest_particle_colour();
+        var _particle_colour = _data.get_tile_harvest_particle_colour();
         
-        repeat (smart_value(_data.get_harvest_particle_frequency()))
+        repeat (smart_value(_data.get_tile_harvest_particle_frequency()))
         {
             spawn_particle(_x * TILE_SIZE, _y * TILE_SIZE, "phantasia:tile/harvest", is_array_choose(_particle_colour));
         }

@@ -11,10 +11,20 @@ function init_item(_directory, _namespace)
         
         dbg_timer("init_item");
         
-        var _json = tag_value_parse(buffer_load_json($"{_directory}/{_file}/data.json"));
+        var _json = tag_value_parse(buffer_load_json($"{_directory}/{_file}.json"));
         
         var _item_data = new ItemData(_namespace, _file);
         
+        var _sprite = _json.sprite;
+        
+        _item_data.set_inventory(_json.inventory);
+        _item_data.set_item(_json[$ "item"]);
+        _item_data.set_tile(_json[$ "tile"]);
+        
+        _item_data.set_sprite(_sprite);
+        _item_data.set_type(_json.type);
+        
+        /*
         _item_data.set_type(_json.type);
         _item_data.set_rarity(_json[$ "rarity"]);
         _item_data.set_inventory(_json[$ "inventory"]);
@@ -55,8 +65,9 @@ function init_item(_directory, _namespace)
         });
         
         _item_data.set_edge_padding(_sprite_data[$ "edge_padding"]);
+        */
         
-        carbasa_sprite_add("item", _sprite, $"{_namespace}:{_file}");
+        carbasa_sprite_add("item", global.sprite_asset[$ _sprite], _sprite);
         
         global.item_data[$ $"{_namespace}:{_file}"] = _item_data;
         

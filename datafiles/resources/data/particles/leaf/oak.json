@@ -1,0 +1,67 @@
+{
+    "attribute": {
+        "gravity": 0.1
+    },
+    "lifetime": {
+        "type": "smart_value:random",
+        "values": {
+            "min": 2,
+            "max": 4
+        }
+    },
+    "physics": {
+        "xspeed": {
+            "type": "reference",
+            "value": "phantasia:weather_wind",
+            "offset": {
+                "type": "smart_value:random",
+                "values": {
+                    "min": -0.3,
+                    "max": 0.3
+                }
+            },
+            "multiplier": {
+                "type": "smart_value:random",
+                "values": {
+                    "min": 0.5,
+                    "max": 1.25
+                }
+            }
+        },
+        "yspeed": {
+            "type": "smart_value:random",
+            "values": {
+                "min": 0.6,
+                "max": 1.1
+            }
+        },
+        "scale": {
+            "type": "smart_value:random",
+            "values": {
+                "min": 0.75,
+                "max": 1.25
+            }
+        },
+        "rotation": {
+            "type": "incremental",
+            "value": {
+                "type": "smart_value:random",
+                "values": {
+                    "min": 0.5,
+                    "max": 1.25
+                }
+            },
+            "increment": {
+                "type": "smart_value:random",
+                "values": {
+                    "min": -16,
+                    "max": 16
+                }
+            }
+        }
+    },
+    "properties": [
+        "phantasia:is_fade_out"
+    ],
+    "sprite": "phantasia:particle/leaf/oak"
+}

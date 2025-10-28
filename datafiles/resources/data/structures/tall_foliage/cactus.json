@@ -1,0 +1,52 @@
+{
+    "function": {
+        "id": "phantasia:tree/generic",
+        "parameters": {
+            "tile_top": {
+                "id": "phantasia:cactus",
+                "index": 5
+            },
+            "tile_middle": {
+                "id": "phantasia:cactus",
+                "index": {
+                    "type": "smart_value:irandom",
+                    "values": {
+                        "min": 1,
+                        "max": 4
+                    }
+                }
+            },
+            "tile_bottom": {
+                "id": "phantasia:cactus",
+                "index": {
+                    "type": "smart_value:irandom",
+                    "values": {
+                        "min": 1,
+                        "max": 4
+                    }
+                }
+            }
+        }
+    },
+    "height": {
+        "type": "smart_value:irandom",
+        "values": {
+            "min": 4,
+            "max": 8
+        }
+    },
+    "placement": {
+        "type": "floor",
+        "xoffset": 0,
+        "yoffset": "-height",
+        "clearance_condition": [
+            {
+                "xoffset": 0,
+                "yoffset": "-height",
+                "width": 1,
+                "height": "height"
+            }
+        ]
+    },
+    "width": 1
+}

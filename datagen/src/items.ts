@@ -7,10 +7,10 @@ import {
 } from "../index";
 
 export class Item {
-    public type: ItemType;
-    public sprite: string | ItemSprite;
-    public inventory: string | ItemInventory;
-    public properties?: any;
+    private type: ItemType;
+    private sprite: string | ItemSprite;
+    private inventory: string | ItemInventory;
+    private properties?: any;
 
     constructor(
         type: ItemType,
@@ -24,10 +24,8 @@ export class Item {
 
         if (properties !== undefined) {
             this.properties = Array.isArray(properties)
-                ? properties
+                ? properties.toSorted()
                 : [properties];
-
-            this.properties.sort();
         }
     }
 }
@@ -121,11 +119,11 @@ export class ItemConsumable {
 
 export class ItemCooldown {
     private id: string;
-    private second: number;
+    private seconds: number;
 
-    constructor(id: string, second: number) {
+    constructor(id: string, seconds: number) {
         this.id = id;
-        this.second = second;
+        this.seconds = seconds;
     }
 }
 

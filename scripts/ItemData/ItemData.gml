@@ -105,6 +105,18 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
         return !!(___type & _type);
     }
     
+    static set_sprite = function(_sprite)
+    {
+        ___sprite = _sprite;
+        
+        return self;
+    }
+    
+    static get_sprite = function()
+    {
+        return ___sprite;
+    }
+    
     static set_rarity = function(_rarity)
     {
         if (_rarity != undefined)
@@ -214,8 +226,19 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     
     static set_item = function(_data)
     {
-        static __item_armor_type = global.item_armor_type;
+        // static __item_armor_type = global.item_armor_type;
         
+        if (_data != undefined)
+        {
+            var _consumable = _data[$ "consumable"];
+            
+            if (_consumable != undefined)
+            {
+                set_item_consumable(_consumable);
+            }
+        }
+        
+        /*
         if (_data != undefined)
         {
             ___item_damage = _data[$ "damage"];
@@ -281,7 +304,7 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
                         .set_regeneration_time(_attribute[$ "regeneration_time"]);
                 }
             }
-        }
+        }*/
         
         return self;
     }
@@ -289,6 +312,26 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     static get_item_damage = function()
     {
         return self[$ "___item_damage"] ?? 1;
+    }
+    
+    static set_item_consumable = function(_consumable)
+    {
+        ___item_consumable_hp = _consumable.hp;
+        ___item_consumable_saturation = _consumable.saturation;
+        
+        var _cooldown = _consumable[$ "cooldown"];
+        
+        if (_cooldown != undefined)
+        {
+            ___item_consumable_cooldown = new ItemCooldown(_cooldown.id, _cooldown.seconds);
+        }
+        
+        var _sfx = _consumable[$ "sfx"];
+        
+        if (_sfx != undefined)
+        {
+            ___item_consumable_sfx = new ItemSFX(_sfx.id, _sfx[$ "gain"]);
+        }
     }
     
     static get_item_consumable_hp = function()
@@ -301,19 +344,14 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
         return self[$ "___item_consumable_saturation"];
     }
     
-    static get_item_consumable_cooldown_id = function()
+    static get_item_consumable_cooldown = function()
     {
-        return self[$ "___item_consumable_cooldown_id"];
+        return self[$ "___item_consumable_cooldown"];
     }
     
-    static get_item_consumable_cooldown_second = function()
+    static get_item_consumable_sfx = function()
     {
-        return self[$ "___item_consumable_cooldown_second"];
-    }
-    
-    static get_item_consumable_sfx_id = function()
-    {
-        return self[$ "___item_consumable_sfx_id"];
+        return self[$ "___item_consumable_sfx"];
     }
     
     static get_item_durability_amount = function()
@@ -350,6 +388,20 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     {
         if (_tile != undefined)
         {
+            var _drops = _tile[$ "drops"];
+            
+            if (_drops != undefined)
+            {
+                set_tile_drops(_drops);
+            }
+            
+            var _harvest = _tile[$ "harvest"];
+            
+            if (_harvest != undefined)
+            {
+                set_tile_harvest(_harvest);
+            }
+            /*
             ___tile_is_visible = _tile[$ "is_visible"];
             
             var _render_state = _tile[$ "render_state"];
@@ -359,9 +411,52 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
                 ___render_state = _render_state;
                 ___render_state_length = array_length(_render_state);
             }
+            */
         }
         
         return self;
+    }
+    
+    static set_tile_drops = function(_drops)
+    {
+        ___drops = [];
+        
+        var _drops_length = array_length(_drops);
+        
+        for (var i = 0; i < _drops_length; ++i)
+        {
+            var _drop = _drops[i];
+            
+            var _condition = _drop[$ "condition"];
+            var _c = undefined;
+            
+            if (_condition != undefined)
+            {
+                _c = new ItemCondition()
+                    .set_id(_condition[$ "id"])
+                    .set_index(_condition[$ "index"]);
+            }
+            
+            array_push(___drops, {
+                item: new ItemDrop(_drop.id, _drop[$ "amount"], _drop[$ "chance"]),
+                condition: _c
+            });
+        }
+    }
+    
+    static get_tile_drops = function()
+    {
+        return self[$ "___drops"];
+    }
+    
+    static set_tile_harvest = function()
+    {
+        
+    }
+    
+    static get_tile_harvest = function()
+    {
+        
     }
     
     static get_tile_is_visible = function()
@@ -548,34 +643,39 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
         return self;
     }
     
-    static get_harvest_hardness = function()
+    static get_item_harvest_hardness = function()
     {
         return self[$ "___harvest_hardness"];
     }
     
-    static get_harvest_level = function()
+    static get_item_harvest_level = function()
     {
         return self[$ "___harvest_level"] ?? 0;
     }
     
-    static get_harvest_condition_id = function()
+    static get_tile_harvest_hardness = function()
+    {
+        return self[$ "___harvest_hardness"];
+    }
+    
+    static get_tile_harvest_level = function()
+    {
+        return self[$ "___harvest_level"] ?? 0;
+    }
+    
+    static get_tile_harvest_condition_id = function()
     {
         return self[$ "___harvest_condition_id"]
     }
     
-    static get_harvest_particle_colour = function()
+    static get_tile_harvest_particle_colour = function()
     {
         return self[$ "___harvest_particle_colour"];
     }
     
-    static get_harvest_particle_frequency = function()
+    static get_tile_harvest_particle_frequency = function()
     {
         return self[$ "___harvest_particle_frequency"] ?? 0;
-    }
-    
-    static has_harvest_condition = function(_type)
-    {
-        return !!(get_harvest_condition() & _type);
     }
     
     static set_drop = function(_drop)

@@ -1,0 +1,121 @@
+{
+    "background": "phantasia:desert",
+    "creatures": [
+        {
+            "id": "phantasia:chicken",
+            "variant": "warm",
+            "amount": 1,
+            "chance": 0.01,
+            "time_range_min": 0,
+            "time_range_max": 890,
+            "tile": "#phantasia:tile/creature_spawn/animal"
+        }
+    ],
+    "foliage": [
+        {
+            "id": "phantasia:short_grass_dry",
+            "chance": 0.14,
+            "generate_on": "#phantasia:tile/placement/dry_plant_on"
+        },
+        {
+            "id": "phantasia:tall_grass_dry",
+            "chance": 0.06,
+            "generate_on": "#phantasia:tile/placement/dry_plant_on"
+        },
+        {
+            "id": "phantasia:dead_bush",
+            "chance": 0.12,
+            "generate_on": "#phantasia:tile/placement/dry_plant_on"
+        },
+        {
+            "id": "phantasia:rock",
+            "chance": 0.04,
+            "generate_on": "#phantasia:tile/placement/dry_plant_on"
+        },
+        {
+            "id": "phantasia:twig",
+            "chance": 0.05,
+            "generate_on": "#phantasia:tile/placement/dry_plant_on"
+        }
+    ],
+    "light_colour": {
+        "dawn": "#C68B69",
+        "day": "#FFFFFF",
+        "dusk": "#C68B69",
+        "night": "#141B35"
+    },
+    "map_colour": "#F4AF66",
+    "music": [
+        {
+            "id": "phantasia:dune",
+            "gain": 0.3
+        },
+        {
+            "id": "phantasia:field_of_concourse",
+            "gain": 0.4
+        },
+        {
+            "id": "phantasia:oasis",
+            "gain": 0.4
+        },
+        {
+            "id": "phantasia:sol_y_luna",
+            "gain": 0.5
+        },
+        {
+            "id": "phantasia:tense",
+            "gain": 0.5
+        }
+    ],
+    "sky_colour": {
+        "dawn": {
+            "base": "#292231",
+            "gradient": "#37232C"
+        },
+        "day": {
+            "base": "#D3BEA9",
+            "gradient": "#936E63"
+        },
+        "dusk": {
+            "base": "#C66448",
+            "gradient": "#AC6F56"
+        },
+        "night": {
+            "base": "#17121D",
+            "gradient": "#110A14"
+        }
+    },
+    "structures": [
+        {
+            "id": "phantasia:tall_foliage/cactus",
+            "chance": 0.06,
+            "generate_on": "#phantasia:tile/placement/plant_on"
+        }
+    ],
+    "tile": {
+        "top_layer": {
+            "base": {
+                "id": "phantasia:sand"
+            },
+            "wall": {
+                "id": "phantasia:sandstone_wall"
+            }
+        },
+        "middle_layer": {
+            "base": {
+                "id": "phantasia:sand"
+            },
+            "wall": {
+                "id": "phantasia:sandstone_wall"
+            }
+        },
+        "bottom_layer": {
+            "base": {
+                "id": "phantasia:sandstone"
+            },
+            "wall": {
+                "id": "phantasia:sandstone_wall"
+            }
+        }
+    }
+}

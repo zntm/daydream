@@ -1,0 +1,12 @@
+{
+    "inventory": "#phantasia:item/generic/inventory_tool",
+    "item": {
+        "durability": {
+            "amount": 1239,
+            "bar": "#phantasia:item/generic/inventory_tool"
+        },
+        "damage": 13
+    },
+    "sprite": "phantasia:item/platinum_sword",
+    "type": "tool"
+}

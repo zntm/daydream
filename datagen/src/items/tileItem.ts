@@ -179,7 +179,7 @@ export default (
 ) => {
     class TileItem extends Item {
         private tile: {
-            drop?: string | ItemTileDrop[];
+            drops?: string | ItemTileDrop[];
             harvest?: string | ItemTileHarvest;
             placement?: string | ItemTilePlacement;
             sfx?: string | ItemTileSFX;
@@ -200,9 +200,9 @@ export default (
             this.tile = {};
         }
 
-        setTileDrop(drop?: string | ItemTileDrop[]) {
+        setTileDrops(drop?: string | ItemTileDrop[]) {
             if (drop) {
-                this.tile.drop = drop;
+                this.tile.drops = drop;
             }
 
             return this;
@@ -252,7 +252,7 @@ export default (
         inventory,
         properties,
     )
-        .setTileDrop(drop)
+        .setTileDrops(drop)
         .setTileHarvest(harvest)
         .setTilePlacement(placement)
         .setTileSFX(sfx);

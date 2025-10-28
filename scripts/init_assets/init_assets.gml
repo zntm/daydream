@@ -162,6 +162,4 @@ function init_assets(_directory, _namespace, _folder = "")
             continue;
         }
     }
-    
-    // show_debug_message(global.sound_asset)
 }

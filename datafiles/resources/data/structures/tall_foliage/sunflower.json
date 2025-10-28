@@ -1,0 +1,52 @@
+{
+    "function": {
+        "id": "phantasia:tree/generic",
+        "parameters": {
+            "tile_top": {
+                "id": "phantasia:sunflower",
+                "index": 0
+            },
+            "tile_middle": {
+                "id": "phantasia:sunflower",
+                "index": {
+                    "type": "smart_value:choose_weighted",
+                    "values": [
+                        {
+                            "value": 2,
+                            "weight": 1
+                        },
+                        {
+                            "value": 3,
+                            "weight": 3
+                        }
+                    ]
+                }
+            },
+            "tile_bottom": {
+                "id": "phantasia:sunflower",
+                "index": 1
+            }
+        }
+    },
+    "height": {
+        "type": "smart_value:irandom",
+        "values": {
+            "min": 3,
+            "max": 6
+        }
+    },
+    "placement": {
+        "type": "floor",
+        "xoffset": 0,
+        "yoffset": "-height",
+        "clearance_condition": [
+            {
+                "xoffset": 0,
+                "yoffset": "-height",
+                "width": 1,
+                "height": "height"
+            }
+        ]
+    },
+    "width": 1
+}

@@ -96,26 +96,29 @@ function control_game_tick(_delta_time)
                 var _data = _item_data[$ _item_holding.get_id()];
                 var _hp = _data.get_item_consumable_hp();
                 
-                if (obj_Player.hp < obj_Player.hp_max) && (_hp != undefined)
+                if (_hp != undefined) && (obj_Player.hp < obj_Player.hp_max)
                 {
-                    var _cooldown_id = _data.get_item_consumable_cooldown_id();
+                    var _cooldown = _data.get_item_consumable_cooldown();
                     
-                    if (_cooldown_id != undefined)
+                    if (_cooldown != undefined)
                     {
                         obj_Player.hp = min(obj_Player.hp_max, obj_Player.hp + _hp);
                         obj_Player.saturation += _data.get_item_consumable_saturation();
                         
-                        item_cooldown[$ _cooldown_id] = _data.get_item_consumable_cooldown_second();
+                        item_cooldown[$ _cooldown.get_id()] = _cooldown.get_seconds();
                         
                         inventory_delete("base", _inventory_selected_hotbar);
                         
                         obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR | SURFACE_REFRESH_BOOLEAN.HP;
                         
-                        var _sfx = _data.get_item_consumable_sfx_id();
+                        var _sfx = _data.get_item_consumable_sfx();
                         
                         if (_sfx != undefined)
                         {
-                            sfx_diegetic_play(obj_Player.audio_emitter, obj_Player.x, obj_Player.y, _sfx);
+                            var _sfx_id = _sfx.get_id();
+                            var _sfx_gain = _sfx.get_gain();
+                            
+                            sfx_diegetic_play(obj_Player.audio_emitter, obj_Player.x, obj_Player.y, _sfx_id, _sfx_gain);
                         }
                     }
                 }

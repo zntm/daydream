@@ -1,0 +1,16 @@
+{
+    "inventory": "#phantasia:item/generic/inventory_tool",
+    "item": {
+        "durability": {
+            "amount": 1012,
+            "bar": "#phantasia:item/generic/inventory_tool"
+        },
+        "damage": 10,
+        "harvest": {
+            "hardness": 1.31,
+            "level": 5
+        }
+    },
+    "sprite": "phantasia:item/platinum_axe",
+    "type": "tool"
+}

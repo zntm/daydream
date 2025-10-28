@@ -1,0 +1,15 @@
+{
+    "inventory": "#phantasia:item/generic/inventory_tool",
+    "item": {
+        "durability": {
+            "amount": 65,
+            "bar": "#phantasia:item/generic/inventory_tool"
+        },
+        "harvest": {
+            "hardness": 1,
+            "level": 1
+        }
+    },
+    "sprite": "phantasia:item/pine_shovel",
+    "type": "tool"
+}

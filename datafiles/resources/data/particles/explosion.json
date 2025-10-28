@@ -1,0 +1,25 @@
+{
+    "lifetime": {
+        "type": "smart_value:random",
+        "values": {
+            "min": 0.5,
+            "max": 1
+        }
+    },
+    "physics": {
+        "xspeed": 0,
+        "yspeed": 0,
+        "scale": {
+            "type": "smart_value:random",
+            "values": {
+                "min": 0.9,
+                "max": 1.1
+            }
+        },
+        "rotation": 0
+    },
+    "properties": [
+        "phantasia:has_stretch_animation"
+    ],
+    "sprite": "phantasia:particle/explosion"
+}
