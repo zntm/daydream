@@ -1,4 +1,4 @@
-function file_load_snippet_effects(_buffer)
+function file_load_snippet_effects(_buffer, _inst)
 {
     var _effects_length = buffer_read(_buffer, buffer_u16);
     
@@ -7,7 +7,8 @@ function file_load_snippet_effects(_buffer)
         return undefined;
     }
     
-    var _effects = {}
+    var _effects = _inst.effects;
+    var _data = {}
     
     for (var i = 0; i < _effects_length; ++i)
     {
@@ -21,12 +22,12 @@ function file_load_snippet_effects(_buffer)
         var _boolean = buffer_read(_buffer, buffer_u64);
         var _time = buffer_read(_buffer, buffer_f64);
         
-        _effects[$ _name] = {
+        _data[$ _name] = {
             level: _level,
             boolean: _boolean,
             time: _time
         }
     }
     
-    return _effects;
+    return _data;
 }

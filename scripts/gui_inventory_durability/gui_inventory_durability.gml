@@ -2,7 +2,9 @@
 
 function gui_inventory_durability(_xoffset, _yoffset, _durability, _data, _gui_multiplier_x, _gui_multiplier_y)
 {
-    var _durability_max = _data.get_item_durability_amount();
+    var _d = _data.get_item_durability();
+    
+    var _durability_max = _d.get_amount();
     
     if (_durability >= _durability_max) exit;
     
@@ -14,7 +16,7 @@ function gui_inventory_durability(_xoffset, _yoffset, _durability, _data, _gui_m
     var _xscale = _gui_multiplier_x * INVENTORY_SLOT_SCALE * (INVENTORY_SLOT_DIMENSION - (GUI_INVENTORY_DURABILITY_PADDING * 2));
     var _yscale = _gui_multiplier_y * INVENTORY_SLOT_SCALE * 1;
     
-    var _durability_bar = _data.get_item_durability_bar();
+    var _durability_bar = _d.get_bar();
     
     draw_sprite_ext(spr_Square, 0, _x, _y, _xscale, _yscale, 0, hex_parse(_durability_bar.base_colour), 1);
     
@@ -26,7 +28,7 @@ function gui_inventory_durability(_xoffset, _yoffset, _durability, _data, _gui_m
     
     var _bar = _durability_bar.data;
     
-    var _length = _data.get_item_durability_bar_length();
+    var _length = _d.get_bar_length();
     
     for (var l = 0; l < _length; ++l)
     {

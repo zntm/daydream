@@ -16,13 +16,13 @@
   "exportToGame":true,
   "extensionVersion":"0.0.1",
   "files":[
-    {"$GMExtensionFile":"","%Name":"","constants":[],"copyToTargets":-1,"filename":"OpenSimplexNoise.dll","final":"","functions":[
+    {"$GMExtensionFile":"v1","%Name":"","constants":[],"copyToTargets":-1,"filename":"OpenSimplexNoise.dll","final":"","functions":[
         {"$GMExtensionFunction":"","%Name":"open_simplex_noise","argCount":0,"args":[2,2,2,2,],"documentation":"","externalName":"","help":"","hidden":false,"kind":1,"name":"open_simplex_noise","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"open_simplex_noise_seed","argCount":0,"args":[2,],"documentation":"","externalName":"","help":"","hidden":false,"kind":1,"name":"open_simplex_noise_seed","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"open_simplex_noise_free","argCount":0,"args":[],"documentation":"","externalName":"","help":"","hidden":false,"kind":1,"name":"open_simplex_noise_free","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"open_simplex_noise_3d","argCount":0,"args":[2,2,2,2,2,],"documentation":"","externalName":"","help":"","hidden":false,"kind":1,"name":"open_simplex_noise_3d","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
         {"$GMExtensionFunction":"","%Name":"open_simplex_noise_4d","argCount":0,"args":[2,2,2,2,2,2,],"documentation":"","externalName":"","help":"","hidden":false,"kind":1,"name":"open_simplex_noise_4d","resourceType":"GMExtensionFunction","resourceVersion":"2.0","returnType":2,},
-      ],"init":"","kind":1,"name":"","order":[],"origname":"","ProxyFiles":[],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
+      ],"init":"","kind":1,"name":"","origname":"","ProxyFiles":[],"resourceType":"GMExtensionFile","resourceVersion":"2.0","uncompress":false,"usesRunnerInterface":false,},
   ],
   "gradleinject":null,
   "hasConvertedCodeInjection":true,

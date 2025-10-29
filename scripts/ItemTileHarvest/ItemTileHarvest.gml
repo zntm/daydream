@@ -1,32 +1,37 @@
-function ItemTileParticle(_id, _frequency) constructor 
+function ItemTileParticle(_colours, _frequency) constructor 
 {
-    ___id = _id;
+    ___colours = _colours;
     ___frequency = _frequency;
     
-    static get_id = function()
+    static get_colours = function()
     {
-        return ___id;
+        return ___colours;
     }
     
     static get_frequency = function()
     {
-        return ___id;
+        return ___frequency;
     }
 }
 
 function ItemTileHarvest(_hardness, _level, _particle, _condition = undefined) : ItemHarvest(_hardness, _level) constructor
 {
-    ___particle = _particle;
+    ___particle = new ItemTileParticle(_particle.id, _particle.frequency);
+    
+    if (_condition != undefined)
+    {
+        ___condition = new ItemCondition()
+            .set_id(_condition[$ "id"])
+            .set_index(_condition[$ "index"]);
+    }
     
     static get_particle = function()
     {
         return ___particle;
     }
     
-    ___condition = _condition;
-    
     static get_condition = function()
     {
-        return ___condition;
+        return self[$ "___condition"];
     }
 }

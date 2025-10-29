@@ -52,7 +52,7 @@ function player_build(_dt, _x, _y)
     
     surface_refresh |= ((is_opened & IS_OPENED_BOOLEAN.INVENTORY) ? SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK : SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR);
     
-    var _sfx = _data.get_sfx_build();
+    var _sfx = _data.get_tile().get_build();
     
     if (_sfx != undefined)
     {

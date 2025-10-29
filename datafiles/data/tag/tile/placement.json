@@ -19,10 +19,8 @@
         "type": "every",
         "values": [
             {
-                "offset": {
-                    "x": 0,
-                    "y": 1
-                },
+                "xoffset": 0,
+                "yoffset": 1,
                 "z": "default",
                 "id": "#phantasia:tile/placement/dry_plant_on"
             }
@@ -32,10 +30,8 @@
         "type": "every",
         "values": [
             {
-                "offset": {
-                    "x": 0,
-                    "y": 1
-                },
+                "xoffset": 0,
+                "yoffset": 1,
                 "z": "default",
                 "id": "#phantasia:tile/placement/plant_on"
             }
@@ -50,37 +46,25 @@
                         "type": "some",
                         "values": [
                             {
-                                "offset": {
-                                    "x": 0,
-                                    "y": 1
-                                },
+                                "xoffset": 0,
+                                "yoffset": 1,
                                 "z": "default",
                                 "id": "#phantasia:tile/placement/dry_plant_on"
                             },
                             {
-                                "offset": {
-                                    "x": 0,
-                                    "y": 1
-                                },
+                                "xoffset": 0,
+                                "yoffset": 1,
                                 "z": "z",
-                                "id": "id"
+                                "id": "$ID"
                             }
                         ]
                     }
                 },
                 {
-                    "offset": {
-                        "x": 0,
-                        "y": -1
-                    },
+                    "xoffset": 0,
+                    "yoffset": -1,
                     "z": "z",
-                    "id": {
-                        "type": "concat",
-                        "values": [
-                            "empty",
-                            "id"
-                        ]
-                    }
+                    "id": ["$EMPTY", "$ID"]
                 }
             ]
         }
@@ -94,37 +78,25 @@
                         "type": "some",
                         "values": [
                             {
-                                "offset": {
-                                    "x": 0,
-                                    "y": 1
-                                },
+                                "xoffset": 0,
+                                "yoffset": 1,
                                 "z": "default",
                                 "id": "#phantasia:tile/placement/plant_on"
                             },
                             {
-                                "offset": {
-                                    "x": 0,
-                                    "y": 1
-                                },
+                                "xoffset": 0,
+                                "yoffset": 1,
                                 "z": "z",
-                                "id": "id"
+                                "id": "$ID"
                             }
                         ]
                     }
                 },
                 {
-                    "offset": {
-                        "x": 0,
-                        "y": -1
-                    },
+                    "xoffset": 0,
+                    "yoffset": -1,
                     "z": "z",
-                    "id": {
-                        "type": "concat",
-                        "values": [
-                            "empty",
-                            "id"
-                        ]
-                    }
+                    "id": ["$EMPTY", "$ID"]
                 }
             ]
         }

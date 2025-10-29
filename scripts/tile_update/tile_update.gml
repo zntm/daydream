@@ -27,9 +27,11 @@ function tile_update(_x, _y, _z)
         
         var _data = global.item_data[$ _tile.get_id()];
         
-        var _particle_colour = _data.get_tile_harvest_particle_colour();
+        var _tile_harvest = _data.get_tile_harvest();
         
-        repeat (smart_value(_data.get_tile_harvest_particle_frequency()))
+        var _particle_colour = _tile_harvest.get_colours();
+        
+        repeat (smart_value(_tile_harvest.get_frequency()))
         {
             spawn_particle(_x * TILE_SIZE, _y * TILE_SIZE, "phantasia:tile/harvest", is_array_choose(_particle_colour));
         }

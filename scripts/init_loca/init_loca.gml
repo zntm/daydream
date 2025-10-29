@@ -3,7 +3,7 @@ global.loca_font_scale = 0.38;
 
 global.loca_data = {}
 
-init_loca_effect(fnt_Default);
+init_loca_effect();
 
 function init_loca(_directory, _namespace)
 {

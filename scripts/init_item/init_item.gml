@@ -20,7 +20,7 @@ function init_item(_directory, _namespace)
         _item_data.set_inventory(_json.inventory);
         _item_data.set_item(_json[$ "item"]);
         _item_data.set_tile(_json[$ "tile"]);
-        
+        _item_data.set_properties(_json[$ "properties"]);
         _item_data.set_sprite(_sprite);
         _item_data.set_type(_json.type);
         

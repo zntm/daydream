@@ -3,55 +3,77 @@ global.sound_asset = {}
 
 function SpriteAsset(_sprite, _xoffset, _yoffset, _length) constructor
 {
-    sprite = _sprite;
-    xoffset = _xoffset;
-    yoffset = _xoffset;
-    length = _xoffset;
+    ___sprite = _sprite;
+    ___xoffset = _xoffset;
+    ___yoffset = _xoffset;
+    ___length = _xoffset;
+    
+    static get_sprite = function()
+    {
+        return ___sprite;
+    }
+    
+    static get_xoffset = function()
+    {
+        return ___xoffset;
+    }
+    
+    static get_yoffset = function()
+    {
+        return ___yoffset;
+    }
+    
+    static get_length = function()
+    {
+        return ___length;
+    }
     
     static set_is_tile = function()
     {
-        _is_tile = true;
+        ___is_tile = true;
+        
+        return self;
     }
     
     static is_tile = function()
     {
-        return self[$ "_is_tile"] ?? false;
+        return self[$ "___is_tile"] ?? false;
     }
 }
 
 function SoundAsset(_sound, _duration, _author = undefined, _title = undefined) constructor
 {
-    sound = _sound;
-    duration = _duration;
+    ___sound = _sound;
+    ___duration = _duration;
     
     if (_author != undefined)
     {
-        author = _author;
+        ___author = _author;
     }
     
     if (_title != undefined)
     {
-        title = _title;
+        ___title = _title;
     }
     
     static get_sound = function()
     {
-        return self[$ "sound"];
+        return self[$ "___sound"];
     }
     
     static get_duration = function()
     {
-        return self[$ "duration"];
+        return self[$ "___duration"];
     }
     
     static get_author = function()
     {
-        return self[$ "author"];
+        return self[$ "___author"];
     }
     
     static get_title = function()
     {
-        return self[$ "title"];
+        return self[$ "___title"];
     }
 }
 
@@ -131,10 +153,8 @@ function init_assets(_directory, _namespace, _folder = "")
                     
                     if (_data[$ "is_tile"])
                     {
-                        _asset.set_is_tile(true);
+                        _asset.set_is_tile();
                     }
-                    
-                    show_debug_message($"{_directory}/{_file2}/{_sprite_file}");
                     
                     array_push(_array, _asset);
                 }
@@ -153,7 +173,7 @@ function init_assets(_directory, _namespace, _folder = "")
                 
                 if (_json[$ "is_tile"])
                 {
-                    _asset.set_is_tile(true);
+                    _asset.set_is_tile();
                 }
                 
                 global.sprite_asset[$ $"{_namespace}:{_file2}"] = _asset;

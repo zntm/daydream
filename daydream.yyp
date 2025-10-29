@@ -2,7 +2,7 @@
   "$GMProject":"v1",
   "%Name":"daydream",
   "AudioGroups":[
-    {"$GMAudioGroup":"","%Name":"audiogroup_default","name":"audiogroup_default","resourceType":"GMAudioGroup","resourceVersion":"2.0","targets":-1,},
+    {"$GMAudioGroup":"v1","%Name":"audiogroup_default","exportDir":"","name":"audiogroup_default","resourceType":"GMAudioGroup","resourceVersion":"2.0","targets":-1,},
   ],
   "configs":{
     "children":[],
@@ -1638,7 +1638,7 @@
   "isEcma":false,
   "LibraryEmitters":[],
   "MetaData":{
-    "IDEVersion":"2024.13.1.193",
+    "IDEVersion":"2024.1400.0.911",
   },
   "name":"daydream",
   "resources":[
@@ -1839,13 +1839,15 @@
     {"id":{"name":"Inventory","path":"scripts/Inventory/Inventory.yy",},},
     {"id":{"name":"is_array_choose","path":"scripts/is_array_choose/is_array_choose.yy",},},
     {"id":{"name":"ItemCondition","path":"scripts/ItemCondition/ItemCondition.yy",},},
+    {"id":{"name":"ItemConsumable","path":"scripts/ItemConsumable/ItemConsumable.yy",},},
     {"id":{"name":"ItemCooldown","path":"scripts/ItemCooldown/ItemCooldown.yy",},},
     {"id":{"name":"ItemData","path":"scripts/ItemData/ItemData.yy",},},
     {"id":{"name":"ItemDrop","path":"scripts/ItemDrop/ItemDrop.yy",},},
+    {"id":{"name":"ItemDurability","path":"scripts/ItemDurability/ItemDurability.yy",},},
     {"id":{"name":"ItemFunction","path":"scripts/ItemFunction/ItemFunction.yy",},},
     {"id":{"name":"ItemHarvest","path":"scripts/ItemHarvest/ItemHarvest.yy",},},
-    {"id":{"name":"ItemSFX","path":"scripts/ItemSFX/ItemSFX.yy",},},
     {"id":{"name":"ItemTileHarvest","path":"scripts/ItemTileHarvest/ItemTileHarvest.yy",},},
+    {"id":{"name":"ItemTileSFX","path":"scripts/ItemTileSFX/ItemTileSFX.yy",},},
     {"id":{"name":"lerp_delta","path":"scripts/lerp_delta/lerp_delta.yy",},},
     {"id":{"name":"loca_translate","path":"scripts/loca_translate/loca_translate.yy",},},
     {"id":{"name":"menu_anchor_position","path":"scripts/menu_anchor_position/menu_anchor_position.yy",},},
@@ -1903,6 +1905,7 @@
     {"id":{"name":"SmartValue","path":"scripts/SmartValue/SmartValue.yy",},},
     {"id":{"name":"sort_alphabetical_ascending","path":"scripts/sort_alphabetical_ascending/sort_alphabetical_ascending.yy",},},
     {"id":{"name":"sort_alphabetical_descending","path":"scripts/sort_alphabetical_descending/sort_alphabetical_descending.yy",},},
+    {"id":{"name":"Sound","path":"scripts/Sound/Sound.yy",},},
     {"id":{"name":"spawn_creature","path":"scripts/spawn_creature/spawn_creature.yy",},},
     {"id":{"name":"spawn_floating_text","path":"scripts/spawn_floating_text/spawn_floating_text.yy",},},
     {"id":{"name":"spawn_item_drop","path":"scripts/spawn_item_drop/spawn_item_drop.yy",},},

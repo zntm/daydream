@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"ItemSFX",
+  "%Name":"ItemTileSFX",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"ItemSFX",
+  "name":"ItemTileSFX",
   "parent":{
     "name":"Item Data",
     "path":"folders/Data/Item Data.yy",

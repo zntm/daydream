@@ -94,16 +94,17 @@ function control_game_tick(_delta_time)
             if (_item_holding != INVENTORY_EMPTY)
             {
                 var _data = _item_data[$ _item_holding.get_id()];
-                var _hp = _data.get_item_consumable_hp();
+                var _item_consumable = _data.get_item_consumable();
+                var _hp = _item_consumable.get_hp();
                 
                 if (_hp != undefined) && (obj_Player.hp < obj_Player.hp_max)
                 {
-                    var _cooldown = _data.get_item_consumable_cooldown();
+                    var _cooldown = _item_consumable.get_cooldown();
                     
                     if (_cooldown != undefined)
                     {
                         obj_Player.hp = min(obj_Player.hp_max, obj_Player.hp + _hp);
-                        obj_Player.saturation += _data.get_item_consumable_saturation();
+                        obj_Player.saturation += _item_consumable.get_saturation();
                         
                         item_cooldown[$ _cooldown.get_id()] = _cooldown.get_seconds();
                         
@@ -111,7 +112,7 @@ function control_game_tick(_delta_time)
                         
                         obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR | SURFACE_REFRESH_BOOLEAN.HP;
                         
-                        var _sfx = _data.get_item_consumable_sfx();
+                        var _sfx = _item_consumable.get_sfx();
                         
                         if (_sfx != undefined)
                         {

@@ -30,11 +30,11 @@ function Inventory(_item, _amount = 1) constructor
     
     var _data = global.item_data[$ get_id()];
     
-    var _durability = round(_data.get_item_durability_amount() / 2);
+    var _durability = _data.get_item_durability();
     
-    if (_durability > 0)
+    if (_durability != undefined)
     {
-        ___durability = _durability;
+        ___durability = _durability.get_amount();
     }
     
     static set_durability = function(_durability)

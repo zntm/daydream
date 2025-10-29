@@ -131,7 +131,7 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     {
         return self[$ "___rarity"];
     }
-    
+    /*
     static set_sprite = function(_sprite)
     {
         ___sprite = _sprite;
@@ -139,12 +139,12 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
         
         return self;
     }
-    
+    *
     static get_sprite = function()
     {
         return ___sprite;
     }
-    
+    */
     static get_sprite_xoffset = function()
     {
         return (___sprite_size & 0xff) - 0x80;
@@ -236,6 +236,20 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
             {
                 set_item_consumable(_consumable);
             }
+            
+            var _durability = _data[$ "durability"];
+            
+            if (_durability != undefined)
+            {
+                set_item_durability(_durability);
+            }
+            
+            var _harvest = _data[$ "harvest"];
+            
+            if (_harvest != undefined)
+            {
+                set_item_harvest(_harvest);
+            }
         }
         
         /*
@@ -316,49 +330,34 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     
     static set_item_consumable = function(_consumable)
     {
-        ___item_consumable_hp = _consumable.hp;
-        ___item_consumable_saturation = _consumable.saturation;
-        
-        var _cooldown = _consumable[$ "cooldown"];
-        
-        if (_cooldown != undefined)
-        {
-            ___item_consumable_cooldown = new ItemCooldown(_cooldown.id, _cooldown.seconds);
-        }
-        
-        var _sfx = _consumable[$ "sfx"];
-        
-        if (_sfx != undefined)
-        {
-            ___item_consumable_sfx = new ItemSFX(_sfx.id, _sfx[$ "gain"]);
-        }
+        ___item_consumable = new ItemConsumable(_consumable);
     }
     
-    static get_item_consumable_hp = function()
+    static get_item_consumable = function()
     {
-        return self[$ "___item_consumable_hp"];
+        return self[$ "___item_consumable"];
     }
     
-    static get_item_consumable_saturation = function()
+    static set_item_durability = function(_durability)
     {
-        return self[$ "___item_consumable_saturation"];
+        ___item_durability = new ItemDurability(_durability.amount, _durability.bar);
     }
     
-    static get_item_consumable_cooldown = function()
+    static get_item_durability = function()
     {
-        return self[$ "___item_consumable_cooldown"];
+        return self[$ "___item_durability"];
     }
     
-    static get_item_consumable_sfx = function()
+    static set_item_harvest = function(_harvest)
     {
-        return self[$ "___item_consumable_sfx"];
+        ___item_harvest = new ItemHarvest(_harvest.hardness, _harvest.level);
     }
     
-    static get_item_durability_amount = function()
+    static get_item_harvest = function()
     {
-        return self[$ "___item_durability_amount"] ?? 0;
+        return self[$ "___item_harvest"];
     }
-       
+    
     static get_item_armor_type = function()
     {
         return self[$ "___item_armor_type"];
@@ -401,6 +400,16 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
             {
                 set_tile_harvest(_harvest);
             }
+            
+            var _placement
+            
+            var _sfx = _tile[$ "sfx"];
+            
+            if (_sfx != undefined)
+            {
+                set_tile_sfx(_sfx);
+            }
+            
             /*
             ___tile_is_visible = _tile[$ "is_visible"];
             
@@ -428,18 +437,12 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
             var _drop = _drops[i];
             
             var _condition = _drop[$ "condition"];
-            var _c = undefined;
-            
-            if (_condition != undefined)
-            {
-                _c = new ItemCondition()
-                    .set_id(_condition[$ "id"])
-                    .set_index(_condition[$ "index"]);
-            }
             
             array_push(___drops, {
                 item: new ItemDrop(_drop.id, _drop[$ "amount"], _drop[$ "chance"]),
-                condition: _c
+                condition: (_condition != undefined) ? new ItemCondition()
+                    .set_id(_condition[$ "id"])
+                    .set_index(_condition[$ "index"]) : undefined
             });
         }
     }
@@ -449,14 +452,28 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
         return self[$ "___drops"];
     }
     
-    static set_tile_harvest = function()
+    static set_tile_harvest = function(_harvest)
     {
-        
+        ___tile_harvest = new ItemTileHarvest(_harvest.hardness, _harvest.level, _harvest.particle, _drop[$ "condition"]);
     }
     
     static get_tile_harvest = function()
     {
-        
+        return self[$ "___tile_harvest"];
+    }
+    
+    static set_tile_sfx = function(_sfx)
+    {
+        ___sfx = new ItemTileSFX(
+            new Sound(_sfx.build),
+            new Sound(_sfx.harvest),
+            new Sound(_sfx.step)
+        );
+    }
+    
+    static get_tile_sfx = function()
+    {
+        return self[$ "___sfx"];
     }
     
     static get_tile_is_visible = function()
@@ -731,50 +748,6 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
         return self;
     }
     
-    static set_sfx = function(_sfx)
-    {
-        if (_sfx != undefined)
-        {
-            var _build = _sfx[$ "build"];
-            
-            if (_build != undefined)
-            {
-                ___sfx_build = _build;
-            }
-            
-            var _harvest = _sfx[$ "harvest"];
-            
-            if (_harvest != undefined)
-            {
-                ___sfx_harvest = _harvest;
-            }
-            
-            var _step = _sfx[$ "step"];
-            
-            if (_step != undefined)
-            {
-                ___sfx_step = _step;
-            }
-        }
-        
-        return self;
-    }
-    
-    static get_sfx_build = function()
-    {
-        return self[$ "___sfx_build"];
-    }
-    
-    static get_sfx_harvest = function()
-    {
-        return self[$ "___sfx_harvest"];
-    }
-    
-    static get_sfx_step = function()
-    {
-        return self[$ "___sfx_step"];
-    }
-    
     static set_audio_properties = function(_audio_properties)
     {
         if (_audio_properties != undefined)
@@ -829,12 +802,12 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     static set_properties = function(_properties)
     {
         static __properties = {
-            "phantasia:is_tile":        set_is_tile,
-            "phantasia:is_wall":        set_is_wall,
-            "phantasia:is_foliage":     set_is_foliage,
-            "phantasia:is_transparent": set_is_transparent,
-            "phantasia:can_flip_on_x":  set_can_flip_on_x,
-            "phantasia:can_flip_on_y":  set_can_flip_on_y
+            "phantasia:can_mirror":     set_property_can_mirror,
+            "phantasia:can_flip":       set_property_can_flip,
+            "phantasia:is_foliage":     set_property_is_foliage,
+            "phantasia:is_tile":        set_property_is_tile,
+            "phantasia:is_transparent": set_property_is_transparent,
+            "phantasia:is_wall":        set_property_is_wall,
         }
         
         if (_properties != undefined)
@@ -845,14 +818,14 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
             {
                 var _property = _properties[i];
                 
-                __properties[$ _property](true);
+                __properties[$ _property]();
             }
         }
         
         return self;
     }
     
-    static set_is_tile = function(_is_tile)
+    static set_property_is_tile = function(_is_tile)
     {
         if (_is_tile)
         {
@@ -869,7 +842,7 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
         return !!(___properties & ITEM_PROPERTIES_BOOLEAN.IS_TILE);
     }
     
-    static set_is_wall = function(_is_wall)
+    static set_property_is_wall = function(_is_wall)
     {
         if (_is_wall)
         {
@@ -884,7 +857,7 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
         return !!(___properties & ITEM_PROPERTIES_BOOLEAN.IS_WALL);
     }
     
-    static set_is_foliage = function(_is_foliage)
+    static set_property_is_foliage = function(_is_foliage)
     {
         if (_is_foliage)
         {
@@ -916,7 +889,7 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
         return !!(___properties & ITEM_PROPERTIES_BOOLEAN.IS_CRAFTING_STATION);
     }
     
-    static set_is_transparent = function(_is_transparent)
+    static set_property_is_transparent = function(_is_transparent)
     {
         if (_is_transparent)
         {
@@ -931,14 +904,9 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
         return !!(___properties & ITEM_PROPERTIES_BOOLEAN.IS_TRANSPARENT);
     }
     
-    static set_can_flip_on_x = function(_can_flip_on_x)
+    static set_property_can_mirror = function()
     {
-        if (_can_flip_on_x)
-        {
-            ___properties |= ITEM_PROPERTIES_BOOLEAN.CAN_FLIP_ON_X;
-        }
-        
-        return self;
+        ___properties |= ITEM_PROPERTIES_BOOLEAN.CAN_FLIP_ON_X;
     }
     
     static can_flip_on_x = function()
@@ -946,14 +914,9 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
         return !!(___properties & ITEM_PROPERTIES_BOOLEAN.CAN_FLIP_ON_X);
     }
     
-    static set_can_flip_on_y = function(_can_flip_on_y)
+    static set_property_can_flip = function()
     {
-        if (_can_flip_on_y)
-        {
-            ___properties |= ITEM_PROPERTIES_BOOLEAN.CAN_FLIP_ON_Y;
-        }
-        
-        return self;
+        ___properties |= ITEM_PROPERTIES_BOOLEAN.CAN_FLIP_ON_Y;
     }
     
     static can_flip_on_y = function()

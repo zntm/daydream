@@ -1,4 +1,4 @@
-function control_physics_item_drop(_dt)
+function control_physics_item_drop(_dt, _id)
 {
     var _time = _dt / GAME_TICK;
     
