@@ -20,16 +20,8 @@ function tile_met_custom_placement_condition(_x, _y, _z, _condition, _item_data 
             continue;
         }
         
-        var _xoffset = 0;
-        var _yoffset = 0;
-        
-        var _offset = _value[$ "offset"];
-        
-        if (_offset != undefined)
-        {
-            _xoffset = _offset[$ "x"] ?? 0;
-            _yoffset = _offset[$ "y"] ?? 0;
-        }
+        var _xoffset = _value[$ "xoffset"] ?? 0;
+        var _yoffset = _value[$ "yoffset"] ?? 0;
         
         var _z2 = _value.z;
         

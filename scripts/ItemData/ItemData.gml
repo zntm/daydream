@@ -401,7 +401,12 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
                 set_tile_harvest(_harvest);
             }
             
-            var _placement
+            var _placement = _tile[$ "placement"];
+            
+            if (_placement != undefined)
+            {
+                set_tile_placement(_placement);
+            }
             
             var _sfx = _tile[$ "sfx"];
             
@@ -491,9 +496,9 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
         return self[$ "___render_state_length"] ?? 0;
     }
     
-    static set_placement = function(_placement)
+    static set_tile_placement = function(_placement)
     {
-        function __condition(_data)
+        function __placement_condition(_data)
         {
             var _values = _data.values;
             var _values_length = array_length(_values);
@@ -506,7 +511,7 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
                 
                 if (_condition != undefined)
                 {
-                    _data.values[@ i].condition = __condition(_condition);
+                    _data.values[@ i].condition = __placement_condition(_condition);
                     
                     continue;
                 }
@@ -517,23 +522,28 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
                 {
                     _id = smart_value_parse(_id);
                     
-                    if (_id == "id")
+                    if (is_array(_id))
+                    {
+                        var _id2 = get_id();
+                        
+                        var _index_id = array_get_index(_id2, "$ID");
+                        
+                        if (_index_id > -1)
+                        {
+                            _value.id[@ _index_id] = $"{get_namespace()}:{_}";
+                        }
+                        
+                        var _index_empty = array_get_index(_id2, "$EMPTY");
+                        
+                        if (_index_empty > -1)
+                        {
+                            _value.id[@ _index_empty] = TILE_EMPTY_ID;
+                        }
+                    }
+                    else if (_id == "$ID")
                     {
                         _id = $"{get_namespace()}:{get_id()}";
                     }
-                    else if (is_array(_id))
-                    {
-                        var _ = get_id();
-                        
-                        var _index = array_get_index(_id, "id");
-                        
-                        if (_index > -1)
-                        {
-                            _id[@ _index] = $"{get_namespace()}:{_}";
-                        }
-                    }
-                    
-                    _data.values[@ i].id = _id;
                 }
             }
             
@@ -569,7 +579,7 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
             
             if (_condition != undefined)
             {
-                ___placement_condition = __condition(tag_value_parse(_condition));
+                ___placement_condition = tag_value_parse(_condition);
             }
             
             var _id = _placement[$ "id"];
