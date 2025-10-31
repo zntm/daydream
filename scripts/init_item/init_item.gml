@@ -68,12 +68,12 @@ function init_item(_directory, _namespace)
         _item_data.set_edge_padding(_sprite_data[$ "edge_padding"]);
         */
         
-        carbasa_sprite_add("item", global.sprite_asset[$ _sprite].get_sprite(), _sprite);
+        atla_push("item", global.sprite_asset[$ _sprite].get_sprite(), _sprite);
         
         global.item_data[$ $"{_namespace}:{_id}"] = _item_data;
         
         delete _json;
         
-        dbg_timer("init_item", $"[Init] Loaded Item: \'{_file}\'");
+        dbg_timer("init_item", $"[Init] Loaded Item: \'{_id}\'");
     }
 }

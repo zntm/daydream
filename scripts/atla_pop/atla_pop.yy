@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"atla_pop",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"atla_pop",
+  "parent":{
+    "name":"Atla",
+    "path":"folders/Atla.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
