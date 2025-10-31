@@ -127,6 +127,8 @@
     {"name":"atla_draw","order":5,"path":"scripts/atla_draw/atla_draw.yy",},
     {"name":"atla_get_height","order":9,"path":"scripts/atla_get_height/atla_get_height.yy",},
     {"name":"atla_get_number","order":10,"path":"scripts/atla_get_number/atla_get_number.yy",},
+    {"name":"atla_get_surface_texture","order":12,"path":"scripts/atla_get_surface_texture/atla_get_surface_texture.yy",},
+    {"name":"atla_get_surface_uvs","order":13,"path":"scripts/atla_get_surface_uvs/atla_get_surface_uvs.yy",},
     {"name":"atla_get_uvs","order":11,"path":"scripts/atla_get_uvs/atla_get_uvs.yy",},
     {"name":"atla_get_width","order":8,"path":"scripts/atla_get_width/atla_get_width.yy",},
     {"name":"atla_get_xoffset","order":6,"path":"scripts/atla_get_xoffset/atla_get_xoffset.yy",},

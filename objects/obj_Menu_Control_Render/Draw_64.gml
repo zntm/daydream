@@ -1,8 +1,8 @@
 gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_src_alpha, bm_one);
 
-if (surface_exists(global.atla_surface[$ "item"] ?? -1))
+if (surface_exists(global.___atla_surface[$ "item"] ?? -1))
 {
-    draw_surface_ext(global.atla_surface[$ "item"], mouse_x, mouse_y, 0.5, 0.5, 0, c_white, 1)
+    draw_surface_ext(global.___atla_surface[$ "item"], mouse_x, mouse_y, 0.5, 0.5, 0, c_white, 1)
 }
 
 var _render_xoffset = xoffset;

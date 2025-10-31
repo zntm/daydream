@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"atla_get_surface_texture",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"atla_get_surface_texture",
+  "parent":{
+    "name":"Atla",
+    "path":"folders/Atla.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
