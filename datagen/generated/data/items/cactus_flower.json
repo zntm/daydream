@@ -21,7 +21,7 @@
         "placement": {
             "condition": "#phantasia:tile/placement/condition_dry_plant"
         },
-        "sfx": "#phantasia:tile/sfx/leaves"
+        "sfx": "#phantasia:tile/sfx/foliage"
     },
     "type": "untouchable"
 }

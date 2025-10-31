@@ -1,14 +1,11 @@
 {
     "inventory": "#phantasia:item/generic/inventory_default",
-    "properties": [
-        "phantasia:can_mirror",
-        "phantasia:is_foliage"
-    ],
-    "sprite": "phantasia:block/tall_grass_borea",
+    "properties": ["phantasia:can_mirror", "phantasia:is_foliage"],
+    "sprite": "phantasia:block/tall_grass_taiga",
     "tile": {
         "drop": [
             {
-                "id": "phantasia:tall_grass_borea"
+                "id": "phantasia:tall_grass_taiga"
             }
         ],
         "harvest": {
@@ -22,7 +19,7 @@
         "placement": {
             "condition": "#phantasia:tile/placement/condition_plant"
         },
-        "sfx": "#phantasia:tile/sfx/leaves"
+        "sfx": "#phantasia:tile/sfx/foliage"
     },
     "type": "untouchable"
 }

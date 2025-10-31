@@ -2,8 +2,8 @@
     "dry_plant_on": [
         "phantasia:dirt",
         "phantasia:grass_block",
-        "phantasia:grass_block_borea",
-        "phantasia:grass_block_myr",
+        "phantasia:grass_block_taiga",
+        "phantasia:grass_block_swamp",
         "phantasia:moss",
         "phantasia:sand",
         "phantasia:sandstone"
@@ -11,8 +11,8 @@
     "plant_on": [
         "phantasia:dirt",
         "phantasia:grass_block",
-        "phantasia:grass_block_borea",
-        "phantasia:grass_block_myr",
+        "phantasia:grass_block_taiga",
+        "phantasia:grass_block_swamp",
         "phantasia:moss"
     ],
     "condition_dry_plant": {

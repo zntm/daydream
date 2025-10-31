@@ -51,33 +51,33 @@
             "gain": 0.7
         }
     ],
-	"tile": {
-		"top_layer": {
-			"base": {
-				"id": "phantasia:grass_block_myr"
-			},
-			"wall": {
-				"id": "phantasia:dirt_wall"
-			}
-		},
-		"sub_layer": {
+    "tile": {
+        "top_layer": {
+            "base": {
+                "id": "phantasia:grass_block_swamp"
+            },
+            "wall": {
+                "id": "phantasia:dirt_wall"
+            }
+        },
+        "sub_layer": {
             "base": {
                 "id": "phantasia:dirt"
             },
             "wall": {
                 "id": "phantasia:dirt_wall"
             }
-		}
-	},
+        }
+    },
     "creature": [],
     "foliage": [
         {
-            "id": "phantasia:short_grass_myr",
+            "id": "phantasia:short_grass_swamp",
             "chance": 0.26,
             "placeable_on": "#phantasia:tile/placement/plant_on"
         },
         {
-            "id": "phantasia:tall_grass_myr",
+            "id": "phantasia:tall_grass_swamp",
             "chance": 0.04,
             "placeable_on": "#phantasia:tile/placement/plant_on"
         },

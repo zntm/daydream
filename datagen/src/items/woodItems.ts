@@ -41,7 +41,7 @@ export default (
             new ItemTileCondition("#phantasia:item/type/axe"),
         ),
         undefined,
-        new ItemTileSFX("#phantasia:tile/sfx/wood"),
+        "#phantasia:tile/sfx/wood",
     ),
     tileItem(
         `${id}_chest`,
@@ -59,7 +59,7 @@ export default (
             new ItemTileCondition("#phantasia:item/type/axe"),
         ),
         undefined,
-        new ItemTileSFX("#phantasia:tile/sfx/wood"),
+        "#phantasia:tile/sfx/wood",
     ),
     tileItem(
         `${id}_leaves`,
@@ -81,7 +81,7 @@ export default (
             new ItemTileCondition("#phantasia:item/type/axe"),
         ),
         undefined,
-        new ItemTileSFX("#phantasia:tile/sfx/wood"),
+        "#phantasia:tile/sfx/wood",
     ),
     toolItem(
         `${id}_pickaxe`,
@@ -129,6 +129,6 @@ export default (
             new ItemTileCondition("#phantasia:item/type/axe"),
         ),
         undefined,
-        new ItemTileSFX("#phantasia:tile/sfx/wood"),
+        "#phantasia:tile/sfx/wood",
     ),
 ];

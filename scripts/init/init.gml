@@ -1,6 +1,12 @@
 function init(_namespace)
 {
-    init_assets(PROGRAM_DIRECTORY_ASSETS, _namespace);
+    var _files = file_read_directory(PROGRAM_DIRECTORY_ASSETS);
+    var _files_length = array_length(_files);
+    
+    for (var i = 0; i < _files_length; ++i)
+    {
+        init_assets($"{PROGRAM_DIRECTORY_ASSETS}/{_files[i]}", _namespace);
+    }
     
     init_credit($"{PROGRAM_DIRECTORY_DATA}\\credit\\data.json");
     
@@ -22,7 +28,7 @@ function init(_namespace)
     
     init_music($"{PROGRAM_DIRECTORY_DATA}\\music", _namespace);
     
-    init_item($"{PROGRAM_DIRECTORY_DATA}\\item", _namespace);
+    init_item($"{PROGRAM_DIRECTORY_RESOURCES}/data/items", _namespace);
     
     init_crafting($"{PROGRAM_DIRECTORY_DATA}\\crafting.json", _namespace);
     

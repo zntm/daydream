@@ -55,27 +55,27 @@
             "gain": 0.7
         }
     ],
-	"tile": {
-		"top_layer": {
-			"base": {
-				"id": "phantasia:grass_block_borea"
-			},
-			"wall": {
-				"id": "phantasia:dirt_wall"
-			}
-		},
-		"sub_layer": {
+    "tile": {
+        "top_layer": {
+            "base": {
+                "id": "phantasia:grass_block_taiga"
+            },
+            "wall": {
+                "id": "phantasia:dirt_wall"
+            }
+        },
+        "sub_layer": {
             "base": {
                 "id": "phantasia:dirt"
             },
             "wall": {
                 "id": "phantasia:dirt_wall"
             }
-		}
-	},
+        }
+    },
     "creature": [
         {
-            "id": "phantasia:bunny",
+            "id": "phantasia:rabbit",
             "variant": {
                 "type": "choose_weighted",
                 "values": [
@@ -140,12 +140,12 @@
     ],
     "foliage": [
         {
-            "id": "phantasia:short_grass_borea",
+            "id": "phantasia:short_grass_taiga",
             "chance": 0.06,
             "placeable_on": "#phantasia:tile/placement/plant_on"
         },
         {
-            "id": "phantasia:tall_grass_borea",
+            "id": "phantasia:tall_grass_taiga",
             "chance": 0.01,
             "placeable_on": "#phantasia:tile/placement/plant_on"
         },

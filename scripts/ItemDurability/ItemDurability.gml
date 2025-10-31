@@ -1,4 +1,4 @@
-function ItemDurability(_amount, _bar)
+function ItemDurability(_amount, _bar) constructor
 {
     ___amount = _amount;
     ___bar = _bar;

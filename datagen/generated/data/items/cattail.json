@@ -56,7 +56,7 @@
                 ]
             }
         },
-        "sfx": "#phantasia:tile/sfx/leaves"
+        "sfx": "#phantasia:tile/sfx/foliage"
     },
     "type": "untouchable"
 }

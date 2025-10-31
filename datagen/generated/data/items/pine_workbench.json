@@ -18,9 +18,7 @@
                 "id": "#phantasia:item/type/axe"
             }
         },
-        "sfx": {
-            "id": "#phantasia:tile/sfx/wood"
-        }
+        "sfx": "#phantasia:tile/sfx/wood"
     },
     "type": "untouchable"
 }

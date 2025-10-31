@@ -1,8 +1,6 @@
 {
     "inventory": "#phantasia:item/generic/inventory_default",
-    "properties": [
-        "phantasia:is_foliage"
-    ],
+    "properties": ["phantasia:is_foliage"],
     "sprite": "phantasia:item/cactus_flower",
     "tile": {
         "drops": [
@@ -21,7 +19,7 @@
         "placement": {
             "condition": "#phantasia:tile/placement/condition_dry_plant"
         },
-        "sfx": "#phantasia:tile/sfx/leaves"
+        "sfx": "#phantasia:tile/sfx/foliage"
     },
     "type": "untouchable"
 }

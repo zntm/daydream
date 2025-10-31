@@ -1,8 +1,6 @@
 {
     "inventory": "#phantasia:item/generic/inventory_default",
-    "properties": [
-        "phantasia:can_mirror"
-    ],
+    "properties": ["phantasia:can_mirror"],
     "sprite": "phantasia:item/cactus",
     "tile": {
         "drops": [
@@ -14,10 +12,7 @@
             "hardness": 0.38,
             "level": 0,
             "particle": {
-                "colour": [
-                    "#113402",
-                    "#032802"
-                ],
+                "colour": ["#113402", "#032802"],
                 "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
             }
         },
@@ -48,15 +43,12 @@
                         "xoffset": 0,
                         "yoffset": -1,
                         "z": "z",
-                        "id": [
-                            "$EMPTY",
-                            "$ID"
-                        ]
+                        "id": ["$EMPTY", "$ID"]
                     }
                 ]
             }
         },
-        "sfx": "#phantasia:tile/sfx/leaves"
+        "sfx": "#phantasia:tile/sfx/foliage"
     },
     "type": "untouchable"
 }

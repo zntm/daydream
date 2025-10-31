@@ -16,7 +16,7 @@ function ItemTileParticle(_colours, _frequency) constructor
 
 function ItemTileHarvest(_hardness, _level, _particle, _condition = undefined) : ItemHarvest(_hardness, _level) constructor
 {
-    ___particle = new ItemTileParticle(_particle.id, _particle.frequency);
+    ___particle = new ItemTileParticle(_particle.colour, _particle.frequency);
     
     if (_condition != undefined)
     {

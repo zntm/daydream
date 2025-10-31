@@ -23,8 +23,6 @@ function menu_refresh_instance_worlds()
         
         var _uuid = _data.get_uuid();
         
-        show_debug_message(_uuid);
-        
         if (!directory_exists($"{PROGRAM_DIRECTORY_WORLDS}/{_uuid}"))
         {
             var _inst_header = instance_create_layer(480, 224, "Instances", obj_Menu_Anchor);

@@ -140,7 +140,7 @@ export default [
                     .setTile("#phantasia:tile/creature_spawn/animal")
                     .setTimeRange(0, 890),
                 new BiomeCreature(
-                    "phantasia:bunny",
+                    "phantasia:rabbit",
                     new SmartValue(
                         SmartValueType.IntRandom,
                         new SmartValueRandom(1, 4),
@@ -342,7 +342,7 @@ export default [
             ])
             .setCreatures([
                 new BiomeCreature(
-                    "phantasia:bunny",
+                    "phantasia:rabbit",
                     new SmartValue(
                         SmartValueType.IntRandom,
                         new SmartValueRandom(1, 4),

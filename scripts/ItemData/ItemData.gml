@@ -330,7 +330,7 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     
     static set_item_consumable = function(_consumable)
     {
-        ___item_consumable = new ItemConsumable(_consumable);
+        ___item_consumable = new ItemConsumable(_consumable.hp, _consumable.saturation, _consumable[$ "cooldown"], _consumable[$ "sfx"]);
     }
     
     static get_item_consumable = function()
@@ -459,7 +459,7 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     
     static set_tile_harvest = function(_harvest)
     {
-        ___tile_harvest = new ItemTileHarvest(_harvest.hardness, _harvest.level, _harvest.particle, _drop[$ "condition"]);
+        ___tile_harvest = new ItemTileHarvest(_harvest.hardness, _harvest.level, _harvest.particle, _harvest[$ "condition"]);
     }
     
     static get_tile_harvest = function()
@@ -537,8 +537,12 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
                         
                         if (_index_empty > -1)
                         {
-                            _value.id[@ _index_empty] = TILE_EMPTY_ID;
+                            _value.id[@ _index_empty] = TILE_EMPTY;
                         }
+                    }
+                    else if (_id == "$EMPTY")
+                    {
+                        _id = TILE_EMPTY;
                     }
                     else if (_id == "$ID")
                     {

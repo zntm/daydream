@@ -7,10 +7,7 @@
         "edge_padding": 8
     },
     "inventory": "#phantasia:item/generic/inventory_tile",
-    "properties": [
-        "phantasia:is_tile",
-        "phantasia:can_flip_on_x"
-    ],
+    "properties": ["phantasia:is_tile", "phantasia:can_flip_on_x"],
     "harvest": {
         "hardness": 0.36,
         "particle": {
@@ -23,7 +20,7 @@
             "id": "phantasia:dirt"
         }
     ],
-    "sfx": "#phantasia:tile/sfx/grass_block",
+    "sfx": "#phantasia:tile/sfx/foliage_block",
     "audio_properties": {
         "lowpass": 0,
         "reverb": 0

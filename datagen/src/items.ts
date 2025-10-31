@@ -444,7 +444,7 @@ export default [
                     ],
                 ),
             ),
-            "#phantasia:tile/sfx/leaves",
+            "#phantasia:tile/sfx/foliage",
         ),
     ),
     tileItem(
@@ -552,7 +552,7 @@ export default [
         new ItemTilePlacement().setCondition(
             "#phantasia:tile/placement/condition_dry_plant",
         ),
-        "#phantasia:tile/sfx/leaves",
+        "#phantasia:tile/sfx/foliage",
     ),
     tileItem(
         "dead_bush",
@@ -607,7 +607,7 @@ export default [
                     "#phantasia:tile/generic/harvest_particle_frequency",
                 ),
             ),
-            sfx: "#phantasia:tile/sfx/grass",
+            sfx: "#phantasia:tile/sfx/foliage",
         },
         {
             id: "moss",
@@ -624,7 +624,7 @@ export default [
                     "#phantasia:tile/generic/harvest_particle_frequency",
                 ),
             ),
-            sfx: "#phantasia:tile/sfx/grass",
+            sfx: "#phantasia:tile/sfx/foliage",
         },
         {
             id: "sandstone",
@@ -703,7 +703,7 @@ export default [
             ),
         },
         {
-            id: "bunny",
+            id: "rabbit",
             rawConsumable: new ItemConsumable(
                 3,
                 2,
@@ -750,7 +750,7 @@ export default [
             new ItemTilePlacement().setCondition(
                 "#phantasia:tile/placement/condition_plant",
             ),
-            "#phantasia:tile/sfx/leaves",
+            "#phantasia:tile/sfx/foliage",
         ),
     ),
     // Grass
@@ -779,7 +779,7 @@ export default [
                     new ItemTilePlacement().setCondition(
                         "#phantasia:tile/placement/condition_plant",
                     ),
-                    "#phantasia:tile/sfx/leaves",
+                    "#phantasia:tile/sfx/foliage",
                 ),
             );
         })
@@ -802,7 +802,8 @@ export default [
                     "#phantasia:tile/generic/harvest_particle_frequency",
                 ),
             ),
-            "#phantasia/tile/sfx/dirt",
+            undefined,
+            "#phantasia:tile/sfx/dirt",
         );
     }),
     // Ore

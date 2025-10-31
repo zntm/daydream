@@ -16,7 +16,7 @@
             "tile": "#phantasia:tile/creature_spawn/animal"
         },
         {
-            "id": "phantasia:bunny",
+            "id": "phantasia:rabbit",
             "variant": {
                 "type": "smart_value:choose_weighted",
                 "values": [

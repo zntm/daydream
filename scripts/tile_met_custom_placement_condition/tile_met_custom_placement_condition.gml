@@ -47,7 +47,7 @@ function tile_met_custom_placement_condition(_x, _y, _z, _condition, _item_data 
         {
             if (_id != undefined)
             {
-                if (is_array(_id)) ? (array_contains(_id, TILE_EMPTY_ID)) : (_id == TILE_EMPTY_ID)
+                if (is_array(_id)) ? (array_contains(_id, TILE_EMPTY)) : (_id == TILE_EMPTY)
                 {
                     ++_condition_amount;
                 }

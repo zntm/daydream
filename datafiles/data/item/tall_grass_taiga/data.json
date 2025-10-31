@@ -6,14 +6,11 @@
         "length": 4
     },
     "inventory": "#phantasia:item/generic/inventory_default",
-    "properties": [
-        "phantasia:is_foliage",
-        "phantasia:can_flip_on_x"
-    ],
+    "properties": ["phantasia:is_foliage", "phantasia:can_flip_on_x"],
     "harvest": {
         "hardness": 0.18,
         "particle": {
-            "colour": "#phantasia:tile/particle_colour/grass_myr",
+            "colour": "#phantasia:tile/particle_colour/grass_taiga",
             "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
         }
     },

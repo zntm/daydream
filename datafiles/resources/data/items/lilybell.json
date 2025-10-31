@@ -1,9 +1,6 @@
 {
     "inventory": "#phantasia:item/generic/inventory_default",
-    "properties": [
-        "phantasia:can_mirror",
-        "phantasia:is_foliage"
-    ],
+    "properties": ["phantasia:can_mirror", "phantasia:is_foliage"],
     "sprite": "phantasia:item/lilybell",
     "tile": {
         "drops": [
@@ -22,7 +19,7 @@
         "placement": {
             "condition": "#phantasia:tile/placement/condition_plant"
         },
-        "sfx": "#phantasia:tile/sfx/leaves"
+        "sfx": "#phantasia:tile/sfx/foliage"
     },
     "type": "untouchable"
 }

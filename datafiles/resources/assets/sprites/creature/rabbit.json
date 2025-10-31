@@ -13,11 +13,11 @@
     },
     "drops": [
         {
-            "id": "phantasia:raw_bunny"
+            "id": "phantasia:raw_rabbit"
         }
     ],
     "hostility_type": "passive",
     "hp": 12,
     "movement_type": "ground",
-    "sprite": "phantasia:creature/bunny"
+    "sprite": "phantasia:creature/rabbit"
 }

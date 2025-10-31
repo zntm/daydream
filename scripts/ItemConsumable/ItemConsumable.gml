@@ -1,4 +1,4 @@
-function ItemConsumable(_hp, _saturation, _cooldown, _sfx)
+function ItemConsumable(_hp, _saturation, _cooldown, _sfx) constructor
 {
     ___hp = _hp;
     ___saturation = _saturation;

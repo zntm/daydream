@@ -159,7 +159,7 @@ function init_assets(_directory, _namespace, _folder = "")
                     array_push(_array, _asset);
                 }
                 
-                global.sprite_asset[$ $"{_namespace}:{string_delete(_id, string_length(_id) - 8, 9)}"] = _array;
+                global.sprite_asset[$ $"{_namespace}:{_folder}/{_file2}"] = _array;
             }
             else
             {
@@ -176,7 +176,7 @@ function init_assets(_directory, _namespace, _folder = "")
                     _asset.set_is_tile();
                 }
                 
-                global.sprite_asset[$ $"{_namespace}:{_file2}"] = _asset;
+                global.sprite_asset[$ $"{_namespace}:{_folder}/{_file2}"] = _asset;
             }
             
             continue;

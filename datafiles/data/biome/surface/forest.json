@@ -47,24 +47,24 @@
             "gain": 0.7
         }
     ],
-	"tile": {
-		"top_layer": {
-			"base": {
-				"id": "phantasia:grass_block"
-			},
-			"wall": {
-				"id": "phantasia:dirt_wall"
-			}
-		},
-		"sub_layer": {
+    "tile": {
+        "top_layer": {
+            "base": {
+                "id": "phantasia:grass_block"
+            },
+            "wall": {
+                "id": "phantasia:dirt_wall"
+            }
+        },
+        "sub_layer": {
             "base": {
                 "id": "phantasia:dirt"
             },
             "wall": {
                 "id": "phantasia:dirt_wall"
             }
-		}
-	},
+        }
+    },
     "creature": [
         {
             "id": "phantasia:chicken",
@@ -83,7 +83,7 @@
             "tile": "#phantasia:tile/creature_spawn/animal"
         },
         {
-            "id": "phantasia:bunny",
+            "id": "phantasia:rabbit",
             "variant": {
                 "type": "choose_weighted",
                 "values": [

@@ -20,7 +20,7 @@
                 "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
             }
         },
-        "sfx": "#phantasia:tile/sfx/grass"
+        "sfx": "#phantasia:tile/sfx/foliage"
     },
     "type": "solid"
 }

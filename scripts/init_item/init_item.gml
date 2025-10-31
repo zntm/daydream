@@ -8,12 +8,13 @@ function init_item(_directory, _namespace)
     for (var i = 0; i < _files_length; ++i)
     {
         var _file = _files[i];
+        var _id = string_delete(_file, string_length(_file) - 4, 5);
         
         dbg_timer("init_item");
         
-        var _json = tag_value_parse(buffer_load_json($"{_directory}/{_file}.json"));
+        var _json = tag_value_parse(buffer_load_json($"{_directory}/{_file}"));
         
-        var _item_data = new ItemData(_namespace, _file);
+        var _item_data = new ItemData(_namespace, _id);
         
         var _sprite = _json.sprite;
         
@@ -67,9 +68,9 @@ function init_item(_directory, _namespace)
         _item_data.set_edge_padding(_sprite_data[$ "edge_padding"]);
         */
         
-        carbasa_sprite_add("item", global.sprite_asset[$ _sprite], _sprite);
+        carbasa_sprite_add("item", global.sprite_asset[$ _sprite].get_sprite(), _sprite);
         
-        global.item_data[$ $"{_namespace}:{_file}"] = _item_data;
+        global.item_data[$ $"{_namespace}:{_id}"] = _item_data;
         
         delete _json;
         

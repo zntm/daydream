@@ -26,12 +26,12 @@ class PassiveCreature extends Creature {
 
 export default [
     new DatagenReturnData(
-        "generated/assets/sprites/creature/bunny.json",
+        "generated/assets/sprites/creature/rabbit.json",
         new PassiveCreature(
             12,
             CreatureHostilityType.Passive,
             CreatureMovementType.Ground,
-            "phantasia:creature/bunny",
+            "phantasia:creature/rabbit",
             new Attribute()
                 .setCollisionBox(17, 17)
                 .setHitBox(15, 16)
@@ -39,7 +39,7 @@ export default [
                 .setGravity(0.5)
                 .setJump(2.2, 4.9, 11)
                 .setMovementSpeed(0.4),
-        ).setDrops([new ItemDrop("phantasia:raw_bunny")]),
+        ).setDrops([new ItemDrop("phantasia:raw_rabbit")]),
     ),
     new DatagenReturnData(
         "generated/assets/sprites/creature/chicken.json",

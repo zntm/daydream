@@ -7,10 +7,7 @@
         "edge_padding": 8
     },
     "inventory": "#phantasia:item/generic/inventory_tile",
-    "properties": [
-        "phantasia:is_tile",
-        "phantasia:can_flip_on_x"
-    ],
+    "properties": ["phantasia:is_tile", "phantasia:can_flip_on_x"],
     "harvest": {
         "hardness": 0.36,
         "particle": {
@@ -23,7 +20,7 @@
             "id": "phantasia:dirt"
         }
     ],
-    "sfx": "#phantasia:tile/sfx/grass_block",
+    "sfx": "#phantasia:tile/sfx/foliage_block",
     "audio_properties": {
         "lowpass": 0,
         "reverb": 0
@@ -37,7 +34,7 @@
                         "x": "#phantasia:tile/on_random_tick/condition/generic/x",
                         "y": "#phantasia:tile/on_random_tick/condition/generic/y",
                         "z": "default",
-                        "id": "phantasia:grass_block_borea",
+                        "id": "phantasia:grass_block_taiga",
                         "condition": "#phantasia:tile/on_random_tick/condition/grass_block/dirt_and_empty_above"
                     }
                 },
