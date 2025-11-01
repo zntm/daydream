@@ -10,16 +10,8 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
     var _particle_data = global.particle_data;
     var _projectile_data = global.projectile_data;
     
-    var _texture = global.carbasa_surface_texture[$ "item"];
-    
-    if (!surface_exists(_texture))
-    {
-        carbasa_repair_page("item");
-        
-        _texture = global.carbasa_surface_texture[$ "item"] ?? pointer_null;
-    }
-    
-    var _uv = global.carbasa_surface_uv[$ "item"];
+    var _texture = atla_get_surface_texture("item");
+    var _uvs = atla_get_surface_uvs("item");
     
     var _texel_width  = texture_get_texel_width(_texture);
     var _texel_height = texture_get_texel_height(_texture);
@@ -44,7 +36,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
             
             if (!vertex_buffer_exists(_buffer))
             {
-                _buffer = render_chunk(_uv, _inst, _z);
+                _buffer = render_chunk(_uvs, _inst, _z);
             }
             
             if (_z == CHUNK_DEPTH_FOLIAGE_BACK)

@@ -46,8 +46,8 @@ function render_harvest(_camera_x, _camera_y, _camera_width, _camera_height)
     var _xscale = _tile.get_xscale();
     var _yscale = _tile.get_yscale();
     
-    var _xoffset = _data.get_sprite_xoffset() * abs(_xscale);
-    var _yoffset = _data.get_sprite_yoffset() * abs(_yscale);
+    var _xoffset = atla_get_xoffset("item", _sprite) * abs(_xscale);
+    var _yoffset = atla_get_yoffset("item", _sprite) * abs(_yscale);
     
     var _xstart = _xoffset - (TILE_SIZE / 2) + RENDER_HARVEST_PADDING + random_range(-_offset, _offset);
     var _ystart = _yoffset - (TILE_SIZE / 2) + RENDER_HARVEST_PADDING + random_range(-_offset, _offset);

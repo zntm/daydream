@@ -89,7 +89,7 @@ const _exportData = (data: DatagenReturnData) => {
 
 const exportData = (data: DatagenReturnData | DatagenReturnData[]) => {
     if (Array.isArray(data)) {
-        data.forEach(_exportData);
+        data.flat().forEach(_exportData);
     } else {
         _exportData(data);
     }

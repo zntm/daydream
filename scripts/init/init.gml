@@ -10,11 +10,11 @@ function init(_namespace)
     
     init_credit($"{PROGRAM_DIRECTORY_DATA}\\credit\\data.json");
     
-    init_splash($"{PROGRAM_DIRECTORY_DATA}\\splash.json");
+    init_splash($"{PROGRAM_DIRECTORY_DATA}/data/json/splash_texts.json");
     
     init_rarity($"{PROGRAM_DIRECTORY_DATA}\\rarity.json", _namespace);
     
-    init_tag_recursive($"{PROGRAM_DIRECTORY_DATA}\\tag", _namespace);
+    init_tag_recursive($"{PROGRAM_DIRECTORY_DATA}/data/tags", _namespace);
     
     init_attire($"{PROGRAM_DIRECTORY_DATA}\\attire", _namespace);
     
@@ -30,7 +30,7 @@ function init(_namespace)
     
     init_item($"{PROGRAM_DIRECTORY_RESOURCES}/data/items", _namespace);
     
-    init_crafting($"{PROGRAM_DIRECTORY_DATA}\\crafting.json", _namespace);
+    init_crafting($"{PROGRAM_DIRECTORY_RESOURCES}/data/json/crafting_recipes.json", _namespace);
     
     init_structure($"{PROGRAM_DIRECTORY_DATA}\\structure", _namespace);
     

@@ -1,28 +1,22 @@
-function render_tile_foliage(_buffer, _data, _page, _position, _uv, _chunk_index, _surface_width, _surface_height, _name, _index, _x, _y, _xscale, _yscale, _rotation, _colour, _alpha)
+function render_tile_foliage(_buffer, _data, _name, _position, _uv, _chunk_index, _surface_width, _surface_height, _index, _x, _y, _xscale, _yscale, _rotation, _colour, _alpha)
 {
-    var _ = _page[$ _name];
+    var _width  = atla_get_width("item", _name);
+    var _height = atla_get_height("item", _name);
     
-    var _sprite = _position[_.sprite[0]];
-    
-    var _width  = _.width;
-    var _height = _.height;
-    
-    var _v0 = _sprite.get_x() / _surface_width;
-    var _v1 = _sprite.get_y() / _surface_height;
+    var _v0 = _data.get_x() / _surface_width;
+    var _v1 = _data.get_y() / _surface_height;
     
     var _v2 = _v0 + (_width  / _surface_width);
     var _v3 = _v1 + (_height / _surface_height);
     
-    var _xoffset = -_xscale * _.xoffset;
-    var _yoffset = -_yscale * _.yoffset;
+    var _xoffset = -_xscale * atla_get_xoffset("item", _name);
+    var _yoffset = -_yscale * atla_get_yoffset("item", _name);
     
     var _xw = (_xscale * _width)  + _xoffset;
     var _yh = (_yscale * _height) + _yoffset;
     
-    static __render_cos = global.render_cos;
-    
-    var _cos = __render_cos[_rotation];
-    var _sin = __render_cos[(_rotation + 90) % 360];
+    var _cos =  dcos(_rotation);
+    var _sin = -dsin(_rotation);
     
     var _a = _xoffset * _cos;
     var _b = _xoffset * _sin;
@@ -46,7 +40,7 @@ function render_tile_foliage(_buffer, _data, _page, _position, _uv, _chunk_index
     var _dx = _x + _e - _h;
     var _dy = _y + _f + _g;
     
-    var _number = _.number;
+    var _number = atla_get_number("item", _name);
     
     // var _animation_type = (_width << 8) | _data.get_animation_type();
     var _animation_type = (_width << 8) | TILE_ANIMATION_TYPE.FOLIAGE;

@@ -1,4 +1,4 @@
-function atla_get_surface_uvs(_page, _name)
+function atla_get_surface_uvs(_page)
 {
     var _surface_texture = global.___atla_surface_texture[$ _page];
     

@@ -131,20 +131,7 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     {
         return self[$ "___rarity"];
     }
-    /*
-    static set_sprite = function(_sprite)
-    {
-        ___sprite = _sprite;
-        ___sprite_size = (sprite_get_height(_sprite) << 24) | (sprite_get_width(_sprite) << 16) | ((sprite_get_yoffset(_sprite) + 0x80) << 8) | (sprite_get_xoffset(_sprite) + 0x80);
-        
-        return self;
-    }
-    *
-    static get_sprite = function()
-    {
-        return ___sprite;
-    }
-    */
+    
     static get_sprite_xoffset = function()
     {
         return (___sprite_size & 0xff) - 0x80;
@@ -230,11 +217,25 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
         
         if (_data != undefined)
         {
+            var _armor = _data[$ "armor"];
+            
+            if (_armor != undefined)
+            {
+                set_item_armor(_armor);
+            }
+            
             var _consumable = _data[$ "consumable"];
             
             if (_consumable != undefined)
             {
                 set_item_consumable(_consumable);
+            }
+            
+            var _damage = _data[$ "damage"];
+            
+            if (_damage != undefined)
+            {
+                ___item_damage = smart_value_parse(_damage);
             }
             
             var _durability = _data[$ "durability"];
@@ -323,9 +324,16 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
         return self;
     }
     
-    static get_item_damage = function()
+    static set_item_armor = function(_armor)
     {
-        return self[$ "___item_damage"] ?? 1;
+        ___item_armor = new ItemArmor(_armor.type, _armor.defense);
+        
+        var _attributes = _armor[$ "attrbutes"];
+        
+        if (_attributes != undefined)
+        {
+            ___item_armor.set_attributes(_attributes);
+        }
     }
     
     static set_item_consumable = function(_consumable)
@@ -336,6 +344,11 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     static get_item_consumable = function()
     {
         return self[$ "___item_consumable"];
+    }
+    
+    static get_item_damage = function()
+    {
+        return self[$ "___item_damage"] ?? 1;
     }
     
     static set_item_durability = function(_durability)
@@ -433,7 +446,7 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     
     static set_tile_drops = function(_drops)
     {
-        ___drops = [];
+        ___tile_drops = [];
         
         var _drops_length = array_length(_drops);
         
@@ -443,18 +456,19 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
             
             var _condition = _drop[$ "condition"];
             
-            array_push(___drops, {
+            array_push(___tile_drops, {
                 item: new ItemDrop(_drop.id, _drop[$ "amount"], _drop[$ "chance"]),
-                condition: (_condition != undefined) ? new ItemCondition()
+                condition: (_condition != undefined) ? new ItemTileCondition()
                     .set_id(_condition[$ "id"])
-                    .set_index(_condition[$ "index"]) : undefined
+                    .set_index(_condition[$ "index"])
+                    .set_level(_condition[$ "level"]) : undefined
             });
         }
     }
     
     static get_tile_drops = function()
     {
-        return self[$ "___drops"];
+        return self[$ "___tile_drops"];
     }
     
     static set_tile_harvest = function(_harvest)

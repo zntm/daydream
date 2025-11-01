@@ -8,11 +8,6 @@ vertex_format_add_custom(vertex_type_float4, vertex_usage_texcoord);
 
 global.chunk_format_perspective = vertex_format_end();
 
-global.render_cos = array_create_ext(360, function(_index)
-{
-    return dcos(_index);
-});
-
 function render_chunk(_uv, _inst, _z)
 {
     var _item_data = global.item_data;
@@ -43,11 +38,13 @@ function render_chunk(_uv, _inst, _z)
             if (_tile == TILE_EMPTY) continue;
             
             var _id = _tile.get_id();
-            var _index = _tile.get_index();
-            
             var _data = _item_data[$ _id];
             
             if (!_data.get_tile_is_visible()) continue;
+            
+            var _index = _tile.get_index();
+            
+            var _sprite = _data.get_sprite();
             
             var _draw_x = _xstart + (_x * TILE_SIZE);
             var _draw_y = _ystart + (_y * TILE_SIZE);
@@ -57,23 +54,25 @@ function render_chunk(_uv, _inst, _z)
             
             var _rotation = _tile.get_rotation();
             
+            var _atla_data = atla_get_data("item", _sprite, _index + _tile.get_index_offset());
+            
             if (_data.is_tile())
             {
                 var _edge_padding = _data.get_edge_padding();
                 
-                render_connected_tile(_buffer, _data, _page, _position, _uv, _surface_width, _surface_height, _id, _index, _tile.get_index_offset(), _edge_padding, _draw_x, _draw_y, _xscale, _yscale, _rotation, c_white, 1);
+                render_connected_tile(_buffer, _data, _atla_data, _sprite, _position, _uv, _surface_width, _surface_height, _index, _tile.get_index_offset(), _edge_padding, _draw_x, _draw_y, _xscale, _yscale, _rotation, c_white, 1);
                 
                 continue;
             }
             
             if (_data.is_foliage())
             {
-                render_tile_foliage(_buffer, _data, _page, _position, _uv, tile_index_xy(_x, _y), _surface_width, _surface_height, _id, _index + _tile.get_index_offset(), _draw_x, _draw_y, _xscale, _yscale, _rotation, c_white, 1);
+                render_tile_foliage(_buffer, _atla_data, _sprite, _position, _uv, tile_index_xy(_x, _y), _surface_width, _surface_height, _index + _tile.get_index_offset(), _draw_x, _draw_y, _xscale, _yscale, _rotation, c_white, 1);
                 
                 continue;
             }
             
-            render_tile(_buffer, _data, _page, _position, _uv, _surface_width, _surface_height, _id, _index + _tile.get_index_offset(), _draw_x, _draw_y, _xscale, _yscale, _rotation, c_white, 1);
+            render_tile(_buffer, _sprite, _atla_data, _position, _uv, _surface_width, _surface_height, _id, _index + _tile.get_index_offset(), _draw_x, _draw_y, _xscale, _yscale, _rotation, c_white, 1);
         }
     }
     

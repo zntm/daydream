@@ -38,17 +38,14 @@ function atla_push(_page, _sprite, _name)
         var _b_width  = _b.get_width();
         var _b_height = _b.get_height();
         
-        // Use the larger dimension (after potential rotation)
         var _a_size = max(_a_width, _a_height);
         var _b_size = max(_b_width, _b_height);
         
-        // Primary sort: by size (descending - larger first)
         if (_a_size != _b_size)
         {
             return _b_size - _a_size;
         }
         
-        // Secondary sort: by frame count (descending - more frames first)
         var _a_number = _a.get_number();
         var _b_number = _b.get_number();
         
@@ -57,7 +54,6 @@ function atla_push(_page, _sprite, _name)
             return _b_number - _a_number;
         }
         
-        // Tertiary sort: by position index (ascending - earlier first)
         return _a.get_position_index() - _b.get_position_index();
         
     });
@@ -70,10 +66,10 @@ function atla_push(_page, _sprite, _name)
     var _surface_width  = ___ATLA_INIT_SIZE;
     var _surface_height = ___ATLA_INIT_SIZE;
     
-    // First pass: place all sprites linearly left-to-right, top-to-bottom
     var _current_x = 0;
     var _current_y = 0;
-    var _current_row_height = 0;
+    
+    var _current_height = 0;
     
     for (var i = 0; i < _atla_page_position_length;)
     {
@@ -94,17 +90,16 @@ function atla_push(_page, _sprite, _name)
         }
         
         var _n = _position.get_number();
+        
         var _total_width = _w * _n;
         
-        // Wrap to next row if needed
         if (_current_x + _total_width >= ___ATLA_MAX_SIZE)
         {
             _current_x = 0;
-            _current_y += _current_row_height;
-            _current_row_height = 0;
+            _current_y += _current_height;
+            _current_height = 0;
         }
         
-        // Place all frames of this sprite
         for (var j = 0; j < _n; ++j)
         {
             global.___atla_page[$ _page][$ _position_name].set_sprite_index(i + j, j);
@@ -112,14 +107,13 @@ function atla_push(_page, _sprite, _name)
         }
         
         _current_x += _total_width;
-        _current_row_height = max(_current_row_height, _h);
+        _current_height = max(_current_height, _h);
         _surface_width = max(_surface_width, _current_x);
-        _surface_height = max(_surface_height, _current_y + _current_row_height);
+        _surface_height = max(_surface_height, _current_y + _current_height);
         
         i += _n;
     }
     
-    // Second pass: compact sprites to top-left by finding optimal Y position
     for (var i = 0; i < _atla_page_position_length;)
     {
         var _s = _atla_page_position[i];
@@ -141,34 +135,38 @@ function atla_push(_page, _sprite, _name)
             _h = _temp;
         }
         
+        var _r = _x + (_w * _n);
+        
         var _new_y = 0;
         
-        // Find the maximum Y position of all sprites that overlap horizontally
         for (var j = 0; j < i;)
         {
             var _prev_sprite = _atla_page_position[j];
-            var _prev_name = _prev_sprite.get_name();
             
             var _prev_x = _prev_sprite.get_x();
             var _prev_y = _prev_sprite.get_y();
             
-            var _prev_w = _prev_sprite.get_width();
-            var _prev_h = _prev_sprite.get_height();
-            
             var _prev_n = _prev_sprite.get_number();
             
-            if (_atla_page[$ _prev_name].is_rotated())
+            if (_r > _prev_x)
             {
-                var _temp = _prev_w;
+                var _prev_w = _prev_sprite.get_width();
+                var _prev_h = _prev_sprite.get_height();
                 
-                _prev_w = _prev_h;
-                _prev_h = _temp;
-            }
-            
-            // Check horizontal overlap
-            if (_x < _prev_x + (_prev_w * _prev_n) && _x + (_w * _n) > _prev_x)
-            {
-                _new_y = max(_new_y, _prev_y + _prev_h);
+                if (_atla_page[$ _prev_sprite.get_name()].is_rotated())
+                {
+                    var _temp = _prev_w;
+                    
+                    _prev_w = _prev_h;
+                    _prev_h = _temp;
+                }
+                
+                if (_prev_y + _prev_h < _new_y) break;
+                
+                if (_x < _prev_x + (_prev_w * _prev_n))
+                {
+                    _new_y = _prev_y + _prev_h;
+                }
             }
             
             j += _prev_n;

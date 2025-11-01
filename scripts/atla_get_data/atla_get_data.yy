@@ -1,9 +1,13 @@
 {
   "$GMScript":"v1",
-  "%Name":"vertex_buffer_exists",
+  "%Name":"atla_get_data",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"vertex_buffer_exists",
+  "name":"atla_get_data",
+  "parent":{
+    "name":"Atla",
+    "path":"folders/Atla.yy",
+  },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
 }

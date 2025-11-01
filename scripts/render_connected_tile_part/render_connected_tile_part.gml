@@ -1,7 +1,7 @@
-function render_connected_tile_part(_buffer, _animation_type, _surface_width, _surface_height, _cos, _sin, _sprite, _sprite_data, _index, _left, _top, _width, _height, _x, _y, _xscale, _yscale, _colour, _alpha)
+function render_connected_tile_part(_buffer, _name, _data, _animation_type, _surface_width, _surface_height, _cos, _sin, _index, _left, _top, _width, _height, _x, _y, _xscale, _yscale, _colour, _alpha)
 {
-    var _v0 = (_sprite_data.get_x() + _left) / _surface_width;
-    var _v1 = (_sprite_data.get_y() + _top)  / _surface_height;
+    var _v0 = (_data.get_x() + _left) / _surface_width;
+    var _v1 = (_data.get_y() + _top)  / _surface_height;
     var _v2 = _v0 + (_width  / _surface_width);
     var _v3 = _v1 + (_height / _surface_height);
     
@@ -20,9 +20,9 @@ function render_connected_tile_part(_buffer, _animation_type, _surface_width, _s
     var _dx = _bx - (_b * _sin);
     var _dy = _by + (_b * _cos);
     
-    var _number = _sprite.number;
+    var _number = atla_get_number("item", _name);
     
-    var _w = _sprite.width;
+    var _w = atla_get_width("item", _name);
     
     // Triangle 1
     vertex_colour(_buffer, _colour, _alpha);

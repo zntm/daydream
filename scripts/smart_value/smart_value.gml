@@ -1,9 +1,11 @@
 function smart_value(_data)
 {
-    if (!is_struct(_data)) || (instanceof(_data) == SmartValue)
+    if (!is_struct(_data)) || (instanceof(_data) != "SmartValue")
     {
         return _data;
     }
+    
+    show_debug_message(instanceof(_data))
     
     var _type = _data.get_type();
     

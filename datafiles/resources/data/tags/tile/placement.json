@@ -1,0 +1,104 @@
+{
+    "dry_plant_on": [
+        "phantasia:dirt",
+        "phantasia:grass_block",
+        "phantasia:grass_block_taiga",
+        "phantasia:grass_block_swamp",
+        "phantasia:moss",
+        "phantasia:sand",
+        "phantasia:sandstone"
+    ],
+    "plant_on": [
+        "phantasia:dirt",
+        "phantasia:grass_block",
+        "phantasia:grass_block_taiga",
+        "phantasia:grass_block_swamp",
+        "phantasia:moss"
+    ],
+    "condition_dry_plant": {
+        "type": "every",
+        "values": [
+            {
+                "xoffset": 0,
+                "yoffset": 1,
+                "z": "default",
+                "id": "#phantasia:tile/placement/dry_plant_on"
+            }
+        ]
+    },
+    "condition_plant": {
+        "type": "every",
+        "values": [
+            {
+                "xoffset": 0,
+                "yoffset": 1,
+                "z": "default",
+                "id": "#phantasia:tile/placement/plant_on"
+            }
+        ]
+    },
+    "condition_tall_dry_plant": {
+        "condition": {
+            "type": "every",
+            "values": [
+                {
+                    "condition": {
+                        "type": "some",
+                        "values": [
+                            {
+                                "xoffset": 0,
+                                "yoffset": 1,
+                                "z": "default",
+                                "id": "#phantasia:tile/placement/dry_plant_on"
+                            },
+                            {
+                                "xoffset": 0,
+                                "yoffset": 1,
+                                "z": "z",
+                                "id": "$ID"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "xoffset": 0,
+                    "yoffset": -1,
+                    "z": "z",
+                    "id": ["$EMPTY", "$ID"]
+                }
+            ]
+        }
+    },
+    "condition_tall_plant": {
+        "condition": {
+            "type": "every",
+            "values": [
+                {
+                    "condition": {
+                        "type": "some",
+                        "values": [
+                            {
+                                "xoffset": 0,
+                                "yoffset": 1,
+                                "z": "default",
+                                "id": "#phantasia:tile/placement/plant_on"
+                            },
+                            {
+                                "xoffset": 0,
+                                "yoffset": 1,
+                                "z": "z",
+                                "id": "$ID"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "xoffset": 0,
+                    "yoffset": -1,
+                    "z": "z",
+                    "id": ["$EMPTY", "$ID"]
+                }
+            ]
+        }
+    }
+}

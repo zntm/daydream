@@ -1,0 +1,9 @@
+{
+    "pitch_default": {
+        "type": "smart_value:random",
+        "values": {
+            "min": 0.9,
+            "max": 1.1
+        }
+    }
+}
