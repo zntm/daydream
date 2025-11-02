@@ -20,7 +20,7 @@ export default [
     new DatagenReturnData(
         "generated/data/biomes/surface/desert.json",
         new Biome(
-            "phantasia:desert",
+            "phantasia:background/desert",
             "#F4AF66",
             {
                 dawn: new BiomeSkyColor("#292231", "#37232C"),
@@ -92,7 +92,7 @@ export default [
     new DatagenReturnData(
         "generated/data/biomes/surface/forest.json",
         new Biome(
-            "phantasia:forest",
+            "phantasia:background/forest",
             "#32B559",
             {
                 dawn: new BiomeSkyColor("#180738", "#2A1504"),
@@ -215,7 +215,7 @@ export default [
     new DatagenReturnData(
         "generated/data/biomes/surface/swamp.json",
         new Biome(
-            "phantasia:swamp",
+            "phantasia:background/swamp",
             "#8C8C6C",
             {
                 dawn: new BiomeSkyColor("#180738", "#2A1504"),
@@ -302,7 +302,7 @@ export default [
     new DatagenReturnData(
         "generated/data/biomes/surface/taiga.json",
         new Biome(
-            "phantasia:taiga",
+            "phantasia:background/taiga",
             "#097A67",
             {
                 dawn: new BiomeSkyColor("#180738", "#2A1504"),

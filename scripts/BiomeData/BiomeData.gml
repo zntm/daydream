@@ -5,15 +5,8 @@ enum BIOME_TYPE {
     CAVE
 }
 
-function BiomeData(_namespace, _id, _type) : ParentData(_namespace, _id) constructor
+function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
 {
-    ___type = _type;
-    
-    static get_type = function()
-    {
-        return ___type;
-    }
-    
     static set_background = function(_background)
     {
         ___background = _background;
@@ -107,9 +100,15 @@ function BiomeData(_namespace, _id, _type) : ParentData(_namespace, _id) constru
     
     static set_music = function(_music)
     {
-        if (_music != undefined)
+        ___music = [];
+        
+        var _length = array_length(_music);
+        
+        for (var i = 0; i < _length; ++i)
         {
-            ___music = _music;
+            var _ = _music[i];
+            
+            array_push(___music, new Sound(_.id, _.gain));
         }
         
         return self;
@@ -156,22 +155,40 @@ function BiomeData(_namespace, _id, _type) : ParentData(_namespace, _id) constru
         return ___tile_top_layer_wall;
     }
     
-    static set_tile_sub_layer = function(_data)
+    static set_tile_middle_layer = function(_data)
     {
-        ___tile_sub_layer_base = _data.base;
-        ___tile_sub_layer_wall = _data.wall;
+        ___tile_middle_layer_base = _data.base;
+        ___tile_middle_layer_wall = _data.wall;
         
         return self;
     }
     
-    static get_tile_sub_layer_base = function()
+    static get_tile_middle_layer_base = function()
     {
-        return ___tile_sub_layer_base;
+        return ___tile_middle_layer_base;
     }
     
-    static get_tile_sub_layer_wall = function()
+    static get_tile_middle_layer_wall = function()
     {
-        return ___tile_sub_layer_wall;
+        return ___tile_middle_layer_wall;
+    }
+    
+    static set_tile_bottom_layer = function(_data)
+    {
+        ___tile_bottom_layer_base = _data.base;
+        ___tile_bottom_layer_wall = _data.wall;
+        
+        return self;
+    }
+    
+    static get_tile_bottom_layer_base = function()
+    {
+        return ___tile_bottom_layer_base;
+    }
+    
+    static get_tile_bottom_layer_wall = function()
+    {
+        return ___tile_bottom_layer_wall;
     }
     
     static set_tile_foliage = function(_foliage)

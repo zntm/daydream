@@ -50,7 +50,7 @@ export default [
                 ),
             ]),
             new StructureFunction(
-                "phantasia:tree/generic",
+                "phantasia:tall_foliage",
                 new StructureParameter(
                     new StructureParameterTile("phantasia:cactus", 5),
                     new StructureParameterTile(

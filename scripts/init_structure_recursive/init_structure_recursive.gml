@@ -36,9 +36,9 @@ function init_structure_recursive(_directory, _namespace, _id)
                 }
                 
                 var _json = buffer_load_json(_subdirectory);
-                var _data = _json.data;
+                var _data = _json[$ "function"];
                 
-                var _parameter = (_natural_structure_data[$ _data[$ "function"]].get_parser())(_data[$ "parameter"]);
+                var _parameter = (_natural_structure_data[$ _data.id].get_parser())(_data[$ "parameters"]);
                 
                 var _width  = smart_value_parse(_json.width);
                 var _height = smart_value_parse(_json.height);

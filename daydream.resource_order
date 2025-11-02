@@ -218,7 +218,7 @@
     {"name":"hex_parse","order":5,"path":"scripts/hex_parse/hex_parse.yy",},
     {"name":"init_attire","order":1,"path":"scripts/init_attire/init_attire.yy",},
     {"name":"init_background","order":1,"path":"scripts/init_background/init_background.yy",},
-    {"name":"init_biome","order":1,"path":"scripts/init_biome/init_biome.yy",},
+    {"name":"init_biome_recursive","order":1,"path":"scripts/init_biome_recursive/init_biome_recursive.yy",},
     {"name":"init_crafting","order":2,"path":"scripts/init_crafting/init_crafting.yy",},
     {"name":"init_creature","order":1,"path":"scripts/init_creature/init_creature.yy",},
     {"name":"init_entity_physics","order":5,"path":"scripts/init_entity_physics/init_entity_physics.yy",},

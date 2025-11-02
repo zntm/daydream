@@ -20,7 +20,7 @@ export default [
     new DatagenReturnData(
         "generated/data/biomes/cave/chasm.json",
         new Biome(
-            "phantasia:chasm",
+            "phantasia:background/chasm",
             "#32B559",
             {
                 dawn: new BiomeSkyColor("#180738", "#2A1504"),
@@ -84,7 +84,7 @@ export default [
     new DatagenReturnData(
         "generated/data/biomes/cave/depths.json",
         new Biome(
-            "phantasia:depths",
+            "phantasia:background/depths",
             "#32B559",
             {
                 dawn: new BiomeSkyColor("#180738", "#2A1504"),

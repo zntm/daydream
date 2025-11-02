@@ -40,45 +40,45 @@ function structure_create(_x, _y, _id, _seed)
         _y -= TILE_SIZE / 2;
     }
     
-    if (_structure_data.has_if_clear())
+    if (_structure_data.has_clearance_condition())
     {
-        var _if_clear = _structure_data.get_placement_if_clear();
-        var _if_clear_length = _structure_data.get_placement_if_clear_length();
+        var _clearance_condition = _structure_data.get_placement_clearance_condition();
+        var _clearance_condition_length = _structure_data.get_placement_clearance_condition_length();
         
         var _tile_x = round(_x / TILE_SIZE);
         var _tile_y = round(_y / TILE_SIZE);
         
-        for (var i = 0; i < _if_clear_length; ++i)
+        for (var i = 0; i < _clearance_condition_length; ++i)
         {
-            var _data = _if_clear[i];
+            var _data = _clearance_condition[i];
             
-            var _if_clear_width  = __size(_data.width,  _width, _height);
-            var _if_clear_height = __size(_data.height, _width, _height);
+            var _clearance_condition_width  = __size(_data.width,  _width, _height);
+            var _clearance_condition_height = __size(_data.height, _width, _height);
             
-            var _abs_if_clear_width  = abs(_if_clear_width);
-            var _abs_if_clear_height = abs(_if_clear_height);
+            var _abs_clearance_condition_width  = abs(_clearance_condition_width);
+            var _abs_clearance_condition_height = abs(_clearance_condition_height);
             
-            var _xoffset = __size(_data.xoffset, _abs_if_clear_width, _abs_if_clear_height);
-            var _yoffset = __size(_data.yoffset, _abs_if_clear_width, _abs_if_clear_height);
+            var _xoffset = __size(_data.xoffset, _abs_clearance_condition_width, _abs_clearance_condition_height);
+            var _yoffset = __size(_data.yoffset, _abs_clearance_condition_width, _abs_clearance_condition_height);
             
-            for (var j = 0; j < _abs_if_clear_width; ++j)
+            for (var j = 0; j < _abs_clearance_condition_width; ++j)
             {
                 var _x2 = _tile_x + j + _xoffset;
                 
                 var _surface_height = worldgen_get_surface_height(_x2, _seed);
                 
-                if (_tile_y + _abs_if_clear_height + _yoffset < _surface_height) continue;
+                if (_tile_y + _abs_clearance_condition_height + _yoffset < _surface_height) continue;
                 
                 var l = 0;
                 
-                while (_tile_y + l + _yoffset < _surface_height) && (l < _abs_if_clear_height)
+                while (_tile_y + l + _yoffset < _surface_height) && (l < _abs_clearance_condition_height)
                 {
                     ++l;
                 }
                 
                 var _cave_start = worldgen_get_cave_start(_x2, _seed);
                 
-                for (; l < _abs_if_clear_height; ++l)
+                for (; l < _abs_clearance_condition_height; ++l)
                 {
                     var _y2 = _tile_y + l + _yoffset;
                     

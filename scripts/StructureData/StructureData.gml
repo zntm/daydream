@@ -31,7 +31,7 @@ function StructureData(_width, _height, _placement, _is_persistent, _is_natural)
         return !!(___value & (1 << 1));
     }
     
-    static has_if_clear = function()
+    static has_clearance_condition = function()
     {
         return !!(___value & (1 << 2));
     }
@@ -42,31 +42,28 @@ function StructureData(_width, _height, _placement, _is_persistent, _is_natural)
         "inside":  STRUCTURE_PLACEMENT_TYPE.INSIDE
     }
     
-    var _placement_offset = _placement.offset;
-    
     ___placement_value = __structure_placement_type[$ _placement.type];
     
-    ___placement_xoffset = _placement_offset.x;
-    ___placement_yoffset = _placement_offset.y;
+    ___placement_xoffset = _placement[$ "xoffset"];
+    ___placement_yoffset = _placement[$ "yoffset"];
     
-    var _if_clear = _placement[$ "if_clear"];
+    var _clearance_condition = _placement[$ "clearance_condition"];
     
-    if (_if_clear != undefined)
+    if (_clearance_condition != undefined)
     {
-        ___placement_if_clear_length = array_length(_if_clear);
-        ___placement_if_clear = array_create(___placement_if_clear_length);
+        ___placement_clearance_condition = [];
+        ___placement_clearance_condition_length = array_length(_clearance_condition);
         
-        for (var i = 0; i < ___placement_if_clear_length; ++i)
+        for (var i = 0; i < ___placement_clearance_condition_length; ++i)
         {
-            var _data = _if_clear[i];
-            var _offset = _data.offset;
+            var _data = _clearance_condition[i];
             
-            ___placement_if_clear[@ i] = {
-                xoffset: _offset.x,
-                yoffset: _offset.y,
+            array_push(___placement_clearance_condition, {
+                xoffset: _data[$ "xoffset"] ?? 0,
+                yoffset: _data[$ "yoffset"] ?? 0,
                 width:  _data.width,
                 height: _data.height
-            }
+            });
         }
         
         ___value |= 1 << 2;
@@ -87,14 +84,14 @@ function StructureData(_width, _height, _placement, _is_persistent, _is_natural)
         return ___placement_yoffset;
     }
     
-    static get_placement_if_clear = function()
+    static get_placement_clearance_condition = function()
     {
-        return ___placement_if_clear;
+        return ___placement_clearance_condition;
     }
     
-    static get_placement_if_clear_length = function()
+    static get_placement_clearance_condition_length = function()
     {
-        return ___placement_if_clear_length;
+        return ___placement_clearance_condition_length;
     }
     
     static set_parameter = function(_array)

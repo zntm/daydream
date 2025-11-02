@@ -1,0 +1,13 @@
+[
+    {
+        "value": "phantasia:background/desert"
+    },
+    {
+        "value": "phantasia:background/forest",
+        "weight": 4
+    },
+    {
+        "value": "phantasia:background/taiga",
+        "weight": 2
+    }
+]
