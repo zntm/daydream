@@ -116,11 +116,11 @@ function init_assets(_directory, _namespace, _folder = "")
                     array_push(_array, _asset);
                 }
                 
-                global.sound_asset[$ $"{_namespace}:{_file2}"] = _array;
+                global.sound_asset[$ $"{_namespace}:{_folder}/{_file2}"] = _array;
             }
             else
             {
-            	global.sound_asset[$ $"{_namespace}:{_file2}"] = new SoundAsset(audio_create_stream($"{_directory}/{string_delete(_file, string_length(_file) - 4, 5)}"), _json.duration, _json[$ "author"], _json[$ "title"]);
+            	global.sound_asset[$ $"{_namespace}:{_folder}/{_file2}"] = new SoundAsset(audio_create_stream($"{_directory}/{string_delete(_file, string_length(_file) - 4, 5)}"), _json.duration, _json[$ "author"], _json[$ "title"]);
             }
             
             continue;

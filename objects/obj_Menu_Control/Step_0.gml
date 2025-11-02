@@ -6,6 +6,9 @@ if (!audio_is_playing(global.menu_music))
     
     var _gain = _music.gain;
     
+    show_debug_message(_music.id);
+    show_debug_message(struct_get_names(global.sound_asset));
+    
     global.menu_music_gain = _gain;
-    global.menu_music = audio_play_sound(global.music_data[$ _music.id].get_audio(), 0, false, _gain);
+    global.menu_music = audio_play_sound(global.sound_asset[$ _music.id].get_sound(), 0, false, _gain);
 }

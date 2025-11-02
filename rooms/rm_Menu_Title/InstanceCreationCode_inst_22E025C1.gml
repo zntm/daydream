@@ -1,6 +1,6 @@
 menu_anchor_position(x, y, GUI_ANCHOR.TOP, room_width, room_height);
 
-var _splash_data = global.splash_data;
+var _splash_data = global.menu_data.splash_texts;
 var _splash_current_date = _splash_data[$ $"{current_month}_{current_day}"];
 
 text = array_choose(((chance(0.1)) && (_splash_current_date != undefined)) ? _splash_current_date : _splash_data.generic);

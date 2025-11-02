@@ -1,0 +1,57 @@
+[
+    {
+        "value": {
+            "id": "phantasia:music/12_hours_at_ease",
+            "gain": 0.6
+        }
+    },
+    {
+        "value": {
+            "id": "phantasia:music/liminal",
+            "gain": 0.4
+        }
+    },
+    {
+        "value": {
+            "id": "phantasia:music/ornaments_of_the_sky",
+            "gain": 0.5
+        }
+    },
+    {
+        "value": {
+            "id": "phantasia:music/limerick",
+            "gain": 0.4
+        }
+    },
+    {
+        "value": {
+            "id": "phantasia:music/phantasia",
+            "gain": 0.6
+        },
+        "weight": 2
+    },
+    {
+        "value": {
+            "id": "phantasia:music/red_apple",
+            "gain": 0.4
+        }
+    },
+    {
+        "value": {
+            "id": "phantasia:music/sol_y_luna",
+            "gain": 0.5
+        }
+    },
+    {
+        "value": {
+            "id": "phantasia:music/someday_it_will_rain",
+            "gain": 0.4
+        }
+    },
+    {
+        "value": {
+            "id": "phantasia:music/tense",
+            "gain": 0.4
+        }
+    }
+]

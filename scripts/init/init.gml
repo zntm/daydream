@@ -10,15 +10,13 @@ function init(_namespace)
     
     init_credit($"{PROGRAM_DIRECTORY_DATA}\\credit\\data.json");
     
-    init_splash($"{PROGRAM_DIRECTORY_DATA}/data/json/splash_texts.json");
-    
     init_rarity($"{PROGRAM_DIRECTORY_DATA}\\rarity.json", _namespace);
     
-    init_tag_recursive($"{PROGRAM_DIRECTORY_DATA}/data/tags", _namespace);
+    init_tag_recursive($"{PROGRAM_DIRECTORY_RESOURCES}/data/tags", _namespace);
     
     init_attire($"{PROGRAM_DIRECTORY_DATA}\\attire", _namespace);
     
-    init_sfx($"{PROGRAM_DIRECTORY_DATA}\\sfx", _namespace);
+    // init_sfx($"{PROGRAM_DIRECTORY_DATA}\\sfx", _namespace);
     
     init_particle_recursive($"{PROGRAM_DIRECTORY_DATA}\\particle", _namespace);
     
@@ -26,7 +24,7 @@ function init(_namespace)
     
     init_background($"{PROGRAM_DIRECTORY_DATA}\\background", _namespace);
     
-    init_music($"{PROGRAM_DIRECTORY_DATA}\\music", _namespace);
+    // init_music($"{PROGRAM_DIRECTORY_DATA}\\music", _namespace);
     
     init_item($"{PROGRAM_DIRECTORY_RESOURCES}/data/items", _namespace);
     
@@ -38,7 +36,9 @@ function init(_namespace)
     
     init_world($"{PROGRAM_DIRECTORY_DATA}\\world", _namespace);
     
-    init_menu($"{PROGRAM_DIRECTORY_DATA}\\menu.json");
+    init_menu($"{PROGRAM_DIRECTORY_RESOURCES}/data/json/menu/music.json");
+    
+    init_splash($"{PROGRAM_DIRECTORY_RESOURCES}/data/json/menu/splash_texts.json");
     
     init_creature($"{PROGRAM_DIRECTORY_DATA}\\creature", _namespace);
     

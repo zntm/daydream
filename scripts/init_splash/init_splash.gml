@@ -1,22 +1,18 @@
-global.splash_data = {}
-
 function init_splash(_directory)
 {
-    static __clear = function(_name, _value)
-    {
-        struct_remove(global.splash_data, _name);
-    }
+    global.menu_data[$ "splash_texts"] ??= {}
     
-    static __init = function(_name, _value)
+    struct_foreach(global.menu_data.splash_texts, function(_name, _value)
     {
-        global.splash_data[$ _name] = _value;
-    }
-    
-    struct_foreach(global.splash_data, __clear);
+        struct_remove(global.menu_data.splash_texts, _name);
+    });
     
     var _json = buffer_load_json(_directory);
     
-    struct_foreach(_json, __init);
+    struct_foreach(_json, function(_name, _value)
+    {
+        global.menu_data.splash_texts[$ _name] = _value;
+    });
     
     delete _json;
 }
