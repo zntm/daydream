@@ -1,5 +1,5 @@
 {
-    "background": "phantasia:forest",
+    "background": "phantasia:background/forest",
     "creatures": [
         {
             "id": "phantasia:chicken",

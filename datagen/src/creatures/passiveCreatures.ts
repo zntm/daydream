@@ -15,21 +15,25 @@ import { ItemDrop } from "../items";
 class PassiveCreature extends Creature {
     constructor(
         hp: number,
-        hostilityType: CreatureHostilityType,
         movementType: CreatureMovementType,
         sprite: any,
         attribute: Attribute,
     ) {
-        super(hp, hostilityType, movementType, sprite, attribute);
+        super(
+            hp,
+            CreatureHostilityType.Passive,
+            movementType,
+            sprite,
+            attribute,
+        );
     }
 }
 
 export default [
     new DatagenReturnData(
-        "generated/assets/sprites/creature/rabbit.json",
+        "generated/data/creatures/rabbit.json",
         new PassiveCreature(
             12,
-            CreatureHostilityType.Passive,
             CreatureMovementType.Ground,
             "phantasia:creature/rabbit",
             new Attribute()
@@ -42,10 +46,9 @@ export default [
         ).setDrops([new ItemDrop("phantasia:raw_rabbit")]),
     ),
     new DatagenReturnData(
-        "generated/assets/sprites/creature/chicken.json",
+        "generated/data/creatures/chicken.json",
         new PassiveCreature(
             12,
-            CreatureHostilityType.Passive,
             CreatureMovementType.Ground,
             "phantasia:creature/chicken",
             new Attribute()
@@ -69,10 +72,9 @@ export default [
         ]),
     ),
     new DatagenReturnData(
-        "generated/assets/sprites/creature/fox.json",
+        "generated/data/sprites/creature/fox.json",
         new PassiveCreature(
             18,
-            CreatureHostilityType.Passive,
             CreatureMovementType.Ground,
             "phantasia:creature/fox",
             new Attribute()

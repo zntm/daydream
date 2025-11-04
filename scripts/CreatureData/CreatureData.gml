@@ -161,32 +161,23 @@ function CreatureData(_namespace, _id, _hp, _hostility_type, _movement_type) : P
         return self[$ "___effect_immune"];
     }
     
-    static set_drop = function(_drop)
+    static set_drops = function(_drops)
     {
-        if (_drop != undefined)
-        {
-            self[$ "___drop"] ??= [];
-            
-            var _length = array_length(_drop);
-            
-            for (var i = 0; i < _length; ++i)
-            {
-                var _data = _drop[i];
-                
-                array_push(___drop, {
-                    id: _data.id,
-                    amount: smart_value_parse(_data.amount),
-                    chance: _data.chance    
-                })
-            }
-        }
+        ___drops = [];
         
-        return self;
+        var _drops_length = array_length(_drops);
+        
+        for (var i = 0; i < _drops_length; ++i)
+        {
+            var _drop = _drops[i];
+            
+            array_push(___drops, new ItemDrop(_drop.id, smart_value_parse(_drop[$ "amount"]), _drop[$ "chance"]));
+        }
     }
     
-    static get_drop = function()
+    static get_drops = function()
     {
-        return self[$ "___drop"];
+        return self[$ "___drops"];
     }
     
     static set_attribute = function(_attributes)

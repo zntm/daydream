@@ -15,21 +15,25 @@ import { ItemDrop } from "../items";
 class HostileCreature extends Creature {
     constructor(
         hp: number,
-        hostilityType: CreatureHostilityType,
         movementType: CreatureMovementType,
         sprite: string,
         attribute: Attribute,
     ) {
-        super(hp, hostilityType, movementType, sprite, attribute);
+        super(
+            hp,
+            CreatureHostilityType.Hostile,
+            movementType,
+            sprite,
+            attribute,
+        );
     }
 }
 
 export default [
     new DatagenReturnData(
-        "generated/assets/sprites/creature/zombie.json",
+        "generated/data/creatures/zombie.json",
         new HostileCreature(
             36,
-            CreatureHostilityType.Passive,
             CreatureMovementType.Ground,
             "phantasia:creature/zombie",
             new Attribute()

@@ -1,10 +1,11 @@
 function Atla(_xoffset, _yoffset, _width, _height, _number) constructor
 {
-    ___xoffset = _xoffset;
-    ___yoffset = _yoffset;
-    ___width = _width;
-    ___height = _height;
-    ___number = _number;
+    ___value =
+        (_number            << 44) |
+        (_height            << 33) |
+        (_width             << 22) |
+        ((_yoffset + 1024)  << 11) |
+        ((_xoffset + 1024)  << 0);
     
     static set_sprite_index = function(_sprite_index, _index)
     {
@@ -33,27 +34,27 @@ function Atla(_xoffset, _yoffset, _width, _height, _number) constructor
     
     static get_xoffset = function()
     {
-        return ___xoffset;
+        return ((___value >> 0) & 2047) - 1024;
     }
     
     static get_yoffset = function()
     {
-        return ___yoffset;
+        return ((___value >> 11) & 2047) - 1024;
     }
     
     static get_width = function()
     {
-        return ___width;
+        return (___value >> 22) & 2047;
     }
     
     static get_height = function()
     {
-        return ___height;
+        return (___value >> 33) & 2047;
     }
     
     static get_number = function()
     {
-        return ___number;
+        return (___value >> 44) & 2047;
     }
     
     static set_is_rotated = function()

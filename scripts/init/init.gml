@@ -40,7 +40,7 @@ function init(_namespace)
     
     init_splash($"{PROGRAM_DIRECTORY_RESOURCES}/data/json/menu/splash_texts.json");
     
-    init_creature($"{PROGRAM_DIRECTORY_DATA}\\creature", _namespace);
+    init_creature($"{PROGRAM_DIRECTORY_RESOURCES}/data/creatures", _namespace);
     
     init_loot($"{PROGRAM_DIRECTORY_DATA}\\loot", _namespace);
 }

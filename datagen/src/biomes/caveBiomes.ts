@@ -1,7 +1,7 @@
 import {
     DatagenReturnData,
     SmartValue,
-    SmartValueChooseWeightedOption,
+    ChooseWeightedOption,
     SmartValueRandom,
     SmartValueType,
     Sound,

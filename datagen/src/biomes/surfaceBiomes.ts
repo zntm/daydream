@@ -1,7 +1,7 @@
 import {
     DatagenReturnData,
     SmartValue,
-    SmartValueChooseWeightedOption,
+    ChooseWeightedOption,
     SmartValueRandom,
     SmartValueType,
     Sound,
@@ -151,9 +151,9 @@ export default [
                     .setTimeRange(0, 890)
                     .setVariant(
                         new SmartValue(SmartValueType.ChooseWeighted, [
-                            new SmartValueChooseWeightedOption("generic", 2),
-                            new SmartValueChooseWeightedOption("white", 1),
-                            new SmartValueChooseWeightedOption("spotted", 1),
+                            new ChooseWeightedOption("generic", 2),
+                            new ChooseWeightedOption("white", 1),
+                            new ChooseWeightedOption("spotted", 1),
                         ]),
                     ),
                 new BiomeCreature(
@@ -353,8 +353,8 @@ export default [
                     .setTimeRange(0, 890)
                     .setVariant(
                         new SmartValue(SmartValueType.ChooseWeighted, [
-                            new SmartValueChooseWeightedOption("black", 1),
-                            new SmartValueChooseWeightedOption("spotted", 2),
+                            new ChooseWeightedOption("black", 1),
+                            new ChooseWeightedOption("spotted", 2),
                         ]),
                     ),
                 new BiomeCreature(

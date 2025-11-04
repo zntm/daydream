@@ -1,10 +1,11 @@
 import {
     DatagenReturnData,
     SmartValue,
-    SmartValueChooseWeightedOption,
+    ChooseWeightedOption,
     SmartValueRandom,
     SmartValueType,
 } from "../../index";
+import { SmartValueChooseWeighted, SmartValueIntRandom } from "../smartValue";
 
 import {
     Structure,
@@ -37,10 +38,7 @@ export default [
         "generated/data/structures/tall_foliage/cactus.json",
         new Structure(
             1,
-            new SmartValue(
-                SmartValueType.IntRandom,
-                new SmartValueRandom(4, 8),
-            ),
+            new SmartValueIntRandom(2, 6),
             new StructurePlacement(StructurePlacementType.Floor, 0, "-height", [
                 new StructurePlacementClearanceCondition(
                     0,
@@ -55,17 +53,11 @@ export default [
                     new StructureParameterTile("phantasia:cactus", 5),
                     new StructureParameterTile(
                         "phantasia:cactus",
-                        new SmartValue(
-                            SmartValueType.IntRandom,
-                            new SmartValueRandom(1, 4),
-                        ),
+                        new SmartValueIntRandom(1, 4),
                     ),
                     new StructureParameterTile(
                         "phantasia:cactus",
-                        new SmartValue(
-                            SmartValueType.IntRandom,
-                            new SmartValueRandom(1, 4),
-                        ),
+                        new SmartValueIntRandom(1, 4),
                     ),
                 ),
             ),
@@ -76,10 +68,7 @@ export default [
         "generated/data/structures/tall_foliage/cattail.json",
         new Structure(
             1,
-            new SmartValue(
-                SmartValueType.IntRandom,
-                new SmartValueRandom(3, 6),
-            ),
+            new SmartValueIntRandom(3, 8),
             new StructurePlacement(StructurePlacementType.Floor, 0, "-height", [
                 new StructurePlacementClearanceCondition(
                     0,
@@ -103,10 +92,7 @@ export default [
         "generated/data/structures/tall_foliage/sunflower.json",
         new Structure(
             1,
-            new SmartValue(
-                SmartValueType.IntRandom,
-                new SmartValueRandom(3, 6),
-            ),
+            new SmartValueIntRandom(3, 6),
             new StructurePlacement(StructurePlacementType.Floor, 0, "-height", [
                 new StructurePlacementClearanceCondition(
                     0,
@@ -121,9 +107,9 @@ export default [
                     new StructureParameterTile("phantasia:sunflower", 0),
                     new StructureParameterTile(
                         "phantasia:sunflower",
-                        new SmartValue(SmartValueType.ChooseWeighted, [
-                            new SmartValueChooseWeightedOption(2, 1),
-                            new SmartValueChooseWeightedOption(3, 3),
+                        new SmartValueChooseWeighted([
+                            new ChooseWeightedOption(2, 1),
+                            new ChooseWeightedOption(3, 3),
                         ]),
                     ),
                     new StructureParameterTile("phantasia:sunflower", 1),

@@ -457,7 +457,7 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
             var _condition = _drop[$ "condition"];
             
             array_push(___tile_drops, {
-                item: new ItemDrop(_drop.id, _drop[$ "amount"], _drop[$ "chance"]),
+                item: new ItemDrop(_drop.id, smart_value_parse(_drop[$ "amount"]), _drop[$ "chance"]),
                 condition: (_condition != undefined) ? new ItemTileCondition()
                     .set_id(_condition[$ "id"])
                     .set_index(_condition[$ "index"])

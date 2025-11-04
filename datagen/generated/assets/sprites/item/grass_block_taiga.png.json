@@ -1,6 +1,6 @@
 {
     "is_tile": true,
-    "length": 5,
-    "xoffset": 8,
+    "length": null,
+    "xoffset": null,
     "yoffset": 8
 }

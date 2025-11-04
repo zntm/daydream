@@ -1,0 +1,18 @@
+{
+    "attribute": {
+        "collision_box_width": 16,
+        "collision_box_height": 30,
+        "hit_box_width": 18,
+        "hit_box_height": 32,
+        "eye_level": 8,
+        "gravity": 0.5,
+        "jump_falloff": 2.2,
+        "jump_height": 5.9,
+        "jump_time": 10,
+        "movement_speed": 0.4
+    },
+    "hostility_type": "hostile",
+    "hp": 36,
+    "movement_type": "ground",
+    "sprite": "phantasia:creature/zombie"
+}

@@ -32,12 +32,12 @@ function Attribute() constructor
         return !!((self[$ "___boolean"] ?? 0) & _boolean);
     }
     
-    static set_collision_box = function(_collision_box)
+    static set_collision_box = function(_width, _height)
     {
-        if (_collision_box != undefined)
+        if (_width != undefined) && (_height != undefined)
         {
-            ___collision_box_width  = _collision_box.width;
-            ___collision_box_height = _collision_box.height;
+            ___collision_box_width  = _width;
+            ___collision_box_height = _height;
         }
         
         return self;
@@ -58,12 +58,12 @@ function Attribute() constructor
         return self[$ "___collision_box_height"];
     }
     
-    static set_hit_box = function(_hit_box)
+    static set_hit_box = function(_width, _height)
     {
-        if (_hit_box != undefined)
+        if (_width != undefined) && (_height != undefined)
         {
-            ___hit_box_width  = _hit_box.width;
-            ___hit_box_height = _hit_box.height
+            ___hit_box_width  = _width;
+            ___hit_box_height = _height;
         }
         
         return self;

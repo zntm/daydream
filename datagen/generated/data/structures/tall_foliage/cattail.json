@@ -20,7 +20,7 @@
         "type": "smart_value:irandom",
         "values": {
             "min": 3,
-            "max": 6
+            "max": 8
         }
     },
     "placement": {

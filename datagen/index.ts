@@ -29,7 +29,7 @@ export class SmartValueRandom {
     }
 }
 
-export class SmartValueChooseWeightedOption {
+export class ChooseWeightedOption {
     value: any;
     weight: number;
 
@@ -42,10 +42,7 @@ export class SmartValueChooseWeightedOption {
 export class SmartValue {
     constructor(
         public type: SmartValueType,
-        public values:
-            | SmartValueRandom
-            | any[]
-            | SmartValueChooseWeightedOption[],
+        public values: SmartValueRandom | any[] | ChooseWeightedOption[],
     ) {
         this.type = type;
         this.values = values;

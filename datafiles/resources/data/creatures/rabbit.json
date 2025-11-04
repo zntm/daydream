@@ -1,0 +1,23 @@
+{
+    "attribute": {
+        "collision_box_width": 17,
+        "collision_box_height": 17,
+        "hit_box_width": 15,
+        "hit_box_height": 16,
+        "eye_level": 3,
+        "gravity": 0.5,
+        "jump_falloff": 2.2,
+        "jump_height": 4.9,
+        "jump_time": 11,
+        "movement_speed": 0.4
+    },
+    "drops": [
+        {
+            "id": "phantasia:raw_rabbit"
+        }
+    ],
+    "hostility_type": "passive",
+    "hp": 12,
+    "movement_type": "ground",
+    "sprite": "phantasia:creature/rabbit"
+}

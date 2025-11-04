@@ -1,6 +1,6 @@
 {
     "function": {
-        "id": "phantasia:tree/generic",
+        "id": "phantasia:tall_foliage",
         "parameters": {
             "tile_top": {
                 "id": "phantasia:cactus",
@@ -31,8 +31,8 @@
     "height": {
         "type": "smart_value:irandom",
         "values": {
-            "min": 4,
-            "max": 8
+            "min": 2,
+            "max": 6
         }
     },
     "placement": {
