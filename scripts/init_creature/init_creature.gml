@@ -25,7 +25,7 @@ function init_creature(_directory, _namespace = "phantasia")
         var _json = buffer_load_json($"{_directory}/{_file}");
         var _id = string_delete(_file, string_length(_file) - 4, 5);
         
-        var _data = new CreatureData(_namespace, _id, _json.hp, __hostility_type[$ _data.hostility_type], __movement_type[$ _data.movement_type]);
+        var _data = new CreatureData(_namespace, _id, _json.hp, __hostility_type[$ _json.hostility_type], __movement_type[$ _json.movement_type]);
         
         var _attribute = _json.attribute;
         

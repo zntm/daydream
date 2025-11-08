@@ -50,6 +50,7 @@ function init_attire(_directory, _namespace = "phantasia", _type = 0)
         init_data_reset("attire_data");
     }
     */
+    /*
     var _attire_elements = global.attire_elements;
     
     var _length = array_length(_attire_elements);
@@ -176,5 +177,5 @@ function init_attire(_directory, _namespace = "phantasia", _type = 0)
     
     sprite_delete(_sprite);
     surface_free(_surface);
-    buffer_delete(_buffer);
+    buffer_delete(_buffer);*/
 }

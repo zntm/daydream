@@ -226,6 +226,7 @@
     {"name":"init_inventory_instance","order":10,"path":"scripts/init_inventory_instance/init_inventory_instance.yy",},
     {"name":"init_item","order":1,"path":"scripts/init_item/init_item.yy",},
     {"name":"init_loca_effect","order":1,"path":"scripts/init_loca_effect/init_loca_effect.yy",},
+    {"name":"init_menu_biomes","order":1,"path":"scripts/init_menu_biomes/init_menu_biomes.yy",},
     {"name":"init_music","order":1,"path":"scripts/init_music/init_music.yy",},
     {"name":"init_particle_recursive","order":1,"path":"scripts/init_particle_recursive/init_particle_recursive.yy",},
     {"name":"init_projectile","order":1,"path":"scripts/init_projectile/init_projectile.yy",},

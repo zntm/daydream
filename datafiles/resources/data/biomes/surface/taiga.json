@@ -1,5 +1,8 @@
 {
-    "background": "phantasia:taiga",
+    "background": {
+        "id": "phantasia:background/taiga",
+        "blend": 0.7
+    },
     "creatures": [
         {
             "id": "phantasia:rabbit",
@@ -79,10 +82,10 @@
         }
     ],
     "light_colour": {
-        "dawn": "#C4502D",
+        "dawn": "#2d1981",
         "day": "#5F91FE",
         "dusk": "#C4502D",
-        "night": "#000019"
+        "night": "#10042e"
     },
     "map_colour": "#097A67",
     "music": [
@@ -117,8 +120,8 @@
     ],
     "sky_colour": {
         "dawn": {
-            "base": "#180738",
-            "gradient": "#2A1504"
+            "base": "#371479",
+            "gradient": "#4D1140"
         },
         "day": {
             "base": "#5F91FE",
@@ -129,8 +132,8 @@
             "gradient": "#DA651C"
         },
         "night": {
-            "base": "#000019",
-            "gradient": "#020008"
+            "base": "#2B243F",
+            "gradient": "#1E1F2B"
         }
     },
     "structures": [

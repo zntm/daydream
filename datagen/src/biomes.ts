@@ -3,7 +3,7 @@ import { join } from "path";
 import { readdirSync } from "fs";
 
 export class Biome {
-    private background: string;
+    private background: BiomeBackground;
     private map_colour: string;
     private sky_colour: any;
     private light_colour: any;
@@ -16,7 +16,7 @@ export class Biome {
     private structures?: BiomeStructure[];
 
     constructor(
-        background: string,
+        background: BiomeBackground,
         mapColor: string,
         skyColor: any,
         lightColor: any,
@@ -56,13 +56,23 @@ export class Biome {
     }
 }
 
+export class BiomeBackground {
+    private id: string;
+    private blend: number;
+
+    constructor(id: string, blend: number) {
+        this.id = id;
+        this.blend = blend;
+    }
+}
+
 export class BiomeSkyColor {
     private base: string;
     private gradient: string;
 
     constructor(base: string, gradient: string) {
-        this.base = base;
-        this.gradient = gradient;
+        this.base = base.toUpperCase();
+        this.gradient = gradient.toUpperCase();
     }
 }
 

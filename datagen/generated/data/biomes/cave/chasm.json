@@ -1,5 +1,8 @@
 {
-    "background": "phantasia:background/chasm",
+    "background": {
+        "id": "phantasia:background/chasm",
+        "blend": 0.7
+    },
     "foliage": [
         {
             "id": "phantasia:rock",

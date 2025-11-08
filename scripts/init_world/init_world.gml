@@ -41,41 +41,40 @@ function init_world(_directory, _namespace = "phantasia", _type = 0)
         
         _world_data.set_spawn_interval(_json.spawn_interval);
         
+        // Vignette
         var _vignette = _json.vignette;
+        _world_data.set_vignette(_vignette.ystart, _vignette.yend, _vignette.colour);
         
-        _world_data.set_vignette(_vignette.start, _vignette[$ "end"], _vignette.colour);
-        
+        // Time system
         _world_data.set_time(_json.time);
         
-        var _celestial = {}
+        // Celestial bodies
+        var _c = [];
         
-        var _files_celestial = file_read_directory($"{_directory}/{_file}/celestial");
-        var _files_celestial_length = array_length(_files_celestial);
+        var _celestials = _json.celestials;
+        var _celestials_length = array_length(_celestials);
         
-        for (var j = 0; j < _files_celestial_length; ++j)
+        for (var j = 0; j < _celestials_length; ++j)
         {
-            var _file_celestial = _files_celestial[j];
+            var _celestial = _celestials[j];
             
-            var _sprite = sprite_add($"{_directory}/{_file}/celestial/{_file_celestial}", 1, false, false, 0, 0);
-            
-            sprite_set_offset(_sprite, round(sprite_get_width(_sprite) / 2), sprite_get_height(_sprite) / 2);
-            
-            _celestial[$ string_delete(_file_celestial, string_length(_file_celestial) - 3, 4)] = _sprite;
+            _c[@ j] = new WorldCelestial(_celestial.id, _celestial.time_range_min, _celestial.time_range_max);
         }
         
-        _world_data.set_celestial(_celestial, _json[$ "celestial"]);
+        _world_data.set_celestial(_c);
         
+        // Biome configuration
         var _biome = _json.biome;
         
         _world_data.set_cave_biome(_biome.cave);
         _world_data.set_surface_biome(_biome.surface);
         
+        // Surface configuration
         var _surface = _json.surface;
+        _world_data.set_surface(_surface.start, _surface.noise_offset);
         
-        _world_data.set_surface(_surface.start, _surface.offset);
-        
+        // Cave configuration
         var _cave = _json.cave;
-        
         _world_data.set_cave(_cave.start, _cave.system);
         
         #region Biome Map

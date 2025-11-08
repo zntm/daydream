@@ -8,6 +8,7 @@ import {
 } from "../../index";
 import {
     Biome,
+    BiomeBackground,
     BiomeCreature,
     BiomeFoliage,
     BiomeSkyColor,
@@ -20,7 +21,7 @@ export default [
     new DatagenReturnData(
         "generated/data/biomes/cave/chasm.json",
         new Biome(
-            "phantasia:background/chasm",
+            new BiomeBackground("phantasia:background/chasm", 0.7),
             "#32B559",
             {
                 dawn: new BiomeSkyColor("#180738", "#2A1504"),
@@ -84,7 +85,7 @@ export default [
     new DatagenReturnData(
         "generated/data/biomes/cave/depths.json",
         new Biome(
-            "phantasia:background/depths",
+            new BiomeBackground("phantasia:background/depths", 0.7),
             "#32B559",
             {
                 dawn: new BiomeSkyColor("#180738", "#2A1504"),

@@ -46,8 +46,8 @@ function render_chunk(_uv, _inst, _z)
             
             var _sprite = _data.get_sprite();
             
-            var _draw_x = _xstart + (_x * TILE_SIZE);
-            var _draw_y = _ystart + (_y * TILE_SIZE);
+            var _draw_x = _xstart + (_x << TILE_SIZE_BIT);
+            var _draw_y = _ystart + (_y << TILE_SIZE_BIT);
             
             var _xscale = _tile.get_xscale();
             var _yscale = _tile.get_yscale();

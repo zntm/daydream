@@ -1,5 +1,8 @@
 {
-    "background": "phantasia:depths",
+    "background": {
+        "id": "phantasia:background/depths",
+        "blend": 0.7
+    },
     "foliage": [
         {
             "id": "phantasia:rock",

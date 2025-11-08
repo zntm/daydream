@@ -56,7 +56,7 @@ function tile_rectangle_meeting(_x1, _y1, _x2, _y2, _z = CHUNK_DEPTH_DEFAULT, _t
             
             if (_collision_box_type == TILE_COLLISION_BOX_TYPE.RECTANGLE)
             {
-                if (rectangle_in_rectangle(_x1, _y1, _x2, _y2, min(_x3, _x4), min(_y3, _y4), max(_x3, _x4), max(_y3, _y4)))
+                if (rectangle_in_rectangle(_x1, _y1, _x2, _y2, _x3, _y3, _x4, _y4))
                 {
                     return _tile;
                 }

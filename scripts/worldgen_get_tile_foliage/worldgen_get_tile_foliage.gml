@@ -9,9 +9,9 @@ function worldgen_get_tile_foliage(_x, _y, _surface_biome, _cave_biome, _top_til
         
         if (chance_seeded(_tile.chance, _seed * ((_x ^ _y) + (i * 859))))
         {
-            var _placeable_on = _tile.placeable_on;
+            var _generate_on = _tile.generate_on;
             
-            if (_placeable_on != undefined) || (array_contains(_placeable_on, _top_tile.id))
+            if (_generate_on != undefined) || (array_contains(_generate_on, _top_tile.id))
             {
                 return _tile;
             }

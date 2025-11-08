@@ -35,6 +35,7 @@
             "humidity": {
                 "octaves": 1
             },
+            "map": "phantasia:world/map/playground",
             "offset": {
                 "min": 22,
                 "max": 34,
@@ -69,16 +70,18 @@
             }
         ]
     },
-    "celestial": {
-        "sun": {
+    "celestials": [
+        {
+            "id": "phantasia:world/celestial/sun",
             "time_start": 0,
             "time_end": 890
         },
-        "moon": {
+        {
+            "id": "phantasia:world/celestial/moon",
             "time_start": 890,
             "time_end": 1200
         }
-    },
+    ],
     "spawn_interval": 14,
     "surface": {
         "start": 512,

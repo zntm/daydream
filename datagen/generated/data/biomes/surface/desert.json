@@ -1,5 +1,8 @@
 {
-    "background": "phantasia:background/desert",
+    "background": {
+        "id": "phantasia:background/desert",
+        "blend": 0.7
+    },
     "creatures": [
         {
             "id": "phantasia:chicken",

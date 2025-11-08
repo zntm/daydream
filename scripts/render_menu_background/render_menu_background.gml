@@ -20,10 +20,11 @@ function render_menu_background(_id, _colour)
         var _offset = global.menu_background_offset;
         
         var _background = _biome_data.get_background();
-        var _background_data = global.background_data[$ _background];
         
-        var _background_blend  = _background_data.get_blend();
-        var _background_length = _background_data.get_sprite_length();
+        var _background_sprites = global.sprite_asset[$ _background.id];
+        
+        var _background_blend  = _background.blend;
+        var _background_length = array_length(_background_sprites);
         
         shader_set(shd_Background);
         
@@ -33,7 +34,7 @@ function render_menu_background(_id, _colour)
         {
             shader_set_uniform_f(__u_strength, _background_blend * (1 - ((i + 1) / _background_length)));
             
-            render_background_parallax(_background_data, i, _offset, 0, 0, 0, room_width, room_height, c_white, 1);
+            render_background_parallax(_background_sprites[i].get_sprite(), i, _offset, 0, 0, 0, room_width, room_height, c_white, 1);
         }
         
         shader_reset();

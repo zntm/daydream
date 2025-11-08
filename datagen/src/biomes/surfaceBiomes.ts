@@ -8,6 +8,7 @@ import {
 } from "../../index";
 import {
     Biome,
+    BiomeBackground,
     BiomeCreature,
     BiomeFoliage,
     BiomeSkyColor,
@@ -20,7 +21,7 @@ export default [
     new DatagenReturnData(
         "generated/data/biomes/surface/desert.json",
         new Biome(
-            "phantasia:background/desert",
+            new BiomeBackground("phantasia:background/desert", 0.7),
             "#F4AF66",
             {
                 dawn: new BiomeSkyColor("#292231", "#37232C"),
@@ -92,19 +93,19 @@ export default [
     new DatagenReturnData(
         "generated/data/biomes/surface/forest.json",
         new Biome(
-            "phantasia:background/forest",
+            new BiomeBackground("phantasia:background/forest", 0.7),
             "#32B559",
             {
-                dawn: new BiomeSkyColor("#180738", "#2A1504"),
+                dawn: new BiomeSkyColor("#371479", "#4d1140"),
                 day: new BiomeSkyColor("#5F91FE", "#244FE9"),
                 dusk: new BiomeSkyColor("#C4502D", "#DA651C"),
-                night: new BiomeSkyColor("#000019", "#020008"),
+                night: new BiomeSkyColor("#2b243f", "#1e1f2b"),
             },
             {
-                dawn: "#C4502D",
+                dawn: "#2d1981",
                 day: "#5F91FE",
                 dusk: "#C4502D",
-                night: "#000019",
+                night: "#10042e",
             },
             {
                 top_layer: new BiomeTile(
@@ -215,19 +216,19 @@ export default [
     new DatagenReturnData(
         "generated/data/biomes/surface/swamp.json",
         new Biome(
-            "phantasia:background/swamp",
+            new BiomeBackground("phantasia:background/swano", 0.7),
             "#8C8C6C",
             {
-                dawn: new BiomeSkyColor("#180738", "#2A1504"),
+                dawn: new BiomeSkyColor("#371479", "#4d1140"),
                 day: new BiomeSkyColor("#5F91FE", "#244FE9"),
                 dusk: new BiomeSkyColor("#C4502D", "#DA651C"),
-                night: new BiomeSkyColor("#000019", "#020008"),
+                night: new BiomeSkyColor("#2b243f", "#1e1f2b"),
             },
             {
-                dawn: "#C4502D",
+                dawn: "#2d1981",
                 day: "#5F91FE",
                 dusk: "#C4502D",
-                night: "#000019",
+                night: "#10042e",
             },
             {
                 top_layer: new BiomeTile(
@@ -302,19 +303,19 @@ export default [
     new DatagenReturnData(
         "generated/data/biomes/surface/taiga.json",
         new Biome(
-            "phantasia:background/taiga",
+            new BiomeBackground("phantasia:background/taiga", 0.7),
             "#097A67",
             {
-                dawn: new BiomeSkyColor("#180738", "#2A1504"),
+                dawn: new BiomeSkyColor("#371479", "#4d1140"),
                 day: new BiomeSkyColor("#5F91FE", "#244FE9"),
                 dusk: new BiomeSkyColor("#C4502D", "#DA651C"),
-                night: new BiomeSkyColor("#000019", "#020008"),
+                night: new BiomeSkyColor("#2b243f", "#1e1f2b"),
             },
             {
-                dawn: "#C4502D",
+                dawn: "#2d1981",
                 day: "#5F91FE",
                 dusk: "#C4502D",
-                night: "#000019",
+                night: "#10042e",
             },
             {
                 top_layer: new BiomeTile(
