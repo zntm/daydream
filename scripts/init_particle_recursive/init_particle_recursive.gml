@@ -12,9 +12,12 @@ function init_particle_recursive(_directory, _namespace, _id)
         
         var _name = ((_id == undefined) ? _file : $"{_id}/{_file}");
         
-        if (!file_exists($"{_subdirectory}/data.json"))
+        if (!file_exists(_subdirectory))
         {
-            init_particle_recursive(_subdirectory, _namespace, _name);
+            if (directory_exists(_subdirectory))
+            {
+                init_particle_recursive(_subdirectory, _namespace, _name);
+            }
             
             continue;
         }
@@ -28,18 +31,9 @@ function init_particle_recursive(_directory, _namespace, _id)
             array_push(global.particle_data[$ $"{_namespace}:{_id}"], $"{_namespace}:{_name}");
         }
         
-        var _json = buffer_load_json($"{_subdirectory}/data.json");
+        var _json = buffer_load_json(_subdirectory);
         
-        var _sprite_data = _json.sprite;
-        
-        var _sprite = sprite_add($"{_subdirectory}/sprite.png", _sprite_data[$ "length"] ?? 1, false, false, 0, 0);
-        
-        var _sprite_xoffset = round(sprite_get_width(_sprite)  / 2);
-        var _sprite_yoffset = round(sprite_get_height(_sprite) / 2);
-        
-        sprite_set_offset(_sprite, _sprite_xoffset, _sprite_yoffset);
-        
-        var _particle_data = new ParticleData(_namespace, _id, _sprite, _sprite_data);
+        var _particle_data = new ParticleData(_namespace, _id, _json.sprite);
         
         _particle_data.set_properties(_json[$ "properties"]);
         _particle_data.set_lifetime(_json.lifetime);
@@ -50,12 +44,12 @@ function init_particle_recursive(_directory, _namespace, _id)
         if (_attribute != undefined)
         {
             _particle_data.set_attribute(new Attribute()
-                .set_collision_box(_attribute[$ "collision_box"])
+                .set_collision_box(_attribute[$ "collision_box_width"], _attribute[$ "collision_box_height"])
                 .set_gravity(_attribute[$ "gravity"])
             );
         }
         
-        global.particle_data[$ $"{_namespace}:{_name}"] = _particle_data; 
+        global.particle_data[$ $"{_namespace}:{string_delete(_name, string_length(_name) - 4, 5)}"] = _particle_data; 
         
         delete _json;
         

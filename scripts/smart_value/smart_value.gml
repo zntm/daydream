@@ -5,8 +5,6 @@ function smart_value(_data)
         return _data;
     }
     
-    show_debug_message(instanceof(_data))
-    
     var _type = _data.get_type();
     
     if (_type == SMART_VALUE_TYPE.CHOOSE)

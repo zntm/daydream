@@ -11,18 +11,11 @@ function init_projectile(_directory, _namespace = "phantasia")
         
         dbg_timer("init_projectile");
         
-        var _json = buffer_load_json($"{_directory}/{_file}/data.json");
+        var _json = buffer_load_json($"{_directory}/{_file}");
         
-        var _sprite_data = _json.sprite;
+        var _id = string_delete(_file, string_length(_file) - 4, 5);
         
-        var _sprite_xoffset = _sprite_data.xoffset;
-        var _sprite_yoffset = _sprite_data.yoffset;
-        
-        var _sprite = sprite_add($"{_directory}/{_file}/sprite.png", _sprite_data.length, false, false, _sprite_xoffset, _sprite_yoffset);
-        
-        var _data = new ProjectileData(_namespace, _file, _sprite, _sprite_data);
-        
-        _data.set_sprite(_sprite);
+        var _data = new ProjectileData(_namespace, _id, _json.sprite);
         
         _data.set_properties(_json[$ "properties"]);
         _data.set_lifetime(_json.lifetime);
@@ -31,14 +24,14 @@ function init_projectile(_directory, _namespace = "phantasia")
         var _attribute = _json.attribute;
         
         _data.set_attribute(new Attribute()
-            .set_collision_box(_attribute[$ "collision_box"])
-            .set_hit_box(_attribute[$ "hit_box"])
+            .set_collision_box(_attribute[$ "collision_box_width"], _attribute[$ "collision_box_height"])
+            .set_hit_box(_attribute[$ "hit_box_width"], _attribute[$ "hit_box_height"])
             .set_gravity(_attribute[$ "gravity"])
         );
         
-        global.projectile_data[$ $"{_namespace}:{_file}"] = _data;
+        global.projectile_data[$ $"{_namespace}:{_id}"] = _data;
         
-        dbg_timer("init_projectile", $"[Init] Loaded Projectile: '{_file}'");
+        dbg_timer("init_projectile", $"[Init] Loaded Projectile: '{_id}'");
         
         delete _json;
     }

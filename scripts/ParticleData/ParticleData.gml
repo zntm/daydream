@@ -11,7 +11,7 @@ enum PARTICLE_MOVEMENT_TYPE {
     REFERENCE
 }
 
-function ParticleData(_namespace, _id, _sprite, _sprite_data) : ParentData(_namespace, _id) constructor
+function ParticleData(_namespace, _id, _sprite) : ParentData(_namespace, _id) constructor
 {
     static __set_value = function(_name, _value)
     {
@@ -30,23 +30,10 @@ function ParticleData(_namespace, _id, _sprite, _sprite_data) : ParentData(_name
     }
     
     ___sprite = _sprite;
-    ___sprite_number = sprite_get_number(_sprite);
-    
-    __set_smart_value("___sprite_speed", _sprite_data[$ "speed"]);
     
     static get_sprite = function()
     {
         return ___sprite;
-    }
-    
-    static get_sprite_number = function()
-    {
-        return ___sprite_number;
-    }
-    
-    static get_sprite_speed = function()
-    {
-        return ___sprite_speed;
     }
     
     #region Properties
@@ -121,51 +108,48 @@ function ParticleData(_namespace, _id, _sprite, _sprite_data) : ParentData(_name
     {
         if (_physics != undefined)
         {
-            var _speed = _physics[$ "speed"];
+            // Handle xspeed directly under physics
+            var _xspeed = _physics[$ "xspeed"];
             
-            if (_speed != undefined)
+            if (_xspeed != undefined)
             {
-                var _x = _speed[$ "x"];
+                var _type = _xspeed[$ "type"];
                 
-                if (_x != undefined)
+                if (_type == "reference")
                 {
-                    var _type = _x[$ "type"];
-                    
-                    if (_type == "reference")
-                    {
-                        __set_value("___xspeed_type", PARTICLE_MOVEMENT_TYPE.REFERENCE);
-                        __set_value("___xspeed", _x.value);
-                    }
-                    else// if (_type == "number")
-                    {
-                        __set_value("___xspeed_type", PARTICLE_MOVEMENT_TYPE.CONSTANT);
-                    	__set_smart_value("___xspeed", _x.value);
-                    }
-                    
-                    __set_smart_value("___xspeed_offset", _x[$ "offset"]);
-                    __set_smart_value("___xspeed_multiplier", _x[$ "multiplier"]);
+                    __set_value("___xspeed_type", PARTICLE_MOVEMENT_TYPE.REFERENCE);
+                    __set_value("___xspeed", _xspeed.value);
+                }
+                else// if (_type == "smart_value:random" or other)
+                {
+                    __set_value("___xspeed_type", PARTICLE_MOVEMENT_TYPE.CONSTANT);
+                    __set_smart_value("___xspeed", _xspeed);
                 }
                 
-                var _y = _speed[$ "y"];
+                __set_smart_value("___xspeed_offset", _xspeed[$ "offset"]);
+                __set_smart_value("___xspeed_multiplier", _xspeed[$ "multiplier"]);
+            }
+            
+            // Handle yspeed directly under physics
+            var _yspeed = _physics[$ "yspeed"];
+            
+            if (_yspeed != undefined)
+            {
+                var _type = _yspeed[$ "type"];
                 
-                if (_y != undefined)
+                if (_type == "reference")
                 {
-                    var _type = _y[$ "type"];
-                    
-                    if (_type == "reference")
-                    {
-                        __set_value("___yspeed_type", PARTICLE_MOVEMENT_TYPE.REFERENCE);
-                        __set_value("___yspeed", _y.value);
-                    }
-                    else// if (_type == "number")
-                    {
-                        __set_value("___yspeed_type", PARTICLE_MOVEMENT_TYPE.CONSTANT);
-                    	__set_smart_value("___yspeed", _y.value);
-                    }
-                    
-                    __set_smart_value("___yspeed_offset", _y[$ "offset"]);
-                    __set_smart_value("___yspeed_multiplier", _y[$ "multiplier"]);
+                    __set_value("___yspeed_type", PARTICLE_MOVEMENT_TYPE.REFERENCE);
+                    __set_value("___yspeed", _yspeed.value);
                 }
+                else// if (_type == "smart_value:random" or other)
+                {
+                    __set_value("___yspeed_type", PARTICLE_MOVEMENT_TYPE.CONSTANT);
+                    __set_smart_value("___yspeed", _yspeed);
+                }
+                
+                __set_smart_value("___yspeed_offset", _yspeed[$ "offset"]);
+                __set_smart_value("___yspeed_multiplier", _yspeed[$ "multiplier"]);
             }
             
             __set_smart_value("___scale", _physics[$ "scale"]);
@@ -175,60 +159,67 @@ function ParticleData(_namespace, _id, _sprite, _sprite_data) : ParentData(_name
             if (_rotation != undefined)
             {
                 __set_smart_value("___rotation_increment", _rotation[$ "increment"]);
-                __set_smart_value("___rotation", _rotation.value);
+                __set_smart_value("___rotation", _rotation[$ "value"]);
             }
             
             var _on_collision = _physics[$ "on_collision"];
             
             if (_on_collision != undefined)
             {
-                var _on_collision_speed = _on_collision[$ "speed"];
+                // Handle on_collision xspeed
+                var _x = _on_collision[$ "xspeed"];
                 
-                if (_on_collision_speed != undefined)
+                if (_x != undefined)
                 {
-                    var _x = _on_collision_speed[$ "x"];
+                    var _type = _x[$ "type"];
                     
-                    if (_x != undefined)
+                    if (_type == "reference")
                     {
-                        var _type = _x[$ "type"];
-                        
-                        if (_type == "reference")
-                        {
-                            __set_value("___on_collision_xspeed_type", PARTICLE_MOVEMENT_TYPE.REFERENCE);
-                            __set_value("___on_collision_xspeed", _x.value);
-                        }
-                        else// if (_type == "number")
-                        {
-                            __set_value("___on_collision_xspeed_type", PARTICLE_MOVEMENT_TYPE.CONSTANT);
-                        	__set_smart_value("___on_collision_xspeed", _x.value);
-                        }
-                        
-                        __set_smart_value("___on_collision_xspeed_offset", _x[$ "offset"]);
-                        __set_smart_value("___on_collision_xspeed_multiplier", _x[$ "multiplier"]);
+                        __set_value("___on_collision_xspeed_type", PARTICLE_MOVEMENT_TYPE.REFERENCE);
+                        __set_value("___on_collision_xspeed", _x.value);
+                    }
+                    else// if (_type == "smart_value:random" or other)
+                    {
+                        __set_value("___on_collision_xspeed_type", PARTICLE_MOVEMENT_TYPE.CONSTANT);
+                        __set_smart_value("___on_collision_xspeed", _x);
                     }
                     
-                    var _y = _on_collision_speed[$ "y"];
+                    __set_smart_value("___on_collision_xspeed_offset", _x[$ "offset"]);
+                    __set_smart_value("___on_collision_xspeed_multiplier", _x[$ "multiplier"]);
+                }
+                
+                // Handle on_collision yspeed
+                var _y = _on_collision[$ "yspeed"];
+                
+                if (_y != undefined)
+                {
+                    var _type = _y[$ "type"];
                     
-                    if (_y != undefined)
+                    if (_type == "reference")
                     {
-                        var _type = _y[$ "type"];
-                        
-                        if (_type == "reference")
-                        {
-                            __set_value("___on_collision_yspeed_type", PARTICLE_MOVEMENT_TYPE.REFERENCE);
-                            __set_value("___on_collision_yspeed", _y.value);
-                        }
-                        else// if (_type == "number")
-                        {
-                            __set_value("___on_collision_yspeed_type", PARTICLE_MOVEMENT_TYPE.CONSTANT);
-                        	__set_smart_value("___on_collision_yspeed", _y.value);
-                        }
-                        
-                        __set_smart_value("___on_collision_yspeed_offset", _y[$ "offset"]);
-                        __set_smart_value("___on_collision_yspeed_multiplier", _y[$ "multiplier"]);
+                        __set_value("___on_collision_yspeed_type", PARTICLE_MOVEMENT_TYPE.REFERENCE);
+                        __set_value("___on_collision_yspeed", _y.value);
                     }
+                    else// if (_type == "smart_value:random" or other)
+                    {
+                        __set_value("___on_collision_yspeed_type", PARTICLE_MOVEMENT_TYPE.CONSTANT);
+                        __set_smart_value("___on_collision_yspeed", _y);
+                    }
+                    
+                    __set_smart_value("___on_collision_yspeed_offset", _y[$ "offset"]);
+                    __set_smart_value("___on_collision_yspeed_multiplier", _y[$ "multiplier"]);
                 }
             }
+        }
+        
+        return self;
+    }
+    
+    static set_attribute = function(_attributes)
+    {
+        if (_attributes != undefined)
+        {
+            __set_smart_value("___gravity", _attributes[$ "gravity"]);
         }
         
         return self;
@@ -334,14 +325,7 @@ function ParticleData(_namespace, _id, _sprite, _sprite_data) : ParentData(_name
         return self[$ "___on_collision_yspeed_multiplier"] ?? 1;
     }
     
-    static set_attribute = function(_attributes)
-    {
-        ___attributes = _attributes;
-        
-        return self;
-    }
-    
-    static get_attribute = function(_attributes)
+    static get_attribute = function()
     {
         return self[$ "___attributes"];
     }

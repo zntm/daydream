@@ -35,7 +35,7 @@
             "humidity": {
                 "octaves": 1
             },
-            "map": "phantasia:world/map/playground",
+            "map": "phantasia:world/playground/map",
             "offset": {
                 "min": 22,
                 "max": 34,
@@ -73,13 +73,13 @@
     "celestials": [
         {
             "id": "phantasia:world/celestial/sun",
-            "time_start": 0,
-            "time_end": 890
+            "time_range_min": 0,
+            "time_range_max": 890
         },
         {
             "id": "phantasia:world/celestial/moon",
-            "time_start": 890,
-            "time_end": 1200
+            "time_range_min": 890,
+            "time_range_max": 1200
         }
     ],
     "spawn_interval": 14,
@@ -95,20 +95,20 @@
         "start": 180,
         "diurnal": {
             "dawn": {
-                "time_start": 0,
-                "time_end": 240
+                "time_range_min": 0,
+                "time_range_max": 240
             },
             "day": {
-                "time_start": 240,
-                "time_end": 820
+                "time_range_min": 240,
+                "time_range_max": 820
             },
             "dusk": {
-                "time_start": 820,
-                "time_end": 890
+                "time_range_min": 820,
+                "time_range_max": 890
             },
             "night": {
-                "time_start": 890,
-                "time_end": 1200
+                "time_range_min": 890,
+                "time_range_max": 1200
             }
         }
     },

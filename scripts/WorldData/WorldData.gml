@@ -83,14 +83,14 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         return ___time_diurnal;
     }
     
-    static set_celestial = function(_celestial)
+    static set_celestials = function(_celestial)
     {
         ___celestial = _celestial;
         
         return self;
     }
     
-    static get_celestial = function()
+    static get_celestials = function()
     {
         return ___celestial;
     }
@@ -109,7 +109,67 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
     
     static set_surface_biome = function(_surface_biome)
     {
+        static __biome_map_buffer  = -1;
+        static __biome_map_surface = -1;
+        
+        if (!buffer_exists(__biome_map_buffer))
+        {
+            __biome_map_buffer = buffer_create(WORLDGEN_SIZE_HUMIDITY * WORLDGEN_SIZE_HEAT * 4, buffer_fixed, 1);
+        }
+        
+        if (!surface_exists(__biome_map_surface))
+        {
+            __biome_map_surface = surface_create(WORLDGEN_SIZE_HUMIDITY, WORLDGEN_SIZE_HEAT);
+        }
+        
         ___surface_biome = _surface_biome;
+        
+        var _sprite = global.sprite_asset[$ _surface_biome.map].get_sprite();
+        
+        surface_set_target(__biome_map_surface);
+        
+        draw_sprite(_sprite, 0, 0, 0);
+        
+        surface_reset_target();
+        
+        buffer_get_surface(__biome_map_buffer, __biome_map_surface, 0);
+        
+        var _biome_data = global.biome_data;
+        
+        var _names = struct_get_names(_biome_data);
+        var _length = array_length(_names);
+        
+        var _surface_biome_map = array_create(WORLDGEN_SIZE_HUMIDITY * WORLDGEN_SIZE_HEAT, 0);
+        
+        for (var j = 0; j < _length; ++j)
+        {
+            var _name = _names[j];
+            
+            var _map_colour = _biome_data[$ _name].get_map_colour();
+            
+            if (_map_colour == undefined) continue;
+            
+            buffer_seek(__biome_map_buffer, buffer_seek_start, 0);
+            
+            for (var l = 0; l < WORLDGEN_SIZE_HUMIDITY; ++l)
+            {
+                var _index_humidity = l << WORLDGEN_SIZE_HEAT_BIT;
+                
+                for (var m = 0; m < WORLDGEN_SIZE_HEAT; ++m)
+                {
+                    var _colour = buffer_read(__biome_map_buffer, buffer_u32) & 0xffffff;
+                    
+                    if (_map_colour == _colour)
+                    {
+                        _surface_biome_map[@ _index_humidity | m] = _name;
+                    }
+                }
+            }
+        }
+        
+        buffer_delete(__biome_map_buffer);
+        
+        set_surface_biome_map(_surface_biome_map);
         
         return self;
     }
