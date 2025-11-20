@@ -224,6 +224,13 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
                 set_item_armor(_armor);
             }
             
+            var _components = _data[$ "components"];
+            
+            if (_components != undefined)
+            {
+                set_item_components(_components);
+            }
+            
             var _consumable = _data[$ "consumable"];
             
             if (_consumable != undefined)
@@ -400,6 +407,13 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     {
         if (_tile != undefined)
         {
+            var _components = _tile[$ "components"];
+            
+            if (_components != undefined)
+            {
+                set_tile_components(_components);
+            }
+            
             var _drops = _tile[$ "drops"];
             
             if (_drops != undefined)
@@ -441,6 +455,16 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
             */
         }
         
+        var _sprite = global.sprite_asset[$ get_sprite()].get_sprite();
+        
+        set_collision_box(
+            TILE_COLLISION_BOX_TYPE.RECTANGLE,
+            -sprite_get_xoffset(_sprite),
+            -sprite_get_yoffset(_sprite),
+            sprite_get_width(_sprite),
+            sprite_get_height(_sprite),
+        );
+        
         return self;
     }
     
@@ -466,7 +490,7 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
         }
     }
     
-    static get_tile_drops = function()
+    static get_tile_middle_layer_drops = function()
     {
         return self[$ "___tile_drops"];
     }
@@ -476,7 +500,7 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
         ___tile_harvest = new ItemTileHarvest(_harvest.hardness, _harvest.level, _harvest.particle, _harvest[$ "condition"]);
     }
     
-    static get_tile_harvest = function()
+    static get_tile_middle_layer_harvest = function()
     {
         return self[$ "___tile_harvest"];
     }
@@ -490,12 +514,12 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
         );
     }
     
-    static get_tile_sfx = function()
+    static get_tile_middle_layer_sfx = function()
     {
         return self[$ "___sfx"];
     }
     
-    static get_tile_is_visible = function()
+    static get_tile_middle_layer_is_visible = function()
     {
         return self[$ "___tile_is_visible"] ?? true;
     }
@@ -698,27 +722,27 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
         return self[$ "___harvest_level"] ?? 0;
     }
     
-    static get_tile_harvest_hardness = function()
+    static get_tile_middle_layer_harvest_hardness = function()
     {
         return self[$ "___harvest_hardness"];
     }
     
-    static get_tile_harvest_level = function()
+    static get_tile_middle_layer_harvest_level = function()
     {
         return self[$ "___harvest_level"] ?? 0;
     }
     
-    static get_tile_harvest_condition_id = function()
+    static get_tile_middle_layer_harvest_condition_id = function()
     {
         return self[$ "___harvest_condition_id"]
     }
     
-    static get_tile_harvest_particle_colour = function()
+    static get_tile_middle_layer_harvest_particle_colour = function()
     {
         return self[$ "___harvest_particle_colour"];
     }
     
-    static get_tile_harvest_particle_frequency = function()
+    static get_tile_middle_layer_harvest_particle_frequency = function()
     {
         return self[$ "___harvest_particle_frequency"] ?? 0;
     }
@@ -762,16 +786,14 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
         return self[$ "___drop_length"] ?? 0;
     }
     
-    static set_collision_box = function(_collision_box)
-    {
+    static set_collision_box = function(_type, _left, _top, _right, _bottom)
+    {/*
         static __collision_box_type = {
             "rectangle": TILE_COLLISION_BOX_TYPE.RECTANGLE,
             "triangle":  TILE_COLLISION_BOX_TYPE.TRIANGLE
         }
-        
-        ___colliison_box = (__collision_box_type[$ _collision_box.type] << 32) | ((_collision_box.bottom + 0x80) << 24) | ((_collision_box.right + 0x80) << 16) | ((_collision_box.top + 0x80) << 8) | (_collision_box.left + 0x80);
-        
-        delete _collision_box;
+        */
+        ___collision_box = (_type << 32) | ((_bottom + 0x80) << 24) | ((_right + 0x80) << 16) | ((_top + 0x80) << 8) | (_left + 0x80);
         
         return self;
     }
@@ -800,27 +822,27 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     
     static get_collision_box_left = function()
     {
-        return (___colliison_box & 0xff) - 0x80;
+        return (___collision_box & 0xff) - 0x80;
     }
     
     static get_collision_box_top = function()
     {
-        return ((___colliison_box >> 8) & 0xff) - 0x80;
+        return ((___collision_box >> 8) & 0xff) - 0x80;
     }
     
     static get_collision_box_right = function()
     {
-        return ((___colliison_box >> 16) & 0xff) - 0x80;
+        return ((___collision_box >> 16) & 0xff) - 0x80;
     }
     
     static get_collision_box_bottom = function()
     {
-        return ((___colliison_box >> 24) & 0xff) - 0x80;
+        return ((___collision_box >> 24) & 0xff) - 0x80;
     }
     
     static get_collision_box_type = function()
     {
-        return (___colliison_box >> 32) & 0xff;
+        return (___collision_box >> 32) & 0xff;
     }
     
     #region Properties
@@ -1137,39 +1159,76 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
         return self[$ "___container_invalid"];
     }
     
-    static set_components = function(_components)
+    static set_item_components = function(_components)
     {
         if (_components != undefined)
         {
             var _names = struct_get_names(_components);
             var _length = array_length(_names);
             
-            ___components = {}
-            ___components_names = _names;
-            ___components_length = _length;
+            ___item_components = {}
+            ___item_components_names = _names;
+            ___item_components_length = _length;
             
             for (var i = 0; i < _length; ++i)
             {
                 var _name = _names[i];
                 
-                ___components[$ _name] = _components[$ _name];
+                ___item_components[$ _name] = _components[$ _name];
             }
         }
         
         return self;
     }
     
-    static get_component = function(_name)
+    static get_item_component = function(_name)
     {
-        return ___components[$ _name];
+        return ___item_components[$ _name];
     }
     
-    static get_components_names = function()
+    static get_item_components_names = function()
     {
         return self[$ "___components_names"];
     }
     
-    static get_components_length = function()
+    static get_item_components_length = function()
+    {
+        return self[$ "___components_length"] ?? 0;
+    }
+    
+    static set_tile_components = function(_components)
+    {
+        if (_components != undefined)
+        {
+            var _names = struct_get_names(_components);
+            var _length = array_length(_names);
+            
+            ___tile_components = {}
+            ___tile_components_names = _names;
+            ___tile_components_length = _length;
+            
+            for (var i = 0; i < _length; ++i)
+            {
+                var _name = _names[i];
+                
+                ___tile_components[$ _name] = _components[$ _name];
+            }
+        }
+        
+        return self;
+    }
+    
+    static get_tile_component = function(_name)
+    {
+        return ___tile_components[$ _name];
+    }
+    
+    static get_tile_components_names = function()
+    {
+        return self[$ "___components_names"];
+    }
+    
+    static get_tile_components_length = function()
     {
         return self[$ "___components_length"] ?? 0;
     }

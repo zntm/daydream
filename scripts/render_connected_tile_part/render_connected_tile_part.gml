@@ -1,4 +1,4 @@
-function render_connected_tile_part(_buffer, _name, _data, _animation_type, _surface_width, _surface_height, _cos, _sin, _index, _left, _top, _width, _height, _x, _y, _xscale, _yscale, _colour, _alpha)
+function chunk_vertex_tile_connected_part(_buffer, _name, _data, _animation_type, _surface_width, _surface_height, _cos, _sin, _index, _left, _top, _width, _height, _x, _y, _xscale, _yscale, _colour, _alpha)
 {
     var _v0 = (_data.get_x() + _left) / _surface_width;
     var _v1 = (_data.get_y() + _top)  / _surface_height;
@@ -21,7 +21,6 @@ function render_connected_tile_part(_buffer, _name, _data, _animation_type, _sur
     var _dy = _by + (_b * _cos);
     
     var _number = atla_get_number("item", _name);
-    
     var _w = atla_get_width("item", _name);
     
     // Triangle 1

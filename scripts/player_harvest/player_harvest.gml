@@ -32,7 +32,7 @@ function player_harvest(_dt, _x, _y)
     
     var _data = _item_data[$ _tile.get_id()];
     
-    var _tile_harvest = _data.get_tile_harvest();
+    var _tile_harvest = _data.get_tile_middle_layer_harvest();
     
     var _harvest_hardness = _tile_harvest.get_hardness();
     
@@ -70,7 +70,7 @@ function player_harvest(_dt, _x, _y)
     
     if (_tile_harvest.get_level() > _item_level) exit;
     
-    var _sfx = _data.get_tile_sfx();
+    var _sfx = _data.get_tile_middle_layer_sfx();
     
     var _particle = _tile_harvest.get_particle();
     

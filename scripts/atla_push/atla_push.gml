@@ -185,6 +185,24 @@ function atla_push(_page, _sprite, _name)
     _surface_width  = power(2, ceil(log2(_surface_width)));
     _surface_height = power(2, ceil(log2(_surface_height)));
     
+    for (var i = 0; i < _atla_page_position_length; ++i)
+    {
+        var _s = _atla_page_position[i];
+        
+        var _x = _s.get_x();
+        var _y = _s.get_y();
+        
+        var _w = _s.get_width();
+        var _h = _s.get_height();
+        
+        _atla_page_position[i].set_uvs(
+            _x / _surface_width,
+            _y / _surface_height,
+            (_x + _w) / _surface_width,
+            (_y + _h) / _surface_height,
+        );
+    }
+    
     global.___atla_surface_size[$ _page] = (_surface_height << 16) | _surface_width;
     
     var _surface = global.___atla_surface[$ _page];

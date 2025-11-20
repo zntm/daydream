@@ -1,16 +1,19 @@
-function render_tile(_buffer, _name, _data, _animation_type, _position, _uv, _texel_width, _texel_height, _index, _x, _y, _xscale, _yscale, _rotation, _colour, _alpha)
+function chunk_vertex_tile(_buffer, _texel_width, _texel_height, _animation_type, _atla, _atla_sprite, _index, _x, _y, _xscale, _yscale, _rotation, _colour, _alpha)
 {
-    var _width  = atla_get_width("item", _name);
-    var _height = atla_get_height("item", _name);
+    var _atla_value = _atla.___value;
     
-    var _v0 = _data.get_x() * _texel_width;
-    var _v1 = _data.get_y() * _texel_height;
+    var _width  = (_atla_value >> 22) & 2047;
+    var _height = (_atla_value >> 33) & 2047;
     
-    var _v2 = _v0 + (_width  * _texel_width);
-    var _v3 = _v1 + (_height * _texel_height);
+    var _uvs = _atla_sprite.___uvs;
     
-    var _xoffset = -_xscale * atla_get_xoffset("item", _name);
-    var _yoffset = -_yscale * atla_get_yoffset("item", _name);
+    var _u0 = _uvs[0];
+    var _v0 = _uvs[1];
+    var _u1 = _uvs[2];
+    var _v1 = _uvs[3];
+    
+    var _xoffset = -_xscale * (((_atla_value >> 0)  & 2047) - 1024);
+    var _yoffset = -_yscale * (((_atla_value >> 11) & 2047) - 1024);
     
     var _xw = (_xscale * _width)  + _xoffset;
     var _yh = (_yscale * _height) + _yoffset;
@@ -40,39 +43,35 @@ function render_tile(_buffer, _name, _data, _animation_type, _position, _uv, _te
     var _dx = _x + _e - _h;
     var _dy = _y + _f + _g;
     
-    show_debug_message($"{_v0} {_v1} {_v2} {_v3} {_texel_width} {_texel_height} {_x} {_y} {_data.get_x()} {_data.get_y()} {_width} {_height}")
+    var _number = (_atla_value >> 44) & 2047;
     
-    var _number = atla_get_number("item", _name);
-    
-    // Triangle 1
     vertex_colour(_buffer, _colour, _alpha);
     vertex_position(_buffer, _ax, _ay);
-    vertex_texcoord(_buffer, _v0, _v1);
+    vertex_texcoord(_buffer, _u0, _v0);
     vertex_float4(_buffer, _index, _number, _width, _animation_type);
     
     vertex_colour(_buffer, _colour, _alpha);
     vertex_position(_buffer, _bx, _by);
-    vertex_texcoord(_buffer, _v2, _v1);
+    vertex_texcoord(_buffer, _u1, _v0);
     vertex_float4(_buffer, _index, _number, _width, _animation_type);
     
     vertex_colour(_buffer, _colour, _alpha);
     vertex_position(_buffer, _cx, _cy);
-    vertex_texcoord(_buffer, _v0, _v3);
+    vertex_texcoord(_buffer, _u0, _v1);
     vertex_float4(_buffer, _index, _number, _width, _animation_type);
     
-    // Triangle 2
     vertex_colour(_buffer, _colour, _alpha);
     vertex_position(_buffer, _bx, _by);
-    vertex_texcoord(_buffer, _v2, _v1);
+    vertex_texcoord(_buffer, _u1, _v0);
     vertex_float4(_buffer, _index, _number, _width, _animation_type);
     
     vertex_colour(_buffer, _colour, _alpha);
     vertex_position(_buffer, _cx, _cy);
-    vertex_texcoord(_buffer, _v0, _v3);
+    vertex_texcoord(_buffer, _u0, _v1);
     vertex_float4(_buffer, _index, _number, _width, _animation_type);
     
     vertex_colour(_buffer, _colour, _alpha);
     vertex_position(_buffer, _dx, _dy);
-    vertex_texcoord(_buffer, _v2, _v3);
+    vertex_texcoord(_buffer, _u1, _v1);
     vertex_float4(_buffer, _index, _number, _width, _animation_type);
 }

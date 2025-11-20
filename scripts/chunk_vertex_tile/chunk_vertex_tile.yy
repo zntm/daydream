@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"chunk_vertex_tile",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"chunk_vertex_tile",
+  "parent":{
+    "name":"Vertex",
+    "path":"folders/Scripts/Chunk/Vertex.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

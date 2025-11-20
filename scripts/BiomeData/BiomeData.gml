@@ -119,24 +119,6 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
         return self[$ "___music"];
     }
     
-    static set_tile = function(_data)
-    {
-        ___tile_base = _data.base;
-        ___tile_wall = _data.wall;
-        
-        return self;
-    }
-    
-    static get_tile_base = function()
-    {
-        return ___tile_base;
-    }
-    
-    static get_tile_wall = function()
-    {
-        return ___tile_wall;
-    }
-    
     static set_tile_top_layer = function(_data)
     {
         ___tile_top_layer_base = _data.base;
@@ -199,12 +181,12 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
         return self;
     }
     
-    static get_tile_foliage = function(_index)
+    static get_tile_middle_layer_foliage = function(_index)
     {
         return ___tile_foliage[_index];
     }
     
-    static get_tile_foliage_length = function()
+    static get_tile_middle_layer_foliage_length = function()
     {
         return self[$ "___tile_foliage_length"] ?? 0;
     }

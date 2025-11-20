@@ -187,17 +187,21 @@ function Tile(_id, _item_data = global.item_data) constructor
         return self;
     }
     
-    var _components_length = _data.get_components_length();
+    //show_debug_message($"{_id} {_data}")
+    
+    var _components_length = _data.get_tile_components_length();
     
     if (_components_length > 0)
     {
-        var _names = _data.get_components_names();
+        ___components_length = _components_length;
+        
+        var _names = _data.get_tile_components_names();
         
         for (var i = 0; i < _components_length; ++i)
         {
             var _name = _names[i];
             
-            var _ = _data.get_component(_name);
+            var _ = _data.get_tile_component(_name);
             
             set_component(_name, _[$ "default"]);
         }
@@ -218,6 +222,11 @@ function Tile(_id, _item_data = global.item_data) constructor
         }
         
         return _component[$ _name];
+    }
+    
+    static get_components_length = function()
+    {
+        return self[$ "___components_length"] ?? 0;
     }
     
     var _inventory_length = _data.get_tile_inventory_length();

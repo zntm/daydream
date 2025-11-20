@@ -16,10 +16,16 @@ function render_chunk(_uv, _inst, _z)
     
     vertex_begin(_buffer, global.chunk_format_perspective);
     
-    var _page = global.carbasa_page[$ "item"];
-    var _position = global.carbasa_page_position[$ "item"];
+    var _page = global.___atla_page[$ "item"];
+    var _position = global.___atla_page_position[$ "item"];
     
-    var _size = global.carbasa_surface_size[$ "item"];
+    var _size = global.___atla_surface_size[$ "item"];
+    
+    var _texture = global.___atla_surface_texture[$ "item"];
+    
+    // FIX: Was calling texture_get_texel_width twice
+    var _texel_width  = texture_get_texel_width(_texture);
+    var _texel_height = texture_get_texel_height(_texture);
     
     var _surface_width  = (_size >>  0) & 0xffff;
     var _surface_height = (_size >> 16) & 0xffff;
@@ -40,7 +46,7 @@ function render_chunk(_uv, _inst, _z)
             var _id = _tile.get_id();
             var _data = _item_data[$ _id];
             
-            if (!_data.get_tile_is_visible()) continue;
+            if (!_data.get_tile_middle_layer_is_visible()) continue;
             
             var _index = _tile.get_index();
             
@@ -60,19 +66,34 @@ function render_chunk(_uv, _inst, _z)
             {
                 var _edge_padding = _data.get_edge_padding();
                 
-                render_connected_tile(_buffer, _data, _atla_data, _sprite, _position, _uv, _surface_width, _surface_height, _index, _tile.get_index_offset(), _edge_padding, _draw_x, _draw_y, _xscale, _yscale, _rotation, c_white, 1);
+                chunk_vertex_tile_connected(_buffer, _data, _atla_data, _sprite, _position, _uv, _surface_width, _surface_height, _index, _tile.get_index_offset(), _edge_padding, _draw_x, _draw_y, _xscale, _yscale, _rotation, c_white, 1);
                 
                 continue;
             }
             
             if (_data.is_foliage())
             {
-                render_tile_foliage(_buffer, _atla_data, _sprite, _position, _uv, tile_index_xy(_x, _y), _surface_width, _surface_height, _index + _tile.get_index_offset(), _draw_x, _draw_y, _xscale, _yscale, _rotation, c_white, 1);
+                chunk_vertex_tile_foliage(_buffer, _atla_data, _sprite, _position, _uv, tile_index_xy(_x, _y), _surface_width, _surface_height, _index + _tile.get_index_offset(), _draw_x, _draw_y, _xscale, _yscale, _rotation, c_white, 1);
                 
                 continue;
             }
             
-            render_tile(_buffer, _sprite, _atla_data, _position, _uv, _surface_width, _surface_height, _id, _index + _tile.get_index_offset(), _draw_x, _draw_y, _xscale, _yscale, _rotation, c_white, 1);
+            chunk_vertex_tile(
+                _buffer,
+                _texel_width,
+                _texel_height,
+                _data.get_animation_type(),
+                global.___atla_page[$ "item"][$ _sprite],
+                global.___atla_page_position[$ "item"][global.___atla_page[$ "item"][$ _sprite].get_sprite_index(_index)],
+                _index,
+                _draw_x,
+                _draw_y,
+                _xscale,
+                _yscale,
+                _rotation,
+                c_white,
+                1
+            );
         }
     }
     

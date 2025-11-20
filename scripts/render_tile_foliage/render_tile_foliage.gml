@@ -1,11 +1,10 @@
-function render_tile_foliage(_buffer, _data, _name, _position, _uv, _chunk_index, _surface_width, _surface_height, _index, _x, _y, _xscale, _yscale, _rotation, _colour, _alpha)
+function chunk_vertex_tile_foliage(_buffer, _data, _name, _position, _uv, _chunk_index, _surface_width, _surface_height, _index, _x, _y, _xscale, _yscale, _rotation, _colour, _alpha)
 {
     var _width  = atla_get_width("item", _name);
     var _height = atla_get_height("item", _name);
     
     var _v0 = _data.get_x() / _surface_width;
     var _v1 = _data.get_y() / _surface_height;
-    
     var _v2 = _v0 + (_width  / _surface_width);
     var _v3 = _v1 + (_height / _surface_height);
     
@@ -41,11 +40,9 @@ function render_tile_foliage(_buffer, _data, _name, _position, _uv, _chunk_index
     var _dy = _y + _f + _g;
     
     var _number = atla_get_number("item", _name);
-    
-    // var _animation_type = (_width << 8) | _data.get_animation_type();
     var _animation_type = (_width << 8) | TILE_ANIMATION_TYPE.FOLIAGE;
     
-    // Triangle 1
+    // Triangle 1 - Top vertices use foliage animation
     vertex_colour(_buffer, _colour, _alpha);
     vertex_position(_buffer, _ax, _ay);
     vertex_texcoord(_buffer, _v0, _v1);
@@ -59,7 +56,7 @@ function render_tile_foliage(_buffer, _data, _name, _position, _uv, _chunk_index
     vertex_colour(_buffer, _colour, _alpha);
     vertex_position(_buffer, _cx, _cy);
     vertex_texcoord(_buffer, _v0, _v3);
-    vertex_float4(_buffer, _index, _number, _width, TILE_ANIMATION_TYPE.DEFAULT);
+    vertex_float4(_buffer, _index, _number, _chunk_index, _animation_type);
     
     // Triangle 2
     vertex_colour(_buffer, _colour, _alpha);
@@ -70,10 +67,10 @@ function render_tile_foliage(_buffer, _data, _name, _position, _uv, _chunk_index
     vertex_colour(_buffer, _colour, _alpha);
     vertex_position(_buffer, _cx, _cy);
     vertex_texcoord(_buffer, _v0, _v3);
-    vertex_float4(_buffer, _index, _number, _width, TILE_ANIMATION_TYPE.DEFAULT);
+    vertex_float4(_buffer, _index, _number, _chunk_index, _animation_type);
     
     vertex_colour(_buffer, _colour, _alpha);
     vertex_position(_buffer, _dx, _dy);
     vertex_texcoord(_buffer, _v2, _v3);
-    vertex_float4(_buffer, _index, _number, _width, TILE_ANIMATION_TYPE.DEFAULT);
+    vertex_float4(_buffer, _index, _number, _chunk_index, _animation_type);
 }

@@ -15,30 +15,35 @@ function worldgen_get_biome_cave(_x, _y, _surface_height, _seed)
     
     var _world_data = global.world_data[$ global.world_save_data.dimension];
     
-    var _default_length = _world_data.get_default_cave_length();
+    var _default = _world_data.get_cave_biome_default();
+    var _default_length = _world_data.get_cave_biome_default_length();
     
     for (var i = 0; i < _default_length; ++i)
     {
-        var _start = _world_data.get_default_cave_start(i);
+        var _data = _default[i];
+        var _start = _data.start;
         
         if (_y < _start) continue;
         
-        var _type = _world_data.get_default_cave_transition_type(i);
+        var _transition = _data.transition;
         
-        if (_type == WORLDGEN_CAVE_TRANSITION_TYPE.RANDOM)
+        var _type = _transition.type;
+        
+        // if (_type == WORLDGEN_CAVE_TRANSITION_TYPE.RANDOM)
+        if (_type == "random")
         {
             var _ = _seed + ((((_x * _y) + (i << 9)) * 244) * ((_y & 0xf) * 188));
             
-            if (_y < round(_start + random_seeded(_world_data.get_default_cave_transition_amplitude(i), _))) continue;
+            if (_y < round(_start + _transition.min + random_seeded(_transition.max - _transition.min, _))) continue;
             
-            return _world_data.get_default_cave_id(i);
+            return _data.id;
         }
         
-        var _end = _world_data.get_default_cave_end(i);
+        var _end = _data[$ "end"];
         
         if (_y < _end)
         {
-            return _world_data.get_default_cave_id(i);
+            return _data.id;
         }
         
         /*

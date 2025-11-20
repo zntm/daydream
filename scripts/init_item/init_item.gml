@@ -10,7 +10,7 @@ function init_item(_directory, _namespace)
         var _file = _files[i];
         var _id = string_delete(_file, string_length(_file) - 4, 5);
         
-        dbg_timer("init_item");
+        dbg_timer("init_item0");
         
         var _json = tag_value_parse(buffer_load_json($"{_directory}/{_file}"));
         
@@ -18,11 +18,12 @@ function init_item(_directory, _namespace)
         
         var _sprite = _json.sprite;
         
+        _item_data.set_sprite(_sprite);
+        
         _item_data.set_inventory(_json.inventory);
         _item_data.set_item(_json[$ "item"]);
         _item_data.set_tile(_json[$ "tile"]);
         _item_data.set_properties(_json[$ "properties"]);
-        _item_data.set_sprite(_sprite);
         _item_data.set_type(_json.type);
         
         /*
@@ -68,7 +69,10 @@ function init_item(_directory, _namespace)
         _item_data.set_edge_padding(_sprite_data[$ "edge_padding"]);
         */
         
-        atla_push("item", global.sprite_asset[$ _sprite].get_sprite(), _sprite);
+        if (_item_data.get_type() & (ITEM_TYPE_BIT.PLATFORM | ITEM_TYPE_BIT.SOLID | ITEM_TYPE_BIT.UNTOUCHABLE))
+        {
+            atla_push("item", global.sprite_asset[$ _sprite].get_sprite(), _sprite);
+        }
         
         global.item_data[$ $"{_namespace}:{_id}"] = _item_data;
         

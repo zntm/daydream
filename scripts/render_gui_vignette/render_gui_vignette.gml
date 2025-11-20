@@ -2,8 +2,8 @@ function render_gui_vignette(_y, _gui_width, _gui_height)
 {
     var _data = global.world_data[$ global.world_save_data.dimension];
     
-    var _start = _data.get_vignette_start();
-    var _end   = _data.get_vignette_end();
+    var _start = _data.get_vignette_ystart();
+    var _end   = _data.get_vignette_yend();
     
     var _alpha = normalize(_y / TILE_SIZE, _start, _end);
     

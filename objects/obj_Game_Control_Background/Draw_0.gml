@@ -11,6 +11,6 @@ draw_sprite_general(spr_Glow_Corner, 0, 0, 0, 128, 1, _camera_x, _camera_y + _ca
 
 if (global.settings.display_background)
 {
-    render_background_celestial(_camera_x, _camera_y, _camera_width, _camera_height);
+    render_background_celestial(global.world_save_data.time, _camera_x, _camera_y, _camera_width, _camera_height);
     render_background(_camera_x, _camera_y, _camera_width, _camera_height);
 }

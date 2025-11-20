@@ -72,6 +72,8 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         ___time_diurnal = _time.diurnal;
         ___time_diurnal_length = array_length(___time_diurnal);
         
+        ___time_length = _time.length;
+        
         return self;
     }
     
@@ -90,9 +92,15 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         return ___time_diurnal_length;
     }
     
+    static get_time_length = function()
+    {
+        return ___time_length;
+    }
+    
     static set_celestials = function(_celestial)
     {
         ___celestial = _celestial;
+        ___celestial_length = array_length(_celestial);
         
         return self;
     }
@@ -102,16 +110,27 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         return ___celestial;
     }
     
+    static get_celestials_length = function()
+    {
+        return ___celestial_length;
+    }
+    
     static set_cave_biome = function(_cave_biome)
     {
-        ___cave_biome = _cave_biome;
+        ___cave_biome_default = _cave_biome[$ "default"];
+        ___cave_biome_default_length = array_length(___cave_biome_default);
         
         return self;
     }
     
-    static get_cave_biome = function()
+    static get_cave_biome_default = function()
     {
-        return ___cave_biome;
+        return ___cave_biome_default;
+    }
+    
+    static get_cave_biome_default_length = function()
+    {
+        return ___cave_biome_default_length;
     }
     
     static set_surface_biome = function(_surface_biome)

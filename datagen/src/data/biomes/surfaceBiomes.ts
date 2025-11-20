@@ -216,7 +216,7 @@ export default [
     new DatagenReturnData(
         "generated/data/biomes/surface/swamp.json",
         new Biome(
-            new BiomeBackground("phantasia:background/swano", 0.7),
+            new BiomeBackground("phantasia:background/swamp", 0.7),
             "#8C8C6C",
             {
                 dawn: new BiomeSkyColor("#371479", "#4d1140"),

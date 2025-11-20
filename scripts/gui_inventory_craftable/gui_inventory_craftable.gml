@@ -85,7 +85,7 @@ function gui_inventory_craftable(_gui_multiplier_x, _gui_multiplier_y)
         var _xscale = _gui_multiplier_x * _inventory_scale;
         var _yscale = _gui_multiplier_y * _inventory_scale;
         
-        draw_sprite_ext(_sprite, _index, _x, _y, _xscale, _yscale, 0, c_white, 1);
+        draw_sprite_ext(global.sprite_asset[$ _sprite].get_sprite(), _index, _x, _y, _xscale, _yscale, 0, c_white, 1);
     }
     
     for (var i = 0; i < _length; ++i)

@@ -7,7 +7,7 @@ function worldgen_get_tile_base(_x, _y, _surface_biome, _cave_biome, _surface_he
     
     if (_cave_biome != undefined)
     {
-        return global.biome_data[$ _cave_biome].get_tile_base();
+        return global.biome_data[$ _cave_biome].get_tile_middle_layer_base();
     }
     
     if (_cave_above)

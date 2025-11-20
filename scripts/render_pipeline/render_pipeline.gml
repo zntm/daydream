@@ -10,11 +10,18 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
     var _particle_data = global.particle_data;
     var _projectile_data = global.projectile_data;
     
-    var _texture = atla_get_surface_texture("item");
-    var _uvs = atla_get_surface_uvs("item");
+    atla_repair("item");
     
-    var _texel_width  = texture_get_texel_width(_texture);
-    var _texel_height = texture_get_texel_height(_texture);
+    var _texture = global.___atla_surface_texture[$ "item"];
+    var _uvs = global.___atla_surface_uvs[$ "item"];
+    
+    var _surface_size = global.___atla_surface_size[$ "item"];
+    
+    var _surface_width  = (_surface_size >> 0)  & 0xffff;
+    var _surface_height = (_surface_size >> 16) & 0xffff;
+    
+    var _texel_width  = texture_get_width(_texture);
+    var _texel_height = texture_get_height(_texture);
     
     var _animation_index = round(global.world_save_data.time * 8);
     
@@ -204,6 +211,8 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
             }
         }
     }
+    
+    draw_surface(global.___atla_surface[$ "item"], mouse_x, mouse_y)
     
     if (timer_harvest > 0)
     {
