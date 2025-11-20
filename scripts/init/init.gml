@@ -8,6 +8,8 @@ function init(_namespace)
         init_assets($"{PROGRAM_DIRECTORY_ASSETS}/{_files[i]}", _namespace);
     }
     
+    show_debug_message(json_stringify(global.sprite_asset, true))
+    
     init_credit($"{PROGRAM_DIRECTORY_DATA}\\credit\\data.json");
     
     init_rarity($"{PROGRAM_DIRECTORY_RESOURCES}/data/json/rarity_colours.json", _namespace);

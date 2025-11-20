@@ -68,7 +68,9 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
     static set_time = function(_time)
     {
         ___time_start = _time.start;
+        
         ___time_diurnal = _time.diurnal;
+        ___time_diurnal_length = array_length(___time_diurnal);
         
         return self;
     }
@@ -81,6 +83,11 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
     static get_time_diurnal = function()
     {
         return ___time_diurnal;
+    }
+    
+    static get_time_diurnal_length = function()
+    {
+        return ___time_diurnal_length;
     }
     
     static set_celestials = function(_celestial)
@@ -169,6 +176,9 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         
         buffer_delete(__biome_map_buffer);
         
+        ___surface_biome_heat = _surface_biome.heat;
+        ___surface_biome_humidity = _surface_biome.humidity;
+        
         set_surface_biome_map(_surface_biome_map);
         
         return self;
@@ -179,10 +189,22 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         return ___surface_biome;
     }
     
+    static get_surface_biome_heat = function()
+    {
+        return ___surface_biome_heat;
+    }
+    
+    static get_surface_biome_humidity = function()
+    {
+        return ___surface_biome_humidity;
+    }
+    
     static set_surface = function(_start, _noise_offset)
     {
         ___surface_start = _start;
-        ___surface_noise_offset = _noise_offset;
+        ___surface_noise_offset_max = _noise_offset.max;
+        ___surface_noise_offset_min = _noise_offset.min;
+        ___surface_noise_offset_octaves = _noise_offset.octaves;
         
         return self;
     }
@@ -192,27 +214,56 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         return ___surface_start;
     }
     
-    static get_surface_noise_offset = function()
+    static get_surface_noise_offset_max = function()
     {
-        return ___surface_noise_offset;
+        return ___surface_noise_offset_max;
+    }
+    
+    static get_surface_noise_offset_min = function()
+    {
+        return ___surface_noise_offset_min;
+    }
+    
+    static get_surface_noise_offset_octaves = function()
+    {
+        return ___surface_noise_offset_octaves;
     }
     
     static set_cave = function(_start, _system)
     {
-        ___cave_start = _start;
+        ___cave_start_max = _start.max;
+        ___cave_start_min = _start.min;
+        ___cave_start_octaves = _start.octaves;
+        
         ___cave_system = _system;
+        ___cave_system_length = array_length(_system);
         
         return self;
     }
     
-    static get_cave_start = function()
+    static get_cave_start_max = function()
     {
-        return ___cave_start;
+        return ___cave_start_max;
+    }
+    
+    static get_cave_start_min = function()
+    {
+        return ___cave_start_min;
+    }
+    
+    static get_cave_start_octaves = function()
+    {
+        return ___cave_start_octaves;
     }
     
     static get_cave_system = function()
     {
         return ___cave_system;
+    }
+    
+    static get_cave_system_length = function()
+    {
+        return ___cave_system_length;
     }
     
     static set_surface_biome_map = function(_map)

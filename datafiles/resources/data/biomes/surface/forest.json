@@ -117,23 +117,23 @@
     "map_colour": "#32B559",
     "music": [
         {
-            "id": "phantasia:field_of_concourse",
+            "id": "phantasia:music/field_of_concourse",
             "gain": 0.7
         },
         {
-            "id": "phantasia:liminal",
+            "id": "phantasia:music/liminal",
             "gain": 0.7
         },
         {
-            "id": "phantasia:red_apple",
+            "id": "phantasia:music/red_apple",
             "gain": 0.6
         },
         {
-            "id": "phantasia:soft_hour",
+            "id": "phantasia:music/soft_hour",
             "gain": 0.6
         },
         {
-            "id": "phantasia:someday_it_will_rain",
+            "id": "phantasia:music/someday_it_will_rain",
             "gain": 0.7
         }
     ],
@@ -157,7 +157,7 @@
     },
     "structures": [
         {
-            "id": "phantasia:moss_clump",
+            "id": "phantasia:clump/moss",
             "chance": 0.008,
             "generate_on": "phantasia/tile/placement/plant_on"
         },

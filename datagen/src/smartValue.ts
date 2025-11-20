@@ -1,4 +1,4 @@
-import { ChooseWeightedOption } from "../index";
+import { ChooseWeightedOption } from "..";
 
 enum SmartValueType {
     FloatRandom = "smart_value:random",

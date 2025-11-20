@@ -1,19 +1,19 @@
 {
-  "name": "daydream",
-  "module": "index.ts",
-  "type": "module",
-  "private": true,
-  "devDependencies": {
-    "@types/bun": "latest"
-  },
-  "peerDependencies": {
-    "typescript": "^5"
-  },
-  "scripts": {
-    "datagen": "bun run datagen/index.ts"
-  },
-  "dependencies": {
-    "exifreader": "^4.32.0",
-    "music-metadata": "^11.9.0"
-  }
+    "name": "daydream",
+    "module": "index.ts",
+    "type": "module",
+    "private": true,
+    "devDependencies": {
+        "@types/bun": "latest"
+    },
+    "peerDependencies": {
+        "typescript": "^5"
+    },
+    "scripts": {
+        "datagen": "bun run datagen/index.ts"
+    },
+    "dependencies": {
+        "exifreader": "^4.32.0",
+        "music-metadata": "^11.9.0"
+    }
 }

@@ -26,7 +26,7 @@ function file_load_snippet_item(_buffer, _item_data)
     
     if (_inventory_length > 0)
     {
-        _item.set_inventory(file_save_snippet_inventory(_buffer, _item.get_inventory(), _inventory_length, _item_data));
+        _item.set_inventory(file_load_snippet_inventory(_buffer, _inventory_length, _item_data));
     }
     
     return _item;

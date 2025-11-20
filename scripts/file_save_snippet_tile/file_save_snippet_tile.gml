@@ -48,18 +48,7 @@ function file_save_snippet_tile(_buffer, _tile, _item_data)
         }
         else
         {
-            if (_inventory == undefined)
-            {
-                buffer_write(_buffer, buffer_bool, false);
-            }
-            else
-            {
-                buffer_write(_buffer, buffer_bool, true);
-                
-                buffer_write(_buffer, buffer_u8, _inventory_length);
-                
-                file_save_snippet_inventory(_buffer, _inventory, _inventory_length, _item_data);
-            }
+            file_save_snippet_inventory(_buffer, _inventory, _inventory_length, _item_data);
         }
     }
     

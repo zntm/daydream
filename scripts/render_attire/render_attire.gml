@@ -19,6 +19,8 @@ function render_attire(_attire, _index, _x, _y, _xscale, _yscale, _is_blinking =
         shader_set_uniform_i_array(__u_replace, _colour_replace);
         shader_set_uniform_i(__u_length, ATTIRE_COLOUR_AMOUNT);
         
+        show_debug_message(_sprite);
+        
         draw_sprite_ext(_sprite, _index, _x, _y, _xscale, _yscale, _angle, c_white, 1);
         
         shader_reset();
@@ -79,11 +81,11 @@ function render_attire(_attire, _index, _x, _y, _xscale, _yscale, _is_blinking =
             {
                 if (!is_array(_sprite_colour))
                 {
-                    __draw_body(_sprite_colour, _image_index_arm, _x, _y, _xscale, _yscale, image_angle, _colour_white, _colour_data[_part_colour]);
+                    __draw_body(_sprite_colour.get_sprite(), _image_index_arm, _x, _y, _xscale, _yscale, image_angle, _colour_white, _colour_data[_part_colour]);
                 }
                 else if (_element_index < _.get_sprite_colour_length())
                 {
-                    __draw_body(_sprite_colour[_element_index], _image_index_arm, _x, _y, _xscale, _yscale, image_angle, _colour_white, _colour_data[_part_colour]);
+                    __draw_body(_sprite_colour[_element_index].get_sprite(), _image_index_arm, _x, _y, _xscale, _yscale, image_angle, _colour_white, _colour_data[_part_colour]);
                 }
             }
             
@@ -93,11 +95,11 @@ function render_attire(_attire, _index, _x, _y, _xscale, _yscale, _is_blinking =
             {
                 if (!is_array(_sprite_white))
                 {
-                    draw_sprite_ext(_sprite_white, _image_index_arm, _x, _y, _xscale, _yscale, image_angle, c_white, 1);
+                    draw_sprite_ext(_sprite_white.get_sprite(), _image_index_arm, _x, _y, _xscale, _yscale, image_angle, c_white, 1);
                 }
                 else if (_element_index < _.get_sprite_white_length())
                 {
-                    draw_sprite_ext(_sprite_white[_element_index], _image_index_arm, _x, _y, _xscale, _yscale, image_angle, c_white, 1);
+                    draw_sprite_ext(_sprite_white[_element_index].get_sprite(), _image_index_arm, _x, _y, _xscale, _yscale, image_angle, c_white, 1);
                 }
             }
         }
@@ -120,14 +122,14 @@ function render_attire(_attire, _index, _x, _y, _xscale, _yscale, _is_blinking =
             
             if (_sprite_colour != undefined)
             {
-                __draw_body(_sprite_colour, _index, _x, _y, _xscale, _yscale, image_angle, _colour_white, _colour_data[_part_colour]);
+                __draw_body(_sprite_colour.get_sprite(), _index, _x, _y, _xscale, _yscale, image_angle, _colour_white, _colour_data[_part_colour]);
             }
             
             var _sprite_white = _.get_sprite_white();
             
             if (_sprite_white != undefined)
             {
-                draw_sprite_ext(_sprite_white, _index, _x, _y, _xscale, _yscale, image_angle, c_white, 1);
+                draw_sprite_ext(_sprite_white.get_sprite(), _index, _x, _y, _xscale, _yscale, image_angle, c_white, 1);
             }
         }
     }

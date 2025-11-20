@@ -21,7 +21,7 @@ function file_load_world_chunk(_world_save_data, _inst)
     var _chunk_relative_x = ((_chunk_x % CHUNK_REGION_SIZE) + CHUNK_REGION_SIZE) % CHUNK_REGION_SIZE;
     var _chunk_relative_y = ((_chunk_y % CHUNK_REGION_SIZE) + CHUNK_REGION_SIZE) % CHUNK_REGION_SIZE;
     
-    var _bit = buffer_peek(_buffer, _chunk_relative_x * 4, buffer_u64);
+    var _bit = buffer_peek(_buffer, _chunk_relative_x * 8, buffer_u64);
     
     if !(_bit & (1 << _chunk_relative_y))
     {
@@ -32,7 +32,7 @@ function file_load_world_chunk(_world_save_data, _inst)
     
     var _datetime = unix_to_datetime(buffer_read(_buffer, buffer_f64));
     
-    var _seek = (CHUNK_REGION_SIZE * 4) + (((_chunk_relative_y * CHUNK_REGION_SIZE) + _chunk_relative_x) * (1 << 16));
+    var _seek = (CHUNK_REGION_SIZE * 8) + (((_chunk_relative_y * CHUNK_REGION_SIZE) + _chunk_relative_x) * (1 << 16));
     
     buffer_seek(_buffer, buffer_seek_start, _seek);
     

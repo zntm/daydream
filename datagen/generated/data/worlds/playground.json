@@ -35,7 +35,7 @@
             "humidity": {
                 "octaves": 1
             },
-            "map": "phantasia:world/map/playground",
+            "map": "phantasia:world/playground/map",
             "offset": {
                 "min": 22,
                 "max": 34,

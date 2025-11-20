@@ -14,8 +14,6 @@ if !(obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.PAUSE)
 {
     if (in_biome_transition_value <= 0)
     {
-        var _type = _in_biome_transition_data.get_type();
-        
         if (in_biome != _in_biome)
         {
             in_biome_transition = _in_biome;

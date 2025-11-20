@@ -178,4 +178,81 @@ function init_attire(_directory, _namespace = "phantasia", _type = 0)
     sprite_delete(_sprite);
     surface_free(_surface);
     buffer_delete(_buffer);*/
+    
+    var _files = file_read_directory(_directory);
+    var _files_length = array_length(_files);
+    
+    for (var i = 0; i < _files_length; ++i)
+    {
+        var _file = _files[i];
+        
+        if (!directory_exists($"{_directory}/{_file}")) continue; 
+        
+        global.attire_data[$ _file] = [ undefined ];
+        
+        for (var j = ((file_exists($"{_directory}/{_file}/0.json")) ? 0 : 1); file_exists($"{_directory}/{_file}/{j}.json"); ++j)
+        {
+            dbg_timer("init_attire");
+            
+            var _json = buffer_load_json($"{_directory}/{_file}/{j}.json");
+            
+            global.attire_data[$ _file][@ j] = new AttireData(_json.icon, _json.colour, _json[$ "white"]);
+            /*
+            var _directory2 = $"{_directory}/{_file}/{j}";
+            
+            var _data = new AttireData();
+            
+            if (file_exists($"{_directory2}/icon.png"))
+            {
+                var _icon = sprite_add($"{_directory2}/icon.png", 1, false, false, 0, 0);
+                
+                sprite_set_offset(_icon, round(sprite_get_xoffset(_icon) / 2), round(sprite_get_yoffset(_icon) / 2));
+                
+                _data.set_icon(_icon);
+            }
+            
+            _data.set_sprite_colour(__init(_file, j, "colour", $"{_directory2}/colour"));
+            _data.set_sprite_white(__init(_file, j, "white", $"{_directory2}/white"));
+            
+            global.attire_data[$ _file][@ j] = _data;
+            */
+            dbg_timer("init_attire", $"Loaded Attire Type: '{_file}', Index: '{j}'");
+        }
+    }
+    
+    global.attire_colour_white_data = array_shift(global.attire_colour_data);
+    
+    var _sprite = global.sprite_asset[$ $"{_namespace}:attire/colour"].get_sprite();
+    
+    var _sprite_width  = sprite_get_width(_sprite);
+    var _sprite_height = sprite_get_height(_sprite);
+    
+    var _surface = surface_create(_sprite_width, _sprite_height);
+    var _buffer = buffer_create(_sprite_width * _sprite_height * 4, buffer_fixed, 1);
+    
+    surface_set_target(_surface);
+    
+    draw_sprite(_sprite, 0, 0, 0);
+    
+    surface_reset_target();
+    
+    buffer_get_surface(_buffer, _surface, 0);
+    buffer_seek(_buffer, buffer_seek_start, 0);
+    
+    global.attire_colour_data = array_create(_sprite_height);
+    
+    for (var i = 0; i < _sprite_height; ++i)
+    {
+        global.attire_colour_data[@ i] = array_create(_sprite_width);
+        
+        for (var j = 0; j < _sprite_width; ++j)
+        {
+            global.attire_colour_data[@ i][@ j] = buffer_read(_buffer, buffer_u32) & 0xffffff;
+        }
+    }
+    
+    global.attire_colour_white_data = array_shift(global.attire_colour_data);
+    
+    sprite_delete(_sprite);
+    surface_free(_surface);
 }
