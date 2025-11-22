@@ -1,6 +1,8 @@
 {
     "inventory": "#phantasia:item/generic/inventory_default",
-    "properties": ["phantasia:is_foliage"],
+    "properties": [
+        "phantasia:is_foliage"
+    ],
     "sprite": "phantasia:item/cactus_flower",
     "tile": {
         "drops": [

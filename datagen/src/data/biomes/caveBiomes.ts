@@ -51,8 +51,8 @@ export default [
             },
         )
             .setMusic([
-                new Sound("phantasia:12_hours_at_ease", 0.6),
-                new Sound("phantasia:behind", 0.5),
+                new Sound("phantasia:music/12_hours_at_ease", 0.6),
+                new Sound("phantasia:music/behind", 0.5),
             ])
             .setFoliage([
                 new BiomeFoliage("phantasia:rock", 0.07).setGenerateOn([
@@ -115,8 +115,8 @@ export default [
             },
         )
             .setMusic([
-                new Sound("phantasia:12_hours_at_ease", 0.7),
-                new Sound("phantasia:behind", 0.6),
+                new Sound("phantasia:music/12_hours_at_ease", 0.7),
+                new Sound("phantasia:music/behind", 0.6),
             ])
             .setFoliage([
                 new BiomeFoliage("phantasia:rock", 0.07).setGenerateOn([

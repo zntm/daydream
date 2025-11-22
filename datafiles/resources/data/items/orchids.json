@@ -1,6 +1,9 @@
 {
     "inventory": "#phantasia:item/generic/inventory_default",
-    "properties": ["phantasia:can_mirror", "phantasia:is_foliage"],
+    "properties": [
+        "phantasia:can_mirror",
+        "phantasia:is_foliage"
+    ],
     "sprite": "phantasia:item/orchids",
     "tile": {
         "drops": [

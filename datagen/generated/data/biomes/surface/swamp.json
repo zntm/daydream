@@ -65,27 +65,27 @@
     "map_colour": "#8C8C6C",
     "music": [
         {
-            "id": "phantasia:12_hours_at_ease",
+            "id": "phantasia:music/12_hours_at_ease",
             "gain": 0.7
         },
         {
-            "id": "phantasia:limerick",
+            "id": "phantasia:music/limerick",
             "gain": 0.7
         },
         {
-            "id": "phantasia:ornaments_of_the_sky",
+            "id": "phantasia:music/ornaments_of_the_sky",
             "gain": 0.7
         },
         {
-            "id": "phantasia:soliloquy",
+            "id": "phantasia:music/soliloquy",
             "gain": 0.6
         },
         {
-            "id": "phantasia:sol_y_luna",
+            "id": "phantasia:music/sol_y_luna",
             "gain": 0.6
         },
         {
-            "id": "phantasia:tense",
+            "id": "phantasia:music/tense",
             "gain": 0.7
         }
     ],
@@ -109,7 +109,7 @@
     },
     "structures": [
         {
-            "id": "phantasia:moss_clump",
+            "id": "phantasia:clump/moss",
             "chance": 0.02,
             "generate_on": "phantasia/tile/placement/plant_on"
         },

@@ -1,6 +1,14 @@
 import { DatagenReturnData } from "../../lib/DatagenReturnData";
 import { Item } from "./lib/Item";
 import { ItemType } from "./lib/ItemType";
+import type {
+    ItemTileCondition as ItemTileConditionType,
+    ItemTileDrop as ItemTileDropType,
+    ItemTileHarvest as ItemTileHarvestType,
+    ItemTileParticle as ItemTileParticleType,
+    ItemTileProperties,
+    ItemTileSFX as ItemTileSFXType,
+} from "./tileItem";
 
 const {
     default: tileItem,
@@ -8,19 +16,18 @@ const {
     ItemTileDrop,
     ItemTileHarvest,
     ItemTileParticle,
-    ItemTileProperties,
     ItemTileSFX,
 } = import.meta.require("./tileItem");
 
 export default (
     id: string,
     harvestLevel: number,
-    blockProperties: typeof ItemTileProperties,
-    blockHarvest: typeof ItemTileHarvest,
-    blockSFX: typeof ItemTileSFX,
-    oreProperties: typeof ItemTileProperties,
-    oreHarvest: typeof ItemTileHarvest,
-    oreSFX: typeof ItemTileSFX,
+    blockProperties: ItemTileProperties[],
+    blockHarvest: ItemTileHarvestType,
+    blockSFX: ItemTileSFXType,
+    oreProperties: ItemTileProperties[],
+    oreHarvest: ItemTileHarvestType,
+    oreSFX: ItemTileSFXType,
     hasRawItem?: boolean,
 ) => {
     const data = [

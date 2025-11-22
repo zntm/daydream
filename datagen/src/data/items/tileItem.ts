@@ -47,7 +47,7 @@ export class ItemTileDrop extends ItemDrop {
         super(id, amount, chance);
     }
 
-    setCondition(condition: ItemTileCondition) {
+    setCondition(condition?: ItemTileCondition) {
         this.condition = condition;
 
         return this;
@@ -101,20 +101,20 @@ export class ItemTilePlacement {
     }
 }
 
-export const ItemTilePlacementConditionType = {
-    Every: "every",
-    Some: "some",
-} as const;
+export enum ItemTilePlacementConditionType {
+    Every = "every",
+    Some = "some",
+}
 
 export class ItemTilePlacementCondition {
-    private type: typeof ItemTilePlacementConditionType;
+    private type: ItemTilePlacementConditionType;
     private values: Array<
         | { condition: ItemTilePlacementCondition }
         | ItemTilePlacementConditionValue
     >;
 
     constructor(
-        type: typeof ItemTilePlacementConditionType,
+        type: ItemTilePlacementConditionType,
         values: Array<
             | { condition: ItemTilePlacementCondition }
             | ItemTilePlacementConditionValue
@@ -159,6 +159,103 @@ export enum ItemTileProperties {
     IsWall = "phantasia:is_wall",
 }
 
+export class TileItem extends Item {
+    private tile: {
+        drops?: string | ItemTileDrop[];
+        harvest?: string | ItemTileHarvest;
+        placement?: string | ItemTilePlacement;
+        sfx?: string | ItemTileSFX;
+        components?: {
+            [key: string]: ItemComponent;
+        };
+        on_use?: ItemFunction[];
+        on_random_tick?: Array<{
+            function: ItemFunction[];
+            chance?: number;
+        }>;
+        light?: string;
+        animation_type?: string;
+    };
+
+    constructor(
+        type: ItemType,
+        sprite: string | ItemSprite,
+        inventory: string | ItemInventory,
+        properties?: ItemTileProperties | ItemTileProperties[],
+    ) {
+        super(type, sprite, inventory, properties);
+
+        this.tile = {};
+    }
+
+    setTileDrops(drop?: string | ItemTileDrop[]) {
+        if (drop) {
+            this.tile.drops = drop;
+        }
+
+        return this;
+    }
+
+    setTileHarvest(harvest?: string | ItemTileHarvest) {
+        if (harvest) {
+            this.tile.harvest = harvest;
+        }
+
+        return this;
+    }
+
+    setTilePlacement(placement?: string | ItemTilePlacement) {
+        if (placement) {
+            this.tile.placement = placement;
+        }
+
+        return this;
+    }
+
+    setTileSFX(sfx?: string | ItemTileSFX) {
+        if (sfx) {
+            this.tile.sfx = sfx;
+        }
+
+        return this;
+    }
+
+    addComponent(key: string, value: ItemComponent) {
+        this.tile.components ??= {};
+        this.tile.components[key] = value;
+
+        return this;
+    }
+
+    addOnUse(value: ItemFunction[]) {
+        this.tile.on_use ??= value;
+
+        return this;
+    }
+
+    setTileLight(color: string) {
+        this.tile.light = color;
+
+        return this;
+    }
+
+    setAnimationType(type: string) {
+        this.tile.animation_type = type;
+
+        return this;
+    }
+
+    addOnRandomTick(functions: ItemFunction[], chance?: number) {
+        this.tile.on_random_tick ??= [];
+        this.tile.on_random_tick.push({
+            function: functions,
+            ...(chance !== undefined && { chance }),
+        });
+
+        return this;
+    }
+}
+
 export default (
     id: string,
     type: ItemType,
@@ -176,75 +273,6 @@ export default (
     ],
     onUse?: ItemFunction[],
 ) => {
-    class TileItem extends Item {
-        private tile: {
-            drops?: string | ItemTileDrop[];
-            harvest?: string | ItemTileHarvest;
-            placement?: string | ItemTilePlacement;
-            sfx?: string | ItemTileSFX;
-            components?: {
-                [key: string]: ItemComponent;
-            };
-            on_use?: ItemFunction[];
-        };
-
-        constructor(
-            type: ItemType,
-            sprite: string | ItemSprite,
-            inventory: string | ItemInventory,
-            properties?: ItemTileProperties | ItemTileProperties[],
-        ) {
-            super(type, sprite, inventory, properties);
-
-            this.tile = {};
-        }
-
-        setTileDrops(drop?: string | ItemTileDrop[]) {
-            if (drop) {
-                this.tile.drops = drop;
-            }
-
-            return this;
-        }
-
-        setTileHarvest(harvest?: string | ItemTileHarvest) {
-            if (harvest) {
-                this.tile.harvest = harvest;
-            }
-
-            return this;
-        }
-
-        setTilePlacement(placement?: string | ItemTilePlacement) {
-            if (placement) {
-                this.tile.placement = placement;
-            }
-
-            return this;
-        }
-
-        setTileSFX(sfx?: string | ItemTileSFX) {
-            if (sfx) {
-                this.tile.sfx = sfx;
-            }
-
-            return this;
-        }
-
-        addComponent(key: string, value: ItemComponent) {
-            this.tile.components ??= {};
-            this.tile.components[key] = value;
-
-            return this;
-        }
-
-        addOnUse(value: ItemFunction[]) {
-            this.tile.on_use ??= value;
-
-            return this;
-        }
-    }
-
     const tile = new TileItem(
         type,
         `phantasia:item/${id}`,

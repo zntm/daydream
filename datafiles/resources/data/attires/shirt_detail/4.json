@@ -1,4 +1,6 @@
 {
-    "colour": "phantasia:attire/shirt_detail/4/colour",
+    "colour": [
+        "phantasia:attire/shirt_detail/4/colour/0"
+    ],
     "icon": "phantasia:attire/shirt_detail/4/icon"
 }

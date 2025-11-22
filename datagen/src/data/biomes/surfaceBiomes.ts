@@ -51,11 +51,11 @@ export default [
             },
         )
             .setMusic([
-                new Sound("phantasia:dune", 0.3),
-                new Sound("phantasia:field_of_concourse", 0.4),
-                new Sound("phantasia:oasis", 0.4),
-                new Sound("phantasia:sol_y_luna", 0.5),
-                new Sound("phantasia:tense", 0.5),
+                new Sound("phantasia:music/dune", 0.3),
+                new Sound("phantasia:music/field_of_concourse", 0.4),
+                new Sound("phantasia:music/oasis", 0.4),
+                new Sound("phantasia:music/sol_y_luna", 0.5),
+                new Sound("phantasia:music/tense", 0.5),
             ])
             .setCreatures([
                 new BiomeCreature("phantasia:chicken", 1, 0.01)
@@ -123,11 +123,11 @@ export default [
             },
         )
             .setMusic([
-                new Sound("phantasia:field_of_concourse", 0.7),
-                new Sound("phantasia:liminal", 0.7),
-                new Sound("phantasia:red_apple", 0.6),
-                new Sound("phantasia:soft_hour", 0.6),
-                new Sound("phantasia:someday_it_will_rain", 0.7),
+                new Sound("phantasia:music/field_of_concourse", 0.7),
+                new Sound("phantasia:music/liminal", 0.7),
+                new Sound("phantasia:music/red_apple", 0.6),
+                new Sound("phantasia:music/soft_hour", 0.6),
+                new Sound("phantasia:music/someday_it_will_rain", 0.7),
             ])
             .setCreatures([
                 new BiomeCreature(
@@ -197,7 +197,7 @@ export default [
                 ).setGenerateOn("phantasia/tile/placement/plant_on"),
             ])
             .setStructures([
-                new BiomeStructure("phantasia:moss_clump", 0.008).setGenerateOn(
+                new BiomeStructure("phantasia:clump/moss", 0.008).setGenerateOn(
                     "phantasia/tile/placement/plant_on",
                 ),
                 new BiomeStructure(
@@ -246,12 +246,12 @@ export default [
             },
         )
             .setMusic([
-                new Sound("phantasia:12_hours_at_ease", 0.7),
-                new Sound("phantasia:limerick", 0.7),
-                new Sound("phantasia:ornaments_of_the_sky", 0.7),
-                new Sound("phantasia:soliloquy", 0.6),
-                new Sound("phantasia:sol_y_luna", 0.6),
-                new Sound("phantasia:tense", 0.7),
+                new Sound("phantasia:music/12_hours_at_ease", 0.7),
+                new Sound("phantasia:music/limerick", 0.7),
+                new Sound("phantasia:music/ornaments_of_the_sky", 0.7),
+                new Sound("phantasia:music/soliloquy", 0.6),
+                new Sound("phantasia:music/sol_y_luna", 0.6),
+                new Sound("phantasia:music/tense", 0.7),
             ])
             .setCreatures([])
             .setFoliage([
@@ -290,7 +290,7 @@ export default [
                 ).setGenerateOn("phantasia/tile/placement/plant_on"),
             ])
             .setStructures([
-                new BiomeStructure("phantasia:moss_clump", 0.02).setGenerateOn(
+                new BiomeStructure("phantasia:clump/moss", 0.02).setGenerateOn(
                     "phantasia/tile/placement/plant_on",
                 ),
                 new BiomeStructure(
@@ -333,13 +333,13 @@ export default [
             },
         )
             .setMusic([
-                new Sound("phantasia:12_hours_at_ease", 0.6),
-                new Sound("phantasia:fall", 0.6),
-                new Sound("phantasia:ornaments_of_the_sky", 0.5),
-                new Sound("phantasia:sol_y_luna", 0.5),
-                new Sound("phantasia:soliloquy", 0.4),
-                new Sound("phantasia:tense", 0.6),
-                new Sound("phantasia:winter_2012", 0.7),
+                new Sound("phantasia:music/12_hours_at_ease", 0.6),
+                new Sound("phantasia:music/fall", 0.6),
+                new Sound("phantasia:music/ornaments_of_the_sky", 0.5),
+                new Sound("phantasia:music/sol_y_luna", 0.5),
+                new Sound("phantasia:music/soliloquy", 0.4),
+                new Sound("phantasia:music/tense", 0.6),
+                new Sound("phantasia:music/winter_2012", 0.7),
             ])
             .setCreatures([
                 new BiomeCreature(
@@ -394,7 +394,7 @@ export default [
                 ).setGenerateOn("phantasia/tile/placement/plant_on"),
             ])
             .setStructures([
-                new BiomeStructure("phantasia:moss_clump", 0.006).setGenerateOn(
+                new BiomeStructure("phantasia:clump/moss", 0.006).setGenerateOn(
                     "phantasia/tile/placement/plant_on",
                 ),
                 new BiomeStructure("phantasia:tree/pine", 0.14).setGenerateOn(

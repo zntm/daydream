@@ -1,6 +1,9 @@
 {
     "inventory": "#phantasia:item/generic/inventory_default",
-    "properties": ["phantasia:can_mirror", "phantasia:is_tile"],
+    "properties": [
+        "phantasia:can_mirror",
+        "phantasia:is_tile"
+    ],
     "sprite": "phantasia:item/grass_block",
     "tile": {
         "drops": [

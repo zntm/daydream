@@ -19,7 +19,12 @@ export default [
         },
     ]
         .map(({ id, leavesParticleId, logParticleId }): any =>
-            woodItems(id, leavesParticleId, logParticleId),
+            woodItems(
+                id,
+                leavesParticleId,
+                logParticleId,
+                `#phantasia:tile/particle_colour/plank_${id}`,
+            ),
         )
         .flat(),
 ];

@@ -50,23 +50,23 @@
     "map_colour": "#F4AF66",
     "music": [
         {
-            "id": "phantasia:dune",
+            "id": "phantasia:music/dune",
             "gain": 0.3
         },
         {
-            "id": "phantasia:field_of_concourse",
+            "id": "phantasia:music/field_of_concourse",
             "gain": 0.4
         },
         {
-            "id": "phantasia:oasis",
+            "id": "phantasia:music/oasis",
             "gain": 0.4
         },
         {
-            "id": "phantasia:sol_y_luna",
+            "id": "phantasia:music/sol_y_luna",
             "gain": 0.5
         },
         {
-            "id": "phantasia:tense",
+            "id": "phantasia:music/tense",
             "gain": 0.5
         }
     ],

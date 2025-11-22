@@ -28,11 +28,11 @@
     "map_colour": "#32B559",
     "music": [
         {
-            "id": "phantasia:12_hours_at_ease",
+            "id": "phantasia:music/12_hours_at_ease",
             "gain": 0.6
         },
         {
-            "id": "phantasia:behind",
+            "id": "phantasia:music/behind",
             "gain": 0.5
         }
     ],

@@ -55,30 +55,18 @@ export {
     ItemType,
 };
 
-const { default: toolItems } = import.meta.require("./items/toolItems");
-const { default: miscItems } = import.meta.require("./items/miscItems");
-const { default: foodItems } = import.meta.require("./items/foodItems");
-const { default: plantItems } = import.meta.require("./items/plantItems");
-const { default: grassItems } = import.meta.require("./items/grassItems");
-const { default: furnaceItem } = import.meta.require("./items/furnaceItem");
-const { default: glassItem } = import.meta.require("./items/glassItem");
-const { default: debrisItems } = import.meta.require("./items/debrisItems");
-const { default: stoneItems } = import.meta.require("./items/stoneItems");
-const { default: oreItemsList } = import.meta.require("./items/oreItemsList");
-const { default: equipmentItems } = import.meta.require("./items/equipmentItems");
-const { default: woodItemsList } = import.meta.require("./items/woodItemsList");
-
 export default [
-    ...toolItems,
-    ...miscItems,
-    ...foodItems,
-    ...plantItems,
-    ...grassItems,
-    ...furnaceItem,
-    ...glassItem,
-    ...debrisItems,
-    ...stoneItems,
-    ...oreItemsList,
-    ...equipmentItems,
-    ...woodItemsList,
-];
+    "./items/toolItems",
+    "./items/miscItems",
+    "./items/foodItems",
+    "./items/plantItems",
+    "./items/grassItems",
+    "./items/furnaceItem",
+    "./items/glassItem",
+    "./items/debrisItems",
+    "./items/stoneItems",
+    "./items/oreItemsList",
+    "./items/equipmentItems",
+    "./items/woodItemsList",
+    "./items/lightSourceItems",
+].map((dir) => import.meta.require(dir).default);

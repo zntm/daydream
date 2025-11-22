@@ -72,7 +72,7 @@ export default [
         ]),
     ),
     new DatagenReturnData(
-        "generated/data/sprites/creature/fox.json",
+        "generated/data/creatures/fox.json",
         new PassiveCreature(
             18,
             CreatureMovementType.Ground,

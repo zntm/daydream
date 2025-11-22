@@ -8,7 +8,7 @@ vertex_format_add_custom(vertex_type_float4, vertex_usage_texcoord);
 
 global.chunk_format_perspective = vertex_format_end();
 
-function render_chunk(_uv, _inst, _z)
+function render_chunk(_inst, _z)
 {
     var _item_data = global.item_data;
     

@@ -182,16 +182,24 @@ export default [
                 night: new WorldTimeDiurnal(890, 1200),
             }),
             [
-                new WorldCelestial("phantasia:world/celestial/sun", 0, 890),
-                new WorldCelestial("phantasia:world/celestial/moon", 890, 1200),
+                new WorldCelestial(
+                    "phantasia:world/playground/celestial/sun",
+                    0,
+                    890,
+                ),
+                new WorldCelestial(
+                    "phantasia:world/playground/celestial/moon",
+                    890,
+                    1200,
+                ),
             ],
             new WorldBiome(
                 [
-                    new WorldCaveBiome("phantasia:depths", 768, 1024, {
+                    new WorldCaveBiome("phantasia:cave/depths", 768, 1024, {
                         type: WorldCaveBiomeTransitionType.Random,
                         ...new Noise(4, 2, 22),
                     }),
-                    new WorldCaveBiome("phantasia:chasm", 0, 800, {
+                    new WorldCaveBiome("phantasia:cave/chasm", 0, 800, {
                         type: WorldCaveBiomeTransitionType.Random,
                         ...new Noise(0),
                     }),

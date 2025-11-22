@@ -1,6 +1,6 @@
 {
     "function": {
-        "id": "phantasia:tall_foliage",
+        "id": "phantasia:tree/generic",
         "parameters": {
             "tile_top": {
                 "id": "phantasia:sunflower",

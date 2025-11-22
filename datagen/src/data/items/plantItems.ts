@@ -1,5 +1,8 @@
+import { DatagenReturnData } from "../../lib/DatagenReturnData";
 import { ItemType } from "./lib/ItemType";
+import { ItemFunction } from "./lib/ItemFunction";
 import tileItem, {
+    TileItem,
     ItemTileCondition,
     ItemTileDrop,
     ItemTileDropCondition,
@@ -75,7 +78,7 @@ export default [
                 ),
             ),
             "#phantasia:tile/sfx/foliage",
-        ),
+        )
     ),
     tileItem(
         "cactus_flower",
@@ -143,6 +146,37 @@ export default [
                 "#phantasia:tile/placement/condition_plant",
             ),
             "#phantasia:tile/sfx/foliage",
-        ),
+        )
+    ),
+    new DatagenReturnData(
+        "generated/data/items/seeding_dandelion.json",
+        new TileItem(
+            ItemType.Untouchable,
+            "phantasia:item/seeding_dandelion",
+            "#phantasia:item/generic/inventory_default",
+            [ItemTileProperties.CanMirror, ItemTileProperties.IsFoliage],
+        )
+            .setTileDrops([new ItemTileDrop("phantasia:seeding_dandelion")])
+            .setTileHarvest(
+                new ItemTileHarvest(
+                    0.38,
+                    0,
+                    new ItemTileParticle(
+                        "#phantasia:tile/particle_colour/plant",
+                        "#phantasia:tile/generic/harvest_particle_frequency",
+                    ),
+                ),
+            )
+            .setTilePlacement(
+                new ItemTilePlacement().setCondition(
+                    "#phantasia:tile/placement/condition_plant",
+                ),
+            )
+            .setTileSFX("#phantasia:tile/sfx/foliage")
+            .addOnRandomTick([
+                new ItemFunction("phantasia:spawn_particle", [{
+                    id: "phantasia:seeding_dandelion"
+                }])
+            ])
     ),
 ];

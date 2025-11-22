@@ -13,7 +13,6 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
     atla_repair("item");
     
     var _texture = global.___atla_surface_texture[$ "item"];
-    var _uvs = global.___atla_surface_uvs[$ "item"];
     
     var _surface_size = global.___atla_surface_size[$ "item"];
     
@@ -43,7 +42,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
             
             if (!vertex_buffer_exists(_buffer))
             {
-                _buffer = render_chunk(_uvs, _inst, _z);
+                _buffer = render_chunk(_inst, _z);
             }
             
             if (_z == CHUNK_DEPTH_FOLIAGE_BACK)

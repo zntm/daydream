@@ -32,7 +32,7 @@ const getMetadata = async (sourcePath: string) => {
 const sfxRegex = /^([a-zA-Z_]+)(\d+)\.ogg$/;
 
 const sourceAudioDir = join(__dirname, "./sounds");
-const destAudioDir = join(__dirname, "../generated/assets/sounds");
+const destAudioDir = join(__dirname, "../../generated/assets/sounds");
 
 const allFiles = readdirSync(sourceAudioDir, {
     recursive: true,

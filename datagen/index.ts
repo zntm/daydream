@@ -12,7 +12,7 @@ export * from "./src/lib/Entity";
 import { DatagenReturnData } from "./src/lib/DatagenReturnData";
 
 const _exportData = (data: DatagenReturnData) => {
-    const file = Bun.file(join(__dirname, data.destination));
+    const file = join(__dirname, data.destination);
 
     if (typeof data.data === "object" && !Array.isArray(data.data)) {
         data.data = Object.fromEntries(Object.entries(data.data).sort());
@@ -35,7 +35,9 @@ const exportData = (data: DatagenReturnData | DatagenReturnData[]) => {
         .forEach(async (dir2: string) => {
             console.log(`Processing: '${dir2}'`);
 
-            let { default: datagen } = await import(`./src/${dir}/${dir2}`);
+            let datagen = await import(`./src/${dir}/${dir2}`);
+
+            datagen = datagen.default;
 
             if (!datagen) {
                 console.error(`Datagen function not found in ${dir2}`);

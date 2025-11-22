@@ -181,7 +181,7 @@
     ],
     "structure": [
         {
-            "id": "phantasia:moss_clump",
+            "id": "phantasia:clump/moss",
             "chance": 0.008,
             "placeable_on": "#phantasia:tile/placement/plant_on"
         },

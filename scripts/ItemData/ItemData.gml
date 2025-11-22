@@ -407,6 +407,13 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     {
         if (_tile != undefined)
         {
+            var _animation_type = _tile[$ "animation_type"];
+            
+            if (_animation_type != undefined)
+            {
+                set_animation_type(_animation_type);
+            }
+            
             var _components = _tile[$ "components"];
             
             if (_components != undefined)
@@ -426,6 +433,13 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
             if (_harvest != undefined)
             {
                 set_tile_harvest(_harvest);
+            }
+            
+            var _light = _tile[$ "light"];
+            
+            if (_light != undefined)
+            {
+                set_light(_light);
             }
             
             var _placement = _tile[$ "placement"];

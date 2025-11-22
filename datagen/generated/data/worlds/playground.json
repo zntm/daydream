@@ -3,7 +3,7 @@
         "cave": {
             "default": [
                 {
-                    "id": "phantasia:depths",
+                    "id": "phantasia:cave/depths",
                     "start": 768,
                     "end": 1024,
                     "transition": {
@@ -14,7 +14,7 @@
                     }
                 },
                 {
-                    "id": "phantasia:chasm",
+                    "id": "phantasia:cave/chasm",
                     "start": 0,
                     "end": 800,
                     "transition": {
@@ -72,12 +72,12 @@
     },
     "celestials": [
         {
-            "id": "phantasia:world/celestial/sun",
+            "id": "phantasia:world/playground/celestial/sun",
             "time_range_min": 0,
             "time_range_max": 890
         },
         {
-            "id": "phantasia:world/celestial/moon",
+            "id": "phantasia:world/playground/celestial/moon",
             "time_range_min": 890,
             "time_range_max": 1200
         }

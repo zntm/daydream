@@ -67,7 +67,7 @@ const getMetadata = async (sourcePath: string) => {
 const sequentialRegex = /^(\d+)(.*)\.png$/;
 
 const sourceImageDir = join(__dirname, "./sprites");
-const destImageDir = join(__dirname, "../generated/assets/sprites");
+const destImageDir = join(__dirname, "../../generated/assets/sprites");
 
 const allFiles = readdirSync(sourceImageDir, {
     recursive: true,
