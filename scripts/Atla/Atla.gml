@@ -59,13 +59,13 @@ function Atla(_xoffset, _yoffset, _width, _height, _number) constructor
     
     static set_is_rotated = function()
     {
-        ___is_rotated = true;
+        ___value |= 1 << 55;
         
         return self;
     }
     
     static is_rotated = function()
     {
-        return self[$ "___is_rotated"] ?? false;
+        return ___value & (1 << 55);
     }
 }

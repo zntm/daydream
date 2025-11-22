@@ -187,8 +187,6 @@ function Tile(_id, _item_data = global.item_data) constructor
         return self;
     }
     
-    //show_debug_message($"{_id} {_data}")
-    
     var _components_length = _data.get_tile_components_length();
     
     if (_components_length > 0)

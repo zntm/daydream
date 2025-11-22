@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"render_tile",
+  "%Name":"chunk_vertex_foliage",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"render_tile",
+  "name":"chunk_vertex_foliage",
   "parent":{
-    "name":"Draw",
-    "path":"folders/Scripts/Render/Draw.yy",
+    "name":"Vertex",
+    "path":"folders/Scripts/Chunk/Vertex.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

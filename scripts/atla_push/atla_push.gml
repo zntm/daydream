@@ -80,15 +80,6 @@ function atla_push(_page, _sprite, _name)
         var _w = _position.get_width();
         var _h = _position.get_height();
         
-        if (_w > _h)
-        {
-            var _temp = _w;
-            _w = _h;
-            _h = _temp;
-            
-            global.___atla_page[$ _page][$ _position_name].set_is_rotated();
-        }
-        
         var _n = _position.get_number();
         
         var _total_width = _w * _n;
@@ -117,7 +108,6 @@ function atla_push(_page, _sprite, _name)
     for (var i = 0; i < _atla_page_position_length;)
     {
         var _s = _atla_page_position[i];
-        var _sprite_name = _s.get_name();
         
         var _x = _s.get_x();
         var _y = _s.get_y();
@@ -126,14 +116,6 @@ function atla_push(_page, _sprite, _name)
         var _h = _s.get_height();
         
         var _n = _s.get_number();
-        
-        if (_atla_page[$ _sprite_name].is_rotated())
-        {
-            var _temp = _w;
-            
-            _w = _h;
-            _h = _temp;
-        }
         
         var _r = _x + (_w * _n);
         
@@ -152,14 +134,6 @@ function atla_push(_page, _sprite, _name)
             {
                 var _prev_w = _prev_sprite.get_width();
                 var _prev_h = _prev_sprite.get_height();
-                
-                if (_atla_page[$ _prev_sprite.get_name()].is_rotated())
-                {
-                    var _temp = _prev_w;
-                    
-                    _prev_w = _prev_h;
-                    _prev_h = _temp;
-                }
                 
                 if (_prev_y + _prev_h < _new_y) break;
                 

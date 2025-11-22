@@ -1,4 +1,4 @@
-function chunk_vertex_tile(_buffer, _texel_width, _texel_height, _animation_type, _atla, _atla_sprite, _index, _x, _y, _xscale, _yscale, _rotation, _colour, _alpha)
+function chunk_vertex_foliage(_buffer, _texel_width, _texel_height, _animation_type, _atla, _atla_sprite, _chunk_index, _index, _x, _y, _xscale, _yscale, _rotation, _colour, _alpha)
 {
     var _atla_value = _atla.___value;
     
@@ -48,30 +48,30 @@ function chunk_vertex_tile(_buffer, _texel_width, _texel_height, _animation_type
     vertex_colour(_buffer, _colour, _alpha);
     vertex_position(_buffer, _ax, _ay);
     vertex_texcoord(_buffer, _u0, _v0);
-    vertex_float4(_buffer, _animation_type, _index, _width * _texel_width, _number);
+    vertex_float4(_buffer, (_chunk_index << 16) | TILE_ANIMATION_TYPE.FOLIAGE, _index, _width * _texel_width, _number);
     
     vertex_colour(_buffer, _colour, _alpha);
     vertex_position(_buffer, _bx, _by);
     vertex_texcoord(_buffer, _u1, _v0);
-    vertex_float4(_buffer, _animation_type, _index, _width * _texel_width, _number);
+    vertex_float4(_buffer, (_chunk_index << 16) | TILE_ANIMATION_TYPE.FOLIAGE, _index, _width * _texel_width, _number);
     
     vertex_colour(_buffer, _colour, _alpha);
     vertex_position(_buffer, _cx, _cy);
     vertex_texcoord(_buffer, _u0, _v1);
-    vertex_float4(_buffer, _animation_type, _index, _width * _texel_width, _number);
+    vertex_float4(_buffer, TILE_ANIMATION_TYPE.DEFAULT, _index, _width * _texel_width, _number);
     
     vertex_colour(_buffer, _colour, _alpha);
     vertex_position(_buffer, _bx, _by);
     vertex_texcoord(_buffer, _u1, _v0);
-    vertex_float4(_buffer, _animation_type, _index, _width * _texel_width, _number);
+    vertex_float4(_buffer, (_chunk_index << 16) | TILE_ANIMATION_TYPE.FOLIAGE, _index, _width * _texel_width, _number);
     
     vertex_colour(_buffer, _colour, _alpha);
     vertex_position(_buffer, _cx, _cy);
     vertex_texcoord(_buffer, _u0, _v1);
-    vertex_float4(_buffer, _animation_type, _index, _width * _texel_width, _number);
+    vertex_float4(_buffer, TILE_ANIMATION_TYPE.DEFAULT, _index, _width * _texel_width, _number);
     
     vertex_colour(_buffer, _colour, _alpha);
     vertex_position(_buffer, _dx, _dy);
     vertex_texcoord(_buffer, _u1, _v1);
-    vertex_float4(_buffer, _animation_type, _index, _width * _texel_width, _number);
+    vertex_float4(_buffer, TILE_ANIMATION_TYPE.DEFAULT, _index, _width * _texel_width, _number);
 }

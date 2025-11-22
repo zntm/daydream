@@ -19,8 +19,6 @@ function render_attire(_attire, _index, _x, _y, _xscale, _yscale, _is_blinking =
         shader_set_uniform_i_array(__u_replace, _colour_replace);
         shader_set_uniform_i(__u_length, ATTIRE_COLOUR_AMOUNT);
         
-        show_debug_message(_sprite);
-        
         draw_sprite_ext(_sprite, _index, _x, _y, _xscale, _yscale, _angle, c_white, 1);
         
         shader_reset();

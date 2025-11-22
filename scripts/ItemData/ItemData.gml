@@ -519,7 +519,7 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
         return self[$ "___sfx"];
     }
     
-    static get_tile_middle_layer_is_visible = function()
+    static get_is_visible = function()
     {
         return self[$ "___tile_is_visible"] ?? true;
     }
@@ -864,11 +864,13 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
         {
             var _length = array_length(_properties);
             
+            show_debug_message($"{_length} {_properties}");
+            
             for (var i = 0; i < _length; ++i)
             {
                 var _property = _properties[i];
                 
-                __properties[$ _property]();
+                __properties[$ _property](true);
             }
         }
         
