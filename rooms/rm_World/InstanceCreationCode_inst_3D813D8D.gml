@@ -1,6 +1,6 @@
 on_window_resize = function()
 {
-    carbasa_repair_all();
+    atla_repair_all();
     
     var _gui_scale = global.gui_scale;
     

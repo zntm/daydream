@@ -271,6 +271,8 @@ global.natural_structure_data[$ "phantasia:tree/generic"] = new NaturalStructure
         
         _data[@ NATURAL_STRUCTURE_TREE_GENERIC.USE_STRUCTURE_VOID] = _parameter[$ "use_structure_void"] ?? true;
         
+        show_debug_message(_parameter);
+        
         _data[@ NATURAL_STRUCTURE_TREE_GENERIC.TILE_WOOD]   = _parameter.tile_wood;
         _data[@ NATURAL_STRUCTURE_TREE_GENERIC.TILE_LEAVES] = _parameter.tile_leaves;
         

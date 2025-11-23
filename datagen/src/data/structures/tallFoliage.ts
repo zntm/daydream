@@ -5,7 +5,10 @@ import {
     SmartValueRandom,
     SmartValueType,
 } from "../../../index";
-import { SmartValueChooseWeighted, SmartValueIntRandom } from "../../smartValue";
+import {
+    SmartValueChooseWeighted,
+    SmartValueIntRandom,
+} from "../../smartValue";
 
 import {
     Structure,
@@ -78,7 +81,7 @@ export default [
                 ),
             ]),
             new StructureFunction(
-                "phantasia:tree/generic",
+                "phantasia:tall_foliage",
                 new StructureParameter(
                     new StructureParameterTile("phantasia:cattail", 2),
                     new StructureParameterTile("phantasia:cattail", 1),
@@ -102,7 +105,7 @@ export default [
                 ),
             ]),
             new StructureFunction(
-                "phantasia:tree/generic",
+                "phantasia:tall_foliage",
                 new StructureParameter(
                     new StructureParameterTile("phantasia:sunflower", 0),
                     new StructureParameterTile(

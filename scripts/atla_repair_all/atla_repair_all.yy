@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"carbasa_sort",
+  "%Name":"atla_repair_all",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"carbasa_sort",
+  "name":"atla_repair_all",
   "parent":{
-    "name":"Carbasa",
-    "path":"folders/Scripts/Carbasa.yy",
+    "name":"Atla",
+    "path":"folders/Atla.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

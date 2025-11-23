@@ -83,6 +83,8 @@ function render_attire(_attire, _index, _x, _y, _xscale, _yscale, _is_blinking =
                 }
                 else if (_element_index < _.get_sprite_colour_length())
                 {
+                    show_debug_message(_sprite_colour);
+                    show_debug_message(_sprite_colour[_element_index]);
                     __draw_body(_sprite_colour[_element_index].get_sprite(), _image_index_arm, _x, _y, _xscale, _yscale, image_angle, _colour_white, _colour_data[_part_colour]);
                 }
             }
@@ -97,6 +99,8 @@ function render_attire(_attire, _index, _x, _y, _xscale, _yscale, _is_blinking =
                 }
                 else if (_element_index < _.get_sprite_white_length())
                 {
+                    show_debug_message(_sprite_white);
+                    show_debug_message(_sprite_white[_element_index]);
                     draw_sprite_ext(_sprite_white[_element_index].get_sprite(), _image_index_arm, _x, _y, _xscale, _yscale, image_angle, c_white, 1);
                 }
             }
