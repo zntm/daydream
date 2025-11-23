@@ -41,7 +41,7 @@ on_window_resize = function()
 
 on_window_focus = function()
 {
-    carbasa_repair_all();
+    atla_repair_all();
     
     if (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.INVENTORY)
     {
