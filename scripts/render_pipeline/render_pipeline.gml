@@ -19,10 +19,12 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
     var _surface_width  = (_surface_size >> 0)  & 0xffff;
     var _surface_height = (_surface_size >> 16) & 0xffff;
     
-    var _texel_width  = texture_get_width(_texture);
-    var _texel_height = texture_get_height(_texture);
+    var _texel_width  = 1 / _surface_width;
+    var _texel_height = 1 / _surface_height;
     
     var _animation_index = round(global.world_save_data.time * 8);
+    
+    var _sprite_asset = global.sprite_asset;
     
     for (var _z = 0; _z < CHUNK_DEPTH; ++_z)
     {
@@ -135,13 +137,13 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 
                 if (!_data.is_additive()) continue;
                 
-                var _sprite = _data.get_sprite();
+                var _sprite = _sprite_asset[$ _data.get_sprite()];
                 
                 var _index = 0;
                 
                 if (_data.has_stretch_animation())
                 {
-                    _index = floor(_data.get_sprite_number() * (1 - (timer_life / timer_life_max)));
+                    _index = floor(_sprite.get_length() * (1 - (timer_life / timer_life_max)));
                 }
                 
                 draw_sprite_ext(_sprite, _index, x, y, entity_scale, entity_scale, image_angle, image_blend, image_alpha * (_data.is_fade_out() ? timer_life / timer_life_max : 1));
@@ -153,19 +155,19 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 
                 if (!_data.is_additive()) continue;
                 
-                var _sprite = _data.get_sprite();
+                var _sprite = _sprite_asset[$ _data.get_sprite()];
                 
                 var _index = 0;
                 
                 if (_data.has_stretch_animation())
                 {
-                    _index = floor(_data.get_sprite_number() * (1 - (timer_life / timer_life_max)));
+                    _index = floor(_sprite.get_length() * (1 - (timer_life / timer_life_max)));
                 }
                 
                 var _xscale = entity_xscale * sign(image_xscale);
                 var _yscale = entity_yscale * sign(image_yscale);
                 
-                draw_sprite_ext(_sprite, _index, x + (_xscale * (_data.get_sprite_xoffset() - (attribute.get_collision_box_width() / 2))), y + (_yscale * (_data.get_sprite_yoffset() - attribute.get_collision_box_height())), _xscale, _yscale, image_angle, image_blend, image_alpha);
+                draw_sprite_ext(_sprite.get_sprite(), _index, x + (_xscale * (_data.get_sprite_xoffset() - (attribute.get_collision_box_width() / 2))), y + (_yscale * (_data.get_sprite_yoffset() - attribute.get_collision_box_height())), _xscale, _yscale, image_angle, image_blend, image_alpha);
             }
             
             gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_src_alpha, bm_one);
@@ -176,19 +178,19 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 
                 if (_data.is_additive()) continue;
                 
-                var _sprite = _data.get_sprite();
+                var _sprite = _sprite_asset[$ _data.get_sprite()];
                 
                 var _index = 0;
                 
                 if (_data.has_stretch_animation())
                 {
-                    _index = floor(_data.get_sprite_number() * (1 - (timer_life / timer_life_max)));
+                    _index = floor(_sprite.get_length() * (1 - (timer_life / timer_life_max)));
                 }
                 
                 var _xscale = entity_xscale * sign(image_xscale);
                 var _yscale = entity_yscale * sign(image_yscale);
                 
-                draw_sprite_ext(_sprite, _index, x + (_xscale * (_data.get_sprite_xoffset() - (attribute.get_collision_box_width() / 2))), y + (_yscale * (_data.get_sprite_yoffset() - attribute.get_collision_box_height())), _xscale, _yscale, image_angle, image_blend, image_alpha);
+                draw_sprite_ext(_sprite.get_sprite(), _index, x + (_xscale * (_data.get_sprite_xoffset() - (attribute.get_collision_box_width() / 2))), y + (_yscale * (_data.get_sprite_yoffset() - attribute.get_collision_box_height())), _xscale, _yscale, image_angle, image_blend, image_alpha);
             }
             
             with (obj_Particle)
@@ -197,16 +199,16 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 
                 if (_data.is_additive()) continue;
                 
-                var _sprite = _data.get_sprite();
+                var _sprite = _sprite_asset[$ _data.get_sprite()];
                 
                 var _index = 0;
                 
                 if (_data.has_stretch_animation())
                 {
-                    _index = floor(_data.get_sprite_number() * (1 - (timer_life / timer_life_max)));
+                    _index = floor(_sprite.get_length() * (1 - (timer_life / timer_life_max)));
                 }
                 
-                draw_sprite_ext(_sprite, _index, x, y, entity_xscale, entity_yscale, image_angle, image_blend, image_alpha * (_data.is_fade_out() ? timer_life / timer_life_max : 1));
+                draw_sprite_ext(_sprite.get_sprite(), _index, x, y, entity_xscale, entity_yscale, image_angle, image_blend, image_alpha * (_data.is_fade_out() ? timer_life / timer_life_max : 1));
             }
         }
     }

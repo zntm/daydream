@@ -135,11 +135,9 @@ function atla_push(_page, _sprite, _name)
                 var _prev_w = _prev_sprite.get_width();
                 var _prev_h = _prev_sprite.get_height();
                 
-                if (_prev_y + _prev_h < _new_y) break;
-                
                 if (_x < _prev_x + (_prev_w * _prev_n))
                 {
-                    _new_y = _prev_y + _prev_h;
+                    _new_y = max(_new_y, _prev_y + _prev_h);
                 }
             }
             
