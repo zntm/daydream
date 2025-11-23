@@ -45,33 +45,33 @@ function chunk_vertex_foliage(_buffer, _texel_width, _texel_height, _animation_t
     
     var _number = (_atla_value >> 44) & 2047;
     
-    vertex_colour(_buffer, _colour, _alpha);
     vertex_position(_buffer, _ax, _ay);
     vertex_texcoord(_buffer, _u0, _v0);
+    vertex_colour(_buffer, _colour, _alpha);
     vertex_float4(_buffer, (_chunk_index << 16) | TILE_ANIMATION_TYPE.FOLIAGE, _index, _width * _texel_width, _number);
     
-    vertex_colour(_buffer, _colour, _alpha);
     vertex_position(_buffer, _bx, _by);
     vertex_texcoord(_buffer, _u1, _v0);
+    vertex_colour(_buffer, _colour, _alpha);
     vertex_float4(_buffer, (_chunk_index << 16) | TILE_ANIMATION_TYPE.FOLIAGE, _index, _width * _texel_width, _number);
     
-    vertex_colour(_buffer, _colour, _alpha);
     vertex_position(_buffer, _cx, _cy);
     vertex_texcoord(_buffer, _u0, _v1);
+    vertex_colour(_buffer, _colour, _alpha);
     vertex_float4(_buffer, TILE_ANIMATION_TYPE.DEFAULT, _index, _width * _texel_width, _number);
     
-    vertex_colour(_buffer, _colour, _alpha);
     vertex_position(_buffer, _bx, _by);
     vertex_texcoord(_buffer, _u1, _v0);
+    vertex_colour(_buffer, _colour, _alpha);
     vertex_float4(_buffer, (_chunk_index << 16) | TILE_ANIMATION_TYPE.FOLIAGE, _index, _width * _texel_width, _number);
     
-    vertex_colour(_buffer, _colour, _alpha);
     vertex_position(_buffer, _cx, _cy);
     vertex_texcoord(_buffer, _u0, _v1);
+    vertex_colour(_buffer, _colour, _alpha);
     vertex_float4(_buffer, TILE_ANIMATION_TYPE.DEFAULT, _index, _width * _texel_width, _number);
     
-    vertex_colour(_buffer, _colour, _alpha);
     vertex_position(_buffer, _dx, _dy);
     vertex_texcoord(_buffer, _u1, _v1);
+    vertex_colour(_buffer, _colour, _alpha);
     vertex_float4(_buffer, TILE_ANIMATION_TYPE.DEFAULT, _index, _width * _texel_width, _number);
 }
