@@ -19,5 +19,38 @@
     "hostility_type": "passive",
     "hp": 12,
     "movement_type": "ground",
-    "sprite": "phantasia:creature/rabbit"
+    "sprite": {
+        "black": {
+            "idle": {
+                "id": "phantasia:creature/rabbit/idle/black"
+            },
+            "moving": {
+                "id": "phantasia:creature/rabbit/moving/black"
+            }
+        },
+        "default": {
+            "idle": {
+                "id": "phantasia:creature/rabbit/idle/default"
+            },
+            "moving": {
+                "id": "phantasia:creature/rabbit/moving/default"
+            }
+        },
+        "spotted": {
+            "idle": {
+                "id": "phantasia:creature/rabbit/idle/spotted"
+            },
+            "moving": {
+                "id": "phantasia:creature/rabbit/moving/spotted"
+            }
+        },
+        "white": {
+            "idle": {
+                "id": "phantasia:creature/rabbit/idle/white"
+            },
+            "moving": {
+                "id": "phantasia:creature/rabbit/moving/white"
+            }
+        }
+    }
 }

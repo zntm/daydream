@@ -33,5 +33,6 @@
     "hostility_type": "passive",
     "hp": 12,
     "movement_type": "ground",
-    "sprite": "phantasia:creature/chicken"
+    "sprite_idle": "phantasia:creature/chicken_idle",
+    "sprite_moving": "phantasia:creature/chicken_moving"
 }

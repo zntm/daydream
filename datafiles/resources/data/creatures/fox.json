@@ -14,5 +14,30 @@
     "hostility_type": "passive",
     "hp": 18,
     "movement_type": "ground",
-    "sprite": "phantasia:creature/fox"
+    "sprite": {
+        "brown": {
+            "idle": {
+                "id": "phantasia:creature/fox/idle/brown"
+            },
+            "moving": {
+                "id": "phantasia:creature/fox/moving/brown"
+            }
+        },
+        "default": {
+            "idle": {
+                "id": "phantasia:creature/fox/idle/default"
+            },
+            "moving": {
+                "id": "phantasia:creature/fox/moving/default"
+            }
+        },
+        "snow": {
+            "idle": {
+                "id": "phantasia:creature/fox/idle/snow"
+            },
+            "moving": {
+                "id": "phantasia:creature/fox/moving/snow"
+            }
+        }
+    }
 }

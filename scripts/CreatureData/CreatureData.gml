@@ -37,6 +37,48 @@ function CreatureData(_namespace, _id, _hp, _hostility_type, _movement_type) : P
         return ___type & 0xf;
     }
     
+    static set_sprite = function(_sprite)
+    {
+        var _sprite_idle = _sprite[$ "idle"];
+        var _sprite_moving = _sprite[$ "moving"];
+        
+        if (_sprite_idle != undefined) && (_sprite_moving != undefined)
+        {
+            ___sprite_idle = _sprite_idle.id;
+            ___sprite_idle_emissive = _sprite_idle[$ "emissive"];
+            
+            ___sprite_moving = _sprite_moving.id;
+            ___sprite_moving_emissive = _sprite_moving[$ "emissive"];
+        }
+        else
+        {
+            ___sprite_idle = {}
+            ___sprite_idle_emissive = {}
+            ___sprite_moving = {}
+            ___sprite_moving_emissive = {}
+            
+        	var _names = struct_get_names(_sprite);
+            var _length = array_length(_names);
+            
+            for (var i = 0; i < _length; ++i)
+            {
+                var _name = _names[i];
+                var _data = _sprite[$ _name];
+                
+                var _idle = _data.idle;
+                var _moving = _data.moving;
+                
+                ___sprite_idle[$ _name] = _idle.id;
+                ___sprite_idle_emissive[$ _name] = _idle[$ "emissive"];
+                
+                ___sprite_moving[$ _name] = _moving.id;
+                ___sprite_moving_emissive[$ _name] = _moving[$ "emissive"];
+            }
+        }
+        
+        return self;
+    }
+    
     static __get_sprite = function(_name, _variant)
     {
         var _sprite = self[$ _name];

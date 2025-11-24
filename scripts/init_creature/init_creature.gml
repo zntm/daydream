@@ -27,6 +27,8 @@ function init_creature(_directory, _namespace = "phantasia")
         
         var _data = new CreatureData(_namespace, _id, _json.hp, __hostility_type[$ _json.hostility_type], __movement_type[$ _json.movement_type]);
         
+        _data.set_sprite(_json.sprite);
+        
         var _attribute = _json.attribute;
         
         _data.set_attribute(new Attribute()

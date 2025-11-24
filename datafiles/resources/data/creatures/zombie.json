@@ -14,5 +14,12 @@
     "hostility_type": "hostile",
     "hp": 36,
     "movement_type": "ground",
-    "sprite": "phantasia:creature/zombie"
+    "sprite": {
+        "idle": {
+            "id": "phantasia:creature/zombie/idle"
+        },
+        "moving": {
+            "id": "phantasia:creature/zombie/moving"
+        }
+    }
 }

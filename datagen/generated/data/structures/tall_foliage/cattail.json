@@ -1,6 +1,6 @@
 {
     "function": {
-        "id": "phantasia:tree/generic",
+        "id": "phantasia:tall_foliage",
         "parameters": {
             "tile_top": {
                 "id": "phantasia:cattail",

@@ -18,7 +18,8 @@ export class Creature {
     private hp: number;
     private hostility_type: CreatureHostilityType;
     private movement_type: CreatureMovementType;
-    private sprite: string;
+    private sprite_idle: string;
+    private sprite_moving: string;
     private attribute: Attribute;
     private drops?: ItemDrop[];
 
@@ -32,7 +33,8 @@ export class Creature {
         this.hp = hp;
         this.hostility_type = hostilityType;
         this.movement_type = movementType;
-        this.sprite = sprite;
+        this.sprite_idle = `${sprite}/idle`;
+        this.sprite_moving = `${sprite}/moving`;
         this.attribute = attribute;
     }
 

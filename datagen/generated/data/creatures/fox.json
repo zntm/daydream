@@ -14,5 +14,6 @@
     "hostility_type": "passive",
     "hp": 18,
     "movement_type": "ground",
-    "sprite": "phantasia:creature/fox"
+    "sprite_idle": "phantasia:creature/fox_idle",
+    "sprite_moving": "phantasia:creature/fox_moving"
 }
