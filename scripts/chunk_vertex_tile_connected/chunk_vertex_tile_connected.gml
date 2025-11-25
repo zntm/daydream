@@ -224,9 +224,7 @@ function chunk_vertex_tile_connected(_buffer, _texel_width, _texel_height, _anim
             _u2,
             _v1,
             _texel_sprite_width,
-            _index_tl,
-            _colour,
-            _alpha
+            _index_tl
         );
         
         _vertex ^= 0b0011;
@@ -248,9 +246,7 @@ function chunk_vertex_tile_connected(_buffer, _texel_width, _texel_height, _anim
             _u2,
             _v2,
             _texel_sprite_width,
-            _index_bl,
-            _colour,
-            _alpha
+            _index_bl
         );
         
         _vertex ^= 0b1100;
