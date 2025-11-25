@@ -57,31 +57,99 @@ exception_unhandled_handler(function(_exception)
     var _long_message = _exception.longMessage;
     var _stack_trace = string_join_ext("\n", _exception.stacktrace);
     
+    var _version;
+    
+    if (PROGRAM_VERSION_PATCH > 0)
+    {
+        _version = string(loca_translate("phantasia:menu.title.version.patch"), PROGRAM_VERSION_MAJOR, PROGRAM_VERSION_MINOR, PROGRAM_VERSION_PATCH);
+    }
+    else
+    {
+        _version = string(loca_translate("phantasia:menu.title.version"), PROGRAM_VERSION_MAJOR, PROGRAM_VERSION_MINOR);
+    }
+    
+    var _os_info = os_type;
+    
+    if (_os_info == os_windows)
+    {
+        _os_info = "Windows"; 
+    }
+    else if (_os_info == os_macosx)
+    {
+        _os_info = "macOS"; 
+    }
+    else if (_os_info == os_linux)
+    {
+        _os_info = "Linux"; 
+    }
+    else if (_os_info == os_ios)
+    {
+        _os_info = "iOS"; 
+    }
+    else if (_os_info == os_android)
+    {
+        _os_info = "Android"; 
+    }
+    else if (_os_info == os_tvos)
+    {
+        _os_info = "tvOS"; 
+    }
+    else if (_os_info == os_ps4)
+    {
+        _os_info = "PS4"; 
+    }
+    else if (_os_info == os_ps5)
+    {
+        _os_info = "PS5"; 
+    }
+    else if (_os_info == os_xboxseriesxs)
+    {
+        _os_info = "Xbox Series X/S";
+    }
+    else if (_os_info == os_switch)
+    {
+        _os_info = "Switch"; 
+    }
+    else if (_os_info == os_gdk)
+    {
+        _os_info = "Microsoft GDK Platform";
+    }
+    else if (_os_info == os_operagx)
+    {
+        _os_info = "Opera GX";
+    }
+    else
+    {
+        _os_info = "Unknown";
+    }
+    
     var _message =
-        $":: Crash Log - ({current_month}/{current_day}/{current_year} @ {current_hour}:{current_minute}:{current_second})\n" +
+        $"---[ Crash Log ]---\n" +
+        $"{current_month}/{current_day}/{current_year} @ {current_hour}:{current_minute}:{current_second}\n" +
         $"It is advised to report this error to the Discord server so that it will be fixed in a future update.\n" +
         $"{SITE_DISCORD}\n\n" +
         
-        $":: Error Message\n" +
+        $"---[ Game & System Information ]---\n" +
+        $"Version: {_version}\n" +
+        $"OS: {_os_info}\n" +
+        $"Display: {display_get_width()}x{display_get_height()}@{display_get_frequency()}\n\n" +
+        
+        $"---[ Error Message ]---\n" +
         $"{_long_message}\n\n" +
         
-        $":: Stack Trace\n" +
+        $"---[ Stack Trace ]---\n" +
         $"{_stack_trace}";
     
-    buffer_write(_buffer, buffer_text,
-        $"# Crash Log - ({current_month}/{current_day}/{current_year}) @ {current_hour}:{current_minute}:{current_second}\n" +
-        $"---\n" +
-        $"It is advised to report this error to the [Discord server]({SITE_DISCORD}) so that it will be fixed in a future update.\n" +
-        $"## Error Message\n" +
-        $"{_long_message}\n" +
-        $"## Stack Trace\n" +
-        $"{_stack_trace}\n" +
-        $"End of Crash Log\n" +
-        $"---\n" +
-        $"{_secret}"
+    
+    buffer_write(
+        _buffer,
+        buffer_text,
+        $"{_secret}\n" +
+        $"{string_repeat("-", 24)}\n" +
+        _message
     );
     
-    buffer_save(_buffer, $"{PROGRAM_DIRECTORY_CRASH_LOG}/{_exception.script} (Line {_exception.line}).md");
+    buffer_save(_buffer, $"{PROGRAM_DIRECTORY_CRASH_LOG}/{_exception.script} (Line {_exception.line}).txt");
     
     buffer_delete(_buffer);
     
