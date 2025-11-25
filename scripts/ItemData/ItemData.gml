@@ -442,6 +442,20 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
                 set_light(_light);
             }
             
+            var _on_random_tick = _tile[$ "on_random_tick"];
+            
+            if (_on_random_tick != undefined)
+            {
+                set_on_random_tick(_on_random_tick);
+            }
+            
+            var _on_use = _tile[$ "on_use"];
+            
+            if (_on_use != undefined)
+            {
+                set_on_tile_use(_on_use);
+            }
+            
             var _placement = _tile[$ "placement"];
             
             if (_placement != undefined)

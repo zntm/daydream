@@ -1,4 +1,4 @@
-function chunk_vertex_tile_connected(_buffer, _texel_width, _texel_height, _animation_type, _atla, _atla_sprite, _index, _index_offset, _x, _y, _xscale, _yscale, _rotation, _colour, _alpha)
+function chunk_vertex_tile_connected(_buffer, _texel_width, _texel_height, _animation_type, _atla, _atla_sprite, _index, _index_offset, _x, _y, _xscale, _yscale, _rotation)
 {
     static __corner_index = function(_index, _bit_a, _bit_b, _bit_corner)
     {
@@ -47,9 +47,7 @@ function chunk_vertex_tile_connected(_buffer, _texel_width, _texel_height, _anim
             _y,
             _xscale,
             _yscale,
-            _rotation,
-            _colour,
-            _alpha
+            _rotation
         );
         
         exit;
@@ -69,9 +67,7 @@ function chunk_vertex_tile_connected(_buffer, _texel_width, _texel_height, _anim
             _y,
             _xscale,
             _yscale,
-            _rotation,
-            _colour,
-            _alpha
+            _rotation
         );
         
         exit;
@@ -93,9 +89,7 @@ function chunk_vertex_tile_connected(_buffer, _texel_width, _texel_height, _anim
             _y,
             _xscale,
             _yscale,
-            _rotation,
-            _colour,
-            _alpha
+            _rotation
         );
         
         exit;
@@ -115,9 +109,7 @@ function chunk_vertex_tile_connected(_buffer, _texel_width, _texel_height, _anim
             _y,
             _xscale,
             _yscale,
-            _rotation,
-            _colour,
-            _alpha
+            _rotation
         );
         
         exit;
@@ -137,9 +129,7 @@ function chunk_vertex_tile_connected(_buffer, _texel_width, _texel_height, _anim
             _y,
             _xscale,
             _yscale,
-            _rotation,
-            _colour,
-            _alpha
+            _rotation
         );
         
         exit;
@@ -282,9 +272,7 @@ function chunk_vertex_tile_connected(_buffer, _texel_width, _texel_height, _anim
             _u1,
             _v2,
             _texel_sprite_width,
-            _index_tl,
-            _colour,
-            _alpha
+            _index_tl
         );
         
         _vertex ^= 0b0101;
@@ -306,9 +294,7 @@ function chunk_vertex_tile_connected(_buffer, _texel_width, _texel_height, _anim
             _u2,
             _v2,
             _texel_sprite_width,
-            _index_tr,
-            _colour,
-            _alpha
+            _index_tr
         );
         
         _vertex ^= 0b1010;
@@ -330,9 +316,7 @@ function chunk_vertex_tile_connected(_buffer, _texel_width, _texel_height, _anim
             _u1,
             _v1,
             _texel_sprite_width,
-            _index_tl,
-            _colour,
-            _alpha
+            _index_tl
         );
     }
     
@@ -352,9 +336,7 @@ function chunk_vertex_tile_connected(_buffer, _texel_width, _texel_height, _anim
             _u1,
             _v2,
             _texel_sprite_width,
-            _index_bl,
-            _colour,
-            _alpha
+            _index_bl
         );
     }
     
@@ -374,9 +356,7 @@ function chunk_vertex_tile_connected(_buffer, _texel_width, _texel_height, _anim
             _u2,
             _v1,
             _texel_sprite_width,
-            _index_tr,
-            _colour,
-            _alpha
+            _index_tr
         );
     }
     
@@ -396,9 +376,7 @@ function chunk_vertex_tile_connected(_buffer, _texel_width, _texel_height, _anim
             _u2,
             _v2,
             _texel_sprite_width,
-            _index_br,
-            _colour,
-            _alpha
+            _index_br
         );
     }
 }

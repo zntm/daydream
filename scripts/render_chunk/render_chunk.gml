@@ -2,9 +2,9 @@ vertex_format_begin();
 
 vertex_format_add_position();
 vertex_format_add_texcoord();
-vertex_format_add_colour();
+// vertex_format_add_colour();
 
-vertex_format_add_custom(vertex_type_float4, vertex_usage_texcoord);
+vertex_format_add_custom(vertex_type_float3, vertex_usage_texcoord);
 
 global.chunk_format_perspective = vertex_format_end();
 
@@ -76,9 +76,7 @@ function render_chunk(_inst, _z)
                     _draw_y,
                     _xscale,
                     _yscale,
-                    _rotation,
-                    c_white,
-                    1
+                    _rotation
                 );
                 
                 continue;
@@ -100,8 +98,7 @@ function render_chunk(_inst, _z)
                     _xscale,
                     _yscale,
                     _rotation,
-                    c_white,
-                    1
+                    c_white
                 );
                 
                 continue;
@@ -120,8 +117,7 @@ function render_chunk(_inst, _z)
                 _xscale,
                 _yscale,
                 _rotation,
-                c_white,
-                1
+                c_white
             );
         }
     }

@@ -2,7 +2,7 @@
 #define CHUNK_DEPTH 8
 
 attribute vec3 in_Position;
-attribute vec4 in_Colour;
+// attribute vec4 in_Colour;
 attribute vec2 in_TextureCoord;
 
 attribute vec4 in_TextureData;
@@ -17,7 +17,7 @@ uniform float u_skew[CHUNK_SIZE * CHUNK_SIZE];
 
 void main()
 {
-    v_vColour = in_Colour;
+    v_vColour = vec4(1.0, 1.0, 1.0, 1.0);
     v_vTexcoord = in_TextureCoord;
     
     float animation_type = mod(in_TextureData.x, 256.0);
@@ -33,7 +33,9 @@ void main()
     // Increment
     else if (animation_type == 3.0)
     {
-        v_vTexcoord.x += in_TextureData.y * in_TextureData.z * mod(u_time, in_TextureData.w - 1.0);
+        float number = mod(floor(in_TextureData.x / 16777216.0), 256.0);
+        
+        v_vTexcoord.x += in_TextureData.y * in_TextureData.z * mod(u_time, number - 1.0);
         
         gl_Position = gm_Matrices[MATRIX_WORLD_VIEW_PROJECTION] * vec4(in_Position.x, in_Position.y, 0.0, 1.0);
     }

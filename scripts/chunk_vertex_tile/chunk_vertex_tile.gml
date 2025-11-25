@@ -1,4 +1,4 @@
-function chunk_vertex_tile(_buffer, _texel_width, _texel_height, _animation_type, _atla, _atla_sprite, _index, _x, _y, _xscale, _yscale, _rotation, _colour, _alpha)
+function chunk_vertex_tile(_buffer, _texel_width, _texel_height, _animation_type, _atla, _atla_sprite, _index, _x, _y, _xscale, _yscale, _rotation)
 {
     var _atla_value = _atla.___value;
     
@@ -31,47 +31,53 @@ function chunk_vertex_tile(_buffer, _texel_width, _texel_height, _animation_type
     var _g = _yh * _cos;
     var _h = _yh * _sin;
     
-    var _ax = _x + _a - _d;
-    var _ay = _y + _b + _c;
+    var _i = _x + _a;
+    var _j = _y + _b;
     
-    var _bx = _x + _e - _d;
-    var _by = _y + _f + _c;
+    var _k = _x + _e;
+    var _l = _y + _f;
     
-    var _cx = _x + _a - _h;
-    var _cy = _y + _b + _g;
+    var _ax = _i - _d;
+    var _ay = _j + _c;
     
-    var _dx = _x + _e - _h;
-    var _dy = _y + _f + _g;
+    var _bx = _k - _d;
+    var _by = _l + _c;
+    
+    var _cx = _i - _h;
+    var _cy = _j + _g;
+    
+    var _dx = _k - _h;
+    var _dy = _l + _g;
     
     var _number = (_atla_value >> 44) & 2047;
     
     vertex_position(_buffer, _ax, _ay);
     vertex_texcoord(_buffer, _u0, _v0);
-    vertex_colour(_buffer, _colour, _alpha);
-    vertex_float4(_buffer, _animation_type, _index, _width * _texel_width, _number);
+    // vertex_colour(_buffer);
+    vertex_float3(_buffer, (_number << 24) | _animation_type, _index, _width * _texel_width);
     
     vertex_position(_buffer, _bx, _by);
     vertex_texcoord(_buffer, _u1, _v0);
-    vertex_colour(_buffer, _colour, _alpha);
-    vertex_float4(_buffer, _animation_type, _index, _width * _texel_width, _number);
+    // vertex_colour(_buffer);
+    vertex_float3(_buffer, (_number << 24) | _animation_type, _index, _width * _texel_width);
     
     vertex_position(_buffer, _cx, _cy);
     vertex_texcoord(_buffer, _u0, _v1);
-    vertex_colour(_buffer, _colour, _alpha);
-    vertex_float4(_buffer, _animation_type, _index, _width * _texel_width, _number);
+    // vertex_colour(_buffer);
+    vertex_float3(_buffer, (_number << 24) | _animation_type, _index, _width * _texel_width);
     
     vertex_position(_buffer, _bx, _by);
     vertex_texcoord(_buffer, _u1, _v0);
-    vertex_colour(_buffer, _colour, _alpha);
-    vertex_float4(_buffer, _animation_type, _index, _width * _texel_width, _number);
+    // vertex_colour(_buffer);
+    vertex_float3(_buffer, (_number << 24) | _animation_type, _index, _width * _texel_width);
     
     vertex_position(_buffer, _cx, _cy);
     vertex_texcoord(_buffer, _u0, _v1);
-    vertex_colour(_buffer, _colour, _alpha);
-    vertex_float4(_buffer, _animation_type, _index, _width * _texel_width, _number);
+    // vertex_colour(_buffer);
+    vertex_float3(_buffer, (_number << 24) | _animation_type, _index, _width * _texel_width);
     
     vertex_position(_buffer, _dx, _dy);
     vertex_texcoord(_buffer, _u1, _v1);
-    vertex_colour(_buffer, _colour, _alpha);
-    vertex_float4(_buffer, _animation_type, _index, _width * _texel_width, _number);
+    // vertex_colour(_buffer);
+    vertex_float3(_buffer, (_number << 24) | _animation_type, _index, _width * _texel_width);
 }

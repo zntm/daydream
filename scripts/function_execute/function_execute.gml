@@ -1,21 +1,29 @@
 function function_execute(_function, _x, _y, _z, _xscale, _yscale, _dt)
 {
-    if (!chance(_function[0] * _dt)) exit;
+    var _chance = _function[0];
     
-    var _random_tick_length = _function[1];
+    if (_chance != undefined) && (!chance(_chance * _dt)) exit;
     
-    var _ = _function[2];
+    var _item_function = global.item_function;
     
-    var _id = _[0];
+    var _functions = _function[1];
+    var _functions_length = array_length(_functions);
     
-    if (_id != undefined)
+    for (var i = 0; i < _functions_length; ++i)
     {
-        var _f = global.item_function[$ _id];
-        var _parameter = _[1];
+        var _ = _functions[i];
         
-        repeat (smart_value(_[2]))
+        var _id = _[0];
+        
+        if (_id != undefined)
         {
-            _f(_dt, _x, _y, _z, _xscale, _yscale, _parameter);
+            var _f = _item_function[$ _id];
+            var _parameter = _[1];
+            
+            repeat (smart_value(_[2]))
+            {
+                _f(_dt, _x, _y, _z, _xscale, _yscale, _parameter);
+            }
         }
     }
 }

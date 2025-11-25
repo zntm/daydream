@@ -2,6 +2,7 @@ function function_parse(_data)
 {
     var _length = array_length(_data);
     
+    /*
     var _function = array_create(_length);
     
     for (var i = 0; i < _length; ++i)
@@ -44,4 +45,49 @@ function function_parse(_data)
     }
     
     return _function;
+    */
+    
+    var _functions = [];
+    
+    for (var i = 0; i < _length; ++i)
+    {
+        var _ = _data[i];
+        
+        var _f = _[$ "function"];
+        var _f_length = array_length(_f);
+        
+        var _f2 = [];
+        
+        for (var j = 0; j < _f_length; ++j)
+        {
+            var _a = _f[j];
+            
+            var _parameters = _a[$ "parameters"];
+            /*
+            var _p = {}
+            
+            var _parameter_names = struct_get_names(_parameters);
+            var _parameter_length = array_length(_parameter_names);
+            
+            for (var l = 0; l < _parameter_length; ++l)
+            {
+                var _name = _parameter_names[l];
+                
+                _p[$ _name] = _parameters[$ _name];
+            }
+            */
+            _f2[@ j] = [
+                _a.id,
+                _parameters,
+                _[$ "repeat"]
+            ];
+        }
+        
+        _functions[@ i] = [
+            _[$ "chance"],
+            _f2
+        ];
+    }
+    
+    return _functions;
 }
