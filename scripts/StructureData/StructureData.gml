@@ -46,7 +46,7 @@ function StructureData(_width, _height, _placement, _is_persistent, _is_natural)
     
     ___placement_xoffset = _placement[$ "xoffset"];
     ___placement_yoffset = _placement[$ "yoffset"];
-    ___placement_type = _placement[$ "type"];
+    ___placement_type = __structure_placement_type[$ _placement[$ "type"]];
     
     var _clearance_condition = _placement[$ "clearance_condition"];
     
@@ -107,16 +107,34 @@ function StructureData(_width, _height, _placement, _is_persistent, _is_natural)
         return self[$ "___parameter"];
     }
     
-    static set_data = function(_function)
+    static set_data = function(_data)
     {
-        ___data = _function;
+        ___data = _data;
         
         return self;
     }
     
     static get_data = function()
     {
-        return ___data;
+        return self[$ "___data"];
+    }
+    
+    static set_function = function(_id, _parameters)
+    {
+        ___function_id = _id;
+        ___function_parameters = _parameters;
+        
+        return self;
+    }
+    
+    static get_function_id = function()
+    {
+        return ___function_id;
+    }
+    
+    static get_function_parameters = function()
+    {
+        return ___function_parameters;
     }
 }
 

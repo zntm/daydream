@@ -41,7 +41,8 @@ function control_structure(_x, _y)
         {
             if (ds_map_exists(_ds, j))
             {
-                j = ((floor(j / CHUNK_SIZE) + 1) * CHUNK_SIZE) - 1;
+                // j = ((floor(j / CHUNK_SIZE) + 1) * CHUNK_SIZE) - 1;
+                j = (((j >> CHUNK_SIZE_BIT) + 1) << CHUNK_SIZE_BIT) - 1;
                 
                 _queue =
                     (worldgen_get_cave(i, j + 1, _surface_height, _cave_start, _world_seed, _world_data) << 0) |

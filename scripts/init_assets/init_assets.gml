@@ -5,8 +5,8 @@ function SpriteAsset(_sprite, _xoffset, _yoffset, _length) constructor
 {
     ___sprite = _sprite;
     ___xoffset = _xoffset;
-    ___yoffset = _xoffset;
-    ___length = _xoffset;
+    ___yoffset = _yoffset;
+    ___length = _length;
     
     static get_sprite = function()
     {
@@ -26,18 +26,6 @@ function SpriteAsset(_sprite, _xoffset, _yoffset, _length) constructor
     static get_length = function()
     {
         return ___length;
-    }
-    
-    static set_is_tile = function()
-    {
-        ___is_tile = true;
-        
-        return self;
-    }
-    
-    static is_tile = function()
-    {
-        return self[$ "___is_tile"] ?? false;
     }
 }
 
@@ -170,11 +158,6 @@ function init_assets(_directory, _namespace, _folder = "")
                 var _sprite = sprite_add($"{_directory}/{string_delete(_file, string_length(_file) - 4, 5)}", _length, false, false, _xoffset, _yoffset);
                 
                 var _asset = new SpriteAsset(_sprite, _xoffset, _yoffset, _length);
-                
-                if (_json[$ "is_tile"])
-                {
-                    _asset.set_is_tile();
-                }
                 
                 global.sprite_asset[$ $"{_namespace}:{_folder}/{_file2}"] = _asset;
             }

@@ -54,6 +54,7 @@ function CreatureData(_namespace, _id, _hp, _hostility_type, _movement_type) : P
         {
             ___sprite_idle = {}
             ___sprite_idle_emissive = {}
+            
             ___sprite_moving = {}
             ___sprite_moving_emissive = {}
             

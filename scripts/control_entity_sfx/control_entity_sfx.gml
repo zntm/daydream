@@ -89,7 +89,9 @@ function control_entity_sfx(_dt)
             
             if (_tile != TILE_EMPTY)
             {
-                sfx_diegetic_play(audio_emitter, x, y, global.item_data[$ _tile.get_id()].get_sfx_step());
+                var _sound = global.item_data[$ _tile.get_id()].get_tile_sfx().get_step().get_id();
+                
+                sfx_diegetic_play(audio_emitter, x, y, _sound);
             }
             else
             {

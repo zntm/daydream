@@ -13,6 +13,18 @@ global.sfx_diegetic_floodfill_position = {}
 
 function sfx_diegetic_play(_emitter, _x, _y, _id, _gain = global.settings.audio_sfx, _world_height = global.world_data[$ global.world_save_data.dimension].get_world_height())
 {
+    var _data = global.sound_asset[$ _id];
+    
+    show_debug_message($"{_id} {_data}")
+    
+    return audio_play_sound_ext({
+        emitter: _emitter,
+        sound: is_array_choose(_data).get_sound(),
+        pitch: 1,
+        gain: _gain
+    });
+    
+    /*
     var _sfx_data = global.sfx_data;
     
     var _data = _sfx_data[$ _id];
@@ -34,4 +46,5 @@ function sfx_diegetic_play(_emitter, _x, _y, _id, _gain = global.settings.audio_
         pitch: smart_value(_data.get_pitch()),
         gain: _gain
     });
+    */
 }

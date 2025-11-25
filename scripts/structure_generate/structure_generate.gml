@@ -8,7 +8,7 @@ function structure_generate(_inst, _seed, _item_data, _structure_data, _natural_
         
         if (_data.is_natural())
         {
-            var _function = _natural_structure_data[$ _data.get_data()[$ "function"]].get_function();
+            var _function = _natural_structure_data[$ _data.get_function_id()].get_function();
             
             _data = _function(
                 _inst.structure_xrelative,
@@ -16,7 +16,7 @@ function structure_generate(_inst, _seed, _item_data, _structure_data, _natural_
                 _inst.image_xscale,
                 _inst.image_yscale,
                 _seed,
-                _data.get_parameter(),
+                _data.get_function_parameters(),
                 _item_data
             );
         }

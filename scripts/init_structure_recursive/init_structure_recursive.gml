@@ -36,16 +36,15 @@ function init_structure_recursive(_directory, _namespace, _id)
                 }
                 
                 var _json = buffer_load_json(_subdirectory);
-                var _data = _json[$ "function"];
                 
-                var _parameter = (_natural_structure_data[$ _data.id].get_parser())(_data[$ "parameters"]);
+                var _function = _json[$ "function"];
+                var _function_id = _function.id;
                 
                 var _width  = smart_value_parse(_json.width);
                 var _height = smart_value_parse(_json.height);
                 
                 global.structure_data[$ $"{_namespace}:{string_delete(_name, string_length(_name) - 4, 5)}"] = new StructureData(_width, _height, _json.placement, false, true)
-                    .set_parameter(_parameter)
-                    .set_data(_data);
+                    .set_function(_function_id, (_natural_structure_data[$ _function_id].get_parser())(_function[$ "parameters"]));
                 
                 delete _json;
                 

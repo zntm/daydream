@@ -70,7 +70,7 @@ function player_harvest(_dt, _x, _y)
     
     if (_tile_harvest.get_level() > _item_level) exit;
     
-    var _sfx = _data.get_tile_middle_layer_sfx();
+    var _sfx = _data.get_tile_sfx().get_harvest().get_id();
     
     var _particle = _tile_harvest.get_particle();
     
@@ -82,7 +82,7 @@ function player_harvest(_dt, _x, _y)
     {
         obj_Player.timer_sfx_harvest %= 0.28;
         
-        sfx_diegetic_play(obj_Player.audio_emitter, _x * TILE_SIZE, _y * TILE_SIZE, _sfx.get_harvest());
+        sfx_diegetic_play(obj_Player.audio_emitter, _x * TILE_SIZE, _y * TILE_SIZE, _sfx);
         
         var _particle_colour = _particle.get_colours();
         
@@ -105,7 +105,7 @@ function player_harvest(_dt, _x, _y)
             obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.LIGHTING;
         }
         
-        sfx_diegetic_play(obj_Player.audio_emitter, _x * TILE_SIZE, _y * TILE_SIZE, _sfx.get_harvest());
+        sfx_diegetic_play(obj_Player.audio_emitter, _x * TILE_SIZE, _y * TILE_SIZE, _sfx);
         
         if (_item != INVENTORY_EMPTY) && (_data2.get_item_durability() != undefined)
         {

@@ -528,7 +528,7 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
         );
     }
     
-    static get_tile_middle_layer_sfx = function()
+    static get_tile_sfx = function()
     {
         return self[$ "___sfx"];
     }
