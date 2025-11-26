@@ -5,21 +5,28 @@ function bg_sky_colour(_in_biome_data, _in_biome_transition_data)
     
     var _world_data = global.world_data[$ _world_save_data.dimension];
     
+    var _time_diurnal = _world_data.get_time_diurnal();
     var _time_diurnal_length = _world_data.get_time_diurnal_length();
+    
+    show_debug_message(_time_diurnal, _time_diurnal_length)
     
     for (var i = 0; i < _time_diurnal_length; ++i)
     {
-        var _name_from = _world_data.get_time_diurnal_name(i);
+        var _from = _time_diurnal[i];
         
-        var _start_from = _world_data.get_time_diurnal_start(_name_from);
-        var _end_from   = _world_data.get_time_diurnal_end(_name_from);
+        var _name_from = _from.id;
+        
+        var _start_from = _from.time_range_min;
+        var _end_from   = _from.time_range_max;
         
         if (_world_time < _start_from) || (_world_time >= _end_from) continue;
         
-        var _name_to = _world_data.get_time_diurnal_name((i + 1) % _time_diurnal_length);
+        var _to = _time_diurnal[(i + 1) % _time_diurnal_length];
         
-        var _start_to = _world_data.get_time_diurnal_start(_name_to);
-        var _end_to   = _world_data.get_time_diurnal_end(_name_to);
+        var _name_to = _to.id;
+        
+        var _start_to = _to.time_range_min;
+        var _end_to   = _to.time_range_max;
         
         var _sky_colour_base_from = _in_biome_data.get_sky_colour_base(_name_from);
         var _sky_colour_base_to   = _in_biome_data.get_sky_colour_base(_name_to);
