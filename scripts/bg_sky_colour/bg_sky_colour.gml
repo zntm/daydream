@@ -8,8 +8,6 @@ function bg_sky_colour(_in_biome_data, _in_biome_transition_data)
     var _time_diurnal = _world_data.get_time_diurnal();
     var _time_diurnal_length = _world_data.get_time_diurnal_length();
     
-    show_debug_message(_time_diurnal, _time_diurnal_length)
-    
     for (var i = 0; i < _time_diurnal_length; ++i)
     {
         var _from = _time_diurnal[i];

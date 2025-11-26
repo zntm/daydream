@@ -1,47 +1,47 @@
 {
     "dirt": {
-        "build": "phantasia:tile.dirt.harvest",
-        "harvest": "phantasia:tile.dirt.harvest",
-        "step": "phantasia:tile.dirt.step"
+        "build": "phantasia:sfx/tile/dirt/harvest",
+        "harvest": "phantasia:sfx/tile/dirt/harvest",
+        "step": "phantasia:sfx/tile/dirt/step"
     },
     "grass_block": {
-        "build": "phantasia:tile.grass_block.build",
-        "harvest": "phantasia:tile.grass_block.harvest",
-        "step": "phantasia:tile.grass.step"
+        "build": "phantasia:sfx/tile/grass_block/build",
+        "harvest": "phantasia:sfx/tile/grass_block/harvest",
+        "step": "phantasia:sfx/tile/grass/step"
     },
     "foliage": {
-        "build": "phantasia:tile.grass.harvest",
-        "harvest": "phantasia:tile.grass.step",
-        "step": "phantasia:tile.grass.harvest"
+        "build": "phantasia:sfx/tile/grass/harvest",
+        "harvest": "phantasia:sfx/tile/grass/step",
+        "step": "phantasia:sfx/tile/grass/harvest"
     },
     "metal": {
-        "build": "phantasia:tile.metal.harvest",
-        "harvest": "phantasia:tile.metal.harvest",
-        "step": "phantasia:tile.metal.step"
+        "build": "phantasia:sfx/tile/metal/harvest",
+        "harvest": "phantasia:sfx/tile/metal/harvest",
+        "step": "phantasia:sfx/tile/metal/step"
     },
     "nightrock": {
-        "build": "phantasia:tile.nightrock.build",
-        "harvest": "phantasia:tile.nightrock.harvest",
-        "step": "phantasia:tile.nightrock.step"
+        "build": "phantasia:sfx/tile/nightrock/build",
+        "harvest": "phantasia:sfx/tile/nightrock/harvest",
+        "step": "phantasia:sfx/tile/nightrock/step"
     },
     "sand": {
-        "build": "phantasia:tile.sand.harvest",
-        "harvest": "phantasia:tile.sand.harvest",
-        "step": "phantasia:tile.sand.step"
+        "build": "phantasia:sfx/tile/sand/harvest",
+        "harvest": "phantasia:sfx/tile/sand/harvest",
+        "step": "phantasia:sfx/tile/sand/step"
     },
     "stone": {
-        "build": "phantasia:tile.stone.build",
-        "harvest": "phantasia:tile.stone.harvest",
-        "step": "phantasia:tile.stone.step"
+        "build": "phantasia:sfx/tile/stone/build",
+        "harvest": "phantasia:sfx/tile/stone/harvest",
+        "step": "phantasia:sfx/tile/stone/step"
     },
     "twig": {
-        "build": "phantasia:tile.twig.harvest",
-        "harvest": "phantasia:tile.twig.harvest",
-        "step": "phantasia:tile.twig.step"
+        "build": "phantasia:sfx/tile/twig/harvest",
+        "harvest": "phantasia:sfx/tile/twig/harvest",
+        "step": "phantasia:sfx/tile/twig/step"
     },
     "wood": {
-        "build": "phantasia:tile.wood.harvest",
-        "harvest": "phantasia:tile.wood.harvest",
-        "step": "phantasia:tile.wood.step"
+        "build": "phantasia:sfx/tile/wood/harvest",
+        "harvest": "phantasia:sfx/tile/wood/harvest",
+        "step": "phantasia:sfx/tile/wood/step"
     }
 }

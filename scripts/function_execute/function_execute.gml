@@ -20,7 +20,16 @@ function function_execute(_function, _x, _y, _z, _xscale, _yscale, _dt)
             var _f = _item_function[$ _id];
             var _parameter = _[1];
             
-            repeat (smart_value(_[2]))
+            var _repeat = _[2];
+            
+            if (_repeat == undefined)
+            {
+                _f(_dt, _x, _y, _z, _xscale, _yscale, _parameter);
+                
+                continue;
+            }
+            
+            repeat (smart_value(_repeat))
             {
                 _f(_dt, _x, _y, _z, _xscale, _yscale, _parameter);
             }
