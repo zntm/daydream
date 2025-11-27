@@ -12,6 +12,9 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
     
     atla_repair("item");
     
+    var _page = global.___atla_page[$ "item"];
+    var _position = global.___atla_page_position[$ "item"];
+    
     var _texture = global.___atla_surface_texture[$ "item"];
     
     var _surface_size = global.___atla_surface_size[$ "item"];
@@ -44,7 +47,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
             
             if (!vertex_buffer_exists(_buffer))
             {
-                _buffer = render_chunk(_inst, _z);
+                _buffer = render_chunk(_page, _position, _texel_width, _texel_height, _inst, _z);
             }
             
             if (_z == CHUNK_DEPTH_FOLIAGE_BACK)
@@ -73,7 +76,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 var _xscale = 8 / attribute.get_collision_box_width();
                 var _yscale = 8 / attribute.get_collision_box_height();
                 
-                draw_sprite_ext(_sprite, _index, x, y - (_data.get_sprite_yoffset() * _yscale), _xscale, _yscale, image_angle, image_blend, 1);
+                draw_sprite_ext(_sprite.get_sprite(), _index, x, y - (_data.get_sprite_yoffset() * _yscale), _xscale, _yscale, image_angle, image_blend, 1);
             }
             
             with (obj_Creature)
@@ -87,8 +90,6 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 
                 if (yvelocity == 0) && ((input_left) || (input_right))
                 {
-                    show_debug_message(_data.get_sprite_moving(_variant));
-                    
                     draw_sprite_ext(_sprite_asset[$ _data.get_sprite_moving(_variant)].get_sprite(), _animation_index, x, y, _xscale, _yscale, image_angle, c_white, 1);
                     
                     var _emissive = _data.get_sprite_moving_emissive(_variant);
@@ -100,8 +101,6 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 }
                 else
                 {
-                    show_debug_message(_data.get_sprite_idle(_variant));
-                    
                     draw_sprite_ext(_sprite_asset[$ _data.get_sprite_idle(_variant)].get_sprite(), _animation_index, x, y, _xscale, _yscale, image_angle, c_white, 1);
                     
                     var _emissive = _data.get_sprite_idle_emissive(_variant);
@@ -217,7 +216,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
         }
     }
     
-    draw_surface(global.___atla_surface[$ "item"], mouse_x, mouse_y)
+    // draw_surface(global.___atla_surface[$ "item"], mouse_x, mouse_y);
     
     if (timer_harvest > 0)
     {
@@ -236,7 +235,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
         draw_set_align(fa_left, fa_top);
     }
     
-    // render_lighting(_camera_x, _camera_y, _camera_width, _camera_height);
+    render_lighting(_camera_x, _camera_y, _camera_width, _camera_height);
     
     var _render_state = global.render_state;
     

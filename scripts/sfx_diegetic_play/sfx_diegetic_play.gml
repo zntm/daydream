@@ -15,6 +15,8 @@ function sfx_diegetic_play(_emitter, _x, _y, _id, _gain = global.settings.audio_
 {
     var _data = global.sound_asset[$ _id];
     
+    show_debug_message($"{_id} {_data}")
+    
     return audio_play_sound_ext({
         emitter: _emitter,
         sound: is_array_choose(_data).get_sound(),

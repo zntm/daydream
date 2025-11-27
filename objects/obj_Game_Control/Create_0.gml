@@ -50,6 +50,7 @@ timer_crafting_max = 0.3;
 timer_crafting = timer_crafting_max;
 
 cooldown_build = 0;
+
 cooldown_harvest = 0;
 
 surface_harvest = -1;

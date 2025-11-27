@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"file_save_snippet_component",
+  "%Name":"file_save_snippet_item_component",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"file_save_snippet_component",
+  "name":"file_save_snippet_item_component",
   "parent":{
     "name":"Snippet",
     "path":"folders/Scripts/File/Save/Snippet.yy",

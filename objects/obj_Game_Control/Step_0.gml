@@ -306,7 +306,7 @@ if !(is_opened & IS_OPENED_BOOLEAN.MENU)
 }
 
 control_chunk_activity(_camera_x, _camera_y, _camera_width, _camera_height);
-
+/*
 if (keyboard_check_pressed(vk_f2))
 {
     sfx_play("phantasia:menu.screenshot");
@@ -325,4 +325,4 @@ if (keyboard_check_pressed(vk_f2))
     surface_save(_surface, $"{PROGRAM_DIRECTORY_SCREENSHOTS}/{round(datetime_to_unix())}.png");
     
     surface_free(_surface);
-}
+}*/

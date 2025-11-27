@@ -8,23 +8,13 @@ vertex_format_add_custom(vertex_type_float3, vertex_usage_texcoord);
 
 global.chunk_format_perspective = vertex_format_end();
 
-function render_chunk(_inst, _z)
+function render_chunk(_page, _position, _texel_width, _texel_height, _inst, _z)
 {
     var _item_data = global.item_data;
     
     var _buffer = vertex_create_buffer();
     
     vertex_begin(_buffer, global.chunk_format_perspective);
-    
-    var _page = global.___atla_page[$ "item"];
-    var _position = global.___atla_page_position[$ "item"];
-    
-    var _size = global.___atla_surface_size[$ "item"];
-    
-    var _texture = global.___atla_surface_texture[$ "item"];
-    
-    var _texel_width  = texture_get_texel_width(_texture);
-    var _texel_height = texture_get_texel_height(_texture);
     
     var _xstart = _inst.x;
     var _ystart = _inst.y;
@@ -61,8 +51,6 @@ function render_chunk(_inst, _z)
             
             if (_data.is_tile())
             {
-                var _edge_padding = _data.get_edge_padding();
-                
                 chunk_vertex_tile_connected(
                     _buffer,
                     _texel_width,
@@ -97,8 +85,7 @@ function render_chunk(_inst, _z)
                     _draw_y,
                     _xscale,
                     _yscale,
-                    _rotation,
-                    c_white
+                    _rotation
                 );
                 
                 continue;
@@ -116,8 +103,7 @@ function render_chunk(_inst, _z)
                 _draw_y,
                 _xscale,
                 _yscale,
-                _rotation,
-                c_white
+                _rotation
             );
         }
     }

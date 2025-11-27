@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"file_load_snippet_component",
+  "%Name":"file_load_snippet_tile_component",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"file_load_snippet_component",
+  "name":"file_load_snippet_tile_component",
   "parent":{
     "name":"Snippet",
     "path":"folders/Scripts/File/Load/Snippet.yy",
