@@ -52,8 +52,8 @@ function tile_meeting(_x, _y, _z = CHUNK_DEPTH_DEFAULT, _type = ITEM_TYPE_BIT.SO
             var _tile_xscale = _tile.get_xscale();
             var _tile_yscale = _tile.get_yscale();
             
-            var _x3 = _tile_x + ((_tile_xoffset - _data.get_collision_box_left()) * _tile_xscale);
-            var _y3 = _tile_y + ((_tile_yoffset - _data.get_collision_box_top())  * _tile_yscale);
+            var _x3 = _tile_x + ((_tile_xoffset + _data.get_collision_box_left()) * _tile_xscale);
+            var _y3 = _tile_y + ((_tile_yoffset + _data.get_collision_box_top())  * _tile_yscale);
             
             var _x4 = _x3 + (_data.get_collision_box_right()  * _tile_xscale);
             var _y4 = _y3 + (_data.get_collision_box_bottom() * _tile_yscale);
