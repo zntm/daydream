@@ -27,7 +27,7 @@ function tile_update(_x, _y, _z)
         
         var _data = global.item_data[$ _tile.get_id()];
         
-        var _tile_harvest = _data.get_tile_middle_layer_harvest();
+        var _tile_harvest = _data.get_tile_harvest().get_particle();
         
         var _particle_colour = _tile_harvest.get_colours();
         

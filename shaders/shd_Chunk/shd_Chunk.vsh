@@ -15,9 +15,11 @@ uniform vec2 u_texture_size;
 uniform float u_time;
 uniform float u_skew[CHUNK_SIZE * CHUNK_SIZE];
 
+const vec4 COLOUR_ALPHA = vec4(1.0, 1.0, 1.0, 1.0);
+
 void main()
 {
-    v_vColour = vec4(1.0, 1.0, 1.0, 1.0);
+    v_vColour = COLOUR_ALPHA;
     v_vTexcoord = in_TextureCoord;
     
     float animation_type = mod(in_TextureData.x, 256.0);

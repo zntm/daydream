@@ -3,13 +3,17 @@
 
 function render_harvest(_camera_x, _camera_y, _camera_width, _camera_height)
 {
-    static __index_max = (sprite_get_number(spr_Harvest) - 1);
+    static __index_max = sprite_get_number(spr_Harvest) - 1;
     
     var _tile = tile_get(tile_harvest_x, tile_harvest_y, tile_harvest_z);
     var _data = global.item_data[$ _tile.get_id()];
     
-    var _width  = ceil(_data.get_sprite_width()  / TILE_SIZE);
-    var _height = ceil(_data.get_sprite_height() / TILE_SIZE);
+    var _sprite = global.sprite_asset[$ _data.get_sprite()];
+    
+    show_debug_message(_sprite)
+    
+    var _width  = ceil(_sprite.get_width()  / TILE_SIZE);
+    var _height = ceil(_sprite.get_height() / TILE_SIZE);
     
     var _surface_width  = (_width  * TILE_SIZE) + (RENDER_HARVEST_PADDING * 2);
     var _surface_height = (_height * TILE_SIZE) + (RENDER_HARVEST_PADDING * 2);
@@ -26,11 +30,9 @@ function render_harvest(_camera_x, _camera_y, _camera_width, _camera_height)
     surface_set_target(surface_harvest);
     draw_clear_alpha(c_black, 0);
     
-    var _progress = normalize(timer_harvest, 0, _data.get_tile_middle_layer_harvest().get_hardness());
+    var _progress = normalize(timer_harvest, 0, _data.get_tile_harvest().get_hardness());
     
     var _offset = RENDER_HARVEST_OFFSET * _progress
-    
-    var _sprite = _data.get_sprite();
     
     var _index = 0;
     
@@ -46,15 +48,15 @@ function render_harvest(_camera_x, _camera_y, _camera_width, _camera_height)
     var _xscale = _tile.get_xscale();
     var _yscale = _tile.get_yscale();
     
-    var _xoffset = atla_get_xoffset("item", _sprite) * abs(_xscale);
-    var _yoffset = atla_get_yoffset("item", _sprite) * abs(_yscale);
+    var _xoffset = _sprite.get_xoffset() * abs(_xscale);
+    var _yoffset = _sprite.get_yoffset() * abs(_yscale);
     
     var _xstart = _xoffset - (TILE_SIZE / 2) + RENDER_HARVEST_PADDING + random_range(-_offset, _offset);
     var _ystart = _yoffset - (TILE_SIZE / 2) + RENDER_HARVEST_PADDING + random_range(-_offset, _offset);
     
     var _rotation = _tile.get_rotation();
     
-    draw_sprite_ext(_sprite, _index, _xstart + _xoffset, _ystart + _yoffset, _xscale, _yscale, _rotation, c_white, 1);
+    draw_sprite_ext(_sprite.get_sprite(), _index, _xstart + _xoffset, _ystart + _yoffset, _xscale, _yscale, _rotation, c_white, 1);
     
     gpu_set_colorwriteenable(true, true, true, false);
     

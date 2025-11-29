@@ -1,11 +1,13 @@
 global.sprite_asset = {}
 global.sound_asset = {}
 
-function SpriteAsset(_sprite, _xoffset, _yoffset, _length) constructor
+function SpriteAsset(_sprite, _xoffset, _yoffset, _width, _height, _length) constructor
 {
     ___sprite = _sprite;
     ___xoffset = _xoffset;
     ___yoffset = _yoffset;
+    ___width = _width;
+    ___height = _height;
     ___length = _length;
     
     static get_sprite = function()
@@ -21,6 +23,16 @@ function SpriteAsset(_sprite, _xoffset, _yoffset, _length) constructor
     static get_yoffset = function()
     {
         return ___yoffset;
+    }
+    
+    static get_width = function()
+    {
+        return ___width;
+    }
+    
+    static get_height = function()
+    {
+        return ___height;
     }
     
     static get_length = function()
@@ -139,7 +151,7 @@ function init_assets(_directory, _namespace, _folder = "")
                     
                     var _sprite = sprite_add($"{_directory}/{_file2}/{_sprite_file}", _length, false, false, _xoffset, _yoffset);
                     
-                    var _asset = new SpriteAsset(_sprite, _xoffset, _yoffset, _length);
+                    var _asset = new SpriteAsset(_sprite, _xoffset, _yoffset, sprite_get_width(_sprite), sprite_get_height(_sprite), _length);
                     
                     array_push(_array, _asset);
                 }
@@ -154,7 +166,7 @@ function init_assets(_directory, _namespace, _folder = "")
                 
                 var _sprite = sprite_add($"{_directory}/{string_delete(_file, string_length(_file) - 4, 5)}", _length, false, false, _xoffset, _yoffset);
                 
-                var _asset = new SpriteAsset(_sprite, _xoffset, _yoffset, _length);
+                var _asset = new SpriteAsset(_sprite, _xoffset, _yoffset, sprite_get_width(_sprite), sprite_get_height(_sprite), _length);
                 
                 global.sprite_asset[$ $"{_namespace}:{_folder}/{_file2}"] = _asset;
             }

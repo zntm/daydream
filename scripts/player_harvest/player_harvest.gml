@@ -32,7 +32,9 @@ function player_harvest(_dt, _x, _y)
     
     var _data = _item_data[$ _tile.get_id()];
     
-    var _tile_harvest = _data.get_tile_middle_layer_harvest();
+    var _tile_harvest = _data.get_tile_harvest();
+    
+    if (_tile_harvest == undefined) exit;
     
     var _harvest_hardness = _tile_harvest.get_hardness();
     
@@ -60,12 +62,20 @@ function player_harvest(_dt, _x, _y)
         
         var _item_harvest = _data2.get_item_harvest();
         
-        _item_hardness = _item_harvest.get_hardness() ?? 1;
-        _item_level = _item_harvest.get_level();
+        if (_item_harvest != undefined)
+        {
+            _item_hardness = _item_harvest.get_hardness() ?? 1;
+            _item_level = _item_harvest.get_level() ?? 0;
+        }
         
-        var _harvest_condition_id = _tile_harvest.get_condition().get_id();
+        var _condition = _tile_harvest.get_condition();
         
-        if (_harvest_condition_id != undefined) && (!array_contains(_harvest_condition_id, _id)) exit;
+        if (_condition != undefined)
+        {
+            var _harvest_condition_id = _condition.get_id();
+            
+            if (_harvest_condition_id != undefined) && (!array_contains(_harvest_condition_id, _id)) exit;
+        }
     }
     
     if (_tile_harvest.get_level() > _item_level) exit;

@@ -528,7 +528,7 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
         ___tile_harvest = new ItemTileHarvest(_harvest.hardness, _harvest.level, _harvest.particle, _harvest[$ "condition"]);
     }
     
-    static get_tile_middle_layer_harvest = function()
+    static get_tile_harvest = function()
     {
         return self[$ "___tile_harvest"];
     }
@@ -750,27 +750,27 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
         return self[$ "___harvest_level"] ?? 0;
     }
     
-    static get_tile_middle_layer_harvest_hardness = function()
+    static get_tile_harvest_hardness = function()
     {
         return self[$ "___harvest_hardness"];
     }
     
-    static get_tile_middle_layer_harvest_level = function()
+    static get_tile_harvest_level = function()
     {
         return self[$ "___harvest_level"] ?? 0;
     }
     
-    static get_tile_middle_layer_harvest_condition_id = function()
+    static get_tile_harvest_condition_id = function()
     {
         return self[$ "___harvest_condition_id"]
     }
     
-    static get_tile_middle_layer_harvest_particle_colour = function()
+    static get_tile_harvest_particle_colour = function()
     {
         return self[$ "___harvest_particle_colour"];
     }
     
-    static get_tile_middle_layer_harvest_particle_frequency = function()
+    static get_tile_harvest_particle_frequency = function()
     {
         return self[$ "___harvest_particle_frequency"] ?? 0;
     }

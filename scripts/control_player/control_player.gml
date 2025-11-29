@@ -68,7 +68,7 @@ function control_player(_dt)
     
     if !(obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.MENU) && (timer_attack <= 0) && (mouse_check_button(mb_left))
     {
-        sfx_diegetic_play(obj_Player.audio_emitter, obj_Player.x, obj_Player.y, "phantasia:item.swing");
+        sfx_diegetic_play(obj_Player.audio_emitter, obj_Player.x, obj_Player.y, "phantasia:item/swing");
         
         timer_attack = 0.3;
         
@@ -88,7 +88,7 @@ function control_player(_dt)
                 
                 inst_item._id = _id;
                 
-                inst_item.sprite_index = _data.get_sprite();
+                inst_item.sprite_index = global.sprite_asset[$ _data.get_sprite()].get_sprite();
                 
                 inst_item.image_index = _data.get_inventory_index();
                 inst_item.image_speed = 0;
