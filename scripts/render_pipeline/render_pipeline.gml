@@ -202,6 +202,8 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 
                 if (_data.is_additive()) continue;
                 
+                show_debug_message(_data.get_sprite())
+                
                 var _sprite = _sprite_asset[$ _data.get_sprite()];
                 
                 var _index = 0;

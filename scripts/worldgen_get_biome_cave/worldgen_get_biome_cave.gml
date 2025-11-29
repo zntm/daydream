@@ -8,7 +8,7 @@ function worldgen_get_biome_cave(_x, _y, _surface_height, _seed)
 {
     var _surface_offset = worldgen_get_surface_noise_offset(_x, _seed);
     
-    if (_y <= _surface_height + _surface_offset)
+    if (_y <= _surface_height + 40)
     {
         return undefined;
     }

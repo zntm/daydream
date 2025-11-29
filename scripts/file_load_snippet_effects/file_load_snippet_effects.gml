@@ -1,4 +1,4 @@
-function file_load_snippet_effects(_buffer, _inst)
+function file_load_snippet_effects(_buffer)
 {
     var _effects_length = buffer_read(_buffer, buffer_u16);
     
@@ -7,7 +7,6 @@ function file_load_snippet_effects(_buffer, _inst)
         return undefined;
     }
     
-    var _effects = _inst.effects;
     var _data = {}
     
     for (var i = 0; i < _effects_length; ++i)

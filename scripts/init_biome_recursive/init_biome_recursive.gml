@@ -44,7 +44,7 @@ function init_biome_recursive(_directory, _namespace = "phantasia", _id = undefi
         
         _biome_data.set_tile_top_layer(_tile.top_layer);
         _biome_data.set_tile_middle_layer(_tile.middle_layer);
-        _biome_data.set_tile_middle_layer(_tile.bottom_layer);
+        _biome_data.set_tile_bottom_layer(_tile.bottom_layer);
         
         _biome_data.set_tile_foliage(_json.foliage);
         

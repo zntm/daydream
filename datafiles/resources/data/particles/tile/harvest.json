@@ -36,5 +36,5 @@
     "properties": [
         "phantasia:is_fade_out"
     ],
-    "sprite": "phantasia:particle/harvest"
+    "sprite": "phantasia:particle/tile/harvest"
 }

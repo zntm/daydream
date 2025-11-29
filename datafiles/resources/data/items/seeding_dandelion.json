@@ -29,7 +29,7 @@
                     {
                         "id": "phantasia:spawn_particle",
                         "parameters": {
-                            "id": "phantasia:seeding_dandelion"
+                            "id": "phantasia:tile/seeding_dandelion"
                         }
                     }
                 ]

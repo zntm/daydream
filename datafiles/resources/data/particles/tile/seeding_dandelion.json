@@ -52,5 +52,5 @@
     "properties": [
         "phantasia:is_fade_out"
     ],
-    "sprite": "phantasia:particle/seeding_dandelion"
+    "sprite": "phantasia:particle/tile/seeding_dandelion"
 }
