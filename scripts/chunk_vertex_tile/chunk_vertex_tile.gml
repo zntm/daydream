@@ -53,31 +53,25 @@ function chunk_vertex_tile(_buffer, _texel_width, _texel_height, _animation_type
     
     vertex_position(_buffer, _ax, _ay);
     vertex_texcoord(_buffer, _u0, _v0);
-    // vertex_colour(_buffer);
     vertex_float3(_buffer, (_number << 24) | _animation_type, _index, _width * _texel_width);
     
     vertex_position(_buffer, _bx, _by);
     vertex_texcoord(_buffer, _u1, _v0);
-    // vertex_colour(_buffer);
     vertex_float3(_buffer, (_number << 24) | _animation_type, _index, _width * _texel_width);
     
     vertex_position(_buffer, _cx, _cy);
     vertex_texcoord(_buffer, _u0, _v1);
-    // vertex_colour(_buffer);
     vertex_float3(_buffer, (_number << 24) | _animation_type, _index, _width * _texel_width);
     
     vertex_position(_buffer, _bx, _by);
     vertex_texcoord(_buffer, _u1, _v0);
-    // vertex_colour(_buffer);
     vertex_float3(_buffer, (_number << 24) | _animation_type, _index, _width * _texel_width);
     
     vertex_position(_buffer, _cx, _cy);
     vertex_texcoord(_buffer, _u0, _v1);
-    // vertex_colour(_buffer);
     vertex_float3(_buffer, (_number << 24) | _animation_type, _index, _width * _texel_width);
     
     vertex_position(_buffer, _dx, _dy);
     vertex_texcoord(_buffer, _u1, _v1);
-    // vertex_colour(_buffer);
     vertex_float3(_buffer, (_number << 24) | _animation_type, _index, _width * _texel_width);
 }

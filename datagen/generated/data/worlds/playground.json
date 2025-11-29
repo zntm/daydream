@@ -93,28 +93,24 @@
     },
     "time": {
         "start": 180,
-        "diurnal": [
-            {
-                "id": "dawn",
+        "diurnal": {
+            "dawn": {
                 "time_range_min": 0,
                 "time_range_max": 240
             },
-            {
-                "id": "day",
+            "day": {
                 "time_range_min": 240,
                 "time_range_max": 820
             },
-            {
-                "id": "dusk",
+            "dusk": {
                 "time_range_min": 820,
                 "time_range_max": 890
             },
-            {
-                "id": "night",
+            "night": {
                 "time_range_min": 890,
                 "time_range_max": 1200
             }
-        ]
+        }
     },
     "vignette": {
         "ystart": 768,

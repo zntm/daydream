@@ -7,7 +7,7 @@ function render_attire(_attire, _index, _x, _y, _xscale, _yscale, _is_blinking =
         body_legs:      spr_Attire_Base_Legs
     }
     
-    static __draw_body = function(_sprite, _index, _x, _y, _xscale, _yscale, _angle, _colour_match, _colour_replace)
+    static __draw_body = function(_sprite_or_asset, _index, _x, _y, _xscale, _yscale, _angle, _colour_match, _colour_replace)
     {
         static __u_match   = shader_get_uniform(shd_Colour_Replace, "u_match");
         static __u_replace = shader_get_uniform(shd_Colour_Replace, "u_replace");
@@ -19,9 +19,22 @@ function render_attire(_attire, _index, _x, _y, _xscale, _yscale, _is_blinking =
         shader_set_uniform_i_array(__u_replace, _colour_replace);
         shader_set_uniform_i(__u_length, ATTIRE_COLOUR_AMOUNT);
         
+        // Get sprite ID from SpriteAsset object or use raw sprite ID
+        // Sprite origin is already set by sprite_add, so draw at base position
+        var _sprite = is_struct(_sprite_or_asset) ? _sprite_or_asset.get_sprite() : _sprite_or_asset;
+        
         draw_sprite_ext(_sprite, _index, _x, _y, _xscale, _yscale, _angle, c_white, 1);
         
         shader_reset();
+    }
+    
+    static __draw_sprite_white = function(_sprite_or_asset, _index, _x, _y, _xscale, _yscale, _angle)
+    {
+        // Get sprite ID from SpriteAsset object or use raw sprite ID
+        // Sprite origin is already set by sprite_add, so draw at base position
+        var _sprite = is_struct(_sprite_or_asset) ? _sprite_or_asset.get_sprite() : _sprite_or_asset;
+        
+        draw_sprite_ext(_sprite, _index, _x, _y, _xscale, _yscale, _angle, c_white, 1);
     }
     
     var _attire_data  = global.attire_data;
@@ -77,15 +90,38 @@ function render_attire(_attire, _index, _x, _y, _xscale, _yscale, _is_blinking =
             
             if (_sprite_colour != undefined)
             {
-                if (!is_array(_sprite_colour))
+                // Check if colour sprites are stored as top-level array (multiple parts like shirt)
+                if (is_array(_sprite_colour) && (_element_index < _.get_sprite_colour_length()))
                 {
-                    __draw_body(_sprite_colour.get_sprite(), _image_index_arm, _x, _y, _xscale, _yscale, image_angle, _colour_white, _colour_data[_part_colour]);
+                    // Top-level array - get the sprite for this element index
+                    var _sprite_asset_at_index = _sprite_colour[_element_index];
+                    
+                    if (is_array(_sprite_asset_at_index))
+                    {
+                        // Nested array - folder-based multi-frame sprites
+                        if (_image_index_arm < array_length(_sprite_asset_at_index))
+                        {
+                            __draw_body(_sprite_asset_at_index[_image_index_arm], 0, _x, _y, _xscale, _yscale, image_angle, _colour_white, _colour_data[_part_colour]);
+                        }
+                    }
+                    else
+                    {
+                        // Single SpriteAsset for this part
+                        __draw_body(_sprite_asset_at_index, _image_index_arm, _x, _y, _xscale, _yscale, image_angle, _colour_white, _colour_data[_part_colour]);
+                    }
                 }
-                else if (_element_index < _.get_sprite_colour_length())
+                else if (is_array(_sprite_colour))
                 {
-                    show_debug_message(_sprite_colour);
-                    show_debug_message(_sprite_colour[_element_index]);
-                    __draw_body(_sprite_colour[_element_index].get_sprite(), _image_index_arm, _x, _y, _xscale, _yscale, image_angle, _colour_white, _colour_data[_part_colour]);
+                    // Folder-based array of SpriteAssets (multi-frame animation)
+                    if (_image_index_arm < array_length(_sprite_colour))
+                    {
+                        __draw_body(_sprite_colour[_image_index_arm], 0, _x, _y, _xscale, _yscale, image_angle, _colour_white, _colour_data[_part_colour]);
+                    }
+                }
+                else
+                {
+                    // Single SpriteAsset
+                    __draw_body(_sprite_colour, _image_index_arm, _x, _y, _xscale, _yscale, image_angle, _colour_white, _colour_data[_part_colour]);
                 }
             }
             
@@ -93,15 +129,38 @@ function render_attire(_attire, _index, _x, _y, _xscale, _yscale, _is_blinking =
             
             if (_sprite_white != undefined)
             {
-                if (!is_array(_sprite_white))
+                // Check if white sprites are stored as top-level array (multiple parts like shirt)
+                if (is_array(_sprite_white) && (_element_index < _.get_sprite_white_length()))
                 {
-                    draw_sprite_ext(_sprite_white.get_sprite(), _image_index_arm, _x, _y, _xscale, _yscale, image_angle, c_white, 1);
+                    // Top-level array - get the sprite for this element index
+                    var _sprite_asset_at_index = _sprite_white[_element_index];
+                    
+                    if (is_array(_sprite_asset_at_index))
+                    {
+                        // Nested array - folder-based multi-frame sprites
+                        if (_image_index_arm < array_length(_sprite_asset_at_index))
+                        {
+                            __draw_sprite_white(_sprite_asset_at_index[_image_index_arm], 0, _x, _y, _xscale, _yscale, image_angle);
+                        }
+                    }
+                    else
+                    {
+                        // Single SpriteAsset for this part
+                        __draw_sprite_white(_sprite_asset_at_index, _image_index_arm, _x, _y, _xscale, _yscale, image_angle);
+                    }
                 }
-                else if (_element_index < _.get_sprite_white_length())
+                else if (is_array(_sprite_white))
                 {
-                    show_debug_message(_sprite_white);
-                    show_debug_message(_sprite_white[_element_index]);
-                    draw_sprite_ext(_sprite_white[_element_index].get_sprite(), _image_index_arm, _x, _y, _xscale, _yscale, image_angle, c_white, 1);
+                    // Folder-based array of SpriteAssets (multi-frame animation)
+                    if (_image_index_arm < array_length(_sprite_white))
+                    {
+                        __draw_sprite_white(_sprite_white[_image_index_arm], 0, _x, _y, _xscale, _yscale, image_angle);
+                    }
+                }
+                else
+                {
+                    // Single SpriteAsset
+                    __draw_sprite_white(_sprite_white, _image_index_arm, _x, _y, _xscale, _yscale, image_angle);
                 }
             }
         }
@@ -124,14 +183,38 @@ function render_attire(_attire, _index, _x, _y, _xscale, _yscale, _is_blinking =
             
             if (_sprite_colour != undefined)
             {
-                __draw_body(_sprite_colour.get_sprite(), _index, _x, _y, _xscale, _yscale, image_angle, _colour_white, _colour_data[_part_colour]);
+                if (is_array(_sprite_colour))
+                {
+                    // Folder-based array of SpriteAssets (multi-frame animation)
+                    if (_index < array_length(_sprite_colour))
+                    {
+                        __draw_body(_sprite_colour[_index], 0, _x, _y, _xscale, _yscale, image_angle, _colour_white, _colour_data[_part_colour]);
+                    }
+                }
+                else
+                {
+                    // Single SpriteAsset
+                    __draw_body(_sprite_colour, _index, _x, _y, _xscale, _yscale, image_angle, _colour_white, _colour_data[_part_colour]);
+                }
             }
             
             var _sprite_white = _.get_sprite_white();
             
             if (_sprite_white != undefined)
             {
-                draw_sprite_ext(_sprite_white.get_sprite(), _index, _x, _y, _xscale, _yscale, image_angle, c_white, 1);
+                if (is_array(_sprite_white))
+                {
+                    // Folder-based array of SpriteAssets (multi-frame animation)
+                    if (_index < array_length(_sprite_white))
+                    {
+                        __draw_sprite_white(_sprite_white[_index], 0, _x, _y, _xscale, _yscale, image_angle);
+                    }
+                }
+                else
+                {
+                    // Single SpriteAsset
+                    __draw_sprite_white(_sprite_white, _index, _x, _y, _xscale, _yscale, image_angle);
+                }
             }
         }
     }

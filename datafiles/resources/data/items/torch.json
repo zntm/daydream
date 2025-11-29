@@ -23,11 +23,9 @@
                 "function": [
                     {
                         "id": "phantasia:sfx_play",
-                        "parameters": [
-                            {
-                                "id": "phantasia:tile.fire.ambient"
-                            }
-                        ]
+                        "parameters": {
+                            "id": "phantasia:tile.fire.ambient"
+                        }
                     }
                 ],
                 "chance": 0.1

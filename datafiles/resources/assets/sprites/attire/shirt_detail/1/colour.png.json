@@ -1,7 +1,5 @@
-[
-    {
-        "xoffset": 16,
-        "yoffset": 24,
-        "length": 1
-    }
-]
+{
+    "length": 1,
+    "xoffset": 16,
+    "yoffset": 32
+}

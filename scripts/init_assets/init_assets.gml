@@ -119,6 +119,8 @@ function init_assets(_directory, _namespace, _folder = "")
             var _json = buffer_load_json($"{_directory}/{_file}");
             var _file2 = string_delete(_file, string_length(_file) - 8, 9);
             
+            show_debug_message($"{$"{_directory}/{_file}"} {_json}");
+            
             if (directory_exists($"{_directory}/{_file2}"))
             {
                 var _array = [];
@@ -138,11 +140,6 @@ function init_assets(_directory, _namespace, _folder = "")
                     var _sprite = sprite_add($"{_directory}/{_file2}/{_sprite_file}", _length, false, false, _xoffset, _yoffset);
                     
                     var _asset = new SpriteAsset(_sprite, _xoffset, _yoffset, _length);
-                    
-                    if (_data[$ "is_tile"])
-                    {
-                        _asset.set_is_tile();
-                    }
                     
                     array_push(_array, _asset);
                 }

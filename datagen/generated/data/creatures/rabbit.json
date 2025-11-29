@@ -19,6 +19,6 @@
     "hostility_type": "passive",
     "hp": 12,
     "movement_type": "ground",
-    "sprite_idle": "phantasia:creature/rabbit_idle",
-    "sprite_moving": "phantasia:creature/rabbit_moving"
+    "sprite_idle": "phantasia:creature/rabbit/idle",
+    "sprite_moving": "phantasia:creature/rabbit/moving"
 }

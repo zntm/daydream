@@ -63,22 +63,27 @@ function function_parse(_data)
             var _a = _f[j];
             
             var _parameters = _a[$ "parameters"];
-            /*
+            
             var _p = {}
             
-            var _parameter_names = struct_get_names(_parameters);
-            var _parameter_length = array_length(_parameter_names);
-            
-            for (var l = 0; l < _parameter_length; ++l)
+            if (_parameters != undefined)
             {
-                var _name = _parameter_names[l];
+                show_debug_message(_parameters);
                 
-                _p[$ _name] = _parameters[$ _name];
+                var _parameter_names = struct_get_names(_parameters);
+                var _parameter_length = array_length(_parameter_names);
+                
+                for (var l = 0; l < _parameter_length; ++l)
+                {
+                    var _name = _parameter_names[l];
+                    
+                    _p[$ _name] = _parameters[$ _name];
+                }
             }
-            */
+             
             _f2[@ j] = [
                 _a.id,
-                _parameters,
+                _p,
                 _[$ "repeat"]
             ];
         }

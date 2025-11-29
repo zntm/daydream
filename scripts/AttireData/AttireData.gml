@@ -11,12 +11,24 @@ function AttireData(_icon, _colour, _white) constructor
         
         for (var i = 0; i < _length; ++i)
         {
+            // Get the asset from global.sprite_asset
+            // The asset itself may be an array of SpriteAssets (when sprites are in a folder)
+            // or a single SpriteAsset
             ___sprite_colour[@ i] = global.sprite_asset[$ _colour[i]];
         }
     }
     else
     {
+        // Get the asset from global.sprite_asset
+        // The asset itself may be an array of SpriteAssets (when sprites are in a folder)
+        // or a single SpriteAsset
         ___sprite_colour = global.sprite_asset[$ _colour];
+        
+        // If the asset is an array (multi-part attire like shirt with 3 parts), track length
+        if (is_array(___sprite_colour))
+        {
+            ___sprite_colour_length = array_length(___sprite_colour);
+        }
     }
     
     // Handle white - can be a single sprite ID, an array of sprite IDs, or undefined
@@ -30,12 +42,24 @@ function AttireData(_icon, _colour, _white) constructor
             
             for (var i = 0; i < _length; ++i)
             {
+                // Get the asset from global.sprite_asset
+                // The asset itself may be an array of SpriteAssets (when sprites are in a folder)
+                // or a single SpriteAsset
                 ___sprite_white[@ i] = global.sprite_asset[$ _white[i]];
             }
         }
         else
         {
+            // Get the asset from global.sprite_asset
+            // The asset itself may be an array of SpriteAssets (when sprites are in a folder)
+            // or a single SpriteAsset
             ___sprite_white = global.sprite_asset[$ _white];
+            
+            // If the asset is an array (multi-part attire like shirt with 3 parts), track length
+            if (is_array(___sprite_white))
+            {
+                ___sprite_white_length = array_length(___sprite_white);
+            }
         }
     }
     
