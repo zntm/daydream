@@ -62,37 +62,8 @@ var _world_save_data = global.world_save_data;
 
 var _world_data = global.world_data[$ _world_save_data.dimension];
 
-// TODO: Fix this, make it prettier
-var _seed = _world_save_data.seed;
-var _surface_height = worldgen_get_surface_height(0, _seed);
-
-obj_Player.y = ((_surface_height - 1) * TILE_SIZE) + (TILE_SIZE / 2);
-
-var _cave_start = worldgen_get_cave_start(0, _seed);
-
-while (worldgen_get_cave(0, round(obj_Player.y / TILE_SIZE) + 1, _surface_height, _cave_start, _seed))
-{
-    obj_Player.y += TILE_SIZE;
-}
-
-obj_Player.spawn_x = obj_Player.x;
-obj_Player.spawn_y = obj_Player.y;
-
-if (!directory_exists($"{PROGRAM_DIRECTORY_WORLDS}/{_world_save_data.uuid}"))
-{
-    global.world_save_data.time = _world_data.get_time_start();
-    
-    global.world_save_data.weather_wind  = 0;
-    global.world_save_data.weather_storm = 0;
-}
-else
-{
-	file_load_world_spawn(global.world_save_data, obj_Player, global.player_save_data.uuid);
-}
-
-control_camera_pos(obj_Player.x, obj_Player.y, true);
-
-obj_Player.ylast = obj_Player.y;
+//Defer spawn calculation to Room Creation Code after all instances are created
+spawn_needs_init = true;
 
 global.inventory_selected_hotbar = 0;
 global.inventory_selected_backpack = {
@@ -112,6 +83,8 @@ inventory_mouse_select_type = INVENTORY_MOUSE_SELECT_TYPE.NONE;
 global.inventory_selected_hover = noone;
 
 surface_lighting = -1;
+surface_lighting_x = -1;
+surface_lighting_y = -1;
 
 surface_inventory = {
     tooltip: {
@@ -161,8 +134,8 @@ chunk_saved_count_max = 0;
 var _camera_width  = camera_get_view_width(view_camera[0]);
 var _camera_height = camera_get_view_height(view_camera[0]);
 
-var _camera_x = obj_Player.x - (_camera_width  / 2);
-var _camera_y = obj_Player.y - (_camera_height / 2);
+var _camera_x = 0 - (_camera_width  / 2);
+var _camera_y = 0 - (_camera_height / 2);
 
 var _gui_scale = 1;
 

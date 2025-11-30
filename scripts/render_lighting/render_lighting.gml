@@ -11,9 +11,17 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
     var _surface_x = round(_camera_x / RENDER_LIGHTING_RESIZE) * RENDER_LIGHTING_RESIZE;
     var _surface_y = round(_camera_y / RENDER_LIGHTING_RESIZE) * RENDER_LIGHTING_RESIZE;
     
+    if (_surface_x != obj_Game_Control.surface_lighting_x) || (_surface_y != obj_Game_Control.surface_lighting_y)
+    {
+        surface_refresh |= SURFACE_REFRESH_BOOLEAN.LIGHTING;
+    }
+    
     if (surface_refresh & SURFACE_REFRESH_BOOLEAN.LIGHTING)
     {
         surface_refresh ^= SURFACE_REFRESH_BOOLEAN.LIGHTING;
+        
+        obj_Game_Control.surface_lighting_x = _surface_x;
+        obj_Game_Control.surface_lighting_y = _surface_y;
         
         for (var i = 0; i < chunk_in_view_length; ++i)
         {
@@ -62,8 +70,6 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
         surface_set_target(surface_lighting);
         draw_clear_alpha(c_black, 1);
         
-        shader_set(shd_Lighting);
-        
         for (var i = 0; i < chunk_in_view_length; ++i)
         {
             var _inst = chunk_in_view[i];
@@ -78,8 +84,6 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
                 draw_surface(_inst.surface_lighting, _x2, _y2 + 8);
             }
         }
-        
-        shader_reset();
         
         with (obj_Player)
         {
@@ -106,7 +110,14 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
     
     if (surface_exists(surface_lighting))
     {
+        shader_set(shd_Lighting);
+        
+        var _u_resolution = shader_get_uniform(shd_Lighting, "u_resolution");
+        shader_set_uniform_f(_u_resolution, _surface_lighting_width * RENDER_LIGHTING_RESIZE, _surface_lighting_height * RENDER_LIGHTING_RESIZE);
+        
         draw_surface_ext(surface_lighting, _surface_x - RENDER_LIGHTING_PADDING - (RENDER_LIGHTING_PADDING / 2) + TILE_SIZE, _surface_y - RENDER_LIGHTING_PADDING - (RENDER_LIGHTING_PADDING / 2) + TILE_SIZE, RENDER_LIGHTING_RESIZE, RENDER_LIGHTING_RESIZE, 0, c_white, 1);
+        
+        shader_reset();
         /*
         gpu_set_tex_filter(true);
         
