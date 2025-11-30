@@ -28,7 +28,7 @@ function Inventory(_item, _amount = 1) constructor
         return self[$ "___amount"];
     }
     
-    var _data = global.item_data[$ get_id()];
+    var _data = global.item_data[$ _item];
     
     var _durability = _data.get_item_durability();
     

@@ -7,7 +7,7 @@
     "tile": {
         "drops": [
             {
-                "id": "cattail",
+                "id": "phantasia:cattail",
                 "condition": {
                     "index": 2
                 }
