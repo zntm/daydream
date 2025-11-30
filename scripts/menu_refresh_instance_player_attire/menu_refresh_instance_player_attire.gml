@@ -52,6 +52,8 @@ function menu_refresh_instance_player_attire()
     
     var _start_index = global.menu_player_attire_page * 6;
     
+    var _sprite_asset = global.sprite_asset;
+    
     for (var i = 0; i < 6; ++i)
     {
         var _inst = __inst[i];
@@ -73,7 +75,7 @@ function menu_refresh_instance_player_attire()
         
         var _data = _attire_data[_index];
         
-        _inst.icon = ((_data != undefined) ? _data.get_icon() : spr_Icon_Prohibited);
+        _inst.icon = ((_data != undefined) ? _sprite_asset[$ _data.get_icon()].get_sprite() : spr_Icon_Prohibited);
         
         _inst.icon_xscale = 1.5;
         _inst.icon_yscale = 1.5;

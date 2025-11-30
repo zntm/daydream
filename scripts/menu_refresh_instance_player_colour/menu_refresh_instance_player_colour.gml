@@ -34,7 +34,7 @@ function menu_refresh_instance_player_colour()
     
     var _attire = global.player_save_data.attire[$ _name];
     
-    if (_name == "body") || (global.attire_data[$ _name][_attire.index] == undefined)
+    if (_name == "body") || (global.attire_data[$ _name] == undefined) || (global.attire_data[$ _name][_attire.index] == undefined)
     {
         for (var i = 0; i < 6; ++i)
         {
