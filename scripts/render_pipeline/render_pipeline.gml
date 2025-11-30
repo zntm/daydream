@@ -76,7 +76,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 var _xscale = 8 / attribute.get_collision_box_width();
                 var _yscale = 8 / attribute.get_collision_box_height();
                 
-                draw_sprite_ext(_sprite.get_sprite(), _index, x, y - (_data.get_sprite_yoffset() * _yscale), _xscale, _yscale, image_angle, image_blend, 1);
+                draw_sprite_ext(_sprite.get_sprite(), _index, x, y - (_sprite.get_yoffset() * _yscale), _xscale, _yscale, image_angle, image_blend, 1);
             }
             
             with (obj_Creature)

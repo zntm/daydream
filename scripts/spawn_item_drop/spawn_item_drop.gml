@@ -11,10 +11,7 @@ function spawn_item_drop(_x, _y, _item, _direction = 0, _xvelocity = 0, _yveloci
     with (instance_create_layer(_x, _y + (_size / 2), "Instances", obj_Item_Drop))
     {
         attribute = new Attribute()
-            .set_collision_box({
-                width:  _size,
-                height: _size
-            })
+            .set_collision_box(_size, _size)
             .set_gravity(0.15);
         
         image_xscale = _size / 8;

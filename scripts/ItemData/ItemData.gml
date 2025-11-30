@@ -499,10 +499,9 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     static set_tile_drops = function(_drops)
     {
         ___tile_drops = [];
+        ___tile_drops_length = array_length(_drops);
         
-        var _drops_length = array_length(_drops);
-        
-        for (var i = 0; i < _drops_length; ++i)
+        for (var i = 0; i < ___tile_drops_length; ++i)
         {
             var _drop = _drops[i];
             
@@ -518,9 +517,14 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
         }
     }
     
-    static get_tile_middle_layer_drops = function()
+    static get_tile_drops = function()
     {
         return self[$ "___tile_drops"];
+    }
+    
+    static get_tile_drops_length = function()
+    {
+        return self[$ "___tile_drops_length"];
     }
     
     static set_tile_harvest = function(_harvest)
