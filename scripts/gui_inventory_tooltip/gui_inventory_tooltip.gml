@@ -62,22 +62,34 @@ function gui_inventory_tooltip(_gui_multiplier_x, _gui_multiplier_y)
     
     // if (_index == -1) || ((_surface_data.type == _index) && (_surface_data.index == _index)) exit;
     
-    if (_item == INVENTORY_EMPTY) exit;
+    if (_item == INVENTORY_EMPTY)
+    {
+        var _surface = surface_inventory.tooltip.surface;
+        
+        if (surface_exists(_surface))
+        {
+            surface_free(_surface);
+            
+            surface_inventory.tooltip.surface = -1;
+        }
+        
+        exit;
+    }
     
     var _data = global.item_data[$ _item.get_id()];
     
     var _item_name = _item.get_id()//loca_item_name(_item);
     var _item_description = _item.get_id()//loca_item_description(_item);
     
-    var _sprite = _data.get_sprite();
+    var _sprite = global.sprite_asset[$ _data.get_sprite()];
     
     var _inventory_scale = _data.get_inventory_scale();
     
     var _sprite_xscale = _gui_multiplier_x * _inventory_scale;
     var _sprite_yscale = _gui_multiplier_y * _inventory_scale;
     
-    var _sprite_width  = _data.get_sprite_width();
-    var _sprite_height = _data.get_sprite_height();
+    var _sprite_width  = _sprite.get_width();
+    var _sprite_height = _sprite.get_height();
     
     var _sprite_xoffset = _sprite_width  / 2;
     var _sprite_yoffset = _sprite_height / 2;
@@ -143,7 +155,7 @@ function gui_inventory_tooltip(_gui_multiplier_x, _gui_multiplier_y)
     
     draw_set_align(fa_left, fa_center);
     
-    draw_sprite_ext(_sprite, 0, _sprite_x, _sprite_y, _sprite_xscale, _sprite_yscale, 0, c_white, 1);
+    draw_sprite_ext(_sprite.get_sprite(), 0, _sprite_x, _sprite_y, _sprite_xscale, _sprite_yscale, 0, c_white, 1);
     
     var _rarity = _data.get_rarity();
     var _rarity_colour = ((_data.get_rarity() != undefined) ? (global.rarity_data[$ _rarity] ?? c_white) : c_white);
