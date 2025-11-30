@@ -95,31 +95,35 @@ function control_game_tick(_delta_time)
             {
                 var _data = _item_data[$ _item_holding.get_id()];
                 var _item_consumable = _data.get_item_consumable();
-                var _hp = _item_consumable.get_hp();
                 
-                if (_hp != undefined) && (obj_Player.hp < obj_Player.hp_max)
+                if (_item_consumable != undefined)
                 {
-                    var _cooldown = _item_consumable.get_cooldown();
+                    var _hp = _item_consumable.get_hp();
                     
-                    if (_cooldown != undefined)
+                    if (_hp != undefined) && (obj_Player.hp < obj_Player.hp_max)
                     {
-                        obj_Player.hp = min(obj_Player.hp_max, obj_Player.hp + _hp);
-                        obj_Player.saturation += _item_consumable.get_saturation();
+                        var _cooldown = _item_consumable.get_cooldown();
                         
-                        item_cooldown[$ _cooldown.get_id()] = _cooldown.get_seconds();
-                        
-                        inventory_delete("base", _inventory_selected_hotbar);
-                        
-                        obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR | SURFACE_REFRESH_BOOLEAN.HP;
-                        
-                        var _sfx = _item_consumable.get_sfx();
-                        
-                        if (_sfx != undefined)
+                        if (_cooldown != undefined)
                         {
-                            var _sfx_id = _sfx.get_id();
-                            var _sfx_gain = _sfx.get_gain();
+                            obj_Player.hp = min(obj_Player.hp_max, obj_Player.hp + _hp);
+                            obj_Player.saturation += _item_consumable.get_saturation();
                             
-                            sfx_diegetic_play(obj_Player.audio_emitter, obj_Player.x, obj_Player.y, _sfx_id, _sfx_gain);
+                            item_cooldown[$ _cooldown.get_id()] = _cooldown.get_seconds();
+                            
+                            inventory_delete("base", _inventory_selected_hotbar);
+                            
+                            obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR | SURFACE_REFRESH_BOOLEAN.HP;
+                            
+                            var _sfx = _item_consumable.get_sfx();
+                            
+                            if (_sfx != undefined)
+                            {
+                                var _sfx_id = _sfx.get_id();
+                                var _sfx_gain = _sfx.get_gain();
+                                
+                                sfx_diegetic_play(obj_Player.audio_emitter, obj_Player.x, obj_Player.y, _sfx_id, _sfx_gain);
+                            }
                         }
                     }
                 }
