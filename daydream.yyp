@@ -1340,6 +1340,7 @@
     {"id":{"name":"ParticleData","path":"scripts/ParticleData/ParticleData.yy",},},
     {"id":{"name":"player_build","path":"scripts/player_build/player_build.yy",},},
     {"id":{"name":"player_harvest","path":"scripts/player_harvest/player_harvest.yy",},},
+    {"id":{"name":"program_get_version","path":"scripts/program_get_version/program_get_version.yy",},},
     {"id":{"name":"ProjectileData","path":"scripts/ProjectileData/ProjectileData.yy",},},
     {"id":{"name":"random_seeded","path":"scripts/random_seeded/random_seeded.yy",},},
     {"id":{"name":"rectangle_distance","path":"scripts/rectangle_distance/rectangle_distance.yy",},},

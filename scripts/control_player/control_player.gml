@@ -159,7 +159,7 @@ function control_player(_dt)
     {
         if (!_on_ground) && (tile_meeting(x, y + 1))
         {
-            var _difference = max(0, y - ylast - 10);
+            var _difference = max(0, y - ylast - 16);
             
             var _value = floor(power(floor(_difference / TILE_SIZE) * 0.62, 1.25));
             

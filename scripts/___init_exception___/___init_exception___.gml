@@ -57,17 +57,6 @@ exception_unhandled_handler(function(_exception)
     var _long_message = _exception.longMessage;
     var _stack_trace = string_join_ext("\n", _exception.stacktrace);
     
-    var _version;
-    
-    if (PROGRAM_VERSION_PATCH > 0)
-    {
-        _version = string(loca_translate("phantasia:menu.title.version.patch"), PROGRAM_VERSION_MAJOR, PROGRAM_VERSION_MINOR, PROGRAM_VERSION_PATCH);
-    }
-    else
-    {
-        _version = string(loca_translate("phantasia:menu.title.version"), PROGRAM_VERSION_MAJOR, PROGRAM_VERSION_MINOR);
-    }
-    
     var _os_info = os_type;
     
     if (_os_info == os_windows)
@@ -130,7 +119,7 @@ exception_unhandled_handler(function(_exception)
         $"{SITE_DISCORD}\n\n" +
         
         $"---[ Game & System Information ]---\n" +
-        $"Version: {_version}\n" +
+        $"Version: {program_get_version()}\n" +
         $"OS: {_os_info}\n" +
         $"Display: {display_get_width()}x{display_get_height()}@{display_get_frequency()}\n\n" +
         

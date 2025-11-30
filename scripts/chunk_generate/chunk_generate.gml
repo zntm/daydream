@@ -222,7 +222,7 @@ function chunk_generate()
                 var _surface_biome = worldgen_get_biome_surface(_world_x, _world_y + 1, _surface_height, _world_seed);
                 var _cave_biome = worldgen_get_biome_cave(_world_x, _world_y + 1, _surface_height, _world_seed);
                 
-                if ((_world_y == _surface_height - 1) || (_cave_bit & (1 << (j + 1)))) && !(_cave_bit & (1 << (j + 2)))
+                if (_cave_bit & (1 << (j + 1))) && !(_cave_bit & (1 << (j + 2)))
                 {
                     var _tile_base = worldgen_get_tile_base(_world_x, _world_y + 1, _surface_biome, _cave_biome, _surface_height, true, _world_seed);
                     

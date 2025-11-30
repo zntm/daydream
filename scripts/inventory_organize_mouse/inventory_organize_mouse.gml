@@ -321,6 +321,16 @@ function inventory_organize_mouse(_inst)
         timer_crafting_max = 0.3;
         timer_crafting = timer_crafting_max;
         
+        with (obj_Inventory)
+        {
+            if (inventory_type == "_craftable")
+            {
+                instance_destroy();
+            }
+        }
+        
+        inventory_refresh_craftable();
+        
         inventory_mouse_select_type = INVENTORY_MOUSE_SELECT_TYPE.NONE;
         
         global.inventory.mouse.item = INVENTORY_EMPTY;
@@ -328,6 +338,6 @@ function inventory_organize_mouse(_inst)
         global.inventory.mouse.type  = "";
         global.inventory.mouse.index = -1;
         
-        surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK;
+        surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK | SURFACE_REFRESH_BOOLEAN.INVENTORY_CRAFTABLE;
     }
 }

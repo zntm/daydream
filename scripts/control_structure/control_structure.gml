@@ -82,7 +82,7 @@ function control_structure(_x, _y)
                 
                 var _placement_type = _structure_data[$ _structure.id].get_placement_type();
                 
-                if (_queue & 0b100)
+                if ((_queue & 0b100) && !(_queue & 0b001))
                 {
                     if (_placement_type == STRUCTURE_PLACEMENT_TYPE.FLOOR)
                     {

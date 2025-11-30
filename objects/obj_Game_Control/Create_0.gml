@@ -203,5 +203,3 @@ with (obj_Menu_Textbox)
 {
     y = -1000;
 }
-
-global.inventory.base[@ 0] = new Inventory("phantasia:structure_blueprint");

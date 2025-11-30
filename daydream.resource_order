@@ -284,6 +284,7 @@
     {"name":"ParentData","order":1,"path":"scripts/ParentData/ParentData.yy",},
     {"name":"player_build","order":1,"path":"scripts/player_build/player_build.yy",},
     {"name":"player_harvest","order":2,"path":"scripts/player_harvest/player_harvest.yy",},
+    {"name":"program_get_version","order":30,"path":"scripts/program_get_version/program_get_version.yy",},
     {"name":"random_seeded","order":4,"path":"scripts/random_seeded/random_seeded.yy",},
     {"name":"rectangle_distance","order":9,"path":"scripts/rectangle_distance/rectangle_distance.yy",},
     {"name":"render_attire","order":10,"path":"scripts/render_attire/render_attire.yy",},
