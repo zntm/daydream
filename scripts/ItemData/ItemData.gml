@@ -896,8 +896,6 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
         {
             var _length = array_length(_properties);
             
-            show_debug_message($"{_length} {_properties}");
-            
             for (var i = 0; i < _length; ++i)
             {
                 var _property = _properties[i];

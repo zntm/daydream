@@ -10,8 +10,6 @@ function render_harvest(_camera_x, _camera_y, _camera_width, _camera_height)
     
     var _sprite = global.sprite_asset[$ _data.get_sprite()];
     
-    show_debug_message(_sprite)
-    
     var _width  = ceil(_sprite.get_width()  / TILE_SIZE);
     var _height = ceil(_sprite.get_height() / TILE_SIZE);
     

@@ -68,8 +68,6 @@ function function_parse(_data)
             
             if (_parameters != undefined)
             {
-                show_debug_message(_parameters);
-                
                 var _parameter_names = struct_get_names(_parameters);
                 var _parameter_length = array_length(_parameter_names);
                 

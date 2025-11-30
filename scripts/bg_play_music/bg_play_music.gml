@@ -1,7 +1,5 @@
 function bg_play_music(_music)
 {
-    show_debug_message(_music.get_id());
-    
     var _sound = global.sound_asset[$ _music.get_id()].get_sound();
     
     music_current    = audio_play_sound(_sound, 0, false, 0);

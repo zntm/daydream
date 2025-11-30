@@ -116,11 +116,14 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
         
         // shader_set_uniform_f(_u_resolution, _surface_lighting_width * RENDER_LIGHTING_RESIZE, _surface_lighting_height * RENDER_LIGHTING_RESIZE);
         
-        draw_surface_ext(surface_lighting, _surface_x - RENDER_LIGHTING_PADDING - (RENDER_LIGHTING_PADDING / 2) + TILE_SIZE, _surface_y - RENDER_LIGHTING_PADDING - (RENDER_LIGHTING_PADDING / 2) + TILE_SIZE, RENDER_LIGHTING_RESIZE, RENDER_LIGHTING_RESIZE, 0, c_white, 0.8);
+        var _x2 = _surface_x - RENDER_LIGHTING_PADDING - (RENDER_LIGHTING_PADDING / 2) + TILE_SIZE;
+        var _y2 = _surface_y - RENDER_LIGHTING_PADDING - (RENDER_LIGHTING_PADDING / 2) + TILE_SIZE;
+        
+        draw_surface_ext(surface_lighting, _x2, _y2, RENDER_LIGHTING_RESIZE, RENDER_LIGHTING_RESIZE, 0, c_white, 0.8);
         
         gpu_set_tex_filter(true);
         
-        draw_surface_ext(surface_lighting, _surface_x - RENDER_LIGHTING_PADDING - (RENDER_LIGHTING_PADDING / 2) + TILE_SIZE, _surface_y - RENDER_LIGHTING_PADDING - (RENDER_LIGHTING_PADDING / 2) + TILE_SIZE, RENDER_LIGHTING_RESIZE, RENDER_LIGHTING_RESIZE, 0, c_white, 1);
+        draw_surface_ext(surface_lighting, _x2, _y2, RENDER_LIGHTING_RESIZE, RENDER_LIGHTING_RESIZE, 0, c_white, 1);
         
         gpu_set_tex_filter(false);
         

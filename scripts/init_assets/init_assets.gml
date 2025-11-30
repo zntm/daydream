@@ -131,8 +131,6 @@ function init_assets(_directory, _namespace, _folder = "")
             var _json = buffer_load_json($"{_directory}/{_file}");
             var _file2 = string_delete(_file, string_length(_file) - 8, 9);
             
-            show_debug_message($"{$"{_directory}/{_file}"} {_json}");
-            
             if (directory_exists($"{_directory}/{_file2}"))
             {
                 var _array = [];
