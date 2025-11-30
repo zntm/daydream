@@ -112,19 +112,19 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
     {
         shader_set(shd_Lighting);
         
-        var _u_resolution = shader_get_uniform(shd_Lighting, "u_resolution");
-        shader_set_uniform_f(_u_resolution, _surface_lighting_width * RENDER_LIGHTING_RESIZE, _surface_lighting_height * RENDER_LIGHTING_RESIZE);
+        // var _u_resolution = shader_get_uniform(shd_Lighting, "u_resolution");
+        
+        // shader_set_uniform_f(_u_resolution, _surface_lighting_width * RENDER_LIGHTING_RESIZE, _surface_lighting_height * RENDER_LIGHTING_RESIZE);
+        
+        draw_surface_ext(surface_lighting, _surface_x - RENDER_LIGHTING_PADDING - (RENDER_LIGHTING_PADDING / 2) + TILE_SIZE, _surface_y - RENDER_LIGHTING_PADDING - (RENDER_LIGHTING_PADDING / 2) + TILE_SIZE, RENDER_LIGHTING_RESIZE, RENDER_LIGHTING_RESIZE, 0, c_white, 0.8);
+        
+        gpu_set_tex_filter(true);
         
         draw_surface_ext(surface_lighting, _surface_x - RENDER_LIGHTING_PADDING - (RENDER_LIGHTING_PADDING / 2) + TILE_SIZE, _surface_y - RENDER_LIGHTING_PADDING - (RENDER_LIGHTING_PADDING / 2) + TILE_SIZE, RENDER_LIGHTING_RESIZE, RENDER_LIGHTING_RESIZE, 0, c_white, 1);
         
-        shader_reset();
-        /*
-        gpu_set_tex_filter(true);
-        
-        draw_surface_ext(surface_lighting, _camera_x - RENDER_LIGHTING_PADDING, _camera_y - RENDER_LIGHTING_PADDING, RENDER_LIGHTING_RESIZE, RENDER_LIGHTING_RESIZE, 0, c_white, 1);
-        
         gpu_set_tex_filter(false);
-        */
+        
+        shader_reset();
     }
     
     draw_sprite_ext(spr_Square, 0, _camera_x, _camera_y, _camera_width + _camera_width, _camera_y + _camera_height, 0, obj_Game_Control_Background.light_colour, 1);
