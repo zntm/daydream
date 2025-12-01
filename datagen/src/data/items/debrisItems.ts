@@ -1,4 +1,3 @@
-import { SmartValue, SmartValueRandom, SmartValueType } from "../../lib/SmartValue";
 import { SmartValueIntRandom } from "../../lib/SmartValue";
 import { ItemType } from "./lib/ItemType";
 import tileItem, {
@@ -45,10 +44,7 @@ export default [
             ),
         ),
         new ItemTilePlacement().setIndex(
-            new SmartValue(
-                SmartValueType.IntRandom,
-                new SmartValueRandom(1, 4),
-            ),
+            new SmartValueIntRandom(1, 4),
         ),
         "#phantasia:tile/sfx/stone",
     ),

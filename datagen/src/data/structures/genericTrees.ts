@@ -1,8 +1,6 @@
 import {
     DatagenReturnData,
-    SmartValue,
-    SmartValueRandom,
-    SmartValueType,
+    SmartValueIntRandom,
 } from "../../../index";
 
 import {
@@ -17,7 +15,7 @@ import {
 class StructureParameter {
     private tile_wood: StructureParameterTile;
     private tile_leaves: StructureParameterTile;
-    private index: number | string | SmartValue;
+    private index: number | string | SmartValueIntRandom;
     private index_top: number;
     private index_bottom: number;
     private layers: Array<{
@@ -30,7 +28,7 @@ class StructureParameter {
     constructor(
         tileWood: StructureParameterTile,
         tileLeaves: StructureParameterTile,
-        index: number | string | SmartValue,
+        index: number | string | SmartValueIntRandom,
         indexTop: number,
         indexBottom: number,
         layers: Array<{
@@ -55,10 +53,7 @@ export default [
         "generated/data/structures/tree/birch.json",
         new Structure(
             7,
-            new SmartValue(
-                SmartValueType.IntRandom,
-                new SmartValueRandom(9, 12),
-            ),
+            new SmartValueIntRandom(9, 12),
             new StructurePlacement(StructurePlacementType.Floor, 0, "-height", [
                 new StructurePlacementClearanceCondition(
                     -3,
@@ -72,10 +67,7 @@ export default [
                 new StructureParameter(
                     new StructureParameterTile("phantasia:birch"),
                     new StructureParameterTile("phantasia:birch_leaves"),
-                    new SmartValue(
-                        SmartValueType.IntRandom,
-                        new SmartValueRandom(1, 3),
-                    ),
+                    new SmartValueIntRandom(1, 3),
                     4,
                     5,
                     [
@@ -93,10 +85,7 @@ export default [
         "generated/data/structures/tree/oak.json",
         new Structure(
             5,
-            new SmartValue(
-                SmartValueType.IntRandom,
-                new SmartValueRandom(6, 9),
-            ),
+            new SmartValueIntRandom(6, 9),
             new StructurePlacement(StructurePlacementType.Floor, 0, "-height", [
                 new StructurePlacementClearanceCondition(
                     -2,
@@ -110,10 +99,7 @@ export default [
                 new StructureParameter(
                     new StructureParameterTile("phantasia:oak"),
                     new StructureParameterTile("phantasia:oak_leaves"),
-                    new SmartValue(
-                        SmartValueType.IntRandom,
-                        new SmartValueRandom(1, 3),
-                    ),
+                    new SmartValueIntRandom(1, 3),
                     4,
                     5,
                     [

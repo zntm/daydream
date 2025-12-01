@@ -1,3 +1,7 @@
+global.settings_list_offset = 0;
+global.settings_list_length = 0;
+global.settings_list_size = 0;
+
 function menu_refresh_instance_settings()
 {
     static __text = function(_x, _y, _xscale, _yscale)
@@ -44,19 +48,22 @@ function menu_refresh_instance_settings()
     var _category = global.settings_data_category[$ category];
     var _length = array_length(_category);
     
+    var _inst_slider = global.settings_inst_slider;
+    
 	if (_length <= 5)
 	{
-		inst_19AB9799.x = -64;
+		_inst_slider.x = -64;
+		_inst_slider.y = -64;
 	}
 	else
 	{
-		obj_Menu_Control.list_offset = 0;
+		global.settings_list_offset = 0;
 		
-		obj_Menu_Control.list_length = _length;
-		obj_Menu_Control.list_size = max(0, (_length - 5) * 64);
+		global.settings_list_length = _length;
+		global.settings_list_size = max(0, (_length - 5) * 64);
 		
-		inst_19AB9799.x = inst_19AB9799.xstart;
-		inst_19AB9799.y = inst_19AB9799.ystart;
+		_inst_slider.x = _menu_settings_xoffset + _inst_slider.xstart;
+		_inst_slider.y = _menu_settings_yoffset + _inst_slider.ystart;
 	}
     
     for (var i = 0; i < _length; ++i)

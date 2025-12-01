@@ -1,9 +1,8 @@
 import {
     DatagenReturnData,
-    SmartValue,
     ChooseWeightedOption,
-    SmartValueRandom,
-    SmartValueType,
+    SmartValueIntRandom,
+    SmartValueChooseWeighted,
     Sound,
 } from "../../..";
 import {
@@ -132,26 +131,20 @@ export default [
             .setCreatures([
                 new BiomeCreature(
                     "phantasia:chicken",
-                    new SmartValue(
-                        SmartValueType.IntRandom,
-                        new SmartValueRandom(1, 3),
-                    ),
+                    new SmartValueIntRandom(1, 3),
                     0.03,
                 )
                     .setTile("#phantasia:tile/creature_spawn/animal")
                     .setTimeRange(0, 890),
                 new BiomeCreature(
                     "phantasia:rabbit",
-                    new SmartValue(
-                        SmartValueType.IntRandom,
-                        new SmartValueRandom(1, 4),
-                    ),
+                    new SmartValueIntRandom(1, 4),
                     0.01,
                 )
                     .setTile("#phantasia:tile/creature_spawn/animal")
                     .setTimeRange(0, 890)
                     .setVariant(
-                        new SmartValue(SmartValueType.ChooseWeighted, [
+                        new SmartValueChooseWeighted([
                             new ChooseWeightedOption("generic", 2),
                             new ChooseWeightedOption("white", 1),
                             new ChooseWeightedOption("spotted", 1),
@@ -159,10 +152,7 @@ export default [
                     ),
                 new BiomeCreature(
                     "phantasia:fox",
-                    new SmartValue(
-                        SmartValueType.IntRandom,
-                        new SmartValueRandom(1, 3),
-                    ),
+                    new SmartValueIntRandom(1, 3),
                     0.03,
                 ),
             ])
@@ -344,26 +334,20 @@ export default [
             .setCreatures([
                 new BiomeCreature(
                     "phantasia:rabbit",
-                    new SmartValue(
-                        SmartValueType.IntRandom,
-                        new SmartValueRandom(1, 4),
-                    ),
+                    new SmartValueIntRandom(1, 4),
                     0.01,
                 )
                     .setTile("#phantasia:tile/creature_spawn/animal")
                     .setTimeRange(0, 890)
                     .setVariant(
-                        new SmartValue(SmartValueType.ChooseWeighted, [
+                        new SmartValueChooseWeighted([
                             new ChooseWeightedOption("black", 1),
                             new ChooseWeightedOption("spotted", 2),
                         ]),
                     ),
                 new BiomeCreature(
                     "phantasia:fox",
-                    new SmartValue(
-                        SmartValueType.IntRandom,
-                        new SmartValueRandom(1, 3),
-                    ),
+                    new SmartValueIntRandom(1, 3),
                     0.03,
                 ).setVariant("cold"),
             ])

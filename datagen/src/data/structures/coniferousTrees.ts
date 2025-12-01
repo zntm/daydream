@@ -1,8 +1,7 @@
 import {
     DatagenReturnData,
-    SmartValue,
-    SmartValueRandom,
-    SmartValueType,
+    SmartValueFloatRandom,
+    SmartValueIntRandom,
 } from "../../../index";
 
 import {
@@ -17,24 +16,24 @@ import {
 class StructureParameter {
     private tile_wood: StructureParameterTile;
     private tile_leaves: StructureParameterTile;
-    private index: number | string | SmartValue;
+    private index: number | string | SmartValueIntRandom;
     private index_top: number;
     private index_bottom: number;
-    private cone_steepness: number | string | SmartValue;
-    private cone_roundness: number | string | SmartValue;
-    private cone_width: number | string | SmartValue;
-    private cone_offset: number | string | SmartValue;
+    private cone_steepness: number | string | SmartValueFloatRandom;
+    private cone_roundness: number | string | SmartValueFloatRandom;
+    private cone_width: number | string | SmartValueFloatRandom;
+    private cone_offset: number | string | SmartValueFloatRandom;
 
     constructor(
         tileWood: StructureParameterTile,
         tileLeaves: StructureParameterTile,
-        index: number | string | SmartValue,
+        index: number | string | SmartValueIntRandom,
         indexTop: number,
         indexBottom: number,
-        coneSteepness: number | string | SmartValue,
-        coneRoundness: number | string | SmartValue,
-        coneWidth: number | string | SmartValue,
-        coneOffset: number | string | SmartValue,
+        coneSteepness: number | string | SmartValueFloatRandom,
+        coneRoundness: number | string | SmartValueFloatRandom,
+        coneWidth: number | string | SmartValueFloatRandom,
+        coneOffset: number | string | SmartValueFloatRandom,
     ) {
         this.tile_wood = tileWood;
         this.tile_leaves = tileLeaves;
@@ -54,10 +53,7 @@ export default [
         "generated/data/structures/tree/pine.json",
         new Structure(
             9,
-            new SmartValue(
-                SmartValueType.IntRandom,
-                new SmartValueRandom(9, 14),
-            ),
+            new SmartValueIntRandom(9, 14),
             new StructurePlacement(StructurePlacementType.Floor, 0, "-height", [
                 new StructurePlacementClearanceCondition(
                     -4,
@@ -74,19 +70,10 @@ export default [
                     1,
                     2,
                     3,
-                    new SmartValue(
-                        SmartValueType.FloatRandom,
-                        new SmartValueRandom(0.1, 0.3),
-                    ),
-                    new SmartValue(
-                        SmartValueType.FloatRandom,
-                        new SmartValueRandom(1, 3),
-                    ),
+                    new SmartValueFloatRandom(0.1, 0.3),
+                    new SmartValueFloatRandom(1, 3),
                     1,
-                    new SmartValue(
-                        SmartValueType.FloatRandom,
-                        new SmartValueRandom(-0.2, 0),
-                    ),
+                    new SmartValueFloatRandom(-0.2, 0),
                 ),
             ),
         ),

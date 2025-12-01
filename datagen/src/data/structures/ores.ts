@@ -1,8 +1,6 @@
 import {
     DatagenReturnData,
-    SmartValue,
-    SmartValueRandom,
-    SmartValueType,
+    SmartValueIntRandom,
 } from "../../../index";
 
 import {
@@ -15,15 +13,15 @@ import {
 
 class StructureParameter {
     private tile: StructureParameterTile;
-    private threshold: number | string | SmartValue;
-    private clumpiness: number | string | SmartValue;
-    private roundedness: number | string | SmartValue;
+    private threshold: number | string | SmartValueIntRandom;
+    private clumpiness: number | string | SmartValueIntRandom;
+    private roundedness: number | string | SmartValueIntRandom;
 
     constructor(
         tile: StructureParameterTile,
-        threshold: number | string | SmartValue,
-        clumpiness: number | string | SmartValue,
-        roundedness: number | string | SmartValue,
+        threshold: number | string | SmartValueIntRandom,
+        clumpiness: number | string | SmartValueIntRandom,
+        roundedness: number | string | SmartValueIntRandom,
     ) {
         this.tile = tile;
         this.threshold = threshold;
@@ -37,14 +35,8 @@ export default [
     new DatagenReturnData(
         "generated/data/structures/ore/coal.json",
         new Structure(
-            new SmartValue(
-                SmartValueType.IntRandom,
-                new SmartValueRandom(2, 6),
-            ),
-            new SmartValue(
-                SmartValueType.IntRandom,
-                new SmartValueRandom(2, 6),
-            ),
+            new SmartValueIntRandom(2, 6),
+            new SmartValueIntRandom(2, 6),
             new StructurePlacement(StructurePlacementType.Inside, 0, 0),
             new StructureFunction(
                 "phantasia:ore",
@@ -61,14 +53,8 @@ export default [
     new DatagenReturnData(
         "generated/data/structures/ore/copper.json",
         new Structure(
-            new SmartValue(
-                SmartValueType.IntRandom,
-                new SmartValueRandom(1, 4),
-            ),
-            new SmartValue(
-                SmartValueType.IntRandom,
-                new SmartValueRandom(1, 4),
-            ),
+            new SmartValueIntRandom(1, 4),
+            new SmartValueIntRandom(1, 4),
             new StructurePlacement(StructurePlacementType.Inside, 0, 0),
             new StructureFunction(
                 "phantasia:ore",
@@ -85,14 +71,8 @@ export default [
     new DatagenReturnData(
         "generated/data/structures/ore/iron.json",
         new Structure(
-            new SmartValue(
-                SmartValueType.IntRandom,
-                new SmartValueRandom(2, 4),
-            ),
-            new SmartValue(
-                SmartValueType.IntRandom,
-                new SmartValueRandom(2, 4),
-            ),
+            new SmartValueIntRandom(2, 4),
+            new SmartValueIntRandom(2, 4),
             new StructurePlacement(StructurePlacementType.Inside, 0, 0),
             new StructureFunction(
                 "phantasia:ore",
@@ -109,14 +89,8 @@ export default [
     new DatagenReturnData(
         "generated/data/structures/ore/gold.json",
         new Structure(
-            new SmartValue(
-                SmartValueType.IntRandom,
-                new SmartValueRandom(1, 4),
-            ),
-            new SmartValue(
-                SmartValueType.IntRandom,
-                new SmartValueRandom(1, 4),
-            ),
+            new SmartValueIntRandom(1, 4),
+            new SmartValueIntRandom(1, 4),
             new StructurePlacement(StructurePlacementType.Inside, 0, 0),
             new StructureFunction(
                 "phantasia:ore",
@@ -133,14 +107,8 @@ export default [
     new DatagenReturnData(
         "generated/data/structures/ore/platinum.json",
         new Structure(
-            new SmartValue(
-                SmartValueType.IntRandom,
-                new SmartValueRandom(1, 3),
-            ),
-            new SmartValue(
-                SmartValueType.IntRandom,
-                new SmartValueRandom(1, 3),
-            ),
+            new SmartValueIntRandom(1, 3),
+            new SmartValueIntRandom(1, 3),
             new StructurePlacement(StructurePlacementType.Inside, 0, 0),
             new StructureFunction(
                 "phantasia:ore",

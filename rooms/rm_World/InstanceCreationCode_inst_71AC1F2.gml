@@ -1,0 +1,1 @@
+global.settings_inst_slider = inst_39457BAD;

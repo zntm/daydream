@@ -1,8 +1,6 @@
 import {
     DatagenReturnData,
-    SmartValue,
-    SmartValueRandom,
-    SmartValueType,
+    SmartValueIntRandom,
 } from "../../../index";
 import { Attribute, AttributeBoolean } from "../../attribute";
 import {
@@ -63,10 +61,7 @@ export default [
             new ItemDrop("phantasia:raw_chicken"),
             new ItemDrop(
                 "phantasia:feather",
-                new SmartValue(
-                    SmartValueType.IntRandom,
-                    new SmartValueRandom(1, 3),
-                ),
+                new SmartValueIntRandom(1, 3),
                 0.7,
             ),
         ]),

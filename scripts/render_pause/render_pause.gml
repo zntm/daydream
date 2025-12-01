@@ -27,10 +27,11 @@ function render_pause()
     shader_set_uniform_f(__u_direction, 1, 0);
     shader_set_uniform_f(__u_blur_size, 1);
     shader_set_uniform_f(__u_texel_size, _texel_width, _texel_height);
-    shader_set_uniform_i(__u_radius, 3);
-    shader_set_uniform_f(__u_sigma, 32);
+    shader_set_uniform_i(__u_radius, 16);
+    shader_set_uniform_f(__u_sigma, 8.0);
     
-    draw_surface_ext(application_surface, 0, 0, 1 / GUI_PAUSE_BLUR_RESIZE, 1 / GUI_PAUSE_BLUR_RESIZE, 0, c_white, 1);
+    draw_surface_stretched_ext(application_surface, 0, 0, _width, _height, c_white, 1);
+    draw_surface_stretched_ext(application_surface, 0, 0, _width, _height, c_white, 1);
     
     shader_reset();
     
@@ -49,8 +50,8 @@ function render_pause()
     shader_set_uniform_f(__u_direction, 0, 1);
     shader_set_uniform_f(__u_blur_size, 1);
     shader_set_uniform_f(__u_texel_size, _texel_width, _texel_height);
-    shader_set_uniform_i(__u_radius, 3);
-    shader_set_uniform_f(__u_sigma, 32);
+    shader_set_uniform_i(__u_radius, 16);
+    shader_set_uniform_f(__u_sigma, 8.0);
     
     draw_surface(surface_pause[@ 0], 0, 0);
     

@@ -3,7 +3,7 @@
     "item": {
         "durability": {
             "amount": 616,
-            "bar": "#phantasia:item/generic/durability_bar"
+            "bar": "#phantasia:item/generic/inventory_tool"
         },
         "damage": 5,
         "harvest": {

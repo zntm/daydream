@@ -39,11 +39,6 @@ if (global.window_width <= 0) || (global.window_height <= 0)
         }
     }
     
-    if (surface_refresh & SURFACE_REFRESH_BOOLEAN.PAUSE)
-    {
-        surface_refresh ^= SURFACE_REFRESH_BOOLEAN.PAUSE;
-    }
-    
     control_instance_pause();
 }
 else if (keyboard_check_pressed(global.settings.input_keyboard_pause))
@@ -88,12 +83,12 @@ else if (keyboard_check_pressed(global.settings.input_keyboard_pause))
         
         if (is_opened & IS_OPENED_BOOLEAN.PAUSE)
         {
+            control_instance_pause();
+            
             if (surface_refresh & SURFACE_REFRESH_BOOLEAN.PAUSE)
             {
                 surface_refresh ^= SURFACE_REFRESH_BOOLEAN.PAUSE;
             }
-            
-            control_instance_pause();
         }
         else
         {

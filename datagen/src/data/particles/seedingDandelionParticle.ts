@@ -1,8 +1,6 @@
 import {
     DatagenReturnData,
-    SmartValue,
-    SmartValueRandom,
-    SmartValueType,
+    SmartValueFloatRandom,
 } from "../../..";
 import { Attribute } from "../../attribute";
 import {
@@ -19,33 +17,18 @@ export default [
             ParticleProperties.IsFadeOut,
         ])
             .setLifetime(
-                new SmartValue(
-                    SmartValueType.FloatRandom,
-                    new SmartValueRandom(0.75, 2.5),
-                ),
+                new SmartValueFloatRandom(0.75, 2.5),
             )
             .setPhysics(
                 new EntityPhysics(
                     new EntityPhysicsValue(
                         EntityPhysicsValueType.Reference,
                         "phantasia:weather_wind",
-                        new SmartValue(
-                            SmartValueType.FloatRandom,
-                            new SmartValueRandom(-0.1, 0.1),
-                        ),
-                        new SmartValue(
-                            SmartValueType.FloatRandom,
-                            new SmartValueRandom(0.85, 1.5),
-                        ),
+                        new SmartValueFloatRandom(-0.1, 0.1),
+                        new SmartValueFloatRandom(0.85, 1.5),
                     ),
-                    new SmartValue(
-                        SmartValueType.FloatRandom,
-                        new SmartValueRandom(-1.1, -0.75),
-                    ),
-                    new SmartValue(
-                        SmartValueType.FloatRandom,
-                        new SmartValueRandom(1, 2),
-                    ),
+                    new SmartValueFloatRandom(-1.1, -0.75),
+                    new SmartValueFloatRandom(1, 2),
                 ),
             )
             .setAttribute(new Attribute().setCollisionBox(2, 2))

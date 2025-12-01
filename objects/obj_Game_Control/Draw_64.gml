@@ -22,7 +22,7 @@ var _gui_scale = global.gui_scale;
 var _gui_scale_width  = _gui_scale * (_gui_width  / 960);
 var _gui_scale_height = _gui_scale * (_gui_height / 540);
 
-if (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.GENERATING_WORLD)
+if (is_opened & IS_OPENED_BOOLEAN.GENERATING_WORLD)
 {
     if !(surface_refresh & SURFACE_REFRESH_BOOLEAN.GENERATING_WORLD) || (!surface_exists(surface_pause[0])) || (!surface_exists(surface_pause[1]))
     {
@@ -41,7 +41,6 @@ if (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.GENERATING_WORLD)
         
         gpu_set_texfilter(false);
     }
-    
     
     var _halign = draw_get_halign();
     var _valign = draw_get_valign();
@@ -64,8 +63,6 @@ if (is_opened & (IS_OPENED_BOOLEAN.PAUSE | IS_OPENED_BOOLEAN.EXIT))
         render_pause();
     }
     
-    draw_surface(application_surface, 0, 0);
-    
     var _display_blur = global.settings.display_blur;
     
     if (_display_blur > 0)
@@ -76,10 +73,6 @@ if (is_opened & (IS_OPENED_BOOLEAN.PAUSE | IS_OPENED_BOOLEAN.EXIT))
         
         gpu_set_texfilter(false);
     }
-    
-    render_gui_vignette(_player_y, _gui_width, _gui_height);
-    
-    gpu_set_blendmode(bm_normal);
     
     exit;
 }

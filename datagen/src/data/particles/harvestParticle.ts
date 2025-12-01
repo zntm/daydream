@@ -1,8 +1,6 @@
 import {
     DatagenReturnData,
-    SmartValue,
-    SmartValueRandom,
-    SmartValueType,
+    SmartValueFloatRandom,
 } from "../../..";
 import { Attribute } from "../../attribute";
 import {
@@ -19,25 +17,13 @@ export default [
             ParticleProperties.IsFadeOut,
         ])
             .setLifetime(
-                new SmartValue(
-                    SmartValueType.FloatRandom,
-                    new SmartValueRandom(0.5, 1.25),
-                ),
+                new SmartValueFloatRandom(0.5, 1.25),
             )
             .setPhysics(
                 new EntityPhysics(
-                    new SmartValue(
-                        SmartValueType.FloatRandom,
-                        new SmartValueRandom(-1, 1),
-                    ),
-                    new SmartValue(
-                        SmartValueType.FloatRandom,
-                        new SmartValueRandom(-1.75, -0.5),
-                    ),
-                    new SmartValue(
-                        SmartValueType.FloatRandom,
-                        new SmartValueRandom(1, 3),
-                    ),
+                    new SmartValueFloatRandom(-1, 1),
+                    new SmartValueFloatRandom(-1.75, -0.5),
+                    new SmartValueFloatRandom(1, 3),
                 ),
             )
             .setAttribute(new Attribute().setGravity(0.1)),

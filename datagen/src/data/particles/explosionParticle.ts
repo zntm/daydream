@@ -26,12 +26,9 @@
 
 import {
     DatagenReturnData,
-    SmartValue,
-    SmartValueRandom,
-    SmartValueType,
+    SmartValueFloatRandom,
 } from "../../..";
-import { Attribute } from "../../attribute";
-import { EntityPhysics, EntityPhysicsValue } from "../../entity";
+import { EntityPhysics } from "../../entity";
 import { Particle, ParticleProperties } from "../particles";
 
 export default [
@@ -41,19 +38,13 @@ export default [
             ParticleProperties.HasStretchAnimation,
         ])
             .setLifetime(
-                new SmartValue(
-                    SmartValueType.FloatRandom,
-                    new SmartValueRandom(0.5, 1),
-                ),
+                new SmartValueFloatRandom(0.5, 1),
             )
             .setPhysics(
                 new EntityPhysics(
                     0,
                     0,
-                    new SmartValue(
-                        SmartValueType.FloatRandom,
-                        new SmartValueRandom(0.9, 1.1),
-                    ),
+                    new SmartValueFloatRandom(0.9, 1.1),
                 ),
             ),
     ),

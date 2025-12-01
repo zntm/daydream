@@ -1,8 +1,6 @@
 import {
     DatagenReturnData,
-    SmartValue,
-    SmartValueRandom,
-    SmartValueType,
+    SmartValueFloatRandom,
 } from "../../..";
 import { Attribute } from "../../attribute";
 import {
@@ -19,44 +17,23 @@ export default ["birch", "oak", "pine"].map((id) => {
             ParticleProperties.IsFadeOut,
         ])
             .setLifetime(
-                new SmartValue(
-                    SmartValueType.FloatRandom,
-                    new SmartValueRandom(2, 4),
-                ),
+                new SmartValueFloatRandom(2, 4),
             )
             .setPhysics(
                 new EntityPhysics(
                     new EntityPhysicsValue(
                         EntityPhysicsValueType.Reference,
                         "phantasia:weather_wind",
-                        new SmartValue(
-                            SmartValueType.FloatRandom,
-                            new SmartValueRandom(-0.3, 0.3),
-                        ),
-                        new SmartValue(
-                            SmartValueType.FloatRandom,
-                            new SmartValueRandom(0.5, 1.25),
-                        ),
+                        new SmartValueFloatRandom(-0.3, 0.3),
+                        new SmartValueFloatRandom(0.5, 1.25),
                     ),
-                    new SmartValue(
-                        SmartValueType.FloatRandom,
-                        new SmartValueRandom(0.6, 1.1),
-                    ),
-                    new SmartValue(
-                        SmartValueType.FloatRandom,
-                        new SmartValueRandom(0.75, 1.25),
-                    ),
+                    new SmartValueFloatRandom(0.6, 1.1),
+                    new SmartValueFloatRandom(0.75, 1.25),
                     new EntityPhysicsValue(
                         EntityPhysicsValueType.Incremental,
-                        new SmartValue(
-                            SmartValueType.FloatRandom,
-                            new SmartValueRandom(0.5, 1.25),
-                        ),
+                        new SmartValueFloatRandom(0.5, 1.25),
                     ).setIncrement(
-                        new SmartValue(
-                            SmartValueType.FloatRandom,
-                            new SmartValueRandom(-16, 16),
-                        ),
+                        new SmartValueFloatRandom(-16, 16),
                     ),
                 ),
             )
