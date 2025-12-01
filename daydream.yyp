@@ -200,6 +200,8 @@
     {"$GMIncludedFile":"","%Name":"small.ogg.json","CopyToMask":-1,"filePath":"datafiles/resources/assets/sounds/sfx/explosion","name":"small.ogg.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"0.ogg","CopyToMask":-1,"filePath":"datafiles/resources/assets/sounds/sfx/explosion/small","name":"0.ogg","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"1.ogg","CopyToMask":-1,"filePath":"datafiles/resources/assets/sounds/sfx/explosion/small","name":"1.ogg","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"key.ogg","CopyToMask":-1,"filePath":"datafiles/resources/assets/sounds/sfx/menu/textbox","name":"key.ogg","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"key.ogg.json","CopyToMask":-1,"filePath":"datafiles/resources/assets/sounds/sfx/menu/textbox","name":"key.ogg.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"harvest.ogg.json","CopyToMask":-1,"filePath":"datafiles/resources/assets/sounds/sfx/tile/dirt","name":"harvest.ogg.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"0.ogg","CopyToMask":-1,"filePath":"datafiles/resources/assets/sounds/sfx/tile/dirt/harvest","name":"0.ogg","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"1.ogg","CopyToMask":-1,"filePath":"datafiles/resources/assets/sounds/sfx/tile/dirt/harvest","name":"1.ogg","resourceType":"GMIncludedFile","resourceVersion":"2.0",},

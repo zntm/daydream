@@ -14,7 +14,7 @@ function menu_control_textbox()
             // Copy Text
             if (keyboard_check_pressed(ord("C"))) && (_text_not_empty)
             {
-                sfx_play("phantasia:menu.key", global.settings.audio_sfx);
+                sfx_play("phantasia:sfx/menu/textbox/key", global.settings.audio_sfx);
                 
                 clipboard_set_text(text);
                 
@@ -24,7 +24,7 @@ function menu_control_textbox()
             // Cut Text
             if (keyboard_check_pressed(ord("X"))) && (_text_not_empty)
             {
-                sfx_play("phantasia:menu.key", global.settings.audio_sfx);
+                sfx_play("phantasia:sfx/menu/textbox/key", global.settings.audio_sfx);
                 
                 clipboard_set_text(text);
                 
@@ -43,7 +43,7 @@ function menu_control_textbox()
                 
                 if (keyboard_check(vk_shift))
                 {
-                    sfx_play("phantasia:menu.key", global.settings.audio_sfx);
+                    sfx_play("phantasia:sfx/menu/textbox/key", global.settings.audio_sfx);
                     
                     text = _text;
                     
@@ -54,7 +54,7 @@ function menu_control_textbox()
                 }
                 else
                 {
-                    sfx_play("phantasia:menu.key", global.settings.audio_sfx);
+                    sfx_play("phantasia:sfx/menu/textbox/key", global.settings.audio_sfx);
                     
                     text += _text;
                     
@@ -74,7 +74,7 @@ function menu_control_textbox()
             // Clear Text
             if (keyboard_check_pressed(vk_delete) || keyboard_check_pressed(vk_backspace))
             {
-                sfx_play("phantasia:menu.key", global.settings.audio_sfx);
+                sfx_play("phantasia:sfx/menu/textbox/key", global.settings.audio_sfx);
                 
                 text = "";
                 keyboard_string = "";
@@ -104,7 +104,7 @@ function menu_control_textbox()
                 on_update();
             }
             
-            sfx_play("phantasia:menu.key", global.settings.audio_sfx);
+            sfx_play("phantasia:sfx/menu/textbox/key", global.settings.audio_sfx);
         }
         
         exit;

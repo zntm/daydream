@@ -44,6 +44,21 @@ function menu_refresh_instance_settings()
     var _category = global.settings_data_category[$ category];
     var _length = array_length(_category);
     
+	if (_length <= 5)
+	{
+		inst_19AB9799.x = -64;
+	}
+	else
+	{
+		obj_Menu_Control.list_offset = 0;
+		
+		obj_Menu_Control.list_length = _length;
+		obj_Menu_Control.list_size = max(0, (_length - 5) * 64);
+		
+		inst_19AB9799.x = inst_19AB9799.xstart;
+		inst_19AB9799.y = inst_19AB9799.ystart;
+	}
+    
     for (var i = 0; i < _length; ++i)
     {
         var _name = _category[i];

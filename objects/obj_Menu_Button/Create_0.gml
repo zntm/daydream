@@ -18,6 +18,8 @@ on_select_release = undefined;
 
 on_destroy = undefined;
 
+on_step = undefined;
+
 on_draw        = undefined;
 on_draw_behind = undefined;
 

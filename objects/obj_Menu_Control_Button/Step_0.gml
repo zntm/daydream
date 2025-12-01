@@ -36,7 +36,7 @@ for (var i = 0; i < _number; ++i)
                     {
                         boolean |= MENU_BUTTON_BOOLEAN.IS_SELECTED;
                         
-                        sfx_play("phantasia:menu.button.select");
+                        sfx_play("phantasia:sfx/menu/button/select");
                         
                         if (on_select != undefined)
                         {
@@ -54,7 +54,7 @@ for (var i = 0; i < _number; ++i)
                 
                 if (boolean & MENU_BUTTON_BOOLEAN.IS_SELECTED)
                 {
-                    sfx_play("phantasia:menu.button.deselect");
+                    sfx_play("phantasia:sfx/menu/button/deselect");
                     
                     boolean ^= MENU_BUTTON_BOOLEAN.IS_SELECTED;
                 }
@@ -82,7 +82,7 @@ for (var i = 0; i < _number; ++i)
                         {
                             boolean |= MENU_BUTTON_BOOLEAN.IS_SELECTED;
                             
-                            sfx_play("phantasia:menu.button.select");
+                            sfx_play("phantasia:sfx/menu/button/select");
                             
                             if (on_select != undefined)
                             {
@@ -100,7 +100,7 @@ for (var i = 0; i < _number; ++i)
                     
                     if (boolean & MENU_BUTTON_BOOLEAN.IS_SELECTED)
                     {
-                        sfx_play("phantasia:menu.button.deselect");
+                        sfx_play("phantasia:sfx/menu/button/deselect");
                         
                         boolean ^= MENU_BUTTON_BOOLEAN.IS_SELECTED;
                     }
@@ -122,7 +122,7 @@ for (var i = 0; i < _number; ++i)
                     {
                         boolean |= MENU_BUTTON_BOOLEAN.IS_SELECTED;
                         
-                        sfx_play("phantasia:menu.button.select");
+                        sfx_play("phantasia:sfx/menu/button/select");
                         
                         if (on_select != undefined)
                         {
@@ -166,7 +166,7 @@ if (mouse_check_button_released(mb_left))
     {
         if (boolean & MENU_BUTTON_BOOLEAN.IS_SELECTED)
         {
-            sfx_play("phantasia:menu.button.deselect");
+            sfx_play("phantasia:sfx/menu/button/deselect");
             
             boolean ^= MENU_BUTTON_BOOLEAN.IS_SELECTED;
             
@@ -223,11 +223,11 @@ if (mouse_check_button_released(mb_left))
             
             if (_has_selected)
             {
-                sfx_play("phantasia:menu.button.select");
+                sfx_play("phantasia:sfx/menu/button/select");
             }
             else
             {
-            	sfx_play("phantasia:menu.button.deselect");
+            	sfx_play("phantasia:sfx/menu/button/deselect");
             }
         }
         
@@ -244,7 +244,7 @@ if (mouse_check_button_pressed(mb_left))
     {
         if (!point_in_rectangle(mouse_x, mouse_y, bbox_left, bbox_top, bbox_right, bbox_bottom)) && (boolean & MENU_BUTTON_BOOLEAN.IS_SELECTED)
         {
-            sfx_play("phantasia:menu.button.deselect");
+            sfx_play("phantasia:sfx/menu/button/deselect");
             
             boolean ^= MENU_BUTTON_BOOLEAN.IS_SELECTED;
             
@@ -262,7 +262,7 @@ if (keyboard_check_pressed(vk_escape))
     {
         if (boolean & MENU_BUTTON_BOOLEAN.IS_SELECTED)
         {
-            sfx_play("phantasia:menu.button.deselect");
+            sfx_play("phantasia:sfx/menu/button/deselect");
             
             boolean ^= MENU_BUTTON_BOOLEAN.IS_SELECTED;
             
@@ -271,6 +271,14 @@ if (keyboard_check_pressed(vk_escape))
                 on_select_release();
             }
         }
+    }
+}
+
+with (obj_Menu_Button)
+{
+    if (on_step != undefined)
+    {
+        on_step();
     }
 }
 

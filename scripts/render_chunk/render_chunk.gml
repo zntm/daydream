@@ -72,6 +72,8 @@ function render_chunk(_page, _position, _texel_width, _texel_height, _inst, _z)
             
             if (_data.is_foliage())
             {
+                var _index_xy = tile_index_xy(_x, _y);
+                
                 chunk_vertex_foliage(
                     _buffer,
                     _texel_width,
@@ -79,7 +81,7 @@ function render_chunk(_page, _position, _texel_width, _texel_height, _inst, _z)
                     _data.get_animation_type(),
                     _atla,
                     _position[_atla.___sprites_indeces[0]],
-                    tile_index_xy(_x, _y),
+                    _index_xy,
                     _index + _index_offset,
                     _draw_x,
                     _draw_y,
