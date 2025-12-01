@@ -84,7 +84,7 @@ export default (
         toolItem(
             `${id}_pickaxe`,
             73,
-            "#phantasia:item/generic/inventory_tool",
+            "#phantasia:item/generic/durability_bar",
             undefined,
             1,
             1,
@@ -106,7 +106,7 @@ export default (
         toolItem(
             `${id}_shovel`,
             65,
-            "#phantasia:item/generic/inventory_tool",
+            "#phantasia:item/generic/durability_bar",
             undefined,
             1,
             1,

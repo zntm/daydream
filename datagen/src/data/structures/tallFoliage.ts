@@ -8,7 +8,7 @@ import {
 import {
     SmartValueChooseWeighted,
     SmartValueIntRandom,
-} from "../../smartValue";
+} from "../../lib/SmartValue";
 
 import {
     Structure,
