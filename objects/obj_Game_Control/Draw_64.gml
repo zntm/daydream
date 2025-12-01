@@ -206,17 +206,30 @@ if (_hp > 0) && (is_opened & IS_OPENED_BOOLEAN.GUI) && !(is_opened & IS_OPENED_B
         {
             if (_inst.slot_type != INVENTORY_SLOT_TYPE.CRAFTABLE)
             {
-                gui_inventory_tooltip(_gui_scale, _gui_scale_height);
+                gui_inventory_tooltip(_gui_scale_width, _gui_scale_height);
                 
-                var _tooltip_surface = surface_inventory.tooltip.surface;
+                var _tooltip = surface_inventory.tooltip;
                 
-                if (surface_exists(_tooltip_surface))
+                var _surface_tooltip = _tooltip.surface;
+                
+                if (surface_exists(_surface_tooltip))
                 {
                     var _tooltip_x = _gui_mouse_x + (GUI_TOOLTIP_XOFFSET * _gui_scale_width);
                     var _tooltip_y = _gui_mouse_y + (GUI_TOOLTIP_YOFFSET * _gui_scale_height);
                     
-                    draw_sprite_ext(spr_Square, 0, _tooltip_x, _tooltip_y, surface_inventory.tooltip.surface_width * _gui_scale_width, surface_inventory.tooltip.surface_height * _gui_scale_height, 0, c_black, 0.8);
-                    draw_surface(_tooltip_surface, _tooltip_x, _tooltip_y);
+                    draw_sprite_ext(
+                        spr_Inventory_Tooltip,
+                        0,
+                        _tooltip_x - (GUI_INVENTORY_TOOLTIP_BG_PADDING * _gui_scale_width),
+                        _tooltip_y - (GUI_INVENTORY_TOOLTIP_BG_PADDING * _gui_scale_height),
+                        (((_tooltip.surface_width  + (GUI_INVENTORY_TOOLTIP_BG_PADDING)) / 14)) * _gui_scale_width,
+                        (((_tooltip.surface_height + (GUI_INVENTORY_TOOLTIP_BG_PADDING)) / 14)) * _gui_scale_height,
+                        0,
+                        c_white,
+                        1
+                    );
+                    
+                    draw_surface(_surface_tooltip, _tooltip_x, _tooltip_y);
                 }
             }
         }

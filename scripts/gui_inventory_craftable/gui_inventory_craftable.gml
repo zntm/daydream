@@ -9,7 +9,24 @@ function gui_inventory_craftable(_gui_multiplier_x, _gui_multiplier_y)
     
     var _length = array_length(_inventory_instance);
     
-    if (_length <= 0) exit;
+    if (_length <= 0)
+    {
+        var _surface_inventory = surface_inventory._craftable;
+        
+        if (surface_exists(_surface_inventory.surface_slot))
+        {
+            surface_free(_surface_inventory.surface_slot);
+            _surface_inventory.surface_slot = -1;
+        }
+        
+        if (surface_exists(_surface_inventory.surface_item))
+        {
+            surface_free(_surface_inventory.surface_item);
+            _surface_inventory.surface_item = -1;
+        }
+        
+        exit;
+    }
     
     var _surface_width  = _inventory_data.surface_width;
     var _surface_height = _inventory_data.surface_height;

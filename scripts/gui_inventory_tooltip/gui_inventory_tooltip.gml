@@ -7,7 +7,7 @@
 #macro GUI_TOOLTIP_DESCRIPTION_XSCALE 0.6
 #macro GUI_TOOLTIP_DESCRIPTION_YSCALE 0.6
 
-#macro GUI_INVENTORY_TOOLTIP_BG_PADDING 4
+#macro GUI_INVENTORY_TOOLTIP_BG_PADDING 8
 
 #macro GUI_INVENTORY_TOOLTIP_PADDING_NAME 8
 #macro GUI_INVENTORY_TOOLTIP_PADDING_DESCRIPTION 4
@@ -97,8 +97,8 @@ function gui_inventory_tooltip(_gui_multiplier_x, _gui_multiplier_y)
     var _surface_width  = (_inventory_scale * _sprite_width) + string_width(_item_name) + GUI_INVENTORY_TOOLTIP_PADDING_NAME;
     var _surface_height = (_inventory_scale * _sprite_height);
     
-    var _sprite_x = (_gui_multiplier_x * _sprite_xoffset);
-    var _sprite_y = (_gui_multiplier_y * _sprite_yoffset);
+    var _sprite_x = _gui_multiplier_x * _sprite_xoffset;
+    var _sprite_y = _gui_multiplier_y * _sprite_yoffset;
     
     if (_sprite_xoffset < TILE_SIZE / 2)
     {
@@ -155,7 +155,9 @@ function gui_inventory_tooltip(_gui_multiplier_x, _gui_multiplier_y)
     
     draw_set_align(fa_left, fa_center);
     
-    draw_sprite_ext(_sprite.get_sprite(), 0, _sprite_x, _sprite_y, _sprite_xscale, _sprite_yscale, 0, c_white, 1);
+    var _inventory_index = _data.get_inventory_index();
+    
+    draw_sprite_ext(_sprite.get_sprite(), _inventory_index, _sprite_x, _sprite_y, _sprite_xscale, _sprite_yscale, 0, c_white, 1);
     
     var _rarity = _data.get_rarity();
     var _rarity_colour = ((_data.get_rarity() != undefined) ? (global.rarity_data[$ _rarity] ?? c_white) : c_white);
