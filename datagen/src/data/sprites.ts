@@ -7,17 +7,11 @@ export class Sprite {
     private xoffset: number;
     private yoffset: number;
     private length: number;
-    private is_tile?: boolean;
 
     constructor(xoffset: number, yoffset: number, length: number = 1) {
         this.xoffset = xoffset;
         this.yoffset = yoffset;
         this.length = length;
-    }
-
-    setIsTile() {
-        this.is_tile = true;
-        return this;
     }
 }
 
@@ -105,10 +99,9 @@ const individualPromises = individualFiles.map(async (file) => {
 
     const { exif, arrayBuffer } = await getMetadata(sourcePath);
 
-    const isTile = name.startsWith("#");
-
     let length = lengthStr !== undefined ? parseInt(lengthStr) : 1;
-    if (isTile) {
+
+    if (name.startsWith("#")) {
         length *= 5;
     }
 
@@ -116,11 +109,6 @@ const individualPromises = individualFiles.map(async (file) => {
     const yoffset = getYOffset(yoffsetStr, exif) ?? 0;
 
     const data = new Sprite(xoffset, yoffset, length);
-
-    if (isTile) {
-        name = name.substring(1);
-        data.setIsTile();
-    }
 
     const outputFileName = `${name}.png`;
     const destFilePath = join(destImageDir, relDir, outputFileName);

@@ -3,8 +3,7 @@ import {
     ItemTileHarvest,
     ItemTileParticle,
     ItemTileProperties,
-    ItemTileSFX,
-} from "./tileItem";
+} from "../lib/TileItem";
 
 const { default: blockWallItems } = import.meta.require("./blockWallItems");
 

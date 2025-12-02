@@ -2,8 +2,6 @@ import {
     DatagenReturnData,
     SmartValue,
     ChooseWeightedOption,
-    SmartValueRandom,
-    SmartValueType,
 } from "../../../index";
 import {
     SmartValueChooseWeighted,

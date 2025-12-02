@@ -1,9 +1,5 @@
 import { DatagenReturnData } from "../lib/DatagenReturnData";
-import {
-    SmartValue,
-    SmartValueRandom,
-    SmartValueType,
-} from "../lib/SmartValue";
+import { SmartValue } from "../lib/SmartValue";
 import { Sound } from "../lib/Sound";
 import { Item } from "./items/lib/Item";
 import { ItemBooleanComponent } from "./items/lib/ItemComponent";
@@ -56,17 +52,17 @@ export {
 };
 
 export default [
-    "./items/toolItems",
-    "./items/miscItems",
-    "./items/foodItems",
-    "./items/plantItems",
-    "./items/grassItems",
-    "./items/furnaceItem",
-    "./items/glassItem",
-    "./items/debrisItems",
-    "./items/stoneItems",
-    "./items/oreItemsList",
-    "./items/equipmentItems",
-    "./items/woodItemsList",
-    "./items/lightSourceItems",
+    "./items/groups/toolItems",
+    "./items/groups/miscItems",
+    "./items/groups/foodItems",
+    "./items/groups/plantItems",
+    "./items/groups/grassItems",
+    "./items/groups/furnaceItem",
+    "./items/groups/glassItem",
+    "./items/groups/debrisItems",
+    "./items/groups/stoneItems",
+    "./items/groups/oreItemsList",
+    "./items/groups/equipmentItems",
+    "./items/groups/woodItemsList",
+    "./items/groups/lightSourceItems",
 ].map((dir) => import.meta.require(dir).default);

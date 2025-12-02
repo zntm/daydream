@@ -1,8 +1,6 @@
 import {
     DatagenReturnData,
     SmartValue,
-    SmartValueRandom,
-    SmartValueType,
 } from "../../../index";
 
 import {

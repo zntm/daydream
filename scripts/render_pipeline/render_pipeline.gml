@@ -50,11 +50,13 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 _buffer = render_chunk(_page, _position, _texel_width, _texel_height, _inst, _z);
             }
             
-            if (_z == CHUNK_DEPTH_FOLIAGE_BACK)
+            var _chunk_count = _inst.chunk_count;
+            
+            if (_z == CHUNK_DEPTH_FOLIAGE_BACK) && (_chunk_count[CHUNK_DEPTH_FOLIAGE_BACK] > 0)
             {
                 shader_set_uniform_f_array(__u_skew, _inst.chunk_skew_back);
             }
-            else if (_z == CHUNK_DEPTH_FOLIAGE_FRONT)
+            else if (_z == CHUNK_DEPTH_FOLIAGE_FRONT) && (_chunk_count[CHUNK_DEPTH_FOLIAGE_FRONT] > 0)
             {
                 shader_set_uniform_f_array(__u_skew, _inst.chunk_skew_front);
             }

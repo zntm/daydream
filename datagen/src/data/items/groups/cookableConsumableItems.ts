@@ -1,19 +1,17 @@
-import type { ItemConsumable } from "./lib/ItemConsumable";
-import type { ItemInventory } from "./lib/ItemInventory";
-
-const { default: consumableItem } = import.meta.require("./consumableItem");
+import type { ItemConsumable } from "../lib/ItemConsumable";
+import { ConsumableItem } from "../lib/ConsumableItem";
 
 export default (
     id: string,
     rawConsumable: ItemConsumable,
     cookedConsumable: ItemConsumable,
 ) => [
-        consumableItem(
+        new ConsumableItem(
             `cooked_${id}`,
             "#phantasia:item/generic/inventory_default",
             cookedConsumable,
         ),
-        consumableItem(
+        new ConsumableItem(
             `raw_${id}`,
             "#phantasia:item/generic/inventory_default",
             rawConsumable,

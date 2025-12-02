@@ -1,12 +1,12 @@
-import { Sound } from "../../lib/Sound";
-import { ItemConsumable } from "./lib/ItemConsumable";
-import { ItemCooldown } from "./lib/ItemCooldown";
+import { Sound } from "../../../lib/Sound";
+import { ItemConsumable } from "../lib/ItemConsumable";
+import { ItemCooldown } from "../lib/ItemCooldown";
+import { ConsumableItem } from "../lib/ConsumableItem";
 
-const { default: consumableItem } = import.meta.require("./consumableItem");
 const { default: cookableConsumableItems } = import.meta.require("./cookableConsumableItems");
 
 export default [
-    consumableItem(
+    new ConsumableItem(
         "apple",
         "#phantasia:item/generic/inventory_default",
         new ItemConsumable(

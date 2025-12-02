@@ -1,14 +1,14 @@
-import { DatagenReturnData } from "../../lib/DatagenReturnData";
-import { Item } from "./lib/Item";
-import { ItemDrop } from "./lib/ItemDrop";
-import { ItemSprite } from "./lib/ItemSprite";
-import { ItemInventory } from "./lib/ItemInventory";
-import { ItemDurability } from "./lib/ItemDurability";
-import { ItemHarvest } from "./lib/ItemHarvest";
-import { ItemType } from "./lib/ItemType";
-import { ItemComponent } from "./lib/ItemComponent";
-import { ItemFunction } from "./lib/ItemFunction";
-import type { SmartValue } from "../../lib/SmartValue";
+import { DatagenReturnData } from "../../../lib/DatagenReturnData";
+import { Item } from "./Item";
+import { ItemDrop } from "./ItemDrop";
+import { ItemSprite } from "./ItemSprite";
+import { ItemInventory } from "./ItemInventory";
+import { ItemDurability } from "./ItemDurability";
+import { ItemHarvest } from "./ItemHarvest";
+import { ItemType } from "./ItemType";
+import { ItemComponent } from "./ItemComponent";
+import { ItemFunction } from "./ItemFunction";
+import type { SmartValue } from "../../../lib/SmartValue";
 
 export class ItemTileParticle {
     private colour: string | string[];
@@ -41,13 +41,13 @@ export class ItemTileDropCondition {
 }
 
 export class ItemTileDrop extends ItemDrop {
-    private condition?: ItemTileCondition;
+    private condition?: ItemTileCondition | ItemTileDropCondition;
 
     constructor(id: string, amount?: number, chance?: number) {
         super(id, amount, chance);
     }
 
-    setCondition(condition?: ItemTileCondition) {
+    setCondition(condition?: ItemTileCondition | ItemTileDropCondition) {
         this.condition = condition;
 
         return this;
@@ -255,42 +255,3 @@ export class TileItem extends Item {
         return this;
     }
 }
-
-export default (
-    id: string,
-    type: ItemType,
-    inventory: string | ItemInventory,
-    properties?: ItemTileProperties | ItemTileProperties[],
-    drop?: string | ItemTileDrop[],
-    harvest?: ItemTileHarvest,
-    placement?: string | ItemTilePlacement,
-    sfx?: string | ItemTileSFX,
-    components?: [
-        {
-            key: string;
-            component: ItemComponent;
-        },
-    ],
-    onUse?: ItemFunction[],
-) => {
-    const tile = new TileItem(
-        type,
-        `phantasia:item/${id}`,
-        inventory,
-        properties,
-    )
-        .setTileDrops(drop)
-        .setTileHarvest(harvest)
-        .setTilePlacement(placement)
-        .setTileSFX(sfx);
-
-    components?.forEach(({ key, component }) =>
-        tile.addComponent(key, component),
-    );
-
-    if (onUse) {
-        tile.addOnUse(onUse);
-    }
-
-    return new DatagenReturnData(`generated/data/items/${id}.json`, tile);
-};

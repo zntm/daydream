@@ -1,12 +1,12 @@
-import { DatagenReturnData } from "../../lib/DatagenReturnData";
-import { ItemType } from "./lib/ItemType";
-import { ItemFunction } from "./lib/ItemFunction";
+import { DatagenReturnData } from "../../../lib/DatagenReturnData";
+import { ItemType } from "../lib/ItemType";
+import { ItemFunction } from "../lib/ItemFunction";
 import {
     TileItem,
     ItemTileDrop,
     ItemTileHarvest,
     ItemTileParticle,
-} from "./tileItem";
+} from "../lib/TileItem";
 
 export default [
     new DatagenReturnData(
@@ -15,7 +15,6 @@ export default [
             ItemType.Untouchable,
             "phantasia:item/campfire",
             "#phantasia:item/generic/inventory_default",
-            undefined,
         )
             .setTileDrops([new ItemTileDrop("phantasia:campfire")])
             .setTileHarvest(
@@ -42,7 +41,6 @@ export default [
             ItemType.Untouchable,
             "phantasia:item/torch",
             "#phantasia:item/generic/inventory_default",
-            undefined,
         )
             .setTileDrops([new ItemTileDrop("phantasia:torch")])
             .setTileHarvest(

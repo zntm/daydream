@@ -3,7 +3,7 @@ import {
     ItemTileHarvest,
     ItemTileParticle,
     ItemTileProperties,
-} from "./tileItem";
+} from "../lib/TileItem";
 
 const { default: oreItems } = import.meta.require("./oreItems");
 

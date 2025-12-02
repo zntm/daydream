@@ -2,8 +2,6 @@ import {
     DatagenReturnData,
     SmartValue,
     ChooseWeightedOption,
-    SmartValueRandom,
-    SmartValueType,
     Sound,
 } from "../../..";
 import {

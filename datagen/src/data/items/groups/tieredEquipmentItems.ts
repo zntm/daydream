@@ -1,15 +1,7 @@
-import type { ItemHarvest } from "./lib/ItemHarvest";
+import type { ItemHarvest } from "../lib/ItemHarvest";
+import { AccessoryItem, ItemAccessoryType } from "../lib/AccessoryItem";
+import { ToolItem } from "../lib/ToolItem";
 
-const { default: accessoryItem, ItemAccessoryType } = import.meta.require(
-    "./accessoryItem",
-);
-const { default: toolItem } = import.meta.require("./toolItem");
-/*
-id: string,
-armorType: ItemAccessoryType,
-armorDefense: number,
-durabilityAmount: number,
-durabilityBar: string,*/
 export default (
     id: string,
     helmet: any,
@@ -21,34 +13,34 @@ export default (
     shovel: any,
     harvest: any,
 ) => [
-        accessoryItem(
+        new AccessoryItem(
             `${id}_helmet`,
             ItemAccessoryType.Helmet,
             helmet.defense,
             helmet.durability,
             "#phantasia:item/generic/inventory_armor",
         ),
-        accessoryItem(
+        new AccessoryItem(
             `${id}_breastplate`,
             ItemAccessoryType.Breastplate,
             breastplate.defense,
             breastplate.durability,
             "#phantasia:item/generic/inventory_armor",
         ),
-        accessoryItem(
+        new AccessoryItem(
             `${id}_leggings`,
             ItemAccessoryType.Leggings,
             leggings.defense,
             leggings.durability,
             "#phantasia:item/generic/inventory_armor",
         ),
-        toolItem(
+        new ToolItem(
             `${id}_sword`,
             sword.durability,
             "#phantasia:item/generic/inventory_tool",
             sword.damage,
         ),
-        toolItem(
+        new ToolItem(
             `${id}_pickaxe`,
             pickaxe.durability,
             "#phantasia:item/generic/inventory_tool",
@@ -56,7 +48,7 @@ export default (
             harvest.hardness,
             harvest.level,
         ),
-        toolItem(
+        new ToolItem(
             `${id}_axe`,
             axe.durability,
             "#phantasia:item/generic/inventory_tool",
@@ -64,7 +56,7 @@ export default (
             harvest.hardness,
             harvest.level,
         ),
-        toolItem(
+        new ToolItem(
             `${id}_shovel`,
             shovel.durability,
             "#phantasia:item/generic/inventory_tool",
