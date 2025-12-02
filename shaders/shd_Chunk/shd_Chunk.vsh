@@ -10,8 +10,6 @@ attribute vec4 in_TextureData;
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-uniform vec2 u_texture_size;
-
 uniform float u_time;
 uniform float u_skew[CHUNK_SIZE * CHUNK_SIZE];
 

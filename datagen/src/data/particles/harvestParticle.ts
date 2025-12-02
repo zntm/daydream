@@ -13,7 +13,7 @@ import { Particle, ParticleFunction, ParticleProperties } from "../particles";
 export default [
     new DatagenReturnData(
         "generated/data/particles/tile/harvest.json",
-        new Particle("phantasia:particle/harvest", [
+        new Particle("phantasia:particle/tile/harvest", [
             ParticleProperties.IsFadeOut,
         ])
             .setLifetime(

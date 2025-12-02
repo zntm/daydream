@@ -7,6 +7,8 @@ import {
     Creature,
     CreatureHostilityType,
     CreatureMovementType,
+    CreatureSprite,
+    CreatureSpriteData
 } from "../creatures";
 import { ItemDrop } from "../items";
 
@@ -14,7 +16,7 @@ class HostileCreature extends Creature {
     constructor(
         hp: number,
         movementType: CreatureMovementType,
-        sprite: string,
+        sprite: CreatureSprite | { [key: string]: CreatureSprite },
         attribute: Attribute,
     ) {
         super(
@@ -33,7 +35,7 @@ export default [
         new HostileCreature(
             36,
             CreatureMovementType.Ground,
-            "phantasia:creature/zombie",
+            new CreatureSprite(new CreatureSpriteData("phantasia:creature/zombie/idle"), new CreatureSpriteData("phantasia:creature/zombie/moving")),
             new Attribute()
                 .setCollisionBox(16, 30)
                 .setHitBox(18, 32)

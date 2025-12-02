@@ -7,6 +7,8 @@ import {
     Creature,
     CreatureHostilityType,
     CreatureMovementType,
+    CreatureSprite,
+    CreatureSpriteData,
 } from "../creatures";
 import { ItemDrop } from "../items";
 
@@ -14,7 +16,7 @@ class PassiveCreature extends Creature {
     constructor(
         hp: number,
         movementType: CreatureMovementType,
-        sprite: any,
+        sprite: CreatureSprite | { [key: string]: CreatureSprite },
         attribute: Attribute,
     ) {
         super(
@@ -33,7 +35,12 @@ export default [
         new PassiveCreature(
             12,
             CreatureMovementType.Ground,
-            "phantasia:creature/rabbit",
+            {
+                "black": new CreatureSprite(new CreatureSpriteData("phantasia:creature/rabbit/idle/black"), new CreatureSpriteData("phantasia:creature/rabbit/moving/black")),
+                "default": new CreatureSprite(new CreatureSpriteData("phantasia:creature/rabbit/idle/default"), new CreatureSpriteData("phantasia:creature/rabbit/moving/default")),
+                "spotted": new CreatureSprite(new CreatureSpriteData("phantasia:creature/rabbit/idle/spotted"), new CreatureSpriteData("phantasia:creature/rabbit/moving/spotted")),
+                "white": new CreatureSprite(new CreatureSpriteData("phantasia:creature/rabbit/idle/white"), new CreatureSpriteData("phantasia:creature/rabbit/moving/white")),
+            },
             new Attribute()
                 .setCollisionBox(17, 17)
                 .setHitBox(15, 16)
@@ -48,7 +55,7 @@ export default [
         new PassiveCreature(
             12,
             CreatureMovementType.Ground,
-            "phantasia:creature/chicken",
+            new CreatureSprite(new CreatureSpriteData("phantasia:creature/chicken/idle"), new CreatureSpriteData("phantasia:creature/chicken/moving")),
             new Attribute()
                 .setBoolean([AttributeBoolean.IsFallDamageResistant])
                 .setCollisionBox(10, 16)
@@ -71,7 +78,11 @@ export default [
         new PassiveCreature(
             18,
             CreatureMovementType.Ground,
-            "phantasia:creature/fox",
+            {
+                "brown": new CreatureSprite(new CreatureSpriteData("phantasia:creature/fox/idle/brown"), new CreatureSpriteData("phantasia:creature/fox/moving/brown")),
+                "default": new CreatureSprite(new CreatureSpriteData("phantasia:creature/fox/idle/default"), new CreatureSpriteData("phantasia:creature/fox/moving/default")),
+                "snow": new CreatureSprite(new CreatureSpriteData("phantasia:creature/fox/idle/snow"), new CreatureSpriteData("phantasia:creature/fox/moving/snow")),
+            },
             new Attribute()
                 .setCollisionBox(22, 18)
                 .setHitBox(22, 19)

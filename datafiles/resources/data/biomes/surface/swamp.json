@@ -57,10 +57,10 @@
         }
     ],
     "light_colour": {
-        "dawn": "#2d1981",
-        "day": "#5F91FE",
-        "dusk": "#C4502D",
-        "night": "#10042e"
+        "dawn": "#374A91",
+        "day": "#FFFFFF",
+        "dusk": "#C68B69",
+        "night": "#141B35"
     },
     "map_colour": "#8C8C6C",
     "music": [

@@ -7,10 +7,10 @@ import { EntityPhysics, EntityPhysicsValue } from "../../entity";
 import { Particle, ParticleProperties } from "../particles";
 
 export default [
-    ...["entity/damage", "entity/damage_critical"].map((id) => {
+    ...["damage", "damage_critical"].map((id) => {
         return new DatagenReturnData(
-            `generated/data/particles/${id}.json`,
-            new Particle(`phantasia:particle/${id}`, [
+            `generated/data/particles/entity/${id}.json`,
+            new Particle(`phantasia:particle/entity/${id}`, [
                 ParticleProperties.HasStretchAnimation,
             ])
                 .setLifetime(

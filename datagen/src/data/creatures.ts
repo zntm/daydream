@@ -18,8 +18,7 @@ export class Creature {
     private hp: number;
     private hostility_type: CreatureHostilityType;
     private movement_type: CreatureMovementType;
-    private sprite_idle: string;
-    private sprite_moving: string;
+    private sprite: CreatureSprite | { [key: string]: CreatureSprite };
     private attribute: Attribute;
     private drops?: ItemDrop[];
 
@@ -27,14 +26,13 @@ export class Creature {
         hp: number,
         hostilityType: CreatureHostilityType,
         movementType: CreatureMovementType,
-        sprite: string,
+        sprite: CreatureSprite | { [key: string]: CreatureSprite },
         attribute: Attribute,
     ) {
         this.hp = hp;
         this.hostility_type = hostilityType;
         this.movement_type = movementType;
-        this.sprite_idle = `${sprite}/idle`;
-        this.sprite_moving = `${sprite}/moving`;
+        this.sprite = sprite;
         this.attribute = attribute;
     }
 
@@ -42,6 +40,26 @@ export class Creature {
         this.drops = drops;
 
         return this;
+    }
+}
+
+export class CreatureSpriteData {
+    id: string;
+    emissive?: string;
+
+    constructor(id: string, emissive?: string) {
+        this.id = id;
+        this.emissive = emissive;
+    }
+}
+
+export class CreatureSprite {
+    idle: CreatureSpriteData;
+    moving: CreatureSpriteData;
+
+    constructor(idle: CreatureSpriteData, moving: CreatureSpriteData) {
+        this.idle = idle;
+        this.moving = moving;
     }
 }
 

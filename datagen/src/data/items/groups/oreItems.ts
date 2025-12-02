@@ -31,38 +31,44 @@ export default (
                 "#phantasia:item/generic/inventory_default",
             ),
         ),
-        new TileItem(
-            ItemType.Solid,
-            `phantasia:item/${id}_block`,
-            "#phantasia:item/generic/inventory_default",
-            blockProperties,
-        )
-            .setTileDrops([
-                new ItemTileDrop(`phantasia:item/${id}_block`).setCondition(
-                    new ItemTileCondition(
-                        "#phantasia:item/type/pickaxe",
-                        harvestLevel,
+        new DatagenReturnData(
+            `generated/data/items/${id}_block.json`,
+            new TileItem(
+                ItemType.Solid,
+                `phantasia:item/${id}_block`,
+                "#phantasia:item/generic/inventory_default",
+                blockProperties,
+            )
+                .setTileDrops([
+                    new ItemTileDrop(`phantasia:item/${id}_block`).setCondition(
+                        new ItemTileCondition(
+                            "#phantasia:item/type/pickaxe",
+                            harvestLevel,
+                        ),
                     ),
-                ),
-            ])
-            .setTileHarvest(blockHarvest)
-            .setTileSFX(blockSFX),
-        new TileItem(
-            ItemType.Solid,
-            `phantasia:item/${id}_ore`,
-            "#phantasia:item/generic/inventory_default",
-            oreProperties,
-        )
-            .setTileDrops([
-                new ItemTileDrop(`phantasia:item/${id}_ore`).setCondition(
-                    new ItemTileCondition(
-                        "#phantasia:item/type/pickaxe",
-                        harvestLevel,
+                ])
+                .setTileHarvest(blockHarvest)
+                .setTileSFX(blockSFX),
+        ),
+        new DatagenReturnData(
+            `generated/data/items/${id}_ore.json`,
+            new TileItem(
+                ItemType.Solid,
+                `phantasia:item/${id}_ore`,
+                "#phantasia:item/generic/inventory_default",
+                oreProperties,
+            )
+                .setTileDrops([
+                    new ItemTileDrop(`phantasia:item/${id}_ore`).setCondition(
+                        new ItemTileCondition(
+                            "#phantasia:item/type/pickaxe",
+                            harvestLevel,
+                        ),
                     ),
-                ),
-            ])
-            .setTileHarvest(oreHarvest)
-            .setTileSFX(oreSFX),
+                ])
+                .setTileHarvest(oreHarvest)
+                .setTileSFX(oreSFX),
+        ),
     ];
 
     if (hasRawItem) {

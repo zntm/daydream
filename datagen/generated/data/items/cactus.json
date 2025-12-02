@@ -7,7 +7,7 @@
     "tile": {
         "drops": [
             {
-                "id": "cactus"
+                "id": "phantasia:cactus"
             }
         ],
         "harvest": {

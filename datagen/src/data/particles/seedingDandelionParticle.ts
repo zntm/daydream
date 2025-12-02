@@ -13,7 +13,7 @@ import { Particle, ParticleFunction, ParticleProperties } from "../particles";
 export default [
     new DatagenReturnData(
         "generated/data/particles/tile/seeding_dandelion.json",
-        new Particle("phantasia:particle/seeding_dandelion", [
+        new Particle("phantasia:particle/tile/seeding_dandelion", [
             ParticleProperties.IsFadeOut,
         ])
             .setLifetime(

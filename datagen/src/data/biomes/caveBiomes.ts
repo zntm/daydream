@@ -20,7 +20,7 @@ export default [
         "generated/data/biomes/cave/chasm.json",
         new Biome(
             new BiomeBackground("phantasia:background/chasm", 0.7),
-            "#32B559",
+            "#000000",
             {
                 dawn: new BiomeSkyColor("#180738", "#2A1504"),
                 day: new BiomeSkyColor("#5F91FE", "#244FE9"),
@@ -28,10 +28,10 @@ export default [
                 night: new BiomeSkyColor("#000019", "#020008"),
             },
             {
-                dawn: "#C4502D",
-                day: "#5F91FE",
-                dusk: "#C4502D",
-                night: "#000019",
+                dawn: "#374A91",
+                day: "#FFFFFF",
+                dusk: "#C68B69",
+                night: "#141B35",
             },
             {
                 top_layer: new BiomeTile(
@@ -92,10 +92,10 @@ export default [
                 night: new BiomeSkyColor("#000019", "#020008"),
             },
             {
-                dawn: "#C4502D",
-                day: "#5F91FE",
-                dusk: "#C4502D",
-                night: "#000019",
+                dawn: "#374A91",
+                day: "#FFFFFF",
+                dusk: "#C68B69",
+                night: "#141B35",
             },
             {
                 top_layer: new BiomeTile(

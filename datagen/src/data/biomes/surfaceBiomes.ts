@@ -101,10 +101,10 @@ export default [
                 night: new BiomeSkyColor("#2b243f", "#1e1f2b"),
             },
             {
-                dawn: "#2d1981",
-                day: "#5F91FE",
-                dusk: "#C4502D",
-                night: "#10042e",
+                dawn: "#374A91",
+                day: "#FFFFFF",
+                dusk: "#C68B69",
+                night: "#141B35",
             },
             {
                 top_layer: new BiomeTile(
@@ -215,10 +215,10 @@ export default [
                 night: new BiomeSkyColor("#2b243f", "#1e1f2b"),
             },
             {
-                dawn: "#2d1981",
-                day: "#5F91FE",
-                dusk: "#C4502D",
-                night: "#10042e",
+                dawn: "#374A91",
+                day: "#FFFFFF",
+                dusk: "#C68B69",
+                night: "#141B35",
             },
             {
                 top_layer: new BiomeTile(
@@ -302,10 +302,10 @@ export default [
                 night: new BiomeSkyColor("#2b243f", "#1e1f2b"),
             },
             {
-                dawn: "#2d1981",
-                day: "#5F91FE",
-                dusk: "#C4502D",
-                night: "#10042e",
+                dawn: "#374A91",
+                day: "#FFFFFF",
+                dusk: "#C68B69",
+                night: "#141B35",
             },
             {
                 top_layer: new BiomeTile(

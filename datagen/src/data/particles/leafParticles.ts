@@ -12,8 +12,8 @@ import { Particle, ParticleProperties } from "../particles";
 
 export default ["birch", "oak", "pine"].map((id) => {
     return new DatagenReturnData(
-        `generated/data/particles/leaf/${id}.json`,
-        new Particle(`phantasia:particle/leaf/${id}`, [
+        `generated/data/particles/tile/leaf/${id}.json`,
+        new Particle(`phantasia:particle/tile/leaf/${id}`, [
             ParticleProperties.IsFadeOut,
         ])
             .setLifetime(

@@ -1,3 +1,4 @@
+import { DatagenReturnData } from "../../../lib/DatagenReturnData";
 import { ItemType } from "../lib/ItemType";
 import {
     TileItem,
@@ -15,55 +16,61 @@ export default [
             id = id !== "" ? `grass_${id}` : "grass";
 
             return ["short", "tall"].map((type: string) =>
-                new TileItem(
-                    ItemType.Untouchable,
-                    `phantasia:item/${type}_${id}`,
-                    "#phantasia:item/generic/inventory_default",
-                    [
-                        ItemTileProperties.CanMirror,
-                        ItemTileProperties.IsFoliage,
-                    ],
-                )
-                    .setTileDrops([new ItemTileDrop(`phantasia:${type}_${id}`)])
-                    .setTileHarvest(
-                        new ItemTileHarvest(
-                            0.38,
-                            0,
-                            new ItemTileParticle(
-                                "#phantasia:tile/particle_colour/plant",
-                                "#phantasia:tile/generic/harvest_particle_frequency",
+                new DatagenReturnData(
+                    `generated/data/items/${type}_${id}.json`,
+                    new TileItem(
+                        ItemType.Untouchable,
+                        `phantasia:item/${type}_${id}`,
+                        "#phantasia:item/generic/inventory_default",
+                        [
+                            ItemTileProperties.CanMirror,
+                            ItemTileProperties.IsFoliage,
+                        ],
+                    )
+                        .setTileDrops([new ItemTileDrop(`phantasia:${type}_${id}`)])
+                        .setTileHarvest(
+                            new ItemTileHarvest(
+                                0.38,
+                                0,
+                                new ItemTileParticle(
+                                    "#phantasia:tile/particle_colour/plant",
+                                    "#phantasia:tile/generic/harvest_particle_frequency",
+                                ),
                             ),
-                        ),
-                    )
-                    .setTilePlacement(
-                        new ItemTilePlacement().setCondition(
-                            "#phantasia:tile/placement/condition_plant",
-                        ),
-                    )
-                    .setTileSFX("#phantasia:tile/sfx/foliage"),
+                        )
+                        .setTilePlacement(
+                            new ItemTilePlacement().setCondition(
+                                "#phantasia:tile/placement/condition_plant",
+                            ),
+                        )
+                        .setTileSFX("#phantasia:tile/sfx/foliage"),
+                ),
             );
         })
         .flat(),
     ...["", "taiga", "swamp"].map((id) => {
         id = id !== "" ? `grass_block_${id}` : "grass_block";
 
-        return new TileItem(
-            ItemType.Untouchable,
-            `phantasia:item/${id}`,
-            "#phantasia:item/generic/inventory_default",
-            [ItemTileProperties.CanMirror, ItemTileProperties.IsTile],
-        )
-            .setTileDrops([new ItemTileDrop(`phantasia:dirt`)])
-            .setTileHarvest(
-                new ItemTileHarvest(
-                    0.36,
-                    0,
-                    new ItemTileParticle(
-                        "#phantasia:tile/particle_colour/dirt",
-                        "#phantasia:tile/generic/harvest_particle_frequency",
-                    ),
-                ),
+        return new DatagenReturnData(
+            `generated/data/items/${id}.json`,
+            new TileItem(
+                ItemType.Solid,
+                `phantasia:item/${id}`,
+                "#phantasia:item/generic/inventory_default",
+                [ItemTileProperties.CanMirror, ItemTileProperties.IsTile],
             )
-            .setTileSFX("#phantasia:tile/sfx/dirt");
+                .setTileDrops([new ItemTileDrop(`phantasia:dirt`)])
+                .setTileHarvest(
+                    new ItemTileHarvest(
+                        0.36,
+                        0,
+                        new ItemTileParticle(
+                            "#phantasia:tile/particle_colour/dirt",
+                            "#phantasia:tile/generic/harvest_particle_frequency",
+                        ),
+                    ),
+                )
+                .setTileSFX("#phantasia:tile/sfx/dirt"),
+        );
     }),
 ];

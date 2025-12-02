@@ -25,6 +25,7 @@ export default [
                 const colourDir = join(basePath, "colour");
                 const colourFile = join(basePath, "colour.png");
 
+                /*
                 if (existsSync(colourDir) && statSync(colourDir).isDirectory()) {
                     // Get all files in the colour directory and filter for numbered sprites
                     const files = readdirSync(colourDir);
@@ -41,15 +42,16 @@ export default [
                     }
 
                     colour = colourSprites.length > 0 ? colourSprites : `phantasia:attire/${type}/${file}/colour`;
-                } else {
+                } else {*/
                     colour = `phantasia:attire/${type}/${file}/colour`;
-                }
+                //}
 
                 // Check if white is a directory with numbered sprites or a single file
                 let white: string | string[] | undefined;
                 const whiteDir = join(basePath, "white");
                 const whiteFile = join(basePath, "white.png");
 
+                /*
                 if (existsSync(whiteDir) && statSync(whiteDir).isDirectory()) {
                     // Get all files in the white directory and filter for numbered sprites
                     const files = readdirSync(whiteDir);
@@ -66,7 +68,7 @@ export default [
                     }
 
                     white = whiteSprites.length > 0 ? whiteSprites : undefined;
-                } else if (existsSync(whiteFile)) {
+                } else */if (readdirSync(basePath).some((f) => f.startsWith("white"))) {
                     white = `phantasia:attire/${type}/${file}/white`;
                 }
 

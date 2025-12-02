@@ -13,10 +13,12 @@ export class WorldVignette {
 }
 
 export class WorldTimeDiurnal {
+    private id: string;
     private time_range_min: number;
     private time_range_max: number;
 
-    constructor(start: number, end: number) {
+    constructor(id: string, start: number, end: number) {
+        this.id = id;
         this.time_range_min = start;
         this.time_range_max = end;
     }
@@ -24,11 +26,13 @@ export class WorldTimeDiurnal {
 
 export class WorldTime {
     private start: number;
-    private diurnal: { [key: string]: WorldTimeDiurnal };
+    private diurnal: WorldTimeDiurnal[];
+    private length: number;
 
-    constructor(start: number, diurnal: { [key: string]: WorldTimeDiurnal }) {
+    constructor(start: number, diurnal: WorldTimeDiurnal[], length: number) {
         this.start = start;
         this.diurnal = diurnal;
+        this.length = length;
     }
 }
 
@@ -175,12 +179,12 @@ export default [
             1024,
             14,
             new WorldVignette(768, 1024, "#000000"),
-            new WorldTime(180, {
-                dawn: new WorldTimeDiurnal(0, 240),
-                day: new WorldTimeDiurnal(240, 820),
-                dusk: new WorldTimeDiurnal(820, 890),
-                night: new WorldTimeDiurnal(890, 1200),
-            }),
+            new WorldTime(240, [
+                new WorldTimeDiurnal("dawn", 0, 240),
+                new WorldTimeDiurnal("day", 240, 820),
+                new WorldTimeDiurnal("dusk", 820, 890),
+                new WorldTimeDiurnal("night", 890, 1200),
+            ], 1200),
             [
                 new WorldCelestial(
                     "phantasia:world/playground/celestial/sun",
@@ -201,7 +205,7 @@ export default [
                     }),
                     new WorldCaveBiome("phantasia:cave/chasm", 0, 800, {
                         type: WorldCaveBiomeTransitionType.Random,
-                        ...new Noise(0),
+                        ...new Noise(0, 2, 22),
                     }),
                 ],
                 new Noise(4),

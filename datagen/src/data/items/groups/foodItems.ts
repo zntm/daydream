@@ -1,3 +1,4 @@
+import { DatagenReturnData } from "../../../lib/DatagenReturnData";
 import { Sound } from "../../../lib/Sound";
 import { ItemConsumable } from "../lib/ItemConsumable";
 import { ItemCooldown } from "../lib/ItemCooldown";
@@ -6,14 +7,17 @@ import { ConsumableItem } from "../lib/ConsumableItem";
 const { default: cookableConsumableItems } = import.meta.require("./cookableConsumableItems");
 
 export default [
-    new ConsumableItem(
-        "apple",
-        "#phantasia:item/generic/inventory_default",
-        new ItemConsumable(
-            8,
-            4,
-            new ItemCooldown("phantasia:food", 1),
-            new Sound("phantasia:sound.eat"),
+    new DatagenReturnData(
+        "generated/data/items/apple.json",
+        new ConsumableItem(
+            "apple",
+            "#phantasia:item/generic/inventory_default",
+            new ItemConsumable(
+                8,
+                4,
+                new ItemCooldown("phantasia:food", 1),
+                new Sound("phantasia:sound.eat"),
+            ),
         ),
     ),
     ...[

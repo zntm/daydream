@@ -103,6 +103,7 @@ const individualPromises = individualFiles.map(async (file) => {
 
     if (name.startsWith("#")) {
         length *= 5;
+        name = name.substring(1);
     }
 
     const xoffset = getXOffset(xoffsetStr, length, exif) ?? 0;

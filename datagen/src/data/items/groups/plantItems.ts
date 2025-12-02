@@ -33,13 +33,15 @@ export default [
             dropCondition: new ItemTileDropCondition().setIndex(0),
         },
     ].map(({ id, particleColour, dropCondition }) =>
+    new DatagenReturnData(
+        `generated/data/items/${id}.json`,
         new TileItem(
             ItemType.Untouchable,
             `phantasia:item/${id}`,
             "#phantasia:item/generic/inventory_default",
             [ItemTileProperties.CanMirror],
         )
-            .setTileDrops([new ItemTileDrop(id).setCondition(dropCondition)])
+            .setTileDrops([new ItemTileDrop(`phantasia:${id}`).setCondition(dropCondition)])
             .setTileHarvest(
                 new ItemTileHarvest(
                     0.38,
@@ -83,53 +85,59 @@ export default [
                 ),
             )
             .setTileSFX("#phantasia:tile/sfx/foliage"),
+    )),
+    new DatagenReturnData(
+        "generated/data/items/cactus_flower.json",
+        new TileItem(
+            ItemType.Untouchable,
+            "phantasia:item/cactus_flower",
+            "#phantasia:item/generic/inventory_default",
+            [ItemTileProperties.IsFoliage],
+        )
+            .setTileDrops([new ItemTileDrop("phantasia:cactus_flower")])
+            .setTileHarvest(
+                new ItemTileHarvest(
+                    0.38,
+                    0,
+                    new ItemTileParticle(
+                        "#phantasia:tile/particle_colour/twig",
+                        "#phantasia:tile/generic/harvest_particle_frequency",
+                    ),
+                ),
+            )
+            .setTilePlacement(
+                new ItemTilePlacement().setCondition(
+                    "#phantasia:tile/placement/condition_dry_plant",
+                ),
+            )
+            .setTileSFX("#phantasia:tile/sfx/foliage"),
     ),
-    new TileItem(
-        ItemType.Untouchable,
-        "phantasia:item/cactus_flower",
-        "#phantasia:item/generic/inventory_default",
-        [ItemTileProperties.IsFoliage],
-    )
-        .setTileDrops([new ItemTileDrop("phantasia:cactus_flower")])
-        .setTileHarvest(
-            new ItemTileHarvest(
-                0.38,
-                0,
-                new ItemTileParticle(
-                    "#phantasia:tile/particle_colour/twig",
-                    "#phantasia:tile/generic/harvest_particle_frequency",
+    new DatagenReturnData(
+        "generated/data/items/dead_bush.json",
+        new TileItem(
+            ItemType.Untouchable,
+            "phantasia:item/dead_bush",
+            "#phantasia:item/generic/inventory_default",
+            [ItemTileProperties.CanMirror, ItemTileProperties.IsFoliage],
+        )
+            .setTileDrops([new ItemTileDrop("phantasia:twig")])
+            .setTileHarvest(
+                new ItemTileHarvest(
+                    0.38,
+                    0,
+                    new ItemTileParticle(
+                        "#phantasia:tile/particle_colour/twig",
+                        "#phantasia:tile/generic/harvest_particle_frequency",
+                    ),
                 ),
-            ),
-        )
-        .setTilePlacement(
-            new ItemTilePlacement().setCondition(
-                "#phantasia:tile/placement/condition_dry_plant",
-            ),
-        )
-        .setTileSFX("#phantasia:tile/sfx/foliage"),
-    new TileItem(
-        ItemType.Untouchable,
-        "phantasia:item/dead_bush",
-        "#phantasia:item/generic/inventory_default",
-        [ItemTileProperties.CanMirror, ItemTileProperties.IsFoliage],
-    )
-        .setTileDrops([new ItemTileDrop("phantasia:twig")])
-        .setTileHarvest(
-            new ItemTileHarvest(
-                0.38,
-                0,
-                new ItemTileParticle(
-                    "#phantasia:tile/particle_colour/twig",
-                    "#phantasia:tile/generic/harvest_particle_frequency",
+            )
+            .setTilePlacement(
+                new ItemTilePlacement().setCondition(
+                    "#phantasia:tile/placement/condition_dry_plant",
                 ),
-            ),
-        )
-        .setTilePlacement(
-            new ItemTilePlacement().setCondition(
-                "#phantasia:tile/placement/condition_dry_plant",
-            ),
-        )
-        .setTileSFX("#phantasia:tile/sfx/wood"),
+            )
+            .setTileSFX("#phantasia:tile/sfx/wood"),
+    ),
     ...[
         "bluebells",
         "daisy",
@@ -140,29 +148,32 @@ export default [
         "orchids",
         "rose",
     ].map((id: string) =>
-        new TileItem(
-            ItemType.Untouchable,
-            `phantasia:item/${id}`,
-            "#phantasia:item/generic/inventory_default",
-            [ItemTileProperties.CanMirror, ItemTileProperties.IsFoliage],
-        )
-            .setTileDrops([new ItemTileDrop(`phantasia:${id}`)])
-            .setTileHarvest(
-                new ItemTileHarvest(
-                    0.38,
-                    0,
-                    new ItemTileParticle(
-                        "#phantasia:tile/particle_colour/plant",
-                        "#phantasia:tile/generic/harvest_particle_frequency",
+        new DatagenReturnData(
+            `generated/data/items/${id}.json`,
+            new TileItem(
+                ItemType.Untouchable,
+                `phantasia:item/${id}`,
+                "#phantasia:item/generic/inventory_default",
+                [ItemTileProperties.CanMirror, ItemTileProperties.IsFoliage],
+            )
+                .setTileDrops([new ItemTileDrop(`phantasia:${id}`)])
+                .setTileHarvest(
+                    new ItemTileHarvest(
+                        0.38,
+                        0,
+                        new ItemTileParticle(
+                            "#phantasia:tile/particle_colour/plant",
+                            "#phantasia:tile/generic/harvest_particle_frequency",
+                        ),
                     ),
-                ),
-            )
-            .setTilePlacement(
-                new ItemTilePlacement().setCondition(
-                    "#phantasia:tile/placement/condition_plant",
-                ),
-            )
-            .setTileSFX("#phantasia:tile/sfx/foliage"),
+                )
+                .setTilePlacement(
+                    new ItemTilePlacement().setCondition(
+                        "#phantasia:tile/placement/condition_plant",
+                    ),
+                )
+                .setTileSFX("#phantasia:tile/sfx/foliage"),
+        ),
     ),
     new DatagenReturnData(
         "generated/data/items/seeding_dandelion.json",
@@ -190,9 +201,9 @@ export default [
             )
             .setTileSFX("#phantasia:tile/sfx/foliage")
             .addOnRandomTick([
-                new ItemFunction("phantasia:spawn_particle", [{
-                    id: "phantasia:seeding_dandelion"
-                }])
+                new ItemFunction("phantasia:spawn_particle", {
+                    id: "phantasia:tile/seeding_dandelion"
+                })
             ])
     ),
 ];

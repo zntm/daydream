@@ -21,7 +21,7 @@ export class ToolItem extends Item {
     ) {
         super(ItemType.Tool, `phantasia:item/${id}`, "#phantasia:item/generic/inventory_tool");
 
-        this.setItemDurability(new ItemDurability(durabilityAmount, durabilityBar));
+        this.setItemDurability(new ItemDurability(durabilityAmount, "#phantasia:item/generic/durability_bar"));
 
         if (damage) {
             this.setItemDamage(damage);

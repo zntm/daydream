@@ -1,0 +1,16 @@
+{
+    "attribute": {
+        "collision_box_width": 32,
+        "collision_box_height": 64,
+        "hit_box_width": 32,
+        "hit_box_height": 64
+    },
+    "lifetime": 0.25,
+    "physics": {
+        "xspeed": 14,
+        "yspeed": 0,
+        "scale": 1,
+        "rotation": 0
+    },
+    "sprite": "phantasia:projectile/melee_swing"
+}

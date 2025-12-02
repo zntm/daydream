@@ -1,8 +1,8 @@
 export class ItemFunction {
     private id: string;
-    private parameters?: any[];
+    private parameters?: any;
 
-    constructor(id: string, parameters?: any[]) {
+    constructor(id: string, parameters?: any) {
         this.id = id;
 
         if (parameters !== undefined) {

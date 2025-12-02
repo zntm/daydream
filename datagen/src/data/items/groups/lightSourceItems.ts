@@ -31,7 +31,7 @@ export default [
             .setTileLight("#EAC7A6")
             .setAnimationType("increment")
             .addOnRandomTick([
-                new ItemFunction("phantasia:sfx_play", [{ id: "phantasia:tile.fire.ambient" }])
+                new ItemFunction("phantasia:sfx_play", { id: "phantasia:tile.fire.ambient" })
             ], 0.24)
     ),
 
@@ -57,7 +57,7 @@ export default [
             .setTileLight("#D89172")
             .setAnimationType("increment")
             .addOnRandomTick([
-                new ItemFunction("phantasia:sfx_play", [{ id: "phantasia:tile.fire.ambient" }])
+                new ItemFunction("phantasia:sfx_play", { id: "phantasia:tile.fire.ambient" })
             ], 0.1)
     ),
 ];

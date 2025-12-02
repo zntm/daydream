@@ -1,3 +1,4 @@
+import { DatagenReturnData } from "../../../lib/DatagenReturnData";
 import { ItemType } from "../lib/ItemType";
 import {
     TileItem,
@@ -13,6 +14,8 @@ export default (
     harvest: ItemTileHarvest,
     sfx: string,
 ) => [
+    new DatagenReturnData(
+        `generated/data/items/${id}.json`,
         new TileItem(
             ItemType.Solid,
             `phantasia:item/${id}`,
@@ -22,6 +25,9 @@ export default (
             .setTileDrops([new ItemTileDrop(`phantasia:${id}`)])
             .setTileHarvest(harvest)
             .setTileSFX(sfx),
+    ),
+    new DatagenReturnData(
+        `generated/data/items/${id}_wall.json`,
         new TileItem(
             ItemType.Untouchable,
             `phantasia:item/${id}_wall`,
@@ -31,4 +37,5 @@ export default (
             .setTileDrops([new ItemTileDrop(`phantasia:${id}_wall`)])
             .setTileHarvest(harvest)
             .setTileSFX(sfx),
-    ];
+    ),
+];

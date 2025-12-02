@@ -1,0 +1,32 @@
+{
+    "function": {
+        "id": "phantasia:ore",
+        "parameters": {
+            "tile": {
+                "id": "phantasia:iron_ore"
+            },
+            "threshold": 0.7,
+            "clumpiness": 0.6,
+            "roundedness": 0.4
+        }
+    },
+    "height": {
+        "type": "smart_value:irandom",
+        "values": {
+            "min": 2,
+            "max": 4
+        }
+    },
+    "placement": {
+        "type": "inside",
+        "xoffset": 0,
+        "yoffset": 0
+    },
+    "width": {
+        "type": "smart_value:irandom",
+        "values": {
+            "min": 2,
+            "max": 4
+        }
+    }
+}

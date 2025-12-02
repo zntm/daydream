@@ -10,7 +10,9 @@
         "jump_height": 4.6,
         "jump_time": 10,
         "movement_speed": 0.4,
-        "boolean": ["phantasia:is_fall_damage_resistant"]
+        "boolean": [
+            "phantasia:is_fall_damage_resistant"
+        ]
     },
     "drops": [
         {
@@ -32,29 +34,11 @@
     "hp": 12,
     "movement_type": "ground",
     "sprite": {
-        "cold": {
-            "idle": {
-                "id": "phantasia:creature/chicken/idle/cold"
-            },
-            "moving": {
-                "id": "phantasia:creature/chicken/moving/cold"
-            }
+        "idle": {
+            "id": "phantasia:creature/chicken/idle"
         },
-        "default": {
-            "idle": {
-                "id": "phantasia:creature/chicken/idle/default"
-            },
-            "moving": {
-                "id": "phantasia:creature/chicken/moving/default"
-            }
-        },
-        "warm": {
-            "idle": {
-                "id": "phantasia:creature/chicken/idle/warm"
-            },
-            "moving": {
-                "id": "phantasia:creature/chicken/moving/warm"
-            }
+        "moving": {
+            "id": "phantasia:creature/chicken/moving"
         }
     }
 }
