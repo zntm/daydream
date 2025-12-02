@@ -48,7 +48,7 @@
     },
     "placement": {
         "type": "floor",
-        "xoffset": 0,
+        "xoffset": -3,
         "yoffset": "-height",
         "clearance_condition": [
             {

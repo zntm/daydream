@@ -54,7 +54,7 @@ export default [
         new Structure(
             7,
             new SmartValueIntRandom(9, 12),
-            new StructurePlacement(StructurePlacementType.Floor, 0, "-height", [
+            new StructurePlacement(StructurePlacementType.Floor, -3, "-height", [
                 new StructurePlacementClearanceCondition(
                     -3,
                     "-height",
@@ -86,7 +86,7 @@ export default [
         new Structure(
             5,
             new SmartValueIntRandom(6, 9),
-            new StructurePlacement(StructurePlacementType.Floor, 0, "-height", [
+            new StructurePlacement(StructurePlacementType.Floor, -2, "-height", [
                 new StructurePlacementClearanceCondition(
                     -2,
                     "-height",
