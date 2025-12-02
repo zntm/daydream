@@ -32,7 +32,7 @@ if (obj_Game_Control.spawn_needs_init)
         file_load_world_spawn(global.world_save_data, obj_Player, global.player_save_data.uuid);
     }
     
-    control_camera_pos(obj_Player.x , obj_Player.y, true);
+    control_camera_pos(obj_Player.x - (global.camera_width / 2), obj_Player.y - (global.camera_height / 2), true);
     
     obj_Player.ylast = obj_Player.y;
     
