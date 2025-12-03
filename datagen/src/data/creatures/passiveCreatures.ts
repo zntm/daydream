@@ -55,7 +55,11 @@ export default [
         new PassiveCreature(
             12,
             CreatureMovementType.Ground,
-            new CreatureSprite(new CreatureSpriteData("phantasia:creature/chicken/idle"), new CreatureSpriteData("phantasia:creature/chicken/moving")),
+            {
+                "cold": new CreatureSprite(new CreatureSpriteData("phantasia:creature/chicken/idle/cold"), new CreatureSpriteData("phantasia:creature/chicken/moving/cold")),
+                "default": new CreatureSprite(new CreatureSpriteData("phantasia:creature/chicken/idle/default"), new CreatureSpriteData("phantasia:creature/chicken/moving/default")),
+                "warm": new CreatureSprite(new CreatureSpriteData("phantasia:creature/chicken/idle/warm"), new CreatureSpriteData("phantasia:creature/chicken/moving/warm")),
+            },
             new Attribute()
                 .setBoolean([AttributeBoolean.IsFallDamageResistant])
                 .setCollisionBox(10, 16)

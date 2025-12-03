@@ -1,4 +1,4 @@
-function tile_met_custom_placement_condition(_x, _y, _z, _condition, _item_data = global.item_data)
+function tile_met_custom_placement_condition(_x, _y, _z, _condition, _item_data = global.item_data, _self_id = undefined)
 {
     var _condition_type = _condition.type;
     
@@ -15,7 +15,7 @@ function tile_met_custom_placement_condition(_x, _y, _z, _condition, _item_data 
         
         if (_c != undefined)
         {
-            _condition_amount += tile_met_custom_placement_condition(_x, _y, _z, _c, _item_data);
+            _condition_amount += tile_met_custom_placement_condition(_x, _y, _z, _c, _item_data, _self_id);
             
             continue;
         }
@@ -47,7 +47,21 @@ function tile_met_custom_placement_condition(_x, _y, _z, _condition, _item_data 
         {
             if (_id != undefined)
             {
-                if (is_array(_id)) ? (array_contains(_id, TILE_EMPTY)) : (_id == TILE_EMPTY)
+                var _match = false;
+                
+                if (is_array(_id))
+                {
+                    if (array_contains(_id, "$EMPTY")) || (array_contains(_id, TILE_EMPTY))
+                    {
+                        _match = true;
+                    }
+                }
+                else if (_id == "$EMPTY") || (_id == TILE_EMPTY)
+                {
+                    _match = true;
+                }
+                
+                if (_match)
                 {
                     ++_condition_amount;
                 }
@@ -62,7 +76,33 @@ function tile_met_custom_placement_condition(_x, _y, _z, _condition, _item_data 
         
         if (_id != undefined)
         {
-            if (is_array(_id)) ? (array_contains(_id, _tile.get_id())) : (_id == _tile.get_id())
+            var _match = false;
+            var _tile_id = _tile.get_id();
+            
+            if (is_array(_id))
+            {
+                if (array_contains(_id, _tile_id))
+                {
+                    _match = true;
+                }
+                else if (_self_id != undefined) && (array_contains(_id, "$ID")) && (_tile_id == _self_id)
+                {
+                    _match = true;
+                }
+            }
+            else
+            {
+                if (_id == _tile_id)
+                {
+                    _match = true;
+                }
+                else if (_self_id != undefined) && (_id == "$ID") && (_tile_id == _self_id)
+                {
+                    _match = true;
+                }
+            }
+            
+            if (_match)
             {
                 ++_condition_amount;
             }

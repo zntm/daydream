@@ -8,7 +8,7 @@ function tile_placement_condition(_x, _y, _z, _item)
     
     if (_requirements != undefined)
     {
-        return tile_met_custom_placement_condition(_x, _y, _z, _requirements);
+        return tile_met_custom_placement_condition(_x, _y, _z, _requirements, _item_data, _item.get_id());
     }
     
     if (_z == CHUNK_DEPTH_DEFAULT)

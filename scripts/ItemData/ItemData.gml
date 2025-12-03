@@ -590,33 +590,29 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
                 
                 if (_id != undefined)
                 {
-                    _id = smart_value_parse(_id);
-                    
                     if (is_array(_id))
                     {
-                        var _id2 = get_id();
-                        
-                        var _index_id = array_get_index(_id2, "$ID");
+                        var _index_id = array_get_index(_id, "$ID");
                         
                         if (_index_id > -1)
                         {
-                            _value.id[@ _index_id] = $"{get_namespace()}:{_}";
+                            _data.values[@ i].id[@ _index_id] = $"{get_namespace()}:{get_id()}";
                         }
                         
-                        var _index_empty = array_get_index(_id2, "$EMPTY");
+                        var _index_empty = array_get_index(_id, "$EMPTY");
                         
                         if (_index_empty > -1)
                         {
-                            _value.id[@ _index_empty] = TILE_EMPTY;
+                            _data.values[@ i].id[@ _index_empty] = TILE_EMPTY;
                         }
                     }
                     else if (_id == "$EMPTY")
                     {
-                        _id = TILE_EMPTY;
+                        _data.values[@ i].id = TILE_EMPTY;
                     }
                     else if (_id == "$ID")
                     {
-                        _id = $"{get_namespace()}:{get_id()}";
+                        _data.values[@ i].id = $"{get_namespace()}:{get_id()}";
                     }
                 }
             }
@@ -624,6 +620,36 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
             return _data;
         }
         
+        var _condition = _placement[$ "condition"];
+        
+        if (_condition != undefined)
+        {
+            ___placement_condition = __placement_condition(_condition);
+            show_debug_message(___placement_condition);
+        }
+        
+        var _id = _placement[$ "id"];
+        
+        if (_id != undefined)
+        {
+            ___placement_id = _id;
+        }
+        
+        var _index = _placement[$ "index"];
+        
+        if (_index != undefined)
+        {
+            ___placement_index = smart_value_parse(_index);
+        }
+        
+        var _index_offset = _placement[$ "index_offset"];
+        
+        if (_index_offset != undefined)
+        {
+            ___placement_index_offset = smart_value_parse(_index_offset);
+        }
+        
+        /*
         static __chunk_depth = global.chunk_depth;
         
         static __condition_type = {
@@ -663,7 +689,7 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
                 ___placement_id = _id;
             }
         }
-        
+        */
         return self;
     }
     

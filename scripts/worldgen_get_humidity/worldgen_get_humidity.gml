@@ -1,8 +1,6 @@
-function worldgen_get_humidity(_x, _y, _seed)
+function worldgen_get_humidity(_x, _y, _seed, _world_data = global.world_data[$ global.world_save_data.dimension])
 {
-    var _world_data = global.world_data[$ global.world_save_data.dimension];
-    
     var _octaves = _world_data.get_surface_biome_humidity().octaves;
     
-    return round(open_simplex_noise(_x / 64, -24, 63, _octaves));
+    return round(open_simplex_noise(_x * 0.015625, -24, 63, _octaves));
 }

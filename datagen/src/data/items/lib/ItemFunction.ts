@@ -1,12 +1,22 @@
 export class ItemFunction {
     private id: string;
     private parameters?: any;
+    private chance?: string | number;
+    private repeat?: string | number;
 
-    constructor(id: string, parameters?: any) {
+    constructor(id: string, parameters?: any, chance?: string | number, repeat?: string | number) {
         this.id = id;
 
         if (parameters !== undefined) {
             this.parameters = parameters;
+        }
+
+        if (chance !== undefined) {
+            this.chance = chance;
+        }
+
+        if (repeat !== undefined) {
+            this.repeat = repeat;
         }
     }
 }
@@ -111,8 +121,8 @@ class ItemFunctionTextboxNumberData extends ItemFunctionData {
     }
 }
 
-export class ItemFunctionTextboxFloatData extends ItemFunctionTextboxNumberData { }
-export class ItemFunctionTextboxIntegerData extends ItemFunctionTextboxNumberData { }
+export class ItemFunctionTextboxFloatData extends ItemFunctionTextboxNumberData {}
+export class ItemFunctionTextboxIntegerData extends ItemFunctionTextboxNumberData {}
 
 export class ItemFunctionTextboxStringData extends ItemFunctionData {
     private width?: number;

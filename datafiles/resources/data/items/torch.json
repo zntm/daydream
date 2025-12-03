@@ -20,15 +20,18 @@
         "animation_type": "increment",
         "on_random_tick": [
             {
-                "function": [
-                    {
-                        "id": "phantasia:sfx_play",
-                        "parameters": {
-                            "id": "phantasia:tile.fire.ambient"
-                        }
-                    }
-                ],
-                "chance": 0.1
+                "id": "phantasia:sfx_play",
+                "parameters": {
+                    "id": "phantasia:sfx/tile/fire/ambient"
+                },
+                "chance": 0.18
+            },
+            {
+                "id": "phantasia:sfx_play",
+                "parameters": {
+                    "id": "phantasia:sfx/tile/fire/ambient"
+                },
+                "chance": 0.18
             }
         ]
     },

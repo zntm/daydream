@@ -37,68 +37,64 @@
             }
         ]
     },
-    "condition_tall_dry_plant": {
-        "condition": {
-            "type": "every",
-            "values": [
-                {
-                    "condition": {
-                        "type": "some",
-                        "values": [
-                            {
-                                "xoffset": 0,
-                                "yoffset": 1,
-                                "z": "default",
-                                "id": "#phantasia:tile/placement/dry_plant_on"
-                            },
-                            {
-                                "xoffset": 0,
-                                "yoffset": 1,
-                                "z": "z",
-                                "id": "$ID"
-                            }
-                        ]
-                    }
-                },
-                {
-                    "xoffset": 0,
-                    "yoffset": -1,
-                    "z": "z",
-                    "id": ["$EMPTY", "$ID"]
+    "placement_condition_tall_dry_plant": {
+        "type": "every",
+        "values": [
+            {
+                "condition": {
+                    "type": "some",
+                    "values": [
+                        {
+                            "xoffset": 0,
+                            "yoffset": 1,
+                            "z": "default",
+                            "id": "#phantasia:tile/placement/dry_plant_on"
+                        },
+                        {
+                            "xoffset": 0,
+                            "yoffset": 1,
+                            "z": "z",
+                            "id": "$ID"
+                        }
+                    ]
                 }
-            ]
-        }
+            },
+            {
+                "xoffset": 0,
+                "yoffset": -1,
+                "z": "z",
+                "id": ["$EMPTY", "$ID"]
+            }
+        ]
     },
-    "condition_tall_plant": {
-        "condition": {
-            "type": "every",
-            "values": [
-                {
-                    "condition": {
-                        "type": "some",
-                        "values": [
-                            {
-                                "xoffset": 0,
-                                "yoffset": 1,
-                                "z": "default",
-                                "id": "#phantasia:tile/placement/plant_on"
-                            },
-                            {
-                                "xoffset": 0,
-                                "yoffset": 1,
-                                "z": "z",
-                                "id": "$ID"
-                            }
-                        ]
-                    }
-                },
-                {
-                    "xoffset": 0,
-                    "yoffset": -1,
-                    "z": "z",
-                    "id": ["$EMPTY", "$ID"]
+    "placement_condition_tall_plant": {
+        "type": "every",
+        "values": [
+            {
+                "condition": {
+                    "type": "some",
+                    "values": [
+                        {
+                            "xoffset": 0,
+                            "yoffset": 1,
+                            "z": "default",
+                            "id": "#phantasia:tile/placement/plant_on"
+                        },
+                        {
+                            "xoffset": 0,
+                            "yoffset": 1,
+                            "z": "z",
+                            "id": "$ID"
+                        }
+                    ]
                 }
-            ]
-        }
+            },
+            {
+                "xoffset": 0,
+                "yoffset": -1,
+                "z": "z",
+                "id": ["$EMPTY", "$ID"]
+            }
+        ]
     }
 }

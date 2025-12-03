@@ -52,6 +52,7 @@ export {
 };
 
 export default [
+    "./items/groups/blueprintItems",
     "./items/groups/toolItems",
     "./items/groups/miscItems",
     "./items/groups/foodItems",

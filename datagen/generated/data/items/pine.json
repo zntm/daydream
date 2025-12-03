@@ -21,7 +21,33 @@
                 "id": "#phantasia:item/type/axe"
             }
         },
-        "sfx": "#phantasia:tile/sfx/wood"
+        "sfx": "#phantasia:tile/sfx/wood",
+        "placement": {
+            "condition": {
+                "type": "every",
+                "values": [
+                    {
+                        "condition": {
+                            "type": "some",
+                            "values": [
+                                {
+                                    "xoffset": 0,
+                                    "yoffset": 1,
+                                    "z": "default",
+                                    "id": "#phantasia:tile/placement/plant_on"
+                                },
+                                {
+                                    "xoffset": 0,
+                                    "yoffset": 1,
+                                    "z": "z",
+                                    "id": "$ID"
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
     },
     "type": "untouchable"
 }

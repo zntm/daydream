@@ -1,9 +1,7 @@
-function worldgen_get_surface_height(_x, _seed)
+function worldgen_get_surface_height(_x, _seed, _world_data = global.world_data[$ global.world_save_data.dimension])
 {
-    var _world_data = global.world_data[$ global.world_save_data.dimension];
-    
     var _amplitude = _world_data.get_surface_noise_offset_max() - _world_data.get_surface_noise_offset_min();
     var _octaves = _world_data.get_surface_noise_offset_octaves();
     
-    return _world_data.get_surface_start() - _world_data.get_surface_noise_offset_min() + round(open_simplex_noise(_x / 64, -40, _amplitude, _octaves));
+    return _world_data.get_surface_start() - _world_data.get_surface_noise_offset_min() + round(open_simplex_noise(_x * 0.015625, -40, _amplitude, _octaves));
 }

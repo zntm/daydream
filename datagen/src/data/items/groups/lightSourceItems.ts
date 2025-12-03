@@ -25,14 +25,20 @@ export default [
                         "#phantasia:tile/particle_colour/wood",
                         "#phantasia:tile/generic/harvest_particle_frequency",
                     ),
-                )
+                ),
             )
             .setTileSFX("#phantasia:tile/sfx/wood")
             .setTileLight("#EAC7A6")
             .setAnimationType("increment")
             .addOnRandomTick([
-                new ItemFunction("phantasia:sfx_play", { id: "phantasia:tile.fire.ambient" })
-            ], 0.24)
+                new ItemFunction(
+                    "phantasia:sfx_play",
+                    {
+                        id: "phantasia:sfx/tile/fire/ambient",
+                    },
+                    0.24,
+                ),
+            ]),
     ),
 
     new DatagenReturnData(
@@ -51,13 +57,19 @@ export default [
                         "#phantasia:tile/particle_colour/twig",
                         "#phantasia:tile/generic/harvest_particle_frequency",
                     ),
-                )
+                ),
             )
             .setTileSFX("#phantasia:tile/sfx/wood")
             .setTileLight("#D89172")
             .setAnimationType("increment")
             .addOnRandomTick([
-                new ItemFunction("phantasia:sfx_play", { id: "phantasia:tile.fire.ambient" })
-            ], 0.1)
+                new ItemFunction(
+                    "phantasia:sfx_play",
+                    {
+                        id: "phantasia:sfx/tile/fire/ambient",
+                    },
+                    0.18,
+                ),
+            ]),
     ),
 ];

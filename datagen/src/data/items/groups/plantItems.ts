@@ -32,60 +32,63 @@ export default [
             particleColour: "#phantasia:tile/particle_colour/plant",
             dropCondition: new ItemTileDropCondition().setIndex(0),
         },
-    ].map(({ id, particleColour, dropCondition }) =>
-    new DatagenReturnData(
-        `generated/data/items/${id}.json`,
-        new TileItem(
-            ItemType.Untouchable,
-            `phantasia:item/${id}`,
-            "#phantasia:item/generic/inventory_default",
-            [ItemTileProperties.CanMirror],
-        )
-            .setTileDrops([new ItemTileDrop(`phantasia:${id}`).setCondition(dropCondition)])
-            .setTileHarvest(
-                new ItemTileHarvest(
-                    0.38,
-                    0,
-                    new ItemTileParticle(
-                        particleColour,
-                        "#phantasia:tile/generic/harvest_particle_frequency",
-                    ),
-                ),
-            )
-            .setTilePlacement(
-                new ItemTilePlacement().setCondition(
-                    new ItemTilePlacementCondition(
-                        ItemTilePlacementConditionType.Every,
-                        [
-                            {
-                                condition: new ItemTilePlacementCondition(
-                                    ItemTilePlacementConditionType.Some,
-                                    [
-                                        new ItemTilePlacementConditionValue(
-                                            0,
-                                            1,
-                                            "default",
-                                        ).setId(
-                                            "#phantasia:tile/placement/plant_on",
-                                        ),
-                                        new ItemTilePlacementConditionValue(
-                                            0,
-                                            1,
-                                            "default",
-                                        ).setId("$ID"),
-                                    ],
-                                ),
-                            },
-                            new ItemTilePlacementConditionValue(0, -1, "z").setId([
-                                "$EMPTY",
-                                "$ID",
-                            ]),
-                        ],
-                    ),
-                ),
-            )
-            .setTileSFX("#phantasia:tile/sfx/foliage"),
-    )),
+    ].map(
+        ({ id, particleColour, dropCondition }) =>
+            new DatagenReturnData(
+                `generated/data/items/${id}.json`,
+                new TileItem(
+                    ItemType.Untouchable,
+                    `phantasia:item/${id}`,
+                    "#phantasia:item/generic/inventory_default",
+                    [ItemTileProperties.CanMirror],
+                )
+                    .setTileDrops([
+                        new ItemTileDrop(`phantasia:${id}`).setCondition(
+                            dropCondition,
+                        ),
+                    ])
+                    .setTileHarvest(
+                        new ItemTileHarvest(
+                            0.38,
+                            0,
+                            new ItemTileParticle(
+                                particleColour,
+                                "#phantasia:tile/generic/harvest_particle_frequency",
+                            ),
+                        ),
+                    )
+                    .setTilePlacement(
+                        new ItemTilePlacement().setCondition(
+                            new ItemTilePlacementCondition(
+                                ItemTilePlacementConditionType.Every,
+                                [
+                                    {
+                                        condition:
+                                            new ItemTilePlacementCondition(
+                                                ItemTilePlacementConditionType.Some,
+                                                [
+                                                    new ItemTilePlacementConditionValue(
+                                                        0,
+                                                        1,
+                                                        "default",
+                                                    ).setId(
+                                                        "#phantasia:tile/placement/plant_on",
+                                                    ),
+                                                    new ItemTilePlacementConditionValue(
+                                                        0,
+                                                        1,
+                                                        "z",
+                                                    ).setId("$ID"),
+                                                ],
+                                            ),
+                                    },
+                                ],
+                            ),
+                        ),
+                    )
+                    .setTileSFX("#phantasia:tile/sfx/foliage"),
+            ),
+    ),
     new DatagenReturnData(
         "generated/data/items/cactus_flower.json",
         new TileItem(
@@ -147,33 +150,37 @@ export default [
         "lilybell",
         "orchids",
         "rose",
-    ].map((id: string) =>
-        new DatagenReturnData(
-            `generated/data/items/${id}.json`,
-            new TileItem(
-                ItemType.Untouchable,
-                `phantasia:item/${id}`,
-                "#phantasia:item/generic/inventory_default",
-                [ItemTileProperties.CanMirror, ItemTileProperties.IsFoliage],
-            )
-                .setTileDrops([new ItemTileDrop(`phantasia:${id}`)])
-                .setTileHarvest(
-                    new ItemTileHarvest(
-                        0.38,
-                        0,
-                        new ItemTileParticle(
-                            "#phantasia:tile/particle_colour/plant",
-                            "#phantasia:tile/generic/harvest_particle_frequency",
+    ].map(
+        (id: string) =>
+            new DatagenReturnData(
+                `generated/data/items/${id}.json`,
+                new TileItem(
+                    ItemType.Untouchable,
+                    `phantasia:item/${id}`,
+                    "#phantasia:item/generic/inventory_default",
+                    [
+                        ItemTileProperties.CanMirror,
+                        ItemTileProperties.IsFoliage,
+                    ],
+                )
+                    .setTileDrops([new ItemTileDrop(`phantasia:${id}`)])
+                    .setTileHarvest(
+                        new ItemTileHarvest(
+                            0.38,
+                            0,
+                            new ItemTileParticle(
+                                "#phantasia:tile/particle_colour/plant",
+                                "#phantasia:tile/generic/harvest_particle_frequency",
+                            ),
                         ),
-                    ),
-                )
-                .setTilePlacement(
-                    new ItemTilePlacement().setCondition(
-                        "#phantasia:tile/placement/condition_plant",
-                    ),
-                )
-                .setTileSFX("#phantasia:tile/sfx/foliage"),
-        ),
+                    )
+                    .setTilePlacement(
+                        new ItemTilePlacement().setCondition(
+                            "#phantasia:tile/placement/condition_plant",
+                        ),
+                    )
+                    .setTileSFX("#phantasia:tile/sfx/foliage"),
+            ),
     ),
     new DatagenReturnData(
         "generated/data/items/seeding_dandelion.json",
@@ -202,8 +209,8 @@ export default [
             .setTileSFX("#phantasia:tile/sfx/foliage")
             .addOnRandomTick([
                 new ItemFunction("phantasia:spawn_particle", {
-                    id: "phantasia:tile/seeding_dandelion"
-                })
-            ])
+                    id: "phantasia:tile/seeding_dandelion",
+                }),
+            ]),
     ),
 ];

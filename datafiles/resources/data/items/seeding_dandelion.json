@@ -25,14 +25,16 @@
         "sfx": "#phantasia:tile/sfx/foliage",
         "on_random_tick": [
             {
-                "function": [
-                    {
-                        "id": "phantasia:spawn_particle",
-                        "parameters": {
-                            "id": "phantasia:tile/seeding_dandelion"
-                        }
-                    }
-                ]
+                "id": "phantasia:spawn_particle",
+                "parameters": {
+                    "id": "phantasia:tile/seeding_dandelion"
+                }
+            },
+            {
+                "id": "phantasia:spawn_particle",
+                "parameters": {
+                    "id": "phantasia:tile/seeding_dandelion"
+                }
             }
         ]
     },

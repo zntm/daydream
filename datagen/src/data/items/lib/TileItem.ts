@@ -85,10 +85,10 @@ export class ItemTileSFX {
 }
 
 export class ItemTilePlacement {
-    private condition?: string | ItemTilePlacementCondition;
+    private condition?: string | ItemTilePlacementCondition[];
     private index?: string | number | SmartValue;
 
-    setCondition(condition: string | ItemTilePlacementCondition) {
+    setCondition(condition: string | ItemTilePlacementCondition[]) {
         this.condition = condition;
 
         return this;
@@ -161,18 +161,13 @@ export enum ItemTileProperties {
 
 export class TileItem extends Item {
     private tile: {
+        components?: string | { [key: string]: ItemComponent };
         drops?: string | ItemTileDrop[];
         harvest?: string | ItemTileHarvest;
         placement?: string | ItemTilePlacement;
         sfx?: string | ItemTileSFX;
-        components?: {
-            [key: string]: ItemComponent;
-        };
         on_use?: ItemFunction[];
-        on_random_tick?: Array<{
-            function: ItemFunction[];
-            chance?: number;
-        }>;
+        on_random_tick?: ItemFunction[];
         light?: string;
         animation_type?: string;
     };
@@ -186,6 +181,14 @@ export class TileItem extends Item {
         super(type, sprite, inventory, properties);
 
         this.tile = {};
+    }
+
+    setTileComponents(components?: string | { [key: string]: ItemComponent }) {
+        if (components) {
+            this.tile.components = components;
+        }
+
+        return this;
     }
 
     setTileDrops(drop?: string | ItemTileDrop[]) {
@@ -227,12 +230,6 @@ export class TileItem extends Item {
         return this;
     }
 
-    addOnUse(value: ItemFunction[]) {
-        this.tile.on_use ??= value;
-
-        return this;
-    }
-
     setTileLight(color: string) {
         this.tile.light = color;
 
@@ -245,12 +242,16 @@ export class TileItem extends Item {
         return this;
     }
 
-    addOnRandomTick(functions: ItemFunction[], chance?: number) {
-        this.tile.on_random_tick ??= [];
-        this.tile.on_random_tick.push({
-            function: functions,
-            ...(chance !== undefined && { chance }),
-        });
+    addOnRandomTick(functions: ItemFunction[]) {
+        this.tile.on_random_tick ??= functions;
+        this.tile.on_random_tick.push(...functions);
+
+        return this;
+    }
+
+    addOnUse(functions: ItemFunction[]) {
+        this.tile.on_use ??= [];
+        this.tile.on_use.push(...functions);
 
         return this;
     }

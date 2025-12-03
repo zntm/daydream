@@ -34,11 +34,29 @@
     "hp": 12,
     "movement_type": "ground",
     "sprite": {
-        "idle": {
-            "id": "phantasia:creature/chicken/idle"
+        "cold": {
+            "idle": {
+                "id": "phantasia:creature/chicken/idle/cold"
+            },
+            "moving": {
+                "id": "phantasia:creature/chicken/moving/cold"
+            }
         },
-        "moving": {
-            "id": "phantasia:creature/chicken/moving"
+        "default": {
+            "idle": {
+                "id": "phantasia:creature/chicken/idle/default"
+            },
+            "moving": {
+                "id": "phantasia:creature/chicken/moving/default"
+            }
+        },
+        "warm": {
+            "idle": {
+                "id": "phantasia:creature/chicken/idle/warm"
+            },
+            "moving": {
+                "id": "phantasia:creature/chicken/moving/warm"
+            }
         }
     }
 }

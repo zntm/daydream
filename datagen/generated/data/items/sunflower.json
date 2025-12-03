@@ -38,20 +38,11 @@
                                 {
                                     "xoffset": 0,
                                     "yoffset": 1,
-                                    "z": "default",
+                                    "z": "z",
                                     "id": "$ID"
                                 }
                             ]
                         }
-                    },
-                    {
-                        "xoffset": 0,
-                        "yoffset": -1,
-                        "z": "z",
-                        "id": [
-                            "$EMPTY",
-                            "$ID"
-                        ]
                     }
                 ]
             }

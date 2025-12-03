@@ -27,12 +27,16 @@ function chunk_generate()
     
     var _world_seed = _world_save_data.seed;
     
+    // Optimization: Cache biome lookups per column
+    var _biome_cache = array_create(CHUNK_SIZE + 1, undefined);
+    
     for (var i = 0; i < CHUNK_SIZE; ++i)
     {
         var _world_x = chunk_xstart + i;
         
-        var _surface_height = worldgen_get_surface_height(_world_x, _world_seed);
-        var _cave_start = worldgen_get_cave_start(_world_x, _world_seed);
+        // Pass cached world_data
+        var _surface_height = worldgen_get_surface_height(_world_x, _world_seed, _world_data);
+        var _cave_start = worldgen_get_cave_start(_world_x, _world_seed, _world_data);
         
         __surface_height[@ i] = _surface_height;
         
@@ -44,7 +48,8 @@ function chunk_generate()
         {
             var _world_y = chunk_ystart + j - 1;
             
-            _cave_bit |= worldgen_get_cave(_world_x, _world_y, _surface_height, _cave_start, _world_seed) << j;
+            // Pass cached world_data
+            _cave_bit |= worldgen_get_cave(_world_x, _world_y, _surface_height, _cave_start, _world_seed, _world_data) << j;
         }
         
         __cave_bit[@ i] = _cave_bit;
@@ -82,6 +87,9 @@ function chunk_generate()
         var _cave_bit = __cave_bit[i];
         
         var _xorshift = xorshift(_world_seed ^ ((_world_x + chunk_ystart) * _surface_height));
+        
+        // Clear biome cache for new column
+        for (var k = 0; k < CHUNK_SIZE + 1; ++k) _biome_cache[@ k] = undefined;
         
         for (var j = 0; j < CHUNK_SIZE; ++j)
         {
@@ -163,8 +171,17 @@ function chunk_generate()
             
             if (_world_y >= _surface_height)
             {
-                var _surface_biome = worldgen_get_biome_surface(_world_x, _world_y, _surface_height, _world_seed);
-                var _cave_biome = worldgen_get_biome_cave(_world_x, _world_y, _surface_height, _world_seed);
+                // Optimization: Use biome cache
+                var _biome_key = j; // Relative Y index for cache
+                if (_biome_cache[_biome_key] == undefined)
+                {
+                    _biome_cache[@ _biome_key] = {
+                        surface: worldgen_get_biome_surface(_world_x, _world_y, _surface_height, _world_seed, _world_data),
+                        cave: worldgen_get_biome_cave(_world_x, _world_y, _surface_height, _world_seed, _world_data)
+                    };
+                }
+                var _surface_biome = _biome_cache[_biome_key].surface;
+                var _cave_biome = _biome_cache[_biome_key].cave;
                 
                 if !(_skip_z & (1 << CHUNK_DEPTH_DEFAULT)) && !(_cave_bit & (1 << (j + 1)))
                 {
@@ -219,28 +236,40 @@ function chunk_generate()
             
             if !(_skip_z & (1 << _z)) && (_world_y >= _surface_height - 1)
             {
-                var _surface_biome = worldgen_get_biome_surface(_world_x, _world_y + 1, _surface_height, _world_seed);
-                var _cave_biome = worldgen_get_biome_cave(_world_x, _world_y + 1, _surface_height, _world_seed);
-                
-                if (_cave_bit & (1 << (j + 1))) && !(_cave_bit & (1 << (j + 2)))
+                // Optimization: Use biome cache for y+1
+                var _biome_key_next = j + 1;
+                if (_biome_key_next <= CHUNK_SIZE) // Ensure within bounds
                 {
-                    var _tile_base = worldgen_get_tile_base(_world_x, _world_y + 1, _surface_biome, _cave_biome, _surface_height, true, _world_seed);
-                    
-                    var _tile_foliage = worldgen_get_tile_foliage(_world_x, _world_y, _surface_biome, _cave_biome, _tile_base, _surface_height, _world_seed);
-                    
-                    if (_tile_foliage != TILE_EMPTY)
+                    if (_biome_cache[_biome_key_next] == undefined)
                     {
-                        var _id = _tile_foliage.id;
-                        var _data = _item_data[$ _id];
+                        _biome_cache[@ _biome_key_next] = {
+                            surface: worldgen_get_biome_surface(_world_x, _world_y + 1, _surface_height, _world_seed, _world_data),
+                            cave: worldgen_get_biome_cave(_world_x, _world_y + 1, _surface_height, _world_seed, _world_data)
+                        };
+                    }
+                    var _surface_biome = _biome_cache[_biome_key_next].surface;
+                    var _cave_biome = _biome_cache[_biome_key_next].cave;
+                    
+                    if (_cave_bit & (1 << (j + 1))) && !(_cave_bit & (1 << (j + 2)))
+                    {
+                        var _tile_base = worldgen_get_tile_base(_world_x, _world_y + 1, _surface_biome, _cave_biome, _surface_height, true, _world_seed);
                         
-                        ++chunk_count[@ _z];
+                        var _tile_foliage = worldgen_get_tile_foliage(_world_x, _world_y, _surface_biome, _cave_biome, _tile_base, _surface_height, _world_seed);
                         
-                        chunk[@ (_z << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_id)
-                            .set_xscale(((_data.can_flip_on_x()) && (_xorshift & (1 << (CHUNK_SIZE + j)))) ? -1 : 1)
-                            .set_index(smart_value(_data.get_placement_index()))
-                            .set_index_offset(smart_value(_data.get_placement_index_offset()));
-                        
-                        chunk_display |= 1 << _z;
+                        if (_tile_foliage != TILE_EMPTY)
+                        {
+                            var _id = _tile_foliage.id;
+                            var _data = _item_data[$ _id];
+                            
+                            ++chunk_count[@ _z];
+                            
+                            chunk[@ (_z << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_id)
+                                .set_xscale(((_data.can_flip_on_x()) && (_xorshift & (1 << (CHUNK_SIZE + j)))) ? -1 : 1)
+                                .set_index(smart_value(_data.get_placement_index()))
+                                .set_index_offset(smart_value(_data.get_placement_index_offset()));
+                            
+                            chunk_display |= 1 << _z;
+                        }
                     }
                 }
             }
