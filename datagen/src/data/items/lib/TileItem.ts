@@ -243,7 +243,7 @@ export class TileItem extends Item {
     }
 
     addOnRandomTick(functions: ItemFunction[]) {
-        this.tile.on_random_tick ??= functions;
+        this.tile.on_random_tick ??= [];
         this.tile.on_random_tick.push(...functions);
 
         return this;
