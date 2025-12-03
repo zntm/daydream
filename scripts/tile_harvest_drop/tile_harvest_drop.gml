@@ -21,11 +21,11 @@ function tile_harvest_drop(_x, _y, _z, _tile, _harvest_id = INVENTORY_EMPTY)
         
         if (_condition != undefined)
         {
-            var _tool = _condition[$ "id"];
+            var _tool = _condition.get_id();
             
             if (_tool != undefined) && (!array_contains(_tool, _harvest_id)) continue;
             
-            var _index = _condition[$ "index"];
+            var _index = _condition.get_index();
             
             if (_index != undefined) && (_tile.get_index() != _index) continue;
         }
