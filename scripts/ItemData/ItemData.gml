@@ -625,7 +625,6 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
         if (_condition != undefined)
         {
             ___placement_condition = __placement_condition(_condition);
-            show_debug_message(___placement_condition);
         }
         
         var _id = _placement[$ "id"];
@@ -649,47 +648,6 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
             ___placement_index_offset = smart_value_parse(_index_offset);
         }
         
-        /*
-        static __chunk_depth = global.chunk_depth;
-        
-        static __condition_type = {
-            "every": TILE_PLACEMENT_CONDITION_TYPE.EVERY,
-            "some":  TILE_PLACEMENT_CONDITION_TYPE.SOME
-        }
-        
-        static __item_type = global.item_type;
-        
-        if (_placement != undefined)
-        {
-            var _index = _placement[$ "index"];
-            
-            if (_index != undefined)
-            {
-                ___placement_index = smart_value_parse(_index);
-            }
-            
-            var _index_offset = _placement[$ "index_offset"];
-            
-            if (_index_offset != undefined)
-            {
-                ___placement_index_offset = smart_value_parse(_index_offset);
-            }
-            
-            var _condition = _placement[$ "condition"];
-            
-            if (_condition != undefined)
-            {
-                ___placement_condition = tag_value_parse(_condition);
-            }
-            
-            var _id = _placement[$ "id"];
-            
-            if (_id != undefined)
-            {
-                ___placement_id = _id;
-            }
-        }
-        */
         return self;
     }
     
