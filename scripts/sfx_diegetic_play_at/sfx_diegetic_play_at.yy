@@ -1,0 +1,13 @@
+{
+    "$GMScript": "v1",
+    "%Name": "sfx_diegetic_play_at",
+    "isCompatibility": false,
+    "isDnD": false,
+    "name": "sfx_diegetic_play_at",
+    "parent": {
+        "name": "SFX",
+        "path": "folders/Scripts/SFX.yy"
+    },
+    "resourceType": "GMScript",
+    "resourceVersion": "2.0"
+}

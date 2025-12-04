@@ -29,7 +29,7 @@ function init_entity(_hp, _hp_max, _attribute, _uuid = uuid_generate(irandom(0xf
     
     audio_emitter = audio_emitter_create();
     
-    timer_audio_effect = 0;
+    timer_audio_effect = 0.1;
     
     audio_effect_lowpass = 0;
     audio_effect_reverb  = 0;

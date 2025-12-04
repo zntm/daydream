@@ -16,7 +16,7 @@ function control_creature_spawn(_dt)
     static __spawn = function(_world_time, _tile_x, _tile_y, _biome_data, _creature_data)
     {
         var _x = (_tile_x * TILE_SIZE);
-        var _y = (_tile_y * TILE_SIZE) - (TILE_SIZE / 2);
+        var _y = ((_tile_y - 1) * TILE_SIZE) - (TILE_SIZE / 2);
         
         // Check spawn density for this grid cell
         var _grid_x = floor(_tile_x / SPAWN_DENSITY_GRID_SIZE);

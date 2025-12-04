@@ -247,7 +247,7 @@ function control_creature(_dt)
     {
         if (!ai_cached_on_ground && tile_meeting(x, y + 1))
         {
-            var _difference = max(0, y - ylast - 10);
+            var _difference = max(0, y - ylast - (TILE_SIZE * 4));
             var _value = floor(power(floor(_difference / TILE_SIZE) * 0.62, 1.25));
             
             if (_value > 0)

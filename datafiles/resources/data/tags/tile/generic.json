@@ -1,0 +1,10 @@
+{
+    "harvest_particle_frequency": {
+        "type": "smart_value:irandom",
+        "values": {
+            "min": 4,
+            "max": 10
+        }
+    },
+    "workbench": ["phantasia:oak_workbench"]
+}

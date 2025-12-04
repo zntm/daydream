@@ -1,0 +1,31 @@
+{
+    "axe": [
+        "phantasia:copper_axe",
+        "phantasia:gold_axe",
+        "phantasia:hatchet",
+        "phantasia:iron_axe",
+        "phantasia:platinum_axe"
+    ],
+    "pickaxe": [
+        "phantasia:birch_pickaxe",
+        "phantasia:copper_pickaxe",
+        "phantasia:gold_pickaxe",
+        "phantasia:iron_pickaxe",
+        "phantasia:oak_pickaxe",
+        "phantasia:platinum_pickaxe"
+    ],
+    "shovel": [
+        "phantasia:birch_shovel",
+        "phantasia:copper_shovel",
+        "phantasia:gold_shovel",
+        "phantasia:iron_shovel",
+        "phantasia:oak_shovel",
+        "phantasia:platinum_shovel"
+    ],
+    "sword": [
+        "phantasia:copper_sword",
+        "phantasia:gold_sword",
+        "phantasia:iron_sword",
+        "phantasia:platinum_sword"
+    ]
+}

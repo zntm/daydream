@@ -148,6 +148,11 @@ function control_player(_dt)
                 
                 ylast = y;
                 
+                repeat (irandom_range(8, 14))
+                {
+                    spawn_particle(random_range(bbox_left, bbox_right), random_range(bbox_top, bbox_bottom), "phantasia:entity/damage");
+                }
+                
                 spawn_floating_text(x, y, _value, 0, -3.9);
                 
                 if (hp <= 0)

@@ -414,6 +414,13 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
                 set_animation_type(_animation_type);
             }
             
+            var _audio_properties = _tile[$ "audio_properties"];
+            
+            if (_audio_properties != undefined)
+            {
+                set_tile_audio_properties(_audio_properties);
+            }
+            
             var _components = _tile[$ "components"];
             
             if (_components != undefined)
@@ -494,6 +501,61 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
         );
         
         return self;
+    }
+    
+    static set_collision_box = function(_type, _left, _top, _right, _bottom)
+    {/*
+        static __collision_box_type = {
+            "rectangle": TILE_COLLISION_BOX_TYPE.RECTANGLE,
+            "triangle":  TILE_COLLISION_BOX_TYPE.TRIANGLE
+        }
+        */
+        ___collision_box = (_type << 32) | ((_bottom + 0x80) << 24) | ((_right + 0x80) << 16) | ((_top + 0x80) << 8) | (_left + 0x80);
+        
+        return self;
+    }
+    
+    static get_collision_box_left = function()
+    {
+        return (___collision_box & 0xff) - 0x80;
+    }
+    
+    static get_collision_box_top = function()
+    {
+        return ((___collision_box >> 8) & 0xff) - 0x80;
+    }
+    
+    static get_collision_box_right = function()
+    {
+        return ((___collision_box >> 16) & 0xff) - 0x80;
+    }
+    
+    static get_collision_box_bottom = function()
+    {
+        return ((___collision_box >> 24) & 0xff) - 0x80;
+    }
+    
+    static get_collision_box_type = function()
+    {
+        return (___collision_box >> 32) & 0xff;
+    }
+    
+    static set_tile_audio_properties = function(_tile_audio_properties)
+    {
+        ___tile_audio_properties_lowpass = _tile_audio_properties[$ "lowpass"];
+        ___tile_audio_properties_reverb  = _tile_audio_properties[$ "reverb"];
+        
+        return self;
+    }
+    
+    static get_tile_audio_property_lowpass = function()
+    {
+        return self[$ "___tile_audio_properties_lowpass"] ?? 0;
+    }
+    
+    static get_tile_audio_property_reverb = function()
+    {
+        return self[$ "___tile_audio_properties_reverb"] ?? 0;
     }
     
     static set_tile_drops = function(_drops)
@@ -790,77 +852,6 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
         }
         
         return self;
-    }
-    
-    static get_drop = function(_index)
-    {
-        var _item = self[$ "___drop"];
-        
-        return ((_item != undefined) ? _item[_index] : undefined);
-    }
-    
-    static get_drop_length = function()
-    {
-        return self[$ "___drop_length"] ?? 0;
-    }
-    
-    static set_collision_box = function(_type, _left, _top, _right, _bottom)
-    {/*
-        static __collision_box_type = {
-            "rectangle": TILE_COLLISION_BOX_TYPE.RECTANGLE,
-            "triangle":  TILE_COLLISION_BOX_TYPE.TRIANGLE
-        }
-        */
-        ___collision_box = (_type << 32) | ((_bottom + 0x80) << 24) | ((_right + 0x80) << 16) | ((_top + 0x80) << 8) | (_left + 0x80);
-        
-        return self;
-    }
-    
-    static set_audio_properties = function(_audio_properties)
-    {
-        if (_audio_properties != undefined)
-        {
-            ___audio_properties_lowpass = _audio_properties[$ "lowpass"];
-            ___audio_properties_reverb  = _audio_properties[$ "reverb"];
-            
-        }
-        
-        return self;
-    }
-    
-    static get_audio_property_lowpass = function()
-    {
-        return self[$ "___audio_properties_lowpass"] ?? 0;
-    }
-    
-    static get_audio_property_reverb = function()
-    {
-        return self[$ "___audio_properties_reverb"] ?? 0;
-    }
-    
-    static get_collision_box_left = function()
-    {
-        return (___collision_box & 0xff) - 0x80;
-    }
-    
-    static get_collision_box_top = function()
-    {
-        return ((___collision_box >> 8) & 0xff) - 0x80;
-    }
-    
-    static get_collision_box_right = function()
-    {
-        return ((___collision_box >> 16) & 0xff) - 0x80;
-    }
-    
-    static get_collision_box_bottom = function()
-    {
-        return ((___collision_box >> 24) & 0xff) - 0x80;
-    }
-    
-    static get_collision_box_type = function()
-    {
-        return (___collision_box >> 32) & 0xff;
     }
     
     #region Properties

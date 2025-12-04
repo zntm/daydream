@@ -38,7 +38,7 @@ function init_item(_directory, _namespace)
         _item_data.set_harvest(_json[$ "harvest"]);
         _item_data.set_drop(_json[$ "drop"]);
         _item_data.set_sfx(_json[$ "sfx"]);
-        _item_data.set_audio_properties(_json[$ "audio_properties"]);
+        _item_data.set_tile_audio_properties(_json[$ "audio_properties"]);
         _item_data.set_on_random_tick(_json[$ "on_random_tick"]);
         _item_data.set_on_attack(_json[$ "on_attack"]);
         _item_data.set_on_item_use(_json[$ "on_item_use"]);

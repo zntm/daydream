@@ -14,9 +14,9 @@ function control_entity_sfx(_dt)
         
         var _item_data = global.item_data;
         
-        for (var i = 0; i < 32; ++i)
+        for (var i = 0; i < 16; ++i)
         {
-            var _angle = (i / 32) * 360;
+            var _angle = (i / 16) * 360;
             
             var _tile_x = round(x / TILE_SIZE);
             var _tile_y = round(y / TILE_SIZE);
@@ -34,22 +34,24 @@ function control_entity_sfx(_dt)
                 {
                     var _data = _item_data[$ _tile.get_id()];
                     
-                    _total_lowpass += _data.get_audio_property_lowpass();
-                    _total_reverb  += _data.get_audio_property_reverb();
+                    _total_lowpass += _data.get_tile_audio_property_lowpass();
+                    _total_reverb  += _data.get_tile_audio_property_reverb();
                     
                     break;
                 }
             }
         }
         
-        var _l = min(1, _total_lowpass / 32);
-        var _r = min(1, _total_reverb  / 32);
+        var _l = min(1, _total_lowpass / 16);
+        var _r = min(1, _total_reverb  / 16);
         
         audio_effect_lowpass = _l;
         audio_effect_lowpass_to = _l;
         
         audio_effect_reverb = _r;
         audio_effect_reverb_to = _r;
+        
+        timer_audio_effect = 0.1; // Recalculate every ~0.1 seconds
     }
     
     audio_emitter_bus(audio_emitter, global.audio_bus[$ $"{round(audio_effect_lowpass * (AUDIO_EFFECT_SIZE - 1))}_{round(audio_effect_reverb * (AUDIO_EFFECT_SIZE - 1))}"]);
