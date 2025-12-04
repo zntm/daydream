@@ -43,7 +43,8 @@ export default [
                                 "#phantasia:tile/placement/condition_plant",
                             ),
                         )
-                        .setTileSFX("#phantasia:tile/sfx/foliage"),
+                        .setTileSFX("#phantasia:tile/sfx/foliage")
+                        .setAudioProperties(0.05, 0.0),
                 ),
             );
         })
@@ -70,7 +71,8 @@ export default [
                         ),
                     ),
                 )
-                .setTileSFX("#phantasia:tile/sfx/dirt"),
+                .setTileSFX("#phantasia:tile/sfx/dirt")
+                .setAudioProperties(0.15, 0.05),
         );
     }),
 ];

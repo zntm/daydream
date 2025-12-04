@@ -6,8 +6,8 @@ export * from "./src/lib/DatagenReturnData";
 export * from "./src/lib/SmartValue";
 export * from "./src/lib/Sound";
 export * from "./src/lib/Noise";
-export * from "./src/lib/Attribute";
-export * from "./src/lib/Entity";
+export * from "./src/attribute";
+export * from "./src/entity";
 
 import { DatagenReturnData } from "./src/lib/DatagenReturnData";
 

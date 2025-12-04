@@ -9,7 +9,6 @@
             "tile_middle": {
                 "id": "phantasia:sunflower",
                 "index": {
-                    "type": "smart_value:choose_weighted",
                     "values": [
                         {
                             "value": 2,
@@ -19,7 +18,8 @@
                             "value": 3,
                             "weight": 3
                         }
-                    ]
+                    ],
+                    "type": "smart_value:choose_weighted"
                 }
             },
             "tile_bottom": {
@@ -29,11 +29,11 @@
         }
     },
     "height": {
-        "type": "smart_value:irandom",
         "values": {
             "min": 3,
             "max": 6
-        }
+        },
+        "type": "smart_value:irandom"
     },
     "placement": {
         "type": "floor",

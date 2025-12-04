@@ -28,6 +28,7 @@ export default [
                 ),
             )
             .setTileSFX("#phantasia:tile/sfx/wood")
+            .setAudioProperties(0.1, 0.0)
             .setTileLight("#EAC7A6")
             .setAnimationType("increment")
             .addOnRandomTick([
@@ -60,6 +61,7 @@ export default [
                 ),
             )
             .setTileSFX("#phantasia:tile/sfx/wood")
+            .setAudioProperties(0.05, 0.0)
             .setTileLight("#D89172")
             .setAnimationType("increment")
             .addOnRandomTick([

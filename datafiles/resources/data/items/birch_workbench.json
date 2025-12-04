@@ -18,7 +18,11 @@
                 "id": "#phantasia:item/type/axe"
             }
         },
-        "sfx": "#phantasia:tile/sfx/wood"
+        "sfx": "#phantasia:tile/sfx/wood",
+        "audio_properties": {
+            "lowpass": 0.4,
+            "reverb": 0.1
+        }
     },
     "type": "untouchable"
 }

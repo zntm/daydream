@@ -1,10 +1,7 @@
-import {
-    DatagenReturnData,
-    ChooseWeightedOption,
-    SmartValueIntRandom,
-    SmartValueChooseWeighted,
-    Sound,
-} from "../../..";
+import { DatagenReturnData } from "../../lib/DatagenReturnData";
+import { ChooseWeightedOption, SmartValueChooseWeighted, SmartValueIntRandom } from "../../lib/SmartValue";
+import { Sound } from "../../lib/Sound";
+
 import {
     Biome,
     BiomeBackground,

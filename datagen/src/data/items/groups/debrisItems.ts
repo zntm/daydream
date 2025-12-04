@@ -36,7 +36,8 @@ export default [
                     new SmartValueIntRandom(1, 3),
                 ),
             )
-            .setTileSFX("#phantasia:tile/sfx/wood"),
+            .setTileSFX("#phantasia:tile/sfx/wood")
+            .setAudioProperties(0.05, 0.0),
     ),
     new DatagenReturnData(
         "generated/data/items/rock.json",
@@ -62,6 +63,7 @@ export default [
                     new SmartValueIntRandom(1, 4),
                 ),
             )
-            .setTileSFX("#phantasia:tile/sfx/stone"),
+            .setTileSFX("#phantasia:tile/sfx/stone")
+            .setAudioProperties(0.05, 0.0),
     ),
 ];

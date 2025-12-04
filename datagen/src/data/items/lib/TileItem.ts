@@ -84,6 +84,16 @@ export class ItemTileSFX {
     }
 }
 
+export class ItemAudioProperties {
+    private lowpass: number;
+    private reverb: number;
+
+    constructor(lowpass: number, reverb: number) {
+        this.lowpass = lowpass;
+        this.reverb = reverb;
+    }
+}
+
 export class ItemTilePlacement {
     private condition?: string | ItemTilePlacementCondition[];
     private index?: string | number | SmartValue;
@@ -166,6 +176,7 @@ export class TileItem extends Item {
         harvest?: string | ItemTileHarvest;
         placement?: string | ItemTilePlacement;
         sfx?: string | ItemTileSFX;
+        audio_properties?: ItemAudioProperties;
         on_use?: ItemFunction[];
         on_random_tick?: ItemFunction[];
         light?: string;
@@ -223,9 +234,18 @@ export class TileItem extends Item {
         return this;
     }
 
+    setAudioProperties(lowpass: number, reverb: number) {
+        this.tile.audio_properties = new ItemAudioProperties(lowpass, reverb);
+
+        return this;
+    }
+
     addComponent(key: string, value: ItemComponent) {
+        if (typeof this.tile.components === "string") {
+            this.tile.components = {};
+        }
         this.tile.components ??= {};
-        this.tile.components[key] = value;
+        (this.tile.components as { [key: string]: ItemComponent })[key] = value;
 
         return this;
     }

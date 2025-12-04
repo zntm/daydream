@@ -17,11 +17,11 @@
         }
     },
     "height": {
-        "type": "smart_value:irandom",
         "values": {
             "min": 3,
             "max": 8
-        }
+        },
+        "type": "smart_value:irandom"
     },
     "placement": {
         "type": "floor",

@@ -1,7 +1,5 @@
-import {
-    DatagenReturnData,
-    SmartValueIntRandom,
-} from "../../../index";
+import { DatagenReturnData } from "../../lib/DatagenReturnData";
+import { SmartValueIntRandom } from "../../lib/SmartValue";
 import { Attribute, AttributeBoolean } from "../../attribute";
 import {
     Creature,
@@ -36,10 +34,38 @@ export default [
             12,
             CreatureMovementType.Ground,
             {
-                "black": new CreatureSprite(new CreatureSpriteData("phantasia:creature/rabbit/idle/black"), new CreatureSpriteData("phantasia:creature/rabbit/moving/black")),
-                "default": new CreatureSprite(new CreatureSpriteData("phantasia:creature/rabbit/idle/default"), new CreatureSpriteData("phantasia:creature/rabbit/moving/default")),
-                "spotted": new CreatureSprite(new CreatureSpriteData("phantasia:creature/rabbit/idle/spotted"), new CreatureSpriteData("phantasia:creature/rabbit/moving/spotted")),
-                "white": new CreatureSprite(new CreatureSpriteData("phantasia:creature/rabbit/idle/white"), new CreatureSpriteData("phantasia:creature/rabbit/moving/white")),
+                black: new CreatureSprite(
+                    new CreatureSpriteData(
+                        "phantasia:creature/rabbit/idle/black",
+                    ),
+                    new CreatureSpriteData(
+                        "phantasia:creature/rabbit/moving/black",
+                    ),
+                ),
+                default: new CreatureSprite(
+                    new CreatureSpriteData(
+                        "phantasia:creature/rabbit/idle/default",
+                    ),
+                    new CreatureSpriteData(
+                        "phantasia:creature/rabbit/moving/default",
+                    ),
+                ),
+                spotted: new CreatureSprite(
+                    new CreatureSpriteData(
+                        "phantasia:creature/rabbit/idle/spotted",
+                    ),
+                    new CreatureSpriteData(
+                        "phantasia:creature/rabbit/moving/spotted",
+                    ),
+                ),
+                white: new CreatureSprite(
+                    new CreatureSpriteData(
+                        "phantasia:creature/rabbit/idle/white",
+                    ),
+                    new CreatureSpriteData(
+                        "phantasia:creature/rabbit/moving/white",
+                    ),
+                ),
             },
             new Attribute()
                 .setCollisionBox(17, 17)
@@ -56,9 +82,30 @@ export default [
             12,
             CreatureMovementType.Ground,
             {
-                "cold": new CreatureSprite(new CreatureSpriteData("phantasia:creature/chicken/idle/cold"), new CreatureSpriteData("phantasia:creature/chicken/moving/cold")),
-                "default": new CreatureSprite(new CreatureSpriteData("phantasia:creature/chicken/idle/default"), new CreatureSpriteData("phantasia:creature/chicken/moving/default")),
-                "warm": new CreatureSprite(new CreatureSpriteData("phantasia:creature/chicken/idle/warm"), new CreatureSpriteData("phantasia:creature/chicken/moving/warm")),
+                cold: new CreatureSprite(
+                    new CreatureSpriteData(
+                        "phantasia:creature/chicken/idle/cold",
+                    ),
+                    new CreatureSpriteData(
+                        "phantasia:creature/chicken/moving/cold",
+                    ),
+                ),
+                default: new CreatureSprite(
+                    new CreatureSpriteData(
+                        "phantasia:creature/chicken/idle/default",
+                    ),
+                    new CreatureSpriteData(
+                        "phantasia:creature/chicken/moving/default",
+                    ),
+                ),
+                warm: new CreatureSprite(
+                    new CreatureSpriteData(
+                        "phantasia:creature/chicken/idle/warm",
+                    ),
+                    new CreatureSpriteData(
+                        "phantasia:creature/chicken/moving/warm",
+                    ),
+                ),
             },
             new Attribute()
                 .setBoolean([AttributeBoolean.IsFallDamageResistant])
@@ -83,9 +130,26 @@ export default [
             18,
             CreatureMovementType.Ground,
             {
-                "brown": new CreatureSprite(new CreatureSpriteData("phantasia:creature/fox/idle/brown"), new CreatureSpriteData("phantasia:creature/fox/moving/brown")),
-                "default": new CreatureSprite(new CreatureSpriteData("phantasia:creature/fox/idle/default"), new CreatureSpriteData("phantasia:creature/fox/moving/default")),
-                "snow": new CreatureSprite(new CreatureSpriteData("phantasia:creature/fox/idle/snow"), new CreatureSpriteData("phantasia:creature/fox/moving/snow")),
+                brown: new CreatureSprite(
+                    new CreatureSpriteData("phantasia:creature/fox/idle/brown"),
+                    new CreatureSpriteData(
+                        "phantasia:creature/fox/moving/brown",
+                    ),
+                ),
+                default: new CreatureSprite(
+                    new CreatureSpriteData(
+                        "phantasia:creature/fox/idle/default",
+                    ),
+                    new CreatureSpriteData(
+                        "phantasia:creature/fox/moving/default",
+                    ),
+                ),
+                snow: new CreatureSprite(
+                    new CreatureSpriteData("phantasia:creature/fox/idle/snow"),
+                    new CreatureSpriteData(
+                        "phantasia:creature/fox/moving/snow",
+                    ),
+                ),
             },
             new Attribute()
                 .setCollisionBox(22, 18)

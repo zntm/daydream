@@ -13,6 +13,8 @@ export default (
     properties: ItemTileProperties[],
     harvest: ItemTileHarvest,
     sfx: string,
+    lowpass: number = 0,
+    reverb: number = 0,
 ) => [
     new DatagenReturnData(
         `generated/data/items/${id}.json`,
@@ -24,7 +26,8 @@ export default (
         )
             .setTileDrops([new ItemTileDrop(`phantasia:${id}`)])
             .setTileHarvest(harvest)
-            .setTileSFX(sfx),
+            .setTileSFX(sfx)
+            .setAudioProperties(lowpass, reverb),
     ),
     new DatagenReturnData(
         `generated/data/items/${id}_wall.json`,
@@ -36,6 +39,7 @@ export default (
         )
             .setTileDrops([new ItemTileDrop(`phantasia:${id}_wall`)])
             .setTileHarvest(harvest)
-            .setTileSFX(sfx),
+            .setTileSFX(sfx)
+            .setAudioProperties(lowpass, reverb),
     ),
 ];

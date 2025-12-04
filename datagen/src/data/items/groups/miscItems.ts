@@ -45,6 +45,7 @@ export default [
                     ),
                 ),
             )
-            .setTileSFX("#phantasia:tile/sfx/sand"),
+            .setTileSFX("#phantasia:tile/sfx/sand")
+            .setAudioProperties(0.2, 0.0),
     ),
 ];

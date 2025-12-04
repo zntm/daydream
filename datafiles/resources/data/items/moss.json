@@ -20,7 +20,11 @@
                 "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
             }
         },
-        "sfx": "#phantasia:tile/sfx/foliage"
+        "sfx": "#phantasia:tile/sfx/foliage",
+        "audio_properties": {
+            "lowpass": 0.05,
+            "reverb": 0
+        }
     },
     "type": "solid"
 }

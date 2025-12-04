@@ -23,7 +23,11 @@
                 "id": "#phantasia:item/type/pickaxe"
             }
         },
-        "sfx": "#phantasia:tile/sfx/stone"
+        "sfx": "#phantasia:tile/sfx/stone",
+        "audio_properties": {
+            "lowpass": 0.7,
+            "reverb": 0.6
+        }
     },
     "type": "solid"
 }

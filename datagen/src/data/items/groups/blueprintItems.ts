@@ -45,7 +45,8 @@ export default [
                     },
                 ]),
             ])
-            .setTileSFX("#phantasia:tile/sfx/stone"),
+            .setTileSFX("#phantasia:tile/sfx/stone")
+            .setAudioProperties(0.65, 0.5),
     ),
     new DatagenReturnData(
         "generated/data/items/structure_blueprint.json",
@@ -164,6 +165,7 @@ export default [
                     },
                 ]),
             ])
-            .setTileSFX("#phantasia:tile/sfx/stone"),
+            .setTileSFX("#phantasia:tile/sfx/stone")
+            .setAudioProperties(0.65, 0.5),
     ),
 ];

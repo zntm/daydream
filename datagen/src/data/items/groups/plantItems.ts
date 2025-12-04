@@ -86,7 +86,8 @@ export default [
                             ),
                         ),
                     )
-                    .setTileSFX("#phantasia:tile/sfx/foliage"),
+                    .setTileSFX("#phantasia:tile/sfx/foliage")
+                    .setAudioProperties(0.05, 0.0),
             ),
     ),
     new DatagenReturnData(
@@ -113,7 +114,8 @@ export default [
                     "#phantasia:tile/placement/condition_dry_plant",
                 ),
             )
-            .setTileSFX("#phantasia:tile/sfx/foliage"),
+            .setTileSFX("#phantasia:tile/sfx/foliage")
+            .setAudioProperties(0.05, 0.0),
     ),
     new DatagenReturnData(
         "generated/data/items/dead_bush.json",
@@ -139,7 +141,8 @@ export default [
                     "#phantasia:tile/placement/condition_dry_plant",
                 ),
             )
-            .setTileSFX("#phantasia:tile/sfx/wood"),
+            .setTileSFX("#phantasia:tile/sfx/wood")
+            .setAudioProperties(0.05, 0.0),
     ),
     ...[
         "bluebells",
@@ -179,7 +182,8 @@ export default [
                             "#phantasia:tile/placement/condition_plant",
                         ),
                     )
-                    .setTileSFX("#phantasia:tile/sfx/foliage"),
+                    .setTileSFX("#phantasia:tile/sfx/foliage")
+                    .setAudioProperties(0.05, 0.0),
             ),
     ),
     new DatagenReturnData(
@@ -207,6 +211,7 @@ export default [
                 ),
             )
             .setTileSFX("#phantasia:tile/sfx/foliage")
+            .setAudioProperties(0.05, 0.0)
             .addOnRandomTick([
                 new ItemFunction("phantasia:spawn_particle", {
                     id: "phantasia:tile/seeding_dandelion",

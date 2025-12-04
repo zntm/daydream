@@ -69,7 +69,8 @@ export default (
                         ],
                     ),
                 ),
-            ),
+            )
+            .setAudioProperties(0.4, 0.1),
     ),
     new DatagenReturnData(
         `generated/data/items/${id}_chest.json`,
@@ -90,7 +91,8 @@ export default (
                     new ItemTileCondition("#phantasia:item/type/axe"),
                 ),
             )
-            .setTileSFX("#phantasia:tile/sfx/wood"),
+            .setTileSFX("#phantasia:tile/sfx/wood")
+            .setAudioProperties(0.4, 0.1),
     ),
     new DatagenReturnData(
         `generated/data/items/${id}_leaves.json`,
@@ -116,7 +118,8 @@ export default (
                     new ItemTileCondition("#phantasia:item/type/axe"),
                 ),
             )
-            .setTileSFX("#phantasia:tile/sfx/wood"),
+            .setTileSFX("#phantasia:tile/sfx/wood")
+            .setAudioProperties(0.2, 0.0),
     ),
     new DatagenReturnData(
         `generated/data/items/${id}_pickaxe.json`,
@@ -142,6 +145,8 @@ export default (
             new ItemTileCondition("#phantasia:item/type/axe"),
         ),
         "#phantasia:tile/sfx/wood",
+        0.4,
+        0.1,
     ),
     new DatagenReturnData(
         `generated/data/items/${id}_shovel.json`,
@@ -173,6 +178,7 @@ export default (
                     new ItemTileCondition("#phantasia:item/type/axe"),
                 ),
             )
-            .setTileSFX("#phantasia:tile/sfx/wood"),
+            .setTileSFX("#phantasia:tile/sfx/wood")
+            .setAudioProperties(0.4, 0.1),
     ),
 ];

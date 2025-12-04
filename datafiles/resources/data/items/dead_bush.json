@@ -22,7 +22,11 @@
         "placement": {
             "condition": "#phantasia:tile/placement/condition_dry_plant"
         },
-        "sfx": "#phantasia:tile/sfx/wood"
+        "sfx": "#phantasia:tile/sfx/wood",
+        "audio_properties": {
+            "lowpass": 0.05,
+            "reverb": 0
+        }
     },
     "type": "untouchable"
 }

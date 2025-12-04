@@ -16,6 +16,10 @@
             }
         },
         "sfx": "#phantasia:tile/sfx/wood",
+        "audio_properties": {
+            "lowpass": 0.05,
+            "reverb": 0
+        },
         "light": "#D89172",
         "animation_type": "increment",
         "on_random_tick": [

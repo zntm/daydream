@@ -23,6 +23,10 @@
             "condition": "#phantasia:tile/placement/condition_plant"
         },
         "sfx": "#phantasia:tile/sfx/foliage",
+        "audio_properties": {
+            "lowpass": 0.05,
+            "reverb": 0
+        },
         "on_random_tick": [
             {
                 "id": "phantasia:spawn_particle",

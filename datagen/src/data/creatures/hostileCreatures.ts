@@ -1,14 +1,11 @@
-import {
-    DatagenReturnData,
-    SmartValue,
-} from "../../../index";
+import { DatagenReturnData } from "../../lib/DatagenReturnData";
 import { Attribute, AttributeBoolean } from "../../attribute";
 import {
     Creature,
     CreatureHostilityType,
     CreatureMovementType,
     CreatureSprite,
-    CreatureSpriteData
+    CreatureSpriteData,
 } from "../creatures";
 import { ItemDrop } from "../items";
 
@@ -35,7 +32,10 @@ export default [
         new HostileCreature(
             36,
             CreatureMovementType.Ground,
-            new CreatureSprite(new CreatureSpriteData("phantasia:creature/zombie/idle"), new CreatureSpriteData("phantasia:creature/zombie/moving")),
+            new CreatureSprite(
+                new CreatureSpriteData("phantasia:creature/zombie/idle"),
+                new CreatureSpriteData("phantasia:creature/zombie/moving"),
+            ),
             new Attribute()
                 .setCollisionBox(16, 30)
                 .setHitBox(18, 32)

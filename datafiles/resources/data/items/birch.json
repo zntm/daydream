@@ -47,6 +47,10 @@
                     }
                 ]
             }
+        },
+        "audio_properties": {
+            "lowpass": 0.4,
+            "reverb": 0.1
         }
     },
     "type": "untouchable"

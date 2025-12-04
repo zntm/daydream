@@ -25,6 +25,8 @@ export default [
                 ),
             ),
             sfx: "#phantasia:tile/sfx/dirt",
+            lowpass: 0.15,
+            reverb: 0.05,
         },
         {
             id: "lumin_moss",
@@ -42,6 +44,8 @@ export default [
                 ),
             ),
             sfx: "#phantasia:tile/sfx/foliage",
+            lowpass: 0.05,
+            reverb: 0.0,
         },
         {
             id: "moss",
@@ -59,6 +63,8 @@ export default [
                 ),
             ),
             sfx: "#phantasia:tile/sfx/foliage",
+            lowpass: 0.05,
+            reverb: 0.0,
         },
         {
             id: "sandstone",
@@ -77,6 +83,8 @@ export default [
                 new ItemTileCondition("#phantasia:item/type/pickaxe"),
             ),
             sfx: "#phantasia:tile/sfx/stone",
+            lowpass: 0.55,
+            reverb: 0.4,
         },
         {
             id: "stone",
@@ -95,6 +103,8 @@ export default [
                 new ItemTileCondition("#phantasia:item/type/pickaxe"),
             ),
             sfx: "#phantasia:tile/sfx/stone",
+            lowpass: 0.65,
+            reverb: 0.5,
         },
         {
             id: "nightrock",
@@ -113,10 +123,12 @@ export default [
                 new ItemTileCondition("#phantasia:item/type/pickaxe"),
             ),
             sfx: "#phantasia:tile/sfx/stone",
+            lowpass: 0.7,
+            reverb: 0.6,
         },
     ]
-        .map(({ id, properties, harvest, sfx }) =>
-            blockWallItems(id, properties, harvest, sfx),
+        .map(({ id, properties, harvest, sfx, lowpass, reverb }) =>
+            blockWallItems(id, properties, harvest, sfx, lowpass, reverb),
         )
         .flat(),
 ];

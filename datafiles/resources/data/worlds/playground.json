@@ -8,9 +8,9 @@
                     "end": 1024,
                     "transition": {
                         "type": "random",
+                        "octaves": 4,
                         "min": 2,
-                        "max": 22,
-                        "octaves": 4
+                        "max": 22
                     }
                 },
                 {
@@ -19,9 +19,9 @@
                     "end": 800,
                     "transition": {
                         "type": "random",
+                        "octaves": 0,
                         "min": 2,
-                        "max": 22,
-                        "octaves": 0
+                        "max": 22
                     }
                 }
             ],
@@ -39,35 +39,35 @@
             },
             "map": "phantasia:world/playground/map",
             "offset": {
+                "octaves": 2,
                 "min": 22,
-                "max": 34,
-                "octaves": 2
+                "max": 34
             }
         }
     },
     "cave": {
         "start": {
+            "octaves": 0,
             "min": 12,
-            "max": 2,
-            "octaves": 0
+            "max": 2
         },
         "system": [
             {
                 "range_min": 512,
                 "range_max": 1000,
                 "threshold": {
+                    "octaves": 4,
                     "min": 50,
-                    "max": 60,
-                    "octaves": 4
+                    "max": 60
                 }
             },
             {
                 "range_min": 600,
                 "range_max": 1000,
                 "threshold": {
+                    "octaves": 4,
                     "min": 116,
-                    "max": 130,
-                    "octaves": 4
+                    "max": 130
                 }
             }
         ]
@@ -88,9 +88,9 @@
     "surface": {
         "start": 512,
         "noise_offset": {
+            "octaves": 4,
             "min": 40,
-            "max": 96,
-            "octaves": 4
+            "max": 96
         }
     },
     "time": {

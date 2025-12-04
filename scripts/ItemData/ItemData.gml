@@ -570,6 +570,8 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     {
         function __placement_condition(_data)
         {
+            show_debug_message($"{get_id()} {_data}");
+            
             var _values = _data.values;
             var _values_length = array_length(_values);
             

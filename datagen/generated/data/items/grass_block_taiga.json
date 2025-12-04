@@ -1,5 +1,5 @@
 {
-    "inventory": "#phantasia:item/generic/inventory_default",
+    "inventory": "#phantasia:item/generic/inventory_tile",
     "properties": [
         "phantasia:can_mirror",
         "phantasia:is_tile"
@@ -19,7 +19,11 @@
                 "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
             }
         },
-        "sfx": "#phantasia:tile/sfx/dirt"
+        "sfx": "#phantasia:tile/sfx/dirt",
+        "audio_properties": {
+            "lowpass": 0.15,
+            "reverb": 0.05
+        }
     },
     "type": "solid"
 }

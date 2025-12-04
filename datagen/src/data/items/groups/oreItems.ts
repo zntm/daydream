@@ -48,7 +48,8 @@ export default (
                     ),
                 ])
                 .setTileHarvest(blockHarvest)
-                .setTileSFX(blockSFX),
+                .setTileSFX(blockSFX)
+                .setAudioProperties(0.65, 0.5),
         ),
         new DatagenReturnData(
             `generated/data/items/${id}_ore.json`,
@@ -67,7 +68,8 @@ export default (
                     ),
                 ])
                 .setTileHarvest(oreHarvest)
-                .setTileSFX(oreSFX),
+                .setTileSFX(oreSFX)
+                .setAudioProperties(0.65, 0.5),
         ),
     ];
 
