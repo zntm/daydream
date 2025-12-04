@@ -219,7 +219,7 @@ function ParticleData(_namespace, _id, _sprite) : ParentData(_namespace, _id) co
     {
         if (_attributes != undefined)
         {
-            __set_smart_value("___gravity", _attributes[$ "gravity"]);
+            ___attributes = _attributes;;
         }
         
         return self;

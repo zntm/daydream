@@ -12,40 +12,17 @@ function control_player(_dt)
             
             if (_data.get_hostility_type() == CREATURE_HOSTILITY_TYPE.HOSTILE)
             {
-                var _damage = 1;
+                // Use unified damage handler
+                var _died = control_entity_damage(id, _inst, 1);
                 
-                if (chance(0.05))
+                if (_died)
                 {
-                    _damage = round(_damage * 1.25);
-                    
-                    repeat (irandom_range(8, 14))
-                    {
-                        spawn_particle(random_range(bbox_left, bbox_right), random_range(bbox_top, bbox_bottom), "phantasia:entity/damage_critical");
-                    }
-                }
-                else
-                {
-                    repeat (irandom_range(8, 14))
-                    {
-                        spawn_particle(random_range(bbox_left, bbox_right), random_range(bbox_top, bbox_bottom), "phantasia:entity/damage");
-                    }
-                }
-                
-                hp -= _damage;
-                
-                spawn_floating_text(x, y, _damage, 0, -3.9);
-                
-                if (hp <= 0)
-                {
-                    instance_destroy();
-                    
+                    obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.HP;
                     exit;
                 }
                 
-                timer_immunity = 1;
-                
-                xvelocity = sign(x - _inst.x) * 5.2;
-                yvelocity = sign(y - _inst.y) * 0.6;
+                // Use unified knockback handler
+                control_entity_knockback(id, _inst);
                 
                 obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.HP;
             }

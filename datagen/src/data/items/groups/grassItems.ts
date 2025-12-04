@@ -56,7 +56,7 @@ export default [
             new TileItem(
                 ItemType.Solid,
                 `phantasia:item/${id}`,
-                "#phantasia:item/generic/inventory_default",
+                "#phantasia:item/generic/inventory_tile",
                 [ItemTileProperties.CanMirror, ItemTileProperties.IsTile],
             )
                 .setTileDrops([new ItemTileDrop(`phantasia:dirt`)])

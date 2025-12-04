@@ -1,5 +1,5 @@
 {
-    "inventory": "#phantasia:item/generic/inventory_default",
+    "inventory": "#phantasia:item/generic/inventory_tile",
     "properties": [
         "phantasia:can_mirror",
         "phantasia:is_tile"

@@ -84,7 +84,7 @@ export default [
         "generated/data/biomes/cave/depths.json",
         new Biome(
             new BiomeBackground("phantasia:background/depths", 0.7),
-            "#32B559",
+            "#000000",
             {
                 dawn: new BiomeSkyColor("#180738", "#2A1504"),
                 day: new BiomeSkyColor("#5F91FE", "#244FE9"),

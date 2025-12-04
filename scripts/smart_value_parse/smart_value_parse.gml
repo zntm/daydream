@@ -48,11 +48,18 @@ function smart_value_parse(_data)
         return _array;
     }
     
-    if (_type == "smart_value:irandom") || (_type == "smart_value:random")
+    if (_type == "smart_value:irandom")
     {
         var _values = _data.values;
         
-        return new SmartValue(SMART_VALUE_TYPE.CHOOSE_WEIGHTED, [ _values.min, _values.max ]);
+        return new SmartValue(SMART_VALUE_TYPE.IRANDOM, [ _values.min, _values.max ]);
+    }
+    
+    if (_type == "smart_value:random")
+    {
+        var _values = _data.values;
+        
+        return new SmartValue(SMART_VALUE_TYPE.RANDOM, [ _values.min, _values.max ]);
     }
     
     return _data;

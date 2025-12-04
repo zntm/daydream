@@ -21,12 +21,14 @@ function smart_value(_data)
     {
         var _values = _data.get_values();
         
-        return random_range(_data[0], _data[1]);
+        return random_range(_values[0], _values[1]);
     }
     
     if (_type == SMART_VALUE_TYPE.IRANDOM)
     {
-        return irandom_range(_data[0], _data[1]);
+        var _values = _data.get_values();
+        
+        return irandom_range(_values[0], _values[1]);
     }
     
     return _data;

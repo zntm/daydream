@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"control_entity_knockback",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"control_entity_knockback",
+  "parent":{
+    "name":"Control",
+    "path":"folders/Scripts/Control.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

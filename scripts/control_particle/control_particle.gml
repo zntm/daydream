@@ -41,6 +41,18 @@ function control_particle(_dt)
             }
         }
     }
+    else
+    {
+        // Particles without collision boxes - simple velocity-based movement
+        x += xvelocity * (_dt / GAME_TICK);
+        y += yvelocity * (_dt / GAME_TICK);
+        
+        // Apply rotation increment
+        if (variable_instance_exists(id, "rotation_increment"))
+        {
+            image_angle += rotation_increment * (_dt / GAME_TICK);
+        }
+    }
     
     var _camera_x = global.camera_x;
     var _camera_y = global.camera_y;

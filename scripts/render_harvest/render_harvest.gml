@@ -30,7 +30,7 @@ function render_harvest(_camera_x, _camera_y, _camera_width, _camera_height)
     
     var _progress = normalize(timer_harvest, 0, _data.get_tile_harvest().get_hardness());
     
-    var _offset = RENDER_HARVEST_OFFSET * _progress
+    var _offset = RENDER_HARVEST_OFFSET * _progress;
     
     var _index = 0;
     
