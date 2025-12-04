@@ -24,7 +24,7 @@ function control_entity_damage(_victim, _attacker, _base_damage, _variance = 0.0
         _damage = round(_damage * _crit_multiplier);
         
         // Spawn critical hit particles
-        repeat (irandom_range(8, 14))
+        repeat (irandom_range(3, 8))
         {
             spawn_particle(
                 random_range(_victim.bbox_left, _victim.bbox_right),
@@ -36,7 +36,7 @@ function control_entity_damage(_victim, _attacker, _base_damage, _variance = 0.0
     else
     {
         // Spawn normal damage particles
-        repeat (irandom_range(8, 14))
+        repeat (irandom_range(3, 8))
         {
             spawn_particle(
                 random_range(_victim.bbox_left, _victim.bbox_right),

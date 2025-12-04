@@ -204,6 +204,18 @@ function CreatureData(_namespace, _id, _hp, _hostility_type, _movement_type) : P
         return self[$ "___effect_immune"];
     }
     
+    static set_predators = function(_predators)
+    {
+        ___predators = _predators ?? [];
+        
+        return self;
+    }
+    
+    static get_predators = function()
+    {
+        return self[$ "___predators"] ?? [];
+    }
+    
     static set_drops = function(_drops)
     {
         ___drops = [];

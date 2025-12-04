@@ -1381,6 +1381,7 @@
     {"id":{"name":"tile_index_xy","path":"scripts/tile_index_xy/tile_index_xy.yy",},},
     {"id":{"name":"tile_index_xyz","path":"scripts/tile_index_xyz/tile_index_xyz.yy",},},
     {"id":{"name":"tile_instance_create","path":"scripts/tile_instance_create/tile_instance_create.yy",},},
+    {"id":{"name":"tile_line_of_sight","path":"scripts/tile_line_of_sight/tile_line_of_sight.yy",},},
     {"id":{"name":"tile_meeting","path":"scripts/tile_meeting/tile_meeting.yy",},},
     {"id":{"name":"tile_met_custom_placement_condition","path":"scripts/tile_met_custom_placement_condition/tile_met_custom_placement_condition.yy",},},
     {"id":{"name":"tile_place","path":"scripts/tile_place/tile_place.yy",},},

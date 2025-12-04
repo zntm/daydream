@@ -19,6 +19,9 @@
     "hostility_type": "passive",
     "hp": 12,
     "movement_type": "ground",
+    "predators": [
+        "phantasia:fox"
+    ],
     "sprite": {
         "black": {
             "idle": {

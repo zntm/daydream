@@ -21,6 +21,7 @@ export class Creature {
     private sprite: CreatureSprite | { [key: string]: CreatureSprite };
     private attribute: Attribute;
     private drops?: ItemDrop[];
+    private predators?: string[];
 
     constructor(
         hp: number,
@@ -38,6 +39,12 @@ export class Creature {
 
     setDrops(drops: ItemDrop[]) {
         this.drops = drops;
+
+        return this;
+    }
+
+    setPredators(predators: string[]) {
+        this.predators = predators;
 
         return this;
     }

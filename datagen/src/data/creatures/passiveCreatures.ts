@@ -74,7 +74,9 @@ export default [
                 .setGravity(0.5)
                 .setJump(2.2, 4.9, 11)
                 .setMovementSpeed(0.4),
-        ).setDrops([new ItemDrop("phantasia:raw_rabbit")]),
+        )
+            .setDrops([new ItemDrop("phantasia:raw_rabbit")])
+            .setPredators(["phantasia:fox"]),
     ),
     new DatagenReturnData(
         "generated/data/creatures/chicken.json",

@@ -148,7 +148,7 @@ function control_player(_dt)
                 
                 ylast = y;
                 
-                repeat (irandom_range(8, 14))
+                repeat (irandom_range(2, 6))
                 {
                     spawn_particle(random_range(bbox_left, bbox_right), random_range(bbox_top, bbox_bottom), "phantasia:entity/damage");
                 }

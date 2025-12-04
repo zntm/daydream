@@ -326,6 +326,7 @@
     {"name":"tile_index_xy","order":5,"path":"scripts/tile_index_xy/tile_index_xy.yy",},
     {"name":"tile_index_xyz","order":6,"path":"scripts/tile_index_xyz/tile_index_xyz.yy",},
     {"name":"tile_instance_create","order":2,"path":"scripts/tile_instance_create/tile_instance_create.yy",},
+    {"name":"tile_line_of_sight","order":32,"path":"scripts/tile_line_of_sight/tile_line_of_sight.yy",},
     {"name":"tile_meeting","order":9,"path":"scripts/tile_meeting/tile_meeting.yy",},
     {"name":"tile_met_custom_placement_condition","order":20,"path":"scripts/tile_met_custom_placement_condition/tile_met_custom_placement_condition.yy",},
     {"name":"tile_place","order":3,"path":"scripts/tile_place/tile_place.yy",},
