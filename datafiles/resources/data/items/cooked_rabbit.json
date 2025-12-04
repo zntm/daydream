@@ -9,7 +9,7 @@
                 "seconds": 1
             },
             "sfx": {
-                "id": "phantasia:sound.eat"
+                "id": "phantasia:sfx/item/eat"
             }
         }
     },

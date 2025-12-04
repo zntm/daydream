@@ -8,6 +8,7 @@ import {
     CreatureSpriteData,
 } from "../creatures";
 import { ItemDrop } from "../items";
+import { SmartValueIntRandom } from "../../lib/SmartValue";
 
 class HostileCreature extends Creature {
     constructor(
@@ -43,6 +44,12 @@ export default [
                 .setGravity(0.5)
                 .setJump(2.2, 5.9, 10)
                 .setMovementSpeed(0.4),
-        ),
+        ).setDrops([
+            new ItemDrop(
+                "phantasia:rotten_flesh",
+                new SmartValueIntRandom(1, 3),
+                0.8,
+            ),
+        ]),
     ),
 ];
