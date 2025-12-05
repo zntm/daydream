@@ -45,7 +45,7 @@ export default [
         new TileItem(
             ItemType.Solid,
             `phantasia:item/mangrove_roots`,
-            "#phantasia:item/generic/inventory_default",
+            "#phantasia:item/generic/inventory_tile",
         )
             .setTileDrops([new ItemTileDrop(`phantasia:mangrove`)])
             .setTileHarvest(
