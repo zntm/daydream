@@ -57,60 +57,62 @@ exception_unhandled_handler(function(_exception)
     var _long_message = _exception.longMessage;
     var _stack_trace = string_join_ext("\n", _exception.stacktrace);
     
-    var _os_info = os_type;
+    var _os_type = os_type;
     
-    if (_os_info == os_windows)
+    if (_os_type == os_windows)
     {
-        _os_info = "Windows"; 
+        _os_type = "Windows"; 
     }
-    else if (_os_info == os_macosx)
+    else if (_os_type == os_macosx)
     {
-        _os_info = "macOS"; 
+        _os_type = "macOS"; 
     }
-    else if (_os_info == os_linux)
+    else if (_os_type == os_linux)
     {
-        _os_info = "Linux"; 
+        _os_type = "Linux"; 
     }
-    else if (_os_info == os_ios)
+    else if (_os_type == os_ios)
     {
-        _os_info = "iOS"; 
+        _os_type = "iOS"; 
     }
-    else if (_os_info == os_android)
+    else if (_os_type == os_android)
     {
-        _os_info = "Android"; 
+        _os_type = "Android"; 
     }
-    else if (_os_info == os_tvos)
+    else if (_os_type == os_tvos)
     {
-        _os_info = "tvOS"; 
+        _os_type = "tvOS"; 
     }
-    else if (_os_info == os_ps4)
+    else if (_os_type == os_ps4)
     {
-        _os_info = "PS4"; 
+        _os_type = "PS4"; 
     }
-    else if (_os_info == os_ps5)
+    else if (_os_type == os_ps5)
     {
-        _os_info = "PS5"; 
+        _os_type = "PS5"; 
     }
-    else if (_os_info == os_xboxseriesxs)
+    else if (_os_type == os_xboxseriesxs)
     {
-        _os_info = "Xbox Series X/S";
+        _os_type = "Xbox Series X/S";
     }
-    else if (_os_info == os_switch)
+    else if (_os_type == os_switch)
     {
-        _os_info = "Switch"; 
+        _os_type = "Switch"; 
     }
-    else if (_os_info == os_gdk)
+    else if (_os_type == os_gdk)
     {
-        _os_info = "Microsoft GDK Platform";
+        _os_type = "Microsoft GDK Platform";
     }
-    else if (_os_info == os_operagx)
+    else if (_os_type == os_operagx)
     {
-        _os_info = "Opera GX";
+        _os_type = "Opera GX";
     }
     else
     {
-        _os_info = "Unknown";
+        _os_type = "Unknown";
     }
+    
+    var _os_info = os_get_info();
     
     var _message =
         $"---[ Crash Log ]---\n" +
@@ -120,8 +122,10 @@ exception_unhandled_handler(function(_exception)
         
         $"---[ Game & System Information ]---\n" +
         $"Version: {program_get_version()}\n" +
-        $"OS: {_os_info}\n" +
-        $"Display: {display_get_width()}x{display_get_height()}@{display_get_frequency()}\n\n" +
+        $"OS: {_os_type}\n" +
+        $"OS Version: {os_version}\n" +
+        $"Display: {display_get_width()}x{display_get_height()}@{display_get_frequency()}\n" +
+        $"Is Network Connected: {os_is_network_connected()}\n\n" +
         
         $"---[ Error Message ]---\n" +
         $"{_long_message}\n\n" +

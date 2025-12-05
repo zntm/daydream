@@ -24,14 +24,12 @@ export default (
     chestFrame: string,
     workbench: string | string[],
 ) => [
-    new CraftingRecipe(`${namespace}:${material}_workbench`)
-        .setCraftingStations(workbench)
-        .setIngredients(
-            new CraftingIngredient(
-                `${namespace}:${material}`,
-                WoodIngredientAmount.Workbench,
-            ),
+    new CraftingRecipe(`${namespace}:${material}_workbench`).setIngredients(
+        new CraftingIngredient(
+            `${namespace}:${material}`,
+            WoodIngredientAmount.Workbench,
         ),
+    ),
     new CraftingRecipe(`${namespace}:${material}_chest`)
         .setCraftingStations(workbench)
         .setIngredients(

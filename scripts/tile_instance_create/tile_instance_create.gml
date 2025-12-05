@@ -9,7 +9,7 @@ function tile_instance_create(_x, _y, _z, _tile)
     {
         with (instance_create_layer((_x * TILE_SIZE) + _tile.get_xoffset(), (_y * TILE_SIZE) + _tile.get_yoffset(), "Instances", obj_Tile_Crafting_Station))
         {
-            sprite_index = _data.get_sprite();
+            sprite_index = global.sprite_asset[$ _data.get_sprite()].get_sprite();
             
             image_index = _tile.get_index() + _tile.get_index_offset();
             image_angle = _tile.get_rotation();
@@ -28,7 +28,7 @@ function tile_instance_create(_x, _y, _z, _tile)
     {
         with (instance_create_layer((_x * TILE_SIZE) + _tile.get_xoffset(), (_y * TILE_SIZE) + _tile.get_yoffset(), "Instances", obj_Tile_Container))
         {
-            sprite_index = _data.get_sprite();
+            sprite_index = global.sprite_asset[$ _data.get_sprite()].get_sprite();
             
             image_index = _tile.get_index() + _tile.get_index_offset();
             image_angle = _tile.get_rotation();
@@ -47,7 +47,7 @@ function tile_instance_create(_x, _y, _z, _tile)
     {
         with (instance_create_layer((_x * TILE_SIZE) + _tile.get_xoffset(), (_y * TILE_SIZE) + _tile.get_yoffset(), "Instances", obj_Tile_Light))
         {
-            sprite_index = _data.get_sprite();
+            sprite_index = global.sprite_asset[$ _data.get_sprite()].get_sprite();
             
             image_index = _tile.get_index() + _tile.get_index_offset();
             image_angle = _tile.get_rotation();

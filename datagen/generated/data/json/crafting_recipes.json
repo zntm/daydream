@@ -354,7 +354,6 @@
     {
         "id": "phantasia:birch_workbench",
         "amount": 1,
-        "crafting_stations": "#phantasia:tile/generic/workbench",
         "ingredients": [
             {
                 "id": "phantasia:birch",
@@ -399,34 +398,31 @@
             }
         ]
     },
-    [
-        {
-            "id": "phantasia:birch_planks",
-            "amount": 3,
-            "crafting_stations": "#phantasia:tile/generic/workbench",
-            "ingredients": [
-                {
-                    "id": "phantasia:birch",
-                    "amount": 1
-                }
-            ]
-        },
-        {
-            "id": "phantasia:birch_planks_wall",
-            "amount": 2,
-            "crafting_stations": "#phantasia:tile/generic/workbench",
-            "ingredients": [
-                {
-                    "id": "phantasia:birch_planks",
-                    "amount": 3
-                }
-            ]
-        }
-    ],
+    {
+        "id": "phantasia:birch_planks",
+        "amount": 3,
+        "crafting_stations": "#phantasia:tile/generic/workbench",
+        "ingredients": [
+            {
+                "id": "phantasia:birch",
+                "amount": 1
+            }
+        ]
+    },
+    {
+        "id": "phantasia:birch_planks_wall",
+        "amount": 2,
+        "crafting_stations": "#phantasia:tile/generic/workbench",
+        "ingredients": [
+            {
+                "id": "phantasia:birch_planks",
+                "amount": 3
+            }
+        ]
+    },
     {
         "id": "phantasia:oak_workbench",
         "amount": 1,
-        "crafting_stations": "#phantasia:tile/generic/workbench",
         "ingredients": [
             {
                 "id": "phantasia:oak",
@@ -471,34 +467,31 @@
             }
         ]
     },
-    [
-        {
-            "id": "phantasia:oak_planks",
-            "amount": 3,
-            "crafting_stations": "#phantasia:tile/generic/workbench",
-            "ingredients": [
-                {
-                    "id": "phantasia:oak",
-                    "amount": 1
-                }
-            ]
-        },
-        {
-            "id": "phantasia:oak_planks_wall",
-            "amount": 2,
-            "crafting_stations": "#phantasia:tile/generic/workbench",
-            "ingredients": [
-                {
-                    "id": "phantasia:oak_planks",
-                    "amount": 3
-                }
-            ]
-        }
-    ],
+    {
+        "id": "phantasia:oak_planks",
+        "amount": 3,
+        "crafting_stations": "#phantasia:tile/generic/workbench",
+        "ingredients": [
+            {
+                "id": "phantasia:oak",
+                "amount": 1
+            }
+        ]
+    },
+    {
+        "id": "phantasia:oak_planks_wall",
+        "amount": 2,
+        "crafting_stations": "#phantasia:tile/generic/workbench",
+        "ingredients": [
+            {
+                "id": "phantasia:oak_planks",
+                "amount": 3
+            }
+        ]
+    },
     {
         "id": "phantasia:mangrove_workbench",
         "amount": 1,
-        "crafting_stations": "#phantasia:tile/generic/workbench",
         "ingredients": [
             {
                 "id": "phantasia:mangrove",
@@ -543,34 +536,31 @@
             }
         ]
     },
-    [
-        {
-            "id": "phantasia:mangrove_planks",
-            "amount": 3,
-            "crafting_stations": "#phantasia:tile/generic/workbench",
-            "ingredients": [
-                {
-                    "id": "phantasia:mangrove",
-                    "amount": 1
-                }
-            ]
-        },
-        {
-            "id": "phantasia:mangrove_planks_wall",
-            "amount": 2,
-            "crafting_stations": "#phantasia:tile/generic/workbench",
-            "ingredients": [
-                {
-                    "id": "phantasia:mangrove_planks",
-                    "amount": 3
-                }
-            ]
-        }
-    ],
+    {
+        "id": "phantasia:mangrove_planks",
+        "amount": 3,
+        "crafting_stations": "#phantasia:tile/generic/workbench",
+        "ingredients": [
+            {
+                "id": "phantasia:mangrove",
+                "amount": 1
+            }
+        ]
+    },
+    {
+        "id": "phantasia:mangrove_planks_wall",
+        "amount": 2,
+        "crafting_stations": "#phantasia:tile/generic/workbench",
+        "ingredients": [
+            {
+                "id": "phantasia:mangrove_planks",
+                "amount": 3
+            }
+        ]
+    },
     {
         "id": "phantasia:pine_workbench",
         "amount": 1,
-        "crafting_stations": "#phantasia:tile/generic/workbench",
         "ingredients": [
             {
                 "id": "phantasia:pine",
@@ -615,30 +605,28 @@
             }
         ]
     },
-    [
-        {
-            "id": "phantasia:pine_planks",
-            "amount": 3,
-            "crafting_stations": "#phantasia:tile/generic/workbench",
-            "ingredients": [
-                {
-                    "id": "phantasia:pine",
-                    "amount": 1
-                }
-            ]
-        },
-        {
-            "id": "phantasia:pine_planks_wall",
-            "amount": 2,
-            "crafting_stations": "#phantasia:tile/generic/workbench",
-            "ingredients": [
-                {
-                    "id": "phantasia:pine_planks",
-                    "amount": 3
-                }
-            ]
-        }
-    ],
+    {
+        "id": "phantasia:pine_planks",
+        "amount": 3,
+        "crafting_stations": "#phantasia:tile/generic/workbench",
+        "ingredients": [
+            {
+                "id": "phantasia:pine",
+                "amount": 1
+            }
+        ]
+    },
+    {
+        "id": "phantasia:pine_planks_wall",
+        "amount": 2,
+        "crafting_stations": "#phantasia:tile/generic/workbench",
+        "ingredients": [
+            {
+                "id": "phantasia:pine_planks",
+                "amount": 3
+            }
+        ]
+    },
     {
         "id": "phantasia:dirt_wall",
         "amount": 2,

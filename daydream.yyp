@@ -1041,8 +1041,6 @@
     {"$GMIncludedFile":"","%Name":"torch.json","CopyToMask":-1,"filePath":"datafiles/resources/data/items","name":"torch.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"twig.json","CopyToMask":-1,"filePath":"datafiles/resources/data/items","name":"twig.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"crafting_recipes.json","CopyToMask":-1,"filePath":"datafiles/resources/data/json","name":"crafting_recipes.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
-    {"$GMIncludedFile":"","%Name":"crafting.json","CopyToMask":-1,"filePath":"datafiles/resources/data/json","name":"crafting.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
-    {"$GMIncludedFile":"","%Name":"menu.json","CopyToMask":-1,"filePath":"datafiles/resources/data/json","name":"menu.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"biomes.json","CopyToMask":-1,"filePath":"datafiles/resources/data/json/menu","name":"biomes.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"music.json","CopyToMask":-1,"filePath":"datafiles/resources/data/json/menu","name":"music.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"splash_texts.json","CopyToMask":-1,"filePath":"datafiles/resources/data/json/menu","name":"splash_texts.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},

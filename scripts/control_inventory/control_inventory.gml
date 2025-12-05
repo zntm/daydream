@@ -75,7 +75,7 @@ function control_inventory()
                     
                     if (instance_exists(_inst))
                     {
-                        sfx_play("phantasia:item.collect");
+                        sfx_play("phantasia:sfx/item/collect");
                         
                         inventory_switch(_inst.inventory_type, _inst.inventory_index, "base", i); 
                         

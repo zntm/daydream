@@ -58,70 +58,73 @@ import compactMaterialRecipes from "./craftingRecipes/compactMaterialRecipes";
 import tieredEquipmentRecipes from "./craftingRecipes/tieredEquipmentRecipes";
 import woodRecipes from "./craftingRecipes/woodRecipes";
 
-export default new DatagenReturnData("generated/data/json/crafting.json", [
-    // Cookable Consumable
-    ...["chicken", "rabbit"].map((id) =>
-        new CraftingRecipe(
-            `phantasia:cooked_${id}`,
-            IngredientAmount.MaterialCompact,
-        )
-            .setCraftingStations("phantasia:furnace")
-            .setIngredients(new CraftingIngredient(`phantasia:raw_${id}`)),
-    ),
-    // Tiered Equipment
-    ...["platinum", "gold", "iron", "copper"]
-        .map((id) =>
-            tieredEquipmentRecipes(
-                "phantasia",
-                id,
-                "#phantasia:tile/generic/workbench",
-                "phantasia:furnace",
-            ),
-        )
-        .flat(),
-    ...compactMaterialRecipes(
-        "phantasia:coal",
-        "phantasia:coal_block",
-        "#phantasia:tile/generic/workbench",
-    ),
-    // Wood
-    ...["birch", "oak", "mangrove", "pine"]
-        .map((id) =>
-            woodRecipes(
-                "phantasia",
-                id,
-                "phantasia:iron",
-                "#phantasia:tile/generic/workbench",
-            ),
-        )
-        .flat(),
-    ...[
-        "phantasia:dirt",
-        "phantasia:nightrock",
-        "phantasia:moss",
-        "phantasia:sandstone",
-        "phantasia:stone",
-    ].map((material) =>
-        new CraftingRecipe(`${material}_wall`, RecipeAmount.Wall)
+export default new DatagenReturnData(
+    "generated/data/json/crafting_recipes.json",
+    [
+        // Cookable Consumable
+        ...["chicken", "rabbit"].map((id) =>
+            new CraftingRecipe(
+                `phantasia:cooked_${id}`,
+                IngredientAmount.MaterialCompact,
+            )
+                .setCraftingStations("phantasia:furnace")
+                .setIngredients(new CraftingIngredient(`phantasia:raw_${id}`)),
+        ),
+        // Tiered Equipment
+        ...["platinum", "gold", "iron", "copper"]
+            .map((id) =>
+                tieredEquipmentRecipes(
+                    "phantasia",
+                    id,
+                    "#phantasia:tile/generic/workbench",
+                    "phantasia:furnace",
+                ),
+            )
+            .flat(),
+        ...compactMaterialRecipes(
+            "phantasia:coal",
+            "phantasia:coal_block",
+            "#phantasia:tile/generic/workbench",
+        ),
+        // Wood
+        ...["birch", "oak", "mangrove", "pine"]
+            .map((id) =>
+                woodRecipes(
+                    "phantasia",
+                    id,
+                    "phantasia:iron",
+                    "#phantasia:tile/generic/workbench",
+                ),
+            )
+            .flat(),
+        ...[
+            "phantasia:dirt",
+            "phantasia:nightrock",
+            "phantasia:moss",
+            "phantasia:sandstone",
+            "phantasia:stone",
+        ].map((material) =>
+            new CraftingRecipe(`${material}_wall`, RecipeAmount.Wall)
+                .setCraftingStations("#phantasia:tile/generic/workbench")
+                .setIngredients(
+                    new CraftingIngredient(material, IngredientAmount.Wall),
+                ),
+        ),
+        new CraftingRecipe("phantasia:torch", RecipeAmount.Torch)
             .setCraftingStations("#phantasia:tile/generic/workbench")
             .setIngredients(
-                new CraftingIngredient(material, IngredientAmount.Wall),
+                new CraftingIngredient(
+                    "#phantasia:item/generic/wood",
+                    IngredientAmount.TorchWood,
+                ),
+                new CraftingIngredient(
+                    "phantasia:coal",
+                    IngredientAmount.TorchCoal,
+                ),
             ),
-    ),
-    new CraftingRecipe("phantasia:torch", RecipeAmount.Torch)
-        .setCraftingStations("#phantasia:tile/generic/workbench")
-        .setIngredients(
-            new CraftingIngredient(
-                "#phantasia:item/generic/wood",
-                IngredientAmount.TorchWood,
-            ),
-            new CraftingIngredient(
-                "phantasia:coal",
-                IngredientAmount.TorchCoal,
-            ),
+        new CraftingRecipe("phantasia:hatchet").setIngredients(
+            new CraftingIngredient("phantasia:twig", 2),
+            new CraftingIngredient("phantasia:rock", 2),
         ),
-    new CraftingRecipe("phantasia:hatchet").setIngredients(
-        new CraftingIngredient("phantasia:twig", 2),
-        new CraftingIngredient("phantasia:rock", 2),
-    ),
-]);
+    ].flat(Infinity),
+);

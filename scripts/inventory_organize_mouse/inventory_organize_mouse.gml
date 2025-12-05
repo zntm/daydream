@@ -11,7 +11,7 @@ function inventory_organize_mouse(_inst)
             
             if (_item != INVENTORY_EMPTY)
             {
-                sfx_play("phantasia:item.collect");
+                sfx_play("phantasia:sfx/item/collect");
                 
                 inventory_mouse_select_type = INVENTORY_MOUSE_SELECT_TYPE.RIGHT;
                 
@@ -42,7 +42,7 @@ function inventory_organize_mouse(_inst)
     }
     else if (mouse_check_button_released(mb_right)) && (inventory_mouse_select_type == INVENTORY_MOUSE_SELECT_TYPE.RIGHT)
     {
-        sfx_play("phantasia:item.collect");
+        sfx_play("phantasia:sfx/item/collect");
         
         if (instance_exists(_inst)) && (_inst.slot_type != INVENTORY_SLOT_TYPE.CRAFTABLE)
         {
@@ -121,7 +121,7 @@ function inventory_organize_mouse(_inst)
             
             if (_item != INVENTORY_EMPTY)
             {
-                sfx_play("phantasia:item.collect");
+                sfx_play("phantasia:sfx/item/collect");
                 
                 inventory_mouse_select_type = INVENTORY_MOUSE_SELECT_TYPE.LEFT;
                 
@@ -140,7 +140,7 @@ function inventory_organize_mouse(_inst)
     }
     else if (mouse_check_button_released(mb_left)) && (inventory_mouse_select_type == INVENTORY_MOUSE_SELECT_TYPE.LEFT)
     {
-        sfx_play("phantasia:item.collect");
+        sfx_play("phantasia:sfx/item/collect");
         
         if (instance_exists(_inst)) && (_inst.slot_type != INVENTORY_SLOT_TYPE.CRAFTABLE)
         {
@@ -220,7 +220,7 @@ function inventory_organize_mouse(_inst)
                 
                 timer_crafting_max = max(timer_crafting_max - 0.04, 0.08);
                 
-                sfx_play("phantasia:item.collect");
+                sfx_play("phantasia:sfx/item/collect");
                 
                 var _index = _inst.index;
                 
@@ -264,7 +264,7 @@ function inventory_organize_mouse(_inst)
     }
     else if (mouse_check_button_released(mb_left)) && (inventory_mouse_select_type == INVENTORY_MOUSE_SELECT_TYPE.CRAFTING)
     {
-        sfx_play("phantasia:item.collect");
+        sfx_play("phantasia:sfx/item/collect");
         
         if (instance_exists(_inst)) && (_inst.slot_type != INVENTORY_SLOT_TYPE.CRAFTABLE)
         { 
