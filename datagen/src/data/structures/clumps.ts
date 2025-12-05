@@ -1,6 +1,6 @@
 import {
     DatagenReturnData,
-    SmartValue,
+    type SmartValue,
 } from "../../../index";
 
 import {

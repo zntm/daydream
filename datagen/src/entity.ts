@@ -1,4 +1,4 @@
-import { SmartValue } from "../index";
+import type { SmartValue } from "../index";
 
 export class EntityPhysics {
     private xspeed: number | string | EntityPhysicsValue | SmartValue;

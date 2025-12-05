@@ -1,4 +1,4 @@
-import { SmartValue } from "../../../lib/SmartValue";
+import type { SmartValue } from "../../../lib/SmartValue";
 
 export class ItemDrop {
     private id: string;

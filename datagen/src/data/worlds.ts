@@ -1,4 +1,4 @@
-import { DatagenReturnData, Noise, SmartValue } from "../../index";
+import { DatagenReturnData, Noise, type SmartValue } from "../../index";
 
 export class WorldVignette {
     private ystart: number;

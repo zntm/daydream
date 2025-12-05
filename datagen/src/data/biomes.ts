@@ -1,4 +1,4 @@
-import { SmartValue, Sound } from "../../index";
+import { type SmartValue, Sound } from "../../index";
 import { join } from "path";
 import { readdirSync } from "fs";
 

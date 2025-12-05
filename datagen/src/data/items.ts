@@ -1,5 +1,5 @@
 import { DatagenReturnData } from "../lib/DatagenReturnData";
-import { SmartValue } from "../lib/SmartValue";
+import { type SmartValue } from "../lib/SmartValue";
 import { Sound } from "../lib/Sound";
 import { Item } from "./items/lib/Item";
 import { ItemBooleanComponent } from "./items/lib/ItemComponent";

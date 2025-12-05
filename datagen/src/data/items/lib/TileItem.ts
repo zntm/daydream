@@ -95,10 +95,10 @@ export class ItemAudioProperties {
 }
 
 export class ItemTilePlacement {
-    private condition?: string | ItemTilePlacementCondition[];
+    private condition?: string | ItemTilePlacementCondition | ItemTilePlacementCondition[];
     private index?: string | number | SmartValue;
 
-    setCondition(condition: string | ItemTilePlacementCondition[]) {
+    setCondition(condition: string | ItemTilePlacementCondition | ItemTilePlacementCondition[]) {
         this.condition = condition;
 
         return this;

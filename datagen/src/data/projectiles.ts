@@ -1,4 +1,4 @@
-import { DatagenReturnData, SmartValue } from "../../index";
+import { DatagenReturnData, type SmartValue } from "../../index";
 import { Attribute } from "../attribute";
 import type { ItemSprite } from "./items";
 import {
