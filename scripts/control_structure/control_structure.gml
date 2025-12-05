@@ -80,25 +80,82 @@ function control_structure(_x, _y)
                     if (_max != undefined) && (j >= _max) continue;
                 }
                 
-                var _placement_type = _structure_data[$ _structure.id].get_placement_type();
+                var _id = _structure.id;
                 
-                if ((_queue & 0b100) && !(_queue & 0b001))
+                if (is_array(_id))
                 {
-                    if (_placement_type == STRUCTURE_PLACEMENT_TYPE.FLOOR)
+                    var _id_length = array_length(_id);
+                    
+                    var _generate = true;
+                    
+                    for (var m = 0; m < _id_length; ++m)
                     {
-                        structure_create(i * TILE_SIZE, j * TILE_SIZE, _structure.id, _world_seed);
+                        var _id2 = _id[m];
+                        
+                        var _placement_type = _structure_data[$ _id2].get_placement_type();
+                        
+                        if ((_queue & 0b100) && !(_queue & 0b001))
+                        {
+                            if (_placement_type == STRUCTURE_PLACEMENT_TYPE.FLOOR) continue;
+                        }
+                        else if (_queue & 0b001)
+                        {
+                            if (_placement_type == STRUCTURE_PLACEMENT_TYPE.CEILING) continue;
+                        }
+                        else if (_placement_type == STRUCTURE_PLACEMENT_TYPE.INSIDE) continue;
+                        
+                        _generate = false;
+                        
+                        break;
+                    }
+                    
+                    if (_generate)
+                    {
+                        show_debug_message(_id);
+                        
+                        for (var m = 0; m < _id_length; ++m)
+                        {
+                            var _id2 = _id[m];
+                            
+                            var _placement_type = _structure_data[$ _id2].get_placement_type();
+                            
+                            if (_placement_type == STRUCTURE_PLACEMENT_TYPE.FLOOR)
+                            {
+                                structure_create(i * TILE_SIZE, j * TILE_SIZE, _id2, _world_seed);
+                            }
+                            else if (_placement_type == STRUCTURE_PLACEMENT_TYPE.CEILING)
+                            {
+                                structure_create(i * TILE_SIZE, j * TILE_SIZE, _id2, _world_seed);
+                            }
+                            else if (_placement_type == STRUCTURE_PLACEMENT_TYPE.INSIDE)
+                            {
+                            	structure_create(i * TILE_SIZE, j * TILE_SIZE, _id2, _world_seed);
+                            }
+                        }
                     }
                 }
-                else if (_queue & 0b001)
+                else
                 {
-                    if (_placement_type == STRUCTURE_PLACEMENT_TYPE.CEILING)
+                    var _placement_type = _structure_data[$ _id].get_placement_type();
+                    
+                    if ((_queue & 0b100) && !(_queue & 0b001))
                     {
-                        structure_create(i * TILE_SIZE, j * TILE_SIZE, _structure.id, _world_seed);
+                        if (_placement_type == STRUCTURE_PLACEMENT_TYPE.FLOOR)
+                        {
+                            structure_create(i * TILE_SIZE, j * TILE_SIZE, _id, _world_seed);
+                        }
                     }
-                }
-                else if (_placement_type == STRUCTURE_PLACEMENT_TYPE.INSIDE)
-                {
-                	structure_create(i * TILE_SIZE, j * TILE_SIZE, _structure.id, _world_seed);
+                    else if (_queue & 0b001)
+                    {
+                        if (_placement_type == STRUCTURE_PLACEMENT_TYPE.CEILING)
+                        {
+                            structure_create(i * TILE_SIZE, j * TILE_SIZE, _id, _world_seed);
+                        }
+                    }
+                    else if (_placement_type == STRUCTURE_PLACEMENT_TYPE.INSIDE)
+                    {
+                    	structure_create(i * TILE_SIZE, j * TILE_SIZE, _id, _world_seed);
+                    }
                 }
             }
         }

@@ -133,13 +133,13 @@ export class BiomeCreature {
 }
 
 export class BiomeFeature {
-    private id: string;
+    private id: string | string[];
     private chance: number;
     private generate_on?: string | string[];
     private range_min?: number;
     private range_max?: number;
 
-    constructor(id: string, chance: number) {
+    constructor(id: string | string[], chance: number) {
         this.id = id;
         this.chance = chance;
     }

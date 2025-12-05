@@ -155,47 +155,47 @@ export default [
             ])
             .setFoliage([
                 new BiomeFoliage("phantasia:short_grass", 0.26).setGenerateOn(
-                    "phantasia/tile/placement/plant_on",
+                    "#phantasia:tile/placement/plant_on",
                 ),
                 new BiomeFoliage("phantasia:tall_grass", 0.04).setGenerateOn(
-                    "phantasia/tile/placement/plant_on",
+                    "#phantasia:tile/placement/plant_on",
                 ),
                 new BiomeFoliage("phantasia:rock", 0.04).setGenerateOn(
-                    "phantasia/tile/placement/plant_on",
+                    "#phantasia:tile/placement/plant_on",
                 ),
                 new BiomeFoliage("phantasia:twig", 0.05).setGenerateOn(
-                    "phantasia/tile/placement/plant_on",
+                    "#phantasia:tile/placement/plant_on",
                 ),
                 new BiomeFoliage("phantasia:globeflower", 0.05).setGenerateOn(
-                    "phantasia/tile/placement/plant_on",
+                    "#phantasia:tile/placement/plant_on",
                 ),
                 new BiomeFoliage("phantasia:rose", 0.07).setGenerateOn(
-                    "phantasia/tile/placement/plant_on",
+                    "#phantasia:tile/placement/plant_on",
                 ),
                 new BiomeFoliage("phantasia:dendrobium", 0.04).setGenerateOn(
-                    "phantasia/tile/placement/plant_on",
+                    "#phantasia:tile/placement/plant_on",
                 ),
                 new BiomeFoliage("phantasia:dandelion", 0.03).setGenerateOn(
-                    "phantasia/tile/placement/plant_on",
+                    "#phantasia:tile/placement/plant_on",
                 ),
                 new BiomeFoliage(
                     "phantasia:seeding_dandelion",
                     0.01,
-                ).setGenerateOn("phantasia/tile/placement/plant_on"),
+                ).setGenerateOn("#phantasia:tile/placement/plant_on"),
             ])
             .setStructures([
                 new BiomeStructure("phantasia:clump/moss", 0.008).setGenerateOn(
-                    "phantasia/tile/placement/plant_on",
+                    "#phantasia:tile/placement/plant_on",
                 ),
                 new BiomeStructure(
                     "phantasia:tall_foliage/sunflower",
                     0.04,
-                ).setGenerateOn("phantasia/tile/placement/plant_on"),
+                ).setGenerateOn("#phantasia:tile/placement/plant_on"),
                 new BiomeStructure("phantasia:tree/oak", 0.1).setGenerateOn(
-                    "phantasia/tile/placement/plant_on",
+                    "#phantasia:tile/placement/plant_on",
                 ),
                 new BiomeStructure("phantasia:tree/birch", 0.07).setGenerateOn(
-                    "phantasia/tile/placement/plant_on",
+                    "#phantasia:tile/placement/plant_on",
                 ),
             ]),
     ),
@@ -245,45 +245,51 @@ export default [
                 new BiomeFoliage(
                     "phantasia:short_grass_swamp",
                     0.26,
-                ).setGenerateOn("phantasia/tile/placement/plant_on"),
+                ).setGenerateOn("#phantasia:tile/placement/plant_on"),
                 new BiomeFoliage(
                     "phantasia:tall_grass_swamp",
                     0.04,
-                ).setGenerateOn("phantasia/tile/placement/plant_on"),
+                ).setGenerateOn("#phantasia:tile/placement/plant_on"),
                 new BiomeFoliage("phantasia:globeflower", 0.05).setGenerateOn(
-                    "phantasia/tile/placement/plant_on",
+                    "#phantasia:tile/placement/plant_on",
                 ),
                 new BiomeFoliage("phantasia:rock", 0.04).setGenerateOn(
-                    "phantasia/tile/placement/plant_on",
+                    "#phantasia:tile/placement/plant_on",
                 ),
                 new BiomeFoliage("phantasia:twig", 0.05).setGenerateOn(
-                    "phantasia/tile/placement/plant_on",
+                    "#phantasia:tile/placement/plant_on",
                 ),
                 new BiomeFoliage("phantasia:rose", 0.07).setGenerateOn(
-                    "phantasia/tile/placement/plant_on",
+                    "#phantasia:tile/placement/plant_on",
                 ),
                 new BiomeFoliage("phantasia:lilybell", 0.03).setGenerateOn(
-                    "phantasia/tile/placement/plant_on",
+                    "#phantasia:tile/placement/plant_on",
                 ),
                 new BiomeFoliage("phantasia:orchids", 0.03).setGenerateOn(
-                    "phantasia/tile/placement/plant_on",
+                    "#phantasia:tile/placement/plant_on",
                 ),
                 new BiomeFoliage("phantasia:dandelion", 0.04).setGenerateOn(
-                    "phantasia/tile/placement/plant_on",
+                    "#phantasia:tile/placement/plant_on",
                 ),
                 new BiomeFoliage(
                     "phantasia:seeding_dandelion",
                     0.01,
-                ).setGenerateOn("phantasia/tile/placement/plant_on"),
+                ).setGenerateOn("#phantasia:tile/placement/plant_on"),
             ])
             .setStructures([
                 new BiomeStructure("phantasia:clump/moss", 0.02).setGenerateOn(
-                    "phantasia/tile/placement/plant_on",
+                    "#phantasia:tile/placement/plant_on",
                 ),
                 new BiomeStructure(
                     "phantasia:tall_foliage/cattail",
                     0.05,
-                ).setGenerateOn("phantasia/tile/placement/plant_on"),
+                ).setGenerateOn("#phantasia:tile/placement/plant_on"),
+                new BiomeStructure([
+                    "phantasia:tree/mangrove",
+                    "phantasia:tree/mangrove_roots",
+                ], 0.1).setGenerateOn(
+                    "#phantasia:tile/placement/plant_on",
+                )
             ]),
     ),
     // Taiga
@@ -352,34 +358,34 @@ export default [
                 new BiomeFoliage(
                     "phantasia:short_grass_taiga",
                     0.26,
-                ).setGenerateOn("phantasia/tile/placement/plant_on"),
+                ).setGenerateOn("#phantasia:tile/placement/plant_on"),
                 new BiomeFoliage(
                     "phantasia:tall_grass_taiga",
                     0.04,
-                ).setGenerateOn("phantasia/tile/placement/plant_on"),
+                ).setGenerateOn("#phantasia:tile/placement/plant_on"),
                 new BiomeFoliage("phantasia:rock", 0.04).setGenerateOn(
-                    "phantasia/tile/placement/plant_on",
+                    "#phantasia:tile/placement/plant_on",
                 ),
                 new BiomeFoliage("phantasia:twig", 0.05).setGenerateOn(
-                    "phantasia/tile/placement/plant_on",
+                    "#phantasia:tile/placement/plant_on",
                 ),
                 new BiomeFoliage("phantasia:bluebells", 0.05).setGenerateOn(
-                    "phantasia/tile/placement/plant_on",
+                    "#phantasia:tile/placement/plant_on",
                 ),
                 new BiomeFoliage("phantasia:daisy", 0.07).setGenerateOn(
-                    "phantasia/tile/placement/plant_on",
+                    "#phantasia:tile/placement/plant_on",
                 ),
                 new BiomeFoliage(
                     "phantasia:seeding_dandelion",
                     0.02,
-                ).setGenerateOn("phantasia/tile/placement/plant_on"),
+                ).setGenerateOn("#phantasia:tile/placement/plant_on"),
             ])
             .setStructures([
                 new BiomeStructure("phantasia:clump/moss", 0.006).setGenerateOn(
-                    "phantasia/tile/placement/plant_on",
+                    "#phantasia:tile/placement/plant_on",
                 ),
                 new BiomeStructure("phantasia:tree/pine", 0.14).setGenerateOn(
-                    "phantasia/tile/placement/plant_on",
+                    "#phantasia:tile/placement/plant_on",
                 ),
             ]),
     ),

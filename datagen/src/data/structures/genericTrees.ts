@@ -1,7 +1,4 @@
-import {
-    DatagenReturnData,
-    SmartValueIntRandom,
-} from "../../../index";
+import { DatagenReturnData, SmartValueIntRandom } from "../../../index";
 
 import {
     Structure,
@@ -11,6 +8,10 @@ import {
     StructurePlacementClearanceCondition,
     StructurePlacementType,
 } from "../structures";
+
+const { StructureParameter: StructureOreParameter } = import.meta.require(
+    "./ores",
+);
 
 class StructureParameter {
     private tile_wood: StructureParameterTile;
@@ -54,14 +55,19 @@ export default [
         new Structure(
             7,
             new SmartValueIntRandom(9, 12),
-            new StructurePlacement(StructurePlacementType.Floor, -3, "-height", [
-                new StructurePlacementClearanceCondition(
-                    -3,
-                    "-height",
-                    "width",
-                    4,
-                ),
-            ]),
+            new StructurePlacement(
+                StructurePlacementType.Floor,
+                -3,
+                "-height",
+                [
+                    new StructurePlacementClearanceCondition(
+                        -3,
+                        "-height",
+                        "width",
+                        4,
+                    ),
+                ],
+            ),
             new StructureFunction(
                 "phantasia:tree/generic",
                 new StructureParameter(
@@ -80,20 +86,80 @@ export default [
             ),
         ),
     ),
+    // Mangrove
+    new DatagenReturnData(
+        "generated/data/structures/tree/mangrove.json",
+        new Structure(
+            7,
+            new SmartValueIntRandom(7, 10),
+            new StructurePlacement(
+                StructurePlacementType.Floor,
+                -3,
+                "-height",
+                [
+                    new StructurePlacementClearanceCondition(
+                        -3,
+                        "-height",
+                        "width",
+                        6,
+                    ),
+                ],
+            ),
+            new StructureFunction(
+                "phantasia:tree/generic",
+                new StructureParameter(
+                    new StructureParameterTile("phantasia:mangrove"),
+                    new StructureParameterTile("phantasia:mangrove_leaves"),
+                    new SmartValueIntRandom(1, 3),
+                    4,
+                    5,
+                    [
+                        { width: 3, index_offset: 0 },
+                        { width: 3, yscale: 1, index_offset: 5 },
+                        { width: 5, index_offset: 0 },
+                        { width: 5, yscale: 1, index_offset: 5 },
+                    ],
+                ),
+            ),
+        ),
+    ),
+    // Mangrove Roots
+    new DatagenReturnData(
+        "generated/data/structures/tree/mangrove_roots.json",
+        new Structure(
+            5,
+            5,
+            new StructurePlacement(StructurePlacementType.Floor, -2, -1),
+            new StructureFunction(
+                "phantasia:ore",
+                new StructureOreParameter(
+                    new StructureParameterTile("phantasia:mangrove_roots"),
+                    0.4,
+                    0.8,
+                    0.8,
+                ),
+            ),
+        ),
+    ),
     // Oak
     new DatagenReturnData(
         "generated/data/structures/tree/oak.json",
         new Structure(
             5,
             new SmartValueIntRandom(6, 9),
-            new StructurePlacement(StructurePlacementType.Floor, -2, "-height", [
-                new StructurePlacementClearanceCondition(
-                    -2,
-                    "-height",
-                    "width",
-                    4,
-                ),
-            ]),
+            new StructurePlacement(
+                StructurePlacementType.Floor,
+                -2,
+                "-height",
+                [
+                    new StructurePlacementClearanceCondition(
+                        -2,
+                        "-height",
+                        "width",
+                        4,
+                    ),
+                ],
+            ),
             new StructureFunction(
                 "phantasia:tree/generic",
                 new StructureParameter(

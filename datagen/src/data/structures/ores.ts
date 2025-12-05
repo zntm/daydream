@@ -1,7 +1,4 @@
-import {
-    DatagenReturnData,
-    SmartValueIntRandom,
-} from "../../../index";
+import { DatagenReturnData, SmartValueIntRandom } from "../../../index";
 
 import {
     Structure,
@@ -11,7 +8,7 @@ import {
     StructurePlacementType,
 } from "../structures";
 
-class StructureParameter {
+export class StructureParameter {
     private tile: StructureParameterTile;
     private threshold: number | string | SmartValueIntRandom;
     private clumpiness: number | string | SmartValueIntRandom;

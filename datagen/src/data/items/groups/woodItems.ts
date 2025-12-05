@@ -27,7 +27,7 @@ export default (
         new TileItem(
             ItemType.Untouchable,
             `phantasia:item/${id}`,
-            "#phantasia:item/generic/inventory_tile",
+            "#phantasia:item/generic/inventory_default",
         )
             .setTileDrops([new ItemTileDrop(`phantasia:${id}`)])
             .setTileHarvest(

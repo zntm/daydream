@@ -85,7 +85,7 @@ export default new DatagenReturnData("generated/data/json/crafting.json", [
         "#phantasia:tile/generic/workbench",
     ),
     // Wood
-    ...["birch", "oak", "pine"]
+    ...["birch", "oak", "mangrove", "pine"]
         .map((id) =>
             woodRecipes(
                 "phantasia",
