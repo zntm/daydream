@@ -9,6 +9,10 @@ enum CREATURE_MOVEMENT_TYPE {
     SWIM
 }
 
+enum CREATURE_PROPERTIES {
+    IS_HUMANOID = 1 << 0,
+}
+
 function CreatureData(_namespace, _id, _hp, _hostility_type, _movement_type) : ParentData(_namespace, _id) constructor
 {
     ___hp = _hp;
@@ -281,5 +285,48 @@ function CreatureData(_namespace, _id, _hp, _hostility_type, _movement_type) : P
     static get_sfx_idle = function()
     {
         return self[$ "___sfx_idle"];
+    }
+    
+    static set_properties = function(_properties)
+    {
+        static __properties = {
+            "phantasia:is_humanoid": CREATURE_PROPERTIES.IS_HUMANOID,
+        }
+        
+        ___properties = 0;
+        
+        if (_properties != undefined)
+        {
+            var _length = array_length(_properties);
+            
+            for (var i = 0; i < _length; ++i)
+            {
+                ___properties |= __properties[$ _properties[i]];
+            }
+        }
+        
+        return self;
+    }
+    
+    static has_property = function(_property)
+    {
+        return !!((self[$ "___properties"] ?? 0) & _property);
+    }
+    
+    static is_humanoid = function()
+    {
+        return has_property(CREATURE_PROPERTIES.IS_HUMANOID);
+    }
+    
+    static set_contact_damage = function(_damage)
+    {
+        ___contact_damage = _damage ?? 1;
+        
+        return self;
+    }
+    
+    static get_contact_damage = function()
+    {
+        return self[$ "___contact_damage"] ?? 1;
     }
 }

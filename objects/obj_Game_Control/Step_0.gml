@@ -185,7 +185,8 @@ with (obj_Player)
 
 if (keyboard_check_pressed(ord("P")))
 {
-    spawn_creature(obj_Player.x, obj_Player.y, "phantasia:zombie");
+    spawn_creature(obj_Player.x - 60, obj_Player.y - 30, "phantasia:fox");
+    spawn_creature(obj_Player.x + 60, obj_Player.y - 30, "phantasia:rabbit");
 }
 
 control_game_tick(_delta_time);

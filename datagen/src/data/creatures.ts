@@ -14,6 +14,10 @@ export enum CreatureMovementType {
     Air = "air",
 }
 
+export enum CreatureProperties {
+    IsHumanoid = "phantasia:is_humanoid",
+}
+
 export class Creature {
     private hp: number;
     private hostility_type: CreatureHostilityType;
@@ -22,6 +26,8 @@ export class Creature {
     private attribute: Attribute;
     private drops?: ItemDrop[];
     private predators?: string[];
+    private properties?: CreatureProperties[];
+    private contact_damage?: number;
 
     constructor(
         hp: number,
@@ -45,6 +51,18 @@ export class Creature {
 
     setPredators(predators: string[]) {
         this.predators = predators;
+
+        return this;
+    }
+
+    setProperties(properties: CreatureProperties[]) {
+        this.properties = properties;
+
+        return this;
+    }
+
+    setContactDamage(damage: number) {
+        this.contact_damage = damage;
 
         return this;
     }

@@ -160,6 +160,6 @@ export default [
                 .setGravity(0.3)
                 .setJump(2.2, 5.9, 10)
                 .setMovementSpeed(0.5),
-        ),
+        ).setContactDamage(3),
     ),
 ];

@@ -4,6 +4,7 @@ import {
     Creature,
     CreatureHostilityType,
     CreatureMovementType,
+    CreatureProperties,
     CreatureSprite,
     CreatureSpriteData,
 } from "../creatures";
@@ -44,12 +45,16 @@ export default [
                 .setGravity(0.5)
                 .setJump(2.2, 5.9, 10)
                 .setMovementSpeed(0.4),
-        ).setDrops([
-            new ItemDrop(
-                "phantasia:rotten_flesh",
-                new SmartValueIntRandom(1, 3),
-                0.8,
-            ),
-        ]),
+        )
+            .setDrops([
+                new ItemDrop(
+                    "phantasia:rotten_flesh",
+                    new SmartValueIntRandom(1, 3),
+                    0.8,
+                ),
+            ])
+            .setProperties([CreatureProperties.IsHumanoid])
+            .setContactDamage(4),
     ),
 ];
+

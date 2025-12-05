@@ -15,6 +15,8 @@ enum CREATURE_AI_STATE {
 #macro AI_IDLE_DURATION 1.5               // How long to stay idle
 #macro AI_ATTACK_COOLDOWN 1.0             // Cooldown between attacks
 #macro AI_LOW_HEALTH_THRESHOLD 0.3        // Health % to trigger retreat behavior
+#macro AI_ATTACK_RANGE (TILE_SIZE * 1.5)  // Melee attack range
+#macro AI_HUNT_RANGE (TILE_SIZE * 8)      // Range to detect prey
 
 function control_creature(_dt)
 {
@@ -30,6 +32,10 @@ function control_creature(_dt)
         ai_cached_on_ground = false;
         ai_cached_collision_width = attribute.get_collision_box_width();
         ai_cached_collision_height = attribute.get_collision_box_height();
+
+        // Predator hunting initialization
+        attack_cooldown = 0;
+        ai_prey_target = noone;
     }
     
     // Update timers
@@ -178,7 +184,84 @@ function control_creature(_dt)
             }
         }
     }
-    
+        
+    // Prey hunting for predator creatures (e.g., fox hunting rabbit)
+    if (ai_state != CREATURE_AI_STATE.FLEE)
+    {
+        var _my_id = _id;
+        var _contact_damage = _data.get_contact_damage();
+        
+        // Decrement attack cooldown
+        if (attack_cooldown > 0) attack_cooldown -= _dt_normalized;
+        
+        // Find nearby creatures that have us as their predator
+        var _nearest_prey = noone;
+        var _nearest_prey_dist = AI_HUNT_RANGE;
+        
+        with (obj_Creature)
+        {
+            if (id == other.id) continue;
+            
+            var _prey_data = global.creature_data[$ _id];
+            var _predators = _prey_data.get_predators();
+            
+            if (array_length(_predators) > 0)
+            {
+                for (var _p = 0; _p < array_length(_predators); ++_p)
+                {
+                    if (_predators[_p] == _my_id)
+                    {
+                        var _dist = point_distance(other.x, other.y, x, y);
+                        if (_dist < _nearest_prey_dist)
+                        {
+                            _nearest_prey = id;
+                            _nearest_prey_dist = _dist;
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+        
+        if (instance_exists(_nearest_prey))
+        {
+            ai_prey_target = _nearest_prey;
+            
+            if (_nearest_prey_dist <= AI_ATTACK_RANGE)
+            {
+                if (attack_cooldown <= 0 && _nearest_prey.timer_immunity <= 0)
+                {
+                    control_entity_damage(_nearest_prey, id, _contact_damage);
+                    
+                    if (instance_exists(_nearest_prey))
+                    {
+                        // Knockback - push prey away
+                        var _kb_dir = sign(_nearest_prey.x - x);
+                        if (_kb_dir == 0) _kb_dir = choose(-1, 1);
+                        _nearest_prey.xvelocity = _kb_dir * 3;
+                        _nearest_prey.yvelocity = -2;
+                        _nearest_prey.timer_immunity = 0.5;
+                        attack_cooldown = AI_ATTACK_COOLDOWN;
+                        _nearest_prey.inst_predator = id;
+                    }
+                }
+            }
+            else if (ai_state != CREATURE_AI_STATE.CHASE)
+            {
+                ai_state = CREATURE_AI_STATE.CHASE;
+                ai_target_direction = sign(_nearest_prey.x - x);
+            }
+            else
+            {
+                ai_target_direction = sign(_nearest_prey.x - x);
+            }
+        }
+        else
+        {
+            ai_prey_target = noone;
+        }
+    }
+
     // Apply movement based on current state
     input_left = false;
     input_right = false;

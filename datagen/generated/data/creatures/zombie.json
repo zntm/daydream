@@ -11,6 +11,7 @@
         "jump_time": 10,
         "movement_speed": 0.4
     },
+    "contact_damage": 4,
     "drops": [
         {
             "id": "phantasia:rotten_flesh",
@@ -27,6 +28,9 @@
     "hostility_type": "hostile",
     "hp": 36,
     "movement_type": "ground",
+    "properties": [
+        "phantasia:is_humanoid"
+    ],
     "sprite": {
         "idle": {
             "id": "phantasia:creature/zombie/idle"

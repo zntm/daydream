@@ -13,7 +13,7 @@ function control_player(_dt)
             if (_data.get_hostility_type() == CREATURE_HOSTILITY_TYPE.HOSTILE)
             {
                 // Use unified damage handler
-                var _died = control_entity_damage(id, _inst, 1);
+                var _died = control_entity_damage(id, _inst, _data.get_contact_damage());
                 
                 if (_died)
                 {

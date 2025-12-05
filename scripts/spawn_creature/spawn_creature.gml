@@ -28,6 +28,11 @@ function spawn_creature(_x, _y, _id, _variant)
         
         inst_predator = noone;
         timer_panic = 0;
+        
+        // Humanoid-specific initialization
+        timer_attack = 0;
+        attack_cooldown = 0;
+        ai_prey_target = noone;
     }
     
     return _inst;
