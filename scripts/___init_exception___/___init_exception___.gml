@@ -112,8 +112,6 @@ exception_unhandled_handler(function(_exception)
         _os_type = "Unknown";
     }
     
-    var _os_info = os_get_info();
-    
     var _message =
         $"---[ Crash Log ]---\n" +
         $"{current_month}/{current_day}/{current_year} @ {current_hour}:{current_minute}:{current_second}\n" +
