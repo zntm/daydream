@@ -1,4 +1,4 @@
-function control_game_tick(_delta_time)
+function control_gametick(_delta_time)
 {
     var _item_data = global.item_data;
     var _item_function = global.item_function;

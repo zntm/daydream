@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"control_game_tick",
+  "%Name":"control_gametick",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"control_game_tick",
+  "name":"control_gametick",
   "parent":{
     "name":"Control",
     "path":"folders/Scripts/Control.yy",

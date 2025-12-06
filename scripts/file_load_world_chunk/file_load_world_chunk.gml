@@ -18,23 +18,34 @@ function file_load_world_chunk(_world_save_data, _inst)
     
     var _buffer = buffer_load_decompressed(_directory);
     
+    // Validate File Size (Must accommodate at least the 512 byte header)
+    if (buffer_get_size(_buffer) < 512)
+    {
+        buffer_delete(_buffer);
+        return false; 
+    }
+    
     var _chunk_relative_x = ((_chunk_x % CHUNK_REGION_SIZE) + CHUNK_REGION_SIZE) % CHUNK_REGION_SIZE;
     var _chunk_relative_y = ((_chunk_y % CHUNK_REGION_SIZE) + CHUNK_REGION_SIZE) % CHUNK_REGION_SIZE;
+    var _chunk_index = _chunk_relative_y * CHUNK_REGION_SIZE + _chunk_relative_x;
     
-    var _bit = buffer_peek(_buffer, _chunk_relative_x * 8, buffer_u64);
+    // READ HEADER
+    var _offset = buffer_peek(_buffer, _chunk_index * 8, buffer_u32);
+    var _length = buffer_peek(_buffer, _chunk_index * 8 + 4, buffer_u32);
     
-    if !(_bit & (1 << _chunk_relative_y))
+    // Validate Chunk Entry
+    if (_length == 0 || _offset < 512 || (_offset + _length > buffer_get_size(_buffer)))
     {
+        buffer_delete(_buffer);
         return false;
     }
     
+    // SEEK AND READ
+    buffer_seek(_buffer, buffer_seek_start, _offset);
+    
+    // Standard Chunk Read
     var _version = buffer_read(_buffer, buffer_u32);
-    
     var _datetime = unix_to_datetime(buffer_read(_buffer, buffer_f64));
-    
-    var _seek = (CHUNK_REGION_SIZE * 8) + (((_chunk_relative_y * CHUNK_REGION_SIZE) + _chunk_relative_x) * (1 << 16));
-    
-    buffer_seek(_buffer, buffer_seek_start, _seek);
     
     if (buffer_read(_buffer, buffer_bool))
     {
@@ -72,7 +83,7 @@ function file_load_world_chunk(_world_save_data, _inst)
     
     for (var i = 0; i < _length_item; ++i)
     {
-        var _next = buffer_read(_buffer, buffer_u32);
+        var _next = buffer_read(_buffer, buffer_u32); // Skip next ptr
         
         var _timer_pickup = buffer_read(_buffer, buffer_f64);
         var _timer_life = buffer_read(_buffer, buffer_f64);
@@ -88,7 +99,7 @@ function file_load_world_chunk(_world_save_data, _inst)
     
     for (var i = 0; i < _length_creature; ++i)
     {
-        var _next = buffer_read(_buffer, buffer_u32);
+        var _next = buffer_read(_buffer, buffer_u32); // Skip next ptr
         
         var _id = buffer_read(_buffer, buffer_string);
         var _variant = buffer_read(_buffer, buffer_string);

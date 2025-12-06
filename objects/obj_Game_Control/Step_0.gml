@@ -183,7 +183,7 @@ with (obj_Player)
     }
 }
 
-control_game_tick(_delta_time);
+control_gametick(_delta_time);
 
 with (obj_Floating_Text)
 {
