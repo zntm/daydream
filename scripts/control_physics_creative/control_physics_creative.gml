@@ -1,9 +1,16 @@
 function control_physics_creative(_dt, _id)
 {
+    var _fly_speed = 8.65;
+    
+    if (IS_DEVELOPER_MODE && variable_struct_exists(global, "debug_settings") && variable_struct_exists(global.dbg_settings, "fly_speed"))
+    {
+        _fly_speed = global.dbg_settings.fly_speed;
+    }
+
     with (_id)
     {
-        xvelocity = lerp_delta(xvelocity, (input_right      - input_left)     * 8.65, 0.25, _dt);
-        yvelocity = lerp_delta(yvelocity, (input_climb_down - input_climb_up) * 8.65, 0.25, _dt);
+        xvelocity = lerp_delta(xvelocity, (input_right      - input_left)     * _fly_speed, 0.25, _dt);
+        yvelocity = lerp_delta(yvelocity, (input_climb_down - input_climb_up) * _fly_speed, 0.25, _dt);
         
         var _xsign = sign(xvelocity);
         var _ysign = sign(yvelocity);

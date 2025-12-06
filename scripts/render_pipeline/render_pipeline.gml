@@ -28,7 +28,18 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
     var _animation_index = round(global.world_save_data.time * 8);
     
     var _sprite_asset = global.sprite_asset;
+    /*
+    var _debug_chunk = true;
+    var _debug_instances = true;
+    var _debug_lighting = true;
     
+    if (IS_DEVELOPER_MODE && variable_global_exists("debug_settings"))
+    {
+        if (variable_struct_exists(global.dbg_settings, "chunk")) _debug_chunk = global.dbg_settings.chunk;
+        if (variable_struct_exists(global.dbg_settings, "instances")) _debug_instances = global.dbg_settings.instances;
+        if (variable_struct_exists(global.dbg_settings, "lighting")) _debug_lighting = global.dbg_settings.lighting;
+    }
+    */
     for (var _z = 0; _z < CHUNK_DEPTH; ++_z)
     {
         var _bitmask = 1 << _z;
@@ -130,7 +141,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 {
                     var _index_arm = ((timer_attack > 0) ? round(lerp(13, 8, timer_attack / 0.3)) : 0);
                     
-                	render_attire(global.player_save_data.attire, 0, x, y, _xscale, _yscale, false, _index_arm, inst_item);
+                    render_attire(global.player_save_data.attire, 0, x, y, _xscale, _yscale, false, _index_arm, inst_item);
                 }
             }
             
@@ -257,6 +268,41 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
             for (var j = 0; j < _data_length; ++j)
             {
                 _render_state[$ _data[j].id](_x, _y, _z);
+            }
+        }
+    }
+    
+    if (IS_DEVELOPER_MODE)
+    {
+        var _dbg_settings = global.dbg_settings;
+        
+        if (_dbg_settings[$ "display_chunk_boundary"])
+        {
+            with (obj_Chunk)
+            {
+                var _x1 = x - (TILE_SIZE / 2);
+                var _y1 = y - (TILE_SIZE / 2);
+                var _x2 = _x1 - 1 + CHUNK_SIZE_DIMENSION;
+                var _y2 = _y1 - 1 + CHUNK_SIZE_DIMENSION;
+                
+                draw_rectangle_colour(_x1, _y1, _x2, _y2, c_red, c_yellow, c_purple, c_blue, true);
+            }
+        }
+        
+        if (_dbg_settings[$ "display_chunk_information"])
+        {
+            with (obj_Chunk)
+            {
+                draw_text_ext_transformed(
+                    x,
+                    y,
+                    $"X/Y: ({x}, {y}) ({round(x / TILE_SIZE)}, {round(y / TILE_SIZE)}), ({round(x / CHUNK_SIZE_DIMENSION)}, {round(y / CHUNK_SIZE_DIMENSION)})",
+                    0,
+                    0xffff,
+                    0.25,
+                    0.25,
+                    0
+                );
             }
         }
     }

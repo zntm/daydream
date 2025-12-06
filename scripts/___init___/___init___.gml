@@ -4,6 +4,8 @@ enum VERISON_TYPE {
     RELEASE
 }
 
+#macro IS_DEVELOPER_MODE true
+
 #macro PROGRAM_VERSION_MAJOR current_year
 #macro PROGRAM_VERSION_MINOR 0
 #macro PROGRAM_VERSION_PATCH 2

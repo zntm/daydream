@@ -5,6 +5,8 @@
 
 function control_creature_spawn(_dt)
 {
+    if (IS_DEVELOPER_MODE && variable_struct_exists(global, "debug_settings") && variable_struct_exists(global.dbg_settings, "creature") && !global.dbg_settings.creature) return;
+
     // Initialize spawn density grid if not exists
     if (!variable_global_exists("spawn_density_grid"))
     {

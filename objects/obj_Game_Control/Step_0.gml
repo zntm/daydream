@@ -148,6 +148,28 @@ if (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.EXIT)
 if (is_opened & IS_OPENED_BOOLEAN.PAUSE) exit;
 
 var _delta_time = global.delta_time;
+
+if (IS_DEVELOPER_MODE)
+{
+    var _debug_settings = global.dbg_settings;
+    
+    if (!_debug_settings.delta_time)
+    {
+        _delta_time = 1 / GAME_TICK;
+    }
+    
+    _delta_time *= _debug_settings.time_speed;
+    
+    if (variable_struct_exists(_debug_settings, "camera_size"))
+    {
+        var _size = _debug_settings.camera_size;
+        global.camera_width  = global.camera_width_base  * _size;
+        global.camera_height = global.camera_height_base * _size;
+        
+        camera_set_view_size(view_camera[0], global.camera_width, global.camera_height);
+    }
+}
+
 var _dt = GAME_TICK * _delta_time;
 
 var _player_x = obj_Player.x;
