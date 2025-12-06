@@ -6,11 +6,6 @@
     ],
     "sprite": "phantasia:item/tall_grass",
     "tile": {
-        "drops": [
-            {
-                "id": "phantasia:tall_grass"
-            }
-        ],
         "harvest": {
             "hardness": 0.38,
             "level": 0,

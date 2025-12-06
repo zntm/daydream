@@ -7,11 +7,6 @@
     ],
     "sprite": "phantasia:item/mangrove_leaves",
     "tile": {
-        "drops": [
-            {
-                "id": "phantasia:mangrove_leaves"
-            }
-        ],
         "harvest": {
             "hardness": 0.44,
             "level": 1,

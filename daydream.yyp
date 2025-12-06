@@ -1367,6 +1367,7 @@
     {"id":{"name":"render_chunk","path":"scripts/render_chunk/render_chunk.yy",},},
     {"id":{"name":"render_gui_vignette","path":"scripts/render_gui_vignette/render_gui_vignette.yy",},},
     {"id":{"name":"render_harvest","path":"scripts/render_harvest/render_harvest.yy",},},
+    {"id":{"name":"render_hud","path":"scripts/render_hud/render_hud.yy",},},
     {"id":{"name":"render_lighting","path":"scripts/render_lighting/render_lighting.yy",},},
     {"id":{"name":"render_menu_anchor","path":"scripts/render_menu_anchor/render_menu_anchor.yy",},},
     {"id":{"name":"render_menu_background","path":"scripts/render_menu_background/render_menu_background.yy",},},

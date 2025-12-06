@@ -15,37 +15,38 @@ export default [
         .map((id: string) => {
             id = id !== "" ? `grass_${id}` : "grass";
 
-            return ["short", "tall"].map((type: string) =>
-                new DatagenReturnData(
-                    `generated/data/items/${type}_${id}.json`,
-                    new TileItem(
-                        ItemType.Untouchable,
-                        `phantasia:item/${type}_${id}`,
-                        "#phantasia:item/generic/inventory_default",
-                        [
-                            ItemTileProperties.CanMirror,
-                            ItemTileProperties.IsFoliage,
-                        ],
-                    )
-                        .setTileDrops([new ItemTileDrop(`phantasia:${type}_${id}`)])
-                        .setTileHarvest(
-                            new ItemTileHarvest(
-                                0.38,
-                                0,
-                                new ItemTileParticle(
-                                    "#phantasia:tile/particle_colour/plant",
-                                    "#phantasia:tile/generic/harvest_particle_frequency",
+            return ["short", "tall"].map(
+                (type: string) =>
+                    new DatagenReturnData(
+                        `generated/data/items/${type}_${id}.json`,
+                        new TileItem(
+                            ItemType.Untouchable,
+                            `phantasia:item/${type}_${id}`,
+                            "#phantasia:item/generic/inventory_default",
+                            [
+                                ItemTileProperties.CanMirror,
+                                ItemTileProperties.IsFoliage,
+                            ],
+                        )
+                            // .setTileDrops([new ItemTileDrop(`phantasia:${type}_${id}`)])
+                            .setTileHarvest(
+                                new ItemTileHarvest(
+                                    0.38,
+                                    0,
+                                    new ItemTileParticle(
+                                        "#phantasia:tile/particle_colour/plant",
+                                        "#phantasia:tile/generic/harvest_particle_frequency",
+                                    ),
                                 ),
-                            ),
-                        )
-                        .setTilePlacement(
-                            new ItemTilePlacement().setCondition(
-                                "#phantasia:tile/placement/condition_plant",
-                            ),
-                        )
-                        .setTileSFX("#phantasia:tile/sfx/foliage")
-                        .setAudioProperties(0.05, 0.0),
-                ),
+                            )
+                            .setTilePlacement(
+                                new ItemTilePlacement().setCondition(
+                                    "#phantasia:tile/placement/condition_plant",
+                                ),
+                            )
+                            .setTileSFX("#phantasia:tile/sfx/foliage")
+                            .setAudioProperties(0.05, 0.0),
+                    ),
             );
         })
         .flat(),

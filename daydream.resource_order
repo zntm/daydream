@@ -294,6 +294,7 @@
     {"name":"render_background_parallax","order":2,"path":"scripts/render_background_parallax/render_background_parallax.yy",},
     {"name":"render_chunk","order":4,"path":"scripts/render_chunk/render_chunk.yy",},
     {"name":"render_harvest","order":6,"path":"scripts/render_harvest/render_harvest.yy",},
+    {"name":"render_hud","order":11,"path":"scripts/render_hud/render_hud.yy",},
     {"name":"render_lighting","order":9,"path":"scripts/render_lighting/render_lighting.yy",},
     {"name":"render_menu_background","order":1,"path":"scripts/render_menu_background/render_menu_background.yy",},
     {"name":"render_menu_title","order":2,"path":"scripts/render_menu_title/render_menu_title.yy",},

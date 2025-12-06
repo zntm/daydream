@@ -183,12 +183,6 @@ with (obj_Player)
     }
 }
 
-if (keyboard_check_pressed(ord("P")))
-{
-    spawn_creature(obj_Player.x - 60, obj_Player.y - 30, "phantasia:fox");
-    spawn_creature(obj_Player.x + 60, obj_Player.y - 30, "phantasia:rabbit");
-}
-
 control_game_tick(_delta_time);
 
 with (obj_Floating_Text)
@@ -307,23 +301,3 @@ if !(is_opened & IS_OPENED_BOOLEAN.MENU)
 }
 
 control_chunk_activity(_camera_x, _camera_y, _camera_width, _camera_height);
-/*
-if (keyboard_check_pressed(vk_f2))
-{
-    sfx_play("phantasia:menu.screenshot");
-    
-    var _window_width  = global.window_width;
-    var _window_height = global.window_height;
-    
-    var _surface = surface_create(_window_width, _window_height);
-    
-    surface_set_target(_surface);
-    
-    draw_surface_stretched(application_surface, 0, 0, _window_width, _window_height);
-    
-    surface_reset_target();
-    
-    surface_save(_surface, $"{PROGRAM_DIRECTORY_SCREENSHOTS}/{round(datetime_to_unix())}.png");
-    
-    surface_free(_surface);
-}*/

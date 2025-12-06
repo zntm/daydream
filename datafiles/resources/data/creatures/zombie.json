@@ -7,7 +7,7 @@
         "eye_level": 8,
         "gravity": 0.5,
         "jump_falloff": 2.2,
-        "jump_height": 5.9,
+        "jump_height": 4.9,
         "jump_time": 10,
         "movement_speed": 0.4
     },

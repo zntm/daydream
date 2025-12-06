@@ -6,11 +6,6 @@
     ],
     "sprite": "phantasia:item/short_grass_swamp",
     "tile": {
-        "drops": [
-            {
-                "id": "phantasia:short_grass_swamp"
-            }
-        ],
         "harvest": {
             "hardness": 0.38,
             "level": 0,

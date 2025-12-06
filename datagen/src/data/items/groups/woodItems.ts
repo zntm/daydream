@@ -106,7 +106,7 @@ export default (
                 ItemTileProperties.IsTile,
             ],
         )
-            .setTileDrops([new ItemTileDrop(`phantasia:${id}_leaves`)])
+            // .setTileDrops([new ItemTileDrop(`phantasia:${id}_leaves`)])
             .setTileHarvest(
                 new ItemTileHarvest(
                     0.44,

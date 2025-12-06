@@ -43,7 +43,7 @@ export default [
                 .setHitBox(18, 32)
                 .setEyeLevel(8)
                 .setGravity(0.5)
-                .setJump(2.2, 5.9, 10)
+                .setJump(2.2, 4.9, 10)
                 .setMovementSpeed(0.4),
         )
             .setDrops([
@@ -57,4 +57,3 @@ export default [
             .setContactDamage(4),
     ),
 ];
-

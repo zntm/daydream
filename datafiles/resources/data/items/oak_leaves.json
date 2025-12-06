@@ -7,11 +7,6 @@
     ],
     "sprite": "phantasia:item/oak_leaves",
     "tile": {
-        "drops": [
-            {
-                "id": "phantasia:oak_leaves"
-            }
-        ],
         "harvest": {
             "hardness": 0.44,
             "level": 1,

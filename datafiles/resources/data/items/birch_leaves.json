@@ -7,11 +7,6 @@
     ],
     "sprite": "phantasia:item/birch_leaves",
     "tile": {
-        "drops": [
-            {
-                "id": "phantasia:birch_leaves"
-            }
-        ],
         "harvest": {
             "hardness": 0.44,
             "level": 1,

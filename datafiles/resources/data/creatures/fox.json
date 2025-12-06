@@ -5,7 +5,7 @@
         "hit_box_width": 22,
         "hit_box_height": 19,
         "eye_level": 3,
-        "gravity": 0.3,
+        "gravity": 0.5,
         "jump_falloff": 2.2,
         "jump_height": 4.9,
         "jump_time": 10,

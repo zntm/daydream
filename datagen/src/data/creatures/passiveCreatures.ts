@@ -114,7 +114,7 @@ export default [
                 .setCollisionBox(10, 16)
                 .setHitBox(14, 15)
                 .setEyeLevel(3)
-                .setGravity(0.3)
+                .setGravity(0.5)
                 .setJump(2.2, 4.6, 10)
                 .setMovementSpeed(0.4),
         ).setDrops([
@@ -157,7 +157,7 @@ export default [
                 .setCollisionBox(22, 18)
                 .setHitBox(22, 19)
                 .setEyeLevel(3)
-                .setGravity(0.3)
+                .setGravity(0.5)
                 .setJump(2.2, 4.9, 10)
                 .setMovementSpeed(0.5),
         ).setContactDamage(3),
