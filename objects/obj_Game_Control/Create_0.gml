@@ -325,19 +325,6 @@ if (IS_DEVELOPER_MODE)
             
             var _item = new Inventory(_item_id, _data.get_inventory_max());
             
-            /*
-            var _variant = _data[$ "___variant"];
-            
-            if (_variant != undefined)
-            {
-                var _variants = struct_get_names(_variant);
-                
-                array_push(_variants, undefined);
-                
-                _item.set_variant(array_choose(_variants));
-            }
-            */
-            
             var _item_durability = _data.get_item_durability();
             
             if (_item_durability != undefined)
@@ -349,6 +336,7 @@ if (IS_DEVELOPER_MODE)
         }
         
         obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR | SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK;
+        
         inventory_refresh_craftable(true);
     });
     

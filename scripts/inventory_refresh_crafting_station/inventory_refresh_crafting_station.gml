@@ -5,6 +5,15 @@ function inventory_refresh_crafting_station(_refresh = false)
     var _crafting_stations = global.crafting_stations;
     var _crafting_stations_length = array_length(_crafting_stations);
     
+    var _previously_available = {};
+    
+    for (var i = 0; i < _crafting_stations_length; ++i)
+    {
+        var _station = _crafting_stations[i];
+        
+        _previously_available[$ _station] = (global.crafting_stations_distance[$ _station] <= TILE_SIZE * 4);
+    }
+    
     var _player_x = obj_Player.x;
     var _player_y = obj_Player.y;
     
@@ -22,7 +31,16 @@ function inventory_refresh_crafting_station(_refresh = false)
         {
             global.crafting_stations_distance[$ tile_id] = _b;
         }
-        else
+    }
+    
+    for (var i = 0; i < _crafting_stations_length; ++i)
+    {
+        var _station = _crafting_stations[i];
+        
+        var _available_previous = _previously_available[$ _station];
+        var _available_current  = (global.crafting_stations_distance[$ _station] <= TILE_SIZE * 4);
+        
+        if (_available_previous != _available_current)
         {
             _refresh = true;
         }

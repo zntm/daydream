@@ -35,6 +35,15 @@ function gui_inventory_craftable(_gui_multiplier_x, _gui_multiplier_y)
     
     var _surface_slot = _surface_inventory.surface_slot;
     
+    if (surface_exists(_surface_slot))
+    {
+        if (surface_get_width(_surface_slot) != ceil(_surface_width / INVENTORY_SLOT_SCALE)) || (surface_get_height(_surface_slot) != ceil(_surface_height / INVENTORY_SLOT_SCALE))
+        {
+            surface_free(_surface_slot);
+            _surface_slot = -1;
+        }
+    }
+    
     if (!surface_exists(_surface_slot))
     {
         _surface_slot = surface_create(ceil(_surface_width / INVENTORY_SLOT_SCALE), ceil(_surface_height / INVENTORY_SLOT_SCALE));
@@ -70,6 +79,15 @@ function gui_inventory_craftable(_gui_multiplier_x, _gui_multiplier_y)
     surface_reset_target();
     
     var _surface_item = _surface_inventory.surface_item;
+    
+    if (surface_exists(_surface_item))
+    {
+        if (surface_get_width(_surface_item) != ceil(_surface_width * _gui_multiplier_x)) || (surface_get_height(_surface_item) != ceil(_surface_height * _gui_multiplier_y))
+        {
+            surface_free(_surface_item);
+            _surface_item = -1;
+        }
+    }
     
     if (!surface_exists(_surface_item))
     {
