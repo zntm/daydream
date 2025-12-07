@@ -299,7 +299,9 @@ if !(is_opened & IS_OPENED_BOOLEAN.MENU)
         }
     }
     
-    if (cooldown_build <= 0) && (mouse_check_button(mb_right))
+    var _mouse_distance = rectangle_distance(mouse_x, mouse_y, obj_Player.bbox_left, obj_Player.bbox_top, obj_Player.bbox_right, obj_Player.bbox_bottom);
+    
+    if (cooldown_build <= 0) && (_mouse_distance < ATTRIBUTE_DEFAULT_BUILD_REACH) && (mouse_check_button(mb_right))
     {
         player_build(_delta_time, _tile_x, _tile_y);
     }
@@ -308,7 +310,7 @@ if !(is_opened & IS_OPENED_BOOLEAN.MENU)
         cooldown_build -= _delta_time;
     }
     
-    if (cooldown_harvest <= 0) && (mouse_check_button(mb_left))
+    if (cooldown_harvest <= 0) && (_mouse_distance < ATTRIBUTE_DEFAULT_HARVEST_REACH) && (mouse_check_button(mb_left))
     {
         player_harvest(_delta_time, _tile_x, _tile_y);
     }

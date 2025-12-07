@@ -32,10 +32,10 @@
         },
         "surface": {
             "heat": {
-                "octaves": 1
+                "octaves": 4.5
             },
             "humidity": {
-                "octaves": 1
+                "octaves": 2.75
             },
             "map": "phantasia:world/playground/map",
             "offset": {
