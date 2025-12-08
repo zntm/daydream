@@ -111,6 +111,187 @@ global.item_function[$ "phantasia:export_structure"] = function()
     buffer_delete(_buffer);
 }
 
+global.item_function[$ "phantasia:liquid_flow"] = function(_dt, _x, _y, _z, _xscale, _yscale, _parameter)
+{
+    var _tile = tile_get(_x, _y, _z);
+    
+    // Safety check
+    if (_tile == TILE_EMPTY) exit;
+    
+    var _id = _tile.get_id();
+    var _level = _tile.get_component("level");
+    var _flow_direction = _tile.get_component("flow_direction") ?? 0;
+    
+    // Ensure we have a valid level
+    if (_level == undefined)
+    {
+        _level = 8;
+        _tile.set_component("level", _level);
+    }
+    
+    if (_level <= 0)
+    {
+        tile_place(_x, _y, _z, TILE_EMPTY_ID);
+        tile_update_surrounding(_x, _y, _z);
+        exit;
+    }
+    
+    var _flow_amount = 0;
+    var _moved = false;
+    
+    // 1. Flow Down
+    // Check for solid block below
+    var _solid_down = tile_get(_x, _y + 1, CHUNK_DEPTH_DEFAULT);
+    
+    if (_solid_down == TILE_EMPTY)
+    {
+        var _tile_down = tile_get(_x, _y + 1, _z);
+        
+        if (_tile_down == TILE_EMPTY)
+        {
+            // Move all down
+            tile_place(_x, _y + 1, _z, new Tile(_id));
+            var _new_tile = tile_get(_x, _y + 1, _z);
+            _new_tile.set_component("level", _level);
+            // Preserve momentum
+            _new_tile.set_component("flow_direction", _flow_direction);
+            
+            tile_place(_x, _y, _z, TILE_EMPTY_ID);
+            
+            tile_update_surrounding(_x, _y + 1, _z);
+            tile_update_surrounding(_x, _y, _z);
+            exit;
+        }
+        else if (_tile_down.get_id() == _id)
+        {
+            var _level_down = _tile_down.get_component("level");
+            var _space_down = 8 - _level_down;
+            
+            if (_space_down > 0)
+            {
+                var _transfer = min(_level, _space_down);
+                
+                _level -= _transfer;
+                _level_down += _transfer;
+                
+                _tile.set_component("level", _level);
+                _tile_down.set_component("level", _level_down);
+                
+                // Let's settle direction to 0 if full? 
+                if (_level_down == 8) _tile_down.set_component("flow_direction", 0);
+                
+                if (_level <= 0)
+                {
+                    tile_place(_x, _y, _z, TILE_EMPTY_ID);
+                }
+                
+                tile_update_surrounding(_x, _y + 1, _z);
+                tile_update_surrounding(_x, _y, _z);
+                
+                return; // Don't flow sideways if we flowed down
+            }
+        }
+    }
+    
+    // 2. Flow Sideways
+    // We only flow sideways if we have liquid left
+    if (_level <= 0) exit;
+    
+    // Determine target directions
+    var _dirs = [];
+    
+    if (_flow_direction != 0)
+    {
+        _dirs = [_flow_direction];
+    }
+    else
+    {
+        _dirs = [1, -1];
+        if (irandom(2) == 0) _dirs = [-1, 1];
+    }
+    
+    // Try primary direction first
+    var _blocked = true;
+    
+    for (var i = 0; i < array_length(_dirs); ++i)
+    {
+        var _dx = _dirs[i];
+        var _tx = _x + _dx;
+        
+        // Check for solid wall in the default layer
+        var _solid_target = tile_get(_tx, _y, CHUNK_DEPTH_DEFAULT);
+        
+        if (_solid_target == TILE_EMPTY)
+        {
+            // Check if we can flow there (liquid layer)
+            var _target = tile_get(_tx, _y, _z);
+            var _can_flow = false;
+            var _target_level = 0;
+            
+            if (_target == TILE_EMPTY)
+            {
+                _can_flow = true;
+                _target_level = 0;
+            }
+            else if (_target.get_id() == _id)
+            {
+                _target_level = _target.get_component("level");
+                if (_target_level < _level)
+                {
+                    _can_flow = true;
+                }
+            }
+            
+            if (_can_flow)
+            {
+                _blocked = false;
+                
+                var _total = _level + _target_level;
+                var _new_level_self = ceil(_total / 2);
+                var _new_level_target = floor(_total / 2);
+                
+                if (_new_level_target > _target_level)
+                {
+                    var _transfer = _new_level_target - _target_level;
+                    
+                    _level -= _transfer;
+                    _tile.set_component("level", _level);
+                    
+                    // Update flow direction to match where we went
+                    if (_level > 0) _tile.set_component("flow_direction", _dx);
+                    
+                    if (_target == TILE_EMPTY)
+                    {
+                        tile_place(_tx, _y, _z, new Tile(_id));
+                        _target = tile_get(_tx, _y, _z);
+                    }
+                    
+                    _target.set_component("level", _new_level_target);
+                    _target.set_component("flow_direction", _dx); // Pass momentum
+                    
+                    tile_update_surrounding(_tx, _y, _z);
+                    
+                    if (_level <= 0)
+                    {
+                        tile_place(_x, _y, _z, TILE_EMPTY_ID);
+                        tile_update_surrounding(_x, _y, _z);
+                        exit;
+                    }
+                }
+                
+                // If we flowed successfully in our preferred direction, we stop trying others
+                break;
+            }
+        }
+    }
+    
+    // If we were trying to go a specific way and got blocked, bounce!
+    if (_blocked && _flow_direction != 0)
+    {
+        _tile.set_component("flow_direction", -_flow_direction);
+    }
+}
+
 global.item_function[$ "phantasia:open_menu"] = function(_dt, _x, _y, _z, _xscale, _yscale, _parameter)
 {
     static __update_float = function()

@@ -65,15 +65,20 @@ function gui_inventory(_gui_multiplier_x, _gui_multiplier_y)
         {
             var _id = _[global.inventory_selected_hotbar];
             
-            var _x = (GUI_INVENTORY_SURFACE_PADDING + _id.xoffset) / INVENTORY_SLOT_SCALE;
-            var _y = (GUI_INVENTORY_SURFACE_PADDING + _id.yoffset) / INVENTORY_SLOT_SCALE;
-            
-            draw_sprite_ext(spr_Square, 0, _x - 2, _y - 2, 20, 20, 0, INVENTORY_OUTLINE_COLOUR, 1);
+            if (instance_exists(_id))
+            {
+                var _x = (GUI_INVENTORY_SURFACE_PADDING + _id.xoffset) / INVENTORY_SLOT_SCALE;
+                var _y = (GUI_INVENTORY_SURFACE_PADDING + _id.yoffset) / INVENTORY_SLOT_SCALE;
+                
+                draw_sprite_ext(spr_Square, 0, _x - 2, _y - 2, 20, 20, 0, INVENTORY_OUTLINE_COLOUR, 1);
+            }
         }
         
         for (var j = 0; j < _length; ++j)
         {
             var _id = _[j];
+            
+            if (!instance_exists(_id)) continue;
             
             var _x = (GUI_INVENTORY_SURFACE_PADDING + _id.xoffset) / INVENTORY_SLOT_SCALE;
             var _y = (GUI_INVENTORY_SURFACE_PADDING + _id.yoffset) / INVENTORY_SLOT_SCALE;
@@ -90,10 +95,13 @@ function gui_inventory(_gui_multiplier_x, _gui_multiplier_y)
         {
             var _id = _[global.inventory_selected_hotbar];
             
-            var _x = (GUI_INVENTORY_SURFACE_PADDING + _id.xoffset) / INVENTORY_SLOT_SCALE;
-            var _y = (GUI_INVENTORY_SURFACE_PADDING + _id.yoffset) / INVENTORY_SLOT_SCALE;
-            
-            draw_sprite_ext(spr_Inventory_Hotbar, 0, _x, _y, 1, 1, 0, c_white, 1);
+            if (instance_exists(_id))
+            {
+                var _x = (GUI_INVENTORY_SURFACE_PADDING + _id.xoffset) / INVENTORY_SLOT_SCALE;
+                var _y = (GUI_INVENTORY_SURFACE_PADDING + _id.yoffset) / INVENTORY_SLOT_SCALE;
+                
+                draw_sprite_ext(spr_Inventory_Hotbar, 0, _x, _y, 1, 1, 0, c_white, 1);
+            }
         }
         
         surface_reset_target();
@@ -119,6 +127,8 @@ function gui_inventory(_gui_multiplier_x, _gui_multiplier_y)
             if (_item == INVENTORY_EMPTY) continue;
             
             var _id = _[j];
+            
+            if (!instance_exists(_id)) continue;
             
             var _data = _item_data[$ _item.get_id()];
             
@@ -155,6 +165,8 @@ function gui_inventory(_gui_multiplier_x, _gui_multiplier_y)
             if (_amount <= 1) continue;
             
             var _id = _[j];
+            
+            if (!instance_exists(_id)) continue;
             
             var _x = _gui_multiplier_x * (GUI_INVENTORY_AMOUNT_XOFFSET + (GUI_INVENTORY_SURFACE_PADDING + (INVENTORY_SLOT_DIMENSION_SCALED / 2)) + _id.xoffset);
             var _y = _gui_multiplier_y * (GUI_INVENTORY_AMOUNT_YOFFSET + (GUI_INVENTORY_SURFACE_PADDING + (INVENTORY_SLOT_DIMENSION_SCALED / 2)) + _id.yoffset);

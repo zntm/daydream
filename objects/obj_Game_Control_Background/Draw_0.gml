@@ -9,15 +9,15 @@ var _camera_height = global.camera_height;
 draw_sprite_ext(spr_Square, 0, _camera_x, _camera_y, _camera_width, _camera_height, 0, sky_colour_base, 1);
 draw_sprite_general(spr_Glow_Corner, 0, 0, 0, 128, 1, _camera_x, _camera_y + _camera_height, _camera_height / 128, _camera_width, 90, sky_colour_gradient, sky_colour_gradient, sky_colour_gradient, sky_colour_gradient, 1);
 
-var _display_background = global.settings.display_background;
-
-if (IS_DEVELOPER_MODE && variable_struct_exists(global, "debug_settings") && variable_struct_exists(global.dbg_settings, "background"))
+if (global.settings.display_background)
 {
-    _display_background = _display_background && global.dbg_settings.background;
-}
-
-if (_display_background)
-{
-    render_background_celestial(global.world_save_data.time, _camera_x, _camera_y, _camera_width, _camera_height);
-    render_background(_camera_x, _camera_y, _camera_width, _camera_height);
+    if (!IS_DEVELOPER_MODE) || (global.dbg_settings[$ "display_background_celestial"])
+    {
+        render_background_celestial(global.world_save_data.time, _camera_x, _camera_y, _camera_width, _camera_height);
+    }
+    
+    if (!IS_DEVELOPER_MODE) || (global.dbg_settings[$ "display_background_parallax"])
+    {
+        render_background(_camera_x, _camera_y, _camera_width, _camera_height);
+    }
 }

@@ -1,0 +1,26 @@
+{
+    "inventory": "#phantasia:item/generic/inventory_default",
+    "sprite": "phantasia:item/water",
+    "tile": {
+        "components": {
+            "level": {
+                "type": "integer",
+                "default_value": 8,
+                "min_value": 1,
+                "max_value": 8
+            },
+            "flow_direction": {
+                "type": "integer",
+                "default_value": 0,
+                "min_value": -1,
+                "max_value": 1
+            }
+        },
+        "on_random_tick": [
+            {
+                "id": "phantasia:liquid_flow"
+            }
+        ]
+    },
+    "type": "untouchable"
+}

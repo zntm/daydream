@@ -66,4 +66,5 @@ export default [
     "./items/groups/equipmentItems",
     "./items/groups/woodItemsList",
     "./items/groups/lightSourceItems",
+    "./items/groups/liquidItems",
 ].map((dir) => import.meta.require(dir).default);

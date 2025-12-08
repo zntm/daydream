@@ -44,6 +44,34 @@ if (!_is_loaded)
 {
 	chunk_generate();
 }
+else
+{
+    var _item_data = global.item_data;
+    
+    for (var _tile_z = 0; _tile_z < CHUNK_DEPTH; ++_tile_z)
+    {
+        if !(chunk_display & (1 << _tile_z)) continue;
+        
+        for (var _tile_y = 0; _tile_y < CHUNK_SIZE; ++_tile_y)
+        {
+            for (var _tile_x = 0; _tile_x < CHUNK_SIZE; ++_tile_x)
+            {
+                var _world_x = chunk_xstart + _tile_x;
+                var _world_y = chunk_ystart + _tile_y;
+                
+                var _tile = chunk[tile_index_xyz(_world_x, _world_y, _tile_z)];
+                
+                if (_tile == TILE_EMPTY) continue;
+                
+                var _data = _item_data[$ _tile.get_id()];
+                
+                tile_instance_create(_world_x, _world_y, _tile_z, _tile);
+                
+                tile_connect(_world_x, _world_y, _tile_z, _tile);
+            }
+        }
+    }
+}
 
 chunk_audio_emitter = array_create(CHUNK_SIZE * CHUNK_SIZE);
 

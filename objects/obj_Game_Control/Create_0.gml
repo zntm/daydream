@@ -213,7 +213,8 @@ if (IS_DEVELOPER_MODE)
     
     global.dbg_settings = {
         delta_time: true,
-        background: true,
+        display_background_celestial: true,
+        display_background_parallax: true,
         display_chunk_boundary: false,
         display_chunk_information: false,
         instances: true,
@@ -282,7 +283,8 @@ if (IS_DEVELOPER_MODE)
     dbg_checkbox(ref_create(global.dbg_settings, "delta_time"), "Delta Time");
     
     dbg_text_separator("Display");
-    dbg_checkbox(ref_create(global.dbg_settings, "background"), "Display Background");
+    dbg_checkbox(ref_create(global.dbg_settings, "display_background_celestial"), "Display Background");
+    dbg_checkbox(ref_create(global.dbg_settings, "display_background_parallax"), "Display Background");
     dbg_checkbox(ref_create(global.dbg_settings, "display_chunk_boundary"),      "Display Chunk Boundary");
     dbg_checkbox(ref_create(global.dbg_settings, "display_chunk_information"),      "Display Chunk Information");
     dbg_checkbox(ref_create(global.dbg_settings, "instances"),  "Display Instances");

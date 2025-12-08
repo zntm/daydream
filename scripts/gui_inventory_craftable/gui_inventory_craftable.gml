@@ -70,6 +70,8 @@ function gui_inventory_craftable(_gui_multiplier_x, _gui_multiplier_y)
     {
         var _id = _inventory_instance[i];
         
+        if (!instance_exists(_id)) continue;
+        
         var _x = (GUI_INVENTORY_SURFACE_PADDING + _id.xoffset) / INVENTORY_SLOT_SCALE;
         var _y = (GUI_INVENTORY_SURFACE_PADDING + _id.yoffset) / INVENTORY_SLOT_SCALE;
         
@@ -102,6 +104,8 @@ function gui_inventory_craftable(_gui_multiplier_x, _gui_multiplier_y)
     for (var i = 0; i < _length; ++i)
     {
         var _id = _inventory_instance[i];
+        
+        if (!instance_exists(_id)) continue;
         var _item = _crafting_data[_id.index];
         
         var _data = _item_data[$ _item.get_id()];
@@ -126,6 +130,8 @@ function gui_inventory_craftable(_gui_multiplier_x, _gui_multiplier_y)
     for (var i = 0; i < _length; ++i)
     {
         var _id = _inventory_instance[i];
+        
+        if (!instance_exists(_id)) continue;
         var _item = _crafting_data[_id.index];
         
         var _amount = _item.get_amount();

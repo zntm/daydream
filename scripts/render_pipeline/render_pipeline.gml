@@ -183,7 +183,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 var _xscale = entity_xscale * sign(image_xscale);
                 var _yscale = entity_yscale * sign(image_yscale);
                 
-                draw_sprite_ext(_sprite.get_sprite(), _index, x + (_xscale * (_data.get_sprite_xoffset() - (attribute.get_collision_box_width() / 2))), y + (_yscale * (_data.get_sprite_yoffset() - attribute.get_collision_box_height())), _xscale, _yscale, image_angle, image_blend, image_alpha);
+                draw_sprite_ext(_sprite.get_sprite(), _index, x + (_xscale * (_sprite.get_xoffset() - (attribute.get_collision_box_width() / 2))), y + (_yscale * (_sprite.get_yoffset() - attribute.get_collision_box_height())), _xscale, _yscale, image_angle, image_blend, image_alpha);
             }
             
             gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_src_alpha, bm_one);
@@ -206,7 +206,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 var _xscale = entity_xscale * sign(image_xscale);
                 var _yscale = entity_yscale * sign(image_yscale);
                 
-                draw_sprite_ext(_sprite.get_sprite(), _index, x + (_xscale * (_data.get_sprite_xoffset() - (attribute.get_collision_box_width() / 2))), y + (_yscale * (_data.get_sprite_yoffset() - attribute.get_collision_box_height())), _xscale, _yscale, image_angle, image_blend, image_alpha);
+                draw_sprite_ext(_sprite.get_sprite(), _index, x + (_xscale * (_sprite.get_xoffset() - (attribute.get_collision_box_width() / 2))), y + (_yscale * (_sprite.get_yoffset() - attribute.get_collision_box_height())), _xscale, _yscale, image_angle, image_blend, image_alpha);
             }
             
             with (obj_Particle)
@@ -215,7 +215,13 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 
                 if (_data.is_additive()) continue;
                 
+                // draw_sprite(spr_Null, 0, x, y)
+                
                 var _sprite = _sprite_asset[$ _data.get_sprite()];
+                
+                // draw_sprite(_sprite.get_sprite(), 0, x, y)
+                
+                // show_debug_message($"{_sprite.get_sprite()}")
                 
                 var _index = 0;
                 
@@ -223,7 +229,12 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 {
                     _index = floor(_sprite.get_length() * (1 - (timer_life / timer_life_max)));
                 }
-                
+                /*
+                show_debug_message(_data.get_sprite());
+                show_debug_message(image_alpha);
+                show_debug_message((_data.is_fade_out() ? timer_life / timer_life_max : 1));
+                show_debug_message(_sprite);
+                */
                 draw_sprite_ext(_sprite.get_sprite(), _index, x, y, entity_xscale, entity_yscale, image_angle, image_blend, image_alpha * (_data.is_fade_out() ? timer_life / timer_life_max : 1));
             }
         }
