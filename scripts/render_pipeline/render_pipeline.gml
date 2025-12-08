@@ -28,18 +28,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
     var _animation_index = round(global.world_save_data.time * 8);
     
     var _sprite_asset = global.sprite_asset;
-    /*
-    var _debug_chunk = true;
-    var _debug_instances = true;
-    var _debug_lighting = true;
     
-    if (IS_DEVELOPER_MODE && variable_global_exists("debug_settings"))
-    {
-        if (variable_struct_exists(global.dbg_settings, "chunk")) _debug_chunk = global.dbg_settings.chunk;
-        if (variable_struct_exists(global.dbg_settings, "instances")) _debug_instances = global.dbg_settings.instances;
-        if (variable_struct_exists(global.dbg_settings, "lighting")) _debug_lighting = global.dbg_settings.lighting;
-    }
-    */
     for (var _z = 0; _z < CHUNK_DEPTH; ++_z)
     {
         var _bitmask = 1 << _z;
@@ -215,13 +204,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 
                 if (_data.is_additive()) continue;
                 
-                // draw_sprite(spr_Null, 0, x, y)
-                
                 var _sprite = _sprite_asset[$ _data.get_sprite()];
-                
-                // draw_sprite(_sprite.get_sprite(), 0, x, y)
-                
-                // show_debug_message($"{_sprite.get_sprite()}")
                 
                 var _index = 0;
                 
@@ -229,12 +212,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 {
                     _index = floor(_sprite.get_length() * (1 - (timer_life / timer_life_max)));
                 }
-                /*
-                show_debug_message(_data.get_sprite());
-                show_debug_message(image_alpha);
-                show_debug_message((_data.is_fade_out() ? timer_life / timer_life_max : 1));
-                show_debug_message(_sprite);
-                */
+                
                 draw_sprite_ext(_sprite.get_sprite(), _index, x, y, entity_xscale, entity_yscale, image_angle, image_blend, image_alpha * (_data.is_fade_out() ? timer_life / timer_life_max : 1));
             }
         }
