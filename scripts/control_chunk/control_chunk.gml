@@ -41,7 +41,7 @@ function control_chunk(_player_x, _player_y, _camera_x, _camera_y, _camera_width
     {
         control_update_chunk_in_view();
     }
-    
+    /*
     for (var i = 0; i < chunk_in_view_length; ++i)
     {
         var _inst = chunk_in_view[i];
@@ -75,5 +75,5 @@ function control_chunk(_player_x, _player_y, _camera_x, _camera_y, _camera_width
                 }
             }
         }
-    }
+    }*/
 }

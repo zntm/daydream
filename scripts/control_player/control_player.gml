@@ -42,7 +42,7 @@ function control_player(_dt)
     
     var _use_physics = true;
     
-    if (IS_DEVELOPER_MODE && variable_struct_exists(global, "debug_settings") && variable_struct_exists(global.dbg_settings, "physics"))
+    if (IS_DEVELOPER_MODE && variable_struct_exists(global, "dbg_settings") && variable_struct_exists(global.dbg_settings, "physics"))
     {
         _use_physics = global.dbg_settings.physics;
     }
@@ -58,7 +58,7 @@ function control_player(_dt)
     
     if !(obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.MENU) && (timer_attack <= 0) && (mouse_check_button(mb_left))
     {
-        sfx_diegetic_play(obj_Player.audio_emitter, obj_Player.x, obj_Player.y, "phantasia:sfx/item/swing");
+        sfx_diegetic_play(obj_Player.audio_emitter, obj_Player.x, obj_Player.y, "phantasia:sfx/item/swing", global.settings.audio_sfx);
         
         timer_attack = 0.3;
         

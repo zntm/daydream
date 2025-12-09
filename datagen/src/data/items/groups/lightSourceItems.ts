@@ -3,9 +3,9 @@ import { ItemType } from "../lib/ItemType";
 import { ItemFunction } from "../lib/ItemFunction";
 import {
     TileItem,
-    ItemTileDrop,
-    ItemTileHarvest,
-    ItemTileParticle,
+    TileItemDrop,
+    TileItemHarvest,
+    TileItemParticle,
 } from "../lib/TileItem";
 
 export default [
@@ -16,12 +16,12 @@ export default [
             "phantasia:item/campfire",
             "#phantasia:item/generic/inventory_default",
         )
-            .setTileDrops([new ItemTileDrop("phantasia:campfire")])
+            .setTileDrops([new TileItemDrop("phantasia:campfire")])
             .setTileHarvest(
-                new ItemTileHarvest(
+                new TileItemHarvest(
                     0.38,
                     0,
-                    new ItemTileParticle(
+                    new TileItemParticle(
                         "#phantasia:tile/particle_colour/wood",
                         "#phantasia:tile/generic/harvest_particle_frequency",
                     ),
@@ -49,12 +49,12 @@ export default [
             "phantasia:item/torch",
             "#phantasia:item/generic/inventory_default",
         )
-            .setTileDrops([new ItemTileDrop("phantasia:torch")])
+            .setTileDrops([new TileItemDrop("phantasia:torch")])
             .setTileHarvest(
-                new ItemTileHarvest(
+                new TileItemHarvest(
                     0.38,
                     0,
-                    new ItemTileParticle(
+                    new TileItemParticle(
                         "#phantasia:tile/particle_colour/twig",
                         "#phantasia:tile/generic/harvest_particle_frequency",
                     ),

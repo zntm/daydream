@@ -1,8 +1,8 @@
 import {
-    ItemTileCondition,
-    ItemTileHarvest,
-    ItemTileParticle,
-    ItemTileProperties,
+    TileItemCondition,
+    TileItemHarvest,
+    TileItemParticle,
+    TileItemProperties,
 } from "../lib/TileItem";
 
 const { default: blockWallItems } = import.meta.require("./blockWallItems");
@@ -12,14 +12,14 @@ export default [
         {
             id: "dirt",
             properties: [
-                ItemTileProperties.CanFlip,
-                ItemTileProperties.CanMirror,
-                ItemTileProperties.IsTile,
+                TileItemProperties.CanFlip,
+                TileItemProperties.CanMirror,
+                TileItemProperties.IsTile,
             ],
-            harvest: new ItemTileHarvest(
+            harvest: new TileItemHarvest(
                 0.36,
                 0,
-                new ItemTileParticle(
+                new TileItemParticle(
                     "#phantasia:tile/particle_colour/dirt",
                     "#phantasia:tile/generic/harvest_particle_frequency",
                 ),
@@ -31,14 +31,14 @@ export default [
         {
             id: "lumin_moss",
             properties: [
-                ItemTileProperties.CanFlip,
-                ItemTileProperties.CanMirror,
-                ItemTileProperties.IsTile,
+                TileItemProperties.CanFlip,
+                TileItemProperties.CanMirror,
+                TileItemProperties.IsTile,
             ],
-            harvest: new ItemTileHarvest(
+            harvest: new TileItemHarvest(
                 0.26,
                 0,
-                new ItemTileParticle(
+                new TileItemParticle(
                     "#phantasia:tile/particle_colour/lumin_moss",
                     "#phantasia:tile/generic/harvest_particle_frequency",
                 ),
@@ -50,14 +50,14 @@ export default [
         {
             id: "moss",
             properties: [
-                ItemTileProperties.CanFlip,
-                ItemTileProperties.CanMirror,
-                ItemTileProperties.IsTile,
+                TileItemProperties.CanFlip,
+                TileItemProperties.CanMirror,
+                TileItemProperties.IsTile,
             ],
-            harvest: new ItemTileHarvest(
+            harvest: new TileItemHarvest(
                 0.26,
                 0,
-                new ItemTileParticle(
+                new TileItemParticle(
                     "#phantasia:tile/particle_colour/moss",
                     "#phantasia:tile/generic/harvest_particle_frequency",
                 ),
@@ -69,18 +69,18 @@ export default [
         {
             id: "sandstone",
             properties: [
-                ItemTileProperties.CanFlip,
-                ItemTileProperties.CanMirror,
-                ItemTileProperties.IsTile,
+                TileItemProperties.CanFlip,
+                TileItemProperties.CanMirror,
+                TileItemProperties.IsTile,
             ],
-            harvest: new ItemTileHarvest(
+            harvest: new TileItemHarvest(
                 0.22,
                 0,
-                new ItemTileParticle(
+                new TileItemParticle(
                     "#phantasia:tile/particle_colour/sand",
                     "#phantasia:tile/generic/harvest_particle_frequency",
                 ),
-                new ItemTileCondition("#phantasia:item/type/pickaxe"),
+                new TileItemCondition("#phantasia:item/type/pickaxe"),
             ),
             sfx: "#phantasia:tile/sfx/stone",
             lowpass: 0.55,
@@ -89,18 +89,18 @@ export default [
         {
             id: "stone",
             properties: [
-                ItemTileProperties.CanFlip,
-                ItemTileProperties.CanMirror,
-                ItemTileProperties.IsTile,
+                TileItemProperties.CanFlip,
+                TileItemProperties.CanMirror,
+                TileItemProperties.IsTile,
             ],
-            harvest: new ItemTileHarvest(
+            harvest: new TileItemHarvest(
                 0.36,
                 0,
-                new ItemTileParticle(
+                new TileItemParticle(
                     "#phantasia:tile/particle_colour/stone",
                     "#phantasia:tile/generic/harvest_particle_frequency",
                 ),
-                new ItemTileCondition("#phantasia:item/type/pickaxe"),
+                new TileItemCondition("#phantasia:item/type/pickaxe"),
             ),
             sfx: "#phantasia:tile/sfx/stone",
             lowpass: 0.65,
@@ -109,18 +109,18 @@ export default [
         {
             id: "nightrock",
             properties: [
-                ItemTileProperties.CanFlip,
-                ItemTileProperties.CanMirror,
-                ItemTileProperties.IsTile,
+                TileItemProperties.CanFlip,
+                TileItemProperties.CanMirror,
+                TileItemProperties.IsTile,
             ],
-            harvest: new ItemTileHarvest(
+            harvest: new TileItemHarvest(
                 0.52,
                 0,
-                new ItemTileParticle(
+                new TileItemParticle(
                     "#phantasia:tile/particle_colour/nightrock",
                     "#phantasia:tile/generic/harvest_particle_frequency",
                 ),
-                new ItemTileCondition("#phantasia:item/type/pickaxe"),
+                new TileItemCondition("#phantasia:item/type/pickaxe"),
             ),
             sfx: "#phantasia:tile/sfx/stone",
             lowpass: 0.7,

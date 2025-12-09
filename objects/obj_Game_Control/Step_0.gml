@@ -41,7 +41,7 @@ if (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.GENERATING_WORLD)
     }
     
     control_update_chunk_in_view();
-    
+    /*
     for (var i = 0; i < chunk_in_view_length; ++i)
     {
         var _inst = chunk_in_view[i];
@@ -75,7 +75,7 @@ if (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.GENERATING_WORLD)
                 }
             }
         }
-    }
+    }*/
     
     obj_Game_Control.is_opened ^= IS_OPENED_BOOLEAN.GENERATING_WORLD;
 }
@@ -226,7 +226,7 @@ with (obj_Creature)
         
         if (timer_sfx_idle <= 0)
         {
-            sfx_diegetic_play(audio_emitter, x, y, smart_value(_data.get_sfx_idle()));
+            sfx_diegetic_play(audio_emitter, x, y, smart_value(_data.get_sfx_idle()), global.settings.audio_creature_passive);
             
             timer_sfx_idle = smart_value(_interval);
         }

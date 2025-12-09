@@ -5,3 +5,5 @@ sprites.import.json
 sprites.info.json
 
 node_modules/
+
+build/

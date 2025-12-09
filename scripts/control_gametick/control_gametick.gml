@@ -122,7 +122,7 @@ function control_gametick(_delta_time)
                                 var _sfx_id = _sfx.get_id();
                                 var _sfx_gain = _sfx.get_gain();
                                 
-                                sfx_diegetic_play(obj_Player.audio_emitter, obj_Player.x, obj_Player.y, _sfx_id, _sfx_gain);
+                                sfx_diegetic_play(obj_Player.audio_emitter, obj_Player.x, obj_Player.y, _sfx_id, _sfx_gain, global.settings.audio_sfx);
                             }
                         }
                     }

@@ -2,12 +2,11 @@ import { DatagenReturnData } from "../../../lib/DatagenReturnData";
 import { ItemType } from "../lib/ItemType";
 import {
     TileItem,
-    ItemTileDrop,
-    ItemTileHarvest,
-    ItemTileParticle,
-    ItemTilePlacement,
-    ItemTileProperties,
-    ItemTileSFX,
+    TileItemDrop,
+    TileItemHarvest,
+    TileItemParticle,
+    TileItemPlacement,
+    TileItemProperties,
 } from "../lib/TileItem";
 
 export default [
@@ -24,23 +23,23 @@ export default [
                             `phantasia:item/${type}_${id}`,
                             "#phantasia:item/generic/inventory_default",
                             [
-                                ItemTileProperties.CanMirror,
-                                ItemTileProperties.IsFoliage,
+                                TileItemProperties.CanMirror,
+                                TileItemProperties.IsFoliage,
                             ],
                         )
-                            // .setTileDrops([new ItemTileDrop(`phantasia:${type}_${id}`)])
+                            // .setTileDrops([new TileItemDrop(`phantasia:${type}_${id}`)])
                             .setTileHarvest(
-                                new ItemTileHarvest(
+                                new TileItemHarvest(
                                     0.38,
                                     0,
-                                    new ItemTileParticle(
+                                    new TileItemParticle(
                                         "#phantasia:tile/particle_colour/plant",
                                         "#phantasia:tile/generic/harvest_particle_frequency",
                                     ),
                                 ),
                             )
                             .setTilePlacement(
-                                new ItemTilePlacement().setCondition(
+                                new TileItemPlacement().setCondition(
                                     "#phantasia:tile/placement/condition_plant",
                                 ),
                             )
@@ -59,14 +58,14 @@ export default [
                 ItemType.Solid,
                 `phantasia:item/${id}`,
                 "#phantasia:item/generic/inventory_tile",
-                [ItemTileProperties.CanMirror, ItemTileProperties.IsTile],
+                [TileItemProperties.CanMirror, TileItemProperties.IsTile],
             )
-                .setTileDrops([new ItemTileDrop(`phantasia:dirt`)])
+                .setTileDrops([new TileItemDrop(`phantasia:dirt`)])
                 .setTileHarvest(
-                    new ItemTileHarvest(
+                    new TileItemHarvest(
                         0.36,
                         0,
-                        new ItemTileParticle(
+                        new TileItemParticle(
                             "#phantasia:tile/particle_colour/dirt",
                             "#phantasia:tile/generic/harvest_particle_frequency",
                         ),

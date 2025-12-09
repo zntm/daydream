@@ -2,16 +2,15 @@ import { DatagenReturnData } from "../../../lib/DatagenReturnData";
 import { ItemType } from "../lib/ItemType";
 import {
     TileItem,
-    ItemTileDrop,
-    ItemTileHarvest,
-    ItemTileProperties,
-    ItemTileSFX,
+    TileItemDrop,
+    TileItemHarvest,
+    TileItemProperties,
 } from "../lib/TileItem";
 
 export default (
     id: string,
-    properties: ItemTileProperties[],
-    harvest: ItemTileHarvest,
+    properties: TileItemProperties[],
+    harvest: TileItemHarvest,
     sfx: string,
     lowpass: number = 0,
     reverb: number = 0,
@@ -24,7 +23,7 @@ export default (
             "#phantasia:item/generic/inventory_tile",
             properties,
         )
-            .setTileDrops([new ItemTileDrop(`phantasia:${id}`)])
+            .setTileDrops([new TileItemDrop(`phantasia:${id}`)])
             .setTileHarvest(harvest)
             .setTileSFX(sfx)
             .setAudioProperties(lowpass, reverb),
@@ -35,9 +34,9 @@ export default (
             ItemType.Untouchable,
             `phantasia:item/${id}_wall`,
             "#phantasia:item/generic/inventory_tile",
-            [...properties, ItemTileProperties.IsWall],
+            [...properties, TileItemProperties.IsWall],
         )
-            .setTileDrops([new ItemTileDrop(`phantasia:${id}_wall`)])
+            .setTileDrops([new TileItemDrop(`phantasia:${id}_wall`)])
             .setTileHarvest(harvest)
             .setTileSFX(sfx)
             .setAudioProperties(lowpass, reverb),

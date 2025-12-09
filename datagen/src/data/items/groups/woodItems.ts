@@ -2,15 +2,15 @@ import { DatagenReturnData } from "../../../lib/DatagenReturnData";
 import { ItemType } from "../lib/ItemType";
 import {
     TileItem,
-    ItemTileCondition,
-    ItemTileDrop,
-    ItemTileHarvest,
-    ItemTileParticle,
-    ItemTilePlacement,
-    ItemTilePlacementCondition,
-    ItemTilePlacementConditionType,
-    ItemTilePlacementConditionValue,
-    ItemTileProperties,
+    TileItemCondition,
+    TileItemDrop,
+    TileItemHarvest,
+    TileItemParticle,
+    TileItemPlacement,
+    TileItemPlacementCondition,
+    TileItemPlacementConditionType,
+    TileItemPlacementConditionValue,
+    TileItemProperties,
 } from "../lib/TileItem";
 import { ToolItem } from "../lib/ToolItem";
 
@@ -29,36 +29,36 @@ export default (
             `phantasia:item/${id}`,
             "#phantasia:item/generic/inventory_default",
         )
-            .setTileDrops([new ItemTileDrop(`phantasia:${id}`)])
+            .setTileDrops([new TileItemDrop(`phantasia:${id}`)])
             .setTileHarvest(
-                new ItemTileHarvest(
+                new TileItemHarvest(
                     0.56,
                     1,
-                    new ItemTileParticle(
+                    new TileItemParticle(
                         logParticleId,
                         "#phantasia:tile/generic/harvest_particle_frequency",
                     ),
-                    new ItemTileCondition("#phantasia:item/type/axe"),
+                    new TileItemCondition("#phantasia:item/type/axe"),
                 ),
             )
             .setTileSFX("#phantasia:tile/sfx/wood")
             .setTilePlacement(
-                new ItemTilePlacement().setCondition(
-                    new ItemTilePlacementCondition(
-                        ItemTilePlacementConditionType.Every,
+                new TileItemPlacement().setCondition(
+                    new TileItemPlacementCondition(
+                        TileItemPlacementConditionType.Every,
                         [
                             {
-                                condition: new ItemTilePlacementCondition(
-                                    ItemTilePlacementConditionType.Some,
+                                condition: new TileItemPlacementCondition(
+                                    TileItemPlacementConditionType.Some,
                                     [
-                                        new ItemTilePlacementConditionValue(
+                                        new TileItemPlacementConditionValue(
                                             0,
                                             1,
                                             "default",
                                         ).setId(
                                             "#phantasia:tile/placement/plant_on",
                                         ),
-                                        new ItemTilePlacementConditionValue(
+                                        new TileItemPlacementConditionValue(
                                             0,
                                             1,
                                             "z",
@@ -79,16 +79,16 @@ export default (
             `phantasia:item/${id}_chest`,
             "#phantasia:item/generic/inventory_tile",
         )
-            .setTileDrops([new ItemTileDrop(`phantasia:${id}_chest`)])
+            .setTileDrops([new TileItemDrop(`phantasia:${id}_chest`)])
             .setTileHarvest(
-                new ItemTileHarvest(
+                new TileItemHarvest(
                     0.56,
                     1,
-                    new ItemTileParticle(
+                    new TileItemParticle(
                         plankParticleId,
                         "#phantasia:tile/generic/harvest_particle_frequency",
                     ),
-                    new ItemTileCondition("#phantasia:item/type/axe"),
+                    new TileItemCondition("#phantasia:item/type/axe"),
                 ),
             )
             .setTileSFX("#phantasia:tile/sfx/wood")
@@ -101,21 +101,21 @@ export default (
             `phantasia:item/${id}_leaves`,
             "#phantasia:item/generic/inventory_tile",
             [
-                ItemTileProperties.CanFlip,
-                ItemTileProperties.CanMirror,
-                ItemTileProperties.IsTile,
+                TileItemProperties.CanFlip,
+                TileItemProperties.CanMirror,
+                TileItemProperties.IsTile,
             ],
         )
-            // .setTileDrops([new ItemTileDrop(`phantasia:${id}_leaves`)])
+            // .setTileDrops([new TileItemDrop(`phantasia:${id}_leaves`)])
             .setTileHarvest(
-                new ItemTileHarvest(
+                new TileItemHarvest(
                     0.44,
                     1,
-                    new ItemTileParticle(
+                    new TileItemParticle(
                         leavesParticleId,
                         "#phantasia:tile/generic/harvest_particle_frequency",
                     ),
-                    new ItemTileCondition("#phantasia:item/type/axe"),
+                    new TileItemCondition("#phantasia:item/type/axe"),
                 ),
             )
             .setTileSFX("#phantasia:tile/sfx/wood")
@@ -134,15 +134,15 @@ export default (
     ),
     ...blockWallItems(
         `${id}_planks`,
-        [ItemTileProperties.IsTile],
-        new ItemTileHarvest(
+        [TileItemProperties.IsTile],
+        new TileItemHarvest(
             0.44,
             1,
-            new ItemTileParticle(
+            new TileItemParticle(
                 plankParticleId,
                 "#phantasia:tile/generic/harvest_particle_frequency",
             ),
-            new ItemTileCondition("#phantasia:item/type/axe"),
+            new TileItemCondition("#phantasia:item/type/axe"),
         ),
         "#phantasia:tile/sfx/wood",
         0.4,
@@ -166,16 +166,16 @@ export default (
             `phantasia:item/${id}_workbench`,
             "#phantasia:item/generic/inventory_tile",
         )
-            .setTileDrops([new ItemTileDrop(`phantasia:${id}_workbench`)])
+            .setTileDrops([new TileItemDrop(`phantasia:${id}_workbench`)])
             .setTileHarvest(
-                new ItemTileHarvest(
+                new TileItemHarvest(
                     0.36,
                     1,
-                    new ItemTileParticle(
+                    new TileItemParticle(
                         plankParticleId,
                         "#phantasia:tile/generic/harvest_particle_frequency",
                     ),
-                    new ItemTileCondition("#phantasia:item/type/axe"),
+                    new TileItemCondition("#phantasia:item/type/axe"),
                 ),
             )
             .setTileSFX("#phantasia:tile/sfx/wood")

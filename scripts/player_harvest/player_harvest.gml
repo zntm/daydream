@@ -92,7 +92,7 @@ function player_harvest(_dt, _x, _y)
     {
         obj_Player.timer_sfx_harvest %= 0.28;
         
-        sfx_diegetic_play(obj_Player.audio_emitter, _x * TILE_SIZE, _y * TILE_SIZE, _sfx);
+        sfx_diegetic_play(obj_Player.audio_emitter, _x * TILE_SIZE, _y * TILE_SIZE, _sfx, global.settings.audio_tile);
         
         var _particle_colour = _particle.get_colours();
         
@@ -115,7 +115,7 @@ function player_harvest(_dt, _x, _y)
             obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.LIGHTING;
         }
         
-        sfx_diegetic_play(obj_Player.audio_emitter, _x * TILE_SIZE, _y * TILE_SIZE, _sfx);
+        sfx_diegetic_play(obj_Player.audio_emitter, _x * TILE_SIZE, _y * TILE_SIZE, _sfx, global.settings.audio_tile);
         
         if (_item != INVENTORY_EMPTY) && (_data2.get_item_durability() != undefined)
         {

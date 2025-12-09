@@ -21,7 +21,7 @@ function tile_update(_x, _y, _z)
     {
         var _data = global.item_data[$ _tile.get_id()];
         
-        sfx_diegetic_play(obj_Player.audio_emitter, _x * TILE_SIZE, _y * TILE_SIZE, _data.get_tile_sfx().get_harvest().get_id());
+        sfx_diegetic_play(obj_Player.audio_emitter, _x * TILE_SIZE, _y * TILE_SIZE, _data.get_tile_sfx().get_harvest().get_id(), global.settings.audio_tile);
         
         tile_harvest_drop(_x, _y, _z, _tile);
         

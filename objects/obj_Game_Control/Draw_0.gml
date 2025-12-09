@@ -17,7 +17,7 @@ render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height);
 
 if (keyboard_check_pressed(vk_f2))
 {
-    sfx_play("phantasia:sfx/menu/screenshot");
+    sfx_play("phantasia:sfx/menu/screenshot", global.settings.audio_sfx);
     
     var _surface = surface_create(_window_width, _window_height);
     

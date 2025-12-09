@@ -93,7 +93,7 @@ function control_entity_sfx(_dt)
             {
                 var _sound = global.item_data[$ _tile.get_id()].get_tile_sfx().get_step().get_id();
                 
-                sfx_diegetic_play(audio_emitter, x, y, _sound);
+                sfx_diegetic_play(audio_emitter, x, y, _sound, global.settings.audio_creature_passive);
             }
             else
             {

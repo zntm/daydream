@@ -3,22 +3,21 @@ import { Item } from "../lib/Item";
 import { ItemType } from "../lib/ItemType";
 import {
     TileItem,
-    ItemTileCondition,
-    ItemTileDrop,
-    ItemTileHarvest,
-    ItemTileParticle,
-    ItemTileProperties,
-    ItemTileSFX,
+    TileItemCondition,
+    TileItemDrop,
+    TileItemHarvest,
+    TileItemParticle,
+    TileItemProperties,
 } from "../lib/TileItem";
 
 export default (
     id: string,
     harvestLevel: number,
-    blockProperties: ItemTileProperties[],
-    blockHarvest: ItemTileHarvest,
+    blockProperties: TileItemProperties[],
+    blockHarvest: TileItemHarvest,
     blockSFX: string,
-    oreProperties: ItemTileProperties[],
-    oreHarvest: ItemTileHarvest,
+    oreProperties: TileItemProperties[],
+    oreHarvest: TileItemHarvest,
     oreSFX: string,
     hasRawItem?: boolean,
 ) => {
@@ -40,8 +39,8 @@ export default (
                 blockProperties,
             )
                 .setTileDrops([
-                    new ItemTileDrop(`phantasia:item/${id}_block`).setCondition(
-                        new ItemTileCondition(
+                    new TileItemDrop(`phantasia:item/${id}_block`).setCondition(
+                        new TileItemCondition(
                             "#phantasia:item/type/pickaxe",
                             harvestLevel,
                         ),
@@ -60,8 +59,8 @@ export default (
                 oreProperties,
             )
                 .setTileDrops([
-                    new ItemTileDrop(`phantasia:item/${id}_ore`).setCondition(
-                        new ItemTileCondition(
+                    new TileItemDrop(`phantasia:item/${id}_ore`).setCondition(
+                        new TileItemCondition(
                             "#phantasia:item/type/pickaxe",
                             harvestLevel,
                         ),

@@ -10,7 +10,7 @@ import { ItemComponent } from "./ItemComponent";
 import { ItemFunction } from "./ItemFunction";
 import type { SmartValue } from "../../../lib/SmartValue";
 
-export class ItemTileParticle {
+export class TileItemParticle {
     private colour: string | string[];
     private frequency: number | string;
 
@@ -20,7 +20,7 @@ export class ItemTileParticle {
     }
 }
 
-export class ItemTileCondition {
+export class TileItemCondition {
     private id: string;
     private level?: number;
 
@@ -30,7 +30,7 @@ export class ItemTileCondition {
     }
 }
 
-export class ItemTileDropCondition {
+export class TileItemDropCondition {
     private index?: number;
 
     setIndex(index: number) {
@@ -40,29 +40,29 @@ export class ItemTileDropCondition {
     }
 }
 
-export class ItemTileDrop extends ItemDrop {
-    private condition?: ItemTileCondition | ItemTileDropCondition;
+export class TileItemDrop extends ItemDrop {
+    private condition?: TileItemCondition | TileItemDropCondition;
 
     constructor(id: string, amount?: number, chance?: number) {
         super(id, amount, chance);
     }
 
-    setCondition(condition?: ItemTileCondition | ItemTileDropCondition) {
+    setCondition(condition?: TileItemCondition | TileItemDropCondition) {
         this.condition = condition;
 
         return this;
     }
 }
 
-export class ItemTileHarvest extends ItemHarvest {
-    private particle: ItemTileParticle;
-    private condition?: ItemTileCondition;
+export class TileItemHarvest extends ItemHarvest {
+    private particle: TileItemParticle;
+    private condition?: TileItemCondition;
 
     constructor(
         hardness: number,
         level: number,
-        particle: ItemTileParticle,
-        condition?: ItemTileCondition,
+        particle: TileItemParticle,
+        condition?: TileItemCondition,
     ) {
         super(hardness, level);
 
@@ -74,7 +74,7 @@ export class ItemTileHarvest extends ItemHarvest {
     }
 }
 
-export class ItemTileSFX {
+export class ItemSFX {
     private id: string;
     private gain?: string | number;
 
@@ -94,11 +94,19 @@ export class ItemAudioProperties {
     }
 }
 
-export class ItemTilePlacement {
-    private condition?: string | ItemTilePlacementCondition | ItemTilePlacementCondition[];
+export class TileItemPlacement {
+    private condition?:
+        | string
+        | TileItemPlacementCondition
+        | TileItemPlacementCondition[];
     private index?: string | number | SmartValue;
 
-    setCondition(condition: string | ItemTilePlacementCondition | ItemTilePlacementCondition[]) {
+    setCondition(
+        condition:
+            | string
+            | TileItemPlacementCondition
+            | TileItemPlacementCondition[],
+    ) {
         this.condition = condition;
 
         return this;
@@ -111,23 +119,23 @@ export class ItemTilePlacement {
     }
 }
 
-export enum ItemTilePlacementConditionType {
+export enum TileItemPlacementConditionType {
     Every = "every",
     Some = "some",
 }
 
-export class ItemTilePlacementCondition {
-    private type: ItemTilePlacementConditionType;
+export class TileItemPlacementCondition {
+    private type: TileItemPlacementConditionType;
     private values: Array<
-        | { condition: ItemTilePlacementCondition }
-        | ItemTilePlacementConditionValue
+        | { condition: TileItemPlacementCondition }
+        | TileItemPlacementConditionValue
     >;
 
     constructor(
-        type: ItemTilePlacementConditionType,
+        type: TileItemPlacementConditionType,
         values: Array<
-            | { condition: ItemTilePlacementCondition }
-            | ItemTilePlacementConditionValue
+            | { condition: TileItemPlacementCondition }
+            | TileItemPlacementConditionValue
         >,
     ) {
         this.type = type;
@@ -135,7 +143,7 @@ export class ItemTilePlacementCondition {
     }
 }
 
-export class ItemTilePlacementConditionValue {
+export class TileItemPlacementConditionValue {
     private xoffset: number;
     private yoffset: number;
     private z: string;
@@ -161,7 +169,7 @@ export class ItemTilePlacementConditionValue {
     }
 }
 
-export enum ItemTileProperties {
+export enum TileItemProperties {
     CanMirror = "phantasia:can_mirror",
     CanFlip = "phantasia:can_flip",
     IsFoliage = "phantasia:is_foliage",
@@ -172,10 +180,10 @@ export enum ItemTileProperties {
 export class TileItem extends Item {
     private tile: {
         components?: string | { [key: string]: ItemComponent };
-        drops?: string | ItemTileDrop[];
-        harvest?: string | ItemTileHarvest;
-        placement?: string | ItemTilePlacement;
-        sfx?: string | ItemTileSFX;
+        drops?: string | TileItemDrop[];
+        harvest?: string | TileItemHarvest;
+        placement?: string | TileItemPlacement;
+        sfx?: string | ItemSFX;
         audio_properties?: ItemAudioProperties;
         on_use?: ItemFunction[];
         on_random_tick?: ItemFunction[];
@@ -187,22 +195,14 @@ export class TileItem extends Item {
         type: ItemType,
         sprite: string | ItemSprite,
         inventory: string | ItemInventory,
-        properties?: ItemTileProperties | ItemTileProperties[],
+        properties?: TileItemProperties | TileItemProperties[],
     ) {
         super(type, sprite, inventory, properties);
 
         this.tile = {};
     }
 
-    setTileComponents(components?: string | { [key: string]: ItemComponent }) {
-        if (components) {
-            this.tile.components = components;
-        }
-
-        return this;
-    }
-
-    setTileDrops(drop?: string | ItemTileDrop[]) {
+    setTileDrops(drop?: string | TileItemDrop[]) {
         if (drop) {
             this.tile.drops = drop;
         }
@@ -210,7 +210,7 @@ export class TileItem extends Item {
         return this;
     }
 
-    setTileHarvest(harvest?: string | ItemTileHarvest) {
+    setTileHarvest(harvest?: string | TileItemHarvest) {
         if (harvest) {
             this.tile.harvest = harvest;
         }
@@ -218,7 +218,7 @@ export class TileItem extends Item {
         return this;
     }
 
-    setTilePlacement(placement?: string | ItemTilePlacement) {
+    setTilePlacement(placement?: string | TileItemPlacement) {
         if (placement) {
             this.tile.placement = placement;
         }
@@ -226,7 +226,7 @@ export class TileItem extends Item {
         return this;
     }
 
-    setTileSFX(sfx?: string | ItemTileSFX) {
+    setTileSFX(sfx?: string | ItemSFX) {
         if (sfx) {
             this.tile.sfx = sfx;
         }

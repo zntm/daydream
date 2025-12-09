@@ -2,7 +2,7 @@ function control_physics_creative(_dt, _id)
 {
     var _fly_speed = 8.65;
     
-    if (IS_DEVELOPER_MODE && variable_struct_exists(global, "debug_settings") && variable_struct_exists(global.dbg_settings, "fly_speed"))
+    if (IS_DEVELOPER_MODE && variable_struct_exists(global, "dbg_settings") && variable_struct_exists(global.dbg_settings, "fly_speed"))
     {
         _fly_speed = global.dbg_settings.fly_speed;
     }

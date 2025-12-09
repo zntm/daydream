@@ -3,11 +3,11 @@ import { Item } from "../lib/Item";
 import { ItemType } from "../lib/ItemType";
 import {
     TileItem,
-    ItemTileCondition,
-    ItemTileDrop,
-    ItemTileHarvest,
-    ItemTileParticle,
-    ItemTileProperties,
+    TileItemCondition,
+    TileItemDrop,
+    TileItemHarvest,
+    TileItemParticle,
+    TileItemProperties,
 } from "../lib/TileItem";
 
 export default [
@@ -25,21 +25,22 @@ export default [
             ItemType.Solid,
             "phantasia:item/sand",
             "#phantasia:item/generic/inventory_default",
-            [ItemTileProperties.CanFlip, ItemTileProperties.CanMirror, ItemTileProperties.IsTile],
+            [
+                TileItemProperties.CanFlip,
+                TileItemProperties.CanMirror,
+                TileItemProperties.IsTile,
+            ],
         )
             .setTileDrops([
-                new ItemTileDrop(`phantasia:sand`).setCondition(
-                    new ItemTileCondition(
-                        "#phantasia:item/type/shovel",
-                        0,
-                    ),
+                new TileItemDrop(`phantasia:sand`).setCondition(
+                    new TileItemCondition("#phantasia:item/type/shovel", 0),
                 ),
             ])
             .setTileHarvest(
-                new ItemTileHarvest(
+                new TileItemHarvest(
                     0.36,
                     0,
-                    new ItemTileParticle(
+                    new TileItemParticle(
                         "#phantasia:tile/particle_colour/sand",
                         "#phantasia:tile/generic/harvest_particle_frequency",
                     ),

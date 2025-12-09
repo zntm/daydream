@@ -3,12 +3,11 @@ import { SmartValueIntRandom } from "../../../lib/SmartValue";
 import { ItemType } from "../lib/ItemType";
 import {
     TileItem,
-    ItemTileDrop,
-    ItemTileHarvest,
-    ItemTileParticle,
-    ItemTilePlacement,
-    ItemTileProperties,
-    ItemTileSFX,
+    TileItemDrop,
+    TileItemHarvest,
+    TileItemParticle,
+    TileItemPlacement,
+    TileItemProperties,
 } from "../lib/TileItem";
 
 export default [
@@ -18,23 +17,21 @@ export default [
             ItemType.Untouchable,
             "phantasia:item/twig",
             "#phantasia:item/generic/inventory_default",
-            [ItemTileProperties.CanMirror],
+            [TileItemProperties.CanMirror],
         )
-            .setTileDrops([new ItemTileDrop("phantasia:twig")])
+            .setTileDrops([new TileItemDrop("phantasia:twig")])
             .setTileHarvest(
-                new ItemTileHarvest(
+                new TileItemHarvest(
                     0.11,
                     0,
-                    new ItemTileParticle(
+                    new TileItemParticle(
                         "#phantasia:tile/particle_colour/twig",
                         "#phantasia:tile/generic/harvest_particle_frequency",
                     ),
                 ),
             )
             .setTilePlacement(
-                new ItemTilePlacement().setIndex(
-                    new SmartValueIntRandom(1, 3),
-                ),
+                new TileItemPlacement().setIndex(new SmartValueIntRandom(1, 3)),
             )
             .setTileSFX("#phantasia:tile/sfx/wood")
             .setAudioProperties(0.05, 0.0),
@@ -45,23 +42,21 @@ export default [
             ItemType.Untouchable,
             "phantasia:item/rock",
             "#phantasia:item/generic/inventory_default",
-            [ItemTileProperties.CanMirror],
+            [TileItemProperties.CanMirror],
         )
-            .setTileDrops([new ItemTileDrop("phantasia:rock")])
+            .setTileDrops([new TileItemDrop("phantasia:rock")])
             .setTileHarvest(
-                new ItemTileHarvest(
+                new TileItemHarvest(
                     0.11,
                     0,
-                    new ItemTileParticle(
+                    new TileItemParticle(
                         "#phantasia:tile/particle_colour/stone",
                         "#phantasia:tile/generic/harvest_particle_frequency",
                     ),
                 ),
             )
             .setTilePlacement(
-                new ItemTilePlacement().setIndex(
-                    new SmartValueIntRandom(1, 4),
-                ),
+                new TileItemPlacement().setIndex(new SmartValueIntRandom(1, 4)),
             )
             .setTileSFX("#phantasia:tile/sfx/stone")
             .setAudioProperties(0.05, 0.0),

@@ -1,10 +1,10 @@
 import { DatagenReturnData } from "../../../lib/DatagenReturnData";
 import { ItemType } from "../lib/ItemType";
 import {
-    ItemTileCondition,
-    ItemTileDrop,
-    ItemTileHarvest,
-    ItemTileParticle,
+    TileItemCondition,
+    TileItemDrop,
+    TileItemHarvest,
+    TileItemParticle,
     TileItem,
 } from "../lib/TileItem";
 
@@ -47,16 +47,16 @@ export default [
             `phantasia:item/mangrove_roots`,
             "#phantasia:item/generic/inventory_tile",
         )
-            .setTileDrops([new ItemTileDrop(`phantasia:mangrove`)])
+            .setTileDrops([new TileItemDrop(`phantasia:mangrove`)])
             .setTileHarvest(
-                new ItemTileHarvest(
+                new TileItemHarvest(
                     0.56,
                     1,
-                    new ItemTileParticle(
+                    new TileItemParticle(
                         ["#4D2D0B", "#3F2207"],
                         "#phantasia:tile/generic/harvest_particle_frequency",
                     ),
-                    new ItemTileCondition("#phantasia:item/type/axe"),
+                    new TileItemCondition("#phantasia:item/type/axe"),
                 ),
             )
             .setTileSFX("#phantasia:tile/sfx/wood")
