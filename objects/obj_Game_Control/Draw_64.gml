@@ -47,7 +47,7 @@ if (is_opened & IS_OPENED_BOOLEAN.GENERATING_WORLD)
     
     draw_set_align(fa_center, fa_middle);
     
-    render_text(_gui_width / 2, _gui_height / 2, "Loading world...", 2 * _gui_scale, 2 * _gui_scale);
+    render_text(_gui_width / 2, _gui_height / 2, loca_translate("phantasia:menu.loading_world.title"), 2 * _gui_scale, 2 * _gui_scale);
     
     draw_set_align(_halign, _valign);
     

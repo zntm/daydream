@@ -17,7 +17,7 @@ on_draw = function(_xoffset, _yoffset, _xscale, _yscale)
     
     render_text(480 * _xscale, _y - (32 * _yscale), loca_translate("phantasia:menu.saving_world.title"), 1.5 * _xscale, 1.5 * _yscale);
     
-    render_text(480 * _xscale, _y - (16 * _yscale), string(loca_translate("phantasia:menu.saving_world.progress"), _chunk_saved_count, _chunk_saved_count_max, round(_t)), _xscale, _yscale);
+    render_text(480 * _xscale, _y - (16 * _yscale), string(loca_translate("phantasia:menu.saving_world.progress"), _chunk_saved_count, _chunk_saved_count_max, round(_t * 100)), _xscale, _yscale);
     
     draw_set_align(_halign, _valign);
     

@@ -18,6 +18,15 @@ function sfx_diegetic_play(_emitter, _x, _y, _id, _gain = global.settings.audio_
     // Calculate sound occlusion
     var _occlusion = sfx_calculate_occlusion(obj_Player.x, obj_Player.y, _x, _y);
     
+    var _distance = point_distance(obj_Player.x, obj_Player.y, _x, _y);
+    
+    var _falloff_reference = _data.get_falloff_reference();
+    var _falloff_max = _data.get_falloff_max();
+    
+    _gain = _gain * (1 - normalize(_distance, _falloff_reference, _falloff_max));
+    
+    if (_gain <= 0) exit;
+    
     // If occluded, set bus with LPF and play sound
     if (_occlusion > 0)
     {

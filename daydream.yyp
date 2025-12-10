@@ -1488,6 +1488,7 @@
     {"id":{"name":"spr_Null","path":"sprites/spr_Null/spr_Null.yy",},},
     {"id":{"name":"spr_Square","path":"sprites/spr_Square/spr_Square.yy",},},
     {"id":{"name":"spr_Vignette_Corner","path":"sprites/spr_Vignette_Corner/spr_Vignette_Corner.yy",},},
+    {"id":{"name":"Sprite43","path":"sprites/Sprite43/Sprite43.yy",},},
   ],
   "resourceType":"GMProject",
   "resourceVersion":"2.0",

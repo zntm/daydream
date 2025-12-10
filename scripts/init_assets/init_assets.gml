@@ -41,7 +41,7 @@ function SpriteAsset(_sprite, _xoffset, _yoffset, _width, _height, _length) cons
     }
 }
 
-function SoundAsset(_sound, _duration, _author = undefined, _title = undefined) constructor
+function SoundAsset(_sound, _duration, _author = undefined, _title = undefined, _falloff_reference = undefined, _falloff_max = undefined) constructor
 {
     ___sound = _sound;
     ___duration = _duration;
@@ -74,6 +74,16 @@ function SoundAsset(_sound, _duration, _author = undefined, _title = undefined) 
     static get_title = function()
     {
         return self[$ "___title"];
+    }
+    
+    static get_falloff_reference = function()
+    {
+        return self[$ "___falloff_reference"] ?? (TILE_SIZE * 8);
+    }
+    
+    static get_falloff_max = function()
+    {
+        return self[$ "___falloff_max"] ?? (TILE_SIZE * 16);
     }
 }
 

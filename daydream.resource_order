@@ -392,5 +392,6 @@
     {"name":"spr_Mouse","order":5,"path":"sprites/spr_Mouse/spr_Mouse.yy",},
     {"name":"spr_Square","order":1,"path":"sprites/spr_Square/spr_Square.yy",},
     {"name":"spr_Vignette_Corner","order":4,"path":"sprites/spr_Vignette_Corner/spr_Vignette_Corner.yy",},
+    {"name":"Sprite43","order":3,"path":"sprites/Sprite43/Sprite43.yy",},
   ],
 }
