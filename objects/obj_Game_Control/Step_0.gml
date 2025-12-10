@@ -41,7 +41,7 @@ if (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.GENERATING_WORLD)
     }
     
     control_update_chunk_in_view();
-    /*
+    
     for (var i = 0; i < chunk_in_view_length; ++i)
     {
         var _inst = chunk_in_view[i];
@@ -75,7 +75,7 @@ if (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.GENERATING_WORLD)
                 }
             }
         }
-    }*/
+    }
     
     obj_Game_Control.is_opened ^= IS_OPENED_BOOLEAN.GENERATING_WORLD;
 }
@@ -163,6 +163,7 @@ if (IS_DEVELOPER_MODE)
     if (variable_struct_exists(_debug_settings, "camera_size"))
     {
         var _size = _debug_settings.camera_size;
+        
         global.camera_width  = global.camera_width_base  * _size;
         global.camera_height = global.camera_height_base * _size;
         

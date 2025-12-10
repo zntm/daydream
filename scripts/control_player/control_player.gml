@@ -12,19 +12,13 @@ function control_player(_dt)
             
             if (_data.get_hostility_type() == CREATURE_HOSTILITY_TYPE.HOSTILE)
             {
-                // Use unified damage handler
                 var _died = control_entity_damage(id, _inst, _data.get_contact_damage());
                 
-                if (_died)
-                {
-                    obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.HP;
-                    exit;
-                }
-                
-                // Use unified knockback handler
-                control_entity_knockback(id, _inst);
-                
                 obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.HP;
+                
+                if (_died) exit;
+                
+                control_entity_knockback(id, _inst);
             }
         }
     }
@@ -40,20 +34,13 @@ function control_player(_dt)
     
     var _on_ground = tile_meeting(x, y + 1);
     
-    var _use_physics = true;
-    
-    if (IS_DEVELOPER_MODE && variable_struct_exists(global, "dbg_settings") && variable_struct_exists(global.dbg_settings, "physics"))
+    if (IS_DEVELOPER_MODE) && (global.dbg_settings[$ "use_physics"])
     {
-        _use_physics = global.dbg_settings.physics;
-    }
-    
-    if (_use_physics)
-    {
-        control_physics(_dt, id);
+        control_physics_creative(_dt, id);
     }
     else
     {
-        control_physics_creative(_dt, id);
+        control_physics(_dt, id);
     }
     
     if !(obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.MENU) && (timer_attack <= 0) && (mouse_check_button(mb_left))

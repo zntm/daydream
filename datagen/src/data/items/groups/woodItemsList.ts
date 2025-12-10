@@ -6,6 +6,7 @@ import {
     TileItemHarvest,
     TileItemParticle,
     TileItem,
+    TileItemProperties,
 } from "../lib/TileItem";
 
 const { default: woodItems } = import.meta.require("./woodItems");
@@ -46,6 +47,11 @@ export default [
             ItemType.Solid,
             `phantasia:item/mangrove_roots`,
             "#phantasia:item/generic/inventory_tile",
+            [
+                TileItemProperties.CanFlip,
+                TileItemProperties.CanMirror,
+                TileItemProperties.IsTile,
+            ],
         )
             .setTileDrops([new TileItemDrop(`phantasia:mangrove`)])
             .setTileHarvest(

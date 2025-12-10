@@ -61,6 +61,7 @@ export default [
     "./items/groups/furnaceItem",
     "./items/groups/glassItem",
     "./items/groups/debrisItems",
+    "./items/groups/snowItems",
     "./items/groups/stoneItems",
     "./items/groups/oreItemsList",
     "./items/groups/equipmentItems",

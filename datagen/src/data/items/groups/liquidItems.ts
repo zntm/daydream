@@ -28,9 +28,9 @@ export default [
                 `generated/data/items/${id}_bucket.json`,
                 new Item(
                     ItemType.Untouchable,
-                    `phantasia:item/${id}_flowing`,
+                    `phantasia:item/${id}_bucket`,
                     "#phantasia:item/generic/inventory_default",
-                )
+                ) /*
                     .addComponent("level", new ItemIntegerComponent(8, 1, 8))
                     .addComponent(
                         "flow_direction",
@@ -38,7 +38,7 @@ export default [
                     )
                     .addOnRandomTick([
                         new ItemFunction("phantasia:liquid_flow"),
-                    ]),
+                        ]),*/,
             ),
         ];
     }),

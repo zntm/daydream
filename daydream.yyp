@@ -1381,7 +1381,6 @@
     {"id":{"name":"rpc_world","path":"scripts/rpc_world/rpc_world.yy",},},
     {"id":{"name":"SettingsData","path":"scripts/SettingsData/SettingsData.yy",},},
     {"id":{"name":"sfx_calculate_occlusion","path":"scripts/sfx_calculate_occlusion/sfx_calculate_occlusion.yy",},},
-    {"id":{"name":"sfx_diegetic_play_at","path":"scripts/sfx_diegetic_play_at/sfx_diegetic_play_at.yy",},},
     {"id":{"name":"sfx_diegetic_play","path":"scripts/sfx_diegetic_play/sfx_diegetic_play.yy",},},
     {"id":{"name":"sfx_play","path":"scripts/sfx_play/sfx_play.yy",},},
     {"id":{"name":"SFXData","path":"scripts/SFXData/SFXData.yy",},},

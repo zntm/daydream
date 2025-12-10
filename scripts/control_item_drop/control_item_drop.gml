@@ -63,7 +63,7 @@ function control_item_drop(_dt)
     {
         item = inventory_give(x, y, item, true);
         
-        sfx_diegetic_play_at(x, y, "phantasia:sfx/item/collect");
+        sfx_diegetic_play(obj_Player.audio_emitter, x, y, "phantasia:sfx/item/collect", global.settings.audio_sfx);
         
         inventory_refresh_craftable();
         
