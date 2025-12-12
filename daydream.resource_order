@@ -356,6 +356,7 @@
     {"name":"shd_Colour_Replace","order":5,"path":"shaders/shd_Colour_Replace/shd_Colour_Replace.yy",},
     {"name":"shd_Colourblind","order":6,"path":"shaders/shd_Colourblind/shd_Colourblind.yy",},
     {"name":"shd_Lighting","order":7,"path":"shaders/shd_Lighting/shd_Lighting.yy",},
+    {"name":"shd_Menu_Settings_Fade","order":8,"path":"shaders/shd_Menu_Settings_Fade/shd_Menu_Settings_Fade.yy",},
     {"name":"shd_Separable_Blur","order":4,"path":"shaders/shd_Separable_Blur/shd_Separable_Blur.yy",},
     {"name":"spr_Attire_Base_Arm_Left","order":1,"path":"sprites/spr_Attire_Base_Arm_Left/spr_Attire_Base_Arm_Left.yy",},
     {"name":"spr_Attire_Base_Arm_Right","order":2,"path":"sprites/spr_Attire_Base_Arm_Right/spr_Attire_Base_Arm_Right.yy",},
@@ -392,6 +393,5 @@
     {"name":"spr_Mouse","order":5,"path":"sprites/spr_Mouse/spr_Mouse.yy",},
     {"name":"spr_Square","order":1,"path":"sprites/spr_Square/spr_Square.yy",},
     {"name":"spr_Vignette_Corner","order":4,"path":"sprites/spr_Vignette_Corner/spr_Vignette_Corner.yy",},
-    {"name":"Sprite43","order":3,"path":"sprites/Sprite43/Sprite43.yy",},
   ],
 }

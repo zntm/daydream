@@ -66,6 +66,11 @@ function menu_refresh_instance_settings()
 		_inst_slider.y = _menu_settings_yoffset + _inst_slider.ystart;
 	}
     
+    obj_Menu_Control_Render.surface_index_length = 2;
+    obj_Menu_Control_Render.surface_index_shader[@ 1] = {
+        id: shd_Menu_Settings_Fade
+    }
+    
     for (var i = 0; i < _length; ++i)
     {
         var _name = _category[i];
@@ -132,6 +137,7 @@ function menu_refresh_instance_settings()
             with (instance_create_layer(_menu_settings_xoffset + 64, _menu_settings_yoffset + _y, "Settings", obj_Menu_Button))
             {
                 is_setting = true;
+                surface_index = 1;
                 
                 name = _name;
                 
@@ -176,6 +182,7 @@ function menu_refresh_instance_settings()
             with (instance_create_layer(_menu_settings_xoffset + 64, _menu_settings_yoffset + _y, "Settings", obj_Menu_Button))
             {
                 is_setting = true;
+                surface_index = 1;
                 
                 name = _name;
                 

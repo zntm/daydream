@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"shd_Menu_Settings_Fade",
+  "name":"shd_Menu_Settings_Fade",
+  "parent":{
+    "name":"Shaders",
+    "path":"folders/Shaders.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

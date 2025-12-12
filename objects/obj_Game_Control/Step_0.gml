@@ -326,3 +326,8 @@ if !(is_opened & IS_OPENED_BOOLEAN.MENU)
 }
 
 control_chunk_activity(_camera_x, _camera_y, _camera_width, _camera_height);
+
+if (keyboard_check_pressed(vk_f1))
+{
+    is_opened ^= IS_OPENED_BOOLEAN.GUI;
+}

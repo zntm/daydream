@@ -13,7 +13,7 @@ global.sfx_diegetic_floodfill_position = {}
 
 function sfx_diegetic_play(_emitter, _x, _y, _id, _gain = global.settings.audio_sfx, _world_height = global.world_data[$ global.world_save_data.dimension].get_world_height())
 {
-    var _data = global.sound_asset[$ _id];
+    var _data = is_array_choose(global.sound_asset[$ _id]);
     
     // Calculate sound occlusion
     var _occlusion = sfx_calculate_occlusion(obj_Player.x, obj_Player.y, _x, _y);
@@ -41,7 +41,7 @@ function sfx_diegetic_play(_emitter, _x, _y, _id, _gain = global.settings.audio_
         // Play sound with occlusion effect
         return audio_play_sound_ext({
             emitter: _emitter,
-            sound: is_array_choose(_data).get_sound(),
+            sound: _data.get_sound(),
             pitch: 1,
             gain: _gain
         });
@@ -50,7 +50,7 @@ function sfx_diegetic_play(_emitter, _x, _y, _id, _gain = global.settings.audio_
     // No occlusion - play normally
     return audio_play_sound_ext({
         emitter: _emitter,
-        sound: is_array_choose(_data).get_sound(),
+        sound: _data.get_sound(),
         pitch: 1,
         gain: _gain
     });
