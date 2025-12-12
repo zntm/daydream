@@ -209,6 +209,8 @@ if (IS_DEVELOPER_MODE)
 {
     show_debug_overlay(true);
     
+    global.inventory.base[@ 0] = new Inventory("phantasia:water_bucket")
+    
     global.debug_reload = {};
     
     global.dbg_settings = {

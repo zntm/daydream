@@ -35,5 +35,13 @@ function spawn_creature(_x, _y, _id, _variant)
         ai_prey_target = noone;
     }
     
+    // Emit entity spawned event
+    event_emit(GAME_EVENT.ENTITY_SPAWNED, {
+        instance: _inst,
+        type: "creature",
+        id: _id,
+        variant: _variant
+    });
+    
     return _inst;
 }

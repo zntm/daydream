@@ -1,0 +1,101 @@
+/// @desc Event system for game-wide event subscription and emission
+
+// Event type enum - simplified
+enum GAME_EVENT {
+    TILE_CHANGED,       // Tile placed or destroyed
+    ENTITY_SPAWNED,     // Entity created
+    ENTITY_DAMAGED,     // Entity took damage (includes player)
+    ENTITY_HEALED,      // Entity healed (includes player)
+    ENTITY_DEATH,       // Entity died (includes player)
+    ITEM_COLLECTED,     // Item picked up
+    ITEM_DROPPED,       // Item dropped
+    CHUNK_GENERATED,    // Chunk finished generating
+    EXPLOSION           // Explosion occurred
+}
+
+global.event_listeners = {};
+
+/// @function event_subscribe(_event, _callback)
+/// @desc Subscribe to an event
+/// @param {real} _event Event type from GAME_EVENT enum
+/// @param {function} _callback Function to call when event fires
+/// @returns {struct} Subscription handle (for unsubscribing)
+function event_subscribe(_event, _callback)
+{
+    if (!variable_struct_exists(global.event_listeners, _event))
+    {
+        global.event_listeners[$ _event] = [];
+    }
+    
+    var _subscription = {
+        event: _event,
+        callback: _callback,
+        active: true
+    };
+    
+    array_push(global.event_listeners[$ _event], _subscription);
+    
+    return _subscription;
+}
+
+/// @function event_unsubscribe(_subscription)
+/// @desc Unsubscribe from an event using the subscription handle
+/// @param {struct} _subscription The subscription handle from event_subscribe
+function event_unsubscribe(_subscription)
+{
+    _subscription.active = false;
+    
+    var _listeners = global.event_listeners[$ _subscription.event];
+    
+    if (_listeners == undefined) return;
+    
+    for (var i = array_length(_listeners) - 1; i >= 0; --i)
+    {
+        if (_listeners[i] == _subscription)
+        {
+            array_delete(_listeners, i, 1);
+            break;
+        }
+    }
+}
+
+/// @function event_emit(_event, _data)
+/// @desc Emit an event to all subscribers
+/// @param {real} _event Event type from GAME_EVENT enum
+/// @param {struct} _data Event data to pass to callbacks
+function event_emit(_event, _data = {})
+{
+    var _listeners = global.event_listeners[$ _event];
+    
+    if (_listeners == undefined) return;
+    
+    var _length = array_length(_listeners);
+    
+    for (var i = 0; i < _length; ++i)
+    {
+        var _subscription = _listeners[i];
+        
+        if (_subscription.active)
+        {
+            _subscription.callback(_data);
+        }
+    }
+}
+
+/// @function event_clear(_event)
+/// @desc Clear all listeners for a specific event
+/// @param {real} _event Event type from GAME_EVENT enum
+function event_clear(_event)
+{
+    if (variable_struct_exists(global.event_listeners, _event))
+    {
+        global.event_listeners[$ _event] = [];
+    }
+}
+
+/// @function event_clear_all()
+/// @desc Clear all event listeners
+function event_clear_all()
+{
+    global.event_listeners = {};
+}

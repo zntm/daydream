@@ -5,13 +5,13 @@
         "components": {
             "id": {
                 "type": "string",
-                "default_value": "id",
-                "max_length": 80
+                "default": "id",
+                "max": 80
             },
             "turns_into": {
                 "type": "string",
-                "default_value": "turns_into",
-                "max_length": 80
+                "default": "turns_into",
+                "max": 80
             }
         },
         "on_use": [

@@ -135,7 +135,15 @@ function Tile(_id, _item_data = global.item_data) constructor
         
         var _data = global.item_data[$ get_id()];
         
-        var _component = _data.get_component(_name);
+        var _component = _data.get_tile_component(_name);
+        
+        // If component definition doesn't exist, just store the value directly
+        if (_component == undefined)
+        {
+            ___components[$ _name] = _value;
+            return self;
+        }
+        
         var _type = _component.type;
         
         if (_type == "string")

@@ -39,7 +39,8 @@ enum ITEM_PROPERTIES_BOOLEAN {
     IS_CRAFTING_STATION = 1 << 3,
     IS_TRANSPARENT      = 1 << 4,
     CAN_FLIP_ON_X       = 1 << 5,
-    CAN_FLIP_ON_Y       = 1 << 6
+    CAN_FLIP_ON_Y       = 1 << 6,
+    IS_LIQUID       = 1 << 7,
 }
 
 enum TILE_ANIMATION_TYPE {
@@ -257,6 +258,13 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
             if (_harvest != undefined)
             {
                 set_item_harvest(_harvest);
+            }
+            
+            var _on_use = _data[$ "on_use"];
+            
+            if (_on_use != undefined)
+            {
+                set_on_item_use(_on_use);
             }
         }
         
@@ -489,6 +497,8 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
             }
             */
         }
+        
+        show_debug_message(get_sprite());
         
         var _sprite = global.sprite_asset[$ get_sprite()].get_sprite();
         
@@ -864,6 +874,7 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
             "phantasia:can_mirror":     set_property_can_mirror,
             "phantasia:can_flip":       set_property_can_flip,
             "phantasia:is_foliage":     set_property_is_foliage,
+            "phantasia:is_liquid":     set_property_is_liquid,
             "phantasia:is_tile":        set_property_is_tile,
             "phantasia:is_transparent": set_property_is_transparent,
             "phantasia:is_wall":        set_property_is_wall,
@@ -931,6 +942,21 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     static is_foliage = function()
     {
         return !!(___properties & ITEM_PROPERTIES_BOOLEAN.IS_FOLIAGE);
+    }
+    
+    static set_property_is_liquid = function(_is_liquid)
+    {
+        if (_is_liquid)
+        {
+            ___properties |= ITEM_PROPERTIES_BOOLEAN.IS_LIQUID;
+        }
+        
+        return self;
+    }
+    
+    static is_liquid = function()
+    {
+        return !!(___properties & ITEM_PROPERTIES_BOOLEAN.IS_LIQUID);
     }
     
     static set_is_crafting_station = function(_is_crafting_station)

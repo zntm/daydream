@@ -1,7 +1,5 @@
 function file_save_snippet_tile_component(_buffer, _tile)
 {
-    static __file_component_type = global.file_component_type;
-    
     var _data = global.item_data[$ _tile.get_id()];
     
     var _component_length = _data.get_tile_components_length();
@@ -11,26 +9,64 @@ function file_save_snippet_tile_component(_buffer, _tile)
     if (_component_length > 0)
     {
         var _names = _data.get_tile_components_names();
+        var _components = _data.get_tile_components();
         
         for (var i = 0; i < _component_length; ++i)
         {
             var _name = _names[i];
+            var _component_def = _components[$ _name];
+            var _type_str = _component_def[$ "type"];
+            var _value = _tile.get_tile_component(_name) ?? _component_def[$ "default"];
             
             buffer_write(_buffer, buffer_string, _name);
             
-            var _component = _tile.get_tile_component(_name) ?? _data.get_tile_component(_name)[$ "default"];
-            
-            var _type = __file_component_type[$ typeof(_component)];
-            
-            buffer_write(_buffer, buffer_u8, _type);
-            
-            if (_type == FILE_COMPONENT_TYPE.NUMBER)
+            // Write type and value based on component type from data
+            switch (_type_str)
             {
-                buffer_write(_buffer, buffer_f64, _component);
-            }
-            else if (_type == FILE_COMPONENT_TYPE.STRING)
-            {
-            	buffer_write(_buffer, buffer_string, _component);
+                case "u8":
+                    buffer_write(_buffer, buffer_u8, FILE_COMPONENT_TYPE.U8);
+                    buffer_write(_buffer, buffer_u8, _value);
+                    break;
+                case "u16":
+                    buffer_write(_buffer, buffer_u8, FILE_COMPONENT_TYPE.U16);
+                    buffer_write(_buffer, buffer_u16, _value);
+                    break;
+                case "u32":
+                    buffer_write(_buffer, buffer_u8, FILE_COMPONENT_TYPE.U32);
+                    buffer_write(_buffer, buffer_u32, _value);
+                    break;
+                case "u64":
+                    buffer_write(_buffer, buffer_u8, FILE_COMPONENT_TYPE.U64);
+                    buffer_write(_buffer, buffer_u64, _value);
+                    break;
+                case "s8":
+                    buffer_write(_buffer, buffer_u8, FILE_COMPONENT_TYPE.S8);
+                    buffer_write(_buffer, buffer_s8, _value);
+                    break;
+                case "s16":
+                    buffer_write(_buffer, buffer_u8, FILE_COMPONENT_TYPE.S16);
+                    buffer_write(_buffer, buffer_s16, _value);
+                    break;
+                case "s32":
+                    buffer_write(_buffer, buffer_u8, FILE_COMPONENT_TYPE.S32);
+                    buffer_write(_buffer, buffer_s32, _value);
+                    break;
+                case "f16":
+                    buffer_write(_buffer, buffer_u8, FILE_COMPONENT_TYPE.F16);
+                    buffer_write(_buffer, buffer_f16, _value);
+                    break;
+                case "f32":
+                    buffer_write(_buffer, buffer_u8, FILE_COMPONENT_TYPE.F32);
+                    buffer_write(_buffer, buffer_f32, _value);
+                    break;
+                case "f64":
+                    buffer_write(_buffer, buffer_u8, FILE_COMPONENT_TYPE.F64);
+                    buffer_write(_buffer, buffer_f64, _value);
+                    break;
+                case "string":
+                    buffer_write(_buffer, buffer_u8, FILE_COMPONENT_TYPE.STRING);
+                    buffer_write(_buffer, buffer_string, _value);
+                    break;
             }
         }
     }

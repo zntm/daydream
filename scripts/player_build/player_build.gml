@@ -11,6 +11,22 @@ function player_build(_dt, _x, _y)
     
     var _data = _item_data[$ _id];
     
+    // Check for item on_use functions (e.g., buckets, tools with special use)
+    var _on_item_use = _data.get_on_item_use();
+    var _on_item_use_length = _data.get_on_item_use_length() ?? 0;
+    
+    if (_on_item_use_length > 0)
+    {
+        for (var i = 0; i < _on_item_use_length; ++i)
+        {
+            function_execute(_on_item_use[i], _x, _y, CHUNK_DEPTH_DEFAULT, 1, 1, _dt);
+        }
+        
+        cooldown_build = 0.15;
+        
+        exit; // Item on_use handled, don't continue with tile placement
+    }
+    
     var _z = CHUNK_DEPTH_DEFAULT;
     
     if (_data.has_type(ITEM_TYPE_BIT.UNTOUCHABLE))

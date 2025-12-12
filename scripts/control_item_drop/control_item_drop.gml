@@ -61,9 +61,22 @@ function control_item_drop(_dt)
     */
     if (timer_pickup <= 0) && (instance_exists(inst)) && (place_meeting(x, y, inst))
     {
+        var _item_before = item;
+        var _amount_before = (item != undefined) ? item.get_amount() : 0;
+        
         item = inventory_give(x, y, item, true);
         
         sfx_diegetic_play(obj_Player.audio_emitter, x, y, "phantasia:sfx/item/collect", global.settings.audio_sfx);
+        
+        // Emit item collected event
+        var _collected_amount = _amount_before - ((item != undefined) ? item.get_amount() : 0);
+        if (_collected_amount > 0)
+        {
+            event_emit(GAME_EVENT.ITEM_COLLECTED, {
+                item_id: _item_before.get_id(),
+                amount: _collected_amount
+            });
+        }
         
         inventory_refresh_craftable();
         

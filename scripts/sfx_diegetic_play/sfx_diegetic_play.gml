@@ -15,6 +15,8 @@ function sfx_diegetic_play(_emitter, _x, _y, _id, _gain = global.settings.audio_
 {
     var _data = is_array_choose(global.sound_asset[$ _id]);
     
+    if (_data == undefined) exit;
+    
     // Calculate sound occlusion
     var _occlusion = sfx_calculate_occlusion(obj_Player.x, obj_Player.y, _x, _y);
     
@@ -26,6 +28,17 @@ function sfx_diegetic_play(_emitter, _x, _y, _id, _gain = global.settings.audio_
     _gain = _gain * (1 - normalize(_distance, _falloff_reference, _falloff_max));
     
     if (_gain <= 0) exit;
+    
+    // Create temporary emitter if none provided
+    var _is_temp_emitter = (_emitter == undefined);
+    
+    if (_is_temp_emitter)
+    {
+        _emitter = audio_emitter_create();
+        audio_emitter_position(_emitter, _x, _y, 0);
+    }
+    
+    var _sound;
     
     // If occluded, set bus with LPF and play sound
     if (_occlusion > 0)
@@ -39,7 +52,17 @@ function sfx_diegetic_play(_emitter, _x, _y, _id, _gain = global.settings.audio_
         audio_emitter_bus(_emitter, global.audio_bus[$ $"{_lpf_index}_0"]);
         
         // Play sound with occlusion effect
-        return audio_play_sound_ext({
+        _sound = audio_play_sound_ext({
+            emitter: _emitter,
+            sound: _data.get_sound(),
+            pitch: 1,
+            gain: _gain
+        });
+    }
+    else
+    {
+        // No occlusion - play normally
+        _sound = audio_play_sound_ext({
             emitter: _emitter,
             sound: _data.get_sound(),
             pitch: 1,
@@ -47,11 +70,11 @@ function sfx_diegetic_play(_emitter, _x, _y, _id, _gain = global.settings.audio_
         });
     }
     
-    // No occlusion - play normally
-    return audio_play_sound_ext({
-        emitter: _emitter,
-        sound: _data.get_sound(),
-        pitch: 1,
-        gain: _gain
-    });
+    // Track temporary emitters for cleanup
+    if (_is_temp_emitter)
+    {
+        sfx_emitter_track(_emitter, _sound);
+    }
+    
+    return _sound;
 }

@@ -5,16 +5,46 @@ function file_load_snippet_item_component(_buffer, _item)
     for (var i = 0; i < _component_length; ++i)
     {
         var _name = buffer_read(_buffer, buffer_string);
-        
         var _type = buffer_read(_buffer, buffer_u8);
+        var _value;
         
-        if (_type == FILE_COMPONENT_TYPE.NUMBER)
+        switch (_type)
         {
-            _item.set_item_component(_name, buffer_read(_buffer, buffer_f64));
+            case FILE_COMPONENT_TYPE.U8:
+                _value = buffer_read(_buffer, buffer_u8);
+                break;
+            case FILE_COMPONENT_TYPE.U16:
+                _value = buffer_read(_buffer, buffer_u16);
+                break;
+            case FILE_COMPONENT_TYPE.U32:
+                _value = buffer_read(_buffer, buffer_u32);
+                break;
+            case FILE_COMPONENT_TYPE.U64:
+                _value = buffer_read(_buffer, buffer_u64);
+                break;
+            case FILE_COMPONENT_TYPE.S8:
+                _value = buffer_read(_buffer, buffer_s8);
+                break;
+            case FILE_COMPONENT_TYPE.S16:
+                _value = buffer_read(_buffer, buffer_s16);
+                break;
+            case FILE_COMPONENT_TYPE.S32:
+                _value = buffer_read(_buffer, buffer_s32);
+                break;
+            case FILE_COMPONENT_TYPE.F16:
+                _value = buffer_read(_buffer, buffer_f16);
+                break;
+            case FILE_COMPONENT_TYPE.F32:
+                _value = buffer_read(_buffer, buffer_f32);
+                break;
+            case FILE_COMPONENT_TYPE.F64:
+                _value = buffer_read(_buffer, buffer_f64);
+                break;
+            case FILE_COMPONENT_TYPE.STRING:
+                _value = buffer_read(_buffer, buffer_string);
+                break;
         }
-        else if (_type == FILE_COMPONENT_TYPE.STRING)
-        {
-            _item.set_item_component(_name, buffer_read(_buffer, buffer_string));
-        }
+        
+        _item.set_item_component(_name, _value);
     }
 }

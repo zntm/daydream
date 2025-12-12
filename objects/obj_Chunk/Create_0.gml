@@ -72,20 +72,3 @@ else
         }
     }
 }
-
-chunk_audio_emitter = array_create(CHUNK_SIZE * CHUNK_SIZE);
-
-for (var i = 0; i < CHUNK_SIZE; ++i)
-{
-    for (var j = 0; j < CHUNK_SIZE; ++j)
-    {
-        var _audio_emitter = audio_emitter_create();
-        
-        var _x = (chunk_xstart + i) * TILE_SIZE;
-        var _y = (chunk_ystart + j) * TILE_SIZE;
-        
-        audio_emitter_position(_audio_emitter, _x, _y, 0);
-        
-        chunk_audio_emitter[@ tile_index_xy(i, j)] = _audio_emitter;
-    }
-}

@@ -140,12 +140,30 @@ for (var i = 0; i < AUDIO_EFFECT_SIZE; ++i)
 }
 
 enum FILE_COMPONENT_TYPE {
-    NUMBER,
+    U8,
+    U16,
+    U32,
+    U64,
+    S8,
+    S16,
+    S32,
+    F16,
+    F32,
+    F64,
     STRING
 }
 
 global.file_component_type = {
-    "number": FILE_COMPONENT_TYPE.NUMBER,
+    "u8": FILE_COMPONENT_TYPE.U8,
+    "u16": FILE_COMPONENT_TYPE.U16,
+    "u32": FILE_COMPONENT_TYPE.U32,
+    "u64": FILE_COMPONENT_TYPE.U64,
+    "s8": FILE_COMPONENT_TYPE.S8,
+    "s16": FILE_COMPONENT_TYPE.S16,
+    "s32": FILE_COMPONENT_TYPE.S32,
+    "f16": FILE_COMPONENT_TYPE.F16,
+    "f32": FILE_COMPONENT_TYPE.F32,
+    "f64": FILE_COMPONENT_TYPE.F64,
     "string": FILE_COMPONENT_TYPE.STRING
 }
 

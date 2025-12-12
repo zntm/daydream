@@ -41,14 +41,17 @@ function control_chunk(_player_x, _player_y, _camera_x, _camera_y, _camera_width
     {
         control_update_chunk_in_view();
     }
-    /*
+    
     for (var i = 0; i < chunk_in_view_length; ++i)
     {
         var _inst = chunk_in_view[i];
         
         if (!instance_exists(_inst)) || (_inst.boolean & CHUNK_BOOLEAN.GENERATED) continue;
         
-        _inst.boolean |= CHUNK_BOOLEAN.GENERATED;
+        _inst.boolean |= CHUNK_BOOLEAN.GENERATED | CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH;
+        
+        // Trigger global lighting refresh for newly generated chunks
+        obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.LIGHTING;
         
         var _chunk = _inst.chunk;
         
@@ -75,5 +78,5 @@ function control_chunk(_player_x, _player_y, _camera_x, _camera_y, _camera_width
                 }
             }
         }
-    }*/
+    }
 }

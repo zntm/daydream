@@ -11,6 +11,18 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
     var _surface_x = round(_camera_x / RENDER_LIGHTING_RESIZE) * RENDER_LIGHTING_RESIZE;
     var _surface_y = round(_camera_y / RENDER_LIGHTING_RESIZE) * RENDER_LIGHTING_RESIZE;
     
+    // Check if any chunks need lighting refresh (new/loaded chunks)
+    for (var i = 0; i < chunk_in_view_length; ++i)
+    {
+        var _inst = chunk_in_view[i];
+        
+        if (instance_exists(_inst) && (_inst.boolean & CHUNK_BOOLEAN.GENERATED) && (_inst.boolean & CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH))
+        {
+            surface_refresh |= SURFACE_REFRESH_BOOLEAN.LIGHTING;
+            break;
+        }
+    }
+    
     if (_surface_x != obj_Game_Control.surface_lighting_x) || (_surface_y != obj_Game_Control.surface_lighting_y)
     {
         surface_refresh |= SURFACE_REFRESH_BOOLEAN.LIGHTING;
@@ -23,19 +35,26 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
         obj_Game_Control.surface_lighting_x = _surface_x;
         obj_Game_Control.surface_lighting_y = _surface_y;
         
+        // Create/update lighting surfaces for ALL generated chunks in view
         for (var i = 0; i < chunk_in_view_length; ++i)
         {
             var _inst = chunk_in_view[i];
             
-            if (!instance_exists(_inst)) || !(_inst.boolean & CHUNK_BOOLEAN.GENERATED) || !(_inst.boolean & CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH) continue;
+            if (!instance_exists(_inst)) || !(_inst.boolean & CHUNK_BOOLEAN.GENERATED) continue;
             
-            _inst.boolean ^= CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH;
+            // Clear the refresh flag if set
+            if (_inst.boolean & CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH)
+            {
+                _inst.boolean ^= CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH;
+            }
             
+            // Create surface if it doesn't exist
             if (!surface_exists(_inst.surface_lighting))
             {
                 _inst.surface_lighting = surface_create(CHUNK_SIZE + RENDER_LIGHTING_PADDING, CHUNK_SIZE + RENDER_LIGHTING_PADDING, surface_r8unorm);
             }
             
+            // Redraw the chunk's lighting surface
             surface_set_target(_inst.surface_lighting);
             draw_clear_alpha(c_black, 1);
             

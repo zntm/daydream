@@ -48,7 +48,10 @@ if (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.GENERATING_WORLD)
         
         if (!instance_exists(_inst)) || (_inst.boolean & CHUNK_BOOLEAN.GENERATED) continue;
         
-        _inst.boolean |= CHUNK_BOOLEAN.GENERATED;
+        _inst.boolean |= CHUNK_BOOLEAN.GENERATED | CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH;
+        
+        // Trigger global lighting refresh for newly generated chunks
+        surface_refresh |= SURFACE_REFRESH_BOOLEAN.LIGHTING;
         
         var _chunk = _inst.chunk;
         
@@ -207,6 +210,9 @@ with (obj_Player)
 }
 
 control_gametick(_delta_time);
+
+// Cleanup temporary audio emitters that have finished playing
+sfx_emitter_cleanup();
 
 with (obj_Floating_Text)
 {

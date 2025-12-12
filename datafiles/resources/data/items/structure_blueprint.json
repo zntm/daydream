@@ -5,37 +5,37 @@
         "components": {
             "id": {
                 "type": "string",
-                "default_value": "id",
-                "max_length": 80
+                "default": "id",
+                "max": 80
             },
             "turns_into": {
                 "type": "string",
-                "default_value": "turns_into",
-                "max_length": 80
+                "default": "turns_into",
+                "max": 80
             },
             "xoffset": {
-                "type": "integer",
-                "default_value": "xoffset",
-                "min_value": -128,
-                "max_value": 127
+                "type": "s32",
+                "default": "xoffset",
+                "min": -128,
+                "max": 127
             },
             "yoffset": {
-                "type": "integer",
-                "default_value": "yoffset",
-                "min_value": -128,
-                "max_value": 127
+                "type": "s32",
+                "default": "yoffset",
+                "min": -128,
+                "max": 127
             },
             "xscale": {
-                "type": "integer",
-                "default_value": "xscale",
-                "min_value": 1,
-                "max_value": 255
+                "type": "s32",
+                "default": "xscale",
+                "min": 1,
+                "max": 255
             },
             "yscale": {
-                "type": "integer",
-                "default_value": "yscale",
-                "min_value": 1,
-                "max_value": 255
+                "type": "s32",
+                "default": "yscale",
+                "min": 1,
+                "max": 255
             }
         },
         "on_use": [

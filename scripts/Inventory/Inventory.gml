@@ -61,7 +61,8 @@ function Inventory(_item, _amount = 1) constructor
         self[$ "___component"] ??= {}
         self[$ "___component_length"] ??= 0;
         
-        ___component[$ _name] = _name;
+        ___component[$ _name] = _value;
+        ___component_length++;
         
         return self;
     }

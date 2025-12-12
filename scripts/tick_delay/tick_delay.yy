@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"tick_delay",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"tick_delay",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

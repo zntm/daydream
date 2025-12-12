@@ -78,8 +78,6 @@ function tile_place(_x, _y, _z, _tile)
         {
             instance_destroy(_instance_light);
         }
-        
-        delete _tile_before;
     }
     
     _inst.chunk[@ _index] = _tile;
@@ -89,5 +87,33 @@ function tile_place(_x, _y, _z, _tile)
     if (vertex_buffer_exists(_vertex_buffer))
     {
         vertex_delete_buffer(_vertex_buffer);
+    }
+    
+    // Emit tile changed event
+    if (_tile != TILE_EMPTY)
+    {
+        event_emit(GAME_EVENT.TILE_CHANGED, {
+            action: "placed",
+            x: _x,
+            y: _y,
+            z: _z,
+            tile_id: _tile.get_id(),
+            tile: _tile
+        });
+    }
+    else if (_tile_before != TILE_EMPTY)
+    {
+        event_emit(GAME_EVENT.TILE_CHANGED, {
+            action: "destroyed",
+            x: _x,
+            y: _y,
+            z: _z,
+            tile_id: _tile_before.get_id()
+        });
+    }
+    
+    if (_tile_before != undefined)
+    {
+        delete _tile_before;
     }
 }

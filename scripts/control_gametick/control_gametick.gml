@@ -79,6 +79,9 @@ function control_gametick(_delta_time)
             }
         }
         
+        // Process delayed function executions
+        tick_delay_process();
+        
         control_creature_spawn(_tick);
         
         with (obj_Player)

@@ -2,7 +2,161 @@ global.item_function = {}
 
 global.item_function[$ "phantasia:explode"] = function(_dt, _x, _y, _z, _xscale, _yscale, _parameter)
 {
+    var _item_data = global.item_data;
+    
+    // Get explosion parameters with defaults
+    var _radius = _parameter[$ "radius"] ?? 3;
+    var _damage = _parameter[$ "damage"] ?? 10;
+    var _destroy_tiles = _parameter[$ "destroy_tiles"] ?? true;
+    var _particle = _parameter[$ "particle"];
+    var _sound = _parameter[$ "sound"];
+    var _chain_react = _parameter[$ "chain_react"] ?? true;
+    
+    var _world_x = _x * TILE_SIZE;
+    var _world_y = _y * TILE_SIZE;
+    
+    // Play explosion sound
+    if (_sound != undefined)
+    {
+        sfx_diegetic_play(undefined, _world_x, _world_y, smart_value(_sound));
+    }
+    
+    // Emit explosion event
+    event_emit(GAME_EVENT.EXPLOSION, {
+        x: _x,
+        y: _y,
+        z: _z,
+        radius: _radius,
+        damage: _damage
+    });
+    
+    // Spawn explosion particles
+    if (_particle != undefined)
+    {
+        var _particle_count = _parameter[$ "particle_count"] ?? (_radius * 4);
+        
+        for (var i = 0; i < _particle_count; ++i)
+        {
+            var _angle = irandom(360);
+            var _dist = irandom(_radius * TILE_SIZE);
+            
+            spawn_particle(
+                _world_x + lengthdir_x(_dist, _angle),
+                _world_y + lengthdir_y(_dist, _angle),
+                smart_value(_particle)
+            );
+        }
+    }
+    
+    // Collect tiles to explode (for chain reactions)
+    var _tiles_to_explode = [];
+    
+    // Destroy tiles in radius
+    if (_destroy_tiles)
+    {
+        for (var _tx = -_radius; _tx <= _radius; ++_tx)
+        {
+            for (var _ty = -_radius; _ty <= _radius; ++_ty)
+            {
+                var _dist = point_distance(0, 0, _tx, _ty);
+                
+                if (_dist <= _radius)
+                {
+                    var _target_x = _x + _tx;
+                    var _target_y = _y + _ty;
+                    
+                    for (var _tz = 0; _tz < CHUNK_DEPTH; ++_tz)
+                    {
+                        var _tile = tile_get(_target_x, _target_y, _tz);
+                        
+                        if (_tile != TILE_EMPTY)
+                        {
+                            var _tile_id = _tile.get_id();
+                            var _tile_data = _item_data[$ _tile_id];
+                            
+                            // Check for chain reaction (explosive tiles)
+                            if (_chain_react && (_target_x != _x || _target_y != _y))
+                            {
+                                var _on_random_tick = _tile_data.get_on_random_tick();
+                                
+                                if (_on_random_tick != undefined)
+                                {
+                                    for (var j = 0; j < array_length(_on_random_tick); ++j)
+                                    {
+                                        var _func = _on_random_tick[j];
+                                        
+                                        if (_func.id == "phantasia:explode")
+                                        {
+                                            array_push(_tiles_to_explode, {
+                                                x: _target_x,
+                                                y: _target_y,
+                                                z: _tz,
+                                                param: _func.parameter
+                                            });
+                                        }
+                                    }
+                                }
+                            }
+                            
+                            // Destroy the tile
+                            tile_place(_target_x, _target_y, _tz, TILE_EMPTY);
+                            tile_update_surrounding(_target_x, _target_y, _tz);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    // Damage entities in radius
+    if (_damage > 0)
+    {
+        var _damage_radius = _radius * TILE_SIZE;
+        
+        with (obj_Player)
+        {
+            var _dist = point_distance(x, y, _world_x, _world_y);
+            
+            if (_dist < _damage_radius)
+            {
+                var _falloff = 1 - (_dist / _damage_radius);
+                var _actual_damage = ceil(_damage * _falloff);
+                
+                control_entity_damage(id, noone, _actual_damage);
+            }
+        }
+        
+        with (obj_Creature)
+        {
+            var _dist = point_distance(x, y, _world_x, _world_y);
+            
+            if (_dist < _damage_radius)
+            {
+                var _falloff = 1 - (_dist / _damage_radius);
+                var _actual_damage = ceil(_damage * _falloff);
+                
+                control_entity_damage(id, noone, _actual_damage);
+            }
+        }
+    }
+    
+    // Trigger chain reactions with delay
+    if (array_length(_tiles_to_explode) > 0)
+    {
+        for (var i = 0; i < array_length(_tiles_to_explode); ++i)
+        {
+            var _chain = _tiles_to_explode[i];
+            
+            tick_delay_add(irandom_range(2, 6), function(_chain) {
+                var _item_function = global.item_function;
+                var _func = _item_function[$ "phantasia:explode"];
+                
+                _func(1, _chain.x, _chain.y, _chain.z, 1, 1, _chain.param ?? {});
+            }, [_chain]);
+        }
+    }
 }
+
 
 global.item_function[$ "phantasia:export_structure"] = function()
 {
@@ -122,6 +276,27 @@ global.item_function[$ "phantasia:liquid_flow"] = function(_dt, _x, _y, _z, _xsc
     var _level = _tile.get_component("level");
     var _flow_direction = _tile.get_component("flow_direction") ?? 0;
     
+    // Get flow parameters
+    var _flow_speed = _parameter[$ "flow_speed"] ?? 5;
+    var _fluid_collisions = _parameter[$ "fluid_collisions"];
+    
+    // Fallback defaults if triggered by environment (no parameters passed)
+    if (_fluid_collisions == undefined)
+    {
+        if (_id == "phantasia:water") {
+            _fluid_collisions = [{ id: "phantasia:stone", liquid_id: "phantasia:lava" }];
+        } else if (_id == "phantasia:lava") {
+            _fluid_collisions = [{ id: "phantasia:stone", liquid_id: "phantasia:water" }];
+        } else {
+            _fluid_collisions = [];
+        }
+        
+        // Update parameter struct to persist these defaults for downstream flow
+        if (_parameter == undefined) _parameter = {};
+        _parameter.fluid_collisions = _fluid_collisions;
+        _parameter.flow_speed = _flow_speed;
+    }
+    
     // Ensure we have a valid level
     if (_level == undefined)
     {
@@ -131,16 +306,15 @@ global.item_function[$ "phantasia:liquid_flow"] = function(_dt, _x, _y, _z, _xsc
     
     if (_level <= 0)
     {
-        tile_place(_x, _y, _z, TILE_EMPTY_ID);
+        tile_place(_x, _y, _z, TILE_EMPTY);
         tile_update_surrounding(_x, _y, _z);
         exit;
     }
     
-    var _flow_amount = 0;
-    var _moved = false;
+    var _flowed = false;
+    var _new_positions = []; // Track new water positions to schedule
     
-    // 1. Flow Down
-    // Check for solid block below
+    // 1. Flow Down (straight down)
     var _solid_down = tile_get(_x, _y + 1, CHUNK_DEPTH_DEFAULT);
     
     if (_solid_down == TILE_EMPTY)
@@ -153,145 +327,357 @@ global.item_function[$ "phantasia:liquid_flow"] = function(_dt, _x, _y, _z, _xsc
             tile_place(_x, _y + 1, _z, new Tile(_id));
             var _new_tile = tile_get(_x, _y + 1, _z);
             _new_tile.set_component("level", _level);
-            // Preserve momentum
             _new_tile.set_component("flow_direction", _flow_direction);
             
-            tile_place(_x, _y, _z, TILE_EMPTY_ID);
+            tile_place(_x, _y, _z, TILE_EMPTY);
             
             tile_update_surrounding(_x, _y + 1, _z);
             tile_update_surrounding(_x, _y, _z);
-            exit;
+            
+            array_push(_new_positions, { x: _x, y: _y + 1, z: _z });
+            _flowed = true;
+            _level = 0;
         }
         else if (_tile_down.get_id() == _id)
         {
-            var _level_down = _tile_down.get_component("level");
+            // Same liquid below - combine as much as possible
+            var _level_down = _tile_down.get_component("level") ?? 0;
             var _space_down = 8 - _level_down;
             
+            // Always transfer if there's any space (no level comparison needed for downward flow)
             if (_space_down > 0)
             {
                 var _transfer = min(_level, _space_down);
                 
                 _level -= _transfer;
-                _level_down += _transfer;
-                
-                _tile.set_component("level", _level);
-                _tile_down.set_component("level", _level_down);
-                
-                // Let's settle direction to 0 if full? 
-                if (_level_down == 8) _tile_down.set_component("flow_direction", 0);
+                _tile_down.set_component("level", _level_down + _transfer);
                 
                 if (_level <= 0)
                 {
-                    tile_place(_x, _y, _z, TILE_EMPTY_ID);
+                    // All water transferred down - remove source tile
+                    tile_place(_x, _y, _z, TILE_EMPTY);
+                }
+                else
+                {
+                    // Update source tile level
+                    _tile.set_component("level", _level);
                 }
                 
                 tile_update_surrounding(_x, _y + 1, _z);
                 tile_update_surrounding(_x, _y, _z);
                 
-                return; // Don't flow sideways if we flowed down
+                array_push(_new_positions, { x: _x, y: _y + 1, z: _z });
+                _flowed = true;
+            }
+        }
+        else
+        {
+            // Check for liquid interaction using parameter list
+            var _interaction = undefined;
+            var _other_id = _tile_down.get_id();
+            
+            for (var k = 0; k < array_length(_fluid_collisions); k++) {
+                if (_fluid_collisions[k].liquid_id == _other_id) {
+                    _interaction = _fluid_collisions[k].id;
+                    break;
+                }
+            }
+            
+            if (_interaction != undefined)
+            {
+                // Create the interaction block (e.g. stone) at the destination
+                tile_place(_x, _y + 1, _z, new Tile(_interaction));
+                tile_update_surrounding(_x, _y + 1, _z);
+                _flowed = false; // Blocked flow
             }
         }
     }
     
-    // 2. Flow Sideways
-    // We only flow sideways if we have liquid left
-    if (_level <= 0) exit;
-    
-    // Determine target directions
-    var _dirs = [];
-    
-    if (_flow_direction != 0)
+    // 2. Flow Down-Diagonal (if blocked straight down but can go diagonal)
+    if (!_flowed && _level > 0)
     {
-        _dirs = [_flow_direction];
-    }
-    else
-    {
-        _dirs = [1, -1];
-        if (irandom(2) == 0) _dirs = [-1, 1];
-    }
-    
-    // Try primary direction first
-    var _blocked = true;
-    
-    for (var i = 0; i < array_length(_dirs); ++i)
-    {
-        var _dx = _dirs[i];
-        var _tx = _x + _dx;
+        var _diag_dirs = (irandom(1) == 0) ? [-1, 1] : [1, -1];
         
-        // Check for solid wall in the default layer
-        var _solid_target = tile_get(_tx, _y, CHUNK_DEPTH_DEFAULT);
-        
-        if (_solid_target == TILE_EMPTY)
+        for (var i = 0; i < 2; ++i)
         {
-            // Check if we can flow there (liquid layer)
-            var _target = tile_get(_tx, _y, _z);
-            var _can_flow = false;
-            var _target_level = 0;
+            var _dx = _diag_dirs[i];
+            var _diag_x = _x + _dx;
+            var _diag_y = _y + 1;
             
-            if (_target == TILE_EMPTY)
+            // Check for solid blocks
+            var _solid_side = tile_get(_diag_x, _y, CHUNK_DEPTH_DEFAULT);
+            var _solid_diag = tile_get(_diag_x, _diag_y, CHUNK_DEPTH_DEFAULT);
+            
+            if (_solid_side == TILE_EMPTY && _solid_diag == TILE_EMPTY)
             {
-                _can_flow = true;
-                _target_level = 0;
+                var _tile_diag = tile_get(_diag_x, _diag_y, _z);
+                
+                if (_tile_diag == TILE_EMPTY)
+                {
+                    // Move all diagonal-down
+                    tile_place(_diag_x, _diag_y, _z, new Tile(_id));
+                    var _new_tile = tile_get(_diag_x, _diag_y, _z);
+                    _new_tile.set_component("level", _level);
+                    _new_tile.set_component("flow_direction", _dx);
+                    
+                    tile_place(_x, _y, _z, TILE_EMPTY);
+                    
+                    tile_update_surrounding(_diag_x, _diag_y, _z);
+                    tile_update_surrounding(_x, _y, _z);
+                    
+                    array_push(_new_positions, { x: _diag_x, y: _diag_y, z: _z });
+                    _flowed = true;
+                    _level = 0;
+                    break;
+                }
+                else if (_tile_diag.get_id() == _id)
+                {
+                    // Same liquid logic (omitted for brevity, assume similar to down)
+                     var _level_diag = _tile_diag.get_component("level");
+                    var _space_diag = 8 - _level_diag;
+                    
+                    if (_space_diag > 0)
+                    {
+                        var _transfer = min(_level, _space_diag);
+                        
+                        _level -= _transfer;
+                        
+                        _tile.set_component("level", _level);
+                        _tile_diag.set_component("level", _level_diag + _transfer);
+                        
+                        if (_level <= 0)
+                        {
+                            tile_place(_x, _y, _z, TILE_EMPTY);
+                        }
+                        
+                        tile_update_surrounding(_diag_x, _diag_y, _z);
+                        tile_update_surrounding(_x, _y, _z);
+                        
+                        array_push(_new_positions, { x: _diag_x, y: _diag_y, z: _z });
+                        _flowed = true;
+                        break;
+                    }
+                }
+                 else
+                {
+                    // Check for liquid interaction diagonal
+                    var _interaction = undefined;
+                    var _other_id = _tile_diag.get_id();
+                    
+                    for (var k = 0; k < array_length(_fluid_collisions); k++) {
+                        if (_fluid_collisions[k].liquid_id == _other_id) {
+                            _interaction = _fluid_collisions[k].id;
+                            break;
+                        }
+                    }
+                    
+                    if (_interaction != undefined)
+                    {
+                        tile_place(_diag_x, _diag_y, _z, new Tile(_interaction));
+                        tile_update_surrounding(_diag_x, _diag_y, _z);
+                        // Blocked flow
+                    }
+                }
             }
-            else if (_target.get_id() == _id)
+        }
+    }
+    
+    // 3. Flow Sideways (only if we still have liquid and didn't flow down)
+    if (!_flowed && _level > 0)
+    {
+        var _dirs = (_flow_direction != 0) ? [_flow_direction] : ((irandom(1) == 0) ? [1, -1] : [-1, 1]);
+        var _blocked = true;
+        
+        for (var i = 0; i < array_length(_dirs); ++i)
+        {
+            var _dx = _dirs[i];
+            var _tx = _x + _dx;
+            
+            var _solid_target = tile_get(_tx, _y, CHUNK_DEPTH_DEFAULT);
+            
+            if (_solid_target == TILE_EMPTY)
             {
-                _target_level = _target.get_component("level");
-                if (_target_level < _level)
+                var _target = tile_get(_tx, _y, _z);
+                var _can_flow = false;
+                var _target_level = 0;
+                
+                if (_target == TILE_EMPTY)
                 {
                     _can_flow = true;
                 }
-            }
-            
-            if (_can_flow)
-            {
-                _blocked = false;
-                
-                var _total = _level + _target_level;
-                var _new_level_self = ceil(_total / 2);
-                var _new_level_target = floor(_total / 2);
-                
-                if (_new_level_target > _target_level)
+                else if (_target.get_id() == _id)
                 {
-                    var _transfer = _new_level_target - _target_level;
-                    
-                    _level -= _transfer;
-                    _tile.set_component("level", _level);
-                    
-                    // Update flow direction to match where we went
-                    if (_level > 0) _tile.set_component("flow_direction", _dx);
-                    
-                    if (_target == TILE_EMPTY)
+                    _target_level = _target.get_component("level");
+                    if (_target_level < _level - 1)
                     {
-                        tile_place(_tx, _y, _z, new Tile(_id));
-                        _target = tile_get(_tx, _y, _z);
+                        _can_flow = true;
+                    }
+                }
+                else
+                {
+                     // Check for liquid interaction sideways
+                    var _interaction = undefined;
+                    var _other_id = _target.get_id();
+                    
+                    for (var k = 0; k < array_length(_fluid_collisions); k++) {
+                        if (_fluid_collisions[k].liquid_id == _other_id) {
+                            _interaction = _fluid_collisions[k].id;
+                            break;
+                        }
                     }
                     
-                    _target.set_component("level", _new_level_target);
-                    _target.set_component("flow_direction", _dx); // Pass momentum
-                    
-                    tile_update_surrounding(_tx, _y, _z);
-                    
-                    if (_level <= 0)
+                    if (_interaction != undefined)
                     {
-                        tile_place(_x, _y, _z, TILE_EMPTY_ID);
-                        tile_update_surrounding(_x, _y, _z);
-                        exit;
+                        tile_place(_tx, _y, _z, new Tile(_interaction));
+                        tile_update_surrounding(_tx, _y, _z);
+                        _blocked = true; 
+                        continue; 
                     }
                 }
                 
-                // If we flowed successfully in our preferred direction, we stop trying others
-                break;
+                if (_can_flow)
+                {
+                    _blocked = false;
+                    
+                    var _total = _level + _target_level;
+                    var _new_level_target = floor(_total / 2);
+                    var _transfer = _new_level_target - _target_level;
+                    
+                    if (_transfer > 0)
+                    {
+                        _level -= _transfer;
+                        _tile.set_component("level", _level);
+                        
+                        if (_level > 0) _tile.set_component("flow_direction", _dx);
+                        
+                        if (_target == TILE_EMPTY)
+                        {
+                            tile_place(_tx, _y, _z, new Tile(_id));
+                            _target = tile_get(_tx, _y, _z);
+                        }
+                        
+                        _target.set_component("level", _target_level + _transfer);
+                        _target.set_component("flow_direction", _dx);
+                        
+                        tile_update_surrounding(_tx, _y, _z);
+                        
+                        array_push(_new_positions, { x: _tx, y: _y, z: _z });
+                        _flowed = true;
+                        
+                        if (_level <= 0)
+                        {
+                            tile_place(_x, _y, _z, TILE_EMPTY);
+                            tile_update_surrounding(_x, _y, _z);
+                        }
+                    }
+                    
+                    break;
+                }
             }
+        }
+        
+        // Bounce if blocked
+        if (_blocked && _level > 0)
+        {
+             // If blocked sideways, reverse momentum or stop
+             if (_flow_direction != 0)
+             {
+                 _tile.set_component("flow_direction", -_flow_direction);
+             }
         }
     }
     
-    // If we were trying to go a specific way and got blocked, bounce!
-    if (_blocked && _flow_direction != 0)
+    // Schedule flow for all NEW positions (where water moved TO)
+    for (var i = 0; i < array_length(_new_positions); ++i)
     {
-        _tile.set_component("flow_direction", -_flow_direction);
+        var _pos = _new_positions[i];
+        liquid_flow_schedule(_pos.x, _pos.y, _pos.z, _parameter);
+    }
+    
+    // Also schedule for current position if still has water
+    if (_level > 0)
+    {
+        liquid_flow_schedule(_x, _y, _z, _parameter);
     }
 }
 
+/// @desc Schedule liquid flow with proper delay (prevents duplicates)
+function liquid_flow_schedule(_x, _y, _z, _parameter = {})
+{
+    var _flow_speed = _parameter[$ "flow_speed"] ?? 5;
+    
+    tick_delay_add(_flow_speed, function(_chain) {
+        var _item_function = global.item_function;
+        var _func = _item_function[$ "phantasia:liquid_flow"];
+        // Pass the parameter struct for the next tick
+        _func(1, _chain.x, _chain.y, _chain.z, 1, 1, _chain.parameter);
+    }, [{ x: _x, y: _y, z: _z, parameter: _parameter }]);
+}
+
+/// @desc Helper to start liquid flow cycle when water is placed
+function liquid_flow_start(_x, _y, _z, _parameter = {})
+{
+    liquid_flow_schedule(_x, _y, _z, _parameter);
+}
+
+// ... collision helper removed/ignored ...
+
+global.item_function[$ "phantasia:bucket_place"] = function(_dt, _x, _y, _z, _xscale, _yscale, _parameter)
+{
+    // ... setup ...
+    var _liquid_id = _parameter[$ "liquid_id"];
+    
+    // ...
+    // When calling liquid_flow_start:
+    liquid_flow_start(_x, _y, _liquid_z, _parameter); // Pass the bucket_place parameters (which contain flow_speed and fluid_collisions)
+    // ...
+}
+
+
+// Subscribe to tile changes to trigger water flow when blocks are broken
+event_subscribe(GAME_EVENT.TILE_CHANGED, function(_data) {
+    if (_data.action != "destroyed") exit;
+    
+    var _x = _data.x;
+    var _y = _data.y;
+    
+    // Check for water above the broken block
+    for (var _z = 0; _z < CHUNK_DEPTH; ++_z)
+    {
+        // Check above
+        var _tile_above = tile_get(_x, _y - 1, _z);
+        if (_tile_above != TILE_EMPTY)
+        {
+            var _data_above = global.item_data[$ _tile_above.get_id()];
+            if (_data_above.is_liquid())
+            {
+                liquid_flow_start(_x, _y - 1, _z);
+            }
+        }
+        
+        // Check left
+        var _tile_left = tile_get(_x - 1, _y, _z);
+        if (_tile_left != TILE_EMPTY)
+        {
+            var _data_left = global.item_data[$ _tile_left.get_id()];
+            if (_data_left.is_liquid())
+            {
+                liquid_flow_start(_x - 1, _y, _z);
+            }
+        }
+        
+        // Check right
+        var _tile_right = tile_get(_x + 1, _y, _z);
+        if (_tile_right != TILE_EMPTY)
+        {
+            var _data_right = global.item_data[$ _tile_right.get_id()];
+            if (_data_right.is_liquid())
+            {
+                liquid_flow_start(_x + 1, _y, _z);
+            }
+        }
+    }
+});
 global.item_function[$ "phantasia:open_menu"] = function(_dt, _x, _y, _z, _xscale, _yscale, _parameter)
 {
     static __update_float = function()
@@ -641,7 +1027,7 @@ global.item_function[$ "phantasia:tile_place"] = function(_dt, _x, _y, _z, _xsca
             
             var _id = _.id;
             
-            if (_id == TILE_EMPTY_ID)
+            if (_id == TILE_EMPTY)
             {
                 if (_tile != TILE_EMPTY) exit;
             }
@@ -661,14 +1047,157 @@ global.item_function[$ "phantasia:tile_place"] = function(_dt, _x, _y, _z, _xsca
     
     var _id = smart_value(_parameter.id);
     
-    if (_id != TILE_EMPTY_ID)
+    if (_id != TILE_EMPTY)
     {
         tile_place(_x2, _y2, _z2, new Tile(_id));
     }
     else
     {
-        tile_place(_x2, _y2, _z2, TILE_EMPTY_ID);
+        tile_place(_x2, _y2, _z2, TILE_EMPTY);
     }
     
     tile_update_surrounding(_x2, _y2, _z2);
+}
+
+/// @desc Bucket picks up liquid tile (call from tile on_use)
+/// Converts empty bucket in hotbar to filled bucket with liquid level
+global.item_function[$ "phantasia:bucket_pickup"] = function(_dt, _x, _y, _z, _xscale, _yscale, _parameter)
+{
+    var _item_data = global.item_data;
+    var _inventory = global.inventory;
+    var _inventory_selected = global.inventory_selected_hotbar;
+    var _held_item = _inventory.base[_inventory_selected];
+    
+    // Check if holding empty bucket
+    if (_held_item == INVENTORY_EMPTY) exit;
+    
+    var _bucket_id = _parameter[$ "bucket_id"] ?? "phantasia:bucket";
+    
+    if (_held_item.get_id() != _bucket_id) exit;
+    
+    // Liquids use their own z-layer
+    var _liquid_z = CHUNK_DEPTH_LIQUID;
+    
+    // Get the liquid tile
+    var _tile = tile_get(_x, _y, _liquid_z);
+    
+    if (_tile == TILE_EMPTY) exit;
+    
+    var _tile_id = _tile.get_id();
+    var _tile_data = _item_data[$ _tile_id];
+    
+    // Check if it's a liquid
+    if (!_tile_data.is_liquid()) exit;
+    
+    // Get liquid level
+    var _level = _tile.get_component("level") ?? 8;
+    
+    // Get filled bucket item ID
+    var _filled_bucket_id = _parameter[$ "filled_bucket_id"] ?? (_tile_id + "_bucket");
+    
+    // Replace empty bucket with filled bucket (including level)
+    var _filled_bucket = new Inventory(_filled_bucket_id, 1);
+    _filled_bucket.set_component("level", _level);
+    
+    _inventory.base[@ _inventory_selected] = _filled_bucket;
+    
+    // Remove the liquid tile
+    tile_place(_x, _y, _liquid_z, TILE_EMPTY);
+    tile_update_surrounding(_x, _y, _liquid_z);
+    
+    // Play pickup sound
+    var _sound = _parameter[$ "sound"] ?? "phantasia:sfx/liquid/bucket_fill";
+    sfx_diegetic_play(obj_Player.audio_emitter, _x * TILE_SIZE, _y * TILE_SIZE, _sound, global.settings.audio_sfx);
+    
+    // Refresh inventory display
+    obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR;
+}
+
+/// @desc Bucket places liquid tile (call from player_build or item use)
+/// Places liquid with stored level and converts filled bucket to empty bucket
+global.item_function[$ "phantasia:bucket_place"] = function(_dt, _x, _y, _z, _xscale, _yscale, _parameter)
+{
+    var _item_data = global.item_data;
+    var _inventory = global.inventory;
+    var _inventory_selected = global.inventory_selected_hotbar;
+    var _held_item = _inventory.base[_inventory_selected];
+    
+    if (_held_item == INVENTORY_EMPTY) exit;
+    
+    // Get the liquid ID to place
+    var _liquid_id = _parameter[$ "liquid_id"];
+    
+    if (_liquid_id == undefined) exit;
+    
+    // Liquids use their own z-layer, not the passed one
+    var _liquid_z = CHUNK_DEPTH_LIQUID;
+    
+    // Get stored level from bucket
+    var _bucket_level = _held_item.get_component("level") ?? 8;
+    
+    // Check existing tile
+    var _existing = tile_get(_x, _y, _liquid_z);
+    
+    if (_existing != TILE_EMPTY)
+    {
+        // Check if same liquid type - combine them
+        if (_existing.get_id() == _liquid_id)
+        {
+            var _existing_level = _existing.get_component("level") ?? 0;
+            var _total = _existing_level + _bucket_level;
+            var _new_level = min(_total, 8);
+            var _remaining = _total - _new_level;
+            
+            _existing.set_component("level", _new_level);
+            tile_update_surrounding(_x, _y, _liquid_z);
+            
+            // Start liquid flow
+            liquid_flow_start(_x, _y, _liquid_z);
+            
+            if (_remaining <= 0)
+            {
+                // All water placed - convert to empty bucket
+                var _empty_bucket_id = _parameter[$ "empty_bucket_id"] ?? "phantasia:bucket";
+                _inventory.base[@ _inventory_selected] = new Inventory(_empty_bucket_id, 1);
+            }
+            else
+            {
+                // Some water remains in bucket
+                _held_item.set_component("level", _remaining);
+            }
+            
+            // Play place sound
+            var _sound = _parameter[$ "sound"] ?? "phantasia:sfx/liquid/bucket_empty";
+            sfx_diegetic_play(obj_Player.audio_emitter, _x * TILE_SIZE, _y * TILE_SIZE, _sound, global.settings.audio_sfx);
+            
+            obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR;
+        }
+        
+        exit;
+    }
+    
+    // Create liquid tile with level
+    var _liquid_tile = new Tile(_liquid_id);
+    _liquid_tile.set_component("level", _bucket_level);
+    _liquid_tile.set_component("flow_direction", 0);
+    
+    tile_place(_x, _y, _liquid_z, _liquid_tile);
+    tile_update_surrounding(_x, _y, _liquid_z);
+    
+    // Start liquid flow cycle
+    liquid_flow_start(_x, _y, _liquid_z);
+    
+    // Replace filled bucket with empty bucket
+    var _empty_bucket_id = _parameter[$ "empty_bucket_id"] ?? "phantasia:bucket";
+    _inventory.base[@ _inventory_selected] = new Inventory(_empty_bucket_id, 1);
+    
+    // Play place sound
+    var _sound = _parameter[$ "sound"] ?? "phantasia:sfx/liquid/bucket_empty";
+    sfx_diegetic_play(obj_Player.audio_emitter, _x * TILE_SIZE, _y * TILE_SIZE, _sound, global.settings.audio_sfx);
+    
+    // Refresh inventory display
+    obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR;
+    
+    // Refresh lighting for liquid
+    obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.LIGHTING;
 }

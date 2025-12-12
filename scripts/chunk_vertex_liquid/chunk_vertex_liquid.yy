@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"chunk_vertex_liquid",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"chunk_vertex_liquid",
+  "parent":{
+    "name":"Vertex",
+    "path":"folders/Scripts/Chunk/Vertex.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

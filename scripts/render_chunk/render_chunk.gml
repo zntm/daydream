@@ -93,6 +93,27 @@ function render_chunk(_page, _position, _texel_width, _texel_height, _inst, _z)
                 continue;
             }
             
+            if (_data.is_liquid())
+            {
+                chunk_vertex_liquid(
+                    _buffer,
+                    _texel_width,
+                    _texel_height,
+                    _data.get_animation_type(),
+                    _atla,
+                    _position[_atla.___sprites_indeces[0]],
+                    _index + _index_offset,
+                    _draw_x,
+                    _draw_y,
+                    _xscale,
+                    _yscale,
+                    _rotation,
+                    _tile.get_component("level") ?? 8
+                );
+                
+                continue;
+            }
+            
             chunk_vertex_tile(
                 _buffer,
                 _texel_width,

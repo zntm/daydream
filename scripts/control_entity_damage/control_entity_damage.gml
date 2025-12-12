@@ -49,12 +49,28 @@ function control_entity_damage(_victim, _attacker, _base_damage, _variance = 0.0
     // Apply damage
     _victim.hp -= _damage;
     
+    // Emit damage event
+    event_emit(GAME_EVENT.ENTITY_DAMAGED, {
+        victim: _victim,
+        type: (_victim.object_index == obj_Player) ? "player" : "creature",
+        damage: _damage,
+        attacker: _attacker,
+        is_critical: _is_critical
+    });
+    
     // Spawn floating damage text
     spawn_floating_text(_victim.x, _victim.y, _damage, 0, -3.9);
     
     // Check if victim died
     if (_victim.hp <= 0)
     {
+        // Emit death event
+        event_emit(GAME_EVENT.ENTITY_DEATH, {
+            instance: _victim,
+            type: (_victim.object_index == obj_Player) ? "player" : "creature",
+            killer: _attacker
+        });
+        
         // Special handling for player death
         if (_victim.object_index == obj_Player)
         {
