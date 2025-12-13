@@ -40,4 +40,6 @@ function init_entity(_hp, _hp_max, _attribute, _uuid = uuid_generate(irandom(0xf
     timer_sfx_step = 0;
     
     inst_item = noone;
+    
+    timer_suffocation = 0;
 }

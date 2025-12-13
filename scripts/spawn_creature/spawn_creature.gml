@@ -33,6 +33,24 @@ function spawn_creature(_x, _y, _id, _variant)
         timer_attack = 0;
         attack_cooldown = 0;
         ai_prey_target = noone;
+        
+        ai_state = CREATURE_AI_STATE.IDLE;
+        ai_decision_timer = 0;
+        ai_state_timer = 0;
+        ai_target_direction = 0;
+        ai_cached_on_ground = false;
+        ai_cached_collision_width = attribute.get_collision_box_width();
+        ai_cached_collision_height = attribute.get_collision_box_height();
+        
+        // Predator hunting initialization
+        attack_cooldown = 0;
+        ai_prey_target = noone;
+        
+        // Stuck detection
+        ai_stuck_timer = 0;
+        ai_stuck_x = x;
+        ai_stuck_y = y;
+        ai_is_stuck = false;
     }
     
     // Emit entity spawned event

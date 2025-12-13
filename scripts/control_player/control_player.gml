@@ -210,4 +210,6 @@ function control_player(_dt)
             control_update_chunk_in_view();
         }
     }
+    
+    control_entity_suffocation(id);
 }

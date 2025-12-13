@@ -163,15 +163,12 @@ if (IS_DEVELOPER_MODE)
     
     _delta_time *= _debug_settings.time_speed;
     
-    if (variable_struct_exists(_debug_settings, "camera_size"))
-    {
-        var _size = _debug_settings.camera_size;
-        
-        global.camera_width  = global.camera_width_base  * _size;
-        global.camera_height = global.camera_height_base * _size;
-        
-        camera_set_view_size(view_camera[0], global.camera_width, global.camera_height);
-    }
+    var _size = _debug_settings.camera_size;
+    
+    global.camera_width  = global.camera_width_base  * _size;
+    global.camera_height = global.camera_height_base * _size;
+    
+    camera_set_view_size(view_camera[0], global.camera_width, global.camera_height);
 }
 
 var _dt = GAME_TICK * _delta_time;

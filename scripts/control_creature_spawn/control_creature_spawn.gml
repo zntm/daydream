@@ -3,16 +3,12 @@
 #macro SPAWN_DENSITY_GRID_SIZE 16               // Grid cell size for density tracking (in tiles)
 #macro SPAWN_MAX_PER_GRID 3                     // Maximum creatures per grid cell
 
+global.spawn_density_grid = {};
+global.spawn_last_cleanup_time = 0;
+
 function control_creature_spawn(_dt)
 {
-    if (IS_DEVELOPER_MODE && variable_struct_exists(global, "dbg_settings") && variable_struct_exists(global.dbg_settings, "creature") && !global.dbg_settings.creature) return;
-
-    // Initialize spawn density grid if not exists
-    if (!variable_global_exists("spawn_density_grid"))
-    {
-        global.spawn_density_grid = {};
-        global.spawn_last_cleanup_time = 0;
-    }
+    if (IS_DEVELOPER_MODE) && (!global.dbg_settings[$ "spawn_creatures"]) return;
     
     // Optimized spawn function with density checking
     static __spawn = function(_world_time, _tile_x, _tile_y, _biome_data, _creature_data)

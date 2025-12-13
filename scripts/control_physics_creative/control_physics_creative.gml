@@ -1,12 +1,7 @@
 function control_physics_creative(_dt, _id)
 {
-    var _fly_speed = 8.65;
+    var _fly_speed = ((IS_DEVELOPER_MODE) ? global.dbg_settings[$ "fly_speed"] : 8.65);
     
-    if (IS_DEVELOPER_MODE && variable_struct_exists(global, "dbg_settings") && variable_struct_exists(global.dbg_settings, "fly_speed"))
-    {
-        _fly_speed = global.dbg_settings.fly_speed;
-    }
-
     with (_id)
     {
         xvelocity = lerp_delta(xvelocity, (input_right      - input_left)     * _fly_speed, 0.25, _dt);
@@ -28,7 +23,7 @@ function control_physics_creative(_dt, _id)
                 {
                     var _offset2 = min(j, 1) * _xsign;
                     
-                    // if (tile_meeting(x + _offset2, y)) break;
+                    if (tile_meeting(x + _offset2, y)) break;
                     
                     x += _offset2;
                 }
@@ -49,7 +44,7 @@ function control_physics_creative(_dt, _id)
                 {
                     var _offset2 = min(j, 1) * _ysign;
                     
-                    // if (tile_meeting(x, y + _offset2)) break;
+                    if (tile_meeting(x, y + _offset2)) break;
                     
                     y += _offset2;
                 }

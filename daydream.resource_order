@@ -166,6 +166,7 @@
     {"name":"control_entity_knockback","order":12,"path":"scripts/control_entity_knockback/control_entity_knockback.yy",},
     {"name":"control_entity_regeneration","order":6,"path":"scripts/control_entity_regeneration/control_entity_regeneration.yy",},
     {"name":"control_entity_sfx","order":5,"path":"scripts/control_entity_sfx/control_entity_sfx.yy",},
+    {"name":"control_entity_suffocation","order":8,"path":"scripts/control_entity_suffocation/control_entity_suffocation.yy",},
     {"name":"control_gametick","order":5,"path":"scripts/control_gametick/control_gametick.yy",},
     {"name":"control_instance_pause","order":7,"path":"scripts/control_instance_pause/control_instance_pause.yy",},
     {"name":"control_instance_unpause","order":8,"path":"scripts/control_instance_unpause/control_instance_unpause.yy",},

@@ -11,10 +11,7 @@ global.file_version_upgraders = {};
 /// @param {function} _upgrade_func Function that takes buffer and returns upgraded data struct
 function file_version_register(_category, _from_version, _to_version, _upgrade_func)
 {
-    if (!variable_struct_exists(global.file_version_upgraders, _category))
-    {
-        global.file_version_upgraders[$ _category] = [];
-    }
+    global.file_version_upgraders[$ _category] ??= [];
     
     array_push(global.file_version_upgraders[$ _category], {
         from: _from_version,

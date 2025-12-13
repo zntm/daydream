@@ -22,10 +22,7 @@ global.event_listeners = {};
 /// @returns {struct} Subscription handle (for unsubscribing)
 function event_subscribe(_event, _callback)
 {
-    if (!variable_struct_exists(global.event_listeners, _event))
-    {
-        global.event_listeners[$ _event] = [];
-    }
+    global.event_listeners[$ _event] ??= [];
     
     var _subscription = {
         event: _event,
@@ -54,6 +51,7 @@ function event_unsubscribe(_subscription)
         if (_listeners[i] == _subscription)
         {
             array_delete(_listeners, i, 1);
+            
             break;
         }
     }
@@ -87,9 +85,14 @@ function event_emit(_event, _data = {})
 /// @param {real} _event Event type from GAME_EVENT enum
 function event_clear(_event)
 {
-    if (variable_struct_exists(global.event_listeners, _event))
+    var _data = global.event_listeners[$ _event];
+    var _length = array_length(_data);
+    
+    repeat (_length)
     {
-        global.event_listeners[$ _event] = [];
+        delete global.event_listeners[$ _event][@ 0];
+        
+        array_delete(global.event_listeners[$ _event], 0, 1);
     }
 }
 
@@ -97,5 +100,25 @@ function event_clear(_event)
 /// @desc Clear all event listeners
 function event_clear_all()
 {
-    global.event_listeners = {};
+    var _event_listeners = global.event_listeners;
+    
+    var _names = struct_get_names(_event_listeners);
+    var _names_length = array_length(_names);
+    
+    for (var i = 0; i < _names_length; ++i)
+    {
+        var _name = _names[i];
+        
+        var _data = global.event_listeners[$ _name];
+        var _length = array_length(_data);
+        
+        repeat (_length)
+        {
+            delete global.event_listeners[$ _name][@ 0];
+            
+            array_delete(global.event_listeners[$ _name], 0, 1);
+        }
+        
+        struct_remove(global.event_listeners, _name);
+    }
 }
