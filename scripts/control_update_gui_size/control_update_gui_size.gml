@@ -5,6 +5,8 @@ function control_update_gui_size(_width, _height)
     
     display_set_gui_size(_width, _height);
     
-    obj_Menu_Control_Render.xscale = global.window_width  / global.camera_width;
-    obj_Menu_Control_Render.yscale = global.window_height / global.camera_height;
+    // Account for gui_scale since menus are rendered on the GUI layer which is already scaled
+    var _gui_scale = global.gui_scale;
+    obj_Menu_Control_Render.xscale = _gui_scale * (global.window_width  / global.camera_width);
+    obj_Menu_Control_Render.yscale = _gui_scale * (global.window_height / global.camera_height);
 }

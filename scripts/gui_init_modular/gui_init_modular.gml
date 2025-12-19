@@ -57,9 +57,15 @@ function gui_init_modular()
     }
     
     // Position inventory at top-left with small offset
-    global.gui_panel_inventory_modular.x = 16;
-    global.gui_panel_inventory_modular.y = 16;
+    // global.gui_panel_inventory_modular.x = 16;
+    // global.gui_panel_inventory_modular.y = 16;
     global.gui_panel_inventory_modular.visible = false;
+    
+    // Create crafting panel (dynamic)
+    global.gui_panel_crafting_modular = new GUIPanel(0, 0, 0, 0);
+    global.gui_panel_crafting_modular.set_anchor("center", "bottom");
+    global.gui_panel_crafting_modular.visible = false;
+    global.gui_root.add_child(global.gui_panel_crafting_modular);
     
     show_debug_message("GUI: Modular GUI system initialized");
 }

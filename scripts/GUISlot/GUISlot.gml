@@ -64,23 +64,28 @@ function GUISlot(_x, _y, _inventory_name, _slot_index, _sprite = spr_Inventory_S
         draw_sprite_ext(_sprite, _index, _item_x, _item_y, _scale_x * _inventory_scale, _scale_y * _inventory_scale, 0, c_white, 1);
         
         // Draw durability bar if applicable
-        var _max_durability = _item_data.get_item_durability();
-        if (_max_durability != undefined)
+        var _durability_data = _item_data.get_item_durability();
+        if (_durability_data != undefined)
         {
+            var _max_durability = _durability_data.get_amount();
             var _durability = _item.get_item_durability();
-            var _ratio = _durability / _max_durability;
             
-            var _bar_width = 12;
-            var _bar_height = 2;
-            var _bar_x = (_abs_x + 2) * _scale_x;
-            var _bar_y = (_abs_y + 13) * _scale_y;
-            
-            // Background
-            draw_sprite_ext(spr_Square, 0, _bar_x, _bar_y, _bar_width * _scale_x, _bar_height * _scale_y, 0, c_black, 0.5);
-            
-            // Durability fill
-            var _color = make_color_rgb(lerp(255, 0, _ratio), lerp(0, 255, _ratio), 0);
-            draw_sprite_ext(spr_Square, 0, _bar_x, _bar_y, _bar_width * _ratio * _scale_x, _bar_height * _scale_y, 0, _color, 1);
+            if (_durability != undefined) && (_max_durability > 0)
+            {
+                var _ratio = _durability / _max_durability;
+                
+                var _bar_width = 12;
+                var _bar_height = 2;
+                var _bar_x = (_abs_x + 2) * _scale_x;
+                var _bar_y = (_abs_y + 13) * _scale_y;
+                
+                // Background
+                draw_sprite_ext(spr_Square, 0, _bar_x, _bar_y, _bar_width * _scale_x, _bar_height * _scale_y, 0, c_black, 0.5);
+                
+                // Durability fill
+                var _color = make_color_rgb(lerp(255, 0, _ratio), lerp(0, 255, _ratio), 0);
+                draw_sprite_ext(spr_Square, 0, _bar_x, _bar_y, _bar_width * _ratio * _scale_x, _bar_height * _scale_y, 0, _color, 1);
+            }
         }
         
         // Draw amount if > 1

@@ -49,19 +49,19 @@ const inventory: GUIComponent = {
     type: "panel",
     props: {
         anchor_x: "center",
-        anchor_y: "center",
+        anchor_y: "bottom",
         x: 0,
-        y: 0,
+        y: 36,
         width: SLOT_SIZE * ROW_LENGTH,
-        height: SLOT_SIZE * (INVENTORY_SIZE / ROW_LENGTH)
+        height: SLOT_SIZE * ((INVENTORY_SIZE - ROW_LENGTH) / ROW_LENGTH)
     },
-    children: Array.from({ length: INVENTORY_SIZE }, (_, i) => ({
+    children: Array.from({ length: INVENTORY_SIZE - ROW_LENGTH }, (_, i) => ({
         type: "slot",
         props: {
             x: (i % ROW_LENGTH) * SLOT_SIZE,
             y: Math.floor(i / ROW_LENGTH) * SLOT_SIZE,
             inventory_name: "base",
-            slot_index: i
+            slot_index: i + ROW_LENGTH
         }
     }))
 };

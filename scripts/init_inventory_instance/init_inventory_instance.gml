@@ -154,12 +154,12 @@ global.gui_inventory = {
         ]
     },
     _craftable: {
-        anchor_type: GUI_ANCHOR.TOP_LEFT,
+        anchor_type: GUI_ANCHOR.BOTTOM,
         sprite: spr_Inventory_Slot,
         icon: spr_Inventory_Slot_Icon,
         icon_index: 0,
-        surface_xoffset: INVENTORY_BACKPACK_XOFFSET,
-        surface_yoffset: (INVENTORY_BACKPACK_YOFFSET * 2) + (INVENTORY_SLOT_DIMENSION_SCALED * (INVENTORY_LENGTH.BASE div INVENTORY_LENGTH.ROW)),
+        surface_xoffset: -(INVENTORY_SLOT_DIMENSION_SCALED * 1.0),
+        surface_yoffset: -(INVENTORY_SLOT_DIMENSION_SCALED * 5.0),
         surface_width: 0,
         surface_height: 0,
         outline: [

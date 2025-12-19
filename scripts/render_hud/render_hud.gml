@@ -13,13 +13,7 @@ function render_hud(_gui_width, _gui_height)
         // Note: Hotbar and inventory rendering now handled by modular GUI system
         // (GUISlot components in global.gui_root)
         
-        // Craftable panel still uses old system for now
-        if (surface_refresh & SURFACE_REFRESH_BOOLEAN.INVENTORY_CRAFTABLE)
-        {
-            surface_refresh ^= SURFACE_REFRESH_BOOLEAN.INVENTORY_CRAFTABLE;
-            
-            gui_inventory_craftable(_gui_scale_width, _gui_scale_height);
-        }
+        // Craftable panel now handled by modular GUI system
         
         // HP bar rendering
         if (surface_refresh & SURFACE_REFRESH_BOOLEAN.HP)
@@ -49,28 +43,7 @@ function render_hud(_gui_width, _gui_height)
         
         if (is_opened & IS_OPENED_BOOLEAN.INVENTORY)
         {
-            // Craftable panel rendering (still uses old surface system)
-            var _data = _gui_inventory._craftable;
-            var _surface_inventory = surface_inventory._craftable;
-            
-            var _anchor_type = _data.anchor_type;
-            
-            var _x = gui_xanchor(_anchor_type, _gui_width,  _gui_scale_width)  + (_gui_scale_width  * (_data.surface_xoffset - GUI_INVENTORY_SURFACE_PADDING));
-            var _y = gui_yanchor(_anchor_type, _gui_height, _gui_scale_height) + (_gui_scale_height * (_data.surface_yoffset - GUI_INVENTORY_SURFACE_PADDING));
-            
-            var _surface_slot = _surface_inventory.surface_slot;
-            
-            if (surface_exists(_surface_slot))
-            {
-                draw_surface_ext(_surface_slot, _x, _y, _gui_scale_width * INVENTORY_SLOT_SCALE, _gui_scale_height * INVENTORY_SLOT_SCALE, 0, c_white, 1);
-            }
-            
-            var _surface_item = _surface_inventory.surface_item;
-            
-            if (surface_exists(_surface_item))
-            {
-                draw_surface(_surface_item, _x, _y);
-            }
+            // Craftable panel rendering handled by modular GUI
             
             // Tooltip rendering
             var _inst = global.inventory_selected_hover;

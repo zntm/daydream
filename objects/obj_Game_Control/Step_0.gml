@@ -354,5 +354,11 @@ if (global.gui_root != undefined)
         global.gui_panel_inventory_modular.visible = (is_opened & IS_OPENED_BOOLEAN.INVENTORY);
     }
     
+    // Crafting: visible when inventory is open and has content
+    if (variable_global_exists("gui_panel_crafting_modular")) && (global.gui_panel_crafting_modular != undefined)
+    {
+        global.gui_panel_crafting_modular.visible = (is_opened & IS_OPENED_BOOLEAN.INVENTORY) && (array_length(global.gui_panel_crafting_modular.children) > 0);
+    }
+    
     global.gui_root.update();
 }
