@@ -1127,7 +1127,7 @@
   "isEcma":false,
   "LibraryEmitters":[],
   "MetaData":{
-    "IDEVersion":"2024.14.2.212",
+    "IDEVersion":"2024.14.2.213",
   },
   "name":"daydream",
   "resources":[
@@ -1140,6 +1140,7 @@
     {"id":{"name":"obj_Chunk","path":"objects/obj_Chunk/obj_Chunk.yy",},},
     {"id":{"name":"obj_Control","path":"objects/obj_Control/obj_Control.yy",},},
     {"id":{"name":"obj_Creature","path":"objects/obj_Creature/obj_Creature.yy",},},
+    {"id":{"name":"obj_Falling_Tile","path":"objects/obj_Falling_Tile/obj_Falling_Tile.yy",},},
     {"id":{"name":"obj_Floating_Text","path":"objects/obj_Floating_Text/obj_Floating_Text.yy",},},
     {"id":{"name":"obj_Game_Control_Background","path":"objects/obj_Game_Control_Background/obj_Game_Control_Background.yy",},},
     {"id":{"name":"obj_Game_Control_Spawn_Check","path":"objects/obj_Game_Control_Spawn_Check/obj_Game_Control_Spawn_Check.yy",},},

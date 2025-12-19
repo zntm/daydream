@@ -15,21 +15,24 @@ export default [
             "#phantasia:item/generic/inventory_default",
         ),
     ),
-    
+
     // Liquid items and their buckets
-    [{
-        id: "lava",
-        flow_speed: 1,
-        fluid_collisions: [
-            { id: "phantasia:stone", liquid_id: "phantasia:water" },
-        ],
-    }, {
-        id: "water",
-        flow_speed: 5,
-        fluid_collisions: [
-            { id: "phantasia:stone", liquid_id: "phantasia:lava" },
-        ],
-    }].map(({ id, flow_speed, fluid_collisions }) => {
+    [
+        {
+            id: "lava",
+            tick_delay: 1,
+            fluid_collisions: [
+                { id: "phantasia:stone", liquid_id: "phantasia:water" },
+            ],
+        },
+        {
+            id: "water",
+            tick_delay: 5,
+            fluid_collisions: [
+                { id: "phantasia:stone", liquid_id: "phantasia:lava" },
+            ],
+        },
+    ].map(({ id, tick_delay, fluid_collisions }) => {
         return [
             // Liquid tile (no on_random_tick - uses tick_delay instead)
             new DatagenReturnData(
@@ -46,7 +49,7 @@ export default [
                         new ItemFunction("phantasia:bucket_pickup", {
                             bucket_id: "phantasia:bucket",
                             filled_bucket_id: `phantasia:${id}_bucket`,
-                            flow_speed,
+                            tick_delay,
                         }),
                     ]),
             ),
@@ -63,7 +66,7 @@ export default [
                         new ItemFunction("phantasia:bucket_place", {
                             liquid_id: `phantasia:${id}`,
                             empty_bucket_id: "phantasia:bucket",
-                            flow_speed,
+                            tick_delay,
                             fluid_collisions,
                         }),
                     ]),
