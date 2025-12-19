@@ -42,6 +42,8 @@ function init(_namespace)
     
     init_creature($"{PROGRAM_DIRECTORY_RESOURCES}/data/creatures", _namespace);
     
+    init_achievement($"{PROGRAM_DIRECTORY_RESOURCES}/data/achievements", _namespace);
+    
     init_loot($"{PROGRAM_DIRECTORY_RESOURCES}/data/loot", _namespace);
 }
 

@@ -1,0 +1,7 @@
+{
+    "condition": {
+        "statistic": "chunks_explored",
+        "count": 25
+    },
+    "icon": "phantasia:achievement/explorer"
+}

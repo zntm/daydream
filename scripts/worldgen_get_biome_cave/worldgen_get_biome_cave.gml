@@ -15,6 +15,22 @@ function worldgen_get_biome_cave(_x, _y, _surface_height, _seed)
     
     var _world_data = global.world_data[$ global.world_save_data.dimension];
     
+    // Check for optional image-based cave biome map
+    /*
+    var _cave_map = _world_data.get_cave_biome_map();
+    if (_cave_map != undefined)
+    {
+        var _heat = worldgen_get_heat(_x, _y, _seed, _world_data);
+        var _humidity = worldgen_get_humidity(_x, _y, _seed, _world_data);
+        
+        var _biome = _cave_map[(_humidity << WORLDGEN_SIZE_HEAT_BIT) | _heat];
+        
+        if (_biome != 0 && _biome != undefined)
+        {
+            return _biome;
+        }
+    }
+    */
     var _default = _world_data.get_cave_biome_default();
     var _default_length = _world_data.get_cave_biome_default_length();
     

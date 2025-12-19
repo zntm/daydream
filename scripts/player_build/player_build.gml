@@ -55,6 +55,8 @@ function player_build(_dt, _x, _y)
     
     tile_place(_x, _y, _z, _tile);
     
+    falling_tile_check(_x, _y, _z);
+    
     tile_update_surrounding(_x, _y, _z, 1, 1);
     
     tile_instance_create(_x, _y, _z, _tile);

@@ -28,7 +28,14 @@
             "noise": {
                 "octaves": 4
             },
-            "options": []
+            "options": [],
+            "heat": {
+                "octaves": 4.5
+            },
+            "humidity": {
+                "octaves": 2.75
+            },
+            "map": "phantasia:world/playground/map"
         },
         "surface": {
             "heat": {

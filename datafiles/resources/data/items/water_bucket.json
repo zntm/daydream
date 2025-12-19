@@ -14,11 +14,18 @@
                 "id": "phantasia:bucket_place",
                 "parameters": {
                     "liquid_id": "phantasia:water",
-                    "empty_bucket_id": "phantasia:bucket"
+                    "empty_bucket_id": "phantasia:bucket",
+                    "tick_delay": 5,
+                    "fluid_collisions": [
+                        {
+                            "id": "phantasia:stone",
+                            "liquid_id": "phantasia:lava"
+                        }
+                    ]
                 }
             }
         ]
     },
     "sprite": "phantasia:item/water_bucket",
-    "type": "untouchable"
+    "type": "default"
 }

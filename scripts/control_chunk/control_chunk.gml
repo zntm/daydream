@@ -16,6 +16,7 @@ function control_chunk(_player_x, _player_y, _camera_x, _camera_y, _camera_width
     
     var _refresh = false;
     
+    // Create chunks that don't exist
     for (var i = -_a; i <= _a; ++i)
     {
         var _x = _xstart + (i * CHUNK_SIZE_DIMENSION);
@@ -42,41 +43,21 @@ function control_chunk(_player_x, _player_y, _camera_x, _camera_y, _camera_width
         control_update_chunk_in_view();
     }
     
+    // Queue ungenerated chunks for processing (priority = distance to player)
     for (var i = 0; i < chunk_in_view_length; ++i)
     {
         var _inst = chunk_in_view[i];
         
-        if (!instance_exists(_inst)) || (_inst.boolean & CHUNK_BOOLEAN.GENERATED) continue;
+        if (!instance_exists(_inst)) continue;
+        if (_inst.boolean & CHUNK_BOOLEAN.GENERATED) continue;
+        if (_inst.boolean & CHUNK_BOOLEAN.QUEUED) continue;
         
-        _inst.boolean |= CHUNK_BOOLEAN.GENERATED | CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH;
+        // Calculate priority based on distance to player (lower = higher priority)
+        var _priority = point_distance(_player_x, _player_y, _inst.xcenter, _inst.ycenter);
         
-        // Trigger global lighting refresh for newly generated chunks
-        obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.LIGHTING;
-        
-        var _chunk = _inst.chunk;
-        
-        for (var _tile_z = 0; _tile_z < CHUNK_DEPTH; ++_tile_z)
-        {
-            if !(_inst.chunk_display & (1 << _tile_z)) continue;
-            
-            for (var _tile_y = 0; _tile_y < CHUNK_SIZE; ++_tile_y)
-            {
-                for (var _tile_x = 0; _tile_x < CHUNK_SIZE; ++_tile_x)
-                {
-                    var _tile = _chunk[(_tile_z << (CHUNK_SIZE_BIT * 2)) | (_tile_y << CHUNK_SIZE_BIT) | _tile_x];
-                    
-                    if (_tile == TILE_EMPTY) continue;
-                    
-                    var _data = _item_data[$ _tile.get_id()];
-                    
-                    var _world_x = _inst.chunk_xstart + _tile_x;
-                    var _world_y = _inst.chunk_ystart + _tile_y;
-                    
-                    tile_instance_create(_world_x, _world_y, _tile_z, _tile);
-                    
-                    tile_connect(_world_x, _world_y, _tile_z, _tile);
-                }
-            }
-        }
+        chunk_queue_add(_inst, _priority);
     }
+    
+    // Process queued chunks within time budget
+    chunk_queue_process(_player_x, _player_y);
 }

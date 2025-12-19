@@ -74,4 +74,28 @@ function FilePlayer(_uuid, _name, _last_opened) constructor
     {
         return self[$ "___effects"];
     }
+    
+    static set_statistics = function(_statistics)
+    {
+        ___statistics = _statistics;
+        
+        return self;
+    }
+    
+    static get_statistics = function()
+    {
+        return self[$ "___statistics"];
+    }
+    
+    static set_achievements = function(_achievements)
+    {
+        ___achievements = _achievements;
+        
+        return self;
+    }
+    
+    static get_achievements = function()
+    {
+        return self[$ "___achievements"];
+    }
 }

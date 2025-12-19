@@ -1,0 +1,7 @@
+{
+    "condition": {
+        "statistic": "tiles_broken",
+        "count": 100
+    },
+    "icon": "phantasia:achievement/miner"
+}

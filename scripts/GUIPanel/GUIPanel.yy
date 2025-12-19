@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"GUIPanel",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"GUIPanel",
+  "parent":{
+    "name":"GUI",
+    "path":"folders/Scripts/GUI.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

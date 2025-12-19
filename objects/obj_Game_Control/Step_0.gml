@@ -239,6 +239,10 @@ with (obj_Creature)
 
 var _particle_data = global.particle_data;
 
+// Update pooled particles (optimized batch processing)
+control_particles_batch(_dt);
+
+// Legacy: Update instance-based particles (only those with collision)
 with (obj_Particle)
 {
     var _data = _particle_data[$ _id];
@@ -333,4 +337,22 @@ control_chunk_activity(_camera_x, _camera_y, _camera_width, _camera_height);
 if (keyboard_check_pressed(vk_f1))
 {
     is_opened ^= IS_OPENED_BOOLEAN.GUI;
+}
+
+// Update modular GUI visibility and state
+if (global.gui_root != undefined)
+{
+    // Hotbar: visible when GUI is open and not in menu
+    if (global.gui_panel_hotbar_modular != undefined)
+    {
+        global.gui_panel_hotbar_modular.visible = (is_opened & IS_OPENED_BOOLEAN.GUI) && !(is_opened & IS_OPENED_BOOLEAN.MENU);
+    }
+    
+    // Inventory: visible when inventory is open
+    if (global.gui_panel_inventory_modular != undefined)
+    {
+        global.gui_panel_inventory_modular.visible = (is_opened & IS_OPENED_BOOLEAN.INVENTORY);
+    }
+    
+    global.gui_root.update();
 }

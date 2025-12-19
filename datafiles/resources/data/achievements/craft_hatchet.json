@@ -1,0 +1,8 @@
+{
+    "condition": {
+        "event": "CRAFTING_COMPLETE",
+        "item_id": "phantasia:wooden_axe,phantasia:stone_axe,phantasia:copper_axe",
+        "count": 1
+    },
+    "icon": "phantasia:achievement/craft_hatchet"
+}

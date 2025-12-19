@@ -10,7 +10,11 @@ enum GAME_EVENT {
     ITEM_COLLECTED,     // Item picked up
     ITEM_DROPPED,       // Item dropped
     CHUNK_GENERATED,    // Chunk finished generating
-    EXPLOSION           // Explosion occurred
+    EXPLOSION,          // Explosion occurred
+    STATISTIC_CHANGED,  // Statistic value updated
+    ACHIEVEMENT_UNLOCKED, // Achievement completed
+    CRAFTING_COMPLETE,  // Item crafted
+    ITEM_USED           // Item or consumable used
 }
 
 global.event_listeners = {};

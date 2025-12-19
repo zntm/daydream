@@ -35,6 +35,9 @@ function file_save_player_global(_directory, _player_name, _player_attire, _play
     
     buffer_write(_buffer, buffer_u8, _hotbar);
     
+    statistics_save_player(_buffer);
+    achievement_save_player(_buffer);
+    
     buffer_save_compressed(_buffer, $"{_directory}/global.dat");
     
     buffer_delete(_buffer);

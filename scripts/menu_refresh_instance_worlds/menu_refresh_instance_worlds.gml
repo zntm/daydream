@@ -98,6 +98,8 @@ function menu_refresh_instance_worlds()
         
         global.world_save_data.uuid = _uuid;
         
+        global.world_statistics = _data.get_statistics() ?? {};
+        
         room_goto(rm_World);
     }
     

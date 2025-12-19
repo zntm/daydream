@@ -1,0 +1,7 @@
+{
+    "condition": {
+        "statistic": "mobs_killed",
+        "count": 50
+    },
+    "icon": "phantasia:achievement/monster_hunter"
+}

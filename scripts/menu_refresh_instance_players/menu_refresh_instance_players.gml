@@ -101,6 +101,9 @@ function menu_refresh_instance_players()
         
         global.player_save_data.uuid = _uuid;
         
+        global.player_statistics = _data.get_statistics() ?? {};
+        global.player_achievements = _data.get_achievements() ?? {};
+        
         menu_refresh_value_world_save();
         
         room_goto(rm_Menu_Worlds);

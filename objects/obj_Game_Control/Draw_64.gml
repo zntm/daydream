@@ -87,4 +87,10 @@ var _hp_max = obj_Player.hp_max;
 
 render_hud(_gui_width, _gui_height);
 
+// Draw modular GUI
+if (global.gui_root != undefined)
+{
+    global.gui_root.draw();
+}
+
 gpu_set_blendmode(bm_normal);

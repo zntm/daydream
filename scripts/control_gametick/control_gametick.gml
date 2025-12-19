@@ -163,6 +163,11 @@ function control_gametick(_delta_time)
             control_item_drop(_tick);
         }
         
+        with (obj_Falling_Tile)
+        {
+            control_falling_tile(_tick);
+        }
+        
         global.world_save_data.time += _tick / GAME_TICK;
         
         if (global.world_save_data.time >= _time_length)

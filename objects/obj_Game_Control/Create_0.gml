@@ -161,6 +161,10 @@ camera_set_view_size(view_camera[0], _camera_width, _camera_height);
 
 init_inventory_instance();
 
+event_clear_all();
+statistics_init();
+achievement_init();
+
 game_set_speed(display_get_frequency(), gamespeed_fps);
 
 control_instance_unpause();
@@ -178,6 +182,9 @@ chunk_in_view_y = infinity;
 
 chunk_in_view = [];
 chunk_in_view_length = 0;
+
+// Initialize chunk generation queue for time-sliced worldgen
+chunk_queue_init();
 
 open_simplex_noise_seed(global.world_save_data.seed);
 
@@ -392,3 +399,6 @@ if (IS_DEVELOPER_MODE)
     
     dbg_text(ref_create(id, "debug_text"));
 }
+
+// Initialize the modular GUI system
+gui_init_modular();

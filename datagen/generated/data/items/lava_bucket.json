@@ -1,0 +1,31 @@
+{
+    "inventory": "#phantasia:item/generic/inventory_default",
+    "item": {
+        "components": {
+            "level": {
+                "type": "u8",
+                "default": 8,
+                "min": 1,
+                "max": 8
+            }
+        },
+        "on_use": [
+            {
+                "id": "phantasia:bucket_place",
+                "parameters": {
+                    "liquid_id": "phantasia:lava",
+                    "empty_bucket_id": "phantasia:bucket",
+                    "tick_delay": 1,
+                    "fluid_collisions": [
+                        {
+                            "id": "phantasia:stone",
+                            "liquid_id": "phantasia:water"
+                        }
+                    ]
+                }
+            }
+        ]
+    },
+    "sprite": "phantasia:item/lava_bucket",
+    "type": "default"
+}

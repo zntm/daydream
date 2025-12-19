@@ -81,6 +81,22 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 draw_sprite_ext(_sprite.get_sprite(), _index, x, y - (_sprite.get_yoffset() * _yscale), _xscale, _yscale, image_angle, image_blend, 1);
             }
             
+            // Render falling tiles
+            with (obj_Falling_Tile)
+            {
+                var _data = _item_data[$ tile_id];
+                
+                if (_data != undefined)
+                {
+                    var _sprite = _sprite_asset[$ _data.get_sprite()];
+                    
+                    if (_sprite != undefined)
+                    {
+                        draw_sprite_ext(_sprite.get_sprite(), tile_index, x, y, entity_xscale, entity_yscale, 0, c_white, 1);
+                    }
+                }
+            }
+            
             with (obj_Creature)
             {
                 var _variant = id[$ "variant"];
@@ -215,6 +231,11 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 
                 draw_sprite_ext(_sprite.get_sprite(), _index, x, y, entity_xscale, entity_yscale, image_angle, image_blend, image_alpha * (_data.is_fade_out() ? timer_life / timer_life_max : 1));
             }
+            
+            // Render pooled particles (optimized batch rendering)
+            render_particles_batch();
+            
+            gpu_set_blendmode(bm_normal);
         }
     }
     

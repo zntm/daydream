@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"gui_inventory",
+  "%Name":"worldgen_get_cave_heat",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"gui_inventory",
+  "name":"worldgen_get_cave_heat",
   "parent":{
-    "name":"GUI",
-    "path":"folders/Scripts/GUI.yy",
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

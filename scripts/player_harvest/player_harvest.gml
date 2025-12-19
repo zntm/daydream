@@ -108,6 +108,8 @@ function player_harvest(_dt, _x, _y)
         
         tile_place(_x, _y, _z, TILE_EMPTY);
         
+        falling_tile_check(_x, _y - 1, _z);
+        
         tile_update_surrounding(_x, _y, _z, 1, 1);
         
         if (_data.has_light())

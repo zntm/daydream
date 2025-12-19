@@ -71,7 +71,10 @@ function control_inventory()
                 
                 if (keyboard_check(vk_shift))
                 {
-                    var _inst = instance_position(mouse_x, mouse_y, obj_Inventory);
+                    // Convert mouse to GUI coordinates for collision detection
+                    var _gui_mouse_x = (window_mouse_get_x() / global.window_width) * global.gui_width;
+                    var _gui_mouse_y = (window_mouse_get_y() / global.window_height) * global.gui_height;
+                    var _inst = instance_position(_gui_mouse_x, _gui_mouse_y, obj_Inventory);
                     
                     if (instance_exists(_inst))
                     {
@@ -110,7 +113,11 @@ function control_inventory()
     
     control_inventory_position();
     
-    var _inst = instance_position(mouse_x, mouse_y, obj_Inventory);
+    // Convert mouse to GUI coordinates for collision detection
+    var _gui_mouse_x = (window_mouse_get_x() / global.window_width) * global.gui_width;
+    var _gui_mouse_y = (window_mouse_get_y() / global.window_height) * global.gui_height;
+    
+    var _inst = instance_position(_gui_mouse_x, _gui_mouse_y, obj_Inventory);
     
     inventory_organize_mouse(_inst);
     

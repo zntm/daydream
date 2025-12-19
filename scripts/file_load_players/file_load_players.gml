@@ -56,6 +56,25 @@ function file_load_players()
         
         var _effects = file_load_snippet_effects(_buffer);
         
+        // Skip hotbar byte (u8) which is saved after effects
+        if (buffer_tell(_buffer) < buffer_get_size(_buffer))
+        {
+            buffer_read(_buffer, buffer_u8);
+        }
+        
+        var _statistics = undefined;
+        var _achievements = undefined;
+        
+        if (buffer_tell(_buffer) < buffer_get_size(_buffer))
+        {
+            _statistics = statistics_load_player(_buffer);
+        }
+        
+        if (buffer_tell(_buffer) < buffer_get_size(_buffer))
+        {
+            _achievements = achievement_load_player(_buffer);
+        }
+        
         buffer_delete(_buffer);
         
         array_push(global.file_players_uuid, _file);
@@ -64,7 +83,9 @@ function file_load_players()
             .set_version(_version)
             .set_attire(_attire)
             .set_hp(_hp, _hp_max)
-            .set_effects(_effects));
+            .set_effects(_effects)
+            .set_statistics(_statistics)
+            .set_achievements(_achievements));
     }
     
     array_sort(global.file_players, __sort);

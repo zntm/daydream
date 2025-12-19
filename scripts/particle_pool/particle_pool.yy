@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"particle_pool",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"particle_pool",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -23,7 +23,9 @@ chunk_display = 0;
 
 enum CHUNK_BOOLEAN {
     GENERATED                = 1 << 0,
-    SURFACE_LIGHTING_REFRESH = 1 << 1
+    SURFACE_LIGHTING_REFRESH = 1 << 1,
+    QUEUED                   = 1 << 2,  // Chunk is queued for generation
+    DIRTY                    = 1 << 3   // Chunk vertex buffer needs rebuild
 }
 
 boolean =

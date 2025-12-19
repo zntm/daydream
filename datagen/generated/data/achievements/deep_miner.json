@@ -1,0 +1,7 @@
+{
+    "condition": {
+        "statistic": "tiles_broken",
+        "count": 1000
+    },
+    "icon": "phantasia:achievement/deep_miner"
+}

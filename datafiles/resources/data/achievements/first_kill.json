@@ -1,0 +1,7 @@
+{
+    "condition": {
+        "statistic": "mobs_killed",
+        "count": 1
+    },
+    "icon": "phantasia:achievement/first_kill"
+}

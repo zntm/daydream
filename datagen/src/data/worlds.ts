@@ -77,6 +77,9 @@ export class WorldBiome {
         default: WorldCaveBiome[];
         noise: Noise;
         options: any[];
+        heat?: Noise;
+        humidity?: Noise;
+        map?: string;
     };
 
     private surface: {
@@ -94,11 +97,17 @@ export class WorldBiome {
         surfaceHumidity: Noise,
         surfaceMap: string,
         surfaceOffset: Noise,
+        caveHeat?: Noise,
+        caveHumidity?: Noise,
+        caveMap?: string,
     ) {
         this.cave = {
             default: defaultCaveBiomes,
             noise: caveNoise,
             options: caveOptions,
+            heat: caveHeat,
+            humidity: caveHumidity,
+            map: caveMap,
         };
         this.surface = {
             heat: surfaceHeat,
@@ -214,6 +223,10 @@ export default [
                 new Noise(2.75),
                 "phantasia:world/playground/map",
                 new Noise(2, 22, 34),
+                // Use surface logic for caves for now (placeholder values)
+                new Noise(4.5),
+                new Noise(2.75),
+                "phantasia:world/playground/map",
             ),
             new WorldSurface(512, new Noise(4, 40, 96)),
             new WorldCave(new Noise(0, 12, 2), [

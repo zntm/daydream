@@ -485,6 +485,13 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
                 set_tile_sfx(_sfx);
             }
             
+            var _falling = _tile[$ "falling"];
+            
+            if (_falling != undefined)
+            {
+                set_falling(_falling);
+            }
+            
             /*
             ___tile_is_visible = _tile[$ "is_visible"];
             
@@ -621,6 +628,35 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     static get_tile_sfx = function()
     {
         return self[$ "___sfx"];
+    }
+    
+    /// @function set_falling(_falling)
+    /// @desc Set falling tile properties
+    /// @param {Struct} _falling Falling properties { enabled, delay, gravity }
+    static set_falling = function(_falling)
+    {
+        ___falling = {
+            enabled: _falling[$ "enabled"] ?? true,
+            delay: _falling[$ "delay"] ?? 2,
+            gravity: _falling[$ "gravity"]
+        };
+        
+        return self;
+    }
+    
+    /// @function get_falling()
+    /// @desc Get falling tile properties or undefined if not a falling tile
+    static get_falling = function()
+    {
+        return self[$ "___falling"];
+    }
+    
+    /// @function is_falling_tile()
+    /// @desc Check if this is a falling tile type
+    static is_falling_tile = function()
+    {
+        var _falling = self[$ "___falling"];
+        return (_falling != undefined) && (_falling.enabled);
     }
     
     static get_is_visible = function()

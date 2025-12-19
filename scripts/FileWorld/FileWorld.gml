@@ -87,4 +87,16 @@ function FileWorld(_uuid, _name, _seed, _last_opened) constructor
     {
         return self[$ "___weather_storm"];
     }
+    
+    static set_statistics = function(_statistics)
+    {
+        ___statistics = _statistics;
+        
+        return self;
+    }
+    
+    static get_statistics = function()
+    {
+        return self[$ "___statistics"];
+    }
 }

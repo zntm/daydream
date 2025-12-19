@@ -1,0 +1,8 @@
+{
+    "condition": {
+        "event": "CRAFTING_COMPLETE",
+        "item_id": "phantasia:copper_pickaxe",
+        "count": 1
+    },
+    "icon": "phantasia:achievement/copper_tools"
+}

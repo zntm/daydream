@@ -93,11 +93,18 @@ function inventory_organize_mouse(_inst)
         }
         else
         {
-            var _item = global.inventory.mouse;
+            var _mouse = global.inventory.mouse;
+            var _target_item = global.inventory[$ _mouse.type][_mouse.index];
             
-            global.inventory[$ _item.type][_item.index].add_amount(_item.item.get_amount());
-            
-            delete _item.item;
+            if (_target_item == INVENTORY_EMPTY)
+            {
+                global.inventory[$ _mouse.type][@ _mouse.index] = _mouse.item;
+            }
+            else
+            {
+                _target_item.add_amount(_mouse.item.get_amount());
+                delete _mouse.item;
+            }
         }
         
         inventory_mouse_select_type = INVENTORY_MOUSE_SELECT_TYPE.NONE;
@@ -191,11 +198,18 @@ function inventory_organize_mouse(_inst)
         }
         else
         {
-            var _item = global.inventory.mouse;
+            var _mouse = global.inventory.mouse;
+            var _target_item = global.inventory[$ _mouse.type][_mouse.index];
             
-            global.inventory[$ _item.type][_item.index].add_amount(_item.item.get_amount());
-            
-            delete _item.item;
+            if (_target_item == INVENTORY_EMPTY)
+            {
+                global.inventory[$ _mouse.type][@ _mouse.index] = _mouse.item;
+            }
+            else
+            {
+                _target_item.add_amount(_mouse.item.get_amount());
+                delete _mouse.item;
+            }
         }
         
         inventory_mouse_select_type = INVENTORY_MOUSE_SELECT_TYPE.NONE;

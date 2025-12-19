@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"gui_inventory_hotbar",
+  "%Name":"statistics_system",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"gui_inventory_hotbar",
+  "name":"statistics_system",
   "parent":{
-    "name":"GUI",
-    "path":"folders/Scripts/GUI.yy",
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

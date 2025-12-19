@@ -10,20 +10,10 @@ function render_hud(_gui_width, _gui_height)
     
     if (_hp > 0) && (is_opened & IS_OPENED_BOOLEAN.GUI) && !(is_opened & IS_OPENED_BOOLEAN.MENU)
     {
-        if (surface_refresh & SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR)
-        {
-            surface_refresh ^= SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR;
-            
-            gui_inventory_hotbar(_gui_scale_width, _gui_scale_height);
-        }
+        // Note: Hotbar and inventory rendering now handled by modular GUI system
+        // (GUISlot components in global.gui_root)
         
-        if (surface_refresh & SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK)
-        {
-            surface_refresh ^= SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK;
-            
-            gui_inventory(_gui_scale_width, _gui_scale_height);
-        }
-        
+        // Craftable panel still uses old system for now
         if (surface_refresh & SURFACE_REFRESH_BOOLEAN.INVENTORY_CRAFTABLE)
         {
             surface_refresh ^= SURFACE_REFRESH_BOOLEAN.INVENTORY_CRAFTABLE;
@@ -31,8 +21,7 @@ function render_hud(_gui_width, _gui_height)
             gui_inventory_craftable(_gui_scale_width, _gui_scale_height);
         }
         
-        // gui_effects();
-        
+        // HP bar rendering
         if (surface_refresh & SURFACE_REFRESH_BOOLEAN.HP)
         {
             surface_refresh ^= SURFACE_REFRESH_BOOLEAN.HP;
@@ -60,40 +49,7 @@ function render_hud(_gui_width, _gui_height)
         
         if (is_opened & IS_OPENED_BOOLEAN.INVENTORY)
         {
-            var _inventory = global.inventory;
-            var _inventory_instance = global.inventory_instance;
-            var _inventory_length = global.inventory_length;
-            
-            var _inventory_names = global.inventory_names;
-            var _inventory_names_length = array_length(_inventory_names);
-            
-            for (var i = 0; i < _inventory_names_length; ++i)
-            {
-                var _name = _inventory_names[i];
-                
-                var _data = _gui_inventory[$ _name];
-                var _surface_inventory = surface_inventory[$ _name];
-                
-                var _anchor_type = _data.anchor_type;
-                
-                var _x = gui_xanchor(_anchor_type, _gui_width,  _gui_scale_width)  + (_gui_scale_width  * (_data.surface_xoffset - GUI_INVENTORY_SURFACE_PADDING));
-                var _y = gui_yanchor(_anchor_type, _gui_height, _gui_scale_height) + (_gui_scale_height * (_data.surface_yoffset - GUI_INVENTORY_SURFACE_PADDING));
-                
-                var _surface_slot = _surface_inventory.surface_slot;
-                
-                if (surface_exists(_surface_slot))
-                {
-                    draw_surface_ext(_surface_slot, _x, _y, _gui_scale_width * INVENTORY_SLOT_SCALE, _gui_scale_height * INVENTORY_SLOT_SCALE, 0, c_white, 1);
-                }
-                
-                var _surface_item = _surface_inventory.surface_item;
-                
-                if (surface_exists(_surface_item))
-                {
-                    draw_surface(_surface_item, _x, _y);
-                }
-            }
-            
+            // Craftable panel rendering (still uses old surface system)
             var _data = _gui_inventory._craftable;
             var _surface_inventory = surface_inventory._craftable;
             
@@ -116,6 +72,7 @@ function render_hud(_gui_width, _gui_height)
                 draw_surface(_surface_item, _x, _y);
             }
             
+            // Tooltip rendering
             var _inst = global.inventory_selected_hover;
             
             if (instance_exists(_inst))
@@ -156,29 +113,6 @@ function render_hud(_gui_width, _gui_height)
                 }
             }
         }
-        else
-        {
-            var _data = _gui_inventory.hotbar;
-            var _surface_inventory = surface_inventory.hotbar;
-            
-            var _anchor_type = _data.anchor_type;
-            
-            var _x = gui_xanchor(_anchor_type, _gui_width,  _gui_scale_width)  + (_gui_scale_width  * (_data.surface_xoffset - GUI_INVENTORY_SURFACE_PADDING));
-            var _y = gui_yanchor(_anchor_type, _gui_height, _gui_scale_height) + (_gui_scale_height * (_data.surface_yoffset - GUI_INVENTORY_SURFACE_PADDING));
-            
-            var _surface_slot = _surface_inventory.surface_slot;
-            
-            if (surface_exists(_surface_slot))
-            {
-                draw_surface_ext(_surface_slot, _x, _y, _gui_scale_width * INVENTORY_SLOT_SCALE, _gui_scale_height * INVENTORY_SLOT_SCALE, 0, c_white, 1);
-            }
-            
-            var _surface_item = _surface_inventory.surface_item;
-            
-            if (surface_exists(_surface_item))
-            {
-                draw_surface(_surface_item, _x, _y);
-            }
-        }
+        // Note: Hotbar rendering when inventory is closed is now handled by modular GUI
     }
 }
