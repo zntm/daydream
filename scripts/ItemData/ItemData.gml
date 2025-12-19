@@ -1254,7 +1254,9 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     
     static get_item_component = function(_name)
     {
-        return ___item_components[$ _name];
+        var _components = self[$ "___item_components"];
+        if (_components == undefined) return undefined;
+        return _components[$ _name];
     }
     
     static get_item_components_names = function()
@@ -1291,7 +1293,9 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     
     static get_tile_component = function(_name)
     {
-        return ___tile_components[$ _name];
+        var _components = self[$ "___tile_components"];
+        if (_components == undefined) return undefined;
+        return _components[$ _name];
     }
     
     static get_tile_components_names = function()

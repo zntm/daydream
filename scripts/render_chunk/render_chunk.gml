@@ -95,6 +95,36 @@ function render_chunk(_page, _position, _texel_width, _texel_height, _inst, _z)
             
             if (_data.is_liquid())
             {
+                var _level = _tile.get_component("level") ?? 8;
+                var _left_level = 0;
+                var _right_level = 0;
+                
+                // Get world coordinates for this tile
+                var _world_x = (_xstart >> TILE_SIZE_BIT) + _x;
+                var _world_y = (_ystart >> TILE_SIZE_BIT) + _y;
+                
+                // Check left neighbor using tile_get (handles cross-chunk)
+                var _left_tile = tile_get(_world_x - 1, _world_y, _z);
+                if (_left_tile != TILE_EMPTY)
+                {
+                    var _left_data = _item_data[$ _left_tile.get_id()];
+                    if (_left_data.is_liquid())
+                    {
+                        _left_level = _left_tile.get_component("level") ?? 8;
+                    }
+                }
+                
+                // Check right neighbor using tile_get (handles cross-chunk)
+                var _right_tile = tile_get(_world_x + 1, _world_y, _z);
+                if (_right_tile != TILE_EMPTY)
+                {
+                    var _right_data = _item_data[$ _right_tile.get_id()];
+                    if (_right_data.is_liquid())
+                    {
+                        _right_level = _right_tile.get_component("level") ?? 8;
+                    }
+                }
+                
                 chunk_vertex_liquid(
                     _buffer,
                     _texel_width,
@@ -108,7 +138,9 @@ function render_chunk(_page, _position, _texel_width, _texel_height, _inst, _z)
                     _xscale,
                     _yscale,
                     _rotation,
-                    _tile.get_component("level") ?? 8
+                    _level,
+                    _left_level,
+                    _right_level
                 );
                 
                 continue;

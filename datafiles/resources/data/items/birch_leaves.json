@@ -25,7 +25,18 @@
         "audio_properties": {
             "lowpass": 0.2,
             "reverb": 0
-        }
+        },
+        "on_random_tick": [
+            {
+                "id": "phantasia:leaf_decay",
+                "parameters": {
+                    "particle": [
+                        "#051417",
+                        "#041013"
+                    ]
+                }
+            }
+        ]
     },
     "type": "untouchable"
 }

@@ -1,4 +1,5 @@
 import { DatagenReturnData } from "../../../lib/DatagenReturnData";
+import { ItemFunction } from "../lib/ItemFunction";
 import { ItemType } from "../lib/ItemType";
 import {
     TileItem,
@@ -119,7 +120,12 @@ export default (
                 ),
             )
             .setTileSFX("#phantasia:tile/sfx/wood")
-            .setAudioProperties(0.2, 0.0),
+            .setAudioProperties(0.2, 0.0)
+            .addOnRandomTick([
+                new ItemFunction("phantasia:leaf_decay", {
+                    particle: leavesParticleId,
+                }),
+            ]),
     ),
     new DatagenReturnData(
         `generated/data/items/${id}_pickaxe.json`,

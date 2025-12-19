@@ -678,6 +678,128 @@ event_subscribe(GAME_EVENT.TILE_CHANGED, function(_data) {
         }
     }
 });
+
+// Leaf Decay System
+// Minecraft-style leaf decay: natural leaves decay when no wood is nearby
+
+global.item_function[$ "phantasia:leaf_decay"] = function(_dt, _x, _y, _z, _xscale, _yscale, _parameter)
+{
+    // Convert from pixel to tile coordinates (control_gametick passes world pixel coords)
+    var _tx = _x div TILE_SIZE;
+    var _ty = _y div TILE_SIZE;
+    
+    var _tile = tile_get(_tx, _ty, _z);
+    
+    // Safety check
+    if (_tile == TILE_EMPTY) exit;
+    
+    // Only natural leaves decay (player-placed leaves don't decay)
+    var _is_natural = _tile.get_component("natural");
+    if (_is_natural != true) exit;
+    
+    // Get parameters with defaults
+    var _decay_radius = _parameter[$ "radius"] ?? 4;       // How far to check for wood
+    var _decay_chance = _parameter[$ "chance"] ?? 0.10;    // 10% per random tick (Minecraft-like)
+    var _wood_tag = _parameter[$ "wood_tag"] ?? "#phantasia:item/generic/wood";
+    
+    // Resolve wood tag to array of wood IDs
+    var _wood_ids = tag_value_parse(_wood_tag);
+    if (!is_array(_wood_ids)) _wood_ids = [_wood_ids]; // Ensure it's an array
+    
+    // Check if wood is nearby
+    var _wood_found = false;
+    
+    for (var _dx = -_decay_radius; _dx <= _decay_radius && !_wood_found; ++_dx)
+    {
+        for (var _dy = -_decay_radius; _dy <= _decay_radius && !_wood_found; ++_dy)
+        {
+            // Use Manhattan distance 
+            if (abs(_dx) + abs(_dy) > _decay_radius) continue;
+            
+            // Check tree layer for wood
+            var _check_tile = tile_get(_tx + _dx, _ty + _dy, CHUNK_DEPTH_TREE);
+            
+            if (_check_tile != TILE_EMPTY)
+            {
+                var _check_id = _check_tile.get_id();
+                
+                // Check if tile ID matches any wood in the tag
+                if (array_contains(_wood_ids, _check_id))
+                {
+                    _wood_found = true;
+                }
+            }
+        }
+    }
+    
+    // If wood is found, don't decay
+    if (_wood_found) exit;
+    
+    // Roll for decay
+    if (random(1) < _decay_chance)
+    {
+        // Decay the leaf - trigger tile destruction
+        tile_place(_tx, _ty, _z, TILE_EMPTY);
+        tile_update_surrounding(_tx, _ty, _z);
+        
+        // Optionally spawn leaf particle
+        var _particle_id = _parameter[$ "particle"];
+        if (_particle_id != undefined)
+        {
+            spawn_particle(_x, _y, smart_value(_particle_id));
+        }
+    }
+}
+
+// Subscribe to tile changes to speed up leaf decay when wood is destroyed
+event_subscribe(GAME_EVENT.TILE_CHANGED, function(_data) {
+    if (_data.action != "destroyed") exit;
+    
+    var _destroyed_id = _data.id;
+    
+    // Resolve wood tag to array of wood IDs
+    var _wood_ids = tag_value_parse("#phantasia:item/generic/wood");
+    if (!is_array(_wood_ids)) _wood_ids = [_wood_ids];
+    
+    // Only trigger if wood was destroyed
+    if (!array_contains(_wood_ids, _destroyed_id)) exit;
+    
+    var _x = _data.x;
+    var _y = _data.y;
+    var _decay_radius = 5; // Slightly larger than check radius to catch edge cases
+    
+    var _item_data = global.item_data;
+    
+    // Schedule decay checks for nearby leaves on the leaf layer
+    for (var _dx = -_decay_radius; _dx <= _decay_radius; ++_dx)
+    {
+        for (var _dy = -_decay_radius; _dy <= _decay_radius; ++_dy)
+        {
+            var _check_tile = tile_get(_x + _dx, _y + _dy, CHUNK_DEPTH_LEAVES);
+            
+            if (_check_tile != TILE_EMPTY)
+            {
+                var _check_data = _item_data[$ _check_tile.get_id()];
+                
+                // Check if it has leaves property and is natural
+                if (_check_data != undefined)
+                {
+                    var _is_natural = _check_tile.get_component("natural");
+                    if (_is_natural == true)
+                    {
+                        // Schedule a decay check with a random delay
+                        tick_delay_add(irandom_range(5, 20), function(_chain) {
+                            var _func = global.item_function[$ "phantasia:leaf_decay"];
+                            _func(1, _chain.x * TILE_SIZE, _chain.y * TILE_SIZE, _chain.z, 1, 1, {});
+                        }, [{ x: _x + _dx, y: _y + _dy, z: CHUNK_DEPTH_LEAVES }]);
+                    }
+                }
+            }
+        }
+    }
+});
+
+
 global.item_function[$ "phantasia:open_menu"] = function(_dt, _x, _y, _z, _xscale, _yscale, _parameter)
 {
     static __update_float = function()

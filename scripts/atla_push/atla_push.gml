@@ -23,12 +23,30 @@ function atla_push(_page, _sprite, _name)
     var _height = sprite_get_height(_sprite);
     var _number = sprite_get_number(_sprite);
     
+    // Determine if rotation would save space (tall sprites become wide)
+    var _should_rotate = _height > _width;
+    
+    // Create AtlaSprite entries (before potential rotation swap)
     for (var i = 0; i < _number; ++i)
     {
         array_push(global.___atla_page_position[$ _page], new AtlaSprite(_name, _sprite, array_length(global.___atla_page_position[$ _page]), i, _number, _xoffset, _yoffset, _width, _height));
     }
     
-    global.___atla_page[$ _page][$ _name] = new Atla(_xoffset, _yoffset, _width, _height, _number);
+    // For the Atla entry, swap dimensions if rotating but keep original offsets
+    // The vertex functions will handle offset transformation when is_rotated() is true
+    var _atla_width = _should_rotate ? _height : _width;
+    var _atla_height = _should_rotate ? _width : _height;
+    
+    // Store original offsets - vertex functions will transform them based on is_rotated()
+    var _atla = new Atla(_xoffset, _yoffset, _atla_width, _atla_height, _number);
+    
+    if (_should_rotate)
+    {
+        _atla.set_is_rotated();
+    }
+    
+    global.___atla_page[$ _page][$ _name] = _atla;
+
     
     array_sort(global.___atla_page_position[$ _page], function(_a, _b)
     {

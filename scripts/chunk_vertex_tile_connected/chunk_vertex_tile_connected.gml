@@ -146,8 +146,27 @@ function chunk_vertex_tile_connected(_buffer, _texel_width, _texel_height, _anim
     var _half_width  = _width  / 2;
     var _half_height = _height / 2;
     
-    var _xoffset = -_xscale * (((_atla_value >> 0)  & 2047) - 1024);
-    var _yoffset = -_yscale * (((_atla_value >> 11) & 2047) - 1024);
+    // Get stored offsets (original, not transformed)
+    var _stored_xoffset = ((_atla_value >> 0)  & 2047) - 1024;
+    var _stored_yoffset = ((_atla_value >> 11) & 2047) - 1024;
+    
+    // Check if the atla entry is rotated (need this early for offset transformation)
+    var _is_rotated = _atla.is_rotated();
+    
+    // Transform offsets for rotated sprites
+    var _xoffset, _yoffset;
+    if (_is_rotated)
+    {
+        // For 90° CW rotation: new_xoffset = old_yoffset, new_yoffset = original_width - old_xoffset
+        // Original width is now stored as _height (since dimensions were swapped)
+        _xoffset = -_xscale * _stored_yoffset;
+        _yoffset = -_yscale * (_height - _stored_xoffset);
+    }
+    else
+    {
+        _xoffset = -_xscale * _stored_xoffset;
+        _yoffset = -_yscale * _stored_yoffset;
+    }
     
     var _a = _xoffset * _cos;
     var _b = _xoffset * _sin;
@@ -167,11 +186,25 @@ function chunk_vertex_tile_connected(_buffer, _texel_width, _texel_height, _anim
     
     var _uvs = _atla_sprite.___uvs;
     
-    var _u0 = _uvs[0];
-    var _v0 = _uvs[1];
+    // Check if the atla entry is rotated
+    var _is_rotated = _atla.is_rotated();
     
-    var _u2 = _uvs[2];
-    var _v2 = _uvs[3];
+    var _u0, _v0, _u2, _v2;
+    
+    if (_is_rotated)
+    {
+        // For rotated sprites, remap the corner UVs
+        // The sprite is stored rotated 90° CW in the atlas
+        _u0 = _uvs[0]; _v0 = _uvs[3]; // was bottom-left
+        _u2 = _uvs[2]; _v2 = _uvs[1]; // was top-right
+    }
+    else
+    {
+        _u0 = _uvs[0];
+        _v0 = _uvs[1];
+        _u2 = _uvs[2];
+        _v2 = _uvs[3];
+    }
     
     var _u1 = _u0 + ((_u2 - _u0) / 2);
     var _v1 = _v0 + ((_v2 - _v0) / 2);

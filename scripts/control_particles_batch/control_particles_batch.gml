@@ -47,19 +47,19 @@ function control_particles_batch(_dt)
         }
         
         // Update position
-        _px[@ i] += _vx[i] * _dt_normalized;
-        _py[@ i] += _vy[i] * _dt_normalized;
+        _px[@ i] += _vx[i] * _dt;
+        _py[@ i] += _vy[i] * _dt;
         
         // Apply gravity
         if (_has_gravity[i])
         {
-            _vy[@ i] += _gravity[i] * _dt_normalized;
+            _vy[@ i] += _gravity[i] * _dt;
         }
         
         // Update rotation
         if (_rotation_increment[i] != 0)
         {
-            _rotation[@ i] += _rotation_increment[i] * _dt_normalized;
+            _rotation[@ i] += _rotation_increment[i] * _dt;
         }
         
         // Cull off-screen particles

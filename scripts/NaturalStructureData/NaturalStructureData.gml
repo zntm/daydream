@@ -335,7 +335,8 @@ global.natural_structure_data[$ "phantasia:tree/generic"] = new NaturalStructure
                 {
                     var _tile = new Tile(_tile_leaves_id, _item_data)
                         .set_scale(_xscale, _yscale)
-                        .set_index_offset(_index_offset);
+                        .set_index_offset(_index_offset)
+                        .set_component("natural", true);
                     
                     _data[@ (_xstart + j) + ((_offset + l) * _width) + _depth_leaves] = _tile;
                 }
@@ -479,8 +480,10 @@ global.natural_structure_data[$ "phantasia:tree/coniferous"] = new NaturalStruct
                         }
                     }
                     
-                    var _t1 = new Tile(_tile_leaves_id, _item_data);
-                    var _t2 = new Tile(_tile_leaves_id, _item_data);
+                    var _t1 = new Tile(_tile_leaves_id, _item_data)
+                        .set_component("natural", true);
+                    var _t2 = new Tile(_tile_leaves_id, _item_data)
+                        .set_component("natural", true);
                     
                     if (_count_current != _count_next)
                     {
@@ -500,7 +503,8 @@ global.natural_structure_data[$ "phantasia:tree/coniferous"] = new NaturalStruct
             
             if (_y2 <= 1 + _cone_offset)
             {
-                var _t = new Tile(_tile_leaves_id, _item_data);
+                var _t = new Tile(_tile_leaves_id, _item_data)
+                    .set_component("natural", true);
                 
                 var _y2_next = (i + 2) / _height;
                 
