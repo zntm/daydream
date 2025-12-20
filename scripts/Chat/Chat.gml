@@ -17,7 +17,7 @@ function Chat(_name, _message) constructor
         return ___message;
     }
     
-    ___timer = GAME_FPS * 8;
+    ___timer = GAME_TICK * 8;
     
     static add_timer = function(_value)
     {

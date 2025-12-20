@@ -37,6 +37,33 @@ if (keyboard_check_pressed(vk_f2))
     
     render_hud(_window_width, _window_height);
     
+    // Draw modular GUI for screenshot
+    if (global.gui_root != undefined)
+    {
+        global.gui_root.draw();
+    }
+    
+    // Draw deferred text for screenshot
+    var _deferred_text_length = array_length(global.gui_deferred_text);
+    
+    if (_deferred_text_length > 0)
+    {
+        draw_set_halign(fa_right);
+        draw_set_valign(fa_bottom);
+        
+        for (var i = 0; i < _deferred_text_length; ++i)
+        {
+            var _ = global.gui_deferred_text[i];
+            
+            render_text(_.x, _.y, _.text, _.xscale, _.yscale, 0, _.colour, _.alpha);
+        }
+        
+        draw_set_halign(fa_left);
+        draw_set_valign(fa_top);
+        
+        array_resize(global.gui_deferred_text, 0);
+    }
+    
     surface_reset_target();
     
     surface_save(_surface, $"{PROGRAM_DIRECTORY_SCREENSHOTS}/{current_year}-{current_month}-{current_day}_{current_hour}.{current_minute}.{current_second}.png");

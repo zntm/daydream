@@ -38,6 +38,17 @@ function gui_create_component(_type, _props)
             var _inventory_name = _props[$ "inventory_name"] ?? "base";
             var _slot_index = _props[$ "slot_index"] ?? 0;
             return new GUISlot(_x, _y, _inventory_name, _slot_index);
+        
+        case "text":
+            var _text = _props[$ "text"] ?? "";
+            return new GUIText(_x, _y, _text);
+        
+        case "chat_history":
+            var _max_messages = _props[$ "max_messages"] ?? 8;
+            return new GUIChatHistory(_x, _y, _width, _height, _max_messages);
+        
+        case "choice_panel":
+            return new GUIChoicePanel(_x, _y, _width);
             
         default:
             // Generic constructor call

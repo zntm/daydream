@@ -26,7 +26,8 @@ enum IS_OPENED_BOOLEAN {
     INVENTORY_CONTAINER = 1 << 3,
     PAUSE               = 1 << 4,
     MENU                = 1 << 5,
-    EXIT                = 1 << 6
+    EXIT                = 1 << 6,
+    CHAT                = 1 << 7
 }
 
 is_opened =
@@ -401,6 +402,33 @@ if (IS_DEVELOPER_MODE)
     
     dbg_text(ref_create(id, "debug_text"));
 }
+
+// Global command values
+global.command_value = {};
+
+// Chat state (migrated from obj_Control)
+// Note: Chat open state is now in is_opened & IS_OPENED_BOOLEAN.CHAT
+chat_message = "";
+chat_message_history_index = 0;
+
+
+// Initialize chat history if not exists
+if (!variable_global_exists("chat_history"))
+{
+    global.chat_history = [];
+}
+
+// Load chat history
+file_load_message_history();
+
+// Initialize message history (for up/down arrow history)
+if (!variable_global_exists("message_history"))
+{
+    global.message_history = [];
+}
+
+// Initialize command hint
+global.chat_command_hint = undefined;
 
 // Initialize the modular GUI system
 gui_init_modular();

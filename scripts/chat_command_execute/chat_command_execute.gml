@@ -10,6 +10,8 @@
 #macro CHAT_COMMAND_PARAMETER #77C0EA
 #macro CHAT_COMMAND_PARAMETER_SELECTED #E8D15F
 
+#macro CHAT_HISTORY_MAX 100
+
 function chat_command_execute(_command)
 {
 	static __parameter = [];

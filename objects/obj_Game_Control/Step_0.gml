@@ -182,7 +182,7 @@ var _settings = global.settings;
 
 with (obj_Player)
 {
-    if (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.MENU)
+    if (obj_Game_Control.is_opened & (IS_OPENED_BOOLEAN.MENU | IS_OPENED_BOOLEAN.CHAT))
     {
         input_left  = false;
         input_right = false;
@@ -278,11 +278,14 @@ if (timer_foliage_sway >= 0.04)
 var _tile_x = round(mouse_x / TILE_SIZE);
 var _tile_y = round(mouse_y / TILE_SIZE);
 
-control_inventory();
+if !(is_opened & IS_OPENED_BOOLEAN.CHAT)
+{
+    control_inventory();
+}
 
 control_chunk_clear(_camera_x, _camera_y, _camera_width, _camera_height);
 
-if !(is_opened & IS_OPENED_BOOLEAN.MENU)
+if !(is_opened & (IS_OPENED_BOOLEAN.MENU | IS_OPENED_BOOLEAN.CHAT))
 {
     if (mouse_check_button_pressed(mb_right))
     {
@@ -342,23 +345,150 @@ if (keyboard_check_pressed(vk_f1))
 // Update modular GUI visibility and state
 if (global.gui_root != undefined)
 {
-    // Hotbar: visible when GUI is open and not in menu
+    // Hotbar: visible when GUI is open and not in menu or chat
     if (global.gui_panel_hotbar_modular != undefined)
     {
-        global.gui_panel_hotbar_modular.visible = (is_opened & IS_OPENED_BOOLEAN.GUI) && !(is_opened & IS_OPENED_BOOLEAN.MENU);
+        global.gui_panel_hotbar_modular.visible = (is_opened & IS_OPENED_BOOLEAN.GUI) && !(is_opened & IS_OPENED_BOOLEAN.MENU) && !(is_opened & IS_OPENED_BOOLEAN.CHAT);
     }
     
-    // Inventory: visible when inventory is open
+    // Inventory: visible when inventory is open and chat is not open
     if (global.gui_panel_inventory_modular != undefined)
     {
-        global.gui_panel_inventory_modular.visible = (is_opened & IS_OPENED_BOOLEAN.INVENTORY);
+        global.gui_panel_inventory_modular.visible = (is_opened & IS_OPENED_BOOLEAN.INVENTORY) && !(is_opened & IS_OPENED_BOOLEAN.CHAT);
     }
     
-    // Crafting: visible when inventory is open and has content
+    // Crafting: visible when inventory is open, chat is not open, and has content
     if (variable_global_exists("gui_panel_crafting_modular")) && (global.gui_panel_crafting_modular != undefined)
     {
-        global.gui_panel_crafting_modular.visible = (is_opened & IS_OPENED_BOOLEAN.INVENTORY) && (array_length(global.gui_panel_crafting_modular.children) > 0);
+        global.gui_panel_crafting_modular.visible = (is_opened & IS_OPENED_BOOLEAN.INVENTORY) && !(is_opened & IS_OPENED_BOOLEAN.CHAT) && (array_length(global.gui_panel_crafting_modular.children) > 0);
     }
     
     global.gui_root.update();
+}
+
+// Chat panel visibility
+if (variable_global_exists("gui_panel_chat") && (global.gui_panel_chat != undefined))
+{
+    global.gui_panel_chat.visible = (is_opened & IS_OPENED_BOOLEAN.GUI) && !(is_opened & IS_OPENED_BOOLEAN.MENU);
+}
+
+// Chat input handling
+if (is_opened & IS_OPENED_BOOLEAN.CHAT)
+{
+    // Update chat message from keyboard_string
+    chat_message = keyboard_string;
+    
+    // Refresh suggestions (lightweight, handles its own change detection internally)
+    chat_refresh_suggestions();
+    
+    // Handle Enter to send message
+    if (keyboard_check_pressed(vk_enter))
+    {
+        var _message = string_trim(chat_message);
+        
+        if (string_length(_message) > 0)
+        {
+            // Check if it's a command
+            if (string_char_at(_message, 1) == CHAT_COMMAND_PREFIX)
+            {
+                var _command = string_delete(_message, 1, 1);
+                chat_command_execute(_command);
+            }
+            else
+            {
+                // Add as regular chat message
+                chat_add(global.player_save_data.name, _message);
+            }
+            
+            // Add to message history
+            array_insert(global.message_history, 0, _message);
+            
+            if (array_length(global.message_history) > 50)
+            {
+                array_resize(global.message_history, 50);
+            }
+        }
+        
+        chat_disable();
+    }
+    // Handle Escape to cancel
+    else if (keyboard_check_pressed(vk_escape))
+    {
+        chat_disable();
+    }
+    // Handle Up arrow - navigate commands if visible, otherwise history
+    else if (keyboard_check_pressed(vk_up))
+    {
+        if (global.gui_panel_choices != undefined) && (global.gui_panel_choices.visible)
+        {
+            global.gui_panel_choices.selected_index = max(0, global.gui_panel_choices.selected_index - 1);
+        }
+        else
+        {
+            var _history = global.message_history;
+            var _history_length = array_length(_history);
+            
+            if (_history_length > 0) && (chat_message_history_index > 0)
+            {
+                chat_message_history_index--;
+                keyboard_string = _history[chat_message_history_index];
+                chat_message = keyboard_string;
+            }
+        }
+    }
+    // Handle Down arrow - navigate commands if visible, otherwise history
+    else if (keyboard_check_pressed(vk_down))
+    {
+        if (global.gui_panel_choices != undefined) && (global.gui_panel_choices.visible)
+        {
+            var _choice_count = array_length(global.gui_panel_choices.choices);
+            global.gui_panel_choices.selected_index = min(_choice_count - 1, global.gui_panel_choices.selected_index + 1);
+        }
+        else
+        {
+            var _history = global.message_history;
+            var _history_length = array_length(_history);
+            
+            if (chat_message_history_index < _history_length - 1)
+            {
+                chat_message_history_index++;
+                keyboard_string = _history[chat_message_history_index];
+                chat_message = keyboard_string;
+            }
+            else
+            {
+                chat_message_history_index = _history_length;
+                keyboard_string = "";
+                chat_message = "";
+            }
+        }
+    }
+    // Handle Tab for autocomplete
+    else if (keyboard_check_pressed(vk_tab))
+    {
+        if (global.gui_panel_choices != undefined) && (global.gui_panel_choices.visible)
+        {
+            global.gui_panel_choices.select_choice(global.gui_panel_choices.selected_index);
+        }
+        else
+        {
+            chat_refresh_suggestions();
+        }
+    }
+}
+else
+{
+    // Open chat with T key
+    if (keyboard_check_pressed(ord("T"))) && !(is_opened & IS_OPENED_BOOLEAN.MENU) && !(is_opened & IS_OPENED_BOOLEAN.INVENTORY)
+    {
+        chat_enable();
+    }
+    // Open command prompt with / key
+    else if (keyboard_check_pressed(vk_divide) || keyboard_check_pressed(191)) && !(is_opened & IS_OPENED_BOOLEAN.MENU) && !(is_opened & IS_OPENED_BOOLEAN.INVENTORY)
+    {
+        chat_enable();
+        keyboard_string = "/";
+        obj_Game_Control.chat_message = "/";
+        chat_refresh_suggestions();
+    }
 }

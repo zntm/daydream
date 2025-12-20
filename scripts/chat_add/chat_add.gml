@@ -16,5 +16,9 @@ function chat_add(_name, _message, _colour = undefined, _sprite_prefix = "emote_
         array_resize(global.chat_history, CHAT_HISTORY_MAX);
     }
 	
-	file_save_message_history();
+	// Save message history if function exists
+	if (script_exists(file_save_message_history))
+	{
+		file_save_message_history();
+	}
 }

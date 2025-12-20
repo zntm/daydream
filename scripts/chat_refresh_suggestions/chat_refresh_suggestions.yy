@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"chat_refresh_suggestions",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"chat_refresh_suggestions",
+  "parent":{
+    "name":"Chat",
+    "path":"folders/Scripts/Chat.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

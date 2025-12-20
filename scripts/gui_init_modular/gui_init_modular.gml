@@ -5,6 +5,9 @@ function gui_init_modular()
     // Register component types
     gui_register_component("panel", GUIPanel);
     gui_register_component("slot", GUISlot);
+    gui_register_component("text", GUIText);
+    gui_register_component("chat_history", GUIChatHistory);
+    gui_register_component("choice_panel", GUIChoicePanel);
     
     global.gui_deferred_text = [];
     
@@ -69,5 +72,15 @@ function gui_init_modular()
     global.gui_panel_crafting_modular.visible = false;
     global.gui_root.add_child(global.gui_panel_crafting_modular);
     
+    // Create chat history panel (bottom-left)
+    global.gui_panel_chat = new GUIChatHistory(8, _logical_height - 160, 300, 128, 8);
+    global.gui_root.add_child(global.gui_panel_chat);
+    
+    // Create choice panel (centered, initially hidden)
+    global.gui_panel_choices = new GUIChoicePanel((_logical_width - 300) / 2, _logical_height / 2 - 50, 300);
+    global.gui_panel_choices.visible = false;
+    global.gui_root.add_child(global.gui_panel_choices);
+    
     show_debug_message("GUI: Modular GUI system initialized");
 }
+

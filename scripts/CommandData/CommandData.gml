@@ -188,11 +188,7 @@ global.command_data[$ "inventory"] = new CommandData()
                 }
             }
             
-            if (obj_Control.is_opened_inventory)
-            {
-                inventory_close();
-                inventory_open();
-            }
+
         }))
     .add_subcommand("give", new CommandData()
         .add_parameter(new CommandParameter("user", COMMAND_PARAMETER_TYPE.USER))

@@ -48,7 +48,7 @@ function render_hud(_gui_width, _gui_height)
             // Tooltip rendering
             var _inst = global.inventory_selected_hover;
             
-            if (instance_exists(_inst))
+            if (instance_exists(_inst)) && !(is_opened & IS_OPENED_BOOLEAN.CHAT)
             {
                 if (_inst.slot_type != INVENTORY_SLOT_TYPE.CRAFTABLE)
                 {

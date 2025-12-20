@@ -41,7 +41,7 @@ if (global.window_width <= 0) || (global.window_height <= 0)
     
     control_instance_pause();
 }
-else if (keyboard_check_pressed(global.settings.input_keyboard_pause))
+else if (keyboard_check_pressed(global.settings.input_keyboard_pause) && !(is_opened & IS_OPENED_BOOLEAN.CHAT))
 {
     with (obj_Menu_Anchor)
     {

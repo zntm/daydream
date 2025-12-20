@@ -84,7 +84,15 @@ function CommandParameter(_name, _type, _default_value = undefined) constructor
 	
 	static get_choices = function()
 	{
-		return self[$ "___choices"];
+		var _choices = self[$ "___choices"];
+		
+		// If choices is a function, execute it to get the array dynamically
+		if (is_method(_choices))
+		{
+			return _choices();
+		}
+		
+		return _choices;
 	}
 	
 	static get_choices_length = function()
