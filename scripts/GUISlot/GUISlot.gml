@@ -61,7 +61,7 @@ function GUISlot(_x, _y, _inventory_name, _slot_index, _sprite = spr_Inventory_S
         var _item_x = (_abs_x + (8 * scale)) * _base_scale_x;
         var _item_y = (_abs_y + (8 * scale)) * _base_scale_y;
         
-        draw_sprite_ext(_sprite, _index, _item_x, _item_y, _scale_x * _inventory_scale, _scale_y * _inventory_scale, 0, c_white, 1);
+        draw_sprite_ext(_sprite, _index, _item_x, _item_y, _scale_x * _inventory_scale * INVENTORY_ITEM_SCALE_MODIFIER, _scale_y * _inventory_scale * INVENTORY_ITEM_SCALE_MODIFIER, 0, c_white, 1);
         
         // Draw durability bar if applicable
         var _durability_data = _item_data.get_item_durability();
@@ -92,8 +92,8 @@ function GUISlot(_x, _y, _inventory_name, _slot_index, _sprite = spr_Inventory_S
         var _amount = _item.get_amount();
         if (_amount > 1)
         {
-            var _text_x = (_abs_x + 12) * _scale_x;
-            var _text_y = (_abs_y + 12) * _scale_y;
+            var _text_x = (_abs_x + INVENTORY_AMOUNT_TEXT_X_OFFSET) * _scale_x;
+            var _text_y = (_abs_y + INVENTORY_AMOUNT_TEXT_Y_OFFSET) * _scale_y;
             
             draw_set_halign(fa_right);
             draw_set_valign(fa_bottom);
