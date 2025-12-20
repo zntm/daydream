@@ -30,9 +30,9 @@ function sfx_diegetic_play(_emitter, _x, _y, _id, _gain = global.settings.audio_
     if (_gain <= 0) exit;
     
     // Create temporary emitter if none provided
-    var _is_temp_emitter = (_emitter == undefined);
+    // var _is_temp_emitter = (_emitter == undefined);
     
-    if (_is_temp_emitter)
+    // if (_is_temp_emitter)
     {
         _emitter = audio_emitter_create();
         audio_emitter_position(_emitter, _x, _y, 0);
@@ -71,7 +71,7 @@ function sfx_diegetic_play(_emitter, _x, _y, _id, _gain = global.settings.audio_
     }
     
     // Track temporary emitters for cleanup
-    if (_is_temp_emitter)
+    // if (_is_temp_emitter)
     {
         sfx_emitter_track(_emitter, _sound);
     }

@@ -42,7 +42,7 @@ function achievement_unlock(_id)
     
     // Show notification (if available)
     achievement_show_notification(_id, _data);
-    
+    /*
     // Give reward if any
     if (_data != undefined)
     {
@@ -58,7 +58,7 @@ function achievement_unlock(_id)
                 inventory_add("base", new Inventory(_item, _amount));
             }
         }
-    }
+    }*/
     
     // Emit event
     event_emit(GAME_EVENT.ACHIEVEMENT_UNLOCKED, {
