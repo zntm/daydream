@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"file_save_snippet_component_value",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"file_save_snippet_component_value",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

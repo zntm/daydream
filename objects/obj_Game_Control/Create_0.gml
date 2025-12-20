@@ -216,7 +216,9 @@ if (IS_DEVELOPER_MODE)
 {
     show_debug_overlay(true);
     
-    global.inventory.base[@ 0] = new Inventory("phantasia:water_bucket")
+    global.inventory.base[@ 0] = new Inventory("phantasia:water_bucket");
+    global.inventory.base[@ 1] = new Inventory("phantasia:lava_bucket");
+    global.inventory.base[@ 2] = new Inventory("phantasia:torch");
     
     global.debug_reload = {};
     

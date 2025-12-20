@@ -1244,8 +1244,17 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
             for (var i = 0; i < _length; ++i)
             {
                 var _name = _names[i];
+                var _component = _components[$ _name];
                 
-                ___item_components[$ _name] = _components[$ _name];
+                var _type = _component[$ "type"];
+                
+                if (string_ends_with(_type, "[]"))
+                {
+                    _component.type = string_replace(_type, "[]", "");
+                    _component.is_array = true;
+                }
+                
+                ___item_components[$ _name] = _component;
             }
         }
         
@@ -1283,8 +1292,17 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
             for (var i = 0; i < _length; ++i)
             {
                 var _name = _names[i];
+                var _component = _components[$ _name];
                 
-                ___tile_components[$ _name] = _components[$ _name];
+                var _type = _component[$ "type"];
+                
+                if (string_ends_with(_type, "[]"))
+                {
+                    _component.type = string_replace(_type, "[]", "");
+                    _component.is_array = true;
+                }
+                
+                ___tile_components[$ _name] = _component;
             }
         }
         

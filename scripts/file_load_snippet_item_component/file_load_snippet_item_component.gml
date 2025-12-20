@@ -5,44 +5,26 @@ function file_load_snippet_item_component(_buffer, _item)
     for (var i = 0; i < _component_length; ++i)
     {
         var _name = buffer_read(_buffer, buffer_string);
-        var _type = buffer_read(_buffer, buffer_u8);
+        var _type_header = buffer_read(_buffer, buffer_u8);
+        
+        var _is_array = (_type_header & 128) != 0;
+        var _type_id = _type_header & 127; // Mask out the array flag
+        
         var _value;
         
-        switch (_type)
+        if (_is_array)
         {
-            case FILE_COMPONENT_TYPE.U8:
-                _value = buffer_read(_buffer, buffer_u8);
-                break;
-            case FILE_COMPONENT_TYPE.U16:
-                _value = buffer_read(_buffer, buffer_u16);
-                break;
-            case FILE_COMPONENT_TYPE.U32:
-                _value = buffer_read(_buffer, buffer_u32);
-                break;
-            case FILE_COMPONENT_TYPE.U64:
-                _value = buffer_read(_buffer, buffer_u64);
-                break;
-            case FILE_COMPONENT_TYPE.S8:
-                _value = buffer_read(_buffer, buffer_s8);
-                break;
-            case FILE_COMPONENT_TYPE.S16:
-                _value = buffer_read(_buffer, buffer_s16);
-                break;
-            case FILE_COMPONENT_TYPE.S32:
-                _value = buffer_read(_buffer, buffer_s32);
-                break;
-            case FILE_COMPONENT_TYPE.F16:
-                _value = buffer_read(_buffer, buffer_f16);
-                break;
-            case FILE_COMPONENT_TYPE.F32:
-                _value = buffer_read(_buffer, buffer_f32);
-                break;
-            case FILE_COMPONENT_TYPE.F64:
-                _value = buffer_read(_buffer, buffer_f64);
-                break;
-            case FILE_COMPONENT_TYPE.STRING:
-                _value = buffer_read(_buffer, buffer_string);
-                break;
+            var _array_length = buffer_read(_buffer, buffer_u16);
+            _value = array_create(_array_length);
+            
+            for (var j = 0; j < _array_length; ++j)
+            {
+                _value[@ j] = file_load_snippet_component_value(_buffer, _type_id);
+            }
+        }
+        else
+        {
+            _value = file_load_snippet_component_value(_buffer, _type_id);
         }
         
         _item.set_item_component(_name, _value);
