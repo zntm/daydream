@@ -2,16 +2,6 @@ global.achievement_data = {}
 
 function init_achievement(_directory, _namespace)
 {
-    // Ensure achievement data store exists (it is initialized in achievement_init but that might be called later? No, achievement_init calls event_subscribe. It should be called early. But global.achievement_data = {} is there.)
-    // Actually, init() calls init_achievement.
-    // achievement_init() is called in Game Start?
-    // Let's check when achievement_init is called.
-    
-    // If achievement_init resets the global, it wipes data loaded here.
-    // achievement_init is likely called BEFORE init().
-    // No, init() is called in step 0.
-    // achievement_init needs to be checked.
-    
     var _files = file_read_directory(_directory);
     var _files_length = array_length(_files);
     

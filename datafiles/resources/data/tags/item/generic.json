@@ -35,5 +35,10 @@
         "index": 0,
         "size": 18
     },
-    "wood": ["phantasia:birch", "phantasia:oak", "phantasia:pine"]
+    "wood": [
+        "phantasia:birch",
+        "phantasia:mangrove",
+        "phantasia:oak",
+        "phantasia:pine"
+    ]
 }
