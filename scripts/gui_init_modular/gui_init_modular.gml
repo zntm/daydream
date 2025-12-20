@@ -6,6 +6,8 @@ function gui_init_modular()
     gui_register_component("panel", GUIPanel);
     gui_register_component("slot", GUISlot);
     
+    global.gui_deferred_text = [];
+    
     // Create root panel using logical dimensions (reference width 960)
     var _gui_scale = global.gui_scale * (global.gui_width / 960);
     var _logical_width = global.gui_width / _gui_scale;

@@ -93,4 +93,47 @@ if (global.gui_root != undefined)
     global.gui_root.draw();
 }
 
+// Draw deferred text
+var _deferred_text_length = array_length(global.gui_deferred_text);
+
+if (_deferred_text_length > 0)
+{
+    draw_set_halign(fa_right);
+    draw_set_valign(fa_bottom);
+    
+    for (var i = 0; i < _deferred_text_length; ++i)
+    {
+        var _ = global.gui_deferred_text[i];
+        
+        render_text(_.x, _.y, _.text, _.xscale, _.yscale, 0, _.colour, _.alpha);
+    }
+    
+    draw_set_halign(fa_left);
+    draw_set_valign(fa_top);
+    
+    array_resize(global.gui_deferred_text, 0);
+}
+
+// Display held item name
+if !(is_opened & IS_OPENED_BOOLEAN.INVENTORY)
+{
+    var _item = global.inventory.base[global.inventory_selected_hotbar];
+    
+    if (_item != INVENTORY_EMPTY)
+    {
+        var _data = global.item_data[$ _item.get_id()];
+        
+        var _text_x = _gui_width / 2;
+        var _text_y = _gui_height - (INVENTORY_SLOT_DIMENSION_SCALED + (96 * _gui_scale));
+        
+        draw_set_halign(fa_center);
+        draw_set_valign(fa_bottom);
+        
+        render_text(_text_x, _text_y, loca_translate($"{_data.get_namespace()}:item.{_data.get_id()}.name"), 1.5 * _gui_scale, 1.5 * _gui_scale);
+        
+        draw_set_halign(fa_left);
+        draw_set_valign(fa_top);
+    }
+}
+
 gpu_set_blendmode(bm_normal);

@@ -95,11 +95,15 @@ function GUISlot(_x, _y, _inventory_name, _slot_index, _sprite = spr_Inventory_S
             var _text_x = (_abs_x + INVENTORY_AMOUNT_TEXT_X_OFFSET) * _scale_x;
             var _text_y = (_abs_y + INVENTORY_AMOUNT_TEXT_Y_OFFSET) * _scale_y;
             
-            draw_set_halign(fa_right);
-            draw_set_valign(fa_bottom);
-            render_text(_text_x, _text_y, string(_amount), _scale_x * 0.5, _scale_y * 0.5, 0, c_white, 1);
-            draw_set_halign(fa_left);
-            draw_set_valign(fa_top);
+            array_push(global.gui_deferred_text, {
+                x: _text_x,
+                y: _text_y,
+                text: string(_amount),
+                xscale: _scale_x * 0.5,
+                yscale: _scale_y * 0.5,
+                colour: c_white,
+                alpha: 1
+            });
         }
     }
 }
