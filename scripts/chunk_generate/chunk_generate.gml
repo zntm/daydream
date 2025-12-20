@@ -27,8 +27,7 @@ function chunk_generate()
     
     var _world_seed = _world_save_data.seed;
     
-    // Optimization: Cache biome lookups per column
-    var _biome_cache = array_create(CHUNK_SIZE + 1, undefined);
+    var _world_seed = _world_save_data.seed;
     
     for (var i = 0; i < CHUNK_SIZE; ++i)
     {
@@ -88,8 +87,14 @@ function chunk_generate()
         
         var _xorshift = xorshift(_world_seed ^ ((_world_x + chunk_ystart) * _surface_height));
         
-        // Clear biome cache for new column
-        for (var k = 0; k < CHUNK_SIZE + 1; ++k) _biome_cache[@ k] = undefined;
+        // Hoisted optimizations
+        var _heat_surface = worldgen_get_heat(_world_x, 0, _world_seed, _world_data);
+        var _humidity_surface = worldgen_get_humidity(_world_x, 0, _world_seed, _world_data);
+        
+        var _heat_cave = worldgen_get_cave_heat(_world_x, 0, _world_seed, _world_data);
+        var _humidity_cave = worldgen_get_cave_humidity(_world_x, 0, _world_seed, _world_data);
+        
+        var _surface_biome = worldgen_get_biome_surface(_world_x, 0, _surface_height, _world_seed, _world_data, _heat_surface, _humidity_surface);
         
         for (var j = 0; j < CHUNK_SIZE; ++j)
         {
@@ -169,21 +174,11 @@ function chunk_generate()
                 }
             }
             
+            var _cave_biome = undefined;
+            
             if (_world_y >= _surface_height)
             {
-                // Optimization: Use biome cache
-                var _biome_key = j; // Relative Y index for cache
-                
-                if (_biome_cache[_biome_key] == undefined)
-                {
-                    _biome_cache[@ _biome_key] = {
-                        surface: worldgen_get_biome_surface(_world_x, _world_y, _surface_height, _world_seed, _world_data),
-                        cave: worldgen_get_biome_cave(_world_x, _world_y, _surface_height, _world_seed, _world_data)
-                    };
-                }
-                
-                var _surface_biome = _biome_cache[_biome_key].surface;
-                var _cave_biome = _biome_cache[_biome_key].cave;
+                _cave_biome = worldgen_get_biome_cave(_world_x, _world_y, _surface_height, _world_seed, _world_data, _heat_cave, _humidity_cave);
                 
                 if !(_skip_z & (1 << CHUNK_DEPTH_DEFAULT)) && !(_cave_bit & (1 << (j + 1)))
                 {
@@ -238,23 +233,11 @@ function chunk_generate()
             
             if !(_skip_z & (1 << _z)) && (_world_y >= _surface_height - 1)
             {
-                // Optimization: Use biome cache for y+1
-                var _biome_key_next = j + 1;
-                
-                if (_biome_cache[_biome_key_next] == undefined)
-                {
-                    _biome_cache[@ _biome_key_next] = {
-                        surface: worldgen_get_biome_surface(_world_x, _world_y + 1, _surface_height, _world_seed, _world_data),
-                        cave: worldgen_get_biome_cave(_world_x, _world_y + 1, _surface_height, _world_seed, _world_data)
-                    };
-                }
-                
-                var _surface_biome = _biome_cache[_biome_key_next].surface;
-                var _cave_biome = _biome_cache[_biome_key_next].cave;
+                var _cave_biome_next = worldgen_get_biome_cave(_world_x, _world_y + 1, _surface_height, _world_seed, _world_data, _heat_cave, _humidity_cave);
                 
                 if (_cave_bit & (1 << (j + 1))) && !(_cave_bit & (1 << (j + 2)))
                 {
-                    var _tile_base = worldgen_get_tile_base(_world_x, _world_y + 1, _surface_biome, _cave_biome, _surface_height, true, _world_seed);
+                    var _tile_base = worldgen_get_tile_base(_world_x, _world_y + 1, _surface_biome, _cave_biome_next, _surface_height, true, _world_seed);
                     
                     var _tile_foliage = worldgen_get_tile_foliage(_world_x, _world_y, _surface_biome, _cave_biome, _tile_base, _surface_height, _world_seed);
                     

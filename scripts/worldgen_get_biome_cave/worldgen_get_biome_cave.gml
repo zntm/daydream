@@ -4,7 +4,7 @@ enum WORLDGEN_CAVE_TRANSITION_TYPE {
     SPIKE
 }
 
-function worldgen_get_biome_cave(_x, _y, _surface_height, _seed)
+function worldgen_get_biome_cave(_x, _y, _surface_height, _seed, _world_data = global.world_data[$ global.world_save_data.dimension], _heat = worldgen_get_cave_heat(_x, _y, _seed, _world_data), _humidity = worldgen_get_cave_humidity(_x, _y, _seed, _world_data))
 {
     var _surface_offset = worldgen_get_surface_noise_offset(_x, _seed);
     
@@ -13,16 +13,11 @@ function worldgen_get_biome_cave(_x, _y, _surface_height, _seed)
         return undefined;
     }
     
-    var _world_data = global.world_data[$ global.world_save_data.dimension];
-    
     // Check for optional image-based cave biome map
-    
     var _cave_map = _world_data.get_cave_biome_map();
+    
     if (_cave_map != undefined)
     {
-        var _heat = worldgen_get_cave_heat(_x, _y, _seed, _world_data);
-        var _humidity = worldgen_get_cave_humidity(_x, _y, _seed, _world_data);
-        
         var _biome = _cave_map[(_humidity << WORLDGEN_SIZE_HEAT_BIT) | _heat];
         
         if (_biome != 0 && _biome != undefined)
