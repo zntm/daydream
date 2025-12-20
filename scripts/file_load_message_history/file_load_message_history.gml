@@ -2,7 +2,7 @@ function file_load_message_history()
 {
     var _path = $"{PROGRAM_DIRECTORY_APPDATA}/chat_history.dat";
     
-    if (!file_exists(_path)) return;
+    if (!file_exists(_path)) exit;
     
     var _buffer = buffer_load_decompressed(_path);
     
@@ -12,26 +12,20 @@ function file_load_message_history()
         var _timestamp = buffer_read(_buffer, buffer_f64);
         var _length = buffer_read(_buffer, buffer_u16);
         
-        global.chat_history = array_create(_length);
+        global.message_history = array_create(_length);
         
         for (var i = 0; i < _length; ++i)
         {
-            var _name = buffer_read(_buffer, buffer_string);
-            if (_name == "") _name = undefined;
-            
-            var _message = buffer_read(_buffer, buffer_string);
-            var _colour = buffer_read(_buffer, buffer_u32);
-            
-            global.chat_history[i] = new Chat(_name, _message).set_colour(_colour);
-            global.chat_history[i].add_timer(-100000); // Ensure expired
+            global.message_history[i] = buffer_read(_buffer, buffer_string);
         }
+        
+        // Reset navigation index
+        obj_Game_Control.chat_message_history_index = _length;
     }
     catch (_error)
     {
         show_debug_message($"Failed to load chat history: {_error}");
     }
-    finally
-    {
-        buffer_delete(_buffer);
-    }
+    
+    buffer_delete(_buffer);
 }

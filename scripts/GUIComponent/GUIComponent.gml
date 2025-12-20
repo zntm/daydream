@@ -42,7 +42,7 @@ function GUIComponent(_x, _y, _width, _height) constructor
     
     static recalculate_layout = function()
     {
-        if (parent == undefined) return;
+        if (parent == undefined) exit;
         
         if (anchor_x != undefined)
         {
@@ -95,7 +95,7 @@ function GUIComponent(_x, _y, _width, _height) constructor
     /// @description Update the component (called each step)
     static update = function()
     {
-        if (!visible) return;
+        if (!visible) exit;
         
         var _length = array_length(children);
         for (var i = 0; i < _length; ++i)
@@ -107,7 +107,7 @@ function GUIComponent(_x, _y, _width, _height) constructor
     /// @description Draw the component (called each draw event)
     static draw = function()
     {
-        if (!visible) return;
+        if (!visible) exit;
         
         draw_content();
         

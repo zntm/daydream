@@ -1,7 +1,7 @@
 function control_entity_suffocation(_entity)
 {
     // Skip if entity is dead or doesn't exist
-    if (!instance_exists(_entity) || _entity.hp <= 0) return;
+    if (!instance_exists(_entity) || _entity.hp <= 0) exit;
     
     // Define suffocation points (head/center)
     var _x = _entity.x;

@@ -76,8 +76,8 @@ function ParticlePool() constructor
     /// @param {real} _index The particle index to release
     static release = function(_index)
     {
-        if (_index < 0 || _index >= pool_size) return;
-        if (!active[_index]) return;
+        if (_index < 0 || _index >= pool_size) exit;
+        if (!active[_index]) exit;
         
         active[@ _index] = false;
         free_stack_top++;

@@ -8,7 +8,7 @@ global.spawn_last_cleanup_time = 0;
 
 function control_creature_spawn(_dt)
 {
-    if (IS_DEVELOPER_MODE) && (!global.dbg_settings[$ "spawn_creatures"]) return;
+    if (IS_DEVELOPER_MODE) && (!global.dbg_settings[$ "spawn_creatures"]) exit;
     
     // Optimized spawn function with density checking
     static __spawn = function(_world_time, _tile_x, _tile_y, _biome_data, _creature_data)

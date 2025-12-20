@@ -18,9 +18,9 @@ function chunk_queue_init()
 /// @param {real} _priority Priority (lower = higher priority, typically distance to player)
 function chunk_queue_add(_inst, _priority)
 {
-    if (!instance_exists(_inst)) return;
-    if (_inst.boolean & CHUNK_BOOLEAN.GENERATED) return;
-    if (_inst.boolean & CHUNK_BOOLEAN.QUEUED) return;
+    if (!instance_exists(_inst)) exit;
+    if (_inst.boolean & CHUNK_BOOLEAN.GENERATED) exit;
+    if (_inst.boolean & CHUNK_BOOLEAN.QUEUED) exit;
     
     _inst.boolean |= CHUNK_BOOLEAN.QUEUED;
     ds_priority_add(global.chunk_gen_queue, _inst, _priority);
@@ -34,7 +34,7 @@ function chunk_queue_process(_player_x, _player_y)
 {
     var _queue = global.chunk_gen_queue;
     
-    if (ds_priority_empty(_queue)) return;
+    if (ds_priority_empty(_queue)) exit;
     
     var _start_time = get_timer();
     var _budget_us = CHUNK_GEN_BUDGET_MS * 1000; // Convert ms to microseconds

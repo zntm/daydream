@@ -92,8 +92,6 @@ function control_structure(_x, _y)
                     {
                         var _id2 = _id[m];
                         
-                        show_debug_message(_id2)
-                        
                         var _placement_type = _structure_data[$ _id2].get_placement_type();
                         
                         if ((_queue & 0b100) && !(_queue & 0b001))
@@ -113,13 +111,9 @@ function control_structure(_x, _y)
                     
                     if (_generate)
                     {
-                        show_debug_message(_id);
-                        
                         for (var m = 0; m < _id_length; ++m)
                         {
                             var _id2 = _id[m];
-                            
-                            show_debug_message(_id2)
                             
                             var _placement_type = _structure_data[$ _id2].get_placement_type();
                             
@@ -140,8 +134,6 @@ function control_structure(_x, _y)
                 }
                 else
                 {
-                    show_debug_message(_id)
-                    
                     var _placement_type = _structure_data[$ _id].get_placement_type();
                     
                     if ((_queue & 0b100) && !(_queue & 0b001))

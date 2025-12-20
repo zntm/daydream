@@ -48,7 +48,7 @@ function event_unsubscribe(_subscription)
     
     var _listeners = global.event_listeners[$ _subscription.event];
     
-    if (_listeners == undefined) return;
+    if (_listeners == undefined) exit;
     
     for (var i = array_length(_listeners) - 1; i >= 0; --i)
     {
@@ -69,7 +69,7 @@ function event_emit(_event, _data = {})
 {
     var _listeners = global.event_listeners[$ _event];
     
-    if (_listeners == undefined) return;
+    if (_listeners == undefined) exit;
     
     var _length = array_length(_listeners);
     

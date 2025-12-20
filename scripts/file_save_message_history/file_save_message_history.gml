@@ -6,26 +6,15 @@ function file_save_message_history()
     buffer_write(_buffer, buffer_u32, PROGRAM_VERSION_NUMBER);
     buffer_write(_buffer, buffer_f64, datetime_to_unix());
     
-    var _history = global.chat_history;
+    // Write input history (strings only)
+    var _history = global.message_history;
     var _length = array_length(_history);
     
     buffer_write(_buffer, buffer_u16, _length);
     
     for (var i = 0; i < _length; ++i)
     {
-        var _chat = _history[i];
-        
-        // Ensure name is string
-        var _name = _chat.get_name();
-        if (_name == undefined) _name = "";
-        
-        buffer_write(_buffer, buffer_string, _name);
-        buffer_write(_buffer, buffer_string, _chat.get_message());
-        
-        // Colour
-        var _colour = _chat.get_colour();
-        if (_colour == undefined) _colour = c_white;
-        buffer_write(_buffer, buffer_u32, _colour);
+        buffer_write(_buffer, buffer_string, _history[i]);
     }
     
     // Save to AppData

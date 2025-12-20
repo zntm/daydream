@@ -18,7 +18,7 @@ function chat_show_subcommand_choices(_command_data, _callback)
     
     if (_subcommand_names == undefined) || (array_length(_subcommand_names) == 0)
     {
-        return;
+        exit;
     }
     
     // Build choices with descriptions
@@ -60,7 +60,7 @@ function chat_show_parameter_choices(_parameter, _callback)
     
     if (_choices == undefined) || (array_length(_choices) == 0)
     {
-        return;
+        exit;
     }
     
     // Convert choices to strings for display
@@ -94,7 +94,7 @@ function chat_show_command_choices()
     
     if (_command_names == undefined) || (array_length(_command_names) == 0)
     {
-        return;
+        exit;
     }
     
     var _choices = [];

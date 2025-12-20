@@ -7,7 +7,7 @@ function control_particles_batch(_dt)
     var _pool = global.particle_pool;
     
     // Early exit if no active particles
-    if (_pool.active_count <= 0) return;
+    if (_pool.active_count <= 0) exit;
     
     var _dt_normalized = _dt / GAME_TICK;
     

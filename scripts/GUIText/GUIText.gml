@@ -48,7 +48,7 @@ function GUIText(_x, _y, _text = "") : GUIComponent(_x, _y, 0, 0) constructor
     
     static draw_content = function()
     {
-        if (text == "") return;
+        if (text == "") exit;
         
         var _abs_x = get_absolute_x();
         var _abs_y = get_absolute_y();

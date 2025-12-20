@@ -15,8 +15,6 @@ for (var i = 0; i < surface_index_length; ++i)
 {
     var _shader = surface_index_shader[i];
     
-    show_debug_message(surface_index_shader);
-    
     var _has_shader = (_shader != undefined);
     
     for (var j = 0; j <= obj_Menu_Control_Button.menu_layer; ++j)

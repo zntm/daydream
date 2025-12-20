@@ -6,7 +6,7 @@ function render_particles_batch()
     var _pool = global.particle_pool;
     
     // Early exit if no active particles
-    if (_pool.active_count <= 0) return;
+    if (_pool.active_count <= 0) exit;
     
     var _particle_data = global.particle_data;
     var _sprite_asset = global.sprite_asset;

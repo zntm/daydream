@@ -12,8 +12,6 @@ function smart_value_parse(_data)
         return _data;
     }
     
-    show_debug_message(_data);
-    
     var _type = _data[$ "type"];
     
     if (_type == "smart_value:choose")

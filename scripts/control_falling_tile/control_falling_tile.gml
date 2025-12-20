@@ -8,7 +8,7 @@ function control_falling_tile(_dt)
     if (fall_delay > 0)
     {
         fall_delay -= _dt / GAME_TICK;
-        return;
+        exit;
     }
     
     // Apply gravity
@@ -134,7 +134,7 @@ function control_falling_tile(_dt)
         }
         
         instance_destroy();
-        return;
+        exit;
     }
     
     // Check world bounds
@@ -145,7 +145,7 @@ function control_falling_tile(_dt)
     {
         // Fell out of world - just destroy
         instance_destroy();
-        return;
+        exit;
     }
     
     // Move to new position

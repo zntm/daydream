@@ -61,7 +61,7 @@ function CommandData() constructor
 		return _subcommands[$ _name];
 	}
 	
-	static get_subcommand_names = function(_name)
+	static get_subcommand_names = function()
 	{
 		return self[$ "___subcommands_names"];
 	}

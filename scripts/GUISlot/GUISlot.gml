@@ -43,13 +43,13 @@ function GUISlot(_x, _y, _inventory_name, _slot_index, _sprite = spr_Inventory_S
         
         // Get item at this slot
         var _inventory = global.inventory[$ inventory_name];
-        if (_inventory == undefined) return;
+        if (_inventory == undefined) exit;
         
         var _item = _inventory[slot_index];
-        if (_item == INVENTORY_EMPTY) return;
+        if (_item == INVENTORY_EMPTY) exit;
         
         var _item_data = global.item_data[$ _item.get_id()];
-        if (_item_data == undefined) return;
+        if (_item_data == undefined) exit;
         
         // Draw item sprite
         var _sprite_name = _item_data.get_sprite();

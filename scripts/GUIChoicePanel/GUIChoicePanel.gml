@@ -63,7 +63,7 @@ function GUIChoicePanel(_x, _y, _width = 200) : GUIComponent(_x, _y, _width, 0) 
     
     static update = function()
     {
-        if (!visible) || (array_length(choices) == 0) return;
+        if (!visible) || (array_length(choices) == 0) exit;
         
         var _choice_count = array_length(choices);
         
@@ -104,7 +104,7 @@ function GUIChoicePanel(_x, _y, _width = 200) : GUIComponent(_x, _y, _width, 0) 
         // Handle click (always check)
         if (mouse_check_button_pressed(mb_left))
         {
-             for (var i = 0; i < _choice_count; ++i)
+            for (var i = 0; i < _choice_count; ++i)
             {
                 var _choice_y = _abs_y + padding + i * choice_height;
                 
@@ -112,7 +112,7 @@ function GUIChoicePanel(_x, _y, _width = 200) : GUIComponent(_x, _y, _width, 0) 
                 && (_mouse_y >= _choice_y) && (_mouse_y <= _choice_y + choice_height)
                 {
                     select_choice(i);
-                    return;
+                    exit;
                 }
             }
         }
@@ -122,7 +122,7 @@ function GUIChoicePanel(_x, _y, _width = 200) : GUIComponent(_x, _y, _width, 0) 
     /// @param {Real} _index Choice index
     static select_choice = function(_index)
     {
-        if (_index < 0) || (_index >= array_length(choices)) return;
+        if (_index < 0) || (_index >= array_length(choices)) exit;
         
         if (callback != undefined)
         {
@@ -134,7 +134,7 @@ function GUIChoicePanel(_x, _y, _width = 200) : GUIComponent(_x, _y, _width, 0) 
     
     static draw_content = function()
     {
-        if (array_length(choices) == 0) return;
+        if (array_length(choices) == 0) exit;
         
         var _abs_x = get_absolute_x();
         var _abs_y = get_absolute_y();

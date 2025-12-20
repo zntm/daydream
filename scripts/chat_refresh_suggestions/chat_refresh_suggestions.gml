@@ -7,7 +7,7 @@ function chat_refresh_suggestions()
     {
         chat_hide_choices();
         global.chat_command_hint = undefined;
-        return;
+        exit;
     }
     
     var _input = string_delete(_message, 1, 1);

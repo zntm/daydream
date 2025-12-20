@@ -81,13 +81,13 @@ function falling_tile_check(_world_x, _world_y, _tile_z)
 {
     var _tile = tile_get(_world_x, _world_y, _tile_z);
     
-    if (_tile == TILE_EMPTY) return;
+    if (_tile == TILE_EMPTY) exit;
     
     var _data = global.item_data[$ _tile.get_id()];
     
     // Check if this is a falling tile type
     var _falling = _data.get_falling();
-    if (_falling == undefined) return;
+    if (_falling == undefined) exit;
     
     // Check if there's air below
     var _tile_below = tile_get(_world_x, _world_y + 1, _tile_z);
