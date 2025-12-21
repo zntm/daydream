@@ -88,12 +88,15 @@ function control_structure(_x, _y)
                     
                     var _generate = true;
                     
+                    var _struct_seed = _chance_seed ^ (_id_length * 521.123);
+                    
                     for (var m = 0; m < _id_length; ++m)
                     {
                         var _id2 = _id[m];
                         
                         var _placement_type = _structure_data[$ _id2].get_placement_type();
                         
+                        // Placement Type Check (Existing)
                         if ((_queue & 0b100) && !(_queue & 0b001))
                         {
                             if (_placement_type == STRUCTURE_PLACEMENT_TYPE.FLOOR) continue;
@@ -104,9 +107,28 @@ function control_structure(_x, _y)
                         }
                         else if (_placement_type == STRUCTURE_PLACEMENT_TYPE.INSIDE) continue;
                         
+                        // Context Failure -> Invalid
                         _generate = false;
                         
                         break;
+                    }
+                    
+                    if (_generate)
+                    {
+                        // Validation Pass (New)
+                        // Check if ALL structures in the group are valid given terrain/clearance
+                        for (var m = 0; m < _id_length; ++m)
+                        {
+                            var _id2 = _id[m];
+                             
+                            random_set_seed(_struct_seed + m * 100);
+                            
+                            if (!structure_valid(i * TILE_SIZE, j * TILE_SIZE, _id2, _world_seed))
+                            {
+                                _generate = false;
+                                break;
+                            }
+                        }
                     }
                     
                     if (_generate)
@@ -116,6 +138,8 @@ function control_structure(_x, _y)
                             var _id2 = _id[m];
                             
                             var _placement_type = _structure_data[$ _id2].get_placement_type();
+                            
+                            random_set_seed(_struct_seed + m * 100);
                             
                             if (_placement_type == STRUCTURE_PLACEMENT_TYPE.FLOOR)
                             {

@@ -1530,6 +1530,7 @@
     {"id":{"name":"string_scunthorpe","path":"scripts/string_scunthorpe/string_scunthorpe.yy",},},
     {"id":{"name":"structure_create","path":"scripts/structure_create/structure_create.yy",},},
     {"id":{"name":"structure_generate","path":"scripts/structure_generate/structure_generate.yy",},},
+    {"id":{"name":"structure_valid","path":"scripts/structure_valid/structure_valid.yy",},},
     {"id":{"name":"StructureData","path":"scripts/StructureData/StructureData.yy",},},
     {"id":{"name":"tag_value_parse","path":"scripts/tag_value_parse/tag_value_parse.yy",},},
     {"id":{"name":"tick_delay","path":"scripts/tick_delay/tick_delay.yy",},},

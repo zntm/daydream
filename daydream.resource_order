@@ -369,6 +369,7 @@
     {"name":"string_pad_start","order":1,"path":"scripts/string_pad_start/string_pad_start.yy",},
     {"name":"string_scunthorpe","order":1,"path":"scripts/string_scunthorpe/string_scunthorpe.yy",},
     {"name":"structure_create","order":8,"path":"scripts/structure_create/structure_create.yy",},
+    {"name":"structure_valid","order":1,"path":"scripts/structure_valid/structure_valid.yy",},
     {"name":"tag_value_parse","order":1,"path":"scripts/tag_value_parse/tag_value_parse.yy",},
     {"name":"tick_delay","order":33,"path":"scripts/tick_delay/tick_delay.yy",},
     {"name":"tile_audio_emitter","order":7,"path":"scripts/tile_audio_emitter/tile_audio_emitter.yy",},
