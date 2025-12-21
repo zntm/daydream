@@ -111,6 +111,17 @@ function menu_refresh_instance_worlds()
         file_load_worlds();
     }
     
+    var _base_layer = obj_Menu_Control_Button.menu_layer;
+    var _fade_layer = _base_layer + 1;
+    
+    obj_Menu_Control_Render.surface_index_length = _fade_layer + 1;
+    obj_Menu_Control_Render.surface_index_shader[@ _fade_layer] = {
+        id: shd_Menu_Settings_Fade,
+        u_FadeStart: 0.3, 
+        u_FadeEnd: 0.6,
+        no_dim: true
+    };
+    
     var _worlds = global.file_worlds;
     var _worlds_length = array_length(_worlds);
     
@@ -127,6 +138,9 @@ function menu_refresh_instance_worlds()
             image_yscale = 9;
             
             is_option = true;
+            
+            surface_index = _fade_layer;
+            menu_layer = 0;
             
             index = i;
             
