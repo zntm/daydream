@@ -128,6 +128,11 @@ function menu_refresh_instance_players()
         no_dim: true
     };
     
+    obj_Menu_Control_Render.surface_index_boundary[@ _fade_layer] = {
+        y_min: global.gui_height * 0.3,
+        y_max: global.gui_height * 0.6
+    };
+    
     var _players = global.file_players;
     var _players_length = array_length(_players);
     

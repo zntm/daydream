@@ -1,5 +1,36 @@
 var _menu_layer = menu_layer;
 
+var _check_boundary = function(_surface_index)
+{
+    if (_surface_index < 0) || (_surface_index >= array_length(obj_Menu_Control_Render.surface_index_boundary)) return true;
+    
+    var _struct = obj_Menu_Control_Render.surface_index_boundary[_surface_index];
+    
+    if (!is_struct(_struct)) return true;
+    
+    if (variable_struct_exists(_struct, "x_min"))
+    {
+        if (global.gui_mouse_x < _struct.x_min) return false;
+    }
+
+    if (variable_struct_exists(_struct, "x_max"))
+    {
+        if (global.gui_mouse_x > _struct.x_max) return false;
+    }
+
+    if (variable_struct_exists(_struct, "y_min"))
+    {
+        if (global.gui_mouse_y < _struct.y_min) return false;
+    }
+
+    if (variable_struct_exists(_struct, "y_max"))
+    {
+        if (global.gui_mouse_y > _struct.y_max) return false;
+    }
+    
+    return true;
+}
+
 var _number = instance_number(obj_Menu_Button);
 
 for (var i = 0; i < _number; ++i)
@@ -9,6 +40,10 @@ for (var i = 0; i < _number; ++i)
     with (obj_Menu_Button)
     {
         if (_menu_layer != menu_layer) || !(boolean & (MENU_BUTTON_BOOLEAN.IS_SELECTED | MENU_BUTTON_BOOLEAN.IS_HOLDING)) continue;
+        
+        var _surface_index = (variable_instance_exists(id, "surface_index") ? surface_index : menu_layer);
+        
+        if (!_check_boundary(_surface_index)) continue;
         
         _has_selected = true;
         
@@ -21,7 +56,9 @@ for (var i = 0; i < _number; ++i)
         {
             if (index != i) || (boolean & MENU_BUTTON_BOOLEAN.IS_HOLDING) continue;
             
-            if (_menu_layer == menu_layer) && (point_in_rectangle(mouse_x, mouse_y, bbox_left, bbox_top, bbox_right, bbox_bottom))
+            var _surface_index = (variable_instance_exists(id, "surface_index") ? surface_index : menu_layer);
+            
+            if (_menu_layer == menu_layer) && (point_in_rectangle(mouse_x, mouse_y, bbox_left, bbox_top, bbox_right, bbox_bottom)) && (_check_boundary(_surface_index))
             {
                 boolean |= MENU_BUTTON_BOOLEAN.IS_HOVER;
                 
@@ -65,7 +102,9 @@ for (var i = 0; i < _number; ++i)
         {
             if (index != i) || (boolean & MENU_BUTTON_BOOLEAN.IS_HOLDING) continue;
             
-            if (point_in_rectangle(mouse_x, mouse_y, bbox_left, bbox_top, bbox_right, bbox_bottom))
+            var _surface_index = (variable_instance_exists(id, "surface_index") ? surface_index : menu_layer);
+            
+            if (point_in_rectangle(mouse_x, mouse_y, bbox_left, bbox_top, bbox_right, bbox_bottom)) && (_check_boundary(_surface_index))
             {
                 if (_menu_layer == menu_layer)
                 {
@@ -112,7 +151,9 @@ for (var i = 0; i < _number; ++i)
         {
             if (index != i) || (boolean & MENU_BUTTON_BOOLEAN.IS_HOLDING) continue;
             
-            if (_menu_layer == menu_layer) && (point_in_rectangle(mouse_x, mouse_y, bbox_left, bbox_top, bbox_right, bbox_bottom))
+            var _surface_index = (variable_instance_exists(id, "surface_index") ? surface_index : menu_layer);
+            
+            if (_menu_layer == menu_layer) && (point_in_rectangle(mouse_x, mouse_y, bbox_left, bbox_top, bbox_right, bbox_bottom)) && (_check_boundary(_surface_index))
             {
                 boolean |= MENU_BUTTON_BOOLEAN.IS_HOVER;
                 

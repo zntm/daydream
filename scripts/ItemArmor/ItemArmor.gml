@@ -65,7 +65,7 @@ function ItemArmor(_type, _defense) constructor
     /// @param {Struct.Attribute} _base_attributes - The attribute struct to modify
     static apply_modifiers = function(_base_attributes)
     {
-        if (___modifiers == undefined) return;
+        if (___modifiers == undefined) exit;
         
         for (var i = 0; i < ___modifiers_length; ++i)
         {

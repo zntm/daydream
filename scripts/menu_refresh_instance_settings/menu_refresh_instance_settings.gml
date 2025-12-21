@@ -77,6 +77,11 @@ function menu_refresh_instance_settings()
         no_dim: true
     };
     
+    obj_Menu_Control_Render.surface_index_boundary[@ _fade_layer] = {
+        y_min: global.gui_height * 0.45,
+        y_max: global.gui_height * 0.85
+    };
+    
     for (var i = 0; i < _length; ++i)
     {
         var _name = _category[i];
@@ -116,7 +121,7 @@ function menu_refresh_instance_settings()
             {
                 obj_Menu_Control_Button.menu_layer++;
                 
-                with (instance_create_layer(0, 0, layer, obj_Menu_Control_Keybind_Remap))
+                with (instance_create_layer(-64, -64, layer, obj_Menu_Control_Keybind_Remap))
                 {
                     menu_layer = 1;
                     surface_index = other.surface_index + 1; // Render on top of settings (Layer 2)
