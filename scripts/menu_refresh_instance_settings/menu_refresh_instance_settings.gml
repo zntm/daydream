@@ -66,10 +66,16 @@ function menu_refresh_instance_settings()
 		_inst_slider.y = _menu_settings_yoffset + _inst_slider.ystart;
 	}
     
-    obj_Menu_Control_Render.surface_index_length = 2;
-    obj_Menu_Control_Render.surface_index_shader[@ 1] = {
-        id: shd_Menu_Settings_Fade
-    }
+    var _base_layer = obj_Menu_Control_Button.menu_layer;
+    var _fade_layer = _base_layer + 1;
+    
+    obj_Menu_Control_Render.surface_index_length = _fade_layer + 1;
+    obj_Menu_Control_Render.surface_index_shader[@ _fade_layer] = {
+        id: shd_Menu_Settings_Fade,
+        u_FadeStart: 0.45, 
+        u_FadeEnd: 0.85,
+        no_dim: true
+    };
     
     for (var i = 0; i < _length; ++i)
     {
@@ -84,6 +90,8 @@ function menu_refresh_instance_settings()
         with (instance_create_layer(64, _y, "Settings", obj_Menu_Anchor))
         {
             is_setting = true;
+            surface_index = _fade_layer;
+            menu_layer = 0; // Explicitly set to 0 for input
             
             name = _name;
             
@@ -110,6 +118,15 @@ function menu_refresh_instance_settings()
                 
                 with (instance_create_layer(0, 0, layer, obj_Menu_Control_Keybind_Remap))
                 {
+                    menu_layer = 1;
+                    surface_index = other.surface_index + 1; // Render on top of settings (Layer 2)
+                    obj_Menu_Control_Render.surface_index_length = surface_index + 1;
+                    
+                    if (variable_instance_exists(id, "anchor"))
+                    {
+                        anchor.surface_index = surface_index;
+                    }
+                    
                     setting_name = other.setting_name;
                     button_id = other.id; // Pass the button ID
                 }
@@ -120,7 +137,8 @@ function menu_refresh_instance_settings()
             with (instance_create_layer(_menu_settings_xoffset + 64, _menu_settings_yoffset + _y, "Settings", obj_Menu_Button))
             {
                 is_setting = true;
-                surface_index = 1;
+                surface_index = _fade_layer;
+                menu_layer = 0; // Explicitly set to 0 for input
 
                 setting_name = _name;
                 display_text = loca_translate($"phantasia:settings.{_name}.name");
@@ -173,7 +191,7 @@ function menu_refresh_instance_settings()
             with (instance_create_layer(_menu_settings_xoffset + 64, _menu_settings_yoffset + _y, "Settings", obj_Menu_Button))
             {
                 is_setting = true;
-                surface_index = 1;
+                surface_index = _fade_layer;
                 
                 name = _name;
                 
@@ -218,7 +236,7 @@ function menu_refresh_instance_settings()
             with (instance_create_layer(_menu_settings_xoffset + 64, _menu_settings_yoffset + _y, "Settings", obj_Menu_Button))
             {
                 is_setting = true;
-                surface_index = 1;
+                surface_index = _fade_layer;
                 
                 name = _name;
                 
