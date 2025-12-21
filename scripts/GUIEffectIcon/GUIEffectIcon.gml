@@ -139,7 +139,7 @@ function GUIEffectIcon(_x, _y, _effect_id) : GUIComponent(_x, _y, 16, 16) constr
             var _tooltip_y = _gui_mouse_y + _offset_y - ((_text_h + (_padding * 2)) / 2);
             
             // Background scaling: Sprite is 7x7. Target size / 7 = Scale.
-            draw_sprite_ext(spr_Inventory_Tooltip, 0, _tooltip_x - _padding, _tooltip_y - _padding, (_text_w + (_padding * _text_scale * 2)) / 14, (_text_h + (_padding * _text_scale * 2)) / 14, 0, c_white, 1);
+            draw_sprite_ext(spr_Inventory_Tooltip, 0, _tooltip_x - _padding, _tooltip_y - _padding, (_text_w + (_padding * 2)) / 14, (_text_h + (_padding * 2)) / 14, 0, c_white, 1);
             
             // Draw text
             render_text(_tooltip_x, _tooltip_y, _text, _scale_x * _text_scale, _scale_y * _text_scale);

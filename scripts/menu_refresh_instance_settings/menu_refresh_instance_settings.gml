@@ -98,6 +98,42 @@ function menu_refresh_instance_settings()
         }
         else if (_type == SETTINGS_TYPE.HOTKEY)
         {
+            static __hotkey_on_draw_behind = function(_x, _y, _xscale, _yscale)
+            {
+                var _width = (room_width - 64 - 16) * _xscale; // Adjust width as needed
+                 draw_sprite_ext(spr_Menu_Indent, 0, (room_width - 64 - 16) * _xscale, (y - global.menu_settings_yoffset) * _yscale, 32 / 8, 16 / 8, 0, c_white, 1); 
+            }
+            
+            static __hotkey_on_select_release = function()
+            {
+                obj_Menu_Control_Button.menu_layer++;
+                
+                with (instance_create_layer(0, 0, layer, obj_Menu_Control_Keybind_Remap))
+                {
+                    setting_name = other.setting_name;
+                    button_id = other.id; // Pass the button ID
+                }
+            }
+
+            var _key_name = input_get_name(_value);
+
+            with (instance_create_layer(_menu_settings_xoffset + 64, _menu_settings_yoffset + _y, "Settings", obj_Menu_Button))
+            {
+                is_setting = true;
+                surface_index = 1;
+
+                setting_name = _name;
+                display_text = loca_translate($"phantasia:settings.{_name}.name");
+                text = _key_name; // Just the key name
+
+                image_xscale = 12; // Bigger button
+                image_yscale = 2;
+                
+                 x = _menu_settings_xoffset + room_width - 64 - (image_xscale * 8); // Align right based on width
+               
+                on_draw_behind = method(id, __hotkey_on_draw_behind);
+                on_select_release = method(id, __hotkey_on_select_release);
+            }
         }
         else if (_type == SETTINGS_TYPE.SLIDER)
         {
