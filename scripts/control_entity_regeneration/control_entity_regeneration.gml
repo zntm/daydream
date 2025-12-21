@@ -1,6 +1,6 @@
 function control_entity_regeneration(_dt)
 {
-    if (hp < hp_max)
+    if (hp < hp_max) || (attribute.get_regeneration_amount() < 0)
     {
         var _regeneration_time = attribute.get_regeneration_time();
         
@@ -12,11 +12,16 @@ function control_entity_regeneration(_dt)
             {
                 timer_regeneration = _regeneration_time;
                 
-                hp += attribute.get_regeneration_amount();
+                var _amount = attribute.get_regeneration_amount();
                 
-                if (saturation > 0)
+                if (_amount != 0)
                 {
-                    --saturation;
+                    hp += _amount;
+                    
+                    if (saturation > 0)
+                    {
+                        --saturation;
+                    }
                 }
                 
                 return true;

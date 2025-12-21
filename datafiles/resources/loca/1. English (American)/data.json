@@ -151,5 +151,15 @@
     "sfx.menu.sweep": "Menu sweeps",
     "sfx.voice.hurt": "Someone got hurt",
     "sfx.voice.idle": "Someone idles",
-    "sfx.voice.idle_weak": "Someone idles weakly"
+    "sfx.voice.idle_weak": "Someone idles weakly",
+    "effect.phantasia.bad_luck.name": "Bad Luck",
+    "effect.phantasia.bad_luck.description": "Reduces your luck attribute, causing fewer critical hits and worse loot.",
+    "effect.phantasia.poison.name": "Poison",
+    "effect.phantasia.poison.description": "You are poisoned! Take damage over time.",
+    "effect.phantasia.speed.name": "Speed",
+    "effect.phantasia.speed.description": "Increases movement speed.",
+    "effect.phantasia.regeneration.name": "Regeneration",
+    "effect.phantasia.regeneration.description": "Restore health over time.",
+    "item.water_bucket.name": "Water Bucket",
+    "item.lava_bucket.name": "Lava Bucket"
 }

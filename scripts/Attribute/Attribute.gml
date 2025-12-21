@@ -5,6 +5,25 @@ enum ATTRIBUTE_BOOLEAN {
 
 function Attribute() constructor
 {
+    static copy_from = function(_source)
+    {
+        var _names = struct_get_names(_source);
+        var _length = array_length(_names);
+        
+        for (var i = 0; i < _length; ++i)
+        {
+            var _name = _names[i];
+            
+            // Only copy internal member variables (starting with three underscores)
+            if (string_copy(_name, 1, 3) == "___")
+            {
+                self[$ _name] = _source[$ _name];
+            }
+        }
+        
+        return self;
+    }
+
     static set_boolean = function(_boolean)
     {
         static __boolean = {
@@ -198,7 +217,7 @@ function Attribute() constructor
     
     static get_regeneration_amount = function()
     {
-        return self[$ "___regeneration_amount"] ?? 1;
+        return self[$ "___regeneration_amount"] ?? 0;
     }
     
     static set_regeneration_time = function(_time)
@@ -210,6 +229,6 @@ function Attribute() constructor
     
     static get_regeneration_time = function()
     {
-        return self[$ "___regeneration_time"];
+        return self[$ "___regeneration_time"] ?? 60;
     }
 }

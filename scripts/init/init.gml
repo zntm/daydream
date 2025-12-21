@@ -24,6 +24,8 @@ function init(_namespace)
     
     // init_music($"{PROGRAM_DIRECTORY_DATA}\\music", _namespace);
     
+    init_effect($"{PROGRAM_DIRECTORY_RESOURCES}/data/effects", _namespace);
+
     init_item($"{PROGRAM_DIRECTORY_RESOURCES}/data/items", _namespace);
     
     init_crafting($"{PROGRAM_DIRECTORY_RESOURCES}/data/json/crafting_recipes.json", _namespace);

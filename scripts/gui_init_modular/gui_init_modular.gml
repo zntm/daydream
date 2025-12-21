@@ -8,6 +8,8 @@ function gui_init_modular()
     gui_register_component("text", GUIText);
     gui_register_component("chat_history", GUIChatHistory);
     gui_register_component("choice_panel", GUIChoicePanel);
+    gui_register_component("effect_panel", GUIEffectPanel);
+    gui_register_component("effect_icon", GUIEffectIcon);
     
     global.gui_deferred_text = [];
     
@@ -80,6 +82,13 @@ function gui_init_modular()
     global.gui_panel_choices = new GUIChoicePanel((_logical_width - 300) / 2, _logical_height / 2 - 50, 300);
     global.gui_panel_choices.visible = false;
     global.gui_root.add_child(global.gui_panel_choices);
+    
+    // Create effect panel (bottom-right)
+    global.gui_panel_effects = new GUIEffectPanel(0, 0);
+    global.gui_panel_effects.offset_x = 16;
+    global.gui_panel_effects.offset_y = 16;
+    global.gui_panel_effects.set_anchor("right", "bottom");
+    global.gui_root.add_child(global.gui_panel_effects);
     
     show_debug_message("GUI: Modular GUI system initialized");
 }

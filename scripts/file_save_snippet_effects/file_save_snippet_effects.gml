@@ -1,3 +1,7 @@
+/// @function file_save_snippet_effects(_buffer, _effects)
+/// @desc Save effect data to a buffer using the new format
+/// @param {Id.Buffer} _buffer - The buffer to write to
+/// @param {Struct} _effects - Effect instances to save
 function file_save_snippet_effects(_buffer, _effects)
 {
     if (_effects == undefined)
@@ -32,8 +36,8 @@ function file_save_snippet_effects(_buffer, _effects)
         }
         
         buffer_write(_buffer, buffer_u8, _effect.level);
-        buffer_write(_buffer, buffer_u64, _effect.boolean);
-        buffer_write(_buffer, buffer_f64, _effect.time);
+        buffer_write(_buffer, buffer_f64, _effect.timer);
+        buffer_write(_buffer, buffer_bool, _effect.particle);
         
         buffer_poke(_buffer, _seek, buffer_u32, buffer_tell(_buffer));
     }

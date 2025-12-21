@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"GUIEffectIcon",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"GUIEffectIcon",
+  "parent":{
+    "name":"GUI",
+    "path":"folders/Data/GUI.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -1,6 +1,6 @@
 function init_entity(_hp, _hp_max, _attribute, _uuid = uuid_generate(irandom(0xffff_ffff)))
 {
-    attribute = _attribute;
+    attribute = new Attribute().copy_from(_attribute);
     
     init_entity_physics(1);
     
@@ -42,4 +42,8 @@ function init_entity(_hp, _hp_max, _attribute, _uuid = uuid_generate(irandom(0xf
     inst_item = noone;
     
     timer_suffocation = 0;
+    
+    effects = {};
+    
+    effect_immune = undefined;
 }

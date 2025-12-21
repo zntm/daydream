@@ -184,6 +184,8 @@ function control_player(_dt)
         _is_regenerated = control_entity_regeneration(_dt / GAME_TICK);
     }
     
+    control_entity_effect();
+    
     if (_is_regenerated)
     {
         obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.HP;

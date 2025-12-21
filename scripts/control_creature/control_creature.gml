@@ -156,6 +156,8 @@ function control_creature(_dt)
         control_entity_regeneration(_dt_normalized);
     }
     
+    control_entity_effect();
+    
     // Reset jump input
     if (input_jump && chance(0.4 * _dt))
     {

@@ -32,7 +32,7 @@ if !(obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.PAUSE)
             /*
             if (!instance_exists(obj_Toast))
             {
-                spawn_toast(GAME_FPS * 8, toast_biome);
+                spawn_toast(GAME_TICK * 8, toast_biome);
             }
             */
             

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"get_buffs",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"get_buffs",
+  "parent":{
+    "name":"Control",
+    "path":"folders/Scripts/Control.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
