@@ -34,13 +34,13 @@ function control_player(_dt)
     
     var _on_ground = tile_meeting(x, y + 1);
     
-    if (IS_DEVELOPER_MODE) && (global.dbg_settings[$ "use_physics"])
+    if (IS_DEVELOPER_MODE) && (global.dbg_settings[$ "enable_physics"])
     {
-        control_physics_creative(_dt, id);
+        control_physics(_dt, id);
     }
     else
     {
-        control_physics(_dt, id);
+        control_physics_creative(_dt, id);
     }
     
     if !(obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.MENU) && (timer_attack <= 0) && (mouse_check_button(mb_left))

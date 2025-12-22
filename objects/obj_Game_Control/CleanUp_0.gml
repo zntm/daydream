@@ -34,3 +34,5 @@ if (is_array(surface_pause))
         if (surface_exists(surface_pause[i])) surface_free(surface_pause[i]);
     }
 }
+
+debug_cleanup();

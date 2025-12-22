@@ -154,6 +154,8 @@ var _delta_time = global.delta_time;
 
 if (IS_DEVELOPER_MODE)
 {
+    debug_step();
+    
     var _debug_settings = global.dbg_settings;
     
     if (!_debug_settings.delta_time)

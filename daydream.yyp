@@ -1334,6 +1334,7 @@
     {"id":{"name":"datetime_to_unix","path":"scripts/datetime_to_unix/datetime_to_unix.yy",},},
     {"id":{"name":"dbg_log","path":"scripts/dbg_log/dbg_log.yy",},},
     {"id":{"name":"dbg_timer","path":"scripts/dbg_timer/dbg_timer.yy",},},
+    {"id":{"name":"debug_system","path":"scripts/debug_system/debug_system.yy",},},
     {"id":{"name":"draw_glow","path":"scripts/draw_glow/draw_glow.yy",},},
     {"id":{"name":"draw_set_align","path":"scripts/draw_set_align/draw_set_align.yy",},},
     {"id":{"name":"draw_text_cuteify","path":"scripts/draw_text_cuteify/draw_text_cuteify.yy",},},
