@@ -27,7 +27,7 @@ function menu_refresh_instance_player_colour()
         
         sprite_index = spr_Menu_Button_Secondary;
         
-        global.player_save_data.attire[$ global.attire_elements[global.menu_player_attire_index]].colour = index;
+        global.player_save_data.attire[$ global.attire_elements[global.menu_player_attire_index]].colour = data_index;
     }
     
     var _name = global.attire_elements[global.menu_player_attire_index];
@@ -76,7 +76,8 @@ function menu_refresh_instance_player_colour()
         
         _inst.y = _inst.ystart;
         
-        _inst.index = _index;
+        _inst.index = i;
+        _inst.data_index = _index;
         
         _inst.icon = spr_Menu_Attire_Colour;
         
