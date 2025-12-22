@@ -194,7 +194,7 @@ function statistics_on_chunk_generated(_data)
 /// @desc Save player statistics to buffer
 function statistics_save_player(_buffer, _statistics = undefined)
 {
-    _statistics ??= global.player_statistics;
+    _statistics ??= global.player_statistics ?? {};
 
     buffer_write(_buffer, buffer_u16, STATISTICS_VERSION);
     
@@ -235,7 +235,7 @@ function statistics_load_player(_buffer)
 /// @desc Save world statistics to buffer
 function statistics_save_world(_buffer, _statistics = undefined)
 {
-    _statistics ??= global.world_statistics;
+    _statistics ??= global.world_statistics ?? {};
 
     buffer_write(_buffer, buffer_u16, STATISTICS_VERSION);
     

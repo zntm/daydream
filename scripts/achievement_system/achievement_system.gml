@@ -280,7 +280,7 @@ function achievement_check_event(_event_type, _event_data)
 /// @function achievement_save_player(_buffer, _achievements)
 function achievement_save_player(_buffer, _achievements = undefined)
 {
-    _achievements ??= global.player_achievements;
+    _achievements ??= global.player_achievements ?? {};
 
     buffer_write(_buffer, buffer_u16, ACHIEVEMENT_VERSION);
     
