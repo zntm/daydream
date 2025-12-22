@@ -123,12 +123,34 @@ function menu_refresh_instance_worlds()
     };
     
     obj_Menu_Control_Render.surface_index_boundary[@ _fade_layer] = {
-        y_min: global.gui_height * 0.3,
-        y_max: global.gui_height * 0.6
+        y_min: global.gui_height * 0.15,
+        y_max: global.gui_height * 0.85
     };
     
     var _worlds = global.file_worlds;
     var _worlds_length = array_length(_worlds);
+
+    var _inst_slider = global.worlds_inst_slider;
+
+    var _rows = ceil(_worlds_length / 4);
+    var _height = _rows * 160;
+    var _view_height = global.gui_height * 0.15; // Starting position effectively
+
+    if (_height <= (global.gui_height * 0.7)) // Total view height approx
+    {
+        _inst_slider.x = -64;
+        _inst_slider.y = -64;
+    }
+    else
+    {
+        global.worlds_list_offset = 0;
+
+        global.worlds_list_length = _worlds_length;
+        global.worlds_list_size = _height - (global.gui_height * 0.7) + 32; // Reset +32 since view is larger
+
+        _inst_slider.x = _inst_slider.xstart;
+        _inst_slider.y = _inst_slider.ystart;
+    }
     
     for (var i = 0; i < _worlds_length; ++i)
     {

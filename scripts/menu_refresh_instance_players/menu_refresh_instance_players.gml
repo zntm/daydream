@@ -129,12 +129,33 @@ function menu_refresh_instance_players()
     };
     
     obj_Menu_Control_Render.surface_index_boundary[@ _fade_layer] = {
-        y_min: global.gui_height * 0.3,
-        y_max: global.gui_height * 0.6
+        y_min: global.gui_height * 0.15,
+        y_max: global.gui_height * 0.85
     };
     
     var _players = global.file_players;
     var _players_length = array_length(_players);
+
+    var _inst_slider = global.players_inst_slider;
+
+    var _rows = ceil(_players_length / 4);
+    var _height = _rows * 160;
+    
+    if (_height <= (global.gui_height * 0.7))
+    {
+        _inst_slider.x = -64;
+        _inst_slider.y = -64;
+    }
+    else
+    {
+        global.players_list_offset = 0;
+
+        global.players_list_length = _players_length;
+        global.players_list_size = _height - (global.gui_height * 0.7) + 32; // Reset +32
+
+        _inst_slider.x = _inst_slider.xstart;
+        _inst_slider.y = _inst_slider.ystart;
+    }
     
     for (var i = 0; i < _players_length; ++i)
     {
