@@ -209,8 +209,6 @@ function chunk_vertex_tile_connected(_buffer, _texel_width, _texel_height, _anim
     var _u1 = _u0 + ((_u2 - _u0) / 2);
     var _v1 = _v0 + ((_v2 - _v0) / 2);
     
-    var _texel_sprite_width = _width * _texel_width;
-    
     var _xw = _xscale * _width;
     var _yh = _yscale * _height;
     
@@ -256,7 +254,7 @@ function chunk_vertex_tile_connected(_buffer, _texel_width, _texel_height, _anim
             _v0,
             _u2,
             _v1,
-            _texel_sprite_width,
+            _width,
             _index_tl
         );
         
@@ -278,7 +276,7 @@ function chunk_vertex_tile_connected(_buffer, _texel_width, _texel_height, _anim
             _v1,
             _u2,
             _v2,
-            _texel_sprite_width,
+            _width,
             _index_bl
         );
         
@@ -300,7 +298,7 @@ function chunk_vertex_tile_connected(_buffer, _texel_width, _texel_height, _anim
             _v0,
             _u1,
             _v2,
-            _texel_sprite_width,
+            _width,
             _index_tl
         );
         
@@ -322,7 +320,7 @@ function chunk_vertex_tile_connected(_buffer, _texel_width, _texel_height, _anim
             _v0,
             _u2,
             _v2,
-            _texel_sprite_width,
+            _width,
             _index_tr
         );
         
@@ -344,7 +342,7 @@ function chunk_vertex_tile_connected(_buffer, _texel_width, _texel_height, _anim
             _v0,
             _u1,
             _v1,
-            _texel_sprite_width,
+            _width,
             _index_tl
         );
     }
@@ -364,7 +362,7 @@ function chunk_vertex_tile_connected(_buffer, _texel_width, _texel_height, _anim
             _v1,
             _u1,
             _v2,
-            _texel_sprite_width,
+            _width,
             _index_bl
         );
     }
@@ -384,7 +382,7 @@ function chunk_vertex_tile_connected(_buffer, _texel_width, _texel_height, _anim
             _v0,
             _u2,
             _v1,
-            _texel_sprite_width,
+            _width,
             _index_tr
         );
     }
@@ -404,7 +402,7 @@ function chunk_vertex_tile_connected(_buffer, _texel_width, _texel_height, _anim
             _v1,
             _u2,
             _v2,
-            _texel_sprite_width,
+            _width,
             _index_br
         );
     }

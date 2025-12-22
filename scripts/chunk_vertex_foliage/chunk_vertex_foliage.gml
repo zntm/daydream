@@ -85,27 +85,33 @@ function chunk_vertex_foliage(_buffer, _texel_width, _texel_height, _animation_t
     
     var _number = (_atla_value >> 44) & 2047;
     
+    // Pack: float1 = (number << 24) | (chunk_index << 16) | animation_type, float2 = (index * 256) + width
+    var _packed_anim_foliage = (_number << 24) | (_chunk_index << 16) | TILE_ANIMATION_TYPE.FOLIAGE;
+    var _packed_anim_default = (_number << 24) | TILE_ANIMATION_TYPE.DEFAULT;
+    var _packed_index_width = (_index * 256) + _width;
+    
+    // Top vertices use FOLIAGE animation for skew, bottom use DEFAULT
     vertex_position(_buffer, _ax, _ay);
     vertex_texcoord(_buffer, _u_tl, _v_tl);
-    vertex_float3(_buffer, (_number << 24) | (_chunk_index << 16) | TILE_ANIMATION_TYPE.FOLIAGE, _index, _width * _texel_width);
+    vertex_float2(_buffer, _packed_anim_foliage, _packed_index_width);
     
     vertex_position(_buffer, _bx, _by);
     vertex_texcoord(_buffer, _u_tr, _v_tr);
-    vertex_float3(_buffer, (_number << 24) | (_chunk_index << 16) | TILE_ANIMATION_TYPE.FOLIAGE, _index, _width * _texel_width);
+    vertex_float2(_buffer, _packed_anim_foliage, _packed_index_width);
     
     vertex_position(_buffer, _cx, _cy);
     vertex_texcoord(_buffer, _u_bl, _v_bl);
-    vertex_float3(_buffer, (_number << 24) | TILE_ANIMATION_TYPE.DEFAULT, _index, _width * _texel_width);
+    vertex_float2(_buffer, _packed_anim_default, _packed_index_width);
     
     vertex_position(_buffer, _bx, _by);
     vertex_texcoord(_buffer, _u_tr, _v_tr);
-    vertex_float3(_buffer, (_number << 24) | (_chunk_index << 16) | TILE_ANIMATION_TYPE.FOLIAGE, _index, _width * _texel_width);
+    vertex_float2(_buffer, _packed_anim_foliage, _packed_index_width);
     
     vertex_position(_buffer, _cx, _cy);
     vertex_texcoord(_buffer, _u_bl, _v_bl);
-    vertex_float3(_buffer, (_number << 24) | TILE_ANIMATION_TYPE.DEFAULT, _index, _width * _texel_width);
+    vertex_float2(_buffer, _packed_anim_default, _packed_index_width);
     
     vertex_position(_buffer, _dx, _dy);
     vertex_texcoord(_buffer, _u_br, _v_br);
-    vertex_float3(_buffer, (_number << 24) | TILE_ANIMATION_TYPE.DEFAULT, _index, _width * _texel_width);
+    vertex_float2(_buffer, _packed_anim_default, _packed_index_width);
 }

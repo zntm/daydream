@@ -4,6 +4,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
     static __u_texture_size = shader_get_uniform(shd_Chunk, "u_texture_size");
     static __u_time = shader_get_uniform(shd_Chunk, "u_time");
     static __u_skew = shader_get_uniform(shd_Chunk, "u_skew");
+    static __u_texel_width = shader_get_uniform(shd_Chunk, "u_texel_width");
     
     var _creature_data = global.creature_data;
     var _item_data = global.item_data;
@@ -35,6 +36,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
         
         shader_set(shd_Chunk);
         shader_set_uniform_f(__u_time, _animation_index);
+        shader_set_uniform_f(__u_texel_width, _texel_width);
         
         for (var i = 0; i < chunk_in_view_length; ++i)
         {
