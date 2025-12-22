@@ -142,17 +142,65 @@ for (var j = 0; j <= _max_layer; ++j)
         
         if (text != undefined) && (icon != undefined)
         { 
+            var _icon_shader = (variable_instance_exists(id, "icon_shader") ? icon_shader : undefined);
+            
+            if (_icon_shader != undefined)
+            {
+                shader_set(_icon_shader);
+                
+                var _uniforms = (variable_instance_exists(id, "icon_shader_uniforms") ? icon_shader_uniforms : undefined);
+                
+                if (_uniforms != undefined)
+                {
+                    var _keys = variable_struct_get_names(_uniforms);
+                    var _cnt = array_length(_keys);
+                    var _use_int = _uniforms[$ "_use_int"] ?? false;
+                    
+                    for (var k = 0; k < _cnt; ++k)
+                    {
+                        var _key = _keys[k];
+                        if (_key == "_use_int") continue;
+                        
+                        var _u = shader_get_uniform(_icon_shader, _key);
+                        if (_u == -1) continue;
+                        
+                        var _val = _uniforms[$ _key];
+                        
+                        if (is_array(_val))
+                        {
+                            if (_use_int) shader_set_uniform_i_array(_u, _val);
+                            else shader_set_uniform_f_array(_u, _val);
+                        }
+                        else
+                        {
+                            if (_use_int) shader_set_uniform_i(_u, _val);
+                            else shader_set_uniform_f(_u, _val);
+                        }
+                    }
+                }
+            }
+            
             if (boolean & (MENU_BUTTON_BOOLEAN.IS_SELECTED | MENU_BUTTON_BOOLEAN.IS_HOLDING))
             {
                 draw_sprite_ext(icon, icon_index, _x - (string_width(text) * _loca_font_scale / 2), _y + _asset_offset, _render_xscale * icon_xscale, _render_yscale * icon_yscale, 0, c_ltgray, 1);
-                
-                render_text(_x + (sprite_get_width(icon) * icon_xscale / 2), _y + _asset_offset, text, _render_xscale, _render_yscale, 0, c_ltgray, 1);
             }
             else
             {
                 draw_sprite_ext(icon, icon_index, _x - (string_width(text) * _loca_font_scale / 2), _y, _render_xscale * icon_xscale, _render_yscale * icon_yscale, 0, c_white, 1);
-                
-                render_text(_x + (sprite_get_width(icon) * icon_xscale / 2), _y, text, _render_xscale, _render_yscale, 0, c_white, 1);
+            }
+            
+            if (_icon_shader != undefined)
+            {
+                shader_reset();
+            }
+            
+            if (boolean & (MENU_BUTTON_BOOLEAN.IS_SELECTED | MENU_BUTTON_BOOLEAN.IS_HOLDING))
+            {
+                 render_text(_x + (sprite_get_width(icon) * icon_xscale / 2), _y + _asset_offset, text, _render_xscale, _render_yscale, 0, c_ltgray, 1);
+            }
+            else
+            {
+                 render_text(_x + (sprite_get_width(icon) * icon_xscale / 2), _y, text, _render_xscale, _render_yscale, 0, c_white, 1);
             }
         }
         else if (text != undefined)
@@ -168,6 +216,44 @@ for (var j = 0; j <= _max_layer; ++j)
         }
         else if (icon != undefined)
         {
+            var _icon_shader = (variable_instance_exists(id, "icon_shader") ? icon_shader : undefined);
+            
+            if (_icon_shader != undefined)
+            {
+                shader_set(_icon_shader);
+                
+                var _uniforms = (variable_instance_exists(id, "icon_shader_uniforms") ? icon_shader_uniforms : undefined);
+                
+                if (_uniforms != undefined)
+                {
+                    var _keys = variable_struct_get_names(_uniforms);
+                    var _cnt = array_length(_keys);
+                    var _use_int = _uniforms[$ "_use_int"] ?? false;
+                    
+                    for (var k = 0; k < _cnt; ++k)
+                    {
+                        var _key = _keys[k];
+                        if (_key == "_use_int") continue;
+                        
+                        var _u = shader_get_uniform(_icon_shader, _key);
+                        if (_u == -1) continue;
+                        
+                        var _val = _uniforms[$ _key];
+                        
+                        if (is_array(_val))
+                        {
+                            if (_use_int) shader_set_uniform_i_array(_u, _val);
+                            else shader_set_uniform_f_array(_u, _val);
+                        }
+                        else
+                        {
+                            if (_use_int) shader_set_uniform_i(_u, _val);
+                            else shader_set_uniform_f(_u, _val);
+                        }
+                    }
+                }
+            }
+            
             if (boolean & (MENU_BUTTON_BOOLEAN.IS_SELECTED | MENU_BUTTON_BOOLEAN.IS_HOLDING))
             {
                 draw_sprite_ext(icon, icon_index, _x, _y + _asset_offset, _render_xscale * icon_xscale, _render_yscale * icon_yscale, 0, c_ltgray, 1);
@@ -175,6 +261,11 @@ for (var j = 0; j <= _max_layer; ++j)
             else
             {
                 draw_sprite_ext(icon, icon_index, _x, _y, _render_xscale * icon_xscale, _render_yscale * icon_yscale, 0, c_white, 1);
+            }
+            
+            if (_icon_shader != undefined)
+            {
+                shader_reset();
             }
         }
         

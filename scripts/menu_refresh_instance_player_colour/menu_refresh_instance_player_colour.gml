@@ -83,6 +83,15 @@ function menu_refresh_instance_player_colour()
         _inst.icon_xscale = 1.5;
         _inst.icon_yscale = 1.5;
         
+        _inst.icon_shader = shd_Colour_Replace;
+        
+        _inst.icon_shader_uniforms = {
+            u_replace: _attire_colour_data[_index],
+            u_match: global.attire_colour_white_data,
+            u_length: array_length(global.attire_colour_white_data),
+            _use_int: true
+        };
+        
         _inst.on_select_release = method(_inst, __on_select_release);
     }
 }
