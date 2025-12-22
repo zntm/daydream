@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"chunk_save_queue",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"chunk_save_queue",
+  "parent":{
+    "name":"Chunk",
+    "path":"folders/Scripts/Chunk.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -5,10 +5,7 @@ function tile_get(_x, _y, _z)
         return TILE_EMPTY;
     }
     
-    var _chunk_x = floor(_x / CHUNK_SIZE) * CHUNK_SIZE_DIMENSION;
-    var _chunk_y = floor(_y / CHUNK_SIZE) * CHUNK_SIZE_DIMENSION;
-    
-    var _inst = instance_position(_chunk_x, _chunk_y, obj_Chunk);
+    var _inst = chunk_map_get_by_tile(_x, _y);
     
     if (!instance_exists(_inst))
     {

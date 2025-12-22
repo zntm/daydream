@@ -9,6 +9,9 @@ chunk_covered_surface_refresh = true;
 
 chunk_render_state = [];
 
+// Register in spatial hash map for O(1) lookups
+chunk_map_register(id);
+
 chunk_skew_back = array_create(CHUNK_SIZE * CHUNK_SIZE, 0);
 chunk_skew_back_to = array_create(CHUNK_SIZE * CHUNK_SIZE, 0);
 
@@ -25,7 +28,8 @@ enum CHUNK_BOOLEAN {
     GENERATED                = 1 << 0,
     SURFACE_LIGHTING_REFRESH = 1 << 1,
     QUEUED                   = 1 << 2,  // Chunk is queued for generation
-    DIRTY                    = 1 << 3   // Chunk vertex buffer needs rebuild
+    DIRTY                    = 1 << 3,  // Chunk vertex buffer needs rebuild
+    TILE_PROCESSED           = 1 << 4   // Tile instances created and connected
 }
 
 boolean =
@@ -45,6 +49,10 @@ var _is_loaded = file_load_world_chunk(_world_save_data, id);
 if (!_is_loaded)
 {
 	chunk_generate();
+	boolean |= CHUNK_BOOLEAN.GENERATED;
+	
+	// Queue for deferred tile processing
+	array_push(global.chunk_tile_process_queue, id);
 }
 else
 {
@@ -73,4 +81,7 @@ else
             }
         }
     }
+    
+    // Mark as fully processed for synchronously loaded chunks
+    boolean |= CHUNK_BOOLEAN.GENERATED | CHUNK_BOOLEAN.TILE_PROCESSED;
 }

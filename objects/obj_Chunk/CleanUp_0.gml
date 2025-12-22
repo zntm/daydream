@@ -1,3 +1,6 @@
+// Unregister from spatial hash map
+chunk_map_unregister(id);
+
 var _length = array_length(chunk_vertex_buffer);
 
 for (var i = 0; i < _length; ++i)

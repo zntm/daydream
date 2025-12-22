@@ -10,10 +10,7 @@ function tile_update_surrounding(_x, _y, _z, _xoffset = 2, _yoffset = 2)
     {
         for (var j = _ystart; j <= _yend; ++j)
         {
-            var _chunk_x = floor(i / CHUNK_SIZE) * CHUNK_SIZE_DIMENSION;
-            var _chunk_y = floor(j / CHUNK_SIZE) * CHUNK_SIZE_DIMENSION;
-            
-            var _inst = instance_position(_chunk_x, _chunk_y, obj_Chunk);
+            var _inst = chunk_map_get_by_tile(i, j);
             
             for (var l = 0; l < CHUNK_DEPTH; ++l)
             {

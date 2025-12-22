@@ -26,7 +26,7 @@ function control_update_chunk_in_view()
             
             if (_y < 0) || (_y >= _world_height * TILE_SIZE) continue;
             
-            var _inst = instance_position(_x, _y, obj_Chunk);
+            var _inst = chunk_map_get(_x, _y);
             
             if (instance_exists(_inst))
             {

@@ -1,8 +1,12 @@
 /// @desc Chunk generation queue system for time-sliced worldgen
 /// Spreads chunk generation across multiple frames to prevent stuttering
 
-#macro CHUNK_GEN_BUDGET_MS 4  // Max milliseconds per frame for chunk generation
-#macro CHUNK_GEN_MAX_PER_FRAME 2  // Max chunks to generate per frame
+#macro CHUNK_GEN_BUDGET_MS 2  // Max milliseconds per frame for chunk generation (reduced from 4)
+#macro CHUNK_GEN_MAX_PER_FRAME 1  // Max chunks to generate per frame (reduced from 2)
+
+// Queue for deferred tile processing (tile_connect calls)
+global.chunk_tile_process_queue = [];
+#macro CHUNK_TILE_PROCESS_BUDGET_MS 2  // Time budget for tile processing
 
 /// @function chunk_queue_init()
 /// @desc Initialize the chunk generation queue
@@ -10,6 +14,7 @@ function chunk_queue_init()
 {
     global.chunk_gen_queue = ds_priority_create();
     global.chunk_gen_processing = false;
+    global.chunk_tile_process_queue = [];
 }
 
 /// @function chunk_queue_add(_inst, _priority)
@@ -34,13 +39,14 @@ function chunk_queue_process(_player_x, _player_y)
 {
     var _queue = global.chunk_gen_queue;
     
+    // First, process any pending tile work from previous generations
+    chunk_tile_process_queue_process();
+    
     if (ds_priority_empty(_queue)) exit;
     
     var _start_time = get_timer();
     var _budget_us = CHUNK_GEN_BUDGET_MS * 1000; // Convert ms to microseconds
     var _chunks_generated = 0;
-    
-    var _item_data = global.item_data;
     
     while (!ds_priority_empty(_queue))
     {
@@ -60,7 +66,7 @@ function chunk_queue_process(_player_x, _player_y)
         // Skip if already generated
         if (_inst.boolean & CHUNK_BOOLEAN.GENERATED) continue;
         
-        // Generate the chunk
+        // Generate the chunk (just creates tile data, doesn't connect)
         with (_inst)
         {
             chunk_generate();
@@ -69,8 +75,43 @@ function chunk_queue_process(_player_x, _player_y)
             
             // Trigger global lighting refresh
             obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.LIGHTING;
-            
-            // Process tile instances
+        }
+        
+        // Queue for deferred tile processing
+        array_push(global.chunk_tile_process_queue, _inst);
+        
+        _chunks_generated++;
+    }
+}
+
+/// @function chunk_tile_process_queue_process()
+/// @desc Process deferred tile instance creation and connection
+function chunk_tile_process_queue_process()
+{
+    var _queue = global.chunk_tile_process_queue;
+    
+    if (array_length(_queue) == 0) exit;
+    
+    var _start_time = get_timer();
+    var _budget_us = CHUNK_TILE_PROCESS_BUDGET_MS * 1000;
+    var _item_data = global.item_data;
+    
+    while (array_length(_queue) > 0)
+    {
+        // Check time budget
+        if ((get_timer() - _start_time) > _budget_us) break;
+        
+        var _inst = _queue[0];
+        
+        if (!instance_exists(_inst))
+        {
+            array_delete(_queue, 0, 1);
+            continue;
+        }
+        
+        // Process tile instances for this chunk
+        with (_inst)
+        {
             var _chunk = chunk;
             
             for (var _tile_z = 0; _tile_z < CHUNK_DEPTH; ++_tile_z)
@@ -95,7 +136,10 @@ function chunk_queue_process(_player_x, _player_y)
             }
         }
         
-        _chunks_generated++;
+        // Mark chunk as ready for rendering
+        _inst.boolean |= CHUNK_BOOLEAN.TILE_PROCESSED;
+        
+        array_delete(_queue, 0, 1);
     }
 }
 

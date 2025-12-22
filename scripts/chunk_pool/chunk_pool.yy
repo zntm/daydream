@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"chunk_pool",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"chunk_pool",
+  "parent":{
+    "name":"Chunk",
+    "path":"folders/Scripts/Chunk.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -34,14 +34,13 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
         var _bitmask = 1 << _z;
         
         shader_set(shd_Chunk);
-        shader_set_uniform_f(__u_texture_size, _texel_width, _texel_height);
         shader_set_uniform_f(__u_time, _animation_index);
         
         for (var i = 0; i < chunk_in_view_length; ++i)
         {
             var _inst = chunk_in_view[i];
             
-            if (!instance_exists(_inst)) || !(_inst.boolean & CHUNK_BOOLEAN.GENERATED) || !(_inst.chunk_display & _bitmask) || (_inst.chunk_count[_z] <= 0) continue;
+            if (!instance_exists(_inst)) || !(_inst.boolean & CHUNK_BOOLEAN.GENERATED) || !(_inst.boolean & CHUNK_BOOLEAN.TILE_PROCESSED) || !(_inst.chunk_display & _bitmask) || (_inst.chunk_count[_z] <= 0) continue;
             
             var _buffer = _inst.chunk_vertex_buffer[_z];
             

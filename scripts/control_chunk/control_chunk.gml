@@ -27,11 +27,9 @@ function control_chunk(_player_x, _player_y, _camera_x, _camera_y, _camera_width
             
             if (_y < 0) || (_y >= _world_height * TILE_SIZE) continue;
             
-            var _inst = instance_position(_x, _y, obj_Chunk);
-            
-            if (!instance_exists(_inst))
+            if (!chunk_map_exists(_x, _y))
             {
-                instance_create_layer(_x, _y, "Instances", obj_Chunk);
+                chunk_pool_acquire(_x, _y);
                 
                 _refresh = true;
             }
@@ -60,4 +58,7 @@ function control_chunk(_player_x, _player_y, _camera_x, _camera_y, _camera_width
     
     // Process queued chunks within time budget
     chunk_queue_process(_player_x, _player_y);
+    
+    // Process queued chunk saves within time budget
+    chunk_save_queue_process();
 }
