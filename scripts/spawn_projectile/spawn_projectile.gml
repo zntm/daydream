@@ -1,4 +1,4 @@
-function spawn_projectile(_x, _y, _id, _damage, _xscale = 1, _yscale = 1)
+function spawn_projectile(_x, _y, _id, _damage, _xscale = 1, _yscale = 1, _owner = noone)
 {
     var _data = global.projectile_data[$ _id];
     
@@ -6,6 +6,7 @@ function spawn_projectile(_x, _y, _id, _damage, _xscale = 1, _yscale = 1)
     {
         id._id = _id;
         damage = _damage;
+        owner = _owner;
         
         attribute = _data.get_attribute();
         

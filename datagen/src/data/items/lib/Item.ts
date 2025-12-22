@@ -36,6 +36,8 @@ export class UseableItem extends Item {
     private item: {
         components?: { [key: string]: ItemComponent };
         on_use?: ItemFunction[];
+        ammo_type?: string;
+        projectile?: string;
     };
 
     constructor(
@@ -57,6 +59,16 @@ export class UseableItem extends Item {
     addOnUse(functions: ItemFunction[]) {
         this.item.on_use ??= [];
         this.item.on_use.push(...functions);
+        return this;
+    }
+
+    setAmmoType(ammoType: string) {
+        this.item.ammo_type = ammoType;
+        return this;
+    }
+
+    setProjectile(projectile: string) {
+        this.item.projectile = projectile;
         return this;
     }
 }

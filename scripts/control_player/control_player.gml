@@ -73,6 +73,16 @@ function control_player(_dt)
                 inst_item.inst_owner = _inst;
             }
             
+            // --- Shooting Logic ---
+            var _angle = point_direction(x, y - 24, mouse_x, mouse_y);
+            
+            if (control_entity_shoot(id, _id, x, y - 24, _angle))
+            {
+                // If we shot something, maybe we don't need to do on_attack?
+                // Or maybe we do both (e.g. muzzle flash particle from on_attack).
+                // Let's allow both for now.
+            }
+            
             var _on_attack = _data.get_on_attack();
             var _on_attack_length = _data.get_on_attack_length();
             

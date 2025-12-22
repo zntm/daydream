@@ -9,6 +9,8 @@ export class ToolItem extends Item {
         damage?: number;
         harvest?: ItemHarvest;
         durability?: ItemDurability;
+        ammo_type?: string;
+        projectile?: string;
     };
 
     constructor(
@@ -49,6 +51,20 @@ export class ToolItem extends Item {
     setItemHarvest(harvest: ItemHarvest) {
         this.item ??= {};
         this.item.harvest = harvest;
+
+        return this;
+    }
+
+    setAmmoType(ammoType: string) {
+        this.item ??= {};
+        this.item.ammo_type = ammoType;
+
+        return this;
+    }
+
+    setProjectile(projectile: string) {
+        this.item ??= {};
+        this.item.projectile = projectile;
 
         return this;
     }
