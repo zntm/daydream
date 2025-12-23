@@ -250,13 +250,21 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
         render_harvest(_camera_x, _camera_y, _camera_width, _camera_height);
     }
     
-    if (instance_exists(obj_Floating_Text))
+    var _floating_text_active = global.floating_text_active;
+    var _floating_text_active_length = array_length(_floating_text_active);
+    
+    if (_floating_text_active_length > 0)
     {
         draw_set_align(fa_center, fa_middle);
         
-        with (obj_Floating_Text)
+        for (var i = 0; i < _floating_text_active_length; ++i)
         {
-            render_text(x, y, text, image_xscale, image_yscale, image_angle, image_blend, power(timer_life, 1 / 4));
+            var _inst = _floating_text_active[i];
+            
+            with (_inst)
+            {
+                render_text(x, y, text, image_xscale, image_yscale, image_angle, image_blend, power(timer_life, 1 / 4));
+            }
         }
         
         draw_set_align(fa_left, fa_top);

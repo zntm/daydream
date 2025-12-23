@@ -13,20 +13,27 @@ function spawn_floating_text(_x, _y, _text, _xvelocity = 0, _yvelocity = 0, _xsc
     
     if (!rectangle_in_rectangle(_x - _string_width, _y - _string_height, _x + _string_width, _y + _string_height, _camera_x, _camera_y, _camera_x + _camera_width, _camera_y + _camera_height)) exit;
     
-    with (instance_create_layer(_x, _y, "Instances", obj_Floating_Text))
-    {
-        image_xscale = _xscale;
-        image_yscale = _yscale;
-        
-        image_blend = _colour;
-        
-        text = _text;
-        
-        xvelocity = _xvelocity;
-        yvelocity = _yvelocity;
-        
-        rotation = _rotation;
-        
-        timer_life = 0.56;
-    }
+    var _pool = global.floating_text_pool;
+    var _active = global.floating_text_active;
+    
+    var _inst = _pool.get_free_item();
+    
+    _inst.x = _x;
+    _inst.y = _y;
+    
+    _inst.image_xscale = _xscale;
+    _inst.image_yscale = _yscale;
+    
+    _inst.image_blend = _colour;
+    
+    _inst.text = _text;
+    
+    _inst.xvelocity = _xvelocity;
+    _inst.yvelocity = _yvelocity;
+    
+    _inst.rotation = _rotation;
+    
+    _inst.timer_life = 0.56;
+    
+    array_push(_active, _inst);
 }

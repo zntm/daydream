@@ -213,10 +213,7 @@ control_gametick(_delta_time);
 // Cleanup temporary audio emitters that have finished playing
 sfx_emitter_cleanup();
 
-with (obj_Floating_Text)
-{
-    control_floating_text(_dt);
-}
+control_floating_text(_dt);
 
 var _creature_data = global.creature_data;
 
