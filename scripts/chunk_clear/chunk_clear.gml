@@ -7,5 +7,5 @@ function chunk_clear(_inst)
     }
     
     // Release to pool instead of destroying
-    chunk_pool_release(_inst);
+    global.chunk_pool.release(_inst);
 }

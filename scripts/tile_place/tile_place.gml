@@ -28,7 +28,7 @@ function tile_place(_x, _y, _z, _tile)
         
         if (_data.get_render_state_length() > 0)
         {
-            array_push(_inst.chunk_render_state, render_state_pool_acquire(_x, _y, _z, _data.get_render_state()));
+            array_push(_inst.chunk_render_state, global.render_state_pool.acquire(_x, _y, _z, _data.get_render_state()));
         }
     }
     else if (_tile_before != TILE_EMPTY) && (--_inst.chunk_count[_z] <= 0)
@@ -44,7 +44,7 @@ function tile_place(_x, _y, _z, _tile)
             
             if (_.x == _x) && (_.y == _y) && (_.z == _z)
             {
-                render_state_pool_release(_);
+                global.render_state_pool.release(_);
                 
                 array_delete(_render_state, i, 1);
                 

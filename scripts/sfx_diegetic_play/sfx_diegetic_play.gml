@@ -34,7 +34,7 @@ function sfx_diegetic_play(_emitter, _x, _y, _id, _gain = global.settings.audio_
     
     // if (_is_temp_emitter)
     {
-        _emitter = audio_emitter_create();
+        _emitter = global.sfx_pool.acquire();
         audio_emitter_position(_emitter, _x, _y, 0);
     }
     

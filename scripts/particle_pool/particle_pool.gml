@@ -167,9 +167,4 @@ function ParticlePool() constructor
 // Initialize global particle pool
 global.particle_pool = new ParticlePool();
 
-/// @function particle_pool_spawn(_x, _y, _id, _colour)
-/// @desc Wrapper function to spawn particle using pool
-function particle_pool_spawn(_x, _y, _id, _colour = c_white)
-{
-    return global.particle_pool.spawn(_x, _y, _id, _colour);
-}
+

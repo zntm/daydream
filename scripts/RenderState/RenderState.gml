@@ -1,6 +1,6 @@
 global.render_state = {};
 
-render_state_pool_init();
+
 
 global.render_state[$ "phantasia:blueprint/structure"] = function(_x, _y, _z)
 {

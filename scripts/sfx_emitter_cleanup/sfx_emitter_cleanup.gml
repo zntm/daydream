@@ -13,7 +13,7 @@ function sfx_emitter_cleanup()
         {
             if (audio_emitter_exists(_entry.emitter))
             {
-                audio_emitter_free(_entry.emitter);
+                global.sfx_pool.release(_entry.emitter);
             }
             
             array_delete(_emitters, i, 1);
