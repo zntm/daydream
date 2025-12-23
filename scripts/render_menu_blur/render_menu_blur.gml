@@ -1,0 +1,60 @@
+#macro GUI_MENU_BLUR_RESIZE 4
+
+function render_menu_blur()
+{
+    static __u_direction  = shader_get_uniform(shd_Separable_Blur, "u_direction");
+    static __u_blur_size  = shader_get_uniform(shd_Separable_Blur, "u_blur_size");
+    static __u_texel_size = shader_get_uniform(shd_Separable_Blur, "u_texel_size");
+    static __u_radius     = shader_get_uniform(shd_Separable_Blur, "u_radius");
+    static __u_sigma      = shader_get_uniform(shd_Separable_Blur, "u_sigma");
+    
+    var _width  = ceil(global.gui_width  / GUI_MENU_BLUR_RESIZE);
+    var _height = ceil(global.gui_height / GUI_MENU_BLUR_RESIZE);
+    
+    if (!surface_exists(global.menu_blur_surface[@ 0]))
+    {
+        global.menu_blur_surface[@ 0] = surface_create(_width, _height);
+    }
+    
+    var _texel_width  = 1 / _width;
+    var _texel_height = 1 / _height;
+    
+    surface_set_target(global.menu_blur_surface[@ 0]);
+    draw_clear_alpha(c_black, 0);
+    
+    shader_set(shd_Separable_Blur);
+    
+    shader_set_uniform_f(__u_direction, 1, 0);
+    shader_set_uniform_f(__u_blur_size, 1);
+    shader_set_uniform_f(__u_texel_size, _texel_width, _texel_height);
+    shader_set_uniform_i(__u_radius, 16);
+    shader_set_uniform_f(__u_sigma, 8.0);
+    
+    draw_surface_stretched_ext(application_surface, 0, 0, _width, _height, c_white, 1);
+    
+    shader_reset();
+    
+    surface_reset_target();
+    
+    if (!surface_exists(global.menu_blur_surface[@ 1]))
+    {
+        global.menu_blur_surface[@ 1] = surface_create(_width, _height);
+    }
+    
+    surface_set_target(global.menu_blur_surface[@ 1]);
+    draw_clear_alpha(c_black, 0);
+    
+    shader_set(shd_Separable_Blur);
+    
+    shader_set_uniform_f(__u_direction, 0, 1);
+    shader_set_uniform_f(__u_blur_size, 1);
+    shader_set_uniform_f(__u_texel_size, _texel_width, _texel_height);
+    shader_set_uniform_i(__u_radius, 16);
+    shader_set_uniform_f(__u_sigma, 8.0);
+    
+    draw_surface(global.menu_blur_surface[@ 0], 0, 0);
+    
+    shader_reset();
+    
+    surface_reset_target();
+}

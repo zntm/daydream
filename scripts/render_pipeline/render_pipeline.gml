@@ -4,6 +4,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
     static __u_texture_size = shader_get_uniform(shd_Chunk, "u_texture_size");
     static __u_time = shader_get_uniform(shd_Chunk, "u_time");
     static __u_skew = shader_get_uniform(shd_Chunk, "u_skew");
+    static __u_wave = shader_get_uniform(shd_Chunk, "u_wave");
     static __u_texel_width = shader_get_uniform(shd_Chunk, "u_texel_width");
     
     var _creature_data = global.creature_data;
@@ -60,6 +61,10 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
             else if (_z == CHUNK_DEPTH_FOLIAGE_FRONT) && (_chunk_count[CHUNK_DEPTH_FOLIAGE_FRONT] > 0)
             {
                 shader_set_uniform_f_array(__u_skew, _inst.chunk_skew_front);
+            }
+            else if (_z == CHUNK_DEPTH_LIQUID) && (_chunk_count[CHUNK_DEPTH_LIQUID] > 0)
+            {
+                shader_set_uniform_f_array(__u_wave, _inst.chunk_wave);
             }
             
             vertex_submit(_buffer, pr_trianglelist, _texture);

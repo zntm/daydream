@@ -7,5 +7,5 @@ icon_yscale = 1.5;
 
 on_select_release = function()
 {
-    room_goto(rm_Menu_Players);
+    menu_transition_goto(rm_Menu_Players);
 }

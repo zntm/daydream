@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"control_entity_shoot",
+  "%Name":"render_menu_blur",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"control_entity_shoot",
+  "name":"render_menu_blur",
   "parent":{
-    "name":"Control",
-    "path":"folders/Scripts/Control.yy",
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -15,7 +15,7 @@ function effect_set(_type, _time, _level = 1, _object = id, _particle = true)
     
     if (_data == undefined) 
     {
-        show_debug_message($"[effect_set] ERROR: Effect data for {_type} is UNDEFINED. Available keys: {variable_struct_get_names(_effect_data)}");
+        show_debug_message($"[effect_set] ERROR: Effect data for {_type} is UNDEFINED. Available keys: {struct_get_names(_effect_data)}");
         exit;
     }
     

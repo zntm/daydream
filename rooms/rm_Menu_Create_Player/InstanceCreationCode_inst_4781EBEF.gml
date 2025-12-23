@@ -75,5 +75,5 @@ on_select_release = function()
     
     array_insert(global.file_players_uuid, 0, _uuid);
     
-    room_goto(rm_Menu_Players);
+    menu_transition_goto(rm_Menu_Players);
 }

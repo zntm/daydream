@@ -6,5 +6,5 @@ text = loca_translate("phantasia:menu.settings.title");
 
 on_select_release = function()
 {
-    room_goto(rm_Menu_Settings);
+    menu_transition_goto(rm_Menu_Settings);
 }

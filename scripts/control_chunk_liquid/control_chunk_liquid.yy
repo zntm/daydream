@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"control_entity_shoot",
+  "%Name":"control_chunk_liquid",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"control_entity_shoot",
+  "name":"control_chunk_liquid",
   "parent":{
-    "name":"Control",
-    "path":"folders/Scripts/Control.yy",
+    "name":"Chunk",
+    "path":"folders/Scripts/Control/Chunk.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

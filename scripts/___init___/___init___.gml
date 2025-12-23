@@ -17,7 +17,7 @@ enum VERISON_TYPE {
 #macro GAME_TICK 60
 
 #macro SITE_BLUESKY "https://bsky.app/profile/phantasiagame.bsky.social"
-#macro SITE_DISCORD "https://discord.gg/PjdKzPZUKK"
+#macro SITE_DISCORD "https://discord.gg/MetyWwT8fs"
 #macro SITE_TWITTER "https://x.com/PhantasiaGame"
 
 cursor_sprite = spr_Mouse;

@@ -277,6 +277,9 @@ if (timer_foliage_sway >= 0.04)
     control_chunk_foliage(_delta_time, _player_x, _player_y, _camera_x, _camera_y, _camera_width, _camera_height);
 }
 
+// Update liquid wave forces (for splash effects)
+control_chunk_liquid(_delta_time, _player_x, _player_y, _camera_x, _camera_y, _camera_width, _camera_height);
+
 var _tile_x = round(mouse_x / TILE_SIZE);
 var _tile_y = round(mouse_y / TILE_SIZE);
 

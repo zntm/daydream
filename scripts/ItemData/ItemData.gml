@@ -48,7 +48,8 @@ enum TILE_ANIMATION_TYPE {
     CONNECTED,
     CONNECTED_TO_SELF,
     INCREMENT,
-    FOLIAGE
+    FOLIAGE,
+    WAVE
 }
 
 enum TILE_COLLISION_BOX_TYPE {
@@ -199,7 +200,8 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
             "connected":         TILE_ANIMATION_TYPE.CONNECTED,
             "connected_to_self": TILE_ANIMATION_TYPE.CONNECTED_TO_SELF,
             "increment":         TILE_ANIMATION_TYPE.INCREMENT,
-            "foliage":           TILE_ANIMATION_TYPE.FOLIAGE
+            "foliage":           TILE_ANIMATION_TYPE.FOLIAGE,
+            "wave":              TILE_ANIMATION_TYPE.WAVE
         }
         
         ___animation_type = __animation_type[$ _type];

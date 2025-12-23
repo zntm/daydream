@@ -1,3 +1,5 @@
+if (menu_transition_is_active()) exit;
+
 var _menu_layer = menu_layer;
 
 var _check_boundary = function(_surface_index)
@@ -8,22 +10,22 @@ var _check_boundary = function(_surface_index)
     
     if (!is_struct(_struct)) return true;
     
-    if (variable_struct_exists(_struct, "x_min"))
+    if (struct_exists(_struct, "x_min"))
     {
         if (global.gui_mouse_x < _struct.x_min) return false;
     }
 
-    if (variable_struct_exists(_struct, "x_max"))
+    if (struct_exists(_struct, "x_max"))
     {
         if (global.gui_mouse_x > _struct.x_max) return false;
     }
 
-    if (variable_struct_exists(_struct, "y_min"))
+    if (struct_exists(_struct, "y_min"))
     {
         if (global.gui_mouse_y < _struct.y_min) return false;
     }
 
-    if (variable_struct_exists(_struct, "y_max"))
+    if (struct_exists(_struct, "y_max"))
     {
         if (global.gui_mouse_y > _struct.y_max) return false;
     }

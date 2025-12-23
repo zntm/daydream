@@ -98,10 +98,21 @@ function render_chunk(_page, _position, _texel_width, _texel_height, _inst, _z)
                 var _level = _tile.get_component("level") ?? 8;
                 var _left_level = 0;
                 var _right_level = 0;
+                var _has_liquid_below = false;
                 
                 // Get world coordinates for this tile
                 var _world_x = (_xstart >> TILE_SIZE_BIT) + _x;
                 var _world_y = (_ystart >> TILE_SIZE_BIT) + _y;
+                
+                // Check for same liquid below (for bottom cropping)
+                var _below_tile = tile_get(_world_x, _world_y + 1, _z);
+                if (_below_tile != TILE_EMPTY)
+                {
+                    if (_below_tile.get_id() == _id)
+                    {
+                        _has_liquid_below = true;
+                    }
+                }
                 
                 // Check left neighbor using tile_get (handles cross-chunk)
                 var _left_tile = tile_get(_world_x - 1, _world_y, _z);
@@ -140,7 +151,8 @@ function render_chunk(_page, _position, _texel_width, _texel_height, _inst, _z)
                     _rotation,
                     _level,
                     _left_level,
-                    _right_level
+                    _right_level,
+                    _has_liquid_below
                 );
                 
                 continue;

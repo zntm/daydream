@@ -28,7 +28,7 @@ function get_buffs(_base_attributes)
             var _setter = $"set_{_attr_name}";
             
             // Apply modifier if attribute exists
-            if (variable_struct_exists(attribute, _getter) && variable_struct_exists(attribute, _setter))
+            if (struct_exists(attribute, _getter) && struct_exists(attribute, _setter))
             {
                 var _current_val = attribute[$ _getter]();
                 var _level = _active_effect.level;
@@ -80,7 +80,7 @@ function get_buffs(_base_attributes)
                 // Assuming AccessoryItem datagen creates ItemArmor or similar runtime struct
                 // In daymare engine, ItemArmor was used for accessories too usually.
                 // Let's check type or just check method existence
-                if (_data != undefined && variable_struct_exists(_data, "apply_modifiers"))
+                if (_data != undefined && struct_exists(_data, "apply_modifiers"))
                 {
                     _data.apply_modifiers(attribute);
                 }

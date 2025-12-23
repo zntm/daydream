@@ -1,4 +1,4 @@
-function chunk_vertex_liquid(_buffer, _texel_width, _texel_height, _animation_type, _atla, _atla_sprite, _index, _x, _y, _xscale, _yscale, _rotation, _level = 8, _left_level = 0, _right_level = 0)
+function chunk_vertex_liquid(_buffer, _texel_width, _texel_height, _animation_type, _atla, _atla_sprite, _index, _x, _y, _xscale, _yscale, _rotation, _level = 8, _left_level = 0, _right_level = 0, _has_liquid_below = false)
 {
     var _atla_value = _atla.___value;
     
@@ -18,6 +18,9 @@ function chunk_vertex_liquid(_buffer, _texel_width, _texel_height, _animation_ty
     var _left_ratio = _left_level > 0 ? ((_level_ratio + clamp(_left_level, 1, 8) / 8) / 2) : _level_ratio;
     var _right_ratio = _right_level > 0 ? ((_level_ratio + clamp(_right_level, 1, 8) / 8) / 2) : _level_ratio;
     
+    // Bottom cropping when same liquid is below (crop/stretch bottom ~20%)
+    var _bottom_crop_ratio = _has_liquid_below ? 0.8 : 1.0;
+    
     // UV coordinates - remap if rotated 90° clockwise in atlas
     var _u_tl, _v_tl, _u_tr, _v_tr, _u_bl, _v_bl, _u_br, _v_br;
     
@@ -28,21 +31,27 @@ function chunk_vertex_liquid(_buffer, _texel_width, _texel_height, _animation_ty
         var _u_crop_left = lerp(_uvs[0], _uvs[2], 1 - _left_ratio);
         var _u_crop_right = lerp(_uvs[0], _uvs[2], 1 - _right_ratio);
         
+        // Bottom crop in rotated space
+        var _u_bottom = lerp(_uvs[0], _uvs[2], _bottom_crop_ratio);
+        
         _u_tl = _u_crop_left;  _v_tl = _uvs[3];
         _u_tr = _u_crop_right; _v_tr = _uvs[1];
-        _u_bl = _uvs[2];       _v_bl = _uvs[3];
-        _u_br = _uvs[2];       _v_br = _uvs[1];
+        _u_bl = _u_bottom;     _v_bl = _uvs[3];
+        _u_br = _u_bottom;     _v_br = _uvs[1];
     }
     else
     {
-        // Crop the bottom of the UV based on level (keeping top constant)
+        // Crop the top of the UV based on level (liquid surface)
         var _v1_cropped_left = lerp(_uvs[1], _uvs[3], _left_ratio);
         var _v1_cropped_right = lerp(_uvs[1], _uvs[3], _right_ratio);
         
+        // Crop the bottom if liquid is below (to hide seam)
+        var _v_bottom = lerp(_uvs[1], _uvs[3], _bottom_crop_ratio);
+        
         _u_tl = _uvs[0]; _v_tl = _uvs[1];
         _u_tr = _uvs[2]; _v_tr = _uvs[1];
-        _u_bl = _uvs[0]; _v_bl = _v1_cropped_left;
-        _u_br = _uvs[2]; _v_br = _v1_cropped_right;
+        _u_bl = _uvs[0]; _v_bl = min(_v1_cropped_left, _v_bottom);
+        _u_br = _uvs[2]; _v_br = min(_v1_cropped_right, _v_bottom);
     }
     
     // Adjust heights for cropped portions

@@ -152,7 +152,7 @@ for (var j = 0; j <= _max_layer; ++j)
                 
                 if (_uniforms != undefined)
                 {
-                    var _keys = variable_struct_get_names(_uniforms);
+                    var _keys = struct_get_names(_uniforms);
                     var _cnt = array_length(_keys);
                     var _use_int = _uniforms[$ "_use_int"] ?? false;
                     
@@ -226,7 +226,7 @@ for (var j = 0; j <= _max_layer; ++j)
                 
                 if (_uniforms != undefined)
                 {
-                    var _keys = variable_struct_get_names(_uniforms);
+                    var _keys = struct_get_names(_uniforms);
                     var _cnt = array_length(_keys);
                     var _use_int = _uniforms[$ "_use_int"] ?? false;
                     
@@ -396,13 +396,65 @@ for (var j = 0; j <= _max_layer; ++j)
     surface_reset_target();
 }
 
-// 2. Draw all surfaces
+// 1. Capture background for blur (if requested by transition)
+if (global.menu_capture_blur)
+{
+    render_menu_blur();
+    
+    global.menu_capture_blur = false;
+}
+
+// 2. Draw all surfaces with transition effect
+var _transition_alpha = global.menu_transition_alpha ?? 1;
+var _transition_scale = global.menu_transition_scale ?? 1;
+
+// Calculate scale factor to fit window-sized surface into GUI-sized draw event
+var _sw = window_get_width();
+var _sh = window_get_height();
+var _scale_correction_x = _gui_width / _sw;
+var _scale_correction_y = _gui_height / _sh;
+
+// Calculate transition scale offset (centered)
+// _render_xscale is internal scale. _transition_scale is fade animation scale.
+var _trans_scale_x = _scale_correction_x * _transition_scale;
+var _trans_scale_y = _scale_correction_y * _transition_scale;
+
+var _trans_offset_x = (_gui_width - (_sw * _trans_scale_x)) / 2;
+var _trans_offset_y = (_gui_height - (_sh * _trans_scale_y)) / 2;
+
+// Draw blur background during transition (fades in during shrink phase)
+// Use persistent blur alpha set by transition script
+var _blur_alpha = global.menu_blur_alpha ?? 0;
+if (_blur_alpha > 0.01)
+{
+    // Use pause surface if available for blur effect
+    if (surface_exists(global.menu_blur_surface[@ 1]))
+    {
+        var _tex_filter = gpu_get_tex_filter();
+        gpu_set_tex_filter(true);
+        
+        draw_surface_stretched_ext(
+            global.menu_blur_surface[@ 1],
+            0, 0,
+            _gui_width + GUI_MENU_BLUR_RESIZE,
+            _gui_height + GUI_MENU_BLUR_RESIZE,
+            c_white,
+            _blur_alpha
+        );
+        
+        gpu_set_tex_filter(_tex_filter);
+    }
+    else
+    {
+        // Fallback: just dim the background
+        draw_sprite_ext(spr_Square, 0, 0, 0, _gui_width, _gui_height, 0, c_black, _blur_alpha * 0.5);
+    }
+}
+
 for (var j = 0; j <= _max_layer; ++j)
 {
     var _shader_struct = undefined;
     var _shader = undefined;
-    
-
     
     // Check if a shader is assigned to this layer
     // Assuming surface_index_shader can be [ shader_id, { id: shader_id, uniform: value }, ... ]
@@ -426,7 +478,7 @@ for (var j = 0; j <= _max_layer; ++j)
         
         if (is_struct(_shader_struct))
         {
-            var _keys = variable_struct_get_names(_shader_struct);
+            var _keys = struct_get_names(_shader_struct);
             var _length = array_length(_keys);
             
             for (var k = 0; k < _length; ++k)
@@ -454,7 +506,16 @@ for (var j = 0; j <= _max_layer; ++j)
         }
     }
     
-    draw_surface_stretched(surfaces[j], 0, 0, _gui_width, _gui_height);
+    draw_surface_ext(
+        surfaces[j],
+        _trans_offset_x,
+        _trans_offset_y,
+        _trans_scale_x,
+        _trans_scale_y,
+        0,
+        c_white,
+        _transition_alpha
+    );
     
     if (_shader != undefined)
     {

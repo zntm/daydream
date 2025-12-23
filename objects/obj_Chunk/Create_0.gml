@@ -18,6 +18,10 @@ chunk_skew_back_to = array_create(CHUNK_SIZE * CHUNK_SIZE, 0);
 chunk_skew_front = array_create(CHUNK_SIZE * CHUNK_SIZE, 0);
 chunk_skew_front_to = array_create(CHUNK_SIZE * CHUNK_SIZE, 0);
 
+// Liquid wave arrays (force-based bobbing, similar to foliage skew)
+chunk_wave = array_create(CHUNK_SIZE * CHUNK_SIZE, 0);
+chunk_wave_to = array_create(CHUNK_SIZE * CHUNK_SIZE, 0);
+
 chunk_vertex_buffer = array_create(CHUNK_DEPTH, -1);
 
 chunk_count = array_create(CHUNK_DEPTH, 0);

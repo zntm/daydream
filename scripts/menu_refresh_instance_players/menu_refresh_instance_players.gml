@@ -106,7 +106,7 @@ function menu_refresh_instance_players()
         
         menu_refresh_value_world_save();
         
-        room_goto(rm_Menu_Worlds);
+        menu_transition_goto(rm_Menu_Worlds);
     }
     
     var _a = file_read_directory(PROGRAM_DIRECTORY_PLAYERS);

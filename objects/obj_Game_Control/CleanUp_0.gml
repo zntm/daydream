@@ -6,17 +6,17 @@ for (var i = 0; i < _length; ++i)
 {
     var _struct = surface_inventory[$ _names[i]];
     
-    if (variable_struct_exists(_struct, "surface"))
+    if (struct_exists(_struct, "surface"))
     {
         if (surface_exists(_struct.surface)) surface_free(_struct.surface);
     }
     
-    if (variable_struct_exists(_struct, "surface_item"))
+    if (struct_exists(_struct, "surface_item"))
     {
         if (surface_exists(_struct.surface_item)) surface_free(_struct.surface_item);
     }
     
-    if (variable_struct_exists(_struct, "surface_slot"))
+    if (struct_exists(_struct, "surface_slot"))
     {
         if (surface_exists(_struct.surface_slot)) surface_free(_struct.surface_slot);
     }

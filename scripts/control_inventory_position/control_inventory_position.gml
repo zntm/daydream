@@ -52,7 +52,7 @@ function control_inventory_position()
             var _slot = _children[i];
             
             // Check if this is a GUISlot (has inventory_name property)
-            if (!variable_struct_exists(_slot, "inventory_name")) continue;
+            if (!struct_exists(_slot, "inventory_name")) continue;
             
             var _inv_name = _slot.inventory_name;
             var _inv_index = _slot.slot_index;

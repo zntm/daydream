@@ -77,12 +77,12 @@ function ItemArmor(_type, _defense) constructor
             var _getter = $"get_{_attr}";
             var _setter = $"set_{_attr}";
             
-            if (variable_struct_exists(_base_attributes, _getter))
+            if (struct_exists(_base_attributes, _getter))
             {
                 var _current = _base_attributes[$ _getter]();
                 var _new_value = _modifier.calculate(_current, 1);
                 
-                if (variable_struct_exists(_base_attributes, _setter))
+                if (struct_exists(_base_attributes, _setter))
                 {
                     _base_attributes[$ _setter](_new_value);
                 }

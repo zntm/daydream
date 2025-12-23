@@ -105,10 +105,10 @@ if (_deferred_text_length > 0)
     {
         var _ = global.gui_deferred_text[i];
         
-        if (variable_struct_exists(_, "halign")) draw_set_halign(_.halign);
+        if (struct_exists(_, "halign")) draw_set_halign(_.halign);
         else draw_set_halign(fa_right);
         
-        if (variable_struct_exists(_, "valign")) draw_set_valign(_.valign);
+        if (struct_exists(_, "valign")) draw_set_valign(_.valign);
         else draw_set_valign(fa_bottom);
         
         render_text(_.x, _.y, _.text, _.xscale, _.yscale, 0, _.colour, _.alpha);
