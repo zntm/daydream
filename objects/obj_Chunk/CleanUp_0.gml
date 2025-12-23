@@ -1,6 +1,8 @@
 // Unregister from spatial hash map
 chunk_map_unregister(id);
 
+render_state_pool_clean(chunk_render_state);
+
 var _length = array_length(chunk_vertex_buffer);
 
 for (var i = 0; i < _length; ++i)

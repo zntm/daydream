@@ -353,6 +353,7 @@
     {"name":"render_pipeline","order":5,"path":"scripts/render_pipeline/render_pipeline.yy",},
     {"name":"render_text","order":8,"path":"scripts/render_text/render_text.yy",},
     {"name":"RenderState","order":3,"path":"scripts/RenderState/RenderState.yy",},
+    {"name":"RenderStatePool","order":55,"path":"scripts/RenderStatePool/RenderStatePool.yy",},
     {"name":"rpc_world","order":1,"path":"scripts/rpc_world/rpc_world.yy",},
     {"name":"sfx_calculate_occlusion","order":30,"path":"scripts/sfx_calculate_occlusion/sfx_calculate_occlusion.yy",},
     {"name":"sfx_emitter_cleanup","order":35,"path":"scripts/sfx_emitter_cleanup/sfx_emitter_cleanup.yy",},

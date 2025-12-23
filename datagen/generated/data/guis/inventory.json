@@ -359,6 +359,105 @@
                 "inventory_name": "base",
                 "slot_index": 49
             }
+        },
+        {
+            "type": "slot",
+            "props": {
+                "x": -20,
+                "y": 0,
+                "inventory_name": "armor_helmet",
+                "slot_index": 0,
+                "icon_sprite": "spr_Inventory_Slot_Icon",
+                "icon_index": 0
+            }
+        },
+        {
+            "type": "slot",
+            "props": {
+                "x": -20,
+                "y": 16,
+                "inventory_name": "armor_breastplate",
+                "slot_index": 0,
+                "icon_sprite": "spr_Inventory_Slot_Icon",
+                "icon_index": 1
+            }
+        },
+        {
+            "type": "slot",
+            "props": {
+                "x": -20,
+                "y": 32,
+                "inventory_name": "armor_leggings",
+                "slot_index": 0,
+                "icon_sprite": "spr_Inventory_Slot_Icon",
+                "icon_index": 2
+            }
+        },
+        {
+            "type": "slot",
+            "props": {
+                "x": -56,
+                "y": 0,
+                "inventory_name": "accessory",
+                "slot_index": 0,
+                "icon_sprite": "spr_Inventory_Slot_Icon",
+                "icon_index": 3
+            }
+        },
+        {
+            "type": "slot",
+            "props": {
+                "x": -40,
+                "y": 0,
+                "inventory_name": "accessory",
+                "slot_index": 1,
+                "icon_sprite": "spr_Inventory_Slot_Icon",
+                "icon_index": 3
+            }
+        },
+        {
+            "type": "slot",
+            "props": {
+                "x": -56,
+                "y": 16,
+                "inventory_name": "accessory",
+                "slot_index": 2,
+                "icon_sprite": "spr_Inventory_Slot_Icon",
+                "icon_index": 3
+            }
+        },
+        {
+            "type": "slot",
+            "props": {
+                "x": -40,
+                "y": 16,
+                "inventory_name": "accessory",
+                "slot_index": 3,
+                "icon_sprite": "spr_Inventory_Slot_Icon",
+                "icon_index": 3
+            }
+        },
+        {
+            "type": "slot",
+            "props": {
+                "x": -56,
+                "y": 32,
+                "inventory_name": "accessory",
+                "slot_index": 4,
+                "icon_sprite": "spr_Inventory_Slot_Icon",
+                "icon_index": 3
+            }
+        },
+        {
+            "type": "slot",
+            "props": {
+                "x": -40,
+                "y": 32,
+                "inventory_name": "accessory",
+                "slot_index": 5,
+                "icon_sprite": "spr_Inventory_Slot_Icon",
+                "icon_index": 3
+            }
         }
     ],
     "props": {

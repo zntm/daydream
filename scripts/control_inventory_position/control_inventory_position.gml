@@ -90,38 +90,7 @@ function control_inventory_position()
         }
     }
     
-    // Also handle armor, accessory, and container slots if inventory is open
-    if (is_opened & IS_OPENED_BOOLEAN.INVENTORY)
-    {
-        // Position armor/accessory slots using old system for now (they're not in modular GUI yet)
-        var _gui_inventory_data = global.gui_inventory;
-        var _other_names = ["armor_helmet", "armor_breastplate", "armor_leggings", "accessory"];
-        
-        for (var n = 0; n < array_length(_other_names); ++n)
-        {
-            var _inv_name = _other_names[n];
-            var _data = _gui_inventory_data[$ _inv_name];
-            if (_data == undefined) continue;
-            
-            var _anchor_type = _data.anchor_type;
-            var _anchor_x = gui_xanchor(_anchor_type, global.gui_width, _scale_x) + (_data.surface_xoffset * _scale_x);
-            var _anchor_y = gui_yanchor(_anchor_type, global.gui_height, _scale_y) + (_data.surface_yoffset * _scale_y);
-            
-            var _instances = _inventory_instance[$ _inv_name];
-            if (_instances == undefined) continue;
-            
-            var _len = array_length(_instances);
-            for (var j = 0; j < _len; ++j)
-            {
-                var _inst = _instances[j];
-                if (!instance_exists(_inst)) continue;
-                
-                _inst.x = _anchor_x + (_inst.xoffset * _scale_x);
-                _inst.y = _anchor_y + (_inst.yoffset * _scale_y);
-                _inst.image_xscale = _scale_x;
-                _inst.image_yscale = _scale_y;
-            }
-        }
-    }
+    // Note: Armor and accessory positioning should be handled by the modular inventory panel definition (datagen).
+    // The previous legacy fallback has been removed.
 }
 

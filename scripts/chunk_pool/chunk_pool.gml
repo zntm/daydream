@@ -45,6 +45,8 @@ function chunk_pool_release(_inst)
     // Unregister from map
     chunk_map_unregister(_inst);
     
+    render_state_pool_clean(_inst.chunk_render_state);
+    
     if (array_length(global.chunk_pool) < global.chunk_pool_max)
     {
         // Clear vertex buffers before pooling
@@ -135,7 +137,7 @@ function chunk_reset(_inst, _x, _y)
         boolean = CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH;
         chunk_covered_surface_refresh = true;
         
-        array_resize(chunk_render_state, 0);
+        render_state_pool_clean(chunk_render_state);
         
         // Register at new position
         chunk_map_register(id);

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"RenderStatePool",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"RenderStatePool",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

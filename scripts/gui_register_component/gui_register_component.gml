@@ -37,7 +37,12 @@ function gui_create_component(_type, _props)
         case "slot":
             var _inventory_name = _props[$ "inventory_name"] ?? "base";
             var _slot_index = _props[$ "slot_index"] ?? 0;
-            return new GUISlot(_x, _y, _inventory_name, _slot_index);
+            var _slot = new GUISlot(_x, _y, _inventory_name, _slot_index);
+            
+            if (variable_struct_exists(_props, "icon_sprite")) _slot.icon_sprite = _props.icon_sprite;
+            if (variable_struct_exists(_props, "icon_index")) _slot.icon_index = _props.icon_index;
+            
+            return _slot;
         
         case "text":
             var _text = _props[$ "text"] ?? "";
