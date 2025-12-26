@@ -4,6 +4,13 @@ enum STRUCTURE_PLACEMENT_TYPE {
     INSIDE
 }
 
+enum STRUCTURE_TERRAIN_MODIFIER_TYPE {
+    NONE,
+    CLEAR,    // Village-style: clear surface above structure
+    CARVE,    // Trial chamber-style: carve into terrain
+    ELEVATE   // Raise terrain around structure
+}
+
 function StructureData(_width, _height, _placement, _is_persistent, _is_natural) constructor
 {
     ___width  = _width;
@@ -135,6 +142,51 @@ function StructureData(_width, _height, _placement, _is_persistent, _is_natural)
     static get_function_parameters = function()
     {
         return ___function_parameters;
+    }
+    
+    static __terrain_modifier_type = {
+        "clear":   STRUCTURE_TERRAIN_MODIFIER_TYPE.CLEAR,
+        "carve":   STRUCTURE_TERRAIN_MODIFIER_TYPE.CARVE,
+        "elevate": STRUCTURE_TERRAIN_MODIFIER_TYPE.ELEVATE
+    }
+    
+    static set_terrain_modifier = function(_modifier)
+    {
+        if (_modifier != undefined)
+        {
+            ___terrain_modifier_type = __terrain_modifier_type[$ _modifier.type] ?? STRUCTURE_TERRAIN_MODIFIER_TYPE.NONE;
+            ___terrain_modifier_depth = _modifier[$ "depth"] ?? 0;
+            ___terrain_modifier_radius = _modifier[$ "radius"];
+            ___terrain_modifier_blend = _modifier[$ "blend"] ?? true;
+            ___value |= 1 << 3;
+        }
+        
+        return self;
+    }
+    
+    static has_terrain_modifier = function()
+    {
+        return !!(___value & (1 << 3));
+    }
+    
+    static get_terrain_modifier_type = function()
+    {
+        return self[$ "___terrain_modifier_type"] ?? STRUCTURE_TERRAIN_MODIFIER_TYPE.NONE;
+    }
+    
+    static get_terrain_modifier_depth = function()
+    {
+        return self[$ "___terrain_modifier_depth"] ?? 0;
+    }
+    
+    static get_terrain_modifier_radius = function()
+    {
+        return self[$ "___terrain_modifier_radius"];
+    }
+    
+    static get_terrain_modifier_blend = function()
+    {
+        return self[$ "___terrain_modifier_blend"] ?? true;
     }
 }
 

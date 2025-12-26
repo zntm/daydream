@@ -54,11 +54,18 @@ function init_world(_directory, _namespace = "phantasia", _type = 0)
         _world_data.set_cave_biome(_biome.cave);
         _world_data.set_surface_biome(_biome.surface);
         
+        // Parse sky biome configuration (optional)
+        var _sky_biome = _biome[$ "sky"];
+        if (_sky_biome != undefined)
+        {
+            _world_data.set_sky_biome(_sky_biome);
+        }
+        
         var _surface = _json.surface;
-        _world_data.set_surface(_surface.start, _surface.noise_offset);
+        _world_data.set_surface(_surface);
         
         var _cave = _json.cave;
-        _world_data.set_cave(_cave.start, _cave.system);
+        _world_data.set_cave(_cave);
         
         global.world_data[$ $"{_namespace}:{_id}"] = _world_data;
         

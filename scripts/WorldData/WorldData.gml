@@ -311,12 +311,20 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         return ___surface_biome_humidity;
     }
     
-    static set_surface = function(_start, _noise_offset)
+    static set_surface = function(_surface)
     {
-        ___surface_start = _start;
+        ___surface_start = _surface.start;
+        
+        var _noise_offset = _surface.noise_offset;
         ___surface_noise_offset_max = _noise_offset.max;
         ___surface_noise_offset_min = _noise_offset.min;
         ___surface_noise_offset_octaves = _noise_offset.octaves;
+        
+        var _smoothing = _surface[$ "smoothing"];
+        ___surface_smoothing_range = _smoothing[$ "range"] ?? 32;
+        ___surface_smoothing_factor = _smoothing[$ "factor"] ?? 0.6;
+        
+        ___surface_noise_scale = _surface[$ "noise_scale"] ?? 0.015625;
         
         return self;
     }
@@ -341,16 +349,59 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         return ___surface_noise_offset_octaves;
     }
     
-    static set_cave = function(_start, _system)
+    static get_surface_smoothing_range = function()
     {
+        return ___surface_smoothing_range;
+    }
+    
+    static get_surface_smoothing_factor = function()
+    {
+        return ___surface_smoothing_factor;
+    }
+    
+    static get_surface_noise_scale = function()
+    {
+        return ___surface_noise_scale;
+    }
+    
+    static set_cave = function(_cave)
+    {
+        var _start = _cave.start;
         ___cave_start_max = _start.max;
         ___cave_start_min = _start.min;
         ___cave_start_octaves = _start.octaves;
         
-        ___cave_system = _system;
-        ___cave_system_length = array_length(_system);
+        ___cave_system = _cave.system;
+        ___cave_system_length = array_length(___cave_system);
+        
+        var _aquifers = _cave[$ "aquifers"];
+        if (_aquifers != undefined)
+        {
+            ___aquifers = _aquifers;
+            ___aquifers_length = array_length(_aquifers);
+        }
+        else
+        {
+            ___aquifers = [];
+            ___aquifers_length = 0;
+        }
+        
+        ___cave_noise_scale = _cave[$ "noise_scale"] ?? 0.015625;
+        ___cave_breach_threshold = _cave[$ "breach_threshold"] ?? 242;
+        ___cave_breach_depth = _cave[$ "breach_depth"] ?? -8;
+        ___cave_transition_threshold = _cave[$ "transition_threshold"] ?? 220;
         
         return self;
+    }
+    
+    static get_aquifers = function()
+    {
+        return self[$ "___aquifers"] ?? [];
+    }
+    
+    static get_aquifers_length = function()
+    {
+        return self[$ "___aquifers_length"] ?? 0;
     }
     
     static get_cave_start_max = function()
@@ -377,6 +428,26 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
     {
         return ___cave_system_length;
     }
+
+    static get_cave_noise_scale = function()
+    {
+        return ___cave_noise_scale;
+    }
+
+    static get_cave_breach_threshold = function()
+    {
+        return ___cave_breach_threshold;
+    }
+
+    static get_cave_breach_depth = function()
+    {
+        return ___cave_breach_depth;
+    }
+
+    static get_cave_transition_threshold = function()
+    {
+        return ___cave_transition_threshold;
+    }
     
     static set_surface_biome_map = function(_map)
     {
@@ -388,5 +459,66 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
     static get_surface_biome_map = function()
     {
         return ___surface_biome_map;
+    }
+    
+    static set_sky_biome = function(_sky_biome)
+    {
+        ___sky_biome_threshold = _sky_biome[$ "threshold"] ?? 256;
+        ___sky_biome_id = _sky_biome[$ "id"] ?? "phantasia:sky/floating_islands";
+        ___sky_biome_enabled = _sky_biome[$ "enabled"] ?? true;
+        
+        ___sky_island_spacing = _sky_biome[$ "spacing"] ?? 32;
+        ___sky_island_radius = _sky_biome[$ "radius"] ?? 18;
+        ___sky_island_thickness = _sky_biome[$ "thickness"] ?? 10;
+        ___sky_noise_scale_region = _sky_biome[$ "noise_scale_region"] ?? 0.12;
+        ___sky_noise_scale_edge = _sky_biome[$ "noise_scale_edge"] ?? 0.15;
+        ___sky_noise_scale_detail = _sky_biome[$ "noise_scale_detail"] ?? 0.3;
+        
+        return self;
+    }
+    
+    static get_sky_biome_threshold = function()
+    {
+        return self[$ "___sky_biome_threshold"] ?? 256;
+    }
+    
+    static get_sky_biome_id = function()
+    {
+        return self[$ "___sky_biome_id"] ?? "phantasia:sky/floating_islands";
+    }
+    
+    static is_sky_biome_enabled = function()
+    {
+        return self[$ "___sky_biome_enabled"] ?? true;
+    }
+    
+    static get_sky_island_spacing = function()
+    {
+        return ___sky_island_spacing;
+    }
+    
+    static get_sky_island_radius = function()
+    {
+        return ___sky_island_radius;
+    }
+    
+    static get_sky_island_thickness = function()
+    {
+        return ___sky_island_thickness;
+    }
+    
+    static get_sky_noise_scale_region = function()
+    {
+        return ___sky_noise_scale_region;
+    }
+    
+    static get_sky_noise_scale_edge = function()
+    {
+        return ___sky_noise_scale_edge;
+    }
+    
+    static get_sky_noise_scale_detail = function()
+    {
+        return ___sky_noise_scale_detail;
     }
 }

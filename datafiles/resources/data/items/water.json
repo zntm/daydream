@@ -5,7 +5,6 @@
     ],
     "sprite": "phantasia:item/water",
     "tile": {
-        "animation_type": "wave",
         "components": {
             "level": {
                 "type": "u8",

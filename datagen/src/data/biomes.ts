@@ -14,6 +14,10 @@ export class Biome {
     private creatures?: BiomeCreature[];
     private foliage?: BiomeFoliage[];
     private structures?: BiomeStructure[];
+    private terrain_modifier?: BiomeTerrainModifier;
+    private is_ocean?: boolean;
+    private shore_tiles?: BiomeTile;
+    private is_skyland?: boolean;
 
     constructor(
         background: BiomeBackground,
@@ -54,7 +58,42 @@ export class Biome {
 
         return this;
     }
+
+    setTerrainModifier(modifier: BiomeTerrainModifier) {
+        this.terrain_modifier = modifier;
+
+        return this;
+    }
+
+    setIsOcean(value: boolean = true) {
+        this.is_ocean = value;
+
+        return this;
+    }
+
+    setShoreTiles(tiles: BiomeTile) {
+        this.shore_tiles = tiles;
+
+        return this;
+    }
+
+    setIsSkyland(value: boolean = true) {
+        this.is_skyland = value;
+
+        return this;
+    }
 }
+
+export class BiomeTerrainModifier {
+    private height_offset: number;
+    private amplitude_scale?: number;
+
+    constructor(heightOffset: number, amplitudeScale: number = 1.0) {
+        this.height_offset = heightOffset;
+        if (amplitudeScale !== 1.0) this.amplitude_scale = amplitudeScale;
+    }
+}
+
 
 export class BiomeBackground {
     private id: string;
@@ -78,22 +117,38 @@ export class BiomeSkyColor {
     }
 }
 
+export class TileEntry {
+    private id: string;
+    private weight?: number;
+    private noise_min?: number;
+    private noise_max?: number;
+    private context?: string[];
+
+    constructor(id: string, weight: number = 1, context?: string[]) {
+        this.id = id;
+        if (weight !== 1) this.weight = weight;
+        if (context) this.context = context;
+    }
+
+    setNoiseRange(min: number, max: number) {
+        this.noise_min = min;
+        this.noise_max = max;
+        return this;
+    }
+}
+
 export class BiomeTile {
-    private base: {
-        id: string;
-    };
+    private base: TileEntry[];
+    private wall: TileEntry[];
 
-    private wall: {
-        id: string;
-    };
-
-    constructor(base: string, id: string) {
-        this.base = {
-            id: base,
-        };
-        this.wall = {
-            id: id,
-        };
+    constructor(base: string | TileEntry[], wall: string | TileEntry[]) {
+        // Support both legacy string format and new array format
+        this.base = typeof base === "string" 
+            ? [new TileEntry(base)] 
+            : base;
+        this.wall = typeof wall === "string" 
+            ? [new TileEntry(wall)] 
+            : wall;
     }
 }
 

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"worldgen_apply_structure_terrain_modifier",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"worldgen_apply_structure_terrain_modifier",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

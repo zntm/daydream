@@ -1,20 +1,50 @@
 function worldgen_get_cave(_x, _y, _surface_height, _cave_start, _seed, _world_data = global.world_data[$ global.world_save_data.dimension])
 {
-    if (_y < _surface_height)
+    // Surface breach zone: allow caves to occasionally breach the surface
+    var _depth_from_surface = _y - _surface_height;
+    
+    // Above surface - check for surface breach openings
+    if (_depth_from_surface < 0)
     {
-        return true;
+        // Only allow breaches within a reasonable range above surface (8 tiles)
+        if (_depth_from_surface > _world_data.get_cave_breach_depth())
+        {
+            // Use separate noise for surface breaching (low frequency, rare occurrence)
+            var _breach_noise = open_simplex_noise(_x * 0.03, _surface_height * 0.03 + 1000, 255, 2);
+            
+            // ~5% chance of surface breach (threshold ~242 out of 255)
+            if (_breach_noise > _world_data.get_cave_breach_threshold())
+            {
+                // Check if there's an actual cave below to connect to
+                var _cave_below = worldgen_get_cave(_x, _surface_height + 2, _surface_height, _cave_start, _seed, _world_data);
+                if (_cave_below)
+                {
+                    return true; // This is a surface breach opening
+                }
+            }
+        }
+        return true; // Above surface, no block (sky)
     }
     
-    if (_y < _surface_height + _cave_start + _world_data.get_cave_start_min())
+    // Transition zone near surface - caves can exist but with reduced probability
+    if (_depth_from_surface < _cave_start + _world_data.get_cave_start_min())
     {
-        return false;
+        // Gradual transition: deeper = more likely to have caves
+        var _transition_factor = _depth_from_surface / (_cave_start + _world_data.get_cave_start_min());
+        var _transition_noise = open_simplex_noise(_x * 0.02, _y * 0.02, 255, 3);
+        
+        // Require higher noise values near surface
+        if (_transition_noise < (_world_data.get_cave_transition_threshold() * (1 - _transition_factor)))
+        {
+            return false;
+        }
     }
     
     var _system = _world_data.get_cave_system();
     var _system_length = _world_data.get_cave_system_length();
     
-    var _x_noise = _x * 0.015625;
-    var _y_noise = _y * 0.015625;
+    var _x_noise = _x * _world_data.get_cave_noise_scale();
+    var _y_noise = _y * _world_data.get_cave_noise_scale();
     
     for (var i = 0; i < _system_length; ++i)
     {
