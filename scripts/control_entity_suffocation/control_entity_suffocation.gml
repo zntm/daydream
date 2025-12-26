@@ -24,7 +24,7 @@ function control_entity_suffocation(_entity)
         // Apply damage
         var _damage = 2; // Fixed damage amount?
         
-        control_entity_damage(_entity, noone, _damage, 0); // No source, 0 variance
+        spawn_floating_text(_x, _y - 12, _damage, 0, -2, 0.5, 0.5, 0, c_red);
         
         // Visual feedback
         spawn_floating_text(_x, _y - 12, _damage, 0, -2, c_red);

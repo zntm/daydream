@@ -92,7 +92,6 @@
     {"name":"obj_Chunk","order":3,"path":"objects/obj_Chunk/obj_Chunk.yy",},
     {"name":"obj_Creature","order":5,"path":"objects/obj_Creature/obj_Creature.yy",},
     {"name":"obj_Falling_Tile","order":13,"path":"objects/obj_Falling_Tile/obj_Falling_Tile.yy",},
-    {"name":"obj_Floating_Text","order":10,"path":"objects/obj_Floating_Text/obj_Floating_Text.yy",},
     {"name":"obj_Game_Control_Background","order":1,"path":"objects/obj_Game_Control_Background/obj_Game_Control_Background.yy",},
     {"name":"obj_Game_Control_Spawn_Check","order":2,"path":"objects/obj_Game_Control_Spawn_Check/obj_Game_Control_Spawn_Check.yy",},
     {"name":"obj_Inventory","order":9,"path":"objects/obj_Inventory/obj_Inventory.yy",},
