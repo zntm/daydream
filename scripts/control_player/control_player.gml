@@ -1,7 +1,14 @@
+/// @desc Player control using new physics system
+/// @param {Real} _dt Delta time
+
 function control_player(_dt)
 {
     if (hp <= 0) exit;
     
+    // --- INPUT ---
+    input_state.poll_player();
+    
+    // --- DAMAGE CHECK ---
     if (timer_immunity <= 0)
     {
         var _inst = instance_place(x, y, obj_Creature);
@@ -18,7 +25,11 @@ function control_player(_dt)
                 
                 if (_died) exit;
                 
-                control_entity_knockback(id, _inst);
+                // Knockback using new physics
+                var _kb_dir = sign(x - _inst.x);
+                if (_kb_dir == 0) _kb_dir = 1;
+                physics_body.vel_x = _kb_dir * 4;
+                physics_body.vel_y = -3;
             }
         }
     }
@@ -28,24 +39,27 @@ function control_player(_dt)
         timer_immunity = max(0, timer_immunity - (_dt / GAME_TICK));
     }
     
+    // --- AUDIO ---
     audio_listener_position(x, y, 0);
     
-    control_physics_input(_dt, id);
+    // --- PHYSICS ---
+    physics_body.sync_from_instance(id);
+    entity_update_collision(physics_body);
     
-    var _on_ground = tile_meeting(x, y + 1);
-    
-    if (IS_DEVELOPER_MODE) && (global.dbg_settings[$ "enable_physics"])
+    // Choose physics mode based on debug settings
+    if (IS_DEVELOPER_MODE && !global.dbg_settings[$ "enable_physics"])
     {
-        control_physics(_dt, id);
-    }
-    else
-    {
-        control_physics_creative(_dt, id);
+        // Creative flight mode
+        physics_body.mode = MOVEMENT_MODE.FLY;
     }
     
-    if !(obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.MENU) && (timer_attack <= 0) && (mouse_check_button(mb_left))
+    physics_step(physics_body, input_state, _dt);
+    physics_body.sync_to_instance(id);
+    
+    // --- COMBAT ---
+    if !(obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.MENU) && (timer_attack <= 0) && (input_state.attack_held)
     {
-        sfx_diegetic_play(obj_Player.audio_emitter, obj_Player.x, obj_Player.y, "phantasia:sfx/item/swing", global.settings.audio_sfx);
+        sfx_diegetic_play(audio_emitter, x, y, "phantasia:sfx/item/swing", global.settings.audio_sfx);
         
         timer_attack = 0.3;
         
@@ -54,33 +68,23 @@ function control_player(_dt)
         if (_item != INVENTORY_EMPTY)
         {
             var _id = _item.get_id();
-            
             var _data = global.item_data[$ _id];
-            
-            var _inst = id;
             
             if (!instance_exists(inst_item))
             {
                 inst_item = instance_create_layer(x, y, "Instances", obj_Tool);
-                
                 inst_item._id = _id;
-                
                 inst_item.sprite_index = global.sprite_asset[$ _data.get_sprite()].get_sprite();
-                
                 inst_item.image_index = _data.get_inventory_index();
                 inst_item.image_speed = 0;
-                
-                inst_item.inst_owner = _inst;
+                inst_item.inst_owner = id;
             }
             
-            // --- Shooting Logic ---
-            var _angle = point_direction(x, y - 24, mouse_x, mouse_y);
-            
+            // Shooting logic
+            var _angle = input_state.aim_angle;
             if (control_entity_shoot(id, _id, x, y - 24, _angle))
             {
-                // If we shot something, maybe we don't need to do on_attack?
-                // Or maybe we do both (e.g. muzzle flash particle from on_attack).
-                // Let's allow both for now.
+                // Shot something
             }
             
             var _on_attack = _data.get_on_attack();
@@ -93,6 +97,7 @@ function control_player(_dt)
         }
     }
     
+    // Attack timer and weapon swing animation
     if (timer_attack > 0)
     {
         timer_attack = max(0, timer_attack - (_dt / GAME_TICK));
@@ -100,11 +105,10 @@ function control_player(_dt)
     
     if (timer_attack <= 0)
     {
-        var _direction = input_right - input_left;
-        
-        if (_direction != 0)
+        // Face movement direction
+        if (input_state.move_x != 0)
         {
-            image_xscale = abs(image_xscale) * _direction;
+            image_xscale = abs(image_xscale) * sign(input_state.move_x);
         }
         
         if (instance_exists(inst_item))
@@ -114,49 +118,46 @@ function control_player(_dt)
     }
     else if (instance_exists(inst_item))
     {
-        var _x = x;
-        var _y = y;
-        
+        // Weapon swing animation
         var _direction = sign(image_xscale);
-        
         var _t = power((0.3 - timer_attack) / 0.3, 1 / 4);
-        
         var _angle = (45 * cos(_t * pi)) + 15;
         
         with (inst_item)
         {
-            var _sprite_width  = sprite_get_width(sprite_index);
+            var _id = self._id;
+            var _sprite_width = sprite_get_width(sprite_index);
             var _sprite_height = sprite_get_height(sprite_index);
             
-            x = _x - 0  + (lengthdir_x(_sprite_width,  _angle) * _direction);
-            y = _y - 24 + (lengthdir_y(_sprite_height, _angle));
+            image_yscale = _direction;
+            
+            x = other.x + (lengthdir_x(_sprite_width, _angle) * _direction);
+            y = other.y - 24 + (lengthdir_y(_sprite_height, _angle));
             
             if (_direction > 0)
             {
-                image_angle = _angle - ((global.item_data[$ id._id].has_type(ITEM_TYPE_BIT.TOOL)) ? 45 : 90);
+                image_angle = _angle - ((global.item_data[$ _id].has_type(ITEM_TYPE_BIT.TOOL)) ? 45 : 90);
             }
             else
             {
-            	image_angle = 180 - _angle + ((global.item_data[$ id._id].has_type(ITEM_TYPE_BIT.TOOL)) ? 45 : 90);
+                image_angle = 180 - _angle + ((global.item_data[$ _id].has_type(ITEM_TYPE_BIT.TOOL)) ? 45 : 90);
             }
         }
     }
     
-    if (y > ylast)
+    // --- FALL DAMAGE ---
+    if (y > y_last)
     {
-        if (!_on_ground) && (tile_meeting(x, y + 1))
+        if (physics_body.collision.ground)
         {
-            var _difference = max(0, y - ylast - (TILE_SIZE * 4));
-            
+            var _difference = max(0, y - y_last - (TILE_SIZE * 4));
             var _value = floor(power(floor(_difference / TILE_SIZE) * 0.62, 1.25));
             
-            if (_value > 0)
+            if (_value > 0 && !attribute.has_boolean(ATTRIBUTE_BOOLEAN.IS_FALL_DAMAGE_RESISTANT))
             {
                 obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.HP;
-                
                 hp -= _value;
-                
-                ylast = y;
+                y_last = y;
                 
                 repeat (irandom_range(2, 6))
                 {
@@ -168,7 +169,6 @@ function control_player(_dt)
                 if (hp <= 0)
                 {
                     obj_Game_Control.timer_respawn = 3;
-                    
                     exit;
                 }
             }
@@ -176,19 +176,17 @@ function control_player(_dt)
     }
     else
     {
-        ylast = y;
+        y_last = y;
     }
     
-    var _refresh = (xvelocity != 0) || (yvelocity != 0);
-    
+    // --- POST-PHYSICS ---
     control_entity_sfx(_dt);
     
-    control_physics_input_after(_dt, id);
-    
+    // Camera
     control_camera_pos(x - (global.camera_width / 2), y - (global.camera_height / 2), false, _dt);
     
+    // Regeneration
     var _is_regenerated = false;
-    
     if (attribute.has_boolean(ATTRIBUTE_BOOLEAN.HAS_REGENERATION))
     {
         _is_regenerated = control_entity_regeneration(_dt / GAME_TICK);
@@ -201,24 +199,23 @@ function control_player(_dt)
         obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.HP;
     }
     
-    if (_refresh)
+    // Chunk visibility
+    if (physics_body.vel_x != 0 || physics_body.vel_y != 0)
     {
         obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.LIGHTING;
         
         var _camera_x = global.camera_x;
         var _camera_y = global.camera_y;
-        
-        var _camera_width  = global.camera_width;
+        var _camera_width = global.camera_width;
         var _camera_height = global.camera_height;
         
-        var _xstart = round((_camera_x + (_camera_width  / 2)) / CHUNK_SIZE_DIMENSION) * CHUNK_SIZE_DIMENSION;
+        var _xstart = round((_camera_x + (_camera_width / 2)) / CHUNK_SIZE_DIMENSION) * CHUNK_SIZE_DIMENSION;
         var _ystart = round((_camera_y + (_camera_height / 2)) / CHUNK_SIZE_DIMENSION) * CHUNK_SIZE_DIMENSION;
         
-        if (_xstart != obj_Game_Control.chunk_in_view_x) || (_ystart != obj_Game_Control.chunk_in_view_y)
+        if (_xstart != obj_Game_Control.chunk_in_view_x || _ystart != obj_Game_Control.chunk_in_view_y)
         {
             obj_Game_Control.chunk_in_view_x = _xstart;
             obj_Game_Control.chunk_in_view_y = _ystart;
-            
             control_update_chunk_in_view();
         }
     }

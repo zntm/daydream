@@ -1,3 +1,5 @@
+input_bindings_init();
+
 global.settings = {}
 
 global.settings_data = {}

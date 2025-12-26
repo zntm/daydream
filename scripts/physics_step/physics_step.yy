@@ -1,0 +1,13 @@
+{
+    "$GMScript": "v1",
+    "%Name": "physics_step",
+    "isCompatibility": false,
+    "isDnD": false,
+    "name": "physics_step",
+    "parent": {
+        "name": "Physics",
+        "path": "folders/Scripts/Entity/Physics.yy"
+    },
+    "resourceType": "GMScript",
+    "resourceVersion": "2.0"
+}

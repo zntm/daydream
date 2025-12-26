@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"control_physics_x",
+  "%Name":"entity_physics",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"control_physics_x",
+  "name":"entity_physics",
   "parent":{
     "name":"Physics",
-    "path":"folders/Scripts/Control/Physics.yy",
+    "path":"folders/Scripts/Entity/Physics.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

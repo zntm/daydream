@@ -17,9 +17,9 @@ function control_item_drop(_dt)
     {
         image_angle = 0;
     }
-    else if (xvelocity != 0) && (yvelocity != 0)
+    else if (physics_body.vel_x != 0) && (physics_body.vel_y != 0)
     {
-        image_angle = point_direction(x, y, x + xvelocity, y + yvelocity);
+        image_angle = point_direction(x, y, x + physics_body.vel_x, y + physics_body.vel_y);
     }
     /*
     var _id = item.get_id();

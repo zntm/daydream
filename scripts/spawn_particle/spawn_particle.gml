@@ -11,41 +11,48 @@ function spawn_particle(_x, _y, _id, _colour = c_white)
     
     if (_data == undefined) return -1;
     
-    // Check if particle needs collision physics (use legacy system for these)
+    // Check if particle needs collision physics
     var _attribute = _data.get_attribute();
     var _needs_collision = (_attribute != undefined) && (_attribute.has_collision_box());
     
     if (_needs_collision)
     {
-        // Use legacy instance-based system for particles with collision
+        // Use instance-based system for particles with collision
         with (instance_create_layer(_x, _y, "Instances", obj_Particle))
         {
             id._id = _id;
             
             attribute = _attribute;
             
-            init_entity_physics(smart_value(_data.get_scale()));
+            // Create physics body
+            physics_body = new PhysicsBody(_attribute);
+            physics_body.pos_x = x;
+            physics_body.pos_y = y;
+            physics_body.scale_x = smart_value(_data.get_scale());
+            physics_body.scale_y = physics_body.scale_x;
             
+            image_xscale = physics_body.scale_x;
+            image_yscale = physics_body.scale_y;
+            
+            // Set velocity
             if (_data.get_xspeed_type() == PARTICLE_MOVEMENT_TYPE.REFERENCE)
             {
                 var _xspeed = world_get_reference(_data.get_xspeed());
-                
-                xvelocity = (smart_value(_xspeed) + smart_value(_data.get_xspeed_offset())) * smart_value(_data.get_xspeed_multiplier());
+                physics_body.vel_x = (smart_value(_xspeed) + smart_value(_data.get_xspeed_offset())) * smart_value(_data.get_xspeed_multiplier());
             }
             else
             {
-                xvelocity = smart_value(_data.get_xspeed());
+                physics_body.vel_x = smart_value(_data.get_xspeed());
             }
             
             if (_data.get_yspeed_type() == PARTICLE_MOVEMENT_TYPE.REFERENCE)
             {
                 var _yspeed = world_get_reference(_data.get_yspeed());
-                
-                yvelocity = (smart_value(_yspeed) + smart_value(_data.get_yspeed_offset())) * smart_value(_data.get_yspeed_multiplier());
+                physics_body.vel_y = (smart_value(_yspeed) + smart_value(_data.get_yspeed_offset())) * smart_value(_data.get_yspeed_multiplier());
             }
             else
             {
-                yvelocity = smart_value(_data.get_yspeed());
+                physics_body.vel_y = smart_value(_data.get_yspeed());
             }
             
             rotation_increment = smart_value(_data.get_rotation_increment());
@@ -57,7 +64,7 @@ function spawn_particle(_x, _y, _id, _colour = c_white)
             timer_life_max = timer_life;
         }
         
-        return -1; // Indicate legacy system used
+        return -1;
     }
     
     // Use optimized pool system for simple particles
