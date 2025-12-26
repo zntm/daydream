@@ -110,6 +110,7 @@ function ProgParser(_tokens) constructor {
         if (match(PROG_TOKEN.FOR)) return parse_for_stmt();
         if (match(PROG_TOKEN.REPEAT)) return parse_repeat_stmt();
         
+        if (match(PROG_TOKEN.TRY)) return parse_try_stmt();
         if (match(PROG_TOKEN.BREAK)) {
             match(PROG_TOKEN.SEMICOLON); // Optional
             return new ProgASTBreakStmt();
@@ -147,7 +148,57 @@ function ProgParser(_tokens) constructor {
         return _statements;
     }
     
-    static parse_var_decl = function(_is_global = false) {
+    static parse_var_decl = function(_is_global = false, _require_semi = true) {
+        // Destructuring: var {a, b} = ... OR var [a, b] = ...
+        if (match(PROG_TOKEN.LBRACE)) {
+            // Object Destructuring
+            var _elements = [];
+            do {
+                // { key } or { key: var_name }
+                var _key = consume(PROG_TOKEN.IDENTIFIER, "Expected key in destructuring.").lexeme;
+                var _var_name = _key;
+                if (match(PROG_TOKEN.COLON)) {
+                    _var_name = consume(PROG_TOKEN.IDENTIFIER, "Expected variable name.").lexeme;
+                }
+                array_push(_elements, { key: _key, name: _var_name });
+            } until (!match(PROG_TOKEN.COMMA));
+            consume(PROG_TOKEN.RBRACE, "Expected '}' after destructuring pattern.");
+            
+            consume(PROG_TOKEN.ASSIGN, "Expected '=' in destructuring declaration.");
+            var _initializer = parse_expression();
+            if (_require_semi) match(PROG_TOKEN.SEMICOLON);
+            
+            return new ProgASTDestructuringDecl("object", _elements, _initializer);
+        }
+        else if (match(PROG_TOKEN.LBRACKET)) {
+            // Array Destructuring
+            var _elements = [];
+            do {
+                if (match(PROG_TOKEN.COMMA)) {
+                    // Skip element? Not supported in simple version yet.
+                    // Just expect identifiers.
+                    // But usually `var [a, , b]` is valid.
+                    // Let's assume strict identifiers for now.
+                    // Backtrack not possible easily.
+                    // match COMMA means empty slot? `var [, b]`.
+                    // My loop is `do .. until (!match(COMMA))`.
+                    // So explicit commas are consumed by loop condition.
+                    // If I hit a comma immediately? `match(IDENTIFIER)` fails.
+                    // Let's just consume Identifier.
+                }
+                var _name = consume(PROG_TOKEN.IDENTIFIER, "Expected variable name in array destructuring.").lexeme;
+                array_push(_elements, _name);
+            } until (!match(PROG_TOKEN.COMMA));
+            consume(PROG_TOKEN.RBRACKET, "Expected ']' after destructuring pattern.");
+            
+            consume(PROG_TOKEN.ASSIGN, "Expected '=' in destructuring declaration.");
+            var _initializer = parse_expression();
+            if (_require_semi) match(PROG_TOKEN.SEMICOLON);
+            
+             return new ProgASTDestructuringDecl("array", _elements, _initializer);
+        }
+        
+        // Normal Declaration
         var _name = consume(PROG_TOKEN.IDENTIFIER, "Expected variable name.").lexeme;
         var _initializer = undefined;
         
@@ -155,7 +206,7 @@ function ProgParser(_tokens) constructor {
             _initializer = parse_expression();
         }
         
-        match(PROG_TOKEN.SEMICOLON); // Optional
+        if (_require_semi) match(PROG_TOKEN.SEMICOLON);
         
         var _node = new ProgASTVarDecl(_name, _initializer);
         _node.is_global = _is_global;
@@ -211,25 +262,59 @@ function ProgParser(_tokens) constructor {
     }
     
     static parse_for_stmt = function() {
-        // for (init; cond; inc) body
-        // parens optional in GML if structured correctly, but usually needed for separator.
-        // Let's enforce parens for simplicity of parsing 3 parts, OR semi-colons.
-        // `for i = 0; i < 10; i++`
-        
-        // If parens used: `for (i=0; i<10; i++)`
         var _paren = match(PROG_TOKEN.LPAREN);
         
+        // Check for "for (var x in y)" or "for (x in y)"
+        // This is tricky because "var x" looks like init.
+        // We peek? Or we parse var decl without semi, then check for IN?
+        
         var _init = undefined;
-        if (!match(PROG_TOKEN.SEMICOLON)) {
-            if (match(PROG_TOKEN.VAR)) {
-                _init = parse_var_decl();
+        var _is_for_in = false;
+        var _for_in_var = undefined;
+        
+        if (match(PROG_TOKEN.VAR)) {
+            // var decl
+            // Must NOT consume semicolon yet to check for IN
+            _init = parse_var_decl(false, false); // _require_semi = false
+            
+            if (match(PROG_TOKEN.IN)) { // CHANGED check to match
+                 _is_for_in = true;
+                 // Extract variable name from decl
+                 if (_init.type == PROG_AST.VAR_DECL) _for_in_var = _init.name;
+                 else if (_init.type == PROG_AST.DESTRUCTURING_DECL) error_at_current("Destructuring in for-in not yet supported.");
             } else {
-                _init = parse_expression_statement(); // This consumes the semicolon usually?
+                 match(PROG_TOKEN.SEMICOLON); // Consume the semi we skipped
+            }
+        } 
+        else if (!match(PROG_TOKEN.SEMICOLON)) {
+            // Expression init: "for (i in list)" or "for (i = 0; ...)"
+            // Parse expression first, then check for IN keyword
+            var _expr = parse_expression();
+            
+            if (match(PROG_TOKEN.IN)) {
+                _is_for_in = true;
+                // Verify _expr is valid lvalue (Identifier)
+                if (_expr.type == PROG_AST.IDENTIFIER) _for_in_var = _expr.name;
+                else error_at_current("Expected identifier in for-in loop.");
+            } else {
+                // It's a normal for loop init. Convert to assignment if needed, then expect semicolon.
+                _expr = _convert_to_assignment(_expr);
+                match(PROG_TOKEN.SEMICOLON);
+                _init = new ProgASTExpressionStmt(_expr);
             }
         }
-        // Note: parse_var_decl/expression_stmt consumes trailing semicolon if present.
-        // If not present, we should expect one?
-        // `parse_expression_statement` consumes semicolon.
+        
+        if (_is_for_in) {
+            // for (var x IN ... ) or for (x IN ...)
+            // We already consumed IN.
+            var _collection = parse_expression();
+            if (_paren) consume(PROG_TOKEN.RPAREN, "Expected ')' after for-in.");
+            var _body = parse_statement();
+            return new ProgASTForInStmt(_for_in_var, _collection, _body);
+        }
+        
+        // Normal For Loop
+        // _init is already set (Block or ExpressionStmt)
         
         var _cond = undefined;
         if (!check(PROG_TOKEN.SEMICOLON)) {
@@ -239,10 +324,6 @@ function ProgParser(_tokens) constructor {
         
         var _inc = undefined;
         if (!check(PROG_TOKEN.RPAREN) && !check(PROG_TOKEN.LBRACE)) {
-            // Increment is an expression statement usually (i += 1)
-            // But w/o semicolon?
-            // Special handling: parse expression, check for assignment conversion
-            // We use `parse_expression` then convert to assignment just like `parse_expression_statement`.
             var _expr = parse_expression();
             _inc = _convert_to_assignment(_expr);
         }
@@ -252,6 +333,25 @@ function ProgParser(_tokens) constructor {
         var _body = parse_statement();
         
         return new ProgASTForStmt(_init, _cond, _inc, _body);
+    }
+    
+    static parse_try_stmt = function() {
+        consume(PROG_TOKEN.LBRACE, "Expected '{' before try block.");
+        var _try_block = new ProgASTBlock(parse_block());
+        
+        var _catch_var = undefined;
+        var _catch_block = undefined;
+        
+        if (match(PROG_TOKEN.CATCH)) {
+            if (match(PROG_TOKEN.LPAREN)) {
+                _catch_var = consume(PROG_TOKEN.IDENTIFIER, "Expected catch variable name.").lexeme;
+                consume(PROG_TOKEN.RPAREN, "Expected ')' after catch variable.");
+            }
+            consume(PROG_TOKEN.LBRACE, "Expected '{' before catch block.");
+            _catch_block = new ProgASTBlock(parse_block());
+        }
+        
+        return new ProgASTTryStmt(_try_block, _catch_var, _catch_block);
     }
     
     static parse_switch_stmt = function() {
@@ -349,11 +449,29 @@ function ProgParser(_tokens) constructor {
     // ----------------------------------------------------------------------------
     
     static parse_expression = function() {
-        return parse_ternary();
+        return parse_assignment();
+    }
+    
+    static parse_assignment = function() {
+        var _expr = parse_ternary();
+        
+        if (match(PROG_TOKEN.ASSIGN) || match(PROG_TOKEN.PLUS_ASSIGN) || match(PROG_TOKEN.MINUS_ASSIGN) ||
+            match(PROG_TOKEN.STAR_ASSIGN) || match(PROG_TOKEN.SLASH_ASSIGN)) {
+            var _op = tokens[current - 1].type;
+            var _value = parse_expression(); // Right associative? usually parse_assignment() to allow a=b=c
+                                            // parse_expression calls parse_assignment so it works.
+                                            
+            if (_expr.type == PROG_AST.IDENTIFIER || _expr.type == PROG_AST.INDEX || _expr.type == PROG_AST.MEMBER) {
+                return new ProgASTAssignment(_expr, _value, _op);
+            }
+            error_at_current("Invalid assignment target.");
+        }
+        
+        return _expr;
     }
     
     static parse_ternary = function() {
-        var _expr = parse_logic_or();
+        var _expr = parse_null_coalescing();
         
         if (match(PROG_TOKEN.QUESTION)) {
             var _true_branch = parse_expression();
@@ -362,6 +480,15 @@ function ProgParser(_tokens) constructor {
             return new ProgASTTernary(_expr, _true_branch, _false_branch);
         }
         
+        return _expr;
+    }
+    
+    static parse_null_coalescing = function() {
+        var _expr = parse_logic_or();
+        while (match(PROG_TOKEN.NULL_COALESCE)) {
+            var _right = parse_logic_or(); 
+            _expr = new ProgASTBinaryOp(PROG_TOKEN.NULL_COALESCE, _expr, _right);
+        }
         return _expr;
     }
     
@@ -470,7 +597,7 @@ function ProgParser(_tokens) constructor {
             return new ProgASTPrefixOp(_op, _target);
         }
         
-        if (check(PROG_TOKEN.NOT) || check(PROG_TOKEN.MINUS)) {
+        if (check(PROG_TOKEN.SPREAD) || check(PROG_TOKEN.NOT) || check(PROG_TOKEN.MINUS)) {
             var _op = advance().type;
             var _right = parse_unary();
             return new ProgASTUnaryOp(_op, _right);

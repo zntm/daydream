@@ -6,10 +6,15 @@
 function proglang_execute(_source, _context = {}) {
     var _bytecode = proglang_compile(_source);
     
+    if (_bytecode == undefined) {
+        show_debug_message("[Proglang Execute] Compilation failed.");
+        return undefined;
+    }
+    
     var _vm = new ProgVM();
     
     // Extract functions from bytecode and register them
-    if (struct_exists(_bytecode, "constants")) { // Function definitions are in constants
+    if (variable_struct_exists(_bytecode, "constants")) { // Function definitions are in constants
         for (var i = 0; i < array_length(_bytecode.constants); i++) {
             var _const = _bytecode.constants[i];
             if (is_struct(_const) && variable_struct_exists(_const, "type") && _const.type == "function") {

@@ -10,7 +10,9 @@ enum PROG_AST {
     // Statements  
     VAR_DECL, GLOBAL_DECL, IF_STMT, WHILE_STMT, FOR_STMT, REPEAT_STMT,
     BREAK_STMT, CONTINUE_STMT, RETURN_STMT, BLOCK,
-    EXPRESSION_STMT, SWITCH_STMT, FUNC_DECL
+    EXPRESSION_STMT, SWITCH_STMT, FUNC_DECL,
+    // New
+    FOR_IN_STMT, TRY_STMT, DESTRUCTURING_DECL
 }
 
 /// @desc Base AST node
@@ -174,4 +176,27 @@ function ProgASTFuncDecl(_name, _params, _body, _is_global = false) : ProgASTNod
     params = _params; // Array of parameter names
     body = _body; // Block
     is_global = _is_global;
+}
+
+/// @desc For-In statement (for var in collection)
+function ProgASTForInStmt(_variable, _collection, _body) : ProgASTNode(PROG_AST.FOR_IN_STMT) constructor {
+    variable = _variable; // Identifier string
+    collection = _collection; // Expression
+    body = _body;
+}
+
+/// @desc Try-Catch statement
+function ProgASTTryStmt(_try_block, _catch_var, _catch_block) : ProgASTNode(PROG_AST.TRY_STMT) constructor {
+    try_block = _try_block;
+    catch_var = _catch_var; // Identifier string for error variable
+    catch_block = _catch_block;
+}
+
+/// @desc Destructuring Declaration (var {a, b} = obj)
+// pattern_type: "array" or "object"
+// elements: Array of strings (for array) or structs {key, name} (for object)
+function ProgASTDestructuringDecl(_pattern_type, _elements, _initializer) : ProgASTNode(PROG_AST.DESTRUCTURING_DECL) constructor {
+    pattern_type = _pattern_type; 
+    elements = _elements; 
+    initializer = _initializer; 
 }
