@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"ProgLexer",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"ProgLexer",
+  "parent":{
+    "name":"Proglang",
+    "path":"folders/Scripts/Proglang.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

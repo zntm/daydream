@@ -329,6 +329,34 @@ global.command_data[$ "value"] = new CommandData()
             chat_add(undefined, $"Destroyed value '{_name}'"); 
         }));
 
+global.command_data[$ "proglang"] = new CommandData()
+    .set_description("Manage Proglang system")
+    .add_subcommand("test", new CommandData()
+        .set_description("Run Proglang test suite")
+        .set_function(function()
+        {
+            var _result = proglang_test();
+            chat_add(undefined, _result ? "[Proglang] Tests PASSED" : "[Proglang] Tests FAILED");
+        }))
+    .add_subcommand("run", new CommandData()
+        .set_description("Run a Proglang script")
+        .set_function(function()
+        {
+            var _source = @"
+                var a = 10;
+                var b = 20;
+                log('Hello from Proglang!');
+                return a + b;
+            ";
+            
+            try {
+                var _result = proglang_execute(_source);
+                chat_add(undefined, $"[Proglang] Result: {_result}");
+            } catch (_e) {
+                chat_add(undefined, $"[Proglang] Error: {_e}");
+            }
+        }));
+
 global.command_data_names = struct_get_names(global.command_data);
 
 array_sort(global.command_data_names, sort_alphabetical_descending);
