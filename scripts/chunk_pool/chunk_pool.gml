@@ -1,180 +1,218 @@
-/// @desc Chunk pooling system to reduce memory allocation overhead
-/// Recycles chunks instead of creating/destroying them
+/// @desc Chunk pooling system using constructor-based structs
+/// Replaces obj_Chunk instances with lightweight struct management
 
 // Note: Ensure Pool script is loaded before this or in same group
+
+/// Chunk state flags
+enum CHUNK_BOOLEAN {
+    GENERATED                = 1 << 0,
+    SURFACE_LIGHTING_REFRESH = 1 << 1,
+    QUEUED                   = 1 << 2,
+    DIRTY                    = 1 << 3,
+    TILE_PROCESSED           = 1 << 4
+}
+
+/// @function Chunk(_x, _y)
+/// @desc Constructor for chunk data struct - replaces obj_Chunk
+/// @param {real} _x Pixel X position
+/// @param {real} _y Pixel Y position
+function Chunk(_x, _y) constructor
+{
+    // Position (replaces instance x/y)
+    x = _x;
+    y = _y;
+    chunk_xstart = floor(_x / CHUNK_SIZE);
+    chunk_ystart = floor(_y / CHUNK_SIZE);
+    xcenter = _x - (TILE_SIZE / 2) + (CHUNK_SIZE_DIMENSION / 2);
+    ycenter = _y - (TILE_SIZE / 2) + (CHUNK_SIZE_DIMENSION / 2);
+    
+    // Tile data
+    chunk = array_create(CHUNK_SIZE * CHUNK_SIZE * CHUNK_DEPTH, TILE_EMPTY);
+    chunk_covered = array_create(CHUNK_SIZE);
+    chunk_covered_surface = -1;
+    chunk_covered_surface_refresh = true;
+    chunk_render_state = [];
+    
+    // Skew arrays for foliage animation
+    chunk_skew_back = array_create(CHUNK_SIZE * CHUNK_SIZE, 0);
+    chunk_skew_back_to = array_create(CHUNK_SIZE * CHUNK_SIZE, 0);
+    chunk_skew_front = array_create(CHUNK_SIZE * CHUNK_SIZE, 0);
+    chunk_skew_front_to = array_create(CHUNK_SIZE * CHUNK_SIZE, 0);
+    
+    // Liquid wave arrays
+    chunk_wave = array_create(CHUNK_SIZE * CHUNK_SIZE, 0);
+    chunk_wave_to = array_create(CHUNK_SIZE * CHUNK_SIZE, 0);
+    
+    // Rendering
+    chunk_vertex_buffer = array_create(CHUNK_DEPTH, -1);
+    chunk_count = array_create(CHUNK_DEPTH, 0);
+    chunk_display = 0;
+    surface_lighting = -1;
+    
+    // State flags
+    boolean = CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH;
+}
+
+/// @function ChunkPool()
+/// @desc Pool manager for chunk structs
 function ChunkPool() : Pool() constructor
 {
     max_size = 32;
     
     static create = function()
     {
-        // Must be created at 0,0 initially, will be moved
-        return instance_create_layer(0, 0, "Instances", obj_Chunk);
+        return new Chunk(0, 0);
     }
     
-    static reset = function(_inst, _x, _y)
+    /// @function reset(_chunk, _x, _y)
+    /// @desc Reset and reinitialize a chunk at new position
+    static reset = function(_chunk, _x, _y)
     {
-        with (_inst)
+        // Reset position
+        _chunk.x = _x;
+        _chunk.y = _y;
+        _chunk.chunk_xstart = floor(_x / CHUNK_SIZE);
+        _chunk.chunk_ystart = floor(_y / CHUNK_SIZE);
+        _chunk.xcenter = _x - (TILE_SIZE / 2) + (CHUNK_SIZE_DIMENSION / 2);
+        _chunk.ycenter = _y - (TILE_SIZE / 2) + (CHUNK_SIZE_DIMENSION / 2);
+        
+        // Clear tile data
+        var _chunk_size = CHUNK_SIZE * CHUNK_SIZE * CHUNK_DEPTH;
+        for (var i = 0; i < _chunk_size; ++i)
         {
-            // Reset position
-            x = _x;
-            y = _y;
-            chunk_xstart = floor(_x / CHUNK_SIZE);
-            chunk_ystart = floor(_y / CHUNK_SIZE);
-            xcenter = _x - (TILE_SIZE / 2) + (CHUNK_SIZE_DIMENSION / 2);
-            ycenter = _y - (TILE_SIZE / 2) + (CHUNK_SIZE_DIMENSION / 2);
-            
-            // Clear tile data
-            var _chunk_size = CHUNK_SIZE * CHUNK_SIZE * CHUNK_DEPTH;
-            for (var i = 0; i < _chunk_size; ++i)
+            var _tile = _chunk.chunk[i];
+            if (_tile != TILE_EMPTY)
             {
-                var _tile = chunk[i];
-                if (_tile != TILE_EMPTY)
-                {
-                    delete _tile;
-                }
-                chunk[@ i] = TILE_EMPTY;
+                delete _tile;
             }
-            
-            // Clear chunk covered
-            for (var i = 0; i < CHUNK_SIZE; ++i)
-            {
-                chunk_covered[@ i] = 0;
-            }
-            
-            // Clear count array
-            for (var i = 0; i < CHUNK_DEPTH; ++i)
-            {
-                chunk_count[@ i] = 0;
-            }
-            
-            // Clear skew arrays (16x16 = 256)
-            var _skew_size = CHUNK_SIZE * CHUNK_SIZE;
-            for (var i = 0; i < _skew_size; ++i)
-            {
-                chunk_skew_back[@ i] = 0;
-                chunk_skew_back_to[@ i] = 0;
-                chunk_skew_front[@ i] = 0;
-                chunk_skew_front_to[@ i] = 0;
-            }
-            
-            chunk_display = 0;
-            boolean = CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH;
-            chunk_covered_surface_refresh = true;
-            
-            global.render_state_pool.clear_list(chunk_render_state);
-            
-            // Register at new position
-            chunk_map_register(id);
-            
-            // Regenerate structures and generate chunk
-            control_structure(chunk_xstart, chunk_ystart);
-            
-            var _is_loaded = file_load_world_chunk(global.world_save_data, id);
-            
-            if (!_is_loaded)
-            {
-                chunk_generate();
-                boolean |= CHUNK_BOOLEAN.GENERATED;
-            }
-            else
-            {
-                boolean |= CHUNK_BOOLEAN.GENERATED;
-            }
-            
-            // Trigger lighting refresh
-            obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.LIGHTING;
+            _chunk.chunk[@ i] = TILE_EMPTY;
         }
         
+        // Clear chunk covered
+        for (var i = 0; i < CHUNK_SIZE; ++i)
+        {
+            _chunk.chunk_covered[@ i] = 0;
+        }
+        
+        // Clear count array
+        for (var i = 0; i < CHUNK_DEPTH; ++i)
+        {
+            _chunk.chunk_count[@ i] = 0;
+        }
+        
+        // Clear skew arrays (16x16 = 256)
+        var _skew_size = CHUNK_SIZE * CHUNK_SIZE;
+        for (var i = 0; i < _skew_size; ++i)
+        {
+            _chunk.chunk_skew_back[@ i] = 0;
+            _chunk.chunk_skew_back_to[@ i] = 0;
+            _chunk.chunk_skew_front[@ i] = 0;
+            _chunk.chunk_skew_front_to[@ i] = 0;
+        }
+        
+        _chunk.chunk_display = 0;
+        _chunk.boolean = CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH;
+        _chunk.chunk_covered_surface_refresh = true;
+        
+        global.render_state_pool.clear_list(_chunk.chunk_render_state);
+        
+        // Register at new position
+        chunk_map_register(_chunk);
+        
+        // Regenerate structures and generate chunk
+        control_structure(_chunk.chunk_xstart, _chunk.chunk_ystart);
+        
+        var _is_loaded = file_load_world_chunk(global.world_save_data, _chunk);
+        
+        if (!_is_loaded)
+        {
+            chunk_generate(_chunk);
+            _chunk.boolean |= CHUNK_BOOLEAN.GENERATED;
+        }
+        else
+        {
+            _chunk.boolean |= CHUNK_BOOLEAN.GENERATED;
+        }
+        
+        // Trigger lighting refresh
+        obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.LIGHTING;
+        
         // Defer tile processing to the queue for smooth loading
-        array_push(global.chunk_tile_process_queue, _inst);
+        array_push(global.chunk_tile_process_queue, _chunk);
     }
 
     static acquire = function(_x, _y)
     {
-        var _inst = get_free_item();
+        var _chunk = get_free_item();
         
-        // Reactivate and reset the chunk
-        instance_activate_object(_inst);
-        reset(_inst, _x, _y);
+        // Reset the chunk at new position
+        reset(_chunk, _x, _y);
         
-        return _inst;
+        return _chunk;
     }
     
-    static on_release = function(_inst)
+    static on_release = function(_chunk)
     {
-        if (!instance_exists(_inst)) return;
-        
         // Unregister from map
-        chunk_map_unregister(_inst);
+        chunk_map_unregister(_chunk);
         
         // Clean render states
-        if (variable_instance_exists(_inst, "chunk_render_state") && is_array(_inst.chunk_render_state))
+        if (is_array(_chunk.chunk_render_state))
         {
-            global.render_state_pool.clear_list(_inst.chunk_render_state);
+            global.render_state_pool.clear_list(_chunk.chunk_render_state);
         }
         
         // Clear vertex buffers
         for (var i = 0; i < CHUNK_DEPTH; ++i)
         {
-             if (vertex_buffer_exists(_inst.chunk_vertex_buffer[i]))
+             if (vertex_buffer_exists(_chunk.chunk_vertex_buffer[i]))
              {
-                 vertex_delete_buffer(_inst.chunk_vertex_buffer[i]);
+                 vertex_delete_buffer(_chunk.chunk_vertex_buffer[i]);
              }
-             _inst.chunk_vertex_buffer[@ i] = -1;
+             _chunk.chunk_vertex_buffer[@ i] = -1;
         }
         
         // Free surfaces
-        if (surface_exists(_inst.surface_lighting))
+        if (surface_exists(_chunk.surface_lighting))
         {
-            surface_free(_inst.surface_lighting);
-            _inst.surface_lighting = -1;
+            surface_free(_chunk.surface_lighting);
+            _chunk.surface_lighting = -1;
         }
-        if (surface_exists(_inst.chunk_covered_surface))
+        if (surface_exists(_chunk.chunk_covered_surface))
         {
-            surface_free(_inst.chunk_covered_surface);
-            _inst.chunk_covered_surface = -1;
+            surface_free(_chunk.chunk_covered_surface);
+            _chunk.chunk_covered_surface = -1;
         }
-        
-        // Deactivate
-        instance_deactivate_object(_inst);
     }
     
-    static destroy = function(_inst)
+    static destroy = function(_chunk)
     {
-        if (instance_exists(_inst))
-        {
-            instance_destroy(_inst);
-        }
+        // Cleanup resources before GC
+        on_release(_chunk);
     }
     
     // Override release to check capacity
-    static release = function(_inst)
+    static release = function(_chunk)
     {
-        if (!instance_exists(_inst)) return;
-        
         if (array_length(pool) < max_size)
         {
-            on_release(_inst);
-            array_push(pool, _inst);
+            on_release(_chunk);
+            array_push(pool, _chunk);
         }
         else
         {
-            // Pool full - proper cleanup is still needed inside on_release logic?
-            // Actually, if we destroy it, standard Destroy Event might handle some things?
-            // But checking manual cleanup:
-            chunk_map_unregister(_inst); // Ensure map is clean
-            // Render state pool cleanup might be needed if not done in Destroy event
-             if (variable_instance_exists(_inst, "chunk_render_state") && is_array(_inst.chunk_render_state))
+            // Pool full - cleanup and let GC handle
+            chunk_map_unregister(_chunk);
+            
+            if (is_array(_chunk.chunk_render_state))
             {
-                global.render_state_pool.clear_list(_inst.chunk_render_state);
+                global.render_state_pool.clear_list(_chunk.chunk_render_state);
             }
             
-            instance_destroy(_inst);
+            // Clean vertex buffers and surfaces
+            on_release(_chunk);
         }
     }
 }
 
 global.chunk_pool = new ChunkPool();
-
-

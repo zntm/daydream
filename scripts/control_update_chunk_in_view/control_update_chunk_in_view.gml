@@ -26,11 +26,11 @@ function control_update_chunk_in_view()
             
             if (_y < 0) || (_y >= _world_height * TILE_SIZE) continue;
             
-            var _inst = chunk_map_get(_x, _y);
+            var _chunk = chunk_map_get(_x, _y);
             
-            if (instance_exists(_inst))
+            if (_chunk != undefined)
             {
-                obj_Game_Control.chunk_in_view[@ _index++] = _inst;
+                obj_Game_Control.chunk_in_view[@ _index++] = _chunk;
             }
         }
     }

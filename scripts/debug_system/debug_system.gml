@@ -174,7 +174,7 @@ function debug_step()
         var _camera_width = global.camera_width;
         var _camera_height = global.camera_height;
         
-        var _semver = $"{PROGRAM_VERSION_MAJOR}.{PROGRAM_VERSION_MINOR}.{PROGRAM_VERSION_PATCH}";
+        var _semver = program_get_version();
         
         var _text = 
             "Performance:\n" +
@@ -190,7 +190,7 @@ function debug_step()
             "World:\n" +
             $"Time: {global.world_save_data.time}\n" +
             $"Seed: {global.world_save_data.seed}\n" +
-            $"Chunks Loaded: {instance_number(obj_Chunk)}\n" +
+            $"Chunks Loaded: {chunk_map_count()}\n" +
             $"Total Instances: {instance_number(all)}\n\n" +
             
             $"Version: {_semver}";

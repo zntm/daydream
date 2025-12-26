@@ -17,18 +17,18 @@ function chunk_queue_init()
     global.chunk_tile_process_queue = [];
 }
 
-/// @function chunk_queue_add(_inst, _priority)
+/// @function chunk_queue_add(_chunk, _priority)
 /// @desc Add a chunk to the generation queue
-/// @param {Id.Instance} _inst Chunk instance to generate
+/// @param {Struct.Chunk} _chunk Chunk struct to generate
 /// @param {real} _priority Priority (lower = higher priority, typically distance to player)
-function chunk_queue_add(_inst, _priority)
+function chunk_queue_add(_chunk, _priority)
 {
-    if (!instance_exists(_inst)) exit;
-    if (_inst.boolean & CHUNK_BOOLEAN.GENERATED) exit;
-    if (_inst.boolean & CHUNK_BOOLEAN.QUEUED) exit;
+    if (_chunk == undefined) exit;
+    if (_chunk.boolean & CHUNK_BOOLEAN.GENERATED) exit;
+    if (_chunk.boolean & CHUNK_BOOLEAN.QUEUED) exit;
     
-    _inst.boolean |= CHUNK_BOOLEAN.QUEUED;
-    ds_priority_add(global.chunk_gen_queue, _inst, _priority);
+    _chunk.boolean |= CHUNK_BOOLEAN.QUEUED;
+    ds_priority_add(global.chunk_gen_queue, _chunk, _priority);
 }
 
 /// @function chunk_queue_process(_player_x, _player_y)
@@ -56,29 +56,26 @@ function chunk_queue_process(_player_x, _player_y)
         // Check max chunks per frame
         if (_chunks_generated >= CHUNK_GEN_MAX_PER_FRAME) break;
         
-        var _inst = ds_priority_delete_min(_queue);
+        var _chunk = ds_priority_delete_min(_queue);
         
-        if (!instance_exists(_inst)) continue;
+        if (_chunk == undefined) continue;
         
         // Clear queued flag
-        _inst.boolean &= ~CHUNK_BOOLEAN.QUEUED;
+        _chunk.boolean &= ~CHUNK_BOOLEAN.QUEUED;
         
         // Skip if already generated
-        if (_inst.boolean & CHUNK_BOOLEAN.GENERATED) continue;
+        if (_chunk.boolean & CHUNK_BOOLEAN.GENERATED) continue;
         
         // Generate the chunk (just creates tile data, doesn't connect)
-        with (_inst)
-        {
-            chunk_generate();
-            
-            boolean |= CHUNK_BOOLEAN.GENERATED | CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH;
-            
-            // Trigger global lighting refresh
-            obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.LIGHTING;
-        }
+        chunk_generate(_chunk);
+        
+        _chunk.boolean |= CHUNK_BOOLEAN.GENERATED | CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH;
+        
+        // Trigger global lighting refresh
+        obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.LIGHTING;
         
         // Queue for deferred tile processing
-        array_push(global.chunk_tile_process_queue, _inst);
+        array_push(global.chunk_tile_process_queue, _chunk);
         
         _chunks_generated++;
     }
@@ -101,43 +98,43 @@ function chunk_tile_process_queue_process()
         // Check time budget
         if ((get_timer() - _start_time) > _budget_us) break;
         
-        var _inst = _queue[0];
+        var _chunk = _queue[0];
         
-        if (!instance_exists(_inst))
+        if (_chunk == undefined)
         {
             array_delete(_queue, 0, 1);
             continue;
         }
         
         // Process tile instances for this chunk
-        with (_inst)
+        var _chunk_array = _chunk.chunk;
+        var _chunk_xstart = _chunk.chunk_xstart;
+        var _chunk_ystart = _chunk.chunk_ystart;
+        var _chunk_display = _chunk.chunk_display;
+        
+        for (var _tile_z = 0; _tile_z < CHUNK_DEPTH; ++_tile_z)
         {
-            var _chunk = chunk;
+            if !(_chunk_display & (1 << _tile_z)) continue;
             
-            for (var _tile_z = 0; _tile_z < CHUNK_DEPTH; ++_tile_z)
+            for (var _tile_y = 0; _tile_y < CHUNK_SIZE; ++_tile_y)
             {
-                if !(chunk_display & (1 << _tile_z)) continue;
-                
-                for (var _tile_y = 0; _tile_y < CHUNK_SIZE; ++_tile_y)
+                for (var _tile_x = 0; _tile_x < CHUNK_SIZE; ++_tile_x)
                 {
-                    for (var _tile_x = 0; _tile_x < CHUNK_SIZE; ++_tile_x)
-                    {
-                        var _world_x = chunk_xstart + _tile_x;
-                        var _world_y = chunk_ystart + _tile_y;
-                        
-                        var _tile = _chunk[tile_index_xyz(_tile_x, _tile_y, _tile_z)];
-                        
-                        if (_tile == TILE_EMPTY) continue;
-                        
-                        tile_instance_create(_world_x, _world_y, _tile_z, _tile);
-                        tile_connect(_world_x, _world_y, _tile_z, _tile);
-                    }
+                    var _world_x = _chunk_xstart + _tile_x;
+                    var _world_y = _chunk_ystart + _tile_y;
+                    
+                    var _tile = _chunk_array[tile_index_xyz(_tile_x, _tile_y, _tile_z)];
+                    
+                    if (_tile == TILE_EMPTY) continue;
+                    
+                    tile_instance_create(_world_x, _world_y, _tile_z, _tile);
+                    tile_connect(_world_x, _world_y, _tile_z, _tile);
                 }
             }
         }
         
         // Mark chunk as ready for rendering
-        _inst.boolean |= CHUNK_BOOLEAN.TILE_PROCESSED;
+        _chunk.boolean |= CHUNK_BOOLEAN.TILE_PROCESSED;
         
         array_delete(_queue, 0, 1);
     }
@@ -150,11 +147,11 @@ function chunk_queue_clear()
     // Clear queued flags from all chunks in queue
     while (!ds_priority_empty(global.chunk_gen_queue))
     {
-        var _inst = ds_priority_delete_min(global.chunk_gen_queue);
+        var _chunk = ds_priority_delete_min(global.chunk_gen_queue);
         
-        if (instance_exists(_inst))
+        if (_chunk != undefined)
         {
-            _inst.boolean &= ~CHUNK_BOOLEAN.QUEUED;
+            _chunk.boolean &= ~CHUNK_BOOLEAN.QUEUED;
         }
     }
 }

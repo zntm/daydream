@@ -1,4 +1,7 @@
-function chunk_generate()
+/// @function chunk_generate(_chunk)
+/// @desc Generate terrain for a chunk
+/// @param {Struct.Chunk} _chunk The chunk to generate
+function chunk_generate(_chunk)
 {
     static __cave_bit = array_create(CHUNK_SIZE);
     static __surface_height = array_create(CHUNK_SIZE);
@@ -27,11 +30,14 @@ function chunk_generate()
     
     var _world_seed = _world_save_data.seed;
     
-    var _world_seed = _world_save_data.seed;
+    var _chunk_xstart = _chunk.chunk_xstart;
+    var _chunk_ystart = _chunk.chunk_ystart;
+    var _chunk_x = _chunk.x;
+    var _chunk_y = _chunk.y;
     
     for (var i = 0; i < CHUNK_SIZE; ++i)
     {
-        var _world_x = chunk_xstart + i;
+        var _world_x = _chunk_xstart + i;
         
         // Pass cached world_data
         var _surface_height = worldgen_get_surface_height(_world_x, _world_seed, _world_data);
@@ -45,7 +51,7 @@ function chunk_generate()
         
         for (var j = 0; j < CHUNK_SIZE + 2; ++j)
         {
-            var _world_y = chunk_ystart + j - 1;
+            var _world_y = _chunk_ystart + j - 1;
             
             // Pass cached world_data
             _cave_bit |= worldgen_get_cave(_world_x, _world_y, _surface_height, _cave_start, _world_seed, _world_data) << j;
@@ -55,10 +61,10 @@ function chunk_generate()
     }
     
     var _structure_rectangle_length = collision_rectangle_list(
-        x - (TILE_SIZE / 2),
-        y - (TILE_SIZE / 2),
-        x - (TILE_SIZE / 2) + CHUNK_SIZE_DIMENSION,
-        y - (TILE_SIZE / 2) + CHUNK_SIZE_DIMENSION,
+        _chunk_x - (TILE_SIZE / 2),
+        _chunk_y - (TILE_SIZE / 2),
+        _chunk_x - (TILE_SIZE / 2) + CHUNK_SIZE_DIMENSION,
+        _chunk_y - (TILE_SIZE / 2) + CHUNK_SIZE_DIMENSION,
         obj_Structure,
         false,
         true,
@@ -66,7 +72,7 @@ function chunk_generate()
         false
     );
     
-    if (_structure_rectangle_length <= 0) && (_surface_height_max > chunk_ystart + CHUNK_SIZE - 1) exit;
+    if (_structure_rectangle_length <= 0) && (_surface_height_max > _chunk_ystart + CHUNK_SIZE - 1) exit;
     
     for (var i = 0; i < _structure_rectangle_length; ++i)
     {
@@ -75,9 +81,14 @@ function chunk_generate()
     
     ds_list_clear(__structure_list_rectangle);
     
+    // Cache chunk arrays for performance
+    var _chunk_array = _chunk.chunk;
+    var _chunk_count = _chunk.chunk_count;
+    var _chunk_covered = _chunk.chunk_covered;
+    
     for (var i = 0; i < CHUNK_SIZE; ++i)
     {
-        var _world_x = chunk_xstart + i;
+        var _world_x = _chunk_xstart + i;
         
         var _inst_x = _world_x * TILE_SIZE;
         
@@ -85,7 +96,7 @@ function chunk_generate()
         
         var _cave_bit = __cave_bit[i];
         
-        var _xorshift = xorshift(_world_seed ^ ((_world_x + chunk_ystart) * _surface_height));
+        var _xorshift = xorshift(_world_seed ^ ((_world_x + _chunk_ystart) * _surface_height));
         
         // Hoisted optimizations
         var _heat_surface = worldgen_get_heat(_world_x, 0, _world_seed, _world_data);
@@ -98,7 +109,7 @@ function chunk_generate()
         
         for (var j = 0; j < CHUNK_SIZE; ++j)
         {
-            var _world_y = chunk_ystart + j;
+            var _world_y = _chunk_ystart + j;
             
             var _inst_y = _world_y * TILE_SIZE;
             
@@ -150,20 +161,20 @@ function chunk_generate()
                             _skip_z |= 1 << m;
                         }
                         
-                        chunk[@ (m << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = _tile;
+                        _chunk_array[@ (m << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = _tile;
                         
                         if (_tile != TILE_EMPTY)
                         {
-                            ++chunk_count[@ m];
+                            ++_chunk_count[@ m];
                             
-                            chunk_display |= 1 << m;
+                            _chunk.chunk_display |= 1 << m;
                         }
                         
                         var _ = _item_data[$ _tile.get_id()];
                         
                         if ((1 << m) & ((1 << CHUNK_DEPTH_DEFAULT) | (1 << CHUNK_DEPTH_WALL))) && (_.has_type(ITEM_TYPE_BIT.SOLID | ITEM_TYPE_BIT.UNTOUCHABLE)) && (!_.is_transparent())
                         {
-                            chunk_covered[@ i] |= 1 << j;
+                            _chunk_covered[@ i] |= 1 << j;
                         }
                     }
                     
@@ -189,17 +200,17 @@ function chunk_generate()
                         var _id = _tile_base.id;
                         var _data = _item_data[$ _id];
                         
-                        ++chunk_count[@ CHUNK_DEPTH_DEFAULT];
+                        ++_chunk_count[@ CHUNK_DEPTH_DEFAULT];
                         
-                        chunk[@ (CHUNK_DEPTH_DEFAULT << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_id)
+                        _chunk_array[@ (CHUNK_DEPTH_DEFAULT << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_id)
                             .set_index(smart_value(_data.get_placement_index()))
                             .set_index_offset(smart_value(_data.get_placement_index_offset()));
                         
-                        chunk_display |= 1 << CHUNK_DEPTH_DEFAULT;
+                        _chunk.chunk_display |= 1 << CHUNK_DEPTH_DEFAULT;
                         
                         if (_data.has_type(ITEM_TYPE_BIT.SOLID | ITEM_TYPE_BIT.UNTOUCHABLE)) && (!_data.is_transparent())
                         {
-                            chunk_covered[@ i] |= 1 << j;
+                            _chunk_covered[@ i] |= 1 << j;
                         }
                     }
                 }
@@ -213,17 +224,17 @@ function chunk_generate()
                         var _id = _tile_wall.id;
                         var _data = _item_data[$ _id];
                         
-                        ++chunk_count[@ CHUNK_DEPTH_WALL];
+                        ++_chunk_count[@ CHUNK_DEPTH_WALL];
                         
-                        chunk[@ (CHUNK_DEPTH_WALL << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_id)
+                        _chunk_array[@ (CHUNK_DEPTH_WALL << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_id)
                             .set_index(smart_value(_data.get_placement_index()))
                             .set_index_offset(smart_value(_data.get_placement_index_offset()));
                         
-                        chunk_display |= 1 << CHUNK_DEPTH_WALL;
+                        _chunk.chunk_display |= 1 << CHUNK_DEPTH_WALL;
                         
                         if (_data.has_type(ITEM_TYPE_BIT.SOLID | ITEM_TYPE_BIT.UNTOUCHABLE)) && (!_data.is_transparent())
                         {
-                            chunk_covered[@ i] |= 1 << j;
+                            _chunk_covered[@ i] |= 1 << j;
                         }
                     }
                 }
@@ -246,14 +257,14 @@ function chunk_generate()
                         var _id = _tile_foliage.id;
                         var _data = _item_data[$ _id];
                         
-                        ++chunk_count[@ _z];
+                        ++_chunk_count[@ _z];
                         
-                        chunk[@ (_z << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_id)
+                        _chunk_array[@ (_z << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_id)
                             .set_xscale(((_data.can_flip_on_x()) && (_xorshift & (1 << (CHUNK_SIZE + j)))) ? -1 : 1)
                             .set_index(smart_value(_data.get_placement_index()))
                             .set_index_offset(smart_value(_data.get_placement_index_offset()));
                         
-                        chunk_display |= 1 << _z;
+                        _chunk.chunk_display |= 1 << _z;
                     }
                 }
             }

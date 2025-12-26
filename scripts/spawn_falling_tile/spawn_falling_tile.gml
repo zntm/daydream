@@ -64,7 +64,7 @@ function spawn_falling_tile(_world_x, _world_y, _tile_z, _tile)
     
     // Mark chunk as needing vertex buffer rebuild
     var _chunk = chunk_map_get(_pixel_x, _pixel_y);
-    if (instance_exists(_chunk))
+    if (_chunk != undefined)
     {
         _chunk.boolean |= CHUNK_BOOLEAN.DIRTY;
     }

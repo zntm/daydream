@@ -10,15 +10,15 @@ function tile_update_surrounding(_x, _y, _z, _xoffset = 2, _yoffset = 2)
     {
         for (var j = _ystart; j <= _yend; ++j)
         {
-            var _inst = chunk_map_get_by_tile(i, j);
+            var _chunk = chunk_map_get_by_tile(i, j);
             
             for (var l = 0; l < CHUNK_DEPTH; ++l)
             {
                 tile_update(i, j, l);
                 
-                if (instance_exists(_inst))
+                if (_chunk != undefined)
                 {
-                    var _vertex_buffer = _inst.chunk_vertex_buffer[l];
+                    var _vertex_buffer = _chunk.chunk_vertex_buffer[l];
                     
                     if (vertex_buffer_exists(_vertex_buffer))
                     {

@@ -1,6 +1,8 @@
 #macro CHUNK_REGION_SIZE 8
 
-function file_save_world_chunk(_world_save_data, _inst)
+/// @function file_save_world_chunk(_world_save_data, _chunk)
+/// @param {Struct.Chunk} _chunk The chunk struct to save
+function file_save_world_chunk(_world_save_data, _chunk)
 {
     // ==========================================================================================
     // 1. PREPARE DATA & CONTEXT
@@ -9,8 +11,8 @@ function file_save_world_chunk(_world_save_data, _inst)
     var _item_data = global.item_data;
     var _world_data = global.world_data[$ _world_save_data.dimension];
     
-    var _chunk_x = _inst.chunk_xstart / CHUNK_SIZE;
-    var _chunk_y = _inst.chunk_ystart / CHUNK_SIZE;
+    var _chunk_x = _chunk.chunk_xstart / CHUNK_SIZE;
+    var _chunk_y = _chunk.chunk_ystart / CHUNK_SIZE;
     
     var _region_x = floor(_chunk_x / CHUNK_REGION_SIZE);
     var _region_y = floor(_chunk_y / CHUNK_REGION_SIZE);
@@ -26,8 +28,8 @@ function file_save_world_chunk(_world_save_data, _inst)
     buffer_write(_current_chunk_buffer, buffer_u32, PROGRAM_VERSION_NUMBER);
     buffer_write(_current_chunk_buffer, buffer_f64, datetime_to_unix());
     
-    var _is_generated = !!(_inst.boolean & CHUNK_BOOLEAN.GENERATED);
-    var _chunk_display = _inst.chunk_display;
+    var _is_generated = !!(_chunk.boolean & CHUNK_BOOLEAN.GENERATED);
+    var _chunk_display = _chunk.chunk_display;
     
     buffer_write(_current_chunk_buffer, buffer_bool, _is_generated);
     buffer_write(_current_chunk_buffer, buffer_u16, _chunk_display);
@@ -37,9 +39,9 @@ function file_save_world_chunk(_world_save_data, _inst)
     // ------------------------------------------------------------------------------------------
     if (_chunk_display)
     {
-        var _chunk = _inst.chunk;
-        var _chunk_count = _inst.chunk_count;
-        var _chunk_covered = _inst.chunk_covered;
+        var _chunk2 = _chunk.chunk;
+        var _chunk_count = _chunk.chunk_count;
+        var _chunk_covered = _chunk.chunk_covered;
         
         for (var i = 0; i < CHUNK_SIZE; ++i)
         {
@@ -56,7 +58,7 @@ function file_save_world_chunk(_world_save_data, _inst)
             {
                 for (var l = 0; l < CHUNK_SIZE; ++l)
                 {
-                    var _tile = _chunk[tile_index_xyz(l, j, i)];
+                    var _tile = _chunk2[tile_index_xyz(l, j, i)];
                     file_save_snippet_tile(_current_chunk_buffer, _tile, _item_data);
                     
                     if (_tile != TILE_EMPTY)
@@ -71,8 +73,8 @@ function file_save_world_chunk(_world_save_data, _inst)
     // ------------------------------------------------------------------------------------------
     // Write Entities (Items & Creatures)
     // ------------------------------------------------------------------------------------------
-    var _xcenter = _inst.xcenter;
-    var _ycenter = _inst.ycenter;
+    var _xcenter = _chunk.xcenter;
+    var _ycenter = _chunk.ycenter;
     var _bbox_l = _xcenter - (CHUNK_SIZE_DIMENSION / 2);
     var _bbox_t = _ycenter - (CHUNK_SIZE_DIMENSION / 2);
     var _bbox_r = _xcenter + (CHUNK_SIZE_DIMENSION / 2);

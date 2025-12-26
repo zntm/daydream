@@ -89,7 +89,6 @@
     {"name":"Extensions","order":4,"path":"extensions/Extensions/Extensions.yy",},
     {"name":"OpenSimplexNoise","order":3,"path":"extensions/OpenSimplexNoise/OpenSimplexNoise.yy",},
     {"name":"window_taskbar","order":2,"path":"extensions/window_taskbar/window_taskbar.yy",},
-    {"name":"obj_Chunk","order":3,"path":"objects/obj_Chunk/obj_Chunk.yy",},
     {"name":"obj_Creature","order":5,"path":"objects/obj_Creature/obj_Creature.yy",},
     {"name":"obj_Falling_Tile","order":13,"path":"objects/obj_Falling_Tile/obj_Falling_Tile.yy",},
     {"name":"obj_Game_Control_Background","order":1,"path":"objects/obj_Game_Control_Background/obj_Game_Control_Background.yy",},

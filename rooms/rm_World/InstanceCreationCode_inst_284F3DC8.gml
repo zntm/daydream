@@ -5,7 +5,7 @@ on_select_release = function()
     obj_Game_Control.is_opened |= IS_OPENED_BOOLEAN.EXIT;
     obj_Game_Control.is_opened ^= IS_OPENED_BOOLEAN.PAUSE;
     
-    obj_Game_Control.chunk_saved_count_max = instance_number(obj_Chunk);
+    obj_Game_Control.chunk_saved_count_max = chunk_map_count();
     
     with (obj_Menu_Anchor)
     {

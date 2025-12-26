@@ -29,11 +29,9 @@ if (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.GENERATING_WORLD)
             
             if (_y < 0) || (_y >= _world_height * TILE_SIZE) continue;
             
-            var _inst = instance_position(_x, _y, obj_Chunk);
-            
-            if (!instance_exists(_inst))
+            if (!chunk_map_exists(_x, _y))
             {
-                instance_create_layer(_x, _y, "Instances", obj_Chunk);
+                global.chunk_pool.acquire(_x, _y);
                 
                 exit;
             }
@@ -44,29 +42,29 @@ if (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.GENERATING_WORLD)
     
     for (var i = 0; i < chunk_in_view_length; ++i)
     {
-        var _inst = chunk_in_view[i];
+        var _chunk = chunk_in_view[i];
         
-        if (!instance_exists(_inst)) || (_inst.boolean & CHUNK_BOOLEAN.GENERATED) continue;
+        if (_chunk == undefined) || (_chunk.boolean & CHUNK_BOOLEAN.GENERATED) continue;
         
-        _inst.boolean |= CHUNK_BOOLEAN.GENERATED | CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH;
+        _chunk.boolean |= CHUNK_BOOLEAN.GENERATED | CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH;
         
         // Trigger global lighting refresh for newly generated chunks
         surface_refresh |= SURFACE_REFRESH_BOOLEAN.LIGHTING;
         
-        var _chunk = _inst.chunk;
+        var _chunk_data = _chunk.chunk;
         
         for (var _tile_z = 0; _tile_z < CHUNK_DEPTH; ++_tile_z)
         {
-            if !(_inst.chunk_display & (1 << _tile_z)) continue;
+            if !(_chunk.chunk_display & (1 << _tile_z)) continue;
             
             for (var _tile_y = 0; _tile_y < CHUNK_SIZE; ++_tile_y)
             {
                 for (var _tile_x = 0; _tile_x < CHUNK_SIZE; ++_tile_x)
                 {
-                    var _world_x = _inst.chunk_xstart + _tile_x;
-                    var _world_y = _inst.chunk_ystart + _tile_y;
+                    var _world_x = _chunk.chunk_xstart + _tile_x;
+                    var _world_y = _chunk.chunk_ystart + _tile_y;
                     
-                    var _tile = _chunk[tile_index_xyz(_world_x, _world_y, _tile_z)];
+                    var _tile = _chunk_data[tile_index_xyz(_world_x, _world_y, _tile_z)];
                     
                     if (_tile == TILE_EMPTY) continue;
                     
@@ -138,11 +136,13 @@ if (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.EXIT)
     
     window_progress(window_progress_normal, chunk_saved_count, chunk_saved_count_max);
     
-    with (obj_Chunk)
+    // Clear all chunks using chunk_map
+    var _all_chunks = chunk_map_get_all();
+    var _chunks_length = array_length(_all_chunks);
+    
+    for (var i = 0; i < _chunks_length; ++i)
     {
-        chunk_clear(id);
-        
-        instance_destroy();
+        chunk_clear(_all_chunks[i]);
     }
     
     exit;

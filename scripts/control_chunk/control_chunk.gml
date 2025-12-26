@@ -44,16 +44,16 @@ function control_chunk(_player_x, _player_y, _camera_x, _camera_y, _camera_width
     // Queue ungenerated chunks for processing (priority = distance to player)
     for (var i = 0; i < chunk_in_view_length; ++i)
     {
-        var _inst = chunk_in_view[i];
+        var _chunk = chunk_in_view[i];
         
-        if (!instance_exists(_inst)) continue;
-        if (_inst.boolean & CHUNK_BOOLEAN.GENERATED) continue;
-        if (_inst.boolean & CHUNK_BOOLEAN.QUEUED) continue;
+        if (_chunk == undefined) continue;
+        if (_chunk.boolean & CHUNK_BOOLEAN.GENERATED) continue;
+        if (_chunk.boolean & CHUNK_BOOLEAN.QUEUED) continue;
         
         // Calculate priority based on distance to player (lower = higher priority)
-        var _priority = point_distance(_player_x, _player_y, _inst.xcenter, _inst.ycenter);
+        var _priority = point_distance(_player_x, _player_y, _chunk.xcenter, _chunk.ycenter);
         
-        chunk_queue_add(_inst, _priority);
+        chunk_queue_add(_chunk, _priority);
     }
     
     // Process queued chunks within time budget

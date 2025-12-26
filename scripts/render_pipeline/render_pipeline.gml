@@ -41,30 +41,30 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
         
         for (var i = 0; i < chunk_in_view_length; ++i)
         {
-            var _inst = chunk_in_view[i];
+            var _chunk = chunk_in_view[i];
             
-            if (!instance_exists(_inst)) || !(_inst.boolean & CHUNK_BOOLEAN.GENERATED) || !(_inst.boolean & CHUNK_BOOLEAN.TILE_PROCESSED) || !(_inst.chunk_display & _bitmask) || (_inst.chunk_count[_z] <= 0) continue;
+            if (_chunk == undefined) || !(_chunk.boolean & CHUNK_BOOLEAN.GENERATED) || !(_chunk.boolean & CHUNK_BOOLEAN.TILE_PROCESSED) || !(_chunk.chunk_display & _bitmask) || (_chunk.chunk_count[_z] <= 0) continue;
             
-            var _buffer = _inst.chunk_vertex_buffer[_z];
+            var _buffer = _chunk.chunk_vertex_buffer[_z];
             
             if (!vertex_buffer_exists(_buffer))
             {
-                _buffer = render_chunk(_page, _position, _texel_width, _texel_height, _inst, _z);
+                _buffer = render_chunk(_page, _position, _texel_width, _texel_height, _chunk, _z);
             }
             
-            var _chunk_count = _inst.chunk_count;
+            var _chunk_count_arr = _chunk.chunk_count;
             
-            if (_z == CHUNK_DEPTH_FOLIAGE_BACK) && (_chunk_count[CHUNK_DEPTH_FOLIAGE_BACK] > 0)
+            if (_z == CHUNK_DEPTH_FOLIAGE_BACK) && (_chunk_count_arr[CHUNK_DEPTH_FOLIAGE_BACK] > 0)
             {
-                shader_set_uniform_f_array(__u_skew, _inst.chunk_skew_back);
+                shader_set_uniform_f_array(__u_skew, _chunk.chunk_skew_back);
             }
-            else if (_z == CHUNK_DEPTH_FOLIAGE_FRONT) && (_chunk_count[CHUNK_DEPTH_FOLIAGE_FRONT] > 0)
+            else if (_z == CHUNK_DEPTH_FOLIAGE_FRONT) && (_chunk_count_arr[CHUNK_DEPTH_FOLIAGE_FRONT] > 0)
             {
-                shader_set_uniform_f_array(__u_skew, _inst.chunk_skew_front);
+                shader_set_uniform_f_array(__u_skew, _chunk.chunk_skew_front);
             }
-            else if (_z == CHUNK_DEPTH_LIQUID) && (_chunk_count[CHUNK_DEPTH_LIQUID] > 0)
+            else if (_z == CHUNK_DEPTH_LIQUID) && (_chunk_count_arr[CHUNK_DEPTH_LIQUID] > 0)
             {
-                shader_set_uniform_f_array(__u_wave, _inst.chunk_wave);
+                shader_set_uniform_f_array(__u_wave, _chunk.chunk_wave);
             }
             
             vertex_submit(_buffer, pr_trianglelist, _texture);
@@ -277,13 +277,19 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
     
     var _render_state = global.render_state;
     
-    with (obj_Chunk)
+    // Render chunk render states
+    var _all_chunks = chunk_map_get_all();
+    var _all_chunks_length = array_length(_all_chunks);
+    
+    for (var c = 0; c < _all_chunks_length; ++c)
     {
-        var _length = array_length(chunk_render_state);
+        var _chunk = _all_chunks[c];
+        var _chunk_render_state = _chunk.chunk_render_state;
+        var _length = array_length(_chunk_render_state);
         
         for (var i = 0; i < _length; ++i)
         {
-            var _ = chunk_render_state[i];
+            var _ = _chunk_render_state[i];
             
             var _x = _.x;
             var _y = _.y;
@@ -305,10 +311,12 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
         
         if (_dbg_settings[$ "display_chunk_boundary"])
         {
-            with (obj_Chunk)
+            for (var c = 0; c < _all_chunks_length; ++c)
             {
-                var _x1 = x - (TILE_SIZE / 2);
-                var _y1 = y - (TILE_SIZE / 2);
+                var _chunk = _all_chunks[c];
+                
+                var _x1 = _chunk.x - (TILE_SIZE / 2);
+                var _y1 = _chunk.y - (TILE_SIZE / 2);
                 var _x2 = _x1 - 1 + CHUNK_SIZE_DIMENSION;
                 var _y2 = _y1 - 1 + CHUNK_SIZE_DIMENSION;
                 
@@ -318,12 +326,14 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
         
         if (_dbg_settings[$ "display_chunk_information"])
         {
-            with (obj_Chunk)
+            for (var c = 0; c < _all_chunks_length; ++c)
             {
+                var _chunk = _all_chunks[c];
+                
                 draw_text_ext_transformed(
-                    x,
-                    y,
-                    $"X/Y: ({x}, {y}) ({round(x / TILE_SIZE)}, {round(y / TILE_SIZE)}), ({round(x / CHUNK_SIZE_DIMENSION)}, {round(y / CHUNK_SIZE_DIMENSION)})",
+                    _chunk.x,
+                    _chunk.y,
+                    $"X/Y: ({_chunk.x}, {_chunk.y}) ({round(_chunk.x / TILE_SIZE)}, {round(_chunk.y / TILE_SIZE)}), ({round(_chunk.x / CHUNK_SIZE_DIMENSION)}, {round(_chunk.y / CHUNK_SIZE_DIMENSION)})",
                     0,
                     0xffff,
                     0.25,

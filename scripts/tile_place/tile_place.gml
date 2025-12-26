@@ -1,41 +1,43 @@
+/// @function tile_place(_x, _y, _z, _tile)
+/// @desc Place a tile at the specified position
 function tile_place(_x, _y, _z, _tile)
 {
     if (_y < 0) || (_y >= global.world_data[$ global.world_save_data.dimension].get_world_height()) exit;
     
-    var _inst = chunk_map_get_by_tile(_x, _y);
+    var _chunk = chunk_map_get_by_tile(_x, _y);
     
-    if (!instance_exists(_inst))
+    if (_chunk == undefined)
     {
         var _chunk_x = floor(_x / CHUNK_SIZE) * CHUNK_SIZE_DIMENSION;
         var _chunk_y = floor(_y / CHUNK_SIZE) * CHUNK_SIZE_DIMENSION;
         
-        _inst = instance_create_layer(_chunk_x, _chunk_y, "Instances", obj_Chunk);
+        _chunk = global.chunk_pool.acquire(_chunk_x, _chunk_y);
         
         control_update_chunk_in_view();
     }
     
     var _index = tile_index_xyz(_x, _y, _z);
     
-    var _tile_before = _inst.chunk[_index];
+    var _tile_before = _chunk.chunk[_index];
     
     if (_tile != TILE_EMPTY)
     {
-        _inst.chunk_display |= 1 << _z;
+        _chunk.chunk_display |= 1 << _z;
         
-        ++_inst.chunk_count[@ _z];
+        ++_chunk.chunk_count[@ _z];
         
         var _data = global.item_data[$ _tile.get_id()];    
         
         if (_data.get_render_state_length() > 0)
         {
-            array_push(_inst.chunk_render_state, global.render_state_pool.acquire(_x, _y, _z, _data.get_render_state()));
+            array_push(_chunk.chunk_render_state, global.render_state_pool.acquire(_x, _y, _z, _data.get_render_state()));
         }
     }
-    else if (_tile_before != TILE_EMPTY) && (--_inst.chunk_count[_z] <= 0)
+    else if (_tile_before != TILE_EMPTY) && (--_chunk.chunk_count[_z] <= 0)
     {
-        _inst.chunk_display ^= 1 << _z;
+        _chunk.chunk_display ^= 1 << _z;
         
-        var _render_state = _inst.chunk_render_state;
+        var _render_state = _chunk.chunk_render_state;
         var _length = array_length(_render_state);
         
         for (var i = 0; i < _length; ++i)
@@ -77,9 +79,9 @@ function tile_place(_x, _y, _z, _tile)
         }
     }
     
-    _inst.chunk[@ _index] = _tile;
+    _chunk.chunk[@ _index] = _tile;
     
-    var _vertex_buffer = _inst.chunk_vertex_buffer[_z];
+    var _vertex_buffer = _chunk.chunk_vertex_buffer[_z];
     
     if (vertex_buffer_exists(_vertex_buffer))
     {

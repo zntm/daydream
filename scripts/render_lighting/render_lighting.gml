@@ -14,9 +14,9 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
     // Check if any chunks need lighting refresh (new/loaded chunks)
     for (var i = 0; i < chunk_in_view_length; ++i)
     {
-        var _inst = chunk_in_view[i];
+        var _chunk = chunk_in_view[i];
         
-        if (instance_exists(_inst) && (_inst.boolean & CHUNK_BOOLEAN.GENERATED) && (_inst.boolean & CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH))
+        if (_chunk != undefined) && (_chunk.boolean & CHUNK_BOOLEAN.GENERATED) && (_chunk.boolean & CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH)
         {
             surface_refresh |= SURFACE_REFRESH_BOOLEAN.LIGHTING;
             break;
@@ -38,27 +38,27 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
         // Create/update lighting surfaces for ALL generated chunks in view
         for (var i = 0; i < chunk_in_view_length; ++i)
         {
-            var _inst = chunk_in_view[i];
+            var _chunk = chunk_in_view[i];
             
-            if (!instance_exists(_inst)) || !(_inst.boolean & CHUNK_BOOLEAN.GENERATED) continue;
+            if (_chunk == undefined) || !(_chunk.boolean & CHUNK_BOOLEAN.GENERATED) continue;
             
             // Clear the refresh flag if set
-            if (_inst.boolean & CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH)
+            if (_chunk.boolean & CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH)
             {
-                _inst.boolean ^= CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH;
+                _chunk.boolean ^= CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH;
             }
             
             // Create surface if it doesn't exist
-            if (!surface_exists(_inst.surface_lighting))
+            if (!surface_exists(_chunk.surface_lighting))
             {
-                _inst.surface_lighting = surface_create(CHUNK_SIZE + RENDER_LIGHTING_PADDING, CHUNK_SIZE + RENDER_LIGHTING_PADDING, surface_r8unorm);
+                _chunk.surface_lighting = surface_create(CHUNK_SIZE + RENDER_LIGHTING_PADDING, CHUNK_SIZE + RENDER_LIGHTING_PADDING, surface_r8unorm);
             }
             
             // Redraw the chunk's lighting surface
-            surface_set_target(_inst.surface_lighting);
+            surface_set_target(_chunk.surface_lighting);
             draw_clear_alpha(c_black, 1);
             
-            var _chunk_covered = _inst.chunk_covered;
+            var _chunk_covered = _chunk.chunk_covered;
             
             for (var l = 0; l < CHUNK_SIZE; ++l)
             {
@@ -91,16 +91,16 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
         
         for (var i = 0; i < chunk_in_view_length; ++i)
         {
-            var _inst = chunk_in_view[i];
+            var _chunk = chunk_in_view[i];
             
-            if (!instance_exists(_inst)) || !(_inst.boolean & CHUNK_BOOLEAN.GENERATED) continue;
+            if (_chunk == undefined) || !(_chunk.boolean & CHUNK_BOOLEAN.GENERATED) continue;
             
-            if (surface_exists(_inst.surface_lighting))
+            if (surface_exists(_chunk.surface_lighting))
             {
-                var _x2 = ((_inst.x - _surface_x) / RENDER_LIGHTING_RESIZE) - (RENDER_LIGHTING_PADDING / 2);
-                var _y2 = ((_inst.y - _surface_y) / RENDER_LIGHTING_RESIZE) - (RENDER_LIGHTING_PADDING / 2);
+                var _x2 = ((_chunk.x - _surface_x) / RENDER_LIGHTING_RESIZE) - (RENDER_LIGHTING_PADDING / 2);
+                var _y2 = ((_chunk.y - _surface_y) / RENDER_LIGHTING_RESIZE) - (RENDER_LIGHTING_PADDING / 2);
                 
-                draw_surface(_inst.surface_lighting, _x2, _y2 + 8);
+                draw_surface(_chunk.surface_lighting, _x2, _y2 + 8);
             }
         }
         

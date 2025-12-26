@@ -11,12 +11,12 @@ function chunk_save_queue_init()
     global.chunk_save_queue = [];
 }
 
-/// @function chunk_save_queue_add(_inst)
+/// @function chunk_save_queue_add(_chunk)
 /// @desc Add chunk to save queue
-/// @param {Id.Instance} _inst Chunk instance
-function chunk_save_queue_add(_inst)
+/// @param {Struct.Chunk} _chunk Chunk struct
+function chunk_save_queue_add(_chunk)
 {
-    if (!instance_exists(_inst)) exit;
+    if (_chunk == undefined) exit;
     
     // Check if already queued
     var _queue = global.chunk_save_queue;
@@ -24,10 +24,10 @@ function chunk_save_queue_add(_inst)
     
     for (var i = 0; i < _length; ++i)
     {
-        if (_queue[i] == _inst) exit; // Already queued
+        if (_queue[i] == _chunk) exit; // Already queued
     }
     
-    array_push(_queue, _inst);
+    array_push(_queue, _chunk);
 }
 
 /// @function chunk_save_queue_process()
@@ -47,12 +47,12 @@ function chunk_save_queue_process()
         // Check time budget
         if ((get_timer() - _start) > _budget_us) break;
         
-        var _inst = _queue[0];
+        var _chunk = _queue[0];
         array_delete(_queue, 0, 1);
         
-        if (instance_exists(_inst))
+        if (_chunk != undefined)
         {
-            file_save_world_chunk(_world_save_data, _inst);
+            file_save_world_chunk(_world_save_data, _chunk);
         }
     }
 }
@@ -66,12 +66,12 @@ function chunk_save_queue_flush()
     
     while (array_length(_queue) > 0)
     {
-        var _inst = _queue[0];
+        var _chunk = _queue[0];
         array_delete(_queue, 0, 1);
         
-        if (instance_exists(_inst))
+        if (_chunk != undefined)
         {
-            file_save_world_chunk(_world_save_data, _inst);
+            file_save_world_chunk(_world_save_data, _chunk);
         }
     }
 }

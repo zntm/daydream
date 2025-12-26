@@ -42,16 +42,16 @@ function control_gametick(_delta_time)
         
         for (var i = 0; i < chunk_in_view_length; ++i)
         {
-            var _inst = chunk_in_view[i];
+            var _chunk = chunk_in_view[i];
             
-            if (!instance_exists(_inst)) || !(_inst.boolean & CHUNK_BOOLEAN.GENERATED) continue;
+            if (_chunk == undefined) || !(_chunk.boolean & CHUNK_BOOLEAN.GENERATED) continue;
             
-            var _chunk_xstart = _inst.chunk_xstart;
-            var _chunk_ystart = _inst.chunk_ystart;
+            var _chunk_xstart = _chunk.chunk_xstart;
+            var _chunk_ystart = _chunk.chunk_ystart;
             
-            var _chunk = _inst.chunk;
-            var _chunk_count = _inst.chunk_count;
-            var _chunk_display = _inst.chunk_display;
+            var _chunk_data = _chunk.chunk;
+            var _chunk_count = _chunk.chunk_count;
+            var _chunk_display = _chunk.chunk_display;
             
             repeat (4)
             {
@@ -63,7 +63,7 @@ function control_gametick(_delta_time)
                 
                 if !(_chunk_display & _bitmask) || (_chunk_count[_z] <= 0) continue;
                 
-                var _tile = _chunk[tile_index_xyz(_x2, _y2, _z)];
+                var _tile = _chunk_data[tile_index_xyz(_x2, _y2, _z)];
                 
                 if (_tile == TILE_EMPTY) continue;
                 

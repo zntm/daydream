@@ -4,13 +4,13 @@ function tile_update(_x, _y, _z)
     
     if (_y < 0) || (_y >= _world_height) exit;
     
-    var _inst = chunk_map_get_by_tile(_x, _y);
+    var _chunk = chunk_map_get_by_tile(_x, _y);
     
-    if (!instance_exists(_inst)) exit;
+    if (_chunk == undefined) exit;
     
     var _index = tile_index_xyz(_x, _y, _z);
     
-    var _tile = _inst.chunk[_index];
+    var _tile = _chunk.chunk[_index];
     
     if (_tile == TILE_EMPTY) exit;
     
