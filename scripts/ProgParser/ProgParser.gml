@@ -139,6 +139,18 @@ function ProgParser(_tokens) constructor {
         if (match(PROG_TOKEN.IMPORT)) return parse_import_stmt();
         if (match(PROG_TOKEN.EXPORT)) return parse_export_stmt();
         
+        if (match(PROG_TOKEN.ABSTRACT)) {
+            if (match(PROG_TOKEN.CLASS)) {
+                var _decl = parse_class_decl();
+                _decl.is_abstract = true;
+                return _decl;
+            }
+            error_at_current("Expected 'class' after 'abstract'.");
+            return new ProgASTLiteral(PROG_AST.UNDEFINED_LITERAL, undefined);
+        }
+
+        if (match(PROG_TOKEN.CLASS)) return parse_class_decl();
+        
         if (match(PROG_TOKEN.THROW)) {
             var _expr = parse_expression();
             match(PROG_TOKEN.SEMICOLON);
@@ -176,34 +188,15 @@ function ProgParser(_tokens) constructor {
         
         if (match(PROG_TOKEN.DEFAULT)) {
             _is_default = true;
-            // export default expression;
             _decl = parse_expression();
              consume(PROG_TOKEN.SEMICOLON, "Expected ';' after export default.");
         } else {
-             // export var ... or export fn ...
              if (match(PROG_TOKEN.VAR)) {
                   _decl = parse_var_decl(false);
              } else if (match(PROG_TOKEN.FN) || match(PROG_TOKEN.FUNCTION)) {
                   _decl = parse_function_decl(false);
-             } else if (match(PROG_TOKEN.LBRACE)) {
-                  // export { a, b }
-                  var _exports = [];
-                   do {
-                        var _name = consume(PROG_TOKEN.IDENTIFIER, "Expected exported name.").lexeme;
-                        var _alias = _name;
-                        if (match(PROG_TOKEN.AS)) {
-                            _alias = consume(PROG_TOKEN.IDENTIFIER, "Expected alias name.").lexeme;
-                        }
-                        array_push(_exports, { name: _name, alias: _alias });
-                   } until (!match(PROG_TOKEN.COMMA));
-                   consume(PROG_TOKEN.RBRACE, "Expected '}' after export list.");
-                   consume(PROG_TOKEN.SEMICOLON, "Expected ';' after export statement.");
-                   return new ProgASTExportStmt(new ProgASTBlock([]), false); // Placeholder structure?
-                   // Actually export list is usually creating getters. 
-                   // Simplification: Treat as ExpressionStmt? No, need specific AST.
-                   // Let's stick to export decl for now.
-                   error_at_current("Export list not yet fully supported. Use export var/fn.");
-                   return new ProgASTStatement(); 
+             } else if (match(PROG_TOKEN.CLASS)) {
+                  _decl = parse_class_decl();
              } else {
                   error_at_current("Expected declaration after export.");
                   return new ProgASTStatement();
@@ -211,6 +204,129 @@ function ProgParser(_tokens) constructor {
         }
         
         return new ProgASTExportStmt(_decl, _is_default);
+    }
+    
+    static parse_class_decl = function() {
+        var _name = consume(PROG_TOKEN.IDENTIFIER, "Expected class name.").lexeme;
+        var _super = undefined;
+        
+        if (match(PROG_TOKEN.EXTENDS)) {
+            _super = consume(PROG_TOKEN.IDENTIFIER, "Expected superclass name.").lexeme;
+        }
+        
+        consume(PROG_TOKEN.LBRACE, "Expected '{' before class body.");
+        
+        var _members = [];
+        var _constructor = undefined;
+        
+        while (!check(PROG_TOKEN.RBRACE) && !is_at_end()) {
+            var _access = "public";
+            if (match(PROG_TOKEN.PUBLIC)) _access = "public";
+            else if (match(PROG_TOKEN.PRIVATE)) _access = "private";
+            else if (match(PROG_TOKEN.PROTECTED)) _access = "protected";
+            
+            var _is_static = match(PROG_TOKEN.STATIC);
+            var _is_abstract_method = match(PROG_TOKEN.ABSTRACT);
+            if (_is_abstract_method) show_debug_message($"[Proglang Parser] Found abstract method");
+
+            if (match(PROG_TOKEN.FN) || match(PROG_TOKEN.FUNCTION) || check(PROG_TOKEN.VAR) || check(PROG_TOKEN.IDENTIFIER)) {
+                
+                var _is_method = false;
+                var _decl = undefined;
+                
+                if (match(PROG_TOKEN.FN) || match(PROG_TOKEN.FUNCTION)) {
+                    if (_is_abstract_method) {
+                        show_debug_message($"[Proglang Parser] Found abstract method: {_name}");
+                        _name = consume(PROG_TOKEN.IDENTIFIER, "Expected function name.").lexeme;
+                        consume(PROG_TOKEN.LPAREN, "Expected '(' after function name.");
+                        var _params = [];
+                        if (!check(PROG_TOKEN.RPAREN)) {
+                            do {
+                                var _p_name = consume(PROG_TOKEN.IDENTIFIER, "Expected parameter name.").lexeme;
+                                array_push(_params, { name: _p_name, default_value: undefined });
+                            } until (!match(PROG_TOKEN.COMMA));
+                        }
+                        consume(PROG_TOKEN.RPAREN, "Expected ')' after parameters.");
+                        
+                        var _body = undefined;
+                        if (check(PROG_TOKEN.LBRACE)) {
+                            show_debug_message($"[Proglang Parser] Abstract m+ethod has body, parsing it.");
+                            consume(PROG_TOKEN.LBRACE, "Expected '{' before function body.");
+                            _body = new ProgASTBlock(parse_block());
+                        }
+                        
+                        _decl = new ProgASTFuncDecl(_name, _params, _body, false);
+                        _is_method = true;
+                    } else {
+                        show_debug_message($"[Proglang Parser] Parsing concrete method body");
+                        _decl = parse_function_decl(false);
+                        _is_method = true;
+                    }
+                } else if (match(PROG_TOKEN.VAR)) {
+                    _decl = parse_var_decl(false); // expects semicolon
+                    _is_method = false;
+                } else {
+                    // Maybe constructor or method without 'fn'?
+                    var _name_token = peek();
+                     if (_name_token.type == PROG_TOKEN.IDENTIFIER) {
+                         // Check if next is LPAREN -> Method
+                         if (tokens[current+1].type == PROG_TOKEN.LPAREN) {
+                             var _m_name = advance().lexeme;
+                             var _data = parse_function_body();
+                             _decl = new ProgASTFuncDecl(_m_name, _data.params, _data.body, false);
+                             _is_method = true;
+                         } else {
+                             // Property without 'var'? "x = 10;"
+                             // Let's enforce 'var' for properties for now to be safe or support it.
+                             // Error for now.
+                             error_at_current("Expected 'fn' or 'var' in class body.");
+                             advance();
+                             continue;
+                         }
+                     } else {
+                         advance(); // skip bad token
+                         continue;
+                     }
+                }
+                
+                if (_decl != undefined) {
+                    // Attach metadata
+                    // Since _decl is AST node, we wrap or modify it? 
+                    // Better to wrap in member struct
+                    if (_is_method && _decl.name == "constructor") {
+                         _constructor = _decl;
+                    } else {
+                         // Store as plain struct or new AST?
+                         // The VM will iterate this list.
+                         array_push(_members, { 
+                             type: _is_method ? "method" : "field",
+                             node: _decl, 
+                             access: _access, 
+                             is_static: _is_static 
+                         });
+                    }
+                }
+            } else {
+                advance();
+            }
+        }
+        
+        consume(PROG_TOKEN.RBRACE, "Expected '}' after class body.");
+        
+        return new ProgASTClassDecl(_name, _super, _members, _constructor);
+    }
+    
+    static parse_new_expr = function() {
+        var _class_name = consume(PROG_TOKEN.IDENTIFIER, "Expected class name.").lexeme;
+        consume(PROG_TOKEN.LPAREN, "Expected '(' after class name.");
+        var _args = [];
+        if (!check(PROG_TOKEN.RPAREN)) {
+            do {
+                array_push(_args, parse_expression());
+            } until (!match(PROG_TOKEN.COMMA));
+        }
+        consume(PROG_TOKEN.RPAREN, "Expected ')' after arguments.");
+        return new ProgASTNewExpr(_class_name, _args);
     }
     
     static parse_block = function() {
@@ -763,6 +879,16 @@ function ProgParser(_tokens) constructor {
         if (match(PROG_TOKEN.UNDEFINED)) return new ProgASTLiteral(PROG_AST.UNDEFINED_LITERAL, undefined);
 
         if (match(PROG_TOKEN.FN) || match(PROG_TOKEN.FUNCTION)) return parse_function_expr();
+        
+        if (match(PROG_TOKEN.NEW)) return parse_new_expr();
+        if (match(PROG_TOKEN.THIS)) return new ProgASTThisExpr();
+        if (match(PROG_TOKEN.SUPER)) {
+            // Check for super(args) call vs super.method()
+            // super() is usually in constructor call. 
+            // Parsing it as primitive allows it to be used in ParseCall.
+            // ParseCall sees Primary(SUPER) then LPAREN -> Call(Super).
+            return new ProgASTSuperExpr();
+        }
         
         if (match(PROG_TOKEN.NUMBER)) return new ProgASTLiteral(PROG_AST.NUMBER_LITERAL, previous().literal);
         if (match(PROG_TOKEN.STRING)) return new ProgASTLiteral(PROG_AST.STRING_LITERAL, previous().literal);

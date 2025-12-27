@@ -13,7 +13,9 @@ enum PROG_AST {
     EXPRESSION_STMT, SWITCH_STMT, FUNC_DECL, FUNC_EXPR,
     // New
     FOR_IN_STMT, TRY_STMT, DESTRUCTURING_DECL,
-    IMPORT_STMT, EXPORT_STMT, THROW_STMT
+    IMPORT_STMT, EXPORT_STMT, THROW_STMT,
+    // Class System
+    CLASS_DECL, NEW_EXPR, THIS_EXPR, SUPER_EXPR
 }
 
 /// @desc Base AST node
@@ -227,3 +229,23 @@ function ProgASTExportStmt(_declaration, _is_default = false) : ProgASTNode(PROG
 function ProgASTThrowStmt(_expression) : ProgASTNode(PROG_AST.THROW_STMT) constructor {
     expression = _expression;
 }
+
+/// @desc Class declaration
+function ProgASTClassDecl(_name, _super, _members, _constructor) : ProgASTNode(PROG_AST.CLASS_DECL) constructor {
+    name = _name;           // String: class name
+    super_class = _super;   // String or undefined: parent class
+    members = _members;     // Array of {type, name, value, access, is_static}
+    class_constructor = _constructor; // ProgASTFuncDecl (renamed to avoid keyword conflict if any)
+}
+
+/// @desc New expression (new ClassName(...))
+function ProgASTNewExpr(_class_name, _args) : ProgASTNode(PROG_AST.NEW_EXPR) constructor {
+    class_name = _class_name; // Identifier string
+    args = _args;
+}
+
+/// @desc This keyword
+function ProgASTThisExpr() : ProgASTNode(PROG_AST.THIS_EXPR) constructor {}
+
+/// @desc Super keyword
+function ProgASTSuperExpr() : ProgASTNode(PROG_AST.SUPER_EXPR) constructor {}

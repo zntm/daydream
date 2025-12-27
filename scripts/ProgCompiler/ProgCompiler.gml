@@ -41,7 +41,13 @@ enum PROG_OP {
     IMPORT, EXPORT_SET,
 
     // Stack Ops Extra
-    DUP2 // Added DUP2
+    DUP2,
+
+    // Class System
+    CLASS_DEF, NEW_INSTANCE, LOAD_THIS, LOAD_SUPER, ACCESS_CHECK,
+    
+    // Debug
+    DEBUG_LINE // Ops to track line changes for stack trace
 }
 
 /// @desc Bytecode container
@@ -112,6 +118,7 @@ function ProgCompiler() constructor {
     }
     
     static compile_node = function(_node) {
+        // show_debug_message($"[ProgCompiler DEBUG] compile_node type={_node.type}");
         switch (_node.type) {
             // Literals
             case PROG_AST.NUMBER_LITERAL:
@@ -394,8 +401,8 @@ function ProgCompiler() constructor {
                     compile_node(_node.callee);
                     emit(PROG_OP.CALL_SPREAD, undefined, _node.line);
                 } else {
-                    for (var i = 0; i < array_length(_node.args); i++) compile_node(_node.args[i]);
                     compile_node(_node.callee);
+                    for (var i = 0; i < array_length(_node.args); i++) compile_node(_node.args[i]);
                     emit(PROG_OP.CALL, array_length(_node.args), _node.line);
                 }
                 break;
@@ -406,6 +413,7 @@ function ProgCompiler() constructor {
                 break;
                 
             case PROG_AST.INDEX:
+                // show_debug_message($"[ProgCompiler DEBUG] Compiling INDEX: target={_node.target} index={_node.index}");
                 compile_node(_node.target);
                 compile_node(_node.index);
                 emit(PROG_OP.INDEX_GET, undefined, _node.line);
@@ -526,7 +534,122 @@ function ProgCompiler() constructor {
                 }
                 emit(PROG_OP.POP);
                 break;
+                
+            case PROG_AST.CLASS_DECL:
+                compile_class_def(_node);
+                break;
+                
+            case PROG_AST.NEW_EXPR:
+                // Push args first? Or name first?
+                // NEW_INSTANCE instruction could take Class Name index?
+                // But Class might be in a variable.
+                // emit(PROG_OP.LOAD, name) -> Class Descriptor (or constructor)
+                // then NEW_INSTANCE
+                
+                // Opcode: NEW_INSTANCE [ArgCount]
+                // Stack: [Values...], Class
+                
+                for (var i = 0; i < array_length(_node.args); i++) {
+                    compile_node(_node.args[i]);
+                }
+                
+                emit(PROG_OP.LOAD, add_constant(_node.class_name), _node.line);
+                emit(PROG_OP.NEW_INSTANCE, array_length(_node.args), _node.line);
+                break;
+                
+            case PROG_AST.THIS_EXPR:
+                emit(PROG_OP.LOAD_THIS, undefined, _node.line);
+                break;
+                
+            case PROG_AST.SUPER_EXPR:
+                emit(PROG_OP.LOAD_SUPER, undefined, _node.line);
+                break;
         }
+    }
+    
+    static compile_class_def = function(_node) {
+        var _descriptor = {
+            name: _node.name,
+            super_class: _node.super_class,
+            methods: {},
+            statics: {},
+            fields: []
+        };
+        
+        // Constructor
+        if (_node.class_constructor != undefined) {
+             var _ctor = _node.class_constructor;
+             _descriptor.constructor_code = compile_func_body(_ctor).bytecode;
+             _descriptor.constructor_params = array_length(_ctor.params);
+        }
+        
+        // Members
+        for (var i = 0; i < array_length(_node.members); i++) {
+            var _mem = _node.members[i];
+            if (_mem.type == "method") {
+                if (_mem.node.body == undefined) continue;
+                var _bc = compile_func_body(_mem.node);
+                var _entry = { 
+                    bytecode: _bc.bytecode, 
+                    params: _bc.params, // Param names
+                    param_count: _bc.param_count,
+                    access: _mem.access 
+                };
+                
+                if (_mem.is_static) {
+                    _descriptor.statics[$ _mem.node.name] = _entry;
+                } else {
+                    _descriptor.methods[$ _mem.node.name] = _entry;
+                }
+            } else {
+                // Field with initializer?
+                // For simplified impl, ignore field init for now or treat as null.
+                // We'll add field names to allow validation or reflection if needed.
+                 array_push(_descriptor.fields, { name: _mem.node.name, access: _mem.access, is_static: _mem.is_static });
+            }
+        }
+        
+        var _idx = add_constant(_descriptor);
+        emit(PROG_OP.CLASS_DEF, _idx, _node.line);
+    }
+    
+    static compile_func_body = function(_node) {
+        var _parent = bytecode;
+        bytecode = new ProgBytecode();
+        
+        var _param_names = [];
+        for (var i = 0; i < array_length(_node.params); i++) {
+            var _param = _node.params[i];
+            array_push(_param_names, _param.name);
+            
+            emit(PROG_OP.LOAD, add_constant($"arg{i}"), _node.line);
+            
+            if (_param.default_value != undefined) {
+                 emit(PROG_OP.DUP);
+                 emit(PROG_OP.PUSH_NULL);
+                 emit(PROG_OP.EQ);
+                 var _skip = emit(PROG_OP.JUMP_IF_FALSE, 0);
+                 emit(PROG_OP.POP);
+                 compile_node(_param.default_value);
+                 patch_jump(_skip, bytecode.code_size);
+            }
+            
+            emit(PROG_OP.DEFINE, add_constant(_param.name), _node.line);
+            emit(PROG_OP.POP);
+        }
+        
+        compile_node(_node.body);
+        emit(PROG_OP.PUSH_NULL);
+        emit(PROG_OP.RETURN);
+        
+        var _res = {
+            bytecode: bytecode,
+            params: _param_names,
+            param_count: array_length(_node.params)
+        };
+        
+        bytecode = _parent;
+        return _res;
     }
     
     static compile_assignment = function(_node) {
@@ -588,47 +711,15 @@ function ProgCompiler() constructor {
     }
     
     static compile_function_def = function(_node) {
-        var _parent = bytecode;
-        bytecode = new ProgBytecode();
-        
-        // Map parameters to arg0, arg1, etc.
-        for (var i = 0; i < array_length(_node.params); i++) {
-            var _param = _node.params[i];
-            var _pname = _param.name;
-            var _pdef = _param.default_value;
-            
-            emit(PROG_OP.LOAD, add_constant($"arg{i}"), _node.line);
-            
-            if (_pdef != undefined) {
-                 emit(PROG_OP.DUP);
-                 emit(PROG_OP.PUSH_NULL);
-                 emit(PROG_OP.EQ);
-                 var _skip = emit(PROG_OP.JUMP_IF_FALSE, 0); // Skip if arg != null
-                 
-                 emit(PROG_OP.POP); // Pop the null arg
-                 compile_node(_pdef); // Eval default
-                 
-                 patch_jump(_skip, bytecode.code_size);
-            }
-            
-            emit(PROG_OP.DEFINE, add_constant(_pname), _node.line); // Changed STORE to DEFINE
-            emit(PROG_OP.POP);
-        }
-        
-        compile_node(_node.body);
-        emit(PROG_OP.PUSH_NULL);
-        emit(PROG_OP.RETURN);
-        
-        var _func_bc = bytecode;
-        bytecode = _parent;
+        var _res = compile_func_body(_node);
         
         var _is_global = struct_exists(_node, "is_global") ? _node.is_global : false;
         var _name = struct_exists(_node, "name") && _node.name != undefined ? _node.name : "";
         
         var _func_idx = add_constant({
             type: "function", name: _name,
-            bytecode: _func_bc, is_global: _is_global,
-            param_count: array_length(_node.params)
+            bytecode: _res.bytecode, is_global: _is_global,
+            param_count: _res.param_count
         });
         emit(PROG_OP.PUSH_CONST, _func_idx, _node.line);
         emit(PROG_OP.MAKE_CLOSURE, undefined, _node.line);

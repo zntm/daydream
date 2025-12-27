@@ -282,60 +282,60 @@ function proglang_test() {
     
     // For In Array
     if (_assert("For In Array", 
-        "var arr = [1, 2, 3]" + "\n" +
-        "var sum = 0" + "\n" +
-        "for (v in arr) {" + "\n" +
-        "    sum += v" + "\n" +
-        "}" + "\n" +
+        "var arr = [1, 2, 3]\n" +
+        "var sum = 0\n" +
+        "for (v in arr) {\n" +
+        "    sum += v\n" +
+        "}\n" +
         "return sum"
     , 6)) _passed++; else _failed++;
 
     // For In Array With Index
     if (_assert("For In Array With Index", 
-        "var arr = [1, 2, 3]" + "\n" +
-        "var sum = 0" + "\n" +
-        "for (v, i in arr) {" + "\n" +
-        "    sum += v + i" + "\n" +
-        "}" + "\n" +
-        "// v=1,i=0 -> 1; v=2,i=1 -> 3; v=3,i=2 -> 5. Sum=1+3+5=9" + "\n" +
+        "var arr = [1, 2, 3]\n" +
+        "var sum = 0\n" +
+        "for (v, i in arr) {\n" +
+        "    sum += v + i\n" +
+        "}\n" +
+        "// v=1,i=0 -> 1; v=2,i=1 -> 3; v=3,i=2 -> 5. Sum=1+3+5=9\n" +
         "return sum"
     , 9)) _passed++; else _failed++;
     
     // For In Struct
     if (_assert("For In Struct", 
-        "var obj = {a: 1, b: 2}" + "\n" +
-        "var count = 0" + "\n" +
-        "for (k in obj) {" + "\n" +
-        "    count++" + "\n" +
-        "}" + "\n" +
+        "var obj = {a: 1, b: 2}\n" +
+        "var count = 0\n" +
+        "for (k in obj) {\n" +
+        "    count++\n" +
+        "}\n" +
         "return count"
     , 2)) _passed++; else _failed++;
 
     // For In Struct With Value
     if (_assert("For In Struct With Value", 
-        "var obj = {a: 1, b: 2}" + "\n" +
-        "var sum = 0" + "\n" +
-        "for (k, v in obj) {" + "\n" +
-        "    sum += v" + "\n" +
-        "}" + "\n" +
+        "var obj = {a: 1, b: 2}\n" +
+        "var sum = 0\n" +
+        "for (k, v in obj) {\n" +
+        "    sum += v\n" +
+        "}\n" +
         "return sum"
     , 3)) _passed++; else _failed++;
     
     // Try Catch (Runtime Error)
     if (_assert("Try Catch Catch", 
-        "try {" + "\n" +
-        "    var a = undefined" + "\n" +
-        "    return a + 1 " + "\n" +
-        "} catch (e) {" + "\n" +
-        "    return 100" + "\n" +
+        "try {\n" +
+        "    var a = undefined\n" +
+        "    return a + 1 \n" +
+        "} catch (e) {\n" +
+        "    return 100\n" +
         "}"
     , 100)) _passed++; else _failed++;
     
     if (_assert("Try Catch No Error", 
-        "try {" + "\n" +
-        "    return 50" + "\n" +
-        "} catch (e) {" + "\n" +
-        "    return 100" + "\n" +
+        "try {\n" +
+        "    return 50\n" +
+        "} catch (e) {\n" +
+        "    return 100\n" +
         "}"
     , 50)) _passed++; else _failed++;
     
@@ -363,12 +363,12 @@ function proglang_test() {
     
     // Custom Error Handling
     if (_assert("Custom Error Handling", 
-        "try {" + "\n" +
-        "    // Simulate a typed error" + "\n" +
-        "    throw { type: PROG_ERROR.TYPE, message: \"Custom error\" }" + "\n" +
-        "} catch (e) {" + "\n" +
-        "    if (e.type == PROG_ERROR.TYPE) return 1" + "\n" +
-        "    return 0" + "\n" +
+        "try {\n" +
+        "    // Simulate a typed error\n" +
+        "    throw { type: PROG_ERROR.TYPE, message: \"Custom error\" }\n" +
+        "} catch (e) {\n" +
+        "    if (e.type == PROG_ERROR.TYPE) return 1\n" +
+        "    return 0\n" +
         "}"
     , 1)) _passed++; else _failed++;
 
@@ -452,231 +452,231 @@ function proglang_test() {
 
     // 6. Complex Data: Inventory Manager
     if (_assert("Inventory Manager", 
-        "var inv = [" + "\n" +
-        "    { id: \"sword\", qty: 1 }," + "\n" +
-        "    { id: \"potion\", qty: 5 }," + "\n" +
-        "    { id: \"shield\", qty: 1 }" + "\n" +
-        "]" + "\n" +
-        "" + "\n" +
-        "fn find_item(items, name) {" + "\n" +
-        "    for (item in items) {" + "\n" +
-        "        if (item.id == name) return item" + "\n" +
-        "    }" + "\n" +
-        "    return undefined" + "\n" +
-        "}" + "\n" +
-        "" + "\n" +
-        "var potion = find_item(inv, \"potion\")" + "\n" +
-        "if (potion != undefined) {" + "\n" +
-        "    potion.qty += 3" + "\n" +
-        "    return potion.qty" + "\n" +
-        "}" + "\n" +
+        "var inv = [\n" +
+        "    { id: \"sword\", qty: 1 },\n" +
+        "    { id: \"potion\", qty: 5 },\n" +
+        "    { id: \"shield\", qty: 1 }\n" +
+        "]\n" +
+        "\n" +
+        "fn find_item(items, name) {\n" +
+        "    for (item in items) {\n" +
+        "        if (item.id == name) return item\n" +
+        "    }\n" +
+        "    return undefined\n" +
+        "}\n" +
+        "\n" +
+        "var potion = find_item(inv, \"potion\")\n" +
+        "if (potion != undefined) {\n" +
+        "    potion.qty += 3\n" +
+        "    return potion.qty\n" +
+        "}\n" +
         "return 0"
     , 8)) _passed++; else _failed++;
 
     // 7. Algorithm: Bubble Sort
     if (_assert("Bubble Sort", 
-        "var arr = [5, 1, 4, 2, 8]" + "\n" +
-        "var n = array_length(arr)" + "\n" +
-        "for (var i = 0; i < n; i++) {" + "\n" +
-        "    for (var j = 0; j < n - i - 1; j++) {" + "\n" +
-        "        if (arr[j] > arr[j+1]) {" + "\n" +
-        "            var temp = arr[j]" + "\n" +
-        "            arr[j] = arr[j+1]" + "\n" +
-        "            arr[j+1] = temp" + "\n" +
-        "        }" + "\n" +
-        "    }" + "\n" +
-        "}" + "\n" +
+        "var arr = [5, 1, 4, 2, 8]\n" +
+        "var n = array_length(arr)\n" +
+        "for (var i = 0; i < n; i++) {\n" +
+        "    for (var j = 0; j < n - i - 1; j++) {\n" +
+        "        if (arr[j] > arr[j+1]) {\n" +
+        "            var temp = arr[j]\n" +
+        "            arr[j] = arr[j+1]\n" +
+        "            arr[j+1] = temp\n" +
+        "        }\n" +
+        "    }\n" +
+        "}\n" +
         "return arr[0] + arr[4] // 1 + 8"
     , 9)) _passed++; else _failed++;
 
     // 8. Algorithm: Binary Search
     if (_assert("Binary Search", 
-        "fn binary_search(arr, target) {" + "\n" +
-        "    var left = 0" + "\n" +
-        "    var right = array_length(arr) - 1" + "\n" +
-        "    while (left <= right) {" + "\n" +
-        "        var mid = floor((left + right) / 2)" + "\n" +
-        "        if (arr[mid] == target) return mid" + "\n" +
-        "        if (arr[mid] < target) left = mid + 1" + "\n" +
-        "        else right = mid - 1" + "\n" +
-        "    }" + "\n" +
-        "    return -1" + "\n" +
-        "}" + "\n" +
-        "var sorted = [10, 20, 30, 40, 50]" + "\n" +
+        "fn binary_search(arr, target) {\n" +
+        "    var left = 0\n" +
+        "    var right = array_length(arr) - 1\n" +
+        "    while (left <= right) {\n" +
+        "        var mid = floor((left + right) / 2)\n" +
+        "        if (arr[mid] == target) return mid\n" +
+        "        if (arr[mid] < target) left = mid + 1\n" +
+        "        else right = mid - 1\n" +
+        "    }\n" +
+        "    return -1\n" +
+        "}\n" +
+        "var sorted = [10, 20, 30, 40, 50]\n" +
         "return binary_search(sorted, 40)"
     , 3)) _passed++; else _failed++;
 
     // 9. Matrix Addition
     if (_assert("Matrix Add", 
-        "var m1 = [[1, 2], [3, 4]]" + "\n" +
-        "var m2 = [[5, 6], [7, 8]]" + "\n" +
-        "var res = [[0, 0], [0, 0]]" + "\n" +
-        "" + "\n" +
-        "for (var r = 0; r < 2; r++) {" + "\n" +
-        "    for (var c = 0; c < 2; c++) {" + "\n" +
-        "        res[r][c] = m1[r][c] + m2[r][c]" + "\n" +
-        "    }" + "\n" +
-        "}" + "\n" +
+        "var m1 = [[1, 2], [3, 4]]\n" +
+        "var m2 = [[5, 6], [7, 8]]\n" +
+        "var res = [[0, 0], [0, 0]]\n" +
+        "\n" +
+        "for (var r = 0; r < 2; r++) {\n" +
+        "    for (var c = 0; c < 2; c++) {\n" +
+        "        res[r][c] = m1[r][c] + m2[r][c]\n" +
+        "    }\n" +
+        "}\n" +
         "return res[1][1] // 4 + 8 = 12"
     , 12)) _passed++; else _failed++;
 
     // 10. State Machine (Traffic Light)
     if (_assert("State Machine", 
-        "var state = \"red\"" + "\n" +
-        "var actions = 0" + "\n" +
-        "" + "\n" +
-        "for (var i = 0; i < 5; i++) {" + "\n" +
-        "    switch (state) {" + "\n" +
-        "        case \"red\":" + "\n" +
-        "            state = \"green\"" + "\n" +
-        "            break" + "\n" +
-        "        case \"green\":" + "\n" +
-        "            state = \"yellow\"" + "\n" +
-        "            actions++ // go" + "\n" +
-        "            break" + "\n" +
-        "        case \"yellow\":" + "\n" +
-        "            state = \"red\"" + "\n" +
-        "            break" + "\n" +
-        "    }" + "\n" +
-        "}" + "\n" +
+        "var state = \"red\"\n" +
+        "var actions = 0\n" +
+        "\n" +
+        "for (var i = 0; i < 5; i++) {\n" +
+        "    switch (state) {\n" +
+        "        case \"red\":\n" +
+        "            state = \"green\"\n" +
+        "            break\n" +
+        "        case \"green\":\n" +
+        "            state = \"yellow\"\n" +
+        "            actions++ // go\n" +
+        "            break\n" +
+        "        case \"yellow\":\n" +
+        "            state = \"red\"\n" +
+        "            break\n" +
+        "    }\n" +
+        "}\n" +
         "return actions"
     , 2)) _passed++; else _failed++;
 
     // 11. String Parsing (CSV)
     if (_assert("CSV Parse", 
-        "var csv = \"10,20,30,40\"" + "\n" +
-        "var sum = 0" + "\n" +
-        "var num_str = \"\"" + "\n" +
-        "var len = string_length(csv)" + "\n" +
-        "" + "\n" +
-        "for (var i = 1; i <= len; i++) {" + "\n" +
-        "    var char = string_char_at(csv, i)" + "\n" +
-        "    if (char == \",\") {" + "\n" +
-        "        sum += real(num_str)" + "\n" +
-        "        num_str = \"\"" + "\n" +
-        "    } else {" + "\n" +
-        "        num_str += char" + "\n" +
-        "    }" + "\n" +
-        "}" + "\n" +
-        "sum += real(num_str) // last one" + "\n" +
+        "var csv = \"10,20,30,40\"\n" +
+        "var sum = 0\n" +
+        "var num_str = \"\"\n" +
+        "var len = string_length(csv)\n" +
+        "\n" +
+        "for (var i = 1; i <= len; i++) {\n" +
+        "    var char = string_char_at(csv, i)\n" +
+        "    if (char == \",\") {\n" +
+        "        sum += real(num_str)\n" +
+        "        num_str = \"\"\n" +
+        "    } else {\n" +
+        "        num_str += char\n" +
+        "    }\n" +
+        "}\n" +
+        "sum += real(num_str) // last one\n" +
         "return sum"
     , 100)) _passed++; else _failed++;
 
     // 12. Vector Dot Product
     if (_assert("Vector Struct Dot", 
-        "fn dot(v1, v2) {" + "\n" +
-        "    return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z" + "\n" +
-        "}" + "\n" +
-        "var a = {x: 1, y: 2, z: 3}" + "\n" +
-        "var b = {x: 4, y: -5, z: 6}" + "\n" +
+        "fn dot(v1, v2) {\n" +
+        "    return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z\n" +
+        "}\n" +
+        "var a = {x: 1, y: 2, z: 3}\n" +
+        "var b = {x: 4, y: -5, z: 6}\n" +
         "return dot(a, b) // 4 - 10 + 18 = 12"
     , 12)) _passed++; else _failed++;
 
     // 13. Function Wrapper (Mock Decorator)
     if (_assert("Function Wrapper", 
-        "fn logger(func, arg) {" + "\n" +
-        "    // log \"calling\"" + "\n" +
-        "    var res = func(arg)" + "\n" +
-        "    // log \"done\"" + "\n" +
-        "    return res" + "\n" +
-        "}" + "\n" +
-        "fn double_it(n) { return n * 2 }" + "\n" +
+        "fn logger(func, arg) {\n" +
+        "    // log \"calling\"\n" +
+        "    var res = func(arg)\n" +
+        "    // log \"done\"\n" +
+        "    return res\n" +
+        "}\n" +
+        "fn double_it(n) { return n * 2 }\n" +
         "return logger(double_it, 21)"
     , 42)) _passed++; else _failed++;
     
     // 14. Deep Nesting Update
     if (_assert("Deep Nesting", 
-        "var config = {" + "\n" +
-        "    graphics: {" + "\n" +
-        "        resolution: { w: 1920, h: 1080 }, " + "\n" +
-        "        settings: { bloom: true }" + "\n" +
-        "    }" + "\n" +
-        "}" + "\n" +
-        "config.graphics.resolution.w = 2560" + "\n" +
+        "var config = {\n" +
+        "    graphics: {\n" +
+        "        resolution: { w: 1920, h: 1080 }, \n" +
+        "        settings: { bloom: true }\n" +
+        "    }\n" +
+        "}\n" +
+        "config.graphics.resolution.w = 2560\n" +
         "return config.graphics.resolution.w"
     , 2560)) _passed++; else _failed++;
 
     // 15. Scope Shadowing
     if (_assert("Scope Shadowing", 
-        "var x = 10" + "\n" +
-        "fn test(x) {" + "\n" +
-        "    var y = 20" + "\n" +
-        "    return x + y // param x (5) + y (20) = 25" + "\n" +
-        "}" + "\n" +
+        "var x = 10\n" +
+        "fn test(x) {\n" +
+        "    var y = 20\n" +
+        "    return x + y // param x (5) + y (20) = 25\n" +
+        "}\n" +
         "return test(5) + x // 25 + 10 = 35"
     , 35)) _passed++; else _failed++;
 
     // 16. Array Merging (Spread)
     if (_assert("Merge Configs via Spread", 
-        "var default_tags = [\"item\", \"pickable\"]" + "\n" +
-        "var weapon_tags = [\"weapon\", \"damage\"]" + "\n" +
-        "var all_tags = [...default_tags, ...weapon_tags, \"legendary\"]" + "\n" +
+        "var default_tags = [\"item\", \"pickable\"]\n" +
+        "var weapon_tags = [\"weapon\", \"damage\"]\n" +
+        "var all_tags = [...default_tags, ...weapon_tags, \"legendary\"]\n" +
         "return all_tags[4]"
     , "legendary")) _passed++; else _failed++;
 
     // 17. Exception in Loop
     if (_assert("Exception Loop", 
-        "var sum = 0" + "\n" +
-        "var items = [10, 20, undefined, 30]" + "\n" +
-        "for (item in items) {" + "\n" +
-        "     try {" + "\n" +
-        "         if (item == undefined) throw \"bad item\"" + "\n" +
-        "         sum += item" + "\n" +
-        "     } catch (e) {" + "\n" +
-        "         // ignore" + "\n" +
-        "     }" + "\n" +
-        "}" + "\n" +
+        "var sum = 0\n" +
+        "var items = [10, 20, undefined, 30]\n" +
+        "for (item in items) {\n" +
+        "     try {\n" +
+        "         if (item == undefined) throw \"bad item\"\n" +
+        "         sum += item\n" +
+        "     } catch (e) {\n" +
+        "         // ignore\n" +
+        "     }\n" +
+        "}\n" +
         "return sum"
     , 60)) _passed++; else _failed++;
 
     // 18. Prime Finder
     if (_assert("Prime Finder", 
-        "fn is_prime(n) {" + "\n" +
-        "    if (n < 2) return false" + "\n" +
-        "    for (var i = 2; i * i <= n; i++) {" + "\n" +
-        "        if (n % i == 0) return false" + "\n" +
-        "    }" + "\n" +
-        "    return true" + "\n" +
-        "}" + "\n" +
-        "var count = 0" + "\n" +
-        "for (var k = 1; k < 20; k++) {" + "\n" +
-        "    if (is_prime(k)) count++" + "\n" +
-        "}" + "\n" +
-        "// 2, 3, 5, 7, 11, 13, 17, 19 -> 8 primes" + "\n" +
+        "fn is_prime(n) {\n" +
+        "    if (n < 2) return false\n" +
+        "    for (var i = 2; i * i <= n; i++) {\n" +
+        "        if (n % i == 0) return false\n" +
+        "    }\n" +
+        "    return true\n" +
+        "}\n" +
+        "var count = 0\n" +
+        "for (var k = 1; k < 20; k++) {\n" +
+        "    if (is_prime(k)) count++\n" +
+        "}\n" +
+        "// 2, 3, 5, 7, 11, 13, 17, 19 -> 8 primes\n" +
         "return count"
     , 8)) _passed++; else _failed++;
     
     // 19. Context Binding (this simulation)
     if (_assert("Object Method simulation", 
-        "fn create_player(name) {" + "\n" +
-        "    var p = { name: name, hp: 100 }" + "\n" +
-        "    p.heal = fn(amount) {" + "\n" +
-        "        // 'p' is captured by closure" + "\n" +
-        "        p.hp += amount" + "\n" +
-        "        return p.hp" + "\n" +
-        "    }" + "\n" +
-        "    return p" + "\n" +
-        "}" + "\n" +
-        "var player = create_player(\"Hero\")" + "\n" +
-        "player.heal(50)" + "\n" +
+        "fn create_player(name) {\n" +
+        "    var p = { name: name, hp: 100 }\n" +
+        "    p.heal = fn(amount) {\n" +
+        "        // 'p' is captured by closure\n" +
+        "        p.hp += amount\n" +
+        "        return p.hp\n" +
+        "    }\n" +
+        "    return p\n" +
+        "}\n" +
+        "var player = create_player(\"Hero\")\n" +
+        "player.heal(50)\n" +
         "return player.hp"
     , 150)) _passed++; else _failed++;
     
     // 20. Mini Evaluator
     if (_assert("Mini Eval", 
-        "var program = [1, 5, 2] // ADD, 5, 2" + "\n" +
-        "// Ops: 1=ADD, 2=SUB" + "\n" +
-        "var ip = 0" + "\n" +
-        "var reg = 0" + "\n" +
-        "while (ip < array_length(program)) {" + "\n" +
-        "    var op = program[ip]" + "\n" +
-        "    ip++" + "\n" +
-        "    if (op == 1) {" + "\n" +
-        "        var val1 = program[ip]; ip++;" + "\n" +
-        "        var val2 = program[ip]; ip++;" + "\n" +
-        "        reg = val1 + val2" + "\n" +
-        "    }" + "\n" +
-        "}" + "\n" +
+        "var program = [1, 5, 2] // ADD, 5, 2\n" +
+        "// Ops: 1=ADD, 2=SUB\n" +
+        "var ip = 0\n" +
+        "var reg = 0\n" +
+        "while (ip < array_length(program)) {\n" +
+        "    var op = program[ip]\n" +
+        "    ip++\n" +
+        "    if (op == 1) {\n" +
+        "        var val1 = program[ip]; ip++;\n" +
+        "        var val2 = program[ip]; ip++;\n" +
+        "        reg = val1 + val2\n" +
+        "    }\n" +
+        "}\n" +
         "return reg"
     , 7)) _passed++; else _failed++;
 
@@ -723,6 +723,108 @@ function proglang_test() {
         return opt_expr()
     ", 3)) _passed++; else _failed++;
 
+
+    // Numeric Underscores
+    if (_assert("Numeric Underscores", "return 1_000 + 500", 1500)) _passed++; else _failed++;
+
+    // ============ PHASE 12 TESTS: Class System ============
+
+    // 1. Basic Class Instantiation
+    if (_assert("Class Basic", @"
+        class Point {
+            // Field initialization in constructor required for now (or via closure if we supported it)
+            
+            fn constructor(x, y) {
+                this.x = x
+                this.y = y
+            }
+            
+            fn magnitude() {
+                // sqrt not built-in? use dist logic or assume it exists in math funcs
+                return this.x * this.x + this.y * this.y
+            }
+        }
+        var p = new Point(3, 4)
+        return p.magnitude()
+    ", 25)) _passed++; else _failed++;
+
+    // 2. Class Inheritance
+    if (_assert("Class Inheritance", 
+        $"class Animal \{\n" +
+        $"    fn constructor(name) \{ this.name = name \}\n" +
+        $"    fn speak() \{ return '...' \}\n" +
+        $"\}\n" +
+        $"class Dog extends Animal \{\n" +
+        $"    fn constructor(name) \{\n" +
+        $"        super(name)\n" +
+        $"    \}\n" +
+        $"    fn speak() \{ return 'Woof!' \}\n" +
+        $"\}\n" +
+        $"var d = new Dog('Rex')\n" +
+        $"return d.speak()", 
+        "Woof!")) _passed++; else _failed++;
+
+    // 3. Super Method Call
+    if (_assert("Super Method", @"
+        class A {
+            fn get_val() { return 10 }
+        }
+        class B extends A {
+            fn get_val() { return super.get_val() + 5 }
+        }
+        var b = new B()
+        return b.get_val()
+    ", 15)) _passed++; else _failed++;
+    
+    // 4. Static Member
+    if (_assert("Static Method", @"
+        class MathUtils {
+            static fn add(a, b) { return a + b }
+        }
+        return MathUtils.add(10, 20)
+    ", 30)) _passed++; else _failed++;
+
+    // 5. Polymorphism (Method Overriding)
+    if (_assert("Polymorphism", @"
+        class Shape { fn area() { return 0 } }
+        class Rect extends Shape { fn area() { return 10 } }
+        class Circle extends Shape { fn area() { return 20 } }
+        
+        var shapes = [new Rect(), new Circle()]
+        var total = 0
+        for (s in shapes) total += s.area()
+        return total
+    ", 30)) _passed++; else _failed++;
+
+    // 6. Encapsulation (Syntax Check - Runtime enforcement optional)
+    if (_assert("Encapsulation Syntax", @"
+        class Box {
+            private var content = 0
+            fn set_content(c) { this.content = c }
+            fn get_content() { return this.content }
+        }
+        var b = new Box()
+        b.set_content(42)
+        return b.get_content()
+    ", 42)) _passed++; else _failed++;
+    
+    // 7. Abstraction (Syntax Check - Abstract classes)
+    if (_assert("Abstraction Syntax", @"
+        abstract class Base {
+            abstract fn process() {}
+        }
+        class Impl extends Base {
+            fn process() { return 1 }
+        }
+        var i = new Impl()
+        return i.process()
+    ", 1)) _passed++; else _failed++;
+
+    // ============ Debug Tests ============
+    
+    // Print (should not crash)
+    proglang_execute("print(\"Proglang Print Test OK\")");
+    
     show_debug_message($"[Proglang Test] Tests Completed. Passed: {_passed}, Failed: {_failed}");
     
     return (_failed == 0);

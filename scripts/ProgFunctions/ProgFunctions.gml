@@ -98,3 +98,30 @@ proglang_function_register("sfx_play", function(_args) {
 proglang_function_register("log", function(_args) { 
     show_debug_message($"[Proglang] {_args[0]}");
 });
+
+// Print - variadic debug output (alias for show_debug_message)
+proglang_function_register("print", function(_args) { 
+    var _msg = "";
+    for (var i = 0; i < array_length(_args); i++) {
+        if (i > 0) _msg += " ";
+        _msg += string(_args[i]);
+    }
+    show_debug_message($"[Proglang] {_msg}");
+});
+
+// Type checking
+proglang_function_register("typeof", function(_args) {
+    var _val = _args[0];
+    if (is_undefined(_val)) return "undefined";
+    if (is_bool(_val)) return "boolean";
+    if (is_real(_val)) return "number";
+    if (is_string(_val)) return "string";
+    if (is_array(_val)) return "array";
+    if (is_struct(_val)) {
+        // Check for class instance
+        if (variable_struct_exists(_val, "__class__")) return "object";
+        return "struct";
+    }
+    if (is_method(_val)) return "function";
+    return "unknown";
+});

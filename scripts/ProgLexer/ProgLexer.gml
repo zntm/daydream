@@ -7,7 +7,10 @@ enum PROG_TOKEN {
     // Keywords
     VAR, GLOBAL, IF, ELSE, FOR, IN, WHILE, REPEAT, BREAK, CONTINUE, RETURN,
     TRY, CATCH, THROW, AND, OR, NOT, SWITCH, CASE, DEFAULT, FN, FUNCTION,
-    IMPORT, EXPORT, FROM, AS, // Added
+    IMPORT, EXPORT, FROM, AS,
+    // Class keywords
+    CLASS, NEW, THIS, EXTENDS, SUPER, STATIC,
+    PUBLIC, PRIVATE, PROTECTED, ABSTRACT, INTERFACE, IMPLEMENTS,
     // Operators
     PLUS, MINUS, STAR, SLASH, PERCENT, POWER,
     PLUS_PLUS, MINUS_MINUS,
@@ -48,7 +51,12 @@ function ProgLexer(_source) constructor {
         "and": PROG_TOKEN.AND, "or": PROG_TOKEN.OR, "not": PROG_TOKEN.NOT,
         "switch": PROG_TOKEN.SWITCH, "case": PROG_TOKEN.CASE, "default": PROG_TOKEN.DEFAULT,
         "fn": PROG_TOKEN.FN, "function": PROG_TOKEN.FUNCTION,
-        "import": PROG_TOKEN.IMPORT, "export": PROG_TOKEN.EXPORT, "from": PROG_TOKEN.FROM, "as": PROG_TOKEN.AS
+        "import": PROG_TOKEN.IMPORT, "export": PROG_TOKEN.EXPORT, "from": PROG_TOKEN.FROM, "as": PROG_TOKEN.AS,
+        // Class keywords
+        "class": PROG_TOKEN.CLASS, "new": PROG_TOKEN.NEW, "this": PROG_TOKEN.THIS,
+        "extends": PROG_TOKEN.EXTENDS, "super": PROG_TOKEN.SUPER, "static": PROG_TOKEN.STATIC,
+        "public": PROG_TOKEN.PUBLIC, "private": PROG_TOKEN.PRIVATE, "protected": PROG_TOKEN.PROTECTED,
+        "abstract": PROG_TOKEN.ABSTRACT, "interface": PROG_TOKEN.INTERFACE, "implements": PROG_TOKEN.IMPLEMENTS
     };
     
     /// @desc Tokenize the source code
@@ -158,7 +166,8 @@ function ProgLexer(_source) constructor {
             
             case " ": case "\r": case "\t": break;
             case "\n": line++; break;
-            case "\"": scan_string(); break;
+            case "\"": scan_string("\""); break;
+            case "'": scan_string("'"); break; // Single quote support
             case "$": 
                 if (match("\"")) { start_interpolation(); }
                 else { had_error = true; error = $"Unexpected '$' at line {line}"; }
@@ -172,8 +181,8 @@ function ProgLexer(_source) constructor {
         }
     }
     
-    static scan_string = function() {
-        while (peek() != "\"" && !is_at_end()) {
+    static scan_string = function(_quote = "\"") {
+        while (peek() != _quote && !is_at_end()) {
             if (peek() == "\n") line++;
             advance();
         }
@@ -220,12 +229,16 @@ function ProgLexer(_source) constructor {
     }
     
     static scan_number = function() {
-        while (is_digit(peek())) advance();
+        // Support underscores in numbers (e.g., 10_000)
+        while (is_digit(peek()) || peek() == "_") advance();
         if (peek() == "." && is_digit(peek_next())) {
             advance();
-            while (is_digit(peek())) advance();
+            while (is_digit(peek()) || peek() == "_") advance();
         }
-        add_token(PROG_TOKEN.NUMBER, real(string_copy(source, start, current - start)));
+        // Remove underscores before parsing
+        var _num_str = string_copy(source, start, current - start);
+        _num_str = string_replace_all(_num_str, "_", "");
+        add_token(PROG_TOKEN.NUMBER, real(_num_str));
     }
     
     static is_digit = function(_c) { return (_c >= "0" && _c <= "9"); }
