@@ -1,6 +1,5 @@
 function chat_command_parameter_parse(_value, _parameter, _index, _user, _return)
 {
-	// TODO: FIX BOUNDARY ISSUES
 	static __parse_position = function(_value, _type, _index, _user, _return)
 	{
 		static __filter = function(_value)
@@ -102,6 +101,33 @@ function chat_command_parameter_parse(_value, _parameter, _index, _user, _return
 		for (var i = 0; i < _length; ++i)
 		{
 			_result += real(_values[i]);
+		}
+		
+		var _valid = true;
+		
+		if (_type == COMMAND_PARAMETER_TYPE.POSITION_X)
+		{
+			var _max_width = room_width / TILE_SIZE;
+			if (_result < 0) || (_result >= _max_width) _valid = false;
+		}
+		else if (_type == COMMAND_PARAMETER_TYPE.POSITION_Y)
+		{
+			var _max_height = global.world_data[$ global.world.realm].get_world_height();
+			if (_result < 0) || (_result >= _max_height) _valid = false;
+		}
+		else if (_type == COMMAND_PARAMETER_TYPE.POSITION_Z)
+		{
+			if (_result < 0) || (_result >= CHUNK_DEPTH) _valid = false;
+		}
+		
+		if (!_valid)
+		{
+			if (_return)
+			{
+				chat_add(undefined, $"Argument {_index} is not a valid position", CHAT_COMMAND_ERROR);
+			}
+			
+			return undefined;
 		}
 		
 		return _result;
@@ -208,7 +234,7 @@ function chat_command_parameter_parse(_value, _parameter, _index, _user, _return
 			return undefined;
 		}
 	}
-	// TODO: Cleanup
+
 	else if (_type == COMMAND_PARAMETER_TYPE.USER)
 	{
 		_value = obj_Player;
