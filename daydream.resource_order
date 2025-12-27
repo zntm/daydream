@@ -252,6 +252,7 @@
     {"name":"function_execute","order":27,"path":"scripts/function_execute/function_execute.yy",},
     {"name":"function_parse","order":26,"path":"scripts/function_parse/function_parse.yy",},
     {"name":"get_buffs","order":16,"path":"scripts/get_buffs/get_buffs.yy",},
+    {"name":"GMLRegex","order":11,"path":"scripts/GMLRegex/GMLRegex.yy",},
     {"name":"gui_hp","order":7,"path":"scripts/gui_hp/gui_hp.yy",},
     {"name":"gui_init_modular","order":11,"path":"scripts/gui_init_modular/gui_init_modular.yy",},
     {"name":"gui_inventory_craftable","order":1,"path":"scripts/gui_inventory_craftable/gui_inventory_craftable.yy",},

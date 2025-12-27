@@ -2,7 +2,7 @@
 // AST Node types
 enum PROG_AST {
     // Literals
-    NUMBER_LITERAL, STRING_LITERAL, BOOL_LITERAL, UNDEFINED_LITERAL,
+    NUMBER_LITERAL, STRING_LITERAL, BOOL_LITERAL, UNDEFINED_LITERAL, REGEX_LITERAL,
     ARRAY_LITERAL, OBJECT_LITERAL,
     // Expressions
     IDENTIFIER, BINARY_OP, UNARY_OP, CALL, INDEX, MEMBER,
@@ -249,3 +249,9 @@ function ProgASTThisExpr() : ProgASTNode(PROG_AST.THIS_EXPR) constructor {}
 
 /// @desc Super keyword
 function ProgASTSuperExpr() : ProgASTNode(PROG_AST.SUPER_EXPR) constructor {}
+
+/// @desc Regex literal node (/abc/i)
+function ProgASTRegexLiteral(_pattern, _flags) : ProgASTNode(PROG_AST.REGEX_LITERAL) constructor {
+    pattern = _pattern;
+    flags = _flags;
+}

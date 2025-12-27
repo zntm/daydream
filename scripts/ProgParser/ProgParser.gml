@@ -877,6 +877,11 @@ function ProgParser(_tokens) constructor {
         if (match(PROG_TOKEN.FALSE)) return new ProgASTLiteral(PROG_AST.BOOL_LITERAL, false);
         if (match(PROG_TOKEN.TRUE)) return new ProgASTLiteral(PROG_AST.BOOL_LITERAL, true);
         if (match(PROG_TOKEN.UNDEFINED)) return new ProgASTLiteral(PROG_AST.UNDEFINED_LITERAL, undefined);
+        
+        if (match(PROG_TOKEN.REGEX)) {
+             var _token = previous();
+             return new ProgASTRegexLiteral(_token.literal.pattern, _token.literal.flags);
+        }
 
         if (match(PROG_TOKEN.FN) || match(PROG_TOKEN.FUNCTION)) return parse_function_expr();
         

@@ -579,6 +579,13 @@ function ProgVM() constructor {
                             _stack[@ sp++] = _obj;
                             break;
                         }
+                        
+                        case PROG_OP.MAKE_REGEX: {
+                            var _flags = _stack[--sp];
+                            var _pattern = _stack[--sp];
+                            _stack[@ sp++] = new GMLRegex(_pattern, _flags);
+                            break;
+                        }
 
                         case PROG_OP.ITER_INIT: {
                             var _col = _stack[--sp];

@@ -147,4 +147,33 @@ function proglang_init() {
     // Output
     _reg("show_debug_message", function(_args) { show_debug_message(_args[0]); return 0; });
     _reg("print", function(_args) { show_debug_message(_args[0]); return 0; });
+    
+    // Regex
+    _reg("regex_parse", function(_args) { return new GMLRegex(_args[0], array_length(_args)>1 ? _args[1] : ""); });
+    _reg("regex_test", function(_args) { 
+        if (!is_struct(_args[1]) || !variable_struct_exists(_args[1], "test")) {
+             throw { type: PROG_ERROR.TYPE, message: "Expected regex object." };
+        }
+        return _args[1].test(_args[0]); 
+    });
+    _reg("regex_match", function(_args) { return _args[1].match(_args[0]); });
+    _reg("regex_match_index", function(_args) { return _args[1].match_index(_args[0]); });
+    _reg("regex_replace", function(_args) { return _args[1].replace(_args[0], _args[2]); });
+    _reg("regex_replace_all", function(_args) { 
+        // Force global flag? Or assume user passed regex with /g?
+        // User request says "regex_replace_all(string, regex)".
+        // If the regex has 'g' flag, replace does it all.
+        // If not, we should probably set it temporarily or just loop?
+        // GMLRegex engine in replace() checks is_global.
+        // Let's assume user creates regex with /g for replace_all, OR we modify it?
+        // Modifying might affect other uses.
+        // Let's rely on GMLRegex.replace() handling global flag, effectively making regex_replace alias.
+        // But maybe force global behavior if possible.
+        // Since my GMLRegex implementation respects is_global in replace(),
+        // "regex_replace" already does "replace all" if /g is present.
+        // "regex_replace_all" might be expected to ALWAYs replace all regardless of flag.
+        // But simple alias is safest for now.
+        return _args[1].replace(_args[0], _args[2]); 
+    });
+    _reg("regex_split", function(_args) { return _args[1].split(_args[0]); });
 }

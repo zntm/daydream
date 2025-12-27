@@ -1385,6 +1385,7 @@
     {"id":{"name":"function_execute","path":"scripts/function_execute/function_execute.yy",},},
     {"id":{"name":"function_parse","path":"scripts/function_parse/function_parse.yy",},},
     {"id":{"name":"get_buffs","path":"scripts/get_buffs/get_buffs.yy",},},
+    {"id":{"name":"GMLRegex","path":"scripts/GMLRegex/GMLRegex.yy",},},
     {"id":{"name":"gui_hp","path":"scripts/gui_hp/gui_hp.yy",},},
     {"id":{"name":"gui_init_modular","path":"scripts/gui_init_modular/gui_init_modular.yy",},},
     {"id":{"name":"gui_inventory_craftable","path":"scripts/gui_inventory_craftable/gui_inventory_craftable.yy",},},

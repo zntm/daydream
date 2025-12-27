@@ -1,7 +1,7 @@
 /// @desc Proglang Token Types
 enum PROG_TOKEN {
     // Literals
-    NUMBER, STRING, TRUE, FALSE, UNDEFINED,
+    NUMBER, STRING, REGEX, TRUE, FALSE, UNDEFINED,
     // Identifiers
     IDENTIFIER,
     // Keywords
@@ -146,7 +146,35 @@ function ProgLexer(_source) constructor {
                         if (peek() == "\n") line++;
                         advance();
                     }
-                } else { add_token(match("=") ? PROG_TOKEN.SLASH_ASSIGN : PROG_TOKEN.SLASH); }
+                } else { 
+                    // Regex vs Division check
+                    var _is_regex = false;
+                    if (array_length(tokens) == 0) _is_regex = true;
+                    else {
+                        var _last = tokens[array_length(tokens) - 1].type;
+                        if (_last == PROG_TOKEN.LPAREN || _last == PROG_TOKEN.COMMA || 
+                            _last == PROG_TOKEN.ASSIGN || _last == PROG_TOKEN.COLON ||
+                            _last == PROG_TOKEN.SEMICOLON || _last == PROG_TOKEN.LBRACE ||
+                            _last == PROG_TOKEN.LBRACKET || _last == PROG_TOKEN.RETURN ||
+                            _last == PROG_TOKEN.THROW || _last == PROG_TOKEN.CASE ||
+                            _last == PROG_TOKEN.PLUS || _last == PROG_TOKEN.MINUS ||
+                            _last == PROG_TOKEN.STAR || _last == PROG_TOKEN.SLASH ||
+                            _last == PROG_TOKEN.PERCENT || _last == PROG_TOKEN.POWER ||
+                            _last == PROG_TOKEN.AND || _last == PROG_TOKEN.OR || 
+                            _last == PROG_TOKEN.NOT || _last == PROG_TOKEN.AMP || 
+                            _last == PROG_TOKEN.PIPE || _last == PROG_TOKEN.CARET ||
+                            _last == PROG_TOKEN.EQ || _last == PROG_TOKEN.NE ||
+                            _last == PROG_TOKEN.LT || _last == PROG_TOKEN.GT ||
+                            _last == PROG_TOKEN.LE || _last == PROG_TOKEN.GE ||
+                            _last == PROG_TOKEN.QUESTION || _last == PROG_TOKEN.NULL_COALESCE) {
+                            _is_regex = true;
+                        }
+                    }
+                    
+                    if (match("=")) add_token(PROG_TOKEN.SLASH_ASSIGN);
+                    else if (_is_regex) scan_regex();
+                    else add_token(PROG_TOKEN.SLASH);
+                }
                 break;
             case "%": add_token(PROG_TOKEN.PERCENT); break;
             
@@ -241,6 +269,36 @@ function ProgLexer(_source) constructor {
         add_token(PROG_TOKEN.NUMBER, real(_num_str));
     }
     
+    static scan_regex = function() {
+        while (!is_at_end()) {
+            var _c = peek();
+            if (_c == "\n") {
+                 had_error = true; error = $"Unterminated regex at line {line}"; return;
+            }
+            if (_c == "/") {
+                // Check if escaped?
+                if (string_char_at(source, current - 1) == "\\") {
+                    // It is escaped, continue
+                } else {
+                    // End of regex
+                    advance(); // Consume /
+                    break;
+                }
+            }
+            advance();
+        }
+        
+        var _pattern = string_copy(source, start + 1, current - start - 2);
+        var _flags = "";
+        
+        // Scan flags
+        while (is_alpha(peek())) {
+            _flags += advance();
+        }
+        
+        add_token(PROG_TOKEN.REGEX, { pattern: _pattern, flags: _flags });
+    }
+
     static is_digit = function(_c) { return (_c >= "0" && _c <= "9"); }
     static is_alpha = function(_c) { return (_c >= "a" && _c <= "z") || (_c >= "A" && _c <= "Z") || _c == "_"; }
     static is_alpha_numeric = function(_c) { return is_alpha(_c) || is_digit(_c); }

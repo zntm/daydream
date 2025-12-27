@@ -820,6 +820,15 @@ function proglang_test() {
         return i.process()
     ", 1)) _passed++; else _failed++;
 
+    // ============ REGEX TESTS ============
+    if (_assert("Regex Lit", "return /abc/.pattern", "abc")) _passed++; else _failed++;
+    if (_assert("Regex Test", "return regex_test(\"abc\", /abc/)", true)) _passed++; else _failed++;
+    if (_assert("Regex Match", "var m = regex_match(\"abc\", /abc/); return m[0]", "abc")) _passed++; else _failed++;
+    if (_assert("Regex Replace", "return regex_replace(\"banana\", /a/, \"o\")", "bonana")) _passed++; else _failed++;
+    if (_assert("Regex Replace All", "return regex_replace(\"banana\", /a/g, \"o\")", "bonono")) _passed++; else _failed++;
+    if (_assert("Regex Split", "var r = regex_split(\"a,b,c\", /,/); return r[1]", "b,c")) _passed++; else _failed++;
+    if (_assert("Regex Split Global", "var r = regex_split(\"a,b,c\", /,/g); return r[1]", "b")) _passed++; else _failed++;
+
     // ============ Debug Tests ============
     
     // Print (should not crash)

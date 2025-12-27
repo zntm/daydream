@@ -20,7 +20,7 @@ enum PROG_OP {
     INDEX_GET, INDEX_SET, MEMBER_GET, MEMBER_SET,
     
     // Creation
-    ARRAY_NEW, OBJECT_NEW,
+    ARRAY_NEW, OBJECT_NEW, MAKE_REGEX,
     
     // Control flow
     JUMP, JUMP_IF_FALSE, JUMP_IF_NULL, JUMP_IF_NOT_NULL,
@@ -165,6 +165,12 @@ function ProgCompiler() constructor {
                     compile_node(_node.pairs[i].value);
                 }
                 emit(PROG_OP.OBJECT_NEW, array_length(_node.pairs), _node.line);
+                break;
+                
+            case PROG_AST.REGEX_LITERAL:
+                emit(PROG_OP.PUSH_CONST, add_constant(_node.pattern), _node.line);
+                emit(PROG_OP.PUSH_CONST, add_constant(_node.flags), _node.line);
+                emit(PROG_OP.MAKE_REGEX, undefined, _node.line);
                 break;
                 
             // Expressions
