@@ -1,6 +1,8 @@
 
 /// @desc Proglang Test Suite
 function proglang_test() {
+    proglang_init(); // Initialize environment (constants, etc.)
+    
     var _passed = 0;
     var _failed = 0;
     
@@ -320,22 +322,55 @@ function proglang_test() {
     , 3)) _passed++; else _failed++;
     
     // Try Catch (Runtime Error)
-    if (_assert("Try Catch Catch", @"
-        try {
-            var a = undefined
-            return a + 1 
-        } catch (e) {
-            return 100
-        }
-    ", 100)) _passed++; else _failed++;
+    if (_assert("Try Catch Catch", 
+        "try {" + "\n" +
+        "    var a = undefined" + "\n" +
+        "    return a + 1 " + "\n" +
+        "} catch (e) {" + "\n" +
+        "    return 100" + "\n" +
+        "}"
+    , 100)) _passed++; else _failed++;
     
-    if (_assert("Try Catch No Error", @"
-        try {
-            return 50
-        } catch (e) {
-            return 100
-        }
-    ", 50)) _passed++; else _failed++;
+    if (_assert("Try Catch No Error", 
+        "try {" + "\n" +
+        "    return 50" + "\n" +
+        "} catch (e) {" + "\n" +
+        "    return 100" + "\n" +
+        "}"
+    , 50)) _passed++; else _failed++;
+    
+    // Module Import/Export
+    try {
+        // 1. Compile Module
+        var _lib_code = "export var PI = 3.0; export fn add(a, b) { return a + b; }";
+        var _lib_bc = proglang_compile(_lib_code);
+        
+        // 2. Run Module to populate exports
+        var _lib_vm = new ProgVM();
+        if (!variable_global_exists("proglang_modules")) global.proglang_modules = {};
+        global.proglang_modules[$ "math_lib"] = { exports: {}, loaded: true };
+        _lib_vm.active_module = global.proglang_modules[$ "math_lib"];
+        _lib_vm.run(_lib_bc);
+        
+        // 3. Run Consumer
+        var _main_code = "import PI, add from \"math_lib\"; return add(PI, 2.0);";
+        if (_assert("Module Import/Export", _main_code, 5.0)) _passed++; else _failed++;
+        
+    } catch (_e) {
+        show_debug_message($"[Proglang Test] Module Test Exception: {_e}");
+        _failed++;
+    }
+    
+    // Custom Error Handling
+    if (_assert("Custom Error Handling", 
+        "try {" + "\n" +
+        "    // Simulate a typed error" + "\n" +
+        "    throw { type: PROG_ERROR.TYPE, message: \"Custom error\" }" + "\n" +
+        "} catch (e) {" + "\n" +
+        "    if (e.type == PROG_ERROR.TYPE) return 1" + "\n" +
+        "    return 0" + "\n" +
+        "}"
+    , 1)) _passed++; else _failed++;
 
 
     

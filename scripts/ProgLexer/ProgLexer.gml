@@ -6,7 +6,8 @@ enum PROG_TOKEN {
     IDENTIFIER,
     // Keywords
     VAR, GLOBAL, IF, ELSE, FOR, IN, WHILE, REPEAT, BREAK, CONTINUE, RETURN,
-    TRY, CATCH, AND, OR, NOT, SWITCH, CASE, DEFAULT, FN, FUNCTION,
+    TRY, CATCH, THROW, AND, OR, NOT, SWITCH, CASE, DEFAULT, FN, FUNCTION,
+    IMPORT, EXPORT, FROM, AS, // Added
     // Operators
     PLUS, MINUS, STAR, SLASH, PERCENT, POWER,
     PLUS_PLUS, MINUS_MINUS,
@@ -43,10 +44,11 @@ function ProgLexer(_source) constructor {
         "break": PROG_TOKEN.BREAK, "continue": PROG_TOKEN.CONTINUE,
         "return": PROG_TOKEN.RETURN,
         "true": PROG_TOKEN.TRUE, "false": PROG_TOKEN.FALSE, "undefined": PROG_TOKEN.UNDEFINED,
-        "try": PROG_TOKEN.TRY, "catch": PROG_TOKEN.CATCH,
+        "try": PROG_TOKEN.TRY, "catch": PROG_TOKEN.CATCH, "throw": PROG_TOKEN.THROW,
         "and": PROG_TOKEN.AND, "or": PROG_TOKEN.OR, "not": PROG_TOKEN.NOT,
         "switch": PROG_TOKEN.SWITCH, "case": PROG_TOKEN.CASE, "default": PROG_TOKEN.DEFAULT,
-        "fn": PROG_TOKEN.FN, "function": PROG_TOKEN.FUNCTION
+        "fn": PROG_TOKEN.FN, "function": PROG_TOKEN.FUNCTION,
+        "import": PROG_TOKEN.IMPORT, "export": PROG_TOKEN.EXPORT, "from": PROG_TOKEN.FROM, "as": PROG_TOKEN.AS
     };
     
     /// @desc Tokenize the source code

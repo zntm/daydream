@@ -37,6 +37,9 @@ enum PROG_OP {
     // Spread operations
     PUSH_ARRAY_EMPTY, ARRAY_PUSH, ARRAY_SPREAD,
 
+    // Module Ops
+    IMPORT, EXPORT_SET,
+
     // Stack Ops Extra
     DUP2 // Added DUP2
 }
@@ -452,6 +455,53 @@ function ProgCompiler() constructor {
                 }
                 if (_node.catch_block != undefined) compile_node(_node.catch_block);
                 patch_jump(_end_jmp, bytecode.code_size);
+                break;
+            
+            case PROG_AST.IMPORT_STMT:
+                emit(PROG_OP.IMPORT, add_constant(_node.module_path), _node.line);
+                // Stack: ExportsStruct
+                for (var i = 0; i < array_length(_node.imports); i++) {
+                    var _imp = _node.imports[i];
+                    emit(PROG_OP.DUP); // Exports, Exports
+                    if (struct_exists(_imp, "is_default") && _imp.is_default) {
+                        // For now, default export is stored as "default"
+                         emit(PROG_OP.MEMBER_GET, add_constant(_imp.name), _node.line);
+                    } else {
+                         emit(PROG_OP.MEMBER_GET, add_constant(_imp.name), _node.line);
+                    }
+                    // Stack: Exports, Val
+                    emit(PROG_OP.DEFINE, add_constant(_imp.alias), _node.line);
+                    emit(PROG_OP.POP); // Exports
+                }
+                emit(PROG_OP.POP); // Pop Exports
+                break;
+                
+            case PROG_AST.EXPORT_STMT:
+                if (_node.is_default) {
+                    compile_node(_node.declaration);
+                    // Default export not fully spec'd yet, maybe EXPORT_SET "default"?
+                    emit(PROG_OP.EXPORT_SET, add_constant("default"), _node.line);
+                    emit(PROG_OP.POP);
+                } else {
+                    compile_node(_node.declaration);
+                    // Declaration (Var/Func) handles its own defining.
+                    // We need to also export it. 
+                    
+                    if (_node.declaration.type == PROG_AST.VAR_DECL) {
+                        emit(PROG_OP.LOAD, add_constant(_node.declaration.name), _node.line);
+                        emit(PROG_OP.EXPORT_SET, add_constant(_node.declaration.name), _node.line);
+                        emit(PROG_OP.POP);
+                    } else if (_node.declaration.type == PROG_AST.FUNC_DECL) {
+                        emit(PROG_OP.LOAD, add_constant(_node.declaration.name), _node.line);
+                        emit(PROG_OP.EXPORT_SET, add_constant(_node.declaration.name), _node.line);
+                        emit(PROG_OP.POP);
+                    }
+                }
+                break;
+            
+            case PROG_AST.THROW_STMT:
+                compile_node(_node.expression);
+                emit(PROG_OP.THROW, undefined, _node.line);
                 break;
                 
             case PROG_AST.DESTRUCTURING_DECL:

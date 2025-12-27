@@ -1,4 +1,21 @@
 /// @desc Virtual Machine for Proglang bytecode execution
+
+enum PROG_ERROR {
+    NONE = 0,
+    RUNTIME,
+    TYPE,
+    INDEX,
+    MEMBER,
+    VARIABLE,
+    DIVIDE_BY_ZERO,
+    UNDEFINED_VALUE,
+    NULL_REFERENCE,
+    INVALID_ARGUMENT,
+    NOT_CALLABLE,
+    SYNTAX,
+    IMPORT
+}
+
 function ProgVM() constructor {
     // Pre-allocate stack for performance
     stack = array_create(256);
@@ -12,6 +29,27 @@ function ProgVM() constructor {
     context = undefined;
     global_ref = global;
     try_stack = [];
+    
+    // Module System
+    if (!variable_global_exists("proglang_modules")) {
+        global.proglang_modules = {};
+    }
+    if (!variable_global_exists("proglang_constants")) {
+         global.proglang_constants = {};
+    }
+    
+    active_module = undefined; // Struct { exports: {}, loaded: bool }
+    
+    // Inject constants into global scope (or create a 'constants' scope?)
+    // For simplicity, we can treat them as globals or pre-defined vars.
+    // Let's add them to the initial locals if they are globally available.
+    // Or better, handle LOAD_GLOBAL to look there too.
+    // For now, let's copy them to current scope (simplest for access like PROG_ERROR.TYPE)
+    var _names = variable_struct_get_names(global.proglang_constants);
+    for (var i = 0; i < array_length(_names); i++) {
+        var _name = _names[i];
+        current_scope.vars[$ _name] = global.proglang_constants[$ _name];
+    }
     
     /// @desc Find variable in scope chain
     static find_var_scope = function(_name) {
@@ -322,10 +360,30 @@ function ProgVM() constructor {
                         case PROG_OP.JUMP_IF_NULL: if (_stack[sp - 1] == undefined) ip = _arg; break;
                         case PROG_OP.JUMP_IF_NOT_NULL: if (_stack[sp - 1] != undefined) ip = _arg; break;
                         
-                        // Exception Handling
-                        case PROG_OP.PUSH_TRY: array_push(try_stack, { ip: _arg, sp: sp }); break;
-                        case PROG_OP.POP_TRY: array_pop(try_stack); break;
-                        case PROG_OP.THROW: throw _stack[--sp];
+                        // Exception Handling (VM-internal, no GML throw)
+                        case PROG_OP.PUSH_TRY: {
+                            array_push(try_stack, { ip: _arg, sp: sp });
+                            break;
+                        }
+                        
+                        case PROG_OP.POP_TRY: {
+                            if (array_length(try_stack) > 0) array_pop(try_stack);
+                            break;
+                        }
+                        
+                        case PROG_OP.THROW: {
+                            var _err = _stack[--sp];
+                            if (array_length(try_stack) > 0) {
+                                var _handler = array_pop(try_stack);
+                                ip = _handler.ip;
+                                sp = _handler.sp;
+                                _stack[@ sp++] = _err; // Push error for catch block
+                            } else {
+                                show_debug_message($"[ProgVM] Uncaught Exception: {_err}");
+                                return undefined;
+                            }
+                            break;
+                        }
                         
                         // Iteration
                         case PROG_OP.ITER_INIT: {
@@ -388,6 +446,26 @@ function ProgVM() constructor {
                         }
                         
                         case PROG_OP.RETURN: return _stack[--sp];
+                        
+                        // Modules
+                        case PROG_OP.IMPORT: {
+                             var _path = _constants[_arg];
+                             if (!struct_exists(global.proglang_modules, _path)) {
+                                 // Auto-init module entry if missing (lazy loading hook could go here)
+                                 global.proglang_modules[$ _path] = { exports: {}, loaded: false };
+                             }
+                             _stack[@ sp++] = global.proglang_modules[$ _path].exports;
+                             break;
+                        }
+                        
+                        case PROG_OP.EXPORT_SET: {
+                             var _name = _constants[_arg];
+                             var _val = _stack[sp - 1]; // Peek
+                             if (active_module != undefined) {
+                                 active_module.exports[$ _name] = _val;
+                             }
+                             break;
+                        }
                     }
                 }
             } catch (_e) {
@@ -410,4 +488,8 @@ function ProgVM() constructor {
     static push = function(_val) { stack[@ sp++] = _val; }
     static pop = function() { return stack[@ --sp]; }
     static peek = function() { return stack[sp - 1]; }
+    
+    static runtime_error = function(_type, _message) {
+        throw { type: _type, message: _message, line: 0 }; // TODO: Pass line number
+    }
 }

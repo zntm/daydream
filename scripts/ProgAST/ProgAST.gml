@@ -12,7 +12,8 @@ enum PROG_AST {
     BREAK_STMT, CONTINUE_STMT, RETURN_STMT, BLOCK,
     EXPRESSION_STMT, SWITCH_STMT, FUNC_DECL, FUNC_EXPR,
     // New
-    FOR_IN_STMT, TRY_STMT, DESTRUCTURING_DECL
+    FOR_IN_STMT, TRY_STMT, DESTRUCTURING_DECL,
+    IMPORT_STMT, EXPORT_STMT, THROW_STMT
 }
 
 /// @desc Base AST node
@@ -208,4 +209,21 @@ function ProgASTDestructuringDecl(_pattern_type, _elements, _initializer) : Prog
     pattern_type = _pattern_type; 
     elements = _elements; 
     initializer = _initializer; 
+}
+
+/// @desc Import Statement
+function ProgASTImportStmt(_imports, _module_path) : ProgASTNode(PROG_AST.IMPORT_STMT) constructor {
+    imports = _imports; // Array of { name: "exportedName", alias: "localName" }
+    module_path = _module_path; // String path
+}
+
+/// @desc Export Statement
+function ProgASTExportStmt(_declaration, _is_default = false) : ProgASTNode(PROG_AST.EXPORT_STMT) constructor {
+    declaration = _declaration; // AST node (VarDecl, FuncDecl, or ClassDecl)
+    is_default = _is_default;
+}
+
+/// @desc Throw Statement
+function ProgASTThrowStmt(_expression) : ProgASTNode(PROG_AST.THROW_STMT) constructor {
+    expression = _expression;
 }

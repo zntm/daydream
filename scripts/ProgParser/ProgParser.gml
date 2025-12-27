@@ -136,7 +136,81 @@ function ProgParser(_tokens) constructor {
         
         if (match(PROG_TOKEN.SWITCH)) return parse_switch_stmt();
         
+        if (match(PROG_TOKEN.IMPORT)) return parse_import_stmt();
+        if (match(PROG_TOKEN.EXPORT)) return parse_export_stmt();
+        
+        if (match(PROG_TOKEN.THROW)) {
+            var _expr = parse_expression();
+            match(PROG_TOKEN.SEMICOLON);
+            return new ProgASTThrowStmt(_expr);
+        }
+        
         return parse_expression_statement();
+    }
+    
+    static parse_import_stmt = function() {
+        var _imports = [];
+        
+        // Simplified imports: import a, b from "path" (No braces)
+        do {
+            var _name = consume(PROG_TOKEN.IDENTIFIER, "Expected imported name.").lexeme;
+            var _alias = _name;
+            
+            if (match(PROG_TOKEN.AS)) {
+                _alias = consume(PROG_TOKEN.IDENTIFIER, "Expected alias name.").lexeme;
+            }
+            
+            array_push(_imports, { name: _name, alias: _alias });
+        } until (!match(PROG_TOKEN.COMMA));
+        
+        consume(PROG_TOKEN.FROM, "Expected 'from' after imports.");
+        var _path = consume(PROG_TOKEN.STRING, "Expected module path.").literal;
+        consume(PROG_TOKEN.SEMICOLON, "Expected ';' after import statement.");
+        
+        return new ProgASTImportStmt(_imports, _path);
+    }
+    
+    static parse_export_stmt = function() {
+        var _decl = undefined;
+        var _is_default = false;
+        
+        if (match(PROG_TOKEN.DEFAULT)) {
+            _is_default = true;
+            // export default expression;
+            _decl = parse_expression();
+             consume(PROG_TOKEN.SEMICOLON, "Expected ';' after export default.");
+        } else {
+             // export var ... or export fn ...
+             if (match(PROG_TOKEN.VAR)) {
+                  _decl = parse_var_decl(false);
+             } else if (match(PROG_TOKEN.FN) || match(PROG_TOKEN.FUNCTION)) {
+                  _decl = parse_function_decl(false);
+             } else if (match(PROG_TOKEN.LBRACE)) {
+                  // export { a, b }
+                  var _exports = [];
+                   do {
+                        var _name = consume(PROG_TOKEN.IDENTIFIER, "Expected exported name.").lexeme;
+                        var _alias = _name;
+                        if (match(PROG_TOKEN.AS)) {
+                            _alias = consume(PROG_TOKEN.IDENTIFIER, "Expected alias name.").lexeme;
+                        }
+                        array_push(_exports, { name: _name, alias: _alias });
+                   } until (!match(PROG_TOKEN.COMMA));
+                   consume(PROG_TOKEN.RBRACE, "Expected '}' after export list.");
+                   consume(PROG_TOKEN.SEMICOLON, "Expected ';' after export statement.");
+                   return new ProgASTExportStmt(new ProgASTBlock([]), false); // Placeholder structure?
+                   // Actually export list is usually creating getters. 
+                   // Simplification: Treat as ExpressionStmt? No, need specific AST.
+                   // Let's stick to export decl for now.
+                   error_at_current("Export list not yet fully supported. Use export var/fn.");
+                   return new ProgASTStatement(); 
+             } else {
+                  error_at_current("Expected declaration after export.");
+                  return new ProgASTStatement();
+             }
+        }
+        
+        return new ProgASTExportStmt(_decl, _is_default);
     }
     
     static parse_block = function() {
