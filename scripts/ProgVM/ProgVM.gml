@@ -307,19 +307,26 @@ function ProgVM() constructor {
                             break;
                         }
                         
+                        // Optimization Ops
+                        case PROG_OP.INC: _stack[sp - 1]++; break;
+                        case PROG_OP.DEC: _stack[sp - 1]--; break;
+
                         // Arithmetic
                         case PROG_OP.ADD: { 
                             var _b = _stack[--sp]; 
                             var _a = _stack[sp - 1];
-                            if (is_undefined(_a) || is_undefined(_b)) {
-                                runtime_error(PROG_ERROR.UNDEFINED_VALUE, "Undefined value in addition.");
-                            }
-                            if (is_string(_a) || is_string(_b)) {
-                                var _sa = is_bool(_a) ? (_a ? "true" : "false") : string(_a);
-                                var _sb = is_bool(_b) ? (_b ? "true" : "false") : string(_b);
-                                _stack[sp - 1] = _sa + _sb;
+                            if (is_real(_a) && is_real(_b)) {
+                                _stack[sp - 1] = _a + _b;
                             } else {
-                                _stack[sp - 1] = _a + _b; 
+                                if (is_string(_a) || is_string(_b)) {
+                                    var _sa = is_bool(_a) ? (_a ? "true" : "false") : string(_a);
+                                    var _sb = is_bool(_b) ? (_b ? "true" : "false") : string(_b);
+                                    _stack[sp - 1] = _sa + _sb;
+                                } else if (is_undefined(_a) || is_undefined(_b)) {
+                                    runtime_error(PROG_ERROR.UNDEFINED_VALUE, "Undefined value in addition.");
+                                } else {
+                                    _stack[sp - 1] = _a + _b; 
+                                }
                             }
                             break; 
                         }

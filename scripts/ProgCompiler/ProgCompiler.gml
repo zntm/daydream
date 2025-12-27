@@ -43,6 +43,9 @@ enum PROG_OP {
     // Stack Ops Extra
     DUP2, POP_AND_KEEP,
 
+    // Optimization Ops
+    INC, DEC,
+
     // Class System
     CLASS_DEF, NEW_INSTANCE, LOAD_THIS, LOAD_SUPER, ACCESS_CHECK,
     
@@ -491,23 +494,20 @@ function ProgCompiler() constructor {
                 if (_node.target.type == PROG_AST.IDENTIFIER) {
                     var _idx = add_constant(_node.target.name);
                     emit(PROG_OP.LOAD, _idx, _node.line);
-                    emit(PROG_OP.PUSH_CONST, add_constant(1));
-                    emit(_node.op == PROG_TOKEN.PLUS_PLUS ? PROG_OP.ADD : PROG_OP.SUB);
+                    emit(_node.op == PROG_TOKEN.PLUS_PLUS ? PROG_OP.INC : PROG_OP.DEC);
                     emit(PROG_OP.STORE, _idx, _node.line);
                 } else if (_node.target.type == PROG_AST.MEMBER) {
                      compile_node(_node.target.target); // Obj
                      emit(PROG_OP.DUP);
                      emit(PROG_OP.MEMBER_GET, add_constant(_node.target.property), _node.line);
-                     emit(PROG_OP.PUSH_CONST, add_constant(1));
-                     emit(_node.op == PROG_TOKEN.PLUS_PLUS ? PROG_OP.ADD : PROG_OP.SUB);
+                     emit(_node.op == PROG_TOKEN.PLUS_PLUS ? PROG_OP.INC : PROG_OP.DEC);
                      emit(PROG_OP.MEMBER_SET, add_constant(_node.target.property), _node.line);
                 } else if (_node.target.type == PROG_AST.INDEX) {
                      compile_node(_node.target.target); // Arr
                      compile_node(_node.target.index); // Idx
                      emit(PROG_OP.DUP2);
                      emit(PROG_OP.INDEX_GET, undefined, _node.line);
-                     emit(PROG_OP.PUSH_CONST, add_constant(1));
-                     emit(_node.op == PROG_TOKEN.PLUS_PLUS ? PROG_OP.ADD : PROG_OP.SUB);
+                     emit(_node.op == PROG_TOKEN.PLUS_PLUS ? PROG_OP.INC : PROG_OP.DEC);
                      emit(PROG_OP.INDEX_SET, undefined, _node.line);
                 }
                 break;
@@ -517,8 +517,7 @@ function ProgCompiler() constructor {
                     var _idx = add_constant(_node.target.name);
                     emit(PROG_OP.LOAD, _idx, _node.line);
                     emit(PROG_OP.DUP);
-                    emit(PROG_OP.PUSH_CONST, add_constant(1));
-                    emit(_node.op == PROG_TOKEN.PLUS_PLUS ? PROG_OP.ADD : PROG_OP.SUB);
+                    emit(_node.op == PROG_TOKEN.PLUS_PLUS ? PROG_OP.INC : PROG_OP.DEC);
                     emit(PROG_OP.STORE, _idx, _node.line);
                     emit(PROG_OP.POP);
                 } else if (_node.target.type == PROG_AST.MEMBER) {
@@ -532,8 +531,7 @@ function ProgCompiler() constructor {
                     emit(PROG_OP.POP); // Obj
                     
                     emit(PROG_OP.LOAD, _tidx); // Obj, Val
-                    emit(PROG_OP.PUSH_CONST, add_constant(1));
-                    emit(_node.op == PROG_TOKEN.PLUS_PLUS ? PROG_OP.ADD : PROG_OP.SUB); // Obj, NewVal
+                    emit(_node.op == PROG_TOKEN.PLUS_PLUS ? PROG_OP.INC : PROG_OP.DEC); // Obj, NewVal
                     emit(PROG_OP.MEMBER_SET, add_constant(_node.target.property), _node.line); // Set returns NewVal. Stack: NewVal
                     emit(PROG_OP.POP); // Consume NewVal
                     emit(PROG_OP.LOAD, _tidx); // Return Original
@@ -549,8 +547,7 @@ function ProgCompiler() constructor {
                     emit(PROG_OP.POP); // Arr, Idx
                     
                     emit(PROG_OP.LOAD, _tidx); // Arr, Idx, Val
-                    emit(PROG_OP.PUSH_CONST, add_constant(1));
-                    emit(_node.op == PROG_TOKEN.PLUS_PLUS ? PROG_OP.ADD : PROG_OP.SUB); // Arr, Idx, NewVal
+                    emit(_node.op == PROG_TOKEN.PLUS_PLUS ? PROG_OP.INC : PROG_OP.DEC); // Arr, Idx, NewVal
                     emit(PROG_OP.INDEX_SET, undefined, _node.line); // NewVal
                     emit(PROG_OP.POP);
                     emit(PROG_OP.LOAD, _tidx);
