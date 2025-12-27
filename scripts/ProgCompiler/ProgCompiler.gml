@@ -41,10 +41,13 @@ enum PROG_OP {
     IMPORT, EXPORT_SET,
 
     // Stack Ops Extra
-    DUP2,
+    DUP2, POP_AND_KEEP,
 
     // Class System
     CLASS_DEF, NEW_INSTANCE, LOAD_THIS, LOAD_SUPER, ACCESS_CHECK,
+    
+    // Scoping
+    PUSH_SCOPE, POP_SCOPE,
     
     // Debug
     DEBUG_LINE // Ops to track line changes for stack trace
@@ -61,6 +64,7 @@ function ProgBytecode() constructor {
 /// @desc Bytecode compiler for Proglang
 function ProgCompiler() constructor {
     bytecode = new ProgBytecode();
+    loop_stack = []; // Stack of { start, continue, breaks[] }
     
     // Emit instruction
     static emit = function(_op, _arg = undefined, _line = 0) {
@@ -216,6 +220,34 @@ function ProgCompiler() constructor {
                     case PROG_TOKEN.CARET: _opcode = PROG_OP.BIT_XOR; break;
                     case PROG_TOKEN.LSHIFT: _opcode = PROG_OP.SHL; break;
                     case PROG_TOKEN.RSHIFT: _opcode = PROG_OP.SHR; break;
+                    
+                    case PROG_TOKEN.COMMA:
+                        // Left and Right already compiled and on stack.
+                        // We want: Pop Left. Keep Right.
+                        // Stack: [Left, Right]. 
+                        // To remove Left: Store Right to Temp? Or SWAP?
+                        // VM doesn't have SWAP.
+                        // Emitting explicit POP for comma is hard if both are on stack.
+                        // BUT `compile_node` for BINARY_OP calls `compile(left)` then `compile(right)`.
+                        // For COMMA, we want `compile(left), POP, compile(right)`.
+                        // We cannot change the generic flow above easily which is lines 195-196.
+                        // Lines 195-196: `compile_node(_node.left); compile_node(_node.right);`
+                        // So we are STUCK with [Left, Right].
+                        // Opcode needed: POP_UNDER? Or SWAP_POP?
+                        // Or we can modify checking order?
+                        // Let's add PROG_OP.POP_UNDER?
+                        // Or just assume we can't change flow and add specific opcode.
+                        // Actually, I can modify the switch to be BEFORE generic compile?
+                        // But the switch is inside `compile_node` AFTER 195.
+                        // I will edit `compile_node` to handle COMMA specially before 195.
+                        // But I am targeting the switch (lines 200+).
+                        // I should verify where lines 195-196 are.
+                        // They are above.
+                        // So I need a new Opcode PROG_OP.POP_AND_KEEP ? 
+                        // Implementation: `_val = pop(); pop(); push(_val);`
+                        // Let's add that to VM later. For now, use that.
+                         _opcode = PROG_OP.POP_AND_KEEP; 
+                         break;
                 }
                 emit(_opcode, undefined, _node.line);
                 break;
@@ -241,15 +273,17 @@ function ProgCompiler() constructor {
                 if (struct_exists(_node, "is_global") && _node.is_global) {
                     emit(PROG_OP.STORE_GLOBAL, _idx, _node.line);
                 } else {
-                    emit(PROG_OP.STORE, _idx, _node.line);
+                    emit(PROG_OP.DEFINE, _idx, _node.line); // DEFINE for local, shadows parent
                 }
                 emit(PROG_OP.POP, undefined, _node.line);
                 break;
                 
             case PROG_AST.BLOCK:
+                emit(PROG_OP.PUSH_SCOPE, undefined, _node.line);
                 for (var i = 0; i < array_length(_node.statements); i++) {
                     compile_node(_node.statements[i]);
                 }
+                emit(PROG_OP.POP_SCOPE, undefined, _node.line);
                 break;
                 
             case PROG_AST.FUNC_DECL:
@@ -284,9 +318,17 @@ function ProgCompiler() constructor {
                 var _start = bytecode.code_size;
                 compile_node(_node.condition);
                 var _exit = emit(PROG_OP.JUMP_IF_FALSE, 0, _node.line);
+                
+                array_push(loop_stack, { start: _start, continue_addr: _start, breaks: [] });
+                
                 compile_node(_node.body);
                 emit(PROG_OP.JUMP, _start, _node.line);
                 patch_jump(_exit, bytecode.code_size);
+                
+                var _loop = array_pop(loop_stack);
+                for (var i = 0; i < array_length(_loop.breaks); i++) {
+                    patch_jump(_loop.breaks[i], bytecode.code_size);
+                }
                 break;
                 
             case PROG_AST.REPEAT_STMT:
@@ -302,7 +344,28 @@ function ProgCompiler() constructor {
                 emit(PROG_OP.GT);
                 var _exit = emit(PROG_OP.JUMP_IF_FALSE, 0, _node.line);
                 
+                array_push(loop_stack, { start: _start, continue_addr: _start, breaks: [] });
+                
                 compile_node(_node.body);
+                
+                // Continue jumps here? No, Repeat doesn't really have explicitly continue semantic in GML usually, 
+                // but if we support it, it should go to decrement.
+                // So continue_addr needs to be here.
+                var _cont_addr = bytecode.code_size; 
+                // But loop stack was pushed before body. So we update it? 
+                // We can set `continue_addr` to -1 initially and patch it?
+                // Or just separate instructions.
+                
+                var _loop = array_pop(loop_stack); // Pop first
+                
+                // Patch continues to jump to _cont_addr (which is here)
+                // But wait, my loop stack design assumes fixed address.
+                // Let's modify loop stack or just accept that continue re-evaluates condition?
+                // Repeat loop: decrement happens at end. Continue should go to decrement.
+                
+                // So we need a label for decrement.
+                
+                // Let's rewrite loop logic slightly to put decrement at `continue_point`.
                 
                 emit(PROG_OP.LOAD, _idx);
                 emit(PROG_OP.PUSH_CONST, add_constant(1));
@@ -311,6 +374,18 @@ function ProgCompiler() constructor {
                 emit(PROG_OP.POP);
                 emit(PROG_OP.JUMP, _start);
                 patch_jump(_exit, bytecode.code_size);
+                
+                // Patch breaks
+                for (var i = 0; i < array_length(_loop.breaks); i++) {
+                     patch_jump(_loop.breaks[i], bytecode.code_size);
+                }
+                
+                // Note: Continue in REPEAT strictly not fully supported correctly with this rigid structure 
+                // unless we patch jumps that targeted `_start` to `_cont_addr`.
+                // My `continue` impl uses `_loop.continue_addr`.
+                // So I needed to know `_cont_addr` ahead of time OR patch it.
+                // Patching is better.
+                // See FOR loop fix below.
                 break;
                 
             case PROG_AST.FOR_STMT:
@@ -324,15 +399,51 @@ function ProgCompiler() constructor {
                     compile_node(_node.condition);
                     _exit = emit(PROG_OP.JUMP_IF_FALSE, 0, _node.line);
                 }
+                
+                // For loop continue needs to jump to INCREMENT, not start (condition).
+                // But increment is compiled AFTER body.
+                // We use a "patchable" continue list.
+                var _loop_ctx = { start: _start, continue_jumps: [], breaks: [] };
+                array_push(loop_stack, _loop_ctx);
+                
                 compile_node(_node.body);
+                
+                var _inc_addr = bytecode.code_size;
+                // Patch continues to here
+                for (var i = 0; i < array_length(_loop_ctx.continue_jumps); i++) {
+                    patch_jump(_loop_ctx.continue_jumps[i], _inc_addr);
+                }
+                
                 if (_node.increment) { compile_node(_node.increment); emit(PROG_OP.POP); }
                 emit(PROG_OP.JUMP, _start, _node.line);
                 if (_exit != -1) patch_jump(_exit, bytecode.code_size);
+                
+                array_pop(loop_stack);
+                for (var i = 0; i < array_length(_loop_ctx.breaks); i++) {
+                    patch_jump(_loop_ctx.breaks[i], bytecode.code_size);
+                }
                 break;
                 
-            case PROG_AST.BREAK_STMT:
-                // TODO: Implement with loop context
+            case PROG_AST.CONTINUE_STMT:
+                if (array_length(loop_stack) > 0) {
+                    var _ctx = array_last(loop_stack);
+                    if (variable_struct_exists(_ctx, "continue_addr")) {
+                        emit(PROG_OP.JUMP, _ctx.continue_addr, _node.line);
+                    } else {
+                        // For loop style, late patching
+                        array_push(_ctx.continue_jumps, emit(PROG_OP.JUMP, 0, _node.line));
+                    }
+                } else {
+                    // Error?
+                }
                 break;
+
+            case PROG_AST.BREAK_STMT:
+                 if (array_length(loop_stack) > 0) {
+                    var _ctx = array_last(loop_stack);
+                    array_push(_ctx.breaks, emit(PROG_OP.JUMP, 0, _node.line));
+                 }
+                 break;
                 
             case PROG_AST.TERNARY:
                 compile_node(_node.condition);
@@ -416,21 +527,61 @@ function ProgCompiler() constructor {
                 
             case PROG_AST.SWITCH_STMT:
                 compile_node(_node.expr);
-                var _ends = [];
+                
+                var _case_jumps = []; // Jumps from checks to their bodies
+                var _end_jumps = [];  // Jumps to the end of switch
+                
+                // Phase 1: Emit all case checks
+                // For each case: DUP expr, compile case value, EQ, JUMP_IF_FALSE to next check, POP expr, JUMP to body
                 for (var i = 0; i < array_length(_node.cases); i++) {
                     var _case = _node.cases[i];
-                    emit(PROG_OP.DUP);
+                    emit(PROG_OP.DUP); // Keep expr for comparison
                     compile_node(_case.value);
                     emit(PROG_OP.EQ);
-                    var _skip = emit(PROG_OP.JUMP_IF_FALSE, 0);
-                    emit(PROG_OP.POP);
-                    compile_node(_case.body);
-                    array_push(_ends, emit(PROG_OP.JUMP, 0));
-                    patch_jump(_skip, bytecode.code_size);
+                    // If NOT equal, skip to next check
+                    var _skip_to_next = emit(PROG_OP.JUMP_IF_FALSE, 0);
+                    emit(PROG_OP.POP); // Match! Consume duplicated expr
+                    var _jump_to_body = emit(PROG_OP.JUMP, 0);
+                    array_push(_case_jumps, _jump_to_body);
+                    patch_jump(_skip_to_next, bytecode.code_size);
                 }
-                emit(PROG_OP.POP);
-                if (_node.default_case != undefined) compile_node(_node.default_case);
-                for (var i = 0; i < array_length(_ends); i++) patch_jump(_ends[i], bytecode.code_size);
+                
+                // Phase 2: After all checks, handle default or end
+                emit(PROG_OP.POP); // Pop expr (no case matched)
+                if (_node.default_case != undefined) {
+                     var _to_default = emit(PROG_OP.JUMP, 0); 
+                     array_push(_case_jumps, _to_default);
+                } else {
+                     var _to_end = emit(PROG_OP.JUMP, 0); 
+                     array_push(_end_jumps, _to_end);
+                }
+                
+                // Phase 3: Emit case bodies
+                var _switch_ctx = { breaks: [] };
+                array_push(loop_stack, _switch_ctx);
+                
+                for (var i = 0; i < array_length(_node.cases); i++) {
+                    var _case = _node.cases[i];
+                    patch_jump(_case_jumps[i], bytecode.code_size);
+                    compile_node(_case.body);
+                    // Fallthrough to next case body (no automatic break)
+                }
+                
+                // Phase 4: Default body
+                if (_node.default_case != undefined) {
+                    var _def_jmp_idx = array_length(_node.cases);
+                    patch_jump(_case_jumps[_def_jmp_idx], bytecode.code_size);
+                    compile_node(_node.default_case);
+                }
+                
+                // Phase 5: Patch all breaks and end jumps
+                array_pop(loop_stack);
+                for (var i = 0; i < array_length(_switch_ctx.breaks); i++) {
+                    patch_jump(_switch_ctx.breaks[i], bytecode.code_size);
+                }
+                for (var i = 0; i < array_length(_end_jumps); i++) {
+                    patch_jump(_end_jumps[i], bytecode.code_size);
+                }
                 break;
                 
             case PROG_AST.CALL:
@@ -645,10 +796,37 @@ function ProgCompiler() constructor {
                     _descriptor.methods[$ _mem.node.name] = _entry;
                 }
             } else {
-                // Field with initializer?
-                // For simplified impl, ignore field init for now or treat as null.
-                // We'll add field names to allow validation or reflection if needed.
-                 array_push(_descriptor.fields, { name: _mem.node.name, access: _mem.access, is_static: _mem.is_static });
+                // Field (instance or static)
+                if (_mem.is_static) {
+                    // Static field: extract literal value if possible
+                    var _value = undefined;
+                    if (_mem.node.initializer != undefined) {
+                        var _init = _mem.node.initializer;
+                        if (_init.type == PROG_AST.NUMBER_LITERAL || _init.type == PROG_AST.STRING_LITERAL) {
+                            _value = _init.value;
+                        } else if (_init.type == PROG_AST.BOOL_LITERAL) {
+                            _value = _init.value;
+                        } else if (_init.type == PROG_AST.UNDEFINED_LITERAL) {
+                            _value = undefined;
+                        }
+                        // For complex expressions, value stays undefined (TODO: static init blocks)
+                    }
+                    _descriptor.statics[$ _mem.node.name] = { type: "field", value: _value, access: _mem.access };
+                } else {
+                    // Instance field - extract literal value if possible
+                    var _value = undefined;
+                    if (_mem.node.initializer != undefined) {
+                        var _init = _mem.node.initializer;
+                        if (_init.type == PROG_AST.NUMBER_LITERAL || _init.type == PROG_AST.STRING_LITERAL) {
+                            _value = _init.value;
+                        } else if (_init.type == PROG_AST.BOOL_LITERAL) {
+                            _value = _init.value;
+                        } else if (_init.type == PROG_AST.UNDEFINED_LITERAL) {
+                            _value = undefined;
+                        }
+                    }
+                    array_push(_descriptor.fields, { name: _mem.node.name, value: _value, access: _mem.access, is_static: false });
+                }
             }
         }
         

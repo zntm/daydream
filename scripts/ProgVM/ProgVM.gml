@@ -252,6 +252,13 @@ function ProgVM() constructor {
                              break;
                         }
                         
+                        case PROG_OP.POP_AND_KEEP: {
+                            var _top = _stack[--sp];
+                            sp--; // Pop second
+                            _stack[@ sp++] = _top; // Push top back
+                            break;
+                        }
+                        
                         // Arithmetic
                         case PROG_OP.ADD: { 
                             var _b = _stack[--sp]; 
@@ -259,9 +266,16 @@ function ProgVM() constructor {
                             if (is_undefined(_a) || is_undefined(_b)) {
                                 runtime_error(PROG_ERROR.UNDEFINED_VALUE, "Undefined value in addition.");
                             }
-                            _stack[sp - 1] = _a + _b; 
+                            if (is_string(_a) || is_string(_b)) {
+                                var _sa = is_bool(_a) ? (_a ? "true" : "false") : string(_a);
+                                var _sb = is_bool(_b) ? (_b ? "true" : "false") : string(_b);
+                                _stack[sp - 1] = _sa + _sb;
+                            } else {
+                                _stack[sp - 1] = _a + _b; 
+                            }
                             break; 
                         }
+                        
                         case PROG_OP.SUB: { var _b = _stack[--sp]; _stack[sp - 1] -= _b; break; }
                         case PROG_OP.MUL: { var _b = _stack[--sp]; _stack[sp - 1] *= _b; break; }
                         case PROG_OP.DIV: { var _b = _stack[--sp]; _stack[sp - 1] /= _b; break; }
@@ -318,8 +332,12 @@ function ProgVM() constructor {
                                 _stack[@ sp++] = global.proglang_functions[$ _name];
                             }
                             else { 
-                                // show_debug_message($"[ProgVM] LOAD '{_name}' FAILED. Return undefined.");
-                                _stack[@ sp++] = undefined; 
+                                // Relax strictness for "argN" (implicit arguments) if missing
+                                if (string_pos("arg", _name) == 1 && string_digits(_name) == string_delete(_name, 1, 3)) {
+                                    _stack[@ sp++] = undefined;
+                                } else {
+                                    runtime_error(PROG_ERROR.VARIABLE, $"Variable '{_name}' not found.");
+                                }
                             }
                             break;
                         }
@@ -346,6 +364,18 @@ function ProgVM() constructor {
                         
                         case PROG_OP.LOAD_GLOBAL: _stack[@ sp++] = _gref[$ _constants[_arg]]; break;
                         case PROG_OP.STORE_GLOBAL: _gref[$ _constants[_arg]] = _stack[sp - 1]; break;
+                        
+                        case PROG_OP.PUSH_SCOPE:
+                            current_scope = { vars: {}, parent: current_scope };
+                            break;
+                            
+                        case PROG_OP.POP_SCOPE:
+                            if (current_scope.parent != undefined) {
+                                current_scope = current_scope.parent;
+                            } else {
+                                runtime_error(PROG_ERROR.RUNTIME, "Scope underflow");
+                            }
+                            break;
                         
 
                         case PROG_OP.MAKE_CLOSURE: {
@@ -438,11 +468,21 @@ function ProgVM() constructor {
                                      // Class Descriptor - Static Lookup
                                      if (variable_struct_exists(_obj.statics, _prop)) {
                                           var _entry = _obj.statics[$ _prop];
-                                          _val = {
-                                              type: "closure",
-                                              bytecode: _entry.bytecode,
-                                              env: current_scope
-                                          };
+                                          // Distinguish between static method and static field
+                                          if (is_struct(_entry) && variable_struct_exists(_entry, "bytecode")) {
+                                              // Static method
+                                              _val = {
+                                                  type: "closure",
+                                                  bytecode: _entry.bytecode,
+                                                  env: current_scope
+                                              };
+                                          } else if (is_struct(_entry) && variable_struct_exists(_entry, "type") && _entry.type == "field") {
+                                              // Static field - return the value directly
+                                              _val = _entry.value;
+                                          } else {
+                                              // Fallback: treat as raw value
+                                              _val = _entry;
+                                          }
                                      }
                                 }
                             }
@@ -460,7 +500,26 @@ function ProgVM() constructor {
                             var _val = _stack[--sp];
                             var _obj = _stack[--sp];
                             var _prop = _constants[_arg];
-                            if (is_struct(_obj)) _obj[$ _prop] = _val;
+                            if (is_struct(_obj)) {
+                                // Check if this is a class descriptor (for static field assignment)
+                                if (variable_struct_exists(_obj, "statics") && variable_struct_exists(_obj, "methods")) {
+                                    // Class descriptor - update static field
+                                    if (variable_struct_exists(_obj.statics, _prop)) {
+                                        var _entry = _obj.statics[$ _prop];
+                                        if (is_struct(_entry) && variable_struct_exists(_entry, "type") && _entry.type == "field") {
+                                            _entry.value = _val;
+                                        } else {
+                                            _obj.statics[$ _prop] = _val;
+                                        }
+                                    } else {
+                                        // New static field
+                                        _obj.statics[$ _prop] = { type: "field", value: _val, access: "public" };
+                                    }
+                                } else {
+                                    // Regular struct
+                                    _obj[$ _prop] = _val;
+                                }
+                            }
                             else if (is_numeric(_obj) && instance_exists(_obj)) variable_instance_set(_obj, _prop, _val);
                             _stack[@ sp++] = _val;
                             break;
@@ -494,6 +553,14 @@ function ProgVM() constructor {
                             }
                             
                             var _inst = { __class__: _class };
+                            
+                            // Initialize instance fields with their default values
+                            if (variable_struct_exists(_class, "fields")) {
+                                for (var f = 0; f < array_length(_class.fields); f++) {
+                                    var _field = _class.fields[f];
+                                    _inst[$ _field.name] = _field.value;
+                                }
+                            }
                             
                             // Call constructor
                             if (variable_struct_exists(_class, "constructor_code") && _class.constructor_code != undefined) {
@@ -591,7 +658,18 @@ function ProgVM() constructor {
                         }
 
                         case PROG_OP.JUMP: ip = _arg; break;
-                        case PROG_OP.JUMP_IF_FALSE: if (!_stack[--sp]) ip = _arg; break;
+                        case PROG_OP.JUMP_IF_FALSE: {
+                            var _val = _stack[--sp];
+                            // Robust Truthy Check: undefined, false, 0 are Falsy. "red", true, 1 are Truthy.
+                            var _cond = true;
+                            if (_val == false || _val == undefined || _val == 0) _cond = false;
+                            
+                            // Special case: empty string? Javascript says "" is false. GML?
+                            if (is_string(_val) && _val == "") _cond = false;
+
+                            if (!_cond) ip = _arg; 
+                            break;
+                        }
                         case PROG_OP.JUMP_IF_NULL: if (_stack[--sp] == undefined) ip = _arg; break;
                         case PROG_OP.JUMP_IF_NOT_NULL: if (_stack[sp - 1] != undefined) ip = _arg; break;
                         

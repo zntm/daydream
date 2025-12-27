@@ -93,13 +93,22 @@ function ProgParser(_tokens) constructor {
                 // global var x
                 advance(); // consume VAR
                 return parse_var_decl(true); // is_global = true
-            } else if (check(PROG_TOKEN.IDENTIFIER)) {
-                // global x = 10 (treat as implicit var decl)
-                return parse_var_decl(true);
             } else {
                 // global.x = expression (member access)
-                current--; // Backtrack
-                return parse_expression_statement();
+                // If expecting 'var' or 'fn' but found identifier directly -> Error or Member Access?
+                // global.x starts with 'global' then DOT.
+                // If just 'global x', we now disallow it.
+                // WE MUST CHECK FOR DOT.
+                // But parse_statement consumes 'global'.
+                
+                // If next is DOT, it is member access.
+                if (check(PROG_TOKEN.DOT)) {
+                     current--; // Backtrack to let parse_expression_statement handle 'global.x'
+                     return parse_expression_statement();
+                } else {
+                     error_at_current("Expected 'var', 'fn', or '.' after 'global'.");
+                     return new ProgASTStatement();
+                }
             }
         }
         
@@ -182,7 +191,7 @@ function ProgParser(_tokens) constructor {
         
         consume(PROG_TOKEN.FROM, "Expected 'from' after imports.");
         var _path = consume(PROG_TOKEN.STRING, "Expected module path.").literal;
-        consume(PROG_TOKEN.SEMICOLON, "Expected ';' after import statement.");
+        match(PROG_TOKEN.SEMICOLON); // Optional semicolon
         
         return new ProgASTImportStmt(_imports, _path);
     }
@@ -196,11 +205,17 @@ function ProgParser(_tokens) constructor {
             _decl = parse_expression();
              consume(PROG_TOKEN.SEMICOLON, "Expected ';' after export default.");
         } else {
+             var _is_global = false;
+             if (match(PROG_TOKEN.GLOBAL)) {
+                 _is_global = true;
+             }
+
              if (match(PROG_TOKEN.VAR)) {
-                  _decl = parse_var_decl(false);
+                  _decl = parse_var_decl(_is_global);
              } else if (match(PROG_TOKEN.FN) || match(PROG_TOKEN.FUNCTION)) {
-                  _decl = parse_function_decl(false);
+                  _decl = parse_function_decl(_is_global);
              } else if (match(PROG_TOKEN.CLASS)) {
+                  if (_is_global) error_at_current("Global classes not supported (all classes are effectively global or module-scoped).");
                   _decl = parse_class_decl();
              } else {
                   error_at_current("Expected declaration after export.");
@@ -327,7 +342,7 @@ function ProgParser(_tokens) constructor {
         var _args = [];
         if (!check(PROG_TOKEN.RPAREN)) {
             do {
-                array_push(_args, parse_expression());
+                array_push(_args, parse_assignment());
             } until (!match(PROG_TOKEN.COMMA));
         }
         consume(PROG_TOKEN.RPAREN, "Expected ')' after arguments.");
@@ -441,7 +456,7 @@ function ProgParser(_tokens) constructor {
                 var _param_name = consume(PROG_TOKEN.IDENTIFIER, "Expected parameter name.").lexeme;
                 var _default = undefined;
                 if (match(PROG_TOKEN.ASSIGN) || match(PROG_TOKEN.EQ)) {
-                    _default = parse_expression();
+                    _default = parse_assignment();
                 }
                 array_push(_params, { name: _param_name, default_value: _default });
             } until (!match(PROG_TOKEN.COMMA));
@@ -519,7 +534,7 @@ function ProgParser(_tokens) constructor {
         else if (!match(PROG_TOKEN.SEMICOLON)) {
             // Expression init: "for (i in list)" or "for (i = 0; ...)"
             // Parse expression first, then check for IN keyword
-            var _expr = parse_expression();
+            var _expr = parse_assignment();
             
             if (check(PROG_TOKEN.COMMA)) { // Check for comma if it looks like start of for-in with 2 vars
                  // NOTE: parse_expression stops at comma usually.
@@ -687,7 +702,14 @@ function ProgParser(_tokens) constructor {
     // ----------------------------------------------------------------------------
     
     static parse_expression = function() {
-        return parse_assignment();
+        var _expr = parse_assignment();
+        
+        while (match(PROG_TOKEN.COMMA)) {
+            var _right = parse_assignment();
+            _expr = new ProgASTBinaryOp(PROG_TOKEN.COMMA, _expr, _right);
+        }
+        
+        return _expr;
     }
     
     static parse_assignment = function() {
@@ -880,7 +902,7 @@ function ProgParser(_tokens) constructor {
         var _args = [];
         if (!check(PROG_TOKEN.RPAREN)) {
             do {
-                array_push(_args, parse_expression());
+                array_push(_args, parse_assignment());
             } until (!match(PROG_TOKEN.COMMA));
         }
         consume(PROG_TOKEN.RPAREN, "Expected ')' after arguments.");
@@ -925,7 +947,8 @@ function ProgParser(_tokens) constructor {
             var _elements = [];
             if (!check(PROG_TOKEN.RBRACKET)) {
                 do {
-                    array_push(_elements, parse_expression());
+                    if (check(PROG_TOKEN.RBRACKET)) break; // Trailing comma
+                    array_push(_elements, parse_assignment());
                 } until (!match(PROG_TOKEN.COMMA));
             }
             consume(PROG_TOKEN.RBRACKET, "Expected ']' after array.");
@@ -936,9 +959,10 @@ function ProgParser(_tokens) constructor {
              var _pairs = [];
              if (!check(PROG_TOKEN.RBRACE)) {
                  do {
+                     if (check(PROG_TOKEN.RBRACE)) break; // Trailing comma
                      var _key = consume(PROG_TOKEN.IDENTIFIER, "Expected key name.");
                      consume(PROG_TOKEN.COLON, "Expected ':' after key.");
-                     var _val = parse_expression();
+                     var _val = parse_assignment();
                      array_push(_pairs, { key: _key.lexeme, value: _val });
                  } until (!match(PROG_TOKEN.COMMA));
              }

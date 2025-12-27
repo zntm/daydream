@@ -8,6 +8,7 @@ enum PROG_AST {
     IDENTIFIER, BINARY_OP, UNARY_OP, CALL, INDEX, MEMBER,
     ASSIGNMENT, TERNARY, PREFIX_OP, POSTFIX_OP,
     // Statements  
+    STATEMENT, // Generic/Error statement
     VAR_DECL, GLOBAL_DECL, IF_STMT, WHILE_STMT, FOR_STMT, REPEAT_STMT,
     BREAK_STMT, CONTINUE_STMT, RETURN_STMT, BLOCK,
     EXPRESSION_STMT, SWITCH_STMT, FUNC_DECL, FUNC_EXPR,
@@ -97,6 +98,10 @@ function ProgASTExpressionStmt(_expression) : ProgASTNode(PROG_AST.EXPRESSION_ST
 /// @desc Block statement ({ stmt1; stmt2; })
 function ProgASTBlock(_statements) : ProgASTNode(PROG_AST.BLOCK) constructor {
     statements = _statements;
+}
+
+/// @desc Generic/Error Statement
+function ProgASTStatement() : ProgASTNode(PROG_AST.STATEMENT) constructor {
 }
 
 /// @desc Var declaration (var x = 10)
