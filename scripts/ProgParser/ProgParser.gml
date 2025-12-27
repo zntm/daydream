@@ -66,7 +66,12 @@ function ProgParser(_tokens) constructor {
         current = 0;
         
         while (!is_at_end()) {
+            var _start = current;
             array_push(_statements, parse_statement());
+            if (current == _start && !is_at_end()) {
+                 error_at_current("Parser stuck: Infinite loop detected. Forcing advance.");
+                 advance();
+            }
         }
         
         return new ProgASTBlock(_statements);
@@ -332,7 +337,12 @@ function ProgParser(_tokens) constructor {
     static parse_block = function() {
         var _statements = [];
         while (!check(PROG_TOKEN.RBRACE) && !is_at_end()) {
+            var _start = current;
             array_push(_statements, parse_statement());
+            if (current == _start && !check(PROG_TOKEN.RBRACE) && !is_at_end()) {
+                 error_at_current("Parser block stuck: Infinite loop detected. Forcing advance.");
+                 advance();
+            }
         }
         consume(PROG_TOKEN.RBRACE, "Expected '}' after block.");
         return _statements;
@@ -340,52 +350,14 @@ function ProgParser(_tokens) constructor {
     
     static parse_var_decl = function(_is_global = false, _require_semi = true) {
         // Destructuring: var {a, b} = ... OR var [a, b] = ...
-        if (match(PROG_TOKEN.LBRACE)) {
-            // Object Destructuring
-            var _elements = [];
-            do {
-                // { key } or { key: var_name }
-                var _key = consume(PROG_TOKEN.IDENTIFIER, "Expected key in destructuring.").lexeme;
-                var _var_name = _key;
-                if (match(PROG_TOKEN.COLON)) {
-                    _var_name = consume(PROG_TOKEN.IDENTIFIER, "Expected variable name.").lexeme;
-                }
-                array_push(_elements, { key: _key, name: _var_name });
-            } until (!match(PROG_TOKEN.COMMA));
-            consume(PROG_TOKEN.RBRACE, "Expected '}' after destructuring pattern.");
-            
-            consume(PROG_TOKEN.ASSIGN, "Expected '=' in destructuring declaration.");
-            var _initializer = parse_expression();
-            if (_require_semi) match(PROG_TOKEN.SEMICOLON);
-            
-            return new ProgASTDestructuringDecl("object", _elements, _initializer);
-        }
-        else if (match(PROG_TOKEN.LBRACKET)) {
-            // Array Destructuring
-            var _elements = [];
-            do {
-                if (match(PROG_TOKEN.COMMA)) {
-                    // Skip element? Not supported in simple version yet.
-                    // Just expect identifiers.
-                    // But usually `var [a, , b]` is valid.
-                    // Let's assume strict identifiers for now.
-                    // Backtrack not possible easily.
-                    // match COMMA means empty slot? `var [, b]`.
-                    // My loop is `do .. until (!match(COMMA))`.
-                    // So explicit commas are consumed by loop condition.
-                    // If I hit a comma immediately? `match(IDENTIFIER)` fails.
-                    // Let's just consume Identifier.
-                }
-                var _name = consume(PROG_TOKEN.IDENTIFIER, "Expected variable name in array destructuring.").lexeme;
-                array_push(_elements, _name);
-            } until (!match(PROG_TOKEN.COMMA));
-            consume(PROG_TOKEN.RBRACKET, "Expected ']' after destructuring pattern.");
-            
-            consume(PROG_TOKEN.ASSIGN, "Expected '=' in destructuring declaration.");
-            var _initializer = parse_expression();
-            if (_require_semi) match(PROG_TOKEN.SEMICOLON);
-            
-             return new ProgASTDestructuringDecl("array", _elements, _initializer);
+        if (check(PROG_TOKEN.LBRACE) || check(PROG_TOKEN.LBRACKET)) {
+             var _pattern = parse_destructuring_pattern();
+             consume(PROG_TOKEN.ASSIGN, "Expected '=' in destructuring declaration.");
+             var _initializer = parse_expression();
+             if (_require_semi) match(PROG_TOKEN.SEMICOLON);
+             
+             // Reuse existing AST Node but structurally richer
+             return new ProgASTDestructuringDecl(_pattern.type, _pattern.elements, _initializer);
         }
         
         // Normal Declaration
@@ -401,6 +373,48 @@ function ProgParser(_tokens) constructor {
         var _node = new ProgASTVarDecl(_name, _initializer);
         _node.is_global = _is_global;
         return _node;
+    }
+    
+    static parse_destructuring_pattern = function() {
+        if (match(PROG_TOKEN.LBRACE)) {
+            // Object Pattern
+            var _elements = [];
+            do {
+                var _key = consume(PROG_TOKEN.IDENTIFIER, "Expected key in destructuring.").lexeme;
+                var _target = _key; // Default to var name same as key
+                
+                if (match(PROG_TOKEN.COLON)) {
+                    if (check(PROG_TOKEN.LBRACE) || check(PROG_TOKEN.LBRACKET)) {
+                         // Nested pattern
+                         _target = parse_destructuring_pattern();
+                    } else {
+                         // Alias variable
+                         _target = consume(PROG_TOKEN.IDENTIFIER, "Expected variable name.").lexeme;
+                    }
+                }
+                array_push(_elements, { key: _key, target: _target });
+            } until (!match(PROG_TOKEN.COMMA));
+            consume(PROG_TOKEN.RBRACE, "Expected '}' after object pattern.");
+            return { type: "object", elements: _elements };
+        } 
+        else if (match(PROG_TOKEN.LBRACKET)) {
+            // Array Pattern
+            var _elements = [];
+            do {
+                 if (check(PROG_TOKEN.LBRACE) || check(PROG_TOKEN.LBRACKET)) {
+                     // Nested pattern
+                     array_push(_elements, parse_destructuring_pattern());
+                 } else {
+                     var _name = consume(PROG_TOKEN.IDENTIFIER, "Expected variable name.").lexeme;
+                     array_push(_elements, _name);
+                 }
+            } until (!match(PROG_TOKEN.COMMA));
+            consume(PROG_TOKEN.RBRACKET, "Expected ']' after array pattern.");
+            return { type: "array", elements: _elements }; 
+        }
+        
+        error_at_current("Invalid destructuring pattern start.");
+        return { type: "error", elements: [] };
     }
     
     static parse_function_decl = function(_is_global = false) {

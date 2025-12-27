@@ -351,6 +351,21 @@ function ProgCompiler() constructor {
                     emit(PROG_OP.PUSH_CONST, add_constant(1));
                     emit(_node.op == PROG_TOKEN.PLUS_PLUS ? PROG_OP.ADD : PROG_OP.SUB);
                     emit(PROG_OP.STORE, _idx, _node.line);
+                } else if (_node.target.type == PROG_AST.MEMBER) {
+                     compile_node(_node.target.target); // Obj
+                     emit(PROG_OP.DUP);
+                     emit(PROG_OP.MEMBER_GET, add_constant(_node.target.property), _node.line);
+                     emit(PROG_OP.PUSH_CONST, add_constant(1));
+                     emit(_node.op == PROG_TOKEN.PLUS_PLUS ? PROG_OP.ADD : PROG_OP.SUB);
+                     emit(PROG_OP.MEMBER_SET, add_constant(_node.target.property), _node.line);
+                } else if (_node.target.type == PROG_AST.INDEX) {
+                     compile_node(_node.target.target); // Arr
+                     compile_node(_node.target.index); // Idx
+                     emit(PROG_OP.DUP2);
+                     emit(PROG_OP.INDEX_GET, undefined, _node.line);
+                     emit(PROG_OP.PUSH_CONST, add_constant(1));
+                     emit(_node.op == PROG_TOKEN.PLUS_PLUS ? PROG_OP.ADD : PROG_OP.SUB);
+                     emit(PROG_OP.INDEX_SET, undefined, _node.line);
                 }
                 break;
                 
@@ -363,6 +378,39 @@ function ProgCompiler() constructor {
                     emit(_node.op == PROG_TOKEN.PLUS_PLUS ? PROG_OP.ADD : PROG_OP.SUB);
                     emit(PROG_OP.STORE, _idx, _node.line);
                     emit(PROG_OP.POP);
+                } else if (_node.target.type == PROG_AST.MEMBER) {
+                    var _temp = "@post_tmp_" + string(bytecode.code_size);
+                    var _tidx = add_constant(_temp);
+                    
+                    compile_node(_node.target.target); // Obj
+                    emit(PROG_OP.DUP);
+                    emit(PROG_OP.MEMBER_GET, add_constant(_node.target.property), _node.line); // Obj, Val
+                    emit(PROG_OP.STORE, _tidx); // Obj, Val
+                    emit(PROG_OP.POP); // Obj
+                    
+                    emit(PROG_OP.LOAD, _tidx); // Obj, Val
+                    emit(PROG_OP.PUSH_CONST, add_constant(1));
+                    emit(_node.op == PROG_TOKEN.PLUS_PLUS ? PROG_OP.ADD : PROG_OP.SUB); // Obj, NewVal
+                    emit(PROG_OP.MEMBER_SET, add_constant(_node.target.property), _node.line); // Set returns NewVal. Stack: NewVal
+                    emit(PROG_OP.POP); // Consume NewVal
+                    emit(PROG_OP.LOAD, _tidx); // Return Original
+                } else if (_node.target.type == PROG_AST.INDEX) {
+                    var _temp = "@post_tmp_" + string(bytecode.code_size);
+                    var _tidx = add_constant(_temp);
+
+                    compile_node(_node.target.target); // Arr
+                    compile_node(_node.target.index); // Idx
+                    emit(PROG_OP.DUP2); 
+                    emit(PROG_OP.INDEX_GET, undefined, _node.line); // Arr, Idx, Val
+                    emit(PROG_OP.STORE, _tidx); // Arr, Idx, Val
+                    emit(PROG_OP.POP); // Arr, Idx
+                    
+                    emit(PROG_OP.LOAD, _tidx); // Arr, Idx, Val
+                    emit(PROG_OP.PUSH_CONST, add_constant(1));
+                    emit(_node.op == PROG_TOKEN.PLUS_PLUS ? PROG_OP.ADD : PROG_OP.SUB); // Arr, Idx, NewVal
+                    emit(PROG_OP.INDEX_SET, undefined, _node.line); // NewVal
+                    emit(PROG_OP.POP);
+                    emit(PROG_OP.LOAD, _tidx);
                 }
                 break;
                 
@@ -522,23 +570,12 @@ function ProgCompiler() constructor {
                 if (_node.initializer != undefined) compile_node(_node.initializer);
                 else emit(PROG_OP.PUSH_NULL);
                 
-                if (_node.pattern_type == "array") {
-                    for (var i = 0; i < array_length(_node.elements); i++) {
-                        emit(PROG_OP.DUP);
-                        emit(PROG_OP.PUSH_CONST, add_constant(i));
-                        emit(PROG_OP.INDEX_GET, undefined, _node.line);
-                        emit(PROG_OP.STORE, add_constant(_node.elements[i]), _node.line);
-                        emit(PROG_OP.POP);
-                    }
-                } else {
-                    for (var i = 0; i < array_length(_node.elements); i++) {
-                        emit(PROG_OP.DUP);
-                        emit(PROG_OP.MEMBER_GET, add_constant(_node.elements[i].key), _node.line);
-                        emit(PROG_OP.STORE, add_constant(_node.elements[i].name), _node.line);
-                        emit(PROG_OP.POP);
-                    }
-                }
-                emit(PROG_OP.POP);
+                // Recursively compile destructuring assignment
+                // Pattern is { type, elements } where elements can be strings or nested patterns
+                // Stack has Initializer Value on top.
+                compile_destructuring({ type: _node.pattern_type, elements: _node.elements });
+                
+                emit(PROG_OP.POP); // Consume Initializer
                 break;
                 
             case PROG_AST.CLASS_DECL:
@@ -658,6 +695,42 @@ function ProgCompiler() constructor {
         return _res;
     }
     
+    static compile_destructuring = function(_pattern) {
+        if (_pattern.type == "array") {
+             for (var i = 0; i < array_length(_pattern.elements); i++) {
+                 var _el = _pattern.elements[i];
+                 emit(PROG_OP.DUP);
+                 emit(PROG_OP.PUSH_CONST, add_constant(i));
+                 emit(PROG_OP.INDEX_GET); // Stack: [..., Arr, Val]
+                 
+                 if (is_string(_el)) {
+                     emit(PROG_OP.STORE, add_constant(_el));
+                 } else if (is_struct(_el)) {
+                     // Nested pattern
+                     compile_destructuring(_el);
+                 }
+                 
+                 emit(PROG_OP.POP); // Consume Val
+             }
+        } 
+        else if (_pattern.type == "object") {
+             for (var i = 0; i < array_length(_pattern.elements); i++) {
+                 var _el = _pattern.elements[i];
+                 emit(PROG_OP.DUP);
+                 emit(PROG_OP.MEMBER_GET, add_constant(_el.key)); // Stack: [..., Obj, Val]
+                 
+                 if (is_string(_el.target)) {
+                     emit(PROG_OP.STORE, add_constant(_el.target));
+                 } else if (is_struct(_el.target)) {
+                     // Nested pattern (target is the pattern struct)
+                     compile_destructuring(_el.target);
+                 }
+                 
+                 emit(PROG_OP.POP); // Consume Val
+             }
+        }
+    }
+
     static compile_assignment = function(_node) {
         var _target = _node.target;
         var _line = _node.line;

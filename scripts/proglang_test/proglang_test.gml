@@ -26,12 +26,17 @@ function proglang_test() {
     };
     
     var _assert = function(_name, _source, _expected, _context = {}) {
-        var _result = proglang_execute(_source, _context);
-        if (_result == _expected) {
-            show_debug_message($"[Proglang Test] PASS: {_name}");
-            return true;
-        } else {
-            show_debug_message($"[Proglang Test] FAIL: {_name}. Expected {_expected}, got {_result}");
+        try {
+            var _result = proglang_execute(_source, _context);
+            if (_result == _expected) {
+                show_debug_message($"[Proglang Test] PASS: {_name}");
+                return true;
+            } else {
+                show_debug_message($"[Proglang Test] FAIL: {_name}. Expected {_expected}, got {_result}");
+                return false;
+            }
+        } catch (_e) {
+            show_debug_message($"[Proglang Test] FAIL (EXCEPTION): {_name}. Error: {_e}");
             return false;
         }
     };
@@ -103,15 +108,15 @@ function proglang_test() {
     
     // Nested Control Flow
     if (_assert("Nested If", "var a = 5; if a > 3 { if a < 10 { return 1 } } return 0", 1)) _passed++; else _failed++;
-    if (_assert("Nested Loop", @"
-        var sum = 0;
-        for (var i = 0; i < 3; i += 1) {
-            for (var j = 0; j < 3; j += 1) {
-                sum += 1
-            }
-        }
-        return sum
-    ", 9)) _passed++; else _failed++;
+    if (_assert("Nested Loop", 
+        $"var sum = 0;\n" +
+        $"for (var i = 0; i < 3; i += 1) \{\n" +
+        $"    for (var j = 0; j < 3; j += 1) \{\n" +
+        $"        sum += 1\n" +
+        $"    \}\n" +
+        $"\}\n" +
+        $"return sum"
+    , 9)) _passed++; else _failed++;
     
     // Complex Expressions
     if (_assert("Complex Math", "return (2 + 3) * (4 - 1) / 3", 5)) _passed++; else _failed++;
@@ -160,104 +165,104 @@ function proglang_test() {
     if (_assert("Postfix Inc Side Effect", "var i = 5; i++; return i", 6)) _passed++; else _failed++;
     
     // Switch/Case
-    if (_assert("Switch Case 1", @"
-        var x = 1
-        switch (x) {
-            case 1: return 10
-            case 2: return 20
-            default: return 0
-        }
-    ", 10)) _passed++; else _failed++;
+    if (_assert("Switch Case 1", 
+        $"var x = 1\n" +
+        $"switch (x) \{\n" +
+        $"    case 1: return 10\n" +
+        $"    case 2: return 20\n" +
+        $"    default: return 0\n" +
+        $"\}"
+    , 10)) _passed++; else _failed++;
     
-    if (_assert("Switch Case 2", @"
-        var x = 2
-        switch (x) {
-            case 1: return 10
-            case 2: return 20
-            default: return 0
-        }
-    ", 20)) _passed++; else _failed++;
+    if (_assert("Switch Case 2", 
+        $"var x = 2\n" +
+        $"switch (x) \{\n" +
+        $"    case 1: return 10\n" +
+        $"    case 2: return 20\n" +
+        $"    default: return 0\n" +
+        $"\}"
+    , 20)) _passed++; else _failed++;
     
-    if (_assert("Switch Default", @"
-        var x = 99
-        switch (x) {
-            case 1: return 10
-            case 2: return 20
-            default: return 0
-        }
-    ", 0)) _passed++; else _failed++;
+    if (_assert("Switch Default", 
+        $"var x = 99\n" +
+        $"switch (x) \{\n" +
+        $"    case 1: return 10\n" +
+        $"    case 2: return 20\n" +
+        $"    default: return 0\n" +
+        $"\}"
+    , 0)) _passed++; else _failed++;
     
     // ============ PHASE 8 TESTS: User-Defined Functions ============
     
     // Local function with parameters  
-    if (_assert("Function Decl", @"
-        fn add(a, b) {
-            return a + b
-        }
-        return add(3, 5)
-    ", 8)) _passed++; else _failed++;
+    if (_assert("Function Decl", 
+        $"fn add(a, b) \{\n" +
+        $"    return a + b\n" +
+        $"\}\n" +
+        $"return add(3, 5)"
+    , 8)) _passed++; else _failed++;
     
     // Function calling another function
-    if (_assert("Function Nesting", @"
-        fn double(x) {
-            return x * 2
-        }
-        fn quadruple(x) {
-            return double(double(x))
-        }
-        return quadruple(5)
-    ", 20)) _passed++; else _failed++;
+    if (_assert("Function Nesting", 
+        $"fn double(x) \{\n" +
+        $"    return x * 2\n" +
+        $"\}\n" +
+        $"fn quadruple(x) \{\n" +
+        $"    return double(double(x))\n" +
+        $"\}\n" +
+        $"return quadruple(5)"
+    , 20)) _passed++; else _failed++;
     
     // Global function and variable
-    if (_assert("Global Var Decl", @"
-        global my_val = 42
-        return my_val
-    ", 42)) _passed++; else _failed++;
+    if (_assert("Global Var Decl",
+        $"global my_val = 42\n" +
+        $"return my_val\n"
+    , 42)) _passed++; else _failed++;
     
     // Multiple parameters
-    if (_assert("Multiple Params", @"
-        fn sum3(a, b, c) {
-            return a + b + c
-        }
-        return sum3(1, 2, 3)
-    ", 6)) _passed++; else _failed++;
+    if (_assert("Multiple Params", 
+        $"fn sum3(a, b, c) \{\n" +
+        $"    return a + b + c\n" +
+        $"\}\n" +
+        $"return sum3(1, 2, 3)"
+    , 6)) _passed++; else _failed++;
     
     // No params
-    if (_assert("No Params Fn", @"
-        fn get_ten() {
-            return 10
-        }
-        return get_ten()
-    ", 10)) _passed++; else _failed++;
+    if (_assert("No Params Fn", 
+        $"fn get_ten() \{\n" +
+        $"    return 10\n" +
+        $"\}\n" +
+        $"return get_ten()"
+    , 10)) _passed++; else _failed++;
     
     // Function with if statement
-    if (_assert("Fn With Control Flow", @"
-        fn is_positive(n) {
-            if (n > 0) {
-                return true
-            }
-            return false
-        }
-        return is_positive(5)
-    ", true)) _passed++; else _failed++;
+    if (_assert("Fn With Control Flow", 
+        $"fn is_positive(n) \{\n" +
+        $"    if (n > 0) \{\n" +
+        $"        return true\n" +
+        $"    \}\n" +
+        $"    return false\n" +
+        $"\}\n" +
+        $"return is_positive(5)"
+    , true)) _passed++; else _failed++;
     
     // Function keyword (synonym for fn)
-    if (_assert("Function Keyword", @"
-        function multiply(a, b) {
-            return a * b
-        }
-        return multiply(4, 5)
-    ", 20)) _passed++; else _failed++;
+    if (_assert("Function Keyword", 
+        $"function multiply(a, b) \{\n" +
+        $"    return a * b\n" +
+        $"\}\n" +
+        $"return multiply(4, 5)"
+    , 20)) _passed++; else _failed++;
 
     // Local function with global variable  
-    if (_assert("Fn With Global Var", @"
-        global n = 10
-        
-        fn add(b) {
-            return n + b
-        }
-        return add(5)
-    ", 15)) _passed++; else _failed++;
+    if (_assert("Fn With Global Var", 
+        $"global n = 10\n" +
+        $"\n" +
+        $"fn add(b) \{\n" +
+        $"    return n + b\n" +
+        $"\}\n" +
+        $"return add(5)"
+    , 15)) _passed++; else _failed++;
 
 
     // ============ PHASE 9 TESTS: Modern Features ============
@@ -282,61 +287,61 @@ function proglang_test() {
     
     // For In Array
     if (_assert("For In Array", 
-        "var arr = [1, 2, 3]\n" +
-        "var sum = 0\n" +
-        "for (v in arr) {\n" +
-        "    sum += v\n" +
-        "}\n" +
-        "return sum"
+        $"var arr = [1, 2, 3]\n" +
+        $"var sum = 0\n" +
+        $"for (v in arr) \{\n" +
+        $"    sum += v\n" +
+        $"\}" +
+        $"return sum"
     , 6)) _passed++; else _failed++;
 
     // For In Array With Index
     if (_assert("For In Array With Index", 
-        "var arr = [1, 2, 3]\n" +
-        "var sum = 0\n" +
-        "for (v, i in arr) {\n" +
-        "    sum += v + i\n" +
-        "}\n" +
-        "// v=1,i=0 -> 1; v=2,i=1 -> 3; v=3,i=2 -> 5. Sum=1+3+5=9\n" +
-        "return sum"
+        $"var arr = [1, 2, 3]\n" +
+        $"var sum = 0\n" +
+        $"for (v, i in arr) \{\n" +
+        $"    sum += v + i\n" +
+        $"\}\n" +
+        $"// v=1,i=0 -> 1; v=2,i=1 -> 3; v=3,i=2 -> 5. Sum=1+3+5=9\n" +
+        $"return sum"
     , 9)) _passed++; else _failed++;
     
     // For In Struct
     if (_assert("For In Struct", 
-        "var obj = {a: 1, b: 2}\n" +
-        "var count = 0\n" +
-        "for (k in obj) {\n" +
-        "    count++\n" +
-        "}\n" +
-        "return count"
+        $"var obj = \{a: 1, b: 2\}\n" +
+        $"var count = 0\n" +
+        $"for (k in obj) \{\n" +
+        $"    count++\n" +
+        $"\}\n" +
+        $"return count"
     , 2)) _passed++; else _failed++;
 
     // For In Struct With Value
     if (_assert("For In Struct With Value", 
-        "var obj = {a: 1, b: 2}\n" +
-        "var sum = 0\n" +
-        "for (k, v in obj) {\n" +
-        "    sum += v\n" +
-        "}\n" +
-        "return sum"
+        $"var obj = \{a: 1, b: 2\}\n" +
+        $"var sum = 0\n" +
+        $"for (k, v in obj) \{\n" +
+        $"    sum += v\n" +
+        $"\}\n" +
+        $"return sum"
     , 3)) _passed++; else _failed++;
     
     // Try Catch (Runtime Error)
     if (_assert("Try Catch Catch", 
-        "try {\n" +
-        "    var a = undefined\n" +
-        "    return a + 1 \n" +
-        "} catch (e) {\n" +
-        "    return 100\n" +
-        "}"
+        $"try \{\n" +
+        $"    var a = undefined\n" +
+        $"    return a + 1 \n" +
+        $"\} catch (e) \{\n" +
+        $"    return 100\n" +
+        $"\}"
     , 100)) _passed++; else _failed++;
     
     if (_assert("Try Catch No Error", 
-        "try {\n" +
-        "    return 50\n" +
-        "} catch (e) {\n" +
-        "    return 100\n" +
-        "}"
+        $"try \{\n" +
+        $"    return 50\n" +
+        $"\} catch (e) \{\n" +
+        $"    return 100\n" +
+        $"\}"
     , 50)) _passed++; else _failed++;
     
     // Module Import/Export
@@ -363,13 +368,13 @@ function proglang_test() {
     
     // Custom Error Handling
     if (_assert("Custom Error Handling", 
-        "try {\n" +
-        "    // Simulate a typed error\n" +
-        "    throw { type: PROG_ERROR.TYPE, message: \"Custom error\" }\n" +
-        "} catch (e) {\n" +
-        "    if (e.type == PROG_ERROR.TYPE) return 1\n" +
-        "    return 0\n" +
-        "}"
+        $"try \{\n" +
+        $"    // Simulate a typed error\n" +
+        $"    throw \{ type: PROG_ERROR.TYPE, message: \"Custom error\" \}\n" +
+        $"\} catch (e) \{\n" +
+        $"    if (e.type == PROG_ERROR.TYPE) return 1\n" +
+        $"    return 0\n" +
+        $"\}"
     , 1)) _passed++; else _failed++;
 
 
@@ -380,348 +385,349 @@ function proglang_test() {
     // Spread Call (assuming 'max' is exposed. If not, verify result is correct logic)
     // var args = [1, 5, 2]; return max(...args); -> Wait, Proglang 'max' might be limited.
     // Use user function for reliability
-    if (_assert("Spread Call", @"
-        fn sum(a, b, c) { return a + b + c; }
-        var args = [1, 2, 3];
-        return sum(...args);
-    ", 6)) _passed++; else _failed++;
+    if (_assert("Spread Call", 
+        $"fn sum(a, b, c) \{ return a + b + c; \}\n" +
+        $"var args = [1, 2, 3];\n" +
+        $"return sum(...args);"
+    , 6)) _passed++; else _failed++;
 
     // ============ PHASE 10 TESTS: Complex Scenarios ============
 
     // 1. Recursion: Factorial
-    if (_assert("Recursion Factorial", @"
-        fn fact(n) {
-            if (n <= 1) return 1
-            return n * fact(n - 1)
-        }
-        return fact(5)
-    ", 120)) _passed++; else _failed++;
+    if (_assert("Recursion Factorial", 
+        $"fn fact(n) \{\n" +
+        $"    if (n <= 1) return 1\n" +
+        $"    return n * fact(n - 1)\n" +
+        $"\}\n" +
+        $"return fact(5)"
+    , 120)) _passed++; else _failed++;
 
     // 2. Recursion: Fibonacci
-    if (_assert("Recursion Fibonacci", @"
-        fn fib(n) {
-            if (n <= 1) return n
-            return fib(n - 1) + fib(n - 2)
-        }
-        return fib(10)
-    ", 55)) _passed++; else _failed++;
+    if (_assert("Recursion Fibonacci", 
+        $"fn fib(n) \{\n" +
+        $"    if (n <= 1) return n\n" +
+        $"    return fib(n - 1) + fib(n - 2)\n" +
+        $"\}\n" +
+        $"return fib(10)"
+    , 55)) _passed++; else _failed++;
 
     // 3. Closures: Counter
-    if (_assert("Closure Counter", @"
-        fn make_counter(start) {
-            var count = start
-            fn increment() {
-                count = count + 1
-                return count
-            }
-            return increment
-        }
-        var c = make_counter(10)
-        c() // 11
-        return c()
-    ", 12)) _passed++; else _failed++;
+    if (_assert("Closure Counter", 
+        $"fn make_counter(start) \{\n" +
+        $"    var count = start\n" +
+        $"    fn increment() \{\n" +
+        $"        count = count + 1\n" +
+        $"        return count\n" +
+        $"    \}\n" +
+        $"    return increment\n" +
+        $"\}\n" +
+        $"var c = make_counter(10)\n" +
+        $"c() // 11\n" +
+        $"return c()"
+    , 12)) _passed++; else _failed++;
 
     // 4. Higher Order: Map
-    if (_assert("Higher Order Map", @"
-        fn map(arr, f) {
-            var res = []
-            for (var i = 0; i < array_length(arr); i++) {
-                res[i] = f(arr[i])
-            }
-            return res
-        }
-        fn square(x) { return x * x }
-        var numbers = [1, 2, 3]
-        var squared = map(numbers, square)
-        return squared[2]
-    ", 9)) _passed++; else _failed++;
+    if (_assert("Higher Order Map", 
+        $"fn map(arr, f) \{\n" +
+        $"    var res = []\n" +
+        $"    for (var i = 0; i < array_length(arr); i++) \{\n" +
+        $"        res[i] = f(arr[i])\n" +
+        $"    \}\n" +
+        $"    return res\n" +
+        $"\}\n" +
+        $"fn square(x) \{ return x * x \}\n" +
+        $"var numbers = [1, 2, 3]\n" +
+        $"var squared = map(numbers, square)\n" +
+        $"return squared[2]"
+    , 9)) _passed++; else _failed++;
 
     // 5. Higher Order: Filter (manual simulation)
-    if (_assert("Higher Order Filter", @"
-        var arr = [1, 5, 2, 8, 3]
-        var res = []
-        var idx = 0
-        for (var i = 0; i < array_length(arr); i++) {
-            if (arr[i] > 3) {
-                res[idx] = arr[i]
-                idx++
-            }
-        }
-        return idx
-    ", 2)) _passed++; else _failed++;
+    if (_assert("Higher Order Filter", 
+        $"var arr = [1, 5, 2, 8, 3]\n" +
+        $"var res = []\n" +
+        $"var idx = 0\n" +
+        $"for (var i = 0; i < array_length(arr); i++) \{\n" +
+        $"    if (arr[i] > 3) \{\n" +
+        $"        res[idx] = arr[i]\n" +
+        $"        idx++\n" +
+        $"    \}\n" +
+        $"\}\n" +
+        $"return idx"
+    , 2)) _passed++; else _failed++;
 
     // 6. Complex Data: Inventory Manager
     if (_assert("Inventory Manager", 
-        "var inv = [\n" +
-        "    { id: \"sword\", qty: 1 },\n" +
-        "    { id: \"potion\", qty: 5 },\n" +
-        "    { id: \"shield\", qty: 1 }\n" +
-        "]\n" +
-        "\n" +
-        "fn find_item(items, name) {\n" +
-        "    for (item in items) {\n" +
-        "        if (item.id == name) return item\n" +
-        "    }\n" +
-        "    return undefined\n" +
-        "}\n" +
-        "\n" +
-        "var potion = find_item(inv, \"potion\")\n" +
-        "if (potion != undefined) {\n" +
-        "    potion.qty += 3\n" +
-        "    return potion.qty\n" +
-        "}\n" +
-        "return 0"
+        $"var inv = [\n" +
+        $"    \{ id: \"sword\", qty: 1 \},\n" +
+        $"    \{ id: \"potion\", qty: 5 \},\n" +
+        $"    \{ id: \"shield\", qty: 1 \}\n" +
+        $"]\n" +
+        $"\n" +
+        $"fn find_item(items, name) \{\n" +
+        $"    for (item in items) \{\n" +
+        $"        if (item.id == name) return item\n" +
+        $"    \}\n" +
+        $"    return undefined\n" +
+        $"\}\n" +
+        $"\n" +
+        $"var potion = find_item(inv, \"potion\")\n" +
+        $"if (potion != undefined) \{\n" +
+        $"    potion.qty += 3\n" +
+        $"    return potion.qty\n" +
+        $"\}\n" +
+        $"return 0"
     , 8)) _passed++; else _failed++;
 
     // 7. Algorithm: Bubble Sort
     if (_assert("Bubble Sort", 
-        "var arr = [5, 1, 4, 2, 8]\n" +
-        "var n = array_length(arr)\n" +
-        "for (var i = 0; i < n; i++) {\n" +
-        "    for (var j = 0; j < n - i - 1; j++) {\n" +
-        "        if (arr[j] > arr[j+1]) {\n" +
-        "            var temp = arr[j]\n" +
-        "            arr[j] = arr[j+1]\n" +
-        "            arr[j+1] = temp\n" +
-        "        }\n" +
-        "    }\n" +
-        "}\n" +
-        "return arr[0] + arr[4] // 1 + 8"
+        $"var arr = [5, 1, 4, 2, 8]\n" +
+        $"var n = array_length(arr)\n" +
+        $"for (var i = 0; i < n; i++) \{\n" +
+        $"    for (var j = 0; j < n - i - 1; j++) \{\n" +
+        $"        if (arr[j] > arr[j+1]) \{\n" +
+        $"            var temp = arr[j]\n" +
+        $"            arr[j] = arr[j+1]\n" +
+        $"            arr[j+1] = temp\n" +
+        $"        \}\n" +
+        $"    \}\n" +
+        $"\}\n" +
+        $"return arr[0] + arr[4] // 1 + 8"
     , 9)) _passed++; else _failed++;
 
     // 8. Algorithm: Binary Search
     if (_assert("Binary Search", 
-        "fn binary_search(arr, target) {\n" +
-        "    var left = 0\n" +
-        "    var right = array_length(arr) - 1\n" +
-        "    while (left <= right) {\n" +
-        "        var mid = floor((left + right) / 2)\n" +
-        "        if (arr[mid] == target) return mid\n" +
-        "        if (arr[mid] < target) left = mid + 1\n" +
-        "        else right = mid - 1\n" +
-        "    }\n" +
-        "    return -1\n" +
-        "}\n" +
-        "var sorted = [10, 20, 30, 40, 50]\n" +
-        "return binary_search(sorted, 40)"
+        $"fn binary_search(arr, target) \{\n" +
+        $"    var left = 0\n" +
+        $"    var right = array_length(arr) - 1\n" +
+        $"    while (left <= right) \{\n" +
+        $"        var mid = floor((left + right) / 2)\n" +
+        $"        if (arr[mid] == target) return mid\n" +
+        $"        if (arr[mid] < target) left = mid + 1\n" +
+        $"        else right = mid - 1\n" +
+        $"    \}\n" +
+        $"    return -1\n" +
+        $"\}\n" +
+        $"var sorted = [10, 20, 30, 40, 50]\n" +
+        $"return binary_search(sorted, 40)"
     , 3)) _passed++; else _failed++;
 
     // 9. Matrix Addition
     if (_assert("Matrix Add", 
-        "var m1 = [[1, 2], [3, 4]]\n" +
-        "var m2 = [[5, 6], [7, 8]]\n" +
-        "var res = [[0, 0], [0, 0]]\n" +
-        "\n" +
-        "for (var r = 0; r < 2; r++) {\n" +
-        "    for (var c = 0; c < 2; c++) {\n" +
-        "        res[r][c] = m1[r][c] + m2[r][c]\n" +
-        "    }\n" +
-        "}\n" +
-        "return res[1][1] // 4 + 8 = 12"
+        $"var m1 = [[1, 2], [3, 4]]\n" +
+        $"var m2 = [[5, 6], [7, 8]]\n" +
+        $"var res = [[0, 0], [0, 0]]\n" +
+        $"\n" +
+        $"for (var r = 0; r < 2; r++) \{\n" +
+        $"    for (var c = 0; c < 2; c++) \{\n" +
+        $"        res[r][c] = m1[r][c] + m2[r][c]\n" +
+        $"    \}\n" +
+        $"\}\n" +
+        $"return res[1][1] // 4 + 8 = 12"
     , 12)) _passed++; else _failed++;
 
     // 10. State Machine (Traffic Light)
     if (_assert("State Machine", 
-        "var state = \"red\"\n" +
-        "var actions = 0\n" +
-        "\n" +
-        "for (var i = 0; i < 5; i++) {\n" +
-        "    switch (state) {\n" +
-        "        case \"red\":\n" +
-        "            state = \"green\"\n" +
-        "            break\n" +
-        "        case \"green\":\n" +
-        "            state = \"yellow\"\n" +
-        "            actions++ // go\n" +
-        "            break\n" +
-        "        case \"yellow\":\n" +
-        "            state = \"red\"\n" +
-        "            break\n" +
-        "    }\n" +
-        "}\n" +
-        "return actions"
+        $"var state = \"red\"\n" +
+        $"var actions = 0\n" +
+        $"\n" +
+        $"for (var i = 0; i < 5; i++) \{\n" +
+        $"    switch (state) \{\n" +
+        $"        case \"red\":\n" +
+        $"            state = \"green\"\n" +
+        $"            break\n" +
+        $"        case \"green\":\n" +
+        $"            state = \"yellow\"\n" +
+        $"            actions++ // go\n" +
+        $"            break\n" +
+        $"\n" +
+        $"        case \"yellow\":\n" +
+        $"            state = \"red\"\n" +
+        $"            break\n" +
+        $"    \}\n" +
+        $"\}\n" +
+        $"return actions"
     , 2)) _passed++; else _failed++;
 
     // 11. String Parsing (CSV)
     if (_assert("CSV Parse", 
-        "var csv = \"10,20,30,40\"\n" +
-        "var sum = 0\n" +
-        "var num_str = \"\"\n" +
-        "var len = string_length(csv)\n" +
-        "\n" +
-        "for (var i = 1; i <= len; i++) {\n" +
-        "    var char = string_char_at(csv, i)\n" +
-        "    if (char == \",\") {\n" +
-        "        sum += real(num_str)\n" +
-        "        num_str = \"\"\n" +
-        "    } else {\n" +
-        "        num_str += char\n" +
-        "    }\n" +
-        "}\n" +
-        "sum += real(num_str) // last one\n" +
-        "return sum"
+        $"var csv = \"10,20,30,40\"\n" +
+        $"var sum = 0\n" +
+        $"var num_str = \"\"\n" +
+        $"var len = string_length(csv)\n" +
+        $"\n" +
+        $"for (var i = 1; i <= len; i++) \{\n" +
+        $"    var char = string_char_at(csv, i)\n" +
+        $"    if (char == \",\") \{\n" +
+        $"        sum += real(num_str)\n" +
+        $"        num_str = \"\"\n" +
+        $"    \} else \{\n" +
+        $"        num_str += char\n" +
+        $"    \}\n" +
+        $"\}\n" +
+        $"sum += real(num_str) // last one\n" +
+        $"return sum"
     , 100)) _passed++; else _failed++;
 
     // 12. Vector Dot Product
     if (_assert("Vector Struct Dot", 
-        "fn dot(v1, v2) {\n" +
-        "    return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z\n" +
-        "}\n" +
-        "var a = {x: 1, y: 2, z: 3}\n" +
-        "var b = {x: 4, y: -5, z: 6}\n" +
-        "return dot(a, b) // 4 - 10 + 18 = 12"
+        $"fn dot(v1, v2) \{\n" +
+        $"    return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z\n" +
+        $"\}\n" +
+        $"var a = \{x: 1, y: 2, z: 3\}\n" +
+        $"var b = \{x: 4, y: -5, z: 6\}\n" +
+        $"return dot(a, b) // 4 - 10 + 18 = 12"
     , 12)) _passed++; else _failed++;
 
     // 13. Function Wrapper (Mock Decorator)
     if (_assert("Function Wrapper", 
-        "fn logger(func, arg) {\n" +
-        "    // log \"calling\"\n" +
-        "    var res = func(arg)\n" +
-        "    // log \"done\"\n" +
-        "    return res\n" +
-        "}\n" +
-        "fn double_it(n) { return n * 2 }\n" +
-        "return logger(double_it, 21)"
+        $"fn logger(func, arg) \{\n" +
+        $"    // log \"calling\"\n" +
+        $"    var res = func(arg)\n" +
+        $"    // log \"done\"\n" +
+        $"    return res\n" +
+        $"\}\n" +
+        $"fn double_it(n) \{ return n * 2 \}\n" +
+        $"return logger(double_it, 21)"
     , 42)) _passed++; else _failed++;
     
     // 14. Deep Nesting Update
     if (_assert("Deep Nesting", 
-        "var config = {\n" +
-        "    graphics: {\n" +
-        "        resolution: { w: 1920, h: 1080 }, \n" +
-        "        settings: { bloom: true }\n" +
-        "    }\n" +
-        "}\n" +
-        "config.graphics.resolution.w = 2560\n" +
-        "return config.graphics.resolution.w"
+        $"var config = \{\n" +
+        $"    graphics: \{\n" +
+        $"        resolution: \{ w: 1920, h: 1080 \}, \n" +
+        $"        settings: \{ bloom: true \}\n" +
+        $"    \}\n" +
+        $"\}\n" +
+        $"config.graphics.resolution.w = 2560\n" +
+        $"return config.graphics.resolution.w"
     , 2560)) _passed++; else _failed++;
 
     // 15. Scope Shadowing
     if (_assert("Scope Shadowing", 
-        "var x = 10\n" +
-        "fn test(x) {\n" +
-        "    var y = 20\n" +
-        "    return x + y // param x (5) + y (20) = 25\n" +
-        "}\n" +
-        "return test(5) + x // 25 + 10 = 35"
+        $"var x = 10\n" +
+        $"fn test(x) \{\n" +
+        $"    var y = 20\n" +
+        $"    return x + y // param x (5) + y (20) = 25\n" +
+        $"\}\n" +
+        $"return test(5) + x // 25 + 10 = 35"
     , 35)) _passed++; else _failed++;
 
     // 16. Array Merging (Spread)
     if (_assert("Merge Configs via Spread", 
-        "var default_tags = [\"item\", \"pickable\"]\n" +
-        "var weapon_tags = [\"weapon\", \"damage\"]\n" +
-        "var all_tags = [...default_tags, ...weapon_tags, \"legendary\"]\n" +
-        "return all_tags[4]"
+        $"var default_tags = [\"item\", \"pickable\"]\n" +
+        $"var weapon_tags = [\"weapon\", \"damage\"]\n" +
+        $"var all_tags = [...default_tags, ...weapon_tags, \"legendary\"]\n" +
+        $"return all_tags[4]"
     , "legendary")) _passed++; else _failed++;
 
     // 17. Exception in Loop
     if (_assert("Exception Loop", 
-        "var sum = 0\n" +
-        "var items = [10, 20, undefined, 30]\n" +
-        "for (item in items) {\n" +
-        "     try {\n" +
-        "         if (item == undefined) throw \"bad item\"\n" +
-        "         sum += item\n" +
-        "     } catch (e) {\n" +
-        "         // ignore\n" +
-        "     }\n" +
-        "}\n" +
-        "return sum"
+        $"var sum = 0\n" +
+        $"var items = [10, 20, undefined, 30]\n" +
+        $"for (item in items) \{\n" +
+        $"     try \{\n" +
+        $"         if (item == undefined) throw \"bad item\"\n" +
+        $"         sum += item\n" +
+        $"     \} catch (e) \{\n" +
+        $"         // ignore\n" +
+        $"     \}\n" +
+        $"\}\n" +
+        $"return sum"
     , 60)) _passed++; else _failed++;
 
     // 18. Prime Finder
     if (_assert("Prime Finder", 
-        "fn is_prime(n) {\n" +
-        "    if (n < 2) return false\n" +
-        "    for (var i = 2; i * i <= n; i++) {\n" +
-        "        if (n % i == 0) return false\n" +
-        "    }\n" +
-        "    return true\n" +
-        "}\n" +
-        "var count = 0\n" +
-        "for (var k = 1; k < 20; k++) {\n" +
-        "    if (is_prime(k)) count++\n" +
-        "}\n" +
-        "// 2, 3, 5, 7, 11, 13, 17, 19 -> 8 primes\n" +
-        "return count"
+        $"fn is_prime(n) \{\n" +
+        $"    if (n < 2) return false\n" +
+        $"    for (var i = 2; i * i <= n; i++) \{\n" +
+        $"        if (n % i == 0) return false\n" +
+        $"    \}\n" +
+        $"    return true\n" +
+        $"\}\n" +
+        $"var count = 0\n" +
+        $"for (var k = 1; k < 20; k++) \{\n" +
+        $"    if (is_prime(k)) count++\n" +
+        $"\}\n" +
+        $"// 2, 3, 5, 7, 11, 13, 17, 19 -> 8 primes\n" +
+        $"return count"
     , 8)) _passed++; else _failed++;
     
     // 19. Context Binding (this simulation)
     if (_assert("Object Method simulation", 
-        "fn create_player(name) {\n" +
-        "    var p = { name: name, hp: 100 }\n" +
-        "    p.heal = fn(amount) {\n" +
-        "        // 'p' is captured by closure\n" +
-        "        p.hp += amount\n" +
-        "        return p.hp\n" +
-        "    }\n" +
-        "    return p\n" +
-        "}\n" +
-        "var player = create_player(\"Hero\")\n" +
-        "player.heal(50)\n" +
-        "return player.hp"
+        $"fn create_player(name) \{\n" +
+        $"    var p = \{ name: name, hp: 100 \}\n" +
+        $"    p.heal = fn(amount) \{\n" +
+        $"        // 'p' is captured by closure\n" +
+        $"        p.hp += amount\n" +
+        $"        return p.hp\n" +
+        $"    \}\n" +
+        $"    return p\n" +
+        $"\}\n" +
+        $"var player = create_player(\"Hero\")\n" +
+        $"player.heal(50)\n" +
+        $"return player.hp"
     , 150)) _passed++; else _failed++;
     
     // 20. Mini Evaluator
     if (_assert("Mini Eval", 
-        "var program = [1, 5, 2] // ADD, 5, 2\n" +
-        "// Ops: 1=ADD, 2=SUB\n" +
-        "var ip = 0\n" +
-        "var reg = 0\n" +
-        "while (ip < array_length(program)) {\n" +
-        "    var op = program[ip]\n" +
-        "    ip++\n" +
-        "    if (op == 1) {\n" +
-        "        var val1 = program[ip]; ip++;\n" +
-        "        var val2 = program[ip]; ip++;\n" +
-        "        reg = val1 + val2\n" +
-        "    }\n" +
-        "}\n" +
-        "return reg"
+        $"var program = [1, 5, 2] // ADD, 5, 2\n" +
+        $"// Ops: 1=ADD, 2=SUB\n" +
+        $"var ip = 0\n" +
+        $"var reg = 0\n" +
+        $"while (ip < array_length(program)) \{\n" +
+        $"    var op = program[ip]\n" +
+        $"    ip++\n" +
+        $"    if (op == 1) \{\n" +
+        $"        var val1 = program[ip]; ip++;\n" +
+        $"        var val2 = program[ip]; ip++;\n" +
+        $"        reg = val1 + val2\n" +
+        $"    \}\n" +
+        $"\}\n" +
+        $"return reg"
     , 7)) _passed++; else _failed++;
 
     // ============ PHASE 11 TESTS: Optional Parameters ============
     
     // 1. Implicit Undefined
-    if (_assert("Opt Param Implicit", @"
-        fn opt_implicit(a, b) {
-            return [a, b]
-        }
-        var res = opt_implicit(10)
-        return res[1] // should be undefined
-    ", undefined)) _passed++; else _failed++;
+    if (_assert("Opt Param Implicit", 
+        $"fn opt_implicit(a, b) \{\n" +
+        $"    return [a, b]\n" +
+        $"\}\n" +
+        $"var res = opt_implicit(10)\n" +
+        $"return res[1] // should be undefined"
+    , undefined)) _passed++; else _failed++;
     
     // 2. Default Value
-    if (_assert("Opt Param Default", @"
-        fn opt_def(a = 100) {
-            return a
-        }
-        return opt_def()
-    ", 100)) _passed++; else _failed++;
+    if (_assert("Opt Param Default", 
+        $"fn opt_def(a = 100) \{\n" +
+        $"    return a\n" +
+        $"\}\n" +
+        $"return opt_def()"
+    , 100)) _passed++; else _failed++;
     
     // 3. Default Value Override
-    if (_assert("Opt Param Override", @"
-        fn opt_def2(a = 100) {
-            return a
-        }
-        return opt_def2(50)
-    ", 50)) _passed++; else _failed++;
+    if (_assert("Opt Param Override", 
+        $"fn opt_def2(a = 100) \{\n" +
+        $"    return a\n" +
+        $"\}\n" +
+        $"return opt_def2(50)"
+    , 50)) _passed++; else _failed++;
     
     // 4. Mixed Defaults
-    if (_assert("Opt Param Mixed", @"
-        fn opt_mixed(a, b = 2) {
-            return a + b
-        }
-        return opt_mixed(1)
-    ", 3)) _passed++; else _failed++;
+    if (_assert("Opt Param Mixed", 
+        $"fn opt_mixed(a, b = 2) \{\n" +
+        $"    return a + b\n" +
+        $"\}\n" +
+        $"return opt_mixed(1)"
+    , 3)) _passed++; else _failed++;
     
     // 5. Default Expression
-    if (_assert("Opt Param Expr", @"
-        fn opt_expr(a = 1 + 2) {
-            return a
-        }
-        return opt_expr()
-    ", 3)) _passed++; else _failed++;
+    if (_assert("Opt Param Expr", 
+        $"fn opt_expr(a = 1 + 2) \{\n" +
+        $"    return a\n" +
+        $"\}\n" +
+        $"return opt_expr()"
+    , 3)) _passed++; else _failed++;
 
 
     // Numeric Underscores
@@ -730,23 +736,19 @@ function proglang_test() {
     // ============ PHASE 12 TESTS: Class System ============
 
     // 1. Basic Class Instantiation
-    if (_assert("Class Basic", @"
-        class Point {
-            // Field initialization in constructor required for now (or via closure if we supported it)
-            
-            fn constructor(x, y) {
-                this.x = x
-                this.y = y
-            }
-            
-            fn magnitude() {
-                // sqrt not built-in? use dist logic or assume it exists in math funcs
-                return this.x * this.x + this.y * this.y
-            }
-        }
-        var p = new Point(3, 4)
-        return p.magnitude()
-    ", 25)) _passed++; else _failed++;
+    if (_assert("Class Basic", 
+        $"class Point \{\n" +
+        $"    fn constructor(x, y) \{\n" +
+        $"        this.x = x\n" +
+        $"        this.y = y\n" +
+        $"    \}\n" +
+        $"    fn magnitude() \{\n" +
+        $"        return this.x * this.x + this.y * this.y\n" +
+        $"    \}\n" +
+        $"\}\n" +
+        $"var p = new Point(3, 4)\n" +
+        $"return p.magnitude()"
+    , 25)) _passed++; else _failed++;
 
     // 2. Class Inheritance
     if (_assert("Class Inheritance", 
@@ -765,60 +767,60 @@ function proglang_test() {
         "Woof!")) _passed++; else _failed++;
 
     // 3. Super Method Call
-    if (_assert("Super Method", @"
-        class A {
-            fn get_val() { return 10 }
-        }
-        class B extends A {
-            fn get_val() { return super.get_val() + 5 }
-        }
-        var b = new B()
-        return b.get_val()
-    ", 15)) _passed++; else _failed++;
+    if (_assert("Super Method", 
+        $"class A \{\n" +
+        $"    fn get_val() \{ return 10 \}\n" +
+        $"\}\n" +
+        $"class B extends A \{\n" +
+        $"    fn get_val() \{ return super.get_val() + 5 \}\n" +
+        $"\}\n" +
+        $"var b = new B()\n" +
+        $"return b.get_val()"
+    , 15)) _passed++; else _failed++;
     
     // 4. Static Member
-    if (_assert("Static Method", @"
-        class MathUtils {
-            static fn add(a, b) { return a + b }
-        }
-        return MathUtils.add(10, 20)
-    ", 30)) _passed++; else _failed++;
+    if (_assert("Static Method", 
+        $"class MathUtils \{\n" +
+        $"    static fn add(a, b) \{ return a + b \}\n" +
+        $"\}\n" +
+        $"return MathUtils.add(10, 20)"
+    , 30)) _passed++; else _failed++;
 
     // 5. Polymorphism (Method Overriding)
-    if (_assert("Polymorphism", @"
-        class Shape { fn area() { return 0 } }
-        class Rect extends Shape { fn area() { return 10 } }
-        class Circle extends Shape { fn area() { return 20 } }
-        
-        var shapes = [new Rect(), new Circle()]
-        var total = 0
-        for (s in shapes) total += s.area()
-        return total
-    ", 30)) _passed++; else _failed++;
+    if (_assert("Polymorphism", 
+        $"class Shape \{ fn area() \{ return 0 \} \}\n" +
+        $"class Rect extends Shape \{ fn area() \{ return 10 \} \}\n" +
+        $"class Circle extends Shape \{ fn area() \{ return 20 \} \}\n" +
+        $"\n" +
+        $"var shapes = [new Rect(), new Circle()]\n" +
+        $"var total = 0\n" +
+        $"for (s in shapes) total += s.area()\n" +
+        $"return total"
+    , 30)) _passed++; else _failed++;
 
     // 6. Encapsulation (Syntax Check - Runtime enforcement optional)
-    if (_assert("Encapsulation Syntax", @"
-        class Box {
-            private var content = 0
-            fn set_content(c) { this.content = c }
-            fn get_content() { return this.content }
-        }
-        var b = new Box()
-        b.set_content(42)
-        return b.get_content()
-    ", 42)) _passed++; else _failed++;
+    if (_assert("Encapsulation Syntax", 
+        $"class Box \{\n" +
+        $"    private var content = 0\n" +
+        $"    fn set_content(c) \{ this.content = c \}\n" +
+        $"    fn get_content() \{ return this.content \}\n" +
+        $"\}\n" +
+        $"var b = new Box()\n" +
+        $"b.set_content(42)\n" +
+        $"return b.get_content()"
+    , 42)) _passed++; else _failed++;
     
     // 7. Abstraction (Syntax Check - Abstract classes)
-    if (_assert("Abstraction Syntax", @"
-        abstract class Base {
-            abstract fn process() {}
-        }
-        class Impl extends Base {
-            fn process() { return 1 }
-        }
-        var i = new Impl()
-        return i.process()
-    ", 1)) _passed++; else _failed++;
+    if (_assert("Abstraction Syntax", 
+        $"abstract class Base \{\n" +
+        $"    abstract fn process() \{\}\n" +
+        $"\}\n" +
+        $"class Impl extends Base \{\n" +
+        $"    fn process() \{ return 1 \}\n" +
+        $"\}\n" +
+        $"var i = new Impl()\n" +
+        $"return i.process()"
+    , 1)) _passed++; else _failed++;
 
     // ============ REGEX TESTS ============
     if (_assert("Regex Lit", "return /abc/.pattern", "abc")) _passed++; else _failed++;
@@ -828,6 +830,242 @@ function proglang_test() {
     if (_assert("Regex Replace All", "return regex_replace(\"banana\", /a/g, \"o\")", "bonono")) _passed++; else _failed++;
     if (_assert("Regex Split", "var r = regex_split(\"a,b,c\", /,/); return r[1]", "b,c")) _passed++; else _failed++;
     if (_assert("Regex Split Global", "var r = regex_split(\"a,b,c\", /,/g); return r[1]", "b")) _passed++; else _failed++;
+
+    // ============ COMPLEX STRESS TESTS ============
+
+    // 1. Advanced Recursion: Ackermann Function
+    if (_assert("Ackermann Function", 
+        $"fn ack(m, n) \{\n" +
+        $"    if (m == 0) return n + 1\n" +
+        $"    if (m > 0 && n == 0) return ack(m - 1, 1)\n" +
+        $"    return ack(m - 1, ack(m, n - 1))\n" +
+        $"\}\n" +
+        $"return ack(3, 2)"
+    , 29)) _passed++; else _failed++;
+
+    // 2. Advanced Data Structures: Linked List
+    if (_assert("Linked List", 
+        $"class Node \{\n" +
+        $"    fn constructor(val) \{\n" +
+        $"        this.val = val\n" +
+        $"        this.next = undefined\n" +
+        $"    \}\n" +
+        $"\}\n" +
+        $"class LinkedList \{\n" +
+        $"    fn constructor() \{\n" +
+        $"        this.head = undefined\n" +
+        $"        this.size = 0\n" +
+        $"    \}\n" +
+        $"    fn add(val) \{\n" +
+        $"        var newNode = new Node(val)\n" +
+        $"        if (this.head == undefined) \{\n" +
+        $"            this.head = newNode\n" +
+        $"        \} else \{\n" +
+        $"            var current = this.head\n" +
+        $"            while (current.next != undefined) \{\n" +
+        $"                current = current.next\n" +
+        $"            \}\n" +
+        $"            current.next = newNode\n" +
+        $"        \}\n" +
+        $"        this.size++\n" +
+        $"    \}\n" +
+        $"    fn get(index) \{\n" +
+        $"        if (index < 0 || index >= this.size) return undefined\n" +
+        $"        var current = this.head\n" +
+        $"        for (var i = 0; i < index; i++) \{\n" +
+        $"            current = current.next\n" +
+        $"        \}\n" +
+        $"        return current.val\n" +
+        $"    \}\n" +
+        $"\}\n" +
+        $"var list = new LinkedList()\n" +
+        $"list.add(10)\n" +
+        $"list.add(20)\n" +
+        $"list.add(30)\n" +
+        $"return list.get(1) + list.get(2)"
+    , 50)) _passed++; else _failed++;
+
+    // 3. Closure Stress: Function Chains
+    if (_assert("Closure Chains", 
+        $"fn make_adder(x) \{\n" +
+        $"    return fn(y) \{\n" +
+        $"        return fn(z) \{\n" +
+        $"            return x + y + z\n" +
+        $"        \}\n" +
+        $"    \}\n" +
+        $"\}\n" +
+        $"var add5 = make_adder(5)\n" +
+        $"var add5_and_10 = add5(10)\n" +
+        $"return add5_and_10(20)"
+    , 35)) _passed++; else _failed++;
+
+    // 4. OOP Complexity: Multi-level Inheritance & Overriding
+    if (_assert("Multi-level Inheritance", 
+        $"class GrandParent \{\n" +
+        $"    fn method() \{ return 1 \}\n" +
+        $"\}\n" +
+        $"class Parent extends GrandParent \{\n" +
+        $"    fn method() \{ return super.method() + 10 \}\n" +
+        $"\}\n" +
+        $"class Child extends Parent \{\n" +
+        $"    fn method() \{ return super.method() + 100 \}\n" +
+        $"\}\n" +
+        $"var c = new Child()\n" +
+        $"return c.method()"
+    , 111)) _passed++; else _failed++;
+
+    // 5. Exception Handling: Nested Try-Catch with Re-throw
+    if (_assert("Nested Exception", 
+        $"fn fail() \{\n" +
+        $"    throw 42\n" +
+        $"\}\n" +
+        $"try \{\n" +
+        $"    try \{\n" +
+        $"        fail()\n" +
+        $"    \} catch (e) \{\n" +
+        $"        throw e + 1\n" +
+        $"    \}\n" +
+        $"\} catch (e) \{\n" +
+        $"    return e\n" +
+        $"\}\n" +
+        $"return 0"
+    , 43)) _passed++; else _failed++;
+
+     // 6. Algorithms: Merge Sort
+    if (_assert("Merge Sort", 
+        $"fn merge(left, right) \{\n" +
+        $"    var res = []\n" +
+        $"    var i = 0\n" +
+        $"    var j = 0\n" +
+        $"    while (i < array_length(left) && j < array_length(right)) \{\n" +
+        $"        if (left[i] < right[j]) \{\n" +
+        $"            array_push(res, left[i])\n" +
+        $"            i++\n" +
+        $"        \} else \{\n" +
+        $"            array_push(res, right[j])\n" +
+        $"            j++\n" +
+        $"        \}\n" +
+        $"    \}\n" +
+        $"    while (i < array_length(left)) \{\n" +
+        $"        array_push(res, left[i])\n" +
+        $"        i++\n" +
+        $"    \}\n" +
+        $"    while (j < array_length(right)) \{\n" +
+        $"        array_push(res, right[j])\n" +
+        $"        j++\n" +
+        $"    \}\n" +
+        $"    return res\n" +
+        $"\}\n" +
+        $"fn merge_sort(arr) \{\n" +
+        $"    if (array_length(arr) <= 1) return arr\n" +
+        $"    var mid = floor(array_length(arr) / 2)\n" +
+        $"    var left = []\n" +
+        $"    var right = []\n" +
+        $"    for (var i = 0; i < mid; i++) array_push(left, arr[i])\n" +
+        $"    for (var i = mid; i < array_length(arr); i++) array_push(right, arr[i])\n" +
+        $"    return merge(merge_sort(left), merge_sort(right))\n" +
+        $"\}\n" +
+        $"var arr = [5, 2, 9, 1, 5, 6]\n" +
+        $"var sorted = merge_sort(arr)\n" +
+        $"return sorted[0] + sorted[1] + sorted[5] // 1 + 2 + 9 = 12"
+    , 12)) _passed++; else _failed++;
+
+    // ============ ROBUSTNESS & EDGE CASES ============
+
+    // 1. Shared Closure State: Multiple closures sharing the same captured variable
+    if (_assert("Shared Closure Mutation", 
+        $"fn make_counter() \{\n" +
+        $"    var count = 0\n" +
+        $"    return \{\n" +
+        $"        inc: fn() \{ count++ \},\n" +
+        $"        dec: fn() \{ count-- \},\n" +
+        $"        get: fn() \{ return count \}\n" +
+        $"    \}\n" +
+        $"\}\n" +
+        $"var c = make_counter()\n" +
+        $"c.inc()\n" +
+        $"c.inc()\n" +
+        $"c.dec()\n" +
+        $"return c.get()"
+    , 1)) _passed++; else _failed++;
+
+    // 2. Deep Control Flow: Nested loops, if-statements, and returns
+    if (_assert("Deep Nesting Return", 
+        $"fn complex_flow(n) \{\n" +
+        $"    var sum = 0\n" +
+        $"    for (var i = 0; i < n; i++) \{\n" +
+        $"        if (i == 5) \{\n" +
+        $"            for (var j = 0; j < 10; j++) \{\n" +
+        $"                if (j == 3) return sum + i + j\n" +
+        $"                sum++\n" +
+        $"            \}\n" +
+        $"        \}\n" +
+        $"        sum++\n" +
+        $"    \}\n" +
+        $"    return sum\n" +
+        $"\}\n" +
+        $"return complex_flow(10)"
+    , 16)) _passed++; else _failed++;
+
+    // 3. Method Binding & this: Verify that extracting a method still works (bound at access)
+    if (_assert("Method Extraction Binding", 
+        $"class Greeter \{\n" +
+        $"    fn constructor(prefix) \{ this.prefix = prefix \}\n" +
+        $"    fn greet(name) \{ return this.prefix + \" \" + name \}\n" +
+        $"\}\n" +
+        $"var g = new Greeter(\"Hello\")\n" +
+        $"var f = g.greet\n" +
+        $"return f(\"World\")"
+    , "Hello World")) _passed++; else _failed++;
+
+    // 4. Static Method Access
+    if (_assert("Static Method Counter", 
+        $"class GlobalState \{\n" +
+        $"    static fn get_version() \{ return 123 \}\n" +
+        $"\}\n" +
+        $"return GlobalState.get_version()"
+    , 123)) _passed++; else _failed++;
+
+    // 5. Complex Destructuring: Nested object and array patterns
+    if (_assert("Nested Destructuring", 
+        $"var data = \{\n" +
+        $"    users: [\n" +
+        $"        \{ id: 101, meta: \{ active: true \} \},\n" +
+        $"        \{ id: 102, meta: \{ active: false \} \}\n" +
+        $"    ]\n" +
+        $"\}\n" +
+        $"var \{ users: [u1, \{ id: id2, meta: \{ active: a2 \} \}] \} = data\n" +
+        $"return u1.id + id2 + (a2 ? 1000 : 0)"
+    , 203)) _passed++; else _failed++;
+
+    // 6. Closure capture of arguments
+    if (_assert("Argument Capture Closure", 
+        $"fn wrapper(val) \{\n" +
+        $"    return fn() \{ return val \}\n" +
+        $"\}\n" +
+        $"var f1 = wrapper(10)\n" +
+        $"var f2 = wrapper(20)\n" +
+        $"return f1() + f2()"
+    , 30)) _passed++; else _failed++;
+
+    // 7. Recursive Closure
+    if (_assert("Recursive Closure", 
+        $"var fact = undefined\n" +
+        $"fact = fn(n) \{\n" +
+        $"    if (n <= 1) return 1\n" +
+        $"    return n * fact(n - 1)\n" +
+        $"\}\n" +
+        $"return fact(5)"
+    , 120)) _passed++; else _failed++;
+
+    // 8. Array method-like behavior (if supported via context)
+    // Testing array_length as a first-class citizen inside a function
+    if (_assert("First-class Builtin", 
+        $"fn do_call(f, arg) \{\n" +
+        $"    return f(arg)\n" +
+        $"\}\n" +
+        $"return do_call(array_length, [1, 2, 3, 4, 5])"
+    , 5)) _passed++; else _failed++;
 
     // ============ Debug Tests ============
     

@@ -18,7 +18,7 @@ enum PROG_ERROR {
 
 function ProgVM() constructor {
     // Pre-allocate stack for performance
-    stack = array_create(256);
+    stack = array_create(1024);
     sp = 0;
     ip = 0;
     
@@ -45,6 +45,7 @@ function ProgVM() constructor {
     
     // Class System
     current_this = undefined;
+    active_class = undefined;
     class_registry = {};
     
     // Inject constants into global scope (or create a 'constants' scope?)
@@ -112,6 +113,11 @@ function ProgVM() constructor {
                 // Closure scope chain
                 _vm.current_scope.parent = _callee.env;
                 
+                // Set defining class for super calls
+                if (variable_struct_exists(_callee, "defining_class")) {
+                    _vm.active_class = _callee.defining_class;
+                }
+                
                 // Copy call stack for debugging (reference copy)
                 _vm.call_stack = variable_clone(call_stack); 
                 
@@ -141,6 +147,11 @@ function ProgVM() constructor {
                 
                 if (variable_struct_exists(global.proglang_functions, _callee)) {
                     var _f = global.proglang_functions[$ _callee];
+                    
+                    // Check if it's a class method (static or instance)
+                    // If so, we might need to set 'defining_class' for super calls?
+                    // Built-ins usually don't use super.
+                    
                     var _res = _f.func(_args);
                     // show_debug_message($"[ProgVM] Builtin Call {_callee} Result: {_res}");
                     array_pop(call_stack);
@@ -227,7 +238,11 @@ function ProgVM() constructor {
                         case PROG_OP.PUSH_FALSE: _stack[@ sp++] = false; break;
                         case PROG_OP.PUSH_GLOBAL_REF: _stack[@ sp++] = _gref; break;
                         case PROG_OP.PUSH_CONST: _stack[@ sp++] = _constants[_arg]; break;
-                        case PROG_OP.POP: sp--; break;
+                        case PROG_OP.POP: {
+                            if (sp > 0) sp--;
+                            else show_debug_message($"[ProgVM CRITICAL] STACK UNDERFLOW at IP {ip}");
+                            break;
+                        }
                         case PROG_OP.DUP: _stack[@ sp] = _stack[sp - 1]; sp++; break;
                         case PROG_OP.DUP2: {
                              var _v1 = _stack[sp - 1];
@@ -371,17 +386,26 @@ function ProgVM() constructor {
                                 var _super_class = _obj.__super__;
                                 var _receiver = _obj.receiver;
                                 
-                                // Look in super class methods
-                                if (variable_struct_exists(_super_class.methods, _prop)) {
-                                     var _method_entry = _super_class.methods[$ _prop];
-                                     // Create bound closure
-                                     _val = { 
-                                         type: "closure", 
-                                         bytecode: _method_entry.bytecode, 
-                                         receiver: _receiver,
-                                         env: current_scope 
-                                     };
-                                } else {
+                                // Look in super class methods (walk up the chain)
+                                var _curr = _super_class;
+                                var _found = false;
+                                while (_curr != undefined) {
+                                    if (variable_struct_exists(_curr.methods, _prop)) {
+                                         var _method_entry = _curr.methods[$ _prop];
+                                         // Create bound closure
+                                         _val = { 
+                                             type: "closure", 
+                                             bytecode: _method_entry.bytecode, 
+                                             receiver: _receiver,
+                                             env: current_scope,
+                                             defining_class: _curr
+                                         };
+                                         _found = true;
+                                         break;
+                                    }
+                                    _curr = _curr.super_class;
+                                }
+                                if (!_found) {
                                      runtime_error(PROG_ERROR.MEMBER, $"Property '{_prop}' not found in super class.");
                                 }
                             }
@@ -401,7 +425,8 @@ function ProgVM() constructor {
                                                    type: "closure", 
                                                    bytecode: _method_entry.bytecode, 
                                                    receiver: _obj,
-                                                   env: current_scope 
+                                                   env: current_scope,
+                                                   defining_class: _curr // Capture the class where this method is defined
                                                };
                                                _found = true;
                                                break;
@@ -500,7 +525,18 @@ function ProgVM() constructor {
                             if (current_this == undefined || !variable_struct_exists(current_this, "__class__")) {
                                 runtime_error(PROG_ERROR.RUNTIME, "'super' used outside of class instance.");
                             }
-                            var _class = current_this.__class__;
+                            var _class = undefined;
+                            
+                            if (active_class != undefined) {
+                                // If we are in a method, use its defining class to find super
+                                _class = active_class;
+                            } else if (current_this != undefined && variable_struct_exists(current_this, "__class__")) {
+                                // Fallback for script context (though super shouldn't be valid here?)
+                                _class = current_this.__class__;
+                            } else {
+                                runtime_error(PROG_ERROR.RUNTIME, "'super' used outside of class context.");
+                            }
+                            
                             if (_class.super_class == undefined) {
                                 runtime_error(PROG_ERROR.RUNTIME, "Class has no super class.");
                             }
@@ -684,8 +720,8 @@ function ProgVM() constructor {
                     sp = _handler.sp;
                     _stack[@ sp++] = _e;
                 } else {
-                    show_debug_message($"[ProgVM] Uncaught Exception: {_e}");
-                    return undefined;
+                    // Propagate unhandled exception so calling VM can catch it
+                    throw _e;
                 }
             }
         }
