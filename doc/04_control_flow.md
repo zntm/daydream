@@ -113,3 +113,46 @@ try {
     print($"Caught error: {e}");
 }
 ```
+
+### Error Types
+
+The `PROG_ERROR` enum defines specific error types that can be checked in a `catch` block.
+
+```javascript
+try {
+    // ...
+} catch (e) {
+    if (is_struct(e) && variable_struct_exists(e, "type")) {
+        if (e.type == PROG_ERROR.DIVIDE_BY_ZERO) {
+            print("Cannot divide by zero!");
+        }
+    }
+}
+```
+
+Available error types:
+
+-   `PROG_ERROR.NONE`: No error.
+-   `PROG_ERROR.RUNTIME`: Generic runtime error.
+-   `PROG_ERROR.TYPE`: Type mismatch (e.g. adding string to object).
+-   `PROG_ERROR.INDEX`: Array or string index out of bounds.
+-   `PROG_ERROR.MEMBER`: accessing invalid struct member.
+-   `PROG_ERROR.VARIABLE`: Variable not found.
+-   `PROG_ERROR.DIVIDE_BY_ZERO`: Division by zero.
+-   `PROG_ERROR.UNDEFINED_VALUE`: Operation on undefined value.
+-   `PROG_ERROR.NULL_REFERENCE`: Dereferencing null/undefined.
+-   `PROG_ERROR.INVALID_ARGUMENT`: Invalid argument passed to function.
+-   `PROG_ERROR.NOT_CALLABLE`: Attempting to call a non-function.
+-   `PROG_ERROR.SYNTAX`: Syntax error during compilation.
+-   `PROG_ERROR.IMPORT`: Module import failure.
+-   `PROG_ERROR.STACK_OVERFLOW`: Stack overflow.
+-   `PROG_ERROR.STACK_UNDERFLOW`: Stack underflow.
+-   `PROG_ERROR.RECURSION_LIMIT`: Maximum recursion depth exceeded.
+-   `PROG_ERROR.INFINITE_LOOP`: Infinite loop protection triggered.
+-   `PROG_ERROR.ACCESS_DENIED`: Access violation (e.g. private member).
+-   `PROG_ERROR.READ_ONLY`: Modifying read-only value.
+-   `PROG_ERROR.ABSTRACT_METHOD`: calling abstract method.
+-   `PROG_ERROR.FILE_NOT_FOUND`: File not found.
+-   `PROG_ERROR.PATH_SECURITY`: Path security violation.
+-   `PROG_ERROR.ARITY_MISMATCH`: Incorrect number of arguments.
+-   `PROG_ERROR.SUPER_ERROR`: Invalid use of `super`.
