@@ -2,7 +2,6 @@ placeholder = loca_translate("menu.generic.textbox.enter_name");
 
 text_length = 40;
 
-// TODO: replace with global world var
 var _text = global.world_save_data.name;
 
 if (_text != "")
