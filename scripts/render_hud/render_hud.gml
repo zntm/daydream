@@ -15,29 +15,7 @@ function render_hud(_gui_width, _gui_height)
         
         // Craftable panel now handled by modular GUI system
         
-        // HP bar rendering
-        if (surface_refresh & SURFACE_REFRESH_BOOLEAN.HP)
-        {
-            surface_refresh ^= SURFACE_REFRESH_BOOLEAN.HP;
-            
-            gui_hp(_hp, _hp_max);
-        }
-        
-        if (surface_exists(surface_hp))
-        {
-            var _x = gui_xanchor(GUI_ANCHOR.TOP_RIGHT, _gui_width,  _gui_scale_width) - (_gui_scale_width * 13 * min(GUI_HP_ROW_LENGTH, ceil(_hp_max / GUI_HP_PER_SPRITE)));
-            var _y = gui_yanchor(GUI_ANCHOR.TOP_RIGHT, _gui_height, _gui_scale_height);
-            
-            var _header = string(loca_translate("phantasia:gui.hp.header"), _hp, _hp_max);
-            
-            draw_set_halign(fa_right);
-            
-            render_text(_x + (surface_get_width(surface_hp) * _gui_scale_width), _y, _header, _gui_scale_width * 0.75, _gui_scale_height * 0.75);
-            
-            draw_set_halign(fa_left);
-            
-            draw_surface_ext(surface_hp, _x, _y + (_gui_scale_height * string_height(_header) * global.loca_font_scale * 0.75), _gui_scale_width, _gui_scale_height, 0, c_white, 1);
-        }
+        // HP bar rendering now handled by modular GUI (see gui_init_modular)
         
         var _gui_inventory = global.gui_inventory;
         

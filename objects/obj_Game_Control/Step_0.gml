@@ -350,7 +350,7 @@ if (global.gui_root != undefined)
     // Hotbar: visible when GUI is open and not in menu or chat
     if (global.gui_panel_hotbar_modular != undefined)
     {
-        global.gui_panel_hotbar_modular.visible = (is_opened & IS_OPENED_BOOLEAN.GUI) && !(is_opened & IS_OPENED_BOOLEAN.MENU) && !(is_opened & IS_OPENED_BOOLEAN.CHAT);
+        global.gui_panel_hotbar_modular.visible = ((is_opened & IS_OPENED_BOOLEAN.GUI) && !(is_opened & IS_OPENED_BOOLEAN.MENU) && !(is_opened & IS_OPENED_BOOLEAN.CHAT)) || ((is_opened & IS_OPENED_BOOLEAN.INVENTORY) && !(is_opened & IS_OPENED_BOOLEAN.CHAT));
     }
     
     // Inventory: visible when inventory is open and chat is not open
