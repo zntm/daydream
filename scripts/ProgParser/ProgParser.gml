@@ -45,7 +45,7 @@ function ProgParser(_tokens) constructor {
         if (check(_type)) return advance();
         
         error_at_current(_message);
-        return new ProgASTNode(PROG_AST.UNDEFINED_LITERAL); // Return dummy to prevent crash
+        return { type: PROG_TOKEN.EOF, lexeme: "", literal: undefined, line: peek().line }; // Return dummy token
     }
     
     static error_at_current = function(_message) {
@@ -215,13 +215,31 @@ function ProgParser(_tokens) constructor {
     
     static parse_function_decl = function(_is_global = false) {
         var _name = consume(PROG_TOKEN.IDENTIFIER, "Expected function name.").lexeme;
+        var _data = parse_function_body();
+        return new ProgASTFuncDecl(_name, _data.params, _data.body, _is_global);
+    }
+
+    static parse_function_expr = function() {
+        var _name = undefined;
+        if (check(PROG_TOKEN.IDENTIFIER)) { // Optional name for recursion
+             _name = advance().lexeme;
+        }
+        var _data = parse_function_body();
+        return new ProgASTFuncExpr(_name, _data.params, _data.body);
+    }
+
+    static parse_function_body = function() {
         consume(PROG_TOKEN.LPAREN, "Expected '(' after function name.");
         
         var _params = [];
         if (!check(PROG_TOKEN.RPAREN)) {
             do {
-                var _param = consume(PROG_TOKEN.IDENTIFIER, "Expected parameter name.").lexeme;
-                array_push(_params, _param);
+                var _param_name = consume(PROG_TOKEN.IDENTIFIER, "Expected parameter name.").lexeme;
+                var _default = undefined;
+                if (match(PROG_TOKEN.ASSIGN) || match(PROG_TOKEN.EQ)) {
+                    _default = parse_expression();
+                }
+                array_push(_params, { name: _param_name, default_value: _default });
             } until (!match(PROG_TOKEN.COMMA));
         }
         consume(PROG_TOKEN.RPAREN, "Expected ')' after parameters.");
@@ -229,7 +247,7 @@ function ProgParser(_tokens) constructor {
         consume(PROG_TOKEN.LBRACE, "Expected '{' before function body.");
         var _body = new ProgASTBlock(parse_block());
         
-        return new ProgASTFuncDecl(_name, _params, _body, _is_global);
+        return { params: _params, body: _body };
     }
     
     static parse_if_stmt = function() {
@@ -271,18 +289,26 @@ function ProgParser(_tokens) constructor {
         var _init = undefined;
         var _is_for_in = false;
         var _for_in_var = undefined;
+        var _for_in_val_var = undefined; // Added
         
         if (match(PROG_TOKEN.VAR)) {
             // var decl
             // Must NOT consume semicolon yet to check for IN
             _init = parse_var_decl(false, false); // _require_semi = false
             
+            if (check(PROG_TOKEN.COMMA)) { // Check for comma
+                advance(); // consume comma
+                var _val_token = consume(PROG_TOKEN.IDENTIFIER, "Expected value variable name.");
+                _for_in_val_var = _val_token.lexeme;
+            }
+
             if (match(PROG_TOKEN.IN)) { // CHANGED check to match
                  _is_for_in = true;
                  // Extract variable name from decl
                  if (_init.type == PROG_AST.VAR_DECL) _for_in_var = _init.name;
                  else if (_init.type == PROG_AST.DESTRUCTURING_DECL) error_at_current("Destructuring in for-in not yet supported.");
             } else {
+                 if (_for_in_val_var != undefined) error_at_current("Unexpected comma in variable declaration.");
                  match(PROG_TOKEN.SEMICOLON); // Consume the semi we skipped
             }
         } 
@@ -291,12 +317,20 @@ function ProgParser(_tokens) constructor {
             // Parse expression first, then check for IN keyword
             var _expr = parse_expression();
             
+            if (check(PROG_TOKEN.COMMA)) { // Check for comma if it looks like start of for-in with 2 vars
+                 // NOTE: parse_expression stops at comma usually.
+                 advance(); // consume comma
+                 var _val_token = consume(PROG_TOKEN.IDENTIFIER, "Expected value variable name.");
+                 _for_in_val_var = _val_token.lexeme;
+            }
+
             if (match(PROG_TOKEN.IN)) {
                 _is_for_in = true;
                 // Verify _expr is valid lvalue (Identifier)
                 if (_expr.type == PROG_AST.IDENTIFIER) _for_in_var = _expr.name;
                 else error_at_current("Expected identifier in for-in loop.");
             } else {
+                if (_for_in_val_var != undefined) error_at_current("Unexpected variable in for loop initializer.");
                 // It's a normal for loop init. Convert to assignment if needed, then expect semicolon.
                 _expr = _convert_to_assignment(_expr);
                 match(PROG_TOKEN.SEMICOLON);
@@ -310,7 +344,7 @@ function ProgParser(_tokens) constructor {
             var _collection = parse_expression();
             if (_paren) consume(PROG_TOKEN.RPAREN, "Expected ')' after for-in.");
             var _body = parse_statement();
-            return new ProgASTForInStmt(_for_in_var, _collection, _body);
+            return new ProgASTForInStmt(_for_in_var, _collection, _body, _for_in_val_var);
         }
         
         // Normal For Loop
@@ -653,6 +687,8 @@ function ProgParser(_tokens) constructor {
         if (match(PROG_TOKEN.FALSE)) return new ProgASTLiteral(PROG_AST.BOOL_LITERAL, false);
         if (match(PROG_TOKEN.TRUE)) return new ProgASTLiteral(PROG_AST.BOOL_LITERAL, true);
         if (match(PROG_TOKEN.UNDEFINED)) return new ProgASTLiteral(PROG_AST.UNDEFINED_LITERAL, undefined);
+
+        if (match(PROG_TOKEN.FN) || match(PROG_TOKEN.FUNCTION)) return parse_function_expr();
         
         if (match(PROG_TOKEN.NUMBER)) return new ProgASTLiteral(PROG_AST.NUMBER_LITERAL, previous().literal);
         if (match(PROG_TOKEN.STRING)) return new ProgASTLiteral(PROG_AST.STRING_LITERAL, previous().literal);

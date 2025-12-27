@@ -10,7 +10,7 @@ enum PROG_AST {
     // Statements  
     VAR_DECL, GLOBAL_DECL, IF_STMT, WHILE_STMT, FOR_STMT, REPEAT_STMT,
     BREAK_STMT, CONTINUE_STMT, RETURN_STMT, BLOCK,
-    EXPRESSION_STMT, SWITCH_STMT, FUNC_DECL,
+    EXPRESSION_STMT, SWITCH_STMT, FUNC_DECL, FUNC_EXPR,
     // New
     FOR_IN_STMT, TRY_STMT, DESTRUCTURING_DECL
 }
@@ -173,14 +173,23 @@ function ProgASTSwitchStmt(_expr, _cases, _default_case) : ProgASTNode(PROG_AST.
 /// @desc Function declaration
 function ProgASTFuncDecl(_name, _params, _body, _is_global = false) : ProgASTNode(PROG_AST.FUNC_DECL) constructor {
     name = _name;
-    params = _params; // Array of parameter names
+    params = _params; // Array of { name, default_value }
     body = _body; // Block
     is_global = _is_global;
 }
 
+/// @desc Function expression
+function ProgASTFuncExpr(_name, _params, _body) : ProgASTNode(PROG_AST.FUNC_EXPR) constructor {
+    name = _name; // Optional name (can be undefined/empty)
+    params = _params;
+    body = _body;
+}
+
 /// @desc For-In statement (for var in collection)
-function ProgASTForInStmt(_variable, _collection, _body) : ProgASTNode(PROG_AST.FOR_IN_STMT) constructor {
-    variable = _variable; // Identifier string
+/// @desc For-In statement (for var in collection)
+function ProgASTForInStmt(_variable, _collection, _body, _value_var = undefined) : ProgASTNode(PROG_AST.FOR_IN_STMT) constructor {
+    variable = _variable; // Identifier string (Key)
+    value_var = _value_var; // Identifier string (Value, optional)
     collection = _collection; // Expression
     body = _body;
 }

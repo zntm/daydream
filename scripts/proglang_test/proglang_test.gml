@@ -279,24 +279,45 @@ function proglang_test() {
     if (_assert("Destruct Alias", "var {x: a} = {x: 10}; return a", 10)) _passed++; else _failed++;
     
     // For In Array
-    if (_assert("For In Array", @"
-        var arr = [1, 2, 3]
-        var sum = 0
-        for (v in arr) {
-            sum += v
-        }
-        return sum
-    ", 6)) _passed++; else _failed++;
+    if (_assert("For In Array", 
+        "var arr = [1, 2, 3]" + "\n" +
+        "var sum = 0" + "\n" +
+        "for (v in arr) {" + "\n" +
+        "    sum += v" + "\n" +
+        "}" + "\n" +
+        "return sum"
+    , 6)) _passed++; else _failed++;
+
+    // For In Array With Index
+    if (_assert("For In Array With Index", 
+        "var arr = [1, 2, 3]" + "\n" +
+        "var sum = 0" + "\n" +
+        "for (v, i in arr) {" + "\n" +
+        "    sum += v + i" + "\n" +
+        "}" + "\n" +
+        "// v=1,i=0 -> 1; v=2,i=1 -> 3; v=3,i=2 -> 5. Sum=1+3+5=9" + "\n" +
+        "return sum"
+    , 9)) _passed++; else _failed++;
     
     // For In Struct
-    if (_assert("For In Struct", @"
-        var obj = {a: 1, b: 2}
-        var count = 0
-        for (k in obj) {
-            count++
-        }
-        return count
-    ", 2)) _passed++; else _failed++;
+    if (_assert("For In Struct", 
+        "var obj = {a: 1, b: 2}" + "\n" +
+        "var count = 0" + "\n" +
+        "for (k in obj) {" + "\n" +
+        "    count++" + "\n" +
+        "}" + "\n" +
+        "return count"
+    , 2)) _passed++; else _failed++;
+
+    // For In Struct With Value
+    if (_assert("For In Struct With Value", 
+        "var obj = {a: 1, b: 2}" + "\n" +
+        "var sum = 0" + "\n" +
+        "for (k, v in obj) {" + "\n" +
+        "    sum += v" + "\n" +
+        "}" + "\n" +
+        "return sum"
+    , 3)) _passed++; else _failed++;
     
     // Try Catch (Runtime Error)
     if (_assert("Try Catch Catch", @"
@@ -394,236 +415,278 @@ function proglang_test() {
         return idx
     ", 2)) _passed++; else _failed++;
 
-    /*
     // 6. Complex Data: Inventory Manager
-    if (_assert("Inventory Manager", @"
-        var inv = [
-            { id: \"sword\", qty: 1 },
-            { id: \"potion\", qty: 5 },
-            { id: \"shield\", qty: 1 }
-        ]
-        
-        fn find_item(items, name) {
-            for (item in items) {
-                if (item.id == name) return item
-            }
-            return undefined
-        }
-        
-        var potion = find_item(inv, \"potion\")
-        if (potion != undefined) {
-            potion.qty += 3
-            return potion.qty
-        }
-        return 0
-    ", 8)) _passed++; else _failed++;
+    if (_assert("Inventory Manager", 
+        "var inv = [" + "\n" +
+        "    { id: \"sword\", qty: 1 }," + "\n" +
+        "    { id: \"potion\", qty: 5 }," + "\n" +
+        "    { id: \"shield\", qty: 1 }" + "\n" +
+        "]" + "\n" +
+        "" + "\n" +
+        "fn find_item(items, name) {" + "\n" +
+        "    for (item in items) {" + "\n" +
+        "        if (item.id == name) return item" + "\n" +
+        "    }" + "\n" +
+        "    return undefined" + "\n" +
+        "}" + "\n" +
+        "" + "\n" +
+        "var potion = find_item(inv, \"potion\")" + "\n" +
+        "if (potion != undefined) {" + "\n" +
+        "    potion.qty += 3" + "\n" +
+        "    return potion.qty" + "\n" +
+        "}" + "\n" +
+        "return 0"
+    , 8)) _passed++; else _failed++;
 
     // 7. Algorithm: Bubble Sort
-    if (_assert("Bubble Sort", @"
-        var arr = [5, 1, 4, 2, 8]
-        var n = array_length(arr)
-        for (var i = 0; i < n; i++) {
-            for (var j = 0; j < n - i - 1; j++) {
-                if (arr[j] > arr[j+1]) {
-                    var temp = arr[j]
-                    arr[j] = arr[j+1]
-                    arr[j+1] = temp
-                }
-            }
-        }
-        return arr[0] + arr[4] // 1 + 8
-    ", 9)) _passed++; else _failed++;
+    if (_assert("Bubble Sort", 
+        "var arr = [5, 1, 4, 2, 8]" + "\n" +
+        "var n = array_length(arr)" + "\n" +
+        "for (var i = 0; i < n; i++) {" + "\n" +
+        "    for (var j = 0; j < n - i - 1; j++) {" + "\n" +
+        "        if (arr[j] > arr[j+1]) {" + "\n" +
+        "            var temp = arr[j]" + "\n" +
+        "            arr[j] = arr[j+1]" + "\n" +
+        "            arr[j+1] = temp" + "\n" +
+        "        }" + "\n" +
+        "    }" + "\n" +
+        "}" + "\n" +
+        "return arr[0] + arr[4] // 1 + 8"
+    , 9)) _passed++; else _failed++;
 
     // 8. Algorithm: Binary Search
-    if (_assert("Binary Search", @"
-        fn binary_search(arr, target) {
-            var left = 0
-            var right = array_length(arr) - 1
-            while (left <= right) {
-                var mid = floor((left + right) / 2)
-                if (arr[mid] == target) return mid
-                if (arr[mid] < target) left = mid + 1
-                else right = mid - 1
-            }
-            return -1
-        }
-        var sorted = [10, 20, 30, 40, 50]
-        return binary_search(sorted, 40)
-    ", 3)) _passed++; else _failed++;
+    if (_assert("Binary Search", 
+        "fn binary_search(arr, target) {" + "\n" +
+        "    var left = 0" + "\n" +
+        "    var right = array_length(arr) - 1" + "\n" +
+        "    while (left <= right) {" + "\n" +
+        "        var mid = floor((left + right) / 2)" + "\n" +
+        "        if (arr[mid] == target) return mid" + "\n" +
+        "        if (arr[mid] < target) left = mid + 1" + "\n" +
+        "        else right = mid - 1" + "\n" +
+        "    }" + "\n" +
+        "    return -1" + "\n" +
+        "}" + "\n" +
+        "var sorted = [10, 20, 30, 40, 50]" + "\n" +
+        "return binary_search(sorted, 40)"
+    , 3)) _passed++; else _failed++;
 
     // 9. Matrix Addition
-    if (_assert("Matrix Add", @"
-        var m1 = [[1, 2], [3, 4]]
-        var m2 = [[5, 6], [7, 8]]
-        var res = [[0, 0], [0, 0]]
-        
-        for (var r = 0; r < 2; r++) {
-            for (var c = 0; c < 2; c++) {
-                res[r][c] = m1[r][c] + m2[r][c]
-            }
-        }
-        return res[1][1] // 4 + 8 = 12
-    ", 12)) _passed++; else _failed++;
+    if (_assert("Matrix Add", 
+        "var m1 = [[1, 2], [3, 4]]" + "\n" +
+        "var m2 = [[5, 6], [7, 8]]" + "\n" +
+        "var res = [[0, 0], [0, 0]]" + "\n" +
+        "" + "\n" +
+        "for (var r = 0; r < 2; r++) {" + "\n" +
+        "    for (var c = 0; c < 2; c++) {" + "\n" +
+        "        res[r][c] = m1[r][c] + m2[r][c]" + "\n" +
+        "    }" + "\n" +
+        "}" + "\n" +
+        "return res[1][1] // 4 + 8 = 12"
+    , 12)) _passed++; else _failed++;
 
     // 10. State Machine (Traffic Light)
-    if (_assert("State Machine", @"
-        var state = \"red\"
-        var actions = 0
-        
-        for (var i = 0; i < 5; i++) {
-            switch (state) {
-                case \"red\":
-                    state = \"green\"
-                    break
-                case \"green\":
-                    state = \"yellow\"
-                    actions++ // go
-                    break
-                case \"yellow\":
-                    state = \"red\"
-                    break
-            }
-        }
-        return actions
-    ", 2)) _passed++; else _failed++;
+    if (_assert("State Machine", 
+        "var state = \"red\"" + "\n" +
+        "var actions = 0" + "\n" +
+        "" + "\n" +
+        "for (var i = 0; i < 5; i++) {" + "\n" +
+        "    switch (state) {" + "\n" +
+        "        case \"red\":" + "\n" +
+        "            state = \"green\"" + "\n" +
+        "            break" + "\n" +
+        "        case \"green\":" + "\n" +
+        "            state = \"yellow\"" + "\n" +
+        "            actions++ // go" + "\n" +
+        "            break" + "\n" +
+        "        case \"yellow\":" + "\n" +
+        "            state = \"red\"" + "\n" +
+        "            break" + "\n" +
+        "    }" + "\n" +
+        "}" + "\n" +
+        "return actions"
+    , 2)) _passed++; else _failed++;
 
     // 11. String Parsing (CSV)
-    if (_assert("CSV Parse", @"
-        var csv = \"10,20,30,40\"
-        var sum = 0
-        var num_str = \"\"
-        var len = string_length(csv)
-        
-        for (var i = 1; i <= len; i++) {
-            var char = string_char_at(csv, i)
-            if (char == \",\") {
-                sum += real(num_str)
-                num_str = \"\"
-            } else {
-                num_str += char
-            }
-        }
-        sum += real(num_str) // last one
-        return sum
-    ", 100)) _passed++; else _failed++;
+    if (_assert("CSV Parse", 
+        "var csv = \"10,20,30,40\"" + "\n" +
+        "var sum = 0" + "\n" +
+        "var num_str = \"\"" + "\n" +
+        "var len = string_length(csv)" + "\n" +
+        "" + "\n" +
+        "for (var i = 1; i <= len; i++) {" + "\n" +
+        "    var char = string_char_at(csv, i)" + "\n" +
+        "    if (char == \",\") {" + "\n" +
+        "        sum += real(num_str)" + "\n" +
+        "        num_str = \"\"" + "\n" +
+        "    } else {" + "\n" +
+        "        num_str += char" + "\n" +
+        "    }" + "\n" +
+        "}" + "\n" +
+        "sum += real(num_str) // last one" + "\n" +
+        "return sum"
+    , 100)) _passed++; else _failed++;
 
     // 12. Vector Dot Product
-    if (_assert("Vector Struct Dot", @"
-        fn dot(v1, v2) {
-            return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z
-        }
-        var a = {x: 1, y: 2, z: 3}
-        var b = {x: 4, y: -5, z: 6}
-        return dot(a, b) // 4 - 10 + 18 = 12
-    ", 12)) _passed++; else _failed++;
+    if (_assert("Vector Struct Dot", 
+        "fn dot(v1, v2) {" + "\n" +
+        "    return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z" + "\n" +
+        "}" + "\n" +
+        "var a = {x: 1, y: 2, z: 3}" + "\n" +
+        "var b = {x: 4, y: -5, z: 6}" + "\n" +
+        "return dot(a, b) // 4 - 10 + 18 = 12"
+    , 12)) _passed++; else _failed++;
 
     // 13. Function Wrapper (Mock Decorator)
-    if (_assert("Function Wrapper", @"
-        fn logger(func, arg) {
-            // log \"calling\"
-            var res = func(arg)
-            // log \"done\"
-            return res
-        }
-        fn double_it(n) { return n * 2 }
-        return logger(double_it, 21)
-    ", 42)) _passed++; else _failed++;
+    if (_assert("Function Wrapper", 
+        "fn logger(func, arg) {" + "\n" +
+        "    // log \"calling\"" + "\n" +
+        "    var res = func(arg)" + "\n" +
+        "    // log \"done\"" + "\n" +
+        "    return res" + "\n" +
+        "}" + "\n" +
+        "fn double_it(n) { return n * 2 }" + "\n" +
+        "return logger(double_it, 21)"
+    , 42)) _passed++; else _failed++;
     
     // 14. Deep Nesting Update
-    if (_assert("Deep Nesting", @"
-        var config = {
-            graphics: {
-                resolution: { w: 1920, h: 1080 },
-                settings: { bloom: true }
-            }
-        }
-        config.graphics.resolution.w = 2560
-        return config.graphics.resolution.w
-    ", 2560)) _passed++; else _failed++;
+    if (_assert("Deep Nesting", 
+        "var config = {" + "\n" +
+        "    graphics: {" + "\n" +
+        "        resolution: { w: 1920, h: 1080 }, " + "\n" +
+        "        settings: { bloom: true }" + "\n" +
+        "    }" + "\n" +
+        "}" + "\n" +
+        "config.graphics.resolution.w = 2560" + "\n" +
+        "return config.graphics.resolution.w"
+    , 2560)) _passed++; else _failed++;
 
     // 15. Scope Shadowing
-    if (_assert("Scope Shadowing", @"
-        var x = 10
-        fn test(x) {
-            var y = 20
-            return x + y // param x (5) + y (20) = 25
-        }
-        return test(5) + x // 25 + 10 = 35
-    ", 35)) _passed++; else _failed++;
+    if (_assert("Scope Shadowing", 
+        "var x = 10" + "\n" +
+        "fn test(x) {" + "\n" +
+        "    var y = 20" + "\n" +
+        "    return x + y // param x (5) + y (20) = 25" + "\n" +
+        "}" + "\n" +
+        "return test(5) + x // 25 + 10 = 35"
+    , 35)) _passed++; else _failed++;
 
     // 16. Array Merging (Spread)
-    if (_assert("Merge Configs via Spread", @"
-        var default_tags = [\"item\", \"pickable\"]
-        var weapon_tags = [\"weapon\", \"damage\"]
-        var all_tags = [...default_tags, ...weapon_tags, \"legendary\"]
-        return all_tags[4]
-    ", "legendary")) _passed++; else _failed++;
+    if (_assert("Merge Configs via Spread", 
+        "var default_tags = [\"item\", \"pickable\"]" + "\n" +
+        "var weapon_tags = [\"weapon\", \"damage\"]" + "\n" +
+        "var all_tags = [...default_tags, ...weapon_tags, \"legendary\"]" + "\n" +
+        "return all_tags[4]"
+    , "legendary")) _passed++; else _failed++;
 
     // 17. Exception in Loop
-    if (_assert("Exception Loop", @"
-        var sum = 0
-        var items = [10, 20, undefined, 30]
-        for (item in items) {
-             try {
-                 if (item == undefined) throw \"bad item\"
-                 sum += item
-             } catch (e) {
-                 // ignore
-             }
-        }
-        return sum
-    ", 60)) _passed++; else _failed++;
+    if (_assert("Exception Loop", 
+        "var sum = 0" + "\n" +
+        "var items = [10, 20, undefined, 30]" + "\n" +
+        "for (item in items) {" + "\n" +
+        "     try {" + "\n" +
+        "         if (item == undefined) throw \"bad item\"" + "\n" +
+        "         sum += item" + "\n" +
+        "     } catch (e) {" + "\n" +
+        "         // ignore" + "\n" +
+        "     }" + "\n" +
+        "}" + "\n" +
+        "return sum"
+    , 60)) _passed++; else _failed++;
 
     // 18. Prime Finder
-    if (_assert("Prime Finder", @"
-        fn is_prime(n) {
-            if (n < 2) return false
-            for (var i = 2; i * i <= n; i++) {
-                if (n % i == 0) return false
-            }
-            return true
-        }
-        var count = 0
-        for (var k = 1; k < 20; k++) {
-            if (is_prime(k)) count++
-        }
-        // 2, 3, 5, 7, 11, 13, 17, 19 -> 8 primes
-        return count
-    ", 8)) _passed++; else _failed++;
+    if (_assert("Prime Finder", 
+        "fn is_prime(n) {" + "\n" +
+        "    if (n < 2) return false" + "\n" +
+        "    for (var i = 2; i * i <= n; i++) {" + "\n" +
+        "        if (n % i == 0) return false" + "\n" +
+        "    }" + "\n" +
+        "    return true" + "\n" +
+        "}" + "\n" +
+        "var count = 0" + "\n" +
+        "for (var k = 1; k < 20; k++) {" + "\n" +
+        "    if (is_prime(k)) count++" + "\n" +
+        "}" + "\n" +
+        "// 2, 3, 5, 7, 11, 13, 17, 19 -> 8 primes" + "\n" +
+        "return count"
+    , 8)) _passed++; else _failed++;
     
     // 19. Context Binding (this simulation)
-    if (_assert("Object Method simulation", @"
-        fn create_player(name) {
-            var p = { name: name, hp: 100 }
-            p.heal = fn(amount) {
-                // 'p' is captured by closure
-                p.hp += amount
-                return p.hp
-            }
-            return p
-        }
-        var player = create_player("Hero")
-        player.heal(50)
-        return player.hp
-    ", 150)) _passed++; else _failed++;
+    if (_assert("Object Method simulation", 
+        "fn create_player(name) {" + "\n" +
+        "    var p = { name: name, hp: 100 }" + "\n" +
+        "    p.heal = fn(amount) {" + "\n" +
+        "        // 'p' is captured by closure" + "\n" +
+        "        p.hp += amount" + "\n" +
+        "        return p.hp" + "\n" +
+        "    }" + "\n" +
+        "    return p" + "\n" +
+        "}" + "\n" +
+        "var player = create_player(\"Hero\")" + "\n" +
+        "player.heal(50)" + "\n" +
+        "return player.hp"
+    , 150)) _passed++; else _failed++;
     
     // 20. Mini Evaluator
-    if (_assert("Mini Eval", @"
-        var program = [1, 5, 2] // ADD, 5, 2
-        // Ops: 1=ADD, 2=SUB
-        var ip = 0
-        var reg = 0
-        while (ip < array_length(program)) {
-            var op = program[ip]
-            ip++
-            if (op == 1) {
-                var val1 = program[ip]; ip++;
-                var val2 = program[ip]; ip++;
-                reg = val1 + val2
-            }
+    if (_assert("Mini Eval", 
+        "var program = [1, 5, 2] // ADD, 5, 2" + "\n" +
+        "// Ops: 1=ADD, 2=SUB" + "\n" +
+        "var ip = 0" + "\n" +
+        "var reg = 0" + "\n" +
+        "while (ip < array_length(program)) {" + "\n" +
+        "    var op = program[ip]" + "\n" +
+        "    ip++" + "\n" +
+        "    if (op == 1) {" + "\n" +
+        "        var val1 = program[ip]; ip++;" + "\n" +
+        "        var val2 = program[ip]; ip++;" + "\n" +
+        "        reg = val1 + val2" + "\n" +
+        "    }" + "\n" +
+        "}" + "\n" +
+        "return reg"
+    , 7)) _passed++; else _failed++;
+
+    // ============ PHASE 11 TESTS: Optional Parameters ============
+    
+    // 1. Implicit Undefined
+    if (_assert("Opt Param Implicit", @"
+        fn opt_implicit(a, b) {
+            return [a, b]
         }
-        return reg
-    ", 7)) _passed++; else _failed++;*/
+        var res = opt_implicit(10)
+        return res[1] // should be undefined
+    ", undefined)) _passed++; else _failed++;
+    
+    // 2. Default Value
+    if (_assert("Opt Param Default", @"
+        fn opt_def(a = 100) {
+            return a
+        }
+        return opt_def()
+    ", 100)) _passed++; else _failed++;
+    
+    // 3. Default Value Override
+    if (_assert("Opt Param Override", @"
+        fn opt_def2(a = 100) {
+            return a
+        }
+        return opt_def2(50)
+    ", 50)) _passed++; else _failed++;
+    
+    // 4. Mixed Defaults
+    if (_assert("Opt Param Mixed", @"
+        fn opt_mixed(a, b = 2) {
+            return a + b
+        }
+        return opt_mixed(1)
+    ", 3)) _passed++; else _failed++;
+    
+    // 5. Default Expression
+    if (_assert("Opt Param Expr", @"
+        fn opt_expr(a = 1 + 2) {
+            return a
+        }
+        return opt_expr()
+    ", 3)) _passed++; else _failed++;
 
     show_debug_message($"[Proglang Test] Tests Completed. Passed: {_passed}, Failed: {_failed}");
     

@@ -14,7 +14,7 @@ enum PROG_OP {
     NOT, AND, OR, BIT_AND, BIT_OR, BIT_XOR, SHL, SHR,
     
     // Variables
-    LOAD, STORE, LOAD_GLOBAL, STORE_GLOBAL,
+    LOAD, STORE, DEFINE, LOAD_GLOBAL, STORE_GLOBAL, // Added DEFINE
     
     // Structure access
     INDEX_GET, INDEX_SET, MEMBER_GET, MEMBER_SET,
@@ -29,13 +29,16 @@ enum PROG_OP {
     CALL, RETURN, CALL_SPREAD, MAKE_CLOSURE,
     
     // Iteration
-    ITER_INIT, ITER_NEXT,
+    ITER_INIT, ITER_NEXT, ITER_GET_VAL,
     
     // Exceptions
     PUSH_TRY, POP_TRY, THROW,
     
     // Spread operations
-    PUSH_ARRAY_EMPTY, ARRAY_PUSH, ARRAY_SPREAD
+    PUSH_ARRAY_EMPTY, ARRAY_PUSH, ARRAY_SPREAD,
+
+    // Stack Ops Extra
+    DUP2 // Added DUP2
 }
 
 /// @desc Bytecode container
@@ -234,32 +237,16 @@ function ProgCompiler() constructor {
                 break;
                 
             case PROG_AST.FUNC_DECL:
-                var _parent = bytecode;
-                bytecode = new ProgBytecode();
-                
-                // Map parameters to arg0, arg1, etc.
-                for (var i = 0; i < array_length(_node.params); i++) {
-                    emit(PROG_OP.LOAD, add_constant($"arg{i}"), _node.line);
-                    emit(PROG_OP.STORE, add_constant(_node.params[i]), _node.line);
-                }
-                
-                compile_node(_node.body);
-                emit(PROG_OP.PUSH_NULL);
-                emit(PROG_OP.RETURN);
-                
-                var _func_bc = bytecode;
-                bytecode = _parent;
-                
-                var _func_idx = add_constant({
-                    type: "function", name: _node.name,
-                    bytecode: _func_bc, is_global: _node.is_global
-                });
-                emit(PROG_OP.PUSH_CONST, _func_idx, _node.line);
-                emit(PROG_OP.MAKE_CLOSURE, undefined, _node.line);
+                compile_function_def(_node);
                 
                 var _name_idx = add_constant(_node.name);
                 emit(_node.is_global ? PROG_OP.STORE_GLOBAL : PROG_OP.STORE, _name_idx, _node.line);
                 emit(PROG_OP.POP);
+                break;
+                
+            case PROG_AST.FUNC_EXPR:
+                compile_function_def(_node);
+                // Leave closure on stack
                 break;
                 
             case PROG_AST.EXPRESSION_STMT:
@@ -433,8 +420,18 @@ function ProgCompiler() constructor {
                 var _start = bytecode.code_size;
                 emit(PROG_OP.ITER_NEXT, undefined, _node.line);
                 var _exit = emit(PROG_OP.JUMP_IF_FALSE, 0, _node.line);
-                emit(PROG_OP.STORE, add_constant(_node.variable), _node.line);
-                emit(PROG_OP.POP);
+                
+                // Stack: Iter, Key
+                emit(PROG_OP.DEFINE, add_constant(_node.variable), _node.line); // Define Key
+                emit(PROG_OP.POP); // Consume Key
+                
+                // If value variable requested:
+                if (struct_exists(_node, "value_var") && _node.value_var != undefined) {
+                     emit(PROG_OP.ITER_GET_VAL, undefined, _node.line); // Pushes Value using Iterator
+                     emit(PROG_OP.DEFINE, add_constant(_node.value_var), _node.line); // Define Value
+                     emit(PROG_OP.POP); // Consume Value
+                }
+                
                 compile_node(_node.body);
                 emit(PROG_OP.JUMP, _start, _node.line);
                 patch_jump(_exit, bytecode.code_size);
@@ -503,14 +500,87 @@ function ProgCompiler() constructor {
             }
             emit(PROG_OP.STORE, _idx, _line);
         } else if (_target.type == PROG_AST.MEMBER) {
-            compile_node(_target.target);
-            compile_node(_node.value);
+            compile_node(_target.target); // Push Obj
+            if (_op != PROG_TOKEN.ASSIGN) {
+                emit(PROG_OP.DUP); // Obj, Obj
+                emit(PROG_OP.MEMBER_GET, add_constant(_target.property), _line); // Obj, Val
+                compile_node(_node.value); // Obj, Val, RHS
+                switch (_op) {
+                    case PROG_TOKEN.PLUS_ASSIGN: emit(PROG_OP.ADD); break;
+                    case PROG_TOKEN.MINUS_ASSIGN: emit(PROG_OP.SUB); break;
+                    case PROG_TOKEN.STAR_ASSIGN: emit(PROG_OP.MUL); break;
+                    case PROG_TOKEN.SLASH_ASSIGN: emit(PROG_OP.DIV); break;
+                }
+                // Stack: Obj, NewVal
+            } else {
+                compile_node(_node.value); // Obj, NewVal
+            }
             emit(PROG_OP.MEMBER_SET, add_constant(_target.property), _line);
         } else if (_target.type == PROG_AST.INDEX) {
-            compile_node(_target.target);
-            compile_node(_target.index);
-            compile_node(_node.value);
+            compile_node(_target.target); // Arr
+            compile_node(_target.index); // Arr, Idx
+            if (_op != PROG_TOKEN.ASSIGN) {
+                emit(PROG_OP.DUP2); // Arr, Idx, Arr, Idx
+                emit(PROG_OP.INDEX_GET, undefined, _line); // Arr, Idx, Val
+                compile_node(_node.value); // Arr, Idx, Val, RHS
+                switch (_op) {
+                    case PROG_TOKEN.PLUS_ASSIGN: emit(PROG_OP.ADD); break;
+                    case PROG_TOKEN.MINUS_ASSIGN: emit(PROG_OP.SUB); break;
+                    case PROG_TOKEN.STAR_ASSIGN: emit(PROG_OP.MUL); break;
+                    case PROG_TOKEN.SLASH_ASSIGN: emit(PROG_OP.DIV); break;
+                }
+                // Stack: Arr, Idx, NewVal
+            } else {
+                compile_node(_node.value); // Arr, Idx, NewVal
+            }
             emit(PROG_OP.INDEX_SET, undefined, _line);
         }
+    }
+    
+    static compile_function_def = function(_node) {
+        var _parent = bytecode;
+        bytecode = new ProgBytecode();
+        
+        // Map parameters to arg0, arg1, etc.
+        for (var i = 0; i < array_length(_node.params); i++) {
+            var _param = _node.params[i];
+            var _pname = _param.name;
+            var _pdef = _param.default_value;
+            
+            emit(PROG_OP.LOAD, add_constant($"arg{i}"), _node.line);
+            
+            if (_pdef != undefined) {
+                 emit(PROG_OP.DUP);
+                 emit(PROG_OP.PUSH_NULL);
+                 emit(PROG_OP.EQ);
+                 var _skip = emit(PROG_OP.JUMP_IF_FALSE, 0); // Skip if arg != null
+                 
+                 emit(PROG_OP.POP); // Pop the null arg
+                 compile_node(_pdef); // Eval default
+                 
+                 patch_jump(_skip, bytecode.code_size);
+            }
+            
+            emit(PROG_OP.DEFINE, add_constant(_pname), _node.line); // Changed STORE to DEFINE
+            emit(PROG_OP.POP);
+        }
+        
+        compile_node(_node.body);
+        emit(PROG_OP.PUSH_NULL);
+        emit(PROG_OP.RETURN);
+        
+        var _func_bc = bytecode;
+        bytecode = _parent;
+        
+        var _is_global = struct_exists(_node, "is_global") ? _node.is_global : false;
+        var _name = struct_exists(_node, "name") && _node.name != undefined ? _node.name : "";
+        
+        var _func_idx = add_constant({
+            type: "function", name: _name,
+            bytecode: _func_bc, is_global: _is_global,
+            param_count: array_length(_node.params)
+        });
+        emit(PROG_OP.PUSH_CONST, _func_idx, _node.line);
+        emit(PROG_OP.MAKE_CLOSURE, undefined, _node.line);
     }
 }

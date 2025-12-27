@@ -38,6 +38,13 @@ function ProgVM() constructor {
             for (var j = 0; j < array_length(_args); j++) {
                 _vm.current_scope.vars[$ $"arg{j}"] = _args[j];
             }
+            // Optional params: fill with undefined if missing
+            if (struct_exists(_callee, "param_count")) {
+                 for (var j = array_length(_args); j < _callee.param_count; j++) {
+                     _vm.current_scope.vars[$ $"arg{j}"] = undefined;
+                 }
+            }
+            
             _vm.current_scope.vars[$ "argc"] = array_length(_args);
             return _vm.run(_callee.bytecode);
         }
@@ -63,14 +70,34 @@ function ProgVM() constructor {
             
             // Global exports
             if (variable_global_exists("proglang_exports") && struct_exists(global.proglang_exports, _callee)) {
-                var _bc = global.proglang_exports[$ _callee];
+                var _bc = global.proglang_exports[$ _callee]; // This is likely the Func constant (not closure)
+                // If it's a function struct (from compiler), it has param_count? 
+                // Wait, global exports might be raw bytecode OR function struct?
+                // Compiler emits: STORE_GLOBAL (function index).
+                // So proglang_exports has function structs.
+                // Let's handle if it is a function struct.
+                
                 var _vm = new ProgVM();
                 _vm.context = context;
+                
+                // If it is a function struct, it might have param_count
+                var _target_bc = _bc;
+                var _pcount = 0;
+                
+                if (struct_exists(_bc, "type") && _bc.type == "function") {
+                    _target_bc = _bc.bytecode;
+                    if (struct_exists(_bc, "param_count")) _pcount = _bc.param_count;
+                }
+                
                 for (var j = 0; j < array_length(_args); j++) {
                     _vm.current_scope.vars[$ $"arg{j}"] = _args[j];
                 }
+                for (var j = array_length(_args); j < _pcount; j++) {
+                    _vm.current_scope.vars[$ $"arg{j}"] = undefined;
+                }
+                
                 _vm.current_scope.vars[$ "argc"] = array_length(_args);
-                return _vm.run(_bc);
+                return _vm.run(_target_bc);
             }
             
             // Loaded scripts
@@ -141,6 +168,13 @@ function ProgVM() constructor {
                         case PROG_OP.PUSH_CONST: _stack[@ sp++] = _constants[_arg]; break;
                         case PROG_OP.POP: sp--; break;
                         case PROG_OP.DUP: _stack[@ sp] = _stack[sp - 1]; sp++; break;
+                        case PROG_OP.DUP2: {
+                             var _v1 = _stack[sp - 1];
+                             var _v2 = _stack[sp - 2];
+                             _stack[@ sp++] = _v2;
+                             _stack[@ sp++] = _v1;
+                             break;
+                        }
                         
                         // Arithmetic
                         case PROG_OP.ADD: { var _b = _stack[--sp]; _stack[sp - 1] += _b; break; }
@@ -196,7 +230,7 @@ function ProgVM() constructor {
                         }
                         
                         case PROG_OP.STORE: {
-                            var _val = _stack[sp - 1];
+                            var _val = _stack[sp - 1]; // Peek
                             var _name = _constants[_arg];
                             var _s = find_var_scope(_name);
                             
@@ -206,12 +240,21 @@ function ProgVM() constructor {
                             break;
                         }
                         
+                        case PROG_OP.DEFINE: {
+                            var _val = _stack[sp - 1]; // Peek
+                            var _name = _constants[_arg];
+                            current_scope.vars[$ _name] = _val;
+                            break;
+                        }
+                        
                         case PROG_OP.LOAD_GLOBAL: _stack[@ sp++] = _gref[$ _constants[_arg]]; break;
                         case PROG_OP.STORE_GLOBAL: _gref[$ _constants[_arg]] = _stack[sp - 1]; break;
                         
                         case PROG_OP.MAKE_CLOSURE: {
                             var _func = _stack[--sp];
-                            _stack[@ sp++] = { type: "closure", bytecode: _func.bytecode, name: _func.name, env: current_scope };
+                            var _closure = { type: "closure", bytecode: _func.bytecode, name: _func.name, env: current_scope };
+                            if (struct_exists(_func, "param_count")) _closure.param_count = _func.param_count;
+                            _stack[@ sp++] = _closure;
                             break;
                         }
                         
@@ -304,6 +347,19 @@ function ProgVM() constructor {
                                 _stack[@ sp++] = false;
                             }
                             break;
+                        }
+                        
+                        case PROG_OP.ITER_GET_VAL: {
+                             var _iter = _stack[sp - 1]; // Peek iterator
+                             var _val = undefined;
+                             if (_iter.type == "struct") {
+                                  var _key = _iter.keys[_iter.index - 1];
+                                  _val = _iter.source[$ _key];
+                             } else if (_iter.type == "array") {
+                                  _val = _iter.index - 1; // Return index for array (since Key was Element)
+                             }
+                             _stack[@ sp++] = _val;
+                             break;
                         }
                         
                         // Array Spread
