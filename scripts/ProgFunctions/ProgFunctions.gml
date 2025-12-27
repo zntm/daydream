@@ -95,10 +95,6 @@ proglang_function_register("sfx_play", function(_args) {
     sfx_diegetic_play(undefined, _args[0], _args[1], smart_value(_args[2]));
 });
 
-proglang_function_register("log", function(_args) { 
-    show_debug_message($"[Proglang] {_args[0]}");
-});
-
 // Print - variadic debug output (alias for show_debug_message)
 proglang_function_register("print", function(_args) { 
     var _msg = "";

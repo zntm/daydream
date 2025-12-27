@@ -345,7 +345,7 @@ global.command_data[$ "proglang"] = new CommandData()
             var _source = @"
                 var a = 10;
                 var b = 20;
-                log('Hello from Proglang!');
+                print('Hello from Proglang!');
                 return a + b;
             ";
             
