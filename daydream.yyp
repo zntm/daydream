@@ -1431,6 +1431,7 @@
     {"id":{"name":"init_tag_recursive","path":"scripts/init_tag_recursive/init_tag_recursive.yy",},},
     {"id":{"name":"init_world","path":"scripts/init_world/init_world.yy",},},
     {"id":{"name":"init","path":"scripts/init/init.yy",},},
+    {"id":{"name":"input_get_gamepad_name","path":"scripts/input_get_gamepad_name/input_get_gamepad_name.yy",},},
     {"id":{"name":"input_get_name","path":"scripts/input_get_name/input_get_name.yy",},},
     {"id":{"name":"InputDevice","path":"scripts/InputDevice/InputDevice.yy",},},
     {"id":{"name":"InputState","path":"scripts/InputState/InputState.yy",},},

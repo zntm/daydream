@@ -281,6 +281,7 @@
     {"name":"init_sfx","order":2,"path":"scripts/init_sfx/init_sfx.yy",},
     {"name":"init_structure_recursive","order":2,"path":"scripts/init_structure_recursive/init_structure_recursive.yy",},
     {"name":"init_world","order":1,"path":"scripts/init_world/init_world.yy",},
+    {"name":"input_get_gamepad_name","order":59,"path":"scripts/input_get_gamepad_name/input_get_gamepad_name.yy",},
     {"name":"input_get_name","order":52,"path":"scripts/input_get_name/input_get_name.yy",},
     {"name":"inventory_container_close","order":13,"path":"scripts/inventory_container_close/inventory_container_close.yy",},
     {"name":"inventory_container_open","order":12,"path":"scripts/inventory_container_open/inventory_container_open.yy",},

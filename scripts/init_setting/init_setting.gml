@@ -94,6 +94,25 @@ init_setting("controls", "input_keyboard_drop",       new SettingsData(SETTINGS_
 
 #endregion
 
+#region Controls Gamepad
+
+// Input type to show in controls menu: "keyboard", "gamepad", "touch"
+global.controls_input_type = "keyboard";
+
+init_setting("controls_gamepad", "input_gamepad_jump",       new SettingsData(SETTINGS_TYPE.HOTKEY, gp_face1));
+
+init_setting("controls_gamepad", "input_gamepad_attack",     new SettingsData(SETTINGS_TYPE.HOTKEY, gp_face3));
+
+init_setting("controls_gamepad", "input_gamepad_use",        new SettingsData(SETTINGS_TYPE.HOTKEY, gp_face2));
+
+init_setting("controls_gamepad", "input_gamepad_mount",      new SettingsData(SETTINGS_TYPE.HOTKEY, gp_face4));
+
+init_setting("controls_gamepad", "input_gamepad_pause",      new SettingsData(SETTINGS_TYPE.HOTKEY, gp_start));
+
+init_setting("controls_gamepad", "input_gamepad_inventory",  new SettingsData(SETTINGS_TYPE.HOTKEY, gp_select));
+
+#endregion
+
 #region Audio
 
 init_setting("audio", "audio_master", new SettingsData(SETTINGS_TYPE.SLIDER, 1)
