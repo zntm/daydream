@@ -1,13 +1,13 @@
 {
-    "$GMScript": "v1",
-    "%Name": "physics_mode_swim",
-    "isCompatibility": false,
-    "isDnD": false,
-    "name": "physics_mode_swim",
-    "parent": {
-        "name": "Physics",
-        "path": "folders/Scripts/Entity/Physics.yy"
-    },
-    "resourceType": "GMScript",
-    "resourceVersion": "2.0"
+  "$GMScript":"v1",
+  "%Name":"physics_mode_swim",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"physics_mode_swim",
+  "parent":{
+    "name":"Physics",
+    "path":"folders/Scripts/Entity/Physics.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

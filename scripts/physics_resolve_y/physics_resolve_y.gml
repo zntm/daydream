@@ -10,7 +10,7 @@ function physics_resolve_y(_body, _dt)
     
     var _distance = abs(_vy);
     var _direction = sign(_vy);
-    var _size = abs(_body.scale_y * 8);
+    var _size = abs(_body.scale_y * PHYSICS_TILE_CHECK_SIZE);
     
     // Check if immediately blocked
     if (tile_meeting(_body.pos_x, _body.pos_y + _direction))
@@ -61,21 +61,43 @@ function physics_resolve_y(_body, _dt)
             }
         }
         
-        // Pixel-by-pixel
-        for (var i = abs(_offset); i > 0; i -= 1)
+        // Binary search
+        var _low = 0;
+        var _high = abs(_offset);
+        var _best = 0;
+        
+        repeat (4)
         {
-            var _fine = _direction * min(i, 1);
-            
-            if (tile_meeting(_body.pos_x, _body.pos_y + _fine))
+            if (_low > _high) break;
+             
+            var _mid = (_low + _high) div 2;
+             if (_mid == 0) 
             {
-                _body.vel_y = 0;
-                if (_direction > 0) _body.collision.ground = true;
-                else _body.collision.ceiling = true;
-                return;
+                _low = 1;
+                continue;
             }
-            
-            _body.pos_y += _fine;
+
+            var _test_pos = _body.pos_y + (_direction * _mid);
+            if (!tile_meeting(_body.pos_x, _test_pos))
+            {
+                _best = _mid;
+                _low = _mid + 1;
+            }
+            else
+            {
+                _high = _mid - 1;
+            }
         }
-        break;
+        
+        if (_best > 0)
+        {
+             _body.pos_y += _direction * _best;
+        }
+
+        // Hit the ground/ceiling
+        _body.vel_y = 0;
+        if (_direction > 0) _body.collision.ground = true;
+        else _body.collision.ceiling = true;
+        return;
     }
 }

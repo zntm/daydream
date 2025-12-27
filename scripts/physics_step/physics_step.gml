@@ -39,9 +39,6 @@ function physics_step(_body, _input, _dt)
     physics_resolve_x(_body, _dt);
     physics_resolve_y(_body, _dt);
     
-    // Update collision state flags
-    physics_update_collision(_body);
-    
     // Reset jump state if landed
     if (_body.collision.ground && _body.mode == MOVEMENT_MODE.GROUND)
     {
@@ -92,12 +89,4 @@ function physics_detect_mode(_body)
     
     // Default to ground
     _body.mode = MOVEMENT_MODE.GROUND;
-}
-
-/// @desc Update collision state flags based on current position
-/// @param {Struct.PhysicsBody} _body  
-function physics_update_collision(_body)
-{
-    // These need the instance context to call tile_meeting
-    // Will be called from instance context after sync_to_instance
 }

@@ -9,7 +9,7 @@ tile_components = undefined;
 // Physics
 xvelocity = 0;
 yvelocity = 0;
-gravity_value = PHYSICS_GLOBAL_GRAVITY;
+gravity_value = PHYSICS_GRAVITY;
 fall_delay = 2;
 
 // Origin tracking

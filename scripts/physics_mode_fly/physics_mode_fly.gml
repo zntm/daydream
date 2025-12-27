@@ -8,13 +8,13 @@ function physics_mode_fly(_body, _input, _dt)
     var _attr = _body.attribute;
     
     // Get fly speed (with fallback)
-    var _speed = 8.65;  // Default creative mode speed
+    var _speed = PHYSICS_MOVE_SPEED_FLY;  // Default creative mode speed
     if (_attr != undefined)
     {
         _speed = _attr[$ "___fly_speed"] ?? _attr.get_movement_speed() * 2;
     }
     
-    var _accel = 0.25;
+    var _accel = PHYSICS_MOVE_ACCEL_FLY;
     
     // 360° movement
     var _target_vx = _input.move_x * _speed;

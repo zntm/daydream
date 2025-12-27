@@ -32,7 +32,7 @@ function spawn_falling_tile(_world_x, _world_y, _tile_z, _tile)
         yvelocity = 0;
         
         // Use custom gravity if specified, otherwise use global
-        gravity_value = _falling[$ "gravity"] ?? PHYSICS_GLOBAL_GRAVITY;
+        gravity_value = _falling[$ "gravity"] ?? PHYSICS_GRAVITY;
         
         // Fall delay (in game ticks)
         fall_delay = _falling[$ "delay"] ?? 2;  // Default 2 tick delay like Minecraft

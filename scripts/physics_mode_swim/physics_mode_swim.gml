@@ -8,14 +8,14 @@ function physics_mode_swim(_body, _input, _dt)
     var _attr = _body.attribute;
     
     // Get swim speed (with fallback)
-    var _speed = 2.5;
+    var _speed = PHYSICS_MOVE_SPEED_SWIM;
     if (_attr != undefined)
     {
         _speed = _attr[$ "___swim_speed"] ?? _attr.get_movement_speed() * 0.7;
     }
     
-    var _accel = 0.15;  // More sluggish than air
-    var _drag = 0.92;   // Water resistance
+    var _accel = PHYSICS_MOVE_ACCEL_SWIM;  // More sluggish than air
+    var _drag = PHYSICS_MOVE_DRAG_SWIM;   // Water resistance
     
     // 360° movement with drag
     var _target_vx = _input.move_x * _speed;

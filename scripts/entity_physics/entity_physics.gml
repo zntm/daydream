@@ -50,11 +50,11 @@ function entity_update_collision(_body)
 /// @param {Id.Instance} _inst Target instance
 /// @param {Id.Instance} _source Source of knockback
 /// @param {Real} [_force] Knockback force
-function entity_knockback(_inst, _source, _force = 4)
+function entity_knockback(_inst, _source, _force = PHYSICS_KNOCKBACK_FORCE)
 {
     var _dir = sign(_inst.x - _source.x);
     if (_dir == 0) _dir = choose(-1, 1);
     
     _inst.physics_body.vel_x = _dir * _force;
-    _inst.physics_body.vel_y = -_force * 0.75;
+    _inst.physics_body.vel_y = -_force * PHYSICS_KNOCKBACK_Y_RATIO;
 }

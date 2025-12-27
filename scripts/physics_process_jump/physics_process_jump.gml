@@ -9,16 +9,16 @@ function physics_process_jump(_body, _input, _dt)
     var _jump = _body.jump;
     
     var _jump_max = (_attr != undefined) ? _attr.get_jump_count_max() : 1;
-    var _jump_time = (_attr != undefined) ? _attr.get_jump_time() : 12;
-    var _jump_height = (_attr != undefined) ? _attr.get_jump_height() : 28.5;
-    var _jump_falloff = (_attr != undefined) ? _attr.get_jump_falloff() : 2.2;
+    var _jump_time = (_attr != undefined) ? _attr.get_jump_time() : PHYSICS_JUMP_TIME;
+    var _jump_height = (_attr != undefined) ? _attr.get_jump_height() : PHYSICS_JUMP_HEIGHT;
+    var _jump_falloff = (_attr != undefined) ? _attr.get_jump_falloff() : PHYSICS_JUMP_FALLOFF;
     
     // Coyote time - allow jumping shortly after leaving ground
     if (_jump.count == 0 && !_body.collision.ground)
     {
         _jump.coyote_time += _dt;
         
-        if (_jump.coyote_time > PHYSICS_GLOBAL_timer_coyote)
+        if (_jump.coyote_time > PHYSICS_JUMP_COYOTE_TIME)
         {
             _jump.count = 1;  // Lost coyote time
         }
