@@ -53,6 +53,38 @@ enum PROG_OP {
     DEBUG_LINE // Ops to track line changes for stack trace
 }
 
+/// @desc Array indices for function data (replaces struct)
+/// Usage: func_arr = [PROG_FUNC_TYPE, name, bytecode, is_global, param_count]
+enum PROG_FUNC {
+    TYPE,           // Always "function"
+    NAME,           // Function name
+    BYTECODE,       // Compiled bytecode
+    IS_GLOBAL,      // Boolean: is global function
+    PARAM_COUNT,    // Number of parameters
+    SIZE            // Array size
+}
+
+/// @desc Array indices for closure data (replaces struct)
+/// Usage: closure_arr = [PROG_CLOSURE_TYPE, bytecode, env]
+enum PROG_CLOSURE {
+    TYPE,           // Always "closure"
+    BYTECODE,       // Compiled bytecode
+    ENV,            // Captured scope environment
+    NAME,           // Function name (for debug/recursion)
+    PARAM_COUNT,    // Number of parameters
+    DEFINING_CLASS, // Class where method was defined
+    RECEIVER,       // Bound 'this' instance
+    SIZE            // Array size
+}
+
+/// @desc Array indices for script module data (replaces struct)
+/// Usage: module_arr = [main_bytecode, scope_struct]
+enum PROG_MODULE {
+    MAIN,           // Main bytecode
+    SCOPE,          // Scope with local functions
+    SIZE            // Array size
+}
+
 /// @desc Bytecode container
 function ProgBytecode() constructor {
     code = [];
@@ -973,11 +1005,15 @@ function ProgCompiler() constructor {
         var _is_global = struct_exists(_node, "is_global") ? _node.is_global : false;
         var _name = struct_exists(_node, "name") && _node.name != undefined ? _node.name : "";
         
-        var _func_idx = add_constant({
-            type: "function", name: _name,
-            bytecode: _res.bytecode, is_global: _is_global,
-            param_count: _res.param_count
-        });
+        // Array-based function storage for performance (uses PROG_FUNC enum)
+        var _func_arr = array_create(PROG_FUNC.SIZE);
+        _func_arr[PROG_FUNC.TYPE] = "function";
+        _func_arr[PROG_FUNC.NAME] = _name;
+        _func_arr[PROG_FUNC.BYTECODE] = _res.bytecode;
+        _func_arr[PROG_FUNC.IS_GLOBAL] = _is_global;
+        _func_arr[PROG_FUNC.PARAM_COUNT] = _res.param_count;
+        
+        var _func_idx = add_constant(_func_arr);
         emit(PROG_OP.PUSH_CONST, _func_idx, _node.line);
         emit(PROG_OP.MAKE_CLOSURE, undefined, _node.line);
     }

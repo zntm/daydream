@@ -13,7 +13,23 @@ enum PROG_ERROR {
     INVALID_ARGUMENT,
     NOT_CALLABLE,
     SYNTAX,
-    IMPORT
+    IMPORT,
+    // Stack errors
+    STACK_OVERFLOW,
+    STACK_UNDERFLOW,
+    // Execution limits
+    RECURSION_LIMIT,
+    INFINITE_LOOP,
+    // Access control
+    ACCESS_DENIED,
+    READ_ONLY,
+    ABSTRACT_METHOD,
+    // File/path errors
+    FILE_NOT_FOUND,
+    PATH_SECURITY,
+    // Function errors
+    ARITY_MISMATCH,
+    SUPER_ERROR
 }
 
 function ProgVM() constructor {
@@ -107,21 +123,47 @@ function ProgVM() constructor {
             }
             
             // Function struct (closure or built-in wrapper)
-            if (is_struct(_callee) && variable_struct_exists(_callee, "type") && _callee.type == "closure") {
+            // Handle Array-based Closure (PROG_CLOSURE enum)
+            if (is_array(_callee) && array_length(_callee) >= PROG_CLOSURE.SIZE && _callee[PROG_CLOSURE.TYPE] == "closure") {
                 var _vm = new ProgVM();
                 _vm.context = context;
                 // Closure scope chain
-                _vm.current_scope.parent = _callee.env;
+                _vm.current_scope.parent = _callee[PROG_CLOSURE.ENV];
                 
                 // Set defining class for super calls
-                if (variable_struct_exists(_callee, "defining_class")) {
-                    _vm.active_class = _callee.defining_class;
+                if (_callee[PROG_CLOSURE.DEFINING_CLASS] != undefined) {
+                    _vm.active_class = _callee[PROG_CLOSURE.DEFINING_CLASS];
                 }
                 
                 // Copy call stack for debugging (reference copy)
                 _vm.call_stack = variable_clone(call_stack); 
                 
                 // Set 'this' context if bound
+                if (_callee[PROG_CLOSURE.RECEIVER] != undefined) {
+                     _vm.current_this = _callee[PROG_CLOSURE.RECEIVER];
+                }
+                
+                for (var j = 0; j < array_length(_args); j++) {
+                    _vm.current_scope.vars[$ $"arg{j}"] = _args[j];
+                }
+                _vm.current_scope.vars[$ "argc"] = array_length(_args);
+                var _res = _vm.run(_callee[PROG_CLOSURE.BYTECODE]);
+                array_pop(call_stack);
+                return _res;
+            }
+            
+            // Legacy struct closure support
+            if (is_struct(_callee) && variable_struct_exists(_callee, "type") && _callee.type == "closure") {
+                var _vm = new ProgVM();
+                _vm.context = context;
+                _vm.current_scope.parent = _callee.env;
+                
+                if (variable_struct_exists(_callee, "defining_class")) {
+                    _vm.active_class = _callee.defining_class;
+                }
+                
+                _vm.call_stack = variable_clone(call_stack); 
+                
                 if (variable_struct_exists(_callee, "receiver")) {
                      _vm.current_this = _callee.receiver;
                 }
@@ -147,20 +189,26 @@ function ProgVM() constructor {
                 
                 if (variable_struct_exists(global.proglang_functions, _callee)) {
                     var _f = global.proglang_functions[$ _callee];
-                    
-                    // Check if it's a class method (static or instance)
-                    // If so, we might need to set 'defining_class' for super calls?
-                    // Built-ins usually don't use super.
-                    
                     var _res = _f.func(_args);
-                    // show_debug_message($"[ProgVM] Builtin Call {_callee} Result: {_res}");
                     array_pop(call_stack);
                     return _res;
                 }
                 
                 if (variable_struct_exists(global.proglang_scripts, _callee)) {
                     var _script = global.proglang_scripts[$ _callee];
-                    var _bc = is_struct(_script) && variable_struct_exists(_script, "main") ? _script.main : _script;
+                    var _bc = undefined;
+                    
+                    // Handle array-based module (PROG_MODULE)
+                    if (is_array(_script) && array_length(_script) >= PROG_MODULE.SIZE) {
+                        _bc = _script[PROG_MODULE.MAIN];
+                    }
+                    // Handle legacy struct module
+                    else if (is_struct(_script) && variable_struct_exists(_script, "main")) {
+                        _bc = _script.main;
+                    } 
+                    else {
+                        _bc = _script;
+                    }
                     
                     var _vm = new ProgVM();
                     _vm.context = context;
@@ -380,9 +428,27 @@ function ProgVM() constructor {
 
                         case PROG_OP.MAKE_CLOSURE: {
                             var _func = _stack[--sp];
-                            var _closure = { type: "closure", bytecode: _func.bytecode, name: _func.name, env: current_scope };
-                            if (variable_struct_exists(_func, "param_count")) _closure.param_count = _func.param_count;
-                            _stack[@ sp++] = _closure;
+                            
+                            // Check for array format (PROG_FUNC) - this is the standard path now
+                            if (is_array(_func) && array_length(_func) >= PROG_FUNC.SIZE) {
+                                var _closure_arr = array_create(PROG_CLOSURE.SIZE);
+                                _closure_arr[PROG_CLOSURE.TYPE] = "closure";
+                                _closure_arr[PROG_CLOSURE.BYTECODE] = _func[PROG_FUNC.BYTECODE];
+                                _closure_arr[PROG_CLOSURE.ENV] = current_scope;
+                                _closure_arr[PROG_CLOSURE.NAME] = _func[PROG_FUNC.NAME];
+                                _closure_arr[PROG_CLOSURE.PARAM_COUNT] = _func[PROG_FUNC.PARAM_COUNT];
+                                // DEFINING_CLASS and RECEIVER are undefined by default (array_create)
+                                _stack[@ sp++] = _closure_arr;
+                            }
+                            // Fallback for legacy struct format (mostly for tests/manually created bytecode)
+                            else if (is_struct(_func)) {
+                                var _closure = { type: "closure", bytecode: _func.bytecode, name: _func.name, env: current_scope };
+                                if (variable_struct_exists(_func, "param_count")) _closure.param_count = _func.param_count;
+                                _stack[@ sp++] = _closure;
+                            }
+                            else {
+                                runtime_error(PROG_ERROR.TYPE, "MAKE_CLOSURE expects a function constant");
+                            }
                             break;
                         }
                         
@@ -422,14 +488,15 @@ function ProgVM() constructor {
                                 while (_curr != undefined) {
                                     if (variable_struct_exists(_curr.methods, _prop)) {
                                          var _method_entry = _curr.methods[$ _prop];
-                                         // Create bound closure
-                                         _val = { 
-                                             type: "closure", 
-                                             bytecode: _method_entry.bytecode, 
-                                             receiver: _receiver,
-                                             env: current_scope,
-                                             defining_class: _curr
-                                         };
+                                         // Create PROG_CLOSURE array for super bound method
+                                         _val = array_create(PROG_CLOSURE.SIZE);
+                                         _val[PROG_CLOSURE.TYPE] = "closure";
+                                         _val[PROG_CLOSURE.BYTECODE] = _method_entry.bytecode;
+                                         _val[PROG_CLOSURE.ENV] = current_scope;
+                                         _val[PROG_CLOSURE.NAME] = _prop;
+                                         _val[PROG_CLOSURE.PARAM_COUNT] = variable_struct_exists(_method_entry, "param_count") ? _method_entry.param_count : 0;
+                                         _val[PROG_CLOSURE.DEFINING_CLASS] = _curr;
+                                         _val[PROG_CLOSURE.RECEIVER] = _receiver;
                                          _found = true;
                                          break;
                                     }
@@ -451,13 +518,15 @@ function ProgVM() constructor {
                                      while (_curr != undefined) {
                                           if (variable_struct_exists(_curr.methods, _prop)) {
                                                var _method_entry = _curr.methods[$ _prop];
-                                               _val = { 
-                                                   type: "closure", 
-                                                   bytecode: _method_entry.bytecode, 
-                                                   receiver: _obj,
-                                                   env: current_scope,
-                                                   defining_class: _curr // Capture the class where this method is defined
-                                               };
+                                               // Create PROG_CLOSURE array
+                                                _val = array_create(PROG_CLOSURE.SIZE);
+                                                _val[PROG_CLOSURE.TYPE] = "closure";
+                                                _val[PROG_CLOSURE.BYTECODE] = _method_entry.bytecode;
+                                                _val[PROG_CLOSURE.ENV] = current_scope;
+                                                _val[PROG_CLOSURE.NAME] = _prop;
+                                                _val[PROG_CLOSURE.PARAM_COUNT] = variable_struct_exists(_method_entry, "param_count") ? _method_entry.param_count : 0;
+                                                _val[PROG_CLOSURE.DEFINING_CLASS] = _curr;
+                                                _val[PROG_CLOSURE.RECEIVER] = _obj;
                                                _found = true;
                                                break;
                                           }
@@ -470,12 +539,16 @@ function ProgVM() constructor {
                                           var _entry = _obj.statics[$ _prop];
                                           // Distinguish between static method and static field
                                           if (is_struct(_entry) && variable_struct_exists(_entry, "bytecode")) {
-                                              // Static method
-                                              _val = {
-                                                  type: "closure",
-                                                  bytecode: _entry.bytecode,
-                                                  env: current_scope
-                                              };
+                                              // Static method - return PROG_CLOSURE array
+                                              // Static methods don't have 'receiver' (this), but have 'defining_class'?
+                                              // Usually statics don't access instance 'this'.
+                                              _val = array_create(PROG_CLOSURE.SIZE);
+                                              _val[PROG_CLOSURE.TYPE] = "closure";
+                                              _val[PROG_CLOSURE.BYTECODE] = _entry.bytecode;
+                                              _val[PROG_CLOSURE.ENV] = current_scope;
+                                              _val[PROG_CLOSURE.NAME] = _prop;
+                                              _val[PROG_CLOSURE.PARAM_COUNT] = variable_struct_exists(_entry, "param_count") ? _entry.param_count : 0;
+                                              // _val[PROG_CLOSURE.DEFINING_CLASS] = _obj; // Maybe?
                                           } else if (is_struct(_entry) && variable_struct_exists(_entry, "type") && _entry.type == "field") {
                                               // Static field - return the value directly
                                               _val = _entry.value;
@@ -636,11 +709,19 @@ function ProgVM() constructor {
                         
                         case PROG_OP.IMPORT: {
                              var _path = _constants[_arg];
-                             if (!variable_struct_exists(global.proglang_modules, _path)) {
-                                 // Auto-init module entry if missing (lazy loading hook could go here)
-                                 global.proglang_modules[$ _path] = { exports: {}, loaded: false };
+                             // Get current file's path for relative resolution
+                             var _current_file = variable_struct_exists(current_scope.vars, "__filename") 
+                                 ? current_scope.vars[$ "__filename"] : "";
+                             try {
+                                 var _exports = proglang_load_module(_path, _current_file);
+                                 _stack[@ sp++] = _exports;
+                             } catch (_e) {
+                                 // Re-throw with context
+                                 if (is_struct(_e) && variable_struct_exists(_e, "type")) {
+                                     throw _e;
+                                 }
+                                 runtime_error(PROG_ERROR.IMPORT, $"Failed to import '{_path}': {_e}");
                              }
-                             _stack[@ sp++] = global.proglang_modules[$ _path].exports;
                              break;
                         }
                         
@@ -785,7 +866,18 @@ function ProgVM() constructor {
                         }
 
                         case PROG_OP.LOAD_THIS: _stack[@ sp++] = current_this; break;
-                        case PROG_OP.ACCESS_CHECK: break; // TODO: runtime access checks
+                        case PROG_OP.ACCESS_CHECK: {
+                            // Validate access level for member access
+                            // Stack: [member_name, access_level ("public", "private", "protected"), object]
+                            // For now, just check if private is being accessed from outside class
+                            var _access = _constants[_arg];
+                            if (_access == "private") {
+                                // Private members should only be accessed from within the same class
+                                // This is a simplified check - full implementation would track calling context
+                                // For now, we allow it (strictness can be enabled later)
+                            }
+                            break;
+                        }
 
 
 
@@ -812,7 +904,11 @@ function ProgVM() constructor {
     static pop = function() { return stack[@ --sp]; }
     static peek = function() { return stack[sp - 1]; }
     
-    static runtime_error = function(_type, _message) {
-        throw { type: _type, message: _message, line: 0 }; // TODO: Pass line number
+    /// @desc Throw a runtime error with type, message, and optional line number
+    /// @param {enum} _type PROG_ERROR type
+    /// @param {string} _message Error message
+    /// @param {real} _line Line number (optional, defaults to 0)
+    static runtime_error = function(_type, _message, _line = 0) {
+        throw { type: _type, message: _message, line: _line };
     }
 }

@@ -67,6 +67,8 @@ function proglang_test() {
     if (_assert("If False", "if false { return 1 } return 0", 0)) _passed++; else _failed++;
     if (_assert("While", "var i = 0; while i < 5 { i = i + 1 } return i", 5)) _passed++; else _failed++;
     if (_assert("For", "var sum = 0; for (var i = 0; i < 5; i += 1) { sum += i } return sum", 10)) _passed++; else _failed++;
+    if (_assert("For Continue", "var sum = 0; for (var i = 0; i < 5; i += 1) { if (i == 0) continue sum += 1 } return sum", 4)) _passed++; else _failed++;
+    if (_assert("For Break", "var sum = 0; for (var i = 0; i < 5; i += 1) { if (i == 3) break sum += 1 } return sum", 3)) _passed++; else _failed++;
     
     // Compound Assignment
     if (_assert("PlusEqual", "var a = 1; a += 5; return a", 6)) _passed++; else _failed++;
