@@ -63,7 +63,7 @@ function init_proglang_recursive(_directory, _namespace = "") {
                 _func_is_global = _const[PROG_FUNC.IS_GLOBAL];
             }
             // Legacy struct format
-            else if (is_struct(_const) && variable_struct_exists(_const, "type") && _const.type == "function") {
+            else if (is_struct(_const) && struct_exists(_const, "type") && _const.type == "function") {
                 _is_func = true;
                 _func_name = _const.name;
                 _func_bc = _const.bytecode;
@@ -202,7 +202,7 @@ function proglang_load_module(_module_path, _importer_path = "") {
     }
     
     // Check if already loaded
-    if (variable_struct_exists(global.proglang_modules, _resolved)) {
+    if (struct_exists(global.proglang_modules, _resolved)) {
         return global.proglang_modules[$ _resolved].exports;
     }
     
@@ -242,16 +242,16 @@ function proglang_load_module(_module_path, _importer_path = "") {
 function proglang_call(_name, _args = [], _context = {}) {
     var _bytecode = undefined;
     
-    if (variable_struct_exists(global.proglang_exports, _name)) {
+    if (struct_exists(global.proglang_exports, _name)) {
         _bytecode = global.proglang_exports[$ _name];
-    } else if (variable_struct_exists(global.proglang_scripts, _name)) {
+    } else if (struct_exists(global.proglang_scripts, _name)) {
         var _script = global.proglang_scripts[$ _name];
         // Check for array format (PROG_MODULE)
         if (is_array(_script) && array_length(_script) >= PROG_MODULE.SIZE) {
             _bytecode = _script[PROG_MODULE.MAIN];
         }
         // Legacy struct format
-        else if (is_struct(_script) && variable_struct_exists(_script, "main")) {
+        else if (is_struct(_script) && struct_exists(_script, "main")) {
             _bytecode = _script.main;
         }
         else {

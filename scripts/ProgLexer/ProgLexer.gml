@@ -6,7 +6,7 @@ enum PROG_TOKEN {
     IDENTIFIER,
     // Keywords
     VAR, GLOBAL, IF, ELSE, FOR, IN, WHILE, REPEAT, BREAK, CONTINUE, RETURN,
-    TRY, CATCH, THROW, AND, OR, NOT, SWITCH, CASE, DEFAULT, FN, FUNCTION,
+    TRY, CATCH, THROW, AND, OR, NOT, SWITCH, CASE, DEFAULT, FN,
     IMPORT, EXPORT, FROM, AS,
     // Class keywords
     CLASS, NEW, THIS, EXTENDS, SUPER, STATIC,
@@ -50,7 +50,7 @@ function ProgLexer(_source) constructor {
         "try": PROG_TOKEN.TRY, "catch": PROG_TOKEN.CATCH, "throw": PROG_TOKEN.THROW,
         "and": PROG_TOKEN.AND, "or": PROG_TOKEN.OR, "not": PROG_TOKEN.NOT,
         "switch": PROG_TOKEN.SWITCH, "case": PROG_TOKEN.CASE, "default": PROG_TOKEN.DEFAULT,
-        "fn": PROG_TOKEN.FN, "function": PROG_TOKEN.FUNCTION,
+        "fn": PROG_TOKEN.FN,
         "import": PROG_TOKEN.IMPORT, "export": PROG_TOKEN.EXPORT, "from": PROG_TOKEN.FROM, "as": PROG_TOKEN.AS,
         // Class keywords
         "class": PROG_TOKEN.CLASS, "new": PROG_TOKEN.NEW, "this": PROG_TOKEN.THIS,

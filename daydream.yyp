@@ -1497,6 +1497,7 @@
     {"id":{"name":"ProgFunctions","path":"scripts/ProgFunctions/ProgFunctions.yy",},},
     {"id":{"name":"proglang_compile","path":"scripts/proglang_compile/proglang_compile.yy",},},
     {"id":{"name":"proglang_execute","path":"scripts/proglang_execute/proglang_execute.yy",},},
+    {"id":{"name":"proglang_function_test","path":"scripts/proglang_function_test/proglang_function_test.yy",},},
     {"id":{"name":"proglang_init","path":"scripts/proglang_init/proglang_init.yy",},},
     {"id":{"name":"proglang_load_scripts","path":"scripts/proglang_load_scripts/proglang_load_scripts.yy",},},
     {"id":{"name":"proglang_test","path":"scripts/proglang_test/proglang_test.yy",},},

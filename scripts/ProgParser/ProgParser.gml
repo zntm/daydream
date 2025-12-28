@@ -86,7 +86,7 @@ function ProgParser(_tokens) constructor {
         var _is_global = false;
         if (match(PROG_TOKEN.GLOBAL)) {
             // Could be: global fn, global function, global var, or global.x
-            if (check(PROG_TOKEN.FN) || check(PROG_TOKEN.FUNCTION)) {
+            if (check(PROG_TOKEN.FN)) {
                 _is_global = true;
                 // Fall through to fn/function handling below
             } else if (check(PROG_TOKEN.VAR)) {
@@ -113,7 +113,7 @@ function ProgParser(_tokens) constructor {
         }
         
         // Function declaration
-        if (match(PROG_TOKEN.FN) || match(PROG_TOKEN.FUNCTION)) {
+        if (match(PROG_TOKEN.FN)) {
             return parse_function_decl(_is_global);
         }
         
@@ -212,7 +212,7 @@ function ProgParser(_tokens) constructor {
 
              if (match(PROG_TOKEN.VAR)) {
                   _decl = parse_var_decl(_is_global);
-             } else if (match(PROG_TOKEN.FN) || match(PROG_TOKEN.FUNCTION)) {
+             } else if (match(PROG_TOKEN.FN)) {
                   _decl = parse_function_decl(_is_global);
              } else if (match(PROG_TOKEN.CLASS)) {
                   if (_is_global) error_at_current("Global classes not supported (all classes are effectively global or module-scoped).");
@@ -249,12 +249,12 @@ function ProgParser(_tokens) constructor {
             var _is_abstract_method = match(PROG_TOKEN.ABSTRACT);
             if (_is_abstract_method) show_debug_message($"[Proglang Parser] Found abstract method");
 
-            if (match(PROG_TOKEN.FN) || match(PROG_TOKEN.FUNCTION) || check(PROG_TOKEN.VAR) || check(PROG_TOKEN.IDENTIFIER)) {
+            if (match(PROG_TOKEN.FN) || check(PROG_TOKEN.VAR) || check(PROG_TOKEN.IDENTIFIER)) {
                 
                 var _is_method = false;
                 var _decl = undefined;
                 
-                if (match(PROG_TOKEN.FN) || match(PROG_TOKEN.FUNCTION)) {
+                if (match(PROG_TOKEN.FN)) {
                     if (_is_abstract_method) {
                         show_debug_message($"[Proglang Parser] Found abstract method: {_name}");
                         _name = consume(PROG_TOKEN.IDENTIFIER, "Expected function name.").lexeme;
@@ -919,7 +919,7 @@ function ProgParser(_tokens) constructor {
              return new ProgASTRegexLiteral(_token.literal.pattern, _token.literal.flags);
         }
 
-        if (match(PROG_TOKEN.FN) || match(PROG_TOKEN.FUNCTION)) return parse_function_expr();
+        if (match(PROG_TOKEN.FN)) return parse_function_expr();
         
         if (match(PROG_TOKEN.NEW)) return parse_new_expr();
         if (match(PROG_TOKEN.THIS)) return new ProgASTThisExpr();

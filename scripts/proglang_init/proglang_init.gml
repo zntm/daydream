@@ -25,6 +25,8 @@ function proglang_init() {
         global.proglang_constants = {};
     }
     
+    global.proglang_constants[$ "infinity"] = infinity;
+    
     // Expose PROG_ERROR enum
     global.proglang_constants.PROG_ERROR = {
         NONE: PROG_ERROR.NONE,
@@ -57,6 +59,40 @@ function proglang_init() {
     var _reg = function(_name, _func) {
         global.proglang_functions[$ _name] = { func: _func };
     };
+    
+    // Debug Timer Map
+    if (!variable_global_exists("proglang_timers")) {
+        global.proglang_timers = {};
+    }
+
+    _reg("assert", function(_args) {
+        if (!_args[0]) {
+            var _msg = (array_length(_args) > 1) ? _args[1] : "Assertion failed";
+            throw { type: PROG_ERROR.RUNTIME, message: _msg };
+        }
+    });
+
+    _reg("time_start", function(_args) {
+        var _name = _args[0];
+        global.proglang_timers[$ _name] = get_timer();
+    });
+
+    _reg("time_end", function(_args) {
+        var _name = _args[0];
+        if (!struct_exists(global.proglang_timers, _name)) {
+            throw { type: PROG_ERROR.RUNTIME, message: $"Timer '{_name}' does not exist." };
+        }
+        var _start = global.proglang_timers[$ _name];
+        var _time = (get_timer() - _start) / 1000; // ms
+        
+        struct_remove(global.proglang_timers, _name);
+        
+        return _time;
+    });
+
+    _reg("struct_stringify", function(_args) { return json_stringify(_args[0]); });
+    _reg("struct_parse", function(_args) { return json_parse(_args[0]); });
+
     
     // Math
     _reg("max", function(_args) { 
@@ -149,11 +185,11 @@ function proglang_init() {
     });
     
     // Structs
-    _reg("variable_struct_exists", function(_args) { return variable_struct_exists(_args[0], _args[1]); });
-    _reg("variable_struct_get", function(_args) { return variable_struct_get(_args[0], _args[1]); });
-    _reg("variable_struct_set", function(_args) { variable_struct_set(_args[0], _args[1], _args[2]); return 0; });
-    _reg("variable_struct_names_count", function(_args) { return variable_struct_names_count(_args[0]); });
-    _reg("variable_struct_get_names", function(_args) { return variable_struct_get_names(_args[0]); });
+    _reg("struct_exists", function(_args) { return struct_exists(_args[0], _args[1]); });
+    _reg("struct_get", function(_args) { return struct_get(_args[0], _args[1]); });
+    _reg("struct_set", function(_args) { struct_set(_args[0], _args[1], _args[2]); return 0; });
+    _reg("struct_names_count", function(_args) { return struct_names_count(_args[0]); });
+    _reg("struct_get_names", function(_args) { return struct_get_names(_args[0]); });
     
     // Output
     _reg("show_debug_message", function(_args) { show_debug_message(_args[0]); return 0; });
@@ -162,7 +198,7 @@ function proglang_init() {
     // Regex
     _reg("regex_parse", function(_args) { return new GMLRegex(_args[0], array_length(_args)>1 ? _args[1] : ""); });
     _reg("regex_test", function(_args) { 
-        if (!is_struct(_args[1]) || !variable_struct_exists(_args[1], "test")) {
+        if (!is_struct(_args[1]) || !struct_exists(_args[1], "test")) {
              throw { type: PROG_ERROR.TYPE, message: "Expected regex object." };
         }
         return _args[1].test(_args[0]); 

@@ -462,7 +462,7 @@ function ProgCompiler() constructor {
             case PROG_AST.CONTINUE_STMT:
                 if (array_length(loop_stack) > 0) {
                     var _ctx = array_last(loop_stack);
-                    if (variable_struct_exists(_ctx, "continue_addr")) {
+                    if (struct_exists(_ctx, "continue_addr")) {
                         emit(PROG_OP.JUMP, _ctx.continue_addr, _node.line);
                     } else {
                         // For loop style, late patching

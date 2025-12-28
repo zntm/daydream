@@ -258,19 +258,10 @@ function proglang_test() {
         $"\}\n" +
         $"return is_positive(5)"
     , true)) _passed++; else _failed++;
-    
-    // Function keyword (synonym for fn)
-    if (_assert("Function Keyword", 
-        $"function multiply(a, b) \{\n" +
-        $"    return a * b\n" +
-        $"\}\n" +
-        $"return multiply(4, 5)"
-    , 20)) _passed++; else _failed++;
 
     // Local function with global variable  
     if (_assert("Fn With Global Var", 
         $"global var n = 10\n" +
-        $"\n" +
         $"fn add(b) \{\n" +
         $"    return n + b\n" +
         $"\}\n" +
@@ -1517,7 +1508,7 @@ function proglang_test() {
     // Let's test property existence check for 'value' in Box from test 32
     if (_assert("Prop Exists", 
         $"var o = \{ x: 10 \}\n" +
-        $"return variable_struct_exists(o, \"x\")"
+        $"return struct_exists(o, \"x\")"
     , true)) _passed++; else _failed++;
     
     // 39. Static vs Instance Name Collision

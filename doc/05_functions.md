@@ -4,7 +4,7 @@ Functions are first-class citizens in Daydream. They can be assigned to variable
 
 ## Declaration
 
-Use `fn` (or `function`) to declare a function.
+Use `fn` to declare a function.
 
 ```javascript
 fn mysum(a, b) {

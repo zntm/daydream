@@ -115,7 +115,7 @@ proglang_function_register("typeof", function(_args) {
     if (is_array(_val)) return "array";
     if (is_struct(_val)) {
         // Check for class instance
-        if (variable_struct_exists(_val, "__class__")) return "object";
+        if (struct_exists(_val, "__class__")) return "object";
         return "struct";
     }
     if (is_method(_val)) return "function";
