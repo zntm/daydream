@@ -123,7 +123,12 @@ exception_unhandled_handler(function(_exception)
         $"OS: {_os_type}\n" +
         $"OS Version: {os_version}\n" +
         $"Display: {display_get_width()}x{display_get_height()}@{display_get_frequency()}\n" +
-        $"Is Network Connected: {os_is_network_connected()}\n\n" +
+        $"Is Network Connected: {os_is_network_connected()}\n" +
+        $"User: {sysinfo_get_username()}@{sysinfo_get_hostname()} (PID: {sysinfo_get_pid()})\n" +
+        $"CPU: {sysinfo_get_cpu_brand()} [{sysinfo_get_cpu_vendor_id()}] ({sysinfo_get_core_count()}C @ {sysinfo_get_cpu_frequency()}MHz)\n" +
+        $"GPU: {sysinfo_get_gpu_name()} ({sysinfo_get_gpu_vram() / 1048576}MB VRAM)\n" +
+        $"RAM: {sysinfo_sys_memory_used() / 1048576}/{sysinfo_get_memory_max() / 1048576}MB (Proc: {sysinfo_proc_memory_used() / 1048576}MB)\n" +
+        $"Usage: CPU {sysinfo_sys_cpu_usage()}%/{sysinfo_proc_cpu_usage()}% | GPU {sysinfo_get_gpu_usage()}%\n\n" +
         
         $"---[ Error Message ]---\n" +
         $"{_long_message}\n\n" +

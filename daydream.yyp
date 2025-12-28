@@ -1183,6 +1183,7 @@
     {"id":{"name":"Extensions","path":"extensions/Extensions/Extensions.yy",},},
     {"id":{"name":"NekoPresence","path":"extensions/NekoPresence/NekoPresence.yy",},},
     {"id":{"name":"OpenSimplexNoise","path":"extensions/OpenSimplexNoise/OpenSimplexNoise.yy",},},
+    {"id":{"name":"sysinfo","path":"extensions/sysinfo/sysinfo.yy",},},
     {"id":{"name":"window_taskbar","path":"extensions/window_taskbar/window_taskbar.yy",},},
     {"id":{"name":"fnt_Default","path":"fonts/fnt_Default/fnt_Default.yy",},},
     {"id":{"name":"obj_Control","path":"objects/obj_Control/obj_Control.yy",},},

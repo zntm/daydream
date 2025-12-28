@@ -193,7 +193,14 @@ function debug_step()
             $"Chunks Loaded: {chunk_map_count()}\n" +
             $"Total Instances: {instance_number(all)}\n\n" +
             
-            $"Version: {_semver}";
+            $"Version: {_semver}\n\n" +
+            
+            "System:\n" +
+            $"{sysinfo_get_username()}@{sysinfo_get_hostname()}\n" +
+            $"CPU: {sysinfo_get_cpu_name()} ({sysinfo_get_core_count()}C @ {sysinfo_get_cpu_frequency()}MHz)\n" +
+            $"GPU: {sysinfo_get_gpu_name()} ({sysinfo_get_gpu_vram() / 1048576}MB VRAM)\n" +
+            $"RAM: {sysinfo_sys_memory_used() / 1048576}/{sysinfo_get_memory_max() / 1048576}MB (Proc: {sysinfo_proc_memory_used() / 1048576}MB)\n" +
+            $"Usage: CPU {sysinfo_sys_cpu_usage()}%/{sysinfo_proc_cpu_usage()}% | GPU {sysinfo_get_gpu_usage()}%";
             
         if (instance_exists(obj_Game_Control))
         {
