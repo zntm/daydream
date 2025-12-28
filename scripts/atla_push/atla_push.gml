@@ -24,7 +24,7 @@ function atla_push(_page, _sprite, _name)
     var _number = sprite_get_number(_sprite);
     
     // Determine if rotation would save space (tall sprites become wide)
-    var _should_rotate = _height > _width;
+    var _should_rotate = false//_height > _width;
     
     // Create AtlaSprite entries (before potential rotation swap)
     for (var i = 0; i < _number; ++i)

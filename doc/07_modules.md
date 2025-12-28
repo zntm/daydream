@@ -9,7 +9,7 @@ Use the `export` keyword to make variables or functions available to other modul
 ```javascript
 // math_lib.daydream
 
-export var PI = 3.14159;
+export global var PI = 3.14159;
 
 export fn area(r) {
     return PI * r * r;
