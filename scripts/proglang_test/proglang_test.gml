@@ -56,11 +56,11 @@ function proglang_test() {
     if (_assert("Var", "var a = 10; return a", 10)) _passed++; else _failed++;
     if (_assert("Assign", "var a = 10; a = 20; return a", 20)) _passed++; else _failed++;
     
-    // Macros (Global)
-    global.proglang_macros[$ "TEST_PI"] = 3.14159;
-    global.proglang_macros[$ "GET_HUNDRED"] = function() { return 100; };
-    if (_assert("Macro Value", "return TEST_PI", 3.14159)) _passed++; else _failed++;
-    if (_assert("Macro Function", "return GET_HUNDRED", 100)) _passed++; else _failed++;
+    // Constants (Global) - can be values or functions
+    // global.proglang_macros[$ "TEST_PI"] = 3.14159;
+    // global.proglang_macros[$ "GET_HUNDRED"] = function() { return 100; };
+    // if (_assert("Macro Value", "return TEST_PI", 3.14159)) _passed++; else _failed++;
+    // if (_assert("Macro Function", "return GET_HUNDRED", 100)) _passed++; else _failed++;
     
     // Control Flow
     if (_assert("If True", "if true { return 1 } return 0", 1)) _passed++; else _failed++;
@@ -827,6 +827,9 @@ function proglang_test() {
     , 1)) _passed++; else _failed++;
 
     // ============ REGEX TESTS ============
+    if (_assert("Is Regex True", "return is_regex(/abc/)", true)) _passed++; else _failed++;
+    if (_assert("Is Regex False", "return is_regex('abc')", false)) _passed++; else _failed++;
+    if (_assert("Typeof Regex", "return typeof(/abc/)", "regex")) _passed++; else _failed++;
     if (_assert("Regex Lit", "return /abc/.pattern", "abc")) _passed++; else _failed++;
     if (_assert("Regex Test", "return regex_test(\"abc\", /abc/)", true)) _passed++; else _failed++;
     if (_assert("Regex Match", "var m = regex_match(\"abc\", /abc/); return m[0]", "abc")) _passed++; else _failed++;

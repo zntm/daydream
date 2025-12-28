@@ -11,6 +11,9 @@
 -   **Modular**: Built-in support for `import` and `export` to organize code.
 -   **Game Integration**: Direct access to game logic through context variables and exposed API functions.
 
+> [!NOTE]
+> Daydream is designed to be embedded in the game engine, providing a safe and powerful scripting environment for content creation.
+
 ## Getting Started
 
 Daydream scripts are typically stored in `.daydream` files or embedded within the game's data.

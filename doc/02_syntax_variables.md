@@ -28,7 +28,7 @@ var my_string = "Hello";
 
 ### Global Variables
 
-Use `global var` to declare a variable that is accessible across different scopes (files/modules). Note that `global var` creates a variable in the global scope.
+Use `global var` to declare a variable that is accessible across different scopes (files/modules).
 
 ```javascript
 global var PLAYER_MAX_HP = 100;
@@ -39,6 +39,8 @@ Global variables can be accessed directly by their name in any script.
 ```javascript
 print(PLAYER_MAX_HP); // 100
 ```
+
+> [!IMPORTANT] > `global var` variable declarations are visible to all scripts and modules. Use unique names to avoid collisions, like `MY_MOD_CONFIG`.
 
 ## Data Types
 

@@ -56,10 +56,7 @@ print(counter()); // 2
 
 ## Destructuring Arguments
 
-You can destruct objects or arrays directly in the parameter list (if supported by syntax, otherwise manually inside).
-
-_Note: Currently destructuring is supported in assignments, verify if supported in param list._
-_(Based on tests, destructuring is `var {x} = obj`, so manual destructuring inside function is the standard way)._
+You can destruct objects or arrays using assignment syntax within the function body.
 
 ```javascript
 fn print_point(pt) {

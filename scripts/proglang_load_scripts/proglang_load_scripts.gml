@@ -33,14 +33,16 @@ function init_proglang_recursive(_directory, _namespace = "") {
         var _script_id = _namespace == "" ? _filename : $"{_namespace}/{_filename}";
         
         var _source = buffer_load_text(_subdirectory);
-        if (_source == undefined) {
-            show_debug_message($"[Proglang] Failed to load: {_script_id}");
+        if (_source == undefined)
+        {
+            if (IS_DEVELOPER_MODE) show_debug_message($"[Daydream] Failed to load: {_script_id}");
             continue;
         }
         
         var _bytecode = proglang_compile(_source);
-        if (_bytecode == undefined) {
-            show_debug_message($"[Proglang] Failed to compile: {_script_id}");
+        if (_bytecode == undefined)
+        {
+            if (IS_DEVELOPER_MODE) show_debug_message($"[Daydream] Failed to compile: {_script_id}");
             continue;
         }
         
@@ -74,7 +76,7 @@ function init_proglang_recursive(_directory, _namespace = "") {
                 _has_functions = true;
                 if (_func_is_global) {
                     global.proglang_exports[$ _func_name] = _func_bc;
-                    show_debug_message($"[Proglang] Exported: {_func_name} from {_script_id}");
+                    if (IS_DEVELOPER_MODE) show_debug_message($"[Daydream] Exported: {_func_name} from {_script_id}");
                 } else {
                     _file_scope[$ _func_name] = _func_bc;
                 }
@@ -83,14 +85,14 @@ function init_proglang_recursive(_directory, _namespace = "") {
         
         if (!_has_functions) {
             global.proglang_scripts[$ _script_id] = _bytecode;
-            show_debug_message($"[Proglang] Loaded script: {_script_id}");
+            if (IS_DEVELOPER_MODE) show_debug_message($"[Daydream] Loaded script: {_script_id}");
         } else {
             // Array-based module storage (PROG_MODULE enum)
             var _module_arr = array_create(PROG_MODULE.SIZE);
             _module_arr[PROG_MODULE.MAIN] = _bytecode;
             _module_arr[PROG_MODULE.SCOPE] = _file_scope;
             global.proglang_scripts[$ _script_id] = _module_arr;
-            show_debug_message($"[Proglang] Loaded module: {_script_id}");
+            if (IS_DEVELOPER_MODE) show_debug_message($"[Daydream] Loaded module: {_script_id}");
         }
     }
 }
@@ -129,7 +131,7 @@ function proglang_resolve_path(_path, _current_dir = "") {
             if (array_length(_result_parts) > 0) {
                 array_pop(_result_parts);
             } else {
-                show_debug_message("[Proglang] PATH_SECURITY: Cannot access parent of base directory");
+                if (IS_DEVELOPER_MODE) show_debug_message("[Daydream] PATH_SECURITY: Cannot access parent of base directory");
                 return undefined;
             }
         } else {
@@ -260,7 +262,7 @@ function proglang_call(_name, _args = [], _context = {}) {
     }
     
     if (_bytecode == undefined) {
-        show_debug_message($"[Proglang] Function not found: {_name}");
+        if (IS_DEVELOPER_MODE) show_debug_message($"[Daydream] Function not found: {_name}");
         return undefined;
     }
     

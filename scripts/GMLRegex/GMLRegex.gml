@@ -4,6 +4,7 @@
 function GMLRegex(_pattern, _flags = "") constructor {
     pattern = _pattern;
     flags = _flags;
+    __type__ = "regex"; // Type identifier for Proglang
     
     is_global = string_pos("g", _flags) > 0;
     ignore_case = string_pos("i", _flags) > 0;

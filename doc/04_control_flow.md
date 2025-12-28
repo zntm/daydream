@@ -130,29 +130,27 @@ try {
 }
 ```
 
-Available error types:
-
--   `PROG_ERROR.NONE`: No error.
--   `PROG_ERROR.RUNTIME`: Generic runtime error.
--   `PROG_ERROR.TYPE`: Type mismatch (e.g. adding string to object).
--   `PROG_ERROR.INDEX`: Array or string index out of bounds.
--   `PROG_ERROR.MEMBER`: accessing invalid struct member.
--   `PROG_ERROR.VARIABLE`: Variable not found.
--   `PROG_ERROR.DIVIDE_BY_ZERO`: Division by zero.
--   `PROG_ERROR.UNDEFINED_VALUE`: Operation on undefined value.
--   `PROG_ERROR.NULL_REFERENCE`: Dereferencing null/undefined.
--   `PROG_ERROR.INVALID_ARGUMENT`: Invalid argument passed to function.
--   `PROG_ERROR.NOT_CALLABLE`: Attempting to call a non-function.
--   `PROG_ERROR.SYNTAX`: Syntax error during compilation.
--   `PROG_ERROR.IMPORT`: Module import failure.
--   `PROG_ERROR.STACK_OVERFLOW`: Stack overflow.
--   `PROG_ERROR.STACK_UNDERFLOW`: Stack underflow.
--   `PROG_ERROR.RECURSION_LIMIT`: Maximum recursion depth exceeded.
--   `PROG_ERROR.INFINITE_LOOP`: Infinite loop protection triggered.
--   `PROG_ERROR.ACCESS_DENIED`: Access violation (e.g. private member).
--   `PROG_ERROR.READ_ONLY`: Modifying read-only value.
--   `PROG_ERROR.ABSTRACT_METHOD`: calling abstract method.
--   `PROG_ERROR.FILE_NOT_FOUND`: File not found.
--   `PROG_ERROR.PATH_SECURITY`: Path security violation.
--   `PROG_ERROR.ARITY_MISMATCH`: Incorrect number of arguments.
--   `PROG_ERROR.SUPER_ERROR`: Invalid use of `super`.
+| Type                          | Description                      | Example Cause                           |
+| ----------------------------- | -------------------------------- | --------------------------------------- |
+| `PROG_ERROR.RUNTIME`          | Generic runtime error            | `throw "Error"`                         |
+| `PROG_ERROR.TYPE`             | Type mismatch                    | `array_push(10, 5)` (1st arg not array) |
+| `PROG_ERROR.INDEX`            | Array/String index out of bounds | `[1, 2][5]`                             |
+| `PROG_ERROR.MEMBER`           | Invalid member access            | `obj.missing_prop`                      |
+| `PROG_ERROR.VARIABLE`         | Variable not found               | `print(unknown_var)`                    |
+| `PROG_ERROR.DIVIDE_BY_ZERO`   | Division by zero                 | `10 / 0`                                |
+| `PROG_ERROR.UNDEFINED_VALUE`  | Operation on undefined value     | `undefined + 5`                         |
+| `PROG_ERROR.NULL_REFERENCE`   | Dereferencing null/undefined     | `undefined.prop`                        |
+| `PROG_ERROR.INVALID_ARGUMENT` | Invalid argument passed          | `sqrt(-1)` (if strict)                  |
+| `PROG_ERROR.NOT_CALLABLE`     | Calling a non-function           | `var x = 1; x()`                        |
+| `PROG_ERROR.SYNTAX`           | Syntax error                     | `if (x {`                               |
+| `PROG_ERROR.IMPORT`           | Module import failure            | `import "missing_file"`                 |
+| `PROG_ERROR.STACK_OVERFLOW`   | Stack limit reached              | Deep recursion `f() { f() }`            |
+| `PROG_ERROR.STACK_UNDERFLOW`  | Stack underflow                  | Internal VM error                       |
+| `PROG_ERROR.RECURSION_LIMIT`  | Recursion depth limit            | Deep recursion                          |
+| `PROG_ERROR.INFINITE_LOOP`    | Infinite loop protection         | `while(true) {}`                        |
+| `PROG_ERROR.ACCESS_DENIED`    | Access violation                 | Accessing `private` member              |
+| `PROG_ERROR.ABSTRACT_METHOD`  | Abstract method usage            | `new AbstractClass()`                   |
+| `PROG_ERROR.FILE_NOT_FOUND`   | File system error                | Opening non-existent file               |
+| `PROG_ERROR.PATH_SECURITY`    | Path violation                   | Accessing forbidden path                |
+| `PROG_ERROR.ARITY_MISMATCH`   | Incorrect argument count         | `fn f(a,b){} f(1)`                      |
+| `PROG_ERROR.SUPER_ERROR`      | Invalid super usage              | `super` outside class                   |

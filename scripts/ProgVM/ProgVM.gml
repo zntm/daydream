@@ -1,7 +1,6 @@
 /// @desc Virtual Machine for Proglang bytecode execution
 
 enum PROG_ERROR {
-    NONE = 0,
     RUNTIME,
     TYPE,
     INDEX,
@@ -22,7 +21,6 @@ enum PROG_ERROR {
     INFINITE_LOOP,
     // Access control
     ACCESS_DENIED,
-    READ_ONLY,
     ABSTRACT_METHOD,
     // File/path errors
     FILE_NOT_FOUND,
@@ -50,8 +48,8 @@ function ProgVM() constructor {
     if (!variable_global_exists("proglang_modules")) {
         global.proglang_modules = {};
     }
-    if (!variable_global_exists("proglang_constants")) {
-         global.proglang_constants = {};
+    if (!variable_global_exists("proglang_macros")) {
+         global.proglang_macros = {};
     }
     
     active_module = undefined; // Struct { exports: {}, loaded: bool }
@@ -63,17 +61,6 @@ function ProgVM() constructor {
     current_this = undefined;
     active_class = undefined;
     class_registry = {};
-    
-    // Inject constants into global scope (or create a 'constants' scope?)
-    // For simplicity, we can treat them as globals or pre-defined vars.
-    // Let's add them to the initial locals if they are globally available.
-    // Or better, handle LOAD_GLOBAL to look there too.
-    // For now, let's copy them to current scope (simplest for access like PROG_ERROR.TYPE)
-    var _names = struct_get_names(global.proglang_constants);
-    for (var i = 0; i < array_length(_names); i++) {
-        var _name = _names[i];
-        current_scope.vars[$ _name] = global.proglang_constants[$ _name];
-    }
     
     /// @desc Find variable in scope chain
     static find_var_scope = function(_name) {

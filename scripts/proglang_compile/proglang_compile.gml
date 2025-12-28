@@ -17,8 +17,9 @@ function proglang_compile(_source) {
     var _lexer = new ProgLexer(_source);
     var _tokens = _lexer.tokenize();
     
-    if (_lexer.had_error) {
-        show_debug_message($"[Proglang] Lexer Error: {_lexer.error}");
+    if (_lexer.had_error)
+    {
+        if (IS_DEVELOPER_MODE) show_debug_message($"[Daydream] Lexer Error: {_lexer.error}");
         return undefined;
     }
     
@@ -26,8 +27,9 @@ function proglang_compile(_source) {
     var _parser = new ProgParser(_tokens);
     var _ast = _parser.parse();
     
-    if (_parser.had_error) {
-        show_debug_message($"[Proglang] Parser Error: {_parser.error}");
+    if (_parser.had_error)
+    {
+        if (IS_DEVELOPER_MODE) show_debug_message($"[Daydream] Parser Error: {_parser.error}");
         return undefined;
     }
     

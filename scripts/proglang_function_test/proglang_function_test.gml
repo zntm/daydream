@@ -86,7 +86,7 @@ function proglang_function_test() {
     }
 
     // choose
-    var _ch = proglang_execute("return choose(10, 20, 30)");
+    var _ch = proglang_execute("return choose([10, 20, 30])");
     if (_ch == 10 || _ch == 20 || _ch == 30) {
         show_debug_message("[Proglang Fn Test] PASS: choose"); _passed++;
     } else {
@@ -101,10 +101,11 @@ function proglang_function_test() {
     if (_assert("is_array true", "return is_array([])", true)) _passed++; else _failed++;
     if (_assert("is_struct true", "return is_struct({})", true)) _passed++; else _failed++;
     if (_assert("is_undefined true", "return is_undefined(undefined)", true)) _passed++; else _failed++;
+    if (_assert("is_regex true", "return is_regex(/^abs/g)", true)) _passed++; else _failed++;
     
     if (_assert("typeof string", "return typeof('s')", "string")) _passed++; else _failed++;
     if (_assert("typeof number", "return typeof(10)", "number")) _passed++; else _failed++;
-    if (_assert("typeof boolean", "return typeof(true)", "bool")) _passed++; else _failed++;
+    if (_assert("typeof boolean", "return typeof(true)", "boolean")) _passed++; else _failed++;
     if (_assert("typeof array", "return typeof([])", "array")) _passed++; else _failed++;
     if (_assert("typeof struct", "return typeof({})", "struct")) _passed++; else _failed++;
     
@@ -132,7 +133,8 @@ function proglang_function_test() {
         $"return array_length(names)"
     , 2)) _passed++; else _failed++;
 
-    // ============ DEBUG ============
+    
+    // ============ DEBUG & REGEX ============
     // Just run print, shouldn't crash
     try {
         proglang_execute("print('Hello from test', 123)");
@@ -149,6 +151,31 @@ function proglang_function_test() {
     // but GML infinity == infinity.
     if (_assert("infinity check", "return infinity > 999999999", true)) _passed++; else _failed++;
     
+    // ============ REGEX FUNCTIONS ============
+    if (_assert("is_regex true", "return is_regex(regex_parse('^test$'))", true)) _passed++; else _failed++;
+    if (_assert("is_regex false", "return is_regex('not a regex')", false)) _passed++; else _failed++;
+    if (_assert("typeof regex", "return typeof(regex_parse('^test$'))", "regex")) _passed++; else _failed++;
+    
+    // Regex Logic
+    if (_assert("regex_test true", "return regex_test('hello', /^h.llo$/)", true)) _passed++; else _failed++;
+    if (_assert("regex_test false", "return regex_test('hello', regex_parse('^world$'))", false)) _passed++; else _failed++;
+    
+    if (_assert("regex_match", 
+        $"var re = regex_parse(\"\\d+\") // match digits\n" +
+        $"var m = regex_match(\"item: 1234\", re)\n" +
+        $"return m[0]"
+    , "1234")) _passed++; else _failed++;
+    
+    if (_assert("regex_replace", 
+        $"var re = regex_parse(\"apple\")\n" +
+        $"return regex_replace(\"apple pie\", re, \"banana\")"
+    , "banana pie")) _passed++; else _failed++;
+
+    if (_assert("regex_replace_all", 
+        $"var re = regex_parse(\" \", \"g\") // global flag\n" +
+        $"return regex_replace(\"a b c\", re, \"-\")" // uses regex_replace with global flag internally or regex_replace_all
+    , "a-b-c")) _passed++; else _failed++;
+
     // Assert
     try {
         proglang_execute("assert(true)");
