@@ -1,5 +1,6 @@
 setting_name = undefined;
 button_id = undefined;
+is_gamepad = false; // Set by the calling code
 menu_layer = obj_Menu_Control_Button.menu_layer;
 
 cancel_timer = 0;
@@ -20,7 +21,8 @@ anchor.on_draw = method(id, function(_x, _y, _xscale, _yscale) {
     
     // Main instruction
     render_text(_cx, _cy - 32, $"Remapping: {_display_name}", 2, 2, 0, c_white, 1);
-    render_text(_cx, _cy + 16, "Press any key to bind", 1.5, 1.5, 0, c_ltgray, 1);
+    var _instruction = is_gamepad ? "Press any button to bind" : "Press any key to bind";
+    render_text(_cx, _cy + 16, _instruction, 1.5, 1.5, 0, c_ltgray, 1);
     
     // Cancel instruction
     var _cancel_col = (cancel_timer > 0) ? c_red : c_gray;

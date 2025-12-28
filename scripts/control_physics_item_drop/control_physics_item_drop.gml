@@ -1,56 +1,85 @@
+/// @desc Item drop physics control using new physics system
+/// @param {Real} _dt Delta time
+/// @param {Id.Instance} _id Item drop instance
+
 function control_physics_item_drop(_dt, _id)
 {
     var _time = _dt / GAME_TICK;
     
-    if (timer_pickup > 0)
+    with (_id)
     {
-        timer_pickup -= _time;
+        physics_body.sync_from_instance(id);
         
-        if (tile_meeting(x, y + 1))
+        // During pickup delay, just physics
+        if (timer_pickup > 0)
         {
-            xvelocity = lerp_delta(xvelocity, 0, 0.3, _dt);
+            timer_pickup -= _time;
+            
+            // Friction on ground
+            if (tile_meeting(x, y + 1))
+            {
+                physics_body.vel_x = lerp_delta(physics_body.vel_x, 0, 0.3, _dt);
+            }
+            
+            // Gravity
+            physics_body.vel_y += attribute.get_gravity() * _dt;
+            
+            physics_resolve_x(physics_body, _dt);
+            physics_resolve_y(physics_body, _dt);
+            physics_body.sync_to_instance(id);
+            
+            exit;
         }
         
-        control_physics(_dt, id);
+        inst = instance_nearest(x, y, obj_Player);
         
-        exit;
-    }
-    
-    inst = instance_nearest(x, y, obj_Player);
-    
-    if (!instance_exists(inst))
-    {
-        if (tile_meeting(x, y + 1))
+        if (!instance_exists(inst))
         {
-            xvelocity = lerp_delta(xvelocity, 0, 0.3, _dt);
+            // No player - just physics
+            if (tile_meeting(x, y + 1))
+            {
+                physics_body.vel_x = lerp_delta(physics_body.vel_x, 0, 0.3, _dt);
+            }
+            
+            physics_body.vel_y += attribute.get_gravity() * _dt;
+            
+            physics_resolve_x(physics_body, _dt);
+            physics_resolve_y(physics_body, _dt);
+            physics_body.sync_to_instance(id);
+            
+            exit;
         }
         
-        control_physics(_dt, id);
+        var _inst_x = inst.x;
+        var _inst_y = inst.y;
+        var _distance = point_distance(x, y, _inst_x, _inst_y);
         
-        exit;
-    }
-    
-    var _inst_x = inst.x;
-    var _inst_y = inst.y;
-    
-    var _distance = point_distance(x, y, _inst_x, _inst_y);
-    
-    if (_distance >= 6.5 * TILE_SIZE)
-    {
-        if (tile_meeting(x, y + 1))
+        if (_distance >= 6.5 * TILE_SIZE)
         {
-            xvelocity = lerp_delta(xvelocity, 0, 0.3, _dt);
+            // Too far from player - just physics
+            if (tile_meeting(x, y + 1))
+            {
+                physics_body.vel_x = lerp_delta(physics_body.vel_x, 0, 0.3, _dt);
+            }
+            
+            physics_body.vel_y += attribute.get_gravity() * _dt;
+            
+            physics_resolve_x(physics_body, _dt);
+            physics_resolve_y(physics_body, _dt);
+            physics_body.sync_to_instance(id);
+            
+            exit;
         }
         
-        control_physics(_dt, id);
+        // Attract to player
+        var _speed = 5.2;
         
-        exit;
+        physics_body.vel_x = lerp_delta(physics_body.vel_x, sign(_inst_x - x) * _speed, 0.02, _dt);
+        physics_body.vel_y = lerp_delta(physics_body.vel_y, sign(_inst_y - y) * _speed, 0.02, _dt);
+        
+        // No gravity during attraction
+        physics_resolve_x(physics_body, _dt);
+        physics_resolve_y(physics_body, _dt);
+        physics_body.sync_to_instance(id);
     }
-    
-    var _speed = 5.2;
-    
-    xvelocity = lerp_delta(xvelocity, sign(_inst_x - x) * _speed, 0.02, _dt);
-    yvelocity = lerp_delta(yvelocity, sign(_inst_y - y) * _speed, 0.02, _dt);
-    
-    control_physics(_dt, id, 0);
 }

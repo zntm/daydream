@@ -26,7 +26,11 @@ function control_floating_text(_dt)
             }
             else
             {
-                control_physics_y(_dt, 0.14, false);
+                var _acceleration = 0.14 * _dt / 2;
+                
+                yvelocity = clamp(yvelocity + _acceleration, -PHYSICS_TERMINAL_VELOCITY, PHYSICS_TERMINAL_VELOCITY);
+                y += yvelocity * _dt;
+                yvelocity = clamp(yvelocity + _acceleration, -PHYSICS_TERMINAL_VELOCITY, PHYSICS_TERMINAL_VELOCITY);
                 
                 var _string_width  = string_width(text) / 2;
                 var _string_height = string_height(text);

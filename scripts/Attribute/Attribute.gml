@@ -208,6 +208,96 @@ function Attribute() constructor
         return self[$ "___movement_speed"] ?? 3.1;
     }
     
+    // --- Movement Mode Speeds ---
+    
+    static set_fly_speed = function(_speed)
+    {
+        if (_speed != undefined)
+        {
+            ___fly_speed = _speed;
+        }
+        return self;
+    }
+    
+    static get_fly_speed = function()
+    {
+        return self[$ "___fly_speed"] ?? get_movement_speed() * 2;
+    }
+    
+    static set_swim_speed = function(_speed)
+    {
+        if (_speed != undefined)
+        {
+            ___swim_speed = _speed;
+        }
+        return self;
+    }
+    
+    static get_swim_speed = function()
+    {
+        return self[$ "___swim_speed"] ?? get_movement_speed() * 0.7;
+    }
+    
+    static set_climb_speed = function(_speed)
+    {
+        if (_speed != undefined)
+        {
+            ___climb_speed = _speed;
+        }
+        return self;
+    }
+    
+    static get_climb_speed = function()
+    {
+        return self[$ "___climb_speed"] ?? get_movement_speed() * 0.5;
+    }
+    
+    // --- Movement Capabilities ---
+    
+    static set_can_fly = function(_can)
+    {
+        ___can_fly = _can;
+        return self;
+    }
+    
+    static get_can_fly = function()
+    {
+        return self[$ "___can_fly"] ?? false;
+    }
+    
+    static set_can_swim = function(_can)
+    {
+        ___can_swim = _can;
+        return self;
+    }
+    
+    static get_can_swim = function()
+    {
+        return self[$ "___can_swim"] ?? true;  // Most entities can swim by default
+    }
+    
+    static set_can_climb = function(_can)
+    {
+        ___can_climb = _can;
+        return self;
+    }
+    
+    static get_can_climb = function()
+    {
+        return self[$ "___can_climb"] ?? false;
+    }
+    
+    static set_wall_jump_power = function(_power)
+    {
+        ___wall_jump_power = _power;
+        return self;
+    }
+    
+    static get_wall_jump_power = function()
+    {
+        return self[$ "___wall_jump_power"] ?? 4.0;
+    }
+    
     static set_regeneration_amount = function(_amount)
     {
         ___regeneration_amount = _amount;

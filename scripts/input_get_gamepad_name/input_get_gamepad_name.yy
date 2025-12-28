@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"control_physics_input",
+  "%Name":"input_get_gamepad_name",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"control_physics_input",
+  "name":"input_get_gamepad_name",
   "parent":{
-    "name":"Physics",
-    "path":"folders/Scripts/Control/Physics.yy",
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

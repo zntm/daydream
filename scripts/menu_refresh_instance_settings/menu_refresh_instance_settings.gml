@@ -45,7 +45,16 @@ function menu_refresh_instance_settings()
     var _settings = global.settings;
     var _settings_data = global.settings_data;
     
-    var _category = global.settings_data_category[$ category];
+    // Handle controls category with input type toggle (keyboard, gamepad, touch)
+    var _actual_category = category;
+    if (category == "controls" || category == "controls_gamepad" || category == "controls_touch")
+    {
+        _actual_category = "controls_" + global.controls_input_type;
+        // keyboard uses "controls" not "controls_keyboard"
+        if (global.controls_input_type == "keyboard") _actual_category = "controls";
+    }
+    
+    var _category = global.settings_data_category[$ _actual_category];
     var _length = array_length(_category);
     
     var _inst_slider = global.settings_inst_slider;
@@ -81,6 +90,41 @@ function menu_refresh_instance_settings()
         y_min: global.gui_height * 0.45,
         y_max: global.gui_height * 0.85
     };
+    
+    // Add input type toggle when viewing controls (keyboard, gamepad, touch)
+    if (_actual_category == "controls" || _actual_category == "controls_gamepad" || _actual_category == "controls_touch")
+    {
+        // List of available input types to cycle through
+        static __input_types = ["keyboard", "gamepad"]; // Add "touch" when implemented
+        
+        static __toggle_on_select_release = function()
+        {
+            var _current = global.controls_input_type;
+            var _index = array_get_index(__input_types, _current);
+            _index = (_index + 1) mod array_length(__input_types);
+            global.controls_input_type = __input_types[_index];
+            menu_refresh_instance_settings();
+        }
+        
+        with (instance_create_layer(_menu_settings_xoffset + 64, _menu_settings_yoffset + 128, "Settings", obj_Menu_Button))
+        {
+            is_setting = true;
+            surface_index = _fade_layer;
+            menu_layer = 0;
+            
+            // Capitalize first letter for display
+            var _type = global.controls_input_type;
+            var _mode_text = string_upper(string_char_at(_type, 1)) + string_copy(_type, 2, string_length(_type) - 1);
+            text = $"Mode: {_mode_text}";
+            
+            image_xscale = 16;
+            image_yscale = 2;
+            
+            x = _menu_settings_xoffset + room_width / 2 - (image_xscale * 8 / 2);
+            
+            on_select_release = method(id, __toggle_on_select_release);
+        }
+    }
     
     for (var i = 0; i < _length; ++i)
     {
@@ -134,16 +178,20 @@ function menu_refresh_instance_settings()
                     
                     setting_name = other.setting_name;
                     button_id = other.id; // Pass the button ID
+                    is_gamepad = other.is_gamepad_setting; // Pass gamepad flag
                 }
             }
 
-            var _key_name = input_get_name(_value);
+            // Check if this is a gamepad setting
+            var _is_gamepad = string_pos("gamepad", _name) > 0;
+            var _key_name = _is_gamepad ? input_get_gamepad_name(_value) : input_get_name(_value);
 
             with (instance_create_layer(_menu_settings_xoffset + 64, _menu_settings_yoffset + _y, "Settings", obj_Menu_Button))
             {
                 is_setting = true;
                 surface_index = _fade_layer;
                 menu_layer = 0; // Explicitly set to 0 for input
+                is_gamepad_setting = _is_gamepad; // Store gamepad flag
 
                 setting_name = _name;
                 display_text = loca_translate($"phantasia:settings.{_name}.name");

@@ -28,8 +28,8 @@ function control_gametick(_delta_time)
                 obj_Player.x = obj_Player.spawn_x;
                 obj_Player.y = obj_Player.spawn_y;
                 
-                obj_Player.xvelocity = 0;
-                obj_Player.yvelocity = 0;
+                obj_Player.physics_body.vel_x = 0;
+                obj_Player.physics_body.vel_y = 0;
                 
                 obj_Player.hp = obj_Player.hp_max;
                 

@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"init_entity_physics",
+  "%Name":"physics_mode_swim",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"init_entity_physics",
+  "name":"physics_mode_swim",
   "parent":{
-    "name":"Entity",
-    "path":"folders/Scripts/Entity.yy",
+    "name":"Physics",
+    "path":"folders/Scripts/Entity/Physics.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

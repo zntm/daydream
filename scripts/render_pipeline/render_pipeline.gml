@@ -112,7 +112,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 var _xscale = entity_xscale * sign(image_xscale);
                 var _yscale = entity_yscale * sign(image_yscale);
                 
-                if (yvelocity == 0) && ((input_left) || (input_right))
+                if (physics_body.vel_y == 0) && (input_state.move_x != 0)
                 {
                     draw_sprite_ext(_sprite_asset[$ _data.get_sprite_moving(_variant)].get_sprite(), _animation_index, x, y, _xscale, _yscale, image_angle, c_white, 1);
                     
@@ -141,7 +141,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 var _xscale = entity_xscale * sign(image_xscale);
                 var _yscale = entity_yscale * sign(image_yscale);
                 
-                if (yvelocity == 0) && ((input_left) || (input_right))
+                if (physics_body.vel_y == 0) && (input_state.move_x != 0)
                 {
                     var _index_body = (_animation_index * 2) % 8;
                     var _index_arm = ((timer_attack > 0) ? round(lerp(13, 8, timer_attack / 0.3)) : _index_body);

@@ -56,7 +56,7 @@ function control_entity_sfx(_dt)
     
     audio_emitter_bus(audio_emitter, global.audio_bus[$ $"{round(audio_effect_lowpass * (AUDIO_EFFECT_SIZE - 1))}_{round(audio_effect_reverb * (AUDIO_EFFECT_SIZE - 1))}"]);
     
-    if ((input_left) || (input_right)) && (tile_meeting(x, y + 1))
+    if (input_state.move_x != 0) && (physics_body.collision.ground)
     {
         timer_sfx_step += _dt / GAME_TICK;
         

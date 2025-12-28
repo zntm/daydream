@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"control_physics_creative",
+  "%Name":"physics_mode_climb",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"control_physics_creative",
+  "name":"physics_mode_climb",
   "parent":{
     "name":"Physics",
-    "path":"folders/Scripts/Control/Physics.yy",
+    "path":"folders/Scripts/Entity/Physics.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",
