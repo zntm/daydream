@@ -122,6 +122,7 @@ function file_load_world_chunk(_world_save_data, _chunk)
         _inst_creature.uuid = buffer_read(_buffer, buffer_string);
         
         file_load_snippet_position(_buffer, _inst_creature);
+        _inst_creature.y_last = buffer_read(_buffer, buffer_f64);
         file_load_snippet_effects(_buffer, _inst_creature);
         
         var _inventory_length = buffer_read(_buffer, buffer_u8);

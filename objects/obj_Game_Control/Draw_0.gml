@@ -72,10 +72,3 @@ if (keyboard_check_pressed(vk_f2))
 }
 
 gpu_set_blendmode(bm_normal);
-
-var _ = global.___atla_surface[$ "item"];
-
-if (surface_exists(_))
-{
-    draw_surface_ext(_, mouse_x, mouse_y, 0.5, 0.5, 0, c_white, 1);
-}

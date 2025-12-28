@@ -261,7 +261,7 @@ global.command_data[$ "tp"] = new CommandData()
 		_user.x = _x2;
 		_user.y = _y2;
 		
-		_user.ylast = _y2;
+		_user.y_last = _y2;
 		
 		#region Update Camera Positions
 		

@@ -34,7 +34,7 @@ if (obj_Game_Control.spawn_needs_init)
     
     control_camera_pos(obj_Player.x - (global.camera_width / 2), obj_Player.y - (global.camera_height / 2), true);
     
-    obj_Player.ylast = obj_Player.y;
+    obj_Player.y_last = obj_Player.y;
     
     // Refresh lighting surface with correct position
     obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.LIGHTING;

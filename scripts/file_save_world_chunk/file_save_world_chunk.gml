@@ -142,6 +142,7 @@ function file_save_world_chunk(_world_save_data, _chunk)
         buffer_write(_current_chunk_buffer, buffer_string, _.uuid);
         
         file_save_snippet_position(_current_chunk_buffer, _);
+        buffer_write(_current_chunk_buffer, buffer_f64, _.y_last);
         file_save_snippet_effects(_current_chunk_buffer, _[$ "effects"]);
         
         var _inventory = _[$ "inventory"];
