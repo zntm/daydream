@@ -59,21 +59,8 @@ function chunk_vertex_liquid(_buffer, _texel_width, _texel_height, _animation_ty
     var _height_cropped_right = _height * _right_ratio;
     
     // Get stored offsets (original, not transformed)
-    var _stored_xoffset = ((_atla_value >> 0)  & 2047) - 1024;
-    var _stored_yoffset = ((_atla_value >> 11) & 2047) - 1024;
-    
-    // Transform offsets for rotated sprites
-    var _xoffset, _yoffset;
-    if (_is_rotated)
-    {
-        _xoffset = -_xscale * _stored_yoffset;
-        _yoffset = -_yscale * (_height - _stored_xoffset);
-    }
-    else
-    {
-        _xoffset = -_xscale * _stored_xoffset;
-        _yoffset = -_yscale * _stored_yoffset;
-    }
+    var _xoffset = -_xscale * (((_atla_value >> 0)  & 2047) - 1024);
+    var _yoffset = -_yscale * (((_atla_value >> 11) & 2047) - 1024);
     
     // Adjust y offsets to move sprite down when cropped (liquid settles to bottom)
     var _yoffset_cropped_left = _yoffset + (_height * (1 - _left_ratio) * _yscale);
@@ -129,7 +116,16 @@ function chunk_vertex_liquid(_buffer, _texel_width, _texel_height, _animation_ty
     
     // Pack: float1 = (number << 24) | animation_type, float2 = (index * 256) + width
     var _packed_anim = (_number << 24) | _animation_type;
-    var _packed_index_width = (_index << 8) | _width;
+    var _packed_index_width;
+    
+    if (_is_rotated)
+    {
+        _packed_index_width = (_index << 8) | _height;
+    }
+    else
+    {
+        _packed_index_width = (_index << 8) | _width;
+    }
     
     // Triangle 1: top-left, top-right, bottom-left
     vertex_position(_buffer, _ax, _ay);
