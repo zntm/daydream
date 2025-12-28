@@ -1,6 +1,6 @@
 /// @description GUI Component registry and factory
 
-global.gui_component_registry = {};
+global.gui_component_registry = {}
 
 /// @description Register a component constructor
 /// @param {String} _type Type name (e.g., "panel", "slot")

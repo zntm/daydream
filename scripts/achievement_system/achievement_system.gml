@@ -10,10 +10,10 @@ global.player_achievements = undefined;
 function achievement_init()
 {
     // Player achievements (unlocked status)
-    global.player_achievements ??= {};
+    global.player_achievements ??= {}
     
     // Achievement data loaded from datagen
-    global.achievement_data ??= {};
+    global.achievement_data ??= {}
     
     // Subscribe to events for achievement checking
     event_subscribe(GAME_EVENT.TILE_CHANGED, achievement_on_tile_changed);
@@ -35,7 +35,7 @@ function achievement_unlock(_id)
     global.player_achievements[$ _id] = {
         unlocked: true,
         timestamp: datetime_to_unix()
-    };
+    }
     
     // Get achievement data
     var _data = global.achievement_data[$ _id];
@@ -86,11 +86,11 @@ function achievement_get_progress(_id)
 {
     var _data = global.achievement_data[$ _id];
     
-    if (_data == undefined) return { current: 0, required: 1, percentage: 0 };
+    if (_data == undefined) return { current: 0, required: 1, percentage: 0 }
     
     var _condition = _data[$ "condition"];
     
-    if (_condition == undefined) return { current: 0, required: 1, percentage: 0 };
+    if (_condition == undefined) return { current: 0, required: 1, percentage: 0 }
     
     var _stat = _condition[$ "statistic"];
     var _required = _condition[$ "count"] ?? 1;
@@ -103,10 +103,10 @@ function achievement_get_progress(_id)
             current: _current,
             required: _required,
             percentage: clamp(_current / _required, 0, 1)
-        };
+        }
     }
     
-    return { current: 0, required: _required, percentage: 0 };
+    return { current: 0, required: _required, percentage: 0 }
 }
 
 /// @function achievement_show_notification(_id, _data)
@@ -280,7 +280,7 @@ function achievement_check_event(_event_type, _event_data)
 /// @function achievement_save_player(_buffer, _achievements)
 function achievement_save_player(_buffer, _achievements = undefined)
 {
-    _achievements ??= global.player_achievements ?? {};
+    _achievements ??= global.player_achievements ?? {}
 
     buffer_write(_buffer, buffer_u16, ACHIEVEMENT_VERSION);
     
@@ -306,7 +306,7 @@ function achievement_load_player(_buffer)
     var _version = buffer_read(_buffer, buffer_u16);
     var _count = buffer_read(_buffer, buffer_u32);
     
-    var _achievements = {};
+    var _achievements = {}
     
     for (var i = 0; i < _count; i++)
     {
@@ -316,7 +316,7 @@ function achievement_load_player(_buffer)
         _achievements[$ _name] = {
             unlocked: true,
             timestamp: _timestamp
-        };
+        }
     }
     
     return _achievements;

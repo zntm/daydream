@@ -6,7 +6,7 @@
 function gui_load_layout(_data, _parent = undefined)
 {
     var _type = _data[$ "type"];
-    var _props = _data[$ "props"] ?? {};
+    var _props = _data[$ "props"] ?? {}
     
     // Create the component
     var _component = gui_create_component(_type, _props);

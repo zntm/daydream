@@ -9,7 +9,7 @@ function debug_init()
     debug_text = "";
     global.debug_overlay_hint = "F3 to toggle overlay";
     
-    global.debug_reload = {};
+    global.debug_reload = {}
     
     // Initialize settings if they don't exist, otherwise keep existing values
     // (This allows settings to persist if we ever reload while keeping global state, 
@@ -33,7 +33,7 @@ function debug_init()
             fly_speed: 1,
             time_speed: 1,
             // render_texture_page: false,
-        };
+        }
     }
     
     // Create the debug view

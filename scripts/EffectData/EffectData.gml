@@ -191,7 +191,7 @@ function EffectData(_namespace, _id) constructor
                 id: _particle.id,
                 chance: _particle.chance ?? 0.1,
                 colour: _particle[$ "colour"]
-            };
+            }
         }
         
         return self;

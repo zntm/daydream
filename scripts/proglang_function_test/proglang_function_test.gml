@@ -6,7 +6,7 @@ function proglang_function_test() {
 
     var _log = function(_msg) {
         show_debug_message($"[Proglang function Test] {_msg}");
-    };
+    }
     
     var _assert = function(_name, _source, _expected, _epsilon = undefined) {
         try {
@@ -30,7 +30,7 @@ function proglang_function_test() {
             show_debug_message($"[Proglang Fn Test] FAIL (EXCEPTION): {_name}. Error: {_e}");
             return false;
         }
-    };
+    }
 
     show_debug_message("[Proglang Fn Test] Starting Tests...");
 
@@ -117,7 +117,7 @@ function proglang_function_test() {
         $"array_push(a, 2)\n" +
         $"return a[1]"
     , 2)) _passed++; else _failed++;
-
+    
     if (_assert("array_pop", 
         $"var a = [1, 5]\n" +
         $"var v = array_pop(a)\n" +
@@ -126,7 +126,7 @@ function proglang_function_test() {
     
     if (_assert("array_contains true", "return array_contains([1, 2, 3], 2)", true)) _passed++; else _failed++;
     if (_assert("array_contains false", "return array_contains([1, 2, 3], 5)", false)) _passed++; else _failed++;
-
+    
     if (_assert("struct_get_names", 
         $"var s = \{ a: 1, b: 2 \}\n" +
         $"var names = struct_get_names(s)\n" +
@@ -212,10 +212,9 @@ function proglang_function_test() {
         $"var s2 = struct_parse(json)\n" +
         $"return s2.a == 10 && s2.b == \"hello\""
     , true)) _passed++; else _failed++;
-
     
     show_debug_message($"[Proglang Fn Test] COMPLETE. Passed: {_passed}, Failed: {_failed}");
-    return { passed: _passed, failed: _failed };
+    return { passed: _passed, failed: _failed }
 }
 
 if (IS_DEVELOPER_MODE)

@@ -663,7 +663,7 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
             enabled: _falling[$ "enabled"] ?? true,
             delay: _falling[$ "delay"] ?? 2,
             gravity: _falling[$ "gravity"]
-        };
+        }
         
         return self;
     }

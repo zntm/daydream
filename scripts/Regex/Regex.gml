@@ -1,7 +1,7 @@
 /// @desc GML Regex Engine with capture groups
 /// @param {string} _pattern The regex pattern
 /// @param {string} _flags The flags (i, g)
-function GMLRegex(_pattern, _flags = "") constructor {
+function Regex(_pattern, _flags = "") constructor {
     pattern = _pattern;
     flags = _flags;
     __type__ = "regex"; // Type identifier for Proglang
@@ -82,7 +82,7 @@ function GMLRegex(_pattern, _flags = "") constructor {
             else if (_c == "*" || _c == "+" || _c == "?") {
                 if (array_length(_res) > 0) {
                     var _prev = _res[array_length(_res)-1];
-                    _res[array_length(_res)-1] = { type: "quantifier", node: _prev, op: _c };
+                    _res[array_length(_res)-1] = { type: "quantifier", node: _prev, op: _c }
                 }
             }
             else {
@@ -289,7 +289,8 @@ function GMLRegex(_pattern, _flags = "") constructor {
         return -1;
     }
     
-    static replace = function(_str, _replacement) {
+    static replace = function(_str, _replacement)
+    {
         var _res = "";
         var _len = string_length(_str);
         var _i = 1;
@@ -319,8 +320,9 @@ function GMLRegex(_pattern, _flags = "") constructor {
         }
         return _res;
     }
-
-    static split = function(_str) {
+    
+    static split = function(_str)
+    {
         var _res = [];
         var _len = string_length(_str);
         var _last_end = 1;
@@ -346,26 +348,40 @@ function GMLRegex(_pattern, _flags = "") constructor {
         array_push(_res, string_copy(_str, _last_end, _len - _last_end + 1));
         return _res;
     }
-
-    static match_index = function(_str) {
+    
+    static match_index = function(_str)
+    {
         var _indices = [];
         var _len = string_length(_str);
-        var _i = 1;
         
-        while (_i <= _len + 1) {
+        for (var i = 0; i <= _len + 1;)
+        {
             last_captures = array_create(group_count + 1, "");
-            var _res = match_at(_str, _i, 0, last_captures);
-            if (_res != -1) {
-                array_push(_indices, _i - 1);
-                if (!is_global) return _indices[0];
-                _i += (_res > 0) ? _res : 1;
-            } else {
-                _i++;
+            
+            var _res = match_at(_str, i, 0, last_captures);
+            
+            if (_res == -1)
+            {
+                ++i;
+                
+                continue;
             }
-            if (_i > _len + 1) break;
+            
+            array_push(_indices, i - 1);
+            
+            if (!is_global)
+            {
+                return _indices[0];
+            }
+            
+            i += ((_res > 0) ? _res : 1);
         }
         
-        if (array_length(_indices) == 0 && !is_global) return -1;
+        if (!is_global) && (array_length(_indices) == 0)
+        {
+            return -1;
+        }
+        
         return _indices;
     }
 }

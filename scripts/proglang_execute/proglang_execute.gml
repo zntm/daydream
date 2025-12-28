@@ -2,27 +2,23 @@
 /// @param {string} _source Script source code
 /// @param {struct} _context Execution context variables
 /// @returns {any} Script result
-function proglang_execute(_source, _context = {}) {
+function proglang_execute(_source, _context = {})
+{
     var _bytecode = proglang_compile(_source);
     
     if (_bytecode == undefined)
     {
-        if (IS_DEVELOPER_MODE) show_debug_message("[Daydream] Compilation failed.");
+        if (IS_DEVELOPER_MODE)
+        {
+            show_debug_message("[Daydream] Compilation failed.");
+        }
+        
         return undefined;
     }
     
     var _vm = new ProgVM();
+    
     _vm.context = _context;
     
-    return _vm.run(_bytecode);
-}
-
-/// @desc Run pre-compiled bytecode
-/// @param {struct} _bytecode Compiled ProgBytecode struct
-/// @param {struct} _context Execution context variables
-/// @returns {any} Script result
-function proglang_run(_bytecode, _context = {}) {
-    var _vm = new ProgVM();
-    _vm.context = _context;
     return _vm.run(_bytecode);
 }

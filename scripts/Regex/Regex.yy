@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"GMLRegex",
+  "%Name":"Regex",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"GMLRegex",
+  "name":"Regex",
   "parent":{
     "name":"Proglang",
     "path":"folders/Scripts/Proglang.yy",

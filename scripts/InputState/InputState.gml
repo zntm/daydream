@@ -50,7 +50,7 @@ function InputState() constructor
         aim_angle = _aim.angle;
         
         return self;
-    };
+    }
     
     /// @desc Create input state from AI decisions
     /// @param {Real} _move_x Horizontal movement direction (-1, 0, 1)
@@ -79,7 +79,7 @@ function InputState() constructor
         aim_angle = (_move_x >= 0) ? 0 : 180;
         
         return self;
-    };
+    }
     
     /// @desc Clear all input (for when entity shouldn't move)
     static clear = function()
@@ -97,7 +97,7 @@ function InputState() constructor
         aim_angle = 0;
         
         return self;
-    };
+    }
     
     /// @desc Serialize for network transmission
     static serialize = function()
@@ -117,8 +117,8 @@ function InputState() constructor
             flags: _flags,
             ax: aim_x,
             ay: aim_y
-        };
-    };
+        }
+    }
     
     /// @desc Deserialize from network
     static deserialize = function(_data)
@@ -139,7 +139,7 @@ function InputState() constructor
         aim_angle = point_direction(0, 0, aim_x, aim_y);
         
         return self;
-    };
+    }
 }
 
 /// @desc Poll player input and return a new InputState

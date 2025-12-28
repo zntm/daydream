@@ -1,6 +1,6 @@
 /// @desc Mount configuration data
 
-global.mount_data = {};
+global.mount_data = {}
 
 enum MOUNT_TYPE {
     CREATURE,   // Existing creature that can be mounted
@@ -42,7 +42,7 @@ function MountData(_namespace, _id) constructor
     {
         type = _type;
         return self;
-    };
+    }
     
     /// @desc Set rider offset
     static set_rider_offset = function(_x, _y)
@@ -50,7 +50,7 @@ function MountData(_namespace, _id) constructor
         rider_offset_x = _x;
         rider_offset_y = _y;
         return self;
-    };
+    }
     
     /// @desc Set movement capabilities
     static set_capabilities = function(_fly = false, _swim = false, _climb = false)
@@ -59,7 +59,7 @@ function MountData(_namespace, _id) constructor
         can_swim = _swim;
         can_climb = _climb;
         return self;
-    };
+    }
     
     /// @desc Set speed modifiers
     static set_speed = function(_speed_mult = 1.5, _jump_mult = 1.2)
@@ -67,14 +67,14 @@ function MountData(_namespace, _id) constructor
         speed_multiplier = _speed_mult;
         jump_multiplier = _jump_mult;
         return self;
-    };
+    }
     
     /// @desc Set control mode
     static set_controlled_by_rider = function(_controlled)
     {
         controlled_by_rider = _controlled;
         return self;
-    };
+    }
     
     /// @desc Set summon requirements
     static set_summon = function(_item, _duration = undefined)
@@ -82,14 +82,14 @@ function MountData(_namespace, _id) constructor
         summon_item = _item;
         summon_duration = _duration;
         return self;
-    };
+    }
     
     /// @desc Set sprite
     static set_sprite = function(_sprite)
     {
         sprite = _sprite;
         return self;
-    };
+    }
 }
 
 /// @desc Initialize mount data from directory

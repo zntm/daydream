@@ -57,7 +57,7 @@ function ProgLexer(_source) constructor {
         "extends": PROG_TOKEN.EXTENDS, "super": PROG_TOKEN.SUPER, "static": PROG_TOKEN.STATIC,
         "public": PROG_TOKEN.PUBLIC, "private": PROG_TOKEN.PRIVATE, "protected": PROG_TOKEN.PROTECTED,
         "abstract": PROG_TOKEN.ABSTRACT, "interface": PROG_TOKEN.INTERFACE, "implements": PROG_TOKEN.IMPLEMENTS
-    };
+    }
     
     /// @desc Tokenize the source code
     /// @returns {array} Array of token structs

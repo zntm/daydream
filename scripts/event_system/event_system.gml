@@ -17,7 +17,7 @@ enum GAME_EVENT {
     ITEM_USED           // Item or consumable used
 }
 
-global.event_listeners = {};
+global.event_listeners = {}
 
 /// @function event_subscribe(_event, _callback)
 /// @desc Subscribe to an event
@@ -32,7 +32,7 @@ function event_subscribe(_event, _callback)
         event: _event,
         callback: _callback,
         active: true
-    };
+    }
     
     array_push(global.event_listeners[$ _event], _subscription);
     

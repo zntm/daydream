@@ -21,7 +21,7 @@ function function_execute(_function, _x, _y, _z, _xscale, _yscale, _dt)
                 yscale: _yscale,
                 dt: _dt,
                 parameter: _function[2] 
-            };
+            }
             
             // Pass common game objects to context if needed, or rely on global access
             // Maybe add 'player' to context explicitly?

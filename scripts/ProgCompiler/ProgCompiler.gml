@@ -14,7 +14,7 @@ enum PROG_OP {
     NOT, AND, OR, BIT_AND, BIT_OR, BIT_XOR, SHL, SHR,
     
     // Variables
-    LOAD, STORE, DEFINE, LOAD_GLOBAL, STORE_GLOBAL, // Added DEFINE
+    LOAD, STORE, DEFINE, LOAD_GLOBAL, STORE_GLOBAL,
     
     // Structure access
     INDEX_GET, INDEX_SET, MEMBER_GET, MEMBER_SET,
@@ -36,16 +36,16 @@ enum PROG_OP {
     
     // Spread operations
     PUSH_ARRAY_EMPTY, ARRAY_PUSH, ARRAY_SPREAD,
-
+    
     // Module Ops
     IMPORT, EXPORT_SET,
-
+    
     // Stack Ops Extra
     DUP2, POP_AND_KEEP,
-
+    
     // Optimization Ops
     INC, DEC,
-
+    
     // Class System
     CLASS_DEF, NEW_INSTANCE, LOAD_THIS, LOAD_SUPER, ACCESS_CHECK,
     
@@ -53,7 +53,7 @@ enum PROG_OP {
     PUSH_SCOPE, POP_SCOPE,
     
     // Debug
-    DEBUG_LINE // Ops to track line changes for stack trace
+    DEBUG_LINE
 }
 
 /// @desc Array indices for function data (replaces struct)
@@ -438,7 +438,7 @@ function ProgCompiler() constructor {
                 // For loop continue needs to jump to INCREMENT, not start (condition).
                 // But increment is compiled AFTER body.
                 // We use a "patchable" continue list.
-                var _loop_ctx = { start: _start, continue_jumps: [], breaks: [] };
+                var _loop_ctx = { start: _start, continue_jumps: [], breaks: [] }
                 array_push(loop_stack, _loop_ctx);
                 
                 compile_node(_node.body);
@@ -586,7 +586,7 @@ function ProgCompiler() constructor {
                 }
                 
                 // Phase 3: Emit case bodies
-                var _switch_ctx = { breaks: [] };
+                var _switch_ctx = { breaks: [] }
                 array_push(loop_stack, _switch_ctx);
                 
                 for (var i = 0; i < array_length(_node.cases); i++) {
@@ -797,7 +797,7 @@ function ProgCompiler() constructor {
             methods: {},
             statics: {},
             fields: []
-        };
+        }
         
         // Constructor
         if (_node.class_constructor != undefined) {
@@ -817,7 +817,7 @@ function ProgCompiler() constructor {
                     params: _bc.params, // Param names
                     param_count: _bc.param_count,
                     access: _mem.access 
-                };
+                }
                 
                 if (_mem.is_static) {
                     _descriptor.statics[$ _mem.node.name] = _entry;
@@ -840,7 +840,7 @@ function ProgCompiler() constructor {
                         }
                         // For complex expressions, value stays undefined (TODO: static init blocks)
                     }
-                    _descriptor.statics[$ _mem.node.name] = { type: "field", value: _value, access: _mem.access };
+                    _descriptor.statics[$ _mem.node.name] = { type: "field", value: _value, access: _mem.access }
                 } else {
                     // Instance field - extract literal value if possible
                     var _value = undefined;
@@ -896,7 +896,7 @@ function ProgCompiler() constructor {
             bytecode: bytecode,
             params: _param_names,
             param_count: array_length(_node.params)
-        };
+        }
         
         bytecode = _parent;
         return _res;

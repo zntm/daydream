@@ -1,13 +1,14 @@
 
 /// @desc Proglang Standard Library Registry
 
-global.proglang_functions = {};
+global.proglang_functions = {}
 
-function proglang_function_register(_name, _func) {
+function proglang_function_register(_name, _func)
+{
     global.proglang_functions[$ _name] = {
         name: _name,
         func: _func
-    };
+    }
 }
 
 // Math
@@ -176,20 +177,20 @@ proglang_function_register("show_debug_message", function(_args) { show_debug_me
 proglang_function_register("assert", function(_args) {
     if (!_args[0]) {
         var _msg = (array_length(_args) > 1) ? _args[1] : "Assertion failed";
-        throw { type: PROG_ERROR.RUNTIME, message: _msg };
+        throw { type: PROG_ERROR.RUNTIME, message: _msg }
     }
 });
 
 proglang_function_register("time_start", function(_args) {
     var _name = _args[0];
-    if (!variable_global_exists("proglang_timers")) global.proglang_timers = {};
+    if (!variable_global_exists("proglang_timers")) global.proglang_timers = {}
     global.proglang_timers[$ _name] = get_timer();
 });
 
 proglang_function_register("time_end", function(_args) {
     var _name = _args[0];
     if (!variable_global_exists("proglang_timers") || !struct_exists(global.proglang_timers, _name)) {
-        throw { type: PROG_ERROR.RUNTIME, message: $"Timer '{_name}' does not exist." };
+        throw { type: PROG_ERROR.RUNTIME, message: $"Timer '{_name}' does not exist." }
     }
     var _start = global.proglang_timers[$ _name];
     var _time = (get_timer() - _start) / 1000; // ms
@@ -198,10 +199,10 @@ proglang_function_register("time_end", function(_args) {
 });
 
 // Regex
-proglang_function_register("regex_parse", function(_args) { return new GMLRegex(_args[0], array_length(_args)>1 ? _args[1] : ""); });
+proglang_function_register("regex_parse", function(_args) { return new Regex(_args[0], array_length(_args)>1 ? _args[1] : ""); });
 proglang_function_register("regex_test", function(_args) { 
     if (!is_struct(_args[1]) || !struct_exists(_args[1], "test")) {
-            throw { type: PROG_ERROR.TYPE, message: "Expected regex object." };
+            throw { type: PROG_ERROR.TYPE, message: "Expected regex object." }
     }
     return _args[1].test(_args[0]); 
 });

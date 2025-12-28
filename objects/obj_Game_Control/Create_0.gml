@@ -220,7 +220,7 @@ if (IS_DEVELOPER_MODE)
 }
 
 // Global command values
-global.command_value = {};
+global.command_value = {}
 
 // Note: Chat open state is now in is_opened & IS_OPENED_BOOLEAN.CHAT
 chat_message = "";

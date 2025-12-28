@@ -8,7 +8,7 @@ function RenderStatePool() : Pool() constructor
             y: 0,
             z: 0,
             data: undefined
-        };
+        }
     }
     
     static acquire = function(_x, _y, _z, _data)

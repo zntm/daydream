@@ -38,7 +38,7 @@ function ItemArmor(_type, _defense) constructor
                 ___modifiers[i] = {
                     attribute: _attr.attribute,
                     modifier: new EffectModifier(_attr.modifier.value, _attr.modifier.operation)
-                };
+                }
             }
         }
         

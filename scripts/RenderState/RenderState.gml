@@ -1,4 +1,4 @@
-global.render_state = {};
+global.render_state = {}
 
 
 

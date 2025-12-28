@@ -7,10 +7,10 @@ function proglang_test() {
     var _failed = 0;
     
     // Ensure globals exist (if test runs before init scripts)
-    if (!variable_global_exists("proglang_macros")) global.proglang_macros = {};
-    if (!variable_global_exists("proglang_functions")) global.proglang_functions = {};
-    if (!variable_global_exists("proglang_scripts")) global.proglang_scripts = {};
-    if (!variable_global_exists("proglang_exports")) global.proglang_exports = {};
+    if (!variable_global_exists("proglang_macros")) global.proglang_macros = {}
+    if (!variable_global_exists("proglang_functions")) global.proglang_functions = {}
+    if (!variable_global_exists("proglang_scripts")) global.proglang_scripts = {}
+    if (!variable_global_exists("proglang_exports")) global.proglang_exports = {}
     if (!variable_global_exists("proglang_functions_registered")) {
          // If we created empty functions map, we need to register stdlib?
          // This is harder because the registration calls are in ProgFunctions.gml
@@ -23,7 +23,7 @@ function proglang_test() {
         show_debug_message($"[Proglang Test] {_msg}");
         // Also log to chat if possible?
         // chat_add(_msg);
-    };
+    }
     
     var _assert = function(_name, _source, _expected, _context = {}) {
         try {
@@ -40,7 +40,7 @@ function proglang_test() {
             show_debug_message($"[Proglang Test] FAIL (EXCEPTION): {_name}. Error: {_e}");
             return false;
         }
-    };
+    }
     
     show_debug_message("[Proglang Test] Starting Tests...");
     
@@ -58,7 +58,7 @@ function proglang_test() {
     
     // Constants (Global) - can be values or functions
     // global.proglang_macros[$ "TEST_PI"] = 3.14159;
-    // global.proglang_macros[$ "GET_HUNDRED"] = function() { return 100; };
+    // global.proglang_macros[$ "GET_HUNDRED"] = function() { return 100; }
     // if (_assert("Macro Value", "return TEST_PI", 3.14159)) _passed++; else _failed++;
     // if (_assert("Macro Function", "return GET_HUNDRED", 100)) _passed++; else _failed++;
     
@@ -106,8 +106,8 @@ function proglang_test() {
     if (_assert("Shift Left", "return 1 << 4", 16)) _passed++; else _failed++;
     
     // Objects/Structs
-    if (_assert("Object Create", "var o = { x: 10 }; return o.x", 10)) _passed++; else _failed++;
-    if (_assert("Object Set", "var o = { x: 1 }; o.x = 5; return o.x", 5)) _passed++; else _failed++;
+    if (_assert("Object Create", "var o = { x: 10 } return o.x", 10)) _passed++; else _failed++;
+    if (_assert("Object Set", "var o = { x: 1 } o.x = 5; return o.x", 5)) _passed++; else _failed++;
     
     // Nested Control Flow
     if (_assert("Nested If", "var a = 5; if a > 3 { if a < 10 { return 1 } } return 0", 1)) _passed++; else _failed++;
@@ -130,7 +130,7 @@ function proglang_test() {
     if (_assert("If Else False", "if false { return 1 } else { return 2 }", 2)) _passed++; else _failed++;
     
     // Context Variables
-    var _ctx = { player_hp: 100, player_x: 50 };
+    var _ctx = { player_hp: 100, player_x: 50 }
     if (_assert("Context Read", "return player_hp", 100, _ctx)) _passed++; else _failed++;
     if (_assert("Context Math", "return player_x * 2", 100, _ctx)) _passed++; else _failed++;
     
@@ -286,8 +286,8 @@ function proglang_test() {
     if (_assert("Destruct Array", "var [a, b] = [10, 20]; return a + b", 30)) _passed++; else _failed++;
     
     // Destructuring Object
-    if (_assert("Destruct Object", "var {x, y} = {x: 5, y: 6}; return x * y", 30)) _passed++; else _failed++;
-    if (_assert("Destruct Alias", "var {x: a} = {x: 10}; return a", 10)) _passed++; else _failed++;
+    if (_assert("Destruct Object", "var {x, y} = {x: 5, y: 6} return x * y", 30)) _passed++; else _failed++;
+    if (_assert("Destruct Alias", "var {x: a} = {x: 10} return a", 10)) _passed++; else _failed++;
     
     // For In Array
     if (_assert("For In Array", 
@@ -356,8 +356,8 @@ function proglang_test() {
         
         // 2. Run Module to populate exports
         var _lib_vm = new ProgVM();
-        if (!variable_global_exists("proglang_modules")) global.proglang_modules = {};
-        global.proglang_modules[$ "math_lib"] = { exports: {}, loaded: true };
+        if (!variable_global_exists("proglang_modules")) global.proglang_modules = {}
+        global.proglang_modules[$ "math_lib"] = { exports: {}, loaded: true }
         _lib_vm.active_module = global.proglang_modules[$ "math_lib"];
         _lib_vm.run(_lib_bc);
         
@@ -1102,8 +1102,8 @@ function proglang_test() {
         
         // Run Module
         var _mod_vm = new ProgVM();
-        if (!variable_global_exists("proglang_modules")) global.proglang_modules = {};
-        global.proglang_modules[$ "vars_lib"] = { exports: {}, loaded: true };
+        if (!variable_global_exists("proglang_modules")) global.proglang_modules = {}
+        global.proglang_modules[$ "vars_lib"] = { exports: {}, loaded: true }
         _mod_vm.active_module = global.proglang_modules[$ "vars_lib"];
         _mod_vm.run(_mod_bc);
         

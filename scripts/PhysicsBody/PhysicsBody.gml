@@ -32,7 +32,7 @@ function PhysicsBody(_attribute = undefined) constructor
         held_time: 0,
         coyote_time: 0,
         max_count: (_attribute != undefined) ? _attribute.get_jump_count_max() : 1
-    };
+    }
     
     // Collision state (updated each physics step)
     collision = {
@@ -42,7 +42,7 @@ function PhysicsBody(_attribute = undefined) constructor
         wall_right: false,
         in_liquid: false,
         liquid_type: ""
-    };
+    }
     
     // Mount system
     mount = undefined;
@@ -61,7 +61,7 @@ function PhysicsBody(_attribute = undefined) constructor
         scale_x = _inst.image_xscale;
         scale_y = _inst.image_yscale;
         return self;
-    };
+    }
     
     /// @desc Sync position to instance
     static sync_to_instance = function(_inst)
@@ -69,7 +69,7 @@ function PhysicsBody(_attribute = undefined) constructor
         _inst.x = pos_x;
         _inst.y = pos_y;
         return self;
-    };
+    }
     
     /// @desc Reset jump state (called when landing)
     static reset_jump = function()
@@ -78,7 +78,7 @@ function PhysicsBody(_attribute = undefined) constructor
         jump.held_time = 0;
         jump.coyote_time = 0;
         return self;
-    };
+    }
     
     /// @desc Serialize for network/save
     static serialize = function()
@@ -91,8 +91,8 @@ function PhysicsBody(_attribute = undefined) constructor
             mode: mode,
             jump_count: jump.count,
             mount_id: mount_id
-        };
-    };
+        }
+    }
     
     /// @desc Deserialize from network/save
     static deserialize = function(_data)
@@ -105,5 +105,5 @@ function PhysicsBody(_attribute = undefined) constructor
         jump.count = _data.jump_count;
         mount_id = _data.mount_id;
         return self;
-    };
+    }
 }

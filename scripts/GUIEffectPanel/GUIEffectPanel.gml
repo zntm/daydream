@@ -4,7 +4,7 @@ function GUIEffectPanel(_x, _y) : GUIComponent(_x, _y, 0, 16) constructor
     static ICON_SIZE = 16;
     static ICON_SPACING = 2;
     
-    effect_icons = {};
+    effect_icons = {}
     
     static update = function()
     {

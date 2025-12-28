@@ -292,7 +292,7 @@ global.item_function[$ "phantasia:liquid_flow"] = function(_dt, _x, _y, _z, _xsc
         }
 
         // Update parameter struct to persist these defaults for downstream flow
-        if (_parameter == undefined) _parameter = {};
+        if (_parameter == undefined) _parameter = {}
         _parameter.fluid_collisions = _fluid_collisions;
         _parameter.tick_delay = _tick_delay;
     }

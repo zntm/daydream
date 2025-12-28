@@ -4,9 +4,9 @@
 /// Base directory for all proglang scripts (sandbox root)
 #macro PROGLANG_BASE_DIR "proglang"
 
-global.proglang_scripts = {};
-global.proglang_exports = {};
-global.proglang_modules = {};
+global.proglang_scripts = {}
+global.proglang_exports = {}
+global.proglang_modules = {}
 
 /// @desc Initialize proglang by recursively loading all .daydream scripts
 /// @param {string} _directory Directory to load from
@@ -47,7 +47,7 @@ function init_proglang_recursive(_directory, _namespace = "") {
         }
         
         var _has_functions = false;
-        var _file_scope = {};
+        var _file_scope = {}
         
         // Scan for function definitions (supports both struct and array format)
         for (var j = 0; j < array_length(_bytecode.constants); j++) {
@@ -200,7 +200,7 @@ function proglang_load_module(_module_path, _importer_path = "") {
     var _resolved = proglang_resolve_path(_module_path, _importer_dir);
     
     if (_resolved == undefined) {
-        throw { type: PROG_ERROR.PATH_SECURITY, message: $"Path security violation: '{_module_path}'" };
+        throw { type: PROG_ERROR.PATH_SECURITY, message: $"Path security violation: '{_module_path}'" }
     }
     
     // Check if already loaded
@@ -211,18 +211,18 @@ function proglang_load_module(_module_path, _importer_path = "") {
     // Try to load the file
     var _full_path = $"{PROGLANG_BASE_DIR}/{_resolved}.daydream";
     if (!file_exists(_full_path)) {
-        throw { type: PROG_ERROR.FILE_NOT_FOUND, message: $"Module not found: '{_resolved}'" };
+        throw { type: PROG_ERROR.FILE_NOT_FOUND, message: $"Module not found: '{_resolved}'" }
     }
     
     var _source = buffer_load_text(_full_path);
     var _bytecode = proglang_compile(_source);
     
     if (_bytecode == undefined) {
-        throw { type: PROG_ERROR.SYNTAX, message: $"Failed to compile module: '{_resolved}'" };
+        throw { type: PROG_ERROR.SYNTAX, message: $"Failed to compile module: '{_resolved}'" }
     }
     
     // Create module entry
-    global.proglang_modules[$ _resolved] = { exports: {}, loaded: false, path: _resolved };
+    global.proglang_modules[$ _resolved] = { exports: {}, loaded: false, path: _resolved }
     
     // Run module to populate exports
     var _vm = new ProgVM();

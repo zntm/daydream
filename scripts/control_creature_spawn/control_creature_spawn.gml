@@ -3,7 +3,7 @@
 #macro SPAWN_DENSITY_GRID_SIZE 16               // Grid cell size for density tracking (in tiles)
 #macro SPAWN_MAX_PER_GRID 3                     // Maximum creatures per grid cell
 
-global.spawn_density_grid = {};
+global.spawn_density_grid = {}
 global.spawn_last_cleanup_time = 0;
 
 function control_creature_spawn(_dt)
@@ -232,7 +232,7 @@ function control_creature_spawn(_dt)
         global.spawn_last_cleanup_time = 0;
         
         // Rebuild density grid by counting actual creatures
-        global.spawn_density_grid = {};
+        global.spawn_density_grid = {}
         
         with (obj_Creature)
         {

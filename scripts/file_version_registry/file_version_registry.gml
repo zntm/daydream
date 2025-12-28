@@ -1,7 +1,7 @@
 /// @desc Save version registry and upgrade system
 /// Allows registering version upgraders for different save categories
 
-global.file_version_upgraders = {};
+global.file_version_upgraders = {}
 
 /// @function file_version_register(_category, _from_version, _to_version, _upgrade_func)
 /// @desc Register a version upgrader for a category

@@ -5,7 +5,7 @@ function inventory_refresh_crafting_station(_refresh = false)
     var _crafting_stations = global.crafting_stations;
     var _crafting_stations_length = array_length(_crafting_stations);
     
-    var _previously_available = {};
+    var _previously_available = {}
     
     for (var i = 0; i < _crafting_stations_length; ++i)
     {

@@ -101,8 +101,8 @@ function menu_refresh_instance_players()
         
         global.player_save_data.uuid = _uuid;
         
-        global.player_statistics = _data.get_statistics() ?? {};
-        global.player_achievements = _data.get_achievements() ?? {};
+        global.player_statistics = _data.get_statistics() ?? {}
+        global.player_achievements = _data.get_achievements() ?? {}
         
         menu_refresh_value_world_save();
         
@@ -126,12 +126,12 @@ function menu_refresh_instance_players()
         u_FadeStart: 0.3, 
         u_FadeEnd: 0.6,
         no_dim: true
-    };
+    }
     
     obj_Menu_Control_Render.surface_index_boundary[@ _fade_layer] = {
         y_min: global.gui_height * 0.15,
         y_max: global.gui_height * 0.85
-    };
+    }
     
     var _players = global.file_players;
     var _players_length = array_length(_players);

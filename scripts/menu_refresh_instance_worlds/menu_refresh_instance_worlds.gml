@@ -100,7 +100,7 @@ function menu_refresh_instance_worlds()
         
         global.world_save_data.difficulty = _data.get_difficulty();
         
-        global.world_statistics = _data.get_statistics() ?? {};
+        global.world_statistics = _data.get_statistics() ?? {}
         
         room_goto(rm_World);
     }
@@ -122,12 +122,12 @@ function menu_refresh_instance_worlds()
         u_FadeStart: 0.3, 
         u_FadeEnd: 0.6,
         no_dim: true
-    };
+    }
     
     obj_Menu_Control_Render.surface_index_boundary[@ _fade_layer] = {
         y_min: global.gui_height * 0.15,
         y_max: global.gui_height * 0.85
-    };
+    }
     
     var _worlds = global.file_worlds;
     var _worlds_length = array_length(_worlds);

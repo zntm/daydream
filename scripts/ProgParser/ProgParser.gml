@@ -45,7 +45,7 @@ function ProgParser(_tokens) constructor {
         if (check(_type)) return advance();
         
         error_at_current(_message);
-        return { type: PROG_TOKEN.EOF, lexeme: "", literal: undefined, line: peek().line }; // Return dummy token
+        return { type: PROG_TOKEN.EOF, lexeme: "", literal: undefined, line: peek().line } // Return dummy token
     }
     
     static error_at_current = function(_message) {
@@ -288,25 +288,25 @@ function ProgParser(_tokens) constructor {
                 } else {
                     // Maybe constructor or method without 'fn'?
                     var _name_token = peek();
-                     if (_name_token.type == PROG_TOKEN.IDENTIFIER) {
-                         // Check if next is LPAREN -> Method
-                         if (tokens[current+1].type == PROG_TOKEN.LPAREN) {
-                             var _m_name = advance().lexeme;
-                             var _data = parse_function_body();
-                             _decl = new ProgASTFuncDecl(_m_name, _data.params, _data.body, false);
-                             _is_method = true;
-                         } else {
-                             // Property without 'var'? "x = 10;"
-                             // Let's enforce 'var' for properties for now to be safe or support it.
-                             // Error for now.
-                             error_at_current("Expected 'fn' or 'var' in class body.");
-                             advance();
-                             continue;
-                         }
-                     } else {
-                         advance(); // skip bad token
-                         continue;
-                     }
+                    if (_name_token.type == PROG_TOKEN.IDENTIFIER) {
+                        // Check if next is LPAREN -> Method
+                        if (tokens[current+1].type == PROG_TOKEN.LPAREN) {
+                            var _m_name = advance().lexeme;
+                            var _data = parse_function_body();
+                            _decl = new ProgASTFuncDecl(_m_name, _data.params, _data.body, false);
+                            _is_method = true;
+                        } else {
+                            // Property without 'var'? "x = 10;"
+                            // Let's enforce 'var' for properties for now to be safe or support it.
+                            // Error for now.
+                            error_at_current("Expected 'fn' or 'var' in class body.");
+                            advance();
+                            continue;
+                        }
+                    } else {
+                        advance(); // skip bad token
+                        continue;
+                    }
                 }
                 
                 if (_decl != undefined) {
@@ -314,16 +314,16 @@ function ProgParser(_tokens) constructor {
                     // Since _decl is AST node, we wrap or modify it? 
                     // Better to wrap in member struct
                     if (_is_method && _decl.name == "constructor") {
-                         _constructor = _decl;
+                        _constructor = _decl;
                     } else {
-                         // Store as plain struct or new AST?
-                         // The VM will iterate this list.
-                         array_push(_members, { 
-                             type: _is_method ? "method" : "field",
-                             node: _decl, 
-                             access: _access, 
-                             is_static: _is_static 
-                         });
+                        // Store as plain struct or new AST?
+                        // The VM will iterate this list.
+                        array_push(_members, { 
+                            type: _is_method ? "method" : "field",
+                            node: _decl, 
+                            access: _access, 
+                            is_static: _is_static 
+                        });
                     }
                 }
             } else {
@@ -410,7 +410,7 @@ function ProgParser(_tokens) constructor {
                 array_push(_elements, { key: _key, target: _target });
             } until (!match(PROG_TOKEN.COMMA));
             consume(PROG_TOKEN.RBRACE, "Expected '}' after object pattern.");
-            return { type: "object", elements: _elements };
+            return { type: "object", elements: _elements }
         } 
         else if (match(PROG_TOKEN.LBRACKET)) {
             // Array Pattern
@@ -425,11 +425,11 @@ function ProgParser(_tokens) constructor {
                  }
             } until (!match(PROG_TOKEN.COMMA));
             consume(PROG_TOKEN.RBRACKET, "Expected ']' after array pattern.");
-            return { type: "array", elements: _elements }; 
+            return { type: "array", elements: _elements } 
         }
         
         error_at_current("Invalid destructuring pattern start.");
-        return { type: "error", elements: [] };
+        return { type: "error", elements: [] }
     }
     
     static parse_function_decl = function(_is_global = false) {
@@ -466,7 +466,7 @@ function ProgParser(_tokens) constructor {
         consume(PROG_TOKEN.LBRACE, "Expected '{' before function body.");
         var _body = new ProgASTBlock(parse_block());
         
-        return { params: _params, body: _body };
+        return { params: _params, body: _body }
     }
     
     static parse_if_stmt = function() {
@@ -679,8 +679,8 @@ function ProgParser(_tokens) constructor {
             return new ProgASTAssignment(_expr, _rhs, PROG_TOKEN.SLASH);
         }
         if (match(PROG_TOKEN.ASSIGN) || match(PROG_TOKEN.EQ)) {
-             // Handle explicit `target = value` where parser stopped at `=` (if treating as simple expr)
-             // But my parser treats `=` as operator, so it IS in `_expr` as BinaryOp
+            // Handle explicit `target = value` where parser stopped at `=` (if treating as simple expr)
+            // But my parser treats `=` as operator, so it IS in `_expr` as BinaryOp
         }
         
         // Convert `BinaryOp(ASSIGN/EQ)` to `Assignment` if Top-Level

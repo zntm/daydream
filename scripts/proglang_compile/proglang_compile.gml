@@ -1,16 +1,23 @@
 
-global.proglang_cache = {};
+global.proglang_cache = {}
 
 /// @desc Compile Proglang source to bytecode (cached)
 /// @param {string} _source The script source code
-/// @returns {struct} ProgBytecode or undefined on error
-function proglang_compile(_source) {
-    if (_source == undefined) return undefined;
-
+/// @returns {Any} ProgBytecode or undefined on error
+function proglang_compile(_source)
+{
+    if (_source == undefined)
+    {
+        return undefined;
+    }
+    
     var _hash = md5_string_utf8(_source);
     
-    if (struct_exists(global.proglang_cache, _hash)) {
-        return global.proglang_cache[$ _hash];
+    var _cache = global.proglang_cache[$ _hash];
+    
+    if (_cache != undefined)
+    {
+        return _cache;
     }
     
     // Lexing
@@ -19,7 +26,11 @@ function proglang_compile(_source) {
     
     if (_lexer.had_error)
     {
-        if (IS_DEVELOPER_MODE) show_debug_message($"[Daydream] Lexer Error: {_lexer.error}");
+        if (IS_DEVELOPER_MODE)
+        {
+            show_debug_message($"[Daydream] Lexer Error: {_lexer.error}");
+        }
+        
         return undefined;
     }
     
@@ -29,7 +40,11 @@ function proglang_compile(_source) {
     
     if (_parser.had_error)
     {
-        if (IS_DEVELOPER_MODE) show_debug_message($"[Daydream] Parser Error: {_parser.error}");
+        if (IS_DEVELOPER_MODE)
+        {
+            show_debug_message($"[Daydream] Parser Error: {_parser.error}");
+        }
+        
         return undefined;
     }
     
@@ -39,10 +54,18 @@ function proglang_compile(_source) {
     
     // Cache
     global.proglang_cache[$ _hash] = _bytecode;
+    
     return _bytecode;
 }
 
 /// @desc Clear compilation cache
-function proglang_cache_clear() {
-    global.proglang_cache = {};
+function proglang_cache_clear() 
+{
+    var _names = struct_get_names(global.proglang_cache);
+    var _length = array_length(_names);
+    
+    for (var i = 0; i < _length; ++i)
+    {
+        struct_remove(global.proglang_cache, _names[i]);
+    }
 }

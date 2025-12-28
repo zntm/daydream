@@ -84,12 +84,12 @@ function menu_refresh_instance_settings()
         u_FadeStart: 0.45, 
         u_FadeEnd: 0.85,
         no_dim: true
-    };
+    }
     
     obj_Menu_Control_Render.surface_index_boundary[@ _fade_layer] = {
         y_min: global.gui_height * 0.45,
         y_max: global.gui_height * 0.85
-    };
+    }
     
     // Add input type toggle when viewing controls (keyboard, gamepad, touch)
     if (_actual_category == "controls" || _actual_category == "controls_gamepad" || _actual_category == "controls_touch")

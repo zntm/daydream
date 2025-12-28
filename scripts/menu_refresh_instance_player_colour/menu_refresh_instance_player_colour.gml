@@ -91,7 +91,7 @@ function menu_refresh_instance_player_colour()
             u_match: global.attire_colour_white_data,
             u_length: array_length(global.attire_colour_white_data),
             _use_int: true
-        };
+        }
         
         _inst.on_select_release = method(_inst, __on_select_release);
     }

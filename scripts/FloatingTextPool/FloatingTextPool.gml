@@ -15,6 +15,6 @@ function FloatingTextPool() : Pool() constructor
             yvelocity: 0,
             rotation: 0,
             timer_life: 0
-        };
+        }
     }
 }

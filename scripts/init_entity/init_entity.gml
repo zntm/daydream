@@ -46,7 +46,7 @@ function init_entity(_hp, _hp_max, _attribute, _uuid = uuid_generate(irandom(0xf
     inst_item = noone;
     
     // Effects
-    effects = {};
+    effects = {}
     effect_immune = undefined;
     
     // Collision box scale (for physics)

@@ -11,10 +11,10 @@ global.world_statistics = undefined;
 function statistics_init()
 {
     // Player statistics (persist across worlds)
-    global.player_statistics ??= {};
+    global.player_statistics ??= {}
     
     // World statistics (per-player contributions in the world)
-    global.world_statistics ??= {};
+    global.world_statistics ??= {}
     
     // Subscribe to game events for automatic tracking
     event_subscribe(GAME_EVENT.TILE_CHANGED, statistics_on_tile_changed);
@@ -37,7 +37,7 @@ function statistics_increment(_stat_id, _amount = 1)
     // Update world statistics (track per-player)
     var _player_uuid = global.player_save_data.uuid;
     
-    global.world_statistics[$ _stat_id] ??= {};
+    global.world_statistics[$ _stat_id] ??= {}
     global.world_statistics[$ _stat_id][$ _player_uuid] ??= 0;
     global.world_statistics[$ _stat_id][$ _player_uuid] += _amount;
     
@@ -63,7 +63,7 @@ function statistics_set_max(_stat_id, _value)
         
         // Update world stats too
         var _player_uuid = global.player_save_data.uuid;
-        global.world_statistics[$ _stat_id] ??= {};
+        global.world_statistics[$ _stat_id] ??= {}
         global.world_statistics[$ _stat_id][$ _player_uuid] = _value;
     }
 }
@@ -194,7 +194,7 @@ function statistics_on_chunk_generated(_data)
 /// @desc Save player statistics to buffer
 function statistics_save_player(_buffer, _statistics = undefined)
 {
-    _statistics ??= global.player_statistics ?? {};
+    _statistics ??= global.player_statistics ?? {}
 
     buffer_write(_buffer, buffer_u16, STATISTICS_VERSION);
     
@@ -219,7 +219,7 @@ function statistics_load_player(_buffer)
     var _version = buffer_read(_buffer, buffer_u16);
     var _count = buffer_read(_buffer, buffer_u32);
     
-    var _statistics = {};
+    var _statistics = {}
     
     for (var i = 0; i < _count; i++)
     {
@@ -235,7 +235,7 @@ function statistics_load_player(_buffer)
 /// @desc Save world statistics to buffer
 function statistics_save_world(_buffer, _statistics = undefined)
 {
-    _statistics ??= global.world_statistics ?? {};
+    _statistics ??= global.world_statistics ?? {}
 
     buffer_write(_buffer, buffer_u16, STATISTICS_VERSION);
     
@@ -273,14 +273,14 @@ function statistics_load_world(_buffer)
     var _version = buffer_read(_buffer, buffer_u16);
     var _stat_count = buffer_read(_buffer, buffer_u32);
     
-    var _statistics = {};
+    var _statistics = {}
     
     for (var i = 0; i < _stat_count; i++)
     {
         var _stat_name = buffer_read(_buffer, buffer_string);
         var _player_count = buffer_read(_buffer, buffer_u16);
         
-        _statistics[$ _stat_name] = {};
+        _statistics[$ _stat_name] = {}
         
         for (var j = 0; j < _player_count; j++)
         {

@@ -17,14 +17,14 @@ function EntityState() constructor
         vx: 0,
         vy: 0,
         mode: MOVEMENT_MODE.GROUND
-    };
+    }
     
     // Timers
     timer_immunity = 0;
     timer_regeneration = 0;
     
     // Effects (map of effect_id -> { duration, level })
-    effects = {};
+    effects = {}
     
     // Mount relationship
     mount_uuid = "";
@@ -79,7 +79,7 @@ function EntityState() constructor
         timer_regeneration = _inst.timer_regeneration;
         
         // Effects
-        effects = {};
+        effects = {}
         var _effect_names = struct_get_names(_inst.effects);
         for (var i = 0; i < array_length(_effect_names); ++i)
         {
@@ -98,7 +98,7 @@ function EntityState() constructor
         }
         
         return self;
-    };
+    }
     
     /// @desc Apply state to an entity instance
     /// @param {Id.Instance} _inst
@@ -132,7 +132,7 @@ function EntityState() constructor
         _inst.timer_regeneration = timer_regeneration;
         
         // Effects
-        _inst.effects = {};
+        _inst.effects = {}
         var _effect_names = struct_get_names(effects);
         for (var i = 0; i < array_length(_effect_names); ++i)
         {
@@ -141,7 +141,7 @@ function EntityState() constructor
         }
         
         return self;
-    };
+    }
     
     /// @desc Serialize to buffer for network transmission
     /// @param {Id.Buffer} _buffer
@@ -165,7 +165,7 @@ function EntityState() constructor
         buffer_write(_buffer, buffer_string, json_stringify(effects));
         
         return self;
-    };
+    }
     
     /// @desc Deserialize from buffer
     /// @param {Id.Buffer} _buffer
@@ -189,7 +189,7 @@ function EntityState() constructor
         effects = json_parse(_effects_json);
         
         return self;
-    };
+    }
     
     /// @desc Serialize to struct for save files
     static serialize = function()
@@ -205,8 +205,8 @@ function EntityState() constructor
             effects: effects,
             mount_uuid: mount_uuid,
             rider_uuid: rider_uuid
-        };
-    };
+        }
+    }
     
     /// @desc Deserialize from struct
     static deserialize = function(_data)
@@ -223,5 +223,5 @@ function EntityState() constructor
         rider_uuid = _data.rider_uuid;
         
         return self;
-    };
+    }
 }

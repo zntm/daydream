@@ -1,7 +1,7 @@
 /// @desc Spatial hash map for O(1) chunk lookups
 /// Stores chunk structs instead of instance IDs
 
-global.chunk_map = {};
+global.chunk_map = {}
 
 /// @function chunk_map_key(_x, _y)
 /// @desc Generate hash key from world coordinates
@@ -58,7 +58,7 @@ function chunk_map_unregister(_chunk)
 /// @desc Clear entire chunk map (e.g., on world unload)
 function chunk_map_clear()
 {
-    global.chunk_map = {};
+    global.chunk_map = {}
 }
 
 /// @function chunk_map_exists(_x, _y)
