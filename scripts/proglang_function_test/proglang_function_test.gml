@@ -1,6 +1,5 @@
 /// @desc Proglang Standard Library Function Tests
 function proglang_function_test() {
-    proglang_init(); // Initialize environment
     var _passed = 0;
     var _failed = 0;
 
@@ -219,5 +218,5 @@ function proglang_function_test() {
 
 if (IS_DEVELOPER_MODE)
 {
-    proglang_function_test()
+    call_later(1, time_source_units_frames, proglang_function_test);
 }

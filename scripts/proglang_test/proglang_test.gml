@@ -1,8 +1,6 @@
 
 /// @desc Proglang Test Suite
 function proglang_test() {
-    proglang_init(); // Initialize environment (constants, etc.)
-    
     var _passed = 0;
     var _failed = 0;
     
@@ -374,9 +372,9 @@ function proglang_test() {
     if (_assert("Custom Error Handling", 
         $"try \{\n" +
         $"    // Simulate a typed error\n" +
-        $"    throw \{ type: PROG_ERROR.TYPE, message: \"Custom error\" \}\n" +
+        $"    throw \{ type: ERROR_TYPE.TYPE, message: \"Custom error\" \}\n" +
         $"\} catch (e) \{\n" +
-        $"    if (e.type == PROG_ERROR.TYPE) return 1\n" +
+        $"    if (e.type == ERROR_TYPE.TYPE) return 1\n" +
         $"    return 0\n" +
         $"\}"
     , 1)) _passed++; else _failed++;
@@ -1635,5 +1633,5 @@ function proglang_test() {
 
 if (IS_DEVELOPER_MODE)
 {
-    proglang_test();
+    call_later(1, time_source_units_frames, proglang_test);
 }

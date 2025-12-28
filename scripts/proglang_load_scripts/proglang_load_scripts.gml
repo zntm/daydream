@@ -200,7 +200,7 @@ function proglang_load_module(_module_path, _importer_path = "") {
     var _resolved = proglang_resolve_path(_module_path, _importer_dir);
     
     if (_resolved == undefined) {
-        throw { type: PROG_ERROR.PATH_SECURITY, message: $"Path security violation: '{_module_path}'" }
+        throw { type: PROGLANG_ERROR_TYPE.PATH_SECURITY, message: $"Path security violation: '{_module_path}'" }
     }
     
     // Check if already loaded
@@ -211,14 +211,14 @@ function proglang_load_module(_module_path, _importer_path = "") {
     // Try to load the file
     var _full_path = $"{PROGLANG_BASE_DIR}/{_resolved}.daydream";
     if (!file_exists(_full_path)) {
-        throw { type: PROG_ERROR.FILE_NOT_FOUND, message: $"Module not found: '{_resolved}'" }
+        throw { type: PROGLANG_ERROR_TYPE.FILE_NOT_FOUND, message: $"Module not found: '{_resolved}'" }
     }
     
     var _source = buffer_load_text(_full_path);
     var _bytecode = proglang_compile(_source);
     
     if (_bytecode == undefined) {
-        throw { type: PROG_ERROR.SYNTAX, message: $"Failed to compile module: '{_resolved}'" }
+        throw { type: PROGLANG_ERROR_TYPE.SYNTAX, message: $"Failed to compile module: '{_resolved}'" }
     }
     
     // Create module entry

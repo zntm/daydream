@@ -1,6 +1,6 @@
 /// @desc Virtual Machine for Proglang bytecode execution
 
-enum PROG_ERROR {
+enum PROGLANG_ERROR_TYPE {
     RUNTIME,
     TYPE,
     INDEX,
@@ -310,7 +310,7 @@ function ProgVM() constructor {
                                     var _sb = is_bool(_b) ? (_b ? "true" : "false") : string(_b);
                                     _stack[sp - 1] = _sa + _sb;
                                 } else if (is_undefined(_a) || is_undefined(_b)) {
-                                    runtime_error(PROG_ERROR.UNDEFINED_VALUE, "Undefined value in addition.");
+                                    runtime_error(PROGLANG_ERROR_TYPE.UNDEFINED_VALUE, "Undefined value in addition.");
                                 } else {
                                     _stack[sp - 1] = _a + _b; 
                                 }
@@ -378,7 +378,7 @@ function ProgVM() constructor {
                                 if (string_pos("arg", _name) == 1 && string_digits(_name) == string_delete(_name, 1, 3)) {
                                     _stack[@ sp++] = undefined;
                                 } else {
-                                    runtime_error(PROG_ERROR.VARIABLE, $"Variable '{_name}' not found.");
+                                    runtime_error(PROGLANG_ERROR_TYPE.VARIABLE, $"Variable '{_name}' not found.");
                                 }
                             }
                             break;
@@ -415,7 +415,7 @@ function ProgVM() constructor {
                             if (current_scope.parent != undefined) {
                                 current_scope = current_scope.parent;
                             } else {
-                                runtime_error(PROG_ERROR.RUNTIME, "Scope underflow");
+                                runtime_error(PROGLANG_ERROR_TYPE.RUNTIME, "Scope underflow");
                             }
                             break;
                         
@@ -441,7 +441,7 @@ function ProgVM() constructor {
                                 _stack[@ sp++] = _closure;
                             }
                             else {
-                                runtime_error(PROG_ERROR.TYPE, "MAKE_CLOSURE expects a function constant");
+                                runtime_error(PROGLANG_ERROR_TYPE.TYPE, "MAKE_CLOSURE expects a function constant");
                             }
                             break;
                         }
@@ -497,7 +497,7 @@ function ProgVM() constructor {
                                     _curr = _curr.super_class;
                                 }
                                 if (!_found) {
-                                     runtime_error(PROG_ERROR.MEMBER, $"Property '{_prop}' not found in super class.");
+                                     runtime_error(PROGLANG_ERROR_TYPE.MEMBER, $"Property '{_prop}' not found in super class.");
                                 }
                             }
                             // Regular instance lookup
@@ -556,7 +556,7 @@ function ProgVM() constructor {
                             
                             if (is_undefined(_val) && !is_struct(_obj)) {
                                  // GML struct or other
-                                 runtime_error(PROG_ERROR.MEMBER, $"Cannot read property '{_prop}' of non-struct.");
+                                 runtime_error(PROGLANG_ERROR_TYPE.MEMBER, $"Cannot read property '{_prop}' of non-struct.");
                             }
                             
                             _stack[@ sp++] = _val;
@@ -616,7 +616,7 @@ function ProgVM() constructor {
                             var _class = _stack[--sp]; // Class Descriptor
                             
                             if (!is_struct(_class)) {
-                                runtime_error(PROG_ERROR.TYPE, "Attempted to instantiate non-class.");
+                                runtime_error(PROGLANG_ERROR_TYPE.TYPE, "Attempted to instantiate non-class.");
                             }
                             
                             var _inst = { __class__: _class }
@@ -657,7 +657,7 @@ function ProgVM() constructor {
                         
                         case PROG_OP.LOAD_SUPER: {
                             if (current_this == undefined || !struct_exists(current_this, "__class__")) {
-                                runtime_error(PROG_ERROR.RUNTIME, "'super' used outside of class instance.");
+                                runtime_error(PROGLANG_ERROR_TYPE.RUNTIME, "'super' used outside of class instance.");
                             }
                             var _class = undefined;
                             
@@ -668,11 +668,11 @@ function ProgVM() constructor {
                                 // Fallback for script context (though super shouldn't be valid here?)
                                 _class = current_this.__class__;
                             } else {
-                                runtime_error(PROG_ERROR.RUNTIME, "'super' used outside of class context.");
+                                runtime_error(PROGLANG_ERROR_TYPE.RUNTIME, "'super' used outside of class context.");
                             }
                             
                             if (_class.super_class == undefined) {
-                                runtime_error(PROG_ERROR.RUNTIME, "Class has no super class.");
+                                runtime_error(PROGLANG_ERROR_TYPE.RUNTIME, "Class has no super class.");
                             }
                             // Push wrapper to indicate super lookup
                             _stack[@ sp++] = { __super__: _class.super_class, receiver: current_this }
@@ -714,7 +714,7 @@ function ProgVM() constructor {
                                  if (is_struct(_e) && struct_exists(_e, "type")) {
                                      throw _e;
                                  }
-                                 runtime_error(PROG_ERROR.IMPORT, $"Failed to import '{_path}': {_e}");
+                                 runtime_error(PROGLANG_ERROR_TYPE.IMPORT, $"Failed to import '{_path}': {_e}");
                              }
                              break;
                         }
@@ -899,7 +899,7 @@ function ProgVM() constructor {
     static peek = function() { return stack[sp - 1]; }
     
     /// @desc Throw a runtime error with type, message, and optional line number
-    /// @param {enum} _type PROG_ERROR type
+    /// @param {enum} _type PROGLANG_ERROR_TYPE. type
     /// @param {string} _message Error message
     /// @param {real} _line Line number (optional, defaults to 0)
     static runtime_error = function(_type, _message, _line = 0) {
