@@ -129,7 +129,7 @@ function chunk_vertex_liquid(_buffer, _texel_width, _texel_height, _animation_ty
     
     // Pack: float1 = (number << 24) | animation_type, float2 = (index * 256) + width
     var _packed_anim = (_number << 24) | _animation_type;
-    var _packed_index_width = (_index * 256) + _width;
+    var _packed_index_width = (_index << 8) | _width;
     
     // Triangle 1: top-left, top-right, bottom-left
     vertex_position(_buffer, _ax, _ay);

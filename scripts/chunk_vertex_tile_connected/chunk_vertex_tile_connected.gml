@@ -155,6 +155,7 @@ function chunk_vertex_tile_connected(_buffer, _texel_width, _texel_height, _anim
     
     // Transform offsets for rotated sprites
     var _xoffset, _yoffset;
+    
     if (_is_rotated)
     {
         // For 90° CW rotation: new_xoffset = old_yoffset, new_yoffset = original_width - old_xoffset
@@ -185,9 +186,6 @@ function chunk_vertex_tile_connected(_buffer, _texel_width, _texel_height, _anim
     var _y2 = _yscale * (_yoffset + _half_height);
     
     var _uvs = _atla_sprite.___uvs;
-    
-    // Check if the atla entry is rotated
-    var _is_rotated = _atla.is_rotated();
     
     var _u0, _v0, _u2, _v2;
     

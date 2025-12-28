@@ -88,7 +88,7 @@ function chunk_vertex_foliage(_buffer, _texel_width, _texel_height, _animation_t
     // Pack: float1 = (number << 24) | (chunk_index << 16) | animation_type, float2 = (index * 256) + width
     var _packed_anim_foliage = (_number << 24) | (_chunk_index << 16) | TILE_ANIMATION_TYPE.FOLIAGE;
     var _packed_anim_default = (_number << 24) | TILE_ANIMATION_TYPE.DEFAULT;
-    var _packed_index_width = (_index * 256) + _width;
+    var _packed_index_width = (_index << 8) | _width;
     
     // Top vertices use FOLIAGE animation for skew, bottom use DEFAULT
     vertex_position(_buffer, _ax, _ay);

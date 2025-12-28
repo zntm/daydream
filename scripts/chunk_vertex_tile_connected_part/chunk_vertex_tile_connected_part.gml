@@ -15,7 +15,7 @@ function chunk_vertex_tile_connected_part(_buffer, _x, _y, _w, _h, _cos, _sin, _
     var _dy = _cy + _wy;
     
     // Pack: float1 = animation_type (DEFAULT = 0), float2 = (index * 256) + width
-    var _packed_index_width = (_index * 256) + _width;
+    var _packed_index_width = (_index << 8) | _width;
     
     vertex_position(_buffer, _x, _y);
     vertex_texcoord(_buffer, _u0, _v0);
