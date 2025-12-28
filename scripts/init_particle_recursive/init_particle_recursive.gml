@@ -37,17 +37,13 @@ function init_particle_recursive(_directory, _namespace, _id)
         
         _particle_data.set_properties(_json[$ "properties"]);
         _particle_data.set_lifetime(_json.lifetime);
-        _particle_data.set_physics(_json[$ "physics"]);
         
-        var _attribute = _json[$ "attribute"];
-        
-        if (_attribute != undefined)
-        {
-            _particle_data.set_attribute(new Attribute()
-                .set_collision_box(_attribute[$ "collision_box_width"], _attribute[$ "collision_box_height"])
-                .set_gravity(_attribute[$ "gravity"])
-            );
-        }
+        _particle_data.set_size(_json[$ "size"]);
+        _particle_data.set_orientation(_json[$ "orientation"]);
+        _particle_data.set_colour(_json[$ "colour"]);
+        _particle_data.set_speed(_json[$ "speed"]);
+        _particle_data.set_direction(_json[$ "direction"]);
+        _particle_data.set_gravity(_json[$ "gravity"]);
         
         global.particle_data[$ $"{_namespace}:{string_delete(_name, string_length(_name) - 4, 5)}"] = _particle_data; 
         

@@ -115,8 +115,8 @@ function chat_refresh_suggestions()
             {
                 var _param_idx = (_part_count - 1) - _arg_start;
                 
-                // Build parameter hint array with colored entries
-                // Format: [ { text: "...", color: c_xxx }, ... ]
+                // Build parameter hint array with coloured entries
+                // Format: [ { text: "...", colour: c_xxx }, ... ]
                 var _hint_parts = [];
                 var _param_len = _pointer.get_parameter_length();
                 
@@ -139,31 +139,31 @@ function chat_refresh_suggestions()
                         default: _type_name = "?";
                     }
                     
-                    var _hint_color = #555555; // Default gray
+                    var _hint_colour = #555555; // Default gray
                     var _hint_text = "";
                     
                     if (i < _param_idx)
                     {
-                        // Already filled in - show the value with validation color
+                        // Already filled in - show the value with validation colour
                         var _value = _parts[_arg_start + i];
                         var _valid = chat_validate_parameter(_value, _param_type);
-                        _hint_color = _valid ? #7ecfff : #ff6b6b; // Light blue if valid, red if invalid
+                        _hint_colour = _valid ? #7ecfff : #ff6b6b; // Light blue if valid, red if invalid
                         _hint_text = $"[{_value}]";
                     }
                     else if (i == _param_idx)
                     {
                         // Currently typing - yellow
-                        _hint_color = #ffd369;
+                        _hint_colour = #ffd369;
                         _hint_text = $"<{_p.get_name()}: {_type_name}>";
                     }
                     else
                     {
                         // Not yet typed - gray
-                        _hint_color = #666666;
+                        _hint_colour = #666666;
                         _hint_text = $"<{_p.get_name()}: {_type_name}>";
                     }
                     
-                    array_push(_hint_parts, { text: _hint_text, color: _hint_color });
+                    array_push(_hint_parts, { text: _hint_text, colour: _hint_colour });
                 }
                 
                 global.chat_command_hint = _hint_parts;

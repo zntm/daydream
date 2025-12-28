@@ -87,7 +87,6 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 draw_sprite_ext(_sprite.get_sprite(), _index, x, y - (_sprite.get_yoffset() * _yscale), _xscale, _yscale, image_angle, image_blend, 1);
             }
             
-            // Render falling tiles
             with (obj_Falling_Tile)
             {
                 var _data = _item_data[$ tile_id];
@@ -158,24 +157,6 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
             
             gpu_set_blendmode(bm_add);
             
-            with (obj_Particle)
-            {
-                var _data = _particle_data[$ _id];
-                
-                if (!_data.is_additive()) continue;
-                
-                var _sprite = _sprite_asset[$ _data.get_sprite()];
-                
-                var _index = 0;
-                
-                if (_data.has_stretch_animation())
-                {
-                    _index = floor(_sprite.get_length() * (1 - (timer_life / timer_life_max)));
-                }
-                
-                draw_sprite_ext(_sprite, _index, x, y, entity_scale, entity_scale, image_angle, image_blend, image_alpha * (_data.is_fade_out() ? timer_life / timer_life_max : 1));
-            }
-            
             with (obj_Projectile)
             {
                 var _data = _projectile_data[$ _id];
@@ -219,29 +200,6 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 
                 draw_sprite_ext(_sprite.get_sprite(), _index, x + (_xscale * (_sprite.get_xoffset() - (attribute.get_collision_box_width() / 2))), y + (_yscale * (_sprite.get_yoffset() - attribute.get_collision_box_height())), _xscale, _yscale, image_angle, image_blend, image_alpha * (_data.is_fade_out() ? timer_life / timer_life_max : 1));
             }
-            
-            with (obj_Particle)
-            {
-                var _data = _particle_data[$ _id];
-                
-                if (_data.is_additive()) continue;
-                
-                var _sprite = _sprite_asset[$ _data.get_sprite()];
-                
-                var _index = 0;
-                
-                if (_data.has_stretch_animation())
-                {
-                    _index = floor(_sprite.get_length() * (1 - (timer_life / timer_life_max)));
-                }
-                
-                draw_sprite_ext(_sprite.get_sprite(), _index, x, y, entity_xscale, entity_yscale, image_angle, image_blend, image_alpha * (_data.is_fade_out() ? timer_life / timer_life_max : 1));
-            }
-            
-            // Render pooled particles (optimized batch rendering)
-            render_particles_batch();
-            
-            gpu_set_blendmode(bm_normal);
         }
     }
     
@@ -249,6 +207,8 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
     {
         render_harvest(_camera_x, _camera_y, _camera_width, _camera_height);
     }
+    
+    render_particles_batch();
     
     var _floating_text_active = global.floating_text_active;
     var _floating_text_active_length = array_length(_floating_text_active);
@@ -277,7 +237,6 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
     
     var _render_state = global.render_state;
     
-    // Render chunk render states
     var _all_chunks = chunk_map_get_all();
     var _all_chunks_length = array_length(_all_chunks);
     

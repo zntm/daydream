@@ -39,7 +39,7 @@ if (obj_Game_Control.spawn_needs_init)
     // Refresh lighting surface with correct position
     obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.LIGHTING;
     
-    // Update sky and light colors based on initialized time
+    // Update sky and light colours based on initialized time
     with (obj_Game_Control_Background)
     {
         var _in_biome = bg_get_biome(round(obj_Player.x / TILE_SIZE), clamp(round(obj_Player.y / TILE_SIZE), 0, _world_data.get_world_height() - 1));

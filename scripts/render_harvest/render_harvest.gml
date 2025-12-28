@@ -56,7 +56,7 @@ function render_harvest(_camera_x, _camera_y, _camera_width, _camera_height)
     
     draw_sprite_ext(_sprite.get_sprite(), _index, _xstart + _xoffset, _ystart + _yoffset, _xscale, _yscale, _rotation, c_white, 1);
     
-    gpu_set_colorwriteenable(true, true, true, false);
+    gpu_set_colourwriteenable(true, true, true, false);
     
     var _index_harvest = round(__index_max * _progress);
     
@@ -75,7 +75,7 @@ function render_harvest(_camera_x, _camera_y, _camera_width, _camera_height)
         }
     }
     
-    gpu_set_colorwriteenable(true, true, true, true);
+    gpu_set_colourwriteenable(true, true, true, true);
     
     surface_reset_target();
     

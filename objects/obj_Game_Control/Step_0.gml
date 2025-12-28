@@ -238,24 +238,8 @@ with (obj_Creature)
 
 var _particle_data = global.particle_data;
 
-// Update pooled particles (optimized batch processing)
-control_particles_batch(_dt);
-
-// Legacy: Update instance-based particles (only those with collision)
-with (obj_Particle)
-{
-    var _data = _particle_data[$ _id];
-    
-    if (attribute != undefined) && (!attribute.has_collision_box())
-    {
-        x += xvelocity * _dt;
-        y += yvelocity * _dt;
-        
-        yvelocity += attribute.get_gravity() * _dt;
-    }
-    
-    image_angle += rotation_increment * _dt;
-}
+// Update pooled particles (visual properties and non-colliding movement)
+global.particle_pool.update_visuals(_delta_time);
 
 var _camera_x = global.camera_x_real;
 var _camera_y = global.camera_y_real;

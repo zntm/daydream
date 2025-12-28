@@ -1,6 +1,30 @@
 {
-    "attribute": {
-        "gravity": 0.1
+    "direction": {
+        "direction_min": {
+            "values": {
+                "min": 250,
+                "max": 290
+            },
+            "type": "smart_value:random"
+        },
+        "direction_max": {
+            "values": {
+                "min": 250,
+                "max": 290
+            },
+            "type": "smart_value:random"
+        },
+        "direction_increment": {
+            "values": {
+                "min": -1,
+                "max": 1
+            },
+            "type": "smart_value:random"
+        }
+    },
+    "gravity": {
+        "gravity_amount": 0.1,
+        "gravity_direction": 270
     },
     "lifetime": {
         "values": {
@@ -9,59 +33,81 @@
         },
         "type": "smart_value:random"
     },
-    "physics": {
-        "xspeed": {
-            "type": "reference",
-            "value": "phantasia:weather_wind",
-            "offset": {
-                "values": {
-                    "min": -0.3,
-                    "max": 0.3
-                },
-                "type": "smart_value:random"
-            },
-            "multiplier": {
-                "values": {
-                    "min": 0.5,
-                    "max": 1.25
-                },
-                "type": "smart_value:random"
-            }
-        },
-        "yspeed": {
+    "orientation": {
+        "angle_min": {
             "values": {
-                "min": 0.6,
-                "max": 1.1
+                "min": 0.5,
+                "max": 1.25
             },
             "type": "smart_value:random"
         },
-        "scale": {
+        "angle_max": {
+            "values": {
+                "min": 0.5,
+                "max": 1.25
+            },
+            "type": "smart_value:random"
+        },
+        "angle_increment": {
+            "values": {
+                "min": -16,
+                "max": 16
+            },
+            "type": "smart_value:random"
+        }
+    },
+    "size": {
+        "xscale_min": {
             "values": {
                 "min": 0.75,
                 "max": 1.25
             },
             "type": "smart_value:random"
         },
-        "rotation": {
-            "type": "incremental",
-            "value": {
-                "values": {
-                    "min": 0.5,
-                    "max": 1.25
-                },
-                "type": "smart_value:random"
+        "xscale_max": {
+            "values": {
+                "min": 0.75,
+                "max": 1.25
             },
-            "increment": {
-                "values": {
-                    "min": -16,
-                    "max": 16
-                },
-                "type": "smart_value:random"
-            }
+            "type": "smart_value:random"
+        },
+        "yscale_min": {
+            "values": {
+                "min": 0.75,
+                "max": 1.25
+            },
+            "type": "smart_value:random"
+        },
+        "yscale_max": {
+            "values": {
+                "min": 0.75,
+                "max": 1.25
+            },
+            "type": "smart_value:random"
         }
     },
-    "properties": [
-        "phantasia:is_fade_out"
-    ],
+    "speed": {
+        "speed_min": {
+            "values": {
+                "min": 0.6,
+                "max": 1.1
+            },
+            "type": "smart_value:random"
+        },
+        "speed_max": {
+            "values": {
+                "min": 0.6,
+                "max": 1.1
+            },
+            "type": "smart_value:random"
+        },
+        "speed_wiggle": {
+            "values": {
+                "min": 0.1,
+                "max": 0.3
+            },
+            "type": "smart_value:random"
+        }
+    },
     "sprite": "phantasia:particle/tile/leaf/pine"
 }

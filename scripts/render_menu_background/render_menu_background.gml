@@ -40,7 +40,7 @@ function render_menu_background(_id, _colour)
         shader_reset();
     }
     
-    gpu_set_blendmode_ext(bm_dest_color, bm_zero);
+    gpu_set_blendmode_ext(bm_dest_colour, bm_zero);
     
     draw_sprite_ext(spr_Square, 0, 0, 0, room_width, room_height, 0, _light_colour, 1);
     

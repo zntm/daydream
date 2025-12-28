@@ -1,9 +1,8 @@
 enum PARTICLE_PROPERTIES_BOOLEAN {
     IS_ADDITIVE             = 1 << 0,
     IS_DESTROY_ON_COLLISION = 1 << 1,
-    IS_FADE_OUT             = 1 << 2,
-    HAS_COLLISION           = 1 << 3,
-    HAS_STRETCHED_ANIMATION = 1 << 4
+    HAS_COLLISION           = 1 << 2,
+    HAS_STRETCHED_ANIMATION = 1 << 3
 }
 
 enum PARTICLE_MOVEMENT_TYPE {
@@ -45,7 +44,6 @@ function ParticleData(_namespace, _id, _sprite) : ParentData(_namespace, _id) co
         static __properties = {
             "phantasia:is_additive":             PARTICLE_PROPERTIES_BOOLEAN.IS_ADDITIVE,
             "phantasia:is_destroy_on_collision": PARTICLE_PROPERTIES_BOOLEAN.IS_DESTROY_ON_COLLISION,
-            "phantasia:is_fade_out":             PARTICLE_PROPERTIES_BOOLEAN.IS_FADE_OUT,
             "phantasia:has_collision":           PARTICLE_PROPERTIES_BOOLEAN.HAS_COLLISION,
             "phantasia:has_stretch_animation":   PARTICLE_PROPERTIES_BOOLEAN.HAS_STRETCHED_ANIMATION
         }
@@ -75,11 +73,6 @@ function ParticleData(_namespace, _id, _sprite) : ParentData(_namespace, _id) co
         return !!(___properties & PARTICLE_PROPERTIES_BOOLEAN.IS_DESTROY_ON_COLLISION);
     }
     
-    static is_fade_out = function()
-    {
-        return !!(___properties & PARTICLE_PROPERTIES_BOOLEAN.IS_FADE_OUT);
-    }
-    
     static has_collision = function()
     {
         return !!(___properties & PARTICLE_PROPERTIES_BOOLEAN.HAS_COLLISION);
@@ -104,110 +97,240 @@ function ParticleData(_namespace, _id, _sprite) : ParentData(_namespace, _id) co
         return ___lifetime;
     }
     
-    static set_physics = function(_physics)
+    static set_size = function(_size)
     {
-        if (_physics != undefined)
+        if (_size != undefined)
         {
-            // Handle xspeed directly under physics
-            var _xspeed = _physics[$ "xspeed"];
+            __set_smart_value("___xscale_min", _size[$ "xscale_min"]);
+            __set_smart_value("___xscale_max", _size[$ "xscale_max"]);
+            __set_smart_value("___xscale_increment", _size[$ "xscale_increment"]);
+            __set_smart_value("___xscale_wiggle", _size[$ "xscale_wiggle"]);
             
-            if (_xspeed != undefined)
+            __set_smart_value("___yscale_min", _size[$ "yscale_min"]);
+            __set_smart_value("___yscale_max", _size[$ "yscale_max"]);
+            __set_smart_value("___yscale_increment", _size[$ "yscale_increment"]);
+            __set_smart_value("___yscale_wiggle", _size[$ "yscale_wiggle"]);
+        }
+        
+        return self;
+    }
+    
+    static get_xscale_min = function()
+    {
+        return self[$ "___xscale_min"] ?? 1;
+    }
+    
+    static get_xscale_max = function()
+    {
+        return self[$ "___xscale_max"] ?? 1;
+    }
+    
+    static get_xscale_increment = function()
+    {
+        return self[$ "___xscale_increment"] ?? 0;
+    }
+    
+    static get_xscale_wiggle = function()
+    {
+        return self[$ "___xscale_wiggle"] ?? 0;
+    }
+    
+    static get_yscale_min = function()
+    {
+        return self[$ "___yscale_min"] ?? 1;
+    }
+    
+    static get_yscale_max = function()
+    {
+        return self[$ "___yscale_max"] ?? 1;
+    }
+    
+    static get_yscale_increment = function()
+    {
+        return self[$ "___yscale_increment"] ?? 0;
+    }
+    
+    static get_yscale_wiggle = function()
+    {
+        return self[$ "___yscale_wiggle"] ?? 0;
+    }
+    
+    static set_orientation = function(_orientation)
+    {
+        if (_orientation != undefined)
+        {
+            __set_smart_value("___angle_min", _orientation[$ "angle_min"]);
+            __set_smart_value("___angle_max", _orientation[$ "angle_max"]);
+            __set_smart_value("___angle_increment", _orientation[$ "angle_increment"]);
+            __set_smart_value("___angle_wiggle", _orientation[$ "angle_wiggle"]);
+            
+            __set_value("___angle_relative", _orientation[$ "angle_relative"]);
+        }
+        
+        return self;
+    }
+    
+    static get_angle_min = function()
+    {
+        return self[$ "___angle_min"] ?? 0;
+    }
+    
+    static get_angle_max = function()
+    {
+        return self[$ "___angle_max"] ?? 0;
+    }
+    
+    static get_angle_increment = function()
+    {
+        return self[$ "___angle_increment"] ?? 0;
+    }
+    
+    static get_angle_wiggle = function()
+    {
+        return self[$ "___angle_wiggle"] ?? 0;
+    }
+    
+    static get_angle_relative = function()
+    {
+        return self[$ "___angle_relative"] ?? false;
+    }
+    
+    static set_colour = function(_colour)
+    {
+        if (_colour != undefined)
+        {
+            __set_value("___colour1", _colour[$ "colour1"]);
+            __set_value("___colour2", _colour[$ "colour2"]);
+            __set_value("___colour3", _colour[$ "colour3"]);
+            
+            __set_smart_value("___alpha1", _colour[$ "alpha1"]);
+            __set_smart_value("___alpha2", _colour[$ "alpha2"]);
+            __set_smart_value("___alpha3", _colour[$ "alpha3"]);
+        }
+        
+        return self;
+    }
+    
+    static get_colour1 = function()
+    {
+        return self[$ "___colour1"];
+    }
+    
+    static get_colour2 = function()
+    {
+        return self[$ "___colour2"];
+    }
+    
+    static get_colour3 = function()
+    {
+        return self[$ "___colour3"];
+    }
+    
+    static get_alpha1 = function()
+    {
+        return self[$ "___alpha1"] ?? 1;
+    }
+    
+    static get_alpha2 = function()
+    {
+        return self[$ "___alpha2"]
+    }
+    
+    static get_alpha3 = function()
+    {
+        return self[$ "___alpha3"];
+    }
+    
+    static set_speed = function(_speed)
+    {
+        if (_speed != undefined)
+        {
+            __set_smart_value("___speed_min", _speed[$ "speed_min"]);
+            __set_smart_value("___speed_max", _speed[$ "speed_max"]);
+            __set_smart_value("___speed_increment", _speed[$ "speed_increment"]);
+            __set_smart_value("___speed_wiggle", _speed[$ "speed_wiggle"]);
+        }
+        
+        return self;
+    }
+    
+    static get_speed_min = function()
+    {
+        return self[$ "___speed_min"] ?? 0;
+    }
+    
+    static get_speed_max = function()
+    {
+        return self[$ "___speed_max"] ?? 0;
+    }
+    
+    static get_speed_increment = function()
+    {
+        return self[$ "___speed_increment"] ?? 0;
+    }
+    
+    static get_speed_wiggle = function()
+    {
+        return self[$ "___speed_wiggle"] ?? 0;
+    }
+    
+    static set_direction = function(_direction)
+    {
+        if (_direction != undefined)
+        {
+            __set_smart_value("___direction_min", _direction[$ "direction_min"]);
+            __set_smart_value("___direction_max", _direction[$ "direction_max"]);
+            __set_smart_value("___direction_increment", _direction[$ "direction_increment"]);
+            __set_smart_value("___direction_wiggle", _direction[$ "direction_wiggle"]);
+        }
+        
+        return self;
+    }
+    
+    static get_direction_min = function()
+    {
+        return self[$ "___direction_min"] ?? 0;
+    }
+    
+    static get_direction_max = function()
+    {
+        return self[$ "___direction_max"] ?? 0;
+    }
+    
+    static get_direction_increment = function()
+    {
+        return self[$ "___direction_increment"] ?? 0;
+    }
+    
+    static get_direction_wiggle = function()
+    {
+        return self[$ "___direction_wiggle"] ?? 0;
+    }
+    
+    static set_gravity = function(_gravity)
+    {
+        if (_gravity != undefined)
+        {
+            __set_smart_value("___gravity_amount", _gravity[$ "gravity_amount"]);
+            __set_smart_value("___gravity_direction", _gravity[$ "gravity_direction"]);
+            
+            __set_smart_value("___gravity_point_x", _gravity[$ "gravity_point_x"]);
+            __set_smart_value("___gravity_point_y", _gravity[$ "gravity_point_y"]);
+            
+            var _func = _gravity[$ "gravity_point_function"];
+            
+            if (_func != undefined)
             {
-                var _type = _xspeed[$ "type"];
+                __set_value("___gravity_point_function_source", _func);
                 
-                if (_type == "reference")
+                try
                 {
-                    __set_value("___xspeed_type", PARTICLE_MOVEMENT_TYPE.REFERENCE);
-                    __set_value("___xspeed", _xspeed.value);
-                }
-                else// if (_type == "smart_value:random" or other)
-                {
-                    __set_value("___xspeed_type", PARTICLE_MOVEMENT_TYPE.CONSTANT);
-                    __set_smart_value("___xspeed", _xspeed);
-                }
-                
-                __set_smart_value("___xspeed_offset", _xspeed[$ "offset"]);
-                __set_smart_value("___xspeed_multiplier", _xspeed[$ "multiplier"]);
-            }
-            
-            // Handle yspeed directly under physics
-            var _yspeed = _physics[$ "yspeed"];
-            
-            if (_yspeed != undefined)
-            {
-                var _type = _yspeed[$ "type"];
-                
-                if (_type == "reference")
-                {
-                    __set_value("___yspeed_type", PARTICLE_MOVEMENT_TYPE.REFERENCE);
-                    __set_value("___yspeed", _yspeed.value);
-                }
-                else// if (_type == "smart_value:random" or other)
-                {
-                    __set_value("___yspeed_type", PARTICLE_MOVEMENT_TYPE.CONSTANT);
-                    __set_smart_value("___yspeed", _yspeed);
-                }
-                
-                __set_smart_value("___yspeed_offset", _yspeed[$ "offset"]);
-                __set_smart_value("___yspeed_multiplier", _yspeed[$ "multiplier"]);
-            }
-            
-            __set_smart_value("___scale", _physics[$ "scale"]);
-            
-            var _rotation = _physics[$ "rotation"];
-            
-            if (_rotation != undefined)
-            {
-                __set_smart_value("___rotation_increment", _rotation[$ "increment"]);
-                __set_smart_value("___rotation", _rotation[$ "value"]);
-            }
-            
-            var _on_collision = _physics[$ "on_collision"];
-            
-            if (_on_collision != undefined)
-            {
-                // Handle on_collision xspeed
-                var _x = _on_collision[$ "xspeed"];
-                
-                if (_x != undefined)
-                {
-                    var _type = _x[$ "type"];
+                    var _bytecode = proglang_compile(_func);
                     
-                    if (_type == "reference")
-                    {
-                        __set_value("___on_collision_xspeed_type", PARTICLE_MOVEMENT_TYPE.REFERENCE);
-                        __set_value("___on_collision_xspeed", _x.value);
-                    }
-                    else// if (_type == "smart_value:random" or other)
-                    {
-                        __set_value("___on_collision_xspeed_type", PARTICLE_MOVEMENT_TYPE.CONSTANT);
-                        __set_smart_value("___on_collision_xspeed", _x);
-                    }
-                    
-                    __set_smart_value("___on_collision_xspeed_offset", _x[$ "offset"]);
-                    __set_smart_value("___on_collision_xspeed_multiplier", _x[$ "multiplier"]);
+                    __set_value("___gravity_point_function", _bytecode);
                 }
-                
-                // Handle on_collision yspeed
-                var _y = _on_collision[$ "yspeed"];
-                
-                if (_y != undefined)
+                catch (e)
                 {
-                    var _type = _y[$ "type"];
-                    
-                    if (_type == "reference")
-                    {
-                        __set_value("___on_collision_yspeed_type", PARTICLE_MOVEMENT_TYPE.REFERENCE);
-                        __set_value("___on_collision_yspeed", _y.value);
-                    }
-                    else// if (_type == "smart_value:random" or other)
-                    {
-                        __set_value("___on_collision_yspeed_type", PARTICLE_MOVEMENT_TYPE.CONSTANT);
-                        __set_smart_value("___on_collision_yspeed", _y);
-                    }
-                    
-                    __set_smart_value("___on_collision_yspeed_offset", _y[$ "offset"]);
-                    __set_smart_value("___on_collision_yspeed_multiplier", _y[$ "multiplier"]);
                 }
             }
         }
@@ -215,118 +338,28 @@ function ParticleData(_namespace, _id, _sprite) : ParentData(_namespace, _id) co
         return self;
     }
     
-    static set_attribute = function(_attributes)
+    static get_gravity_amount = function()
     {
-        if (_attributes != undefined)
-        {
-            ___attributes = _attributes;
-        }
-        
-        return self;
+        return self[$ "___gravity_amount"] ?? 0;
     }
     
-    static get_gravity = function()
+    static get_gravity_direction = function()
     {
-        return self[$ "___gravity"] ?? 0;
+        return self[$ "___gravity_direction"] ?? 270;
     }
     
-    static get_xspeed_type = function()
+    static get_gravity_point_x = function()
     {
-        return self[$ "___xspeed_type"] ?? PARTICLE_MOVEMENT_TYPE.CONSTANT;
+        return self[$ "___gravity_point_x"]; 
     }
     
-    static get_xspeed = function()
+    static get_gravity_point_y = function()
     {
-        return self[$ "___xspeed"] ?? 0;
+        return self[$ "___gravity_point_y"]; 
     }
     
-    static get_xspeed_offset = function()
+    static get_gravity_point_function = function()
     {
-        return self[$ "___xspeed_offset"] ?? 0;
-    }
-    
-    static get_xspeed_multiplier = function()
-    {
-        return self[$ "___xspeed_multiplier"] ?? 1;
-    }
-    
-    static get_yspeed_type = function()
-    {
-        return self[$ "___yspeed_type"] ?? PARTICLE_MOVEMENT_TYPE.CONSTANT;
-    }
-    
-    static get_yspeed = function()
-    {
-        return self[$ "___yspeed"] ?? 0;
-    }
-    
-    static get_yspeed_offset = function()
-    {
-        return self[$ "___yspeed_offset"] ?? 0;
-    }
-    
-    static get_yspeed_multiplier = function()
-    {
-        return self[$ "___yspeed_multiplier"] ?? 1;
-    }
-    
-    static get_scale = function()
-    {
-        return self[$ "___scale"] ?? 1;
-    }
-    
-    static get_rotation_increment = function()
-    {
-        return self[$ "___rotation_increment"] ?? 0;
-    }
-    
-    static get_rotation = function()
-    {
-        return self[$ "___rotation"] ?? 0;
-    }
-    
-    static get_on_collision_xspeed_type = function()
-    {
-        return self[$ "___on_collision_xspeed_type"] ?? PARTICLE_MOVEMENT_TYPE.CONSTANT;
-    }
-    
-    static get_on_collision_xspeed = function()
-    {
-        return self[$ "___on_collision_xspeed"] ?? 0;
-    }
-    
-    static get_on_collision_xspeed_offset = function()
-    {
-        return self[$ "___on_collision_xspeed_offset"] ?? 0;
-    }
-    
-    static get_on_collision_xspeed_multiplier = function()
-    {
-        return self[$ "___on_collision_xspeed_multiplier"] ?? 1;
-    }
-    
-    static get_on_collision_yspeed_type = function()
-    {
-        return self[$ "___on_collision_yspeed_type"] ?? PARTICLE_MOVEMENT_TYPE.CONSTANT;
-    }
-    
-    static get_on_collision_yspeed = function()
-    {
-        return self[$ "___on_collision_yspeed"] ?? 0;
-    }
-    
-    static get_on_collision_yspeed_offset = function()
-    {
-        return self[$ "___on_collision_yspeed_offset"] ?? 0;
-    }
-    
-    static get_on_collision_yspeed_multiplier = function()
-    {
-        return self[$ "___on_collision_yspeed_multiplier"] ?? 1;
-    }
-    
-    static get_attribute = function()
-    {
-        return self[$ "___attributes"];
+        return self[$ "___gravity_point_function"]; 
     }
 }
