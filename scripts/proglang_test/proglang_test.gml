@@ -1639,5 +1639,7 @@ function proglang_test() {
     return (_failed == 0);
 }
 
-
-proglang_test();
+if (IS_DEVELOPER_MODE)
+{
+    proglang_test();
+}

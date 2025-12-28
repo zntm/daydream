@@ -34,7 +34,7 @@ function control_player(_dt)
     
     var _on_ground = tile_meeting(x, y + 1);
     
-    if (IS_DEVELOPER_MODE) && (global.dbg_settings[$ "enable_physics"])
+    if (!IS_DEVELOPER_MODE) || (global.dbg_settings[$ "enable_physics"])
     {
         control_physics(_dt, id);
     }
