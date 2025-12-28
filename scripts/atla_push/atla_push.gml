@@ -24,7 +24,7 @@ function atla_push(_page, _sprite, _name)
     var _number = sprite_get_number(_sprite);
     
     // Determine if rotation would save space (tall sprites become wide)
-    var _should_rotate = false//_height > _width;
+    var _should_rotate = (_width > _height);
     
     // Create AtlaSprite entries (before potential rotation swap)
     for (var i = 0; i < _number; ++i)
@@ -32,13 +32,8 @@ function atla_push(_page, _sprite, _name)
         array_push(global.___atla_page_position[$ _page], new AtlaSprite(_name, _sprite, array_length(global.___atla_page_position[$ _page]), i, _number, _xoffset, _yoffset, _width, _height));
     }
     
-    // For the Atla entry, swap dimensions if rotating but keep original offsets
-    // The vertex functions will handle offset transformation when is_rotated() is true
-    var _atla_width = _should_rotate ? _height : _width;
-    var _atla_height = _should_rotate ? _width : _height;
-    
     // Store original offsets - vertex functions will transform them based on is_rotated()
-    var _atla = new Atla(_xoffset, _yoffset, _atla_width, _atla_height, _number);
+    var _atla = new Atla(_xoffset, _yoffset, _width, _height, _number);
     
     if (_should_rotate)
     {
@@ -46,7 +41,6 @@ function atla_push(_page, _sprite, _name)
     }
     
     global.___atla_page[$ _page][$ _name] = _atla;
-
     
     array_sort(global.___atla_page_position[$ _page], function(_a, _b)
     {
@@ -98,6 +92,14 @@ function atla_push(_page, _sprite, _name)
         var _w = _position.get_width();
         var _h = _position.get_height();
         
+        if (global.___atla_page[$ _page][$ _position_name].is_rotated())
+        {
+            var _temp = _w;
+            
+            _w = _h;
+            _h = _temp;
+        }
+        
         var _n = _position.get_number();
         
         var _total_width = _w * _n;
@@ -133,6 +135,14 @@ function atla_push(_page, _sprite, _name)
         var _w = _s.get_width();
         var _h = _s.get_height();
         
+        if (global.___atla_page[$ _page][$ _s.get_name()].is_rotated())
+        {
+            var _temp = _w;
+            
+            _w = _h;
+            _h = _temp;
+        }
+        
         var _n = _s.get_number();
         
         var _r = _x + (_w * _n);
@@ -152,6 +162,14 @@ function atla_push(_page, _sprite, _name)
             {
                 var _prev_w = _prev_sprite.get_width();
                 var _prev_h = _prev_sprite.get_height();
+                
+                if (global.___atla_page[$ _page][$ _prev_sprite.get_name()].is_rotated())
+                {
+                    var _temp = _prev_w;
+                    
+                    _prev_w = _prev_h;
+                    _prev_h = _temp;
+                }
                 
                 if (_x < _prev_x + (_prev_w * _prev_n))
                 {
@@ -184,6 +202,14 @@ function atla_push(_page, _sprite, _name)
         
         var _w = _s.get_width();
         var _h = _s.get_height();
+        
+        if (global.___atla_page[$ _page][$ _s.get_name()].is_rotated())
+        {
+            var _temp = _w;
+            
+            _w = _h;
+            _h = _temp;
+        }
         
         _atla_page_position[i].set_uvs(
             _x / _surface_width,

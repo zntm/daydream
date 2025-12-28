@@ -121,7 +121,6 @@
     {"link":"io.gamemaker.sdfshaders-1.0.0","name":"io.gamemaker.sdfshaders-1.0.0","path":"io.gamemaker.sdfshaders-1.0.0.yyp",},
   ],
   "IncludedFiles":[
-    {"$GMIncludedFile":"","%Name":"test_module.daydream","CopyToMask":-1,"filePath":"datafiles/proglang","name":"test_module.daydream","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"12_hours_at_ease.ogg","CopyToMask":-1,"filePath":"datafiles/resources/assets/sounds/music","name":"12_hours_at_ease.ogg","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"12_hours_at_ease.ogg.json","CopyToMask":-1,"filePath":"datafiles/resources/assets/sounds/music","name":"12_hours_at_ease.ogg.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"behind.ogg","CopyToMask":-1,"filePath":"datafiles/resources/assets/sounds/music","name":"behind.ogg","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
@@ -1168,8 +1167,6 @@
     {"$GMIncludedFile":"","%Name":"data.json","CopyToMask":-1,"filePath":"datafiles/resources/loca/3. Español (Spanish)","name":"data.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"data.json","CopyToMask":-1,"filePath":"datafiles/resources/loca/4. German","name":"data.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"data.json","CopyToMask":-1,"filePath":"datafiles/resources/loca/5. Japanese","name":"data.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
-    {"$GMIncludedFile":"","%Name":"font.json","CopyToMask":-1,"filePath":"datafiles/resources/loca/5. Japanese","name":"font.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
-    {"$GMIncludedFile":"","%Name":"font.ttf","CopyToMask":-1,"filePath":"datafiles/resources/loca/5. Japanese","name":"font.ttf","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"data.json","CopyToMask":-1,"filePath":"datafiles/resources/loca/6. Dutch","name":"data.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"data.json","CopyToMask":-1,"filePath":"datafiles/resources/loca/7. Russian","name":"data.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"data.json","CopyToMask":-1,"filePath":"datafiles/resources/loca/8. Français","name":"data.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},

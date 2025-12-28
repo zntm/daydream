@@ -4,51 +4,39 @@ function chunk_vertex_tile(_buffer, _texel_width, _texel_height, _animation_type
     
     var _uvs = _atla_sprite.___uvs;
     
-    // Check if the atla entry is rotated
-    var _is_rotated = _atla.is_rotated();
+    var _u0 = _uvs[0];
+    var _v0 = _uvs[1];
+    var _u1 = _uvs[2];
+    var _v1 = _uvs[3];
     
-    // UV coordinates - remap if rotated 90° clockwise in atlas
-    var _u_tl, _v_tl, _u_tr, _v_tr, _u_bl, _v_bl, _u_br, _v_br;
+    var _is_rotated = _atla_value & (1 << 55);
     
-    if (_is_rotated)
-    {
-        // Rotated 90° CW in atlas: remap UVs
-        // Atlas has: top-left at what was bottom-left, etc.
-        _u_tl = _uvs[0]; _v_tl = _uvs[3]; // was bottom-left
-        _u_tr = _uvs[0]; _v_tr = _uvs[1]; // was top-left
-        _u_bl = _uvs[2]; _v_bl = _uvs[3]; // was bottom-right
-        _u_br = _uvs[2]; _v_br = _uvs[1]; // was top-right
-    }
-    else
-    {
-        _u_tl = _uvs[0]; _v_tl = _uvs[1];
-        _u_tr = _uvs[2]; _v_tr = _uvs[1];
-        _u_bl = _uvs[0]; _v_bl = _uvs[3];
-        _u_br = _uvs[2]; _v_br = _uvs[3];
-    }
-    
-    // Get stored dimensions (already swapped if rotated)
     var _width  = (_atla_value >> 22) & 2047;
     var _height = (_atla_value >> 33) & 2047;
     
-    // Get stored offsets (original, not transformed)
-    var _stored_xoffset = ((_atla_value >> 0)  & 2047) - 1024;
-    var _stored_yoffset = ((_atla_value >> 11) & 2047) - 1024;
+    var _u_tl, _v_tl, _u_tr, _v_tr, _u_bl, _v_bl, _u_br, _v_br, _packed_index_width;
     
-    // Transform offsets for rotated sprites
-    var _xoffset, _yoffset;
     if (_is_rotated)
     {
-        // For 90° CW rotation: new_xoffset = old_yoffset, new_yoffset = original_width - old_xoffset
-        // Original width is now stored as _height (since dimensions were swapped)
-        _xoffset = -_xscale * _stored_yoffset;
-        _yoffset = -_yscale * (_height - _stored_xoffset);
+        _u_tl = _u0; _v_tl = _v1;
+        _u_tr = _u0; _v_tr = _v0;
+        _u_bl = _u1; _v_bl = _v1;
+        _u_br = _u1; _v_br = _v0;
+        
+        _packed_index_width = (_index << 8) | _height;
     }
     else
     {
-        _xoffset = -_xscale * _stored_xoffset;
-        _yoffset = -_yscale * _stored_yoffset;
+        _u_tl = _u0; _v_tl = _v0;
+        _u_tr = _u1; _v_tr = _v0;
+        _u_bl = _u0; _v_bl = _v1;
+        _u_br = _u1; _v_br = _v1;
+        
+        _packed_index_width = (_index << 8) | _width;
     }
+    
+    var _xoffset = -_xscale * (((_atla_value >> 0)  & 2047) - 1024);
+    var _yoffset = -_yscale * (((_atla_value >> 11) & 2047) - 1024);
     
     var _xw = (_xscale * _width)  + _xoffset;
     var _yh = (_yscale * _height) + _yoffset;
@@ -86,9 +74,7 @@ function chunk_vertex_tile(_buffer, _texel_width, _texel_height, _animation_type
     
     var _number = (_atla_value >> 44) & 2047;
     
-    // Pack: float1 = (number << 24) | animation_type, float2 = (index * 256) + width
     var _packed_anim = (_number << 24) | _animation_type;
-    var _packed_index_width = (_index << 8) | _width;
     
     vertex_position(_buffer, _ax, _ay);
     vertex_texcoord(_buffer, _u_tl, _v_tl);

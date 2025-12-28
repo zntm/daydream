@@ -149,6 +149,9 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
             
             buffer_get_surface(__biome_map_buffer_cave, __biome_map_surface_cave, 0);
             
+            surface_free(__biome_map_surface_cave);
+            __biome_map_surface_cave = -1;
+            
             var _biome_data = global.biome_data;
             
             var _names = struct_get_names(_biome_data);
@@ -252,6 +255,9 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         surface_reset_target();
         
         buffer_get_surface(__biome_map_buffer, __biome_map_surface, 0);
+        
+        surface_free(__biome_map_surface);
+        __biome_map_surface = -1;
         
         var _biome_data = global.biome_data;
         

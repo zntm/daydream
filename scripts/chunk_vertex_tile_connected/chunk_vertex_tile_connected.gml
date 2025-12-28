@@ -191,10 +191,8 @@ function chunk_vertex_tile_connected(_buffer, _texel_width, _texel_height, _anim
     
     if (_is_rotated)
     {
-        // For rotated sprites, remap the corner UVs
-        // The sprite is stored rotated 90° CW in the atlas
-        _u0 = _uvs[0]; _v0 = _uvs[3]; // was bottom-left
-        _u2 = _uvs[2]; _v2 = _uvs[1]; // was top-right
+        _u0 = _uvs[0]; _v0 = _uvs[3];
+        _u2 = _uvs[2]; _v2 = _uvs[1];
     }
     else
     {
