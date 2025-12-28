@@ -99,4 +99,16 @@ function FileWorld(_uuid, _name, _seed, _last_opened) constructor
     {
         return self[$ "___statistics"];
     }
+    
+    static set_difficulty = function(_difficulty)
+    {
+        ___difficulty = _difficulty;
+        
+        return self;
+    }
+    
+    static get_difficulty = function()
+    {
+        return self[$ "___difficulty"] ?? 1.0;
+    }
 }

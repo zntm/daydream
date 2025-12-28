@@ -46,6 +46,13 @@ function file_load_worlds()
                 _statistics = statistics_load_world(_buffer);
             }
             
+            var _difficulty = 1.0;
+            
+            if (buffer_tell(_buffer) < buffer_get_size(_buffer))
+            {
+                _difficulty = buffer_read(_buffer, buffer_f32);
+            }
+            
             buffer_delete(_buffer);
             
             array_push(global.file_worlds_uuid, _file);
@@ -55,7 +62,8 @@ function file_load_worlds()
                 .set_dimension(_dimension)
                 .set_time(_time, _day)
                 .set_weather(_weather_wind, _weather_storm)
-                .set_statistics(_statistics));
+                .set_statistics(_statistics)
+                .set_difficulty(_difficulty));
         }
         catch (_error)
         {

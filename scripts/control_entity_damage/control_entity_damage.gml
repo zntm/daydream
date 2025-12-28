@@ -11,6 +11,13 @@ function control_entity_damage(_victim, _attacker, _base_damage, _variance = 0.0
     // Apply damage variance if specified
     var _damage = _base_damage;
     
+    // Apply difficulty multiplier if victim is player
+    if (_victim.object_index == obj_Player || object_is_ancestor(_victim.object_index, obj_Player))
+    {
+        var _difficulty = global.world_save_data[$ "difficulty"] ?? 1.0;
+        _damage *= _difficulty;
+    }
+    
     if (_variance > 0)
     {
         _damage = round(_damage * random_range(1.0 - _variance, 1.0 + _variance));
