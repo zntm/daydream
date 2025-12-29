@@ -73,7 +73,7 @@ function ProgASTAssignment(_target, _value, _op = PROG_TOKEN.ASSIGN) : ProgASTNo
     op = _op; // For +=, -= etc.
 }
 
-/// @desc Call node (func(a, b))
+/// @desc Call node (function(a, b))
 function ProgASTCall(_callee, _args) : ProgASTNode(PROG_AST.CALL) constructor
 {
     callee = _callee;
@@ -163,9 +163,10 @@ function ProgASTForStmt(_initializer, _condition, _increment, _body) : ProgASTNo
     body = _body;
 }
 
-/// @desc Break statement
-function ProgASTBreakStmt() : ProgASTNode(PROG_AST.BREAK_STMT) constructor
+/// @desc Break statement (supports break N for multi-level break)
+function ProgASTBreakStmt(_amount = undefined) : ProgASTNode(PROG_AST.BREAK_STMT) constructor
 {
+    amount = _amount; // Expression for number of loops to break (default: 1)
 }
 
 /// @desc Continue statement
@@ -194,9 +195,9 @@ function ProgASTPostfixOp(_op, _target) : ProgASTNode(PROG_AST.POSTFIX_OP) const
 }
 
 /// @desc Switch statement
-function ProgASTSwitchStmt(_expr, _cases, _default_case) : ProgASTNode(PROG_AST.SWITCH_STMT) constructor
+function ProgASTSwitchStmt(_expression, _cases, _default_case) : ProgASTNode(PROG_AST.SWITCH_STMT) constructor
 {
-    expr = _expr;
+    expr = _expression;
     cases = _cases; // Array of { value, body }
     default_case = _default_case; // Block or undefined
 }

@@ -2,7 +2,7 @@
 /// Handles loading .daydream files with secure path traversal
 
 /// Base directory for all proglang scripts (sandbox root)
-#macro PROGLANG_BASE_DIR "proglang"
+#macro PROGLANG_BASE_DIR ($"{PROGRAM_DIRECTORY_RESOURCES}/data/proglang")
 
 global.proglang_scripts = {}
 global.proglang_exports = {}
@@ -112,6 +112,11 @@ function proglang_resolve_path(_path, _current_dir = "") {
     
     var _result_parts = [];
     
+    // Get root parts for security check
+    var _root = variable_global_exists("proglang_root") ? global.proglang_root : "proglang";
+    var _root_parts = proglang_split_path(_root);
+    var _root_len = array_length(_root_parts);
+    
     // Start with current directory parts if relative path
     if (_current_dir != "" && (string_pos("./", _path) == 1 || string_pos("../", _path) == 1)) {
         var _dir_parts = proglang_split_path(_current_dir);
@@ -128,10 +133,15 @@ function proglang_resolve_path(_path, _current_dir = "") {
         if (_seg == "" || _seg == ".") {
             continue;
         } else if (_seg == "..") {
-            if (array_length(_result_parts) > 0) {
+            // SECURITY: Don't allow going above base directory
+            // If _current_dir is absolute (contains root), we must stay within _root_len
+            // If _current_dir is empty (virtual path from root), we must stay within virtual root (0)
+            var _min_parts = (_current_dir == "") ? 0 : _root_len;
+            
+            if (array_length(_result_parts) > _min_parts) {
                 array_pop(_result_parts);
             } else {
-                if (IS_DEVELOPER_MODE) show_debug_message("[Daydream] PATH_SECURITY: Cannot access parent of base directory");
+                if (IS_DEVELOPER_MODE) show_debug_message("[Daydream] PATH_SECURITY: Cannot access parent of base directory: " + _root);
                 return undefined;
             }
         } else {
@@ -197,10 +207,27 @@ function proglang_get_directory(_path) {
 /// @returns {struct|undefined} Module exports
 function proglang_load_module(_module_path, _importer_path = "") {
     var _importer_dir = proglang_get_directory(_importer_path);
-    var _resolved = proglang_resolve_path(_module_path, _importer_dir);
+    var _is_relative = (string_pos("./", _module_path) == 1 || string_pos("../", _module_path) == 1);
     
-    if (_resolved == undefined) {
-        throw { type: PROG_ERROR.PATH_SECURITY, message: $"Path security violation: '{_module_path}'" }
+    // For relative paths, resolve from importer's actual directory
+    // For absolute paths, use the standard base directory
+    var _full_path;
+    var _resolved;
+    
+    if (_is_relative && _importer_dir != "") {
+        // Relative import: resolve from the importing file's directory
+        _resolved = proglang_resolve_path(_module_path, _importer_dir);
+        if (_resolved == undefined) {
+            throw { type: PROGLANG_ERROR_TYPE.PATH_SECURITY, message: $"Path security violation: '{_module_path}'" }
+        }
+        _full_path = $"{_resolved}.daydream";
+    } else {
+        // Absolute import: use base directory
+        _resolved = proglang_resolve_path(_module_path, "");
+        if (_resolved == undefined) {
+            throw { type: PROGLANG_ERROR_TYPE.PATH_SECURITY, message: $"Path security violation: '{_module_path}'" }
+        }
+        _full_path = $"{global.proglang_root}/{_resolved}.daydream";
     }
     
     // Check if already loaded
@@ -209,16 +236,15 @@ function proglang_load_module(_module_path, _importer_path = "") {
     }
     
     // Try to load the file
-    var _full_path = $"{PROGLANG_BASE_DIR}/{_resolved}.daydream";
     if (!file_exists(_full_path)) {
-        throw { type: PROG_ERROR.FILE_NOT_FOUND, message: $"Module not found: '{_resolved}'" }
+        throw { type: PROGLANG_ERROR_TYPE.FILE_NOT_FOUND, message: $"Module not found: '{_resolved}'" }
     }
     
     var _source = buffer_load_text(_full_path);
     var _bytecode = proglang_compile(_source);
     
     if (_bytecode == undefined) {
-        throw { type: PROG_ERROR.SYNTAX, message: $"Failed to compile module: '{_resolved}'" }
+        throw { type: PROGLANG_ERROR_TYPE.SYNTAX, message: $"Failed to compile module: '{_resolved}'" }
     }
     
     // Create module entry
@@ -227,8 +253,8 @@ function proglang_load_module(_module_path, _importer_path = "") {
     // Run module to populate exports
     var _vm = new ProgVM();
     _vm.active_module = global.proglang_modules[$ _resolved];
-    _vm.current_scope.vars[$ "__dirname"] = proglang_get_directory(_resolved);
-    _vm.current_scope.vars[$ "__filename"] = _resolved;
+    _vm.current_scope.vars[$ "__dirname"] = proglang_get_directory(_full_path);
+    _vm.current_scope.vars[$ "__filename"] = _full_path;
     _vm.run(_bytecode);
     
     global.proglang_modules[$ _resolved].loaded = true;
@@ -268,6 +294,11 @@ function proglang_call(_name, _args = [], _context = {}) {
     
     var _vm = new ProgVM();
     _vm.context = _context;
+    
+    // Set directory context for import/export resolution
+    var _dirname = proglang_get_directory(_name);
+    _vm.current_scope.vars[$ "__dirname"] = _dirname;
+    _vm.current_scope.vars[$ "__filename"] = _name;
     
     for (var i = 0; i < array_length(_args); i++) {
         _vm.current_scope.vars[$ $"arg{i}"] = _args[i];

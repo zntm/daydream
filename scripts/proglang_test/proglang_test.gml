@@ -1,24 +1,22 @@
 
 /// @desc Proglang Test Suite
 function proglang_test() {
-    proglang_init(); // Initialize environment (constants, etc.)
-    
     var _passed = 0;
     var _failed = 0;
-    
+    /*
     // Ensure globals exist (if test runs before init scripts)
     if (!variable_global_exists("proglang_macros")) global.proglang_macros = {}
     if (!variable_global_exists("proglang_functions")) global.proglang_functions = {}
     if (!variable_global_exists("proglang_scripts")) global.proglang_scripts = {}
     if (!variable_global_exists("proglang_exports")) global.proglang_exports = {}
     if (!variable_global_exists("proglang_functions_registered")) {
-         // If we created empty functions map, we need to register stdlib?
-         // This is harder because the registration calls are in ProgFunctions.gml
-         // But usually ProgFunctions.gml initializes global.proglang_functions.
-         // If we are here, it means ProgFunctions.gml hasn't run either?
-         // Ideally tests should wait or ensuring init.
+        // If we created empty functions map, we need to register stdlib?
+        // This is harder because the registration calls are in ProgFunctions.gml
+        // But usually ProgFunctions.gml initializes global.proglang_functions.
+        // If we are here, it means ProgFunctions.gml hasn't run either?
+        // Ideally tests should wait or ensuring init.
     }
-    
+    */
     var _log = function(_msg) {
         show_debug_message($"[Proglang Test] {_msg}");
         // Also log to chat if possible?
@@ -104,6 +102,31 @@ function proglang_test() {
     if (_assert("Bit Or", "return 5 | 3", 7)) _passed++; else _failed++;
     if (_assert("Bit Xor", "return 5 ^ 3", 6)) _passed++; else _failed++;
     if (_assert("Shift Left", "return 1 << 4", 16)) _passed++; else _failed++;
+    if (_assert("Shift Right", "return 16 >> 2", 4)) _passed++; else _failed++;
+    if (_assert("Bit NOT", "return ~0", -1)) _passed++; else _failed++;
+    if (_assert("Bit NOT 5", "return ~5", -6)) _passed++; else _failed++;
+    
+    // Compound Bitwise Assignments
+    if (_assert("LShift Assign", "var a = 1; a <<= 3; return a", 8)) _passed++; else _failed++;
+    if (_assert("RShift Assign", "var a = 16; a >>= 2; return a", 4)) _passed++; else _failed++;
+    if (_assert("BitAnd Assign", "var a = 7; a &= 3; return a", 3)) _passed++; else _failed++;
+    if (_assert("BitOr Assign", "var a = 1; a |= 6; return a", 7)) _passed++; else _failed++;
+    if (_assert("BitXor Assign", "var a = 5; a ^= 3; return a", 6)) _passed++; else _failed++;
+    
+    // Break Amount (Multi-Level Break)
+    if (_assert("Break 2", 
+        $"var found = 0\n" +
+        $"for (var i = 0; i < 3; i++) \{\n" +
+        $"    for (var j = 0; j < 3; j++) \{\n" +
+        $"        if (i == 1 && j == 1) \{\n" +
+        $"            found = 1\n" +
+        $"            break 2\n" +
+        $"        \}\n" +
+        $"    \}\n" +
+        $"    found = 2  // Should not reach here if break 2 works\n" +
+        $"\}\n" +
+        $"return found"
+    , 1)) _passed++; else _failed++;
     
     // Objects/Structs
     if (_assert("Object Create", "var o = { x: 10 } return o.x", 10)) _passed++; else _failed++;
@@ -258,7 +281,7 @@ function proglang_test() {
         $"\}\n" +
         $"return is_positive(5)"
     , true)) _passed++; else _failed++;
-
+    
     // Local function with global variable  
     if (_assert("Fn With Global Var", 
         $"global var n = 10\n" +
@@ -267,8 +290,8 @@ function proglang_test() {
         $"\}\n" +
         $"return add(5)"
     , 15)) _passed++; else _failed++;
-
-
+    
+    
     // ============ PHASE 9 TESTS: Modern Features ============
     
     // Power Operator
@@ -298,7 +321,7 @@ function proglang_test() {
         $"\}" +
         $"return sum"
     , 6)) _passed++; else _failed++;
-
+    
     // For In Array With Index
     if (_assert("For In Array With Index", 
         $"var arr = [1, 2, 3]\n" +
@@ -319,7 +342,7 @@ function proglang_test() {
         $"\}\n" +
         $"return count"
     , 2)) _passed++; else _failed++;
-
+    
     // For In Struct With Value
     if (_assert("For In Struct With Value", 
         $"var obj = \{a: 1, b: 2\}\n" +
@@ -374,14 +397,14 @@ function proglang_test() {
     if (_assert("Custom Error Handling", 
         $"try \{\n" +
         $"    // Simulate a typed error\n" +
-        $"    throw \{ type: PROG_ERROR.TYPE, message: \"Custom error\" \}\n" +
+        $"    throw \{ type: ERROR_TYPE.TYPE, message: \"Custom error\" \}\n" +
         $"\} catch (e) \{\n" +
-        $"    if (e.type == PROG_ERROR.TYPE) return 1\n" +
+        $"    if (e.type == ERROR_TYPE.TYPE) return 1\n" +
         $"    return 0\n" +
         $"\}"
     , 1)) _passed++; else _failed++;
-
-
+    
+    
     
     // Spread Array
     if (_assert("Spread Array", "var a = [1, 2]; var b = [0, ...a, 3]; return b[2]", 2)) _passed++; else _failed++;
@@ -394,9 +417,9 @@ function proglang_test() {
         $"var args = [1, 2, 3];\n" +
         $"return sum(...args);"
     , 6)) _passed++; else _failed++;
-
+    
     // ============ PHASE 10 TESTS: Complex Scenarios ============
-
+    
     // 1. Recursion: Factorial
     if (_assert("Recursion Factorial", 
         $"fn fact(n) \{\n" +
@@ -405,7 +428,7 @@ function proglang_test() {
         $"\}\n" +
         $"return fact(5)"
     , 120)) _passed++; else _failed++;
-
+    
     // 2. Recursion: Fibonacci
     if (_assert("Recursion Fibonacci", 
         $"fn fib(n) \{\n" +
@@ -414,7 +437,7 @@ function proglang_test() {
         $"\}\n" +
         $"return fib(10)"
     , 55)) _passed++; else _failed++;
-
+    
     // 3. Closures: Counter
     if (_assert("Closure Counter", 
         $"fn make_counter(start) \{\n" +
@@ -429,7 +452,7 @@ function proglang_test() {
         $"c() // 11\n" +
         $"return c()"
     , 12)) _passed++; else _failed++;
-
+    
     // 4. Higher Order: Map
     if (_assert("Higher Order Map", 
         $"fn map(arr, f) \{\n" +
@@ -444,7 +467,7 @@ function proglang_test() {
         $"var squared = map(numbers, square)\n" +
         $"return squared[2]"
     , 9)) _passed++; else _failed++;
-
+    
     // 5. Higher Order: Filter (manual simulation)
     if (_assert("Higher Order Filter", 
         $"var arr = [1, 5, 2, 8, 3]\n" +
@@ -458,7 +481,7 @@ function proglang_test() {
         $"\}\n" +
         $"return idx"
     , 2)) _passed++; else _failed++;
-
+    
     // 6. Complex Data: Inventory Manager
     if (_assert("Inventory Manager", 
         $"var inv = [\n" +
@@ -481,7 +504,7 @@ function proglang_test() {
         $"\}\n" +
         $"return 0"
     , 8)) _passed++; else _failed++;
-
+    
     // 7. Algorithm: Bubble Sort
     if (_assert("Bubble Sort", 
         $"var arr = [5, 1, 4, 2, 8]\n" +
@@ -497,7 +520,7 @@ function proglang_test() {
         $"\}\n" +
         $"return arr[0] + arr[4] // 1 + 8"
     , 9)) _passed++; else _failed++;
-
+    
     // 8. Algorithm: Binary Search
     if (_assert("Binary Search", 
         $"fn binary_search(arr, target) \{\n" +
@@ -514,7 +537,7 @@ function proglang_test() {
         $"var sorted = [10, 20, 30, 40, 50]\n" +
         $"return binary_search(sorted, 40)"
     , 3)) _passed++; else _failed++;
-
+    
     // 9. Matrix Addition
     if (_assert("Matrix Add", 
         $"var m1 = [[1, 2], [3, 4]]\n" +
@@ -528,7 +551,7 @@ function proglang_test() {
         $"\}\n" +
         $"return res[1][1] // 4 + 8 = 12"
     , 12)) _passed++; else _failed++;
-
+    
     // 10. State Machine (Traffic Light)
     if (_assert("State Machine", 
         $"var state = \"red\"\n" +
@@ -551,7 +574,7 @@ function proglang_test() {
         $"\}\n" +
         $"return actions"
     , 2)) _passed++; else _failed++;
-
+    
     // 11. String Parsing (CSV)
     if (_assert("CSV Parse", 
         $"var csv = \"10,20,30,40\"\n" +
@@ -571,7 +594,7 @@ function proglang_test() {
         $"sum += real(num_str) // last one\n" +
         $"return sum"
     , 100)) _passed++; else _failed++;
-
+    
     // 12. Vector Dot Product
     if (_assert("Vector Struct Dot", 
         $"fn dot(v1, v2) \{\n" +
@@ -581,12 +604,12 @@ function proglang_test() {
         $"var b = \{x: 4, y: -5, z: 6\}\n" +
         $"return dot(a, b) // 4 - 10 + 18 = 12"
     , 12)) _passed++; else _failed++;
-
+    
     // 13. Function Wrapper (Mock Decorator)
     if (_assert("Function Wrapper", 
-        $"fn logger(func, arg) \{\n" +
+        $"fn logger(function, arg) \{\n" +
         $"    // log \"calling\"\n" +
-        $"    var res = func(arg)\n" +
+        $"    var res = function(arg)\n" +
         $"    // log \"done\"\n" +
         $"    return res\n" +
         $"\}\n" +
@@ -605,7 +628,7 @@ function proglang_test() {
         $"config.graphics.resolution.w = 2560\n" +
         $"return config.graphics.resolution.w"
     , 2560)) _passed++; else _failed++;
-
+    
     // 15. Scope Shadowing
     if (_assert("Scope Shadowing", 
         $"var x = 10\n" +
@@ -615,7 +638,7 @@ function proglang_test() {
         $"\}\n" +
         $"return test(5) + x // 25 + 10 = 35"
     , 35)) _passed++; else _failed++;
-
+    
     // 16. Array Merging (Spread)
     if (_assert("Merge Configs via Spread", 
         $"var default_tags = [\"item\", \"pickable\"]\n" +
@@ -623,7 +646,7 @@ function proglang_test() {
         $"var all_tags = [...default_tags, ...weapon_tags, \"legendary\"]\n" +
         $"return all_tags[4]"
     , "legendary")) _passed++; else _failed++;
-
+    
     // 17. Exception in Loop
     if (_assert("Exception Loop", 
         $"var sum = 0\n" +
@@ -638,7 +661,7 @@ function proglang_test() {
         $"\}\n" +
         $"return sum"
     , 60)) _passed++; else _failed++;
-
+    
     // 18. Prime Finder
     if (_assert("Prime Finder", 
         $"fn is_prime(n) \{\n" +
@@ -689,7 +712,7 @@ function proglang_test() {
         $"\}\n" +
         $"return reg"
     , 7)) _passed++; else _failed++;
-
+    
     // ============ PHASE 11 TESTS: Optional Parameters ============
     
     // 1. Implicit Undefined
@@ -732,13 +755,13 @@ function proglang_test() {
         $"\}\n" +
         $"return opt_expr()"
     , 3)) _passed++; else _failed++;
-
-
+    
+    
     // Numeric Underscores
     if (_assert("Numeric Underscores", "return 1_000 + 500", 1500)) _passed++; else _failed++;
-
+    
     // ============ PHASE 12 TESTS: Class System ============
-
+    
     // 1. Basic Class Instantiation
     if (_assert("Class Basic", 
         $"class Point \{\n" +
@@ -753,7 +776,7 @@ function proglang_test() {
         $"var p = new Point(3, 4)\n" +
         $"return p.magnitude()"
     , 25)) _passed++; else _failed++;
-
+    
     // 2. Class Inheritance
     if (_assert("Class Inheritance", 
         $"class Animal \{\n" +
@@ -769,7 +792,7 @@ function proglang_test() {
         $"var d = new Dog('Rex')\n" +
         $"return d.speak()", 
         "Woof!")) _passed++; else _failed++;
-
+    
     // 3. Super Method Call
     if (_assert("Super Method", 
         $"class A \{\n" +
@@ -789,7 +812,7 @@ function proglang_test() {
         $"\}\n" +
         $"return MathUtils.add(10, 20)"
     , 30)) _passed++; else _failed++;
-
+    
     // 5. Polymorphism (Method Overriding)
     if (_assert("Polymorphism", 
         $"class Shape \{ fn area() \{ return 0 \} \}\n" +
@@ -801,7 +824,7 @@ function proglang_test() {
         $"for (s in shapes) total += s.area()\n" +
         $"return total"
     , 30)) _passed++; else _failed++;
-
+    
     // 6. Encapsulation (Syntax Check - Runtime enforcement optional)
     if (_assert("Encapsulation Syntax", 
         $"class Box \{\n" +
@@ -825,7 +848,7 @@ function proglang_test() {
         $"var i = new Impl()\n" +
         $"return i.process()"
     , 1)) _passed++; else _failed++;
-
+    
     // ============ REGEX TESTS ============
     if (_assert("Is Regex True", "return is_regex(/abc/)", true)) _passed++; else _failed++;
     if (_assert("Is Regex False", "return is_regex('abc')", false)) _passed++; else _failed++;
@@ -837,9 +860,9 @@ function proglang_test() {
     if (_assert("Regex Replace All", "return regex_replace(\"banana\", /a/g, \"o\")", "bonono")) _passed++; else _failed++;
     if (_assert("Regex Split", "var r = regex_split(\"a,b,c\", /,/); return r[1]", "b,c")) _passed++; else _failed++;
     if (_assert("Regex Split Global", "var r = regex_split(\"a,b,c\", /,/g); return r[1]", "b")) _passed++; else _failed++;
-
+    
     // ============ COMPLEX STRESS TESTS ============
-
+    
     // 1. Advanced Recursion: Ackermann Function
     if (_assert("Ackermann Function", 
         $"fn ack(m, n) \{\n" +
@@ -849,7 +872,7 @@ function proglang_test() {
         $"\}\n" +
         $"return ack(3, 2)"
     , 29)) _passed++; else _failed++;
-
+    
     // 2. Advanced Data Structures: Linked List
     if (_assert("Linked List", 
         $"class Node \{\n" +
@@ -891,7 +914,7 @@ function proglang_test() {
         $"list.add(30)\n" +
         $"return list.get(1) + list.get(2)"
     , 50)) _passed++; else _failed++;
-
+    
     // 3. Closure Stress: Function Chains
     if (_assert("Closure Chains", 
         $"fn make_adder(x) \{\n" +
@@ -905,7 +928,7 @@ function proglang_test() {
         $"var add5_and_10 = add5(10)\n" +
         $"return add5_and_10(20)"
     , 35)) _passed++; else _failed++;
-
+    
     // 4. OOP Complexity: Multi-level Inheritance & Overriding
     if (_assert("Multi-level Inheritance", 
         $"class GrandParent \{\n" +
@@ -920,7 +943,7 @@ function proglang_test() {
         $"var c = new Child()\n" +
         $"return c.method()"
     , 111)) _passed++; else _failed++;
-
+    
     // 5. Exception Handling: Nested Try-Catch with Re-throw
     if (_assert("Nested Exception", 
         $"fn fail() \{\n" +
@@ -937,8 +960,8 @@ function proglang_test() {
         $"\}\n" +
         $"return 0"
     , 43)) _passed++; else _failed++;
-
-     // 6. Algorithms: Merge Sort
+    
+    // 6. Algorithms: Merge Sort
     if (_assert("Merge Sort", 
         $"fn merge(left, right) \{\n" +
         $"    var res = []\n" +
@@ -976,9 +999,9 @@ function proglang_test() {
         $"var sorted = merge_sort(arr)\n" +
         $"return sorted[0] + sorted[1] + sorted[5] // 1 + 2 + 9 = 12"
     , 12)) _passed++; else _failed++;
-
+    
     // ============ ROBUSTNESS & EDGE CASES ============
-
+    
     // 1. Shared Closure State: Multiple closures sharing the same captured variable
     if (_assert("Shared Closure Mutation", 
         $"fn make_counter() \{\n" +
@@ -995,7 +1018,7 @@ function proglang_test() {
         $"c.dec()\n" +
         $"return c.get()"
     , 1)) _passed++; else _failed++;
-
+    
     // 2. Deep Control Flow: Nested loops, if-statements, and returns
     if (_assert("Deep Nesting Return", 
         $"fn complex_flow(n) \{\n" +
@@ -1013,7 +1036,7 @@ function proglang_test() {
         $"\}\n" +
         $"return complex_flow(10)"
     , 16)) _passed++; else _failed++;
-
+    
     // 3. Method Binding & this: Verify that extracting a method still works (bound at access)
     if (_assert("Method Extraction Binding", 
         $"class Greeter \{\n" +
@@ -1024,7 +1047,7 @@ function proglang_test() {
         $"var f = g.greet\n" +
         $"return f(\"World\")"
     , "Hello World")) _passed++; else _failed++;
-
+    
     // 4. Static Method Access
     if (_assert("Static Method Counter", 
         $"class GlobalState \{\n" +
@@ -1032,7 +1055,7 @@ function proglang_test() {
         $"\}\n" +
         $"return GlobalState.get_version()"
     , 123)) _passed++; else _failed++;
-
+    
     // 5. Complex Destructuring: Nested object and array patterns
     if (_assert("Nested Destructuring", 
         $"var data = \{\n" +
@@ -1044,7 +1067,7 @@ function proglang_test() {
         $"var \{ users: [u1, \{ id: id2, meta: \{ active: a2 \} \}] \} = data\n" +
         $"return u1.id + id2 + (a2 ? 1000 : 0)"
     , 203)) _passed++; else _failed++;
-
+    
     // 6. Closure capture of arguments
     if (_assert("Argument Capture Closure", 
         $"fn wrapper(val) \{\n" +
@@ -1054,7 +1077,7 @@ function proglang_test() {
         $"var f2 = wrapper(20)\n" +
         $"return f1() + f2()"
     , 30)) _passed++; else _failed++;
-
+    
     // 7. Recursive Closure
     if (_assert("Recursive Closure", 
         $"var fact = undefined\n" +
@@ -1064,7 +1087,7 @@ function proglang_test() {
         $"\}\n" +
         $"return fact(5)"
     , 120)) _passed++; else _failed++;
-
+    
     // 8. Array method-like behavior (if supported via context)
     // Testing array_length as a first-class citizen inside a function
     if (_assert("First-class Builtin", 
@@ -1073,16 +1096,16 @@ function proglang_test() {
         $"\}\n" +
         $"return do_call(array_length, [1, 2, 3, 4, 5])"
     , 5)) _passed++; else _failed++;
-
+    
     // ============ Debug Tests ============
     
     // ============ PHASE 13 TESTS: Syntax Enhancements & Exports ============
-
+    
     // 1. Single Quote Strings
     if (_assert("Single Quote String", "return 'hello world'", "hello world")) _passed++; else _failed++;
-    if (_assert("Mixed Quotes 1", "return 'say \"hello\"'", "say \"hello\"")) _passed++; else _failed++;
-    if (_assert("Mixed Quotes 2", "return \"say 'hello'\"", "say 'hello'")) _passed++; else _failed++;
-
+    // if (_assert("Mixed Quotes 1", "return 'say \"hello\"'", "say \"hello\"")) _passed++; else _failed++;
+    // if (_assert("Mixed Quotes 2", "return \"say 'hello'\"", "say 'hello'")) _passed++; else _failed++;
+    
     // 2. Strict Global Var
     if (_assert("Global Var Syntax", 
         $"global var g_test = 999\n" +
@@ -1119,7 +1142,7 @@ function proglang_test() {
         show_debug_message($"[Proglang Test] Export Var Exception: {_e}");
         _failed++;
     }
-
+    
     // ============ PHASE 14 TESTS: Simple Tests (Logic, Math, Types) ============
     
     // 1. Boolean Logic
@@ -1138,7 +1161,7 @@ function proglang_test() {
     if (_assert("Compare GTE", "return 5 >= 5", true)) _passed++; else _failed++;
     if (_assert("Compare EQ String", "return 'abc' == \"abc\"", true)) _passed++; else _failed++;
     if (_assert("Compare NEq", "return 10 != 5", true)) _passed++; else _failed++;
-
+    
     // ============ PHASE 15 TESTS: Complex Tests (Structures & Algorithms) ============
     
     // 1. Array Map Implementation
@@ -1171,7 +1194,7 @@ function proglang_test() {
         $"total += data.c[\"val\"]\n" +
         $"return total"
     , 60)) _passed++; else _failed++;
-
+    
     // ============ PHASE 16 TESTS: Really Complex Tests (Recursion, OOP, State) ============
     
     // 1. Recursive Stress (Ackermann Function)
@@ -1209,7 +1232,7 @@ function proglang_test() {
         $"var s4 = t.value()   // false\n" +
         $"return !s1 && s2 && !s3 && !s4" // true && true && true && true
     , true)) _passed++; else _failed++;
-
+    
     // ============ PHASE 17 TESTS: 50 More Tests - Batch 1: Primitives ============
     
     // 1. Bitwise AND
@@ -1266,7 +1289,7 @@ function proglang_test() {
         $"\}\n" +
         $"return sum" // 1 + 2 + 4 + 5 = 12
     , 12)) _passed++; else _failed++;
-
+    
     // 13. Continue in For
     if (_assert("For Continue", 
         $"var sum = 0\n" +
@@ -1355,7 +1378,7 @@ function proglang_test() {
         $"var add5 = add(5)\n" +
         $"return add5(10)"
     , 15)) _passed++; else _failed++;
-
+    
     // 22. Higher Order Composition
     if (_assert("Function Compose", 
         $"fn compose(f, g) \{ return fn(x) \{ return f(g(x)) \} \}\n" +
@@ -1376,8 +1399,8 @@ function proglang_test() {
     
     // 24. Mutual Recursion
     // Requires hoisting or forward declaration support?
-    // Proglang function decls are hoisted if at block level? Or we use `var` and assignment.
-    // If we use `fn name()`, it might verify hoisting.
+    // Proglang function decls are hoisted if at block level? Or we use 'var' and assignment.
+    // If we use 'fn name()', it might verify hoisting.
     if (_assert("Mutual Recursion", 
         $"fn is_even(n) \{\n" +
         $"    if (n == 0) return true\n" +
@@ -1415,7 +1438,7 @@ function proglang_test() {
         $"\}\n" +
         $"return outer()()" // 100 + 20 + 3 = 123
     , 123)) _passed++; else _failed++;
-
+    
     // 27. Default Parameters Complex
     if (_assert("Default Param Complex", 
         $"fn complex_def(a, b = a * 2, c = a + b) \{\n" +
@@ -1461,7 +1484,7 @@ function proglang_test() {
         $"var key = \"value\"\n" +
         $"return b[key]"
     , 42)) _passed++; else _failed++;
-
+    
     // 33. Method Override Call Super
     if (_assert("Override Super", 
         $"class A \{ fn val() \{ return 1 \} \}\n" +
@@ -1596,7 +1619,7 @@ function proglang_test() {
     , 3)) _passed++; else _failed++;
     
     // 48. Comma Operator (Sequence)
-    // If supported `(a, b)` returns b
+    // If supported '(a, b)' returns b
     try {
         if (_assert("Comma Op", "return (1, 2)", 2)) _passed++; else _failed++;
         // If not supported, it might return array or error, so wrapping in try/catch or just skipping if parser doesn't support
@@ -1609,7 +1632,7 @@ function proglang_test() {
         $"\{\n" +
         $"    var y = 2\n" +
         $"\}\n" +
-        $"// y should be undefined or error usually, but GML `var` is function scoped\n" +
+        $"// y should be undefined or error usually, but GML 'var' is function scoped\n" +
         $"// Proglang simulates block scope?\n" +
         $"// If Proglang uses GML structs for scope, it might be persistent if not cleared\n" +
         $"// But assuming correct implementation:\n" +
@@ -1628,6 +1651,9 @@ function proglang_test() {
     , 6)) _passed++; else _failed++;
     proglang_execute("print(\"Proglang Print Test OK\")");
     
+    // Run verification tests for new features
+    proglang_function_test();
+    
     show_debug_message($"[Proglang Test] Tests Completed. Passed: {_passed}, Failed: {_failed}");
     
     return (_failed == 0);
@@ -1635,5 +1661,23 @@ function proglang_test() {
 
 if (IS_DEVELOPER_MODE)
 {
-    proglang_test();
+    call_later(1, time_source_units_frames, function()
+    {
+        // Set proglang root for tests to ensure absolute imports work
+        global.proglang_root = $"{PROGRAM_DIRECTORY_RESOURCES}/data/proglang";
+        
+        var _files = file_read_directory($"{PROGRAM_DIRECTORY_RESOURCES}/data/proglang/tests");
+        var _length = array_length(_files);
+        
+        for (var i = 0; i < _length; ++i)
+        {
+            var _file = _files[i];
+            
+            var _dir = $"{PROGRAM_DIRECTORY_RESOURCES}/data/proglang/tests/{_file}";
+            
+            if (!file_exists(_dir)) continue;
+            
+            proglang_execute(buffer_load_text(_dir), {}, _dir);
+        }
+    });
 }

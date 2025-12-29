@@ -1,4 +1,4 @@
-/// @func rectangle_distance(px, py, x1, y1, x2, y2)
+/// @function rectangle_distance(px, py, x1, y1, x2, y2)
 /// @desc Returns the distance from a point and a rectangle.
 /// @arg {Real} px The coordinate of the point
 /// @arg {Real} py The coordinate of the point

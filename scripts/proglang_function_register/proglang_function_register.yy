@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"proglang_init",
+  "%Name":"proglang_function_register",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"proglang_init",
+  "name":"proglang_function_register",
   "parent":{
     "name":"Proglang",
     "path":"folders/Scripts/Proglang.yy",

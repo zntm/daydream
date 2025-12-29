@@ -91,15 +91,69 @@ print($"Loop completed in {ms}ms");
 
 ---
 
-## Constants
+## Testing Framework
 
-### `infinity`: Number
+Functions for writing clean, timed unit tests. Tests are registered and executed by the test runner.
 
-The mathematical infinity value. Useful for initializing min/max comparisons.
+### `test_expect(actual, expected)`: Boolean
+
+Compares two values. If `actual` is a closure, it is executed first. Records functionality for the current test context.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `actual` | Any | Value or closure to test |
+| `expected` | Any | Expected value |
+
+**Returns:** `true` if passed, `false` if failed.
 
 ```javascript
-var min_val = infinity;
-for (v in values) {
-    if (v < min_val) min_val = v;
-}
+test_expect(5 + 3, 8);        // Passes silently
+test_expect(5 + 3, 10);       // Fails
+test_expect(fn() { return 2 * 3 }, 6); // Executes closure first
+```
+
+### `test(name, fn, stop_on_failure?)`: Struct
+
+Registers a test function to be run by the test runner.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `name` | String | Test name |
+| `fn` | Function | Test closure containing `test_expect` calls |
+| `stop_on_failure` | Boolean | Optional. If true, stops test execution on failure |
+
+**Returns:** A Test struct object.
+
+```javascript
+test("Math Operations", fn() {
+    test_expect(2 + 2, 4);
+    test_expect(10 / 2, 5);
+});
+// Registered for execution (0.00ms)
+```
+
+### `test_group(name, tests)`: Struct
+
+Groups multiple registered tests with clean hierarchical output.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `name` | String | Group name |
+| `tests` | Array | Array of Test objects (returned from `test`) |
+
+**Returns:** A Group struct object.
+
+```javascript
+test_group("Core Tests", [
+    test("Addition", fn() { test_expect(1 + 1, 2) }),
+    test("Subtraction", fn() { test_expect(5 - 3, 2) })
+]);
+// Output when run:
+// ━━━ Core Tests ━━━
+//   ✓ Addition (0.01ms)
+//   ✓ Subtraction (0.01ms)
+// ━━━ 2/2 passed (0.05ms) ━━━
 ```

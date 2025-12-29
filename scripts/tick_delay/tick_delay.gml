@@ -11,7 +11,7 @@ function tick_delay_add(_ticks, _func, _args = [])
 {
     array_push(global.tick_delay_queue, {
         ticks: _ticks,
-        func: _func,
+        "function": _func,
         args: _args
     });
 }
@@ -32,23 +32,12 @@ function tick_delay_process()
         if (_entry.ticks <= 0)
         {
             // Execute the function with args
-            var _func = _entry.func;
+            var _func = _entry[$ "function"];
             var _args = _entry.args;
+            
             var _args_length = array_length(_args);
             
-            switch (_args_length)
-            {
-                case 0: _func(); break;
-                case 1: _func(_args[0]); break;
-                case 2: _func(_args[0], _args[1]); break;
-                case 3: _func(_args[0], _args[1], _args[2]); break;
-                case 4: _func(_args[0], _args[1], _args[2], _args[3]); break;
-                case 5: _func(_args[0], _args[1], _args[2], _args[3], _args[4]); break;
-                default:
-                    // For more args, use method and call
-                    script_execute_ext(_func, _args);
-                    break;
-            }
+            script_execute_ext(_func, _args);
             
             array_delete(_queue, i, 1);
         }

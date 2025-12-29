@@ -1,0 +1,295 @@
+
+test_group("basic control flow", [
+    test("if true", fn() {
+        var x = 0
+
+        if true {
+            x = 50
+        }
+
+        test_expect(x, 50)
+    }),
+    test("if false", fn() {
+        var x = 0
+
+        if false {
+            x = 50
+        }
+
+        test_expect(x, 0)
+    }),
+    test("if else true", fn() {
+        var x = 0
+
+        if true {
+            x = 50
+        } else {
+            x = 100
+        }
+
+        test_expect(x, 50)
+    }),
+    test("if else false", fn() {
+        var x = 0
+
+        if false {
+            x = 50
+        } else {
+            x = 100
+        }
+
+        test_expect(x, 100)
+    }),
+    test("nested if", fn() {
+        var a = 5
+        var b = 0
+
+        if a > 3 {
+            if a < 10 {
+                b = 10
+            }
+        }
+
+        test_expect(b, 10)
+    }),
+    test("ternary true", fn() {
+        test_expect(true ? 1 : 2, 1)
+    }),
+    test("ternary false", fn() {
+        test_expect(false ? 1 : 2, 2)
+    }),
+    test("ternary nested", fn() {
+        test_expect(true ? (false ? 1 : 2) : 3, 2)
+    }),
+    test("ternary expr", fn() {
+        var a = 5
+        test_expect(a > 3 ? 10 : 20, 10)
+    })
+])
+
+test_group("loops", [
+    test("while", fn() {
+        var i = 0
+
+        while i < 5 {
+            i = i + 1
+        }
+
+        test_expect(i, 5)
+    }),
+    test("for", fn() {
+        var sum = 0
+
+        for (var i = 0; i < 5; i += 1) {
+            sum += i
+        }
+
+        test_expect(sum, 10)
+    }),
+    test("for continue", fn() {
+        var sum = 0
+
+        for (var i = 0; i < 5; i += 1) {
+            if (i == 0) {
+                continue
+            }
+
+            sum += 1
+        }
+
+        test_expect(sum, 4)
+    }),
+    test("for break", fn() {
+        var sum = 0
+
+        for (var i = 0; i < 5; i += 1) {
+            if (i == 3) {
+                break
+            }
+
+            sum += 1
+        }
+
+        test_expect(sum, 3)
+    }),
+    test("nested loop", fn() {
+        var sum = 0
+
+        for (var i = 0; i < 3; i += 1) {
+            for (var j = 0; j < 3; j += 1) {
+                sum += 1
+            }
+        }
+
+        test_expect(sum, 9)
+    }),
+    test("break 2 (multi-level)", fn() {
+        var found = 0
+
+        for (var i = 0; i < 3; i++) {
+            for (var j = 0; j < 3; j++) {
+                if (i == 1 && j == 1) {
+                    found = 1
+                    break 2
+                }
+            }
+
+            // should not reach here if break 2 works
+            found = 2
+        }
+
+        test_expect(found, 1)
+    })
+])
+
+test_group("switch statement", [
+    test("switch case 1", fn() {
+        var x = 1
+        var y = 0
+
+        switch (x) {
+            case 1: 
+                y = 10
+                break
+            case 2: 
+                y = 20
+                break
+            default: 
+                y = 0
+                break
+        }
+
+        test_expect(y, 10)
+    }),
+    test("switch case 2", fn() {
+        var x = 2
+        var y = 0
+
+        switch (x) {
+            case 1: 
+                y = 10
+                break
+            case 2: 
+                y = 20
+                break
+            default: 
+                y = 0
+                break
+        }
+
+        test_expect(y, 20)
+    }),
+    test("switch default", fn() {
+        var x = 99
+        var y = 0
+
+        switch (x) {
+            case 1: 
+                y = 10
+                break
+            case 2: 
+                y = 20
+                break
+            default: 
+                y = 0
+                break
+        }
+
+        test_expect(y, 0)
+    }),
+    test("switch case fallthrough", fn() {
+        var x = 2
+        var y = 0
+
+        switch (x) {
+            case 1:
+            case 2: 
+                y = 10
+                break
+            case 3: 
+                y = 20
+                break
+            default: 
+                y = 0
+                break
+        }
+
+        test_expect(y, 10)
+    }),
+    test("state machine loop", fn() {
+        var state = "red"
+        var actions = 0
+
+        for (var i = 0; i < 5; i++) {
+            switch (state) {
+                case "red":
+                    state = "green"
+                    break
+                case "green":
+                    state = "yellow"
+                    actions++ // go
+                    break
+                case "yellow":
+                    state = "red"
+                    break
+            }
+        }
+
+        test_expect(actions, 2)
+    })
+])
+
+test_group("error handling", [
+    test("try catch no error", fn() {
+        var x = 0
+
+        try {
+            x = 50
+        } catch (e) {
+            x = 100
+        }
+
+        test_expect(x, 50)
+    }),
+    test("try catch catch", fn() {
+        var x = 0
+
+        try {
+            x = non_existent_var + 10
+        } catch (e) {
+            x = 100
+        }
+
+        test_expect(x, 100)
+    }),
+    test("custom error handling", fn() {
+        var x = 0
+
+        try {
+            // simulate a typed error
+            throw { type: ERROR_TYPE.TYPE, message: "Custom error" }
+        } catch (e) {
+            x = e
+        }
+
+        test_expect(x.type, ERROR_TYPE.TYPE)
+    }),
+    test("exception loop", fn() {
+        var sum = 0
+        var items = [10, 20, undefined, 30]
+
+        for (item in items) {
+            try {
+                if (item == undefined) {
+                    throw "bad item"
+                }
+
+                sum += item
+            } catch (e) {
+                // ignore
+            }
+        }
+
+        test_expect(sum, 60)
+    })
+])

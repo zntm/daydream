@@ -1,0 +1,13 @@
+export fn add(a, b) {
+    return a + b
+}
+
+export fn sub(a, b) {
+    return a - b
+}
+
+global var secret = 42
+
+export fn get_secret() {
+    return secret
+}

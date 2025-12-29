@@ -1,3 +1,4 @@
+#macro PROGRAM_DIRECTORY_DATAFILES ((GM_build_type == "run") ? $"{filename_dir(GM_project_filename)}/datafiles" : "")
 #macro PROGRAM_DIRECTORY_RESOURCES ((GM_build_type == "run") ? $"{filename_dir(GM_project_filename)}/datafiles/resources" : "resources")
 #macro PROGRAM_DIRECTORY_ASSETS $"{PROGRAM_DIRECTORY_RESOURCES}/assets"
 

@@ -2,6 +2,7 @@
 if (keyboard_check(vk_escape))
 {
     cancel_timer++;
+    
     if (cancel_timer >= cancel_threshold)
     {
         // Cancelled

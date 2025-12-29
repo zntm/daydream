@@ -1,0 +1,28 @@
+test_group("modules", [
+    test("import math", fn() {
+        import add, sub, get_secret from "./modules/math_module"
+
+        test_expect(add(10, 5), 15)
+        test_expect(sub(10, 5), 5)
+        test_expect(get_secret(), 42)
+    }),
+    test("import alias", fn() {
+        import add as sum from "./modules/math_module"
+
+        test_expect(sum(2, 2), 4)
+    }),
+    test("import base dir", fn() {
+        import add, sub, get_secret from "tests/modules/math_module"
+
+        test_expect(add(10, 5), 15)
+        test_expect(sub(10, 5), 5)
+        test_expect(get_secret(), 42)
+    }),
+    test("import path security catch", fn() {
+        try {
+            import n from "../../test"
+        } catch (e) {
+            test_expect(e.type, ERROR_TYPE.PATH_SECURITY)
+        }
+    }),
+])

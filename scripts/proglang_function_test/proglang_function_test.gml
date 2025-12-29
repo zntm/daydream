@@ -1,6 +1,5 @@
 /// @desc Proglang Standard Library Function Tests
 function proglang_function_test() {
-    proglang_init(); // Initialize environment
     var _passed = 0;
     var _failed = 0;
 
@@ -215,9 +214,4 @@ function proglang_function_test() {
     
     show_debug_message($"[Proglang Fn Test] COMPLETE. Passed: {_passed}, Failed: {_failed}");
     return { passed: _passed, failed: _failed }
-}
-
-if (IS_DEVELOPER_MODE)
-{
-    proglang_function_test()
 }

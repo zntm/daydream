@@ -1,0 +1,128 @@
+{
+    "Function Definition": {
+        "prefix": "fn",
+        "body": [
+            "fn ${1:name}(${2:args}) {",
+            "\t$0",
+            "}"
+        ],
+        "description": "Define a new function"
+    },
+    "Test Case": {
+        "prefix": "test",
+        "body": [
+            "test(\"${1:name}\", fn() {",
+            "\t$0",
+            "})"
+        ],
+        "description": "Create a new test case"
+    },
+    "Test Group": {
+        "prefix": "test_group",
+        "body": [
+            "test_group(\"${1:group_name}\", [",
+            "\t$0",
+            "])"
+        ],
+        "description": "Create a new test group"
+    },
+    "Test Expect": {
+        "prefix": "expect",
+        "body": [
+            "test_expect(${1:actual}, ${2:expected})"
+        ],
+        "description": "Assertion for tests"
+    },
+    "Import": {
+        "prefix": "import",
+        "body": [
+            "import ${1:items} from \"${2:path}\""
+        ],
+        "description": "Import module"
+    },
+    "Print": {
+        "prefix": "print",
+        "body": [
+            "print($1)"
+        ],
+        "description": "Print to console"
+    },
+    "If Statement": {
+        "prefix": "if",
+        "body": [
+            "if (${1:condition}) {",
+            "\t$0",
+            "}"
+        ],
+        "description": "If statement"
+    },
+    "If Else Statement": {
+        "prefix": "ifelse",
+        "body": [
+            "if (${1:condition}) {",
+            "\t$2",
+            "} else {",
+            "\t$0",
+            "}"
+        ],
+        "description": "If-Else statement"
+    },
+    "For Loop": {
+        "prefix": "for",
+        "body": [
+            "for (${1:var i = 0}; ${2:i < count}; ${3:i++}) {",
+            "\t$0",
+            "}"
+        ],
+        "description": "For loop"
+    },
+    "While Loop": {
+        "prefix": "while",
+        "body": [
+            "while (${1:condition}) {",
+            "\t$0",
+            "}"
+        ],
+        "description": "While loop"
+    },
+    "Try Catch": {
+        "prefix": "try",
+        "body": [
+            "try {",
+            "\t$1",
+            "} catch (${2:e}) {",
+            "\t$0",
+            "}"
+        ],
+        "description": "Try-Catch block"
+    },
+    "Log": {
+        "prefix": "log",
+        "body": [
+            "print($1)"
+        ],
+        "description": "Print to console"
+    },
+    "ERROR_TYPE.RUNTIME": { "prefix": "ERROR_TYPE.RUNTIME", "body": ["ERROR_TYPE.RUNTIME"], "description": "Runtime Error" },
+    "ERROR_TYPE.TYPE": { "prefix": "ERROR_TYPE.TYPE", "body": ["ERROR_TYPE.TYPE"], "description": "Type Error" },
+    "ERROR_TYPE.INDEX": { "prefix": "ERROR_TYPE.INDEX", "body": ["ERROR_TYPE.INDEX"], "description": "Index Error" },
+    "ERROR_TYPE.MEMBER": { "prefix": "ERROR_TYPE.MEMBER", "body": ["ERROR_TYPE.MEMBER"], "description": "Member Error" },
+    "ERROR_TYPE.VARIABLE": { "prefix": "ERROR_TYPE.VARIABLE", "body": ["ERROR_TYPE.VARIABLE"], "description": "Variable Error" },
+    "ERROR_TYPE.DIVIDE_BY_ZERO": { "prefix": "ERROR_TYPE.DIVIDE_BY_ZERO", "body": ["ERROR_TYPE.DIVIDE_BY_ZERO"], "description": "Divide By Zero Error" },
+    "ERROR_TYPE.UNDEFINED_VALUE": { "prefix": "ERROR_TYPE.UNDEFINED_VALUE", "body": ["ERROR_TYPE.UNDEFINED_VALUE"], "description": "Undefined Value Error" },
+    "ERROR_TYPE.NULL_REFERENCE": { "prefix": "ERROR_TYPE.NULL_REFERENCE", "body": ["ERROR_TYPE.NULL_REFERENCE"], "description": "Null Reference Error" },
+    "ERROR_TYPE.INVALID_ARGUMENT": { "prefix": "ERROR_TYPE.INVALID_ARGUMENT", "body": ["ERROR_TYPE.INVALID_ARGUMENT"], "description": "Invalid Argument Error" },
+    "ERROR_TYPE.NOT_CALLABLE": { "prefix": "ERROR_TYPE.NOT_CALLABLE", "body": ["ERROR_TYPE.NOT_CALLABLE"], "description": "Not Callable Error" },
+    "ERROR_TYPE.SYNTAX": { "prefix": "ERROR_TYPE.SYNTAX", "body": ["ERROR_TYPE.SYNTAX"], "description": "Syntax Error" },
+    "ERROR_TYPE.IMPORT": { "prefix": "ERROR_TYPE.IMPORT", "body": ["ERROR_TYPE.IMPORT"], "description": "Import Error" },
+    "ERROR_TYPE.STACK_OVERFLOW": { "prefix": "ERROR_TYPE.STACK_OVERFLOW", "body": ["ERROR_TYPE.STACK_OVERFLOW"], "description": "Stack Overflow Error" },
+    "ERROR_TYPE.STACK_UNDERFLOW": { "prefix": "ERROR_TYPE.STACK_UNDERFLOW", "body": ["ERROR_TYPE.STACK_UNDERFLOW"], "description": "Stack Underflow Error" },
+    "ERROR_TYPE.RECURSION_LIMIT": { "prefix": "ERROR_TYPE.RECURSION_LIMIT", "body": ["ERROR_TYPE.RECURSION_LIMIT"], "description": "Recursion Limit Error" },
+    "ERROR_TYPE.INFINITE_LOOP": { "prefix": "ERROR_TYPE.INFINITE_LOOP", "body": ["ERROR_TYPE.INFINITE_LOOP"], "description": "Infinite Loop Error" },
+    "ERROR_TYPE.ACCESS_DENIED": { "prefix": "ERROR_TYPE.ACCESS_DENIED", "body": ["ERROR_TYPE.ACCESS_DENIED"], "description": "Access Denied Error" },
+    "ERROR_TYPE.ABSTRACT_METHOD": { "prefix": "ERROR_TYPE.ABSTRACT_METHOD", "body": ["ERROR_TYPE.ABSTRACT_METHOD"], "description": "Abstract Method Error" },
+    "ERROR_TYPE.FILE_NOT_FOUND": { "prefix": "ERROR_TYPE.FILE_NOT_FOUND", "body": ["ERROR_TYPE.FILE_NOT_FOUND"], "description": "File Not Found Error" },
+    "ERROR_TYPE.PATH_SECURITY": { "prefix": "ERROR_TYPE.PATH_SECURITY", "body": ["ERROR_TYPE.PATH_SECURITY"], "description": "Path Security Error" },
+    "ERROR_TYPE.ARITY_MISMATCH": { "prefix": "ERROR_TYPE.ARITY_MISMATCH", "body": ["ERROR_TYPE.ARITY_MISMATCH"], "description": "Arity Mismatch Error" },
+    "ERROR_TYPE.SUPER_ERROR": { "prefix": "ERROR_TYPE.SUPER_ERROR", "body": ["ERROR_TYPE.SUPER_ERROR"], "description": "Super Error" }
+}

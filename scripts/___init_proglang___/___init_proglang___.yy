@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"ProgFunctions",
+  "%Name":"___init_proglang___",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"ProgFunctions",
+  "name":"___init_proglang___",
   "parent":{
-    "name":"Proglang",
-    "path":"folders/Scripts/Proglang.yy",
+    "name":"daydream",
+    "path":"daydream.yyp",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

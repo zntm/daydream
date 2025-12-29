@@ -4,33 +4,22 @@ var _menu_layer = menu_layer;
 
 var _check_boundary = function(_surface_index)
 {
-    if (_surface_index < 0) || (_surface_index >= array_length(obj_Menu_Control_Render.surface_index_boundary)) return true;
+    if (_surface_index < 0) || (_surface_index >= array_length(obj_Menu_Control_Render.surface_index_boundary))
+    {
+        return true;
+    }
     
     var _struct = obj_Menu_Control_Render.surface_index_boundary[_surface_index];
     
-    if (!is_struct(_struct)) return true;
-    
-    if (struct_exists(_struct, "x_min"))
+    if (!is_struct(_struct))
     {
-        if (global.gui_mouse_x < _struct.x_min) return false;
-    }
-
-    if (struct_exists(_struct, "x_max"))
-    {
-        if (global.gui_mouse_x > _struct.x_max) return false;
-    }
-
-    if (struct_exists(_struct, "y_min"))
-    {
-        if (global.gui_mouse_y < _struct.y_min) return false;
-    }
-
-    if (struct_exists(_struct, "y_max"))
-    {
-        if (global.gui_mouse_y > _struct.y_max) return false;
+        return true;
     }
     
-    return true;
+    var _gui_mouse_x = global.gui_mouse_x;
+    var _gui_mouse_y = global.gui_mouse_y;
+    
+    return (_gui_mouse_x >= _struct.x_min) && (_gui_mouse_y >= _struct.y_min) && (_gui_mouse_x < _struct.x_max) && (_gui_mouse_y < _struct.y_max);
 }
 
 var _number = instance_number(obj_Menu_Button);
