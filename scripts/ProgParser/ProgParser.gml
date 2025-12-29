@@ -816,6 +816,16 @@ function ProgParser(_tokens) constructor
             var _rhs = parse_expression();
             return new ProgASTAssignment(_expr, _rhs, PROG_TOKEN.SLASH);
         }
+        if (match(PROG_TOKEN.PERCENT_ASSIGN))
+        {
+            var _rhs = parse_expression();
+            return new ProgASTAssignment(_expr, _rhs, PROG_TOKEN.PERCENT);
+        }
+        if (match(PROG_TOKEN.POWER_ASSIGN))
+        {
+            var _rhs = parse_expression();
+            return new ProgASTAssignment(_expr, _rhs, PROG_TOKEN.POWER);
+        }
         if (match(PROG_TOKEN.LSHIFT_ASSIGN))
         {
             var _rhs = parse_expression();
@@ -885,7 +895,7 @@ function ProgParser(_tokens) constructor
         var _expr = parse_ternary();
         
         if (match(PROG_TOKEN.ASSIGN) || match(PROG_TOKEN.PLUS_ASSIGN) || match(PROG_TOKEN.MINUS_ASSIGN) ||
-            match(PROG_TOKEN.STAR_ASSIGN) || match(PROG_TOKEN.SLASH_ASSIGN) ||
+            match(PROG_TOKEN.STAR_ASSIGN) || match(PROG_TOKEN.SLASH_ASSIGN) || match(PROG_TOKEN.PERCENT_ASSIGN) || match(PROG_TOKEN.POWER_ASSIGN) ||
             match(PROG_TOKEN.LSHIFT_ASSIGN) || match(PROG_TOKEN.RSHIFT_ASSIGN) ||
             match(PROG_TOKEN.AMP_ASSIGN) || match(PROG_TOKEN.PIPE_ASSIGN) || match(PROG_TOKEN.CARET_ASSIGN))
         {

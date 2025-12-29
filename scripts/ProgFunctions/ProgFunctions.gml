@@ -221,7 +221,7 @@ proglang_function_register("test_expect", function(_args)
     if (is_array(_actual) && array_length(_actual) >= PROG_CLOSURE.SIZE && _actual[PROG_CLOSURE.TYPE] == "closure")
     {
         var _vm = new ProgVM();
-        
+        _vm.current_scope.parent = _actual[PROG_CLOSURE.ENV];
         _actual = _vm.run(_actual[PROG_CLOSURE.BYTECODE]);
     }
     else if (is_struct(_actual) && struct_exists(_actual, "func"))
@@ -233,6 +233,7 @@ proglang_function_register("test_expect", function(_args)
     if (is_array(_expected) && array_length(_expected) >= PROG_CLOSURE.SIZE && _expected[PROG_CLOSURE.TYPE] == "closure")
     {
         var _vm = new ProgVM();
+        _vm.current_scope.parent = _expected[PROG_CLOSURE.ENV];
         _expected = _vm.run(_expected[PROG_CLOSURE.BYTECODE]);
     }
     else if (is_struct(_expected) && struct_exists(_expected, "func"))
@@ -253,12 +254,121 @@ proglang_function_register("test_expect", function(_args)
 
 /// test(name, fn, stop_on_failure) - Runs a test function, measures time, prints summary on completion
 /// Returns { passed: bool, time_ms: number, failures: array }
-proglang_function_register("test", function(_args)
+global.proglang_pending_tests = [];
+
+function proglang_reset_pending()
 {
-    var _name = _args[0];
-    var _fn = _args[1];
-    var _stop_on_fail = array_length(_args) > 2 ? _args[2] : false;
+    global.proglang_pending_tests = [];
+}
+
+function proglang_run_pending()
+{
+    var _tests = global.proglang_pending_tests;
+    for (var i = 0; i < array_length(_tests); i++)
+    {
+        var _test = _tests[i];
+        
+        // Skip handled tests (ones that were inside a group)
+        if (is_struct(_test) && struct_exists(_test, "handled") && _test.handled) continue;
+        
+        if (struct_exists(_test, "__type__") && _test.__type__ == "Group")
+        {
+            // Execute Group
+            var _group_name = _test.name;
+            var _group_tests = _test.tests;
+            
+            var _start = get_timer();
+            var _total = array_length(_group_tests);
+            var _passed = 0;
+            var _failed = 0;
+            
+            show_debug_message($"━━━ {_group_name} ━━━");
+            
+            for (var j = 0; j < _total; j++)
+            {
+                var _t_res = _proglang_run_test_internal(_group_tests[j], $"Test {j + 1}");
+                
+                var _t_time = _t_res.time_ms;
+                var _t_name = _t_res.name;
+                
+                if (_t_res.passed)
+                {
+                    _passed++;
+                    show_debug_message($"  ✓ {_t_name} ({_t_time}ms)");
+                }
+                else
+                {
+                    _failed++;
+                    show_debug_message($"  ✗ {_t_name} ({_t_time}ms)");
+                    for (var k = 0; k < array_length(_t_res.failures); k++)
+                    {
+                        show_debug_message($"    - {_t_res.failures[k]}");
+                    }
+                    if (_t_res.error != undefined)
+                    {
+                        var _err_msg = is_struct(_t_res.error) && struct_exists(_t_res.error, "message") ? _t_res.error.message : string(_t_res.error);
+                        show_debug_message($"    - Error: {_err_msg}");
+                    }
+                }
+            }
+            
+            var _total_time = (get_timer() - _start) / 1000;
+            if (_failed == 0) show_debug_message($"━━━ {_passed}/{_total} passed ({_total_time}ms) ━━━");
+            else show_debug_message($"━━━ {_passed}/{_total} passed, {_failed} failed ({_total_time}ms) ━━━");
+        }
+        else if (struct_exists(_test, "__type__") && _test.__type__ == "Test")
+        {
+            // Execute Single Test
+            var _t_res = _proglang_run_test_internal(_test, _test.name);
+            var _t_time = _t_res.time_ms;
+            
+            if (_t_res.passed)
+            {
+                show_debug_message($"✓ {_test.name} ({_t_time}ms)");
+            }
+            else
+            {
+                show_debug_message($"✗ {_test.name} ({_t_time}ms)");
+                for (var k = 0; k < array_length(_t_res.failures); k++)
+                {
+                    show_debug_message($"  - {_t_res.failures[k]}");
+                }
+                if (_t_res.error != undefined)
+                {
+                    var _err_msg = is_struct(_t_res.error) && struct_exists(_t_res.error, "message") ? _t_res.error.message : string(_t_res.error);
+                    show_debug_message($"  - Error: {_err_msg}");
+                }
+            }
+        }
+    }
+}
+
+function _proglang_run_test_internal(_test_struct, _default_name)
+{
+    var _name = _default_name;
+    var _fn = undefined;
     
+    if (is_struct(_test_struct) && struct_exists(_test_struct, "__type__") && _test_struct.__type__ == "Test")
+    {
+        _name = _test_struct.name;
+        _fn = _test_struct.fn;
+    }
+    else if (is_struct(_test_struct) && struct_exists(_test_struct, "fn"))
+    {
+        _name = struct_exists(_test_struct, "name") ? _test_struct.name : _default_name;
+        _fn = _test_struct.fn;
+    }
+    else
+    {
+        _fn = _test_struct;
+    }
+    
+    // Support Test N: 'name' format if we have a real name
+    if (_name != _default_name && string_pos(_default_name, "Test") == 1)
+    {
+         _name = $"{_default_name}: '{_name}'";
+    }
+
     // Reset test state
     global.proglang_test_state.current_failures = [];
     global.proglang_test_state.current_assertions = 0;
@@ -272,6 +382,7 @@ proglang_function_register("test", function(_args)
         if (is_array(_fn) && array_length(_fn) >= PROG_CLOSURE.SIZE && _fn[PROG_CLOSURE.TYPE] == "closure")
         {
             var _vm = new ProgVM();
+            _vm.current_scope.parent = _fn[PROG_CLOSURE.ENV];
             _vm.run(_fn[PROG_CLOSURE.BYTECODE]);
         }
         else if (is_struct(_fn) && struct_exists(_fn, "func"))
@@ -288,129 +399,50 @@ proglang_function_register("test", function(_args)
     var _failures = global.proglang_test_state.current_failures;
     var _passed = array_length(_failures) == 0 && _error == undefined;
     
-    // Print result only after completion
-    if (_passed)
-    {
-        show_debug_message($"✓ {_name} ({_time_ms}ms)");
-    }
-    else
-    {
-        show_debug_message($"✗ {_name} ({_time_ms}ms)");
-        for (var i = 0; i < array_length(_failures); i++)
-        {
-            show_debug_message($"  - {_failures[i]}");
-        }
-        if (_error != undefined)
-        {
-            var _err_msg = is_struct(_error) && struct_exists(_error, "message") ? _error.message : string(_error);
-            show_debug_message($"  - Error: {_err_msg}");
-        }
-        
-        if (_stop_on_fail)
-        {
-            throw { type: PROGLANG_ERROR_TYPE.RUNTIME, message: $"Test '{_name}' failed" };
-        }
-    }
+    return { passed: _passed, time_ms: _time_ms, failures: _failures, error: _error, name: _name };
+}
+
+/// test(name, fn, stop_on_failure) - Registers a test to pending list
+proglang_function_register("test", function(_args)
+{
+    var _name = _args[0];
+    var _fn = _args[1];
+    var _stop_on_fail = array_length(_args) > 2 ? _args[2] : false;
     
-    return { passed: _passed, time_ms: _time_ms, failures: _failures };
+    var _test_struct = {
+        __type__: "Test",
+        name: _name,
+        fn: _fn,
+        stop_on_fail: _stop_on_fail,
+        handled: false
+    };
+    
+    array_push(global.proglang_pending_tests, _test_struct);
+    return _test_struct;
 });
 
-/// test_group(name, tests) - Aggregates multiple tests, prints clean summary after completion
-/// tests: array of { name, fn } or just functions
-/// Returns { total: n, passed: n, failed: n, time_ms: n }
+/// test_group(name, tests) - Registers a test group
 proglang_function_register("test_group", function(_args)
 {
     var _group_name = _args[0];
     var _tests = _args[1];
     
-    var _start = get_timer();
-    var _total = array_length(_tests);
-    var _passed = 0;
-    var _failed = 0;
-    var _results = [];
-    
-    show_debug_message($"━━━ {_group_name} ━━━");
-    
-    for (var i = 0; i < _total; i++)
+    // Mark children as handled so they don't run individually at top level
+    for (var i = 0; i < array_length(_tests); i++)
     {
-        var _test = _tests[i];
-        var _test_name = "";
-        var _test_fn = undefined;
-        
-        // Support { name, fn } or just fn
-        if (is_struct(_test) && struct_exists(_test, "fn"))
+        var _t = _tests[i];
+        if (is_struct(_t) && struct_exists(_t, "__type__") && _t.__type__ == "Test")
         {
-            _test_name = struct_exists(_test, "name") ? _test.name : $"Test {i + 1}";
-            _test_fn = _test.fn;
+            _t.handled = true;
         }
-        else
-        {
-            _test_name = $"Test {i + 1}";
-            _test_fn = _test;
-        }
-        
-        // Reset test state
-        global.proglang_test_state.current_failures = [];
-        global.proglang_test_state.current_assertions = 0;
-        
-        var _t_start = get_timer();
-        var _error = undefined;
-        
-        try
-        {
-            if (is_array(_test_fn) && array_length(_test_fn) >= PROG_CLOSURE.SIZE && _test_fn[PROG_CLOSURE.TYPE] == "closure")
-            {
-                var _vm = new ProgVM();
-                _vm.run(_test_fn[PROG_CLOSURE.BYTECODE]);
-            }
-            else if (is_struct(_test_fn) && struct_exists(_test_fn, "func"))
-            {
-                _test_fn.func([]);
-            }
-        }
-        catch (_e)
-        {
-            _error = _e;
-        }
-        
-        var _t_time = (get_timer() - _t_start) / 1000;
-        var _failures = global.proglang_test_state.current_failures;
-        var _test_passed = array_length(_failures) == 0 && _error == undefined;
-        
-        if (_test_passed)
-        {
-            _passed++;
-            show_debug_message($"  ✓ {_test_name} ({_t_time}ms)");
-        }
-        else
-        {
-            _failed++;
-            show_debug_message($"  ✗ {_test_name} ({_t_time}ms)");
-            for (var j = 0; j < array_length(_failures); j++)
-            {
-                show_debug_message($"    - {_failures[j]}");
-            }
-            if (_error != undefined)
-            {
-                var _err_msg = is_struct(_error) && struct_exists(_error, "message") ? _error.message : string(_error);
-                show_debug_message($"    - Error: {_err_msg}");
-            }
-        }
-        
-        array_push(_results, { name: _test_name, passed: _test_passed, time_ms: _t_time });
     }
     
-    var _total_time = (get_timer() - _start) / 1000;
+    var _group_struct = {
+        __type__: "Group",
+        name: _group_name,
+        tests: _tests
+    };
     
-    // Summary line
-    if (_failed == 0)
-    {
-        show_debug_message($"━━━ {_passed}/{_total} passed ({_total_time}ms) ━━━");
-    }
-    else
-    {
-        show_debug_message($"━━━ {_passed}/{_total} passed, {_failed} failed ({_total_time}ms) ━━━");
-    }
-    
-    return { total: _total, passed: _passed, failed: _failed, time_ms: _total_time, results: _results };
+    array_push(global.proglang_pending_tests, _group_struct);
+    return _group_struct;
 });

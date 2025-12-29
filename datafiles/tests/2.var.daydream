@@ -1,0 +1,127 @@
+global var y = 5
+
+test_group("var", [
+    test("var declaration", fn() {
+        var x = 5
+
+        test_expect(x, 5)
+        test_expect(fn() {
+            var x = 5
+
+            return x
+        }, 5)
+        test_expect(x + 5, 10)
+    }),
+    // should be able to use the global var y at the top level
+    test("global var", fn() {
+        print(y)
+
+        test_expect(y, 5)
+        test_expect(fn() {
+            return y
+        }, 5)
+        test_expect(y + 5, 10)
+    })
+])
+
+test_group("var manipulation math", [
+    test("var add", fn() {
+        var x = 5
+        x = x + 5
+        test_expect(x, 10)
+        x += 5
+        test_expect(x, 15)
+    }),
+    test("var sub", fn() {
+        var x = 7
+        x = x - 3
+        test_expect(x, 4)
+        x -= 3
+        test_expect(x, 1)
+    }),
+    test("var mul", fn() {
+        var x = 5
+        x = x * 5
+        test_expect(x, 25)
+        x *= 5
+        test_expect(x, 125)
+    }),
+    test("var div", fn() {
+        var x = 8
+        x = x / 2
+        test_expect(x, 4)
+        x /= 2
+        test_expect(x, 2)
+    }),
+    test("var mod", fn() {
+        var x = 10
+        x = x % 7
+        test_expect(x, 3)
+        x %= 2
+        test_expect(x, 1)
+    }),
+    test("var pow", fn() {
+        var x = 2
+        x = x ** 3
+        test_expect(x, 8)
+        x **= 2
+        test_expect(x, 64)
+    }),
+    test("var increment", fn() {
+        var x = 5
+
+        x++
+
+        test_expect(x, 6)
+    }),
+    test("var decrement", fn() {
+        var x = 5
+
+        x--
+
+        test_expect(x, 4)
+    })
+])
+
+test_group("var manipulation bit", [
+    test("var and", fn() {
+        var x = 7
+        x = x & 3
+        test_expect(x, 3)
+        x &= 2
+        test_expect(x, 2)
+    }),
+    test("var or", fn() {
+        var x = 5
+        x = x | 3
+        test_expect(x, 7)
+        x |= 3
+        test_expect(x, 7)
+    }),
+    test("var xor", fn() {
+        var x = 5
+        x = x ^ 3
+        test_expect(x, 6)
+        x ^= 3
+        test_expect(x, 6)
+    }),
+    test("var not", fn() {
+        var x = 5
+        x = ~x
+        test_expect(x, -6)
+    }),
+    test("var lshift", fn() {
+        var x = 1
+        x = x << 4
+        test_expect(x, 16)
+        x <<= 4
+        test_expect(x, 256)
+    }),
+    test("var rshift", fn() {
+        var x = 16
+        x = x >> 2
+        test_expect(x, 4)
+        x >>= 2
+        test_expect(x, 1)
+    })
+])

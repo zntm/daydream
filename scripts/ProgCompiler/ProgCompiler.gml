@@ -1039,6 +1039,8 @@ function ProgCompiler() constructor
                     case PROG_TOKEN.MINUS: case PROG_TOKEN.MINUS_ASSIGN: emit(PROG_OP.SUB); break;
                     case PROG_TOKEN.STAR: case PROG_TOKEN.STAR_ASSIGN: emit(PROG_OP.MUL); break;
                     case PROG_TOKEN.SLASH: case PROG_TOKEN.SLASH_ASSIGN: emit(PROG_OP.DIV); break;
+                    case PROG_TOKEN.PERCENT: case PROG_TOKEN.PERCENT_ASSIGN: emit(PROG_OP.MOD); break;
+                    case PROG_TOKEN.POWER: case PROG_TOKEN.POWER_ASSIGN: emit(PROG_OP.POW); break;
                     case PROG_TOKEN.LSHIFT: case PROG_TOKEN.LSHIFT_ASSIGN: emit(PROG_OP.SHL); break;
                     case PROG_TOKEN.RSHIFT: case PROG_TOKEN.RSHIFT_ASSIGN: emit(PROG_OP.SHR); break;
                     case PROG_TOKEN.AMP: case PROG_TOKEN.AMP_ASSIGN: emit(PROG_OP.BIT_AND); break;
@@ -1066,6 +1068,8 @@ function ProgCompiler() constructor
                     case PROG_TOKEN.MINUS: case PROG_TOKEN.MINUS_ASSIGN: emit(PROG_OP.SUB); break;
                     case PROG_TOKEN.STAR: case PROG_TOKEN.STAR_ASSIGN: emit(PROG_OP.MUL); break;
                     case PROG_TOKEN.SLASH: case PROG_TOKEN.SLASH_ASSIGN: emit(PROG_OP.DIV); break;
+                    case PROG_TOKEN.PERCENT: case PROG_TOKEN.PERCENT_ASSIGN: emit(PROG_OP.MOD); break;
+                    case PROG_TOKEN.POWER: case PROG_TOKEN.POWER_ASSIGN: emit(PROG_OP.POW); break;
                     case PROG_TOKEN.LSHIFT: case PROG_TOKEN.LSHIFT_ASSIGN: emit(PROG_OP.SHL); break;
                     case PROG_TOKEN.RSHIFT: case PROG_TOKEN.RSHIFT_ASSIGN: emit(PROG_OP.SHR); break;
                     case PROG_TOKEN.AMP: case PROG_TOKEN.AMP_ASSIGN: emit(PROG_OP.BIT_AND); break;
@@ -1095,6 +1099,8 @@ function ProgCompiler() constructor
                     case PROG_TOKEN.MINUS: case PROG_TOKEN.MINUS_ASSIGN: emit(PROG_OP.SUB); break;
                     case PROG_TOKEN.STAR: case PROG_TOKEN.STAR_ASSIGN: emit(PROG_OP.MUL); break;
                     case PROG_TOKEN.SLASH: case PROG_TOKEN.SLASH_ASSIGN: emit(PROG_OP.DIV); break;
+                    case PROG_TOKEN.PERCENT: case PROG_TOKEN.PERCENT_ASSIGN: emit(PROG_OP.MOD); break;
+                    case PROG_TOKEN.POWER: case PROG_TOKEN.POWER_ASSIGN: emit(PROG_OP.POW); break;
                     case PROG_TOKEN.LSHIFT: case PROG_TOKEN.LSHIFT_ASSIGN: emit(PROG_OP.SHL); break;
                     case PROG_TOKEN.RSHIFT: case PROG_TOKEN.RSHIFT_ASSIGN: emit(PROG_OP.SHR); break;
                     case PROG_TOKEN.AMP: case PROG_TOKEN.AMP_ASSIGN: emit(PROG_OP.BIT_AND); break;

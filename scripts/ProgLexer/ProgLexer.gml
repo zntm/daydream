@@ -17,7 +17,7 @@ enum PROG_TOKEN
     PLUS_PLUS, MINUS_MINUS,
     EQ, NE, LT, GT, LE, GE,
     AMP, PIPE, CARET, TILDE, LSHIFT, RSHIFT,
-    ASSIGN, PLUS_ASSIGN, MINUS_ASSIGN, STAR_ASSIGN, SLASH_ASSIGN,
+    ASSIGN, PLUS_ASSIGN, MINUS_ASSIGN, STAR_ASSIGN, SLASH_ASSIGN, PERCENT_ASSIGN, POWER_ASSIGN,
     LSHIFT_ASSIGN, RSHIFT_ASSIGN, AMP_ASSIGN, PIPE_ASSIGN, CARET_ASSIGN,
     NULL_COALESCE, SPREAD, ARROW,
     // Punctuation
@@ -87,6 +87,7 @@ function ProgLexer(_source) constructor
         }
         
         array_push(tokens, { type: PROG_TOKEN.EOF, lexeme: "", literal: undefined, line: line });
+        
         return tokens;
     }
     
@@ -97,8 +98,10 @@ function ProgLexer(_source) constructor
     
     static match = function(_expected)
     {
-        if (is_at_end() || string_char_at(source, current) != _expected) return false;
+        if (is_at_end()) || (string_char_at(source, current) != _expected) return false;
+        
         current++;
+        
         return true;
     }
     
@@ -148,10 +151,10 @@ function ProgLexer(_source) constructor
                 break;
             case "-": 
                 if (match("-")) add_token(PROG_TOKEN.MINUS_MINUS);
-                else if (match(">")) add_token(PROG_TOKEN.ARROW);
+                // else if (match(">")) add_token(PROG_TOKEN.ARROW);
                 else add_token(match("=") ? PROG_TOKEN.MINUS_ASSIGN : PROG_TOKEN.MINUS); 
                 break;
-            case "*": add_token(match("=") ? PROG_TOKEN.STAR_ASSIGN : (match("*") ? PROG_TOKEN.POWER : PROG_TOKEN.STAR)); break;
+            case "*": add_token(match("=") ? PROG_TOKEN.STAR_ASSIGN : (match("*") ? (match("=") ? PROG_TOKEN.POWER_ASSIGN : PROG_TOKEN.POWER) : PROG_TOKEN.STAR)); break;
             case "/": 
                 if (match("/")) { while (peek() != "\n" && !is_at_end()) advance(); }
                 else if (match("*"))
@@ -196,7 +199,7 @@ function ProgLexer(_source) constructor
                     else add_token(PROG_TOKEN.SLASH);
                 }
                 break;
-            case "%": add_token(PROG_TOKEN.PERCENT); break;
+            case "%": add_token(match("=") ? PROG_TOKEN.PERCENT_ASSIGN : PROG_TOKEN.PERCENT); break;
             
             case "!": add_token(match("=") ? PROG_TOKEN.NE : PROG_TOKEN.NOT); break;
             case "=": 
