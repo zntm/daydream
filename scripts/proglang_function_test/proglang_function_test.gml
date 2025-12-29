@@ -215,8 +215,3 @@ function proglang_function_test() {
     show_debug_message($"[Proglang Fn Test] COMPLETE. Passed: {_passed}, Failed: {_failed}");
     return { passed: _passed, failed: _failed }
 }
-
-if (IS_DEVELOPER_MODE)
-{
-    call_later(1, time_source_units_frames, proglang_function_test);
-}

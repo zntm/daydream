@@ -102,6 +102,31 @@ function proglang_test() {
     if (_assert("Bit Or", "return 5 | 3", 7)) _passed++; else _failed++;
     if (_assert("Bit Xor", "return 5 ^ 3", 6)) _passed++; else _failed++;
     if (_assert("Shift Left", "return 1 << 4", 16)) _passed++; else _failed++;
+    if (_assert("Shift Right", "return 16 >> 2", 4)) _passed++; else _failed++;
+    if (_assert("Bit NOT", "return ~0", -1)) _passed++; else _failed++;
+    if (_assert("Bit NOT 5", "return ~5", -6)) _passed++; else _failed++;
+    
+    // Compound Bitwise Assignments
+    if (_assert("LShift Assign", "var a = 1; a <<= 3; return a", 8)) _passed++; else _failed++;
+    if (_assert("RShift Assign", "var a = 16; a >>= 2; return a", 4)) _passed++; else _failed++;
+    if (_assert("BitAnd Assign", "var a = 7; a &= 3; return a", 3)) _passed++; else _failed++;
+    if (_assert("BitOr Assign", "var a = 1; a |= 6; return a", 7)) _passed++; else _failed++;
+    if (_assert("BitXor Assign", "var a = 5; a ^= 3; return a", 6)) _passed++; else _failed++;
+    
+    // Break Amount (Multi-Level Break)
+    if (_assert("Break 2", 
+        $"var found = 0\n" +
+        $"for (var i = 0; i < 3; i++) \{\n" +
+        $"    for (var j = 0; j < 3; j++) \{\n" +
+        $"        if (i == 1 && j == 1) \{\n" +
+        $"            found = 1\n" +
+        $"            break 2\n" +
+        $"        \}\n" +
+        $"    \}\n" +
+        $"    found = 2  // Should not reach here if break 2 works\n" +
+        $"\}\n" +
+        $"return found"
+    , 1)) _passed++; else _failed++;
     
     // Objects/Structs
     if (_assert("Object Create", "var o = { x: 10 } return o.x", 10)) _passed++; else _failed++;
@@ -1626,12 +1651,10 @@ function proglang_test() {
     , 6)) _passed++; else _failed++;
     proglang_execute("print(\"Proglang Print Test OK\")");
     
+    // Run verification tests for new features
+    proglang_function_test();
+
     show_debug_message($"[Proglang Test] Tests Completed. Passed: {_passed}, Failed: {_failed}");
     
     return (_failed == 0);
-}
-
-if (IS_DEVELOPER_MODE)
-{
-    call_later(1, time_source_units_frames, proglang_test);
 }

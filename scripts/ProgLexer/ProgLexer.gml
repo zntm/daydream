@@ -1,5 +1,6 @@
 /// @desc Proglang Token Types
-enum PROG_TOKEN {
+enum PROG_TOKEN
+{
     // Literals
     NUMBER, STRING, REGEX, TRUE, FALSE, UNDEFINED,
     // Identifiers
@@ -15,8 +16,9 @@ enum PROG_TOKEN {
     PLUS, MINUS, STAR, SLASH, PERCENT, POWER,
     PLUS_PLUS, MINUS_MINUS,
     EQ, NE, LT, GT, LE, GE,
-    AMP, PIPE, CARET, LSHIFT, RSHIFT,
+    AMP, PIPE, CARET, TILDE, LSHIFT, RSHIFT,
     ASSIGN, PLUS_ASSIGN, MINUS_ASSIGN, STAR_ASSIGN, SLASH_ASSIGN,
+    LSHIFT_ASSIGN, RSHIFT_ASSIGN, AMP_ASSIGN, PIPE_ASSIGN, CARET_ASSIGN,
     NULL_COALESCE, SPREAD, ARROW,
     // Punctuation
     LPAREN, RPAREN, LBRACE, RBRACE, LBRACKET, RBRACKET,
@@ -27,7 +29,8 @@ enum PROG_TOKEN {
 
 /// @desc Lexer for Proglang - tokenizes source code into tokens
 /// @param {string} _source The source code to tokenize
-function ProgLexer(_source) constructor {
+function ProgLexer(_source) constructor
+{
     source = _source;
     length = string_length(_source);
     start = 1;
@@ -61,7 +64,8 @@ function ProgLexer(_source) constructor {
     
     /// @desc Tokenize the source code
     /// @returns {array} Array of token structs
-    static tokenize = function() {
+    static tokenize = function()
+    {
         tokens = [];
         start = 1;
         current = 1;
@@ -69,11 +73,15 @@ function ProgLexer(_source) constructor {
         had_error = false;
         interp_stack = [];
         
-        while (!is_at_end()) {
+        while (!is_at_end())
+        {
             start = current;
-            if (array_length(interp_stack) > 0 && interp_stack[array_length(interp_stack)-1] == -1) {
+            if (array_length(interp_stack) > 0 && interp_stack[array_length(interp_stack)-1] == -1)
+            {
                 scan_interpolation();
-            } else {
+            }
+            else
+            {
                 scan_token();
             }
         }
@@ -87,21 +95,25 @@ function ProgLexer(_source) constructor {
     static peek = function() { return is_at_end() ? "" : string_char_at(source, current); }
     static peek_next = function() { return (current + 1 > length) ? "" : string_char_at(source, current + 1); }
     
-    static match = function(_expected) {
+    static match = function(_expected)
+    {
         if (is_at_end() || string_char_at(source, current) != _expected) return false;
         current++;
         return true;
     }
     
-    static add_token = function(_type, _literal = undefined) {
+    static add_token = function(_type, _literal = undefined)
+    {
         var _text = (current >= start) ? string_copy(source, start, current - start) : "";
         array_push(tokens, { type: _type, lexeme: _text, literal: _literal, line: line });
     }
     
-    static scan_token = function() {
+    static scan_token = function()
+    {
         var _c = advance();
         
-        switch (_c) {
+        switch (_c)
+        {
             case "(": add_token(PROG_TOKEN.LPAREN); break;
             case ")": add_token(PROG_TOKEN.RPAREN); break;
             case "{": 
@@ -109,9 +121,11 @@ function ProgLexer(_source) constructor {
                 if (array_length(interp_stack) > 0) interp_stack[@ array_length(interp_stack) - 1]++;
                 break;
             case "}": 
-                if (array_length(interp_stack) > 0) {
+                if (array_length(interp_stack) > 0)
+                {
                     var _depth = interp_stack[array_length(interp_stack) - 1];
-                    if (_depth == 0) {
+                    if (_depth == 0)
+                    {
                         add_token(PROG_TOKEN.RPAREN);
                         add_token(PROG_TOKEN.PLUS);
                         interp_stack[@ array_length(interp_stack) - 1] = -1;
@@ -140,17 +154,22 @@ function ProgLexer(_source) constructor {
             case "*": add_token(match("=") ? PROG_TOKEN.STAR_ASSIGN : (match("*") ? PROG_TOKEN.POWER : PROG_TOKEN.STAR)); break;
             case "/": 
                 if (match("/")) { while (peek() != "\n" && !is_at_end()) advance(); }
-                else if (match("*")) {
-                    while (!is_at_end()) {
+                else if (match("*"))
+                {
+                    while (!is_at_end())
+                    {
                         if (peek() == "*" && peek_next() == "/") { advance(); advance(); break; }
                         if (peek() == "\n") line++;
                         advance();
                     }
-                } else { 
+                }
+                else
+                { 
                     // Regex vs Division check
                     var _is_regex = false;
                     if (array_length(tokens) == 0) _is_regex = true;
-                    else {
+                    else
+                    {
                         var _last = tokens[array_length(tokens) - 1].type;
                         if (_last == PROG_TOKEN.LPAREN || _last == PROG_TOKEN.COMMA || 
                             _last == PROG_TOKEN.ASSIGN || _last == PROG_TOKEN.COLON ||
@@ -166,7 +185,8 @@ function ProgLexer(_source) constructor {
                             _last == PROG_TOKEN.EQ || _last == PROG_TOKEN.NE ||
                             _last == PROG_TOKEN.LT || _last == PROG_TOKEN.GT ||
                             _last == PROG_TOKEN.LE || _last == PROG_TOKEN.GE ||
-                            _last == PROG_TOKEN.QUESTION || _last == PROG_TOKEN.NULL_COALESCE) {
+                            _last == PROG_TOKEN.QUESTION || _last == PROG_TOKEN.NULL_COALESCE)
+                        {
                             _is_regex = true;
                         }
                     }
@@ -184,12 +204,19 @@ function ProgLexer(_source) constructor {
                 else if (match(">")) add_token(PROG_TOKEN.ARROW);
                 else add_token(PROG_TOKEN.ASSIGN);
                 break; 
-            case "<": add_token(match("=") ? PROG_TOKEN.LE : (match("<") ? PROG_TOKEN.LSHIFT : PROG_TOKEN.LT)); break;
-            case ">": add_token(match("=") ? PROG_TOKEN.GE : (match(">") ? PROG_TOKEN.RSHIFT : PROG_TOKEN.GT)); break;
+            case "<": 
+                if (match("<")) add_token(match("=") ? PROG_TOKEN.LSHIFT_ASSIGN : PROG_TOKEN.LSHIFT);
+                else add_token(match("=") ? PROG_TOKEN.LE : PROG_TOKEN.LT);
+                break;
+            case ">": 
+                if (match(">")) add_token(match("=") ? PROG_TOKEN.RSHIFT_ASSIGN : PROG_TOKEN.RSHIFT);
+                else add_token(match("=") ? PROG_TOKEN.GE : PROG_TOKEN.GT);
+                break;
             
-            case "&": add_token(match("&") ? PROG_TOKEN.AND : PROG_TOKEN.AMP); break;
-            case "|": add_token(match("|") ? PROG_TOKEN.OR : PROG_TOKEN.PIPE); break;
-            case "^": add_token(PROG_TOKEN.CARET); break;
+            case "&": add_token(match("&") ? PROG_TOKEN.AND : (match("=") ? PROG_TOKEN.AMP_ASSIGN : PROG_TOKEN.AMP)); break;
+            case "|": add_token(match("|") ? PROG_TOKEN.OR : (match("=") ? PROG_TOKEN.PIPE_ASSIGN : PROG_TOKEN.PIPE)); break;
+            case "^": add_token(match("=") ? PROG_TOKEN.CARET_ASSIGN : PROG_TOKEN.CARET); break;
+            case "~": add_token(PROG_TOKEN.TILDE); break;
             case "?": add_token(match("?") ? PROG_TOKEN.NULL_COALESCE : PROG_TOKEN.QUESTION); break;
             
             case " ": case "\r": case "\t": break;
@@ -209,8 +236,10 @@ function ProgLexer(_source) constructor {
         }
     }
     
-    static scan_string = function(_quote = "\"") {
-        while (peek() != _quote && !is_at_end()) {
+    static scan_string = function(_quote = "\"")
+    {
+        while (peek() != _quote && !is_at_end())
+        {
             if (peek() == "\n") line++;
             advance();
         }
@@ -219,16 +248,19 @@ function ProgLexer(_source) constructor {
         add_token(PROG_TOKEN.STRING, string_copy(source, start + 1, current - start - 2));
     }
     
-    static start_interpolation = function() {
+    static start_interpolation = function()
+    {
         add_token(PROG_TOKEN.LPAREN);
         array_push(interp_stack, -1);
         start = current;
         scan_interpolation();
     }
     
-    static scan_interpolation = function() {
+    static scan_interpolation = function()
+    {
         start = current;
-        while (peek() != "\"" && peek() != "{" && !is_at_end()) {
+        while (peek() != "\"" && peek() != "{" && !is_at_end())
+        {
             if (peek() == "\n") line++;
             advance();
         }
@@ -237,11 +269,14 @@ function ProgLexer(_source) constructor {
         add_token(PROG_TOKEN.STRING, string_copy(source, start, current - start));
         
         var _char = peek();
-        if (_char == "\"") {
+        if (_char == "\"")
+        {
             advance();
             add_token(PROG_TOKEN.RPAREN);
             array_pop(interp_stack);
-        } else if (_char == "{") {
+        }
+        else if (_char == "{")
+        {
             advance();
             add_token(PROG_TOKEN.PLUS);
             array_push(tokens, { type: PROG_TOKEN.IDENTIFIER, lexeme: "string", literal: undefined, line: line });
@@ -250,16 +285,19 @@ function ProgLexer(_source) constructor {
         }
     }
     
-    static scan_identifier = function() {
+    static scan_identifier = function()
+    {
         while (is_alpha_numeric(peek())) advance();
         var _text = string_copy(source, start, current - start);
         add_token(struct_exists(keywords, _text) ? keywords[$ _text] : PROG_TOKEN.IDENTIFIER);
     }
     
-    static scan_number = function() {
+    static scan_number = function()
+    {
         // Support underscores in numbers (e.g., 10_000)
         while (is_digit(peek()) || peek() == "_") advance();
-        if (peek() == "." && is_digit(peek_next())) {
+        if (peek() == "." && is_digit(peek_next()))
+        {
             advance();
             while (is_digit(peek()) || peek() == "_") advance();
         }
@@ -269,17 +307,24 @@ function ProgLexer(_source) constructor {
         add_token(PROG_TOKEN.NUMBER, real(_num_str));
     }
     
-    static scan_regex = function() {
-        while (!is_at_end()) {
+    static scan_regex = function()
+    {
+        while (!is_at_end())
+        {
             var _c = peek();
-            if (_c == "\n") {
+            if (_c == "\n")
+            {
                  had_error = true; error = $"Unterminated regex at line {line}"; return;
             }
-            if (_c == "/") {
+            if (_c == "/")
+            {
                 // Check if escaped?
-                if (string_char_at(source, current - 1) == "\\") {
+                if (string_char_at(source, current - 1) == "\\")
+                {
                     // It is escaped, continue
-                } else {
+                }
+                else
+                {
                     // End of regex
                     advance(); // Consume /
                     break;
@@ -292,7 +337,8 @@ function ProgLexer(_source) constructor {
         var _flags = "";
         
         // Scan flags
-        while (is_alpha(peek())) {
+        while (is_alpha(peek()))
+        {
             _flags += advance();
         }
         

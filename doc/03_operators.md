@@ -41,6 +41,7 @@ Comparison operators return a boolean (`true` or `false`).
 | `&`      | Bitwise AND | `5 & 3` (1)  |
 | `\|`     | Bitwise OR  | `5 \| 3` (7) |
 | `^`      | Bitwise XOR | `5 ^ 3` (6)  |
+| `~`      | Bitwise NOT | `~5` (-6)    |
 | `<<`     | Left Shift  | `1 << 2` (4) |
 | `>>`     | Right Shift | `8 >> 2` (2) |
 
@@ -53,6 +54,11 @@ Comparison operators return a boolean (`true` or `false`).
 | `-=`     | Subtract and assign        |
 | `*=`     | Multiply and assign        |
 | `/=`     | Divide and assign          |
+| `<<=`    | Left shift and assign      |
+| `>>=`    | Right shift and assign     |
+| `&=`     | Bitwise AND and assign     |
+| `\|=`    | Bitwise OR and assign      |
+| `^=`     | Bitwise XOR and assign     |
 | `++`     | Increment (Prefix/Postfix) |
 | `--`     | Decrement (Prefix/Postfix) |
 

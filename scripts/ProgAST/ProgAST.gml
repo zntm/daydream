@@ -163,9 +163,10 @@ function ProgASTForStmt(_initializer, _condition, _increment, _body) : ProgASTNo
     body = _body;
 }
 
-/// @desc Break statement
-function ProgASTBreakStmt() : ProgASTNode(PROG_AST.BREAK_STMT) constructor
+/// @desc Break statement (supports break N for multi-level break)
+function ProgASTBreakStmt(_amount = undefined) : ProgASTNode(PROG_AST.BREAK_STMT) constructor
 {
+    amount = _amount; // Expression for number of loops to break (default: 1)
 }
 
 /// @desc Continue statement

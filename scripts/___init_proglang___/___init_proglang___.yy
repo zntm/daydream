@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"___init_proglang___",
   "parent":{
-    "name":"Proglang",
-    "path":"folders/Scripts/Proglang.yy",
+    "name":"daydream",
+    "path":"daydream.yyp",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -33,6 +33,20 @@ switch (state) {
 
 (Note: `break` is required to prevent fall-through).
 
+### break N (Multi-Level Break)
+
+You can break out of multiple nested loops by specifying a number after `break`:
+
+```javascript
+for (var i = 0; i < 10; i++) {
+    for (var j = 0; j < 10; j++) {
+        if (found) break 2; // Breaks out of BOTH loops
+    }
+}
+```
+
+`break 1` is equivalent to `break`. The number must be a literal value.
+
 ## Loops
 
 ### while
