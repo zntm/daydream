@@ -77,7 +77,7 @@ function ProgLexer(_source) constructor
         {
             start = current;
             
-            if (array_length(interp_stack) > 0 && interp_stack[array_length(interp_stack)-1] == -1)
+            if (array_length(interp_stack) > 0) && (interp_stack[array_length(interp_stack) - 1] == -1)
             {
                 scan_interpolation();
             }
@@ -92,14 +92,32 @@ function ProgLexer(_source) constructor
         return tokens;
     }
     
-    static is_at_end = function() { return current > length; }
-    static advance = function() { return string_char_at(source, current++); }
-    static peek = function() { return is_at_end() ? "" : string_char_at(source, current); }
-    static peek_next = function() { return (current + 1 > length) ? "" : string_char_at(source, current + 1); }
+    static is_at_end = function()
+    {
+        return (current > length);
+    }
+    
+    static advance = function()
+    {
+        return string_char_at(source, current++);
+    }
+    
+    static peek = function()
+    {
+        return ((is_at_end()) ? "" : string_char_at(source, current));
+    }
+    
+    static peek_next = function()
+    {
+        return ((current + 1 > length) ? "" : string_char_at(source, current + 1));
+    }
     
     static match = function(_expected)
     {
-        if (is_at_end()) || (string_char_at(source, current) != _expected) return false;
+        if (is_at_end()) || (string_char_at(source, current) != _expected)
+        {
+            return false;
+        }
         
         current++;
         
@@ -108,7 +126,8 @@ function ProgLexer(_source) constructor
     
     static add_token = function(_type, _literal = undefined)
     {
-        var _text = (current >= start) ? string_copy(source, start, current - start) : "";
+        var _text = ((current >= start) ? string_copy(source, start, current - start) : "");
+        
         array_push(tokens, { type: _type, lexeme: _text, literal: _literal, line: line });
     }
     
@@ -180,23 +199,43 @@ function ProgLexer(_source) constructor
                 add_token(PROG_TOKEN.COLON);
                 break;
             
-            case "+": 
-                if (match("+")) add_token(PROG_TOKEN.PLUS_PLUS);
-                else add_token(match("=") ? PROG_TOKEN.PLUS_ASSIGN : PROG_TOKEN.PLUS); 
+            case "+":
+                add_token(match("+") ? PROG_TOKEN.PLUS_PLUS : (match("=") ? PROG_TOKEN.PLUS_ASSIGN : PROG_TOKEN.PLUS));
                 break;
-            case "-": 
-                if (match("-")) add_token(PROG_TOKEN.MINUS_MINUS);
-                else add_token(match("=") ? PROG_TOKEN.MINUS_ASSIGN : PROG_TOKEN.MINUS); 
+            
+            case "-":
+                add_token(match("-") ? PROG_TOKEN.MINUS_MINUS : (match("=") ? PROG_TOKEN.MINUS_ASSIGN : PROG_TOKEN.MINUS));
                 break;
-            case "*": add_token(match("=") ? PROG_TOKEN.STAR_ASSIGN : (match("*") ? (match("=") ? PROG_TOKEN.POWER_ASSIGN : PROG_TOKEN.POWER) : PROG_TOKEN.STAR)); break;
+            
+            case "*":
+                add_token(match("*") ? (match("=") ? PROG_TOKEN.POWER_ASSIGN : PROG_TOKEN.POWER) : (match("=") ? PROG_TOKEN.STAR_ASSIGN : PROG_TOKEN.STAR));
+                break;
+            
             case "/": 
-                if (match("/")) { while (peek() != "\n" && !is_at_end()) advance(); }
+                if (match("/"))
+                {
+                    while (peek() != "\n") && (!is_at_end())
+                    {
+                        advance();
+                    }
+                }
                 else if (match("*"))
                 {
                     while (!is_at_end())
                     {
-                        if (peek() == "*" && peek_next() == "/") { advance(); advance(); break; }
-                        if (peek() == "\n") line++;
+                        if (peek() == "*") && (peek_next() == "/")
+                        {
+                            advance();
+                            advance();
+                            
+                            break;
+                        }
+                        
+                        if (peek() == "\n")
+                        {
+                            ++line;
+                        }
+                        
                         advance();
                     }
                 }
@@ -348,25 +387,23 @@ function ProgLexer(_source) constructor
         while (!is_at_end())
         {
             var _c = peek();
+            
             if (_c == "\n")
             {
-                 had_error = true; error = $"Unterminated regex at line {line}"; return;
+                had_error = true;
+                error = $"Unterminated regex at line {line}";
+                
+                return;
             }
-            if (_c == "/")
+            
+            // Exit if not escaped
+            if (_c == "/") && (string_char_at(source, current - 1) != "\\")
             {
-                // Check if escaped?
-                if (string_char_at(source, current - 1) == "\\")
-                {
-                    // It is escaped, continue
-                }
-                else
-                {
-                    // End of regex
-                    advance(); // Consume /
-                    
-                    break;
-                }
+                advance();
+                
+                break;
             }
+            
             advance();
         }
         
@@ -381,8 +418,19 @@ function ProgLexer(_source) constructor
         
         add_token(PROG_TOKEN.REGEX, { pattern: _pattern, flags: _flags });
     }
-
-    static is_digit = function(_c) { return (_c >= "0" && _c <= "9"); }
-    static is_alpha = function(_c) { return (_c >= "a" && _c <= "z") || (_c >= "A" && _c <= "Z") || _c == "_"; }
-    static is_alpha_numeric = function(_c) { return is_alpha(_c) || is_digit(_c); }
+    
+    static is_digit = function(_c)
+    {
+        return (_c >= "0") && (_c <= "9");
+    }
+    
+    static is_alpha = function(_c)
+    {
+        return ((_c >= "a") && (_c <= "z")) || ((_c >= "A") && (_c <= "Z")) || (_c == "_");
+    }
+    
+    static is_alpha_numeric = function(_c)
+    {
+        return (is_alpha(_c)) || (is_digit(_c));
+    }
 }

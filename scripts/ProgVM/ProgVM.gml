@@ -192,9 +192,9 @@ function ProgVM() constructor
             */
             
             // Built-in function
-            if (is_struct(_callee)) && (struct_exists(_callee, "func"))
+            if (is_struct(_callee)) && (struct_exists(_callee, "function"))
             {
-                var _res = _callee.func(_args);
+                var _res = _callee.function(_args);
                 
                 array_pop(call_stack);
                 
@@ -208,7 +208,7 @@ function ProgVM() constructor
                 
                 if (_f != undefined)
                 {
-                    var _res = _f.func(_args);
+                    var _res = _f.function(_args);
                     
                     array_pop(call_stack);
                     
@@ -499,30 +499,30 @@ function ProgVM() constructor
                         case PROG_OP.BIT_AND:
                             var _b = _stack[--sp];
                             
-                            _stack[sp - 1] &= _b;
+                            _stack[@ sp - 1] = int64(_stack[sp - 1]) & int64(_b);
                             break;
                         case PROG_OP.BIT_OR:
                             var _b = _stack[--sp];
                             
-                            _stack[sp - 1] |= _b;
+                            _stack[@ sp - 1] = int64(_stack[sp - 1]) | int64(_b);
                             break;
                         case PROG_OP.BIT_XOR:
                             var _b = _stack[--sp];
                             
-                            _stack[sp - 1] ^= _b;
+                            _stack[@ sp - 1] = int64(_stack[sp - 1]) ^ int64(_b);
                             break;
                         case PROG_OP.BIT_NOT:
-                            _stack[sp - 1] = ~floor(_stack[sp - 1]);
+                            _stack[sp - 1] = ~int64(_stack[sp - 1]);
                             break;
                         case PROG_OP.SHL:
                             var _b = _stack[--sp];
                             
-                            _stack[sp - 1] = _stack[sp - 1] << _b;
+                            _stack[@ sp - 1] = int64(_stack[sp - 1]) << int64(_b);
                             break;
                         case PROG_OP.SHR:
                             var _b = _stack[--sp];
                             
-                            _stack[sp - 1] = _stack[sp - 1] >> _b;
+                            _stack[@ sp - 1] = int64(_stack[sp - 1]) >> int64(_b);
                             break;
                         
                         // Variable Access
@@ -554,6 +554,7 @@ function ProgVM() constructor
                                 _stack[@ sp++] = global.proglang_scripts[$ _name];
                             }
                             else if (_name == "global") { _stack[@ sp++] = global; }
+                            else if (struct_exists(global, _name)) { _stack[@ sp++] = global[$ _name]; }
                             else if (variable_global_exists(_name)) { _stack[@ sp++] = variable_global_get(_name); }
                             else if (variable_global_exists("proglang_functions") && struct_exists(global.proglang_functions, _name))
                             {
@@ -877,7 +878,7 @@ function ProgVM() constructor
                             
                             var _call_args = array_create(_call_arg_count);
                             for (var i = _call_arg_count - 1; i >= 0; i--) _call_args[i] = _stack[--sp];
-                            sp--; // Pop func
+                            sp--; // Pop function
                             
                             var _line_idx = (ip div 2) - 1;
                             var _line_num = (_line_idx >= 0 && _line_idx < array_length(_bytecode.lines)) ? _bytecode.lines[_line_idx] : 0;

@@ -882,7 +882,8 @@ function ProgCompiler() constructor
             super_class: _node.super_class,
             methods: {},
             statics: {},
-            fields: []
+            fields: [],
+            __type__: "class"
         }
         
         // Constructor

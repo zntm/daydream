@@ -607,9 +607,9 @@ function proglang_test() {
     
     // 13. Function Wrapper (Mock Decorator)
     if (_assert("Function Wrapper", 
-        $"fn logger(func, arg) \{\n" +
+        $"fn logger(function, arg) \{\n" +
         $"    // log \"calling\"\n" +
-        $"    var res = func(arg)\n" +
+        $"    var res = function(arg)\n" +
         $"    // log \"done\"\n" +
         $"    return res\n" +
         $"\}\n" +

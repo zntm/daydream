@@ -1,6 +1,6 @@
 global.cuteify_data = {}
 
-/// @func cuteify_parse(_string, _asset_prefix)
+/// @function cuteify_parse(_string, _asset_prefix)
 /// @desc Parses a cuteify-formatted string into structured data
 /// @param {String} _string The input string with formatting tags
 /// @param {String} _asset_prefix Prefix for asset lookups

@@ -1,4 +1,4 @@
-/// @func choose_weighted(_data)
+/// @function choose_weighted(_data)
 /// @desc Returns a random value with weight.
 /// @arg {Any} _data Set any value with the weight in the next argument or use an array.
 /// @return {Any}

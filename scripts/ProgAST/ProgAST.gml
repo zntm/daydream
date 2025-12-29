@@ -73,7 +73,7 @@ function ProgASTAssignment(_target, _value, _op = PROG_TOKEN.ASSIGN) : ProgASTNo
     op = _op; // For +=, -= etc.
 }
 
-/// @desc Call node (func(a, b))
+/// @desc Call node (function(a, b))
 function ProgASTCall(_callee, _args) : ProgASTNode(PROG_AST.CALL) constructor
 {
     callee = _callee;

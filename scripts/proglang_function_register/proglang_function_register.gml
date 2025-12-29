@@ -4,104 +4,399 @@ function proglang_function_register(_name, _func)
 {
     global.proglang_functions[$ _name] = {
         name: _name,
-        func: _func
+        "function": _func
     }
 }
 
-// Math
-proglang_function_register("floor", function(_args) { return floor(_args[0]); });
-proglang_function_register("ceil", function(_args) { return ceil(_args[0]); });
-proglang_function_register("round", function(_args) { return round(_args[0]); });
-proglang_function_register("abs", function(_args) { return abs(_args[0]); });
-proglang_function_register("sign", function(_args) { return sign(_args[0]); });
-proglang_function_register("min", function(_args) { return min(_args[0], _args[1]); });
-proglang_function_register("max", function(_args) { return max(_args[0], _args[1]); });
-proglang_function_register("clamp", function(_args) { return clamp(_args[0], _args[1], _args[2]); });
-proglang_function_register("lerp", function(_args) { return lerp(_args[0], _args[1], _args[2]); });
-proglang_function_register("power", function(_args) { return power(_args[0], _args[1]); });
-proglang_function_register("sqrt", function(_args) { return sqrt(_args[0]); });
-proglang_function_register("sin", function(_args) { return sin(_args[0]); });
-proglang_function_register("cos", function(_args) { return cos(_args[0]); });
-proglang_function_register("tan", function(_args) { return tan(_args[0]); });
-proglang_function_register("dsin", function(_args) { return dsin(_args[0]); });
-proglang_function_register("dcos", function(_args) { return dcos(_args[0]); });
-proglang_function_register("dtan", function(_args) { return dtan(_args[0]); });
-proglang_function_register("lengthdir_x", function(_args) { return lengthdir_x(_args[0], _args[1]); });
-proglang_function_register("lengthdir_y", function(_args) { return lengthdir_y(_args[0], _args[1]); });
-proglang_function_register("point_distance", function(_args) { return point_distance(_args[0], _args[1], _args[2], _args[3]); });
-proglang_function_register("point_direction", function(_args) { return point_direction(_args[0], _args[1], _args[2], _args[3]); });
+#region Math
 
-proglang_function_register("exp", function(_args) { return exp(_args[0]); });
-proglang_function_register("ln", function(_args) { return ln(_args[0]); });
-proglang_function_register("log2", function(_args) { return log2(_args[0]); });
-proglang_function_register("log10", function(_args) { return log10(_args[0]); });
-proglang_function_register("sqr", function(_args) { return sqr(_args[0]); });
-proglang_function_register("frac", function(_args) { return frac(_args[0]); });
-proglang_function_register("arcsin", function(_args) { return arcsin(_args[0]); });
-proglang_function_register("arccos", function(_args) { return arccos(_args[0]); });
-proglang_function_register("arctan", function(_args) { return arctan(_args[0]); });
-proglang_function_register("arctan2", function(_args) { return arctan2(_args[0], _args[1]); });
-proglang_function_register("degtorad", function(_args) { return degtorad(_args[0]); });
-proglang_function_register("radtodeg", function(_args) { return radtodeg(_args[0]); });
-
-// Random
-proglang_function_register("random", function(_args) { return random(_args[0]); });
-proglang_function_register("irandom", function(_args) { return irandom(_args[0]); });
-proglang_function_register("random_range", function(_args) { return random_range(_args[0], _args[1]); });
-proglang_function_register("irandom_range", function(_args) { return irandom_range(_args[0], _args[1]); });
-proglang_function_register("choose", function(_args)
+proglang_function_register("floor", function(_args)
 {
-    var _arr = _args[0];
-    if (!is_array(_arr) || array_length(_arr) == 0) return undefined;
-    var _idx = irandom(array_length(_arr) - 1);
-    return _arr[_idx];
+    return floor(_args[0]);
 });
 
-// Strings & Types
-proglang_function_register("string", function(_args) { return string(_args[0]); });
-proglang_function_register("is_string", function(_args) { return is_string(_args[0]); });
-proglang_function_register("is_real", function(_args) { return is_real(_args[0]); });
-proglang_function_register("is_numeric", function(_args) { return is_numeric(_args[0]); });
-proglang_function_register("is_bool", function(_args) { return is_bool(_args[0]); });
-proglang_function_register("is_array", function(_args) { return is_array(_args[0]); });
-proglang_function_register("is_struct", function(_args) { return is_struct(_args[0]); });
-proglang_function_register("is_undefined", function(_args) { return is_undefined(_args[0]); });
-proglang_function_register("real", function(_args) { return real(_args[0]); });
+proglang_function_register("ceil", function(_args)
+{
+    return ceil(_args[0]);
+});
 
-proglang_function_register("string_length", function(_args) { return string_length(_args[0]); });
-proglang_function_register("string_pos", function(_args) { return string_pos(_args[0], _args[1]); });
-proglang_function_register("string_copy", function(_args) { return string_copy(_args[0], _args[1], _args[2]); });
-proglang_function_register("string_char_at", function(_args) { return string_char_at(_args[0], _args[1]); });
-proglang_function_register("string_delete", function(_args) { return string_delete(_args[0], _args[1], _args[2]); });
-proglang_function_register("string_insert", function(_args) { return string_insert(_args[0], _args[1], _args[2]); });
-proglang_function_register("string_replace", function(_args) { return string_replace(_args[0], _args[1], _args[2]); });
-proglang_function_register("string_replace_all", function(_args) { return string_replace_all(_args[0], _args[1], _args[2]); });
-proglang_function_register("string_upper", function(_args) { return string_upper(_args[0]); });
-proglang_function_register("string_lower", function(_args) { return string_lower(_args[0]); });
-proglang_function_register("string_width", function(_args) { return string_width(_args[0]); });
-proglang_function_register("string_height", function(_args) { return string_height(_args[0]); });
-proglang_function_register("chr", function(_args) { return chr(_args[0]); });
-proglang_function_register("ord", function(_args) { return ord(_args[0]); });
+proglang_function_register("round", function(_args)
+{
+    return round(_args[0]);
+});
+
+proglang_function_register("abs", function(_args)
+{
+    return abs(_args[0]);
+});
+
+proglang_function_register("sign", function(_args)
+{
+    return sign(_args[0]);
+});
+
+proglang_function_register("min", function(_args)
+{
+    return min(_args[0], _args[1]);
+});
+
+proglang_function_register("max", function(_args)
+{
+    return max(_args[0], _args[1]);
+});
+
+proglang_function_register("clamp", function(_args)
+{
+    return clamp(_args[0], _args[1], _args[2]);
+});
+
+proglang_function_register("lerp", function(_args)
+{
+    return lerp(_args[0], _args[1], _args[2]);
+});
+
+proglang_function_register("power", function(_args)
+{
+    return power(_args[0], _args[1]);
+});
+
+proglang_function_register("sqrt", function(_args)
+{
+    return sqrt(_args[0]);
+});
+
+proglang_function_register("sin", function(_args)
+{
+    return sin(_args[0]);
+});
+
+proglang_function_register("cos", function(_args)
+{
+    return cos(_args[0]);
+});
+
+proglang_function_register("tan", function(_args)
+{
+    return tan(_args[0]);
+});
+
+proglang_function_register("dsin", function(_args)
+{
+    return dsin(_args[0]);
+});
+
+proglang_function_register("dcos", function(_args)
+{
+    return dcos(_args[0]);
+});
+
+proglang_function_register("dtan", function(_args)
+{
+    return dtan(_args[0]);
+});
+
+proglang_function_register("lengthdir_x", function(_args)
+{
+    return lengthdir_x(_args[0], _args[1]);
+});
+
+proglang_function_register("lengthdir_y", function(_args)
+{
+    return lengthdir_y(_args[0], _args[1]);
+});
+
+proglang_function_register("point_distance", function(_args)
+{
+    return point_distance(_args[0], _args[1], _args[2], _args[3]);
+});
+
+proglang_function_register("point_direction", function(_args)
+{
+    return point_direction(_args[0], _args[1], _args[2], _args[3]);
+});
+
+proglang_function_register("exp", function(_args)
+{
+    return exp(_args[0]);
+});
+
+proglang_function_register("ln", function(_args)
+{
+    return ln(_args[0]);
+});
+
+proglang_function_register("log2", function(_args)
+{
+    return log2(_args[0]);
+});
+
+proglang_function_register("log10", function(_args)
+{
+    return log10(_args[0]);
+});
+
+proglang_function_register("sqr", function(_args)
+{
+    return sqr(_args[0]);
+});
+
+proglang_function_register("frac", function(_args)
+{
+    return frac(_args[0]);
+});
+
+proglang_function_register("arcsin", function(_args)
+{
+    return arcsin(_args[0]);
+});
+
+proglang_function_register("arccos", function(_args)
+{
+    return arccos(_args[0]);
+});
+
+proglang_function_register("arctan", function(_args)
+{
+    return arctan(_args[0]);
+});
+
+proglang_function_register("arctan2", function(_args)
+{
+    return arctan2(_args[0], _args[1]);
+});
+
+proglang_function_register("degtorad", function(_args)
+{
+    return degtorad(_args[0]);
+});
+
+proglang_function_register("radtodeg", function(_args)
+{
+    return radtodeg(_args[0]);
+});
+
+#endregion
+
+#region Random
+
+proglang_function_register("random", function(_args)
+{
+    return random(_args[0]);
+});
+
+proglang_function_register("irandom", function(_args)
+{
+    return irandom(_args[0]);
+});
+
+proglang_function_register("random_range", function(_args)
+{
+    return random_range(_args[0], _args[1]);
+});
+
+proglang_function_register("irandom_range", function(_args)
+{
+    return irandom_range(_args[0], _args[1]);
+});
+
+proglang_function_register("choose", function(_args)
+{
+    var _array = _args[0];
+    
+    if (!is_array(_array)) || (array_length(_array) == 0)
+    {
+        return undefined;
+    }
+    
+    return array_choose(_array);
+});
+
+#endregion
+
+// Strings & Types
+proglang_function_register("string", function(_args)
+{
+    return string(_args[0]);
+});
+
+proglang_function_register("is_string", function(_args)
+{
+    return is_string(_args[0]);
+});
+
+proglang_function_register("is_real", function(_args)
+{
+    return is_real(_args[0]);
+});
+
+proglang_function_register("is_numeric", function(_args)
+{
+    return is_numeric(_args[0]);
+});
+
+proglang_function_register("is_bool", function(_args)
+{
+    return is_bool(_args[0]);
+});
+
+proglang_function_register("is_array", function(_args)
+{
+    return is_array(_args[0]);
+});
+
+proglang_function_register("is_struct", function(_args)
+{
+    return is_struct(_args[0]);
+});
+
+proglang_function_register("is_undefined", function(_args)
+{
+    return is_undefined(_args[0]);
+});
+
+proglang_function_register("real", function(_args)
+{
+    return real(_args[0]);
+});
+
+proglang_function_register("string_length", function(_args)
+{
+    return string_length(_args[0]);
+});
+
+proglang_function_register("string_pos", function(_args)
+{
+    return string_pos(_args[0], _args[1]);
+});
+
+proglang_function_register("string_copy", function(_args)
+{
+    return string_copy(_args[0], _args[1], _args[2]);
+});
+
+proglang_function_register("string_char_at", function(_args)
+{
+    return string_char_at(_args[0], _args[1]);
+});
+
+proglang_function_register("string_delete", function(_args)
+{
+    return string_delete(_args[0], _args[1], _args[2]);
+});
+
+proglang_function_register("string_insert", function(_args)
+{
+    return string_insert(_args[0], _args[1], _args[2]);
+});
+
+proglang_function_register("string_replace", function(_args)
+{
+    return string_replace(_args[0], _args[1], _args[2]);
+});
+
+proglang_function_register("string_replace_all", function(_args)
+{
+    return string_replace_all(_args[0], _args[1], _args[2]);
+});
+
+proglang_function_register("string_upper", function(_args)
+{
+    return string_upper(_args[0]);
+});
+
+proglang_function_register("string_lower", function(_args)
+{
+    return string_lower(_args[0]);
+});
+
+proglang_function_register("string_width", function(_args)
+{
+    return string_width(_args[0]);
+});
+
+proglang_function_register("string_height", function(_args)
+{
+    return string_height(_args[0]);
+});
+
+proglang_function_register("chr", function(_args)
+{
+    return chr(_args[0]);
+});
+
+proglang_function_register("ord", function(_args)
+{
+    return ord(_args[0]);
+});
 
 // Data Structures
-proglang_function_register("array_length", function(_args) { return array_length(_args[0]); });
+proglang_function_register("array_length", function(_args)
+{
+    return array_length(_args[0]);
+});
+
 proglang_function_register("array_push", function(_args)
 { 
     var _arr = _args[0];
     for(var i=1; i<array_length(_args); i++) array_push(_arr, _args[i]);
 });
-proglang_function_register("array_pop", function(_args) { return array_pop(_args[0]); });
-proglang_function_register("array_resize", function(_args) { array_resize(_args[0], _args[1]); });
-proglang_function_register("array_copy", function(_args) { array_copy(_args[0], _args[1], _args[2], _args[3], _args[4]); });
-proglang_function_register("array_contains", function(_args) { return array_contains(_args[0], _args[1]); });
-proglang_function_register("struct_get_names", function(_args) { return struct_get_names(_args[0]); });
-proglang_function_register("struct_exists", function(_args) { return struct_exists(_args[0], _args[1]); });
-proglang_function_register("struct_get", function(_args) { return struct_get(_args[0], _args[1]); });
-proglang_function_register("struct_set", function(_args) { struct_set(_args[0], _args[1], _args[2]); });
-proglang_function_register("struct_names_count", function(_args) { return struct_names_count(_args[0]); });
-proglang_function_register("struct_stringify", function(_args) { return json_stringify(_args[0]); });
-proglang_function_register("struct_parse", function(_args) { return json_parse(_args[0]); });
 
+proglang_function_register("array_pop", function(_args)
+{
+    return array_pop(_args[0]);
+});
+
+proglang_function_register("array_resize", function(_args)
+{
+    array_resize(_args[0], _args[1]);
+});
+
+proglang_function_register("array_copy", function(_args)
+{
+    array_copy(_args[0], _args[1], _args[2], _args[3], _args[4]);
+});
+
+proglang_function_register("array_contains", function(_args)
+{
+    return array_contains(_args[0], _args[1]);
+});
+
+proglang_function_register("struct_get_names", function(_args)
+{
+    return struct_get_names(_args[0]);
+});
+
+proglang_function_register("struct_exists", function(_args)
+{
+    return struct_exists(_args[0], _args[1]);
+});
+
+proglang_function_register("struct_get", function(_args)
+{
+    return struct_get(_args[0], _args[1]);
+});
+
+proglang_function_register("struct_set", function(_args)
+{
+    struct_set(_args[0], _args[1], _args[2]);
+});
+
+proglang_function_register("struct_names_count", function(_args)
+{
+    return struct_names_count(_args[0]);
+});
+
+proglang_function_register("struct_stringify", function(_args)
+{
+    return json_stringify(_args[0]);
+});
+
+proglang_function_register("struct_parse", function(_args)
+{
+    return json_parse(_args[0]);
+});
+
+/*
 // Game API
 proglang_function_register("tile_place", function(_args, _ctx)
 { 
@@ -123,35 +418,98 @@ proglang_function_register("spawn_particle", function(_args) {
 proglang_function_register("sfx_play", function(_args) { 
     sfx_diegetic_play(undefined, _args[0], _args[1], smart_value(_args[2]));
 });
+*/
 
 // Print
 proglang_function_register("print", function(_args)
-{ 
-    var _msg = "";
-    for (var i = 0; i < array_length(_args); i++)
+{
+    var _length = array_length(_args);
+    
+    var _string = "";
+    
+    for (var i = 0; i < _length; i++)
     {
-        if (i > 0) _msg += " ";
-        _msg += string(_args[i]);
+        if (i > 0)
+        {
+            _string += " ";
+        }
+        
+        _string += string(_args[i]);
     }
-    show_debug_message($"[Daydream] {_msg}");
+    
+    show_debug_message(_string);
 });
 
 // Type checking
 proglang_function_register("typeof", function(_args)
 {
     var _val = _args[0];
-    if (is_undefined(_val)) return "undefined";
-    if (is_bool(_val)) return "boolean";
-    if (is_real(_val)) return "number";
-    if (is_string(_val)) return "string";
-    if (is_array(_val)) return "array";
+    
+    if (is_undefined(_val))
+    {
+        return "undefined";
+    }
+    
+    if (is_bool(_val))
+    {
+        return "boolean";
+    }
+    
+    if (is_real(_val))
+    {
+        return "number";
+    }
+    
+    if (is_string(_val))
+    {
+        return "string";
+    }
+    
+    // Check for closures/functions BEFORE generic array check
+    if (is_array(_val))
+    {
+        // Check if it's a Proglang closure
+        if (array_length(_val) >= PROG_CLOSURE.SIZE && _val[PROG_CLOSURE.TYPE] == "closure")
+        {
+            return "function";
+        }
+        // Check if it's a Proglang function
+        if (array_length(_val) >= PROG_FUNC.SIZE && _val[PROG_FUNC.TYPE] == "function")
+        {
+            return "function";
+        }
+        // Otherwise it's a regular array
+        return "array";
+    }
+    
     if (is_struct(_val))
     {
-        if (struct_exists(_val, "__type__") && _val.__type__ == "regex") return "regex";
-        if (struct_exists(_val, "__class__")) return "object";
+        if (_val[$ "__type__"] == "regex")
+        {
+            return "regex";
+        }
+        
+        // Class instance (has __class__)
+        if (_val[$ "__class__"] != undefined)
+        {
+            return "object";
+        }
+        
+        // Class definition (has __type__ == "class")
+        if (_val[$ "__type__"] == "class")
+        {
+            return "object";
+        }
+        
+        // Plain struct
         return "struct";
     }
-    if (is_method(_val)) return "function";
+    
+    if (is_method(_val))
+    {
+        return "function";
+    }
+    
     return "unknown";
 });
 
@@ -224,9 +582,9 @@ proglang_function_register("test_expect", function(_args)
         _vm.current_scope.parent = _actual[PROG_CLOSURE.ENV];
         _actual = _vm.run(_actual[PROG_CLOSURE.BYTECODE]);
     }
-    else if (is_struct(_actual) && struct_exists(_actual, "func"))
+    else if (is_struct(_actual) && struct_exists(_actual, "function"))
     {
-        _actual = _actual.func([]);
+        _actual = _actual.function([]);
     }
     
     // Execute expected if it's a closure/function
@@ -236,9 +594,9 @@ proglang_function_register("test_expect", function(_args)
         _vm.current_scope.parent = _expected[PROG_CLOSURE.ENV];
         _expected = _vm.run(_expected[PROG_CLOSURE.BYTECODE]);
     }
-    else if (is_struct(_expected) && struct_exists(_expected, "func"))
+    else if (is_struct(_expected) && struct_exists(_expected, "function"))
     {
-        _expected = _expected.func([]);
+        _expected = _expected.function([]);
     }
     
     ++global.proglang_test_state.current_assertions;
@@ -353,7 +711,7 @@ function _proglang_run_test_internal(_test_struct, _default_name)
     var _name = _default_name;
     var _fn = undefined;
     
-    if (is_struct(_test_struct) && struct_exists(_test_struct, "__type__") && _test_struct.__type__ == "Test")
+    if (is_struct(_test_struct)) && (_test_struct[$ "__type__"] == "Test")
     {
         _name = _test_struct.name;
         _fn = _test_struct.fn;
@@ -390,9 +748,9 @@ function _proglang_run_test_internal(_test_struct, _default_name)
             _vm.current_scope.parent = _fn[PROG_CLOSURE.ENV];
             _vm.run(_fn[PROG_CLOSURE.BYTECODE]);
         }
-        else if (is_struct(_fn) && struct_exists(_fn, "func"))
+        else if (is_struct(_fn)) && (struct_exists(_fn, "function"))
         {
-            _fn.func([]);
+            _fn.function([]);
         }
     }
     catch (_e)
@@ -404,25 +762,26 @@ function _proglang_run_test_internal(_test_struct, _default_name)
     var _failures = global.proglang_test_state.current_failures;
     var _passed = array_length(_failures) == 0 && _error == undefined;
     
-    return { passed: _passed, time_ms: _time_ms, failures: _failures, error: _error, name: _name };
+    return { passed: _passed, time_ms: _time_ms, failures: _failures, error: _error, name: _name }
 }
 
-/// test(name, fn, stop_on_failure) - Registers a test to pending list
 proglang_function_register("test", function(_args)
 {
     var _name = _args[0];
-    var _fn = _args[1];
-    var _stop_on_fail = array_length(_args) > 2 ? _args[2] : false;
+    var _function = _args[1];
+    
+    var _stop_on_fail = ((array_length(_args) > 2) ? _args[2] : false);
     
     var _test_struct = {
         __type__: "Test",
         name: _name,
-        fn: _fn,
+        fn: _function,
         stop_on_fail: _stop_on_fail,
         handled: false
-    };
+    }
     
     array_push(global.proglang_pending_tests, _test_struct);
+    
     return _test_struct;
 });
 
@@ -432,11 +791,11 @@ proglang_function_register("test_group", function(_args)
     var _group_name = _args[0];
     var _tests = _args[1];
     
-    // Mark children as handled so they don't run individually at top level
     for (var i = 0; i < array_length(_tests); i++)
     {
         var _t = _tests[i];
-        if (is_struct(_t) && struct_exists(_t, "__type__") && _t.__type__ == "Test")
+        
+        if (is_struct(_t)) && (_t[$ "__type__"] == "Test")
         {
             _t.handled = true;
         }
@@ -446,8 +805,9 @@ proglang_function_register("test_group", function(_args)
         __type__: "Group",
         name: _group_name,
         tests: _tests
-    };
+    }
     
     array_push(global.proglang_pending_tests, _group_struct);
+    
     return _group_struct;
 });
