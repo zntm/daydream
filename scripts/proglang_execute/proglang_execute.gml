@@ -1,8 +1,9 @@
 /// @desc Execute Proglang source string
 /// @param {string} _source Script source code
 /// @param {struct} _context Execution context variables
+/// @param {string} _filepath Optional file path for import/export resolution
 /// @returns {any} Script result
-function proglang_execute(_source, _context = {})
+function proglang_execute(_source, _context = {}, _filepath = "")
 {
     proglang_reset_pending();
     
@@ -21,6 +22,14 @@ function proglang_execute(_source, _context = {})
     var _vm = new ProgVM();
     
     _vm.context = _context;
+    
+    // Set directory context for import/export resolution
+    if (_filepath != "")
+    {
+        var _dirname = proglang_get_directory(_filepath);
+        _vm.current_scope.vars[$ "__dirname"] = _dirname;
+        _vm.current_scope.vars[$ "__filename"] = _filepath;
+    }
     
     var _result = _vm.run(_bytecode);
     

@@ -570,7 +570,7 @@ global.proglang_test_state = {
     current_assertions: 0
 }
 
-proglang_function_register("test_expect", function(_args)
+proglang_function_register("test_expect", function(_args, _vm = undefined)
 {
     var _actual = _args[0];
     var _expected = _args[1];
@@ -578,9 +578,11 @@ proglang_function_register("test_expect", function(_args)
     // Execute actual if it's a closure/function
     if (is_array(_actual) && array_length(_actual) >= PROG_CLOSURE.SIZE && _actual[PROG_CLOSURE.TYPE] == "closure")
     {
-        var _vm = new ProgVM();
-        _vm.current_scope.parent = _actual[PROG_CLOSURE.ENV];
-        _actual = _vm.run(_actual[PROG_CLOSURE.BYTECODE]);
+        var _eval_vm = new ProgVM();
+        // Propagate global_ref from calling VM
+        if (_vm != undefined) _eval_vm.global_ref = _vm.global_ref;
+        _eval_vm.current_scope.parent = _actual[PROG_CLOSURE.ENV];
+        _actual = _eval_vm.run(_actual[PROG_CLOSURE.BYTECODE]);
     }
     else if (is_struct(_actual) && struct_exists(_actual, "function"))
     {
@@ -590,9 +592,11 @@ proglang_function_register("test_expect", function(_args)
     // Execute expected if it's a closure/function
     if (is_array(_expected) && array_length(_expected) >= PROG_CLOSURE.SIZE && _expected[PROG_CLOSURE.TYPE] == "closure")
     {
-        var _vm = new ProgVM();
-        _vm.current_scope.parent = _expected[PROG_CLOSURE.ENV];
-        _expected = _vm.run(_expected[PROG_CLOSURE.BYTECODE]);
+        var _eval_vm = new ProgVM();
+        // Propagate global_ref from calling VM
+        if (_vm != undefined) _eval_vm.global_ref = _vm.global_ref;
+        _eval_vm.current_scope.parent = _expected[PROG_CLOSURE.ENV];
+        _expected = _eval_vm.run(_expected[PROG_CLOSURE.BYTECODE]);
     }
     else if (is_struct(_expected) && struct_exists(_expected, "function"))
     {
@@ -745,6 +749,11 @@ function _proglang_run_test_internal(_test_struct, _default_name)
         if (is_array(_fn) && array_length(_fn) >= PROG_CLOSURE.SIZE && _fn[PROG_CLOSURE.TYPE] == "closure")
         {
             var _vm = new ProgVM();
+            // Use captured global_ref if available
+            if (is_struct(_test_struct) && struct_exists(_test_struct, "global_ref") && _test_struct.global_ref != undefined)
+            {
+                _vm.global_ref = _test_struct.global_ref;
+            }
             _vm.current_scope.parent = _fn[PROG_CLOSURE.ENV];
             _vm.run(_fn[PROG_CLOSURE.BYTECODE]);
         }
@@ -765,7 +774,7 @@ function _proglang_run_test_internal(_test_struct, _default_name)
     return { passed: _passed, time_ms: _time_ms, failures: _failures, error: _error, name: _name }
 }
 
-proglang_function_register("test", function(_args)
+proglang_function_register("test", function(_args, _vm = undefined)
 {
     var _name = _args[0];
     var _function = _args[1];
@@ -777,7 +786,8 @@ proglang_function_register("test", function(_args)
         name: _name,
         fn: _function,
         stop_on_fail: _stop_on_fail,
-        handled: false
+        handled: false,
+        global_ref: (_vm != undefined) ? _vm.global_ref : undefined
     }
     
     array_push(global.proglang_pending_tests, _test_struct);
@@ -786,7 +796,7 @@ proglang_function_register("test", function(_args)
 });
 
 /// test_group(name, tests) - Registers a test group
-proglang_function_register("test_group", function(_args)
+proglang_function_register("test_group", function(_args, _vm = undefined)
 {
     var _group_name = _args[0];
     var _tests = _args[1];
@@ -798,13 +808,19 @@ proglang_function_register("test_group", function(_args)
         if (is_struct(_t)) && (_t[$ "__type__"] == "Test")
         {
             _t.handled = true;
+            // Propagate global_ref if not already set
+            if (!struct_exists(_t, "global_ref") || _t.global_ref == undefined)
+            {
+                _t.global_ref = (_vm != undefined) ? _vm.global_ref : undefined;
+            }
         }
     }
     
     var _group_struct = {
         __type__: "Group",
         name: _group_name,
-        tests: _tests
+        tests: _tests,
+        global_ref: (_vm != undefined) ? _vm.global_ref : undefined
     }
     
     array_push(global.proglang_pending_tests, _group_struct);

@@ -1663,18 +1663,20 @@ if (IS_DEVELOPER_MODE)
 {
     call_later(1, time_source_units_frames, function()
     {
-        var _files = file_read_directory($"{PROGRAM_DIRECTORY_DATAFILES}/tests");
+        var _files = file_read_directory($"{PROGRAM_DIRECTORY_RESOURCES}/data/proglang/tests");
         var _length = array_length(_files);
+        
+        show_debug_message($"{_files} {_length}");
         
         for (var i = 0; i < _length; ++i)
         {
             var _file = _files[i];
             
-            var _dir = $"{PROGRAM_DIRECTORY_DATAFILES}/tests/{_file}";
+            var _dir = $"{PROGRAM_DIRECTORY_RESOURCES}/data/proglang/tests/{_file}";
             
             if (!file_exists(_dir)) continue;
             
-            proglang_execute(buffer_load_text(_dir), {});
+            proglang_execute(buffer_load_text(_dir), {}, _dir);
         }
     });
 }

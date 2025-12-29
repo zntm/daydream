@@ -43,7 +43,7 @@ function ProgVM() constructor
     locals = current_scope.vars;
     
     context = undefined;
-    global_ref = global;
+    global_ref = {}; // Isolated global scope per VM
     try_stack = [];
     
     active_module = undefined; // Struct { exports: {}, loaded: bool }
@@ -94,6 +94,7 @@ function ProgVM() constructor
                 if (_super_class[$ "constructor_code"] != undefined)
                 {
                     var _vm = new ProgVM();
+                    _vm.global_ref = global_ref; // Share global scope
                     
                     _vm.context = context;
                     _vm.call_stack = variable_clone(call_stack);
@@ -126,6 +127,7 @@ function ProgVM() constructor
             if (is_array(_callee)) && (array_length(_callee) >= PROG_CLOSURE.SIZE) && (_callee[PROG_CLOSURE.TYPE] == "closure")
             {
                 var _vm = new ProgVM();
+                _vm.global_ref = global_ref; // Share global scope
                 
                 _vm.context = context;
                 // Closure scope chain
@@ -194,7 +196,7 @@ function ProgVM() constructor
             // Built-in function
             if (is_struct(_callee)) && (struct_exists(_callee, "function"))
             {
-                var _res = _callee[$ "function"](_args);
+                var _res = _callee[$ "function"](_args, self);
                 
                 array_pop(call_stack);
                 
@@ -208,7 +210,7 @@ function ProgVM() constructor
                 
                 if (_f != undefined)
                 {
-                    var _res = _f[$ "function"](_args);
+                    var _res = _f[$ "function"](_args, self);
                     
                     array_pop(call_stack);
                     
@@ -545,6 +547,10 @@ function ProgVM() constructor
                                 _val = global.proglang_macros[$ _name];
                                 _stack[@ sp++] = is_method(_val) ? method_call(_val, []) : _val;
                             }
+                            else if (struct_exists(_gref, _name))
+                            {
+                                _stack[@ sp++] = _gref[$ _name];
+                            }
                             else if (variable_global_exists("proglang_exports") && struct_exists(global.proglang_exports, _name))
                             {
                                 _stack[@ sp++] = global.proglang_exports[$ _name];
@@ -580,6 +586,7 @@ function ProgVM() constructor
                             var _s_store = find_var_scope(_name);
                             if (_s_store != undefined) { _s_store.vars[$ _name] = _val; }
                             else if (context != undefined && struct_exists(context, _name)) { context[$ _name] = _val; }
+                            else if (struct_exists(_gref, _name)) { _gref[$ _name] = _val; }
                             else { current_scope.vars[$ _name] = _val; }
                             break;
                             

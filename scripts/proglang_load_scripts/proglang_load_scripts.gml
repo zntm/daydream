@@ -269,6 +269,11 @@ function proglang_call(_name, _args = [], _context = {}) {
     var _vm = new ProgVM();
     _vm.context = _context;
     
+    // Set directory context for import/export resolution
+    var _dirname = proglang_get_directory(_name);
+    _vm.current_scope.vars[$ "__dirname"] = _dirname;
+    _vm.current_scope.vars[$ "__filename"] = _name;
+    
     for (var i = 0; i < array_length(_args); i++) {
         _vm.current_scope.vars[$ $"arg{i}"] = _args[i];
     }
