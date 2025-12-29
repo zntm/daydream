@@ -972,55 +972,53 @@ function ProgCompiler() constructor
         emit(PROG_OP.CLASS_DEF, _idx, _node.line);
     }
     
-
-    
     static compile_destructuring = function(_pattern)
     {
         if (_pattern.type == "array")
         {
-             for (var i = 0; i < array_length(_pattern.elements); i++)
-             {
-                 var _el = _pattern.elements[i];
-                 emit(PROG_OP.DUP);
-                 emit(PROG_OP.PUSH_CONST, add_constant(i));
-                 emit(PROG_OP.INDEX_GET); // Stack: [..., Arr, Val]
-                 
-                 if (is_string(_el))
-                 {
-                     emit(PROG_OP.STORE, add_constant(_el));
-                 }
-                 else if (is_struct(_el))
-                 {
-                     // Nested pattern
-                     compile_destructuring(_el);
-                 }
-                 
-                 emit(PROG_OP.POP); // Consume Val
-             }
+            for (var i = 0; i < array_length(_pattern.elements); i++)
+            {
+                var _el = _pattern.elements[i];
+                emit(PROG_OP.DUP);
+                emit(PROG_OP.PUSH_CONST, add_constant(i));
+                emit(PROG_OP.INDEX_GET); // Stack: [..., Arr, Val]
+                
+                if (is_string(_el))
+                {
+                    emit(PROG_OP.STORE, add_constant(_el));
+                }
+                else if (is_struct(_el))
+                {
+                    // Nested pattern
+                    compile_destructuring(_el);
+                }
+                
+                emit(PROG_OP.POP); // Consume Val
+            }
         } 
         else if (_pattern.type == "object")
         {
-             for (var i = 0; i < array_length(_pattern.elements); i++)
-             {
-                 var _el = _pattern.elements[i];
-                 emit(PROG_OP.DUP);
-                 emit(PROG_OP.MEMBER_GET, add_constant(_el.key)); // Stack: [..., Obj, Val]
-                 
-                 if (is_string(_el.target))
-                 {
-                     emit(PROG_OP.STORE, add_constant(_el.target));
-                 }
-                 else if (is_struct(_el.target))
-                 {
-                     // Nested pattern (target is the pattern struct)
-                     compile_destructuring(_el.target);
-                 }
-                 
-                 emit(PROG_OP.POP); // Consume Val
-             }
+            for (var i = 0; i < array_length(_pattern.elements); i++)
+            {
+                var _el = _pattern.elements[i];
+                emit(PROG_OP.DUP);
+                emit(PROG_OP.MEMBER_GET, add_constant(_el.key)); // Stack: [..., Obj, Val]
+                
+                if (is_string(_el.target))
+                {
+                    emit(PROG_OP.STORE, add_constant(_el.target));
+                }
+                else if (is_struct(_el.target))
+                {
+                    // Nested pattern (target is the pattern struct)
+                    compile_destructuring(_el.target);
+                }
+                
+                emit(PROG_OP.POP); // Consume Val
+            }
         }
     }
-
+    
     static compile_assignment = function(_node)
     {
         var _target = _node.target;

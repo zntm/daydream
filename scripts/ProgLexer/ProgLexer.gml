@@ -313,14 +313,53 @@ function ProgLexer(_source) constructor
     
     static scan_string = function(_quote = "\"")
     {
-        while (peek() != _quote && !is_at_end())
+        var _res = "";
+        
+        while (!is_at_end())
         {
-            if (peek() == "\n") line++;
-            advance();
+            var _c = peek();
+            
+            if (_c == _quote) 
+            {
+                break;
+            }
+            
+            if (_c == "\n") 
+            {
+                line++;
+            }
+            
+            if (_c == "\\")
+            {
+                advance(); // Consume backslash
+                
+                if (is_at_end()) break;
+                
+                var _next = advance();
+                switch (_next)
+                {
+                    case "n": _res += "\n"; break;
+                    case "r": _res += "\r"; break;
+                    case "t": _res += "\t"; break;
+                    case "b": _res += "\b"; break;
+                    case "f": _res += "\f"; break;
+                    case "\\": _res += "\\"; break;
+                    case "\"": _res += "\""; break;
+                    case "'": _res += "'"; break;
+                    default: _res += _next; break; // Unknown escape, keep literal
+                }
+            }
+            else
+            {
+                _res += advance();
+            }
         }
+        
         if (is_at_end()) { had_error = true; error = $"Unterminated string at line {line}"; return; }
-        advance();
-        add_token(PROG_TOKEN.STRING, string_copy(source, start + 1, current - start - 2));
+        
+        advance(); // Closing quote
+        
+        add_token(PROG_TOKEN.STRING, _res);
     }
     
     static start_interpolation = function()
@@ -333,15 +372,54 @@ function ProgLexer(_source) constructor
     
     static scan_interpolation = function()
     {
+        var _res = "";
         start = current;
-        while (peek() != "\"" && peek() != "{" && !is_at_end())
+        
+        while (!is_at_end())
         {
-            if (peek() == "\n") line++;
-            advance();
+            var _c = peek();
+            
+            if (_c == "\"" || _c == "{") 
+            {
+                break;
+            }
+            
+            if (_c == "\n") 
+            {
+                line++;
+            }
+            
+            if (_c == "\\")
+            {
+                advance(); // Consume backslash
+                
+                if (is_at_end()) break;
+                
+                var _next = advance();
+                switch (_next)
+                {
+                    case "n": _res += "\n"; break;
+                    case "r": _res += "\r"; break;
+                    case "t": _res += "\t"; break;
+                    case "b": _res += "\b"; break;
+                    case "f": _res += "\f"; break;
+                    case "\\": _res += "\\"; break;
+                    case "\"": _res += "\""; break;
+                    case "'": _res += "'"; break;
+                    case "{": _res += "{"; break; // Allow escaping opening brace in interpolation
+                    case "}": _res += "}"; break; 
+                    default: _res += _next; break; 
+                }
+            }
+            else
+            {
+                _res += advance();
+            }
         }
+        
         if (is_at_end()) { had_error = true; error = $"Unterminated interpolated string at line {line}"; return; }
         
-        add_token(PROG_TOKEN.STRING, string_copy(source, start, current - start));
+        add_token(PROG_TOKEN.STRING, _res);
         
         var _char = peek();
         if (_char == "\"")

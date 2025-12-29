@@ -194,7 +194,7 @@ function ProgVM() constructor
             // Built-in function
             if (is_struct(_callee)) && (struct_exists(_callee, "function"))
             {
-                var _res = _callee.function(_args);
+                var _res = _callee[$ "function"](_args);
                 
                 array_pop(call_stack);
                 
@@ -208,7 +208,7 @@ function ProgVM() constructor
                 
                 if (_f != undefined)
                 {
-                    var _res = _f.function(_args);
+                    var _res = _f[$ "function"](_args);
                     
                     array_pop(call_stack);
                     
@@ -499,30 +499,30 @@ function ProgVM() constructor
                         case PROG_OP.BIT_AND:
                             var _b = _stack[--sp];
                             
-                            _stack[@ sp - 1] = int64(_stack[sp - 1]) & int64(_b);
+                            _stack[@ sp - 1] = floor(_stack[sp - 1]) & floor(_b);
                             break;
                         case PROG_OP.BIT_OR:
                             var _b = _stack[--sp];
                             
-                            _stack[@ sp - 1] = int64(_stack[sp - 1]) | int64(_b);
+                            _stack[@ sp - 1] = floor(_stack[sp - 1]) | floor(_b);
                             break;
                         case PROG_OP.BIT_XOR:
                             var _b = _stack[--sp];
                             
-                            _stack[@ sp - 1] = int64(_stack[sp - 1]) ^ int64(_b);
+                            _stack[@ sp - 1] = floor(_stack[sp - 1]) ^ floor(_b);
                             break;
                         case PROG_OP.BIT_NOT:
-                            _stack[sp - 1] = ~int64(_stack[sp - 1]);
+                            _stack[sp - 1] = ~floor(_stack[sp - 1]);
                             break;
                         case PROG_OP.SHL:
                             var _b = _stack[--sp];
                             
-                            _stack[@ sp - 1] = int64(_stack[sp - 1]) << int64(_b);
+                            _stack[@ sp - 1] = floor(_stack[sp - 1]) << floor(_b);
                             break;
                         case PROG_OP.SHR:
                             var _b = _stack[--sp];
                             
-                            _stack[@ sp - 1] = int64(_stack[sp - 1]) >> int64(_b);
+                            _stack[@ sp - 1] = floor(_stack[sp - 1]) >> floor(_b);
                             break;
                         
                         // Variable Access
@@ -531,7 +531,7 @@ function ProgVM() constructor
                             var _s = find_var_scope(_name);
                             
                             if (_s != undefined)
-                            { 
+                            {
                                 _val = _s.vars[$ _name];
                                 _stack[@ sp++] = _val; 
                             }

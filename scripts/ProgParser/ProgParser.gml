@@ -826,6 +826,12 @@ function ProgParser(_tokens) constructor
         // Check for compound assignment tokens (+=, -=) that appear AFTER the expression
         // parse_expression() stops at them.
         
+        if (match(PROG_TOKEN.ASSIGN))
+        {
+            var _rhs = parse_expression();
+            return new ProgASTAssignment(_expression, _rhs, PROG_TOKEN.ASSIGN);
+        }
+        
         if (match(PROG_TOKEN.PLUS_ASSIGN))
         {
             var _rhs = parse_expression();
@@ -910,12 +916,6 @@ function ProgParser(_tokens) constructor
             // But my parser treats '=' as operator, so it IS in '_expression' as BinaryOp
         }
         */
-        
-        // Convert 'BinaryOp(ASSIGN/EQ)' to 'Assignment' if Top-Level
-        if (_expression.type == PROG_AST.BINARY_OP) && ((_expression.op == PROG_TOKEN.ASSIGN) || (_expression.op == PROG_TOKEN.EQ))
-        {
-            return new ProgASTAssignment(_expression.left, _expression.right, PROG_TOKEN.ASSIGN);
-        }
         
         return _expression;
     }
@@ -1061,17 +1061,11 @@ function ProgParser(_tokens) constructor
     {
         var _expression = parse_comparison();
         
-        // Treat both == and = as equality in expressions
-        while (check(PROG_TOKEN.EQ)) || (check(PROG_TOKEN.NE)) || (check(PROG_TOKEN.ASSIGN))
+        // Only handle == and != as equality operators
+        // Strict assignment (=) is handled by parse_assignment/expression statement
+        while (check(PROG_TOKEN.EQ)) || (check(PROG_TOKEN.NE))
         {
             var _op = advance().type;
-            
-            // Normalize to EQ
-            if (_op == PROG_TOKEN.ASSIGN)
-            {
-                _op = PROG_TOKEN.EQ;
-            }
-            
             var _right = parse_comparison();
             
             _expression = new ProgASTBinaryOp(_op, _expression, _right);

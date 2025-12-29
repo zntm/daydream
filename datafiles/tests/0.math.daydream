@@ -1,0 +1,145 @@
+test_group("math", [
+    test("add", fn() {
+        test_expect(1 + 2, 3)
+        test_expect(5.1 + 10.6, 15.7)
+    }),
+    test("sub", fn() {
+        test_expect(3 - 2, 1)
+        test_expect(10.6 - 5.1, 5.5)
+    }),
+    test("mul", fn() {
+        test_expect(2 * 3, 6)
+        test_expect(5.1 * 10.6, 54.06)
+    }),
+    test("div", fn() {
+        test_expect(6 / 2, 3)
+        test_expect(10.6 / 5.1, 2.078431372549019)
+    }),
+    test("mod", fn() {
+        test_expect(7 % 2, 1)
+        test_expect(10.6 % 5.1, 0.4)
+    }),
+    test("pow", fn() {
+        test_expect(2 ** 3, 8)
+        test_expect(5.1 ** 2, 26.01)
+    }),
+    test("pemdas", fn() {
+        test_expect(5 + 3 * 2, 11)
+        test_expect(5 + 3 * 2.5, 12.5)
+        test_expect(5 + 3 * 2 / 4, 6.5)
+    }),
+    test("parenthesis", fn() {
+        test_expect((5 + 3) * 2, 16)
+        test_expect(5 + (3 * 2), 11)
+        test_expect(5 + 3 * (2 / 4), 6.5)
+    }),
+])
+
+test_group("bitwise", [
+    test("and", fn() {
+        test_expect(5 & 3, 1)
+        test_expect(7 & 11, 3)
+    }),
+    test("or", fn() {
+        test_expect(5 | 3, 7)
+        test_expect(7 | 9, 15)
+    }),
+    test("xor", fn() {
+        test_expect(5 ^ 3, 6)
+        test_expect(8 ^ 3, 11)
+    }),
+    test("not", fn() {
+        test_expect(~0, -1)
+        test_expect(~5, -6)
+    }),
+    test("lshift", fn() {
+        test_expect(1 << 4, 16)
+        test_expect(5 << 3, 40)
+    }),
+    test("rshift", fn() {
+        test_expect(16 >> 2, 4)
+        test_expect(15 >> 1, 7)
+    })
+])
+
+test_group("math functions", [
+    test("floor", fn() {
+        test_expect(floor(5.9), 5)
+    }),
+    test("ceil", fn() {
+        test_expect(ceil(5.1), 6)
+    }),
+    test("round", fn() {
+        test_expect(round(5.5), 6)
+    }),
+    test("abs", fn() {
+        test_expect(abs(-10), 10)
+    }),
+    test("sign positive", fn() {
+        test_expect(sign(50), 1)
+    }),
+    test("sign negative", fn() {
+        test_expect(sign(-50), -1)
+    }),
+    test("sign zero", fn() {
+        test_expect(sign(0), 0)
+    }),
+    test("min", fn() {
+        test_expect(min(10, 5), 5)
+    }),
+    test("max", fn() {
+        test_expect(max(10, 5), 10)
+    }),
+    test("clamp logic", fn() {
+        test_expect(clamp(15, 0, 10), 10)
+    }),
+    test("lerp", fn() {
+        test_expect(lerp(0, 10, 0.5), 5)
+    }),
+    test("power", fn() {
+        test_expect(power(2, 3), 8)
+    }),
+    test("sqrt", fn() {
+        test_expect(sqrt(16), 4)
+    }),
+    test("func chain", fn() {
+        test_expect(floor(abs(-3.7)), 3)
+    })
+])
+
+test_group("trigonometry", [
+    test("sin", fn() {
+        test_expect(sin(0), 0)
+    }),
+    test("cos", fn() {
+        test_expect(cos(0), 1)
+    }),
+    test("tan", fn() {
+        test_expect(tan(0), 0)
+    }),
+    test("dsin", fn() {
+        test_expect(dsin(90), 1)
+    }),
+    test("dcos", fn() {
+        test_expect(dcos(180), -1)
+    }),
+    test("lengthdir_x", fn() {
+        test_expect(lengthdir_x(10, 0), 10)
+    }),
+    test("lengthdir_y", fn() {
+        // y is flipped
+        test_expect(lengthdir_y(10, 90), -10)
+    }),
+    test("point_distance", fn() {
+        test_expect(point_distance(0, 0, 3, 4), 5)
+    }),
+    test("point_direction", fn() {
+        test_expect(point_direction(0, 0, 10, 0), 0)
+    })
+])
+
+test_group("numeric utilities", [
+    test("numeric underscores", fn() {
+        test_expect(1_000 + 500, 1500)
+    })
+])
