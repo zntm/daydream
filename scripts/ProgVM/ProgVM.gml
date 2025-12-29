@@ -127,7 +127,8 @@ function ProgVM() constructor
             if (is_array(_callee)) && (array_length(_callee) >= PROG_CLOSURE.SIZE) && (_callee[PROG_CLOSURE.TYPE] == "closure")
             {
                 var _vm = new ProgVM();
-                _vm.global_ref = global_ref; // Share global scope
+                // Use captured global_ref if available (for module exports), otherwise inherit from caller
+                _vm.global_ref = (_callee[PROG_CLOSURE.GLOBAL_REF] != undefined) ? _callee[PROG_CLOSURE.GLOBAL_REF] : global_ref;
                 
                 _vm.context = context;
                 // Closure scope chain
@@ -154,6 +155,19 @@ function ProgVM() constructor
                 }
                 
                 _vm.current_scope.vars[$ "argc"] = array_length(_args);
+                
+                // Propagate __filename and __dirname from parent scope for import resolution
+                var _env = _callee[PROG_CLOSURE.ENV];
+                while (_env != undefined)
+                {
+                    if (struct_exists(_env.vars, "__filename"))
+                    {
+                        _vm.current_scope.vars[$ "__filename"] = _env.vars[$ "__filename"];
+                        _vm.current_scope.vars[$ "__dirname"] = _env.vars[$ "__dirname"];
+                        break;
+                    }
+                    _env = _env.parent;
+                }
                 
                 var _res = _vm.run(_callee[PROG_CLOSURE.BYTECODE]);
                 
@@ -626,6 +640,7 @@ function ProgVM() constructor
                                 _closure_arr[PROG_CLOSURE.ENV] = current_scope;
                                 _closure_arr[PROG_CLOSURE.NAME] = _func[PROG_FUNC.NAME];
                                 _closure_arr[PROG_CLOSURE.PARAM_COUNT] = _func[PROG_FUNC.PARAM_COUNT];
+                                _closure_arr[PROG_CLOSURE.GLOBAL_REF] = global_ref; // Capture module globals
                                 _stack[@ sp++] = _closure_arr;
                             }
                             // Legacy
@@ -683,6 +698,7 @@ function ProgVM() constructor
                                         _val[PROG_CLOSURE.PARAM_COUNT] = struct_exists(_method_entry, "param_count") ? _method_entry.param_count : 0;
                                         _val[PROG_CLOSURE.DEFINING_CLASS] = _curr;
                                         _val[PROG_CLOSURE.RECEIVER] = _receiver;
+                                        _val[PROG_CLOSURE.GLOBAL_REF] = global_ref; // Capture globals
                                         _found = true;
                                         break;
                                     }
@@ -716,6 +732,7 @@ function ProgVM() constructor
                                             _val[PROG_CLOSURE.PARAM_COUNT] = struct_exists(_method_entry, "param_count") ? _method_entry.param_count : 0;
                                             _val[PROG_CLOSURE.DEFINING_CLASS] = _curr;
                                             _val[PROG_CLOSURE.RECEIVER] = _obj;
+                                            _val[PROG_CLOSURE.GLOBAL_REF] = global_ref; // Capture globals
                                             _found = true;
                                             break;
                                         }
@@ -737,6 +754,7 @@ function ProgVM() constructor
                                             _val[PROG_CLOSURE.ENV] = current_scope;
                                             _val[PROG_CLOSURE.NAME] = _prop;
                                             _val[PROG_CLOSURE.PARAM_COUNT] = struct_exists(_entry, "param_count") ? _entry.param_count : 0;
+                                            _val[PROG_CLOSURE.GLOBAL_REF] = global_ref; // Capture globals
                                         }
                                         else if (is_struct(_entry) && struct_exists(_entry, "type") && _entry.type == "field")
                                         {
@@ -896,7 +914,18 @@ function ProgVM() constructor
                         
                         case PROG_OP.IMPORT:
                             var _path = _constants[_arg];
-                            var _current_file = struct_exists(current_scope.vars, "__filename") ? current_scope.vars[$ "__filename"] : "";
+                            // Search scope chain for __filename
+                            var _current_file = "";
+                            var _search_scope = current_scope;
+                            while (_search_scope != undefined)
+                            {
+                                if (struct_exists(_search_scope.vars, "__filename"))
+                                {
+                                    _current_file = _search_scope.vars[$ "__filename"];
+                                    break;
+                                }
+                                _search_scope = _search_scope.parent;
+                            }
                             try
                             {
                                 var _exports = proglang_load_module(_path, _current_file);

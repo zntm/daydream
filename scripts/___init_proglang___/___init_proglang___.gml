@@ -3,6 +3,7 @@ global.proglang_functions = {}
 global.proglang_macros = {}
 global.proglang_modules = {}
 global.proglang_scripts = {}
+global.proglang_root = PROGLANG_BASE_DIR;
 
 global.proglang_macros[$ "infinity"] = infinity;
 global.proglang_macros[$ "PI"] = pi;

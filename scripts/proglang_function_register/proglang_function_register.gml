@@ -755,6 +755,12 @@ function _proglang_run_test_internal(_test_struct, _default_name)
                 _vm.global_ref = _test_struct.global_ref;
             }
             _vm.current_scope.parent = _fn[PROG_CLOSURE.ENV];
+            // Propagate __filename for import resolution
+            if (is_struct(_test_struct) && struct_exists(_test_struct, "__filename") && _test_struct.__filename != undefined)
+            {
+                _vm.current_scope.vars[$ "__filename"] = _test_struct.__filename;
+                _vm.current_scope.vars[$ "__dirname"] = proglang_get_directory(_test_struct.__filename);
+            }
             _vm.run(_fn[PROG_CLOSURE.BYTECODE]);
         }
         else if (is_struct(_fn)) && (struct_exists(_fn, "function"))
@@ -787,7 +793,8 @@ proglang_function_register("test", function(_args, _vm = undefined)
         fn: _function,
         stop_on_fail: _stop_on_fail,
         handled: false,
-        global_ref: (_vm != undefined) ? _vm.global_ref : undefined
+        global_ref: (_vm != undefined) ? _vm.global_ref : undefined,
+        __filename: (_vm != undefined && struct_exists(_vm.current_scope.vars, "__filename")) ? _vm.current_scope.vars[$ "__filename"] : undefined
     }
     
     array_push(global.proglang_pending_tests, _test_struct);

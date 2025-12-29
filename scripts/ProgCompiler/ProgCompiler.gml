@@ -80,6 +80,7 @@ enum PROG_CLOSURE
     PARAM_COUNT,    // Number of parameters
     DEFINING_CLASS, // Class where method was defined
     RECEIVER,       // Bound 'this' instance
+    GLOBAL_REF,     // Captured global scope for module exports
     SIZE            // Array size
 }
 

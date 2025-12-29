@@ -1663,10 +1663,11 @@ if (IS_DEVELOPER_MODE)
 {
     call_later(1, time_source_units_frames, function()
     {
+        // Set proglang root for tests to ensure absolute imports work
+        global.proglang_root = $"{PROGRAM_DIRECTORY_RESOURCES}/data/proglang";
+        
         var _files = file_read_directory($"{PROGRAM_DIRECTORY_RESOURCES}/data/proglang/tests");
         var _length = array_length(_files);
-        
-        show_debug_message($"{_files} {_length}");
         
         for (var i = 0; i < _length; ++i)
         {
