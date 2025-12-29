@@ -60,11 +60,17 @@ function ProgVM() constructor
     static find_var_scope = function(_name)
     {
         var _s = current_scope;
+        
         while (_s != undefined)
         {
-            if (struct_exists(_s.vars, _name)) return _s;
+            if (struct_exists(_s.vars, _name))
+            {
+                return _s;
+            }
+            
             _s = _s.parent;
         }
+        
         return undefined;
     }
     
@@ -79,15 +85,16 @@ function ProgVM() constructor
         {
             // Super Constructor Call via super(...)
             // Parser emits Call(SuperExpr, args). SuperExpr emits LOAD_SUPER -> SuperReference.
-            if (is_struct(_callee) && struct_exists(_callee, "__super__"))
+            if (is_struct(_callee)) && (struct_exists(_callee, "__super__"))
             {
                 var _super_class = _callee.__super__;
                 var _receiver = _callee.receiver;
                 
                 // Look for constructor in super class
-                if (struct_exists(_super_class, "constructor_code") && _super_class.constructor_code != undefined)
+                if (_super_class[$ "constructor_code"] != undefined)
                 {
                     var _vm = new ProgVM();
+                    
                     _vm.context = context;
                     _vm.call_stack = variable_clone(call_stack);
                     _vm.current_this = _receiver;
@@ -96,25 +103,30 @@ function ProgVM() constructor
                     {
                         _vm.current_scope.vars[$ $"arg{j}"] = _args[j];
                     }
+                    
                     _vm.current_scope.vars[$ "argc"] = array_length(_args);
                     
                     var _res = _vm.run(_super_class.constructor_code);
+                    
                     array_pop(call_stack);
+                    
                     return _res;
                 }
                 else
                 {
                     // No constructor in super, just return (default constructor)
                     array_pop(call_stack);
+                    
                     return undefined;
                 }
             }
             
             // Function struct (closure or built-in wrapper)
             // Handle Array-based Closure (PROG_CLOSURE enum)
-            if (is_array(_callee) && array_length(_callee) >= PROG_CLOSURE.SIZE && _callee[PROG_CLOSURE.TYPE] == "closure")
+            if (is_array(_callee)) && (array_length(_callee) >= PROG_CLOSURE.SIZE) && (_callee[PROG_CLOSURE.TYPE] == "closure")
             {
                 var _vm = new ProgVM();
+                
                 _vm.context = context;
                 // Closure scope chain
                 _vm.current_scope.parent = _callee[PROG_CLOSURE.ENV];
@@ -131,19 +143,24 @@ function ProgVM() constructor
                 // Set 'this' context if bound
                 if (_callee[PROG_CLOSURE.RECEIVER] != undefined)
                 {
-                     _vm.current_this = _callee[PROG_CLOSURE.RECEIVER];
+                    _vm.current_this = _callee[PROG_CLOSURE.RECEIVER];
                 }
                 
                 for (var j = 0; j < array_length(_args); j++)
                 {
                     _vm.current_scope.vars[$ $"arg{j}"] = _args[j];
                 }
+                
                 _vm.current_scope.vars[$ "argc"] = array_length(_args);
+                
                 var _res = _vm.run(_callee[PROG_CLOSURE.BYTECODE]);
+                
                 array_pop(call_stack);
+                
                 return _res;
             }
             
+            /*
             // Legacy struct closure support
             if (is_struct(_callee) && struct_exists(_callee, "type") && _callee.type == "closure")
             {
@@ -160,7 +177,7 @@ function ProgVM() constructor
                 
                 if (struct_exists(_callee, "receiver"))
                 {
-                     _vm.current_this = _callee.receiver;
+                    _vm.current_this = _callee.receiver;
                 }
                 
                 for (var j = 0; j < array_length(_args); j++)
@@ -172,48 +189,57 @@ function ProgVM() constructor
                 array_pop(call_stack);
                 return _res;
             }
+            */
             
             // Built-in function
-            if (is_struct(_callee) && struct_exists(_callee, "func"))
+            if (is_struct(_callee)) && (struct_exists(_callee, "func"))
             {
-                 var _res = _callee.func(_args);
-                 array_pop(call_stack);
-                 return _res;
+                var _res = _callee.func(_args);
+                
+                array_pop(call_stack);
+                
+                return _res;
             }
             
             // String name lookup
             if (is_string(_callee))
             {
+                var _f = global.proglang_functions[$ _callee];
                 
-                if (struct_exists(global.proglang_functions, _callee))
+                if (_f != undefined)
                 {
-                    var _f = global.proglang_functions[$ _callee];
                     var _res = _f.func(_args);
+                    
                     array_pop(call_stack);
+                    
                     return _res;
                 }
                 
-                if (struct_exists(global.proglang_scripts, _callee))
+                var _script = global.proglang_scripts[$ _callee];
+                
+                if (_script != undefined)
                 {
-                    var _script = global.proglang_scripts[$ _callee];
                     var _bc = undefined;
                     
                     // Handle array-based module (PROG_MODULE)
-                    if (is_array(_script) && array_length(_script) >= PROG_MODULE.SIZE)
+                    if (is_array(_script)) && (array_length(_script) >= PROG_MODULE.SIZE)
                     {
                         _bc = _script[PROG_MODULE.MAIN];
                     }
+                    /*
                     // Handle legacy struct module
                     else if (is_struct(_script) && struct_exists(_script, "main"))
                     {
                         _bc = _script.main;
-                    } 
+                    }
+                    */
                     else
                     {
                         _bc = _script;
                     }
                     
                     var _vm = new ProgVM();
+                    
                     _vm.context = context;
                     _vm.call_stack = variable_clone(call_stack);
                     
@@ -221,30 +247,43 @@ function ProgVM() constructor
                     {
                         _vm.current_scope.vars[$ $"arg{j}"] = _args[j];
                     }
+                    
                     _vm.current_scope.vars[$ "argc"] = array_length(_args);
+                    
                     var _res = _vm.run(_bc);
+                    
                     array_pop(call_stack);
+                    
                     return _res;
                 }
                 
                 // Context value
-                if (context != undefined && struct_exists(context, _callee))
+                if (context != undefined)
                 {
-                     var _res = exec_call(context[$ _callee], _args, _line, _callee);
-                     array_pop(call_stack);
-                     return _res;
+                    var _ = context[$ _callee];
+                    
+                    if (_ != undefined)
+                    {
+                        var _res = exec_call(, _args, _line, _callee);
+                        
+                        array_pop(call_stack);
+                        
+                        return _res;
+                    }
                 }
                 
-                // GML script asset
                 var _asset = asset_get_index(_callee);
-                if (_asset != -1 && asset_get_type(_callee) == asset_script)
+                
+                if (_asset != -1) && (asset_get_type(_callee) == asset_script)
                 {
                     var _res = script_execute_ext(_asset, _args);
+                    
                     array_pop(call_stack);
+                    
                     return _res;
                 }
             }
-
+            
         }
         catch (_e)
         {
@@ -260,7 +299,7 @@ function ProgVM() constructor
     /// @desc Execute bytecode
     /// @param {struct} _bytecode Compiled bytecode object
     /// @returns {any} Execution result
-    run = function(_bytecode)
+    static run = function(_bytecode)
     {
         var _code = _bytecode.code;
         var _constants = _bytecode.constants;
@@ -290,6 +329,7 @@ function ProgVM() constructor
                     if (++_steps > _max_steps)
                     {
                         show_debug_message("[ProgVM] Infinite loop protection triggered");
+                        
                         return undefined;
                     }
                     
@@ -305,80 +345,185 @@ function ProgVM() constructor
                         case PROG_OP.PUSH_GLOBAL_REF: _stack[@ sp++] = _gref; break;
                         case PROG_OP.PUSH_CONST: _stack[@ sp++] = _constants[_arg]; break;
                         case PROG_OP.POP:
-                            if (sp > 0) sp--;
-                            else show_debug_message($"[ProgVM CRITICAL] STACK UNDERFLOW at IP {ip}");
-                            break;
-                            
-                        case PROG_OP.DUP: _stack[@ sp] = _stack[sp - 1]; sp++; break;
-                        case PROG_OP.DUP2:
-                             _a = _stack[sp - 1];
-                             _b = _stack[sp - 2];
-                             _stack[@ sp++] = _b;
-                             _stack[@ sp++] = _a;
-                             break;
-                        
-                        case PROG_OP.POP_AND_KEEP:
-                            _a = _stack[--sp]; // Top
-                            sp--; // Pop second
-                            _stack[@ sp++] = _a; // Push top back
-                            break;
-                        
-                        // Optimization Ops
-                        case PROG_OP.INC: _stack[sp - 1]++; break;
-                        case PROG_OP.DEC: _stack[sp - 1]--; break;
-
-                        // Arithmetic
-                        case PROG_OP.ADD:
-                            _b = _stack[--sp]; 
-                            _a = _stack[sp - 1];
-                            if (is_real(_a) && is_real(_b))
+                            if (sp > 0)
                             {
-                                _stack[sp - 1] = _a + _b;
+                                --sp;
                             }
                             else
                             {
-                                if (is_string(_a) || is_string(_b))
-                                {
-                                    var _sa = is_bool(_a) ? (_a ? "true" : "false") : string(_a);
-                                    var _sb = is_bool(_b) ? (_b ? "true" : "false") : string(_b);
-                                    _stack[sp - 1] = _sa + _sb;
-                                }
-                                else if (is_undefined(_a) || is_undefined(_b))
-                                {
-                                    runtime_error(PROGLANG_ERROR_TYPE.UNDEFINED_VALUE, "Undefined value in addition.");
-                                }
-                                else
-                                {
-                                    _stack[sp - 1] = _a + _b; 
-                                }
+                                show_debug_message($"[ProgVM CRITICAL] STACK UNDERFLOW at IP {ip}");
+                            }
+                            break;
+                            
+                        case PROG_OP.DUP:
+                            _stack[@ sp] = _stack[sp - 1];
+                            sp++;
+                            break;
+                        case PROG_OP.DUP2:
+                            var _a = _stack[sp - 1];
+                            var _b = _stack[sp - 2];
+                            
+                            _stack[@ sp++] = _b;
+                            _stack[@ sp++] = _a;
+                            break;
+                        
+                        case PROG_OP.POP_AND_KEEP:
+                            var _a = _stack[--sp]; // Top
+                            
+                            // Pop second and push top back
+                            _stack[@ sp - 1] = _a;
+                            break;
+                        
+                        // Optimization Ops
+                        case PROG_OP.INC:
+                            ++_stack[@ sp - 1];
+                            break;
+                        
+                        case PROG_OP.DEC:
+                            --_stack[@ sp - 1];
+                            break;
+                        
+                        // Arithmetic
+                        case PROG_OP.ADD:
+                            var _b = _stack[--sp]; 
+                            var _a = _stack[sp - 1];
+                            
+                            if (is_real(_a)) && (is_real(_b))
+                            {
+                                _stack[@ sp - 1] = _a + _b;
+                            }
+                            else if (is_string(_a)) || (is_string(_b))
+                            {
+                                var _sa = ((is_bool(_a)) ? ((_a) ? "true" : "false") : string(_a));
+                                var _sb = ((is_bool(_b)) ? ((_b) ? "true" : "false") : string(_b));
+                                
+                                _stack[@ sp - 1] = _sa + _sb;
+                            }
+                            else if (is_undefined(_a)) || (is_undefined(_b))
+                            {
+                                runtime_error(PROGLANG_ERROR_TYPE.UNDEFINED_VALUE, "Undefined value in addition.");
+                            }
+                            else
+                            {
+                                _stack[@ sp - 1] = _a + _b; 
                             }
                             break; 
                         
-                        case PROG_OP.SUB: _b = _stack[--sp]; _stack[sp - 1] -= _b; break;
-                        case PROG_OP.MUL: _b = _stack[--sp]; _stack[sp - 1] *= _b; break;
-                        case PROG_OP.DIV: _b = _stack[--sp]; _stack[sp - 1] /= _b; break;
-                        case PROG_OP.MOD: _b = _stack[--sp]; _stack[sp - 1] %= _b; break;
-                        case PROG_OP.POW: _b = _stack[--sp]; _stack[sp - 1] = power(_stack[sp - 1], _b); break;
-                        case PROG_OP.NEG: _stack[sp - 1] = -_stack[sp - 1]; break;
+                        case PROG_OP.SUB:
+                            var _b = _stack[--sp];
+                            
+                            _stack[@ sp - 1] -= _b;
+                            break;
+                        
+                        case PROG_OP.MUL:
+                            var _b = _stack[--sp];
+                            
+                            _stack[@ sp - 1] *= _b;
+                            break;
+                        
+                        case PROG_OP.DIV:
+                            var _b = _stack[--sp];
+                            
+                            _stack[@ sp - 1] /= _b;
+                            break;
+                        
+                        case PROG_OP.MOD:
+                            var _b = _stack[--sp];
+                            
+                            _stack[@ sp - 1] %= _b;
+                            break;
+                        
+                        case PROG_OP.POW:
+                            var _b = _stack[--sp];
+                            
+                            _stack[@ sp - 1] = power(_stack[sp - 1], _b);
+                            break;
+                        
+                        case PROG_OP.NEG:
+                            _stack[@ sp - 1] = -_stack[sp - 1];
+                            break;
                         
                         // Comparison
-                        case PROG_OP.EQ: _b = _stack[--sp]; _stack[sp - 1] = (_stack[sp - 1] == _b); break;
-                        case PROG_OP.NE: _b = _stack[--sp]; _stack[sp - 1] = (_stack[sp - 1] != _b); break;
-                        case PROG_OP.LT: _b = _stack[--sp]; _stack[sp - 1] = (_stack[sp - 1] < _b); break;
-                        case PROG_OP.GT: _b = _stack[--sp]; _stack[sp - 1] = (_stack[sp - 1] > _b); break;
-                        case PROG_OP.LE: _b = _stack[--sp]; _stack[sp - 1] = (_stack[sp - 1] <= _b); break;
-                        case PROG_OP.GE: _b = _stack[--sp]; _stack[sp - 1] = (_stack[sp - 1] >= _b); break;
+                        case PROG_OP.EQ:
+                            var _b = _stack[--sp];
+                            
+                            _stack[@ sp - 1] = (_stack[sp - 1] == _b);
+                            break;
+                        
+                        case PROG_OP.NE:
+                            var _b = _stack[--sp];
+                            
+                            _stack[@ sp - 1] = (_stack[sp - 1] != _b);
+                            break;
+                        
+                        case PROG_OP.LT:
+                            var _b = _stack[--sp];
+                            
+                            _stack[@ sp - 1] = (_stack[sp - 1] < _b);
+                            break;
+                        
+                        case PROG_OP.GT:
+                            var _b = _stack[--sp];
+                            
+                            _stack[@ sp - 1] = (_stack[sp - 1] > _b);
+                            break;
+                        
+                        case PROG_OP.LE:
+                            var _b = _stack[--sp];
+                            
+                            _stack[@ sp - 1] = (_stack[sp - 1] <= _b);
+                            break;
+                        
+                        case PROG_OP.GE:
+                            var _b = _stack[--sp];
+                            
+                            _stack[@ sp - 1] = (_stack[sp - 1] >= _b);
+                            break;
                         
                         // Logical / Bitwise
-                        case PROG_OP.NOT: _stack[sp - 1] = !_stack[sp - 1]; break;
-                        case PROG_OP.AND: _b = _stack[--sp]; _stack[sp - 1] = (_stack[sp - 1] && _b); break;
-                        case PROG_OP.OR: _b = _stack[--sp]; _stack[sp - 1] = (_stack[sp - 1] || _b); break;
-                        case PROG_OP.BIT_AND: _b = _stack[--sp]; _stack[sp - 1] &= _b; break;
-                        case PROG_OP.BIT_OR: _b = _stack[--sp]; _stack[sp - 1] |= _b; break;
-                        case PROG_OP.BIT_XOR: _b = _stack[--sp]; _stack[sp - 1] ^= _b; break;
-                        case PROG_OP.BIT_NOT: _stack[sp - 1] = ~floor(_stack[sp - 1]); break;
-                        case PROG_OP.SHL: _b = _stack[--sp]; _stack[sp - 1] = _stack[sp - 1] << _b; break;
-                        case PROG_OP.SHR: _b = _stack[--sp]; _stack[sp - 1] = _stack[sp - 1] >> _b; break;
+                        case PROG_OP.NOT:
+                            _stack[@ sp - 1] = !_stack[sp - 1];
+                            break;
+                        
+                        case PROG_OP.AND:
+                            var _b = _stack[--sp];
+                            
+                            _stack[sp - 1] = (_stack[sp - 1] && _b);
+                            break;
+                        
+                        case PROG_OP.OR:
+                            var _b = _stack[--sp];
+                            
+                            _stack[sp - 1] = (_stack[sp - 1] || _b);
+                            break;
+                        case PROG_OP.BIT_AND:
+                            var _b = _stack[--sp];
+                            
+                            _stack[sp - 1] &= _b;
+                            break;
+                        case PROG_OP.BIT_OR:
+                            var _b = _stack[--sp];
+                            
+                            _stack[sp - 1] |= _b;
+                            break;
+                        case PROG_OP.BIT_XOR:
+                            var _b = _stack[--sp];
+                            
+                            _stack[sp - 1] ^= _b;
+                            break;
+                        case PROG_OP.BIT_NOT:
+                            _stack[sp - 1] = ~floor(_stack[sp - 1]);
+                            break;
+                        case PROG_OP.SHL:
+                            var _b = _stack[--sp];
+                            
+                            _stack[sp - 1] = _stack[sp - 1] << _b;
+                            break;
+                        case PROG_OP.SHR:
+                            var _b = _stack[--sp];
+                            
+                            _stack[sp - 1] = _stack[sp - 1] >> _b;
+                            break;
                         
                         // Variable Access
                         case PROG_OP.LOAD:
@@ -521,17 +666,17 @@ function ProgVM() constructor
                                 {
                                     if (struct_exists(_curr.methods, _prop))
                                     {
-                                         var _method_entry = _curr.methods[$ _prop];
-                                         _val = array_create(PROG_CLOSURE.SIZE);
-                                         _val[PROG_CLOSURE.TYPE] = "closure";
-                                         _val[PROG_CLOSURE.BYTECODE] = _method_entry.bytecode;
-                                         _val[PROG_CLOSURE.ENV] = current_scope;
-                                         _val[PROG_CLOSURE.NAME] = _prop;
-                                         _val[PROG_CLOSURE.PARAM_COUNT] = struct_exists(_method_entry, "param_count") ? _method_entry.param_count : 0;
-                                         _val[PROG_CLOSURE.DEFINING_CLASS] = _curr;
-                                         _val[PROG_CLOSURE.RECEIVER] = _receiver;
-                                         _found = true;
-                                         break;
+                                        var _method_entry = _curr.methods[$ _prop];
+                                        _val = array_create(PROG_CLOSURE.SIZE);
+                                        _val[PROG_CLOSURE.TYPE] = "closure";
+                                        _val[PROG_CLOSURE.BYTECODE] = _method_entry.bytecode;
+                                        _val[PROG_CLOSURE.ENV] = current_scope;
+                                        _val[PROG_CLOSURE.NAME] = _prop;
+                                        _val[PROG_CLOSURE.PARAM_COUNT] = struct_exists(_method_entry, "param_count") ? _method_entry.param_count : 0;
+                                        _val[PROG_CLOSURE.DEFINING_CLASS] = _curr;
+                                        _val[PROG_CLOSURE.RECEIVER] = _receiver;
+                                        _found = true;
+                                        break;
                                     }
                                     _curr = _curr.super_class;
                                 }
@@ -906,12 +1051,21 @@ function ProgVM() constructor
         return undefined;
     }
     
-    // External access methods
-    static push = function(_val) { stack[@ sp++] = _val; }
-    static pop = function() { return stack[@ --sp]; }
-    static peek = function() { return stack[sp - 1]; }
+    static push = function(_val)
+    {
+        stack[@ sp++] = _val;
+    }
     
-    /// @desc Throw a runtime error with type, message, and optional line number
+    static pop = function()
+    {
+        return stack[@ --sp];
+    }
+    
+    static peek = function()
+    {
+        return stack[sp - 1];
+    }
+    
     static runtime_error = function(_type, _message, _line = 0)
     {
         throw { type: _type, message: _message, line: _line }

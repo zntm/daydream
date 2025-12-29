@@ -241,7 +241,7 @@ proglang_function_register("test_expect", function(_args)
         _expected = _expected.func([]);
     }
     
-    global.proglang_test_state.current_assertions++;
+    ++global.proglang_test_state.current_assertions;
     
     if (_actual != _expected)
     {
@@ -293,20 +293,25 @@ function proglang_run_pending()
                 
                 if (_t_res.passed)
                 {
-                    _passed++;
+                    ++_passed;
+                    
                     show_debug_message($"  ✓ {_t_name} ({_t_time}ms)");
                 }
                 else
                 {
-                    _failed++;
+                    ++_failed;
+                    
                     show_debug_message($"  ✗ {_t_name} ({_t_time}ms)");
+                    
                     for (var k = 0; k < array_length(_t_res.failures); k++)
                     {
                         show_debug_message($"    - {_t_res.failures[k]}");
                     }
+                    
                     if (_t_res.error != undefined)
                     {
                         var _err_msg = is_struct(_t_res.error) && struct_exists(_t_res.error, "message") ? _t_res.error.message : string(_t_res.error);
+                        
                         show_debug_message($"    - Error: {_err_msg}");
                     }
                 }

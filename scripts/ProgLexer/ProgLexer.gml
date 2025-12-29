@@ -19,7 +19,7 @@ enum PROG_TOKEN
     AMP, PIPE, CARET, TILDE, LSHIFT, RSHIFT,
     ASSIGN, PLUS_ASSIGN, MINUS_ASSIGN, STAR_ASSIGN, SLASH_ASSIGN, PERCENT_ASSIGN, POWER_ASSIGN,
     LSHIFT_ASSIGN, RSHIFT_ASSIGN, AMP_ASSIGN, PIPE_ASSIGN, CARET_ASSIGN,
-    NULL_COALESCE, SPREAD, ARROW,
+    NULL_COALESCE, SPREAD,
     // Punctuation
     LPAREN, RPAREN, LBRACE, RBRACE, LBRACKET, RBRACKET,
     COMMA, DOT, SEMICOLON, COLON, QUESTION,
@@ -76,6 +76,7 @@ function ProgLexer(_source) constructor
         while (!is_at_end())
         {
             start = current;
+            
             if (array_length(interp_stack) > 0 && interp_stack[array_length(interp_stack)-1] == -1)
             {
                 scan_interpolation();
@@ -117,33 +118,67 @@ function ProgLexer(_source) constructor
         
         switch (_c)
         {
-            case "(": add_token(PROG_TOKEN.LPAREN); break;
-            case ")": add_token(PROG_TOKEN.RPAREN); break;
+            case "(":
+                add_token(PROG_TOKEN.LPAREN);
+                break;
+            
+            case ")":
+                add_token(PROG_TOKEN.RPAREN);
+                break;
+            
             case "{": 
                 add_token(PROG_TOKEN.LBRACE); 
-                if (array_length(interp_stack) > 0) interp_stack[@ array_length(interp_stack) - 1]++;
+                
+                if (array_length(interp_stack) > 0)
+                {
+                    ++interp_stack[@ array_length(interp_stack) - 1];
+                }
                 break;
+            
             case "}": 
                 if (array_length(interp_stack) > 0)
                 {
                     var _depth = interp_stack[array_length(interp_stack) - 1];
+                    
                     if (_depth == 0)
                     {
                         add_token(PROG_TOKEN.RPAREN);
                         add_token(PROG_TOKEN.PLUS);
+                        
                         interp_stack[@ array_length(interp_stack) - 1] = -1;
+                        
                         return;
                     }
-                    interp_stack[@ array_length(interp_stack) - 1]--;
+                    
+                    --interp_stack[@ array_length(interp_stack) - 1];
                 }
+                
                 add_token(PROG_TOKEN.RBRACE); 
                 break;
-            case "[": add_token(PROG_TOKEN.LBRACKET); break;
-            case "]": add_token(PROG_TOKEN.RBRACKET); break;
-            case ",": add_token(PROG_TOKEN.COMMA); break;
-            case ".": add_token((match(".") && match(".")) ? PROG_TOKEN.SPREAD : PROG_TOKEN.DOT); break;
-            case ";": add_token(PROG_TOKEN.SEMICOLON); break;
-            case ":": add_token(PROG_TOKEN.COLON); break;
+            
+            case "[":
+                add_token(PROG_TOKEN.LBRACKET);
+                break;
+            
+            case "]":
+                add_token(PROG_TOKEN.RBRACKET);
+                break;
+            
+            case ",":
+                add_token(PROG_TOKEN.COMMA);
+                break;
+            
+            case ".":
+                add_token(((match(".")) && (match("."))) ? PROG_TOKEN.SPREAD : PROG_TOKEN.DOT);
+                break;
+            
+            case ";":
+                add_token(PROG_TOKEN.SEMICOLON);
+                break;
+            
+            case ":":
+                add_token(PROG_TOKEN.COLON);
+                break;
             
             case "+": 
                 if (match("+")) add_token(PROG_TOKEN.PLUS_PLUS);
@@ -151,7 +186,6 @@ function ProgLexer(_source) constructor
                 break;
             case "-": 
                 if (match("-")) add_token(PROG_TOKEN.MINUS_MINUS);
-                // else if (match(">")) add_token(PROG_TOKEN.ARROW);
                 else add_token(match("=") ? PROG_TOKEN.MINUS_ASSIGN : PROG_TOKEN.MINUS); 
                 break;
             case "*": add_token(match("=") ? PROG_TOKEN.STAR_ASSIGN : (match("*") ? (match("=") ? PROG_TOKEN.POWER_ASSIGN : PROG_TOKEN.POWER) : PROG_TOKEN.STAR)); break;
@@ -204,7 +238,6 @@ function ProgLexer(_source) constructor
             case "!": add_token(match("=") ? PROG_TOKEN.NE : PROG_TOKEN.NOT); break;
             case "=": 
                 if (match("=")) add_token(PROG_TOKEN.EQ);
-                else if (match(">")) add_token(PROG_TOKEN.ARROW);
                 else add_token(PROG_TOKEN.ASSIGN);
                 break; 
             case "<": 
@@ -330,6 +363,7 @@ function ProgLexer(_source) constructor
                 {
                     // End of regex
                     advance(); // Consume /
+                    
                     break;
                 }
             }

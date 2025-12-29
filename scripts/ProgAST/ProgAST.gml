@@ -195,9 +195,9 @@ function ProgASTPostfixOp(_op, _target) : ProgASTNode(PROG_AST.POSTFIX_OP) const
 }
 
 /// @desc Switch statement
-function ProgASTSwitchStmt(_expr, _cases, _default_case) : ProgASTNode(PROG_AST.SWITCH_STMT) constructor
+function ProgASTSwitchStmt(_expression, _cases, _default_case) : ProgASTNode(PROG_AST.SWITCH_STMT) constructor
 {
-    expr = _expr;
+    expr = _expression;
     cases = _cases; // Array of { value, body }
     default_case = _default_case; // Block or undefined
 }

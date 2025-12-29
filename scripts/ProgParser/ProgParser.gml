@@ -14,7 +14,7 @@ function ProgParser(_tokens) constructor
     
     static is_at_end = function()
     {
-        return peek().type == PROG_TOKEN.EOF;
+        return (peek().type == PROG_TOKEN.EOF);
     }
     
     static peek = function()
@@ -29,14 +29,22 @@ function ProgParser(_tokens) constructor
     
     static advance = function()
     {
-        if (!is_at_end()) current++;
+        if (!is_at_end())
+        {
+            ++current;
+        }
+        
         return previous();
     }
     
     static check = function(_type)
     {
-        if (is_at_end()) return false;
-        return peek().type == _type;
+        if (is_at_end())
+        {
+            return false;
+        }
+        
+        return (peek().type == _type);
     }
     
     static match = function(_type)
@@ -44,24 +52,33 @@ function ProgParser(_tokens) constructor
         if (check(_type))
         {
             advance();
+            
             return true;
         }
+        
         return false;
     }
     
     static consume = function(_type, _message)
     {
-        if (check(_type)) return advance();
+        if (check(_type))
+        {
+            return advance();
+        }
         
         error_at_current(_message);
+        
         return { type: PROG_TOKEN.EOF, lexeme: "", literal: undefined, line: peek().line } // Return dummy token
     }
     
     static error_at_current = function(_message)
     {
         if (had_error) return; // Suppress cascade
+        
         had_error = true;
+        
         var _token = peek();
+        
         error = $"[Line {_token.line}] Error at '{_token.lexeme}': {_message}";
     }
     
@@ -98,6 +115,7 @@ function ProgParser(_tokens) constructor
     {
         // Check for global prefix
         var _is_global = false;
+        
         if (match(PROG_TOKEN.GLOBAL))
         {
             // Could be: global fn, global function, global var, or global.x
@@ -112,26 +130,17 @@ function ProgParser(_tokens) constructor
                 advance(); // consume VAR
                 return parse_var_decl(true); // is_global = true
             }
+            // Backtrack to let parse_expression_statement handle 'global.x'
+            else if (check(PROG_TOKEN.DOT))
+            {
+                --current;
+                
+                return parse_expression_statement();
+            }
             else
             {
-                // global.x = expression (member access)
-                // If expecting 'var' or 'fn' but found identifier directly -> Error or Member Access?
-                // global.x starts with 'global' then DOT.
-                // If just 'global x', we now disallow it.
-                // WE MUST CHECK FOR DOT.
-                // But parse_statement consumes 'global'.
-                
-                // If next is DOT, it is member access.
-                if (check(PROG_TOKEN.DOT))
-                {
-                     current--; // Backtrack to let parse_expression_statement handle 'global.x'
-                     return parse_expression_statement();
-                }
-                else
-                {
-                     error_at_current("Expected 'var', 'fn', or '.' after 'global'.");
-                     return new ProgASTStatement();
-                }
+                error_at_current("Expected 'var', 'fn', or '.' after 'global'.");
+                return new ProgASTStatement();
             }
         }
         
@@ -199,14 +208,19 @@ function ProgParser(_tokens) constructor
             error_at_current("Expected 'class' after 'abstract'.");
             return new ProgASTLiteral(PROG_AST.UNDEFINED_LITERAL, undefined);
         }
-
-        if (match(PROG_TOKEN.CLASS)) return parse_class_decl();
+        
+        if (match(PROG_TOKEN.CLASS))
+        {
+            return parse_class_decl();
+        }
         
         if (match(PROG_TOKEN.THROW))
         {
-            var _expr = parse_expression();
+            var _expression = parse_expression();
+            
             match(PROG_TOKEN.SEMICOLON);
-            return new ProgASTThrowStmt(_expr);
+            
+            return new ProgASTThrowStmt(_expression);
         }
         
         return parse_expression_statement();
@@ -649,7 +663,7 @@ function ProgParser(_tokens) constructor
         {
             // Expression init: "for (i in list)" or "for (i = 0; ...)"
             // Parse expression first, then check for IN keyword
-            var _expr = parse_assignment();
+            var _expression = parse_assignment();
             
             if (check(PROG_TOKEN.COMMA))
             { // Check for comma if it looks like start of for-in with 2 vars
@@ -662,27 +676,31 @@ function ProgParser(_tokens) constructor
             if (match(PROG_TOKEN.IN))
             {
                 _is_for_in = true;
-                // Verify _expr is valid lvalue (Identifier)
-                if (_expr.type == PROG_AST.IDENTIFIER) _for_in_var = _expr.name;
+                // Verify _expression is valid lvalue (Identifier)
+                if (_expression.type == PROG_AST.IDENTIFIER) _for_in_var = _expression.name;
                 else error_at_current("Expected identifier in for-in loop.");
             }
             else
             {
                 if (_for_in_val_var != undefined) error_at_current("Unexpected variable in for loop initializer.");
                 // It's a normal for loop init. Convert to assignment if needed, then expect semicolon.
-                _expr = _convert_to_assignment(_expr);
+                _expression = _convert_to_assignment(_expression);
                 match(PROG_TOKEN.SEMICOLON);
-                _init = new ProgASTExpressionStmt(_expr);
+                _init = new ProgASTExpressionStmt(_expression);
             }
         }
         
         if (_is_for_in)
         {
-            // for (var x IN ... ) or for (x IN ...)
-            // We already consumed IN.
             var _collection = parse_expression();
-            if (_paren) consume(PROG_TOKEN.RPAREN, "Expected ')' after for-in.");
+            
+            if (_paren)
+            {
+                consume(PROG_TOKEN.RPAREN, "Expected ')' after for-in.");
+            }
+            
             var _body = parse_statement();
+            
             return new ProgASTForInStmt(_for_in_var, _collection, _body, _for_in_val_var);
         }
         
@@ -690,20 +708,27 @@ function ProgParser(_tokens) constructor
         // _init is already set (Block or ExpressionStmt)
         
         var _cond = undefined;
+        
         if (!check(PROG_TOKEN.SEMICOLON))
         {
             _cond = parse_expression();
         }
+        
         consume(PROG_TOKEN.SEMICOLON, "Expected ';' after loop condition.");
         
         var _inc = undefined;
-        if (!check(PROG_TOKEN.RPAREN) && !check(PROG_TOKEN.LBRACE))
+        
+        if (!check(PROG_TOKEN.RPAREN)) && (!check(PROG_TOKEN.LBRACE))
         {
-            var _expr = parse_expression();
-            _inc = _convert_to_assignment(_expr);
+            var _expression = parse_expression();
+            
+            _inc = _convert_to_assignment(_expression);
         }
         
-        if (_paren) consume(PROG_TOKEN.RPAREN, "Expected ')' after for clauses.");
+        if (_paren)
+        {
+            consume(PROG_TOKEN.RPAREN, "Expected ')' after for clauses.");
+        }
         
         var _body = parse_statement();
         
@@ -713,6 +738,7 @@ function ProgParser(_tokens) constructor
     static parse_try_stmt = function()
     {
         consume(PROG_TOKEN.LBRACE, "Expected '{' before try block.");
+        
         var _try_block = new ProgASTBlock(parse_block());
         
         var _catch_var = undefined;
@@ -723,9 +749,12 @@ function ProgParser(_tokens) constructor
             if (match(PROG_TOKEN.LPAREN))
             {
                 _catch_var = consume(PROG_TOKEN.IDENTIFIER, "Expected catch variable name.").lexeme;
+                
                 consume(PROG_TOKEN.RPAREN, "Expected ')' after catch variable.");
             }
+            
             consume(PROG_TOKEN.LBRACE, "Expected '{' before catch block.");
+            
             _catch_block = new ProgASTBlock(parse_block());
         }
         
@@ -736,7 +765,7 @@ function ProgParser(_tokens) constructor
     {
         // switch (expr) { case val: body... default: body }
         var _paren = match(PROG_TOKEN.LPAREN);
-        var _expr = parse_expression();
+        var _expression = parse_expression();
         if (_paren) consume(PROG_TOKEN.RPAREN, "Expected ')' after switch expression.");
         
         consume(PROG_TOKEN.LBRACE, "Expected '{' before switch cases.");
@@ -778,20 +807,21 @@ function ProgParser(_tokens) constructor
         }
         
         consume(PROG_TOKEN.RBRACE, "Expected '}' after switch cases.");
-        return new ProgASTSwitchStmt(_expr, _cases, _default_case);
+        return new ProgASTSwitchStmt(_expression, _cases, _default_case);
     }
     
     static parse_expression_statement = function()
     {
-        var _expr = parse_expression();
+        var _expression = parse_expression();
         
-        _expr = _convert_to_assignment(_expr);
+        _expression = _convert_to_assignment(_expression);
         
         match(PROG_TOKEN.SEMICOLON);
-        return new ProgASTExpressionStmt(_expr);
+        
+        return new ProgASTExpressionStmt(_expression);
     }
     
-    static _convert_to_assignment = function(_expr)
+    static _convert_to_assignment = function(_expression)
     {
         // Check for compound assignment tokens (+=, -=) that appear AFTER the expression
         // parse_expression() stops at them.
@@ -799,78 +829,95 @@ function ProgParser(_tokens) constructor
         if (match(PROG_TOKEN.PLUS_ASSIGN))
         {
             var _rhs = parse_expression();
-            return new ProgASTAssignment(_expr, _rhs, PROG_TOKEN.PLUS); // Op is logic to apply
+            
+            return new ProgASTAssignment(_expression, _rhs, PROG_TOKEN.PLUS); // Op is logic to apply
         }
+        
         if (match(PROG_TOKEN.MINUS_ASSIGN))
         {
             var _rhs = parse_expression();
-            return new ProgASTAssignment(_expr, _rhs, PROG_TOKEN.MINUS);
+            
+            return new ProgASTAssignment(_expression, _rhs, PROG_TOKEN.MINUS);
         }
+        
         if (match(PROG_TOKEN.STAR_ASSIGN))
         {
             var _rhs = parse_expression();
-            return new ProgASTAssignment(_expr, _rhs, PROG_TOKEN.STAR);
+            
+            return new ProgASTAssignment(_expression, _rhs, PROG_TOKEN.STAR);
         }
+        
         if (match(PROG_TOKEN.SLASH_ASSIGN))
         {
             var _rhs = parse_expression();
-            return new ProgASTAssignment(_expr, _rhs, PROG_TOKEN.SLASH);
+            
+            return new ProgASTAssignment(_expression, _rhs, PROG_TOKEN.SLASH);
         }
+        
         if (match(PROG_TOKEN.PERCENT_ASSIGN))
         {
             var _rhs = parse_expression();
-            return new ProgASTAssignment(_expr, _rhs, PROG_TOKEN.PERCENT);
+            
+            return new ProgASTAssignment(_expression, _rhs, PROG_TOKEN.PERCENT);
         }
+        
         if (match(PROG_TOKEN.POWER_ASSIGN))
         {
             var _rhs = parse_expression();
-            return new ProgASTAssignment(_expr, _rhs, PROG_TOKEN.POWER);
+            
+            return new ProgASTAssignment(_expression, _rhs, PROG_TOKEN.POWER);
         }
+        
         if (match(PROG_TOKEN.LSHIFT_ASSIGN))
         {
             var _rhs = parse_expression();
-            return new ProgASTAssignment(_expr, _rhs, PROG_TOKEN.LSHIFT);
+            
+            return new ProgASTAssignment(_expression, _rhs, PROG_TOKEN.LSHIFT);
         }
+        
         if (match(PROG_TOKEN.RSHIFT_ASSIGN))
         {
             var _rhs = parse_expression();
-            return new ProgASTAssignment(_expr, _rhs, PROG_TOKEN.RSHIFT);
+            
+            return new ProgASTAssignment(_expression, _rhs, PROG_TOKEN.RSHIFT);
         }
+        
         if (match(PROG_TOKEN.AMP_ASSIGN))
         {
             var _rhs = parse_expression();
-            return new ProgASTAssignment(_expr, _rhs, PROG_TOKEN.AMP);
+            
+            return new ProgASTAssignment(_expression, _rhs, PROG_TOKEN.AMP);
         }
+        
         if (match(PROG_TOKEN.PIPE_ASSIGN))
         {
             var _rhs = parse_expression();
-            return new ProgASTAssignment(_expr, _rhs, PROG_TOKEN.PIPE);
+            
+            return new ProgASTAssignment(_expression, _rhs, PROG_TOKEN.PIPE);
         }
+        
         if (match(PROG_TOKEN.CARET_ASSIGN))
         {
             var _rhs = parse_expression();
-            return new ProgASTAssignment(_expr, _rhs, PROG_TOKEN.CARET);
-        }
-        if (match(PROG_TOKEN.ASSIGN) || match(PROG_TOKEN.EQ))
-        {
-            // Handle explicit `target = value` where parser stopped at `=` (if treating as simple expr)
-            // But my parser treats `=` as operator, so it IS in `_expr` as BinaryOp
+            
+            return new ProgASTAssignment(_expression, _rhs, PROG_TOKEN.CARET);
         }
         
-        // Convert `BinaryOp(ASSIGN/EQ)` to `Assignment` if Top-Level
-        if (_expr.type == PROG_AST.BINARY_OP)
+        /*
+        if (match(PROG_TOKEN.ASSIGN)) || (match(PROG_TOKEN.EQ))
         {
-            if (_expr.op == PROG_TOKEN.ASSIGN || _expr.op == PROG_TOKEN.EQ)
-            {
-                // Determine implicit chaining? `a = b` -> Assignment.
-                // Compiler will handle `ExpressionStmt(Assignment)` as STORE.
-                // `BinaryOp(EQ)` here effectively becomes `Attribute = value`.
-                // So we assume top-Level `=` is always Assignment.
-                return new ProgASTAssignment(_expr.left, _expr.right, PROG_TOKEN.ASSIGN);
-            }
+            // Handle explicit 'target = value' where parser stopped at '=' (if treating as simple expr)
+            // But my parser treats '=' as operator, so it IS in '_expression' as BinaryOp
+        }
+        */
+        
+        // Convert 'BinaryOp(ASSIGN/EQ)' to 'Assignment' if Top-Level
+        if (_expression.type == PROG_AST.BINARY_OP) && ((_expression.op == PROG_TOKEN.ASSIGN) || (_expression.op == PROG_TOKEN.EQ))
+        {
+            return new ProgASTAssignment(_expression.left, _expression.right, PROG_TOKEN.ASSIGN);
         }
         
-        return _expr;
+        return _expression;
     }
     
     // ----------------------------------------------------------------------------
@@ -879,20 +926,21 @@ function ProgParser(_tokens) constructor
     
     static parse_expression = function()
     {
-        var _expr = parse_assignment();
+        var _expression = parse_assignment();
         
         while (match(PROG_TOKEN.COMMA))
         {
             var _right = parse_assignment();
-            _expr = new ProgASTBinaryOp(PROG_TOKEN.COMMA, _expr, _right);
+            
+            _expression = new ProgASTBinaryOp(PROG_TOKEN.COMMA, _expression, _right);
         }
         
-        return _expr;
+        return _expression;
     }
     
     static parse_assignment = function()
     {
-        var _expr = parse_ternary();
+        var _expression = parse_ternary();
         
         if (match(PROG_TOKEN.ASSIGN) || match(PROG_TOKEN.PLUS_ASSIGN) || match(PROG_TOKEN.MINUS_ASSIGN) ||
             match(PROG_TOKEN.STAR_ASSIGN) || match(PROG_TOKEN.SLASH_ASSIGN) || match(PROG_TOKEN.PERCENT_ASSIGN) || match(PROG_TOKEN.POWER_ASSIGN) ||
@@ -903,19 +951,19 @@ function ProgParser(_tokens) constructor
             var _value = parse_expression(); // Right associative? usually parse_assignment() to allow a=b=c
                                             // parse_expression calls parse_assignment so it works.
                                             
-            if (_expr.type == PROG_AST.IDENTIFIER || _expr.type == PROG_AST.INDEX || _expr.type == PROG_AST.MEMBER)
+            if (_expression.type == PROG_AST.IDENTIFIER || _expression.type == PROG_AST.INDEX || _expression.type == PROG_AST.MEMBER)
             {
-                return new ProgASTAssignment(_expr, _value, _op);
+                return new ProgASTAssignment(_expression, _value, _op);
             }
             error_at_current("Invalid assignment target.");
         }
         
-        return _expr;
+        return _expression;
     }
     
     static parse_ternary = function()
     {
-        var _expr = parse_null_coalescing();
+        var _expression = parse_null_coalescing();
         
         if (match(PROG_TOKEN.QUESTION))
         {
@@ -925,93 +973,93 @@ function ProgParser(_tokens) constructor
             
             var _false_branch = parse_ternary();
             
-            return new ProgASTTernary(_expr, _true_branch, _false_branch);
+            return new ProgASTTernary(_expression, _true_branch, _false_branch);
         }
         
-        return _expr;
+        return _expression;
     }
     
     static parse_null_coalescing = function()
     {
-        var _expr = parse_logic_or();
+        var _expression = parse_logic_or();
         
         while (match(PROG_TOKEN.NULL_COALESCE))
         {
             var _right = parse_logic_or();
             
-            _expr = new ProgASTBinaryOp(PROG_TOKEN.NULL_COALESCE, _expr, _right);
+            _expression = new ProgASTBinaryOp(PROG_TOKEN.NULL_COALESCE, _expression, _right);
         }
         
-        return _expr;
+        return _expression;
     }
     
     static parse_logic_or = function()
     {
-        var _expr = parse_logic_and();
+        var _expression = parse_logic_and();
         
         while (match(PROG_TOKEN.OR))
         {
             var _right = parse_logic_and();
             
-            _expr = new ProgASTBinaryOp(PROG_TOKEN.OR, _expr, _right);
+            _expression = new ProgASTBinaryOp(PROG_TOKEN.OR, _expression, _right);
         }
         
-        return _expr;
+        return _expression;
     }
     
     static parse_logic_and = function()
     {
-        var _expr = parse_bitwise_or();
+        var _expression = parse_bitwise_or();
         
         while (match(PROG_TOKEN.AND))
         {
             var _right = parse_bitwise_or();
             
-            _expr = new ProgASTBinaryOp(PROG_TOKEN.AND, _expr, _right);
+            _expression = new ProgASTBinaryOp(PROG_TOKEN.AND, _expression, _right);
         }
         
-        return _expr;
+        return _expression;
     }
     
     static parse_bitwise_or = function()
     {
-        var _expr = parse_bitwise_xor();
+        var _expression = parse_bitwise_xor();
         
         while (match(PROG_TOKEN.PIPE))
         {
-            _expr = new ProgASTBinaryOp(PROG_TOKEN.PIPE, _expr, parse_bitwise_xor());
+            _expression = new ProgASTBinaryOp(PROG_TOKEN.PIPE, _expression, parse_bitwise_xor());
         }
         
-        return _expr;
+        return _expression;
     }
     
     static parse_bitwise_xor = function()
     {
-        var _expr = parse_bitwise_and();
+        var _expression = parse_bitwise_and();
         
         while (match(PROG_TOKEN.CARET))
         {
-            _expr = new ProgASTBinaryOp(PROG_TOKEN.CARET, _expr, parse_bitwise_and());
+            _expression = new ProgASTBinaryOp(PROG_TOKEN.CARET, _expression, parse_bitwise_and());
         }
         
-        return _expr;
+        return _expression;
     }
     
     static parse_bitwise_and = function()
     {
-        var _expr = parse_equality();
+        var _expression = parse_equality();
         
         while (match(PROG_TOKEN.AMP))
         {
-            _expr = new ProgASTBinaryOp(PROG_TOKEN.AMP, _expr, parse_equality());
+            _expression = new ProgASTBinaryOp(PROG_TOKEN.AMP, _expression, parse_equality());
         }
         
-        return _expr;
+        return _expression;
     }
     
     static parse_equality = function()
     {
-        var _expr = parse_comparison();
+        var _expression = parse_comparison();
         
         // Treat both == and = as equality in expressions
         while (check(PROG_TOKEN.EQ)) || (check(PROG_TOKEN.NE)) || (check(PROG_TOKEN.ASSIGN))
@@ -1026,70 +1074,70 @@ function ProgParser(_tokens) constructor
             
             var _right = parse_comparison();
             
-            _expr = new ProgASTBinaryOp(_op, _expr, _right);
+            _expression = new ProgASTBinaryOp(_op, _expression, _right);
         }
         
-        return _expr;
+        return _expression;
     }
     
     static parse_comparison = function()
     {
-        var _expr = parse_shift();
+        var _expression = parse_shift();
         
         while (check(PROG_TOKEN.GT)) || (check(PROG_TOKEN.GE)) || (check(PROG_TOKEN.LT)) || (check(PROG_TOKEN.LE))
         {
              var _op = advance().type;
              var _right = parse_shift();
             
-             _expr = new ProgASTBinaryOp(_op, _expr, _right);
+             _expression = new ProgASTBinaryOp(_op, _expression, _right);
         }
         
-        return _expr;
+        return _expression;
     }
     
     static parse_shift = function()
     {
-        var _expr = parse_term();
+        var _expression = parse_term();
         
         while (check(PROG_TOKEN.LSHIFT)) || (check(PROG_TOKEN.RSHIFT))
         {
              var _op = advance().type;
              var _right = parse_term();
              
-            _expr = new ProgASTBinaryOp(_op, _expr, _right);
+            _expression = new ProgASTBinaryOp(_op, _expression, _right);
         }
         
-        return _expr;
+        return _expression;
     }
     
     static parse_term = function()
     {
-        var _expr = parse_factor();
+        var _expression = parse_factor();
         
         while (check(PROG_TOKEN.PLUS)) || (check(PROG_TOKEN.MINUS))
         {
             var _op = advance().type;
             var _right = parse_factor();
             
-            _expr = new ProgASTBinaryOp(_op, _expr, _right);
+            _expression = new ProgASTBinaryOp(_op, _expression, _right);
         }
         
-        return _expr;
+        return _expression;
     }
     
     static parse_factor = function()
     {
-        var _expr = parse_unary();
+        var _expression = parse_unary();
         
         while (check(PROG_TOKEN.STAR)) || (check(PROG_TOKEN.SLASH)) || (check(PROG_TOKEN.PERCENT))
         {
             var _op = advance().type;
             var _right = parse_unary();
             
-            _expr = new ProgASTBinaryOp(_op, _expr, _right);
+            _expression = new ProgASTBinaryOp(_op, _expression, _right);
         }
         
-        return _expr;
+        return _expression;
     }
     
     static parse_unary = function()
@@ -1116,34 +1164,34 @@ function ProgParser(_tokens) constructor
     
     static parse_power = function()
     {
-        var _expr = parse_call();
+        var _expression = parse_call();
         
-        // Right associative? 2^3^4 -> 2^(3^4)? 
+        // Right associative? 2**3**4 -> 2**(3**4)? 
         if (match(PROG_TOKEN.POWER))
         {
             var _right = parse_unary(); // Recursion for right associativity
             
-            _expr = new ProgASTBinaryOp(PROG_TOKEN.POWER, _expr, _right);
+            _expression = new ProgASTBinaryOp(PROG_TOKEN.POWER, _expression, _right);
         }
         
-        return _expr;
+        return _expression;
     }
     
     static parse_call = function()
     {
-        var _expr = parse_primary();
+        var _expression = parse_primary();
         
         while (true)
         {
             if (match(PROG_TOKEN.LPAREN))
             {
-                _expr = finish_call(_expr);
+                _expression = finish_call(_expression);
             }
             else if (match(PROG_TOKEN.DOT))
             {
                 var _name = consume(PROG_TOKEN.IDENTIFIER, "Expected property name after '.'.");
                 
-                _expr = new ProgASTMember(_expr, _name.lexeme);
+                _expression = new ProgASTMember(_expression, _name.lexeme);
             }
             else if (match(PROG_TOKEN.LBRACKET))
             {
@@ -1151,17 +1199,17 @@ function ProgParser(_tokens) constructor
                 
                 consume(PROG_TOKEN.RBRACKET, "Expected ']' after index.");
                 
-                _expr = new ProgASTIndex(_expr, _index);
+                _expression = new ProgASTIndex(_expression, _index);
             }
             else if (match(PROG_TOKEN.PLUS_PLUS)) || (match(PROG_TOKEN.MINUS_MINUS))
             {
                 // Postfix increment/decrement
-                _expr = new ProgASTPostfixOp(previous().type, _expr);
+                _expression = new ProgASTPostfixOp(previous().type, _expression);
             }
             else break;
         }
         
-        return _expr;
+        return _expression;
     }
     
     static finish_call = function(_callee)
@@ -1246,14 +1294,14 @@ function ProgParser(_tokens) constructor
         
         if (match(PROG_TOKEN.GLOBAL))
         {
-            return new ProgASTIdentifier("global"); // Allow `global` as identifier
+            return new ProgASTIdentifier("global"); // Allow 'global' as identifier
         }
         
         if (match(PROG_TOKEN.LPAREN))
         {
-            var _expr = parse_expression();
+            var _expression = parse_expression();
             consume(PROG_TOKEN.RPAREN, "Expect ')' after expression.");
-            return _expr;
+            return _expression;
         }
         
         if (match(PROG_TOKEN.LBRACKET))

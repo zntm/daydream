@@ -1399,8 +1399,8 @@ function proglang_test() {
     
     // 24. Mutual Recursion
     // Requires hoisting or forward declaration support?
-    // Proglang function decls are hoisted if at block level? Or we use `var` and assignment.
-    // If we use `fn name()`, it might verify hoisting.
+    // Proglang function decls are hoisted if at block level? Or we use 'var' and assignment.
+    // If we use 'fn name()', it might verify hoisting.
     if (_assert("Mutual Recursion", 
         $"fn is_even(n) \{\n" +
         $"    if (n == 0) return true\n" +
@@ -1619,7 +1619,7 @@ function proglang_test() {
     , 3)) _passed++; else _failed++;
     
     // 48. Comma Operator (Sequence)
-    // If supported `(a, b)` returns b
+    // If supported '(a, b)' returns b
     try {
         if (_assert("Comma Op", "return (1, 2)", 2)) _passed++; else _failed++;
         // If not supported, it might return array or error, so wrapping in try/catch or just skipping if parser doesn't support
@@ -1632,7 +1632,7 @@ function proglang_test() {
         $"\{\n" +
         $"    var y = 2\n" +
         $"\}\n" +
-        $"// y should be undefined or error usually, but GML `var` is function scoped\n" +
+        $"// y should be undefined or error usually, but GML 'var' is function scoped\n" +
         $"// Proglang simulates block scope?\n" +
         $"// If Proglang uses GML structs for scope, it might be persistent if not cleared\n" +
         $"// But assuming correct implementation:\n" +
@@ -1670,7 +1670,11 @@ if (IS_DEVELOPER_MODE)
         {
             var _file = _files[i];
             
-            proglang_execute(buffer_load_text($"{PROGRAM_DIRECTORY_DATAFILES}/tests/{_file}"), {});
+            var _dir = $"{PROGRAM_DIRECTORY_DATAFILES}/tests/{_file}";
+            
+            if (!file_exists(_dir)) continue;
+            
+            proglang_execute(buffer_load_text(_dir), {});
         }
     });
 }
