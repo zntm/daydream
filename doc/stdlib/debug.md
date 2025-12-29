@@ -91,82 +91,67 @@ print($"Loop completed in {ms}ms");
 
 ---
 
-## Constants
-
-### `infinity`: Number
-
-The mathematical infinity value. Useful for initializing min/max comparisons.
-
-```javascript
-var min_val = infinity;
-for (v in values) {
-    if (v < min_val) min_val = v;
-}
-```
-
----
-
 ## Testing Framework
 
-Functions for writing clean, timed unit tests.
+Functions for writing clean, timed unit tests. Tests are registered and executed by the test runner.
 
 ### `test_expect(actual, expected)`: Boolean
 
-Compares two values. Prints only on failure. If `actual` is a function, it is executed first.
+Compares two values. If `actual` is a closure, it is executed first. Records functionality for the current test context.
 
 **Arguments:**
 | Name | Type | Description |
 |------|------|-------------|
-| `actual` | Any | Value or function to test |
+| `actual` | Any | Value or closure to test |
 | `expected` | Any | Expected value |
 
 **Returns:** `true` if passed, `false` if failed.
 
 ```javascript
 test_expect(5 + 3, 8);        // Passes silently
-test_expect(5 + 3, 10);       // Prints failure
-test_expect(fn() { return 2 * 3 }, 6); // Executes function first
+test_expect(5 + 3, 10);       // Fails
+test_expect(fn() { return 2 * 3 }, 6); // Executes closure first
 ```
 
 ### `test(name, fn, stop_on_failure?)`: Struct
 
-Runs a test function, measures time, prints summary on completion.
+Registers a test function to be run by the test runner.
 
 **Arguments:**
 | Name | Type | Description |
 |------|------|-------------|
 | `name` | String | Test name |
-| `fn` | Function | Test function containing `test_expect` calls |
-| `stop_on_failure` | Boolean | Optional. If true, throws on failure |
+| `fn` | Function | Test closure containing `test_expect` calls |
+| `stop_on_failure` | Boolean | Optional. If true, stops test execution on failure |
 
-**Returns:** `{ passed: bool, time_ms: number, failures: array }`
+**Returns:** A Test struct object.
 
 ```javascript
 test("Math Operations", fn() {
     test_expect(2 + 2, 4);
     test_expect(10 / 2, 5);
 });
-// Output: ✓ Math Operations (0.123ms)
+// Registered for execution (0.00ms)
 ```
 
 ### `test_group(name, tests)`: Struct
 
-Aggregates multiple tests with clean hierarchical output.
+Groups multiple registered tests with clean hierarchical output.
 
 **Arguments:**
 | Name | Type | Description |
 |------|------|-------------|
 | `name` | String | Group name |
-| `tests` | Array | Array of `{ name, fn }` structs or functions |
+| `tests` | Array | Array of Test objects (returned from `test`) |
 
-**Returns:** `{ total, passed, failed, time_ms, results }`
+**Returns:** A Group struct object.
 
 ```javascript
 test_group("Core Tests", [
-    { name: "Addition", fn: fn() { test_expect(1 + 1, 2) } },
-    { name: "Subtraction", fn: fn() { test_expect(5 - 3, 2) } }
+    test("Addition", fn() { test_expect(1 + 1, 2) }),
+    test("Subtraction", fn() { test_expect(5 - 3, 2) })
 ]);
-// Output:
+// Output when run:
 // ━━━ Core Tests ━━━
 //   ✓ Addition (0.01ms)
 //   ✓ Subtraction (0.01ms)

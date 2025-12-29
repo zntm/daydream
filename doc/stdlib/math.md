@@ -6,12 +6,13 @@ Mathematical functions for calculations, trigonometry, and vector operations.
 
 ## Constants
 
-| Name  | Type   | Value (Approx) | Description                                       |
-| ----- | ------ | -------------- | ------------------------------------------------- |
-| `PI`  | Number | 3.14159...     | Ratio of a circle's circumference to its diameter |
-| `TAU` | Number | 6.28318...     | `2 * PI`                                          |
-| `E`   | Number | 2.71828...     | Euler's number                                    |
-| `PHI` | Number | 1.61803...     | The Golden Ratio                                  |
+| Name       | Type   | Value (Approx) | Description                                       |
+| ---------- | ------ | -------------- | ------------------------------------------------- |
+| `PI`       | Number | 3.14159...     | Ratio of a circle's circumference to its diameter |
+| `TAU`      | Number | 6.28318...     | `2 * PI`                                          |
+| `E`        | Number | 2.71828...     | Euler's number                                    |
+| `PHI`      | Number | 1.61803...     | The Golden Ratio                                  |
+| `infinity` | Number | Infinity       | Positive infinity                                 |
 
 ---
 
@@ -239,6 +240,42 @@ Returns the square of a number (n \* n).
 
 ```javascript
 sqr(5); // 25
+```
+
+---
+
+## Exponentials & Logarithms
+
+### `exp(n)`: Number
+
+Returns `e^n`.
+
+```javascript
+exp(1); // 2.718...
+```
+
+### `ln(n)`: Number
+
+Returns the natural logarithm (base e).
+
+```javascript
+ln(E); // 1
+```
+
+### `log2(n)`: Number
+
+Returns the base-2 logarithm.
+
+```javascript
+log2(256); // 8
+```
+
+### `log10(n)`: Number
+
+Returns the base-10 logarithm.
+
+```javascript
+log10(100); // 2
 ```
 
 ---

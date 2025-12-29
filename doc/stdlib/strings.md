@@ -83,15 +83,6 @@ is_regex(re); // true
 is_regex(".*"); // false
 ```
 
-### `is_string(val)`: Boolean
-
-Returns true if the value is a string.
-
-```javascript
-is_string("hello"); // true
-is_string(123); // false
-```
-
 ### `is_real(val)`: Boolean
 
 Returns true if the value is a number.
@@ -216,6 +207,40 @@ string_char_at("Hello", 1); // "H"
 string_char_at("Hello", 5); // "o"
 ```
 
+### `string_delete(str, index, count)`: String
+
+Removes a part of a string.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `str` | String | Input string |
+| `index` | Number | Start position (1-indexed) |
+| `count` | Number | Number of characters to delete |
+
+**Returns:** New string.
+
+```javascript
+string_delete("Hello World", 6, 6); // "Hello"
+```
+
+### `string_insert(str, substr, index)`: String
+
+Inserts a substring into a string.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `str` | String | Base string |
+| `substr` | String | String to insert |
+| `index` | Number | Insertion position (1-indexed) |
+
+**Returns:** New string.
+
+```javascript
+string_insert("World", "Hello ", 1); // "Hello World"
+```
+
 ### `string_upper(str)`: String
 
 Converts a string to uppercase.
@@ -255,9 +280,30 @@ string_replace("Hello World", "World", "Daydream");
 Replaces all occurrences of a substring.
 
 ```javascript
-string_replace_all("ha ha ha", "ha", "ho");
 // "ho ho ho"
 ```
+
+### `string_width(str)`: Number
+
+Returns the width of the string in pixels based on current font.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `str` | String | Input string |
+
+**Returns:** Width in pixels.
+
+### `string_height(str)`: Number
+
+Returns the height of the string in pixels based on current font.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `str` | String | Input string |
+
+**Returns:** Height in pixels.
 
 ---
 

@@ -94,6 +94,28 @@ array_resize(arr, 3);
 // arr is now [1, 2, 3]
 ```
 
+### `array_copy(dest, dest_index, src, src_index, length)`: Undefined
+
+Copies elements from one array to another.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `dest` | Array | Destination array |
+| `dest_index` | Number | Start index in destination |
+| `src` | Array | Source array |
+| `src_index` | Number | Start index in source |
+| `length` | Number | Number of elements to copy |
+
+**Returns:** Nothing (undefined).
+
+```javascript
+var src = [1, 2, 3, 4, 5];
+var dest = [0, 0, 0];
+array_copy(dest, 0, src, 1, 3);
+// dest is now [2, 3, 4]
+```
+
 ---
 
 ## Structs

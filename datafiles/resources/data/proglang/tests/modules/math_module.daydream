@@ -6,7 +6,7 @@ export fn sub(a, b) {
     return a - b
 }
 
-export global var secret = 42
+global var secret = 42
 
 export fn get_secret() {
     return secret
