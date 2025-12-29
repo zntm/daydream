@@ -1,91 +1,155 @@
 
 test_group("strings", [
-    test("string convert", fn() { test_expect(string(123), "123") }),
-    test("string interp", fn() {
+    test("string convert", fn()
+    {
+        test_expect(string(123), "123")
+    }),
+    test("string interp", fn()
+    {
         var name = "World"
+
         test_expect($"Hello {name}!", "Hello World!")
     }),
-
-    test("csv parse", fn() {
+    test("csv parse", fn()
+    {
         var csv = "10,20,30,40"
         var sum = 0
         var num_str = ""
         var len = string_length(csv)
 
-        for (var i = 1; i <= len; i++) {
+        for (var i = 1; i <= len; i++)
+        {
             var char = string_char_at(csv, i)
-            if (char == ",") {
+
+            if (char == ",")
+            {
                 sum += real(num_str)
                 num_str = ""
-            } else {
+            }
+            else 
+            {
                 num_str += char
             }
         }
+
         sum += real(num_str) // last one
+        
         test_expect(sum, 100)
     })
 ])
 
 test_group("types", [
-    test("is real", fn() { test_expect(is_real(5), true) }),
-    test("is string", fn() { test_expect(is_string("hi"), true) }),
-    test("is array", fn() { test_expect(is_array([]), true) }),
-    test("is struct", fn() { test_expect(is_struct({}), true) }),
-    test("is undefined", fn() { test_expect(is_undefined(undefined), true) }),
-    
-    test("typeof string", fn() { test_expect(typeof("s"), "string") }),
-    test("typeof number", fn() { test_expect(typeof(10), "number") }),
-    test("typeof boolean", fn() { test_expect(typeof(true), "boolean") }),
-    test("typeof array", fn() { test_expect(typeof([]), "array") }),
-    test("typeof struct", fn() { test_expect(typeof({}), "struct") }),
-    
-    test("null coalesce 1", fn() { test_expect(undefined ?? 10, 10) }),
-    test("null coalesce 2", fn() { test_expect(5 ?? 10, 5) }),
-    test("null coalesce chain", fn() { test_expect(undefined ?? undefined ?? 20, 20) })
+    test("is real", fn()
+    {
+        test_expect(is_real(5), true)
+    }),
+    test("is string", fn()
+    {
+        test_expect(is_string("hi"), true)
+    }),
+    test("is array", fn()
+    {
+        test_expect(is_array([]), true)
+    }),
+    test("is struct", fn()
+    {
+        test_expect(is_struct({}), true)
+    }),
+    test("is undefined", fn()
+    {
+        test_expect(is_undefined(undefined), true)
+    }),
+    test("typeof string", fn()
+    {
+        test_expect(typeof("s"), "string")
+    }),
+    test("typeof number", fn()
+    {
+        test_expect(typeof(10), "number")
+    }),
+    test("typeof boolean", fn()
+    {
+        test_expect(typeof(true), "boolean")
+    }),
+    test("typeof array", fn()
+    {
+        test_expect(typeof([]), "array")
+    }),
+    test("typeof struct", fn()
+    {
+        test_expect(typeof({}), "struct")
+    }),
+    test("null coalesce 1", fn()
+    {
+        test_expect(undefined ?? 10, 10)
+    }),
+    test("null coalesce 2", fn()
+    {
+        test_expect(5 ?? 10, 5)
+    }),
+    test("null coalesce chain", fn()
+    {
+        test_expect(undefined ?? undefined ?? 20, 20)
+    })
 ])
 
 test_group("regex", [
-    test("is regex", fn() { test_expect(is_regex(regex_parse("^test$")), true) }),
-    test("typeof regex", fn() { test_expect(typeof(regex_parse("^test$")), "regex") }),
-    
-    test("regex test true", fn() { test_expect(regex_test("hello", /^h.llo$/), true) }),
-    test("regex test false", fn() { test_expect(regex_test("hello", regex_parse("^world$")), false) }),
-    
+    test("is regex", fn()
+    {
+        test_expect(is_regex(regex_parse("^test$")), true)
+    }),
+    test("typeof regex", fn()
+    {
+        test_expect(typeof(regex_parse("^test$")), "regex")
+    }),
+    test("regex test true", fn()
+    {
+        test_expect(regex_test("hello", /^h.llo$/), true)
+    }),
+    test("regex test false", fn()
+    {
+        test_expect(regex_test("hello", regex_parse("^world$")), false)
+    }),
     test("regex match", fn() {
         var re = regex_parse("\\d+") // match digits
         var m = regex_match("item: 1234", re)
         test_expect(m[0], "1234")
     }),
-    
     test("regex replace", fn() {
         var re = regex_parse("apple")
+
         test_expect(regex_replace("apple pie", re, "banana"), "banana pie")
     })
 ])
 
 test_group("random", [
-    test("irandom", fn() {
+    test("irandom", fn()
+    {
         var r = irandom(10)
+
         test_expect(r >= 0 && r <= 10 && floor(r) == r, true)
     }),
-
-    test("random range", fn() {
+    test("random range", fn()
+    {
         var r = random_range(5, 10)
+
         test_expect(r >= 5 && r <= 10, true)
     }),
-
-    test("choose", fn() {
+    test("choose", fn()
+    {
         var c = choose([10, 20, 30])
+
         test_expect(c == 10 || c == 20 || c == 30, true)
     })
 ])
 
 test_group("system", [
-    test("assert true", fn() {
+    test("assert true", fn()
+    {
         assert(true)
     }),
-
-    test("assert false throws", fn() {
+    test("assert false throws", fn()
+    {
         try {
             assert(false, "Should fail")
             test_expect(true, false) // Should not reach here
@@ -93,12 +157,18 @@ test_group("system", [
             test_expect(true, true)
         }
     }),
-
     test("timers", fn() {
         time_start("test_timer")
-        var i=0
-        for(var k=0; k<100; k++) i++
+
+        var i = 0
+
+        for(var k = 0; k < 100; ++k)
+        {
+            ++i
+        }
+
         var t = time_end("test_timer")
+        
         test_expect(is_real(t), true)
     })
 ])

@@ -20,7 +20,7 @@ test_group("modules", [
     }),
     test("import path security catch", fn() {
         try {
-            import test from "../../test"
+            import n from "../../test"
         } catch (e) {
             test_expect(e.type, ERROR_TYPE.PATH_SECURITY)
         }

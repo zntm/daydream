@@ -297,7 +297,7 @@ function ProgLexer(_source) constructor
             case " ": case "\r": case "\t": break;
             case "\n": line++; break;
             case "\"": scan_string("\""); break;
-            case "'": scan_string("'"); break; // Single quote support
+            // case "'": scan_string("'"); break; // Single quote support
             case "$": 
                 if (match("\"")) { start_interpolation(); }
                 else { had_error = true; error = $"Unexpected '$' at line {line}"; }
@@ -345,7 +345,7 @@ function ProgLexer(_source) constructor
                     case "f": _res += "\f"; break;
                     case "\\": _res += "\\"; break;
                     case "\"": _res += "\""; break;
-                    case "'": _res += "'"; break;
+                    // case "'": _res += "'"; break;
                     default: _res += _next; break; // Unknown escape, keep literal
                 }
             }
@@ -405,7 +405,7 @@ function ProgLexer(_source) constructor
                     case "f": _res += "\f"; break;
                     case "\\": _res += "\\"; break;
                     case "\"": _res += "\""; break;
-                    case "'": _res += "'"; break;
+                    // case "'": _res += "'"; break;
                     case "{": _res += "{"; break; // Allow escaping opening brace in interpolation
                     case "}": _res += "}"; break; 
                     default: _res += _next; break; 
