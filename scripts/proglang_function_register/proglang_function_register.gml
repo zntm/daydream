@@ -607,7 +607,8 @@ proglang_function_register("typeof", function(_args)
             return "function";
         }
 
-        if (_val[$ "__type__"] == "regex")
+        // Check for Regex instance or struct with __type__ == "regex"
+        if ((is_instanceof(_val, Regex)) || (_val[$ "__type__"] == "regex"))
         {
             return "regex";
         }
@@ -639,7 +640,15 @@ proglang_function_register("typeof", function(_args)
 proglang_function_register("is_regex", function(_args)
 {
     var _val = _args[0];
-    return is_struct(_val) && struct_exists(_val, "__type__") && _val.__type__ == "regex";
+    return (is_instanceof(_val, Regex)) || (is_struct(_val) && struct_exists(_val, "__type__") && _val.__type__ == "regex");
+});
+
+// Runtime error function (throws an error that can be caught)
+proglang_function_register("runtime_error", function(_args)
+{
+    var _type = (array_length(_args) > 0) ? _args[0] : PROGLANG_ERROR_TYPE.RUNTIME;
+    var _msg = (array_length(_args) > 1) ? _args[1] : "Runtime error";
+    throw { type: _type, message: _msg };
 });
 
 // Debug & Utils
@@ -703,9 +712,9 @@ proglang_function_register("test_expect", function(_args, _vm = undefined)
     {
         var _eval_vm = ProgVM_create();
         // Propagate global_ref from calling VM
-        if (_vm != undefined) _eval_vm.global_ref = _vm.global_ref;
-        _eval_vm.current_scope.parent = _actual[PROG_CLOSURE.ENV];
-        _actual = _eval_vm.run(_actual[PROG_CLOSURE.BYTECODE]);
+        if (_vm != undefined) _eval_vm[@ PROG_VM.GLOBAL_REF] = _vm[PROG_VM.GLOBAL_REF];
+        _eval_vm[PROG_VM.SCOPE][@ PROG_SCOPE.PARENT] = _actual[PROG_CLOSURE.ENV];
+        _actual = ProgVM_run(_eval_vm, _actual[PROG_CLOSURE.BYTECODE]);
         ProgVM_free(_eval_vm);
     }
     else if (is_struct(_actual) && struct_exists(_actual, "function"))
@@ -718,9 +727,9 @@ proglang_function_register("test_expect", function(_args, _vm = undefined)
     {
         var _eval_vm = ProgVM_create();
         // Propagate global_ref from calling VM
-        if (_vm != undefined) _eval_vm.global_ref = _vm.global_ref;
-        _eval_vm.current_scope.parent = _expected[PROG_CLOSURE.ENV];
-        _expected = _eval_vm.run(_expected[PROG_CLOSURE.BYTECODE]);
+        if (_vm != undefined) _eval_vm[@ PROG_VM.GLOBAL_REF] = _vm[PROG_VM.GLOBAL_REF];
+        _eval_vm[PROG_VM.SCOPE][@ PROG_SCOPE.PARENT] = _expected[PROG_CLOSURE.ENV];
+        _expected = ProgVM_run(_eval_vm, _expected[PROG_CLOSURE.BYTECODE]);
         ProgVM_free(_eval_vm);
     }
     else if (is_struct(_expected) && struct_exists(_expected, "function"))
@@ -877,16 +886,18 @@ function _proglang_run_test_internal(_test_struct, _default_name)
             // Use captured global_ref if available
             if (is_struct(_test_struct) && struct_exists(_test_struct, "global_ref") && _test_struct.global_ref != undefined)
             {
-                _vm.global_ref = _test_struct.global_ref;
+                _vm[@ PROG_VM.GLOBAL_REF] = _test_struct.global_ref;
             }
-            _vm.current_scope.parent = _fn[PROG_CLOSURE.ENV];
+            _vm[PROG_VM.SCOPE][@ PROG_SCOPE.PARENT] = _fn[PROG_CLOSURE.ENV];
+            
             // Propagate __filename for import resolution
             if (is_struct(_test_struct) && struct_exists(_test_struct, "__filename") && _test_struct.__filename != undefined)
             {
-                _vm.current_scope.vars[$ "__filename"] = _test_struct.__filename;
-                _vm.current_scope.vars[$ "__dirname"] = proglang_get_directory(_test_struct.__filename);
+                _vm[PROG_VM.SCOPE][PROG_SCOPE.VARS][$ "__filename"] = _test_struct.__filename;
+                _vm[PROG_VM.SCOPE][PROG_SCOPE.VARS][$ "__dirname"] = proglang_get_directory(_test_struct.__filename);
             }
-            _vm.run(_fn[PROG_CLOSURE.BYTECODE]);
+            
+            ProgVM_run(_vm, _fn[PROG_CLOSURE.BYTECODE]);
             ProgVM_free(_vm);
         }
         else if (is_struct(_fn)) && (struct_exists(_fn, "function"))
@@ -919,8 +930,17 @@ proglang_function_register("test", function(_args, _vm = undefined)
         fn: _function,
         stop_on_fail: _stop_on_fail,
         handled: false,
-        global_ref: (_vm != undefined) ? _vm.global_ref : undefined,
-        __filename: (_vm != undefined && struct_exists(_vm.current_scope.vars, "__filename")) ? _vm.current_scope.vars[$ "__filename"] : undefined
+        global_ref: (_vm != undefined) ? _vm[PROG_VM.GLOBAL_REF] : undefined,
+        __filename: undefined
+    }
+    
+    if (_vm != undefined)
+    {
+        var _s = ProgVM_find_var_scope(_vm, "__filename");
+        if (_s != undefined)
+        {
+            _test_struct.__filename = _s[PROG_SCOPE.VARS][$ "__filename"];
+        }
     }
     
     array_push(global.proglang_pending_tests, _test_struct);
@@ -944,7 +964,7 @@ proglang_function_register("test_group", function(_args, _vm = undefined)
             // Propagate global_ref if not already set
             if (!struct_exists(_t, "global_ref") || _t.global_ref == undefined)
             {
-                _t.global_ref = (_vm != undefined) ? _vm.global_ref : undefined;
+                _t.global_ref = (_vm != undefined) ? _vm[PROG_VM.GLOBAL_REF] : undefined;
             }
         }
     }
@@ -953,7 +973,7 @@ proglang_function_register("test_group", function(_args, _vm = undefined)
         __type__: "Group",
         name: _group_name,
         tests: _tests,
-        global_ref: (_vm != undefined) ? _vm.global_ref : undefined
+        global_ref: (_vm != undefined) ? _vm[PROG_VM.GLOBAL_REF] : undefined
     }
     
     array_push(global.proglang_pending_tests, _group_struct);

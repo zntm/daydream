@@ -381,8 +381,8 @@ function proglang_test() {
         var _lib_vm = ProgVM_create();
         if (!variable_global_exists("proglang_modules")) global.proglang_modules = {}
         global.proglang_modules[$ "math_lib"] = { exports: {}, loaded: true }
-        _lib_vm.active_module = global.proglang_modules[$ "math_lib"];
-        _lib_vm.run(_lib_bc);
+        _lib_vm[@ PROG_VM.ACTIVE_MODULE] = global.proglang_modules[$ "math_lib"];
+        ProgVM_run(_lib_vm, _lib_bc);
         ProgVM_free(_lib_vm);
         
         // 3. Run Consumer
@@ -1128,8 +1128,8 @@ function proglang_test() {
         var _mod_vm = ProgVM_create();
         if (!variable_global_exists("proglang_modules")) global.proglang_modules = {}
         global.proglang_modules[$ "vars_lib"] = { exports: {}, loaded: true }
-        _mod_vm.active_module = global.proglang_modules[$ "vars_lib"];
-        _mod_vm.run(_mod_bc);
+        _mod_vm[@ PROG_VM.ACTIVE_MODULE] = global.proglang_modules[$ "vars_lib"];
+        ProgVM_run(_mod_vm, _mod_bc);
         ProgVM_free(_mod_vm);
         
         // Consumer
@@ -1674,8 +1674,12 @@ if (IS_DEVELOPER_MODE)
             
             var _dir = $"{PROGRAM_DIRECTORY_RESOURCES}/data/scripts/tests/{_file}";
             
-            if (!file_exists(_dir)) continue;
+            // Skip directories and non-.daydream files
+            if (directory_exists(_dir)) continue;
+            if (!string_ends_with(_file, ".daydream")) continue;
+            //if (_file != "debug_crash.daydream") continue;
             
+            show_debug_message($"[ProglangTest] Executing: {_file}");
             proglang_execute(buffer_load_text(_dir), {}, _dir);
         }
     });

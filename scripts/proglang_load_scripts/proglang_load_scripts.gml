@@ -219,13 +219,15 @@ function proglang_load_module(_module_path, _importer_path = "") {
     if (_is_relative && _importer_dir != "") {
         // Relative import: resolve from the importing file's directory
         _resolved = proglang_resolve_path(_module_path, _importer_dir);
+        if (IS_DEVELOPER_MODE) show_debug_message($"[Daydream] Resolving relative path: '{_module_path}' from '{_importer_dir}' -> '{_resolved}'");
         if (_resolved == undefined) {
             throw { type: PROGLANG_ERROR_TYPE.PATH_SECURITY, message: $"Path security violation: '{_module_path}'" }
         }
-        _full_path = _resolved;
+        _full_path = $"{PROGLANG_BASE_DIR}/{_resolved}";
     } else {
         // Absolute import: use base directory
         _resolved = proglang_resolve_path(_module_path, "");
+        if (IS_DEVELOPER_MODE) show_debug_message($"[Daydream] Resolving absolute path: '{_module_path}' -> '{_resolved}'");
         if (_resolved == undefined) {
             throw { type: PROGLANG_ERROR_TYPE.PATH_SECURITY, message: $"Path security violation: '{_module_path}'" }
         }
@@ -254,10 +256,10 @@ function proglang_load_module(_module_path, _importer_path = "") {
     
     // Run module to populate exports
     var _vm = ProgVM_create();
-    _vm.active_module = global.proglang_modules[$ _resolved];
-    _vm.current_scope.vars[$ "__dirname"] = proglang_get_directory(_full_path);
-    _vm.current_scope.vars[$ "__filename"] = _full_path;
-    _vm.run(_bytecode);
+    _vm[@ PROG_VM.ACTIVE_MODULE] = global.proglang_modules[$ _resolved];
+    _vm[PROG_VM.SCOPE][PROG_SCOPE.VARS][$ "__dirname"] = proglang_get_directory(_full_path);
+    _vm[PROG_VM.SCOPE][PROG_SCOPE.VARS][$ "__filename"] = _full_path;
+    ProgVM_run(_vm, _bytecode);
     
     ProgVM_free(_vm);
     
@@ -297,19 +299,19 @@ function proglang_call(_name, _args = [], _context = {}) {
     }
     
     var _vm = ProgVM_create();
-    _vm.context = _context;
+    _vm[@ PROG_VM.CONTEXT] = _context;
     
     // Set directory context for import/export resolution
     var _dirname = proglang_get_directory(_name);
-    _vm.current_scope.vars[$ "__dirname"] = _dirname;
-    _vm.current_scope.vars[$ "__filename"] = _name;
+    _vm[PROG_VM.SCOPE][PROG_SCOPE.VARS][$ "__dirname"] = _dirname;
+    _vm[PROG_VM.SCOPE][PROG_SCOPE.VARS][$ "__filename"] = _name;
     
     for (var i = 0; i < array_length(_args); i++) {
-        _vm.current_scope.vars[$ $"arg{i}"] = _args[i];
+        _vm[PROG_VM.SCOPE][PROG_SCOPE.VARS][$ $"arg{i}"] = _args[i];
     }
-    _vm.current_scope.vars[$ "argc"] = array_length(_args);
+    _vm[PROG_VM.SCOPE][PROG_SCOPE.VARS][$ "argc"] = array_length(_args);
     
-    var _result = _vm.run(_bytecode);
+    var _result = ProgVM_run(_vm, _bytecode);
     ProgVM_free(_vm);
     return _result;
 }

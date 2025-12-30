@@ -21,20 +21,20 @@ function proglang_execute(_source, _context = {}, _filepath = "")
     
     var _vm = ProgVM_create();
     
-    _vm.context = _context;
+    _vm[@ PROG_VM.CONTEXT] = _context;
     
     // Set directory context for import/export resolution
     if (_filepath != "")
     {
         var _dirname = proglang_get_directory(_filepath);
         
-        _vm.current_scope.vars[$ "__dirname"] = _dirname;
-        _vm.current_scope.vars[$ "__filename"] = _filepath;
+        _vm[PROG_VM.SCOPE][PROG_SCOPE.VARS][$ "__dirname"] = _dirname;
+        _vm[PROG_VM.SCOPE][PROG_SCOPE.VARS][$ "__filename"] = _filepath;
     }
     
     // show_debug_message(_bytecode);
     
-    var _result = _vm.run(_bytecode);
+    var _result = ProgVM_run(_vm, _bytecode);
     
     proglang_run_pending();
     

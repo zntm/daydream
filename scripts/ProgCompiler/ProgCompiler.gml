@@ -24,7 +24,7 @@ enum PROG_OP
     ARRAY_NEW, OBJECT_NEW, MAKE_REGEX,
     
     // Control flow
-    JUMP, JUMP_IF_FALSE, JUMP_IF_NULL, JUMP_IF_NOT_NULL, BREAK_N,
+    JUMP, JUMP_IF_FALSE, JUMP_IF_TRUE, JUMP_IF_NULL, JUMP_IF_NOT_NULL, BREAK_N,
     
     // Functions
     CALL, RETURN, CALL_SPREAD, MAKE_CLOSURE,
@@ -782,16 +782,24 @@ function ProgCompiler() constructor
                 emit(PROG_OP.ITER_NEXT, undefined, _node.line);
                 var _exit = emit(PROG_OP.JUMP_IF_FALSE, 0, _node.line);
                 
-                // Stack: Iter, Key
-                emit(PROG_OP.DEFINE, add_constant(_node.variable), _node.line); // Define Key
-                emit(PROG_OP.POP); // Consume Key
-                
-                // If value variable requested:
+                // If two variables requested (k, v in arr): first is key, second is value
                 if (struct_exists(_node, "value_var") && _node.value_var != undefined)
                 {
+                     // _node.variable is the key, _node.value_var is the value (per AST definition)
+                     emit(PROG_OP.DEFINE, add_constant(_node.variable), _node.line); // Define Key
+                     emit(PROG_OP.POP); // Consume Key
                      emit(PROG_OP.ITER_GET_VAL, undefined, _node.line); // Pushes Value using Iterator
                      emit(PROG_OP.DEFINE, add_constant(_node.value_var), _node.line); // Define Value
                      emit(PROG_OP.POP); // Consume Value
+                }
+                else
+                {
+                    // Single variable: iterate over VALUES (not keys)
+                    // Stack: Iter, Key - but we want the value
+                    emit(PROG_OP.POP); // Pop the key, we don't need it
+                    emit(PROG_OP.ITER_GET_VAL, undefined, _node.line); // Push value
+                    emit(PROG_OP.DEFINE, add_constant(_node.variable), _node.line); // Define Value
+                    emit(PROG_OP.POP); // Consume Value
                 }
                 
                 compile_node(_node.body);
@@ -997,8 +1005,14 @@ function ProgCompiler() constructor
             }
         }
         
-        var _idx = add_constant(_descriptor);
-        emit(PROG_OP.CLASS_DEF, _idx, _node.line);
+    var _idx = add_constant(_descriptor);
+    emit(PROG_OP.CLASS_DEF, _idx, _node.line);
+    
+    // Define the class variable if named
+    if (_node.name != undefined)
+    {
+        emit(PROG_OP.DEFINE, add_constant(_node.name), _node.line);
+    }
     }
     
     static compile_destructuring = function(_pattern)
