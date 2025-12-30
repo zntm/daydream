@@ -1656,9 +1656,27 @@ function proglang_test() {
     // Run verification tests for new features
     proglang_function_test();
     
-    show_debug_message($"[Proglang Test] Tests Completed. Passed: {_passed}, Failed: {_failed}");
+    // ============ PHASE 13 TESTS: Optimizations ============
     
-    return (_failed == 0);
+    // Constant Folding and Propagation
+    if (_assert("Constant Optimization", 
+        $"var a = 10;\n" +
+        $"var b = 20;\n" +
+        $"var c = a + b; // Should be 30\n" +
+        $"var str1 = \"Hello\";\n" +
+        $"var str2 = \" World\";\n" +
+        $"var str3 = str1 + str2; // \"Hello World\"\n" +
+        $"var bool1 = true;\n" +
+        $"var bool2 = false;\n" +
+        $"var bool3 = bool1 || bool2; // true\n" +
+        $"var x = 100;\n" +
+        $"if (true) \{ x = 200; \}\n" +
+        $"var y = x; // 200 (should not be constant folded to 100)\n" +
+        $"return c == 30 && str3 == \"Hello World\" && bool3 == true && y == 200;"
+    , true)) _passed++; else _failed++;
+
+    show_debug_message($"[Proglang Test] COMPLETE. Passed: {_passed}, Failed: {_failed}");
+    return _failed == 0;
 }
 
 if (IS_DEVELOPER_MODE)

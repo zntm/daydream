@@ -124,9 +124,61 @@ function ProgCompiler(_context_keys = []) constructor
     }
     
     // Stack of declared variable sets per scope (for redeclaration checks)
-    // Each entry is a struct of { varname: true }
-    declared_vars = [{}]; // Start with top-level scope
+    declared_vars = [{}];
+
+    // Stack of constant scopes (parallel to declared_vars)
+    // Each entry is a struct of { varname: value }
+    const_scopes = [{}]; 
     
+    static invalidate_constants = function()
+    {
+        // When control flow merges or loops, any variable could have changed.
+        // We must clear ALL known constants in ALL active scopes because an inner loop
+        // can modify an outer variable.
+        for (var i = 0; i < array_length(const_scopes); i++)
+        {
+            const_scopes[i] = {};
+        }
+    }
+    
+    static get_const = function(_name)
+    {
+        // Search from inner-most scope to outer-most
+        for (var i = array_length(const_scopes) - 1; i >= 0; i--)
+        {
+            if (struct_exists(const_scopes[i], _name)) return const_scopes[i][$ _name];
+        }
+        return undefined;
+    }
+    
+    static set_const = function(_name, _value)
+    {
+        // Update existing constant in the nearest scope it defines
+        for (var i = array_length(const_scopes) - 1; i >= 0; i--)
+        {
+             // If we find the variable in our tracking, update it
+             if (struct_exists(const_scopes[i], _name)) 
+             {
+                 const_scopes[i][$ _name] = _value;
+                 return;
+             }
+        }
+        // If not found, it might be a variable we aren't tracking as constant (or global unknown).
+        // Since we only track via VAR_DECL or distinct assignment to tracked vars, do nothing here.
+    }
+    
+    static remove_const = function(_name)
+    {
+        for (var i = array_length(const_scopes) - 1; i >= 0; i--)
+        {
+            if (struct_exists(const_scopes[i], _name)) 
+            {
+                variable_struct_remove(const_scopes[i], _name);
+                return;
+            }
+        }
+    }
+
     /// @desc Reserved keywords that cannot be used as variable names
     static reserved_keywords = {
         "var": true, "global": true, "if": true, "else": true, "for": true, "in": true,
@@ -168,6 +220,7 @@ function ProgCompiler(_context_keys = []) constructor
     /// @desc Compile AST to bytecode
     static compile = function(_ast)
     {
+        invalidate_constants();
         if (_ast.type == PROG_AST.BLOCK)
         {
             for (var i = 0; i < array_length(_ast.statements); i++)
@@ -187,22 +240,79 @@ function ProgCompiler(_context_keys = []) constructor
     /// @desc Try constant folding for binary operations
     static try_fold_binary = function(_node)
     {
-        if (_node.left.type != PROG_AST.NUMBER_LITERAL || _node.right.type != PROG_AST.NUMBER_LITERAL)
+        // Try to simplify operands if they are identifiers known to be constant
+        var _left = _node.left;
+        var _right = _node.right;
+        
+        var _l_val = (_left.type == PROG_AST.IDENTIFIER) ? get_const(_left.name) : undefined;
+        if (_l_val != undefined)
         {
-            return undefined;
+             _left = { type: (is_string(_l_val) ? PROG_AST.STRING_LITERAL : (is_bool(_l_val) ? PROG_AST.BOOL_LITERAL : PROG_AST.NUMBER_LITERAL)), value: _l_val };
         }
-        var _a = _node.left.value;
-        var _b = _node.right.value;
-        switch (_node.op)
+        
+        var _r_val = (_right.type == PROG_AST.IDENTIFIER) ? get_const(_right.name) : undefined;
+        if (_r_val != undefined)
         {
-            case PROG_TOKEN.PLUS: return _a + _b;
-            case PROG_TOKEN.MINUS: return _a - _b;
-            case PROG_TOKEN.STAR: return _a * _b;
-            case PROG_TOKEN.SLASH: return _b != 0 ? _a / _b : undefined;
-            case PROG_TOKEN.PERCENT: return _b != 0 ? _a % _b : undefined;
-            case PROG_TOKEN.POWER: return power(_a, _b);
-            default: return undefined;
+             _right = { type: (is_string(_r_val) ? PROG_AST.STRING_LITERAL : (is_bool(_r_val) ? PROG_AST.BOOL_LITERAL : PROG_AST.NUMBER_LITERAL)), value: _r_val };
         }
+        
+        var _is_num_left = _left.type == PROG_AST.NUMBER_LITERAL;
+        var _is_num_right = _right.type == PROG_AST.NUMBER_LITERAL;
+        var _is_str_left = _left.type == PROG_AST.STRING_LITERAL;
+        var _is_str_right = _right.type == PROG_AST.STRING_LITERAL;
+        var _is_bool_left = _left.type == PROG_AST.BOOL_LITERAL;
+        var _is_bool_right = _right.type == PROG_AST.BOOL_LITERAL;
+
+        if (_is_num_left && _is_num_right)
+        {
+            var _a = _left.value;
+            var _b = _right.value;
+            switch (_node.op)
+            {
+                case PROG_TOKEN.PLUS: return _a + _b;
+                case PROG_TOKEN.MINUS: return _a - _b;
+                case PROG_TOKEN.STAR: return _a * _b;
+                case PROG_TOKEN.SLASH: return _b != 0 ? _a / _b : undefined;
+                case PROG_TOKEN.PERCENT: return _b != 0 ? _a % _b : undefined;
+                case PROG_TOKEN.POWER: return power(_a, _b);
+                case PROG_TOKEN.EQ: return _a == _b;
+                case PROG_TOKEN.NE: return _a != _b;
+                case PROG_TOKEN.LT: return _a < _b;
+                case PROG_TOKEN.GT: return _a > _b;
+                case PROG_TOKEN.LE: return _a <= _b;
+                case PROG_TOKEN.GE: return _a >= _b;
+                default: return undefined;
+            }
+        }
+        
+        if (_is_str_left && _is_str_right)
+        {
+            var _a = _left.value;
+            var _b = _right.value;
+             switch (_node.op)
+            {
+                case PROG_TOKEN.PLUS: return _a + _b;
+                case PROG_TOKEN.EQ: return _a == _b;
+                case PROG_TOKEN.NE: return _a != _b;
+                default: return undefined;
+            }
+        }
+        
+        if (_is_bool_left && _is_bool_right)
+        {
+             var _a = _left.value;
+            var _b = _right.value;
+             switch (_node.op)
+            {
+                case PROG_TOKEN.EQ: return _a == _b;
+                case PROG_TOKEN.NE: return _a != _b;
+                case PROG_TOKEN.AND: return _a && _b;
+                case PROG_TOKEN.OR: return _a || _b;
+                default: return undefined;
+            }
+        }
+        
+        return undefined;
     }
     
     static compile_func_body = function(_node)
@@ -212,6 +322,10 @@ function ProgCompiler(_context_keys = []) constructor
         
         // Push function scope
         array_push(declared_vars, {});
+        // Push const scope logic is handled via const_scopes stack BUT functions isolate scope completely
+        // so we can't share const_scopes. We must save/restore.
+        var _old_scopes = const_scopes;
+        const_scopes = [{}]; // Reset for new function
         
         var _param_names = [];
         for (var i = 0; i < array_length(_node.params); i++)
@@ -226,22 +340,15 @@ function ProgCompiler(_context_keys = []) constructor
                  error_message = $"[Line {_node.line}] Error: Context variable '{_param.name}' cannot be used as argument name.";
                  bytecode = _parent;
                  array_pop(declared_vars);
+                 const_scopes = _old_scopes;
                  return { bytecode: new ProgBytecode(), params: [], param_count: 0 };
              }
              
-             // Error: Check shadowing (strict: checks whole chain)
-             for (var j = 0; j < array_length(declared_vars); j++) {
-                 if (struct_exists(declared_vars[j], _param.name)) {
-                     had_error = true;
-                     error_message = $"[Line {_node.line}] Error: Argument '{_param.name}' shadows existing variable.";
-                     bytecode = _parent;
-                     array_pop(declared_vars);
-                     return { bytecode: new ProgBytecode(), params: [], param_count: 0 };
-                 }
-             }
+
              
              // Add to current function scope
              array_last(declared_vars)[$ _param.name] = true;
+             // Argument values are unknown at compile time, so we don't add to const_scopes
             
             emit(PROG_OP.LOAD, add_constant($"arg{i}"), _node.line);
             
@@ -264,6 +371,7 @@ function ProgCompiler(_context_keys = []) constructor
         
         // Pop function scope
         array_pop(declared_vars);
+        const_scopes = _old_scopes;
         emit(PROG_OP.PUSH_NULL);
         emit(PROG_OP.RETURN);
         
@@ -366,7 +474,14 @@ function ProgCompiler(_context_keys = []) constructor
                 var _folded = try_fold_binary(_node);
                 if (_folded != undefined)
                 {
-                    emit(PROG_OP.PUSH_CONST, add_constant(_folded), _node.line);
+                    if (is_bool(_folded))
+                    {
+                         emit(_folded ? PROG_OP.PUSH_TRUE : PROG_OP.PUSH_FALSE, undefined, _node.line);
+                    }
+                    else
+                    {
+                        emit(PROG_OP.PUSH_CONST, add_constant(_folded), _node.line);
+                    }
                     break;
                 }
                 
@@ -450,11 +565,108 @@ function ProgCompiler(_context_keys = []) constructor
                 break;
                 
             case PROG_AST.IDENTIFIER:
-                emit(PROG_OP.LOAD, add_constant(_node.name), _node.line);
+                var _val = get_const(_node.name);
+                if (_val != undefined)
+                {
+                     if (is_bool(_val))
+                     {
+                         emit(_val ? PROG_OP.PUSH_TRUE : PROG_OP.PUSH_FALSE, undefined, _node.line);
+                     }
+                     else if (is_string(_val) || is_real(_val))
+                     {
+                         emit(PROG_OP.PUSH_CONST, add_constant(_val), _node.line);
+                     }
+                     else
+                     {
+                         emit(PROG_OP.LOAD, add_constant(_node.name), _node.line);
+                     }
+                }
+                else
+                {
+                    emit(PROG_OP.LOAD, add_constant(_node.name), _node.line);
+                }
                 break;
                 
             case PROG_AST.ASSIGNMENT:
+                var _known_const = undefined;
+                var _invalidate = true;
+                
+                // 1. Analyze if we can predict the new constant value
+                if (_node.target.type == PROG_AST.IDENTIFIER)
+                {
+                    // For straight assignment (=)
+                    if (_node.op == PROG_TOKEN.ASSIGN)
+                    {
+                         // Check Literal
+                         if (_node.value.type == PROG_AST.NUMBER_LITERAL || _node.value.type == PROG_AST.STRING_LITERAL || _node.value.type == PROG_AST.BOOL_LITERAL)
+                         {
+                             _known_const = _node.value.value;
+                             _invalidate = false;
+                         }
+                         // Check Identifier (known)
+                         else if (_node.value.type == PROG_AST.IDENTIFIER)
+                         {
+                             _known_const = get_const(_node.value.name);
+                             if (_known_const != undefined) _invalidate = false;
+                         }
+                         // Check Binary Fold
+                         else if (_node.value.type == PROG_AST.BINARY_OP)
+                         {
+                             var _folded = try_fold_binary(_node.value);
+                             if (_folded != undefined) {
+                                 _known_const = _folded;
+                                 _invalidate = false;
+                             }
+                         }
+                    }
+                    // For compound assignment (+=, -=, etc)
+                    else 
+                    {
+                        var _old_val = get_const(_node.target.name);
+                        if (_old_val != undefined)
+                        {
+                            var _rhs_val = undefined;
+                            
+                            // Determine RHS value
+                            if (_node.value.type == PROG_AST.NUMBER_LITERAL) _rhs_val = _node.value.value;
+                            else if (_node.value.type == PROG_AST.IDENTIFIER) _rhs_val = get_const(_node.value.name);
+                            else if (_node.value.type == PROG_AST.BINARY_OP) _rhs_val = try_fold_binary(_node.value);
+                            
+                            if (_rhs_val != undefined && is_real(_old_val) && is_real(_rhs_val))
+                            {
+                                switch (_node.op) {
+                                    case PROG_TOKEN.PLUS_ASSIGN: _known_const = _old_val + _rhs_val; _invalidate = false; break;
+                                    case PROG_TOKEN.MINUS_ASSIGN: _known_const = _old_val - _rhs_val; _invalidate = false; break;
+                                    case PROG_TOKEN.STAR_ASSIGN: _known_const = _old_val * _rhs_val; _invalidate = false; break;
+                                    case PROG_TOKEN.SLASH_ASSIGN: if (_rhs_val != 0) { _known_const = _old_val / _rhs_val; _invalidate = false; } break;
+                                    case PROG_TOKEN.PERCENT_ASSIGN: if (_rhs_val != 0) { _known_const = _old_val % _rhs_val; _invalidate = false; } break;
+                                    case PROG_TOKEN.POWER_ASSIGN: _known_const = power(_old_val, _rhs_val); _invalidate = false; break;
+                                    case PROG_TOKEN.LSHIFT_ASSIGN: _known_const = ((_old_val << _rhs_val) & 0xFFFFFFFF); _invalidate = false; break;
+                                    case PROG_TOKEN.RSHIFT_ASSIGN: _known_const = (_old_val >> _rhs_val); _invalidate = false; break;
+                                    case PROG_TOKEN.AMP_ASSIGN: _known_const = (_old_val & _rhs_val); _invalidate = false; break;
+                                    case PROG_TOKEN.PIPE_ASSIGN: _known_const = (_old_val | _rhs_val); _invalidate = false; break;
+                                    case PROG_TOKEN.CARET_ASSIGN: _known_const = (_old_val ^ _rhs_val); _invalidate = false; break;
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                // 2. Compile the assignment
                 compile_assignment(_node);
+                
+                // 3. Update Constant State
+                if (_node.target.type == PROG_AST.IDENTIFIER)
+                {
+                    if (!_invalidate && _known_const != undefined)
+                    {
+                        set_const(_node.target.name, _known_const);
+                    }
+                    else
+                    {
+                        remove_const(_node.target.name);
+                    }
+                }
                 break;
                 
             case PROG_AST.VAR_DECL:
@@ -496,8 +708,32 @@ function ProgCompiler(_context_keys = []) constructor
                     return;
                 }
                 
-                if (_node.initializer != undefined) compile_node(_node.initializer);
-                else emit(PROG_OP.PUSH_NULL, undefined, _node.line);
+                var _init_const = undefined;
+                if (_node.initializer != undefined) 
+                {
+                    // Constant tracking
+                    if (_node.initializer.type == PROG_AST.NUMBER_LITERAL || _node.initializer.type == PROG_AST.STRING_LITERAL || _node.initializer.type == PROG_AST.BOOL_LITERAL)
+                    {
+                        _init_const = _node.initializer.value;
+                    }
+                    else if (_node.initializer.type == PROG_AST.IDENTIFIER)
+                    {
+                        _init_const = get_const(_node.initializer.name);
+                    }
+                    else if (_node.initializer.type == PROG_AST.BINARY_OP)
+                    {
+                        var _folded = try_fold_binary(_node.initializer);
+                        if (_folded != undefined) _init_const = _folded;
+                    }
+                    
+                    compile_node(_node.initializer);
+                }
+                else 
+                {
+                    // Undefined is not treated as a foldable constant currently (simplifies logic)
+                    emit(PROG_OP.PUSH_NULL, undefined, _node.line);
+                }
+                
                 var _idx = add_constant(_node.name);
                 if (struct_exists(_node, "is_global") && _node.is_global)
                 {
@@ -506,6 +742,13 @@ function ProgCompiler(_context_keys = []) constructor
                 else
                 {
                     emit(PROG_OP.DEFINE, _idx, _node.line);
+                    
+                    // Track local constant
+                    if (_init_const != undefined)
+                    {
+                        var _scope = array_last(const_scopes);
+                        _scope[$ _node.name] = _init_const;
+                    }
                 }
                 emit(PROG_OP.POP, undefined, _node.line);
                 break;
@@ -513,12 +756,14 @@ function ProgCompiler(_context_keys = []) constructor
             case PROG_AST.BLOCK:
                 scope_depth++;
                 array_push(declared_vars, {});
+                array_push(const_scopes, {}); // Start new constant scope
                 emit(PROG_OP.PUSH_SCOPE, undefined, _node.line);
                 for (var i = 0; i < array_length(_node.statements); i++)
                 {
                     compile_node(_node.statements[i]);
                 }
                 emit(PROG_OP.POP_SCOPE, undefined, _node.line);
+                array_pop(const_scopes); // End constant scope
                 array_pop(declared_vars);
                 scope_depth--;
                 break;
@@ -542,6 +787,7 @@ function ProgCompiler(_context_keys = []) constructor
                 
             case PROG_AST.IF_STMT:
                 compile_node(_node.condition);
+                invalidate_constants(); // Invalidate on branches
                 var _jmp_else = emit(PROG_OP.JUMP_IF_FALSE, 0, _node.line);
                 compile_node(_node.then_branch);
                 var _jmp_end = emit(PROG_OP.JUMP, 0, _node.line);
@@ -551,6 +797,7 @@ function ProgCompiler(_context_keys = []) constructor
                 break;
                 
             case PROG_AST.WHILE_STMT:
+                invalidate_constants();
                 var _start = bytecode.code_size;
                 compile_node(_node.condition);
                 var _exit = emit(PROG_OP.JUMP_IF_FALSE, 0, _node.line);
@@ -569,6 +816,7 @@ function ProgCompiler(_context_keys = []) constructor
                 break;
                 
             case PROG_AST.REPEAT_STMT:
+                invalidate_constants();
                 var _rep_var = "@rep_" + string(bytecode.code_size);
                 var _idx = add_constant(_rep_var);
                 compile_node(_node.count);
@@ -601,12 +849,20 @@ function ProgCompiler(_context_keys = []) constructor
                 break;
                 
             case PROG_AST.FOR_STMT:
+                // Initialize scope for For loop variable if VarDecl
+                // Note: PROG_AST.FOR usually has its own block scope logic if we implemented let/const strictly,
+                // but here var is function-scoped. However, for constant tracking, we treat initializer as current scope.
+                
                 if (_node.initializer)
                 {
                     if (_node.initializer.type == PROG_AST.VAR_DECL) compile_node(_node.initializer);
                     else { compile_node(_node.initializer); emit(PROG_OP.POP); }
                 }
+                
+                // Loop starts: invalidate constants as we re-enter this block
                 var _start = bytecode.code_size;
+                invalidate_constants(); 
+                
                 var _exit = -1;
                 if (_node.condition)
                 {
@@ -691,6 +947,14 @@ function ProgCompiler(_context_keys = []) constructor
                     emit(PROG_OP.LOAD, _idx, _node.line);
                     emit(_node.op == PROG_TOKEN.PLUS_PLUS ? PROG_OP.INC : PROG_OP.DEC);
                     emit(PROG_OP.STORE, _idx, _node.line);
+                    
+                    // Update constants for PREFIX
+                    var _val = get_const(_node.target.name);
+                    if (_val != undefined && is_real(_val)) {
+                        set_const(_node.target.name, _val + (_node.op == PROG_TOKEN.PLUS_PLUS ? 1 : -1));
+                    } else {
+                        remove_const(_node.target.name);
+                    }
                 }
                 else if (_node.target.type == PROG_AST.MEMBER)
                 {
@@ -720,6 +984,14 @@ function ProgCompiler(_context_keys = []) constructor
                     emit(_node.op == PROG_TOKEN.PLUS_PLUS ? PROG_OP.INC : PROG_OP.DEC);
                     emit(PROG_OP.STORE, _idx, _node.line);
                     emit(PROG_OP.POP);
+                    
+                    // Update constants for POSTFIX (same internal upgrade)
+                    var _val = get_const(_node.target.name);
+                    if (_val != undefined && is_real(_val)) {
+                        set_const(_node.target.name, _val + (_node.op == PROG_TOKEN.PLUS_PLUS ? 1 : -1));
+                    } else {
+                        remove_const(_node.target.name);
+                    }
                 }
                 else if (_node.target.type == PROG_AST.MEMBER)
                 {
@@ -760,6 +1032,9 @@ function ProgCompiler(_context_keys = []) constructor
                 
             case PROG_AST.SWITCH_STMT:
                 compile_node(_node.expr);
+                
+                // Switch involves jumps, so invalidate
+                invalidate_constants();
                 
                 var _case_jumps = []; // Jumps from checks to their bodies
                 var _end_jumps = [];  // Jumps to the end of switch
@@ -878,6 +1153,7 @@ function ProgCompiler(_context_keys = []) constructor
                 break;
                 
             case PROG_AST.FOR_IN_STMT:
+                invalidate_constants(); // Invalidate before loop
                 compile_node(_node.collection);
                 emit(PROG_OP.ITER_INIT, undefined, _node.line);
                 var _start = bytecode.code_size;
@@ -911,11 +1187,14 @@ function ProgCompiler(_context_keys = []) constructor
                 break;
                 
             case PROG_AST.TRY_STMT:
+                invalidate_constants(); // Conservative
                 var _catch_jmp = emit(PROG_OP.PUSH_TRY, 0, _node.line);
                 compile_node(_node.try_block);
                 emit(PROG_OP.POP_TRY, undefined, _node.line);
                 var _end_jmp = emit(PROG_OP.JUMP, 0, _node.line);
                 patch_jump(_catch_jmp, bytecode.code_size);
+                
+                invalidate_constants(); // Catch block entry
                 if (_node.catch_var != undefined)
                 {
                     emit(PROG_OP.STORE, add_constant(_node.catch_var), _node.line);

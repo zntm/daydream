@@ -665,22 +665,45 @@ function ProgParser(_tokens) constructor
             // Parse expression first, then check for IN keyword
             var _expression = parse_assignment();
             
-            if (check(PROG_TOKEN.COMMA))
-            { // Check for comma if it looks like start of for-in with 2 vars
+            // Check if parsing consumed 'in' operator (e.g. "for (item in items)")
+            if (_expression.type == PROG_AST.IN_EXPR)
+            {
+                 _is_for_in = true;
+                 if (_expression.left.type == PROG_AST.IDENTIFIER) _for_in_var = _expression.left.name;
+                 else error_at_current("Expected identifier in for-in loop.");
+                 
+                 // The 'collection' is the right side of the IN expression
+                 // Note: We need to handle this carefully because parse_for_stmt expects to parse collection next
+                 // But we already have it.
+                 // We can restructure slightly.
+            }
+            // Check for comma if it looks like start of for-in with 2 vars
+            else if (check(PROG_TOKEN.COMMA))
+            { 
                  // NOTE: parse_expression stops at comma usually.
                  advance(); // consume comma
                  var _val_token = consume(PROG_TOKEN.IDENTIFIER, "Expected value variable name.");
                  _for_in_val_var = _val_token.lexeme;
+                 
+                  if (match(PROG_TOKEN.IN))
+                 {
+                    _is_for_in = true;
+                    // Verify _expression is valid lvalue (Identifier)
+                    if (_expression.type == PROG_AST.IDENTIFIER) _for_in_var = _expression.name;
+                    else error_at_current("Expected identifier in for-in loop.");
+                 }
             }
-
-            if (match(PROG_TOKEN.IN))
+            else if (match(PROG_TOKEN.IN))
             {
                 _is_for_in = true;
                 // Verify _expression is valid lvalue (Identifier)
                 if (_expression.type == PROG_AST.IDENTIFIER) _for_in_var = _expression.name;
                 else error_at_current("Expected identifier in for-in loop.");
             }
-            else
+            
+             // For IN_EXPR case, we need to handle the collection outside
+        
+            if (!_is_for_in && _expression.type != PROG_AST.IN_EXPR)
             {
                 if (_for_in_val_var != undefined) error_at_current("Unexpected variable in for loop initializer.");
                 // It's a normal for loop init. Convert to assignment if needed, then expect semicolon.
@@ -692,7 +715,19 @@ function ProgParser(_tokens) constructor
         
         if (_is_for_in)
         {
-            var _collection = parse_expression();
+            var _collection = undefined;
+            if (_init != undefined && _init.type == PROG_AST.VAR_DECL) // Var declaration case
+            {
+                 _collection = parse_expression();
+            }
+            else if (_expression != undefined && _expression.type == PROG_AST.IN_EXPR) // Binary IN expression case
+            {
+                 _collection = _expression.right;
+            }
+            else // Normal assignment case where IN was matched
+            {
+                 _collection = parse_expression();
+            }
             
             if (_paren)
             {
@@ -718,7 +753,7 @@ function ProgParser(_tokens) constructor
         
         var _inc = undefined;
         
-        if (!check(PROG_TOKEN.RPAREN)) && (!check(PROG_TOKEN.LBRACE))
+        if (!check(PROG_TOKEN.RPAREN) && !check(PROG_TOKEN.LBRACE))
         {
             var _expression = parse_expression();
             
