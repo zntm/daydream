@@ -34,16 +34,19 @@ function function_execute(_function, _x, _y, _z, _xscale, _yscale, _dt)
             // Load and execute the script
             if (file_exists(_filepath))
             {
+                var _tx = round(_x / TILE_SIZE);
+                var _ty = round(_y / TILE_SIZE);
+                
                 var _source = buffer_load_text(_filepath);
                 var _context = {
-                    x: _x,
-                    y: _y,
+                    x: _tx,
+                    y: _ty,
                     z: _z,
                     xscale: _xscale,
                     yscale: _yscale,
                     dt: _dt,
                     parameter: _function[$ "parameters"] ?? {},
-                    tile: tile_get(_x, _y, _z),
+                    tile: tile_get(_tx, _ty, _z),
                     inventory: global.inventory
                 }
                 
@@ -59,6 +62,7 @@ function function_execute(_function, _x, _y, _z, _xscale, _yscale, _dt)
             exit;
         }
         
+        /*
         // Native GML Function Execution
         var _item_function = global.item_function;
         var _f = _item_function[$ _id];
@@ -78,6 +82,6 @@ function function_execute(_function, _x, _y, _z, _xscale, _yscale, _dt)
                     _f(_dt, _x, _y, _z, _xscale, _yscale, _parameter);
                 }
             }
-        }
+        }*/
     }
 }

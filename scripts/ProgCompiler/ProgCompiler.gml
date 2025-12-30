@@ -106,13 +106,26 @@ function ProgBytecode() constructor
 }
 
 /// @desc Bytecode compiler for Proglang
-function ProgCompiler() constructor
+/// @param {Array} _context_keys Optional array of context variable names that cannot be redeclared
+function ProgCompiler(_context_keys = []) constructor
 {
     bytecode = new ProgBytecode();
     loop_stack = []; // Stack of { start, continue, breaks[] }
     scope_depth = 0; // Track nesting depth for error checking
     had_error = false;
     error_message = "";
+    
+    // Build context keywords struct from provided keys
+    context_keywords = {};
+    var _len = array_length(_context_keys);
+    for (var i = 0; i < _len; i++)
+    {
+        context_keywords[$ _context_keys[i]] = true;
+    }
+    
+    // Stack of declared variable sets per scope (for redeclaration checks)
+    // Each entry is a struct of { varname: true }
+    declared_vars = [{}]; // Start with top-level scope
     
     /// @desc Reserved keywords that cannot be used as variable names
     static reserved_keywords = {
@@ -197,11 +210,38 @@ function ProgCompiler() constructor
         var _parent = bytecode;
         bytecode = new ProgBytecode();
         
+        // Push function scope
+        array_push(declared_vars, {});
+        
         var _param_names = [];
         for (var i = 0; i < array_length(_node.params); i++)
         {
             var _param = _node.params[i];
             array_push(_param_names, _param.name);
+            
+            // Error: Check context keywords
+             if (struct_exists(context_keywords, _param.name)) 
+             {
+                 had_error = true;
+                 error_message = $"[Line {_node.line}] Error: Context variable '{_param.name}' cannot be used as argument name.";
+                 bytecode = _parent;
+                 array_pop(declared_vars);
+                 return { bytecode: new ProgBytecode(), params: [], param_count: 0 };
+             }
+             
+             // Error: Check shadowing (strict: checks whole chain)
+             for (var j = 0; j < array_length(declared_vars); j++) {
+                 if (struct_exists(declared_vars[j], _param.name)) {
+                     had_error = true;
+                     error_message = $"[Line {_node.line}] Error: Argument '{_param.name}' shadows existing variable.";
+                     bytecode = _parent;
+                     array_pop(declared_vars);
+                     return { bytecode: new ProgBytecode(), params: [], param_count: 0 };
+                 }
+             }
+             
+             // Add to current function scope
+             array_last(declared_vars)[$ _param.name] = true;
             
             emit(PROG_OP.LOAD, add_constant($"arg{i}"), _node.line);
             
@@ -221,6 +261,9 @@ function ProgCompiler() constructor
         }
         
         compile_node(_node.body);
+        
+        // Pop function scope
+        array_pop(declared_vars);
         emit(PROG_OP.PUSH_NULL);
         emit(PROG_OP.RETURN);
         
@@ -422,6 +465,29 @@ function ProgCompiler() constructor
                     error_message = $"[Line {_node.line}] Error: Cannot use reserved keyword '{_node.name}' as variable name.";
                     return;
                 }
+                // Error: Check if name shadows a context variable
+                if (struct_exists(context_keywords, _node.name))
+                {
+                    had_error = true;
+                    error_message = $"[Line {_node.line}] Error: Cannot redeclare context variable '{_node.name}'.";
+                    return;
+                }
+                
+                // Error: Check for redeclaration/shadowing in any active scope
+                for (var i = 0; i < array_length(declared_vars); i++)
+                {
+                    if (struct_exists(declared_vars[i], _node.name))
+                    {
+                        had_error = true;
+                        error_message = $"[Line {_node.line}] Error: Variable '{_node.name}' already declared in this scope chain.";
+                        return;
+                    }
+                }
+                
+                // Add to current scope declarations
+                var _current_scope = array_last(declared_vars);
+                _current_scope[$ _node.name] = true;
+                
                 // Error: Check if global var declared inside nested scope
                 if (struct_exists(_node, "is_global") && _node.is_global && scope_depth > 0)
                 {
@@ -446,12 +512,14 @@ function ProgCompiler() constructor
                 
             case PROG_AST.BLOCK:
                 scope_depth++;
+                array_push(declared_vars, {});
                 emit(PROG_OP.PUSH_SCOPE, undefined, _node.line);
                 for (var i = 0; i < array_length(_node.statements); i++)
                 {
                     compile_node(_node.statements[i]);
                 }
                 emit(PROG_OP.POP_SCOPE, undefined, _node.line);
+                array_pop(declared_vars);
                 scope_depth--;
                 break;
                 

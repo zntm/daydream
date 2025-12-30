@@ -7,7 +7,10 @@ function proglang_execute(_source, _context = {}, _filepath = "")
 {
     proglang_reset_pending();
     
-    var _bytecode = proglang_compile(_source);
+    // Extract context keys to prevent redeclaration
+    var _context_keys = struct_get_names(_context);
+    
+    var _bytecode = proglang_compile(_source, _context_keys);
     
     if (_bytecode == undefined)
     {

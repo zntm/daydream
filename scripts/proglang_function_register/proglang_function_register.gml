@@ -497,7 +497,12 @@ proglang_function_register("tile_get", function(_args) {
 });
 
 proglang_function_register("tile_place", function(_args) {
-    tile_place(_args[1], _args[2], _args[3], _args[0] ?? TILE_EMPTY);
+    var _x = _args[1];
+    var _y = _args[2];
+    var _z = _args[3];
+    
+    tile_place(_x, _y, _z, _args[0] ?? TILE_EMPTY);
+    tile_update_surrounding(_x, _y, _z);
 });
 
 proglang_function_register("tag_get", function(_args) {
@@ -689,11 +694,18 @@ proglang_function_register("regex_split", function(_args) { return _args[1].spli
 
 global.proglang_test_state = {
     current_failures: [],
-    current_assertions: 0
+    current_assertions: 0,
+    in_test: false
 }
 
 proglang_function_register("test_expect", function(_args, _vm = undefined)
 {
+    // Guard: test_expect must be called inside a test
+    if (!global.proglang_test_state.in_test)
+    {
+        throw { type: PROGLANG_ERROR_TYPE.RUNTIME, message: "test_expect() can only be called inside a test or test_group." };
+    }
+    
     var _actual = _args[0];
     var _expected = _args[1];
     
@@ -863,6 +875,7 @@ function _proglang_run_test_internal(_test_struct, _default_name)
     // Reset test state
     global.proglang_test_state.current_failures = [];
     global.proglang_test_state.current_assertions = 0;
+    global.proglang_test_state.in_test = true;
     
     var _start = get_timer();
     var _error = undefined;
@@ -903,6 +916,9 @@ function _proglang_run_test_internal(_test_struct, _default_name)
     var _time_ms = (get_timer() - _start) / 1000;
     var _failures = global.proglang_test_state.current_failures;
     var _passed = array_length(_failures) == 0 && _error == undefined;
+    
+    // Reset in_test flag after test completes
+    global.proglang_test_state.in_test = false;
     
     return { passed: _passed, time_ms: _time_ms, failures: _failures, error: _error, name: _name }
 }

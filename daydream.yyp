@@ -1137,7 +1137,6 @@
     {"$GMIncludedFile":"","%Name":"7.std_lib.daydream","CopyToMask":-1,"filePath":"datafiles/resources/data/scripts/tests","name":"7.std_lib.daydream","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"8.modules.daydream","CopyToMask":-1,"filePath":"datafiles/resources/data/scripts/tests","name":"8.modules.daydream","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"9.new_features.daydream","CopyToMask":-1,"filePath":"datafiles/resources/data/scripts/tests","name":"9.new_features.daydream","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
-    {"$GMIncludedFile":"","%Name":"debug_crash.daydream","CopyToMask":-1,"filePath":"datafiles/resources/data/scripts/tests","name":"debug_crash.daydream","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"math_module.daydream","CopyToMask":-1,"filePath":"datafiles/resources/data/scripts/tests/modules","name":"math_module.daydream","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"leaf_decay.daydream","CopyToMask":-1,"filePath":"datafiles/resources/data/scripts/tile","name":"leaf_decay.daydream","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"chunks_explored.json","CopyToMask":-1,"filePath":"datafiles/resources/data/statistics","name":"chunks_explored.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
