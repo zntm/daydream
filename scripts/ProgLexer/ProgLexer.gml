@@ -19,7 +19,7 @@ enum PROG_TOKEN
     AMP, PIPE, CARET, TILDE, LSHIFT, RSHIFT,
     ASSIGN, PLUS_ASSIGN, MINUS_ASSIGN, STAR_ASSIGN, SLASH_ASSIGN, PERCENT_ASSIGN, POWER_ASSIGN,
     LSHIFT_ASSIGN, RSHIFT_ASSIGN, AMP_ASSIGN, PIPE_ASSIGN, CARET_ASSIGN,
-    NULL_COALESCE, SPREAD,
+    NULL_COALESCE, SPREAD, QUESTION_DOT, RANGE,
     // Punctuation
     LPAREN, RPAREN, LBRACE, RBRACE, LBRACKET, RBRACKET,
     COMMA, DOT, SEMICOLON, COLON, QUESTION,
@@ -59,7 +59,9 @@ function ProgLexer(_source) constructor
         "class": PROG_TOKEN.CLASS, "new": PROG_TOKEN.NEW, "this": PROG_TOKEN.THIS,
         "extends": PROG_TOKEN.EXTENDS, "super": PROG_TOKEN.SUPER, "static": PROG_TOKEN.STATIC,
         "public": PROG_TOKEN.PUBLIC, "private": PROG_TOKEN.PRIVATE, "protected": PROG_TOKEN.PROTECTED,
-        "abstract": PROG_TOKEN.ABSTRACT, "interface": PROG_TOKEN.INTERFACE, "implements": PROG_TOKEN.IMPLEMENTS
+        "abstract": PROG_TOKEN.ABSTRACT, "interface": PROG_TOKEN.INTERFACE, "implements": PROG_TOKEN.IMPLEMENTS,
+        // In operator modifiers
+        "key": PROG_TOKEN.IDENTIFIER, "value": PROG_TOKEN.IDENTIFIER
     }
     
     /// @desc Tokenize the source code
@@ -188,7 +190,15 @@ function ProgLexer(_source) constructor
                 break;
             
             case ".":
-                add_token(((match(".")) && (match("."))) ? PROG_TOKEN.SPREAD : PROG_TOKEN.DOT);
+                if (match("."))
+                {
+                    // Could be .. (RANGE) or ... (SPREAD)
+                    add_token(match(".") ? PROG_TOKEN.SPREAD : PROG_TOKEN.RANGE);
+                }
+                else
+                {
+                    add_token(PROG_TOKEN.DOT);
+                }
                 break;
             
             case ";":
@@ -292,7 +302,11 @@ function ProgLexer(_source) constructor
             case "|": add_token(match("|") ? PROG_TOKEN.OR : (match("=") ? PROG_TOKEN.PIPE_ASSIGN : PROG_TOKEN.PIPE)); break;
             case "^": add_token(match("=") ? PROG_TOKEN.CARET_ASSIGN : PROG_TOKEN.CARET); break;
             case "~": add_token(PROG_TOKEN.TILDE); break;
-            case "?": add_token(match("?") ? PROG_TOKEN.NULL_COALESCE : PROG_TOKEN.QUESTION); break;
+            case "?":
+                if (match("?")) add_token(PROG_TOKEN.NULL_COALESCE);
+                else if (match(".")) add_token(PROG_TOKEN.QUESTION_DOT);
+                else add_token(PROG_TOKEN.QUESTION);
+                break;
             
             case " ": case "\r": case "\t": break;
             case "\n": line++; break;

@@ -58,24 +58,6 @@ var last = array_pop(stack); // 3
 // stack is now [1, 2]
 ```
 
-### `array_contains(arr, val)`: Boolean
-
-Checks if an array contains a specific value.
-
-**Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `arr` | Array | The array to search |
-| `val` | Any | Value to find |
-
-**Returns:** `true` if found, `false` otherwise.
-
-```javascript
-var fruits = ["apple", "banana", "cherry"];
-array_contains(fruits, "banana"); // true
-array_contains(fruits, "grape"); // false
-```
-
 ### `array_resize(arr, size)`: Undefined
 
 Resizes an array to a specific length.

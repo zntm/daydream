@@ -91,5 +91,6 @@ var player = {
 };
 
 print(player.name); // "Hero"
+print(player["name"]); // "Hero"
 player.hp = 90;
 ```

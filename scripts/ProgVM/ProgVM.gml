@@ -891,7 +891,13 @@ function ProgVM_run(_vm, _bytecode)
                     case PROG_OP.ITER_INIT:
                         var _coll = _stack[--_sp];
                         var _iter = undefined;
-                        if (is_array(_coll))
+                        // Check for range object (array with "range" marker)
+                        if (is_array(_coll) && array_length(_coll) >= 3 && _coll[0] == "range")
+                        {
+                            // Range iterator: [1]=start, [2]=end (inclusive)
+                            _iter = { type: "range_iter", current: _coll[1], range_end: _coll[2], done: false };
+                        }
+                        else if (is_array(_coll))
                         {
                             _iter = { type: "array_iter", val: _coll, idx: 0, len: array_length(_coll) };
                         }
@@ -909,7 +915,22 @@ function ProgVM_run(_vm, _bytecode)
     
                     case PROG_OP.ITER_NEXT:
                         var _iter = _stack[_sp - 1]; // Peek
-                        if (_iter.idx < _iter.len) {
+                        if (_iter.type == "range_iter")
+                        {
+                            if (!_iter.done && _iter.current <= _iter.range_end)
+                            {
+                                var _val = _iter.current;
+                                _iter.current++;
+                                if (_iter.current > _iter.range_end) _iter.done = true;
+                                _stack[@ _sp++] = _val;
+                                _stack[@ _sp++] = true;
+                            }
+                            else
+                            {
+                                _stack[@ _sp++] = false;
+                            }
+                        }
+                        else if (_iter.idx < _iter.len) {
                             var _key = undefined;
                             if (_iter.type == "array_iter") _key = _iter.idx;
                             else if (_iter.type == "struct_iter") _key = _iter.keys[_iter.idx];
@@ -925,7 +946,11 @@ function ProgVM_run(_vm, _bytecode)
                     case PROG_OP.ITER_GET_VAL:
                         var _iter = _stack[_sp - 1]; // Peek
                         var _val = undefined;
-                        if (_iter.type == "array_iter") _val = _iter.val[_iter.idx - 1];
+                        if (_iter.type == "range_iter")
+                        {
+                            _val = _iter.current - 1; // Current was already incremented
+                        }
+                        else if (_iter.type == "array_iter") _val = _iter.val[_iter.idx - 1];
                         else if (_iter.type == "struct_iter") {
                             var _key = _iter.keys[_iter.idx - 1];
                             _val = _iter.val[$ _key];
@@ -971,6 +996,65 @@ function ProgVM_run(_vm, _bytecode)
                     case PROG_OP.THROW:
                         _val = _stack[--_sp];
                         throw _val;
+                        break;
+                        
+                    // ========== NEW V2 OPS ==========
+                    
+                    case PROG_OP.IN_CHECK:
+                        // lhs in rhs: string in string, value in array
+                        // Structs require explicit 'in key' or 'in value'
+                        var _rhs = _stack[--_sp];
+                        var _lhs = _stack[--_sp];
+                        var _result = false;
+                        if (is_string(_rhs) && is_string(_lhs))
+                        {
+                            _result = (string_pos(_lhs, _rhs) > 0);
+                        }
+                        else if (is_array(_rhs))
+                        {
+                            for (var i = 0; i < array_length(_rhs); i++)
+                            {
+                                if (_rhs[i] == _lhs) { _result = true; break; }
+                            }
+                        }
+                        _stack[@ _sp++] = _result;
+                        break;
+                        
+                    case PROG_OP.IN_KEY:
+                        // lhs in key rhs: check if key exists in struct
+                        var _rhs = _stack[--_sp];
+                        var _lhs = _stack[--_sp];
+                        var _result = false;
+                        if (is_struct(_rhs))
+                        {
+                            _result = struct_exists(_rhs, _lhs);
+                        }
+                        _stack[@ _sp++] = _result;
+                        break;
+                        
+                    case PROG_OP.IN_VALUE:
+                        // lhs in value rhs: check if value exists in struct values
+                        var _rhs = _stack[--_sp];
+                        var _lhs = _stack[--_sp];
+                        var _result = false;
+                        if (is_struct(_rhs))
+                        {
+                            var _names = variable_struct_get_names(_rhs);
+                            for (var i = 0; i < array_length(_names); i++)
+                            {
+                                if (_rhs[$ _names[i]] == _lhs) { _result = true; break; }
+                            }
+                        }
+                        _stack[@ _sp++] = _result;
+                        break;
+                        
+                    case PROG_OP.MAKE_RANGE:
+                        // Create range object [type, start, end, current]
+                        var _end = _stack[--_sp];
+                        var _start = _stack[--_sp];
+                        // Using array for performance: [0]=type, [1]=start, [2]=end
+                        var _range = ["range", _start, _end];
+                        _stack[@ _sp++] = _range;
                         break;
                 }
             }

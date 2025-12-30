@@ -16,7 +16,9 @@ enum PROG_AST {
     FOR_IN_STMT, TRY_STMT, DESTRUCTURING_DECL,
     IMPORT_STMT, EXPORT_STMT, THROW_STMT,
     // Class System
-    CLASS_DECL, NEW_EXPR, THIS_EXPR, SUPER_EXPR
+    CLASS_DECL, NEW_EXPR, THIS_EXPR, SUPER_EXPR,
+    // New v2
+    IN_EXPR, RANGE_EXPR, OPTIONAL_MEMBER, OPTIONAL_INDEX
 }
 
 /// @desc Base AST node
@@ -291,4 +293,36 @@ function ProgASTRegexLiteral(_pattern, _flags) : ProgASTNode(PROG_AST.REGEX_LITE
 {
     pattern = _pattern;
     flags = _flags;
+}
+
+/// @desc In expression (x in collection) with optional modifier
+/// @param _left LHS expression
+/// @param _right RHS expression (collection)
+/// @param _modifier "key" | "value" | undefined
+function ProgASTInExpr(_left, _right, _modifier = undefined) : ProgASTNode(PROG_AST.IN_EXPR) constructor
+{
+    left = _left;
+    right = _right;
+    modifier = _modifier; // "key", "value", or undefined
+}
+
+/// @desc Range expression (min..max)
+function ProgASTRangeExpr(_start, _end) : ProgASTNode(PROG_AST.RANGE_EXPR) constructor
+{
+    range_start = _start;
+    range_end = _end;
+}
+
+/// @desc Optional member access (obj?.prop)
+function ProgASTOptionalMember(_target, _property) : ProgASTNode(PROG_AST.OPTIONAL_MEMBER) constructor
+{
+    target = _target;
+    property = _property;
+}
+
+/// @desc Optional index access (arr?.[idx])
+function ProgASTOptionalIndex(_target, _index) : ProgASTNode(PROG_AST.OPTIONAL_INDEX) constructor
+{
+    target = _target;
+    index = _index;
 }

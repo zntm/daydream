@@ -9,12 +9,12 @@ if (conditions != undefined) {
     for (var i = 0; i < condition_count; i++) {
         var cond = conditions[i];
         
-        var check_x = x + (cond.x ?? 0);
-        var check_y = y + (cond.y ?? 0);
-        var check_z = get_chunk_depth(cond.z);
+        var check_x = x + (cond?.x ?? 0);
+        var check_y = y + (cond?.y ?? 0);
+        var check_z = get_chunk_depth(cond?.z);
         
         var check_tile = tile_get(check_x, check_y, check_z);
-        var expected_id = cond.id;
+        var expected_id = cond?.id;
         
         if (expected_id == undefined) {
             // Expecting empty
@@ -26,7 +26,7 @@ if (conditions != undefined) {
             var tile_id = check_tile.get_id();
             
             if (is_array(expected_id)) {
-                if (!array_contains(expected_id, tile_id)) return;
+                if (!(tile_id in expected_id)) return;
             } else {
                 if (tile_id != expected_id) return;
             }

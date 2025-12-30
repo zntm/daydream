@@ -1078,12 +1078,31 @@ function ProgParser(_tokens) constructor
     {
         var _expression = parse_shift();
         
-        while (check(PROG_TOKEN.GT)) || (check(PROG_TOKEN.GE)) || (check(PROG_TOKEN.LT)) || (check(PROG_TOKEN.LE))
+        while (check(PROG_TOKEN.GT)) || (check(PROG_TOKEN.GE)) || (check(PROG_TOKEN.LT)) || (check(PROG_TOKEN.LE)) || (check(PROG_TOKEN.IN))
         {
              var _op = advance().type;
-             var _right = parse_shift();
-            
-             _expression = new ProgASTBinaryOp(_op, _expression, _right);
+             
+             // Handle 'in' operator with optional key/value modifier
+             if (_op == PROG_TOKEN.IN)
+             {
+                 var _modifier = undefined;
+                 // Check for 'key' or 'value' modifier
+                 if (check(PROG_TOKEN.IDENTIFIER))
+                 {
+                     var _next = peek();
+                     if (_next.lexeme == "key" || _next.lexeme == "value")
+                     {
+                         _modifier = advance().lexeme;
+                     }
+                 }
+                 var _right = parse_shift();
+                 _expression = new ProgASTInExpr(_expression, _right, _modifier);
+             }
+             else
+             {
+                 var _right = parse_shift();
+                 _expression = new ProgASTBinaryOp(_op, _expression, _right);
+             }
         }
         
         return _expression;
@@ -1091,14 +1110,28 @@ function ProgParser(_tokens) constructor
     
     static parse_shift = function()
     {
-        var _expression = parse_term();
+        var _expression = parse_range();
         
         while (check(PROG_TOKEN.LSHIFT)) || (check(PROG_TOKEN.RSHIFT))
         {
              var _op = advance().type;
-             var _right = parse_term();
+             var _right = parse_range();
              
             _expression = new ProgASTBinaryOp(_op, _expression, _right);
+        }
+        
+        return _expression;
+    }
+    
+    static parse_range = function()
+    {
+        var _expression = parse_term();
+        
+        // Handle .. range operator (inclusive)
+        if (match(PROG_TOKEN.RANGE))
+        {
+            var _end = parse_term();
+            _expression = new ProgASTRangeExpr(_expression, _end);
         }
         
         return _expression;
@@ -1186,6 +1219,21 @@ function ProgParser(_tokens) constructor
                 var _name = consume(PROG_TOKEN.IDENTIFIER, "Expected property name after '.'.");
                 
                 _expression = new ProgASTMember(_expression, _name.lexeme);
+            }
+            else if (match(PROG_TOKEN.QUESTION_DOT))
+            {
+                // Optional chaining: obj?.prop or obj?.[expr]
+                if (match(PROG_TOKEN.LBRACKET))
+                {
+                    var _index = parse_expression();
+                    consume(PROG_TOKEN.RBRACKET, "Expected ']' after optional index.");
+                    _expression = new ProgASTOptionalIndex(_expression, _index);
+                }
+                else
+                {
+                    var _name = consume(PROG_TOKEN.IDENTIFIER, "Expected property name after '?.'.");
+                    _expression = new ProgASTOptionalMember(_expression, _name.lexeme);
+                }
             }
             else if (match(PROG_TOKEN.LBRACKET))
             {

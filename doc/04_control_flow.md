@@ -113,6 +113,16 @@ for (key, val in obj) {
 }
 ```
 
+**Ranges:**
+
+Iterate over a numeric range (inclusive).
+
+```javascript
+for (i in 1..10) {
+    print(i); // 1, 2, ..., 10
+}
+```
+
 ## Error Handling
 
 ### try / catch

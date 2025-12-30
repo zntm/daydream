@@ -54,7 +54,10 @@ enum PROG_OP
     PUSH_SCOPE, POP_SCOPE,
     
     // Debug
-    DEBUG_LINE
+    DEBUG_LINE,
+    
+    // New v2 Ops
+    IN_CHECK, IN_KEY, IN_VALUE, MAKE_RANGE
 }
 
 /// @desc Array indices for function data (replaces struct)
@@ -107,6 +110,20 @@ function ProgCompiler() constructor
 {
     bytecode = new ProgBytecode();
     loop_stack = []; // Stack of { start, continue, breaks[] }
+    scope_depth = 0; // Track nesting depth for error checking
+    had_error = false;
+    error_message = "";
+    
+    /// @desc Reserved keywords that cannot be used as variable names
+    static reserved_keywords = {
+        "var": true, "global": true, "if": true, "else": true, "for": true, "in": true,
+        "while": true, "repeat": true, "break": true, "continue": true, "return": true,
+        "true": true, "false": true, "undefined": true, "try": true, "catch": true, "throw": true,
+        "and": true, "or": true, "not": true, "switch": true, "case": true, "default": true,
+        "fn": true, "import": true, "export": true, "from": true, "as": true,
+        "class": true, "new": true, "this": true, "extends": true, "super": true, "static": true,
+        "public": true, "private": true, "protected": true, "abstract": true, "interface": true, "implements": true
+    };
     
     // Emit instruction
     static emit = function(_op, _arg = undefined, _line = 0)
@@ -398,6 +415,21 @@ function ProgCompiler() constructor
                 break;
                 
             case PROG_AST.VAR_DECL:
+                // Error: Check if name is a reserved keyword
+                if (struct_exists(reserved_keywords, _node.name))
+                {
+                    had_error = true;
+                    error_message = $"[Line {_node.line}] Error: Cannot use reserved keyword '{_node.name}' as variable name.";
+                    return;
+                }
+                // Error: Check if global var declared inside nested scope
+                if (struct_exists(_node, "is_global") && _node.is_global && scope_depth > 0)
+                {
+                    had_error = true;
+                    error_message = $"[Line {_node.line}] Error: Global variables must be declared at top level, not inside statements.";
+                    return;
+                }
+                
                 if (_node.initializer != undefined) compile_node(_node.initializer);
                 else emit(PROG_OP.PUSH_NULL, undefined, _node.line);
                 var _idx = add_constant(_node.name);
@@ -413,12 +445,14 @@ function ProgCompiler() constructor
                 break;
                 
             case PROG_AST.BLOCK:
+                scope_depth++;
                 emit(PROG_OP.PUSH_SCOPE, undefined, _node.line);
                 for (var i = 0; i < array_length(_node.statements); i++)
                 {
                     compile_node(_node.statements[i]);
                 }
                 emit(PROG_OP.POP_SCOPE, undefined, _node.line);
+                scope_depth--;
                 break;
                 
             case PROG_AST.FUNC_DECL:
@@ -908,6 +942,47 @@ function ProgCompiler() constructor
                 
             case PROG_AST.SUPER_EXPR:
                 emit(PROG_OP.LOAD_SUPER, undefined, _node.line);
+                break;
+                
+            // ========== NEW V2 FEATURES ==========
+            
+            case PROG_AST.IN_EXPR:
+                compile_node(_node.left);
+                compile_node(_node.right);
+                if (_node.modifier == "key") emit(PROG_OP.IN_KEY, undefined, _node.line);
+                else if (_node.modifier == "value") emit(PROG_OP.IN_VALUE, undefined, _node.line);
+                else emit(PROG_OP.IN_CHECK, undefined, _node.line);
+                break;
+                
+            case PROG_AST.RANGE_EXPR:
+                compile_node(_node.range_start);
+                compile_node(_node.range_end);
+                emit(PROG_OP.MAKE_RANGE, undefined, _node.line);
+                break;
+                
+            case PROG_AST.OPTIONAL_MEMBER:
+                // obj?.prop -> if obj is null/undefined, result is undefined
+                compile_node(_node.target);
+                emit(PROG_OP.DUP, undefined, _node.line);
+                var _skip = emit(PROG_OP.JUMP_IF_NULL, 0, _node.line);
+                emit(PROG_OP.MEMBER_GET, add_constant(_node.property), _node.line);
+                var _end = emit(PROG_OP.JUMP, 0, _node.line);
+                patch_jump(_skip, bytecode.code_size);
+                // At this point stack has: undefined (from DUP of null target)
+                patch_jump(_end, bytecode.code_size);
+                break;
+                
+            case PROG_AST.OPTIONAL_INDEX:
+                // obj?.[idx] -> if obj is null/undefined, result is undefined
+                compile_node(_node.target);
+                emit(PROG_OP.DUP, undefined, _node.line);
+                var _skip = emit(PROG_OP.JUMP_IF_NULL, 0, _node.line);
+                compile_node(_node.index);
+                emit(PROG_OP.INDEX_GET, undefined, _node.line);
+                var _end = emit(PROG_OP.JUMP, 0, _node.line);
+                patch_jump(_skip, bytecode.code_size);
+                // At this point stack has: undefined (from DUP of null target)
+                patch_jump(_end, bytecode.code_size);
                 break;
         }
     }

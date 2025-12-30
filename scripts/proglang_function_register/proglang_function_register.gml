@@ -457,11 +457,6 @@ proglang_function_register("array_copy", function(_args)
     array_copy(_args[0], _args[1], _args[2], _args[3], _args[4]);
 });
 
-proglang_function_register("array_contains", function(_args)
-{
-    return array_contains(_args[0], _args[1]);
-});
-
 proglang_function_register("struct_get_names", function(_args)
 {
     return struct_get_names(_args[0]);

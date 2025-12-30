@@ -96,3 +96,31 @@ var whole = [0, ...parts, 3]; // [0, 1, 2, 3]
 
 var m = max(...whole); // Calls max(0, 1, 2, 3)
 ```
+
+### In Operator (`in`)
+
+Checks if a value exists in a collection.
+
+```javascript
+// Strings (substring check)
+if "world" in "hello world" { ... }
+
+// Arrays (element presence)
+if 5 in [1, 2, 3, 5] { ... }
+
+// Struct (explicit key check)
+if "key" in key { key: "value" } { ... }
+
+// Struct (value check)
+if "value" in value { key: "value" } { ... }
+```
+
+### Optional Chaining (`?.`)
+
+Safe access to properties or indices of potentially `undefined` or `null` values.
+
+```javascript
+var user = undefined;
+var name = user?.name; // undefined (no error)
+var item = user?.items?.[0]; // undefined
+```

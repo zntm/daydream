@@ -30,9 +30,9 @@ test_group("arrays", [
 
         test_expect(v, 5)
     }),
-    test("array contains", fn() {
-        test_expect(array_contains([ 1, 2, 3 ], 2), true)
-        test_expect(array_contains([ 1, 2, 3 ], 5), false)
+    test("in operator (arrays)", fn() {
+        test_expect(2 in [ 1, 2, 3 ], true)
+        test_expect(5 in [ 1, 2, 3 ], false)
     })
 ])
 

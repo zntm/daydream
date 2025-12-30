@@ -12,15 +12,15 @@ var wood = tag_get("phantasia:tile/generic/wood")
 var radius = 4
 var decay_chance = 0.1
 
-for (var dx = -radius; dx <= radius; dx++) {
-    for (var dy = -radius; dy <= radius; dy++) {
+for (var dx in -radius..radius) {
+    for (var dy in -radius..radius) {
         if (abs(dx) + abs(dy) > radius) {
             continue
         }
     
         var t = tile_get(tx + dx, ty + dy, z - 1)
 
-        if (t != undefined && array_contains(wood, t.get_id())) {
+        if (t != undefined && t.get_id() in wood) {
             return
         }
     }
