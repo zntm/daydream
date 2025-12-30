@@ -1663,17 +1663,14 @@ if (IS_DEVELOPER_MODE)
 {
     call_later(1, time_source_units_frames, function()
     {
-        // Set proglang root for tests to ensure absolute imports work
-        global.proglang_root = $"{PROGRAM_DIRECTORY_RESOURCES}/data/proglang";
-        
-        var _files = file_read_directory($"{PROGRAM_DIRECTORY_RESOURCES}/data/proglang/tests");
+        var _files = file_read_directory($"{PROGRAM_DIRECTORY_RESOURCES}/data/scripts/tests");
         var _length = array_length(_files);
         
         for (var i = 0; i < _length; ++i)
         {
             var _file = _files[i];
             
-            var _dir = $"{PROGRAM_DIRECTORY_RESOURCES}/data/proglang/tests/{_file}";
+            var _dir = $"{PROGRAM_DIRECTORY_RESOURCES}/data/scripts/tests/{_file}";
             
             if (!file_exists(_dir)) continue;
             

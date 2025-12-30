@@ -2,7 +2,7 @@
 /// Handles loading .daydream files with secure path traversal
 
 /// Base directory for all proglang scripts (sandbox root)
-#macro PROGLANG_BASE_DIR ($"{PROGRAM_DIRECTORY_RESOURCES}/data/proglang")
+#macro PROGLANG_BASE_DIR ($"{PROGRAM_DIRECTORY_RESOURCES}/data/scripts")
 
 global.proglang_scripts = {}
 global.proglang_exports = {}
@@ -105,15 +105,17 @@ function proglang_resolve_path(_path, _current_dir = "") {
     _path = string_replace_all(_path, "\\", "/");
     _current_dir = string_replace_all(_current_dir, "\\", "/");
     
+    /*
     // Remove .daydream extension if present
     if (string_ends_with(_path, ".daydream")) {
         _path = string_copy(_path, 1, string_length(_path) - 9);
     }
+    */
     
     var _result_parts = [];
     
     // Get root parts for security check
-    var _root = variable_global_exists("proglang_root") ? global.proglang_root : "proglang";
+    var _root = PROGLANG_BASE_DIR;
     var _root_parts = proglang_split_path(_root);
     var _root_len = array_length(_root_parts);
     
@@ -220,14 +222,14 @@ function proglang_load_module(_module_path, _importer_path = "") {
         if (_resolved == undefined) {
             throw { type: PROGLANG_ERROR_TYPE.PATH_SECURITY, message: $"Path security violation: '{_module_path}'" }
         }
-        _full_path = $"{_resolved}.daydream";
+        _full_path = _resolved;
     } else {
         // Absolute import: use base directory
         _resolved = proglang_resolve_path(_module_path, "");
         if (_resolved == undefined) {
             throw { type: PROGLANG_ERROR_TYPE.PATH_SECURITY, message: $"Path security violation: '{_module_path}'" }
         }
-        _full_path = $"{global.proglang_root}/{_resolved}.daydream";
+        _full_path = $"{PROGLANG_BASE_DIR}/{_resolved}";
     }
     
     // Check if already loaded

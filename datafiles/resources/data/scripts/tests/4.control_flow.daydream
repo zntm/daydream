@@ -148,15 +148,9 @@ test_group("switch statement", [
         var y = 0
 
         switch (x) {
-            case 1: 
-                y = 10
-                break
-            case 2: 
-                y = 20
-                break
-            default: 
-                y = 0
-                break
+            case 1: y = 10 break
+            case 2: y = 20 break
+            default: y = 0 break
         }
 
         test_expect(y, 10)
@@ -166,15 +160,9 @@ test_group("switch statement", [
         var y = 0
 
         switch (x) {
-            case 1: 
-                y = 10
-                break
-            case 2: 
-                y = 20
-                break
-            default: 
-                y = 0
-                break
+            case 1: y = 10 break
+            case 2: y = 20 break
+            default: y = 0 break
         }
 
         test_expect(y, 20)
@@ -184,15 +172,9 @@ test_group("switch statement", [
         var y = 0
 
         switch (x) {
-            case 1: 
-                y = 10
-                break
-            case 2: 
-                y = 20
-                break
-            default: 
-                y = 0
-                break
+            case 1: y = 10 break
+            case 2: y = 20 break
+            default: y = 0 break
         }
 
         test_expect(y, 0)
@@ -203,15 +185,9 @@ test_group("switch statement", [
 
         switch (x) {
             case 1:
-            case 2: 
-                y = 10
-                break
-            case 3: 
-                y = 20
-                break
-            default: 
-                y = 0
-                break
+            case 2: y = 10 break
+            case 3: y = 20 break
+            default: y = 0 break
         }
 
         test_expect(y, 10)
