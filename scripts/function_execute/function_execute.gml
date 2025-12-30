@@ -3,10 +3,10 @@ function function_execute(_function, _x, _y, _z, _xscale, _yscale, _dt)
     // Handle simplified JSON object structure
     // { "id": "...", "chance": 0.1, "parameters": { ... } }
     
-    show_debug_message(_function);
+    // show_debug_message(_function);
     
     if (!is_struct(_function)) exit;
-
+    
     var _chance = _function[$ "chance"];
     
     if (_chance != undefined) && (!chance(_chance * _dt)) exit;
@@ -15,8 +15,6 @@ function function_execute(_function, _x, _y, _z, _xscale, _yscale, _dt)
     
     if (_id != undefined)
     {
-        
-        
         // Proglang Script Execution (@ prefix indicates script file)
         if (string_char_at(_id, 1) == "@")
         {
@@ -31,7 +29,7 @@ function function_execute(_function, _x, _y, _z, _xscale, _yscale, _dt)
             
             var _filepath = $"{PROGLANG_BASE_DIR}/{_script_path}.daydream";
             
-            show_debug_message(_filepath);
+            // show_debug_message(_filepath);
             
             // Load and execute the script
             if (file_exists(_filepath))

@@ -119,24 +119,6 @@ var keys = struct_get_names(point);
 // ["x", "y"] (order not guaranteed)
 ```
 
-### `struct_exists(obj, key)`: Boolean
-
-Checks if a struct has a specific property.
-
-**Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `obj` | Struct | The struct to check |
-| `key` | String | Property name |
-
-**Returns:** `true` if property exists, `false` otherwise.
-
-```javascript
-var config = { volume: 80 };
-struct_exists(config, "volume"); // true
-struct_exists(config, "brightness"); // false
-```
-
 ### `struct_get(obj, key)`: Any
 
 Gets the value of a struct property by name.

@@ -462,11 +462,6 @@ proglang_function_register("struct_get_names", function(_args)
     return struct_get_names(_args[0]);
 });
 
-proglang_function_register("struct_exists", function(_args)
-{
-    return struct_exists(_args[0], _args[1]);
-});
-
 proglang_function_register("struct_get", function(_args)
 {
     return struct_get(_args[0], _args[1]);
