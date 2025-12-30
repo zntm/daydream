@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"proglang_native_init",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"proglang_native_init",
+  "parent":{
+    "name":"Proglang",
+    "path":"folders/Scripts/Proglang.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"proglang_serialize",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"proglang_serialize",
+  "parent":{
+    "name":"Proglang",
+    "path":"folders/Scripts/Proglang.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

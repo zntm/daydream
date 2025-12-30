@@ -1663,6 +1663,8 @@ if (IS_DEVELOPER_MODE)
 {
     call_later(1, time_source_units_frames, function()
     {
+        proglang_serialize_test();
+        
         var _files = file_read_directory($"{PROGRAM_DIRECTORY_RESOURCES}/data/scripts/tests");
         var _length = array_length(_files);
         

@@ -18,6 +18,10 @@ function proglang_execute(_source, _context = {}, _filepath = "")
         
         return undefined;
     }
+
+    if (variable_global_exists("proglang_native_enabled") && global.proglang_native_enabled) {
+        return proglang_execute_native(_bytecode, _context, _filepath);
+    }
     
     var _vm = new ProgVM();
     
