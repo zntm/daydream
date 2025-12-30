@@ -1,49 +1,78 @@
 function function_execute(_function, _x, _y, _z, _xscale, _yscale, _dt)
 {
-    var _chance = _function[0];
+    // Handle simplified JSON object structure
+    // { "id": "...", "chance": 0.1, "parameters": { ... } }
+    
+    if (!is_struct(_function)) exit;
+
+    var _chance = _function[$ "chance"];
     
     if (_chance != undefined) && (!chance(_chance * _dt)) exit;
     
-    var _item_function = global.item_function;
-    var _id = _function[1];
+    var _id = _function[$ "id"];
     
     if (_id != undefined)
     {
-        // Proglang Script Execution
-        if (string_pos("$proglang:", _id) == 1)
+        // Proglang Script Execution (@ prefix indicates script file)
+        if (string_char_at(_id, 1) == "@")
         {
-            var _source = string_delete(_id, 1, 10); // Remove "$proglang:"
-            var _context = {
-                x: _x,
-                y: _y,
-                z: _z,
-                xscale: _xscale,
-                yscale: _yscale,
-                dt: _dt,
-                parameter: _function[2] 
+            var _script_path = string_delete(_id, 1, 1); // Remove "@"
+            
+            // Convert namespace:path to file path
+            var _colon_pos = string_pos(":", _script_path);
+            if (_colon_pos > 0)
+            {
+                _script_path = string_delete(_script_path, 1, _colon_pos); // Remove namespace prefix
             }
             
-            // Pass common game objects to context if needed, or rely on global access
-            // Maybe add 'player' to context explicitly?
-            if (instance_exists(obj_Player)) _context.player = obj_Player;
+            var _filepath = $"{PROGLANG_BASE_DIR}/{_script_path}.daydream";
             
-            proglang_execute(_source, _context);
+            // Load and execute the script
+            if (file_exists(_filepath))
+            {
+                var _source = buffer_load_text(_filepath);
+                var _context = {
+                    x: _x,
+                    y: _y,
+                    z: _z,
+                    xscale: _xscale,
+                    yscale: _yscale,
+                    dt: _dt,
+                    parameter: _function[$ "parameters"] ?? {},
+                    tile: tile_get(_x, _y, _z),
+                    inventory: global.inventory
+                }
+                
+                if (instance_exists(obj_Player)) _context.player = obj_Player;
+                
+                proglang_execute(_source, _context, _filepath);
+            }
+            else if (IS_DEVELOPER_MODE)
+            {
+                show_debug_message($"[Daydream] Script not found: {_filepath}");
+            }
+            
             exit;
         }
-
-        var _f = _item_function[$ _id];
-        var _parameter = _function[2];
-        var _repeat = _function[3];
         
-        if (_repeat == undefined)
+        // Native GML Function Execution
+        var _item_function = global.item_function;
+        var _f = _item_function[$ _id];
+        var _parameter = _function[$ "parameters"];
+        var _repeat = _function[$ "repeat"];
+        
+        if (_f != undefined)
         {
-            _f(_dt, _x, _y, _z, _xscale, _yscale, _parameter);
-        }
-        else
-        {
-            repeat (smart_value(_repeat))
+            if (_repeat == undefined)
             {
                 _f(_dt, _x, _y, _z, _xscale, _yscale, _parameter);
+            }
+            else
+            {
+                repeat (smart_value(_repeat))
+                {
+                    _f(_dt, _x, _y, _z, _xscale, _yscale, _parameter);
+                }
             }
         }
     }

@@ -321,6 +321,34 @@ function ProgCompiler() constructor
                     break;
                 }
                 
+                // Logical AND short-circuit
+                if (_node.op == PROG_TOKEN.AND)
+                {
+                    compile_node(_node.left);
+                    emit(PROG_OP.DUP, undefined, _node.line);
+                    var _jmp = emit(PROG_OP.JUMP_IF_FALSE, 0, _node.line);
+                    emit(PROG_OP.POP, undefined, _node.line);
+                    compile_node(_node.right);
+                    patch_jump(_jmp, bytecode.code_size);
+                    break;
+                }
+                
+                // Logical OR short-circuit
+                if (_node.op == PROG_TOKEN.OR)
+                {
+                    compile_node(_node.left);
+                    emit(PROG_OP.DUP, undefined, _node.line);
+                    var _jmp_eval = emit(PROG_OP.JUMP_IF_FALSE, 0, _node.line);
+                    var _jmp_end = emit(PROG_OP.JUMP, 0, _node.line);
+                    
+                    patch_jump(_jmp_eval, bytecode.code_size);
+                    emit(PROG_OP.POP, undefined, _node.line);
+                    compile_node(_node.right);
+                    
+                    patch_jump(_jmp_end, bytecode.code_size);
+                    break;
+                }
+                
                 compile_node(_node.left);
                 compile_node(_node.right);
                 

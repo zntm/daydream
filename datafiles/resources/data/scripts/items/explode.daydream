@@ -1,0 +1,60 @@
+// Explosion - destroys tiles in radius and damages entities
+// Context: x, y, z, xscale, yscale, dt, parameter, tile
+
+
+
+var radius = parameter.radius ?? 3;
+var damage = parameter.damage ?? 10;
+var destroy_tiles = parameter.destroy_tiles ?? true;
+
+var world_x = x * TILE_SIZE;
+var world_y = y * TILE_SIZE;
+
+// Play sound
+if (parameter.sound != undefined) {
+    sfx_play(world_x, world_y, parameter.sound);
+}
+
+// Emit explosion event
+event_emit("explosion", { 
+    x: x, 
+    y: y, 
+    z: z, 
+    radius: radius, 
+    damage: damage 
+});
+
+// Spawn particles
+if (parameter.particle != undefined) {
+    var count = parameter.particle_count ?? (radius * 4);
+    
+    for (var i = 0; i < count; i++) {
+        var angle = irandom(360);
+        var dist = irandom(radius * TILE_SIZE);
+        
+        spawn_particle(
+            world_x + lengthdir_x(dist, angle),
+            world_y + lengthdir_y(dist, angle),
+            parameter.particle
+        );
+    }
+}
+
+// Destroy tiles in radius
+if (destroy_tiles) {
+    for (var tx = -radius; tx <= radius; tx++) {
+        for (var ty = -radius; ty <= radius; ty++) {
+            var tile_dist = point_distance(0, 0, tx, ty);
+            
+            if (tile_dist <= radius) {
+                var target_x = x + tx;
+                var target_y = y + ty;
+                
+                // Destroy tiles on all layers
+                for (var tz = 0; tz < 4; tz++) {
+                    tile_place(target_x, target_y, tz, undefined);
+                }
+            }
+        }
+    }
+}

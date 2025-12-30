@@ -6,6 +6,12 @@
             "max": 10
         }
     },
+    "wood": [
+        "phantasia:birch",
+        "phantasia:mangrove",
+        "phantasia:oak",
+        "phantasia:pine"
+    ],
     "workbench": [
         "phantasia:birch_workbench",
         "phantasia:mangrove_workbench",

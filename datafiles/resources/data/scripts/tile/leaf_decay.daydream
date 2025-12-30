@@ -1,0 +1,29 @@
+var tx = round(x / TILE_SIZE)
+var ty = round(y / TILE_SIZE)
+
+var tile = tile_get(tx, ty, z)
+
+if (tile == undefined || !tile.get_component("natural")) {
+    return
+}
+
+var wood = tag_get("phantasia:tile/generic/wood")
+
+var radius = 4
+var decay_chance = 0.1
+
+for (var dx = -radius; dx <= radius; dx++) {
+    for (var dy = -radius; dy <= radius; dy++) {
+        if (abs(dx) + abs(dy) > radius) {
+            continue
+        }
+    
+        var t = tile_get(tx + dx, ty + dy, z - 1)
+
+        if (t != undefined && array_contains(wood, t.get_id())) {
+            return
+        }
+    }
+}
+
+tile_place(undefined, tx, ty, z)

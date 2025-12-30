@@ -1,0 +1,45 @@
+// Tile placement with conditions
+// Context: x, y, z, xscale, yscale, dt, parameter, tile
+
+// Check conditions if specified
+var conditions = parameter.condition;
+if (conditions != undefined) {
+    var condition_count = array_length(conditions);
+    
+    for (var i = 0; i < condition_count; i++) {
+        var cond = conditions[i];
+        
+        var check_x = x + (cond.x ?? 0);
+        var check_y = y + (cond.y ?? 0);
+        var check_z = get_chunk_depth(cond.z);
+        
+        var check_tile = tile_get(check_x, check_y, check_z);
+        var expected_id = cond.id;
+        
+        if (expected_id == undefined) {
+            // Expecting empty
+            if (check_tile != undefined) return;
+        } else {
+            // Expecting specific tile
+            if (check_tile == undefined) return;
+            
+            var tile_id = check_tile.get_id();
+            
+            if (is_array(expected_id)) {
+                if (!array_contains(expected_id, tile_id)) return;
+            } else {
+                if (tile_id != expected_id) return;
+            }
+        }
+    }
+}
+
+// Calculate placement position
+var place_x = x + (parameter.x ?? 0);
+var place_y = y + (parameter.y ?? 0);
+var place_z = get_chunk_depth(parameter.z);
+
+var place_id = parameter.id;
+
+// Place the tile
+tile_place(place_x, place_y, place_z, place_id);

@@ -11,7 +11,7 @@
         },
         "on_use": [
             {
-                "id": "phantasia:bucket_place",
+                "id": "@phantasia:items/bucket_place",
                 "parameters": {
                     "liquid_id": "phantasia:lava",
                     "empty_bucket_id": "phantasia:bucket",

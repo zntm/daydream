@@ -1,0 +1,69 @@
+// Bucket places liquid tile
+// Context: x, y, z, xscale, yscale, dt, parameter, tile, inventory, player
+
+
+
+// Get the held item
+var held_item = inventory_get_selected();
+if (held_item == undefined) return;
+
+// Get the liquid ID to place
+var liquid_id = parameter.liquid_id;
+if (liquid_id == undefined) return;
+
+// Liquids use their own z-layer
+var liquid_z = get_chunk_depth("liquid");
+
+// Get stored level from bucket
+var bucket_level = held_item.get_component("level") ?? 8;
+
+// Check existing tile
+var existing = tile_get(x, y, liquid_z);
+
+if (existing != undefined) {
+    // Check if same liquid type - combine them
+    if (existing.get_id() == liquid_id) {
+        var existing_level = existing.get_component("level") ?? 0;
+        var total = existing_level + bucket_level;
+        var new_level = min(total, 8);
+        var remaining = total - new_level;
+        
+        existing.set_component("level", new_level);
+        tile_update_surrounding(x, y, liquid_z);
+        
+        // Start liquid flow
+        liquid_flow_start(x, y, liquid_z, parameter);
+        
+        if (remaining <= 0) {
+            // All water placed - convert to empty bucket
+            var empty_bucket_id = parameter.empty_bucket_id ?? "phantasia:bucket";
+            inventory_set_selected(new Inventory(empty_bucket_id, 1));
+        } else {
+            // Some water remains in bucket
+            held_item.set_component("level", remaining);
+        }
+        
+        // Play place sound
+        var sound = parameter.sound ?? "phantasia:sfx/liquid/bucket_empty";
+        sfx_play(x * TILE_SIZE, y * TILE_SIZE, sound);
+    }
+    return;
+}
+
+// Create liquid tile with level
+var liquid_tile = new Tile(liquid_id);
+liquid_tile.set_component("level", bucket_level);
+liquid_tile.set_component("flow_direction", 0);
+
+tile_place(x, y, liquid_z, liquid_tile);
+
+// Start liquid flow cycle
+liquid_flow_start(x, y, liquid_z, parameter);
+
+// Replace filled bucket with empty bucket
+var empty_bucket_id = parameter.empty_bucket_id ?? "phantasia:bucket";
+inventory_set_selected(new Inventory(empty_bucket_id, 1));
+
+// Play place sound
+var sound = parameter.sound ?? "phantasia:sfx/liquid/bucket_empty";
+sfx_play(x * TILE_SIZE, y * TILE_SIZE, sound);

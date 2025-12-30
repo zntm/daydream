@@ -1,0 +1,12 @@
+// Spawns a projectile at the tile position
+// Context: x, y, z, xscale, yscale, dt, parameter, tile
+
+
+var offset = parameter.offset ?? {};
+var px = (x + (offset.x ?? 0)) * TILE_SIZE;
+var py = (y + (offset.y ?? 0)) * TILE_SIZE;
+
+var id = parameter.id;
+var damage = parameter.damage ?? 0;
+
+spawn_projectile(px, py, id, damage, xscale, yscale);

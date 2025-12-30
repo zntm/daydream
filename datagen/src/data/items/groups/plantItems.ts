@@ -1,6 +1,6 @@
 import { DatagenReturnData } from "../../../lib/DatagenReturnData";
 import { ItemType } from "../lib/ItemType";
-import { ItemFunction } from "../lib/ItemFunction";
+import { ItemScript } from "../lib/ProgLang";
 import {
     TileItem,
     TileItemCondition,
@@ -212,7 +212,7 @@ export default [
             .setTileSFX("#phantasia:tile/sfx/foliage")
             .setAudioProperties(0.05, 0.0)
             .addOnRandomTick([
-                new ItemFunction("phantasia:spawn_particle", {
+                new ItemScript("items/spawn_particle", {
                     id: "phantasia:tile/seeding_dandelion",
                 }),
             ]),

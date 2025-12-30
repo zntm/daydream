@@ -10,6 +10,20 @@ global.proglang_macros[$ "TAU"] = pi * 2;
 global.proglang_macros[$ "E"] = 2.71828182845904523536;
 global.proglang_macros[$ "PHI"] = 1.61803398874989484820;
 
+global.proglang_macros[$ "TILE_SIZE"] = TILE_SIZE;
+global.proglang_macros[$ "CHUNK_DEPTH"] = {
+    DEFAULT: CHUNK_DEPTH_DEFAULT,
+    FOLIAGE_BACK: CHUNK_DEPTH_FOLIAGE_BACK,
+    FOLIAGE_FRONT: CHUNK_DEPTH_FOLIAGE_FRONT,
+    LIQUID: CHUNK_DEPTH_LIQUID,
+    TREE_BACK: CHUNK_DEPTH_TREE_BACK,
+    TREE_FRONT: CHUNK_DEPTH_TREE_FRONT,
+    WALL: CHUNK_DEPTH_WALL
+}
+
+
+global.proglang_macros[$ "TILE_SIZE"] = TILE_SIZE;
+
 global.proglang_macros[$ "CURRENT_YEAR"] = function()
 {
     return current_year;

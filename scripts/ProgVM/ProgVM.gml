@@ -43,7 +43,7 @@ function ProgVM() constructor
     locals = current_scope.vars;
     
     context = undefined;
-    global_ref = {}; // Isolated global scope per VM
+    global_ref = {} // Isolated global scope per VM
     try_stack = [];
     
     active_module = undefined; // Struct { exports: {}, loaded: bool }
@@ -216,6 +216,17 @@ function ProgVM() constructor
                 
                 return _res;
             }
+
+            // GML Method / Script
+            if (is_method(_callee))
+            {
+                var _res = method_call(_callee, _args);
+                
+                array_pop(call_stack);
+                
+                return _res;
+            }
+
             
             // String name lookup
             if (is_string(_callee))
@@ -573,13 +584,13 @@ function ProgVM() constructor
                             {
                                 _stack[@ sp++] = global.proglang_scripts[$ _name];
                             }
-                            else if (_name == "global") { _stack[@ sp++] = global; }
-                            else if (struct_exists(global, _name)) { _stack[@ sp++] = global[$ _name]; }
-                            else if (variable_global_exists(_name)) { _stack[@ sp++] = variable_global_get(_name); }
                             else if (variable_global_exists("proglang_functions") && struct_exists(global.proglang_functions, _name))
                             {
                                 _stack[@ sp++] = global.proglang_functions[$ _name];
                             }
+                            else if (_name == "global") { _stack[@ sp++] = global; }
+                            else if (struct_exists(global, _name)) { _stack[@ sp++] = global[$ _name]; }
+                            else if (variable_global_exists(_name)) { _stack[@ sp++] = variable_global_get(_name); }
                             else
                             { 
                                 // Relax strictness for "argN"

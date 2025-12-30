@@ -27,9 +27,12 @@ function proglang_execute(_source, _context = {}, _filepath = "")
     if (_filepath != "")
     {
         var _dirname = proglang_get_directory(_filepath);
+        
         _vm.current_scope.vars[$ "__dirname"] = _dirname;
         _vm.current_scope.vars[$ "__filename"] = _filepath;
     }
+    
+    // show_debug_message(_bytecode);
     
     var _result = _vm.run(_bytecode);
     

@@ -1,4 +1,5 @@
 global.proglang_functions = {}
+global.proglang_classes = {}
 
 function proglang_function_register(_name, _func)
 {
@@ -7,6 +8,101 @@ function proglang_function_register(_name, _func)
         "function": _func
     }
 }
+
+#region Game API
+/*
+// Tile Operations
+proglang_function_register("tile_get", function(_args)
+{
+    return tile_get(_args[0], _args[1], _args[2]);
+});
+
+proglang_function_register("tile_place", function(_args)
+{
+    var _x = _args[0];
+    var _y = _args[1];
+    var _z = _args[2];
+    var _id = _args[3];
+    
+    if (is_string(_id)) _id = new Tile(_id);
+    else if (_id == undefined) _id = TILE_EMPTY;
+    
+    tile_place(_x, _y, _z, _id);
+    tile_update_surrounding(_x, _y, _z);
+});
+
+proglang_function_register("tile_update_surrounding", function(_args)
+{
+    tile_update_surrounding(_args[0], _args[1], _args[2]);
+});
+
+// Particle & Audio
+proglang_function_register("spawn_particle", function(_args)
+{
+    spawn_particle(_args[0], _args[1], smart_value(_args[2]));
+});
+
+proglang_function_register("sfx_play", function(_args)
+{
+    var _emitter = (array_length(_args) > 3) ? _args[3] : undefined;
+    sfx_diegetic_play(_emitter, _args[0], _args[1], smart_value(_args[2]));
+});
+
+proglang_function_register("spawn_projectile", function(_args)
+{
+    spawn_projectile(_args[0], _args[1], smart_value(_args[2]), _args[3], _args[4] ?? 1, _args[5] ?? 1);
+});
+
+// Events
+proglang_function_register("event_emit", function(_args)
+{
+    event_emit(_args[0], _args[1]);
+});
+/*
+// Game Constants
+proglang_function_register("get_tile_size", function(_args)
+{
+    return TILE_SIZE;
+});
+
+proglang_function_register("get_chunk_depth", function(_args)
+{
+    return global.chunk_depth[$ _args[0]];
+});
+
+// Inventory
+proglang_function_register("inventory_get_selected", function(_args)
+{
+    return global.inventory.base[global.inventory_selected_hotbar];
+});
+
+proglang_function_register("inventory_set_selected", function(_args)
+{
+    global.inventory.base[@ global.inventory_selected_hotbar] = _args[0];
+    obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR;
+});
+
+// Liquid Flow
+proglang_function_register("liquid_flow_start", function(_args)
+{
+    liquid_flow_start(_args[0], _args[1], _args[2], _args[3] ?? {});
+});
+
+// Tick Delay  
+proglang_function_register("tick_delay_add", function(_args)
+{
+    tick_delay_add(_args[0], _args[1], _args[2] ?? []);
+});
+*/
+#endregion
+
+#region Native Classes
+
+// Register Tile and Inventory as native constructors
+global.proglang_classes[$ "Tile"] = Tile;
+global.proglang_classes[$ "Inventory"] = Inventory;
+
+#endregion
 
 #region Math
 
@@ -211,6 +307,11 @@ proglang_function_register("choose", function(_args)
     return array_choose(_array);
 });
 
+proglang_function_register("chance", function(_args)
+{
+    return chance(_args[0]);
+});
+
 #endregion
 
 // Strings & Types
@@ -396,6 +497,23 @@ proglang_function_register("struct_parse", function(_args)
     return json_parse(_args[0]);
 });
 
+// GAME
+// proglang_
+
+proglang_function_register("tile_get", function(_args) {
+    var _tile = tile_get(_args[0], _args[1], _args[2]);
+    
+    return ((_tile != TILE_EMPTY) ? _tile : undefined);
+});
+
+proglang_function_register("tile_place", function(_args) {
+    tile_place(_args[1], _args[2], _args[3], _args[0] ?? TILE_EMPTY);
+});
+
+proglang_function_register("tag_get", function(_args) {
+    return global.tag_data[$ $"#{_args[0]}"];
+});
+
 /*
 // Game API
 proglang_function_register("tile_place", function(_args, _ctx)
@@ -484,6 +602,11 @@ proglang_function_register("typeof", function(_args)
     
     if (is_struct(_val))
     {
+        if (struct_exists(_val, "function"))
+        {
+            return "function";
+        }
+
         if (_val[$ "__type__"] == "regex")
         {
             return "regex";

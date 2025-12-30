@@ -19,9 +19,6 @@ export class ItemFunction {
             this.repeat = repeat;
         }
     }
-
-
-
 }
 
 export enum ItemFunctionDataType {

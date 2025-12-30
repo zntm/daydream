@@ -2,9 +2,9 @@ function Tile(_id, _item_data = global.item_data) constructor
 {
     ___id = _id;
     
-    static get_id = function()
+    get_id = function()
     {
-        return self[$ "___id"];
+        return ___id;
     }
     
     var _data = _item_data[$ _id];
@@ -15,38 +15,38 @@ function Tile(_id, _item_data = global.item_data) constructor
     
     ___value = (9 << 28) | (9 << 24) | (8 << 4) | (8 << 0);
     
-    static set_offset = function(_xoffset, _yoffset)
+    set_offset = function(_xoffset, _yoffset)
     {
         ___value = (___value & 0b111111111_1111_1111_11111111_11111111_0000_0000) | ((_yoffset + 8) << 4) | ((_xoffset + 8) << 0);
         
         return self;
     }
     
-    static set_xoffset = function(_xoffset)
+    set_xoffset = function(_xoffset)
     {
         ___value = (___value & 0b111111111_1111_0000_11111111_11111111_1111_0000) | ((_xoffset + 8) << 0);
         
         return self;
     }
     
-    static set_yoffset = function(_yoffset)
+    set_yoffset = function(_yoffset)
     {
         ___value = (___value & 0b111111111_0000_1111_11111111_11111111_0000_1111) | ((_yoffset + 8) << 4);
         
         return self;
     }
     
-    static get_xoffset = function()
+    get_xoffset = function()
     {
         return ((___value >> 0) & 0b1111) - 8;
     }
     
-    static get_yoffset = function()
+    get_yoffset = function()
     {
         return ((___value >> 4) & 0b1111) - 8;
     }
     
-    static set_scale = function(_xscale, _yscale)
+    set_scale = function(_xscale, _yscale)
     {
         // ___value = (___value & 0b111111111_0000_0000_11111111_11111111_1111_1111) | ((_yscale + 8) << 28) | ((_xscale + 8) << 24);
         
@@ -56,7 +56,7 @@ function Tile(_id, _item_data = global.item_data) constructor
         return self;
     }
     
-    static set_xscale = function(_xscale)
+    set_xscale = function(_xscale)
     {
         if (_xscale != undefined)
         {
@@ -66,7 +66,7 @@ function Tile(_id, _item_data = global.item_data) constructor
         return self;
     }
     
-    static set_yscale = function(_yscale)
+    set_yscale = function(_yscale)
     {
         if (_yscale != undefined)
         {
@@ -78,29 +78,29 @@ function Tile(_id, _item_data = global.item_data) constructor
         return self;
     }
     
-    static get_xscale = function()
+    get_xscale = function()
     {
         return ((___value >> 24) & 0b1111) - 8;
     }
     
-    static get_yscale = function()
+    get_yscale = function()
     {
         return ((___value >> 28) & 0b1111) - 8;
     }
     
-    static set_index = function(_index)
+    set_index = function(_index)
     {
         ___value = (___value & 0b111111111_1111_1111_11111111_00000000_1111_1111) | (_index << 8);
         
         return self;
     }
     
-    static get_index = function()
+    get_index = function()
     {
         return (___value >> 8) & 0b11111111;
     }
     
-    static set_index_offset = function(_index)
+    set_index_offset = function(_index)
     {
         if (_index != undefined)
         {
@@ -110,12 +110,12 @@ function Tile(_id, _item_data = global.item_data) constructor
         return self;
     }
     
-    static get_index_offset = function()
+    get_index_offset = function()
     {
         return (___value >> 16) & 0b11111111;
     }
     
-    static set_rotation = function(_rotation)
+    set_rotation = function(_rotation)
     {
         _rotation = ((_rotation % 360) + 360) % 360;
         
@@ -124,12 +124,12 @@ function Tile(_id, _item_data = global.item_data) constructor
         return self;
     }
     
-    static get_rotation = function()
+    get_rotation = function()
     {
         return (___value >> 32) & 0b111111111;
     }
     
-    static set_component = function(_name, _value)
+    set_component = function(_name, _value)
     {
         self[$ "___components"] ??= {}
         
@@ -213,7 +213,7 @@ function Tile(_id, _item_data = global.item_data) constructor
         }
     }
     
-    static get_component = function(_name)
+    get_component = function(_name)
     {
         if (_name == undefined)
         {
@@ -230,7 +230,7 @@ function Tile(_id, _item_data = global.item_data) constructor
         return _component[$ _name];
     }
     
-    static get_components_length = function()
+    get_components_length = function()
     {
         return self[$ "___components_length"] ?? 0;
     }
@@ -242,50 +242,50 @@ function Tile(_id, _item_data = global.item_data) constructor
         ___inventory = array_create(_inventory_length, INVENTORY_EMPTY);
     }
     
-    static set_inventory = function(_inventory)
+    set_inventory = function(_inventory)
     {
         ___inventory = _inventory;
         
         return self;
     }
     
-    static get_inventory = function()
+    get_inventory = function()
     {
         return self[$ "___inventory"];
     }
     
-    static set_instance_light = function(_id)
+    set_instance_light = function(_id)
     {
         ___instance_light = _id;
         
         return self;
     }
     
-    static get_instance_light = function()
+    get_instance_light = function()
     {
         return self[$ "___instance_light"] ?? noone;
     }
     
-    static set_instance_crafting_station = function(_id)
+    set_instance_crafting_station = function(_id)
     {
         ___instance_crafting_station = _id;
         
         return self;
     }
     
-    static get_instance_crafting_station = function()
+    get_instance_crafting_station = function()
     {
         return self[$ "___instance_crafting_station"] ?? noone;
     }
     
-    static set_instance_container = function(_id)
+    set_instance_container = function(_id)
     {
         ___instance_container = _id;
         
         return self;
     }
     
-    static get_instance_container = function()
+    get_instance_container = function()
     {
         return self[$ "___instance_container"] ?? noone;
     }
