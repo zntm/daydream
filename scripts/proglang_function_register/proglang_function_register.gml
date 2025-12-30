@@ -940,7 +940,16 @@ proglang_function_register("test", function(_args, _vm = undefined)
         if (_s != undefined)
         {
             _test_struct.__filename = _s[PROG_SCOPE.VARS][$ "__filename"];
+            // show_debug_message($"[Test] Captured filename: {_test_struct.__filename}");
         }
+        else
+        {
+             if (IS_DEVELOPER_MODE) show_debug_message($"[Test] Warning: __filename not found in scope for test '{_name}'");
+        }
+    }
+    else
+    {
+         if (IS_DEVELOPER_MODE) show_debug_message($"[Test] Warning: VM undefined for test '{_name}'");
     }
     
     array_push(global.proglang_pending_tests, _test_struct);

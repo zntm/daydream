@@ -946,8 +946,9 @@ function ProgVM_run(_vm, _bytecode)
                     case PROG_OP.IMPORT:
                         var _path = _constants[_arg];
                         var _cur_file = "";
-                        if (struct_exists(_vm[PROG_VM.SCOPE][PROG_SCOPE.VARS], "__filename"))
-                            _cur_file = _vm[PROG_VM.SCOPE][PROG_SCOPE.VARS][$ "__filename"];
+                        var _scope_file = ProgVM_find_var_scope(_vm, "__filename");
+                        if (_scope_file != undefined)
+                            _cur_file = _scope_file[PROG_SCOPE.VARS][$ "__filename"];
                         
                         var _exports = proglang_load_module(_path, _cur_file);
                         _stack[@ _sp++] = _exports;

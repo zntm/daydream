@@ -219,15 +219,16 @@ function proglang_load_module(_module_path, _importer_path = "") {
     if (_is_relative && _importer_dir != "") {
         // Relative import: resolve from the importing file's directory
         _resolved = proglang_resolve_path(_module_path, _importer_dir);
-        if (IS_DEVELOPER_MODE) show_debug_message($"[Daydream] Resolving relative path: '{_module_path}' from '{_importer_dir}' -> '{_resolved}'");
+        // (IS_DEVELOPER_MODE) show_debug_message($"[Daydream] Resolving relative path: '{_module_path}' from '{_importer_dir}' -> '{_resolved}'");
         if (_resolved == undefined) {
             throw { type: PROGLANG_ERROR_TYPE.PATH_SECURITY, message: $"Path security violation: '{_module_path}'" }
         }
-        _full_path = $"{PROGLANG_BASE_DIR}/{_resolved}";
+        //_full_path = $"{PROGLANG_BASE_DIR}/{_resolved}";
+        _full_path = _resolved;
     } else {
         // Absolute import: use base directory
         _resolved = proglang_resolve_path(_module_path, "");
-        if (IS_DEVELOPER_MODE) show_debug_message($"[Daydream] Resolving absolute path: '{_module_path}' -> '{_resolved}'");
+        // if (IS_DEVELOPER_MODE) show_debug_message($"[Daydream] Resolving absolute path: '{_module_path}' -> '{_resolved}'");
         if (_resolved == undefined) {
             throw { type: PROGLANG_ERROR_TYPE.PATH_SECURITY, message: $"Path security violation: '{_module_path}'" }
         }
@@ -241,14 +242,14 @@ function proglang_load_module(_module_path, _importer_path = "") {
     
     // Try to load the file
     if (!file_exists(_full_path)) {
-        throw { type: PROGLANG_ERROR_TYPE.FILE_NOT_FOUND, message: $"Module not found: '{_resolved}'" }
+        throw { type: PROGLANG_ERROR_TYPE.FILE_NOT_FOUND, message: $"Module not found: '{_full_path}'" }
     }
     
     var _source = buffer_load_text(_full_path);
     var _bytecode = proglang_compile(_source);
     
     if (_bytecode == undefined) {
-        throw { type: PROGLANG_ERROR_TYPE.SYNTAX, message: $"Failed to compile module: '{_resolved}'" }
+        throw { type: PROGLANG_ERROR_TYPE.SYNTAX, message: $"Failed to compile module: '{_full_path}'" }
     }
     
     // Create module entry
@@ -256,9 +257,11 @@ function proglang_load_module(_module_path, _importer_path = "") {
     
     // Run module to populate exports
     var _vm = ProgVM_create();
+    
     _vm[@ PROG_VM.ACTIVE_MODULE] = global.proglang_modules[$ _resolved];
     _vm[PROG_VM.SCOPE][PROG_SCOPE.VARS][$ "__dirname"] = proglang_get_directory(_full_path);
     _vm[PROG_VM.SCOPE][PROG_SCOPE.VARS][$ "__filename"] = _full_path;
+    
     ProgVM_run(_vm, _bytecode);
     
     ProgVM_free(_vm);
