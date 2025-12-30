@@ -1123,7 +1123,6 @@
     {"$GMIncludedFile":"","%Name":"bucket_pickup.daydream","CopyToMask":-1,"filePath":"datafiles/resources/data/scripts/items","name":"bucket_pickup.daydream","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"bucket_place.daydream","CopyToMask":-1,"filePath":"datafiles/resources/data/scripts/items","name":"bucket_place.daydream","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"explode.daydream","CopyToMask":-1,"filePath":"datafiles/resources/data/scripts/items","name":"explode.daydream","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
-    {"$GMIncludedFile":"","%Name":"leaf_decay.daydream","CopyToMask":-1,"filePath":"datafiles/resources/data/scripts/items","name":"leaf_decay.daydream","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"sfx_play.daydream","CopyToMask":-1,"filePath":"datafiles/resources/data/scripts/items","name":"sfx_play.daydream","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"spawn_particle.daydream","CopyToMask":-1,"filePath":"datafiles/resources/data/scripts/items","name":"spawn_particle.daydream","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"spawn_projectile.daydream","CopyToMask":-1,"filePath":"datafiles/resources/data/scripts/items","name":"spawn_projectile.daydream","resourceType":"GMIncludedFile","resourceVersion":"2.0",},

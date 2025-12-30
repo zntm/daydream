@@ -56,6 +56,27 @@ function ProgVM() constructor
     active_class = undefined;
     class_registry = {}
     
+
+    
+    /// @desc Reset VM state for reuse
+    reset = function()
+    {
+        sp = 0;
+        ip = 0;
+        current_scope = { vars: {}, parent: undefined };
+        locals = current_scope.vars;
+        context = undefined;
+        global_ref = {};
+        try_stack = [];
+        call_stack = [];
+        current_this = undefined;
+        active_class = undefined;
+        active_module = undefined;
+        // Note: stack array is reused, just reset sp
+    }
+    
+
+    
     /// @desc Find variable in scope chain
     static find_var_scope = function(_name)
     {
@@ -93,7 +114,7 @@ function ProgVM() constructor
                 // Look for constructor in super class
                 if (_super_class[$ "constructor_code"] != undefined)
                 {
-                    var _vm = new ProgVM();
+                    var _vm = ProgVM_create();
                     _vm.global_ref = global_ref; // Share global scope
                     
                     _vm.context = context;
@@ -109,6 +130,7 @@ function ProgVM() constructor
                     
                     var _res = _vm.run(_super_class.constructor_code);
                     
+                    ProgVM_free(_vm);
                     array_pop(call_stack);
                     
                     return _res;
@@ -126,7 +148,7 @@ function ProgVM() constructor
             // Handle Array-based Closure (PROG_CLOSURE enum)
             if (is_array(_callee)) && (array_length(_callee) >= PROG_CLOSURE.SIZE) && (_callee[PROG_CLOSURE.TYPE] == "closure")
             {
-                var _vm = new ProgVM();
+                var _vm = ProgVM_create();
                 // Use captured global_ref if available (for module exports), otherwise inherit from caller
                 _vm.global_ref = (_callee[PROG_CLOSURE.GLOBAL_REF] != undefined) ? _callee[PROG_CLOSURE.GLOBAL_REF] : global_ref;
                 
@@ -171,6 +193,7 @@ function ProgVM() constructor
                 
                 var _res = _vm.run(_callee[PROG_CLOSURE.BYTECODE]);
                 
+                ProgVM_free(_vm);
                 array_pop(call_stack);
                 
                 return _res;
@@ -260,12 +283,8 @@ function ProgVM() constructor
                         _bc = _script.main;
                     }
                     */
-                    else
-                    {
-                        _bc = _script;
-                    }
                     
-                    var _vm = new ProgVM();
+                    var _vm = ProgVM_create();
                     
                     _vm.context = context;
                     _vm.call_stack = variable_clone(call_stack);
@@ -279,6 +298,7 @@ function ProgVM() constructor
                     
                     var _res = _vm.run(_bc);
                     
+                    ProgVM_free(_vm);
                     array_pop(call_stack);
                     
                     return _res;
@@ -366,11 +386,26 @@ function ProgVM() constructor
                     switch (_op)
                     {
                         // Stack operations
-                        case PROG_OP.PUSH_NULL: _stack[@ sp++] = undefined; break;
-                        case PROG_OP.PUSH_TRUE: _stack[@ sp++] = true; break;
-                        case PROG_OP.PUSH_FALSE: _stack[@ sp++] = false; break;
-                        case PROG_OP.PUSH_GLOBAL_REF: _stack[@ sp++] = _gref; break;
-                        case PROG_OP.PUSH_CONST: _stack[@ sp++] = _constants[_arg]; break;
+                        case PROG_OP.PUSH_NULL:
+                            _stack[@ sp++] = undefined;
+                            break;
+                        
+                        case PROG_OP.PUSH_TRUE:
+                            _stack[@ sp++] = true;
+                            break;
+                        
+                        case PROG_OP.PUSH_FALSE:
+                            _stack[@ sp++] = false;
+                            break;
+                        
+                        case PROG_OP.PUSH_GLOBAL_REF:
+                            _stack[@ sp++] = _gref;
+                            break;
+                        
+                        case PROG_OP.PUSH_CONST:
+                            _stack[@ sp++] = _constants[_arg];
+                            break;
+                        
                         case PROG_OP.POP:
                             if (sp > 0)
                             {
@@ -860,7 +895,7 @@ function ProgVM() constructor
                                 var _args_arr = array_create(_arg_count);
                                 for (var i = _arg_count - 1; i >= 0; i--) _args_arr[i] = _stack[--sp];
                                 
-                                var _vm = new ProgVM();
+                                var _vm = ProgVM_create();
                                 _vm.context = context;
                                 _vm.call_stack = variable_clone(call_stack);
                                 _vm.current_this = _inst;
@@ -872,6 +907,7 @@ function ProgVM() constructor
                                 _vm.current_scope.vars[$ "argc"] = _arg_count;
                                 
                                 _vm.run(_class.constructor_code);
+                                ProgVM_free(_vm);
                             }
                             else
                             {
@@ -1117,5 +1153,77 @@ function ProgVM() constructor
     static runtime_error = function(_type, _message, _line = 0)
     {
         throw { type: _type, message: _message, line: _line }
+    }
+}
+
+// ========== VM POOL MANAGEMENT (Global) ==========
+
+/// @desc Initialize VM pool if needed
+function proglang_vm_pool_init()
+{
+    if (!variable_global_exists("proglang_vm_pool"))
+    {
+        global.proglang_vm_pool = [];
+        global.proglang_vm_pool_max = 32;
+        global.proglang_vm_alloc_count = 0;
+        global.proglang_vm_gc_threshold = 100;
+    }
+}
+
+/// @desc Acquire a VM instance (from pool or new)
+/// @returns {ProgVM}
+function ProgVM_create()
+{
+    proglang_vm_pool_init();
+    
+    global.proglang_vm_alloc_count++;
+    
+    // Auto-GC check
+    if (global.proglang_vm_alloc_count >= global.proglang_vm_gc_threshold)
+    {
+        ProgVM_gc();
+        global.proglang_vm_alloc_count = 0;
+    }
+    
+    if (array_length(global.proglang_vm_pool) > 0)
+    {
+        var _vm = array_pop(global.proglang_vm_pool);
+        _vm.reset();
+        return _vm;
+    }
+    
+    return new ProgVM();
+}
+
+/// @desc Release a VM instance back to the pool
+/// @param {ProgVM} _vm
+function ProgVM_free(_vm)
+{
+    proglang_vm_pool_init();
+    
+    if (array_length(global.proglang_vm_pool) < global.proglang_vm_pool_max)
+    {
+        _vm.reset();
+        array_push(global.proglang_vm_pool, _vm);
+    }
+}
+
+/// @desc Garbage collection - clear unused VMs from pool
+function ProgVM_gc()
+{
+    proglang_vm_pool_init();
+    
+    // Clear excess pool entries
+    while (array_length(global.proglang_vm_pool) > global.proglang_vm_pool_max / 2)
+    {
+        array_pop(global.proglang_vm_pool);
+    }
+    
+    // Force GML garbage collection
+    gc_collect();
+    
+    if (IS_DEVELOPER_MODE)
+    {
+        show_debug_message($"[ProgVM] GC: pool size = {array_length(global.proglang_vm_pool)}");
     }
 }

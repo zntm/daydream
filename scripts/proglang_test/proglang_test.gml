@@ -378,11 +378,12 @@ function proglang_test() {
         var _lib_bc = proglang_compile(_lib_code);
         
         // 2. Run Module to populate exports
-        var _lib_vm = new ProgVM();
+        var _lib_vm = ProgVM_create();
         if (!variable_global_exists("proglang_modules")) global.proglang_modules = {}
         global.proglang_modules[$ "math_lib"] = { exports: {}, loaded: true }
         _lib_vm.active_module = global.proglang_modules[$ "math_lib"];
         _lib_vm.run(_lib_bc);
+        ProgVM_free(_lib_vm);
         
         // 3. Run Consumer
         var _main_code = "import PI, add from \"math_lib\"; return add(PI, 2.0);";
@@ -1124,11 +1125,12 @@ function proglang_test() {
         var _mod_bc = proglang_compile(_mod_code);
         
         // Run Module
-        var _mod_vm = new ProgVM();
+        var _mod_vm = ProgVM_create();
         if (!variable_global_exists("proglang_modules")) global.proglang_modules = {}
         global.proglang_modules[$ "vars_lib"] = { exports: {}, loaded: true }
         _mod_vm.active_module = global.proglang_modules[$ "vars_lib"];
         _mod_vm.run(_mod_bc);
+        ProgVM_free(_mod_vm);
         
         // Consumer
         var _consumer_code = 

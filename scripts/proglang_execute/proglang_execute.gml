@@ -19,7 +19,7 @@ function proglang_execute(_source, _context = {}, _filepath = "")
         return undefined;
     }
     
-    var _vm = new ProgVM();
+    var _vm = ProgVM_create();
     
     _vm.context = _context;
     
@@ -37,6 +37,8 @@ function proglang_execute(_source, _context = {}, _filepath = "")
     var _result = _vm.run(_bytecode);
     
     proglang_run_pending();
+    
+    ProgVM_free(_vm);
     
     return _result;
 }
