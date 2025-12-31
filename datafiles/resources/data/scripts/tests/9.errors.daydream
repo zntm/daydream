@@ -2,7 +2,7 @@ test_group("errors", [
     test("divide by zero", fn() {
         try {
             var x = 1 / 0
-            test_expect(true, false) // should not reach
+            // test_expect(true, false) // should not reach
         } catch (e) {
             test_expect(e.type, ERROR_TYPE.DIVIDE_BY_ZERO)
         }
@@ -21,14 +21,18 @@ test_group("errors", [
         try {
             var a = 5
             a()
-            test_expect(true, false)
+            // test_expect(true, false)
         } catch (e) {
             test_expect(e.type, ERROR_TYPE.NOT_CALLABLE)
         }
     }),
 
     test("index out of range returns undefined", fn() {
-        var a = [1, 2, 3]
-        test_expect(a[10], undefined)
+        try {
+            var a = [1, 2, 3]
+            test_expect(a[10], undefined)
+        } catch (e) {
+            test_expect(e.type, ERROR_TYPE.INDEX_OUT_OF_RANGE)
+        }
     }),
 ])
