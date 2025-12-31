@@ -21,7 +21,10 @@ function worldgen_get_surface_height(_x, _seed, _world_data = global.world_data[
     var _biome_data = global.biome_data[$ _biome_id];
     
     // Calculate base terrain height for this position
-    var _base_noise = open_simplex_noise(_x * _world_data.get_surface_noise_scale(), -40, _base_amplitude, _octaves);
+    // Use biome salt to decorrelate terrain between different biome families
+    // Biome variants with the same salt will share identical terrain shapes
+    var _salt = _biome_data.get_salt();
+    var _base_noise = open_simplex_noise(_x * _world_data.get_surface_noise_scale(), -40 + _salt, _base_amplitude, _octaves);
     
     // Apply biome modifiers
     var _height_offset = _biome_data.get_terrain_height_offset();
@@ -41,15 +44,27 @@ function worldgen_get_surface_height(_x, _seed, _world_data = global.world_data[
     var _is_right_different = (_heat_right != _heat) || (_humidity_right != _humidity);
     var _is_boundary = _is_left_different || _is_right_different;
     
+    // Get neighbor biome salts - skip smoothing if they share the same salt
+    var _biome_id_left = _is_left_different ? _surface_biome_map[(_humidity_left << WORLDGEN_SIZE_HEAT_BIT) | _heat_left] : _biome_id;
+    var _biome_id_right = _is_right_different ? _surface_biome_map[(_humidity_right << WORLDGEN_SIZE_HEAT_BIT) | _heat_right] : _biome_id;
+    var _salt_left = global.biome_data[$ _biome_id_left].get_salt();
+    var _salt_right = global.biome_data[$ _biome_id_right].get_salt();
+    
+    // If all salts match, no smoothing needed (biome variants share terrain)
+    if (_salt == _salt_left && _salt == _salt_right)
+    {
+        _is_boundary = false;
+    }
+    
     if (_is_boundary)
     {
         var _total_weight = 1.0;
         var _weighted_height = _height;
         
         // Blend with left neighbor if different biome
-        if (_is_left_different)
+        // Skip blending if neighbor salt matches current salt
+        if (_is_left_different && _salt_left != _salt)
         {
-            var _biome_id_left = _surface_biome_map[(_humidity_left << WORLDGEN_SIZE_HEAT_BIT) | _heat_left];
             var _biome_left = global.biome_data[$ _biome_id_left];
             
             var _noise_left = open_simplex_noise((_x - _smoothing_range) * _world_data.get_surface_noise_scale(), -40, _base_amplitude, _octaves);
@@ -62,9 +77,9 @@ function worldgen_get_surface_height(_x, _seed, _world_data = global.world_data[
         }
         
         // Blend with right neighbor if different biome
-        if (_is_right_different)
+        // Skip blending if neighbor salt matches current salt
+        if (_is_right_different && _salt_right != _salt)
         {
-            var _biome_id_right = _surface_biome_map[(_humidity_right << WORLDGEN_SIZE_HEAT_BIT) | _heat_right];
             var _biome_right = global.biome_data[$ _biome_id_right];
             
             var _noise_right = open_simplex_noise((_x + _smoothing_range) * _world_data.get_surface_noise_scale(), -40, _base_amplitude, _octaves);

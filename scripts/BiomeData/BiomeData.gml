@@ -407,4 +407,16 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
     {
         return self[$ "___structure_length"] ?? 0;
     }
+    
+    static set_salt = function(_salt)
+    {
+        ___salt = _salt;
+        
+        return self;
+    }
+    
+    static get_salt = function()
+    {
+        return self[$ "___salt"] ?? 0;
+    }
 }

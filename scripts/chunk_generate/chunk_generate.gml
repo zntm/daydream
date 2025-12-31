@@ -376,6 +376,28 @@ function chunk_generate(_chunk)
                             _chunk.chunk_display |= 1 << CHUNK_DEPTH_LIQUID;
                         }
                     }
+                    else
+                    {
+                        // Lava ocean: fill deep cave voids with lava (bottom 32 tiles)
+                        static __LAVA_OCEAN_DEPTH = 32;
+                        var _depth_from_bottom = _world_height - _world_y;
+                        
+                        if (_depth_from_bottom <= __LAVA_OCEAN_DEPTH && _depth_from_bottom > 3)
+                        {
+                            var _lava_id = "phantasia:lava";
+                            var _lava_data = _item_data[$ _lava_id];
+                            
+                            if (_lava_data != undefined)
+                            {
+                                ++_chunk.chunk_count[@ CHUNK_DEPTH_LIQUID];
+                                
+                                _chunk.chunk[@ (CHUNK_DEPTH_LIQUID << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_lava_id)
+                                    .set_component("level", 8);
+                                
+                                _chunk.chunk_display |= 1 << CHUNK_DEPTH_LIQUID;
+                            }
+                        }
+                    }
                 }
             }
             

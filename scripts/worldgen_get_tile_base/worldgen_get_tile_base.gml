@@ -9,6 +9,29 @@
 /// @returns {String} Tile ID
 function worldgen_get_tile_base(_x, _y, _surface_biome, _cave_biome, _surface_height, _cave_above, _seed)
 {
+    // Get world data for bedrock/lava calculations
+    var _world_data = global.world_data[$ global.world_save_data.dimension];
+    var _world_height = _world_data.get_world_height();
+    
+    // Bedrock layer: bottom 3 tiles with randomized edges
+    // Layer 0-1: always bedrock, Layer 2: noise-based edge
+    var _bedrock_depth = _world_height - _y;
+    if (_bedrock_depth <= 3)
+    {
+        if (_bedrock_depth <= 1)
+        {
+            return "phantasia:bedrock";
+        }
+        // Use noise for ragged bedrock edge
+        var _bedrock_noise = open_simplex_noise(_x * 0.3, _seed * 50, 1.0, 1);
+        if (_bedrock_noise > (_bedrock_depth - 1) * 0.4)
+        {
+            return "phantasia:bedrock";
+        }
+    }
+    
+    // Note: Lava ocean is handled by worldgen_get_cave - empty caves in deep areas fill with lava
+    
     if (_y < _surface_height)
     {
         return TILE_EMPTY;
@@ -41,7 +64,6 @@ function worldgen_get_tile_base(_x, _y, _surface_biome, _cave_biome, _surface_he
     }
     
     // Surface biome tiles with horizontal blending
-    var _world_data = global.world_data[$ global.world_save_data.dimension];
     
     // Check if we're near a biome boundary for horizontal tile blending
     var _heat = worldgen_get_heat(_x, 0, _seed, _world_data);
