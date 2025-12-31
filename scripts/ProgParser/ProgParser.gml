@@ -649,24 +649,24 @@ function ProgParser(_tokens) constructor
 
             if (match(PROG_TOKEN.IN))
             { // CHANGED check to match
-                 _is_for_in = true;
-                 
-                 // Check for modifier (key/value)
-                 if (check(PROG_TOKEN.IDENTIFIER)) {
-                     var _next = peek();
-                     if (_next.lexeme == "key" || _next.lexeme == "value") {
-                         _for_in_modifier = advance().lexeme;
-                     }
-                 }
-                 _is_for_in = true;
-                 // Extract variable name from decl
-                 if (_init.type == PROG_AST.VAR_DECL) _for_in_var = _init.name;
-                 else if (_init.type == PROG_AST.DESTRUCTURING_DECL) error_at_current("Destructuring in for-in not yet supported.");
+                _is_for_in = true;
+                
+                // Check for modifier (key/value)
+                if (check(PROG_TOKEN.IDENTIFIER)) {
+                    var _next = peek();
+                    if (_next.lexeme == "key" || _next.lexeme == "value") {
+                        _for_in_modifier = advance().lexeme;
+                    }
+                }
+                _is_for_in = true;
+                // Extract variable name from decl
+                if (_init.type == PROG_AST.VAR_DECL) _for_in_var = _init.name;
+                else if (_init.type == PROG_AST.DESTRUCTURING_DECL) error_at_current("Destructuring in for-in not yet supported.");
             }
             else
             {
-                 if (_for_in_val_var != undefined) error_at_current("Unexpected comma in variable declaration.");
-                 match(PROG_TOKEN.SEMICOLON); // Consume the semi we skipped
+                if (_for_in_val_var != undefined) error_at_current("Unexpected comma in variable declaration.");
+                match(PROG_TOKEN.SEMICOLON); // Consume the semi we skipped
             }
         } 
         else if (!match(PROG_TOKEN.SEMICOLON))
@@ -676,69 +676,16 @@ function ProgParser(_tokens) constructor
             var _expression = parse_assignment();
             
             // Check if parsing consumed 'in' operator (e.g. "for (item in items)")
-            if (_expression.type == PROG_AST.IN_EXPR)
+            // If so, error because we require 'var'
+            if (_expression.type == PROG_AST.IN_EXPR || check(PROG_TOKEN.COMMA) || check(PROG_TOKEN.IN))
             {
-                 _is_for_in = true;
-                 if (_expression.left.type == PROG_AST.IDENTIFIER) _for_in_var = _expression.left.name;
-                 else error_at_current("Expected identifier in for-in loop.");
-                 
-                 _for_in_modifier = _expression.modifier;
-                 
-                 // The 'collection' is the right side of the IN expression
-                 // Note: We need to handle this carefully because parse_for_stmt expects to parse collection next
-                 // But we already have it.
-                 // We can restructure slightly.
-            }
-            // Check for comma if it looks like start of for-in with 2 vars
-            else if (check(PROG_TOKEN.COMMA))
-            { 
-                 // NOTE: parse_expression stops at comma usually.
-                 advance(); // consume comma
-                 var _val_token = consume(PROG_TOKEN.IDENTIFIER, "Expected value variable name.");
-                 _for_in_val_var = _val_token.lexeme;
-                 
-                  if (match(PROG_TOKEN.IN))
-                 {
-                    _is_for_in = true;
-                    
-                    // Check for modifier (key/value)
-                     if (check(PROG_TOKEN.IDENTIFIER)) {
-                         var _next = peek();
-                         if (_next.lexeme == "key" || _next.lexeme == "value") {
-                             _for_in_modifier = advance().lexeme;
-                         }
-                     }
-                    // Verify _expression is valid lvalue (Identifier)
-                    if (_expression.type == PROG_AST.IDENTIFIER) _for_in_var = _expression.name;
-                    else error_at_current("Expected identifier in for-in loop.");
-                 }
-            }
-            else if (match(PROG_TOKEN.IN))
-            {
-                _is_for_in = true;
-                
-                // Check for modifier (key/value)
-                 if (check(PROG_TOKEN.IDENTIFIER)) {
-                     var _next = peek();
-                     if (_next.lexeme == "key" || _next.lexeme == "value") {
-                         _for_in_modifier = advance().lexeme;
-                     }
-                 }
-                // Verify _expression is valid lvalue (Identifier)
-                if (_expression.type == PROG_AST.IDENTIFIER) _for_in_var = _expression.name;
-                else error_at_current("Expected identifier in for-in loop.");
+                 error_at_current("'for-in' loops require 'var' declaration (e.g. 'for (var i in list)').");
             }
             
-             // For IN_EXPR case, we need to handle the collection outside
-        
-            if (!_is_for_in && _expression.type != PROG_AST.IN_EXPR)
-            {
-                if (_for_in_val_var != undefined) error_at_current("Unexpected variable in for loop initializer.");
-                // It's a normal for loop init. Convert to assignment if needed, then expect semicolon.
-                _expression = _convert_to_assignment(_expression);
-                match(PROG_TOKEN.SEMICOLON);
-                _init = new ProgASTExpressionStmt(_expression);
-            }
+            // It's a normal for loop init. Convert to assignment if needed, then expect semicolon.
+            _expression = _convert_to_assignment(_expression);
+            match(PROG_TOKEN.SEMICOLON);
+            _init = new ProgASTExpressionStmt(_expression);
         }
         
         if (_is_for_in)

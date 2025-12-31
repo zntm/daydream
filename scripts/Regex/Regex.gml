@@ -1,7 +1,8 @@
 /// @desc GML Regex Engine with capture groups
 /// @param {string} _pattern The regex pattern
 /// @param {string} _flags The flags (i, g)
-function Regex(_pattern, _flags = "") constructor {
+function Regex(_pattern, _flags = "") constructor
+{
     pattern = _pattern;
     flags = _flags;
     __type__ = "regex"; // Type identifier for Proglang

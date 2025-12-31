@@ -254,7 +254,7 @@ test_group("error handling", [
         var sum = 0
         var items = [10, 20, undefined, 30]
 
-        for (item in items) {
+        for (var item in items) {
             try {
                 if (item == undefined) {
                     throw "bad item"

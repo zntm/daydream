@@ -108,7 +108,7 @@ test_group("iteration", [
         var arr = [ 1, 2, 3 ]
         var sum = 0
 
-        for (v in arr) {
+        for (var v in arr) {
             sum += v
         }
 
@@ -118,7 +118,7 @@ test_group("iteration", [
         var arr = [ 1, 2, 3 ]
         var sum = 0
 
-        for (v, i in arr) {
+        for (var v, i in arr) {
             sum += v + i
         }
 
@@ -223,7 +223,7 @@ test_group("algorithms", [
         ]
 
         fn find_item(items, name) {
-            for (item in items) {
+            for (var item in items) {
                 if (item.id == name) {
                     return item
                 }

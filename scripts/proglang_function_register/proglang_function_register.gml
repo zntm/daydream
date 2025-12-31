@@ -643,7 +643,7 @@ proglang_function_register("runtime_error", function(_args)
 {
     var _type = (array_length(_args) > 0) ? _args[0] : PROGLANG_ERROR_TYPE.RUNTIME;
     var _msg = (array_length(_args) > 1) ? _args[1] : "Runtime error";
-    throw { type: _type, message: _msg };
+    throw { type: _type, message: _msg }
 });
 
 // Debug & Utils
@@ -703,7 +703,7 @@ proglang_function_register("test_expect", function(_args, _vm = undefined)
     // Guard: test_expect must be called inside a test
     if (!global.proglang_test_state.in_test)
     {
-        throw { type: PROGLANG_ERROR_TYPE.RUNTIME, message: "test_expect() can only be called inside a test or test_group." };
+        throw { type: PROGLANG_ERROR_TYPE.RUNTIME, message: "test_expect() can only be called inside a test or test_group." }
     }
     
     var _actual = _args[0];

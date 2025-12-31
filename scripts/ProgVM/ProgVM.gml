@@ -72,12 +72,12 @@ function ProgVM_reset(_vm)
     
     // Create new root scope
     var _scope = array_create(PROG_SCOPE.SIZE);
-    _scope[PROG_SCOPE.VARS] = {};
+    _scope[PROG_SCOPE.VARS] = {}
     _scope[PROG_SCOPE.PARENT] = undefined;
     
     _vm[@ PROG_VM.SCOPE] = _scope;
     _vm[@ PROG_VM.CONTEXT] = undefined;
-    _vm[@ PROG_VM.GLOBAL_REF] = {};
+    _vm[@ PROG_VM.GLOBAL_REF] = {}
     _vm[@ PROG_VM.TRY_STACK] = [];
     _vm[@ PROG_VM.CALL_STACK] = [];
     _vm[@ PROG_VM.CURRENT_THIS] = undefined;
@@ -515,7 +515,7 @@ function ProgVM_run(_vm, _bytecode)
                     case PROG_OP.PUSH_SCOPE:
                         // Array-based scope
                         var _new_scope = array_create(PROG_SCOPE.SIZE);
-                        _new_scope[PROG_SCOPE.VARS] = {};
+                        _new_scope[PROG_SCOPE.VARS] = {}
                         _new_scope[PROG_SCOPE.PARENT] = _vm[PROG_VM.SCOPE];
                         _vm[@ PROG_VM.SCOPE] = _new_scope;
                         break;
@@ -758,7 +758,7 @@ function ProgVM_run(_vm, _bytecode)
                         
                     case PROG_OP.OBJECT_NEW:
                         var _size = _arg; // Number of pairs
-                        var _obj = {};
+                        var _obj = {}
                         for (var i = 0; i < _size; i++)
                         {
                             var _val = _stack[--_sp];
@@ -848,7 +848,7 @@ function ProgVM_run(_vm, _bytecode)
                         var _inst = {
                             __class__: _class,
                             __type__: "instance"
-                        };
+                        }
                         
                         // Initialize fields
                         if (struct_exists(_class, "fields"))
@@ -914,7 +914,7 @@ function ProgVM_run(_vm, _bytecode)
                         _stack[@ _sp++] = {
                             __super__: _class_super.super_class,
                             receiver: _vm[PROG_VM.CURRENT_THIS]
-                        };
+                        }
                         break;
                         
                     case PROG_OP.PUSH_TRY:
@@ -935,11 +935,11 @@ function ProgVM_run(_vm, _bytecode)
                         if (is_array(_coll) && array_length(_coll) >= 3 && _coll[0] == "range")
                         {
                             // Range iterator: [1]=start, [2]=end (inclusive)
-                            _iter = { type: "range_iter", current: _coll[1], range_end: _coll[2], done: false };
+                            _iter = { type: "range_iter", current: _coll[1], range_end: _coll[2], done: false }
                         }
                         else if (is_array(_coll))
                         {
-                            _iter = { type: "array_iter", val: _coll, idx: 0, len: array_length(_coll) };
+                            _iter = { type: "array_iter", val: _coll, idx: 0, len: array_length(_coll) }
                         }
                         else if (is_struct(_coll))
                         {
@@ -949,11 +949,11 @@ function ProgVM_run(_vm, _bytecode)
                             }
                             
                             var _keys = variable_struct_get_names(_coll);
-                            _iter = { type: "struct_iter", val: _coll, keys: _keys, idx: 0, len: array_length(_keys) };
+                            _iter = { type: "struct_iter", val: _coll, keys: _keys, idx: 0, len: array_length(_keys) }
                         }
                         else
                         {
-                            _iter = { type: "empty", idx: 0, len: 0 };
+                            _iter = { type: "empty", idx: 0, len: 0 }
                         }
                         _stack[@ _sp++] = _iter;
                         break;
@@ -1146,18 +1146,18 @@ function ProgVM_create_impl()
     
     // Initial scope
     var _scope = array_create(PROG_SCOPE.SIZE);
-    _scope[PROG_SCOPE.VARS] = {};
+    _scope[PROG_SCOPE.VARS] = {}
     _scope[PROG_SCOPE.PARENT] = undefined;
     
     _vm[PROG_VM.SCOPE] = _scope;
     _vm[PROG_VM.CONTEXT] = undefined;
-    _vm[PROG_VM.GLOBAL_REF] = {};
+    _vm[PROG_VM.GLOBAL_REF] = {}
     _vm[PROG_VM.TRY_STACK] = [];
     _vm[PROG_VM.ACTIVE_MODULE] = undefined;
     _vm[PROG_VM.CALL_STACK] = [];
     _vm[PROG_VM.CURRENT_THIS] = undefined;
     _vm[PROG_VM.ACTIVE_CLASS] = undefined;
-    _vm[PROG_VM.CLASS_REGISTRY] = {};
+    _vm[PROG_VM.CLASS_REGISTRY] = {}
     
     return _vm;
 }
@@ -1220,5 +1220,5 @@ function ProgVM_gc()
 /// @param {string} _msg Error message
 function runtime_error(_type, _msg)
 {
-    throw { type: _type, message: _msg, stacktrace: debug_get_callstack() };
+    throw { type: _type, message: _msg, stacktrace: debug_get_callstack() }
 }
