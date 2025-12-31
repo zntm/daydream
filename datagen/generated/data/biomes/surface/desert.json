@@ -95,30 +95,59 @@
             "generate_on": "#phantasia:tile/placement/plant_on"
         }
     ],
+    "terrain_modifier": {
+        "height_offset": 8,
+        "amplitude_scale": 0.8
+    },
     "tile": {
         "top_layer": {
-            "base": {
-                "id": "phantasia:sand"
-            },
-            "wall": {
-                "id": "phantasia:sandstone_wall"
-            }
+            "base": [
+                {
+                    "id": "phantasia:sand"
+                }
+            ],
+            "wall": [
+                {
+                    "id": "phantasia:sandstone_wall",
+                    "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
+                }
+            ]
         },
         "middle_layer": {
-            "base": {
-                "id": "phantasia:sand"
-            },
-            "wall": {
-                "id": "phantasia:sandstone_wall"
-            }
+            "base": [
+                {
+                    "id": "phantasia:sand"
+                }
+            ],
+            "wall": [
+                {
+                    "id": "phantasia:sandstone_wall",
+                    "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
+                }
+            ]
         },
         "bottom_layer": {
-            "base": {
-                "id": "phantasia:sandstone"
-            },
-            "wall": {
-                "id": "phantasia:sandstone_wall"
-            }
+            "base": [
+                {
+                    "id": "phantasia:sandstone"
+                }
+            ],
+            "wall": [
+                {
+                    "id": "phantasia:sandstone_wall",
+                    "weight": 3
+                },
+                {
+                    "id": "$EMPTY",
+                    "weight": 2
+                }
+            ]
         }
     }
 }

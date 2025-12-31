@@ -8,12 +8,16 @@ function worldgen_get_biome_cave(_x, _y, _surface_height, _seed, _world_data = g
 {
     var _surface_offset = worldgen_get_surface_noise_offset(_x, _seed);
     
-    if (_y <= _surface_height + 40)
+    if (_y <= _surface_height + 8)
     {
         return undefined;
     }
     
+    // Debug
+    // show_debug_message($"Checking cave biome at {_y} (Surf: {_surface_height})");
+    
     // Check for optional image-based cave biome map
+    /*
     var _cave_map = _world_data.get_cave_biome_map();
     
     if (_cave_map != undefined)
@@ -25,6 +29,7 @@ function worldgen_get_biome_cave(_x, _y, _surface_height, _seed, _world_data = g
             return _biome;
         }
     }
+    */
     
     var _default = _world_data.get_cave_biome_default();
     var _default_length = _world_data.get_cave_biome_default_length();

@@ -1,45 +1,32 @@
 {
     "background": {
-        "id": "phantasia:background/chasm",
+        "id": "phantasia:background/ocean",
         "blend": 0.7
     },
-    "foliage": [
-        {
-            "id": "phantasia:rock",
-            "chance": 0.07,
-            "generate_on": [
-                "phantasia:stone"
-            ]
-        },
-        {
-            "id": "phantasia:twig",
-            "chance": 0.0007,
-            "generate_on": [
-                "phantasia:stone"
-            ]
-        }
-    ],
+    "creatures": [],
+    "foliage": [],
+    "is_ocean": true,
     "light_colour": {
         "dawn": "#374A91",
         "day": "#FFFFFF",
         "dusk": "#C68B69",
         "night": "#141B35"
     },
-    "map_colour": "#000000",
+    "map_colour": "#2563A8",
     "music": [
         {
             "id": "phantasia:music/12_hours_at_ease",
             "gain": 0.6
         },
         {
-            "id": "phantasia:music/behind",
-            "gain": 0.5
+            "id": "phantasia:music/liminal",
+            "gain": 0.7
         }
     ],
     "sky_colour": {
         "dawn": {
-            "base": "#180738",
-            "gradient": "#2A1504"
+            "base": "#292231",
+            "gradient": "#37232C"
         },
         "day": {
             "base": "#5F91FE",
@@ -50,46 +37,25 @@
             "gradient": "#DA651C"
         },
         "night": {
-            "base": "#000019",
-            "gradient": "#020008"
+            "base": "#2B243F",
+            "gradient": "#1E1F2B"
         }
     },
-    "structures": [
-        {
-            "id": "phantasia:ore/coal",
-            "chance": 0.003,
-            "range_min": 0,
-            "range_max": 768
-        },
-        {
-            "id": "phantasia:ore/copper",
-            "chance": 0.003,
-            "range_min": 0,
-            "range_max": 768
-        },
-        {
-            "id": "phantasia:ore/iron",
-            "chance": 0.003,
-            "range_min": 640,
-            "range_max": 768
-        },
-        {
-            "id": "phantasia:ore/iron",
-            "chance": 0.003,
-            "range_min": 712,
-            "range_max": 768
-        }
-    ],
+    "structures": [],
+    "terrain_modifier": {
+        "height_offset": -80,
+        "amplitude_scale": 0.3
+    },
     "tile": {
         "top_layer": {
             "base": [
                 {
-                    "id": "phantasia:stone"
+                    "id": "phantasia:sand"
                 }
             ],
             "wall": [
                 {
-                    "id": "phantasia:stone_wall",
+                    "id": "phantasia:sandstone_wall",
                     "weight": 4
                 },
                 {
@@ -100,7 +66,7 @@
         "middle_layer": {
             "base": [
                 {
-                    "id": "phantasia:stone"
+                    "id": "phantasia:gravel"
                 }
             ],
             "wall": [

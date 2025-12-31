@@ -50,6 +50,11 @@
                 "min": 22,
                 "max": 34
             }
+        },
+        "sky": {
+            "enabled": true,
+            "threshold": 256,
+            "id": "phantasia:sky/floating_islands"
         }
     },
     "cave": {
@@ -60,22 +65,36 @@
         },
         "system": [
             {
-                "range_min": 512,
-                "range_max": 1000,
+                "range_min": 50,
+                "range_max": 70,
                 "threshold": {
-                    "octaves": 4,
-                    "min": 50,
-                    "max": 60
+                    "octaves": 4
                 }
             },
             {
-                "range_min": 600,
-                "range_max": 1000,
+                "range_min": 116,
+                "range_max": 140,
                 "threshold": {
-                    "octaves": 4,
-                    "min": 116,
-                    "max": 130
+                    "octaves": 4
                 }
+            }
+        ],
+        "aquifers": [
+            {
+                "type": "phantasia:water",
+                "depth_min": 20,
+                "depth_max": 200,
+                "threshold": 200,
+                "octaves": 3,
+                "fill_level": 8
+            },
+            {
+                "type": "phantasia:lava",
+                "depth_min": 350,
+                "depth_max": 450,
+                "threshold": 220,
+                "octaves": 2,
+                "fill_level": 8
             }
         ]
     },

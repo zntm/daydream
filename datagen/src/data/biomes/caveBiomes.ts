@@ -9,6 +9,7 @@ import {
     BiomeSkyColor,
     BiomeStructure,
     BiomeTile,
+    TileEntry,
 } from "../biomes";
 
 export default [
@@ -33,15 +34,24 @@ export default [
             {
                 top_layer: new BiomeTile(
                     "phantasia:stone",
-                    "phantasia:stone_wall",
+                    [
+                        new TileEntry("phantasia:stone_wall", 4),
+                        new TileEntry("$EMPTY", 1),
+                    ],
                 ),
                 middle_layer: new BiomeTile(
                     "phantasia:stone",
-                    "phantasia:stone_wall",
+                    [
+                        new TileEntry("phantasia:stone_wall", 4),
+                        new TileEntry("$EMPTY", 1),
+                    ],
                 ),
                 bottom_layer: new BiomeTile(
                     "phantasia:stone",
-                    "phantasia:stone_wall",
+                    [
+                        new TileEntry("phantasia:stone_wall", 4),
+                        new TileEntry("$EMPTY", 1),
+                    ],
                 ),
             },
         )
@@ -97,15 +107,24 @@ export default [
             {
                 top_layer: new BiomeTile(
                     "phantasia:nightrock",
-                    "phantasia:nightrock_wall",
+                    [
+                        new TileEntry("phantasia:nightrock_wall", 4),
+                        new TileEntry("$EMPTY", 1),
+                    ],
                 ),
                 middle_layer: new BiomeTile(
                     "phantasia:nightrock",
-                    "phantasia:nightrock_wall",
+                    [
+                        new TileEntry("phantasia:nightrock_wall", 4),
+                        new TileEntry("$EMPTY", 1),
+                    ],
                 ),
                 bottom_layer: new BiomeTile(
                     "phantasia:nightrock",
-                    "phantasia:nightrock_wall",
+                    [
+                        new TileEntry("phantasia:nightrock_wall", 4),
+                        new TileEntry("$EMPTY", 1),
+                    ],
                 ),
             },
         )

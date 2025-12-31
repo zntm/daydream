@@ -72,6 +72,40 @@ export class WorldCaveBiome {
     }
 }
 
+export class WorldSky {
+    private enabled: boolean;
+    private id: string;
+    private threshold: number;
+    private spacing: number;
+    private radius: number;
+    private thickness: number;
+    private noise_scale_region: number;
+    private noise_scale_edge: number;
+    private noise_scale_detail: number;
+
+    constructor(
+        enabled: boolean = true,
+        id: string = "phantasia:sky/floating_islands",
+        threshold: number = 256,
+        spacing: number = 32,
+        radius: number = 18,
+        thickness: number = 10,
+        noiseScaleRegion: number = 0.12,
+        noiseScaleEdge: number = 0.15,
+        noiseScaleDetail: number = 0.3
+    ) {
+        this.enabled = enabled;
+        this.id = id;
+        this.threshold = threshold;
+        this.spacing = spacing;
+        this.radius = radius;
+        this.thickness = thickness;
+        this.noise_scale_region = noiseScaleRegion;
+        this.noise_scale_edge = noiseScaleEdge;
+        this.noise_scale_detail = noiseScaleDetail;
+    }
+}
+
 export class WorldBiome {
     private cave: {
         default: WorldCaveBiome[];
@@ -89,6 +123,8 @@ export class WorldBiome {
         offset: Noise;
     };
 
+    private sky?: WorldSky;
+
     constructor(
         defaultCaveBiomes: WorldCaveBiome[],
         caveNoise: Noise,
@@ -100,6 +136,7 @@ export class WorldBiome {
         caveHeat?: Noise,
         caveHumidity?: Noise,
         caveMap?: string,
+        sky?: WorldSky,
     ) {
         this.cave = {
             default: defaultCaveBiomes,
@@ -115,16 +152,36 @@ export class WorldBiome {
             map: surfaceMap,
             offset: surfaceOffset,
         };
+        this.sky = sky;
+    }
+}
+
+export class WorldSurfaceSmoothing {
+    private range: number;
+    private factor: number;
+
+    constructor(range: number = 32, factor: number = 0.6) {
+        this.range = range;
+        this.factor = factor;
     }
 }
 
 export class WorldSurface {
     private start: number;
     private noise_offset: Noise;
+    private smoothing: WorldSurfaceSmoothing;
+    private noise_scale: number;
 
-    constructor(start: number, noiseOffset: Noise) {
+    constructor(
+        start: number, 
+        noiseOffset: Noise,
+        smoothing: WorldSurfaceSmoothing = new WorldSurfaceSmoothing(),
+        noiseScale: number = 0.015625
+    ) {
         this.start = start;
         this.noise_offset = noiseOffset;
+        this.smoothing = smoothing;
+        this.noise_scale = noiseScale;
     }
 }
 
@@ -140,13 +197,59 @@ export class WorldCaveSystem {
     }
 }
 
-export class WorldCave {
-    start: Noise;
-    system: WorldCaveSystem[];
+export class WorldAquifer {
+    private type: string;           // Liquid tile ID (e.g., "phantasia:water")
+    private depth_min: number;      // Min depth from surface
+    private depth_max: number;      // Max depth from surface
+    private threshold: number;      // Noise threshold (0-255, higher = rarer)
+    private octaves: number;        // Noise octaves
+    private fill_level: number;     // Liquid fill level (1-8)
+    private noise_scale: number;    // Noise scale
 
-    constructor(start: Noise, system: WorldCaveSystem[]) {
+    constructor(
+        type: string,
+        depthMin: number,
+        depthMax: number,
+        threshold: number,
+        octaves: number = 3,
+        fillLevel: number = 8,
+        noiseScale: number = 0.02
+    ) {
+        this.type = type;
+        this.depth_min = depthMin;
+        this.depth_max = depthMax;
+        this.threshold = threshold;
+        this.octaves = octaves;
+        this.fill_level = fillLevel;
+        this.noise_scale = noiseScale;
+    }
+}
+
+export class WorldCave {
+    private start: Noise;
+    private system: WorldCaveSystem[];
+    private aquifers?: WorldAquifer[];
+    private noise_scale: number;
+    private breach_threshold: number;
+    private breach_depth: number;
+    private transition_threshold: number;
+
+    constructor(
+        start: Noise, 
+        system: WorldCaveSystem[], 
+        aquifers?: WorldAquifer[],
+        noiseScale: number = 0.015625,
+        breachThreshold: number = 242,
+        breachDepth: number = -8,
+        transitionThreshold: number = 220
+    ) {
         this.start = start;
         this.system = system;
+        if (aquifers) this.aquifers = aquifers;
+        this.noise_scale = noiseScale;
+        this.breach_threshold = breachThreshold;
+        this.breach_depth = breachDepth;
+        this.transition_threshold = transitionThreshold;
     }
 }
 
@@ -226,12 +329,18 @@ export default [
                 // Use surface logic for caves for now (placeholder values)
                 new Noise(4.5),
                 new Noise(2.75),
-                "phantasia:world/playground/map",
+                undefined, // caveMap removed
+                new WorldSky() // Default sky configuration
             ),
             new WorldSurface(512, new Noise(4, 40, 96)),
             new WorldCave(new Noise(0, 12, 2), [
-                new WorldCaveSystem(512, 1000, new Noise(4, 50, 60)),
-                new WorldCaveSystem(600, 1000, new Noise(4, 116, 130)),
+                new WorldCaveSystem(50, 70, new Noise(4)),
+                new WorldCaveSystem(116, 140, new Noise(4)),
+            ], [
+                // Water aquifers: shallow caves (20-200 blocks below surface)
+                new WorldAquifer("phantasia:water", 20, 200, 200, 3, 8),
+                // Lava aquifers: deep caves (350-450 blocks below surface)
+                new WorldAquifer("phantasia:lava", 350, 450, 220, 2, 8),
             ]),
         ),
     ),

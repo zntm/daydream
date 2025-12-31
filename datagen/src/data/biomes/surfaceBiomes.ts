@@ -10,6 +10,8 @@ import {
     BiomeSkyColor,
     BiomeStructure,
     BiomeTile,
+    BiomeTerrainModifier,
+    TileEntry,
 } from "../biomes";
 
 export default [
@@ -34,18 +36,28 @@ export default [
             {
                 top_layer: new BiomeTile(
                     "phantasia:sand",
-                    "phantasia:sandstone_wall",
+                    [
+                        new TileEntry("phantasia:sandstone_wall", 4),
+                        new TileEntry("$EMPTY", 1),
+                    ],
                 ),
                 middle_layer: new BiomeTile(
                     "phantasia:sand",
-                    "phantasia:sandstone_wall",
+                    [
+                        new TileEntry("phantasia:sandstone_wall", 4),
+                        new TileEntry("$EMPTY", 1),
+                    ],
                 ),
                 bottom_layer: new BiomeTile(
                     "phantasia:sandstone",
-                    "phantasia:sandstone_wall",
+                    [
+                        new TileEntry("phantasia:sandstone_wall", 3),
+                        new TileEntry("$EMPTY", 2),
+                    ],
                 ),
             },
         )
+            .setTerrainModifier(new BiomeTerrainModifier(8, 0.8))
             .setMusic([
                 new Sound("phantasia:music/dune", 0.3),
                 new Sound("phantasia:music/field_of_concourse", 0.4),
@@ -106,18 +118,35 @@ export default [
             {
                 top_layer: new BiomeTile(
                     "phantasia:grass_block",
-                    "phantasia:dirt_wall",
+                    [
+                        new TileEntry("phantasia:dirt_wall", 4),
+                        new TileEntry("$EMPTY", 1),
+                    ],
                 ),
                 middle_layer: new BiomeTile(
                     "phantasia:dirt",
-                    "phantasia:dirt_wall",
+                    [
+                        new TileEntry("phantasia:dirt_wall", 4),
+                        new TileEntry("$EMPTY", 1),
+                    ],
                 ),
                 bottom_layer: new BiomeTile(
                     "phantasia:stone",
-                    "phantasia:stone_wall",
+                    [
+                        new TileEntry("phantasia:stone_wall", 4),
+                        new TileEntry("$EMPTY", 1),
+                    ],
                 ),
             },
         )
+            .setTerrainModifier(new BiomeTerrainModifier(0))
+            .setShoreTiles(new BiomeTile(
+                "phantasia:sand",
+                [
+                    new TileEntry("phantasia:sandstone_wall", 4),
+                    new TileEntry("$EMPTY", 1),
+                ],
+            ))
             .setMusic([
                 new Sound("phantasia:music/field_of_concourse", 0.7),
                 new Sound("phantasia:music/liminal", 0.7),
@@ -220,18 +249,28 @@ export default [
             {
                 top_layer: new BiomeTile(
                     "phantasia:grass_block_swamp",
-                    "phantasia:dirt_wall",
+                    [
+                        new TileEntry("phantasia:dirt_wall", 4),
+                        new TileEntry("$EMPTY", 1),
+                    ],
                 ),
                 middle_layer: new BiomeTile(
                     "phantasia:dirt",
-                    "phantasia:dirt_wall",
+                    [
+                        new TileEntry("phantasia:dirt_wall", 4),
+                        new TileEntry("$EMPTY", 1),
+                    ],
                 ),
                 bottom_layer: new BiomeTile(
                     "phantasia:stone",
-                    "phantasia:stone_wall",
+                    [
+                        new TileEntry("phantasia:stone_wall", 4),
+                        new TileEntry("$EMPTY", 1),
+                    ],
                 ),
             },
         )
+            .setTerrainModifier(new BiomeTerrainModifier(-12, 0.7))
             .setMusic([
                 new Sound("phantasia:music/12_hours_at_ease", 0.7),
                 new Sound("phantasia:music/limerick", 0.7),
@@ -313,18 +352,28 @@ export default [
             {
                 top_layer: new BiomeTile(
                     "phantasia:grass_block_taiga",
-                    "phantasia:dirt_wall",
+                    [
+                        new TileEntry("phantasia:dirt_wall", 4),
+                        new TileEntry("$EMPTY", 1),
+                    ],
                 ),
                 middle_layer: new BiomeTile(
                     "phantasia:dirt",
-                    "phantasia:dirt_wall",
+                    [
+                        new TileEntry("phantasia:dirt_wall", 4),
+                        new TileEntry("$EMPTY", 1),
+                    ],
                 ),
                 bottom_layer: new BiomeTile(
                     "phantasia:stone",
-                    "phantasia:stone_wall",
+                    [
+                        new TileEntry("phantasia:stone_wall", 4),
+                        new TileEntry("$EMPTY", 1),
+                    ],
                 ),
             },
         )
+            .setTerrainModifier(new BiomeTerrainModifier(4, 1.2))
             .setMusic([
                 new Sound("phantasia:music/12_hours_at_ease", 0.6),
                 new Sound("phantasia:music/fall", 0.6),
@@ -388,5 +437,57 @@ export default [
                     "#phantasia:tile/placement/plant_on",
                 ),
             ]),
+    ),
+    // Ocean
+    new DatagenReturnData(
+        "generated/data/biomes/surface/ocean.json",
+        new Biome(
+            new BiomeBackground("phantasia:background/ocean", 0.7),
+            "#2563A8",
+            {
+                dawn: new BiomeSkyColor("#292231", "#37232C"),
+                day: new BiomeSkyColor("#5F91FE", "#244FE9"),
+                dusk: new BiomeSkyColor("#C4502D", "#DA651C"),
+                night: new BiomeSkyColor("#2b243f", "#1e1f2b"),
+            },
+            {
+                dawn: "#374A91",
+                day: "#FFFFFF",
+                dusk: "#C68B69",
+                night: "#141B35",
+            },
+            {
+                top_layer: new BiomeTile(
+                    "phantasia:sand",
+                    [
+                        new TileEntry("phantasia:sandstone_wall", 4),
+                        new TileEntry("$EMPTY", 1),
+                    ],
+                ),
+                middle_layer: new BiomeTile(
+                    "phantasia:gravel",
+                    [
+                        new TileEntry("phantasia:stone_wall", 4),
+                        new TileEntry("$EMPTY", 1),
+                    ],
+                ),
+                bottom_layer: new BiomeTile(
+                    "phantasia:stone",
+                    [
+                        new TileEntry("phantasia:stone_wall", 4),
+                        new TileEntry("$EMPTY", 1),
+                    ],
+                ),
+            },
+        )
+            .setTerrainModifier(new BiomeTerrainModifier(-80, 0.3))
+            .setIsOcean()
+            .setMusic([
+                new Sound("phantasia:music/12_hours_at_ease", 0.6),
+                new Sound("phantasia:music/liminal", 0.7),
+            ])
+            .setCreatures([])
+            .setFoliage([])
+            .setStructures([]),
     ),
 ];
