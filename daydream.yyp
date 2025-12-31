@@ -1535,6 +1535,7 @@
     {"id":{"name":"ProjectileData","path":"scripts/ProjectileData/ProjectileData.yy",},},
     {"id":{"name":"random_seeded","path":"scripts/random_seeded/random_seeded.yy",},},
     {"id":{"name":"rectangle_distance","path":"scripts/rectangle_distance/rectangle_distance.yy",},},
+    {"id":{"name":"Regex","path":"scripts/Regex/Regex.yy",},},
     {"id":{"name":"render_attire","path":"scripts/render_attire/render_attire.yy",},},
     {"id":{"name":"render_background_celestial","path":"scripts/render_background_celestial/render_background_celestial.yy",},},
     {"id":{"name":"render_background_parallax","path":"scripts/render_background_parallax/render_background_parallax.yy",},},
