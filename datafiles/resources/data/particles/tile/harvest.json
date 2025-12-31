@@ -1,7 +1,19 @@
 {
     "direction": {
-        "direction_min": 20,
-        "direction_max": 160
+        "direction_min": {
+            "values": {
+                "min": 20,
+                "max": 160
+            },
+            "type": "smart_value:random"
+        },
+        "direction_max": {
+            "values": {
+                "min": 20,
+                "max": 160
+            },
+            "type": "smart_value:random"
+        }
     },
     "gravity": {
         "gravity_amount": 3,

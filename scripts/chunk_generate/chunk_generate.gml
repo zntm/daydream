@@ -1,6 +1,6 @@
 /// @function chunk_generate(_chunk)
-/// @desc Generate terrain for a chunk
-/// @param {Struct.Chunk} _chunk The chunk to generate
+/// @desc Generate terrain for a _chunk.chunk
+/// @param {Struct.Chunk} _chunk The _chunk.chunk to generate
 function chunk_generate(_chunk)
 {
     static __cave_bit = array_create(CHUNK_SIZE);
@@ -24,10 +24,10 @@ function chunk_generate(_chunk)
     
     // Collect structures first
     var _structure_rectangle_length = collision_rectangle_list(
-        x - (TILE_SIZE / 2),
-        y - (TILE_SIZE / 2),
-        x - (TILE_SIZE / 2) + CHUNK_SIZE_DIMENSION,
-        y - (TILE_SIZE / 2) + CHUNK_SIZE_DIMENSION,
+        _chunk.x - (TILE_SIZE / 2),
+        _chunk.y - (TILE_SIZE / 2),
+        _chunk.x - (TILE_SIZE / 2) + CHUNK_SIZE_DIMENSION,
+        _chunk.y - (TILE_SIZE / 2) + CHUNK_SIZE_DIMENSION,
         obj_Structure,
         false,
         true,
@@ -58,7 +58,7 @@ function chunk_generate(_chunk)
     // Calculate heights and apply structure modifiers
     for (var i = 0; i < CHUNK_SIZE; ++i)
     {
-        var _world_x = _chunk_xstart + i;
+        var _world_x = _chunk.chunk_xstart + i;
         
         // Pass cached world_data
         var _surface_height = worldgen_get_surface_height(_world_x, _world_seed, _world_data);
@@ -79,7 +79,7 @@ function chunk_generate(_chunk)
         
         for (var j = 0; j < CHUNK_SIZE + 2; ++j)
         {
-            var _world_y = _chunk_ystart + j - 1;
+            var _world_y = _chunk.chunk_ystart + j - 1;
             
             // Pass cached world_data
             _cave_bit |= worldgen_get_cave(_world_x, _world_y, _surface_height, _cave_start, _world_seed, _world_data) << j;
@@ -94,14 +94,14 @@ function chunk_generate(_chunk)
         structure_generate(__structure_array[i], _world_seed, _item_data, _structure_data, _natural_structure_data);
     }
     
-    // Check if chunk is empty (above surface and no structures)
-    // ALSO check if chunk is in sky biome zone - don't skip those
+    // Check if _chunk.chunk is empty (above surface and no structures)
+    // ALSO check if _chunk.chunk is in sky biome zone - don't skip those
     var _sky_threshold = _world_data.get_sky_biome_threshold();
-    var _in_sky_zone = (chunk_ystart <= _sky_threshold) && _world_data.is_sky_biome_enabled();
+    var _in_sky_zone = (_chunk.chunk_ystart <= _sky_threshold) && _world_data.is_sky_biome_enabled();
     
-    if (_structure_rectangle_length <= 0) && (_surface_height_max > chunk_ystart + CHUNK_SIZE - 1) && (!_in_sky_zone) exit;
+    if (_structure_rectangle_length <= 0) && (_surface_height_max > _chunk.chunk_ystart + CHUNK_SIZE - 1) && (!_in_sky_zone) exit;
     
-    // Sort and Push structures to chunk
+    // Sort and Push structures to _chunk.chunk
     if (_structure_rectangle_length > 0)
     {
         array_sort(__structure_array, __structure_sort);
@@ -110,9 +110,9 @@ function chunk_generate(_chunk)
         {
             var _inst = __structure_array[l];
             
-            // Calculate relative position of structure to this chunk
-            var _structure_x = chunk_xstart - _inst.structure_xrelative;
-            var _structure_y = chunk_ystart - _inst.structure_yrelative;
+            // Calculate relative position of structure to this _chunk.chunk
+            var _structure_x = _chunk.chunk_xstart - _inst.structure_xrelative;
+            var _structure_y = _chunk.chunk_ystart - _inst.structure_yrelative;
             
             var _xscale = _inst.image_xscale;
             var _yscale = _inst.image_yscale;
@@ -125,12 +125,12 @@ function chunk_generate(_chunk)
             // Iterate over the structure bounds
             for (var _sy = 0; _sy < _yscale; ++_sy)
             {
-                var _chunk_y = _structure_ystart + _sy - chunk_ystart;
+                var _chunk_y = _structure_ystart + _sy - _chunk.chunk_ystart;
                 if (_chunk_y < 0 || _chunk_y >= CHUNK_SIZE) continue;
                 
                 for (var _sx = 0; _sx < _xscale; ++_sx)
                 {
-                    var _chunk_x = _structure_xstart + _sx - chunk_xstart;
+                    var _chunk_x = _structure_xstart + _sx - _chunk.chunk_xstart;
                     if (_chunk_x < 0 || _chunk_x >= CHUNK_SIZE) continue;
                     
                     var _structure_index = _sx + (_sy * _xscale);
@@ -152,21 +152,21 @@ function chunk_generate(_chunk)
                             __skip_z_array[@ _chunk_index] |= 1 << m;
                         }
                         
-                        // Write tile to chunk
+                        // Write tile to _chunk.chunk
                         // Chunk array index: (Depth << 10) | (Y << 5) | X
                         // Y is _chunk_y (j), X is _chunk_x (i)
-                        chunk[@ (m << (CHUNK_SIZE_BIT * 2)) | (_chunk_y << CHUNK_SIZE_BIT) | _chunk_x] = _tile;
+                        _chunk.chunk[@ (m << (CHUNK_SIZE_BIT * 2)) | (_chunk_y << CHUNK_SIZE_BIT) | _chunk_x] = _tile;
                         
                         if (_tile != TILE_EMPTY)
                         {
-                            ++chunk_count[@ m];
-                            chunk_display |= 1 << m;
+                            ++_chunk.chunk_count[@ m];
+                            _chunk.chunk_display |= 1 << m;
                         }
                         
                         var _ = _item_data[$ _tile.get_id()];
                         if ((1 << m) & ((1 << CHUNK_DEPTH_DEFAULT) | (1 << CHUNK_DEPTH_WALL))) && (_.has_type(ITEM_TYPE_BIT.SOLID | ITEM_TYPE_BIT.UNTOUCHABLE)) && (!_.is_transparent())
                         {
-                            chunk_covered[@ _chunk_x] |= 1 << _chunk_y;
+                            _chunk.chunk_covered[@ _chunk_x] |= 1 << _chunk_y;
                         }
                     }
                 }
@@ -184,7 +184,7 @@ function chunk_generate(_chunk)
     
     for (var i = 0; i < CHUNK_SIZE; ++i)
     {
-        var _world_x = _chunk_xstart + i;
+        var _world_x = _chunk.chunk_xstart + i;
         
         var _inst_x = _world_x * TILE_SIZE;
         
@@ -192,7 +192,7 @@ function chunk_generate(_chunk)
         
         var _cave_bit = __cave_bit[i];
         
-        var _xorshift = xorshift(_world_seed ^ ((_world_x + _chunk_ystart) * _surface_height));
+        var _xorshift = xorshift(_world_seed ^ ((_world_x + _chunk.chunk_ystart) * _surface_height));
         
         // Hoisted optimizations
         var _heat_surface = worldgen_get_heat(_world_x, 0, _world_seed, _world_data);
@@ -202,7 +202,7 @@ function chunk_generate(_chunk)
         
         for (var j = 0; j < CHUNK_SIZE; ++j)
         {
-            var _world_y = chunk_ystart + j;
+            var _world_y = _chunk.chunk_ystart + j;
             
             // Calculate cave biome parameters at this depth
             var _heat_cave = worldgen_get_cave_heat(_world_x, _world_y, _world_seed, _world_data);
@@ -260,17 +260,17 @@ function chunk_generate(_chunk)
                             
                             if (_data != undefined)
                             {
-                                ++chunk_count[@ CHUNK_DEPTH_DEFAULT];
+                                ++_chunk.chunk_count[@ CHUNK_DEPTH_DEFAULT];
                                 
-                                chunk[@ (CHUNK_DEPTH_DEFAULT << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_tile_id)
+                                _chunk.chunk[@ (CHUNK_DEPTH_DEFAULT << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_tile_id)
                                     .set_index(smart_value(_data.get_placement_index()))
                                     .set_index_offset(smart_value(_data.get_placement_index_offset()));
                                 
-                                chunk_display |= 1 << CHUNK_DEPTH_DEFAULT;
+                                _chunk.chunk_display |= 1 << CHUNK_DEPTH_DEFAULT;
                                 
                                 if (_data.has_type(ITEM_TYPE_BIT.SOLID | ITEM_TYPE_BIT.UNTOUCHABLE)) && (!_data.is_transparent())
                                 {
-                                    chunk_covered[@ i] |= 1 << j;
+                                    _chunk.chunk_covered[@ i] |= 1 << j;
                                 }
                             }
                         }
@@ -288,12 +288,12 @@ function chunk_generate(_chunk)
                     
                     if (_water_data != undefined)
                     {
-                        ++chunk_count[@ CHUNK_DEPTH_LIQUID];
+                        ++_chunk.chunk_count[@ CHUNK_DEPTH_LIQUID];
                         
-                        chunk[@ (CHUNK_DEPTH_LIQUID << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_water_id)
+                        _chunk.chunk[@ (CHUNK_DEPTH_LIQUID << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_water_id)
                             .set_component("level", 8);
                         
-                        chunk_display |= 1 << CHUNK_DEPTH_LIQUID;
+                        _chunk.chunk_display |= 1 << CHUNK_DEPTH_LIQUID;
                     }
                 }
             }
@@ -313,17 +313,17 @@ function chunk_generate(_chunk)
                         
                         if (_data != undefined)
                         {
-                            ++chunk_count[@ CHUNK_DEPTH_DEFAULT];
+                            ++_chunk.chunk_count[@ CHUNK_DEPTH_DEFAULT];
                             
-                            chunk[@ (CHUNK_DEPTH_DEFAULT << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_id)
+                            _chunk.chunk[@ (CHUNK_DEPTH_DEFAULT << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_id)
                                 .set_index(smart_value(_data.get_placement_index()))
                                 .set_index_offset(smart_value(_data.get_placement_index_offset()));
                             
-                            chunk_display |= 1 << CHUNK_DEPTH_DEFAULT;
+                            _chunk.chunk_display |= 1 << CHUNK_DEPTH_DEFAULT;
                             
                             if (_data.has_type(ITEM_TYPE_BIT.SOLID | ITEM_TYPE_BIT.UNTOUCHABLE)) && (!_data.is_transparent())
                             {
-                                chunk_covered[@ i] |= 1 << j;
+                                _chunk.chunk_covered[@ i] |= 1 << j;
                             }
                         }
                     }
@@ -340,17 +340,17 @@ function chunk_generate(_chunk)
                         
                         if (_data != undefined)
                         {
-                            ++chunk_count[@ CHUNK_DEPTH_WALL];
+                            ++_chunk.chunk_count[@ CHUNK_DEPTH_WALL];
                             
-                            chunk[@ (CHUNK_DEPTH_WALL << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_id)
+                            _chunk.chunk[@ (CHUNK_DEPTH_WALL << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_id)
                                 .set_index(smart_value(_data.get_placement_index()))
                                 .set_index_offset(smart_value(_data.get_placement_index_offset()));
                             
-                            chunk_display |= 1 << CHUNK_DEPTH_WALL;
+                            _chunk.chunk_display |= 1 << CHUNK_DEPTH_WALL;
                             
                             if (_data.has_type(ITEM_TYPE_BIT.SOLID | ITEM_TYPE_BIT.UNTOUCHABLE)) && (!_data.is_transparent())
                             {
-                                chunk_covered[@ i] |= 1 << j;
+                                _chunk.chunk_covered[@ i] |= 1 << j;
                             }
                         }
                     }
@@ -368,12 +368,12 @@ function chunk_generate(_chunk)
                         
                         if (_data != undefined)
                         {
-                            ++chunk_count[@ CHUNK_DEPTH_LIQUID];
+                            ++_chunk.chunk_count[@ CHUNK_DEPTH_LIQUID];
                             
-                            chunk[@ (CHUNK_DEPTH_LIQUID << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_id)
+                            _chunk.chunk[@ (CHUNK_DEPTH_LIQUID << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_id)
                                 .set_component("level", _aquifer.fill_level);
                             
-                            chunk_display |= 1 << CHUNK_DEPTH_LIQUID;
+                            _chunk.chunk_display |= 1 << CHUNK_DEPTH_LIQUID;
                         }
                     }
                 }
@@ -398,14 +398,14 @@ function chunk_generate(_chunk)
                         
                         if (_data != undefined)
                         {
-                            ++chunk_count[@ _z];
+                            ++_chunk.chunk_count[@ _z];
                             
-                            chunk[@ (_z << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_id)
+                            _chunk.chunk[@ (_z << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_id)
                                 .set_xscale(((_data.can_flip_on_x()) && (_xorshift & (1 << (CHUNK_SIZE + j)))) ? -1 : 1)
                                 .set_index(smart_value(_data.get_placement_index()))
                                 .set_index_offset(smart_value(_data.get_placement_index_offset()));
                             
-                            chunk_display |= 1 << _z;
+                            _chunk.chunk_display |= 1 << _z;
                         }
                     }
                 }

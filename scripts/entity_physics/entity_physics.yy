@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"entity_physics",
   "parent":{
-    "name":"Physics",
-    "path":"folders/Scripts/Entity/Physics.yy",
+    "name":"Entity",
+    "path":"folders/Scripts/Control/Physics/Entity.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

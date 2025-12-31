@@ -28,7 +28,7 @@
         },
         "on_random_tick": [
             {
-                "id": "@phantasia:tile/leaf_decay",
+                "id": "@phantasia:items/leaf_decay",
                 "parameters": {
                     "particle": [
                         "#051417",

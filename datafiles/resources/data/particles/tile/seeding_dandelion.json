@@ -22,10 +22,6 @@
         },
         "type": "smart_value:random"
     },
-    "on_collision": {
-        "xspeed": 0,
-        "yspeed": 0
-    },
     "properties": [
         "phantasia:has_collision"
     ],

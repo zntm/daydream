@@ -1,13 +1,13 @@
 {
-    "$GMScript": "v1",
-    "%Name": "EntityState",
-    "isCompatibility": false,
-    "isDnD": false,
-    "name": "EntityState",
-    "parent": {
-        "name": "Data",
-        "path": "folders/Scripts/Entity/Data.yy"
-    },
-    "resourceType": "GMScript",
-    "resourceVersion": "2.0"
+  "$GMScript":"v1",
+  "%Name":"EntityState",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"EntityState",
+  "parent":{
+    "name":"Entity",
+    "path":"folders/Scripts/Control/Physics/Entity.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

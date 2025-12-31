@@ -34,8 +34,7 @@
             },
             "humidity": {
                 "octaves": 2.75
-            },
-            "map": "phantasia:world/playground/map"
+            }
         },
         "surface": {
             "heat": {
@@ -53,8 +52,14 @@
         },
         "sky": {
             "enabled": true,
+            "id": "phantasia:sky/floating_islands",
             "threshold": 256,
-            "id": "phantasia:sky/floating_islands"
+            "spacing": 32,
+            "radius": 18,
+            "thickness": 10,
+            "noise_scale_region": 0.12,
+            "noise_scale_edge": 0.15,
+            "noise_scale_detail": 0.3
         }
     },
     "cave": {
@@ -86,7 +91,8 @@
                 "depth_max": 200,
                 "threshold": 200,
                 "octaves": 3,
-                "fill_level": 8
+                "fill_level": 8,
+                "noise_scale": 0.02
             },
             {
                 "type": "phantasia:lava",
@@ -94,9 +100,14 @@
                 "depth_max": 450,
                 "threshold": 220,
                 "octaves": 2,
-                "fill_level": 8
+                "fill_level": 8,
+                "noise_scale": 0.02
             }
-        ]
+        ],
+        "noise_scale": 0.015625,
+        "breach_threshold": 242,
+        "breach_depth": -8,
+        "transition_threshold": 220
     },
     "celestials": [
         {
@@ -117,7 +128,12 @@
             "octaves": 4,
             "min": 40,
             "max": 96
-        }
+        },
+        "smoothing": {
+            "range": 32,
+            "factor": 0.6
+        },
+        "noise_scale": 0.015625
     },
     "time": {
         "start": 240,
