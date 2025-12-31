@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"SpatialGrid",
   "parent":{
-    "name":"Scripts",
-    "path":"folders/Scripts.yy",
+    "name":"Physics",
+    "path":"folders/Scripts/Control/Physics.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -1,66 +1,43 @@
-/// @desc Process jump input and update velocity
+/// @desc Swimming movement mode - buoyancy, drag, 360° movement
 /// @param {Struct.PhysicsBody} _body
 /// @param {Struct.InputState} _input
 /// @param {Real} _dt
 
-function physics_process_jump(_body, _input, _dt)
+function physics_mode_swim(_body, _input, _dt)
 {
     var _attr = _body.attribute;
-    var _jump = _body.jump;
     
-    var _jump_max = (_attr != undefined) ? _attr.get_jump_count_max() : 1;
-    var _jump_time = (_attr != undefined) ? _attr.get_jump_time() : PHYSICS_JUMP_TIME;
-    var _jump_height = (_attr != undefined) ? _attr.get_jump_height() : PHYSICS_JUMP_HEIGHT;
-    var _jump_falloff = (_attr != undefined) ? _attr.get_jump_falloff() : PHYSICS_JUMP_FALLOFF;
-    
-    // Coyote time - allow jumping shortly after leaving ground
-    if (_jump.count == 0 && !_body.collision.ground)
+    // Get swim speed (with fallback)
+    var _speed = PHYSICS_MOVE_SPEED_SWIM;
+    if (_attr != undefined)
     {
-        _jump.coyote_time += _dt;
-        
-        if (_jump.coyote_time > PHYSICS_JUMP_COYOTE_TIME)
-        {
-            _jump.count = 1;  // Lost coyote time
-        }
+        _speed = _attr[$ "___swim_speed"] ?? _attr.get_movement_speed() * 0.7;
     }
     
-    // Jump initiation
-    if (_input.jump_pressed && _jump.count < _jump_max)
+    var _accel = PHYSICS_MOVE_ACCEL_SWIM;  // More sluggish than air
+    var _drag = PHYSICS_MOVE_DRAG_SWIM;   // Water resistance
+    
+    // 360° movement with drag
+    var _target_vx = _input.move_x * _speed;
+    var _target_vy = _input.move_y * _speed;
+    
+    // Apply drag first
+    _body.vel_x *= _drag;
+    _body.vel_y *= _drag;
+    
+    // Then lerp towards target
+    _body.vel_x = lerp_delta(_body.vel_x, _target_vx, _accel, _dt);
+    _body.vel_y = lerp_delta(_body.vel_y, _target_vy, _accel, _dt);
+    
+    // Subtle buoyancy (float upward when not moving)
+    if (_input.move_y == 0)
     {
-        ++_jump.count;
-        _jump.held_time = 0;
+        _body.vel_y -= PHYSICS_BUOYANCY * _dt;
     }
     
-    // Check if over max jumps
-    if (_jump.count > _jump_max)
-    {
-        _jump.held_time = infinity;
-    }
-    
-    // Variable height jump - holding jump goes higher
+    // Jump input makes you swim upward faster
     if (_input.jump_held)
     {
-        // Check for ceiling collision
-        if (_body.collision.ceiling)
-        {
-            _jump.held_time = infinity;
-        }
-        else
-        {
-            _jump.held_time += _dt;
-            
-            if (_jump.held_time > 0 && _jump.held_time < _jump_time)
-            {
-                // Curved jump force - stronger at start, weaker as held
-                var _progress = _jump.held_time / _jump_time;
-                var _force = 1 - power(_progress, _jump_falloff);
-                
-                _body.vel_y = -_jump_height * _dt * _force;
-            }
-        }
-    }
-    else
-    {
-        _jump.held_time = infinity;  // Released - no more jump force
+        _body.vel_y = lerp_delta(_body.vel_y, -_speed, _accel * 2, _dt);
     }
 }
