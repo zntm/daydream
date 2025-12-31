@@ -2,28 +2,28 @@ import {
     DatagenReturnData,
     SmartValueFloatRandom,
 } from "../../..";
-import { Attribute } from "../../attribute";
 import {
-    EntityPhysics,
-} from "../../entity";
-import { Particle, ParticleProperties } from "../particles";
+    Particle,
+    ParticleSize,
+    ParticleGravity,
+    ParticleSpeed,
+    ParticleDirection,
+} from "../particles";
 
 export default [
     new DatagenReturnData(
         "generated/data/particles/debris.json",
-        new Particle("phantasia:particle/tile/harvest", [
-            ParticleProperties.IsFadeOut,
-        ])
-            .setLifetime(
-                new SmartValueFloatRandom(0.5, 1.0),
-            )
-            .setPhysics(
-                new EntityPhysics(
-                    new SmartValueFloatRandom(-2, 2),
-                    new SmartValueFloatRandom(-2, -0.5),
-                    new SmartValueFloatRandom(1, 3),
-                ),
-            )
-            .setAttribute(new Attribute().setGravity(0.2)),
+        new Particle("phantasia:particle/tile/harvest")
+            .setLifetime(new SmartValueFloatRandom(0.5, 1.0))
+            .setSize(new ParticleSize().setScale(
+                new SmartValueFloatRandom(1, 3),
+            ))
+            .setSpeed(new ParticleSpeed(
+                new SmartValueFloatRandom(1, 2.5),
+            ))
+            .setDirection(new ParticleDirection(
+                new SmartValueFloatRandom(200, 340),
+            ))
+            .setGravity(new ParticleGravity().setDirectional(0.2)),
     ),
 ];

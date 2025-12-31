@@ -154,7 +154,7 @@ function draw_text_cuteify(_x, _y, _string, _xscale = 1, _yscale = 1, _angle = 0
                 {
                     if (string_char_at(_text, l) == " ")
                     {
-                        draw_text_transformed_color(
+                        draw_text_transformed_colour(
                             _xstart + (_xoffset * _cos),
                             _ystart + (_xoffset * _sin),
                             " ",
@@ -175,7 +175,7 @@ function draw_text_cuteify(_x, _y, _string, _xscale = 1, _yscale = 1, _angle = 0
                     
                     var _char_random = chr(irandom_range(32, 127));
                     
-                    draw_text_transformed_color(
+                    draw_text_transformed_colour(
                         _xstart + (_xoffset * _cos),
                         _ystart + (_xoffset * _sin),
                         _char_random,
@@ -194,7 +194,7 @@ function draw_text_cuteify(_x, _y, _string, _xscale = 1, _yscale = 1, _angle = 0
             }
             else
             {
-                draw_text_transformed_color(
+                draw_text_transformed_colour(
                     _x + (_yoffset * _cos_90) + _xoffset_cos,
                     _y + (_yoffset * _sin_90) + _xoffset_sin,
                     _text,

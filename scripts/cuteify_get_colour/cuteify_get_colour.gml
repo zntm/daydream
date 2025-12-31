@@ -2,7 +2,7 @@
 /// @desc Gets the last colour specified in a cuteify-formatted string
 /// @param {String} _string The input string with formatting tags
 /// @param {String} _asset_prefix Prefix for asset lookups
-/// @returns {Constant.Color|Real} The last colour found, or current draw colour if none
+/// @returns {Constant.colour|Real} The last colour found, or current draw colour if none
 function cuteify_get_colour(_string, _asset_prefix = "")
 {
     var _parsed = cuteify_parse(_string, _asset_prefix);

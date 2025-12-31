@@ -149,10 +149,8 @@ function control_gametick(_delta_time)
             control_projectile(_tick);
         }
         
-        with (obj_Particle)
-        {
-            control_particle(_tick);
-        }
+        // Update pooled particles (physics for colliding particles)
+        global.particle_pool.update_physics(_tick);
         
         with (obj_Creature)
         {

@@ -1,6 +1,23 @@
 {
-    "attribute": {
-        "gravity": 0.1
+    "direction": {
+        "direction_min": {
+            "values": {
+                "min": 20,
+                "max": 160
+            },
+            "type": "smart_value:random"
+        },
+        "direction_max": {
+            "values": {
+                "min": 20,
+                "max": 160
+            },
+            "type": "smart_value:random"
+        }
+    },
+    "gravity": {
+        "gravity_amount": 3,
+        "gravity_direction": 270
     },
     "lifetime": {
         "values": {
@@ -9,32 +26,51 @@
         },
         "type": "smart_value:random"
     },
-    "physics": {
-        "xspeed": {
-            "values": {
-                "min": -1,
-                "max": 1
-            },
-            "type": "smart_value:random"
-        },
-        "yspeed": {
-            "values": {
-                "min": -1.75,
-                "max": -0.5
-            },
-            "type": "smart_value:random"
-        },
-        "scale": {
+    "size": {
+        "xscale_min": {
             "values": {
                 "min": 1,
                 "max": 3
             },
             "type": "smart_value:random"
         },
-        "rotation": 0
+        "xscale_max": {
+            "values": {
+                "min": 1,
+                "max": 3
+            },
+            "type": "smart_value:random"
+        },
+        "yscale_min": {
+            "values": {
+                "min": 1,
+                "max": 3
+            },
+            "type": "smart_value:random"
+        },
+        "yscale_max": {
+            "values": {
+                "min": 1,
+                "max": 3
+            },
+            "type": "smart_value:random"
+        }
     },
-    "properties": [
-        "phantasia:is_fade_out"
-    ],
+    "speed": {
+        "speed_min": {
+            "values": {
+                "min": 0.8,
+                "max": 1.8
+            },
+            "type": "smart_value:random"
+        },
+        "speed_max": {
+            "values": {
+                "min": 0.8,
+                "max": 1.8
+            },
+            "type": "smart_value:random"
+        }
+    },
     "sprite": "phantasia:particle/tile/harvest"
 }

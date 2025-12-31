@@ -2,41 +2,39 @@ import {
     DatagenReturnData,
     SmartValueFloatRandom,
 } from "../../..";
-import { Attribute } from "../../attribute";
 import {
-    EntityPhysics,
-    EntityPhysicsValue,
-    EntityPhysicsValueType,
-} from "../../entity";
-import { Particle, ParticleProperties } from "../particles";
+    Particle,
+    ParticleSize,
+    ParticleGravity,
+    ParticleSpeed,
+    ParticleDirection,
+    ParticleOrientation,
+} from "../particles";
 
 export default ["birch", "oak", "pine"].map((id) => {
     return new DatagenReturnData(
         `generated/data/particles/tile/leaf/${id}.json`,
-        new Particle(`phantasia:particle/tile/leaf/${id}`, [
-            ParticleProperties.IsFadeOut,
-        ])
-            .setLifetime(
-                new SmartValueFloatRandom(2, 4),
-            )
-            .setPhysics(
-                new EntityPhysics(
-                    new EntityPhysicsValue(
-                        EntityPhysicsValueType.Reference,
-                        "phantasia:weather_wind",
-                        new SmartValueFloatRandom(-0.3, 0.3),
-                        new SmartValueFloatRandom(0.5, 1.25),
-                    ),
-                    new SmartValueFloatRandom(0.6, 1.1),
-                    new SmartValueFloatRandom(0.75, 1.25),
-                    new EntityPhysicsValue(
-                        EntityPhysicsValueType.Incremental,
-                        new SmartValueFloatRandom(0.5, 1.25),
-                    ).setIncrement(
-                        new SmartValueFloatRandom(-16, 16),
-                    ),
-                ),
-            )
-            .setAttribute(new Attribute().setGravity(0.1)),
+        new Particle(`phantasia:particle/tile/leaf/${id}`)
+            .setLifetime(new SmartValueFloatRandom(2, 4))
+            .setSize(new ParticleSize().setScale(
+                new SmartValueFloatRandom(0.75, 1.25),
+            ))
+            .setSpeed(new ParticleSpeed(
+                new SmartValueFloatRandom(0.6, 1.1),
+                undefined,
+                undefined,
+                new SmartValueFloatRandom(0.1, 0.3), // wiggle
+            ))
+            .setDirection(new ParticleDirection(
+                new SmartValueFloatRandom(250, 290),
+                undefined,
+                new SmartValueFloatRandom(-1, 1), // increment for drifting
+            ))
+            .setOrientation(new ParticleOrientation(
+                new SmartValueFloatRandom(0.5, 1.25),
+                undefined,
+                new SmartValueFloatRandom(-16, 16), // increment
+            ))
+            .setGravity(new ParticleGravity().setDirectional(0.1)),
     );
 });

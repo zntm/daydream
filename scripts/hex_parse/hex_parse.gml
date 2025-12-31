@@ -12,7 +12,7 @@ function hex_parse(_string, _throw = true)
             return undefined;
         }
         
-        throw $"'{_string}' is not a valid color";
+        throw $"'{_string}' is not a valid colour";
     }
     
     return real($"0x{string_copy(_string, 6, 2)}{string_copy(_string, 4, 2)}{string_copy(_string, 2, 2)}");

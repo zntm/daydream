@@ -95,8 +95,8 @@ function GUISlot(_x, _y, _inventory_name, _slot_index, _sprite = spr_Inventory_S
                 draw_sprite_ext(spr_Square, 0, _bar_x, _bar_y, _bar_width * _scale_x, _bar_height * _scale_y, 0, c_black, 0.5);
                 
                 // Durability fill
-                var _color = make_color_rgb(lerp(255, 0, _ratio), lerp(0, 255, _ratio), 0);
-                draw_sprite_ext(spr_Square, 0, _bar_x, _bar_y, _bar_width * _ratio * _scale_x, _bar_height * _scale_y, 0, _color, 1);
+                var _colour = make_colour_rgb(lerp(255, 0, _ratio), lerp(0, 255, _ratio), 0);
+                draw_sprite_ext(spr_Square, 0, _bar_x, _bar_y, _bar_width * _ratio * _scale_x, _bar_height * _scale_y, 0, _colour, 1);
             }
         }
         

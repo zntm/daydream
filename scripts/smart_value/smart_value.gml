@@ -1,6 +1,20 @@
+
 function smart_value(_data)
 {
-    if (!is_struct(_data)) || (instanceof(_data) != "SmartValue")
+    if (!is_struct(_data))
+    {
+        return _data;
+    }
+    
+    var _inst_type = instanceof(_data);
+    
+    if (_inst_type == "ProgBytecode")
+    {
+        // Execute Proglang bytecode (for dynamic particle properties)
+        var _vm = new ProgVM();
+        return _vm.run(_data);
+    }
+    else if (_inst_type != "SmartValue")
     {
         return _data;
     }

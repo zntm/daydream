@@ -5,7 +5,7 @@
 #macro GUI_HP_BAR_LOGICAL_HEIGHT 8
 #macro GUI_HP_HEART_OVERLAP_RATIO 0.5
 #macro GUI_HP_SPRITE_INDEX 2
-#macro GUI_HP_COLOR make_color_rgb(255, 20, 147)
+#macro GUI_HP_COLOUR make_colour_rgb(255, 20, 147)
 #macro GUI_HP_HEART_XOFFSET 0
 #macro GUI_HP_HEART_YOFFSET 0
 
@@ -161,17 +161,17 @@ function GUIHPBar(_x, _y, _width, _height) : GUIComponent(_x, _y, _width, _heigh
         var _bar_y = _screen_y + (height * _base_scale_y) - _bar_height;
         
         // Draw Bar Background (Draw FIRST so it is behind the heart)
-        draw_set_color(c_black);
+        draw_set_colour(c_black);
         draw_rectangle(_screen_x + _bar_x_offset, _bar_y, _screen_x + _bar_x_offset + _bar_width, _bar_y + _bar_height, false);
         
         // Draw HP Fill
-        draw_set_color(GUI_HP_COLOR);
+        draw_set_colour(GUI_HP_COLOUR);
         if (_hp_ratio > 0)
         {
             draw_rectangle(_screen_x + _bar_x_offset, _bar_y, _screen_x + _bar_x_offset + (_bar_width * _hp_ratio), _bar_y + _bar_height, false);
         }
         
-        draw_set_color(c_white);
+        draw_set_colour(c_white);
         
         // Draw Heart (aligned with bar center, drawn AFTER bar)
         var _heart_x = _screen_x + (GUI_HP_HEART_XOFFSET * _base_scale_x);
