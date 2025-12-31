@@ -1,0 +1,5 @@
+export default 100
+
+export fn inc(a) {
+    return a + 1
+}
