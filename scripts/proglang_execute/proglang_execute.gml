@@ -22,7 +22,7 @@ function proglang_execute(_source, _context = {}, _filepath = "")
         return undefined;
     }
     
-    var _vm = ProgVM_create();
+    var _vm = proglang_vm_create();
     
     _vm[@ PROG_VM.CONTEXT] = _context;
     
@@ -42,11 +42,11 @@ function proglang_execute(_source, _context = {}, _filepath = "")
     
     // show_debug_message(_bytecode);
     
-    var _result = ProgVM_run(_vm, _bytecode);
+    var _result = proglang_vm_run(_vm, _bytecode);
     
     proglang_run_pending();
     
-    ProgVM_free(_vm);
+    proglang_vm_free(_vm);
     
     return _result;
 }

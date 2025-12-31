@@ -716,12 +716,12 @@ proglang_function_register("test_expect", function(_args, _vm = undefined)
     // Execute actual if it's a closure/function
     if (is_array(_actual) && array_length(_actual) >= PROG_CLOSURE.SIZE && _actual[PROG_CLOSURE.TYPE] == "closure")
     {
-        var _eval_vm = ProgVM_create();
+        var _eval_vm = proglang_vm_create();
         // Propagate global_ref from calling VM
         if (_vm != undefined) _eval_vm[@ PROG_VM.GLOBAL_REF] = _vm[PROG_VM.GLOBAL_REF];
         _eval_vm[PROG_VM.SCOPE][@ PROG_SCOPE.PARENT] = _actual[PROG_CLOSURE.ENV];
-        _actual = ProgVM_run(_eval_vm, _actual[PROG_CLOSURE.BYTECODE]);
-        ProgVM_free(_eval_vm);
+        _actual = proglang_vm_run(_eval_vm, _actual[PROG_CLOSURE.BYTECODE]);
+        proglang_vm_free(_eval_vm);
     }
     else if (is_struct(_actual) && struct_exists(_actual, "function"))
     {
@@ -731,12 +731,12 @@ proglang_function_register("test_expect", function(_args, _vm = undefined)
     // Execute expected if it's a closure/function
     if (is_array(_expected) && array_length(_expected) >= PROG_CLOSURE.SIZE && _expected[PROG_CLOSURE.TYPE] == "closure")
     {
-        var _eval_vm = ProgVM_create();
+        var _eval_vm = proglang_vm_create();
         // Propagate global_ref from calling VM
         if (_vm != undefined) _eval_vm[@ PROG_VM.GLOBAL_REF] = _vm[PROG_VM.GLOBAL_REF];
         _eval_vm[PROG_VM.SCOPE][@ PROG_SCOPE.PARENT] = _expected[PROG_CLOSURE.ENV];
-        _expected = ProgVM_run(_eval_vm, _expected[PROG_CLOSURE.BYTECODE]);
-        ProgVM_free(_eval_vm);
+        _expected = proglang_vm_run(_eval_vm, _expected[PROG_CLOSURE.BYTECODE]);
+        proglang_vm_free(_eval_vm);
     }
     else if (is_struct(_expected) && struct_exists(_expected, "function"))
     {
@@ -889,7 +889,7 @@ function _proglang_run_test_internal(_test_struct, _default_name)
         // Execute the test function
         if (is_array(_fn) && array_length(_fn) >= PROG_CLOSURE.SIZE && _fn[PROG_CLOSURE.TYPE] == "closure")
         {
-            var _vm = ProgVM_create();
+            var _vm = proglang_vm_create();
             // Use captured global_ref if available
             if (is_struct(_test_struct) && struct_exists(_test_struct, "global_ref") && _test_struct.global_ref != undefined)
             {
@@ -904,8 +904,8 @@ function _proglang_run_test_internal(_test_struct, _default_name)
                 _vm[PROG_VM.SCOPE][PROG_SCOPE.VARS][$ "__dirname"] = proglang_get_directory(_test_struct.__filename);
             }
             
-            ProgVM_run(_vm, _fn[PROG_CLOSURE.BYTECODE]);
-            ProgVM_free(_vm);
+            proglang_vm_run(_vm, _fn[PROG_CLOSURE.BYTECODE]);
+            proglang_vm_free(_vm);
         }
         else if (is_struct(_fn)) && (struct_exists(_fn, "function"))
         {
@@ -946,7 +946,7 @@ proglang_function_register("test", function(_args, _vm = undefined)
     
     if (_vm != undefined)
     {
-        var _s = ProgVM_find_var_scope(_vm, "__filename");
+        var _s = proglang_vm_find_var_scope(_vm, "__filename");
         if (_s != undefined)
         {
             _test_struct.__filename = _s[PROG_SCOPE.VARS][$ "__filename"];

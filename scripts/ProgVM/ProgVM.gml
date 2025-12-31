@@ -65,7 +65,7 @@ enum PROG_FRAME {
 
 /// @desc Reset VM state for reuse
 /// @param {Array<PROG_VM>} _vm The VM array
-function ProgVM_reset(_vm)
+function proglang_vm_reset(_vm)
 {
     _vm[@ PROG_VM.SP] = 0;
     _vm[@ PROG_VM.IP] = 0;
@@ -89,7 +89,7 @@ function ProgVM_reset(_vm)
 /// @desc Find variable in scope chain
 /// @param {Array<PROG_VM>} _vm
 /// @param {string} _name
-function ProgVM_find_var_scope(_vm, _name)
+function proglang_vm_find_var_scope(_vm, _name)
 {
     var _s = _vm[PROG_VM.SCOPE];
     
@@ -112,7 +112,7 @@ function ProgVM_find_var_scope(_vm, _name)
 /// @param {array} _args
 /// @param {real} _line
 /// @param {string} _callee_name
-function ProgVM_exec_call(_vm, _callee, _args, _line = 0, _callee_name = "<anonymous>")
+function proglang_vm_exec_call(_vm, _callee, _args, _line = 0, _callee_name = "<anonymous>")
 {
     // Push call stack frame
     var _frame = array_create(PROG_FRAME.SIZE);
@@ -131,7 +131,7 @@ function ProgVM_exec_call(_vm, _callee, _args, _line = 0, _callee_name = "<anony
             // Look for constructor in super class
             if (_super_class[$ "constructor_code"] != undefined)
             {
-                var _new_vm = ProgVM_create();
+                var _new_vm = proglang_vm_create();
                 _new_vm[@ PROG_VM.GLOBAL_REF] = _vm[PROG_VM.GLOBAL_REF]; // Share global scope
                 
                 _new_vm[@ PROG_VM.CONTEXT] = _vm[PROG_VM.CONTEXT];
@@ -145,9 +145,9 @@ function ProgVM_exec_call(_vm, _callee, _args, _line = 0, _callee_name = "<anony
                 }
                 _vars[$ "argc"] = array_length(_args);
                 
-                var _res = ProgVM_run(_new_vm, _super_class.constructor_code);
+                var _res = proglang_vm_run(_new_vm, _super_class.constructor_code);
                 
-                ProgVM_free(_new_vm);
+                proglang_vm_free(_new_vm);
                 array_pop(_vm[PROG_VM.CALL_STACK]);
                 
                 return _res;
@@ -164,7 +164,7 @@ function ProgVM_exec_call(_vm, _callee, _args, _line = 0, _callee_name = "<anony
         // Handle Array-based Closure (PROG_CLOSURE enum)
         if (is_array(_callee)) && (array_length(_callee) >= PROG_CLOSURE.SIZE) && (_callee[PROG_CLOSURE.TYPE] == "closure")
         {
-            var _new_vm = ProgVM_create();
+            var _new_vm = proglang_vm_create();
             // Use captured global_ref if available
             _new_vm[@ PROG_VM.GLOBAL_REF] = (_callee[PROG_CLOSURE.GLOBAL_REF] != undefined) ? _callee[PROG_CLOSURE.GLOBAL_REF] : _vm[PROG_VM.GLOBAL_REF];
             
@@ -207,9 +207,9 @@ function ProgVM_exec_call(_vm, _callee, _args, _line = 0, _callee_name = "<anony
                 _env = _env[PROG_SCOPE.PARENT];
             }
             
-            var _res = ProgVM_run(_new_vm, _callee[PROG_CLOSURE.BYTECODE]);
+            var _res = proglang_vm_run(_new_vm, _callee[PROG_CLOSURE.BYTECODE]);
             
-            ProgVM_free(_new_vm);
+            proglang_vm_free(_new_vm);
             array_pop(_vm[PROG_VM.CALL_STACK]);
             
             return _res;
@@ -258,7 +258,7 @@ function ProgVM_exec_call(_vm, _callee, _args, _line = 0, _callee_name = "<anony
                     _bc = _script;
                 }
                 
-                var _new_vm = ProgVM_create();
+                var _new_vm = proglang_vm_create();
                 
                 _new_vm[@ PROG_VM.CONTEXT] = _vm[PROG_VM.CONTEXT];
                 _new_vm[@ PROG_VM.CALL_STACK] = variable_clone(_vm[PROG_VM.CALL_STACK]);
@@ -271,9 +271,9 @@ function ProgVM_exec_call(_vm, _callee, _args, _line = 0, _callee_name = "<anony
                 
                 _vars[$ "argc"] = array_length(_args);
                 
-                var _res = ProgVM_run(_new_vm, _bc);
+                var _res = proglang_vm_run(_new_vm, _bc);
                 
-                ProgVM_free(_new_vm);
+                proglang_vm_free(_new_vm);
                 array_pop(_vm[PROG_VM.CALL_STACK]);
                 
                 return _res;
@@ -286,7 +286,7 @@ function ProgVM_exec_call(_vm, _callee, _args, _line = 0, _callee_name = "<anony
                 
                 if (_ != undefined)
                 {
-                    var _res = ProgVM_exec_call(_vm, _, _args, _line, _callee);
+                    var _res = proglang_vm_exec_call(_vm, _, _args, _line, _callee);
                     array_pop(_vm[PROG_VM.CALL_STACK]);
                     return _res;
                 }
@@ -317,7 +317,7 @@ function ProgVM_exec_call(_vm, _callee, _args, _line = 0, _callee_name = "<anony
 /// @param {Array<PROG_VM>} _vm The VM array
 /// @param {struct} _bytecode Compiled bytecode object
 /// @returns {any} Execution result
-function ProgVM_run(_vm, _bytecode)
+function proglang_vm_run(_vm, _bytecode)
 {
     var _code = _bytecode.code;
     var _constants = _bytecode.constants;
@@ -443,7 +443,7 @@ function ProgVM_run(_vm, _bytecode)
                     // Variable Access
                     case PROG_OP.LOAD:
                         _name = _constants[_arg];
-                        var _s = ProgVM_find_var_scope(_vm, _name);
+                        var _s = proglang_vm_find_var_scope(_vm, _name);
                         
                         if (_s != undefined)
                         {
@@ -496,7 +496,7 @@ function ProgVM_run(_vm, _bytecode)
                     case PROG_OP.STORE:
                         _val = _stack[_sp - 1]; // Peek
                         _name = _constants[_arg];
-                        var _s_store = ProgVM_find_var_scope(_vm, _name);
+                        var _s_store = proglang_vm_find_var_scope(_vm, _name);
                         if (_s_store != undefined) { _s_store[PROG_SCOPE.VARS][$ _name] = _val; }
                         else if (_vm[PROG_VM.CONTEXT] != undefined && struct_exists(_vm[PROG_VM.CONTEXT], _name)) { _vm[PROG_VM.CONTEXT][$ _name] = _val; }
                         else if (struct_exists(_gref, _name)) { _gref[$ _name] = _val; }
@@ -803,7 +803,7 @@ function ProgVM_run(_vm, _bytecode)
                         _vm[@ PROG_VM.SP] = _sp;
                         _vm[@ PROG_VM.IP] = _ip;
                         
-                        var _res = ProgVM_exec_call(_vm, _val, _args_arr);
+                        var _res = proglang_vm_exec_call(_vm, _val, _args_arr);
                         
                         _stack[@ _vm[PROG_VM.SP]++] = _res;
                         
@@ -822,7 +822,7 @@ function ProgVM_run(_vm, _bytecode)
                         _vm[@ PROG_VM.SP] = _sp;
                         _vm[@ PROG_VM.IP] = _ip;
                         
-                        var _res = ProgVM_exec_call(_vm, _val, _args_arr);
+                        var _res = proglang_vm_exec_call(_vm, _val, _args_arr);
                         
                         _stack[@ _vm[PROG_VM.SP]++] = _res;
                         
@@ -866,7 +866,7 @@ function ProgVM_run(_vm, _bytecode)
                             var _args_arr = array_create(_arg_count);
                             for (var i = _arg_count - 1; i >= 0; i--) _args_arr[i] = _stack[--_sp];
                             
-                            var _new_vm = ProgVM_create();
+                            var _new_vm = proglang_vm_create();
                             _new_vm[@ PROG_VM.CONTEXT] = _vm[PROG_VM.CONTEXT];
                             // _new_vm[@ PROG_VM.CALL_STACK] = variable_clone(_vm[PROG_VM.CALL_STACK]); // don't debug new callstack deeper?
                             _new_vm[@ PROG_VM.CURRENT_THIS] = _inst;
@@ -878,8 +878,8 @@ function ProgVM_run(_vm, _bytecode)
                             }
                             _vars[$ "argc"] = _arg_count;
                             
-                            ProgVM_run(_new_vm, _class.constructor_code);
-                            ProgVM_free(_new_vm);
+                            proglang_vm_run(_new_vm, _class.constructor_code);
+                            proglang_vm_free(_new_vm);
                         }
                         else
                         {
@@ -1016,7 +1016,7 @@ function ProgVM_run(_vm, _bytecode)
                     case PROG_OP.IMPORT:
                         var _path = _constants[_arg];
                         var _cur_file = "";
-                        var _scope_file = ProgVM_find_var_scope(_vm, "__filename");
+                        var _scope_file = proglang_vm_find_var_scope(_vm, "__filename");
                         if (_scope_file != undefined)
                             _cur_file = _scope_file[PROG_SCOPE.VARS][$ "__filename"];
                         
@@ -1137,7 +1137,7 @@ function proglang_vm_pool_init()
     }
 }
 
-function ProgVM_create_impl()
+function proglang_vm_create_impl()
 {
     var _vm = array_create(PROG_VM.SIZE);
     _vm[PROG_VM.STACK] = array_create(1024);
@@ -1164,7 +1164,7 @@ function ProgVM_create_impl()
 
 /// @desc Acquire a VM instance (from pool or new)
 /// @returns {Array<PROG_VM>}
-function ProgVM_create()
+function proglang_vm_create()
 {
     proglang_vm_pool_init();
     
@@ -1173,35 +1173,35 @@ function ProgVM_create()
     // Auto-GC check
     if (global.proglang_vm_alloc_count >= global.proglang_vm_gc_threshold)
     {
-        ProgVM_gc();
+        proglang_vm_gc();
         global.proglang_vm_alloc_count = 0;
     }
     
     if (array_length(global.proglang_vm_pool) > 0)
     {
         var _vm = array_pop(global.proglang_vm_pool);
-        ProgVM_reset(_vm);
+        proglang_vm_reset(_vm);
         return _vm;
     }
     
-    return ProgVM_create_impl();
+    return proglang_vm_create_impl();
 }
 
 /// @desc Release a VM instance back to the pool
 /// @param {Array<PROG_VM>} _vm
-function ProgVM_free(_vm)
+function proglang_vm_free(_vm)
 {
     proglang_vm_pool_init();
     
     if (array_length(global.proglang_vm_pool) < global.proglang_vm_pool_max)
     {
-        ProgVM_reset(_vm);
+        proglang_vm_reset(_vm);
         array_push(global.proglang_vm_pool, _vm);
     }
 }
 
 /// @desc Garbage collection - clear unused VMs from pool
-function ProgVM_gc()
+function proglang_vm_gc()
 {
     proglang_vm_pool_init();
     

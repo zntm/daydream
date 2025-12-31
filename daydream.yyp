@@ -958,6 +958,7 @@
     {"$GMIncludedFile":"","%Name":"hotbar.json","CopyToMask":-1,"filePath":"datafiles/resources/data/guis","name":"hotbar.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"inventory.json","CopyToMask":-1,"filePath":"datafiles/resources/data/guis","name":"inventory.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"apple.json","CopyToMask":-1,"filePath":"datafiles/resources/data/items","name":"apple.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"bedrock.json","CopyToMask":-1,"filePath":"datafiles/resources/data/items","name":"bedrock.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"birch_chest.json","CopyToMask":-1,"filePath":"datafiles/resources/data/items","name":"birch_chest.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"birch_leaves.json","CopyToMask":-1,"filePath":"datafiles/resources/data/items","name":"birch_leaves.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"birch_pickaxe.json","CopyToMask":-1,"filePath":"datafiles/resources/data/items","name":"birch_pickaxe.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},

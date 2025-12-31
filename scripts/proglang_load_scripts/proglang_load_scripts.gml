@@ -256,15 +256,15 @@ function proglang_load_module(_module_path, _importer_path = "") {
     global.proglang_modules[$ _resolved] = { exports: {}, loaded: false, path: _resolved }
     
     // Run module to populate exports
-    var _vm = ProgVM_create();
+    var _vm = proglang_vm_create();
     
     _vm[@ PROG_VM.ACTIVE_MODULE] = global.proglang_modules[$ _resolved];
     _vm[PROG_VM.SCOPE][PROG_SCOPE.VARS][$ "__dirname"] = proglang_get_directory(_full_path);
     _vm[PROG_VM.SCOPE][PROG_SCOPE.VARS][$ "__filename"] = _full_path;
     
-    ProgVM_run(_vm, _bytecode);
+    proglang_vm_run(_vm, _bytecode);
     
-    ProgVM_free(_vm);
+    proglang_vm_free(_vm);
     
     global.proglang_modules[$ _resolved].loaded = true;
     
@@ -301,7 +301,7 @@ function proglang_call(_name, _args = [], _context = {}) {
         return undefined;
     }
     
-    var _vm = ProgVM_create();
+    var _vm = proglang_vm_create();
     _vm[@ PROG_VM.CONTEXT] = _context;
     
     // Set directory context for import/export resolution
@@ -314,7 +314,7 @@ function proglang_call(_name, _args = [], _context = {}) {
     }
     _vm[PROG_VM.SCOPE][PROG_SCOPE.VARS][$ "argc"] = array_length(_args);
     
-    var _result = ProgVM_run(_vm, _bytecode);
-    ProgVM_free(_vm);
+    var _result = proglang_vm_run(_vm, _bytecode);
+    proglang_vm_free(_vm);
     return _result;
 }
