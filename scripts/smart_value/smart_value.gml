@@ -11,8 +11,8 @@ function smart_value(_data)
     if (_inst_type == "ProgBytecode")
     {
         // Execute Proglang bytecode (for dynamic particle properties)
-        var _vm = new ProgVM();
-        return _vm.run(_data);
+        // var _vm = new ProgVM();
+        // return _vm.run(_data);
     }
     else if (_inst_type != "SmartValue")
     {

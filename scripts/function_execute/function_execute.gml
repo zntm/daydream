@@ -1,4 +1,4 @@
-function function_execute(_function, _x, _y, _z, _xscale, _yscale, _dt)
+function function_execute(_function, _x, _y, _z, _xscale, _yscale)
 {
     // Handle simplified JSON object structure
     // { "id": "...", "chance": 0.1, "parameters": { ... } }
@@ -9,7 +9,7 @@ function function_execute(_function, _x, _y, _z, _xscale, _yscale, _dt)
     
     var _chance = _function[$ "chance"];
     
-    if (_chance != undefined) && (!chance(_chance * _dt)) exit;
+    if (_chance != undefined) && (!chance(_chance)) exit;
     
     var _id = _function[$ "id"];
     
@@ -44,7 +44,7 @@ function function_execute(_function, _x, _y, _z, _xscale, _yscale, _dt)
                     z: _z,
                     xscale: _xscale,
                     yscale: _yscale,
-                    dt: _dt,
+                    dt: 1,
                     parameter: _function[$ "parameters"] ?? {},
                     tile: tile_get(_tx, _ty, _z),
                     inventory: global.inventory
@@ -73,13 +73,13 @@ function function_execute(_function, _x, _y, _z, _xscale, _yscale, _dt)
         {
             if (_repeat == undefined)
             {
-                _f(_dt, _x, _y, _z, _xscale, _yscale, _parameter);
+                _f(1, _x, _y, _z, _xscale, _yscale, _parameter);
             }
             else
             {
                 repeat (smart_value(_repeat))
                 {
-                    _f(_dt, _x, _y, _z, _xscale, _yscale, _parameter);
+                    _f(1, _x, _y, _z, _xscale, _yscale, _parameter);
                 }
             }
         }*/

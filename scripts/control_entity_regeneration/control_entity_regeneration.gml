@@ -1,5 +1,6 @@
-function control_entity_regeneration(_dt)
+function control_entity_regeneration()
 {
+    var _dt = 1;
     if (hp < hp_max) || (attribute.get_regeneration_amount() < 0)
     {
         var _regeneration_time = attribute.get_regeneration_time();

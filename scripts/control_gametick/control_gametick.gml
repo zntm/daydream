@@ -17,11 +17,9 @@ function control_gametick(_delta_time)
     
     while (global.tick_accumulator >= 1)
     {
-        var _tick = min(1, global.tick_accumulator);
-        
         if (timer_respawn > 0)
         {
-            timer_respawn -= _tick / GAME_TICK;
+            timer_respawn -= 1 / GAME_TICK;
             
             if (timer_respawn <= 0)
             {
@@ -75,7 +73,7 @@ function control_gametick(_delta_time)
                 
                 for (var j = 0; j < _on_random_tick_length; ++j)
                 {
-                    function_execute(_on_random_tick[j], (_chunk_xstart + _x2) * TILE_SIZE, (_chunk_ystart + _y2) * TILE_SIZE, _z, 1, 1, _tick);
+                    function_execute(_on_random_tick[j], (_chunk_xstart + _x2) * TILE_SIZE, (_chunk_ystart + _y2) * TILE_SIZE, _z, 1, 1);
                 }
             }
         }
@@ -83,11 +81,11 @@ function control_gametick(_delta_time)
         // Process delayed function executions
         tick_delay_process();
         
-        control_creature_spawn(_tick);
+        control_creature_spawn();
         
         with (obj_Player)
         {
-            control_player(_tick);
+            control_player();
         }
         
         if (mouse_check_button(mb_right))
@@ -141,33 +139,33 @@ function control_gametick(_delta_time)
         {
             var _name = _item_cooldown_names[j];
             
-            item_cooldown[$ _name] = max(0, item_cooldown[$ _name] - (_tick / GAME_TICK));
+            item_cooldown[$ _name] = max(0, item_cooldown[$ _name] - (1 / GAME_TICK));
         }
         
         with (obj_Projectile)
         {
-            control_projectile(_tick);
+            control_projectile();
         }
         
         // Update pooled particles (physics for colliding particles)
-        global.particle_pool.update_physics(_tick);
+        global.particle_pool.update_physics();
         
         with (obj_Creature)
         {
-            control_creature(_tick);
+            control_creature();
         }
         
         with (obj_Item_Drop)
         {
-            control_item_drop(_tick);
+            control_item_drop();
         }
         
         with (obj_Falling_Tile)
         {
-            control_falling_tile(_tick);
+            control_falling_tile();
         }
         
-        global.world_save_data.time += _tick / GAME_TICK;
+        global.world_save_data.time += 1 / GAME_TICK;
         
         if (global.world_save_data.time >= _time_length)
         {

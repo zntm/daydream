@@ -3,7 +3,7 @@
 /// @param {Struct.InputState} _input
 /// @param {Real} _dt
 
-function physics_mode_mounted(_body, _input, _dt)
+function physics_mode_mounted(_body, _input)
 {
     var _mount = _body.mount;
     
@@ -32,7 +32,7 @@ function physics_mode_mounted(_body, _input, _dt)
     if (_controlled)
     {
         // Run mount's physics with rider's input
-        physics_step(_mount, _input, _dt);
+        physics_step(_mount, _input);
     }
     
     // Rider follows mount position

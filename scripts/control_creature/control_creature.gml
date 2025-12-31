@@ -23,10 +23,10 @@ enum CREATURE_AI_STATE {
 #macro AI_STUCK_CHECK_INTERVAL 0.5
 #macro AI_STUCK_THRESHOLD 4.0
 
-function control_creature(_dt)
+function control_creature()
 {
     var _data = global.creature_data[$ _id];
-    var _dt_normalized = _dt / GAME_TICK;
+    var _dt_normalized = 1 / GAME_TICK;
     
     // --- TIMERS ---
     ai_decision_timer -= _dt_normalized;
@@ -165,14 +165,14 @@ function control_creature(_dt)
         physics_body.mode = MOVEMENT_MODE.GROUND;
     }
     
-    physics_step(physics_body, input_state, _dt);
+    physics_step(physics_body, input_state);
     physics_body.sync_to_instance(id);
     
     // --- FALL DAMAGE ---
     creature_handle_fall_damage();
     
     // --- POST-PHYSICS ---
-    control_entity_sfx(_dt);
+    control_entity_sfx();
     control_entity_suffocation(id);
     
     if (attribute.has_boolean(ATTRIBUTE_BOOLEAN.HAS_REGENERATION))

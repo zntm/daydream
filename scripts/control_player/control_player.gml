@@ -1,7 +1,7 @@
 /// @desc Player control using new physics system
 /// @param {Real} _dt Delta time
 
-function control_player(_dt)
+function control_player()
 {
     if (hp <= 0) exit;
     
@@ -36,7 +36,7 @@ function control_player(_dt)
     
     if (timer_immunity > 0)
     {
-        timer_immunity = max(0, timer_immunity - (_dt / GAME_TICK));
+        timer_immunity = max(0, timer_immunity - (1 / GAME_TICK));
     }
     
     // --- AUDIO ---
@@ -54,7 +54,7 @@ function control_player(_dt)
         physics_body.mode = MOVEMENT_MODE.FLY;
     }
     
-    physics_step(physics_body, input_state, _dt);
+    physics_step(physics_body, input_state);
     physics_body.sync_to_instance(id);
     
     // --- COMBAT ---
@@ -93,7 +93,7 @@ function control_player(_dt)
             
             for (var j = 0; j < _on_attack_length; ++j)
             {
-                function_execute(_on_attack[j], round(x / TILE_SIZE), round(y / TILE_SIZE), CHUNK_DEPTH_DEFAULT, sign(image_xscale), sign(image_yscale), _dt);
+                function_execute(_on_attack[j], round(x / TILE_SIZE), round(y / TILE_SIZE), CHUNK_DEPTH_DEFAULT, sign(image_xscale), sign(image_yscale));
             }
         }
     }
@@ -101,7 +101,7 @@ function control_player(_dt)
     // Attack timer and weapon swing animation
     if (timer_attack > 0)
     {
-        timer_attack = max(0, timer_attack - (_dt / GAME_TICK));
+        timer_attack = max(0, timer_attack - (1 / GAME_TICK));
     }
     
     if (timer_attack <= 0)
@@ -181,16 +181,16 @@ function control_player(_dt)
     }
     
     // --- POST-PHYSICS ---
-    control_entity_sfx(_dt);
+    control_entity_sfx();
     
     // Camera
-    control_camera_pos(x - (global.camera_width / 2), y - (global.camera_height / 2), false, _dt);
+    control_camera_pos(x - (global.camera_width / 2), y - (global.camera_height / 2), false);
     
     // Regeneration
     var _is_regenerated = false;
     if (attribute.has_boolean(ATTRIBUTE_BOOLEAN.HAS_REGENERATION))
     {
-        _is_regenerated = control_entity_regeneration(_dt / GAME_TICK);
+        _is_regenerated = control_entity_regeneration(1 / GAME_TICK);
     }
     
     control_entity_effect();

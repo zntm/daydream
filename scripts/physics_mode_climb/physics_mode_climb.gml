@@ -3,7 +3,7 @@
 /// @param {Struct.InputState} _input
 /// @param {Real} _dt
 
-function physics_mode_climb(_body, _input, _dt)
+function physics_mode_climb(_body, _input)
 {
     var _attr = _body.attribute;
     
@@ -15,10 +15,10 @@ function physics_mode_climb(_body, _input, _dt)
     }
     
     // Horizontal movement (small amount for repositioning)
-    _body.vel_x = lerp_delta(_body.vel_x, _input.move_x * _speed * 0.3, PHYSICS_MOVE_ACCEL_CLIMB, _dt);
+    _body.vel_x = lerp_delta(_body.vel_x, _input.move_x * _speed * 0.3, PHYSICS_MOVE_ACCEL_CLIMB, 1);
     
     // Vertical movement on wall
-    _body.vel_y = lerp_delta(_body.vel_y, _input.move_y * _speed, PHYSICS_MOVE_ACCEL_CLIMB, _dt);
+    _body.vel_y = lerp_delta(_body.vel_y, _input.move_y * _speed, PHYSICS_MOVE_ACCEL_CLIMB, 1);
     
     // Jump off wall
     if (_input.jump_pressed)
@@ -28,7 +28,7 @@ function physics_mode_climb(_body, _input, _dt)
         var _wall_jump_power = (_attr != undefined) ? (_attr[$ "___wall_jump_power"] ?? PHYSICS_WALL_JUMP_POWER) : PHYSICS_WALL_JUMP_POWER;
         
         _body.vel_x = _wall_dir * _wall_jump_power;
-        _body.vel_y = -_jump_power * PHYSICS_WALL_JUMP_VERTICAL_DAMPING * _dt;
+        _body.vel_y = -_jump_power * PHYSICS_WALL_JUMP_VERTICAL_DAMPING;
         
         // Transition back to ground mode (will be detected next frame)
         _body.mode = MOVEMENT_MODE.GROUND;

@@ -1,9 +1,9 @@
 /// @desc Projectile control using new physics system
 /// @param {Real} _dt Delta time
 
-function control_projectile(_dt)
+function control_projectile()
 {
-    timer_life -= _dt / GAME_TICK;
+    timer_life -= 1 / GAME_TICK;
     
     if (timer_life <= 0)
     {
@@ -38,12 +38,12 @@ function control_projectile(_dt)
         // Apply gravity
         if (attribute.get_gravity() != 0)
         {
-            physics_body.vel_y += attribute.get_gravity() * _dt / 2;
+            physics_body.vel_y += attribute.get_gravity() / 2;
         }
         
         // Resolve collisions
-        physics_resolve_x(physics_body, _dt);
-        physics_resolve_y(physics_body, _dt);
+        physics_resolve_x(physics_body);
+        physics_resolve_y(physics_body);
         
         physics_body.sync_to_instance(id);
         

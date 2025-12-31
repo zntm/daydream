@@ -1,6 +1,6 @@
-function control_item_drop(_dt)
+function control_item_drop()
 {
-    timer_life -= _dt / GAME_TICK;
+    timer_life -= 1 / GAME_TICK;
     
     if (timer_life <= 0)
     {
@@ -13,7 +13,7 @@ function control_item_drop(_dt)
         exit;
     }
     
-    control_physics_item_drop(_dt, id);
+    control_physics_item_drop(id);
     
     if (physics_body.collision.ground)
     {

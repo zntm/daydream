@@ -3,12 +3,12 @@
 /// @param {Struct.InputState} _input
 /// @param {Real} _dt Delta time
 
-function physics_step(_body, _input, _dt)
+function physics_step(_body, _input)
 {
     // If mounted, delegate physics to mount
     if (_body.mount != undefined)
     {
-        physics_mode_mounted(_body, _input, _dt);
+        physics_mode_mounted(_body, _input);
         return;
     }
     
@@ -19,25 +19,25 @@ function physics_step(_body, _input, _dt)
     switch (_body.mode)
     {
         case MOVEMENT_MODE.GROUND:
-            physics_mode_ground(_body, _input, _dt);
+            physics_mode_ground(_body, _input);
             break;
             
         case MOVEMENT_MODE.FLY:
-            physics_mode_fly(_body, _input, _dt);
+            physics_mode_fly(_body, _input);
             break;
             
         case MOVEMENT_MODE.SWIM:
-            physics_mode_swim(_body, _input, _dt);
+            physics_mode_swim(_body, _input);
             break;
             
         case MOVEMENT_MODE.CLIMB:
-            physics_mode_climb(_body, _input, _dt);
+            physics_mode_climb(_body, _input);
             break;
     }
     
     // Collision resolution (same for all modes)
-    physics_resolve_x(_body, _dt);
-    physics_resolve_y(_body, _dt);
+    physics_resolve_x(_body);
+    physics_resolve_y(_body);
     
     // Resolve entity collisions using SpatialGrid
     physics_resolve_entity(_body, global.spatial_grid);

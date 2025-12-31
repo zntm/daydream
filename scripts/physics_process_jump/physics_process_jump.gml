@@ -1,9 +1,8 @@
 /// @desc Swimming movement mode - buoyancy, drag, 360° movement
 /// @param {Struct.PhysicsBody} _body
 /// @param {Struct.InputState} _input
-/// @param {Real} _dt
 
-function physics_mode_swim(_body, _input, _dt)
+function physics_mode_swim(_body, _input)
 {
     var _attr = _body.attribute;
     
@@ -26,18 +25,18 @@ function physics_mode_swim(_body, _input, _dt)
     _body.vel_y *= _drag;
     
     // Then lerp towards target
-    _body.vel_x = lerp_delta(_body.vel_x, _target_vx, _accel, _dt);
-    _body.vel_y = lerp_delta(_body.vel_y, _target_vy, _accel, _dt);
+    _body.vel_x = lerp_delta(_body.vel_x, _target_vx, _accel);
+    _body.vel_y = lerp_delta(_body.vel_y, _target_vy, _accel);
     
     // Subtle buoyancy (float upward when not moving)
     if (_input.move_y == 0)
     {
-        _body.vel_y -= PHYSICS_BUOYANCY * _dt;
+        _body.vel_y -= PHYSICS_BUOYANCY;
     }
     
     // Jump input makes you swim upward faster
     if (_input.jump_held)
     {
-        _body.vel_y = lerp_delta(_body.vel_y, -_speed, _accel * 2, _dt);
+        _body.vel_y = lerp_delta(_body.vel_y, -_speed, _accel * 2);
     }
 }

@@ -3,13 +3,13 @@
 /// @desc Run physics step on an entity instance
 /// @param {Id.Instance} _inst
 /// @param {Real} _dt
-function entity_physics_step(_inst, _dt)
+function entity_physics_step(_inst)
 {
     with (_inst)
     {
         physics_body.sync_from_instance(id);
         entity_update_collision(physics_body);
-        physics_step(physics_body, input_state, _dt);
+        physics_step(physics_body, input_state);
         physics_body.sync_to_instance(id);
     }
 }

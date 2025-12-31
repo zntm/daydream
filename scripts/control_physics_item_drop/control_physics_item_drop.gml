@@ -2,9 +2,9 @@
 /// @param {Real} _dt Delta time
 /// @param {Id.Instance} _id Item drop instance
 
-function control_physics_item_drop(_dt, _id)
+function control_physics_item_drop(_id)
 {
-    var _time = _dt / GAME_TICK;
+    var _time = 1 / GAME_TICK;
     
     with (_id)
     {
@@ -18,14 +18,14 @@ function control_physics_item_drop(_dt, _id)
             // Friction on ground
             if (physics_body.collision.ground)
             {
-                physics_body.vel_x = lerp_delta(physics_body.vel_x, 0, 0.3, _dt);
+                physics_body.vel_x = lerp_delta(physics_body.vel_x, 0, 0.3, 1);
             }
             
             // Gravity
-            physics_body.vel_y += attribute.get_gravity() * _dt;
+            physics_body.vel_y += attribute.get_gravity();
             
-            physics_resolve_x(physics_body, _dt);
-            physics_resolve_y(physics_body, _dt);
+            physics_resolve_x(physics_body);
+            physics_resolve_y(physics_body);
             physics_body.sync_to_instance(id);
             
             exit;
@@ -42,13 +42,13 @@ function control_physics_item_drop(_dt, _id)
             // No player - just physics
             if (physics_body.collision.ground)
             {
-                physics_body.vel_x = lerp_delta(physics_body.vel_x, 0, 0.3, _dt);
+                physics_body.vel_x = lerp_delta(physics_body.vel_x, 0, 0.3, 1);
             }
             
-            physics_body.vel_y += attribute.get_gravity() * _dt;
+            physics_body.vel_y += attribute.get_gravity();
             
-            physics_resolve_x(physics_body, _dt);
-            physics_resolve_y(physics_body, _dt);
+            physics_resolve_x(physics_body);
+            physics_resolve_y(physics_body);
             physics_body.sync_to_instance(id);
             
             exit;
@@ -63,13 +63,13 @@ function control_physics_item_drop(_dt, _id)
             // Too far from player - just physics
             if (physics_body.collision.ground)
             {
-                physics_body.vel_x = lerp_delta(physics_body.vel_x, 0, 0.3, _dt);
+                physics_body.vel_x = lerp_delta(physics_body.vel_x, 0, 0.3, 1);
             }
             
-            physics_body.vel_y += attribute.get_gravity() * _dt;
+            physics_body.vel_y += attribute.get_gravity();
             
-            physics_resolve_x(physics_body, _dt);
-            physics_resolve_y(physics_body, _dt);
+            physics_resolve_x(physics_body);
+            physics_resolve_y(physics_body);
             physics_body.sync_to_instance(id);
             
             exit;
@@ -78,12 +78,12 @@ function control_physics_item_drop(_dt, _id)
         // Attract to player
         var _speed = 5.2;
         
-        physics_body.vel_x = lerp_delta(physics_body.vel_x, sign(_inst_x - x) * _speed, 0.02, _dt);
-        physics_body.vel_y = lerp_delta(physics_body.vel_y, sign(_inst_y - y) * _speed, 0.02, _dt);
+        physics_body.vel_x = lerp_delta(physics_body.vel_x, sign(_inst_x - x) * _speed, 0.02, 1);
+        physics_body.vel_y = lerp_delta(physics_body.vel_y, sign(_inst_y - y) * _speed, 0.02, 1);
         
         // No gravity during attraction
-        physics_resolve_x(physics_body, _dt);
-        physics_resolve_y(physics_body, _dt);
+        physics_resolve_x(physics_body);
+        physics_resolve_y(physics_body);
         physics_body.sync_to_instance(id);
     }
 }

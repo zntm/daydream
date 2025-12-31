@@ -380,7 +380,7 @@ function ParticlePool() : Pool() constructor
         }
     }
     
-    static update_physics = function(_dt)
+    static update_physics = function()
     {
         if (collision_count <= 0) exit;
         

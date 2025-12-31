@@ -6,7 +6,7 @@
 global.spawn_density_grid = {}
 global.spawn_last_cleanup_time = 0;
 
-function control_creature_spawn(_dt)
+function control_creature_spawn()
 {
     if (IS_DEVELOPER_MODE) && (!global.dbg_settings[$ "spawn_creatures"]) exit;
     
@@ -217,7 +217,7 @@ function control_creature_spawn(_dt)
         return false;
     }
     
-    timer_creature_spawn += _dt / GAME_TICK;
+    timer_creature_spawn += 1 / GAME_TICK;
     
     var _world_save_data = global.world_save_data;
     
@@ -248,7 +248,7 @@ function control_creature_spawn(_dt)
     var _tile_yend   = round((_camera_y + _camera_height) / TILE_SIZE) + 4;
     
     // Periodically clean up density grid (remove entries for destroyed creatures)
-    global.spawn_last_cleanup_time += _dt / GAME_TICK;
+    global.spawn_last_cleanup_time += 1 / GAME_TICK;
     
     if (global.spawn_last_cleanup_time >= 5.0) // Cleanup every 5 seconds
     {

@@ -2,9 +2,9 @@
 /// @param {Struct.PhysicsBody} _body
 /// @param {Real} _dt
 
-function physics_resolve_y(_body, _dt)
+function physics_resolve_y(_body)
 {
-    var _vy = _body.vel_y * _dt;
+    var _vy = _body.vel_y;
     
     if (_vy == 0) return;
     

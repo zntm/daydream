@@ -2,17 +2,17 @@
 /// @function control_falling_tile(_dt)
 /// @param {real} _dt Delta time
 
-function control_falling_tile(_dt)
+function control_falling_tile()
 {
     // Handle fall delay
     if (fall_delay > 0)
     {
-        fall_delay -= _dt / GAME_TICK;
+        fall_delay -= 1 / GAME_TICK;
         exit;
     }
     
     // Apply gravity
-    yvelocity += gravity_value * _dt;
+    yvelocity += gravity_value;
     
     // Cap at terminal velocity
     if (yvelocity > PHYSICS_TERMINAL_YVELOCITY)
@@ -21,7 +21,7 @@ function control_falling_tile(_dt)
     }
     
     // Calculate new position
-    var _new_y = y + (yvelocity * _dt);
+    var _new_y = y + yvelocity;
     
     // Check for collision with solid tiles below
     var _world_x = floor(x / TILE_SIZE);

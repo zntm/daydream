@@ -3,7 +3,7 @@
 /// @param {Struct.InputState} _input
 /// @param {Real} _dt
 
-function physics_mode_fly(_body, _input, _dt)
+function physics_mode_fly(_body, _input)
 {
     var _attr = _body.attribute;
     
@@ -20,8 +20,6 @@ function physics_mode_fly(_body, _input, _dt)
     var _target_vx = _input.move_x * _speed;
     var _target_vy = _input.move_y * _speed;
     
-    _body.vel_x = lerp_delta(_body.vel_x, _target_vx, _accel, _dt);
-    _body.vel_y = lerp_delta(_body.vel_y, _target_vy, _accel, _dt);
-    
-    // No gravity, no jumps in fly mode
+    _body.vel_x = lerp_delta(_body.vel_x, _target_vx, _accel, 1);
+    _body.vel_y = lerp_delta(_body.vel_y, _target_vy, _accel, 1);
 }

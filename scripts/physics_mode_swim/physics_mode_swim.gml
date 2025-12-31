@@ -3,7 +3,7 @@
 /// @param {Struct.InputState} _input
 /// @param {Real} _dt
 
-function physics_process_jump(_body, _input, _dt)
+function physics_process_jump(_body, _input)
 {
     var _attr = _body.attribute;
     var _jump = _body.jump;
@@ -16,7 +16,7 @@ function physics_process_jump(_body, _input, _dt)
     // Coyote time - allow jumping shortly after leaving ground
     if (_jump.count == 0 && !_body.collision.ground)
     {
-        _jump.coyote_time += _dt;
+        _jump.coyote_time += 1;
         
         if (_jump.coyote_time > PHYSICS_JUMP_COYOTE_TIME)
         {
@@ -47,7 +47,7 @@ function physics_process_jump(_body, _input, _dt)
         }
         else
         {
-            _jump.held_time += _dt;
+            _jump.held_time += 1;
             
             if (_jump.held_time > 0 && _jump.held_time < _jump_time)
             {
@@ -55,7 +55,7 @@ function physics_process_jump(_body, _input, _dt)
                 var _progress = _jump.held_time / _jump_time;
                 var _force = 1 - power(_progress, _jump_falloff);
                 
-                _body.vel_y = -_jump_height * _dt * _force;
+                _body.vel_y = -_jump_height * _force;
             }
         }
     }

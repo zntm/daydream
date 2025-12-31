@@ -1,11 +1,11 @@
-function control_entity_sfx(_dt)
+function control_entity_sfx()
 {
-    timer_audio_effect -= _dt / GAME_TICK;
+    timer_audio_effect -= 1 / GAME_TICK;
     
     if (timer_audio_effect > 0)
     {
-        audio_effect_lowpass = lerp_delta(audio_effect_lowpass, audio_effect_lowpass_to, 0.1, _dt);
-        audio_effect_reverb  = lerp_delta(audio_effect_reverb,  audio_effect_reverb_to,  0.1, _dt);
+        audio_effect_lowpass = lerp_delta(audio_effect_lowpass, audio_effect_lowpass_to, 0.1, 1);
+        audio_effect_reverb  = lerp_delta(audio_effect_reverb,  audio_effect_reverb_to,  0.1, 1);
     }
     else
     {
@@ -58,7 +58,7 @@ function control_entity_sfx(_dt)
     
     if (input_state.move_x != 0) && (physics_body.collision.ground)
     {
-        timer_sfx_step += _dt / GAME_TICK;
+        timer_sfx_step += 1 / GAME_TICK;
         
         if (timer_sfx_step >= 0.28)
         {
