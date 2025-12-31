@@ -142,6 +142,8 @@ for (var i = 0; i < AUDIO_EFFECT_SIZE; ++i)
 global.floating_text_active = [];
 global.floating_text_pool = new FloatingTextPool();
 
+global.spatial_grid = new SpatialGrid(TILE_SIZE * 4);
+
 enum FILE_COMPONENT_TYPE {
     U8,
     U16,

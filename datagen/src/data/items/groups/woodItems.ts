@@ -124,7 +124,7 @@ export default (
             .addOnRandomTick([
                 new ItemScript("items/leaf_decay", {
                     particle: leavesParticleId,
-                }),
+                }, 0.03),
             ]),
     ),
     new DatagenReturnData(

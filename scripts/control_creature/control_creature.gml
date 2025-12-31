@@ -70,6 +70,7 @@ function control_creature(_dt)
     
     // --- SENSORS ---
     physics_body.sync_from_instance(id);
+    global.spatial_grid.update(physics_body);
     entity_update_collision(physics_body);
     
     var _target = instance_nearest(x, y, obj_Player);
@@ -382,7 +383,9 @@ function creature_handle_fall_damage()
                 spawn_floating_text(x, y, _value, 0, -3.9);
                 
                 if (hp <= 0)
+                if (hp <= 0)
                 {
+                    global.spatial_grid.remove(physics_body);
                     instance_destroy();
                     exit;
                 }

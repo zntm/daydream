@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"physics_resolve_y",
+  "%Name":"SpatialGrid",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"physics_resolve_y",
+  "name":"SpatialGrid",
   "parent":{
-    "name":"Physics",
-    "path":"folders/Scripts/Entity/Physics.yy",
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

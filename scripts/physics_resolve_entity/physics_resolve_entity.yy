@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"physics_resolve_y",
+  "%Name":"physics_resolve_entity",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"physics_resolve_y",
+  "name":"physics_resolve_entity",
   "parent":{
     "name":"Physics",
     "path":"folders/Scripts/Entity/Physics.yy",

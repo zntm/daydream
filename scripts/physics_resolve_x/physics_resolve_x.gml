@@ -46,15 +46,17 @@ function physics_resolve_x(_body, _dt)
         return;
     }
     
-    // Collision detected: Binary search (chop) for the contact point
+    // Collision detected: Binary search for contact point
+    // Complexity: O(log(distance)) with early termination
+    // Max iterations: ceil(log2(distance / 0.5)) = ~10 for 512px movement
     var _low = 0;
     var _high = _distance;
     var _best = 0;
     
-    // 10 iterations = 1/1024 precision (sub-pixel for movement up to 1024px)
-    repeat (10)
+    // Early termination when sub-pixel precision reached (< 0.5px)
+    while ((_high - _low) >= 0.5)
     {
-        var _mid = (_low + _high) / 2;
+        var _mid = (_low + _high) * 0.5;  // Multiply is faster than divide
         var _test_pos = _body.pos_x + (_direction * _mid);
         
         if (!tile_meeting(_test_pos, _body.pos_y))

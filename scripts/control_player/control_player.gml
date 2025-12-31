@@ -44,6 +44,7 @@ function control_player(_dt)
     
     // --- PHYSICS ---
     physics_body.sync_from_instance(id);
+    global.spatial_grid.update(physics_body);
     entity_update_collision(physics_body);
     
     // Choose physics mode based on debug settings

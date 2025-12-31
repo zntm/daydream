@@ -85,6 +85,7 @@ function control_entity_damage(_victim, _attacker, _base_damage, _variance = 0.0
         }
         else
         {
+            if (struct_exists(_victim, "physics_body")) global.spatial_grid.remove(_victim.physics_body);
             instance_destroy(_victim);
         }
         

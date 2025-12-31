@@ -11,6 +11,9 @@ enum MOVEMENT_MODE {
 
 function PhysicsBody(_attribute = undefined) constructor
 {
+    // Owner Instance ID (for SpatialGrid)
+    id = noone;
+    
     // Position
     pos_x = 0;
     pos_y = 0;
@@ -56,6 +59,7 @@ function PhysicsBody(_attribute = undefined) constructor
     /// @desc Sync position from instance
     static sync_from_instance = function(_inst)
     {
+        id = _inst.id;
         pos_x = _inst.x;
         pos_y = _inst.y;
         scale_x = _inst.image_xscale;

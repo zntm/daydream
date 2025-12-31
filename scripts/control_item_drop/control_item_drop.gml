@@ -8,6 +8,8 @@ function control_item_drop(_dt)
         
         instance_destroy();
         
+        global.spatial_grid.remove(physics_body);
+        
         exit;
     }
     
@@ -21,6 +23,11 @@ function control_item_drop(_dt)
     {
         image_angle = point_direction(x, y, x + physics_body.vel_x, y + physics_body.vel_y);
     }
+    
+    physics_body.sync_from_instance(id);
+    
+    // Update spatial grid
+    global.spatial_grid.update(physics_body);
     /*
     var _id = item.get_id();
     var _amount = item.get_amount();
@@ -82,6 +89,7 @@ function control_item_drop(_dt)
         
         if (item == undefined) || (item.get_amount() <= 0)
         {
+            global.spatial_grid.remove(physics_body);
             instance_destroy();
         }
     }
