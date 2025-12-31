@@ -632,6 +632,7 @@ function ProgParser(_tokens) constructor
         var _is_for_in = false;
         var _for_in_var = undefined;
         var _for_in_val_var = undefined; // Added
+        var _for_in_modifier = undefined;
         
         if (match(PROG_TOKEN.VAR))
         {
@@ -648,6 +649,15 @@ function ProgParser(_tokens) constructor
 
             if (match(PROG_TOKEN.IN))
             { // CHANGED check to match
+                 _is_for_in = true;
+                 
+                 // Check for modifier (key/value)
+                 if (check(PROG_TOKEN.IDENTIFIER)) {
+                     var _next = peek();
+                     if (_next.lexeme == "key" || _next.lexeme == "value") {
+                         _for_in_modifier = advance().lexeme;
+                     }
+                 }
                  _is_for_in = true;
                  // Extract variable name from decl
                  if (_init.type == PROG_AST.VAR_DECL) _for_in_var = _init.name;
@@ -672,6 +682,8 @@ function ProgParser(_tokens) constructor
                  if (_expression.left.type == PROG_AST.IDENTIFIER) _for_in_var = _expression.left.name;
                  else error_at_current("Expected identifier in for-in loop.");
                  
+                 _for_in_modifier = _expression.modifier;
+                 
                  // The 'collection' is the right side of the IN expression
                  // Note: We need to handle this carefully because parse_for_stmt expects to parse collection next
                  // But we already have it.
@@ -688,6 +700,14 @@ function ProgParser(_tokens) constructor
                   if (match(PROG_TOKEN.IN))
                  {
                     _is_for_in = true;
+                    
+                    // Check for modifier (key/value)
+                     if (check(PROG_TOKEN.IDENTIFIER)) {
+                         var _next = peek();
+                         if (_next.lexeme == "key" || _next.lexeme == "value") {
+                             _for_in_modifier = advance().lexeme;
+                         }
+                     }
                     // Verify _expression is valid lvalue (Identifier)
                     if (_expression.type == PROG_AST.IDENTIFIER) _for_in_var = _expression.name;
                     else error_at_current("Expected identifier in for-in loop.");
@@ -696,6 +716,14 @@ function ProgParser(_tokens) constructor
             else if (match(PROG_TOKEN.IN))
             {
                 _is_for_in = true;
+                
+                // Check for modifier (key/value)
+                 if (check(PROG_TOKEN.IDENTIFIER)) {
+                     var _next = peek();
+                     if (_next.lexeme == "key" || _next.lexeme == "value") {
+                         _for_in_modifier = advance().lexeme;
+                     }
+                 }
                 // Verify _expression is valid lvalue (Identifier)
                 if (_expression.type == PROG_AST.IDENTIFIER) _for_in_var = _expression.name;
                 else error_at_current("Expected identifier in for-in loop.");
@@ -736,7 +764,7 @@ function ProgParser(_tokens) constructor
             
             var _body = parse_statement();
             
-            return new ProgASTForInStmt(_for_in_var, _collection, _body, _for_in_val_var);
+            return new ProgASTForInStmt(_for_in_var, _collection, _body, _for_in_val_var, _for_in_modifier);
         }
         
         // Normal For Loop

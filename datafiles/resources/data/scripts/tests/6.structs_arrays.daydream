@@ -124,11 +124,21 @@ test_group("iteration", [
 
         test_expect(sum, 9)
     }),
-    test("for in struct", fn() {
+    test("for in key struct", fn() {
         var obj = { a: 1, b: 2 }
         var count = 0
 
-        for (k in obj) {
+        for (var k in key obj) {
+            count++
+        }
+
+        test_expect(count, 2)
+    }),
+    test("for in value struct", fn() {
+        var obj = { a: 1, b: 2 }
+        var count = 0
+
+        for (var v in value obj) {
             count++
         }
 
@@ -138,7 +148,7 @@ test_group("iteration", [
         var obj = { a: 1, b: 2 }
         var sum = 0
 
-        for (k, v in obj) {
+        for (var k, v in obj) {
             sum += v
         }
 

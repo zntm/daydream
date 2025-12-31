@@ -222,12 +222,14 @@ function ProgASTFuncExpr(_name, _params, _body) : ProgASTNode(PROG_AST.FUNC_EXPR
 }
 
 /// @desc For-In statement (for var in collection)
-function ProgASTForInStmt(_variable, _collection, _body, _value_var = undefined) : ProgASTNode(PROG_AST.FOR_IN_STMT) constructor
+/// @desc For-In statement (for var in collection)
+function ProgASTForInStmt(_variable, _collection, _body, _value_var = undefined, _modifier = undefined) : ProgASTNode(PROG_AST.FOR_IN_STMT) constructor
 {
     variable = _variable; // Identifier string (Key)
     value_var = _value_var; // Identifier string (Value, optional)
     collection = _collection; // Expression
     body = _body;
+    modifier = _modifier; // "key" | "value" | undefined
 }
 
 /// @desc Try-Catch statement

@@ -1155,14 +1155,47 @@ function ProgCompiler(_context_keys = []) constructor
             case PROG_AST.FOR_IN_STMT:
                 invalidate_constants(); // Invalidate before loop
                 compile_node(_node.collection);
-                emit(PROG_OP.ITER_INIT, undefined, _node.line);
+                
+                // Determine Iteration Mode
+                // 0: Default (Single var, no modifier) -> Error on struct
+                // 1: Key (modifier == "key")
+                // 2: Value (modifier == "value")
+                // 3: Pair (Two variables) -> OK on struct (implicit key iteration, fetching value manual)
+                
+                var _mode = 0;
+                
+                var _mod = undefined;
+                if (struct_exists(_node, "modifier")) _mod = _node.modifier;
+                
+                if (_mod == "key") _mode = 1;
+                else if (_mod == "value") _mode = 2;
+                else if (struct_exists(_node, "value_var") && _node.value_var != undefined) _mode = 3;
+                
+                emit(PROG_OP.ITER_INIT, _mode, _node.line);
                 var _start = bytecode.code_size;
                 emit(PROG_OP.ITER_NEXT, undefined, _node.line);
                 var _exit = emit(PROG_OP.JUMP_IF_FALSE, 0, _node.line);
                 
-                // If two variables requested (k, v in arr): first is key, second is value
-                if (struct_exists(_node, "value_var") && _node.value_var != undefined)
+                var _mod = undefined;
+                if (struct_exists(_node, "modifier")) _mod = _node.modifier;
+
+                if (_mod == "key")
                 {
+                    // Key iteration: Variable becomes the key
+                    emit(PROG_OP.DEFINE, add_constant(_node.variable), _node.line);
+                    emit(PROG_OP.POP);
+                }
+                else if (_mod == "value")
+                {
+                     // Value iteration: Variable becomes the value
+                     emit(PROG_OP.POP); // Discard Key
+                     emit(PROG_OP.ITER_GET_VAL, undefined, _node.line);
+                     emit(PROG_OP.DEFINE, add_constant(_node.variable), _node.line);
+                     emit(PROG_OP.POP);
+                }
+                else if (struct_exists(_node, "value_var") && _node.value_var != undefined)
+                {
+                     // If two variables requested (k, v in arr): first is key, second is value
                      // _node.variable is the key, _node.value_var is the value (per AST definition)
                      emit(PROG_OP.DEFINE, add_constant(_node.variable), _node.line); // Define Key
                      emit(PROG_OP.POP); // Consume Key
@@ -1172,7 +1205,7 @@ function ProgCompiler(_context_keys = []) constructor
                 }
                 else
                 {
-                    // Single variable: iterate over VALUES (not keys)
+                    // Single variable default: iterate over VALUES (not keys)
                     // Stack: Iter, Key - but we want the value
                     emit(PROG_OP.POP); // Pop the key, we don't need it
                     emit(PROG_OP.ITER_GET_VAL, undefined, _node.line); // Push value

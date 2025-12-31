@@ -558,7 +558,45 @@ function ProgVM_run(_vm, _bytecode)
                     case PROG_OP.INDEX_GET:
                         _idx = _stack[--_sp];
                         _arr = _stack[--_sp];
-                        _val = is_array(_arr) ? _arr[_idx] : (is_struct(_arr) ? _arr[$ _idx] : undefined);
+                        
+                        // Check for range slicing: _idx is ["range", start, end]
+                        if (is_array(_idx) && array_length(_idx) >= 3 && _idx[0] == "range")
+                        {
+                            if (is_array(_arr))
+                            {
+                                var _start = _idx[1];
+                                var _end = _idx[2];
+                                var _len = array_length(_arr);
+                                
+                                // Handle negative indices (python style) if desired? 
+                                // Task doesn't specify, but often useful. 
+                                // For now, simple clamping as per plan: 0 to length-1.
+                                
+                                if (_start < 0) _start = 0;
+                                if (_end >= _len) _end = _len - 1;
+                                
+                                var _slice_len = _end - _start + 1;
+                                
+                                if (_slice_len > 0)
+                                {
+                                    _val = array_create(_slice_len);
+                                    array_copy(_val, 0, _arr, _start, _slice_len);
+                                }
+                                else
+                                {
+                                    _val = [];
+                                }
+                            }
+                            else
+                            {
+                                runtime_error(PROGLANG_ERROR_TYPE.TYPE, "Range indexing only supported on arrays.");
+                            }
+                        }
+                        else
+                        {
+                            _val = is_array(_arr) ? _arr[_idx] : (is_struct(_arr) ? _arr[$ _idx] : undefined);
+                        }
+                        
                         _stack[@ _sp++] = _val;
                         break;
                     
@@ -890,7 +928,9 @@ function ProgVM_run(_vm, _bytecode)
                     // Iteration
                     case PROG_OP.ITER_INIT:
                         var _coll = _stack[--_sp];
+                        var _mode = _arg; // 0: Default, 1: Key, 2: Value, 3: Pair
                         var _iter = undefined;
+                        
                         // Check for range object (array with "range" marker)
                         if (is_array(_coll) && array_length(_coll) >= 3 && _coll[0] == "range")
                         {
@@ -903,6 +943,11 @@ function ProgVM_run(_vm, _bytecode)
                         }
                         else if (is_struct(_coll))
                         {
+                            if (_mode == 0)
+                            {
+                                runtime_error(PROGLANG_ERROR_TYPE.RUNTIME, "Iterating struct with 'in' requires explicit 'key' or 'value' modifier.");
+                            }
+                            
                             var _keys = variable_struct_get_names(_coll);
                             _iter = { type: "struct_iter", val: _coll, keys: _keys, idx: 0, len: array_length(_keys) };
                         }
