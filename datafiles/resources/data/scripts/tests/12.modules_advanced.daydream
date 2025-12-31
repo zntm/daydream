@@ -1,0 +1,22 @@
+test_group("modules advanced", [
+    test("default import", fn() {
+        import def, inc from "./modules/math_default.daydream"
+        test_expect(def, 100)
+        test_expect(inc(1), 2)
+    }),
+
+    test("import alias with default", fn() {
+        import inc as inc2, def as d from "./modules/math_default.daydream"
+        test_expect(inc2(2), 3)
+        test_expect(d, 100)
+    }),
+
+    test("module init throws", fn() {
+        try {
+            import bad from "./modules/throws_module.daydream"
+            test_expect(true, false) // should not reach
+        } catch (e) {
+            test_expect(e.type, ERROR_TYPE.RUNTIME)
+        }
+    }),
+])
