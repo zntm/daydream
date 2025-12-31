@@ -16,7 +16,7 @@ function control_physics_item_drop(_dt, _id)
             timer_pickup -= _time;
             
             // Friction on ground
-            if (tile_meeting(x, y + 1))
+            if (physics_body.collision.ground)
             {
                 physics_body.vel_x = lerp_delta(physics_body.vel_x, 0, 0.3, _dt);
             }
@@ -31,12 +31,16 @@ function control_physics_item_drop(_dt, _id)
             exit;
         }
         
-        inst = instance_nearest(x, y, obj_Player);
+        // Cache player search
+        if ((current_time % 100) < (1000 / 60)) || (!instance_exists(inst))
+        {
+            inst = instance_nearest(x, y, obj_Player);
+        }
         
         if (!instance_exists(inst))
         {
             // No player - just physics
-            if (tile_meeting(x, y + 1))
+            if (physics_body.collision.ground)
             {
                 physics_body.vel_x = lerp_delta(physics_body.vel_x, 0, 0.3, _dt);
             }
@@ -57,7 +61,7 @@ function control_physics_item_drop(_dt, _id)
         if (_distance >= 6.5 * TILE_SIZE)
         {
             // Too far from player - just physics
-            if (tile_meeting(x, y + 1))
+            if (physics_body.collision.ground)
             {
                 physics_body.vel_x = lerp_delta(physics_body.vel_x, 0, 0.3, _dt);
             }

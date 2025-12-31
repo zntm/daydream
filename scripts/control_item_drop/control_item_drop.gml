@@ -15,7 +15,7 @@ function control_item_drop(_dt)
     
     control_physics_item_drop(_dt, id);
     
-    if (tile_meeting(x, y + 1))
+    if (physics_body.collision.ground)
     {
         image_angle = 0;
     }
