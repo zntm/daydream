@@ -34,6 +34,11 @@ function proglang_execute(_source, _context = {}, _filepath = "")
         _vm[PROG_VM.SCOPE][PROG_SCOPE.VARS][$ "__dirname"] = _dirname;
         _vm[PROG_VM.SCOPE][PROG_SCOPE.VARS][$ "__filename"] = _filepath;
     }
+
+    // Inject common context variables into root scope for reliable access in nested blocks
+    if (struct_exists(_context, "x")) _vm[PROG_VM.SCOPE][PROG_SCOPE.VARS][$ "x"] = _context.x;
+    if (struct_exists(_context, "y")) _vm[PROG_VM.SCOPE][PROG_SCOPE.VARS][$ "y"] = _context.y;
+    if (struct_exists(_context, "z")) _vm[PROG_VM.SCOPE][PROG_SCOPE.VARS][$ "z"] = _context.z;
     
     // show_debug_message(_bytecode);
     

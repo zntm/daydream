@@ -1,4 +1,4 @@
-/// @desc Resolve X-axis collision - move body and handle wall collisions (instance context version)
+/// @desc Resolve X-axis collision - Hybrid (Binary Search + Iterative Stepping)
 /// @param {Struct.PhysicsBody} _body
 /// @param {Real} _dt
 
@@ -8,73 +8,92 @@ function physics_resolve_x(_body, _dt)
     
     if (_vx == 0) return;
     
-    var _distance = abs(_vx);
     var _direction = sign(_vx);
-    var _size = abs(_body.scale_x * PHYSICS_TILE_CHECK_SIZE);
+    var _distance = abs(_vx);
     
-    // Check if immediately blocked
-    if (tile_meeting(_body.pos_x + _direction, _body.pos_y))
+    // 1. Initial overlap check (stuck protection)
+    if (tile_meeting(_body.pos_x, _body.pos_y))
     {
-        _body.vel_x = 0;
-        if (_direction > 0) _body.collision.wall_right = true;
-        else _body.collision.wall_left = true;
-        return;
-    }
-    
-    // Fast path - no collision at destination
-    var _dest_x = _body.pos_x + _vx;
-    
-    // Tunneling prevention: check midpoints for large movements
-    var _tunneling_safe = true;
-    if (_distance > PHYSICS_TILE_CHECK_SIZE * 2)
-    {
-        var _mid_count = ceil(_distance / (PHYSICS_TILE_CHECK_SIZE * 2));
-        for (var i = 1; i < _mid_count; ++i)
+        if (!tile_meeting(_body.pos_x - _direction, _body.pos_y))
         {
-            var _p = _body.pos_x + (_vx * (i / _mid_count));
-            if (tile_meeting(_p, _body.pos_y))
-            {
-                _tunneling_safe = false;
-                break;
-            }
+            _body.pos_x -= _direction;
         }
     }
     
-    if (_tunneling_safe && !tile_meeting(_dest_x, _body.pos_y))
+    // 2. Fast Path: Check destination
+    if (!tile_meeting(_body.pos_x + _vx, _body.pos_y))
     {
-        _body.pos_x = _dest_x;
+        _body.pos_x += _vx;
         return;
     }
     
-    // Collision detected: Binary search for contact point
-    // Complexity: O(log(distance)) with early termination
-    // Max iterations: ceil(log2(distance / 0.5)) = ~10 for 512px movement
-    var _low = 0;
-    var _high = _distance;
-    var _best = 0;
+    // 3. Hybrid approach
+    // Step A: Binary Search to get close quickly (optimization for high speeds)
+    // Only worth it if distance is significant (e.g. > 4 pixels)
     
-    // Early termination when sub-pixel precision reached (< 0.5px)
-    while ((_high - _low) >= 0.5)
+    var _dist_remain = _distance;
+    
+    if (_dist_remain > 4)
     {
-        var _mid = (_low + _high) * 0.5;  // Multiply is faster than divide
-        var _test_pos = _body.pos_x + (_direction * _mid);
+        var _low = 0;
+        var _high = _dist_remain;
+        var _best = 0;
         
-        if (!tile_meeting(_test_pos, _body.pos_y))
+        // Search until range is small (~2px)
+        while ((_high - _low) > 2)
         {
-            _best = _mid;
-            _low = _mid;
+            var _mid = (_low + _high) * 0.5;
+            if (!tile_meeting(_body.pos_x + (_direction * _mid), _body.pos_y))
+            {
+                _best = _mid;
+                _low = _mid;
+            }
+            else
+            {
+                _high = _mid;
+            }
+        }
+        
+        // Move the safe amount found by binary search
+        _body.pos_x += _direction * _best;
+        _dist_remain -= _best;
+    }
+    
+    // Step B: Iterative Stepping for the final gap (Pixel-Perfect Accuracy)
+    // Now we are close (within ~2-4px + remainder), so O(N) is cheap here.
+    
+    var _move = 0;
+    var _limit = ceil(_dist_remain);
+    var _hit = false;
+    
+    for (var i = 1; i <= _limit; ++i)
+    {
+        if (!tile_meeting(_body.pos_x + _direction, _body.pos_y))
+        {
+            _body.pos_x += _direction;
+            _move += 1;
         }
         else
         {
-            _high = _mid;
+            _hit = true;
+            break;
         }
     }
     
-    // Commit best move
-    _body.pos_x += _direction * _best;
-    
-    // Handle collision state
-    _body.vel_x = 0;
-    if (_direction > 0) _body.collision.wall_right = true;
-    else _body.collision.wall_left = true;
+    // Handle sub-pixel remainder if no hit
+    if (!_hit)
+    {
+        var _final_fraction = _dist_remain - _move;
+        if (_final_fraction > 0 && !tile_meeting(_body.pos_x + (_direction * _final_fraction), _body.pos_y))
+        {
+             _body.pos_x += _direction * _final_fraction;
+        }
+    }
+    else
+    {
+        // Hit logic
+        _body.vel_x = 0;
+        if (_direction > 0) _body.collision.wall_right = true;
+        else _body.collision.wall_left = true;
+    }
 }

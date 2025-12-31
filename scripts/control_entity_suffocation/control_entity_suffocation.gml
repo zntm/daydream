@@ -25,8 +25,5 @@ function control_entity_suffocation(_entity)
         var _damage = 2; // Fixed damage amount?
         
         spawn_floating_text(_x, _y - 12, _damage, 0, -2, 0.5, 0.5, 0, c_red);
-        
-        // Visual feedback
-        spawn_floating_text(_x, _y - 12, _damage, 0, -2, c_red);
     }
 }

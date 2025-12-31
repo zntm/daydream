@@ -505,6 +505,10 @@ proglang_function_register("tile_place", function(_args) {
     tile_update_surrounding(_x, _y, _z);
 });
 
+proglang_function_register("spawn_particle", function(_args) {
+    spawn_particle(_args[1] * TILE_SIZE, _args[2] * TILE_SIZE, _args[0]);
+});
+
 proglang_function_register("tag_get", function(_args) {
     return global.tag_data[$ $"#{_args[0]}"];
 });

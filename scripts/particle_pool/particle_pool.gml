@@ -384,7 +384,8 @@ function ParticlePool() : Pool() constructor
     {
         if (collision_count <= 0) exit;
         
-        var _dt_normalized = _dt / GAME_TICK;
+        // NOTE: No delta time scaling needed here - we're inside control_gametick's fixed tick loop
+        // and velocities/gravity already have GAME_TICK baked in from spawn()
         var _sprite_asset = global.sprite_asset;
         
         for (var j = 0; j < collision_count; ++j)
@@ -395,8 +396,8 @@ function ParticlePool() : Pool() constructor
             
             if (gravity_amount[i] != 0)
             {
-                xvelocity[@ i] += lengthdir_x(gravity_amount[i], gravity_direction[i]) * _dt_normalized;
-                yvelocity[@ i] += lengthdir_y(gravity_amount[i], gravity_direction[i]) * _dt_normalized;
+                xvelocity[@ i] += lengthdir_x(gravity_amount[i], gravity_direction[i]);
+                yvelocity[@ i] += lengthdir_y(gravity_amount[i], gravity_direction[i]);
             }
             
             var _gravity_point_x = gravity_point_x[i];
@@ -431,8 +432,8 @@ function ParticlePool() : Pool() constructor
                     
                     var _gravity_point_direction = point_direction(px[i], py[i], _gravity_point_x, _gravity_point_y);
                     
-                    xvelocity[@ i] += lengthdir_x(_force, _gravity_point_direction) * _dt_normalized;
-                    yvelocity[@ i] += lengthdir_y(_force, _gravity_point_direction) * _dt_normalized;
+                    xvelocity[@ i] += lengthdir_x(_force, _gravity_point_direction);
+                    yvelocity[@ i] += lengthdir_y(_force, _gravity_point_direction);
                 }
             }
             
@@ -449,7 +450,7 @@ function ParticlePool() : Pool() constructor
             var _bbox_t = (sprite_get_bbox_top(_sprite)    - _yoffset) * _yscale;
             var _bbox_b = (sprite_get_bbox_bottom(_sprite) - _yoffset) * _yscale;
             
-            var _xvelocity = xvelocity[i] * _dt_normalized;
+            var _xvelocity = xvelocity[i];
             
             if (_xvelocity != 0)
             {
@@ -478,7 +479,7 @@ function ParticlePool() : Pool() constructor
                 }
             }
             
-            var _yvelocity = yvelocity[i] * _dt_normalized;
+            var _yvelocity = yvelocity[i];
             
             if (_yvelocity != 0)
             {
