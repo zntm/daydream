@@ -27,73 +27,36 @@ function physics_resolve_x(_body, _dt)
         return;
     }
     
-    // 3. Hybrid approach
-    // Step A: Binary Search to get close quickly (optimization for high speeds)
-    // Only worth it if distance is significant (e.g. > 4 pixels)
-    
+    // 3. Binary Chop (High Precision)
     var _dist_remain = _distance;
+    var _low = 0;
+    var _high = _dist_remain;
+    var _best = 0;
     
-    if (_dist_remain > 4)
+    // Perform binary search to find the furthest safe distance
+    // 0.01 precision is sufficient for sub-pixel movement
+    while ((_high - _low) > 0.01)
     {
-        var _low = 0;
-        var _high = _dist_remain;
-        var _best = 0;
-        
-        // Search until range is small (~2px)
-        while ((_high - _low) > 2)
+        var _mid = (_low + _high) * 0.5;
+        if (!tile_meeting(_body.pos_x + (_direction * _mid), _body.pos_y))
         {
-            var _mid = (_low + _high) * 0.5;
-            if (!tile_meeting(_body.pos_x + (_direction * _mid), _body.pos_y))
-            {
-                _best = _mid;
-                _low = _mid;
-            }
-            else
-            {
-                _high = _mid;
-            }
-        }
-        
-        // Move the safe amount found by binary search
-        _body.pos_x += _direction * _best;
-        _dist_remain -= _best;
-    }
-    
-    // Step B: Iterative Stepping for the final gap (Pixel-Perfect Accuracy)
-    // Now we are close (within ~2-4px + remainder), so O(N) is cheap here.
-    
-    var _move = 0;
-    var _limit = ceil(_dist_remain);
-    var _hit = false;
-    
-    for (var i = 1; i <= _limit; ++i)
-    {
-        if (!tile_meeting(_body.pos_x + _direction, _body.pos_y))
-        {
-            _body.pos_x += _direction;
-            _move += 1;
+            _best = _mid;
+            _low = _mid;
         }
         else
         {
-            _hit = true;
-            break;
+            _high = _mid;
         }
     }
     
-    // Handle sub-pixel remainder if no hit
-    if (!_hit)
+    // Apply the best safe movement
+    if (_best > 0)
     {
-        var _final_fraction = _dist_remain - _move;
-        if (_final_fraction > 0 && !tile_meeting(_body.pos_x + (_direction * _final_fraction), _body.pos_y))
-        {
-             _body.pos_x += _direction * _final_fraction;
-        }
+        _body.pos_x += _direction * _best;
     }
-    else
-    {
-        // Hit logic
-        _body.vel_x = 0;
-        if (_direction > 0) _body.collision.wall_right = true;
-        else _body.collision.wall_left = true;
-    }
+    
+    // Collision Response
+    _body.vel_x = 0;
+    if (_direction > 0) _body.collision.wall_right = true;
+    else _body.collision.wall_left = true;
 }
