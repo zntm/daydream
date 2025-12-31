@@ -414,6 +414,14 @@ function proglang_vm_run(_vm, _bytecode)
                         }
                         break; 
                     
+                    case PROG_OP.STRING_CONCAT:
+                        _b = _stack[--_sp]; 
+                        _a = _stack[_sp - 1];
+                        var _sa = is_string(_a) ? _a : ((is_bool(_a)) ? ((_a) ? "true" : "false") : string(_a));
+                        var _sb = is_string(_b) ? _b : ((is_bool(_b)) ? ((_b) ? "true" : "false") : string(_b));
+                        _stack[@ _sp - 1] = _sa + _sb;
+                        break; 
+                    
                     case PROG_OP.SUB: _b = _stack[--_sp]; _stack[@ _sp - 1] -= _b; break;
                     case PROG_OP.MUL: _b = _stack[--_sp]; _stack[@ _sp - 1] *= _b; break;
                     case PROG_OP.DIV: _b = _stack[--_sp]; _stack[@ _sp - 1] /= _b; break;

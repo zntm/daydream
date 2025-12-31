@@ -57,7 +57,8 @@ enum PROG_OP
     DEBUG_LINE,
     
     // New v2 Ops
-    IN_CHECK, IN_KEY, IN_VALUE, MAKE_RANGE
+    IN_CHECK, IN_KEY, IN_VALUE, MAKE_RANGE,
+    STRING_CONCAT
 }
 
 /// @desc Array indices for function data (replaces struct)
@@ -530,7 +531,22 @@ function ProgCompiler(_context_keys = []) constructor
                 var _opcode;
                 switch (_node.op)
                 {
-                    case PROG_TOKEN.PLUS: _opcode = PROG_OP.ADD; break;
+                    case PROG_TOKEN.PLUS: 
+                        // Check if we can infer string type from literals or constants
+                        var _is_str_left = (_node.left.type == PROG_AST.STRING_LITERAL) || 
+                                           (_node.left.type == PROG_AST.IDENTIFIER && is_string(get_const(_node.left.name)));
+                        var _is_str_right = (_node.right.type == PROG_AST.STRING_LITERAL) || 
+                                            (_node.right.type == PROG_AST.IDENTIFIER && is_string(get_const(_node.right.name)));
+                                            
+                        if (_is_str_left || _is_str_right)
+                        {
+                            _opcode = PROG_OP.STRING_CONCAT;
+                        }
+                        else
+                        {
+                            _opcode = PROG_OP.ADD; 
+                        }
+                        break;
                     case PROG_TOKEN.MINUS: _opcode = PROG_OP.SUB; break;
                     case PROG_TOKEN.STAR: _opcode = PROG_OP.MUL; break;
                     case PROG_TOKEN.SLASH: _opcode = PROG_OP.DIV; break;
