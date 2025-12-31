@@ -21,68 +21,58 @@ function physics_resolve_x(_body, _dt)
         return;
     }
     
-    // Fast path - small movement with no collision
-    if (_distance <= _size && !tile_meeting(_body.pos_x + _vx, _body.pos_y))
+    // Fast path - no collision at destination
+    var _dest_x = _body.pos_x + _vx;
+    
+    // Tunneling prevention: check midpoints for large movements
+    var _tunneling_safe = true;
+    if (_distance > PHYSICS_TILE_CHECK_SIZE * 2)
     {
-        _body.pos_x += _vx;
+        var _mid_count = ceil(_distance / (PHYSICS_TILE_CHECK_SIZE * 2));
+        for (var i = 1; i < _mid_count; ++i)
+        {
+            var _p = _body.pos_x + (_vx * (i / _mid_count));
+            if (tile_meeting(_p, _body.pos_y))
+            {
+                _tunneling_safe = false;
+                break;
+            }
+        }
+    }
+    
+    if (_tunneling_safe && !tile_meeting(_dest_x, _body.pos_y))
+    {
+        _body.pos_x = _dest_x;
         return;
     }
     
-    // Step through movement
-    var _remaining = _distance;
+    // Collision detected: Binary search (chop) for the contact point
+    var _low = 0;
+    var _high = _distance;
+    var _best = 0;
     
-    while (_remaining > 0)
+    // 10 iterations = 1/1024 precision (sub-pixel for movement up to 1024px)
+    repeat (10)
     {
-        var _step = min(_remaining, _size);
-        var _offset = _direction * _step;
+        var _mid = (_low + _high) / 2;
+        var _test_pos = _body.pos_x + (_direction * _mid);
         
-        if (!tile_meeting(_body.pos_x + _offset, _body.pos_y))
+        if (!tile_meeting(_test_pos, _body.pos_y))
         {
-            _body.pos_x += _offset;
-            _remaining -= _step;
-            continue;
+            _best = _mid;
+            _low = _mid;
         }
-        
-        // Binary search for precision (limit 4 iterations for size 8-16)
-        var _low = 0;
-        var _high = abs(_offset);
-        var _best = 0;
-        
-        // 4 iterations covers range up to 16 pixels precision
-        repeat (4) 
+        else
         {
-            if (_low > _high) break;
-            
-            var _mid = (_low + _high) div 2;
-            if (_mid == 0) // Tiny step optimization
-            {
-                _low = 1; 
-                continue;
-            }
-            
-            var _test_pos = _body.pos_x + (_direction * _mid);
-            if (!tile_meeting(_test_pos, _body.pos_y))
-            {
-                _best = _mid;
-                _low = _mid + 1;
-            }
-            else
-            {
-                _high = _mid - 1;
-            }
+            _high = _mid;
         }
-        
-        // Commit best move
-        if (_best > 0)
-        {
-            _body.pos_x += _direction * _best;
-        }
-
-        // We hit the wall (since we entered this block because full step failed)
-        _body.vel_x = 0;
-        if (_direction > 0) _body.collision.wall_right = true;
-        else _body.collision.wall_left = true;
-        return;
-        break;
     }
+    
+    // Commit best move
+    _body.pos_x += _direction * _best;
+    
+    // Handle collision state
+    _body.vel_x = 0;
+    if (_direction > 0) _body.collision.wall_right = true;
+    else _body.collision.wall_left = true;
 }

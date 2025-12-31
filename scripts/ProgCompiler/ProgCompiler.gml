@@ -924,6 +924,18 @@ function ProgCompiler(_context_keys = []) constructor
                         }
                     }
                     _amount = clamp(_amount, 1, array_length(loop_stack));
+                    
+                    // Pop items for each loop level being broken out of
+                    for (var i = 0; i < _amount; i++)
+                    {
+                        var _lidx = array_length(loop_stack) - 1 - i;
+                        var _l = loop_stack[_lidx];
+                        if (struct_exists(_l, "needs_pop") && _l.needs_pop)
+                        {
+                            emit(PROG_OP.POP, undefined, _node.line);
+                        }
+                    }
+                    
                     var _target_idx = array_length(loop_stack) - _amount;
                     var _ctx = loop_stack[_target_idx];
                     array_push(_ctx.breaks, emit(PROG_OP.JUMP, 0, _node.line));
@@ -1173,12 +1185,14 @@ function ProgCompiler(_context_keys = []) constructor
                 
                 emit(PROG_OP.ITER_INIT, _mode, _node.line);
                 var _start = bytecode.code_size;
+                
+                // Track loop for break/continue
+                var _loop_ctx = { start: _start, continue_addr: _start, breaks: [], needs_pop: true }
+                array_push(loop_stack, _loop_ctx);
+                
                 emit(PROG_OP.ITER_NEXT, undefined, _node.line);
                 var _exit = emit(PROG_OP.JUMP_IF_FALSE, 0, _node.line);
                 
-                var _mod = undefined;
-                if (struct_exists(_node, "modifier")) _mod = _node.modifier;
-    
                 if (_mod == "key")
                 {
                     // Key iteration: Variable becomes the key
@@ -1216,7 +1230,13 @@ function ProgCompiler(_context_keys = []) constructor
                 compile_node(_node.body);
                 emit(PROG_OP.JUMP, _start, _node.line);
                 patch_jump(_exit, bytecode.code_size);
-                emit(PROG_OP.POP);
+                emit(PROG_OP.POP); // Pop iterator
+                
+                array_pop(loop_stack);
+                for (var i = 0; i < array_length(_loop_ctx.breaks); i++)
+                {
+                    patch_jump(_loop_ctx.breaks[i], bytecode.code_size);
+                }
                 break;
                 
             case PROG_AST.TRY_STMT:
@@ -1343,26 +1363,18 @@ function ProgCompiler(_context_keys = []) constructor
             case PROG_AST.OPTIONAL_MEMBER:
                 // obj?.prop -> if obj is null/undefined, result is undefined
                 compile_node(_node.target);
-                emit(PROG_OP.DUP, undefined, _node.line);
                 var _skip = emit(PROG_OP.JUMP_IF_NULL, 0, _node.line);
                 emit(PROG_OP.MEMBER_GET, add_constant(_node.property), _node.line);
-                var _end = emit(PROG_OP.JUMP, 0, _node.line);
                 patch_jump(_skip, bytecode.code_size);
-                // At this point stack has: undefined (from DUP of null target)
-                patch_jump(_end, bytecode.code_size);
                 break;
                 
             case PROG_AST.OPTIONAL_INDEX:
                 // obj?.[idx] -> if obj is null/undefined, result is undefined
                 compile_node(_node.target);
-                emit(PROG_OP.DUP, undefined, _node.line);
                 var _skip = emit(PROG_OP.JUMP_IF_NULL, 0, _node.line);
                 compile_node(_node.index);
                 emit(PROG_OP.INDEX_GET, undefined, _node.line);
-                var _end = emit(PROG_OP.JUMP, 0, _node.line);
                 patch_jump(_skip, bytecode.code_size);
-                // At this point stack has: undefined (from DUP of null target)
-                patch_jump(_end, bytecode.code_size);
                 break;
         }
     }

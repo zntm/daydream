@@ -21,83 +21,75 @@ function physics_resolve_y(_body, _dt)
         return;
     }
     
-    // Fast path
-    if (_distance <= _size && !tile_meeting(_body.pos_x, _body.pos_y + _vy))
+    // Fast path - no collision at destination
+    var _dest_y = _body.pos_y + _vy;
+    
+    // Tunneling prevention: check midpoints for large movements
+    var _tunneling_safe = true;
+    if (_distance > PHYSICS_TILE_CHECK_SIZE * 2)
     {
-        _body.pos_y += _vy;
+        var _mid_count = ceil(_distance / (PHYSICS_TILE_CHECK_SIZE * 2));
+        for (var i = 1; i < _mid_count; ++i)
+        {
+            var _p = _body.pos_y + (_vy * (i / _mid_count));
+            if (tile_meeting(_body.pos_x, _p))
+            {
+                _tunneling_safe = false;
+                break;
+            }
+        }
+    }
+    
+    if (_tunneling_safe && !tile_meeting(_body.pos_x, _dest_y))
+    {
+        _body.pos_y = _dest_y;
         return;
     }
     
-    // Step through movement
-    var _remaining = _distance;
-    
-    while (_remaining > 0)
+    // Head bump nudge (when jumping into corner)
+    if (_direction < 0)
     {
-        var _step = min(_remaining, _size);
-        var _offset = _direction * _step;
-        
-        if (!tile_meeting(_body.pos_x, _body.pos_y + _offset))
+        for (var j = 1; j <= PHYSICS_GLOBAL_THRESHOLD_NUDGE; ++j)
         {
-            _body.pos_y += _offset;
-            _remaining -= _step;
-            continue;
-        }
-        
-        // Head bump nudge (when jumping into corner)
-        if (_direction < 0)
-        {
-            for (var j = 1; j <= PHYSICS_GLOBAL_THRESHOLD_NUDGE; ++j)
+            if (!tile_meeting(_body.pos_x + j, _body.pos_y))
             {
-                if (!tile_meeting(_body.pos_x + j, _body.pos_y))
-                {
-                    _body.pos_x += j;
-                    continue;  // Continue outer loop
-                }
-                if (!tile_meeting(_body.pos_x - j, _body.pos_y))
-                {
-                    _body.pos_x -= j;
-                    continue;
-                }
+                _body.pos_x += j;
+                break;
+            }
+            if (!tile_meeting(_body.pos_x - j, _body.pos_y))
+            {
+                _body.pos_x -= j;
+                break;
             }
         }
-        
-        // Binary search
-        var _low = 0;
-        var _high = abs(_offset);
-        var _best = 0;
-        
-        repeat (4)
-        {
-            if (_low > _high) break;
-             
-            var _mid = (_low + _high) div 2;
-             if (_mid == 0) 
-            {
-                _low = 1;
-                continue;
-            }
-
-            var _test_pos = _body.pos_y + (_direction * _mid);
-            if (!tile_meeting(_body.pos_x, _test_pos))
-            {
-                _best = _mid;
-                _low = _mid + 1;
-            }
-            else
-            {
-                _high = _mid - 1;
-            }
-        }
-        
-        if (_best > 0)
-        {
-             _body.pos_y += _direction * _best;
-        }
-
-        // Hit the ground/ceiling
-        _body.vel_y = 0;
-        if (_direction > 0) _body.collision.ground = true;
-        else _body.collision.ceiling = true;
-        return;
     }
+    
+    // Collision detected: Binary search (chop) for the contact point
+    var _low = 0;
+    var _high = _distance;
+    var _best = 0;
+    
+    repeat (10)
+    {
+        var _mid = (_low + _high) / 2;
+        var _test_pos = _body.pos_y + (_direction * _mid);
+        
+        if (!tile_meeting(_body.pos_x, _test_pos))
+        {
+            _best = _mid;
+            _low = _mid;
+        }
+        else
+        {
+            _high = _mid;
+        }
+    }
+    
+    // Commit best move
+    _body.pos_y += _direction * _best;
+    
+    // Handle collision state
+    _body.vel_y = 0;
+    if (_direction > 0) _body.collision.ground = true;
+    else _body.collision.ceiling = true;
 }
