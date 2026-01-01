@@ -9,33 +9,40 @@ function physics_move_contact_x(_body)
     var _distance = abs(_vx);
     var _direction = sign(_vx);
     
+    // Horizontal collision ignores platforms (usually)
+    // Adjust this mask if your game treats side-collisions with platforms as blocked
+    var _collision_mask = ITEM_TYPE_BIT.SOLID; 
+    
     // 1. Fast Path: Swept collision check for the whole move
-    if (!tile_meeting_swept(_body.pos_x, _body.pos_y, _body.pos_x + _vx, _body.pos_y))
+    if (!tile_meeting_swept(_body.pos_x, _body.pos_y, _body.pos_x + _vx, _body.pos_y, CHUNK_DEPTH_DEFAULT, _collision_mask))
     {
         _body.pos_x += _vx;
         return;
     }
     
-    // 2. Binary Chop (Swept)
-    var _current_x = _body.pos_x;
-    var _step = _distance;
+    // 2. Binary Chop
+    var _low = 0;
+    var _high = _distance;
     
-    // Perform binary search to find the furthest safe distance
-    // Using a fixed number of iterations for consistent performance (e.g., 10 iterations = ~0.001 precision for 10px move)
-    // Or keep the epsilon approach for variable precision
-    while (_step > 0.01)
+    // Keep chopping until precision is high enough
+    while ((_high - _low) > 0.05)
     {
-        _step *= 0.5;
-        var _target_x = _current_x + (_direction * _step);
+        var _mid = (_low + _high) * 0.5;
+        var _target_x = _body.pos_x + (_direction * _mid);
         
-        // Check if the gap between current safe pos and target is clear
-        if (!tile_meeting_swept(_current_x, _body.pos_y, _target_x, _body.pos_y))
+        // Check if path to mid is clear
+        if (!tile_meeting_swept(_body.pos_x, _body.pos_y, _target_x, _body.pos_y, CHUNK_DEPTH_DEFAULT, _collision_mask))
         {
-            _current_x = _target_x;
+            _low = _mid; // Safe to move at least this far
+        }
+        else
+        {
+            _high = _mid; // Blocked somewhere before or at mid
         }
     }
     
-    _body.pos_x = _current_x;
+    // Apply safe movement
+    _body.pos_x += (_direction * _low);
     
     // Collision Response
     _body.vel_x = 0;
@@ -54,31 +61,42 @@ function physics_move_contact_y(_body)
     var _distance = abs(_vy);
     var _direction = sign(_vy);
     
+    // Vertical collision: Down = Solid + Platform, Up = Solid only
+    var _collision_mask = ITEM_TYPE_BIT.SOLID;
+    if (_direction > 0)
+    {
+        _collision_mask |= ITEM_TYPE_BIT.PLATFORM;
+    }
+    
     // 1. Fast Path: Swept collision check for the whole move
-    if (!tile_meeting_swept(_body.pos_x, _body.pos_y, _body.pos_x, _body.pos_y + _vy))
+    if (!tile_meeting_swept(_body.pos_x, _body.pos_y, _body.pos_x, _body.pos_y + _vy, CHUNK_DEPTH_DEFAULT, _collision_mask))
     {
         _body.pos_y += _vy;
         return;
     }
     
-    // 2. Binary Chop (Swept)
-    var _current_y = _body.pos_y;
-    var _step = _distance;
+    // 2. Binary Chop
+    var _low = 0;
+    var _high = _distance;
     
-    // Perform binary search to find the furthest safe distance
-    while (_step > 0.01)
+    while ((_high - _low) > 0.05)
     {
-        _step *= 0.5;
-        var _target_y = _current_y + (_direction * _step);
+        var _mid = (_low + _high) * 0.5;
+        var _target_y = _body.pos_y + (_direction * _mid);
         
-        // Check if the gap between current safe pos and target is clear
-        if (!tile_meeting_swept(_body.pos_x, _current_y, _body.pos_x, _target_y))
+        // Check if path to mid is clear
+        if (!tile_meeting_swept(_body.pos_x, _body.pos_y, _body.pos_x, _target_y, CHUNK_DEPTH_DEFAULT, _collision_mask))
         {
-            _current_y = _target_y;
+            _low = _mid;
+        }
+        else
+        {
+            _high = _mid;
         }
     }
     
-    _body.pos_y = _current_y;
+    // Apply safe movement
+    _body.pos_y += (_direction * _low);
     
     // Collision Response
     _body.vel_y = 0;

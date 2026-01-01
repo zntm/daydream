@@ -15,7 +15,11 @@ function control_item_drop()
     
     control_physics_item_drop(id);
     
-    if (physics_body.collision.ground)
+    if (variable_instance_exists(id, "is_attracted") && (is_attracted))
+    {
+        image_angle = point_direction(x, y, inst.x, inst.y);
+    }
+    else if (physics_body.collision.ground)
     {
         image_angle = 0;
     }

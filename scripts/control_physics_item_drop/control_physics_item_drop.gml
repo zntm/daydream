@@ -8,6 +8,8 @@ function control_physics_item_drop(_id)
     
     with (_id)
     {
+        is_attracted = false;
+        
         physics_body.sync_from_instance(id);
         
         // During pickup delay, just physics
@@ -76,6 +78,7 @@ function control_physics_item_drop(_id)
         }
         
         // Attract to player
+        is_attracted = true;
         var _speed = 5.2;
         
         physics_body.vel_x = lerp_delta(physics_body.vel_x, sign(_inst_x - x) * _speed, 0.02, 1);
