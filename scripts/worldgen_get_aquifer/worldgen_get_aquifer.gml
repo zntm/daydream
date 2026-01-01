@@ -19,10 +19,10 @@ function worldgen_get_aquifer(_x, _y, _surface_height, _seed, _world_data = glob
         // Check if we're in this aquifer's depth range
         if (_depth >= _aq.depth_min) && (_depth <= _aq.depth_max)
         {
-            var _noise_scale = _aq[$ "noise_scale"] ?? 0.02;
+            var _noise_scale = _aq.noise_scale;
             
             // Use noise to determine if this position is in an aquifer pocket
-            var _noise = open_simplex_noise(_x * _noise_scale, _y * _noise_scale + ((0xffff * (i + 10)) + 500), 255, _aq.octaves);
+            var _noise = open_simplex_noise(_x * _noise_scale, _y * _noise_scale + ((0xffff * (i + 10)) + 500), _aq.range, _aq.octaves);
             
             if (_noise > _aq.threshold)
             {

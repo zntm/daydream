@@ -24,7 +24,7 @@ function worldgen_get_surface_height(_x, _seed, _world_data = global.world_data[
     // Use biome salt to decorrelate terrain between different biome families
     // Biome variants with the same salt will share identical terrain shapes
     var _salt = _biome_data.get_salt();
-    var _base_noise = open_simplex_noise(_x * _world_data.get_surface_noise_scale(), -40 + _salt, _base_amplitude, _octaves);
+    var _base_noise = open_simplex_noise(_x * _world_data.get_surface_noise_scale(), _world_data.get_surface_seed_offset() + _salt, _base_amplitude, _octaves);
     
     // Apply biome modifiers
     var _height_offset = _biome_data.get_terrain_height_offset();
@@ -67,7 +67,7 @@ function worldgen_get_surface_height(_x, _seed, _world_data = global.world_data[
         {
             var _biome_left = global.biome_data[$ _biome_id_left];
             
-            var _noise_left = open_simplex_noise((_x - _smoothing_range) * _world_data.get_surface_noise_scale(), -40, _base_amplitude, _octaves);
+            var _noise_left = open_simplex_noise((_x - _smoothing_range) * _world_data.get_surface_noise_scale(), _world_data.get_surface_seed_offset(), _base_amplitude, _octaves);
             var _height_left = _surface_start - _world_data.get_surface_noise_offset_min() 
                 + round(_noise_left * _biome_left.get_terrain_amplitude_scale()) 
                 + _biome_left.get_terrain_height_offset();
@@ -82,7 +82,7 @@ function worldgen_get_surface_height(_x, _seed, _world_data = global.world_data[
         {
             var _biome_right = global.biome_data[$ _biome_id_right];
             
-            var _noise_right = open_simplex_noise((_x + _smoothing_range) * _world_data.get_surface_noise_scale(), -40, _base_amplitude, _octaves);
+            var _noise_right = open_simplex_noise((_x + _smoothing_range) * _world_data.get_surface_noise_scale(), _world_data.get_surface_seed_offset(), _base_amplitude, _octaves);
             var _height_right = _surface_start - _world_data.get_surface_noise_offset_min() 
                 + round(_noise_right * _biome_right.get_terrain_amplitude_scale()) 
                 + _biome_right.get_terrain_height_offset();

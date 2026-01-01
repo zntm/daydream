@@ -82,6 +82,14 @@ export class WorldSky {
     private noise_scale_region: number;
     private noise_scale_edge: number;
     private noise_scale_detail: number;
+    private region_offset_y?: number;
+    private region_range?: number;
+    private region_octaves?: number;
+    private region_threshold?: number;
+    private edge_noise_amplitude?: number;
+    private edge_noise_octaves?: number;
+    private detail_noise_amplitude?: number;
+    private detail_noise_octaves?: number;
 
     constructor(
         enabled: boolean = true,
@@ -92,7 +100,15 @@ export class WorldSky {
         thickness: number = 10,
         noiseScaleRegion: number = 0.12,
         noiseScaleEdge: number = 0.15,
-        noiseScaleDetail: number = 0.3
+        noiseScaleDetail: number = 0.3,
+        regionOffsetY: number = 1000,
+        regionRange: number = 255,
+        regionOctaves: number = 2,
+        regionThreshold: number = 60,
+        edgeNoiseAmplitude: number = 0.5,
+        edgeNoiseOctaves: number = 3,
+        detailNoiseAmplitude: number = 0.25,
+        detailNoiseOctaves: number = 2
     ) {
         this.enabled = enabled;
         this.id = id;
@@ -103,6 +119,14 @@ export class WorldSky {
         this.noise_scale_region = noiseScaleRegion;
         this.noise_scale_edge = noiseScaleEdge;
         this.noise_scale_detail = noiseScaleDetail;
+        this.region_offset_y = regionOffsetY;
+        this.region_range = regionRange;
+        this.region_octaves = regionOctaves;
+        this.region_threshold = regionThreshold;
+        this.edge_noise_amplitude = edgeNoiseAmplitude;
+        this.edge_noise_octaves = edgeNoiseOctaves;
+        this.detail_noise_amplitude = detailNoiseAmplitude;
+        this.detail_noise_octaves = detailNoiseOctaves;
     }
 }
 
@@ -171,17 +195,38 @@ export class WorldSurface {
     private noise_offset: Noise;
     private smoothing: WorldSurfaceSmoothing;
     private noise_scale: number;
+    private seed_offset?: number;
+    private min_depth?: number;
+    private bedrock_depth?: number;
+    private bedrock_noise_scale?: number;
+    private tile_variation_noise_scale?: number;
+    private biome_blend_range?: number;
+    private biome_blend_noise_scale?: number;
 
     constructor(
         start: number, 
         noiseOffset: Noise,
         smoothing: WorldSurfaceSmoothing = new WorldSurfaceSmoothing(),
-        noiseScale: number = 0.015625
+        noiseScale: number = 0.015625,
+        seedOffset: number = -40,
+        minDepth: number = 8,
+        bedrockDepth: number = 3,
+        bedrockNoiseScale: number = 0.3,
+        tileVariationNoiseScale: number = 0.05,
+        biomeBlendRange: number = 24,
+        biomeBlendNoiseScale: number = 0.08
     ) {
         this.start = start;
         this.noise_offset = noiseOffset;
         this.smoothing = smoothing;
         this.noise_scale = noiseScale;
+        this.seed_offset = seedOffset;
+        this.min_depth = minDepth;
+        this.bedrock_depth = bedrockDepth;
+        this.bedrock_noise_scale = bedrockNoiseScale;
+        this.tile_variation_noise_scale = tileVariationNoiseScale;
+        this.biome_blend_range = biomeBlendRange;
+        this.biome_blend_noise_scale = biomeBlendNoiseScale;
     }
 }
 
@@ -205,6 +250,7 @@ export class WorldAquifer {
     private octaves: number;        // Noise octaves
     private fill_level: number;     // Liquid fill level (1-8)
     private noise_scale: number;    // Noise scale
+    private range?: number;         // Noise range (0-255)
 
     constructor(
         type: string,
@@ -213,7 +259,8 @@ export class WorldAquifer {
         threshold: number,
         octaves: number = 3,
         fillLevel: number = 8,
-        noiseScale: number = 0.02
+        noiseScale: number = 0.02,
+        range: number = 255
     ) {
         this.type = type;
         this.depth_min = depthMin;
@@ -222,6 +269,7 @@ export class WorldAquifer {
         this.octaves = octaves;
         this.fill_level = fillLevel;
         this.noise_scale = noiseScale;
+        this.range = range;
     }
 }
 
@@ -233,6 +281,15 @@ export class WorldCave {
     private breach_threshold: number;
     private breach_depth: number;
     private transition_threshold: number;
+    private breach_noise_scale_x?: number;
+    private breach_noise_scale_y?: number;
+    private breach_noise_offset_y?: number;
+    private breach_noise_range?: number;
+    private breach_noise_octaves?: number;
+    private transition_noise_scale_x?: number;
+    private transition_noise_scale_y?: number;
+    private transition_noise_range?: number;
+    private transition_noise_octaves?: number;
 
     constructor(
         start: Noise, 
@@ -241,7 +298,16 @@ export class WorldCave {
         noiseScale: number = 0.015625,
         breachThreshold: number = 242,
         breachDepth: number = -8,
-        transitionThreshold: number = 220
+        transitionThreshold: number = 220,
+        breachNoiseScaleX: number = 0.03,
+        breachNoiseScaleY: number = 0.03,
+        breachNoiseOffsetY: number = 1000,
+        breachNoiseRange: number = 255,
+        breachNoiseOctaves: number = 2,
+        transitionNoiseScaleX: number = 0.02,
+        transitionNoiseScaleY: number = 0.02,
+        transitionNoiseRange: number = 255,
+        transitionNoiseOctaves: number = 3
     ) {
         this.start = start;
         this.system = system;
@@ -250,6 +316,15 @@ export class WorldCave {
         this.breach_threshold = breachThreshold;
         this.breach_depth = breachDepth;
         this.transition_threshold = transitionThreshold;
+        this.breach_noise_scale_x = breachNoiseScaleX;
+        this.breach_noise_scale_y = breachNoiseScaleY;
+        this.breach_noise_offset_y = breachNoiseOffsetY;
+        this.breach_noise_range = breachNoiseRange;
+        this.breach_noise_octaves = breachNoiseOctaves;
+        this.transition_noise_scale_x = transitionNoiseScaleX;
+        this.transition_noise_scale_y = transitionNoiseScaleY;
+        this.transition_noise_range = transitionNoiseRange;
+        this.transition_noise_octaves = transitionNoiseOctaves;
     }
 }
 

@@ -39,8 +39,8 @@ function worldgen_get_sky_island(_x, _y, _seed, _world_data = global.world_data[
             var _cell_seed = abs(_cx * 73856093) ^ abs(_cy * 19349663) ^ _seed;
             
             // More islands - lower threshold for region check
-            var _region = open_simplex_noise(_cx * _world_data.get_sky_noise_scale_region(), _cy * _world_data.get_sky_noise_scale_region() + 1000, 255, 2);
-            if (_region < 60) continue; // Lower = more islands
+            var _region = open_simplex_noise(_cx * _world_data.get_sky_noise_scale_region(), _cy * _world_data.get_sky_noise_scale_region() + _world_data.get_sky_region_offset_y(), _world_data.get_sky_region_range(), _world_data.get_sky_region_octaves());
+            if (_region < _world_data.get_sky_region_threshold()) continue; // Lower = more islands
             
             // Random offset within cell for island center
             var _island_x = (_cx + 0.2 + frac(sin(_cell_seed * 0.0001) * 43758.5453) * 0.6) * _island_spacing;
@@ -74,8 +74,8 @@ function worldgen_get_sky_island(_x, _y, _seed, _world_data = global.world_data[
             var _dist = sqrt(_horizontal_dist * _horizontal_dist + _vertical_dist * _vertical_dist);
             
             // ROUGHER edges - more noise amplitude and higher frequency
-            var _edge_noise = open_simplex_noise(_x * _world_data.get_sky_noise_scale_edge(), _y * _world_data.get_sky_noise_scale_edge() + _cell_seed * 0.001, 0.5, 3);
-            var _detail_noise = open_simplex_noise(_x * _world_data.get_sky_noise_scale_detail(), _y * _world_data.get_sky_noise_scale_detail() + _cell_seed * 0.002, 0.25, 2);
+            var _edge_noise = open_simplex_noise(_x * _world_data.get_sky_noise_scale_edge(), _y * _world_data.get_sky_noise_scale_edge() + _cell_seed * 0.001, _world_data.get_sky_edge_noise_amplitude(), _world_data.get_sky_edge_noise_octaves());
+            var _detail_noise = open_simplex_noise(_x * _world_data.get_sky_noise_scale_detail(), _y * _world_data.get_sky_noise_scale_detail() + _cell_seed * 0.002, _world_data.get_sky_detail_noise_amplitude(), _world_data.get_sky_detail_noise_octaves());
             
             if (_dist < 1.0 + _edge_noise + _detail_noise)
             {

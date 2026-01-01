@@ -10,7 +10,7 @@ function worldgen_get_cave(_x, _y, _surface_height, _cave_start, _seed, _world_d
         if (_depth_from_surface > _world_data.get_cave_breach_depth())
         {
             // Use separate noise for surface breaching (low frequency, rare occurrence)
-            var _breach_noise = open_simplex_noise(_x * 0.03, _surface_height * 0.03 + 1000, 255, 2);
+            var _breach_noise = open_simplex_noise(_x * _world_data.get_cave_breach_noise_scale_x(), _surface_height * _world_data.get_cave_breach_noise_scale_y() + _world_data.get_cave_breach_noise_offset_y(), _world_data.get_cave_breach_noise_range(), _world_data.get_cave_breach_noise_octaves());
             
             // ~5% chance of surface breach (threshold ~242 out of 255)
             if (_breach_noise > _world_data.get_cave_breach_threshold())
@@ -31,7 +31,7 @@ function worldgen_get_cave(_x, _y, _surface_height, _cave_start, _seed, _world_d
     {
         // Gradual transition: deeper = more likely to have caves
         var _transition_factor = _depth_from_surface / (_cave_start + _world_data.get_cave_start_min());
-        var _transition_noise = open_simplex_noise(_x * 0.02, _y * 0.02, 255, 3);
+        var _transition_noise = open_simplex_noise(_x * _world_data.get_cave_transition_noise_scale_x(), _y * _world_data.get_cave_transition_noise_scale_y(), _world_data.get_cave_transition_noise_range(), _world_data.get_cave_transition_noise_octaves());
         
         // Require higher noise values near surface
         if (_transition_noise < (_world_data.get_cave_transition_threshold() * (1 - _transition_factor)))

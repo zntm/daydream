@@ -191,6 +191,36 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
             ___cave_biome_heat = _cave_biome.heat;
             ___cave_biome_humidity = _cave_biome.humidity;
             
+            if (___cave_biome_heat != undefined)
+            {
+                ___cave_heat_noise_scale_x = ___cave_biome_heat[$ "noise_scale_x"] ?? 0.015625;
+                ___cave_heat_noise_scale_y = ___cave_biome_heat[$ "noise_scale_y"] ?? 0.015625;
+                ___cave_heat_range = ___cave_biome_heat[$ "range"] ?? 63;
+            }
+            else
+            {
+                ___cave_heat_noise_scale_x = 0;
+                ___cave_heat_noise_scale_y = 0;
+                ___cave_heat_range = 0;
+            }
+            
+            if (___cave_biome_humidity != undefined)
+            {
+                ___cave_humidity_noise_scale_x = ___cave_biome_humidity[$ "noise_scale_x"] ?? 0.015625;
+                ___cave_humidity_noise_scale_y = ___cave_biome_humidity[$ "noise_scale_y"] ?? 0.015625;
+                ___cave_humidity_offset_y = ___cave_biome_humidity[$ "offset_y"] ?? 1000;
+                ___cave_humidity_range = ___cave_biome_humidity[$ "range"] ?? 63;
+                ___cave_humidity_octaves_offset = ___cave_biome_humidity[$ "octaves_offset"] ?? 16;
+            }
+            else
+            {
+                ___cave_humidity_noise_scale_x = 0;
+                ___cave_humidity_noise_scale_y = 0;
+                ___cave_humidity_offset_y = 0;
+                ___cave_humidity_range = 0;
+                ___cave_humidity_octaves_offset = 0;
+            }
+            
             set_cave_biome_map(_cave_biome_map);
         }
         
@@ -228,6 +258,16 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
     {
         return self[$ "___cave_biome_humidity"];
     }
+    
+    static get_cave_heat_noise_scale_x = function() { return ___cave_heat_noise_scale_x; }
+    static get_cave_heat_noise_scale_y = function() { return ___cave_heat_noise_scale_y; }
+    static get_cave_heat_range = function() { return ___cave_heat_range; }
+    
+    static get_cave_humidity_noise_scale_x = function() { return ___cave_humidity_noise_scale_x; }
+    static get_cave_humidity_noise_scale_y = function() { return ___cave_humidity_noise_scale_y; }
+    static get_cave_humidity_offset_y = function() { return ___cave_humidity_offset_y; }
+    static get_cave_humidity_range = function() { return ___cave_humidity_range; }
+    static get_cave_humidity_octaves_offset = function() { return ___cave_humidity_octaves_offset; }
     
     static set_surface_biome = function(_surface_biome)
     {
@@ -297,6 +337,14 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         ___surface_biome_heat = _surface_biome.heat;
         ___surface_biome_humidity = _surface_biome.humidity;
         
+        ___surface_heat_noise_scale = ___surface_biome_heat[$ "noise_scale"] ?? 0.015625;
+        ___surface_heat_offset = ___surface_biome_heat[$ "offset"] ?? -16;
+        ___surface_heat_range = ___surface_biome_heat[$ "range"] ?? 63;
+        
+        ___surface_humidity_noise_scale = ___surface_biome_humidity[$ "noise_scale"] ?? 0.015625;
+        ___surface_humidity_offset = ___surface_biome_humidity[$ "offset"] ?? -24;
+        ___surface_humidity_range = ___surface_biome_humidity[$ "range"] ?? 63;
+        
         set_surface_biome_map(_surface_biome_map);
         
         return self;
@@ -317,6 +365,14 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         return ___surface_biome_humidity;
     }
     
+    static get_surface_heat_noise_scale = function() { return ___surface_heat_noise_scale; }
+    static get_surface_heat_offset = function() { return ___surface_heat_offset; }
+    static get_surface_heat_range = function() { return ___surface_heat_range; }
+    
+    static get_surface_humidity_noise_scale = function() { return ___surface_humidity_noise_scale; }
+    static get_surface_humidity_offset = function() { return ___surface_humidity_offset; }
+    static get_surface_humidity_range = function() { return ___surface_humidity_range; }
+    
     static set_surface = function(_surface)
     {
         ___surface_start = _surface.start;
@@ -325,12 +381,22 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         ___surface_noise_offset_max = _noise_offset.max;
         ___surface_noise_offset_min = _noise_offset.min;
         ___surface_noise_offset_octaves = _noise_offset.octaves;
+        ___surface_noise_offset_scale = _noise_offset[$ "scale"] ?? 0.015625;
+        ___surface_noise_offset_y = _noise_offset[$ "y_offset"] ?? -48;
         
         var _smoothing = _surface[$ "smoothing"];
         ___surface_smoothing_range = _smoothing[$ "range"] ?? 32;
         ___surface_smoothing_factor = _smoothing[$ "factor"] ?? 0.6;
         
         ___surface_noise_scale = _surface[$ "noise_scale"] ?? 0.015625;
+        ___surface_seed_offset = _surface[$ "seed_offset"] ?? -40;
+        ___surface_min_depth = _surface[$ "min_depth"] ?? 8;
+        
+        ___bedrock_depth = _surface[$ "bedrock_depth"] ?? 3;
+        ___bedrock_noise_scale = _surface[$ "bedrock_noise_scale"] ?? 0.3;
+        ___tile_variation_noise_scale = _surface[$ "tile_variation_noise_scale"] ?? 0.05;
+        ___biome_blend_range = _surface[$ "biome_blend_range"] ?? 24;
+        ___biome_blend_noise_scale = _surface[$ "biome_blend_noise_scale"] ?? 0.08;
         
         return self;
     }
@@ -354,6 +420,16 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
     {
         return ___surface_noise_offset_octaves;
     }
+
+    static get_surface_noise_offset_scale = function()
+    {
+        return ___surface_noise_offset_scale;
+    }
+
+    static get_surface_noise_offset_y = function()
+    {
+        return ___surface_noise_offset_y;
+    }
     
     static get_surface_smoothing_range = function()
     {
@@ -375,7 +451,10 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         var _start = _cave.start;
         ___cave_start_max = _start.max;
         ___cave_start_min = _start.min;
+        ___cave_start_min = _start.min;
         ___cave_start_octaves = _start.octaves;
+        ___cave_start_noise_scale = _start[$ "noise_scale"] ?? 0.015625;
+        ___cave_start_offset = _start[$ "offset"] ?? -8;
         
         ___cave_system = _cave.system;
         ___cave_system_length = array_length(___cave_system);
@@ -385,6 +464,13 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         {
             ___aquifers = _aquifers;
             ___aquifers_length = array_length(_aquifers);
+            
+            // Inject defaults
+            for (var i = 0; i < ___aquifers_length; ++i)
+            {
+                ___aquifers[i].noise_scale ??= 0.02;
+                ___aquifers[i].range ??= 255;
+            }
         }
         else
         {
@@ -397,7 +483,63 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         ___cave_breach_depth = _cave[$ "breach_depth"] ?? -8;
         ___cave_transition_threshold = _cave[$ "transition_threshold"] ?? 220;
         
+        ___cave_breach_noise_scale_x = _cave[$ "breach_noise_scale_x"] ?? 0.03;
+        ___cave_breach_noise_scale_y = _cave[$ "breach_noise_scale_y"] ?? 0.03;
+        ___cave_breach_noise_offset_y = _cave[$ "breach_noise_offset_y"] ?? 1000;
+        ___cave_breach_noise_range = _cave[$ "breach_noise_range"] ?? 255;
+        ___cave_breach_noise_octaves = _cave[$ "breach_noise_octaves"] ?? 2;
+        
+        ___cave_transition_noise_scale_x = _cave[$ "transition_noise_scale_x"] ?? 0.02;
+        ___cave_transition_noise_scale_y = _cave[$ "transition_noise_scale_y"] ?? 0.02;
+        ___cave_transition_noise_range = _cave[$ "transition_noise_range"] ?? 255;
+        ___cave_transition_noise_octaves = _cave[$ "transition_noise_octaves"] ?? 3;
+        
         return self;
+    }
+
+    static get_cave_breach_noise_scale_x = function()
+    {
+        return ___cave_breach_noise_scale_x;
+    }
+
+    static get_cave_breach_noise_scale_y = function()
+    {
+        return ___cave_breach_noise_scale_y;
+    }
+
+    static get_cave_breach_noise_offset_y = function()
+    {
+        return ___cave_breach_noise_offset_y;
+    }
+
+    static get_cave_breach_noise_range = function()
+    {
+        return ___cave_breach_noise_range;
+    }
+
+    static get_cave_breach_noise_octaves = function()
+    {
+        return ___cave_breach_noise_octaves;
+    }
+
+    static get_cave_transition_noise_scale_x = function()
+    {
+        return ___cave_transition_noise_scale_x;
+    }
+
+    static get_cave_transition_noise_scale_y = function()
+    {
+        return ___cave_transition_noise_scale_y;
+    }
+
+    static get_cave_transition_noise_range = function()
+    {
+        return ___cave_transition_noise_range;
+    }
+
+    static get_cave_transition_noise_octaves = function()
+    {
+        return ___cave_transition_noise_octaves;
     }
     
     static get_aquifers = function()
@@ -423,6 +565,16 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
     static get_cave_start_octaves = function()
     {
         return ___cave_start_octaves;
+    }
+
+    static get_cave_start_noise_scale = function()
+    {
+        return ___cave_start_noise_scale;
+    }
+
+    static get_cave_start_offset = function()
+    {
+        return ___cave_start_offset;
     }
     
     static get_cave_system = function()
@@ -455,6 +607,41 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         return ___cave_transition_threshold;
     }
     
+    static get_surface_seed_offset = function()
+    {
+        return ___surface_seed_offset;
+    }
+    
+    static get_surface_min_depth = function()
+    {
+        return ___surface_min_depth;
+    }
+
+    static get_bedrock_depth = function()
+    {
+        return ___bedrock_depth;
+    }
+
+    static get_bedrock_noise_scale = function()
+    {
+        return ___bedrock_noise_scale;
+    }
+
+    static get_tile_variation_noise_scale = function()
+    {
+        return ___tile_variation_noise_scale;
+    }
+
+    static get_biome_blend_range = function()
+    {
+        return ___biome_blend_range;
+    }
+
+    static get_biome_blend_noise_scale = function()
+    {
+        return ___biome_blend_noise_scale;
+    }
+    
     static set_surface_biome_map = function(_map)
     {
         ___surface_biome_map = _map;
@@ -479,6 +666,17 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         ___sky_noise_scale_region = _sky_biome[$ "noise_scale_region"] ?? 0.12;
         ___sky_noise_scale_edge = _sky_biome[$ "noise_scale_edge"] ?? 0.15;
         ___sky_noise_scale_detail = _sky_biome[$ "noise_scale_detail"] ?? 0.3;
+        
+        ___sky_region_offset_y = _sky_biome[$ "region_offset_y"] ?? 1000;
+        ___sky_region_range = _sky_biome[$ "region_range"] ?? 255;
+        ___sky_region_octaves = _sky_biome[$ "region_octaves"] ?? 2;
+        ___sky_region_threshold = _sky_biome[$ "region_threshold"] ?? 60;
+        
+        ___sky_edge_noise_amplitude = _sky_biome[$ "edge_noise_amplitude"] ?? 0.5;
+        ___sky_edge_noise_octaves = _sky_biome[$ "edge_noise_octaves"] ?? 3;
+        
+        ___sky_detail_noise_amplitude = _sky_biome[$ "detail_noise_amplitude"] ?? 0.25;
+        ___sky_detail_noise_octaves = _sky_biome[$ "detail_noise_octaves"] ?? 2;
         
         return self;
     }
@@ -526,5 +724,45 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
     static get_sky_noise_scale_detail = function()
     {
         return ___sky_noise_scale_detail;
+    }
+
+    static get_sky_region_offset_y = function()
+    {
+        return ___sky_region_offset_y;
+    }
+
+    static get_sky_region_range = function()
+    {
+        return ___sky_region_range;
+    }
+
+    static get_sky_region_octaves = function()
+    {
+        return ___sky_region_octaves;
+    }
+
+    static get_sky_region_threshold = function()
+    {
+        return ___sky_region_threshold;
+    }
+
+    static get_sky_edge_noise_amplitude = function()
+    {
+        return ___sky_edge_noise_amplitude;
+    }
+
+    static get_sky_edge_noise_octaves = function()
+    {
+        return ___sky_edge_noise_octaves;
+    }
+
+    static get_sky_detail_noise_amplitude = function()
+    {
+        return ___sky_detail_noise_amplitude;
+    }
+
+    static get_sky_detail_noise_octaves = function()
+    {
+        return ___sky_detail_noise_octaves;
     }
 }

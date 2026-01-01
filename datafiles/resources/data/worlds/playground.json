@@ -59,7 +59,15 @@
             "thickness": 10,
             "noise_scale_region": 0.12,
             "noise_scale_edge": 0.15,
-            "noise_scale_detail": 0.3
+            "noise_scale_detail": 0.3,
+            "region_offset_y": 1000,
+            "region_range": 255,
+            "region_octaves": 2,
+            "region_threshold": 60,
+            "edge_noise_amplitude": 0.5,
+            "edge_noise_octaves": 3,
+            "detail_noise_amplitude": 0.25,
+            "detail_noise_octaves": 2
         }
     },
     "cave": {
@@ -92,7 +100,8 @@
                 "threshold": 200,
                 "octaves": 3,
                 "fill_level": 8,
-                "noise_scale": 0.02
+                "noise_scale": 0.02,
+                "range": 255
             },
             {
                 "type": "phantasia:lava",
@@ -101,13 +110,23 @@
                 "threshold": 220,
                 "octaves": 2,
                 "fill_level": 8,
-                "noise_scale": 0.02
+                "noise_scale": 0.02,
+                "range": 255
             }
         ],
         "noise_scale": 0.015625,
         "breach_threshold": 242,
         "breach_depth": -8,
-        "transition_threshold": 220
+        "transition_threshold": 220,
+        "breach_noise_scale_x": 0.03,
+        "breach_noise_scale_y": 0.03,
+        "breach_noise_offset_y": 1000,
+        "breach_noise_range": 255,
+        "breach_noise_octaves": 2,
+        "transition_noise_scale_x": 0.02,
+        "transition_noise_scale_y": 0.02,
+        "transition_noise_range": 255,
+        "transition_noise_octaves": 3
     },
     "celestials": [
         {
@@ -133,7 +152,14 @@
             "range": 32,
             "factor": 0.6
         },
-        "noise_scale": 0.015625
+        "noise_scale": 0.015625,
+        "seed_offset": -40,
+        "min_depth": 8,
+        "bedrock_depth": 3,
+        "bedrock_noise_scale": 0.3,
+        "tile_variation_noise_scale": 0.05,
+        "biome_blend_range": 24,
+        "biome_blend_noise_scale": 0.08
     },
     "time": {
         "start": 240,

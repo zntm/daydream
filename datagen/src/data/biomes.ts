@@ -18,6 +18,7 @@ export class Biome {
     private is_ocean?: boolean;
     private shore_tiles?: BiomeTile;
     private is_skyland?: boolean;
+    private salt?: number;
 
     constructor(
         background: BiomeBackground,
@@ -79,6 +80,12 @@ export class Biome {
 
     setIsSkyland(value: boolean = true) {
         this.is_skyland = value;
+
+        return this;
+    }
+
+    setSalt(salt: number) {
+        this.salt = salt;
 
         return this;
     }
