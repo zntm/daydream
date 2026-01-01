@@ -506,7 +506,15 @@ proglang_function_register("tile_place", function(_args) {
 });
 
 proglang_function_register("spawn_particle", function(_args) {
-    spawn_particle(_args[1] * TILE_SIZE, _args[2] * TILE_SIZE, _args[0]);
+    var _x = _args[1];
+    
+    if (_x == undefined) exit;
+    
+    var _y = _args[2];
+    
+    if (_y == undefined) exit;
+    
+    spawn_particle(_x * TILE_SIZE, _y * TILE_SIZE, _args[0]);
 });
 
 proglang_function_register("tag_get", function(_args) {
