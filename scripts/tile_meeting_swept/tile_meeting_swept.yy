@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"physics_resolve_y",
+  "%Name":"tile_meeting_swept",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"physics_resolve_y",
+  "name":"tile_meeting_swept",
   "parent":{
     "name":"Physics",
     "path":"folders/Scripts/Control/Physics.yy",

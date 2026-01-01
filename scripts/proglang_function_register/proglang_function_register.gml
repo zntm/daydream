@@ -733,7 +733,7 @@ proglang_function_register("test_expect", function(_args, _vm = undefined)
     }
     else if (is_struct(_actual) && struct_exists(_actual, "function"))
     {
-        _actual = _actual.function([]);
+        _actual = _actual[$ "function"]([]);
     }
     
     // Execute expected if it's a closure/function
@@ -748,7 +748,7 @@ proglang_function_register("test_expect", function(_args, _vm = undefined)
     }
     else if (is_struct(_expected) && struct_exists(_expected, "function"))
     {
-        _expected = _expected.function([]);
+        _expected = _expected[$ "function"]([]);
     }
     
     ++global.proglang_test_state.current_assertions;
@@ -917,7 +917,7 @@ function _proglang_run_test_internal(_test_struct, _default_name)
         }
         else if (is_struct(_fn)) && (struct_exists(_fn, "function"))
         {
-            _fn.function([]);
+            _fn[$ "function"]([]);
         }
     }
     catch (_e)

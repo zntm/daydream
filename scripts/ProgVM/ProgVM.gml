@@ -466,7 +466,7 @@ function proglang_vm_run(_vm, _entry_bytecode)
                             var _args_subset = array_create(_param_count);
                             array_copy(_args_subset, 0, _stack, _callee_idx + 1, _param_count);
                             _sp -= (_param_count + 1); // Pop args and callee
-                            var _res = _val.function(_args_subset, _vm);
+                            var _res = _val[$ "function"](_args_subset, _vm);
                             _stack[@ _sp++] = _res;
                         }
                         // 3. Native Script

@@ -42,8 +42,8 @@ function control_projectile()
         }
         
         // Resolve collisions
-        physics_resolve_x(physics_body);
-        physics_resolve_y(physics_body);
+        physics_move_contact_x(physics_body);
+        physics_move_contact_y(physics_body);
         
         physics_body.sync_to_instance(id);
         

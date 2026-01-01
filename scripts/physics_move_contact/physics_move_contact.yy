@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"physics_resolve_x",
+  "%Name":"physics_move_contact",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"physics_resolve_x",
+  "name":"physics_move_contact",
   "parent":{
     "name":"Physics",
     "path":"folders/Scripts/Control/Physics.yy",

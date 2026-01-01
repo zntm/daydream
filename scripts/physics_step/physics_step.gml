@@ -36,8 +36,8 @@ function physics_step(_body, _input)
     }
     
     // Collision resolution (same for all modes)
-    physics_resolve_x(_body);
-    physics_resolve_y(_body);
+    physics_move_contact_x(_body);
+    physics_move_contact_y(_body);
     
     // Resolve entity collisions using SpatialGrid
     physics_resolve_entity(_body, global.spatial_grid);

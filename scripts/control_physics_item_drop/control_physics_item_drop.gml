@@ -24,8 +24,8 @@ function control_physics_item_drop(_id)
             // Gravity
             physics_body.vel_y += attribute.get_gravity();
             
-            physics_resolve_x(physics_body);
-            physics_resolve_y(physics_body);
+            physics_move_contact_x(physics_body);
+            physics_move_contact_y(physics_body);
             physics_body.sync_to_instance(id);
             
             exit;
@@ -47,8 +47,8 @@ function control_physics_item_drop(_id)
             
             physics_body.vel_y += attribute.get_gravity();
             
-            physics_resolve_x(physics_body);
-            physics_resolve_y(physics_body);
+            physics_move_contact_x(physics_body);
+            physics_move_contact_y(physics_body);
             physics_body.sync_to_instance(id);
             
             exit;
@@ -68,8 +68,8 @@ function control_physics_item_drop(_id)
             
             physics_body.vel_y += attribute.get_gravity();
             
-            physics_resolve_x(physics_body);
-            physics_resolve_y(physics_body);
+            physics_move_contact_x(physics_body);
+            physics_move_contact_y(physics_body);
             physics_body.sync_to_instance(id);
             
             exit;
@@ -82,8 +82,8 @@ function control_physics_item_drop(_id)
         physics_body.vel_y = lerp_delta(physics_body.vel_y, sign(_inst_y - y) * _speed, 0.02, 1);
         
         // No gravity during attraction
-        physics_resolve_x(physics_body);
-        physics_resolve_y(physics_body);
+        physics_move_contact_x(physics_body);
+        physics_move_contact_y(physics_body);
         physics_body.sync_to_instance(id);
     }
 }
