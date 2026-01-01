@@ -40,7 +40,7 @@ function physics_step(_body, _input)
     physics_move_contact_y(_body);
     
     // Resolve entity collisions using SpatialGrid
-    physics_resolve_entity(_body, global.spatial_grid);
+    // physics_resolve_entity(_body, global.spatial_grid);
     
     // Reset jump state if landed
     if (_body.collision.ground && _body.mode == MOVEMENT_MODE.GROUND)
