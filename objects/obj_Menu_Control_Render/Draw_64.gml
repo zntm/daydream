@@ -397,11 +397,17 @@ for (var j = 0; j <= _max_layer; ++j)
 }
 
 // 1. Capture background for blur (if requested by transition)
-if (global.menu_capture_blur)
+// 1. Capture background for blur (if requested by transition or if in main menu)
+var _is_menu_room = string_starts_with(room_get_name(room), "rm_Menu");
+
+if (global.menu_capture_blur) || (_is_menu_room)
 {
     render_menu_blur();
     
-    global.menu_capture_blur = false;
+    if (!_is_menu_room)
+    {
+        global.menu_capture_blur = false;
+    }
 }
 
 // 2. Draw all surfaces with transition effect
