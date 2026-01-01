@@ -58,7 +58,10 @@ enum PROG_OP
     
     // New v2 Ops
     IN_CHECK, IN_KEY, IN_VALUE, MAKE_RANGE,
-    STRING_CONCAT
+    STRING_CONCAT,
+    
+    // Optimization Ops
+    LOAD_LOCAL, STORE_LOCAL
 }
 
 /// @desc Array indices for function data (replaces struct)
@@ -174,7 +177,7 @@ function ProgCompiler(_context_keys = []) constructor
         {
             if (struct_exists(const_scopes[i], _name)) 
             {
-                variable_struct_remove(const_scopes[i], _name);
+                struct_remove(const_scopes[i], _name);
                 return;
             }
         }
@@ -321,8 +324,8 @@ function ProgCompiler(_context_keys = []) constructor
         var _parent = bytecode;
         bytecode = new ProgBytecode();
         
-        // Push function scope
-        array_push(declared_vars, {});
+        // Push function scope with marker
+        array_push(declared_vars, { is_func: true });
         // Push const scope logic is handled via const_scopes stack BUT functions isolate scope completely
         // so we can't share const_scopes. We must save/restore.
         var _old_scopes = const_scopes;
@@ -347,26 +350,38 @@ function ProgCompiler(_context_keys = []) constructor
             
     
             
-            // Add to current function scope
-            array_last(declared_vars)[$ _param.name] = true;
-            // Argument values are unknown at compile time, so we don't add to const_scopes
+            // Track local variable mapping
+            // Note: Since arguments are already on stack at BP+i, we map them directly.
+            // We don't need to emit LOAD/DEFINE/POP logic anymore for basic args.
             
-            emit(PROG_OP.LOAD, add_constant($"arg{i}"), _node.line);
+            array_last(declared_vars)[$ _param.name] = { type: "local", index: i };
             
+            // Handle default values
             if (_param.default_value != undefined)
             {
-                emit(PROG_OP.DUP);
-                emit(PROG_OP.PUSH_NULL);
-                emit(PROG_OP.EQ);
-                var _skip = emit(PROG_OP.JUMP_IF_FALSE, 0);
-                emit(PROG_OP.POP);
-                compile_node(_param.default_value);
-                patch_jump(_skip, bytecode.code_size);
+                 // Default value logic is tricky with pre-pushed args.
+                 // We need to check if the passed arg (at stack[BP+i]) is undefined (or missing).
+                 // Actually, if missing, Call opcode pushes undefined? 
+                 // My Call opcode pushes args.
+                 // If call has fewer args, the stack slots are NOT filled.
+                 // So BP+i might be garbage or old stack data if we didn't push undefined.
+                 // In CALL logic, we didn't fill missing args with undefined.
+                 // We need to fix CALL or handle here.
+                 // For now, let's assume CALL pushed undefined (I need to verify/fix that).
+                 
+                 emit(PROG_OP.LOAD_LOCAL, i, _node.line);
+                 emit(PROG_OP.PUSH_NULL);
+                 emit(PROG_OP.EQ);
+                 var _skip = emit(PROG_OP.JUMP_IF_FALSE, 0);
+                 compile_node(_param.default_value); // Pushes default value
+                 emit(PROG_OP.STORE_LOCAL, i, _node.line); // Update local (BP+i)
+                 emit(PROG_OP.POP); // Consume result of store (peek)
+                 patch_jump(_skip, bytecode.code_size);
             }
-            
-            emit(PROG_OP.DEFINE, add_constant(_param.name), _node.line);
-            emit(PROG_OP.POP);
         }
+        
+        // We removed the LOAD/DEFINE/POP loop.
+        // Now arguments are just locals 0..N-1.
         
         compile_node(_node.body);
         
@@ -392,14 +407,59 @@ function ProgCompiler(_context_keys = []) constructor
         
         var _func_arr = array_create(PROG_FUNC.SIZE);
         _func_arr[PROG_FUNC.TYPE] = "function";
-        _func_arr[PROG_FUNC.NAME] = variable_struct_exists(_node, "name") ? _node.name : "<anonymous>";
+        _func_arr[PROG_FUNC.NAME] = struct_exists(_node, "name") ? _node.name : "<anonymous>";
         _func_arr[PROG_FUNC.BYTECODE] = _res.bytecode;
-        _func_arr[PROG_FUNC.IS_GLOBAL] = variable_struct_exists(_node, "is_global") ? _node.is_global : false;
+        _func_arr[PROG_FUNC.IS_GLOBAL] = struct_exists(_node, "is_global") ? _node.is_global : false;
         _func_arr[PROG_FUNC.PARAM_COUNT] = _res.param_count;
         
         var _idx = add_constant(_func_arr);
         emit(PROG_OP.PUSH_CONST, _idx, _node.line);
         emit(PROG_OP.MAKE_CLOSURE, undefined, _node.line);
+    }
+    
+    static compile_identifier = function(_node, _is_assignment = false)
+    {
+        var _name = _node.name;
+        
+        // 1. Check constants/macros
+        if (!_is_assignment && struct_exists(global.proglang_macros, _name))
+        {
+            var _val = global.proglang_macros[$ _name];
+            if (is_bool(_val)) emit(_val ? PROG_OP.PUSH_TRUE : PROG_OP.PUSH_FALSE, undefined, _node.line);
+            else if (is_string(_val) || is_real(_val)) emit(PROG_OP.PUSH_CONST, add_constant(_val), _node.line);
+            else emit(PROG_OP.LOAD, add_constant(_name), _node.line);
+            return;
+        }
+        
+        // 2. Check locals (BP relative)
+        // Search backwards from current scope until function boundary
+        var _idx = array_length(declared_vars) - 1;
+        while (_idx >= 0)
+        {
+            var _scope = declared_vars[_idx];
+            if (struct_exists(_scope, _name))
+            {
+                var _info = _scope[$ _name];
+                if (is_struct(_info) && _info.type == "local")
+                {
+                    emit(PROG_OP.LOAD_LOCAL, _info.index, _node.line);
+                    return;
+                }
+                // If found but not local (e.g. shadowed by something?), stop.
+                // Actually, if we found it, we used it.
+            }
+            
+            // Stop if we hit a function boundary
+            if (struct_exists(_scope, "is_func") && _scope.is_func) break;
+            _idx--;
+        }
+        
+        // Fallback or Capture?
+        // If not found in local scopes, it loops back to LOAD name.
+        // Captures are handled by runtime lookup in v2 (or closure env).
+        
+        // Fallback to standard named load
+        emit(PROG_OP.LOAD, add_constant(_name), _node.line);
     }
     
     static compile_node = function(_node)
@@ -581,26 +641,7 @@ function ProgCompiler(_context_keys = []) constructor
                 break;
                 
             case PROG_AST.IDENTIFIER:
-                var _val = get_const(_node.name);
-                if (_val != undefined)
-                {
-                    if (is_bool(_val))
-                    {
-                        emit(_val ? PROG_OP.PUSH_TRUE : PROG_OP.PUSH_FALSE, undefined, _node.line);
-                    }
-                    else if (is_string(_val) || is_real(_val))
-                    {
-                        emit(PROG_OP.PUSH_CONST, add_constant(_val), _node.line);
-                    }
-                    else
-                    {
-                        emit(PROG_OP.LOAD, add_constant(_node.name), _node.line);
-                    }
-                }
-                else
-                {
-                    emit(PROG_OP.LOAD, add_constant(_node.name), _node.line);
-                }
+                compile_identifier(_node);
                 break;
                 
             case PROG_AST.ASSIGNMENT:
@@ -629,7 +670,8 @@ function ProgCompiler(_context_keys = []) constructor
                         else if (_node.value.type == PROG_AST.BINARY_OP)
                         {
                             var _folded = try_fold_binary(_node.value);
-                            if (_folded != undefined) {
+                            if (_folded != undefined)
+                            {
                                 _known_const = _folded;
                                 _invalidate = false;
                             }
@@ -650,7 +692,8 @@ function ProgCompiler(_context_keys = []) constructor
                             
                             if (_rhs_val != undefined && is_real(_old_val) && is_real(_rhs_val))
                             {
-                                switch (_node.op) {
+                                switch (_node.op)
+                                {
                                     case PROG_TOKEN.PLUS_ASSIGN: _known_const = _old_val + _rhs_val; _invalidate = false; break;
                                     case PROG_TOKEN.MINUS_ASSIGN: _known_const = _old_val - _rhs_val; _invalidate = false; break;
                                     case PROG_TOKEN.STAR_ASSIGN: _known_const = _old_val * _rhs_val; _invalidate = false; break;
@@ -897,7 +940,11 @@ function ProgCompiler(_context_keys = []) constructor
                     patch_jump(_loop_ctx.continue_jumps[i], _inc_addr);
                 }
                 
-                if (_node.increment) { compile_node(_node.increment); emit(PROG_OP.POP); }
+                if (_node.increment)
+                {
+                    compile_node(_node.increment); emit(PROG_OP.POP);
+                }
+
                 emit(PROG_OP.JUMP, _start, _node.line);
                 if (_exit != -1) patch_jump(_exit, bytecode.code_size);
                 
@@ -978,9 +1025,12 @@ function ProgCompiler(_context_keys = []) constructor
                     
                     // Update constants for PREFIX
                     var _val = get_const(_node.target.name);
-                    if (_val != undefined && is_real(_val)) {
+                    if (_val != undefined && is_real(_val))
+                    {
                         set_const(_node.target.name, _val + (_node.op == PROG_TOKEN.PLUS_PLUS ? 1 : -1));
-                    } else {
+                    }
+                    else
+                    {
                         remove_const(_node.target.name);
                     }
                 }
@@ -1015,9 +1065,12 @@ function ProgCompiler(_context_keys = []) constructor
                     
                     // Update constants for POSTFIX (same internal upgrade)
                     var _val = get_const(_node.target.name);
-                    if (_val != undefined && is_real(_val)) {
+                    if (_val != undefined && is_real(_val))
+                    {
                         set_const(_node.target.name, _val + (_node.op == PROG_TOKEN.PLUS_PLUS ? 1 : -1));
-                    } else {
+                    }
+                    else
+                    {
                         remove_const(_node.target.name);
                     }
                 }

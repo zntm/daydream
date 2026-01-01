@@ -313,7 +313,10 @@ function ProgLexer(_source) constructor
             case "\"": scan_string("\""); break;
             // case "'": scan_string("'"); break; // Single quote support
             case "$": 
-                if (match("\"")) { start_interpolation(); }
+                if (match("\""))
+                {
+                    start_interpolation();
+                }
                 else { had_error = true; error = $"Unexpected '$' at line {line}"; }
                 break;
             
@@ -369,7 +372,12 @@ function ProgLexer(_source) constructor
             }
         }
         
-        if (is_at_end()) { had_error = true; error = $"Unterminated string at line {line}"; return; }
+        if (is_at_end())
+        {
+            had_error = true; 
+            error = $"Unterminated string at line {line}"; 
+            return;
+        }
         
         advance(); // Closing quote
         
@@ -431,7 +439,12 @@ function ProgLexer(_source) constructor
             }
         }
         
-        if (is_at_end()) { had_error = true; error = $"Unterminated interpolated string at line {line}"; return; }
+        if (is_at_end())
+        {
+            had_error = true; 
+            error = $"Unterminated interpolated string at line {line}"; 
+            return;
+        }
         
         add_token(PROG_TOKEN.STRING, _res);
         

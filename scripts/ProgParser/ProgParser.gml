@@ -652,9 +652,11 @@ function ProgParser(_tokens) constructor
                 _is_for_in = true;
                 
                 // Check for modifier (key/value)
-                if (check(PROG_TOKEN.IDENTIFIER)) {
+                if (check(PROG_TOKEN.IDENTIFIER))
+                {
                     var _next = peek();
-                    if (_next.lexeme == "key" || _next.lexeme == "value") {
+                    if (_next.lexeme == "key" || _next.lexeme == "value")
+                    {
                         _for_in_modifier = advance().lexeme;
                     }
                 }
