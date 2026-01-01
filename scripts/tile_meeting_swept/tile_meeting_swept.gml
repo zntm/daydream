@@ -12,8 +12,8 @@ function tile_meeting_swept(_x_start, _y_start, _x_end, _y_end, _z = CHUNK_DEPTH
     var _collision_width  = attribute.get_collision_box_width();
     var _collision_height = attribute.get_collision_box_height();
     
-    var _xscale = abs(image_xscale * 8) / _collision_width;
-    var _yscale = abs(image_yscale * 8) / _collision_height;
+    var _xscale = abs(image_xscale);
+    var _yscale = abs(image_yscale);
     
     // Calculate start BBOX
     var _x1_start = _x_start - ((_xscale * _collision_width) / 2);

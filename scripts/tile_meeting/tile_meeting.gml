@@ -10,8 +10,8 @@ function tile_meeting(_x, _y, _z = CHUNK_DEPTH_DEFAULT, _type = ITEM_TYPE_BIT.SO
     var _collision_width  = attribute.get_collision_box_width();
     var _collision_height = attribute.get_collision_box_height();
     
-    var _xscale = abs(image_xscale * 8) / _collision_width;
-    var _yscale = abs(image_yscale * 8) / _collision_height;
+    var _xscale = abs(image_xscale);
+    var _yscale = abs(image_yscale);
     
     var _x1 = _x - ((_xscale * _collision_width) / 2);
     var _y1 = _y -  (_yscale * _collision_height);

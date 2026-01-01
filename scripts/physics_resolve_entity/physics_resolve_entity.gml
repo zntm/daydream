@@ -73,33 +73,96 @@ function physics_resolve_entity(_body, _entities, _push_strength = 0.5)
         }
         
         // Push apart along minimum overlap axis (MTV - Minimum Translation Vector)
+        // Push apart along minimum overlap axis (MTV - Minimum Translation Vector)
         if (_overlap_x < _overlap_y)
         {
             var _push = _overlap_x * _push_strength;
+            
+            // Backup velocities
+            var _vx_body = _body.vel_x;
+            var _vx_other = _other.vel_x;
+            
             if (_body.pos_x < _other.pos_x)
             {
-                _body.pos_x -= _push;
-                _other.pos_x += _push * (1 - _push_strength);
+                // Push body Left
+                with (_body.id)
+                {
+                    physics_body.vel_x = -_push;
+                    physics_move_contact_x(physics_body);
+                }
+                
+                // Push other Right
+                with (_other.id)
+                {
+                    physics_body.vel_x = _push * (1 - _push_strength);
+                    physics_move_contact_x(physics_body);
+                }
             }
             else
             {
-                _body.pos_x += _push;
-                _other.pos_x -= _push * (1 - _push_strength);
+                // Push body Right
+                with (_body.id)
+                {
+                    physics_body.vel_x = _push;
+                    physics_move_contact_x(physics_body);
+                }
+                
+                // Push other Left
+                with (_other.id)
+                {
+                    physics_body.vel_x = -_push * (1 - _push_strength);
+                    physics_move_contact_x(physics_body);
+                }
             }
+            
+            // Restore velocities (and sync back position from physics body to be safe, though move_contact updates body.pos)
+            _body.vel_x = _vx_body;
+            _other.vel_x = _vx_other;
         }
         else
         {
             var _push = _overlap_y * _push_strength;
+            
+            // Backup velocities
+            var _vy_body = _body.vel_y;
+            var _vy_other = _other.vel_y;
+            
             if (_body.pos_y < _other.pos_y)
             {
-                _body.pos_y -= _push;
-                _other.pos_y += _push * (1 - _push_strength);
+                // Push body Up
+                with (_body.id)
+                {
+                    physics_body.vel_y = -_push;
+                    physics_move_contact_y(physics_body);
+                }
+                
+                // Push other Down
+                with (_other.id)
+                {
+                    physics_body.vel_y = _push * (1 - _push_strength);
+                    physics_move_contact_y(physics_body);
+                }
             }
             else
             {
-                _body.pos_y += _push;
-                _other.pos_y -= _push * (1 - _push_strength);
+                // Push body Down
+                with (_body.id)
+                {
+                    physics_body.vel_y = _push;
+                    physics_move_contact_y(physics_body);
+                }
+                
+                // Push other Up
+                with (_other.id)
+                {
+                    physics_body.vel_y = -_push * (1 - _push_strength);
+                    physics_move_contact_y(physics_body);
+                }
             }
+            
+            // Restore velocities
+            _body.vel_y = _vy_body;
+            _other.vel_y = _vy_other;
         }
     }
 }
