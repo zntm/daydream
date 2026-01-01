@@ -15,9 +15,9 @@ function control_falling_tile()
     yvelocity += gravity_value;
     
     // Cap at terminal velocity
-    if (yvelocity > PHYSICS_TERMINAL_YVELOCITY)
+    if (yvelocity > PHYSICS_TERMINAL_VELOCITY)
     {
-        yvelocity = PHYSICS_TERMINAL_YVELOCITY;
+        yvelocity = PHYSICS_TERMINAL_VELOCITY;
     }
     
     // Calculate new position
