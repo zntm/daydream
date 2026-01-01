@@ -2,7 +2,7 @@
 // Context: x, y, z, xscale, yscale, dt, parameter, tile, inventory, player
 
 
-
+/*
 // Get the held item
 var held_item = inventory_get_selected();
 if (held_item == undefined) return;
@@ -67,3 +67,4 @@ inventory_set_selected(new Inventory(empty_bucket_id, 1));
 // Play place sound
 var sound = parameter.sound ?? "phantasia:sfx/liquid/bucket_empty";
 sfx_play(x * TILE_SIZE, y * TILE_SIZE, sound);
+*/

@@ -75,6 +75,16 @@ function PhysicsBody(_attribute = undefined) constructor
         return self;
     }
     
+    /// @desc Reset collision flags (called before physics step)
+    static reset_collision = function()
+    {
+        collision.ground = false;
+        collision.ceiling = false;
+        collision.wall_left = false;
+        collision.wall_right = false;
+        return self;
+    }
+    
     /// @desc Reset jump state (called when landing)
     static reset_jump = function()
     {

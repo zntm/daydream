@@ -34,6 +34,7 @@ function control_projectile()
     if (physics_body != undefined && attribute != undefined)
     {
         physics_body.sync_from_instance(id);
+        physics_body.reset_collision();
         
         // Apply gravity
         if (attribute.get_gravity() != 0)

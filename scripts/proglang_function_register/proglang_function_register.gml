@@ -514,6 +514,8 @@ proglang_function_register("spawn_particle", function(_args) {
     
     if (_y == undefined) exit;
     
+    show_debug_message($"{_x} {_y}")
+    
     spawn_particle(_x * TILE_SIZE, _y * TILE_SIZE, _args[0]);
 });
 

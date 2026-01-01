@@ -93,22 +93,27 @@ function draw_text_cuteify(_x, _y, _string, _xscale = 1, _yscale = 1, _angle = 0
             
             if (_type == CUTEIFY_TYPE.SPRITE)
             {
-                var _x2 = (sprite_get_xoffset(_text) * _xscale) + _xoffset;
-                var _y2 = (sprite_get_yoffset(_text) * _yscale) + _yoffset + (sprite_get_height(_text) * _yscale / 2);
+                var _norm = (string_height("I")) / sprite_get_height(_text);
+                
+                var _draw_xscale = _xscale * _norm;
+                var _draw_yscale = _yscale * _norm;
+
+                var _y2 = (sprite_get_yoffset(_text) * _draw_yscale) + _yoffset;
+                var _x2 = (sprite_get_xoffset(_text) * _draw_xscale) + _xoffset;
                 
                 draw_sprite_ext(
                     _text,
                     0,
                     _x + (_y2 * _cos_90) + (_x2 * _cos),
                     _y + (_y2 * _sin_90) + (_x2 * _sin),
-                    _xscale,
-                    _yscale,
+                    _draw_xscale,
+                    _draw_yscale,
                     _angle,
                     _colour,
                     _alpha
                 );
                 
-                _xoffset += sprite_get_width(_text) * _xscale;
+                _xoffset += sprite_get_width(_text) * _draw_xscale;
                 
                 continue;
             }

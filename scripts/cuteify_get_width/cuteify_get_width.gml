@@ -32,7 +32,8 @@ function cuteify_get_width(_string, _asset_prefix = "")
             
             if (_type == CUTEIFY_TYPE.SPRITE)
             {
-                _xoffset += sprite_get_width(_text);
+                var _norm = (string_height("I")) / sprite_get_height(_text);
+                _xoffset += sprite_get_width(_text) * _norm;
                 
                 continue;
             }

@@ -2,5 +2,6 @@
 // Context: x, y, z, xscale, yscale, dt, parameter, tile
 
 
-
+/*
 sfx_play(x * TILE_SIZE, y * TILE_SIZE, parameter.id);
+*/

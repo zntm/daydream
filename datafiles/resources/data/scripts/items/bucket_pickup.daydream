@@ -1,7 +1,7 @@
 // Bucket picks up liquid tile
 // Context: x, y, z, xscale, yscale, dt, parameter, tile, inventory, player
 
-
+/*
 
 // Get the held item
 var held_item = inventory_get_selected();
@@ -40,3 +40,4 @@ tile_place(x, y, liquid_z, undefined);
 // Play pickup sound
 var sound = parameter.sound ?? "phantasia:sfx/liquid/bucket_fill";
 sfx_play(x * TILE_SIZE, y * TILE_SIZE, sound);
+*/

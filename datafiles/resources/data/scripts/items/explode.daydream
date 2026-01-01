@@ -2,7 +2,7 @@
 // Context: x, y, z, xscale, yscale, dt, parameter, tile
 
 
-
+/*
 var radius = parameter.radius ?? 3
 var damage = parameter.damage ?? 10
 var destroy_tiles = parameter.destroy_tiles ?? true
@@ -58,3 +58,4 @@ if (destroy_tiles) {
         }
     }
 }
+*/

@@ -11,6 +11,7 @@ function control_physics_item_drop(_id)
         is_attracted = false;
         
         physics_body.sync_from_instance(id);
+        physics_body.reset_collision();
         
         // During pickup delay, just physics
         if (timer_pickup > 0)
