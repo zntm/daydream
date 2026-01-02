@@ -135,6 +135,34 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 }
             }
             
+            // Draw pooled light sprites
+            for (var i = 0; i < chunk_in_view_length; ++i)
+            {
+                var _chunk = chunk_in_view[i];
+                if (_chunk == undefined) || !(_chunk.boolean & CHUNK_BOOLEAN.GENERATED) continue;
+                
+                var _lights = _chunk.chunk_lights;
+                var _len = array_length(_lights);
+                
+                for (var j = 0; j < _len; ++j)
+                {
+                    var _l = _lights[j];
+                    
+                    // Simple culling
+                    if (_l.x < _camera_x - TILE_SIZE) || (_l.x > _camera_x + _camera_width + TILE_SIZE) || 
+                       (_l.y < _camera_y - TILE_SIZE) || (_l.y > _camera_y + _camera_height + TILE_SIZE) continue;
+                    
+                    var _subimg = _l.image_index;
+                     
+                     // Simple animation if sprite has multiple frames
+                    if (sprite_get_number(_l.sprite_index) > 1) {
+                         _subimg += _animation_index;
+                    }
+                    
+                    draw_sprite_ext(_l.sprite_index, _subimg, _l.x, _l.y, 1, 1, _l.image_angle, _l.image_blend, 1);
+                }
+            }
+            
             with (obj_Player)
             {
                 var _xscale = entity_xscale * sign(image_xscale);

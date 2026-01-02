@@ -112,12 +112,24 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
             draw_sprite_ext(spr_Light, 0, _x, _y + 8 - 1, 1, 1, 0, c_white, 1);
         }
         
-        with (obj_Tile_Light)
+        for (var i = 0; i < chunk_in_view_length; ++i)
         {
-            var _x = ((x + RENDER_LIGHTING_PADDING - _surface_x) / RENDER_LIGHTING_RESIZE);
-            var _y = ((y + RENDER_LIGHTING_PADDING - _surface_y) / RENDER_LIGHTING_RESIZE);
+            var _chunk = chunk_in_view[i];
             
-            draw_sprite_ext(spr_Light, 0, _x, _y + 8, 1, 1, 0, image_blend, 1);
+            if (_chunk == undefined) || !(_chunk.boolean & CHUNK_BOOLEAN.GENERATED) continue;
+            
+            var _lights = _chunk.chunk_lights;
+            var _lights_length = array_length(_lights);
+            
+            for (var j = 0; j < _lights_length; ++j)
+            {
+                var _light = _lights[j];
+                
+                var _x = ((_light.x + RENDER_LIGHTING_PADDING - _surface_x) / RENDER_LIGHTING_RESIZE);
+                var _y = ((_light.y + RENDER_LIGHTING_PADDING - _surface_y) / RENDER_LIGHTING_RESIZE);
+                
+                draw_sprite_ext(spr_Light, 0, _x, _y + 8, 1, 1, 0, _light.image_blend, 1);
+            }
         }
         
         surface_reset_target();

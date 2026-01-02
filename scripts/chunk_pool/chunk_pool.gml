@@ -33,6 +33,11 @@ function Chunk(_x, _y) constructor
     chunk_covered_surface_refresh = true;
     chunk_render_state = [];
     
+    // Pooled objects (structs)
+    chunk_crafting_stations = [];
+    chunk_containers = [];
+    chunk_lights = [];
+    
     // Skew arrays for foliage animation
     chunk_skew_back = array_create(CHUNK_SIZE * CHUNK_SIZE, 0);
     chunk_skew_back_to = array_create(CHUNK_SIZE * CHUNK_SIZE, 0);
@@ -116,6 +121,11 @@ function ChunkPool() : Pool() constructor
         
         global.render_state_pool.clear_list(_chunk.chunk_render_state);
         
+        // Clear pooled objects
+        _chunk.chunk_crafting_stations = [];
+        _chunk.chunk_containers = [];
+        _chunk.chunk_lights = [];
+        
         // Register at new position
         chunk_map_register(_chunk);
         
@@ -161,6 +171,11 @@ function ChunkPool() : Pool() constructor
         {
             global.render_state_pool.clear_list(_chunk.chunk_render_state);
         }
+        
+        // Clear pooled objects
+        _chunk.chunk_crafting_stations = [];
+        _chunk.chunk_containers = [];
+        _chunk.chunk_lights = [];
         
         // Clear vertex buffers
         for (var i = 0; i < CHUNK_DEPTH; ++i)
@@ -208,6 +223,11 @@ function ChunkPool() : Pool() constructor
             {
                 global.render_state_pool.clear_list(_chunk.chunk_render_state);
             }
+        
+            // Clear pooled objects
+            _chunk.chunk_crafting_stations = [];
+            _chunk.chunk_containers = [];
+            _chunk.chunk_lights = [];
             
             // Clean vertex buffers and surfaces
             on_release(_chunk);
