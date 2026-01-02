@@ -345,6 +345,12 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         ___surface_humidity_offset = ___surface_biome_humidity[$ "offset"] ?? -24;
         ___surface_humidity_range = ___surface_biome_humidity[$ "range"] ?? 63;
         
+        ___surface_heat_spline_x = ___surface_biome_heat[$ "spline_x"] == undefined ? undefined : ___surface_biome_heat.spline_x.points;
+        ___surface_heat_spline_y = ___surface_biome_heat[$ "spline_y"] == undefined ? undefined : ___surface_biome_heat.spline_y.points;
+        
+        ___surface_humidity_spline_x = ___surface_biome_humidity[$ "spline_x"] == undefined ? undefined : ___surface_biome_humidity.spline_x.points;
+        ___surface_humidity_spline_y = ___surface_biome_humidity[$ "spline_y"] == undefined ? undefined : ___surface_biome_humidity.spline_y.points;
+        
         set_surface_biome_map(_surface_biome_map);
         
         return self;
@@ -372,6 +378,12 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
     static get_surface_humidity_noise_scale = function() { return ___surface_humidity_noise_scale; }
     static get_surface_humidity_offset = function() { return ___surface_humidity_offset; }
     static get_surface_humidity_range = function() { return ___surface_humidity_range; }
+    
+    static get_surface_heat_spline_x = function() { return ___surface_heat_spline_x; }
+    static get_surface_heat_spline_y = function() { return ___surface_heat_spline_y; }
+    
+    static get_surface_humidity_spline_x = function() { return ___surface_humidity_spline_x; }
+    static get_surface_humidity_spline_y = function() { return ___surface_humidity_spline_y; }
     
     static set_surface = function(_surface)
     {

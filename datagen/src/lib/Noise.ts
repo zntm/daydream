@@ -1,3 +1,5 @@
+import { Spline } from "./Spline";
+
 export class Noise {
     octaves: number;
     min?: number;
@@ -9,6 +11,8 @@ export class Noise {
     noise_scale_x?: number; // Specific X scale
     noise_scale_y?: number; // Specific Y scale
     octaves_offset?: number; // Octave offset
+    spline_x?: Spline;
+    spline_y?: Spline;
 
     constructor(
         octaves: number, 
@@ -56,6 +60,16 @@ export class Noise {
 
     setOctaveOffset(offset: number) {
         this.octaves_offset = offset;
+        return this;
+    }
+
+    setSplineX(spline: Spline) {
+        this.spline_x = spline;
+        return this;
+    }
+
+    setSplineY(spline: Spline) {
+        this.spline_y = spline;
         return this;
     }
 }

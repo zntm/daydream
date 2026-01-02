@@ -398,10 +398,16 @@ export default [
                         ...new Noise(0, 2, 22),
                     }),
                 ],
-                new Noise(4),
+                new Noise(4).setScale(0.005).setSplineY(new Spline([
+                    new SplinePoint(0, -1, SplineEasing.Linear),
+                    new SplinePoint(1024, 1, SplineEasing.Linear),
+                ])),
                 [],
-                new Noise(4.5),
-                new Noise(2.75),
+                new Noise(4.5).setScale(0.005).setSplineX(new Spline([
+                    new SplinePoint(0, -1, SplineEasing.Linear),
+                    new SplinePoint(1024, 1, SplineEasing.Linear),
+                ])),
+                new Noise(2.75).setScale(0.005),
                 "phantasia:world/playground/map",
                 new Noise(2, 22, 34),
                 // Use surface logic for caves for now (placeholder values)

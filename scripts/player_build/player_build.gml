@@ -19,7 +19,7 @@ function player_build(_dt, _x, _y)
     {
         for (var i = 0; i < _on_item_use_length; ++i)
         {
-            function_execute(_on_item_use[i], _x, _y, CHUNK_DEPTH_DEFAULT, 1, 1, _dt);
+            function_execute(_on_item_use[i], _x, _y, CHUNK_DEPTH_DEFAULT, 1, 1, obj_Player.id, _item);
         }
         
         cooldown_build = 0.15;

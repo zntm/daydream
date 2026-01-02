@@ -1,4 +1,4 @@
-function function_execute(_function, _x, _y, _z, _xscale, _yscale)
+function function_execute(_function, _x, _y, _z, _xscale, _yscale, _inst = undefined, _item = undefined)
 {
     // Handle simplified JSON object structure
     // { "id": "...", "chance": 0.1, "parameters": { ... } }
@@ -38,19 +38,59 @@ function function_execute(_function, _x, _y, _z, _xscale, _yscale)
                 var _ty = round(_y / TILE_SIZE);
                 
                 var _source = buffer_load_text(_filepath);
-                var _context = {
-                    x: _tx,
-                    y: _ty,
-                    z: _z,
-                    xscale: _xscale,
-                    yscale: _yscale,
-                    dt: 1,
-                    parameter: _function[$ "parameters"] ?? {},
-                    tile: tile_get(_tx, _ty, _z),
-                    inventory: global.inventory
-                }
                 
-                if (instance_exists(obj_Player)) _context.player = obj_Player;
+                var _context = {}
+                
+                if (_inst != undefined) && (instance_exists(_inst))
+                {
+                    _context.type = "unknown";
+                    
+                    if (_inst.object_index == obj_Player) _context.type = "player";
+                    else if (object_is_ancestor(_inst.object_index, obj_Creature) || _inst.object_index == obj_Creature) _context.type = "creature";
+                    else if (object_is_ancestor(_inst.object_index, obj_Projectile) || _inst.object_index == obj_Projectile) _context.type = "projectile";
+                    
+                    _context.entity_x = _inst.x / TILE_SIZE;
+                    _context.entity_y = _inst.y / TILE_SIZE;
+                    
+                    if (variable_instance_exists(_inst, "physics_body"))
+                    {
+                        var _pb = _inst.physics_body;
+                        _context.velocity = { x: _pb.vel_x, y: _pb.vel_y };
+                    }
+                    else
+                    {
+                        _context.velocity = { x: 0, y: 0 };
+                    }
+                    
+                    if (variable_instance_exists(_inst, "effects"))
+                    {
+                        _context.effects = _inst.effects;
+                    }
+                    
+                    // If the entity has its own inventory, we could expose it here
+                    // For now, Player uses global.inventory
+                }
+                else if (instance_exists(obj_Player))
+                {
+                     // Fallback for backward compatibility or strict tile context? 
+                     // The original code set _context.player = obj_Player
+                     _context.player = obj_Player;
+                }
+                else
+                {
+                    _context = {
+                        x: _tx,
+                        y: _ty,
+                        z: _z,
+                        xscale: _xscale,
+                        yscale: _yscale,
+                        // dt: 1,
+                        parameter: _function[$ "parameters"] ?? {},
+                        tile: tile_get(_tx, _ty, _z),
+                        item: _item,
+                        inventory: global.inventory
+                    }
+                }
                 
                 proglang_execute(_source, _context, _filepath);
             }

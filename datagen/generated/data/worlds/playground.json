@@ -26,7 +26,23 @@
                 }
             ],
             "noise": {
-                "octaves": 4
+                "octaves": 4,
+                "scale": 0.005,
+                "spline_y": {
+                    "points": [
+                        {
+                            "position": 0,
+                            "value": -1,
+                            "easing": "linear"
+                        },
+                        {
+                            "position": 1024,
+                            "value": 1,
+                            "easing": "linear"
+                        }
+                    ],
+                    "type": "spline"
+                }
             },
             "options": [],
             "heat": {
@@ -38,10 +54,27 @@
         },
         "surface": {
             "heat": {
-                "octaves": 4.5
+                "octaves": 4.5,
+                "scale": 0.005,
+                "spline_x": {
+                    "points": [
+                        {
+                            "position": 0,
+                            "value": -1,
+                            "easing": "linear"
+                        },
+                        {
+                            "position": 1024,
+                            "value": 1,
+                            "easing": "linear"
+                        }
+                    ],
+                    "type": "spline"
+                }
             },
             "humidity": {
-                "octaves": 2.75
+                "octaves": 2.75,
+                "scale": 0.005
             },
             "map": "phantasia:world/playground/map",
             "offset": {

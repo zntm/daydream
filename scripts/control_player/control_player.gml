@@ -8,6 +8,64 @@ function control_player()
     // --- INPUT ---
     input_state.poll_player();
     
+    // --- DOUBLE INPUT ---
+    if !(obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.MENU)
+    {
+        var _item = global.inventory.base[global.inventory_selected_hotbar];
+        
+        if (_item != INVENTORY_EMPTY)
+        {
+            var _data = global.item_data[$ _item.get_id()];
+            
+            if (_data != undefined)
+            {
+                // Double Attack
+                if (input_state.attack_double_pressed)
+                {
+                    var _on_event = _data.get_on_item_double_attack();
+                    var _on_event_length = _data.get_on_item_double_attack_length();
+                    
+                    if (_on_event != undefined)
+                    {
+                        for (var j = 0; j < _on_event_length; ++j)
+                        {
+                            function_execute(_on_event[j], round(x / TILE_SIZE), round(y / TILE_SIZE), CHUNK_DEPTH_DEFAULT, sign(image_xscale), sign(image_yscale), id, _item);
+                        }
+                    }
+                }
+                
+                // Double Use
+                if (input_state.use_double_pressed)
+                {
+                    var _on_event = _data.get_on_item_double_use();
+                    var _on_event_length = _data.get_on_item_double_use_length();
+                    
+                    if (_on_event != undefined)
+                    {
+                        for (var j = 0; j < _on_event_length; ++j)
+                        {
+                            function_execute(_on_event[j], round(x / TILE_SIZE), round(y / TILE_SIZE), CHUNK_DEPTH_DEFAULT, sign(image_xscale), sign(image_yscale), id, _item);
+                        }
+                    }
+                }
+                
+                if (input_state.move_left_double_pressed) || (input_state.move_right_double_pressed) || (input_state.move_up_double_pressed) || (input_state.move_down_double_pressed)
+                {
+                    var _on_event = _data.get_on_item_double_move();
+                    var _on_event_length = _data.get_on_item_double_move_length();
+                    
+                    if (_on_event != undefined)
+                    {
+                        for (var j = 0; j < _on_event_length; ++j)
+                        {
+                            function_execute(_on_event[j], round(x / TILE_SIZE), round(y / TILE_SIZE), CHUNK_DEPTH_DEFAULT, sign(image_xscale), sign(image_yscale), id, _item);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
     // --- DAMAGE CHECK ---
     if (timer_immunity <= 0)
     {
@@ -93,7 +151,7 @@ function control_player()
             
             for (var j = 0; j < _on_attack_length; ++j)
             {
-                function_execute(_on_attack[j], round(x / TILE_SIZE), round(y / TILE_SIZE), CHUNK_DEPTH_DEFAULT, sign(image_xscale), sign(image_yscale));
+                function_execute(_on_attack[j], round(x / TILE_SIZE), round(y / TILE_SIZE), CHUNK_DEPTH_DEFAULT, sign(image_xscale), sign(image_yscale), id, _item);
             }
         }
     }

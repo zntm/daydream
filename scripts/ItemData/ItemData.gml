@@ -262,11 +262,30 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
                 set_item_harvest(_harvest);
             }
             
-            var _on_use = _data[$ "on_use"];
-            
             if (_on_use != undefined)
             {
                 set_on_item_use(_on_use);
+            }
+            
+            var _on_item_double_attack = _data[$ "on_item_double_attack"];
+            
+            if (_on_item_double_attack != undefined)
+            {
+                set_on_item_double_attack(_on_item_double_attack);
+            }
+            
+            var _on_item_double_use = _data[$ "on_item_double_use"];
+            
+            if (_on_item_double_use != undefined)
+            {
+                set_on_item_double_use(_on_item_double_use);
+            }
+            
+            var _on_item_double_move = _data[$ "on_item_double_move"];
+            
+            if (_on_item_double_move != undefined)
+            {
+                set_on_item_double_move(_on_item_double_move);
             }
             
             var _ammo_type = _data[$ "ammo_type"];
@@ -1209,6 +1228,78 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     static get_on_tile_use_length = function()
     {
         return self[$ "___on_tile_use_length"];
+    }
+    
+    static set_on_item_double_attack = function(_data)
+    {
+        if (_data != undefined)
+        {
+            var _ = function_parse(_data);
+            var _length = array_length(_);
+            
+            ___on_item_double_attack = _;
+            ___on_item_double_attack_length = _length;
+        }
+        
+        return self;
+    }
+    
+    static get_on_item_double_attack = function()
+    {
+        return self[$ "___on_item_double_attack"];
+    }
+    
+    static get_on_item_double_attack_length = function()
+    {
+        return self[$ "___on_item_double_attack_length"];
+    }
+    
+    static set_on_item_double_use = function(_data)
+    {
+        if (_data != undefined)
+        {
+            var _ = function_parse(_data);
+            var _length = array_length(_);
+            
+            ___on_item_double_use = _;
+            ___on_item_double_use_length = _length;
+        }
+        
+        return self;
+    }
+    
+    static get_on_item_double_use = function()
+    {
+        return self[$ "___on_item_double_use"];
+    }
+    
+    static get_on_item_double_use_length = function()
+    {
+        return self[$ "___on_item_double_use_length"];
+    }
+    
+    static set_on_item_double_move = function(_data)
+    {
+        if (_data != undefined)
+        {
+            var _ = function_parse(_data);
+            var _length = array_length(_);
+            
+            ___on_item_double_move = _;
+            ___on_item_double_move_length = _length;
+        }
+        
+        return self;
+    }
+    
+    static get_on_item_double_move = function()
+    {
+        return self[$ "___on_item_double_move"];
+    }
+    
+    static get_on_item_double_move_length = function()
+    {
+        return self[$ "___on_item_double_move_length"];
     }
     
     static set_light = function(_light)
