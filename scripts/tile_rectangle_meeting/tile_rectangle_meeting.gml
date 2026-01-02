@@ -7,8 +7,6 @@ function tile_rectangle_meeting(_x1, _y1, _x2, _y2, _z = CHUNK_DEPTH_DEFAULT, _t
     
     var _item_data = global.item_data;
     
-
-    
     var _xstart = floor(_x1 / TILE_SIZE) - 1;
     var _ystart = floor(_y1 / TILE_SIZE) - 1;
     
