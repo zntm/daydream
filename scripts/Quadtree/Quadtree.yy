@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"Quadtree",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"Quadtree",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -52,7 +52,7 @@ function tile_update_liquid(_x, _y, _z)
             return {
                 id: _t.get_id(),
                 level: _t.get_component("level") ?? 8
-            };
+            }
         }
         
         // Left

@@ -17,7 +17,7 @@ function function_execute(_function, _x, _y, _z, _xscale, _yscale, _inst = undef
     {
         // Proglang Script Execution (@ prefix indicates script file)
         if (string_char_at(_id, 1) == "@")
-        {
+        {/*
             var _script_path = string_delete(_id, 1, 1); // Remove "@"
             
             // Convert namespace:path to file path
@@ -28,7 +28,7 @@ function function_execute(_function, _x, _y, _z, _xscale, _yscale, _inst = undef
             }
             
             var _filepath = $"{PROGLANG_BASE_DIR}/{_script_path}.daydream";
-            
+            /*
             // show_debug_message(_filepath);
             
             // Load and execute the script
@@ -55,11 +55,11 @@ function function_execute(_function, _x, _y, _z, _xscale, _yscale, _inst = undef
                     if (variable_instance_exists(_inst, "physics_body"))
                     {
                         var _pb = _inst.physics_body;
-                        _context.velocity = { x: _pb.vel_x, y: _pb.vel_y };
+                        _context.velocity = { x: _pb.vel_x, y: _pb.vel_y }
                     }
                     else
                     {
-                        _context.velocity = { x: 0, y: 0 };
+                        _context.velocity = { x: 0, y: 0 }
                     }
                     
                     if (variable_instance_exists(_inst, "effects"))
@@ -98,7 +98,7 @@ function function_execute(_function, _x, _y, _z, _xscale, _yscale, _inst = undef
             {
                 show_debug_message($"[Daydream] Script not found: {_filepath}");
             }
-            
+            */
             exit;
         }
         

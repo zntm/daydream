@@ -4,8 +4,8 @@ function SpatialGrid(_cell_size = TILE_SIZE * 2) constructor
 {
     cell_size = _cell_size;
     inv_cell_size = 1 / _cell_size;
-    cells = {};  // Map of "x,y" -> array of bodies
-    body_cells = {};  // Map of body id -> array of cell keys (for fast removal)
+    cells = {}  // Map of "x,y" -> array of bodies
+    body_cells = {}  // Map of body id -> array of cell keys (for fast removal)
     
     /// @desc Get the cell key for a world position
     /// @param {real} _x World X
@@ -16,7 +16,7 @@ function SpatialGrid(_cell_size = TILE_SIZE * 2) constructor
         var _cx = floor(_x * inv_cell_size);
         var _cy = floor(_y * inv_cell_size);
         return string(_cx) + "," + string(_cy);
-    };
+    }
     
     /// @desc Get all cell keys that an AABB overlaps
     /// @param {real} _x1 Left
@@ -40,7 +40,7 @@ function SpatialGrid(_cell_size = TILE_SIZE * 2) constructor
             }
         }
         return _keys;
-    };
+    }
     
     /// @desc Add a body to the grid
     /// @param {Struct} _body Must have: id, pos_x, pos_y, width, height (or use PhysicsBody)
@@ -67,7 +67,7 @@ function SpatialGrid(_cell_size = TILE_SIZE * 2) constructor
             }
             array_push(cells[$ _key], _body);
         }
-    };
+    }
     
     /// @desc Remove a body from the grid
     /// @param {Struct} _body
@@ -94,7 +94,7 @@ function SpatialGrid(_cell_size = TILE_SIZE * 2) constructor
         }
         
         struct_remove(body_cells, _id);
-    };
+    }
     
     /// @desc Update a body's position in the grid (call after moving)
     /// @param {Struct} _body
@@ -102,7 +102,7 @@ function SpatialGrid(_cell_size = TILE_SIZE * 2) constructor
     {
         remove(_body);
         add(_body);
-    };
+    }
     
     /// @desc Query all bodies overlapping a rectangle
     /// @param {real} _x1 Left
@@ -115,7 +115,7 @@ function SpatialGrid(_cell_size = TILE_SIZE * 2) constructor
     {
         var _keys = get_cells_for_aabb(_x1, _y1, _x2, _y2);
         var _found = [];
-        var _seen = {};  // Deduplication
+        var _seen = {}  // Deduplication
         
         for (var i = 0; i < array_length(_keys); ++i)
         {
@@ -150,7 +150,7 @@ function SpatialGrid(_cell_size = TILE_SIZE * 2) constructor
         }
         
         return _found;
-    };
+    }
     
     /// @desc Query all bodies at a point
     /// @param {real} _x
@@ -160,12 +160,12 @@ function SpatialGrid(_cell_size = TILE_SIZE * 2) constructor
     static query_point = function(_x, _y, _exclude = undefined)
     {
         return query_rect(_x - 1, _y - 1, _x + 1, _y + 1, _exclude);
-    };
+    }
     
     /// @desc Clear all bodies from the grid
     static clear = function()
     {
-        cells = {};
-        body_cells = {};
-    };
+        cells = {}
+        body_cells = {}
+    }
 }

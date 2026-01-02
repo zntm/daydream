@@ -31,7 +31,7 @@ function tile_instance_create(_x, _y, _z, _tile, _chunk = undefined)
             tile_z: _z,
             
             tile_id: _id
-        };
+        }
         
         array_push(_chunk.chunk_crafting_stations, _struct);
         _tile.set_instance_crafting_station(_struct);
@@ -52,7 +52,7 @@ function tile_instance_create(_x, _y, _z, _tile, _chunk = undefined)
             tile_z: _z,
             
             tile_id: _id
-        };
+        }
         
         array_push(_chunk.chunk_containers, _struct);
         _tile.set_instance_container(_struct);
@@ -74,7 +74,7 @@ function tile_instance_create(_x, _y, _z, _tile, _chunk = undefined)
             tile_z: _z,
             
             tile_id: _id
-        };
+        }
         
         array_push(_chunk.chunk_lights, _struct);
         _tile.set_instance_light(_struct);

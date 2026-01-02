@@ -1701,4 +1701,6 @@ if (IS_DEVELOPER_MODE)
             proglang_execute(buffer_load_text(_dir), {}, _dir);
         }
     });
+    
+    test_quadtree();
 }

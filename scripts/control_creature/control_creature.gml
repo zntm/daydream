@@ -273,19 +273,24 @@ function creature_scan_for_prey(_data, _dt_normalized)
     var _nearest_prey = noone;
     var _nearest_prey_dist = AI_HUNT_RANGE;
     
-    with (obj_Creature)
+    var _range = AI_HUNT_RANGE;
+    var _nearby = global.creature_quadtree.query_rect(x - _range, y - _range, x + _range, y + _range);
+    var _len = array_length(_nearby);
+    
+    for (var i = 0; i < _len; ++i)
     {
-        if (id == other.id) continue;
+        var _inst = _nearby[i];
+        if (_inst == id) continue;
         
-        var _prey_data = global.creature_data[$ _id];
+        var _prey_data = global.creature_data[$ _inst._id];
         var _predators = _prey_data.get_predators();
         
         if (array_contains(_predators, _my_id))
         {
-            var _dist = point_distance(other.x, other.y, x, y);
+            var _dist = point_distance(_inst.x, _inst.y, x, y);
             if (_dist < _nearest_prey_dist)
             {
-                _nearest_prey = id;
+                _nearest_prey = _inst;
                 _nearest_prey_dist = _dist;
             }
         }

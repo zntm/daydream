@@ -29,7 +29,7 @@ function worldgen_get_aquifer(_x, _y, _surface_height, _seed, _world_data = glob
                 return {
                     type: _aq.type,
                     fill_level: _aq.fill_level
-                };
+                }
             }
         }
     }

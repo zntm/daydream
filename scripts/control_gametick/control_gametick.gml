@@ -154,6 +154,9 @@ function control_gametick(_delta_time)
         {
             control_creature();
         }
+
+        control_quadtree_update();
+        control_resolve_collisions();
         
         with (obj_Item_Drop)
         {

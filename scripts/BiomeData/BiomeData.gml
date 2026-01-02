@@ -143,10 +143,10 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
                     cumulative_weight: _total_weight,
                     noise_min: _entry[$ "noise_min"],
                     noise_max: _entry[$ "noise_max"]
-                };
+                }
             }
             
-            return { entries: _entries, total_weight: _total_weight };
+            return { entries: _entries, total_weight: _total_weight }
         }
         else
         {
@@ -154,7 +154,7 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
             var _id = _data.id;
             if (_id == "$EMPTY") _id = TILE_EMPTY;
             
-            return { entries: [{ id: _id, weight: 1, cumulative_weight: 1 }], total_weight: 1 };
+            return { entries: [{ id: _id, weight: 1, cumulative_weight: 1 }], total_weight: 1 }
         }
     }
     

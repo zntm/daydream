@@ -262,6 +262,8 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
                 set_item_harvest(_harvest);
             }
             
+            var _on_use = _data[$ "on_use"];
+            
             if (_on_use != undefined)
             {
                 set_on_item_use(_on_use);

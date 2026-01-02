@@ -335,7 +335,7 @@ function proglang_vm_run(_vm, _entry_bytecode)
                     // Scope
                     case PROG_OP.PUSH_SCOPE:
                         var _new_scope = array_create(PROG_SCOPE.SIZE);
-                        _new_scope[PROG_SCOPE.VARS] = {};
+                        _new_scope[PROG_SCOPE.VARS] = {}
                         _new_scope[PROG_SCOPE.PARENT] = _vm[PROG_VM.SCOPE];
                         _vm[@ PROG_VM.SCOPE] = _new_scope;
                         _scope = _new_scope; // Update local cache
@@ -443,7 +443,7 @@ function proglang_vm_run(_vm, _entry_bytecode)
                             // Scope Setup
                             var _closure_env = _val[PROG_CLOSURE.ENV];
                             var _new_scope = array_create(PROG_SCOPE.SIZE);
-                            _new_scope[PROG_SCOPE.VARS] = {};
+                            _new_scope[PROG_SCOPE.VARS] = {}
                             _new_scope[PROG_SCOPE.PARENT] = _closure_env;
                             _vm[@ PROG_VM.SCOPE] = _new_scope;
                             _scope = _new_scope;
@@ -506,7 +506,7 @@ function proglang_vm_run(_vm, _entry_bytecode)
                             _bp = _sp - _param_count;
                             
                             var _new_scope = array_create(PROG_SCOPE.SIZE);
-                            _new_scope[PROG_SCOPE.VARS] = {};
+                            _new_scope[PROG_SCOPE.VARS] = {}
                             _new_scope[PROG_SCOPE.PARENT] = undefined; // Top level
                             _vm[@ PROG_VM.SCOPE] = _new_scope;
                             _scope = _new_scope;
@@ -766,7 +766,7 @@ function proglang_vm_run(_vm, _entry_bytecode)
                         
                     case PROG_OP.OBJECT_NEW:
                         var _sz = _arg;
-                        var _obj = {};
+                        var _obj = {}
                         for (var i = 0; i < _sz; i++) {
                             var _v = _stack[--_sp];
                             var _k = _stack[--_sp];

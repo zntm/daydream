@@ -354,7 +354,7 @@ function ProgCompiler(_context_keys = []) constructor
             // Note: Since arguments are already on stack at BP+i, we map them directly.
             // We don't need to emit LOAD/DEFINE/POP logic anymore for basic args.
             
-            array_last(declared_vars)[$ _param.name] = { type: "local", index: i };
+            array_last(declared_vars)[$ _param.name] = { type: "local", index: i }
             
             // Handle default values
             if (_param.default_value != undefined)
