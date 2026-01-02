@@ -159,7 +159,20 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
             var _x = ((x + RENDER_LIGHTING_PADDING - _surface_x) / RENDER_LIGHTING_RESIZE);
             var _y = ((y + RENDER_LIGHTING_PADDING - _surface_y) / RENDER_LIGHTING_RESIZE);
             
-            draw_sprite_ext(spr_Light, 0, _x, _y + 8 - 1, 1, 1, 0, c_white, 1);
+            var _xf = floor(_x);
+            var _yf = floor(_y);
+            
+            var _xnormalized = _x - _xf;
+            var _ynormalized = _y - _yf;
+            
+            var _xdraw = _xf + 0.5;
+            var _ydraw = _yf + 8 - 1 + 0.5;
+            
+            draw_sprite_ext(spr_Light, 0, _xdraw + 1, _ydraw, 1, 1, 0, c_white,      (_xnormalized) * 0.5);
+            draw_sprite_ext(spr_Light, 0, _xdraw - 1, _ydraw, 1, 1, 0, c_white, (1 - _xnormalized) * 0.5);
+            
+            draw_sprite_ext(spr_Light, 0, _xdraw, _ydraw + 1, 1, 1, 0, c_white,      (_ynormalized) * 0.5);
+            draw_sprite_ext(spr_Light, 0, _xdraw, _ydraw - 1, 1, 1, 0, c_white, (1 - _ynormalized) * 0.5);
         }
         
         for (var i = 0; i < chunk_in_view_length; ++i)
@@ -178,7 +191,20 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
                 var _x = ((_light.x + RENDER_LIGHTING_PADDING - _surface_x) / RENDER_LIGHTING_RESIZE);
                 var _y = ((_light.y + RENDER_LIGHTING_PADDING - _surface_y) / RENDER_LIGHTING_RESIZE);
                 
-                draw_sprite_ext(spr_Light, 0, _x, _y + 8, 1, 1, 0, _light.image_blend, 1);
+                var _xf = floor(_x);
+                var _yf = floor(_y);
+                
+                var _xnormalized = _x - _xf;
+                var _ynormalized = _y - _yf;
+                
+                var _xdraw = _xf + 0.5;
+                var _ydraw = _yf + 8 + 0.5;
+                
+                draw_sprite_ext(spr_Light, 0, _xdraw + 1, _ydraw, 1, 1, 0, _light.image_blend,      (_xnormalized) * 0.5);
+                draw_sprite_ext(spr_Light, 0, _xdraw - 1, _ydraw, 1, 1, 0, _light.image_blend, (1 - _xnormalized) * 0.5);
+                
+                draw_sprite_ext(spr_Light, 0, _xdraw, _ydraw + 1, 1, 1, 0, _light.image_blend,      (_ynormalized) * 0.5);
+                draw_sprite_ext(spr_Light, 0, _xdraw, _ydraw - 1, 1, 1, 0, _light.image_blend, (1 - _ynormalized) * 0.5);
             }
         }
         
