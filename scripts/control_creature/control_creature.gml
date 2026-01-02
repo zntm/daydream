@@ -367,7 +367,7 @@ function creature_handle_fall_damage()
     {
         if (physics_body.collision.ground)
         {
-            var _difference = max(0, y - y_last - (TILE_SIZE * 4));
+            var _difference = max(0, y - y_last - (TILE_SIZE * 8));
             var _value = floor(power(floor(_difference / TILE_SIZE) * 0.62, 1.25));
             
             if (_value > 0 && !attribute.has_boolean(ATTRIBUTE_BOOLEAN.IS_FALL_DAMAGE_RESISTANT))
@@ -383,10 +383,16 @@ function creature_handle_fall_damage()
                 spawn_floating_text(x, y, _value, 0, -3.9);
                 
                 if (hp <= 0)
-                if (hp <= 0)
                 {
-                    global.spatial_grid.remove(physics_body);
-                    instance_destroy();
+                    if (object_index == obj_Player)
+                    {
+                        obj_Game_Control.timer_respawn = 3;
+                    }
+                    else
+                    {
+                        global.spatial_grid.remove(physics_body);
+                        instance_destroy();
+                    }
                     exit;
                 }
             }

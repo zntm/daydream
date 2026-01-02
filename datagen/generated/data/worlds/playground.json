@@ -114,6 +114,24 @@
                 "range": 255
             }
         ],
+        "depth_smoothing": {
+            "points": [
+                {
+                    "position": 0,
+                    "value": 0,
+                    "easing": "ease_out"
+                },
+                {
+                    "position": 16,
+                    "value": 0.3
+                },
+                {
+                    "position": 64,
+                    "value": 1
+                }
+            ],
+            "type": "spline"
+        },
         "noise_scale": 0.015625,
         "breach_threshold": 242,
         "breach_depth": -8,

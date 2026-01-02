@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"spline_evaluate",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"spline_evaluate",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

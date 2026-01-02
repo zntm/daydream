@@ -494,6 +494,18 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         ___cave_transition_noise_range = _cave[$ "transition_noise_range"] ?? 255;
         ___cave_transition_noise_octaves = _cave[$ "transition_noise_octaves"] ?? 3;
         
+        // Depth smoothing spline for cave size
+        var _depth_smoothing = _cave[$ "depth_smoothing"];
+        if (_depth_smoothing != undefined)
+        {
+            ___cave_depth_smoothing = _depth_smoothing.points;
+        }
+        else
+        {
+            // Default: full caves everywhere (no depth smoothing)
+            ___cave_depth_smoothing = [{ position: 0, value: 1 }];
+        }
+        
         return self;
     }
 
@@ -605,6 +617,11 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
     static get_cave_transition_threshold = function()
     {
         return ___cave_transition_threshold;
+    }
+    
+    static get_cave_depth_smoothing = function()
+    {
+        return ___cave_depth_smoothing;
     }
     
     static get_surface_seed_offset = function()

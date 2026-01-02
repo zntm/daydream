@@ -43,9 +43,9 @@ function input_bindings_init()
     global.input_bindings[INPUT_ACTION.PAUSE]      = { keyboard: vk_escape, keyboard_alt: undefined, gamepad: gp_start }
     
     // Mouse buttons (raw)
-    global.input_bindings[INPUT_ACTION.MOUSE_LEFT]   = { keyboard: undefined, mouse: mb_left, gamepad: undefined }
-    global.input_bindings[INPUT_ACTION.MOUSE_RIGHT]  = { keyboard: undefined, mouse: mb_right, gamepad: undefined }
-    global.input_bindings[INPUT_ACTION.MOUSE_MIDDLE] = { keyboard: undefined, mouse: mb_middle, gamepad: undefined }
+    global.input_bindings[INPUT_ACTION.MOUSE_LEFT]   = { keyboard: undefined, keyboard_alt: undefined, mouse: mb_left, gamepad: undefined }
+    global.input_bindings[INPUT_ACTION.MOUSE_RIGHT]  = { keyboard: undefined, keyboard_alt: undefined, mouse: mb_right, gamepad: undefined }
+    global.input_bindings[INPUT_ACTION.MOUSE_MIDDLE] = { keyboard: undefined, keyboard_alt: undefined, mouse: mb_middle, gamepad: undefined }
     
     // Player input device preference (can be auto-detected or set)
     global.player_input_device = INPUT_DEVICE.KEYBOARD;

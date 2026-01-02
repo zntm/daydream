@@ -6,6 +6,7 @@ export * from "./src/lib/DatagenReturnData";
 export * from "./src/lib/SmartValue";
 export * from "./src/lib/Sound";
 export * from "./src/lib/Noise";
+export * from "./src/lib/Spline";
 export * from "./src/attribute";
 export * from "./src/entity";
 

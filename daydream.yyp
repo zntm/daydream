@@ -1584,6 +1584,7 @@
     {"id":{"name":"spawn_item_drop","path":"scripts/spawn_item_drop/spawn_item_drop.yy",},},
     {"id":{"name":"spawn_particle","path":"scripts/spawn_particle/spawn_particle.yy",},},
     {"id":{"name":"spawn_projectile","path":"scripts/spawn_projectile/spawn_projectile.yy",},},
+    {"id":{"name":"spline_evaluate","path":"scripts/spline_evaluate/spline_evaluate.yy",},},
     {"id":{"name":"statistics_system","path":"scripts/statistics_system/statistics_system.yy",},},
     {"id":{"name":"string_contains","path":"scripts/string_contains/string_contains.yy",},},
     {"id":{"name":"string_get_seed","path":"scripts/string_get_seed/string_get_seed.yy",},},

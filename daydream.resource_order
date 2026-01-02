@@ -394,6 +394,7 @@
     {"name":"spawn_item_drop","order":2,"path":"scripts/spawn_item_drop/spawn_item_drop.yy",},
     {"name":"spawn_particle","order":3,"path":"scripts/spawn_particle/spawn_particle.yy",},
     {"name":"spawn_projectile","order":4,"path":"scripts/spawn_projectile/spawn_projectile.yy",},
+    {"name":"spline_evaluate","order":68,"path":"scripts/spline_evaluate/spline_evaluate.yy",},
     {"name":"statistics_system","order":44,"path":"scripts/statistics_system/statistics_system.yy",},
     {"name":"string_get_seed","order":3,"path":"scripts/string_get_seed/string_get_seed.yy",},
     {"name":"string_pad_start","order":1,"path":"scripts/string_pad_start/string_pad_start.yy",},

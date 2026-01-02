@@ -26,18 +26,15 @@ function worldgen_get_cave(_x, _y, _surface_height, _cave_start, _seed, _world_d
         return true; // Above surface, no block (sky)
     }
     
-    // Transition zone near surface - caves can exist but with reduced probability
-    if (_depth_from_surface < _cave_start + _world_data.get_cave_start_min())
+    // Calculate depth smoothing factor using spline interpolation
+    // Factor ranges from 0 (near surface) to 1 (at full depth)
+    var _depth_smoothing = _world_data.get_cave_depth_smoothing();
+    var _depth_factor = spline_evaluate(_depth_smoothing, _depth_from_surface);
+    
+    // If depth factor is 0, no caves at this depth
+    if (_depth_factor <= 0)
     {
-        // Gradual transition: deeper = more likely to have caves
-        var _transition_factor = _depth_from_surface / (_cave_start + _world_data.get_cave_start_min());
-        var _transition_noise = open_simplex_noise(_x * _world_data.get_cave_transition_noise_scale_x(), _y * _world_data.get_cave_transition_noise_scale_y(), _world_data.get_cave_transition_noise_range(), _world_data.get_cave_transition_noise_octaves());
-        
-        // Require higher noise values near surface
-        if (_transition_noise < (_world_data.get_cave_transition_threshold() * (1 - _transition_factor)))
-        {
-            return false;
-        }
+        return false;
     }
     
     var _system = _world_data.get_cave_system();
@@ -54,7 +51,14 @@ function worldgen_get_cave(_x, _y, _surface_height, _cave_start, _seed, _world_d
         
         var _noise = open_simplex_noise(_x_noise, _y_noise + ((0xffff * (i + 1)) + 8), 0xff, _octaves);
         
-        if (_noise >= _.range_min) && (_noise < _.range_max)
+        // Apply depth smoothing: shrink the valid range near surface
+        // This makes caves smaller/rarer near surface and larger/more common deeper
+        var _range_center = (_.range_min + _.range_max) / 2;
+        var _range_half = ((_.range_max - _.range_min) / 2) * _depth_factor;
+        var _smoothed_min = _range_center - _range_half;
+        var _smoothed_max = _range_center + _range_half;
+        
+        if (_noise >= _smoothed_min) && (_noise < _smoothed_max)
         {
             return true;
         }

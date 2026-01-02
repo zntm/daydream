@@ -147,11 +147,12 @@ function control_player()
     }
     
     // --- FALL DAMAGE ---
+    /*
     if (y > y_last)
     {
         if (physics_body.collision.ground)
         {
-            var _difference = max(0, y - y_last - (TILE_SIZE * 4));
+            var _difference = max(0, y - y_last - (TILE_SIZE * 8));
             var _value = floor(power(floor(_difference / TILE_SIZE) * 0.62, 1.25));
             
             if (_value > 0 && !attribute.has_boolean(ATTRIBUTE_BOOLEAN.IS_FALL_DAMAGE_RESISTANT))
@@ -179,6 +180,8 @@ function control_player()
     {
         y_last = y;
     }
+    */
+    creature_handle_fall_damage();
     
     // --- POST-PHYSICS ---
     control_entity_sfx();
