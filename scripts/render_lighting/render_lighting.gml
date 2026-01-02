@@ -35,43 +35,76 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
         obj_Game_Control.surface_lighting_x = _surface_x;
         obj_Game_Control.surface_lighting_y = _surface_y;
         
-        // Create/update lighting surfaces for ALL generated chunks in view
+        // Cache padding offset once
+        var _padding_offset = RENDER_LIGHTING_PADDING / 2;
+        
+        // Create/update lighting surfaces ONLY when needed
         for (var i = 0; i < chunk_in_view_length; ++i)
         {
             var _chunk = chunk_in_view[i];
             
             if (_chunk == undefined) || !(_chunk.boolean & CHUNK_BOOLEAN.GENERATED) continue;
             
-            // Clear the refresh flag if set
-            if (_chunk.boolean & CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH)
-            {
-                _chunk.boolean ^= CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH;
-            }
+            // Check if surface needs updating
+            var _needs_update = false;
             
             // Create surface if it doesn't exist
             if (!surface_exists(_chunk.surface_lighting))
             {
                 _chunk.surface_lighting = surface_create(CHUNK_SIZE + RENDER_LIGHTING_PADDING, CHUNK_SIZE + RENDER_LIGHTING_PADDING, surface_r8unorm);
+                _needs_update = true;
             }
             
-            // Redraw the chunk's lighting surface
+            // Check refresh flag
+            if (_chunk.boolean & CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH)
+            {
+                _chunk.boolean ^= CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH;
+                _needs_update = true;
+            }
+            
+            // Only redraw if needed
+            if (!_needs_update) continue;
+            
+            // Batch all draw operations for this surface
             surface_set_target(_chunk.surface_lighting);
             draw_clear_alpha(c_black, 1);
             
             var _chunk_covered = _chunk.chunk_covered;
             
+            // Optimize inner loop - check full bytes first
             for (var l = 0; l < CHUNK_SIZE; ++l)
             {
                 var _data = _chunk_covered[l];
+                
+                // Skip row entirely if all bits are set (all covered)
+                if (_data == (1 << CHUNK_SIZE) - 1) continue;
+                
+                // If no bits set (none covered), draw entire row quickly
+                if (_data == 0)
+                {
+                    var _x2 = _padding_offset + l;
+                    
+                    draw_sprite_ext(spr_Light, 0, _x2, _padding_offset + CHUNK_SIZE, 1, 1 + (CHUNK_SIZE / 16), 0, c_white, 1);
+                    
+                    continue;
+                }
+                
+                // Mixed case - check individual bits
+                var _x2 = _padding_offset + l;
+                
+                var _c = 0;
                 
                 for (var m = 0; m < CHUNK_SIZE; ++m)
                 {
                     if !(_data & (1 << m))
                     {
-                        var _x2 = (RENDER_LIGHTING_PADDING / 2) + l;
-                        var _y2 = (RENDER_LIGHTING_PADDING / 2) + m;
+                        ++_c;
+                    }
+                    else if (_c > 0)
+                    {
+                        draw_sprite_ext(spr_Light, 0, _x2, _padding_offset + m, 1, 1 + (_c / 16), 0, c_white, 1);
                         
-                        draw_sprite_ext(spr_Light, 0, _x2, _y2, 1, 1, 0, c_white, 1);
+                        _c = 0;
                     }
                 }
             }

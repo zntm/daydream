@@ -329,10 +329,5 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 );
             }
         }
-        
-        if (_dbg_settings[$ "display_quadtree"])
-        {
-            global.creature_quadtree.draw();
-        }
     }
 }
