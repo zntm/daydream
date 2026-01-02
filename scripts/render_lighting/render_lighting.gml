@@ -74,41 +74,56 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
             var _chunk_covered = _chunk.chunk_covered;
             
             // Optimize inner loop - check full bytes first
-            for (var l = 0; l < CHUNK_SIZE; ++l)
+            var l = 0;
+            
+            while (l < CHUNK_SIZE)
             {
                 var _data = _chunk_covered[l];
                 
+                var _xscale = 1;
+                /*
+                while (l + _xscale < CHUNK_SIZE) && (_data == _chunk_covered[l + _xscale])
+                {
+                    ++_xscale;
+                }
+                */
                 // Skip row entirely if all bits are set (all covered)
-                if (_data == (1 << CHUNK_SIZE) - 1) continue;
-                
-                // If no bits set (none covered), draw entire row quickly
-                if (_data == 0)
+                if (_data != (1 << CHUNK_SIZE) - 1)
                 {
-                    var _x2 = _padding_offset + l;
+                    var _x2 = _padding_offset + l + ((_xscale - 1) / 2);
                     
-                    draw_sprite_ext(spr_Light, 0, _x2, _padding_offset + CHUNK_SIZE, 1, CHUNK_SIZE, 0, c_white, 1);
-                    
-                    continue;
-                }
-                
-                // Mixed case - check individual bits
-                var _x2 = _padding_offset + l;
-                
-                var _c = 0;
-                
-                for (var m = 0; m < CHUNK_SIZE; ++m)
-                {
-                    if !(_data & (1 << m))
+                    // If no bits set (none covered), draw entire row quickly
+                    if (_data == 0)
                     {
-                        ++_c;
+                        draw_sprite_ext(spr_Light, 0, _x2, _padding_offset + CHUNK_SIZE - 1, _xscale, CHUNK_SIZE, 0, c_white, 1);
                     }
-                    else if (_c > 0)
+                    else
                     {
-                        draw_sprite_ext(spr_Light, 0, _x2, _padding_offset + m, 1, _c, 0, c_white, 1);
+                        // Mixed case - check individual bits
+                        var _c = 0;
                         
-                        _c = 0;
+                        for (var m = 0; m < CHUNK_SIZE; ++m)
+                        {
+                            if !(_data & (1 << m))
+                            {
+                                ++_c;
+                            }
+                            else if (_c > 0)
+                            {
+                                draw_sprite_ext(spr_Light, 0, _x2, _padding_offset + m, _xscale, _c, 0, c_white, 1);
+                                
+                                _c = 0;
+                            }
+                        }
+                        
+                        if (_c > 0)
+                        {
+                            draw_sprite_ext(spr_Light, 0, _x2, _padding_offset + CHUNK_SIZE - 1 - _c, _xscale, _c, 0, c_white, 1);
+                        }
                     }
                 }
+                
+                l += _xscale;
             }
             
             surface_reset_target();
