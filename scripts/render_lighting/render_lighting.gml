@@ -52,6 +52,7 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
             if (!surface_exists(_chunk.surface_lighting))
             {
                 _chunk.surface_lighting = surface_create(CHUNK_SIZE + RENDER_LIGHTING_PADDING, CHUNK_SIZE + RENDER_LIGHTING_PADDING, surface_r8unorm);
+                
                 _needs_update = true;
             }
             
@@ -59,6 +60,7 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
             if (_chunk.boolean & CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH)
             {
                 _chunk.boolean ^= CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH;
+                
                 _needs_update = true;
             }
             
@@ -84,7 +86,7 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
                 {
                     var _x2 = _padding_offset + l;
                     
-                    draw_sprite_ext(spr_Light, 0, _x2, _padding_offset + CHUNK_SIZE, 1, 1 + (CHUNK_SIZE / 16), 0, c_white, 1);
+                    draw_sprite_ext(spr_Light, 0, _x2, _padding_offset + CHUNK_SIZE, 1, CHUNK_SIZE, 0, c_white, 1);
                     
                     continue;
                 }
@@ -102,7 +104,7 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
                     }
                     else if (_c > 0)
                     {
-                        draw_sprite_ext(spr_Light, 0, _x2, _padding_offset + m, 1, 1 + (_c / 16), 0, c_white, 1);
+                        draw_sprite_ext(spr_Light, 0, _x2, _padding_offset + m, 1, _c, 0, c_white, 1);
                         
                         _c = 0;
                     }
