@@ -1255,7 +1255,7 @@
     {"id":{"name":"___init_fs___","path":"scripts/___init_fs___/___init_fs___.yy",},},
     {"id":{"name":"___init_global___","path":"scripts/___init_global___/___init_global___.yy",},},
     {"id":{"name":"___init_macro___","path":"scripts/___init_macro___/___init_macro___.yy",},},
-    {"id":{"name":"___init_proglang____","path":"scripts/___init_proglang____/___init_proglang____.yy",},},
+    {"id":{"name":"___init_proglang___","path":"scripts/___init_proglang___/___init_proglang___.yy",},},
     {"id":{"name":"achievement_system","path":"scripts/achievement_system/achievement_system.yy",},},
     {"id":{"name":"array_choose","path":"scripts/array_choose/array_choose.yy",},},
     {"id":{"name":"atla_draw","path":"scripts/atla_draw/atla_draw.yy",},},

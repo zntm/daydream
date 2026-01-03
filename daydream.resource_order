@@ -126,7 +126,7 @@
     {"name":"___init_fs___","order":2,"path":"scripts/___init_fs___/___init_fs___.yy",},
     {"name":"___init_global___","order":3,"path":"scripts/___init_global___/___init_global___.yy",},
     {"name":"___init_macro___","order":4,"path":"scripts/___init_macro___/___init_macro___.yy",},
-    {"name":"___init_proglang____","order":5,"path":"scripts/___init_proglang____/___init_proglang____.yy",},
+    {"name":"___init_proglang___","order":5,"path":"scripts/___init_proglang___/___init_proglang___.yy",},
     {"name":"achievement_system","order":37,"path":"scripts/achievement_system/achievement_system.yy",},
     {"name":"atla_draw","order":5,"path":"scripts/atla_draw/atla_draw.yy",},
     {"name":"atla_get_data","order":14,"path":"scripts/atla_get_data/atla_get_data.yy",},

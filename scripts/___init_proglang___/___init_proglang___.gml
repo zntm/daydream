@@ -255,19 +255,19 @@ global.proglang_macros.EVENT_TYPE = {
 }
 
 // Event Data Constructors
-global.proglang_classes.EventDataExplosion = EventDataExplosion;
-global.proglang_classes.EventDataAchievementUnlocked = EventDataAchievementUnlocked;
-global.proglang_classes.EventDataTileChanged = EventDataTileChanged;
-global.proglang_classes.EventDataEntitySpawned = EventDataEntitySpawned;
-global.proglang_classes.EventDataEntityDamaged = EventDataEntityDamaged;
-global.proglang_classes.EventDataEntityHealed = EventDataEntityHealed;
-global.proglang_classes.EventDataEntityDeath = EventDataEntityDeath;
-global.proglang_classes.EventDataItemCollected = EventDataItemCollected;
-global.proglang_classes.EventDataItemDropped = EventDataItemDropped;
-global.proglang_classes.EventDataChunkGenerated = EventDataChunkGenerated;
-global.proglang_classes.EventDataStatisticChanged = EventDataStatisticChanged;
-global.proglang_classes.EventDataCraftingComplete = EventDataCraftingComplete;
-global.proglang_classes.EventDataItemUsed = EventDataItemUsed;
+global.proglang_classes[$ "EventDataExplosion"] = EventDataExplosion;
+global.proglang_classes[$ "EventDataAchievementUnlocked"] = EventDataAchievementUnlocked;
+global.proglang_classes[$ "EventDataTileChanged"] = EventDataTileChanged;
+global.proglang_classes[$ "EventDataEntitySpawned"] = EventDataEntitySpawned;
+global.proglang_classes[$ "EventDataEntityDamaged"] = EventDataEntityDamaged;
+global.proglang_classes[$ "EventDataEntityHealed"] = EventDataEntityHealed;
+global.proglang_classes[$ "EventDataEntityDeath"] = EventDataEntityDeath;
+global.proglang_classes[$ "EventDataItemCollected"] = EventDataItemCollected;
+global.proglang_classes[$ "EventDataItemDropped"] = EventDataItemDropped;
+global.proglang_classes[$ "EventDataChunkGenerated"] = EventDataChunkGenerated;
+global.proglang_classes[$ "EventDataStatisticChanged"] = EventDataStatisticChanged;
+global.proglang_classes[$ "EventDataCraftingComplete"] = EventDataCraftingComplete;
+global.proglang_classes[$ "EventDataItemUsed"] = EventDataItemUsed;
 
-
-
+global.proglang_classes[$ "Tile"] = Tile;
+global.proglang_classes[$ "Inventory"] = Inventory;

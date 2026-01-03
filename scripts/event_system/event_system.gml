@@ -152,6 +152,10 @@ function EventDataAchievementUnlocked(_id) : EventData(GAME_EVENT.ACHIEVEMENT_UN
     data = { id: _id }
 }
 
+function EventDataTileChanged(_x, _y, _z, _new_tile) : EventData(GAME_EVENT.TILE_CHANGED) constructor
+{
+    data = { x: _x, y: _y, z: _z, tile: _new_tile }
+}
 
 function EventDataEntitySpawned(_entity) : EventData(GAME_EVENT.ENTITY_SPAWNED) constructor
 {
@@ -201,7 +205,4 @@ function EventDataCraftingComplete(_recipe, _crafter) : EventData(GAME_EVENT.CRA
 function EventDataItemUsed(_item, _user) : EventData(GAME_EVENT.ITEM_USED) constructor
 {
     data = { item: _item, user: _user }
-}
-
-
 }

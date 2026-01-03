@@ -10,11 +10,6 @@ function proglang_function_register(_name, _func)
 }
 
 #region Game API
-/*
-
-
-
-
 // Events
 proglang_function_register("event_emit", function(_args)
 {
@@ -43,30 +38,6 @@ proglang_function_register("event_subscribe", function(_args, _vm) {
             // Set parent scope to closure environment
             _exec_vm[PROG_VM.SCOPE][@ PROG_SCOPE.PARENT] = func[PROG_CLOSURE.ENV];
             
-            // Note: We need to pass _event_data as an argument.
-            // proglang_vm_run doesn't easily accept args directly on entry unless we manipulate the stack.
-            // But we can manually push arguments onto the stack if we knew where.
-            // Easier way: Create a small wrapper bytecode? Or use a helper.
-            
-            // To pass arguments to a proglang_vm_run of a closure, we usually rely on the CALL op.
-            // But here we are IN the VM host.
-            
-            // Let's use the same logic as CALL op:
-            // 1. Push args to stack
-            // 2. Setup frame manually? This is hard.
-            
-            // ALTERNATIVE:
-            // Just push the event data to a simpler "args" array if the function expects it?
-            // Actually, we can check if it's a closure and manually run it.
-            
-            // Let's look at test_expect's implementation in proglang_test.gml.
-            // It runs: _actual = proglang_vm_run(_eval_vm, _actual[PROG_CLOSURE.BYTECODE]);
-            // It DOES NOT pass arguments!
-            
-            // We need to pass the event data.
-            // PROG_CLOSURE.BYTECODE expects arguments on the stack relative to BP.
-            
-            // Let's manually setup the stack for the call.
             var _params = func[PROG_CLOSURE.PARAM_COUNT];
             
             // Push arguments
@@ -89,7 +60,7 @@ proglang_function_register("event_subscribe", function(_args, _vm) {
         else if (is_struct(func) && struct_exists(func, "function"))
         {
             // Native function wrapper
-            func.function([_event_data], _exec_vm);
+            func[$ "function"]([_event_data], _exec_vm);
         }
         
         proglang_vm_free(_exec_vm);
@@ -102,14 +73,6 @@ proglang_function_register("event_unsubscribe", function(_args)
 {
     event_unsubscribe(_args[0]);
 });
-
-#endregion
-
-#region Native Classes
-
-// Register Tile and Inventory as native constructors
-global.proglang_classes[$ "Tile"] = Tile;
-global.proglang_classes[$ "Inventory"] = Inventory;
 
 #endregion
 
