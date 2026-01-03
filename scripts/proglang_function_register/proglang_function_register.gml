@@ -1,6 +1,3 @@
-global.proglang_functions = {}
-global.proglang_classes = {}
-
 function proglang_function_register(_name, _func)
 {
     global.proglang_functions[$ _name] = {

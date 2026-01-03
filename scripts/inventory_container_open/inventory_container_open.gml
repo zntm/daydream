@@ -14,4 +14,6 @@ function inventory_container_open(_x, _y, _inst)
     
     var _data = global.item_data[$ _tile.get_id()];
     var _container_length = _data.get_container_length();
+    
+    event_emit(new EventDataTileContainerOpen(_tile_x, _tile_y, _tile_z, obj_Player.id));
 }

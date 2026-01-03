@@ -1700,6 +1700,32 @@ function proglang_test() {
         $"return count"
     , 1)) _passed++; else _failed++;
 
+    // ============ PHASE 13 TESTS: Event System Refactor ============
+    
+    // 1. Event Data Constructor
+    if (_assert("EventData Create", 
+        $"var t = \{ get_id: fn() \{ return \"dirt\" \} \}\n" +
+        $"var e = new EventDataTilePlace(10, 20, 0, t)\n" +
+        $"return e.data.x"
+    , 10)) _passed++; else _failed++;
+    
+    // 2. Event Subscription and Emission
+    if (_assert("Event Emit/Subscribe", 
+        $"global var _event_called = false\n" +
+        $"fn on_event(data) \{\n" +
+        $"    _event_called = true\n" +
+        $"\}\n" +
+        $"var sub = event_subscribe(EVENT_TYPE.TILE_PLACE, on_event)\n" +
+        $"var tile = \{ get_id: fn() \{ return \"grass\" \} \}\n" +
+        $"var e = new EventDataTilePlace(5, 5, 0, tile)\n" +
+        $"event_emit(e)\n" +
+        $"event_unsubscribe(sub)\n" +
+        $"return _event_called"
+    , true)) _passed++; else _failed++;
+
+    // 3. Event Type Macro Check
+    if (_assert("Event Type Macro", "return is_real(EVENT_TYPE.ENTITY_DIE)", true)) _passed++; else _failed++;
+
     show_debug_message($"[Proglang Test] COMPLETE. Passed: {_passed}, Failed: {_failed}");
     return _failed == 0;
 }

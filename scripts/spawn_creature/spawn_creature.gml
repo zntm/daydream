@@ -54,12 +54,7 @@ function spawn_creature(_x, _y, _id, _variant)
     }
     
     // Emit entity spawned event
-    event_emit(GAME_EVENT.ENTITY_SPAWNED, {
-        instance: _inst,
-        type: "creature",
-        id: _id,
-        variant: _variant
-    });
+    event_emit(new EventDataEntitySpawn(_inst, "creature", _id, _variant));
     
     return _inst;
 }

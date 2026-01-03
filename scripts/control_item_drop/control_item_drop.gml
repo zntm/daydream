@@ -83,10 +83,7 @@ function control_item_drop()
         var _collected_amount = _amount_before - ((item != undefined) ? item.get_amount() : 0);
         if (_collected_amount > 0)
         {
-            event_emit(GAME_EVENT.ITEM_COLLECTED, {
-                item_id: _item_before.get_id(),
-                amount: _collected_amount
-            });
+            event_emit(new EventDataEntityItemCollect(inst, _item_before, _collected_amount));
         }
         
         inventory_refresh_craftable();

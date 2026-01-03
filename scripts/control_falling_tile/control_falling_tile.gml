@@ -89,13 +89,7 @@ function control_falling_tile()
             tile_place(_world_x, _land_y, tile_z, _new_tile);
             
             // Emit event
-            event_emit(GAME_EVENT.TILE_CHANGED, {
-                x: _world_x,
-                y: _land_y,
-                z: tile_z,
-                id: tile_id,
-                action: "fall_land"
-            });
+            event_emit(new EventDataTileFallingLand(_world_x, _land_y, tile_z, _new_tile));
             
             // Play landing sound
             var _data = global.item_data[$ tile_id];

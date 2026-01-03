@@ -103,7 +103,10 @@ function menu_refresh_instance_settings()
             var _index = array_get_index(__input_types, _current);
             _index = (_index + 1) mod array_length(__input_types);
             global.controls_input_type = __input_types[_index];
-            menu_refresh_instance_settings();
+            with (obj_Menu_Control_Button)
+            {
+                menu_refresh_instance_settings();
+            }
         }
         
         with (instance_create_layer(_menu_settings_xoffset + 64, _menu_settings_yoffset + 128, "Settings", obj_Menu_Button))

@@ -22,13 +22,7 @@ global.item_function[$ "phantasia:explode"] = function(_dt, _x, _y, _z, _xscale,
     }
 
     // Emit explosion event
-    event_emit(GAME_EVENT.EXPLOSION, {
-        x: _x,
-        y: _y,
-        z: _z,
-        radius: _radius,
-        damage: _damage
-    });
+    event_emit(new EventDataExplosiveExplode(_x, _y, _z, _radius, _damage));
 
     // Spawn explosion particles
     if (_particle != undefined)
@@ -635,8 +629,9 @@ global.item_function[$ "phantasia:bucket_place"] = function(_dt, _x, _y, _z, _xs
 
 
 // Subscribe to tile changes to trigger water flow when blocks are broken
-event_subscribe(GAME_EVENT.TILE_CHANGED, function(_data) {
-    if (_data.action != "destroyed") exit;
+// Subscribe to tile changes to trigger water flow when blocks are broken
+event_subscribe(GAME_EVENT.TILE_UPDATE, function(_data) {
+    if (_data.tile == undefined) exit; // Only care about broken tiles (which populate 'tile' in update)
 
     var _x = _data.x;
     var _y = _data.y;
@@ -752,10 +747,11 @@ global.item_function[$ "phantasia:leaf_decay"] = function(_dt, _x, _y, _z, _xsca
 }
 
 // Subscribe to tile changes to speed up leaf decay when wood is destroyed
-event_subscribe(GAME_EVENT.TILE_CHANGED, function(_data) {
-    if (_data.action != "destroyed") exit;
+// Subscribe to tile changes to speed up leaf decay when wood is destroyed
+event_subscribe(GAME_EVENT.TILE_UPDATE, function(_data) {
+    if (_data.tile == undefined) exit;
     
-    var _destroyed_id = _data.id;
+    var _destroyed_id = _data.tile.get_id();
     
     // Resolve wood tag to array of wood IDs
     var _wood_ids = tag_value_parse("#phantasia:item/generic/wood");

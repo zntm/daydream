@@ -94,6 +94,10 @@ function control_entity_shoot(_entity, _item_id, _x, _y, _angle)
             image_angle = _angle;
         }
         
+        var _event = new EventDataProjectileShoot(_entity, _inst, _x, _y, _angle, _damage);
+        
+        event_emit(_event);
+        
         return true;
     }
     

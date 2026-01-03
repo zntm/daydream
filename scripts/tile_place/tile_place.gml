@@ -94,24 +94,11 @@ function tile_place(_x, _y, _z, _tile)
     // Emit tile changed event
     if (_tile != TILE_EMPTY)
     {
-        event_emit(GAME_EVENT.TILE_CHANGED, {
-            action: "placed",
-            x: _x,
-            y: _y,
-            z: _z,
-            tile_id: _tile.get_id(),
-            tile: _tile
-        });
+        event_emit(new EventDataTilePlace(_x, _y, _z, _tile));
     }
     else if (_tile_before != TILE_EMPTY)
     {
-        event_emit(GAME_EVENT.TILE_CHANGED, {
-            action: "destroyed",
-            x: _x,
-            y: _y,
-            z: _z,
-            tile_id: _tile_before.get_id()
-        });
+        event_emit(new EventDataTileUpdate(_x, _y, _z, _tile_before));
     }
     
     if (_tile_before != undefined)

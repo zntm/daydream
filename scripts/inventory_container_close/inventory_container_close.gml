@@ -13,4 +13,6 @@ function inventory_container_close()
     _tile.set_index(0);
 	
 	inventory_resize("container", 0);
+    
+    event_emit(new EventDataTileContainerClose(_x, _y, _z));
 }
