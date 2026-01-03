@@ -11,89 +11,98 @@ function proglang_function_register(_name, _func)
 
 #region Game API
 /*
-// Tile Operations
-proglang_function_register("tile_get", function(_args)
-{
-    return tile_get(_args[0], _args[1], _args[2]);
-});
 
-proglang_function_register("tile_place", function(_args)
-{
-    var _x = _args[0];
-    var _y = _args[1];
-    var _z = _args[2];
-    var _id = _args[3];
-    
-    if (is_string(_id)) _id = new Tile(_id);
-    else if (_id == undefined) _id = TILE_EMPTY;
-    
-    tile_place(_x, _y, _z, _id);
-    tile_update_surrounding(_x, _y, _z);
-});
 
-proglang_function_register("tile_update_surrounding", function(_args)
-{
-    tile_update_surrounding(_args[0], _args[1], _args[2]);
-});
 
-// Particle & Audio
-proglang_function_register("spawn_particle", function(_args)
-{
-    spawn_particle(_args[0], _args[1], smart_value(_args[2]));
-});
-
-proglang_function_register("sfx_play", function(_args)
-{
-    var _emitter = (array_length(_args) > 3) ? _args[3] : undefined;
-    sfx_diegetic_play(_emitter, _args[0], _args[1], smart_value(_args[2]));
-});
-
-proglang_function_register("spawn_projectile", function(_args)
-{
-    spawn_projectile(_args[0], _args[1], smart_value(_args[2]), _args[3], _args[4] ?? 1, _args[5] ?? 1);
-});
 
 // Events
 proglang_function_register("event_emit", function(_args)
 {
-    event_emit(_args[0], _args[1]);
-});
-/*
-// Game Constants
-proglang_function_register("get_tile_size", function(_args)
-{
-    return TILE_SIZE;
+    event_emit(_args[0], (array_length(_args) > 1) ? _args[1] : undefined);
 });
 
-proglang_function_register("get_chunk_depth", function(_args)
-{
-    return global.chunk_depth[$ _args[0]];
+proglang_function_register("event_subscribe", function(_args, _vm) {
+    var _event = _args[0];
+    var _func = _args[1];
+
+    // Create a bridge method that will be called by GML
+    var _bridge = method({ 
+        func: _func, 
+        base_vm_gref: _vm[PROG_VM.GLOBAL_REF] // Capture global ref from registrar
+    }, function(_event_data) {
+        
+        // Prepare VM for execution
+        var _exec_vm = proglang_vm_create();
+        
+        // Restore global context
+        _exec_vm[@ PROG_VM.GLOBAL_REF] = base_vm_gref;
+        
+        // Execute the Proglang function/closure
+        if (is_array(func) && array_length(func) >= PROG_CLOSURE.SIZE && func[PROG_CLOSURE.TYPE] == "closure")
+        {
+            // Set parent scope to closure environment
+            _exec_vm[PROG_VM.SCOPE][@ PROG_SCOPE.PARENT] = func[PROG_CLOSURE.ENV];
+            
+            // Note: We need to pass _event_data as an argument.
+            // proglang_vm_run doesn't easily accept args directly on entry unless we manipulate the stack.
+            // But we can manually push arguments onto the stack if we knew where.
+            // Easier way: Create a small wrapper bytecode? Or use a helper.
+            
+            // To pass arguments to a proglang_vm_run of a closure, we usually rely on the CALL op.
+            // But here we are IN the VM host.
+            
+            // Let's use the same logic as CALL op:
+            // 1. Push args to stack
+            // 2. Setup frame manually? This is hard.
+            
+            // ALTERNATIVE:
+            // Just push the event data to a simpler "args" array if the function expects it?
+            // Actually, we can check if it's a closure and manually run it.
+            
+            // Let's look at test_expect's implementation in proglang_test.gml.
+            // It runs: _actual = proglang_vm_run(_eval_vm, _actual[PROG_CLOSURE.BYTECODE]);
+            // It DOES NOT pass arguments!
+            
+            // We need to pass the event data.
+            // PROG_CLOSURE.BYTECODE expects arguments on the stack relative to BP.
+            
+            // Let's manually setup the stack for the call.
+            var _params = func[PROG_CLOSURE.PARAM_COUNT];
+            
+            // Push arguments
+            if (_params > 0)
+            {
+                    // We only have 1 argument: _event_data
+                    _exec_vm[@ PROG_VM.STACK][@ 0] = _event_data;
+                    _exec_vm[@ PROG_VM.SP] = 1;
+                    
+                    // Pad rest with undefined if needed
+                    for (var i = 1; i < _params; i++)
+                    {
+                        _exec_vm[@ PROG_VM.STACK][@ i] = undefined;
+                        _exec_vm[@ PROG_VM.SP]++;
+                    }
+            }
+            
+            proglang_vm_run(_exec_vm, func[PROG_CLOSURE.BYTECODE]);
+        }
+        else if (is_struct(func) && struct_exists(func, "function"))
+        {
+            // Native function wrapper
+            func.function([_event_data], _exec_vm);
+        }
+        
+        proglang_vm_free(_exec_vm);
+    });
+
+    return event_subscribe(_event, _bridge);
 });
 
-// Inventory
-proglang_function_register("inventory_get_selected", function(_args)
+proglang_function_register("event_unsubscribe", function(_args)
 {
-    return global.inventory.base[global.inventory_selected_hotbar];
+    event_unsubscribe(_args[0]);
 });
 
-proglang_function_register("inventory_set_selected", function(_args)
-{
-    global.inventory.base[@ global.inventory_selected_hotbar] = _args[0];
-    obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR;
-});
-
-// Liquid Flow
-proglang_function_register("liquid_flow_start", function(_args)
-{
-    liquid_flow_start(_args[0], _args[1], _args[2], _args[3] ?? {});
-});
-
-// Tick Delay  
-proglang_function_register("tick_delay_add", function(_args)
-{
-    tick_delay_add(_args[0], _args[1], _args[2] ?? []);
-});
-*/
 #endregion
 
 #region Native Classes
@@ -523,29 +532,7 @@ proglang_function_register("tag_get", function(_args) {
     return global.tag_data[$ $"#{_args[0]}"];
 });
 
-/*
-// Game API
-proglang_function_register("tile_place", function(_args, _ctx)
-{ 
-    var _id = _args[3];
-    if (is_string(_id)) _id = new Tile(_id);
-    else if (_id == undefined) _id = TILE_EMPTY;
-    tile_place(_args[0], _args[1], _args[2], _id);
-    tile_update_surrounding(_args[0], _args[1], _args[2]);
-});
 
-proglang_function_register("tile_get", function(_args) { 
-    return tile_get(_args[0], _args[1], _args[2]);
-});
-
-proglang_function_register("spawn_particle", function(_args) { 
-    spawn_particle(_args[0], _args[1], smart_value(_args[2]));
-});
-
-proglang_function_register("sfx_play", function(_args) { 
-    sfx_diegetic_play(undefined, _args[0], _args[1], smart_value(_args[2]));
-});
-*/
 
 // Print
 proglang_function_register("print", function(_args)

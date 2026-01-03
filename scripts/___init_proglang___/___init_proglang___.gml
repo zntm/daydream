@@ -237,3 +237,37 @@ global.proglang_macros.ERROR_TYPE = {
     ARITY_MISMATCH: PROGLANG_ERROR_TYPE.ARITY_MISMATCH,
     SUPER_ERROR: PROGLANG_ERROR_TYPE.SUPER_ERROR
 }
+
+global.proglang_macros.EVENT_TYPE = {
+    TILE_CHANGED: GAME_EVENT.TILE_CHANGED,
+    ENTITY_SPAWNED: GAME_EVENT.ENTITY_SPAWNED,
+    ENTITY_DAMAGED: GAME_EVENT.ENTITY_DAMAGED,
+    ENTITY_HEALED: GAME_EVENT.ENTITY_HEALED,
+    ENTITY_DEATH: GAME_EVENT.ENTITY_DEATH,
+    ITEM_COLLECTED: GAME_EVENT.ITEM_COLLECTED,
+    ITEM_DROPPED: GAME_EVENT.ITEM_DROPPED,
+    CHUNK_GENERATED: GAME_EVENT.CHUNK_GENERATED,
+    EXPLOSION: GAME_EVENT.EXPLOSION,
+    STATISTIC_CHANGED: GAME_EVENT.STATISTIC_CHANGED,
+    ACHIEVEMENT_UNLOCKED: GAME_EVENT.ACHIEVEMENT_UNLOCKED,
+    CRAFTING_COMPLETE: GAME_EVENT.CRAFTING_COMPLETE,
+    ITEM_USED: GAME_EVENT.ITEM_USED
+}
+
+// Event Data Constructors
+global.proglang_classes.EventDataExplosion = EventDataExplosion;
+global.proglang_classes.EventDataAchievementUnlocked = EventDataAchievementUnlocked;
+global.proglang_classes.EventDataTileChanged = EventDataTileChanged;
+global.proglang_classes.EventDataEntitySpawned = EventDataEntitySpawned;
+global.proglang_classes.EventDataEntityDamaged = EventDataEntityDamaged;
+global.proglang_classes.EventDataEntityHealed = EventDataEntityHealed;
+global.proglang_classes.EventDataEntityDeath = EventDataEntityDeath;
+global.proglang_classes.EventDataItemCollected = EventDataItemCollected;
+global.proglang_classes.EventDataItemDropped = EventDataItemDropped;
+global.proglang_classes.EventDataChunkGenerated = EventDataChunkGenerated;
+global.proglang_classes.EventDataStatisticChanged = EventDataStatisticChanged;
+global.proglang_classes.EventDataCraftingComplete = EventDataCraftingComplete;
+global.proglang_classes.EventDataItemUsed = EventDataItemUsed;
+
+
+

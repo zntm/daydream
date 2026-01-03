@@ -1675,6 +1675,31 @@ function proglang_test() {
         $"return c == 30 && str3 == \"Hello World\" && bool3 == true && y == 200;"
     , true)) _passed++; else _failed++;
 
+
+    // ============ PHASE 14 TESTS: Event System ============
+    
+    if (_assert("Event Hook", 
+        $"global var triggered = false\n" +
+        $"var sub = event_subscribe(EVENT_TYPE.ACHIEVEMENT_UNLOCKED, fn(data) \{\n" +
+        $"    triggered = true\n" +
+        $"\})\n" +
+        $"event_emit(new EventDataAchievementUnlocked('test'))\n" +
+        $"// Cleanup (unsubscribe)\n" +
+        $"event_unsubscribe(sub)\n" +
+        $"return triggered"
+    , true)) _passed++; else _failed++;
+    
+    if (_assert("Event Unhook", 
+        $"global var count = 0\n" +
+        $"var sub = event_subscribe(EVENT_TYPE.ACHIEVEMENT_UNLOCKED, fn(data) \{\n" +
+        $"    count++\n" +
+        $"\})\n" +
+        $"event_emit(new EventDataAchievementUnlocked('test1'))\n" +
+        $"event_unsubscribe(sub)\n" +
+        $"event_emit(new EventDataAchievementUnlocked('test2'))\n" +
+        $"return count"
+    , 1)) _passed++; else _failed++;
+
     show_debug_message($"[Proglang Test] COMPLETE. Passed: {_passed}, Failed: {_failed}");
     return _failed == 0;
 }
