@@ -302,6 +302,13 @@ function menu_refresh_instance_settings()
                     _on_update(name, _value);
                 }
                 
+                var _on_release = global.settings_data[$ name].get_on_release();
+                
+                if (_on_release != undefined)
+                {
+                    _on_release(name, _value);
+                }
+                
                 global.settings[$ name] = _value;
             }
             

@@ -30,7 +30,12 @@ init_setting("general", "menu_profanity_filter", new SettingsData(SETTINGS_TYPE.
 
 init_setting("general", "menu_skip_epilepsy", new SettingsData(SETTINGS_TYPE.SWITCH, true));
 
-init_setting("accessibility", "global_refresh_rate", new SettingsData(SETTINGS_TYPE.ARROW, 0));
+init_setting("accessibility", "global_refresh_rate", new SettingsData(SETTINGS_TYPE.ARROW, 0)
+    .add_values(60, 120, 144, 165, 240, 360)
+    .set_on_update(function(_name, _value)
+    {
+        game_set_speed(global.settings_data[$ _name].get_value(_value), gamespeed_fps);
+    }));
 
 init_setting("accessibility", "global_localization", new SettingsData(SETTINGS_TYPE.ARROW, 0)
     .add_values(array_map(_loca, function(_value)
@@ -39,6 +44,7 @@ init_setting("accessibility", "global_localization", new SettingsData(SETTINGS_T
     }))
     .set_on_update(function(_name, _value)
     {
+        init_loca($"{PROGRAM_DIRECTORY_RESOURCES}\\loca\\{_loca[_value]}", "phantasia");
     }));
 
 #endregion
@@ -58,8 +64,9 @@ init_setting("graphics", "display_strength_weather", new SettingsData(SETTINGS_T
 init_setting("graphics", "window_gui_size", new SettingsData(SETTINGS_TYPE.SLIDER, 1));
 
 init_setting("graphics", "window_fullscreen", new SettingsData(SETTINGS_TYPE.SWITCH, false)
-    .set_on_press(function(_name, _value)
+    .set_on_release(function(_name, _value)
     {
+        window_set_fullscreen(_value);
     }));
     
 init_setting("graphics", "graphics_chunk_fade_time", new SettingsData(SETTINGS_TYPE.SLIDER, 0.5)
@@ -71,14 +78,16 @@ init_setting("graphics", "graphics_background_transition_speed", new SettingsDat
 init_setting("graphics", "graphics_menu_transition_fade_speed", new SettingsData(SETTINGS_TYPE.SLIDER, 0.35)
     .set_range(0, 5));
 
-init_setting("graphics", "window_borderless", new SettingsData(false, SETTINGS_TYPE.SWITCH)
-    .set_on_press(function(_name, _value)
+init_setting("graphics", "window_borderless", new SettingsData(SETTINGS_TYPE.SWITCH, false)
+    .set_on_release(function(_name, _value)
     {
+        window_set_showborder(!_value);
     }));
 
-init_setting("graphics", "window_vsync", new SettingsData(true, SETTINGS_TYPE.SWITCH)
-    .set_on_press(function(_name, _value)
+init_setting("graphics", "window_vsync", new SettingsData(SETTINGS_TYPE.SWITCH, true)
+    .set_on_release(function(_name, _value)
     {
+        display_reset(0, _value);
     }));
 
 #endregion
