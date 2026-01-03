@@ -186,6 +186,20 @@ function cuteify_parse(_string, _asset_prefix = "")
                         _processed_content = "";
                         _type = CUTEIFY_TYPE.UNDERLINE;
                     }
+                    else if (string_starts_with(_tag_content, CUTEIFY_BRACKET_SHAKE + ":"))
+                    {
+                        // Shake tag: {*s:N}
+                        var _param_str = string_delete(_tag_content, 1, string_length(CUTEIFY_BRACKET_SHAKE) + 1);
+                        _processed_content = real(_param_str);
+                        _type = CUTEIFY_TYPE.SHAKE;
+                    }
+                    else if (string_starts_with(_tag_content, CUTEIFY_BRACKET_WAVE + ":"))
+                    {
+                        // Wave tag: {*w:N}
+                        var _param_str = string_delete(_tag_content, 1, string_length(CUTEIFY_BRACKET_WAVE) + 1);
+                        _processed_content = real(_param_str);
+                        _type = CUTEIFY_TYPE.WAVE;
+                    }
                     else
                     {
                         _processed_content = _tag_content + CUTEIFY_BRACKET_CLOSE;

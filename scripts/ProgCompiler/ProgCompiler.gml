@@ -319,6 +319,89 @@ function ProgCompiler(_context_keys = []) constructor
         return undefined;
     }
     
+    /// @desc Try constant folding for index access (str[i] or str[start..end])
+    static try_fold_index = function(_node)
+    {
+        // Check if target is a known constant string
+        var _target_val = undefined;
+        if (_node.target.type == PROG_AST.STRING_LITERAL)
+        {
+            _target_val = _node.target.value;
+        }
+        else if (_node.target.type == PROG_AST.IDENTIFIER)
+        {
+            _target_val = get_const(_node.target.name);
+        }
+        
+        if (!is_string(_target_val)) return undefined;
+        
+        // Check if index is a constant number or a range expression with constant bounds
+        if (_node.index.type == PROG_AST.NUMBER_LITERAL)
+        {
+            var _idx = floor(_node.index.value);
+            if (_idx >= 0 && _idx < string_length(_target_val))
+            {
+                return string_char_at(_target_val, _idx + 1);
+            }
+            return "";
+        }
+        else if (_node.index.type == PROG_AST.IDENTIFIER)
+        {
+            var _idx_val = get_const(_node.index.name);
+            if (is_real(_idx_val))
+            {
+                var _idx = floor(_idx_val);
+                if (_idx >= 0 && _idx < string_length(_target_val))
+                {
+                    return string_char_at(_target_val, _idx + 1);
+                }
+                return "";
+            }
+        }
+        else if (_node.index.type == PROG_AST.RANGE_EXPR)
+        {
+            // Get start and end values
+            var _start_val = undefined;
+            var _end_val = undefined;
+            
+            if (_node.index.range_start.type == PROG_AST.NUMBER_LITERAL)
+            {
+                _start_val = floor(_node.index.range_start.value);
+            }
+            else if (_node.index.range_start.type == PROG_AST.IDENTIFIER)
+            {
+                _start_val = get_const(_node.index.range_start.name);
+                if (is_real(_start_val)) _start_val = floor(_start_val);
+            }
+            
+            if (_node.index.range_end.type == PROG_AST.NUMBER_LITERAL)
+            {
+                _end_val = floor(_node.index.range_end.value);
+            }
+            else if (_node.index.range_end.type == PROG_AST.IDENTIFIER)
+            {
+                _end_val = get_const(_node.index.range_end.name);
+                if (is_real(_end_val)) _end_val = floor(_end_val);
+            }
+            
+            if (is_real(_start_val) && is_real(_end_val))
+            {
+                var _str_len = string_length(_target_val);
+                if (_start_val < 0) _start_val = 0;
+                if (_end_val >= _str_len) _end_val = _str_len - 1;
+                
+                var _slice_len = _end_val - _start_val + 1;
+                if (_slice_len > 0)
+                {
+                    return string_copy(_target_val, _start_val + 1, _slice_len);
+                }
+                return "";
+            }
+        }
+        
+        return undefined;
+    }
+    
     static compile_func_body = function(_node)
     {
         var _parent = bytecode;
@@ -1222,9 +1305,17 @@ function ProgCompiler(_context_keys = []) constructor
                 break;
                 
             case PROG_AST.INDEX:
-                compile_node(_node.target);
-                compile_node(_node.index);
-                emit(PROG_OP.INDEX_GET, undefined, _node.line);
+                var _folded_idx = try_fold_index(_node);
+                if (_folded_idx != undefined)
+                {
+                    emit(PROG_OP.PUSH_CONST, add_constant(_folded_idx), _node.line);
+                }
+                else
+                {
+                    compile_node(_node.target);
+                    compile_node(_node.index);
+                    emit(PROG_OP.INDEX_GET, undefined, _node.line);
+                }
                 break;
                 
             case PROG_AST.RETURN_STMT:

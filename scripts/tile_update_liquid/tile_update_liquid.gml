@@ -23,8 +23,11 @@ function tile_update_liquid(_x, _y, _z)
                 var _data_above = global.item_data[$ _tile_above.get_id()];
                 if (_data_above.is_liquid())
                 {
-                    // Liquid falls down - new tile with max level
-                    tile_place(_x, _y, _z, new Tile(_tile_above.get_id()).set_component("level", 8));
+                    // Liquid falls down - inherit parent level
+                    var _source_level = _tile_above.get_component("level") ?? 8;
+                    tile_place(_x, _y, _z, new Tile(_tile_above.get_id()).set_component("level", _source_level));
+                    tile_place(_x, _y - 1, _z, TILE_EMPTY); // Conservation: Clear source
+                    tile_update(_x, _y - 1, _z);
                     tile_update(_x, _y, _z);
                     return;
                 }
@@ -65,10 +68,30 @@ function tile_update_liquid(_x, _y, _z)
         
         if (_spread)
         {
-            // Place liquid with decremented level
-            tile_place(_x, _y, _z, new Tile(_liquid_id).set_component("level", _max_level - 1));
+            // Split liquid logic for conservation
+            // Identify which neighbor provided the max level (prioritize one if both equal)
+            var _source_is_left = (_l != undefined && _l.level == _max_level);
+            var _source_is_right = (_r != undefined && _r.level == _max_level);
+            // If both, pick random or fixed? Fixed left for stability.
+            if (_source_is_left && _source_is_right) _source_is_right = false;
             
-            tile_update(_x, _y, _z);
+            var _source_x = _source_is_left ? (_x - 1) : (_x + 1);
+            
+            // Calculate split
+            var _new_level = _max_level div 2;
+            var _rem_level = _max_level - _new_level;
+            
+            if (_new_level > 0)
+            {
+                // Update Source Tile (Reduce level)
+                tile_place(_source_x, _y, _z, new Tile(_liquid_id).set_component("level", _rem_level));
+                
+                // Place New Liquid (Half level)
+                tile_place(_x, _y, _z, new Tile(_liquid_id).set_component("level", _new_level));
+                
+                tile_update(_source_x, _y, _z);
+                tile_update(_x, _y, _z);
+            }
         }
         
         return;
@@ -89,13 +112,14 @@ function tile_update_liquid(_x, _y, _z)
         
         if (_tile_below == TILE_EMPTY)
         {
-            // Flow down creates full source block (or inherits? standard MC is full source)
-            // Let's stick to full source for falling water for now, or match parent? 
-            // Standard is falling water is a "falling" block, but here we just place liquid.
-            // Let's reset level to 8 for falling water to ensure it goes all the way down.
-            tile_place(_x, _y + 1, _z, new Tile(_tile.get_id()).set_component("level", 8));
+            // Flow down - inherit parent level
+            var _source_level = _tile.get_component("level") ?? 8;
+            tile_place(_x, _y + 1, _z, new Tile(_tile.get_id()).set_component("level", _source_level));
+            tile_place(_x, _y, _z, TILE_EMPTY); // Conservation: Clear self (Move)
             
             tile_update(_x, _y + 1, _z);
+            tile_update(_x, _y, _z);
+            return;
         }
     }
     

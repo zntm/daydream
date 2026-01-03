@@ -589,15 +589,12 @@ function proglang_vm_run(_vm, _entry_bytecode)
                         // Check for range slicing: _idx is ["range", start, end]
                         if (is_array(_idx) && array_length(_idx) >= 3 && _idx[0] == "range")
                         {
+                            var _start = _idx[1];
+                            var _end = _idx[2];
+                            
                             if (is_array(_arr))
                             {
-                                var _start = _idx[1];
-                                var _end = _idx[2];
                                 var _arr_len = array_length(_arr);
-                                
-                                // Handle negative indices (python style) if desired? 
-                                // Task doesn't specify, but often useful. 
-                                // For now, simple clamping as per plan: 0 to length-1.
                                 
                                 if (_start < 0) _start = 0;
                                 if (_end >= _arr_len) _end = _arr_len - 1;
@@ -614,14 +611,50 @@ function proglang_vm_run(_vm, _entry_bytecode)
                                     _val = [];
                                 }
                             }
+                            else if (is_string(_arr))
+                            {
+                                // String slicing: str[start..end] (0-indexed, inclusive)
+                                var _str_len = string_length(_arr);
+                                
+                                if (_start < 0) _start = 0;
+                                if (_end >= _str_len) _end = _str_len - 1;
+                                
+                                var _slice_len = _end - _start + 1;
+                                
+                                if (_slice_len > 0)
+                                {
+                                    _val = string_copy(_arr, _start + 1, _slice_len);
+                                }
+                                else
+                                {
+                                    _val = "";
+                                }
+                            }
                             else
                             {
-                                runtime_error(PROGLANG_ERROR_TYPE.TYPE, "Range indexing only supported on arrays.");
+                                runtime_error(PROGLANG_ERROR_TYPE.TYPE, "Range indexing only supported on arrays and strings.");
                             }
                         }
                         else
                         {
-                            _val = is_array(_arr) ? _arr[_idx] : (is_struct(_arr) ? _arr[$ _idx] : undefined);
+                            // Single element access
+                            if (is_array(_arr))
+                            {
+                                _val = _arr[_idx];
+                            }
+                            else if (is_struct(_arr))
+                            {
+                                _val = _arr[$ _idx];
+                            }
+                            else if (is_string(_arr))
+                            {
+                                // String indexing: str[i] (0-indexed)
+                                _val = string_char_at(_arr, _idx + 1);
+                            }
+                            else
+                            {
+                                _val = undefined;
+                            }
                         }
                         
                         _stack[@ _sp++] = _val;
