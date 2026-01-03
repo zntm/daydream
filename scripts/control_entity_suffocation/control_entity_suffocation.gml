@@ -11,7 +11,7 @@ function control_entity_suffocation(_entity)
     
     // Check if we are inside a solid block
     // We check the default layer (ground) and wall layer
-    if (!tile_meeting(_x, _y))
+    if (!tile_rectangle_meeting(bbox_left, bbox_top, bbox_right, _y))
     {
         _entity.timer_suffocation = 0;
         
