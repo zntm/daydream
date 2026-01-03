@@ -14,8 +14,13 @@ draw_set_align(fa_center, fa_middle);
 var _gui_width = display_get_gui_width();
 var _gui_height = display_get_gui_height();
 
-// Iterate through all active menu layers
-var _max_layer = max(obj_Menu_Control_Button.menu_layer, surface_index_length - 1);
+// Iterate through all active menu 
+var _max_layer = surface_index_length - 1;
+
+with (obj_Menu_Control_Button)
+{
+    _max_layer = max(menu_layer, _max_layer);
+}
 
 // Ensure surfaces array is large enough
 if (array_length(surfaces) <= _max_layer)

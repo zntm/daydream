@@ -161,7 +161,8 @@ function menu_refresh_instance_settings()
             static __hotkey_on_draw_behind = function(_x, _y, _xscale, _yscale)
             {
                 var _width = (room_width - 64 - 16) * _xscale; // Adjust width as needed
-                 draw_sprite_ext(spr_Menu_Indent, 0, (room_width - 64 - 16) * _xscale, (y - global.menu_settings_yoffset) * _yscale, 32 / 8, 16 / 8, 0, c_white, 1); 
+                
+                draw_sprite_ext(spr_Menu_Indent, 0, (room_width - 64 - 16) * _xscale, (y - global.menu_settings_yoffset) * _yscale, 32 / 8, 16 / 8, 0, c_white, 1); 
             }
             
             static __hotkey_on_select_release = function()

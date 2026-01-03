@@ -139,7 +139,7 @@ function menu_refresh_instance_players()
     var _inst_slider = global.players_inst_slider;
 
     var _rows = ceil(_players_length / 4);
-    var _height = _rows * 160;
+    var _height = _rows * 200; // Increased to fit stats button
     
     if (_height <= (global.gui_height * 0.7))
     {
@@ -162,7 +162,7 @@ function menu_refresh_instance_players()
         var _player = _players[i];
         
         var _xoffset = floor(i % 4) * 208;
-        var _yoffset = floor(i / 4) * 160;
+        var _yoffset = floor(i / 4) * 200; // Updated spacing
         
         with (instance_create_layer(176 + _xoffset, 184 + _yoffset, "Instances", obj_Menu_Button))
         {
@@ -178,6 +178,28 @@ function menu_refresh_instance_players()
             
             on_draw = method(id, __on_draw);
             on_select_release = method(id, __on_select_release);
+        }
+        
+        // Statistics Button
+        with (instance_create_layer(176 + _xoffset, 184 + _yoffset + 72 + 24, "Instances", obj_Menu_Button))
+        {
+            image_xscale = 8;
+            image_yscale = 2; // Small button
+            
+            is_option = true;
+            
+            surface_index = _fade_layer;
+            menu_layer = 0;
+            
+            index = i; // Store index to access player data
+            text = loca_translate("phantasia:menu.generic.statistics");
+            if (string_pos("phantasia:", text) == 1) text = "Statistics"; // Fallback
+            
+            on_select_release = function()
+            {
+                var _data = global.file_players[index];
+                menu_popup_player_statistics(_data);
+            }
         }
     }
 }

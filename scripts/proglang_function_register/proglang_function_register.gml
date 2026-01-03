@@ -40,16 +40,16 @@ proglang_function_register("event_subscribe", function(_args, _vm) {
             // Push arguments
             if (_params > 0)
             {
-                    // We only have 1 argument: _event_data
-                    _exec_vm[@ PROG_VM.STACK][@ 0] = _event_data;
-                    _exec_vm[@ PROG_VM.SP] = 1;
-                    
-                    // Pad rest with undefined if needed
-                    for (var i = 1; i < _params; i++)
-                    {
-                        _exec_vm[@ PROG_VM.STACK][@ i] = undefined;
-                        _exec_vm[@ PROG_VM.SP]++;
-                    }
+                // We only have 1 argument: _event_data
+                _exec_vm[@ PROG_VM.STACK][@ 0] = _event_data;
+                _exec_vm[@ PROG_VM.SP] = 1;
+                
+                // Pad rest with undefined if needed
+                for (var i = 1; i < _params; i++)
+                {
+                    _exec_vm[@ PROG_VM.STACK][@ i] = undefined;
+                    _exec_vm[@ PROG_VM.SP]++;
+                }
             }
             
             proglang_vm_run(_exec_vm, func[PROG_CLOSURE.BYTECODE]);

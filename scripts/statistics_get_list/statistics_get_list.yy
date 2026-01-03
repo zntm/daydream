@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"statistics_get_list",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"statistics_get_list",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

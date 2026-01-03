@@ -5,6 +5,9 @@ function control_player()
 {
     if (hp <= 0) exit;
     
+    var _x_prev = x;
+    var _y_prev = y;
+    
     // --- INPUT ---
     input_state.poll_player();
     
@@ -120,6 +123,8 @@ function control_player()
     {
         sfx_diegetic_play(audio_emitter, x, y, "phantasia:sfx/item/swing", global.settings.audio_sfx);
         
+        statistics_increment("items_used", 1);
+        
         timer_attack = 0.3;
         
         var _item = global.inventory.base[global.inventory_selected_hotbar];
@@ -128,6 +133,8 @@ function control_player()
         {
             var _id = _item.get_id();
             var _data = global.item_data[$ _id];
+
+            statistics_increment($"items_used_{_id}", 1);
             
             if (!instance_exists(inst_item))
             {
@@ -282,5 +289,20 @@ function control_player()
         }
     }
     
+    // Distance Statistics
+    var _dist = point_distance(_x_prev, _y_prev, x, y);
+    if (_dist > 0)
+    {
+        statistics_increment("distance_travelled", _dist);
+        
+        switch (physics_body.mode)
+        {
+            case MOVEMENT_MODE.GROUND: statistics_increment("distance_walked", _dist); break;
+            case MOVEMENT_MODE.FLY:    statistics_increment("distance_flown", _dist); break;
+            case MOVEMENT_MODE.SWIM:   statistics_increment("distance_swum", _dist); break;
+            case MOVEMENT_MODE.CLIMB:  statistics_increment("distance_climbed", _dist); break;
+        }
+    }
+
     control_entity_suffocation(id);
 }

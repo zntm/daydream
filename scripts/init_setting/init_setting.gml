@@ -68,7 +68,7 @@ init_setting("graphics", "graphics_chunk_fade_time", new SettingsData(SETTINGS_T
 init_setting("graphics", "graphics_background_transition_speed", new SettingsData(SETTINGS_TYPE.SLIDER, 3)
     .set_range(0, 5));
     
-init_setting("graphics", "graphics_menu_transition_fade_speed", new SettingsData(SETTINGS_TYPE.SLIDER, 0.75)
+init_setting("graphics", "graphics_menu_transition_fade_speed", new SettingsData(SETTINGS_TYPE.SLIDER, 0.35)
     .set_range(0, 5));
 
 init_setting("graphics", "window_borderless", new SettingsData(false, SETTINGS_TYPE.SWITCH)
