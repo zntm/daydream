@@ -5,10 +5,19 @@ function menu_popup_player_statistics(_data)
     // So we'll use Surface 2 for static popup elements (Header, Background Dim).
     // And Surface 3 for the scrolling list (with Shader).
     
-    // Get the current base layer from the menu controller
-    var _base_layer = obj_Menu_Control_Button.menu_layer;
-    var _popup_static_layer = _base_layer + 1;
-    var _popup_scroll_layer = _base_layer + 2;
+    // Get the current surface layer count - we add our layers on top
+    var _current_surface_count = obj_Menu_Control_Render.surface_index_length;
+    var _popup_static_layer = _current_surface_count;   // First new layer for dim + static elements
+    var _popup_scroll_layer = _current_surface_count + 1; // Second new layer for scrolling content
+    
+    // Increment menu layer first (similar to keybind remap)
+    obj_Menu_Control_Button.menu_layer++;
+    
+    // Logic layer (for input) must match the current controller layer
+    var _logic_layer = obj_Menu_Control_Button.menu_layer;
+    
+    // Track where we started for cleanup
+    var _base_menu_layer = _logic_layer - 1;
     
     var _menu_x_center = room_width / 2;
     var _menu_y_center = room_height / 2;
@@ -20,9 +29,6 @@ function menu_popup_player_statistics(_data)
     
     var _popup_instances = [];
     
-    // Increment menu layer first (similar to keybind remap)
-    obj_Menu_Control_Button.menu_layer++;
-    
     // Set surface index length to accommodate our popup layers
     obj_Menu_Control_Render.surface_index_length = _popup_scroll_layer + 1;
     
@@ -32,7 +38,7 @@ function menu_popup_player_statistics(_data)
     // Header
     with (instance_create_layer(_popup_x + 40, _popup_y + 40, "Instances", obj_Menu_Anchor))
     {
-        menu_layer = _popup_static_layer;
+        menu_layer = _logic_layer;
         surface_index = _popup_static_layer;
         
         name = _data.get_name();
@@ -48,7 +54,7 @@ function menu_popup_player_statistics(_data)
     // Close Button (Back)
     with (instance_create_layer(_popup_x + 40, _popup_y + 40, "Instances", obj_Menu_Button))
     {
-        menu_layer = _popup_static_layer;
+        menu_layer = _logic_layer;
         surface_index = _popup_static_layer;
         
         image_xscale = 4;
@@ -91,7 +97,7 @@ function menu_popup_player_statistics(_data)
     {
         is_setting = false; 
         
-        menu_layer = _popup_static_layer;
+        menu_layer = _logic_layer;
         surface_index = _popup_static_layer;
         
         image_xscale = 2;
@@ -222,7 +228,7 @@ function menu_popup_player_statistics(_data)
             is_popup_stat = true;
             name = _item.name;
             
-            menu_layer = _popup_scroll_layer;
+            menu_layer = _logic_layer;
             surface_index = _popup_scroll_layer;
             
             if (variable_struct_exists(_item, "value"))
@@ -249,5 +255,5 @@ function menu_popup_player_statistics(_data)
     }
     
     // Register popup instances for cleanup tracking
-    obj_Menu_Control_Button.menu_popup[_base_layer] = _popup_instances;
+    obj_Menu_Control_Button.menu_popup[_base_menu_layer] = _popup_instances;
 }
