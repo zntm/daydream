@@ -1316,6 +1316,7 @@
     {"id":{"name":"control_camera_pos","path":"scripts/control_camera_pos/control_camera_pos.yy",},},
     {"id":{"name":"control_chunk_activity","path":"scripts/control_chunk_activity/control_chunk_activity.yy",},},
     {"id":{"name":"control_chunk_clear","path":"scripts/control_chunk_clear/control_chunk_clear.yy",},},
+    {"id":{"name":"control_chunk_fade","path":"scripts/control_chunk_fade/control_chunk_fade.yy",},},
     {"id":{"name":"control_chunk_foliage","path":"scripts/control_chunk_foliage/control_chunk_foliage.yy",},},
     {"id":{"name":"control_chunk_liquid","path":"scripts/control_chunk_liquid/control_chunk_liquid.yy",},},
     {"id":{"name":"control_chunk","path":"scripts/control_chunk/control_chunk.yy",},},

@@ -147,6 +147,8 @@ function control_gametick(_delta_time)
             control_projectile();
         }
         
+        control_chunk_fade();
+        
         // Update pooled particles (physics for colliding particles)
         global.particle_pool.update_physics();
         

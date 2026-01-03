@@ -218,7 +218,7 @@ function draw_text_cuteify(_x, _y, _string, _xscale = 1, _yscale = 1, _angle = 0
             }
             else
             {
-                var _draw_text = ((global.menu_profanity_filter) ? string_scunthorpe(_text) : _text);
+                var _draw_text = ((global.settings.menu_profanity_filter) ? string_scunthorpe(_text) : _text);
                 
                 // Apply shake/wave effects via per-character rendering
                 if (_shake_intensity > 0 || _wave_intensity > 0)

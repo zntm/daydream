@@ -56,6 +56,9 @@ function Chunk(_x, _y) constructor
     
     // State flags
     boolean = CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH;
+    
+    // Fade in timer (0 to 1)
+    timer_fade = 0;
 }
 
 /// @function ChunkPool()
@@ -63,6 +66,9 @@ function Chunk(_x, _y) constructor
 function ChunkPool() : Pool() constructor
 {
     max_size = 32;
+    
+    // Valid list of chunks currently fading in
+    fading_chunks = [];
     
     static create = function()
     {
@@ -118,6 +124,10 @@ function ChunkPool() : Pool() constructor
         _chunk.chunk_display = 0;
         _chunk.boolean = CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH;
         _chunk.chunk_covered_surface_refresh = true;
+        
+        // Reset fade timer and add to fading list
+        _chunk.timer_fade = 0;
+        array_push(fading_chunks, _chunk);
         
         global.render_state_pool.clear_list(_chunk.chunk_render_state);
         
@@ -180,11 +190,11 @@ function ChunkPool() : Pool() constructor
         // Clear vertex buffers
         for (var i = 0; i < CHUNK_DEPTH; ++i)
         {
-             if (vertex_buffer_exists(_chunk.chunk_vertex_buffer[i]))
-             {
-                 vertex_delete_buffer(_chunk.chunk_vertex_buffer[i]);
-             }
-             _chunk.chunk_vertex_buffer[@ i] = -1;
+            if (vertex_buffer_exists(_chunk.chunk_vertex_buffer[i]))
+            {
+                vertex_delete_buffer(_chunk.chunk_vertex_buffer[i]);
+            }
+            _chunk.chunk_vertex_buffer[@ i] = -1;
         }
         
         // Free surfaces
@@ -197,6 +207,13 @@ function ChunkPool() : Pool() constructor
         {
             surface_free(_chunk.chunk_covered_surface);
             _chunk.chunk_covered_surface = -1;
+        }
+        
+        // Remove from fading list if present
+        var _index = array_get_index(fading_chunks, _chunk);
+        if (_index != -1)
+        {
+            array_delete(fading_chunks, _index, 1);
         }
     }
     

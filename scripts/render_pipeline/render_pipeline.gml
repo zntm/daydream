@@ -6,6 +6,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
     static __u_skew = shader_get_uniform(shd_Chunk, "u_skew");
     static __u_wave = shader_get_uniform(shd_Chunk, "u_wave");
     static __u_texel_width = shader_get_uniform(shd_Chunk, "u_texel_width");
+    static __u_fade = shader_get_uniform(shd_Chunk, "u_fade");
     
     var _creature_data = global.creature_data;
     var _item_data = global.item_data;
@@ -39,6 +40,16 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
         shader_set_uniform_f(__u_time, _animation_index);
         shader_set_uniform_f(__u_texel_width, _texel_width);
         
+        // Ensure blending is enabled for fade effect
+        gpu_set_blendenable(true);
+        gpu_set_blendmode(bm_normal);
+        
+        // properties
+        if (array_length(global.chunk_pool.fading_chunks) > 0)
+        {
+             // dbg_log($"Fading chunks: {array_length(global.chunk_pool.fading_chunks)}");
+        }
+        
         for (var i = 0; i < chunk_in_view_length; ++i)
         {
             var _chunk = chunk_in_view[i];
@@ -51,6 +62,10 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
             {
                 _buffer = render_chunk(_page, _position, _texel_width, _texel_height, _chunk, _z);
             }
+            
+            // Set fade uniform
+            var _t = _chunk.timer_fade;
+            shader_set_uniform_f(__u_fade, _t * _t * (3 - 2 * _t)); // Smoothstep
             
             var _chunk_count_arr = _chunk.chunk_count;
             

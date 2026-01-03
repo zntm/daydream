@@ -14,12 +14,15 @@ uniform float u_time;
 uniform float u_texel_width;
 uniform float u_skew[CHUNK_SIZE * CHUNK_SIZE];
 uniform float u_wave[CHUNK_SIZE * CHUNK_SIZE];
+uniform float u_fade;
 
 const vec4 COLOUR_ALPHA = vec4(1.0, 1.0, 1.0, 1.0);
 
 void main()
 {
     v_vColour = COLOUR_ALPHA;
+    v_vColour.a *= u_fade;
+    
     v_vTexcoord = in_TextureCoord;
     
     // in_TextureData.x = packed animation data (number << 24 | chunk_index << 16 | animation_type)
