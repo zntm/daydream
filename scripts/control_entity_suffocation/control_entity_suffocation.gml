@@ -4,8 +4,10 @@ function control_entity_suffocation(_entity)
     if (!instance_exists(_entity) || _entity.hp <= 0) exit;
     
     // Define suffocation points (head/center)
+    var _attribute = _entity.attribute;
+    
     var _x = _entity.x;
-    var _y = _entity.y - (_entity.sprite_height / 2); // Roughly center/head area
+    var _y = _entity.y - ((_attribute.get_collision_box_height() - _attribute.get_eye_level()) * _entity.entity_yscale);
     
     // Check if we are inside a solid block
     // We check the default layer (ground) and wall layer
