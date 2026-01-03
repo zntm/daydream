@@ -95,10 +95,10 @@ function menu_refresh_instance_settings()
     if (_actual_category == "controls" || _actual_category == "controls_gamepad" || _actual_category == "controls_touch")
     {
         // List of available input types to cycle through
-        static __input_types = ["keyboard", "gamepad"]; // Add "touch" when implemented
-        
         static __toggle_on_select_release = function()
         {
+            static __input_types = ["keyboard", "gamepad"]; // Add "touch" when implemented
+            
             var _current = global.controls_input_type;
             var _index = array_get_index(__input_types, _current);
             _index = (_index + 1) mod array_length(__input_types);
@@ -226,19 +226,27 @@ function menu_refresh_instance_settings()
                 
                 x = clamp(_x, slider_x_min, slider_x_max);
                 
-                var _t = normalize(_x, slider_x_min, slider_x_max);
+                var _t_pos = normalize(_x, slider_x_min, slider_x_max);
                 
-                if (global.settings[$ name] != _t)
+                var _data = global.settings_data[$ name];
+                var _min = _data.get_range_min();
+                var _max = _data.get_range_max();
+                
+                if (_min == 0) && (_max == 0) _max = 1;
+                
+                var _val = lerp(_min, _max, _t_pos);
+                
+                if (global.settings[$ name] != _val)
                 {
                     var _on_update = global.settings_data[$ name].get_on_update();
                     
                     if (_on_update != undefined)
                     {
-                        _on_update(name, _t);
+                        _on_update(name, _val);
                     }
                 }
                 
-                global.settings[$ name] = _t;
+                global.settings[$ name] = _val;
             }
             
             with (instance_create_layer(_menu_settings_xoffset + 64, _menu_settings_yoffset + _y, "Settings", obj_Menu_Button))
@@ -255,7 +263,14 @@ function menu_refresh_instance_settings()
                 
                 xoffset = 0;
                 
-                x = lerp(slider_x_min, slider_x_max, _value);
+                var _min = _data.get_range_min();
+                var _max = _data.get_range_max();
+                
+                if (_min == 0) && (_max == 0) _max = 1;
+                
+                var _t = normalize(_value, _min, _max);
+                
+                x = lerp(slider_x_min, slider_x_max, _t);
                 
                 on_select = method(id, __slider_on_select);
                 on_select_hold = method(id, __slider_on_select_hold);

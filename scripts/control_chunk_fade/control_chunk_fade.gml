@@ -19,7 +19,16 @@ function control_chunk_fade()
         if !(_chunk.boolean & CHUNK_BOOLEAN.TILE_PROCESSED) continue;
         
         // Increase timer
-        _chunk.timer_fade += 1 / (GAME_TICK * 0.5); // Fade over 0.5 seconds
+        var _time = global.settings.graphics_chunk_fade_time;
+        
+        if (_time <= 0)
+        {
+            _chunk.timer_fade = 1.0;
+        }
+        else
+        {
+            _chunk.timer_fade += 1 / (GAME_TICK * _time);
+        }
         
         if (_chunk.timer_fade >= 1.0)
         {
