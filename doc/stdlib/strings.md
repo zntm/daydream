@@ -139,7 +139,7 @@ Replaces all occurrences of a substring.
 
 **Returns:** string
 
-```daydream
+```javascript
 string_replace_all("ho ho ho", "ho", "he"); // "he he he"
 ```
 
