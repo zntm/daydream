@@ -15,6 +15,11 @@ import { DatagenReturnData } from "./src/lib/DatagenReturnData";
 const _exportData = (data: DatagenReturnData) => {
     const file = join(__dirname, data.destination);
 
+    if (data.isRaw) {
+        Bun.write(file, data.data);
+        return;
+    }
+
     if (typeof data.data === "object" && !Array.isArray(data.data)) {
         data.data = Object.fromEntries(Object.entries(data.data).sort());
     }

@@ -1,0 +1,57 @@
+/* Daydream Syntax Highlighting for Markdown Preview */
+
+.daydream-keyword {
+    color: #569cd6 !important;
+    font-weight: bold;
+}
+.daydream-storage {
+    color: #569cd6 !important;
+}
+.daydream-string {
+    color: #ce9178 !important;
+}
+.daydream-number {
+    color: #b5cea8 !important;
+}
+.daydream-comment {
+    color: #6a9955 !important;
+    font-style: italic;
+}
+.daydream-function {
+    color: #dcdcaa !important;
+}
+.daydream-constant {
+    color: #4fc1ff !important;
+}
+.daydream-operator {
+    color: #d4d4d4 !important;
+}
+.daydream-property {
+    color: #9cdcfe !important;
+}
+.daydream-regex {
+    color: #d16969 !important;
+}
+.daydream-type {
+    color: #4ec9b0 !important;
+}
+
+.daydream-code-wrapper {
+    border: 5px solid #ff0000 !important; /* VERY THICK RED BORDER */
+    padding: 12px;
+    margin: 16px 0;
+    background: #1e1e1e !important;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(255, 0, 0, 0.3); /* Red glow */
+}
+
+.daydream-code {
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: transparent !important;
+    color: #cccccc !important;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.5;
+}

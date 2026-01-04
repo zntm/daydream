@@ -19,8 +19,8 @@ function menu_popup_player_statistics(_data)
     // Track where we started for cleanup
     var _base_menu_layer = _logic_layer - 1;
     
-    var _menu_x_center = room_width / 2;
-    var _menu_y_center = room_height / 2;
+    var _menu_x_center = display_get_gui_width() / 2;
+    var _menu_y_center = display_get_gui_height() / 2;
     var _popup_width = 800;
     var _popup_height = 450;
     

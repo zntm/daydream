@@ -1,80 +1,114 @@
 # System & Environment
 
-Access to system information, time, input, and engine state.
+### `print(values)`: void
+
+Prints values to the debug console.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `values` | any | Values to print (Optional) |
+
+**Returns:** void
+
+```javascript
+print("Hello", 123);
+```
 
 ---
 
-## Time Macros
+### `event_emit(event_type, data)`: void
 
-These values update automatically based on the current system time.
+Emits an event.
 
-| Name              | Type   | Description                                |
-| ----------------- | ------ | ------------------------------------------ |
-| `CURRENT_YEAR`    | Number | The current year (e.g., 2025)              |
-| `CURRENT_MONTH`   | Number | The current month (1-12)                   |
-| `CURRENT_DAY`     | Number | The current day of the month (1-31)        |
-| `CURRENT_WEEKDAY` | Number | The current weekday (0=Sunday, 6=Saturday) |
-| `CURRENT_HOUR`    | Number | The current hour (0-23)                    |
-| `CURRENT_MINUTE`  | Number | The current minute (0-59)                  |
-| `CURRENT_SECOND`  | Number | The current second (0-59)                  |
-| `CURRENT_TIME`    | Number | Milliseconds since the OS started          |
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `event_type` | string | Type of event |
+| `data` | struct | Event data (Optional) |
+
+**Returns:** void
 
 ---
 
-## Engine Macros
+### `event_subscribe(event_type, callback)`: number
 
-| Name         | Type   | Description                           |
-| ------------ | ------ | ------------------------------------- |
-| `FPS`        | Number | Current frames per second (capped)    |
-| `FPS_REAL`   | Number | Uncapped real frames per second       |
-| `DELTA_TIME` | Number | Time in microseconds since last frame |
+Subscribes to an event.
 
----
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `event_type` | string | Type of event |
+| `callback` | function | Callback function |
 
-## OS & Environment
-
-| Name           | Type   | Description                                                 |
-| -------------- | ------ | ----------------------------------------------------------- |
-| `OS_TYPE`      | String | Operating system type (e.g., "Windows", "Linux", "Android") |
-| `OS_BROWSER`   | String | Browser type (if running in HTML5)                          |
-| `OS_VERSION`   | Number | OS version number                                           |
-| `SYS_HOSTNAME` | String | Device hostname                                             |
-| `SYS_USERNAME` | String | Current user name                                           |
-| `SYS_PID`      | Number | Process ID                                                  |
+**Returns:** number
 
 ---
 
-## Hardware Info
+### `event_unsubscribe(listener_id)`: void
 
-| Name             | Type   | Description                       |
-| ---------------- | ------ | --------------------------------- |
-| `SYS_CPU`        | String | CPU name/model                    |
-| `SYS_CPU_BRAND`  | String | CPU brand string                  |
-| `SYS_CPU_VENDOR` | String | CPU vendor ID                     |
-| `SYS_CPU_FREQ`   | Number | CPU frequency in MHz              |
-| `SYS_CORE_COUNT` | Number | Number of CPU cores               |
-| `SYS_CPU_USAGE`  | Number | Total CPU usage percentage        |
-| `SYS_CPU_PROC`   | Number | Process CPU usage percentage      |
-| `SYS_GPU`        | String | GPU name                          |
-| `SYS_GPU_VRAM`   | Number | Total VRAM in bytes               |
-| `SYS_GPU_USAGE`  | Number | GPU usage percentage              |
-| `SYS_RAM_MAX`    | Number | Total system RAM in bytes         |
-| `SYS_RAM_USED`   | Number | Used system RAM in bytes          |
-| `SYS_RAM_PROC`   | Number | RAM used by this process in bytes |
+Unsubscribes from an event.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `listener_id` | number | ID returned by event_subscribe |
+
+**Returns:** void
 
 ---
 
-## Display & Input
+### `time_start(name)`: void
 
-| Name             | Type   | Description                          |
-| ---------------- | ------ | ------------------------------------ |
-| `WINDOW_WIDTH`   | Number | Current window width in pixels       |
-| `WINDOW_HEIGHT`  | Number | Current window height in pixels      |
-| `DISPLAY_WIDTH`  | Number | Monitor width in pixels              |
-| `DISPLAY_HEIGHT` | Number | Monitor height in pixels             |
-| `WORLD_MOUSE_X`  | Number | Mouse X position in room coordinates |
-| `WORLD_MOUSE_Y`  | Number | Mouse Y position in room coordinates |
-| `DEVICE_MOUSE_X` | Number | Raw device mouse X position          |
-| `DEVICE_MOUSE_Y` | Number | Raw device mouse Y position          |
-| `GUI_MOUSE_X`    | Number | Mouse X position on GUI layer        |
-| `GUI_MOUSE_Y`    | Number | Mouse Y position on GUI layer        |
+Starts a timer.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `name` | string | Timer name |
+
+**Returns:** void
+
+---
+
+### `time_end(name)`: number
+
+Ends a timer and returns elapsed milliseconds.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `name` | string | Timer name |
+
+**Returns:** number
+
+---
+
+### `runtime_error(type, message)`: void
+
+Throws a runtime error.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `type` | string | Error type |
+| `message` | string | Error message |
+
+**Returns:** void
+
+---
+
+### `assert(condition, message)`: void
+
+Throws an error if the condition is false.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `condition` | boolean | Condition to check |
+| `message` | string | Error message (Optional) |
+
+**Returns:** void
+
+---
+

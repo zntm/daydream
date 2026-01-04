@@ -1,127 +1,102 @@
 # Regular Expressions
 
-Daydream supports native regular expressions for pattern matching and text manipulation.
+### `regex_parse(pattern, flags)`: regex
 
-## Creating Regex
-
-### `regex_parse(pattern, flags?)`: Regex
-
-Creates a regex object from a pattern string and optional flags.
+Creates a regex object.
 
 **Arguments:**
 | Name | Type | Description |
 |------|------|-------------|
-| `pattern` | String | The regex pattern |
-| `flags` | String | Optional. Flags like `"g"` (global), `"i"` (case-insensitive) |
+| `pattern` | string | Regex pattern |
+| `flags` | string | Regex flags (e.g. 'g', 'i') (Optional) |
 
-**Returns:** A regex object that can be used with other regex functions.
-
-```javascript
-var email_pattern = regex_parse("[a-z]+@[a-z]+\\.[a-z]+", "i");
-```
+**Returns:** regex
 
 ---
 
-## Testing Patterns
+### `regex_test(str, regex)`: boolean
 
-### `regex_test(string, regex)`: Boolean
-
-Tests if a string matches the regex pattern.
+Tests if a string matches the regex.
 
 **Arguments:**
 | Name | Type | Description |
 |------|------|-------------|
-| `string` | String | The string to test |
-| `regex` | Regex | A regex object from `regex_parse` |
+| `str` | string | String to test |
+| `regex` | regex | Regex object |
 
-**Returns:** `true` if the pattern matches, `false` otherwise.
-
-```javascript
-var pattern = regex_parse("^hello", "i");
-var result = regex_test("Hello World", pattern); // true
-```
+**Returns:** boolean
 
 ---
 
-## Matching
+### `regex_match(str, regex)`: array
 
-### `regex_match(string, regex)`: Array | undefined
-
-Returns an array of matches, or `undefined` if no match.
+Returns matches of the regex in the string.
 
 **Arguments:**
 | Name | Type | Description |
 |------|------|-------------|
-| `string` | String | The string to search |
-| `regex` | Regex | A regex object from `regex_parse` |
+| `str` | string | String to match |
+| `regex` | regex | Regex object |
 
-**Returns:** Array of matched strings, or `undefined`.
-
-```javascript
-var pattern = regex_parse("\\d+", "g");
-var matches = regex_match("abc123def456", pattern); // ["123", "456"]
-```
-
-### `regex_match_index(string, regex)`: Number
-
-Returns the index of the first match, or -1 if no match.
-
-**Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `string` | String | The string to search |
-| `regex` | Regex | A regex object from `regex_parse` |
-
-**Returns:** Index of first match (0-based), or `-1`.
-
-```javascript
-var pattern = regex_parse("world", "i");
-var idx = regex_match_index("Hello World", pattern); // 6
-```
+**Returns:** array
 
 ---
 
-## Replacing
+### `regex_match_index(str, regex)`: number
 
-### `regex_replace(string, regex, replacement)`: String
-
-Replaces matched text with the replacement string.
+Returns the index of the match.
 
 **Arguments:**
 | Name | Type | Description |
 |------|------|-------------|
-| `string` | String | The original string |
-| `regex` | Regex | A regex object from `regex_parse` |
-| `replacement` | String | The replacement text |
+| `str` | string | String to match |
+| `regex` | regex | Regex object |
 
-**Returns:** A new string with replacements made.
-
-```javascript
-var pattern = regex_parse("\\s+", "g");
-var result = regex_replace("hello   world", pattern, " "); // "hello world"
-```
-
-> [!TIP]
-> Use the `"g"` flag in your regex to replace all occurrences, not just the first.
+**Returns:** number
 
 ---
 
-## Splitting
+### `regex_replace(str, regex, replacement)`: string
 
-### `regex_split(string, regex)`: Array
-
-Splits a string by the regex pattern.
+Replaces a match.
 
 **Arguments:**
 | Name | Type | Description |
 |------|------|-------------|
-| `string` | String | The string to split |
-| `regex` | Regex | A regex object from `regex_parse` |
+| `str` | string | Input string |
+| `regex` | regex | Regex object |
+| `replacement` | string | Replacement string |
 
-**Returns:** Array of substrings.
+**Returns:** string
 
-```javascript
-var pattern = regex_parse("[,;]\\s*");
-var parts = regex_split("apple, banana; cherry", pattern);
-// ["apple", "banana", "cherry"]
-```
+---
+
+### `regex_replace_all(str, regex, replacement)`: string
+
+Replaces all matches.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `str` | string | Input string |
+| `regex` | regex | Regex object |
+| `replacement` | string | Replacement string |
+
+**Returns:** string
+
+---
+
+### `regex_split(str, regex)`: array
+
+Splits a string by the regex.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `str` | string | Input string |
+| `regex` | regex | Regex object |
+
+**Returns:** array
+
+---
+
