@@ -339,16 +339,6 @@ proglang_function_register("string_pos", function(_args)
     return string_pos(_args[0], _args[1]);
 });
 
-proglang_function_register("string_copy", function(_args)
-{
-    return string_copy(_args[0], _args[1], _args[2]);
-});
-
-proglang_function_register("string_char_at", function(_args)
-{
-    return string_char_at(_args[0], _args[1]);
-});
-
 proglang_function_register("string_delete", function(_args)
 {
     return string_delete(_args[0], _args[1], _args[2]);
@@ -652,6 +642,55 @@ proglang_function_register("regex_match_index", function(_args) { return _args[1
 proglang_function_register("regex_replace", function(_args) { return _args[1].replace(_args[0], _args[2]); });
 proglang_function_register("regex_replace_all", function(_args) { return _args[1].replace(_args[0], _args[2]); });
 proglang_function_register("regex_split", function(_args) { return _args[1].split(_args[0]); });
+
+
+#region Rendering
+
+proglang_function_register("render_rectangle", function(_args)
+{
+    var _x1 = _args[0];
+    var _y1 = _args[1];
+    var _x2 = _args[2];
+    var _y2 = _args[3];
+    var _outline = (array_length(_args) > 4) ? _args[4] : false;
+    
+    draw_rectangle(_x1, _y1, _x2, _y2, _outline);
+});
+
+proglang_function_register("render_circle", function(_args)
+{
+    var _x = _args[0];
+    var _y = _args[1];
+    var _r = _args[2];
+    var _outline = (array_length(_args) > 3) ? _args[3] : false;
+    
+    draw_circle(_x, _y, _r, _outline);
+});
+
+proglang_function_register("render_text", function(_args)
+{
+    var _text = string(_args[0]);
+    var _x = _args[1];
+    var _y = _args[2];
+    
+    draw_text(_x, _y, _text);
+});
+
+proglang_function_register("render_sprite", function(_args)
+{
+    var _name = _args[0];
+    var _x = _args[1];
+    var _y = _args[2];
+    var _frame = (array_length(_args) > 3) ? _args[3] : 0;
+    
+    var _asset = asset_get_index(_name);
+    if (_asset != -1 && asset_get_type(_name) == asset_sprite)
+    {
+        draw_sprite(_asset, _frame, _x, _y);
+    }
+});
+
+#endregion
 
 global.proglang_test_state = {
     current_failures: [],

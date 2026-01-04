@@ -124,3 +124,21 @@ var user = undefined;
 var name = user?.name; // undefined (no error)
 var item = user?.items?.[0]; // undefined
 ```
+
+### String & Array Access
+
+You can access characters in a string or elements in an array using square brackets `[]`.
+
+```javascript
+var str = "Hello";
+var char = str[0]; // "H"
+```
+
+#### Slicing
+
+You can slice strings and arrays using the range operator `..`.
+
+```javascript
+var str = "Hello World";
+var sub = str[0..4]; // "Hello" (inclusive)
+```

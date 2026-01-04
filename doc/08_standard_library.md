@@ -14,5 +14,7 @@ The standard library includes various built-in functions divided into the follow
     -   Pattern matching and text manipulation.
 -   **[Debugging](file:///e:/GitHub/daydream/doc/stdlib/debug.md)**
     -   Console output, assertions, and timing.
--   **[System & Environment](file:///e:/GitHub/daydream/doc/stdlib/system.md)**
+-   **[System & Environment](file:///doc/stdlib/system.md)**
     -   Time, OS, Hardware, and Input constants.
+-   **[Rendering](file:///doc/stdlib/rendering.md)**
+    -   Drawing shapes, text, and sprites.

@@ -173,40 +173,6 @@ string_pos("lo", "Hello"); // 4
 string_pos("x", "Hello"); // 0
 ```
 
-### `string_copy(str, index, count)`: String
-
-Copies a portion of a string.
-
-**Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `str` | String | Source string |
-| `index` | Number | Start position (1-indexed) |
-| `count` | Number | Number of characters |
-
-**Returns:** The substring.
-
-```javascript
-string_copy("Hello World", 1, 5); // "Hello"
-```
-
-### `string_char_at(str, index)`: String
-
-Returns the character at a specific position.
-
-**Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `str` | String | Input string |
-| `index` | Number | Position (1-indexed) |
-
-**Returns:** Single character string.
-
-```javascript
-string_char_at("Hello", 1); // "H"
-string_char_at("Hello", 5); // "o"
-```
-
 ### `string_delete(str, index, count)`: String
 
 Removes a part of a string.
