@@ -202,19 +202,10 @@ function render_chunk(_page, _position, _texel_width, _texel_height, _inst, _z)
         }
     }
     
-    _inst.chunk_vertex_buffer[@ _z] = _buffer;
-    
     vertex_end(_buffer);
     
-    // Check if buffer is empty (all tiles culled) - GameMaker crashes on empty buffers
-    if (vertex_get_number(_buffer) <= 0)
-    {
-        vertex_delete_buffer(_buffer);
-        _inst.chunk_vertex_buffer[@ _z] = BUFFER_EMPTY_SENTINEL;
-        return BUFFER_EMPTY_SENTINEL;
-    }
-    
     _inst.chunk_vertex_buffer[@ _z] = _buffer;
+    
     vertex_freeze(_buffer);
     
     return _buffer;

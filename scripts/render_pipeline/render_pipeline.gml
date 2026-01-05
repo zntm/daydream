@@ -63,6 +63,8 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 _buffer = render_chunk(_page, _position, _texel_width, _texel_height, _chunk, _z);
             }
             
+            if (vertex_get_number(_buffer) <= 0) continue;
+            
             // Set fade uniform
             var _t = _chunk.timer_fade;
             shader_set_uniform_f(__u_fade, _t * _t * (3 - 2 * _t)); // Smoothstep
@@ -82,10 +84,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 shader_set_uniform_f_array(__u_wave, _chunk.chunk_wave);
             }
             
-            if (_buffer != BUFFER_EMPTY_SENTINEL)
-            {
-                vertex_submit(_buffer, pr_trianglelist, _texture);
-            }
+            vertex_submit(_buffer, pr_trianglelist, _texture);
         }
         
         shader_reset();

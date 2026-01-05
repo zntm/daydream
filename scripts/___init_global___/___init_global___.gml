@@ -1,6 +1,3 @@
-// function ___init_global___()
-// {
-
 vertex_format_begin();
 
 vertex_format_add_position();
@@ -11,28 +8,19 @@ vertex_format_add_custom(vertex_type_float2, vertex_usage_texcoord);
 
 global.chunk_format_perspective = vertex_format_end();
 
-    global.chunk_empty_buffer = vertex_create_buffer();
-    vertex_begin(global.chunk_empty_buffer, global.chunk_format_perspective);
-    vertex_position(global.chunk_empty_buffer, 0, 0); vertex_texcoord(global.chunk_empty_buffer, 0, 0); vertex_float2(global.chunk_empty_buffer, 0, 0);
-    vertex_position(global.chunk_empty_buffer, 0, 0); vertex_texcoord(global.chunk_empty_buffer, 0, 0); vertex_float2(global.chunk_empty_buffer, 0, 0);
-    vertex_position(global.chunk_empty_buffer, 0, 0); vertex_texcoord(global.chunk_empty_buffer, 0, 0); vertex_float2(global.chunk_empty_buffer, 0, 0);
-    vertex_end(global.chunk_empty_buffer);
-    vertex_freeze(global.chunk_empty_buffer);
-    
-    global.inventory = {
-        mouse: {
-            item: INVENTORY_EMPTY,
-            type:  "",
-            index: -1
-        },
-        base:              array_create(INVENTORY_LENGTH.BASE, INVENTORY_EMPTY),
-        armor_helmet:      array_create(1, INVENTORY_EMPTY),
-        armor_breastplate: array_create(1, INVENTORY_EMPTY),
-        armor_leggings:    array_create(1, INVENTORY_EMPTY),
-        accessory:         array_create(INVENTORY_LENGTH.ACCESSORY, INVENTORY_EMPTY),
-        _container:         []
-    }
-// }
+global.inventory = {
+    mouse: {
+        item: INVENTORY_EMPTY,
+        type:  "",
+        index: -1
+    },
+    base:              array_create(INVENTORY_LENGTH.BASE, INVENTORY_EMPTY),
+    armor_helmet:      array_create(1, INVENTORY_EMPTY),
+    armor_breastplate: array_create(1, INVENTORY_EMPTY),
+    armor_leggings:    array_create(1, INVENTORY_EMPTY),
+    accessory:         array_create(INVENTORY_LENGTH.ACCESSORY, INVENTORY_EMPTY),
+    _container:         []
+}
 
 global.inventory_names = [
     "base",
