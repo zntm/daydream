@@ -32,6 +32,7 @@ function Chunk(_x, _y) constructor
     chunk_covered_surface = -1;
     chunk_covered_surface_refresh = true;
     chunk_render_state = [];
+    chunk_occluded = array_create(CHUNK_SIZE * CHUNK_SIZE, 0); // Bitwise occlusion flags per layer
     
     // Pooled objects (structs)
     chunk_crafting_stations = [];
@@ -103,6 +104,13 @@ function ChunkPool() : Pool() constructor
         for (var i = 0; i < CHUNK_SIZE; ++i)
         {
             _chunk.chunk_covered[@ i] = 0;
+        }
+        
+        // Clear occlusion flags
+        var _occluded_size = CHUNK_SIZE * CHUNK_SIZE;
+        for (var i = 0; i < _occluded_size; ++i)
+        {
+            _chunk.chunk_occluded[@ i] = 0;
         }
         
         // Clear count array

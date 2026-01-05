@@ -120,6 +120,9 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         ___cave_biome_default = _cave_biome[$ "default"];
         ___cave_biome_default_length = array_length(___cave_biome_default);
         
+        ___cave_biome_depth_zones = _cave_biome[$ "depth_zones"] ?? [];
+        ___cave_biome_depth_zones_length = array_length(___cave_biome_depth_zones);
+        
         var _map = _cave_biome[$ "map"];
         
         if (_map != undefined)
@@ -235,6 +238,16 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
     static get_cave_biome_default_length = function()
     {
         return ___cave_biome_default_length;
+    }
+    
+    static get_cave_biome_depth_zones = function()
+    {
+        return ___cave_biome_depth_zones;
+    }
+    
+    static get_cave_biome_depth_zones_length = function()
+    {
+        return ___cave_biome_depth_zones_length;
     }
     
     static set_cave_biome_map = function(_map)

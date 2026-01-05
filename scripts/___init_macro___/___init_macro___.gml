@@ -24,6 +24,7 @@
 #macro CHUNK_DEPTH_FOLIAGE_FRONT 4
 #macro CHUNK_DEPTH_FOLIAGE       choose(CHUNK_DEPTH_FOLIAGE_BACK, CHUNK_DEPTH_FOLIAGE_FRONT)
 #macro CHUNK_DEPTH_LIQUID        7
+#macro BUFFER_EMPTY_SENTINEL     global.chunk_empty_buffer // Sentinel for empty (culled) vertex buffers
 
 #endregion
 
