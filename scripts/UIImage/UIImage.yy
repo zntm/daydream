@@ -1,12 +1,12 @@
 {
-    "%Name": "UIImage",
-    "isCompatibility": false,
-    "isDnD": false,
-    "name": "UIImage",
-    "parent": {
-        "name": "scripts",
-        "path": "folders/Scripts.yy"
-    },
-    "resourceType": "GMScript",
-    "resourceVersion": "2.0"
+  "%Name":"UIImage",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"UIImage",
+  "parent":{
+    "name":"scripts",
+    "path":"folders/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }
