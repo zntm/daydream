@@ -1,0 +1,12 @@
+{
+    "%Name": "MenuBuilder",
+    "isCompatibility": false,
+    "isDnD": false,
+    "name": "MenuBuilder",
+    "parent": {
+        "name": "scripts",
+        "path": "folders/Scripts.yy"
+    },
+    "resourceType": "GMScript",
+    "resourceVersion": "2.0"
+}

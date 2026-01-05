@@ -26,6 +26,10 @@ Tests if a string matches the regex.
 
 **Returns:** boolean
 
+```javascript
+regex_test("hello", /h/);
+```
+
 ---
 
 ### `regex_match(str, regex)`: array
@@ -40,6 +44,10 @@ Returns matches of the regex in the string.
 
 **Returns:** array
 
+```javascript
+regex_match("hello", /l+/g);
+```
+
 ---
 
 ### `regex_match_index(str, regex)`: number
@@ -53,6 +61,10 @@ Returns the index of the match.
 | `regex` | regex | Regex object |
 
 **Returns:** number
+
+```javascript
+regex_match_index("hello", /e/);
+```
 
 ---
 
@@ -69,6 +81,10 @@ Replaces a match.
 
 **Returns:** string
 
+```javascript
+regex_replace("hello", /l/ , "L");
+```
+
 ---
 
 ### `regex_replace_all(str, regex, replacement)`: string
@@ -84,6 +100,10 @@ Replaces all matches.
 
 **Returns:** string
 
+```javascript
+regex_replace_all("ho ho ho", /ho/ , "he");
+```
+
 ---
 
 ### `regex_split(str, regex)`: array
@@ -97,6 +117,10 @@ Splits a string by the regex.
 | `regex` | regex | Regex object |
 
 **Returns:** array
+
+```javascript
+regex_split("a,b,c", /,/);
+```
 
 ---
 

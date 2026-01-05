@@ -326,13 +326,13 @@
     "regex_match": {
         "prefix": "regex_match",
         "body": "regex_match(${1:str}, ${2:regex})",
-        "description": "Returns matches of the regex in the string.\n\n**Parameters:**\n- `str` (string): String to match\n- `regex` (regex): Regex object\n\n**Returns:** array\n\n",
+        "description": "Returns matches of the regex in the string.\n\n**Parameters:**\n- `str` (string): String to match\n- `regex` (regex): Regex object\n\n**Returns:** array\n\n**Example:**\n```\nregex_match(\"hello\", /l+/g);\n```",
         "scope": "daydream"
     },
     "regex_match_index": {
         "prefix": "regex_match_index",
         "body": "regex_match_index(${1:str}, ${2:regex})",
-        "description": "Returns the index of the match.\n\n**Parameters:**\n- `str` (string): String to match\n- `regex` (regex): Regex object\n\n**Returns:** number\n\n",
+        "description": "Returns the index of the match.\n\n**Parameters:**\n- `str` (string): String to match\n- `regex` (regex): Regex object\n\n**Returns:** number\n\n**Example:**\n```\nregex_match_index(\"hello\", /e/);\n```",
         "scope": "daydream"
     },
     "regex_parse": {
@@ -344,25 +344,25 @@
     "regex_replace": {
         "prefix": "regex_replace",
         "body": "regex_replace(${1:str}, ${2:regex}, ${3:replacement})",
-        "description": "Replaces a match.\n\n**Parameters:**\n- `str` (string): Input string\n- `regex` (regex): Regex object\n- `replacement` (string): Replacement string\n\n**Returns:** string\n\n",
+        "description": "Replaces a match.\n\n**Parameters:**\n- `str` (string): Input string\n- `regex` (regex): Regex object\n- `replacement` (string): Replacement string\n\n**Returns:** string\n\n**Example:**\n```\nregex_replace(\"hello\", /l/ , \"L\");\n```",
         "scope": "daydream"
     },
     "regex_replace_all": {
         "prefix": "regex_replace_all",
         "body": "regex_replace_all(${1:str}, ${2:regex}, ${3:replacement})",
-        "description": "Replaces all matches.\n\n**Parameters:**\n- `str` (string): Input string\n- `regex` (regex): Regex object\n- `replacement` (string): Replacement string\n\n**Returns:** string\n\n",
+        "description": "Replaces all matches.\n\n**Parameters:**\n- `str` (string): Input string\n- `regex` (regex): Regex object\n- `replacement` (string): Replacement string\n\n**Returns:** string\n\n**Example:**\n```\nregex_replace_all(\"ho ho ho\", /ho/ , \"he\");\n```",
         "scope": "daydream"
     },
     "regex_split": {
         "prefix": "regex_split",
         "body": "regex_split(${1:str}, ${2:regex})",
-        "description": "Splits a string by the regex.\n\n**Parameters:**\n- `str` (string): Input string\n- `regex` (regex): Regex object\n\n**Returns:** array\n\n",
+        "description": "Splits a string by the regex.\n\n**Parameters:**\n- `str` (string): Input string\n- `regex` (regex): Regex object\n\n**Returns:** array\n\n**Example:**\n```\nregex_split(\"a,b,c\", /,/);\n```",
         "scope": "daydream"
     },
     "regex_test": {
         "prefix": "regex_test",
         "body": "regex_test(${1:str}, ${2:regex})",
-        "description": "Tests if a string matches the regex.\n\n**Parameters:**\n- `str` (string): String to test\n- `regex` (regex): Regex object\n\n**Returns:** boolean\n\n",
+        "description": "Tests if a string matches the regex.\n\n**Parameters:**\n- `str` (string): String to test\n- `regex` (regex): Regex object\n\n**Returns:** boolean\n\n**Example:**\n```\nregex_test(\"hello\", /h/);\n```",
         "scope": "daydream"
     },
     "render_circle": {
@@ -497,12 +497,6 @@
         "description": "Returns the width of the string in pixels based on current font.\n\n**Parameters:**\n- `str` (string): Input string\n\n**Returns:** number\n\n",
         "scope": "daydream"
     },
-    "struct_get": {
-        "prefix": "struct_get",
-        "body": "struct_get(${1:struct}, ${2:name})",
-        "description": "Gets a variable from a struct.\n\n**Parameters:**\n- `struct` (struct): Input struct\n- `name` (string): Variable name\n\n**Returns:** any\n\n",
-        "scope": "daydream"
-    },
     "struct_get_names": {
         "prefix": "struct_get_names",
         "body": "struct_get_names(${1:struct})",
@@ -519,12 +513,6 @@
         "prefix": "struct_parse",
         "body": "struct_parse(${1:json})",
         "description": "Parses a JSON string into a struct/array.\n\n**Parameters:**\n- `json` (string): JSON string\n\n**Returns:** any\n\n",
-        "scope": "daydream"
-    },
-    "struct_set": {
-        "prefix": "struct_set",
-        "body": "struct_set(${1:struct}, ${2:name}, ${3:val})",
-        "description": "Sets a variable in a struct.\n\n**Parameters:**\n- `struct` (struct): Input struct\n- `name` (string): Variable name\n- `val` (any): Value to set\n\n**Returns:** void\n\n",
         "scope": "daydream"
     },
     "struct_stringify": {
@@ -590,7 +578,7 @@
     "typeof": {
         "prefix": "typeof",
         "body": "typeof(${1:val})",
-        "description": "Returns a string describing the type of the value.\n\n**Parameters:**\n- `val` (any): Value to check\n\n**Returns:** string\n\n**Example:**\n```\ntypeof 123; // \"number\"\n```",
+        "description": "Returns a string describing the type of the value.\n\n**Parameters:**\n- `val` (any): Value to check\n\n**Returns:** string\n\n**Example:**\n```\ntypeof(123); // \"number\"\n```",
         "scope": "daydream"
     }
 }

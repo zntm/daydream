@@ -323,7 +323,7 @@
     {
         "name": "typeof",
         "description": "Returns a string describing the type of the value.",
-        "example": "typeof 123; // \"number\"",
+        "example": "typeof(123); // \"number\"",
         "parameters": [
             {
                 "name": "val",
@@ -1008,45 +1008,6 @@
         "returnType": "array"
     },
     {
-        "name": "struct_get",
-        "description": "Gets a variable from a struct.",
-        "parameters": [
-            {
-                "name": "struct",
-                "type": "struct",
-                "description": "Input struct"
-            },
-            {
-                "name": "name",
-                "type": "string",
-                "description": "Variable name"
-            }
-        ],
-        "returnType": "any"
-    },
-    {
-        "name": "struct_set",
-        "description": "Sets a variable in a struct.",
-        "parameters": [
-            {
-                "name": "struct",
-                "type": "struct",
-                "description": "Input struct"
-            },
-            {
-                "name": "name",
-                "type": "string",
-                "description": "Variable name"
-            },
-            {
-                "name": "val",
-                "type": "any",
-                "description": "Value to set"
-            }
-        ],
-        "returnType": "void"
-    },
-    {
         "name": "struct_names_count",
         "description": "Returns the number of variables in a struct.",
         "parameters": [
@@ -1306,6 +1267,7 @@
     {
         "name": "regex_test",
         "description": "Tests if a string matches the regex.",
+        "example": "regex_test(\"hello\", /h/);",
         "parameters": [
             {
                 "name": "str",
@@ -1323,6 +1285,7 @@
     {
         "name": "regex_match",
         "description": "Returns matches of the regex in the string.",
+        "example": "regex_match(\"hello\", /l+/g);",
         "parameters": [
             {
                 "name": "str",
@@ -1340,6 +1303,7 @@
     {
         "name": "regex_match_index",
         "description": "Returns the index of the match.",
+        "example": "regex_match_index(\"hello\", /e/);",
         "parameters": [
             {
                 "name": "str",
@@ -1357,6 +1321,7 @@
     {
         "name": "regex_replace",
         "description": "Replaces a match.",
+        "example": "regex_replace(\"hello\", /l/ , \"L\");",
         "parameters": [
             {
                 "name": "str",
@@ -1379,6 +1344,7 @@
     {
         "name": "regex_replace_all",
         "description": "Replaces all matches.",
+        "example": "regex_replace_all(\"ho ho ho\", /ho/ , \"he\");",
         "parameters": [
             {
                 "name": "str",
@@ -1401,6 +1367,7 @@
     {
         "name": "regex_split",
         "description": "Splits a string by the regex.",
+        "example": "regex_split(\"a,b,c\", /,/);",
         "parameters": [
             {
                 "name": "str",

@@ -355,7 +355,7 @@ Returns a string describing the type of the value.
 **Returns:** string
 
 ```javascript
-typeof 123; // "number"
+typeof(123); // "number"
 ```
 
 ---

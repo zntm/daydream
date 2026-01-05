@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"UITabPanel",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"UITabPanel",
+  "parent":{
+    "name":"UI",
+    "path":"folders/Scripts/UI.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

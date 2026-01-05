@@ -84,35 +84,6 @@ Returns an array of property names in a struct.
 
 ---
 
-### `struct_get(struct, name)`: any
-
-Gets a variable from a struct.
-
-**Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `struct` | struct | Input struct |
-| `name` | string | Variable name |
-
-**Returns:** any
-
----
-
-### `struct_set(struct, name, val)`: void
-
-Sets a variable in a struct.
-
-**Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `struct` | struct | Input struct |
-| `name` | string | Variable name |
-| `val` | any | Value to set |
-
-**Returns:** void
-
----
-
 ### `struct_names_count(struct)`: number
 
 Returns the number of variables in a struct.
