@@ -40,7 +40,7 @@ Global variables can be accessed directly by their name in any script.
 print(PLAYER_MAX_HP); // 100
 ```
 
-> [!IMPORTANT] > `global var` variable declarations are visible to all scripts and modules. Use unique names to avoid collisions, like `MY_MOD_CONFIG`.
+> [!IMPORTANT] `global var` variable declarations are visible to all scripts and modules. Use unique names to avoid collisions, like `MY_MOD_CONFIG`.
 
 ## Data Types
 
