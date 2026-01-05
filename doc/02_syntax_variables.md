@@ -40,7 +40,7 @@ Global variables can be accessed directly by their name in any script.
 print(PLAYER_MAX_HP); // 100
 ```
 
-> [!IMPORTANT] > `global var` variable declarations are visible to all scripts and modules. Use unique names to avoid collisions, like `MY_MOD_CONFIG`.
+> [!IMPORTANT] > `global var` variable declarations are visible to the shell of all other modules. However, you still need to `export` them if you want other modules to be able to `import` them. Use unique names to avoid collisions, like `MY_MOD_CONFIG`.
 
 ## Data Types
 
@@ -53,6 +53,7 @@ Daydream supports the following primary data types:
 | **Boolean**   | Logical true or false.                                            | `true`, `false`            |
 | **Array**     | Ordered list of values.                                           | `[1, 2, 3]`                |
 | **Struct**    | Key-value pairs (Objects).                                        | `{ x: 10, y: 20 }`         |
+| **Regex**     | Regular expression patterns.                                      | `/abc/i`                   |
 | **Undefined** | Represents the absence of a value.                                | `undefined`                |
 | **Function**  | Callable code blocks.                                             | `fn() { ... }`             |
 

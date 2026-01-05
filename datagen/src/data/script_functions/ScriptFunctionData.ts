@@ -129,7 +129,7 @@ export const typeFunctions = [
     new ScriptFunction("is_undefined", "Returns true if the value is undefined.", "boolean", [{ name: "val", type: "any", description: "Value to check" }]),
     new ScriptFunction("is_regex", "Returns true if the value is a regex object.", "boolean", [{ name: "val", type: "any", description: "Value to check" }]),
     new ScriptFunction("typeof", "Returns a string describing the type of the value.", "string", [{ name: "val", type: "any", description: "Value to check" }])
-        .setExample('typeof 123; // "number"'),
+        .setExample('typeof(123); // "number"'),
 ];
 
 export const mathFunctions = [
@@ -184,8 +184,6 @@ export const dataStructureFunctions = [
     new ScriptFunction("array_resize", "Resizes an array.", "void", [{ name: "array", type: "array", description: "Target array"}, { name: "new_size", type: "number", description: "New size"}]),
     new ScriptFunction("array_copy", "Copies part of an array into another.", "void", [{ name: "dest", type: "array", description: "Destination array"}, { name: "dest_index", type: "number", description: "Start index in destination"}, { name: "src", type: "array", description: "Source array"}, { name: "src_index", type: "number", description: "Start index in source"}, { name: "length", type: "number", description: "Number of elements to copy"}]),
     new ScriptFunction("struct_get_names", "Returns an array of property names in a struct.", "array", [{ name: "struct", type: "struct", description: "Input struct"}]),
-    new ScriptFunction("struct_get", "Gets a variable from a struct.", "any", [{ name: "struct", type: "struct", description: "Input struct"}, { name: "name", type: "string", description: "Variable name"}]),
-    new ScriptFunction("struct_set", "Sets a variable in a struct.", "void", [{ name: "struct", type: "struct", description: "Input struct"}, { name: "name", type: "string", description: "Variable name"}, { name: "val", type: "any", description: "Value to set"}]),
     new ScriptFunction("struct_names_count", "Returns the number of variables in a struct.", "number", [{ name: "struct", type: "struct", description: "Input struct"}]),
     new ScriptFunction("struct_stringify", "Converts a struct/array to a JSON string.", "string", [{ name: "val", type: "any", description: "Value to stringify"}]),
     new ScriptFunction("struct_parse", "Parses a JSON string into a struct/array.", "any", [{ name: "json", type: "string", description: "JSON string"}]),
@@ -211,12 +209,12 @@ export const systemFunctions = [
 
 export const regexFunctions = [
     new ScriptFunction("regex_parse", "Creates a regex object.", "regex", [{ name: "pattern", type: "string", description: "Regex pattern" }, { name: "flags", type: "string", description: "Regex flags (e.g. 'g', 'i')", optional: true }]),
-    new ScriptFunction("regex_test", "Tests if a string matches the regex.", "boolean", [{ name: "str", type: "string", description: "String to test" }, { name: "regex", type: "regex", description: "Regex object" }]),
-    new ScriptFunction("regex_match", "Returns matches of the regex in the string.", "array", [{ name: "str", type: "string", description: "String to match" }, { name: "regex", type: "regex", description: "Regex object" }]),
-    new ScriptFunction("regex_match_index", "Returns the index of the match.", "number", [{ name: "str", type: "string", description: "String to match" }, { name: "regex", type: "regex", description: "Regex object" }]),
-    new ScriptFunction("regex_replace", "Replaces a match.", "string", [{ name: "str", type: "string", description: "Input string" }, { name: "regex", type: "regex", description: "Regex object" }, { name: "replacement", type: "string", description: "Replacement string" }]),
-    new ScriptFunction("regex_replace_all", "Replaces all matches.", "string", [{ name: "str", type: "string", description: "Input string" }, { name: "regex", type: "regex", description: "Regex object" }, { name: "replacement", type: "string", description: "Replacement string" }]),
-    new ScriptFunction("regex_split", "Splits a string by the regex.", "array", [{ name: "str", type: "string", description: "Input string" }, { name: "regex", type: "regex", description: "Regex object" }]),
+    new ScriptFunction("regex_test", "Tests if a string matches the regex.", "boolean", [{ name: "str", type: "string", description: "String to test" }, { name: "regex", type: "regex", description: "Regex object" }]).setExample('regex_test("hello", /h/);'),
+    new ScriptFunction("regex_match", "Returns matches of the regex in the string.", "array", [{ name: "str", type: "string", description: "String to match" }, { name: "regex", type: "regex", description: "Regex object" }]).setExample('regex_match("hello", /l+/g);'),
+    new ScriptFunction("regex_match_index", "Returns the index of the match.", "number", [{ name: "str", type: "string", description: "String to match" }, { name: "regex", type: "regex", description: "Regex object" }]).setExample('regex_match_index("hello", /e/);'),
+    new ScriptFunction("regex_replace", "Replaces a match.", "string", [{ name: "str", type: "string", description: "Input string" }, { name: "regex", type: "regex", description: "Regex object" }, { name: "replacement", type: "string", description: "Replacement string" }]).setExample('regex_replace("hello", /l/ , "L");'),
+    new ScriptFunction("regex_replace_all", "Replaces all matches.", "string", [{ name: "str", type: "string", description: "Input string" }, { name: "regex", type: "regex", description: "Regex object" }, { name: "replacement", type: "string", description: "Replacement string" }]).setExample('regex_replace_all("ho ho ho", /ho/ , "he");'),
+    new ScriptFunction("regex_split", "Splits a string by the regex.", "array", [{ name: "str", type: "string", description: "Input string" }, { name: "regex", type: "regex", description: "Regex object" }]).setExample('regex_split("a,b,c", /,/);'),
 ];
 
 export const renderFunctions = [
