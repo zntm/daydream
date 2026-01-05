@@ -82,7 +82,7 @@ Replaces a match.
 **Returns:** string
 
 ```javascript
-regex_replace("hello", /l/ , "L");
+regex_replace("hello", /l/, "L");
 ```
 
 ---
@@ -101,7 +101,7 @@ Replaces all matches.
 **Returns:** string
 
 ```javascript
-regex_replace_all("ho ho ho", /ho/ , "he");
+regex_replace_all("ho ho ho", /ho/, "he");
 ```
 
 ---

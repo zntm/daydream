@@ -1321,7 +1321,7 @@
     {
         "name": "regex_replace",
         "description": "Replaces a match.",
-        "example": "regex_replace(\"hello\", /l/ , \"L\");",
+        "example": "regex_replace(\"hello\", /l/, \"L\");",
         "parameters": [
             {
                 "name": "str",
@@ -1344,7 +1344,7 @@
     {
         "name": "regex_replace_all",
         "description": "Replaces all matches.",
-        "example": "regex_replace_all(\"ho ho ho\", /ho/ , \"he\");",
+        "example": "regex_replace_all(\"ho ho ho\", /ho/, \"he\");",
         "parameters": [
             {
                 "name": "str",

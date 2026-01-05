@@ -344,13 +344,13 @@
     "regex_replace": {
         "prefix": "regex_replace",
         "body": "regex_replace(${1:str}, ${2:regex}, ${3:replacement})",
-        "description": "Replaces a match.\n\n**Parameters:**\n- `str` (string): Input string\n- `regex` (regex): Regex object\n- `replacement` (string): Replacement string\n\n**Returns:** string\n\n**Example:**\n```\nregex_replace(\"hello\", /l/ , \"L\");\n```",
+        "description": "Replaces a match.\n\n**Parameters:**\n- `str` (string): Input string\n- `regex` (regex): Regex object\n- `replacement` (string): Replacement string\n\n**Returns:** string\n\n**Example:**\n```\nregex_replace(\"hello\", /l/, \"L\");\n```",
         "scope": "daydream"
     },
     "regex_replace_all": {
         "prefix": "regex_replace_all",
         "body": "regex_replace_all(${1:str}, ${2:regex}, ${3:replacement})",
-        "description": "Replaces all matches.\n\n**Parameters:**\n- `str` (string): Input string\n- `regex` (regex): Regex object\n- `replacement` (string): Replacement string\n\n**Returns:** string\n\n**Example:**\n```\nregex_replace_all(\"ho ho ho\", /ho/ , \"he\");\n```",
+        "description": "Replaces all matches.\n\n**Parameters:**\n- `str` (string): Input string\n- `regex` (regex): Regex object\n- `replacement` (string): Replacement string\n\n**Returns:** string\n\n**Example:**\n```\nregex_replace_all(\"ho ho ho\", /ho/, \"he\");\n```",
         "scope": "daydream"
     },
     "regex_split": {
