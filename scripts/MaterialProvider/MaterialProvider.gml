@@ -160,11 +160,13 @@ function RuleChance(_chance) : MaterialRule() constructor
         var _x = _context[$ "x"] ?? 0;
         var _y = _context[$ "y"] ?? 0;
         // Generate a stable seed from world position
-        var _seed = (_x * 73856093) ^ (_y * 19349663);
+        var _seed = (abs(_x) * 73856093) ^ (abs(_y) * 19349663);
         // Add world seed if available
         if (variable_global_exists("world_save_data")) _seed ^= global.world_save_data.seed;
         
-        return (((xorshift(_seed) & 0xff) / 0xff) < ___chance);
+        var _res = (((abs(xorshift(_seed)) & 0xff) / 0xff) < ___chance);
+        // if (_res) show_debug_message($"RuleChance passed at {_x},{_y} with chance {___chance}");
+        return _res;
     }
 }
 
@@ -180,8 +182,28 @@ function RuleGenerateOn(_tile_ids) : MaterialRule() constructor
         
         for (var i = 0; i < array_length(___tile_ids); ++i)
         {
-            if (_top == ___tile_ids[i]) return true;
+            var _id = ___tile_ids[i];
+            
+            // NEW: Handle tags (starts with #)
+            if (string_starts_with(_id, "#"))
+            {
+                var _tag_list = tag_value_parse(_id);
+                if (is_array(_tag_list))
+                {
+                    if (array_get_index(_tag_list, _top) != -1) return true;
+                }
+                else
+                {
+                    // show_debug_message($"[MaterialProvider] WARNING: Tag '{_id}' returned non-array: {typeof(_tag_list)}");
+                }
+            }
+            else
+            {
+                if (_top == _id) return true;
+            }
         }
+        
+        // show_debug_message($"RuleGenerateOn FAILED: top='{_top}', expected={json_stringify(___tile_ids)}");
         return false;
     }
 }
