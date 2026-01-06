@@ -136,6 +136,26 @@ function debug_init()
     // --- Information Section ---
     dbg_section("Information");
     dbg_text(ref_create(self, "debug_text"));
+    
+    // System Information Cache
+    global.debug_sysinfo = {
+        username: "",
+        hostname: "",
+        cpu_name: "",
+        core_count: 0,
+        cpu_frequency: 0,
+        gpu_name: "",
+        gpu_vram: 0,
+        sys_memory_used: 0,
+        memory_max: 0,
+        proc_memory_used: 0,
+        sys_cpu_usage: 0,
+        proc_cpu_usage: 0,
+        gpu_usage: 0
+    };
+    global.debug_sysinfo_index = 0;
+    global.debug_sysinfo_text = "";
+    global.debug_sysinfo_timer = 0;
 }
 
 /// @function debug_cleanup()
@@ -175,7 +195,44 @@ function debug_step()
         var _camera_height = global.camera_height;
         
         var _semver = program_get_version();
-        /*
+        
+        // Staggered Refresh: Update ONE stat per frame
+        var _info = global.debug_sysinfo;
+        switch (global.debug_sysinfo_index)
+        {
+            case 0: _info.username = sysinfo_get_username(); break;
+            case 1: _info.hostname = sysinfo_get_hostname(); break;
+            case 2: _info.cpu_name = sysinfo_get_cpu_name(); break;
+            case 3: _info.core_count = sysinfo_get_core_count(); break;
+            case 4: _info.cpu_frequency = sysinfo_get_cpu_frequency(); break;
+            case 5: _info.gpu_name = sysinfo_get_gpu_name(); break;
+            case 6: _info.gpu_vram = sysinfo_get_gpu_vram(); break;
+            case 7: _info.sys_memory_used = sysinfo_sys_memory_used(); break;
+            case 8: _info.memory_max = sysinfo_get_memory_max(); break;
+            case 9: _info.proc_memory_used = sysinfo_proc_memory_used(); break;
+            case 10: _info.sys_cpu_usage = sysinfo_sys_cpu_usage(); break;
+            case 11: _info.proc_cpu_usage = sysinfo_proc_cpu_usage(); break;
+            case 12: _info.gpu_usage = sysinfo_get_gpu_usage(); break;
+        }
+        global.debug_sysinfo_index = (global.debug_sysinfo_index + 1) % 13;
+        
+        // Re-assemble text every 1 second
+        if (global.debug_sysinfo_timer > 0)
+        {
+            global.debug_sysinfo_timer--;
+        }
+        else
+        {
+            global.debug_sysinfo_timer = 60;
+            global.debug_sysinfo_text = 
+                "System:\n" +
+                $"{_info.username}@{_info.hostname}\n" +
+                $"CPU: {_info.cpu_name} ({_info.core_count}C @ {_info.cpu_frequency}MHz)\n" +
+                $"GPU: {_info.gpu_name} ({_info.gpu_vram / 1048576}MB VRAM)\n" +
+                $"RAM: {_info.sys_memory_used / 1048576}/{_info.memory_max / 1048576}MB (Proc: {_info.proc_memory_used / 1048576}MB)\n" +
+                $"Usage: CPU {_info.sys_cpu_usage}%/{_info.proc_cpu_usage}% | GPU {_info.gpu_usage}%";
+        }
+
         var _text = 
             "Performance:\n" +
             $"FPS: {fps}/{fps_real} ({string_format(1000 / max(1, fps_real), 0, 2)}ms)\n" +
@@ -195,17 +252,12 @@ function debug_step()
             
             $"Version: {_semver}\n\n" +
             
-            "System:\n" +
-            $"{sysinfo_get_username()}@{sysinfo_get_hostname()}\n" +
-            $"CPU: {sysinfo_get_cpu_name()} ({sysinfo_get_core_count()}C @ {sysinfo_get_cpu_frequency()}MHz)\n" +
-            $"GPU: {sysinfo_get_gpu_name()} ({sysinfo_get_gpu_vram() / 1048576}MB VRAM)\n" +
-            $"RAM: {sysinfo_sys_memory_used() / 1048576}/{sysinfo_get_memory_max() / 1048576}MB (Proc: {sysinfo_proc_memory_used() / 1048576}MB)\n" +
-            $"Usage: CPU {sysinfo_sys_cpu_usage()}%/{sysinfo_proc_cpu_usage()}% | GPU {sysinfo_get_gpu_usage()}%";
+            global.debug_sysinfo_text;
             
         if (instance_exists(obj_Game_Control))
         {
             obj_Game_Control.debug_text = _text;
-        }*/
+        }
         
         global.dbg_settings.fps = fps;
         global.dbg_settings.fps_real = fps_real;
