@@ -407,6 +407,7 @@
     {"name":"string_scunthorpe","order":1,"path":"scripts/string_scunthorpe/string_scunthorpe.yy",},
     {"name":"structure_create","order":8,"path":"scripts/structure_create/structure_create.yy",},
     {"name":"structure_valid","order":1,"path":"scripts/structure_valid/structure_valid.yy",},
+    {"name":"StructurePool","order":78,"path":"scripts/StructurePool/StructurePool.yy",},
     {"name":"tag_value_parse","order":1,"path":"scripts/tag_value_parse/tag_value_parse.yy",},
     {"name":"test_quadtree","order":73,"path":"scripts/test_quadtree/test_quadtree.yy",},
     {"name":"tick_delay","order":34,"path":"scripts/tick_delay/tick_delay.yy",},

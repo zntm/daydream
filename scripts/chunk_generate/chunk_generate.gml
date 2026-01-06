@@ -16,22 +16,14 @@ function chunk_generate(_chunk)
         return ((_a.x * 0xffff) + _a.y) - ((_b.x * 0xffff) + _b.y);
     }
     
-    static __structure_list_rectangle = ds_list_create();
-    static __structure_list = ds_list_create();
-    
-    static __structure_array = [];
-    
-    var _structure_rectangle_length = collision_rectangle_list(
+    var __structure_array = global.structure_pool.query_range(
         _chunk.x - (TILE_SIZE / 2),
         _chunk.y - (TILE_SIZE / 2),
         _chunk.x - (TILE_SIZE / 2) + CHUNK_SIZE_DIMENSION,
-        _chunk.y - (TILE_SIZE / 2) + CHUNK_SIZE_DIMENSION,
-        obj_Structure,
-        false,
-        true,
-        __structure_list_rectangle,
-        false
+        _chunk.y - (TILE_SIZE / 2) + CHUNK_SIZE_DIMENSION
     );
+    
+    var _structure_rectangle_length = array_length(__structure_array);
     
     var _item_data = global.item_data;
     
@@ -39,12 +31,6 @@ function chunk_generate(_chunk)
     var _structure_data = global.structure_data;
     
     var _world_save_data = global.world_save_data;
-    
-    array_resize(__structure_array, _structure_rectangle_length);
-    for (var i = 0; i < _structure_rectangle_length; ++i)
-    {
-        __structure_array[@ i] = __structure_list_rectangle[| i];
-    }
     
     var _world_data = global.world_data[$ _world_save_data.dimension];
     var _world_height = _world_data.get_world_height();
@@ -340,7 +326,7 @@ function chunk_generate(_chunk)
                     
                     if (++_inst.count >= _rectangle)
                     {
-                        instance_destroy(_inst);
+                        global.structure_pool.release(_inst);
                     }
                 }
             }
@@ -348,8 +334,7 @@ function chunk_generate(_chunk)
     }
 
     
-    ds_list_clear(__structure_list_rectangle);
-    ds_list_clear(__structure_list);
+
     
     for (var i = 0; i < CHUNK_SIZE; ++i)
     {

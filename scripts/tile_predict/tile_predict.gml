@@ -3,9 +3,9 @@ function tile_predict(_x, _y, _z)
     var _world_seed = global.world_save_data.seed;
     var _world_data = global.world_data[$ global.world_save_data.dimension];
     
-    var _inst = instance_position(_x * TILE_SIZE, _y * TILE_SIZE, obj_Structure);
+    var _inst = global.structure_pool.query_position(_x * TILE_SIZE, _y * TILE_SIZE);
     
-    if (instance_exists(_inst))
+    if (_inst != noone)
     {
         var _xscale = _inst.image_xscale;
         var _yscale = _inst.image_yscale;

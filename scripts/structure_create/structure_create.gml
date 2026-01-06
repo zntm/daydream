@@ -52,16 +52,5 @@ function structure_create(_x, _y, _id, _seed)
     _x += (ceil(_width  / 2) + _xoffset) * TILE_SIZE;
     _y += (ceil(_height / 2) + _yoffset) * TILE_SIZE;
     
-    with (instance_create_layer(_x, _y, "Instances", obj_Structure))
-    {
-        image_xscale = _width;
-        image_yscale = _height;
-        
-        structure_xrelative = ceil(bbox_left / TILE_SIZE);
-        structure_yrelative = ceil(bbox_top  / TILE_SIZE);
-        
-        structure_id = _id;
-        
-        count = 0;
-    }
+    global.structure_pool.acquire(_x, _y, _width, _height, _id);
 }
