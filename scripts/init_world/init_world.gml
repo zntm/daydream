@@ -6,6 +6,22 @@
 
 global.world_data = {}
 
+// Region-based world generation system
+// Initialized with defaults, can be overridden by world config
+global.region_generator = new RegionGenerator({
+    cell_size: 256,
+    warp_scale: 0.008,
+    warp_power: 48
+}).set_regions(region_create_defaults());
+
+// Density-based terrain generator
+// Overhauls terrain shaping to support 3D features (overhangs, floating islands)
+global.terrain_generator = new TerrainGenerator({
+    base_surface_y: 400,
+    noise_scale: 0.02,
+    gradient_strength: 0.015
+});
+
 function init_world(_directory, _namespace = "phantasia", _type = 0)
 {
     var _biome_data = global.biome_data;

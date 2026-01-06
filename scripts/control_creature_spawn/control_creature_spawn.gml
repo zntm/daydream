@@ -51,7 +51,10 @@ function control_creature_spawn()
             return false; // Too many creatures in this area
         }
         
-        var _biome = _biome_data[$ bg_get_biome(_tile_x, _tile_y)];
+        var _biome_id = bg_get_biome(_tile_x, _tile_y);
+        var _biome = _biome_data[$ _biome_id];
+        
+        if (_biome == undefined) return false;
         
         var _spawn = _biome.get_creature();
         var _spawn_length = _biome.get_creature_length();

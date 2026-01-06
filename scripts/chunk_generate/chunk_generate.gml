@@ -339,134 +339,59 @@ function chunk_generate(_chunk)
     for (var i = 0; i < CHUNK_SIZE; ++i)
     {
         var _world_x = _chunk.chunk_xstart + i;
-        
         var _inst_x = _world_x * TILE_SIZE;
         
+        // 1. Resolve Region
+        var _region = global.region_generator.get_region(_world_x, 0, 0, _world_seed);
+        
+        // 2. Resolve Surface Height (use old working worldgen function)
         var _surface_height = __surface_height[i];
+        var _cave_start = worldgen_get_cave_start(_world_x, _world_seed, _world_data);
         
-        var _cave_bit = __cave_bit[i];
-        
-        var _xorshift = xorshift(_world_seed ^ ((_world_x + _chunk.chunk_ystart) * _surface_height));
-        
-        var _heat_surface = __get_heat_inline(_world_x, 0, _surface_heat_noise_scale, _surface_heat_offset, _surface_heat_range, _surface_biome_octaves, _surface_heat_spline_x, _surface_heat_spline_y);
-        var _humidity_surface = __get_humidity_inline(_world_x, 0, _surface_humidity_noise_scale, _surface_humidity_offset, _surface_humidity_range, _surface_humidity_octaves, _surface_humidity_spline_x, _surface_humidity_spline_y);
-        
-        var _surface_biome = _surface_biome_map[(_humidity_surface << WORLDGEN_SIZE_HEAT_BIT) | (_heat_surface)];
+        // Get Surface Biome from Region
+        var _surface_biome_id = _region.get_surface_biome_id();
+        var _surface_biome_data = global.biome_data[$ _surface_biome_id];
+        var _sea_level = 450; // default sea level, effectively overridden by liquid placement logic
         
         for (var j = 0; j < CHUNK_SIZE; ++j)
         {
             var _world_y = _chunk.chunk_ystart + j;
-            
-            var _heat_cave = __get_cave_heat_inline(_world_x, _world_y, _cave_heat_enabled, _cave_heat_noise_scale_x, _cave_heat_noise_scale_y, _cave_heat_range, _cave_heat_octaves);
-            var _humidity_cave = __get_cave_humidity_inline(_world_x, _world_y, _cave_humidity_enabled, _cave_humidity_noise_scale_x, _cave_humidity_noise_scale_y, _cave_humidity_offset_y, _cave_humidity_range, _cave_humidity_octaves);
-            
             var _inst_y = _world_y * TILE_SIZE;
-            
             var _skip_z = __skip_z_array[i + (j * CHUNK_SIZE)];
             
+            // Use cave bit array for cave detection (bit 1 = current position, offset by 1 for alignment)
+            var _is_cave = (__cave_bit[i] >> (j + 1)) & 1;
+            var _is_cave_above = (__cave_bit[i] >> j) & 1;
+            
+            // Skip if above surface and not in cave
+            if (_world_y < _surface_height) continue;
+            
+            // Get cave biome if underground
+            var _depth_from_surface = _world_y - _surface_height;
             var _cave_biome = undefined;
-            var _biome_data = _biome_data_struct[$ _surface_biome];
-            var _sea_level = _surface_start;
-            
-            if !(_skip_z & (1 << CHUNK_DEPTH_DEFAULT)) && (_world_y <= _sky_threshold) && _sky_biome_enabled
+            if (_depth_from_surface >= 8)
             {
-                var _is_sky_biome = worldgen_get_sky_island(_world_x, _world_y, _world_seed, _world_data);
-                
-                if (_is_sky_biome)
-                {
-                    var _sky_biome_data = _biome_data_struct[$ _sky_biome_id];
-                    
-                    if (_sky_biome_data != undefined)
-                    {
-                        var _is_above_sky = worldgen_get_sky_island(_world_x, _world_y - 1, _world_seed, _world_data);
-                        var _is_below_sky = worldgen_get_sky_island(_world_x, _world_y + 1, _world_seed, _world_data);
-                        
-                        var _tile_seed = abs(_world_x * 73856093) ^ abs(_world_y * 19349663) ^ _world_seed;
-                        var _tile_id;
-                        
-                        if (!_is_above_sky)
-                        {
-                            _tile_id = _sky_biome_data.get_tile_top_layer_base(_tile_seed);
-                        }
-                        else if (!_is_below_sky)
-                        {
-                            _tile_id = _sky_biome_data.get_tile_bottom_layer_base(_tile_seed);
-                        }
-                        else
-                        {
-                            _tile_id = _sky_biome_data.get_tile_middle_layer_base(_tile_seed);
-                        }
-                        
-                        if (_tile_id != TILE_EMPTY)
-                        {
-                            var _data = _item_data[$ _tile_id];
-                            
-                            if (_data != undefined)
-                            {
-                                ++_chunk.chunk_count[@ CHUNK_DEPTH_DEFAULT];
-                                
-                                var _placement_index = _data.get_placement_index();
-                                var _placement_index_offset = _data.get_placement_index_offset();
-                                
-                                _chunk.chunk[@ (CHUNK_DEPTH_DEFAULT << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_tile_id)
-                                    .set_index(is_struct(_placement_index) ? smart_value(_placement_index) : _placement_index)
-                                    .set_index_offset(is_struct(_placement_index_offset) ? smart_value(_placement_index_offset) : _placement_index_offset);
-                                
-                                _chunk.chunk_display |= 1 << CHUNK_DEPTH_DEFAULT;
-                                
-                                if (_data.has_type(ITEM_TYPE_BIT.SOLID | ITEM_TYPE_BIT.UNTOUCHABLE)) && (!_data.is_transparent())
-                                {
-                                    _chunk.chunk_covered[@ i] |= 1 << j;
-                                }
-                            }
-                        }
-                    }
-                }
+                _cave_biome = worldgen_get_biome_cave(_world_x, _world_y, _surface_height, _world_seed);
             }
             
-            if (_world_y < _surface_height) && (_world_y >= _sea_level) && (_biome_data.is_ocean())
+            // --- BASE TILE ---
+            if !(_skip_z & (1 << CHUNK_DEPTH_DEFAULT))
             {
-                if !(_skip_z & (1 << CHUNK_DEPTH_LIQUID))
+                if (!_is_cave)
                 {
-                    var _water_id = "phantasia:water";
-                    var _water_data = _item_data[$ _water_id];
+                    // Use old working worldgen function for proper grass/dirt/stone detection
+                    // Note: _is_cave_above tells us if the block above is AIR (cave/sky).
+                    // If true, and we are solid, we are the surface layer.
+                    var _tile_id = worldgen_get_tile_base(_world_x, _world_y, _surface_biome_id, _cave_biome, _surface_height, _is_cave_above, _world_seed);
                     
-                    if (_water_data != undefined)
+                    if (_tile_id != TILE_EMPTY)
                     {
-                        ++_chunk.chunk_count[@ CHUNK_DEPTH_LIQUID];
-                        
-                        _chunk.chunk[@ (CHUNK_DEPTH_LIQUID << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_water_id)
-                            .set_component("level", 8);
-                        
-                        _chunk.chunk_display |= 1 << CHUNK_DEPTH_LIQUID;
-                    }
-                }
-            }
-            
-            if (_world_y >= _surface_height)
-            {
-                _cave_biome = worldgen_get_biome_cave(_world_x, _world_y, _surface_height, _world_seed, _world_data, _heat_cave, _humidity_cave);
-                
-                if !(_skip_z & (1 << CHUNK_DEPTH_DEFAULT)) && !(_cave_bit & (1 << (j + 1)))
-                {
-                    var _tile_base = worldgen_get_tile_base(_world_x, _world_y, _surface_biome, _cave_biome, _surface_height, _cave_bit & (1 << j), _world_seed);
-                    
-                    if (_tile_base != TILE_EMPTY)
-                    {
-                        var _id = _tile_base;
-                        var _data = _item_data[$ _id];
-                        
+                        var _data = _item_data[$ _tile_id];
                         if (_data != undefined)
                         {
                             ++_chunk.chunk_count[@ CHUNK_DEPTH_DEFAULT];
-                            
-                            var _placement_index = _data.get_placement_index();
-                            var _placement_index_offset = _data.get_placement_index_offset();
-                            
-                            _chunk.chunk[@ (CHUNK_DEPTH_DEFAULT << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_id)
-                                .set_index(is_struct(_placement_index) ? smart_value(_placement_index) : _placement_index)
-                                .set_index_offset(is_struct(_placement_index_offset) ? smart_value(_placement_index_offset) : _placement_index_offset);
-                            
+                            var _idx = (is_struct(_data.get_placement_index()) ? smart_value(_data.get_placement_index()) : _data.get_placement_index());
+                            _chunk.chunk[@ (CHUNK_DEPTH_DEFAULT << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_tile_id).set_index(_idx);
                             _chunk.chunk_display |= 1 << CHUNK_DEPTH_DEFAULT;
                             
                             if (_data.has_type(ITEM_TYPE_BIT.SOLID | ITEM_TYPE_BIT.UNTOUCHABLE)) && (!_data.is_transparent())
@@ -476,109 +401,56 @@ function chunk_generate(_chunk)
                         }
                     }
                 }
+            }
+            
+            // --- WALLS ---
+            if !(_skip_z & (1 << CHUNK_DEPTH_WALL))
+            {
+                var _wall_id = worldgen_get_tile_wall(_world_x, _world_y, _surface_biome_id, _cave_biome, _surface_height, _world_seed);
                 
-                if !(_skip_z & (1 << CHUNK_DEPTH_WALL))
+                if (_wall_id != TILE_EMPTY)
                 {
-                    var _tile_wall = worldgen_get_tile_wall(_world_x, _world_y, _surface_biome, _cave_biome, _surface_height, _world_seed);
-                    
-                    if (_tile_wall != TILE_EMPTY)
+                    var _data = _item_data[$ _wall_id];
+                    if (_data != undefined)
                     {
-                        var _id = _tile_wall;
-                        var _data = _item_data[$ _id];
+                        ++_chunk.chunk_count[@ CHUNK_DEPTH_WALL];
+                        var _idx = (is_struct(_data.get_placement_index()) ? smart_value(_data.get_placement_index()) : _data.get_placement_index());
+                        _chunk.chunk[@ (CHUNK_DEPTH_WALL << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_wall_id).set_index(_idx);
+                        _chunk.chunk_display |= 1 << CHUNK_DEPTH_WALL;
                         
-                        if (_data != undefined)
+                        if (_data.has_type(ITEM_TYPE_BIT.SOLID | ITEM_TYPE_BIT.UNTOUCHABLE)) && (!_data.is_transparent())
                         {
-                            ++_chunk.chunk_count[@ CHUNK_DEPTH_WALL];
-                            
-                            var _placement_index = _data.get_placement_index();
-                            var _placement_index_offset = _data.get_placement_index_offset();
-                            
-                            _chunk.chunk[@ (CHUNK_DEPTH_WALL << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_id)
-                                .set_index(is_struct(_placement_index) ? smart_value(_placement_index) : _placement_index)
-                                .set_index_offset(is_struct(_placement_index_offset) ? smart_value(_placement_index_offset) : _placement_index_offset);
-                            
-                            _chunk.chunk_display |= 1 << CHUNK_DEPTH_WALL;
-                            
-                            if (_data.has_type(ITEM_TYPE_BIT.SOLID | ITEM_TYPE_BIT.UNTOUCHABLE)) && (!_data.is_transparent())
-                            {
-                                _chunk.chunk_covered[@ i] |= 1 << j;
-                            }
-                        }
-                    }
-                }
-                
-                if !(_skip_z & (1 << CHUNK_DEPTH_LIQUID)) && (_cave_bit & (1 << (j + 1)))
-                {
-                    var _aquifer = worldgen_get_aquifer(_world_x, _world_y, _surface_height, _world_seed, _world_data);
-                    
-                    if (_aquifer != undefined)
-                    {
-                        var _id = _aquifer.type;
-                        var _data = _item_data[$ _id];
-                        
-                        if (_data != undefined)
-                        {
-                            ++_chunk.chunk_count[@ CHUNK_DEPTH_LIQUID];
-                            
-                            _chunk.chunk[@ (CHUNK_DEPTH_LIQUID << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_id)
-                                .set_component("level", _aquifer.fill_level);
-                            
-                            _chunk.chunk_display |= 1 << CHUNK_DEPTH_LIQUID;
-                        }
-                    }
-                    else
-                    {
-                        static __LAVA_OCEAN_DEPTH = 32;
-                        var _depth_from_bottom = _world_height - _world_y;
-                        
-                        if (_depth_from_bottom <= __LAVA_OCEAN_DEPTH && _depth_from_bottom > 3)
-                        {
-                            var _lava_id = "phantasia:lava";
-                            var _lava_data = _item_data[$ _lava_id];
-                            
-                            if (_lava_data != undefined)
-                            {
-                                ++_chunk.chunk_count[@ CHUNK_DEPTH_LIQUID];
-                                
-                                _chunk.chunk[@ (CHUNK_DEPTH_LIQUID << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_lava_id)
-                                    .set_component("level", 8);
-                                
-                                _chunk.chunk_display |= 1 << CHUNK_DEPTH_LIQUID;
-                            }
+                            _chunk.chunk_covered[@ i] |= 1 << j;
                         }
                     }
                 }
             }
             
-            var _z = ((_xorshift & (1 << j)) ? CHUNK_DEPTH_FOLIAGE_FRONT : CHUNK_DEPTH_FOLIAGE_BACK);
+            // Foliage / Decorations (when above solid ground)
+            // Check if current is cave (air) and below is solid
+            // Bit j+2 is row BELOW
+            var _is_cave_below = (__cave_bit[i] >> (j + 2)) & 1;
             
-            if !(_skip_z & (1 << _z)) && (_world_y >= _surface_height - 1)
+            if (_is_cave && !_is_cave_below) // Air above solid = floor for foliage
             {
-                var _cave_biome_next = worldgen_get_biome_cave(_world_x, _world_y + 1, _surface_height, _world_seed, _world_data, _heat_cave, _humidity_cave);
-                
-                if (_cave_bit & (1 << (j + 1))) && !(_cave_bit & (1 << (j + 2)))
+                var _z = ((xorshift(_world_seed ^ (_world_x * 457)) & (1 << j)) ? CHUNK_DEPTH_FOLIAGE_FRONT : CHUNK_DEPTH_FOLIAGE_BACK);
+                if !(_skip_z & (1 << _z)) 
                 {
-                    var _tile_base = worldgen_get_tile_base(_world_x, _world_y + 1, _surface_biome, _cave_biome_next, _surface_height, true, _world_seed);
+                    // Get the base tile for foliage placement check
+                    var _tile_base = worldgen_get_tile_base(_world_x, _world_y + 1, _surface_biome_id, _cave_biome, _surface_height, true, _world_seed);
                     
-                    var _tile_foliage = worldgen_get_tile_foliage(_world_x, _world_y, _surface_biome, _cave_biome, _tile_base, _surface_height, _world_seed);
+                    var _tile_foliage = worldgen_get_tile_foliage(_world_x, _world_y, _surface_biome_id, _cave_biome, _tile_base, _surface_height, _world_seed);
                     
                     if (_tile_foliage != TILE_EMPTY)
                     {
-                        var _id = _tile_foliage;
-                        var _data = _item_data[$ _id];
-                        
+                        var _data = _item_data[$ _tile_foliage];
                         if (_data != undefined)
                         {
                             ++_chunk.chunk_count[@ _z];
+                            var _flip = ((_data.can_flip_on_x()) && (xorshift(_world_seed ^ (_world_x * 997)) & 1)) ? -1 : 1;
                             
-                            var _placement_index = _data.get_placement_index();
-                            var _placement_index_offset = _data.get_placement_index_offset();
-                            
-                            _chunk.chunk[@ (_z << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_id)
-                                .set_xscale(((_data.can_flip_on_x()) && (_xorshift & (1 << (CHUNK_SIZE + j)))) ? -1 : 1)
-                                .set_index(is_struct(_placement_index) ? smart_value(_placement_index) : _placement_index)
-                                .set_index_offset(is_struct(_placement_index_offset) ? smart_value(_placement_index_offset) : _placement_index_offset);
-                            
+                            var _idx = (is_struct(_data.get_placement_index()) ? smart_value(_data.get_placement_index()) : _data.get_placement_index());
+                            _chunk.chunk[@ (_z << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_tile_foliage).set_index(_idx).set_xscale(_flip);
                             _chunk.chunk_display |= 1 << _z;
                         }
                     }
@@ -589,6 +461,7 @@ function chunk_generate(_chunk)
         obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.LIGHTING;
     }
     
+    // Occlusion pass
     for (var i = 0; i < CHUNK_SIZE; ++i)
     {
         for (var j = 0; j < CHUNK_SIZE; ++j)
@@ -598,10 +471,7 @@ function chunk_generate(_chunk)
             
             for (var _z = CHUNK_DEPTH_DEFAULT; _z >= CHUNK_DEPTH_WALL; --_z)
             {
-                if (_has_opaque_above)
-                {
-                    _occluded |= (1 << _z);
-                }
+                if (_has_opaque_above) _occluded |= (1 << _z);
                 
                 var _tile = _chunk.chunk[tile_index_xyz(i, j, _z)];
                 if (_tile != TILE_EMPTY)
@@ -613,7 +483,6 @@ function chunk_generate(_chunk)
                     }
                 }
             }
-            
             _chunk.chunk_occluded[@ tile_index_xy(i, j)] = _occluded;
         }
     }

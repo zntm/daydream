@@ -43,6 +43,7 @@ function worldgen_get_tile_base(_x, _y, _surface_biome, _cave_biome, _surface_he
         surface_height: _surface_height,
         noise: _noise,
         cave_above: _cave_above,
+        air_above: (_cave_above ? 1 : 0),
         cave_biome: _cave_biome
         // Add more context properties here as needed by rules
     }

@@ -61,7 +61,14 @@ function control_structure(_x, _y)
             // If current tile (bit 1) is not cave
             if (_queue & 0b010) continue;
             
-            var _data = _biome_data[$ bg_get_biome(i, j, _surface_height)];
+            var _biome_id = bg_get_biome(i, j, _surface_height);
+            var _data = _biome_data[$ _biome_id];
+            
+            if (_data == undefined)
+            {
+                _data = _biome_data[$ "phantasia:surface/forest"];
+                if (_data == undefined) continue;
+            }
             
             var _length = _data.get_structure_length();
             

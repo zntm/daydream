@@ -18,6 +18,9 @@ function worldgen_get_tile_foliage(_x, _y, _surface_biome, _cave_biome, _top_til
 
     var _foliage = global.biome_data[$ _biome_id];
     
+    // Safety check
+    if (_foliage == undefined) return TILE_EMPTY;
+    
     // NEW: Check for MaterialProvider-based foliage
     var _provider = _foliage.get_tile_foliage();
     

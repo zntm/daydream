@@ -126,6 +126,30 @@ function RuleCaveBiome(_biome_id) : MaterialRule() constructor
     }
 }
 
+/// @desc Checks for specific sub-biome from ZoneData (e.g. "cave_lush" even if Zone is Desert)
+function RuleSubBiome(_sub_biome_id) : MaterialRule() constructor
+{
+    ___sub_biome_id = _sub_biome_id;
+    
+    static check = function(_context)
+    {
+        return (_context[$ "sub_biome"] == ___sub_biome_id);
+    }
+}
+
+/// @desc Checks for specific zone (e.g. only spawn in "desert" zone)
+function RuleZone(_zone_id) : MaterialRule() constructor
+{
+    ___zone_id = _zone_id;
+    
+    static check = function(_context)
+    {
+        var _zone = _context[$ "zone"];
+        if (_zone == undefined) return false;
+        return (_zone.get_id() == ___zone_id);
+    }
+}
+
 /// @desc Checks for random chance based on position
 function RuleChance(_chance) : MaterialRule() constructor
 {
