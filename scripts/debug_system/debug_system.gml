@@ -175,7 +175,7 @@ function debug_step()
         var _camera_height = global.camera_height;
         
         var _semver = program_get_version();
-        
+        /*
         var _text = 
             "Performance:\n" +
             $"FPS: {fps}/{fps_real} ({string_format(1000 / max(1, fps_real), 0, 2)}ms)\n" +
@@ -205,7 +205,7 @@ function debug_step()
         if (instance_exists(obj_Game_Control))
         {
             obj_Game_Control.debug_text = _text;
-        }
+        }*/
         
         global.dbg_settings.fps = fps;
         global.dbg_settings.fps_real = fps_real;
