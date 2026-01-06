@@ -26,7 +26,7 @@ function worldgen_get_tile_foliage(_x, _y, _surface_biome, _cave_biome, _top_til
         var _noise = open_simplex_noise(_x * 0.1, _y * 0.1 + (_seed * 200), 1.0, 1);
         var _context = {
             x: _x, y: _y, surface_height: _surface_height, noise: _noise, top_tile: _top_tile
-        };
+        }
         return _provider.get_tile(_context);
     }
 

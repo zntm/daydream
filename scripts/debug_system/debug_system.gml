@@ -152,7 +152,7 @@ function debug_init()
         sys_cpu_usage: 0,
         proc_cpu_usage: 0,
         gpu_usage: 0
-    };
+    }
     global.debug_sysinfo_index = 0;
     global.debug_sysinfo_text = "";
     global.debug_sysinfo_timer = 0;

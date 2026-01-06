@@ -45,7 +45,7 @@ function worldgen_get_tile_base(_x, _y, _surface_biome, _cave_biome, _surface_he
         cave_above: _cave_above,
         cave_biome: _cave_biome
         // Add more context properties here as needed by rules
-    };
+    }
     
     var _biome_data = global.biome_data;
     

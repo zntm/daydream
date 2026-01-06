@@ -24,7 +24,7 @@ function __json_to_provider(_json_data)
                 for (var _j = 0; _j < array_length(_json_rules); ++_j)
                 {
                     var _rule_data = _json_rules[_j];
-                    var _p = _rule_data[$ "params"] ?? {};
+                    var _p = _rule_data[$ "params"] ?? {}
                     var _rule = undefined;
                     
                     switch (_rule_data.type)

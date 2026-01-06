@@ -10,10 +10,10 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
     // Initialization
     ___background = undefined;
     ___map_colour = 0;
-    ___sky_colour = {};
+    ___sky_colour = {}
     ___sky_colour_names = [];
     ___sky_colour_length = 0;
-    ___light_colour = {};
+    ___light_colour = {}
     ___music = [];
     
     ___tile_top_layer = undefined;
@@ -170,7 +170,7 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
                 time: _[$ "time"],
                 tile: _[$ "tile"],
                 variant: smart_value_parse(_[$ "variant"])
-            };
+            }
         }
         return self;
     }
