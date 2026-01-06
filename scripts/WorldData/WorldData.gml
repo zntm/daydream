@@ -346,6 +346,7 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         }
         
         buffer_delete(__biome_map_buffer);
+        __biome_map_buffer = -1;
         
         ___surface_biome_heat = _surface_biome.heat;
         ___surface_biome_humidity = _surface_biome.humidity;

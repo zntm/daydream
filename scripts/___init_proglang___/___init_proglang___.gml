@@ -363,3 +363,19 @@ global.proglang_classes[$ "EventDataTileFallingLand"] = EventDataTileFallingLand
 
 global.proglang_classes[$ "Tile"] = Tile;
 global.proglang_classes[$ "Inventory"] = Inventory;
+
+// World Generation Classes
+global.proglang_classes[$ "MaterialProvider"] = MaterialProvider;
+global.proglang_classes[$ "MaterialRule"] = MaterialRule;
+global.proglang_classes[$ "RuleDepth"] = RuleDepth;
+global.proglang_classes[$ "RuleAirAbove"] = RuleAirAbove;
+global.proglang_classes[$ "RuleCaveBiome"] = RuleCaveBiome;
+global.proglang_classes[$ "RuleChance"] = RuleChance;
+global.proglang_classes[$ "RuleGenerateOn"] = RuleGenerateOn;
+
+global.proglang_classes[$ "PatternScanner"] = PatternScanner;
+global.proglang_classes[$ "WorldPattern"] = WorldPattern;
+global.proglang_classes[$ "PatternTreeRootOverCave"] = PatternTreeRootOverCave;
+
+global.proglang_classes[$ "BiomeData"] = BiomeData;
+global.proglang_classes[$ "WorldData"] = WorldData;

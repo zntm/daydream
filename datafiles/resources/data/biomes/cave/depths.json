@@ -82,52 +82,49 @@
     ],
     "tile": {
         "top_layer": {
-            "base": [
+            "items": [
                 {
-                    "id": "phantasia:nightrock"
-                }
-            ],
-            "wall": [
-                {
-                    "id": "phantasia:nightrock_wall",
-                    "weight": 4
+                    "id": "phantasia:nightrock",
+                    "rules": []
                 },
                 {
-                    "id": "$EMPTY"
+                    "id": "phantasia:nightrock_wall",
+                    "rules": [],
+                    "noise_min": 0,
+                    "noise_max": 204
                 }
-            ]
+            ],
+            "default_id": "phantasia:nightrock"
         },
         "middle_layer": {
-            "base": [
+            "items": [
                 {
-                    "id": "phantasia:nightrock"
-                }
-            ],
-            "wall": [
-                {
-                    "id": "phantasia:nightrock_wall",
-                    "weight": 4
+                    "id": "phantasia:nightrock",
+                    "rules": []
                 },
                 {
-                    "id": "$EMPTY"
+                    "id": "phantasia:nightrock_wall",
+                    "rules": [],
+                    "noise_min": 0,
+                    "noise_max": 204
                 }
-            ]
+            ],
+            "default_id": "phantasia:nightrock"
         },
         "bottom_layer": {
-            "base": [
+            "items": [
                 {
-                    "id": "phantasia:nightrock"
-                }
-            ],
-            "wall": [
-                {
-                    "id": "phantasia:nightrock_wall",
-                    "weight": 4
+                    "id": "phantasia:nightrock",
+                    "rules": []
                 },
                 {
-                    "id": "$EMPTY"
+                    "id": "phantasia:nightrock_wall",
+                    "rules": [],
+                    "noise_min": 0,
+                    "noise_max": 204
                 }
-            ]
+            ],
+            "default_id": "phantasia:nightrock"
         }
     }
 }

@@ -8,7 +8,7 @@ export class Biome {
     private sky_colour: any;
     private light_colour: any;
     private tile: {
-        [key: string]: BiomeTile;
+        [key: string]: MaterialProvider;
     };
     private music?: Sound[];
     private creatures?: BiomeCreature[];
@@ -16,7 +16,7 @@ export class Biome {
     private structures?: BiomeStructure[];
     private terrain_modifier?: BiomeTerrainModifier;
     private is_ocean?: boolean;
-    private shore_tiles?: BiomeTile;
+    private shore_tiles?: MaterialProvider;
     private is_skyland?: boolean;
     private salt?: number;
 
@@ -26,7 +26,7 @@ export class Biome {
         skyColor: any,
         lightColor: any,
         tile: {
-            [key: string]: BiomeTile;
+            [key: string]: MaterialProvider;
         },
     ) {
         this.background = background;
@@ -72,7 +72,7 @@ export class Biome {
         return this;
     }
 
-    setShoreTiles(tiles: BiomeTile) {
+    setShoreTiles(tiles: MaterialProvider) {
         this.shore_tiles = tiles;
 
         return this;
@@ -93,11 +93,24 @@ export class Biome {
 
 export class BiomeTerrainModifier {
     private height_offset: number;
-    private amplitude_scale?: number;
+    private noise_scale?: number;
+    private amplitude_min?: number;
+    private amplitude_max?: number;
+    private octaves?: number;
 
-    constructor(heightOffset: number, amplitudeScale: number = 1.0) {
+    constructor(
+        heightOffset: number, 
+        noiseScale?: number,
+        amplitudeMin?: number,
+        amplitudeMax?: number,
+        octaves?: number
+    ) {
         this.height_offset = heightOffset;
-        if (amplitudeScale !== 1.0) this.amplitude_scale = amplitudeScale;
+        
+        if (noiseScale !== undefined) this.noise_scale = noiseScale;
+        if (amplitudeMin !== undefined) this.amplitude_min = amplitudeMin;
+        if (amplitudeMax !== undefined) this.amplitude_max = amplitudeMax;
+        if (octaves !== undefined) this.octaves = octaves;
     }
 }
 
@@ -124,17 +137,43 @@ export class BiomeSkyColor {
     }
 }
 
-export class TileEntry {
-    private id: string;
-    private weight?: number;
-    private noise_min?: number;
-    private noise_max?: number;
-    private context?: string[];
+export class MaterialRule {
+    private type: string;
+    private params: any;
 
-    constructor(id: string, weight: number = 1, context?: string[]) {
+    constructor(type: string, params: any = {}) {
+        this.type = type;
+        this.params = params;
+    }
+}
+
+export class RuleDepth extends MaterialRule {
+    constructor(min: number, max: number) {
+        super("RuleDepth", { min, max });
+    }
+}
+
+export class RuleAirAbove extends MaterialRule {
+    constructor(min_blocks: number) {
+        super("RuleAirAbove", { min_blocks });
+    }
+}
+
+export class RuleCaveBiome extends MaterialRule {
+    constructor(biome_id: string) {
+        super("RuleCaveBiome", { biome_id });
+    }
+}
+
+export class MaterialItem {
+    id: string;
+    rules: MaterialRule[];
+    noise_min?: number;
+    noise_max?: number;
+
+    constructor(id: string, rules: MaterialRule[] = []) {
         this.id = id;
-        if (weight !== 1) this.weight = weight;
-        if (context) this.context = context;
+        this.rules = rules;
     }
 
     setNoiseRange(min: number, max: number) {
@@ -144,18 +183,29 @@ export class TileEntry {
     }
 }
 
-export class BiomeTile {
-    private base: TileEntry[];
-    private wall: TileEntry[];
+export class MaterialProvider {
+    items: MaterialItem[];
+    default_id?: string;
 
-    constructor(base: string | TileEntry[], wall: string | TileEntry[]) {
-        // Support both legacy string format and new array format
-        this.base = typeof base === "string" 
-            ? [new TileEntry(base)] 
-            : base;
-        this.wall = typeof wall === "string" 
-            ? [new TileEntry(wall)] 
-            : wall;
+    constructor() {
+        this.items = [];
+    }
+
+    addItem(id: string, rules: MaterialRule[] = []) {
+        this.items.push(new MaterialItem(id, rules));
+        return this;
+    }
+
+    addItemNoise(id: string, min: number, max: number, rules: MaterialRule[] = []) {
+        const item = new MaterialItem(id, rules);
+        item.setNoiseRange(min, max);
+        this.items.push(item);
+        return this;
+    }
+
+    setDefault(id: string) {
+        this.default_id = id;
+        return this;
     }
 }
 

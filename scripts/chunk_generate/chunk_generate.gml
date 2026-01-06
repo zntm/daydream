@@ -299,6 +299,25 @@ function chunk_generate(_chunk)
         structure_generate(__structure_array[i], _world_seed, _item_data, _structure_data, _natural_structure_data);
     }
     
+    // PATTERN SCANNING PASS
+    // ---------------------------------------------------------
+    // Run pattern scanners defined in WorldData (or a global registry)
+    // This allows for procedural placement of props based on the generated terrain context
+    static __pattern_scanner = new PatternScanner()
+        .add_pattern(new PatternTreeRootOverCave());
+        
+    var _pattern_matches = __pattern_scanner.scan_chunk(_chunk, _world_data, _world_seed);
+    if (array_length(_pattern_matches) > 0)
+    {
+        for (var p = 0; p < array_length(_pattern_matches); ++p)
+        {
+            var _match = _pattern_matches[p];
+            // Instantiate prop or modify chunk directly
+            _match.pattern.generate(_match.x, _match.y, _chunk);
+        }
+    }
+    // ---------------------------------------------------------
+    
     // Check if _chunk.chunk is empty (above surface and no structures)
     // ALSO check if _chunk.chunk is in sky biome zone - don't skip those
     var _in_sky_zone = (_chunk.chunk_ystart <= _sky_threshold) && _sky_biome_enabled;

@@ -97,57 +97,56 @@
     ],
     "terrain_modifier": {
         "height_offset": 8,
-        "amplitude_scale": 0.8
+        "noise_scale": 0.015625,
+        "amplitude_min": 30,
+        "amplitude_max": 60,
+        "octaves": 4
     },
     "tile": {
         "top_layer": {
-            "base": [
+            "items": [
                 {
-                    "id": "phantasia:sand"
-                }
-            ],
-            "wall": [
-                {
-                    "id": "phantasia:sandstone_wall",
-                    "weight": 4
+                    "id": "phantasia:sand",
+                    "rules": []
                 },
                 {
-                    "id": "$EMPTY"
+                    "id": "phantasia:sandstone_wall",
+                    "rules": [],
+                    "noise_min": 0,
+                    "noise_max": 204
                 }
-            ]
+            ],
+            "default_id": "phantasia:sand"
         },
         "middle_layer": {
-            "base": [
+            "items": [
                 {
-                    "id": "phantasia:sand"
-                }
-            ],
-            "wall": [
-                {
-                    "id": "phantasia:sandstone_wall",
-                    "weight": 4
+                    "id": "phantasia:sand",
+                    "rules": []
                 },
                 {
-                    "id": "$EMPTY"
+                    "id": "phantasia:sandstone_wall",
+                    "rules": [],
+                    "noise_min": 0,
+                    "noise_max": 204
                 }
-            ]
+            ],
+            "default_id": "phantasia:sand"
         },
         "bottom_layer": {
-            "base": [
+            "items": [
                 {
-                    "id": "phantasia:sandstone"
-                }
-            ],
-            "wall": [
-                {
-                    "id": "phantasia:sandstone_wall",
-                    "weight": 3
+                    "id": "phantasia:sandstone",
+                    "rules": []
                 },
                 {
-                    "id": "$EMPTY",
-                    "weight": 2
+                    "id": "phantasia:sandstone_wall",
+                    "rules": [],
+                    "noise_min": 0,
+                    "noise_max": 153
                 }
-            ]
+            ],
+            "default_id": "phantasia:sandstone"
         }
     }
 }
