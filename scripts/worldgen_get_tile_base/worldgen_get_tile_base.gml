@@ -31,7 +31,25 @@ function worldgen_get_tile_base(_x, _y, _surface_biome, _cave_biome, _surface_he
         if (_bedrock_noise > (_bedrock_depth - 1) * 0.4) return "phantasia:bedrock";
     }
     
-    if (_y < _surface_height) return TILE_EMPTY;
+    var _overhang_threshold_tile = _world_data.get_cave_overhang_threshold_tile();
+    var _is_overhang_solid = false;
+    
+    if (_overhang_threshold_tile != undefined)
+    {
+        var _overhang_noise_scale = _world_data.get_cave_overhang_noise_scale();
+        var _overhang_noise = open_simplex_noise(_x * _overhang_noise_scale, _y * _overhang_noise_scale + (_seed * 293), 1.0, 2);
+        
+        if (_overhang_noise < _overhang_threshold_tile)
+        {
+             return TILE_EMPTY; // Void carve
+        }
+        else
+        {
+             if (_y < _surface_height) _is_overhang_solid = true;
+        }
+    }
+    
+    if (_y < _surface_height && !_is_overhang_solid) return TILE_EMPTY;
     
     // Generate context for MaterialProvider
     // Used for evaluating rules and noise-based placement

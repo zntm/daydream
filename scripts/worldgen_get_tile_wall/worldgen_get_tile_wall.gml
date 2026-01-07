@@ -11,6 +11,19 @@ function worldgen_get_tile_wall(_x, _y, _surface_biome, _cave_biome, _surface_he
     // Offset differently from base tiles to avoid identical patterns
     var _noise = open_simplex_noise(_x * _world_data.get_tile_variation_noise_scale(), _y * _world_data.get_tile_variation_noise_scale() + (_seed * 200), 1.0, 2);
     
+    // Overhang Generation check
+    var _overhang_threshold = _world_data.get_cave_overhang_threshold();
+    if (_overhang_threshold != undefined)
+    {
+        var _overhang_noise_scale = _world_data.get_cave_overhang_noise_scale();
+        var _overhang_noise = open_simplex_noise(_x * _overhang_noise_scale, _y * _overhang_noise_scale + (_seed * 293), 1.0, 2);
+        
+        if (_overhang_noise < _overhang_threshold)
+        {
+            return TILE_EMPTY;
+        }
+    }
+    
     var _biome_data = global.biome_data;
     
     if (_cave_biome != undefined)

@@ -518,7 +518,12 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         ___cave_transition_noise_scale_x = _cave[$ "transition_noise_scale_x"] ?? 0.02;
         ___cave_transition_noise_scale_y = _cave[$ "transition_noise_scale_y"] ?? 0.02;
         ___cave_transition_noise_range = _cave[$ "transition_noise_range"] ?? 255;
+        ___cave_transition_noise_range = _cave[$ "transition_noise_range"] ?? 255;
         ___cave_transition_noise_octaves = _cave[$ "transition_noise_octaves"] ?? 3;
+        
+        ___cave_overhang_threshold = _cave[$ "overhang_threshold"];
+        ___cave_overhang_threshold_tile = _cave[$ "overhang_threshold_tile"];
+        ___cave_overhang_noise_scale = _cave[$ "overhang_noise_scale"] ?? 0.05;
         
         // Depth smoothing spline for cave size
         var _depth_smoothing = _cave[$ "depth_smoothing"];
@@ -533,6 +538,21 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         }
         
         return self;
+    }
+
+    static get_cave_overhang_threshold = function()
+    {
+        return self[$ "___cave_overhang_threshold"];
+    }
+
+    static get_cave_overhang_threshold_tile = function()
+    {
+        return self[$ "___cave_overhang_threshold_tile"];
+    }
+
+    static get_cave_overhang_noise_scale = function()
+    {
+        return self[$ "___cave_overhang_noise_scale"];
     }
 
     static get_cave_breach_noise_scale_x = function()

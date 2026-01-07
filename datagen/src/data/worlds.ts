@@ -291,6 +291,9 @@ export class WorldCave {
     private transition_noise_scale_y?: number;
     private transition_noise_range?: number;
     private transition_noise_octaves?: number;
+    private overhang_threshold?: number;
+    private overhang_threshold_tile?: number;
+    private overhang_noise_scale?: number;
 
     constructor(
         start: Noise, 
@@ -309,7 +312,10 @@ export class WorldCave {
         transitionNoiseScaleX: number = 0.02,
         transitionNoiseScaleY: number = 0.02,
         transitionNoiseRange: number = 255,
-        transitionNoiseOctaves: number = 3
+        transitionNoiseOctaves: number = 3,
+        overhangThreshold?: number,
+        overhangThresholdTile?: number,
+        overhangNoiseScale: number = 0.05
     ) {
         this.start = start;
         this.system = system;
@@ -328,6 +334,9 @@ export class WorldCave {
         this.transition_noise_scale_y = transitionNoiseScaleY;
         this.transition_noise_range = transitionNoiseRange;
         this.transition_noise_octaves = transitionNoiseOctaves;
+        this.overhang_threshold = overhangThreshold;
+        this.overhang_threshold_tile = overhangThresholdTile;
+        this.overhang_noise_scale = overhangNoiseScale;
     }
 }
 
@@ -430,7 +439,25 @@ export default [
                 new SplinePoint(0, 0, SplineEasing.EaseOut),   // At surface: no caves (ease out for gradual start)
                 new SplinePoint(16, 0.3),                      // 16 blocks deep: 30% cave size
                 new SplinePoint(64, 1),                        // 64 blocks deep: full caves
-            ])),
+                new SplinePoint(64, 1),                        // 64 blocks deep: full caves
+            ]),
+            0.015625, // noiseScale
+            242,      // breachThreshold
+            -8,       // breachDepth
+            220,      // transitionThreshold
+            0.03,     // breachNoiseScaleX
+            0.03,     // breachNoiseScaleY
+            1000,     // breachNoiseOffsetY
+            255,      // breachNoiseRange
+            2,        // breachNoiseOctaves
+            0.02,     // transitionNoiseScaleX
+            0.02,     // transitionNoiseScaleY
+            255,      // transitionNoiseRange
+            3,        // transitionNoiseOctaves
+            0.2,      // overhangThreshold
+            0.35,     // overhangThresholdTile
+            0.05      // overhangNoiseScale
+            ),
         ),
     ),
 ];

@@ -161,6 +161,10 @@
                 {
                     "position": 64,
                     "value": 1
+                },
+                {
+                    "position": 64,
+                    "value": 1
                 }
             ],
             "type": "spline"
@@ -177,7 +181,10 @@
         "transition_noise_scale_x": 0.02,
         "transition_noise_scale_y": 0.02,
         "transition_noise_range": 255,
-        "transition_noise_octaves": 3
+        "transition_noise_octaves": 3,
+        "overhang_threshold": 0.2,
+        "overhang_threshold_tile": 0.35,
+        "overhang_noise_scale": 0.05
     },
     "celestials": [
         {

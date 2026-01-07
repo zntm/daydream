@@ -365,7 +365,8 @@ function chunk_generate(_chunk)
             
             // Skip if above surface and not in cave
             // ALLOW surface-1 to process foliage on the ground
-            if (_world_y < _surface_height - 1) continue;
+            var _overhang_enabled = (_world_data.get_cave_overhang_threshold() != undefined);
+            if (!_overhang_enabled && _world_y < _surface_height - 1) continue;
             
             // Get cave biome if underground
             var _depth_from_surface = _world_y - _surface_height;
