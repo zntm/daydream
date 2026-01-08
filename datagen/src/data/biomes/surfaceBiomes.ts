@@ -87,7 +87,8 @@ export default [
                     "phantasia:tall_foliage/cactus",
                     0.06,
                 ).setGenerateOn("#phantasia:tile/placement/plant_on"),
-            ]),
+            ])
+            .setTags(["hot", "dry", "sand"]),
     ),
     // Forest
     new DatagenReturnData(
@@ -208,7 +209,8 @@ export default [
                 new BiomeStructure("phantasia:tree/birch", 0.07).setGenerateOn(
                     "#phantasia:tile/placement/plant_on",
                 ),
-            ]),
+            ])
+            .setTags(["forest", "temperate", "lush"]),
     ),
     // Swamp
     new DatagenReturnData(
@@ -303,7 +305,8 @@ export default [
                 ], 0.1).setGenerateOn(
                     "#phantasia:tile/placement/plant_on",
                 )
-            ]),
+            ])
+            .setTags(["swamp", "wet", "lush"]),
     ),
     // Taiga
     new DatagenReturnData(
@@ -402,7 +405,8 @@ export default [
                 new BiomeStructure("phantasia:tree/pine", 0.14).setGenerateOn(
                     "#phantasia:tile/placement/plant_on",
                 ),
-            ]),
+            ])
+            .setTags(["forest", "cold", "snow"]),
     ),
     // Ocean
     new DatagenReturnData(
@@ -445,6 +449,7 @@ export default [
             ])
             .setCreatures([])
             .setFoliage([])
-            .setStructures([]),
+            .setStructures([])
+            .setTags(["ocean", "water", "wet"]),
     ),
 ];

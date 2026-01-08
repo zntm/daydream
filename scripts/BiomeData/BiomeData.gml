@@ -39,6 +39,7 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
     ___structure_length = 0;
     ___salt = 0;
     ___water_color = 0xFFFFFF;
+    ___tags = [];
 
     // --- Background & Map ---
     static set_background = function(_background) { ___background = _background; return self; }
@@ -191,4 +192,16 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
     static set_salt = function(_salt) { ___salt = _salt; return self; }
     static get_salt = function() { return ___salt; }
     static get_water_color = function() { return ___water_color; }
+    
+    // --- Tags ---
+    static set_tags = function(_tags) { ___tags = _tags ?? []; return self; }
+    static get_tags = function() { return ___tags; }
+    static has_tag = function(_tag)
+    {
+        for (var i = 0; i < array_length(___tags); ++i)
+        {
+            if (___tags[i] == _tag) return true;
+        }
+        return false;
+    }
 }

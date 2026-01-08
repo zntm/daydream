@@ -1,0 +1,36 @@
+{
+    "actions": [
+        {
+            "type": "place_tile",
+            "tile_id": "phantasia:mushroom",
+            "offset_x": 0,
+            "offset_y": -1,
+            "depth": 0
+        },
+        {
+            "type": "place_tile",
+            "tile_id": "phantasia:mushroom",
+            "offset_x": 1,
+            "offset_y": -1,
+            "depth": 0
+        }
+    ],
+    "id": "cave_mushrooms",
+    "rules": [
+        {
+            "type": "chance",
+            "probability": 0.15
+        },
+        {
+            "type": "above_cave",
+            "depth_check": 1
+        },
+        {
+            "type": "biome",
+            "biome_ids": [
+                "phantasia:surface/forest",
+                "phantasia:surface/swamp"
+            ]
+        }
+    ]
+}

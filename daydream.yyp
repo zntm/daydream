@@ -1117,6 +1117,8 @@
     {"$GMIncludedFile":"","%Name":"oak.json","CopyToMask":-1,"filePath":"datafiles/resources/data/particles/tile/leaf","name":"oak.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"pine.json","CopyToMask":-1,"filePath":"datafiles/resources/data/particles/tile/leaf","name":"pine.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"seeding_dandelion.json","CopyToMask":-1,"filePath":"datafiles/resources/data/particles/tile","name":"seeding_dandelion.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"cave_mushrooms.json","CopyToMask":-1,"filePath":"datafiles/resources/data/patterns","name":"cave_mushrooms.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"tree_root_cave.json","CopyToMask":-1,"filePath":"datafiles/resources/data/patterns","name":"tree_root_cave.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"melee_swing.json","CopyToMask":-1,"filePath":"datafiles/resources/data/projectiles","name":"melee_swing.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"bucket_pickup.daydream","CopyToMask":-1,"filePath":"datafiles/resources/data/scripts/items","name":"bucket_pickup.daydream","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"bucket_place.daydream","CopyToMask":-1,"filePath":"datafiles/resources/data/scripts/items","name":"bucket_place.daydream","resourceType":"GMIncludedFile","resourceVersion":"2.0",},

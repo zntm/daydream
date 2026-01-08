@@ -81,6 +81,13 @@
                 "octaves": 2,
                 "min": 22,
                 "max": 34
+            },
+            "transitions": {
+                "phantasia:surface/ocean:phantasia:surface/forest": "phantasia:surface/forest",
+                "phantasia:surface/forest:phantasia:surface/ocean": "phantasia:surface/forest",
+                "phantasia:surface/desert:phantasia:surface/forest": "phantasia:surface/forest",
+                "phantasia:surface/forest:phantasia:surface/desert": "phantasia:surface/forest",
+                "phantasia:surface/snow:phantasia:surface/forest": "phantasia:surface/taiga"
             }
         },
         "sky": {
@@ -134,7 +141,9 @@
                 "octaves": 3,
                 "fill_level": 8,
                 "noise_scale": 0.02,
-                "range": 255
+                "range": 255,
+                "edge_tile": "phantasia:stone",
+                "edge_width": 15
             },
             {
                 "type": "phantasia:lava",
@@ -144,7 +153,9 @@
                 "octaves": 2,
                 "fill_level": 8,
                 "noise_scale": 0.02,
-                "range": 255
+                "range": 255,
+                "edge_tile": "phantasia:stone",
+                "edge_width": 12
             }
         ],
         "depth_smoothing": {

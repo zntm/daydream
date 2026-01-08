@@ -130,6 +130,20 @@ export class WorldSky {
     }
 }
 
+export class WorldBiomeTransitionRule {
+    public require_any: string[]; // Pair must contain at least one of these (tag or ID)
+    public require_all?: string[]; // Pair must contain ALL of these
+    public exclude?: string[];     // Pair must NOT contain any of these
+    public result: string;         // Resulting transition biome
+
+    constructor(result: string, requireAny: string[], requireAll?: string[], exclude?: string[]) {
+        this.result = result;
+        this.require_any = requireAny;
+        this.require_all = requireAll;
+        this.exclude = exclude;
+    }
+}
+
 export class WorldBiome {
     private cave: {
         default: WorldCaveBiome[];
@@ -145,6 +159,7 @@ export class WorldBiome {
         humidity: Noise;
         map: string;
         offset: Noise;
+        transitions?: WorldBiomeTransitionRule[];
     };
 
     private sky?: WorldSky;
@@ -161,6 +176,7 @@ export class WorldBiome {
         caveHumidity?: Noise,
         caveMap?: string,
         sky?: WorldSky,
+        surfaceTransitions?: WorldBiomeTransitionRule[]
     ) {
         this.cave = {
             default: defaultCaveBiomes,
@@ -175,10 +191,12 @@ export class WorldBiome {
             humidity: surfaceHumidity,
             map: surfaceMap,
             offset: surfaceOffset,
+            transitions: surfaceTransitions,
         };
         this.sky = sky;
     }
 }
+
 
 export class WorldSurfaceSmoothing {
     private range: number;
@@ -251,6 +269,8 @@ export class WorldAquifer {
     private fill_level: number;     // Liquid fill level (1-8)
     private noise_scale: number;    // Noise scale
     private range?: number;         // Noise range (0-255)
+    private edge_tile?: string;     // Solid tile for aquifer edges (e.g., "phantasia:stone")
+    private edge_width?: number;    // Width of edge in noise units (default 10)
 
     constructor(
         type: string,
@@ -260,7 +280,9 @@ export class WorldAquifer {
         octaves: number = 3,
         fillLevel: number = 8,
         noiseScale: number = 0.02,
-        range: number = 255
+        range: number = 255,
+        edgeTile?: string,
+        edgeWidth: number = 10
     ) {
         this.type = type;
         this.depth_min = depthMin;
@@ -270,6 +292,8 @@ export class WorldAquifer {
         this.fill_level = fillLevel;
         this.noise_scale = noiseScale;
         this.range = range;
+        if (edgeTile) this.edge_tile = edgeTile;
+        if (edgeTile) this.edge_width = edgeWidth;
     }
 }
 
@@ -423,7 +447,30 @@ export default [
                 new Noise(4.5),
                 new Noise(2.75),
                 undefined, // caveMap removed
-                new WorldSky() // Default sky configuration
+                new WorldSky(), // Default sky configuration
+                [
+                    // Rule: Water + Lush/Sand -> Beach
+                    new WorldBiomeTransitionRule(
+                        "phantasia:surface/beach",
+                        ["water"], // Must have water
+                        undefined,
+                        undefined // No exclusions
+                    ),
+                    
+                    // Rule: Sand + Lush -> Savanna
+                    new WorldBiomeTransitionRule(
+                        "phantasia:surface/savanna",
+                        ["sand"], 
+                        ["lush"] // Must have sand AND lush (one has sand, other has lush)
+                    ),
+
+                     // Rule: Snow + Forest -> Taiga (Transition zone)
+                    new WorldBiomeTransitionRule(
+                         "phantasia:surface/taiga",
+                         ["snow"],
+                         ["forest"]
+                    )
+                ]
             ),
             new WorldSurface(512, new Noise(4, 40, 96)),
             new WorldCave(new Noise(0, 12, 2), [
@@ -431,9 +478,9 @@ export default [
                 new WorldCaveSystem(116, 140, new Noise(4)),
             ], [
                 // Water aquifers: shallow caves (20-200 blocks below surface)
-                new WorldAquifer("phantasia:water", 20, 200, 200, 3, 8),
+                new WorldAquifer("phantasia:water", 20, 200, 200, 3, 8, 0.02, 255, "phantasia:stone", 15),
                 // Lava aquifers: deep caves (350-450 blocks below surface)
-                new WorldAquifer("phantasia:lava", 350, 450, 220, 2, 8),
+                new WorldAquifer("phantasia:lava", 350, 450, 220, 2, 8, 0.02, 255, "phantasia:stone", 12),
             ], new Spline([
                 // Depth smoothing: caves scale from 0 at surface to 1 at depth
                 new SplinePoint(0, 0, SplineEasing.EaseOut),   // At surface: no caves (ease out for gradual start)

@@ -1,0 +1,14 @@
+{
+    "actions": [],
+    "id": "tree_root_cave",
+    "rules": [
+        {
+            "type": "chance",
+            "probability": 0.1
+        },
+        {
+            "type": "above_cave",
+            "depth_check": 2
+        }
+    ]
+}

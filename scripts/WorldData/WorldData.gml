@@ -365,6 +365,8 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         ___surface_humidity_spline_x = ___surface_biome_humidity[$ "spline_x"] == undefined ? undefined : ___surface_biome_humidity.spline_x.points;
         ___surface_humidity_spline_y = ___surface_biome_humidity[$ "spline_y"] == undefined ? undefined : ___surface_biome_humidity.spline_y.points;
         
+        ___surface_biome_transitions = _surface_biome[$ "transitions"]; // Load transitions rules array
+        
         set_surface_biome_map(_surface_biome_map);
         
         return self;
@@ -383,6 +385,11 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
     static get_surface_biome_humidity = function()
     {
         return ___surface_biome_humidity;
+    }
+    
+    static get_surface_biome_transitions = function()
+    {
+        return ___surface_biome_transitions;
     }
     
     static get_surface_heat_noise_scale = function() { return ___surface_heat_noise_scale; }
@@ -496,6 +503,8 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
             {
                 ___aquifers[i].noise_scale ??= 0.02;
                 ___aquifers[i].range ??= 255;
+                ___aquifers[i].edge_width ??= 10; // Default edge width in noise units
+                // edge_tile can be undefined (no edge generation)
             }
         }
         else

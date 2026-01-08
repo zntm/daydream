@@ -403,6 +403,45 @@ function chunk_generate(_chunk)
                         }
                     }
                 }
+                else
+                {
+                    // --- AQUIFER LOGIC (inside caves) ---
+                    var _aquifer = worldgen_get_aquifer(_world_x, _world_y, _surface_height, _world_seed, _world_data);
+                    
+                    if (_aquifer != undefined)
+                    {
+                        if (_aquifer.is_edge)
+                        {
+                            // Place solid edge block (stone around water, obsidite around lava, etc.)
+                            var _edge_tile_id = _aquifer.edge_tile;
+                            var _data = _item_data[$ _edge_tile_id];
+                            if (_data != undefined)
+                            {
+                                ++_chunk.chunk_count[@ CHUNK_DEPTH_DEFAULT];
+                                var _idx = (is_struct(_data.get_placement_index()) ? smart_value(_data.get_placement_index()) : _data.get_placement_index());
+                                _chunk.chunk[@ (CHUNK_DEPTH_DEFAULT << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_edge_tile_id).set_index(_idx);
+                                _chunk.chunk_display |= 1 << CHUNK_DEPTH_DEFAULT;
+                                
+                                if (_data.has_type(ITEM_TYPE_BIT.SOLID | ITEM_TYPE_BIT.UNTOUCHABLE)) && (!_data.is_transparent())
+                                {
+                                    _chunk.chunk_covered[@ i] |= 1 << j;
+                                }
+                            }
+                        }
+                        else if (_aquifer.type != undefined)
+                        {
+                            // Place liquid tile in CHUNK_DEPTH_LIQUID layer
+                            var _liquid_tile_id = _aquifer.type;
+                            var _data = _item_data[$ _liquid_tile_id];
+                            if (_data != undefined)
+                            {
+                                ++_chunk.chunk_count[@ CHUNK_DEPTH_LIQUID];
+                                _chunk.chunk[@ (CHUNK_DEPTH_LIQUID << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_liquid_tile_id).set_fill(_aquifer.fill_level);
+                                _chunk.chunk_display |= 1 << CHUNK_DEPTH_LIQUID;
+                            }
+                        }
+                    }
+                }
             }
             
             // --- WALLS ---

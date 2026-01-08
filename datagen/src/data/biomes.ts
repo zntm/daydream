@@ -19,6 +19,7 @@ export class Biome {
     private shore_tiles?: MaterialProvider;
     private is_skyland?: boolean;
     private salt?: number;
+    private tags?: string[];
 
     constructor(
         background: BiomeBackground,
@@ -87,6 +88,11 @@ export class Biome {
     setSalt(salt: number) {
         this.salt = salt;
 
+        return this;
+    }
+
+    setTags(tags: string[]) {
+        this.tags = tags;
         return this;
     }
 }

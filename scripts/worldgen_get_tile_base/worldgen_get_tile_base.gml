@@ -82,6 +82,31 @@ function worldgen_get_tile_base(_x, _y, _surface_biome, _cave_biome, _surface_he
     var _blend_range = _world_data.get_biome_blend_range();
     var _blend_noise_scale = _world_data.get_biome_blend_noise_scale();
     
+    // === BIOME TRANSITION SYSTEM (Beaches, etc.) ===
+    // Check distance to region boundary for transition biomes
+    var _boundary_distance = global.region_generator.get_boundary_distance(_x, _y, 0, _seed);
+    var _transition_threshold = _world_data[$ "___transition_threshold"] ?? 24; // Distance in blocks to trigger transition
+    
+    var _biome_to_use_id = _surface_biome;
+    
+    if (_boundary_distance < _transition_threshold)
+    {
+        // We're near a biome boundary - check for transition biome
+        var _transition_biome = ___get_transition_biome(_surface_biome, _world_data, _seed, _x);
+        if (_transition_biome != undefined)
+        {
+            // Smooth transition: use noise to blend into transition biome
+            var _transition_factor = 1 - (_boundary_distance / _transition_threshold);
+            var _transition_noise = open_simplex_noise(_x * 0.05, _y * 0.05 + 2000, 1.0, 2);
+            
+            if (_transition_noise < _transition_factor * 0.8)
+            {
+                _biome_to_use_id = _transition_biome;
+            }
+        }
+    }
+    
+    // === LEGACY HORIZONTAL BLENDING ===
     var _heat = worldgen_get_heat(_x, 0, _seed, _world_data);
     var _humidity = worldgen_get_humidity(_x, 0, _seed, _world_data);
     var _heat_left = worldgen_get_heat(_x - _blend_range, 0, _seed, _world_data);
@@ -92,9 +117,7 @@ function worldgen_get_tile_base(_x, _y, _surface_biome, _cave_biome, _surface_he
     var _is_boundary = (_heat != _heat_left) || (_heat != _heat_right) || 
                        (_humidity != _humidity_left) || (_humidity != _humidity_right);
     
-    var _biome_to_use_id = _surface_biome;
-    
-    if (_is_boundary)
+    if (_is_boundary && _biome_to_use_id == _surface_biome) // Only apply if not already transitioned
     {
         var _blend_noise = open_simplex_noise(_x * _blend_noise_scale, _y * _blend_noise_scale + 1000, 1.0, 2);
         if (_blend_noise > 0.2)
@@ -126,4 +149,97 @@ function worldgen_get_tile_base(_x, _y, _surface_biome, _cave_biome, _surface_he
     }
     
     return TILE_EMPTY;
+}
+
+/// @desc Get transition biome between two adjacent biomes
+/// @param {String} _current_biome Current biome ID at this position
+/// @param {Struct} _world_data World data
+/// @param {Real} _seed World seed
+/// @param {Real} _x World X position
+/// @returns {String|Undefined} Transition biome ID or undefined if no transition
+function ___get_transition_biome(_current_biome, _world_data, _seed, _x)
+{
+    // Look up adjacent region to determine what we're transitioning to
+    var _adjacent_region = global.region_generator.get_region(_x + 32, 0, 0, _seed);
+    var _adjacent_biome = _adjacent_region.get_surface_biome_id();
+    
+    // If same biome, no transition needed
+    if (_adjacent_biome == _current_biome) return undefined;
+    
+    // Get transition rules from world data
+    var _rules = _world_data.get_surface_biome_transitions();
+    if (_rules == undefined) return undefined;
+    
+    var _biome_data = global.biome_data;
+    var _b1 = _biome_data[$ _current_biome];
+    var _b2 = _biome_data[$ _adjacent_biome];
+    
+    if (_b1 == undefined || _b2 == undefined) return undefined;
+    
+    // Iterate rules
+    // Rule format: { result, require_any, require_all, exclude }
+    var _rules_count = array_length(_rules);
+    for (var i = 0; i < _rules_count; ++i)
+    {
+        var _rule = _rules[i];
+        
+        // Check EXCLUDE first
+        var _exclude = _rule[$ "exclude"];
+        if (_exclude != undefined)
+        {
+            var _fail = false;
+            for (var j = 0; j < array_length(_exclude); ++j)
+            {
+                var _tag = _exclude[j];
+                // If either biome has this excluded tag/ID, fail
+                if (_b1.has_tag(_tag) || _b2.has_tag(_tag) || _current_biome == _tag || _adjacent_biome == _tag)
+                {
+                    _fail = true;
+                    break;
+                }
+            }
+            if (_fail) continue;
+        }
+        
+        // Check REQUIRE_ANY (at least one tag/ID must be present in the pair)
+        var _require_any = _rule[$ "require_any"];
+        if (_require_any != undefined)
+        {
+            var _found = false;
+            for (var j = 0; j < array_length(_require_any); ++j)
+            {
+                var _tag = _require_any[j];
+                if (_b1.has_tag(_tag) || _b2.has_tag(_tag) || _current_biome == _tag || _adjacent_biome == _tag)
+                {
+                    _found = true;
+                    break;
+                }
+            }
+            if (!_found) continue;
+        }
+        
+        // Check REQUIRE_ALL (all tags/IDs must be present in the pair)
+        var _require_all = _rule[$ "require_all"];
+        if (_require_all != undefined)
+        {
+            var _fail = false;
+            for (var j = 0; j < array_length(_require_all); ++j)
+            {
+                var _tag = _require_all[j];
+                // For "require all", the set of tags must be covered by the pair.
+                // Interpretation: Each tag in the requirement must exist in EITHER biome.
+                if (!(_b1.has_tag(_tag) || _b2.has_tag(_tag) || _current_biome == _tag || _adjacent_biome == _tag))
+                {
+                    _fail = true;
+                    break;
+                }
+            }
+            if (_fail) continue;
+        }
+        
+        // Match found!
+        return _rule.result;
+    }
+    
+    return undefined;
 }
