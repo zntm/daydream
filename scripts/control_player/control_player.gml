@@ -109,9 +109,9 @@ function control_player()
     entity_update_collision(physics_body);
     
     // Choose physics mode based on debug settings
-    if (IS_DEVELOPER_MODE) && (global.dbg_settings[$ "enable_physics"])
+    if (IS_DEVELOPER_MODE) && (!global.dbg_settings[$ "enable_physics"])
     {
-        // Creative flight mode
+        // Creative flight mode (physics disabled = fly mode)
         physics_body.mode = MOVEMENT_MODE.FLY;
     }
     

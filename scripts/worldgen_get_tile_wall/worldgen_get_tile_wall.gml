@@ -1,28 +1,35 @@
 function worldgen_get_tile_wall(_x, _y, _surface_biome, _cave_biome, _surface_height, _seed)
 {
-    if (_y < _surface_height)
-    {
-        return TILE_EMPTY;
-    }
-    
     var _world_data = global.world_data[$ global.world_save_data.dimension];
     
-    // Generate noise value (0..1) for coherent tile variation
-    // Offset differently from base tiles to avoid identical patterns
-    var _noise = open_simplex_noise(_x * _world_data.get_tile_variation_noise_scale(), _y * _world_data.get_tile_variation_noise_scale() + (_seed * 200), 1.0, 2);
-    
-    // Overhang Generation check
-    var _overhang_threshold = _world_data.get_cave_overhang_threshold();
-    if (_overhang_threshold != undefined)
+    // Check for sky island walls (inside islands or support pillars)
+    if (_y < _surface_height)
     {
-        var _overhang_noise_scale = _world_data.get_cave_overhang_noise_scale();
-        var _overhang_noise = open_simplex_noise(_x * _overhang_noise_scale, _y * _overhang_noise_scale + (_seed * 293), 1.0, 2);
-        
-        if (_overhang_noise < _overhang_threshold)
-        {
-            return TILE_EMPTY;
-        }
+         var _is_inside = worldgen_get_sky_island(_x, _y, _seed, _world_data);
+         var _is_below = false;
+         
+         if (!_is_inside)
+         {
+             _is_below = worldgen_is_below_sky_island(_x, _y, _seed, _world_data);
+         }
+         
+         if (_is_inside || _is_below)
+         {
+             // Generate noise value for tile variation
+             var _noise = open_simplex_noise(_x * _world_data.get_tile_variation_noise_scale(), _y * _world_data.get_tile_variation_noise_scale() + (_seed * 200), 1.0, 2);
+             
+             // Use surface biome wall for cohesion
+             var _biome_data = global.biome_data;
+             var _biome = _biome_data[$ _surface_biome] ?? _biome_data[$ "phantasia:surface/forest"];
+             if (_biome != undefined) return _biome.get_tile_middle_layer_wall(_noise);
+         }
+         
+         // If above surface and not part of island system, return empty
+         return TILE_EMPTY;
     }
+    
+    // Generate noise value for tile variation
+    var _noise = open_simplex_noise(_x * _world_data.get_tile_variation_noise_scale(), _y * _world_data.get_tile_variation_noise_scale() + (_seed * 200), 1.0, 2);
     
     var _biome_data = global.biome_data;
     
@@ -33,11 +40,8 @@ function worldgen_get_tile_wall(_x, _y, _surface_biome, _cave_biome, _surface_he
     }
     
     // Fallback if underground but no cave biome found
-    // Fallback if underground but no cave biome found
-    // Respect the 8-block surface buffer
     if (_y > _surface_height + _world_data.get_surface_min_depth())
     {
-        // Try to get the first default cave biome
         var _default_caves = _world_data.get_cave_biome_default();
         if (array_length(_default_caves) > 0)
         {

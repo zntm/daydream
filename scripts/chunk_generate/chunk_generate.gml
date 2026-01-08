@@ -132,6 +132,8 @@ function chunk_generate(_chunk)
         
         if (_depth_from_surface < 0)
         {
+            if (_world_data.is_sky_biome_enabled() && worldgen_get_sky_island(_x, _y, _seed, _world_data, _surface_height)) return false;
+
             if (_depth_from_surface > _cave_breach_depth)
             {
                 var _breach_noise = open_simplex_noise(_x * _cave_breach_noise_scale_x, _surface_height * _cave_breach_noise_scale_y + _cave_breach_noise_offset_y, _cave_breach_noise_range, _cave_breach_noise_octaves);
@@ -247,8 +249,10 @@ function chunk_generate(_chunk)
     }
     
     var _in_sky_zone = (_chunk.chunk_ystart <= _sky_threshold) && _sky_biome_enabled;
+    var _overhang_enabled = (_world_data.get_cave_overhang_threshold() != undefined);
     
-    if (_structure_rectangle_length <= 0) && (_surface_height_max > _chunk.chunk_ystart + CHUNK_SIZE - 1) && (!_in_sky_zone) exit;
+    // Don't skip if: structures exist, in sky zone, or overhangs are enabled
+    if (_structure_rectangle_length <= 0) && (_surface_height_max > _chunk.chunk_ystart + CHUNK_SIZE - 1) && (!_in_sky_zone) && (!_overhang_enabled) exit;
     
     if (_structure_rectangle_length > 0)
     {
@@ -366,7 +370,7 @@ function chunk_generate(_chunk)
             // Skip if above surface and not in cave
             // ALLOW surface-1 to process foliage on the ground
             var _overhang_enabled = (_world_data.get_cave_overhang_threshold() != undefined);
-            if (!_overhang_enabled && _world_y < _surface_height - 1) continue;
+            if (!_overhang_enabled && _is_cave && _world_y < _surface_height - 1) continue;
             
             // Get cave biome if underground
             var _depth_from_surface = _world_y - _surface_height;
@@ -436,7 +440,7 @@ function chunk_generate(_chunk)
                             if (_data != undefined)
                             {
                                 ++_chunk.chunk_count[@ CHUNK_DEPTH_LIQUID];
-                                _chunk.chunk[@ (CHUNK_DEPTH_LIQUID << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_liquid_tile_id).set_fill(_aquifer.fill_level);
+                                _chunk.chunk[@ (CHUNK_DEPTH_LIQUID << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_liquid_tile_id).set_component("level", _aquifer.fill_level);
                                 _chunk.chunk_display |= 1 << CHUNK_DEPTH_LIQUID;
                             }
                         }

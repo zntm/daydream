@@ -533,6 +533,7 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         ___cave_overhang_threshold = _cave[$ "overhang_threshold"];
         ___cave_overhang_threshold_tile = _cave[$ "overhang_threshold_tile"];
         ___cave_overhang_noise_scale = _cave[$ "overhang_noise_scale"] ?? 0.05;
+        ___cave_overhang_max_height = _cave[$ "overhang_max_height"] ?? 16;
         
         // Depth smoothing spline for cave size
         var _depth_smoothing = _cave[$ "depth_smoothing"];
@@ -562,6 +563,11 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
     static get_cave_overhang_noise_scale = function()
     {
         return self[$ "___cave_overhang_noise_scale"];
+    }
+
+    static get_cave_overhang_max_height = function()
+    {
+        return self[$ "___cave_overhang_max_height"] ?? 16;
     }
 
     static get_cave_breach_noise_scale_x = function()
@@ -750,6 +756,14 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         ___sky_detail_noise_amplitude = _sky_biome[$ "detail_noise_amplitude"] ?? 0.25;
         ___sky_detail_noise_octaves = _sky_biome[$ "detail_noise_octaves"] ?? 2;
         
+        // New roughness and support parameters
+        ___sky_roughness_amplitude = _sky_biome[$ "roughness_amplitude"] ?? 0.25;
+        ___sky_roughness_scale = _sky_biome[$ "roughness_scale"] ?? 0.08;
+        ___sky_support_chance = _sky_biome[$ "support_chance"] ?? 0.4;
+        ___sky_support_width = _sky_biome[$ "support_width"] ?? 0.3;
+        ___sky_support_taper = _sky_biome[$ "support_taper"] ?? 0.02;
+        ___sky_support_max_length = _sky_biome[$ "support_max_length"] ?? 120;
+        
         return self;
     }
     
@@ -836,5 +850,35 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
     static get_sky_detail_noise_octaves = function()
     {
         return ___sky_detail_noise_octaves;
+    }
+
+    static get_sky_roughness_amplitude = function()
+    {
+        return self[$ "___sky_roughness_amplitude"] ?? 0.25;
+    }
+
+    static get_sky_roughness_scale = function()
+    {
+        return self[$ "___sky_roughness_scale"] ?? 0.08;
+    }
+
+    static get_sky_support_chance = function()
+    {
+        return self[$ "___sky_support_chance"] ?? 0.4;
+    }
+
+    static get_sky_support_width = function()
+    {
+        return self[$ "___sky_support_width"] ?? 0.3;
+    }
+
+    static get_sky_support_taper = function()
+    {
+        return self[$ "___sky_support_taper"] ?? 0.02;
+    }
+
+    static get_sky_support_max_length = function()
+    {
+        return self[$ "___sky_support_max_length"] ?? 120;
     }
 }

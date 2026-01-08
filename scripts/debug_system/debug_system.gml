@@ -29,6 +29,7 @@ function debug_init()
             spawn_creatures: true,
             enable_lighting: true,
             enable_physics: true,
+            noclip: false,  // Noclip mode (no collision when physics disabled)
             camera_size: 1,
             fly_speed: 1,
             time_speed: 1,
@@ -83,6 +84,7 @@ function debug_init()
     dbg_section("Gameplay");
     
     dbg_checkbox(ref_create(global.dbg_settings, "enable_physics"), "Enable Physics");
+    dbg_checkbox(ref_create(global.dbg_settings, "noclip"), "Noclip");
     dbg_checkbox(ref_create(global.dbg_settings, "spawn_creatures"), "Spawn Creatures");
     dbg_slider(ref_create(global.dbg_settings, "time_speed"), 0, 24, "Time Speed", 0.25);
     dbg_slider(ref_create(global.dbg_settings, "fly_speed"), 0.5, 64, "Fly Speed");

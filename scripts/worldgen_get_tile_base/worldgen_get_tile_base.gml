@@ -31,25 +31,28 @@ function worldgen_get_tile_base(_x, _y, _surface_biome, _cave_biome, _surface_he
         if (_bedrock_noise > (_bedrock_depth - 1) * 0.4) return "phantasia:bedrock";
     }
     
-    var _overhang_threshold_tile = _world_data.get_cave_overhang_threshold_tile();
-    var _is_overhang_solid = false;
+    // Check for floating sky islands above the surface
+    var _is_sky_island = false;
+    var _sky_air_above = false;
     
-    if (_overhang_threshold_tile != undefined)
+    if (_y < _surface_height)
     {
-        var _overhang_noise_scale = _world_data.get_cave_overhang_noise_scale();
-        var _overhang_noise = open_simplex_noise(_x * _overhang_noise_scale, _y * _overhang_noise_scale + (_seed * 293), 1.0, 2);
+        // Above surface - check if we're inside a floating island
+        _is_sky_island = worldgen_get_sky_island(_x, _y, _seed, _world_data);
         
-        if (_overhang_noise < _overhang_threshold_tile)
+        if (_is_sky_island)
         {
-             return TILE_EMPTY; // Void carve
+            // Check if tile above is air (for grass detection on island surfaces)
+            _sky_air_above = !worldgen_get_sky_island(_x, _y - 1, _seed, _world_data);
         }
         else
         {
-             if (_y < _surface_height) _is_overhang_solid = true;
+            // Not in a sky island - return empty
+            return TILE_EMPTY;
         }
     }
     
-    if (_y < _surface_height && !_is_overhang_solid) return TILE_EMPTY;
+    if (_y < _surface_height && !_is_sky_island) return TILE_EMPTY;
     
     // Generate context for MaterialProvider
     // Used for evaluating rules and noise-based placement
@@ -61,7 +64,7 @@ function worldgen_get_tile_base(_x, _y, _surface_biome, _cave_biome, _surface_he
         surface_height: _surface_height,
         noise: _noise,
         cave_above: _cave_above,
-        air_above: (_cave_above ? 1 : 0),
+        air_above: ((_cave_above || _sky_air_above) ? 1 : 0),
         cave_biome: _cave_biome
         // Add more context properties here as needed by rules
     }
@@ -138,7 +141,7 @@ function worldgen_get_tile_base(_x, _y, _surface_biome, _cave_biome, _surface_he
     
     if (_biome != undefined)
     {
-        if (_cave_above) // Top Layer (Surface)
+        if (_cave_above || _sky_air_above) // Top Layer (Surface) - includes overhang surfaces
         {
             return _biome.get_tile_top_layer().get_tile(_context);
         }
