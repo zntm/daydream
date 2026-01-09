@@ -1645,7 +1645,6 @@
     {"id":{"name":"worldgen_get_cave","path":"scripts/worldgen_get_cave/worldgen_get_cave.yy",},},
     {"id":{"name":"worldgen_get_heat","path":"scripts/worldgen_get_heat/worldgen_get_heat.yy",},},
     {"id":{"name":"worldgen_get_humidity","path":"scripts/worldgen_get_humidity/worldgen_get_humidity.yy",},},
-    {"id":{"name":"worldgen_get_sky_island","path":"scripts/worldgen_get_sky_island/worldgen_get_sky_island.yy",},},
     {"id":{"name":"worldgen_get_surface_height","path":"scripts/worldgen_get_surface_height/worldgen_get_surface_height.yy",},},
     {"id":{"name":"worldgen_get_surface_offset","path":"scripts/worldgen_get_surface_offset/worldgen_get_surface_offset.yy",},},
     {"id":{"name":"worldgen_get_tile_base","path":"scripts/worldgen_get_tile_base/worldgen_get_tile_base.yy",},},
