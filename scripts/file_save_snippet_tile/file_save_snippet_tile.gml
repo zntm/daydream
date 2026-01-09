@@ -48,7 +48,7 @@ function file_save_snippet_tile(_buffer, _tile, _item_data, _palette_map)
         }
         else
         {
-            file_save_snippet_inventory(_buffer, _inventory, _inventory_length, _item_data);
+            file_save_snippet_inventory(_buffer, _inventory, _inventory_length, _item_data, _palette_map);
         }
     }
     

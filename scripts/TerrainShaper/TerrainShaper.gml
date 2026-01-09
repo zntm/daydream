@@ -79,7 +79,7 @@ function TerrainShaper(_world_data) constructor
         // === 1. Height gradient ===
         // Above surface = negative (air), below = positive (solid)
         var _depth_from_surface = _y - _base_height;
-        var _gradient_strength = 0.01; // Slightly more grounded
+        var _gradient_strength = 0.006; // More room for caves at depth
         var _height_gradient = _depth_from_surface * _gradient_strength;
         
         // === 2. Continentalness (large-scale surface variation) ===
@@ -115,9 +115,8 @@ function TerrainShaper(_world_data) constructor
         
         // === 6. Final density ===
         // Combine height gradient with 3D noise (buffed weight for larger gaps)
-        // Buffed from 0.9/0.5 to 1.5/1.0 to ensure noise can create massive voids
-        var _density = _height_gradient + (_noise_3d * (1.5 + _erosion * 1.0));
+        var _density = _height_gradient + (_noise_3d * (2.2 + _erosion * 1.2));
         
-        return _density - _threshold;
+        return _density - 0.15 - _threshold;
     }
 }

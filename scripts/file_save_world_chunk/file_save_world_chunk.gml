@@ -48,6 +48,40 @@ function file_save_world_chunk(_world_save_data, _chunk)
         var _palette_array = [];
         var _palette_index = 0;
         
+        var _collect_id = function(_id, _map, _array, _idx_ref)
+        {
+            if (!struct_exists(_map, _id))
+            {
+                _map[$ _id] = _idx_ref[0]++;
+                array_push(_array, _id);
+            }
+        }
+        
+        var _idx_ref = [_palette_index]; // Use array as reference for index
+        
+        var _collect_inventory_ids = function(_inventory, _length, _item_data, _map, _array, _idx_ref, _self_func)
+        {
+            for (var k = 0; k < _length; ++k)
+            {
+                var _item = _inventory[k];
+                if (_item == INVENTORY_EMPTY) continue;
+                
+                var _iid = _item.get_id();
+                if (!struct_exists(_map, _iid))
+                {
+                    _map[$ _iid] = _idx_ref[0]++;
+                    array_push(_array, _iid);
+                }
+                
+                var _idata = _item_data[$ _iid];
+                var _ilen = _idata.get_item_inventory_length();
+                if (_ilen > 0)
+                {
+                    _self_func(_item.get_inventory(), _ilen, _item_data, _map, _array, _idx_ref, _self_func);
+                }
+            }
+        }
+        
         for (var i = 0; i < CHUNK_DEPTH; ++i)
         {
             if !(_chunk_display & (1 << i)) continue;
@@ -61,16 +95,24 @@ function file_save_world_chunk(_world_save_data, _chunk)
                     if (_tile != TILE_EMPTY)
                     {
                         var _id = _tile.get_id();
+                        _collect_id(_id, _palette_map, _palette_array, _idx_ref);
                         
-                        if (!struct_exists(_palette_map, _id))
+                        var _tdata = _item_data[$ _id];
+                        var _tlen = _tdata.get_tile_inventory_length();
+                        
+                        if (_tlen > 0)
                         {
-                            _palette_map[$ _id] = _palette_index++;
-                            array_push(_palette_array, _id);
+                            var _inventory = _tile.get_inventory();
+                            if (!is_string(_inventory)) // Not a loot table string
+                            {
+                                _collect_inventory_ids(_inventory, _tlen, _item_data, _palette_map, _palette_array, _idx_ref, _collect_inventory_ids);
+                            }
                         }
                     }
                 }
             }
         }
+        _palette_index = _idx_ref[0];
         
         // Write Palette
         buffer_write(_current_chunk_buffer, buffer_u16, _palette_index);

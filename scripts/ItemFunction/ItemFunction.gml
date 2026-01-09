@@ -235,6 +235,29 @@ global.item_function[$ "phantasia:export_structure"] = function()
     var _palette_array = [];
     var _palette_index = 0;
     
+    var _collect_inventory_ids = function(_inventory, _length, _item_data, _map, _array, _idx_ref, _self_func)
+    {
+        for (var k = 0; k < _length; ++k)
+        {
+            var _item = _inventory[k];
+            if (_item == INVENTORY_EMPTY) continue;
+            
+            var _iid = _item.get_id();
+            if (!struct_exists(_map, _iid))
+            {
+                _map[$ _iid] = _idx_ref[0]++;
+                array_push(_array, _iid);
+            }
+            
+            var _idata = _item_data[$ _iid];
+            var _ilen = _idata.get_item_inventory_length();
+            if (_ilen > 0)
+            {
+                _self_func(_item.get_inventory(), _ilen, _item_data, _map, _array, _idx_ref, _self_func);
+            }
+        }
+    }
+
     for (var _x = _x1; _x <= _x2; ++_x)
     {
         for (var _y = _y1; _y <= _y2; ++_y)
@@ -255,6 +278,20 @@ global.item_function[$ "phantasia:export_structure"] = function()
                     {
                         _palette_map[$ _tid] = _palette_index++;
                         array_push(_palette_array, _tid);
+                    }
+                    
+                    var _tdata = _item_data[$ _tid];
+                    var _tlen = _tdata.get_tile_inventory_length();
+                    
+                    if (_tlen > 0)
+                    {
+                        var _inventory = _.get_inventory();
+                        if (!is_string(_inventory))
+                        {
+                            var _ref = [_palette_index];
+                            _collect_inventory_ids(_inventory, _tlen, _item_data, _palette_map, _palette_array, _ref, _collect_inventory_ids);
+                            _palette_index = _ref[0];
+                        }
                     }
                 }
             }

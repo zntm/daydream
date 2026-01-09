@@ -43,7 +43,7 @@ function file_load_snippet_tile(_buffer, _item_data, _palette)
         }
         else
         {
-            _tile.set_inventory(file_load_snippet_inventory(_buffer, _inventory_length, _item_data));
+            _tile.set_inventory(file_load_snippet_inventory(_buffer, _inventory_length, _item_data, _palette));
         }
     }
     
