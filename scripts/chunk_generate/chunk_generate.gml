@@ -4,10 +4,18 @@
 function chunk_generate(_chunk)
 {
     static __cave_bit = array_create(CHUNK_SIZE);
+    static __density_array = array_create(CHUNK_SIZE * CHUNK_SIZE);
+    static __wall_density_array = array_create(CHUNK_SIZE * CHUNK_SIZE); // For overhangs
     static __surface_height = array_create(CHUNK_SIZE);
     static __skip_z_array = array_create(CHUNK_SIZE * CHUNK_SIZE);
     
-    for (var i = 0; i < CHUNK_SIZE * CHUNK_SIZE; ++i) __skip_z_array[@ i] = 0;
+    // Reset arrays
+    for (var i = 0; i < CHUNK_SIZE * CHUNK_SIZE; ++i) 
+    {
+        __skip_z_array[@ i] = 0;
+        __density_array[@ i] = -1;
+        __wall_density_array[@ i] = -1;
+    }
     
     var _surface_height_max = 999999;
     
@@ -217,21 +225,36 @@ function chunk_generate(_chunk)
         
         _surface_height_max = min(_surface_height_max, _surface_height);
         
-        var _cave_bit = 0;
         
+        var _cave_bit = 0; // Keeping this for now if needed for Foliage logic (is_cave?), but better to rely on density
+        
+        // --- PRE-CALCULATE DENSITY for this column ---
         for (var j = 0; j < CHUNK_SIZE + 2; ++j)
         {
             var _world_y = _chunk.chunk_ystart + j - 1;
             
-            _cave_bit |= __get_cave_inline(
-                _world_x, _world_y, _surface_height, _cave_start, _world_seed, _world_data,
-                _cave_depth_smoothing, _cave_system, _cave_system_length, _cave_noise_scale,
-                _cave_breach_depth, _cave_breach_noise_scale_x, _cave_breach_noise_scale_y, _cave_breach_noise_offset_y,
-                _cave_breach_noise_range, _cave_breach_noise_octaves, _cave_breach_threshold
-            ) << j;
+            // Calculate detailed density (Solid)
+            var _dens = global.terrain_generator.get_density_detailed(_world_x, _world_y, 0, _world_data, _world_seed);
+            
+            // Calculate wall density (Overhang check)
+            var _wall_offset = _world_data.get_wall_noise_offset() ?? 0.15;
+            var _dens_wall = global.terrain_generator.get_density_detailed(_world_x, _world_y, _wall_offset, _world_data, _world_seed);
+            
+            // Store in array (clamped to chunk bounds)
+            if (j > 0 && j <= CHUNK_SIZE)
+            {
+                var _idx = i + ((j - 1) * CHUNK_SIZE);
+                __density_array[@ _idx] = _dens;
+                __wall_density_array[@ _idx] = _dens_wall;
+            }
+            
+            // Legacy cave bit for foliage check (approximate: if density > 0, it's solid)
+            // But wait, foliage check needs to know if ABOVE is air.
+            // We can just check density of above in the main loop.
+            // __cave_bit is not needed if we check density.
         }
         
-        __cave_bit[@ i] = _cave_bit;
+        // __cave_bit[@ i] = _cave_bit; // Disabled legacy cave bit calculation logic
     }
     
     static __pattern_scanner = new PatternScanner()
@@ -361,18 +384,53 @@ function chunk_generate(_chunk)
         {
             var _world_y = _chunk.chunk_ystart + j;
             var _inst_y = _world_y * TILE_SIZE;
-            var _skip_z = __skip_z_array[i + (j * CHUNK_SIZE)];
+            var _chunk_index = i + (j * CHUNK_SIZE);
+            var _skip_z = __skip_z_array[_chunk_index];
             
-            // Use cave bit array for cave detection (bit 1 = current position, offset by 1 for alignment)
-            var _is_cave = (__cave_bit[i] >> (j + 1)) & 1;
-            var _is_cave_above = (__cave_bit[i] >> j) & 1;
+            // Retrieve pre-calculated density
+            var _density = __density_array[_chunk_index];
+            var _density_wall = __wall_density_array[_chunk_index];
             
-            // Skip if above surface and not in cave
-            // ALLOW surface-1 to process foliage on the ground
-            var _overhang_enabled = (_world_data.get_cave_overhang_threshold() != undefined);
-            if (!_overhang_enabled && _is_cave && _world_y < _surface_height - 1) continue;
+            var _is_solid = (_density > 0);
+            var _is_wall = (_density_wall > 0);
             
-            // Get cave biome if underground
+            // Check density above (for surface/foliage detection)
+            // If j=0, we need to check y-1 density.
+            // Since we only cached chunk size, we might need to calc one above/below or use cache if implemented (we didn't cache boundary).
+            // Optimization: Just calculate it if needed or edge case.
+            // Actually, we can check _chunk_ystart + j - 1.
+            var _density_above = -1;
+            if (j > 0) 
+            {
+                 _density_above = __density_array[i + ((j - 1) * CHUNK_SIZE)];
+            }
+            else
+            {
+                // Retrieve from worldgen for boundary check
+                 _density_above = global.terrain_generator.get_density_detailed(_world_x, _world_y - 1, 0, _world_data, _world_seed);
+            }
+            var _is_solid_above = (_density_above > 0);
+            var _is_air_above = !_is_solid_above;
+            
+            // Use this for "cave" logic: if we are solid, we are NOT a cave (in the old sense of "air").
+            // Old code: _is_cave = bit set means AIR (carved).
+            // New code: _density > 0 means SOLID.
+            
+            var _is_cave = !_is_solid; // "Cave" implies open space underground/sky
+            
+            // Skip if above surface and not solid (Sky Air)
+            // BUT: overhangs logic means we might have solids above surface!
+            // Condition: if density <= 0 AND not in sky zone...
+            // Actually, just trust density. If density <= 0, it's air.
+            // Wait, we need to skip trivial air to save performance?
+            // If density <= 0 and we are high up...
+            // But we must check WALLS.
+            
+            // Optim: If not solid and not wall -> EMPTY.
+            if (!_is_solid && !_is_wall) continue;
+            
+            // Get cave biome if underground (Logic depends on depth > 8 below surface height estimate)
+            // Surface Height estimate from 2D generator is still useful for "Biome Depth".
             var _depth_from_surface = _world_y - _surface_height;
             var _cave_biome = undefined;
             if (_depth_from_surface >= 8)
@@ -383,12 +441,10 @@ function chunk_generate(_chunk)
             // --- BASE TILE ---
             if !(_skip_z & (1 << CHUNK_DEPTH_DEFAULT))
             {
-                if (!_is_cave)
+                if (_is_solid)
                 {
-                    // Use old working worldgen function for proper grass/dirt/stone detection
-                    // Note: _is_cave_above tells us if the block above is AIR (cave/sky).
-                    // If true, and we are solid, we are the surface layer.
-                    var _tile_id = worldgen_get_tile_base(_world_x, _world_y, _surface_biome_id, _cave_biome, _surface_height, _is_cave_above, _world_seed);
+                    // Pass TRUE to bypass density check since we already know it is solid
+                    var _tile_id = worldgen_get_tile_base(_world_x, _world_y, _surface_biome_id, _cave_biome, _surface_height, _is_air_above, _world_seed, true);
                     
                     if (_tile_id != TILE_EMPTY)
                     {
@@ -409,7 +465,9 @@ function chunk_generate(_chunk)
                 }
                 else
                 {
-                    // --- AQUIFER LOGIC (inside caves) ---
+                    // --- AQUIFER LOGIC ---
+                    // Aquifers (water/lava) filling caves (Empty Air)
+                    // Only check aquifers if not solid
                     var _aquifer = worldgen_get_aquifer(_world_x, _world_y, _surface_height, _world_seed, _world_data);
                     
                     if (_aquifer != undefined)
@@ -451,8 +509,13 @@ function chunk_generate(_chunk)
             // --- WALLS ---
             if !(_skip_z & (1 << CHUNK_DEPTH_WALL))
             {
-                var _wall_id = worldgen_get_tile_wall(_world_x, _world_y, _surface_biome_id, _cave_biome, _surface_height, _world_seed);
-                
+                // Check if we need walls
+                // Condition: If Density Wall > 0 OR Density Solid > 0
+                if (_is_wall || _is_solid)
+                {
+                    // Pass TRUE to bypass density check
+                    var _wall_id = worldgen_get_tile_wall(_world_x, _world_y, _surface_biome_id, _cave_biome, _surface_height, _world_seed, true);
+                    
                 if (_wall_id != TILE_EMPTY)
                 {
                     var _data = _item_data[$ _wall_id];
@@ -470,13 +533,24 @@ function chunk_generate(_chunk)
                     }
                 }
             }
+        }
             
             // Foliage / Decorations (when above solid ground)
-            // Check if current is cave (air) and below is solid
-            // Bit j+2 is row BELOW
-            var _is_cave_below = (__cave_bit[i] >> (j + 2)) & 1;
+            // Check if current is Air and Below is Solid
             
-            if (_is_cave && !_is_cave_below) // Air above solid = floor for foliage
+            // Check density below (Optimization: use pre-calc array if possible)
+            var _density_below = -1;
+            if (j < CHUNK_SIZE - 1)
+            {
+                 _density_below = __density_array[i + ((j + 1) * CHUNK_SIZE)];
+            }
+            else
+            {
+                 _density_below = global.terrain_generator.get_density_detailed(_world_x, _world_y + 1, 0, _world_data, _world_seed);
+            }
+            var _is_solid_below = (_density_below > 0);
+            
+            if (!_is_solid && _is_solid_below) // Air above solid = floor for foliage
             {
                 var _z = ((xorshift(_world_seed ^ (_world_x * 457)) & (1 << j)) ? CHUNK_DEPTH_FOLIAGE_FRONT : CHUNK_DEPTH_FOLIAGE_BACK);
                 if !(_skip_z & (1 << _z)) 

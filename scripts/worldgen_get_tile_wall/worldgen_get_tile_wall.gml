@@ -1,31 +1,20 @@
-function worldgen_get_tile_wall(_x, _y, _surface_biome, _cave_biome, _surface_height, _seed)
+/// @param {Bool} _bypass_density_check (Optional) If true, skip density check and assume wall exists
+function worldgen_get_tile_wall(_x, _y, _surface_biome, _cave_biome, _surface_height, _seed, _bypass_density_check = false)
 {
     var _world_data = global.world_data[$ global.world_save_data.dimension];
     
-    // Check for sky island walls (inside islands or support pillars)
-    if (_y < _surface_height)
+    // Check for wall existence via density (Z-offset)
+    if (!_bypass_density_check)
     {
-         var _is_inside = worldgen_get_sky_island(_x, _y, _seed, _world_data);
-         var _is_below = false;
-         
-         if (!_is_inside)
-         {
-             _is_below = worldgen_is_below_sky_island(_x, _y, _seed, _world_data);
-         }
-         
-         if (_is_inside || _is_below)
-         {
-             // Generate noise value for tile variation
-             var _noise = open_simplex_noise(_x * _world_data.get_tile_variation_noise_scale(), _y * _world_data.get_tile_variation_noise_scale() + (_seed * 200), 1.0, 2);
-             
-             // Use surface biome wall for cohesion
-             var _biome_data = global.biome_data;
-             var _biome = _biome_data[$ _surface_biome] ?? _biome_data[$ "phantasia:surface/forest"];
-             if (_biome != undefined) return _biome.get_tile_middle_layer_wall(_noise);
-         }
-         
-         // If above surface and not part of island system, return empty
-         return TILE_EMPTY;
+        // 1. Check if Solid exists (Walls always exist behind solid)
+        var _density_solid = global.terrain_generator.get_density_detailed(_x, _y, 0, _world_data, _seed);
+        
+        // 2. Check if Wall exists (Z-offset for overhang/support)
+        var _wall_offset = _world_data.get_wall_noise_offset() ?? 0.15;
+        var _density_wall = global.terrain_generator.get_density_detailed(_x, _y, _wall_offset, _world_data, _seed);
+        
+        if (_density_solid <= 0 && _density_wall <= 0) return TILE_EMPTY;
+        // If either is > 0, we place a wall.
     }
     
     // Generate noise value for tile variation

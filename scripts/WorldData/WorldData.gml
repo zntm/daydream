@@ -431,6 +431,43 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         ___biome_blend_range = _surface[$ "biome_blend_range"] ?? 24;
         ___biome_blend_noise_scale = _surface[$ "biome_blend_noise_scale"] ?? 0.08;
         
+        // --- NEW TERRAIN SHAPING (Minecraft-like) ---
+        var _terrain_shaping = _surface[$ "shaping"];
+        if (_terrain_shaping == undefined) _terrain_shaping = {};
+        
+        // Noise settings for shaping parameters
+        ___continentalness_noise = _terrain_shaping[$ "continentalness_noise"] ?? { scale: 0.002, octaves: 2 };
+        ___erosion_noise = _terrain_shaping[$ "erosion_noise"] ?? { scale: 0.002, octaves: 2 };
+        ___pv_noise = _terrain_shaping[$ "pv_noise"] ?? { scale: 0.005, octaves: 2 };
+        
+        // Wall offset (Z-layer shift for connection)
+        ___wall_noise_offset = _terrain_shaping[$ "wall_noise_offset"] ?? 0.15; 
+        
+        // Default Splines (can be overridden by JSON)
+        // Continentalness: -1 (Ocean) -> 0 (Coast) -> 1 (Inland/Mountain) -> 2 (Sky)
+        ___spline_continentalness = _terrain_shaping[$ "spline_continentalness"] ?? [
+            { position: -1.0, value: 0.0 }, // Deep Ocean / Void
+            { position: -0.2, value: 300.0 }, // Coast
+            { position: 0.0, value: 450.0 }, // Surface Base
+            { position: 0.5, value: 550.0 }, // Hills
+            { position: 1.0, value: 1200.0 } // Sky/mountains
+        ];
+        
+        // Erosion: -1 (Flat/Smooth) -> 1 (Jagged/Chaotic)
+        // Multiplier for noise amplitude
+        ___spline_erosion = _terrain_shaping[$ "spline_erosion"] ?? [
+            { position: -1.0, value: 0.2 }, // Very smooth
+            { position: 0.0, value: 1.0 }, // Normal
+            { position: 1.0, value: 2.5 }  // jagged
+        ];
+        
+        // Peaks & Valleys: modulates height locally
+        ___spline_pv = _terrain_shaping[$ "spline_pv"] ?? [
+            { position: -1.0, value: -100.0 }, // Valley
+            { position: 0.0, value: 0.0 },     // Flat
+            { position: 1.0, value: 100.0 }    // Peak
+        ];
+        
         return self;
     }
     
@@ -719,6 +756,16 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
     {
         return ___biome_blend_noise_scale;
     }
+    
+    // --- New Getters ---
+    static get_continentalness_noise = function() { return ___continentalness_noise; }
+    static get_erosion_noise = function() { return ___erosion_noise; }
+    static get_pv_noise = function() { return ___pv_noise; }
+    static get_wall_noise_offset = function() { return ___wall_noise_offset; }
+    
+    static get_spline_continentalness = function() { return ___spline_continentalness; }
+    static get_spline_erosion = function() { return ___spline_erosion; }
+    static get_spline_pv = function() { return ___spline_pv; }
     
     static set_surface_biome_map = function(_map)
     {
