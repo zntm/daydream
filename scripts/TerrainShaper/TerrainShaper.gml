@@ -115,8 +115,8 @@ function TerrainShaper(_world_data) constructor
         
         // === 6. Final density ===
         // Combine height gradient with 3D noise (buffed weight for larger gaps)
-        var _density = _height_gradient + (_noise_3d * (2.2 + _erosion * 1.2));
+        var _density = _height_gradient + (_noise_3d * (1.8 + _erosion * 0.8));
         
-        return _density - 0.15 - _threshold;
+        return _density - 0.05 - _threshold;
     }
 }

@@ -55,7 +55,7 @@
         "surface": {
             "heat": {
                 "octaves": 4.5,
-                "scale": 0.005,
+                "scale": 0.008,
                 "spline_x": {
                     "points": [
                         {
@@ -74,7 +74,7 @@
             },
             "humidity": {
                 "octaves": 2.75,
-                "scale": 0.005
+                "scale": 0.008
             },
             "map": "phantasia:world/playground/map",
             "offset": {
@@ -209,6 +209,11 @@
             "time_range_max": 1200
         }
     ],
+    "terrain_shaping": {
+        "noise_scale_3d": 0.015,
+        "squash_factor": 4.0,
+        "z_offset_wall": 0.075
+    },
     "spawn_interval": 14,
     "surface": {
         "start": 512,

@@ -441,7 +441,7 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         ___terrain_squash_factor = _config[$ "squash_factor"] ?? 4.0; // Flatter, wider plates
         
         // 3D density noise settings
-        ___terrain_3d_noise_scale = _config[$ "noise_scale_3d"] ?? 0.025; // Larger features (was 0.05)
+        ___terrain_3d_noise_scale = _config[$ "noise_scale_3d"] ?? 0.015; // Larger features
         ___terrain_density_threshold = _config[$ "density_threshold"] ?? 0.0;
         
         // Z-offset for walls (higher = walls extend further than solid)
