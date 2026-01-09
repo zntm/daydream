@@ -33,10 +33,14 @@ function worldgen_get_tile_base(_x, _y, _surface_biome, _cave_biome, _surface_he
     // === 3D Density-based terrain (replaces old overhang system) ===
     // Use TerrainShaper for solid tile determination
     var _density = 0;
+    var _material_noise = 0;
     if (global.terrain_shaper != undefined)
     {
         _density = global.terrain_shaper.get_density_solid(_x, _y, _seed);
         if (_density < 0) return TILE_EMPTY; // Negative density = air
+        
+        // Sample material noise for organic variation
+        _material_noise = global.terrain_shaper.get_density_material(_x, _y, _seed);
     }
     
     // Generate context for MaterialProvider
@@ -48,6 +52,7 @@ function worldgen_get_tile_base(_x, _y, _surface_biome, _cave_biome, _surface_he
         y: _y,
         surface_height: _surface_height,
         noise: _noise,
+        material_noise: _material_noise,
         cave_above: _cave_above,
         air_above: (_cave_above ? 1 : 0),
         cave_biome: _cave_biome
@@ -137,13 +142,32 @@ function worldgen_get_tile_base(_x, _y, _surface_biome, _cave_biome, _surface_he
         // 2. Sub-surface (Near Air): Dirt/Middle Layer
         // Density closer to 0 means we are near the surface/edge.
         // Higher density means we are deeper inside the solid mass.
-        // Threshold: 0.0 to 0.7 = Dirt zone (Increased for thicker layer)
-        if (_density < 0.7)
+        
+        // --- ORGANIC REFINEMENTS ---
+        // A. Continuous "Crust" variation (large-scale waves of soil depth)
+        var _crust_var = open_simplex_noise(_x * 0.015, _seed * 8.3, 1.0, 2);
+        
+        // B. Smooth "Blobby" boundary (medium-scale wobble for rounded transitions)
+        var _boundary_wobble = open_simplex_noise(_x * 0.06, _y * 0.06 + (_seed * 15.7), 1.0, 3);
+        
+        // Calculate dynamic threshold for dirt layer
+        // Base 0.6 + waves + blobs
+        var _dirt_threshold = 0.6 + (_crust_var * 0.4) + (_boundary_wobble * 0.15);
+        
+        if (_density < _dirt_threshold)
         {
             return _biome.get_tile_middle_layer().get_tile(_context);
         }
         
         // 3. Deep Underground: Stone/Fill Layer
+        // Use 3D material noise for organic variation
+        if (_material_noise > 0.4)
+        {
+            // Pockets of other materials (stone variants, gravel, etc.)
+            // For now let's just use it to vary the "type" of stone or use it for gravel patches
+            return "phantasia:stone"; // Replace with your desired variants!
+        }
+        
         return "phantasia:stone"; 
     }
     

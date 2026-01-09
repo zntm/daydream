@@ -24,6 +24,13 @@ function TerrainShaper(_world_data) constructor
         return ___get_density_3d(_x, _y, _z_offset, _seed);
     }
     
+    /// @desc Get 3D density at position for material variation (sedimentary layers, etc.)
+    static get_density_material = function(_x, _y, _seed)
+    {
+        var _z_offset = ___world_data.get_terrain_z_offset_material();
+        return ___get_density_3d(_x, _y, _z_offset, _seed);
+    }
+    
     /// @desc Estimate surface height using binary search on density
     /// @param {Real} _x World X position
     /// @param {Struct} _region Region data (for base height)
