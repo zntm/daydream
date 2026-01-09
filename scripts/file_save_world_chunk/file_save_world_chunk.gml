@@ -43,6 +43,43 @@ function file_save_world_chunk(_world_save_data, _chunk)
         var _chunk_count = _chunk.chunk_count;
         var _chunk_covered = _chunk.chunk_covered;
         
+        // Build Palette
+        var _palette_map = {};
+        var _palette_array = [];
+        var _palette_index = 0;
+        
+        for (var i = 0; i < CHUNK_DEPTH; ++i)
+        {
+            if !(_chunk_display & (1 << i)) continue;
+            
+            for (var j = 0; j < CHUNK_SIZE; ++j)
+            {
+                for (var l = 0; l < CHUNK_SIZE; ++l)
+                {
+                    var _tile = _chunk2[tile_index_xyz(l, j, i)];
+                    
+                    if (_tile != TILE_EMPTY)
+                    {
+                        var _id = _tile.get_id();
+                        
+                        if (!struct_exists(_palette_map, _id))
+                        {
+                            _palette_map[$ _id] = _palette_index++;
+                            array_push(_palette_array, _id);
+                        }
+                    }
+                }
+            }
+        }
+        
+        // Write Palette
+        buffer_write(_current_chunk_buffer, buffer_u16, _palette_index);
+        
+        for (var i = 0; i < _palette_index; ++i)
+        {
+            buffer_write(_current_chunk_buffer, buffer_string, _palette_array[i]);
+        }
+        
         for (var i = 0; i < CHUNK_SIZE; ++i)
         {
             buffer_write(_current_chunk_buffer, buffer_u16, _chunk_covered[i]);
@@ -59,7 +96,7 @@ function file_save_world_chunk(_world_save_data, _chunk)
                 for (var l = 0; l < CHUNK_SIZE; ++l)
                 {
                     var _tile = _chunk2[tile_index_xyz(l, j, i)];
-                    file_save_snippet_tile(_current_chunk_buffer, _tile, _item_data);
+                    file_save_snippet_tile(_current_chunk_buffer, _tile, _item_data, _palette_map);
                     
                     if (_tile != TILE_EMPTY)
                     {

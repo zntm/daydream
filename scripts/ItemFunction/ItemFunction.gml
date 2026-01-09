@@ -230,6 +230,45 @@ global.item_function[$ "phantasia:export_structure"] = function()
     buffer_write(_buffer, buffer_u8, _xscale);
     buffer_write(_buffer, buffer_u8, _yscale);
 
+    // Build Palette
+    var _palette_map = {};
+    var _palette_array = [];
+    var _palette_index = 0;
+    
+    for (var _x = _x1; _x <= _x2; ++_x)
+    {
+        for (var _y = _y1; _y <= _y2; ++_y)
+        {
+            var _tile_default = tile_get(_x, _y, CHUNK_DEPTH_DEFAULT);
+            
+            if (_tile_default != TILE_EMPTY) && (_tile_default.get_id() == "phantasia:void_blueprint") continue;
+            
+            for (var _z = 0; _z < CHUNK_DEPTH; ++_z)
+            {
+                var _ = ((_z == CHUNK_DEPTH_DEFAULT) ? _tile_default : tile_get(_x, _y, _z));
+                
+                if (_ != TILE_EMPTY)
+                {
+                    var _tid = _.get_id();
+                    
+                    if (!struct_exists(_palette_map, _tid))
+                    {
+                        _palette_map[$ _tid] = _palette_index++;
+                        array_push(_palette_array, _tid);
+                    }
+                }
+            }
+        }
+    }
+    
+    // Write Palette
+    buffer_write(_buffer, buffer_u16, _palette_index);
+    
+    for (var i = 0; i < _palette_index; ++i)
+    {
+        buffer_write(_buffer, buffer_string, _palette_array[i]);
+    }
+
     for (var _x = _x1; _x <= _x2; ++_x)
     {
         for (var _y = _y1; _y <= _y2; ++_y)
@@ -249,7 +288,7 @@ global.item_function[$ "phantasia:export_structure"] = function()
             {
                 var _ = ((_z == CHUNK_DEPTH_DEFAULT) ? _tile_default : tile_get(_x, _y, _z));
 
-                file_save_snippet_tile(_buffer, _, _item_data);
+                file_save_snippet_tile(_buffer, _, _item_data, _palette_map);
             }
         }
     }
