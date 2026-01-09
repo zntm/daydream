@@ -7,6 +7,13 @@ function control_physics_creative(_dt, _id)
         xvelocity = lerp_delta(xvelocity, (input_right      - input_left)     * _fly_speed, 0.25, _dt);
         yvelocity = lerp_delta(yvelocity, (input_climb_down - input_climb_up) * _fly_speed, 0.25, _dt);
         
+        if (global.dbg_settings[$ "noclip"] == true)
+        {
+            x += xvelocity;
+            y += yvelocity;
+            return;
+        }
+        
         var _xsign = sign(xvelocity);
         var _ysign = sign(yvelocity);
         

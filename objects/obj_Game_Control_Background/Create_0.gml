@@ -9,6 +9,8 @@ in_biome_transition_value = 0;
 music_current = undefined;
 music_current_id = "";
 
+if (_in_biome_data == undefined) exit;
+
 var _music = _in_biome_data.get_music();
 
 if (_music != undefined)

@@ -29,10 +29,10 @@ function debug_init()
             spawn_creatures: true,
             enable_lighting: true,
             enable_physics: true,
-            noclip: false,  // Noclip mode (no collision when physics disabled)
             camera_size: 1,
             fly_speed: 1,
             time_speed: 1,
+            noclip: false,
             // render_texture_page: false,
         }
     }

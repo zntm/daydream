@@ -16,8 +16,7 @@
 /// @param {Bool} _cave_above Whether there is a cave above this position
 /// @param {Real} _seed World seed
 /// @returns {String} Tile ID
-/// @param {Bool} _bypass_density_check (Optional) If true, skip density check and assume solid
-function worldgen_get_tile_base(_x, _y, _surface_biome, _cave_biome, _surface_height, _cave_above, _seed, _bypass_density_check = false)
+function worldgen_get_tile_base(_x, _y, _surface_biome, _cave_biome, _surface_height, _cave_above, _seed)
 {
     // Get world data for bedrock/lava calculations
     var _world_data = global.world_data[$ global.world_save_data.dimension];
@@ -31,12 +30,13 @@ function worldgen_get_tile_base(_x, _y, _surface_biome, _cave_biome, _surface_he
         var _bedrock_noise = open_simplex_noise(_x * _world_data.get_bedrock_noise_scale(), _seed * 50, 1.0, 1);
         if (_bedrock_noise > (_bedrock_depth - 1) * 0.4) return "phantasia:bedrock";
     }
-    
-    // Check for density-based solidity (3D noise / Continentalness)
-    if (!_bypass_density_check)
+    // === 3D Density-based terrain (replaces old overhang system) ===
+    // Use TerrainShaper for solid tile determination
+    var _density = 0;
+    if (global.terrain_shaper != undefined)
     {
-        var _density = global.terrain_generator.get_density_detailed(_x, _y, 0, _world_data, _seed);
-        if (_density <= 0) return TILE_EMPTY;
+        _density = global.terrain_shaper.get_density_solid(_x, _y, _seed);
+        if (_density < 0) return TILE_EMPTY; // Negative density = air
     }
     
     // Generate context for MaterialProvider
@@ -47,8 +47,6 @@ function worldgen_get_tile_base(_x, _y, _surface_biome, _cave_biome, _surface_he
         x: _x,
         y: _y,
         surface_height: _surface_height,
-        noise: _noise,
-        cave_above: _cave_above,
         noise: _noise,
         cave_above: _cave_above,
         air_above: (_cave_above ? 1 : 0),
@@ -128,14 +126,25 @@ function worldgen_get_tile_base(_x, _y, _surface_biome, _cave_biome, _surface_he
     
     if (_biome != undefined)
     {
-        if (_cave_above) // Top Layer (Surface) - includes overhang surfaces
+        // === STRATIFICATION LOGIC ===
+        // Determine tile based on density and exposure
+        // 1. Surface (Exposed to Air): Grass/Top Layer
+        if (_cave_above)
         {
             return _biome.get_tile_top_layer().get_tile(_context);
         }
-        else // Middle Layer (Underground/Fill)
+        
+        // 2. Sub-surface (Near Air): Dirt/Middle Layer
+        // Density closer to 0 means we are near the surface/edge.
+        // Higher density means we are deeper inside the solid mass.
+        // Threshold: 0.0 to 0.7 = Dirt zone (Increased for thicker layer)
+        if (_density < 0.7)
         {
             return _biome.get_tile_middle_layer().get_tile(_context);
         }
+        
+        // 3. Deep Underground: Stone/Fill Layer
+        return "phantasia:stone"; 
     }
     
     return TILE_EMPTY;

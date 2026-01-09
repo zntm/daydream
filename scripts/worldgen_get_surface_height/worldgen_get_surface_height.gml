@@ -8,6 +8,12 @@ function worldgen_get_surface_height(_x, _seed, _world_data = global.world_data[
     // Resolve Region (using RegionGenerator)
     var _region = global.region_generator.get_region(_x, 0, 0, _seed);
     
-    // Resolve Height via TerrainGenerator (Density-based)
+    // Resolve Height via TerrainShaper (3D Density-based)
+    if (global.terrain_shaper != undefined)
+    {
+        return global.terrain_shaper.get_surface_height(_x, _region, _seed);
+    }
+    
+    // Fallback to legacy
     return global.terrain_generator.get_surface_height(_x, _region, _seed);
 }

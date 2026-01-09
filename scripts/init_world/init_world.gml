@@ -22,6 +22,10 @@ global.terrain_generator = new TerrainGenerator({
     gradient_strength: 0.015
 });
 
+// TerrainShaper for 3D noise-based terrain with overhangs
+// Will be re-initialized per world in init_world with world-specific settings
+global.terrain_shaper = undefined; // Initialized per world
+
 function init_world(_directory, _namespace = "phantasia", _type = 0)
 {
     var _biome_data = global.biome_data;
@@ -70,12 +74,7 @@ function init_world(_directory, _namespace = "phantasia", _type = 0)
         _world_data.set_cave_biome(_biome.cave);
         _world_data.set_surface_biome(_biome.surface);
         
-        // Parse sky biome configuration (optional)
-        var _sky_biome = _biome[$ "sky"];
-        if (_sky_biome != undefined)
-        {
-            _world_data.set_sky_biome(_sky_biome);
-        }
+
         
         var _surface = _json.surface;
         _world_data.set_surface(_surface);
@@ -83,7 +82,25 @@ function init_world(_directory, _namespace = "phantasia", _type = 0)
         var _cave = _json.cave;
         _world_data.set_cave(_cave);
         
+        // Parse terrain shaping configuration (new 3D density system)
+        var _terrain_shaping = _json[$ "terrain_shaping"];
+        if (_terrain_shaping != undefined)
+        {
+            _world_data.set_terrain_shaping(_terrain_shaping);
+        }
+        else
+        {
+            // Apply defaults
+            _world_data.set_terrain_shaping({});
+        }
+        
         global.world_data[$ $"{_namespace}:{_id}"] = _world_data;
+        
+        // Initialize terrain_shaper with the first loaded world's data
+        if (global.terrain_shaper == undefined)
+        {
+            global.terrain_shaper = new TerrainShaper(_world_data);
+        }
         
         delete _json;
         

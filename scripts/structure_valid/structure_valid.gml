@@ -82,7 +82,17 @@ function structure_valid(_x, _y, _id, _seed)
                 {
                     var _y2 = _tile_y + l + _yoffset;
                     
-                    if (!worldgen_get_cave(_x2, _y2, _surface_height, _cave_start, _seed)) return false;
+                    var _is_cave = false;
+                    if (global.terrain_shaper != undefined)
+                    {
+                        _is_cave = (global.terrain_shaper.get_density_solid(_x2, _y2, _seed) < 0);
+                    }
+                    else
+                    {
+                        _is_cave = worldgen_get_cave(_x2, _y2, _surface_height, _cave_start, _seed);
+                    }
+                    
+                    if (!_is_cave) return false;
                 }
             }
         }

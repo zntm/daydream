@@ -165,7 +165,17 @@ global.natural_structure_data[$ "phantasia:ore"] = new NaturalStructureData()
             
             for (; j < _height; ++j)
             {
-                if (worldgen_get_cave(_x + i, _y + j, _surface_height, _cave_start, _seed))
+                var _is_cave = false;
+                if (global.terrain_shaper != undefined)
+                {
+                    _is_cave = (global.terrain_shaper.get_density_solid(_x + i, _y + j, _seed) < 0);
+                }
+                else
+                {
+                    _is_cave = worldgen_get_cave(_x + i, _y + j, _surface_height, _cave_start, _seed);
+                }
+                
+                if (_is_cave)
                 {
                     __cave[@ i] |= 1 << j;
                 }

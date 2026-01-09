@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"worldgen_get_sky_island",
+  "%Name":"TerrainShaper",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"worldgen_get_sky_island",
+  "name":"TerrainShaper",
   "parent":{
     "name":"Scripts",
     "path":"folders/Scripts.yy",

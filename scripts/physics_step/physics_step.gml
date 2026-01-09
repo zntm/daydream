@@ -35,28 +35,9 @@ function physics_step(_body, _input)
             break;
     }
     
-    // Collision resolution (skip if noclip is enabled)
-    var _noclip = false;
-    if (IS_DEVELOPER_MODE && _body.mode == MOVEMENT_MODE.FLY)
-    {
-        var _dbg = variable_global_exists("dbg_settings") ? global.dbg_settings : undefined;
-        if (_dbg != undefined && (_dbg[$ "noclip"] || !_dbg[$ "enable_physics"]))
-        {
-            _noclip = true;
-        }
-    }
-    
-    if (!_noclip)
-    {
-        physics_move_contact_x(_body);
-        physics_move_contact_y(_body);
-    }
-    else
-    {
-        // Noclip: just apply velocity directly, no collision
-        _body.x += _body.vel_x;
-        _body.y += _body.vel_y;
-    }
+    // Collision resolution (same for all modes)
+    physics_move_contact_x(_body);
+    physics_move_contact_y(_body);
     
     // Resolve entity collisions using SpatialGrid
     // physics_resolve_entity(_body, global.spatial_grid);

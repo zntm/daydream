@@ -431,45 +431,45 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         ___biome_blend_range = _surface[$ "biome_blend_range"] ?? 24;
         ___biome_blend_noise_scale = _surface[$ "biome_blend_noise_scale"] ?? 0.08;
         
-        // --- NEW TERRAIN SHAPING (Minecraft-like) ---
-        var _terrain_shaping = _surface[$ "shaping"];
-        if (_terrain_shaping == undefined) _terrain_shaping = {};
+        return self;
+    }
+    
+    /// @desc Set terrain shaping parameters for 3D noise-based terrain
+    static set_terrain_shaping = function(_config)
+    {
+        // Squash factor compresses Y for horizontal caves/overhangs (> 1 = flatter/wider)
+        ___terrain_squash_factor = _config[$ "squash_factor"] ?? 4.0; // Flatter, wider plates
         
-        // Noise settings for shaping parameters
-        ___continentalness_noise = _terrain_shaping[$ "continentalness_noise"] ?? { scale: 0.002, octaves: 2 };
-        ___erosion_noise = _terrain_shaping[$ "erosion_noise"] ?? { scale: 0.002, octaves: 2 };
-        ___pv_noise = _terrain_shaping[$ "pv_noise"] ?? { scale: 0.005, octaves: 2 };
+        // 3D density noise settings
+        ___terrain_3d_noise_scale = _config[$ "noise_scale_3d"] ?? 0.025; // Larger features (was 0.05)
+        ___terrain_density_threshold = _config[$ "density_threshold"] ?? 0.0;
         
-        // Wall offset (Z-layer shift for connection)
-        ___wall_noise_offset = _terrain_shaping[$ "wall_noise_offset"] ?? 0.15; 
+        // Z-offset for walls (higher = walls extend further than solid)
+        ___terrain_z_offset_wall = _config[$ "z_offset_wall"] ?? 0.075; // More connected look as requested
         
-        // Default Splines (can be overridden by JSON)
-        // Continentalness: -1 (Ocean) -> 0 (Coast) -> 1 (Inland/Mountain) -> 2 (Sky)
-        ___spline_continentalness = _terrain_shaping[$ "spline_continentalness"] ?? [
-            { position: -1.0, value: 0.0 }, // Deep Ocean / Void
-            { position: -0.2, value: 300.0 }, // Coast
-            { position: 0.0, value: 450.0 }, // Surface Base
-            { position: 0.5, value: 550.0 }, // Hills
-            { position: 1.0, value: 1200.0 } // Sky/mountains
-        ];
+        // Continentalness (large-scale surface variation)
+        ___terrain_continentalness_scale = _config[$ "continentalness_scale"] ?? 0.0015;
+        ___terrain_continentalness_amplitude = _config[$ "continentalness_amplitude"] ?? 180;
         
-        // Erosion: -1 (Flat/Smooth) -> 1 (Jagged/Chaotic)
-        // Multiplier for noise amplitude
-        ___spline_erosion = _terrain_shaping[$ "spline_erosion"] ?? [
-            { position: -1.0, value: 0.2 }, // Very smooth
-            { position: 0.0, value: 1.0 }, // Normal
-            { position: 1.0, value: 2.5 }  // jagged
-        ];
+        // Peaks/Valleys (local height variation)
+        ___terrain_peaks_scale = _config[$ "peaks_scale"] ?? 0.04;
+        ___terrain_peaks_amplitude = _config[$ "peaks_amplitude"] ?? 100;
         
-        // Peaks & Valleys: modulates height locally
-        ___spline_pv = _terrain_shaping[$ "spline_pv"] ?? [
-            { position: -1.0, value: -100.0 }, // Valley
-            { position: 0.0, value: 0.0 },     // Flat
-            { position: 1.0, value: 100.0 }    // Peak
-        ];
+        // Erosion (controls cave/overhang intensity variation)
+        ___terrain_erosion_scale = _config[$ "erosion_scale"] ?? 0.015;
         
         return self;
     }
+    
+    static get_terrain_squash_factor = function() { return self[$ "___terrain_squash_factor"] ?? 0.5; }
+    static get_terrain_3d_noise_scale = function() { return self[$ "___terrain_3d_noise_scale"] ?? 0.04; }
+    static get_terrain_density_threshold = function() { return self[$ "___terrain_density_threshold"] ?? 0.0; }
+    static get_terrain_z_offset_wall = function() { return self[$ "___terrain_z_offset_wall"] ?? 0.15; }
+    static get_terrain_continentalness_scale = function() { return self[$ "___terrain_continentalness_scale"] ?? 0.003; }
+    static get_terrain_continentalness_amplitude = function() { return self[$ "___terrain_continentalness_amplitude"] ?? 80; }
+    static get_terrain_peaks_scale = function() { return self[$ "___terrain_peaks_scale"] ?? 0.02; }
+    static get_terrain_peaks_amplitude = function() { return self[$ "___terrain_peaks_amplitude"] ?? 25; }
+    static get_terrain_erosion_scale = function() { return self[$ "___terrain_erosion_scale"] ?? 0.015; }
     
     static get_surface_start = function()
     {
@@ -570,7 +570,6 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         ___cave_overhang_threshold = _cave[$ "overhang_threshold"];
         ___cave_overhang_threshold_tile = _cave[$ "overhang_threshold_tile"];
         ___cave_overhang_noise_scale = _cave[$ "overhang_noise_scale"] ?? 0.05;
-        ___cave_overhang_max_height = _cave[$ "overhang_max_height"] ?? 16;
         
         // Depth smoothing spline for cave size
         var _depth_smoothing = _cave[$ "depth_smoothing"];
@@ -600,11 +599,6 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
     static get_cave_overhang_noise_scale = function()
     {
         return self[$ "___cave_overhang_noise_scale"];
-    }
-
-    static get_cave_overhang_max_height = function()
-    {
-        return self[$ "___cave_overhang_max_height"] ?? 16;
     }
 
     static get_cave_breach_noise_scale_x = function()
@@ -757,16 +751,6 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         return ___biome_blend_noise_scale;
     }
     
-    // --- New Getters ---
-    static get_continentalness_noise = function() { return ___continentalness_noise; }
-    static get_erosion_noise = function() { return ___erosion_noise; }
-    static get_pv_noise = function() { return ___pv_noise; }
-    static get_wall_noise_offset = function() { return ___wall_noise_offset; }
-    
-    static get_spline_continentalness = function() { return ___spline_continentalness; }
-    static get_spline_erosion = function() { return ___spline_erosion; }
-    static get_spline_pv = function() { return ___spline_pv; }
-    
     static set_surface_biome_map = function(_map)
     {
         ___surface_biome_map = _map;
@@ -779,153 +763,5 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         return ___surface_biome_map;
     }
     
-    static set_sky_biome = function(_sky_biome)
-    {
-        ___sky_biome_threshold = _sky_biome[$ "threshold"] ?? 256;
-        ___sky_biome_id = _sky_biome[$ "id"] ?? "phantasia:sky/floating_islands";
-        ___sky_biome_enabled = _sky_biome[$ "enabled"] ?? true;
-        
-        ___sky_island_spacing = _sky_biome[$ "spacing"] ?? 32;
-        ___sky_island_radius = _sky_biome[$ "radius"] ?? 18;
-        ___sky_island_thickness = _sky_biome[$ "thickness"] ?? 10;
-        ___sky_noise_scale_region = _sky_biome[$ "noise_scale_region"] ?? 0.12;
-        ___sky_noise_scale_edge = _sky_biome[$ "noise_scale_edge"] ?? 0.15;
-        ___sky_noise_scale_detail = _sky_biome[$ "noise_scale_detail"] ?? 0.3;
-        
-        ___sky_region_offset_y = _sky_biome[$ "region_offset_y"] ?? 1000;
-        ___sky_region_range = _sky_biome[$ "region_range"] ?? 255;
-        ___sky_region_octaves = _sky_biome[$ "region_octaves"] ?? 2;
-        ___sky_region_threshold = _sky_biome[$ "region_threshold"] ?? 60;
-        
-        ___sky_edge_noise_amplitude = _sky_biome[$ "edge_noise_amplitude"] ?? 0.5;
-        ___sky_edge_noise_octaves = _sky_biome[$ "edge_noise_octaves"] ?? 3;
-        
-        ___sky_detail_noise_amplitude = _sky_biome[$ "detail_noise_amplitude"] ?? 0.25;
-        ___sky_detail_noise_octaves = _sky_biome[$ "detail_noise_octaves"] ?? 2;
-        
-        // New roughness and support parameters
-        ___sky_roughness_amplitude = _sky_biome[$ "roughness_amplitude"] ?? 0.25;
-        ___sky_roughness_scale = _sky_biome[$ "roughness_scale"] ?? 0.08;
-        ___sky_support_chance = _sky_biome[$ "support_chance"] ?? 0.4;
-        ___sky_support_width = _sky_biome[$ "support_width"] ?? 0.3;
-        ___sky_support_taper = _sky_biome[$ "support_taper"] ?? 0.02;
-        ___sky_support_max_length = _sky_biome[$ "support_max_length"] ?? 120;
-        
-        return self;
-    }
-    
-    static get_sky_biome_threshold = function()
-    {
-        return self[$ "___sky_biome_threshold"] ?? 256;
-    }
-    
-    static get_sky_biome_id = function()
-    {
-        return self[$ "___sky_biome_id"] ?? "phantasia:sky/floating_islands";
-    }
-    
-    static is_sky_biome_enabled = function()
-    {
-        return self[$ "___sky_biome_enabled"] ?? true;
-    }
-    
-    static get_sky_island_spacing = function()
-    {
-        return ___sky_island_spacing;
-    }
-    
-    static get_sky_island_radius = function()
-    {
-        return ___sky_island_radius;
-    }
-    
-    static get_sky_island_thickness = function()
-    {
-        return ___sky_island_thickness;
-    }
-    
-    static get_sky_noise_scale_region = function()
-    {
-        return ___sky_noise_scale_region;
-    }
-    
-    static get_sky_noise_scale_edge = function()
-    {
-        return ___sky_noise_scale_edge;
-    }
-    
-    static get_sky_noise_scale_detail = function()
-    {
-        return ___sky_noise_scale_detail;
-    }
 
-    static get_sky_region_offset_y = function()
-    {
-        return ___sky_region_offset_y;
-    }
-
-    static get_sky_region_range = function()
-    {
-        return ___sky_region_range;
-    }
-
-    static get_sky_region_octaves = function()
-    {
-        return ___sky_region_octaves;
-    }
-
-    static get_sky_region_threshold = function()
-    {
-        return ___sky_region_threshold;
-    }
-
-    static get_sky_edge_noise_amplitude = function()
-    {
-        return ___sky_edge_noise_amplitude;
-    }
-
-    static get_sky_edge_noise_octaves = function()
-    {
-        return ___sky_edge_noise_octaves;
-    }
-
-    static get_sky_detail_noise_amplitude = function()
-    {
-        return ___sky_detail_noise_amplitude;
-    }
-
-    static get_sky_detail_noise_octaves = function()
-    {
-        return ___sky_detail_noise_octaves;
-    }
-
-    static get_sky_roughness_amplitude = function()
-    {
-        return self[$ "___sky_roughness_amplitude"] ?? 0.25;
-    }
-
-    static get_sky_roughness_scale = function()
-    {
-        return self[$ "___sky_roughness_scale"] ?? 0.08;
-    }
-
-    static get_sky_support_chance = function()
-    {
-        return self[$ "___sky_support_chance"] ?? 0.4;
-    }
-
-    static get_sky_support_width = function()
-    {
-        return self[$ "___sky_support_width"] ?? 0.3;
-    }
-
-    static get_sky_support_taper = function()
-    {
-        return self[$ "___sky_support_taper"] ?? 0.02;
-    }
-
-    static get_sky_support_max_length = function()
-    {
-        return self[$ "___sky_support_max_length"] ?? 120;
-    }
 }

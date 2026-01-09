@@ -109,13 +109,47 @@ function control_player()
     entity_update_collision(physics_body);
     
     // Choose physics mode based on debug settings
-    if (IS_DEVELOPER_MODE) && (!global.dbg_settings[$ "enable_physics"])
+    if (IS_DEVELOPER_MODE)
     {
-        // Creative flight mode (physics disabled = fly mode)
-        physics_body.mode = MOVEMENT_MODE.FLY;
+        var _enable_physics = global.dbg_settings[$ "enable_physics"];
+        var _noclip = global.dbg_settings[$ "noclip"] ?? false;
+        
+        if (_noclip)
+        {
+             // Noclip: Move directly and skip physics step
+             var _fly_speed = global.dbg_settings[$ "fly_speed"] ?? 8.65;
+             var _vx = (input_state.move_right - input_state.move_left) * _fly_speed;
+             var _vy = (input_state.move_down - input_state.move_up) * _fly_speed;
+             
+             x += _vx * _dt;
+             y += _vy * _dt;
+             
+             physics_body.vel_x = 0;
+             physics_body.vel_y = 0;
+             physics_body.sync_to_instance(id);
+             
+             // Update camera/visibility and exit
+             control_camera_pos(x - (global.camera_width / 2), y - (global.camera_height / 2), false);
+             // (Copying chunk update logic if needed, or ensuring it runs next frame)
+             // For simplicity, we just return. The camera/chunk logic is at end of script, so we should jump there.
+             // Actually, let's just use the existing logic flow but bypass physics_step.
+        }
+        else if (!_enable_physics)
+        {
+            // Creative flight mode (no gravity, but collisions enabled usually? Or fly mode handles it?)
+            // physics_mode_fly handles input movement.
+            physics_body.mode = MOVEMENT_MODE.FLY;
+        }
     }
     
-    physics_step(physics_body, input_state);
+    if (IS_DEVELOPER_MODE && (global.dbg_settings[$ "noclip"] ?? false))
+    {
+        // Skip physics step for noclip
+    }
+    else
+    {
+        physics_step(physics_body, input_state);
+    }
     physics_body.sync_to_instance(id);
     
     // --- COMBAT ---

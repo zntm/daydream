@@ -19,18 +19,37 @@ if (obj_Game_Control.spawn_needs_init)
         
         var _player_tile_x = _base_tile_x + _offset;
         var _surface_height = worldgen_get_surface_height(_player_tile_x, _seed);
-        var _cave_start = worldgen_get_cave_start(_player_tile_x, _seed);
         
-        // Check if the position at surface height (one tile above surface) is inside a cave
-        var _spawn_tile_y = _surface_height - 1;
-        var _is_in_cave = worldgen_get_cave(_player_tile_x, _spawn_tile_y + 1, _surface_height, _cave_start, _seed);
-        
-        if (!_is_in_cave)
+        // Verify spawn position using TerrainShaper density
+        if (global.terrain_shaper != undefined)
         {
-            // Valid spawn position found
-            obj_Player.x = _player_tile_x * TILE_SIZE;
-            obj_Player.y = (_spawn_tile_y * TILE_SIZE) + (TILE_SIZE / 2);
-            _spawn_found = true;
+            // Check density: Y (floor) > 0, Y-1 (feet) < 0, Y-2 (head) < 0
+            // Game coordinate Y increases downwards. Surface height is the ground block.
+            var _d_floor = global.terrain_shaper.get_density_solid(_player_tile_x, _surface_height, _seed);
+            var _d_feet  = global.terrain_shaper.get_density_solid(_player_tile_x, _surface_height - 1, _seed);
+            var _d_head  = global.terrain_shaper.get_density_solid(_player_tile_x, _surface_height - 2, _seed);
+            
+            if (_d_floor > 0 && _d_feet < 0 && _d_head < 0)
+            {
+                // Valid spawn position found
+                obj_Player.x = _player_tile_x * TILE_SIZE;
+                obj_Player.y = ((_surface_height - 1) * TILE_SIZE) + (TILE_SIZE / 2); // Feet position
+                _spawn_found = true;
+            }
+        }
+        else
+        {
+            // Legacy fallback
+            var _cave_start = worldgen_get_cave_start(_player_tile_x, _seed);
+            var _spawn_tile_y = _surface_height - 1;
+            var _is_in_cave = worldgen_get_cave(_player_tile_x, _spawn_tile_y + 1, _surface_height, _cave_start, _seed);
+            
+            if (!_is_in_cave)
+            {
+                obj_Player.x = _player_tile_x * TILE_SIZE;
+                obj_Player.y = (_spawn_tile_y * TILE_SIZE) + (TILE_SIZE / 2);
+                _spawn_found = true;
+            }
         }
     }
     
