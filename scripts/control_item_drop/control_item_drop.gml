@@ -1,5 +1,19 @@
 function control_item_drop()
 {
+    // --- REMOTE ITEMS ON CLIENT (INTERPOLATION) ---
+    if (global.network_role == NETWORK_ROLE.CLIENT)
+    {
+        if (variable_instance_exists(self, "interp_start_x"))
+        {
+            interp_timer += 1 / GAME_TICK;
+            var _t = clamp(interp_timer / interp_duration, 0, 1);
+            
+            x = lerp(interp_start_x, interp_target_x, _t);
+            y = lerp(interp_start_y, interp_target_y, _t);
+        }
+        exit;
+    }
+    
     timer_life -= 1 / GAME_TICK;
     
     if (timer_life <= 0)

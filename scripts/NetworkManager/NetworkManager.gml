@@ -174,7 +174,9 @@ function _network_handle_connect()
         
         ds_map_add(global.network_clients, _socket, {
             uuid: _uuid,
-            player_instance: noone
+            player_instance: noone,
+            inventory: {},
+            open_container: { x: -1, y: -1, z: -1 }
         });
         
         show_debug_message($"[NET] Client connected: socket={_socket}, uuid={_uuid}");
@@ -311,6 +313,18 @@ function _network_handle_data()
             
         case PACKET_TYPE.INVENTORY_UPDATE:
             _network_handle_inventory_update(_buffer);
+            break;
+            
+        case PACKET_TYPE.INVENTORY_ACTION:
+            _network_handle_inventory_action(_socket, _buffer);
+            break;
+            
+        case PACKET_TYPE.CONTAINER_OPEN:
+            _network_handle_container_open(_socket, _buffer);
+            break;
+            
+        case PACKET_TYPE.CONTAINER_CLOSE:
+            _network_handle_container_close(_socket, _buffer);
             break;
     }
 }
@@ -831,6 +845,7 @@ function _network_handle_tile_request(_socket, _buffer)
 function _network_init_client_inventory(_client)
 {
     _client.inventory = {};
+    _client.open_container = { x: -1, y: -1, z: -1 };
     
     // Use global inventory reference definitions
     var _names = global.inventory_names;
@@ -847,12 +862,12 @@ function _network_init_client_inventory(_client)
 }
 
 /// @desc Send inventory update to a specific client (server only)
-function network_send_inventory_update(_socket, _inv_name, _index, _item_id, _amount)
+function network_send_inventory_update(_socket, _inv_name, _index, _item)
 {
     if (global.network_role != NETWORK_ROLE.SERVER) return;
     
     var _buffer = packet_create(PACKET_TYPE.INVENTORY_UPDATE);
-    packet_write_inventory_update(_buffer, _inv_name, _index, _item_id, _amount);
+    packet_write_inventory_update(_buffer, _inv_name, _index, _item);
     
     network_send_raw(_socket, _buffer, buffer_tell(_buffer));
     buffer_delete(_buffer);
@@ -865,8 +880,7 @@ function _network_handle_inventory_update(_buffer)
     
     var _inv_name = _data.inv_name;
     var _index = _data.index;
-    var _item_id = _data.item_id;
-    var _amount = _data.amount;
+    var _item = _data.item;
     
     // Validate existence of inventory
     if (!variable_struct_exists(global.inventory, _inv_name)) return;
@@ -874,15 +888,226 @@ function _network_handle_inventory_update(_buffer)
     var _inventory = global.inventory[$ _inv_name];
     if (_index < 0 || _index >= array_length(_inventory)) return;
     
-    if (_item_id == "")
-    {
-        _inventory[@ _index] = INVENTORY_EMPTY;
-    }
-    else
-    {
-        _inventory[@ _index] = new Inventory(_item_id, _amount);
-    }
+    _inventory[@ _index] = _item;
     
     // Refresh GUI
     obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK | SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR;
+}
+
+/// @desc Handle INVENTORY_ACTION packet (server only)
+function _network_handle_inventory_action(_socket, _buffer)
+{
+    var _action = packet_read_inventory_action(_buffer);
+    var _client = global.network_clients[? _socket];
+    if (is_undefined(_client)) return;
+    
+    var _inv_target = _client.inventory;
+    
+    // Helper to resolve physical inventory from name
+    var _resolve_inv = function(_c, _name) {
+        if (_name == "_container") {
+            var _pos = _c.open_container;
+            if (_pos.x != -1) {
+                var _tile = tile_get(_pos.x, _pos.y, _pos.z);
+                if (_tile != TILE_EMPTY) return _tile.get_inventory();
+            }
+            return undefined;
+        }
+        return _c.inventory[$ _name];
+    };
+    
+    switch (_action.type)
+    {
+        case INVENTORY_ACTION_TYPE.MOVE:
+            var _from_inv = _resolve_inv(_client, _action.from_inv);
+            var _to_inv = _resolve_inv(_client, _action.to_inv);
+            
+            if (!is_undefined(_from_inv) && !is_undefined(_to_inv))
+            {
+                var _item = _from_inv[_action.from_idx];
+                _from_inv[@ _action.from_idx] = _to_inv[_action.to_idx];
+                _to_inv[@ _action.to_idx] = _item;
+                
+                // Broadcast updates
+                _network_broadcast_inventory_update(_action.from_inv, _action.from_idx, _from_inv[_action.from_idx], _client);
+                _network_broadcast_inventory_update(_action.to_inv, _action.to_idx, _to_inv[_action.to_idx], _client);
+            }
+            break;
+            
+        case INVENTORY_ACTION_TYPE.SPLIT:
+            var _from_inv = _resolve_inv(_client, _action.from_inv);
+            var _to_inv = _resolve_inv(_client, _action.to_inv);
+            
+            if (!is_undefined(_from_inv) && !is_undefined(_to_inv))
+            {
+                var _item_src = _from_inv[_action.from_idx];
+                if (_item_src != INVENTORY_EMPTY && _item_src.get_amount() >= _action.amount)
+                {
+                    var _item_dst = _to_inv[_action.to_idx];
+                    
+                    if (_item_dst == INVENTORY_EMPTY)
+                    {
+                        var _new_item = variable_clone(_item_src).set_amount(_action.amount);
+                        _to_inv[@ _action.to_idx] = _new_item;
+                        _item_src.add_amount(-_action.amount);
+                        if (_item_src.get_amount() <= 0) _from_inv[@ _action.from_idx] = INVENTORY_EMPTY;
+                    }
+                    else if (_item_dst.get_id() == _item_src.get_id())
+                    {
+                        var _data = global.item_data[$ _item_dst.get_id()];
+                        var _can_add = min(_action.amount, _data.get_inventory_max() - _item_dst.get_amount());
+                        
+                        if (_can_add > 0)
+                        {
+                            _item_dst.add_amount(_can_add);
+                            _item_src.add_amount(-_can_add);
+                            if (_item_src.get_amount() <= 0) _from_inv[@ _action.from_idx] = INVENTORY_EMPTY;
+                        }
+                    }
+                    
+                    _network_broadcast_inventory_update(_action.from_inv, _action.from_idx, _from_inv[_action.from_idx], _client);
+                    _network_broadcast_inventory_update(_action.to_inv, _action.to_idx, _to_inv[_action.to_idx], _client);
+                }
+            }
+            break;
+            
+        case INVENTORY_ACTION_TYPE.DROP:
+            var _inv = _resolve_inv(_client, _action.from_inv);
+            if (!is_undefined(_inv))
+            {
+                var _item = _inv[_action.from_idx];
+                if (_item != INVENTORY_EMPTY)
+                {
+                    var _amount_to_drop = min(_action.amount, _item.get_amount());
+                    var _drop_item = variable_clone(_item).set_amount(_amount_to_drop);
+                    
+                    var _p = _client.player_instance;
+                    if (instance_exists(_p))
+                         spawn_item_drop(_p.x, _p.y - 16, _drop_item, sign(_p.image_xscale), _p.image_xscale * 0.2, -0.6, GAME_TICK * 3);
+                    
+                    _item.add_amount(-_amount_to_drop);
+                    if (_item.get_amount() <= 0) _inv[@ _action.from_idx] = INVENTORY_EMPTY;
+                    
+                    _network_broadcast_inventory_update(_action.from_inv, _action.from_idx, _inv[_action.from_idx], _client);
+                }
+            }
+            break;
+    }
+}
+
+/// @desc Broadcast inventory update to affected client or all clients (if container)
+function _network_broadcast_inventory_update(_inv_name, _index, _item, _triggering_client)
+{
+     if (_inv_name == "_container")
+     {
+         // Broadcast to all clients watching this container
+         var _pos = _triggering_client.open_container;
+         var _sockets = ds_map_keys_to_array(global.network_clients);
+         for (var i = 0; i < array_length(_sockets); ++i)
+         {
+             var _c = global.network_clients[? _sockets[i]];
+             if (_c.open_container.x == _pos.x && _c.open_container.y == _pos.y && _c.open_container.z == _pos.z)
+             {
+                 network_send_inventory_update(_sockets[i], "_container", _index, _item);
+             }
+         }
+     }
+     else
+     {
+         // Find the socket for this client and send update
+         var _sockets = ds_map_keys_to_array(global.network_clients);
+         for (var i = 0; i < array_length(_sockets); ++i)
+         {
+             if (global.network_clients[? _sockets[i]] == _triggering_client)
+             {
+                 network_send_inventory_update(_sockets[i], _inv_name, _index, _item);
+                 break;
+             }
+         }
+     }
+}
+
+/// @desc Handle CONTAINER_OPEN request (Server) or response (Client)
+function _network_handle_container_open(_socket, _buffer)
+{
+    var _data = packet_read_container_open(_buffer);
+    
+    if (global.network_role == NETWORK_ROLE.SERVER)
+    {
+        var _client = global.network_clients[? _socket];
+        _client.open_container = { x: _data.x, y: _data.y, z: _data.z };
+        
+        var _tile = tile_get(_data.x, _data.y, _data.z);
+        if (_tile != TILE_EMPTY)
+        {
+            var _inv = _tile.get_inventory();
+            if (!is_undefined(_inv))
+            {
+                // Send current contents to the client
+                var _size = array_length(_inv);
+                
+                // First send response with size
+                var _resp = packet_create(PACKET_TYPE.CONTAINER_OPEN);
+                packet_write_container_open(_resp, _data.x, _data.y, _data.z, _size);
+                network_send_raw(_socket, _resp, buffer_tell(_resp));
+                buffer_delete(_resp);
+                
+                // Then send all slots
+                for (var i = 0; i < _size; ++i)
+                {
+                    network_send_inventory_update(_socket, "_container", i, _inv[i]);
+                }
+            }
+        }
+    }
+    else
+    {
+        // Client: Server sent container size
+        inventory_resize("_container", _data.size);
+        obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK;
+    }
+}
+
+/// @desc Handle CONTAINER_CLOSE request
+function _network_handle_container_close(_socket, _buffer)
+{
+    if (global.network_role == NETWORK_ROLE.SERVER)
+    {
+        var _client = global.network_clients[? _socket];
+        _client.open_container = { x: -1, y: -1, z: -1 };
+    }
+}
+
+/// @desc Send container open request
+function network_send_container_open(_x, _y, _z)
+{
+    if (global.network_role != NETWORK_ROLE.CLIENT) return;
+    
+    var _buffer = packet_create(PACKET_TYPE.CONTAINER_OPEN);
+    packet_write_container_open(_buffer, _x, _y, _z);
+    
+    network_send_raw(global.network_client_socket, _buffer, buffer_tell(_buffer));
+    buffer_delete(_buffer);
+}
+
+/// @desc Send container close notification
+function network_send_container_close()
+{
+    if (global.network_role != NETWORK_ROLE.CLIENT) return;
+    
+    var _buffer = packet_create(PACKET_TYPE.CONTAINER_CLOSE);
+    network_send_raw(global.network_client_socket, _buffer, buffer_tell(_buffer));
+    buffer_delete(_buffer);
+}
+
+/// @desc Send inventory action request (client only)
+function network_send_inventory_action(_type, _from_inv, _from_idx, _to_inv, _to_idx, _amount)
+{
+    if (global.network_role != NETWORK_ROLE.CLIENT) return;
+    
+    var _buffer = packet_create(PACKET_TYPE.INVENTORY_ACTION);
+    packet_write_inventory_action(_buffer, _type, _from_inv, _from_idx, _to_inv, _to_idx, _amount);
+    
+    network_send_raw(global.network_client_socket, _buffer, buffer_tell(_buffer));
+    buffer_delete(_buffer);
 }

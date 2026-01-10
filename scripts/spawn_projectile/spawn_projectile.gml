@@ -58,6 +58,14 @@ function spawn_projectile(_x, _y, _id, _damage, _xscale = 1, _yscale = 1, _owner
         timer_life = smart_value(_data.get_lifetime());
         timer_life_max = timer_life;
         
+        // Interpolation state
+        interp_start_x = x;
+        interp_start_y = y;
+        interp_target_x = x;
+        interp_target_y = y;
+        interp_timer = 0;
+        interp_duration = 0.05;
+        
         return id;
     }
 }

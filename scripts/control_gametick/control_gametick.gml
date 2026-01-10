@@ -17,25 +17,36 @@ function control_gametick(_delta_time)
     
     while (global.tick_accumulator >= 1)
     {
-        if (timer_respawn > 0)
+        with (obj_Player)
         {
-            timer_respawn -= 1 / GAME_TICK;
-            
-            if (timer_respawn <= 0)
+            if (timer_respawn > 0)
             {
-                obj_Player.x = obj_Player.spawn_x;
-                obj_Player.y = obj_Player.spawn_y;
-                obj_Player.y_last = obj_Player.y;
+                timer_respawn -= 1 / GAME_TICK;
                 
-                obj_Player.physics_body.vel_x = 0;
-                obj_Player.physics_body.vel_y = 0;
-                
-                obj_Player.hp = obj_Player.hp_max;
-                
-                _camera_x = obj_Player.x - (_camera_width  / 2);
-                _camera_y = obj_Player.y - (_camera_height / 2);
-                
-                control_camera_pos(_camera_x, _camera_y, true);
+                if (timer_respawn <= 0)
+                {
+                    x = spawn_x;
+                    y = spawn_y;
+                    y_last = y;
+                    
+                    if (physics_body != undefined)
+                    {
+                        physics_body.vel_x = 0;
+                        physics_body.vel_y = 0;
+                        physics_body.pos_x = x;
+                        physics_body.pos_y = y;
+                    }
+                    
+                    hp = hp_max;
+                    
+                    if (is_local)
+                    {
+                        _camera_x = x - (_camera_width  / 2);
+                        _camera_y = y - (_camera_height / 2);
+                        
+                        control_camera_pos(_camera_x, _camera_y, true);
+                    }
+                }
             }
         }
         

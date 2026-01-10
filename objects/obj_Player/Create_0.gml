@@ -24,3 +24,4 @@ interp_duration = 0.05;  // ~50ms for 20Hz updates
 init_entity(100, 100, global.attribute_player, global.player_save_data.uuid);
 
 timer_attack = 0;
+timer_respawn = 0;

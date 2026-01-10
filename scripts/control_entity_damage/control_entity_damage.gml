@@ -104,7 +104,7 @@ function control_entity_damage(_victim, _attacker, _base_damage, _variance = 0.0
         // Special handling for player death
         if (_victim.object_index == obj_Player)
         {
-            obj_Game_Control.timer_respawn = 3;
+            _victim.timer_respawn = 3;
         }
         else
         {
