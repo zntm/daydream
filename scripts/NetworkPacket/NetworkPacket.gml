@@ -93,7 +93,8 @@ function packet_write_welcome(_buffer, _uuid, _seed, _time)
 {
     buffer_write(_buffer, buffer_string, _uuid);
     show_debug_message($"[NET] Writing WELCOME Seed: {_seed}");
-    buffer_write(_buffer, buffer_string, string(_seed)); // Send as string to support both numeric and text seeds
+    // Use string_format to preserve precision for floating point seeds (default string() rounds to 2 decimals)
+    buffer_write(_buffer, buffer_string, string_format(_seed, 0, 20)); 
     buffer_write(_buffer, buffer_f32, _time);
 }
 

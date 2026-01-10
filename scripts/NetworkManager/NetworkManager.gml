@@ -351,6 +351,10 @@ function _network_handle_hello(_socket, _buffer)
     // This happens frequently in local testing if multiple instances share save data/UUIDs
     var _uuid_collision = false;
     
+    // Debug: Log incoming vs Host
+    var _host_uuid = string(global.player_save_data.uuid);
+    show_debug_message($"[NET] HELLO Check: Incoming={_client_uuid} vs Host={_host_uuid}");
+    
     // 1. Check existing keys in client map
     var _k = ds_map_find_first(global.network_clients);
     while (!is_undefined(_k))
@@ -358,24 +362,35 @@ function _network_handle_hello(_socket, _buffer)
         if (_k != _socket)
         {
             var _c = global.network_clients[? _k];
-            if (_c.uuid == _client_uuid) _uuid_collision = true; 
+            // Ensure strict string comparison
+            if (string(_c.uuid) == string(_client_uuid)) _uuid_collision = true; 
         }
         _k = ds_map_find_next(global.network_clients, _k);
     }
     
-    // 2. Check Host Player (if I am server/host)
+    // 2. Check Host Player (Source of Truth)
+    // Always check global data as obj_Player might not be initialized or 'is_local' might be ambiguous
+    if (string(_client_uuid) == _host_uuid)
+    {
+        _uuid_collision = true;
+        show_debug_message("[NET] CRITICAL: UUID Collision with Host Global Data!");
+    }
+    
+    // 3. Fallback: Check obj_Player instances
     if (!_uuid_collision)
     {
         with (obj_Player)
         {
-            if (is_local && uuid == _client_uuid) _uuid_collision = true;
+            if (is_local && string(uuid) == string(_client_uuid)) _uuid_collision = true;
         }
     }
     
     if (_uuid_collision)
     {
+        randomize(); // Ensure random seed is fresh
         show_debug_message($"[NET] UUID Collision detected for {_client_uuid}. Assigning new UUID.");
         _client_uuid = uuid_generate(irandom(0xffff_ffff)); 
+        show_debug_message($"[NET] New UUID assigned: {_client_uuid}");
     }
     
     // Update client info with their actual (possibly new) UUID
@@ -388,6 +403,8 @@ function _network_handle_hello(_socket, _buffer)
     }
     
     // Reconnection Logic: Bind to persistent data
+    // Use the *possibly new* UUID for persistence lookup
+    // Note: If they collided, they WON'T match a persistent session (which is good, new session)
     if (ds_map_exists(global.network_persistent_data, _client_uuid))
     {
         var _pers = global.network_persistent_data[? _client_uuid];

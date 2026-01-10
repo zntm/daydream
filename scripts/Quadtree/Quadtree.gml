@@ -210,6 +210,9 @@ function Quadtree(_x, _y, _w, _h, _max_objects = 10, _max_levels = 5, _level = 0
         {
             var _obj = objects[i];
             
+            // Safety check for destroyed instances (intra-tick death)
+            if (!is_struct(_obj) && !instance_exists(_obj)) continue;
+            
             // Extract bounds 
              var _ox1, _oy1, _ox2, _oy2;
             if (struct_exists(_obj, "bbox_left"))
@@ -230,10 +233,12 @@ function Quadtree(_x, _y, _w, _h, _max_objects = 10, _max_levels = 5, _level = 0
             }
             else
             {
+                // Fallback for objects with x/y but not bbox (uncommon for instances)
+                if (!variable_instance_exists(_obj, "x")) continue;
                 _ox1 = _obj.x;
                 _oy1 = _obj.y;
-                _ox2 = _obj.x + _obj.width;
-                _oy2 = _obj.y + _obj.height;
+                _ox2 = _obj.x + (_obj.width ?? 0);
+                _oy2 = _obj.y + (_obj.height ?? 0);
             }
             
             if (_ox1 < _x2 && _ox2 > _x1 && _oy1 < _y2 && _oy2 > _y1)
