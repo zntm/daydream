@@ -81,7 +81,14 @@ function control_gametick(_delta_time)
         // Process delayed function executions
         tick_delay_process();
         
-        control_creature_spawn();
+        // === SERVER-ONLY LOGIC ===
+        // These only run on Server (or Singleplayer/NONE)
+        var _is_server = (global.network_role == NETWORK_ROLE.SERVER) || (global.network_role == NETWORK_ROLE.NONE);
+        
+        if (_is_server)
+        {
+            control_creature_spawn();
+        }
         
         with (obj_Player)
         {
@@ -142,9 +149,12 @@ function control_gametick(_delta_time)
             item_cooldown[$ _name] = max(0, item_cooldown[$ _name] - (1 / GAME_TICK));
         }
         
-        with (obj_Projectile)
+        if (_is_server)
         {
-            control_projectile();
+            with (obj_Projectile)
+            {
+                control_projectile();
+            }
         }
         
         control_chunk_fade();
@@ -152,22 +162,25 @@ function control_gametick(_delta_time)
         // Update pooled particles (physics for colliding particles)
         global.particle_pool.update_physics();
         
-        with (obj_Creature)
+        if (_is_server)
         {
-            control_creature();
-        }
+            with (obj_Creature)
+            {
+                control_creature();
+            }
 
-        control_quadtree_update();
-        control_resolve_collisions();
-        
-        with (obj_Item_Drop)
-        {
-            control_item_drop();
-        }
-        
-        with (obj_Falling_Tile)
-        {
-            control_falling_tile();
+            control_quadtree_update();
+            control_resolve_collisions();
+            
+            with (obj_Item_Drop)
+            {
+                control_item_drop();
+            }
+            
+            with (obj_Falling_Tile)
+            {
+                control_falling_tile();
+            }
         }
         
         global.world_save_data.time += 1 / GAME_TICK;

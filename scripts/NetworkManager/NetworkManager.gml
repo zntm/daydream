@@ -21,6 +21,7 @@ function network_init()
     global.network_role = NETWORK_ROLE.NONE;
     global.network_server_socket = undefined;
     global.network_client_socket = undefined;
+    global.network_applying_packet = false;
     ds_map_clear(global.network_clients);
 }
 
@@ -299,6 +300,14 @@ function _network_handle_data()
         case PACKET_TYPE.PLAYER_LEAVE:
             _network_handle_player_leave(_buffer);
             break;
+            
+        case PACKET_TYPE.TILE_UPDATE:
+            _network_handle_tile_update(_buffer);
+            break;
+            
+        case PACKET_TYPE.TILE_UPDATE_REQUEST:
+            _network_handle_tile_request(_socket, _buffer);
+            break;
     }
 }
 
@@ -332,6 +341,7 @@ function _network_handle_welcome(_buffer)
 }
 
 /// @desc Handle PLAYER_INPUT packet (server only)
+/// @desc Handle PLAYER_INPUT packet (server only)
 function _network_handle_player_input(_socket, _buffer)
 {
     var _input = packet_read_input(_buffer);
@@ -339,15 +349,22 @@ function _network_handle_player_input(_socket, _buffer)
     // Apply input to the client's player instance
     var _client = global.network_clients[? _socket];
     
-    if (!is_undefined(_client) && instance_exists(_client.player_instance))
+    if (!is_undefined(_client))
     {
-        _client.player_instance.network_input = _input;
+        // Store the tick so we can echo it back in updates
+        _client.last_processed_tick = _input.tick;
+        
+        if (instance_exists(_client.player_instance))
+        {
+            _client.player_instance.network_input = _input;
+        }
     }
 }
 
 /// @desc Handle ENTITY_UPDATE packet (client only)
 function _network_handle_entity_update(_buffer)
 {
+    var _last_processed_tick = buffer_read(_buffer, buffer_u32);  // Server's last processed input tick
     var _entity_count = buffer_read(_buffer, buffer_u16);
     
     for (var i = 0; i < _entity_count; ++i)
@@ -362,9 +379,115 @@ function _network_handle_entity_update(_buffer)
         {
             if (uuid == _state.uuid)
             {
-                if (!is_local)
+                if (is_local)
                 {
-                    _state.apply(self);
+                    // === RECONCILIATION ===
+                    // Compare server state with our predicted state at that tick
+                    var _reconciliation_threshold = 4;  // pixels
+                    
+                    last_server_tick = _last_processed_tick;
+                    server_verified_x = _state.physics.x;
+                    server_verified_y = _state.physics.y;
+                    
+                    // Find our predicted position for this tick
+                    var _predicted_x = x;
+                    var _predicted_y = y;
+                    var _history_index = -1;
+                    
+                    for (var j = 0; j < array_length(input_history); ++j)
+                    {
+                        if (input_history[j].tick == _last_processed_tick)
+                        {
+                            _predicted_x = input_history[j].predicted_x;
+                            _predicted_y = input_history[j].predicted_y;
+                            _history_index = j;
+                            break;
+                        }
+                    }
+                    
+                    // Calculate discrepancy
+                    var _dx = abs(server_verified_x - _predicted_x);
+                    var _dy = abs(server_verified_y - _predicted_y);
+                    
+                    if (_dx > _reconciliation_threshold || _dy > _reconciliation_threshold)
+                    {
+                        // Snap to server position
+                        x = server_verified_x;
+                        y = server_verified_y;
+                        
+                        if (variable_instance_exists(self, "physics_body"))
+                        {
+                            physics_body.pos_x = x;
+                            physics_body.pos_y = y;
+                        }
+                        
+                        show_debug_message($"[NET] Reconciliation: snapped from ({_predicted_x},{_predicted_y}) to ({x},{y})");
+                        
+                        // Discard old history (inputs before server tick are resolved)
+                        if (_history_index >= 0)
+                        {
+                            array_delete(input_history, 0, _history_index + 1);
+                        }
+                        
+                        // REPLAY LOOP
+                        // Re-simulate physics for all pending inputs to bring us back to current time
+                        var _len = array_length(input_history);
+                        if (_len > 0)
+                        {
+                            // Applying Server Velocity
+                            physics_body.vel_x = _state.physics.vx;
+                            physics_body.vel_y = _state.physics.vy;
+                            physics_body.sync_to_instance(self);
+                            
+                            for (var k = 0; k < _len; ++k)
+                            {
+                                var _hist = input_history[k];
+                                var _inp = _hist.input;
+                                
+                                // Setup Input State
+                                input_state.move_x = _inp.move_x;
+                                input_state.move_y = _inp.move_y;
+                                input_state.move_left = (_inp.move_x < 0);
+                                input_state.move_right = (_inp.move_x > 0);
+                                input_state.move_up = (_inp.move_y < 0);
+                                input_state.move_down = (_inp.move_y > 0);
+                                input_state.jump = _inp.jump;
+                                // Attack/Use are event-based usually, maybe skip for movement replay?
+                                
+                                // Run Physics
+                                // We skip full collision resolution with other entities for performance/complexity
+                                // relying on static world collision in physics_step
+                                physics_body.sync_from_instance(self);
+                                physics_step(physics_body, input_state);
+                                physics_body.sync_to_instance(self);
+                                
+                                // Update prediction in history
+                                _hist.predicted_x = x;
+                                _hist.predicted_y = y;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // Prediction was close enough, just clean up old history
+                        if (_history_index >= 0)
+                        {
+                            array_delete(input_history, 0, _history_index + 1);
+                        }
+                    }
+                }
+                else
+                {
+                    // Remote player - set interpolation target
+                    interp_start_x = x;
+                    interp_start_y = y;
+                    interp_target_x = _state.physics.x;
+                    interp_target_y = _state.physics.y;
+                    interp_timer = 0;
+                    
+                    // Apply other state (HP, effects, etc.)
+                    hp = _state.hp;
+                    hp_max = _state.hp_max;
                 }
                 _found = true;
                 break;
@@ -377,6 +500,8 @@ function _network_handle_entity_update(_buffer)
             var _player = instance_create_depth(_state.physics.x, _state.physics.y, 0, obj_Player);
             _player.is_local = false;
             _player.uuid = _state.uuid;
+            _player.interp_target_x = _state.physics.x;
+            _player.interp_target_y = _state.physics.y;
             _state.apply(_player);
         }
     }
@@ -416,32 +541,65 @@ function network_broadcast_entities()
 {
     if (global.network_role != NETWORK_ROLE.SERVER) return;
     
-    var _buffer = packet_create(PACKET_TYPE.ENTITY_UPDATE);
+    // Send to each client with their specific last_processed_tick
+    var _key = ds_map_find_first(global.network_clients);
     
-    // Count players
-    var _count = instance_number(obj_Player);
-    buffer_write(_buffer, buffer_u16, _count);
-    
-    // Write each player's state
-    with (obj_Player)
+    while (!is_undefined(_key))
     {
-        var _state = new EntityState();
-        _state.capture(self);
-        _state.to_buffer(_buffer);
+        var _client = global.network_clients[? _key];
+        var _last_tick = _client[$ "last_processed_tick"] ?? 0;
+        
+        var _buffer = packet_create(PACKET_TYPE.ENTITY_UPDATE);
+        
+        // Write last processed input tick for this client
+        buffer_write(_buffer, buffer_u32, _last_tick);
+        
+        // Count players
+        var _count = instance_number(obj_Player);
+        buffer_write(_buffer, buffer_u16, _count);
+        
+        // Write each player's state
+        with (obj_Player)
+        {
+            var _state = new EntityState();
+            _state.capture(self);
+            _state.to_buffer(_buffer);
+        }
+        
+        network_send_raw(_key, _buffer, buffer_tell(_buffer));
+        buffer_delete(_buffer);
+        
+        _key = ds_map_find_next(global.network_clients, _key);
     }
-    
-    network_broadcast_packet(_buffer);
-    buffer_delete(_buffer);
 }
 
 /// @desc Send local player input to server (client only, call each tick)
 function network_send_input()
 {
     if (global.network_role != NETWORK_ROLE.CLIENT) return;
+    if (!instance_exists(obj_Player)) return;
+    
+    // Get local player
+    var _local_player = noone;
+    with (obj_Player)
+    {
+        if (is_local)
+        {
+            _local_player = self;
+            break;
+        }
+    }
+    
+    if (_local_player == noone) return;
+    
+    // Increment tick
+    _local_player.current_tick++;
+    var _tick = _local_player.current_tick;
     
     var _buffer = packet_create(PACKET_TYPE.PLAYER_INPUT);
     
     var _input = {
+        tick: _tick,
         move_x: input_get_axis(true),
         move_y: input_get_axis(false),
         jump: input_check(INPUT_ACTION.JUMP),
@@ -449,7 +607,114 @@ function network_send_input()
         use: input_check(INPUT_ACTION.USE)
     };
     
+    // Store in input history for reconciliation
+    var _history_entry = {
+        tick: _tick,
+        input: _input,
+        predicted_x: _local_player.x,
+        predicted_y: _local_player.y
+    };
+    
+    array_push(_local_player.input_history, _history_entry);
+    
+    // Trim history if too large
+    while (array_length(_local_player.input_history) > _local_player.input_history_max)
+    {
+        array_delete(_local_player.input_history, 0, 1);
+    }
+    
     packet_write_input(_buffer, _input);
     network_send_raw(global.network_client_socket, _buffer, buffer_tell(_buffer));
     buffer_delete(_buffer);
+}
+
+/// @desc Send tile update request (client only)
+function network_send_tile_request(_x, _y, _z, _tile_id)
+{
+    if (global.network_role != NETWORK_ROLE.CLIENT) return;
+    
+    var _buffer = packet_create(PACKET_TYPE.TILE_UPDATE_REQUEST);
+    buffer_write(_buffer, buffer_s32, _x);
+    buffer_write(_buffer, buffer_s32, _y);
+    buffer_write(_buffer, buffer_s32, _z);
+    buffer_write(_buffer, buffer_string, _tile_id); // Sending ID string (e.g. "phantasia:stone")
+    
+    network_send_raw(global.network_client_socket, _buffer, buffer_tell(_buffer));
+    buffer_delete(_buffer);
+}
+
+/// @desc Broadcast tile update (server only)
+function network_broadcast_tile_update(_x, _y, _z, _tile_id)
+{
+    if (global.network_role != NETWORK_ROLE.SERVER) return;
+    
+    var _buffer = packet_create(PACKET_TYPE.TILE_UPDATE);
+    buffer_write(_buffer, buffer_s32, _x);
+    buffer_write(_buffer, buffer_s32, _y);
+    buffer_write(_buffer, buffer_s32, _z);
+    buffer_write(_buffer, buffer_string, _tile_id);
+    
+    network_broadcast_packet(_buffer);
+    buffer_delete(_buffer);
+}
+
+/// @desc Handle TILE_UPDATE packet (client only)
+function _network_handle_tile_update(_buffer)
+{
+    var _x = buffer_read(_buffer, buffer_s32);
+    var _y = buffer_read(_buffer, buffer_s32);
+    var _z = buffer_read(_buffer, buffer_s32);
+    var _tile_id = buffer_read(_buffer, buffer_string);
+    
+    var _tile = new Item(_tile_id, 1);
+    if (_tile_id == "base:empty") _tile = TILE_EMPTY; // Assuming "base:empty" or similar convention, or just check ID
+    if (_tile_id == undefined || _tile_id == "undefined") _tile = TILE_EMPTY;
+
+    // Apply Update
+    global.network_applying_packet = true;
+    tile_place(_x, _y, _z, _tile);
+    global.network_applying_packet = false;
+}
+
+/// @desc Handle TILE_UPDATE_REQUEST packet (server only)
+function _network_handle_tile_request(_socket, _buffer)
+{
+    var _x = buffer_read(_buffer, buffer_s32);
+    var _y = buffer_read(_buffer, buffer_s32);
+    var _z = buffer_read(_buffer, buffer_s32);
+    var _tile_id = buffer_read(_buffer, buffer_string);
+    
+    var _client = global.network_clients[? _socket];
+    if (is_undefined(_client) || !instance_exists(_client.player_instance)) return;
+    
+    // VALIDATION: Check distance
+    var _p = _client.player_instance;
+    var _dist = point_distance(_p.x, _p.y, _x * TILE_SIZE, _y * TILE_SIZE);
+    
+    if (_dist < 400) // Reach distance (approx 25 blocks)
+    {
+        var _tile = new Item(_tile_id, 1);
+        if (_tile_id == "undefined") _tile = TILE_EMPTY; // Safety
+        
+        // Apply change (Server will broadcast via tile_place hook)
+        tile_place(_x, _y, _z, _tile);
+    }
+    else
+    {
+        // Reject: Send back current state to revert client
+        // Read actual tile at pos
+        var _current_tile = tile_get(_x, _y, _z);
+        var _current_id = (_current_tile == TILE_EMPTY) ? "undefined" : _current_tile.get_id();
+        
+        var _revert_buffer = packet_create(PACKET_TYPE.TILE_UPDATE);
+        buffer_write(_revert_buffer, buffer_s32, _x);
+        buffer_write(_revert_buffer, buffer_s32, _y);
+        buffer_write(_revert_buffer, buffer_s32, _z);
+        buffer_write(_revert_buffer, buffer_string, _current_id);
+        
+        network_send_raw(_socket, _revert_buffer, buffer_tell(_revert_buffer));
+        buffer_delete(_revert_buffer);
+        
+        show_debug_message($"[NET] Rejected tile request from client (dist={_dist})");
+    }
 }

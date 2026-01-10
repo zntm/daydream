@@ -5,16 +5,43 @@ function control_player()
 {
     if (hp <= 0) exit;
     
+    // --- REMOTE PLAYERS ON CLIENT (INTERPOLATION) ---
+    if (!is_local && global.network_role == NETWORK_ROLE.CLIENT)
+    {
+        interp_timer += 1 / GAME_TICK;
+        var _t = clamp(interp_timer / interp_duration, 0, 1);
+        
+        x = lerp(interp_start_x, interp_target_x, _t);
+        y = lerp(interp_start_y, interp_target_y, _t);
+        
+        // Simple facing direction
+        if (interp_target_x != interp_start_x)
+        {
+            image_xscale = abs(image_xscale) * sign(interp_target_x - interp_start_x);
+        }
+        
+        // Update physics body pos just for rendering/synchronization if needed
+        if (variable_instance_exists(self, "physics_body"))
+        {
+            physics_body.pos_x = x;
+            physics_body.pos_y = y;
+        }
+        
+        // TODO: Update animation state here based on movement
+        
+        exit; // Skip physics simulation for remote players on client
+    }
+    
     var _x_prev = x;
     var _y_prev = y;
     
     // --- INPUT ---
-    // For remote players (multiplayer), use network input instead of local polling
+    // For remote players (Server-side), use network input
     if (is_local)
     {
         input_state.poll_player();
     }
-    else if (network_input != undefined)
+    else if (global.network_role == NETWORK_ROLE.SERVER && network_input != undefined)
     {
         // Apply network input for remote players
         input_state.move_x = network_input.move_x;
@@ -29,8 +56,10 @@ function control_player()
     }
     else
     {
-        // No input available for remote player, skip
-        exit;
+        // No input available for remote player on server? Skip
+        if (global.network_role == NETWORK_ROLE.SERVER) exit;
+        
+        // If we are singleplayer (NONE), fall through to normal logic (should happen via is_local=true usually)
     }
     
     // --- DOUBLE INPUT ---

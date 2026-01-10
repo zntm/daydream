@@ -4,6 +4,27 @@ function tile_place(_x, _y, _z, _tile)
 {
     if (_y < 0) || (_y >= global.world_data[$ global.world_save_data.dimension].get_world_height()) exit;
     
+    // --- NETWORKING INTERCEPTION ---
+    // Handle Client Requests and Server Broadcasts
+    var _applying_packet = global.network_applying_packet ?? false;
+    
+    if (!_applying_packet)
+    {
+        if (global.network_role == NETWORK_ROLE.CLIENT)
+        {
+            // Client: Send Request to Server
+            // We still fall through to apply locally (Prediction)
+            var _id = (_tile == TILE_EMPTY) ? "base:empty" : _tile.get_id();
+            network_send_tile_request(_x, _y, _z, _id);
+        }
+        else if (global.network_role == NETWORK_ROLE.SERVER)
+        {
+            // Server: Broadcast to Clients
+            var _id = (_tile == TILE_EMPTY) ? "base:empty" : _tile.get_id();
+            network_broadcast_tile_update(_x, _y, _z, _id);
+        }
+    }
+    
     var _chunk = chunk_map_get_by_tile(_x, _y);
     
     if (_chunk == undefined)

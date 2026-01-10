@@ -7,6 +7,8 @@ enum PACKET_TYPE {
     ENTITY_UPDATE,  // Server -> Client: Entity state broadcast
     PLAYER_JOIN,    // Server -> Clients: A new player joined
     PLAYER_LEAVE,   // Server -> Clients: A player left
+    TILE_UPDATE,         // Server -> Clients: A tile changed {x, y, z, item_id}
+    TILE_UPDATE_REQUEST, // Client -> Server: Request to change a tile
     __SIZE
 }
 
@@ -29,11 +31,12 @@ function packet_read_type(_buffer)
     return buffer_read(_buffer, buffer_u8);
 }
 
-/// @desc Serialize input state to buffer
+/// @desc Serialize input state to buffer (includes tick for reconciliation)
 /// @param {Id.Buffer} _buffer
-/// @param {Struct} _input { move_x, move_y, jump, attack, use }
+/// @param {Struct} _input { tick, move_x, move_y, jump, attack, use }
 function packet_write_input(_buffer, _input)
 {
+    buffer_write(_buffer, buffer_u32, _input.tick);  // Tick number for reconciliation
     buffer_write(_buffer, buffer_f32, _input.move_x);
     buffer_write(_buffer, buffer_f32, _input.move_y);
     buffer_write(_buffer, buffer_u8, _input.jump);
@@ -47,6 +50,7 @@ function packet_write_input(_buffer, _input)
 function packet_read_input(_buffer)
 {
     return {
+        tick: buffer_read(_buffer, buffer_u32),
         move_x: buffer_read(_buffer, buffer_f32),
         move_y: buffer_read(_buffer, buffer_f32),
         jump: buffer_read(_buffer, buffer_u8),
