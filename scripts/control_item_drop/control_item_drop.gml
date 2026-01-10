@@ -106,7 +106,8 @@ function control_item_drop()
         }
         
         // Perform the give
-        item = inventory_give(x, y, item, _inv_target, true);
+        var _changed_slots = [];
+        item = inventory_give(x, y, item, _inv_target, true, _changed_slots);
         
         if (global.network_role != NETWORK_ROLE.SERVER)
         {
@@ -122,22 +123,11 @@ function control_item_drop()
             // Server: Notify client of inventory change
             if (global.network_role == NETWORK_ROLE.SERVER && !is_undefined(_client))
             {
-                // For simplicity, we currently just send updates for the slots that changed.
-                // inventory_give doesn't tell us WHICH slots changed easily.
-                // We'll need to either:
-                // a) Modify inventory_give to return changed indices.
-                // b) Send a full inventory update (expensive).
-                // c) Guess and check? (bad).
-                // For now, let's send a full "base" inventory update or a simplified version.
-                // TODO: Optimization - only send changed slots.
-                
-                // Temporary: Send first 50 slots if anything changed? No, let's just send the whole thing for now to guarantee sync.
-                for (var i = 0; i < global.inventory_length.base; ++i)
+                // Optimization - only send changed slots.
+                for (var i = 0; i < array_length(_changed_slots); ++i)
                 {
-                    var _slot = _inv_target.base[i];
-                    var _iid = (_slot == INVENTORY_EMPTY) ? "" : _slot.get_id();
-                    var _iam = (_slot == INVENTORY_EMPTY) ? 0 : _slot.get_amount();
-                    network_send_inventory_update(inst.socket_id, "base", i, _iid, _iam);
+                    var _idx = _changed_slots[i];
+                    network_send_inventory_update(inst.socket_id, "base", _idx, _inv_target.base[_idx]);
                 }
             }
         }

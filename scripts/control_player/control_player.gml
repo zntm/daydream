@@ -55,8 +55,20 @@ function control_player()
                 inst_item = instance_create_layer(x, y, "Instances", obj_Tool);
                 inst_item.image_speed = 0;
                 inst_item.inst_owner = id;
-                // Default sprite for now, or use a synced item id if available
-                inst_item.sprite_index = spr_Inventory_Slot; // Placeholder
+                // Use synced item ID for visual
+                if (variable_instance_exists(self, "extra_id") && extra_id != "")
+                {
+                    var _data = global.item_data[$ extra_id];
+                    if (_data != undefined)
+                    {
+                        var _sprite_asset = global.sprite_asset[$ _data.get_sprite()];
+                        if (_sprite_asset != undefined) inst_item.sprite_index = _sprite_asset.get_sprite();
+                    }
+                }
+                else
+                {
+                    inst_item.sprite_index = spr_Inventory_Slot; // Placeholder
+                }
             }
             
             // Weapon swing animation (Visual only)
@@ -114,7 +126,20 @@ function control_player()
     // --- DOUBLE INPUT ---
     if !(obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.MENU)
     {
-        var _item = global.inventory.base[global.inventory_selected_hotbar];
+        var _inv_target = global.inventory;
+        var _hotbar_idx = global.inventory_selected_hotbar;
+        
+        if (global.network_role == NETWORK_ROLE.SERVER && !is_local)
+        {
+            var _client = global.network_clients[? socket_id];
+            if (!is_undefined(_client))
+            {
+                _inv_target = _client.inventory;
+                _hotbar_idx = selected_hotbar;
+            }
+        }
+        
+        var _item = _inv_target.base[_hotbar_idx];
         
         if (_item != INVENTORY_EMPTY)
         {
@@ -261,7 +286,7 @@ function control_player()
         
         timer_attack = 0.3;
         
-        var _item = global.inventory.base[global.inventory_selected_hotbar];
+        var _item = _inv_target.base[_hotbar_idx];
         
         if (_item != INVENTORY_EMPTY)
         {

@@ -4,7 +4,8 @@
 global.network_role = undefined;  // "server", "client", or undefined
 global.network_server_socket = undefined;
 global.network_client_socket = undefined;
-global.network_clients = ds_map_create();  // socket_id -> { uuid, player_instance }
+global.network_clients = ds_map_create();           // socket_id -> { uuid, player_instance, ... }
+global.network_persistent_data = ds_map_create();  // uuid -> { inventory, player_instance?, ... }
 global.network_host_ip = "127.0.0.1";
 global.network_port = 6510;
 global.network_buffer = buffer_create(4096, buffer_grow, 1);
@@ -23,6 +24,7 @@ function network_init()
     global.network_client_socket = undefined;
     global.network_applying_packet = false;
     ds_map_clear(global.network_clients);
+    ds_map_clear(global.network_persistent_data);
 }
 
 /// @desc Start a server on the specified port
@@ -123,12 +125,12 @@ function network_disconnect()
 function network_send_packet(_socket, _buffer)
 {
     var _size = buffer_tell(_buffer);
-    network_send_packet(_socket, _buffer, _size);
+    network_send_raw(_socket, _buffer, _size);
 }
 
 /// @desc Broadcast a buffer to all connected clients (server only)
 /// @param {Id.Buffer} _buffer
-function network_broadcast_packet(_buffer)
+function network_broadcast_packet(_buffer, _exclude_socket = undefined)
 {
     if (global.network_role != NETWORK_ROLE.SERVER) return;
     
@@ -137,7 +139,10 @@ function network_broadcast_packet(_buffer)
     
     while (!is_undefined(_key))
     {
-        network_send_raw(_key, _buffer, _size);
+        if (_key != _exclude_socket)
+        {
+            network_send_raw(_key, _buffer, _size);
+        }
         _key = ds_map_find_next(global.network_clients, _key);
     }
 }
@@ -170,45 +175,15 @@ function _network_handle_connect()
     if (global.network_role == NETWORK_ROLE.SERVER)
     {
         // A client connected to us
-        var _uuid = string(irandom(999999999));  // Temporary UUID generation
-        
         ds_map_add(global.network_clients, _socket, {
-            uuid: _uuid,
+            uuid: undefined,
             player_instance: noone,
             inventory: {},
-            open_container: { x: -1, y: -1, z: -1 }
+            open_container: { x: -1, y: -1, z: -1 },
+            last_processed_tick: 0
         });
         
-        show_debug_message($"[NET] Client connected: socket={_socket}, uuid={_uuid}");
-        
-        // Send WELCOME packet with UUID
-        var _buffer = packet_create(PACKET_TYPE.WELCOME);
-        buffer_write(_buffer, buffer_string, _uuid);
-        network_send_raw(_socket, _buffer, buffer_tell(_buffer));
-        buffer_delete(_buffer);
-        
-        // Spawn remote player for this client
-        var _player = instance_create_depth(obj_Player.x, obj_Player.y, 0, obj_Player);
-        _player.is_local = false;
-        _player.uuid = _uuid;
-        _player.socket_id = _socket;
-        
-        global.network_clients[? _socket].player_instance = _player;
-        
-        // Notify other clients about new player
-        var _join_buffer = packet_create(PACKET_TYPE.PLAYER_JOIN);
-        buffer_write(_join_buffer, buffer_string, _uuid);
-        
-        var _key = ds_map_find_first(global.network_clients);
-        while (!is_undefined(_key))
-        {
-            if (_key != _socket)
-            {
-                network_send_raw(_key, _join_buffer, buffer_tell(_join_buffer));
-            }
-            _key = ds_map_find_next(global.network_clients, _key);
-        }
-        buffer_delete(_join_buffer);
+        show_debug_message($"[NET] Client socket connected: socket={_socket}");
     }
     else if (global.network_role == NETWORK_ROLE.CLIENT)
     {
@@ -345,16 +320,70 @@ function _network_handle_hello(_socket, _buffer)
             _client.player_instance.uuid = _client_uuid;
         }
         
-        // Initialize server-side inventory for this client
-        _network_init_client_inventory(_client);
+        // Reconnection Logic: Bind to persistent data
+        if (ds_map_exists(global.network_persistent_data, _client_uuid))
+        {
+            var _pers = global.network_persistent_data[? _client_uuid];
+            _client.inventory = _pers.inventory;
+            
+            show_debug_message($"[NET] Persistent session restored: uuid={_client_uuid}");
+        }
+        else
+        {
+            // Initializing server-side inventory for this new client
+            _network_init_client_inventory(_client);
+            
+            // Store in persistent map
+            ds_map_add(global.network_persistent_data, _client_uuid, {
+                inventory: _client.inventory
+            });
+            
+            show_debug_message($"[NET] New session created: uuid={_client_uuid}");
+        }
         
-        show_debug_message($"[NET] Client identified: uuid={_client_uuid}");
+        // Handle player instance (Creation or Re-use)
+        var _player = noone;
+        with (obj_Player)
+        {
+            if (uuid == _client_uuid) _player = id;
+        }
+        
+        if (_player == noone)
+        {
+            _player = instance_create_depth(obj_Player.x, obj_Player.y, 0, obj_Player);
+            _player.is_local = false;
+            _player.uuid = _client_uuid;
+        }
+        _player.socket_id = _socket;
+        _client.player_instance = _player;
+        
+        // Notify other clients about player join
+        var _join_buffer = packet_create(PACKET_TYPE.PLAYER_JOIN);
+        buffer_write(_join_buffer, buffer_string, _client_uuid);
+        network_broadcast_packet(_join_buffer, _socket); // Don't send back to the joiner
+        buffer_delete(_join_buffer);
         
         // Send WELCOME packet with assigned UUID, World Seed, and World Time
         var _welcome = packet_create(PACKET_TYPE.WELCOME);
         packet_write_welcome(_welcome, _client_uuid, global.world_save_data.seed, global.world_save_data.time);
         network_send_raw(_socket, _welcome, buffer_tell(_welcome));
         buffer_delete(_welcome);
+        
+        // Send initial inventory sync
+        var _inv = _client.inventory;
+        var _names = struct_get_names(_inv);
+        for (var i = 0; i < array_length(_names); ++i)
+        {
+            var _name = _names[i];
+            var _arr = _inv[$ _name];
+            if (is_array(_arr))
+            {
+                for (var j = 0; j < array_length(_arr); ++j)
+                {
+                    network_send_inventory_update(_socket, _name, j, _arr[j]);
+                }
+            }
+        }
     }
 }
 
@@ -395,6 +424,7 @@ function _network_handle_player_input(_socket, _buffer)
         if (instance_exists(_client.player_instance))
         {
             _client.player_instance.network_input = _input;
+            _client.player_instance.selected_hotbar = _input.selected_hotbar;
         }
     }
 }
@@ -727,7 +757,8 @@ function network_send_input()
         move_y: input_get_axis(false),
         jump: input_check(INPUT_ACTION.JUMP),
         attack: input_check(INPUT_ACTION.ATTACK),
-        use: input_check(INPUT_ACTION.USE)
+        use: input_check(INPUT_ACTION.USE),
+        selected_hotbar: global.inventory_selected_hotbar
     };
     
     // Store in input history for reconciliation
@@ -990,6 +1021,38 @@ function _network_handle_inventory_action(_socket, _buffer)
                     
                     _network_broadcast_inventory_update(_action.from_inv, _action.from_idx, _inv[_action.from_idx], _client);
                 }
+            }
+            break;
+            
+        case INVENTORY_ACTION_TYPE.CRAFT:
+            var _index = _action.from_idx; 
+            if (_index >= 0 && _index < array_length(global.crafting_data))
+            {
+                var _changed_slots = [];
+                inventory_craft_clear(_index, _client.inventory, _changed_slots);
+                
+                var _recipe = global.crafting_data[_index];
+                var _result_id = _recipe.get_id();
+                var _result_amount = _recipe.get_amount();
+                
+                // For simplicity, crafting always gives to mouse in the current UI flow
+                if (_client.inventory.mouse.item == INVENTORY_EMPTY)
+                {
+                    _client.inventory.mouse.item = new Inventory(_result_id, _result_amount);
+                }
+                else if (_client.inventory.mouse.item.get_id() == _result_id)
+                {
+                    _client.inventory.mouse.item.add_amount(_result_amount);
+                }
+                
+                // Broadcast material consumptions
+                for (var i = 0; i < array_length(_changed_slots); ++i)
+                {
+                    _network_broadcast_inventory_update("base", _changed_slots[i], _client.inventory.base[_changed_slots[i]], _client);
+                }
+                
+                // Broadcast new item in mouse
+                _network_broadcast_inventory_update("mouse", 0, _client.inventory.mouse.item, _client);
             }
             break;
     }

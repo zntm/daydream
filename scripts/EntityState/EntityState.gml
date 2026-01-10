@@ -44,6 +44,18 @@ function EntityState() constructor
         if (_inst.object_index == obj_Player)
         {
             entity_type = "player";
+            extra_value = _inst.selected_hotbar;
+            
+            // Resolve item ID for visual sync
+            var _inv = global.inventory;
+            if (global.network_role == NETWORK_ROLE.SERVER && !_inst.is_local)
+            {
+                var _client = global.network_clients[? _inst.socket_id];
+                if (!is_undefined(_client)) _inv = _client.inventory;
+            }
+            
+            var _item = _inv.base[_inst.selected_hotbar];
+            extra_id = (_item == INVENTORY_EMPTY) ? "" : _item.get_id();
         }
         else if (_inst.object_index == obj_Creature)
         {
@@ -144,6 +156,12 @@ function EntityState() constructor
             _inst.y = physics.y;
             if (variable_instance_exists(_inst, "xvelocity")) _inst.xvelocity = physics.vx;
             if (variable_instance_exists(_inst, "yvelocity")) _inst.yvelocity = physics.vy;
+        }
+        
+        if (entity_type == "player")
+        {
+            if (variable_instance_exists(_inst, "selected_hotbar")) _inst.selected_hotbar = extra_value;
+            _inst.extra_id = extra_id; // Store held item ID for visuals
         }
         
         // Timers

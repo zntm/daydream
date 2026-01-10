@@ -351,18 +351,25 @@ if (IS_DEVELOPER_MODE)
         }
     }
     
-    // F6: Connect to Server (localhost for testing)
+    // F6: Connect to Server
     if (keyboard_check_pressed(vk_f6))
     {
         if (global.network_role == NETWORK_ROLE.NONE)
         {
-            if (network_connect_to_server("127.0.0.1", 6510))
+            var _ip = get_string("Enter Server IP Address:", "127.0.0.1");
+            var _port = (variable_global_exists("network_port") ? global.network_port : 6510);
+            _port = get_integer("Enter Port:", _port);
+            
+            if (_ip != "" && _port > 0)
             {
-                chat_add("System", "Connecting to 127.0.0.1:6510...");
-            }
-            else
-            {
-                chat_add("System", "Failed to connect");
+                if (network_connect_to_server(_ip, _port))
+                {
+                    chat_add("System", $"Connecting to {_ip}:{_port}...");
+                }
+                else
+                {
+                    chat_add("System", "Failed to initiate connection");
+                }
             }
         }
         else

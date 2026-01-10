@@ -266,6 +266,11 @@ function inventory_organize_mouse(_inst)
                     inventory_mouse_select_type = INVENTORY_MOUSE_SELECT_TYPE.CRAFTING;
                 }
                 
+                if (global.network_role == NETWORK_ROLE.CLIENT)
+                {
+                    network_send_inventory_action(INVENTORY_ACTION_TYPE.CRAFT, "base", _index, "mouse", 0, _amount);
+                }
+                
                 inventory_craft_clear(_index);
                 
                 with (obj_Inventory)

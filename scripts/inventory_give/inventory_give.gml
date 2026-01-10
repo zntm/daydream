@@ -1,4 +1,4 @@
-function inventory_give(_x, _y, _item, _inventory_target = global.inventory, _text = true)
+function inventory_give(_x, _y, _item, _inventory_target = global.inventory, _text = true, _out_changed_slots = undefined)
 {
     var _id = _item.get_id();
     var _amount = _item.get_amount();
@@ -24,6 +24,8 @@ function inventory_give(_x, _y, _item, _inventory_target = global.inventory, _te
                 {
                     _inventory_target.base[@ i].add_amount(_amount);
                     
+                    if (is_array(_out_changed_slots)) array_push(_out_changed_slots, i);
+                    
                     delete _item;
                     
                     _item = undefined;
@@ -34,6 +36,8 @@ function inventory_give(_x, _y, _item, _inventory_target = global.inventory, _te
                 }
                 
                 _inventory_target.base[@ i].set_amount(_inventory_max);
+                
+                if (is_array(_out_changed_slots)) array_push(_out_changed_slots, i);
                 
                 var _amount3 = _inventory_max - _amount2;
                 
@@ -56,6 +60,8 @@ function inventory_give(_x, _y, _item, _inventory_target = global.inventory, _te
                 {
                     _inventory_target.base[@ i] = _item;
                     
+                    if (is_array(_out_changed_slots)) array_push(_out_changed_slots, i);
+                    
                     _item = undefined;
                     
                     _pickup_amount += _amount;
@@ -64,6 +70,8 @@ function inventory_give(_x, _y, _item, _inventory_target = global.inventory, _te
                 }
                 
                 _inventory_target.base[@ i] = variable_clone(_item).set_amount(_inventory_max);
+                
+                if (is_array(_out_changed_slots)) array_push(_out_changed_slots, i);
                 
                 _item.add_amount(-_inventory_max);
                 

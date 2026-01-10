@@ -46,6 +46,7 @@ function packet_write_input(_buffer, _input)
     buffer_write(_buffer, buffer_u8, _input.jump);
     buffer_write(_buffer, buffer_u8, _input.attack);
     buffer_write(_buffer, buffer_u8, _input.use);
+    buffer_write(_buffer, buffer_u8, _input.selected_hotbar);
 }
 
 /// @desc Deserialize input state from buffer
@@ -59,7 +60,8 @@ function packet_read_input(_buffer)
         move_y: buffer_read(_buffer, buffer_f32),
         jump: buffer_read(_buffer, buffer_u8),
         attack: buffer_read(_buffer, buffer_u8),
-        use: buffer_read(_buffer, buffer_u8)
+        use: buffer_read(_buffer, buffer_u8),
+        selected_hotbar: buffer_read(_buffer, buffer_u8)
     };
 }
 
@@ -229,5 +231,6 @@ enum INVENTORY_ACTION_TYPE {
     MOVE,
     SPLIT,
     DROP,
-    DELETE
+    DELETE,
+    CRAFT
 }
