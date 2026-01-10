@@ -27,7 +27,56 @@ function control_player()
             physics_body.pos_y = y;
         }
         
-        // TODO: Update animation state here based on movement
+        // Update animation state here based on movement
+        if (variable_instance_exists(self, "network_input") && network_input != undefined)
+        {
+            input_state.attack_held = network_input.attack;
+            input_state.use_held = network_input.use;
+            
+            // Trigger swing animation if attacking
+            if (input_state.attack_held && timer_attack <= 0)
+            {
+                timer_attack = 0.3; // Match duration in logic
+                
+                // For remote players, we might need a placeholder or sync the selected item
+                // For now, let's assume they are using a generic tool visual or nothing if we don't sync hotbar index yet
+                // Actually, let's try to show their tool if we can.
+            }
+        }
+        
+        // Handle timer and inst_item creation for remote players visually
+        if (timer_attack > 0)
+        {
+            timer_attack = max(0, timer_attack - (1 / GAME_TICK));
+            
+            // Create visual tool if it doesn't exist
+            if (!instance_exists(inst_item))
+            {
+                inst_item = instance_create_layer(x, y, "Instances", obj_Tool);
+                inst_item.image_speed = 0;
+                inst_item.inst_owner = id;
+                // Default sprite for now, or use a synced item id if available
+                inst_item.sprite_index = spr_Inventory_Slot; // Placeholder
+            }
+            
+            // Weapon swing animation (Visual only)
+            var _direction = sign(image_xscale);
+            var _t = power((0.3 - timer_attack) / 0.3, 1 / 4);
+            var _angle = (45 * cos(_t * pi)) + 15;
+            
+            with (inst_item)
+            {
+                image_yscale = _direction;
+                x = other.x + (lengthdir_x(16, _angle) * _direction);
+                y = other.y - 24 + (lengthdir_y(16, _angle));
+                if (_direction > 0) image_angle = _angle - 45;
+                else image_angle = 180 - _angle + 45;
+            }
+        }
+        else if (instance_exists(inst_item))
+        {
+            instance_destroy(inst_item);
+        }
         
         exit; // Skip physics simulation for remote players on client
     }

@@ -30,6 +30,10 @@ function EntityState() constructor
     mount_uuid = "";
     rider_uuid = "";
     
+    // Item/Projectile attributes
+    extra_id = "";     // For item ID or projectile ID
+    extra_value = 0;   // For item amount or damage
+    
     /// @desc Capture state from an entity instance
     /// @param {Id.Instance} _inst
     static capture = function(_inst)
@@ -45,14 +49,29 @@ function EntityState() constructor
         {
             entity_type = $"creature:{_inst._id}";
         }
+        else if (_inst.object_index == obj_Item_Drop)
+        {
+            entity_type = "item_drop";
+            if (struct_exists(_inst, "item"))
+            {
+                extra_id = _inst.item.get_id();
+                extra_value = _inst.item.get_amount();
+            }
+        }
+        else if (_inst.object_index == obj_Projectile)
+        {
+            entity_type = "projectile";
+            extra_id = _inst._id;
+            extra_value = _inst.damage;
+        }
         else
         {
             entity_type = "unknown";
         }
         
         // Core stats
-        hp = _inst.hp;
-        hp_max = _inst.hp_max;
+        if (variable_instance_exists(_inst, "hp")) hp = _inst.hp;
+        if (variable_instance_exists(_inst, "hp_max")) hp_max = _inst.hp_max;
         
         // Physics
         if (variable_instance_exists(_inst, "physics_body"))
@@ -69,32 +88,32 @@ function EntityState() constructor
             // Legacy support
             physics.x = _inst.x;
             physics.y = _inst.y;
-            physics.vx = _inst.xvelocity;
-            physics.vy = _inst.yvelocity;
+            if (variable_instance_exists(_inst, "xvelocity")) physics.vx = _inst.xvelocity;
+            if (variable_instance_exists(_inst, "yvelocity")) physics.vy = _inst.yvelocity;
             physics.mode = MOVEMENT_MODE.GROUND;
         }
         
         // Timers
-        timer_immunity = _inst.timer_immunity;
-        timer_regeneration = _inst.timer_regeneration;
+        if (variable_instance_exists(_inst, "timer_immunity")) timer_immunity = _inst.timer_immunity;
+        if (variable_instance_exists(_inst, "timer_regeneration")) timer_regeneration = _inst.timer_regeneration;
         
         // Effects
         effects = {}
-        var _effect_names = struct_get_names(_inst.effects);
-        for (var i = 0; i < array_length(_effect_names); ++i)
+        if (variable_instance_exists(_inst, "effects"))
         {
-            var _name = _effect_names[i];
-            effects[$ _name] = _inst.effects[$ _name];
+            var _effect_names = struct_get_names(_inst.effects);
+            for (var i = 0; i < array_length(_effect_names); ++i)
+            {
+                var _name = _effect_names[i];
+                effects[$ _name] = _inst.effects[$ _name];
+            }
         }
         
         // Mount state
-        if (variable_instance_exists(_inst, "physics_body") && _inst.physics_body.mount != undefined)
+        if (variable_instance_exists(_inst, "physics_body"))
         {
-            mount_uuid = _inst.physics_body.mount[$ "entity_uuid"] ?? "";
-        }
-        if (variable_instance_exists(_inst, "physics_body") && _inst.physics_body.rider != undefined)
-        {
-            rider_uuid = _inst.physics_body.rider[$ "entity_uuid"] ?? "";
+            if (_inst.physics_body.mount != undefined) mount_uuid = _inst.physics_body.mount[$ "entity_uuid"] ?? "";
+            if (_inst.physics_body.rider != undefined) rider_uuid = _inst.physics_body.rider[$ "entity_uuid"] ?? "";
         }
         
         return self;
@@ -105,8 +124,8 @@ function EntityState() constructor
     static apply = function(_inst)
     {
         _inst.uuid = uuid;
-        _inst.hp = hp;
-        _inst.hp_max = hp_max;
+        if (variable_instance_exists(_inst, "hp")) _inst.hp = hp;
+        if (variable_instance_exists(_inst, "hp_max")) _inst.hp_max = hp_max;
         
         // Physics
         if (variable_instance_exists(_inst, "physics_body"))
@@ -123,21 +142,24 @@ function EntityState() constructor
         {
             _inst.x = physics.x;
             _inst.y = physics.y;
-            _inst.xvelocity = physics.vx;
-            _inst.yvelocity = physics.vy;
+            if (variable_instance_exists(_inst, "xvelocity")) _inst.xvelocity = physics.vx;
+            if (variable_instance_exists(_inst, "yvelocity")) _inst.yvelocity = physics.vy;
         }
         
         // Timers
-        _inst.timer_immunity = timer_immunity;
-        _inst.timer_regeneration = timer_regeneration;
+        if (variable_instance_exists(_inst, "timer_immunity")) _inst.timer_immunity = timer_immunity;
+        if (variable_instance_exists(_inst, "timer_regeneration")) _inst.timer_regeneration = timer_regeneration;
         
         // Effects
-        _inst.effects = {}
-        var _effect_names = struct_get_names(effects);
-        for (var i = 0; i < array_length(_effect_names); ++i)
+        if (variable_instance_exists(_inst, "effects"))
         {
-            var _name = _effect_names[i];
-            _inst.effects[$ _name] = effects[$ _name];
+            _inst.effects = {}
+            var _effect_names = struct_get_names(effects);
+            for (var i = 0; i < array_length(_effect_names); ++i)
+            {
+                var _name = _effect_names[i];
+                _inst.effects[$ _name] = effects[$ _name];
+            }
         }
         
         return self;
@@ -149,6 +171,8 @@ function EntityState() constructor
     {
         buffer_write(_buffer, buffer_string, uuid);
         buffer_write(_buffer, buffer_string, entity_type);
+        buffer_write(_buffer, buffer_string, extra_id);
+        buffer_write(_buffer, buffer_f32, extra_value);
         buffer_write(_buffer, buffer_f32, hp);
         buffer_write(_buffer, buffer_f32, hp_max);
         buffer_write(_buffer, buffer_f32, physics.x);
@@ -168,11 +192,12 @@ function EntityState() constructor
     }
     
     /// @desc Deserialize from buffer
-    /// @param {Id.Buffer} _buffer
     static from_buffer = function(_buffer)
     {
         uuid = buffer_read(_buffer, buffer_string);
         entity_type = buffer_read(_buffer, buffer_string);
+        extra_id = buffer_read(_buffer, buffer_string);
+        extra_value = buffer_read(_buffer, buffer_f32);
         hp = buffer_read(_buffer, buffer_f32);
         hp_max = buffer_read(_buffer, buffer_f32);
         physics.x = buffer_read(_buffer, buffer_f32);
@@ -197,6 +222,8 @@ function EntityState() constructor
         return {
             uuid: uuid,
             entity_type: entity_type,
+            extra_id: extra_id,
+            extra_value: extra_value,
             hp: hp,
             hp_max: hp_max,
             physics: physics,
@@ -213,6 +240,8 @@ function EntityState() constructor
     {
         uuid = _data.uuid;
         entity_type = _data.entity_type;
+        extra_id = _data.extra_id ?? "";
+        extra_value = _data.extra_value ?? 0;
         hp = _data.hp;
         hp_max = _data.hp_max;
         physics = _data.physics;

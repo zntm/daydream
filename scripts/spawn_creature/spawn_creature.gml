@@ -51,6 +51,14 @@ function spawn_creature(_x, _y, _id, _variant)
         ai_stuck_x = x;
         ai_stuck_y = y;
         ai_is_stuck = false;
+        
+        // Interpolation state (for remote creatures on client)
+        interp_start_x = x;
+        interp_start_y = y;
+        interp_target_x = x;
+        interp_target_y = y;
+        interp_timer = 0;
+        interp_duration = 0.05; // Match server broadcast rate (20Hz)
     }
     
     // Emit entity spawned event

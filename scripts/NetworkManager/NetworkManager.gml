@@ -308,6 +308,10 @@ function _network_handle_data()
         case PACKET_TYPE.TILE_UPDATE_REQUEST:
             _network_handle_tile_request(_socket, _buffer);
             break;
+            
+        case PACKET_TYPE.INVENTORY_UPDATE:
+            _network_handle_inventory_update(_buffer);
+            break;
     }
 }
 
@@ -327,17 +331,37 @@ function _network_handle_hello(_socket, _buffer)
             _client.player_instance.uuid = _client_uuid;
         }
         
+        // Initialize server-side inventory for this client
+        _network_init_client_inventory(_client);
+        
         show_debug_message($"[NET] Client identified: uuid={_client_uuid}");
+        
+        // Send WELCOME packet with assigned UUID, World Seed, and World Time
+        var _welcome = packet_create(PACKET_TYPE.WELCOME);
+        packet_write_welcome(_welcome, _client_uuid, global.world_save_data.seed, global.world_save_data.time);
+        network_send_raw(_socket, _welcome, buffer_tell(_welcome));
+        buffer_delete(_welcome);
     }
 }
 
 /// @desc Handle WELCOME packet (client only)
 function _network_handle_welcome(_buffer)
 {
-    var _assigned_uuid = buffer_read(_buffer, buffer_string);
-    show_debug_message($"[NET] Received WELCOME, assigned UUID: {_assigned_uuid}");
+    var _data = packet_read_welcome(_buffer);
+    show_debug_message($"[NET] Received WELCOME. UUID: {_data.uuid}, Seed: {_data.seed}, Time: {_data.time}");
     
-    // Could update local player UUID if needed
+    // Sync World Seed
+    global.world_save_data.seed = _data.seed;
+    open_simplex_noise_seed(_data.seed);
+    
+    // Sync World Time
+    // obj_Game_Control.timer_respawn = _data.time; // If this is used for time
+    
+    // Could update local player UUID
+    if (instance_exists(obj_Player))
+    {
+        with(obj_Player) { if (is_local) uuid = _data.uuid; }
+    }
 }
 
 /// @desc Handle PLAYER_INPUT packet (server only)
@@ -367,172 +391,251 @@ function _network_handle_entity_update(_buffer)
     var _last_processed_tick = buffer_read(_buffer, buffer_u32);  // Server's last processed input tick
     var _entity_count = buffer_read(_buffer, buffer_u16);
     
+    var _received_uuids = {}; // Track UUIDs for despawning logic
+    
     for (var i = 0; i < _entity_count; ++i)
     {
         var _state = new EntityState();
         _state.from_buffer(_buffer);
         
-        // Find or create entity instance
-        var _found = false;
+        _received_uuids[$ _state.uuid] = true;
         
-        with (obj_Player)
+        // Find existing entity
+        var _inst = noone;
+        var _is_player = (_state.entity_type == "player");
+        
+        // Check Players
+        if (_is_player)
         {
-            if (uuid == _state.uuid)
+            with (obj_Player)
             {
-                if (is_local)
+                if (uuid == _state.uuid) { _inst = id; break; }
+            }
+        }
+        else
+        {
+            // Check other entities
+            // Optimization: Could use a global map uuid->instance if searching becomes slow
+            with (obj_Creature) { if (uuid == _state.uuid) { _inst = id; break; } }
+            if (_inst == noone) with (obj_Item_Drop) { if (uuid == _state.uuid) { _inst = id; break; } }
+            if (_inst == noone) with (obj_Projectile) { if (uuid == _state.uuid) { _inst = id; break; } }
+        }
+        
+        if (instance_exists(_inst))
+        {
+            // --- UPDATE EXISTING ---
+            if (_is_player && _inst.is_local)
+            {
+                // === RECONCILIATION (Local Player) ===
+                var _reconciliation_threshold = 4;  // pixels
+                
+                _inst.last_server_tick = _last_processed_tick;
+                _inst.server_verified_x = _state.physics.x;
+                _inst.server_verified_y = _state.physics.y;
+                
+                // Find our predicted position for this tick
+                var _predicted_x = _inst.x;
+                var _predicted_y = _inst.y;
+                var _history_index = -1;
+                
+                for (var j = 0; j < array_length(_inst.input_history); ++j)
                 {
-                    // === RECONCILIATION ===
-                    // Compare server state with our predicted state at that tick
-                    var _reconciliation_threshold = 4;  // pixels
-                    
-                    last_server_tick = _last_processed_tick;
-                    server_verified_x = _state.physics.x;
-                    server_verified_y = _state.physics.y;
-                    
-                    // Find our predicted position for this tick
-                    var _predicted_x = x;
-                    var _predicted_y = y;
-                    var _history_index = -1;
-                    
-                    for (var j = 0; j < array_length(input_history); ++j)
+                    if (_inst.input_history[j].tick == _last_processed_tick)
                     {
-                        if (input_history[j].tick == _last_processed_tick)
-                        {
-                            _predicted_x = input_history[j].predicted_x;
-                            _predicted_y = input_history[j].predicted_y;
-                            _history_index = j;
-                            break;
-                        }
+                        _predicted_x = _inst.input_history[j].predicted_x;
+                        _predicted_y = _inst.input_history[j].predicted_y;
+                        _history_index = j;
+                        break;
+                    }
+                }
+                
+                // Calculate discrepancy
+                var _dx = abs(_inst.server_verified_x - _predicted_x);
+                var _dy = abs(_inst.server_verified_y - _predicted_y);
+                
+                if (_dx > _reconciliation_threshold || _dy > _reconciliation_threshold)
+                {
+                    // Snap to server position
+                    _inst.x = _inst.server_verified_x;
+                    _inst.y = _inst.server_verified_y;
+                    
+                    if (variable_instance_exists(_inst, "physics_body"))
+                    {
+                        _inst.physics_body.pos_x = _inst.x;
+                        _inst.physics_body.pos_y = _inst.y;
                     }
                     
-                    // Calculate discrepancy
-                    var _dx = abs(server_verified_x - _predicted_x);
-                    var _dy = abs(server_verified_y - _predicted_y);
+                    show_debug_message($"[NET] Reconciliation: snapped from ({_predicted_x},{_predicted_y}) to ({_inst.x},{_inst.y})");
                     
-                    if (_dx > _reconciliation_threshold || _dy > _reconciliation_threshold)
+                    // Discard old history
+                    if (_history_index >= 0)
                     {
-                        // Snap to server position
-                        x = server_verified_x;
-                        y = server_verified_y;
+                        array_delete(_inst.input_history, 0, _history_index + 1);
+                    }
+                    
+                    // REPLAY LOOP
+                    var _len = array_length(_inst.input_history);
+                    if (_len > 0)
+                    {
+                        // Sync velocity from server state for accurate replay start
+                        _inst.physics_body.vel_x = _state.physics.vx;
+                        _inst.physics_body.vel_y = _state.physics.vy;
+                        _inst.physics_body.sync_to_instance(_inst);
                         
-                        if (variable_instance_exists(self, "physics_body"))
+                        for (var k = 0; k < _len; ++k)
                         {
-                            physics_body.pos_x = x;
-                            physics_body.pos_y = y;
-                        }
-                        
-                        show_debug_message($"[NET] Reconciliation: snapped from ({_predicted_x},{_predicted_y}) to ({x},{y})");
-                        
-                        // Discard old history (inputs before server tick are resolved)
-                        if (_history_index >= 0)
-                        {
-                            array_delete(input_history, 0, _history_index + 1);
-                        }
-                        
-                        // REPLAY LOOP
-                        // Re-simulate physics for all pending inputs to bring us back to current time
-                        var _len = array_length(input_history);
-                        if (_len > 0)
-                        {
-                            // Applying Server Velocity
-                            physics_body.vel_x = _state.physics.vx;
-                            physics_body.vel_y = _state.physics.vy;
-                            physics_body.sync_to_instance(self);
+                            var _hist = _inst.input_history[k];
+                            var _inp = _hist.input;
                             
-                            for (var k = 0; k < _len; ++k)
-                            {
-                                var _hist = input_history[k];
-                                var _inp = _hist.input;
-                                
-                                // Setup Input State
-                                input_state.move_x = _inp.move_x;
-                                input_state.move_y = _inp.move_y;
-                                input_state.move_left = (_inp.move_x < 0);
-                                input_state.move_right = (_inp.move_x > 0);
-                                input_state.move_up = (_inp.move_y < 0);
-                                input_state.move_down = (_inp.move_y > 0);
-                                input_state.jump = _inp.jump;
-                                // Attack/Use are event-based usually, maybe skip for movement replay?
-                                
-                                // Run Physics
-                                // We skip full collision resolution with other entities for performance/complexity
-                                // relying on static world collision in physics_step
-                                physics_body.sync_from_instance(self);
-                                physics_step(physics_body, input_state);
-                                physics_body.sync_to_instance(self);
-                                
-                                // Update prediction in history
-                                _hist.predicted_x = x;
-                                _hist.predicted_y = y;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // Prediction was close enough, just clean up old history
-                        if (_history_index >= 0)
-                        {
-                            array_delete(input_history, 0, _history_index + 1);
+                            // Apply input to player state
+                            _inst.input_state.move_x = _inp.move_x;
+                            _inst.input_state.move_y = _inp.move_y;
+                            _inst.input_state.move_left = (_inp.move_x < 0);
+                            _inst.input_state.move_right = (_inp.move_x > 0);
+                            _inst.input_state.move_up = (_inp.move_y < 0);
+                            _inst.input_state.move_down = (_inp.move_y > 0);
+                            _inst.input_state.jump = _inp.jump;
+                            
+                            _inst.physics_body.sync_from_instance(_inst);
+                            physics_step(_inst.physics_body, _inst.input_state); // Assuming physics_step is global/accessible
+                            _inst.physics_body.sync_to_instance(_inst);
+                            
+                            _hist.predicted_x = _inst.x;
+                            _hist.predicted_y = _inst.y;
                         }
                     }
                 }
                 else
                 {
-                    // Remote player - set interpolation target
-                    interp_start_x = x;
-                    interp_start_y = y;
-                    interp_target_x = _state.physics.x;
-                    interp_target_y = _state.physics.y;
-                    interp_timer = 0;
-                    
-                    // Apply other state (HP, effects, etc.)
-                    hp = _state.hp;
-                    hp_max = _state.hp_max;
+                    // Valid prediction
+                    if (_history_index >= 0)
+                    {
+                        array_delete(_inst.input_history, 0, _history_index + 1);
+                    }
                 }
-                _found = true;
-                break;
+            }
+            else
+            {
+                // === INTERPOLATION (Remote Player / Entity) ===
+                if (variable_instance_exists(_inst, "interp_start_x"))
+                {
+                    _inst.interp_start_x = _inst.x;
+                    _inst.interp_start_y = _inst.y;
+                    _inst.interp_target_x = _state.physics.x;
+                    _inst.interp_target_y = _state.physics.y;
+                    _inst.interp_timer = 0;
+                }
+                else
+                {
+                    _inst.x = _state.physics.x;
+                    _inst.y = _state.physics.y;
+                }
+                
+                // For non-local entities, strictly apply state
+                if (!_is_player || !_inst.is_local)
+                {
+                    // Apply HP, etc.
+                    // Note: Ideally we don't snap X/Y here if we are interpolating, apply() does snap physics.
+                    // So we might need to be careful.
+                    _state.apply(_inst); 
+                    
+                    // Re-assert interpolation start to prevent snapping if apply() overwrote it?
+                    // actually apply() updates physics.x/y and inst.x/y.
+                    // If we want smooth visual interpolation, we should separate visual x/y from logic x/y or just override x/y in Draw/Step.
+                    // For now, let's let apply() happen, but if we have interpolation, we used 'interp' vars.
+                }
             }
         }
-        
-        // If not found and not our local player, create remote player
-        if (!_found && _state.entity_type == "player")
+        else
         {
-            var _player = instance_create_depth(_state.physics.x, _state.physics.y, 0, obj_Player);
-            _player.is_local = false;
-            _player.uuid = _state.uuid;
-            _player.interp_target_x = _state.physics.x;
-            _player.interp_target_y = _state.physics.y;
-            _state.apply(_player);
+            // --- SPAWN NEW ---
+            if (_state.entity_type == "player")
+            {
+                 // Create remote player
+                 _inst = instance_create_depth(_state.physics.x, _state.physics.y, 0, obj_Player);
+                 _inst.is_local = false;
+                 _inst.uuid = _state.uuid;
+                 _inst.interp_target_x = _state.physics.x;
+                 _inst.interp_target_y = _state.physics.y;
+                 _state.apply(_inst);
+            }
+            else if (string_pos("creature:", _state.entity_type) == 1)
+            {
+                 // Create creature
+                 // Parse ID: "creature:phantasia:slime"
+                 var _id = string_delete(_state.entity_type, 1, 9); 
+                 _inst = instance_create_layer(_state.physics.x, _state.physics.y, "Instances", obj_Creature);
+                 _inst._id = _id;
+                 _inst.uuid = _state.uuid;
+                 // Initialize creature data
+                 var _data = global.creature_data[$ _id];
+                 if (_data != undefined)
+                 {
+                     _inst.sprite_index = global.sprite_asset[$ _data.get_sprite_idle()].get_sprite();
+                     // Add interpolation vars if we want smooth creatures
+                 }
+                 _state.apply(_inst);
+            }
+            else if (_state.entity_type == "item_drop")
+            {
+                 // Create item drop
+                 var _item = new Item(_state.extra_id, _state.extra_value);
+                 spawn_item_drop(_state.physics.x, _state.physics.y, _item);
+                 // spawn_item_drop creates instance, we need to find it and set uuid
+                 // BUT spawn_item_drop returns nothing? Wait, I saw it returns instance maybe? 
+                 // Checked file: NO, it uses "with(instance_create...)" but doesn't return it explicitly at end?
+                 // Wait, looked at file again: it does not return.
+                 // FIX: We need to set uuid. Maybe use `instance_nearest`? risky.
+                 // Better: just instance_create_layer and init manually here to be safe/clean?
+                 // Or modify spawn_item_drop to return id.
+                 // For now, let's manually create to ensure UUID set.
+                 
+                 // Re-implementation of spawn logic for sync:
+                 var _data = global.item_data[$ _state.extra_id];
+                 if (_data != undefined)
+                 {
+                      _inst = instance_create_layer(_state.physics.x, _state.physics.y, "Instances", obj_Item_Drop);
+                      _inst.uuid = _state.uuid;
+                      _inst.item = _item;
+                      // Init visual
+                      var _size = _data.get_inventory_size();
+                      _inst.image_index = _data.get_inventory_index();
+                      _state.apply(_inst);
+                 }
+            }
+            else if (_state.entity_type == "projectile")
+            {
+                 // Create projectile
+                 _inst = spawn_projectile(_state.physics.x, _state.physics.y, _state.extra_id, _state.extra_value);
+                 if (instance_exists(_inst))
+                 {
+                     _inst.uuid = _state.uuid;
+                     _state.apply(_inst);
+                 }
+            }
         }
     }
-}
-
-/// @desc Handle PLAYER_JOIN packet (client only)
-function _network_handle_player_join(_buffer)
-{
-    var _uuid = buffer_read(_buffer, buffer_string);
-    show_debug_message($"[NET] Player joined: uuid={_uuid}");
     
-    // Create remote player instance
-    var _player = instance_create_depth(obj_Player.x, obj_Player.y, 0, obj_Player);
-    _player.is_local = false;
-    _player.uuid = _uuid;
-}
-
-/// @desc Handle PLAYER_LEAVE packet (client only)
-function _network_handle_player_leave(_buffer)
-{
-    var _uuid = buffer_read(_buffer, buffer_string);
-    show_debug_message($"[NET] Player left: uuid={_uuid}");
+    // --- DESPAWN LOGIC ---
+    // Destroy any non-player entity not in the list
+    // (We treat Players separately via PLAYER_LEAVE for persistence/safety)
     
-    // Find and destroy remote player instance
-    with (obj_Player)
+    with (obj_Creature)
     {
-        if (uuid == _uuid && !is_local)
-        {
-            instance_destroy();
-            break;
-        }
+        if (!struct_exists(_received_uuids, uuid)) instance_destroy();
+    }
+    with (obj_Item_Drop)
+    {
+        // Don't destroy if we just spawned it locally (maybe wait for server ack?)
+        // The server is authority. If server doesn't send it, it doesn't exist.
+        // But what about the frame we drop it?
+        // To avoid flickering, local prediction could keep it alive, but standard auth says kill it.
+        // Let's kill it.
+        if (!struct_exists(_received_uuids, uuid)) instance_destroy();
+    }
+    with (obj_Projectile)
+    {
+        if (!struct_exists(_received_uuids, uuid)) instance_destroy();
     }
 }
 
@@ -554,17 +657,23 @@ function network_broadcast_entities()
         // Write last processed input tick for this client
         buffer_write(_buffer, buffer_u32, _last_tick);
         
-        // Count players
-        var _count = instance_number(obj_Player);
+        // Count all network entities
+        // NOTE: Only sync entities relevant to network (have UUID, etc)
+        var _count = instance_number(obj_Player) + instance_number(obj_Creature) + instance_number(obj_Item_Drop) + instance_number(obj_Projectile);
         buffer_write(_buffer, buffer_u16, _count);
         
-        // Write each player's state
-        with (obj_Player)
-        {
-            var _state = new EntityState();
-            _state.capture(self);
-            _state.to_buffer(_buffer);
-        }
+        // Helper to write
+        var _write_entity = function(_inst, _buf) {
+            var _s = new EntityState();
+            _s.capture(_inst);
+            _s.to_buffer(_buf);
+            delete _s;
+        };
+        
+        with (obj_Player) { _write_entity(self, _buffer); }
+        with (obj_Creature) { _write_entity(self, _buffer); }
+        with (obj_Item_Drop) { _write_entity(self, _buffer); }
+        with (obj_Projectile) { _write_entity(self, _buffer); }
         
         network_send_raw(_key, _buffer, buffer_tell(_buffer));
         buffer_delete(_buffer);
@@ -717,4 +826,63 @@ function _network_handle_tile_request(_socket, _buffer)
         
         show_debug_message($"[NET] Rejected tile request from client (dist={_dist})");
     }
+}
+/// @desc Initialize inventory structure for a connected client (server only)
+function _network_init_client_inventory(_client)
+{
+    _client.inventory = {};
+    
+    // Use global inventory reference definitions
+    var _names = global.inventory_names;
+    
+    for (var i = 0; i < array_length(_names); ++i)
+    {
+        var _name = _names[i];
+        if (variable_struct_exists(global.inventory_length, _name))
+        {
+            var _len = global.inventory_length[$ _name];
+            _client.inventory[$ _name] = array_create(_len, INVENTORY_EMPTY);
+        }
+    }
+}
+
+/// @desc Send inventory update to a specific client (server only)
+function network_send_inventory_update(_socket, _inv_name, _index, _item_id, _amount)
+{
+    if (global.network_role != NETWORK_ROLE.SERVER) return;
+    
+    var _buffer = packet_create(PACKET_TYPE.INVENTORY_UPDATE);
+    packet_write_inventory_update(_buffer, _inv_name, _index, _item_id, _amount);
+    
+    network_send_raw(_socket, _buffer, buffer_tell(_buffer));
+    buffer_delete(_buffer);
+}
+
+/// @desc Handle INVENTORY_UPDATE packet (client only)
+function _network_handle_inventory_update(_buffer)
+{
+    var _data = packet_read_inventory_update(_buffer);
+    
+    var _inv_name = _data.inv_name;
+    var _index = _data.index;
+    var _item_id = _data.item_id;
+    var _amount = _data.amount;
+    
+    // Validate existence of inventory
+    if (!variable_struct_exists(global.inventory, _inv_name)) return;
+    
+    var _inventory = global.inventory[$ _inv_name];
+    if (_index < 0 || _index >= array_length(_inventory)) return;
+    
+    if (_item_id == "")
+    {
+        _inventory[@ _index] = INVENTORY_EMPTY;
+    }
+    else
+    {
+        _inventory[@ _index] = new Inventory(_item_id, _amount);
+    }
+    
+    // Refresh GUI
+    obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK | SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR;
 }

@@ -25,6 +25,26 @@ enum CREATURE_AI_STATE {
 
 function control_creature()
 {
+    // --- REMOTE CREATURES ON CLIENT (INTERPOLATION) ---
+    if (global.network_role == NETWORK_ROLE.CLIENT)
+    {
+        if (variable_instance_exists(self, "interp_start_x"))
+        {
+            interp_timer += 1 / GAME_TICK;
+            var _t = clamp(interp_timer / interp_duration, 0, 1);
+            
+            x = lerp(interp_start_x, interp_target_x, _t);
+            y = lerp(interp_start_y, interp_target_y, _t);
+            
+            // Facing direction
+            if (interp_target_x != interp_start_x)
+            {
+                image_xscale = abs(image_xscale) * sign(interp_target_x - interp_start_x);
+            }
+        }
+        exit; // Skip AI/Physics on client
+    }
+    
     var _data = global.creature_data[$ _id];
     var _dt_normalized = 1 / GAME_TICK;
     
