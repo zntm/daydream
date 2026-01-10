@@ -850,8 +850,49 @@ function _network_handle_tile_request(_socket, _buffer)
         var _tile = new Item(_tile_id, 1);
         if (_tile_id == "undefined") _tile = TILE_EMPTY; // Safety
         
-        // Apply change (Server will broadcast via tile_place hook)
-        tile_place(_x, _y, _z, _tile);
+        // Authoritative Verification & Inventory Consumption
+        var _valid_action = true;
+        
+        // Only consume if placing a block (not mining/clearing)
+        if (_tile != TILE_EMPTY)
+        {
+            var _hotbar_idx = _p.selected_hotbar;
+            var _inv_item = _client.inventory.base[_hotbar_idx];
+            
+            if (_inv_item != INVENTORY_EMPTY && _inv_item.get_id() == _tile_id)
+            {
+                var _changed_slots = [];
+                inventory_item_decrement("base", _hotbar_idx, _client.inventory, _changed_slots);
+                _network_broadcast_inventory_update(_client, "base", _changed_slots);
+            }
+            else
+            {
+                // Verify failed: Player doesn't have the item they are trying to place
+                _valid_action = false;
+                show_debug_message($"[NET] Invalid placement denied: Client {_client.uuid} tried to place {_tile_id} without item.");
+            }
+        }
+        
+        if (_valid_action)
+        {
+            // Apply change (Server will broadcast via tile_place hook)
+            tile_place(_x, _y, _z, _tile);
+        }
+        else
+        {
+             // Revert logic (force update back to client)
+             var _current_tile = tile_get(_x, _y, _z);
+             var _current_id = (_current_tile == TILE_EMPTY) ? "undefined" : _current_tile.get_id();
+             
+             var _revert_buffer = packet_create(PACKET_TYPE.TILE_UPDATE);
+             buffer_write(_revert_buffer, buffer_s32, _x);
+             buffer_write(_revert_buffer, buffer_s32, _y);
+             buffer_write(_revert_buffer, buffer_s32, _z);
+             buffer_write(_revert_buffer, buffer_string, _current_id);
+             
+             network_send_raw(_socket, _revert_buffer, buffer_tell(_revert_buffer));
+             buffer_delete(_revert_buffer);
+        }
     }
     else
     {

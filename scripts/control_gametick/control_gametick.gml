@@ -106,50 +106,7 @@ function control_gametick(_delta_time)
             control_player();
         }
         
-        if (mouse_check_button(mb_right))
-        {
-            var _inventory_selected_hotbar = global.inventory_selected_hotbar;
-            var _item_holding = global.inventory.base[_inventory_selected_hotbar];
-            
-            if (_item_holding != INVENTORY_EMPTY)
-            {
-                var _data = _item_data[$ _item_holding.get_id()];
-                var _item_consumable = _data.get_item_consumable();
-                
-                if (_item_consumable != undefined)
-                {
-                    var _hp = _item_consumable.get_hp();
-                    
-                    if (_hp != undefined) && (obj_Player.hp < obj_Player.hp_max)
-                    {
-                        var _cooldown = _item_consumable.get_cooldown();
-                        
-                        if (_cooldown != undefined)
-                        {
-                            control_entity_heal(obj_Player, _hp, obj_Player);
-                            obj_Player.saturation += _item_consumable.get_saturation();
-                            
-                            item_cooldown[$ _cooldown.get_id()] = _cooldown.get_seconds();
-                            
-                            inventory_delete("base", _inventory_selected_hotbar);
-                            
-                            obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR | SURFACE_REFRESH_BOOLEAN.HP;
-                            
-                            var _sfx = _item_consumable.get_sfx();
-                            
-                            if (_sfx != undefined)
-                            {
-                                var _sfx_id = _sfx.get_id();
-                                var _sfx_gain = _sfx.get_gain();
-                                
-                                sfx_diegetic_play(obj_Player.audio_emitter, obj_Player.x, obj_Player.y, _sfx_id, _sfx_gain, global.settings.audio_sfx);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        
+        // Restore cooldown update loop
         var _item_cooldown_names  = struct_get_names(item_cooldown);
         var _item_cooldown_length = array_length(_item_cooldown_names);
         

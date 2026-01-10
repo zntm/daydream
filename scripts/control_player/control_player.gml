@@ -307,9 +307,20 @@ function control_player()
             
             // Shooting logic
             var _angle = input_state.aim_angle;
-            if (control_entity_shoot(id, _id, x, y - 24, _angle))
+            
+            var _changed_slots = (global.network_role == NETWORK_ROLE.SERVER && !is_local) ? [] : undefined;
+            
+            if (control_entity_shoot(id, _id, x, y - 24, _angle, _inv_target, _changed_slots))
             {
                 // Shot something
+                if (_changed_slots != undefined && array_length(_changed_slots) > 0)
+                {
+                    var _client = global.network_clients[? socket_id];
+                    if (!is_undefined(_client))
+                    {
+                        _network_broadcast_inventory_update(_client, "base", _changed_slots);
+                    }
+                }
             }
             
             var _on_attack = _data.get_on_attack();
@@ -318,6 +329,60 @@ function control_player()
             for (var j = 0; j < _on_attack_length; ++j)
             {
                 function_execute(_on_attack[j], round(x / TILE_SIZE), round(y / TILE_SIZE), CHUNK_DEPTH_DEFAULT, sign(image_xscale), sign(image_yscale), id, _item);
+            }
+        }
+    }
+    
+    // --- CONSUMABLES (Eating) ---
+    if (input_state.use_held)
+    {
+        var _item = _inv_target.base[_hotbar_idx];
+        
+        if (_item != INVENTORY_EMPTY)
+        {
+            var _data = global.item_data[$ _item.get_id()];
+            var _item_consumable = _data.get_item_consumable();
+            
+            if (_item_consumable != undefined)
+            {
+                var _hp = _item_consumable.get_hp();
+                
+                if (_hp != undefined && hp < hp_max)
+                {
+                    var _cooldown = _item_consumable.get_cooldown();
+                    var _cooldown_id = (_cooldown != undefined) ? _cooldown.get_id() : undefined;
+                    
+                    var _can_eat = true;
+                    if (_cooldown_id != undefined && variable_instance_exists(obj_Game_Control, "item_cooldown"))
+                    {
+                        if ((obj_Game_Control.item_cooldown[$ _cooldown_id] ?? 0) > 0) _can_eat = false;
+                    }
+                    
+                    if (_can_eat)
+                    {
+                        control_entity_heal(id, _hp, id);
+                        saturation += _item_consumable.get_saturation();
+                        
+                        if (_cooldown != undefined)
+                        {
+                             obj_Game_Control.item_cooldown[$ _cooldown_id] = _cooldown.get_seconds();
+                        }
+                        
+                        var _changed_slots = (global.network_role == NETWORK_ROLE.SERVER && !is_local) ? [] : undefined;
+                        inventory_item_decrement("base", _hotbar_idx, _inv_target, _changed_slots);
+                        
+                        if (_changed_slots != undefined && array_length(_changed_slots) > 0)
+                        {
+                            var _client = global.network_clients[? socket_id];
+                            if (!is_undefined(_client)) _network_broadcast_inventory_update(_client, "base", _changed_slots);
+                        }
+                        
+                        if (is_local) obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR | SURFACE_REFRESH_BOOLEAN.HP;
+                        
+                        var _sfx = _item_consumable.get_sfx();
+                        if (_sfx != undefined) sfx_diegetic_play(audio_emitter, x, y, _sfx.get_id(), _sfx.get_gain(), global.settings.audio_sfx);
+                    }
+                }
             }
         }
     }
