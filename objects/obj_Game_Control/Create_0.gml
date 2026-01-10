@@ -247,3 +247,6 @@ global.chat_command_hint = undefined;
 
 // Initialize the modular GUI system
 gui_init_modular();
+
+// Initialize network globals
+network_init();

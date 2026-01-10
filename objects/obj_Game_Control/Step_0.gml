@@ -328,6 +328,60 @@ if (keyboard_check_pressed(vk_f1))
     is_opened ^= IS_OPENED_BOOLEAN.GUI;
 }
 
+// Network debug keybinds (developer mode only)
+if (IS_DEVELOPER_MODE)
+{
+    // F5: Start Server
+    if (keyboard_check_pressed(vk_f5))
+    {
+        if (global.network_role == NETWORK_ROLE.NONE)
+        {
+            if (network_start_server(6510))
+            {
+                chat_add("System", "Server started on port 6510");
+            }
+            else
+            {
+                chat_add("System", "Failed to start server");
+            }
+        }
+        else
+        {
+            chat_add("System", "Already in a network session");
+        }
+    }
+    
+    // F6: Connect to Server (localhost for testing)
+    if (keyboard_check_pressed(vk_f6))
+    {
+        if (global.network_role == NETWORK_ROLE.NONE)
+        {
+            if (network_connect_to_server("127.0.0.1", 6510))
+            {
+                chat_add("System", "Connecting to 127.0.0.1:6510...");
+            }
+            else
+            {
+                chat_add("System", "Failed to connect");
+            }
+        }
+        else
+        {
+            chat_add("System", "Already in a network session");
+        }
+    }
+    
+    // F7: Disconnect
+    if (keyboard_check_pressed(vk_f7))
+    {
+        if (global.network_role != NETWORK_ROLE.NONE)
+        {
+            network_disconnect();
+            chat_add("System", "Disconnected from network");
+        }
+    }
+}
+
 // Update modular GUI visibility and state
 if (global.gui_root != undefined)
 {

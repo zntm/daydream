@@ -9,7 +9,29 @@ function control_player()
     var _y_prev = y;
     
     // --- INPUT ---
-    input_state.poll_player();
+    // For remote players (multiplayer), use network input instead of local polling
+    if (is_local)
+    {
+        input_state.poll_player();
+    }
+    else if (network_input != undefined)
+    {
+        // Apply network input for remote players
+        input_state.move_x = network_input.move_x;
+        input_state.move_y = network_input.move_y;
+        input_state.move_left = (network_input.move_x < 0);
+        input_state.move_right = (network_input.move_x > 0);
+        input_state.move_up = (network_input.move_y < 0);
+        input_state.move_down = (network_input.move_y > 0);
+        input_state.jump = network_input.jump;
+        input_state.attack_held = network_input.attack;
+        input_state.use_held = network_input.use;
+    }
+    else
+    {
+        // No input available for remote player, skip
+        exit;
+    }
     
     // --- DOUBLE INPUT ---
     if !(obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.MENU)

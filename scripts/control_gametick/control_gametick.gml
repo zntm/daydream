@@ -179,6 +179,18 @@ function control_gametick(_delta_time)
             ++global.world_save_data.day;
         }
         
+        // --- NETWORK SYNC ---
+        // Server: Broadcast entity states to all clients
+        if (global.network_role == NETWORK_ROLE.SERVER)
+        {
+            network_broadcast_entities();
+        }
+        // Client: Send local player input to server
+        else if (global.network_role == NETWORK_ROLE.CLIENT)
+        {
+            network_send_input();
+        }
+        
         global.tick_accumulator -= 1;
     }
 }
