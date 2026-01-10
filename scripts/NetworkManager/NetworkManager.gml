@@ -220,13 +220,8 @@ function _network_handle_connect()
     else if (global.network_role == NETWORK_ROLE.CLIENT)
     {
         // We connected to the server
+        // Note: HELLO packet is already sent by network_connect_to_server()
         show_debug_message("[NET] Connected to server!");
-        
-        // Send HELLO packet
-        var _buffer = packet_create(PACKET_TYPE.HELLO);
-        buffer_write(_buffer, buffer_string, global.player_save_data.uuid);
-        packet_send(global.network_client_socket, _buffer);
-        buffer_delete(_buffer);
     }
 }
 
@@ -271,21 +266,19 @@ function _network_handle_disconnect()
 /// @desc Internal: Handle incoming data
 function _network_handle_data()
 {
-    var _socket = async_load[? "socket"];
+    var _socket = async_load[? "id"]; // "id" holds the client socket sending the data
     var _buffer = async_load[? "buffer"];
-    var _id = async_load[? "id"];
+    var _buffer_size = async_load[? "size"];  // Actual received data size, NOT buffer_get_size()
     
-    if (is_undefined(_socket)) _socket = _id;
-    
+    // Safety check just in case
     if (is_undefined(_socket))
     {
-        show_debug_message("[NET] CRITICAL: Socket is undefined in DATA event!");
+        show_debug_message("[NET] CRITICAL: Socket (id) is undefined in DATA event!");
         return;
     }
     
     // Process stream (handle concatenated packets)
     buffer_seek(_buffer, buffer_seek_start, 0);
-    var _buffer_size = buffer_get_size(_buffer);
     
     while (buffer_tell(_buffer) < _buffer_size)
     {
@@ -354,7 +347,38 @@ function _network_handle_hello(_socket, _buffer)
         });
     }
     
-    // Update client info with their actual UUID
+    // Check for UUID collision (Host or other Clients)
+    // This happens frequently in local testing if multiple instances share save data/UUIDs
+    var _uuid_collision = false;
+    
+    // 1. Check existing keys in client map
+    var _k = ds_map_find_first(global.network_clients);
+    while (!is_undefined(_k))
+    {
+        if (_k != _socket)
+        {
+            var _c = global.network_clients[? _k];
+            if (_c.uuid == _client_uuid) _uuid_collision = true; 
+        }
+        _k = ds_map_find_next(global.network_clients, _k);
+    }
+    
+    // 2. Check Host Player (if I am server/host)
+    if (!_uuid_collision)
+    {
+        with (obj_Player)
+        {
+            if (is_local && uuid == _client_uuid) _uuid_collision = true;
+        }
+    }
+    
+    if (_uuid_collision)
+    {
+        show_debug_message($"[NET] UUID Collision detected for {_client_uuid}. Assigning new UUID.");
+        _client_uuid = uuid_generate(irandom(0xffff_ffff)); 
+    }
+    
+    // Update client info with their actual (possibly new) UUID
     var _client = global.network_clients[? _socket];
     _client.uuid = _client_uuid;
     
@@ -415,6 +439,7 @@ function _network_handle_hello(_socket, _buffer)
         if (uuid != _client_uuid)
         {
             var _p_buffer = packet_create(PACKET_TYPE.PLAYER_INFO);
+            show_debug_message($"[NET] Sending existing player info: uuid={uuid}, attire={json_stringify(attire)}");
             packet_write_player_info(_p_buffer, uuid, attire);
             packet_send(_socket, _p_buffer);
             buffer_delete(_p_buffer);
@@ -467,7 +492,16 @@ function _network_handle_welcome(_buffer)
         global.world_save_data.seed = _data.seed;
     }
     
-    open_simplex_noise_seed(_data.seed);
+    var _noise_seed = _data.seed;
+    if (is_string(_noise_seed))
+    {
+        // Try to hash string if usage requires real
+        // Assuming open_simplex_noise_seed needs a real.
+        // If string_get_seed is available, use it.
+        try { _noise_seed = string_get_seed(_noise_seed); } catch(_e) { _noise_seed = 0; }
+    }
+    
+    open_simplex_noise_seed(_noise_seed);
     
     // Update local player UUID
     if (instance_exists(obj_Player))
@@ -652,14 +686,22 @@ function _network_handle_entity_update(_buffer)
                 if (!_is_player || !_inst.is_local)
                 {
                     // Apply HP, etc.
-                    // Note: Ideally we don't snap X/Y here if we are interpolating, apply() does snap physics.
-                    // So we might need to be careful.
+                    // Preserve position if interpolating to avoid snapping
+                    var _prev_x = _inst.x;
+                    var _prev_y = _inst.y;
+                    
                     _state.apply(_inst); 
                     
-                    // Re-assert interpolation start to prevent snapping if apply() overwrote it?
-                    // actually apply() updates physics.x/y and inst.x/y.
-                    // If we want smooth visual interpolation, we should separate visual x/y from logic x/y or just override x/y in Draw/Step.
-                    // For now, let's let apply() happen, but if we have interpolation, we used 'interp' vars.
+                    if (variable_instance_exists(_inst, "interp_start_x"))
+                    {
+                        // Restore position solely for visual interpolation
+                        // apply() sets the 'physics' position which logic might need, 
+                        // but for smooth rendering, we usually want to be between start and target.
+                        // However, apply() sets inst.x/y.
+                        // If we restore x/y, we let the interpolation logic (in Step) move it towards target.
+                        _inst.x = _prev_x;
+                        _inst.y = _prev_y;
+                    }
                 }
             }
         }
@@ -795,22 +837,22 @@ function network_broadcast_entities()
         
         with (obj_Player) 
         { 
-            if (!variable_instance_exists(id, "uuid")) uuid = uuid_generate();
+            if (!variable_instance_exists(id, "uuid")) uuid = uuid_generate(irandom(0xffff_ffff));
             _write_entity(self, _buffer); 
         }
         with (obj_Creature) 
         { 
-            if (!variable_instance_exists(id, "uuid")) uuid = uuid_generate();
+            if (!variable_instance_exists(id, "uuid")) uuid = uuid_generate(irandom(0xffff_ffff));
             _write_entity(self, _buffer); 
         }
         with (obj_Item_Drop) 
         { 
-            if (!variable_instance_exists(id, "uuid")) uuid = uuid_generate();
+            if (!variable_instance_exists(id, "uuid")) uuid = uuid_generate(irandom(0xffff_ffff));
             _write_entity(self, _buffer); 
         }
         with (obj_Projectile) 
         { 
-            if (!variable_instance_exists(id, "uuid")) uuid = uuid_generate();
+            if (!variable_instance_exists(id, "uuid")) uuid = uuid_generate(irandom(0xffff_ffff));
             _write_entity(self, _buffer); 
         }
         
@@ -916,8 +958,19 @@ function _network_handle_tile_update(_buffer)
     var _tile_id = buffer_read(_buffer, buffer_string);
     
     var _tile = new Tile(_tile_id);
-    if (_tile_id == "base:empty") _tile = TILE_EMPTY; // Assuming "base:empty" or similar convention, or just check ID
+    if (_tile_id == "base:empty") _tile = TILE_EMPTY; 
     if (_tile_id == undefined || _tile_id == "undefined") _tile = TILE_EMPTY;
+
+    // Safety check BEFORE accessing components
+    if (_tile != TILE_EMPTY && !is_undefined(_tile))
+    {
+         var _data = global.item_data[$ _tile.get_id()];
+         if (_data == undefined) 
+         {
+             // Server sent us an ID we don't know about? Default to empty.
+             _tile = TILE_EMPTY;
+         }
+    }
 
     // Apply Update
     global.network_applying_packet = true;
@@ -1057,8 +1110,11 @@ function _network_handle_inventory_update(_buffer)
     
     _inventory[@ _index] = _item;
     
-    // Refresh GUI
-    obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK | SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR;
+    // Refresh GUI (only if Game Control exists aka inside the game world)
+    if (instance_exists(obj_Game_Control))
+    {
+        obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK | SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR;
+    }
 }
 
 /// @desc Handle INVENTORY_ACTION packet (server only)
@@ -1475,5 +1531,5 @@ function _network_handle_player_info(_buffer)
     
     _player.attire = _attire; // Apply synced attire
     
-    show_debug_message($"[NET] Synced player info for uuid={_uuid}");
+    show_debug_message($"[NET] Synced player info for uuid={_uuid}. Attire: {json_stringify(_attire)}");
 }

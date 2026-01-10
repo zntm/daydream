@@ -45,7 +45,11 @@ function tile_place(_x, _y, _z, _tile)
     {
         _chunk.chunk_display |= 1 << _z;
         
-        ++_chunk.chunk_count[@ _z];
+        // Only increment if we are replacing empty space
+        if (_tile_before == TILE_EMPTY)
+        {
+            ++_chunk.chunk_count[@ _z];
+        }
         
         var _data = global.item_data[$ _tile.get_id()];    
         
@@ -54,9 +58,14 @@ function tile_place(_x, _y, _z, _tile)
             array_push(_chunk.chunk_render_state, global.render_state_pool.acquire(_x, _y, _z, _data.get_render_state()));
         }
     }
-    else if (_tile_before != TILE_EMPTY) && (--_chunk.chunk_count[_z] <= 0)
+    else if (_tile_before != TILE_EMPTY)
     {
-        _chunk.chunk_display ^= 1 << _z;
+        // Decrement only if we are removing a tile
+        if (--_chunk.chunk_count[@ _z] <= 0)
+        {
+            _chunk.chunk_count[@ _z] = 0; // Safety clamp
+            _chunk.chunk_display &= ~(1 << _z); // Safety clear bit
+        }
         
         var _render_state = _chunk.chunk_render_state;
         var _length = array_length(_render_state);

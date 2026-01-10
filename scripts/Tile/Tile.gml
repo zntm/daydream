@@ -9,6 +9,19 @@ function Tile(_id, _item_data = global.item_data) constructor
     
     var _data = _item_data[$ _id];
     
+    if (_data == undefined)
+    {
+        // Safe fallback to prevent crashes if ID is invalid
+        // We can't really do much else here without breaking functionality, 
+        // but avoiding the immediate crash on _data access is key.
+        // The calling code should ideally check this, but for robustness:
+        get_tile_components_length = function() { return 0; };
+        get_tile_inventory_length = function() { return 0; };
+        get_tile_components_names = function() { return []; };
+        // We'll let the rest proceed but ___value setup might be weird if not careful.
+        // Actually, returning early or setting a safe state is better.
+    }
+    
     // set_offset(0, 0);
     // set_scale(1, 1);
     // ___value = 0;

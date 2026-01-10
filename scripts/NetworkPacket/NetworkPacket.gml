@@ -92,7 +92,8 @@ function packet_read_input(_buffer)
 function packet_write_welcome(_buffer, _uuid, _seed, _time)
 {
     buffer_write(_buffer, buffer_string, _uuid);
-    buffer_write(_buffer, buffer_f64, _seed);
+    show_debug_message($"[NET] Writing WELCOME Seed: {_seed}");
+    buffer_write(_buffer, buffer_string, string(_seed)); // Send as string to support both numeric and text seeds
     buffer_write(_buffer, buffer_f32, _time);
 }
 
@@ -101,49 +102,58 @@ function packet_write_welcome(_buffer, _uuid, _seed, _time)
 /// @returns {Struct}
 function packet_read_welcome(_buffer)
 {
+    var _uuid = buffer_read(_buffer, buffer_string);
+    var _seed_str = buffer_read(_buffer, buffer_string);
+    var _time = buffer_read(_buffer, buffer_f32);
+    
+    // Attempt to parse seed as number if possible, otherwise keep as string
+    var _seed = _seed_str;
+    try {
+        if (string_digits(_seed_str) == _seed_str || string_char_at(_seed_str, 1) == "-") {
+            _seed = real(_seed_str);
+        }
+    } catch(_e) {}
+    
     return {
-        uuid: buffer_read(_buffer, buffer_string),
-        seed: buffer_read(_buffer, buffer_f64),
-        time: buffer_read(_buffer, buffer_f32)
+        uuid: _uuid,
+        seed: _seed,
+        time: _time
     };
 }
 
-/// @desc Write an Inventory item to buffer (Full serialization)
+/// @desc Write an Inventory item to buffer (Simplified JSON serialization)
 /// @param {Id.Buffer} _buffer
 /// @param {Struct} _item Inventory item struct or INVENTORY_EMPTY
 function packet_write_item(_buffer, _item)
 {
+    // Use JSON for entire item to avoid field mismatch issues
     if (_item == INVENTORY_EMPTY || _item == undefined)
     {
         buffer_write(_buffer, buffer_string, "");
         return;
     }
     
-    buffer_write(_buffer, buffer_string, _item.get_id());
-    buffer_write(_buffer, buffer_u16, _item.get_amount());
+    // Build a simple struct for serialization
+    var _data = {
+        id: _item.get_id(),
+        amount: _item.get_amount()
+    };
     
-    // Durability
+    // Optional durability
     var _dur = _item.get_item_durability();
     if (_dur != undefined)
     {
-        buffer_write(_buffer, buffer_u8, 1);
-        buffer_write(_buffer, buffer_u32, _dur);
-    }
-    else
-    {
-        buffer_write(_buffer, buffer_u8, 0);
+        _data.durability = _dur;
     }
     
-    // Components (JSON string for flexibility)
+    // Optional components
     var _comp = _item[$ "___component"];
     if (_comp != undefined && _item.get_components_length() > 0)
     {
-        buffer_write(_buffer, buffer_string, json_stringify(_comp));
+        _data.components = _comp;
     }
-    else
-    {
-        buffer_write(_buffer, buffer_string, "");
-    }
+    
+    buffer_write(_buffer, buffer_string, json_stringify(_data));
 }
 
 /// @desc Read an Inventory item from buffer
@@ -151,57 +161,45 @@ function packet_write_item(_buffer, _item)
 /// @returns {Struct} Inventory item or INVENTORY_EMPTY
 function packet_read_item(_buffer)
 {
-    var _id = buffer_read(_buffer, buffer_string);
-    if (_id == "") return INVENTORY_EMPTY;
+    var _json = buffer_read(_buffer, buffer_string);
+    if (_json == "") return INVENTORY_EMPTY;
     
-    var _amount = buffer_read(_buffer, buffer_u16);
-    var _item = new Inventory(_id, _amount);
-    
-    // Durability
-    if (buffer_read(_buffer, buffer_u8))
+    try
     {
-        _item.set_durability(buffer_read(_buffer, buffer_u32));
-    }
-    
-    // Components
-    var _comp_json = "";
-    
-    if (buffer_tell(_buffer) < buffer_get_size(_buffer))
-    {
-        try {
-            _comp_json = buffer_read(_buffer, buffer_string);
-        } catch(_e) {
-            show_debug_message($"[NET] Critical: Failed to read components string (EOF). Pos: {buffer_tell(_buffer)} Size: {buffer_get_size(_buffer)}");
-            _comp_json = "";
-        }
-    }
-    else
-    {
-        show_debug_message($"[NET] Warning: Packet truncated before components. Pos: {buffer_tell(_buffer)} Size: {buffer_get_size(_buffer)}");
-    }
-
-    if (_comp_json != "")
-    {
-        try
+        var _data = json_parse(_json);
+        if (!is_struct(_data)) return INVENTORY_EMPTY;
+        
+        var _id = _data[$ "id"];
+        var _amount = _data[$ "amount"] ?? 1;
+        
+        if (_id == undefined || _id == "") return INVENTORY_EMPTY;
+        
+        var _item = new Inventory(_id, _amount);
+        
+        // Durability
+        if (struct_exists(_data, "durability"))
         {
-            var _comp = json_parse(_comp_json);
-            if (is_struct(_comp))
+            _item.set_durability(_data.durability);
+        }
+        
+        // Components
+        if (struct_exists(_data, "components") && is_struct(_data.components))
+        {
+            var _comp = _data.components;
+            var _names = struct_get_names(_comp);
+            for (var i = 0; i < array_length(_names); ++i)
             {
-                var _names = struct_get_names(_comp);
-                for (var i = 0; i < array_length(_names); ++i)
-                {
-                    _item.set_component(_names[i], _comp[$ _names[i]]);
-                }
+                _item.set_component(_names[i], _comp[$ _names[i]]);
             }
         }
-        catch (_e)
-        {
-            show_debug_message($"[NET] Error parsing item components JSON: {_e.message}");
-            show_debug_message($"[NET] JSON content: '{_comp_json}'");
-        }
+        
+        return _item;
     }
-    
-    return _item;
+    catch (_e)
+    {
+        show_debug_message($"[NET] Error parsing item JSON: {_e.message}");
+        return INVENTORY_EMPTY;
+    }
 }
 
 /// @desc Serialize inventory update
@@ -221,10 +219,14 @@ function packet_write_inventory_update(_buffer, _inv_name, _index, _item)
 /// @returns {Struct}
 function packet_read_inventory_update(_buffer)
 {
+    var _inv_name = buffer_read(_buffer, buffer_string);
+    var _index = buffer_read(_buffer, buffer_u16);
+    var _item = packet_read_item(_buffer);
+    
     return {
-        inv_name: buffer_read(_buffer, buffer_string),
-        index: buffer_read(_buffer, buffer_u16),
-        item: packet_read_item(_buffer)
+        inv_name: _inv_name,
+        index: _index,
+        item: _item
     };
 }
 
