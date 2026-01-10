@@ -487,4 +487,10 @@ function chunk_generate(_chunk)
             _chunk.chunk_occluded[@ tile_index_xy(i, j)] = _occluded;
         }
     }
+    
+    // Request chunk data from server (client late join sync)
+    if (global.network_role == NETWORK_ROLE.CLIENT)
+    {
+        network_send_chunk_request(_chunk.x, _chunk.y);
+    }
 }

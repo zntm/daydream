@@ -127,6 +127,12 @@ if (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.EXIT)
             }
         }
         
+        // Disconnect from network before going to menu
+        if (global.network_role != NETWORK_ROLE.NONE)
+        {
+            network_disconnect();
+        }
+        
         room_goto(rm_Menu_Title);
         
         exit;
@@ -209,6 +215,22 @@ with (obj_Player)
 }
 
 control_gametick(_delta_time);
+
+// Network Time Sync (Server only)
+if (global.network_role == NETWORK_ROLE.SERVER)
+{
+    timer_network_sync += _delta_time;
+    
+    if (timer_network_sync >= 1.0) // Sync every second
+    {
+        timer_network_sync = 0;
+        
+        var _buffer = packet_create(PACKET_TYPE.TIME_UPDATE);
+        packet_write_time_update(_buffer, global.world_save_data.time);
+        network_broadcast_packet(_buffer);
+        buffer_delete(_buffer);
+    }
+}
 
 // Cleanup temporary audio emitters that have finished playing
 sfx_emitter_cleanup();

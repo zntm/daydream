@@ -30,11 +30,14 @@ function Inventory(_item, _amount = 1) constructor
     
     var _data = global.item_data[$ _item];
     
-    var _durability = _data.get_item_durability();
-    
-    if (_durability != undefined)
+    if (_data != undefined)
     {
-        ___durability = _durability.get_amount();
+        var _durability = _data.get_item_durability();
+        
+        if (_durability != undefined)
+        {
+            ___durability = _durability.get_amount();
+        }
     }
     
     static set_durability = function(_durability)
@@ -96,7 +99,7 @@ function Inventory(_item, _amount = 1) constructor
         return self[$ "___component_length"] ?? 0;
     }
     
-    var _inventory_length = _data.get_item_inventory_length();
+    var _inventory_length = (_data != undefined) ? _data.get_item_inventory_length() : 0;
     
     if (_inventory_length > 0)
     {

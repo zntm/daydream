@@ -38,7 +38,7 @@ function network_start_server(_port)
         return false;
     }
     
-    var _socket = network_create_server(network_socket_tcp, _port, 8);
+    var _socket = network_create_server_raw(network_socket_tcp, _port, 8);
     
     if (_socket < 0)
     {
@@ -74,11 +74,12 @@ function network_connect_to_server(_ip, _port)
         return false;
     }
     
-    var _result = network_connect(_socket, _ip, _port);
+    // network_connect_raw is synchronous - blocks until connected or failed
+    var _result = network_connect_raw(_socket, _ip, _port);
     
     if (_result < 0)
     {
-        show_debug_message($"[NET] Failed to initiate connection to {_ip}:{_port}");
+        show_debug_message($"[NET] Failed to connect to {_ip}:{_port}");
         network_destroy(_socket);
         return false;
     }
@@ -88,7 +89,18 @@ function network_connect_to_server(_ip, _port)
     global.network_host_ip = _ip;
     global.network_port = _port;
     
-    show_debug_message($"[NET] Connecting to {_ip}:{_port}...");
+    show_debug_message($"[NET] Connected to {_ip}:{_port}!");
+    
+    var _buffer = packet_create(PACKET_TYPE.HELLO);
+    buffer_write(_buffer, buffer_string, global.player_save_data.uuid);
+    
+    var _attire = global.player_save_data.attire;
+    var _json = (_attire != undefined) ? json_stringify(_attire) : "{}";
+    buffer_write(_buffer, buffer_string, _json);
+    
+    packet_send(global.network_client_socket, _buffer);
+    buffer_delete(_buffer);
+    
     return true;
 }
 
@@ -124,8 +136,8 @@ function network_disconnect()
 /// @param {Id.Buffer} _buffer
 function network_send_packet(_socket, _buffer)
 {
-    var _size = buffer_tell(_buffer);
-    network_send_raw(_socket, _buffer, _size);
+    // Use packet_send to ensure proper size header framing
+    packet_send(_socket, _buffer);
 }
 
 /// @desc Broadcast a buffer to all connected clients (server only)
@@ -141,7 +153,7 @@ function network_broadcast_packet(_buffer, _exclude_socket = undefined)
     {
         if (_key != _exclude_socket)
         {
-            network_send_raw(_key, _buffer, _size);
+            packet_send(_key, _buffer);
         }
         _key = ds_map_find_next(global.network_clients, _key);
     }
@@ -157,6 +169,23 @@ function network_handle_async(_type_event)
             _network_handle_connect();
             break;
             
+        case network_type_non_blocking_connect:
+             var _succeeded = async_load[? "succeeded"];
+             
+             if (_succeeded)
+             {
+                 _network_handle_connect();
+             }
+             else
+             {
+                 show_debug_message($"[NET] Connection Failed!");
+                 // TODO: Show UI error?
+                 network_destroy(global.network_client_socket);
+                 global.network_client_socket = undefined;
+                 global.network_role = NETWORK_ROLE.NONE;
+             }
+             break;
+            
         case network_type_disconnect:
             _network_handle_disconnect();
             break;
@@ -170,10 +199,13 @@ function network_handle_async(_type_event)
 /// @desc Internal: Handle new connection
 function _network_handle_connect()
 {
-    var _socket = async_load[? "socket"];
+    // For non-blocking connect, the socket is already our client socket
+    // For server receiving connect, 'socket' is the new client socket
     
     if (global.network_role == NETWORK_ROLE.SERVER)
     {
+        var _socket = async_load[? "socket"];
+        
         // A client connected to us
         ds_map_add(global.network_clients, _socket, {
             uuid: undefined,
@@ -193,7 +225,7 @@ function _network_handle_connect()
         // Send HELLO packet
         var _buffer = packet_create(PACKET_TYPE.HELLO);
         buffer_write(_buffer, buffer_string, global.player_save_data.uuid);
-        network_send_raw(global.network_client_socket, _buffer, buffer_tell(_buffer));
+        packet_send(global.network_client_socket, _buffer);
         buffer_delete(_buffer);
     }
 }
@@ -221,16 +253,7 @@ function _network_handle_disconnect()
             // Notify other clients
             var _buffer = packet_create(PACKET_TYPE.PLAYER_LEAVE);
             buffer_write(_buffer, buffer_string, _client.uuid);
-            
-            var _key = ds_map_find_first(global.network_clients);
-            while (!is_undefined(_key))
-            {
-                if (_key != _socket)
-                {
-                    network_send_raw(_key, _buffer, buffer_tell(_buffer));
-                }
-                _key = ds_map_find_next(global.network_clients, _key);
-            }
+            network_broadcast_packet(_buffer, _socket);
             buffer_delete(_buffer);
             
             ds_map_delete(global.network_clients, _socket);
@@ -245,143 +268,178 @@ function _network_handle_disconnect()
 }
 
 /// @desc Internal: Handle incoming data
+/// @desc Internal: Handle incoming data
 function _network_handle_data()
 {
     var _socket = async_load[? "socket"];
     var _buffer = async_load[? "buffer"];
+    var _id = async_load[? "id"];
     
-    var _packet_type = packet_read_type(_buffer);
+    if (is_undefined(_socket)) _socket = _id;
     
-    switch (_packet_type)
+    if (is_undefined(_socket))
     {
-        case PACKET_TYPE.HELLO:
-            _network_handle_hello(_socket, _buffer);
-            break;
-            
-        case PACKET_TYPE.WELCOME:
-            _network_handle_welcome(_buffer);
-            break;
-            
-        case PACKET_TYPE.PLAYER_INPUT:
-            _network_handle_player_input(_socket, _buffer);
-            break;
-            
-        case PACKET_TYPE.ENTITY_UPDATE:
-            _network_handle_entity_update(_buffer);
-            break;
-            
-        case PACKET_TYPE.PLAYER_JOIN:
-            _network_handle_player_join(_buffer);
-            break;
-            
-        case PACKET_TYPE.PLAYER_LEAVE:
-            _network_handle_player_leave(_buffer);
-            break;
-            
-        case PACKET_TYPE.TILE_UPDATE:
-            _network_handle_tile_update(_buffer);
-            break;
-            
-        case PACKET_TYPE.TILE_UPDATE_REQUEST:
-            _network_handle_tile_request(_socket, _buffer);
-            break;
-            
-        case PACKET_TYPE.INVENTORY_UPDATE:
-            _network_handle_inventory_update(_buffer);
-            break;
-            
-        case PACKET_TYPE.INVENTORY_ACTION:
-            _network_handle_inventory_action(_socket, _buffer);
-            break;
-            
-        case PACKET_TYPE.CONTAINER_OPEN:
-            _network_handle_container_open(_socket, _buffer);
-            break;
-            
-        case PACKET_TYPE.CONTAINER_CLOSE:
-            _network_handle_container_close(_socket, _buffer);
-            break;
+        show_debug_message("[NET] CRITICAL: Socket is undefined in DATA event!");
+        return;
+    }
+    
+    // Process stream (handle concatenated packets)
+    buffer_seek(_buffer, buffer_seek_start, 0);
+    var _buffer_size = buffer_get_size(_buffer);
+    
+    while (buffer_tell(_buffer) < _buffer_size)
+    {
+        // 1. Check Header (Size u16)
+        if (buffer_tell(_buffer) + 2 > _buffer_size) break; 
+        
+        var _msg_size = buffer_read(_buffer, buffer_u16);
+        var _packet_start_body = buffer_tell(_buffer);
+        
+        // 2. Check Payload
+        if (_packet_start_body + _msg_size > _buffer_size) 
+        {
+            // Incomplete packet (fragmentation not supported yet)
+            show_debug_message("[NET] Warning: Incomplete packet received.");
+            break; 
+        }
+        
+        // 3. Read Type (First byte of payload)
+        var _packet_type = buffer_read(_buffer, buffer_u8);
+        
+        // show_debug_message($"[NET] Received packet type {_packet_type} from socket {_socket}");
+        
+        switch (_packet_type)
+        {
+            case PACKET_TYPE.HELLO:             _network_handle_hello(_socket, _buffer); break;
+            case PACKET_TYPE.WELCOME:           _network_handle_welcome(_buffer); break;
+            case PACKET_TYPE.PLAYER_INPUT:      _network_handle_player_input(_socket, _buffer); break;
+            case PACKET_TYPE.ENTITY_UPDATE:     _network_handle_entity_update(_buffer); break;
+            case PACKET_TYPE.PLAYER_INFO:       _network_handle_player_info(_buffer); break;
+            case PACKET_TYPE.TIME_UPDATE:       _network_handle_time_update(_buffer); break;
+            case PACKET_TYPE.PLAYER_LEAVE:      _network_handle_player_leave(_buffer); break;
+            case PACKET_TYPE.TILE_UPDATE:       _network_handle_tile_update(_buffer); break;
+            case PACKET_TYPE.TILE_UPDATE_REQUEST: _network_handle_tile_request(_socket, _buffer); break;
+            case PACKET_TYPE.INVENTORY_UPDATE:  _network_handle_inventory_update(_buffer); break;
+            case PACKET_TYPE.INVENTORY_ACTION:  _network_handle_inventory_action(_socket, _buffer); break;
+            case PACKET_TYPE.CONTAINER_OPEN:    _network_handle_container_open(_socket, _buffer); break;
+            case PACKET_TYPE.CONTAINER_CLOSE:   _network_handle_container_close(_socket, _buffer); break;
+            case PACKET_TYPE.CHUNK_REQUEST:     _network_handle_chunk_request(_socket, _buffer); break;
+            case PACKET_TYPE.CHUNK_DATA:        _network_handle_chunk_data(_buffer); break;
+        }
+        
+        // 4. Align to next packet
+        buffer_seek(_buffer, buffer_seek_start, _packet_start_body + _msg_size);
     }
 }
 
 /// @desc Handle HELLO packet (server only)
 function _network_handle_hello(_socket, _buffer)
 {
+    show_debug_message($"[NET] Received HELLO from socket={_socket}");
+    
     var _client_uuid = buffer_read(_buffer, buffer_string);
+    var _client_attire_json = buffer_read(_buffer, buffer_string);
+    var _client_attire = json_parse(_client_attire_json);
+    
+    // Create client entry if not exists (raw sockets may not trigger connect event)
+    if (!ds_map_exists(global.network_clients, _socket))
+    {
+        show_debug_message($"[NET] Creating client entry for socket={_socket} (raw socket late registration)");
+        ds_map_add(global.network_clients, _socket, {
+            uuid: undefined,
+            player_instance: noone,
+            inventory: {},
+            open_container: { x: -1, y: -1, z: -1 },
+            last_processed_tick: 0
+        });
+    }
     
     // Update client info with their actual UUID
-    if (ds_map_exists(global.network_clients, _socket))
+    var _client = global.network_clients[? _socket];
+    _client.uuid = _client_uuid;
+    
+    if (instance_exists(_client.player_instance))
     {
-        var _client = global.network_clients[? _socket];
-        _client.uuid = _client_uuid;
+        _client.player_instance.uuid = _client_uuid;
+    }
+    
+    // Reconnection Logic: Bind to persistent data
+    if (ds_map_exists(global.network_persistent_data, _client_uuid))
+    {
+        var _pers = global.network_persistent_data[? _client_uuid];
+        _client.inventory = _pers.inventory;
         
-        if (instance_exists(_client.player_instance))
+        show_debug_message($"[NET] Persistent session restored: uuid={_client_uuid}");
+    }
+    else
+    {
+        // Initializing server-side inventory for this new client
+        _network_init_client_inventory(_client);
+        
+        // Store in persistent map
+        ds_map_add(global.network_persistent_data, _client_uuid, {
+            inventory: _client.inventory
+        });
+        
+        show_debug_message($"[NET] New session created: uuid={_client_uuid}");
+    }
+    
+    // Handle player instance (Creation or Re-use)
+    var _player = noone;
+    with (obj_Player)
+    {
+        if (uuid == _client_uuid) _player = id;
+    }
+    
+    if (_player == noone)
+    {
+        _player = instance_create_depth(obj_Player.x, obj_Player.y, 0, obj_Player);
+        _player.is_local = false;
+        _player.uuid = _client_uuid;
+    }
+    _player.socket_id = _socket;
+    _client.player_instance = _player;
+    
+    // Update player attire
+    _player.attire = _client_attire;
+    
+    // Notify other clients about player join (with Attire)
+    var _join_buffer = packet_create(PACKET_TYPE.PLAYER_INFO);
+    packet_write_player_info(_join_buffer, _client_uuid, _client_attire);
+    network_broadcast_packet(_join_buffer, _socket); // Don't send back to the joiner
+    buffer_delete(_join_buffer);
+    
+    // Send existing players TO the new client
+    with (obj_Player)
+    {
+        if (uuid != _client_uuid)
         {
-            _client.player_instance.uuid = _client_uuid;
+            var _p_buffer = packet_create(PACKET_TYPE.PLAYER_INFO);
+            packet_write_player_info(_p_buffer, uuid, attire);
+            packet_send(_socket, _p_buffer);
+            buffer_delete(_p_buffer);
         }
-        
-        // Reconnection Logic: Bind to persistent data
-        if (ds_map_exists(global.network_persistent_data, _client_uuid))
+    }
+    
+    // Send WELCOME packet with assigned UUID, World Seed, and World Time
+    show_debug_message($"[NET] Sending WELCOME to socket={_socket}");
+    var _welcome = packet_create(PACKET_TYPE.WELCOME);
+    packet_write_welcome(_welcome, _client_uuid, global.world_save_data.seed, global.world_save_data.time);
+    packet_send(_socket, _welcome);
+    buffer_delete(_welcome);
+    
+    // Send initial inventory sync
+    var _inv = _client.inventory;
+    var _names = struct_get_names(_inv);
+    for (var i = 0; i < array_length(_names); ++i)
+    {
+        var _name = _names[i];
+        var _arr = _inv[$ _name];
+        if (is_array(_arr))
         {
-            var _pers = global.network_persistent_data[? _client_uuid];
-            _client.inventory = _pers.inventory;
-            
-            show_debug_message($"[NET] Persistent session restored: uuid={_client_uuid}");
-        }
-        else
-        {
-            // Initializing server-side inventory for this new client
-            _network_init_client_inventory(_client);
-            
-            // Store in persistent map
-            ds_map_add(global.network_persistent_data, _client_uuid, {
-                inventory: _client.inventory
-            });
-            
-            show_debug_message($"[NET] New session created: uuid={_client_uuid}");
-        }
-        
-        // Handle player instance (Creation or Re-use)
-        var _player = noone;
-        with (obj_Player)
-        {
-            if (uuid == _client_uuid) _player = id;
-        }
-        
-        if (_player == noone)
-        {
-            _player = instance_create_depth(obj_Player.x, obj_Player.y, 0, obj_Player);
-            _player.is_local = false;
-            _player.uuid = _client_uuid;
-        }
-        _player.socket_id = _socket;
-        _client.player_instance = _player;
-        
-        // Notify other clients about player join
-        var _join_buffer = packet_create(PACKET_TYPE.PLAYER_JOIN);
-        buffer_write(_join_buffer, buffer_string, _client_uuid);
-        network_broadcast_packet(_join_buffer, _socket); // Don't send back to the joiner
-        buffer_delete(_join_buffer);
-        
-        // Send WELCOME packet with assigned UUID, World Seed, and World Time
-        var _welcome = packet_create(PACKET_TYPE.WELCOME);
-        packet_write_welcome(_welcome, _client_uuid, global.world_save_data.seed, global.world_save_data.time);
-        network_send_raw(_socket, _welcome, buffer_tell(_welcome));
-        buffer_delete(_welcome);
-        
-        // Send initial inventory sync
-        var _inv = _client.inventory;
-        var _names = struct_get_names(_inv);
-        for (var i = 0; i < array_length(_names); ++i)
-        {
-            var _name = _names[i];
-            var _arr = _inv[$ _name];
-            if (is_array(_arr))
+            for (var j = 0; j < array_length(_arr); ++j)
             {
-                for (var j = 0; j < array_length(_arr); ++j)
-                {
-                    network_send_inventory_update(_socket, _name, j, _arr[j]);
-                }
+                network_send_inventory_update(_socket, _name, j, _arr[j]);
             }
         }
     }
@@ -393,18 +451,33 @@ function _network_handle_welcome(_buffer)
     var _data = packet_read_welcome(_buffer);
     show_debug_message($"[NET] Received WELCOME. UUID: {_data.uuid}, Seed: {_data.seed}, Time: {_data.time}");
     
-    // Sync World Seed
-    global.world_save_data.seed = _data.seed;
+    // Initialize world_save_data if not exists (connecting from menu)
+    if (!variable_global_exists("world_save_data") || global.world_save_data == undefined)
+    {
+        global.world_save_data = {
+            seed: _data.seed,
+            dimension: "phantasia:overworld",
+            time: _data.time,
+            name: "Multiplayer World"
+        };
+    }
+    else
+    {
+        // Sync World Seed
+        global.world_save_data.seed = _data.seed;
+    }
+    
     open_simplex_noise_seed(_data.seed);
     
-    // Sync World Time
-    // obj_Game_Control.timer_respawn = _data.time; // If this is used for time
-    
-    // Could update local player UUID
+    // Update local player UUID
     if (instance_exists(obj_Player))
     {
         with(obj_Player) { if (is_local) uuid = _data.uuid; }
     }
+    
+    // Start Game
+    show_debug_message("[NET] Transitioning to rm_World...");
+    room_goto(rm_World);
 }
 
 /// @desc Handle PLAYER_INPUT packet (server only)
@@ -615,6 +688,12 @@ function _network_handle_entity_update(_buffer)
                  var _data = global.creature_data[$ _id];
                  if (_data != undefined)
                  {
+                     with (_inst)
+                     {
+                         // Initialize entity variables (needed for rendering/physics)
+                         init_entity(_data.get_hp(), _data.get_hp(), _data.get_attribute(), _state.uuid);
+                     }
+                     
                      _inst.sprite_index = global.sprite_asset[$ _data.get_sprite_idle()].get_sprite();
                      // Add interpolation vars if we want smooth creatures
                  }
@@ -714,12 +793,28 @@ function network_broadcast_entities()
             delete _s;
         };
         
-        with (obj_Player) { _write_entity(self, _buffer); }
-        with (obj_Creature) { _write_entity(self, _buffer); }
-        with (obj_Item_Drop) { _write_entity(self, _buffer); }
-        with (obj_Projectile) { _write_entity(self, _buffer); }
+        with (obj_Player) 
+        { 
+            if (!variable_instance_exists(id, "uuid")) uuid = uuid_generate();
+            _write_entity(self, _buffer); 
+        }
+        with (obj_Creature) 
+        { 
+            if (!variable_instance_exists(id, "uuid")) uuid = uuid_generate();
+            _write_entity(self, _buffer); 
+        }
+        with (obj_Item_Drop) 
+        { 
+            if (!variable_instance_exists(id, "uuid")) uuid = uuid_generate();
+            _write_entity(self, _buffer); 
+        }
+        with (obj_Projectile) 
+        { 
+            if (!variable_instance_exists(id, "uuid")) uuid = uuid_generate();
+            _write_entity(self, _buffer); 
+        }
         
-        network_send_raw(_key, _buffer, buffer_tell(_buffer));
+        packet_send(_key, _buffer);
         buffer_delete(_buffer);
         
         _key = ds_map_find_next(global.network_clients, _key);
@@ -778,7 +873,7 @@ function network_send_input()
     }
     
     packet_write_input(_buffer, _input);
-    network_send_raw(global.network_client_socket, _buffer, buffer_tell(_buffer));
+    packet_send(global.network_client_socket, _buffer);
     buffer_delete(_buffer);
 }
 
@@ -793,7 +888,7 @@ function network_send_tile_request(_x, _y, _z, _tile_id)
     buffer_write(_buffer, buffer_s32, _z);
     buffer_write(_buffer, buffer_string, _tile_id); // Sending ID string (e.g. "phantasia:stone")
     
-    network_send_raw(global.network_client_socket, _buffer, buffer_tell(_buffer));
+    packet_send(global.network_client_socket, _buffer);
     buffer_delete(_buffer);
 }
 
@@ -820,7 +915,7 @@ function _network_handle_tile_update(_buffer)
     var _z = buffer_read(_buffer, buffer_s32);
     var _tile_id = buffer_read(_buffer, buffer_string);
     
-    var _tile = new Item(_tile_id, 1);
+    var _tile = new Tile(_tile_id);
     if (_tile_id == "base:empty") _tile = TILE_EMPTY; // Assuming "base:empty" or similar convention, or just check ID
     if (_tile_id == undefined || _tile_id == "undefined") _tile = TILE_EMPTY;
 
@@ -890,7 +985,7 @@ function _network_handle_tile_request(_socket, _buffer)
              buffer_write(_revert_buffer, buffer_s32, _z);
              buffer_write(_revert_buffer, buffer_string, _current_id);
              
-             network_send_raw(_socket, _revert_buffer, buffer_tell(_revert_buffer));
+             packet_send(_socket, _revert_buffer);
              buffer_delete(_revert_buffer);
         }
     }
@@ -907,7 +1002,7 @@ function _network_handle_tile_request(_socket, _buffer)
         buffer_write(_revert_buffer, buffer_s32, _z);
         buffer_write(_revert_buffer, buffer_string, _current_id);
         
-        network_send_raw(_socket, _revert_buffer, buffer_tell(_revert_buffer));
+        packet_send(_socket, _revert_buffer);
         buffer_delete(_revert_buffer);
         
         show_debug_message($"[NET] Rejected tile request from client (dist={_dist})");
@@ -941,7 +1036,7 @@ function network_send_inventory_update(_socket, _inv_name, _index, _item)
     var _buffer = packet_create(PACKET_TYPE.INVENTORY_UPDATE);
     packet_write_inventory_update(_buffer, _inv_name, _index, _item);
     
-    network_send_raw(_socket, _buffer, buffer_tell(_buffer));
+    packet_send(_socket, _buffer);
     buffer_delete(_buffer);
 }
 
@@ -1153,7 +1248,7 @@ function _network_handle_container_open(_socket, _buffer)
                 // First send response with size
                 var _resp = packet_create(PACKET_TYPE.CONTAINER_OPEN);
                 packet_write_container_open(_resp, _data.x, _data.y, _data.z, _size);
-                network_send_raw(_socket, _resp, buffer_tell(_resp));
+                packet_send(_socket, _resp);
                 buffer_delete(_resp);
                 
                 // Then send all slots
@@ -1190,7 +1285,7 @@ function network_send_container_open(_x, _y, _z)
     var _buffer = packet_create(PACKET_TYPE.CONTAINER_OPEN);
     packet_write_container_open(_buffer, _x, _y, _z);
     
-    network_send_raw(global.network_client_socket, _buffer, buffer_tell(_buffer));
+    packet_send(global.network_client_socket, _buffer);
     buffer_delete(_buffer);
 }
 
@@ -1200,7 +1295,7 @@ function network_send_container_close()
     if (global.network_role != NETWORK_ROLE.CLIENT) return;
     
     var _buffer = packet_create(PACKET_TYPE.CONTAINER_CLOSE);
-    network_send_raw(global.network_client_socket, _buffer, buffer_tell(_buffer));
+    packet_send(global.network_client_socket, _buffer);
     buffer_delete(_buffer);
 }
 
@@ -1212,6 +1307,173 @@ function network_send_inventory_action(_type, _from_inv, _from_idx, _to_inv, _to
     var _buffer = packet_create(PACKET_TYPE.INVENTORY_ACTION);
     packet_write_inventory_action(_buffer, _type, _from_inv, _from_idx, _to_inv, _to_idx, _amount);
     
-    network_send_raw(global.network_client_socket, _buffer, buffer_tell(_buffer));
+    packet_send(global.network_client_socket, _buffer);
     buffer_delete(_buffer);
+}
+
+/// @desc Send chunk data request (client only)
+/// @param {Real} _chunk_x Chunk world X (pixel)
+/// @param {Real} _chunk_y Chunk world Y (pixel)
+function network_send_chunk_request(_chunk_x, _chunk_y)
+{
+    if (global.network_role != NETWORK_ROLE.CLIENT) return;
+    
+    var _buffer = packet_create(PACKET_TYPE.CHUNK_REQUEST);
+    packet_write_chunk_request(_buffer, _chunk_x, _chunk_y);
+    
+    packet_send(global.network_client_socket, _buffer);
+    buffer_delete(_buffer);
+    
+    show_debug_message($"[NET] Sent CHUNK_REQUEST for ({_chunk_x}, {_chunk_y})");
+}
+
+/// @desc Handle CHUNK_REQUEST packet (server only)
+function _network_handle_chunk_request(_socket, _buffer)
+{
+    if (global.network_role != NETWORK_ROLE.SERVER) return;
+    
+    var _data = packet_read_chunk_request(_buffer);
+    var _chunk_x = _data.chunk_x;
+    var _chunk_y = _data.chunk_y;
+    
+    var _chunk = chunk_map_get(_chunk_x, _chunk_y);
+    
+    if (_chunk == undefined)
+    {
+        // Chunk not loaded, send empty response
+        var _resp = packet_create(PACKET_TYPE.CHUNK_DATA);
+        packet_write_chunk_data(_resp, _chunk_x, _chunk_y, []);
+        packet_send(_socket, _resp);
+        buffer_delete(_resp);
+        return;
+    }
+    
+    // Collect non-empty tiles
+    var _tiles = [];
+    var _chunk_data = _chunk.chunk;
+    
+    for (var _z = 0; _z < CHUNK_DEPTH; ++_z)
+    {
+        for (var _y = 0; _y < CHUNK_SIZE; ++_y)
+        {
+            for (var _x = 0; _x < CHUNK_SIZE; ++_x)
+            {
+                var _tile = _chunk_data[tile_index_xyz(_x, _y, _z)];
+                
+                if (_tile != TILE_EMPTY)
+                {
+                    array_push(_tiles, {
+                        local_x: _x,
+                        local_y: _y,
+                        z: _z,
+                        tile_id: _tile.get_id()
+                    });
+                }
+            }
+        }
+    }
+    
+    // Send chunk data
+    var _resp = packet_create(PACKET_TYPE.CHUNK_DATA);
+    packet_write_chunk_data(_resp, _chunk_x, _chunk_y, _tiles);
+    packet_send(_socket, _resp);
+    buffer_delete(_resp);
+    
+    show_debug_message($"[NET] Sent CHUNK_DATA for ({_chunk_x}, {_chunk_y}): {array_length(_tiles)} tiles");
+}
+
+/// @desc Handle CHUNK_DATA packet (client only)
+function _network_handle_chunk_data(_buffer)
+{
+    if (global.network_role != NETWORK_ROLE.CLIENT) return;
+    
+    var _data = packet_read_chunk_data(_buffer);
+    var _chunk_x = _data.chunk_x;
+    var _chunk_y = _data.chunk_y;
+    var _tiles = _data.tiles;
+    
+    if (array_length(_tiles) == 0)
+    {
+        show_debug_message($"[NET] Received empty CHUNK_DATA for ({_chunk_x}, {_chunk_y})");
+        return;
+    }
+    
+    var _chunk = chunk_map_get(_chunk_x, _chunk_y);
+    
+    if (_chunk == undefined)
+    {
+        show_debug_message($"[NET] Warning: Received CHUNK_DATA for unloaded chunk ({_chunk_x}, {_chunk_y})");
+        return;
+    }
+    
+    // Apply tile updates
+    global.network_applying_packet = true;
+    
+    for (var i = 0; i < array_length(_tiles); ++i)
+    {
+        var _t = _tiles[i];
+        var _world_x = _chunk.chunk_xstart + _t.local_x;
+        var _world_y = _chunk.chunk_ystart + _t.local_y;
+        
+        var _tile = TILE_EMPTY;
+        if (_t.tile_id != "base:empty" && _t.tile_id != "undefined" && _t.tile_id != "")
+        {
+            _tile = new Tile(_t.tile_id);
+        }
+        
+        tile_place(_world_x, _world_y, _t.z, _tile);
+    }
+    
+    global.network_applying_packet = false;
+    
+    // Mark chunk for visual refresh
+    _chunk.boolean |= CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH;
+    
+    // Invalidate vertex buffers
+    for (var _z = 0; _z < CHUNK_DEPTH; ++_z)
+    {
+        var _vb = _chunk.chunk_vertex_buffer[_z];
+        if (vertex_buffer_exists(_vb))
+        {
+            vertex_delete_buffer(_vb);
+            _chunk.chunk_vertex_buffer[@ _z] = -1;
+        }
+    }
+    
+    show_debug_message($"[NET] Applied CHUNK_DATA for ({_chunk_x}, {_chunk_y}): {array_length(_tiles)} tiles");
+}
+
+/// @desc Handle TIME_UPDATE (client)
+function _network_handle_time_update(_buffer)
+{
+    var _time = packet_read_time_update(_buffer);
+    global.world_save_data.time = _time;
+}
+
+/// @desc Handle PLAYER_INFO (client)
+function _network_handle_player_info(_buffer)
+{
+    var _data = packet_read_player_info(_buffer);
+    var _uuid = _data.uuid;
+    var _attire = _data.attire;
+    
+    // Find or Create Player
+    var _player = noone;
+    with (obj_Player)
+    {
+        if (uuid == _uuid) _player = id;
+    }
+    
+    if (_player == noone)
+    {
+        // Create new remote player
+        _player = instance_create_depth(0, 0, 0, obj_Player);
+        _player.is_local = false; 
+        _player.uuid = _uuid;
+        // Note: position will be synced by ENTITY_UPDATE
+    }
+    
+    _player.attire = _attire; // Apply synced attire
+    
+    show_debug_message($"[NET] Synced player info for uuid={_uuid}");
 }

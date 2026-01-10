@@ -13,6 +13,10 @@ enum PACKET_TYPE {
     INVENTORY_ACTION,    // Client -> Server: Request move/split/drop { type, from_inv, from_idx, to_inv, to_idx, amount }
     CONTAINER_OPEN,      // Client -> Server: Request open {x, y, z}; Server -> Client: Response {x, y, z, size}
     CONTAINER_CLOSE,     // Client/Server: Close current container
+    CHUNK_REQUEST,       // Client -> Server: Request chunk data {chunk_x, chunk_y}
+    CHUNK_DATA,          // Server -> Client: Chunk tile data (sparse)
+    TIME_UPDATE,         // Server -> Client: Time sync
+    PLAYER_INFO,         // Server -> Client: Full player data (UUID, Attire)
     __SIZE
 }
 
@@ -22,6 +26,7 @@ enum PACKET_TYPE {
 function packet_create(_type)
 {
     var _buffer = buffer_create(256, buffer_grow, 1);
+    buffer_write(_buffer, buffer_u16, 0); // Placeholder for Size
     buffer_write(_buffer, buffer_u8, _type);
     return _buffer;
 }
@@ -29,10 +34,24 @@ function packet_create(_type)
 /// @desc Read packet type from the beginning of a buffer
 /// @param {Id.Buffer} _buffer
 /// @returns {Enum.PACKET_TYPE}
+/// @desc Read packet type from current buffer position
+/// @param {Id.Buffer} _buffer
+/// @returns {Enum.PACKET_TYPE}
 function packet_read_type(_buffer)
 {
-    buffer_seek(_buffer, buffer_seek_start, 0);
+    // buffer_seek(_buffer, buffer_seek_start, 0); // Removed seek for stream reading
     return buffer_read(_buffer, buffer_u8);
+}
+
+/// @desc Finalize and send packet with size header
+/// @param {Id.Socket} _socket
+/// @param {Id.Buffer} _buffer
+function packet_send(_socket, _buffer)
+{
+    var _curr_pos = buffer_tell(_buffer);
+    var _size = _curr_pos - 2; 
+    buffer_poke(_buffer, 0, buffer_u16, _size);
+    network_send_raw(_socket, _buffer, _curr_pos);
 }
 
 /// @desc Serialize input state to buffer (includes tick for reconciliation)
@@ -73,7 +92,7 @@ function packet_read_input(_buffer)
 function packet_write_welcome(_buffer, _uuid, _seed, _time)
 {
     buffer_write(_buffer, buffer_string, _uuid);
-    buffer_write(_buffer, buffer_u32, _seed);
+    buffer_write(_buffer, buffer_f64, _seed);
     buffer_write(_buffer, buffer_f32, _time);
 }
 
@@ -84,7 +103,7 @@ function packet_read_welcome(_buffer)
 {
     return {
         uuid: buffer_read(_buffer, buffer_string),
-        seed: buffer_read(_buffer, buffer_u32),
+        seed: buffer_read(_buffer, buffer_f64),
         time: buffer_read(_buffer, buffer_f32)
     };
 }
@@ -145,14 +164,40 @@ function packet_read_item(_buffer)
     }
     
     // Components
-    var _comp_json = buffer_read(_buffer, buffer_string);
+    var _comp_json = "";
+    
+    if (buffer_tell(_buffer) < buffer_get_size(_buffer))
+    {
+        try {
+            _comp_json = buffer_read(_buffer, buffer_string);
+        } catch(_e) {
+            show_debug_message($"[NET] Critical: Failed to read components string (EOF). Pos: {buffer_tell(_buffer)} Size: {buffer_get_size(_buffer)}");
+            _comp_json = "";
+        }
+    }
+    else
+    {
+        show_debug_message($"[NET] Warning: Packet truncated before components. Pos: {buffer_tell(_buffer)} Size: {buffer_get_size(_buffer)}");
+    }
+
     if (_comp_json != "")
     {
-        var _comp = json_parse(_comp_json);
-        var _names = struct_get_names(_comp);
-        for (var i = 0; i < array_length(_names); ++i)
+        try
         {
-            _item.set_component(_names[i], _comp[$ _names[i]]);
+            var _comp = json_parse(_comp_json);
+            if (is_struct(_comp))
+            {
+                var _names = struct_get_names(_comp);
+                for (var i = 0; i < array_length(_names); ++i)
+                {
+                    _item.set_component(_names[i], _comp[$ _names[i]]);
+                }
+            }
+        }
+        catch (_e)
+        {
+            show_debug_message($"[NET] Error parsing item components JSON: {_e.message}");
+            show_debug_message($"[NET] JSON content: '{_comp_json}'");
         }
     }
     
@@ -233,4 +278,127 @@ enum INVENTORY_ACTION_TYPE {
     DROP,
     DELETE,
     CRAFT
+}
+
+/// @desc Serialize CHUNK_REQUEST
+/// @param {Id.Buffer} _buffer
+/// @param {Real} _chunk_x Chunk world X (pixel)
+/// @param {Real} _chunk_y Chunk world Y (pixel)
+function packet_write_chunk_request(_buffer, _chunk_x, _chunk_y)
+{
+    buffer_write(_buffer, buffer_s32, _chunk_x);
+    buffer_write(_buffer, buffer_s32, _chunk_y);
+}
+
+/// @desc Deserialize CHUNK_REQUEST
+/// @param {Id.Buffer} _buffer
+/// @returns {Struct}
+function packet_read_chunk_request(_buffer)
+{
+    return {
+        chunk_x: buffer_read(_buffer, buffer_s32),
+        chunk_y: buffer_read(_buffer, buffer_s32)
+    };
+}
+
+/// @desc Serialize CHUNK_DATA (sparse format)
+/// @param {Id.Buffer} _buffer
+/// @param {Real} _chunk_x Chunk world X (pixel)
+/// @param {Real} _chunk_y Chunk world Y (pixel)
+/// @param {Array} _tiles Array of { local_x, local_y, z, tile_id }
+function packet_write_chunk_data(_buffer, _chunk_x, _chunk_y, _tiles)
+{
+    buffer_write(_buffer, buffer_s32, _chunk_x);
+    buffer_write(_buffer, buffer_s32, _chunk_y);
+    buffer_write(_buffer, buffer_u16, array_length(_tiles));
+    
+    for (var i = 0; i < array_length(_tiles); ++i)
+    {
+        var _t = _tiles[i];
+        buffer_write(_buffer, buffer_u8, _t.local_x);
+        buffer_write(_buffer, buffer_u8, _t.local_y);
+        buffer_write(_buffer, buffer_u8, _t.z);
+        buffer_write(_buffer, buffer_string, _t.tile_id);
+    }
+}
+
+/// @desc Deserialize CHUNK_DATA
+/// @param {Id.Buffer} _buffer
+/// @returns {Struct}
+function packet_read_chunk_data(_buffer)
+{
+    var _chunk_x = buffer_read(_buffer, buffer_s32);
+    var _chunk_y = buffer_read(_buffer, buffer_s32);
+    var _count = buffer_read(_buffer, buffer_u16);
+    var _tiles = [];
+    
+    for (var i = 0; i < _count; ++i)
+    {
+        array_push(_tiles, {
+            local_x: buffer_read(_buffer, buffer_u8),
+            local_y: buffer_read(_buffer, buffer_u8),
+            z: buffer_read(_buffer, buffer_u8),
+            tile_id: buffer_read(_buffer, buffer_string)
+        });
+    }
+    
+    return {
+        chunk_x: _chunk_x,
+        chunk_y: _chunk_y,
+        tiles: _tiles
+    };
+}
+/// @desc Serialize TIME_UPDATE
+/// @param {Id.Buffer} _buffer
+/// @param {Real} _time
+function packet_write_time_update(_buffer, _time)
+{
+    buffer_write(_buffer, buffer_f32, _time);
+}
+
+/// @desc Deserialize TIME_UPDATE
+/// @param {Id.Buffer} _buffer
+/// @returns {Real}
+function packet_read_time_update(_buffer)
+{
+    return buffer_read(_buffer, buffer_f32);
+}
+
+/// @desc Serialize PLAYER_INFO (Full data including attire)
+/// @param {Id.Buffer} _buffer
+/// @param {String} _uuid
+/// @param {Struct} _attire
+/// @desc Serialize PLAYER_INFO (Full data including attire)
+/// @param {Id.Buffer} _buffer
+/// @param {String} _uuid
+/// @param {Struct} _attire
+function packet_write_player_info(_buffer, _uuid, _attire)
+{
+    buffer_write(_buffer, buffer_string, _uuid);
+    var _json = (_attire != undefined) ? json_stringify(_attire) : "{}";
+    buffer_write(_buffer, buffer_string, _json);
+}
+
+/// @desc Deserialize PLAYER_INFO
+/// @param {Id.Buffer} _buffer
+/// @returns {Struct} {uuid, attire}
+function packet_read_player_info(_buffer)
+{
+    var _uuid = buffer_read(_buffer, buffer_string);
+    var _json = buffer_read(_buffer, buffer_string);
+    
+    var _attire = {};
+    try
+    {
+        _attire = json_parse(_json);
+    }
+    catch (_e)
+    {
+        show_debug_message($"[NET] JSON Parse Error in PLAYER_INFO: {_e.message}. JSON: {_json}");
+    }
+    
+    return {
+        uuid: _uuid,
+        attire: _attire
+    };
 }

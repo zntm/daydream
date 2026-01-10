@@ -250,3 +250,5 @@ gui_init_modular();
 
 // Initialize network globals
 network_init();
+
+timer_network_sync = 0;
