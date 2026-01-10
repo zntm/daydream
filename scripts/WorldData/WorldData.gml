@@ -447,6 +447,9 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         // Z-offset for walls (higher = walls extend further than solid)
         ___terrain_z_offset_wall = _config[$ "z_offset_wall"] ?? 0.075; // More connected look as requested
         
+        // Z-range for walls (sampling range around offset for thickness)
+        ___terrain_z_range_wall = _config[$ "z_range_wall"] ?? 0.05;
+        
         // Z-offset for material variation (sedimentary layers, gravel patches, etc.)
         ___terrain_z_offset_material = _config[$ "z_offset_material"] ?? 0.5;
         
@@ -468,6 +471,7 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
     static get_terrain_3d_noise_scale = function() { return self[$ "___terrain_3d_noise_scale"] ?? 0.04; }
     static get_terrain_density_threshold = function() { return self[$ "___terrain_density_threshold"] ?? 0.0; }
     static get_terrain_z_offset_wall = function() { return self[$ "___terrain_z_offset_wall"] ?? 0.15; }
+    static get_terrain_z_range_wall = function() { return self[$ "___terrain_z_range_wall"] ?? 0.01; }
     static get_terrain_z_offset_material = function() { return self[$ "___terrain_z_offset_material"] ?? 0.5; }
     static get_terrain_continentalness_scale = function() { return self[$ "___terrain_continentalness_scale"] ?? 0.003; }
     static get_terrain_continentalness_amplitude = function() { return self[$ "___terrain_continentalness_amplitude"] ?? 80; }

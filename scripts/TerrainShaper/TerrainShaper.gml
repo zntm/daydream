@@ -18,10 +18,20 @@ function TerrainShaper(_world_data) constructor
     
     /// @desc Get 3D density at position for wall tiles (Z-offset creates overhangs)
     /// Walls extend further than solid due to Z-offset in 3D noise
+    /// Sampling a range of Z offsets makes walls thicker and more connected
     static get_density_wall = function(_x, _y, _seed)
     {
         var _z_offset = ___world_data.get_terrain_z_offset_wall();
-        return ___get_density_3d(_x, _y, _z_offset, _seed);
+        var _z_range = ___world_data.get_terrain_z_range_wall();
+        
+        if (_z_range <= 0) return ___get_density_3d(_x, _y, _z_offset, _seed);
+        
+        // Sample Z range to thicken walls
+        var _d1 = ___get_density_3d(_x, _y, _z_offset - _z_range, _seed);
+        var _d2 = ___get_density_3d(_x, _y, _z_offset, _seed);
+        var _d3 = ___get_density_3d(_x, _y, _z_offset + _z_range, _seed);
+        
+        return max(_d1, _d2, _d3);
     }
     
     /// @desc Get 3D density at position for material variation (sedimentary layers, etc.)
