@@ -91,7 +91,7 @@ if (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.EXIT)
         
         var _player_save_data = global.player_save_data;
         
-        file_save_player_global($"{PROGRAM_DIRECTORY_PLAYERS}/{_player_save_data.uuid}", _player_save_data.name, _player_save_data.attire, obj_Player.hp, obj_Player.hp_max, obj_Player.saturation, {});
+        file_save_player_global($"{PROGRAM_DIRECTORY_PLAYERS}/{_player_save_data.uuid}", _player_save_data.name, _player_save_data.attire, _lp.hp, _lp.hp_max, _lp.saturation, {});
         file_save_player_inventory(_player_save_data);
         
         file_save_world_global(_world_save_data);
@@ -181,13 +181,19 @@ if (IS_DEVELOPER_MODE)
 
 var _dt = GAME_TICK * _delta_time;
 
-var _player_x = obj_Player.x;
-var _player_y = obj_Player.y;
+var _lp = noone;
+with (obj_Player) { if (is_local) { _lp = id; break; } }
+if (_lp == noone) exit;
+
+var _player_x = _lp.x;
+var _player_y = _lp.y;
 
 var _world_data = global.world_data[$ global.world_save_data.dimension];
 
 var _settings = global.settings;
 
+// Redundant keyboard polling removed - handled by control_player and input_state.poll_player()
+/*
 with (obj_Player)
 {
     if (obj_Game_Control.is_opened & (IS_OPENED_BOOLEAN.MENU | IS_OPENED_BOOLEAN.CHAT))
@@ -213,6 +219,7 @@ with (obj_Player)
         input_jump_pressed = keyboard_check_pressed(_settings.input_keyboard_jump);
     }
 }
+*/
 
 control_gametick(_delta_time);
 
@@ -318,7 +325,7 @@ if !(is_opened & (IS_OPENED_BOOLEAN.MENU | IS_OPENED_BOOLEAN.CHAT))
         }
     }
     
-    var _mouse_distance = rectangle_distance(mouse_x, mouse_y, obj_Player.bbox_left, obj_Player.bbox_top, obj_Player.bbox_right, obj_Player.bbox_bottom);
+    var _mouse_distance = rectangle_distance(mouse_x, mouse_y, _lp.bbox_left, _lp.bbox_top, _lp.bbox_right, _lp.bbox_bottom);
     
     if (cooldown_build <= 0) && (_mouse_distance < ATTRIBUTE_DEFAULT_BUILD_REACH) && (mouse_check_button(mb_right))
     {
@@ -335,7 +342,7 @@ if !(is_opened & (IS_OPENED_BOOLEAN.MENU | IS_OPENED_BOOLEAN.CHAT))
     }
     else
     {
-        obj_Player.timer_sfx_harvest += _delta_time;
+        _lp.timer_sfx_harvest += _delta_time;
         
         timer_harvest = 0;
         

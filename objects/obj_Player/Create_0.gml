@@ -1,7 +1,10 @@
 timer_sfx_harvest = 0;
 
-// Multiplayer state
-is_local = true;          // True if this is the local player
+// Multiplayer & Identity Initialization
+// These may be set via the struct parameter in instance_create_depth
+if (!variable_instance_exists(id, "is_local")) is_local = true;
+if (!variable_instance_exists(id, "uuid"))     uuid = global.player_save_data.uuid;
+
 socket_id = undefined;    // Socket ID (for server tracking remote players)
 network_input = undefined; // Input received from network (for remote players)
 
@@ -21,7 +24,8 @@ interp_target_y = 0;
 interp_timer = 0;
 interp_duration = 0.05;  // ~50ms for 20Hz updates
 
-init_entity(100, 100, global.attribute_player, global.player_save_data.uuid);
+init_entity(100, 100, global.attribute_player, uuid);
+show_debug_message($"[PLAYER] Initialized: UUID={uuid}, is_local={is_local}");
 
 timer_attack = 0;
 timer_respawn = 0;

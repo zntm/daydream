@@ -109,7 +109,14 @@ function chunk_generate(_chunk)
         // Use TerrainShaper if available for consistent solid detection
         if (global.terrain_shaper != undefined)
         {
+            // Optional: verbose check for density
+            // var _d = global.terrain_shaper.get_density_solid(_x, _y, _seed);
             return (global.terrain_shaper.get_density_solid(_x, _y, _seed) < 0);
+        }
+        else
+        {
+             static __logged_fallback = false;
+             if (!__logged_fallback) { show_debug_message("[WORLDGEN] Warning: TerrainShaper is undefined!"); __logged_fallback = true; }
         }
         
         // Legacy fallback

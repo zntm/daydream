@@ -5,7 +5,8 @@ if (obj_Game_Control.spawn_needs_init)
     var _world_data = global.world_data[$ _world_save_data.dimension];
     
     var _seed = _world_save_data.seed;
-    var _base_tile_x = round(obj_Player.x / TILE_SIZE);
+    var _base_tile_x = 0;
+    with (obj_Player) { if (is_local) _base_tile_x = round(x / TILE_SIZE); }
     
     // Find a valid spawn position by trying horizontal offsets: 0, -4, 4, -8, 8, -12, 12, etc.
     var _spawn_found = false;
@@ -29,13 +30,16 @@ if (obj_Game_Control.spawn_needs_init)
             var _d_feet  = global.terrain_shaper.get_density_solid(_player_tile_x, _surface_height - 1, _seed);
             var _d_head  = global.terrain_shaper.get_density_solid(_player_tile_x, _surface_height - 2, _seed);
             
-            if (_d_floor > 0 && _d_feet < 0 && _d_head < 0)
-            {
                 // Valid spawn position found
-                obj_Player.x = _player_tile_x * TILE_SIZE;
-                obj_Player.y = ((_surface_height - 1) * TILE_SIZE) + (TILE_SIZE / 2); // Feet position
+                with (obj_Player)
+                {
+                    if (is_local)
+                    {
+                        x = _player_tile_x * TILE_SIZE;
+                        y = ((_surface_height - 1) * TILE_SIZE) + (TILE_SIZE / 2); // Feet position
+                    }
+                }
                 _spawn_found = true;
-            }
         }
         else
         {
@@ -46,8 +50,14 @@ if (obj_Game_Control.spawn_needs_init)
             
             if (!_is_in_cave)
             {
-                obj_Player.x = _player_tile_x * TILE_SIZE;
-                obj_Player.y = (_spawn_tile_y * TILE_SIZE) + (TILE_SIZE / 2);
+                with (obj_Player)
+                {
+                    if (is_local)
+                    {
+                        x = _player_tile_x * TILE_SIZE;
+                        y = (_spawn_tile_y * TILE_SIZE) + (TILE_SIZE / 2);
+                    }
+                }
                 _spawn_found = true;
             }
         }
@@ -57,11 +67,24 @@ if (obj_Game_Control.spawn_needs_init)
     if (!_spawn_found)
     {
         var _surface_height = worldgen_get_surface_height(_base_tile_x, _seed);
-        obj_Player.y = ((_surface_height - 1) * TILE_SIZE) + (TILE_SIZE / 2);
+        with (obj_Player)
+        {
+            if (is_local)
+            {
+                y = ((_surface_height - 1) * TILE_SIZE) + (TILE_SIZE / 2);
+            }
+        }
     }
     
-    obj_Player.spawn_x = obj_Player.x;
-    obj_Player.spawn_y = obj_Player.y;
+    with (obj_Player)
+    {
+        if (is_local)
+        {
+            spawn_x = x;
+            spawn_y = y;
+            y_last = y;
+        }
+    }
     
     if (!directory_exists($"{PROGRAM_DIRECTORY_WORLDS}/{_world_save_data.uuid}"))
     {
@@ -72,26 +95,36 @@ if (obj_Game_Control.spawn_needs_init)
     }
     else
     {
-        file_load_world_spawn(global.world_save_data, obj_Player, global.player_save_data.uuid);
+         with (obj_Player)
+         {
+             if (is_local) file_load_world_spawn(global.world_save_data, id, global.player_save_data.uuid);
+         }
     }
     
-    control_camera_pos(obj_Player.x - (global.camera_width / 2), obj_Player.y - (global.camera_height / 2), true);
-    
-    obj_Player.y_last = obj_Player.y;
+    with (obj_Player)
+    {
+        if (is_local) control_camera_pos(x - (global.camera_width / 2), y - (global.camera_height / 2), true);
+    }
     
     // Refresh lighting surface with correct position
     obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.LIGHTING;
     
     // Update sky and light colours based on initialized time
-    with (obj_Game_Control_Background)
+    var _lp = noone;
+    with (obj_Player) { if (is_local) { _lp = id; break; } }
+    
+    if (_lp != noone)
     {
-        var _in_biome = bg_get_biome(round(obj_Player.x / TILE_SIZE), clamp(round(obj_Player.y / TILE_SIZE), 0, _world_data.get_world_height() - 1));
-        var _in_biome_data = global.biome_data[$ _in_biome];
-        
-        in_biome = _in_biome;
-        in_biome_transition = _in_biome;
-        
-        bg_sky_colour(_in_biome_data, _in_biome_data);
+        with (obj_Game_Control_Background)
+        {
+            var _in_biome = bg_get_biome(round(_lp.x / TILE_SIZE), clamp(round(_lp.y / TILE_SIZE), 0, _world_data.get_world_height() - 1));
+            var _in_biome_data = global.biome_data[$ _in_biome];
+            
+            in_biome = _in_biome;
+            in_biome_transition = _in_biome;
+            
+            bg_sky_colour(_in_biome_data, _in_biome_data);
+        }
     }
     
     obj_Game_Control.spawn_needs_init = false;

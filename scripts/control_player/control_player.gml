@@ -107,6 +107,9 @@ function control_player()
         // Apply network input for remote players
         input_state.move_x = network_input.move_x;
         input_state.move_y = network_input.move_y;
+        
+        // show_debug_message($"[SERVER] Applied Input to Proxy {uuid}: MoveX={input_state.move_x}");
+        
         input_state.move_left = (network_input.move_x < 0);
         input_state.move_right = (network_input.move_x > 0);
         input_state.move_up = (network_input.move_y < 0);

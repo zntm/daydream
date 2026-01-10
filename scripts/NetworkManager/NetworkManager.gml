@@ -434,9 +434,14 @@ function _network_handle_hello(_socket, _buffer)
     
     if (_player == noone)
     {
-        _player = instance_create_depth(obj_Player.x, obj_Player.y, 0, obj_Player);
-        _player.is_local = false;
-        _player.uuid = _client_uuid;
+        var _spawn_x = 0;
+        var _spawn_y = 0;
+        with (obj_Player) { if (is_local) { _spawn_x = x; _spawn_y = y; break; } }
+        
+        _player = instance_create_depth(_spawn_x, _spawn_y, 0, obj_Player, {
+            is_local: false,
+            uuid: _client_uuid
+        });
     }
     _player.socket_id = _socket;
     _client.player_instance = _player;
@@ -515,10 +520,25 @@ function _network_handle_welcome(_buffer)
     
     open_simplex_noise_seed(_noise_seed);
     
-    // Update local player UUID
+    // Update local player UUID and global persistence
+    global.player_save_data.uuid = _data.uuid;
+    
     if (instance_exists(obj_Player))
     {
         with(obj_Player) { if (is_local) uuid = _data.uuid; }
+    }
+    
+    // Re-initialize TerrainShaper with synced world data to ensure consistent generation
+    var _world_dim = global.world_save_data.dimension;
+    var _world_inst = global.world_data[$ _world_dim];
+    if (_world_inst != undefined)
+    {
+        show_debug_message($"[NET] Re-initializing TerrainShaper for {_world_dim}");
+        global.terrain_shaper = new TerrainShaper(_world_inst);
+    }
+    else
+    {
+        show_debug_message($"[NET] Warning: World data for {_world_dim} not found during TerrainShaper sync!");
     }
     
     // Start Game
@@ -542,15 +562,27 @@ function _network_handle_player_input(_socket, _buffer)
         
         if (instance_exists(_client.player_instance))
         {
+            show_debug_message($"[NET] Applying input to Player {_client.player_instance.uuid} from socket {_socket}: MoveX={_input.move_x}, MoveY={_input.move_y}");
             _client.player_instance.network_input = _input;
             _client.player_instance.selected_hotbar = _input.selected_hotbar;
         }
+        else
+        {
+             show_debug_message($"[NET] Warning: Client {_socket} has no player instance for input!");
+        }
+    }
+    else
+    {
+        show_debug_message($"[NET] Warning: Input from unknown client socket {_socket}");
     }
 }
 
 /// @desc Handle ENTITY_UPDATE packet (client only)
 function _network_handle_entity_update(_buffer)
 {
+    // Ignore entity updates if we are not in the game room (prevents menu-room spawns)
+    if (global.network_role == NETWORK_ROLE.CLIENT && room != rm_World) exit;
+    
     var _last_processed_tick = buffer_read(_buffer, buffer_u32);  // Server's last processed input tick
     var _entity_count = buffer_read(_buffer, buffer_u16);
     
@@ -720,16 +752,17 @@ function _network_handle_entity_update(_buffer)
         else
         {
             // --- SPAWN NEW ---
-            if (_state.entity_type == "player")
-            {
-                 // Create remote player
-                 _inst = instance_create_depth(_state.physics.x, _state.physics.y, 0, obj_Player);
-                 _inst.is_local = false;
-                 _inst.uuid = _state.uuid;
-                 _inst.interp_target_x = _state.physics.x;
-                 _inst.interp_target_y = _state.physics.y;
-                 _state.apply(_inst);
-            }
+             if (_state.entity_type == "player")
+             {
+                  // Create remote player
+                  _inst = instance_create_depth(_state.physics.x, _state.physics.y, 0, obj_Player, {
+                      is_local: false,
+                      uuid: _state.uuid
+                  });
+                  _inst.interp_target_x = _state.physics.x;
+                  _inst.interp_target_y = _state.physics.y;
+                  _state.apply(_inst);
+             }
             else if (string_pos("creature:", _state.entity_type) == 1)
             {
                  // Create creature
@@ -799,7 +832,7 @@ function _network_handle_entity_update(_buffer)
     
     with (obj_Creature)
     {
-        if (!struct_exists(_received_uuids, uuid)) instance_destroy();
+        if (variable_instance_exists(id, "uuid") && !struct_exists(_received_uuids, uuid)) instance_destroy();
     }
     with (obj_Item_Drop)
     {
@@ -808,11 +841,11 @@ function _network_handle_entity_update(_buffer)
         // But what about the frame we drop it?
         // To avoid flickering, local prediction could keep it alive, but standard auth says kill it.
         // Let's kill it.
-        if (!struct_exists(_received_uuids, uuid)) instance_destroy();
+        if (variable_instance_exists(id, "uuid") && !struct_exists(_received_uuids, uuid)) instance_destroy();
     }
     with (obj_Projectile)
     {
-        if (!struct_exists(_received_uuids, uuid)) instance_destroy();
+        if (variable_instance_exists(id, "uuid") && !struct_exists(_received_uuids, uuid)) instance_destroy();
     }
 }
 
@@ -879,7 +912,13 @@ function network_broadcast_entities()
 function network_send_input()
 {
     if (global.network_role != NETWORK_ROLE.CLIENT) return;
-    if (!instance_exists(obj_Player)) return;
+    if (!instance_exists(obj_Player)) 
+    {
+        show_debug_message("[NET] network_send_input: No obj_Player exists");
+        return;
+    }
+    
+    show_debug_message("[NET] network_send_input: Searching for local player...");
     
     // Get local player
     var _local_player = noone;
@@ -892,7 +931,13 @@ function network_send_input()
         }
     }
     
-    if (_local_player == noone) return;
+    if (_local_player == noone) 
+    {
+        show_debug_message("[NET] network_send_input: No local player found!");
+        return;
+    }
+    
+    show_debug_message($"[NET] network_send_input: Local player found, ticking: { _local_player.uuid}");
     
     // Increment tick
     _local_player.current_tick++;
@@ -927,6 +972,9 @@ function network_send_input()
     }
     
     packet_write_input(_buffer, _input);
+    
+    show_debug_message($"[NET] Sent Input Tick={_tick}, MoveX={_input.move_x}, MoveY={_input.move_y}");
+    
     packet_send(global.network_client_socket, _buffer);
     buffer_delete(_buffer);
 }
@@ -969,17 +1017,18 @@ function _network_handle_tile_update(_buffer)
     var _z = buffer_read(_buffer, buffer_s32);
     var _tile_id = buffer_read(_buffer, buffer_string);
     
-    var _tile = new Tile(_tile_id);
-    if (_tile_id == "base:empty") _tile = TILE_EMPTY; 
-    if (_tile_id == undefined || _tile_id == "undefined") _tile = TILE_EMPTY;
-
-    // Safety check BEFORE accessing components
-    if (_tile != TILE_EMPTY && !is_undefined(_tile))
+    var _tile = TILE_EMPTY;
+    if (_tile_id != "base:empty" && _tile_id != "undefined" && _tile_id != "" && _tile_id != undefined)
+    {
+        _tile = new Tile(_tile_id);
+    }
+    
+    // Safety check BEFORE accessing item_data
+    if (_tile != TILE_EMPTY)
     {
          var _data = global.item_data[$ _tile.get_id()];
          if (_data == undefined) 
          {
-             // Server sent us an ID we don't know about? Default to empty.
              _tile = TILE_EMPTY;
          }
     }
@@ -1534,11 +1583,11 @@ function _network_handle_player_info(_buffer)
     
     if (_player == noone)
     {
-        // Create new remote player
-        _player = instance_create_depth(0, 0, 0, obj_Player);
-        _player.is_local = false; 
-        _player.uuid = _uuid;
-        // Note: position will be synced by ENTITY_UPDATE
+        // Create new remote player using struct to set identity BEFORE Create event
+        _player = instance_create_depth(0, 0, 0, obj_Player, {
+            is_local: false,
+            uuid: _uuid
+        });
     }
     
     _player.attire = _attire; // Apply synced attire
