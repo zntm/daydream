@@ -476,7 +476,10 @@ function control_player()
     control_entity_sfx();
     
     // Camera
-    control_camera_pos(x - (global.camera_width / 2), y - (global.camera_height / 2), false);
+    if (is_local)
+    {
+        control_camera_pos(x - (global.camera_width / 2), y - (global.camera_height / 2), false);
+    }
     
     // Regeneration
     var _is_regenerated = false;

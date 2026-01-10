@@ -509,14 +509,9 @@ function _network_handle_welcome(_buffer)
         global.world_save_data.seed = _data.seed;
     }
     
+    // Store the numeric seed directly
     var _noise_seed = _data.seed;
-    if (is_string(_noise_seed))
-    {
-        // Try to hash string if usage requires real
-        // Assuming open_simplex_noise_seed needs a real.
-        // If string_get_seed is available, use it.
-        try { _noise_seed = string_get_seed(_noise_seed); } catch(_e) { _noise_seed = 0; }
-    }
+    global.world_save_data.seed = _noise_seed;
     
     open_simplex_noise_seed(_noise_seed);
     

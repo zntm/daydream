@@ -92,9 +92,14 @@ function packet_read_input(_buffer)
 function packet_write_welcome(_buffer, _uuid, _seed, _time)
 {
     buffer_write(_buffer, buffer_string, _uuid);
-    show_debug_message($"[NET] Writing WELCOME Seed: {_seed}");
-    // Use string_format to preserve precision for floating point seeds (default string() rounds to 2 decimals)
-    buffer_write(_buffer, buffer_string, string_format(_seed, 0, 20)); 
+    
+    // Ensure seed is a number before sending
+    var _noise_seed = _seed;
+    if (is_string(_noise_seed)) _noise_seed = string_get_seed(_noise_seed);
+    if (!is_real(_noise_seed)) _noise_seed = 0;
+    
+    show_debug_message($"[NET] Writing WELCOME Seed: {_noise_seed}"); 
+    buffer_write(_buffer, buffer_f64, _noise_seed); 
     buffer_write(_buffer, buffer_f32, _time);
 }
 
@@ -104,16 +109,8 @@ function packet_write_welcome(_buffer, _uuid, _seed, _time)
 function packet_read_welcome(_buffer)
 {
     var _uuid = buffer_read(_buffer, buffer_string);
-    var _seed_str = buffer_read(_buffer, buffer_string);
+    var _seed = buffer_read(_buffer, buffer_f64);
     var _time = buffer_read(_buffer, buffer_f32);
-    
-    // Attempt to parse seed as number if possible, otherwise keep as string
-    var _seed = _seed_str;
-    try {
-        if (string_digits(_seed_str) == _seed_str || string_char_at(_seed_str, 1) == "-") {
-            _seed = real(_seed_str);
-        }
-    } catch(_e) {}
     
     return {
         uuid: _uuid,
