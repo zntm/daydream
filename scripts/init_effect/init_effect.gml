@@ -32,7 +32,12 @@ function init_effect(_directory, _namespace)
             .set_max_value(_json[$ "max_value"])
             .set_particle(_json[$ "particle"])
             .set_on_effect(_json[$ "on_effect"])
-            .set_on_death(_json[$ "on_death"]);
+            .set_on_death(_json[$ "on_death"])
+            .set_on_heal(_json[$ "on_heal"])
+            .set_on_damage(_json[$ "on_damage"])
+            .set_on_interval(_json[$ "on_interval"])
+            .set_on_chance(_json[$ "on_chance"])
+            .set_on_end(_json[$ "on_end"]);
         
         var _full_id = $"{_namespace}:{_id}";
 

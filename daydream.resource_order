@@ -181,6 +181,7 @@
     {"name":"control_creature","order":4,"path":"scripts/control_creature/control_creature.yy",},
     {"name":"control_entity_damage","order":13,"path":"scripts/control_entity_damage/control_entity_damage.yy",},
     {"name":"control_entity_effect","order":14,"path":"scripts/control_entity_effect/control_entity_effect.yy",},
+    {"name":"control_entity_heal","order":84,"path":"scripts/control_entity_heal/control_entity_heal.yy",},
     {"name":"control_entity_knockback","order":12,"path":"scripts/control_entity_knockback/control_entity_knockback.yy",},
     {"name":"control_entity_regeneration","order":6,"path":"scripts/control_entity_regeneration/control_entity_regeneration.yy",},
     {"name":"control_entity_sfx","order":5,"path":"scripts/control_entity_sfx/control_entity_sfx.yy",},

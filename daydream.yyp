@@ -1326,6 +1326,7 @@
     {"id":{"name":"control_creature","path":"scripts/control_creature/control_creature.yy",},},
     {"id":{"name":"control_entity_damage","path":"scripts/control_entity_damage/control_entity_damage.yy",},},
     {"id":{"name":"control_entity_effect","path":"scripts/control_entity_effect/control_entity_effect.yy",},},
+    {"id":{"name":"control_entity_heal","path":"scripts/control_entity_heal/control_entity_heal.yy",},},
     {"id":{"name":"control_entity_knockback","path":"scripts/control_entity_knockback/control_entity_knockback.yy",},},
     {"id":{"name":"control_entity_regeneration","path":"scripts/control_entity_regeneration/control_entity_regeneration.yy",},},
     {"id":{"name":"control_entity_sfx","path":"scripts/control_entity_sfx/control_entity_sfx.yy",},},

@@ -56,6 +56,39 @@ function control_entity_damage(_victim, _attacker, _base_damage, _variance = 0.0
     // Apply damage
     _victim.hp -= _damage;
     
+    // Trigger on_damage effects
+    var _effects = _victim.effects;
+    var _effect_names = struct_get_names(_effects);
+    var _effect_names_length = array_length(_effect_names);
+    var _effect_data = global.effect_data;
+    var _item_function = global.item_function;
+    
+    for (var i = 0; i < _effect_names_length; ++i)
+    {
+        var _name = _effect_names[i];
+        var _data = _effect_data[$ _name];
+        
+        if (_data == undefined) continue;
+        
+        var _on_damage = _data.get_on_damage();
+        
+        if (_on_damage != undefined)
+        {
+            var _fn = _item_function[$ _on_damage.id];
+            
+            if (_fn != undefined)
+            {
+                var _params = _on_damage[$ "parameters"] ?? {};
+                _params[$ "damage_amount"] = _damage;
+                _params[$ "attacker"] = _attacker;
+                _params[$ "victim"] = _victim;
+                _params[$ "is_critical"] = _is_critical;
+                
+                _fn(1, _victim.x, _victim.y, CHUNK_DEPTH_DEFAULT, 1, 1, _params);
+            }
+        }
+    }
+    
     // Emit damage event
     event_emit(new EventDataEntityDamage(_victim, _damage, _attacker, _is_critical));
     

@@ -108,7 +108,7 @@ function control_gametick(_delta_time)
                         
                         if (_cooldown != undefined)
                         {
-                            obj_Player.hp = min(obj_Player.hp_max, obj_Player.hp + _hp);
+                            control_entity_heal(obj_Player, _hp, obj_Player);
                             obj_Player.saturation += _item_consumable.get_saturation();
                             
                             item_cooldown[$ _cooldown.get_id()] = _cooldown.get_seconds();
