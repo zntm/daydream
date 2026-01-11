@@ -95,19 +95,52 @@ proglang_function_register("abs", function(_args)
     return abs(_args[0]);
 });
 
-proglang_function_register("sign", function(_args)
-{
-    return sign(_args[0]);
+proglang_function_register("point_distance", function(_args) {
+    return point_distance(_args[0], _args[1], _args[2], _args[3]);
 });
 
-proglang_function_register("min", function(_args)
-{
+proglang_function_register("lengthdir_x", function(_args) {
+    return lengthdir_x(_args[0], _args[1]);
+});
+
+proglang_function_register("lengthdir_y", function(_args) {
+    return lengthdir_y(_args[0], _args[1]);
+});
+
+proglang_function_register("irandom", function(_args) {
+    return irandom(_args[0]);
+});
+
+proglang_function_register("random", function(_args) {
+    return random(_args[0]);
+});
+
+proglang_function_register("typeof", function(_args) {
+    return typeof(_args[0]);
+});
+
+proglang_function_register("min", function(_args) {
     return min(_args[0], _args[1]);
 });
 
-proglang_function_register("max", function(_args)
-{
+proglang_function_register("max", function(_args) {
     return max(_args[0], _args[1]);
+});
+
+proglang_function_register("real", function(_args) {
+    return real(_args[0]);
+});
+
+proglang_function_register("string", function(_args) {
+    return string(_args[0]);
+});
+
+proglang_function_register("irandom_range", function(_args) {
+    return irandom_range(_args[0], _args[1]);
+});
+
+proglang_function_register("random_range", function(_args) {
+    return random_range(_args[0], _args[1]);
 });
 
 proglang_function_register("clamp", function(_args)
@@ -429,6 +462,8 @@ proglang_function_register("array_resize", function(_args)
     array_resize(_args[0], _args[1]);
 });
 
+
+
 proglang_function_register("array_copy", function(_args)
 {
     array_copy(_args[0], _args[1], _args[2], _args[3], _args[4]);
@@ -444,10 +479,7 @@ proglang_function_register("struct_get", function(_args)
     return struct_get(_args[0], _args[1]);
 });
 
-proglang_function_register("struct_set", function(_args)
-{
-    struct_set(_args[0], _args[1], _args[2]);
-});
+
 
 proglang_function_register("struct_names_count", function(_args)
 {
@@ -512,6 +544,253 @@ proglang_function_register("spawn_particle", function(_args) {
 proglang_function_register("tag_get", function(_args) {
     return global.tag_data[$ $"#{_args[0]}"];
 });
+
+proglang_function_register("smart_value", function(_args) {
+    return smart_value(_args[0]);
+});
+
+proglang_function_register("sfx_diegetic_play", function(_args) {
+    var _emitter = _args[0];
+    var _x = _args[1];
+    var _y = _args[2];
+    var _id = _args[3];
+    var _volume = (array_length(_args) > 4) ? _args[4] : 1;
+    var _pitch = (array_length(_args) > 5) ? _args[5] : 1;
+    
+    return sfx_diegetic_play(_emitter, _x, _y, _id, _volume, _pitch);
+});
+
+proglang_function_register("control_entity_damage", function(_args) {
+    return control_entity_damage(_args[0], _args[1], _args[2]);
+});
+
+proglang_function_register("control_entity_heal", function(_args) {
+    return control_entity_heal(_args[0], _args[1], _args[2]);
+});
+
+proglang_function_register("tick_delay_add", function(_args, _vm) {
+    var _delay = _args[0];
+    var _callback = _args[1];
+    var _cb_args = (array_length(_args) > 2) ? _args[2] : [];
+    
+    // If _callback is a Proglang closure, we need to handle its execution
+    if (is_array(_callback) && array_length(_callback) >= PROG_CLOSURE.SIZE && _callback[PROG_CLOSURE.TYPE] == "closure") {
+        tick_delay_add(_delay, function(_data) {
+            var _vm = proglang_vm_create();
+            _vm[PROG_VM.SCOPE][@ PROG_SCOPE.PARENT] = _data.env;
+            proglang_vm_run(_vm, _data.bytecode, _data.args);
+            proglang_vm_free(_vm);
+        }, { bytecode: _callback[PROG_CLOSURE.BYTECODE], env: _callback[PROG_CLOSURE.ENV], args: _cb_args });
+    } else {
+        tick_delay_add(_delay, _callback, _cb_args);
+    }
+});
+
+proglang_function_register("tile_audio_emitter", function(_args) {
+    return tile_audio_emitter(_args[0], _args[1]);
+});
+
+proglang_function_register("loca_translate", function(_args) {
+    return loca_translate(_args[0]);
+});
+
+proglang_function_register("spawn_projectile", function(_args) {
+    return spawn_projectile(_args[0], _args[1], _args[2], _args[3], _args[4] ?? 1, _args[5] ?? 1);
+});
+
+proglang_function_register("menu_popup_create", function(_args) {
+    return menu_popup_create(_args[0]);
+});
+
+proglang_function_register("instance_create_layer", function(_args) {
+    var _x = _args[0];
+    var _y = _args[1];
+    var _layer = _args[2];
+    var _obj_name = _args[3];
+    
+    var _obj = asset_get_index(_obj_name);
+    if (_obj == -1) return noone;
+    
+    return instance_create_layer(_x, _y, _layer, _obj);
+});
+
+proglang_function_register("tile_update_surrounding", function(_args) {
+    tile_update_surrounding(_args[0], _args[1], _args[2]);
+});
+
+proglang_function_register("asset_get_index", function(_args) {
+    return asset_get_index(_args[0]);
+});
+
+proglang_function_register("entity_query_circle", function(_args) {
+    var _x = _args[0];
+    var _y = _args[1];
+    var _r = _args[2];
+    
+    var _list = ds_list_create();
+    var _count = collision_circle_list(_x, _y, _r, obj_Entity, false, true, _list, false);
+    
+    var _res = [];
+    for (var i = 0; i < _count; i++) {
+        array_push(_res, _list[| i]);
+    }
+    
+    ds_list_destroy(_list);
+    return _res;
+});
+
+proglang_function_register("entity_get_x", function(_args) {
+    var _id = _args[0];
+    if (!instance_exists(_id)) return 0;
+    return _id.x;
+});
+
+proglang_function_register("entity_get_y", function(_args) {
+    var _id = _args[0];
+    if (!instance_exists(_id)) return 0;
+    return _id.y;
+});
+
+
+
+proglang_function_register("file_exists", function(_args) {
+    return file_exists(_args[0]);
+});
+
+proglang_function_register("callback", function(_args) {
+    var _closure = _args[0];
+    var _cb_args = (array_length(_args) > 1) ? _args[1] : [];
+    
+    var _wrapper = function() {
+        var _c = self.___closure;
+        var _a = self.___args;
+        var _vm = proglang_vm_create();
+        _vm[PROG_VM.SCOPE][@ PROG_SCOPE.PARENT] = _c[PROG_CLOSURE.ENV];
+        _vm[@ PROG_VM.CURRENT_THIS] = self;
+        proglang_vm_run(_vm, _c[PROG_CLOSURE.BYTECODE], _a);
+        proglang_vm_free(_vm);
+    };
+    
+    var _inst = { ___closure: _closure, ___args: _cb_args };
+    return method(_inst, _wrapper);
+});
+
+proglang_function_register("liquid_flow_start", function(_args) {
+    liquid_flow_start(_args[0], _args[1], _args[2], (array_length(_args) > 3) ? _args[3] : {});
+});
+
+proglang_function_register("render_text", function(_args) {
+    render_text(_args[0], _args[1], _args[2], _args[3], _args[4]);
+});
+
+proglang_function_register("draw_get_halign", function(_args) {
+    return draw_get_halign();
+});
+
+proglang_function_register("draw_get_valign", function(_args) {
+    return draw_get_valign();
+});
+
+proglang_function_register("draw_set_halign", function(_args) {
+    draw_set_halign(_args[0]);
+});
+
+proglang_function_register("draw_set_valign", function(_args) {
+    draw_set_valign(_args[0]);
+});
+
+proglang_function_register("menu_popup_destroy", function(_args) {
+    menu_popup_destroy();
+});
+
+proglang_function_register("buffer_create", function(_args) {
+    return buffer_create(_args[0], _args[1], _args[2]);
+});
+
+proglang_function_register("buffer_write", function(_args) {
+    buffer_write(_args[0], _args[1], _args[2]);
+});
+
+proglang_function_register("buffer_save_compressed", function(_args) {
+    buffer_save_compressed(_args[0], _args[1]);
+});
+
+proglang_function_register("buffer_delete", function(_args) {
+    buffer_delete(_args[0]);
+});
+
+proglang_function_register("file_save_snippet_tile", function(_args) {
+    file_save_snippet_tile(_args[0], _args[1], global.item_data, _args[2]);
+});
+
+proglang_function_register("inventory_get", function(_args) {
+    var _uuid = _args[0];
+    var _type = _args[1];
+    var _index = _args[2];
+    
+    var _inv = undefined;
+    if (_uuid == "player") {
+        _inv = global.inventory[$ _type];
+    } else {
+        _inv = global.inventory[$ _type];
+    }
+    
+    if (_inv == undefined) return undefined;
+    
+    var _item = undefined;
+    if (is_array(_inv)) {
+        if (_index < 0 || _index >= array_length(_inv)) return undefined;
+        _item = _inv[_index];
+    } else if (is_struct(_inv)) {
+        if (struct_exists(_inv, "item")) _item = _inv.item;
+        else _item = _inv;
+    }
+    
+    return (_item == INVENTORY_EMPTY) ? undefined : _item;
+});
+
+proglang_function_register("inventory_set", function(_args) {
+    var _uuid = _args[0];
+    var _type = _args[1];
+    var _index = _args[2];
+    var _item = _args[3];
+    
+    var _set_item = (_item == undefined) ? INVENTORY_EMPTY : _item;
+    
+    if (_uuid == "player") {
+        var _inv = global.inventory[$ _type];
+        if (_inv == undefined) return;
+        
+        if (is_array(_inv)) {
+            if (_index >= 0 && _index < array_length(_inv)) {
+                _inv[@ _index] = _set_item;
+            }
+        } else if (is_struct(_inv)) {
+            if (struct_exists(_inv, "item")) _inv.item = _set_item;
+        }
+    }
+    
+    obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR;
+});
+
+proglang_function_register("instance_exists", function(_args) {
+    return instance_exists(_args[0]);
+});
+
+proglang_function_register("instance_destroy", function(_args) {
+    instance_destroy(_args[0]);
+});
+
+// Old inventory and depth functions removed
+
+proglang_function_register("layer_get_id", function(_args) {
+    return layer_get_id(_args[0]);
+});
+
+proglang_function_register("tag_value_parse", function(_args) {
+	return tag_value_parse(_args[0]);
+});
+
 
 
 

@@ -16,7 +16,7 @@
         },
         "on_use": [
             {
-                "id": "phantasia:open_menu",
+                "id": "@phantasia:ui/menu_open",
                 "parameters": [
                     {
                         "type": "button",

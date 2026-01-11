@@ -19,7 +19,6 @@ global.effect_type = {
 function EffectData(_namespace, _id) constructor
 {
     static __effect_type = global.effect_type;
-    static __item_function = global.item_function;
     
     ___namespace = _namespace;
     ___id = _id;

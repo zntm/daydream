@@ -8,11 +8,11 @@ if !tile?.get_component("natural") {
 
 var wood = tag_get("phantasia:tile/generic/wood")
 
-var RADIUS = 4
+var radius = 4
 
-for var dx in -RADIUS..RADIUS {
-    for var dy in -RADIUS..RADIUS {
-        if abs(dx) + abs(dy) > RADIUS {
+for var dx in -radius..radius {
+    for var dy in -radius..radius {
+        if abs(dx) + abs(dy) > radius {
             continue
         }
     

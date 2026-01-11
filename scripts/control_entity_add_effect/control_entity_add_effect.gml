@@ -49,18 +49,13 @@ function control_entity_add_effect(_target, _effect_id, _duration, _level = 1, _
         
         if (_on_effect != undefined)
         {
-            var _fn = global.item_function[$ _on_effect.id];
+            var _params = variable_clone(_on_effect[$ "parameters"] ?? {});
+            _params[$ "target"] = _target;
+            _params[$ "source"] = _source;
+            _params[$ "effect_name"] = _effect_id;
+            _params[$ "level"] = _level;
             
-            if (_fn != undefined)
-            {
-                var _params = _on_effect[$ "parameters"] ?? {};
-                _params[$ "target"] = _target;
-                _params[$ "source"] = _source;
-                _params[$ "effect_name"] = _effect_id;
-                _params[$ "level"] = _level;
-                
-                _fn(1, _target.x, _target.y, CHUNK_DEPTH_DEFAULT, 1, 1, _params);
-            }
+            function_execute({ id: _on_effect.id, parameters: _params }, _target.x, _target.y, CHUNK_DEPTH_DEFAULT, 1, 1, _target);
         }
         
         // Initial particles?

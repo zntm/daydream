@@ -7,7 +7,7 @@ function control_entity_effect()
     if (_names_length == 0) exit;
     
     var _effect_data = global.effect_data;
-    var _item_function = global.item_function;
+    var _effect_data = global.effect_data;
     var _refresh_buffs = false;
     
     for (var i = 0; i < _names_length; ++i)
@@ -29,17 +29,12 @@ function control_entity_effect()
                 
                 if (_on_end != undefined)
                 {
-                    var _fn = _item_function[$ _on_end.id];
+                    var _params = variable_clone(_on_end[$ "parameters"] ?? {});
+                    _params[$ "target"] = id;
+                    _params[$ "effect_name"] = _name;
+                    _params[$ "level"] = _inst.level;
                     
-                    if (_fn != undefined)
-                    {
-                        var _params = _on_end[$ "parameters"] ?? {};
-                        _params[$ "target"] = id;
-                        _params[$ "effect_name"] = _name;
-                        _params[$ "level"] = _inst.level;
-                        
-                        _fn(1, x, y, CHUNK_DEPTH_DEFAULT, 1, 1, _params);
-                    }
+                    function_execute({ id: _on_end.id, parameters: _params }, x, y, CHUNK_DEPTH_DEFAULT, 1, 1, id);
                 }
             }
             
@@ -58,19 +53,14 @@ function control_entity_effect()
             var _tick = _on_interval.tick ?? 20;
             
             if (_inst.timer % _tick == 0)
-            {
-                var _fn = _item_function[$ _on_interval.id];
-                
-                if (_fn != undefined)
                 {
-                    var _params = _on_interval[$ "parameters"] ?? {};
+                    var _params = variable_clone(_on_interval[$ "parameters"] ?? {});
                     _params[$ "target"] = id;
                     _params[$ "effect_name"] = _name;
                     _params[$ "level"] = _inst.level;
                     
-                    _fn(1, x, y, CHUNK_DEPTH_DEFAULT, 1, 1, _params);
+                    function_execute({ id: _on_interval.id, parameters: _params }, x, y, CHUNK_DEPTH_DEFAULT, 1, 1, id);
                 }
-            }
         }
         
         // on_chance: Fires with a random chance each tick
@@ -82,17 +72,12 @@ function control_entity_effect()
             
             if (random(1) < _chance)
             {
-                var _fn = _item_function[$ _on_chance.id];
+                var _params = variable_clone(_on_chance[$ "parameters"] ?? {});
+                _params[$ "target"] = id;
+                _params[$ "effect_name"] = _name;
+                _params[$ "level"] = _inst.level;
                 
-                if (_fn != undefined)
-                {
-                    var _params = _on_chance[$ "parameters"] ?? {};
-                    _params[$ "target"] = id;
-                    _params[$ "effect_name"] = _name;
-                    _params[$ "level"] = _inst.level;
-                    
-                    _fn(1, x, y, CHUNK_DEPTH_DEFAULT, 1, 1, _params);
-                }
+                function_execute({ id: _on_chance.id, parameters: _params }, x, y, CHUNK_DEPTH_DEFAULT, 1, 1, id);
             }
         }
         

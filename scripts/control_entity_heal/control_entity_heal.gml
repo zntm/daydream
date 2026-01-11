@@ -25,7 +25,7 @@ function control_entity_heal(_target, _amount, _source = undefined)
     var _effect_names = struct_get_names(_effects);
     var _effect_names_length = array_length(_effect_names);
     var _effect_data = global.effect_data;
-    var _item_function = global.item_function;
+    var _effect_data = global.effect_data;
     
     for (var i = 0; i < _effect_names_length; ++i)
     {
@@ -38,17 +38,12 @@ function control_entity_heal(_target, _amount, _source = undefined)
         
         if (_on_heal != undefined)
         {
-            var _fn = _item_function[$ _on_heal.id];
+            var _params = variable_clone(_on_heal[$ "parameters"] ?? {});
+            _params[$ "heal_amount"] = _actual_heal;
+            _params[$ "source"] = _source;
+            _params[$ "target"] = _target;
             
-            if (_fn != undefined)
-            {
-                var _params = _on_heal[$ "parameters"] ?? {};
-                _params[$ "heal_amount"] = _actual_heal;
-                _params[$ "source"] = _source;
-                _params[$ "target"] = _target;
-                
-                _fn(1, _target.x, _target.y, CHUNK_DEPTH_DEFAULT, 1, 1, _params);
-            }
+            function_execute({ id: _on_heal.id, parameters: _params }, _target.x, _target.y, CHUNK_DEPTH_DEFAULT, 1, 1, _target);
         }
     }
     

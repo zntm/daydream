@@ -1,7 +1,6 @@
 function control_gametick(_delta_time)
 {
     var _item_data = global.item_data;
-    var _item_function = global.item_function;
     
     var _dt = GAME_TICK * _delta_time;
     

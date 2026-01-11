@@ -24,7 +24,7 @@
         "animation_type": "increment",
         "on_random_tick": [
             {
-                "id": "@phantasia:items/sfx_play",
+                "id": "@phantasia:util/sfx_play",
                 "parameters": {
                     "id": "phantasia:sfx/tile/fire/ambient"
                 },

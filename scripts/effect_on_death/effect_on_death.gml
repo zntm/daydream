@@ -25,12 +25,9 @@ function effect_on_death(_x, _y, _id)
             
             if (_on_death != undefined)
             {
-                var _fn = global.item_function[$ _on_death.id];
+                var _params = variable_clone(_on_death[$ "parameters"] ?? {});
                 
-                if (_fn != undefined)
-                {
-                    _fn(1, _x, _y, CHUNK_DEPTH_DEFAULT, 1, 1, _on_death[$ "parameter"] ?? {});
-                }
+                function_execute({ id: _on_death.id, parameters: _params }, _x, _y, CHUNK_DEPTH_DEFAULT, 1, 1, id);
             }
         }
         

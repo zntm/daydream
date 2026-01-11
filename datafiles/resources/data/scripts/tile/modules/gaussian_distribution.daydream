@@ -1,7 +1,0 @@
-export fn gaussian_distribution(value, mean, std)
-{
-    var _numerator   = power(value - mean, 2);
-    var _denominator = power(2 * std, 2);
-    
-    return power(E, -_numerator / _denominator);
-}

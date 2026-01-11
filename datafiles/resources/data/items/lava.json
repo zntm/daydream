@@ -21,7 +21,7 @@
         },
         "on_use": [
             {
-                "id": "@phantasia:items/bucket_pickup",
+                "id": "@phantasia:item/tool/bucket_pickup",
                 "parameters": {
                     "bucket_id": "phantasia:bucket",
                     "filled_bucket_id": "phantasia:lava_bucket",

@@ -61,7 +61,7 @@ function control_entity_damage(_victim, _attacker, _base_damage, _variance = 0.0
     var _effect_names = struct_get_names(_effects);
     var _effect_names_length = array_length(_effect_names);
     var _effect_data = global.effect_data;
-    var _item_function = global.item_function;
+    var _effect_data = global.effect_data;
     
     for (var i = 0; i < _effect_names_length; ++i)
     {
@@ -74,18 +74,13 @@ function control_entity_damage(_victim, _attacker, _base_damage, _variance = 0.0
         
         if (_on_damage != undefined)
         {
-            var _fn = _item_function[$ _on_damage.id];
+            var _params = variable_clone(_on_damage[$ "parameters"] ?? {});
+            _params[$ "damage_amount"] = _damage;
+            _params[$ "attacker"] = _attacker;
+            _params[$ "victim"] = _victim;
+            _params[$ "is_critical"] = _is_critical;
             
-            if (_fn != undefined)
-            {
-                var _params = _on_damage[$ "parameters"] ?? {};
-                _params[$ "damage_amount"] = _damage;
-                _params[$ "attacker"] = _attacker;
-                _params[$ "victim"] = _victim;
-                _params[$ "is_critical"] = _is_critical;
-                
-                _fn(1, _victim.x, _victim.y, CHUNK_DEPTH_DEFAULT, 1, 1, _params);
-            }
+            function_execute({ id: _on_damage.id, parameters: _params }, _victim.x, _victim.y, CHUNK_DEPTH_DEFAULT, 1, 1, _victim);
         }
     }
     
@@ -128,17 +123,12 @@ function control_entity_damage(_victim, _attacker, _base_damage, _variance = 0.0
             
             if (_on_death != undefined)
             {
-                var _fn = _item_function[$ _on_death.id];
+                var _params = variable_clone(_on_death[$ "parameters"] ?? {});
+                _params[$ "target"] = _victim;
+                _params[$ "killer"] = _attacker;
+                _params[$ "effect_name"] = _name;
                 
-                if (_fn != undefined)
-                {
-                    var _params = _on_death[$ "parameters"] ?? {};
-                    _params[$ "target"] = _victim;
-                    _params[$ "killer"] = _attacker;
-                    _params[$ "effect_name"] = _name;
-                    
-                    _fn(1, _victim.x, _victim.y, CHUNK_DEPTH_DEFAULT, 1, 1, _params);
-                }
+                function_execute({ id: _on_death.id, parameters: _params }, _victim.x, _victim.y, CHUNK_DEPTH_DEFAULT, 1, 1, _victim);
             }
         }
         

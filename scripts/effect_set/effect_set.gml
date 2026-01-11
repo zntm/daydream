@@ -46,11 +46,14 @@ function effect_set(_type, _time, _level = 1, _object = id, _particle = true)
     
     if (_on_effect != undefined)
     {
-        var _fn = global.item_function[$ _on_effect.id];
+    if (_on_effect != undefined)
+    {
+        var _exec = {
+            id: _on_effect.id,
+            parameters: _on_effect[$ "parameters"]
+        };
         
-        if (_fn != undefined)
-        {
-            _fn(1, _object.x, _object.y, CHUNK_DEPTH_DEFAULT, 1, 1, _on_effect[$ "parameter"] ?? {});
-        }
+        function_execute(_exec, _object.x, _object.y, CHUNK_DEPTH_DEFAULT, 1, 1, _object);
+    }
     }
 }
