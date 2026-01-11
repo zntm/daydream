@@ -794,10 +794,79 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
             ___placement_index = smart_value_parse(_index);
         }
         
-        var _index_offset = _placement[$ "index_offset"];
-        
         if (_index_offset != undefined)
         {
+            ___placement_index_offset = smart_value_parse(_index_offset);
+        }
+        
+        return self;
+    }
+    
+    static get_tile_placement = function()
+    {
+        return {
+            condition: self[$ "___placement_condition"],
+            id: self[$ "___placement_id"],
+            index: self[$ "___placement_index"],
+            index_offset: self[$ "___placement_index_offset"]
+        }
+    }
+    
+    // --- Crop System ---
+    
+    static set_crop = function(_crop)
+    {
+        ___crop = _crop;
+        return self;
+    }
+    
+    static get_crop = function()
+    {
+        return self[$ "___crop"];
+    }
+    
+    static get_crop_condition_heat_peak = function()
+    {
+        return ___crop.condition.heat.peak;
+    }
+    
+    static get_crop_condition_heat_falloff = function()
+    {
+        return ___crop.condition.heat.falloff;
+    }
+    
+    static get_crop_condition_humidity_peak = function()
+    {
+        return ___crop.condition.humidity.peak;
+    }
+    
+    static get_crop_condition_humidity_falloff = function()
+    {
+        return ___crop.condition.humidity.falloff;
+    }
+    
+    static get_crop_maturity_limit = function()
+    {
+        return ___crop.maturity_limit;
+    }
+    
+    static get_crop_wither_limit = function()
+    {
+        return ___crop.wither_limit;
+    }
+    
+    static get_animation_index_min = function()
+    {
+        return ___crop.animation.index_min;
+    }
+    
+    static get_animation_index_max = function()
+    {
+        return ___crop.animation.index_max;
+    }
+
+}
+
             ___placement_index_offset = smart_value_parse(_index_offset);
         }
         

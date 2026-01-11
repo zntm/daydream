@@ -214,6 +214,26 @@ global.proglang_macros[$ "GUI_MOUSE_Y"] = function()
     return device_mouse_y_to_gui(0);
 }
 
+global.proglang_macros[$ "WORLD_SEED"] = function()
+{
+    return global.world_save_data.seed;
+}
+
+global.proglang_macros[$ "WORLD_TIME"] = function()
+{
+    return global.world_save_data.time;
+}
+
+global.proglang_macros[$ "WORLD_NAME"] = function()
+{
+    return global.world_save_data.name;
+}
+
+global.proglang_macros[$ "WORLD_DIMENSION"] = function()
+{
+    return global.world_save_data.dimension;
+}
+
 global.proglang_macros[$ "ERROR_TYPE"] = {
     RUNTIME: PROGLANG_ERROR_TYPE.RUNTIME,
     TYPE: PROGLANG_ERROR_TYPE.TYPE,

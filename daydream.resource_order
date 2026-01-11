@@ -183,6 +183,7 @@
     {"name":"control_client","order":86,"path":"scripts/control_client/control_client.yy",},
     {"name":"control_creature_spawn","order":9,"path":"scripts/control_creature_spawn/control_creature_spawn.yy",},
     {"name":"control_creature","order":4,"path":"scripts/control_creature/control_creature.yy",},
+    {"name":"control_entity_add_effect","order":87,"path":"scripts/control_entity_add_effect/control_entity_add_effect.yy",},
     {"name":"control_entity_damage","order":13,"path":"scripts/control_entity_damage/control_entity_damage.yy",},
     {"name":"control_entity_effect","order":14,"path":"scripts/control_entity_effect/control_entity_effect.yy",},
     {"name":"control_entity_heal","order":84,"path":"scripts/control_entity_heal/control_entity_heal.yy",},

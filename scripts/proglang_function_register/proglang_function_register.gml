@@ -264,6 +264,24 @@ proglang_function_register("irandom_range", function(_args)
     return irandom_range(_args[0], _args[1]);
 });
 
+proglang_function_register("worldgen_get_heat", function(_args)
+{
+    var _x = _args[0] / TILE_SIZE;
+    var _y = _args[1] / TILE_SIZE;
+    var _seed = _args[2];
+    
+    return worldgen_get_heat(_x, _y, _seed);
+});
+
+proglang_function_register("worldgen_get_humidity", function(_args)
+{
+    var _x = _args[0] / TILE_SIZE;
+    var _y = _args[1] / TILE_SIZE;
+    var _seed = _args[2];
+    
+    return worldgen_get_humidity(_x, _y, _seed);
+});
+
 proglang_function_register("choose", function(_args)
 {
     var _array = _args[0];
@@ -461,7 +479,20 @@ proglang_function_register("tile_place", function(_args) {
     var _z = _args[3];
     
     tile_place(_x, _y, _z, _args[0] ?? TILE_EMPTY);
+    tile_place(_x, _y, _z, _args[0] ?? TILE_EMPTY);
     tile_update_surrounding(_x, _y, _z);
+});
+
+proglang_function_register("get_item", function(_args) {
+    return global.item_data[$ _args[0]];
+});
+
+proglang_function_register("global_get", function(_args) {
+    var _key = _args[0];
+    if (_key == "world_data") return global.world_data[$ global.world_save_data.dimension];
+    if (_key == "world") return global.world_save_data;  
+    if (_key == "item_data") return global.item_data;
+    return undefined;
 });
 
 proglang_function_register("spawn_particle", function(_args) {
