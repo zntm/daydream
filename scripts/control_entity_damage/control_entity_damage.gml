@@ -112,6 +112,36 @@ function control_entity_damage(_victim, _attacker, _base_damage, _variance = 0.0
             instance_destroy(_victim);
         }
         
+        // Check for on_death effects
+        var _effects = _victim.effects;
+        var _effect_names = struct_get_names(_effects);
+        var _effect_names_length = array_length(_effect_names);
+        
+        for (var i = 0; i < _effect_names_length; ++i)
+        {
+            var _name = _effect_names[i];
+            var _data = _effect_data[$ _name];
+            
+            if (_data == undefined) continue;
+            
+            var _on_death = _data.get_on_death();
+            
+            if (_on_death != undefined)
+            {
+                var _fn = _item_function[$ _on_death.id];
+                
+                if (_fn != undefined)
+                {
+                    var _params = _on_death[$ "parameters"] ?? {};
+                    _params[$ "target"] = _victim;
+                    _params[$ "killer"] = _attacker;
+                    _params[$ "effect_name"] = _name;
+                    
+                    _fn(1, _victim.x, _victim.y, CHUNK_DEPTH_DEFAULT, 1, 1, _params);
+                }
+            }
+        }
+        
         return true; // Entity died
     }
     
