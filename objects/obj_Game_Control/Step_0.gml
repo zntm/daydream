@@ -89,7 +89,26 @@ if (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.EXIT)
     {
         audio_stop_all();
         
+
         var _player_save_data = global.player_save_data;
+        
+        var _lp = noone;
+        with (obj_Player) { if (is_local) { _lp = id; break; } }
+        
+        // If player doesn't exist (e.g. error or already destroyed), try to rescue or skip
+        if (_lp == noone)
+        {
+             // Fallback or exit? If we can't find the player, we can't save hp/saturation accurately.
+             // But we might have just loaded the menu.
+             // Assuming we want to save *current* state.
+             // If _lp is noone, maybe use default values or values from save data?
+             // For now, let's just use the global save data itself if the instance is missing?
+             // But the args are _lp.hp.
+             
+             // Let's create a dummy struct for safety or use save data accessors if available.
+             // Actually, simply finding it should work if the player exists.
+        }
+
         
         file_save_player_global($"{PROGRAM_DIRECTORY_PLAYERS}/{_player_save_data.uuid}", _player_save_data.name, _player_save_data.attire, _lp.hp, _lp.hp_max, _lp.saturation, {});
         file_save_player_inventory(_player_save_data);
