@@ -2,6 +2,7 @@
 /// @param {Struct.Attribute} _attribute The attribute configuration for this body
 
 enum MOVEMENT_MODE {
+    NONE,
     GROUND,    // Normal gravity-based horizontal movement
     FLY,       // No gravity, 360° movement
     SWIM,      // Buoyancy, drag, 360° movement  

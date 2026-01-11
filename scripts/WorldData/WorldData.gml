@@ -479,6 +479,24 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
     static get_terrain_peaks_amplitude = function() { return self[$ "___terrain_peaks_amplitude"] ?? 25; }
     static get_terrain_erosion_scale = function() { return self[$ "___terrain_erosion_scale"] ?? 0.015; }
     
+    /// @desc Get terrain shaping configuration struct
+    static get_terrain_shaping_config = function()
+    {
+        return {
+            squash_factor: get_terrain_squash_factor(),
+            noise_scale_3d: get_terrain_3d_noise_scale(),
+            density_threshold: get_terrain_density_threshold(),
+            z_offset_wall: get_terrain_z_offset_wall(),
+            z_range_wall: get_terrain_z_range_wall(),
+            z_offset_material: get_terrain_z_offset_material(),
+            continentalness_scale: get_terrain_continentalness_scale(),
+            continentalness_amplitude: get_terrain_continentalness_amplitude(),
+            peaks_scale: get_terrain_peaks_scale(),
+            peaks_amplitude: get_terrain_peaks_amplitude(),
+            erosion_scale: get_terrain_erosion_scale()
+        };
+    }
+    
     static get_surface_start = function()
     {
         return ___surface_start;

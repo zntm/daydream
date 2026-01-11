@@ -193,34 +193,8 @@ var _world_data = global.world_data[$ global.world_save_data.dimension];
 var _settings = global.settings;
 
 // Redundant keyboard polling removed - handled by control_player and input_state.poll_player()
-/*
-with (obj_Player)
-{
-    if (obj_Game_Control.is_opened & (IS_OPENED_BOOLEAN.MENU | IS_OPENED_BOOLEAN.CHAT))
-    {
-        input_left  = false;
-        input_right = false;
-        
-        input_climb_up   = false;
-        input_climb_down = false;
-        
-        input_jump = false;
-        input_jump_pressed = false;
-    }
-    else
-    {
-        input_left  = keyboard_check(_settings.input_keyboard_left);
-        input_right = keyboard_check(_settings.input_keyboard_right);
-        
-        input_climb_up   = keyboard_check(_settings.input_keyboard_climb_up);
-        input_climb_down = keyboard_check(_settings.input_keyboard_climb_down);
-        
-        input_jump = keyboard_check(_settings.input_keyboard_jump);
-        input_jump_pressed = keyboard_check_pressed(_settings.input_keyboard_jump);
-    }
-}
-*/
 
+show_debug_message("[LOOP] Reached control_gametick");
 control_gametick(_delta_time);
 
 // Network Time Sync (Server only)
@@ -361,7 +335,7 @@ if (keyboard_check_pressed(vk_f1))
 if (IS_DEVELOPER_MODE)
 {
     // F5: Start Server
-    if (keyboard_check_pressed(vk_f5))
+    if (IS_MULTIPLAYER_ENABLED && keyboard_check_pressed(vk_f5))
     {
         if (global.network_role == NETWORK_ROLE.NONE)
         {
@@ -381,7 +355,7 @@ if (IS_DEVELOPER_MODE)
     }
     
     // F6: Connect to Server
-    if (keyboard_check_pressed(vk_f6))
+    if (IS_MULTIPLAYER_ENABLED && keyboard_check_pressed(vk_f6))
     {
         if (global.network_role == NETWORK_ROLE.NONE)
         {

@@ -1,4 +1,5 @@
 randomize();
+os_powersave_enable(false); // Fix for server stopping when window loses focus
 
 audio_stop_all();
 
@@ -187,7 +188,11 @@ chunk_in_view_length = 0;
 // Initialize chunk generation queue for time-sliced worldgen
 chunk_queue_init();
 
-open_simplex_noise_seed(global.world_save_data.seed);
+// Initialize seed - SKIP for clients, they receive the seed via WELCOME packet
+if (global.network_role != NETWORK_ROLE.CLIENT)
+{
+    open_simplex_noise_seed(global.world_save_data.seed);
+}
 
 item_cooldown = {}
 
@@ -248,7 +253,10 @@ global.chat_command_hint = undefined;
 // Initialize the modular GUI system
 gui_init_modular();
 
-// Initialize network globals
-network_init();
+// Initialize network globals ONLY if not already in a session
+if (is_undefined(global.network_role) || global.network_role == NETWORK_ROLE.NONE)
+{
+    network_init();
+}
 
 timer_network_sync = 0;

@@ -41,7 +41,8 @@ function EntityState() constructor
         uuid = _inst.uuid;
         
         // Determine entity type
-        if (_inst.object_index == obj_Player)
+        // Note: obj_Client is the object used for remote players on the server
+        if (_inst.object_index == obj_Player || _inst.object_index == obj_Client)
         {
             entity_type = "player";
             extra_value = _inst.selected_hotbar;
@@ -203,8 +204,19 @@ function EntityState() constructor
         buffer_write(_buffer, buffer_string, mount_uuid);
         buffer_write(_buffer, buffer_string, rider_uuid);
         
-        // Effects as JSON string for flexibility
-        buffer_write(_buffer, buffer_string, json_stringify(effects));
+        // Effects: Binary serialization
+        var _effect_names = struct_get_names(effects);
+        var _effect_count = array_length(_effect_names);
+        buffer_write(_buffer, buffer_u8, _effect_count);
+        
+        for (var i = 0; i < _effect_count; ++i)
+        {
+            var _name = _effect_names[i];
+            var _effect_data = effects[$ _name];
+            buffer_write(_buffer, buffer_string, _name);
+            // Each effect is expected to be { duration, level } or similar simple struct
+            buffer_write(_buffer, buffer_string, json_stringify(_effect_data));
+        }
         
         return self;
     }
@@ -228,8 +240,24 @@ function EntityState() constructor
         mount_uuid = buffer_read(_buffer, buffer_string);
         rider_uuid = buffer_read(_buffer, buffer_string);
         
-        var _effects_json = buffer_read(_buffer, buffer_string);
-        effects = json_parse(_effects_json);
+        // Effects: Binary deserialization
+        var _effect_count = buffer_read(_buffer, buffer_u8);
+        effects = {};
+        
+        for (var i = 0; i < _effect_count; ++i)
+        {
+            var _name = buffer_read(_buffer, buffer_string);
+            var _effect_data_json = buffer_read(_buffer, buffer_string);
+            try
+            {
+                effects[$ _name] = json_parse(_effect_data_json);
+            }
+            catch (_e)
+            {
+                show_debug_message($"[NET] Error parsing effect '{_name}': {_e.message}");
+                effects[$ _name] = {};
+            }
+        }
         
         return self;
     }

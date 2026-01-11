@@ -3,128 +3,37 @@
 
 function control_player()
 {
-    if (hp <= 0) exit;
-    
-    // --- REMOTE PLAYERS ON CLIENT (INTERPOLATION) ---
-    if (!is_local && global.network_role == NETWORK_ROLE.CLIENT)
+    // Debug entry
+    if (global.network_role == NETWORK_ROLE.SERVER && !is_local) 
     {
-        interp_timer += 1 / GAME_TICK;
-        var _t = clamp(interp_timer / interp_duration, 0, 1);
-        
-        x = lerp(interp_start_x, interp_target_x, _t);
-        y = lerp(interp_start_y, interp_target_y, _t);
-        
-        // Simple facing direction
-        if (interp_target_x != interp_start_x)
-        {
-            image_xscale = abs(image_xscale) * sign(interp_target_x - interp_start_x);
-        }
-        
-        // Update physics body pos just for rendering/synchronization if needed
-        if (variable_instance_exists(self, "physics_body"))
-        {
-            physics_body.pos_x = x;
-            physics_body.pos_y = y;
-        }
-        
-        // Update animation state here based on movement
-        if (variable_instance_exists(self, "network_input") && network_input != undefined)
-        {
-            input_state.attack_held = network_input.attack;
-            input_state.use_held = network_input.use;
-            
-            // Trigger swing animation if attacking
-            if (input_state.attack_held && timer_attack <= 0)
-            {
-                timer_attack = 0.3; // Match duration in logic
-                
-                // For remote players, we might need a placeholder or sync the selected item
-                // For now, let's assume they are using a generic tool visual or nothing if we don't sync hotbar index yet
-                // Actually, let's try to show their tool if we can.
-            }
-        }
-        
-        // Handle timer and inst_item creation for remote players visually
-        if (timer_attack > 0)
-        {
-            timer_attack = max(0, timer_attack - (1 / GAME_TICK));
-            
-            // Create visual tool if it doesn't exist
-            if (!instance_exists(inst_item))
-            {
-                inst_item = instance_create_layer(x, y, "Instances", obj_Tool);
-                inst_item.image_speed = 0;
-                inst_item.inst_owner = id;
-                // Use synced item ID for visual
-                if (variable_instance_exists(self, "extra_id") && extra_id != "")
-                {
-                    var _data = global.item_data[$ extra_id];
-                    if (_data != undefined)
-                    {
-                        var _sprite_asset = global.sprite_asset[$ _data.get_sprite()];
-                        if (_sprite_asset != undefined) inst_item.sprite_index = _sprite_asset.get_sprite();
-                    }
-                }
-                else
-                {
-                    inst_item.sprite_index = spr_Inventory_Slot; // Placeholder
-                }
-            }
-            
-            // Weapon swing animation (Visual only)
-            var _direction = sign(image_xscale);
-            var _t = power((0.3 - timer_attack) / 0.3, 1 / 4);
-            var _angle = (45 * cos(_t * pi)) + 15;
-            
-            with (inst_item)
-            {
-                image_yscale = _direction;
-                x = other.x + (lengthdir_x(16, _angle) * _direction);
-                y = other.y - 24 + (lengthdir_y(16, _angle));
-                if (_direction > 0) image_angle = _angle - 45;
-                else image_angle = 180 - _angle + 45;
-            }
-        }
-        else if (instance_exists(inst_item))
-        {
-            instance_destroy(inst_item);
-        }
-        
-        exit; // Skip physics simulation for remote players on client
+        // show_debug_message($"[NET-PHYS] control_player running for proxy {uuid}, hp={hp}");
     }
+
+    if (hp <= 0) 
+    {
+        if (global.network_role == NETWORK_ROLE.SERVER && !is_local) show_debug_message($"[NET-PHYS] Player {uuid} is DEAD, skipping");
+        exit;
+    }
+    
+
     
     var _x_prev = x;
     var _y_prev = y;
     
     // --- INPUT ---
-    // For remote players (Server-side), use network input
     if (is_local)
     {
         input_state.poll_player();
     }
-    else if (global.network_role == NETWORK_ROLE.SERVER && network_input != undefined)
+    
+    // Apply aim
+    if (input_state.move_x != 0 || input_state.move_y != 0)
     {
-        // Apply network input for remote players
-        input_state.move_x = network_input.move_x;
-        input_state.move_y = network_input.move_y;
-        
-        // show_debug_message($"[SERVER] Applied Input to Proxy {uuid}: MoveX={input_state.move_x}");
-        
-        input_state.move_left = (network_input.move_x < 0);
-        input_state.move_right = (network_input.move_x > 0);
-        input_state.move_up = (network_input.move_y < 0);
-        input_state.move_down = (network_input.move_y > 0);
-        input_state.jump = network_input.jump;
-        input_state.attack_held = network_input.attack;
-        input_state.use_held = network_input.use;
+        input_state.aim_x = input_state.move_x;
+        input_state.aim_y = input_state.move_y;
+        input_state.aim_angle = point_direction(0, 0, input_state.aim_x, input_state.aim_y);
     }
-    else
-    {
-        // No input available for remote player on server? Skip
-        if (global.network_role == NETWORK_ROLE.SERVER) exit;
-        
-        // If we are singleplayer (NONE), fall through to normal logic (should happen via is_local=true usually)
-    }
+    // Note: Physics should ALWAYS run even with no input (gravity, friction, etc.)
     
     // --- DOUBLE INPUT ---
     if !(obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.MENU)
@@ -142,7 +51,7 @@ function control_player()
             }
         }
         
-        var _item = _inv_target.base[_hotbar_idx];
+        var _item = _inv_target.base[clamp(_hotbar_idx, 0, array_length(_inv_target.base) - 1)];
         
         if (_item != INVENTORY_EMPTY)
         {
@@ -236,8 +145,8 @@ function control_player()
     global.spatial_grid.update(physics_body);
     entity_update_collision(physics_body);
     
-    // Choose physics mode based on debug settings
-    if (IS_DEVELOPER_MODE)
+    // Choose physics mode based on debug settings (Apply ONLY to local player)
+    if (IS_DEVELOPER_MODE && is_local)
     {
         var _enable_physics = global.dbg_settings[$ "enable_physics"];
         var _noclip = global.dbg_settings[$ "noclip"] ?? false;
@@ -246,31 +155,29 @@ function control_player()
         {
              // Noclip: Move directly and skip physics step
              var _fly_speed = global.dbg_settings[$ "fly_speed"] ?? 8.65;
-             var _vx = (input_state.move_right - input_state.move_left) * _fly_speed;
-             var _vy = (input_state.move_down - input_state.move_up) * _fly_speed;
+             var _dt_scaled = (1 / GAME_TICK) * (global.dbg_settings[$ "time_speed"] ?? 1.0);
              
-             x += _vx * _dt;
-             y += _vy * _dt;
+             x += input_state.move_x * _fly_speed * GAME_TICK * _dt_scaled;
+             y += input_state.move_y * _fly_speed * GAME_TICK * _dt_scaled;
              
              physics_body.vel_x = 0;
              physics_body.vel_y = 0;
              physics_body.sync_to_instance(id);
              
-             // Update camera/visibility and exit
+             // Update camera/visibility
              control_camera_pos(x - (global.camera_width / 2), y - (global.camera_height / 2), false);
-             // (Copying chunk update logic if needed, or ensuring it runs next frame)
-             // For simplicity, we just return. The camera/chunk logic is at end of script, so we should jump there.
-             // Actually, let's just use the existing logic flow but bypass physics_step.
+             
+             // Update scale for visuals
+             if (input_state.move_x != 0) image_xscale = abs(image_xscale) * sign(input_state.move_x);
         }
         else if (!_enable_physics)
         {
-            // Creative flight mode (no gravity, but collisions enabled usually? Or fly mode handles it?)
-            // physics_mode_fly handles input movement.
+            // Creative flight mode (no gravity)
             physics_body.mode = MOVEMENT_MODE.FLY;
         }
     }
     
-    if (IS_DEVELOPER_MODE && (global.dbg_settings[$ "noclip"] ?? false))
+    if (IS_DEVELOPER_MODE && is_local && (global.dbg_settings[$ "noclip"] ?? false))
     {
         // Skip physics step for noclip
     }
@@ -279,6 +186,12 @@ function control_player()
         physics_step(physics_body, input_state);
     }
     physics_body.sync_to_instance(id);
+    
+    // Post-step debug
+    if (global.network_role == NETWORK_ROLE.SERVER && !is_local && input_state.move_x != 0)
+    {
+        show_debug_message($"[NET-PHYS] Player {uuid} post-step: VelX={physics_body.vel_x}, NewPosX={x}, Grounded={physics_body.collision.ground}");
+    }
     
     // --- COMBAT ---
     if !(obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.MENU) && (timer_attack <= 0) && (input_state.attack_held)
@@ -498,8 +411,8 @@ function control_player()
         obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.HP;
     }
     
-    // Chunk visibility
-    if (physics_body.vel_x != 0 || physics_body.vel_y != 0)
+    // Chunk visibility - ONLY for local player to prevent remote players from hijacking view center
+    if (is_local && (physics_body.vel_x != 0 || physics_body.vel_y != 0))
     {
         obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.LIGHTING;
         

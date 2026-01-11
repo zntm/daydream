@@ -200,6 +200,26 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 }
             }
             
+            with (obj_Client)
+            {
+                var _xscale = entity_xscale * sign(image_xscale);
+                var _yscale = entity_yscale * sign(image_yscale);
+                
+                if (variable_instance_exists(self, "input_state") && input_state.move_x != 0)
+                {
+                    var _index_body = (_animation_index * 2) % 8;
+                    var _index_arm = ((timer_attack > 0) ? round(lerp(13, 8, timer_attack / 0.3)) : _index_body);
+                    
+                    if (attire != undefined) render_attire(attire, _index_body, x, y, _xscale, _yscale, false, _index_arm, inst_item);
+                }
+                else
+                {
+                    var _index_arm = ((timer_attack > 0) ? round(lerp(13, 8, timer_attack / 0.3)) : 0);
+                    
+                    if (attire != undefined) render_attire(attire, 0, x, y, _xscale, _yscale, false, _index_arm, inst_item);
+                }
+            }
+            
             gpu_set_blendmode(bm_add);
             
             with (obj_Projectile)

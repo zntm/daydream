@@ -32,6 +32,8 @@ function network_init()
 /// @returns {Bool} Success
 function network_start_server(_port)
 {
+    if (!IS_MULTIPLAYER_ENABLED) return false;
+
     if (global.network_role != NETWORK_ROLE.NONE)
     {
         show_debug_message("[NET] Cannot start server: already in a network session");
@@ -60,6 +62,8 @@ function network_start_server(_port)
 /// @returns {Bool} Success (connection initiated)
 function network_connect_to_server(_ip, _port)
 {
+    if (!IS_MULTIPLAYER_ENABLED) return false;
+
     if (global.network_role != NETWORK_ROLE.NONE)
     {
         show_debug_message("[NET] Cannot connect: already in a network session");
@@ -438,7 +442,7 @@ function _network_handle_hello(_socket, _buffer)
         var _spawn_y = 0;
         with (obj_Player) { if (is_local) { _spawn_x = x; _spawn_y = y; break; } }
         
-        _player = instance_create_depth(_spawn_x, _spawn_y, 0, obj_Player, {
+        _player = instance_create_depth(_spawn_x, _spawn_y, 0, obj_Client, {
             is_local: false,
             uuid: _client_uuid
         });
@@ -470,10 +474,17 @@ function _network_handle_hello(_socket, _buffer)
     
     // Send WELCOME packet with assigned UUID, World Seed, and World Time
     show_debug_message($"[NET] Sending WELCOME to socket={_socket}");
-    var _welcome = packet_create(PACKET_TYPE.WELCOME);
-    packet_write_welcome(_welcome, _client_uuid, global.world_save_data.seed, global.world_save_data.time);
-    packet_send(_socket, _welcome);
-    buffer_delete(_welcome);
+    var _welcome_buffer = packet_create(PACKET_TYPE.WELCOME);
+    var _terrain_config = undefined;
+    var _world_data = global.world_data[$ global.world_save_data.dimension];
+    if (_world_data != undefined) 
+    {
+        _terrain_config = _world_data.get_terrain_shaping_config();
+    }
+    
+    packet_write_welcome(_welcome_buffer, _client_uuid, global.world_save_data.seed, global.world_save_data.time, _terrain_config);
+    packet_send(_socket, _welcome_buffer);
+    buffer_delete(_welcome_buffer);
     
     // Send initial inventory sync
     var _inv = _client.inventory;
@@ -497,6 +508,43 @@ function _network_handle_welcome(_buffer)
 {
     var _data = packet_read_welcome(_buffer);
     show_debug_message($"[NET] Received WELCOME. UUID: {_data.uuid}, Seed: {_data.seed}, Time: {_data.time}");
+
+    // Apply Seed
+    global.world_save_data.seed = _data.seed;
+    global.world_save_data.time = _data.time;
+    
+    // Apply Terrain Configuration (CRITICAL for worldgen sync)
+    if (_data.terrain_config != undefined)
+    {
+        var _world_data = global.world_data[$ global.world_save_data.dimension];
+        if (_world_data != undefined)
+        {
+            _world_data.set_terrain_shaping(_data.terrain_config);
+            show_debug_message("[NET] Applied Terrain Configuration from Server");
+            
+            // Re-initialize TerrainShaper with new config
+            global.terrain_shaper = new TerrainShaper(_world_data);
+        }
+    }
+    
+    // CRITICAL: Clear existing chunks so they are regenerated with the new seed
+    chunk_map_clear();
+    
+    // Also clear chunk pool / fading chunks if they exist to prevent visual artifacts
+    if (variable_global_exists("chunk_pool"))
+    {
+         var _pool = global.chunk_pool;
+         _pool.fading_chunks = [];
+    }
+    
+    // Force immediate chunk update
+    with (obj_Game_Control)
+    {
+        chunk_in_view_x = -999999; // Force update
+        chunk_in_view_y = -999999;
+    }
+    
+    show_debug_message($"[NET] Applied World Seed: {_data.seed}. Resetting chunks.");
     
     // Initialize world_save_data if not exists (connecting from menu)
     if (!variable_global_exists("world_save_data") || global.world_save_data == undefined)
@@ -505,6 +553,7 @@ function _network_handle_welcome(_buffer)
             seed: _data.seed,
             dimension: "phantasia:overworld",
             time: _data.time,
+            day: 0,
             name: "Multiplayer World"
         };
     }
@@ -564,7 +613,7 @@ function _network_handle_player_input(_socket, _buffer)
         {
             show_debug_message($"[NET] Applying input to Player {_client.player_instance.uuid} from socket {_socket}: MoveX={_input.move_x}, MoveY={_input.move_y}");
             _client.player_instance.network_input = _input;
-            _client.player_instance.selected_hotbar = _input.selected_hotbar;
+            _client.player_instance.selected_hotbar = clamp(_input.selected_hotbar, 0, 9);
         }
         else
         {
@@ -581,10 +630,16 @@ function _network_handle_player_input(_socket, _buffer)
 function _network_handle_entity_update(_buffer)
 {
     // Ignore entity updates if we are not in the game room (prevents menu-room spawns)
-    if (global.network_role == NETWORK_ROLE.CLIENT && room != rm_World) exit;
+    if (global.network_role == NETWORK_ROLE.CLIENT && room != rm_World) 
+    {
+        show_debug_message("[NET] Entity update ignored - not in rm_World");
+        exit;
+    }
     
     var _last_processed_tick = buffer_read(_buffer, buffer_u32);  // Server's last processed input tick
     var _entity_count = buffer_read(_buffer, buffer_u16);
+    
+    show_debug_message($"[NET] Received ENTITY_UPDATE: count={_entity_count}, tick={_last_processed_tick}");
     
     var _received_uuids = {}; // Track UUIDs for despawning logic
     
@@ -605,6 +660,13 @@ function _network_handle_entity_update(_buffer)
             with (obj_Player)
             {
                 if (uuid == _state.uuid) { _inst = id; break; }
+            }
+            if (_inst == noone)
+            {
+                with (obj_Client)
+                {
+                    if (uuid == _state.uuid) { _inst = id; break; }
+                }
             }
         }
         else
@@ -682,14 +744,22 @@ function _network_handle_entity_update(_buffer)
                             var _hist = _inst.input_history[k];
                             var _inp = _hist.input;
                             
-                            // Apply input to player state
+                            // Apply full input state for reconciliation replay
                             _inst.input_state.move_x = _inp.move_x;
                             _inst.input_state.move_y = _inp.move_y;
+                            
+                            _inst.input_state.jump_held      = _inp.jump_held;
+                            _inst.input_state.jump_pressed   = _inp.jump_pressed;
+                            _inst.input_state.attack_held    = _inp.attack_held;
+                            _inst.input_state.attack_pressed = _inp.attack_pressed;
+                            _inst.input_state.use_held       = _inp.use_held;
+                            _inst.input_state.use_pressed    = _inp.use_pressed;
+                            
+                            // Compatibility/Legacy fields if still used anywhere in physics
                             _inst.input_state.move_left = (_inp.move_x < 0);
                             _inst.input_state.move_right = (_inp.move_x > 0);
                             _inst.input_state.move_up = (_inp.move_y < 0);
                             _inst.input_state.move_down = (_inp.move_y > 0);
-                            _inst.input_state.jump = _inp.jump;
                             
                             _inst.physics_body.sync_from_instance(_inst);
                             physics_step(_inst.physics_body, _inst.input_state); // Assuming physics_step is global/accessible
@@ -755,7 +825,7 @@ function _network_handle_entity_update(_buffer)
              if (_state.entity_type == "player")
              {
                   // Create remote player
-                  _inst = instance_create_depth(_state.physics.x, _state.physics.y, 0, obj_Player, {
+                  _inst = instance_create_depth(_state.physics.x, _state.physics.y, 0, obj_Client, {
                       is_local: false,
                       uuid: _state.uuid
                   });
@@ -765,52 +835,51 @@ function _network_handle_entity_update(_buffer)
              }
             else if (string_pos("creature:", _state.entity_type) == 1)
             {
-                 // Create creature
+                 // Create creature using spawn_creature for proper initialization
                  // Parse ID: "creature:phantasia:slime"
                  var _id = string_delete(_state.entity_type, 1, 9); 
-                 _inst = instance_create_layer(_state.physics.x, _state.physics.y, "Instances", obj_Creature);
-                 _inst._id = _id;
-                 _inst.uuid = _state.uuid;
-                 // Initialize creature data
                  var _data = global.creature_data[$ _id];
                  if (_data != undefined)
                  {
-                     with (_inst)
-                     {
-                         // Initialize entity variables (needed for rendering/physics)
-                         init_entity(_data.get_hp(), _data.get_hp(), _data.get_attribute(), _state.uuid);
-                     }
-                     
-                     _inst.sprite_index = global.sprite_asset[$ _data.get_sprite_idle()].get_sprite();
-                     // Add interpolation vars if we want smooth creatures
+                     _inst = spawn_creature(_state.physics.x, _state.physics.y, _id, undefined);
+                     _inst.uuid = _state.uuid;
+                     _state.apply(_inst);
                  }
-                 _state.apply(_inst);
             }
             else if (_state.entity_type == "item_drop")
             {
-                 // Create item drop
+                 // Create item drop with full initialization
                  var _item = new Item(_state.extra_id, _state.extra_value);
-                 spawn_item_drop(_state.physics.x, _state.physics.y, _item);
-                 // spawn_item_drop creates instance, we need to find it and set uuid
-                 // BUT spawn_item_drop returns nothing? Wait, I saw it returns instance maybe? 
-                 // Checked file: NO, it uses "with(instance_create...)" but doesn't return it explicitly at end?
-                 // Wait, looked at file again: it does not return.
-                 // FIX: We need to set uuid. Maybe use `instance_nearest`? risky.
-                 // Better: just instance_create_layer and init manually here to be safe/clean?
-                 // Or modify spawn_item_drop to return id.
-                 // For now, let's manually create to ensure UUID set.
-                 
-                 // Re-implementation of spawn logic for sync:
                  var _data = global.item_data[$ _state.extra_id];
                  if (_data != undefined)
                  {
-                      _inst = instance_create_layer(_state.physics.x, _state.physics.y, "Instances", obj_Item_Drop);
-                      _inst.uuid = _state.uuid;
-                      _inst.item = _item;
-                      // Init visual
-                      var _size = _data.get_inventory_size();
-                      _inst.image_index = _data.get_inventory_index();
-                      _state.apply(_inst);
+                     var _size = _data.get_inventory_size();
+                     
+                     _inst = instance_create_layer(_state.physics.x, _state.physics.y, "Instances", obj_Item_Drop);
+                     
+                     // Initialize attribute and physics body (matches spawn_item_drop)
+                     _inst.attribute = new Attribute()
+                         .set_collision_box(_size, _size)
+                         .set_gravity(0.15);
+                     
+                     _inst.physics_body = new PhysicsBody(_inst.attribute);
+                     _inst.physics_body.pos_x = _inst.x;
+                     _inst.physics_body.pos_y = _inst.y;
+                     _inst.physics_body.scale_x = _size / 8;
+                     _inst.physics_body.scale_y = _size / 8;
+                     
+                     _inst.image_xscale = _inst.physics_body.scale_x;
+                     _inst.image_yscale = _inst.physics_body.scale_y;
+                     _inst.image_index = _data.get_inventory_index();
+                     _inst.image_speed = 0;
+                     
+                     _inst.uuid = _state.uuid;
+                     _inst.item = _item;
+                     _inst.inst = noone;
+                     _inst.timer_pickup = 0;
+                     _inst.timer_life = 60 * 15;
+                     
+                     _state.apply(_inst);
                  }
             }
             else if (_state.entity_type == "projectile")
@@ -869,18 +938,30 @@ function network_broadcast_entities()
         
         // Count all network entities
         // NOTE: Only sync entities relevant to network (have UUID, etc)
-        var _count = instance_number(obj_Player) + instance_number(obj_Creature) + instance_number(obj_Item_Drop) + instance_number(obj_Projectile);
+        // obj_Client is separate from obj_Player and must be counted independently
+        var _count = instance_number(obj_Player) + instance_number(obj_Client) + instance_number(obj_Creature) + instance_number(obj_Item_Drop) + instance_number(obj_Projectile);
         buffer_write(_buffer, buffer_u16, _count);
         
         // Helper to write
         var _write_entity = function(_inst, _buf) {
             var _s = new EntityState();
             _s.capture(_inst);
+            
+            // Debug position being broadcast
+            if (_inst.object_index == obj_Player && !_inst.is_local) {
+                show_debug_message($"[NET-BROADCAST] Player {_inst.uuid} at ({_inst.x}, {_inst.y}), vel ({_inst.physics_body.vel_x}, {_inst.physics_body.vel_y})");
+            }
+            
             _s.to_buffer(_buf);
             delete _s;
         };
         
         with (obj_Player) 
+        { 
+            if (!variable_instance_exists(id, "uuid")) uuid = uuid_generate(irandom(0xffff_ffff));
+            _write_entity(self, _buffer); 
+        }
+        with (obj_Client) 
         { 
             if (!variable_instance_exists(id, "uuid")) uuid = uuid_generate(irandom(0xffff_ffff));
             _write_entity(self, _buffer); 
@@ -945,13 +1026,18 @@ function network_send_input()
     
     var _buffer = packet_create(PACKET_TYPE.PLAYER_INPUT);
     
+    // Get actual input state from the player instance (already polled this frame if local)
+    // We use the fields expected by packet_write_input
     var _input = {
-        tick: _tick,
-        move_x: input_get_axis(true),
-        move_y: input_get_axis(false),
-        jump: input_check(INPUT_ACTION.JUMP),
-        attack: input_check(INPUT_ACTION.ATTACK),
-        use: input_check(INPUT_ACTION.USE),
+        tick:            _tick,
+        move_x:          _local_player.input_state.move_x,
+        move_y:          _local_player.input_state.move_y,
+        jump_held:       _local_player.input_state.jump_held,
+        jump_pressed:    _local_player.input_state.jump_pressed,
+        attack_held:     _local_player.input_state.attack_held,
+        attack_pressed:  _local_player.input_state.attack_pressed,
+        use_held:        _local_player.input_state.use_held,
+        use_pressed:     _local_player.input_state.use_pressed,
         selected_hotbar: global.inventory_selected_hotbar
     };
     
@@ -1584,7 +1670,7 @@ function _network_handle_player_info(_buffer)
     if (_player == noone)
     {
         // Create new remote player using struct to set identity BEFORE Create event
-        _player = instance_create_depth(0, 0, 0, obj_Player, {
+        _player = instance_create_depth(0, 0, 0, obj_Client, {
             is_local: false,
             uuid: _uuid
         });
