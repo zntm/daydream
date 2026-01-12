@@ -4,7 +4,7 @@ enum PACKET_TYPE {
     HELLO,          // Client -> Server: Initial handshake
     WELCOME,        // Server -> Client: Handshake response with assigned UUID
     PLAYER_INPUT,   // Client -> Server: Client's input state
-    ENTITY_UPDATE,  // Server -> Client: Entity state broadcast
+    ENTITY_UPDATE,  // Server -> Client: Entity state broadcast (LEGACY - kept for fallback)
     PLAYER_JOIN,    // Server -> Clients: A new player joined
     PLAYER_LEAVE,   // Server -> Clients: A player left
     TILE_UPDATE,         // Server -> Clients: A tile changed {x, y, z, item_id}
@@ -17,8 +17,17 @@ enum PACKET_TYPE {
     CHUNK_DATA,          // Server -> Client: Chunk tile data (sparse)
     TIME_UPDATE,         // Server -> Client: Time sync
     PLAYER_INFO,         // Server -> Client: Full player data (UUID, Attire)
+    
+    // New Minecraft-style entity packets
+    ENTITY_SPAWN,        // Server -> Client: Entity spawned (EID, type, pos, type-data)
+    ENTITY_DESTROY,      // Server -> Client: Entity destroyed (EID)
+    ENTITY_MOVE,         // Server -> Client: Relative position update (EID, dx, dy, dvx, dvy)
+    ENTITY_TELEPORT,     // Server -> Client: Absolute position update (EID, x, y, vx, vy)
+    ENTITY_METADATA,     // Server -> Client: Entity metadata update (EID, key-value pairs)
+    
     __SIZE
 }
+
 
 /// @desc Create a new buffer for a packet
 /// @param {Enum.PACKET_TYPE} _type

@@ -456,4 +456,4 @@ global.proglang_classes[$ "BiomeData"] = BiomeData;
 global.proglang_classes[$ "WorldData"] = WorldData;
 
 // Pre-load all scripts
-init_proglang_recursive(PROGLANG_BASE_DIR);
+init_proglang_recursive(PROGLANG_BASE_DIR, "phantasia");

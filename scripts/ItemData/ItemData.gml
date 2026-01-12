@@ -794,6 +794,8 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
             ___placement_index = smart_value_parse(_index);
         }
         
+        var _index_offset = _placement[$ "index_offset"];
+        
         if (_index_offset != undefined)
         {
             ___placement_index_offset = smart_value_parse(_index_offset);
@@ -865,14 +867,6 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
         return ___crop.animation.index_max;
     }
 
-}
-
-            ___placement_index_offset = smart_value_parse(_index_offset);
-        }
-        
-        return self;
-    }
-    
     static get_placement_index = function()
     {
         return self[$ "___placement_index"] ?? 0;

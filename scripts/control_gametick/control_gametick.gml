@@ -105,6 +105,11 @@ function control_gametick(_delta_time)
             control_player();
         }
         
+        with (obj_Client)
+        {
+            control_client();
+        }
+        
         // Restore cooldown update loop
         var _item_cooldown_names  = struct_get_names(item_cooldown);
         var _item_cooldown_length = array_length(_item_cooldown_names);

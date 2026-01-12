@@ -1,3 +1,6 @@
 /// @desc Control Client (Remote Player)
 
-control_client();
+if (global.network_role == NETWORK_ROLE.CLIENT)
+{
+    control_client();
+}

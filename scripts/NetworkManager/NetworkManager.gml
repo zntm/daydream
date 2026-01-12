@@ -322,6 +322,13 @@ function _network_handle_data()
             case PACKET_TYPE.CONTAINER_CLOSE:   _network_handle_container_close(_socket, _buffer); break;
             case PACKET_TYPE.CHUNK_REQUEST:     _network_handle_chunk_request(_socket, _buffer); break;
             case PACKET_TYPE.CHUNK_DATA:        _network_handle_chunk_data(_buffer); break;
+            
+            // New Handlers
+            case PACKET_TYPE.ENTITY_SPAWN:      _network_handle_entity_spawn(_buffer); break;
+            case PACKET_TYPE.ENTITY_DESTROY:    _network_handle_entity_destroy(_buffer); break;
+            case PACKET_TYPE.ENTITY_MOVE:       _network_handle_entity_move(_buffer); break;
+            case PACKET_TYPE.ENTITY_TELEPORT:   _network_handle_entity_teleport(_buffer); break;
+            case PACKET_TYPE.ENTITY_METADATA:   _network_handle_entity_metadata(_buffer); break;
         }
         
         // 4. Align to next packet
@@ -918,76 +925,112 @@ function _network_handle_entity_update(_buffer)
     }
 }
 
-/// @desc Broadcast entity states to all clients (server only, call each tick)
+/// @desc Broadcast entity states to all clients using delta compression (server only)
 function network_broadcast_entities()
 {
     if (global.network_role != NETWORK_ROLE.SERVER) return;
     
-    // Send to each client with their specific last_processed_tick
-    var _key = ds_map_find_first(global.network_clients);
+    // --- Step 1: Register new entities ---
+    var _register_if_new = function(_inst) {
+        if (!variable_instance_exists(_inst, "uuid")) 
+            _inst.uuid = uuid_generate(irandom(0xffff_ffff));
+        
+        var _eid = network_eid_get(_inst);
+        if (is_undefined(_eid))
+        {
+            network_eid_register(_inst);
+        }
+    };
     
-    while (!is_undefined(_key))
+    with (obj_Player) { _register_if_new(self); }
+    with (obj_Client) { _register_if_new(self); }
+    with (obj_Creature) { _register_if_new(self); }
+    with (obj_Item_Drop) { _register_if_new(self); }
+    with (obj_Projectile) { _register_if_new(self); }
+    
+    // --- Step 2: Detect destroyed entities and send DESTROY packets ---
+    var _eids_to_remove = [];
+    var _eid_key = ds_map_find_first(global.network_eid_to_instance);
+    
+    while (!is_undefined(_eid_key))
     {
-        var _client = global.network_clients[? _key];
+        var _inst = ds_map_find_value(global.network_eid_to_instance, _eid_key);
+        if (!instance_exists(_inst))
+        {
+            // Queue destroy packet
+            var _destroy_buf = packet_create(PACKET_TYPE.ENTITY_DESTROY);
+            buffer_write(_destroy_buf, buffer_u32, _eid_key);
+            network_broadcast_packet(_destroy_buf);
+            buffer_delete(_destroy_buf);
+            
+            array_push(_eids_to_remove, _eid_key);
+        }
+        _eid_key = ds_map_find_next(global.network_eid_to_instance, _eid_key);
+    }
+    
+    // Cleanup removed EIDs
+    for (var i = 0; i < array_length(_eids_to_remove); ++i)
+    {
+        var _eid = _eids_to_remove[i];
+        var _tracker = ds_map_find_value(global.network_entity_trackers, _eid);
+        if (_tracker != undefined) delete _tracker;
+        
+        ds_map_delete(global.network_entity_trackers, _eid);
+        ds_map_delete(global.network_eid_to_instance, _eid);
+        // Note: instance_to_eid cleanup handled separately since instance is gone
+    }
+    
+    // --- Step 3: Send delta updates for all tracked entities ---
+    var _tracker_key = ds_map_find_first(global.network_entity_trackers);
+    
+    while (!is_undefined(_tracker_key))
+    {
+        var _tracker = ds_map_find_value(global.network_entity_trackers, _tracker_key);
+        
+        if (_tracker != undefined)
+        {
+            var _packets = _tracker.get_update_packets();
+            
+            for (var i = 0; i < array_length(_packets); ++i)
+            {
+                network_broadcast_packet(_packets[i]);
+                buffer_delete(_packets[i]);
+            }
+        }
+        
+        _tracker_key = ds_map_find_next(global.network_entity_trackers, _tracker_key);
+    }
+    
+    // --- Step 4: Send last processed tick for reconciliation (per-client) ---
+    var _client_key = ds_map_find_first(global.network_clients);
+    
+    while (!is_undefined(_client_key))
+    {
+        var _client = global.network_clients[? _client_key];
         var _last_tick = _client[$ "last_processed_tick"] ?? 0;
         
-        var _buffer = packet_create(PACKET_TYPE.ENTITY_UPDATE);
-        
-        // Write last processed input tick for this client
-        buffer_write(_buffer, buffer_u32, _last_tick);
-        
-        // Count all network entities
-        // NOTE: Only sync entities relevant to network (have UUID, etc)
-        // obj_Client is separate from obj_Player and must be counted independently
-        var _count = instance_number(obj_Player) + instance_number(obj_Client) + instance_number(obj_Creature) + instance_number(obj_Item_Drop) + instance_number(obj_Projectile);
-        buffer_write(_buffer, buffer_u16, _count);
-        
-        // Helper to write
-        var _write_entity = function(_inst, _buf) {
-            var _s = new EntityState();
-            _s.capture(_inst);
-            
-            // Debug position being broadcast
-            if (_inst.object_index == obj_Player && !_inst.is_local) {
-                show_debug_message($"[NET-BROADCAST] Player {_inst.uuid} at ({_inst.x}, {_inst.y}), vel ({_inst.physics_body.vel_x}, {_inst.physics_body.vel_y})");
+        // Find the client's player EID and send a targeted reconciliation packet
+        if (instance_exists(_client.player_instance))
+        {
+            var _player_eid = network_eid_get(_client.player_instance);
+            if (!is_undefined(_player_eid))
+            {
+                var _rec_buf = packet_create(PACKET_TYPE.ENTITY_METADATA);
+                buffer_write(_rec_buf, buffer_u32, _player_eid);
+                buffer_write(_rec_buf, buffer_u8, 1);  // 1 entry
+                buffer_write(_rec_buf, buffer_u8, ENTITY_META_KEY.SELECTED_HOTBAR);
+                buffer_write(_rec_buf, buffer_u32, _last_tick);  // Piggyback tick in metadata
+                buffer_write(_rec_buf, buffer_u8, _client.player_instance.selected_hotbar);
+                
+                packet_send(_client_key, _rec_buf);
+                buffer_delete(_rec_buf);
             }
-            
-            _s.to_buffer(_buf);
-            delete _s;
-        };
-        
-        with (obj_Player) 
-        { 
-            if (!variable_instance_exists(id, "uuid")) uuid = uuid_generate(irandom(0xffff_ffff));
-            _write_entity(self, _buffer); 
-        }
-        with (obj_Client) 
-        { 
-            if (!variable_instance_exists(id, "uuid")) uuid = uuid_generate(irandom(0xffff_ffff));
-            _write_entity(self, _buffer); 
-        }
-        with (obj_Creature) 
-        { 
-            if (!variable_instance_exists(id, "uuid")) uuid = uuid_generate(irandom(0xffff_ffff));
-            _write_entity(self, _buffer); 
-        }
-        with (obj_Item_Drop) 
-        { 
-            if (!variable_instance_exists(id, "uuid")) uuid = uuid_generate(irandom(0xffff_ffff));
-            _write_entity(self, _buffer); 
-        }
-        with (obj_Projectile) 
-        { 
-            if (!variable_instance_exists(id, "uuid")) uuid = uuid_generate(irandom(0xffff_ffff));
-            _write_entity(self, _buffer); 
         }
         
-        packet_send(_key, _buffer);
-        buffer_delete(_buffer);
-        
-        _key = ds_map_find_next(global.network_clients, _key);
+        _client_key = ds_map_find_next(global.network_clients, _client_key);
     }
 }
+
 
 /// @desc Send local player input to server (client only, call each tick)
 function network_send_input()
@@ -1142,9 +1185,8 @@ function _network_handle_tile_request(_socket, _buffer)
     
     if (_dist < 400) // Reach distance (approx 25 blocks)
     {
-        var _tile = new Item(_tile_id, 1);
-        if (_tile_id == "undefined") _tile = TILE_EMPTY; // Safety
-        
+        var _tile = ((_tile_id != "undefined") ? new Tile(_tile_id) : TILE_EMPTY);
+
         // Authoritative Verification & Inventory Consumption
         var _valid_action = true;
         
@@ -1598,53 +1640,299 @@ function _network_handle_chunk_data(_buffer)
     if (array_length(_tiles) == 0)
     {
         show_debug_message($"[NET] Received empty CHUNK_DATA for ({_chunk_x}, {_chunk_y})");
-        return;
+        return; // Nothing to do
+    }
+    
+    // Populate chunk
+    // Ensure we have the chunk loaded/created in pool
+    if (!chunk_map_exists(_chunk_x, _chunk_y))
+    {
+         // Usually game control loop requests it, so it should be there.
+         // If not, maybe we force create?
+         global.chunk_pool.acquire(_chunk_x, _chunk_y);
     }
     
     var _chunk = chunk_map_get(_chunk_x, _chunk_y);
-    
-    if (_chunk == undefined)
+    if (_chunk != undefined)
     {
-        show_debug_message($"[NET] Warning: Received CHUNK_DATA for unloaded chunk ({_chunk_x}, {_chunk_y})");
-        return;
-    }
-    
-    // Apply tile updates
-    global.network_applying_packet = true;
-    
-    for (var i = 0; i < array_length(_tiles); ++i)
-    {
-        var _t = _tiles[i];
-        var _world_x = _chunk.chunk_xstart + _t.local_x;
-        var _world_y = _chunk.chunk_ystart + _t.local_y;
+        // Clear existing data? Or merge? Usually clear for fresh load.
+        chunk_clear(_chunk); 
         
-        var _tile = TILE_EMPTY;
-        if (_t.tile_id != "base:empty" && _t.tile_id != "undefined" && _t.tile_id != "")
+        var _chunk_data = _chunk.chunk;
+        
+        for (var i = 0; i < array_length(_tiles); ++i)
         {
-            _tile = new Tile(_t.tile_id);
+            var _t = _tiles[i];
+            var _item = new Item(_t.tile_id, 1); // Basic tile item
+            
+            // Direct array access for speed
+            var _idx = tile_index_xyz(_t.local_x, _t.local_y, _t.z);
+            _chunk_data[@ _idx] = _item;
+            
+            // Update counts/bitmasks
+            _chunk.chunk_count[@ _t.z]++;
+            _chunk.chunk_display |= (1 << _t.z);
         }
         
-        tile_place(_world_x, _world_y, _t.z, _tile);
-    }
-    
-    global.network_applying_packet = false;
-    
-    // Mark chunk for visual refresh
-    _chunk.boolean |= CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH;
-    
-    // Invalidate vertex buffers
-    for (var _z = 0; _z < CHUNK_DEPTH; ++_z)
-    {
-        var _vb = _chunk.chunk_vertex_buffer[_z];
-        if (vertex_buffer_exists(_vb))
+        // Mark for refresh
+        _chunk.boolean |= CHUNK_BOOLEAN.GENERATED | CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH;
+        
+        // Trigger generic refresh?
+        if (instance_exists(obj_Game_Control))
         {
-            vertex_delete_buffer(_vb);
-            _chunk.chunk_vertex_buffer[@ _z] = -1;
+             obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.LIGHTING; 
         }
+        
+        show_debug_message($"[NET] Applied CHUNK_DATA for ({_chunk_x}, {_chunk_y})");
     }
-    
-    show_debug_message($"[NET] Applied CHUNK_DATA for ({_chunk_x}, {_chunk_y}): {array_length(_tiles)} tiles");
 }
+
+/// @desc Handle ENTITY_SPAWN packet (Client Only)
+function _network_handle_entity_spawn(_buffer)
+{
+    if (global.network_role != NETWORK_ROLE.CLIENT) return;
+
+    var _eid = buffer_read(_buffer, buffer_u32);
+    var _type = buffer_read(_buffer, buffer_u8);
+    var _uuid = buffer_read(_buffer, buffer_string);
+    var _x = buffer_read(_buffer, buffer_s32) / 32.0;
+    var _y = buffer_read(_buffer, buffer_s32) / 32.0;
+    var _vx = buffer_read(_buffer, buffer_s16) / 8000.0;
+    var _vy = buffer_read(_buffer, buffer_s16) / 8000.0;
+
+    // Check if EID already exists (idempotency)
+    var _existing_inst = network_instance_get(_eid);
+    if (_existing_inst != noone)
+    {
+        // Already exists, recreate
+        instance_destroy(_existing_inst);
+        network_eid_free(_eid);
+    }
+
+    // Determine object to spawn
+    var _inst = noone;
+    var _is_local_player_uuid = (global.player_save_data.uuid == _uuid);
+
+    // Filter out our own spawn packet (we already exist)
+    if (_is_local_player_uuid)
+    {
+         with (obj_Player) { if (is_local) { _inst = id; break; } }
+         if (_inst != noone)
+         {
+             network_eid_assign(_inst, _eid);
+             _network_read_spawn_extra(_buffer, _type, _inst);
+             return;
+         }
+    }
+
+    switch (_type)
+    {
+        case ENTITY_NET_TYPE.PLAYER:
+            _inst = instance_create_depth(_x, _y, 0, obj_Client, {
+                is_local: false,
+                uuid: _uuid
+            });
+            break;
+            
+        case ENTITY_NET_TYPE.CREATURE:
+            var _creature_id = buffer_read(_buffer, buffer_string);
+            _inst = spawn_creature(_x, _y, _creature_id, undefined);
+            if (instance_exists(_inst)) _inst.uuid = _uuid;
+            break;
+            
+        case ENTITY_NET_TYPE.ITEM_DROP:
+            var _item_id = buffer_read(_buffer, buffer_string);
+            var _amount = buffer_read(_buffer, buffer_u16);
+            if (_item_id != "")
+            {
+                var _item = new Item(_item_id, _amount);
+                _inst = spawn_item_drop(_x, _y, _item, 0, 0, -0.6, GAME_TICK * 3);
+                 if (instance_exists(_inst)) _inst.uuid = _uuid;
+            }
+            break;
+            
+        case ENTITY_NET_TYPE.PROJECTILE:
+            var _proj_id = buffer_read(_buffer, buffer_string);
+            var _dmg = buffer_read(_buffer, buffer_f32);
+            _inst = spawn_projectile(_x, _y, _proj_id, _dmg);
+             if (instance_exists(_inst)) _inst.uuid = _uuid;
+            break;
+    }
+
+    if (instance_exists(_inst))
+    {
+        network_eid_assign(_inst, _eid);
+        _inst.interp_start_x = _x;
+        _inst.interp_start_y = _y;
+        _inst.interp_target_x = _x;
+        _inst.interp_target_y = _y;
+        _inst.interp_timer = 0;
+        
+        if (_type == ENTITY_NET_TYPE.PLAYER)
+        {
+             var _attire_json = buffer_read(_buffer, buffer_string);
+             try { _inst.attire = json_parse(_attire_json); } catch(_e) {}
+        }
+    }
+    else
+    {
+        if (_type == ENTITY_NET_TYPE.PLAYER) buffer_read(_buffer, buffer_string);
+    }
+}
+
+/// @desc Helper to read extra spawn data (for when we skip spawn)
+function _network_read_spawn_extra(_buffer, _type, _inst)
+{
+    switch (_type)
+    {
+        case ENTITY_NET_TYPE.CREATURE:
+            buffer_read(_buffer, buffer_string); 
+            break;
+        case ENTITY_NET_TYPE.ITEM_DROP:
+            buffer_read(_buffer, buffer_string); 
+            buffer_read(_buffer, buffer_u16);    
+            break;
+        case ENTITY_NET_TYPE.PROJECTILE:
+            buffer_read(_buffer, buffer_string); 
+            buffer_read(_buffer, buffer_f32);    
+            break;
+        case ENTITY_NET_TYPE.PLAYER:
+            var _json = buffer_read(_buffer, buffer_string); 
+            if (instance_exists(_inst))
+            {
+                try { _inst.attire = json_parse(_json); } catch(_e) {}
+            }
+            break;
+    }
+}
+
+/// @desc Handle ENTITY_DESTROY packet
+function _network_handle_entity_destroy(_buffer)
+{
+    var _eid = buffer_read(_buffer, buffer_u32);
+    var _inst = network_instance_get(_eid);
+    
+    if (instance_exists(_inst))
+    {
+        if (_inst.object_index == obj_Player && _inst.is_local) return;
+        instance_destroy(_inst);
+    }
+    network_eid_free(_eid);
+}
+
+/// @desc Handle ENTITY_MOVE packet (Relative)
+function _network_handle_entity_move(_buffer)
+{
+    var _eid = buffer_read(_buffer, buffer_u32);
+    var _dx = buffer_read(_buffer, buffer_s16);
+    var _dy = buffer_read(_buffer, buffer_s16);
+    var _dvx = buffer_read(_buffer, buffer_s16);
+    var _dvy = buffer_read(_buffer, buffer_s16);
+    
+    var _inst = network_instance_get(_eid);
+    if (instance_exists(_inst))
+    {
+        var _real_dx = _dx / 32.0;
+        var _real_dy = _dy / 32.0;
+        
+        _inst.interp_start_x = _inst.x;
+        _inst.interp_start_y = _inst.y;
+        
+        if (!variable_instance_exists(_inst, "interp_target_x")) _inst.interp_target_x = _inst.x;
+        if (!variable_instance_exists(_inst, "interp_target_y")) _inst.interp_target_y = _inst.y;
+        
+        _inst.interp_target_x += _real_dx;
+        _inst.interp_target_y += _real_dy;
+        _inst.interp_timer = 0;
+        
+        if (variable_instance_exists(_inst, "physics_body"))
+        {
+            _inst.physics_body.vel_x += _dvx / 8000.0;
+            _inst.physics_body.vel_y += _dvy / 8000.0;
+        }
+    }
+}
+
+/// @desc Handle ENTITY_TELEPORT packet (Absolute)
+function _network_handle_entity_teleport(_buffer)
+{
+    var _eid = buffer_read(_buffer, buffer_u32);
+    var _x = buffer_read(_buffer, buffer_s32) / 32.0;
+    var _y = buffer_read(_buffer, buffer_s32) / 32.0;
+    var _vx = buffer_read(_buffer, buffer_s16) / 8000.0;
+    var _vy = buffer_read(_buffer, buffer_s16) / 8000.0;
+    
+    var _inst = network_instance_get(_eid);
+    if (instance_exists(_inst))
+    {
+        _inst.interp_start_x = _inst.x;
+        _inst.interp_start_y = _inst.y;
+        _inst.interp_target_x = _x;
+        _inst.interp_target_y = _y;
+        _inst.interp_timer = 0;
+        
+        if (variable_instance_exists(_inst, "physics_body"))
+        {
+            _inst.physics_body.vel_x = _vx;
+            _inst.physics_body.vel_y = _vy;
+        }
+        else if (_inst.object_index == obj_Player && _inst.is_local)
+        {
+             _inst.x = _x;
+             _inst.y = _y;
+        }
+    }
+}
+
+/// @desc Handle ENTITY_METADATA packet
+function _network_handle_entity_metadata(_buffer)
+{
+    var _eid = buffer_read(_buffer, buffer_u32);
+    var _count = buffer_read(_buffer, buffer_u8);
+    
+    var _inst = network_instance_get(_eid);
+    
+    for (var i = 0; i < _count; ++i)
+    {
+        var _key = buffer_read(_buffer, buffer_u8);
+        
+        switch (_key)
+        {
+            case ENTITY_META_KEY.HP:
+                var _hp = buffer_read(_buffer, buffer_f32);
+                var _hp_max = buffer_read(_buffer, buffer_f32);
+                if (instance_exists(_inst))
+                {
+                    _inst.hp = _hp;
+                    _inst.hp_max = _hp_max;
+                }
+                break;
+                
+            case ENTITY_META_KEY.SELECTED_HOTBAR:
+                var _last_tick = buffer_read(_buffer, buffer_u32);
+                var _hotbar = buffer_read(_buffer, buffer_u8);
+                
+                if (instance_exists(_inst))
+                {
+                    _inst.selected_hotbar = _hotbar;
+                    if (_inst.object_index == obj_Player && _inst.is_local)
+                    {
+                         var _len = array_length(_inst.input_history);
+                         var _delete_count = 0;
+                         for (var j = 0; j < _len; ++j)
+                         {
+                             if (_inst.input_history[j].tick <= _last_tick) _delete_count++;
+                             else break;
+                         }
+                         if (_delete_count > 0)
+                             array_delete(_inst.input_history, 0, _delete_count);
+                    }
+                }
+                break;
+        }
+    }
+}
+
 
 /// @desc Handle TIME_UPDATE (client)
 function _network_handle_time_update(_buffer)
@@ -1665,6 +1953,14 @@ function _network_handle_player_info(_buffer)
     with (obj_Player)
     {
         if (uuid == _uuid) _player = id;
+    }
+    
+    if (_player == noone)
+    {
+        with (obj_Client)
+        {
+            if (uuid == _uuid) _player = id;
+        }
     }
     
     if (_player == noone)
