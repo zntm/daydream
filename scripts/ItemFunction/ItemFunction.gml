@@ -1,4 +1,4 @@
-// Item functions are now handled by @phantasia/items/ scripts in Daydream
+// Item functions are now handled by @phantasia:items/ scripts in Daydream
 
 /// @desc Schedule liquid flow with proper delay
 function liquid_flow_schedule(_x, _y, _z, _parameter = {})
@@ -6,7 +6,7 @@ function liquid_flow_schedule(_x, _y, _z, _parameter = {})
     var _tick_delay = _parameter[$ "tick_delay"] ?? 8;
 
     tick_delay_add(_tick_delay, function(_chain) {
-        function_execute({ id: "@phantasia/tile/liquid/flow", parameters: _chain.parameter }, _chain.x * TILE_SIZE, _chain.y * TILE_SIZE, _chain.z);
+        function_execute({ id: "@phantasia:tile/liquid/flow", parameters: _chain.parameter }, _chain.x * TILE_SIZE, _chain.y * TILE_SIZE, _chain.z);
     }, [{ x: _x, y: _y, z: _z, parameter: _parameter }]);
 }
 
@@ -107,7 +107,7 @@ event_subscribe(GAME_EVENT.TILE_UPDATE, function(_data) {
                     {
                         // Schedule a decay check with a random delay
                         tick_delay_add(irandom_range(5, 20), function(_chain) {
-                            function_execute({ id: "@phantasia/tile/nature/leaf_decay", parameters: {} }, _chain.x * TILE_SIZE, _chain.y * TILE_SIZE, _chain.z);
+                            function_execute({ id: "@phantasia:tile/nature/leaf_decay", parameters: {} }, _chain.x * TILE_SIZE, _chain.y * TILE_SIZE, _chain.z);
                         }, [{ x: _x + _dx, y: _y + _dy, z: _z }]);
                     }
                 }

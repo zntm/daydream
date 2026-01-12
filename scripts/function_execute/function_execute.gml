@@ -70,7 +70,7 @@ function function_execute(_function, _x, _y, _z, _xscale, _yscale, _inst = undef
             _script_id = string_delete(_id, 1, 1); // Remove "@"
         }
         
-        _script_id = string_replace_all(_script_id, ":", "/");
+        // _script_id = string_replace_all(_script_id, ":", "/");
         
         var _script = global.proglang_scripts[$ _script_id];
         if (_script != undefined)
@@ -88,7 +88,9 @@ function function_execute(_function, _x, _y, _z, _xscale, _yscale, _inst = undef
         }
         else if (IS_DEVELOPER_MODE)
         {
-            show_debug_message($"[Daydream] Script not found: {_id}");
+            show_debug_message($"[Daydream] Script not found: '{_id}' (searched for '{_script_id}')");
+            // Optional: dump available scripts if failure occurs in dev mode
+            // show_debug_message($"[Daydream] Available scripts: {variable_struct_get_names(global.proglang_scripts)}");
         }
     }
 }

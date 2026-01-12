@@ -160,18 +160,23 @@ function ProgParser(_tokens) constructor
         if (match(PROG_TOKEN.TRY)) return parse_try_stmt();
         if (match(PROG_TOKEN.BREAK))
         {
+            var _brk_token = previous();
             // Parse optional amount expression (for break 2, break n, etc.)
             var _amount = undefined;
-            if (check(PROG_TOKEN.NUMBER))
+            
+            if (!check(PROG_TOKEN.SEMICOLON) && !check(PROG_TOKEN.RBRACE) && (!is_at_end() && peek().line == _brk_token.line))
             {
-                _amount = parse_expression();
+                if (check(PROG_TOKEN.NUMBER))
+                {
+                    _amount = parse_expression();
+                }
             }
             match(PROG_TOKEN.SEMICOLON); // Optional
             return new ProgASTBreakStmt(_amount);
         }
-        
         if (match(PROG_TOKEN.CONTINUE))
         {
+             var _con_token = previous();
              match(PROG_TOKEN.SEMICOLON);
              return new ProgASTContinueStmt();
         }
@@ -179,10 +184,13 @@ function ProgParser(_tokens) constructor
         if (match(PROG_TOKEN.RETURN))
         {
             var _value = undefined;
-            if (!check(PROG_TOKEN.SEMICOLON) && !check(PROG_TOKEN.RBRACE))
+            var _ret_token = previous();
+            
+            if (!check(PROG_TOKEN.SEMICOLON) && !check(PROG_TOKEN.RBRACE) && (!is_at_end() && peek().line == _ret_token.line))
             {
                 _value = parse_expression();
             }
+            
             match(PROG_TOKEN.SEMICOLON); // Optional
             return new ProgASTReturnStmt(_value);
         }
@@ -230,7 +238,7 @@ function ProgParser(_tokens) constructor
     {
         var _imports = [];
         
-        // Simplified imports: import a, b from "path" (No braces)
+        // Simplified imports: import a, b from "path"
         do
         {
             var _name = consume(PROG_TOKEN.IDENTIFIER, "Expected imported name.").lexeme;
@@ -1228,9 +1236,11 @@ function ProgParser(_tokens) constructor
             }
             else if (match(PROG_TOKEN.DOT))
             {
-                var _name = consume(PROG_TOKEN.IDENTIFIER, "Expected property name after '.'.");
+                var _name_token = advance();
+                // Allow identifiers and keywords as property names
+                if (_name_token.type == PROG_TOKEN.EOF) error_at_current("Expected property name after '.'.");
                 
-                _expression = new ProgASTMember(_expression, _name.lexeme);
+                _expression = new ProgASTMember(_expression, _name_token.lexeme);
             }
             else if (match(PROG_TOKEN.QUESTION_DOT))
             {
@@ -1243,8 +1253,9 @@ function ProgParser(_tokens) constructor
                 }
                 else
                 {
-                    var _name = consume(PROG_TOKEN.IDENTIFIER, "Expected property name after '?.'.");
-                    _expression = new ProgASTOptionalMember(_expression, _name.lexeme);
+                    var _name_token = advance();
+                    if (_name_token.type == PROG_TOKEN.EOF) error_at_current("Expected property name after '?.'.");
+                    _expression = new ProgASTOptionalMember(_expression, _name_token.lexeme);
                 }
             }
             else if (match(PROG_TOKEN.LBRACKET))

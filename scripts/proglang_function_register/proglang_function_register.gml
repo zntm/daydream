@@ -95,9 +95,129 @@ proglang_function_register("abs", function(_args)
     return abs(_args[0]);
 });
 
+proglang_function_register("sign", function(_args)
+{
+    return sign(_args[0]);
+});
+
+proglang_function_register("min", function(_args) {
+    if (array_length(_args) == 0) return 0;
+    var _min = _args[0];
+    for (var i = 1; i < array_length(_args); i++) _min = min(_min, _args[i]);
+    return _min;
+});
+
+proglang_function_register("max", function(_args) {
+    if (array_length(_args) == 0) return 0;
+    var _max = _args[0];
+    for (var i = 1; i < array_length(_args); i++) _max = max(_max, _args[i]);
+    return _max;
+});
+
+proglang_function_register("clamp", function(_args) {
+    return clamp(_args[0], _args[1], _args[2]);
+});
+
+proglang_function_register("lerp", function(_args) {
+    return lerp(_args[0], _args[1], _args[2]);
+});
+
 proglang_function_register("point_distance", function(_args) {
     return point_distance(_args[0], _args[1], _args[2], _args[3]);
 });
+
+proglang_function_register("point_direction", function(_args) {
+    return point_direction(_args[0], _args[1], _args[2], _args[3]);
+});
+
+proglang_function_register("power", function(_args) {
+    return power(_args[0], _args[1]);
+});
+
+proglang_function_register("sqrt", function(_args) {
+    return sqrt(_args[0]);
+});
+
+proglang_function_register("sqr", function(_args) {
+    return sqr(_args[0]);
+});
+
+proglang_function_register("frac", function(_args) {
+    return frac(_args[0]);
+});
+
+proglang_function_register("sin", function(_args) {
+    return sin(_args[0]);
+});
+
+proglang_function_register("cos", function(_args) {
+    return cos(_args[0]);
+});
+
+proglang_function_register("tan", function(_args) {
+    return tan(_args[0]);
+});
+
+proglang_function_register("dsin", function(_args) {
+    return dsin(_args[0]);
+});
+
+proglang_function_register("dcos", function(_args) {
+    return dcos(_args[0]);
+});
+
+proglang_function_register("dtan", function(_args) {
+    return dtan(_args[0]);
+});
+
+proglang_function_register("degtorad", function(_args) {
+    return degtorad(_args[0]);
+});
+
+proglang_function_register("radtodeg", function(_args) {
+    return radtodeg(_args[0]);
+});
+
+
+
+proglang_function_register("exp", function(_args) {
+    return exp(_args[0]);
+});
+
+proglang_function_register("ln", function(_args) {
+    return ln(_args[0]);
+});
+
+proglang_function_register("log2", function(_args) {
+    return log2(_args[0]);
+});
+
+proglang_function_register("log10", function(_args) {
+    return log10(_args[0]);
+});
+
+proglang_function_register("arcsin", function(_args) {
+    return arcsin(_args[0]);
+});
+
+proglang_function_register("arccos", function(_args) {
+    return arccos(_args[0]);
+});
+
+proglang_function_register("arctan", function(_args) {
+    return arctan(_args[0]);
+});
+
+proglang_function_register("arctan2", function(_args) {
+    return arctan2(_args[0], _args[1]);
+});
+
+
+proglang_function_register("randomize", function(_args) {
+    randomize();
+});
+
+#endregion
 
 proglang_function_register("lengthdir_x", function(_args) {
     return lengthdir_x(_args[0], _args[1]);
@@ -107,196 +227,7 @@ proglang_function_register("lengthdir_y", function(_args) {
     return lengthdir_y(_args[0], _args[1]);
 });
 
-proglang_function_register("irandom", function(_args) {
-    return irandom(_args[0]);
-});
-
-proglang_function_register("random", function(_args) {
-    return random(_args[0]);
-});
-
-proglang_function_register("typeof", function(_args) {
-    return typeof(_args[0]);
-});
-
-proglang_function_register("min", function(_args) {
-    return min(_args[0], _args[1]);
-});
-
-proglang_function_register("max", function(_args) {
-    return max(_args[0], _args[1]);
-});
-
-proglang_function_register("real", function(_args) {
-    return real(_args[0]);
-});
-
-proglang_function_register("string", function(_args) {
-    return string(_args[0]);
-});
-
-proglang_function_register("irandom_range", function(_args) {
-    return irandom_range(_args[0], _args[1]);
-});
-
-proglang_function_register("random_range", function(_args) {
-    return random_range(_args[0], _args[1]);
-});
-
-proglang_function_register("clamp", function(_args)
-{
-    return clamp(_args[0], _args[1], _args[2]);
-});
-
-proglang_function_register("lerp", function(_args)
-{
-    return lerp(_args[0], _args[1], _args[2]);
-});
-
-proglang_function_register("power", function(_args)
-{
-    return power(_args[0], _args[1]);
-});
-
-proglang_function_register("sqrt", function(_args)
-{
-    return sqrt(_args[0]);
-});
-
-proglang_function_register("sin", function(_args)
-{
-    return sin(_args[0]);
-});
-
-proglang_function_register("cos", function(_args)
-{
-    return cos(_args[0]);
-});
-
-proglang_function_register("tan", function(_args)
-{
-    return tan(_args[0]);
-});
-
-proglang_function_register("dsin", function(_args)
-{
-    return dsin(_args[0]);
-});
-
-proglang_function_register("dcos", function(_args)
-{
-    return dcos(_args[0]);
-});
-
-proglang_function_register("dtan", function(_args)
-{
-    return dtan(_args[0]);
-});
-
-proglang_function_register("lengthdir_x", function(_args)
-{
-    return lengthdir_x(_args[0], _args[1]);
-});
-
-proglang_function_register("lengthdir_y", function(_args)
-{
-    return lengthdir_y(_args[0], _args[1]);
-});
-
-proglang_function_register("point_distance", function(_args)
-{
-    return point_distance(_args[0], _args[1], _args[2], _args[3]);
-});
-
-proglang_function_register("point_direction", function(_args)
-{
-    return point_direction(_args[0], _args[1], _args[2], _args[3]);
-});
-
-proglang_function_register("exp", function(_args)
-{
-    return exp(_args[0]);
-});
-
-proglang_function_register("ln", function(_args)
-{
-    return ln(_args[0]);
-});
-
-proglang_function_register("log2", function(_args)
-{
-    return log2(_args[0]);
-});
-
-proglang_function_register("log10", function(_args)
-{
-    return log10(_args[0]);
-});
-
-proglang_function_register("sqr", function(_args)
-{
-    return sqr(_args[0]);
-});
-
-proglang_function_register("frac", function(_args)
-{
-    return frac(_args[0]);
-});
-
-proglang_function_register("arcsin", function(_args)
-{
-    return arcsin(_args[0]);
-});
-
-proglang_function_register("arccos", function(_args)
-{
-    return arccos(_args[0]);
-});
-
-proglang_function_register("arctan", function(_args)
-{
-    return arctan(_args[0]);
-});
-
-proglang_function_register("arctan2", function(_args)
-{
-    return arctan2(_args[0], _args[1]);
-});
-
-proglang_function_register("degtorad", function(_args)
-{
-    return degtorad(_args[0]);
-});
-
-proglang_function_register("radtodeg", function(_args)
-{
-    return radtodeg(_args[0]);
-});
-
 #endregion
-
-#region Random
-
-proglang_function_register("random", function(_args)
-{
-    return random(_args[0]);
-});
-
-proglang_function_register("irandom", function(_args)
-{
-    return irandom(_args[0]);
-});
-
-proglang_function_register("random_range", function(_args)
-{
-    return random_range(_args[0], _args[1]);
-});
-
-proglang_function_register("irandom_range", function(_args)
-{
-    return irandom_range(_args[0], _args[1]);
-});
-
 proglang_function_register("worldgen_get_heat", function(_args)
 {
     var _x = _args[0] / TILE_SIZE;
@@ -315,69 +246,11 @@ proglang_function_register("worldgen_get_humidity", function(_args)
     return worldgen_get_humidity(_x, _y, _seed);
 });
 
-proglang_function_register("choose", function(_args)
-{
-    var _array = _args[0];
-    
-    if (!is_array(_array)) || (array_length(_array) == 0)
-    {
-        return undefined;
-    }
-    
-    return array_choose(_array);
-});
 
-proglang_function_register("chance", function(_args)
-{
-    return chance(_args[0]);
-});
 
-#endregion
-
-// Strings & Types
-proglang_function_register("string", function(_args)
+proglang_function_register("string_char_at", function(_args)
 {
-    return string(_args[0]);
-});
-
-proglang_function_register("is_string", function(_args)
-{
-    return is_string(_args[0]);
-});
-
-proglang_function_register("is_real", function(_args)
-{
-    return is_real(_args[0]);
-});
-
-proglang_function_register("is_numeric", function(_args)
-{
-    return is_numeric(_args[0]);
-});
-
-proglang_function_register("is_bool", function(_args)
-{
-    return is_bool(_args[0]);
-});
-
-proglang_function_register("is_array", function(_args)
-{
-    return is_array(_args[0]);
-});
-
-proglang_function_register("is_struct", function(_args)
-{
-    return is_struct(_args[0]);
-});
-
-proglang_function_register("is_undefined", function(_args)
-{
-    return is_undefined(_args[0]);
-});
-
-proglang_function_register("real", function(_args)
-{
-    return real(_args[0]);
+    return string_char_at(_args[0], _args[1]);
 });
 
 proglang_function_register("string_length", function(_args)
@@ -892,6 +765,14 @@ proglang_function_register("typeof", function(_args)
     
     return "unknown";
 });
+
+proglang_function_register("is_string", function(_args) { return is_string(_args[0]); });
+proglang_function_register("is_real", function(_args) { return is_real(_args[0]); });
+proglang_function_register("is_numeric", function(_args) { return is_numeric(_args[0]); });
+proglang_function_register("is_bool", function(_args) { return is_bool(_args[0]); });
+proglang_function_register("is_array", function(_args) { return is_array(_args[0]); });
+proglang_function_register("is_struct", function(_args) { return is_struct(_args[0]); });
+proglang_function_register("is_undefined", function(_args) { return is_undefined(_args[0]); });
 
 proglang_function_register("is_regex", function(_args)
 {
