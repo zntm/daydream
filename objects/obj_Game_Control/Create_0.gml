@@ -247,6 +247,10 @@ gui_init_modular();
 if (is_undefined(global.network_role) || global.network_role == NETWORK_ROLE.NONE)
 {
     network_init();
+    
+    // Start integrated server for singleplayer
+    // (Multiplayer connections are handled separately via menu or dev shortcuts)
+    network_start_integrated();
 }
 
 timer_network_sync = 0;

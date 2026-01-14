@@ -216,21 +216,7 @@ var _settings = global.settings;
 show_debug_message("[LOOP] Reached control_gametick");
 control_gametick(_delta_time);
 
-// Network Time Sync (Server only)
-if (global.network_role == NETWORK_ROLE.SERVER)
-{
-    timer_network_sync += _delta_time;
-    
-    if (timer_network_sync >= 1.0) // Sync every second
-    {
-        timer_network_sync = 0;
-        
-        var _buffer = packet_create(PACKET_TYPE.TIME_UPDATE);
-        packet_write_time_update(_buffer, global.world_save_data.time);
-        network_broadcast_packet(_buffer);
-        buffer_delete(_buffer);
-    }
-}
+// Note: Network Time Sync is now handled by obj_Server
 
 // Cleanup temporary audio emitters that have finished playing
 sfx_emitter_cleanup();

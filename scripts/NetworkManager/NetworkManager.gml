@@ -13,7 +13,8 @@ global.network_buffer = buffer_create(4096, buffer_grow, 1);
 enum NETWORK_ROLE {
     NONE,
     SERVER,
-    CLIENT
+    CLIENT,
+    INTEGRATED  // Singleplayer: server+client in same process, zero-latency loopback
 }
 
 /// @desc Initialize network globals
@@ -130,9 +131,86 @@ function network_disconnect()
         network_destroy(global.network_client_socket);
         global.network_client_socket = undefined;
     }
+    else if (global.network_role == NETWORK_ROLE.INTEGRATED)
+    {
+        // Destroy the integrated server instance
+        if (instance_exists(obj_Server))
+        {
+            instance_destroy(obj_Server);
+        }
+        ds_map_clear(global.network_clients);
+    }
     
     global.network_role = NETWORK_ROLE.NONE;
     show_debug_message("[NET] Disconnected");
+}
+
+/// @desc Start integrated server for singleplayer (zero-latency loopback)
+/// @returns {Bool} Success
+function network_start_integrated()
+{
+    if (global.network_role != NETWORK_ROLE.NONE)
+    {
+        show_debug_message("[NET] Cannot start integrated: already in a network session");
+        return false;
+    }
+    
+    global.network_role = NETWORK_ROLE.INTEGRATED;
+    
+    // Register the local player as a "client" with socket_id = -1 (loopback)
+    var _local_uuid = global.player_save_data.uuid;
+    ds_map_add(global.network_clients, -1, {
+        uuid: _local_uuid,
+        player_instance: noone, // Will be set when obj_Player is created
+        inventory: {},
+        open_container: { x: -1, y: -1, z: -1 },
+        last_processed_tick: 0,
+        is_local: true
+    });
+    
+    // Create obj_Server if not exists
+    if (!instance_exists(obj_Server))
+    {
+        instance_create_depth(0, 0, 0, obj_Server);
+        obj_Server.is_integrated = true;
+    }
+    
+    show_debug_message("[NET] Integrated server started (singleplayer mode)");
+    return true;
+}
+
+/// @desc Send a packet via loopback (direct function call, zero latency)
+/// @param {Id.Buffer} _buffer
+function _network_loopback_send(_buffer)
+{
+    // Read the packet type and dispatch directly to the handler
+    var _pos = buffer_tell(_buffer);
+    buffer_seek(_buffer, buffer_seek_start, 2); // Skip size header
+    
+    var _packet_type = buffer_read(_buffer, buffer_u8);
+    
+    // Dispatch to appropriate handler (as if we received it from network)
+    switch (_packet_type)
+    {
+        case PACKET_TYPE.ENTITY_UPDATE:     _network_handle_entity_update(_buffer); break;
+        case PACKET_TYPE.TIME_UPDATE:       _network_handle_time_update(_buffer); break;
+        case PACKET_TYPE.TILE_UPDATE:       _network_handle_tile_update(_buffer); break;
+        case PACKET_TYPE.INVENTORY_UPDATE:  _network_handle_inventory_update(_buffer); break;
+        case PACKET_TYPE.ENTITY_SPAWN:      _network_handle_entity_spawn(_buffer); break;
+        case PACKET_TYPE.ENTITY_DESTROY:    _network_handle_entity_destroy(_buffer); break;
+        case PACKET_TYPE.ENTITY_MOVE:       _network_handle_entity_move(_buffer); break;
+        case PACKET_TYPE.ENTITY_TELEPORT:   _network_handle_entity_teleport(_buffer); break;
+        case PACKET_TYPE.ENTITY_METADATA:   _network_handle_entity_metadata(_buffer); break;
+        // Server-bound packets (from local client to integrated server)
+        case PACKET_TYPE.PLAYER_INPUT:      _network_handle_player_input(-1, _buffer); break;
+        case PACKET_TYPE.TILE_UPDATE_REQUEST: _network_handle_tile_request(-1, _buffer); break;
+        case PACKET_TYPE.INVENTORY_ACTION:  _network_handle_inventory_action(-1, _buffer); break;
+        case PACKET_TYPE.CONTAINER_OPEN:    _network_handle_container_open(-1, _buffer); break;
+        case PACKET_TYPE.CONTAINER_CLOSE:   _network_handle_container_close(-1, _buffer); break;
+        case PACKET_TYPE.CHUNK_REQUEST:     _network_handle_chunk_request(-1, _buffer); break;
+    }
+    
+    buffer_seek(_buffer, buffer_seek_start, _pos); // Restore position
 }
 
 /// @desc Send a buffer to a specific socket
@@ -148,7 +226,7 @@ function network_send_packet(_socket, _buffer)
 /// @param {Id.Buffer} _buffer
 function network_broadcast_packet(_buffer, _exclude_socket = undefined)
 {
-    if (global.network_role != NETWORK_ROLE.SERVER) return;
+    if (global.network_role != NETWORK_ROLE.SERVER && global.network_role != NETWORK_ROLE.INTEGRATED) return;
     
     var _size = buffer_tell(_buffer);
     var _key = ds_map_find_first(global.network_clients);
@@ -157,7 +235,15 @@ function network_broadcast_packet(_buffer, _exclude_socket = undefined)
     {
         if (_key != _exclude_socket)
         {
-            packet_send(_key, _buffer);
+            if (_key == -1)
+            {
+                // Loopback for integrated client
+                _network_loopback_send(_buffer);
+            }
+            else
+            {
+                packet_send(_key, _buffer);
+            }
         }
         _key = ds_map_find_next(global.network_clients, _key);
     }
@@ -174,21 +260,21 @@ function network_handle_async(_type_event)
             break;
             
         case network_type_non_blocking_connect:
-             var _succeeded = async_load[? "succeeded"];
-             
-             if (_succeeded)
-             {
-                 _network_handle_connect();
-             }
-             else
-             {
-                 show_debug_message($"[NET] Connection Failed!");
-                 // TODO: Show UI error?
-                 network_destroy(global.network_client_socket);
-                 global.network_client_socket = undefined;
-                 global.network_role = NETWORK_ROLE.NONE;
-             }
-             break;
+            var _succeeded = async_load[? "succeeded"];
+            
+            if (_succeeded)
+            {
+                _network_handle_connect();
+            }
+            else
+            {
+                show_debug_message($"[NET] Connection Failed!");
+                // TODO: Show UI error?
+                network_destroy(global.network_client_socket);
+                global.network_client_socket = undefined;
+                global.network_role = NETWORK_ROLE.NONE;
+            }
+            break;
             
         case network_type_disconnect:
             _network_handle_disconnect();
@@ -540,8 +626,8 @@ function _network_handle_welcome(_buffer)
     // Also clear chunk pool / fading chunks if they exist to prevent visual artifacts
     if (variable_global_exists("chunk_pool"))
     {
-         var _pool = global.chunk_pool;
-         _pool.fading_chunks = [];
+        var _pool = global.chunk_pool;
+        _pool.fading_chunks = [];
     }
     
     // Force immediate chunk update
@@ -624,7 +710,7 @@ function _network_handle_player_input(_socket, _buffer)
         }
         else
         {
-             show_debug_message($"[NET] Warning: Client {_socket} has no player instance for input!");
+            show_debug_message($"[NET] Warning: Client {_socket} has no player instance for input!");
         }
     }
     else
@@ -829,75 +915,75 @@ function _network_handle_entity_update(_buffer)
         else
         {
             // --- SPAWN NEW ---
-             if (_state.entity_type == "player")
-             {
-                  // Create remote player
-                  _inst = instance_create_depth(_state.physics.x, _state.physics.y, 0, obj_Client, {
-                      is_local: false,
-                      uuid: _state.uuid
-                  });
-                  _inst.interp_target_x = _state.physics.x;
-                  _inst.interp_target_y = _state.physics.y;
-                  _state.apply(_inst);
-             }
+            if (_state.entity_type == "player")
+            {
+            // Create remote player
+            _inst = instance_create_depth(_state.physics.x, _state.physics.y, 0, obj_Client, {
+                is_local: false,
+                uuid: _state.uuid
+            });
+            _inst.interp_target_x = _state.physics.x;
+            _inst.interp_target_y = _state.physics.y;
+            _state.apply(_inst);
+            }
             else if (string_pos("creature:", _state.entity_type) == 1)
             {
-                 // Create creature using spawn_creature for proper initialization
-                 // Parse ID: "creature:phantasia:slime"
-                 var _id = string_delete(_state.entity_type, 1, 9); 
-                 var _data = global.creature_data[$ _id];
-                 if (_data != undefined)
-                 {
-                     _inst = spawn_creature(_state.physics.x, _state.physics.y, _id, undefined);
-                     _inst.uuid = _state.uuid;
-                     _state.apply(_inst);
-                 }
+                // Create creature using spawn_creature for proper initialization
+                // Parse ID: "creature:phantasia:slime"
+                var _id = string_delete(_state.entity_type, 1, 9); 
+                var _data = global.creature_data[$ _id];
+                if (_data != undefined)
+                {
+                    _inst = spawn_creature(_state.physics.x, _state.physics.y, _id, undefined);
+                    _inst.uuid = _state.uuid;
+                    _state.apply(_inst);
+                }
             }
             else if (_state.entity_type == "item_drop")
             {
-                 // Create item drop with full initialization
-                 var _item = new Item(_state.extra_id, _state.extra_value);
-                 var _data = global.item_data[$ _state.extra_id];
-                 if (_data != undefined)
-                 {
-                     var _size = _data.get_inventory_size();
-                     
-                     _inst = instance_create_layer(_state.physics.x, _state.physics.y, "Instances", obj_Item_Drop);
-                     
-                     // Initialize attribute and physics body (matches spawn_item_drop)
-                     _inst.attribute = new Attribute()
-                         .set_collision_box(_size, _size)
-                         .set_gravity(0.15);
-                     
-                     _inst.physics_body = new PhysicsBody(_inst.attribute);
-                     _inst.physics_body.pos_x = _inst.x;
-                     _inst.physics_body.pos_y = _inst.y;
-                     _inst.physics_body.scale_x = _size / 8;
-                     _inst.physics_body.scale_y = _size / 8;
-                     
-                     _inst.image_xscale = _inst.physics_body.scale_x;
-                     _inst.image_yscale = _inst.physics_body.scale_y;
-                     _inst.image_index = _data.get_inventory_index();
-                     _inst.image_speed = 0;
-                     
-                     _inst.uuid = _state.uuid;
-                     _inst.item = _item;
-                     _inst.inst = noone;
-                     _inst.timer_pickup = 0;
-                     _inst.timer_life = 60 * 15;
-                     
-                     _state.apply(_inst);
-                 }
+                // Create item drop with full initialization
+                var _item = new Item(_state.extra_id, _state.extra_value);
+                var _data = global.item_data[$ _state.extra_id];
+                if (_data != undefined)
+                {
+                    var _size = _data.get_inventory_size();
+                    
+                    _inst = instance_create_layer(_state.physics.x, _state.physics.y, "Instances", obj_Item_Drop);
+                    
+                    // Initialize attribute and physics body (matches spawn_item_drop)
+                    _inst.attribute = new Attribute()
+                        .set_collision_box(_size, _size)
+                        .set_gravity(0.15);
+                    
+                    _inst.physics_body = new PhysicsBody(_inst.attribute);
+                    _inst.physics_body.pos_x = _inst.x;
+                    _inst.physics_body.pos_y = _inst.y;
+                    _inst.physics_body.scale_x = _size / 8;
+                    _inst.physics_body.scale_y = _size / 8;
+                    
+                    _inst.image_xscale = _inst.physics_body.scale_x;
+                    _inst.image_yscale = _inst.physics_body.scale_y;
+                    _inst.image_index = _data.get_inventory_index();
+                    _inst.image_speed = 0;
+                    
+                    _inst.uuid = _state.uuid;
+                    _inst.item = _item;
+                    _inst.inst = noone;
+                    _inst.timer_pickup = 0;
+                    _inst.timer_life = 60 * 15;
+                    
+                    _state.apply(_inst);
+                }
             }
             else if (_state.entity_type == "projectile")
             {
-                 // Create projectile
-                 _inst = spawn_projectile(_state.physics.x, _state.physics.y, _state.extra_id, _state.extra_value);
-                 if (instance_exists(_inst))
-                 {
-                     _inst.uuid = _state.uuid;
-                     _state.apply(_inst);
-                 }
+                // Create projectile
+                _inst = spawn_projectile(_state.physics.x, _state.physics.y, _state.extra_id, _state.extra_value);
+                if (instance_exists(_inst))
+                {
+                    _inst.uuid = _state.uuid;
+                    _state.apply(_inst);
+                }
             }
         }
     }
@@ -1155,11 +1241,11 @@ function _network_handle_tile_update(_buffer)
     // Safety check BEFORE accessing item_data
     if (_tile != TILE_EMPTY)
     {
-         var _data = global.item_data[$ _tile.get_id()];
-         if (_data == undefined) 
-         {
-             _tile = TILE_EMPTY;
-         }
+        var _data = global.item_data[$ _tile.get_id()];
+        if (_data == undefined) 
+        {
+            _tile = TILE_EMPTY;
+        }
     }
 
     // Apply Update
@@ -1217,18 +1303,18 @@ function _network_handle_tile_request(_socket, _buffer)
         }
         else
         {
-             // Revert logic (force update back to client)
-             var _current_tile = tile_get(_x, _y, _z);
-             var _current_id = (_current_tile == TILE_EMPTY) ? "undefined" : _current_tile.get_id();
-             
-             var _revert_buffer = packet_create(PACKET_TYPE.TILE_UPDATE);
-             buffer_write(_revert_buffer, buffer_s32, _x);
-             buffer_write(_revert_buffer, buffer_s32, _y);
-             buffer_write(_revert_buffer, buffer_s32, _z);
-             buffer_write(_revert_buffer, buffer_string, _current_id);
-             
-             packet_send(_socket, _revert_buffer);
-             buffer_delete(_revert_buffer);
+            // Revert logic (force update back to client)
+            var _current_tile = tile_get(_x, _y, _z);
+            var _current_id = (_current_tile == TILE_EMPTY) ? "undefined" : _current_tile.get_id();
+            
+            var _revert_buffer = packet_create(PACKET_TYPE.TILE_UPDATE);
+            buffer_write(_revert_buffer, buffer_s32, _x);
+            buffer_write(_revert_buffer, buffer_s32, _y);
+            buffer_write(_revert_buffer, buffer_s32, _z);
+            buffer_write(_revert_buffer, buffer_string, _current_id);
+            
+            packet_send(_socket, _revert_buffer);
+            buffer_delete(_revert_buffer);
         }
     }
     else
@@ -1395,7 +1481,7 @@ function _network_handle_inventory_action(_socket, _buffer)
                     
                     var _p = _client.player_instance;
                     if (instance_exists(_p))
-                         spawn_item_drop(_p.x, _p.y - 16, _drop_item, sign(_p.image_xscale), _p.image_xscale * 0.2, -0.6, GAME_TICK * 3);
+                        spawn_item_drop(_p.x, _p.y - 16, _drop_item, sign(_p.image_xscale), _p.image_xscale * 0.2, -0.6, GAME_TICK * 3);
                     
                     _item.add_amount(-_amount_to_drop);
                     if (_item.get_amount() <= 0) _inv[@ _action.from_idx] = INVENTORY_EMPTY;
@@ -1442,33 +1528,33 @@ function _network_handle_inventory_action(_socket, _buffer)
 /// @desc Broadcast inventory update to affected client or all clients (if container)
 function _network_broadcast_inventory_update(_inv_name, _index, _item, _triggering_client)
 {
-     if (_inv_name == "_container")
-     {
-         // Broadcast to all clients watching this container
-         var _pos = _triggering_client.open_container;
-         var _sockets = ds_map_keys_to_array(global.network_clients);
-         for (var i = 0; i < array_length(_sockets); ++i)
-         {
-             var _c = global.network_clients[? _sockets[i]];
-             if (_c.open_container.x == _pos.x && _c.open_container.y == _pos.y && _c.open_container.z == _pos.z)
-             {
-                 network_send_inventory_update(_sockets[i], "_container", _index, _item);
-             }
-         }
-     }
-     else
-     {
-         // Find the socket for this client and send update
-         var _sockets = ds_map_keys_to_array(global.network_clients);
-         for (var i = 0; i < array_length(_sockets); ++i)
-         {
-             if (global.network_clients[? _sockets[i]] == _triggering_client)
-             {
-                 network_send_inventory_update(_sockets[i], _inv_name, _index, _item);
-                 break;
-             }
-         }
-     }
+    if (_inv_name == "_container")
+    {
+        // Broadcast to all clients watching this container
+        var _pos = _triggering_client.open_container;
+        var _sockets = ds_map_keys_to_array(global.network_clients);
+        for (var i = 0; i < array_length(_sockets); ++i)
+        {
+            var _c = global.network_clients[? _sockets[i]];
+            if (_c.open_container.x == _pos.x && _c.open_container.y == _pos.y && _c.open_container.z == _pos.z)
+            {
+                network_send_inventory_update(_sockets[i], "_container", _index, _item);
+            }
+        }
+    }
+    else
+    {
+        // Find the socket for this client and send update
+        var _sockets = ds_map_keys_to_array(global.network_clients);
+        for (var i = 0; i < array_length(_sockets); ++i)
+        {
+            if (global.network_clients[? _sockets[i]] == _triggering_client)
+            {
+                network_send_inventory_update(_sockets[i], _inv_name, _index, _item);
+                break;
+            }
+        }
+    }
 }
 
 /// @desc Handle CONTAINER_OPEN request (Server) or response (Client)
@@ -1647,9 +1733,9 @@ function _network_handle_chunk_data(_buffer)
     // Ensure we have the chunk loaded/created in pool
     if (!chunk_map_exists(_chunk_x, _chunk_y))
     {
-         // Usually game control loop requests it, so it should be there.
-         // If not, maybe we force create?
-         global.chunk_pool.acquire(_chunk_x, _chunk_y);
+        // Usually game control loop requests it, so it should be there.
+        // If not, maybe we force create?
+        global.chunk_pool.acquire(_chunk_x, _chunk_y);
     }
     
     var _chunk = chunk_map_get(_chunk_x, _chunk_y);
@@ -1680,7 +1766,7 @@ function _network_handle_chunk_data(_buffer)
         // Trigger generic refresh?
         if (instance_exists(obj_Game_Control))
         {
-             obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.LIGHTING; 
+            obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.LIGHTING; 
         }
         
         show_debug_message($"[NET] Applied CHUNK_DATA for ({_chunk_x}, {_chunk_y})");
@@ -1716,13 +1802,13 @@ function _network_handle_entity_spawn(_buffer)
     // Filter out our own spawn packet (we already exist)
     if (_is_local_player_uuid)
     {
-         with (obj_Player) { if (is_local) { _inst = id; break; } }
-         if (_inst != noone)
-         {
-             network_eid_assign(_inst, _eid);
-             _network_read_spawn_extra(_buffer, _type, _inst);
-             return;
-         }
+        with (obj_Player) { if (is_local) { _inst = id; break; } }
+        if (_inst != noone)
+        {
+            network_eid_assign(_inst, _eid);
+            _network_read_spawn_extra(_buffer, _type, _inst);
+            return;
+        }
     }
 
     switch (_type)
@@ -1755,13 +1841,14 @@ function _network_handle_entity_spawn(_buffer)
             var _proj_id = buffer_read(_buffer, buffer_string);
             var _dmg = buffer_read(_buffer, buffer_f32);
             _inst = spawn_projectile(_x, _y, _proj_id, _dmg);
-             if (instance_exists(_inst)) _inst.uuid = _uuid;
+            if (instance_exists(_inst)) _inst.uuid = _uuid;
             break;
     }
 
     if (instance_exists(_inst))
     {
         network_eid_assign(_inst, _eid);
+
         _inst.interp_start_x = _x;
         _inst.interp_start_y = _y;
         _inst.interp_target_x = _x;
@@ -1770,8 +1857,14 @@ function _network_handle_entity_spawn(_buffer)
         
         if (_type == ENTITY_NET_TYPE.PLAYER)
         {
-             var _attire_json = buffer_read(_buffer, buffer_string);
-             try { _inst.attire = json_parse(_attire_json); } catch(_e) {}
+            var _attire_json = buffer_read(_buffer, buffer_string);
+            try
+            {
+                _inst.attire = json_parse(_attire_json);
+            }
+            catch(_e)
+            {
+            }
         }
     }
     else
@@ -1800,7 +1893,13 @@ function _network_read_spawn_extra(_buffer, _type, _inst)
             var _json = buffer_read(_buffer, buffer_string); 
             if (instance_exists(_inst))
             {
-                try { _inst.attire = json_parse(_json); } catch(_e) {}
+                try
+                {
+                    _inst.attire = json_parse(_json);
+                }
+                catch(_e)
+                {
+                }
             }
             break;
     }
@@ -1878,8 +1977,8 @@ function _network_handle_entity_teleport(_buffer)
         }
         else if (_inst.object_index == obj_Player && _inst.is_local)
         {
-             _inst.x = _x;
-             _inst.y = _y;
+            _inst.x = _x;
+            _inst.y = _y;
         }
     }
 }
@@ -1915,17 +2014,23 @@ function _network_handle_entity_metadata(_buffer)
                 if (instance_exists(_inst))
                 {
                     _inst.selected_hotbar = _hotbar;
+                    
                     if (_inst.object_index == obj_Player && _inst.is_local)
                     {
-                         var _len = array_length(_inst.input_history);
-                         var _delete_count = 0;
-                         for (var j = 0; j < _len; ++j)
-                         {
-                             if (_inst.input_history[j].tick <= _last_tick) _delete_count++;
-                             else break;
-                         }
-                         if (_delete_count > 0)
-                             array_delete(_inst.input_history, 0, _delete_count);
+                        var _len = array_length(_inst.input_history);
+                        var _delete_count = 0;
+                        
+                        for (var j = 0; j < _len; ++j)
+                        {
+                            if (_inst.input_history[j].tick > _last_tick) break;
+                            
+                            ++_delete_count;
+                        }
+                        
+                        if (_delete_count > 0)
+                        {
+                            array_delete(_inst.input_history, 0, _delete_count);
+                        }
                     }
                 }
                 break;

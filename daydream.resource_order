@@ -112,6 +112,7 @@
     {"name":"obj_Neko_Presence","order":1,"path":"objects/obj_Neko_Presence/obj_Neko_Presence.yy",},
     {"name":"obj_Player","order":1,"path":"objects/obj_Player/obj_Player.yy",},
     {"name":"obj_Projectile","order":8,"path":"objects/obj_Projectile/obj_Projectile.yy",},
+    {"name":"obj_Server","order":4,"path":"objects/obj_Server/obj_Server.yy",},
     {"name":"obj_Structure","order":4,"path":"objects/obj_Structure/obj_Structure.yy",},
     {"name":"obj_Tool","order":7,"path":"objects/obj_Tool/obj_Tool.yy",},
     {"name":"rm_Menu_Create_Player","order":3,"path":"rooms/rm_Menu_Create_Player/rm_Menu_Create_Player.yy",},
