@@ -55,13 +55,26 @@ preview_dirty = true;
 preview_scale = 1;
 preview_resizing = false;
 preview_current_col = 0;       // Progressive rendering: current col
+preview_current_row = 0;       // Progressive rendering: current row (for final pass)
 preview_cols_per_frame = 1;   // Faster rendering (16 columns per frame)
+preview_pass = 0;             // Multi-pass refinement
 preview_view_offset_y = 200;   // Vertical offset for terrain preview
+preview_last_col = undefined; // For RLE state across frames
+preview_strip_start_y = 0;   // For RLE state across frames
+
+// Pooled Context structs for zero-allocation rendering
+render_ctx = { x: 0, y: 0, z: 0, seed: 0, world_data: undefined };
+render_ctx_min = { x: 0, y: 0, z: 0 };
+render_ctx_max = { x: 0, y: 0, z: 0 };
 
 // Biome Preview
 biome_preview_surface = -1;
 biome_preview_current_col = 0;
+biome_preview_current_row = 0;
 biome_preview_dirty = true;
+biome_preview_pass = 0;
+biome_preview_last_col = undefined; 
+biome_preview_strip_start_y = 0;
 biome_preview_width = 200;
 biome_preview_height = 200;
 

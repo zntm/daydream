@@ -24,14 +24,16 @@ function LoomNodeConstant() : LoomNode("Constant") constructor
     static process = function(_context)
     {
         var _in = get_input_value("in_value", _context);
-        if (_in != undefined)
-        {
-            set_output_value("value", _in);
-        }
-        else
-        {
-            set_output_value("value", constant_value);
-        }
+        if (_in != undefined) set_output_value("value", _in);
+        else set_output_value("value", constant_value);
+    }
+    
+    static bounds_process = function(_ctx_min, _ctx_max)
+    {
+        var _in_b = get_input_bounds("in_value", _ctx_min, _ctx_max);
+        var _pin = inputs.in_value;
+        if (_pin != undefined && _pin.is_connected()) set_output_bounds("value", _in_b[0], _in_b[1]);
+        else set_output_bounds("value", constant_value, constant_value);
     }
 }
 
@@ -49,6 +51,13 @@ function LoomNodeAdd() : LoomNode("Add") constructor
         var _b = get_input_value("b", _context);
         set_output_value("result", _a + _b);
     }
+    
+    static bounds_process = function(_ctx_min, _ctx_max)
+    {
+        var _a = get_input_bounds("a", _ctx_min, _ctx_max);
+        var _b = get_input_bounds("b", _ctx_min, _ctx_max);
+        set_output_bounds("result", _a[0] + _b[0], _a[1] + _b[1]);
+    }
 }
 
 /// @desc Subtract two values
@@ -64,6 +73,13 @@ function LoomNodeSubtract() : LoomNode("Subtract") constructor
         var _a = get_input_value("a", _context);
         var _b = get_input_value("b", _context);
         set_output_value("result", _a - _b);
+    }
+    
+    static bounds_process = function(_ctx_min, _ctx_max)
+    {
+        var _a = get_input_bounds("a", _ctx_min, _ctx_max);
+        var _b = get_input_bounds("b", _ctx_min, _ctx_max);
+        set_output_bounds("result", _a[0] - _b[1], _a[1] - _b[0]);
     }
 }
 
@@ -81,6 +97,14 @@ function LoomNodeMultiply() : LoomNode("Multiply") constructor
         var _b = get_input_value("b", _context);
         set_output_value("result", _a * _b);
     }
+    
+    static bounds_process = function(_ctx_min, _ctx_max)
+    {
+        var _a = get_input_bounds("a", _ctx_min, _ctx_max);
+        var _b = get_input_bounds("b", _ctx_min, _ctx_max);
+        var _v1 = _a[0] * _b[0], _v2 = _a[0] * _b[1], _v3 = _a[1] * _b[0], _v4 = _a[1] * _b[1];
+        set_output_bounds("result", min(_v1, _v2, _v3, _v4), max(_v1, _v2, _v3, _v4));
+    }
 }
 
 /// @desc Divide two values
@@ -96,6 +120,16 @@ function LoomNodeDivide() : LoomNode("Divide") constructor
         var _a = get_input_value("a", _context);
         var _b = get_input_value("b", _context);
         set_output_value("result", (_b != 0) ? (_a / _b) : 0);
+    }
+    
+    static bounds_process = function(_ctx_min, _ctx_max)
+    {
+        var _a = get_input_bounds("a", _ctx_min, _ctx_max);
+        var _b = get_input_bounds("b", _ctx_min, _ctx_max);
+        if (_b[0] > 0 || _b[1] < 0) {
+            var _v1 = _a[0]/_b[0], _v2 = _a[0]/_b[1], _v3 = _a[1]/_b[0], _v4 = _a[1]/_b[1];
+            set_output_bounds("result", min(_v1, _v2, _v3, _v4), max(_v1, _v2, _v3, _v4));
+        } else set_output_bounds("result", -999999, 999999); // Div by zero possible in range
     }
 }
 
@@ -115,6 +149,14 @@ function LoomNodeClamp() : LoomNode("Clamp") constructor
         var _max = get_input_value("max", _context);
         set_output_value("result", clamp(_val, _min, _max));
     }
+    
+    static bounds_process = function(_ctx_min, _ctx_max)
+    {
+        var _val = get_input_bounds("value", _ctx_min, _ctx_max);
+        var _min = get_input_bounds("min", _ctx_min, _ctx_max);
+        var _max = get_input_bounds("max", _ctx_min, _ctx_max);
+        set_output_bounds("result", clamp(_val[0], _min[0], _max[1]), clamp(_val[1], _min[0], _max[1]));
+    }
 }
 
 /// @desc Lerp between two values
@@ -133,6 +175,16 @@ function LoomNodeLerp() : LoomNode("Lerp") constructor
         var _t = get_input_value("t", _context);
         set_output_value("result", lerp(_a, _b, _t));
     }
+    
+    static bounds_process = function(_ctx_min, _ctx_max)
+    {
+        var _a = get_input_bounds("a", _ctx_min, _ctx_max);
+        var _b = get_input_bounds("b", _ctx_min, _ctx_max);
+        var _t = get_input_bounds("t", _ctx_min, _ctx_max);
+        var _v1 = lerp(_a[0], _b[0], _t[0]), _v2 = lerp(_a[0], _b[0], _t[1]);
+        var _v3 = lerp(_a[1], _b[1], _t[0]), _v4 = lerp(_a[1], _b[1], _t[1]);
+        set_output_bounds("result", min(_v1, _v2, _v3, _v4), max(_v1, _v2, _v3, _v4));
+    }
 }
 
 /// @desc Absolute value
@@ -146,6 +198,14 @@ function LoomNodeAbs() : LoomNode("Abs") constructor
     {
         var _val = get_input_value("value", _context);
         set_output_value("result", abs(_val));
+    }
+    
+    static bounds_process = function(_ctx_min, _ctx_max)
+    {
+        var _b = get_input_bounds("value", _ctx_min, _ctx_max);
+        if (_b[0] >= 0) set_output_bounds("result", _b[0], _b[1]);
+        else if (_b[1] <= 0) set_output_bounds("result", abs(_b[1]), abs(_b[0]));
+        else set_output_bounds("result", 0, max(abs(_b[0]), abs(_b[1])));
     }
 }
 
@@ -163,6 +223,13 @@ function LoomNodeMax() : LoomNode("Max") constructor
         var _b = get_input_value("b", _context);
         set_output_value("result", max(_a, _b));
     }
+    
+    static bounds_process = function(_ctx_min, _ctx_max)
+    {
+        var _a = get_input_bounds("a", _ctx_min, _ctx_max);
+        var _b = get_input_bounds("b", _ctx_min, _ctx_max);
+        set_output_bounds("result", max(_a[0], _b[0]), max(_a[1], _b[1]));
+    }
 }
 
 /// @desc Minimum of two values
@@ -178,6 +245,13 @@ function LoomNodeMin() : LoomNode("Min") constructor
         var _a = get_input_value("a", _context);
         var _b = get_input_value("b", _context);
         set_output_value("result", min(_a, _b));
+    }
+    
+    static bounds_process = function(_ctx_min, _ctx_max)
+    {
+        var _a = get_input_bounds("a", _ctx_min, _ctx_max);
+        var _b = get_input_bounds("b", _ctx_min, _ctx_max);
+        set_output_bounds("result", min(_a[0], _b[0]), min(_a[1], _b[1]));
     }
 }
 
@@ -198,6 +272,13 @@ function LoomNodeInputCoordinate() : LoomNode("InputCoordinate") constructor
         set_output_value("x", _context[$ "x"] ?? 0);
         set_output_value("y", _context[$ "y"] ?? 0);
         set_output_value("z", _context[$ "z"] ?? 0);
+    }
+    
+    static bounds_process = function(_ctx_min, _ctx_max)
+    {
+        set_output_bounds("x", _ctx_min[$ "x"] ?? 0, _ctx_max[$ "x"] ?? 0);
+        set_output_bounds("y", _ctx_min[$ "y"] ?? 0, _ctx_max[$ "y"] ?? 0);
+        set_output_bounds("z", _ctx_min[$ "z"] ?? 0, _ctx_max[$ "z"] ?? 0);
     }
 }
 
@@ -325,9 +406,16 @@ function LoomNodeContinentalness() : LoomNode("Continentalness") constructor
         var _amp = get_input_value("amp", _context);
         var _gstr = get_input_value("grad_str", _context);
         var _seed = _context.seed;
-        
         var _noise = open_simplex_noise(_x * _scale, _seed * 7.3, 1.0, 2);
         set_output_value("value", _noise * _amp * _gstr);
+    }
+    
+    static bounds_process = function(_ctx_min, _ctx_max) 
+    {
+        var _amp = get_input_bounds("amp", _ctx_min, _ctx_max);
+        var _gstr = get_input_bounds("grad_str", _ctx_min, _ctx_max);
+        var _max_val = max(abs(_amp[0]), abs(_amp[1])) * max(abs(_gstr[0]), abs(_gstr[1]));
+        set_output_bounds("value", -_max_val, _max_val);
     }
 }
 
@@ -348,9 +436,16 @@ function LoomNodePeaks() : LoomNode("Peaks") constructor
         var _amp = get_input_value("amp", _context);
         var _gstr = get_input_value("grad_str", _context);
         var _seed = _context.seed;
-        
         var _noise = open_simplex_noise(_x * _scale, _seed * 13.7, 1.0, 3);
         set_output_value("value", _noise * _amp * _gstr);
+    }
+    
+    static bounds_process = function(_ctx_min, _ctx_max)
+    {
+        var _amp = get_input_bounds("amp", _ctx_min, _ctx_max);
+        var _gstr = get_input_bounds("grad_str", _ctx_min, _ctx_max);
+        var _max_val = max(abs(_amp[0]), abs(_amp[1])) * max(abs(_gstr[0]), abs(_gstr[1]));
+        set_output_bounds("value", -_max_val, _max_val);
     }
 }
 
@@ -373,9 +468,13 @@ function LoomNodeSquashedNoise() : LoomNode("SquashedNoise") constructor
         var _sq = get_input_value("squash", _context);
         var _sc = get_input_value("scale", _context);
         var _seed = _context.seed;
-        
         var _val = open_simplex_noise_3d(_x * _sc, (_y * _sq) * _sc, _z + (_seed * 0.0001), 1.0, 3);
         set_output_value("value", _val);
+    }
+    
+    static bounds_process = function(_ctx_min, _ctx_max)
+    {
+        set_output_bounds("value", -1, 1);
     }
 }
 
@@ -397,6 +496,11 @@ function LoomNodeErosion() : LoomNode("Erosion") constructor
         
         var _val = open_simplex_noise(_x * _sc, _y * _sc + 500, 1.0, 2);
         set_output_value("value", _val);
+    }
+    
+    static bounds_process = function(_ctx_min, _ctx_max)
+    {
+        set_output_bounds("value", -1, 1);
     }
 }
 
@@ -692,6 +796,12 @@ function LoomNodeResult() : LoomNode("Result") constructor
     {
         var _val = get_input_value("value", _context);
         set_output_value("value", _val);
+    }
+    
+    static bounds_process = function(_ctx_min, _ctx_max)
+    {
+        var _b = get_input_bounds("value", _ctx_min, _ctx_max);
+        set_output_bounds("value", _b[0], _b[1]);
     }
 }
 
@@ -1109,16 +1219,26 @@ function LoomNodeSpline() : LoomNode("Spline") constructor
     
     static process = function(_context)
     {
-        var _x = get_input_value("x", _context);
+        var _t = get_input_value("x", _context);
         var _min = get_attribute("min_x");
         var _max = get_attribute("max_x");
+        var _norm = clamp((_t - _min) / (_max - _min), 0, 1);
+        set_output_value("value", spline_evaluate(points, _norm));
+    }
+    
+    static bounds_process = function(_ctx_min, _ctx_max)
+    {
+        // Find min/max values in the points array
+        var _lo = 999999, _hi = -999999;
+        for(var i=0; i<array_length(points); ++i) {
+            _lo = min(_lo, points[i].value);
+            _hi = max(_hi, points[i].value);
+        }
+        if (array_length(points) == 0) { _lo = 0; _hi = 0; }
         
-        // Normalize X if range is not 0-1
-        var _nx = (_max != _min) ? ((_x - _min) / (_max - _min)) : 0;
-        
-        // Use global spline_evaluate helper
-        var _val = spline_evaluate(points, _nx);
-        set_output_value("value", _val);
+        // Note: This assumes the input x range could cover the whole spline domain.
+        // For a tighter bound we could check the input interval vs min_x/max_x.
+        set_output_bounds("value", _lo, _hi);
     }
 }
 
@@ -1166,6 +1286,14 @@ function LoomNodeResultBiome() : LoomNode("ResultBiome") constructor
     static process = function(_context)
     {
         set_output_value("biome_id", get_input_value("biome_id", _context));
+    }
+    
+    static bounds_process = function(_ctx_min, _ctx_max)
+    {
+        // Biomes are strings, interval arithmetic doesn't apply directly.
+        // We could return a set of possible biomes, but for simplicity
+        // we'll just say we don't know (forced subdivision).
+        set_output_bounds("biome_id", 0, 0); 
     }
 }
 
@@ -1328,7 +1456,17 @@ function loom_trigger_refresh(_node)
     with (obj_Loom_Control)
     {
         var _affected = graph.get_affected_preview_types(_node);
-        if (_affected.terrain) preview_dirty = true;
-        if (_affected.biome) biome_preview_dirty = true;
+        if (_affected.terrain) 
+        {
+            preview_dirty = true;
+            preview_pass = 0;
+            preview_current_col = 0;
+        }
+        if (_affected.biome) 
+        {
+            biome_preview_dirty = true;
+            biome_preview_pass = 0;
+            biome_preview_current_col = 0;
+        }
     }
 }

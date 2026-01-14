@@ -17,6 +17,7 @@ function LoomPin(_name, _type, _is_output) constructor
     
     // Current value (cached after evaluation)
     value = undefined;
+    bounds = [0, 0]; // [min, max] range (cached after bounds evaluation)
     
     // For input pins: reference to connected output pin
     connected_pin = undefined;
@@ -43,6 +44,26 @@ function LoomPin(_name, _type, _is_output) constructor
                 return connected_pin.get_value(_context);
             }
             return value; // Default value if not connected
+        }
+    }
+    
+    /// @desc Get the bounds of this pin
+    /// @param {Struct} _ctx_min Minimum coordinate context
+    /// @param {Struct} _ctx_max Maximum coordinate context
+    /// @returns {Array} [min, max] range
+    static get_bounds = function(_ctx_min, _ctx_max)
+    {
+        if (is_output)
+        {
+            return bounds;
+        }
+        else
+        {
+            if (connected_pin != undefined)
+            {
+                return connected_pin.get_bounds(_ctx_min, _ctx_max);
+            }
+            return [value ?? 0, value ?? 0];
         }
     }
     
@@ -160,9 +181,6 @@ function LoomNode(_type) constructor
         return undefined;
     }
     
-    /// @desc Set output value by name
-    /// @param {String} _name Output pin name
-    /// @param {Any} _value Value to set
     static set_output_value = function(_name, _value)
     {
         var _pin = outputs[$ _name];
@@ -171,6 +189,27 @@ function LoomNode(_type) constructor
             _pin.value = _value;
         }
         return self;
+    }
+    
+    /// @desc Get input bounds by name
+    static get_input_bounds = function(_name, _ctx_min, _ctx_max)
+    {
+        var _pin = inputs[$ _name];
+        return (_pin != undefined) ? _pin.get_bounds(_ctx_min, _ctx_max) : [0, 0];
+    }
+    
+    /// @desc Set output bounds by name
+    static set_output_bounds = function(_name, _min, _max)
+    {
+        var _pin = outputs[$ _name];
+        if (_pin != undefined) _pin.bounds = [_min, _max];
+    }
+    
+    /// @desc Process bounds (Interval Arithmetic)
+    static bounds_process = function(_ctx_min, _ctx_max)
+    {
+        // Default: use process with avg context (NOT LOSSLESS, subclasses must override)
+        // If it's a constant, it works fine.
     }
     
     /// @desc Process the node (compute outputs from inputs)
@@ -435,6 +474,22 @@ function LoomGraph(_name = "Untitled") constructor
         }
         
         return _results;
+    }
+    
+    /// @desc Evaluate bounds for the entire graph
+    static evaluate_bounds = function(_ctx_min, _ctx_max)
+    {
+        if (___needs_sort)
+        {
+            ___topological_sort();
+            ___needs_sort = false;
+        }
+        
+        // Process bounds in order
+        for (var i = 0; i < array_length(___eval_order); ++i)
+        {
+            ___eval_order[i].bounds_process(_ctx_min, _ctx_max);
+        }
     }
     
     /// @desc Topological sort of nodes for evaluation order

@@ -184,6 +184,10 @@ var _py = display_get_gui_height() - _ph - 20;
 if (preview_dirty)
 {
     preview_current_col = 0;
+    preview_current_row = 0;
+    preview_pass = 0;
+    preview_last_col = undefined;
+    preview_strip_start_y = 0;
     preview_dirty = false; 
 }
 
@@ -198,7 +202,7 @@ if (!surface_exists(preview_surface) || surface_get_width(preview_surface) != _p
 if (preview_current_col < _pw)
 {
     surface_set_target(preview_surface);
-    if (preview_current_col == 0) draw_clear(c_black);
+    if (preview_current_col == 0 && preview_pass == 0) draw_clear(c_black);
     
     // Evaluate for grid
     var _result_node = undefined;
@@ -213,53 +217,101 @@ if (preview_current_col < _pw)
     
     if (_result_node != undefined)
     {
-        var _cols_to_render = 1;
-        if (keyboard_check(vk_shift)) _cols_to_render = 16;
+        var _budget = LOOM_RENDER_POINT_BUDGET;
+        if (keyboard_check(vk_shift)) _budget *= 4;
+        var _points_spent = 0;
         
-        var _count = 0;
-        while (_count < _cols_to_render && preview_current_col < _pw)
+        while (_points_spent < _budget && preview_current_col < _pw)
         {
             var _ix = preview_current_col;
-            var _start_y = 0;
-            var _last_col = undefined;
+            var _size = (LOOM_RENDER_DENSITY_START_SIZE >> preview_pass);
             
-            for (var _iy = 0; _iy < _ph; ++_iy)
+            if (_size > 1) // Block Passes (16, 8, 4, 2)
             {
-                var _ctx = { 
-                    x: _ix * 1.0, 
-                    y: _iy * 1.0 + preview_view_offset_y, 
-                    z: 0, 
-                    seed: 0, 
-                    world_data: undefined 
-                };
-                graph.evaluate(_ctx);
-                
-                var _val = _result_node.get_input_value("value", _ctx);
-                var _current_col = (is_real(_val) && _val > 0) ? c_white : c_black;
-                
-                if (_last_col == undefined) 
+                if (_ix % _size == 0) 
                 {
-                    _last_col = _current_col;
-                    _start_y = _iy;
-                }
-                else if (_current_col != _last_col)
-                {
-                    if (_last_col != c_black)
+                    for (var _iy = 0; _iy < _ph; _iy += _size)
                     {
-                        draw_set_color(_last_col);
-                        draw_line(_ix, _start_y, _ix, _iy - 1);
+                        if (preview_pass == 0) // Pass 0: LOSSLESS Pruning
+                        {
+                            render_ctx_min.x = _ix * 1.0;
+                            render_ctx_min.y = _iy * 1.0 + preview_view_offset_y;
+                            render_ctx_min.z = 0;
+                            
+                            render_ctx_max.x = (_ix + _size - 1) * 1.0;
+                            render_ctx_max.y = (_iy + _size - 1) * 1.0 + preview_view_offset_y;
+                            render_ctx_max.z = 0;
+                            
+                            graph.evaluate_bounds(render_ctx_min, render_ctx_max);
+                            var _b = _result_node.get_input_bounds("value", render_ctx_min, render_ctx_max);
+                            
+                            if (_b[1] > 0 && _b[0] > 0) draw_sprite_ext(spr_Square, 0, _ix, _iy, _size, _size, 0, c_white, 1.0);
+                        }
+                        else // Pass 1-3: Refinement Carving
+                        {
+                            var _hsize = _size / 2;
+                            render_ctx.x = (_ix + _hsize) * 1.0;
+                            render_ctx.y = (_iy + _hsize) * 1.0 + preview_view_offset_y;
+                            render_ctx.z = 0;
+                            
+                            graph.evaluate(render_ctx);
+                            var _val = _result_node.get_input_value("value", render_ctx);
+                            var _col = (is_real(_val) && _val > 0) ? c_white : c_black;
+                            draw_sprite_ext(spr_Square, 0, _ix, _iy, _size, _size, 0, _col, 1.0);
+                        }
+                        _points_spent++;
                     }
-                    _last_col = _current_col;
-                    _start_y = _iy;
+                }
+                preview_current_col += _size;
+            }
+            else // Pass 4: Final Detail (RLE + Vertical Batching)
+            {
+                var _last_col = preview_last_col;
+                var _start_y = preview_strip_start_y;
+                
+                while (_points_spent < _budget && preview_current_row < _ph)
+                {
+                    var _iy = preview_current_row;
+                    render_ctx.x = _ix * 1.0;
+                    render_ctx.y = _iy * 1.0 + preview_view_offset_y;
+                    render_ctx.z = 0;
+                    
+                    graph.evaluate(render_ctx);
+                    var _val = _result_node.get_input_value("value", render_ctx);
+                    var _current_col = (is_real(_val) && _val > 0) ? c_white : c_black;
+                    
+                    if (_last_col == undefined) { _last_col = _current_col; _start_y = _iy; }
+                    else if (_current_col != _last_col) {
+                        draw_sprite_ext(spr_Square, 0, _ix, _start_y, 1, _iy - _start_y, 0, _last_col, 1.0);
+                        _last_col = _current_col; _start_y = _iy;
+                    }
+                    
+                    preview_current_row++;
+                    _points_spent++;
+                }
+                
+                if (preview_current_row >= _ph)
+                {
+                    if (_last_col != undefined) draw_sprite_ext(spr_Square, 0, _ix, _start_y, 1, _ph - _start_y, 0, _last_col, 1.0);
+                    preview_current_col++; 
+                    preview_current_row = 0;
+                    preview_last_col = undefined;
+                    preview_strip_start_y = 0;
+                }
+                else
+                {
+                    preview_last_col = _last_col;
+                    preview_strip_start_y = _start_y;
                 }
             }
-            if (_last_col != undefined && _last_col != c_black)
-            {
-                draw_set_color(_last_col);
-                draw_line(_ix, _start_y, _ix, _ph - 1);
-            }
-            preview_current_col++; 
-            _count++;
+        }
+        
+        // Pass advancement
+        if (preview_current_col >= _pw) {
+            preview_current_col = 0;
+            preview_current_row = 0;
+            preview_pass++;
+            if ((LOOM_RENDER_DENSITY_START_SIZE >> preview_pass) <= 0) preview_current_col = _pw; 
         }
     }
     else { preview_current_col = _pw; }
@@ -286,6 +338,10 @@ var _bpy = _py - _bph - 30;
 if (biome_preview_dirty)
 {
     biome_preview_current_col = 0;
+    biome_preview_current_row = 0;
+    biome_preview_pass = 0;
+    biome_preview_last_col = undefined;
+    biome_preview_strip_start_y = 0;
     biome_preview_dirty = false;
 }
 
@@ -300,7 +356,7 @@ if (!surface_exists(biome_preview_surface) || surface_get_width(biome_preview_su
 if (biome_preview_current_col < _bpw)
 {
     surface_set_target(biome_preview_surface);
-    if (biome_preview_current_col == 0) draw_clear(c_black);
+    if (biome_preview_current_col == 0 && biome_preview_pass == 0) draw_clear(c_black);
     
     var _biome_result_node = undefined;
     for (var i = 0; i < array_length(graph.nodes); ++i)
@@ -314,47 +370,83 @@ if (biome_preview_current_col < _bpw)
     
     if (_biome_result_node != undefined)
     {
-        var _cols = (keyboard_check(vk_shift)) ? 16 : 4;
-        repeat(_cols)
+        var _budget = LOOM_RENDER_POINT_BUDGET;
+        var _points_spent = 0;
+        
+        while (_points_spent < _budget && biome_preview_current_col < _bpw)
         {
-            if (biome_preview_current_col >= _bpw) break;
             var _ix = biome_preview_current_col;
-            var _start_y = 0;
-            var _last_col = undefined;
+            var _size = (LOOM_RENDER_BIOME_START_SIZE >> biome_preview_pass);
             
-            for (var _iy = 0; _iy < _bph; ++_iy)
+            if (_size > 1) // Block Passes (4, 2)
             {
-                var _ctx = { x: _ix * 4.0, y: _iy * 4.0, z: 0, seed: 0, world_data: undefined };
-                graph.evaluate(_ctx);
-                var _bid = _biome_result_node.get_input_value("biome_id", _ctx);
-                var _current_col = c_black;
-                if (_bid != "" && _bid != undefined && struct_exists(global.biome_data, _bid))
+                if (_ix % _size == 0)
                 {
-                    _current_col = global.biome_data[$ _bid].get_map_colour() ?? c_black;
+                    for (var _iy = 0; _iy < _bph; _iy += _size)
+                    {
+                        var _hsize = _size / 2;
+                        render_ctx.x = (_ix + _hsize) * 4.0;
+                        render_ctx.y = (_iy + _hsize) * 4.0;
+                        render_ctx.z = 0;
+                        
+                        graph.evaluate(render_ctx);
+                        var _bid = _biome_result_node.get_input_value("biome_id", render_ctx);
+                        var _col = c_black;
+                        if (_bid != "" && _bid != undefined && struct_exists(global.biome_data, _bid)) _col = global.biome_data[$ _bid].get_map_colour() ?? c_black;
+                        draw_sprite_ext(spr_Square, 0, _ix, _iy, _size, _size, 0, _col, 1.0);
+                        _points_spent++;
+                    }
+                }
+                biome_preview_current_col += _size;
+            }
+            else // Pass 2: Final Detail (RLE + Vertical Batching)
+            {
+                var _last_col = biome_preview_last_col;
+                var _start_y = biome_preview_strip_start_y;
+                
+                while (_points_spent < _budget && biome_preview_current_row < _bph)
+                {
+                    var _iy = biome_preview_current_row;
+                    render_ctx.x = _ix * 4.0;
+                    render_ctx.y = _iy * 4.0;
+                    render_ctx.z = 0;
+                    
+                    graph.evaluate(render_ctx);
+                    var _bid = _biome_result_node.get_input_value("biome_id", render_ctx);
+                    var _current_col = c_black;
+                    if (_bid != "" && _bid != undefined && struct_exists(global.biome_data, _bid)) _current_col = global.biome_data[$ _bid].get_map_colour() ?? c_black;
+                    
+                    if (_last_col == undefined) { _last_col = _current_col; _start_y = _iy; }
+                    else if (_current_col != _last_col) {
+                        draw_sprite_ext(spr_Square, 0, _ix, _start_y, 1, _iy - _start_y, 0, _last_col, 1.0);
+                        _last_col = _current_col; _start_y = _iy;
+                    }
+                    
+                    biome_preview_current_row++;
+                    _points_spent++;
                 }
                 
-                if (_last_col == undefined) 
+                if (biome_preview_current_row >= _bph)
                 {
-                    _last_col = _current_col;
-                    _start_y = _iy;
+                    if (_last_col != undefined) draw_sprite_ext(spr_Square, 0, _ix, _start_y, 1, _bph - _start_y, 0, _last_col, 1.0);
+                    biome_preview_current_col++;
+                    biome_preview_current_row = 0;
+                    biome_preview_last_col = undefined;
+                    biome_preview_strip_start_y = 0;
                 }
-                else if (_current_col != _last_col)
+                else
                 {
-                    if (_last_col != c_black)
-                    {
-                        draw_set_color(_last_col);
-                        draw_line(_ix, _start_y, _ix, _iy - 1);
-                    }
-                    _last_col = _current_col;
-                    _start_y = _iy;
+                    biome_preview_last_col = _last_col;
+                    biome_preview_strip_start_y = _start_y;
                 }
             }
-            if (_last_col != undefined && _last_col != c_black)
-            {
-                draw_set_color(_last_col);
-                draw_line(_ix, _start_y, _ix, _bph - 1);
-            }
-            biome_preview_current_col++;
+        }
+        
+        if (biome_preview_current_col >= _bpw) {
+            biome_preview_current_col = 0;
+            biome_preview_current_row = 0;
+            biome_preview_pass++;
+            if ((LOOM_RENDER_BIOME_START_SIZE >> biome_preview_pass) <= 0) biome_preview_current_col = _bpw; 
         }
     }
     else { biome_preview_current_col = _bpw; }
@@ -369,6 +461,18 @@ if (surface_exists(biome_preview_surface))
 {
     draw_surface(biome_preview_surface, _bpx, _bpy);
 }
+
+// Chunk Boundary Grid Overlay
+// Density Grid (16px = 16 tiles)
+for (var gx = 0; gx <= _pw; gx += 16) draw_sprite_ext(spr_Square, 0, _px + gx, _py, 1, _ph, 0, c_white, 0.15);
+for (var gy = -(preview_view_offset_y % 16); gy <= _ph; gy += 16) {
+    if (gy >= 0) draw_sprite_ext(spr_Square, 0, _px, _py + gy, _pw, 1, 0, c_white, 0.15);
+}
+
+// Biome Grid (4px = 16 tiles)
+for (var gx = 0; gx <= _bpw; gx += 4) draw_sprite_ext(spr_Square, 0, _bpx + gx, _bpy, 1, _bph, 0, c_white, 0.15);
+for (var gy = 0; gy <= _bph; gy += 4) draw_sprite_ext(spr_Square, 0, _bpx, _bpy + gy, _bpw, 1, 0, c_white, 0.15);
+
 render_text(_bpx, _bpy - 20, "Biome Preview (X * 4, Y * 4)", 0.5, 0.5);
 
 // Handle
