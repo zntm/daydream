@@ -10,23 +10,15 @@ function player_harvest(_dt, _x, _y)
         
         if (_tile == TILE_EMPTY) continue;
         
-        if (_x != tile_harvest_x) || (_y != tile_harvest_y) || (_z != tile_harvest_z)
-        {
-            obj_Player.timer_sfx_harvest = 0.28;
-            
-            timer_harvest = 0;
-            
-            cooldown_harvest = 0.1;
-        }
-        
-        tile_harvest_x = _x;
-        tile_harvest_y = _y;
-        tile_harvest_z = _z;
-        
         break;
     }
     
     if (_z < 0) exit;
+    
+    var _key = string(_x) + "_" + string(_y) + "_" + string(_z);
+    
+    // Mark as active so it doesn't decay this tick
+    harvest_last_key = _key;
     
     var _item_data = global.item_data;
     
@@ -84,15 +76,17 @@ function player_harvest(_dt, _x, _y)
     
     var _particle = _tile_harvest.get_particle();
     
-    timer_harvest += _item_hardness * _dt;
+    var _progress = harvest_progress[$ _key] ?? 0;
+    _progress += _item_hardness * _dt;
+    harvest_progress[$ _key] = _progress;
     
-    obj_Player.timer_sfx_harvest += _dt;
+    timer_sfx_harvest += _dt;
     
-    if (obj_Player.timer_sfx_harvest > 0.28)
+    if (timer_sfx_harvest > 0.28)
     {
-        obj_Player.timer_sfx_harvest %= 0.28;
+        timer_sfx_harvest %= 0.28;
         
-        sfx_diegetic_play(obj_Player.audio_emitter, _x * TILE_SIZE, _y * TILE_SIZE, _sfx, global.settings.audio_tile);
+        sfx_diegetic_play(audio_emitter, _x * TILE_SIZE, _y * TILE_SIZE, _sfx, global.settings.audio_tile);
         
         var _particle_colour = _particle.get_colours();
         
@@ -102,7 +96,7 @@ function player_harvest(_dt, _x, _y)
         }
     }
     
-    if (timer_harvest >= _harvest_hardness)
+    if (_progress >= _harvest_hardness)
     {
         tile_harvest_drop(_x, _y, _z, _tile);
         
@@ -117,7 +111,7 @@ function player_harvest(_dt, _x, _y)
             obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.LIGHTING;
         }
         
-        sfx_diegetic_play(obj_Player.audio_emitter, _x * TILE_SIZE, _y * TILE_SIZE, _sfx, global.settings.audio_tile);
+        sfx_diegetic_play(audio_emitter, _x * TILE_SIZE, _y * TILE_SIZE, _sfx, global.settings.audio_tile);
         
         if (_item != INVENTORY_EMPTY) && (_data2.get_item_durability() != undefined)
         {
@@ -128,7 +122,7 @@ function player_harvest(_dt, _x, _y)
                 inventory_delete("base", _inventory_selected_hotbar);
             }
             
-            surface_refresh |= ((is_opened & IS_OPENED_BOOLEAN.INVENTORY) ? SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK : SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR);
+            obj_Game_Control.surface_refresh |= ((obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.INVENTORY) ? SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK : SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR);
         }
         
         var _particle_colour = _particle.get_colours();
@@ -138,7 +132,8 @@ function player_harvest(_dt, _x, _y)
             spawn_particle(_x * TILE_SIZE, _y * TILE_SIZE, "phantasia:tile/harvest", is_array_choose(_particle_colour));
         }
         
-        timer_harvest = 0;
+        variable_struct_remove(harvest_progress, _key);
+        harvest_last_key = undefined;
         
         if (_item_hardness < _harvest_hardness)
         {

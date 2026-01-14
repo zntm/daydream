@@ -19,9 +19,9 @@ function player_build(_dt, _x, _y)
     {
         for (var i = 0; i < _on_item_use_length; ++i)
         {
-            function_execute(_on_item_use[i], _x, _y, CHUNK_DEPTH_DEFAULT, 1, 1, obj_Player.id, _item);
+            function_execute(_on_item_use[i], _x, _y, CHUNK_DEPTH_DEFAULT, 1, 1, id, _item);
             
-            event_emit(new EventDataItemUse(_item, obj_Player.id, _x, _y));
+            event_emit(new EventDataItemUse(_item, id, _x, _y));
         }
         
         cooldown_build = 0.15;
@@ -70,13 +70,13 @@ function player_build(_dt, _x, _y)
     
     inventory_item_decrement("base", _inventory_selected_hotbar);
     
-    surface_refresh |= ((is_opened & IS_OPENED_BOOLEAN.INVENTORY) ? SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK : SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR);
+    obj_Game_Control.surface_refresh |= ((obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.INVENTORY) ? SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK : SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR);
     
     var _sfx = _data.get_tile_sfx().get_build().get_id();
     
     if (_sfx != undefined)
     {
-        sfx_diegetic_play(obj_Player.audio_emitter, _x * TILE_SIZE, _y * TILE_SIZE, _sfx, global.settings.audio_tile);
+        sfx_diegetic_play(audio_emitter, _x * TILE_SIZE, _y * TILE_SIZE, _sfx, global.settings.audio_tile);
     }
     
     cooldown_build = 0.15;

@@ -37,3 +37,8 @@ if (is_local)
 {
     attire = global.player_save_data.attire;
 }
+
+harvest_progress = {};
+harvest_last_key = undefined;
+cooldown_build = 0;
+cooldown_harvest = 0;

@@ -268,10 +268,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
         }
     }
     
-    if (timer_harvest > 0)
-    {
-        render_harvest(_camera_x, _camera_y, _camera_width, _camera_height);
-    }
+    render_harvest(_camera_x, _camera_y, _camera_width, _camera_height);
     
     render_particles_batch();
     

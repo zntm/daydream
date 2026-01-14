@@ -39,21 +39,11 @@ tile_container_x = 0;
 tile_container_y = 0;
 tile_container_z = 0;
 
-tile_harvest_x = 0;
-tile_harvest_y = 0;
-tile_harvest_z = 0;
-
-timer_harvest = 0;
-
 timer_respawn = 0;
 timer_foliage_sway = 0;
 
 timer_crafting_max = 0.3;
 timer_crafting = timer_crafting_max;
-
-cooldown_build = 0;
-
-cooldown_harvest = 0;
 
 surface_harvest = -1;
 surface_pause = [ -1, -1 ];

@@ -318,32 +318,8 @@ if !(is_opened & (IS_OPENED_BOOLEAN.MENU | IS_OPENED_BOOLEAN.CHAT))
         }
     }
     
-    var _mouse_distance = rectangle_distance(mouse_x, mouse_y, _lp.bbox_left, _lp.bbox_top, _lp.bbox_right, _lp.bbox_bottom);
-    
-    if (cooldown_build <= 0) && (_mouse_distance < ATTRIBUTE_DEFAULT_BUILD_REACH) && (mouse_check_button(mb_right))
-    {
-        player_build(_delta_time, _tile_x, _tile_y);
-    }
-    else
-    {
-        cooldown_build -= _delta_time;
-    }
-    
-    if (cooldown_harvest <= 0) && (_mouse_distance < ATTRIBUTE_DEFAULT_HARVEST_REACH) && (mouse_check_button(mb_left))
-    {
-        player_harvest(_delta_time, _tile_x, _tile_y);
-    }
-    else
-    {
-        _lp.timer_sfx_harvest += _delta_time;
-        
-        timer_harvest = 0;
-        
-        cooldown_harvest -= _delta_time;
-    }
+    control_chunk_activity(_camera_x, _camera_y, _camera_width, _camera_height);
 }
-
-control_chunk_activity(_camera_x, _camera_y, _camera_width, _camera_height);
 
 if (keyboard_check_pressed(vk_f1))
 {

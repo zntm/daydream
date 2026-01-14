@@ -47,6 +47,45 @@ function control_gametick(_delta_time)
                     }
                 }
             }
+
+            if (is_local && !(obj_Game_Control.is_opened & (IS_OPENED_BOOLEAN.MENU | IS_OPENED_BOOLEAN.CHAT | IS_OPENED_BOOLEAN.INVENTORY)))
+            {
+                var _tile_x = round(mouse_x / TILE_SIZE);
+                var _tile_y = round(mouse_y / TILE_SIZE);
+                var _mouse_distance = rectangle_distance(mouse_x, mouse_y, bbox_left, bbox_top, bbox_right, bbox_bottom);
+                
+                if (cooldown_build <= 0) && (_mouse_distance < ATTRIBUTE_DEFAULT_BUILD_REACH) && (mouse_check_button(mb_right))
+                {
+                    player_build(1 / GAME_TICK, _tile_x, _tile_y);
+                }
+                else
+                {
+                    cooldown_build = max(0, cooldown_build - (1 / GAME_TICK));
+                }
+                
+                if (cooldown_harvest <= 0) && (_mouse_distance < ATTRIBUTE_DEFAULT_HARVEST_REACH) && (mouse_check_button(mb_left))
+                {
+                    player_harvest(1 / GAME_TICK, _tile_x, _tile_y);
+                }
+                else
+                {
+                    timer_sfx_harvest = max(0, timer_sfx_harvest - (1 / GAME_TICK));
+                    cooldown_harvest = max(0, cooldown_harvest - (1 / GAME_TICK));
+                }
+                
+                // Decay harvest progress
+                var _keys = struct_get_names(harvest_progress);
+                for (var _key_idx = 0; _key_idx < array_length(_keys); _key_idx++)
+                {
+                    var _key = _keys[_key_idx];
+                    if (_key != harvest_last_key)
+                    {
+                        harvest_progress[$ _key] = max(0, harvest_progress[$ _key] - (1 / GAME_TICK)); // Undoes 1 hardness per second
+                        if (harvest_progress[$ _key] <= 0) variable_struct_remove(harvest_progress, _key);
+                    }
+                }
+                harvest_last_key = undefined;
+            }
         }
         
         for (var i = 0; i < chunk_in_view_length; ++i)
