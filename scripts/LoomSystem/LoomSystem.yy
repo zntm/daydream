@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"LoomSystem",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"LoomSystem",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Loom/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
