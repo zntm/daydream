@@ -26,11 +26,15 @@ context_menu_active_category = undefined;
 
 // Node Categories
 node_categories = {
-    "Math": ["Constant", "Add", "Subtract", "Multiply", "Divide", "Clamp", "Lerp", "Abs"],
+    "Math": ["Constant", "Add", "Subtract", "Multiply", "Divide", "Max", "Min", "Clamp", "Lerp", "Abs"],
     "Logic": ["Compare", "AND", "OR", "NOT"],
-    "Generators": ["Simplex Noise", "Simplex Noise 3D", "Random"],
-    "Terrain": ["Terrain Gradient", "Continentalness", "Peaks", "Squashed Noise", "Erosion", "Terrain Combine"],
-    "Cave": ["Cave Swiss", "Cave Noodle"],
+    "Data": ["Color", "String", "Array", "Spline"],
+    "Generators": ["Simplex Noise", "Simplex Noise 3D", "Random", "Noise Config"],
+    "Terrain": ["Terrain Gradient", "Continentalness", "Peaks", "Squashed Noise", "Erosion", "Terrain Combine", "Terrain Shaping"],
+    "Cave": ["Cave Swiss", "Cave Noodle", "Cave Settings", "Aquifer"],
+    "World Config": ["World Settings", "Time Settings", "Vignette", "Surface Settings"],
+    "Sky": ["Sky Settings", "Celestial Body"],
+    "Biome": ["Biome"],
     "Input": ["Coordinate", "Seed", "World Data"],
     "World Data": ["Surface Height", "Get Biome", "Terrain Density"],
     "Output": ["Result"]
@@ -50,8 +54,7 @@ preview_dirty = true;
 preview_scale = 1;
 preview_resizing = false;
 preview_current_col = 0;       // Progressive rendering: current col
-preview_current_col = 0;       // Progressive rendering: current col
-preview_cols_per_frame = 16;   // Faster rendering (16 columns per frame)
+preview_cols_per_frame = 1;   // Faster rendering (16 columns per frame)
 preview_view_offset_y = 200;   // Vertical offset for terrain preview
 
 // Mouse tracking (must initialize to avoid jump on first pan)
@@ -63,6 +66,19 @@ editing_constant_node = undefined;
 editing_constant_text = "";
 last_click_time = 0;
 last_clicked_node = undefined;
+
+// Attribute editing
+editing_attr_node = undefined;
+editing_attr_name = "";
+editing_attr_text = "";
+
+// Color picker popup
+color_picker_open = false;
+color_picker_node = undefined;
+color_picker_attr = "";
+color_picker_hue = 0;
+color_picker_sat = 1;
+color_picker_val = 1;
 
 // Grid settings
 grid_size = 20;
@@ -77,6 +93,9 @@ pin_color_value = make_color_rgb(150, 200, 100);
 pin_color_bool = make_color_rgb(200, 100, 100);
 pin_color_struct = make_color_rgb(100, 150, 200);
 pin_color_any = make_color_rgb(200, 200, 200);
+pin_color_color = make_color_rgb(255, 100, 200);   // Magenta for color type
+pin_color_string = make_color_rgb(255, 180, 80);   // Orange for string type
+pin_color_spline = make_color_rgb(80, 200, 255);   // Cyan for spline type
 connection_color = make_color_rgb(180, 180, 200);
 
 // --- Create Terrain Demo Graph (TerrainShaper 1:1 Port) ---
@@ -87,9 +106,9 @@ var _coord = loom_create_node("Coordinate"); _coord.set_position(50, 400); graph
 // Constants (Keep them for editing)
 var _c_base = loom_create_node("Constant"); _c_base.constant_value = 512; _c_base.display_name = "Base Height"; _c_base.set_position(50, 100); graph.add_node(_c_base);
 var _c_grad = loom_create_node("Constant"); _c_grad.constant_value = 0.006; _c_grad.display_name = "Grad Str"; _c_grad.set_position(50, 200); graph.add_node(_c_grad);
-var _c_cont = loom_create_node("Constant"); _c_cont.constant_value = 80; _c_cont.display_name = "Cont Amp"; _c_cont.set_position(50, 300); graph.add_node(_c_cont);
-var _c_peak = loom_create_node("Constant"); _c_peak.constant_value = 25; _c_peak.display_name = "Peak Amp"; _c_peak.set_position(50, 0); graph.add_node(_c_peak);
-var _c_squash = loom_create_node("Constant"); _c_squash.constant_value = 0.5; _c_squash.display_name = "Squash"; _c_squash.set_position(50, 500); graph.add_node(_c_squash);
+var _c_cont = loom_create_node("Constant"); _c_cont.constant_value = 180; _c_cont.display_name = "Cont Amp"; _c_cont.set_position(50, 300); graph.add_node(_c_cont);
+var _c_peak = loom_create_node("Constant"); _c_peak.constant_value = 100; _c_peak.display_name = "Peak Amp"; _c_peak.set_position(50, 0); graph.add_node(_c_peak);
+var _c_squash = loom_create_node("Constant"); _c_squash.constant_value = 4.0; _c_squash.display_name = "Squash"; _c_squash.set_position(50, 500); graph.add_node(_c_squash);
 
 // Component Nodes
 var _grad = loom_create_node("Terrain Gradient"); _grad.set_position(300, 200); graph.add_node(_grad);
@@ -135,15 +154,39 @@ graph.connect(_sq_noise.get_output("value"), _combine.get_input("noise3d"));
 graph.connect(_erosion.get_output("value"), _combine.get_input("erosion"));
 
 // --- Cave System ---
-var _cave = loom_create_node("Cave Noodle"); _cave.set_position(900, 700); graph.add_node(_cave);
-graph.connect(_coord.get_output("x"), _cave.get_input("x"));
-graph.connect(_coord.get_output("y"), _cave.get_input("y"));
+var _c_swiss = loom_create_node("Cave Swiss"); _c_swiss.set_position(900, 600); graph.add_node(_c_swiss);
+graph.connect(_coord.get_output("x"), _c_swiss.get_input("x"));
+graph.connect(_coord.get_output("y"), _c_swiss.get_input("y"));
+graph.connect(_c_squash.get_output("value"), _c_swiss.get_input("squash"));
+
+var _c_noodle1 = loom_create_node("Cave Noodle"); _c_noodle1.set_position(900, 800); graph.add_node(_c_noodle1);
+graph.connect(_coord.get_output("x"), _c_noodle1.get_input("x"));
+graph.connect(_coord.get_output("y"), _c_noodle1.get_input("y"));
+graph.connect(_c_squash.get_output("value"), _c_noodle1.get_input("squash"));
+_c_noodle1.set_attribute("range_min", 50);
+_c_noodle1.set_attribute("range_max", 70);
+
+var _c_noodle2 = loom_create_node("Cave Noodle"); _c_noodle2.set_position(900, 1000); graph.add_node(_c_noodle2);
+graph.connect(_coord.get_output("x"), _c_noodle2.get_input("x"));
+graph.connect(_coord.get_output("y"), _c_noodle2.get_input("y"));
+graph.connect(_c_squash.get_output("value"), _c_noodle2.get_input("squash"));
+_c_noodle2.set_attribute("range_min", 116);
+_c_noodle2.set_attribute("range_max", 140);
+
+// Combine Caves
+var _max1 = loom_create_node("Max"); _max1.set_position(1150, 700); graph.add_node(_max1);
+graph.connect(_c_swiss.get_output("value"), _max1.get_input("a"));
+graph.connect(_c_noodle1.get_output("value"), _max1.get_input("b"));
+
+var _max2 = loom_create_node("Max"); _max2.set_position(1300, 800); graph.add_node(_max2);
+graph.connect(_max1.get_output("result"), _max2.get_input("a"));
+graph.connect(_c_noodle2.get_output("value"), _max2.get_input("b"));
 
 // Carve Caves out of Terrain
 var _carve = loom_create_node("Subtract"); _carve.set_position(1100, 400); graph.add_node(_carve);
 graph.connect(_combine.get_output("value"), _carve.get_input("a"));
-graph.connect(_cave.get_output("value"), _carve.get_input("b"));
+graph.connect(_max2.get_output("result"), _carve.get_input("b"));
 
 // Result
-var _res = loom_create_node("Result"); _res.set_position(1300, 400); graph.add_node(_res);
+var _res = loom_create_node("Result"); _res.set_position(1500, 400); graph.add_node(_res);
 graph.connect(_carve.get_output("result"), _res.get_input("value"));

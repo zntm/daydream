@@ -177,6 +177,9 @@ for (var i = 0; i < array_length(graph.nodes); ++i)
             case "value": draw_set_color(pin_color_value); break;
             case "bool": draw_set_color(pin_color_bool); break;
             case "struct": draw_set_color(pin_color_struct); break;
+            case "color": draw_set_color(pin_color_color); break;
+            case "string": draw_set_color(pin_color_string); break;
+            case "spline": draw_set_color(pin_color_spline); break;
             default: draw_set_color(pin_color_any); break;
         }
         draw_circle(_pin_x, _pin_y, 4, false);
@@ -204,6 +207,9 @@ for (var i = 0; i < array_length(graph.nodes); ++i)
             case "value": draw_set_color(pin_color_value); break;
             case "bool": draw_set_color(pin_color_bool); break;
             case "struct": draw_set_color(pin_color_struct); break;
+            case "color": draw_set_color(pin_color_color); break;
+            case "string": draw_set_color(pin_color_string); break;
+            case "spline": draw_set_color(pin_color_spline); break;
             default: draw_set_color(pin_color_any); break;
         }
         
@@ -211,6 +217,56 @@ for (var i = 0; i < array_length(graph.nodes); ++i)
         
         draw_set_halign(fa_left);
         render_text(_pin_x + 8, _pin_y - 8, _pin_name, _text_scale, _text_scale, 0, c_white, 1);
+    }
+    
+    // Attributes (inline editable values)
+    var _attr_start_y = _node.y + 30 + max(array_length(_node.input_order), array_length(_node.output_order)) * 20;
+    for (var j = 0; j < array_length(_node.attribute_order); ++j)
+    {
+        var _attr_name = _node.attribute_order[j];
+        var _attr = _node.attributes[$ _attr_name];
+        var _attr_y = _attr_start_y + j * 24;
+        var _attr_x = _node.x + 8;
+        var _attr_w = _node.width - 16;
+        
+        // Draw attribute label
+        draw_set_halign(fa_left);
+        render_text(_attr_x, _attr_y, _attr_name + ":", _text_scale, _text_scale, 0, c_ltgray, 1);
+        
+        // Draw value based on type
+        var _val_x = _attr_x + 50;
+        switch (_attr.type)
+        {
+            case "color":
+                // Color swatch
+                var _col = _attr.value ?? c_white;
+                draw_set_color(_col);
+                draw_rectangle(_val_x, _attr_y, _val_x + 40, _attr_y + 16, false);
+                draw_set_color(c_white);
+                draw_rectangle(_val_x, _attr_y, _val_x + 40, _attr_y + 16, true);
+                break;
+                
+            case "string":
+                // String display
+                var _str = string(_attr.value ?? "");
+                var _active = (editing_attr_node == _node && editing_attr_name == _attr_name);
+                if (_active) _str = editing_attr_text + ((current_time % 1000 < 500) ? "|" : "");
+                render_text(_val_x, _attr_y, _str, _text_scale, _text_scale, 0, _active ? c_white : pin_color_string, 1);
+                break;
+                
+            case "bool":
+                // Checkbox-style toggle
+                draw_set_color(_attr.value ? c_lime : c_gray);
+                draw_rectangle(_val_x, _attr_y + 2, _val_x + 12, _attr_y + 14, !_attr.value);
+                break;
+                
+            default: // "value" - numeric
+                var _val = is_real(_attr.value) ? string_format(_attr.value, 1, 3) : string(_attr.value ?? "0");
+                var _active = (editing_attr_node == _node && editing_attr_name == _attr_name);
+                if (_active) _val = editing_attr_text + ((current_time % 1000 < 500) ? "|" : "");
+                render_text(_val_x, _attr_y, _val, _text_scale, _text_scale, 0, _active ? c_white : pin_color_value, 1);
+                break;
+        }
     }
 }
 
@@ -402,3 +458,73 @@ draw_triangle(_px, _py, _px + _handle_size, _py, _px, _py + _handle_size, false)
 
 // --- Debug Info ---
 render_text(10, 10, "Nodes: " + string(array_length(graph.nodes)), 0.5, 0.5);
+
+// --- Color Picker Popup ---
+if (color_picker_open)
+{
+    var _picker_w = 200;
+    var _picker_h = 180;
+    var _picker_x = window_get_width() / 2 - _picker_w / 2;
+    var _picker_y = window_get_height() / 2 - _picker_h / 2;
+    
+    // Background
+    draw_set_color(make_color_rgb(40, 40, 50));
+    draw_rectangle(_picker_x, _picker_y, _picker_x + _picker_w, _picker_y + _picker_h, false);
+    draw_set_color(c_white);
+    draw_rectangle(_picker_x, _picker_y, _picker_x + _picker_w, _picker_y + _picker_h, true);
+    
+    // Title
+    render_text(_picker_x + 10, _picker_y + 5, "Color Picker", 0.8, 0.8, 0, c_white, 1);
+    
+    // Hue slider
+    render_text(_picker_x + 10, _picker_y + 30, "Hue", 0.6, 0.6, 0, c_ltgray, 1);
+    for (var i = 0; i < _picker_w - 20; ++i)
+    {
+        draw_set_color(make_color_hsv((i / (_picker_w - 20)) * 255, 255, 255));
+        draw_line(_picker_x + 10 + i, _picker_y + 42, _picker_x + 10 + i, _picker_y + 50);
+    }
+    draw_set_color(c_white);
+    var _hue_x = _picker_x + 10 + color_picker_hue * (_picker_w - 20);
+    draw_rectangle(_hue_x - 2, _picker_y + 40, _hue_x + 2, _picker_y + 52, true);
+    
+    // Saturation slider
+    render_text(_picker_x + 10, _picker_y + 60, "Sat", 0.6, 0.6, 0, c_ltgray, 1);
+    for (var i = 0; i < _picker_w - 20; ++i)
+    {
+        draw_set_color(make_color_hsv(color_picker_hue * 255, (i / (_picker_w - 20)) * 255, 255));
+        draw_line(_picker_x + 10 + i, _picker_y + 72, _picker_x + 10 + i, _picker_y + 90);
+    }
+    draw_set_color(c_white);
+    var _sat_x = _picker_x + 10 + color_picker_sat * (_picker_w - 20);
+    draw_rectangle(_sat_x - 2, _picker_y + 70, _sat_x + 2, _picker_y + 92, true);
+    
+    // Value slider
+    render_text(_picker_x + 10, _picker_y + 100, "Val", 0.6, 0.6, 0, c_ltgray, 1);
+    for (var i = 0; i < _picker_w - 20; ++i)
+    {
+        draw_set_color(make_color_hsv(color_picker_hue * 255, color_picker_sat * 255, (i / (_picker_w - 20)) * 255));
+        draw_line(_picker_x + 10 + i, _picker_y + 112, _picker_x + 10 + i, _picker_y + 130);
+    }
+    draw_set_color(c_white);
+    var _val_x = _picker_x + 10 + color_picker_val * (_picker_w - 20);
+    draw_rectangle(_val_x - 2, _picker_y + 110, _val_x + 2, _picker_y + 132, true);
+    
+    // Preview swatch
+    var _preview_col = make_color_hsv(color_picker_hue * 255, color_picker_sat * 255, color_picker_val * 255);
+    draw_set_color(_preview_col);
+    draw_rectangle(_picker_x + 150, _picker_y + 60, _picker_x + 190, _picker_y + 100, false);
+    draw_set_color(c_white);
+    draw_rectangle(_picker_x + 150, _picker_y + 60, _picker_x + 190, _picker_y + 100, true);
+    
+    // OK button
+    draw_set_color(make_color_rgb(50, 120, 50));
+    draw_rectangle(_picker_x + 10, _picker_y + 145, _picker_x + 95, _picker_y + 170, false);
+    draw_set_color(c_white);
+    render_text(_picker_x + 40, _picker_y + 150, "OK", 0.8, 0.8, 0, c_white, 1);
+    
+    // Cancel button
+    draw_set_color(make_color_rgb(120, 50, 50));
+    draw_rectangle(_picker_x + 105, _picker_y + 145, _picker_x + 190, _picker_y + 170, false);
+    draw_set_color(c_white);
+    render_text(_picker_x + 125, _picker_y + 150, "Cancel", 0.8, 0.8, 0, c_white, 1);
+}

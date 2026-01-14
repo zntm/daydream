@@ -102,6 +102,10 @@ function LoomNode(_type) constructor
     input_order = [];  // For consistent iteration order
     output_order = [];
     
+    // Inline attributes (editable on node body)
+    attributes = {};
+    attribute_order = [];
+    
     // Display name
     display_name = _type;
     
@@ -177,11 +181,50 @@ function LoomNode(_type) constructor
         // Base implementation does nothing
     }
     
-    /// @desc Recalculate node size based on pins
+    /// @desc Recalculate node size based on pins and attributes
     static ___recalculate_size = function()
     {
         var _pin_count = max(array_length(input_order), array_length(output_order));
-        height = 40 + (_pin_count * 20);
+        var _attr_count = array_length(attribute_order);
+        height = 40 + (_pin_count * 20) + (_attr_count * 24);
+        width = max(120, 80 + (_attr_count > 0 ? 40 : 0));
+    }
+    
+    /// @desc Add an inline attribute
+    /// @param {String} _name Attribute name
+    /// @param {String} _type Attribute type ("value", "string", "color", "bool")
+    /// @param {Any} _default Default value
+    static add_attribute = function(_name, _type, _default = undefined)
+    {
+        attributes[$ _name] = {
+            name: _name,
+            type: _type,
+            value: _default
+        };
+        array_push(attribute_order, _name);
+        ___recalculate_size();
+        return self;
+    }
+    
+    /// @desc Get attribute value
+    /// @param {String} _name Attribute name
+    static get_attribute = function(_name)
+    {
+        var _attr = attributes[$ _name];
+        return (_attr != undefined) ? _attr.value : undefined;
+    }
+    
+    /// @desc Set attribute value
+    /// @param {String} _name Attribute name
+    /// @param {Any} _value New value
+    static set_attribute = function(_name, _value)
+    {
+        var _attr = attributes[$ _name];
+        if (_attr != undefined)
+        {
+            _attr.value = _value;
+        }
+        return self;
     }
     
     /// @desc Set editor position
@@ -297,6 +340,12 @@ function LoomGraph(_name = "Untitled") constructor
     static connect = function(_from_pin, _to_pin)
     {
         // Validate
+        if (_from_pin == undefined || _to_pin == undefined)
+        {
+            show_debug_message("LoomGraph.connect: Undefined pin provided");
+            return undefined;
+        }
+
         if (!_from_pin.is_output || _to_pin.is_output)
         {
             show_debug_message("LoomGraph.connect: Invalid connection (must be output -> input)");
@@ -312,6 +361,25 @@ function LoomGraph(_name = "Untitled") constructor
         var _conn = new LoomConnection(_from_pin, _to_pin);
         array_push(connections, _conn);
         ___needs_sort = true;
+        
+        // Call on_connect callback on the target node if it exists
+        for (var i = 0; i < array_length(nodes); ++i)
+        {
+            var _node = nodes[i];
+            var _in_names = struct_get_names(_node.inputs);
+            for (var j = 0; j < array_length(_in_names); ++j)
+            {
+                if (_node.inputs[$ _in_names[j]] == _to_pin)
+                {
+                    if (variable_struct_exists(_node, "on_connect"))
+                    {
+                        _node.on_connect(_in_names[j]);
+                    }
+                    break;
+                }
+            }
+        }
+        
         return _conn;
     }
     
@@ -319,6 +387,8 @@ function LoomGraph(_name = "Untitled") constructor
     /// @param {Struct.LoomPin} _pin Input pin to disconnect
     static disconnect_pin = function(_pin)
     {
+        if (_pin == undefined) return;
+        
         for (var i = array_length(connections) - 1; i >= 0; --i)
         {
             if (connections[i].to_pin == _pin)

@@ -467,16 +467,16 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         return self;
     }
     
-    static get_terrain_squash_factor = function() { return self[$ "___terrain_squash_factor"] ?? 0.5; }
-    static get_terrain_3d_noise_scale = function() { return self[$ "___terrain_3d_noise_scale"] ?? 0.04; }
+    static get_terrain_squash_factor = function() { return self[$ "___terrain_squash_factor"] ?? 4.0; }
+    static get_terrain_3d_noise_scale = function() { return self[$ "___terrain_3d_noise_scale"] ?? 0.015; }
     static get_terrain_density_threshold = function() { return self[$ "___terrain_density_threshold"] ?? 0.0; }
-    static get_terrain_z_offset_wall = function() { return self[$ "___terrain_z_offset_wall"] ?? 0.15; }
+    static get_terrain_z_offset_wall = function() { return self[$ "___terrain_z_offset_wall"] ?? 0.075; }
     static get_terrain_z_range_wall = function() { return self[$ "___terrain_z_range_wall"] ?? 0.01; }
     static get_terrain_z_offset_material = function() { return self[$ "___terrain_z_offset_material"] ?? 0.5; }
-    static get_terrain_continentalness_scale = function() { return self[$ "___terrain_continentalness_scale"] ?? 0.003; }
-    static get_terrain_continentalness_amplitude = function() { return self[$ "___terrain_continentalness_amplitude"] ?? 80; }
-    static get_terrain_peaks_scale = function() { return self[$ "___terrain_peaks_scale"] ?? 0.02; }
-    static get_terrain_peaks_amplitude = function() { return self[$ "___terrain_peaks_amplitude"] ?? 25; }
+    static get_terrain_continentalness_scale = function() { return self[$ "___terrain_continentalness_scale"] ?? 0.0015; }
+    static get_terrain_continentalness_amplitude = function() { return self[$ "___terrain_continentalness_amplitude"] ?? 180; }
+    static get_terrain_peaks_scale = function() { return self[$ "___terrain_peaks_scale"] ?? 0.04; }
+    static get_terrain_peaks_amplitude = function() { return self[$ "___terrain_peaks_amplitude"] ?? 100; }
     static get_terrain_erosion_scale = function() { return self[$ "___terrain_erosion_scale"] ?? 0.015; }
     
     /// @desc Get terrain shaping configuration struct

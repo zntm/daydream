@@ -52,7 +52,114 @@ if (editing_constant_node != undefined)
     return; // Block other interaction
 }
 
-// --- Context Menu ---
+// --- Attribute Text Editing ---
+if (editing_attr_node != undefined)
+{
+    if (keyboard_check_pressed(vk_escape))
+    {
+        editing_attr_node = undefined;
+        keyboard_string = "";
+    }
+    else if (keyboard_check_pressed(vk_enter))
+    {
+        var _attr = editing_attr_node.attributes[$ editing_attr_name];
+        if (_attr != undefined)
+        {
+            if (_attr.type == "value")
+            {
+                try {
+                    _attr.value = real(editing_attr_text);
+                } catch(_e) {}
+            }
+            else
+            {
+                _attr.value = editing_attr_text;
+            }
+            preview_dirty = true;
+        }
+        editing_attr_node = undefined;
+        keyboard_string = "";
+    }
+    else
+    {
+        if (keyboard_check_pressed(vk_backspace))
+        {
+            editing_attr_text = string_copy(editing_attr_text, 1, string_length(editing_attr_text) - 1);
+        }
+        else if (keyboard_string != "")
+        {
+            var _attr = editing_attr_node.attributes[$ editing_attr_name];
+            var _char = string_char_at(keyboard_string, string_length(keyboard_string));
+            
+            if (_attr.type == "value")
+            {
+                if (string_digits(_char) != "" || _char == "." || _char == "-")
+                {
+                    editing_attr_text += _char;
+                }
+            }
+            else
+            {
+                editing_attr_text += _char;
+            }
+            keyboard_string = "";
+        }
+    }
+    return;
+}
+
+// --- Color Picker ---
+if (color_picker_open)
+{
+    var _picker_w = 200;
+    var _picker_h = 180;
+    var _picker_x = window_get_width() / 2 - _picker_w / 2;
+    var _picker_y = window_get_height() / 2 - _picker_h / 2;
+    
+    // Handle HSV sliders
+    if (mouse_check_button(mb_left))
+    {
+        if (point_in_rectangle(_mx, _my, _picker_x + 10, _picker_y + 30, _picker_x + _picker_w - 10, _picker_y + 50))
+        {
+            color_picker_hue = clamp((_mx - (_picker_x + 10)) / (_picker_w - 20), 0, 1);
+        }
+        if (point_in_rectangle(_mx, _my, _picker_x + 10, _picker_y + 70, _picker_x + _picker_w - 10, _picker_y + 90))
+        {
+            color_picker_sat = clamp((_mx - (_picker_x + 10)) / (_picker_w - 20), 0, 1);
+        }
+        if (point_in_rectangle(_mx, _my, _picker_x + 10, _picker_y + 110, _picker_x + _picker_w - 10, _picker_y + 130))
+        {
+            color_picker_val = clamp((_mx - (_picker_x + 10)) / (_picker_w - 20), 0, 1);
+        }
+    }
+    
+    // OK button
+    if (mouse_check_button_pressed(mb_left))
+    {
+        if (point_in_rectangle(_mx, _my, _picker_x + 10, _picker_y + 145, _picker_x + 95, _picker_y + 170))
+        {
+            var _col = make_color_hsv(color_picker_hue * 255, color_picker_sat * 255, color_picker_val * 255);
+            if (color_picker_node != undefined)
+            {
+                color_picker_node.set_attribute(color_picker_attr, _col);
+                preview_dirty = true;
+            }
+            color_picker_open = false;
+        }
+        // Cancel button
+        if (point_in_rectangle(_mx, _my, _picker_x + 105, _picker_y + 145, _picker_x + 190, _picker_y + 170))
+        {
+            color_picker_open = false;
+        }
+    }
+    
+    if (keyboard_check_pressed(vk_escape))
+    {
+        color_picker_open = false;
+    }
+    return;
+}
+
 if (context_menu_open)
 {
     var _cat_names = struct_get_names(node_categories);
@@ -133,6 +240,7 @@ if (mouse_check_button_pressed(mb_left))
     if (point_distance(_mx, _my, _px, _py) < 15)
     {
         preview_resizing = true;
+        return; // Block selection box
     }
 }
 
@@ -154,6 +262,7 @@ if (preview_resizing)
     {
         preview_resizing = false;
     }
+    return; // Block other input
 }
 
 // --- Middle-click: Pan view ---
@@ -169,13 +278,41 @@ if (_scroll != 0)
 {
     // Check if hovering a Constant node
     var _hover_node = graph.get_node_at(_graph_mx, _graph_my);
-    if (_hover_node != undefined && _hover_node.type == "Constant")
+    var _handled = false;
+    
+    if (_hover_node != undefined)
     {
-        var _delta = _scroll * (_shift ? 0.01 : 0.1); // Shift for fine control
-        _hover_node.constant_value -= _delta; // Scroll down = decrement?
-        preview_dirty = true;
+        // Check if hovering a Constant node
+        if (_hover_node.type == "Constant")
+        {
+            var _delta = _scroll * (_shift ? 0.01 : 0.1);
+            _hover_node.constant_value -= _delta;
+            preview_dirty = true;
+            _handled = true;
+        }
+        else
+        {
+            // Check if hovering any numeric attribute
+            var _attr_start_y = _hover_node.y + 30 + max(array_length(_hover_node.input_order), array_length(_hover_node.output_order)) * 20;
+            for (var i = 0; i < array_length(_hover_node.attribute_order); ++i)
+            {
+                var _attr_name = _hover_node.attribute_order[i];
+                var _attr = _hover_node.attributes[$ _attr_name];
+                var _attr_y = _attr_start_y + i * 24;
+                
+                if (_graph_my >= _attr_y && _graph_my < _attr_y + 20 && _attr.type == "value")
+                {
+                    var _delta = _scroll * (_shift ? 0.01 : (_ctrl ? 10 : 1));
+                    _attr.value -= _delta;
+                    preview_dirty = true;
+                    _handled = true;
+                    break;
+                }
+            }
+        }
     }
-    else
+    
+    if (!_handled)
     {
         var _old_scale = view_scale;
         view_scale = clamp(view_scale - _scroll * 0.1, 0.25, 2.0);
@@ -302,6 +439,46 @@ if (mouse_check_button_pressed(mb_left))
                     editing_constant_text = string(_clicked_node.constant_value);
                     keyboard_string = "";
                     return;
+                }
+                
+                // Check attribute click for double-click editing
+                var _attr_start_y = _clicked_node.y + 30 + max(array_length(_clicked_node.input_order), array_length(_clicked_node.output_order)) * 20;
+                for (var i = 0; i < array_length(_clicked_node.attribute_order); ++i)
+                {
+                    var _attr_name = _clicked_node.attribute_order[i];
+                    var _attr = _clicked_node.attributes[$ _attr_name];
+                    var _attr_y = _attr_start_y + i * 24;
+                    var _val_x = _clicked_node.x + 58;
+                    
+                    if (_graph_my >= _attr_y && _graph_my < _attr_y + 20)
+                    {
+                        if (_attr.type == "color")
+                        {
+                            // Open color picker
+                            color_picker_open = true;
+                            color_picker_node = _clicked_node;
+                            color_picker_attr = _attr_name;
+                            var _col = _attr.value ?? c_white;
+                            color_picker_hue = color_get_hue(_col) / 255;
+                            color_picker_sat = color_get_saturation(_col) / 255;
+                            color_picker_val = color_get_value(_col) / 255;
+                        }
+                        else if (_attr.type == "bool")
+                        {
+                            // Toggle boolean
+                            _attr.value = !_attr.value;
+                            preview_dirty = true;
+                        }
+                        else
+                        {
+                            // Start text editing for string/value
+                            editing_attr_node = _clicked_node;
+                            editing_attr_name = _attr_name;
+                            editing_attr_text = string(_attr.value ?? "");
+                            keyboard_string = "";
+                        }
+                        return;
+                    }
                 }
             }
             last_clicked_node = _clicked_node;
