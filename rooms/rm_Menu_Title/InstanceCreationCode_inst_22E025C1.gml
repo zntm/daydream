@@ -18,4 +18,9 @@ on_draw = function()
     render_text(x + (sprite_get_width(spr_Menu_Title) * 2 / 2), y + (sprite_get_height(spr_Menu_Title) * 2), text, 1, 1, 12, MENU_TITLE_SPLASH_COLOUR);
     
     draw_set_align(_halign, _valign);
+    
+    if (IS_LOOM_ENABLED) && (keyboard_check_pressed(vk_f1))
+    {
+        room_goto(rm_Loom);
+    }
 }
