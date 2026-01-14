@@ -9,6 +9,138 @@ var _shift = keyboard_check(vk_shift);
 var _graph_mx = (_mx / view_scale) + view_x;
 var _graph_my = (_my / view_scale) + view_y;
 
+// --- Spline Editor Interaction ---
+if (spline_edit_active && spline_edit_node != undefined)
+{
+    var _gx = device_mouse_x_to_gui(0);
+    var _gy = device_mouse_y_to_gui(0);
+    var _sx = spline_edit_area_x;
+    var _sy = spline_edit_area_y;
+    var _sw = spline_edit_area_w;
+    var _sh = spline_edit_area_h;
+    
+    // Normalize mouse to 0-1 within editor area
+    var _nmx = clamp((_gx - _sx) / _sw, 0, 1);
+    var _nmy = clamp(1.0 - ((_gy - _sy) / _sh), 0, 1);
+    
+    if (keyboard_check_pressed(vk_escape))
+    {
+        spline_edit_active = false;
+        spline_edit_node = undefined;
+        return;
+    }
+    
+    var _points = spline_edit_node.points;
+    
+    // Check points hover
+    var _hover_idx = -1;
+    for (var i = 0; i < array_length(_points); ++i)
+    {
+        var _p = _points[i];
+        var _px = _sx + _p.position * _sw;
+        var _py = _sy + _sh - (_p.value * _sh);
+        if (point_distance(_gx, _gy, _px, _py) < 10)
+        {
+            _hover_idx = i;
+            break;
+        }
+    }
+    
+    // Left Click: Select/Drag or Add
+    if (mouse_check_button_pressed(mb_left))
+    {
+        // Check Min/Max boxes
+        if (point_in_rectangle(_gx, _gy, _sx, _sy + _sh + 5, _sx + 100, _sy + _sh + 25))
+        {
+            editing_attr_node = spline_edit_node;
+            editing_attr_name = "min_x";
+            editing_attr_text = string(spline_edit_node.get_attribute("min_x"));
+            keyboard_string = "";
+            return;
+        }
+        if (point_in_rectangle(_gx, _gy, _sx + _sw - 100, _sy + _sh + 5, _sx + _sw, _sy + _sh + 25))
+        {
+            editing_attr_node = spline_edit_node;
+            editing_attr_name = "max_x";
+            editing_attr_text = string(spline_edit_node.get_attribute("max_x"));
+            keyboard_string = "";
+            return;
+        }
+
+        if (_hover_idx != -1)
+        {
+            spline_edit_selected_point = _hover_idx;
+        }
+        else if (point_in_rectangle(_gx, _gy, _sx, _sy, _sx + _sw, _sy + _sh))
+        {
+            // Add point
+            var _new_p = { position: _nmx, value: _nmy, easing: "linear" };
+            array_push(_points, _new_p);
+            // Sort points by position
+            array_sort(_points, function(_a, _b) { 
+                if (_a.position < _b.position) return -1;
+                if (_a.position > _b.position) return 1;
+                return 0;
+            });
+            // Find new index
+            for(var k=0; k<array_length(_points); ++k) { if (_points[k] == _new_p) { spline_edit_selected_point = k; break; } }
+            loom_trigger_refresh(spline_edit_node);
+        }
+        else
+        {
+            spline_edit_selected_point = -1;
+        }
+    }
+    
+    // Drag selected point
+    if (mouse_check_button(mb_left) && spline_edit_selected_point != -1)
+    {
+        var _p = _points[spline_edit_selected_point];
+        _p.position = clamp(_nmx, 0, 1);
+        _p.value = clamp(_nmy, 0, 1);
+        loom_trigger_refresh(spline_edit_node);
+    }
+    
+    if (mouse_check_button_released(mb_left))
+    {
+        array_sort(_points, function(_a, _b) { 
+            if (_a.position < _b.position) return -1;
+            if (_a.position > _b.position) return 1;
+            return 0;
+        });
+        spline_edit_selected_point = -1; 
+        loom_trigger_refresh(spline_edit_node);
+    }
+    
+    // Right Click: Easing Context Menu
+    if (mouse_check_button_pressed(mb_right) && _hover_idx != -1)
+    {
+        spline_edit_selected_point = _hover_idx;
+        var _p = _points[_hover_idx];
+        // Cycle easing for now
+        var _easings = ["linear", "ease_in", "ease_out", "ease_in_out", "ease_in_cubic", "ease_out_cubic", "ease_in_out_cubic", "step"];
+        var _curr = 0;
+        for(var k=0; k<array_length(_easings); ++k) { if (_easings[k] == _p.easing) { _curr = k; break; } }
+        _p.easing = _easings[(_curr + 1) % array_length(_easings)];
+        loom_trigger_refresh(spline_edit_node);
+    }
+    
+    // Delete Point
+    if (keyboard_check_pressed(vk_delete) && spline_edit_selected_point != -1)
+    {
+        if (array_length(_points) > 2) // Keep at least 2 points
+        {
+            array_delete(_points, spline_edit_selected_point, 1);
+            spline_edit_selected_point = -1;
+            loom_trigger_refresh(spline_edit_node);
+        }
+    }
+    
+    // Block other input if clicking within or near editor
+    if (mouse_check_button_pressed(mb_left) || mouse_check_button_pressed(mb_right)) return;
+    return; 
+}
+
 // --- Text Editing for Constant Nodes ---
 if (editing_constant_node != undefined)
 {
@@ -111,32 +243,34 @@ if (editing_attr_node != undefined)
 // --- Color Picker ---
 if (color_picker_open)
 {
+    var _gx = device_mouse_x_to_gui(0);
+    var _gy = device_mouse_y_to_gui(0);
     var _picker_w = 200;
     var _picker_h = 180;
-    var _picker_x = window_get_width() / 2 - _picker_w / 2;
-    var _picker_y = window_get_height() / 2 - _picker_h / 2;
+    var _picker_x = display_get_gui_width() / 2 - _picker_w / 2;
+    var _picker_y = display_get_gui_height() / 2 - _picker_h / 2;
     
     // Handle HSV sliders
     if (mouse_check_button(mb_left))
     {
-        if (point_in_rectangle(_mx, _my, _picker_x + 10, _picker_y + 30, _picker_x + _picker_w - 10, _picker_y + 50))
+        if (point_in_rectangle(_gx, _gy, _picker_x + 10, _picker_y + 30, _picker_x + _picker_w - 10, _picker_y + 50))
         {
-            color_picker_hue = clamp((_mx - (_picker_x + 10)) / (_picker_w - 20), 0, 1);
+            color_picker_hue = clamp((_gx - (_picker_x + 10)) / (_picker_w - 20), 0, 1);
         }
-        if (point_in_rectangle(_mx, _my, _picker_x + 10, _picker_y + 70, _picker_x + _picker_w - 10, _picker_y + 90))
+        if (point_in_rectangle(_gx, _gy, _picker_x + 10, _picker_y + 70, _picker_x + _picker_w - 10, _picker_y + 90))
         {
-            color_picker_sat = clamp((_mx - (_picker_x + 10)) / (_picker_w - 20), 0, 1);
+            color_picker_sat = clamp((_gx - (_picker_x + 10)) / (_picker_w - 20), 0, 1);
         }
-        if (point_in_rectangle(_mx, _my, _picker_x + 10, _picker_y + 110, _picker_x + _picker_w - 10, _picker_y + 130))
+        if (point_in_rectangle(_gx, _gy, _picker_x + 10, _picker_y + 110, _picker_x + _picker_w - 10, _picker_y + 130))
         {
-            color_picker_val = clamp((_mx - (_picker_x + 10)) / (_picker_w - 20), 0, 1);
+            color_picker_val = clamp((_gx - (_picker_x + 10)) / (_picker_w - 20), 0, 1);
         }
     }
     
     // OK button
     if (mouse_check_button_pressed(mb_left))
     {
-        if (point_in_rectangle(_mx, _my, _picker_x + 10, _picker_y + 145, _picker_x + 95, _picker_y + 170))
+        if (point_in_rectangle(_gx, _gy, _picker_x + 10, _picker_y + 145, _picker_x + 95, _picker_y + 170))
         {
             var _col = make_color_hsv(color_picker_hue * 255, color_picker_sat * 255, color_picker_val * 255);
             if (color_picker_node != undefined)
@@ -147,7 +281,7 @@ if (color_picker_open)
             color_picker_open = false;
         }
         // Cancel button
-        if (point_in_rectangle(_mx, _my, _picker_x + 105, _picker_y + 145, _picker_x + 190, _picker_y + 170))
+        if (point_in_rectangle(_gx, _gy, _picker_x + 105, _picker_y + 145, _picker_x + 190, _picker_y + 170))
         {
             color_picker_open = false;
         }
@@ -229,15 +363,17 @@ if (context_menu_open)
 }
 
 // --- Preview Resizing ---
+var _gx = device_mouse_x_to_gui(0);
+var _gy = device_mouse_y_to_gui(0);
 var _pw = preview_width;
 var _ph = preview_height;
-var _px = window_get_width() - _pw - 20;
-var _py = window_get_height() - _ph - 20; // Anchor Bottom Right
+var _px = display_get_gui_width() - _pw - 20;
+var _py = display_get_gui_height() - _ph - 20; // Anchor Bottom Right
 
 if (mouse_check_button_pressed(mb_left))
 {
     // Handle at Top-Left of preview box
-    if (point_distance(_mx, _my, _px, _py) < 15)
+    if (point_distance(_gx, _gy, _px, _py) < 15)
     {
         preview_resizing = true;
         return; // Block selection box
@@ -248,11 +384,13 @@ if (preview_resizing)
 {
     if (mouse_check_button(mb_left))
     {
-        var _new_w = max(64, window_get_width() - _mx - 20);
-        var _new_h = max(64, window_get_height() - _my - 20);
+        var _new_w = max(64, display_get_gui_width() - _gx - 20);
+        var _new_h = max(64, display_get_gui_height() - _gy - 20);
         
-            preview_dirty = true;
-            biome_preview_dirty = true;
+        preview_width = _new_w;
+        preview_height = _new_h;
+        preview_dirty = true;
+        biome_preview_dirty = true;
     }
     else
     {
@@ -434,6 +572,13 @@ if (mouse_check_button_pressed(mb_left))
                     editing_constant_node = _clicked_node;
                     editing_constant_text = string(_clicked_node.constant_value);
                     keyboard_string = "";
+                    return;
+                }
+                if (_clicked_node.type == "Spline")
+                {
+                    spline_edit_active = true;
+                    spline_edit_node = _clicked_node;
+                    spline_edit_selected_point = -1;
                     return;
                 }
                 

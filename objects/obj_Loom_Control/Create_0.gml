@@ -1,4 +1,5 @@
 /// @desc Initialize Loom editor
+display_set_gui_maximize();
 
 // Create a test graph
 graph = new LoomGraph("Test Graph");
@@ -28,7 +29,7 @@ context_menu_active_category = undefined;
 node_categories = {
     "Math": ["Constant", "Add", "Subtract", "Multiply", "Divide", "Max", "Min", "Clamp", "Lerp", "Abs"],
     "Logic": ["Compare", "AND", "OR", "NOT"],
-    "Data": ["Color", "String", "Array", "Spline", "Spline Point", "Spline (Static)", "Eval Spline"],
+    "Data": ["Color", "String", "Array", "Spline"],
     "Generators": ["Simplex Noise", "Simplex Noise 3D", "Random", "Noise Config"],
     "Terrain": ["Terrain Gradient", "Continentalness", "Peaks", "Squashed Noise", "Erosion", "Terrain Combine", "Terrain Shaping"],
     "Cave": ["Cave Swiss", "Cave Noodle", "Cave Settings", "Aquifer"],
@@ -86,6 +87,17 @@ color_picker_attr = "";
 color_picker_hue = 0;
 color_picker_sat = 1;
 color_picker_val = 1;
+
+// Spline editor state
+spline_edit_active = false;
+spline_edit_node = undefined;
+spline_edit_selected_point = -1;
+spline_edit_mx = 0;
+spline_edit_my = 0;
+spline_edit_area_x = 100;
+spline_edit_area_y = 100;
+spline_edit_area_w = 600;
+spline_edit_area_h = 400;
 
 // Grid settings
 grid_size = 20;
@@ -207,24 +219,16 @@ graph.connect(_coord.get_output("x"), _heat_noise.get_input("x"));
 var _c_heat_off = loom_create_node("Constant"); _c_heat_off.constant_value = -16; graph.add_node(_c_heat_off); _c_heat_off.set_position(50, 1350);
 graph.connect(_c_heat_off.get_output("value"), _heat_noise.get_input("y"));
 
-var _heat_sp1 = loom_create_node("Spline Point"); _heat_sp1.set_position(300, 1200); graph.add_node(_heat_sp1);
-_heat_sp1.set_attribute("position", 0); _heat_sp1.set_attribute("value", -1);
-var _heat_sp2 = loom_create_node("Spline Point"); _heat_sp2.set_position(300, 1300); graph.add_node(_heat_sp2);
-_heat_sp2.set_attribute("position", 1024); _heat_sp2.set_attribute("value", 1);
-
-var _heat_arr = loom_create_node("Array"); _heat_arr.set_position(500, 1250); graph.add_node(_heat_arr);
-graph.connect(_heat_sp1.get_output("point"), _heat_arr.get_input("item_0"));
-graph.connect(_heat_sp2.get_output("point"), _heat_arr.get_input("+ Add"));
-
 var _heat_spline = loom_create_node("Spline"); _heat_spline.set_position(700, 1250); graph.add_node(_heat_spline);
-graph.connect(_heat_arr.get_output("array"), _heat_spline.get_input("points"));
-
-var _heat_eval = loom_create_node("Eval Spline"); _heat_eval.set_position(900, 1200); graph.add_node(_heat_eval);
-graph.connect(_heat_spline.get_output("spline"), _heat_eval.get_input("spline"));
-graph.connect(_coord.get_output("x"), _heat_eval.get_input("x"));
+_heat_spline.set_attribute("max_x", 1024);
+_heat_spline.points = [
+    { position: 0.0, value: 0.0, easing: "linear" },
+    { position: 1.0, value: 1.0, easing: "linear" }
+];
+graph.connect(_coord.get_output("x"), _heat_spline.get_input("x"));
 
 var _heat_mul = loom_create_node("Multiply"); _heat_mul.set_position(1100, 1200); graph.add_node(_heat_mul);
-graph.connect(_heat_eval.get_output("value"), _heat_mul.get_input("a"));
+graph.connect(_heat_spline.get_output("value"), _heat_mul.get_input("a"));
 var _c_63 = loom_create_node("Constant"); _c_63.constant_value = 63; graph.add_node(_c_63); _c_63.set_position(900, 1400);
 graph.connect(_c_63.get_output("value"), _heat_mul.get_input("b"));
 

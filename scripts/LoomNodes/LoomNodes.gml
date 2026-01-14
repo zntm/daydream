@@ -1092,102 +1092,33 @@ function LoomNodeArrayCollector() : LoomNode("ArrayCollector") constructor
     }
 }
 
-/// @desc Spline builder node - creates spline point data
-function LoomNodeSplineBuilder() : LoomNode("SplineBuilder") constructor
-{
-    display_name = "Spline (Static)";
-    width = 160;
-    
-    // Default points (linear from 0 to 1)
-    spline_points = [
-        { position: 0, value: 0, easing: "linear" },
-        { position: 1024, value: 1, easing: "linear" }
-    ];
-    
-    add_attribute("point_count", "value", 2);
-    add_output("spline", "spline");
-    
-    /// @desc Add a point to the spline
-    static add_point = function(_pos, _val, _easing = "linear")
-    {
-        array_push(spline_points, { position: _pos, value: _val, easing: _easing });
-        set_attribute("point_count", array_length(spline_points));
-        return self;
-    }
-    
-    /// @desc Set point at index
-    static set_point = function(_idx, _pos, _val, _easing = "linear")
-    {
-        if (_idx >= 0 && _idx < array_length(spline_points))
-        {
-            spline_points[_idx] = { position: _pos, value: _val, easing: _easing };
-        }
-        return self;
-    }
-    
-    static process = function(_context)
-    {
-        var _spline = {
-            type: "spline",
-            points: spline_points
-        };
-        set_output_value("spline", _spline);
-    }
-}
-
-/// @desc Individual spline point node
-function LoomNodeSplinePoint() : LoomNode("SplinePoint") constructor
-{
-    display_name = "Spline Point";
-    add_attribute("position", "value", 0);
-    add_attribute("value", "value", 0);
-    add_attribute("easing", "string", "linear");
-    add_output("point", "struct");
-    
-    static process = function(_context)
-    {
-        set_output_value("point", { 
-            position: get_attribute("position"), 
-            value: get_attribute("value"), 
-            easing: get_attribute("easing") 
-        });
-    }
-}
-
-/// @desc Dynamic spline builder from point array
+/// @desc Interactive Spline Editor node
 function LoomNodeSpline() : LoomNode("Spline") constructor
 {
     display_name = "Spline";
-    add_input("points", "struct", []);
-    add_output("spline", "spline");
-    
-    static process = function(_context)
-    {
-        var _points = get_input_value("points", _context);
-        set_output_value("spline", { type: "spline", points: is_array(_points) ? _points : [] });
-    }
-}
-
-/// @desc Evaluate a spline at a position
-function LoomNodeEvaluateSpline() : LoomNode("EvaluateSpline") constructor
-{
-    display_name = "Eval Spline";
-    add_input("spline", "spline", undefined);
     add_input("x", "value", 0);
+    add_attribute("min_x", "value", 0);
+    add_attribute("max_x", "value", 1);
     add_output("value", "value");
     
+    // Internal spline data
+    points = [
+        { position: 0.0, value: 0.0, easing: "linear" },
+        { position: 1.0, value: 1.0, easing: "linear" }
+    ];
+    
     static process = function(_context)
     {
-        var _spline = get_input_value("spline", _context);
         var _x = get_input_value("x", _context);
-        if (_spline != undefined && is_struct(_spline))
-        {
-            set_output_value("value", spline_evaluate(_spline.points, _x));
-        }
-        else
-        {
-            set_output_value("value", 0);
-        }
+        var _min = get_attribute("min_x");
+        var _max = get_attribute("max_x");
+        
+        // Normalize X if range is not 0-1
+        var _nx = (_max != _min) ? ((_x - _min) / (_max - _min)) : 0;
+        
+        // Use global spline_evaluate helper
+        var _val = spline_evaluate(points, _nx);
+        set_output_value("value", _val);
     }
 }
 
@@ -1265,10 +1196,10 @@ global.loom_node_registry = {
     "Color": LoomNodeColor,
     "String": LoomNodeString,
     "Array": LoomNodeArrayCollector,
+    "Biome Map": LoomNodeBiomeMap,
+    "Biome Dist": LoomNodeBiomeDistribution,
+    "Result (Biome)": LoomNodeResultBiome,
     "Spline": LoomNodeSpline,
-    "Spline Point": LoomNodeSplinePoint,
-    "Spline (Static)": LoomNodeSplineBuilder,
-    "Eval Spline": LoomNodeEvaluateSpline,
     
     // Generators
     "Simplex Noise": LoomNodeSimplexNoise,
