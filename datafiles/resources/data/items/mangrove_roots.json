@@ -26,6 +26,16 @@
                 "id": "#phantasia:item/type/axe"
             }
         },
+        "on_harvest": [
+            {
+                "id": "@phantasia:tile/nature/trigger_leaf_decay"
+            }
+        ],
+        "on_place": [
+            {
+                "id": "@phantasia:tile/nature/trigger_leaf_decay"
+            }
+        ],
         "sfx": "#phantasia:tile/sfx/wood",
         "audio_properties": {
             "lowpass": 0.4,

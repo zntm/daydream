@@ -139,5 +139,13 @@ function player_harvest(_dt, _x, _y)
         {
             cooldown_harvest = 0.1;
         }
+        
+        var _on_harvest = _data.get_on_harvest();
+        var _on_harvest_length = _data.get_on_harvest_length();
+        
+        for (var i = 0; i < _on_harvest_length; ++i)
+        {
+            function_execute(_on_harvest[i], _x * TILE_SIZE, _y * TILE_SIZE, _z, 1, 1);
+        }
     }
 }

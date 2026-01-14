@@ -2,34 +2,15 @@ if !tile?.get_component("natural") {
     if chance(0.6) {
         spawn_particle("phantasia:tile/leaf/oak", x, y)
     }
-
     return
 }
 
-var wood = tag_get("phantasia:tile/generic/wood")
+// Extremely simple random tick logic: only decay if marked as decaying.
+// No wood check here anymore, as requested by the user.
+if tile.get_component("decaying") {
+    tile_place(undefined, x, y, z)
 
-var radius = 4
-
-for var dx in -radius..radius {
-    for var dy in -radius..radius {
-        if abs(dx) + abs(dy) > radius {
-            continue
-        }
-    
-        var t = tile_get(x + dx, y + dy, z - 1)
-
-        if t?.get_id() in wood {
-            if chance(0.6) {
-                spawn_particle("phantasia:tile/leaf/oak", x, y)
-            }
-            
-            return
-        }
+    repeat 12 {
+        spawn_particle("phantasia:tile/leaf/oak", x, y)
     }
-}
-
-tile_place(undefined, x, y, z)
-
-repeat 12 {
-    spawn_particle("phantasia:tile/leaf/oak", x, y)
 }

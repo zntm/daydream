@@ -63,6 +63,14 @@ function player_build(_dt, _x, _y)
     
     tile_instance_create(_x, _y, _z, _tile);
     
+    var _on_place = _data.get_on_place();
+    var _on_place_length = _data.get_on_place_length();
+    
+    for (var i = 0; i < _on_place_length; ++i)
+    {
+        function_execute(_on_place[i], _x * TILE_SIZE, _y * TILE_SIZE, _z, 1, 1);
+    }
+    
     if (_data.has_light())
     {
         obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.LIGHTING;
