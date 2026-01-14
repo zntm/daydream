@@ -17,7 +17,7 @@ function tile_place(_x, _y, _z, _tile)
             var _id = (_tile == TILE_EMPTY) ? "base:empty" : _tile.get_id();
             network_send_tile_request(_x, _y, _z, _id);
         }
-        else if (global.network_role == NETWORK_ROLE.SERVER || global.network_role == NETWORK_ROLE.INTEGRATED)
+        else if (global.network_role == NETWORK_ROLE.SERVER)
         {
             // Server/Integrated: Broadcast to Clients
             var _id = (_tile == TILE_EMPTY) ? "base:empty" : _tile.get_id();

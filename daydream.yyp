@@ -1152,6 +1152,7 @@
     {"$GMIncludedFile":"","%Name":"flow_schedule.daydream","CopyToMask":-1,"filePath":"datafiles/resources/data/scripts/tile/liquid","name":"flow_schedule.daydream","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"flow.daydream","CopyToMask":-1,"filePath":"datafiles/resources/data/scripts/tile/liquid","name":"flow.daydream","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"leaf_decay.daydream","CopyToMask":-1,"filePath":"datafiles/resources/data/scripts/tile/nature","name":"leaf_decay.daydream","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"trigger_leaf_decay.daydream","CopyToMask":-1,"filePath":"datafiles/resources/data/scripts/tile/nature","name":"trigger_leaf_decay.daydream","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"menu_open.daydream","CopyToMask":-1,"filePath":"datafiles/resources/data/scripts/ui","name":"menu_open.daydream","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"particle_spawn.daydream","CopyToMask":-1,"filePath":"datafiles/resources/data/scripts/util","name":"particle_spawn.daydream","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"sfx_play.daydream","CopyToMask":-1,"filePath":"datafiles/resources/data/scripts/util","name":"sfx_play.daydream","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
