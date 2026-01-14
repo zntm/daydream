@@ -380,6 +380,7 @@
     {"name":"render_attire","order":10,"path":"scripts/render_attire/render_attire.yy",},
     {"name":"render_background_celestial","order":1,"path":"scripts/render_background_celestial/render_background_celestial.yy",},
     {"name":"render_background_parallax","order":2,"path":"scripts/render_background_parallax/render_background_parallax.yy",},
+    {"name":"render_build_preview","order":89,"path":"scripts/render_build_preview/render_build_preview.yy",},
     {"name":"render_chunk","order":4,"path":"scripts/render_chunk/render_chunk.yy",},
     {"name":"render_harvest","order":6,"path":"scripts/render_harvest/render_harvest.yy",},
     {"name":"render_hud","order":11,"path":"scripts/render_hud/render_hud.yy",},

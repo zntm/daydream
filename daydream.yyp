@@ -1570,6 +1570,7 @@
     {"id":{"name":"render_background_celestial","path":"scripts/render_background_celestial/render_background_celestial.yy",},},
     {"id":{"name":"render_background_parallax","path":"scripts/render_background_parallax/render_background_parallax.yy",},},
     {"id":{"name":"render_background","path":"scripts/render_background/render_background.yy",},},
+    {"id":{"name":"render_build_preview","path":"scripts/render_build_preview/render_build_preview.yy",},},
     {"id":{"name":"render_chunk","path":"scripts/render_chunk/render_chunk.yy",},},
     {"id":{"name":"render_gui_vignette","path":"scripts/render_gui_vignette/render_gui_vignette.yy",},},
     {"id":{"name":"render_harvest","path":"scripts/render_harvest/render_harvest.yy",},},

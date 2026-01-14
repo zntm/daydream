@@ -270,6 +270,8 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
     
     render_harvest(_camera_x, _camera_y, _camera_width, _camera_height);
     
+    render_build_preview();
+    
     render_particles_batch();
     
     var _floating_text_active = global.floating_text_active;
