@@ -23,7 +23,7 @@ if (editing_constant_node != undefined)
         try {
             var _val = real(editing_constant_text);
             editing_constant_node.constant_value = _val;
-            preview_dirty = true;
+            loom_trigger_refresh(editing_constant_node);
         } catch(_e) {
             // Invalid number, just ignore or revert
         }
@@ -75,7 +75,7 @@ if (editing_attr_node != undefined)
             {
                 _attr.value = editing_attr_text;
             }
-            preview_dirty = true;
+            loom_trigger_refresh(editing_attr_node);
         }
         editing_attr_node = undefined;
         keyboard_string = "";
@@ -142,7 +142,7 @@ if (color_picker_open)
             if (color_picker_node != undefined)
             {
                 color_picker_node.set_attribute(color_picker_attr, _col);
-                preview_dirty = true;
+                loom_trigger_refresh(color_picker_node);
             }
             color_picker_open = false;
         }
@@ -251,12 +251,8 @@ if (preview_resizing)
         var _new_w = max(64, window_get_width() - _mx - 20);
         var _new_h = max(64, window_get_height() - _my - 20);
         
-        if (preview_width != _new_w || preview_height != _new_h)
-        {
-            preview_width = _new_w;
-            preview_height = _new_h;
             preview_dirty = true;
-        }
+            biome_preview_dirty = true;
     }
     else
     {
@@ -282,12 +278,11 @@ if (_scroll != 0)
     
     if (_hover_node != undefined)
     {
-        // Check if hovering a Constant node
         if (_hover_node.type == "Constant")
         {
             var _delta = _scroll * (_shift ? 0.01 : 0.1);
             _hover_node.constant_value -= _delta;
-            preview_dirty = true;
+            loom_trigger_refresh(_hover_node);
             _handled = true;
         }
         else
@@ -304,7 +299,7 @@ if (_scroll != 0)
                 {
                     var _delta = _scroll * (_shift ? 0.01 : (_ctrl ? 10 : 1));
                     _attr.value -= _delta;
-                    preview_dirty = true;
+                    loom_trigger_refresh(_hover_node);
                     _handled = true;
                     break;
                 }
@@ -359,7 +354,7 @@ if (mouse_check_button_pressed(mb_right))
                 if (_pin.is_connected())
                 {
                     graph.disconnect_pin(_pin);
-                    preview_dirty = true;
+                    loom_trigger_refresh(_clicked_node);
                     _pin_clicked = true;
                 }
                 break;
@@ -389,6 +384,7 @@ if (mouse_check_button_pressed(mb_right))
                 if (_pin.is_connected()) graph.disconnect_pin(_pin);
             }
             preview_dirty = true;
+            biome_preview_dirty = true;
             // Optionally also remove from graph logic? No just disconnects.
         }
     }
@@ -467,7 +463,7 @@ if (mouse_check_button_pressed(mb_left))
                         {
                             // Toggle boolean
                             _attr.value = !_attr.value;
-                            preview_dirty = true;
+                            loom_trigger_refresh(_clicked_node);
                         }
                         else
                         {
@@ -602,7 +598,7 @@ if (connecting_from_pin != undefined)
                 {
                     var _target_pin = _target_node.inputs[$ _pin_name];
                     graph.connect(connecting_from_pin, _target_pin);
-                    preview_dirty = true;
+                    loom_trigger_refresh(_target_node);
                     break;
                 }
             }

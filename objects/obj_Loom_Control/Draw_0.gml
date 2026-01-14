@@ -401,7 +401,9 @@ if (preview_current_col < _pw)
         {
             var _ix = preview_current_col;
             
-            draw_primitive_begin(pr_pointlist);
+            var _start_y = 0;
+            var _last_col = undefined;
+            
             for (var _iy = 0; _iy < _ph; ++_iy)
             {
                 var _ctx = { 
@@ -414,14 +416,32 @@ if (preview_current_col < _pw)
                 graph.evaluate(_ctx);
                 
                 var _val = _result_node.get_input_value("value", _ctx);
-                if (is_real(_val))
+                var _current_col = (is_real(_val) && _val > 0) ? c_white : c_black;
+                
+                if (_last_col == undefined) 
                 {
-                    // Render Density: > 0 is Solid (White), <= 0 is Air (Black)
-                    var _col = (_val > 0) ? c_white : c_black;
-                    draw_vertex_color(_ix, _iy, _col, 1);
+                    _last_col = _current_col;
+                    _start_y = _iy;
+                }
+                else if (_current_col != _last_col)
+                {
+                    // Draw span
+                    if (_last_col != c_black) // Optimization: don't draw black over black surface
+                    {
+                        draw_set_color(_last_col);
+                        draw_line(_ix, _start_y, _ix, _iy - 1);
+                    }
+                    _last_col = _current_col;
+                    _start_y = _iy;
                 }
             }
-            draw_primitive_end();
+            
+            // Draw final span
+            if (_last_col != undefined && _last_col != c_black)
+            {
+                draw_set_color(_last_col);
+                draw_line(_ix, _start_y, _ix, _ph - 1);
+            }
             
             preview_current_col++; 
             _count++;
@@ -449,7 +469,111 @@ if (surface_exists(preview_surface))
 // Label using persistent variable to avoid crash
 var _y_start = preview_view_offset_y;
 var _y_end = _ph + preview_view_offset_y;
-render_text(_px, _py - 20, "Preview (" + string(_pw) + "x" + string(_ph) + ") Y:" + string(_y_start) + "-" + string(_y_end), 0.5, 0.5);
+render_text(_px, _py - 20, "Density Preview (Y:" + string(_y_start) + "-" + string(_y_end) + ")", 0.5, 0.5);
+
+// --- Biome Preview Window (Above Density Preview) ---
+var _bpw = biome_preview_width;
+var _bph = biome_preview_height;
+var _bpx = window_get_width() - _bpw - 20;
+var _bpy = _py - _bph - 30;
+
+if (biome_preview_dirty)
+{
+    biome_preview_current_col = 0;
+    biome_preview_dirty = false;
+}
+
+if (!surface_exists(biome_preview_surface) || surface_get_width(biome_preview_surface) != _bpw || surface_get_height(biome_preview_surface) != _bph)
+{
+    if (surface_exists(biome_preview_surface)) surface_free(biome_preview_surface);
+    biome_preview_surface = surface_create(_bpw, _bph);
+    biome_preview_dirty = true;
+    biome_preview_current_col = 0;
+}
+
+if (biome_preview_current_col < _bpw)
+{
+    surface_set_target(biome_preview_surface);
+    if (biome_preview_current_col == 0) draw_clear(c_black);
+    
+    var _biome_result_node = undefined;
+    for (var i = 0; i < array_length(graph.nodes); ++i)
+    {
+        if (graph.nodes[i].type == "ResultBiome")
+        {
+            _biome_result_node = graph.nodes[i];
+            break;
+        }
+    }
+    
+    if (_biome_result_node != undefined)
+    {
+        var _cols = (keyboard_check(vk_shift)) ? 16 : 4;
+        repeat(_cols)
+        {
+            if (biome_preview_current_col >= _bpw) break;
+            var _ix = biome_preview_current_col;
+            
+            var _start_y = 0;
+            var _last_col = undefined;
+            
+            for (var _iy = 0; _iy < _bph; ++_iy)
+            {
+                var _ctx = { x: _ix * 4.0, y: _iy * 4.0, z: 0, seed: 0, world_data: undefined };
+                graph.evaluate(_ctx);
+                var _bid = _biome_result_node.get_input_value("biome_id", _ctx);
+                var _current_col = c_black;
+                if (_bid != "" && _bid != undefined && struct_exists(global.biome_data, _bid))
+                {
+                    _current_col = global.biome_data[$ _bid].get_map_colour() ?? c_black;
+                }
+                
+                if (_last_col == undefined) 
+                {
+                    _last_col = _current_col;
+                    _start_y = _iy;
+                }
+                else if (_current_col != _last_col)
+                {
+                    // Draw span
+                    if (_last_col != c_black)
+                    {
+                        draw_set_color(_last_col);
+                        draw_line(_ix, _start_y, _ix, _iy - 1);
+                    }
+                    _last_col = _current_col;
+                    _start_y = _iy;
+                }
+            }
+            
+            // Draw final span
+            if (_last_col != undefined && _last_col != c_black)
+            {
+                draw_set_color(_last_col);
+                draw_line(_ix, _start_y, _ix, _bph - 1);
+            }
+            
+            biome_preview_current_col++;
+        }
+    }
+    else
+    {
+        // No node found, stop trying to render
+        biome_preview_current_col = _bpw;
+    }
+    surface_reset_target();
+}
+
+// Draw Biome Preview
+draw_set_color(c_black);
+draw_rectangle(_bpx - 2, _bpy - 2, _bpx + _bpw + 2, _bpy + _bph + 2, false);
+draw_set_color(c_white);
+draw_rectangle(_bpx - 2, _bpy - 2, _bpx + _bpw + 2, _bpy + _bph + 2, true);
+if (surface_exists(biome_preview_surface))
+{
+    draw_surface(biome_preview_surface, _bpx, _bpy);
+}
+render_text(_bpx, _bpy - 20, "Biome Preview (X * 4, Y * 4)", 0.5, 0.5);
 
 // --- Draw Resize Handle ---
 var _handle_size = 10;

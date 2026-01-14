@@ -541,4 +541,70 @@ function LoomGraph(_name = "Untitled") constructor
         }
         return undefined;
     }
+    
+    /// @desc Get which preview types are affected by a node (downstream traversal)
+    /// @param {Struct.LoomNode} _node Starting node
+    /// @returns {Struct} { terrain: bool, biome: bool }
+    static get_affected_preview_types = function(_node)
+    {
+        var _res = { terrain: false, biome: false };
+        if (_node == undefined) return _res;
+        
+        var _visited = {};
+        var _queue = [_node];
+        _visited[$ string(_node.id)] = true;
+        
+        while (array_length(_queue) > 0)
+        {
+            var _curr = _queue[0];
+            array_delete(_queue, 0, 1);
+            
+            // Check if this is a result node
+            if (_curr.type == "Result") _res.terrain = true;
+            if (_curr.type == "ResultBiome") _res.biome = true;
+            
+            // If both are true, we can stop
+            if (_res.terrain && _res.biome) break;
+            
+            // Traverse downstream
+            var _out_names = struct_get_names(_curr.outputs);
+            for (var i = 0; i < array_length(_out_names); ++i)
+            {
+                var _pin = _curr.outputs[$ _out_names[i]];
+                
+                // Find connections from this pin
+                for (var j = 0; j < array_length(connections); ++j)
+                {
+                    if (connections[j].from_pin == _pin)
+                    {
+                        var _to_pin = connections[j].to_pin;
+                        // Find node that owns this to_pin
+                        for (var k = 0; k < array_length(nodes); ++k)
+                        {
+                            var _target = nodes[k];
+                            // Check if this node has the pin
+                            var _found = false;
+                            var _in_names = struct_get_names(_target.inputs);
+                            for (var l = 0; l < array_length(_in_names); ++l)
+                            {
+                                if (_target.inputs[$ _in_names[l]] == _to_pin)
+                                {
+                                    _found = true;
+                                    break;
+                                }
+                            }
+                            
+                            if (_found && !struct_exists(_visited, string(_target.id)))
+                            {
+                                _visited[$ string(_target.id)] = true;
+                                array_push(_queue, _target);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        return _res;
+    }
 }

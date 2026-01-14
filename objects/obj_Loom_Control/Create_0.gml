@@ -28,7 +28,7 @@ context_menu_active_category = undefined;
 node_categories = {
     "Math": ["Constant", "Add", "Subtract", "Multiply", "Divide", "Max", "Min", "Clamp", "Lerp", "Abs"],
     "Logic": ["Compare", "AND", "OR", "NOT"],
-    "Data": ["Color", "String", "Array", "Spline"],
+    "Data": ["Color", "String", "Array", "Spline", "Spline Point", "Spline (Static)", "Eval Spline"],
     "Generators": ["Simplex Noise", "Simplex Noise 3D", "Random", "Noise Config"],
     "Terrain": ["Terrain Gradient", "Continentalness", "Peaks", "Squashed Noise", "Erosion", "Terrain Combine", "Terrain Shaping"],
     "Cave": ["Cave Swiss", "Cave Noodle", "Cave Settings", "Aquifer"],
@@ -36,8 +36,8 @@ node_categories = {
     "Sky": ["Sky Settings", "Celestial Body"],
     "Biome": ["Biome"],
     "Input": ["Coordinate", "Seed", "World Data"],
-    "World Data": ["Surface Height", "Get Biome", "Terrain Density"],
-    "Output": ["Result"]
+    "World Data": ["Surface Height", "Get Biome", "Terrain Density", "Biome Map", "Biome Dist"],
+    "Output": ["Result", "Result (Biome)"]
 };
 
 // Selection
@@ -56,6 +56,13 @@ preview_resizing = false;
 preview_current_col = 0;       // Progressive rendering: current col
 preview_cols_per_frame = 1;   // Faster rendering (16 columns per frame)
 preview_view_offset_y = 200;   // Vertical offset for terrain preview
+
+// Biome Preview
+biome_preview_surface = -1;
+biome_preview_current_col = 0;
+biome_preview_dirty = true;
+biome_preview_width = 200;
+biome_preview_height = 200;
 
 // Mouse tracking (must initialize to avoid jump on first pan)
 mouse_last_x = mouse_x;
@@ -190,3 +197,66 @@ graph.connect(_max2.get_output("result"), _carve.get_input("b"));
 // Result
 var _res = loom_create_node("Result"); _res.set_position(1500, 400); graph.add_node(_res);
 graph.connect(_carve.get_output("result"), _res.get_input("value"));
+
+// --- Biome Distribution Demo (Playground Port) ---
+// Heat
+var _heat_noise = loom_create_node("Simplex Noise"); _heat_noise.set_position(50, 1200); graph.add_node(_heat_noise);
+_heat_noise.set_attribute("scale", 0.008);
+_heat_noise.set_attribute("octaves", 4.5);
+graph.connect(_coord.get_output("x"), _heat_noise.get_input("x"));
+var _c_heat_off = loom_create_node("Constant"); _c_heat_off.constant_value = -16; graph.add_node(_c_heat_off); _c_heat_off.set_position(50, 1350);
+graph.connect(_c_heat_off.get_output("value"), _heat_noise.get_input("y"));
+
+var _heat_sp1 = loom_create_node("Spline Point"); _heat_sp1.set_position(300, 1200); graph.add_node(_heat_sp1);
+_heat_sp1.set_attribute("position", 0); _heat_sp1.set_attribute("value", -1);
+var _heat_sp2 = loom_create_node("Spline Point"); _heat_sp2.set_position(300, 1300); graph.add_node(_heat_sp2);
+_heat_sp2.set_attribute("position", 1024); _heat_sp2.set_attribute("value", 1);
+
+var _heat_arr = loom_create_node("Array"); _heat_arr.set_position(500, 1250); graph.add_node(_heat_arr);
+graph.connect(_heat_sp1.get_output("point"), _heat_arr.get_input("item_0"));
+graph.connect(_heat_sp2.get_output("point"), _heat_arr.get_input("+ Add"));
+
+var _heat_spline = loom_create_node("Spline"); _heat_spline.set_position(700, 1250); graph.add_node(_heat_spline);
+graph.connect(_heat_arr.get_output("array"), _heat_spline.get_input("points"));
+
+var _heat_eval = loom_create_node("Eval Spline"); _heat_eval.set_position(900, 1200); graph.add_node(_heat_eval);
+graph.connect(_heat_spline.get_output("spline"), _heat_eval.get_input("spline"));
+graph.connect(_coord.get_output("x"), _heat_eval.get_input("x"));
+
+var _heat_mul = loom_create_node("Multiply"); _heat_mul.set_position(1100, 1200); graph.add_node(_heat_mul);
+graph.connect(_heat_eval.get_output("value"), _heat_mul.get_input("a"));
+var _c_63 = loom_create_node("Constant"); _c_63.constant_value = 63; graph.add_node(_c_63); _c_63.set_position(900, 1400);
+graph.connect(_c_63.get_output("value"), _heat_mul.get_input("b"));
+
+var _heat_add = loom_create_node("Add"); _heat_add.set_position(1300, 1200); graph.add_node(_heat_add);
+graph.connect(_heat_noise.get_output("value"), _heat_add.get_input("a"));
+graph.connect(_heat_mul.get_output("result"), _heat_add.get_input("b"));
+
+var _heat_clamp = loom_create_node("Clamp"); _heat_clamp.set_position(1500, 1200); graph.add_node(_heat_clamp);
+graph.connect(_heat_add.get_output("result"), _heat_clamp.get_input("value"));
+var _c_0 = loom_create_node("Constant"); _c_0.constant_value = 0; graph.add_node(_c_0); _c_0.set_position(1300, 1400);
+graph.connect(_c_0.get_output("value"), _heat_clamp.get_input("min"));
+graph.connect(_c_63.get_output("value"), _heat_clamp.get_input("max"));
+
+// Humidity
+var _hum_noise = loom_create_node("Simplex Noise"); _hum_noise.set_position(50, 1600); graph.add_node(_hum_noise);
+_hum_noise.set_attribute("scale", 0.008);
+_hum_noise.set_attribute("octaves", 2.75);
+graph.connect(_coord.get_output("x"), _hum_noise.get_input("x"));
+var _c_hum_off = loom_create_node("Constant"); _c_hum_off.constant_value = -24; graph.add_node(_c_hum_off); _c_hum_off.set_position(50, 1750);
+graph.connect(_c_hum_off.get_output("value"), _hum_noise.get_input("y"));
+
+var _hum_clamp = loom_create_node("Clamp"); _hum_clamp.set_position(1500, 1600); graph.add_node(_hum_clamp);
+graph.connect(_hum_noise.get_output("value"), _hum_clamp.get_input("value"));
+graph.connect(_c_0.get_output("value"), _hum_clamp.get_input("min"));
+graph.connect(_c_63.get_output("value"), _hum_clamp.get_input("max"));
+
+// Biome Resolve
+var _biome_map = loom_create_node("Biome Map"); _biome_map.set_position(1500, 1400); graph.add_node(_biome_map);
+var _biome_dist = loom_create_node("Biome Dist"); _biome_dist.set_position(1800, 1400); graph.add_node(_biome_dist);
+graph.connect(_heat_clamp.get_output("result"), _biome_dist.get_input("heat"));
+graph.connect(_hum_clamp.get_output("result"), _biome_dist.get_input("humidity"));
+graph.connect(_biome_map.get_output("map"), _biome_dist.get_input("biome_map"));
+
+var _biome_res = loom_create_node("Result (Biome)"); _biome_res.set_position(2100, 1400); graph.add_node(_biome_res);
+graph.connect(_biome_dist.get_output("biome_id"), _biome_res.get_input("biome_id"));

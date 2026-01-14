@@ -1095,7 +1095,7 @@ function LoomNodeArrayCollector() : LoomNode("ArrayCollector") constructor
 /// @desc Spline builder node - creates spline point data
 function LoomNodeSplineBuilder() : LoomNode("SplineBuilder") constructor
 {
-    display_name = "Spline";
+    display_name = "Spline (Static)";
     width = 160;
     
     // Default points (linear from 0 to 1)
@@ -1135,6 +1135,109 @@ function LoomNodeSplineBuilder() : LoomNode("SplineBuilder") constructor
     }
 }
 
+/// @desc Individual spline point node
+function LoomNodeSplinePoint() : LoomNode("SplinePoint") constructor
+{
+    display_name = "Spline Point";
+    add_attribute("position", "value", 0);
+    add_attribute("value", "value", 0);
+    add_attribute("easing", "string", "linear");
+    add_output("point", "struct");
+    
+    static process = function(_context)
+    {
+        set_output_value("point", { 
+            position: get_attribute("position"), 
+            value: get_attribute("value"), 
+            easing: get_attribute("easing") 
+        });
+    }
+}
+
+/// @desc Dynamic spline builder from point array
+function LoomNodeSpline() : LoomNode("Spline") constructor
+{
+    display_name = "Spline";
+    add_input("points", "struct", []);
+    add_output("spline", "spline");
+    
+    static process = function(_context)
+    {
+        var _points = get_input_value("points", _context);
+        set_output_value("spline", { type: "spline", points: is_array(_points) ? _points : [] });
+    }
+}
+
+/// @desc Evaluate a spline at a position
+function LoomNodeEvaluateSpline() : LoomNode("EvaluateSpline") constructor
+{
+    display_name = "Eval Spline";
+    add_input("spline", "spline", undefined);
+    add_input("x", "value", 0);
+    add_output("value", "value");
+    
+    static process = function(_context)
+    {
+        var _spline = get_input_value("spline", _context);
+        var _x = get_input_value("x", _context);
+        if (_spline != undefined && is_struct(_spline))
+        {
+            set_output_value("value", spline_evaluate(_spline.points, _x));
+        }
+        else
+        {
+            set_output_value("value", 0);
+        }
+    }
+}
+
+/// @desc Biome map data provider
+function LoomNodeBiomeMap() : LoomNode("BiomeMap") constructor
+{
+    display_name = "Biome Map";
+    add_attribute("sprite_id", "string", "phantasia:world/playground/map");
+    add_output("map", "struct");
+    
+    static process = function(_context)
+    {
+        set_output_value("map", { sprite_id: get_attribute("sprite_id") });
+    }
+}
+
+/// @desc Biome distribution resolver
+function LoomNodeBiomeDistribution() : LoomNode("BiomeDistribution") constructor
+{
+    display_name = "Biome Dist";
+    add_input("heat", "value", 0);
+    add_input("humidity", "value", 0);
+    add_input("biome_map", "struct", undefined);
+    add_output("biome_id", "string");
+    
+    static process = function(_context)
+    {
+        var _heat = floor(get_input_value("heat", _context));
+        var _humidity = floor(get_input_value("humidity", _context));
+        var _map = get_input_value("biome_map", _context);
+        
+        // Resolve biome using a helper that handles map caching
+        var _biome_id = loom_resolve_biome(_heat, _humidity, _map);
+        set_output_value("biome_id", _biome_id);
+    }
+}
+
+/// @desc Specialized result node for biome preview
+function LoomNodeResultBiome() : LoomNode("ResultBiome") constructor
+{
+    display_name = "Result (Biome)";
+    add_input("biome_id", "string", "");
+    add_output("biome_id", "string");
+    
+    static process = function(_context)
+    {
+        set_output_value("biome_id", get_input_value("biome_id", _context));
+    }
+}
+
 // ============================================================================
 // NODE REGISTRY
 // ============================================================================
@@ -1162,7 +1265,10 @@ global.loom_node_registry = {
     "Color": LoomNodeColor,
     "String": LoomNodeString,
     "Array": LoomNodeArrayCollector,
-    "Spline": LoomNodeSplineBuilder,
+    "Spline": LoomNodeSpline,
+    "Spline Point": LoomNodeSplinePoint,
+    "Spline (Static)": LoomNodeSplineBuilder,
+    "Eval Spline": LoomNodeEvaluateSpline,
     
     // Generators
     "Simplex Noise": LoomNodeSimplexNoise,
@@ -1198,6 +1304,8 @@ global.loom_node_registry = {
     "Surface Height": LoomNodeGetSurfaceHeight,
     "Get Biome": LoomNodeGetBiome,
     "Terrain Density": LoomNodeGetDensity,
+    "Biome Map": LoomNodeBiomeMap,
+    "Biome Dist": LoomNodeBiomeDistribution,
     
     // Logic
     "Compare": LoomNodeCompare,
@@ -1206,7 +1314,8 @@ global.loom_node_registry = {
     "NOT": LoomNodeNot,
     
     // Output
-    "Result": LoomNodeResult
+    "Result": LoomNodeResult,
+    "Result (Biome)": LoomNodeResultBiome
 };
 
 /// @desc Create a node by type name
@@ -1221,4 +1330,74 @@ function loom_create_node(_type)
         return undefined;
     }
     return new _constructor();
+}
+
+/// @desc Resolve biome ID from heat/humidity and map
+function loom_resolve_biome(_heat, _humidity, _map_struct)
+{
+    if (_map_struct == undefined) return "phantasia:surface/forest";
+    var _map_id = _map_struct[$ "sprite_id"];
+    if (_map_id == undefined) return "phantasia:surface/forest";
+    
+    static __biome_maps = {};
+    
+    if (!struct_exists(__biome_maps, _map_id))
+    {
+        // Load and cache map
+        var _sprite_asset = global.sprite_asset[$ _map_id];
+        if (_sprite_asset == undefined) return "phantasia:surface/forest";
+        
+        var _sprite = _sprite_asset.get_sprite();
+        var _w = sprite_get_width(_sprite);
+        var _h = sprite_get_height(_sprite);
+        
+        var _surf = surface_create(_w, _h);
+        surface_set_target(_surf);
+        draw_clear_alpha(c_black, 0);
+        draw_sprite(_sprite, 0, 0, 0);
+        surface_reset_target();
+        
+        var _buff = buffer_create(_w * _h * 4, buffer_fixed, 1);
+        buffer_get_surface(_buff, _surf, 0);
+        surface_free(_surf);
+        
+        var _map_array = array_create(_w * _h, "");
+        var _biome_data = global.biome_data;
+        var _names = struct_get_names(_biome_data);
+        var _length = array_length(_names);
+        
+        for (var j = 0; j < _length; ++j)
+        {
+            var _name = _names[j];
+            var _col = _biome_data[$ _name].get_map_colour();
+            if (_col == undefined) continue;
+            
+            buffer_seek(_buff, buffer_seek_start, 0);
+            for (var i = 0; i < _w * _h; ++i)
+            {
+                var _pixel = buffer_read(_buff, buffer_u32) & 0xffffff;
+                if (_pixel == _col) _map_array[i] = _name;
+            }
+        }
+        
+        buffer_delete(_buff);
+        __biome_maps[$ _map_id] = _map_array;
+    }
+    
+    var _map_array = __biome_maps[$ _map_id];
+    var _index = (clamp(_humidity, 0, 63) << 6) | clamp(_heat, 0, 63);
+    var _res = _map_array[_index];
+    return (_res != "") ? _res : "phantasia:surface/forest";
+}
+
+/// @desc Trigger selective preview refresh based on node changes
+/// @param {Struct.LoomNode} _node The node that changed
+function loom_trigger_refresh(_node)
+{
+    with (obj_Loom_Control)
+    {
+        var _affected = graph.get_affected_preview_types(_node);
+        if (_affected.terrain) preview_dirty = true;
+        if (_affected.biome) biome_preview_dirty = true;
+    }
 }
