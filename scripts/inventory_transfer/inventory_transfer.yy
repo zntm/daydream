@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"inventory_transfer",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"inventory_transfer",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

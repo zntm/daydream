@@ -1489,6 +1489,7 @@
     {"id":{"name":"inventory_refresh_crafting_station","path":"scripts/inventory_refresh_crafting_station/inventory_refresh_crafting_station.yy",},},
     {"id":{"name":"inventory_resize","path":"scripts/inventory_resize/inventory_resize.yy",},},
     {"id":{"name":"inventory_switch","path":"scripts/inventory_switch/inventory_switch.yy",},},
+    {"id":{"name":"inventory_transfer","path":"scripts/inventory_transfer/inventory_transfer.yy",},},
     {"id":{"name":"Inventory","path":"scripts/Inventory/Inventory.yy",},},
     {"id":{"name":"is_array_choose","path":"scripts/is_array_choose/is_array_choose.yy",},},
     {"id":{"name":"ItemArmor","path":"scripts/ItemArmor/ItemArmor.yy",},},

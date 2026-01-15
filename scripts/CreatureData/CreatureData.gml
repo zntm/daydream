@@ -329,4 +329,15 @@ function CreatureData(_namespace, _id, _hp, _hostility_type, _movement_type) : P
     {
         return self[$ "___contact_damage"] ?? 1;
     }
+    
+    static set_stun_duration = function(_duration)
+    {
+        ___stun_duration = _duration;
+        return self;
+    }
+    
+    static get_stun_duration = function()
+    {
+        return self[$ "___stun_duration"] ?? 0.25;
+    }
 }

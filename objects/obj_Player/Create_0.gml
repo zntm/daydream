@@ -30,6 +30,11 @@ show_debug_message($"[PLAYER] Initialized: UUID={uuid}, is_local={is_local}");
 timer_attack = 0;
 timer_respawn = 0;
 selected_hotbar = 0; // Current hotbar slot (synced)
+combo_count = 0;
+timer_combo = 0;
+stamina = 100;
+stamina_max = 100;
+stamina_regen_timer = 0;
 
 // Visuals
 attire = undefined;

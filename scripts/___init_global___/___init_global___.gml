@@ -196,6 +196,8 @@ global.window_focus = true;
 
 global.delta_time = delta_time / 1_000_000;
 
+global.camera_shake = 0;
+
 global.attribute_player = new Attribute()
     .set_boolean([
         "phantasia:has_regeneration"

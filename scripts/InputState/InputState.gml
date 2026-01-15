@@ -11,12 +11,14 @@ function InputState() constructor
     jump_held = false;
     attack_held = false;
     use_held = false;
+    sprint_held = false;
     
     // Digital actions - just pressed this frame
     jump_pressed = false;
     attack_pressed = false;
     use_pressed = false;
     mount_pressed = false;
+    sprint_pressed = false;
     
     // Digital actions - double pressed
     move_left_double_pressed = false;
@@ -50,6 +52,8 @@ function InputState() constructor
         use_held = input_check(INPUT_ACTION.USE);
         use_pressed = input_check_pressed(INPUT_ACTION.USE);
         mount_pressed = input_check_pressed(INPUT_ACTION.MOUNT);
+        sprint_held = input_check(INPUT_ACTION.SPRINT);
+        sprint_pressed = input_check_pressed(INPUT_ACTION.SPRINT);
         
         // Double Taps
         move_left_double_pressed  = input_check_double_pressed(INPUT_ACTION.MOVE_LEFT);
@@ -164,6 +168,8 @@ function InputState() constructor
         if (mouse_right_double_pressed)  _flags |= 1 << 14;
         if (mouse_middle_double_pressed) _flags |= 1 << 15;
         if (use_held) _flags |= 1 << 16;
+        if (sprint_held) _flags |= 1 << 17;
+        if (sprint_pressed) _flags |= 1 << 18;
         
         return {
             mx: move_x,
@@ -199,6 +205,8 @@ function InputState() constructor
         mouse_right_double_pressed =  !!(_flags & (1 << 14));
         mouse_middle_double_pressed = !!(_flags & (1 << 15));
         use_held = !!(_flags & (1 << 16));
+        sprint_held = !!(_flags & (1 << 17));
+        sprint_pressed = !!(_flags & (1 << 18));
         
         aim_x = _data.ax;
         aim_y = _data.ay;

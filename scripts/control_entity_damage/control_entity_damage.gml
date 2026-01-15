@@ -56,6 +56,38 @@ function control_entity_damage(_victim, _attacker, _base_damage, _variance = 0.0
     // Apply damage
     _victim.hp -= _damage;
     
+    // Screen shake if local player is involved
+    var _lp = noone;
+    with (obj_Player) { if (is_local) { _lp = id; break; } }
+    if (_lp != noone) && (_victim == _lp || _attacker == _lp)
+    {
+        global.camera_shake = clamp(global.camera_shake + (_damage * 0.4), 0, 8);
+    }
+    
+    // AI Stun for creatures
+    if (object_is_ancestor(_victim.object_index, obj_Creature) || _victim.object_index == obj_Creature)
+    {
+        var _c_data = global.creature_data[$ _victim._id];
+        if (_c_data != undefined)
+        {
+            _victim.ai_state = CREATURE_AI_STATE.STUNNED;
+            _victim.ai_state_timer = _c_data.get_stun_duration();
+            
+            // Clear input
+            if (variable_instance_exists(_victim, "input_state"))
+            {
+                _victim.input_state.clear();
+            }
+        }
+    }
+    
+    // Increment combo count for player attacker
+    if (_attacker != noone) && (_attacker.object_index == obj_Player) && (_attacker.is_local)
+    {
+        _attacker.combo_count++;
+        _attacker.timer_combo = 3.0; // 3 seconds to keep combo
+    }
+    
     // Trigger on_damage effects
     var _effects = _victim.effects;
     var _effect_names = struct_get_names(_effects);

@@ -35,6 +35,49 @@ function control_player()
     }
     // Note: Physics should ALWAYS run even with no input (gravity, friction, etc.)
     
+    // --- STAMINA & COMBO ---
+    if (is_local)
+    {
+        // Stamina
+        var _is_sprinting = input_state.sprint_held && (input_state.move_x != 0);
+        
+        if (_is_sprinting)
+        {
+            if (stamina > 0)
+            {
+                stamina = max(0, stamina - (25 / GAME_TICK)); // Drain ~25 per second
+                stamina_regen_timer = 1.0; // 1s cooldown before regen
+            }
+            else
+            {
+                // Exhausted
+                input_state.sprint_held = false;
+            }
+        }
+        else
+        {
+            if (stamina_regen_timer > 0)
+            {
+                stamina_regen_timer -= 1 / GAME_TICK;
+            }
+            else if (stamina < stamina_max)
+            {
+                stamina = min(stamina_max, stamina + (15 / GAME_TICK)); // Regen ~15 per second
+            }
+        }
+        
+        // Combo Timer
+        if (timer_combo > 0)
+        {
+            timer_combo -= 1 / GAME_TICK;
+            
+            if (timer_combo <= 0)
+            {
+                combo_count = 0;
+            }
+        }
+    }
+    
     // --- DOUBLE INPUT ---
     if !(obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.MENU)
     {
@@ -196,6 +239,16 @@ function control_player()
     // --- COMBAT ---
     if !(obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.MENU) && (timer_attack <= 0) && (input_state.attack_held)
     {
+        // Stamina Cost
+        if (is_local)
+        {
+            var _stamina_cost = 10;
+            if (stamina < _stamina_cost) exit;
+            
+            stamina -= _stamina_cost;
+            stamina_regen_timer = 2.0; // Delay regen after attack
+        }
+    
         sfx_diegetic_play(audio_emitter, x, y, "phantasia:sfx/item/swing", global.settings.audio_sfx);
         
         statistics_increment("items_used", 1);
@@ -239,12 +292,46 @@ function control_player()
                 }
             }
             
+            // Regular Attack Events
             var _on_attack = _data.get_on_attack();
             var _on_attack_length = _data.get_on_attack_length();
             
             for (var j = 0; j < _on_attack_length; ++j)
             {
                 function_execute(_on_attack[j], round(x / TILE_SIZE), round(y / TILE_SIZE), CHUNK_DEPTH_DEFAULT, sign(image_xscale), sign(image_yscale), id, _item);
+            }
+            
+            // Combo Finisher
+            if (is_local && combo_count >= 3)
+            {
+                combo_count = 0;
+                
+                // Visual feedback for finisher
+                global.camera_shake = 5;
+                sfx_play("phantasia:sfx/event/lightning", 0.5); // Placeholder SFX
+                
+                // MULTISHOT SPECIAL (Projectiles)
+                // Try to shoot extra projectiles if the weapon shoots
+                if (control_entity_shoot(id, _id, x, y - 24, _angle - 15, _inv_target, _changed_slots))
+                {
+                    // Success left
+                }
+                if (control_entity_shoot(id, _id, x, y - 24, _angle + 15, _inv_target, _changed_slots))
+                {
+                    // Success right
+                }
+                
+                // Trigger Double Attack Events as "Special" (Melee/General)
+                var _on_special = _data.get_on_item_double_attack();
+                var _on_special_length = _data.get_on_item_double_attack_length();
+                
+                if (_on_special != undefined)
+                {
+                    for (var j = 0; j < _on_special_length; ++j)
+                    {
+                        function_execute(_on_special[j], round(x / TILE_SIZE), round(y / TILE_SIZE), CHUNK_DEPTH_DEFAULT, sign(image_xscale), sign(image_yscale), id, _item);
+                    }
+                }
             }
         }
     }
@@ -391,10 +478,34 @@ function control_player()
     // --- POST-PHYSICS ---
     control_entity_sfx();
     
+    // Procedural Squash & Stretch
+    if (abs(physics_body.vel_y) > 1.5)
+    {
+        entity_yscale = lerp_delta(entity_yscale, 1.15, 0.15, 1);
+        entity_xscale = lerp_delta(entity_xscale, 0.85, 0.15, 1);
+    }
+    else
+    {
+        entity_yscale = lerp_delta(entity_yscale, 1.0, 0.2, 1);
+        entity_xscale = lerp_delta(entity_xscale, 1.0, 0.2, 1);
+    }
+
     // Camera
     if (is_local)
     {
-        control_camera_pos(x - (global.camera_width / 2), y - (global.camera_height / 2), false);
+        var _shake_x = 0;
+        var _shake_y = 0;
+        
+        if (global.camera_shake > 0)
+        {
+            _shake_x = random_range(-global.camera_shake, global.camera_shake);
+            _shake_y = random_range(-global.camera_shake, global.camera_shake);
+            
+            global.camera_shake *= 0.85; // Decay
+            if (global.camera_shake < 0.1) global.camera_shake = 0;
+        }
+        
+        control_camera_pos(x - (global.camera_width / 2) + _shake_x, y - (global.camera_height / 2) + _shake_y, false);
     }
     
     // Regeneration

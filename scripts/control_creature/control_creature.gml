@@ -7,7 +7,8 @@ enum CREATURE_AI_STATE {
     WANDER,
     CHASE,
     FLEE,
-    ATTACK
+    ATTACK,
+    STUNNED
 }
 
 // AI Constants
@@ -98,14 +99,23 @@ function control_creature()
     var _hostility_type = _data.get_hostility_type();
     
     // --- AI DECISION ---
-    if (ai_decision_timer <= 0)
+    if (ai_state == CREATURE_AI_STATE.STUNNED)
+    {
+        if (ai_state_timer <= 0)
+        {
+            ai_state = CREATURE_AI_STATE.IDLE;
+            ai_state_timer = AI_IDLE_DURATION;
+        }
+    }
+    
+    if (ai_state != CREATURE_AI_STATE.STUNNED) && (ai_decision_timer <= 0)
     {
         ai_decision_timer = AI_DECISION_INTERVAL;
         creature_evaluate_state(_hostility_type, _target, _distance_to_target, _data);
     }
     
     // --- PREY SCANNING ---
-    if (ai_state != CREATURE_AI_STATE.FLEE && ai_decision_timer == AI_DECISION_INTERVAL)
+    if (ai_state != CREATURE_AI_STATE.STUNNED) && (ai_state != CREATURE_AI_STATE.FLEE && ai_decision_timer == AI_DECISION_INTERVAL)
     {
         creature_scan_for_prey(_data, _dt_normalized);
     }
@@ -154,20 +164,27 @@ function control_creature()
     }
     
     // Movement direction
-    if (ai_target_direction != 0)
+    if (ai_state != CREATURE_AI_STATE.STUNNED)
     {
-        _move_x = ai_target_direction;
-        image_xscale = abs(image_xscale) * ai_target_direction;
-        
-        // Pathfinding - jump over obstacles
-        if (!_wants_jump && physics_body.collision.ground)
+        if (ai_target_direction != 0)
         {
-            creature_pathfinding(_target, _move_x, _wants_jump);
+            _move_x = ai_target_direction;
+            image_xscale = abs(image_xscale) * ai_target_direction;
+            
+            // Pathfinding - jump over obstacles
+            if (!_wants_jump && physics_body.collision.ground)
+            {
+                creature_pathfinding(_target, _move_x, _wants_jump);
+            }
         }
+        
+        // Set AI input
+        input_state.from_ai(_move_x, _move_y, _wants_jump, false);
     }
-    
-    // Set AI input
-    input_state.from_ai(_move_x, _move_y, _wants_jump, false);
+    else
+    {
+        input_state.clear();
+    }
     
     // --- PHYSICS ---
     // Set movement mode based on creature type

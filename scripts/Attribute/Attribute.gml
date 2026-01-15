@@ -321,4 +321,15 @@ function Attribute() constructor
     {
         return self[$ "___regeneration_time"] ?? 60;
     }
+    
+    static set_hp_max = function(_hp_max)
+    {
+        ___hp_max = _hp_max;
+        return self;
+    }
+    
+    static get_hp_max = function()
+    {
+        return self[$ "___hp_max"] ?? 100;
+    }
 }

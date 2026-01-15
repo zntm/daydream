@@ -73,6 +73,7 @@ inventory_mouse_select_type = INVENTORY_MOUSE_SELECT_TYPE.NONE;
 global.inventory_selected_hover = noone;
 
 surface_lighting = -1;
+surface_lighting_colour = -1;
 surface_lighting_x = -1;
 surface_lighting_y = -1;
 

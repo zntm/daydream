@@ -62,17 +62,9 @@ function function_execute(_function, _x, _y, _z, _xscale, _yscale, _inst = undef
 
     if (_id != undefined)
     {
-        // Proglang Script Execution
-        // Use cached scripts from global.proglang_scripts
-        var _script_id = _id;
-        if (string_char_at(_id, 1) == "@")
-        {
-            _script_id = string_delete(_id, 1, 1); // Remove "@"
-        }
-        
         // _script_id = string_replace_all(_script_id, ":", "/");
         
-        var _script = global.proglang_scripts[$ _script_id];
+        var _script = global.proglang_scripts[$ _id];
         if (_script != undefined)
         {
             _context.parameter = _parameter;
@@ -84,11 +76,11 @@ function function_execute(_function, _x, _y, _z, _xscale, _yscale, _inst = undef
                 _bytecode = _script[PROG_MODULE.MAIN];
             }
             
-            proglang_call(_script_id, [_parameter], _context);
+            proglang_call(_id, [_parameter], _context);
         }
         else if (IS_DEVELOPER_MODE)
         {
-            show_debug_message($"[Daydream] Script not found: '{_id}' (searched for '{_script_id}')");
+            show_debug_message($"[Daydream] Script not found: '{_id}'");
             // Optional: dump available scripts if failure occurs in dev mode
             // show_debug_message($"[Daydream] Available scripts: {variable_struct_get_names(global.proglang_scripts)}");
         }
