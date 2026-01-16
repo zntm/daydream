@@ -201,22 +201,6 @@ function chunk_generate(_chunk)
         }
     }
     
-    // Check if chunk has potential surface or structures
-    // Use TerrainShaper density threshold as heuristic if needed, or stick to surface height check
-    // Since we now have floating islands potential anywhere via density, we might need to be less aggressive with skipping,
-    // but for now let's keep the surface height check as a baseline optimization.
-    
-    if (_structure_rectangle_length <= 0) && (_surface_height_max > _chunk.chunk_ystart + CHUNK_SIZE - 1)
-    {
-         // Additional check: If 3D density creates floating islands above surface, we shouldn't skip.
-         // However, scanning every chunk for 3D density is expensive. 
-         // For now, removing the sky zone check means we rely on surface height mainly.
-         // If we want floating islands high up, we might need to relax this optimization.
-         // Let's assume for now that important terrain is around surface height +/- range.
-         // To properly support high altitude islands, we'd need a coarser noise check here.
-         exit;
-    }
-    
     if (_structure_rectangle_length > 0)
     {
         array_sort(__structure_array, __structure_sort);

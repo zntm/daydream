@@ -222,21 +222,6 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
         
         gpu_set_blendmode(bm_add);
         
-        for (var i = 0; i < chunk_in_view_length; ++i)
-        {
-            var _chunk = chunk_in_view[i];
-            
-            if (_chunk == undefined) || !(_chunk.boolean & CHUNK_BOOLEAN.GENERATED) continue;
-            
-            if (surface_exists(_chunk.surface_lighting))
-            {
-                var _x2 = ((_chunk.x - _surface_x) / RENDER_LIGHTING_RESIZE) - (RENDER_LIGHTING_PADDING / 2);
-                var _y2 = ((_chunk.y - _surface_y) / RENDER_LIGHTING_RESIZE) - (RENDER_LIGHTING_PADDING / 2);
-                
-                draw_surface(_chunk.surface_lighting, _x2, _y2 + 8);
-            }
-        }
-        
         with (obj_Player)
         {
             var _x = ((x + RENDER_LIGHTING_PADDING - _surface_x) / RENDER_LIGHTING_RESIZE);
@@ -296,10 +281,10 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
         gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_src_alpha, bm_one);
     }
     
-    gpu_set_blendmode_ext(bm_dest_colour, bm_zero);
-    
     if (surface_exists(surface_lighting))
     {
+        gpu_set_blendmode_ext(bm_dest_colour, bm_zero);
+        
         shader_set(shd_Lighting);
         
         var _x2 = _surface_x - RENDER_LIGHTING_PADDING - (RENDER_LIGHTING_PADDING / 2) + TILE_SIZE;
@@ -318,7 +303,7 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
     
     if (surface_exists(surface_lighting_colour))
     {
-        // gpu_set_blendmode(bm_add);
+        gpu_set_blendmode(bm_add);
         
         var _x2 = _surface_x - RENDER_LIGHTING_PADDING - (RENDER_LIGHTING_PADDING / 2) + TILE_SIZE;
         var _y2 = _surface_y - RENDER_LIGHTING_PADDING - (RENDER_LIGHTING_PADDING / 2) + TILE_SIZE;
@@ -332,7 +317,7 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
         gpu_set_tex_filter(false);
     }
     
-    draw_sprite_ext(spr_Square, 0, _camera_x, _camera_y, _camera_width + _camera_width, _camera_y + _camera_height, 0, obj_Game_Control_Background.light_colour, 1);
+    // draw_sprite_ext(spr_Square, 0, _camera_x, _camera_y, _camera_width + _camera_width, _camera_y + _camera_height, 0, obj_Game_Control_Background.light_colour, 1);
     
     gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_src_alpha, bm_one);
 }

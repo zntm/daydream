@@ -478,18 +478,6 @@ function control_player()
     // --- POST-PHYSICS ---
     control_entity_sfx();
     
-    // Procedural Squash & Stretch
-    if (abs(physics_body.vel_y) > 1.5)
-    {
-        entity_yscale = lerp_delta(entity_yscale, 1.15, 0.15, 1);
-        entity_xscale = lerp_delta(entity_xscale, 0.85, 0.15, 1);
-    }
-    else
-    {
-        entity_yscale = lerp_delta(entity_yscale, 1.0, 0.2, 1);
-        entity_xscale = lerp_delta(entity_xscale, 1.0, 0.2, 1);
-    }
-
     // Camera
     if (is_local)
     {
