@@ -14,16 +14,8 @@ global.region_generator = new RegionGenerator({
     warp_power: 48
 }).set_regions(region_create_defaults());
 
-// Density-based terrain generator
-// Overhauls terrain shaping to support 3D features (overhangs, floating islands)
-global.terrain_generator = new TerrainGenerator({
-    base_surface_y: 400,
-    noise_scale: 0.02,
-    gradient_strength: 0.015
-});
-
-// TerrainShaper for 3D noise-based terrain with overhangs
-// Will be re-initialized per world in init_world with world-specific settings
+// WorldGenCore: Unified 3D density-based terrain with spline-controlled caves
+// Will be initialized per world in init_world with world-specific settings
 global.terrain_shaper = undefined; // Initialized per world
 
 function init_world(_directory, _namespace = "phantasia", _type = 0)
@@ -82,7 +74,7 @@ function init_world(_directory, _namespace = "phantasia", _type = 0)
         var _cave = _json.cave;
         _world_data.set_cave(_cave);
         
-        // Parse terrain shaping configuration (new 3D density system)
+        // Parse terrain shaping configuration (legacy 3D density system)
         var _terrain_shaping = _json[$ "terrain_shaping"];
         if (_terrain_shaping != undefined)
         {
@@ -90,8 +82,14 @@ function init_world(_directory, _namespace = "phantasia", _type = 0)
         }
         else
         {
-            // Apply defaults
             _world_data.set_terrain_shaping({});
+        }
+        
+        // Parse new worldgen configuration (unified spline-based system)
+        var _worldgen = _json[$ "worldgen"];
+        if (_worldgen != undefined)
+        {
+            _world_data.set_worldgen(_worldgen);
         }
         
         global.world_data[$ $"{_namespace}:{_id}"] = _world_data;
@@ -99,7 +97,7 @@ function init_world(_directory, _namespace = "phantasia", _type = 0)
         // Initialize terrain_shaper with the first loaded world's data
         if (global.terrain_shaper == undefined)
         {
-            global.terrain_shaper = new TerrainShaper(_world_data);
+            global.terrain_shaper = new WorldGenCore(_world_data);
         }
         
         delete _json;

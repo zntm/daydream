@@ -32,6 +32,13 @@ function __json_to_provider(_json_data)
                         case "RuleDepth": _rule = new RuleDepth(_p.min, _p.max); break;
                         case "RuleAirAbove": _rule = new RuleAirAbove(_p.min_blocks); break;
                         case "RuleCaveBiome": _rule = new RuleCaveBiome(_p.biome_id); break;
+                        case "RuleSolidAbove": _rule = new RuleSolidAbove(_p.max_blocks); break;
+                        case "RuleAdjacent": _rule = new RuleAdjacent(_p.tile_ids); break;
+                        case "RuleNotAdjacent": _rule = new RuleNotAdjacent(_p.tile_ids); break;
+                        case "RuleSubBiome": _rule = new RuleSubBiome(_p.sub_biome_id); break;
+                        case "RuleZone": _rule = new RuleZone(_p.zone_id); break;
+                        case "RuleChance": _rule = new RuleChance(_p.chance); break;
+                        case "RuleGenerateOn": _rule = new RuleGenerateOn(_p.tile_ids); break;
                         // Add more rules here as we implement them in datagen
                     }
                     if (_rule != undefined) array_push(_rules, _rule);

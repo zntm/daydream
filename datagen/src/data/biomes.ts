@@ -98,11 +98,22 @@ export class Biome {
 }
 
 export class BiomeTerrainModifier {
+    // Legacy height offset
     private height_offset: number;
     private noise_scale?: number;
     private amplitude_min?: number;
     private amplitude_max?: number;
     private octaves?: number;
+    
+    // NEW: Biome blending control
+    private influence?: number;    // How much these modifiers affect generation (0-1)
+    private smoothing?: number;    // Blend radius in blocks for smooth biome edges
+    
+    // NEW: WorldGen modifiers (multipliers that blend at biome edges)
+    private erosion_modifier?: number;       // Multiplier for erosion (flatness)
+    private squash_modifier?: number;        // Multiplier for squash factor
+    private cave_density_modifier?: number;  // Multiplier for cave density
+    private continentalness_modifier?: number; // Modifier for continentalness
 
     constructor(
         heightOffset: number, 
@@ -117,6 +128,42 @@ export class BiomeTerrainModifier {
         if (amplitudeMin !== undefined) this.amplitude_min = amplitudeMin;
         if (amplitudeMax !== undefined) this.amplitude_max = amplitudeMax;
         if (octaves !== undefined) this.octaves = octaves;
+    }
+    
+    /** Set how much this biome's modifiers affect worldgen (0-1) */
+    setInfluence(influence: number) {
+        this.influence = influence;
+        return this;
+    }
+    
+    /** Set blend radius for smooth biome edge transitions (in blocks) */
+    setSmoothing(smoothing: number) {
+        this.smoothing = smoothing;
+        return this;
+    }
+    
+    /** Set erosion modifier (1.0 = normal, <1 = more mountainous, >1 = flatter) */
+    setErosionModifier(modifier: number) {
+        this.erosion_modifier = modifier;
+        return this;
+    }
+    
+    /** Set squash modifier (1.0 = normal, <1 = less squash, >1 = more squash) */
+    setSquashModifier(modifier: number) {
+        this.squash_modifier = modifier;
+        return this;
+    }
+    
+    /** Set cave density modifier (1.0 = normal, <1 = fewer caves, >1 = more caves) */
+    setCaveDensityModifier(modifier: number) {
+        this.cave_density_modifier = modifier;
+        return this;
+    }
+    
+    /** Set continentalness modifier (additive offset to base continentalness) */
+    setContinentalnessModifier(modifier: number) {
+        this.continentalness_modifier = modifier;
+        return this;
     }
 }
 
@@ -168,6 +215,24 @@ export class RuleAirAbove extends MaterialRule {
 export class RuleCaveBiome extends MaterialRule {
     constructor(biome_id: string) {
         super("RuleCaveBiome", { biome_id });
+    }
+}
+
+export class RuleSolidAbove extends MaterialRule {
+    constructor(max_blocks: number) {
+        super("RuleSolidAbove", { max_blocks });
+    }
+}
+
+export class RuleAdjacent extends MaterialRule {
+    constructor(tile_id: string | string[]) {
+        super("RuleAdjacent", { tile_id: Array.isArray(tile_id) ? tile_id : [tile_id] });
+    }
+}
+
+export class RuleNotAdjacent extends MaterialRule {
+    constructor(tile_id: string | string[]) {
+        super("RuleNotAdjacent", { tile_id: Array.isArray(tile_id) ? tile_id : [tile_id] });
     }
 }
 

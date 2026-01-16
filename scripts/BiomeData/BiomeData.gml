@@ -121,22 +121,53 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
     
     static get_tile_foliage_base = function(_noise) { return ___tile_foliage.get_tile({ noise: _noise }); }
     
-    // --- Terrain Modifier ---
     static set_terrain_parameters = function(_params)
     {
-        if (_params == undefined) return self;
-        ___terrain_noise_scale = _params[$ "noise_scale"] ?? 0.015625;
-        ___terrain_height_offset = _params[$ "height_offset"] ?? -40;
-        ___terrain_amplitude_min = _params[$ "amplitude_min"] ?? 30;
-        ___terrain_amplitude_max = _params[$ "amplitude_max"] ?? 60;
-        ___terrain_octaves = _params[$ "octaves"] ?? 4;
+        if (_params == undefined)
+        {
+            return self;
+        }
+        
+        ___terrain_influence = _params[$ "influence"] ?? 1.0;
+        ___terrain_smoothing = _params[$ "smoothing"] ?? 16;
+        
+        ___erosion_modifier = _params[$ "erosion_modifier"] ?? 1.0;
+        ___squash_modifier = _params[$ "squash_modifier"] ?? 1.0;
+        ___cave_density_modifier = _params[$ "cave_density_modifier"] ?? 1.0;
+        ___continentalness_modifier = _params[$ "continentalness_modifier"] ?? 0.0;
+        
         return self;
     }
-    static get_terrain_noise_scale = function() { return ___terrain_noise_scale; }
-    static get_terrain_height_offset = function() { return ___terrain_height_offset; }
-    static get_terrain_amplitude_min = function() { return ___terrain_amplitude_min; }
-    static get_terrain_amplitude_max = function() { return ___terrain_amplitude_max; }
-    static get_terrain_octaves = function() { return ___terrain_octaves; }
+    
+    static get_terrain_influence = function()
+    {
+        return self[$ "___terrain_influence"] ?? 1.0;
+    }
+
+    static get_terrain_smoothing = function()
+    {
+        return self[$ "___terrain_smoothing"] ?? 16;
+    }
+
+    static get_erosion_modifier = function()
+    {
+        return self[$ "___erosion_modifier"] ?? 1.0;
+    }
+
+    static get_squash_modifier = function()
+    {
+        return self[$ "___squash_modifier"] ?? 1.0;
+    }
+
+    static get_cave_density_modifier = function()
+    {
+        return self[$ "___cave_density_modifier"] ?? 1.0;
+    }
+
+    static get_continentalness_modifier = function()
+    {
+        return self[$ "___continentalness_modifier"] ?? 0.0;
+    }
     
     // --- Flags ---
     static set_is_ocean = function(_value) { ___is_ocean = _value ?? false; return self; }

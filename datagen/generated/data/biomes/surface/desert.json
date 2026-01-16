@@ -95,12 +95,22 @@
             "generate_on": "#phantasia:tile/placement/plant_on"
         }
     ],
+    "tags": [
+        "hot",
+        "dry",
+        "sand"
+    ],
     "terrain_modifier": {
         "height_offset": 8,
         "noise_scale": 0.015625,
         "amplitude_min": 30,
         "amplitude_max": 60,
-        "octaves": 4
+        "octaves": 4,
+        "influence": 1,
+        "smoothing": 64,
+        "erosion_modifier": 1.5,
+        "squash_modifier": 2,
+        "continentalness_modifier": 0.3
     },
     "tile": {
         "top_layer": {

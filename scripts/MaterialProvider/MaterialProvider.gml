@@ -115,6 +115,87 @@ function RuleAirAbove(_min_blocks) : MaterialRule() constructor
     }
 }
 
+/// @desc Checks that there are NO solid blocks within N blocks above (for grass under overhangs, etc.)
+/// Returns true if NONE of the N blocks above are solid
+function RuleSolidAbove(_max_blocks) : MaterialRule() constructor
+{
+    ___max_blocks = _max_blocks;
+    
+    static check = function(_context)
+    {
+        var _x = _context[$ "x"];
+        var _y = _context[$ "y"];
+        var _seed = global.world_save_data.seed;
+        
+        // Use WorldGenCore density to check for solid blocks above
+        if (global.terrain_shaper == undefined) return true;
+        
+        for (var i = 1; i <= ___max_blocks; ++i)
+        {
+            var _check_y = _y - i;
+            var _density = global.terrain_shaper.get_density_solid(_x, _check_y, _seed);
+            if (_density > 0) return false; // Solid block found above
+        }
+        
+        return true; // No solid blocks within range
+    }
+}
+
+/// @desc Checks for adjacent tile of specific type (any of 4 cardinal directions)
+function RuleAdjacent(_tile_ids) : MaterialRule() constructor
+{
+    ___tile_ids = is_array(_tile_ids) ? _tile_ids : [_tile_ids];
+    
+    static check = function(_context)
+    {
+        var _x = _context[$ "x"];
+        var _y = _context[$ "y"];
+        
+        // Check all 4 directions
+        static __offsets = [[-1, 0], [1, 0], [0, -1], [0, 1]];
+        
+        for (var i = 0; i < 4; ++i)
+        {
+            var _ox = __offsets[i][0];
+            var _oy = __offsets[i][1];
+            var _tile = tile_get(_x + _ox, _y + _oy, CHUNK_DEPTH_DEFAULT);
+            if (_tile == TILE_EMPTY) continue;
+            
+            var _id = _tile.get_id();
+            if (array_get_index(___tile_ids, _id) != -1) return true;
+        }
+        
+        return false;
+    }
+}
+
+/// @desc Checks that there are NO adjacent tiles of specific type
+function RuleNotAdjacent(_tile_ids) : MaterialRule() constructor
+{
+    ___tile_ids = is_array(_tile_ids) ? _tile_ids : [_tile_ids];
+    
+    static check = function(_context)
+    {
+        var _x = _context[$ "x"];
+        var _y = _context[$ "y"];
+        
+        static __offsets = [[-1, 0], [1, 0], [0, -1], [0, 1]];
+        
+        for (var i = 0; i < 4; ++i)
+        {
+            var _ox = __offsets[i][0];
+            var _oy = __offsets[i][1];
+            var _tile = tile_get(_x + _ox, _y + _oy, CHUNK_DEPTH_DEFAULT);
+            if (_tile == TILE_EMPTY) continue;
+            
+            var _id = _tile.get_id();
+            if (array_get_index(___tile_ids, _id) != -1) return false; // Found forbidden adjacent
+        }
+        
+        return true;
+    }
+}
+
 /// @desc Checks for specific biome context (e.g. only in Cave Biome X)
 function RuleCaveBiome(_biome_id) : MaterialRule() constructor
 {

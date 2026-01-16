@@ -364,6 +364,44 @@ export class WorldCave {
     }
 }
 
+// ============================================================================
+// WORLDGEN - New unified spline-based world generation config
+// ============================================================================
+
+export class WorldGen {
+    // Surface shape
+    private erosion_scale?: number;
+    private continentalness_scale?: number;
+    private continentalness_amplitude?: number;
+    private squash_spline?: Spline;
+    
+    // Cave shape
+    private cave_noise_scale?: number;
+    private cave_noise_range_spline?: Spline;
+    private cave_density_spline?: Spline;
+    private cave_smoothness_spline?: Spline;
+
+    constructor(opts: {
+        erosionScale?: number;
+        continentalnessScale?: number;
+        continentalnessAmplitude?: number;
+        squashSpline?: Spline;
+        caveNoiseScale?: number;
+        caveNoiseRangeSpline?: Spline;
+        caveDensitySpline?: Spline;
+        caveSmoothnessSpline?: Spline;
+    } = {}) {
+        if (opts.erosionScale !== undefined) this.erosion_scale = opts.erosionScale;
+        if (opts.continentalnessScale !== undefined) this.continentalness_scale = opts.continentalnessScale;
+        if (opts.continentalnessAmplitude !== undefined) this.continentalness_amplitude = opts.continentalnessAmplitude;
+        if (opts.squashSpline !== undefined) this.squash_spline = opts.squashSpline;
+        if (opts.caveNoiseScale !== undefined) this.cave_noise_scale = opts.caveNoiseScale;
+        if (opts.caveNoiseRangeSpline !== undefined) this.cave_noise_range_spline = opts.caveNoiseRangeSpline;
+        if (opts.caveDensitySpline !== undefined) this.cave_density_spline = opts.caveDensitySpline;
+        if (opts.caveSmoothnessSpline !== undefined) this.cave_smoothness_spline = opts.caveSmoothnessSpline;
+    }
+}
+
 export class World {
     private world_height: number;
     private spawn_interval: number;
@@ -373,6 +411,7 @@ export class World {
     private biome: WorldBiome;
     private surface: WorldSurface;
     private cave: WorldCave;
+    private worldgen?: WorldGen;
 
     constructor(
         world_height: number,
@@ -383,6 +422,7 @@ export class World {
         biome: WorldBiome,
         surface: WorldSurface,
         cave: WorldCave,
+        worldgen?: WorldGen,
     ) {
         this.world_height = world_height;
         this.spawn_interval = spawn_interval;
@@ -392,6 +432,7 @@ export class World {
         this.biome = biome;
         this.surface = surface;
         this.cave = cave;
+        if (worldgen) this.worldgen = worldgen;
     }
 }
 
@@ -505,6 +546,35 @@ export default [
             0.35,     // overhangThresholdTile
             0.05      // overhangNoiseScale
             ),
+            // NEW: WorldGen spline-based configuration
+            new WorldGen({
+                // Surface shape
+                erosionScale: 0.008,
+                continentalnessScale: 0.0012,
+                continentalnessAmplitude: 180,
+                squashSpline: new Spline([
+                    new SplinePoint(0, 8.0, SplineEasing.EaseOut),      // Near surface: very flat overhangs
+                    new SplinePoint(150, 4.0, SplineEasing.EaseInOut),  // Shallow: moderately flat
+                    new SplinePoint(400, 1.0),                          // Deep: normal caves
+                ]),
+                // Cave shape
+                caveNoiseScale: 0.016,
+                caveNoiseRangeSpline: new Spline([
+                    new SplinePoint(0, 0.1, SplineEasing.EaseOut),      // Surface: tiny pockets
+                    new SplinePoint(100, 0.25, SplineEasing.EaseInOut), // Shallow: small caves
+                    new SplinePoint(300, 0.45),                         // Mid: medium caves
+                    new SplinePoint(600, 0.55),                         // Deep: large Swiss-cheese caves
+                ]),
+                caveDensitySpline: new Spline([
+                    new SplinePoint(0, 0.15, SplineEasing.EaseOut),     // Surface: mostly solid
+                    new SplinePoint(200, 0.35, SplineEasing.EaseInOut), // Mid: balanced
+                    new SplinePoint(600, 0.6),                          // Deep: more porous
+                ]),
+                caveSmoothnessSpline: new Spline([
+                    new SplinePoint(0, 2.0, SplineEasing.Linear),       // Surface: jagged edges
+                    new SplinePoint(400, 4.0),                          // Deep: smooth tunnel surfaces
+                ]),
+            }),
         ),
     ),
 ];

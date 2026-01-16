@@ -148,6 +148,11 @@
             "generate_on": "#phantasia:tile/placement/plant_on"
         }
     ],
+    "tags": [
+        "forest",
+        "cold",
+        "snow"
+    ],
     "terrain_modifier": {
         "height_offset": 4,
         "noise_scale": 0.015625,

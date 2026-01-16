@@ -15,7 +15,7 @@
             "depth": 0
         }
     ],
-    "id": "cave_mushrooms",
+    "id": "phantasia:pattern/cave_mushrooms",
     "rules": [
         {
             "type": "chance",

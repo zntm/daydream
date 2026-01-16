@@ -82,13 +82,32 @@
                 "min": 22,
                 "max": 34
             },
-            "transitions": {
-                "phantasia:surface/ocean:phantasia:surface/forest": "phantasia:surface/forest",
-                "phantasia:surface/forest:phantasia:surface/ocean": "phantasia:surface/forest",
-                "phantasia:surface/desert:phantasia:surface/forest": "phantasia:surface/forest",
-                "phantasia:surface/forest:phantasia:surface/desert": "phantasia:surface/forest",
-                "phantasia:surface/snow:phantasia:surface/forest": "phantasia:surface/taiga"
-            }
+            "transitions": [
+                {
+                    "require_any": [
+                        "water"
+                    ],
+                    "result": "phantasia:surface/beach"
+                },
+                {
+                    "require_any": [
+                        "sand"
+                    ],
+                    "require_all": [
+                        "lush"
+                    ],
+                    "result": "phantasia:surface/savanna"
+                },
+                {
+                    "require_any": [
+                        "snow"
+                    ],
+                    "require_all": [
+                        "forest"
+                    ],
+                    "result": "phantasia:surface/taiga"
+                }
+            ]
         },
         "sky": {
             "enabled": true,
@@ -261,5 +280,86 @@
         "yend": 1024,
         "colour": "#000000"
     },
-    "world_height": 1024
+    "world_height": 1024,
+    "worldgen": {
+        "erosion_scale": 0.008,
+        "continentalness_scale": 0.0012,
+        "continentalness_amplitude": 180,
+        "squash_spline": {
+            "points": [
+                {
+                    "position": 0,
+                    "value": 8,
+                    "easing": "ease_out"
+                },
+                {
+                    "position": 150,
+                    "value": 4,
+                    "easing": "ease_in_out"
+                },
+                {
+                    "position": 400,
+                    "value": 1
+                }
+            ],
+            "type": "spline"
+        },
+        "cave_noise_scale": 0.016,
+        "cave_noise_range_spline": {
+            "points": [
+                {
+                    "position": 0,
+                    "value": 0.1,
+                    "easing": "ease_out"
+                },
+                {
+                    "position": 100,
+                    "value": 0.25,
+                    "easing": "ease_in_out"
+                },
+                {
+                    "position": 300,
+                    "value": 0.45
+                },
+                {
+                    "position": 600,
+                    "value": 0.55
+                }
+            ],
+            "type": "spline"
+        },
+        "cave_density_spline": {
+            "points": [
+                {
+                    "position": 0,
+                    "value": 0.15,
+                    "easing": "ease_out"
+                },
+                {
+                    "position": 200,
+                    "value": 0.35,
+                    "easing": "ease_in_out"
+                },
+                {
+                    "position": 600,
+                    "value": 0.6
+                }
+            ],
+            "type": "spline"
+        },
+        "cave_smoothness_spline": {
+            "points": [
+                {
+                    "position": 0,
+                    "value": 2,
+                    "easing": "linear"
+                },
+                {
+                    "position": 400,
+                    "value": 4
+                }
+            ],
+            "type": "spline"
+        }
+    }
 }

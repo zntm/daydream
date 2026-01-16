@@ -71,7 +71,7 @@ function sfx_diegetic_play(_emitter, _x, _y, _id, _gain = global.settings.audio_
     }
     
     // Track temporary emitters for cleanup
-    if (_is_temp_emitter)
+    // if (_is_temp_emitter)
     {
         sfx_emitter_track(_emitter, _sound);
     }

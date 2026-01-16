@@ -127,6 +127,11 @@
             "generate_on": "#phantasia:tile/placement/plant_on"
         }
     ],
+    "tags": [
+        "swamp",
+        "wet",
+        "lush"
+    ],
     "terrain_modifier": {
         "height_offset": -12,
         "noise_scale": 0.015625,

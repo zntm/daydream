@@ -1,6 +1,6 @@
 {
     "actions": [],
-    "id": "tree_root_cave",
+    "id": "phantasia:pattern/tree_root_cave",
     "rules": [
         {
             "type": "chance",

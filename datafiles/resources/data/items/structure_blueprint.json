@@ -40,7 +40,7 @@
         },
         "on_use": [
             {
-                "id": "@phantasia:ui/menu_open",
+                "id": "phantasia:open_menu",
                 "parameters": [
                     {
                         "type": "button",
@@ -127,7 +127,7 @@
                         "width": 17,
                         "height": 3,
                         "text": "Export",
-                        "on_select_release": "phantasia:item/dev/export_structure"
+                        "on_select_release": "phantasia:export_structure"
                     }
                 ]
             }

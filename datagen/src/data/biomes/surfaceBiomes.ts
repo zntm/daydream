@@ -13,6 +13,10 @@ import {
     MaterialProvider,
     RuleDepth,
     RuleAirAbove,
+    RuleSolidAbove,
+    RuleAdjacent,
+    RuleNotAdjacent,
+    RuleCaveBiome,
 } from "../biomes";
 
 export default [
@@ -49,7 +53,13 @@ export default [
                     .setDefault("phantasia:sandstone"),
             },
         )
-            .setTerrainModifier(new BiomeTerrainModifier(8, 0.015625, 30, 60, 4))
+            .setTerrainModifier(new BiomeTerrainModifier(8, 0.015625, 30, 60, 4)
+                .setInfluence(1.0)
+                .setSmoothing(64)                               // Wide blending range
+                .setErosionModifier(1.5)                        // Flatter terrain
+                .setSquashModifier(2.0)                         // Even flatter caves/overhangs
+                .setContinentalnessModifier(0.3)                // Higher base elevation
+            )
             .setMusic([
                 new Sound("phantasia:music/dune", 0.3),
                 new Sound("phantasia:music/field_of_concourse", 0.4),
@@ -124,7 +134,12 @@ export default [
                     .setDefault("phantasia:stone"),
             },
         )
-            .setTerrainModifier(new BiomeTerrainModifier(0, 0.015625, 30, 60, 4))
+            .setTerrainModifier(new BiomeTerrainModifier(0, 0.015625, 30, 60, 4)
+                .setInfluence(0.8)
+                .setSmoothing(32)
+                .setErosionModifier(1.0)
+                .setSquashModifier(1.0)
+            )
             .setShoreTiles(new MaterialProvider()
                 .addItem("phantasia:sand")
                 .addItemNoise("phantasia:sandstone_wall", 0, 204)

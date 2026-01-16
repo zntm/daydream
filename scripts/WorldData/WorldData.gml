@@ -479,6 +479,39 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
     static get_terrain_peaks_amplitude = function() { return self[$ "___terrain_peaks_amplitude"] ?? 25; }
     static get_terrain_erosion_scale = function() { return self[$ "___terrain_erosion_scale"] ?? 0.015; }
     
+    // --- NEW WORLDGEN SPLINE GETTERS ---
+    // These read from the worldgen section of the JSON config
+    
+    static get_worldgen_erosion_scale = function() { return self[$ "___worldgen_erosion_scale"] ?? 0.008; }
+    static get_worldgen_continentalness_scale = function() { return self[$ "___worldgen_continentalness_scale"] ?? 0.001; }
+    static get_worldgen_continentalness_amplitude = function() { return self[$ "___worldgen_continentalness_amplitude"] ?? 150; }
+    static get_worldgen_cave_noise_scale = function() { return self[$ "___worldgen_cave_noise_scale"] ?? 0.015; }
+    
+    static get_worldgen_squash_spline = function() { return self[$ "___worldgen_squash_spline"]; }
+    static get_worldgen_cave_noise_range_spline = function() { return self[$ "___worldgen_cave_noise_range_spline"]; }
+    static get_worldgen_cave_density_spline = function() { return self[$ "___worldgen_cave_density_spline"]; }
+    static get_worldgen_cave_smoothness_spline = function() { return self[$ "___worldgen_cave_smoothness_spline"]; }
+    
+    /// @desc Set worldgen config (new unified system)
+    static set_worldgen = function(_config)
+    {
+        if (_config == undefined) return self;
+        
+        // Surface shape
+        ___worldgen_erosion_scale = _config[$ "erosion_scale"] ?? 0.008;
+        ___worldgen_continentalness_scale = _config[$ "continentalness_scale"] ?? 0.001;
+        ___worldgen_continentalness_amplitude = _config[$ "continentalness_amplitude"] ?? 150;
+        ___worldgen_squash_spline = _config[$ "squash_spline"];
+        
+        // Cave shape
+        ___worldgen_cave_noise_scale = _config[$ "cave_noise_scale"] ?? 0.015;
+        ___worldgen_cave_noise_range_spline = _config[$ "cave_noise_range_spline"];
+        ___worldgen_cave_density_spline = _config[$ "cave_density_spline"];
+        ___worldgen_cave_smoothness_spline = _config[$ "cave_smoothness_spline"];
+        
+        return self;
+    }
+    
     /// @desc Get terrain shaping configuration struct
     static get_terrain_shaping_config = function()
     {

@@ -530,7 +530,7 @@ function _network_handle_welcome(_buffer)
             show_debug_message("[NET] Applied Terrain Configuration from Server");
             
             // Re-initialize TerrainShaper with new config
-            global.terrain_shaper = new TerrainShaper(_world_data);
+            global.terrain_shaper = new WorldGenCore(_world_data);
         }
     }
     
@@ -590,7 +590,7 @@ function _network_handle_welcome(_buffer)
     if (_world_inst != undefined)
     {
         show_debug_message($"[NET] Re-initializing TerrainShaper for {_world_dim}");
-        global.terrain_shaper = new TerrainShaper(_world_inst);
+        global.terrain_shaper = new WorldGenCore(_world_inst);
     }
     else
     {
