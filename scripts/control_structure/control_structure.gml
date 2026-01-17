@@ -37,42 +37,24 @@ function control_structure(_x, _y)
                 continue;
             }
 
-            // Calculate surface height and cave start only once per column if needed
+            // Calculate surface height only once per column if needed
             if (_surface_height == undefined) _surface_height = worldgen_get_surface_height(i, _world_seed);
-            if (_cave_start == undefined) _cave_start = worldgen_get_cave_start(i, _world_seed);
 
             // Maintain a small sliding window for cave noise
             // Maintain a small sliding window for cave/air check
             if (!_queue_valid)
             {
-                if (global.terrain_shaper != undefined)
-                {
-                    _queue =
-                        ((global.terrain_shaper.get_density_solid(i, j + 1, _world_seed) < 0) << 0) |
-                        ((global.terrain_shaper.get_density_solid(i, j + 0, _world_seed) < 0) << 1) |
-                        ((global.terrain_shaper.get_density_solid(i, j - 1, _world_seed) < 0) << 2);
-                }
-                else
-                {
-                    _queue =
-                        (worldgen_get_cave(i, j + 1, _surface_height, _cave_start, _world_seed, _world_data) << 0) |
-                        (worldgen_get_cave(i, j + 0, _surface_height, _cave_start, _world_seed, _world_data) << 1) |
-                        (worldgen_get_cave(i, j - 1, _surface_height, _cave_start, _world_seed, _world_data) << 2);
-                }
+                _queue =
+                    (!worldgen_is_solid(i, j + 1, _world_seed) << 0) |
+                    (!worldgen_is_solid(i, j + 0, _world_seed) << 1) |
+                    (!worldgen_is_solid(i, j - 1, _world_seed) << 2);
                 _queue_valid = true;
             }
             else
             {
                 // Shift and add next
                 var _next_is_air = false;
-                if (global.terrain_shaper != undefined)
-                {
-                    _next_is_air = (global.terrain_shaper.get_density_solid(i, j + 1, _world_seed) < 0);
-                }
-                else
-                {
-                    _next_is_air = worldgen_get_cave(i, j + 1, _surface_height, _cave_start, _world_seed, _world_data);
-                }
+                _next_is_air = !worldgen_is_solid(i, j + 1, _world_seed);
                 
                 _queue = ((_queue & 0b011) << 1) | _next_is_air;
             }

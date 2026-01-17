@@ -53,7 +53,7 @@ export default [
                     .setDefault("phantasia:sandstone"),
             },
         )
-            .setTerrainModifier(new BiomeTerrainModifier(8, 0.015625, 30, 60, 4)
+            .setTerrainModifier(new BiomeTerrainModifier(8)
                 .setInfluence(1.0)
                 .setSmoothing(64)                               // Wide blending range
                 .setErosionModifier(1.5)                        // Flatter terrain
@@ -134,7 +134,7 @@ export default [
                     .setDefault("phantasia:stone"),
             },
         )
-            .setTerrainModifier(new BiomeTerrainModifier(0, 0.015625, 30, 60, 4)
+            .setTerrainModifier(new BiomeTerrainModifier(0)
                 .setInfluence(0.8)
                 .setSmoothing(32)
                 .setErosionModifier(1.0)
@@ -261,7 +261,7 @@ export default [
                     .setDefault("phantasia:stone"),
             },
         )
-            .setTerrainModifier(new BiomeTerrainModifier(-12, 0.015625, 20, 40, 4))
+            .setTerrainModifier(new BiomeTerrainModifier(-12))
             .setMusic([
                 new Sound("phantasia:music/12_hours_at_ease", 0.7),
                 new Sound("phantasia:music/limerick", 0.7),
@@ -357,7 +357,7 @@ export default [
                     .setDefault("phantasia:stone"),
             },
         )
-            .setTerrainModifier(new BiomeTerrainModifier(4, 0.015625, 40, 80, 5))
+            .setTerrainModifier(new BiomeTerrainModifier(4))
             .setMusic([
                 new Sound("phantasia:music/12_hours_at_ease", 0.6),
                 new Sound("phantasia:music/fall", 0.6),
@@ -456,7 +456,7 @@ export default [
                     .setDefault("phantasia:stone"),
             },
         )
-            .setTerrainModifier(new BiomeTerrainModifier(-80, 0.015625, 10, 20, 3))
+            .setTerrainModifier(new BiomeTerrainModifier(-80))
             .setIsOcean()
             .setMusic([
                 new Sound("phantasia:music/12_hours_at_ease", 0.6),

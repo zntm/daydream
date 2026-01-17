@@ -21,12 +21,6 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
     ___tile_bottom_layer = undefined;
     ___tile_foliage = undefined;
     
-    ___terrain_noise_scale = 0.015625;
-    ___terrain_height_offset = -40;
-    ___terrain_amplitude_min = 30;
-    ___terrain_amplitude_max = 60;
-    ___terrain_octaves = 4;
-    
     ___is_ocean = false;
     ___is_skyland = false;
     

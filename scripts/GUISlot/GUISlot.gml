@@ -142,8 +142,8 @@ function GUISlot(_x, _y, _inventory_name, _slot_index, _sprite = spr_Inventory_S
                 var _spr = asset_get_index(icon_sprite);
                 if (_spr != -1)
                 {
-                    var _idx = (struct_exists(self, "icon_index")) ? icon_index : 0;
-                    draw_sprite_ext(_spr, _idx, _abs_x * _base_scale_x, _abs_y * _base_scale_y, _scale_x, _scale_y, 0, c_white, 1);
+                    var _index = (struct_exists(self, "icon_index")) ? icon_index : 0;
+                    draw_sprite_ext(_spr, _index, _abs_x * _base_scale_x, _abs_y * _base_scale_y, _scale_x, _scale_y, 0, c_white, 1);
                 }
             }
             exit;

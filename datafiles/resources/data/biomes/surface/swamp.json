@@ -133,11 +133,7 @@
         "lush"
     ],
     "terrain_modifier": {
-        "height_offset": -12,
-        "noise_scale": 0.015625,
-        "amplitude_min": 20,
-        "amplitude_max": 40,
-        "octaves": 4
+        "height_offset": -12
     },
     "tile": {
         "top_layer": {

@@ -160,7 +160,7 @@ function proglang_vm_run(_vm, _entry_bytecode)
     var _gref = _vm[PROG_VM.GLOBAL_REF];
     
     // LIFTED VARIABLES
-    var _a, _b, _val, _idx, _name, _arr, _obj, _prop, _vm_thrown_error;
+    var _a, _b, _val, _index, _name, _arr, _obj, _prop, _vm_thrown_error;
     var _steps = 0;
     var _max_steps = 1000000;
     
@@ -363,13 +363,13 @@ function proglang_vm_run(_vm, _entry_bytecode)
                     case PROG_OP.CALL:
                     case PROG_OP.CALL_SPREAD:
                         var _param_count = 0;
-                        var _callee_idx = 0;
+                        var _callee_index = 0;
                         
                         if (_op == PROG_OP.CALL)
                         {
                             _param_count = _arg;
-                            _callee_idx = _sp - _param_count - 1;
-                            _val = _stack[_callee_idx]; // Callee
+                            _callee_index = _sp - _param_count - 1;
+                            _val = _stack[_callee_index]; // Callee
                         }
                         else
                         {
@@ -382,7 +382,7 @@ function proglang_vm_run(_vm, _entry_bytecode)
                             _stack[@ _sp++] = _val;
                             for (var i = 0; i < _param_count; i++) _stack[@ _sp++] = _args_arr[i];
                             
-                            _callee_idx = _sp - _param_count - 1;
+                            _callee_index = _sp - _param_count - 1;
                         }
                         
                         // 0. Resolve String Callee
@@ -464,7 +464,7 @@ function proglang_vm_run(_vm, _entry_bytecode)
                         else if (is_struct(_val) && struct_exists(_val, "function"))
                         {
                             var _args_subset = array_create(_param_count);
-                            array_copy(_args_subset, 0, _stack, _callee_idx + 1, _param_count);
+                            array_copy(_args_subset, 0, _stack, _callee_index + 1, _param_count);
                             _sp -= (_param_count + 1); // Pop args and callee
                             var _res = _val[$ "function"](_args_subset, _vm);
                             _stack[@ _sp++] = _res;
@@ -473,7 +473,7 @@ function proglang_vm_run(_vm, _entry_bytecode)
                         else if (is_real(_val) && script_exists(_val))
                         {
                             var _args_subset = array_create(_param_count);
-                            array_copy(_args_subset, 0, _stack, _callee_idx + 1, _param_count);
+                            array_copy(_args_subset, 0, _stack, _callee_index + 1, _param_count);
                             // Execute
                             _sp -= (_param_count + 1); // Pop args and callee
                             var _res = script_execute_ext(_val, _args_subset);
@@ -483,7 +483,7 @@ function proglang_vm_run(_vm, _entry_bytecode)
                         else if (is_method(_val))
                         {
                             var _args_subset = array_create(_param_count);
-                            array_copy(_args_subset, 0, _stack, _callee_idx + 1, _param_count);
+                            array_copy(_args_subset, 0, _stack, _callee_index + 1, _param_count);
                             _sp -= (_param_count + 1);
                             var _res = method_call(_val, _args_subset);
                             _stack[@ _sp++] = _res;
@@ -583,14 +583,14 @@ function proglang_vm_run(_vm, _entry_bytecode)
                         
                     // Structure Access
                     case PROG_OP.INDEX_GET:
-                        _idx = _stack[--_sp];
+                        _index = _stack[--_sp];
                         _arr = _stack[--_sp];
                         
-                        // Check for range slicing: _idx is ["range", start, end]
-                        if (is_array(_idx) && array_length(_idx) >= 3 && _idx[0] == "range")
+                        // Check for range slicing: _index is ["range", start, end]
+                        if (is_array(_index) && array_length(_index) >= 3 && _index[0] == "range")
                         {
-                            var _start = _idx[1];
-                            var _end = _idx[2];
+                            var _start = _index[1];
+                            var _end = _index[2];
                             
                             if (is_array(_arr))
                             {
@@ -640,16 +640,16 @@ function proglang_vm_run(_vm, _entry_bytecode)
                             // Single element access
                             if (is_array(_arr))
                             {
-                                _val = _arr[_idx];
+                                _val = _arr[_index];
                             }
                             else if (is_struct(_arr))
                             {
-                                _val = _arr[$ _idx];
+                                _val = _arr[$ _index];
                             }
                             else if (is_string(_arr))
                             {
                                 // String indexing: str[i] (0-indexed)
-                                _val = string_char_at(_arr, _idx + 1);
+                                _val = string_char_at(_arr, _index + 1);
                             }
                             else
                             {
@@ -662,10 +662,10 @@ function proglang_vm_run(_vm, _entry_bytecode)
                     
                     case PROG_OP.INDEX_SET:
                         _val = _stack[--_sp];
-                        _idx = _stack[--_sp];
+                        _index = _stack[--_sp];
                         _arr = _stack[--_sp];
-                        if (is_array(_arr)) _arr[@ _idx] = _val;
-                        else if (is_struct(_arr)) _arr[$ _idx] = _val;
+                        if (is_array(_arr)) _arr[@ _index] = _val;
+                        else if (is_struct(_arr)) _arr[$ _index] = _val;
                         _stack[@ _sp++] = _val;
                         break;
                     

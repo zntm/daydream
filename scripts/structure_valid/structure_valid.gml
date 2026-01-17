@@ -76,23 +76,10 @@ function structure_valid(_x, _y, _id, _seed)
                     ++l;
                 }
                 
-                var _cave_start = worldgen_get_cave_start(_x2, _seed);
-                
                 for (; l < _abs_clearance_condition_height; ++l)
                 {
                     var _y2 = _tile_y + l + _yoffset;
-                    
-                    var _is_cave = false;
-                    if (global.terrain_shaper != undefined)
-                    {
-                        _is_cave = (global.terrain_shaper.get_density_solid(_x2, _y2, _seed) < 0);
-                    }
-                    else
-                    {
-                        _is_cave = worldgen_get_cave(_x2, _y2, _surface_height, _cave_start, _seed);
-                    }
-                    
-                    if (!_is_cave) return false;
+                    if (worldgen_is_solid(_x2, _y2, _seed)) return false;
                 }
             }
         }

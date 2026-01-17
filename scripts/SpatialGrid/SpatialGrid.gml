@@ -85,10 +85,10 @@ function SpatialGrid(_cell_size = TILE_SIZE * 2) constructor
             
             if (_cell != undefined)
             {
-                var _idx = array_get_index(_cell, _body);
-                if (_idx >= 0)
+                var _index = array_get_index(_cell, _body);
+                if (_index >= 0)
                 {
-                    array_delete(_cell, _idx, 1);
+                    array_delete(_cell, _index, 1);
                 }
             }
         }

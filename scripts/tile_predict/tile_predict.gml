@@ -38,21 +38,8 @@ function tile_predict(_x, _y, _z)
         
         if (_z == CHUNK_DEPTH_DEFAULT)
         {
-            var _cave_start = worldgen_get_cave_start(_x, _world_seed);
-            
-            var _is_cave = false;
-            var _is_cave_above = false;
-            
-            if (global.terrain_shaper != undefined)
-            {
-                _is_cave = (global.terrain_shaper.get_density_solid(_x, _y, _world_seed) < 0);
-                _is_cave_above = (global.terrain_shaper.get_density_solid(_x, _y - 1, _world_seed) < 0);
-            }
-            else
-            {
-                _is_cave = worldgen_get_cave(_x, _y, _surface_height, _cave_start, _world_seed);
-                _is_cave_above = worldgen_get_cave(_x, _y - 1, _surface_height, _cave_start, _world_seed);
-            }
+            var _is_cave = !worldgen_is_solid(_x, _y, _world_seed);
+            var _is_cave_above = !worldgen_is_solid(_x, _y - 1, _world_seed);
             
             if (!_is_cave)
             {
@@ -82,21 +69,8 @@ function tile_predict(_x, _y, _z)
     
     if (_z == _z2) && (_y >= _surface_height - 1)
     {
-        var _cave_start = worldgen_get_cave_start(_x, _world_seed);
-        
-        var _is_cave = false;
-        var _is_cave_below = false;
-        
-        if (global.terrain_shaper != undefined)
-        {
-            _is_cave = (global.terrain_shaper.get_density_solid(_x, _y, _world_seed) < 0);
-            _is_cave_below = (global.terrain_shaper.get_density_solid(_x, _y + 1, _world_seed) < 0);
-        }
-        else
-        {
-            _is_cave = worldgen_get_cave(_x, _y, _surface_height, _cave_start, _world_seed);
-            _is_cave_below = worldgen_get_cave(_x, _y + 1, _surface_height, _cave_start, _world_seed);
-        }
+        var _is_cave = !worldgen_is_solid(_x, _y, _world_seed);
+        var _is_cave_below = !worldgen_is_solid(_x, _y + 1, _world_seed);
         
         if (_is_cave && !_is_cave_below)
         {

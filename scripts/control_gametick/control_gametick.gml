@@ -75,9 +75,9 @@ function control_gametick(_delta_time)
                 
                 // Decay harvest progress
                 var _keys = struct_get_names(harvest_progress);
-                for (var _key_idx = 0; _key_idx < array_length(_keys); _key_idx++)
+                for (var _key_index = 0; _key_index < array_length(_keys); _key_index++)
                 {
-                    var _key = _keys[_key_idx];
+                    var _key = _keys[_key_index];
                     if (_key != harvest_last_key)
                     {
                         harvest_progress[$ _key] = max(0, harvest_progress[$ _key] - (1 / GAME_TICK)); // Undoes 1 hardness per second

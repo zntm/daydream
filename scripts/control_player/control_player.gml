@@ -82,7 +82,7 @@ function control_player()
     if !(obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.MENU)
     {
         var _inv_target = global.inventory;
-        var _hotbar_idx = global.inventory_selected_hotbar;
+        var _hotbar_index = global.inventory_selected_hotbar;
         
         if (global.network_role == NETWORK_ROLE.SERVER && !is_local)
         {
@@ -90,11 +90,11 @@ function control_player()
             if (!is_undefined(_client))
             {
                 _inv_target = _client.inventory;
-                _hotbar_idx = selected_hotbar;
+                _hotbar_index = selected_hotbar;
             }
         }
         
-        var _item = _inv_target.base[clamp(_hotbar_idx, 0, array_length(_inv_target.base) - 1)];
+        var _item = _inv_target.base[clamp(_hotbar_index, 0, array_length(_inv_target.base) - 1)];
         
         if (_item != INVENTORY_EMPTY)
         {
@@ -255,7 +255,7 @@ function control_player()
         
         timer_attack = 0.3;
         
-        var _item = _inv_target.base[_hotbar_idx];
+        var _item = _inv_target.base[_hotbar_index];
         
         if (_item != INVENTORY_EMPTY)
         {
@@ -339,7 +339,7 @@ function control_player()
     // --- CONSUMABLES (Eating) ---
     if (input_state.use_held)
     {
-        var _item = _inv_target.base[_hotbar_idx];
+        var _item = _inv_target.base[_hotbar_index];
         
         if (_item != INVENTORY_EMPTY)
         {
@@ -372,7 +372,7 @@ function control_player()
                         }
                         
                         var _changed_slots = (global.network_role == NETWORK_ROLE.SERVER && !is_local) ? [] : undefined;
-                        inventory_item_decrement("base", _hotbar_idx, _inv_target, _changed_slots);
+                        inventory_item_decrement("base", _hotbar_index, _inv_target, _changed_slots);
                         
                         if (_changed_slots != undefined && array_length(_changed_slots) > 0)
                         {

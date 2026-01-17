@@ -44,8 +44,8 @@ function tile_update_liquid(_x, _y, _z)
             var _is = chunk_map_get_by_tile(_xs, _ys);
             if (!instance_exists(_is)) return undefined;
             
-            var _idx = tile_index_xyz(_xs, _ys, _zs);
-            var _t = _is.chunk[_idx];
+            var _index = tile_index_xyz(_xs, _ys, _zs);
+            var _t = _is.chunk[_index];
             
             if (_t == TILE_EMPTY) return undefined;
              

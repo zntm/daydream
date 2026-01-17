@@ -66,24 +66,6 @@ function init_world(_directory, _namespace = "phantasia", _type = 0)
         _world_data.set_cave_biome(_biome.cave);
         _world_data.set_surface_biome(_biome.surface);
         
-
-        
-        var _surface = _json.surface;
-        _world_data.set_surface(_surface);
-        
-        var _cave = _json.cave;
-        _world_data.set_cave(_cave);
-        
-        // Parse terrain shaping configuration (legacy 3D density system)
-        var _terrain_shaping = _json[$ "terrain_shaping"];
-        if (_terrain_shaping != undefined)
-        {
-            _world_data.set_terrain_shaping(_terrain_shaping);
-        }
-        else
-        {
-            _world_data.set_terrain_shaping({});
-        }
         
         // Parse new worldgen configuration (unified spline-based system)
         var _worldgen = _json[$ "worldgen"];
@@ -95,10 +77,8 @@ function init_world(_directory, _namespace = "phantasia", _type = 0)
         global.world_data[$ $"{_namespace}:{_id}"] = _world_data;
         
         // Initialize terrain_shaper with the first loaded world's data
-        if (global.terrain_shaper == undefined)
-        {
-            global.terrain_shaper = new WorldGenCore(_world_data);
-        }
+        // Initialize functional worldgen config in chunk pool
+        global.chunk_pool.worldgen_config = new WorldGenState(_world_data);
         
         delete _json;
         

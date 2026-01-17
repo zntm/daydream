@@ -48,11 +48,7 @@
         "wet"
     ],
     "terrain_modifier": {
-        "height_offset": -80,
-        "noise_scale": 0.015625,
-        "amplitude_min": 10,
-        "amplitude_max": 20,
-        "octaves": 3
+        "height_offset": -80
     },
     "tile": {
         "top_layer": {

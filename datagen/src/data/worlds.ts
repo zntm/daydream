@@ -210,11 +210,6 @@ export class WorldSurfaceSmoothing {
 
 export class WorldSurface {
     private start: number;
-    private noise_offset: Noise;
-    private smoothing: WorldSurfaceSmoothing;
-    private noise_scale: number;
-    private seed_offset?: number;
-    private min_depth?: number;
     private bedrock_depth?: number;
     private bedrock_noise_scale?: number;
     private tile_variation_noise_scale?: number;
@@ -223,11 +218,6 @@ export class WorldSurface {
 
     constructor(
         start: number, 
-        noiseOffset: Noise,
-        smoothing: WorldSurfaceSmoothing = new WorldSurfaceSmoothing(),
-        noiseScale: number = 0.015625,
-        seedOffset: number = -40,
-        minDepth: number = 8,
         bedrockDepth: number = 3,
         bedrockNoiseScale: number = 0.3,
         tileVariationNoiseScale: number = 0.05,
@@ -235,11 +225,6 @@ export class WorldSurface {
         biomeBlendNoiseScale: number = 0.08
     ) {
         this.start = start;
-        this.noise_offset = noiseOffset;
-        this.smoothing = smoothing;
-        this.noise_scale = noiseScale;
-        this.seed_offset = seedOffset;
-        this.min_depth = minDepth;
         this.bedrock_depth = bedrockDepth;
         this.bedrock_noise_scale = bedrockNoiseScale;
         this.tile_variation_noise_scale = tileVariationNoiseScale;
@@ -248,17 +233,6 @@ export class WorldSurface {
     }
 }
 
-export class WorldCaveSystem {
-    private range_min: number;
-    private range_max: number;
-    private threshold: Noise;
-
-    constructor(rangeMin: number, rangeMax: number, threshold: Noise) {
-        this.range_min = rangeMin;
-        this.range_max = rangeMax;
-        this.threshold = threshold;
-    }
-}
 
 export class WorldAquifer {
     private type: string;           // Liquid tile ID (e.g., "phantasia:water")
@@ -298,69 +272,12 @@ export class WorldAquifer {
 }
 
 export class WorldCave {
-    private start: Noise;
-    private system: WorldCaveSystem[];
     private aquifers?: WorldAquifer[];
-    private depth_smoothing?: Spline;
-    private noise_scale: number;
-    private breach_threshold: number;
-    private breach_depth: number;
-    private transition_threshold: number;
-    private breach_noise_scale_x?: number;
-    private breach_noise_scale_y?: number;
-    private breach_noise_offset_y?: number;
-    private breach_noise_range?: number;
-    private breach_noise_octaves?: number;
-    private transition_noise_scale_x?: number;
-    private transition_noise_scale_y?: number;
-    private transition_noise_range?: number;
-    private transition_noise_octaves?: number;
-    private overhang_threshold?: number;
-    private overhang_threshold_tile?: number;
-    private overhang_noise_scale?: number;
 
     constructor(
-        start: Noise, 
-        system: WorldCaveSystem[], 
-        aquifers?: WorldAquifer[],
-        depthSmoothing?: Spline,
-        noiseScale: number = 0.015625,
-        breachThreshold: number = 242,
-        breachDepth: number = -8,
-        transitionThreshold: number = 220,
-        breachNoiseScaleX: number = 0.03,
-        breachNoiseScaleY: number = 0.03,
-        breachNoiseOffsetY: number = 1000,
-        breachNoiseRange: number = 255,
-        breachNoiseOctaves: number = 2,
-        transitionNoiseScaleX: number = 0.02,
-        transitionNoiseScaleY: number = 0.02,
-        transitionNoiseRange: number = 255,
-        transitionNoiseOctaves: number = 3,
-        overhangThreshold?: number,
-        overhangThresholdTile?: number,
-        overhangNoiseScale: number = 0.05
+        aquifers?: WorldAquifer[]
     ) {
-        this.start = start;
-        this.system = system;
         if (aquifers) this.aquifers = aquifers;
-        if (depthSmoothing) this.depth_smoothing = depthSmoothing;
-        this.noise_scale = noiseScale;
-        this.breach_threshold = breachThreshold;
-        this.breach_depth = breachDepth;
-        this.transition_threshold = transitionThreshold;
-        this.breach_noise_scale_x = breachNoiseScaleX;
-        this.breach_noise_scale_y = breachNoiseScaleY;
-        this.breach_noise_offset_y = breachNoiseOffsetY;
-        this.breach_noise_range = breachNoiseRange;
-        this.breach_noise_octaves = breachNoiseOctaves;
-        this.transition_noise_scale_x = transitionNoiseScaleX;
-        this.transition_noise_scale_y = transitionNoiseScaleY;
-        this.transition_noise_range = transitionNoiseRange;
-        this.transition_noise_octaves = transitionNoiseOctaves;
-        this.overhang_threshold = overhangThreshold;
-        this.overhang_threshold_tile = overhangThresholdTile;
-        this.overhang_noise_scale = overhangNoiseScale;
     }
 }
 
@@ -513,39 +430,13 @@ export default [
                     )
                 ]
             ),
-            new WorldSurface(512, new Noise(4, 40, 96)),
-            new WorldCave(new Noise(0, 12, 2), [
-                new WorldCaveSystem(50, 70, new Noise(4)),
-                new WorldCaveSystem(116, 140, new Noise(4)),
-            ], [
+            new WorldSurface(512),
+            new WorldCave([
                 // Water aquifers: shallow caves (20-200 blocks below surface)
                 new WorldAquifer("phantasia:water", 20, 200, 200, 3, 8, 0.02, 255, "phantasia:stone", 15),
                 // Lava aquifers: deep caves (350-450 blocks below surface)
                 new WorldAquifer("phantasia:lava", 350, 450, 220, 2, 8, 0.02, 255, "phantasia:stone", 12),
-            ], new Spline([
-                // Depth smoothing: caves scale from 0 at surface to 1 at depth
-                new SplinePoint(0, 0, SplineEasing.EaseOut),   // At surface: no caves (ease out for gradual start)
-                new SplinePoint(16, 0.3),                      // 16 blocks deep: 30% cave size
-                new SplinePoint(64, 1),                        // 64 blocks deep: full caves
-                new SplinePoint(64, 1),                        // 64 blocks deep: full caves
             ]),
-            0.015625, // noiseScale
-            242,      // breachThreshold
-            -8,       // breachDepth
-            220,      // transitionThreshold
-            0.03,     // breachNoiseScaleX
-            0.03,     // breachNoiseScaleY
-            1000,     // breachNoiseOffsetY
-            255,      // breachNoiseRange
-            2,        // breachNoiseOctaves
-            0.02,     // transitionNoiseScaleX
-            0.02,     // transitionNoiseScaleY
-            255,      // transitionNoiseRange
-            3,        // transitionNoiseOctaves
-            0.2,      // overhangThreshold
-            0.35,     // overhangThresholdTile
-            0.05      // overhangNoiseScale
-            ),
             // NEW: WorldGen spline-based configuration
             new WorldGen({
                 // Surface shape

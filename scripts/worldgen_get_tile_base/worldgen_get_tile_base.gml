@@ -30,18 +30,12 @@ function worldgen_get_tile_base(_x, _y, _surface_biome, _cave_biome, _surface_he
         var _bedrock_noise = open_simplex_noise(_x * _world_data.get_bedrock_noise_scale(), _seed * 50, 1.0, 1);
         if (_bedrock_noise > (_bedrock_depth - 1) * 0.4) return "phantasia:bedrock";
     }
-    // === 3D Density-based terrain (replaces old overhang system) ===
-    // Use TerrainShaper for solid tile determination
-    var _density = 0;
-    var _material_noise = 0;
-    if (global.terrain_shaper != undefined)
-    {
-        _density = global.terrain_shaper.get_density_solid(_x, _y, _seed);
-        if (_density < 0) return TILE_EMPTY; // Negative density = air
-        
-        // Sample material noise for organic variation
-        _material_noise = global.terrain_shaper.get_density_material(_x, _y, _seed);
-    }
+    // === 3D Density-based terrain ===
+    var _density = worldgen_get_density_solid(_x, _y, _seed);
+    if (_density < 0) return TILE_EMPTY; // Negative density = air
+    
+    // Sample material noise for organic variation
+    var _material_noise = worldgen_get_density_material(_x, _y, _seed);
     
     // Generate context for MaterialProvider
     // Used for evaluating rules and noise-based placement
@@ -59,119 +53,85 @@ function worldgen_get_tile_base(_x, _y, _surface_biome, _cave_biome, _surface_he
         // Add more context properties here as needed by rules
     }
     
-    var _biome_data = global.biome_data;
+    // === UNIFIED BIOME RESOLUTION ===
+    // Determine which biome config to use for this block
+    var _biome = undefined;
     
-    // Cave biome tiles (no horizontal blending for underground)
+    // 1. Cave Biome Priority
     if (_cave_biome != undefined)
     {
-        var _biome = _biome_data[$ _cave_biome] ?? _biome_data[$ "phantasia:surface/forest"];
-        if (_biome != undefined)
-        {
-            return _biome.get_tile_middle_layer().get_tile(_context);
-        }
+        _biome = _biome_data[$ _cave_biome];
     }
     
-    // Surface biome evaluation
-    var _blend_range = _world_data.get_biome_blend_range();
-    var _blend_noise_scale = _world_data.get_biome_blend_noise_scale();
-    
-    // === BIOME TRANSITION SYSTEM (Beaches, etc.) ===
-    // Check distance to region boundary for transition biomes
-    var _boundary_distance = global.region_generator.get_boundary_distance(_x, _y, 0, _seed);
-    var _transition_threshold = _world_data[$ "___transition_threshold"] ?? 24; // Distance in blocks to trigger transition
-    
-    var _biome_to_use_id = _surface_biome;
-    
-    if (_boundary_distance < _transition_threshold)
+    // 2. Surface Biome & Transitions (if no cave biome or fallback needed)
+    if (_biome == undefined)
     {
-        // We're near a biome boundary - check for transition biome
-        var _transition_biome = ___get_transition_biome(_surface_biome, _world_data, _seed, _x);
-        if (_transition_biome != undefined)
+        var _biome_to_use_id = _surface_biome;
+        
+        // === BIOME TRANSITION SYSTEM ===
+        var _blend_range = _world_data.get_biome_blend_range();
+        
+        // Check distance to region boundary for transition biomes
+        var _boundary_distance = global.region_generator.get_boundary_distance(_x, _y, 0, _seed);
+        var _transition_threshold = _world_data[$ "___transition_threshold"] ?? 24;
+        
+        if (_boundary_distance < _transition_threshold)
         {
-            // Smooth transition: use noise to blend into transition biome
-            var _transition_factor = 1 - (_boundary_distance / _transition_threshold);
-            var _transition_noise = open_simplex_noise(_x * 0.05, _y * 0.05 + 2000, 1.0, 2);
-            
-            if (_transition_noise < _transition_factor * 0.8)
+            var _transition_biome = ___get_transition_biome(_surface_biome, _world_data, _seed, _x);
+            if (_transition_biome != undefined)
             {
-                _biome_to_use_id = _transition_biome;
+                var _transition_factor = 1 - (_boundary_distance / _transition_threshold);
+                var _transition_noise = open_simplex_noise(_x * 0.05, _y * 0.05 + 2000, 1.0, 2);
+                
+                if (_transition_noise < _transition_factor * 0.8)
+                {
+                    _biome_to_use_id = _transition_biome;
+                }
             }
         }
+        
+        _biome = _biome_data[$ _biome_to_use_id] ?? _biome_data[$ "phantasia:surface/forest"];
     }
     
-    // === LEGACY HORIZONTAL BLENDING ===
-    var _heat = worldgen_get_heat(_x, 0, _seed, _world_data);
-    var _humidity = worldgen_get_humidity(_x, 0, _seed, _world_data);
-    var _heat_left = worldgen_get_heat(_x - _blend_range, 0, _seed, _world_data);
-    var _heat_right = worldgen_get_heat(_x + _blend_range, 0, _seed, _world_data);
-    var _humidity_left = worldgen_get_humidity(_x - _blend_range, 0, _seed, _world_data);
-    var _humidity_right = worldgen_get_humidity(_x + _blend_range, 0, _seed, _world_data);
-    
-    var _is_boundary = (_heat != _heat_left) || (_heat != _heat_right) || 
-                       (_humidity != _humidity_left) || (_humidity != _humidity_right);
-    
-    if (_is_boundary && _biome_to_use_id == _surface_biome) // Only apply if not already transitioned
+    // Safety check
+    if (_biome == undefined) return TILE_EMPTY;
+
+    // === STRATIFICATION LOGIC ===
+    // 1. Surface (Exposed to Air): Grass/Top Layer
+    // Valid for both Surface and Cave biomes (e.g. Cave Floor)
+    if (_cave_above)
     {
-        var _blend_noise = open_simplex_noise(_x * _blend_noise_scale, _y * _blend_noise_scale + 1000, 1.0, 2);
-        if (_blend_noise > 0.2)
-        {
-            var _surface_biome_map = _world_data.get_surface_biome_map();
-            if (_blend_noise > 0.55 && (_heat_left != _heat || _humidity_left != _humidity))
-            {
-                _biome_to_use_id = _surface_biome_map[(_humidity_left << WORLDGEN_SIZE_HEAT_BIT) | _heat_left];
-            }
-            else if (_blend_noise > 0.2 && (_heat_right != _heat || _humidity_right != _humidity))
-            {
-                _biome_to_use_id = _surface_biome_map[(_humidity_right << WORLDGEN_SIZE_HEAT_BIT) | _heat_right];
-            }
-        }
+        return _biome.get_tile_top_layer().get_tile(_context);
     }
     
-    var _biome = _biome_data[$ _biome_to_use_id] ?? _biome_data[$ "phantasia:surface/forest"];
+    // 2. Sub-surface (Near Air): Dirt/Middle Layer
+    // Density closer to 0 means we are near the surface/edge.
     
-    if (_biome != undefined)
+    // --- ORGANIC REFINEMENTS ---
+    // A. Continuous "Crust" variation (large-scale waves of soil depth)
+    var _crust_var = open_simplex_noise(_x * 0.015, _seed * 8.3, 1.0, 2);
+    
+    // B. Smooth "Blobby" boundary (medium-scale wobble for rounded transitions)
+    var _boundary_wobble = open_simplex_noise(_x * 0.06, _y * 0.06 + (_seed * 15.7), 1.0, 3);
+    
+    // Calculate dynamic threshold for dirt layer
+    var _dirt_threshold = 0.6 + (_crust_var * 0.4) + (_boundary_wobble * 0.15);
+    
+    if (_density < _dirt_threshold)
     {
-        // === STRATIFICATION LOGIC ===
-        // Determine tile based on density and exposure
-        // 1. Surface (Exposed to Air): Grass/Top Layer
-        if (_cave_above)
-        {
-            return _biome.get_tile_top_layer().get_tile(_context);
-        }
-        
-        // 2. Sub-surface (Near Air): Dirt/Middle Layer
-        // Density closer to 0 means we are near the surface/edge.
-        // Higher density means we are deeper inside the solid mass.
-        
-        // --- ORGANIC REFINEMENTS ---
-        // A. Continuous "Crust" variation (large-scale waves of soil depth)
-        var _crust_var = open_simplex_noise(_x * 0.015, _seed * 8.3, 1.0, 2);
-        
-        // B. Smooth "Blobby" boundary (medium-scale wobble for rounded transitions)
-        var _boundary_wobble = open_simplex_noise(_x * 0.06, _y * 0.06 + (_seed * 15.7), 1.0, 3);
-        
-        // Calculate dynamic threshold for dirt layer
-        // Base 0.6 + waves + blobs
-        var _dirt_threshold = 0.6 + (_crust_var * 0.4) + (_boundary_wobble * 0.15);
-        
-        if (_density < _dirt_threshold)
-        {
-            return _biome.get_tile_middle_layer().get_tile(_context);
-        }
-        
-        // 3. Deep Underground: Stone/Fill Layer
-        // Use 3D material noise for organic variation
-        if (_material_noise > 0.4)
-        {
-            // Pockets of other materials (stone variants, gravel, etc.)
-            // For now let's just use it to vary the "type" of stone or use it for gravel patches
-            return "phantasia:stone"; // Replace with your desired variants!
-        }
-        
+        return _biome.get_tile_middle_layer().get_tile(_context);
+    }
+    
+    // 3. Deep Underground: Stone/Fill Layer
+    // Use 3D material noise for organic variation
+    if (_material_noise > 0.4)
+    {
+        // Pockets of other materials (stone variants, gravel, etc.)
+        // For now let's just use it to vary the "type" of stone or use it for gravel patches
         return "phantasia:stone"; 
     }
     
-    return TILE_EMPTY;
+    return "phantasia:stone";
 }
 
 /// @desc Get transition biome between two adjacent biomes

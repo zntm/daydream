@@ -130,27 +130,6 @@
         }
     },
     "cave": {
-        "start": {
-            "octaves": 0,
-            "min": 12,
-            "max": 2
-        },
-        "system": [
-            {
-                "range_min": 50,
-                "range_max": 70,
-                "threshold": {
-                    "octaves": 4
-                }
-            },
-            {
-                "range_min": 116,
-                "range_max": 140,
-                "threshold": {
-                    "octaves": 4
-                }
-            }
-        ],
         "aquifers": [
             {
                 "type": "phantasia:water",
@@ -176,45 +155,7 @@
                 "edge_tile": "phantasia:stone",
                 "edge_width": 12
             }
-        ],
-        "depth_smoothing": {
-            "points": [
-                {
-                    "position": 0,
-                    "value": 0,
-                    "easing": "ease_out"
-                },
-                {
-                    "position": 16,
-                    "value": 0.3
-                },
-                {
-                    "position": 64,
-                    "value": 1
-                },
-                {
-                    "position": 64,
-                    "value": 1
-                }
-            ],
-            "type": "spline"
-        },
-        "noise_scale": 0.015625,
-        "breach_threshold": 242,
-        "breach_depth": -8,
-        "transition_threshold": 220,
-        "breach_noise_scale_x": 0.03,
-        "breach_noise_scale_y": 0.03,
-        "breach_noise_offset_y": 1000,
-        "breach_noise_range": 255,
-        "breach_noise_octaves": 2,
-        "transition_noise_scale_x": 0.02,
-        "transition_noise_scale_y": 0.02,
-        "transition_noise_range": 255,
-        "transition_noise_octaves": 3,
-        "overhang_threshold": 0.2,
-        "overhang_threshold_tile": 0.35,
-        "overhang_noise_scale": 0.05
+        ]
     },
     "celestials": [
         {
@@ -231,18 +172,6 @@
     "spawn_interval": 14,
     "surface": {
         "start": 512,
-        "noise_offset": {
-            "octaves": 4,
-            "min": 40,
-            "max": 96
-        },
-        "smoothing": {
-            "range": 32,
-            "factor": 0.6
-        },
-        "noise_scale": 0.015625,
-        "seed_offset": -40,
-        "min_depth": 8,
         "bedrock_depth": 3,
         "bedrock_noise_scale": 0.3,
         "tile_variation_noise_scale": 0.05,

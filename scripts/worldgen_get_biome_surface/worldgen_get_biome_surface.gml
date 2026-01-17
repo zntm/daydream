@@ -3,7 +3,7 @@ function worldgen_get_biome_surface(_x, _y, _surface_height, _seed, _world_data 
     var _surface_biome_map = _world_data.get_surface_biome_map();
     if (_surface_biome_map == undefined) return "phantasia:surface/forest";
     
-    _y = max(_y, _surface_height + _world_data.get_surface_min_depth());
+    _y = max(_y, _surface_height);
     
     var _index = (_humidity << WORLDGEN_SIZE_HEAT_BIT) | (_heat);
     

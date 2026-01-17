@@ -100,10 +100,6 @@ export class Biome {
 export class BiomeTerrainModifier {
     // Legacy height offset
     private height_offset: number;
-    private noise_scale?: number;
-    private amplitude_min?: number;
-    private amplitude_max?: number;
-    private octaves?: number;
     
     // NEW: Biome blending control
     private influence?: number;    // How much these modifiers affect generation (0-1)
@@ -116,18 +112,9 @@ export class BiomeTerrainModifier {
     private continentalness_modifier?: number; // Modifier for continentalness
 
     constructor(
-        heightOffset: number, 
-        noiseScale?: number,
-        amplitudeMin?: number,
-        amplitudeMax?: number,
-        octaves?: number
+        heightOffset: number
     ) {
         this.height_offset = heightOffset;
-        
-        if (noiseScale !== undefined) this.noise_scale = noiseScale;
-        if (amplitudeMin !== undefined) this.amplitude_min = amplitudeMin;
-        if (amplitudeMax !== undefined) this.amplitude_max = amplitudeMax;
-        if (octaves !== undefined) this.octaves = octaves;
     }
     
     /** Set how much this biome's modifiers affect worldgen (0-1) */

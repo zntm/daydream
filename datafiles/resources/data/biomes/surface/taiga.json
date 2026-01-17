@@ -154,11 +154,7 @@
         "snow"
     ],
     "terrain_modifier": {
-        "height_offset": 4,
-        "noise_scale": 0.015625,
-        "amplitude_min": 40,
-        "amplitude_max": 80,
-        "octaves": 5
+        "height_offset": 4
     },
     "tile": {
         "top_layer": {

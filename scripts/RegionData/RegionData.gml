@@ -191,30 +191,29 @@ function region_create_defaults()
         // Region 0: Forest (default)
         new RegionData("forest", {
             surface_biome: "phantasia:surface/forest",
-            cave_biome_default: "phantasia:cave/default",
+            cave_biome_default: "phantasia:cave/chasm",
             cave_biomes: [
-                { biome: "phantasia:cave/lush", min_depth: 80, noise_threshold: 0.7, noise_scale: 0.015 },
-                { biome: "phantasia:cave/crystal", min_depth: 150, noise_threshold: 0.85, noise_scale: 0.01 }
+                { biome: "phantasia:cave/depths", min_depth: 150, noise_threshold: 0.7, noise_scale: 0.015 }
             ]
         }),
         
         // Region 1: Desert
         new RegionData("desert", {
             surface_biome: "phantasia:surface/desert",
-            cave_biome_default: "phantasia:cave/sandstone",
+            cave_biome_default: "phantasia:cave/chasm",
             terrain: { height_offset: 10, base_height: 410, amplitude_min: 15, amplitude_max: 35 },
             cave_biomes: [
-                { biome: "phantasia:cave/volcanic", min_depth: 200, noise_threshold: 0.6 }
+                { biome: "phantasia:cave/depths", min_depth: 250, noise_threshold: 0.6 }
             ]
         }),
         
-        // Region 2: Tundra
-        new RegionData("tundra", {
-            surface_biome: "phantasia:surface/tundra",
-            cave_biome_default: "phantasia:cave/ice",
+        // Region 2: Taiga (formerly tundra)
+        new RegionData("taiga", {
+            surface_biome: "phantasia:surface/taiga",
+            cave_biome_default: "phantasia:cave/chasm",
             terrain: { height_offset: -20, base_height: 380, amplitude_min: 20, amplitude_max: 50 },
             cave_biomes: [
-                { biome: "phantasia:cave/frozen", min_depth: 50, noise_threshold: 0.5 }
+                { biome: "phantasia:cave/depths", min_depth: 100, noise_threshold: 0.5 }
             ]
         })
     ];

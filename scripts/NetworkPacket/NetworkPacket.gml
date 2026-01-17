@@ -10,7 +10,7 @@ enum PACKET_TYPE {
     TILE_UPDATE,         // Server -> Clients: A tile changed {x, y, z, item_id}
     TILE_UPDATE_REQUEST, // Client -> Server: Request to change a tile
     INVENTORY_UPDATE,    // Server -> Clients: Inventory slot changed
-    INVENTORY_ACTION,    // Client -> Server: Request move/split/drop { type, from_inv, from_idx, to_inv, to_idx, amount }
+    INVENTORY_ACTION,    // Client -> Server: Request move/split/drop { type, from_inv, from_index, to_inv, to_index, amount }
     CONTAINER_OPEN,      // Client -> Server: Request open {x, y, z}; Server -> Client: Response {x, y, z, size}
     CONTAINER_CLOSE,     // Client/Server: Close current container
     CHUNK_REQUEST,       // Client -> Server: Request chunk data {chunk_x, chunk_y}
@@ -279,13 +279,13 @@ function packet_read_inventory_update(_buffer)
 }
 
 /// @desc Serialize INVENTORY_ACTION
-function packet_write_inventory_action(_buffer, _action_type, _from_inv, _from_idx, _to_inv, _to_idx, _amount)
+function packet_write_inventory_action(_buffer, _action_type, _from_inv, _from_index, _to_inv, _to_index, _amount)
 {
     buffer_write(_buffer, buffer_u8, _action_type);
     buffer_write(_buffer, buffer_string, _from_inv);
-    buffer_write(_buffer, buffer_u16, _from_idx);
+    buffer_write(_buffer, buffer_u16, _from_index);
     buffer_write(_buffer, buffer_string, _to_inv);
-    buffer_write(_buffer, buffer_u16, _to_idx);
+    buffer_write(_buffer, buffer_u16, _to_index);
     buffer_write(_buffer, buffer_u16, _amount);
 }
 
@@ -295,9 +295,9 @@ function packet_read_inventory_action(_buffer)
     return {
         type: buffer_read(_buffer, buffer_u8),
         from_inv: buffer_read(_buffer, buffer_string),
-        from_idx: buffer_read(_buffer, buffer_u16),
+        from_index: buffer_read(_buffer, buffer_u16),
         to_inv: buffer_read(_buffer, buffer_string),
-        to_idx: buffer_read(_buffer, buffer_u16),
+        to_index: buffer_read(_buffer, buffer_u16),
         amount: buffer_read(_buffer, buffer_u16)
     };
 }

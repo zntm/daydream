@@ -126,8 +126,8 @@ function control_item_drop()
                 // Optimization - only send changed slots.
                 for (var i = 0; i < array_length(_changed_slots); ++i)
                 {
-                    var _idx = _changed_slots[i];
-                    network_send_inventory_update(inst.socket_id, "base", _idx, _inv_target.base[_idx]);
+                    var _index = _changed_slots[i];
+                    network_send_inventory_update(inst.socket_id, "base", _index, _inv_target.base[_index]);
                 }
             }
         }

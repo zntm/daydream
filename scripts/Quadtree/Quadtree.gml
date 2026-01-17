@@ -158,10 +158,10 @@ function Quadtree(_x, _y, _w, _h, _max_objects = 10, _max_levels = 5, _level = 0
     static remove = function(_item)
     {
         // Try to find in current objects
-        var _idx = array_get_index(objects, _item);
-        if (_idx != -1)
+        var _index = array_get_index(objects, _item);
+        if (_index != -1)
         {
-            array_delete(objects, _idx, 1);
+            array_delete(objects, _index, 1);
             return true;
         }
         

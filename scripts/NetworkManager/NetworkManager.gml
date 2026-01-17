@@ -479,17 +479,7 @@ function _network_handle_hello(_socket, _buffer)
         }
     }
     
-    // Send WELCOME packet with assigned UUID, World Seed, and World Time
-    show_debug_message($"[NET] Sending WELCOME to socket={_socket}");
-    var _welcome_buffer = packet_create(PACKET_TYPE.WELCOME);
-    var _terrain_config = undefined;
-    var _world_data = global.world_data[$ global.world_save_data.dimension];
-    if (_world_data != undefined) 
-    {
-        _terrain_config = _world_data.get_terrain_shaping_config();
-    }
-    
-    packet_write_welcome(_welcome_buffer, _client_uuid, global.world_save_data.seed, global.world_save_data.time, _terrain_config);
+    packet_write_welcome(_welcome_buffer, _client_uuid, global.world_save_data.seed, global.world_save_data.time, undefined);
     packet_send(_socket, _welcome_buffer);
     buffer_delete(_welcome_buffer);
     
@@ -529,8 +519,8 @@ function _network_handle_welcome(_buffer)
             _world_data.set_terrain_shaping(_data.terrain_config);
             show_debug_message("[NET] Applied Terrain Configuration from Server");
             
-            // Re-initialize TerrainShaper with new config
-            global.terrain_shaper = new WorldGenCore(_world_data);
+            // Re-initialize functional worldgen config in chunk pool
+            global.chunk_pool.worldgen_config = new WorldGenState(_world_data);
         }
     }
     
@@ -589,8 +579,8 @@ function _network_handle_welcome(_buffer)
     var _world_inst = global.world_data[$ _world_dim];
     if (_world_inst != undefined)
     {
-        show_debug_message($"[NET] Re-initializing TerrainShaper for {_world_dim}");
-        global.terrain_shaper = new WorldGenCore(_world_inst);
+        show_debug_message($"[NET] Re-initializing WorldGenState for {_world_dim}");
+        global.chunk_pool.worldgen_config = new WorldGenState(_world_inst);
     }
     else
     {
@@ -1193,13 +1183,13 @@ function _network_handle_tile_request(_socket, _buffer)
         // Only consume if placing a block (not mining/clearing)
         if (_tile != TILE_EMPTY)
         {
-            var _hotbar_idx = _p.selected_hotbar;
-            var _inv_item = _client.inventory.base[_hotbar_idx];
+            var _hotbar_index = _p.selected_hotbar;
+            var _inv_item = _client.inventory.base[_hotbar_index];
             
             if (_inv_item != INVENTORY_EMPTY && _inv_item.get_id() == _tile_id)
             {
                 var _changed_slots = [];
-                inventory_item_decrement("base", _hotbar_idx, _client.inventory, _changed_slots);
+                inventory_item_decrement("base", _hotbar_index, _client.inventory, _changed_slots);
                 _network_broadcast_inventory_update(_client, "base", _changed_slots);
             }
             else
@@ -1336,13 +1326,13 @@ function _network_handle_inventory_action(_socket, _buffer)
             
             if (!is_undefined(_from_inv) && !is_undefined(_to_inv))
             {
-                var _item = _from_inv[_action.from_idx];
-                _from_inv[@ _action.from_idx] = _to_inv[_action.to_idx];
-                _to_inv[@ _action.to_idx] = _item;
+                var _item = _from_inv[_action.from_index];
+                _from_inv[@ _action.from_index] = _to_inv[_action.to_index];
+                _to_inv[@ _action.to_index] = _item;
                 
                 // Broadcast updates
-                _network_broadcast_inventory_update(_action.from_inv, _action.from_idx, _from_inv[_action.from_idx], _client);
-                _network_broadcast_inventory_update(_action.to_inv, _action.to_idx, _to_inv[_action.to_idx], _client);
+                _network_broadcast_inventory_update(_action.from_inv, _action.from_index, _from_inv[_action.from_index], _client);
+                _network_broadcast_inventory_update(_action.to_inv, _action.to_index, _to_inv[_action.to_index], _client);
             }
             break;
             
@@ -1352,17 +1342,17 @@ function _network_handle_inventory_action(_socket, _buffer)
             
             if (!is_undefined(_from_inv) && !is_undefined(_to_inv))
             {
-                var _item_src = _from_inv[_action.from_idx];
+                var _item_src = _from_inv[_action.from_index];
                 if (_item_src != INVENTORY_EMPTY && _item_src.get_amount() >= _action.amount)
                 {
-                    var _item_dst = _to_inv[_action.to_idx];
+                    var _item_dst = _to_inv[_action.to_index];
                     
                     if (_item_dst == INVENTORY_EMPTY)
                     {
                         var _new_item = variable_clone(_item_src).set_amount(_action.amount);
-                        _to_inv[@ _action.to_idx] = _new_item;
+                        _to_inv[@ _action.to_index] = _new_item;
                         _item_src.add_amount(-_action.amount);
-                        if (_item_src.get_amount() <= 0) _from_inv[@ _action.from_idx] = INVENTORY_EMPTY;
+                        if (_item_src.get_amount() <= 0) _from_inv[@ _action.from_index] = INVENTORY_EMPTY;
                     }
                     else if (_item_dst.get_id() == _item_src.get_id())
                     {
@@ -1373,12 +1363,12 @@ function _network_handle_inventory_action(_socket, _buffer)
                         {
                             _item_dst.add_amount(_can_add);
                             _item_src.add_amount(-_can_add);
-                            if (_item_src.get_amount() <= 0) _from_inv[@ _action.from_idx] = INVENTORY_EMPTY;
+                            if (_item_src.get_amount() <= 0) _from_inv[@ _action.from_index] = INVENTORY_EMPTY;
                         }
                     }
                     
-                    _network_broadcast_inventory_update(_action.from_inv, _action.from_idx, _from_inv[_action.from_idx], _client);
-                    _network_broadcast_inventory_update(_action.to_inv, _action.to_idx, _to_inv[_action.to_idx], _client);
+                    _network_broadcast_inventory_update(_action.from_inv, _action.from_index, _from_inv[_action.from_index], _client);
+                    _network_broadcast_inventory_update(_action.to_inv, _action.to_index, _to_inv[_action.to_index], _client);
                 }
             }
             break;
@@ -1387,7 +1377,7 @@ function _network_handle_inventory_action(_socket, _buffer)
             var _inv = _resolve_inv(_client, _action.from_inv);
             if (!is_undefined(_inv))
             {
-                var _item = _inv[_action.from_idx];
+                var _item = _inv[_action.from_index];
                 if (_item != INVENTORY_EMPTY)
                 {
                     var _amount_to_drop = min(_action.amount, _item.get_amount());
@@ -1398,15 +1388,15 @@ function _network_handle_inventory_action(_socket, _buffer)
                          spawn_item_drop(_p.x, _p.y - 16, _drop_item, sign(_p.image_xscale), _p.image_xscale * 0.2, -0.6, GAME_TICK * 3);
                     
                     _item.add_amount(-_amount_to_drop);
-                    if (_item.get_amount() <= 0) _inv[@ _action.from_idx] = INVENTORY_EMPTY;
+                    if (_item.get_amount() <= 0) _inv[@ _action.from_index] = INVENTORY_EMPTY;
                     
-                    _network_broadcast_inventory_update(_action.from_inv, _action.from_idx, _inv[_action.from_idx], _client);
+                    _network_broadcast_inventory_update(_action.from_inv, _action.from_index, _inv[_action.from_index], _client);
                 }
             }
             break;
             
         case INVENTORY_ACTION_TYPE.CRAFT:
-            var _index = _action.from_idx; 
+            var _index = _action.from_index; 
             if (_index >= 0 && _index < array_length(global.crafting_data))
             {
                 var _changed_slots = [];
@@ -1545,12 +1535,12 @@ function network_send_container_close()
 }
 
 /// @desc Send inventory action request (client only)
-function network_send_inventory_action(_type, _from_inv, _from_idx, _to_inv, _to_idx, _amount)
+function network_send_inventory_action(_type, _from_inv, _from_index, _to_inv, _to_index, _amount)
 {
     if (global.network_role != NETWORK_ROLE.CLIENT) return;
     
     var _buffer = packet_create(PACKET_TYPE.INVENTORY_ACTION);
-    packet_write_inventory_action(_buffer, _type, _from_inv, _from_idx, _to_inv, _to_idx, _amount);
+    packet_write_inventory_action(_buffer, _type, _from_inv, _from_index, _to_inv, _to_index, _amount);
     
     packet_send(global.network_client_socket, _buffer);
     buffer_delete(_buffer);
@@ -1666,8 +1656,8 @@ function _network_handle_chunk_data(_buffer)
             var _item = new Item(_t.tile_id, 1); // Basic tile item
             
             // Direct array access for speed
-            var _idx = tile_index_xyz(_t.local_x, _t.local_y, _t.z);
-            _chunk_data[@ _idx] = _item;
+            var _index = tile_index_xyz(_t.local_x, _t.local_y, _t.z);
+            _chunk_data[@ _index] = _item;
             
             // Update counts/bitmasks
             _chunk.chunk_count[@ _t.z]++;

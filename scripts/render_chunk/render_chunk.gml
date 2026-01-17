@@ -29,33 +29,33 @@ function render_chunk(_page, _position, _texel_width, _texel_height, _inst, _z)
             // Precalculated Occlusion Culling: Skip if this tile is marked as occluded
             // Precalculated Occlusion Culling: Skip if this tile AND all 4 neighbors are marked as occluded
             // We "erode" the occlusion mask by ANDing with neighbors.
-            var _idx_xy = tile_index_xy(_x, _y);
-            var _flags = _inst.chunk_occluded[_idx_xy];
+            var _index_xy = tile_index_xy(_x, _y);
+            var _flags = _inst.chunk_occluded[_index_xy];
             
             // Check neighbors. If a neighbor is outside chunk bounds, we assume '0' (Visible/Not Occluded) for safety
             // which effectively disables culling at chunk borders to prevent gaps.
             if (_flags != 0)
             {
                 // Left
-                if (_x > 0) _flags &= _inst.chunk_occluded[_idx_xy - 1];
+                if (_x > 0) _flags &= _inst.chunk_occluded[_index_xy - 1];
                 else _flags = 0;
             }
             if (_flags != 0)
             {
                 // Right
-                if (_x < CHUNK_SIZE - 1) _flags &= _inst.chunk_occluded[_idx_xy + 1];
+                if (_x < CHUNK_SIZE - 1) _flags &= _inst.chunk_occluded[_index_xy + 1];
                 else _flags = 0;
             }
             if (_flags != 0)
             {
                 // Up
-                if (_y > 0) _flags &= _inst.chunk_occluded[_idx_xy - CHUNK_SIZE];
+                if (_y > 0) _flags &= _inst.chunk_occluded[_index_xy - CHUNK_SIZE];
                 else _flags = 0;
             }
             if (_flags != 0)
             {
                 // Down
-                if (_y < CHUNK_SIZE - 1) _flags &= _inst.chunk_occluded[_idx_xy + CHUNK_SIZE];
+                if (_y < CHUNK_SIZE - 1) _flags &= _inst.chunk_occluded[_index_xy + CHUNK_SIZE];
                 else _flags = 0;
             }
             

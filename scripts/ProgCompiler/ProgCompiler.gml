@@ -338,22 +338,22 @@ function ProgCompiler(_context_keys = []) constructor
         // Check if index is a constant number or a range expression with constant bounds
         if (_node.index.type == PROG_AST.NUMBER_LITERAL)
         {
-            var _idx = floor(_node.index.value);
-            if (_idx >= 0 && _idx < string_length(_target_val))
+            var _index = floor(_node.index.value);
+            if (_index >= 0 && _index < string_length(_target_val))
             {
-                return string_char_at(_target_val, _idx + 1);
+                return string_char_at(_target_val, _index + 1);
             }
             return "";
         }
         else if (_node.index.type == PROG_AST.IDENTIFIER)
         {
-            var _idx_val = get_const(_node.index.name);
-            if (is_real(_idx_val))
+            var _index_val = get_const(_node.index.name);
+            if (is_real(_index_val))
             {
-                var _idx = floor(_idx_val);
-                if (_idx >= 0 && _idx < string_length(_target_val))
+                var _index = floor(_index_val);
+                if (_index >= 0 && _index < string_length(_target_val))
                 {
-                    return string_char_at(_target_val, _idx + 1);
+                    return string_char_at(_target_val, _index + 1);
                 }
                 return "";
             }
@@ -495,8 +495,8 @@ function ProgCompiler(_context_keys = []) constructor
         _func_arr[PROG_FUNC.IS_GLOBAL] = struct_exists(_node, "is_global") ? _node.is_global : false;
         _func_arr[PROG_FUNC.PARAM_COUNT] = _res.param_count;
         
-        var _idx = add_constant(_func_arr);
-        emit(PROG_OP.PUSH_CONST, _idx, _node.line);
+        var _index = add_constant(_func_arr);
+        emit(PROG_OP.PUSH_CONST, _index, _node.line);
         emit(PROG_OP.MAKE_CLOSURE, undefined, _node.line);
     }
     
@@ -516,10 +516,10 @@ function ProgCompiler(_context_keys = []) constructor
         
         // 2. Check locals (BP relative)
         // Search backwards from current scope until function boundary
-        var _idx = array_length(declared_vars) - 1;
-        while (_idx >= 0)
+        var _index = array_length(declared_vars) - 1;
+        while (_index >= 0)
         {
-            var _scope = declared_vars[_idx];
+            var _scope = declared_vars[_index];
             if (struct_exists(_scope, _name))
             {
                 var _info = _scope[$ _name];
@@ -534,7 +534,7 @@ function ProgCompiler(_context_keys = []) constructor
             
             // Stop if we hit a function boundary
             if (struct_exists(_scope, "is_func") && _scope.is_func) break;
-            _idx--;
+            _index--;
         }
         
         // Fallback or Capture?
@@ -876,14 +876,14 @@ function ProgCompiler(_context_keys = []) constructor
                     emit(PROG_OP.PUSH_NULL, undefined, _node.line);
                 }
                 
-                var _idx = add_constant(_node.name);
+                var _index = add_constant(_node.name);
                 if (struct_exists(_node, "is_global") && _node.is_global)
                 {
-                    emit(PROG_OP.STORE_GLOBAL, _idx, _node.line);
+                    emit(PROG_OP.STORE_GLOBAL, _index, _node.line);
                 }
                 else
                 {
-                    emit(PROG_OP.DEFINE, _idx, _node.line);
+                    emit(PROG_OP.DEFINE, _index, _node.line);
                     
                     // Track local constant
                     if (_init_const != undefined)
@@ -913,8 +913,8 @@ function ProgCompiler(_context_keys = []) constructor
             case PROG_AST.FUNC_DECL:
                 compile_function_def(_node);
                 
-                var _name_idx = add_constant(_node.name);
-                emit(_node.is_global ? PROG_OP.STORE_GLOBAL : PROG_OP.STORE, _name_idx, _node.line);
+                var _name_index = add_constant(_node.name);
+                emit(_node.is_global ? PROG_OP.STORE_GLOBAL : PROG_OP.STORE, _name_index, _node.line);
                 emit(PROG_OP.POP);
                 break;
                 
@@ -960,13 +960,13 @@ function ProgCompiler(_context_keys = []) constructor
             case PROG_AST.REPEAT_STMT:
                 invalidate_constants();
                 var _rep_var = "@rep_" + string(bytecode.code_size);
-                var _idx = add_constant(_rep_var);
+                var _index = add_constant(_rep_var);
                 compile_node(_node.count);
-                emit(PROG_OP.STORE, _idx, _node.line);
+                emit(PROG_OP.STORE, _index, _node.line);
                 emit(PROG_OP.POP);
                 
                 var _start = bytecode.code_size;
-                emit(PROG_OP.LOAD, _idx, _node.line);
+                emit(PROG_OP.LOAD, _index, _node.line);
                 emit(PROG_OP.PUSH_CONST, add_constant(0));
                 emit(PROG_OP.GT);
                 var _exit = emit(PROG_OP.JUMP_IF_FALSE, 0, _node.line);
@@ -975,10 +975,10 @@ function ProgCompiler(_context_keys = []) constructor
                 
                 compile_node(_node.body);
                 
-                emit(PROG_OP.LOAD, _idx);
+                emit(PROG_OP.LOAD, _index);
                 emit(PROG_OP.PUSH_CONST, add_constant(1));
                 emit(PROG_OP.SUB);
-                emit(PROG_OP.STORE, _idx);
+                emit(PROG_OP.STORE, _index);
                 emit(PROG_OP.POP);
                 emit(PROG_OP.JUMP, _start);
                 patch_jump(_exit, bytecode.code_size);
@@ -1082,8 +1082,8 @@ function ProgCompiler(_context_keys = []) constructor
                         }
                     }
                     
-                    var _target_idx = array_length(loop_stack) - _amount;
-                    var _ctx = loop_stack[_target_idx];
+                    var _target_index = array_length(loop_stack) - _amount;
+                    var _ctx = loop_stack[_target_index];
                     array_push(_ctx.breaks, emit(PROG_OP.JUMP, 0, _node.line));
                 }
                 break;
@@ -1101,10 +1101,10 @@ function ProgCompiler(_context_keys = []) constructor
             case PROG_AST.PREFIX_OP:
                 if (_node.target.type == PROG_AST.IDENTIFIER)
                 {
-                    var _idx = add_constant(_node.target.name);
-                    emit(PROG_OP.LOAD, _idx, _node.line);
+                    var _index = add_constant(_node.target.name);
+                    emit(PROG_OP.LOAD, _index, _node.line);
                     emit(_node.op == PROG_TOKEN.PLUS_PLUS ? PROG_OP.INC : PROG_OP.DEC);
-                    emit(PROG_OP.STORE, _idx, _node.line);
+                    emit(PROG_OP.STORE, _index, _node.line);
                     
                     // Update constants for PREFIX
                     var _val = get_const(_node.target.name);
@@ -1139,11 +1139,11 @@ function ProgCompiler(_context_keys = []) constructor
             case PROG_AST.POSTFIX_OP:
                 if (_node.target.type == PROG_AST.IDENTIFIER)
                 {
-                    var _idx = add_constant(_node.target.name);
-                    emit(PROG_OP.LOAD, _idx, _node.line);
+                    var _index = add_constant(_node.target.name);
+                    emit(PROG_OP.LOAD, _index, _node.line);
                     emit(PROG_OP.DUP);
                     emit(_node.op == PROG_TOKEN.PLUS_PLUS ? PROG_OP.INC : PROG_OP.DEC);
-                    emit(PROG_OP.STORE, _idx, _node.line);
+                    emit(PROG_OP.STORE, _index, _node.line);
                     emit(PROG_OP.POP);
                     
                     // Update constants for POSTFIX (same internal upgrade)
@@ -1245,8 +1245,8 @@ function ProgCompiler(_context_keys = []) constructor
                 // Phase 4: Default body
                 if (_node.default_case != undefined)
                 {
-                    var _def_jmp_idx = array_length(_node.cases);
-                    patch_jump(_case_jumps[_def_jmp_idx], bytecode.code_size);
+                    var _def_jmp_index = array_length(_node.cases);
+                    patch_jump(_case_jumps[_def_jmp_index], bytecode.code_size);
                     compile_node(_node.default_case);
                 }
                 
@@ -1305,10 +1305,10 @@ function ProgCompiler(_context_keys = []) constructor
                 break;
                 
             case PROG_AST.INDEX:
-                var _folded_idx = try_fold_index(_node);
-                if (_folded_idx != undefined)
+                var _folded_index = try_fold_index(_node);
+                if (_folded_index != undefined)
                 {
-                    emit(PROG_OP.PUSH_CONST, add_constant(_folded_idx), _node.line);
+                    emit(PROG_OP.PUSH_CONST, add_constant(_folded_index), _node.line);
                 }
                 else
                 {
@@ -1632,8 +1632,8 @@ function ProgCompiler(_context_keys = []) constructor
             }
         }
         
-        var _idx = add_constant(_descriptor);
-        emit(PROG_OP.CLASS_DEF, _idx, _node.line);
+        var _index = add_constant(_descriptor);
+        emit(PROG_OP.CLASS_DEF, _index, _node.line);
         
         // Define the class variable if named
         if (_node.name != undefined)
@@ -1697,10 +1697,10 @@ function ProgCompiler(_context_keys = []) constructor
         
         if (_target.type == PROG_AST.IDENTIFIER)
         {
-            var _idx = add_constant(_target.name);
+            var _index = add_constant(_target.name);
             if (_op != PROG_TOKEN.ASSIGN)
             {
-                emit(PROG_OP.LOAD, _idx, _line);
+                emit(PROG_OP.LOAD, _index, _line);
                 compile_node(_node.value);
                 switch (_op)
                 {
@@ -1721,7 +1721,7 @@ function ProgCompiler(_context_keys = []) constructor
             {
                 compile_node(_node.value);
             }
-            emit(PROG_OP.STORE, _idx, _line);
+            emit(PROG_OP.STORE, _index, _line);
         }
         else if (_target.type == PROG_AST.MEMBER)
         {

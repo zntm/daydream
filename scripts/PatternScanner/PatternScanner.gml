@@ -238,8 +238,8 @@ function PatternActionPlaceTile(_tile_id, _offset_x = 0, _offset_y = 0, _depth =
         var _data = global.item_data[$ ___tile_id];
         if (_data != undefined)
         {
-            var _idx = (is_struct(_data.get_placement_index()) ? smart_value(_data.get_placement_index()) : _data.get_placement_index());
-            _chunk.chunk[@ (___depth << (CHUNK_SIZE_BIT * 2)) | (_target_y << CHUNK_SIZE_BIT) | _target_x] = new Tile(___tile_id).set_index(_idx);
+            var _index = (is_struct(_data.get_placement_index()) ? smart_value(_data.get_placement_index()) : _data.get_placement_index());
+            _chunk.chunk[@ (___depth << (CHUNK_SIZE_BIT * 2)) | (_target_y << CHUNK_SIZE_BIT) | _target_x] = new Tile(___tile_id).set_index(_index);
             _chunk.chunk_display |= 1 << ___depth;
             ++_chunk.chunk_count[@ ___depth];
         }

@@ -71,6 +71,9 @@ function ChunkPool() : Pool() constructor
     // Valid list of chunks currently fading in
     fading_chunks = [];
     
+    // Active world generation configuration
+    worldgen_config = undefined;
+    
     static create = function()
     {
         return new Chunk(0, 0);

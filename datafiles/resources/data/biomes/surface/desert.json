@@ -102,10 +102,6 @@
     ],
     "terrain_modifier": {
         "height_offset": 8,
-        "noise_scale": 0.015625,
-        "amplitude_min": 30,
-        "amplitude_max": 60,
-        "octaves": 4,
         "influence": 1,
         "smoothing": 64,
         "erosion_modifier": 1.5,
