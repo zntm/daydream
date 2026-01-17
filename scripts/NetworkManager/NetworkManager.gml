@@ -728,15 +728,15 @@ function _network_handle_entity_update(_buffer)
                     }
                     
                     // REPLAY LOOP
-                    var _len = array_length(_inst.input_history);
-                    if (_len > 0)
+                    var _length = array_length(_inst.input_history);
+                    if (_length > 0)
                     {
                         // Sync velocity from server state for accurate replay start
                         _inst.physics_body.vel_x = _state.physics.vx;
                         _inst.physics_body.vel_y = _state.physics.vy;
                         _inst.physics_body.sync_to_instance(_inst);
                         
-                        for (var k = 0; k < _len; ++k)
+                        for (var k = 0; k < _length; ++k)
                         {
                             var _hist = _inst.input_history[k];
                             var _inp = _hist.input;
@@ -1254,8 +1254,8 @@ function _network_init_client_inventory(_client)
         var _name = _names[i];
         if (variable_struct_exists(global.inventory_length, _name))
         {
-            var _len = global.inventory_length[$ _name];
-            _client.inventory[$ _name] = array_create(_len, INVENTORY_EMPTY);
+            var _length = global.inventory_length[$ _name];
+            _client.inventory[$ _name] = array_create(_length, INVENTORY_EMPTY);
         }
     }
 }
@@ -1907,9 +1907,9 @@ function _network_handle_entity_metadata(_buffer)
                     _inst.selected_hotbar = _hotbar;
                     if (_inst.object_index == obj_Player && _inst.is_local)
                     {
-                         var _len = array_length(_inst.input_history);
+                         var _length = array_length(_inst.input_history);
                          var _delete_count = 0;
-                         for (var j = 0; j < _len; ++j)
+                         for (var j = 0; j < _length; ++j)
                          {
                              if (_inst.input_history[j].tick <= _last_tick) _delete_count++;
                              else break;

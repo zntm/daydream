@@ -492,8 +492,8 @@ function ProgLexer(_source) constructor
             // For simplicity in this environment, we'll assume a helper or use a loop if needed.
             // In many GML versions, real("$" + _hex_str) works.
             var _value = 0;
-            var _len = string_length(_hex_str);
-            for (var i = 1; i <= _len; i++)
+            var _length = string_length(_hex_str);
+            for (var i = 1; i <= _length; i++)
             {
                 var _c = string_char_at(_hex_str, i);
                 var _v = 0;
@@ -630,8 +630,8 @@ function ProgLexer(_source) constructor
         
         var _hex_str = string_copy(source, start + 1, current - (start + 1));
         var _value = 0;
-        var _len = string_length(_hex_str);
-        for (var i = 1; i <= _len; i++)
+        var _length = string_length(_hex_str);
+        for (var i = 1; i <= _length; i++)
         {
             var _c = string_char_at(_hex_str, i);
             var _v = 0;

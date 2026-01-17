@@ -21,10 +21,10 @@ function inventory_transfer(_source_name, _source_index, _target_name, _amount =
     // 2. Try to fill empty slots in target
     
     var _transferred = false;
-    var _len = array_length(_target_list);
+    var _length = array_length(_target_list);
     
     // 1. Stack
-    for (var i = 0; i < _len; ++i)
+    for (var i = 0; i < _length; ++i)
     {
         var _target_item = _target_list[i];
         if (_target_item == INVENTORY_EMPTY) continue;
@@ -49,7 +49,7 @@ function inventory_transfer(_source_name, _source_index, _target_name, _amount =
     // 2. Fill Empty
     if (_item.get_amount() > 0)
     {
-        for (var i = 0; i < _len; ++i)
+        for (var i = 0; i < _length; ++i)
         {
             if (_target_list[i] == INVENTORY_EMPTY)
             {

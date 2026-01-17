@@ -102,7 +102,7 @@ function chunk_generate(_chunk)
             var _sy_start = max(0, -_rel_y);
             var _sy_end = min(_yscale, CHUNK_SIZE - _rel_y);
             
-            if (_sx_start >= _sx_end || _sy_start >= _sy_end) continue;
+            if (_sx_start >= _sx_end) || (_sy_start >= _sy_end) continue;
             
             structure_generate(_inst, _world_seed, _item_data, _structure_data, _natural_structure_data);
             
@@ -114,7 +114,7 @@ function chunk_generate(_chunk)
                 
                 for (var _sx = _sx_start; _sx < _sx_end; ++_sx)
                 {
-                    var _chunk_x = _rel_x + _sx;;
+                    var _chunk_x = _rel_x + _sx;
                     
                     var _structure_index = _sx + (_sy * _xscale);
                     var _chunk_index = _chunk_x + (_chunk_y * CHUNK_SIZE);
@@ -163,16 +163,13 @@ function chunk_generate(_chunk)
         var _world_x = _chunk.chunk_xstart + i;
         var _inst_x = _world_x * TILE_SIZE;
         
-        // 1. Resolve Region
         var _region = global.region_generator.get_region(_world_x, 0, 0, _world_seed);
         
-    // 2. Resolve Surface Height - Deprecated for density-based terrain
-    var _surface_height = undefined;
+        var _surface_height = undefined;
         
-        // Get Surface Biome from Region
         var _surface_biome_id = _region.get_surface_biome_id();
         var _surface_biome_data = global.biome_data[$ _surface_biome_id];
-        var _sea_level = 450; // default sea level, effectively overridden by liquid placement logic
+        var _sea_level = 450;
         
         for (var j = 0; j < CHUNK_SIZE; ++j)
         {

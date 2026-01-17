@@ -40,8 +40,8 @@ function chat_refresh_suggestions()
     if (_part_count == 1)
     {
         var _names = global.command_data_names;
-        var _len = array_length(_names);
-        for (var i = 0; i < _len; ++i)
+        var _length = array_length(_names);
+        for (var i = 0; i < _length; ++i)
         {
             if (string_pos(_current_text, _names[i]) == 1)
             {
@@ -90,8 +90,8 @@ function chat_refresh_suggestions()
                 var _names = _pointer.get_subcommand_names();
                 if (_names != undefined)
                 {
-                    var _len = array_length(_names);
-                    for (var i = 0; i < _len; ++i)
+                    var _length = array_length(_names);
+                    for (var i = 0; i < _length; ++i)
                     {
                         if (string_pos(_current_text, _names[i]) == 1)
                         {
@@ -175,8 +175,8 @@ function chat_refresh_suggestions()
                     
                     if (_choices != undefined)
                     {
-                        var _len = array_length(_choices);
-                        for (var i = 0; i < _len; ++i)
+                        var _length = array_length(_choices);
+                        for (var i = 0; i < _length; ++i)
                         {
                              var _choice_str = string(_choices[i]);
                              if (string_pos(_current_text, _choice_str) == 1) array_push(_suggestions, _choice_str);

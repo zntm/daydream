@@ -1121,6 +1121,7 @@
     {"$GMIncludedFile":"","%Name":"cave_mushrooms.json","CopyToMask":-1,"filePath":"datafiles/resources/data/patterns","name":"cave_mushrooms.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"tree_root_cave.json","CopyToMask":-1,"filePath":"datafiles/resources/data/patterns","name":"tree_root_cave.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"melee_swing.json","CopyToMask":-1,"filePath":"datafiles/resources/data/projectiles","name":"melee_swing.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"regions.json","CopyToMask":-1,"filePath":"datafiles/resources/data/regions","name":"regions.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"export_structure.daydream","CopyToMask":-1,"filePath":"datafiles/resources/data/scripts/item/dev","name":"export_structure.daydream","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"explode.daydream","CopyToMask":-1,"filePath":"datafiles/resources/data/scripts/item/explosive","name":"explode.daydream","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"bucket_pickup.daydream","CopyToMask":-1,"filePath":"datafiles/resources/data/scripts/item/tool","name":"bucket_pickup.daydream","resourceType":"GMIncludedFile","resourceVersion":"2.0",},

@@ -469,17 +469,26 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         }
         
         // Surface shape
-        ___surface_start = _config[$ "surface_start"] ?? 400;
+        // Surface shape
+        ___surface_start = _config[$ "surface_start"] ?? ___surface_start;
         ___worldgen_erosion_scale = _config[$ "erosion_scale"] ?? 0.008;
         ___worldgen_continentalness_scale = _config[$ "continentalness_scale"] ?? 0.001;
         ___worldgen_continentalness_amplitude = _config[$ "continentalness_amplitude"] ?? 150;
-        ___worldgen_squash_spline = _config[$ "squash_spline"];
+        
+        var _squash = _config[$ "squash_spline"];
+        ___worldgen_squash_spline = (_squash != undefined && _squash[$ "points"] != undefined) ? _squash.points : _squash;
         
         // Cave shape
         ___worldgen_cave_noise_scale = _config[$ "cave_noise_scale"] ?? 0.015;
-        ___worldgen_cave_noise_range_spline = _config[$ "cave_noise_range_spline"];
-        ___worldgen_cave_density_spline = _config[$ "cave_density_spline"];
-        ___worldgen_cave_smoothness_spline = _config[$ "cave_smoothness_spline"];
+        
+        var _noise_range = _config[$ "cave_noise_range_spline"];
+        ___worldgen_cave_noise_range_spline = (_noise_range != undefined && _noise_range[$ "points"] != undefined) ? _noise_range.points : _noise_range;
+        
+        var _density = _config[$ "cave_density_spline"];
+        ___worldgen_cave_density_spline = (_density != undefined && _density[$ "points"] != undefined) ? _density.points : _density;
+        
+        var _smoothness = _config[$ "cave_smoothness_spline"];
+        ___worldgen_cave_smoothness_spline = (_smoothness != undefined && _smoothness[$ "points"] != undefined) ? _smoothness.points : _smoothness;
         
         return self;
     }

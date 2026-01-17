@@ -16,15 +16,15 @@ function Regex(_pattern, _flags = "") constructor
     
     static parse_pattern = function(_p) {
         var _res = [];
-        var _len = string_length(_p);
+        var _length = string_length(_p);
         var _i = 1;
         
-        while (_i <= _len) {
+        while (_i <= _length) {
             var _c = string_char_at(_p, _i);
             
             if (_c == "\\") {
                 _i++;
-                if (_i > _len) break;
+                if (_i > _length) break;
                 var _next = string_char_at(_p, _i);
                 if (_next == "d") array_push(_res, { type: "digit" });
                 else if (_next == "w") array_push(_res, { type: "word" });
@@ -36,7 +36,7 @@ function Regex(_pattern, _flags = "") constructor
                 var _group_start = _i + 1;
                 var _depth = 1;
                 _i++;
-                while (_i <= _len && _depth > 0) {
+                while (_i <= _length && _depth > 0) {
                     var _gc = string_char_at(_p, _i);
                     if (_gc == "(") _depth++;
                     else if (_gc == ")") _depth--;
@@ -64,9 +64,9 @@ function Regex(_pattern, _flags = "") constructor
                     _negate = true;
                     _i++;
                 }
-                while (_i <= _len && string_char_at(_p, _i) != "]") {
+                while (_i <= _length && string_char_at(_p, _i) != "]") {
                     var _ch = string_char_at(_p, _i);
-                    if (_i + 2 <= _len && string_char_at(_p, _i + 1) == "-" && string_char_at(_p, _i + 2) != "]") {
+                    if (_i + 2 <= _length && string_char_at(_p, _i + 1) == "-" && string_char_at(_p, _i + 2) != "]") {
                         var _start_char = ord(_ch);
                         var _end_char = ord(string_char_at(_p, _i + 2));
                         for (var _r = _start_char; _r <= _end_char; _r++) {
@@ -97,26 +97,26 @@ function Regex(_pattern, _flags = "") constructor
     nodes = parse_pattern(_pattern);
     
     static test = function(_str) {
-        var _len = string_length(_str);
+        var _length = string_length(_str);
         var _anchored = (array_length(nodes) > 0 && nodes[0].type == "start");
         
-        for (var i = 1; i <= _len + 1; i++) {
+        for (var i = 1; i <= _length + 1; i++) {
             last_captures = array_create(group_count + 1, "");
             var _result = match_at(_str, i, 0, last_captures);
             if (_result != -1) return true;
             if (_anchored) break;
-            if (i > _len) break;
+            if (i > _length) break;
         }
         return false;
     }
     
     static match = function(_str) {
         var _matches = [];
-        var _len = string_length(_str);
+        var _length = string_length(_str);
         var _i = 1;
         var _anchored = (array_length(nodes) > 0 && nodes[0].type == "start");
         
-        while (_i <= _len + 1) {
+        while (_i <= _length + 1) {
             last_captures = array_create(group_count + 1, "");
             var _res = match_at(_str, _i, 0, last_captures);
             if (_res != -1) {
@@ -133,7 +133,7 @@ function Regex(_pattern, _flags = "") constructor
                 _i++;
             }
             if (_anchored) break;
-            if (_i > _len + 1) break;
+            if (_i > _length + 1) break;
         }
         
         if (array_length(_matches) == 0 && !is_global) return undefined;
@@ -205,10 +205,10 @@ function Regex(_pattern, _flags = "") constructor
             return -1; 
         }
         
-        var _len = match_single(_str, _str_index, _node);
-        if (_len != -1) {
-            var _rest = match_at(_str, _str_index + _len, _node_index + 1, _captures);
-            if (_rest != -1) return _len + _rest;
+        var _length = match_single(_str, _str_index, _node);
+        if (_length != -1) {
+            var _rest = match_at(_str, _str_index + _length, _node_index + 1, _captures);
+            if (_rest != -1) return _length + _rest;
         }
         
         return -1;
@@ -246,11 +246,11 @@ function Regex(_pattern, _flags = "") constructor
         array_push(_offsets, 0);
         
         while (true) {
-            var _len = match_single(_str, _curr, _sub_node);
-            if (_len == -1) break;
-            if (_len == 0) break;
-            _curr += _len;
-            _total_match_len += _len;
+            var _length = match_single(_str, _curr, _sub_node);
+            if (_length == -1) break;
+            if (_length == 0) break;
+            _curr += _length;
+            _total_match_len += _length;
             array_push(_offsets, _total_match_len);
         }
         
@@ -293,10 +293,10 @@ function Regex(_pattern, _flags = "") constructor
     static replace = function(_str, _replacement)
     {
         var _res = "";
-        var _len = string_length(_str);
+        var _length = string_length(_str);
         var _i = 1;
         
-        while (_i <= _len) {
+        while (_i <= _length) {
             last_captures = array_create(group_count + 1, "");
             var _match_len = match_at(_str, _i, 0, last_captures);
             if (_match_len != -1) {
@@ -311,7 +311,7 @@ function Regex(_pattern, _flags = "") constructor
                 _res += _repl_text;
                 _i += (_match_len > 0) ? _match_len : 1;
                 if (!is_global) {
-                    _res += string_copy(_str, _i, _len - _i + 1);
+                    _res += string_copy(_str, _i, _length - _i + 1);
                     break;
                 }
             } else {
@@ -325,12 +325,12 @@ function Regex(_pattern, _flags = "") constructor
     static split = function(_str)
     {
         var _res = [];
-        var _len = string_length(_str);
+        var _length = string_length(_str);
         var _last_end = 1;
         var _i = 1;
         var _split_count = 0;
         
-        while (_i <= _len) {
+        while (_i <= _length) {
             last_captures = array_create(group_count + 1, "");
             var _match_len = match_at(_str, _i, 0, last_captures);
             if (_match_len != -1 && _match_len > 0) {
@@ -346,16 +346,16 @@ function Regex(_pattern, _flags = "") constructor
                 _i++;
             }
         }
-        array_push(_res, string_copy(_str, _last_end, _len - _last_end + 1));
+        array_push(_res, string_copy(_str, _last_end, _length - _last_end + 1));
         return _res;
     }
     
     static match_index = function(_str)
     {
         var _indices = [];
-        var _len = string_length(_str);
+        var _length = string_length(_str);
         
-        for (var i = 0; i <= _len + 1;)
+        for (var i = 0; i <= _length + 1;)
         {
             last_captures = array_create(group_count + 1, "");
             

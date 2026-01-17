@@ -312,9 +312,9 @@ function creature_scan_for_prey(_data, _dt_normalized)
     
     var _range = AI_HUNT_RANGE;
     var _nearby = global.creature_quadtree.query_rect(x - _range, y - _range, x + _range, y + _range);
-    var _len = array_length(_nearby);
+    var _length = array_length(_nearby);
     
-    for (var i = 0; i < _len; ++i)
+    for (var i = 0; i < _length; ++i)
     {
         var _inst = _nearby[i];
         if (_inst == id) continue;

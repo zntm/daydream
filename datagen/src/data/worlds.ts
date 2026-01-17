@@ -439,31 +439,26 @@ export default [
             ]),
             // NEW: WorldGen spline-based configuration
             new WorldGen({
-                // Surface shape
-                erosionScale: 0.008,
-                continentalnessScale: 0.0012,
-                continentalnessAmplitude: 180,
+                // Surface shape - FLATTENED FOR TESTING
+                erosionScale: 0.0,
+                continentalnessScale: 0.0,
+                continentalnessAmplitude: 0,
                 squashSpline: new Spline([
-                    new SplinePoint(0, 8.0, SplineEasing.EaseOut),      // Near surface: very flat overhangs
-                    new SplinePoint(150, 4.0, SplineEasing.EaseInOut),  // Shallow: moderately flat
-                    new SplinePoint(400, 1.0),                          // Deep: normal caves
+                    new SplinePoint(0, 1.0), // No squash variation
+                    new SplinePoint(1000, 1.0)
                 ]),
-                // Cave shape
-                caveNoiseScale: 0.016,
+                // Cave shape - FLATTENED/DISABLED 
+                caveNoiseScale: 0.0, 
                 caveNoiseRangeSpline: new Spline([
-                    new SplinePoint(0, 0.1, SplineEasing.EaseOut),      // Surface: tiny pockets
-                    new SplinePoint(100, 0.25, SplineEasing.EaseInOut), // Shallow: small caves
-                    new SplinePoint(300, 0.45),                         // Mid: medium caves
-                    new SplinePoint(600, 0.55),                         // Deep: large Swiss-cheese caves
+                    new SplinePoint(0, -1.0), // Always less than threshold, so no caves
+                    new SplinePoint(1000, -1.0)
                 ]),
                 caveDensitySpline: new Spline([
-                    new SplinePoint(0, 0.15, SplineEasing.EaseOut),     // Surface: mostly solid
-                    new SplinePoint(200, 0.35, SplineEasing.EaseInOut), // Mid: balanced
-                    new SplinePoint(600, 0.6),                          // Deep: more porous
+                    new SplinePoint(0, 0.0), // Solid (or whatever density implies solid)
+                    new SplinePoint(1000, 0.0)
                 ]),
                 caveSmoothnessSpline: new Spline([
-                    new SplinePoint(0, 2.0, SplineEasing.Linear),       // Surface: jagged edges
-                    new SplinePoint(400, 4.0),                          // Deep: smooth tunnel surfaces
+                    new SplinePoint(0, 2.0)
                 ]),
             }),
         ),

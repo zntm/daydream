@@ -65,6 +65,10 @@ function worldgen_get_density(_x, _y, _z, _seed, _config = global.chunk_pool.wor
     var _depth = _y - _config.base_height;
     
     var _mods = worldgen_get_biome_modifiers(_x, _y, _seed);
+    var _region_params = _mods.region_params; // Now part of modifiers return
+    
+    // Apply region terrain offset
+    var _depth = _y - (_config.base_height + _region_params.height_offset);
     
     var _gradient_strength = 0.006;
     var _height_gradient = _depth * _gradient_strength;
@@ -126,7 +130,90 @@ function worldgen_get_biome_modifiers(_x, _y, _seed)
         }
     }
     
-    return { erosion: _erosion, squash: _squash, cave_density: _cave_density, continentalness: _continentalness };
+    
+    // Also blend region terrain parameters (base height, offset, etc.)
+    var _region_params = worldgen_get_region_parameters(_x, _y, _seed, _smoothing, _boundary_dist, _blend_smooth);
+    
+    return { 
+        erosion: _erosion, 
+        squash: _squash, 
+        cave_density: _cave_density, 
+        continentalness: _continentalness,
+        region_params: _region_params
+    };
+}
+
+/// @desc Get blended region parameters
+function worldgen_get_region_parameters(_x, _y, _seed, _smoothing = 0, _boundary_dist = 0, _blend = 0)
+{
+    var _region = global.region_generator.get_region(_x, _y, 0, _seed);
+    var _params = _region.get_terrain();
+    
+    // Default values
+    var _height_offset = _params.height_offset;
+    var _base_height = _params.base_height;
+    var _amplitude_min = _params.amplitude_min;
+    var _amplitude_max = _params.amplitude_max;
+    
+    // If we are near a boundary (and smoothing was calculated/passed effectively)
+    // Note: get_boundary_distance was already called in get_biome_modifiers if smoothing > 0.
+    // However, Regions might want their own smoothing range independent of biome smoothing?
+    // For now, let's piggyback on the same smoothing factor or recalculate if needed.
+    
+    // If caller didn't pass smoothing context, calculate it (slow path)
+    if (_smoothing == 0)
+    {
+         // Default region blend range if not provided
+         var _region_blend_range = 64; 
+         _boundary_dist = global.region_generator.get_boundary_distance(_x, _y, 0, _seed);
+         
+         if (_boundary_dist < _region_blend_range)
+         {
+             var _t = _boundary_dist / _region_blend_range;
+             _blend = _t * _t * (3 - 2 * _t); // Smoothstep
+         }
+         else
+         {
+             _blend = 1.0;
+         }
+    }
+    
+    // Use _blend to interpolate if we are in transition zone
+    // Wait, Voronoi noise boundary distance logic gives us distance to *nearest* edge.
+    // If we want to blend with the neighbor, we need to know WHO the neighbor is.
+    // "worldgen_get_transition_biome" does this by looking ahead.
+    
+    // Simplified blending: 
+    // We can't easily fetch "the other region" without knowing direction.
+    // But since we want to smooth *heights*, maybe we can just accept that
+    // near boundaries, we blend towards a "neutral" or "average" if we can't find the specific neighbor?
+    // OR, we can do the same lookahead trick:
+    
+    if (_blend < 1.0)
+    {
+         // Look up adjacent region (heuristic, check +32x like in transition logic)
+         // This is imperfect but works for simple left-right transitions or gradients.
+         // Better approach: Voronoi return 2nd closest point? complex.
+         
+         var _adj_region = global.region_generator.get_region(_x + 32, 0, 0, _seed); 
+         if (_adj_region != _region)
+         {
+             var _adj_params = _adj_region.get_terrain();
+             
+             // Blend
+             _height_offset = lerp(_adj_params.height_offset, _height_offset, _blend);
+             // _base_height = lerp(_adj_params.base_height, _base_height, _blend); // Blending base height can be tricky if they differ wildly
+             
+             // Only blend height offset for now to avoid massive shifts
+         }
+    }
+
+    return {
+        height_offset: _height_offset,
+        base_height: _base_height,
+        amplitude_min: _amplitude_min,
+        amplitude_max: _amplitude_max // Unused for now
+    };
 }
 
 /// @desc Evaluate surface height

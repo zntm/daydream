@@ -27,6 +27,9 @@ function RegionData(_id, _config = {}) constructor
         gradient_strength: _terrain_config[$ "gradient_strength"] ?? 0.015
     };
     
+    // Region grouping for transitions (regions in same category don't generate borders)
+    ___category = _config[$ "category"] ?? ___id;
+    
     // Zone visual/ambient properties
     ___fog_color = _config[$ "fog_color"] ?? 0x000000;
     ___fog_density = _config[$ "fog_density"] ?? 0;
@@ -48,6 +51,17 @@ function RegionData(_id, _config = {}) constructor
     static get_surface_biome = function()
     {
         return global.biome_data[$ ___surface_biome_id];
+    }
+    
+    static get_category = function()
+    {
+        return ___category;
+    }
+    
+    static set_category = function(_category)
+    {
+        ___category = _category;
+        return self;
     }
     
     /// @desc Get terrain parameters for this zone
@@ -190,6 +204,7 @@ function region_create_defaults()
     return [
         // Region 0: Forest (default)
         new RegionData("forest", {
+            category: "temperate",
             surface_biome: "phantasia:surface/forest",
             cave_biome_default: "phantasia:cave/chasm",
             cave_biomes: [
@@ -199,6 +214,7 @@ function region_create_defaults()
         
         // Region 1: Desert
         new RegionData("desert", {
+            category: "arid",
             surface_biome: "phantasia:surface/desert",
             cave_biome_default: "phantasia:cave/chasm",
             terrain: { height_offset: 10, base_height: 410, amplitude_min: 15, amplitude_max: 35 },
@@ -209,6 +225,7 @@ function region_create_defaults()
         
         // Region 2: Taiga (formerly tundra)
         new RegionData("taiga", {
+            category: "cold",
             surface_biome: "phantasia:surface/taiga",
             cave_biome_default: "phantasia:cave/chasm",
             terrain: { height_offset: -20, base_height: 380, amplitude_min: 20, amplitude_max: 50 },

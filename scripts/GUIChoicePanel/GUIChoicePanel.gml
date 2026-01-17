@@ -23,8 +23,8 @@ function GUIChoicePanel(_x, _y, _width = 200) : GUIComponent(_x, _y, _width, 0) 
         var _changed = (array_length(choices) != array_length(_choices));
         if (!_changed)
         {
-            var _len = array_length(_choices);
-            for (var i = 0; i < _len; ++i)
+            var _length = array_length(_choices);
+            for (var i = 0; i < _length; ++i)
             {
                 if (choices[i] != _choices[i])
                 {

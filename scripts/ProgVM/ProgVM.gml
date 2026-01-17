@@ -139,7 +139,7 @@ function proglang_vm_run(_vm, _entry_bytecode)
     var _curr_bytecode = _entry_bytecode;
     var _code = _curr_bytecode.code;
     var _constants = _curr_bytecode.constants;
-    var _len = array_length(_code);
+    var _length = array_length(_code);
     
     // Reset IP for entry (assuming new invocation)
     // If this is a re-entrant call (e.g. from Native), we treat it as a new "thread" on the same stack.
@@ -168,7 +168,7 @@ function proglang_vm_run(_vm, _entry_bytecode)
     {
         try
         {
-            while (_ip < _len)
+            while (_ip < _length)
             {
                 if (++_steps > _max_steps)
                 {
@@ -436,7 +436,7 @@ function proglang_vm_run(_vm, _entry_bytecode)
                             _curr_bytecode = _val[PROG_CLOSURE.BYTECODE];
                             _code = _curr_bytecode.code;
                             _constants = _curr_bytecode.constants;
-                            _len = array_length(_code);
+                            _length = array_length(_code);
                             _ip = 0;
                             _bp = _sp - _param_count; // BP points to first argument
                             
@@ -501,7 +501,7 @@ function proglang_vm_run(_vm, _entry_bytecode)
                             _curr_bytecode = _val;
                             _code = _curr_bytecode.code;
                             _constants = _curr_bytecode.constants;
-                            _len = array_length(_code);
+                            _length = array_length(_code);
                             _ip = 0;
                             _bp = _sp - _param_count;
                             
@@ -554,7 +554,7 @@ function proglang_vm_run(_vm, _entry_bytecode)
                         
                         _code = _curr_bytecode.code;
                         _constants = _curr_bytecode.constants;
-                        _len = array_length(_code);
+                        _length = array_length(_code);
                         
                         // Return Value placement
                         // Previous stack: [... Caller Locals ... | Callee | Arg1 ... ArgN | ... Callee Locals ...]
@@ -1154,7 +1154,7 @@ function proglang_vm_run(_vm, _entry_bytecode)
                 // Restore Handler Context
                 _code = _curr_bytecode.code;
                 _constants = _curr_bytecode.constants;
-                _len = array_length(_code);
+                _length = array_length(_code);
                 _ip = _handler.ip;
                 _vm[@ PROG_VM.SCOPE] = _scope;
                 
@@ -1190,7 +1190,7 @@ function proglang_vm_run(_vm, _entry_bytecode)
                 
                 _code = _curr_bytecode.code;
                 _constants = _curr_bytecode.constants;
-                _len = array_length(_code);
+                _length = array_length(_code);
             }
             else
             {

@@ -179,9 +179,9 @@ function proglang_resolve_path(_path, _current_dir = "") {
 function proglang_split_path(_path) {
     var _parts = [];
     var _current = "";
-    var _len = string_length(_path);
+    var _length = string_length(_path);
     
-    for (var i = 1; i <= _len; i++) {
+    for (var i = 1; i <= _length; i++) {
         var _char = string_char_at(_path, i);
         if (_char == "/" || _char == "\\") {
             if (_current != "") {

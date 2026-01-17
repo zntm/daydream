@@ -211,48 +211,32 @@
     },
     "world_height": 1024,
     "worldgen": {
-        "erosion_scale": 0.008,
-        "continentalness_scale": 0.0012,
-        "continentalness_amplitude": 180,
+        "erosion_scale": 0,
+        "continentalness_scale": 0,
+        "continentalness_amplitude": 0,
         "squash_spline": {
             "points": [
                 {
                     "position": 0,
-                    "value": 8,
-                    "easing": "ease_out"
+                    "value": 1
                 },
                 {
-                    "position": 150,
-                    "value": 4,
-                    "easing": "ease_in_out"
-                },
-                {
-                    "position": 400,
+                    "position": 1000,
                     "value": 1
                 }
             ],
             "type": "spline"
         },
-        "cave_noise_scale": 0.016,
+        "cave_noise_scale": 0,
         "cave_noise_range_spline": {
             "points": [
                 {
                     "position": 0,
-                    "value": 0.1,
-                    "easing": "ease_out"
+                    "value": -1
                 },
                 {
-                    "position": 100,
-                    "value": 0.25,
-                    "easing": "ease_in_out"
-                },
-                {
-                    "position": 300,
-                    "value": 0.45
-                },
-                {
-                    "position": 600,
-                    "value": 0.55
+                    "position": 1000,
+                    "value": -1
                 }
             ],
             "type": "spline"
@@ -261,17 +245,11 @@
             "points": [
                 {
                     "position": 0,
-                    "value": 0.15,
-                    "easing": "ease_out"
+                    "value": 0
                 },
                 {
-                    "position": 200,
-                    "value": 0.35,
-                    "easing": "ease_in_out"
-                },
-                {
-                    "position": 600,
-                    "value": 0.6
+                    "position": 1000,
+                    "value": 0
                 }
             ],
             "type": "spline"
@@ -280,12 +258,7 @@
             "points": [
                 {
                     "position": 0,
-                    "value": 2,
-                    "easing": "linear"
-                },
-                {
-                    "position": 400,
-                    "value": 4
+                    "value": 2
                 }
             ],
             "type": "spline"

@@ -271,16 +271,16 @@ function file_save_world_chunk(_world_save_data, _chunk)
         if (i == _current_chunk_index)
         {
             // CASE A: This is the chunk we are saving RIGHT NOW.
-            var _len = buffer_tell(_current_chunk_buffer);
+            var _length = buffer_tell(_current_chunk_buffer);
             
             // Write Header
             buffer_write(_new_region_buffer, buffer_u32, _write_offset);
-            buffer_write(_new_region_buffer, buffer_u32, _len);
+            buffer_write(_new_region_buffer, buffer_u32, _length);
             
             // Copy data to end of new buffer
-            buffer_copy(_current_chunk_buffer, 0, _len, _new_region_buffer, _write_offset);
+            buffer_copy(_current_chunk_buffer, 0, _length, _new_region_buffer, _write_offset);
             
-            _write_offset += _len;
+            _write_offset += _length;
         }
         else
         {
@@ -290,17 +290,17 @@ function file_save_world_chunk(_world_save_data, _chunk)
             if (_old_region_buffer != -1 && buffer_get_size(_old_region_buffer) >= 512)
             {
                 var _off = buffer_peek(_old_region_buffer, i*8, buffer_u32);
-                var _len = buffer_peek(_old_region_buffer, i*8+4, buffer_u32);
+                var _length = buffer_peek(_old_region_buffer, i*8+4, buffer_u32);
                 
                 // Validate offset/len
                 // Note: Only strictly valid New Format entries are copied. 
                 // Any garbage data or "Old Format" blobs are ignored/discarded as per user request.
-                if (_len > 0 && _off >= 512 && (_off + _len <= buffer_get_size(_old_region_buffer)))
+                if (_length > 0 && _off >= 512 && (_off + _length <= buffer_get_size(_old_region_buffer)))
                 {
                     buffer_write(_new_region_buffer, buffer_u32, _write_offset);
-                    buffer_write(_new_region_buffer, buffer_u32, _len);
-                    buffer_copy(_old_region_buffer, _off, _len, _new_region_buffer, _write_offset);
-                    _write_offset += _len;
+                    buffer_write(_new_region_buffer, buffer_u32, _length);
+                    buffer_copy(_old_region_buffer, _off, _length, _new_region_buffer, _write_offset);
+                    _write_offset += _length;
                     _copied = true;
                 }
             }

@@ -142,8 +142,16 @@ function worldgen_get_tile_base(_x, _y, _surface_biome, _cave_biome, _surface_he
 /// @returns {String|Undefined} Transition biome ID or undefined if no transition
 function ___get_transition_biome(_current_biome, _world_data, _seed, _x)
 {
+    // Look up current region to compare category
+    var _current_region = global.region_generator.get_region(_x, 0, 0, _seed);
+    
     // Look up adjacent region to determine what we're transitioning to
     var _adjacent_region = global.region_generator.get_region(_x + 32, 0, 0, _seed);
+    
+    // If regions are in the same category (e.g. both Temperate), ignore biome transitions
+    // This allows "Birch Forest" and "Rocky Plains" to meet naturally without a transition seam
+    if (_current_region.get_category() == _adjacent_region.get_category()) return undefined;
+    
     var _adjacent_biome = _adjacent_region.get_surface_biome_id();
     
     // If same biome, no transition needed

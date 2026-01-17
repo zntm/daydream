@@ -159,9 +159,9 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 if (_chunk == undefined) || !(_chunk.boolean & CHUNK_BOOLEAN.GENERATED) continue;
                 
                 var _lights = _chunk.chunk_lights;
-                var _len = array_length(_lights);
+                var _length = array_length(_lights);
                 
-                for (var j = 0; j < _len; ++j)
+                for (var j = 0; j < _length; ++j)
                 {
                     var _l = _lights[j];
                     

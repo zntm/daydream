@@ -205,8 +205,8 @@ function Quadtree(_x, _y, _w, _h, _max_objects = 10, _max_levels = 5, _level = 0
         // Add all objects in this node that overlap
         // (Note: Objects in this node definitely overlap the *area* covered by this node 
         //  but might not overlap the query rect)
-        var _len = array_length(objects);
-        for (var i = 0; i < _len; ++i)
+        var _length = array_length(objects);
+        for (var i = 0; i < _length; ++i)
         {
             var _obj = objects[i];
             
@@ -269,13 +269,13 @@ function Quadtree(_x, _y, _w, _h, _max_objects = 10, _max_levels = 5, _level = 0
     static walk_collisions = function(_callback)
     {
         // 1. Check objects within this node against each other
-        var _len = array_length(objects);
-        for (var i = 0; i < _len; ++i)
+        var _length = array_length(objects);
+        for (var i = 0; i < _length; ++i)
         {
             var _obj_a = objects[i];
             
             // A vs other A's in this node
-            for (var j = i + 1; j < _len; ++j)
+            for (var j = i + 1; j < _length; ++j)
             {
                 var _obj_b = objects[j];
                 _callback(_obj_a, _obj_b);
