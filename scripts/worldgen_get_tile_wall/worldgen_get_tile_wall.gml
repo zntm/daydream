@@ -1,10 +1,10 @@
-function worldgen_get_tile_wall(_x, _y, _surface_biome, _cave_biome, _surface_height, _seed, _is_cave_above = false)
+function worldgen_get_tile_wall(_x, _y, _surface_biome, _cave_biome, _surface_height, _seed, _is_cave_above = false, _modifiers = undefined)
 {
     var _world_data = global.world_data[$ global.world_save_data.dimension];
     
     // === 3D Density-based walls with Z-offset ===
     // Walls use Z-offset density, extending further than solid tiles to create overhangs
-    var _density = worldgen_get_density_wall(_x, _y, _seed);
+    var _density = worldgen_get_density_wall(_x, _y, _seed, undefined, _modifiers);
     if (_density < 0) return TILE_EMPTY; // Negative density = no wall
     
     // Generate noise value (0..1) for coherent tile variation

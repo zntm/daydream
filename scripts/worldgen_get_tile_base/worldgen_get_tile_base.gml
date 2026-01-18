@@ -16,11 +16,12 @@
 /// @param {Bool} _cave_above Whether there is a cave above this position
 /// @param {Real} _seed World seed
 /// @returns {String} Tile ID
-function worldgen_get_tile_base(_x, _y, _surface_biome, _cave_biome, _surface_height, _cave_above, _seed)
+function worldgen_get_tile_base(_x, _y, _surface_biome, _cave_biome, _surface_height, _cave_above, _seed, _modifiers = undefined)
 {
     // Get world data for bedrock/lava calculations
     var _world_data = global.world_data[$ global.world_save_data.dimension];
     var _world_height = _world_data.get_world_height();
+    var _biome_data = global.biome_data;
     
     // Bedrock layer
     var _bedrock_depth = _world_height - _y;
@@ -31,11 +32,11 @@ function worldgen_get_tile_base(_x, _y, _surface_biome, _cave_biome, _surface_he
         if (_bedrock_noise > (_bedrock_depth - 1) * 0.4) return "phantasia:bedrock";
     }
     // === 3D Density-based terrain ===
-    var _density = worldgen_get_density_solid(_x, _y, _seed);
+    var _density = worldgen_get_density_solid(_x, _y, _seed, undefined, _modifiers);
     if (_density < 0) return TILE_EMPTY; // Negative density = air
     
     // Sample material noise for organic variation
-    var _material_noise = worldgen_get_density_material(_x, _y, _seed);
+    var _material_noise = worldgen_get_density_material(_x, _y, _seed, undefined, _modifiers);
     
     // Generate context for MaterialProvider
     // Used for evaluating rules and noise-based placement
@@ -72,12 +73,14 @@ function worldgen_get_tile_base(_x, _y, _surface_biome, _cave_biome, _surface_he
         var _blend_range = _world_data.get_biome_blend_range();
         
         // Check distance to region boundary for transition biomes
-        var _boundary_distance = global.region_generator.get_boundary_distance(_x, _y, 0, _seed);
+        var _boundary_distance = (_modifiers != undefined && _modifiers.boundary_dist > 0) ? _modifiers.boundary_dist : global.region_generator.get_boundary_distance(_x, _y, 0, _seed);
         var _transition_threshold = _world_data[$ "___transition_threshold"] ?? 24;
         
         if (_boundary_distance < _transition_threshold)
         {
-            var _transition_biome = ___get_transition_biome(_surface_biome, _world_data, _seed, _x);
+            var _current_region = ((_modifiers != undefined) ? _modifiers.region : undefined);
+            var _transition_biome = ___get_transition_biome(_surface_biome, _world_data, _seed, _x, _current_region);
+            
             if (_transition_biome != undefined)
             {
                 var _transition_factor = 1 - (_boundary_distance / _transition_threshold);
@@ -140,10 +143,13 @@ function worldgen_get_tile_base(_x, _y, _surface_biome, _cave_biome, _surface_he
 /// @param {Real} _seed World seed
 /// @param {Real} _x World X position
 /// @returns {String|Undefined} Transition biome ID or undefined if no transition
-function ___get_transition_biome(_current_biome, _world_data, _seed, _x)
+function ___get_transition_biome(_current_biome, _world_data, _seed, _x, _current_region = undefined)
 {
     // Look up current region to compare category
-    var _current_region = global.region_generator.get_region(_x, 0, 0, _seed);
+    if (_current_region == undefined)
+    {
+        _current_region = global.region_generator.get_region(_x, 0, 0, _seed);
+    }
     
     // Look up adjacent region to determine what we're transitioning to
     var _adjacent_region = global.region_generator.get_region(_x + 32, 0, 0, _seed);

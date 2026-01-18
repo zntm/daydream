@@ -23,6 +23,7 @@ function WorldGenState(_world_data) constructor
     erosion_scale = _world_data.get_worldgen_erosion_scale();
     continentalness_scale = _world_data.get_worldgen_continentalness_scale();
     continentalness_amplitude = _world_data.get_worldgen_continentalness_amplitude();
+    region_height_scale = _world_data.get_worldgen_region_height_scale();
     
     squash_spline = _world_data.get_worldgen_squash_spline() ?? [
         sp(0, 6.0, "ease_out"),
@@ -60,15 +61,15 @@ function WorldGenState(_world_data) constructor
 /// @param {Real} _seed World seed
 /// @param {Struct.WorldGenState} _config Pre-resolved worldgen configuration
 /// @returns {Real} Density (positive = solid, negative = air)
-function worldgen_get_density(_x, _y, _z, _seed, _config = global.chunk_pool.worldgen_config)
+function worldgen_get_density(_x, _y, _z, _seed, _config = global.chunk_pool.worldgen_config, _modifiers = undefined)
 {
     var _depth = _y - _config.base_height;
     
-    var _mods = worldgen_get_biome_modifiers(_x, _y, _seed);
+    var _mods = (_modifiers != undefined) ? _modifiers : worldgen_get_biome_modifiers(_x, _y, _seed);
     var _region_params = _mods.region_params; // Now part of modifiers return
     
     // Apply region terrain offset
-    var _depth = _y - (_config.base_height + _region_params.height_offset);
+    var _depth = _y - (_config.base_height + _region_params.height_offset * _config.region_height_scale);
     
     var _gradient_strength = 0.006;
     var _height_gradient = _depth * _gradient_strength;
@@ -105,7 +106,7 @@ function worldgen_get_biome_modifiers(_x, _y, _seed)
     var _region = global.region_generator.get_region(_x, _y, 0, _seed);
     var _biome = global.biome_data[$ _region.get_surface_biome_id()];
     
-    if (_biome == undefined) return { erosion: 1.0, squash: 1.0, cave_density: 1.0, continentalness: 0.0 };
+    if (_biome == undefined) return { erosion: 1.0, squash: 1.0, cave_density: 1.0, continentalness: 0.0, region_params: { height_offset: 0, base_height: 0, amplitude_min: 0, amplitude_max: 0 }, region: _region };
     
     var _smoothing = _biome.get_terrain_smoothing();
     var _influence = _biome.get_terrain_influence();
@@ -115,13 +116,16 @@ function worldgen_get_biome_modifiers(_x, _y, _seed)
     var _cave_density = lerp(1.0, _biome.get_cave_density_modifier(), _influence);
     var _continentalness = _biome.get_continentalness_modifier() * _influence;
     
+    var _boundary_dist = 0;
+    var _blend_smooth = 0;
+    
     if (_smoothing > 0)
     {
-        var _boundary_dist = global.region_generator.get_boundary_distance(_x, _y, 0, _seed);
+        _boundary_dist = global.region_generator.get_boundary_distance(_x, _y, 0, _seed);
         if (_boundary_dist < _smoothing)
         {
             var _blend = _boundary_dist / _smoothing;
-            var _blend_smooth = _blend * _blend * (3 - 2 * _blend);
+            _blend_smooth = _blend * _blend * (3 - 2 * _blend);
             
             _erosion = lerp(1.0, _erosion, _blend_smooth);
             _squash = lerp(1.0, _squash, _blend_smooth);
@@ -132,21 +136,23 @@ function worldgen_get_biome_modifiers(_x, _y, _seed)
     
     
     // Also blend region terrain parameters (base height, offset, etc.)
-    var _region_params = worldgen_get_region_parameters(_x, _y, _seed, _smoothing, _boundary_dist, _blend_smooth);
+    var _region_params = worldgen_get_region_parameters(_x, _y, _seed, _smoothing, _boundary_dist, _blend_smooth, _region);
     
     return { 
         erosion: _erosion, 
         squash: _squash, 
         cave_density: _cave_density, 
         continentalness: _continentalness,
-        region_params: _region_params
+        region_params: _region_params,
+        region: _region,
+        boundary_dist: _boundary_dist
     };
 }
 
 /// @desc Get blended region parameters
-function worldgen_get_region_parameters(_x, _y, _seed, _smoothing = 0, _boundary_dist = 0, _blend = 0)
+function worldgen_get_region_parameters(_x, _y, _seed, _smoothing = 0, _boundary_dist = 0, _blend = 0, _region = undefined)
 {
-    var _region = global.region_generator.get_region(_x, _y, 0, _seed);
+    if (_region == undefined) _region = global.region_generator.get_region(_x, _y, 0, _seed);
     var _params = _region.get_terrain();
     
     // Default values
@@ -233,49 +239,49 @@ function worldgen_get_surface_height_3d(_x, _seed, _config = global.chunk_pool.w
 }
 
 /// @desc Check if solid
-function worldgen_is_solid(_x, _y, _seed, _config = global.chunk_pool.worldgen_config)
+function worldgen_is_solid(_x, _y, _seed, _config = global.chunk_pool.worldgen_config, _modifiers = undefined)
 {
-    return worldgen_get_density(_x, _y, 0, _seed, _config) > 0;
+    return worldgen_get_density(_x, _y, 0, _seed, _config, _modifiers) > 0;
 }
 
 /// @desc Check if wall
-function worldgen_is_wall(_x, _y, _seed, _config = global.chunk_pool.worldgen_config)
+function worldgen_is_wall(_x, _y, _seed, _config = global.chunk_pool.worldgen_config, _modifiers = undefined)
 {
     var _z = _config.z_offset_wall;
     var _r = _config.z_range_wall;
     
-    if (_r <= 0) return worldgen_get_density(_x, _y, _z, _seed, _config) > 0;
+    if (_r <= 0) return worldgen_get_density(_x, _y, _z, _seed, _config, _modifiers) > 0;
     
     return max(
-        worldgen_get_density(_x, _y, _z - _r, _seed, _config),
-        worldgen_get_density(_x, _y, _z, _seed, _config),
-        worldgen_get_density(_x, _y, _z + _r, _seed, _config)
+        worldgen_get_density(_x, _y, _z - _r, _seed, _config, _modifiers),
+        worldgen_get_density(_x, _y, _z, _seed, _config, _modifiers),
+        worldgen_get_density(_x, _y, _z + _r, _seed, _config, _modifiers)
     ) > 0;
 }
 
 /// @desc Compatibility: Get solid density
-function worldgen_get_density_solid(_x, _y, _seed, _config = global.chunk_pool.worldgen_config)
+function worldgen_get_density_solid(_x, _y, _seed, _config = global.chunk_pool.worldgen_config, _modifiers = undefined)
 {
-    return worldgen_get_density(_x, _y, 0, _seed, _config);
+    return worldgen_get_density(_x, _y, 0, _seed, _config, _modifiers);
 }
 
 /// @desc Compatibility: Get wall density
-function worldgen_get_density_wall(_x, _y, _seed, _config = global.chunk_pool.worldgen_config)
+function worldgen_get_density_wall(_x, _y, _seed, _config = global.chunk_pool.worldgen_config, _modifiers = undefined)
 {
     var _z = _config.z_offset_wall;
     var _r = _config.z_range_wall;
     
-    if (_r <= 0) return worldgen_get_density(_x, _y, _z, _seed, _config);
+    if (_r <= 0) return worldgen_get_density(_x, _y, _z, _seed, _config, _modifiers);
     
     return max(
-        worldgen_get_density(_x, _y, _z - _r, _seed, _config),
-        worldgen_get_density(_x, _y, _z, _seed, _config),
-        worldgen_get_density(_x, _y, _z + _r, _seed, _config)
+        worldgen_get_density(_x, _y, _z - _r, _seed, _config, _modifiers),
+        worldgen_get_density(_x, _y, _z, _seed, _config, _modifiers),
+        worldgen_get_density(_x, _y, _z + _r, _seed, _config, _modifiers)
     );
 }
 
 /// @desc Compatibility: Get material density
-function worldgen_get_density_material(_x, _y, _seed, _config = global.chunk_pool.worldgen_config)
+function worldgen_get_density_material(_x, _y, _seed, _config = global.chunk_pool.worldgen_config, _modifiers = undefined)
 {
-    return worldgen_get_density(_x, _y, _config.z_offset_material, _seed, _config);
+    return worldgen_get_density(_x, _y, _config.z_offset_material, _seed, _config, _modifiers);
 }

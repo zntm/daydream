@@ -5,6 +5,7 @@ function chunk_generate(_chunk)
 {
     static __cave_bit = array_create(CHUNK_SIZE);
     static __skip_z_array = array_create(CHUNK_SIZE * CHUNK_SIZE);
+    static __modifiers_cache = array_create(CHUNK_SIZE * (CHUNK_SIZE + 2)); // Cache modifiers for whole column including neighbors
     
     for (var i = 0; i < CHUNK_SIZE * CHUNK_SIZE; ++i)
     {
@@ -52,7 +53,11 @@ function chunk_generate(_chunk)
         {
             var _world_y = _chunk.chunk_ystart + j - 1;
             
-            if (!worldgen_is_solid(_world_x, _world_y, _world_seed))
+            // Calculate and cache modifiers
+            var _modifiers = worldgen_get_biome_modifiers(_world_x, _world_y, _world_seed);
+            __modifiers_cache[@ i * (CHUNK_SIZE + 2) + j] = _modifiers;
+            
+            if (!worldgen_is_solid(_world_x, _world_y, _world_seed, undefined, _modifiers))
             {
                 _cave_bit |= 1 << j;
             }
@@ -192,7 +197,8 @@ function chunk_generate(_chunk)
             
             if !(_skip_z & (1 << CHUNK_DEPTH_DEFAULT)) && (!_is_cave)
             {
-                var _tile_id = worldgen_get_tile_base(_world_x, _world_y, _surface_biome_id, _cave_biome, _surface_height, _is_cave_above, _world_seed);
+                var _modifiers = __modifiers_cache[i * (CHUNK_SIZE + 2) + (j + 1)]; // Retrieve cached modifiers
+                var _tile_id = worldgen_get_tile_base(_world_x, _world_y, _surface_biome_id, _cave_biome, _surface_height, _is_cave_above, _world_seed, _modifiers);
                 
                 if (_tile_id != TILE_EMPTY)
                 {
@@ -216,7 +222,8 @@ function chunk_generate(_chunk)
             
             if !(_skip_z & (1 << CHUNK_DEPTH_WALL))
             {
-                var _wall_id = worldgen_get_tile_wall(_world_x, _world_y, _surface_biome_id, _cave_biome, _surface_height, _world_seed, _is_cave_above);
+                var _modifiers = __modifiers_cache[i * (CHUNK_SIZE + 2) + (j + 1)]; // Retrieve cached modifiers
+                var _wall_id = worldgen_get_tile_wall(_world_x, _world_y, _surface_biome_id, _cave_biome, _surface_height, _world_seed, _is_cave_above, _modifiers);
                 
                 if (_wall_id != TILE_EMPTY)
                 {
@@ -247,7 +254,8 @@ function chunk_generate(_chunk)
                 
                 if !(_skip_z & (1 << _z)) 
                 {
-                    var _tile_base = worldgen_get_tile_base(_world_x, _world_y + 1, _surface_biome_id, _cave_biome, _surface_height, true, _world_seed);
+                    var _modifiers_below = __modifiers_cache[i * (CHUNK_SIZE + 2) + (j + 2)];
+                    var _tile_base = worldgen_get_tile_base(_world_x, _world_y + 1, _surface_biome_id, _cave_biome, _surface_height, true, _world_seed, _modifiers_below);
                     var _tile_foliage = worldgen_get_tile_foliage(_world_x, _world_y, _surface_biome_id, _cave_biome, _tile_base, _surface_height, _world_seed);
                     
                     if (_tile_foliage != TILE_EMPTY)

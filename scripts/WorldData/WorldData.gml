@@ -63,6 +63,14 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
     ___worldgen_cave_noise_range_spline = undefined;
     ___worldgen_cave_density_spline = undefined;
     ___worldgen_cave_smoothness_spline = undefined;
+    ___worldgen_region_height_scale = 1.0;
+    
+    ___biome_blend_range = 24; // Default blend range
+
+    static get_biome_blend_range = function()
+    {
+        return ___biome_blend_range;
+    }
     
     static get_world_height = function()
     {
@@ -406,6 +414,7 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         ___surface_humidity_spline_y = ___surface_biome_humidity[$ "spline_y"] == undefined ? undefined : ___surface_biome_humidity.spline_y.points;
         
         ___surface_biome_transitions = _surface_biome[$ "transitions"]; // Load transitions rules array
+        ___biome_blend_range = _surface_biome[$ "biome_blend_range"] ?? 24;
         
         set_surface_biome_map(_surface_biome_map);
         
@@ -459,6 +468,7 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
     static get_worldgen_cave_noise_range_spline = function() { return ___worldgen_cave_noise_range_spline; }
     static get_worldgen_cave_density_spline = function() { return ___worldgen_cave_density_spline; }
     static get_worldgen_cave_smoothness_spline = function() { return ___worldgen_cave_smoothness_spline; }
+    static get_worldgen_region_height_scale = function() { return ___worldgen_region_height_scale; }
     
     /// @desc Set worldgen config (new unified system)
     static set_worldgen = function(_config)
@@ -473,7 +483,9 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         ___surface_start = _config[$ "surface_start"] ?? ___surface_start;
         ___worldgen_erosion_scale = _config[$ "erosion_scale"] ?? 0.008;
         ___worldgen_continentalness_scale = _config[$ "continentalness_scale"] ?? 0.001;
+        ___worldgen_continentalness_scale = _config[$ "continentalness_scale"] ?? 0.001;
         ___worldgen_continentalness_amplitude = _config[$ "continentalness_amplitude"] ?? 150;
+        ___worldgen_region_height_scale = _config[$ "region_height_scale"] ?? 1.0;
         
         var _squash = _config[$ "squash_spline"];
         ___worldgen_squash_spline = (_squash != undefined && _squash[$ "points"] != undefined) ? _squash.points : _squash;

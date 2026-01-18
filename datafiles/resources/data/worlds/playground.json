@@ -214,6 +214,7 @@
         "erosion_scale": 0,
         "continentalness_scale": 0,
         "continentalness_amplitude": 0,
+        "region_height_scale": 0,
         "squash_spline": {
             "points": [
                 {
