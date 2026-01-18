@@ -44,7 +44,7 @@ function file_save_world_chunk(_world_save_data, _chunk)
         var _chunk_covered = _chunk.chunk_covered;
         
         // Build Palette
-        var _palette_map = {};
+        var _palette_map = {}
         var _palette_array = [];
         var _palette_index = 0;
         

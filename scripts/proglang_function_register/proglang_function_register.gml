@@ -542,9 +542,9 @@ proglang_function_register("callback", function(_args) {
         _vm[@ PROG_VM.CURRENT_THIS] = self;
         proglang_vm_run(_vm, _c[PROG_CLOSURE.BYTECODE], _a);
         proglang_vm_free(_vm);
-    };
+    }
     
-    var _inst = { ___closure: _closure, ___args: _cb_args };
+    var _inst = { ___closure: _closure, ___args: _cb_args }
     return method(_inst, _wrapper);
 });
 

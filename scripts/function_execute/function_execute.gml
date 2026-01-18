@@ -12,12 +12,12 @@ function function_execute(_function, _x, _y, _z, _xscale, _yscale, _inst = undef
     if (_chance != undefined) && (!chance(_chance)) exit;
     
     var _id = _function[$ "id"];
-    var _parameter = _function[$ "parameters"] ?? {};
+    var _parameter = _function[$ "parameters"] ?? {}
     
     // Build Context
     var _tx = round(_x / TILE_SIZE);
     var _ty = round(_y / TILE_SIZE);
-    var _context = {};
+    var _context = {}
 
     if (_inst != undefined) && (instance_exists(_inst))
     {

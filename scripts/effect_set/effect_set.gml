@@ -51,7 +51,7 @@ function effect_set(_type, _time, _level = 1, _object = id, _particle = true)
         var _exec = {
             id: _on_effect.id,
             parameters: _on_effect[$ "parameters"]
-        };
+        }
         
         function_execute(_exec, _object.x, _object.y, CHUNK_DEPTH_DEFAULT, 1, 1, _object);
     }

@@ -11,7 +11,7 @@ enum PACKET_TYPE {
     TILE_UPDATE_REQUEST, // Client -> Server: Request to change a tile
     INVENTORY_UPDATE,    // Server -> Clients: Inventory slot changed
     INVENTORY_ACTION,    // Client -> Server: Request move/split/drop { type, from_inv, from_index, to_inv, to_index, amount }
-    CONTAINER_OPEN,      // Client -> Server: Request open {x, y, z}; Server -> Client: Response {x, y, z, size}
+    CONTAINER_OPEN,      // Client -> Server: Request open {x, y, z} Server -> Client: Response {x, y, z, size}
     CONTAINER_CLOSE,     // Client/Server: Close current container
     CHUNK_REQUEST,       // Client -> Server: Request chunk data {chunk_x, chunk_y}
     CHUNK_DATA,          // Server -> Client: Chunk tile data (sparse)
@@ -94,7 +94,7 @@ function packet_read_input(_buffer)
         tick:            buffer_read(_buffer, buffer_u32),
         move_x:          buffer_read(_buffer, buffer_f32),
         move_y:          buffer_read(_buffer, buffer_f32),
-    };
+    }
     
     var _flags = buffer_read(_buffer, buffer_u16);
     _data.jump_held      = !!(_flags & (1 << 0));
@@ -143,7 +143,7 @@ function packet_read_welcome(_buffer)
     var _time = buffer_read(_buffer, buffer_f32);
     
     var _config_json = buffer_read(_buffer, buffer_string);
-    var _terrain_config = {};
+    var _terrain_config = {}
     try
     {
         _terrain_config = json_parse(_config_json);
@@ -158,7 +158,7 @@ function packet_read_welcome(_buffer)
         seed: _seed,
         time: _time,
         terrain_config: _terrain_config
-    };
+    }
 }
 
 /// @desc Write an Inventory item to buffer (Binary serialization)
@@ -275,7 +275,7 @@ function packet_read_inventory_update(_buffer)
         inv_name: _inv_name,
         index: _index,
         item: _item
-    };
+    }
 }
 
 /// @desc Serialize INVENTORY_ACTION
@@ -299,7 +299,7 @@ function packet_read_inventory_action(_buffer)
         to_inv: buffer_read(_buffer, buffer_string),
         to_index: buffer_read(_buffer, buffer_u16),
         amount: buffer_read(_buffer, buffer_u16)
-    };
+    }
 }
 
 /// @desc Serialize CONTAINER_OPEN
@@ -319,7 +319,7 @@ function packet_read_container_open(_buffer)
         y: buffer_read(_buffer, buffer_s32),
         z: buffer_read(_buffer, buffer_s32),
         size: buffer_read(_buffer, buffer_u16)
-    };
+    }
 }
 
 enum INVENTORY_ACTION_TYPE {
@@ -348,7 +348,7 @@ function packet_read_chunk_request(_buffer)
     return {
         chunk_x: buffer_read(_buffer, buffer_s32),
         chunk_y: buffer_read(_buffer, buffer_s32)
-    };
+    }
 }
 
 /// @desc Serialize CHUNK_DATA (sparse format)
@@ -396,7 +396,7 @@ function packet_read_chunk_data(_buffer)
         chunk_x: _chunk_x,
         chunk_y: _chunk_y,
         tiles: _tiles
-    };
+    }
 }
 /// @desc Serialize TIME_UPDATE
 /// @param {Id.Buffer} _buffer
@@ -437,7 +437,7 @@ function packet_read_player_info(_buffer)
     var _uuid = buffer_read(_buffer, buffer_string);
     var _json = buffer_read(_buffer, buffer_string);
     
-    var _attire = {};
+    var _attire = {}
     try
     {
         _attire = json_parse(_json);
@@ -450,5 +450,5 @@ function packet_read_player_info(_buffer)
     return {
         uuid: _uuid,
         attire: _attire
-    };
+    }
 }

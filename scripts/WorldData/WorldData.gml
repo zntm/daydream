@@ -41,8 +41,8 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
     
     ___surface_biome = undefined;
     ___surface_biome_map = undefined;
-    ___surface_biome_heat = { octaves: 1 };
-    ___surface_biome_humidity = { octaves: 1 };
+    ___surface_biome_heat = { octaves: 1 }
+    ___surface_biome_humidity = { octaves: 1 }
     ___surface_heat_noise_scale = 0.01;
     ___surface_heat_offset = 0;
     ___surface_heat_range = 63;

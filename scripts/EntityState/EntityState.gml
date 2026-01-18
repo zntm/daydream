@@ -242,7 +242,7 @@ function EntityState() constructor
         
         // Effects: Binary deserialization
         var _effect_count = buffer_read(_buffer, buffer_u8);
-        effects = {};
+        effects = {}
         
         for (var i = 0; i < _effect_count; ++i)
         {
@@ -255,7 +255,7 @@ function EntityState() constructor
             catch (_e)
             {
                 show_debug_message($"[NET] Error parsing effect '{_name}': {_e.message}");
-                effects[$ _name] = {};
+                effects[$ _name] = {}
             }
         }
         

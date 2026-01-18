@@ -552,7 +552,7 @@ function _network_handle_welcome(_buffer)
             time: _data.time,
             day: 0,
             name: "Multiplayer World"
-        };
+        }
     }
     else
     {
@@ -638,7 +638,7 @@ function _network_handle_entity_update(_buffer)
     
     show_debug_message($"[NET] Received ENTITY_UPDATE: count={_entity_count}, tick={_last_processed_tick}");
     
-    var _received_uuids = {}; // Track UUIDs for despawning logic
+    var _received_uuids = {} // Track UUIDs for despawning logic
     
     for (var i = 0; i < _entity_count; ++i)
     {
@@ -930,7 +930,7 @@ function network_broadcast_entities()
         {
             network_eid_register(_inst);
         }
-    };
+    }
     
     with (obj_Player) { _register_if_new(self); }
     with (obj_Client) { _register_if_new(self); }
@@ -1072,7 +1072,7 @@ function network_send_input()
         use_held:        _local_player.input_state.use_held,
         use_pressed:     _local_player.input_state.use_pressed,
         selected_hotbar: global.inventory_selected_hotbar
-    };
+    }
     
     // Store in input history for reconciliation
     var _history_entry = {
@@ -1080,7 +1080,7 @@ function network_send_input()
         input: _input,
         predicted_x: _local_player.x,
         predicted_y: _local_player.y
-    };
+    }
     
     array_push(_local_player.input_history, _history_entry);
     
@@ -1243,8 +1243,8 @@ function _network_handle_tile_request(_socket, _buffer)
 /// @desc Initialize inventory structure for a connected client (server only)
 function _network_init_client_inventory(_client)
 {
-    _client.inventory = {};
-    _client.open_container = { x: -1, y: -1, z: -1 };
+    _client.inventory = {}
+    _client.open_container = { x: -1, y: -1, z: -1 }
     
     // Use global inventory reference definitions
     var _names = global.inventory_names;
@@ -1316,7 +1316,7 @@ function _network_handle_inventory_action(_socket, _buffer)
             return undefined;
         }
         return _c.inventory[$ _name];
-    };
+    }
     
     switch (_action.type)
     {
@@ -1469,7 +1469,7 @@ function _network_handle_container_open(_socket, _buffer)
     if (global.network_role == NETWORK_ROLE.SERVER)
     {
         var _client = global.network_clients[? _socket];
-        _client.open_container = { x: _data.x, y: _data.y, z: _data.z };
+        _client.open_container = { x: _data.x, y: _data.y, z: _data.z }
         
         var _tile = tile_get(_data.x, _data.y, _data.z);
         if (_tile != TILE_EMPTY)
@@ -1508,7 +1508,7 @@ function _network_handle_container_close(_socket, _buffer)
     if (global.network_role == NETWORK_ROLE.SERVER)
     {
         var _client = global.network_clients[? _socket];
-        _client.open_container = { x: -1, y: -1, z: -1 };
+        _client.open_container = { x: -1, y: -1, z: -1 }
     }
 }
 

@@ -31,19 +31,19 @@ function bg_sky_colour(_in_biome_data, _in_biome_transition_data)
             if (_data == undefined) return 0x5F91FE; // Default Sky Blue
             var _val = _data.get_sky_colour_base(_name);
             return _val ?? 0x5F91FE;
-        };
+        }
         
         var _get_sky_grad = function(_data, _name) {
             if (_data == undefined) return 0x244FE9; // Default Sky Gradient
             var _val = _data.get_sky_colour_gradient(_name);
             return _val ?? 0x244FE9;
-        };
+        }
         
         var _get_light = function(_data, _name) {
             if (_data == undefined) return 0xFFFFFF; // Default White
             var _val = _data.get_light_colour(_name);
             return _val ?? 0xFFFFFF;
-        };
+        }
         
         var _sky_colour_base_from = _get_sky_base(_in_biome_data, _name_from);
         var _sky_colour_base_to   = _get_sky_base(_in_biome_data, _name_to);

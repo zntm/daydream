@@ -17,7 +17,7 @@ function RegionData(_id, _config = {}) constructor
     ___cave_biome_default = _config[$ "cave_biome_default"] ?? "phantasia:cave/default";
     
     // Terrain parameters for this zone
-    var _terrain_config = _config[$ "terrain"] ?? {};
+    var _terrain_config = _config[$ "terrain"] ?? {}
     ___terrain = {
         height_offset: _terrain_config[$ "height_offset"] ?? 0,
         base_height: _terrain_config[$ "base_height"] ?? 400,
@@ -25,7 +25,7 @@ function RegionData(_id, _config = {}) constructor
         amplitude_max: _terrain_config[$ "amplitude_max"] ?? 60,
         noise_scale: _terrain_config[$ "noise_scale"] ?? 0.015625,
         gradient_strength: _terrain_config[$ "gradient_strength"] ?? 0.015
-    };
+    }
     
     // Region grouping for transitions (regions in same category don't generate borders)
     ___category = _config[$ "category"] ?? ___id;

@@ -53,7 +53,7 @@ function PatternScanner() constructor
                 seed: _seed,
                 zone: _chunk_zone,
                 sub_biome: _sub_biome
-            };
+            }
             
             // Check patterns at this X, Y
             for (var p = 0; p < array_length(___patterns); ++p)
@@ -280,7 +280,7 @@ function PatternActionChain(_pattern, _offset_x = 0, _offset_y = 0) : PatternAct
             seed: _context.seed,
             zone: _context.zone,
             sub_biome: _context.sub_biome
-        };
+        }
         
         // Check and execute chained pattern
         if (___pattern.check_rules(_chained_context))
@@ -362,7 +362,7 @@ function WorldPattern(_id) constructor
             seed: _seed,
             zone: _zone,
             sub_biome: _sub_biome
-        };
+        }
         return check_rules(_context);
     }
     
@@ -377,7 +377,7 @@ function WorldPattern(_id) constructor
             seed: global.world_save_data.seed,
             zone: undefined,
             sub_biome: undefined
-        };
+        }
         execute_actions(_context);
     }
 }
