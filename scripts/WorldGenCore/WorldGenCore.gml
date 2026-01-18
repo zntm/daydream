@@ -63,35 +63,35 @@ function WorldGenState(_world_data) constructor
     z_offset_material = 0.5;
 }
 
-/// @desc Core density evaluation with biome modifier blending
-/// @param {Real} _x, _y, _z World position
-/// @param {Real} _seed World seed
-/// @param {Struct.WorldGenState} _config Pre-resolved worldgen configuration
-/// @returns {Real} Density (positive = solid, negative = air)
 function worldgen_get_density(_x, _y, _z, _seed, _config = global.chunk_pool.worldgen_config, _modifiers = undefined)
 {
+    var _base = _config.base_height;
+    var _raw_depth = _y - _base;
+    
+    if (_raw_depth < -300) return -1.0;
+    if (_raw_depth > 900) return 1.0;
+    
     var _mods = (_modifiers != undefined) ? _modifiers : worldgen_get_biome_modifiers(_x, _y, _seed);
     var _region_params = _mods.region_params;
     
-    var _depth = _y - (_config.base_height + _region_params.height_offset * _config.region_height_scale);
+    var _depth = _y - (_base + _region_params.height_offset * _config.region_height_scale);
     
     var _gradient_strength = 0.006;
     var _height_gradient = _depth * _gradient_strength;
     
-    var _continentalness = open_simplex_noise(_x * _config.continentalness_scale, _seed * 7.3, 1.0, 2);
-    
-    _continentalness += _mods.continentalness;
+    var _continentalness = open_simplex_noise(_x * _config.continentalness_scale, _seed * 7.3, 1.0, 2) + _mods.continentalness;
     _height_gradient -= _continentalness * _config.continentalness_amplitude * _gradient_strength;
     
     var _squash = spline_evaluate(_config.squash_spline, _depth) * _mods.squash;
     var _squashed_y = _y * _squash;
     
+    var _smoothness = spline_evaluate(_config.cave_smoothness_spline, _depth);
     var _noise_3d = open_simplex_noise_3d(
         _x * _config.cave_noise_scale,
         _squashed_y * _config.cave_noise_scale,
         _z + (_seed * 0.0001),
         1.0,
-        spline_evaluate(_config.cave_smoothness_spline, _depth)
+        _smoothness
     );
     
     var _cave_density = spline_evaluate(_config.cave_density_spline, _depth) * _mods.cave_density;
@@ -100,16 +100,24 @@ function worldgen_get_density(_x, _y, _z, _seed, _config = global.chunk_pool.wor
     var _erosion = open_simplex_noise(_x * _config.erosion_scale, _y * _config.erosion_scale + 500, 1.0, 2) * _mods.erosion;
     
     var _cave_carve = (_noise_3d > -_noise_range && _noise_3d < _noise_range) ? -_cave_density : 0;
-    var _density = _height_gradient + (_noise_3d * (1.8 + _erosion * 0.8)) + _cave_carve;
     
-    return _density - 0.05;
+    return _height_gradient + (_noise_3d * (1.8 + _erosion * 0.8)) + _cave_carve - 0.05;
 }
 
-/// @desc Get blended biome modifiers
 function worldgen_get_biome_modifiers(_x, _y, _seed)
 {
-    var _region = global.region_generator.get_region(_x, _y, 0, _seed);
-    var _biome = global.biome_data[$ _region.get_surface_biome_id()];
+    static _default_region_params = {
+        height_offset: 0,
+        base_height: 0,
+        amplitude_min: 0,
+        amplitude_max: 0
+    };
+    
+    var _region_gen = global.region_generator;
+    var _biome_data = global.biome_data;
+    
+    var _region = _region_gen.get_region(_x, _y, 0, _seed);
+    var _biome = _biome_data[$ _region.get_surface_biome_id()];
     
     if (_biome == undefined)
     {
@@ -118,14 +126,10 @@ function worldgen_get_biome_modifiers(_x, _y, _seed)
             squash: 1.0,
             cave_density: 1.0,
             continentalness: 0.0,
-            region_params: {
-                height_offset: 0,
-                base_height: 0,
-                amplitude_min: 0,
-                amplitude_max: 0
-            },
-            region: _region
-        }
+            region_params: _default_region_params,
+            region: _region,
+            boundary_dist: 999
+        };
     }
     
     var _smoothing = _biome.get_terrain_smoothing();
@@ -136,37 +140,46 @@ function worldgen_get_biome_modifiers(_x, _y, _seed)
     var _cave_density = lerp(1.0, _biome.get_cave_density_modifier(), _influence);
     var _continentalness = _biome.get_continentalness_modifier() * _influence;
     
-    var _boundary_dist = 0;
-    var _blend_smooth = 0;
-    
-    if (_smoothing > 0)
+    if (_smoothing <= 0)
     {
-        _boundary_dist = global.region_generator.get_boundary_distance(_x, _y, 0, _seed);
+        var _region_params = worldgen_get_region_parameters(_x, _y, _seed, 0, 0, 1.0, _region);
         
-        if (_boundary_dist < _smoothing)
-        {
-            var _blend = _boundary_dist / _smoothing;
-            
-            _blend_smooth = _blend * _blend * (3 - 2 * _blend);
-            
-            _erosion = lerp(1.0, _erosion, _blend_smooth);
-            _squash = lerp(1.0, _squash, _blend_smooth);
-            _cave_density = lerp(1.0, _cave_density, _blend_smooth);
-            _continentalness = lerp(0.0, _continentalness, _blend_smooth);
-        }
+        return {
+            erosion: _erosion,
+            squash: _squash,
+            cave_density: _cave_density,
+            continentalness: _continentalness,
+            region_params: _region_params,
+            region: _region,
+            boundary_dist: 999
+        };
+    }
+    
+    var _boundary_dist = _region_gen.get_boundary_distance(_x, _y, 0, _seed);
+    var _blend_smooth = 1.0;
+    
+    if (_boundary_dist < _smoothing)
+    {
+        var _blend = _boundary_dist / _smoothing;
+        _blend_smooth = _blend * _blend * (3 - 2 * _blend);
+        
+        _erosion = lerp(1.0, _erosion, _blend_smooth);
+        _squash = lerp(1.0, _squash, _blend_smooth);
+        _cave_density = lerp(1.0, _cave_density, _blend_smooth);
+        _continentalness = lerp(0.0, _continentalness, _blend_smooth);
     }
     
     var _region_params = worldgen_get_region_parameters(_x, _y, _seed, _smoothing, _boundary_dist, _blend_smooth, _region);
     
-    return { 
-        erosion: _erosion, 
-        squash: _squash, 
-        cave_density: _cave_density, 
+    return {
+        erosion: _erosion,
+        squash: _squash,
+        cave_density: _cave_density,
         continentalness: _continentalness,
         region_params: _region_params,
         region: _region,
         boundary_dist: _boundary_dist
-    }
+    };
 }
 
 /// @desc Get blended region parameters

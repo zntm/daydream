@@ -1,13 +1,11 @@
-/// @function chunk_generate(_chunk)
-/// @desc Generate terrain for a _chunk.chunk
-/// @param {Struct.Chunk} _chunk The _chunk.chunk to generate
 function chunk_generate(_chunk)
 {
     static __cave_bit = array_create(CHUNK_SIZE);
     static __skip_z_array = array_create(CHUNK_SIZE * CHUNK_SIZE);
-    static __modifiers_cache = array_create(CHUNK_SIZE * (CHUNK_SIZE + 2)); // Cache modifiers for whole column including neighbors
+    static __modifiers_cache = array_create(CHUNK_SIZE * (CHUNK_SIZE + 2));
     
-    for (var i = 0; i < CHUNK_SIZE * CHUNK_SIZE; ++i)
+    var _chunk_size_sq = CHUNK_SIZE * CHUNK_SIZE;
+    for (var i = 0; i < _chunk_size_sq; ++i)
     {
         __skip_z_array[@ i] = 0;
     }
@@ -16,6 +14,18 @@ function chunk_generate(_chunk)
     {
         return ((_a.x * 0xffff) + _a.y) - ((_b.x * 0xffff) + _b.y);
     }
+    
+    var _item_data = global.item_data;
+    var _biome_data = global.biome_data;
+    var _region_gen = global.region_generator;
+    var _world_save_data = global.world_save_data;
+    var _world_data = global.world_data[$ _world_save_data.dimension];
+    var _world_height = _world_data.get_world_height();
+    var _world_seed = _world_save_data.seed;
+    var _surface_start = _world_data.get_surface_start();
+    
+    var _natural_structure_data = global.natural_structure_data;
+    var _structure_data = global.structure_data;
     
     var __structure_array = global.structure_pool.query_range(
         _chunk.x - (TILE_SIZE / 2),
@@ -26,36 +36,22 @@ function chunk_generate(_chunk)
     
     var _structure_rectangle_length = array_length(__structure_array);
     
-    var _item_data = global.item_data;
-    
-    var _natural_structure_data = global.natural_structure_data;
-    var _structure_data = global.structure_data;
-    
-    var _world_save_data = global.world_save_data;
-    
-    var _world_data = global.world_data[$ _world_save_data.dimension];
-    var _world_height = _world_data.get_world_height();
-    
-    var _world_seed = _world_save_data.seed;
-    
-    var _surface_height_max = 10000;
-    
-    // Ensure worldgen config is updated for the current dimension (Moved to top)
     global.chunk_pool.worldgen_config = new WorldGenState(_world_data);
+    
+    var _chunk_xstart = _chunk.chunk_xstart;
+    var _chunk_ystart = _chunk.chunk_ystart;
     
     for (var i = 0; i < CHUNK_SIZE; ++i)
     {
-        var _world_x = _chunk.chunk_xstart + i;
-        
+        var _world_x = _chunk_xstart + i;
         var _cave_bit = 0;
+        var _mod_base = i * (CHUNK_SIZE + 2);
         
         for (var j = 0; j < CHUNK_SIZE + 2; ++j)
         {
-            var _world_y = _chunk.chunk_ystart + j - 1;
-            
-            // Calculate and cache modifiers
+            var _world_y = _chunk_ystart + j - 1;
             var _modifiers = worldgen_get_biome_modifiers(_world_x, _world_y, _world_seed);
-            __modifiers_cache[@ i * (CHUNK_SIZE + 2) + j] = _modifiers;
+            __modifiers_cache[@ _mod_base + j] = _modifiers;
             
             if (!worldgen_is_solid(_world_x, _world_y, _world_seed, undefined, _modifiers))
             {
@@ -165,39 +161,32 @@ function chunk_generate(_chunk)
     
     for (var i = 0; i < CHUNK_SIZE; ++i)
     {
-        var _world_x = _chunk.chunk_xstart + i;
-        var _inst_x = _world_x * TILE_SIZE;
-        
-        var _region = global.region_generator.get_region(_world_x, 0, 0, _world_seed);
-        
-        var _surface_height = undefined;
-        
+        var _world_x = _chunk_xstart + i;
+        var _region = _region_gen.get_region(_world_x, 0, 0, _world_seed);
         var _surface_biome_id = _region.get_surface_biome_id();
-        var _surface_biome_data = global.biome_data[$ _surface_biome_id];
-        var _sea_level = 450;
+        var _surface_height = undefined;
+        var _cave_mask = __cave_bit[i];
+        var _mod_base = i * (CHUNK_SIZE + 2);
         
         for (var j = 0; j < CHUNK_SIZE; ++j)
         {
-            var _world_y = _chunk.chunk_ystart + j;
-            
-            var _inst_y = _world_y * TILE_SIZE;
+            var _world_y = _chunk_ystart + j;
             var _skip_z = __skip_z_array[i + (j * CHUNK_SIZE)];
             
-            var _is_cave = (__cave_bit[i] >> (j + 1)) & 1;
-            var _is_cave_above = (__cave_bit[i] >> j) & 1;
+            var _is_cave = (_cave_mask >> (j + 1)) & 1;
+            var _is_cave_above = (_cave_mask >> j) & 1;
             
             var _cave_biome = undefined;
-            // Use implicit depth check or assume valid if we are here
-            var _depth_from_surface = _world_y - (_world_data.get_surface_start());
+            var _depth_from_surface = _world_y - _surface_start;
             
             if (_depth_from_surface >= 8)
             {
                 _cave_biome = worldgen_get_biome_cave(_world_x, _world_y, _surface_height, _world_seed);
             }
             
-            if !(_skip_z & (1 << CHUNK_DEPTH_DEFAULT)) && (!_is_cave)
+            if (!(_skip_z & (1 << CHUNK_DEPTH_DEFAULT)) && (!_is_cave))
             {
-                var _modifiers = __modifiers_cache[i * (CHUNK_SIZE + 2) + (j + 1)]; // Retrieve cached modifiers
+                var _modifiers = __modifiers_cache[_mod_base + (j + 1)];
                 var _tile_id = worldgen_get_tile_base(_world_x, _world_y, _surface_biome_id, _cave_biome, _surface_height, _is_cave_above, _world_seed, _modifiers);
                 
                 if (_tile_id != TILE_EMPTY)
@@ -206,13 +195,11 @@ function chunk_generate(_chunk)
                     if (_data != undefined)
                     {
                         ++_chunk.chunk_count[@ CHUNK_DEPTH_DEFAULT];
-                        
                         var _index = (is_struct(_data.get_placement_index()) ? smart_value(_data.get_placement_index()) : _data.get_placement_index());
-                        
                         _chunk.chunk[@ (CHUNK_DEPTH_DEFAULT << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_tile_id).set_index(_index);
                         _chunk.chunk_display |= 1 << CHUNK_DEPTH_DEFAULT;
                         
-                        if (_data.has_type(ITEM_TYPE_BIT.SOLID | ITEM_TYPE_BIT.UNTOUCHABLE)) && (!_data.is_transparent())
+                        if (_data.has_type(ITEM_TYPE_BIT.SOLID | ITEM_TYPE_BIT.UNTOUCHABLE) && (!_data.is_transparent()))
                         {
                             _chunk.chunk_covered[@ i] |= 1 << j;
                         }
@@ -220,27 +207,22 @@ function chunk_generate(_chunk)
                 }
             }
             
-            if !(_skip_z & (1 << CHUNK_DEPTH_WALL))
+            if (!(_skip_z & (1 << CHUNK_DEPTH_WALL)))
             {
-                var _modifiers = __modifiers_cache[i * (CHUNK_SIZE + 2) + (j + 1)]; // Retrieve cached modifiers
+                var _modifiers = __modifiers_cache[_mod_base + (j + 1)];
                 var _wall_id = worldgen_get_tile_wall(_world_x, _world_y, _surface_biome_id, _cave_biome, _surface_height, _world_seed, _is_cave_above, _modifiers);
                 
                 if (_wall_id != TILE_EMPTY)
                 {
                     var _data = _item_data[$ _wall_id];
-                    
                     if (_data != undefined)
                     {
                         ++_chunk.chunk_count[@ CHUNK_DEPTH_WALL];
-                        
                         var _index = (is_struct(_data.get_placement_index()) ? smart_value(_data.get_placement_index()) : _data.get_placement_index());
-                        
-                        _chunk.chunk[@ (CHUNK_DEPTH_WALL << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_wall_id)
-                            .set_index(_index);
-                        
+                        _chunk.chunk[@ (CHUNK_DEPTH_WALL << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_wall_id).set_index(_index);
                         _chunk.chunk_display |= 1 << CHUNK_DEPTH_WALL;
                         
-                        if (_data.has_type(ITEM_TYPE_BIT.SOLID | ITEM_TYPE_BIT.UNTOUCHABLE)) && (!_data.is_transparent())
+                        if (_data.has_type(ITEM_TYPE_BIT.SOLID | ITEM_TYPE_BIT.UNTOUCHABLE) && (!_data.is_transparent()))
                         {
                             _chunk.chunk_covered[@ i] |= 1 << j;
                         }
@@ -248,13 +230,13 @@ function chunk_generate(_chunk)
                 }
             }
             
-            if (_is_cave) && !((__cave_bit[i] >> (j + 2)) & 1)
+            if (_is_cave && !((_cave_mask >> (j + 2)) & 1))
             {
                 var _z = ((xorshift(_world_seed ^ (_world_x * 457)) & (1 << j)) ? CHUNK_DEPTH_FOLIAGE_FRONT : CHUNK_DEPTH_FOLIAGE_BACK);
                 
-                if !(_skip_z & (1 << _z)) 
+                if (!(_skip_z & (1 << _z)))
                 {
-                    var _modifiers_below = __modifiers_cache[i * (CHUNK_SIZE + 2) + (j + 2)];
+                    var _modifiers_below = __modifiers_cache[_mod_base + (j + 2)];
                     var _tile_base = worldgen_get_tile_base(_world_x, _world_y + 1, _surface_biome_id, _cave_biome, _surface_height, true, _world_seed, _modifiers_below);
                     var _tile_foliage = worldgen_get_tile_foliage(_world_x, _world_y, _surface_biome_id, _cave_biome, _tile_base, _surface_height, _world_seed);
                     
