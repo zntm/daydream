@@ -50,28 +50,7 @@ function worldgen_get_tile_base(_x, _y, _surface_biome, _cave_biome, _surface_he
     
     if (_biome == undefined)
     {
-        var _biome_to_use_id = _surface_biome;
-        var _transition_threshold = _world_data[$ "___transition_threshold"] ?? 24;
-        var _boundary_distance = (_modifiers != undefined && _modifiers.boundary_dist != undefined) ? _modifiers.boundary_dist : 999;
-        
-        if (_boundary_distance < _transition_threshold)
-        {
-            var _current_region = (_modifiers != undefined) ? _modifiers.region : undefined;
-            var _transition_biome = ___get_transition_biome(_surface_biome, _world_data, _seed, _x, _current_region);
-            
-            if (_transition_biome != undefined)
-            {
-                var _transition_factor = 1 - (_boundary_distance / _transition_threshold);
-                var _transition_noise = open_simplex_noise(_x * 0.05, _y * 0.05 + 2000, 1.0, 2);
-                
-                if (_transition_noise < _transition_factor * 0.8)
-                {
-                    _biome_to_use_id = _transition_biome;
-                }
-            }
-        }
-        
-        _biome = _biome_data[$ _biome_to_use_id] ?? _biome_data[$ _default_biome_id];
+        _biome = _biome_data[$ _surface_biome] ?? _biome_data[$ _default_biome_id];
     }
     
     if (_biome == undefined) return TILE_EMPTY;
@@ -91,91 +70,4 @@ function worldgen_get_tile_base(_x, _y, _surface_biome, _cave_biome, _surface_he
     }
     
     return _stone_id;
-}
-
-function ___get_transition_biome(_current_biome, _world_data, _seed, _x, _current_region = undefined)
-{
-    var _region_gen = global.region_generator;
-    
-    if (_current_region == undefined)
-    {
-        _current_region = _region_gen.get_region(_x, 0, 0, _seed);
-    }
-    
-    var _adjacent_region = _region_gen.get_region(_x + 32, 0, 0, _seed);
-    
-    if (_current_region.get_category() == _adjacent_region.get_category()) return undefined;
-    
-    var _adjacent_biome = _adjacent_region.get_surface_biome_id();
-    if (_adjacent_biome == _current_biome) return undefined;
-    
-    var _rules = _world_data.get_surface_biome_transitions();
-    if (_rules == undefined) return undefined;
-    
-    var _biome_data = global.biome_data;
-    var _b1 = _biome_data[$ _current_biome];
-    var _b2 = _biome_data[$ _adjacent_biome];
-    
-    if (_b1 == undefined || _b2 == undefined) return undefined;
-    
-    var _rules_count = array_length(_rules);
-    for (var i = 0; i < _rules_count; ++i)
-    {
-        var _rule = _rules[i];
-        var _exclude = _rule[$ "exclude"];
-        
-        if (_exclude != undefined)
-        {
-            var _fail = false;
-            var _exclude_len = array_length(_exclude);
-            for (var j = 0; j < _exclude_len; ++j)
-            {
-                var _tag = _exclude[j];
-                if (_b1.has_tag(_tag) || _b2.has_tag(_tag) || _current_biome == _tag || _adjacent_biome == _tag)
-                {
-                    _fail = true;
-                    break;
-                }
-            }
-            if (_fail) continue;
-        }
-        
-        var _require_any = _rule[$ "require_any"];
-        if (_require_any != undefined)
-        {
-            var _found = false;
-            var _req_any_len = array_length(_require_any);
-            for (var j = 0; j < _req_any_len; ++j)
-            {
-                var _tag = _require_any[j];
-                if (_b1.has_tag(_tag) || _b2.has_tag(_tag) || _current_biome == _tag || _adjacent_biome == _tag)
-                {
-                    _found = true;
-                    break;
-                }
-            }
-            if (!_found) continue;
-        }
-        
-        var _require_all = _rule[$ "require_all"];
-        if (_require_all != undefined)
-        {
-            var _fail = false;
-            var _req_all_len = array_length(_require_all);
-            for (var j = 0; j < _req_all_len; ++j)
-            {
-                var _tag = _require_all[j];
-                if (!(_b1.has_tag(_tag) || _b2.has_tag(_tag) || _current_biome == _tag || _adjacent_biome == _tag))
-                {
-                    _fail = true;
-                    break;
-                }
-            }
-            if (_fail) continue;
-        }
-        
-        return _rule.result;
-    }
-    
-    return undefined;
 }

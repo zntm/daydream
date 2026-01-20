@@ -117,7 +117,7 @@ function worldgen_get_biome_modifiers(_x, _y, _seed)
     var _biome_data = global.biome_data;
     
     var _region = _region_gen.get_region(_x, _y, 0, _seed);
-    var _biome = _biome_data[$ _region.get_surface_biome_id()];
+    var _biome = _biome_data[$ _region.get_surface_biome_id(_x, _y, _seed)];
     
     if (_biome == undefined)
     {

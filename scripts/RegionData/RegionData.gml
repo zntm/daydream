@@ -1,23 +1,17 @@
-/// @desc Zone Data struct with Sub-Biome rule system
-/// @description Defines a geographic zone and its sub-biome rules for caves/surface.
-///              Sub-biomes are selected based on depth, noise, and custom conditions.
-
-/// @param {String} _id Zone identifier
-/// @param {Struct} _config Configuration struct
 function RegionData(_id, _config = {}) constructor
 {
     ___id = _id;
     
-    // Surface biome reference (uses existing BiomeData system)
     ___surface_biome_id = _config[$ "surface_biome"] ?? "phantasia:surface/forest";
+    ___biomes = _config[$ "biomes"] ?? [___surface_biome_id];
+    ___biome_count = array_length(___biomes);
+    ___biome_noise_scale = _config[$ "biome_noise_scale"] ?? 0.008;
     
-    // Cave sub-biome rules (evaluated in order, first match wins)
     ___cave_biomes = _config[$ "cave_biomes"] ?? [];
     ___cave_biome_count = array_length(___cave_biomes);
     ___cave_biome_default = _config[$ "cave_biome_default"] ?? "phantasia:cave/default";
     
-    // Terrain parameters for this zone
-    var _terrain_config = _config[$ "terrain"] ?? {}
+    var _terrain_config = _config[$ "terrain"] ?? {};
     ___terrain = {
         height_offset: _terrain_config[$ "height_offset"] ?? 0,
         base_height: _terrain_config[$ "base_height"] ?? 400,
@@ -25,32 +19,35 @@ function RegionData(_id, _config = {}) constructor
         amplitude_max: _terrain_config[$ "amplitude_max"] ?? 60,
         noise_scale: _terrain_config[$ "noise_scale"] ?? 0.015625,
         gradient_strength: _terrain_config[$ "gradient_strength"] ?? 0.015
-    }
+    };
     
-    // Region grouping for transitions (regions in same category don't generate borders)
     ___category = _config[$ "category"] ?? ___id;
-    
-    // Zone visual/ambient properties
     ___fog_color = _config[$ "fog_color"] ?? 0x000000;
     ___fog_density = _config[$ "fog_density"] ?? 0;
-    
-    // --- Getters ---
     
     static get_id = function()
     {
         return ___id;
     }
     
-    static get_surface_biome_id = function()
+    static get_surface_biome_id = function(_x = 0, _y = 0, _seed = 0)
     {
-        return ___surface_biome_id;
+        if (___biome_count <= 1) return ___biomes[0];
+        
+        var _noise = open_simplex_noise(_x * ___biome_noise_scale, _y * ___biome_noise_scale + _seed * 0.1, 1.0, 2);
+        var _index = floor((_noise + 1) * 0.5 * ___biome_count) % ___biome_count;
+        
+        return ___biomes[_index];
     }
     
-    /// @desc Get resolved surface BiomeData
-    /// @returns {Struct.BiomeData}
-    static get_surface_biome = function()
+    static get_biomes = function()
     {
-        return global.biome_data[$ ___surface_biome_id];
+        return ___biomes;
+    }
+    
+    static get_surface_biome = function(_x = 0, _y = 0, _seed = 0)
+    {
+        return global.biome_data[$ get_surface_biome_id(_x, _y, _seed)];
     }
     
     static get_category = function()
