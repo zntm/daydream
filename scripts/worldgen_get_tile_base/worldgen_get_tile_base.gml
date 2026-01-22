@@ -21,7 +21,7 @@ function worldgen_get_tile_base(_x, _y, _surface_biome, _cave_biome, _surface_he
     var _density = worldgen_get_density_solid(_x, _y, _seed, undefined, _modifiers);
     if (_density < 0) return TILE_EMPTY;
     
-    if (_density > 2.0 && !_cave_above)
+    if (_density > 0.8 && !_cave_above)
     {
         return _stone_id;
     }
@@ -62,7 +62,7 @@ function worldgen_get_tile_base(_x, _y, _surface_biome, _cave_biome, _surface_he
     
     var _crust_var = open_simplex_noise(_x * 0.015, _seed * 8.3, 1.0, 2);
     var _boundary_wobble = open_simplex_noise(_x * 0.06, _y * 0.06 + (_seed * 15.7), 1.0, 3);
-    var _dirt_threshold = 0.6 + (_crust_var * 0.4) + (_boundary_wobble * 0.15);
+    var _dirt_threshold = 0.7 + (_crust_var * 0.2) + (_boundary_wobble * 0.1);
     
     if (_density < _dirt_threshold)
     {

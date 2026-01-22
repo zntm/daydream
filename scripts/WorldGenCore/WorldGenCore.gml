@@ -40,31 +40,51 @@ function WorldGenState(_world_data) constructor
     z_offset_material = _world_data.get_terrain_z_offset_material();
 }
 
+/// @desc Get the 1D surface height at a specific X position, factoring in biome modifiers
+function worldgen_get_surface_height_at(_x, _seed, _config = global.chunk_pool.worldgen_config, _modifiers = undefined)
+{
+    var _mods = (_modifiers != undefined) ? _modifiers : worldgen_get_biome_modifiers(_x, 0, _seed);
+    var _region_params = _mods.region_params;
+    
+    var _noise_scale = _config.surface_noise_scale;
+    var _octaves = _config.surface_noise_octaves;
+    
+    var _noise = open_simplex_noise(_x * _noise_scale, _seed * 100, 1.0, _octaves);
+    var _noise_norm = (_noise + 1) * 0.5;
+    
+    // Factors in region base height, biome height offset, and blended continentalness
+    var _base = _config.base_height + _region_params.height_offset + (_mods.continentalness * 64);
+    var _range = lerp(_region_params.amplitude_min, _region_params.amplitude_max, _noise_norm);
+    
+    // Erosion reduces the noise peak-to-valley range
+    return _base + (_range / _mods.erosion);
+}
+
 function worldgen_get_density(_x, _y, _z, _seed, _config = global.chunk_pool.worldgen_config, _modifiers = undefined)
 {
     if (_config == undefined) return -1.0;
     
-    // 1. Calculate 1D Surface Height
-    // Uses the pre-resolved noise settings from the config state
-    var _noise = open_simplex_noise(_x * _config.surface_noise_scale, _seed * 100, 1.0, _config.surface_noise_octaves);
-    var _noise_norm = (_noise + 1) * 0.5;
-    var _offset = lerp(_config.surface_noise_range_min, _config.surface_noise_range_max, _noise_norm);
-    var _surface_height = _config.base_height + _offset;
+    var _mods = (_modifiers != undefined) ? _modifiers : worldgen_get_biome_modifiers(_x, _y, _seed);
+    
+    // 1. Calculate 1D Surface Height with Biome Influence
+    var _surface_height = worldgen_get_surface_height_at(_x, _seed, _config, _mods);
     
     if (_y < _surface_height) return -1.0;
     
     var _dist = _y - _surface_height;
     
     // 2. Cave check (only for foreground/solid layer where z=0)
-    // Wall layers (z > 0) typically do not carve caves to provide background
     if (_z == 0)
     {
-        if (worldgen_get_cave(_x, _y, _surface_height, 0, _seed)) return -1.0;
+        if (worldgen_get_cave(_x, _y, _surface_height, 0, _seed, undefined, _mods.cave_density, _mods.squash)) return -1.0;
     }
     
     // 3. Return density gradient
-    // 0.1 at surface, increasing with depth to allow crust/stone differentiation
-    return 0.1 + (_dist * 0.2);
+    // 0.2 at surface, increasing with depth to allow crust/stone differentiation
+    // Squash modifier stretches the density gradient vertically
+    var _gradient = 0.25 / _mods.squash;
+    
+    return 0.2 + (_dist * _gradient);
 }
 
 function worldgen_get_biome_modifiers(_x, _y, _seed)

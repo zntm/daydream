@@ -1,4 +1,4 @@
-function worldgen_get_cave(_x, _y, _surface_height, _cave_seed, _seed, _world_data = global.world_data[$ global.world_save_data.dimension])
+function worldgen_get_cave(_x, _y, _surface_height, _cave_seed, _seed, _world_data = global.world_data[$ global.world_save_data.dimension], _cave_density_modifier = 1.0, _squash = 1.0)
 {
     var _depth = _y - _surface_height;
     if (_depth < 5) return false;
@@ -22,10 +22,10 @@ function worldgen_get_cave(_x, _y, _surface_height, _cave_seed, _seed, _world_da
         // Actually, the user object is `WorldCaveSystem(rangeMin, rangeMax, threshold: Noise)`.
         // Let's assume threshold.range_min is the cutoff value (0-255 usually, need to normalize).
         
-        var _threshold_val = _noise_conf.range_min / 255.0; // Normalize 0-255 to 0-1
+        var _threshold_val = (_noise_conf.range_min / 255.0) / _cave_density_modifier;
         
-        // Generate noise value
-        var _n = open_simplex_noise(_x * _scale, _y * _scale, _seed, _noise_conf.octaves);
+        // Generate noise value with squash applied to Y
+        var _n = open_simplex_noise(_x * _scale, (_y * _squash) * _scale, _seed, _noise_conf.octaves);
         
         // Normalize noise -1..1 to 0..1
         var _n_norm = (_n + 1) * 0.5;
