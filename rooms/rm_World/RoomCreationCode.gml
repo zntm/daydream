@@ -3,6 +3,7 @@ if (obj_Game_Control.spawn_needs_init)
 {
     var _world_save_data = global.world_save_data;
     var _world_data = global.world_data[$ _world_save_data.dimension];
+    global.chunk_pool.worldgen_config = new WorldGenState(_world_data);
     
     var _seed = _world_save_data.seed;
     var _base_tile_x = 0;
@@ -74,10 +75,10 @@ if (obj_Game_Control.spawn_needs_init)
     }
     else
     {
-         with (obj_Player)
-         {
-             if (is_local) file_load_world_spawn(global.world_save_data, id, global.player_save_data.uuid);
-         }
+        with (obj_Player)
+        {
+            if (is_local) file_load_world_spawn(global.world_save_data, id, global.player_save_data.uuid);
+        }
     }
     
     with (obj_Player)

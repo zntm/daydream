@@ -37,17 +37,17 @@ function control_gametick(_delta_time)
                     }
                     
                     hp = hp_max;
-                    
-                    if (is_local)
-                    {
-                        _camera_x = x - (_camera_width  / 2);
-                        _camera_y = y - (_camera_height / 2);
-                        
-                        control_camera_pos(_camera_x, _camera_y, true);
-                    }
                 }
             }
-
+            
+            if (is_local)
+            {
+                _camera_x = x - (_camera_width  / 2);
+                _camera_y = y - (_camera_height / 2);
+                
+                control_camera_pos(_camera_x, _camera_y, true);
+            }
+            
             if (is_local && !(obj_Game_Control.is_opened & (IS_OPENED_BOOLEAN.MENU | IS_OPENED_BOOLEAN.CHAT | IS_OPENED_BOOLEAN.INVENTORY)))
             {
                 var _tile_x = round(mouse_x / TILE_SIZE);

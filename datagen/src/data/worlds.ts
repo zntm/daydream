@@ -1,4 +1,4 @@
-import { DatagenReturnData, Noise, Spline, SplinePoint, SplineEasing, type SmartValue } from "../../index";
+import { DatagenReturnData, Noise, type SmartValue } from "../../index";
 
 export class WorldVignette {
     private ystart: number;
@@ -72,78 +72,6 @@ export class WorldCaveBiome {
     }
 }
 
-export class WorldSky {
-    private enabled: boolean;
-    private id: string;
-    private threshold: number;
-    private spacing: number;
-    private radius: number;
-    private thickness: number;
-    private noise_scale_region: number;
-    private noise_scale_edge: number;
-    private noise_scale_detail: number;
-    private region_offset_y?: number;
-    private region_range?: number;
-    private region_octaves?: number;
-    private region_threshold?: number;
-    private edge_noise_amplitude?: number;
-    private edge_noise_octaves?: number;
-    private detail_noise_amplitude?: number;
-    private detail_noise_octaves?: number;
-
-    constructor(
-        enabled: boolean = true,
-        id: string = "phantasia:sky/floating_islands",
-        threshold: number = 256,
-        spacing: number = 32,
-        radius: number = 18,
-        thickness: number = 10,
-        noiseScaleRegion: number = 0.12,
-        noiseScaleEdge: number = 0.15,
-        noiseScaleDetail: number = 0.3,
-        regionOffsetY: number = 1000,
-        regionRange: number = 255,
-        regionOctaves: number = 2,
-        regionThreshold: number = 60,
-        edgeNoiseAmplitude: number = 0.5,
-        edgeNoiseOctaves: number = 3,
-        detailNoiseAmplitude: number = 0.25,
-        detailNoiseOctaves: number = 2
-    ) {
-        this.enabled = enabled;
-        this.id = id;
-        this.threshold = threshold;
-        this.spacing = spacing;
-        this.radius = radius;
-        this.thickness = thickness;
-        this.noise_scale_region = noiseScaleRegion;
-        this.noise_scale_edge = noiseScaleEdge;
-        this.noise_scale_detail = noiseScaleDetail;
-        this.region_offset_y = regionOffsetY;
-        this.region_range = regionRange;
-        this.region_octaves = regionOctaves;
-        this.region_threshold = regionThreshold;
-        this.edge_noise_amplitude = edgeNoiseAmplitude;
-        this.edge_noise_octaves = edgeNoiseOctaves;
-        this.detail_noise_amplitude = detailNoiseAmplitude;
-        this.detail_noise_octaves = detailNoiseOctaves;
-    }
-}
-
-export class WorldBiomeTransitionRule {
-    public require_any: string[]; // Pair must contain at least one of these (tag or ID)
-    public require_all?: string[]; // Pair must contain ALL of these
-    public exclude?: string[];     // Pair must NOT contain any of these
-    public result: string;         // Resulting transition biome
-
-    constructor(result: string, requireAny: string[], requireAll?: string[], exclude?: string[]) {
-        this.result = result;
-        this.require_any = requireAny;
-        this.require_all = requireAll;
-        this.exclude = exclude;
-    }
-}
-
 export class WorldBiome {
     private cave: {
         default: WorldCaveBiome[];
@@ -159,10 +87,7 @@ export class WorldBiome {
         humidity: Noise;
         map: string;
         offset: Noise;
-        transitions?: WorldBiomeTransitionRule[];
     };
-
-    private sky?: WorldSky;
 
     constructor(
         defaultCaveBiomes: WorldCaveBiome[],
@@ -175,8 +100,6 @@ export class WorldBiome {
         caveHeat?: Noise,
         caveHumidity?: Noise,
         caveMap?: string,
-        sky?: WorldSky,
-        surfaceTransitions?: WorldBiomeTransitionRule[]
     ) {
         this.cave = {
             default: defaultCaveBiomes,
@@ -191,131 +114,39 @@ export class WorldBiome {
             humidity: surfaceHumidity,
             map: surfaceMap,
             offset: surfaceOffset,
-            transitions: surfaceTransitions,
         };
-        this.sky = sky;
-    }
-}
-
-
-export class WorldSurfaceSmoothing {
-    private range: number;
-    private factor: number;
-
-    constructor(range: number = 32, factor: number = 0.6) {
-        this.range = range;
-        this.factor = factor;
     }
 }
 
 export class WorldSurface {
     private start: number;
-    private bedrock_depth?: number;
-    private bedrock_noise_scale?: number;
-    private tile_variation_noise_scale?: number;
-    private biome_blend_range?: number;
-    private biome_blend_noise_scale?: number;
+    private noise_offset: Noise;
 
-    constructor(
-        start: number, 
-        bedrockDepth: number = 3,
-        bedrockNoiseScale: number = 0.3,
-        tileVariationNoiseScale: number = 0.05,
-        biomeBlendRange: number = 24,
-        biomeBlendNoiseScale: number = 0.08
-    ) {
+    constructor(start: number, noiseOffset: Noise) {
         this.start = start;
-        this.bedrock_depth = bedrockDepth;
-        this.bedrock_noise_scale = bedrockNoiseScale;
-        this.tile_variation_noise_scale = tileVariationNoiseScale;
-        this.biome_blend_range = biomeBlendRange;
-        this.biome_blend_noise_scale = biomeBlendNoiseScale;
+        this.noise_offset = noiseOffset;
     }
 }
 
+export class WorldCaveSystem {
+    private range_min: number;
+    private range_max: number;
+    private threshold: Noise;
 
-export class WorldAquifer {
-    private type: string;           // Liquid tile ID (e.g., "phantasia:water")
-    private depth_min: number;      // Min depth from surface
-    private depth_max: number;      // Max depth from surface
-    private threshold: number;      // Noise threshold (0-255, higher = rarer)
-    private octaves: number;        // Noise octaves
-    private fill_level: number;     // Liquid fill level (1-8)
-    private noise_scale: number;    // Noise scale
-    private range?: number;         // Noise range (0-255)
-    private edge_tile?: string;     // Solid tile for aquifer edges (e.g., "phantasia:stone")
-    private edge_width?: number;    // Width of edge in noise units (default 10)
-
-    constructor(
-        type: string,
-        depthMin: number,
-        depthMax: number,
-        threshold: number,
-        octaves: number = 3,
-        fillLevel: number = 8,
-        noiseScale: number = 0.02,
-        range: number = 255,
-        edgeTile?: string,
-        edgeWidth: number = 10
-    ) {
-        this.type = type;
-        this.depth_min = depthMin;
-        this.depth_max = depthMax;
+    constructor(rangeMin: number, rangeMax: number, threshold: Noise) {
+        this.range_min = rangeMin;
+        this.range_max = rangeMax;
         this.threshold = threshold;
-        this.octaves = octaves;
-        this.fill_level = fillLevel;
-        this.noise_scale = noiseScale;
-        this.range = range;
-        if (edgeTile) this.edge_tile = edgeTile;
-        if (edgeTile) this.edge_width = edgeWidth;
     }
 }
 
 export class WorldCave {
-    private aquifers?: WorldAquifer[];
+    start: Noise;
+    system: WorldCaveSystem[];
 
-    constructor(
-        aquifers?: WorldAquifer[]
-    ) {
-        if (aquifers) this.aquifers = aquifers;
-    }
-}
-
-// ============================================================================
-// WORLDGEN - New unified spline-based world generation config
-// ============================================================================
-
-export class WorldGen {
-    // Surface shape
-    private erosion_scale?: number;
-    private continentalness_scale?: number;
-    private continentalness_amplitude?: number;
-    private squash_spline?: Spline;
-    
-    // Cave shape
-    private cave_noise_scale?: number;
-    private cave_noise_range_spline?: Spline;
-    private cave_density_spline?: Spline;
-    private cave_smoothness_spline?: Spline;
-
-    constructor(opts: {
-        erosionScale?: number;
-        continentalnessScale?: number;
-        continentalnessAmplitude?: number;
-        squashSpline?: Spline;
-        caveNoiseScale?: number;
-        caveNoiseRangeSpline?: Spline;
-        caveDensitySpline?: Spline;
-        caveSmoothnessSpline?: Spline;
-    } = {}) {
-        if (opts.erosionScale !== undefined) this.erosion_scale = opts.erosionScale;
-        if (opts.continentalnessScale !== undefined) this.continentalness_scale = opts.continentalnessScale;
-        if (opts.continentalnessAmplitude !== undefined) this.continentalness_amplitude = opts.continentalnessAmplitude;
-        if (opts.squashSpline !== undefined) this.squash_spline = opts.squashSpline;
-        if (opts.caveNoiseScale !== undefined) this.cave_noise_scale = opts.caveNoiseScale;
-        if (opts.caveNoiseRangeSpline !== undefined) this.cave_noise_range_spline = opts.caveNoiseRangeSpline;
-        if (opts.caveDensitySpline !== undefined) this.cave_density_spline = opts.caveDensitySpline;
-        if (opts.caveSmoothnessSpline !== undefined) this.cave_smoothness_spline = opts.caveSmoothnessSpline;
+    constructor(start: Noise, system: WorldCaveSystem[]) {
+        this.start = start;
+        this.system = system;
     }
 }
 
@@ -328,7 +159,6 @@ export class World {
     private biome: WorldBiome;
     private surface: WorldSurface;
     private cave: WorldCave;
-    private worldgen?: WorldGen;
 
     constructor(
         world_height: number,
@@ -339,7 +169,6 @@ export class World {
         biome: WorldBiome,
         surface: WorldSurface,
         cave: WorldCave,
-        worldgen?: WorldGen,
     ) {
         this.world_height = world_height;
         this.spawn_interval = spawn_interval;
@@ -349,7 +178,6 @@ export class World {
         this.biome = biome;
         this.surface = surface;
         this.cave = cave;
-        if (worldgen) this.worldgen = worldgen;
     }
 }
 
@@ -389,78 +217,22 @@ export default [
                         ...new Noise(0, 2, 22),
                     }),
                 ],
-                new Noise(4).setScale(0.005).setSplineY(new Spline([
-                    new SplinePoint(0, -1, SplineEasing.Linear),
-                    new SplinePoint(1024, 1, SplineEasing.Linear),
-                ])),
+                new Noise(4),
                 [],
-                new Noise(4.5).setScale(0.005).setSplineX(new Spline([
-                    new SplinePoint(0, -1, SplineEasing.Linear),
-                    new SplinePoint(1024, 1, SplineEasing.Linear),
-                ])),
-                new Noise(2.75).setScale(0.005),
+                new Noise(4.5),
+                new Noise(2.75),
                 "phantasia:world/playground/map",
                 new Noise(2, 22, 34),
                 // Use surface logic for caves for now (placeholder values)
                 new Noise(4.5),
                 new Noise(2.75),
-                undefined, // caveMap removed
-                new WorldSky(), // Default sky configuration
-                [
-                    // Rule: Water + Lush/Sand -> Beach
-                    new WorldBiomeTransitionRule(
-                        "phantasia:surface/beach",
-                        ["water"], // Must have water
-                        undefined,
-                        undefined // No exclusions
-                    ),
-                    
-                    // Rule: Sand + Lush -> Savanna
-                    new WorldBiomeTransitionRule(
-                        "phantasia:surface/savanna",
-                        ["sand"], 
-                        ["lush"] // Must have sand AND lush (one has sand, other has lush)
-                    ),
-
-                     // Rule: Snow + Forest -> Taiga (Transition zone)
-                    new WorldBiomeTransitionRule(
-                         "phantasia:surface/taiga",
-                         ["snow"],
-                         ["forest"]
-                    )
-                ]
+                "phantasia:world/playground/map",
             ),
-            new WorldSurface(512),
-            new WorldCave([
-                // Water aquifers: shallow caves (20-200 blocks below surface)
-                new WorldAquifer("phantasia:water", 20, 200, 200, 3, 8, 0.02, 255, "phantasia:stone", 15),
-                // Lava aquifers: deep caves (350-450 blocks below surface)
-                new WorldAquifer("phantasia:lava", 350, 450, 220, 2, 8, 0.02, 255, "phantasia:stone", 12),
+            new WorldSurface(512, new Noise(4, 40, 96)),
+            new WorldCave(new Noise(0, 12, 2), [
+                new WorldCaveSystem(512, 1000, new Noise(4, 50, 60)),
+                new WorldCaveSystem(600, 1000, new Noise(4, 116, 130)),
             ]),
-            // NEW: WorldGen spline-based configuration
-            new WorldGen({
-                // Surface shape - FLATTENED FOR TESTING
-                erosionScale: 0.0,
-                continentalnessScale: 0.0,
-                continentalnessAmplitude: 0,
-                squashSpline: new Spline([
-                    new SplinePoint(0, 1.0), // No squash variation
-                    new SplinePoint(1000, 1.0)
-                ]),
-                // Cave shape - FLATTENED/DISABLED 
-                caveNoiseScale: 0.0, 
-                caveNoiseRangeSpline: new Spline([
-                    new SplinePoint(0, -1.0), // Always less than threshold, so no caves
-                    new SplinePoint(1000, -1.0)
-                ]),
-                caveDensitySpline: new Spline([
-                    new SplinePoint(0, 0.0), // Solid (or whatever density implies solid)
-                    new SplinePoint(1000, 0.0)
-                ]),
-                caveSmoothnessSpline: new Spline([
-                    new SplinePoint(0, 2.0)
-                ]),
-            }),
         ),
     ),
 ];

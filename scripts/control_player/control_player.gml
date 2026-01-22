@@ -208,7 +208,7 @@ function control_player()
              physics_body.sync_to_instance(id);
              
              // Update camera/visibility
-             control_camera_pos(x - (global.camera_width / 2), y - (global.camera_height / 2), false);
+             // control_camera_pos(x - (global.camera_width / 2), y - (global.camera_height / 2), false);
              
              // Update scale for visuals
              if (input_state.move_x != 0) image_xscale = abs(image_xscale) * sign(input_state.move_x);
@@ -228,6 +228,7 @@ function control_player()
     {
         physics_step(physics_body, input_state);
     }
+    
     physics_body.sync_to_instance(id);
     
     // Post-step debug

@@ -27,81 +27,44 @@ function sp(_pos, _val, _ease = undefined)
 function WorldGenState(_world_data) constructor
 {
     base_height = _world_data.get_surface_start();
-    erosion_scale = _world_data.get_worldgen_erosion_scale();
-    continentalness_scale = _world_data.get_worldgen_continentalness_scale();
-    continentalness_amplitude = _world_data.get_worldgen_continentalness_amplitude();
-    region_height_scale = _world_data.get_worldgen_region_height_scale();
     
-    squash_spline = _world_data.get_worldgen_squash_spline() ?? [
-        sp(0, 6.0, "ease_out"),
-        sp(100, 3.0, "ease_in_out"),
-        sp(400, 1.0)
-    ];
+    // Simplified system parameters (1D surface)
+    surface_noise_octaves = _world_data.get_surface_noise_offset_octaves();
+    surface_noise_range_min = _world_data.get_surface_noise_offset_range_min();
+    surface_noise_range_max = _world_data.get_surface_noise_offset_range_max();
+    surface_noise_scale = _world_data.get_surface_noise_scale();
     
-    cave_noise_scale = _world_data.get_worldgen_cave_noise_scale();
-    
-    cave_noise_range_spline = _world_data.get_worldgen_cave_noise_range_spline() ?? [
-        sp(0, 0.05, "ease_out"),
-        sp(50, 0.15, "ease_in_out"),
-        sp(200, 0.35),
-        sp(500, 0.5)
-    ];
-    
-    cave_density_spline = _world_data.get_worldgen_cave_density_spline() ?? [
-        sp(0, 0.1, "ease_out"),
-        sp(100, 0.3, "ease_in_out"),
-        sp(400, 0.5)
-    ];
-    
-    cave_smoothness_spline = _world_data.get_worldgen_cave_smoothness_spline() ?? [
-        sp(0, 2),
-        sp(300, 4)
-    ];
-    
-    z_offset_wall = 0.075;
-    z_range_wall = 0.05;
-    z_offset_material = 0.5;
+    // Z-offsets for wall and material layers
+    z_offset_wall = _world_data.get_terrain_z_offset_wall();
+    z_range_wall = _world_data.get_terrain_z_range_wall();
+    z_offset_material = _world_data.get_terrain_z_offset_material();
 }
 
 function worldgen_get_density(_x, _y, _z, _seed, _config = global.chunk_pool.worldgen_config, _modifiers = undefined)
 {
-    var _base = _config.base_height;
-    var _raw_depth = _y - _base;
+    if (_config == undefined) return -1.0;
     
-    if (_raw_depth < -300) return -1.0;
-    if (_raw_depth > 900) return 1.0;
+    // 1. Calculate 1D Surface Height
+    // Uses the pre-resolved noise settings from the config state
+    var _noise = open_simplex_noise(_x * _config.surface_noise_scale, _seed * 100, 1.0, _config.surface_noise_octaves);
+    var _noise_norm = (_noise + 1) * 0.5;
+    var _offset = lerp(_config.surface_noise_range_min, _config.surface_noise_range_max, _noise_norm);
+    var _surface_height = _config.base_height + _offset;
     
-    var _mods = (_modifiers != undefined) ? _modifiers : worldgen_get_biome_modifiers(_x, _y, _seed);
-    var _region_params = _mods.region_params;
+    if (_y < _surface_height) return -1.0;
     
-    var _depth = _y - (_base + _region_params.height_offset * _config.region_height_scale);
+    var _dist = _y - _surface_height;
     
-    var _gradient_strength = 0.006;
-    var _height_gradient = _depth * _gradient_strength;
+    // 2. Cave check (only for foreground/solid layer where z=0)
+    // Wall layers (z > 0) typically do not carve caves to provide background
+    if (_z == 0)
+    {
+        if (worldgen_get_cave(_x, _y, _surface_height, 0, _seed)) return -1.0;
+    }
     
-    var _continentalness = open_simplex_noise(_x * _config.continentalness_scale, _seed * 7.3, 1.0, 2) + _mods.continentalness;
-    _height_gradient -= _continentalness * _config.continentalness_amplitude * _gradient_strength;
-    
-    var _squash = spline_evaluate(_config.squash_spline, _depth) * _mods.squash;
-    var _squashed_y = _y * _squash;
-    
-    var _smoothness = spline_evaluate(_config.cave_smoothness_spline, _depth);
-    var _noise_3d = open_simplex_noise_3d(
-        _x * _config.cave_noise_scale,
-        _squashed_y * _config.cave_noise_scale,
-        _z + (_seed * 0.0001),
-        1.0,
-        _smoothness
-    );
-    
-    var _cave_density = spline_evaluate(_config.cave_density_spline, _depth) * _mods.cave_density;
-    var _noise_range = spline_evaluate(_config.cave_noise_range_spline, _depth);
-    
-    var _erosion = open_simplex_noise(_x * _config.erosion_scale, _y * _config.erosion_scale + 500, 1.0, 2) * _mods.erosion;
-    
-    var _cave_carve = (_noise_3d > -_noise_range && _noise_3d < _noise_range) ? -_cave_density : 0;
-    
-    return _height_gradient + (_noise_3d * (1.8 + _erosion * 0.8)) + _cave_carve - 0.05;
+    // 3. Return density gradient
+    // 0.1 at surface, increasing with depth to allow crust/stone differentiation
+    return 0.1 + (_dist * 0.2);
 }
 
 function worldgen_get_biome_modifiers(_x, _y, _seed)

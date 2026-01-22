@@ -30,6 +30,17 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
     ___bedrock_noise_scale = 0.3;
     ___tile_variation_noise_scale = 0.05;
     
+    // NEW: 1D Surface Height Noise
+    ___surface_noise_offset_octaves = 4;
+    ___surface_noise_offset_range_min = 40;
+    ___surface_noise_offset_range_max = 96;
+    ___surface_noise_scale = 0.015625; // Default, can override from RegionData
+    
+    // NEW: 2D Cave System
+    ___cave_start_octaves = 0; // Unused with new system
+    ___cave_systems = []; // Array of { range_min, range_max, threshold_noise }
+    ___cave_systems_length = 0;
+    
     // Default initializations to prevent "Variable not set" errors
     ___cave_biome_default = [];
     ___cave_biome_default_length = 0;
@@ -54,16 +65,6 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
     ___surface_humidity_spline_x = undefined;
     ___surface_humidity_spline_y = undefined;
     ___surface_biome_transitions = [];
-    
-    ___worldgen_erosion_scale = 0.008;
-    ___worldgen_continentalness_scale = 0.001;
-    ___worldgen_continentalness_amplitude = 150;
-    ___worldgen_cave_noise_scale = 0.015;
-    ___worldgen_squash_spline = undefined;
-    ___worldgen_cave_noise_range_spline = undefined;
-    ___worldgen_cave_density_spline = undefined;
-    ___worldgen_cave_smoothness_spline = undefined;
-    ___worldgen_region_height_scale = 1.0;
     
     ___biome_blend_range = 24; // Default blend range
 
@@ -470,40 +471,53 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
     static get_worldgen_cave_smoothness_spline = function() { return ___worldgen_cave_smoothness_spline; }
     static get_worldgen_region_height_scale = function() { return ___worldgen_region_height_scale; }
     
-    /// @desc Set worldgen config (new unified system)
-    static set_worldgen = function(_config)
+    /// @desc Set surface config (new 1D heightmap system)
+    static set_surface = function(_config)
     {
-        if (_config == undefined)
+        if (_config == undefined) return self;
+        
+        ___surface_start = _config[$ "start"] ?? ___surface_start;
+        
+        var _noise = _config[$ "noise_offset"];
+        if (_noise != undefined)
         {
-            return self;
+            ___surface_noise_offset_octaves = _noise[$ "octaves"] ?? 4;
+            ___surface_noise_offset_range_min = _noise[$ "range_min"] ?? 40;
+            ___surface_noise_offset_range_max = _noise[$ "range_max"] ?? 96;
         }
-        
-        // Surface shape
-        // Surface shape
-        ___surface_start = _config[$ "surface_start"] ?? ___surface_start;
-        ___worldgen_erosion_scale = _config[$ "erosion_scale"] ?? 0.008;
-        ___worldgen_continentalness_scale = _config[$ "continentalness_scale"] ?? 0.001;
-        ___worldgen_continentalness_scale = _config[$ "continentalness_scale"] ?? 0.001;
-        ___worldgen_continentalness_amplitude = _config[$ "continentalness_amplitude"] ?? 150;
-        ___worldgen_region_height_scale = _config[$ "region_height_scale"] ?? 1.0;
-        
-        var _squash = _config[$ "squash_spline"];
-        ___worldgen_squash_spline = (_squash != undefined && _squash[$ "points"] != undefined) ? _squash.points : _squash;
-        
-        // Cave shape
-        ___worldgen_cave_noise_scale = _config[$ "cave_noise_scale"] ?? 0.015;
-        
-        var _noise_range = _config[$ "cave_noise_range_spline"];
-        ___worldgen_cave_noise_range_spline = (_noise_range != undefined && _noise_range[$ "points"] != undefined) ? _noise_range.points : _noise_range;
-        
-        var _density = _config[$ "cave_density_spline"];
-        ___worldgen_cave_density_spline = (_density != undefined && _density[$ "points"] != undefined) ? _density.points : _density;
-        
-        var _smoothness = _config[$ "cave_smoothness_spline"];
-        ___worldgen_cave_smoothness_spline = (_smoothness != undefined && _smoothness[$ "points"] != undefined) ? _smoothness.points : _smoothness;
         
         return self;
     }
+    
+    /// @desc Set cave config (new 2D cave system)
+    static set_cave = function(_config)
+    {
+        if (_config == undefined) return self;
+        
+        var _start = _config[$ "start"];
+        if (_start != undefined)
+        {
+            ___cave_start_octaves = _start[$ "octaves"] ?? 0;
+        }
+        
+        var _systems = _config[$ "system"];
+        if (_systems != undefined && is_array(_systems))
+        {
+            ___cave_systems = _systems;
+            ___cave_systems_length = array_length(_systems);
+        }
+        
+        return self;
+    }
+    
+    // Getters for new surface/cave system
+    static get_surface_noise_offset_octaves = function() { return ___surface_noise_offset_octaves; }
+    static get_surface_noise_offset_range_min = function() { return ___surface_noise_offset_range_min; }
+    static get_surface_noise_offset_range_max = function() { return ___surface_noise_offset_range_max; }
+    static get_surface_noise_scale = function() { return ___surface_noise_scale; }
+    
+    static get_cave_systems = function() { return ___cave_systems; }
+    static get_cave_systems_length = function() { return ___cave_systems_length; }
     
     
     static get_surface_start = function()

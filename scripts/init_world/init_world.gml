@@ -68,11 +68,11 @@ function init_world(_directory, _namespace = "phantasia", _type = 0)
         
         
         // Parse new worldgen configuration (unified spline-based system)
-        var _worldgen = _json[$ "worldgen"];
-        if (_worldgen != undefined)
-        {
-            _world_data.set_worldgen(_worldgen);
-        }
+        // Parse new surface/cave configuration (1D heightmap + 2D caves)
+        _world_data.set_surface(_json[$ "surface"]);
+        _world_data.set_cave(_json[$ "cave"]);
+        
+        // Removed old set_worldgen parsing
         
         global.world_data[$ $"{_namespace}:{_id}"] = _world_data;
         

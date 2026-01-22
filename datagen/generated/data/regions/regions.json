@@ -2,7 +2,6 @@
     {
         "id": "forest",
         "category": "temperate",
-        "biomes": ["phantasia:surface/forest"],
         "surface_biome": "phantasia:surface/forest",
         "cave_biome_default": "phantasia:cave/chasm",
         "cave_biomes": [
@@ -17,7 +16,6 @@
     {
         "id": "desert",
         "category": "arid",
-        "biomes": ["phantasia:surface/desert"],
         "surface_biome": "phantasia:surface/desert",
         "cave_biome_default": "phantasia:cave/chasm",
         "cave_biomes": [
@@ -37,7 +35,6 @@
     {
         "id": "taiga",
         "category": "cold",
-        "biomes": ["phantasia:surface/taiga"],
         "surface_biome": "phantasia:surface/taiga",
         "cave_biome_default": "phantasia:cave/chasm",
         "cave_biomes": [
