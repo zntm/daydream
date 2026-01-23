@@ -13,13 +13,6 @@ export class SurfaceShape {
     /** Base height of the surface (in tiles) */
     base_height: number;
 
-    /** Continentalness: large-scale land mass variation */
-    continentalness_scale: number;
-    continentalness_amplitude: number;
-
-    /** Erosion: how flat/mountainous areas are */
-    erosion_scale: number;
-
     /** Peaks/Valleys: local height variation */
     peaks_scale: number;
     peaks_amplitude: number;
@@ -30,18 +23,12 @@ export class SurfaceShape {
     constructor(
         baseHeight: number = 400,
         opts: {
-            continentalnessScale?: number;
-            continentalnessAmplitude?: number;
-            erosionScale?: number;
             peaksScale?: number;
             peaksAmplitude?: number;
             squashSpline?: Spline;
         } = {},
     ) {
         this.base_height = baseHeight;
-        this.continentalness_scale = opts.continentalnessScale ?? 0.0015;
-        this.continentalness_amplitude = opts.continentalnessAmplitude ?? 180;
-        this.erosion_scale = opts.erosionScale ?? 0.015;
         this.peaks_scale = opts.peaksScale ?? 0.04;
         this.peaks_amplitude = opts.peaksAmplitude ?? 100;
         this.squash_spline =
@@ -214,9 +201,6 @@ export class BiomeModifier {
     /** Height offset for this biome */
     height_offset?: number;
 
-    /** Erosion modifier (multiplier) */
-    erosion_modifier?: number;
-
     /** Squashing modifier (multiplier) */
     squash_modifier?: number;
 
@@ -228,7 +212,6 @@ export class BiomeModifier {
             influence?: number;
             smoothing?: number;
             heightOffset?: number;
-            erosionModifier?: number;
             squashModifier?: number;
             caveDensityModifier?: number;
         } = {},
@@ -237,8 +220,6 @@ export class BiomeModifier {
         this.smoothing = opts.smoothing ?? 16;
         if (opts.heightOffset !== undefined)
             this.height_offset = opts.heightOffset;
-        if (opts.erosionModifier !== undefined)
-            this.erosion_modifier = opts.erosionModifier;
         if (opts.squashModifier !== undefined)
             this.squash_modifier = opts.squashModifier;
         if (opts.caveDensityModifier !== undefined)

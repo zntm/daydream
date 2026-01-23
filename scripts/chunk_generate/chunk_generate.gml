@@ -164,9 +164,7 @@ function chunk_generate(_chunk)
         var _world_x = _chunk_xstart + i;
         var _region = _region_gen.get_region(_world_x, 0, 0, _world_seed);
         var _surface_biome_id = _region.get_surface_biome_id(_world_x, 0, _world_seed);
-        var _surface_height = undefined;
-        var _cave_mask = __cave_bit[i];
-        var _mod_base = i * (CHUNK_SIZE + 2);
+        var _surface_height = worldgen_get_surface_height_at(_world_x, _world_seed);
         
         for (var j = 0; j < CHUNK_SIZE; ++j)
         {

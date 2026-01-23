@@ -460,9 +460,6 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
     static get_terrain_z_range_wall = function() { return 0.05; }
     static get_terrain_z_offset_material = function() { return 0.5; }
     
-    static get_worldgen_erosion_scale = function() { return ___worldgen_erosion_scale; }
-    static get_worldgen_continentalness_scale = function() { return ___worldgen_continentalness_scale; }
-    static get_worldgen_continentalness_amplitude = function() { return ___worldgen_continentalness_amplitude; }
     static get_worldgen_cave_noise_scale = function() { return ___worldgen_cave_noise_scale; }
     
     static get_worldgen_squash_spline = function() { return ___worldgen_squash_spline; }

@@ -52,12 +52,11 @@ function worldgen_get_surface_height_at(_x, _seed, _config = global.chunk_pool.w
     var _noise = open_simplex_noise(_x * _noise_scale, _seed * 100, 1.0, _octaves);
     var _noise_norm = (_noise + 1) * 0.5;
     
-    // Factors in region base height, biome height offset, and blended continentalness
-    var _base = _config.base_height + _region_params.height_offset + (_mods.continentalness * 64);
+    // Factors in region base height and biome height offset
+    var _base = _config.base_height + _region_params.height_offset;
     var _range = lerp(_region_params.amplitude_min, _region_params.amplitude_max, _noise_norm);
     
-    // Erosion reduces the noise peak-to-valley range
-    return _base + (_range / _mods.erosion);
+    return _base + _range;
 }
 
 function worldgen_get_density(_x, _y, _z, _seed, _config = global.chunk_pool.worldgen_config, _modifiers = undefined)
@@ -105,10 +104,8 @@ function worldgen_get_biome_modifiers(_x, _y, _seed)
     if (_biome == undefined)
     {
         return {
-            erosion: 1.0,
             squash: 1.0,
             cave_density: 1.0,
-            continentalness: 0.0,
             region_params: _default_region_params,
             region: _region,
             boundary_dist: 999
@@ -118,20 +115,16 @@ function worldgen_get_biome_modifiers(_x, _y, _seed)
     var _smoothing = _biome.get_terrain_smoothing();
     var _influence = _biome.get_terrain_influence();
     
-    var _erosion = lerp(1.0, _biome.get_erosion_modifier(), _influence);
     var _squash = lerp(1.0, _biome.get_squash_modifier(), _influence);
     var _cave_density = lerp(1.0, _biome.get_cave_density_modifier(), _influence);
-    var _continentalness = _biome.get_continentalness_modifier() * _influence;
     
     if (_smoothing <= 0)
     {
         var _region_params = worldgen_get_region_parameters(_x, _y, _seed, 0, 0, 1.0, _region);
         
         return {
-            erosion: _erosion,
             squash: _squash,
             cave_density: _cave_density,
-            continentalness: _continentalness,
             region_params: _region_params,
             region: _region,
             boundary_dist: 999
@@ -146,19 +139,15 @@ function worldgen_get_biome_modifiers(_x, _y, _seed)
         var _blend = _boundary_dist / _smoothing;
         _blend_smooth = _blend * _blend * (3 - 2 * _blend);
         
-        _erosion = lerp(1.0, _erosion, _blend_smooth);
         _squash = lerp(1.0, _squash, _blend_smooth);
         _cave_density = lerp(1.0, _cave_density, _blend_smooth);
-        _continentalness = lerp(0.0, _continentalness, _blend_smooth);
     }
     
     var _region_params = worldgen_get_region_parameters(_x, _y, _seed, _smoothing, _boundary_dist, _blend_smooth, _region);
     
     return {
-        erosion: _erosion,
         squash: _squash,
         cave_density: _cave_density,
-        continentalness: _continentalness,
         region_params: _region_params,
         region: _region,
         boundary_dist: _boundary_dist
