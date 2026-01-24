@@ -206,6 +206,7 @@ export default [
                     1200,
                 ),
             ],
+            // BIOME DATA (Simplified)
             new WorldBiome(
                 [
                     new WorldCaveBiome("phantasia:cave/depths", 768, 1024, {
@@ -219,19 +220,23 @@ export default [
                 ],
                 new Noise(4),
                 [],
-                new Noise(4.5),
-                new Noise(2.75),
+                new Noise(4.5), // Heat
+                new Noise(2.75), // Humidity
                 "phantasia:world/playground/map",
-                new Noise(2, 22, 34),
-                // Use surface logic for caves for now (placeholder values)
+                new Noise(2, 22, 34), // Surface Offset
                 new Noise(4.5),
                 new Noise(2.75),
                 "phantasia:world/playground/map",
             ),
-            new WorldSurface(512, new Noise(4, 40, 96)),
+            // SURFACE DATA (Simplified Heightmap)
+            // Start at y=400, noise range 40-120
+           new WorldSurface(400, new Noise(4, 40, 120)),
+            // CAVE DATA (Simplified)
             new WorldCave(new Noise(0, 12, 2), [
-                new WorldCaveSystem(512, 1000, new Noise(4, 50, 60)),
-                new WorldCaveSystem(600, 1000, new Noise(4, 116, 130)),
+                // Upper caves
+                new WorldCaveSystem(420, 1000, new Noise(3, 45, 55)),
+                // Deep caves
+                new WorldCaveSystem(600, 1000, new Noise(4, 50, 60)),
             ]),
         ),
     ),

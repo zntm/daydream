@@ -1,11 +1,8 @@
-function worldgen_get_tile_base(_x, _y, _surface_biome, _cave_biome, _surface_height, _cave_above, _seed, _modifiers = undefined)
+function worldgen_get_tile_base(_x, _y, _surface_biome, _cave_biome, _surface_height, _cave_above, _seed, _world_data = global.world_data[$ global.world_save_data.dimension], _biome_data = global.biome_data)
 {
     static _bedrock_id = "phantasia:bedrock";
     static _stone_id = "phantasia:stone";
     static _default_biome_id = "phantasia:surface/forest";
-    
-    var _world_data = global.world_data[$ global.world_save_data.dimension];
-    var _biome_data = global.biome_data;
     
     var _world_height = _world_data.get_world_height();
     var _bedrock_depth = _world_height - _y;
@@ -18,15 +15,14 @@ function worldgen_get_tile_base(_x, _y, _surface_biome, _cave_biome, _surface_he
         if (_bedrock_noise > (_bedrock_depth - 1) * 0.4) return _bedrock_id;
     }
     
-    var _density = worldgen_get_density_solid(_x, _y, _seed, undefined, _modifiers);
-    if (_density < 0) return TILE_EMPTY;
+    var _density = worldgen_get_density_solid(_x, _y, _seed);
     
-    if (_density > 0.8 && !_cave_above)
+    if (_density < 0)
     {
-        return _stone_id;
+        return TILE_EMPTY;
     }
-    
-    var _material_noise = worldgen_get_density_material(_x, _y, _seed, undefined, _modifiers);
+
+    var _material_noise = worldgen_get_density_material(_x, _y, _seed);
     var _variation_scale = _world_data.get_tile_variation_noise_scale();
     var _noise = open_simplex_noise(_x * _variation_scale, _y * _variation_scale + (_seed * 100), 1.0, 2);
     
@@ -47,14 +43,16 @@ function worldgen_get_tile_base(_x, _y, _surface_biome, _cave_biome, _surface_he
     {
         _biome = _biome_data[$ _cave_biome];
     }
-    
-    if (_biome == undefined)
+    else
     {
-        _biome = _biome_data[$ _surface_biome] ?? _biome_data[$ _default_biome_id];
+        _biome ??= _biome_data[$ _surface_biome];
+        
+        if (_biome == undefined)
+        {
+            return TILE_EMPTY;
+        }
     }
     
-    if (_biome == undefined) return TILE_EMPTY;
-
     if (_cave_above)
     {
         return _biome.get_tile_top_layer().get_tile(_context);

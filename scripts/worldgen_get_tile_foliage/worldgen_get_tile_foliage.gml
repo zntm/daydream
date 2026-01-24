@@ -1,11 +1,11 @@
-function worldgen_get_tile_foliage(_x, _y, _surface_biome, _cave_biome, _top_tile, _surface_height, _seed)
+function worldgen_get_tile_foliage(_x, _y, _surface_biome, _cave_biome, _top_tile, _surface_height, _seed, _biome_data = global.biome_data)
 {
     var _biome_id = _cave_biome;
     if (_biome_id == undefined) _biome_id = _surface_biome;
     
     if (_biome_id == undefined) return TILE_EMPTY;
 
-    var _foliage = global.biome_data[$ _biome_id];
+    var _foliage = _biome_data[$ _biome_id];
     
     // Safety check
     if (_foliage == undefined) return TILE_EMPTY;
