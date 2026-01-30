@@ -6,18 +6,6 @@
 
 global.world_data = {}
 
-// Region-based world generation system
-// Initialized with defaults, can be overridden by world config
-global.region_generator = new RegionGenerator({
-    cell_size: 256,
-    warp_scale: 0.008,
-    warp_power: 48
-}).set_regions(region_create_defaults());
-
-// WorldGenCore: Unified 3D density-based terrain with spline-controlled caves
-// Will be initialized per world in init_world with world-specific settings
-global.terrain_shaper = undefined; // Initialized per world
-
 function init_world(_directory, _namespace = "phantasia", _type = 0)
 {
     var _biome_data = global.biome_data;
@@ -66,20 +54,27 @@ function init_world(_directory, _namespace = "phantasia", _type = 0)
         _world_data.set_cave_biome(_biome.cave);
         _world_data.set_surface_biome(_biome.surface);
         
+        // Parse sky biome configuration (optional)
+        var _sky_biome = _biome[$ "sky"];
+        if (_sky_biome != undefined)
+        {
+            _world_data.set_sky_biome(_sky_biome);
+        }
         
-        // Parse new worldgen configuration (unified spline-based system)
-        // Parse new surface/cave configuration (1D heightmap + 2D caves)
-        _world_data.set_surface(_json[$ "surface"]);
-        _world_data.set_cave(_json[$ "cave"]);
+        var _surface = _json.surface;
+        _world_data.set_surface(_surface);
+
+
         
-        // Removed old set_worldgen parsing
+        var _cave = _json.cave;
+        _world_data.set_cave(_cave);
         
         global.world_data[$ $"{_namespace}:{_id}"] = _world_data;
         
-        // Initialize terrain_shaper with the first loaded world's data
-        // Initialize functional worldgen config in chunk pool
-        global.chunk_pool.worldgen_config = new WorldGenState(_world_data);
-        
+
+
+
+
         delete _json;
         
         dbg_timer("init_world", $"[Init] Loaded World: \'{_id}\'");
