@@ -8,8 +8,8 @@ import {
     BiomeFoliage,
     BiomeSkyColor,
     BiomeStructure,
-    BiomeTile,
-    TileEntry,
+    MaterialProvider,
+    RuleDepth,
 } from "../biomes";
 
 export default [
@@ -32,27 +32,18 @@ export default [
                 night: "#141B35",
             },
             {
-                top_layer: new BiomeTile(
-                    "phantasia:stone",
-                    [
-                        new TileEntry("phantasia:stone_wall", 4),
-                        new TileEntry("$EMPTY", 1),
-                    ],
-                ),
-                middle_layer: new BiomeTile(
-                    "phantasia:stone",
-                    [
-                        new TileEntry("phantasia:stone_wall", 4),
-                        new TileEntry("$EMPTY", 1),
-                    ],
-                ),
-                bottom_layer: new BiomeTile(
-                    "phantasia:stone",
-                    [
-                        new TileEntry("phantasia:stone_wall", 4),
-                        new TileEntry("$EMPTY", 1),
-                    ],
-                ),
+                top_layer: new MaterialProvider()
+                    .addItem("phantasia:stone")
+                    .addItemNoise("phantasia:stone_wall", 0, 204)
+                    .setDefault("phantasia:stone"),
+                middle_layer: new MaterialProvider()
+                    .addItem("phantasia:stone")
+                    .addItemNoise("phantasia:stone_wall", 0, 204)
+                    .setDefault("phantasia:stone"),
+                bottom_layer: new MaterialProvider()
+                    .addItem("phantasia:stone")
+                    .addItemNoise("phantasia:stone_wall", 0, 204)
+                    .setDefault("phantasia:stone"),
             },
         )
             .setMusic([
@@ -105,27 +96,18 @@ export default [
                 night: "#141B35",
             },
             {
-                top_layer: new BiomeTile(
-                    "phantasia:nightrock",
-                    [
-                        new TileEntry("phantasia:nightrock_wall", 4),
-                        new TileEntry("$EMPTY", 1),
-                    ],
-                ),
-                middle_layer: new BiomeTile(
-                    "phantasia:nightrock",
-                    [
-                        new TileEntry("phantasia:nightrock_wall", 4),
-                        new TileEntry("$EMPTY", 1),
-                    ],
-                ),
-                bottom_layer: new BiomeTile(
-                    "phantasia:nightrock",
-                    [
-                        new TileEntry("phantasia:nightrock_wall", 4),
-                        new TileEntry("$EMPTY", 1),
-                    ],
-                ),
+                top_layer: new MaterialProvider()
+                    .addItem("phantasia:nightrock")
+                    .addItemNoise("phantasia:nightrock_wall", 0, 204)
+                    .setDefault("phantasia:nightrock"),
+                middle_layer: new MaterialProvider()
+                    .addItem("phantasia:nightrock")
+                    .addItemNoise("phantasia:nightrock_wall", 0, 204)
+                    .setDefault("phantasia:nightrock"),
+                bottom_layer: new MaterialProvider()
+                    .addItem("phantasia:nightrock")
+                    .addItemNoise("phantasia:nightrock_wall", 0, 204)
+                    .setDefault("phantasia:nightrock"),
             },
         )
             .setMusic([

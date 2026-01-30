@@ -9,6 +9,12 @@ function physics_mode_ground(_body, _input)
     
     // Horizontal movement
     var _move_speed = (_attr != undefined) ? _attr.get_movement_speed() : PHYSICS_MOVE_SPEED_GROUND;
+    
+    if (_input.sprint_held)
+    {
+        _move_speed *= 1.6;
+    }
+    
     var _target_vx = _input.move_x * _move_speed;
     
     _body.vel_x = lerp_delta(_body.vel_x, _target_vx, PHYSICS_MOVE_ACCEL_GROUND, 1);

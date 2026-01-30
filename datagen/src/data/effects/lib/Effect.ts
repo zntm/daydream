@@ -24,6 +24,11 @@ export class Effect {
     private particle?: EffectParticle;
     private on_effect?: ItemFunction;
     private on_death?: ItemFunction;
+    private on_heal?: ItemFunction;
+    private on_damage?: ItemFunction;
+    private on_interval?: { tick: number; id: string; parameters?: Record<string, unknown> };
+    private on_chance?: { chance: number; id: string; parameters?: Record<string, unknown> };
+    private on_end?: ItemFunction;
 
     /**
      * @param type - Effect type (constant, on_death, on_hit, timed)
@@ -107,6 +112,31 @@ export class Effect {
 
     setOnDeath(fn: ItemFunction) {
         this.on_death = fn;
+        return this;
+    }
+
+    setOnHeal(fn: ItemFunction) {
+        this.on_heal = fn;
+        return this;
+    }
+
+    setOnDamage(fn: ItemFunction) {
+        this.on_damage = fn;
+        return this;
+    }
+
+    setOnInterval(tick: number, id: string, parameters?: Record<string, unknown>) {
+        this.on_interval = { tick, id, parameters };
+        return this;
+    }
+
+    setOnChance(chance: number, id: string, parameters?: Record<string, unknown>) {
+        this.on_chance = { chance, id, parameters };
+        return this;
+    }
+
+    setOnEnd(fn: ItemFunction) {
+        this.on_end = fn;
         return this;
     }
 }

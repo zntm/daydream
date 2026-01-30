@@ -15,6 +15,35 @@ var _camera_height = global.camera_height;
 
 render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height);
 
+// Selection Highlight
+if (is_opened == 0)
+{
+    var _lp = noone;
+    with (obj_Player) { if (is_local) { _lp = id; break; } }
+    
+    if (_lp != noone)
+    {
+        var _mx = mouse_x;
+        var _my = mouse_y;
+        var _tx = floor(_mx / TILE_SIZE);
+        var _ty = floor(_my / TILE_SIZE);
+        
+        var _reach = _lp.attribute.get_harvest_reach();
+        var _dist = point_distance(_lp.x, _lp.y - 20, _mx, _my);
+        
+        if (_dist <= _reach)
+        {
+            var _x = _tx * TILE_SIZE;
+            var _y = _ty * TILE_SIZE;
+            
+            draw_set_colour(c_white);
+            draw_set_alpha(0.4);
+            draw_rectangle(_x, _y, _x + TILE_SIZE - 1, _y + TILE_SIZE - 1, true);
+            draw_set_alpha(1.0);
+        }
+    }
+}
+
 if (keyboard_check_pressed(vk_f2))
 {
     sfx_play("phantasia:sfx/menu/screenshot", global.settings.audio_sfx);

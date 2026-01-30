@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"TerrainGenerator",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"TerrainGenerator",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

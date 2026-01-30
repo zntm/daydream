@@ -5,9 +5,10 @@ import {
     Biome,
     BiomeBackground,
     BiomeSkyColor,
-    BiomeTile,
     BiomeTerrainModifier,
-    TileEntry,
+    MaterialProvider,
+    RuleDepth,
+    RuleAirAbove,
 } from "../biomes";
 
 export default [
@@ -30,31 +31,23 @@ export default [
                 night: "#141B35",
             },
             {
-                top_layer: new BiomeTile(
-                    "phantasia:grass_block",
-                    [
-                        new TileEntry("phantasia:dirt_wall", 4),
-                        new TileEntry("$EMPTY", 1),
-                    ],
-                ),
-                middle_layer: new BiomeTile(
-                    "phantasia:dirt",
-                    [
-                        new TileEntry("phantasia:dirt_wall", 4),
-                        new TileEntry("$EMPTY", 1),
-                    ],
-                ),
-                bottom_layer: new BiomeTile(
-                    "phantasia:stone",
-                    [
-                        new TileEntry("phantasia:stone_wall", 4),
-                        new TileEntry("$EMPTY", 1),
-                    ],
-                ),
+                top_layer: new MaterialProvider()
+                    .addItem("phantasia:grass_block", [new RuleAirAbove(1)])
+                    .addItem("phantasia:dirt")
+                    .addItemNoise("phantasia:dirt_wall", 0, 204)
+                    .setDefault("phantasia:grass_block"),
+                middle_layer: new MaterialProvider()
+                    .addItem("phantasia:dirt")
+                    .addItemNoise("phantasia:dirt_wall", 0, 204)
+                    .setDefault("phantasia:dirt"),
+                bottom_layer: new MaterialProvider()
+                    .addItem("phantasia:stone")
+                    .addItemNoise("phantasia:stone_wall", 0, 204)
+                    .setDefault("phantasia:stone"),
             },
         )
             .setIsSkyland()
-            .setTerrainModifier(new BiomeTerrainModifier(0, 0.5))
+            .setTerrainModifier(new BiomeTerrainModifier(0, 0.015625, 40, 80, 5))
             .setMusic([
                 new Sound("phantasia:music/ornaments_of_the_sky", 0.7),
                 new Sound("phantasia:music/soft_hour", 0.6),

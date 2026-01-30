@@ -7,416 +7,226 @@ enum BIOME_TYPE {
 
 function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
 {
-    static set_background = function(_background)
-    {
-        ___background = _background;
-        
-        return self;
-    }
+    // Initialization
+    ___background = undefined;
+    ___map_colour = 0;
+    ___sky_colour = {}
+    ___sky_colour_names = [];
+    ___sky_colour_length = 0;
+    ___light_colour = {}
+    ___music = [];
     
-    static get_background = function()
-    {
-        return self[$ "___background"];
-    }
+    ___tile_top_layer = undefined;
+    ___tile_middle_layer = undefined;
+    ___tile_bottom_layer = undefined;
+    ___tile_foliage = undefined;
     
-    static set_map_colour = function(_map_colour)
-    {
-        ___map_colour = hex_parse(_map_colour);
-        
-        return self;
-    }
+    ___is_ocean = false;
+    ___is_skyland = false;
     
-    static get_map_colour = function()
-    {
-        return self[$ "___map_colour"];
-    }
+    ___shore_tiles_base = undefined;
+    ___has_shore_tiles = false;
     
+    ___creature = [];
+    ___creature_length = 0;
+    ___structure = [];
+    ___structure_length = 0;
+    ___salt = 0;
+    ___water_color = 0xFFFFFF;
+    ___tags = [];
+
+    // --- Background & Map ---
+    static set_background = function(_background) { ___background = _background; return self; }
+    static get_background = function() { return ___background; }
+    
+    static set_map_colour = function(_map_colour) { ___map_colour = hex_parse(_map_colour); return self; }
+    static get_map_colour = function() { return ___map_colour; }
+    
+    // --- Sky & Light ---
     static set_sky_colour = function(_sky_colour)
     {
         var _names = struct_get_names(_sky_colour);
         var _length = array_length(_names);
-        
         ___sky_colour = {}
         ___sky_colour_names = _names;
         ___sky_colour_length = _length;
-        
         for (var i = 0; i < _length; ++i)
         {
             var _name = _names[i];
             var _data = _sky_colour[$ _name];
-            
             ___sky_colour[$ _name] = (hex_parse(_data.gradient) << 24) | hex_parse(_data.base);
         }
-        
         return self;
     }
-    
-    static get_sky_colour = function()
-    {
-        return ___sky_colour;
-    }
-    
-    static get_sky_colour_names = function()
-    {
-        return ___sky_colour_names;
-    }
-    
-    static get_sky_colour_length = function()
-    {
-        return ___sky_colour_length;
-    }
-    
-    static get_sky_colour_base = function(_diurnal)
-    {
-        return ___sky_colour[$ _diurnal] & 0xffffff;
-    }
-    
-    static get_sky_colour_gradient = function(_diurnal)
-    {
-        return (___sky_colour[$ _diurnal] >> 24) & 0xffffff;
-    }
+    static get_sky_colour = function() { return ___sky_colour; }
+    static get_sky_colour_names = function() { return ___sky_colour_names; }
+    static get_sky_colour_length = function() { return ___sky_colour_length; }
+    static get_sky_colour_base = function(_diurnal) { return ___sky_colour[$ _diurnal] & 0xffffff; }
+    static get_sky_colour_gradient = function(_diurnal) { return (___sky_colour[$ _diurnal] >> 24) & 0xffffff; }
     
     static set_light_colour = function(_light_colour)
     {
         ___light_colour = {}
-        
         var _names = struct_get_names(_light_colour);
-        var _length = array_length(_names);
-        
-        for (var i = 0; i < _length; ++i)
+        for (var i = 0; i < array_length(_names); ++i)
         {
             var _name = _names[i];
-            
             ___light_colour[$ _name] = hex_parse(_light_colour[$ _name]);
         }
-        
         return self;
     }
+    static get_light_colour = function(_diurnal) { return ___light_colour[$ _diurnal]; }
     
-    static get_light_colour = function(_diurnal)
-    {
-        return ___light_colour[$ _diurnal];
-    }
-    
-    static set_music = function(_music)
+    // --- Music ---
+    static set_music = function(_music_data)
     {
         ___music = [];
-        
-        var _length = array_length(_music);
-        
-        for (var i = 0; i < _length; ++i)
+        for (var i = 0; i < array_length(_music_data); ++i)
         {
-            var _ = _music[i];
-            
+            var _ = _music_data[i];
             array_push(___music, new Sound(_.id, _.gain));
         }
-        
         return self;
     }
+    static get_music = function() { return ___music; }
     
-    static get_music = function(_music)
-    {
-        return self[$ "___music"];
-    }
+    // --- Terrain Layers (Material Providers) ---
+    static set_tile_top_layer = function(_provider) { ___tile_top_layer = _provider; return self; }
+    static get_tile_top_layer = function() { return ___tile_top_layer; }
     
-    /// @desc Parse tile array data into weighted entry format
-    static __parse_tile_array = function(_data)
-    {
-        if (is_array(_data))
-        {
-            var _length = array_length(_data);
-            var _entries = array_create(_length);
-            var _total_weight = 0;
-            
-            for (var i = 0; i < _length; ++i)
-            {
-                var _entry = _data[i];
-                var _weight = _entry[$ "weight"] ?? 1;
-                
-                var _id = _entry.id;
-                if (_id == "$EMPTY") _id = TILE_EMPTY;
-                
-                _total_weight += _weight;
-                _entries[@ i] = {
-                    id: _id,
-                    weight: _weight,
-                    cumulative_weight: _total_weight,
-                    noise_min: _entry[$ "noise_min"],
-                    noise_max: _entry[$ "noise_max"]
-                }
-            }
-            
-            return { entries: _entries, total_weight: _total_weight }
-        }
-        else
-        {
-            // Legacy single-entry format
-            var _id = _data.id;
-            if (_id == "$EMPTY") _id = TILE_EMPTY;
-            
-            return { entries: [{ id: _id, weight: 1, cumulative_weight: 1 }], total_weight: 1 }
-        }
-    }
+    static set_tile_middle_layer = function(_provider) { ___tile_middle_layer = _provider; return self; }
+    static get_tile_middle_layer = function() { return ___tile_middle_layer; }
     
-    /// @desc Get random tile ID from weighted entries using noise value (0..1)
-    static __get_weighted_tile = function(_parsed, _noise)
+    static set_tile_bottom_layer = function(_provider) { ___tile_bottom_layer = _provider; return self; }
+    static get_tile_bottom_layer = function() { return ___tile_bottom_layer; }
+    
+    static set_tile_foliage = function(_provider) { ___tile_foliage = _provider; return self; }
+    static get_tile_foliage = function() { return ___tile_foliage; }
+    
+    // --- Legacy Wrappers (for worldgen compatibility) ---
+    static get_tile_top_layer_base = function(_noise) { return ___tile_top_layer.get_tile({ noise: _noise }); }
+    static get_tile_top_layer_wall = function(_noise) { return ___tile_top_layer.get_wall({ noise: _noise }); }
+    
+    static get_tile_middle_layer_base = function(_noise) { return ___tile_middle_layer.get_tile({ noise: _noise }); }
+    static get_tile_middle_layer_wall = function(_noise) { return ___tile_middle_layer.get_wall({ noise: _noise }); }
+    
+    static get_tile_bottom_layer_base = function(_noise) { return ___tile_bottom_layer.get_tile({ noise: _noise }); }
+    static get_tile_bottom_layer_wall = function(_noise) { return ___tile_bottom_layer.get_wall({ noise: _noise }); }
+    
+    static get_tile_foliage_base = function(_noise) { return ___tile_foliage.get_tile({ noise: _noise }); }
+    
+    static set_terrain_parameters = function(_params)
     {
-        var _entries = _parsed.entries;
-        var _total = _parsed.total_weight;
-        
-        if (array_length(_entries) == 1)
+        if (_params == undefined)
         {
-            return _entries[0].id;
+            return self;
         }
         
-        // Scale noise to 0..255 for range checks
-        var _noise_255 = frac(abs(_noise)) * 255;
+        ___terrain_influence = _params[$ "influence"] ?? 1.0;
+        ___terrain_smoothing = _params[$ "smoothing"] ?? 16;
         
-        // 1. Check explicit ranges
-        for (var i = 0; i < array_length(_entries); ++i)
+        ___erosion_modifier = _params[$ "erosion_modifier"] ?? 1.0;
+        ___squash_modifier = _params[$ "squash_modifier"] ?? 1.0;
+        ___cave_density_modifier = _params[$ "cave_density_modifier"] ?? 1.0;
+        ___continentalness_modifier = _params[$ "continentalness_modifier"] ?? 0.0;
+        
+        return self;
+    }
+    
+    static get_terrain_influence = function()
+    {
+        return self[$ "___terrain_influence"] ?? 1.0;
+    }
+
+    static get_terrain_smoothing = function()
+    {
+        return self[$ "___terrain_smoothing"] ?? 16;
+    }
+
+    static get_erosion_modifier = function()
+    {
+        return self[$ "___erosion_modifier"] ?? 1.0;
+    }
+
+    static get_squash_modifier = function()
+    {
+        return self[$ "___squash_modifier"] ?? 1.0;
+    }
+
+    static get_cave_density_modifier = function()
+    {
+        return self[$ "___cave_density_modifier"] ?? 1.0;
+    }
+
+    static get_continentalness_modifier = function()
+    {
+        return self[$ "___continentalness_modifier"] ?? 0.0;
+    }
+    
+    // --- Flags ---
+    static set_is_ocean = function(_value) { ___is_ocean = _value ?? false; return self; }
+    static is_ocean = function() { return ___is_ocean; }
+    
+    static set_is_skyland = function(_value) { ___is_skyland = _value ?? false; return self; }
+    static is_skyland = function() { return ___is_skyland; }
+    
+    // --- Shore ---
+    static set_shore_tiles = function(_provider_base)
+    {
+        ___shore_tiles_base = _provider_base;
+        ___has_shore_tiles = (_provider_base != undefined);
+        return self;
+    }
+    static has_shore_tiles = function() { return ___has_shore_tiles; }
+    static get_shore_tile_base = function() { return ___shore_tiles_base; }
+    
+    // --- Creatures & Structures ---
+    static set_creature = function(_creature_data)
+    {
+        if (_creature_data == undefined) return self;
+        ___creature = [];
+        ___creature_length = array_length(_creature_data);
+        for (var i = 0; i < ___creature_length; ++i)
         {
-            var _e = _entries[i];
-            if (_e.noise_min != undefined)
-            {
-                var _min = _e.noise_min;
-                var _max = _e.noise_max ?? 256;
-                
-                if (_noise_255 >= _min) && (_noise_255 < _max)
-                {
-                    return _e.id;
-                }
-            }
-        }
-        
-        // 2. Fallback to weighted random
-        // Use noise value (0..1) mapped to total weight
-        var _roll = frac(abs(_noise)) * _total;
-        
-        for (var i = 0; i < array_length(_entries); ++i)
-        {
-            if (_roll < _entries[i].cumulative_weight)
-            {
-                return _entries[i].id;
-            }
-        }
-        
-        return _entries[0].id;
-    }
-    
-    static set_tile_top_layer = function(_data)
-    {
-        ___tile_top_layer_base = __parse_tile_array(_data.base);
-        ___tile_top_layer_wall = __parse_tile_array(_data.wall);
-        
-        return self;
-    }
-    
-    static get_tile_top_layer_base = function(_seed = 0)
-    {
-        return __get_weighted_tile(___tile_top_layer_base, _seed);
-    }
-    
-    static get_tile_top_layer_wall = function(_seed = 0)
-    {
-        return __get_weighted_tile(___tile_top_layer_wall, _seed);
-    }
-    
-    static set_tile_middle_layer = function(_data)
-    {
-        ___tile_middle_layer_base = __parse_tile_array(_data.base);
-        ___tile_middle_layer_wall = __parse_tile_array(_data.wall);
-        
-        return self;
-    }
-    
-    static get_tile_middle_layer_base = function(_seed = 0)
-    {
-        return __get_weighted_tile(___tile_middle_layer_base, _seed);
-    }
-    
-    static get_tile_middle_layer_wall = function(_seed = 0)
-    {
-        return __get_weighted_tile(___tile_middle_layer_wall, _seed);
-    }
-    
-    static set_tile_bottom_layer = function(_data)
-    {
-        ___tile_bottom_layer_base = __parse_tile_array(_data.base);
-        ___tile_bottom_layer_wall = __parse_tile_array(_data.wall);
-        
-        return self;
-    }
-    
-    static get_tile_bottom_layer_base = function(_seed = 0)
-    {
-        return __get_weighted_tile(___tile_bottom_layer_base, _seed);
-    }
-    
-    static get_tile_bottom_layer_wall = function(_seed = 0)
-    {
-        return __get_weighted_tile(___tile_bottom_layer_wall, _seed);
-    }
-    
-    static set_terrain_modifier = function(_modifier)
-    {
-        if (_modifier != undefined)
-        {
-            ___terrain_height_offset = _modifier[$ "height_offset"] ?? 0;
-            ___terrain_amplitude_scale = _modifier[$ "amplitude_scale"] ?? 1;
-        }
-        
-        return self;
-    }
-    
-    static get_terrain_height_offset = function()
-    {
-        return self[$ "___terrain_height_offset"] ?? 0;
-    }
-    
-    static get_terrain_amplitude_scale = function()
-    {
-        return self[$ "___terrain_amplitude_scale"] ?? 1;
-    }
-    
-    static set_is_ocean = function(_value)
-    {
-        ___is_ocean = _value ?? false;
-        
-        return self;
-    }
-    
-    static is_ocean = function()
-    {
-        return self[$ "___is_ocean"] ?? false;
-    }
-    
-    static set_shore_tiles = function(_tiles)
-    {
-        if (_tiles != undefined)
-        {
-            ___shore_tiles_base = __parse_tile_array(_tiles.base);
-            ___shore_tiles_wall = __parse_tile_array(_tiles.wall);
-            ___has_shore_tiles = true;
-        }
-        else
-        {
-            ___has_shore_tiles = false;
-        }
-        
-        return self;
-    }
-    
-    static has_shore_tiles = function()
-    {
-        return self[$ "___has_shore_tiles"] ?? false;
-    }
-    
-    static get_shore_tile_base = function(_seed = 0)
-    {
-        if (!has_shore_tiles()) return undefined;
-        return __get_weighted_tile(___shore_tiles_base, _seed);
-    }
-    
-    static get_shore_tile_wall = function(_seed = 0)
-    {
-        if (!has_shore_tiles()) return undefined;
-        return __get_weighted_tile(___shore_tiles_wall, _seed);
-    }
-    
-    static set_is_skyland = function(_value)
-    {
-        ___is_skyland = _value ?? false;
-        
-        return self;
-    }
-    
-    static is_skyland = function()
-    {
-        return self[$ "___is_skyland"] ?? false;
-    }
-    
-    static set_tile_foliage = function(_foliage)
-    {
-        ___tile_foliage = _foliage;
-        ___tile_foliage_length = array_length(_foliage);
-        
-        return self;
-    }
-    
-    static get_tile_middle_layer_foliage = function(_index)
-    {
-        return ___tile_foliage[_index];
-    }
-    
-    static get_tile_middle_layer_foliage_length = function()
-    {
-        return self[$ "___tile_foliage_length"] ?? 0;
-    }
-    
-    static set_creature = function(_creature)
-    {
-        if (_creature != undefined)
-        {
-            var _length = array_length(_creature);
-            
-            ___creature = [];
-            ___creature_length = _length;
-            
-            for (var i = 0; i < _length; ++i)
-            {
-                var _ = _creature[i];
-                
-                ___creature[@ i] = {
-                    id: _.id,
-                    amount: smart_value_parse(_.amount),
-                    chance: _[$ "chance"] ?? 1,
-                    time: _[$ "time"],
-                    tile: _[$ "tile"],
-                    variant: smart_value_parse(_[$ "variant"])
-                }
+            var _ = _creature_data[i];
+            ___creature[i] = {
+                id: _.id,
+                amount: smart_value_parse(_.amount),
+                chance: _[$ "chance"] ?? 1,
+                time: _[$ "time"],
+                tile: _[$ "tile"],
+                variant: smart_value_parse(_[$ "variant"])
             }
         }
-        
         return self;
     }
+    static get_creature = function() { return ___creature; }
+    static get_creature_length = function() { return ___creature_length; }
     
-    static get_creature = function()
+    static set_structure = function(_structure_data)
     {
-        return self[$ "___creature"];
-    }
-    
-    static get_creature_length = function()
-    {
-        return self[$ "___creature_length"] ?? 0;
-    }
-    
-    static set_structure = function(_structure)
-    {
-        ___structure = _structure;
-        ___structure_length = array_length(_structure);
-        
+        if (_structure_data == undefined) return self;
+        ___structure = _structure_data;
+        ___structure_length = array_length(_structure_data);
         return self;
     }
+    static get_structure = function(_index) { return ___structure[_index]; }
+    static get_structure_length = function() { return ___structure_length; }
     
-    static get_structure = function(_index)
-    {
-        return ___structure[_index];
-    }
+    // --- Other ---
+    static set_salt = function(_salt) { ___salt = _salt; return self; }
+    static get_salt = function() { return ___salt; }
+    static get_water_color = function() { return ___water_color; }
     
-    static get_structure_length = function()
+    // --- Tags ---
+    static set_tags = function(_tags) { ___tags = _tags ?? []; return self; }
+    static get_tags = function() { return ___tags; }
+    static has_tag = function(_tag)
     {
-        return self[$ "___structure_length"] ?? 0;
-    }
-    
-    static set_salt = function(_salt)
-    {
-        ___salt = _salt;
-        
-        return self;
-    }
-    
-    static get_salt = function()
-    {
-        return self[$ "___salt"] ?? 0;
+        for (var i = 0; i < array_length(___tags); ++i)
+        {
+            if (___tags[i] == _tag) return true;
+        }
+        return false;
     }
 }

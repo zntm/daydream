@@ -1,11 +1,13 @@
-function file_load_snippet_tile(_buffer, _item_data)
+function file_load_snippet_tile(_buffer, _item_data, _palette)
 {
-    var _id = buffer_read(_buffer, buffer_string);
+    var _index = buffer_read(_buffer, buffer_u16);
     
-    if (_id == "")
+    if (_index == 65535)
     {
         return TILE_EMPTY;
     }
+    
+    var _id = _palette[_index];
     
     var _seek = buffer_read(_buffer, buffer_u32);
     
@@ -41,7 +43,7 @@ function file_load_snippet_tile(_buffer, _item_data)
         }
         else
         {
-            _tile.set_inventory(file_load_snippet_inventory(_buffer, _inventory_length, _item_data));
+            _tile.set_inventory(file_load_snippet_inventory(_buffer, _inventory_length, _item_data, _palette));
         }
     }
     

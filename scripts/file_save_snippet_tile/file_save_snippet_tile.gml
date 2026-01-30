@@ -1,15 +1,15 @@
-function file_save_snippet_tile(_buffer, _tile, _item_data)
+function file_save_snippet_tile(_buffer, _tile, _item_data, _palette_map)
 {
     if (_tile == TILE_EMPTY)
     {
-        buffer_write(_buffer, buffer_string, "");
+        buffer_write(_buffer, buffer_u16, 65535);
         
         exit;
     }
     
     var _id = _tile.get_id();
     
-    buffer_write(_buffer, buffer_string, _id);
+    buffer_write(_buffer, buffer_u16, _palette_map[$ _id]);
     
     var _seek = buffer_tell(_buffer);
     
@@ -48,7 +48,7 @@ function file_save_snippet_tile(_buffer, _tile, _item_data)
         }
         else
         {
-            file_save_snippet_inventory(_buffer, _inventory, _inventory_length, _item_data);
+            file_save_snippet_inventory(_buffer, _inventory, _inventory_length, _item_data, _palette_map);
         }
     }
     

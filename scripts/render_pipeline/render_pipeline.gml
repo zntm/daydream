@@ -159,9 +159,9 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 if (_chunk == undefined) || !(_chunk.boolean & CHUNK_BOOLEAN.GENERATED) continue;
                 
                 var _lights = _chunk.chunk_lights;
-                var _len = array_length(_lights);
+                var _length = array_length(_lights);
                 
-                for (var j = 0; j < _len; ++j)
+                for (var j = 0; j < _length; ++j)
                 {
                     var _l = _lights[j];
                     
@@ -190,13 +190,33 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                     var _index_body = (_animation_index * 2) % 8;
                     var _index_arm = ((timer_attack > 0) ? round(lerp(13, 8, timer_attack / 0.3)) : _index_body);
                     
-                    render_attire(global.player_save_data.attire, _index_body, x, y, _xscale, _yscale, false, _index_arm, inst_item);
+                    if (attire != undefined) render_attire(attire, _index_body, x, y, _xscale, _yscale, false, _index_arm, inst_item);
                 }
                 else
                 {
                     var _index_arm = ((timer_attack > 0) ? round(lerp(13, 8, timer_attack / 0.3)) : 0);
                     
-                    render_attire(global.player_save_data.attire, 0, x, y, _xscale, _yscale, false, _index_arm, inst_item);
+                    if (attire != undefined) render_attire(attire, 0, x, y, _xscale, _yscale, false, _index_arm, inst_item);
+                }
+            }
+            
+            with (obj_Client)
+            {
+                var _xscale = entity_xscale * sign(image_xscale);
+                var _yscale = entity_yscale * sign(image_yscale);
+                
+                if (variable_instance_exists(self, "input_state") && input_state.move_x != 0)
+                {
+                    var _index_body = (_animation_index * 2) % 8;
+                    var _index_arm = ((timer_attack > 0) ? round(lerp(13, 8, timer_attack / 0.3)) : _index_body);
+                    
+                    if (attire != undefined) render_attire(attire, _index_body, x, y, _xscale, _yscale, false, _index_arm, inst_item);
+                }
+                else
+                {
+                    var _index_arm = ((timer_attack > 0) ? round(lerp(13, 8, timer_attack / 0.3)) : 0);
+                    
+                    if (attire != undefined) render_attire(attire, 0, x, y, _xscale, _yscale, false, _index_arm, inst_item);
                 }
             }
             
@@ -248,10 +268,9 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
         }
     }
     
-    if (timer_harvest > 0)
-    {
-        render_harvest(_camera_x, _camera_y, _camera_width, _camera_height);
-    }
+    render_harvest(_camera_x, _camera_y, _camera_width, _camera_height);
+    
+    render_build_preview();
     
     render_particles_batch();
     

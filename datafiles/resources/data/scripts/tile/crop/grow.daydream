@@ -1,0 +1,49 @@
+import gaussian_distribution from "../../module/math/gaussian.daydream"
+
+var data = get_item(tile.id)
+var crop = data.get_crop()
+
+var heat_peak = crop.condition.heat.peak
+var heat_falloff = crop.condition.heat.falloff
+
+var bonus_heat = max(0.01, gaussian_distribution(
+    worldgen_get_heat(x, y, WORLD_SEED),
+    heat_peak,
+    heat_falloff
+)) * random_range(0.9, 1.1)
+
+var growth_time = tile.variable.growth_time ?? 0
+var maturity_limit = crop.maturity_limit
+
+if (growth_time < maturity_limit) {
+    var n = min(growth_time + bonus_heat, maturity_limit)
+    tile.variable.growth_time = n
+    
+    var animation_index_min = crop.animation.index_min
+    var animation_index_max = crop.animation.index_max
+    
+    var index_offset = animation_index_min + floor(n * (animation_index_max - 1 - animation_index_min))
+    tile.set_index_offset(index_offset)
+    return
+}
+
+var humidity_peak = crop.condition.humidity.peak
+var humidity_falloff = crop.condition.humidity.falloff
+
+var bonus_humidity = max(0.01, 1 - gaussian_distribution(
+    worldgen_get_humidity(x, y, WORLD_SEED),
+    humidity_peak,
+    humidity_falloff
+)) * random_range(0.9, 1.1)
+
+var wither_time = tile.variable.wither_time ?? 0
+var wither_limit = crop.wither_limit
+
+if (wither_time < wither_limit) {
+    var n = min(wither_time + bonus_humidity, wither_limit)
+    tile.variable.wither_time = n
+    
+    var animation_index_max = crop.animation.index_max
+    tile.set_index_offset(animation_index_max)
+    return
+}

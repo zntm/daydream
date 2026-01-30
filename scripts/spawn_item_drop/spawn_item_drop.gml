@@ -44,5 +44,13 @@ function spawn_item_drop(_x, _y, _item, _direction = 0, _xvelocity = 0, _yveloci
         
         timer_pickup = _timer_pickup;
         timer_life = _timer_life;
+        
+        // Interpolation state
+        interp_start_x = x;
+        interp_start_y = y;
+        interp_target_x = x;
+        interp_target_y = y;
+        interp_timer = 0;
+        interp_duration = 0.05;
     }
 }

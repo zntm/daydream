@@ -17,6 +17,7 @@ enum INPUT_ACTION {
     INVENTORY,
     MOUNT,
     PAUSE,
+    SPRINT,
     // Mouse buttons (raw)
     MOUSE_LEFT,
     MOUSE_RIGHT,
@@ -40,6 +41,7 @@ function input_bindings_init()
     global.input_bindings[INPUT_ACTION.USE]        = { keyboard: undefined, keyboard_alt: undefined, gamepad: gp_face2, mouse: mb_right }
     global.input_bindings[INPUT_ACTION.INVENTORY]  = { keyboard: ord("E"), keyboard_alt: vk_tab, gamepad: gp_select }
     global.input_bindings[INPUT_ACTION.MOUNT]      = { keyboard: ord("R"), keyboard_alt: undefined, gamepad: gp_face4 }
+    global.input_bindings[INPUT_ACTION.SPRINT]     = { keyboard: vk_shift, keyboard_alt: undefined, gamepad: gp_stickl }
     global.input_bindings[INPUT_ACTION.PAUSE]      = { keyboard: vk_escape, keyboard_alt: undefined, gamepad: gp_start }
     
     // Mouse buttons (raw)

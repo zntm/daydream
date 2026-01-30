@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"WorldGenCore",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"WorldGenCore",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

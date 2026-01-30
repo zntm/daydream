@@ -4,6 +4,27 @@ function tile_place(_x, _y, _z, _tile)
 {
     if (_y < 0) || (_y >= global.world_data[$ global.world_save_data.dimension].get_world_height()) exit;
     
+    // --- NETWORKING INTERCEPTION ---
+    // Handle Client Requests and Server Broadcasts
+    var _applying_packet = global.network_applying_packet ?? false;
+    
+    if (!_applying_packet)
+    {
+        if (global.network_role == NETWORK_ROLE.CLIENT)
+        {
+            // Client: Send Request to Server
+            // We still fall through to apply locally (Prediction)
+            var _id = (_tile == TILE_EMPTY) ? "base:empty" : _tile.get_id();
+            network_send_tile_request(_x, _y, _z, _id);
+        }
+        else if (global.network_role == NETWORK_ROLE.SERVER)
+        {
+            // Server/Integrated: Broadcast to Clients
+            var _id = (_tile == TILE_EMPTY) ? "base:empty" : _tile.get_id();
+            network_broadcast_tile_update(_x, _y, _z, _id);
+        }
+    }
+    
     var _chunk = chunk_map_get_by_tile(_x, _y);
     
     if (_chunk == undefined)
@@ -24,7 +45,11 @@ function tile_place(_x, _y, _z, _tile)
     {
         _chunk.chunk_display |= 1 << _z;
         
-        ++_chunk.chunk_count[@ _z];
+        // Only increment if we are replacing empty space
+        if (_tile_before == TILE_EMPTY)
+        {
+            ++_chunk.chunk_count[@ _z];
+        }
         
         var _data = global.item_data[$ _tile.get_id()];    
         
@@ -33,9 +58,14 @@ function tile_place(_x, _y, _z, _tile)
             array_push(_chunk.chunk_render_state, global.render_state_pool.acquire(_x, _y, _z, _data.get_render_state()));
         }
     }
-    else if (_tile_before != TILE_EMPTY) && (--_chunk.chunk_count[_z] <= 0)
+    else if (_tile_before != TILE_EMPTY)
     {
-        _chunk.chunk_display ^= 1 << _z;
+        // Decrement only if we are removing a tile
+        if (--_chunk.chunk_count[@ _z] <= 0)
+        {
+            _chunk.chunk_count[@ _z] = 0; // Safety clamp
+            _chunk.chunk_display &= ~(1 << _z); // Safety clear bit
+        }
         
         var _render_state = _chunk.chunk_render_state;
         var _length = array_length(_render_state);

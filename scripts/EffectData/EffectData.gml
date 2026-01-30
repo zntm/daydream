@@ -19,7 +19,6 @@ global.effect_type = {
 function EffectData(_namespace, _id) constructor
 {
     static __effect_type = global.effect_type;
-    static __item_function = global.item_function;
     
     ___namespace = _namespace;
     ___id = _id;
@@ -50,6 +49,11 @@ function EffectData(_namespace, _id) constructor
     ___particle = undefined;
     ___on_effect = undefined;
     ___on_death = undefined;
+    ___on_heal = undefined;
+    ___on_damage = undefined;
+    ___on_interval = undefined;
+    ___on_chance = undefined;
+    ___on_end = undefined;
     
     static get_namespace = function()
     {
@@ -230,6 +234,81 @@ function EffectData(_namespace, _id) constructor
     static get_on_death = function()
     {
         return ___on_death;
+    }
+    
+    static set_on_heal = function(_on_heal)
+    {
+        if (_on_heal != undefined)
+        {
+            ___on_heal = _on_heal;
+        }
+        
+        return self;
+    }
+    
+    static get_on_heal = function()
+    {
+        return ___on_heal;
+    }
+    
+    static set_on_damage = function(_on_damage)
+    {
+        if (_on_damage != undefined)
+        {
+            ___on_damage = _on_damage;
+        }
+        
+        return self;
+    }
+    
+    static get_on_damage = function()
+    {
+        return ___on_damage;
+    }
+    
+    static set_on_interval = function(_on_interval)
+    {
+        if (_on_interval != undefined)
+        {
+            ___on_interval = _on_interval;
+        }
+        
+        return self;
+    }
+    
+    static get_on_interval = function()
+    {
+        return ___on_interval;
+    }
+    
+    static set_on_chance = function(_on_chance)
+    {
+        if (_on_chance != undefined)
+        {
+            ___on_chance = _on_chance;
+        }
+        
+        return self;
+    }
+    
+    static get_on_chance = function()
+    {
+        return ___on_chance;
+    }
+    
+    static set_on_end = function(_on_end)
+    {
+        if (_on_end != undefined)
+        {
+            ___on_end = _on_end;
+        }
+        
+        return self;
+    }
+    
+    static get_on_end = function()
+    {
+        return ___on_end;
     }
     
     /// @function calculate_value(_level)

@@ -1,39 +1,31 @@
-function worldgen_get_tile_wall(_x, _y, _surface_biome, _cave_biome, _surface_height, _seed)
+function worldgen_get_tile_wall(_x, _y, _surface_biome, _cave_biome, _surface_height, _seed, _is_cave_above = false, _world_data = global.world_data[$ global.world_save_data.dimension], _biome_data = global.biome_data)
 {
-    if (_y < _surface_height)
-    {
-        return TILE_EMPTY;
-    }
+    static _default_biome_id = "phantasia:surface/forest";
     
-    var _world_data = global.world_data[$ global.world_save_data.dimension];
+    var _density = worldgen_get_density_wall(_x, _y, _seed);
+    if (_density < 0) return TILE_EMPTY;
     
-    // Generate noise value (0..1) for coherent tile variation
-    // Offset differently from base tiles to avoid identical patterns
-    var _noise = open_simplex_noise(_x * _world_data.get_tile_variation_noise_scale(), _y * _world_data.get_tile_variation_noise_scale() + (_seed * 200), 1.0, 2);
+    var _biome = undefined;
     
     if (_cave_biome != undefined)
     {
-        return global.biome_data[$ _cave_biome].get_tile_middle_layer_wall(_noise);
+        _biome = _biome_data[$ _cave_biome];
     }
-    
-    // Fallback if underground but no cave biome found
-    // Fallback if underground but no cave biome found
-    // Respect the 8-block surface buffer
-    if (_y > _surface_height + _world_data.get_surface_min_depth())
+    else
     {
-        // Try to get the first default cave biome
-        var _default_caves = _world_data.get_cave_biome_default();
-        if (array_length(_default_caves) > 0)
-        {
-            var _def_biome = _default_caves[array_length(_default_caves) - 1].id; 
-            return global.biome_data[$ _def_biome].get_tile_middle_layer_wall(_noise);
-        }
+        _biome ??= _biome_data[$ _surface_biome] ?? _biome_data[$ _default_biome_id];
     }
     
-    if (_y == _surface_height)
+    if (_biome == undefined) return TILE_EMPTY;
+    
+    var _variation_scale = _world_data.get_tile_variation_noise_scale();
+    var _variation_scale = _world_data.get_tile_variation_noise_scale();
+    var _noise = open_simplex_noise(_x * _variation_scale, _y * _variation_scale + (_seed * 200), 1.0, 2);
+    
+    if (_is_cave_above)
     {
-        return global.biome_data[$ _surface_biome].get_tile_top_layer_wall(_noise);
+        return _biome.get_tile_top_layer_wall(_noise);
     }
     
-    return global.biome_data[$ _surface_biome].get_tile_middle_layer_wall(_noise);
+    return _biome.get_tile_middle_layer_wall(_noise);
 }

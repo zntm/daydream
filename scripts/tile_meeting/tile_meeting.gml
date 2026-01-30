@@ -36,7 +36,7 @@ function tile_meeting(_x, _y, _z = CHUNK_DEPTH_DEFAULT, _type = ITEM_TYPE_BIT.SO
         
         for (var i = _xstart; i <= _xend; ++i)
         {
-            var _tile = tile_get(i, j, _z);
+            var _tile = tile_get(i, j, _z, _world_height);
             
             if (_tile == TILE_EMPTY) continue;
             

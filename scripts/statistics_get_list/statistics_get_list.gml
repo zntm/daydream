@@ -3,7 +3,7 @@ function statistics_get_list(_stats, _category)
     var _list = [];
     
     // Helper to get value safely
-    var _get_val = function(_s, _k) { return _s[$ _k] ?? 0; };
+    var _get_val = function(_s, _k) { return _s[$ _k] ?? 0; }
     
     // --- GENERAL ---
     if (_category == "general")
@@ -52,7 +52,7 @@ function statistics_get_list(_stats, _category)
         var _keys = struct_get_names(_stats);
         var _length = array_length(_keys);
         
-        var _data = {}; // id -> { placed, broken, name }
+        var _data = {} // id -> { placed, broken, name }
         
         for (var i = 0; i < _length; ++i)
         {
@@ -95,7 +95,7 @@ function statistics_get_list(_stats, _category)
                     _name = global.tile_data[$ _id].get_name();
                 }
                 
-                _data[$ _id] = { name: _name, placed: 0, broken: 0 };
+                _data[$ _id] = { name: _name, placed: 0, broken: 0 }
             }
             
             _data[$ _id][$ _type] = _val;
@@ -124,7 +124,7 @@ function statistics_get_list(_stats, _category)
         var _keys = struct_get_names(_stats);
         var _length = array_length(_keys);
         
-        var _data = {}; 
+        var _data = {} 
         
         for (var i = 0; i < _length; ++i)
         {
@@ -166,7 +166,7 @@ function statistics_get_list(_stats, _category)
                 {
                     _name = global.item_data[$ _id].get_name();
                 }
-                _data[$ _id] = { name: _name, collected: 0, used: 0 };
+                _data[$ _id] = { name: _name, collected: 0, used: 0 }
             }
             
             _data[$ _id][$ _type] = _val;

@@ -8,7 +8,7 @@ export class Biome {
     private sky_colour: any;
     private light_colour: any;
     private tile: {
-        [key: string]: BiomeTile;
+        [key: string]: MaterialProvider;
     };
     private music?: Sound[];
     private creatures?: BiomeCreature[];
@@ -16,9 +16,10 @@ export class Biome {
     private structures?: BiomeStructure[];
     private terrain_modifier?: BiomeTerrainModifier;
     private is_ocean?: boolean;
-    private shore_tiles?: BiomeTile;
+    private shore_tiles?: MaterialProvider;
     private is_skyland?: boolean;
     private salt?: number;
+    private tags?: string[];
 
     constructor(
         background: BiomeBackground,
@@ -26,7 +27,7 @@ export class Biome {
         skyColor: any,
         lightColor: any,
         tile: {
-            [key: string]: BiomeTile;
+            [key: string]: MaterialProvider;
         },
     ) {
         this.background = background;
@@ -72,7 +73,7 @@ export class Biome {
         return this;
     }
 
-    setShoreTiles(tiles: BiomeTile) {
+    setShoreTiles(tiles: MaterialProvider) {
         this.shore_tiles = tiles;
 
         return this;
@@ -89,15 +90,67 @@ export class Biome {
 
         return this;
     }
+
+    setTags(tags: string[]) {
+        this.tags = tags;
+        return this;
+    }
 }
 
 export class BiomeTerrainModifier {
+    // Legacy height offset
     private height_offset: number;
-    private amplitude_scale?: number;
+    
+    // NEW: Biome blending control
+    private influence?: number;    // How much these modifiers affect generation (0-1)
+    private smoothing?: number;    // Blend radius in blocks for smooth biome edges
+    
+    // NEW: WorldGen modifiers (multipliers that blend at biome edges)
+    private erosion_modifier?: number;       // Multiplier for erosion (flatness)
+    private squash_modifier?: number;        // Multiplier for squash factor
+    private cave_density_modifier?: number;  // Multiplier for cave density
+    private continentalness_modifier?: number; // Modifier for continentalness
 
-    constructor(heightOffset: number, amplitudeScale: number = 1.0) {
+    constructor(
+        heightOffset: number
+    ) {
         this.height_offset = heightOffset;
-        if (amplitudeScale !== 1.0) this.amplitude_scale = amplitudeScale;
+    }
+    
+    /** Set how much this biome's modifiers affect worldgen (0-1) */
+    setInfluence(influence: number) {
+        this.influence = influence;
+        return this;
+    }
+    
+    /** Set blend radius for smooth biome edge transitions (in blocks) */
+    setSmoothing(smoothing: number) {
+        this.smoothing = smoothing;
+        return this;
+    }
+    
+    /** Set erosion modifier (1.0 = normal, <1 = more mountainous, >1 = flatter) */
+    setErosionModifier(modifier: number) {
+        this.erosion_modifier = modifier;
+        return this;
+    }
+    
+    /** Set squash modifier (1.0 = normal, <1 = less squash, >1 = more squash) */
+    setSquashModifier(modifier: number) {
+        this.squash_modifier = modifier;
+        return this;
+    }
+    
+    /** Set cave density modifier (1.0 = normal, <1 = fewer caves, >1 = more caves) */
+    setCaveDensityModifier(modifier: number) {
+        this.cave_density_modifier = modifier;
+        return this;
+    }
+    
+    /** Set continentalness modifier (additive offset to base continentalness) */
+    setContinentalnessModifier(modifier: number) {
+        this.continentalness_modifier = modifier;
+        return this;
     }
 }
 
@@ -124,17 +177,61 @@ export class BiomeSkyColor {
     }
 }
 
-export class TileEntry {
-    private id: string;
-    private weight?: number;
-    private noise_min?: number;
-    private noise_max?: number;
-    private context?: string[];
+export class MaterialRule {
+    private type: string;
+    private params: any;
 
-    constructor(id: string, weight: number = 1, context?: string[]) {
+    constructor(type: string, params: any = {}) {
+        this.type = type;
+        this.params = params;
+    }
+}
+
+export class RuleDepth extends MaterialRule {
+    constructor(min: number, max: number) {
+        super("RuleDepth", { min, max });
+    }
+}
+
+export class RuleAirAbove extends MaterialRule {
+    constructor(min_blocks: number) {
+        super("RuleAirAbove", { min_blocks });
+    }
+}
+
+export class RuleCaveBiome extends MaterialRule {
+    constructor(biome_id: string) {
+        super("RuleCaveBiome", { biome_id });
+    }
+}
+
+export class RuleSolidAbove extends MaterialRule {
+    constructor(max_blocks: number) {
+        super("RuleSolidAbove", { max_blocks });
+    }
+}
+
+export class RuleAdjacent extends MaterialRule {
+    constructor(tile_id: string | string[]) {
+        super("RuleAdjacent", { tile_id: Array.isArray(tile_id) ? tile_id : [tile_id] });
+    }
+}
+
+export class RuleNotAdjacent extends MaterialRule {
+    constructor(tile_id: string | string[]) {
+        super("RuleNotAdjacent", { tile_id: Array.isArray(tile_id) ? tile_id : [tile_id] });
+    }
+}
+
+export class MaterialItem {
+    id: string;
+    rules: MaterialRule[];
+    noise_min?: number;
+    noise_max?: number;
+
+    constructor(id: string, rules: MaterialRule[] = []) {
         this.id = id;
-        if (weight !== 1) this.weight = weight;
-        if (context) this.context = context;
+        this.rules = rules;
     }
 
     setNoiseRange(min: number, max: number) {
@@ -144,18 +241,29 @@ export class TileEntry {
     }
 }
 
-export class BiomeTile {
-    private base: TileEntry[];
-    private wall: TileEntry[];
+export class MaterialProvider {
+    items: MaterialItem[];
+    default_id?: string;
 
-    constructor(base: string | TileEntry[], wall: string | TileEntry[]) {
-        // Support both legacy string format and new array format
-        this.base = typeof base === "string" 
-            ? [new TileEntry(base)] 
-            : base;
-        this.wall = typeof wall === "string" 
-            ? [new TileEntry(wall)] 
-            : wall;
+    constructor() {
+        this.items = [];
+    }
+
+    addItem(id: string, rules: MaterialRule[] = []) {
+        this.items.push(new MaterialItem(id, rules));
+        return this;
+    }
+
+    addItemNoise(id: string, min: number, max: number, rules: MaterialRule[] = []) {
+        const item = new MaterialItem(id, rules);
+        item.setNoiseRange(min, max);
+        this.items.push(item);
+        return this;
+    }
+
+    setDefault(id: string) {
+        this.default_id = id;
+        return this;
     }
 }
 

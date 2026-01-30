@@ -48,7 +48,10 @@ function control_physics_item_drop(_id)
                 physics_body.vel_x = lerp_delta(physics_body.vel_x, 0, 0.3, 1);
             }
             
-            physics_body.vel_y += attribute.get_gravity();
+            var _grav = attribute.get_gravity();
+            physics_body.vel_y += _grav;
+            
+            // show_debug_message($"[PHYSICS] Item Drop {id}: Gravity={_grav}, VelY={physics_body.vel_y}, PosY={physics_body.pos_y}");
             
             physics_move_contact_x(physics_body);
             physics_move_contact_y(physics_body);

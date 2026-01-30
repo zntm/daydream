@@ -40,8 +40,8 @@ function chat_refresh_suggestions()
     if (_part_count == 1)
     {
         var _names = global.command_data_names;
-        var _len = array_length(_names);
-        for (var i = 0; i < _len; ++i)
+        var _length = array_length(_names);
+        for (var i = 0; i < _length; ++i)
         {
             if (string_pos(_current_text, _names[i]) == 1)
             {
@@ -90,8 +90,8 @@ function chat_refresh_suggestions()
                 var _names = _pointer.get_subcommand_names();
                 if (_names != undefined)
                 {
-                    var _len = array_length(_names);
-                    for (var i = 0; i < _len; ++i)
+                    var _length = array_length(_names);
+                    for (var i = 0; i < _length; ++i)
                     {
                         if (string_pos(_current_text, _names[i]) == 1)
                         {
@@ -113,7 +113,7 @@ function chat_refresh_suggestions()
             // Suggest Parameter Choice
             else
             {
-                var _param_idx = (_part_count - 1) - _arg_start;
+                var _param_index = (_part_count - 1) - _arg_start;
                 
                 // Build parameter hint array with coloured entries
                 // Format: [ { text: "...", colour: c_xxx }, ... ]
@@ -142,7 +142,7 @@ function chat_refresh_suggestions()
                     var _hint_colour = #555555; // Default gray
                     var _hint_text = "";
                     
-                    if (i < _param_idx)
+                    if (i < _param_index)
                     {
                         // Already filled in - show the value with validation colour
                         var _value = _parts[_arg_start + i];
@@ -150,7 +150,7 @@ function chat_refresh_suggestions()
                         _hint_colour = _valid ? #7ecfff : #ff6b6b; // Light blue if valid, red if invalid
                         _hint_text = $"[{_value}]";
                     }
-                    else if (i == _param_idx)
+                    else if (i == _param_index)
                     {
                         // Currently typing - yellow
                         _hint_colour = #ffd369;
@@ -168,15 +168,15 @@ function chat_refresh_suggestions()
                 
                 global.chat_command_hint = _hint_parts;
                 
-                if (_param_idx < _param_len)
+                if (_param_index < _param_len)
                 {
-                    var _param = _pointer.get_parameter(_param_idx);
+                    var _param = _pointer.get_parameter(_param_index);
                     var _choices = _param.get_choices();
                     
                     if (_choices != undefined)
                     {
-                        var _len = array_length(_choices);
-                        for (var i = 0; i < _len; ++i)
+                        var _length = array_length(_choices);
+                        for (var i = 0; i < _length; ++i)
                         {
                              var _choice_str = string(_choices[i]);
                              if (string_pos(_current_text, _choice_str) == 1) array_push(_suggestions, _choice_str);

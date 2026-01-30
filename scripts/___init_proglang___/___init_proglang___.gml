@@ -22,6 +22,10 @@ global.proglang_macros[$ "CHUNK_DEPTH"] = {
     WALL: CHUNK_DEPTH_WALL
 }
 
+global.proglang_macros[$ "INVENTORY"] = {
+    SELECTED_INDEX: function() { return global.inventory_selected_hotbar; }
+}
+
 global.proglang_macros[$ "TILE_SIZE"] = TILE_SIZE;
 
 global.proglang_macros[$ "CURRENT_YEAR"] = function()
@@ -184,6 +188,31 @@ global.proglang_macros[$ "DISPLAY_HEIGHT"] = function()
     return display_get_height();
 }
 
+global.proglang_macros[$ "CAMERA_X"] = function()
+{
+    return global.camera_x;
+}
+
+global.proglang_macros[$ "CAMERA_Y"] = function()
+{
+    return global.camera_y;
+}
+
+global.proglang_macros[$ "GUI_SCALE"] = function()
+{
+    return global.gui_scale;
+}
+
+global.proglang_macros[$ "CAMERA_WIDTH"] = function()
+{
+    return global.camera_width;
+}
+
+global.proglang_macros[$ "CAMERA_HEIGHT"] = function()
+{
+    return global.camera_height;
+}
+
 global.proglang_macros[$ "WORLD_MOUSE_X"] = function()
 {
     return mouse_x;
@@ -212,6 +241,52 @@ global.proglang_macros[$ "GUI_MOUSE_X"] = function()
 global.proglang_macros[$ "GUI_MOUSE_Y"] = function()
 {
     return device_mouse_y_to_gui(0);
+}
+
+global.proglang_macros[$ "WORLD_SEED"] = function()
+{
+    return global.world_save_data.seed;
+}
+
+global.proglang_macros[$ "WORLD_TIME"] = function()
+{
+    return global.world_save_data.time;
+}
+
+global.proglang_macros[$ "IS_OPENED_BOOLEAN"] = {
+    GENERATING_WORLD:    IS_OPENED_BOOLEAN.GENERATING_WORLD,
+    GUI:                 IS_OPENED_BOOLEAN.GUI,
+    INVENTORY:           IS_OPENED_BOOLEAN.INVENTORY,
+    INVENTORY_CONTAINER: IS_OPENED_BOOLEAN.INVENTORY_CONTAINER,
+    PAUSE:               IS_OPENED_BOOLEAN.PAUSE,
+    MENU:                IS_OPENED_BOOLEAN.MENU,
+    EXIT:                IS_OPENED_BOOLEAN.EXIT,
+    CHAT:                IS_OPENED_BOOLEAN.CHAT,
+}
+
+global.proglang_macros[$ "FS"] = {
+    STRUCTURES: PROGRAM_DIRECTORY_STRUCTURES
+}
+
+global.proglang_macros[$ "BUFFER"] = {
+    GROW: buffer_grow,
+    U32: buffer_u32,
+    U16: buffer_u16,
+    U8: buffer_u8,
+    BOOL: buffer_bool,
+    STRING: buffer_string
+}
+
+global.proglang_macros[$ "PROGRAM_VERSION_NUMBER"] = PROGRAM_VERSION_NUMBER;
+
+global.proglang_macros[$ "WORLD_NAME"] = function()
+{
+    return global.world_save_data.name;
+}
+
+global.proglang_macros[$ "WORLD_DIMENSION"] = function()
+{
+    return global.world_save_data.dimension;
 }
 
 global.proglang_macros[$ "ERROR_TYPE"] = {
@@ -363,3 +438,22 @@ global.proglang_classes[$ "EventDataTileFallingLand"] = EventDataTileFallingLand
 
 global.proglang_classes[$ "Tile"] = Tile;
 global.proglang_classes[$ "Inventory"] = Inventory;
+
+// World Generation Classes
+global.proglang_classes[$ "MaterialProvider"] = MaterialProvider;
+global.proglang_classes[$ "MaterialRule"] = MaterialRule;
+global.proglang_classes[$ "RuleDepth"] = RuleDepth;
+global.proglang_classes[$ "RuleAirAbove"] = RuleAirAbove;
+global.proglang_classes[$ "RuleCaveBiome"] = RuleCaveBiome;
+global.proglang_classes[$ "RuleChance"] = RuleChance;
+global.proglang_classes[$ "RuleGenerateOn"] = RuleGenerateOn;
+
+global.proglang_classes[$ "PatternScanner"] = PatternScanner;
+global.proglang_classes[$ "WorldPattern"] = WorldPattern;
+global.proglang_classes[$ "PatternTreeRootOverCave"] = PatternTreeRootOverCave;
+
+global.proglang_classes[$ "BiomeData"] = BiomeData;
+global.proglang_classes[$ "WorldData"] = WorldData;
+
+// Pre-load all scripts
+init_proglang_recursive(PROGLANG_BASE_DIR, "phantasia");

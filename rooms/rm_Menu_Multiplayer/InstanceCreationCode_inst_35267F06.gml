@@ -1,0 +1,1 @@
+placeholder = loca_translate("menu.multiplayer.textbox.ip");

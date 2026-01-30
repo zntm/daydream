@@ -76,13 +76,10 @@ function structure_valid(_x, _y, _id, _seed)
                     ++l;
                 }
                 
-                var _cave_start = worldgen_get_cave_start(_x2, _seed);
-                
                 for (; l < _abs_clearance_condition_height; ++l)
                 {
                     var _y2 = _tile_y + l + _yoffset;
-                    
-                    if (!worldgen_get_cave(_x2, _y2, _surface_height, _cave_start, _seed)) return false;
+                    if (worldgen_is_solid(_x2, _y2, _seed)) return false;
                 }
             }
         }

@@ -1,4 +1,4 @@
-function inventory_craft_clear(_index)
+function inventory_craft_clear(_index, _inventory_target = global.inventory, _out_changed_slots = undefined)
 {
     var _data = global.crafting_data[_index];
     
@@ -14,7 +14,7 @@ function inventory_craft_clear(_index)
         
         for (var j = 0; j < global.inventory_length.base; ++j)
         {
-            var _item = global.inventory.base[j];
+            var _item = _inventory_target.base[j];
             
             if (_item == INVENTORY_EMPTY) || ((is_array(_id)) ? (!array_contains(_id, _item.get_id())) : (_id != _item.get_id())) continue;
             
@@ -22,12 +22,14 @@ function inventory_craft_clear(_index)
             
             if (_amount2 > _amount)
             {
-                global.inventory.base[@ j].add_amount(-_amount);
+                _inventory_target.base[@ j].add_amount(-_amount);
+                
+                if (is_array(_out_changed_slots)) array_push(_out_changed_slots, j);
                 
                 break;
             }
             
-            inventory_delete("base", j);
+            inventory_delete("base", j, _inventory_target, _out_changed_slots);
             
             if (_amount2 == _amount) break;
             

@@ -161,7 +161,7 @@ function menu_popup_player_statistics(_data)
     array_push(_popup_instances, _inst_slider);
     
     // --- CONTENT GENERATION ---
-    var _stats = _data.get_statistics() ?? {};
+    var _stats = _data.get_statistics() ?? {}
     var _full_list = [];
     
     var _cats = ["general"];

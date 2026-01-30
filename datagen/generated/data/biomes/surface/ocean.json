@@ -42,58 +42,59 @@
         }
     },
     "structures": [],
+    "tags": [
+        "ocean",
+        "water",
+        "wet"
+    ],
     "terrain_modifier": {
-        "height_offset": -80,
-        "amplitude_scale": 0.3
+        "height_offset": -80
     },
     "tile": {
         "top_layer": {
-            "base": [
+            "items": [
                 {
-                    "id": "phantasia:sand"
-                }
-            ],
-            "wall": [
+                    "id": "phantasia:sand",
+                    "rules": []
+                },
                 {
                     "id": "phantasia:sandstone_wall",
-                    "weight": 4
-                },
-                {
-                    "id": "$EMPTY"
+                    "rules": [],
+                    "noise_min": 0,
+                    "noise_max": 204
                 }
-            ]
+            ],
+            "default_id": "phantasia:sand"
         },
         "middle_layer": {
-            "base": [
+            "items": [
                 {
-                    "id": "phantasia:gravel"
-                }
-            ],
-            "wall": [
-                {
-                    "id": "phantasia:stone_wall",
-                    "weight": 4
+                    "id": "phantasia:gravel",
+                    "rules": []
                 },
                 {
-                    "id": "$EMPTY"
+                    "id": "phantasia:stone_wall",
+                    "rules": [],
+                    "noise_min": 0,
+                    "noise_max": 204
                 }
-            ]
+            ],
+            "default_id": "phantasia:gravel"
         },
         "bottom_layer": {
-            "base": [
+            "items": [
                 {
-                    "id": "phantasia:stone"
-                }
-            ],
-            "wall": [
-                {
-                    "id": "phantasia:stone_wall",
-                    "weight": 4
+                    "id": "phantasia:stone",
+                    "rules": []
                 },
                 {
-                    "id": "$EMPTY"
+                    "id": "phantasia:stone_wall",
+                    "rules": [],
+                    "noise_min": 0,
+                    "noise_max": 204
                 }
-            ]
+            ],
+            "default_id": "phantasia:stone"
         }
     }
 }

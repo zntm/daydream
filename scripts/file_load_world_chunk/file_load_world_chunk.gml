@@ -60,6 +60,15 @@ function file_load_world_chunk(_world_save_data, _chunk)
     
     if (_chunk_display)
     {
+        // Read Palette
+        var _palette_length = buffer_read(_buffer, buffer_u16);
+        var _palette = array_create(_palette_length);
+        
+        for (var i = 0; i < _palette_length; ++i)
+        {
+            _palette[@ i] = buffer_read(_buffer, buffer_string);
+        }
+        
         for (var i = 0; i < CHUNK_SIZE; ++i)
         {
             _chunk.chunk_covered[@ i] = buffer_read(_buffer, buffer_u16);
@@ -75,7 +84,7 @@ function file_load_world_chunk(_world_save_data, _chunk)
             {
                 for (var l = 0; l < CHUNK_SIZE; ++l)
                 {
-                    _chunk.chunk[@ tile_index_xyz(l, j, i)] = file_load_snippet_tile(_buffer, _item_data);
+                    _chunk.chunk[@ tile_index_xyz(l, j, i)] = file_load_snippet_tile(_buffer, _item_data, _palette);
                 }
             }
         }

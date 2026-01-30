@@ -11,18 +11,18 @@ global.proglang_modules = {}
 /// @desc Initialize proglang by recursively loading all .daydream scripts
 /// @param {string} _directory Directory to load from
 /// @param {string} _namespace Namespace prefix for scripts
-function init_proglang_recursive(_directory, _namespace = "") {
+function init_proglang_recursive(_directory, _namespace = "", _path = "") {
     var _files = file_read_directory(_directory);
     var _files_length = array_length(_files);
     
     for (var i = 0; i < _files_length; i++) {
         var _file = _files[i];
         var _subdirectory = $"{_directory}/{_file}";
-        var _rel_path = _namespace == "" ? _file : $"{_namespace}/{_file}";
+        var _rel_path = _path == "" ? _file : $"{_path}/{_file}";
         
         // Recurse into subdirectories
         if (directory_exists(_subdirectory)) {
-            init_proglang_recursive(_subdirectory, _rel_path);
+            init_proglang_recursive(_subdirectory, _namespace, _rel_path);
             continue;
         }
         
@@ -30,7 +30,8 @@ function init_proglang_recursive(_directory, _namespace = "") {
         if (!string_ends_with(_file, ".daydream")) continue;
         
         var _filename = string_delete(_file, string_length(_file) - 8, 9); // Remove .daydream
-        var _script_id = _namespace == "" ? _filename : $"{_namespace}/{_filename}";
+        var _script_path = _path == "" ? _filename : $"{_path}/{_filename}";
+        var _script_id = _namespace == "" ? _script_path : $"{_namespace}:{_script_path}";
         
         var _source = buffer_load_text(_subdirectory);
         if (_source == undefined)
@@ -136,9 +137,9 @@ function proglang_resolve_path(_path, _current_dir = "") {
             continue;
         } else if (_seg == "..") {
             // SECURITY: Don't allow going above base directory
-            // If _current_dir is absolute (contains root), we must stay within _root_len
-            // If _current_dir is empty (virtual path from root), we must stay within virtual root (0)
-            var _min_parts = (_current_dir == "") ? 0 : _root_len;
+            // Check if current resolution is absolute (within GameMaker's sandboxed root)
+            var _is_absolute = (array_length(_result_parts) > 0 && string_pos(PROGLANG_BASE_DIR, _result_parts[0]) == 1);
+            var _min_parts = _is_absolute ? _root_len : 0;
             
             if (array_length(_result_parts) > _min_parts) {
                 array_pop(_result_parts);
@@ -158,6 +159,17 @@ function proglang_resolve_path(_path, _current_dir = "") {
         _resolved += _result_parts[i];
     }
     
+    // Preserve namespace if it was present
+    if (string_pos(":", _path) > 0) {
+        var _colon_pos = string_pos(":", _path);
+        var _ns = string_copy(_path, 1, _colon_pos);
+        if (string_pos(_ns, _resolved) != 1) {
+             // If resolution didn't already include it (e.g. absolute path with NS)
+             // This is a bit complex, but for now we assume absolute paths with NS stay absolute
+             // _resolved = _ns + _resolved; 
+        }
+    }
+    
     return _resolved;
 }
 
@@ -167,9 +179,9 @@ function proglang_resolve_path(_path, _current_dir = "") {
 function proglang_split_path(_path) {
     var _parts = [];
     var _current = "";
-    var _len = string_length(_path);
+    var _length = string_length(_path);
     
-    for (var i = 1; i <= _len; i++) {
+    for (var i = 1; i <= _length; i++) {
         var _char = string_char_at(_path, i);
         if (_char == "/" || _char == "\\") {
             if (_current != "") {
@@ -232,7 +244,17 @@ function proglang_load_module(_module_path, _importer_path = "") {
         if (_resolved == undefined) {
             throw { type: PROGLANG_ERROR_TYPE.PATH_SECURITY, message: $"Path security violation: '{_module_path}'" }
         }
-        _full_path = $"{PROGLANG_BASE_DIR}/{_resolved}";
+        // Strip virtual namespace for physical file access
+        var _physical_path = _resolved;
+        var _colon_pos = string_pos(":", _physical_path);
+        if (_colon_pos > 0) {
+            _physical_path = string_delete(_physical_path, 1, _colon_pos);
+        }
+        
+        _full_path = $"{PROGLANG_BASE_DIR}/{_physical_path}";
+        if (!string_ends_with(_full_path, ".daydream")) {
+            _full_path += ".daydream";
+        }
     }
     
     // Check if already loaded

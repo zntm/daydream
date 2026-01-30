@@ -1,0 +1,228 @@
+export fn flow(parameter, x, y, z) {
+  var tile = tile_get(x, y, z)
+  if (tile == undefined) return
+
+  var id = tile.id
+  var level = tile.variable.level ?? 8
+  var flow_direction = tile.variable.flow_direction ?? 0
+
+  var tick_delay = parameter.tick_delay ?? 5
+  var fluid_collisions = parameter.fluid_collisions
+
+  if (fluid_collisions == undefined) {
+    if (id == "phantasia:water") {
+        fluid_collisions = [{ id: "phantasia:stone", liquid_id: "phantasia:lava" }]
+    } else if (id == "phantasia:lava") {
+        fluid_collisions = [{ id: "phantasia:stone", liquid_id: "phantasia:water" }]
+    } else {
+        fluid_collisions = []
+    }
+    parameter.fluid_collisions = fluid_collisions
+    parameter.tick_delay = tick_delay
+  }
+
+  if (level <= 0) {
+    tile_place(undefined, x, y, z)
+    return
+  }
+
+  var flowed = false
+  var new_positions = []
+
+  var solid_down = tile_get(x, y + 1, CHUNK_DEPTH.DEFAULT)
+
+  if (solid_down == undefined) {
+    var tile_down = tile_get(x, y + 1, z)
+
+    if (tile_down == undefined) {
+        var new_tile = new Tile(id)
+        new_tile.variable.level = level
+        new_tile.variable.flow_direction = flow_direction
+        tile_place(new_tile, x, y + 1, z)
+        tile_place(undefined, x, y, z)
+        array_push(new_positions, { x: x, y: y + 1, z: z })
+        flowed = true
+        level = 0
+    } else if (tile_down.id == id) {
+        var level_down = tile_down.variable.level ?? 0
+        var space_down = 8 - level_down
+
+        if (space_down > 0) {
+            var transfer = min(level, space_down)
+            level -= transfer
+            tile_down.variable.level = level_down + transfer
+
+            if (level <= 0) {
+                tile_place(undefined, x, y, z)
+            } else {
+                tile.variable.level = level
+            }
+
+            array_push(new_positions, { x: x, y: y + 1, z: z })
+            flowed = true
+        }
+    } else {
+        var interaction = undefined
+        for (var k = 0; k < array_length(fluid_collisions); k++) {
+            if (fluid_collisions[k].liquid_id == tile_down.id) {
+                interaction = fluid_collisions[k].id
+                break
+            }
+        }
+
+        if (interaction != undefined) {
+            tile_place(new Tile(interaction), x, y + 1, z)
+            flowed = false
+        }
+    }
+  }
+
+  if (!flowed && level > 0) {
+    var diag_dirs = (irandom(1) == 0) ? [-1, 1] : [1, -1]
+
+    for (var i = 0; i < 2; i++) {
+        var dx = diag_dirs[i]
+        var diag_x = x + dx
+        var diag_y = y + 1
+
+        var solid_side = tile_get(diag_x, y, CHUNK_DEPTH.DEFAULT)
+        var solid_diag = tile_get(diag_x, diag_y, CHUNK_DEPTH.DEFAULT)
+
+        if (solid_side == undefined && solid_diag == undefined) {
+            var tile_diag = tile_get(diag_x, diag_y, z)
+
+            if (tile_diag == undefined) {
+                var new_tile = new Tile(id)
+                new_tile.variable.level = level
+                new_tile.variable.flow_direction = dx
+                tile_place(new_tile, diag_x, diag_y, z)
+                tile_place(undefined, x, y, z)
+                array_push(new_positions, { x: diag_x, y: diag_y, z: z })
+                flowed = true
+                level = 0
+                break
+            } else if (tile_diag.id == id) {
+                var level_diag = tile_diag.variable.level ?? 0
+                var space_diag = 8 - level_diag
+
+                if (space_diag > 0) {
+                    var transfer = min(level, space_diag)
+                    level -= transfer
+                    tile_diag.variable.level = level_diag + transfer
+                    tile.variable.level = level
+
+                    if (level <= 0) {
+                        tile_place(undefined, x, y, z)
+                    }
+
+                    array_push(new_positions, { x: diag_x, y: diag_y, z: z })
+                    flowed = true
+                    break
+                }
+            } else {
+                var interaction = undefined
+                for (var k = 0; k < array_length(fluid_collisions); k++) {
+                    if (fluid_collisions[k].liquid_id == tile_diag.id) {
+                        interaction = fluid_collisions[k].id
+                        break
+                    }
+                }
+
+                if (interaction != undefined) {
+                    tile_place(new Tile(interaction), diag_x, diag_y, z)
+                }
+            }
+        }
+    }
+  }
+
+  if (!flowed && level > 0) {
+    var dirs = (flow_direction != 0) ? [flow_direction] : ((irandom(1) == 0) ? [1, -1] : [-1, 1])
+    var blocked = true
+
+    for (var i = 0; i < array_length(dirs); i++) {
+        var dx = dirs[i]
+        var tx = x + dx
+
+        var solid_target = tile_get(tx, y, CHUNK_DEPTH.DEFAULT)
+
+        if (solid_target == undefined) {
+            var target = tile_get(tx, y, z)
+            var can_flow = false
+            var target_level = 0
+
+            if (target == undefined) {
+                can_flow = true
+            } else if (target.id == id) {
+                target_level = target.variable.level ?? 0
+                if (target_level < level - 1) {
+                    can_flow = true
+                }
+            } else {
+                var interaction = undefined
+                for (var k = 0; k < array_length(fluid_collisions); k++) {
+                    if (fluid_collisions[k].liquid_id == target.id) {
+                        interaction = fluid_collisions[k].id
+                        break
+                    }
+                }
+
+                if (interaction != undefined) {
+                    tile_place(new Tile(interaction), tx, y, z)
+                    blocked = true
+                    continue
+                }
+            }
+
+            if (can_flow) {
+                blocked = false
+                var total = level + target_level
+                var new_level_target = floor(total / 2)
+                var transfer = new_level_target - target_level
+
+                if (transfer > 0) {
+                    level -= transfer
+                    tile.variable.level = level
+                    if (level > 0) tile.variable.flow_direction = dx
+
+                    if (target == undefined) {
+                        target = new Tile(id)
+                        tile_place(target, tx, y, z)
+                    }
+
+                    target.variable.level = target_level + transfer
+                    target.variable.flow_direction = dx
+
+                    array_push(new_positions, { x: tx, y: y, z: z })
+                    flowed = true
+
+                    if (level <= 0) {
+                        tile_place(undefined, x, y, z)
+                    }
+                }
+                break
+            }
+        }
+    }
+
+    if (blocked && level > 0) {
+        if (flow_direction != 0) {
+            tile.variable.flow_direction = -flow_direction
+        }
+    }
+  }
+
+  import schedule from "./flow_schedule"
+  for (var i = 0; i < array_length(new_positions); i++) {
+    var pos = new_positions[i]
+    schedule(parameter, pos.x, pos.y, pos.z)
+  }
+
+  if (level > 0) {
+    schedule(parameter, x, y, z)
+  }
+}
+
+if (parameter != undefined && x != undefined) {
+  flow(parameter, x, y, z)
+}

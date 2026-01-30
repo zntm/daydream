@@ -43,6 +43,85 @@ function file_save_world_chunk(_world_save_data, _chunk)
         var _chunk_count = _chunk.chunk_count;
         var _chunk_covered = _chunk.chunk_covered;
         
+        // Build Palette
+        var _palette_map = {}
+        var _palette_array = [];
+        var _palette_index = 0;
+        
+        var _collect_id = function(_id, _map, _array, _index_ref)
+        {
+            if (!struct_exists(_map, _id))
+            {
+                _map[$ _id] = _index_ref[0]++;
+                array_push(_array, _id);
+            }
+        }
+        
+        var _index_ref = [_palette_index]; // Use array as reference for index
+        
+        var _collect_inventory_ids = function(_inventory, _length, _item_data, _map, _array, _index_ref, _self_func)
+        {
+            for (var k = 0; k < _length; ++k)
+            {
+                var _item = _inventory[k];
+                if (_item == INVENTORY_EMPTY) continue;
+                
+                var _iid = _item.get_id();
+                if (!struct_exists(_map, _iid))
+                {
+                    _map[$ _iid] = _index_ref[0]++;
+                    array_push(_array, _iid);
+                }
+                
+                var _idata = _item_data[$ _iid];
+                var _ilen = _idata.get_item_inventory_length();
+                if (_ilen > 0)
+                {
+                    _self_func(_item.get_inventory(), _ilen, _item_data, _map, _array, _index_ref, _self_func);
+                }
+            }
+        }
+        
+        for (var i = 0; i < CHUNK_DEPTH; ++i)
+        {
+            if !(_chunk_display & (1 << i)) continue;
+            
+            for (var j = 0; j < CHUNK_SIZE; ++j)
+            {
+                for (var l = 0; l < CHUNK_SIZE; ++l)
+                {
+                    var _tile = _chunk2[tile_index_xyz(l, j, i)];
+                    
+                    if (_tile != TILE_EMPTY)
+                    {
+                        var _id = _tile.get_id();
+                        _collect_id(_id, _palette_map, _palette_array, _index_ref);
+                        
+                        var _tdata = _item_data[$ _id];
+                        var _tlen = _tdata.get_tile_inventory_length();
+                        
+                        if (_tlen > 0)
+                        {
+                            var _inventory = _tile.get_inventory();
+                            if (!is_string(_inventory)) // Not a loot table string
+                            {
+                                _collect_inventory_ids(_inventory, _tlen, _item_data, _palette_map, _palette_array, _index_ref, _collect_inventory_ids);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        _palette_index = _index_ref[0];
+        
+        // Write Palette
+        buffer_write(_current_chunk_buffer, buffer_u16, _palette_index);
+        
+        for (var i = 0; i < _palette_index; ++i)
+        {
+            buffer_write(_current_chunk_buffer, buffer_string, _palette_array[i]);
+        }
+        
         for (var i = 0; i < CHUNK_SIZE; ++i)
         {
             buffer_write(_current_chunk_buffer, buffer_u16, _chunk_covered[i]);
@@ -59,7 +138,7 @@ function file_save_world_chunk(_world_save_data, _chunk)
                 for (var l = 0; l < CHUNK_SIZE; ++l)
                 {
                     var _tile = _chunk2[tile_index_xyz(l, j, i)];
-                    file_save_snippet_tile(_current_chunk_buffer, _tile, _item_data);
+                    file_save_snippet_tile(_current_chunk_buffer, _tile, _item_data, _palette_map);
                     
                     if (_tile != TILE_EMPTY)
                     {
@@ -192,16 +271,16 @@ function file_save_world_chunk(_world_save_data, _chunk)
         if (i == _current_chunk_index)
         {
             // CASE A: This is the chunk we are saving RIGHT NOW.
-            var _len = buffer_tell(_current_chunk_buffer);
+            var _length = buffer_tell(_current_chunk_buffer);
             
             // Write Header
             buffer_write(_new_region_buffer, buffer_u32, _write_offset);
-            buffer_write(_new_region_buffer, buffer_u32, _len);
+            buffer_write(_new_region_buffer, buffer_u32, _length);
             
             // Copy data to end of new buffer
-            buffer_copy(_current_chunk_buffer, 0, _len, _new_region_buffer, _write_offset);
+            buffer_copy(_current_chunk_buffer, 0, _length, _new_region_buffer, _write_offset);
             
-            _write_offset += _len;
+            _write_offset += _length;
         }
         else
         {
@@ -211,17 +290,17 @@ function file_save_world_chunk(_world_save_data, _chunk)
             if (_old_region_buffer != -1 && buffer_get_size(_old_region_buffer) >= 512)
             {
                 var _off = buffer_peek(_old_region_buffer, i*8, buffer_u32);
-                var _len = buffer_peek(_old_region_buffer, i*8+4, buffer_u32);
+                var _length = buffer_peek(_old_region_buffer, i*8+4, buffer_u32);
                 
                 // Validate offset/len
                 // Note: Only strictly valid New Format entries are copied. 
                 // Any garbage data or "Old Format" blobs are ignored/discarded as per user request.
-                if (_len > 0 && _off >= 512 && (_off + _len <= buffer_get_size(_old_region_buffer)))
+                if (_length > 0 && _off >= 512 && (_off + _length <= buffer_get_size(_old_region_buffer)))
                 {
                     buffer_write(_new_region_buffer, buffer_u32, _write_offset);
-                    buffer_write(_new_region_buffer, buffer_u32, _len);
-                    buffer_copy(_old_region_buffer, _off, _len, _new_region_buffer, _write_offset);
-                    _write_offset += _len;
+                    buffer_write(_new_region_buffer, buffer_u32, _length);
+                    buffer_copy(_old_region_buffer, _off, _length, _new_region_buffer, _write_offset);
+                    _write_offset += _length;
                     _copied = true;
                 }
             }

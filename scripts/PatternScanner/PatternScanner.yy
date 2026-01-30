@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"PatternScanner",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"PatternScanner",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

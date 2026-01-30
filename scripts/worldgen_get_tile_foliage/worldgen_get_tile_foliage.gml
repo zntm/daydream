@@ -1,38 +1,29 @@
-function worldgen_get_tile_foliage(_x, _y, _surface_biome, _cave_biome, _top_tile, _surface_height, _seed)
+function worldgen_get_tile_foliage(_x, _y, _surface_biome, _cave_biome, _top_tile, _surface_height, _seed, _biome_data = global.biome_data)
 {
     var _biome_id = _cave_biome;
+    if (_biome_id == undefined) _biome_id = _surface_biome;
     
-    // Fallback to surface biome ONLY if we are above the surface height (i.e. not underground)
-    if (_biome_id == undefined)
+    if (_biome_id == undefined) return TILE_EMPTY;
+
+    var _foliage = _biome_data[$ _biome_id];
+    
+    // Safety check
+    if (_foliage == undefined) return TILE_EMPTY;
+    
+    // Check for MaterialProvider-based foliage
+    var _provider = _foliage.get_tile_foliage();
+    
+    if (_provider != undefined)
     {
-        if (_y <= _surface_height)
-        {
-            _biome_id = _surface_biome;
+        var _noise = open_simplex_noise(_x * 0.1, _y * 0.1 + (_seed * 200), 1.0, 1);
+        var _context = {
+            x: _x, y: _y, surface_height: _surface_height, noise: _noise, top_tile: _top_tile,
+            cave_above: true,
+            air_above: 1,
+            cave_biome: _cave_biome
         }
-        else
-        {
-            // Underground but no cave biome? Don't generate anything (prevents trees in caves)
-            return TILE_EMPTY;
-        }
+        return _provider.get_tile(_context);
     }
 
-    var _foliage = global.biome_data[$ _biome_id];
-    var _foliage_length = _foliage.get_tile_middle_layer_foliage_length();
-    
-    for (var i = 0; i < _foliage_length; ++i)
-    {
-        var _tile = _foliage.get_tile_middle_layer_foliage(i);
-        
-        if (chance_seeded(_tile.chance, _seed * ((_x ^ _y) + (i * 859))))
-        {
-            var _generate_on = _tile.generate_on;
-            
-            if (_generate_on == undefined) || (array_contains(_generate_on, _top_tile))
-            {
-                return _tile.id;
-            }
-        }
-    }
-    
     return TILE_EMPTY;
 }

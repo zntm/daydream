@@ -1,64 +1,36 @@
-function worldgen_get_cave(_x, _y, _surface_height, _cave_start, _seed, _world_data = global.world_data[$ global.world_save_data.dimension])
+function worldgen_get_cave(_x, _y, _surface_height, _cave_seed, _seed, _world_data = global.world_data[$ global.world_save_data.dimension], _cave_density_modifier = 1.0, _squash = 1.0)
 {
-    // Surface breach zone: allow caves to occasionally breach the surface
-    var _depth_from_surface = _y - _surface_height;
+    var _depth = _y - _surface_height;
+    if (_depth < 5) return false;
     
-    // Above surface - check for surface breach openings
-    if (_depth_from_surface < 0)
+    var _systems = _world_data.get_cave_systems();
+    var _count = _world_data.get_cave_systems_length();
+    
+    for (var i = 0; i < _count; ++i)
     {
-        // Only allow breaches within a reasonable range above surface (8 tiles)
-        if (_depth_from_surface > _world_data.get_cave_breach_depth())
-        {
-            // Use separate noise for surface breaching (low frequency, rare occurrence)
-            var _breach_noise = open_simplex_noise(_x * _world_data.get_cave_breach_noise_scale_x(), _surface_height * _world_data.get_cave_breach_noise_scale_y() + _world_data.get_cave_breach_noise_offset_y(), _world_data.get_cave_breach_noise_range(), _world_data.get_cave_breach_noise_octaves());
-            
-            // ~5% chance of surface breach (threshold ~242 out of 255)
-            if (_breach_noise > _world_data.get_cave_breach_threshold())
-            {
-                // Check if there's an actual cave below to connect to
-                var _cave_below = worldgen_get_cave(_x, _surface_height + 2, _surface_height, _cave_start, _seed, _world_data);
-                if (_cave_below)
-                {
-                    return true; // This is a surface breach opening
-                }
-            }
-        }
-        return true; // Above surface, no block (sky)
-    }
-    
-    // Calculate depth smoothing factor using spline interpolation
-    // Factor ranges from 0 (near surface) to 1 (at full depth)
-    var _depth_smoothing = _world_data.get_cave_depth_smoothing();
-    var _depth_factor = spline_evaluate(_depth_smoothing, _depth_from_surface);
-    
-    // If depth factor is 0, no caves at this depth
-    if (_depth_factor <= 0)
-    {
-        return false;
-    }
-    
-    var _system = _world_data.get_cave_system();
-    var _system_length = _world_data.get_cave_system_length();
-    
-    var _x_noise = _x * _world_data.get_cave_noise_scale();
-    var _y_noise = _y * _world_data.get_cave_noise_scale();
-    
-    for (var i = 0; i < _system_length; ++i)
-    {
-        var _ = _system[i];
+        var _sys = _systems[i];
         
-        var _octaves = _.threshold.octaves;
+        // Check depth range
+        if (_depth < _sys.range_min || _depth > _sys.range_max) continue;
         
-        var _noise = open_simplex_noise(_x_noise, _y_noise + ((0xffff * (i + 1)) + 8), 0xff, _octaves);
+        // Check noise
+        var _noise_conf = _sys.threshold;
+        var _scale = 0.02; // Default scale per system? or hardcoded? Using default for now
         
-        // Apply depth smoothing: shrink the valid range near surface
-        // This makes caves smaller/rarer near surface and larger/more common deeper
-        var _range_center = (_.range_min + _.range_max) / 2;
-        var _range_half = ((_.range_max - _.range_min) / 2) * _depth_factor;
-        var _smoothed_min = _range_center - _range_half;
-        var _smoothed_max = _range_center + _range_half;
+        // Note: Noise object in worlds.ts has {octaves, range_min, range_max}. 
+        // We use it as a threshold rule here: if noise > threshold, it's a cave.
+        // Actually, the user object is `WorldCaveSystem(rangeMin, rangeMax, threshold: Noise)`.
+        // Let's assume threshold.range_min is the cutoff value (0-255 usually, need to normalize).
         
-        if (_noise >= _smoothed_min) && (_noise < _smoothed_max)
+        var _threshold_val = (_noise_conf.range_min / 255.0) / _cave_density_modifier;
+        
+        // Generate noise value with squash applied to Y
+        var _n = open_simplex_noise(_x * _scale, (_y * _squash) * _scale, _seed, _noise_conf.octaves);
+        
+        // Normalize noise -1..1 to 0..1
+        var _n_norm = (_n + 1) * 0.5;
+        
+        if (_n_norm > _threshold_val)
         {
             return true;
         }

@@ -157,7 +157,10 @@ function init_assets(_directory, _namespace, _folder = "")
                     var _yoffset = _data[$ "yoffset"] ?? 0;
                     var _length  = _data[$ "length"]  ?? 1;
                     
-                    var _sprite = sprite_add($"{_directory}/{_file2}/{_sprite_file}", _length, false, false, _xoffset, _yoffset);
+                    var _full_path = $"{_directory}/{_file2}/{_sprite_file}";
+                    show_debug_message($"[init_assets] Loading sprite: {_full_path} (length: {_length})");
+                    
+                    var _sprite = sprite_add(_full_path, _length, false, false, _xoffset, _yoffset);
                     
                     var _asset = new SpriteAsset(_sprite, _xoffset, _yoffset, sprite_get_width(_sprite), sprite_get_height(_sprite), _length);
                     
@@ -172,7 +175,10 @@ function init_assets(_directory, _namespace, _folder = "")
                 var _yoffset = _json[$ "yoffset"] ?? 0;
                 var _length  = _json[$ "length"]  ?? 1;
                 
-                var _sprite = sprite_add($"{_directory}/{string_delete(_file, string_length(_file) - 4, 5)}", _length, false, false, _xoffset, _yoffset);
+                var _full_path = $"{_directory}/{string_delete(_file, string_length(_file) - 4, 5)}";
+                show_debug_message($"[init_assets] Loading sprite (single): {_full_path} (length: {_length})");
+                
+                var _sprite = sprite_add(_full_path, _length, false, false, _xoffset, _yoffset);
                 
                 var _asset = new SpriteAsset(_sprite, _xoffset, _yoffset, sprite_get_width(_sprite), sprite_get_height(_sprite), _length);
                 

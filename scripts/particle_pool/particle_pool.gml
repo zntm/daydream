@@ -89,11 +89,11 @@ function ParticlePool() : Pool() constructor
         
         if (has_collision[_index])
         {
-            var _coll_idx = array_get_index(collision_indices, _index);
+            var _coll_index = array_get_index(collision_indices, _index);
             
-            if (_coll_idx >= 0)
+            if (_coll_index >= 0)
             {
-                array_delete(collision_indices, _coll_idx, 1);
+                array_delete(collision_indices, _coll_index, 1);
                 
                 --collision_count;
             }
