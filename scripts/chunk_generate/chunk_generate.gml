@@ -97,10 +97,10 @@ function chunk_generate(_chunk)
     
     // Check if _chunk.chunk is empty (above surface and no structures)
     // ALSO check if _chunk.chunk is in sky biome zone - don't skip those
-    var _sky_threshold = _world_data.get_sky_biome_threshold();
-    var _in_sky_zone = (_chunk.chunk_ystart <= _sky_threshold) && _world_data.is_sky_biome_enabled();
+    // var _sky_threshold = _world_data.get_sky_biome_threshold();
+    // var _in_sky_zone = (_chunk.chunk_ystart <= _sky_threshold) && _world_data.is_sky_biome_enabled();
     
-    if (_structure_rectangle_length <= 0) && (_surface_height_max > _chunk.chunk_ystart + CHUNK_SIZE - 1) && (!_in_sky_zone) exit;
+    if (_structure_rectangle_length <= 0) && (_surface_height_max > _chunk.chunk_ystart + CHUNK_SIZE - 1) /*&& (!_in_sky_zone)*/ exit;
     
     // Sort and Push structures to _chunk.chunk
     if (_structure_rectangle_length > 0)
@@ -208,7 +208,6 @@ function chunk_generate(_chunk)
             // Calculate cave biome parameters at this depth
             var _heat_cave = worldgen_get_cave_heat(_world_x, _world_y, _world_seed, _world_data);
             var _humidity_cave = worldgen_get_cave_humidity(_world_x, _world_y, _world_seed, _world_data);
-
             
             var _inst_y = _world_y * TILE_SIZE;
             
@@ -217,7 +216,7 @@ function chunk_generate(_chunk)
             var _cave_biome = undefined;
             var _biome_data = global.biome_data[$ _surface_biome];
             var _sea_level = _world_data.get_surface_start();  // Use world surface start as sea level
-            
+            /*
             // Sky biome generation: check if this position is part of a sky biome
             var _sky_biome_threshold = _world_data.get_sky_biome_threshold();
             if !(_skip_z & (1 << CHUNK_DEPTH_DEFAULT)) && (_world_y <= _sky_biome_threshold) && _world_data.is_sky_biome_enabled()
@@ -278,7 +277,7 @@ function chunk_generate(_chunk)
                     }
                 }
             }
-            
+            */
             // Ocean water fill: if above terrain but below sea level in ocean biome
             if (_world_y < _surface_height) && (_world_y >= _sea_level) && (_biome_data.is_ocean())
             {
