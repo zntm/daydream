@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"worldgen_get_cave_humidity",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"worldgen_get_cave_humidity",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

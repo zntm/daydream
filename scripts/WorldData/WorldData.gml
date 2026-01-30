@@ -30,6 +30,36 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
     ___bedrock_noise_scale = 0.3;
     ___tile_variation_noise_scale = 0.05;
     
+    // RESTORED: Surface Noise Offset aliases
+    // These maps to the new 1D surface noise
+    ___surface_seed_offset = 0;
+    
+    // RESTORED: Cave System Legacy
+    // The old system used a singular 'cave_system' array in some contexts or simpler noise
+    ___cave_depth_smoothing = undefined; // Will need a spline
+    ___cave_breach_depth = 8;
+    ___cave_breach_threshold = 242; // ~5%
+    ___cave_breach_noise = {
+        scale_x: 0.02,
+        scale_y: 0.04,
+        offset_y: 0,
+        range: 255,
+        octaves: 2
+    };
+    
+    // RESTORED: Sky Biome Defaults
+    ___sky_biome_enabled = true;
+    ___sky_biome_id = "phantasia:sky";
+    ___sky_biome_threshold = 200; // Height threshold
+    ___sky_island_spacing = 64;
+    ___sky_island_radius = 16;
+    ___sky_island_thickness = 8;
+    ___sky_noise = {
+        region: { scale: 0.01, range: 255, octaves: 2, threshold: 128, offset_y: 0 },
+        edge: { scale: 0.05, amplitude: 10, octaves: 2 },
+        detail: { scale: 0.1, amplitude: 4, octaves: 3 }
+    };
+    
     // NEW: 1D Surface Height Noise
     ___surface_noise_offset_octaves = 4;
     ___surface_noise_offset_range_min = 40;
@@ -467,6 +497,66 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
     static get_worldgen_cave_density_spline = function() { return ___worldgen_cave_density_spline; }
     static get_worldgen_cave_smoothness_spline = function() { return ___worldgen_cave_smoothness_spline; }
     static get_worldgen_region_height_scale = function() { return ___worldgen_region_height_scale; }
+    
+    // =========================================================================
+    // RESTORED API FOR OLD WORLDGEN SCRIPTS
+    // =========================================================================
+    
+    static get_surface_noise_offset_max = function() { return ___surface_noise_offset_range_max; }
+    static get_surface_noise_offset_min = function() { return ___surface_noise_offset_range_min; }
+    static get_surface_noise_offset_octaves = function() { return ___surface_noise_offset_octaves; }
+    static get_surface_seed_offset = function() { return ___surface_seed_offset; }
+    static get_surface_min_depth = function() { return 5; } // Default value as it was missing
+    
+    // Cave System Compatibility
+    static get_cave_system = function() { return ___cave_systems; } // Old script uses plural logic but calls it singular? Or checks individual systems
+    static get_cave_system_length = function() { return ___cave_systems_length; }
+    static get_cave_noise_scale = function() { return 0.02; } // Default hardcoded in WorldGen?
+    
+    static get_cave_depth_smoothing = function() { 
+        if (___cave_depth_smoothing == undefined) {
+             // Create default linear spline 0->1 if missing (Array of structs for spline_evaluate)
+             ___cave_depth_smoothing = [
+                { position: 0, value: 0 },
+                { position: 32, value: 1 }
+             ];
+        }
+        return ___cave_depth_smoothing; 
+    }
+    
+    static get_cave_breach_depth = function() { return ___cave_breach_depth; }
+    static get_cave_breach_threshold = function() { return ___cave_breach_threshold; }
+    
+    static get_cave_breach_noise_scale_x = function() { return ___cave_breach_noise.scale_x; }
+    static get_cave_breach_noise_scale_y = function() { return ___cave_breach_noise.scale_y; }
+    static get_cave_breach_noise_offset_y = function() { return ___cave_breach_noise.offset_y; }
+    static get_cave_breach_noise_range = function() { return ___cave_breach_noise.range; }
+    static get_cave_breach_noise_octaves = function() { return ___cave_breach_noise.octaves; }
+    
+    static get_cave_humidity_octaves_offset = function() { return 0; }
+    
+    // Sky Biome
+    static is_sky_biome_enabled = function() { return ___sky_biome_enabled; }
+    static get_sky_biome_id = function() { return ___sky_biome_id; }
+    static get_sky_biome_threshold = function() { return ___sky_biome_threshold; }
+    
+    static get_sky_island_spacing = function() { return ___sky_island_spacing; }
+    static get_sky_island_radius = function() { return ___sky_island_radius; }
+    static get_sky_island_thickness = function() { return ___sky_island_thickness; }
+    
+    static get_sky_noise_scale_region = function() { return ___sky_noise.region.scale; }
+    static get_sky_region_offset_y = function() { return ___sky_noise.region.offset_y; }
+    static get_sky_region_range = function() { return ___sky_noise.region.range; }
+    static get_sky_region_octaves = function() { return ___sky_noise.region.octaves; }
+    static get_sky_region_threshold = function() { return ___sky_noise.region.threshold; }
+    
+    static get_sky_noise_scale_edge = function() { return ___sky_noise.edge.scale; }
+    static get_sky_edge_noise_amplitude = function() { return ___sky_noise.edge.amplitude; }
+    static get_sky_edge_noise_octaves = function() { return ___sky_noise.edge.octaves; }
+    
+    static get_sky_noise_scale_detail = function() { return ___sky_noise.detail.scale; }
+    static get_sky_detail_noise_amplitude = function() { return ___sky_noise.detail.amplitude; }
+    static get_sky_detail_noise_octaves = function() { return ___sky_noise.detail.octaves; }
     
     /// @desc Set surface config (new 1D heightmap system)
     static set_surface = function(_config)

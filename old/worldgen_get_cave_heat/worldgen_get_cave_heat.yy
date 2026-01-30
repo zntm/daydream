@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"worldgen_get_cave_heat",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"worldgen_get_cave_heat",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
