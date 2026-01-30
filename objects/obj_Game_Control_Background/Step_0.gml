@@ -7,7 +7,7 @@ var _in_biome = bg_get_biome(round(obj_Player.x / TILE_SIZE), clamp(round(obj_Pl
 var _in_biome_data = _biome_data[$ in_biome];
 var _in_biome_transition_data = _biome_data[$ _in_biome];
 
-#macro BACKGROUND_MUSIC_FADE_TIME (1000 * 8)
+#macro BACKGROUND_MUSIC_FADE_TIME (1000 * 0.3)
 
 if !(obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.PAUSE)
 {
