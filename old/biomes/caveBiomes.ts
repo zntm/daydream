@@ -8,6 +8,8 @@ import {
     BiomeFoliage,
     BiomeSkyColor,
     BiomeStructure,
+    MaterialProvider,
+    RuleDepth,
 } from "../biomes";
 
 export default [
@@ -30,21 +32,18 @@ export default [
                 night: "#141B35",
             },
             {
-                top_layer: {
-                    base: "phantasia:stone",
-                    noise: "phantasia:stone_wall",
-                    noise_range: [0, 204],
-                },
-                middle_layer: {
-                    base: "phantasia:stone",
-                    noise: "phantasia:stone_wall",
-                    noise_range: [0, 204],
-                },
-                bottom_layer: {
-                    base: "phantasia:stone",
-                    noise: "phantasia:stone_wall",
-                    noise_range: [0, 204],
-                },
+                top_layer: new MaterialProvider()
+                    .addItem("phantasia:stone")
+                    .addItemNoise("phantasia:stone_wall", 0, 204)
+                    .setDefault("phantasia:stone"),
+                middle_layer: new MaterialProvider()
+                    .addItem("phantasia:stone")
+                    .addItemNoise("phantasia:stone_wall", 0, 204)
+                    .setDefault("phantasia:stone"),
+                bottom_layer: new MaterialProvider()
+                    .addItem("phantasia:stone")
+                    .addItemNoise("phantasia:stone_wall", 0, 204)
+                    .setDefault("phantasia:stone"),
             },
         )
             .setMusic([
@@ -97,21 +96,18 @@ export default [
                 night: "#141B35",
             },
             {
-                top_layer: {
-                    base: "phantasia:nightrock",
-                    noise: "phantasia:nightrock_wall",
-                    noise_range: [0, 204],
-                },
-                middle_layer: {
-                    base: "phantasia:nightrock",
-                    noise: "phantasia:nightrock_wall",
-                    noise_range: [0, 204],
-                },
-                bottom_layer: {
-                    base: "phantasia:nightrock",
-                    noise: "phantasia:nightrock_wall",
-                    noise_range: [0, 204],
-                },
+                top_layer: new MaterialProvider()
+                    .addItem("phantasia:nightrock")
+                    .addItemNoise("phantasia:nightrock_wall", 0, 204)
+                    .setDefault("phantasia:nightrock"),
+                middle_layer: new MaterialProvider()
+                    .addItem("phantasia:nightrock")
+                    .addItemNoise("phantasia:nightrock_wall", 0, 204)
+                    .setDefault("phantasia:nightrock"),
+                bottom_layer: new MaterialProvider()
+                    .addItem("phantasia:nightrock")
+                    .addItemNoise("phantasia:nightrock_wall", 0, 204)
+                    .setDefault("phantasia:nightrock"),
             },
         )
             .setMusic([

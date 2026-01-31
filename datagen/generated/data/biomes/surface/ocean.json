@@ -52,49 +52,40 @@
     },
     "tile": {
         "top_layer": {
-            "items": [
-                {
-                    "id": "phantasia:sand",
-                    "rules": []
-                },
-                {
-                    "id": "phantasia:sandstone_wall",
-                    "rules": [],
-                    "noise_min": 0,
-                    "noise_max": 204
-                }
-            ],
-            "default_id": "phantasia:sand"
+            "base": {
+                "id": "phantasia:sand"
+            },
+            "noise": {
+                "id": "phantasia:sandstone_wall"
+            },
+            "noise_range": [
+                0,
+                204
+            ]
         },
         "middle_layer": {
-            "items": [
-                {
-                    "id": "phantasia:gravel",
-                    "rules": []
-                },
-                {
-                    "id": "phantasia:stone_wall",
-                    "rules": [],
-                    "noise_min": 0,
-                    "noise_max": 204
-                }
-            ],
-            "default_id": "phantasia:gravel"
+            "base": {
+                "id": "phantasia:sand"
+            },
+            "noise": {
+                "id": "phantasia:sandstone_wall"
+            },
+            "noise_range": [
+                0,
+                204
+            ]
         },
         "bottom_layer": {
-            "items": [
-                {
-                    "id": "phantasia:stone",
-                    "rules": []
-                },
-                {
-                    "id": "phantasia:stone_wall",
-                    "rules": [],
-                    "noise_min": 0,
-                    "noise_max": 204
-                }
-            ],
-            "default_id": "phantasia:stone"
+            "base": {
+                "id": "phantasia:sandstone"
+            },
+            "noise": {
+                "id": "phantasia:sandstone_wall"
+            },
+            "noise_range": [
+                0,
+                204
+            ]
         }
     }
 }

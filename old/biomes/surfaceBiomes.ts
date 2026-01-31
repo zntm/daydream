@@ -10,6 +10,13 @@ import {
     BiomeSkyColor,
     BiomeStructure,
     BiomeTerrainModifier,
+    MaterialProvider,
+    RuleDepth,
+    RuleAirAbove,
+    RuleSolidAbove,
+    RuleAdjacent,
+    RuleNotAdjacent,
+    RuleCaveBiome,
 } from "../biomes";
 
 export default [
@@ -32,21 +39,18 @@ export default [
                 night: "#141B35",
             },
             {
-                top_layer: {
-                    base: "phantasia:sand",
-                    noise: "phantasia:sandstone_wall",
-                    noise_range: [0, 204],
-                },
-                middle_layer: {
-                    base: "phantasia:sand",
-                    noise: "phantasia:sandstone_wall",
-                    noise_range: [0, 204],
-                },
-                bottom_layer: {
-                    base: "phantasia:sandstone",
-                    noise: "phantasia:sandstone_wall",
-                    noise_range: [0, 153],
-                },
+                top_layer: new MaterialProvider()
+                    .addItem("phantasia:sand")
+                    .addItemNoise("phantasia:sandstone_wall", 0, 204) // Weighted logic: 4/5 = 80% = ~204/255
+                    .setDefault("phantasia:sand"),
+                middle_layer: new MaterialProvider()
+                    .addItem("phantasia:sand")
+                    .addItemNoise("phantasia:sandstone_wall", 0, 204)
+                    .setDefault("phantasia:sand"),
+                bottom_layer: new MaterialProvider()
+                    .addItem("phantasia:sandstone")
+                    .addItemNoise("phantasia:sandstone_wall", 0, 153) // Weighted logic: 3/5 = 60% = ~153/255
+                    .setDefault("phantasia:sandstone"),
             },
         )
             .setTerrainModifier(new BiomeTerrainModifier(8)
@@ -115,21 +119,19 @@ export default [
                 night: "#141B35",
             },
             {
-                top_layer: {
-                    base: ["phantasia:grass_block", "phantasia:dirt"],
-                    noise: "phantasia:dirt_wall",
-                    noise_range: [0, 204],
-                },
-                middle_layer: {
-                    base: "phantasia:dirt",
-                    noise: "phantasia:dirt_wall",
-                    noise_range: [0, 204],
-                },
-                bottom_layer: {
-                    base: "phantasia:stone",
-                    noise: "phantasia:stone_wall",
-                    noise_range: [0, 204],
-                },
+                top_layer: new MaterialProvider()
+                    .addItem("phantasia:grass_block", [new RuleAirAbove(1)])
+                    .addItem("phantasia:dirt") // Fallback if no air above
+                    .addItemNoise("phantasia:dirt_wall", 0, 204)
+                    .setDefault("phantasia:grass_block"),
+                middle_layer: new MaterialProvider()
+                    .addItem("phantasia:dirt")
+                    .addItemNoise("phantasia:dirt_wall", 0, 204)
+                    .setDefault("phantasia:dirt"),
+                bottom_layer: new MaterialProvider()
+                    .addItem("phantasia:stone")
+                    .addItemNoise("phantasia:stone_wall", 0, 204)
+                    .setDefault("phantasia:stone"),
             },
         )
             .setTerrainModifier(new BiomeTerrainModifier(0)
@@ -138,11 +140,11 @@ export default [
                 .setErosionModifier(1.0)
                 .setSquashModifier(1.0)
             )
-            .setShoreTiles({
-                base: "phantasia:sand",
-                noise: "phantasia:sandstone_wall",
-                noise_range: [0, 204],
-            })
+            .setShoreTiles(new MaterialProvider()
+                .addItem("phantasia:sand")
+                .addItemNoise("phantasia:sandstone_wall", 0, 204)
+                .setDefault("phantasia:sand")
+            )
             .setMusic([
                 new Sound("phantasia:music/field_of_concourse", 0.7),
                 new Sound("phantasia:music/liminal", 0.7),
@@ -244,21 +246,19 @@ export default [
                 night: "#141B35",
             },
             {
-                top_layer: {
-                    base: ["phantasia:grass_block_swamp", "phantasia:dirt"],
-                    noise: "phantasia:dirt_wall",
-                    noise_range: [0, 204],
-                },
-                middle_layer: {
-                    base: "phantasia:dirt",
-                    noise: "phantasia:dirt_wall",
-                    noise_range: [0, 204],
-                },
-                bottom_layer: {
-                    base: "phantasia:stone",
-                    noise: "phantasia:stone_wall",
-                    noise_range: [0, 204],
-                },
+                top_layer: new MaterialProvider()
+                    .addItem("phantasia:grass_block_swamp", [new RuleAirAbove(1)])
+                    .addItem("phantasia:dirt")
+                    .addItemNoise("phantasia:dirt_wall", 0, 204)
+                    .setDefault("phantasia:grass_block_swamp"),
+                middle_layer: new MaterialProvider()
+                    .addItem("phantasia:dirt")
+                    .addItemNoise("phantasia:dirt_wall", 0, 204)
+                    .setDefault("phantasia:dirt"),
+                bottom_layer: new MaterialProvider()
+                    .addItem("phantasia:stone")
+                    .addItemNoise("phantasia:stone_wall", 0, 204)
+                    .setDefault("phantasia:stone"),
             },
         )
             .setTerrainModifier(new BiomeTerrainModifier(-12))
@@ -342,21 +342,19 @@ export default [
                 night: "#141B35",
             },
             {
-                top_layer: {
-                    base: ["phantasia:grass_block_taiga", "phantasia:dirt"],
-                    noise: "phantasia:dirt_wall",
-                    noise_range: [0, 204],
-                },
-                middle_layer: {
-                    base: "phantasia:dirt",
-                    noise: "phantasia:dirt_wall",
-                    noise_range: [0, 204],
-                },
-                bottom_layer: {
-                    base: "phantasia:stone",
-                    noise: "phantasia:stone_wall",
-                    noise_range: [0, 204],
-                },
+                top_layer: new MaterialProvider()
+                    .addItem("phantasia:grass_block_taiga", [new RuleAirAbove(1)])
+                    .addItem("phantasia:dirt")
+                    .addItemNoise("phantasia:dirt_wall", 0, 204)
+                    .setDefault("phantasia:grass_block_taiga"),
+                middle_layer: new MaterialProvider()
+                    .addItem("phantasia:dirt")
+                    .addItemNoise("phantasia:dirt_wall", 0, 204)
+                    .setDefault("phantasia:dirt"),
+                bottom_layer: new MaterialProvider()
+                    .addItem("phantasia:stone")
+                    .addItemNoise("phantasia:stone_wall", 0, 204)
+                    .setDefault("phantasia:stone"),
             },
         )
             .setTerrainModifier(new BiomeTerrainModifier(4))
@@ -444,21 +442,18 @@ export default [
                 night: "#141B35",
             },
             {
-                top_layer: {
-                    base: "phantasia:sand",
-                    noise: "phantasia:sandstone_wall",
-                    noise_range: [0, 204],
-                },
-                middle_layer: {
-                    base: "phantasia:sand",
-                    noise: "phantasia:sandstone_wall",
-                    noise_range: [0, 204],
-                },
-                bottom_layer: {
-                    base: "phantasia:sandstone",
-                    noise: "phantasia:sandstone_wall",
-                    noise_range: [0, 204],
-                },
+                top_layer: new MaterialProvider()
+                    .addItem("phantasia:sand")
+                    .addItemNoise("phantasia:sandstone_wall", 0, 204)
+                    .setDefault("phantasia:sand"),
+                middle_layer: new MaterialProvider()
+                    .addItem("phantasia:gravel")
+                    .addItemNoise("phantasia:stone_wall", 0, 204)
+                    .setDefault("phantasia:gravel"),
+                bottom_layer: new MaterialProvider()
+                    .addItem("phantasia:stone")
+                    .addItemNoise("phantasia:stone_wall", 0, 204)
+                    .setDefault("phantasia:stone"),
             },
         )
             .setTerrainModifier(new BiomeTerrainModifier(-80))

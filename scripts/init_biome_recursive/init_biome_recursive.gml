@@ -1,4 +1,5 @@
 global.biome_data = {}
+
 function init_biome_recursive(_directory, _namespace = "phantasia", _id = undefined)
 {
     var _files = file_read_directory(_directory);
@@ -35,19 +36,8 @@ function init_biome_recursive(_directory, _namespace = "phantasia", _id = undefi
         var _music = _json[$ "music"];
         
         if (_music != undefined)
-
         {
             _biome_data.set_music(_music);
-
-
-
-
-
-
-
-
-
-
         }
         
         var _tile = _json.tile;
@@ -68,13 +58,6 @@ function init_biome_recursive(_directory, _namespace = "phantasia", _id = undefi
         
         _biome_data.set_shore_tiles(_json[$ "shore_tiles"]);
         
-
-
-
-
-
-
-
         _biome_data.set_is_skyland(_json[$ "is_skyland"]);
         
         var _name2 = string_delete(_name, string_length(_name) - 4, 5);

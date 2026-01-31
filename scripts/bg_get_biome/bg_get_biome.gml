@@ -21,9 +21,8 @@ function bg_get_biome(_x, _y, _surface_height = undefined)
         }
     }
     
-    // Use Region system for surface biome (consistent with chunk_generate)
-    var _region = global.region_generator.get_region(_x, 0, 0, _seed);
-    var _biome_id = _region.get_surface_biome_id();
+    // Use heat/humidity for surface biome (Region system disabled/missing)
+    var _biome_id = worldgen_get_biome_surface(_x, _y, _surface_height, _seed, _world_data);
     
     // Safety Fallback: Ensure the biome actually exists in the data
     if (global.biome_data[$ _biome_id] == undefined)

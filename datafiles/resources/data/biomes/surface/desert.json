@@ -110,49 +110,28 @@
     },
     "tile": {
         "top_layer": {
-            "items": [
-                {
-                    "id": "phantasia:sand",
-                    "rules": []
-                },
-                {
-                    "id": "phantasia:sandstone_wall",
-                    "rules": [],
-                    "noise_min": 0,
-                    "noise_max": 204
-                }
-            ],
-            "default_id": "phantasia:sand"
+            "base": "phantasia:sand",
+            "noise": "phantasia:sandstone_wall",
+            "noise_range": [
+                0,
+                204
+            ]
         },
         "middle_layer": {
-            "items": [
-                {
-                    "id": "phantasia:sand",
-                    "rules": []
-                },
-                {
-                    "id": "phantasia:sandstone_wall",
-                    "rules": [],
-                    "noise_min": 0,
-                    "noise_max": 204
-                }
-            ],
-            "default_id": "phantasia:sand"
+            "base": "phantasia:sand",
+            "noise": "phantasia:sandstone_wall",
+            "noise_range": [
+                0,
+                204
+            ]
         },
         "bottom_layer": {
-            "items": [
-                {
-                    "id": "phantasia:sandstone",
-                    "rules": []
-                },
-                {
-                    "id": "phantasia:sandstone_wall",
-                    "rules": [],
-                    "noise_min": 0,
-                    "noise_max": 153
-                }
-            ],
-            "default_id": "phantasia:sandstone"
+            "base": "phantasia:sandstone",
+            "noise": "phantasia:sandstone_wall",
+            "noise_range": [
+                0,
+                153
+            ]
         }
     }
 }

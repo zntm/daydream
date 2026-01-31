@@ -82,49 +82,28 @@
     ],
     "tile": {
         "top_layer": {
-            "items": [
-                {
-                    "id": "phantasia:nightrock",
-                    "rules": []
-                },
-                {
-                    "id": "phantasia:nightrock_wall",
-                    "rules": [],
-                    "noise_min": 0,
-                    "noise_max": 204
-                }
-            ],
-            "default_id": "phantasia:nightrock"
+            "base": "phantasia:nightrock",
+            "noise": "phantasia:nightrock_wall",
+            "noise_range": [
+                0,
+                204
+            ]
         },
         "middle_layer": {
-            "items": [
-                {
-                    "id": "phantasia:nightrock",
-                    "rules": []
-                },
-                {
-                    "id": "phantasia:nightrock_wall",
-                    "rules": [],
-                    "noise_min": 0,
-                    "noise_max": 204
-                }
-            ],
-            "default_id": "phantasia:nightrock"
+            "base": "phantasia:nightrock",
+            "noise": "phantasia:nightrock_wall",
+            "noise_range": [
+                0,
+                204
+            ]
         },
         "bottom_layer": {
-            "items": [
-                {
-                    "id": "phantasia:nightrock",
-                    "rules": []
-                },
-                {
-                    "id": "phantasia:nightrock_wall",
-                    "rules": [],
-                    "noise_min": 0,
-                    "noise_max": 204
-                }
-            ],
-            "default_id": "phantasia:nightrock"
+            "base": "phantasia:nightrock",
+            "noise": "phantasia:nightrock_wall",
+            "noise_range": [
+                0,
+                204
+            ]
         }
     }
 }

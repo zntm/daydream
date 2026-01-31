@@ -32,8 +32,7 @@ function tile_predict(_x, _y, _z)
     
     if (_y >= _surface_height)
     {
-        var _region = global.region_generator.get_region(_x, 0, 0, _world_seed);
-        var _surface_biome = _region.get_surface_biome_id();
+        var _surface_biome = worldgen_get_biome_surface(_x, _y, _surface_height, _world_seed, _world_data);
         var _cave_biome = worldgen_get_biome_cave(_x, _y, _surface_height, _world_seed);
         
         if (_z == CHUNK_DEPTH_DEFAULT)
@@ -74,8 +73,7 @@ function tile_predict(_x, _y, _z)
         
         if (_is_cave && !_is_cave_below)
         {
-            var _region2 = global.region_generator.get_region(_x, 0, 0, _world_seed);
-            var _surface_biome = _region2.get_surface_biome_id();
+            var _surface_biome = worldgen_get_biome_surface(_x, _y + 1, _surface_height, _world_seed, _world_data);
             var _cave_biome = worldgen_get_biome_cave(_x, _y + 1, _surface_height, _world_seed);
             
             var _tile_base = worldgen_get_tile_base(_x, _y + 1, _surface_biome, _cave_biome, _surface_height, true, _world_seed);

@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 import { DatagenReturnData, Noise, Spline, SplinePoint, SplineEasing, type SmartValue } from "../../index";
+=======
+import { DatagenReturnData, Noise, type SmartValue } from "../../index";
+>>>>>>> Stashed changes
 
 export class WorldVignette {
     private ystart: number;
@@ -72,6 +76,7 @@ export class WorldCaveBiome {
     }
 }
 
+<<<<<<< Updated upstream
 export class WorldSky {
     private enabled: boolean;
     private id: string;
@@ -130,6 +135,8 @@ export class WorldSky {
     }
 }
 
+=======
+>>>>>>> Stashed changes
 export class WorldBiome {
     private cave: {
         default: WorldCaveBiome[];
@@ -147,8 +154,11 @@ export class WorldBiome {
         offset: Noise;
     };
 
+<<<<<<< Updated upstream
     private sky?: WorldSky;
 
+=======
+>>>>>>> Stashed changes
     constructor(
         defaultCaveBiomes: WorldCaveBiome[],
         caveNoise: Noise,
@@ -160,7 +170,10 @@ export class WorldBiome {
         caveHeat?: Noise,
         caveHumidity?: Noise,
         caveMap?: string,
+<<<<<<< Updated upstream
         sky?: WorldSky,
+=======
+>>>>>>> Stashed changes
     ) {
         this.cave = {
             default: defaultCaveBiomes,
@@ -176,6 +189,7 @@ export class WorldBiome {
             map: surfaceMap,
             offset: surfaceOffset,
         };
+<<<<<<< Updated upstream
         this.sky = sky;
     }
 }
@@ -187,12 +201,15 @@ export class WorldSurfaceSmoothing {
     constructor(range: number = 32, factor: number = 0.6) {
         this.range = range;
         this.factor = factor;
+=======
+>>>>>>> Stashed changes
     }
 }
 
 export class WorldSurface {
     private start: number;
     private noise_offset: Noise;
+<<<<<<< Updated upstream
     private smoothing: WorldSurfaceSmoothing;
     private noise_scale: number;
     private seed_offset?: number;
@@ -227,6 +244,12 @@ export class WorldSurface {
         this.tile_variation_noise_scale = tileVariationNoiseScale;
         this.biome_blend_range = biomeBlendRange;
         this.biome_blend_noise_scale = biomeBlendNoiseScale;
+=======
+
+    constructor(start: number, noiseOffset: Noise) {
+        this.start = start;
+        this.noise_offset = noiseOffset;
+>>>>>>> Stashed changes
     }
 }
 
@@ -242,6 +265,7 @@ export class WorldCaveSystem {
     }
 }
 
+<<<<<<< Updated upstream
 export class WorldAquifer {
     private type: string;           // Liquid tile ID (e.g., "phantasia:water")
     private depth_min: number;      // Min depth from surface
@@ -328,6 +352,15 @@ export class WorldCave {
         this.transition_noise_scale_y = transitionNoiseScaleY;
         this.transition_noise_range = transitionNoiseRange;
         this.transition_noise_octaves = transitionNoiseOctaves;
+=======
+export class WorldCave {
+    start: Noise;
+    system: WorldCaveSystem[];
+
+    constructor(start: Noise, system: WorldCaveSystem[]) {
+        this.start = start;
+        this.system = system;
+>>>>>>> Stashed changes
     }
 }
 
@@ -387,6 +420,10 @@ export default [
                     1200,
                 ),
             ],
+<<<<<<< Updated upstream
+=======
+            // BIOME DATA (Simplified)
+>>>>>>> Stashed changes
             new WorldBiome(
                 [
                     new WorldCaveBiome("phantasia:cave/depths", 768, 1024, {
@@ -398,6 +435,7 @@ export default [
                         ...new Noise(0, 2, 22),
                     }),
                 ],
+<<<<<<< Updated upstream
                 new Noise(4).setScale(0.005).setSplineY(new Spline([
                     new SplinePoint(0, -1, SplineEasing.Linear),
                     new SplinePoint(1024, 1, SplineEasing.Linear),
@@ -431,6 +469,28 @@ export default [
                 new SplinePoint(16, 0.3),                      // 16 blocks deep: 30% cave size
                 new SplinePoint(64, 1),                        // 64 blocks deep: full caves
             ])),
+=======
+                new Noise(4),
+                [],
+                new Noise(4.5), // Heat
+                new Noise(2.75), // Humidity
+                "phantasia:world/playground/map",
+                new Noise(2, 22, 34), // Surface Offset
+                new Noise(4.5),
+                new Noise(2.75),
+                "phantasia:world/playground/map",
+            ),
+            // SURFACE DATA (Simplified Heightmap)
+            // Start at y=400, noise range 40-120
+           new WorldSurface(400, new Noise(4, 40, 120)),
+            // CAVE DATA (Simplified)
+            new WorldCave(new Noise(0, 12, 2), [
+                // Upper caves
+                new WorldCaveSystem(420, 1000, new Noise(3, 45, 55)),
+                // Deep caves
+                new WorldCaveSystem(600, 1000, new Noise(4, 50, 60)),
+            ]),
+>>>>>>> Stashed changes
         ),
     ),
 ];

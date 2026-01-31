@@ -138,19 +138,12 @@
         }
     ],
     "shore_tiles": {
-        "items": [
-            {
-                "id": "phantasia:sand",
-                "rules": []
-            },
-            {
-                "id": "phantasia:sandstone_wall",
-                "rules": [],
-                "noise_min": 0,
-                "noise_max": 204
-            }
-        ],
-        "default_id": "phantasia:sand"
+        "base": "phantasia:sand",
+        "noise": "phantasia:sandstone_wall",
+        "noise_range": [
+            0,
+            204
+        ]
     },
     "sky_colour": {
         "dawn": {
@@ -206,60 +199,31 @@
     },
     "tile": {
         "top_layer": {
-            "items": [
-                {
-                    "id": "phantasia:grass_block",
-                    "rules": [
-                        {
-                            "type": "RuleAirAbove",
-                            "params": {
-                                "min_blocks": 1
-                            }
-                        }
-                    ]
-                },
-                {
-                    "id": "phantasia:dirt",
-                    "rules": []
-                },
-                {
-                    "id": "phantasia:dirt_wall",
-                    "rules": [],
-                    "noise_min": 0,
-                    "noise_max": 204
-                }
+            "base": [
+                "phantasia:grass_block",
+                "phantasia:dirt"
             ],
-            "default_id": "phantasia:grass_block"
+            "noise": "phantasia:dirt_wall",
+            "noise_range": [
+                0,
+                204
+            ]
         },
         "middle_layer": {
-            "items": [
-                {
-                    "id": "phantasia:dirt",
-                    "rules": []
-                },
-                {
-                    "id": "phantasia:dirt_wall",
-                    "rules": [],
-                    "noise_min": 0,
-                    "noise_max": 204
-                }
-            ],
-            "default_id": "phantasia:dirt"
+            "base": "phantasia:dirt",
+            "noise": "phantasia:dirt_wall",
+            "noise_range": [
+                0,
+                204
+            ]
         },
         "bottom_layer": {
-            "items": [
-                {
-                    "id": "phantasia:stone",
-                    "rules": []
-                },
-                {
-                    "id": "phantasia:stone_wall",
-                    "rules": [],
-                    "noise_min": 0,
-                    "noise_max": 204
-                }
-            ],
-            "default_id": "phantasia:stone"
+            "base": "phantasia:stone",
+            "noise": "phantasia:stone_wall",
+            "noise_range": [
+                0,
+                204
+            ]
         }
     }
 }

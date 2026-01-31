@@ -1,5 +1,5 @@
 
-#macro IS_MULTIPLAYER_ENABLED 1
+#macro IS_MULTIPLAYER_ENABLED 0
 
 #region Chunk
 

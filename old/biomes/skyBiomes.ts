@@ -6,6 +6,9 @@ import {
     BiomeBackground,
     BiomeSkyColor,
     BiomeTerrainModifier,
+    MaterialProvider,
+    RuleDepth,
+    RuleAirAbove,
 } from "../biomes";
 
 export default [
@@ -28,25 +31,23 @@ export default [
                 night: "#141B35",
             },
             {
-                top_layer: {
-                    base: ["phantasia:grass_block", "phantasia:dirt"],
-                    noise: "phantasia:dirt_wall",
-                    noise_range: [0, 204],
-                },
-                middle_layer: {
-                    base: "phantasia:dirt",
-                    noise: "phantasia:dirt_wall",
-                    noise_range: [0, 204],
-                },
-                bottom_layer: {
-                    base: "phantasia:stone",
-                    noise: "phantasia:stone_wall",
-                    noise_range: [0, 204],
-                },
+                top_layer: new MaterialProvider()
+                    .addItem("phantasia:grass_block", [new RuleAirAbove(1)])
+                    .addItem("phantasia:dirt")
+                    .addItemNoise("phantasia:dirt_wall", 0, 204)
+                    .setDefault("phantasia:grass_block"),
+                middle_layer: new MaterialProvider()
+                    .addItem("phantasia:dirt")
+                    .addItemNoise("phantasia:dirt_wall", 0, 204)
+                    .setDefault("phantasia:dirt"),
+                bottom_layer: new MaterialProvider()
+                    .addItem("phantasia:stone")
+                    .addItemNoise("phantasia:stone_wall", 0, 204)
+                    .setDefault("phantasia:stone"),
             },
         )
             .setIsSkyland()
-            .setTerrainModifier(new BiomeTerrainModifier(0).setInfluence(0.015625)) // Note: setTerrainModifier was using legacy constructor with more args, updated to match biomes.ts
+            .setTerrainModifier(new BiomeTerrainModifier(0, 0.015625, 40, 80, 5))
             .setMusic([
                 new Sound("phantasia:music/ornaments_of_the_sky", 0.7),
                 new Sound("phantasia:music/soft_hour", 0.6),
