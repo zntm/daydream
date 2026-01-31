@@ -7,32 +7,6 @@ enum BIOME_TYPE {
 
 function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
 {
-    // Initialize all variables with defaults
-    ___background = undefined;
-    ___map_colour = 0;
-    ___sky_colour = {};
-    ___sky_colour_names = [];
-    ___sky_colour_length = 0;
-    ___light_colour = c_white;
-    ___music = undefined;
-    
-    ___tile_top_layer = undefined;
-    ___tile_middle_layer = undefined;
-    ___tile_bottom_layer = undefined;
-    
-    ___foliage = [];
-    ___creatures = [];
-    ___structures = [];
-    
-    ___terrain_height_offset = 0;
-    ___terrain_amplitude_scale = 1;
-    
-    ___is_ocean = false;
-    ___shore_tiles = undefined;
-    ___has_shore_tiles = false;
-    
-    ___is_skyland = false;
-
     static set_background = function(_background)
     {
         ___background = _background;
@@ -145,93 +119,142 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
         return self[$ "___music"];
     }
     
-    /// @desc Select a tile ID from a tile layer structure or plain string
-    static __select_tile = function(_data, _noise)
+    /// @desc Parse tile array data into weighted entry format
+    static __parse_tile_array = function(_data)
     {
-        if (_data == undefined) return TILE_EMPTY;
-        
-        // Handle plain string or array of strings (backwards compatibility/simplicity)
-        if (is_string(_data)) return (_data == "$EMPTY") ? TILE_EMPTY : _data;
         if (is_array(_data))
         {
-            var _len = array_length(_data);
-            if (_len == 0) return TILE_EMPTY;
-            return _data[floor(frac(abs(_noise)) * _len)];
+            var _length = array_length(_data);
+            var _entries = array_create(_length);
+            var _total_weight = 0;
+            
+            for (var i = 0; i < _length; ++i)
+            {
+                var _entry = _data[i];
+                var _weight = _entry[$ "weight"] ?? 1;
+                
+                var _id = _entry.id;
+                if (_id == "$EMPTY") _id = TILE_EMPTY;
+                
+                _total_weight += _weight;
+                _entries[@ i] = {
+                    id: _id,
+                    weight: _weight,
+                    cumulative_weight: _total_weight,
+                    noise_min: _entry[$ "noise_min"],
+                    noise_max: _entry[$ "noise_max"]
+                }
+            }
+            
+            return { entries: _entries, total_weight: _total_weight }
+        }
+        else
+        {
+            // Legacy single-entry format
+            var _id = _data.id;
+            if (_id == "$EMPTY") _id = TILE_EMPTY;
+            
+            return { entries: [{ id: _id, weight: 1, cumulative_weight: 1 }], total_weight: 1 }
+        }
+    }
+    
+    /// @desc Get random tile ID from weighted entries using noise value (0..1)
+    static __get_weighted_tile = function(_parsed, _noise)
+    {
+        var _entries = _parsed.entries;
+        var _total = _parsed.total_weight;
+        
+        if (array_length(_entries) == 1)
+        {
+            return _entries[0].id;
         }
         
-        // Handle object with base/noise/noise_range
-        var _base = _data[$ "base"];
-        var _noise_val = _data[$ "noise"];
-        var _range = _data[$ "noise_range"];
+        // Scale noise to 0..255 for range checks
+        var _noise_255 = frac(abs(_noise)) * 255;
         
-        if (_range != undefined && _noise_val != undefined)
+        // 1. Check explicit ranges
+        for (var i = 0; i < array_length(_entries); ++i)
         {
-            var _noise_255 = frac(abs(_noise)) * 255;
-            if (_noise_255 >= _range[0] && _noise_255 < _range[1])
+            var _e = _entries[i];
+            if (_e.noise_min != undefined)
             {
-                return is_array(_noise_val) ? _noise_val[floor(frac(abs(_noise * 1.5)) * array_length(_noise_val))] : _noise_val;
+                var _min = _e.noise_min;
+                var _max = _e.noise_max ?? 256;
+                
+                if (_noise_255 >= _min) && (_noise_255 < _max)
+                {
+                    return _e.id;
+                }
             }
         }
         
-        // Default to base
-        if (is_array(_base))
+        // 2. Fallback to weighted random
+        // Use noise value (0..1) mapped to total weight
+        var _roll = frac(abs(_noise)) * _total;
+        
+        for (var i = 0; i < array_length(_entries); ++i)
         {
-            var _len = array_length(_base);
-            return _base[floor(frac(abs(_noise)) * _len)];
+            if (_roll < _entries[i].cumulative_weight)
+            {
+                return _entries[i].id;
+            }
         }
         
-        return _base ?? TILE_EMPTY;
+        return _entries[0].id;
     }
     
     static set_tile_top_layer = function(_data)
     {
-        ___tile_top_layer = _data;
+        ___tile_top_layer_base = __parse_tile_array(_data.base);
+        ___tile_top_layer_wall = __parse_tile_array(_data.wall);
         
         return self;
     }
     
     static get_tile_top_layer_base = function(_seed = 0)
     {
-        return __select_tile(___tile_top_layer, _seed);
+        return __get_weighted_tile(___tile_top_layer_base, _seed);
     }
     
-    static get_tile_top_layer_wall = function(_seed = 0) // Kept for compatibility, redirects to same logic
+    static get_tile_top_layer_wall = function(_seed = 0)
     {
-        return __select_tile(___tile_top_layer, _seed);
+        return __get_weighted_tile(___tile_top_layer_wall, _seed);
     }
     
     static set_tile_middle_layer = function(_data)
     {
-        ___tile_middle_layer = _data;
+        ___tile_middle_layer_base = __parse_tile_array(_data.base);
+        ___tile_middle_layer_wall = __parse_tile_array(_data.wall);
         
         return self;
     }
     
     static get_tile_middle_layer_base = function(_seed = 0)
     {
-        return __select_tile(___tile_middle_layer, _seed);
+        return __get_weighted_tile(___tile_middle_layer_base, _seed);
     }
     
     static get_tile_middle_layer_wall = function(_seed = 0)
     {
-        return __select_tile(___tile_middle_layer, _seed);
+        return __get_weighted_tile(___tile_middle_layer_wall, _seed);
     }
     
     static set_tile_bottom_layer = function(_data)
     {
-        ___tile_bottom_layer = _data;
+        ___tile_bottom_layer_base = __parse_tile_array(_data.base);
+        ___tile_bottom_layer_wall = __parse_tile_array(_data.wall);
         
         return self;
     }
     
     static get_tile_bottom_layer_base = function(_seed = 0)
     {
-        return __select_tile(___tile_bottom_layer, _seed);
+        return __get_weighted_tile(___tile_bottom_layer_base, _seed);
     }
     
     static get_tile_bottom_layer_wall = function(_seed = 0)
     {
-        return __select_tile(___tile_bottom_layer, _seed);
+        return __get_weighted_tile(___tile_bottom_layer_wall, _seed);
     }
     
     static set_terrain_modifier = function(_modifier)
@@ -271,7 +294,8 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
     {
         if (_tiles != undefined)
         {
-            ___shore_tiles = _tiles;
+            ___shore_tiles_base = __parse_tile_array(_tiles.base);
+            ___shore_tiles_wall = __parse_tile_array(_tiles.wall);
             ___has_shore_tiles = true;
         }
         else
@@ -290,13 +314,13 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
     static get_shore_tile_base = function(_seed = 0)
     {
         if (!has_shore_tiles()) return undefined;
-        return __select_tile(___shore_tiles, _seed);
+        return __get_weighted_tile(___shore_tiles_base, _seed);
     }
     
     static get_shore_tile_wall = function(_seed = 0)
     {
         if (!has_shore_tiles()) return undefined;
-        return __select_tile(___shore_tiles, _seed);
+        return __get_weighted_tile(___shore_tiles_wall, _seed);
     }
     
     static set_is_skyland = function(_value)

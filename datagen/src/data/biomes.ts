@@ -2,19 +2,13 @@ import { type SmartValue, Sound } from "../../index";
 import { join } from "path";
 import { readdirSync } from "fs";
 
-export interface BiomeTileLayer {
-    base: string | string[];
-    noise?: string | string[];
-    noise_range?: [number, number];
-}
-
 export class Biome {
     private background: BiomeBackground;
     private map_colour: string;
     private sky_colour: any;
     private light_colour: any;
     private tile: {
-        [key: string]: BiomeTileLayer;
+        [key: string]: BiomeTile;
     };
     private music?: Sound[];
     private creatures?: BiomeCreature[];
@@ -22,10 +16,9 @@ export class Biome {
     private structures?: BiomeStructure[];
     private terrain_modifier?: BiomeTerrainModifier;
     private is_ocean?: boolean;
-    private shore_tiles?: BiomeTileLayer;
+    private shore_tiles?: BiomeTile;
     private is_skyland?: boolean;
     private salt?: number;
-    private tags?: string[];
 
     constructor(
         background: BiomeBackground,
@@ -33,7 +26,7 @@ export class Biome {
         skyColor: any,
         lightColor: any,
         tile: {
-            [key: string]: BiomeTileLayer;
+            [key: string]: BiomeTile;
         },
     ) {
         this.background = background;
@@ -79,7 +72,7 @@ export class Biome {
         return this;
     }
 
-    setShoreTiles(tiles: BiomeTileLayer) {
+    setShoreTiles(tiles: BiomeTile) {
         this.shore_tiles = tiles;
 
         return this;
@@ -96,67 +89,15 @@ export class Biome {
 
         return this;
     }
-
-    setTags(tags: string[]) {
-        this.tags = tags;
-        return this;
-    }
 }
 
 export class BiomeTerrainModifier {
-    // Legacy height offset
     private height_offset: number;
+    private amplitude_scale?: number;
 
-    // NEW: Biome blending control
-    private influence?: number;    // How much these modifiers affect generation (0-1)
-    private smoothing?: number;    // Blend radius in blocks for smooth biome edges
-
-    // NEW: WorldGen modifiers (multipliers that blend at biome edges)
-    private erosion_modifier?: number;       // Multiplier for erosion (flatness)
-    private squash_modifier?: number;        // Multiplier for squash factor
-    private cave_density_modifier?: number;  // Multiplier for cave density
-    private continentalness_modifier?: number; // Modifier for continentalness
-
-    constructor(
-        heightOffset: number
-    ) {
+    constructor(heightOffset: number, amplitudeScale: number = 1.0) {
         this.height_offset = heightOffset;
-    }
-
-    /** Set how much this biome's modifiers affect worldgen (0-1) */
-    setInfluence(influence: number) {
-        this.influence = influence;
-        return this;
-    }
-
-    /** Set blend radius for smooth biome edge transitions (in blocks) */
-    setSmoothing(smoothing: number) {
-        this.smoothing = smoothing;
-        return this;
-    }
-
-    /** Set erosion modifier (1.0 = normal, <1 = more mountainous, >1 = flatter) */
-    setErosionModifier(modifier: number) {
-        this.erosion_modifier = modifier;
-        return this;
-    }
-
-    /** Set squash modifier (1.0 = normal, <1 = less squash, >1 = more squash) */
-    setSquashModifier(modifier: number) {
-        this.squash_modifier = modifier;
-        return this;
-    }
-
-    /** Set cave density modifier (1.0 = normal, <1 = fewer caves, >1 = more caves) */
-    setCaveDensityModifier(modifier: number) {
-        this.cave_density_modifier = modifier;
-        return this;
-    }
-
-    /** Set continentalness modifier (additive offset to base continentalness) */
-    setContinentalnessModifier(modifier: number) {
-        this.continentalness_modifier = modifier;
-        return this;
+        if (amplitudeScale !== 1.0) this.amplitude_scale = amplitudeScale;
     }
 }
 
@@ -180,6 +121,41 @@ export class BiomeSkyColor {
         this.gradient = /\#[0-9a-fA-F]{6}/.test(gradient)
             ? gradient.toUpperCase()
             : gradient;
+    }
+}
+
+export class TileEntry {
+    private id: string;
+    private weight?: number;
+    private noise_min?: number;
+    private noise_max?: number;
+    private context?: string[];
+
+    constructor(id: string, weight: number = 1, context?: string[]) {
+        this.id = id;
+        if (weight !== 1) this.weight = weight;
+        if (context) this.context = context;
+    }
+
+    setNoiseRange(min: number, max: number) {
+        this.noise_min = min;
+        this.noise_max = max;
+        return this;
+    }
+}
+
+export class BiomeTile {
+    private base: TileEntry[];
+    private wall: TileEntry[];
+
+    constructor(base: string | TileEntry[], wall: string | TileEntry[]) {
+        // Support both legacy string format and new array format
+        this.base = typeof base === "string" 
+            ? [new TileEntry(base)] 
+            : base;
+        this.wall = typeof wall === "string" 
+            ? [new TileEntry(wall)] 
+            : wall;
     }
 }
 
@@ -244,8 +220,8 @@ export class BiomeFeature {
     }
 }
 
-export class BiomeFoliage extends BiomeFeature { }
-export class BiomeStructure extends BiomeFeature { }
+export class BiomeFoliage extends BiomeFeature {}
+export class BiomeStructure extends BiomeFeature {}
 
 export default readdirSync(join(__dirname, "./biomes"))
     .map((type) => import.meta.require(`./biomes/${type}`).default)

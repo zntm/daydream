@@ -81,7 +81,7 @@ function chunk_generate(_chunk)
     var _cave_heat_noise_scale_x = _cave_heat_enabled ? _world_data.get_cave_heat_noise_scale_x() : 0;
     var _cave_heat_noise_scale_y = _cave_heat_enabled ? _world_data.get_cave_heat_noise_scale_y() : 0;
     var _cave_heat_range = _cave_heat_enabled ? _world_data.get_cave_heat_range() : 0;
-    var _cave_heat_octaves = _cave_heat_enabled ? _world_data.get_cave_heat_octaves() : 0;
+    var _cave_heat_octaves = _cave_heat_enabled ? _cave_biome_heat_data.octaves : 0;
     
     var _cave_biome_humidity_data = _world_data.get_cave_biome_humidity();
     var _cave_humidity_enabled = (_cave_biome_humidity_data != undefined);
@@ -89,17 +89,17 @@ function chunk_generate(_chunk)
     var _cave_humidity_noise_scale_y = _cave_humidity_enabled ? _world_data.get_cave_humidity_noise_scale_y() : 0;
     var _cave_humidity_offset_y = _cave_humidity_enabled ? _world_data.get_cave_humidity_offset_y() : 0;
     var _cave_humidity_range = _cave_humidity_enabled ? _world_data.get_cave_humidity_range() : 0;
-    var _cave_humidity_octaves = _cave_humidity_enabled ? _world_data.get_cave_humidity_octaves() : 0;
+    var _cave_humidity_octaves = _cave_humidity_enabled ? (_cave_biome_humidity_data.octaves + _world_data.get_cave_humidity_octaves_offset()) : 0;
     
     // Surface biome parameters
-    var _surface_biome_octaves = _world_data.get_surface_heat_octaves();
+    var _surface_biome_octaves = _world_data.get_surface_biome_heat().octaves;
     var _surface_heat_noise_scale = _world_data.get_surface_heat_noise_scale();
     var _surface_heat_offset = _world_data.get_surface_heat_offset();
     var _surface_heat_range = _world_data.get_surface_heat_range();
     var _surface_heat_spline_x = _world_data.get_surface_heat_spline_x();
     var _surface_heat_spline_y = _world_data.get_surface_heat_spline_y();
     
-    var _surface_humidity_octaves = _world_data.get_surface_humidity_octaves();
+    var _surface_humidity_octaves = _world_data.get_surface_biome_humidity().octaves;
     var _surface_humidity_noise_scale = _world_data.get_surface_humidity_noise_scale();
     var _surface_humidity_offset = _world_data.get_surface_humidity_offset();
     var _surface_humidity_range = _world_data.get_surface_humidity_range();
@@ -404,11 +404,6 @@ function chunk_generate(_chunk)
         
         // INLINED surface biome lookup
         var _surface_biome = _surface_biome_map[(_humidity_surface << WORLDGEN_SIZE_HEAT_BIT) | (_heat_surface)];
-        
-        if (_surface_biome == 0 || _biome_data_struct[$ _surface_biome] == undefined)
-        {
-            _surface_biome = "phantasia:surface/forest";
-        }
         
         for (var j = 0; j < CHUNK_SIZE; ++j)
         {

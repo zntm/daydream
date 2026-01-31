@@ -71,9 +71,6 @@ function ChunkPool() : Pool() constructor
     // Valid list of chunks currently fading in
     fading_chunks = [];
     
-    // Active world generation configuration
-    worldgen_config = undefined;
-    
     static create = function()
     {
         return new Chunk(0, 0);
@@ -150,13 +147,13 @@ function ChunkPool() : Pool() constructor
         // Register at new position
         chunk_map_register(_chunk);
         
+        // Regenerate structures and generate chunk
+        control_structure(_chunk.chunk_xstart, _chunk.chunk_ystart);
+        
         var _is_loaded = file_load_world_chunk(global.world_save_data, _chunk);
         
         if (!_is_loaded)
         {
-            // Regenerate structures and generate chunk
-            control_structure(_chunk.chunk_xstart, _chunk.chunk_ystart);
-            
             chunk_generate(_chunk);
             _chunk.boolean |= CHUNK_BOOLEAN.GENERATED;
         }

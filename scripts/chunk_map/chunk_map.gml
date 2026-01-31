@@ -2,9 +2,6 @@
 /// Stores chunk structs instead of instance IDs
 
 global.chunk_map = {}
-global.chunk_cache_x = -1;
-global.chunk_cache_y = -1;
-global.chunk_cache   = undefined;
 
 /// @function chunk_map_key(_x, _y)
 /// @desc Generate hash key from world coordinates
@@ -25,22 +22,8 @@ function chunk_map_key(_x, _y)
 /// @returns {Struct.Chunk} Chunk struct or undefined
 function chunk_map_get(_x, _y)
 {
-    var _cx = floor(_x / CHUNK_SIZE_DIMENSION);
-    var _cy = floor(_y / CHUNK_SIZE_DIMENSION);
-    
-    if (_cx == global.chunk_cache_x && _cy == global.chunk_cache_y)
-    {
-        return global.chunk_cache;
-    }
-    
-    var _key = $"{_cx}_{_cy}";
-    var _chunk = global.chunk_map[$ _key];
-    
-    global.chunk_cache_x = _cx;
-    global.chunk_cache_y = _cy;
-    global.chunk_cache    = _chunk;
-    
-    return _chunk;
+    var _key = chunk_map_key(_x, _y);
+    return global.chunk_map[$ _key];
 }
 
 /// @function chunk_map_get_by_tile(_tile_x, _tile_y)
@@ -50,22 +33,7 @@ function chunk_map_get(_x, _y)
 /// @returns {Struct.Chunk} Chunk struct or undefined
 function chunk_map_get_by_tile(_tile_x, _tile_y)
 {
-    var _cx = floor(_tile_x / CHUNK_SIZE);
-    var _cy = floor(_tile_y / CHUNK_SIZE);
-    
-    if (_cx == global.chunk_cache_x && _cy == global.chunk_cache_y)
-    {
-        return global.chunk_cache;
-    }
-    
-    var _key = $"{_cx}_{_cy}";
-    var _chunk = global.chunk_map[$ _key];
-    
-    global.chunk_cache_x = _cx;
-    global.chunk_cache_y = _cy;
-    global.chunk_cache   = _chunk;
-    
-    return _chunk;
+    return chunk_map_get(_tile_x * TILE_SIZE, _tile_y * TILE_SIZE);
 }
 
 /// @function chunk_map_register(_chunk)
@@ -84,11 +52,6 @@ function chunk_map_unregister(_chunk)
 {
     var _key = chunk_map_key(_chunk.x, _chunk.y);
     struct_remove(global.chunk_map, _key);
-    
-    // Invalidate cache if this chunk was cached
-    global.chunk_cache_x = -1;
-    global.chunk_cache_y = -1;
-    global.chunk_cache   = undefined;
 }
 
 /// @function chunk_map_clear()
@@ -96,9 +59,6 @@ function chunk_map_unregister(_chunk)
 function chunk_map_clear()
 {
     global.chunk_map = {}
-    global.chunk_cache_x = -1;
-    global.chunk_cache_y = -1;
-    global.chunk_cache   = undefined;
 }
 
 /// @function chunk_map_exists(_x, _y)

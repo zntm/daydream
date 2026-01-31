@@ -42,37 +42,57 @@
         }
     },
     "structures": [],
-    "tags": [
-        "ocean",
-        "water",
-        "wet"
-    ],
     "terrain_modifier": {
-        "height_offset": -80
+        "height_offset": -80,
+        "amplitude_scale": 0.3
     },
     "tile": {
         "top_layer": {
-            "base": "phantasia:sand",
-            "noise": "phantasia:sandstone_wall",
-            "noise_range": [
-                0,
-                204
+            "base": [
+                {
+                    "id": "phantasia:sand"
+                }
+            ],
+            "wall": [
+                {
+                    "id": "phantasia:sandstone_wall",
+                    "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
+                }
             ]
         },
         "middle_layer": {
-            "base": "phantasia:sand",
-            "noise": "phantasia:sandstone_wall",
-            "noise_range": [
-                0,
-                204
+            "base": [
+                {
+                    "id": "phantasia:gravel"
+                }
+            ],
+            "wall": [
+                {
+                    "id": "phantasia:stone_wall",
+                    "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
+                }
             ]
         },
         "bottom_layer": {
-            "base": "phantasia:sandstone",
-            "noise": "phantasia:sandstone_wall",
-            "noise_range": [
-                0,
-                204
+            "base": [
+                {
+                    "id": "phantasia:stone"
+                }
+            ],
+            "wall": [
+                {
+                    "id": "phantasia:stone_wall",
+                    "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
+                }
             ]
         }
     }

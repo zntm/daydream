@@ -82,39 +82,51 @@
     ],
     "tile": {
         "top_layer": {
-            "base": {
-                "id": "phantasia:stone"
-            },
-            "noise": {
-                "id": "phantasia:stone_wall"
-            },
-            "noise_range": [
-                0,
-                204
+            "base": [
+                {
+                    "id": "phantasia:stone"
+                }
+            ],
+            "wall": [
+                {
+                    "id": "phantasia:stone_wall",
+                    "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
+                }
             ]
         },
         "middle_layer": {
-            "base": {
-                "id": "phantasia:stone"
-            },
-            "noise": {
-                "id": "phantasia:stone_wall"
-            },
-            "noise_range": [
-                0,
-                204
+            "base": [
+                {
+                    "id": "phantasia:stone"
+                }
+            ],
+            "wall": [
+                {
+                    "id": "phantasia:stone_wall",
+                    "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
+                }
             ]
         },
         "bottom_layer": {
-            "base": {
-                "id": "phantasia:stone"
-            },
-            "noise": {
-                "id": "phantasia:stone_wall"
-            },
-            "noise_range": [
-                0,
-                204
+            "base": [
+                {
+                    "id": "phantasia:stone"
+                }
+            ],
+            "wall": [
+                {
+                    "id": "phantasia:stone_wall",
+                    "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
+                }
             ]
         }
     }

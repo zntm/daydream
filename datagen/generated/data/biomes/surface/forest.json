@@ -138,15 +138,19 @@
         }
     ],
     "shore_tiles": {
-        "base": {
-            "id": "phantasia:sand"
-        },
-        "noise": {
-            "id": "phantasia:sandstone_wall"
-        },
-        "noise_range": [
-            0,
-            204
+        "base": [
+            {
+                "id": "phantasia:sand"
+            }
+        ],
+        "wall": [
+            {
+                "id": "phantasia:sandstone_wall",
+                "weight": 4
+            },
+            {
+                "id": "$EMPTY"
+            }
         ]
     },
     "sky_colour": {
@@ -189,58 +193,56 @@
             "generate_on": "#phantasia:tile/placement/plant_on"
         }
     ],
-    "tags": [
-        "forest",
-        "temperate",
-        "lush"
-    ],
     "terrain_modifier": {
-        "height_offset": 0,
-        "influence": 0.8,
-        "smoothing": 32,
-        "erosion_modifier": 1,
-        "squash_modifier": 1
+        "height_offset": 0
     },
     "tile": {
         "top_layer": {
             "base": [
                 {
                     "id": "phantasia:grass_block"
+                }
+            ],
+            "wall": [
+                {
+                    "id": "phantasia:dirt_wall",
+                    "weight": 4
                 },
+                {
+                    "id": "$EMPTY"
+                }
+            ]
+        },
+        "middle_layer": {
+            "base": [
                 {
                     "id": "phantasia:dirt"
                 }
             ],
-            "noise": {
-                "id": "phantasia:dirt_wall"
-            },
-            "noise_range": [
-                0,
-                204
-            ]
-        },
-        "middle_layer": {
-            "base": {
-                "id": "phantasia:dirt"
-            },
-            "noise": {
-                "id": "phantasia:dirt_wall"
-            },
-            "noise_range": [
-                0,
-                204
+            "wall": [
+                {
+                    "id": "phantasia:dirt_wall",
+                    "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
+                }
             ]
         },
         "bottom_layer": {
-            "base": {
-                "id": "phantasia:stone"
-            },
-            "noise": {
-                "id": "phantasia:stone_wall"
-            },
-            "noise_range": [
-                0,
-                204
+            "base": [
+                {
+                    "id": "phantasia:stone"
+                }
+            ],
+            "wall": [
+                {
+                    "id": "phantasia:stone_wall",
+                    "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
+                }
             ]
         }
     }

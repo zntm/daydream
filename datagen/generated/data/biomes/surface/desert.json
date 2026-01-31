@@ -95,54 +95,58 @@
             "generate_on": "#phantasia:tile/placement/plant_on"
         }
     ],
-    "tags": [
-        "hot",
-        "dry",
-        "sand"
-    ],
     "terrain_modifier": {
         "height_offset": 8,
-        "influence": 1,
-        "smoothing": 64,
-        "erosion_modifier": 1.5,
-        "squash_modifier": 2,
-        "continentalness_modifier": 0.3
+        "amplitude_scale": 0.8
     },
     "tile": {
         "top_layer": {
-            "base": {
-                "id": "phantasia:sand"
-            },
-            "noise": {
-                "id": "phantasia:sandstone_wall"
-            },
-            "noise_range": [
-                0,
-                204
+            "base": [
+                {
+                    "id": "phantasia:sand"
+                }
+            ],
+            "wall": [
+                {
+                    "id": "phantasia:sandstone_wall",
+                    "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
+                }
             ]
         },
         "middle_layer": {
-            "base": {
-                "id": "phantasia:sand"
-            },
-            "noise": {
-                "id": "phantasia:sandstone_wall"
-            },
-            "noise_range": [
-                0,
-                204
+            "base": [
+                {
+                    "id": "phantasia:sand"
+                }
+            ],
+            "wall": [
+                {
+                    "id": "phantasia:sandstone_wall",
+                    "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
+                }
             ]
         },
         "bottom_layer": {
-            "base": {
-                "id": "phantasia:sandstone"
-            },
-            "noise": {
-                "id": "phantasia:sandstone_wall"
-            },
-            "noise_range": [
-                0,
-                153
+            "base": [
+                {
+                    "id": "phantasia:sandstone"
+                }
+            ],
+            "wall": [
+                {
+                    "id": "phantasia:sandstone_wall",
+                    "weight": 3
+                },
+                {
+                    "id": "$EMPTY",
+                    "weight": 2
+                }
             ]
         }
     }

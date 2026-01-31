@@ -8,6 +8,8 @@ import {
     BiomeFoliage,
     BiomeSkyColor,
     BiomeStructure,
+    BiomeTile,
+    TileEntry,
 } from "../biomes";
 
 export default [
@@ -30,21 +32,27 @@ export default [
                 night: "#141B35",
             },
             {
-                top_layer: {
-                    base: "phantasia:stone",
-                    noise: "phantasia:stone_wall",
-                    noise_range: [0, 204],
-                },
-                middle_layer: {
-                    base: "phantasia:stone",
-                    noise: "phantasia:stone_wall",
-                    noise_range: [0, 204],
-                },
-                bottom_layer: {
-                    base: "phantasia:stone",
-                    noise: "phantasia:stone_wall",
-                    noise_range: [0, 204],
-                },
+                top_layer: new BiomeTile(
+                    "phantasia:stone",
+                    [
+                        new TileEntry("phantasia:stone_wall", 4),
+                        new TileEntry("$EMPTY", 1),
+                    ],
+                ),
+                middle_layer: new BiomeTile(
+                    "phantasia:stone",
+                    [
+                        new TileEntry("phantasia:stone_wall", 4),
+                        new TileEntry("$EMPTY", 1),
+                    ],
+                ),
+                bottom_layer: new BiomeTile(
+                    "phantasia:stone",
+                    [
+                        new TileEntry("phantasia:stone_wall", 4),
+                        new TileEntry("$EMPTY", 1),
+                    ],
+                ),
             },
         )
             .setMusic([
@@ -97,21 +105,27 @@ export default [
                 night: "#141B35",
             },
             {
-                top_layer: {
-                    base: "phantasia:nightrock",
-                    noise: "phantasia:nightrock_wall",
-                    noise_range: [0, 204],
-                },
-                middle_layer: {
-                    base: "phantasia:nightrock",
-                    noise: "phantasia:nightrock_wall",
-                    noise_range: [0, 204],
-                },
-                bottom_layer: {
-                    base: "phantasia:nightrock",
-                    noise: "phantasia:nightrock_wall",
-                    noise_range: [0, 204],
-                },
+                top_layer: new BiomeTile(
+                    "phantasia:nightrock",
+                    [
+                        new TileEntry("phantasia:nightrock_wall", 4),
+                        new TileEntry("$EMPTY", 1),
+                    ],
+                ),
+                middle_layer: new BiomeTile(
+                    "phantasia:nightrock",
+                    [
+                        new TileEntry("phantasia:nightrock_wall", 4),
+                        new TileEntry("$EMPTY", 1),
+                    ],
+                ),
+                bottom_layer: new BiomeTile(
+                    "phantasia:nightrock",
+                    [
+                        new TileEntry("phantasia:nightrock_wall", 4),
+                        new TileEntry("$EMPTY", 1),
+                    ],
+                ),
             },
         )
             .setMusic([

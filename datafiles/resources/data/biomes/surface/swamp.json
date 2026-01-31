@@ -127,40 +127,57 @@
             "generate_on": "#phantasia:tile/placement/plant_on"
         }
     ],
-    "tags": [
-        "swamp",
-        "wet",
-        "lush"
-    ],
     "terrain_modifier": {
-        "height_offset": -12
+        "height_offset": -12,
+        "amplitude_scale": 0.7
     },
     "tile": {
         "top_layer": {
             "base": [
-                "phantasia:grass_block_swamp",
-                "phantasia:dirt"
+                {
+                    "id": "phantasia:grass_block_swamp"
+                }
             ],
-            "noise": "phantasia:dirt_wall",
-            "noise_range": [
-                0,
-                204
+            "wall": [
+                {
+                    "id": "phantasia:dirt_wall",
+                    "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
+                }
             ]
         },
         "middle_layer": {
-            "base": "phantasia:dirt",
-            "noise": "phantasia:dirt_wall",
-            "noise_range": [
-                0,
-                204
+            "base": [
+                {
+                    "id": "phantasia:dirt"
+                }
+            ],
+            "wall": [
+                {
+                    "id": "phantasia:dirt_wall",
+                    "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
+                }
             ]
         },
         "bottom_layer": {
-            "base": "phantasia:stone",
-            "noise": "phantasia:stone_wall",
-            "noise_range": [
-                0,
-                204
+            "base": [
+                {
+                    "id": "phantasia:stone"
+                }
+            ],
+            "wall": [
+                {
+                    "id": "phantasia:stone_wall",
+                    "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
+                }
             ]
         }
     }

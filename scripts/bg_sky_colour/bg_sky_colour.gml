@@ -26,33 +26,14 @@ function bg_sky_colour(_in_biome_data, _in_biome_transition_data)
         var _start_to = _to.time_range_min;
         var _end_to   = _to.time_range_max;
         
-        // Safety Fallbacks for missing biome data or missing diurnal keys
-        var _get_sky_base = function(_data, _name) {
-            if (_data == undefined) return 0x5F91FE; // Default Sky Blue
-            var _val = _data.get_sky_colour_base(_name);
-            return _val ?? 0x5F91FE;
-        }
+        var _sky_colour_base_from = _in_biome_data.get_sky_colour_base(_name_from);
+        var _sky_colour_base_to   = _in_biome_data.get_sky_colour_base(_name_to);
         
-        var _get_sky_grad = function(_data, _name) {
-            if (_data == undefined) return 0x244FE9; // Default Sky Gradient
-            var _val = _data.get_sky_colour_gradient(_name);
-            return _val ?? 0x244FE9;
-        }
+        var _sky_colour_gradient_from = _in_biome_data.get_sky_colour_gradient(_name_from);
+        var _sky_colour_gradient_to   = _in_biome_data.get_sky_colour_gradient(_name_to);
         
-        var _get_light = function(_data, _name) {
-            if (_data == undefined) return 0xFFFFFF; // Default White
-            var _val = _data.get_light_colour(_name);
-            return _val ?? 0xFFFFFF;
-        }
-        
-        var _sky_colour_base_from = _get_sky_base(_in_biome_data, _name_from);
-        var _sky_colour_base_to   = _get_sky_base(_in_biome_data, _name_to);
-        
-        var _sky_colour_gradient_from = _get_sky_grad(_in_biome_data, _name_from);
-        var _sky_colour_gradient_to   = _get_sky_grad(_in_biome_data, _name_to);
-        
-        var _light_colour_from = _get_light(_in_biome_data, _name_from);
-        var _light_colour_to   = _get_light(_in_biome_data, _name_to);
+        var _light_colour_from = _in_biome_data.get_light_colour(_name_from);
+        var _light_colour_to   = _in_biome_data.get_light_colour(_name_to);
         
         var _t  = min(1, normalize(_world_time, _start_from, _end_from));
         var _t2 = min(1, in_biome_transition_value);
@@ -66,11 +47,11 @@ function bg_sky_colour(_in_biome_data, _in_biome_transition_data)
         }
         else
         {
-            var _transition_sky_colour_base_from = _get_sky_base(_in_biome_transition_data, _name_from);
-            var _transition_sky_colour_base_to   = _get_sky_base(_in_biome_transition_data, _name_to);
+            var _transition_sky_colour_base_from = _in_biome_transition_data.get_sky_colour_base(_name_from);
+            var _transition_sky_colour_base_to   = _in_biome_transition_data.get_sky_colour_base(_name_to);
             
-            var _transition_sky_colour_gradient_from = _get_sky_grad(_in_biome_transition_data, _name_from);
-            var _transition_sky_colour_gradient_to   = _get_sky_grad(_in_biome_transition_data, _name_to);
+            var _transition_sky_colour_gradient_from = _in_biome_transition_data.get_sky_colour_gradient(_name_from);
+            var _transition_sky_colour_gradient_to   = _in_biome_transition_data.get_sky_colour_gradient(_name_to);
             
             if (_transition_sky_colour_base_from != _transition_sky_colour_gradient_from) || (_transition_sky_colour_base_to != _transition_sky_colour_gradient_to)
             {
@@ -84,8 +65,8 @@ function bg_sky_colour(_in_biome_data, _in_biome_transition_data)
                 sky_colour_gradient = merge_colour(_sky_colour_gradient, _transition_sky_colour_gradient, _t2);
             }
             
-            var _transition_light_colour_from = _get_light(_in_biome_transition_data, _name_from);
-            var _transition_light_colour_to   = _get_light(_in_biome_transition_data, _name_to);
+            var _transition_light_colour_from = _in_biome_transition_data.get_light_colour(_name_from);
+            var _transition_light_colour_to   = _in_biome_transition_data.get_light_colour(_name_to);
             
             if (_light_colour_from != _transition_light_colour_from) || (_light_colour_to != _transition_light_colour_to)
             {

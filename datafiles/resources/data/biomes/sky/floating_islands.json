@@ -44,34 +44,55 @@
     "structures": [],
     "terrain_modifier": {
         "height_offset": 0,
-        "influence": 0.015625
+        "amplitude_scale": 0.5
     },
     "tile": {
         "top_layer": {
             "base": [
-                "phantasia:grass_block",
-                "phantasia:dirt"
+                {
+                    "id": "phantasia:grass_block"
+                }
             ],
-            "noise": "phantasia:dirt_wall",
-            "noise_range": [
-                0,
-                204
+            "wall": [
+                {
+                    "id": "phantasia:dirt_wall",
+                    "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
+                }
             ]
         },
         "middle_layer": {
-            "base": "phantasia:dirt",
-            "noise": "phantasia:dirt_wall",
-            "noise_range": [
-                0,
-                204
+            "base": [
+                {
+                    "id": "phantasia:dirt"
+                }
+            ],
+            "wall": [
+                {
+                    "id": "phantasia:dirt_wall",
+                    "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
+                }
             ]
         },
         "bottom_layer": {
-            "base": "phantasia:stone",
-            "noise": "phantasia:stone_wall",
-            "noise_range": [
-                0,
-                204
+            "base": [
+                {
+                    "id": "phantasia:stone"
+                }
+            ],
+            "wall": [
+                {
+                    "id": "phantasia:stone_wall",
+                    "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
+                }
             ]
         }
     }

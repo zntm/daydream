@@ -1624,8 +1624,6 @@
     {"id":{"name":"StructureData","path":"scripts/StructureData/StructureData.yy",},},
     {"id":{"name":"StructurePool","path":"scripts/StructurePool/StructurePool.yy",},},
     {"id":{"name":"tag_value_parse","path":"scripts/tag_value_parse/tag_value_parse.yy",},},
-    {"id":{"name":"TerrainGenerator","path":"scripts/TerrainGenerator/TerrainGenerator.yy",},},
-    {"id":{"name":"TerrainShaper","path":"scripts/TerrainShaper/TerrainShaper.yy",},},
     {"id":{"name":"test_quadtree","path":"scripts/test_quadtree/test_quadtree.yy",},},
     {"id":{"name":"tick_delay","path":"scripts/tick_delay/tick_delay.yy",},},
     {"id":{"name":"tile_audio_emitter","path":"scripts/tile_audio_emitter/tile_audio_emitter.yy",},},

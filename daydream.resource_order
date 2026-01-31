@@ -421,8 +421,6 @@
     {"name":"structure_valid","order":1,"path":"scripts/structure_valid/structure_valid.yy",},
     {"name":"StructurePool","order":79,"path":"scripts/StructurePool/StructurePool.yy",},
     {"name":"tag_value_parse","order":1,"path":"scripts/tag_value_parse/tag_value_parse.yy",},
-    {"name":"TerrainGenerator","order":80,"path":"scripts/TerrainGenerator/TerrainGenerator.yy",},
-    {"name":"TerrainShaper","order":1,"path":"scripts/TerrainShaper/TerrainShaper.yy",},
     {"name":"test_quadtree","order":74,"path":"scripts/test_quadtree/test_quadtree.yy",},
     {"name":"tick_delay","order":35,"path":"scripts/tick_delay/tick_delay.yy",},
     {"name":"tile_audio_emitter","order":7,"path":"scripts/tile_audio_emitter/tile_audio_emitter.yy",},

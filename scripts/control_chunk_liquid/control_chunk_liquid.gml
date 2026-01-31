@@ -25,29 +25,29 @@ function control_chunk_liquid(_dt, _player_x, _player_y, _camera_x, _camera_y, _
         {
             for (var m = 0; m < CHUNK_SIZE; ++m)
             {
-                var _index = (m << CHUNK_SIZE_BIT) | l;
-                var _tile = _chunk.chunk[(CHUNK_DEPTH_LIQUID << (CHUNK_SIZE_BIT * 2)) | _index];
+                var _idx = (m << CHUNK_SIZE_BIT) | l;
+                var _tile = _chunk.chunk[(CHUNK_DEPTH_LIQUID << (CHUNK_SIZE_BIT * 2)) | _idx];
                 
                 if (_tile == TILE_EMPTY) continue;
                 if (!_item_data[$ _tile.get_id()].is_liquid()) continue;
                 
-                var _wave = _chunk.chunk_wave[_index];
-                var _wave_to = _chunk.chunk_wave_to[_index];
+                var _wave = _chunk.chunk_wave[_idx];
+                var _wave_to = _chunk.chunk_wave_to[_idx];
                 
                 // Decay wave force towards zero
                 if (_wave != _wave_to)
                 {
-                    _chunk.chunk_wave[@ _index] = lerp_delta(_wave, _wave_to, 0.90, _dt);
+                    _chunk.chunk_wave[@ _idx] = lerp_delta(_wave, _wave_to, 0.90, _dt);
                 }
                 
                 // Decay target towards zero
                 if (abs(_wave_to) > 0.01)
                 {
-                    _chunk.chunk_wave_to[@ _index] = lerp_delta(_wave_to, 0, 0.95, _dt);
+                    _chunk.chunk_wave_to[@ _idx] = lerp_delta(_wave_to, 0, 0.95, _dt);
                 }
                 else
                 {
-                    _chunk.chunk_wave_to[@ _index] = 0;
+                    _chunk.chunk_wave_to[@ _idx] = 0;
                 }
             }
         }
@@ -73,7 +73,7 @@ function liquid_add_wave_force(_world_x, _world_y, _force)
     if (_local_x < 0) _local_x += CHUNK_SIZE;
     if (_local_y < 0) _local_y += CHUNK_SIZE;
     
-    var _index = (_local_y << CHUNK_SIZE_BIT) | _local_x;
+    var _idx = (_local_y << CHUNK_SIZE_BIT) | _local_x;
     
-    _chunk.chunk_wave_to[@ _index] += _force;
+    _chunk.chunk_wave_to[@ _idx] += _force;
 }

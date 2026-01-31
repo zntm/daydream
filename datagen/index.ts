@@ -7,14 +7,13 @@ export * from "./src/lib/SmartValue";
 export * from "./src/lib/Sound";
 export * from "./src/lib/Noise";
 export * from "./src/lib/Spline";
-export * from "./src/lib/WorldGenConfig";
 export * from "./src/attribute";
 export * from "./src/entity";
 
 import { DatagenReturnData } from "./src/lib/DatagenReturnData";
 
 const _exportData = (data: DatagenReturnData) => {
-    const file = join(__dirname, data.destination.replace("generated/", "../datafiles/resources/"));
+    const file = join(__dirname, data.destination);
 
     if (data.isRaw) {
         Bun.write(file, data.data);

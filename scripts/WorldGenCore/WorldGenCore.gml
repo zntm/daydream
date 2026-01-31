@@ -30,14 +30,7 @@ function WorldGenState(_world_data) constructor
     
     // Simplified system parameters (1D surface)
     surface_noise_octaves = _world_data.get_surface_noise_offset_octaves();
-    surface_noise_range_min = _world_data.get_surface_noise_offset_range_min();
-    surface_noise_range_max = _world_data.get_surface_noise_offset_range_max();
     surface_noise_scale = _world_data.get_surface_noise_scale();
-    
-    // Z-offsets for wall and material layers
-    z_offset_wall = _world_data.get_terrain_z_offset_wall();
-    z_range_wall = _world_data.get_terrain_z_range_wall();
-    z_offset_material = _world_data.get_terrain_z_offset_material();
 }
 
 /// @desc Get the 1D surface height at a specific X position, factoring in biome modifiers
@@ -61,7 +54,7 @@ function worldgen_get_density(_x, _y, _z, _seed, _config = global.chunk_pool.wor
     if (_config == undefined) return -1.0;
     
     // 1. Calculate 1D Surface Height
-    var _surface_height = worldgen_get_surface_height_at(_x, _seed, _config);
+    var _surface_height = worldgen_get_surface_height(_x, _seed, global.world_data[$ global.world_save_data.dimension]);
     
     if (_y < _surface_height) return -1.0;
     
