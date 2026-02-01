@@ -447,7 +447,6 @@
     {"name":"Tile","order":1,"path":"scripts/Tile/Tile.yy",},
     {"name":"unix_to_datetime","order":10,"path":"scripts/unix_to_datetime/unix_to_datetime.yy",},
     {"name":"uuid_generate","order":2,"path":"scripts/uuid_generate/uuid_generate.yy",},
-    {"name":"worldgen_apply_structure_terrain_modifier","order":63,"path":"scripts/worldgen_apply_structure_terrain_modifier/worldgen_apply_structure_terrain_modifier.yy",},
     {"name":"worldgen_get_aquifer","order":65,"path":"scripts/worldgen_get_aquifer/worldgen_get_aquifer.yy",},
     {"name":"worldgen_get_biome_surface","order":1,"path":"scripts/worldgen_get_biome_surface/worldgen_get_biome_surface.yy",},
     {"name":"worldgen_get_cave_heat","order":46,"path":"scripts/worldgen_get_cave_heat/worldgen_get_cave_heat.yy",},
