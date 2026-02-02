@@ -137,9 +137,19 @@ function proglang_resolve_path(_path, _current_dir = "") {
             continue;
         } else if (_seg == "..") {
             // SECURITY: Don't allow going above base directory
-            // Check if current resolution is absolute (within GameMaker's sandboxed root)
-            var _is_absolute = (array_length(_result_parts) > 0 && string_pos(PROGLANG_BASE_DIR, _result_parts[0]) == 1);
-            var _min_parts = _is_absolute ? _root_len : 0;
+            // Check if the current path starts with the base directory
+            var _current_path = "";
+            for (var j = 0; j < array_length(_result_parts); j++) {
+                if (j > 0) _current_path += "/";
+                _current_path += _result_parts[j];
+            }
+            
+            // Determine minimum parts based on whether path is absolute (contains base dir)
+            var _min_parts = 0;
+            if (string_pos(PROGLANG_BASE_DIR, _current_path) == 1) {
+                // Absolute path - cannot go above base directory
+                _min_parts = _root_len;
+            }
             
             if (array_length(_result_parts) > _min_parts) {
                 array_pop(_result_parts);

@@ -113,6 +113,9 @@ function ProgParser(_tokens) constructor
     
     static parse_statement = function()
     {
+        // Check for @inline annotation
+        var _is_inline = match(PROG_TOKEN.AT_INLINE);
+        
         // Check for global prefix
         var _is_global = false;
         
@@ -127,12 +130,14 @@ function ProgParser(_tokens) constructor
             else if (check(PROG_TOKEN.VAR))
             {
                 // global var x
+                if (_is_inline) error_at_current("@inline can only be applied to functions.");
                 advance(); // consume VAR
                 return parse_var_decl(true); // is_global = true
             }
             // Backtrack to let parse_expression_statement handle 'global.x'
             else if (check(PROG_TOKEN.DOT))
             {
+                if (_is_inline) error_at_current("@inline can only be applied to functions.");
                 --current;
                 
                 return parse_expression_statement();
@@ -147,7 +152,15 @@ function ProgParser(_tokens) constructor
         // Function declaration
         if (match(PROG_TOKEN.FN))
         {
-            return parse_function_decl(_is_global);
+            var _decl = parse_function_decl(_is_global);
+            _decl.is_inline = _is_inline;
+            return _decl;
+        }
+        
+        // Error if @inline was used without function
+        if (_is_inline)
+        {
+            error_at_current("@inline can only be applied to function declarations.");
         }
         
         if (match(PROG_TOKEN.VAR)) return parse_var_decl(false);

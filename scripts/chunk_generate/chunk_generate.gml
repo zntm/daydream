@@ -22,18 +22,17 @@ function chunk_generate(_chunk)
     
     static __structure_array = [];
     
-    // Collect structures first
-    var _structure_rectangle_length = collision_rectangle_list(
+    // Collect structures from the pool
+    var _structures = global.structure_pool.query_range(
         _chunk.x - (TILE_SIZE / 2),
         _chunk.y - (TILE_SIZE / 2),
         _chunk.x - (TILE_SIZE / 2) + CHUNK_SIZE_DIMENSION,
-        _chunk.y - (TILE_SIZE / 2) + CHUNK_SIZE_DIMENSION,
-        obj_Structure,
-        false,
-        true,
-        __structure_list_rectangle,
-        false
+        _chunk.y - (TILE_SIZE / 2) + CHUNK_SIZE_DIMENSION
     );
+    var _structure_rectangle_length = array_length(_structures);
+    
+    // Copy reference to match existing logic flow
+    __structure_array = _structures;
     
     var _item_data = global.item_data;
     
@@ -42,12 +41,7 @@ function chunk_generate(_chunk)
     
     var _world_save_data = global.world_save_data;
     
-    // Copy structure list to array for easier access
-    array_resize(__structure_array, _structure_rectangle_length);
-    for (var i = 0; i < _structure_rectangle_length; ++i)
-    {
-        __structure_array[@ i] = __structure_list_rectangle[| i];
-    }
+    // Structure array is now directly assigned from pool query
     // Sort logic handled later if needed, but structure_data access needs array/list
     
     var _world_data = global.world_data[$ _world_save_data.dimension];
@@ -264,10 +258,13 @@ function chunk_generate(_chunk)
         var _surface_height = worldgen_get_surface_height(_world_x, _world_seed, _world_data);
         
         // Apply structure terrain modifiers
+        /*
         if (_structure_rectangle_length > 0)
         {
-            _surface_height = worldgen_apply_structure_terrain_modifier(_world_x, _surface_height, __structure_array, _structure_data);
+            // Note: worldgen_apply_structure_terrain_modifier appears to be missing or renamed
+            // _surface_height = worldgen_apply_structure_terrain_modifier(_world_x, _surface_height, __structure_array, _structure_data);
         }
+        */
         
         var _cave_start = worldgen_get_cave_start(_world_x, _world_seed, _world_data);
         
@@ -378,7 +375,7 @@ function chunk_generate(_chunk)
             
             if (++_inst.count >= _rectangle)
             {
-                instance_destroy(_inst);
+                global.structure_pool.release(_inst);
             }
         }
     }

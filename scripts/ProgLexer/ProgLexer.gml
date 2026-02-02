@@ -23,6 +23,8 @@ enum PROG_TOKEN
     // Punctuation
     LPAREN, RPAREN, LBRACE, RBRACE, LBRACKET, RBRACKET,
     COMMA, DOT, SEMICOLON, COLON, QUESTION,
+    // Annotations
+    AT_INLINE,      // @inline annotation for function inlining
     // Special
     EOF, ERROR
 }
@@ -326,6 +328,8 @@ function ProgLexer(_source) constructor
             
             case "#": scan_hex_color(); break;
             
+            case "@": scan_annotation(); break;
+            
             default:
                 if (is_digit(_c)) scan_number();
                 else if (is_alpha(_c)) scan_identifier();
@@ -468,6 +472,28 @@ function ProgLexer(_source) constructor
             array_push(tokens, { type: PROG_TOKEN.IDENTIFIER, lexeme: "string", literal: undefined, line: line });
             array_push(tokens, { type: PROG_TOKEN.LPAREN, lexeme: "(", literal: undefined, line: line });
             interp_stack[@ array_length(interp_stack) - 1] = 0;
+        }
+    }
+    
+    /// @desc Scan annotations starting with @
+    static scan_annotation = function()
+    {
+        // Read the annotation name
+        while (is_alpha_numeric(peek())) advance();
+        
+        var _text = string_copy(source, start, current - start);
+        
+        switch (_text)
+        {
+            case "@inline":
+                add_token(PROG_TOKEN.AT_INLINE);
+                break;
+            
+            default:
+                // Unknown annotation - treat as error
+                had_error = true;
+                error = $"Unknown annotation '{_text}' at line {line}";
+                break;
         }
     }
     

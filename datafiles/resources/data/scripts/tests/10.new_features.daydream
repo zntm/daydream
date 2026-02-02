@@ -76,5 +76,39 @@ test_group("Proglang New Features", [
         // Setting via string key
         obj["age"] = 25
         test_expect(obj.age, 25)
+    }),
+    test("inline simple", fn() {
+        @inline
+        fn add(a, b) {
+            return a + b;
+        }
+        
+        test_expect(add(10, 20), 30)
+    }),
+    test("inline scope", fn() {
+        var x = 10;
+        @inline
+        fn foo() {
+            var x = 20;
+            return x;
+        }
+        
+        test_expect(foo() + x, 30)
+    }),
+    test("inline early return", fn() {
+        @inline
+        fn check(v) {
+            if (v) return 1;
+            return 0;
+        }
+        
+        test_expect(check(true) + check(false), 1)
     })
 ])
+/*
+@inline fn add(a, b) { return a + b; } return add(10, 20)
+
+    if (_assert("Inline Simple", "@inline fn add(a, b) { return a + b; } return add(10, 20)", 30)) _passed++; else _failed++;
+    if (_assert("Inline Scope", "var x = 10; @inline fn foo() { var x = 20; return x; } return foo() + x", 30)) _passed++; else _failed++;
+    if (_assert("Inline Early Return", "@inline fn check(v) { if (v) return 1; return 0; } return check(true) + check(false)", 1)) _passed++; else _failed++;
+*/

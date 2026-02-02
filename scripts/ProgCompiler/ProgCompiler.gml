@@ -73,6 +73,7 @@ enum PROG_FUNC
     BYTECODE,       // Compiled bytecode
     IS_GLOBAL,      // Boolean: is global function
     PARAM_COUNT,    // Number of parameters
+    IS_INLINE,      // Boolean: is inline function
     SIZE            // Array size
 }
 
@@ -118,6 +119,9 @@ function ProgCompiler(_context_keys = []) constructor
     scope_depth = 0; // Track nesting depth for error checking
     had_error = false;
     error_message = "";
+    
+    inline_functions = {}; // Map of inline function name -> AST node
+    inline_stack = []; // Stack for inline expansion contexts (handling returns)
     
     // Build context keywords struct from provided keys
     context_keywords = {}
@@ -452,7 +456,7 @@ function ProgCompiler(_context_keys = []) constructor
             // Note: Since arguments are already on stack at BP+i, we map them directly.
             // We don't need to emit LOAD/DEFINE/POP logic anymore for basic args.
             
-            array_last(declared_vars)[$ _param.name] = { type: "local", index: i }
+            declared_vars[array_length(declared_vars) - 1][$ _param.name] = { type: "local", index: i }
             
             // Handle default values
             if (_param.default_value != undefined)
@@ -509,6 +513,13 @@ function ProgCompiler(_context_keys = []) constructor
         _func_arr[PROG_FUNC.BYTECODE] = _res.bytecode;
         _func_arr[PROG_FUNC.IS_GLOBAL] = struct_exists(_node, "is_global") ? _node.is_global : false;
         _func_arr[PROG_FUNC.PARAM_COUNT] = _res.param_count;
+        _func_arr[PROG_FUNC.IS_INLINE] = struct_exists(_node, "is_inline") ? _node.is_inline : false;
+        
+        // Store inline function AST for call-site expansion
+        if (_func_arr[PROG_FUNC.IS_INLINE] && struct_exists(_node, "name"))
+        {
+            inline_functions[$ _node.name] = _node;
+        }
         
         var _index = add_constant(_func_arr);
         emit(PROG_OP.PUSH_CONST, _index, _node.line);
@@ -843,20 +854,17 @@ function ProgCompiler(_context_keys = []) constructor
                     return;
                 }
                 
-                // Error: Check for redeclaration/shadowing in any active scope
-                for (var i = 0; i < array_length(declared_vars); i++)
+                // Error: Check for redeclaration in the current scope
+                var _current_scope = array_last(declared_vars);
+                if (struct_exists(_current_scope, _node.name))
                 {
-                    if (struct_exists(declared_vars[i], _node.name))
-                    {
-                        had_error = true;
-                        error_message = $"[Line {_node.line}] Error: Variable '{_node.name}' already declared in this scope chain.";
-                        
-                        return;
-                    }
+                    had_error = true;
+                    error_message = $"[Line {_node.line}] Error: Variable '{_node.name}' already declared in this scope.";
+                    
+                    return;
                 }
                 
                 // Add to current scope declarations
-                var _current_scope = array_last(declared_vars);
                 _current_scope[$ _node.name] = true;
                 
                 // Error: Check if global var declared inside nested scope
@@ -1280,15 +1288,94 @@ function ProgCompiler(_context_keys = []) constructor
                 break;
                 
             case PROG_AST.CALL:
-                var _has_spread = false;
-                for (var i = 0; i < array_length(_node.args); i++)
+                var _is_inline_call = false;
+                var _func_node = undefined;
+                
+                // Check if inline
+                if (_node.callee.type == PROG_AST.IDENTIFIER)
                 {
-                    if (_node.args[i].type == PROG_AST.UNARY_OP && _node.args[i].op == PROG_TOKEN.SPREAD)
+                    if (struct_exists(inline_functions, _node.callee.name))
                     {
-                        _has_spread = true; break;
+                        _func_node = inline_functions[$ _node.callee.name];
+                        _is_inline_call = true;
                     }
                 }
-                if (_has_spread)
+                
+                var _has_spread = false;
+                if (!_is_inline_call)
+                {
+                    for (var i = 0; i < array_length(_node.args); i++)
+                    {
+                        if (_node.args[i].type == PROG_AST.UNARY_OP && _node.args[i].op == PROG_TOKEN.SPREAD)
+                        {
+                            _has_spread = true; break;
+                        }
+                    }
+                }
+                
+                if (_is_inline_call)
+                {
+                    // INLINE EXPANSION
+                    var _ret_var = "@inline_ret_" + string(bytecode.code_size);
+                    var _ctx = { ret_var: _ret_var, jumps: [], start_depth: scope_depth };
+                    array_push(inline_stack, _ctx);
+                    
+                    // Initialize return variable to undefined
+                    emit(PROG_OP.PUSH_NULL);
+                    emit(PROG_OP.DEFINE, add_constant(_ret_var), _node.line);
+                    emit(PROG_OP.POP);
+                    
+                    // Push Scope for function body
+                    emit(PROG_OP.PUSH_SCOPE, undefined, _node.line);
+                    
+                    // Bind Parameters
+                    var _params = _func_node.params;
+                    var _param_count = array_length(_params);
+                    var _arg_count = array_length(_node.args);
+                    
+                    for (var i = 0; i < _param_count; i++)
+                    {
+                        var _param = _params[i];
+                        
+                        if (i < _arg_count)
+                        {
+                            compile_node(_node.args[i]);
+                        }
+                        else
+                        {
+                            // Missing argument - use default or undefined
+                            if (_param.default_value != undefined) compile_node(_param.default_value);
+                            else emit(PROG_OP.PUSH_NULL);
+                        }
+                        
+                        emit(PROG_OP.DEFINE, add_constant(_param.name), _node.line);
+                        emit(PROG_OP.POP);
+                    }
+                    
+                    // Compile Body
+                    // Note: func_node.body is a BLOCK, which emits PUSH/POP SCOPE itself.
+                    // This means we have: InlineScope -> BlockScope.
+                    // This is fine, but maybe redundant. 
+                    // However, we need InlineScope to hold the params so they are local to the expansion
+                    // but visible to the body.
+                    compile_node(_func_node.body);
+                    
+                    // Patch Return Jumps
+                    for (var j = 0; j < array_length(_ctx.jumps); j++)
+                    {
+                        patch_jump(_ctx.jumps[j], bytecode.code_size);
+                    }
+                    
+                    // Pop Scope
+                    emit(PROG_OP.POP_SCOPE, undefined, _node.line);
+                    
+                    // Pop Context
+                    array_pop(inline_stack);
+                    
+                    // Load Result
+                    emit(PROG_OP.LOAD, add_constant(_ret_var), _node.line);
+                }
+                else if (_has_spread)
                 {
                     emit(PROG_OP.PUSH_ARRAY_EMPTY, undefined, _node.line);
                     for (var i = 0; i < array_length(_node.args); i++)
@@ -1336,9 +1423,37 @@ function ProgCompiler(_context_keys = []) constructor
                 break;
                 
             case PROG_AST.RETURN_STMT:
-                if (_node.value) compile_node(_node.value);
-                else emit(PROG_OP.PUSH_NULL);
-                emit(PROG_OP.RETURN, undefined, _node.line);
+                if (array_length(inline_stack) > 0)
+                {
+                    // Inline return: Assign to ret var and jump to end
+                    var _ctx = array_last(inline_stack);
+                    
+                    if (_node.value) compile_node(_node.value);
+                    else emit(PROG_OP.PUSH_NULL);
+                    
+                    // Store in return variable
+                    var _ret_idx = add_constant(_ctx.ret_var);
+                    // Use LOAD/STORE for locals in current scope? No, scope is handled by PUSH_SCOPE.
+                    // But we used add_constant for unique name.
+                    // We need to ensure we are addressing the variable correctly.
+                    // Since we are inside a PUSH_SCOPE block, we can use STORE.
+                    // But wait, STORE uses constants to find name in scope.
+                    emit(PROG_OP.STORE, _ret_idx, _node.line); 
+                    emit(PROG_OP.POP); // Consume value (STORE leaves it on stack)
+                    
+                    // Jump to end
+                    var _pop_count = scope_depth - _ctx.start_depth;
+                    for (var k = 0; k < _pop_count; k++) emit(PROG_OP.POP_SCOPE, undefined, _node.line);
+                    
+                    array_push(_ctx.jumps, emit(PROG_OP.JUMP, 0, _node.line));
+                }
+                else
+                {
+                    // Normal return
+                    if (_node.value) compile_node(_node.value);
+                    else emit(PROG_OP.PUSH_NULL);
+                    emit(PROG_OP.RETURN, undefined, _node.line);
+                }
                 break;
                 
             case PROG_AST.FOR_IN_STMT:

@@ -217,6 +217,34 @@ proglang_function_register("randomize", function(_args) {
     randomize();
 });
 
+proglang_function_register("random", function(_args) {
+    return random(_args[0]);
+});
+
+proglang_function_register("irandom", function(_args) {
+    return irandom(_args[0]);
+});
+
+proglang_function_register("random_range", function(_args) {
+    return random_range(_args[0], _args[1]);
+});
+
+proglang_function_register("choose", function(_args) {
+    if (!is_array(_args[0]) || array_length(_args[0]) == 0) {
+        return undefined;
+    }
+
+    return array_choose(_args[0]);
+});
+
+proglang_function_register("string", function(_args) {
+    return string(_args[0]);
+});
+
+proglang_function_register("real", function(_args) {
+    return real(_args[0]);
+});
+
 #endregion
 
 proglang_function_register("lengthdir_x", function(_args) {
@@ -1186,3 +1214,40 @@ proglang_function_register("test_group", function(_args, _vm = undefined)
     
     return _group_struct;
 });
+
+#region RAII Resources
+
+proglang_function_register("ds_list_create", function(_args, _vm) {
+    var _list = ds_list_create();
+    // Auto-track with current scope
+    proglang_scope_track_resource(_vm[PROG_VM.SCOPE], "__ds_list__", _list);
+    return _list;
+});
+
+proglang_function_register("ds_list_destroy", function(_args) {
+    if (ds_exists(_args[0], ds_type_list)) ds_list_destroy(_args[0]);
+});
+
+proglang_function_register("ds_list_add", function(_args) {
+    ds_list_add(_args[0], _args[1]);
+});
+
+proglang_function_register("ds_list_size", function(_args) {
+    return ds_list_size(_args[0]);
+});
+
+proglang_function_register("buffer_create", function(_args, _vm) {
+    var _size = _args[0];
+    var _type = _args[1]; // buffer_fixed, etc. need macros exposed?
+    var _alignment = _args[2];
+    var _buf = buffer_create(_size, _type, _alignment);
+    
+    proglang_scope_track_resource(_vm[PROG_VM.SCOPE], "__buffer__", _buf);
+    return _buf;
+});
+
+proglang_function_register("buffer_delete", function(_args) {
+    if (buffer_exists(_args[0])) buffer_delete(_args[0]);
+});
+
+#endregion

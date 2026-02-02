@@ -52,8 +52,9 @@ enum PROG_VM {
 }
 
 enum PROG_SCOPE {
-    VARS,           // Struct (The actual variables map)
-    PARENT,         // Array [PROG_SCOPE] or undefined
+    VARS,               // Struct (The actual variables map)
+    PARENT,             // Array [PROG_SCOPE] or undefined
+    TRACKED_RESOURCES,  // Array of resources to cleanup on scope exit (RAII)
     SIZE
 }
 
@@ -65,6 +66,9 @@ enum PROG_FRAME {
     SAVED_GREF, // Added for module scope restoration
     SIZE // 5
 }
+
+
+#macro PROGLANG_MAX_STEP 1_000_000
 
 // ========== CORE VM FUNCTIONS ==========
 
@@ -86,6 +90,7 @@ function proglang_vm_reset(_vm)
     var _scope = array_create(PROG_SCOPE.SIZE);
     _scope[PROG_SCOPE.VARS] = {}
     _scope[PROG_SCOPE.PARENT] = undefined;
+    _scope[PROG_SCOPE.TRACKED_RESOURCES] = [];  // RAII resource tracking
     
     _vm[@ PROG_VM.SCOPE] = _scope;
     _vm[@ PROG_VM.CONTEXT] = undefined;
@@ -162,7 +167,6 @@ function proglang_vm_run(_vm, _entry_bytecode)
     // LIFTED VARIABLES
     var _a, _b, _val, _index, _name, _arr, _obj, _prop, _vm_thrown_error;
     var _steps = 0;
-    var _max_steps = 1000000;
     
     while (true)
     {
@@ -170,7 +174,7 @@ function proglang_vm_run(_vm, _entry_bytecode)
         {
             while (_ip < _length)
             {
-                if (++_steps > _max_steps)
+                if (++_steps > PROGLANG_MAX_STEP)
                 {
                     show_debug_message("[ProgVM] Infinite loop protection triggered");
                     return undefined;
@@ -192,20 +196,28 @@ function proglang_vm_run(_vm, _entry_bytecode)
                     case PROG_OP.PUSH_CONST: _stack[@ _sp++] = _constants[_arg]; break;
                     case PROG_OP.POP: _sp--; break;
                     case PROG_OP.DUP: _stack[@ _sp] = _stack[_sp - 1]; _sp++; break;
+                    
                     case PROG_OP.DUP2:
                         _a = _stack[_sp - 1];
                         _b = _stack[_sp - 2];
+                        
                         _stack[@ _sp++] = _b;
                         _stack[@ _sp++] = _a;
                         break;
+                    
                     case PROG_OP.POP_AND_KEEP:
                         _a = _stack[--_sp];
                         _stack[@ _sp - 1] = _a;
                         break;
                     
                     // Optimization Ops
-                    case PROG_OP.INC: _stack[@ _sp - 1]++; break;
-                    case PROG_OP.DEC: _stack[@ _sp - 1]--; break;
+                    case PROG_OP.INC:
+                        ++_stack[@ _sp - 1];
+                        break;
+                    
+                    case PROG_OP.DEC:
+                        --_stack[@ _sp - 1];
+                        break;
                     
                     case PROG_OP.LOAD_LOCAL: _stack[@ _sp++] = _stack[_bp + _arg]; break;
                     case PROG_OP.STORE_LOCAL: _stack[@ _bp + _arg] = _stack[_sp - 1]; break; // Peek
@@ -317,26 +329,45 @@ function proglang_vm_run(_vm, _entry_bytecode)
                         _val = _stack[_sp - 1];
                         _name = _constants[_arg];
                         var _s_store = proglang_vm_find_var_scope(_vm, _name);
-                        if (_s_store != undefined) { _s_store[PROG_SCOPE.VARS][$ _name] = _val; }
-                        else if (_vm[PROG_VM.CONTEXT] != undefined && struct_exists(_vm[PROG_VM.CONTEXT], _name)) { _vm[PROG_VM.CONTEXT][$ _name] = _val; }
-                        else if (struct_exists(_gref, _name)) { _gref[$ _name] = _val; }
-                        else { _vm[PROG_VM.SCOPE][PROG_SCOPE.VARS][$ _name] = _val; }
+                        if (_s_store != undefined)
+                        {
+                            _s_store[@ PROG_SCOPE.VARS][$ _name] = _val;
+                        }
+                        else if (_vm[PROG_VM.CONTEXT] != undefined) && (struct_exists(_vm[PROG_VM.CONTEXT], _name))
+                        {
+                            _vm[@ PROG_VM.CONTEXT][$ _name] = _val;
+                        }
+                        else if (struct_exists(_gref, _name))
+                        {
+                            _gref[$ _name] = _val;
+                        }
+                        else
+                        {
+                            _vm[@ PROG_VM.SCOPE][@ PROG_SCOPE.VARS][$ _name] = _val;
+                        }
                         break;
                         
                     case PROG_OP.DEFINE:
                         _val = _stack[_sp - 1];
                         _name = _constants[_arg];
-                        _vm[PROG_VM.SCOPE][PROG_SCOPE.VARS][$ _name] = _val;
+                        
+                        _vm[@ PROG_VM.SCOPE][@ PROG_SCOPE.VARS][$ _name] = _val;
                         break;
                         
-                    case PROG_OP.LOAD_GLOBAL: _stack[@ _sp++] = _gref[$ _constants[_arg]]; break;
-                    case PROG_OP.STORE_GLOBAL: _gref[$ _constants[_arg]] = _stack[_sp - 1]; break;
+                    case PROG_OP.LOAD_GLOBAL:
+                        _stack[@ _sp++] = _gref[$ _constants[_arg]];
+                        break;
+                    
+                    case PROG_OP.STORE_GLOBAL:
+                        _gref[$ _constants[_arg]] = _stack[_sp - 1];
+                        break;
                         
                     // Scope
                     case PROG_OP.PUSH_SCOPE:
                         var _new_scope = array_create(PROG_SCOPE.SIZE);
                         _new_scope[PROG_SCOPE.VARS] = {}
                         _new_scope[PROG_SCOPE.PARENT] = _vm[PROG_VM.SCOPE];
+                        _new_scope[PROG_SCOPE.TRACKED_RESOURCES] = [];  // RAII resource tracking
                         _vm[@ PROG_VM.SCOPE] = _new_scope;
                         _scope = _new_scope; // Update local cache
                         break;
@@ -345,6 +376,8 @@ function proglang_vm_run(_vm, _entry_bytecode)
                         var _parent = _scope[PROG_SCOPE.PARENT];
                         if (_parent != undefined)
                         {
+                            // RAII cleanup: release all tracked resources
+                            proglang_scope_cleanup(_scope);
                             _vm[@ PROG_VM.SCOPE] = _parent;
                             _scope = _parent;
                         }
@@ -447,7 +480,7 @@ function proglang_vm_run(_vm, _entry_bytecode)
                             _new_scope[PROG_SCOPE.PARENT] = _closure_env;
                             _vm[@ PROG_VM.SCOPE] = _new_scope;
                             _scope = _new_scope;
-
+                            
                             // Restore captured global ref
                             _gref = _val[PROG_CLOSURE.GLOBAL_REF];
                             _vm[@ PROG_VM.GLOBAL_REF] = _gref;
@@ -541,7 +574,7 @@ function proglang_vm_run(_vm, _entry_bytecode)
                         
                         // Capture current (Callee's) BP to restore SP correctly later
                         var _return_bp = _bp;
-    
+                        
                         // Pop Frame
                         _gref = _frames[--_fp];
                         _curr_bytecode = _frames[--_fp];
@@ -1228,6 +1261,7 @@ function proglang_vm_create_impl()
     var _scope = array_create(PROG_SCOPE.SIZE);
     _scope[PROG_SCOPE.VARS] = {}
     _scope[PROG_SCOPE.PARENT] = undefined;
+    _scope[PROG_SCOPE.TRACKED_RESOURCES] = [];  // RAII resource tracking
     
     _vm[PROG_VM.SCOPE] = _scope;
     _vm[PROG_VM.CONTEXT] = undefined;
@@ -1278,6 +1312,74 @@ function proglang_vm_free(_vm)
         proglang_vm_reset(_vm);
         array_push(global.proglang_vm_pool, _vm);
     }
+}
+
+/// @desc RAII-style scope cleanup - release all tracked resources when scope exits
+/// @param {Array<PROG_SCOPE>} _scope The scope to clean up
+function proglang_scope_cleanup(_scope)
+{
+    var _resources = _scope[PROG_SCOPE.TRACKED_RESOURCES];
+    if (_resources == undefined) return;
+    
+    var _len = array_length(_resources);
+    for (var i = 0; i < _len; i++)
+    {
+        var _res = _resources[i];
+        
+        // Handle different resource types
+        if (is_array(_res) && array_length(_res) >= 2)
+        {
+            var _type = _res[0];
+            switch (_type)
+            {
+                case "__buffer__":
+                    // Buffer cleanup
+                    if (buffer_exists(_res[1])) buffer_delete(_res[1]);
+                    break;
+                    
+                case "__surface__":
+                    // Surface cleanup
+                    if (surface_exists(_res[1])) surface_free(_res[1]);
+                    break;
+                    
+                case "__ds_list__":
+                    // DS List cleanup
+                    if (ds_exists(_res[1], ds_type_list)) ds_list_destroy(_res[1]);
+                    break;
+                    
+                case "__ds_map__":
+                    // DS Map cleanup
+                    if (ds_exists(_res[1], ds_type_map)) ds_map_destroy(_res[1]);
+                    break;
+                    
+                case "__ds_grid__":
+                    // DS Grid cleanup
+                    if (ds_exists(_res[1], ds_type_grid)) ds_grid_destroy(_res[1]);
+                    break;
+                    
+                // Add more resource types as needed
+            }
+        }
+    }
+    
+    // Clear the tracked resources array and scope variables
+    _scope[@ PROG_SCOPE.TRACKED_RESOURCES] = [];
+    _scope[@ PROG_SCOPE.VARS] = {};
+}
+
+/// @desc Track a resource for RAII cleanup when scope exits
+/// @param {Array<PROG_SCOPE>} _scope The scope to track in
+/// @param {string} _type Resource type identifier
+/// @param {any} _handle Resource handle/id
+function proglang_scope_track_resource(_scope, _type, _handle)
+{
+    var _resources = _scope[PROG_SCOPE.TRACKED_RESOURCES];
+    if (_resources == undefined)
+    {
+        _resources = [];
+        _scope[@ PROG_SCOPE.TRACKED_RESOURCES] = _resources;
+    }
+    array_push(_resources, [_type, _handle]);
 }
 
 /// @desc Garbage collection - clear unused VMs from pool
