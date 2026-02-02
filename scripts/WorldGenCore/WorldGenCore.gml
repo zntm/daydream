@@ -49,12 +49,12 @@ function worldgen_get_surface_height_at(_x, _seed, _config = global.chunk_pool.w
     return _config.base_height + _range;
 }
 
-function worldgen_get_density(_x, _y, _z, _seed, _config = global.chunk_pool.worldgen_config)
+function worldgen_get_density(_x, _y, _z, _seed, _config = global.chunk_pool.worldgen_config, _surface_height = undefined)
 {
     if (_config == undefined) return -1.0;
     
-    // 1. Calculate 1D Surface Height
-    var _surface_height = worldgen_get_surface_height(_x, _seed, global.world_data[$ global.world_save_data.dimension]);
+    // 1. Calculate 1D Surface Height (bypass if provided)
+    _surface_height ??= worldgen_get_surface_height(_x, _seed, global.world_data[$ global.world_save_data.dimension]);
     
     if (_y < _surface_height) return -1.0;
     
@@ -73,9 +73,9 @@ function worldgen_get_density(_x, _y, _z, _seed, _config = global.chunk_pool.wor
 }
 
 /// @desc Check if solid
-function worldgen_is_solid(_x, _y, _seed, _config = global.chunk_pool.worldgen_config)
+function worldgen_is_solid(_x, _y, _seed, _config = global.chunk_pool.worldgen_config, _surface_height = undefined)
 {
-    return (worldgen_get_density(_x, _y, 0, _seed, _config) > 0);
+    return (worldgen_get_density(_x, _y, 0, _seed, _config, _surface_height) > 0);
 }
 
 /// @desc Check if wall

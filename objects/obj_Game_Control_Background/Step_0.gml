@@ -11,7 +11,8 @@ var _in_biome_transition_data = _biome_data[$ _in_biome];
 
 if !(obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.PAUSE)
 {
-    var _duration = max(0.001, global.settings.graphics_background_transition_speed);
+    // var _duration = max(0.001, global.settings.graphics_background_transition_speed);
+    var _duration = 0.8;
     
     if (in_biome_transition_value <= 0)
     {

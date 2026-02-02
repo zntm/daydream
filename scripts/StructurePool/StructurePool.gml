@@ -41,6 +41,7 @@ function Structure(_x, _y, _width, _height, _id) constructor
 function StructurePool() : Pool() constructor
 {
     active_structures = [];
+    spatial_grid = new SpatialGrid(CHUNK_SIZE_DIMENSION);
     
     static create = function()
     {
@@ -74,6 +75,14 @@ function StructurePool() : Pool() constructor
         _struct.data = undefined;
         _struct.count = 0;
         
+        // Prepare body properties for SpatialGrid
+        _struct.pos_x = _x;
+        _struct.pos_y = _y;
+        _struct.width = _width * TILE_SIZE;
+        _struct.height = _height * TILE_SIZE;
+        _struct.id = string(ptr(_struct)); // Unique ID for grid tracking
+        
+        spatial_grid.add(_struct);
         array_push(active_structures, _struct);
         
         return _struct;
@@ -88,6 +97,8 @@ function StructurePool() : Pool() constructor
         {
             array_delete(active_structures, _index, 1);
         }
+        
+        spatial_grid.remove(_struct);
         
         // Reset heavy data
         if (_struct.data != undefined && is_array(_struct.data))
@@ -109,25 +120,7 @@ function StructurePool() : Pool() constructor
     /// @param {real} _y2 Bottom coordinate
     static query_range = function(_x1, _y1, _x2, _y2)
     {
-        var _results = [];
-        var _count = array_length(active_structures);
-        
-        for (var i = 0; i < _count; ++i)
-        {
-            var _struct = active_structures[i];
-            
-            // AABB Overlap check
-            // Rectangle 1: _x1, _y1, _x2, _y2
-            // Rectangle 2: _struct.bbox_left, _struct.bbox_top, _struct.bbox_right, _struct.bbox_bottom
-            
-            if (_struct.bbox_left < _x2 && _struct.bbox_right > _x1 &&
-                _struct.bbox_top < _y2 && _struct.bbox_bottom > _y1)
-            {
-                array_push(_results, _struct);
-            }
-        }
-        
-        return _results;
+        return spatial_grid.query_rect(_x1, _y1, _x2, _y2);
     }
     
     /// @function query_position(_x, _y)
@@ -136,20 +129,8 @@ function StructurePool() : Pool() constructor
     /// @param {real} _y Y coordinate
     static query_position = function(_x, _y)
     {
-        var _count = array_length(active_structures);
-        
-        for (var i = 0; i < _count; ++i)
-        {
-            var _struct = active_structures[i];
-            
-            if (_x >= _struct.bbox_left && _x < _struct.bbox_right &&
-                _y >= _struct.bbox_top && _y < _struct.bbox_bottom)
-            {
-                return _struct;
-            }
-        }
-        
-        return noone;
+        var _list = spatial_grid.query_point(_x, _y);
+        return (array_length(_list) > 0) ? _list[0] : noone;
     }
 }
 

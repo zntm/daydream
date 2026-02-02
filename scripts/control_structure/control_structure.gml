@@ -34,7 +34,11 @@ function control_structure(_x, _y)
             for (var _ti = 0; _ti < CHUNK_SIZE; ++_ti)
             {
                 var i = (_ci << CHUNK_SIZE_BIT) + _ti;
-                var _surface_height = worldgen_get_surface_height(i, _world_seed);
+                
+                // HOIST: Calculate column parameters ONCE
+                var _surface_height = worldgen_get_surface_height(i, _world_seed, _world_data);
+                var _heat = worldgen_get_heat(i, 0, _world_seed, _world_data);
+                var _humidity = worldgen_get_humidity(i, 0, _world_seed, _world_data);
                 
                 var _queue = 0;
                 var _queue_valid = false;
@@ -44,20 +48,22 @@ function control_structure(_x, _y)
                     var j = (_cj << CHUNK_SIZE_BIT) + _tj;
                     
                     // Maintain a small sliding window for cave/air check
+                    // OPTIMIZATION: Pass pre-calculated _surface_height
                     if (!_queue_valid)
                     {
                         _queue =
-                            (!worldgen_is_solid(i, j + 1, _world_seed) << 0) |
-                            (!worldgen_is_solid(i, j + 0, _world_seed) << 1) |
-                            (!worldgen_is_solid(i, j - 1, _world_seed) << 2);
+                            (!worldgen_is_solid(i, j + 1, _world_seed, undefined, _surface_height) << 0) |
+                            (!worldgen_is_solid(i, j + 0, _world_seed, undefined, _surface_height) << 1) |
+                            (!worldgen_is_solid(i, j - 1, _world_seed, undefined, _surface_height) << 2);
                         _queue_valid = true;
                     }
                     else
                     {
-                        _queue = ((_queue & 0b011) << 1) | (!worldgen_is_solid(i, j + 1, _world_seed) & 0b001);
+                        _queue = ((_queue & 0b011) << 1) | (!worldgen_is_solid(i, j + 1, _world_seed, undefined, _surface_height) & 0b001);
                     }
                     
-                    var _biome_id = bg_get_biome(i, j, _surface_height);
+                    // OPTIMIZATION: Pass pre-calculated column params to bg_get_biome
+                    var _biome_id = bg_get_biome(i, j, _surface_height, _heat, _humidity);
                     var _data = _biome_data[$ _biome_id];
                     
                     if (_data == undefined)
@@ -89,7 +95,6 @@ function control_structure(_x, _y)
                         {
                             var _id_length = array_length(_id);
                             var _generate = true;
-                            var _struct_seed = _chance_seed ^ (_id_length * 521.123);
                             
                             for (var m = 0; m < _id_length; ++m)
                             {
@@ -117,6 +122,7 @@ function control_structure(_x, _y)
                             {
                                 for (var m = 0; m < _id_length; ++m)
                                 {
+                                    // OPTIMIZATION: Pass surface height to structure_valid (if it supported it, but it doesn't yet)
                                     if (!structure_valid(i * TILE_SIZE, j * TILE_SIZE, _id[m], _world_seed)) { _generate = false; break; }
                                 }
                             }
