@@ -469,21 +469,27 @@ proglang_function_register("control_entity_heal", function(_args) {
     return control_entity_heal(_args[0], _args[1], _args[2]);
 });
 
-proglang_function_register("tick_delay_add", function(_args, _vm) {
-    var _delay = _args[0];
-    var _callback = _args[1];
-    var _cb_args = (array_length(_args) > 2) ? _args[2] : [];
+proglang_function_register("wait", function(_args, _vm) {
+    if (array_length(_args) < 3) return;
     
+    var _callback = _args[0];
+    var _params = _args[1];
+    var _seconds = _args[2];
+    
+    if (!is_array(_params)) _params = [_params];
+
     // If _callback is a Proglang closure, we need to handle its execution
     if (is_array(_callback) && array_length(_callback) >= PROG_CLOSURE.SIZE && _callback[PROG_CLOSURE.TYPE] == "closure") {
-        tick_delay_add(_delay, function(_data) {
+        call_later(_seconds, time_source_units_seconds, function(_data) {
             var _vm = proglang_vm_create();
             _vm[PROG_VM.SCOPE][@ PROG_SCOPE.PARENT] = _data.env;
             proglang_vm_run(_vm, _data.bytecode, _data.args);
             proglang_vm_free(_vm);
-        }, { bytecode: _callback[PROG_CLOSURE.BYTECODE], env: _callback[PROG_CLOSURE.ENV], args: _cb_args });
+        }, false, { bytecode: _callback[PROG_CLOSURE.BYTECODE], env: _callback[PROG_CLOSURE.ENV], args: _params });
     } else {
-        tick_delay_add(_delay, _callback, _cb_args);
+        call_later(_seconds, time_source_units_seconds, function(_data) {
+            _data.func(_data.args);
+        }, false, { func: _callback, args: _params });
     }
 });
 

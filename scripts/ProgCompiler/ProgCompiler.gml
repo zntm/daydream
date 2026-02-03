@@ -61,7 +61,10 @@ enum PROG_OP
     STRING_CONCAT,
     
     // Optimization Ops
-    LOAD_LOCAL, STORE_LOCAL
+    LOAD_LOCAL, STORE_LOCAL,
+    
+    // Annotation Ops
+    MEMOIZE_CHECK, MEMOIZE_STORE
 }
 
 /// @desc Array indices for function data (replaces struct)
@@ -133,6 +136,10 @@ function ProgCompiler(_context_keys = []) constructor
     
     // Stack of declared variable sets per scope (for redeclaration checks)
     declared_vars = [{}];
+    
+    memo_count = 0; // Unique ID counter for memoized functions
+    current_memo_id = undefined;
+    memo_id_stack = [];
     
     // Stack of constant scopes (parallel to declared_vars)
     // Each entry is a struct of { varname: value }
@@ -485,11 +492,28 @@ function ProgCompiler(_context_keys = []) constructor
         // We removed the LOAD/DEFINE/POP loop.
         // Now arguments are just locals 0..N-1.
         
+        // Save and restore memo context for nested functions
+        array_push(memo_id_stack, current_memo_id);
+        current_memo_id = struct_exists(_node, "is_memoize") && _node.is_memoize ? memo_count++ : undefined;
+        
+        if (current_memo_id != undefined)
+        {
+            emit(PROG_OP.MEMOIZE_CHECK, current_memo_id, _node.line);
+        }
+        
         compile_node(_node.body);
         
         // Pop function scope
         array_pop(declared_vars);
         const_scopes = _old_scopes;
+        
+        if (current_memo_id != undefined)
+        {
+            emit(PROG_OP.MEMOIZE_STORE, current_memo_id, _node.line);
+        }
+        
+        current_memo_id = array_pop(memo_id_stack);
+        
         emit(PROG_OP.PUSH_NULL);
         emit(PROG_OP.RETURN);
         
@@ -1431,6 +1455,15 @@ function ProgCompiler(_context_keys = []) constructor
                     if (_node.value) compile_node(_node.value);
                     else emit(PROG_OP.PUSH_NULL);
                     
+                    // Memoization in inline functions (if we ever support it, but for now we follow current_memo_id)
+                    // Wait, if an inline function is memoized, its result should be cached.
+                    // But currently we only handle @inline OR @memoize, usually not both.
+                    // If both are used, we follow current_memo_id.
+                    if (current_memo_id != undefined)
+                    {
+                        emit(PROG_OP.MEMOIZE_STORE, current_memo_id, _node.line);
+                    }
+                    
                     // Store in return variable
                     var _ret_idx = add_constant(_ctx.ret_var);
                     // Use LOAD/STORE for locals in current scope? No, scope is handled by PUSH_SCOPE.
@@ -1452,6 +1485,12 @@ function ProgCompiler(_context_keys = []) constructor
                     // Normal return
                     if (_node.value) compile_node(_node.value);
                     else emit(PROG_OP.PUSH_NULL);
+                    
+                    if (current_memo_id != undefined)
+                    {
+                        emit(PROG_OP.MEMOIZE_STORE, current_memo_id, _node.line);
+                    }
+                    
                     emit(PROG_OP.RETURN, undefined, _node.line);
                 }
                 break;

@@ -153,7 +153,7 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
                 draw_surface(_chunk.surface_lighting, _x2, _y2 + 8);
             }
         }
-        
+        /*
         with (obj_Player)
         {
             var _x = ((x + RENDER_LIGHTING_PADDING - _surface_x) / RENDER_LIGHTING_RESIZE);
@@ -174,7 +174,7 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
             draw_sprite_ext(spr_Light, 0, _xdraw, _ydraw + 1, 1, 1, 0, c_white,      (_ynormalized) * 0.5);
             draw_sprite_ext(spr_Light, 0, _xdraw, _ydraw - 1, 1, 1, 0, c_white, (1 - _ynormalized) * 0.5);
         }
-        
+        */
         for (var i = 0; i < chunk_in_view_length; ++i)
         {
             var _chunk = chunk_in_view[i];
@@ -221,7 +221,7 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
         draw_clear_alpha(c_black, 1);
         
         gpu_set_blendmode(bm_add);
-        
+        /*
         with (obj_Player)
         {
             var _x = ((x + RENDER_LIGHTING_PADDING - _surface_x) / RENDER_LIGHTING_RESIZE);
@@ -242,7 +242,7 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
             draw_sprite_ext(spr_Light, 0, _xdraw, _ydraw + 1, 1, 1, 0, c_white,      (_ynormalized) * 0.5);
             draw_sprite_ext(spr_Light, 0, _xdraw, _ydraw - 1, 1, 1, 0, c_white, (1 - _ynormalized) * 0.5);
         }
-        
+        */
         for (var i = 0; i < chunk_in_view_length; ++i)
         {
             var _chunk = chunk_in_view[i];
@@ -536,11 +536,16 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
                 var _xdraw = _xf + 0.5;
                 var _ydraw = _yf + 8 + 0.5;
                 
-                draw_sprite_ext(spr_Light, 0, _xdraw + 1, _ydraw, 1, 1, 0, _light.image_blend,      (_xnormalized) * 0.5);
-                draw_sprite_ext(spr_Light, 0, _xdraw - 1, _ydraw, 1, 1, 0, _light.image_blend, (1 - _xnormalized) * 0.5);
+                // Calculate grayscale for cutout pass
+                var _col = _light.image_blend;
+                var _lum = (colour_get_red(_col) * 0.299) + (colour_get_green(_col) * 0.587) + (colour_get_blue(_col) * 0.114);
+                var _blend = make_colour_rgb(_lum, _lum, _lum);
                 
-                draw_sprite_ext(spr_Light, 0, _xdraw, _ydraw + 1, 1, 1, 0, _light.image_blend,      (_ynormalized) * 0.5);
-                draw_sprite_ext(spr_Light, 0, _xdraw, _ydraw - 1, 1, 1, 0, _light.image_blend, (1 - _ynormalized) * 0.5);
+                draw_sprite_ext(spr_Light, 0, _xdraw + 1, _ydraw, 1, 1, 0, _blend,      (_xnormalized) * 0.5);
+                draw_sprite_ext(spr_Light, 0, _xdraw - 1, _ydraw, 1, 1, 0, _blend, (1 - _xnormalized) * 0.5);
+                
+                draw_sprite_ext(spr_Light, 0, _xdraw, _ydraw + 1, 1, 1, 0, _blend,      (_ynormalized) * 0.5);
+                draw_sprite_ext(spr_Light, 0, _xdraw, _ydraw - 1, 1, 1, 0, _blend, (1 - _ynormalized) * 0.5);
             }
         }
         

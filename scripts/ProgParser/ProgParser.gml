@@ -113,8 +113,23 @@ function ProgParser(_tokens) constructor
     
     static parse_statement = function()
     {
-        // Check for @inline annotation
-        var _is_inline = match(PROG_TOKEN.AT_INLINE);
+        // Check for annotations
+        var _annotations = {
+            is_inline: false,
+            is_memoize: false
+        };
+        
+        while (check(PROG_TOKEN.AT_INLINE) || check(PROG_TOKEN.AT_MEMOIZE))
+        {
+            if (match(PROG_TOKEN.AT_INLINE)) _annotations.is_inline = true;
+            else if (match(PROG_TOKEN.AT_MEMOIZE)) _annotations.is_memoize = true;
+            
+            // STRICT CHECK: No braces allowed
+            if (check(PROG_TOKEN.LBRACE))
+            {
+                error_at_current("Annotations must not be followed by braces ('{'). Use '@annotation declaration'.");
+            }
+        }
         
         // Check for global prefix
         var _is_global = false;
@@ -130,14 +145,16 @@ function ProgParser(_tokens) constructor
             else if (check(PROG_TOKEN.VAR))
             {
                 // global var x
-                if (_is_inline) error_at_current("@inline can only be applied to functions.");
+                if (_annotations.is_inline || _annotations.is_memoize) error_at_current("Annotation can only be applied to functions.");
+                
                 advance(); // consume VAR
                 return parse_var_decl(true); // is_global = true
             }
             // Backtrack to let parse_expression_statement handle 'global.x'
             else if (check(PROG_TOKEN.DOT))
             {
-                if (_is_inline) error_at_current("@inline can only be applied to functions.");
+                if (_annotations.is_inline || _annotations.is_memoize) error_at_current("Annotation can only be applied to functions.");
+                
                 --current;
                 
                 return parse_expression_statement();
@@ -152,15 +169,24 @@ function ProgParser(_tokens) constructor
         // Function declaration
         if (match(PROG_TOKEN.FN))
         {
-            var _decl = parse_function_decl(_is_global);
-            _decl.is_inline = _is_inline;
+            
+            var _decl = parse_function_decl(_is_global, _annotations);
             return _decl;
         }
         
-        // Error if @inline was used without function
-        if (_is_inline)
+        // Class Declaration
+        if (match(PROG_TOKEN.CLASS))
         {
-            error_at_current("@inline can only be applied to function declarations.");
+            if (_annotations.is_inline || _annotations.is_memoize) error_at_current("@inline/@memoize cannot be applied to classes.");
+            if (_is_global) error_at_current("Global classes not supported.");
+            
+            return parse_class_decl(_annotations);
+        }
+        
+        // Error if annotation was used without correct target
+        if (_annotations.is_inline || _annotations.is_memoize)
+        {
+            error_at_current("Annotations must be followed by a function declaration (fn).");
         }
         
         if (match(PROG_TOKEN.VAR)) return parse_var_decl(false);
@@ -314,7 +340,7 @@ function ProgParser(_tokens) constructor
         return new ProgASTExportStmt(_decl, _is_default);
     }
     
-    static parse_class_decl = function()
+    static parse_class_decl = function(_annotations = {})
     {
         var _name = consume(PROG_TOKEN.IDENTIFIER, "Expected class name.").lexeme;
         var _super = undefined;
@@ -444,7 +470,9 @@ function ProgParser(_tokens) constructor
         
         consume(PROG_TOKEN.RBRACE, "Expected '}' after class body.");
         
-        return new ProgASTClassDecl(_name, _super, _members, _constructor);
+        var _node = new ProgASTClassDecl(_name, _super, _members, _constructor);
+        if (struct_exists(_annotations, "is_recyclable")) _node.is_recyclable = _annotations.is_recyclable;
+        return _node;
     }
     
     static parse_new_expr = function()
@@ -472,8 +500,8 @@ function ProgParser(_tokens) constructor
             array_push(_statements, parse_statement());
             if (current == _start && !check(PROG_TOKEN.RBRACE) && !is_at_end())
             {
-                 error_at_current("Parser block stuck: Infinite loop detected. Forcing advance.");
-                 advance();
+                error_at_current("Parser block stuck: Infinite loop detected. Forcing advance.");
+                advance();
             }
         }
         consume(PROG_TOKEN.RBRACE, "Expected '}' after block.");
@@ -485,13 +513,13 @@ function ProgParser(_tokens) constructor
         // Destructuring: var {a, b} = ... OR var [a, b] = ...
         if (check(PROG_TOKEN.LBRACE) || check(PROG_TOKEN.LBRACKET))
         {
-             var _pattern = parse_destructuring_pattern();
-             consume(PROG_TOKEN.ASSIGN, "Expected '=' in destructuring declaration.");
-             var _initializer = parse_expression();
-             if (_require_semi) match(PROG_TOKEN.SEMICOLON);
-             
-             // Reuse existing AST Node but structurally richer
-             return new ProgASTDestructuringDecl(_pattern.type, _pattern.elements, _initializer);
+            var _pattern = parse_destructuring_pattern();
+            consume(PROG_TOKEN.ASSIGN, "Expected '=' in destructuring declaration.");
+            var _initializer = parse_expression();
+            if (_require_semi) match(PROG_TOKEN.SEMICOLON);
+            
+            // Reuse existing AST Node but structurally richer
+            return new ProgASTDestructuringDecl(_pattern.type, _pattern.elements, _initializer);
         }
         
         // Normal Declaration
@@ -525,13 +553,13 @@ function ProgParser(_tokens) constructor
                 {
                     if (check(PROG_TOKEN.LBRACE) || check(PROG_TOKEN.LBRACKET))
                     {
-                         // Nested pattern
-                         _target = parse_destructuring_pattern();
+                        // Nested pattern
+                        _target = parse_destructuring_pattern();
                     }
                     else
                     {
-                         // Alias variable
-                         _target = consume(PROG_TOKEN.IDENTIFIER, "Expected variable name.").lexeme;
+                        // Alias variable
+                        _target = consume(PROG_TOKEN.IDENTIFIER, "Expected variable name.").lexeme;
                     }
                 }
                 array_push(_elements, { key: _key, target: _target });
@@ -545,16 +573,16 @@ function ProgParser(_tokens) constructor
             var _elements = [];
             do
             {
-                 if (check(PROG_TOKEN.LBRACE) || check(PROG_TOKEN.LBRACKET))
-                 {
-                     // Nested pattern
-                     array_push(_elements, parse_destructuring_pattern());
-                 }
-                 else
-                 {
-                     var _name = consume(PROG_TOKEN.IDENTIFIER, "Expected variable name.").lexeme;
-                     array_push(_elements, _name);
-                 }
+                if (check(PROG_TOKEN.LBRACE) || check(PROG_TOKEN.LBRACKET))
+                {
+                    // Nested pattern
+                    array_push(_elements, parse_destructuring_pattern());
+                }
+                else
+                {
+                    var _name = consume(PROG_TOKEN.IDENTIFIER, "Expected variable name.").lexeme;
+                    array_push(_elements, _name);
+                }
             } until (!match(PROG_TOKEN.COMMA));
             consume(PROG_TOKEN.RBRACKET, "Expected ']' after array pattern.");
             return { type: "array", elements: _elements } 
@@ -564,11 +592,16 @@ function ProgParser(_tokens) constructor
         return { type: "error", elements: [] }
     }
     
-    static parse_function_decl = function(_is_global = false)
+    static parse_function_decl = function(_is_global = false, _annotations = {})
     {
         var _name = consume(PROG_TOKEN.IDENTIFIER, "Expected function name.").lexeme;
         var _data = parse_function_body();
-        return new ProgASTFuncDecl(_name, _data.params, _data.body, _is_global);
+        var _node = new ProgASTFuncDecl(_name, _data.params, _data.body, _is_global);
+        
+        if (struct_exists(_annotations, "is_inline")) _node.is_inline = _annotations.is_inline;
+        if (struct_exists(_annotations, "is_memoize")) _node.is_memoize = _annotations.is_memoize;
+        
+        return _node;
     }
 
     static parse_function_expr = function()
@@ -1113,29 +1146,29 @@ function ProgParser(_tokens) constructor
         
         while (check(PROG_TOKEN.GT)) || (check(PROG_TOKEN.GE)) || (check(PROG_TOKEN.LT)) || (check(PROG_TOKEN.LE)) || (check(PROG_TOKEN.IN))
         {
-             var _op = advance().type;
-             
-             // Handle 'in' operator with optional key/value modifier
-             if (_op == PROG_TOKEN.IN)
-             {
-                 var _modifier = undefined;
-                 // Check for 'key' or 'value' modifier
-                 if (check(PROG_TOKEN.IDENTIFIER))
-                 {
-                     var _next = peek();
-                     if (_next.lexeme == "key" || _next.lexeme == "value")
-                     {
-                         _modifier = advance().lexeme;
-                     }
-                 }
-                 var _right = parse_shift();
-                 _expression = new ProgASTInExpr(_expression, _right, _modifier);
-             }
-             else
-             {
-                 var _right = parse_shift();
-                 _expression = new ProgASTBinaryOp(_op, _expression, _right);
-             }
+            var _op = advance().type;
+            
+            // Handle 'in' operator with optional key/value modifier
+            if (_op == PROG_TOKEN.IN)
+            {
+                var _modifier = undefined;
+                // Check for 'key' or 'value' modifier
+                if (check(PROG_TOKEN.IDENTIFIER))
+                {
+                    var _next = peek();
+                    if (_next.lexeme == "key" || _next.lexeme == "value")
+                    {
+                        _modifier = advance().lexeme;
+                    }
+                }
+                var _right = parse_shift();
+                _expression = new ProgASTInExpr(_expression, _right, _modifier);
+            }
+            else
+            {
+                var _right = parse_shift();
+                _expression = new ProgASTBinaryOp(_op, _expression, _right);
+            }
         }
         
         return _expression;
@@ -1147,8 +1180,8 @@ function ProgParser(_tokens) constructor
         
         while (check(PROG_TOKEN.LSHIFT)) || (check(PROG_TOKEN.RSHIFT))
         {
-             var _op = advance().type;
-             var _right = parse_range();
+            var _op = advance().type;
+            var _right = parse_range();
              
             _expression = new ProgASTBinaryOp(_op, _expression, _right);
         }

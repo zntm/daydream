@@ -25,6 +25,7 @@ enum PROG_TOKEN
     COMMA, DOT, SEMICOLON, COLON, QUESTION,
     // Annotations
     AT_INLINE,      // @inline annotation for function inlining
+    AT_MEMOIZE,     // @memoize annotation for result caching
     // Special
     EOF, ERROR
 }
@@ -487,6 +488,10 @@ function ProgLexer(_source) constructor
         {
             case "@inline":
                 add_token(PROG_TOKEN.AT_INLINE);
+                break;
+            
+            case "@memoize":
+                add_token(PROG_TOKEN.AT_MEMOIZE);
                 break;
             
             default:

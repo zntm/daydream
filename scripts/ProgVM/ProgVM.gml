@@ -48,6 +48,8 @@ enum PROG_VM {
     CURRENT_THIS,   // Any
     ACTIVE_CLASS,   // Struct
     CLASS_REGISTRY, // Struct
+    MEMO_CACHES,    // Struct (memo_id -> { hash -> value })
+    MEMO_ARG_KEYS,  // Array (Stack of argument hashes for current calls)
     SIZE            // Total size
 }
 
@@ -99,6 +101,8 @@ function proglang_vm_reset(_vm)
     _vm[@ PROG_VM.CURRENT_THIS] = undefined;
     _vm[@ PROG_VM.ACTIVE_CLASS] = undefined;
     _vm[@ PROG_VM.ACTIVE_MODULE] = undefined;
+    _vm[@ PROG_VM.MEMO_CACHES] = {};
+    _vm[@ PROG_VM.MEMO_ARG_KEYS] = [];
 }
 
 /// @desc Find variable in scope chain
@@ -597,6 +601,57 @@ function proglang_vm_run(_vm, _entry_bytecode)
                         
                         _sp = _return_bp - 1;
                         _stack[@ _sp++] = _val;
+                        break;
+                        
+                    case PROG_OP.MEMOIZE_CHECK:
+                        var _memo_id = _arg;
+                        var _param_count = _sp - _bp;
+                        var _hash = "";
+                        for (var i = 0; i < _param_count; i++) {
+                            _hash += string(_stack[_bp + i]) + "|";
+                        }
+                        array_push(_vm[PROG_VM.MEMO_ARG_KEYS], _hash);
+                        
+                        var _caches = _vm[PROG_VM.MEMO_CACHES];
+                        if (struct_exists(_caches, _memo_id)) {
+                            var _cache = _caches[$ _memo_id];
+                            if (struct_exists(_cache, _hash)) {
+                                _val = _cache[$ _hash];
+                                array_pop(_vm[PROG_VM.MEMO_ARG_KEYS]);
+                                
+                                // Return logic (same as PROG_OP.RETURN)
+                                if (_fp == _start_fp) {
+                                    _vm[@ PROG_VM.SP] = _sp;
+                                    _vm[@ PROG_VM.IP] = _ip;
+                                    _vm[@ PROG_VM.BP] = _bp;
+                                    _vm[@ PROG_VM.FP] = _fp;
+                                    return _val;
+                                }
+                                var _return_bp = _bp;
+                                _gref = _frames[--_fp];
+                                _curr_bytecode = _frames[--_fp];
+                                _scope = _frames[--_fp];
+                                _bp = _frames[--_fp];
+                                _ip = _frames[--_fp];
+                                _vm[@ PROG_VM.SCOPE] = _scope;
+                                _vm[@ PROG_VM.GLOBAL_REF] = _gref;
+                                _code = _curr_bytecode.code;
+                                _constants = _curr_bytecode.constants;
+                                _length = array_length(_code);
+                                _sp = _return_bp - 1;
+                                _stack[@ _sp++] = _val;
+                            }
+                        }
+                        break;
+                        
+                    case PROG_OP.MEMOIZE_STORE:
+                        var _memo_id = _arg;
+                        var _memo_val = _stack[_sp - 1];
+                        var _memo_hash = array_pop(_vm[PROG_VM.MEMO_ARG_KEYS]);
+                        var _caches = _vm[PROG_VM.MEMO_CACHES];
+                        if (!struct_exists(_caches, _memo_id)) _caches[$ _memo_id] = {};
+                        var _cache = _caches[$ _memo_id];
+                        _cache[$ _memo_hash] = _memo_val;
                         break;
                         
                     // Try/Catch
