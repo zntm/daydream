@@ -26,6 +26,7 @@ function structure_valid(_x, _y, _id, _seed)
     }
     
     var _structure_data = global.structure_data[$ _id];
+    var _world_data = global.world_data[$ global.world_save_data.dimension];
     
     var _width  = smart_value(_structure_data.get_width());
     var _height = smart_value(_structure_data.get_height());
@@ -65,7 +66,7 @@ function structure_valid(_x, _y, _id, _seed)
             {
                 var _x2 = _tile_x + j + _xoffset;
                 
-                var _surface_height = worldgen_get_surface_height(_x2, _seed);
+                var _surface_height = worldgen_get_surface_height(_x2, _seed, _world_data);
                 
                 if (_tile_y + _abs_clearance_condition_height + _yoffset < _surface_height) continue;
                 
@@ -76,23 +77,13 @@ function structure_valid(_x, _y, _id, _seed)
                     ++l;
                 }
                 
-                var _cave_start = worldgen_get_cave_start(_x2, _seed);
-                    
+                var _cave_start = worldgen_get_cave_start(_x2, _seed, _world_data);
+                
                 for (; l < _abs_clearance_condition_height; ++l)
                 {
                     var _y2 = _tile_y + l + _yoffset;
-                        
-                    var _is_cave = false;
-                    if (global.terrain_shaper != undefined)
-                    {
-                        _is_cave = (global.terrain_shaper.get_density_solid(_x2, _y2, _seed) < 0);
-                    }
-                    else
-                    {
-                        _is_cave = worldgen_get_cave(_x2, _y2, _surface_height, _cave_start, _seed);
-                    }
-                        
-                    if (!_is_cave) return false;
+                    
+                    if (!worldgen_get_cave(_x2, _y2, _surface_height, _cave_start, _seed, _world_data)) return false;
                 }
             }
         }
