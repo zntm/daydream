@@ -1126,6 +1126,7 @@
     {"$GMIncludedFile":"","%Name":"explode.daydream","CopyToMask":-1,"filePath":"datafiles/resources/data/scripts/item/explosive","name":"explode.daydream","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"bucket_pickup.daydream","CopyToMask":-1,"filePath":"datafiles/resources/data/scripts/item/tool","name":"bucket_pickup.daydream","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"bucket_place.daydream","CopyToMask":-1,"filePath":"datafiles/resources/data/scripts/item/tool","name":"bucket_place.daydream","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"mine_area.daydream","CopyToMask":-1,"filePath":"datafiles/resources/data/scripts/item/tool","name":"mine_area.daydream","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"projectile_spawn.daydream","CopyToMask":-1,"filePath":"datafiles/resources/data/scripts/item/weapon","name":"projectile_spawn.daydream","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"gaussian.daydream","CopyToMask":-1,"filePath":"datafiles/resources/data/scripts/module/math","name":"gaussian.daydream","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"0.math.daydream","CopyToMask":-1,"filePath":"datafiles/resources/data/scripts/tests","name":"0.math.daydream","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
