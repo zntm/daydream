@@ -25,13 +25,9 @@ function structure_create(_x, _y, _id, _seed)
         return _v;
     }
     
-    var _structure_data = global.structure_data[$ _id];
-    
-    var _seed_current = random_get_seed();
-    
     if (!structure_valid(_x, _y, _id, _seed)) exit;
     
-    random_set_seed(_seed_current);
+    var _structure_data = global.structure_data[$ _id];
     
     var _width  = smart_value(_structure_data.get_width());
     var _height = smart_value(_structure_data.get_height());

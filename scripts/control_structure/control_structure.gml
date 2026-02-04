@@ -19,9 +19,6 @@ function control_structure(_x, _y)
             global.worldgen_structure[? i] = _ds;
         }
         
-        var _surface_height = undefined;
-        var _cave_start = undefined;
-        
         var _ystart = _y - WORLDGEN_STRUCTURE_OFFSET;
         var _yend   = _y + WORLDGEN_STRUCTURE_OFFSET;
         var _queue = 0;
@@ -36,11 +33,11 @@ function control_structure(_x, _y)
                 _queue_valid = false; // Must re-initialize after skip
                 continue;
             }
-
+            
             // Calculate surface height and cave start only once per column if needed
-            if (_surface_height == undefined) _surface_height = worldgen_get_surface_height(i, _world_seed, _world_data);
-            if (_cave_start == undefined) _cave_start = worldgen_get_cave_start(i, _world_seed, _world_data);
-
+            var _surface_height = worldgen_get_surface_height(i, _world_seed, _world_data);
+            var _cave_start = worldgen_get_cave_start(i, _world_seed, _world_data);
+            
             // Maintain a small sliding window for cave noise
             if (!_queue_valid)
             {
@@ -124,7 +121,7 @@ function control_structure(_x, _y)
                         for (var m = 0; m < _id_length; ++m)
                         {
                             var _id2 = _id[m];
-                            random_set_seed(_struct_seed + m * 100);
+                            // random_set_seed(_struct_seed + m * 100);
                             if (!structure_valid(i * TILE_SIZE, j * TILE_SIZE, _id2, _world_seed))
                             {
                                 _generate = false;
@@ -138,7 +135,7 @@ function control_structure(_x, _y)
                         for (var m = 0; m < _id_length; ++m)
                         {
                             var _id2 = _id[m];
-                            random_set_seed(_struct_seed + m * 100);
+                            // random_set_seed(_struct_seed + m * 100);
                             structure_create(i * TILE_SIZE, j * TILE_SIZE, _id2, _world_seed);
                         }
                     }

@@ -240,14 +240,10 @@ function control_player()
     // --- COMBAT ---
     if !(obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.MENU) && (timer_attack <= 0) && (input_state.attack_held)
     {
-        // Stamina Cost
+        // Regular swings are now free, but delay regen
         if (is_local)
         {
-            var _stamina_cost = 10;
-            if (stamina < _stamina_cost) exit;
-            
-            stamina -= _stamina_cost;
-            stamina_regen_timer = 2.0; // Delay regen after attack
+            stamina_regen_timer = 1.0; 
         }
     
         sfx_diegetic_play(audio_emitter, x, y, "phantasia:sfx/item/swing", global.settings.audio_sfx);
@@ -305,6 +301,14 @@ function control_player()
             // Combo Finisher
             if (is_local && combo_count >= 3)
             {
+                // Combo finisher costs stamina
+                var _stamina_cost = 30;
+                if (stamina < _stamina_cost) exit; // Maybe too strict? Let's allow it but empty stamina if they have > 0?
+                // Actually, let's keep it strict for now.
+                
+                stamina -= _stamina_cost;
+                stamina_regen_timer = 2.0; 
+                
                 combo_count = 0;
                 
                 // Visual feedback for finisher

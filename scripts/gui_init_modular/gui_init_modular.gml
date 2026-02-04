@@ -6,6 +6,7 @@
 #macro GUI_HP_HEART_OVERLAP_RATIO 0.5
 #macro GUI_HP_SPRITE_INDEX 2
 #macro GUI_HP_COLOUR make_colour_rgb(255, 20, 147)
+#macro GUI_STAMINA_COLOUR make_colour_rgb(0, 191, 255)
 #macro GUI_HP_HEART_XOFFSET 0
 #macro GUI_HP_HEART_YOFFSET 0
 
@@ -141,6 +142,10 @@ function GUIHPBar(_x, _y, _width, _height) : GUIComponent(_x, _y, _width, _heigh
         var _hp_max = obj_Player.hp_max;
         var _hp_ratio = clamp(_hp / _hp_max, 0, 1);
         
+        var _stamina = obj_Player.stamina;
+        var _stamina_max = obj_Player.stamina_max;
+        var _stamina_ratio = clamp(_stamina / _stamina_max, 0, 1);
+        
         // Heart Icon Settings
         var _heart_sprite = spr_GUI_HP; 
         var _heart_sprite_width = sprite_get_width(_heart_sprite);
@@ -150,6 +155,7 @@ function GUIHPBar(_x, _y, _width, _height) : GUIComponent(_x, _y, _width, _heigh
         
         // Position Heart
         var _bar_height = GUI_HP_BAR_LOGICAL_HEIGHT * _base_scale_y;
+        var _half_height = _bar_height / 2;
         
         // Bar starts halfway through the heart to appear "connected/behind"
         var _bar_x_offset = _heart_width * GUI_HP_HEART_OVERLAP_RATIO; 
@@ -164,11 +170,18 @@ function GUIHPBar(_x, _y, _width, _height) : GUIComponent(_x, _y, _width, _heigh
         draw_set_colour(c_black);
         draw_rectangle(_screen_x + _bar_x_offset, _bar_y, _screen_x + _bar_x_offset + _bar_width, _bar_y + _bar_height, false);
         
-        // Draw HP Fill
+        // Draw HP Fill (Top Half)
         draw_set_colour(GUI_HP_COLOUR);
         if (_hp_ratio > 0)
         {
-            draw_rectangle(_screen_x + _bar_x_offset, _bar_y, _screen_x + _bar_x_offset + (_bar_width * _hp_ratio), _bar_y + _bar_height, false);
+            draw_rectangle(_screen_x + _bar_x_offset, _bar_y, _screen_x + _bar_x_offset + (_bar_width * _hp_ratio), _bar_y + _half_height, false);
+        }
+        
+        // Draw Stamina Fill (Bottom Half)
+        draw_set_colour(GUI_STAMINA_COLOUR);
+        if (_stamina_ratio > 0)
+        {
+            draw_rectangle(_screen_x + _bar_x_offset, _bar_y + _half_height, _screen_x + _bar_x_offset + (_bar_width * _stamina_ratio), _bar_y + _bar_height, false);
         }
         
         draw_set_colour(c_white);
