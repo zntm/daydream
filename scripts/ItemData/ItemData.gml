@@ -393,6 +393,20 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
         {
             ___item_armor.set_attributes(_attributes);
         }
+        
+        var _on_double_horizontal_move = _armor[$ "on_double_horizontal_move"];
+        
+        if (_on_double_horizontal_move != undefined)
+        {
+            ___item_armor.set_on_double_horizontal_move(_on_double_horizontal_move);
+        }
+        
+        var _on_double_vertical_move = _armor[$ "on_double_vertical_move"];
+        
+        if (_on_double_vertical_move != undefined)
+        {
+            ___item_armor.set_on_double_vertical_move(_on_double_vertical_move);
+        }
     }
     
     static set_item_consumable = function(_consumable)
@@ -443,6 +457,11 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     static get_item_armor_attribute = function()
     {
         return self[$ "___item_armor_attribute"];
+    }
+    
+    static get_item_armor = function()
+    {
+        return self[$ "___item_armor"];
     }
     
     static get_item_ammo_type = function()

@@ -439,6 +439,10 @@ proglang_function_register("global_get", function(_args) {
     return undefined;
 });
 
+proglang_function_register("camera_shake", function(_args) {
+    global.camera_shake = _args[0];
+});
+
 proglang_function_register("spawn_particle", function(_args) {
     var _x = _args[1];
     
@@ -569,7 +573,33 @@ proglang_function_register("entity_get_y", function(_args) {
     return _id.y;
 });
 
+proglang_function_register("entity_get_stamina", function(_args) {
+    var _id = _args[0];
+    if (!instance_exists(_id)) return 0;
+    if (variable_instance_exists(_id, "stamina")) return _id.stamina;
+    return 0;
+});
 
+proglang_function_register("entity_set_stamina", function(_args) {
+    var _id = _args[0];
+    var _val = _args[1];
+    if (!instance_exists(_id)) return;
+    if (variable_instance_exists(_id, "stamina")) _id.stamina = _val;
+});
+
+proglang_function_register("entity_set_velocity", function(_args) {
+    var _id = _args[0];
+    var _vx = _args[1];
+    var _vy = _args[2];
+    
+    if (!instance_exists(_id)) return;
+    
+    if (variable_instance_exists(_id, "physics_body"))
+    {
+        _id.physics_body.vel_x = _vx;
+        _id.physics_body.vel_y = _vy;
+    }
+});
 
 proglang_function_register("file_exists", function(_args) {
     return file_exists(_args[0]);

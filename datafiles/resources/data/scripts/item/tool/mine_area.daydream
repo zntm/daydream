@@ -1,6 +1,18 @@
 var count = parameter.count ?? 3
 var dir_x = xscale
 
+// Get the tool's harvest level from context.item
+var item_level = 0
+if (item != undefined) {
+    var item_data = get_item(item.get_id())
+    if (item_data != undefined) {
+        var item_harvest = item_data.get_item_harvest()
+        if (item_harvest != undefined) {
+            item_level = item_harvest.get_level() ?? 0
+        }
+    }
+}
+
 for (var i = 1; i <= count; i++) {
     var tx = x + (dir_x * i)
     var ty = y
@@ -10,8 +22,23 @@ for (var i = 1; i <= count; i++) {
     for (var tz = 3; tz >= 0; tz--) {
         var tile = tile_get(tx, ty, tz)
         if (tile != undefined) {
-            tile_harvest_drop(tx, ty, tz)
-            tile_place(tx, ty, tz, undefined)
+            var tile_data = get_item(tile.get_id())
+            var can_mine = true
+            
+            if (tile_data != undefined) {
+                var tile_harvest = tile_data.get_tile_harvest()
+                if (tile_harvest != undefined) {
+                    var required_level = tile_harvest.get_level() ?? 0
+                    if (item_level < required_level) {
+                        can_mine = false
+                    }
+                }
+            }
+            
+            if (can_mine) {
+                tile_harvest_drop(tx, ty, tz)
+                tile_place(undefined, tx, ty, tz)
+            }
             break
         }
     }

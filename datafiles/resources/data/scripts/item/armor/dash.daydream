@@ -1,0 +1,31 @@
+// Dash ability - triggered by double-pressing left/right movement
+// Used by armor/accessories with on_double_horizontal_move
+
+var stamina_cost = parameter.stamina_cost ?? 15
+var velocity = parameter.velocity ?? 12
+
+// Get entity (the 'id' passed to function_execute is the entity instance)
+var entity = id
+
+// Check stamina
+var current_stamina = entity_get_stamina(entity)  
+if (current_stamina < stamina_cost) {
+    return
+}
+
+// Consume stamina
+entity_set_stamina(entity, current_stamina - stamina_cost)
+
+// Apply velocity burst in the dash direction
+// xscale is the dash direction (-1 for left, 1 for right) passed from control_player
+entity_set_velocity(entity, xscale * velocity, -3) // Small upward hop (-3) for better feel
+
+// Visual feedback
+spawn_particle(entity_get_x(entity), entity_get_y(entity) - 0.5, "phantasia:entity/dash")
+
+// Camera shake
+camera_shake(3)
+
+// Sound effect
+// sfx_diegetic_play(entity.audio_emitter, entity_x, entity_y, "phantasia:sfx/player/dash", 0.8)
+// Need audio emitter accessor? For now skip or use simplified sound call if available
