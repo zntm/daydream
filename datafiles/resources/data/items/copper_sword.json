@@ -5,7 +5,12 @@
             "amount": 162,
             "bar": "#phantasia:item/generic/durability_bar"
         },
-        "damage": 5
+        "damage": 5,
+        "skill": {
+            "type": "combo",
+            "threshold": 5,
+            "stamina_cost": 30
+        }
     },
     "sprite": "phantasia:item/copper_sword",
     "type": "tool"

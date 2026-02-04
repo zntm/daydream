@@ -332,4 +332,26 @@ function Attribute() constructor
     {
         return self[$ "___hp_max"] ?? 100;
     }
+    
+    static set_harvest_reach = function(_reach)
+    {
+        ___harvest_reach = _reach;
+        return self;
+    }
+    
+    static get_harvest_reach = function()
+    {
+        return self[$ "___harvest_reach"] ?? ATTRIBUTE_DEFAULT_HARVEST_REACH;
+    }
+    
+    static set_build_reach = function(_reach)
+    {
+        ___build_reach = _reach;
+        return self;
+    }
+    
+    static get_build_reach = function()
+    {
+        return self[$ "___build_reach"] ?? ATTRIBUTE_DEFAULT_BUILD_REACH;
+    }
 }

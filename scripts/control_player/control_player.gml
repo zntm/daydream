@@ -237,8 +237,73 @@ function control_player()
         show_debug_message($"[NET-PHYS] Player {uuid} post-step: VelX={physics_body.vel_x}, NewPosX={x}, Grounded={physics_body.collision.ground}");
     }
     
-    // --- COMBAT ---
-    if !(obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.MENU) && (timer_attack <= 0) && (input_state.attack_held)
+    // --- COMBAT & SKILLS ---
+    var _item = _inv_target.base[_hotbar_index];
+    var _skill = undefined;
+    var _id = "";
+    var _data = undefined;
+    
+    if (_item != INVENTORY_EMPTY)
+    {
+        _id = _item.get_id();
+        _data = global.item_data[$ _id];
+        _skill = _data.get_item_skill();
+    }
+    
+    // Update Charge Logic (Local Player Only)
+    if (is_local && _skill != undefined && _skill.type == "charge")
+    {
+        if (input_state.attack_held && !(obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.MENU))
+        {
+            charge_time += 1 / GAME_TICK;
+            
+            // Visual feedback for charging
+            var _t = clamp(charge_time / _skill.threshold, 0, 1);
+            if (chance(0.3 * _t))
+            {
+                spawn_particle(x + random_range(-8, 8), y - 12 + random_range(-8, 8), "phantasia:entity/glow");
+            }
+            if (_t >= 1 && chance(0.5))
+            {
+                spawn_particle(x + random_range(-12, 12), y - 24 + random_range(-12, 12), "phantasia:entity/glow_ready");
+            }
+        }
+        else if (charge_time > 0)
+        {
+            // Release Charge
+            if (charge_time >= _skill.threshold)
+            {
+                var _stamina_cost = _skill.stamina_cost;
+                if (stamina >= _stamina_cost)
+                {
+                    stamina -= _stamina_cost;
+                    stamina_regen_timer = 2.0;
+                    
+                    // Trigger Skill
+                    global.camera_shake = 5;
+                    sfx_play("phantasia:sfx/event/lightning", 0.7); 
+                    
+                    var _on_trigger = _skill.on_trigger ?? _data.get_on_item_double_attack();
+                    var _on_trigger_length = _skill.on_trigger_length ?? _data.get_on_item_double_attack_length();
+                    
+                    if (_on_trigger != undefined)
+                    {
+                        for (var j = 0; j < _on_trigger_length; ++j)
+                        {
+                            function_execute(_on_trigger[j], round(x / TILE_SIZE), round(y / TILE_SIZE), CHUNK_DEPTH_DEFAULT, sign(image_xscale), sign(image_yscale), id, _item);
+                        }
+                    }
+                }
+            }
+            charge_time = 0;
+        }
+    }
+    
+    var _can_swing = (timer_attack <= 0) && (input_state.attack_held);
+    // For charge skills, only allow the initial swing or very slow repeat (optional, let's just do initial)
+    if (_skill != undefined && _skill.type == "charge" && charge_time > 0.1) _can_swing = false;
+
+    if !(obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.MENU) && _can_swing
     {
         // Regular swings are now free, but delay regen
         if (is_local)
@@ -252,13 +317,8 @@ function control_player()
         
         timer_attack = 0.3;
         
-        var _item = _inv_target.base[_hotbar_index];
-        
         if (_item != INVENTORY_EMPTY)
         {
-            var _id = _item.get_id();
-            var _data = global.item_data[$ _id];
-
             statistics_increment($"items_used_{_id}", 1);
             
             if (!instance_exists(inst_item))
@@ -278,7 +338,7 @@ function control_player()
             
             if (control_entity_shoot(id, _id, x, y - 24, _angle, _inv_target, _changed_slots))
             {
-                // Shot something
+                // Shot something...
                 if (_changed_slots != undefined && array_length(_changed_slots) > 0)
                 {
                     var _client = global.network_clients[? socket_id];
@@ -298,43 +358,55 @@ function control_player()
                 function_execute(_on_attack[j], round(x / TILE_SIZE), round(y / TILE_SIZE), CHUNK_DEPTH_DEFAULT, sign(image_xscale), sign(image_yscale), id, _item);
             }
             
-            // Combo Finisher
-            if (is_local && combo_count >= 3)
+            // Combo Skill logic
+            if (is_local && _skill != undefined && _skill.type == "combo")
             {
-                // Combo finisher costs stamina
-                var _stamina_cost = 30;
-                if (stamina < _stamina_cost) exit; // Maybe too strict? Let's allow it but empty stamina if they have > 0?
-                // Actually, let's keep it strict for now.
-                
-                stamina -= _stamina_cost;
-                stamina_regen_timer = 2.0; 
-                
-                combo_count = 0;
-                
-                // Visual feedback for finisher
-                global.camera_shake = 5;
-                sfx_play("phantasia:sfx/event/lightning", 0.5); // Placeholder SFX
-                
-                // MULTISHOT SPECIAL (Projectiles)
-                // Try to shoot extra projectiles if the weapon shoots
-                if (control_entity_shoot(id, _id, x, y - 24, _angle - 15, _inv_target, _changed_slots))
+                // Visual feedback for "charging up" combo
+                var _threshold = _skill.threshold;
+                if (combo_count > 0 && combo_count < _threshold)
                 {
-                    // Success left
-                }
-                if (control_entity_shoot(id, _id, x, y - 24, _angle + 15, _inv_target, _changed_slots))
-                {
-                    // Success right
-                }
-                
-                // Trigger Double Attack Events as "Special" (Melee/General)
-                var _on_special = _data.get_on_item_double_attack();
-                var _on_special_length = _data.get_on_item_double_attack_length();
-                
-                if (_on_special != undefined)
-                {
-                    for (var j = 0; j < _on_special_length; ++j)
+                    if (chance(0.2 * (combo_count / _threshold)))
                     {
-                        function_execute(_on_special[j], round(x / TILE_SIZE), round(y / TILE_SIZE), CHUNK_DEPTH_DEFAULT, sign(image_xscale), sign(image_yscale), id, _item);
+                        spawn_particle(x + random_range(-8, 8), y - 12 + random_range(-8, 8), "phantasia:entity/glow");
+                    }
+                }
+                else if (combo_count >= _threshold)
+                {
+                    if (chance(0.5))
+                    {
+                        spawn_particle(x + random_range(-12, 12), y - 24 + random_range(-12, 12), "phantasia:entity/glow_ready");
+                    }
+                }
+                
+                // Trigger Combo Skill
+                if (combo_count >= _threshold)
+                {
+                    var _stamina_cost = _skill.stamina_cost;
+                    if (stamina >= _stamina_cost)
+                    {
+                        stamina -= _stamina_cost;
+                        stamina_regen_timer = 2.0; 
+                        
+                        combo_count = 0;
+                        
+                        // Visual feedback for finisher
+                        global.camera_shake = 5;
+                        sfx_play("phantasia:sfx/event/lightning", 0.7); 
+                        
+                        // MULTISHOT SPECIAL (Projectiles)
+                        if (control_entity_shoot(id, _id, x, y - 24, _angle - 15, _inv_target, _changed_slots)) {}
+                        if (control_entity_shoot(id, _id, x, y - 24, _angle + 15, _inv_target, _changed_slots)) {}
+                        
+                        var _on_trigger = _skill.on_trigger ?? _data.get_on_item_double_attack();
+                        var _on_trigger_length = _skill.on_trigger_length ?? _data.get_on_item_double_attack_length();
+                        
+                        if (_on_trigger != undefined)
+                        {
+                            for (var j = 0; j < _on_trigger_length; ++j)
+                            {
+                                function_execute(_on_trigger[j], round(x / TILE_SIZE), round(y / TILE_SIZE), CHUNK_DEPTH_DEFAULT, sign(image_xscale), sign(image_yscale), id, _item);
+                            }
+                        }
                     }
                 }
             }

@@ -412,8 +412,19 @@ proglang_function_register("tile_place", function(_args) {
     var _z = _args[3];
     
     tile_place(_x, _y, _z, _args[0] ?? TILE_EMPTY);
-    tile_place(_x, _y, _z, _args[0] ?? TILE_EMPTY);
     tile_update_surrounding(_x, _y, _z);
+});
+
+proglang_function_register("tile_harvest_drop", function(_args) {
+    var _x = _args[0];
+    var _y = _args[1];
+    var _z = _args[2];
+    var _tile = _args[3] ?? tile_get(_x, _y, _z);
+    
+    if (_tile != TILE_EMPTY)
+    {
+        tile_harvest_drop(_x, _y, _z, _tile);
+    }
 });
 
 proglang_function_register("get_item", function(_args) {

@@ -35,6 +35,7 @@ timer_combo = 0;
 stamina = 100;
 stamina_max = 100;
 stamina_regen_timer = 0;
+charge_time = 0;
 
 // Visuals
 attire = undefined;

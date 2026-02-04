@@ -1,0 +1,18 @@
+var count = parameter.count ?? 3
+var dir_x = xscale
+
+for (var i = 1; i <= count; i++) {
+    var tx = x + (dir_x * i)
+    var ty = y
+    
+    // Find topmost tile (check layers 3, 2, 1, 0)
+    // Layer 3 is usually the main "solid" layer depth for structures/terrain
+    for (var tz = 3; tz >= 0; tz--) {
+        var tile = tile_get(tx, ty, tz)
+        if (tile != undefined) {
+            tile_harvest_drop(tx, ty, tz)
+            tile_place(tx, ty, tz, undefined)
+            break
+        }
+    }
+}
