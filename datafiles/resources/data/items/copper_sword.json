@@ -7,9 +7,15 @@
         },
         "damage": 5,
         "skill": {
-            "type": "combo",
-            "threshold": 5,
-            "stamina_cost": 30
+            "type": "charge",
+            "threshold": 0.5,
+            "stamina_cost": 20,
+            "on_trigger": {
+                "id": "phantasia:item/tool/sword_dash",
+                "parameters": {
+                    "power": 14
+                }
+            }
         }
     },
     "sprite": "phantasia:item/copper_sword",

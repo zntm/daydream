@@ -112,7 +112,7 @@ function control_player()
                     {
                         for (var j = 0; j < _on_event_length; ++j)
                         {
-                            function_execute(_on_event[j], round(x / TILE_SIZE), round(y / TILE_SIZE), CHUNK_DEPTH_DEFAULT, sign(image_xscale), sign(image_yscale), id, _item);
+                            function_execute(_on_event[j], x, y, CHUNK_DEPTH_DEFAULT, sign(image_xscale), sign(image_yscale), id, _item);
                         }
                     }
                 }
@@ -127,7 +127,7 @@ function control_player()
                     {
                         for (var j = 0; j < _on_event_length; ++j)
                         {
-                            function_execute(_on_event[j], round(x / TILE_SIZE), round(y / TILE_SIZE), CHUNK_DEPTH_DEFAULT, sign(image_xscale), sign(image_yscale), id, _item);
+                            function_execute(_on_event[j], x, y, CHUNK_DEPTH_DEFAULT, sign(image_xscale), sign(image_yscale), id, _item);
                         }
                     }
                 }
@@ -141,7 +141,7 @@ function control_player()
                     {
                         for (var j = 0; j < _on_event_length; ++j)
                         {
-                            function_execute(_on_event[j], round(x / TILE_SIZE), round(y / TILE_SIZE), CHUNK_DEPTH_DEFAULT, sign(image_xscale), sign(image_yscale), id, _item);
+                            function_execute(_on_event[j], x, y, CHUNK_DEPTH_DEFAULT, sign(image_xscale), sign(image_yscale), id, _item);
                         }
                     }
                 }
@@ -155,14 +155,15 @@ function control_player()
             var _dash_dir = input_state.move_left_double_pressed ? -1 : 1;
             
             // Check equipped armor for on_double_horizontal_move
-            var _armor_slots = [_inv_target.armor_helmet, _inv_target.armor_breastplate, _inv_target.armor_leggings];
+            var _armor_slots = [_inv_target.armor_helmet[0], _inv_target.armor_breastplate[0], _inv_target.armor_leggings[0]];
             
             for (var k = 0; k < array_length(_armor_slots); ++k)
             {
                 var _armor_item = _armor_slots[k];
                 if (_armor_item == INVENTORY_EMPTY) continue;
                 
-                var _armor_data = global.item_data[$ _armor_item.get_id()];
+                var _armor_id = _armor_item.get_id();
+                var _armor_data = global.item_data[$ _armor_id];
                 if (_armor_data == undefined) continue;
                 
                 var _item_armor = _armor_data.get_item_armor();
@@ -171,7 +172,8 @@ function control_player()
                 var _on_double_horizontal_move = _item_armor.get_on_double_horizontal_move();
                 if (_on_double_horizontal_move != undefined)
                 {
-                    function_execute(_on_double_horizontal_move, round(x / TILE_SIZE), round(y / TILE_SIZE), CHUNK_DEPTH_DEFAULT, _dash_dir, sign(image_yscale), id, _armor_item);
+                    show_debug_message($"[Control] Armor Dash Triggered: {_on_double_horizontal_move.id}");
+                    function_execute(_on_double_horizontal_move, x, y, CHUNK_DEPTH_DEFAULT, _dash_dir, sign(image_yscale), id, _armor_item);
                 }
             }
         }
@@ -183,14 +185,15 @@ function control_player()
             var _dash_dir_v = input_state.move_up_double_pressed ? -1 : 1;
             
             // Check equipped armor for on_double_vertical_move
-            var _armor_slots = [_inv_target.armor_helmet, _inv_target.armor_breastplate, _inv_target.armor_leggings];
+            var _armor_slots = [_inv_target.armor_helmet[0], _inv_target.armor_breastplate[0], _inv_target.armor_leggings[0]];
             
             for (var k = 0; k < array_length(_armor_slots); ++k)
             {
                 var _armor_item = _armor_slots[k];
                 if (_armor_item == INVENTORY_EMPTY) continue;
                 
-                var _armor_data = global.item_data[$ _armor_item.get_id()];
+                var _armor_id = _armor_item.get_id();
+                var _armor_data = global.item_data[$ _armor_id];
                 if (_armor_data == undefined) continue;
                 
                 var _item_armor = _armor_data.get_item_armor();
@@ -201,13 +204,11 @@ function control_player()
                 {
                     // Pass vertical direction in yscale (?) or a specific parameter?
                     // For now, passing 0 as xscale and direction as yscale to indicate vertical movement
-                    function_execute(_on_double_vertical_move, round(x / TILE_SIZE), round(y / TILE_SIZE), CHUNK_DEPTH_DEFAULT, sign(image_xscale), _dash_dir_v, id, _armor_item);
+                    function_execute(_on_double_vertical_move, x, y, CHUNK_DEPTH_DEFAULT, sign(image_xscale), _dash_dir_v, id, _armor_item);
                 }
             }
         }
     }
-
-
     
     // --- DAMAGE CHECK ---
     if (timer_immunity <= 0)
@@ -350,7 +351,7 @@ function control_player()
                     {
                         for (var j = 0; j < _on_trigger_length; ++j)
                         {
-                            function_execute(_on_trigger[j], round(x / TILE_SIZE), round(y / TILE_SIZE), CHUNK_DEPTH_DEFAULT, sign(image_xscale), sign(image_yscale), id, _item);
+                            function_execute(_on_trigger[j], x, y, CHUNK_DEPTH_DEFAULT, sign(image_xscale), sign(image_yscale), id, _item);
                         }
                     }
                 }
@@ -464,7 +465,7 @@ function control_player()
                         {
                             for (var j = 0; j < _on_trigger_length; ++j)
                             {
-                                function_execute(_on_trigger[j], round(x / TILE_SIZE), round(y / TILE_SIZE), CHUNK_DEPTH_DEFAULT, sign(image_xscale), sign(image_yscale), id, _item);
+                                function_execute(_on_trigger[j], x, y, CHUNK_DEPTH_DEFAULT, sign(image_xscale), sign(image_yscale), id, _item);
                             }
                         }
                     }

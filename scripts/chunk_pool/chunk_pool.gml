@@ -154,7 +154,31 @@ function ChunkPool() : Pool() constructor
         
         if (!_is_loaded)
         {
-            chunk_generate(_chunk);
+            // Cache worldgen context for performance (hoisted lookups)
+            if (variable_global_exists("worldgen_context") == false)
+            {
+                var _wsd = global.world_save_data;
+                var _wd = global.world_data[$ _wsd.dimension];
+                var _sky_id = _wd.get_sky_biome_id();
+                global.worldgen_context = {
+                    item_data: global.item_data,
+                    natural_structure_data: global.natural_structure_data,
+                    structure_data: global.structure_data,
+                    world_save_data: _wsd,
+                    world_data: _wd,
+                    biome_data: global.biome_data,
+                    world_height: _wd.get_world_height(),
+                    world_seed: _wsd.seed,
+                    sky_threshold: _wd.get_sky_biome_threshold(),
+                    sky_enabled: _wd.is_sky_biome_enabled(),
+                    sky_biome_id: _sky_id,
+                    sky_biome_data: global.biome_data[$ _sky_id],
+                    surface_start: _wd.get_surface_start(),
+                    blend_range: _wd.get_biome_blend_range()
+                };
+            }
+            
+            chunk_generate(_chunk, global.worldgen_context);
             _chunk.boolean |= CHUNK_BOOLEAN.GENERATED;
         }
         else

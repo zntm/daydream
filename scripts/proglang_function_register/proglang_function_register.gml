@@ -601,6 +601,12 @@ proglang_function_register("entity_set_velocity", function(_args) {
     }
 });
 
+proglang_function_register("entity_set_dash_timer", function(_args) {
+    var _id = _args[0];
+    var _val = _args[1];
+    if (instance_exists(_id)) _id.timer_dash = _val;
+});
+
 proglang_function_register("file_exists", function(_args) {
     return file_exists(_args[0]);
 });

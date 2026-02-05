@@ -67,7 +67,7 @@ function chunk_queue_process(_player_x, _player_y)
         if (_chunk.boolean & CHUNK_BOOLEAN.GENERATED) continue;
         
         // Generate the chunk (just creates tile data, doesn't connect)
-        chunk_generate(_chunk);
+        chunk_generate(_chunk, global[$ "worldgen_context"]);
         
         _chunk.boolean |= CHUNK_BOOLEAN.GENERATED | CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH;
         

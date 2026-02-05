@@ -1,31 +1,43 @@
 // Dash ability - triggered by double-pressing left/right movement
 // Used by armor/accessories with on_double_horizontal_move
 
-var stamina_cost = parameter.stamina_cost ?? 15
-var velocity = parameter.velocity ?? 12
+print("[Dash] Script started")
 
-// Get entity (the 'id' passed to function_execute is the entity instance)
-var entity = id
+var stamina_cost = parameter.stamina_cost ?? 15
+var velocity = parameter.velocity ?? 15
+
+// caller is passed from function_execute.gml
+if (caller == undefined) {
+    print("[Dash] Caller is undefined!")
+    return
+}
 
 // Check stamina
-var current_stamina = entity_get_stamina(entity)  
+var current_stamina = entity_get_stamina(caller)
+print("[Dash] Stamina: " + string(current_stamina) + " / " + string(stamina_cost))
+
 if (current_stamina < stamina_cost) {
+    print("[Dash] Insufficient stamina")
     return
 }
 
 // Consume stamina
-entity_set_stamina(entity, current_stamina - stamina_cost)
+entity_set_stamina(caller, current_stamina - stamina_cost)
 
 // Apply velocity burst in the dash direction
 // xscale is the dash direction (-1 for left, 1 for right) passed from control_player
-entity_set_velocity(entity, xscale * velocity, -3) // Small upward hop (-3) for better feel
+print("[Dash] Applying velocity: " + string(xscale * velocity))
+entity_set_velocity(caller, xscale * velocity, -3) // Small upward hop (-3) for better feel
+entity_set_dash_timer(caller, 0.25) // Prevent friction for 15 frames
 
 // Visual feedback
-spawn_particle(entity_get_x(entity), entity_get_y(entity) - 0.5, "phantasia:entity/dash")
+// Context x, y are now pixel coordinates (after my function_execute caller fix)
+// spawn_particle expects TILE coordinates, so we divide by TILE_SIZE
+spawn_particle("phantasia:entity/dash", x / 16, y / 16) 
 
 // Camera shake
 camera_shake(3)
 
 // Sound effect
-// sfx_diegetic_play(entity.audio_emitter, entity_x, entity_y, "phantasia:sfx/player/dash", 0.8)
-// Need audio emitter accessor? For now skip or use simplified sound call if available
+sfx_play("phantasia:sfx/event/dash", 0.7)
+print("[Dash] Complete")

@@ -1762,6 +1762,8 @@ if (IS_DEVELOPER_MODE)
             show_debug_message($"[ProglangTest] Executing: {_file}");
             proglang_execute(buffer_load_text(_dir), {}, _dir);
         }
+        
+        show_debug_message(struct_get_names(global.proglang_scripts))
     });
     
     test_quadtree();

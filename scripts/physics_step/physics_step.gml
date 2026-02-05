@@ -47,6 +47,12 @@ function physics_step(_body, _input)
     {
         _body.reset_jump();
     }
+
+    // Centrally decrement dash/special timers
+    if (variable_instance_exists(_body.id, "timer_dash") && _body.id.timer_dash > 0)
+    {
+        _body.id.timer_dash = max(0, _body.id.timer_dash - (1 / GAME_TICK));
+    }
 }
 
 /// @desc Detect and set the appropriate movement mode

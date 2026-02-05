@@ -251,3 +251,6 @@ if (is_undefined(global.network_role) || global.network_role == NETWORK_ROLE.NON
 }
 
 timer_network_sync = 0;
+
+global.inventory.base[@ 0] = new Inventory("phantasia:copper_sword");
+global.inventory.base[@ 1] = new Inventory("phantasia:platinum_breastplate");

@@ -122,23 +122,8 @@ function control_entity_damage(_victim, _attacker, _base_damage, _variance = 0.0
     // Spawn floating damage text
     spawn_floating_text(_victim.x, _victim.y, _damage, 0, -3.9);
     
-    // Check if victim died
     if (_victim.hp <= 0)
     {
-        // Emit death event
-        event_emit(new EventDataEntityDie(_victim, _attacker));
-        
-        // Special handling for player death
-        if (_victim.object_index == obj_Player)
-        {
-            _victim.timer_respawn = 3;
-        }
-        else
-        {
-            if (struct_exists(_victim, "physics_body")) global.spatial_grid.remove(_victim.physics_body);
-            instance_destroy(_victim);
-        }
-        
         // Check for on_death effects
         var _effects = _victim.effects;
         var _effect_names = struct_get_names(_effects);
@@ -163,6 +148,21 @@ function control_entity_damage(_victim, _attacker, _base_damage, _variance = 0.0
                 function_execute({ id: _on_death.id, parameters: _params }, _victim.x, _victim.y, CHUNK_DEPTH_DEFAULT, 1, 1, _victim);
             }
         }
+
+        // Emit death event
+        event_emit(new EventDataEntityDie(_victim, _attacker));
+        
+        // Special handling for player death
+        if (_victim.object_index == obj_Player)
+        {
+            _victim.timer_respawn = 3;
+        }
+        else
+        {
+            if (struct_exists(_victim, "physics_body")) global.spatial_grid.remove(_victim.physics_body);
+            instance_destroy(_victim);
+        }
+        
         
         return true; // Entity died
     }

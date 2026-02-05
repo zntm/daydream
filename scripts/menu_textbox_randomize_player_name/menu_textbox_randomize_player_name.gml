@@ -3,7 +3,7 @@ function menu_textbox_randomize_player_name()
     randomize();
     
     // 1. Initial Prefix
-    var _prefix = choose(
+    static _prefix = choose(
         "Al", "Be", "Co", "Da", "El", "Fa", "Ga", "He", "Is", "Jo", "Ka", "Lu", "Ma", "No", "Or", "Pa", "Qu", "Ra", "Se", "Ty", "Ul", "Va", "Wi", "Xan", "Ye", "Ze",
         "Ar", "Bel", "Cor", "Del", "Val", "Zar", "Phar", "Thal", "Kron", "Bran", "Clen", "Phae", "Rhun", "Gwy", "Bry", "Kael", "Lyra", "Mira", "Nym", "Pyra", "Rha", 
         "Syl", "Vel", "Wren", "Xyl", "Yor", "Zeph", "Aeg", "Bla", "Cas", "Dra", "Elth", "Fen", "Gor", "Harl", "Iva", "Jeth", "Ken", "Lor", "Mor", "Nal", "Oro", "Pyr", 
@@ -11,7 +11,7 @@ function menu_textbox_randomize_player_name()
     );
     
     // 2. Middle Syllables
-    var _middles = [
+    static _middles = [
         "an", "en", "in", "on", "un", "ar", "er", "ir", "or", "ur",
         "al", "el", "il", "ol", "ul", "as", "es", "is", "os", "us",
         "den", "len", "ren", "ven", "zen", "bar", "car", "dar", "far", "gar", "lar", "mar", "nar", "par", "sar", "tar", "var",
@@ -19,7 +19,7 @@ function menu_textbox_randomize_player_name()
     ];
     
     // 3. Suffixes
-    var _suffixes = [
+    static _suffixes = [
         "ia", "ius", "ion", "is", "os", "us", "wyn", "lyn", "mon", 
         "thor", "ric", "vin", "dan", "lor", "mar", "ras", "nas", "las",
         "eth", "ith", "oth", "anth", "elle", "ette", "thas", "lorn", "rith", "vance", "dorn", 

@@ -12,6 +12,7 @@ function function_execute(_function, _x, _y, _z, _xscale, _yscale, _inst = undef
     if (_chance != undefined) && (!chance(_chance)) exit;
     
     var _id = _function[$ "id"];
+    if (_id != undefined && string_pos("@", _id) == 1) _id = string_delete(_id, 1, 1);
     var _parameter = _function[$ "parameters"] ?? {}
     
     // Build Context
@@ -51,6 +52,7 @@ function function_execute(_function, _x, _y, _z, _xscale, _yscale, _inst = undef
     }
     
     // Always provide spatial context
+    _context.caller = _inst;
     _context.x = _tx;
     _context.y = _ty;
     _context.z = _z;
@@ -62,27 +64,19 @@ function function_execute(_function, _x, _y, _z, _xscale, _yscale, _inst = undef
 
     if (_id != undefined)
     {
-        // _script_id = string_replace_all(_script_id, ":", "/");
+        _context.parameter = _parameter;
         
-        var _script = global.proglang_scripts[$ _id];
-        if (_script != undefined)
+        // Handle direct script call
+        if (struct_exists(global.proglang_scripts, _id))
         {
-            _context.parameter = _parameter;
-            
-            // If it's a module, run its main bytecode
-            var _bytecode = _script;
-            if (is_array(_script) && array_length(_script) >= PROG_MODULE.SIZE)
-            {
-                _bytecode = _script[PROG_MODULE.MAIN];
-            }
-            
             proglang_call(_id, [_parameter], _context);
         }
         else if (IS_DEVELOPER_MODE)
         {
+            // Debugging aid
+            // show_debug_message(struct_get_names(global.proglang_scripts));
             show_debug_message($"[Daydream] Script not found: '{_id}'");
-            // Optional: dump available scripts if failure occurs in dev mode
-            // show_debug_message($"[Daydream] Available scripts: {variable_struct_get_names(global.proglang_scripts)}");
+            show_debug_message(global.proglang_scripts)
         }
     }
 }

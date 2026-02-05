@@ -1,4 +1,4 @@
-var count = parameter.count ?? 3
+var count = parameter.count ?? (3 + (item_level * 2))
 var dir_x = xscale
 
 // Get the tool's harvest level from context.item

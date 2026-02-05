@@ -55,7 +55,7 @@ function input_bindings_init()
     
     // Double tap tracking
     global.input_last_press_time = array_create(INPUT_ACTION.__SIZE, -1000);
-    global.input_double_tap_threshold = 250; // ms
+    global.input_double_tap_threshold = 350; // ms
 }
 
 /// @desc Check if an action is currently held
@@ -133,6 +133,8 @@ function input_check_double_pressed(_action)
         // If it was a double tap, we reset last press time to a very old one 
         // to prevent "triple tap" being two double taps in a row.
         global.input_last_press_time[_action] = _is_double ? -1000 : _now;
+        
+        if (_is_double) show_debug_message($"[Input] Double Tap Detected: Action {_action}");
         
         return _is_double;
     }

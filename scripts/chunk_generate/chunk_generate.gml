@@ -1,7 +1,8 @@
-/// @function chunk_generate(_chunk)
+/// @function chunk_generate(_chunk, _context = undefined)
 /// @desc Generate terrain for a _chunk.chunk
 /// @param {Struct.Chunk} _chunk The _chunk.chunk to generate
-function chunk_generate(_chunk)
+/// @param {Struct} [_context] Optional pre-calculated world-gen context
+function chunk_generate(_chunk, _context = undefined)
 {
     static __cave_bit = array_create(CHUNK_SIZE);
     static __sky_bit = array_create(CHUNK_SIZE);
@@ -27,17 +28,36 @@ function chunk_generate(_chunk)
     var _structure_rectangle_length = array_length(_structures);
     var __structure_array = _structures;
     
-    var _item_data = global.item_data;
-    var _natural_structure_data = global.natural_structure_data;
-    var _structure_data = global.structure_data;
-    var _world_save_data = global.world_save_data;
-    var _world_data = global.world_data[$ _world_save_data.dimension];
-    var _global_biome_data = global.biome_data;
-    var _world_height = _world_data.get_world_height();
-    var _world_seed = _world_save_data.seed;
+    // Support data-driven value caching via context
+    var _item_data, _natural_structure_data, _structure_data, _world_save_data, _world_data, _global_biome_data, _world_height, _world_seed, _sky_threshold, _sky_enabled;
     
-    var _sky_threshold = _world_data.get_sky_biome_threshold();
-    var _sky_enabled = _world_data.is_sky_biome_enabled();
+    if (_context != undefined)
+    {
+        _item_data = _context.item_data;
+        _natural_structure_data = _context.natural_structure_data;
+        _structure_data = _context.structure_data;
+        _world_save_data = _context.world_save_data;
+        _world_data = _context.world_data;
+        _global_biome_data = _context.biome_data;
+        _world_height = _context.world_height;
+        _world_seed = _context.world_seed;
+        _sky_threshold = _context.sky_threshold;
+        _sky_enabled = _context.sky_enabled;
+    }
+    else
+    {
+        _item_data = global.item_data;
+        _natural_structure_data = global.natural_structure_data;
+        _structure_data = global.structure_data;
+        _world_save_data = global.world_save_data;
+        _world_data = global.world_data[$ _world_save_data.dimension];
+        _global_biome_data = global.biome_data;
+        _world_height = _world_data.get_world_height();
+        _world_seed = _world_save_data.seed;
+        _sky_threshold = _world_data.get_sky_biome_threshold();
+        _sky_enabled = _world_data.is_sky_biome_enabled();
+    }
+
     
     // PASS 1: Calculate heights and bitmasks (Caves + Sky)
     for (var i = 0; i < CHUNK_SIZE; ++i)
@@ -174,11 +194,15 @@ function chunk_generate(_chunk)
         var _surface_biome_data = _global_biome_data[$ _surface_biome];
         
         // HOIST: Biome Blending Helpers (avoid 6 calls per tile)
-        var _blend_range = _world_data.get_biome_blend_range();
+        var _blend_range = (_context != undefined) ? _context.blend_range : _world_data.get_biome_blend_range();
         var _heat_l = worldgen_get_heat(_world_x - _blend_range, 0, _world_seed, _world_data);
         var _heat_r = worldgen_get_heat(_world_x + _blend_range, 0, _world_seed, _world_data);
         var _humid_l = worldgen_get_humidity(_world_x - _blend_range, 0, _world_seed, _world_data);
         var _humid_r = worldgen_get_humidity(_world_x + _blend_range, 0, _world_seed, _world_data);
+        
+        var _sky_biome_id = (_context != undefined) ? _context.sky_biome_id : _world_data.get_sky_biome_id();
+        var _sky_biome_data = (_context != undefined) ? _context.sky_biome_data : _global_biome_data[$ _sky_biome_id];
+        var _world_surface_start = (_context != undefined) ? _context.surface_start : _world_data.get_surface_start();
         
         for (var j = 0; j < CHUNK_SIZE; ++j)
         {
@@ -190,9 +214,6 @@ function chunk_generate(_chunk)
             {
                 if ((_sky_bit_stream >> (j + 1)) & 1)
                 {
-                    var _sky_biome_id = _world_data.get_sky_biome_id();
-                    var _sky_biome_data = _global_biome_data[$ _sky_biome_id];
-                    
                     if (_sky_biome_data != undefined)
                     {
                         var _is_above = (_sky_bit_stream >> j) & 1;
@@ -221,7 +242,7 @@ function chunk_generate(_chunk)
             }
             
             // --- OCEAN WATER ---
-            if (_world_y < _surface_height) && (_world_y >= _world_data.get_surface_start()) && (_surface_biome_data.is_ocean())
+            if (_world_y < _surface_height) && (_world_y >= _world_surface_start) && (_surface_biome_data.is_ocean())
             {
                 if !(_skip_z & (1 << CHUNK_DEPTH_LIQUID))
                 {
