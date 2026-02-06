@@ -1,0 +1,27 @@
+{
+    "inventory": "#phantasia:item/generic/inventory_tool",
+    "item": {
+        "damage": 4,
+        "durability": {
+            "amount": 141,
+            "bar": "#phantasia:item/generic/durability_bar"
+        },
+        "harvest": {
+            "hardness": 1.12,
+            "level": 2
+        },
+        "skill": {
+            "on_trigger": {
+                "id": "@phantasia:item/tool/mine_area",
+                "parameters": {
+                    "count": 2
+                }
+            },
+            "stamina_cost": 25,
+            "threshold": 1,
+            "type": "charge"
+        }
+    },
+    "sprite": "phantasia:item/copper_pickaxe",
+    "type": "tool"
+}

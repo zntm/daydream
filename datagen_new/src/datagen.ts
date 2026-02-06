@@ -27,6 +27,8 @@ for (const dir of ["assets", "data"]) {
 
             const datagen: any[] = import.meta.require(s).default;
 
+            if (!datagen) continue;
+
             try {
                 for (const d of Array.isArray(datagen)
                     ? datagen.flat(Infinity)

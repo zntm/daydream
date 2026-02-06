@@ -1,0 +1,23 @@
+{
+    "inventory": "#phantasia:item/generic/inventory_tool",
+    "item": {
+        "damage": 5,
+        "durability": {
+            "amount": 162,
+            "bar": "#phantasia:item/generic/durability_bar"
+        },
+        "skill": {
+            "on_trigger": {
+                "id": "@phantasia:item/tool/sword_dash",
+                "parameters": {
+                    "power": 6
+                }
+            },
+            "stamina_cost": 20,
+            "threshold": 0.5,
+            "type": "charge"
+        }
+    },
+    "sprite": "phantasia:item/copper_sword",
+    "type": "tool"
+}

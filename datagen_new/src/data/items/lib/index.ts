@@ -12,10 +12,12 @@ import { Item } from "./Item";
 import { ItemCooldown } from "./ItemCooldown";
 import { ItemComponentType, ItemComponent } from "./ItemComponent";
 import { ItemDurability } from "./ItemDurability";
+import { ItemHarvest } from "./ItemHarvest";
 import { ItemInventory } from "./ItemInventory";
 import { ItemParticle } from "./ItemParticle";
 import { type ItemPropertiesType, TileItemProperties } from "./ItemProperties";
 import { ItemScript } from "./ItemScript";
+import { ItemSkill } from "./ItemSkill";
 import { ItemType } from "./ItemType";
 import {
     TileItem,
@@ -28,7 +30,7 @@ import {
     TileItemPlacementConditionType,
     TileItemPlacementConditionValue,
 } from "./TileItem";
-import { ToolItem } from "./ToolItem";
+import { ToolItem, SwordItem, PickaxeItem, AxeItem, ShovelItem } from "./ToolItem";
 
 export {
     ConsumableItem,
@@ -38,10 +40,12 @@ export {
     ItemComponent,
     ItemComponentType,
     ItemDurability,
+    ItemHarvest,
     ItemInventory,
     ItemParticle,
     type ItemPropertiesType,
     ItemScript,
+    ItemSkill,
     TileItemProperties,
     ItemType,
     TileItem,
@@ -54,6 +58,10 @@ export {
     TileItemPlacementConditionType,
     TileItemPlacementConditionValue,
     ToolItem,
+    SwordItem,
+    PickaxeItem,
+    AxeItem,
+    ShovelItem,
     Accessory,
     ItemAccessory,
     ItemAccessoryType,
