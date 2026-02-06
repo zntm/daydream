@@ -33,7 +33,7 @@ function control_inventory()
             
             if (_item != INVENTORY_EMPTY)
             {
-                inventory_give(0, 0, _item, false);
+                inventory_give(0, 0, _item, global.inventory, false);
                 
                 global.inventory.mouse.item = INVENTORY_EMPTY;
             }

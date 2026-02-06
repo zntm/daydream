@@ -74,12 +74,12 @@ function inventory_organize_mouse(_inst)
                         
                         _item2.add_amount(_amount - _inventory_max);
                         
-                        inventory_give(0, 0, _item2, false);
+                        inventory_give(0, 0, _item2, global.inventory, false);
                     }
                 }
                 else
                 {
-                    inventory_give(0, 0, _item2, false);
+                    inventory_give(0, 0, _item2, global.inventory, false);
                 }
             }
             else
@@ -189,12 +189,12 @@ function inventory_organize_mouse(_inst)
                         
                         _item2.add_amount(_amount - _inventory_max);
                         
-                        inventory_give(0, 0, _item2, false);
+                        inventory_give(0, 0, _item2, global.inventory, false);
                     }
                 }
                 else
                 {
-                    inventory_give(0, 0, _item2, false);
+                    inventory_give(0, 0, _item2, global.inventory, false);
                 }
             }
             else
@@ -325,12 +325,12 @@ function inventory_organize_mouse(_inst)
                         
                         _item2.add_amount(_amount - _inventory_max);
                         
-                        inventory_give(0, 0, _item2, false);
+                        inventory_give(0, 0, _item2, global.inventory, false);
                     }
                 }
                 else
                 {
-                    inventory_give(0, 0, _item2, false);
+                    inventory_give(0, 0, _item2, global.inventory, false);
                 }
             }
             else
@@ -340,7 +340,7 @@ function inventory_organize_mouse(_inst)
         }
         else
         {
-            inventory_give(0, 0, global.inventory.mouse.item, false);
+            inventory_give(0, 0, global.inventory.mouse.item, global.inventory, false);
         }
         
         timer_crafting_max = 0.3;

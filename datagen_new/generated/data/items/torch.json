@@ -1,0 +1,37 @@
+{
+    "inventory": "#phantasia:item/generic/inventory_default",
+    "properties": [],
+    "sprite": "phantasia:item/torch",
+    "tile": {
+        "animation_type": "increment",
+        "audio_properties": {
+            "lowpass": 0.05,
+            "reverb": 0
+        },
+        "drops": [
+            {
+                "id": "phantasia:torch"
+            }
+        ],
+        "harvest": {
+            "hardness": 0,
+            "level": 0,
+            "particle": {
+                "colour": "#phantasia:tile/particle_colour/wood",
+                "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
+            }
+        },
+        "light": "#EAC7A6",
+        "on_random_tick": [
+            {
+                "id": "phantasia:sfx_play",
+                "parameters": {
+                    "id": "phantasia:sfx/tile/fire/ambient"
+                },
+                "chance": 0.24
+            }
+        ],
+        "sfx": "#phantasia:tile/sfx/wood"
+    },
+    "type": "untouchable"
+}

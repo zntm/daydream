@@ -1,0 +1,18 @@
+{
+    "inventory": "#phantasia:item/generic/inventory_default",
+    "item": {
+        "consumable": {
+            "cooldown": {
+                "id": "phantasia:food",
+                "seconds": 1
+            },
+            "hp": 8,
+            "saturation": 4,
+            "sfx": {
+                "id": "phantasia:sfx/item/eat"
+            }
+        }
+    },
+    "sprite": "phantasia:item/cooked_chicken",
+    "type": "default"
+}
