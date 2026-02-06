@@ -269,6 +269,27 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
                 set_on_item_use(_on_use);
             }
             
+            var _on_item_double_attack = _data[$ "on_item_double_attack"];
+            
+            if (_on_item_double_attack != undefined)
+            {
+                set_on_item_double_attack(_on_item_double_attack);
+            }
+            
+            var _on_item_double_use = _data[$ "on_item_double_use"];
+            
+            if (_on_item_double_use != undefined)
+            {
+                set_on_item_double_use(_on_item_double_use);
+            }
+            
+            var _on_item_double_move = _data[$ "on_item_double_move"];
+            
+            if (_on_item_double_move != undefined)
+            {
+                set_on_item_double_move(_on_item_double_move);
+            }
+            
             var _ammo_type = _data[$ "ammo_type"];
             
             if (_ammo_type != undefined)
@@ -281,6 +302,13 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
             if (_projectile != undefined)
             {
                 ___item_projectile = _projectile;
+            }
+            
+            var _skill = _data[$ "skill"];
+            
+            if (_skill != undefined)
+            {
+                set_skill(_skill);
             }
         }
         
@@ -365,6 +393,20 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
         {
             ___item_armor.set_attributes(_attributes);
         }
+        
+        var _on_double_horizontal_move = _armor[$ "on_double_horizontal_move"];
+        
+        if (_on_double_horizontal_move != undefined)
+        {
+            ___item_armor.set_on_double_horizontal_move(_on_double_horizontal_move);
+        }
+        
+        var _on_double_vertical_move = _armor[$ "on_double_vertical_move"];
+        
+        if (_on_double_vertical_move != undefined)
+        {
+            ___item_armor.set_on_double_vertical_move(_on_double_vertical_move);
+        }
     }
     
     static set_item_consumable = function(_consumable)
@@ -415,6 +457,11 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     static get_item_armor_attribute = function()
     {
         return self[$ "___item_armor_attribute"];
+    }
+    
+    static get_item_armor = function()
+    {
+        return self[$ "___item_armor"];
     }
     
     static get_item_ammo_type = function()
@@ -483,11 +530,25 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
                 set_light(_light);
             }
             
+            var _on_place = _tile[$ "on_place"];
+            
+            if (_on_place != undefined)
+            {
+                set_on_place(_on_place);
+            }
+            
             var _on_random_tick = _tile[$ "on_random_tick"];
             
             if (_on_random_tick != undefined)
             {
                 set_on_random_tick(_on_random_tick);
+            }
+            
+            var _on_harvest = _tile[$ "on_harvest"];
+            
+            if (_on_harvest != undefined)
+            {
+                set_on_harvest(_on_harvest);
             }
             
             var _on_use = _tile[$ "on_use"];
@@ -783,6 +844,69 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
         return self;
     }
     
+    static get_tile_placement = function()
+    {
+        return {
+            condition: self[$ "___placement_condition"],
+            id: self[$ "___placement_id"],
+            index: self[$ "___placement_index"],
+            index_offset: self[$ "___placement_index_offset"]
+        }
+    }
+    
+    // --- Crop System ---
+    
+    static set_crop = function(_crop)
+    {
+        ___crop = _crop;
+        return self;
+    }
+    
+    static get_crop = function()
+    {
+        return self[$ "___crop"];
+    }
+    
+    static get_crop_condition_heat_peak = function()
+    {
+        return ___crop.condition.heat.peak;
+    }
+    
+    static get_crop_condition_heat_falloff = function()
+    {
+        return ___crop.condition.heat.falloff;
+    }
+    
+    static get_crop_condition_humidity_peak = function()
+    {
+        return ___crop.condition.humidity.peak;
+    }
+    
+    static get_crop_condition_humidity_falloff = function()
+    {
+        return ___crop.condition.humidity.falloff;
+    }
+    
+    static get_crop_maturity_limit = function()
+    {
+        return ___crop.maturity_limit;
+    }
+    
+    static get_crop_wither_limit = function()
+    {
+        return ___crop.wither_limit;
+    }
+    
+    static get_animation_index_min = function()
+    {
+        return ___crop.animation.index_min;
+    }
+    
+    static get_animation_index_max = function()
+    {
+        return ___crop.animation.index_max;
+    }
+
     static get_placement_index = function()
     {
         return self[$ "___placement_index"] ?? 0;
@@ -1211,6 +1335,114 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
         return self[$ "___on_tile_use_length"];
     }
     
+    static set_on_item_double_attack = function(_data)
+    {
+        if (_data != undefined)
+        {
+            var _ = function_parse(_data);
+            var _length = array_length(_);
+            
+            ___on_item_double_attack = _;
+            ___on_item_double_attack_length = _length;
+        }
+        
+        return self;
+    }
+    
+    static get_on_item_double_attack = function()
+    {
+        return self[$ "___on_item_double_attack"];
+    }
+    
+    static get_on_item_double_attack_length = function()
+    {
+        return self[$ "___on_item_double_attack_length"];
+    }
+    
+    static set_on_item_double_use = function(_data)
+    {
+        if (_data != undefined)
+        {
+            var _ = function_parse(_data);
+            var _length = array_length(_);
+            
+            ___on_item_double_use = _;
+            ___on_item_double_use_length = _length;
+        }
+        
+        return self;
+    }
+    
+    static get_on_item_double_use = function()
+    {
+        return self[$ "___on_item_double_use"];
+    }
+    
+    static get_on_item_double_use_length = function()
+    {
+        return self[$ "___on_item_double_use_length"];
+    }
+    
+    static set_on_item_double_move = function(_data)
+    {
+        if (_data != undefined)
+        {
+            var _ = function_parse(_data);
+            var _length = array_length(_);
+            
+            ___on_item_double_move = _;
+            ___on_item_double_move_length = _length;
+        }
+        
+        return self;
+    }
+    
+    static get_on_item_double_move = function()
+    {
+        return self[$ "___on_item_double_move"];
+    }
+    
+    static get_on_item_double_move_length = function()
+    {
+        return self[$ "___on_item_double_move_length"];
+    }
+    
+    static set_skill = function(_skill)
+    {
+        if (_skill != undefined)
+        {
+            var _on_trigger = _skill[$ "on_trigger"];
+            var _ = (_on_trigger != undefined) ? function_parse(_on_trigger) : undefined;
+            
+            ___item_skill = {
+                type: _skill[$ "type"] ?? "combo", // "combo" (hit based) or "charge" (hold based)
+                threshold: smart_value_parse(_skill[$ "threshold"] ?? 10),
+                stamina_cost: smart_value_parse(_skill[$ "stamina_cost"] ?? 30),
+                on_trigger: _,
+                on_trigger_length: (_ != undefined) ? array_length(_) : 0
+            }
+        }
+        
+        return self;
+    }
+    
+    static get_item_skill = function()
+    {
+        return self[$ "___item_skill"];
+    }
+    
+    static get_on_skill_trigger = function()
+    {
+        var _skill = self[$ "___item_skill"];
+        return (_skill != undefined) ? _skill.on_trigger : undefined;
+    }
+    
+    static get_on_skill_trigger_length = function()
+    {
+        var _skill = self[$ "___item_skill"];
+        return (_skill != undefined) ? _skill.on_trigger_length : 0;
+    }
+    
     static set_light = function(_light)
     {
         if (_light != undefined)
@@ -1229,6 +1461,54 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     static has_light = function()
     {
         return (self[$ "___light"] != undefined);
+    }
+    
+    static set_on_place = function(_data)
+    {
+        if (_data != undefined)
+        {
+            var _ = function_parse(_data);
+            var _length = array_length(_);
+            
+            ___on_place = _;
+            ___on_place_length = _length;
+        }
+        
+        return self;
+    }
+    
+    static get_on_place = function()
+    {
+        return self[$ "___on_place"];
+    }
+    
+    static get_on_place_length = function()
+    {
+        return self[$ "___on_place_length"] ?? 0;
+    }
+    
+    static set_on_harvest = function(_data)
+    {
+        if (_data != undefined)
+        {
+            var _ = function_parse(_data);
+            var _length = array_length(_);
+            
+            ___on_harvest = _;
+            ___on_harvest_length = _length;
+        }
+        
+        return self;
+    }
+    
+    static get_on_harvest = function()
+    {
+        return self[$ "___on_harvest"];
+    }
+    
+    static get_on_harvest_length = function()
+    {
+        return self[$ "___on_harvest_length"] ?? 0;
     }
     
     static set_container = function(_container)

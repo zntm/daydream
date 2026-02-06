@@ -2,26 +2,26 @@
 /// @function control_falling_tile(_dt)
 /// @param {real} _dt Delta time
 
-function control_falling_tile(_dt)
+function control_falling_tile()
 {
     // Handle fall delay
     if (fall_delay > 0)
     {
-        fall_delay -= _dt / GAME_TICK;
+        fall_delay -= 1 / GAME_TICK;
         exit;
     }
     
     // Apply gravity
-    yvelocity += gravity_value * _dt;
+    yvelocity += gravity_value;
     
     // Cap at terminal velocity
-    if (yvelocity > PHYSICS_TERMINAL_YVELOCITY)
+    if (yvelocity > PHYSICS_TERMINAL_VELOCITY)
     {
-        yvelocity = PHYSICS_TERMINAL_YVELOCITY;
+        yvelocity = PHYSICS_TERMINAL_VELOCITY;
     }
     
     // Calculate new position
-    var _new_y = y + (yvelocity * _dt);
+    var _new_y = y + yvelocity;
     
     // Check for collision with solid tiles below
     var _world_x = floor(x / TILE_SIZE);
@@ -89,13 +89,7 @@ function control_falling_tile(_dt)
             tile_place(_world_x, _land_y, tile_z, _new_tile);
             
             // Emit event
-            event_emit(GAME_EVENT.TILE_CHANGED, {
-                x: _world_x,
-                y: _land_y,
-                z: tile_z,
-                id: tile_id,
-                action: "fall_land"
-            });
+            event_emit(new EventDataTileFallingLand(_world_x, _land_y, tile_z, _new_tile));
             
             // Play landing sound
             var _data = global.item_data[$ tile_id];

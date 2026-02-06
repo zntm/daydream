@@ -1,50 +1,82 @@
-function function_execute(_function, _x, _y, _z, _xscale, _yscale, _dt)
+function function_execute(_function, _x, _y, _z, _xscale, _yscale, _inst = undefined, _item = undefined)
 {
-    var _chance = _function[0];
+    // Handle simplified JSON object structure
+    // { "id": "...", "chance": 0.1, "parameters": { ... } }
     
-    if (_chance != undefined) && (!chance(_chance * _dt)) exit;
+    // show_debug_message(_function);
     
-    var _item_function = global.item_function;
-    var _id = _function[1];
+    if (!is_struct(_function)) exit;
     
-    if (_id != undefined)
-    {
-        // Proglang Script Execution
-        if (string_pos("$proglang:", _id) == 1)
-        {
-            var _source = string_delete(_id, 1, 10); // Remove "$proglang:"
-            var _context = {
-                x: _x,
-                y: _y,
-                z: _z,
-                xscale: _xscale,
-                yscale: _yscale,
-                dt: _dt,
-                parameter: _function[2] 
-            }
-            
-            // Pass common game objects to context if needed, or rely on global access
-            // Maybe add 'player' to context explicitly?
-            if (instance_exists(obj_Player)) _context.player = obj_Player;
-            
-            proglang_execute(_source, _context);
-            exit;
-        }
+    var _chance = _function[$ "chance"];
+    
+    if (_chance != undefined) && (!chance(_chance)) exit;
+    
+    var _id = _function[$ "id"];
+    if (_id != undefined && string_pos("@", _id) == 1) _id = string_delete(_id, 1, 1);
+    var _parameter = _function[$ "parameters"] ?? {}
+    
+    // Build Context
+    var _tx = round(_x / TILE_SIZE);
+    var _ty = round(_y / TILE_SIZE);
+    var _context = {}
 
-        var _f = _item_function[$ _id];
-        var _parameter = _function[2];
-        var _repeat = _function[3];
+    if (_inst != undefined) && (instance_exists(_inst))
+    {
+        _context.type = "unknown";
         
-        if (_repeat == undefined)
+        if (_inst.object_index == obj_Player) _context.type = "player";
+        else if (object_is_ancestor(_inst.object_index, obj_Creature) || _inst.object_index == obj_Creature) _context.type = "creature";
+        else if (object_is_ancestor(_inst.object_index, obj_Projectile) || _inst.object_index == obj_Projectile) _context.type = "projectile";
+        
+        _context.entity_x = _inst.x / TILE_SIZE;
+        _context.entity_y = _inst.y / TILE_SIZE;
+        
+        if (variable_instance_exists(_inst, "physics_body"))
         {
-            _f(_dt, _x, _y, _z, _xscale, _yscale, _parameter);
+            var _pb = _inst.physics_body;
+            _context.velocity = { x: _pb.vel_x, y: _pb.vel_y }
         }
         else
         {
-            repeat (smart_value(_repeat))
-            {
-                _f(_dt, _x, _y, _z, _xscale, _yscale, _parameter);
-            }
+            _context.velocity = { x: 0, y: 0 }
+        }
+        
+        if (variable_instance_exists(_inst, "effects"))
+        {
+            _context.effects = _inst.effects;
+        }
+    }
+    else if (instance_exists(obj_Player))
+    {
+         _context.player = obj_Player;
+    }
+    
+    // Always provide spatial context
+    _context.caller = _inst;
+    _context.x = _tx;
+    _context.y = _ty;
+    _context.z = _z;
+    _context.xscale = _xscale;
+    _context.yscale = _yscale;
+    _context.tile = tile_get(_tx, _ty, _z);
+    _context.item = _item;
+    _context.inventory = global.inventory;
+
+    if (_id != undefined)
+    {
+        _context.parameter = _parameter;
+        
+        // Handle direct script call
+        if (struct_exists(global.proglang_scripts, _id))
+        {
+            proglang_call(_id, [_parameter], _context);
+        }
+        else if (IS_DEVELOPER_MODE)
+        {
+            // Debugging aid
+            // show_debug_message(struct_get_names(global.proglang_scripts));
+            show_debug_message($"[Daydream] Script not found: '{_id}'");
+            show_debug_message(global.proglang_scripts)
         }
     }
 }

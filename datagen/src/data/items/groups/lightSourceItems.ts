@@ -1,6 +1,6 @@
 import { DatagenReturnData } from "../../../lib/DatagenReturnData";
 import { ItemType } from "../lib/ItemType";
-import { ItemFunction } from "../lib/ItemFunction";
+import { ItemScript } from "../lib/ProgLang";
 import {
     TileItem,
     TileItemDrop,
@@ -32,8 +32,8 @@ export default [
             .setTileLight("#EAC7A6")
             .setAnimationType("increment")
             .addOnRandomTick([
-                new ItemFunction(
-                    "phantasia:sfx_play",
+                new ItemScript(
+                    "items/sfx_play",
                     {
                         id: "phantasia:sfx/tile/fire/ambient",
                     },
@@ -65,8 +65,8 @@ export default [
             .setTileLight("#D89172")
             .setAnimationType("increment")
             .addOnRandomTick([
-                new ItemFunction(
-                    "phantasia:sfx_play",
+                new ItemScript(
+                    "items/sfx_play",
                     {
                         id: "phantasia:sfx/tile/fire/ambient",
                     },

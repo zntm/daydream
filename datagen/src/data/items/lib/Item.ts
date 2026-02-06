@@ -38,6 +38,9 @@ export class UseableItem extends Item {
         on_use?: ItemFunction[];
         ammo_type?: string;
         projectile?: string;
+        on_item_double_attack?: ItemFunction[];
+        on_item_double_use?: ItemFunction[];
+        on_item_double_move?: ItemFunction[];
     };
 
     constructor(
@@ -59,6 +62,24 @@ export class UseableItem extends Item {
     addOnUse(functions: ItemFunction[]) {
         this.item.on_use ??= [];
         this.item.on_use.push(...functions);
+        return this;
+    }
+
+    addOnItemDoubleAttack(functions: ItemFunction[]) {
+        this.item.on_item_double_attack ??= [];
+        this.item.on_item_double_attack.push(...functions);
+        return this;
+    }
+
+    addOnItemDoubleUse(functions: ItemFunction[]) {
+        this.item.on_item_double_use ??= [];
+        this.item.on_item_double_use.push(...functions);
+        return this;
+    }
+
+    addOnItemDoubleMove(functions: ItemFunction[]) {
+        this.item.on_item_double_move ??= [];
+        this.item.on_item_double_move.push(...functions);
         return this;
     }
 

@@ -33,7 +33,7 @@ function control_inventory()
             
             if (_item != INVENTORY_EMPTY)
             {
-                inventory_give(0, 0, _item, false);
+                inventory_give(0, 0, _item, global.inventory, false);
                 
                 global.inventory.mouse.item = INVENTORY_EMPTY;
             }
@@ -48,11 +48,42 @@ function control_inventory()
         var _player_x = obj_Player.x;
         var _player_y = obj_Player.y;
         
-        var _inst = instance_nearest(_player_x, _player_y, obj_Tile_Container);
+        var _nearest_dist = TILE_SIZE * 6;
+        var _nearest_struct = undefined;
         
-        if (instance_exists(_inst)) && (point_distance(_player_x, _player_y, _inst.x, _inst.y) <= TILE_SIZE * 6)
+        // Check 3x3 neighbors or current chunk? 
+        // 6 tiles is small, but if we are at edge of chunk, nearest could be in neighbor.
+        var _chunk_x = floor(_player_x / CHUNK_SIZE_DIMENSION) * CHUNK_SIZE_DIMENSION;
+        var _chunk_y = floor(_player_y / CHUNK_SIZE_DIMENSION) * CHUNK_SIZE_DIMENSION;
+        
+        for (var _cx = -CHUNK_SIZE_DIMENSION; _cx <= CHUNK_SIZE_DIMENSION; _cx += CHUNK_SIZE_DIMENSION)
         {
-            inventory_container_open(_player_x, _player_y, _inst);
+            for (var _cy = -CHUNK_SIZE_DIMENSION; _cy <= CHUNK_SIZE_DIMENSION; _cy += CHUNK_SIZE_DIMENSION)
+            {
+                var _chunk = chunk_map_get(_chunk_x + _cx, _chunk_y + _cy);
+                
+                if (_chunk == undefined) continue;
+                
+                var _containers = _chunk.chunk_containers;
+                var _length = array_length(_containers);
+                
+                for (var k = 0; k < _length; ++k)
+                {
+                    var _cont = _containers[k];
+                    var _d = point_distance(_player_x, _player_y, _cont.x, _cont.y);
+                    
+                    if (_d <= _nearest_dist)
+                    {
+                        _nearest_dist = _d;
+                        _nearest_struct = _cont;
+                    }
+                }
+            }
+        }
+        
+        if (_nearest_struct != undefined)
+        {
+            inventory_container_open(_player_x, _player_y, _nearest_struct);
         }
     }
     

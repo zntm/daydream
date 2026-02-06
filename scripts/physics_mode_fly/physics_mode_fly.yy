@@ -6,7 +6,7 @@
   "name":"physics_mode_fly",
   "parent":{
     "name":"Physics",
-    "path":"folders/Scripts/Entity/Physics.yy",
+    "path":"folders/Scripts/Control/Physics.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

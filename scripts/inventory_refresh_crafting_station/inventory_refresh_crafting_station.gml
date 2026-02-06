@@ -12,24 +12,38 @@ function inventory_refresh_crafting_station(_refresh = false)
         var _station = _crafting_stations[i];
         
         _previously_available[$ _station] = (global.crafting_stations_distance[$ _station] <= TILE_SIZE * 4);
+        
+        // Reset distance
+        global.crafting_stations_distance[$ _station] = infinity;
     }
     
     var _player_x = obj_Player.x;
     var _player_y = obj_Player.y;
     
-    with (obj_Tile_Crafting_Station)
-    {
-        global.crafting_stations_distance[$ tile_id] = infinity;
-    }
+    var _chunks = chunk_map_get_all();
+    var _chunks_length = array_length(_chunks);
     
-    with (obj_Tile_Crafting_Station)
+    for (var i = 0; i < _chunks_length; ++i)
     {
-        var _a = global.crafting_stations_distance[$ tile_id];
-        var _b = point_distance(_player_x, _player_y, x, y);
+        var _chunk = _chunks[i];
         
-        if (_a > _b)
+        // We can check if chunk is generated but usually pooled chunks are.
+        // if !(_chunk.boolean & CHUNK_BOOLEAN.GENERATED) continue; 
+        
+        var _stations = _chunk.chunk_crafting_stations;
+        var _stations_length = array_length(_stations);
+        
+        for (var j = 0; j < _stations_length; ++j)
         {
-            global.crafting_stations_distance[$ tile_id] = _b;
+            var _station_struct = _stations[j];
+            var _id = _station_struct.tile_id;
+            
+            var _dist = point_distance(_player_x, _player_y, _station_struct.x, _station_struct.y);
+            
+            if (global.crafting_stations_distance[$ _id] > _dist)
+            {
+                global.crafting_stations_distance[$ _id] = _dist;
+            }
         }
     }
     

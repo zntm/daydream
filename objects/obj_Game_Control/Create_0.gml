@@ -1,4 +1,5 @@
 randomize();
+os_powersave_enable(false); // Fix for server stopping when window loses focus
 
 audio_stop_all();
 
@@ -38,21 +39,11 @@ tile_container_x = 0;
 tile_container_y = 0;
 tile_container_z = 0;
 
-tile_harvest_x = 0;
-tile_harvest_y = 0;
-tile_harvest_z = 0;
-
-timer_harvest = 0;
-
 timer_respawn = 0;
 timer_foliage_sway = 0;
 
 timer_crafting_max = 0.3;
 timer_crafting = timer_crafting_max;
-
-cooldown_build = 0;
-
-cooldown_harvest = 0;
 
 surface_harvest = -1;
 surface_pause = [ -1, -1 ];
@@ -82,6 +73,7 @@ inventory_mouse_select_type = INVENTORY_MOUSE_SELECT_TYPE.NONE;
 global.inventory_selected_hover = noone;
 
 surface_lighting = -1;
+surface_lighting_colour = -1;
 surface_lighting_x = -1;
 surface_lighting_y = -1;
 
@@ -187,7 +179,11 @@ chunk_in_view_length = 0;
 // Initialize chunk generation queue for time-sliced worldgen
 chunk_queue_init();
 
-open_simplex_noise_seed(global.world_save_data.seed);
+// Initialize seed - SKIP for clients, they receive the seed via WELCOME packet
+if (global.network_role != NETWORK_ROLE.CLIENT)
+{
+    open_simplex_noise_seed(global.world_save_data.seed);
+}
 
 item_cooldown = {}
 
@@ -247,3 +243,11 @@ global.chat_command_hint = undefined;
 
 // Initialize the modular GUI system
 gui_init_modular();
+
+// Initialize network globals ONLY if not already in a session
+if (is_undefined(global.network_role) || global.network_role == NETWORK_ROLE.NONE)
+{
+    network_init();
+}
+
+timer_network_sync = 0;

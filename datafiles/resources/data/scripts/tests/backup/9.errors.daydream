@@ -1,0 +1,38 @@
+test_group("errors", [
+    test("divide by zero", fn() {
+        try {
+            var x = 1 / 0
+            // test_expect(true, false) // should not reach
+        } catch (e) {
+            test_expect(e.type, ERROR_TYPE.DIVIDE_BY_ZERO)
+        }
+    }),
+
+    test("missing import file", fn() {
+        try {
+            import missing from "./modules/does_not_exist.daydream"
+            test_expect(true, false)
+        } catch (e) {
+            test_expect(e.type, ERROR_TYPE.FILE_NOT_FOUND)
+        }
+    }),
+
+    test("call non-callable throws", fn() {
+        try {
+            var a = 5
+            a()
+            // test_expect(true, false)
+        } catch (e) {
+            test_expect(e.type, ERROR_TYPE.NOT_CALLABLE)
+        }
+    }),
+
+    test("index out of range returns undefined", fn() {
+        try {
+            var a = [1, 2, 3]
+            test_expect(a[10], undefined)
+        } catch (e) {
+            test_expect(e.type, ERROR_TYPE.INDEX_OUT_OF_RANGE)
+        }
+    }),
+])

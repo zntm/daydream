@@ -4,95 +4,108 @@
 /// Base directory for all proglang scripts (sandbox root)
 #macro PROGLANG_BASE_DIR ($"{PROGRAM_DIRECTORY_RESOURCES}/data/scripts")
 
-global.proglang_scripts = {}
-global.proglang_exports = {}
-global.proglang_modules = {}
+if (!variable_global_exists("proglang_scripts")) global.proglang_scripts = {};
+if (!variable_global_exists("proglang_exports")) global.proglang_exports = {};
+if (!variable_global_exists("proglang_modules")) global.proglang_modules = {};
 
 /// @desc Initialize proglang by recursively loading all .daydream scripts
 /// @param {string} _directory Directory to load from
 /// @param {string} _namespace Namespace prefix for scripts
-function init_proglang_recursive(_directory, _namespace = "") {
-    var _files = file_read_directory(_directory);
-    var _files_length = array_length(_files);
+/// @param {string} _path Internal logic for recursion (do not set manually)
+function init_proglang_recursive(_directory, _namespace = "", _path = "") {
+    show_debug_message($"[Daydream] Init Proglang Recursive Called with: {_directory}");
+    
+    // Normalize directory separators
+    _directory = string_replace_all(_directory, "\\", "/");
+    if (string_ends_with(_directory, "/")) _directory = string_delete(_directory, string_length(_directory), 1);
+
+    // Get file list
+    var _files = [];
+    var _dir_files = [];
+    
+    // First pass: Collect all files and directories
+    var _f = file_find_first($"{_directory}/*", fa_directory);
+    while (_f != "") {
+        if (_f != "." && _f != "..") {
+            array_push(_dir_files, _f);
+        }
+        _f = file_find_next();
+    }
+    file_find_close();
+    
+    // Check which are directories and which are files
+    // Note: directory_exists works nicely, but file_exists can be tricky with extensions on some platforms.
+    
+    var _files_length = array_length(_dir_files);
+    
+    show_debug_message($"[Daydream] Scanning directory: {_directory} (Found {_files_length} items)");
     
     for (var i = 0; i < _files_length; i++) {
-        var _file = _files[i];
-        var _subdirectory = $"{_directory}/{_file}";
-        var _rel_path = _namespace == "" ? _file : $"{_namespace}/{_file}";
+        var _file = _dir_files[i];
+        var _full_path = $"{_directory}/{_file}";
+        var _rel_path = _path == "" ? _file : $"{_path}/{_file}";
         
-        // Recurse into subdirectories
-        if (directory_exists(_subdirectory)) {
-            init_proglang_recursive(_subdirectory, _rel_path);
-            continue;
+        if (directory_exists(_full_path)) {
+            // It's a directory, recurse
+            init_proglang_recursive(_full_path, _namespace, _rel_path);
         }
-        
-        // Only process .daydream files
-        if (!string_ends_with(_file, ".daydream")) continue;
-        
-        var _filename = string_delete(_file, string_length(_file) - 8, 9); // Remove .daydream
-        var _script_id = _namespace == "" ? _filename : $"{_namespace}/{_filename}";
-        
-        var _source = buffer_load_text(_subdirectory);
-        if (_source == undefined)
-        {
-            if (IS_DEVELOPER_MODE) show_debug_message($"[Daydream] Failed to load: {_script_id}");
-            continue;
-        }
-        
-        var _bytecode = proglang_compile(_source);
-        if (_bytecode == undefined)
-        {
-            if (IS_DEVELOPER_MODE) show_debug_message($"[Daydream] Failed to compile: {_script_id}");
-            continue;
-        }
-        
-        var _has_functions = false;
-        var _file_scope = {}
-        
-        // Scan for function definitions (supports both struct and array format)
-        for (var j = 0; j < array_length(_bytecode.constants); j++) {
-            var _const = _bytecode.constants[j];
-            var _is_func = false;
-            var _func_name = "";
-            var _func_bc = undefined;
-            var _func_is_global = false;
+        else if (string_ends_with(_file, ".daydream")) {
+            // It's a script file
+            var _filename = string_replace(_file, ".daydream", "");
             
-            // Check for array format (PROG_FUNC enum)
-            if (is_array(_const) && array_length(_const) >= PROG_FUNC.SIZE && _const[PROG_FUNC.TYPE] == "function") {
-                _is_func = true;
-                _func_name = _const[PROG_FUNC.NAME];
-                _func_bc = _const[PROG_FUNC.BYTECODE];
-                _func_is_global = _const[PROG_FUNC.IS_GLOBAL];
-            }
-            // Legacy struct format
-            else if (is_struct(_const) && struct_exists(_const, "type") && _const.type == "function") {
-                _is_func = true;
-                _func_name = _const.name;
-                _func_bc = _const.bytecode;
-                _func_is_global = _const.is_global;
+            // Construct ID
+            var _id_path = _path == "" ? _filename : $"{_path}/{_filename}";
+            var _script_id = _namespace == "" ? _id_path : $"{_namespace}:{_id_path}";
+            
+            show_debug_message($"[Daydream] Loading Script: {_script_id} from {_full_path}");
+            
+            var _source = buffer_load_text(_full_path);
+            if (_source == undefined) {
+                show_debug_message($"[Daydream] ERROR: Failed to load content for {_script_id}");
+                continue;
             }
             
-            if (_is_func) {
-                _has_functions = true;
-                if (_func_is_global) {
-                    global.proglang_exports[$ _func_name] = _func_bc;
-                    if (IS_DEVELOPER_MODE) show_debug_message($"[Daydream] Exported: {_func_name} from {_script_id}");
-                } else {
-                    _file_scope[$ _func_name] = _func_bc;
+            var _bytecode = proglang_compile(_source);
+            if (_bytecode == undefined) {
+                show_debug_message($"[Daydream] ERROR: Failed to compile {_script_id}");
+                continue;
+            }
+            
+            // Handle Exports / Functions
+            var _has_functions = false;
+            var _file_scope = {};
+            
+            for (var j = 0; j < array_length(_bytecode.constants); j++) {
+                var _const = _bytecode.constants[j];
+                // Support both Array and Struct format for functions
+                if (is_array(_const) && array_length(_const) >= PROG_FUNC.SIZE && _const[PROG_FUNC.TYPE] == "function") {
+                    if (_const[PROG_FUNC.IS_GLOBAL]) {
+                        global.proglang_exports[$ _const[PROG_FUNC.NAME]] = _const[PROG_FUNC.BYTECODE];
+                        _has_functions = true;
+                    } else {
+                        _file_scope[$ _const[PROG_FUNC.NAME]] = _const[PROG_FUNC.BYTECODE];
+                        _has_functions = true;
+                    }
+                }
+                else if (is_struct(_const) && struct_exists(_const, "type") && _const.type == "function") {
+                    if (_const.is_global) {
+                        global.proglang_exports[$ _const.name] = _const.bytecode;
+                        _has_functions = true;
+                    } else {
+                        _file_scope[$ _const.name] = _const.bytecode;
+                        _has_functions = true;
+                    }
                 }
             }
-        }
-        
-        if (!_has_functions) {
-            global.proglang_scripts[$ _script_id] = _bytecode;
-            if (IS_DEVELOPER_MODE) show_debug_message($"[Daydream] Loaded script: {_script_id}");
-        } else {
-            // Array-based module storage (PROG_MODULE enum)
-            var _module_arr = array_create(PROG_MODULE.SIZE);
-            _module_arr[PROG_MODULE.MAIN] = _bytecode;
-            _module_arr[PROG_MODULE.SCOPE] = _file_scope;
-            global.proglang_scripts[$ _script_id] = _module_arr;
-            if (IS_DEVELOPER_MODE) show_debug_message($"[Daydream] Loaded module: {_script_id}");
+            
+            if (!_has_functions) {
+                global.proglang_scripts[$ _script_id] = _bytecode;
+            } else {
+                var _module = array_create(PROG_MODULE.SIZE);
+                _module[PROG_MODULE.MAIN] = _bytecode;
+                _module[PROG_MODULE.SCOPE] = _file_scope;
+                global.proglang_scripts[$ _script_id] = _module;
+            }
         }
     }
 }
@@ -136,9 +149,19 @@ function proglang_resolve_path(_path, _current_dir = "") {
             continue;
         } else if (_seg == "..") {
             // SECURITY: Don't allow going above base directory
-            // If _current_dir is absolute (contains root), we must stay within _root_len
-            // If _current_dir is empty (virtual path from root), we must stay within virtual root (0)
-            var _min_parts = (_current_dir == "") ? 0 : _root_len;
+            // Check if the current path starts with the base directory
+            var _current_path = "";
+            for (var j = 0; j < array_length(_result_parts); j++) {
+                if (j > 0) _current_path += "/";
+                _current_path += _result_parts[j];
+            }
+            
+            // Determine minimum parts based on whether path is absolute (contains base dir)
+            var _min_parts = 0;
+            if (string_pos(PROGLANG_BASE_DIR, _current_path) == 1) {
+                // Absolute path - cannot go above base directory
+                _min_parts = _root_len;
+            }
             
             if (array_length(_result_parts) > _min_parts) {
                 array_pop(_result_parts);
@@ -158,6 +181,17 @@ function proglang_resolve_path(_path, _current_dir = "") {
         _resolved += _result_parts[i];
     }
     
+    // Preserve namespace if it was present
+    if (string_pos(":", _path) > 0) {
+        var _colon_pos = string_pos(":", _path);
+        var _ns = string_copy(_path, 1, _colon_pos);
+        if (string_pos(_ns, _resolved) != 1) {
+             // If resolution didn't already include it (e.g. absolute path with NS)
+             // This is a bit complex, but for now we assume absolute paths with NS stay absolute
+             // _resolved = _ns + _resolved; 
+        }
+    }
+    
     return _resolved;
 }
 
@@ -167,9 +201,9 @@ function proglang_resolve_path(_path, _current_dir = "") {
 function proglang_split_path(_path) {
     var _parts = [];
     var _current = "";
-    var _len = string_length(_path);
+    var _length = string_length(_path);
     
-    for (var i = 1; i <= _len; i++) {
+    for (var i = 1; i <= _length; i++) {
         var _char = string_char_at(_path, i);
         if (_char == "/" || _char == "\\") {
             if (_current != "") {
@@ -219,17 +253,30 @@ function proglang_load_module(_module_path, _importer_path = "") {
     if (_is_relative && _importer_dir != "") {
         // Relative import: resolve from the importing file's directory
         _resolved = proglang_resolve_path(_module_path, _importer_dir);
+        // (IS_DEVELOPER_MODE) show_debug_message($"[Daydream] Resolving relative path: '{_module_path}' from '{_importer_dir}' -> '{_resolved}'");
         if (_resolved == undefined) {
             throw { type: PROGLANG_ERROR_TYPE.PATH_SECURITY, message: $"Path security violation: '{_module_path}'" }
         }
+        //_full_path = $"{PROGLANG_BASE_DIR}/{_resolved}";
         _full_path = _resolved;
     } else {
         // Absolute import: use base directory
         _resolved = proglang_resolve_path(_module_path, "");
+        // if (IS_DEVELOPER_MODE) show_debug_message($"[Daydream] Resolving absolute path: '{_module_path}' -> '{_resolved}'");
         if (_resolved == undefined) {
             throw { type: PROGLANG_ERROR_TYPE.PATH_SECURITY, message: $"Path security violation: '{_module_path}'" }
         }
-        _full_path = $"{PROGLANG_BASE_DIR}/{_resolved}";
+        // Strip virtual namespace for physical file access
+        var _physical_path = _resolved;
+        var _colon_pos = string_pos(":", _physical_path);
+        if (_colon_pos > 0) {
+            _physical_path = string_delete(_physical_path, 1, _colon_pos);
+        }
+        
+        _full_path = $"{PROGLANG_BASE_DIR}/{_physical_path}";
+        if (!string_ends_with(_full_path, ".daydream")) {
+            _full_path += ".daydream";
+        }
     }
     
     // Check if already loaded
@@ -239,25 +286,29 @@ function proglang_load_module(_module_path, _importer_path = "") {
     
     // Try to load the file
     if (!file_exists(_full_path)) {
-        throw { type: PROGLANG_ERROR_TYPE.FILE_NOT_FOUND, message: $"Module not found: '{_resolved}'" }
+        throw { type: PROGLANG_ERROR_TYPE.FILE_NOT_FOUND, message: $"Module not found: '{_full_path}'" }
     }
     
     var _source = buffer_load_text(_full_path);
     var _bytecode = proglang_compile(_source);
     
     if (_bytecode == undefined) {
-        throw { type: PROGLANG_ERROR_TYPE.SYNTAX, message: $"Failed to compile module: '{_resolved}'" }
+        throw { type: PROGLANG_ERROR_TYPE.SYNTAX, message: $"Failed to compile module: '{_full_path}'" }
     }
     
     // Create module entry
     global.proglang_modules[$ _resolved] = { exports: {}, loaded: false, path: _resolved }
     
     // Run module to populate exports
-    var _vm = new ProgVM();
-    _vm.active_module = global.proglang_modules[$ _resolved];
-    _vm.current_scope.vars[$ "__dirname"] = proglang_get_directory(_full_path);
-    _vm.current_scope.vars[$ "__filename"] = _full_path;
-    _vm.run(_bytecode);
+    var _vm = proglang_vm_create();
+    
+    _vm[@ PROG_VM.ACTIVE_MODULE] = global.proglang_modules[$ _resolved];
+    _vm[PROG_VM.SCOPE][PROG_SCOPE.VARS][$ "__dirname"] = proglang_get_directory(_full_path);
+    _vm[PROG_VM.SCOPE][PROG_SCOPE.VARS][$ "__filename"] = _full_path;
+    
+    proglang_vm_run(_vm, _bytecode);
+    
+    proglang_vm_free(_vm);
     
     global.proglang_modules[$ _resolved].loaded = true;
     
@@ -294,18 +345,20 @@ function proglang_call(_name, _args = [], _context = {}) {
         return undefined;
     }
     
-    var _vm = new ProgVM();
-    _vm.context = _context;
+    var _vm = proglang_vm_create();
+    _vm[@ PROG_VM.CONTEXT] = _context;
     
     // Set directory context for import/export resolution
     var _dirname = proglang_get_directory(_name);
-    _vm.current_scope.vars[$ "__dirname"] = _dirname;
-    _vm.current_scope.vars[$ "__filename"] = _name;
+    _vm[PROG_VM.SCOPE][PROG_SCOPE.VARS][$ "__dirname"] = _dirname;
+    _vm[PROG_VM.SCOPE][PROG_SCOPE.VARS][$ "__filename"] = _name;
     
     for (var i = 0; i < array_length(_args); i++) {
-        _vm.current_scope.vars[$ $"arg{i}"] = _args[i];
+        _vm[PROG_VM.SCOPE][PROG_SCOPE.VARS][$ $"arg{i}"] = _args[i];
     }
-    _vm.current_scope.vars[$ "argc"] = array_length(_args);
+    _vm[PROG_VM.SCOPE][PROG_SCOPE.VARS][$ "argc"] = array_length(_args);
     
-    return _vm.run(_bytecode);
+    var _result = proglang_vm_run(_vm, _bytecode);
+    proglang_vm_free(_vm);
+    return _result;
 }

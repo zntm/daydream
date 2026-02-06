@@ -11,19 +11,10 @@ function inventory_organize_mouse(_inst)
             
             if (_item != INVENTORY_EMPTY)
             {
-                sfx_play("phantasia:sfx/item/collect", global.settings.audio_sfx);
-                
-                inventory_mouse_select_type = INVENTORY_MOUSE_SELECT_TYPE.RIGHT;
-                
-                global.inventory_selected_backpack.type  = _type;
-                global.inventory_selected_backpack.index = _index;
-                
-                var _amount = _item.get_amount();
-                
-                global.inventory.mouse.item = variable_clone(_item).set_amount(ceil(_amount / 2));
-                
-                global.inventory.mouse.type  = _type;
-                global.inventory.mouse.index = _index;
+                if (global.network_role == NETWORK_ROLE.CLIENT)
+                {
+                    network_send_inventory_action(INVENTORY_ACTION_TYPE.SPLIT, _type, _index, "mouse", 0, ceil(_amount / 2));
+                }
                 
                 var _amount2 = floor(_amount / 2);
                 
@@ -48,6 +39,11 @@ function inventory_organize_mouse(_inst)
         {
             var _type  = _inst.inventory_type;
             var _index = _inst.inventory_index;
+            
+            if (global.network_role == NETWORK_ROLE.CLIENT)
+            {
+                network_send_inventory_action(INVENTORY_ACTION_TYPE.SPLIT, "mouse", 0, _type, _index, 1);
+            }
             
             var _item = global.inventory[$ _type][_index];
             
@@ -78,12 +74,12 @@ function inventory_organize_mouse(_inst)
                         
                         _item2.add_amount(_amount - _inventory_max);
                         
-                        inventory_give(0, 0, _item2, false);
+                        inventory_give(0, 0, _item2, global.inventory, false);
                     }
                 }
                 else
                 {
-                    inventory_give(0, 0, _item2, false);
+                    inventory_give(0, 0, _item2, global.inventory, false);
                 }
             }
             else
@@ -135,6 +131,11 @@ function inventory_organize_mouse(_inst)
                 global.inventory_selected_backpack.type  = _type;
                 global.inventory_selected_backpack.index = _index;
                 
+                if (global.network_role == NETWORK_ROLE.CLIENT)
+                {
+                    network_send_inventory_action(INVENTORY_ACTION_TYPE.MOVE, _type, _index, "mouse", 0, _item.get_amount());
+                }
+                
                 global.inventory[$ _type][@ _index] = INVENTORY_EMPTY;
                 global.inventory.mouse.item = _item;
                 
@@ -153,6 +154,11 @@ function inventory_organize_mouse(_inst)
         {
             var _type  = _inst.inventory_type;
             var _index = _inst.inventory_index;
+            
+            if (global.network_role == NETWORK_ROLE.CLIENT)
+            {
+                network_send_inventory_action(INVENTORY_ACTION_TYPE.MOVE, "mouse", 0, _type, _index, global.inventory.mouse.item.get_amount());
+            }
             
             var _item = global.inventory[$ _type][_index];
             
@@ -183,12 +189,12 @@ function inventory_organize_mouse(_inst)
                         
                         _item2.add_amount(_amount - _inventory_max);
                         
-                        inventory_give(0, 0, _item2, false);
+                        inventory_give(0, 0, _item2, global.inventory, false);
                     }
                 }
                 else
                 {
-                    inventory_give(0, 0, _item2, false);
+                    inventory_give(0, 0, _item2, global.inventory, false);
                 }
             }
             else
@@ -260,6 +266,11 @@ function inventory_organize_mouse(_inst)
                     inventory_mouse_select_type = INVENTORY_MOUSE_SELECT_TYPE.CRAFTING;
                 }
                 
+                if (global.network_role == NETWORK_ROLE.CLIENT)
+                {
+                    network_send_inventory_action(INVENTORY_ACTION_TYPE.CRAFT, "base", _index, "mouse", 0, _amount);
+                }
+                
                 inventory_craft_clear(_index);
                 
                 with (obj_Inventory)
@@ -314,12 +325,12 @@ function inventory_organize_mouse(_inst)
                         
                         _item2.add_amount(_amount - _inventory_max);
                         
-                        inventory_give(0, 0, _item2, false);
+                        inventory_give(0, 0, _item2, global.inventory, false);
                     }
                 }
                 else
                 {
-                    inventory_give(0, 0, _item2, false);
+                    inventory_give(0, 0, _item2, global.inventory, false);
                 }
             }
             else
@@ -329,7 +340,7 @@ function inventory_organize_mouse(_inst)
         }
         else
         {
-            inventory_give(0, 0, global.inventory.mouse.item, false);
+            inventory_give(0, 0, global.inventory.mouse.item, global.inventory, false);
         }
         
         timer_crafting_max = 0.3;

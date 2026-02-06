@@ -56,37 +56,113 @@ function control_entity_damage(_victim, _attacker, _base_damage, _variance = 0.0
     // Apply damage
     _victim.hp -= _damage;
     
+    // Screen shake if local player is involved
+    var _lp = noone;
+    with (obj_Player) { if (is_local) { _lp = id; break; } }
+    if (_lp != noone) && (_victim == _lp || _attacker == _lp)
+    {
+        global.camera_shake = clamp(global.camera_shake + (_damage * 0.4), 0, 8);
+    }
+    
+    // AI Stun for creatures
+    if (object_is_ancestor(_victim.object_index, obj_Creature) || _victim.object_index == obj_Creature)
+    {
+        var _c_data = global.creature_data[$ _victim._id];
+        if (_c_data != undefined)
+        {
+            _victim.ai_state = CREATURE_AI_STATE.STUNNED;
+            _victim.ai_state_timer = _c_data.get_stun_duration();
+            
+            // Clear input
+            if (variable_instance_exists(_victim, "input_state"))
+            {
+                _victim.input_state.clear();
+            }
+        }
+    }
+    
+    // Increment combo count for player attacker
+    if (_attacker != noone) && (_attacker.object_index == obj_Player) && (_attacker.is_local)
+    {
+        _attacker.combo_count++;
+        _attacker.timer_combo = 3.0; // 3 seconds to keep combo
+    }
+    
+    // Trigger on_damage effects
+    var _effects = _victim.effects;
+    var _effect_names = struct_get_names(_effects);
+    var _effect_names_length = array_length(_effect_names);
+    var _effect_data = global.effect_data;
+    var _effect_data = global.effect_data;
+    
+    for (var i = 0; i < _effect_names_length; ++i)
+    {
+        var _name = _effect_names[i];
+        var _data = _effect_data[$ _name];
+        
+        if (_data == undefined) continue;
+        
+        var _on_damage = _data.get_on_damage();
+        
+        if (_on_damage != undefined)
+        {
+            var _params = variable_clone(_on_damage[$ "parameters"] ?? {});
+            _params[$ "damage_amount"] = _damage;
+            _params[$ "attacker"] = _attacker;
+            _params[$ "victim"] = _victim;
+            _params[$ "is_critical"] = _is_critical;
+            
+            function_execute({ id: _on_damage.id, parameters: _params }, _victim.x, _victim.y, CHUNK_DEPTH_DEFAULT, 1, 1, _victim);
+        }
+    }
+    
     // Emit damage event
-    event_emit(GAME_EVENT.ENTITY_DAMAGED, {
-        victim: _victim,
-        type: (_victim.object_index == obj_Player) ? "player" : "creature",
-        damage: _damage,
-        attacker: _attacker,
-        is_critical: _is_critical
-    });
+    event_emit(new EventDataEntityDamage(_victim, _damage, _attacker, _is_critical));
     
     // Spawn floating damage text
     spawn_floating_text(_victim.x, _victim.y, _damage, 0, -3.9);
     
-    // Check if victim died
     if (_victim.hp <= 0)
     {
+        // Check for on_death effects
+        var _effects = _victim.effects;
+        var _effect_names = struct_get_names(_effects);
+        var _effect_names_length = array_length(_effect_names);
+        
+        for (var i = 0; i < _effect_names_length; ++i)
+        {
+            var _name = _effect_names[i];
+            var _data = _effect_data[$ _name];
+            
+            if (_data == undefined) continue;
+            
+            var _on_death = _data.get_on_death();
+            
+            if (_on_death != undefined)
+            {
+                var _params = variable_clone(_on_death[$ "parameters"] ?? {});
+                _params[$ "target"] = _victim;
+                _params[$ "killer"] = _attacker;
+                _params[$ "effect_name"] = _name;
+                
+                function_execute({ id: _on_death.id, parameters: _params }, _victim.x, _victim.y, CHUNK_DEPTH_DEFAULT, 1, 1, _victim);
+            }
+        }
+
         // Emit death event
-        event_emit(GAME_EVENT.ENTITY_DEATH, {
-            instance: _victim,
-            type: (_victim.object_index == obj_Player) ? "player" : "creature",
-            killer: _attacker
-        });
+        event_emit(new EventDataEntityDie(_victim, _attacker));
         
         // Special handling for player death
         if (_victim.object_index == obj_Player)
         {
-            obj_Game_Control.timer_respawn = 3;
+            _victim.timer_respawn = 3;
         }
         else
         {
+            if (struct_exists(_victim, "physics_body")) global.spatial_grid.remove(_victim.physics_body);
             instance_destroy(_victim);
         }
+        
         
         return true; // Entity died
     }

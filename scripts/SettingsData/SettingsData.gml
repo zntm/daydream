@@ -63,6 +63,18 @@ function SettingsData(_type, _default_value) constructor
         return self[$ "___on_update"];
     }
     
+    static set_on_release = function(_on_release)
+    {
+        ___on_release = _on_release;
+        
+        return self;
+    }
+    
+    static get_on_release = function()
+    {
+        return self[$ "___on_release"];
+    }
+    
     static set_range = function(_min, _max)
     {
         ___range_min = _min;

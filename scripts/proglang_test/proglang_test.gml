@@ -378,11 +378,12 @@ function proglang_test() {
         var _lib_bc = proglang_compile(_lib_code);
         
         // 2. Run Module to populate exports
-        var _lib_vm = new ProgVM();
+        var _lib_vm = proglang_vm_create();
         if (!variable_global_exists("proglang_modules")) global.proglang_modules = {}
         global.proglang_modules[$ "math_lib"] = { exports: {}, loaded: true }
-        _lib_vm.active_module = global.proglang_modules[$ "math_lib"];
-        _lib_vm.run(_lib_bc);
+        _lib_vm[@ PROG_VM.ACTIVE_MODULE] = global.proglang_modules[$ "math_lib"];
+        proglang_vm_run(_lib_vm, _lib_bc);
+        proglang_vm_free(_lib_vm);
         
         // 3. Run Consumer
         var _main_code = "import PI, add from \"math_lib\"; return add(PI, 2.0);";
@@ -1124,11 +1125,12 @@ function proglang_test() {
         var _mod_bc = proglang_compile(_mod_code);
         
         // Run Module
-        var _mod_vm = new ProgVM();
+        var _mod_vm = proglang_vm_create();
         if (!variable_global_exists("proglang_modules")) global.proglang_modules = {}
         global.proglang_modules[$ "vars_lib"] = { exports: {}, loaded: true }
-        _mod_vm.active_module = global.proglang_modules[$ "vars_lib"];
-        _mod_vm.run(_mod_bc);
+        _mod_vm[@ PROG_VM.ACTIVE_MODULE] = global.proglang_modules[$ "vars_lib"];
+        proglang_vm_run(_mod_vm, _mod_bc);
+        proglang_vm_free(_mod_vm);
         
         // Consumer
         var _consumer_code = 
@@ -1654,9 +1656,89 @@ function proglang_test() {
     // Run verification tests for new features
     proglang_function_test();
     
-    show_debug_message($"[Proglang Test] Tests Completed. Passed: {_passed}, Failed: {_failed}");
+    // ============ PHASE 13 TESTS: Optimizations ============
     
-    return (_failed == 0);
+    // Constant Folding and Propagation
+    if (_assert("Constant Optimization", 
+        $"var a = 10;\n" +
+        $"var b = 20;\n" +
+        $"var c = a + b; // Should be 30\n" +
+        $"var str1 = \"Hello\";\n" +
+        $"var str2 = \" World\";\n" +
+        $"var str3 = str1 + str2; // \"Hello World\"\n" +
+        $"var bool1 = true;\n" +
+        $"var bool2 = false;\n" +
+        $"var bool3 = bool1 || bool2; // true\n" +
+        $"var x = 100;\n" +
+        $"if (true) \{ x = 200; \}\n" +
+        $"var y = x; // 200 (should not be constant folded to 100)\n" +
+        $"return c == 30 && str3 == \"Hello World\" && bool3 == true && y == 200;"
+    , true)) _passed++; else _failed++;
+
+
+    // ============ PHASE 14 TESTS: Event System ============
+    
+    if (_assert("Event Hook", 
+        $"global var triggered = false\n" +
+        $"var sub = event_subscribe(EVENT_TYPE.ACHIEVEMENT_UNLOCKED, fn(data) \{\n" +
+        $"    triggered = true\n" +
+        $"\})\n" +
+        $"event_emit(new EventDataAchievementUnlocked('test'))\n" +
+        $"// Cleanup (unsubscribe)\n" +
+        $"event_unsubscribe(sub)\n" +
+        $"return triggered"
+    , true)) _passed++; else _failed++;
+    
+    if (_assert("Event Unhook", 
+        $"global var count = 0\n" +
+        $"var sub = event_subscribe(EVENT_TYPE.ACHIEVEMENT_UNLOCKED, fn(data) \{\n" +
+        $"    count++\n" +
+        $"\})\n" +
+        $"event_emit(new EventDataAchievementUnlocked('test1'))\n" +
+        $"event_unsubscribe(sub)\n" +
+        $"event_emit(new EventDataAchievementUnlocked('test2'))\n" +
+        $"return count"
+    , 1)) _passed++; else _failed++;
+
+    // ============ PHASE 13 TESTS: Event System Refactor ============
+    
+    // 1. Event Data Constructor
+    if (_assert("EventData Create", 
+        $"var t = \{ get_id: fn() \{ return \"dirt\" \} \}\n" +
+        $"var e = new EventDataTilePlace(10, 20, 0, t)\n" +
+        $"return e.data.x"
+    , 10)) _passed++; else _failed++;
+    
+    // 2. Event Subscription and Emission
+    if (_assert("Event Emit/Subscribe", 
+        $"global var _event_called = false\n" +
+        $"fn on_event(data) \{\n" +
+        $"    _event_called = true\n" +
+        $"\}\n" +
+        $"var sub = event_subscribe(EVENT_TYPE.TILE_PLACE, on_event)\n" +
+        $"var tile = \{ get_id: fn() \{ return \"grass\" \} \}\n" +
+        $"var e = new EventDataTilePlace(5, 5, 0, tile)\n" +
+        $"event_emit(e)\n" +
+        $"event_unsubscribe(sub)\n" +
+        $"return _event_called"
+    , true)) _passed++; else _failed++;
+
+    // 3. Event Type Macro Check
+    if (_assert("Event Type Macro", "return is_real(EVENT_TYPE.ENTITY_DIE)", true)) _passed++; else _failed++;
+
+    // ============ PHASE 14 TESTS: Optimizations ============
+    
+    // 1. Inline Functions
+    if (_assert("Inline Simple", "@inline fn add(a, b) { return a + b; } return add(10, 20)", 30)) _passed++; else _failed++;
+    if (_assert("Inline Scope", "var x = 10; @inline fn foo() { var x = 20; return x; } return foo() + x", 30)) _passed++; else _failed++;
+    if (_assert("Inline Early Return", "@inline fn check(v) { if (v) return 1; return 0; } return check(true) + check(false)", 1)) _passed++; else _failed++;
+
+
+    // 2. RAII List
+    if (_assert("RAII List", "fn test() { var l = ds_list_create(); ds_list_add(l, 10); return ds_list_size(l); } return test();", 1)) _passed++; else _failed++;
+    
+    show_debug_message($"[Proglang Test] COMPLETE. Passed: {_passed}, Failed: {_failed}");
+    return _failed == 0;
 }
 
 if (IS_DEVELOPER_MODE)
@@ -1672,9 +1754,17 @@ if (IS_DEVELOPER_MODE)
             
             var _dir = $"{PROGRAM_DIRECTORY_RESOURCES}/data/scripts/tests/{_file}";
             
-            if (!file_exists(_dir)) continue;
+            // Skip directories and non-.daydream files
+            if (directory_exists(_dir)) continue;
+            if (!string_ends_with(_file, ".daydream")) continue;
+            //if (_file != "debug_crash.daydream") continue;
             
+            show_debug_message($"[ProglangTest] Executing: {_file}");
             proglang_execute(buffer_load_text(_dir), {}, _dir);
         }
+        
+        show_debug_message(struct_get_names(global.proglang_scripts))
     });
+    
+    test_quadtree();
 }

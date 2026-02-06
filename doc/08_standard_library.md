@@ -16,3 +16,5 @@ The standard library includes various built-in functions divided into the follow
     -   Console output, assertions, and timing.
 -   **[System & Environment](file:///e:/GitHub/daydream/doc/stdlib/system.md)**
     -   Time, OS, Hardware, and Input constants.
+-   **[Rendering](file:///e:/GitHub/daydream/doc/stdlib/rendering.md)**
+    -   Drawing shapes, text, and sprites.

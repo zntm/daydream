@@ -26,6 +26,8 @@ function tile_update(_x, _y, _z)
         
         tile_update_surrounding(_x, _y, _z);
         
+        tile_update_liquid(_x, _y, _z);
+        
         var _tile_harvest = _data.get_tile_harvest().get_particle();
         
         var _particle_colour = _tile_harvest.get_colours();

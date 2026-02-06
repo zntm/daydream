@@ -1,13 +1,13 @@
 {
-    "$GMScript": "v1",
-    "%Name": "EffectModifier",
-    "isCompatibility": false,
-    "isDnD": false,
-    "name": "EffectModifier",
-    "parent": {
-        "name": "Effect",
-        "path": "folders/Data/Effect.yy"
-    },
-    "resourceType": "GMScript",
-    "resourceVersion": "2.0"
+  "$GMScript":"v1",
+  "%Name":"EffectModifier",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"EffectModifier",
+  "parent":{
+    "name":"Effect",
+    "path":"folders/Data/Effect.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

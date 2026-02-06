@@ -1,0 +1,67 @@
+var wood = tag_get("phantasia:tile/generic/wood")
+
+// Determine if this script was triggered by on_harvest (wood broken) or on_place (wood placed)
+// x and y are already normalized to tile coordinates by function_execute.
+var wood_at_center = tile_get(x, y, z)
+var is_broken = !wood_at_center?.get_id() || !(wood_at_center.get_id() in wood)
+
+var radius = 6
+
+for var dx in -radius..radius {
+    for var dy in -radius..radius {
+        if abs(dx) + abs(dy) > radius {
+            continue
+        }
+        
+        for var dz in -2..2 {
+            var lx = x + dx
+            var ly = y + dy
+            var lz = z + dz
+            
+            var t = tile_get(lx, ly, lz)
+            
+            if !t?.get_id() {
+                continue
+            }
+            
+            // We only care about natural leaves
+            if tile_has_tag(t.get_id(), "phantasia:tile/generic/leaf") && t.get_component("natural") {
+                if is_broken {
+                    // Wood was broken. Check if this leaf is now orphaned.
+                    if t.get_component("decaying") {
+                        continue
+                    }
+                    
+                    var connected = false
+                    var check_radius = 4
+                    
+                    'outer: for var cdx in -check_radius..check_radius {
+                        for var cdy in -check_radius..check_radius {
+                            if abs(cdx) + abs(cdy) > check_radius {
+                                continue
+                            }
+                            
+                            // Don't count the tile we just broke (which is at x, y, z)
+                            if lx + cdx == x && ly + cdy == y && lz - 1 == z {
+                                continue
+                            }
+                            
+                            var ct = tile_get(lx + cdx, ly + cdy, lz - 1)
+                            if ct?.get_id() in wood {
+                                connected = true
+                                break 'outer
+                            }
+                        }
+                    }
+                    
+                    if !connected {
+                        t.set_component("decaying", true)
+                    }
+                } else {
+                    // Wood was placed. Save nearby leaves!
+                    t.set_component("decaying", false)
+                }
+            }
+        }
+    }
+}

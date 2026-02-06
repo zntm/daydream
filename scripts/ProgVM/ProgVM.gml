@@ -1,6 +1,6 @@
 /// @desc Virtual Machine for Proglang bytecode execution
 
-enum PROGLANG_ERROR_TYPE // Style update
+enum PROGLANG_ERROR_TYPE
 {
     RUNTIME,
     TYPE,
@@ -31,661 +31,779 @@ enum PROGLANG_ERROR_TYPE // Style update
     SUPER_ERROR
 }
 
-function ProgVM() constructor
+// ========== ARRAY-BASED VM STRUCTURE ==========
+
+enum PROG_VM {
+    STACK,          // Array (Unified Data Stack)
+    SP,             // Real (Stack Pointer)
+    IP,             // Real (Instruction Pointer)
+    BP,             // Real (Base Pointer for current frame)
+    SCOPE,          // Array [PROG_SCOPE]
+    CONTEXT,        // Struct (External context)
+    GLOBAL_REF,     // Struct (Global scope)
+    TRY_STACK,      // Array
+    ACTIVE_MODULE,  // Struct (Module info)
+    FRAME_STACK,    // Array (Control Flow Stack: [ReturnIP, SavedBP, SavedScope, SavedBytecode])
+    FP,             // Real (Frame Pointer)
+    CURRENT_THIS,   // Any
+    ACTIVE_CLASS,   // Struct
+    CLASS_REGISTRY, // Struct
+    MEMO_CACHES,    // Struct (memo_id -> { hash -> value })
+    MEMO_ARG_KEYS,  // Array (Stack of argument hashes for current calls)
+    SIZE            // Total size
+}
+
+enum PROG_SCOPE {
+    VARS,               // Struct (The actual variables map)
+    PARENT,             // Array [PROG_SCOPE] or undefined
+    TRACKED_RESOURCES,  // Array of resources to cleanup on scope exit (RAII)
+    SIZE
+}
+
+enum PROG_FRAME {
+    RETURN_IP,
+    SAVED_BP,
+    SAVED_SCOPE,
+    SAVED_BYTECODE,
+    SAVED_GREF, // Added for module scope restoration
+    SIZE // 5
+}
+
+
+#macro PROGLANG_MAX_STEP 1_000_000
+
+// ========== CORE VM FUNCTIONS ==========
+
+/// @desc Reset VM state for reuse
+/// @param {Array<PROG_VM>} _vm The VM array
+function proglang_vm_reset(_vm)
 {
-    // Pre-allocate stack for performance
-    stack = array_create(1024);
-    sp = 0;
-    ip = 0;
+    _vm[@ PROG_VM.SP] = 0;
+    _vm[@ PROG_VM.IP] = 0;
+    _vm[@ PROG_VM.BP] = 0;
+    _vm[@ PROG_VM.FP] = 0;
     
-    // Scope system with parent chain for closures
-    current_scope = { vars: {}, parent: undefined }
-    locals = current_scope.vars;
+    // Pre-allocate or reset stacks
+    if (array_length(_vm[PROG_VM.STACK]) < 10000) _vm[@ PROG_VM.STACK] = array_create(10000); // 10k slots
+    // Using a flat array for frames roughly 1000 deep * 5 items
+    if (array_length(_vm[PROG_VM.FRAME_STACK]) < 5000) _vm[@ PROG_VM.FRAME_STACK] = array_create(5000);
     
-    context = undefined;
-    global_ref = {}; // Isolated global scope per VM
-    try_stack = [];
+    // Create new root scope
+    var _scope = array_create(PROG_SCOPE.SIZE);
+    _scope[PROG_SCOPE.VARS] = {}
+    _scope[PROG_SCOPE.PARENT] = undefined;
+    _scope[PROG_SCOPE.TRACKED_RESOURCES] = [];  // RAII resource tracking
     
-    active_module = undefined; // Struct { exports: {}, loaded: bool }
+    _vm[@ PROG_VM.SCOPE] = _scope;
+    _vm[@ PROG_VM.CONTEXT] = undefined;
+    _vm[@ PROG_VM.GLOBAL_REF] = {}
+    _vm[@ PROG_VM.TRY_STACK] = []; // Try stack is still dynamic for now (usually shallow)
+    _vm[@ PROG_VM.CURRENT_THIS] = undefined;
+    _vm[@ PROG_VM.ACTIVE_CLASS] = undefined;
+    _vm[@ PROG_VM.ACTIVE_MODULE] = undefined;
+    _vm[@ PROG_VM.MEMO_CACHES] = {};
+    _vm[@ PROG_VM.MEMO_ARG_KEYS] = [];
+}
+
+/// @desc Find variable in scope chain
+/// @param {Array<PROG_VM>} _vm
+/// @param {string} _name
+function proglang_vm_find_var_scope(_vm, _name)
+{
+    var _s = _vm[PROG_VM.SCOPE];
     
-    // Debug & Stack Trace
-    call_stack = []; // Array of { name, line }
-    
-    // Class System
-    current_this = undefined;
-    active_class = undefined;
-    class_registry = {}
-    
-    /// @desc Find variable in scope chain
-    static find_var_scope = function(_name)
+    while (_s != undefined)
     {
-        var _s = current_scope;
-        
-        while (_s != undefined)
+        if (struct_exists(_s[PROG_SCOPE.VARS], _name))
         {
-            if (struct_exists(_s.vars, _name))
-            {
-                return _s;
-            }
-            
-            _s = _s.parent;
+            return _s;
         }
         
-        return undefined;
+        _s = _s[PROG_SCOPE.PARENT];
     }
+    
+    return undefined;
+}
+
+/// @desc DEPRECATED: Internal Call Execution (Now Inlined in Run)
+function proglang_vm_exec_call(_vm, _func, _args)
+{
+    show_error("proglang_vm_exec_call is deprecated and should not be used.", true);
+    return undefined;
+}
+
+/// @desc Execute bytecode
+/// @param {Array<PROG_VM>} _vm The VM array
+/// @param {struct} _bytecode Compiled bytecode object
+/// @returns {any} Execution result
+function proglang_vm_run(_vm, _entry_bytecode)
+{
+    // === SINGLE LOOP VM (V2) ===
     
 
-    /// @desc Call a function/script/closure
-    static exec_call = function(_callee, _args, _line = 0, _callee_name = "<anonymous>")
+    
+    if (_entry_bytecode == undefined) return undefined;
+    
+    // Load entry instructions
+    var _curr_bytecode = _entry_bytecode;
+    var _code = _curr_bytecode.code;
+    var _constants = _curr_bytecode.constants;
+    var _length = array_length(_code);
+    
+    // Reset IP for entry (assuming new invocation)
+    // If this is a re-entrant call (e.g. from Native), we treat it as a new "thread" on the same stack.
+    // So we don't reset SP or FP globally, but we track our start point.
+    
+    var _sp = _vm[PROG_VM.SP];
+    var _fp = _vm[PROG_VM.FP];
+    var _bp = _vm[PROG_VM.BP];
+    var _ip = 0; 
+    
+    // Capture starting frame pointer to know when to yield/return from this run
+    var _start_fp = _fp;
+    
+    // Local Cache
+    var _stack = _vm[PROG_VM.STACK];
+    var _frames = _vm[PROG_VM.FRAME_STACK];
+    var _scope = _vm[PROG_VM.SCOPE];
+    var _gref = _vm[PROG_VM.GLOBAL_REF];
+    
+    // LIFTED VARIABLES
+    var _a, _b, _val, _index, _name, _arr, _obj, _prop, _vm_thrown_error;
+    var _steps = 0;
+    
+    while (true)
     {
-        // Push call stack frame
-        array_push(call_stack, { name: _callee_name, line: _line });
-        
         try
         {
-            // Super Constructor Call via super(...)
-            // Parser emits Call(SuperExpr, args). SuperExpr emits LOAD_SUPER -> SuperReference.
-            if (is_struct(_callee)) && (struct_exists(_callee, "__super__"))
+            while (_ip < _length)
             {
-                var _super_class = _callee.__super__;
-                var _receiver = _callee.receiver;
-                
-                // Look for constructor in super class
-                if (_super_class[$ "constructor_code"] != undefined)
+                if (++_steps > PROGLANG_MAX_STEP)
                 {
-                    var _vm = new ProgVM();
-                    _vm.global_ref = global_ref; // Share global scope
-                    
-                    _vm.context = context;
-                    _vm.call_stack = variable_clone(call_stack);
-                    _vm.current_this = _receiver;
-                    
-                    for (var j = 0; j < array_length(_args); j++)
-                    {
-                        _vm.current_scope.vars[$ $"arg{j}"] = _args[j];
-                    }
-                    
-                    _vm.current_scope.vars[$ "argc"] = array_length(_args);
-                    
-                    var _res = _vm.run(_super_class.constructor_code);
-                    
-                    array_pop(call_stack);
-                    
-                    return _res;
-                }
-                else
-                {
-                    // No constructor in super, just return (default constructor)
-                    array_pop(call_stack);
-                    
+                    show_debug_message("[ProgVM] Infinite loop protection triggered");
                     return undefined;
                 }
-            }
-            
-            // Function struct (closure or built-in wrapper)
-            // Handle Array-based Closure (PROG_CLOSURE enum)
-            if (is_array(_callee)) && (array_length(_callee) >= PROG_CLOSURE.SIZE) && (_callee[PROG_CLOSURE.TYPE] == "closure")
-            {
-                var _vm = new ProgVM();
-                // Use captured global_ref if available (for module exports), otherwise inherit from caller
-                _vm.global_ref = (_callee[PROG_CLOSURE.GLOBAL_REF] != undefined) ? _callee[PROG_CLOSURE.GLOBAL_REF] : global_ref;
                 
-                _vm.context = context;
-                // Closure scope chain
-                _vm.current_scope.parent = _callee[PROG_CLOSURE.ENV];
+                var _op = _code[_ip++];
+                var _arg = _code[_ip++];
                 
-                // Set defining class for super calls
-                if (_callee[PROG_CLOSURE.DEFINING_CLASS] != undefined)
+                // DEBUG TRACE
+                if (_sp < 0) show_debug_message($"[VM CRITICAL] SP UNDERFLOW BEFORE OP: {_sp}");
+                
+                switch (_op)
                 {
-                    _vm.active_class = _callee[PROG_CLOSURE.DEFINING_CLASS];
-                }
-                
-                // Copy call stack for debugging (reference copy)
-                _vm.call_stack = variable_clone(call_stack); 
-                
-                // Set 'this' context if bound
-                if (_callee[PROG_CLOSURE.RECEIVER] != undefined)
-                {
-                    _vm.current_this = _callee[PROG_CLOSURE.RECEIVER];
-                }
-                
-                for (var j = 0; j < array_length(_args); j++)
-                {
-                    _vm.current_scope.vars[$ $"arg{j}"] = _args[j];
-                }
-                
-                _vm.current_scope.vars[$ "argc"] = array_length(_args);
-                
-                // Propagate __filename and __dirname from parent scope for import resolution
-                var _env = _callee[PROG_CLOSURE.ENV];
-                while (_env != undefined)
-                {
-                    if (struct_exists(_env.vars, "__filename"))
-                    {
-                        _vm.current_scope.vars[$ "__filename"] = _env.vars[$ "__filename"];
-                        _vm.current_scope.vars[$ "__dirname"] = _env.vars[$ "__dirname"];
+                    // Stack
+                    case PROG_OP.PUSH_NULL: _stack[@ _sp++] = undefined; break;
+                    case PROG_OP.PUSH_TRUE: _stack[@ _sp++] = true; break;
+                    case PROG_OP.PUSH_FALSE: _stack[@ _sp++] = false; break;
+                    case PROG_OP.PUSH_GLOBAL_REF: _stack[@ _sp++] = _gref; break;
+                    case PROG_OP.PUSH_CONST: _stack[@ _sp++] = _constants[_arg]; break;
+                    case PROG_OP.POP: _sp--; break;
+                    case PROG_OP.DUP: _stack[@ _sp] = _stack[_sp - 1]; _sp++; break;
+                    
+                    case PROG_OP.DUP2:
+                        _a = _stack[_sp - 1];
+                        _b = _stack[_sp - 2];
+                        
+                        _stack[@ _sp++] = _b;
+                        _stack[@ _sp++] = _a;
                         break;
-                    }
-                    _env = _env.parent;
-                }
-                
-                var _res = _vm.run(_callee[PROG_CLOSURE.BYTECODE]);
-                
-                array_pop(call_stack);
-                
-                return _res;
-            }
-            
-            /*
-            // Legacy struct closure support
-            if (is_struct(_callee) && struct_exists(_callee, "type") && _callee.type == "closure")
-            {
-                var _vm = new ProgVM();
-                _vm.context = context;
-                _vm.current_scope.parent = _callee.env;
-                
-                if (struct_exists(_callee, "defining_class"))
-                {
-                    _vm.active_class = _callee.defining_class;
-                }
-                
-                _vm.call_stack = variable_clone(call_stack); 
-                
-                if (struct_exists(_callee, "receiver"))
-                {
-                    _vm.current_this = _callee.receiver;
-                }
-                
-                for (var j = 0; j < array_length(_args); j++)
-                {
-                    _vm.current_scope.vars[$ $"arg{j}"] = _args[j];
-                }
-                _vm.current_scope.vars[$ "argc"] = array_length(_args);
-                var _res = _vm.run(_callee.bytecode);
-                array_pop(call_stack);
-                return _res;
-            }
-            */
-            
-            // Built-in function
-            if (is_struct(_callee)) && (struct_exists(_callee, "function"))
-            {
-                var _res = _callee[$ "function"](_args, self);
-                
-                array_pop(call_stack);
-                
-                return _res;
-            }
-            
-            // String name lookup
-            if (is_string(_callee))
-            {
-                var _f = global.proglang_functions[$ _callee];
-                
-                if (_f != undefined)
-                {
-                    var _res = _f[$ "function"](_args, self);
                     
-                    array_pop(call_stack);
+                    case PROG_OP.POP_AND_KEEP:
+                        _a = _stack[--_sp];
+                        _stack[@ _sp - 1] = _a;
+                        break;
                     
-                    return _res;
-                }
-                
-                var _script = global.proglang_scripts[$ _callee];
-                
-                if (_script != undefined)
-                {
-                    var _bc = undefined;
+                    // Optimization Ops
+                    case PROG_OP.INC:
+                        ++_stack[@ _sp - 1];
+                        break;
                     
-                    // Handle array-based module (PROG_MODULE)
-                    if (is_array(_script)) && (array_length(_script) >= PROG_MODULE.SIZE)
-                    {
-                        _bc = _script[PROG_MODULE.MAIN];
-                    }
-                    /*
-                    // Handle legacy struct module
-                    else if (is_struct(_script) && struct_exists(_script, "main"))
-                    {
-                        _bc = _script.main;
-                    }
-                    */
-                    else
-                    {
-                        _bc = _script;
-                    }
+                    case PROG_OP.DEC:
+                        --_stack[@ _sp - 1];
+                        break;
                     
-                    var _vm = new ProgVM();
-                    
-                    _vm.context = context;
-                    _vm.call_stack = variable_clone(call_stack);
-                    
-                    for (var j = 0; j < array_length(_args); j++)
-                    {
-                        _vm.current_scope.vars[$ $"arg{j}"] = _args[j];
-                    }
-                    
-                    _vm.current_scope.vars[$ "argc"] = array_length(_args);
-                    
-                    var _res = _vm.run(_bc);
-                    
-                    array_pop(call_stack);
-                    
-                    return _res;
-                }
-                
-                // Context value
-                if (context != undefined)
-                {
-                    var _ = context[$ _callee];
-                    
-                    if (_ != undefined)
-                    {
-                        var _res = exec_call(, _args, _line, _callee);
+                    case PROG_OP.LOAD_LOCAL: _stack[@ _sp++] = _stack[_bp + _arg]; break;
+                    case PROG_OP.STORE_LOCAL: _stack[@ _bp + _arg] = _stack[_sp - 1]; break; // Peek
                         
-                        array_pop(call_stack);
+                    // Arithmetic
+                    case PROG_OP.ADD:
+                        _b = _stack[--_sp]; _a = _stack[_sp - 1];
+                        if (is_real(_a) && is_real(_b)) _stack[@ _sp - 1] = _a + _b;
+                        else if (is_string(_a) || is_string(_b))
+                        {
+                            var _sa = ((is_bool(_a)) ? ((_a) ? "true" : "false") : string(_a));
+                            var _sb = ((is_bool(_b)) ? ((_b) ? "true" : "false") : string(_b));
+                            _stack[@ _sp - 1] = _sa + _sb;
+                        }
+                        else if (is_undefined(_a) || is_undefined(_b))
+                        {
+                            runtime_error(PROGLANG_ERROR_TYPE.UNDEFINED_VALUE, "Undefined value in addition.");
+                        }
+                        else
+                        {
+                            _stack[@ _sp - 1] = _a + _b; 
+                        }
+                        break;
+                    case PROG_OP.STRING_CONCAT:
+                        _b = _stack[--_sp]; _a = _stack[_sp - 1];
+                        var _sa = is_string(_a) ? _a : ((is_bool(_a)) ? ((_a) ? "true" : "false") : string(_a));
+                        var _sb = is_string(_b) ? _b : ((is_bool(_b)) ? ((_b) ? "true" : "false") : string(_b));
+                        _stack[@ _sp - 1] = _sa + _sb;
+                        break;
+                    case PROG_OP.SUB: _b = _stack[--_sp]; _stack[@ _sp - 1] -= _b; break;
+                    case PROG_OP.MUL: _b = _stack[--_sp]; _stack[@ _sp - 1] *= _b; break;
+                    case PROG_OP.DIV: _b = _stack[--_sp]; _stack[@ _sp - 1] /= _b; break;
+                    case PROG_OP.MOD: _b = _stack[--_sp]; _stack[@ _sp - 1] %= _b; break;
+                    case PROG_OP.POW: _b = _stack[--_sp]; _stack[@ _sp - 1] = power(_stack[_sp - 1], _b); break;
+                    case PROG_OP.NEG: _stack[@ _sp - 1] = -_stack[_sp - 1]; break;
+                    
+                    // Comparison
+                    case PROG_OP.EQ: _b = _stack[--_sp]; _stack[@ _sp - 1] = (_stack[_sp - 1] == _b); break;
+                    case PROG_OP.NE: _b = _stack[--_sp]; _stack[@ _sp - 1] = (_stack[_sp - 1] != _b); break;
+                    case PROG_OP.LT: _b = _stack[--_sp]; _stack[@ _sp - 1] = (_stack[_sp - 1] < _b); break;
+                    case PROG_OP.GT: _b = _stack[--_sp]; _stack[@ _sp - 1] = (_stack[_sp - 1] > _b); break;
+                    case PROG_OP.LE: _b = _stack[--_sp]; _stack[@ _sp - 1] = (_stack[_sp - 1] <= _b); break;
+                    case PROG_OP.GE: _b = _stack[--_sp]; _stack[@ _sp - 1] = (_stack[_sp - 1] >= _b); break;
+                    
+                    // Logical / Bitwise
+                    case PROG_OP.NOT: _stack[@ _sp - 1] = !_stack[_sp - 1]; break;
+                    case PROG_OP.AND: _b = _stack[--_sp]; _stack[_sp - 1] = (_stack[_sp - 1] && _b); break;
+                    case PROG_OP.OR:  _b = _stack[--_sp]; _stack[_sp - 1] = (_stack[_sp - 1] || _b); break;
+                    case PROG_OP.BIT_AND: _b = _stack[--_sp]; _stack[@ _sp - 1] = floor(_stack[_sp - 1]) & floor(_b); break;
+                    case PROG_OP.BIT_OR:  _b = _stack[--_sp]; _stack[@ _sp - 1] = floor(_stack[_sp - 1]) | floor(_b); break;
+                    case PROG_OP.BIT_XOR: _b = _stack[--_sp]; _stack[@ _sp - 1] = floor(_stack[_sp - 1]) ^ floor(_b); break;
+                    case PROG_OP.BIT_NOT: _stack[_sp - 1] = ~floor(_stack[_sp - 1]); break;
+                    case PROG_OP.SHL: _b = _stack[--_sp]; _stack[@ _sp - 1] = floor(_stack[_sp - 1]) << floor(_b); break;
+                    case PROG_OP.SHR: _b = _stack[--_sp]; _stack[@ _sp - 1] = floor(_stack[_sp - 1]) >> floor(_b); break;
+                    
+                    // Variable Access (Legacy/Fallback)
+                    case PROG_OP.LOAD:
+                        _name = _constants[_arg];
+                        var _s = proglang_vm_find_var_scope(_vm, _name);
+                        if (_s != undefined)
+                        {
+                            _val = _s[PROG_SCOPE.VARS][$ _name];
+                            _stack[@ _sp++] = _val; 
+                        }
+                        else if (_vm[PROG_VM.CONTEXT] != undefined && struct_exists(_vm[PROG_VM.CONTEXT], _name))
+                        {
+                            _val = _vm[PROG_VM.CONTEXT][$ _name];
+                            _stack[@ _sp++] = is_method(_val) ? method_call(_val, []) : _val;
+                        } 
+                        else if (variable_global_exists("proglang_macros") && struct_exists(global.proglang_macros, _name))
+                        {
+                            _val = global.proglang_macros[$ _name];
+                            _stack[@ _sp++] = is_method(_val) ? method_call(_val, []) : _val;
+                        }
+                        else if (struct_exists(_gref, _name))
+                        {
+                            _stack[@ _sp++] = _gref[$ _name];
+                        }
+                        else if (variable_global_exists("proglang_exports") && struct_exists(global.proglang_exports, _name))
+                        {
+                            _stack[@ _sp++] = global.proglang_exports[$ _name];
+                        }
+                        else if (variable_global_exists("proglang_scripts") && struct_exists(global.proglang_scripts, _name))
+                        {
+                            _stack[@ _sp++] = global.proglang_scripts[$ _name];
+                        }
+                        else if (variable_global_exists("proglang_functions") && struct_exists(global.proglang_functions, _name))
+                        {
+                            _stack[@ _sp++] = global.proglang_functions[$ _name];
+                        }
+                        else if (_name == "global") { _stack[@ _sp++] = global; }
+                        else if (struct_exists(global, _name)) { _stack[@ _sp++] = global[$ _name]; }
+                        else if (variable_global_exists(_name)) { _stack[@ _sp++] = variable_global_get(_name); } // Simplified global check
+                        else
+                        { 
+                            // Relax strictness for "argN"
+                            if (string_pos("arg", _name) == 1 && string_digits(_name) == string_delete(_name, 1, 3))
+                            {
+                                _stack[@ _sp++] = undefined;
+                            }
+                            else
+                            {
+                                runtime_error(PROGLANG_ERROR_TYPE.VARIABLE, $"Variable '{_name}' not found.");
+                            }
+                        }
+                        break;
                         
-                        return _res;
-                    }
-                }
-                
-                var _asset = asset_get_index(_callee);
-                
-                if (_asset != -1) && (asset_get_type(_callee) == asset_script)
-                {
-                    var _res = script_execute_ext(_asset, _args);
+                    case PROG_OP.STORE:
+                        _val = _stack[_sp - 1];
+                        _name = _constants[_arg];
+                        var _s_store = proglang_vm_find_var_scope(_vm, _name);
+                        if (_s_store != undefined)
+                        {
+                            _s_store[@ PROG_SCOPE.VARS][$ _name] = _val;
+                        }
+                        else if (_vm[PROG_VM.CONTEXT] != undefined) && (struct_exists(_vm[PROG_VM.CONTEXT], _name))
+                        {
+                            _vm[@ PROG_VM.CONTEXT][$ _name] = _val;
+                        }
+                        else if (struct_exists(_gref, _name))
+                        {
+                            _gref[$ _name] = _val;
+                        }
+                        else
+                        {
+                            _vm[@ PROG_VM.SCOPE][@ PROG_SCOPE.VARS][$ _name] = _val;
+                        }
+                        break;
+                        
+                    case PROG_OP.DEFINE:
+                        _val = _stack[_sp - 1];
+                        _name = _constants[_arg];
+                        
+                        _vm[@ PROG_VM.SCOPE][@ PROG_SCOPE.VARS][$ _name] = _val;
+                        break;
+                        
+                    case PROG_OP.LOAD_GLOBAL:
+                        _stack[@ _sp++] = _gref[$ _constants[_arg]];
+                        break;
                     
-                    array_pop(call_stack);
+                    case PROG_OP.STORE_GLOBAL:
+                        _gref[$ _constants[_arg]] = _stack[_sp - 1];
+                        break;
+                        
+                    // Scope
+                    case PROG_OP.PUSH_SCOPE:
+                        var _new_scope = array_create(PROG_SCOPE.SIZE);
+                        _new_scope[PROG_SCOPE.VARS] = {}
+                        _new_scope[PROG_SCOPE.PARENT] = _vm[PROG_VM.SCOPE];
+                        _new_scope[PROG_SCOPE.TRACKED_RESOURCES] = [];  // RAII resource tracking
+                        _vm[@ PROG_VM.SCOPE] = _new_scope;
+                        _scope = _new_scope; // Update local cache
+                        break;
+                        
+                    case PROG_OP.POP_SCOPE:
+                        var _parent = _scope[PROG_SCOPE.PARENT];
+                        if (_parent != undefined)
+                        {
+                            // RAII cleanup: release all tracked resources
+                            proglang_scope_cleanup(_scope);
+                            _vm[@ PROG_VM.SCOPE] = _parent;
+                            _scope = _parent;
+                        }
+                        else
+                        {
+                            runtime_error(PROGLANG_ERROR_TYPE.RUNTIME, "Scope underflow");
+                        }
+                        break;
                     
-                    return _res;
-                }
-            }
-            
-        }
-        catch (_e)
-        {
-             array_pop(call_stack);
-             throw _e;
-        }
-        
-        array_pop(call_stack);
-        
-        return undefined;
-    }
+                    case PROG_OP.JUMP: _ip = _arg; break;
+                    case PROG_OP.JUMP_IF_FALSE: _val = _stack[--_sp]; if (!_val) _ip = _arg; break;
+                    case PROG_OP.JUMP_IF_TRUE: _val = _stack[--_sp]; if (_val) _ip = _arg; break;
+                    case PROG_OP.JUMP_IF_NULL: if (is_undefined(_stack[_sp - 1])) _ip = _arg; break;
+                    case PROG_OP.JUMP_IF_NOT_NULL: if (!is_undefined(_stack[_sp - 1])) _ip = _arg; break;
+                    
+                    case PROG_OP.CALL:
+                    case PROG_OP.CALL_SPREAD:
+                        var _param_count = 0;
+                        var _callee_index = 0;
+                        
+                        if (_op == PROG_OP.CALL)
+                        {
+                            _param_count = _arg;
+                            _callee_index = _sp - _param_count - 1;
+                            _val = _stack[_callee_index]; // Callee
+                        }
+                        else
+                        {
+                            // CALL_SPREAD: [Callee, ArgArr]
+                            var _args_arr = _stack[--_sp];
+                            _val = _stack[--_sp]; // Callee
+                            _param_count = array_length(_args_arr);
+                            
+                            // Re-push callee and args to unify stack Call format
+                            _stack[@ _sp++] = _val;
+                            for (var i = 0; i < _param_count; i++) _stack[@ _sp++] = _args_arr[i];
+                            
+                            _callee_index = _sp - _param_count - 1;
+                        }
+                        
+                        // 0. Resolve String Callee
+                        if (is_string(_val))
+                        {
+                            // 1. Global Functions (Built-ins)
+                            if (variable_global_exists("proglang_functions") && struct_exists(global.proglang_functions, _val))
+                            {
+                                _val = global.proglang_functions[$ _val];
+                            }
+                            // 2. Global Scripts (Modules)
+                            else if (variable_global_exists("proglang_scripts") && struct_exists(global.proglang_scripts, _val))
+                            {
+                                var _s = global.proglang_scripts[$ _val];
+                                if (is_array(_s) && array_length(_s) >= PROG_MODULE.SIZE) _val = _s[PROG_MODULE.MAIN];
+                                else _val = _s;
+                            }
+                            // 3. Context
+                            else if (_vm[PROG_VM.CONTEXT] != undefined && struct_exists(_vm[PROG_VM.CONTEXT], _val))
+                            {
+                                _val = _vm[PROG_VM.CONTEXT][$ _val];
+                            }
+                            // 4. Asset Script
+                            else 
+                            {
+                                var _asset = asset_get_index(_val);
+                                if (_asset != -1 && asset_get_type(_val) == asset_script) _val = _asset;
+                            }
+                        }
     
-    /// @desc Execute bytecode
-    /// @param {struct} _bytecode Compiled bytecode object
-    /// @returns {any} Execution result
-    static run = function(_bytecode)
-    {
-        var _code = _bytecode.code;
-        var _constants = _bytecode.constants;
-        var _len = array_length(_code);
-        
-        // Reset VM state
-        sp = 0;
-        ip = 0;
-        try_stack = [];
-        
-        // Local cache for hot-path optimization
-        var _stack = stack;
-        var _gref = global_ref;
-        
-        // LIFTED VARIABLES for switch simplification
-        var _a, _b, _val, _idx, _name, _arr, _obj, _prop;
-        
-        var _steps = 0;
-        var _max_steps = 200000;
-        
-        while (ip < _len)
-        {
-            try
-            {
-                while (ip < _len)
-                {
-                    if (++_steps > _max_steps)
-                    {
-                        show_debug_message("[ProgVM] Infinite loop protection triggered");
-                        
-                        return undefined;
-                    }
-                    
-                    var _op = _code[ip++];
-                    var _arg = _code[ip++];
-                    
-                    switch (_op)
-                    {
-                        // Stack operations
-                        case PROG_OP.PUSH_NULL: _stack[@ sp++] = undefined; break;
-                        case PROG_OP.PUSH_TRUE: _stack[@ sp++] = true; break;
-                        case PROG_OP.PUSH_FALSE: _stack[@ sp++] = false; break;
-                        case PROG_OP.PUSH_GLOBAL_REF: _stack[@ sp++] = _gref; break;
-                        case PROG_OP.PUSH_CONST: _stack[@ sp++] = _constants[_arg]; break;
-                        case PROG_OP.POP:
-                            if (sp > 0)
+                        // 1. Bytecode Closure
+                        if (is_array(_val) && array_length(_val) >= PROG_CLOSURE.SIZE && _val[PROG_CLOSURE.TYPE] == "closure")
+                        {
+                            // Argument Padding (Optional Parameters)
+                            var _expected_count = _val[PROG_CLOSURE.PARAM_COUNT];
+                            if (_param_count < _expected_count)
                             {
-                                --sp;
+                                var _diff = _expected_count - _param_count;
+                                repeat(_diff) _stack[@ _sp++] = undefined;
+                                _param_count = _expected_count;
                             }
-                            else
+    
+                            // Push Frame
+                            _frames[@ _fp++] = _ip;
+                            _frames[@ _fp++] = _bp;
+                            _frames[@ _fp++] = _scope;
+                            _frames[@ _fp++] = _curr_bytecode;
+                            _frames[@ _fp++] = _gref;
+                            
+                            // Switch Context
+                            _curr_bytecode = _val[PROG_CLOSURE.BYTECODE];
+                            _code = _curr_bytecode.code;
+                            _constants = _curr_bytecode.constants;
+                            _length = array_length(_code);
+                            _ip = 0;
+                            _bp = _sp - _param_count; // BP points to first argument
+                            
+                            // Scope Setup
+                            var _closure_env = _val[PROG_CLOSURE.ENV];
+                            var _new_scope = array_create(PROG_SCOPE.SIZE);
+                            _new_scope[PROG_SCOPE.VARS] = {}
+                            _new_scope[PROG_SCOPE.PARENT] = _closure_env;
+                            _vm[@ PROG_VM.SCOPE] = _new_scope;
+                            _scope = _new_scope;
+                            
+                            // Restore captured global ref
+                            _gref = _val[PROG_CLOSURE.GLOBAL_REF];
+                            _vm[@ PROG_VM.GLOBAL_REF] = _gref;
+                            
+                            // Legacy Argument Support (Populate argN)
+                            var _vars = _new_scope[PROG_SCOPE.VARS];
+                            for (var i = 0; i < _param_count; i++)
                             {
-                                show_debug_message($"[ProgVM CRITICAL] STACK UNDERFLOW at IP {ip}");
+                                _vars[$ "arg" + string(i)] = _stack[_bp + i];
                             }
-                            break;
+                            _vars[$ "argc"] = _param_count;
+                        }
+                        // 2. Built-in Function (Struct wrapper)
+                        else if (is_struct(_val) && struct_exists(_val, "function"))
+                        {
+                            var _args_subset = array_create(_param_count);
+                            array_copy(_args_subset, 0, _stack, _callee_index + 1, _param_count);
+                            _sp -= (_param_count + 1); // Pop args and callee
+                            var _res = _val[$ "function"](_args_subset, _vm);
+                            _stack[@ _sp++] = _res;
+                        }
+                        // 3. Native Script
+                        else if (is_real(_val) && script_exists(_val))
+                        {
+                            var _args_subset = array_create(_param_count);
+                            array_copy(_args_subset, 0, _stack, _callee_index + 1, _param_count);
+                            // Execute
+                            _sp -= (_param_count + 1); // Pop args and callee
+                            var _res = script_execute_ext(_val, _args_subset);
+                            _stack[@ _sp++] = _res;
+                        }
+                        // 4. Native Method/Function
+                        else if (is_method(_val))
+                        {
+                            var _args_subset = array_create(_param_count);
+                            array_copy(_args_subset, 0, _stack, _callee_index + 1, _param_count);
+                            _sp -= (_param_count + 1);
+                            var _res = method_call(_val, _args_subset);
+                            _stack[@ _sp++] = _res;
+                        }
+                        // 5. Raw Bytecode (Module/Script)
+                        else if (is_struct(_val) && struct_exists(_val, "code"))
+                        {
+                            // Push Frame (Same as closure but fresh scope)
+                            _frames[@ _fp++] = _ip;
+                            _frames[@ _fp++] = _bp;
+                            _frames[@ _fp++] = _scope;
+                            _frames[@ _fp++] = _curr_bytecode;
+                            _frames[@ _fp++] = _gref; // No change in gref for raw bytecode usually, but consistent frame push
                             
-                        case PROG_OP.DUP:
-                            _stack[@ sp] = _stack[sp - 1];
-                            sp++;
-                            break;
-                        case PROG_OP.DUP2:
-                            var _a = _stack[sp - 1];
-                            var _b = _stack[sp - 2];
+                            _curr_bytecode = _val;
+                            _code = _curr_bytecode.code;
+                            _constants = _curr_bytecode.constants;
+                            _length = array_length(_code);
+                            _ip = 0;
+                            _bp = _sp - _param_count;
                             
-                            _stack[@ sp++] = _b;
-                            _stack[@ sp++] = _a;
-                            break;
-                        
-                        case PROG_OP.POP_AND_KEEP:
-                            var _a = _stack[--sp]; // Top
+                            var _new_scope = array_create(PROG_SCOPE.SIZE);
+                            _new_scope[PROG_SCOPE.VARS] = {}
+                            _new_scope[PROG_SCOPE.PARENT] = undefined; // Top level
+                            _vm[@ PROG_VM.SCOPE] = _new_scope;
+                            _scope = _new_scope;
                             
-                            // Pop second and push top back
-                            _stack[@ sp - 1] = _a;
-                            break;
-                        
-                        // Optimization Ops
-                        case PROG_OP.INC:
-                            ++_stack[@ sp - 1];
-                            break;
-                        
-                        case PROG_OP.DEC:
-                            --_stack[@ sp - 1];
-                            break;
-                        
-                        // Arithmetic
-                        case PROG_OP.ADD:
-                            var _b = _stack[--sp]; 
-                            var _a = _stack[sp - 1];
-                            
-                            if (is_real(_a)) && (is_real(_b))
+                            var _vars = _new_scope[PROG_SCOPE.VARS];
+                            for (var i = 0; i < _param_count; i++)
                             {
-                                _stack[@ sp - 1] = _a + _b;
+                                _vars[$ "arg" + string(i)] = _stack[_bp + i];
                             }
-                            else if (is_string(_a)) || (is_string(_b))
-                            {
-                                var _sa = ((is_bool(_a)) ? ((_a) ? "true" : "false") : string(_a));
-                                var _sb = ((is_bool(_b)) ? ((_b) ? "true" : "false") : string(_b));
+                            _vars[$ "argc"] = _param_count;
+                        }
+                        else
+                        {
+                            show_debug_message($"[ProgVM] Error: Call to non-callable value: {_val}");
+                            _sp -= (_param_count + 1);
+                            _stack[@ _sp++] = undefined;
+                        }
+                        break;
+                        
+                    case PROG_OP.RETURN:
+                        _val = _stack[--_sp];
+                        
+                        if (_fp == _start_fp)
+                        {
+                            // Sync VM state before exit
+                            _vm[@ PROG_VM.SP] = _sp;
+                            _vm[@ PROG_VM.IP] = _ip;
+                            _vm[@ PROG_VM.BP] = _bp;
+                            _vm[@ PROG_VM.FP] = _fp;
+                            return _val;
+                        }
+                        
+                        // Capture current (Callee's) BP to restore SP correctly later
+                        var _return_bp = _bp;
+                        
+                        // Pop Frame
+                        _gref = _frames[--_fp];
+                        _curr_bytecode = _frames[--_fp];
+                        _scope = _frames[--_fp];
+                        _bp = _frames[--_fp];
+                        _ip = _frames[--_fp];
+                        
+                        _vm[@ PROG_VM.SCOPE] = _scope;
+                        _vm[@ PROG_VM.GLOBAL_REF] = _gref;
+                        
+                        _code = _curr_bytecode.code;
+                        _constants = _curr_bytecode.constants;
+                        _length = array_length(_code);
+                        
+                        // Return Value placement
+                        // Previous stack: [... Caller Locals ... | Callee | Arg1 ... ArgN | ... Callee Locals ...]
+                        // _return_bp was pointing to Arg1.
+                        // We want to reset SP to point to where Callee was, and push the return value there.
+                        // Callee was at _return_bp - 1.
+                        
+                        _sp = _return_bp - 1;
+                        _stack[@ _sp++] = _val;
+                        break;
+                        
+                    case PROG_OP.MEMOIZE_CHECK:
+                        var _memo_id = _arg;
+                        var _param_count = _sp - _bp;
+                        var _hash = "";
+                        for (var i = 0; i < _param_count; i++) {
+                            _hash += string(_stack[_bp + i]) + "|";
+                        }
+                        array_push(_vm[PROG_VM.MEMO_ARG_KEYS], _hash);
+                        
+                        var _caches = _vm[PROG_VM.MEMO_CACHES];
+                        if (struct_exists(_caches, _memo_id)) {
+                            var _cache = _caches[$ _memo_id];
+                            if (struct_exists(_cache, _hash)) {
+                                _val = _cache[$ _hash];
+                                array_pop(_vm[PROG_VM.MEMO_ARG_KEYS]);
                                 
-                                _stack[@ sp - 1] = _sa + _sb;
+                                // Return logic (same as PROG_OP.RETURN)
+                                if (_fp == _start_fp) {
+                                    _vm[@ PROG_VM.SP] = _sp;
+                                    _vm[@ PROG_VM.IP] = _ip;
+                                    _vm[@ PROG_VM.BP] = _bp;
+                                    _vm[@ PROG_VM.FP] = _fp;
+                                    return _val;
+                                }
+                                var _return_bp = _bp;
+                                _gref = _frames[--_fp];
+                                _curr_bytecode = _frames[--_fp];
+                                _scope = _frames[--_fp];
+                                _bp = _frames[--_fp];
+                                _ip = _frames[--_fp];
+                                _vm[@ PROG_VM.SCOPE] = _scope;
+                                _vm[@ PROG_VM.GLOBAL_REF] = _gref;
+                                _code = _curr_bytecode.code;
+                                _constants = _curr_bytecode.constants;
+                                _length = array_length(_code);
+                                _sp = _return_bp - 1;
+                                _stack[@ _sp++] = _val;
                             }
-                            else if (is_undefined(_a)) || (is_undefined(_b))
+                        }
+                        break;
+                        
+                    case PROG_OP.MEMOIZE_STORE:
+                        var _memo_id = _arg;
+                        var _memo_val = _stack[_sp - 1];
+                        var _memo_hash = array_pop(_vm[PROG_VM.MEMO_ARG_KEYS]);
+                        var _caches = _vm[PROG_VM.MEMO_CACHES];
+                        if (!struct_exists(_caches, _memo_id)) _caches[$ _memo_id] = {};
+                        var _cache = _caches[$ _memo_id];
+                        _cache[$ _memo_hash] = _memo_val;
+                        break;
+                        
+                    // Try/Catch
+                    case PROG_OP.PUSH_TRY:
+                        // We push {ip, fp} to handle cross-frame catches
+                        array_push(_vm[PROG_VM.TRY_STACK], { ip: _arg, fp: _fp, sp: _sp });
+                        break;
+                    
+                    case PROG_OP.POP_TRY:
+                        array_pop(_vm[PROG_VM.TRY_STACK]);
+                        break;
+                    
+                    case PROG_OP.THROW:
+                        _val = _stack[--_sp];
+                        throw _val; // Handled by outer try-catch
+                        break;
+                        
+                    // Structure Access
+                    case PROG_OP.INDEX_GET:
+                        _index = _stack[--_sp];
+                        _arr = _stack[--_sp];
+                        
+                        // Check for range slicing: _index is ["range", start, end]
+                        if (is_array(_index) && array_length(_index) >= 3 && _index[0] == "range")
+                        {
+                            var _start = _index[1];
+                            var _end = _index[2];
+                            
+                            if (is_array(_arr))
                             {
-                                runtime_error(PROGLANG_ERROR_TYPE.UNDEFINED_VALUE, "Undefined value in addition.");
-                            }
-                            else
-                            {
-                                _stack[@ sp - 1] = _a + _b; 
-                            }
-                            break; 
-                        
-                        case PROG_OP.SUB:
-                            var _b = _stack[--sp];
-                            
-                            _stack[@ sp - 1] -= _b;
-                            break;
-                        
-                        case PROG_OP.MUL:
-                            var _b = _stack[--sp];
-                            
-                            _stack[@ sp - 1] *= _b;
-                            break;
-                        
-                        case PROG_OP.DIV:
-                            var _b = _stack[--sp];
-                            
-                            _stack[@ sp - 1] /= _b;
-                            break;
-                        
-                        case PROG_OP.MOD:
-                            var _b = _stack[--sp];
-                            
-                            _stack[@ sp - 1] %= _b;
-                            break;
-                        
-                        case PROG_OP.POW:
-                            var _b = _stack[--sp];
-                            
-                            _stack[@ sp - 1] = power(_stack[sp - 1], _b);
-                            break;
-                        
-                        case PROG_OP.NEG:
-                            _stack[@ sp - 1] = -_stack[sp - 1];
-                            break;
-                        
-                        // Comparison
-                        case PROG_OP.EQ:
-                            var _b = _stack[--sp];
-                            
-                            _stack[@ sp - 1] = (_stack[sp - 1] == _b);
-                            break;
-                        
-                        case PROG_OP.NE:
-                            var _b = _stack[--sp];
-                            
-                            _stack[@ sp - 1] = (_stack[sp - 1] != _b);
-                            break;
-                        
-                        case PROG_OP.LT:
-                            var _b = _stack[--sp];
-                            
-                            _stack[@ sp - 1] = (_stack[sp - 1] < _b);
-                            break;
-                        
-                        case PROG_OP.GT:
-                            var _b = _stack[--sp];
-                            
-                            _stack[@ sp - 1] = (_stack[sp - 1] > _b);
-                            break;
-                        
-                        case PROG_OP.LE:
-                            var _b = _stack[--sp];
-                            
-                            _stack[@ sp - 1] = (_stack[sp - 1] <= _b);
-                            break;
-                        
-                        case PROG_OP.GE:
-                            var _b = _stack[--sp];
-                            
-                            _stack[@ sp - 1] = (_stack[sp - 1] >= _b);
-                            break;
-                        
-                        // Logical / Bitwise
-                        case PROG_OP.NOT:
-                            _stack[@ sp - 1] = !_stack[sp - 1];
-                            break;
-                        
-                        case PROG_OP.AND:
-                            var _b = _stack[--sp];
-                            
-                            _stack[sp - 1] = (_stack[sp - 1] && _b);
-                            break;
-                        
-                        case PROG_OP.OR:
-                            var _b = _stack[--sp];
-                            
-                            _stack[sp - 1] = (_stack[sp - 1] || _b);
-                            break;
-                        case PROG_OP.BIT_AND:
-                            var _b = _stack[--sp];
-                            
-                            _stack[@ sp - 1] = floor(_stack[sp - 1]) & floor(_b);
-                            break;
-                        case PROG_OP.BIT_OR:
-                            var _b = _stack[--sp];
-                            
-                            _stack[@ sp - 1] = floor(_stack[sp - 1]) | floor(_b);
-                            break;
-                        case PROG_OP.BIT_XOR:
-                            var _b = _stack[--sp];
-                            
-                            _stack[@ sp - 1] = floor(_stack[sp - 1]) ^ floor(_b);
-                            break;
-                        case PROG_OP.BIT_NOT:
-                            _stack[sp - 1] = ~floor(_stack[sp - 1]);
-                            break;
-                        case PROG_OP.SHL:
-                            var _b = _stack[--sp];
-                            
-                            _stack[@ sp - 1] = floor(_stack[sp - 1]) << floor(_b);
-                            break;
-                        case PROG_OP.SHR:
-                            var _b = _stack[--sp];
-                            
-                            _stack[@ sp - 1] = floor(_stack[sp - 1]) >> floor(_b);
-                            break;
-                        
-                        // Variable Access
-                        case PROG_OP.LOAD:
-                            _name = _constants[_arg];
-                            var _s = find_var_scope(_name);
-                            
-                            if (_s != undefined)
-                            {
-                                _val = _s.vars[$ _name];
-                                _stack[@ sp++] = _val; 
-                            }
-                            else if (context != undefined && struct_exists(context, _name))
-                            {
-                                _val = context[$ _name];
-                                _stack[@ sp++] = is_method(_val) ? method_call(_val, []) : _val;
-                            }
-                            else if (variable_global_exists("proglang_macros") && struct_exists(global.proglang_macros, _name))
-                            {
-                                _val = global.proglang_macros[$ _name];
-                                _stack[@ sp++] = is_method(_val) ? method_call(_val, []) : _val;
-                            }
-                            else if (struct_exists(_gref, _name))
-                            {
-                                _stack[@ sp++] = _gref[$ _name];
-                            }
-                            else if (variable_global_exists("proglang_exports") && struct_exists(global.proglang_exports, _name))
-                            {
-                                _stack[@ sp++] = global.proglang_exports[$ _name];
-                            }
-                            else if (variable_global_exists("proglang_scripts") && struct_exists(global.proglang_scripts, _name))
-                            {
-                                _stack[@ sp++] = global.proglang_scripts[$ _name];
-                            }
-                            else if (_name == "global") { _stack[@ sp++] = global; }
-                            else if (struct_exists(global, _name)) { _stack[@ sp++] = global[$ _name]; }
-                            else if (variable_global_exists(_name)) { _stack[@ sp++] = variable_global_get(_name); }
-                            else if (variable_global_exists("proglang_functions") && struct_exists(global.proglang_functions, _name))
-                            {
-                                _stack[@ sp++] = global.proglang_functions[$ _name];
-                            }
-                            else
-                            { 
-                                // Relax strictness for "argN"
-                                if (string_pos("arg", _name) == 1 && string_digits(_name) == string_delete(_name, 1, 3))
+                                var _arr_len = array_length(_arr);
+                                
+                                if (_start < 0) _start = 0;
+                                if (_end >= _arr_len) _end = _arr_len - 1;
+                                
+                                var _slice_len = _end - _start + 1;
+                                
+                                if (_slice_len > 0)
                                 {
-                                    _stack[@ sp++] = undefined;
+                                    _val = array_create(_slice_len);
+                                    array_copy(_val, 0, _arr, _start, _slice_len);
                                 }
                                 else
                                 {
-                                    runtime_error(PROGLANG_ERROR_TYPE.VARIABLE, $"Variable '{_name}' not found.");
+                                    _val = [];
                                 }
                             }
-                            break;
-                        
-                        case PROG_OP.STORE:
-                            _val = _stack[sp - 1]; // Peek
-                            _name = _constants[_arg];
-                            var _s_store = find_var_scope(_name);
-                            if (_s_store != undefined) { _s_store.vars[$ _name] = _val; }
-                            else if (context != undefined && struct_exists(context, _name)) { context[$ _name] = _val; }
-                            else if (struct_exists(_gref, _name)) { _gref[$ _name] = _val; }
-                            else { current_scope.vars[$ _name] = _val; }
-                            break;
-                            
-                        case PROG_OP.DEFINE:
-                            _val = _stack[sp - 1]; // Peek
-                            _name = _constants[_arg];
-                            current_scope.vars[$ _name] = _val;
-                            break;
-                        
-                        case PROG_OP.LOAD_GLOBAL: _stack[@ sp++] = _gref[$ _constants[_arg]]; break;
-                        case PROG_OP.STORE_GLOBAL: _gref[$ _constants[_arg]] = _stack[sp - 1]; break;
-                        
-                        case PROG_OP.PUSH_SCOPE:
-                            current_scope = { vars: {}, parent: current_scope }
-                            break;
-                            
-                        case PROG_OP.POP_SCOPE:
-                            if (current_scope.parent != undefined)
+                            else if (is_string(_arr))
                             {
-                                current_scope = current_scope.parent;
+                                // String slicing: str[start..end] (0-indexed, inclusive)
+                                var _str_len = string_length(_arr);
+                                
+                                if (_start < 0) _start = 0;
+                                if (_end >= _str_len) _end = _str_len - 1;
+                                
+                                var _slice_len = _end - _start + 1;
+                                
+                                if (_slice_len > 0)
+                                {
+                                    _val = string_copy(_arr, _start + 1, _slice_len);
+                                }
+                                else
+                                {
+                                    _val = "";
+                                }
                             }
                             else
                             {
-                                runtime_error(PROGLANG_ERROR_TYPE.RUNTIME, "Scope underflow");
+                                runtime_error(PROGLANG_ERROR_TYPE.TYPE, "Range indexing only supported on arrays and strings.");
                             }
-                            break;
-                        
-                        case PROG_OP.MAKE_CLOSURE:
-                            var _func = _stack[--sp];
-                            
-                            // Check for array format (PROG_FUNC)
-                            if (is_array(_func) && array_length(_func) >= PROG_FUNC.SIZE)
+                        }
+                        else
+                        {
+                            // Single element access
+                            if (is_array(_arr))
                             {
-                                var _closure_arr = array_create(PROG_CLOSURE.SIZE);
-                                _closure_arr[PROG_CLOSURE.TYPE] = "closure";
-                                _closure_arr[PROG_CLOSURE.BYTECODE] = _func[PROG_FUNC.BYTECODE];
-                                _closure_arr[PROG_CLOSURE.ENV] = current_scope;
-                                _closure_arr[PROG_CLOSURE.NAME] = _func[PROG_FUNC.NAME];
-                                _closure_arr[PROG_CLOSURE.PARAM_COUNT] = _func[PROG_FUNC.PARAM_COUNT];
-                                _closure_arr[PROG_CLOSURE.GLOBAL_REF] = global_ref; // Capture module globals
-                                _stack[@ sp++] = _closure_arr;
+                                _val = _arr[_index];
                             }
-                            // Legacy
-                            else if (is_struct(_func))
+                            else if (is_struct(_arr))
                             {
-                                var _closure = { type: "closure", bytecode: _func.bytecode, name: _func.name, env: current_scope }
-                                if (struct_exists(_func, "param_count")) _closure.param_count = _func.param_count;
-                                _stack[@ sp++] = _closure;
+                                _val = _arr[$ _index];
+                            }
+                            else if (is_string(_arr))
+                            {
+                                // String indexing: str[i] (0-indexed)
+                                _val = string_char_at(_arr, _index + 1);
                             }
                             else
                             {
-                                runtime_error(PROGLANG_ERROR_TYPE.TYPE, "MAKE_CLOSURE expects a function constant");
+                                _val = undefined;
                             }
-                            break;
+                        }
                         
-                        // Structure Access
-                        case PROG_OP.INDEX_GET:
-                            _idx = _stack[--sp];
-                            _arr = _stack[--sp];
-                            _val = is_array(_arr) ? _arr[_idx] : (is_struct(_arr) ? _arr[$ _idx] : undefined);
-                            _stack[@ sp++] = _val;
-                            break;
+                        _stack[@ _sp++] = _val;
+                        break;
+                    
+                    case PROG_OP.INDEX_SET:
+                        _val = _stack[--_sp];
+                        _index = _stack[--_sp];
+                        _arr = _stack[--_sp];
+                        if (is_array(_arr)) _arr[@ _index] = _val;
+                        else if (is_struct(_arr)) _arr[$ _index] = _val;
+                        _stack[@ _sp++] = _val;
+                        break;
+                    
+                    case PROG_OP.MEMBER_GET:
+                        _prop = _constants[_arg];
+                        _obj = _stack[--_sp];
+                        _val = undefined;
                         
-                        case PROG_OP.INDEX_SET:
-                            _val = _stack[--sp];
-                            _idx = _stack[--sp];
-                            _arr = _stack[--sp];
-                            if (is_array(_arr)) _arr[@ _idx] = _val;
-                            else if (is_struct(_arr)) _arr[$ _idx] = _val;
-                            _stack[@ sp++] = _val;
-                            break;
-                        
-                        case PROG_OP.MEMBER_GET:
-                            _prop = _constants[_arg];
-                            _obj = _stack[--sp];
-                            _val = undefined;
-                            
-                            // Super lookup
-                            if (is_struct(_obj) && struct_exists(_obj, "__super__"))
+                        // Super lookup
+                        if (is_struct(_obj) && struct_exists(_obj, "__super__"))
+                        {
+                            var _super_class = _obj.__super__;
+                            var _receiver = _obj.receiver;
+                            var _curr = _super_class;
+                            var _found = false;
+                            while (_curr != undefined)
                             {
-                                var _super_class = _obj.__super__;
-                                var _receiver = _obj.receiver;
-                                var _curr = _super_class;
+                                if (struct_exists(_curr.methods, _prop))
+                                {
+                                    var _method_entry = _curr.methods[$ _prop];
+                                    _val = array_create(PROG_CLOSURE.SIZE);
+                                    _val[PROG_CLOSURE.TYPE] = "closure";
+                                    _val[PROG_CLOSURE.BYTECODE] = _method_entry.bytecode;
+                                    _val[PROG_CLOSURE.ENV] = _vm[PROG_VM.SCOPE];
+                                    _val[PROG_CLOSURE.NAME] = _prop;
+                                    _val[PROG_CLOSURE.PARAM_COUNT] = struct_exists(_method_entry, "param_count") ? _method_entry.param_count : 0;
+                                    _val[PROG_CLOSURE.DEFINING_CLASS] = _curr;
+                                    _val[PROG_CLOSURE.RECEIVER] = _receiver;
+                                    _val[PROG_CLOSURE.GLOBAL_REF] = _gref;
+                                    _found = true;
+                                    break;
+                                }
+                                _curr = _curr.super_class;
+                            }
+                            if (!_found) runtime_error(PROGLANG_ERROR_TYPE.MEMBER, $"Property '{_prop}' not found in super class.");
+                        }
+                        // Regular instance lookup
+                        else if (is_struct(_obj))
+                        {
+                            if (struct_exists(_obj, _prop))
+                            {
+                                _val = _obj[$ _prop];
+                            }
+                            // Class instance method lookup
+                            else if (struct_exists(_obj, "__class__"))
+                            {
+                                var _class = _obj.__class__;
+                                var _curr = _class;
                                 var _found = false;
-                                while (_curr != undefined)
+                                while(_curr != undefined)
                                 {
                                     if (struct_exists(_curr.methods, _prop))
                                     {
@@ -693,418 +811,651 @@ function ProgVM() constructor
                                         _val = array_create(PROG_CLOSURE.SIZE);
                                         _val[PROG_CLOSURE.TYPE] = "closure";
                                         _val[PROG_CLOSURE.BYTECODE] = _method_entry.bytecode;
-                                        _val[PROG_CLOSURE.ENV] = current_scope;
+                                        _val[PROG_CLOSURE.ENV] = _vm[PROG_VM.SCOPE]; // Methods capture current scope (for globals etc)
                                         _val[PROG_CLOSURE.NAME] = _prop;
                                         _val[PROG_CLOSURE.PARAM_COUNT] = struct_exists(_method_entry, "param_count") ? _method_entry.param_count : 0;
                                         _val[PROG_CLOSURE.DEFINING_CLASS] = _curr;
-                                        _val[PROG_CLOSURE.RECEIVER] = _receiver;
-                                        _val[PROG_CLOSURE.GLOBAL_REF] = global_ref; // Capture globals
+                                        _val[PROG_CLOSURE.RECEIVER] = _obj;
+                                        _val[PROG_CLOSURE.GLOBAL_REF] = _gref;
                                         _found = true;
                                         break;
                                     }
                                     _curr = _curr.super_class;
                                 }
-                                if (!_found) runtime_error(PROGLANG_ERROR_TYPE.MEMBER, $"Property '{_prop}' not found in super class.");
-                            }
-                            // Regular instance lookup
-                            else if (is_struct(_obj))
-                            {
-                                if (struct_exists(_obj, _prop))
-                                {
-                                    _val = _obj[$ _prop];
-                                }
-                                else if (struct_exists(_obj, "__class__"))
-                                {
-                                    // Instance Method lookup
-                                    var _class = _obj.__class__;
-                                    var _found = false;
-                                    var _curr = _class;
-                                    while (_curr != undefined)
-                                    {
-                                        if (struct_exists(_curr.methods, _prop))
-                                        {
-                                            var _method_entry = _curr.methods[$ _prop];
-                                            _val = array_create(PROG_CLOSURE.SIZE);
-                                            _val[PROG_CLOSURE.TYPE] = "closure";
-                                            _val[PROG_CLOSURE.BYTECODE] = _method_entry.bytecode;
-                                            _val[PROG_CLOSURE.ENV] = current_scope;
-                                            _val[PROG_CLOSURE.NAME] = _prop;
-                                            _val[PROG_CLOSURE.PARAM_COUNT] = struct_exists(_method_entry, "param_count") ? _method_entry.param_count : 0;
-                                            _val[PROG_CLOSURE.DEFINING_CLASS] = _curr;
-                                            _val[PROG_CLOSURE.RECEIVER] = _obj;
-                                            _val[PROG_CLOSURE.GLOBAL_REF] = global_ref; // Capture globals
-                                            _found = true;
-                                            break;
-                                        }
-                                        _curr = _curr.super_class;
-                                    }
-                                    if (!_found) _val = undefined;
-                                }
-                                else if (struct_exists(_obj, "statics") && struct_exists(_obj, "methods"))
-                                {
-                                    // Static Lookup
-                                    if (struct_exists(_obj.statics, _prop))
-                                    {
-                                        var _entry = _obj.statics[$ _prop];
-                                        if (is_struct(_entry) && struct_exists(_entry, "bytecode"))
-                                        {
-                                            _val = array_create(PROG_CLOSURE.SIZE);
-                                            _val[PROG_CLOSURE.TYPE] = "closure";
-                                            _val[PROG_CLOSURE.BYTECODE] = _entry.bytecode;
-                                            _val[PROG_CLOSURE.ENV] = current_scope;
-                                            _val[PROG_CLOSURE.NAME] = _prop;
-                                            _val[PROG_CLOSURE.PARAM_COUNT] = struct_exists(_entry, "param_count") ? _entry.param_count : 0;
-                                            _val[PROG_CLOSURE.GLOBAL_REF] = global_ref; // Capture globals
-                                        }
-                                        else if (is_struct(_entry) && struct_exists(_entry, "type") && _entry.type == "field")
-                                        {
-                                            _val = _entry.value;
-                                        }
-                                        else
-                                        {
-                                            _val = _entry;
-                                        }
-                                    }
-                                }
-                            }
-                            
-                            if (is_undefined(_val) && !is_struct(_obj))
-                            {
-                                 runtime_error(PROGLANG_ERROR_TYPE.MEMBER, $"Cannot read property '{_prop}' of non-struct.");
-                            }
-                            
-                            _stack[@ sp++] = _val;
-                            break;
-                        
-                        case PROG_OP.MEMBER_SET:
-                            _val = _stack[--sp];
-                            _obj = _stack[--sp];
-                            _prop = _constants[_arg];
-                            if (is_struct(_obj))
-                            {
-                                if (struct_exists(_obj, "statics") && struct_exists(_obj, "methods"))
-                                {
-                                    if (struct_exists(_obj.statics, _prop))
-                                    {
-                                        var _entry = _obj.statics[$ _prop];
-                                        if (is_struct(_entry) && struct_exists(_entry, "type") && _entry.type == "field")
-                                        {
-                                            _entry.value = _val;
-                                        }
-                                        else
-                                        {
-                                            _obj.statics[$ _prop] = _val;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        _obj.statics[$ _prop] = { type: "field", value: _val, access: "public" }
-                                    }
-                                }
-                                else
-                                {
-                                    _obj[$ _prop] = _val;
-                                }
-                            }
-                            else if (is_numeric(_obj) && instance_exists(_obj)) variable_instance_set(_obj, _prop, _val);
-                            _stack[@ sp++] = _val;
-                            break;
-                        
-                        case PROG_OP.CLASS_DEF:
-                            var _desc = _constants[_arg]; // Class Descriptor
-                            if (_desc.super_class != undefined && is_string(_desc.super_class))
-                            {
-                                if (struct_exists(current_scope.vars, _desc.super_class))
-                                {
-                                    _desc.super_class = current_scope.vars[$ _desc.super_class];
-                                }
-                                else if (struct_exists(class_registry, _desc.super_class))
-                                {
-                                    _desc.super_class = class_registry[$ _desc.super_class];
-                                }
-                            }
-                            current_scope.vars[$ _desc.name] = _desc;
-                            class_registry[$ _desc.name] = _desc;
-                            break;
-                        
-                        case PROG_OP.NEW_INSTANCE:
-                            var _arg_count = _arg;
-                            var _class = _stack[--sp]; // Class Descriptor
-                            
-                            if (!is_struct(_class)) runtime_error(PROGLANG_ERROR_TYPE.TYPE, "Attempted to instantiate non-class.");
-                            
-                            var _inst = { __class__: _class }
-                            
-                            if (struct_exists(_class, "fields"))
-                            {
-                                for (var f = 0; f < array_length(_class.fields); f++)
-                                {
-                                    var _field = _class.fields[f];
-                                    _inst[$ _field.name] = _field.value;
-                                }
-                            }
-                            
-                            if (struct_exists(_class, "constructor_code") && _class.constructor_code != undefined)
-                            {
-                                var _args_arr = array_create(_arg_count);
-                                for (var i = _arg_count - 1; i >= 0; i--) _args_arr[i] = _stack[--sp];
                                 
-                                var _vm = new ProgVM();
-                                _vm.context = context;
-                                _vm.call_stack = variable_clone(call_stack);
-                                _vm.current_this = _inst;
-                                
-                                for (var j = 0; j < _arg_count; j++)
+                                if (!_found)
                                 {
-                                     _vm.current_scope.vars[$ $"arg{j}"] = _args_arr[j];
+                                    runtime_error(PROGLANG_ERROR_TYPE.MEMBER, $"Property or method '{_prop}' not found.");
                                 }
-                                _vm.current_scope.vars[$ "argc"] = _arg_count;
-                                
-                                _vm.run(_class.constructor_code);
                             }
                             else
                             {
-                                sp -= _arg_count; 
+                                // Not found on regular struct
+                                //  runtime_error(PROGLANG_ERROR_TYPE.MEMBER, $"Property '{_prop}' not found.");
+                                _val = undefined;
                             }
+                        }
+                        else
+                        {
                             
-                            _stack[@ sp++] = _inst;
-                            break;
-                        
-                        case PROG_OP.LOAD_SUPER:
-                            if (current_this == undefined || !struct_exists(current_this, "__class__"))
+                            // String properties
+                            if (is_string(_obj))
                             {
-                                runtime_error(PROGLANG_ERROR_TYPE.RUNTIME, "'super' used outside of class instance.");
+                                if (_prop == "length") _val = string_length(_obj);
+                                else runtime_error(PROGLANG_ERROR_TYPE.MEMBER, "Unknown string property");
                             }
-                            var _class_super = undefined;
-                            
-                            if (active_class != undefined)
+                            // Array properties
+                            else if (is_array(_obj))
                             {
-                                _class_super = active_class;
-                            }
-                            else if (current_this != undefined && struct_exists(current_this, "__class__"))
-                            {
-                                _class_super = current_this.__class__;
+                                if (_prop == "length") _val = array_length(_obj);
+                                else if (_prop == "push") _val = method(_obj, function(_val) { array_push(self, _val); });
+                                else if (_prop == "pop") _val = method(_obj, function() { return array_pop(self); });
+                                else runtime_error(PROGLANG_ERROR_TYPE.MEMBER, "Unknown array property");
                             }
                             else
                             {
-                                runtime_error(PROGLANG_ERROR_TYPE.RUNTIME, "'super' used outside of class context.");
+                                runtime_error(PROGLANG_ERROR_TYPE.MEMBER, "Cannot access property of non-object.");
                             }
-                            
-                            if (_class_super.super_class == undefined)
-                            {
-                                runtime_error(PROGLANG_ERROR_TYPE.RUNTIME, "Class has no super class.");
-                            }
-                            _stack[@ sp++] = { __super__: _class_super.super_class, receiver: current_this }
-                            break;
-                            
-                        case PROG_OP.CALL:
-                            var _call_arg_count = _arg;
-                            var _func = _stack[sp - 1 - _call_arg_count];
-                            
-                            var _call_args = array_create(_call_arg_count);
-                            for (var i = _call_arg_count - 1; i >= 0; i--) _call_args[i] = _stack[--sp];
-                            sp--; // Pop function
-                            
-                            var _line_idx = (ip div 2) - 1;
-                            var _line_num = (_line_idx >= 0 && _line_idx < array_length(_bytecode.lines)) ? _bytecode.lines[_line_idx] : 0;
-                            _name = is_string(_func) ? _func : ((is_struct(_func) && struct_exists(_func, "name")) ? _func.name : "<anonymous>");
-                            
-                            _stack[@ sp++] = exec_call(_func, _call_args, _line_num, _name);
-                            break;
+                        }
+                        _stack[@ _sp++] = _val;
+                        break;
                         
-                        case PROG_OP.IMPORT:
-                            var _path = _constants[_arg];
-                            // Search scope chain for __filename
-                            var _current_file = "";
-                            var _search_scope = current_scope;
-                            while (_search_scope != undefined)
+                    case PROG_OP.MEMBER_SET:
+                        _val = _stack[--_sp];
+                        _prop = _constants[_arg];
+                        _obj = _stack[--_sp];
+                        
+                        // Check active class for private/protected (simplified)
+                        if (is_struct(_obj))
+                        {
+                            _obj[$ _prop] = _val;
+                        }
+                        else
+                        {
+                            runtime_error(PROGLANG_ERROR_TYPE.MEMBER, "Cannot set property of non-object.");
+                        }
+                        _stack[@ _sp++] = _val;
+                        break;
+                    
+                    // Creation
+                    case PROG_OP.ARRAY_NEW:
+                        var _sz = _arg;
+                        var _arr = array_create(_sz);
+                        for (var i = _sz - 1; i >= 0; i--) _arr[i] = _stack[--_sp];
+                        _stack[@ _sp++] = _arr;
+                        break;
+                        
+                    case PROG_OP.OBJECT_NEW:
+                        var _sz = _arg;
+                        var _obj = {}
+                        for (var i = 0; i < _sz; i++) {
+                            var _v = _stack[--_sp];
+                            var _k = _stack[--_sp];
+                            _obj[$ _k] = _v;
+                        }
+                        _stack[@ _sp++] = _obj;
+                        break;
+                        
+                    case PROG_OP.MAKE_REGEX:
+                        var _flags = _stack[--_sp];
+                        var _pattern = _stack[--_sp];
+                        _stack[@ _sp++] = new Regex(_pattern, _flags);
+                        break;
+                        
+                    // Spread Operations
+                    case PROG_OP.PUSH_ARRAY_EMPTY:
+                        _stack[@ _sp++] = [];
+                        break;
+                    
+                    case PROG_OP.ARRAY_PUSH:
+                        var _val = _stack[--_sp];
+                        var _arr = _stack[_sp - 1]; // Peek
+                        array_push(_arr, _val);
+                        break;
+                    
+                    case PROG_OP.ARRAY_SPREAD:
+                        var _arr = _stack[--_sp]; // The array to spread
+                        var _target = _stack[_sp - 1]; // The target array
+                        if (is_array(_arr))
+                        {
+                            var _arr_spread_len = array_length(_arr);
+                            for (var i = 0; i < _arr_spread_len; i++) array_push(_target, _arr[i]);
+                        }
+                        break;
+                        
+                    case PROG_OP.MAKE_CLOSURE:
+                        var _func = _stack[--_sp];
+                        
+                        // Check for array format (PROG_FUNC)
+                        if (is_array(_func) && array_length(_func) >= PROG_FUNC.SIZE)
+                        {
+                            var _closure_arr = array_create(PROG_CLOSURE.SIZE);
+                            _closure_arr[PROG_CLOSURE.TYPE] = "closure";
+                            _closure_arr[PROG_CLOSURE.BYTECODE] = _func[PROG_FUNC.BYTECODE];
+                            _closure_arr[PROG_CLOSURE.ENV] = _vm[PROG_VM.SCOPE];
+                            _closure_arr[PROG_CLOSURE.NAME] = _func[PROG_FUNC.NAME];
+                            _closure_arr[PROG_CLOSURE.PARAM_COUNT] = _func[PROG_FUNC.PARAM_COUNT];
+                            _closure_arr[PROG_CLOSURE.GLOBAL_REF] = _gref;
+                            _stack[@ _sp++] = _closure_arr;
+                        }
+                        // Legacy support removed/simplified
+                        else
+                        {
+                            runtime_error(PROGLANG_ERROR_TYPE.TYPE, "MAKE_CLOSURE expects a function constant");
+                        }
+                        break;
+                    
+                    case PROG_OP.NEW_INSTANCE:
+                        var _arg_count = _arg;
+                        var _class = _stack[--_sp];
+                        
+                        if (!is_struct(_class) || !struct_exists(_class, "__type__") || _class.__type__ != "class")
+                        {
+                            runtime_error(PROGLANG_ERROR_TYPE.TYPE, "Target is not a class.");
+                        }
+                        
+                        var _inst = {
+                            __class__: _class,
+                            __type__: "instance"
+                        }
+                        
+                        // Initialize fields
+                        if (struct_exists(_class, "fields"))
+                        {
+                            var _fields = _class.fields;
+                            for (var k = 0; k < array_length(_fields); k++)
                             {
-                                if (struct_exists(_search_scope.vars, "__filename"))
+                                var _field = _fields[k];
+                                _inst[$ _field.name] = _field.value;
+                            }
+                        }
+                        
+                        if (struct_exists(_class, "constructor_code") && _class.constructor_code != undefined)
+                        {
+                            var _args_arr = array_create(_arg_count);
+                            for (var i = _arg_count - 1; i >= 0; i--) _args_arr[i] = _stack[--_sp];
+                            
+                            var _new_vm = proglang_vm_create();
+                            _new_vm[@ PROG_VM.CONTEXT] = _vm[PROG_VM.CONTEXT];
+                            // _new_vm[@ PROG_VM.CALL_STACK] = variable_clone(_vm[PROG_VM.CALL_STACK]); // don't debug new callstack deeper?
+                            _new_vm[@ PROG_VM.CURRENT_THIS] = _inst;
+                            
+                            var _vars = _new_vm[PROG_VM.SCOPE][PROG_SCOPE.VARS];
+                            for (var j = 0; j < _arg_count; j++)
+                            {
+                                _vars[$ $"arg{j}"] = _args_arr[j];
+                            }
+                            _vars[$ "argc"] = _arg_count;
+                            
+                            proglang_vm_run(_new_vm, _class.constructor_code);
+                            proglang_vm_free(_new_vm);
+                        }
+                        else
+                        {
+                            _sp -= _arg_count; 
+                        }
+                        
+                        _stack[@ _sp++] = _inst;
+                        break;
+                    
+                    case PROG_OP.LOAD_SUPER:
+                        if (_vm[PROG_VM.CURRENT_THIS] == undefined || !struct_exists(_vm[PROG_VM.CURRENT_THIS], "__class__"))
+                        {
+                            runtime_error(PROGLANG_ERROR_TYPE.RUNTIME, "'super' used outside of class instance.");
+                        }
+                        var _class_super = undefined;
+                        
+                        if (_vm[PROG_VM.ACTIVE_CLASS] != undefined)
+                        {
+                            _class_super = _vm[PROG_VM.ACTIVE_CLASS];
+                        }
+                        else
+                        {
+                            _class_super = _vm[PROG_VM.CURRENT_THIS].__class__;
+                        }
+                        
+                        if (_class_super.super_class == undefined)
+                        {
+                            runtime_error(PROGLANG_ERROR_TYPE.RUNTIME, "Class has no super class.");
+                        }
+                        
+                        // Return super proxy
+                        _stack[@ _sp++] = {
+                            __super__: _class_super.super_class,
+                            receiver: _vm[PROG_VM.CURRENT_THIS]
+                        }
+                        break;
+                        
+                    // Iteration
+                    case PROG_OP.ITER_INIT:
+                        var _coll = _stack[--_sp];
+                        var _mode = _arg; // 0: Default, 1: Key, 2: Value, 3: Pair
+                        var _iter = undefined;
+                        
+                        // Check for range object (array with "range" marker)
+                        if (is_array(_coll) && array_length(_coll) >= 3 && _coll[0] == "range")
+                        {
+                            // Range iterator: [1]=start, [2]=end (inclusive)
+                            _iter = { type: "range_iter", current: _coll[1], range_end: _coll[2], done: false }
+                        }
+                        else if (is_array(_coll))
+                        {
+                            _iter = { type: "array_iter", val: _coll, idx: 0, len: array_length(_coll) }
+                        }
+                        else if (is_struct(_coll))
+                        {
+                            if (_mode == 0)
+                            {
+                                runtime_error(PROGLANG_ERROR_TYPE.RUNTIME, "Iterating struct with 'in' requires explicit 'key' or 'value' modifier.");
+                            }
+                            
+                            var _keys = struct_get_names(_coll);
+                            _iter = { type: "struct_iter", val: _coll, keys: _keys, idx: 0, len: array_length(_keys) }
+                        }
+                        else
+                        {
+                            _iter = { type: "empty", idx: 0, len: 0 }
+                        }
+                        _stack[@ _sp++] = _iter;
+                        break;
+                    
+                    case PROG_OP.ITER_NEXT:
+                        var _iter = _stack[_sp - 1]; // Peek
+                        if (_iter.type == "range_iter")
+                        {
+                            if (!_iter.done && _iter.current <= _iter.range_end)
+                            {
+                                var _val = _iter.current;
+                                _iter.current++;
+                                if (_iter.current > _iter.range_end) _iter.done = true;
+                                _stack[@ _sp++] = _val;
+                                _stack[@ _sp++] = true;
+                            }
+                            else
+                            {
+                                _stack[@ _sp++] = false;
+                            }
+                        }
+                        else if (_iter.idx < _iter.len)
+                        {
+                            var _key = undefined;
+                            if (_iter.type == "array_iter") _key = _iter.idx;
+                            else if (_iter.type == "struct_iter") _key = _iter.keys[_iter.idx];
+                            
+                            _iter.idx++;
+                            _stack[@ _sp++] = _key;
+                            _stack[@ _sp++] = true;
+                        }
+                        else
+                        {
+                            _stack[@ _sp++] = false;
+                        }
+                        break;
+                    
+                    case PROG_OP.ITER_GET_VAL:
+                        var _iter = _stack[_sp - 1]; // Peek
+                        var _val = undefined;
+                        if (_iter.type == "range_iter")
+                        {
+                            _val = _iter.current - 1; // Current was already incremented
+                        }
+                        else if (_iter.type == "array_iter")
+                        {
+                            _val = _iter.val[_iter.idx - 1];
+                        }
+                        else if (_iter.type == "struct_iter")
+                        {
+                            var _key = _iter.keys[_iter.idx - 1];
+                            _val = _iter.val[$ _key];
+                        }
+                        _stack[@ _sp++] = _val;
+                        break;
+                    
+                    // Class Def
+                    case PROG_OP.CLASS_DEF:
+                        _stack[@ _sp++] = _constants[_arg];
+                        break;
+                        
+                    case PROG_OP.LOAD_THIS:
+                        _stack[@ _sp++] = _vm[PROG_VM.CURRENT_THIS];
+                        break;
+                    
+                    // Modules
+                    case PROG_OP.IMPORT:
+                        var _path = _constants[_arg];
+                        var _cur_file = "";
+                        var _scope_file = proglang_vm_find_var_scope(_vm, "__filename");
+                        if (_scope_file != undefined)
+                            _cur_file = _scope_file[PROG_SCOPE.VARS][$ "__filename"];
+                        
+                        var _exports = proglang_load_module(_path, _cur_file);
+                        _stack[@ _sp++] = _exports;
+                        break;
+                        
+                    case PROG_OP.EXPORT_SET:
+                        var _name = _constants[_arg];
+                        var _val = _stack[_sp - 1]; // Peek
+                        
+                        if (_vm[PROG_VM.ACTIVE_MODULE] != undefined)
+                        {
+                            _vm[PROG_VM.ACTIVE_MODULE].exports[$ _name] = _val;
+                        }
+                        else if (variable_global_exists("proglang_exports"))
+                        {
+                            global.proglang_exports[$ _name] = _val;
+                        }
+                        break;
+                        
+                    // ========== NEW V2 OPS ==========
+                    
+                    case PROG_OP.IN_CHECK:
+                        // lhs in rhs: string in string, value in array
+                        // Structs require explicit 'in key' or 'in value'
+                        var _rhs = _stack[--_sp];
+                        var _lhs = _stack[--_sp];
+                        var _result = false;
+                        if (is_string(_rhs) && is_string(_lhs))
+                        {
+                            _result = (string_pos(_lhs, _rhs) > 0);
+                        }
+                        else if (is_array(_rhs))
+                        {
+                            for (var i = 0; i < array_length(_rhs); i++)
+                            {
+                                if (_rhs[i] == _lhs)
                                 {
-                                    _current_file = _search_scope.vars[$ "__filename"];
+                                    _result = true;
                                     break;
                                 }
-                                _search_scope = _search_scope.parent;
                             }
-                            try
+                        }
+                        _stack[@ _sp++] = _result;
+                        break;
+                        
+                    case PROG_OP.IN_KEY:
+                        // lhs in key rhs: check if key exists in struct
+                        var _rhs = _stack[--_sp];
+                        var _lhs = _stack[--_sp];
+                        var _result = false;
+                        if (is_struct(_rhs))
+                        {
+                            _result = struct_exists(_rhs, _lhs);
+                        }
+                        _stack[@ _sp++] = _result;
+                        break;
+                        
+                    case PROG_OP.IN_VALUE:
+                        // lhs in value rhs: check if value exists in struct values
+                        var _rhs = _stack[--_sp];
+                        var _lhs = _stack[--_sp];
+                        var _result = false;
+                        if (is_struct(_rhs))
+                        {
+                            var _names = struct_get_names(_rhs);
+                            for (var i = 0; i < array_length(_names); i++)
                             {
-                                var _exports = proglang_load_module(_path, _current_file);
-                                _stack[@ sp++] = _exports;
-                            }
-                            catch (_e)
-                            {
-                                if (is_struct(_e) && struct_exists(_e, "type")) throw _e;
-                                runtime_error(PROGLANG_ERROR_TYPE.IMPORT, $"Failed to import '{_path}': {_e}");
-                            }
-                            break;
-                        
-                        case PROG_OP.EXPORT_SET:
-                            _name = _constants[_arg];
-                            _val = _stack[sp - 1]; // Peek
-                            if (active_module != undefined) active_module.exports[$ _name] = _val;
-                            break;
-
-                        case PROG_OP.RETURN: return _stack[--sp];
-
-                        case PROG_OP.JUMP: ip = _arg; break;
-                        case PROG_OP.JUMP_IF_FALSE:
-                            _val = _stack[--sp];
-                            // Robust Truthy Check
-                            var _cond = true;
-                            if (_val == false || _val == undefined || _val == 0) _cond = false;
-                            if (is_string(_val) && _val == "") _cond = false;
-
-                            if (!_cond) ip = _arg; 
-                            break;
-                        
-                        case PROG_OP.JUMP_IF_NULL: if (_stack[--sp] == undefined) ip = _arg; break;
-                        case PROG_OP.JUMP_IF_NOT_NULL: if (_stack[sp - 1] != undefined) ip = _arg; break;
-                        
-                        case PROG_OP.ARRAY_NEW:
-                            var _arr_len = _arg;
-                            _arr = array_create(_arr_len);
-                            for (var i = _arr_len - 1; i >= 0; i--) _arr[i] = _stack[--sp];
-                            _stack[@ sp++] = _arr;
-                            break;
-                        
-                        case PROG_OP.OBJECT_NEW:
-                            var _pair_count = _arg;
-                            _obj = {}
-                            for (var i = 0; i < _pair_count; i++)
-                            {
-                                _val = _stack[--sp];
-                                var _key = _stack[--sp];
-                                _obj[$ _key] = _val;
-                            }
-                            _stack[@ sp++] = _obj;
-                            break;
-                        
-                        case PROG_OP.MAKE_REGEX:
-                            var _flags = _stack[--sp];
-                            var _pattern = _stack[--sp];
-                            _stack[@ sp++] = new Regex(_pattern, _flags);
-                            break;
-
-                        case PROG_OP.ITER_INIT:
-                            var _col = _stack[--sp];
-                            var _iter = { collection: _col, index: 0, keys: undefined }
-                            if (is_struct(_col)) _iter.keys = struct_get_names(_col);
-                            _stack[@ sp++] = _iter;
-                            break; 
-
-                        case PROG_OP.ITER_NEXT:
-                            var _iter = _stack[sp - 1]; // Peek
-                            var _has_next = false;
-                            if (is_array(_iter.collection))
-                            {
-                                if (_iter.index < array_length(_iter.collection))
+                                if (_rhs[$ _names[i]] == _lhs)
                                 {
-                                    _stack[@ sp++] = _iter.collection[_iter.index]; // Push Value
-                                    _has_next = true;
+                                    _result = true;
+                                    break;
                                 }
                             }
-                            else if (is_struct(_iter.collection))
-                            {
-                                if (_iter.index < array_length(_iter.keys))
-                                {
-                                    _stack[@ sp++] = _iter.keys[_iter.index]; // Push Key
-                                    _has_next = true;
-                                }
-                            }
-                            
-                            if (_has_next)
-                            {
-                                _stack[@ sp++] = true; // Continue
-                                _iter.index++; 
-                            }
-                            else
-                            {
-                                _stack[@ sp++] = false; // Stop
-                            }
-                            break;
-
-                        case PROG_OP.ITER_GET_VAL:
-                            var _iter2 = _stack[sp - 1]; // Peek
-                            if (is_array(_iter2.collection))
-                            {
-                                _stack[@ sp++] = _iter2.index - 1; // Index
-                            }
-                            else
-                            {
-                                var _k = _iter2.keys[_iter2.index - 1];
-                                _stack[@ sp++] = _iter2.collection[$ _k]; // Value
-                            }
-                            break;
+                        }
+                        _stack[@ _sp++] = _result;
+                        break;
                         
-                        case PROG_OP.PUSH_TRY: array_push(try_stack, { ip: _arg, sp: sp }); break;
-                        case PROG_OP.POP_TRY: array_pop(try_stack); break;
-                        case PROG_OP.THROW: throw _stack[--sp]; break;
-                        
-                        case PROG_OP.PUSH_ARRAY_EMPTY: _stack[@ sp++] = []; break;
-                        case PROG_OP.ARRAY_PUSH:
-                            _val = _stack[--sp];
-                            array_push(_stack[sp - 1], _val);
-                            break;
-                        
-                        case PROG_OP.ARRAY_SPREAD:
-                            _arr = _stack[--sp];
-                            var _target = _stack[sp - 1];
-                            if (is_array(_arr))
-                            {
-                                for (var i = 0; i < array_length(_arr); i++) array_push(_target, _arr[i]);
-                            }
-                            break;
-                        
-                        case PROG_OP.CALL_SPREAD:
-                             var _func_s = _stack[--sp];
-                             var _args_s = _stack[--sp];
-                             var _line_idx_s = (ip div 2) - 1;
-                             var _line_s = (_line_idx_s >= 0 && _line_idx_s < array_length(_bytecode.lines)) ? _bytecode.lines[_line_idx_s] : 0;
-                             var _name_s = is_struct(_func_s) && struct_exists(_func_s, "name") ? _func_s.name : "<anonymous>";
-                             _stack[@ sp++] = exec_call(_func_s, _args_s, _line_s, _name_s);
-                             break;
-
-                        case PROG_OP.LOAD_THIS: _stack[@ sp++] = current_this; break;
-                        case PROG_OP.ACCESS_CHECK: break;
-                    }
+                    case PROG_OP.MAKE_RANGE:
+                        // Create range object [type, start, end, current]
+                        var _end = _stack[--_sp];
+                        var _start = _stack[--_sp];
+                        // Using array for performance: [0]=type, [1]=start, [2]=end
+                        var _range = ["range", _start, _end];
+                        _stack[@ _sp++] = _range;
+                        break;
                 }
             }
-            catch (_e)
+        } catch (_vm_exception) {
+                var _try_stack = _vm[PROG_VM.TRY_STACK];
+                if (array_length(_try_stack) == 0) throw _vm_exception;
+                
+                var _handler = _try_stack[array_length(_try_stack) - 1];
+                
+                // Allow handler even if fp seems "earlier" (e.g. 0 vs 0), 
+                // as long as it's in the stack it was pushed by this VM instance.
+                
+                array_pop(_try_stack);
+                
+                // Unwind Frames until we reach handler's FP
+                while (_fp > _handler.fp)
+                {
+                    _gref = _frames[--_fp];
+                    _curr_bytecode = _frames[--_fp];
+                    _scope = _frames[--_fp];
+                    _bp = _frames[--_fp];
+                    _ip = _frames[--_fp];
+                }
+                
+                // Restore VM state to match unwind
+                _vm[@ PROG_VM.SCOPE] = _scope;
+                _vm[@ PROG_VM.GLOBAL_REF] = _gref;
+                
+                // Restore Handler Context
+                _code = _curr_bytecode.code;
+                _constants = _curr_bytecode.constants;
+                _length = array_length(_code);
+                _ip = _handler.ip;
+                _vm[@ PROG_VM.SCOPE] = _scope;
+                
+                // Push error to stack
+                _sp = _handler.sp;
+                _stack[@ _sp++] = _vm_exception;
+                
+                continue; // Back into the instruction loop
+            }
+            
+            // Loop exit (implicit return)
+            if (_fp > _start_fp)
             {
-                if (array_length(try_stack) > 0)
-                {
-                    var _handler = array_pop(try_stack);
-                    ip = _handler.ip;
-                    sp = _handler.sp;
-                    _stack[@ sp++] = _e;
-                }
-                else
-                {
-                    throw _e;
-                }
+                var _ret_val = undefined;
+                
+                // Return Value placement
+                // Previous stack: [... Caller Locals ... | Callee | Arg1 ... ArgN | ... Callee Locals ...]
+                // BP was pointing to Arg1.
+                // We want to reset SP to point to Callee position, and place return value there.
+                // Callee was at BP - 1.
+                
+                _sp = _bp - 1;
+                _stack[@ _sp++] = _ret_val;
+                
+                _gref = _frames[--_fp];
+                _curr_bytecode = _frames[--_fp];
+                _scope = _frames[--_fp];
+                _bp = _frames[--_fp]; // RESTORE CALLER BP
+                _ip = _frames[--_fp];
+                
+                _vm[@ PROG_VM.SCOPE] = _scope;
+                _vm[@ PROG_VM.GLOBAL_REF] = _gref;
+                
+                _code = _curr_bytecode.code;
+                _constants = _curr_bytecode.constants;
+                _length = array_length(_code);
+            }
+            else
+            {
+                return undefined;
             }
         }
+    }
+
+
+// ========== VM POOL MANAGEMENT (Global) ==========
+
+/// @desc Initialize VM pool if needed
+function proglang_vm_pool_init()
+{
+    if (!variable_global_exists("proglang_vm_pool"))
+    {
+        global.proglang_vm_pool = [];
+        global.proglang_vm_pool_max = 32;
+        global.proglang_vm_alloc_count = 0;
+        global.proglang_vm_gc_threshold = 100;
+    }
+}
+
+function proglang_vm_create_impl()
+{
+    var _vm = array_create(PROG_VM.SIZE);
+    _vm[PROG_VM.STACK] = array_create(1024);
+    _vm[PROG_VM.FRAME_STACK] = array_create(256); // Initial frame stack
+    _vm[PROG_VM.SP] = 0;
+    _vm[PROG_VM.IP] = 0;
+    _vm[PROG_VM.BP] = 0;
+    _vm[PROG_VM.FP] = 0;
+    
+    // Initial scope
+    var _scope = array_create(PROG_SCOPE.SIZE);
+    _scope[PROG_SCOPE.VARS] = {}
+    _scope[PROG_SCOPE.PARENT] = undefined;
+    _scope[PROG_SCOPE.TRACKED_RESOURCES] = [];  // RAII resource tracking
+    
+    _vm[PROG_VM.SCOPE] = _scope;
+    _vm[PROG_VM.CONTEXT] = undefined;
+    _vm[PROG_VM.GLOBAL_REF] = {}
+    _vm[PROG_VM.TRY_STACK] = [];
+    _vm[PROG_VM.ACTIVE_MODULE] = undefined;
+    // _vm[PROG_VM.CALL_STACK] = [];
+    _vm[PROG_VM.CURRENT_THIS] = undefined;
+    _vm[PROG_VM.ACTIVE_CLASS] = undefined;
+    _vm[PROG_VM.CLASS_REGISTRY] = {}
+    
+    return _vm;
+}
+
+/// @desc Acquire a VM instance (from pool or new)
+/// @returns {Array<PROG_VM>}
+function proglang_vm_create()
+{
+    proglang_vm_pool_init();
+    
+    global.proglang_vm_alloc_count++;
+    
+    // Auto-GC check
+    if (global.proglang_vm_alloc_count >= global.proglang_vm_gc_threshold)
+    {
+        proglang_vm_gc();
+        global.proglang_vm_alloc_count = 0;
+    }
+    
+    if (array_length(global.proglang_vm_pool) > 0)
+    {
+        var _vm = array_pop(global.proglang_vm_pool);
+        proglang_vm_reset(_vm);
+        return _vm;
+    }
+    
+    return proglang_vm_create_impl();
+}
+
+/// @desc Release a VM instance back to the pool
+/// @param {Array<PROG_VM>} _vm
+function proglang_vm_free(_vm)
+{
+    proglang_vm_pool_init();
+    
+    if (array_length(global.proglang_vm_pool) < global.proglang_vm_pool_max)
+    {
+        proglang_vm_reset(_vm);
+        array_push(global.proglang_vm_pool, _vm);
+    }
+}
+
+/// @desc RAII-style scope cleanup - release all tracked resources when scope exits
+/// @param {Array<PROG_SCOPE>} _scope The scope to clean up
+function proglang_scope_cleanup(_scope)
+{
+    var _resources = _scope[PROG_SCOPE.TRACKED_RESOURCES];
+    if (_resources == undefined) return;
+    
+    var _len = array_length(_resources);
+    for (var i = 0; i < _len; i++)
+    {
+        var _res = _resources[i];
         
-        return undefined;
+        // Handle different resource types
+        if (is_array(_res) && array_length(_res) >= 2)
+        {
+            var _type = _res[0];
+            switch (_type)
+            {
+                case "__buffer__":
+                    // Buffer cleanup
+                    if (buffer_exists(_res[1])) buffer_delete(_res[1]);
+                    break;
+                    
+                case "__surface__":
+                    // Surface cleanup
+                    if (surface_exists(_res[1])) surface_free(_res[1]);
+                    break;
+                    
+                case "__ds_list__":
+                    // DS List cleanup
+                    if (ds_exists(_res[1], ds_type_list)) ds_list_destroy(_res[1]);
+                    break;
+                    
+                case "__ds_map__":
+                    // DS Map cleanup
+                    if (ds_exists(_res[1], ds_type_map)) ds_map_destroy(_res[1]);
+                    break;
+                    
+                case "__ds_grid__":
+                    // DS Grid cleanup
+                    if (ds_exists(_res[1], ds_type_grid)) ds_grid_destroy(_res[1]);
+                    break;
+                    
+                // Add more resource types as needed
+            }
+        }
     }
     
-    static push = function(_val)
+    // Clear the tracked resources array and scope variables
+    _scope[@ PROG_SCOPE.TRACKED_RESOURCES] = [];
+    _scope[@ PROG_SCOPE.VARS] = {};
+}
+
+/// @desc Track a resource for RAII cleanup when scope exits
+/// @param {Array<PROG_SCOPE>} _scope The scope to track in
+/// @param {string} _type Resource type identifier
+/// @param {any} _handle Resource handle/id
+function proglang_scope_track_resource(_scope, _type, _handle)
+{
+    var _resources = _scope[PROG_SCOPE.TRACKED_RESOURCES];
+    if (_resources == undefined)
     {
-        stack[@ sp++] = _val;
+        _resources = [];
+        _scope[@ PROG_SCOPE.TRACKED_RESOURCES] = _resources;
+    }
+    array_push(_resources, [_type, _handle]);
+}
+
+/// @desc Garbage collection - clear unused VMs from pool
+function proglang_vm_gc()
+{
+    proglang_vm_pool_init();
+    
+    // Clear excess pool entries
+    while (array_length(global.proglang_vm_pool) > global.proglang_vm_pool_max / 2)
+    {
+        array_pop(global.proglang_vm_pool);
     }
     
-    static pop = function()
-    {
-        return stack[@ --sp];
-    }
-    
-    static peek = function()
-    {
-        return stack[sp - 1];
-    }
-    
-    static runtime_error = function(_type, _message, _line = 0)
-    {
-        throw { type: _type, message: _message, line: _line }
-    }
+    // Force GML garbage collection
+    gc_collect();
+}
+
+/// @desc Throw a runtime error
+/// @param {real} _type Error type
+/// @param {string} _msg Error message
+function runtime_error(_type, _msg)
+{
+    throw { type: _type, message: _msg, stacktrace: debug_get_callstack() }
 }

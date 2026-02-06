@@ -7,23 +7,25 @@ var _in_biome = bg_get_biome(round(obj_Player.x / TILE_SIZE), clamp(round(obj_Pl
 var _in_biome_data = _biome_data[$ in_biome];
 var _in_biome_transition_data = _biome_data[$ _in_biome];
 
-#macro BACKGROUND_TRANSITION_SPEED 4.8
-#macro BACKGROUND_MUSIC_FADE_TIME (1000 * 8)
+#macro BACKGROUND_MUSIC_FADE_TIME (1000 * 0.3)
 
 if !(obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.PAUSE)
 {
+    // var _duration = max(0.001, global.settings.graphics_background_transition_speed);
+    var _duration = 0.8;
+    
     if (in_biome_transition_value <= 0)
     {
         if (in_biome != _in_biome)
         {
             in_biome_transition = _in_biome;
             
-            in_biome_transition_value = BACKGROUND_TRANSITION_SPEED * _delta_time;
+            in_biome_transition_value = _delta_time / _duration;
         }
     }
     else
     {
-        in_biome_transition_value += BACKGROUND_TRANSITION_SPEED * _delta_time;
+        in_biome_transition_value += _delta_time / _duration;
         
         if (in_biome_transition_value >= 1)
         {

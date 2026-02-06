@@ -1,4 +1,5 @@
 global.proglang_cache = {}
+global.proglang_classes = {}
 global.proglang_functions = {}
 global.proglang_macros = {}
 global.proglang_modules = {}
@@ -9,6 +10,23 @@ global.proglang_macros[$ "PI"] = pi;
 global.proglang_macros[$ "TAU"] = pi * 2;
 global.proglang_macros[$ "E"] = 2.71828182845904523536;
 global.proglang_macros[$ "PHI"] = 1.61803398874989484820;
+
+global.proglang_macros[$ "TILE_SIZE"] = TILE_SIZE;
+global.proglang_macros[$ "CHUNK_DEPTH"] = {
+    DEFAULT: CHUNK_DEPTH_DEFAULT,
+    FOLIAGE_BACK: CHUNK_DEPTH_FOLIAGE_BACK,
+    FOLIAGE_FRONT: CHUNK_DEPTH_FOLIAGE_FRONT,
+    LIQUID: CHUNK_DEPTH_LIQUID,
+    TREE_BACK: CHUNK_DEPTH_TREE_BACK,
+    TREE_FRONT: CHUNK_DEPTH_TREE_FRONT,
+    WALL: CHUNK_DEPTH_WALL
+}
+
+global.proglang_macros[$ "INVENTORY"] = {
+    SELECTED_INDEX: function() { return global.inventory_selected_hotbar; }
+}
+
+global.proglang_macros[$ "TILE_SIZE"] = TILE_SIZE;
 
 global.proglang_macros[$ "CURRENT_YEAR"] = function()
 {
@@ -170,6 +188,31 @@ global.proglang_macros[$ "DISPLAY_HEIGHT"] = function()
     return display_get_height();
 }
 
+global.proglang_macros[$ "CAMERA_X"] = function()
+{
+    return global.camera_x;
+}
+
+global.proglang_macros[$ "CAMERA_Y"] = function()
+{
+    return global.camera_y;
+}
+
+global.proglang_macros[$ "GUI_SCALE"] = function()
+{
+    return global.gui_scale;
+}
+
+global.proglang_macros[$ "CAMERA_WIDTH"] = function()
+{
+    return global.camera_width;
+}
+
+global.proglang_macros[$ "CAMERA_HEIGHT"] = function()
+{
+    return global.camera_height;
+}
+
 global.proglang_macros[$ "WORLD_MOUSE_X"] = function()
 {
     return mouse_x;
@@ -200,7 +243,53 @@ global.proglang_macros[$ "GUI_MOUSE_Y"] = function()
     return device_mouse_y_to_gui(0);
 }
 
-global.proglang_macros.ERROR_TYPE = {
+global.proglang_macros[$ "WORLD_SEED"] = function()
+{
+    return global.world_save_data.seed;
+}
+
+global.proglang_macros[$ "WORLD_TIME"] = function()
+{
+    return global.world_save_data.time;
+}
+
+global.proglang_macros[$ "IS_OPENED_BOOLEAN"] = {
+    GENERATING_WORLD:    IS_OPENED_BOOLEAN.GENERATING_WORLD,
+    GUI:                 IS_OPENED_BOOLEAN.GUI,
+    INVENTORY:           IS_OPENED_BOOLEAN.INVENTORY,
+    INVENTORY_CONTAINER: IS_OPENED_BOOLEAN.INVENTORY_CONTAINER,
+    PAUSE:               IS_OPENED_BOOLEAN.PAUSE,
+    MENU:                IS_OPENED_BOOLEAN.MENU,
+    EXIT:                IS_OPENED_BOOLEAN.EXIT,
+    CHAT:                IS_OPENED_BOOLEAN.CHAT,
+}
+
+global.proglang_macros[$ "FS"] = {
+    STRUCTURES: PROGRAM_DIRECTORY_STRUCTURES
+}
+
+global.proglang_macros[$ "BUFFER"] = {
+    GROW: buffer_grow,
+    U32: buffer_u32,
+    U16: buffer_u16,
+    U8: buffer_u8,
+    BOOL: buffer_bool,
+    STRING: buffer_string
+}
+
+global.proglang_macros[$ "PROGRAM_VERSION_NUMBER"] = PROGRAM_VERSION_NUMBER;
+
+global.proglang_macros[$ "WORLD_NAME"] = function()
+{
+    return global.world_save_data.name;
+}
+
+global.proglang_macros[$ "WORLD_DIMENSION"] = function()
+{
+    return global.world_save_data.dimension;
+}
+
+global.proglang_macros[$ "ERROR_TYPE"] = {
     RUNTIME: PROGLANG_ERROR_TYPE.RUNTIME,
     TYPE: PROGLANG_ERROR_TYPE.TYPE,
     INDEX: PROGLANG_ERROR_TYPE.INDEX,
@@ -224,3 +313,147 @@ global.proglang_macros.ERROR_TYPE = {
     ARITY_MISMATCH: PROGLANG_ERROR_TYPE.ARITY_MISMATCH,
     SUPER_ERROR: PROGLANG_ERROR_TYPE.SUPER_ERROR
 }
+
+global.proglang_macros[$ "EVENT_TYPE"] = {
+    // Entity Movement
+    ENTITY_STEP: GAME_EVENT.ENTITY_STEP,
+    ENTITY_SWIM: GAME_EVENT.ENTITY_SWIM,
+    ENTITY_LAND: GAME_EVENT.ENTITY_LAND,
+    ENTITY_SPLASH: GAME_EVENT.ENTITY_SPLASH,
+    
+    // Entity Actions
+    ENTITY_CONSUME: GAME_EVENT.ENTITY_CONSUME,
+    ENTITY_HEAL: GAME_EVENT.ENTITY_HEAL,
+    ENTITY_DAMAGE: GAME_EVENT.ENTITY_DAMAGE,
+    ENTITY_DIE: GAME_EVENT.ENTITY_DIE,
+    ENTITY_SPAWN: GAME_EVENT.ENTITY_SPAWN,
+    ENTITY_MOUNT: GAME_EVENT.ENTITY_MOUNT,
+    ENTITY_DISMOUNT: GAME_EVENT.ENTITY_DISMOUNT,
+    ENTITY_TELEPORT: GAME_EVENT.ENTITY_TELEPORT,
+    
+    // Entity Item Interactions
+    ENTITY_ITEM_COLLECT: GAME_EVENT.ENTITY_ITEM_COLLECT,
+    ENTITY_ITEM_DROP: GAME_EVENT.ENTITY_ITEM_DROP,
+    
+    // Item Events
+    ITEM_COLLECT: GAME_EVENT.ITEM_COLLECT,
+    ITEM_DROP: GAME_EVENT.ITEM_DROP,
+    
+    // Tile Item Interactions
+    TILE_ITEM_COLLECT: GAME_EVENT.TILE_ITEM_COLLECT,
+    TILE_ITEM_DROP: GAME_EVENT.TILE_ITEM_DROP,
+    
+    // Projectile Events
+    PROJECTILE_SHOOT: GAME_EVENT.PROJECTILE_SHOOT,
+    PROJECTILE_LAND: GAME_EVENT.PROJECTILE_LAND,
+    
+    // Item Use Events
+    ITEM_USE: GAME_EVENT.ITEM_USE,
+    ITEM_USE_START: GAME_EVENT.ITEM_USE_START,
+    ITEM_USE_FINISH: GAME_EVENT.ITEM_USE_FINISH,
+    
+    // Tile Use Events
+    TILE_USE: GAME_EVENT.TILE_USE,
+    TILE_USE_START: GAME_EVENT.TILE_USE_START,
+    TILE_USE_FINISH: GAME_EVENT.TILE_USE_FINISH,
+    
+    // Tile Placement Events
+    TILE_PLACE: GAME_EVENT.TILE_PLACE,
+    TILE_UPDATE: GAME_EVENT.TILE_UPDATE,
+    
+    // Container Events
+    TILE_CONTAINER_OPEN: GAME_EVENT.TILE_CONTAINER_OPEN,
+    TILE_CONTAINER_CLOSE: GAME_EVENT.TILE_CONTAINER_CLOSE,
+    
+    // Explosive Events
+    EXPLOSIVE_PRIME: GAME_EVENT.EXPLOSIVE_PRIME,
+    EXPLOSIVE_EXPLODE: GAME_EVENT.EXPLOSIVE_EXPLODE,
+    
+    // Miscellaneous
+    TILE_FALLING_LAND: GAME_EVENT.TILE_FALLING_LAND,
+    ITEM_CRAFT: GAME_EVENT.ITEM_CRAFT
+}
+
+global.proglang_macros[$ "GAME_EVENT"] = global.proglang_macros[$ "EVENT_TYPE"];
+
+// Event Data Constructors - one for each GAME_EVENT type
+
+// Entity Movement
+global.proglang_classes[$ "EventDataEntityStep"] = EventDataEntityStep;
+global.proglang_classes[$ "EventDataEntitySwim"] = EventDataEntitySwim;
+global.proglang_classes[$ "EventDataEntityLand"] = EventDataEntityLand;
+global.proglang_classes[$ "EventDataEntitySplash"] = EventDataEntitySplash;
+
+// Entity Actions
+global.proglang_classes[$ "EventDataEntityConsume"] = EventDataEntityConsume;
+global.proglang_classes[$ "EventDataEntityHeal"] = EventDataEntityHeal;
+global.proglang_classes[$ "EventDataEntityDamage"] = EventDataEntityDamage;
+global.proglang_classes[$ "EventDataEntityDie"] = EventDataEntityDie;
+global.proglang_classes[$ "EventDataEntitySpawn"] = EventDataEntitySpawn;
+global.proglang_classes[$ "EventDataEntityMount"] = EventDataEntityMount;
+global.proglang_classes[$ "EventDataEntityDismount"] = EventDataEntityDismount;
+global.proglang_classes[$ "EventDataEntityTeleport"] = EventDataEntityTeleport;
+
+// Entity Item Interactions
+global.proglang_classes[$ "EventDataEntityItemCollect"] = EventDataEntityItemCollect;
+global.proglang_classes[$ "EventDataEntityItemDrop"] = EventDataEntityItemDrop;
+
+// Item Events
+global.proglang_classes[$ "EventDataItemCollect"] = EventDataItemCollect;
+global.proglang_classes[$ "EventDataItemDrop"] = EventDataItemDrop;
+
+// Tile Item Interactions
+global.proglang_classes[$ "EventDataTileItemCollect"] = EventDataTileItemCollect;
+global.proglang_classes[$ "EventDataTileItemDrop"] = EventDataTileItemDrop;
+
+// Projectile Events
+global.proglang_classes[$ "EventDataProjectileShoot"] = EventDataProjectileShoot;
+global.proglang_classes[$ "EventDataProjectileLand"] = EventDataProjectileLand;
+
+// Item Use Events
+global.proglang_classes[$ "EventDataItemUse"] = EventDataItemUse;
+global.proglang_classes[$ "EventDataItemUseStart"] = EventDataItemUseStart;
+global.proglang_classes[$ "EventDataItemUseFinish"] = EventDataItemUseFinish;
+global.proglang_classes[$ "EventDataItemCraft"] = EventDataItemCraft;
+
+// Tile Use Events
+global.proglang_classes[$ "EventDataTileUse"] = EventDataTileUse;
+global.proglang_classes[$ "EventDataTileUseStart"] = EventDataTileUseStart;
+global.proglang_classes[$ "EventDataTileUseFinish"] = EventDataTileUseFinish;
+
+// Tile Placement Events
+global.proglang_classes[$ "EventDataTilePlace"] = EventDataTilePlace;
+global.proglang_classes[$ "EventDataTileUpdate"] = EventDataTileUpdate;
+
+// Container Events
+global.proglang_classes[$ "EventDataTileContainerOpen"] = EventDataTileContainerOpen;
+global.proglang_classes[$ "EventDataTileContainerClose"] = EventDataTileContainerClose;
+
+// Explosive Events
+global.proglang_classes[$ "EventDataExplosivePrime"] = EventDataExplosivePrime;
+global.proglang_classes[$ "EventDataExplosiveExplode"] = EventDataExplosiveExplode;
+
+// Miscellaneous
+global.proglang_classes[$ "EventDataTileFallingLand"] = EventDataTileFallingLand;
+
+global.proglang_classes[$ "Tile"] = Tile;
+global.proglang_classes[$ "Inventory"] = Inventory;
+
+// World Generation Classes
+global.proglang_classes[$ "MaterialProvider"] = MaterialProvider;
+global.proglang_classes[$ "MaterialRule"] = MaterialRule;
+global.proglang_classes[$ "RuleDepth"] = RuleDepth;
+global.proglang_classes[$ "RuleAirAbove"] = RuleAirAbove;
+global.proglang_classes[$ "RuleCaveBiome"] = RuleCaveBiome;
+global.proglang_classes[$ "RuleChance"] = RuleChance;
+global.proglang_classes[$ "RuleGenerateOn"] = RuleGenerateOn;
+
+global.proglang_classes[$ "PatternScanner"] = PatternScanner;
+global.proglang_classes[$ "WorldPattern"] = WorldPattern;
+global.proglang_classes[$ "PatternTreeRootOverCave"] = PatternTreeRootOverCave;
+
+global.proglang_classes[$ "BiomeData"] = BiomeData;
+global.proglang_classes[$ "WorldData"] = WorldData;
+
+// Pre-load all scripts
+init_proglang_recursive(PROGLANG_BASE_DIR, "phantasia");

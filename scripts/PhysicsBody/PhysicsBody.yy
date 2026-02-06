@@ -1,13 +1,13 @@
 {
-    "$GMScript": "v1",
-    "%Name": "PhysicsBody",
-    "isCompatibility": false,
-    "isDnD": false,
-    "name": "PhysicsBody",
-    "parent": {
-        "name": "Data",
-        "path": "folders/Scripts/Entity/Data.yy"
-    },
-    "resourceType": "GMScript",
-    "resourceVersion": "2.0"
+  "$GMScript":"v1",
+  "%Name":"PhysicsBody",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"PhysicsBody",
+  "parent":{
+    "name":"Physics",
+    "path":"folders/Scripts/Control/Physics.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

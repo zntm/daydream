@@ -14,13 +14,17 @@ enum CUTEIFY_TYPE {
     FONT,
     STRING,
     OBSTRUCT,
-    UNDERLINE
+    UNDERLINE,
+    SHAKE,
+    WAVE
 }
 
 #macro CUTEIFY_BRACKET_OPEN "{"
 #macro CUTEIFY_BRACKET_CLOSE "}"
 #macro CUTEIFY_BRACKET_OBSTRUCT "*o"
 #macro CUTEIFY_BRACKET_UNDERLINE "*u"
+#macro CUTEIFY_BRACKET_SHAKE "*s"
+#macro CUTEIFY_BRACKET_WAVE "*w"
 
 function draw_text_cuteify(_x, _y, _string, _xscale = 1, _yscale = 1, _angle = 0, _colour = c_white, _alpha = 1, _asset_prefix = "")
 {
@@ -60,6 +64,9 @@ function draw_text_cuteify(_x, _y, _string, _xscale = 1, _yscale = 1, _angle = 0
     }
     
     var _boolean = 0;
+    var _shake_intensity = 0;
+    var _wave_intensity = 0;
+    var _char_counter = 0; // For wave phase offset
     
     for (var i = 0; i <= _index2; ++i)
     {
@@ -93,22 +100,27 @@ function draw_text_cuteify(_x, _y, _string, _xscale = 1, _yscale = 1, _angle = 0
             
             if (_type == CUTEIFY_TYPE.SPRITE)
             {
-                var _x2 = (sprite_get_xoffset(_text) * _xscale) + _xoffset;
-                var _y2 = (sprite_get_yoffset(_text) * _yscale) + _yoffset + (sprite_get_height(_text) * _yscale / 2);
+                var _norm = (string_height("I")) / sprite_get_height(_text);
+                
+                var _draw_xscale = _xscale * _norm;
+                var _draw_yscale = _yscale * _norm;
+
+                var _y2 = (sprite_get_yoffset(_text) * _draw_yscale) + _yoffset;
+                var _x2 = (sprite_get_xoffset(_text) * _draw_xscale) + _xoffset;
                 
                 draw_sprite_ext(
                     _text,
                     0,
                     _x + (_y2 * _cos_90) + (_x2 * _cos),
                     _y + (_y2 * _sin_90) + (_x2 * _sin),
-                    _xscale,
-                    _yscale,
+                    _draw_xscale,
+                    _draw_yscale,
                     _angle,
                     _colour,
                     _alpha
                 );
                 
-                _xoffset += sprite_get_width(_text) * _xscale;
+                _xoffset += sprite_get_width(_text) * _draw_xscale;
                 
                 continue;
             }
@@ -138,6 +150,18 @@ function draw_text_cuteify(_x, _y, _string, _xscale = 1, _yscale = 1, _angle = 0
                 continue;
             }
             
+            if (_type == CUTEIFY_TYPE.SHAKE)
+            {
+                _shake_intensity = _text; // _text is the numeric parameter
+                continue;
+            }
+            
+            if (_type == CUTEIFY_TYPE.WAVE)
+            {
+                _wave_intensity = _text; // _text is the numeric parameter
+                continue;
+            }
+            
             var _text_length = string_length(_text);
             
             if (_text_length <= 0) continue;
@@ -154,7 +178,7 @@ function draw_text_cuteify(_x, _y, _string, _xscale = 1, _yscale = 1, _angle = 0
                 {
                     if (string_char_at(_text, l) == " ")
                     {
-                        draw_text_transformed_color(
+                        draw_text_transformed_colour(
                             _xstart + (_xoffset * _cos),
                             _ystart + (_xoffset * _sin),
                             " ",
@@ -175,7 +199,7 @@ function draw_text_cuteify(_x, _y, _string, _xscale = 1, _yscale = 1, _angle = 0
                     
                     var _char_random = chr(irandom_range(32, 127));
                     
-                    draw_text_transformed_color(
+                    draw_text_transformed_colour(
                         _xstart + (_xoffset * _cos),
                         _ystart + (_xoffset * _sin),
                         _char_random,
@@ -194,21 +218,72 @@ function draw_text_cuteify(_x, _y, _string, _xscale = 1, _yscale = 1, _angle = 0
             }
             else
             {
-                draw_text_transformed_color(
-                    _x + (_yoffset * _cos_90) + _xoffset_cos,
-                    _y + (_yoffset * _sin_90) + _xoffset_sin,
-                    _text,
-                    _xscale,
-                    _yscale,
-                    _angle,
-                    _colour,
-                    _colour,
-                    _colour,
-                    _colour,
-                    _alpha
-                );
+                var _draw_text = ((global.settings.menu_profanity_filter) ? string_scunthorpe(_text) : _text);
                 
-                _xoffset += string_width(_text) * _xscale;
+                // Apply shake/wave effects via per-character rendering
+                if (_shake_intensity > 0 || _wave_intensity > 0)
+                {
+                    var _xstart = _x + (_yoffset * _cos_90);
+                    var _ystart = _y + (_yoffset * _sin_90);
+                    
+                    for (var l = 1; l <= _text_length; ++l)
+                    {
+                        var _char = string_char_at(_draw_text, l);
+                        var _char_width = string_width(_char);
+                        
+                        var _sx = 0;
+                        var _sy = 0;
+                        
+                        // Shake: random offset
+                        if (_shake_intensity > 0)
+                        {
+                            _sx = random_range(-_shake_intensity, _shake_intensity);
+                            _sy = random_range(-_shake_intensity, _shake_intensity);
+                        }
+                        
+                        // Wave: sine-based y offset
+                        if (_wave_intensity > 0)
+                        {
+                            _sy += sin((current_time / 100) + _char_counter * 0.5) * _wave_intensity;
+                        }
+                        
+                        draw_text_transformed_colour(
+                            _xstart + (_xoffset * _cos) + (_sx * _cos) - (_sy * _sin),
+                            _ystart + (_xoffset * _sin) + (_sx * _sin) + (_sy * _cos),
+                            _char,
+                            _xscale,
+                            _yscale,
+                            _angle,
+                            _colour,
+                            _colour,
+                            _colour,
+                            _colour,
+                            _alpha
+                        );
+                        
+                        _xoffset += _char_width * _xscale;
+                        ++_char_counter;
+                    }
+                }
+                else
+                {
+                    draw_text_transformed_colour(
+                        _x + (_yoffset * _cos_90) + _xoffset_cos,
+                        _y + (_yoffset * _sin_90) + _xoffset_sin,
+                        _draw_text,
+                        _xscale,
+                        _yscale,
+                        _angle,
+                        _colour,
+                        _colour,
+                        _colour,
+                        _colour,
+                        _alpha
+                    );
+                    
+                    _xoffset += string_width(_draw_text) * _xscale;
+                    _char_counter += _text_length;
+                }
             }
             
             if (_boolean & CUTEIFY_BOOLEAN.UNDERLINE)

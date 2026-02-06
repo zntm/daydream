@@ -1,13 +1,13 @@
 {
-    "$GMScript": "v1",
-    "%Name": "InputState",
-    "isCompatibility": false,
-    "isDnD": false,
-    "name": "InputState",
-    "parent": {
-        "name": "Input",
-        "path": "folders/Scripts/Input.yy"
-    },
-    "resourceType": "GMScript",
-    "resourceVersion": "2.0"
+  "$GMScript":"v1",
+  "%Name":"InputState",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"InputState",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

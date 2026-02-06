@@ -1,0 +1,8 @@
+var particle = parameter.id
+if (particle == undefined) return
+
+var count = parameter.count ?? 1
+
+for (var i = 0; i < count; i++) {
+    spawn_particle(smart_value(particle), x, y)
+}

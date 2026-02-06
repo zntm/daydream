@@ -1,5 +1,6 @@
-function control_entity_regeneration(_dt)
+function control_entity_regeneration()
 {
+    var _dt = 1;
     if (hp < hp_max) || (attribute.get_regeneration_amount() < 0)
     {
         var _regeneration_time = attribute.get_regeneration_time();
@@ -14,9 +15,9 @@ function control_entity_regeneration(_dt)
                 
                 var _amount = attribute.get_regeneration_amount();
                 
-                if (_amount != 0)
+            if (_amount != 0)
                 {
-                    hp += _amount;
+                    control_entity_heal(id, _amount, id);
                     
                     if (saturation > 0)
                     {

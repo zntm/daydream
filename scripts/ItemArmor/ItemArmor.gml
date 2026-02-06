@@ -10,6 +10,9 @@ function ItemArmor(_type, _defense) constructor
     ___defense = _defense;
     ___modifiers = undefined;
     ___modifiers_length = 0;
+    ___on_double_horizontal_move = undefined;
+    ___on_double_vertical_move = undefined;
+
     
     static get_type = function()
     {
@@ -19,6 +22,34 @@ function ItemArmor(_type, _defense) constructor
     static get_defense = function()
     {
         return ___defense;
+    }
+    
+    /// @function set_on_double_horizontal_move(_on_double_horizontal_move)
+    /// @desc Set on_double_horizontal_move event (triggered when player double-taps left/right)
+    /// @param {Struct} _on_double_horizontal_move - { id: "script_id", parameters: { ... } }
+    static set_on_double_horizontal_move = function(_on_double_horizontal_move)
+    {
+        ___on_double_horizontal_move = _on_double_horizontal_move;
+        return self;
+    }
+    
+    static get_on_double_horizontal_move = function()
+    {
+        return ___on_double_horizontal_move;
+    }
+
+    /// @function set_on_double_vertical_move(_on_double_vertical_move)
+    /// @desc Set on_double_vertical_move event (triggered when player double-taps up/down)
+    /// @param {Struct} _on_double_vertical_move - { id: "script_id", parameters: { ... } }
+    static set_on_double_vertical_move = function(_on_double_vertical_move)
+    {
+        ___on_double_vertical_move = _on_double_vertical_move;
+        return self;
+    }
+    
+    static get_on_double_vertical_move = function()
+    {
+        return ___on_double_vertical_move;
     }
     
     /// @function set_attributes(_attributes)
@@ -65,6 +96,18 @@ function ItemArmor(_type, _defense) constructor
     /// @param {Struct.Attribute} _base_attributes - The attribute struct to modify
     static apply_modifiers = function(_base_attributes)
     {
+        // 1. Convert Defense to Max HP (Heart Containers)
+        // 1 Defense Point = 10 HP (0.5 Heart Container if 20HP base, but we use 100HP base -> 10HP = 0.5 Heart visual?)
+        // Let's assume 1 Defense = 10 HP.
+        if (___defense > 0)
+        {
+            if (struct_exists(_base_attributes, "get_hp_max") && struct_exists(_base_attributes, "set_hp_max"))
+            {
+                var _current_max = _base_attributes.get_hp_max();
+                _base_attributes.set_hp_max(_current_max + (___defense * 10));
+            }
+        }
+        
         if (___modifiers == undefined) exit;
         
         for (var i = 0; i < ___modifiers_length; ++i)

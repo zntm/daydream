@@ -1,0 +1,28 @@
+{
+    "inventory": "#phantasia:item/generic/inventory_tile",
+    "properties": [
+        "phantasia:is_tile"
+    ],
+    "sprite": "phantasia:/item/sandstone_bricks",
+    "tile": {
+        "audio_properties": {
+            "lowpass": 0.7,
+            "reverb": 0.6
+        },
+        "drops": [
+            {
+                "id": "phantasia:sandstone_bricks"
+            }
+        ],
+        "harvest": {
+            "hardness": 0.34,
+            "level": 2,
+            "particle": {
+                "colour": "#phantasia:tile/particle_colour/sand",
+                "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
+            }
+        },
+        "sfx": "#phantasia:tile/sfx/stone"
+    },
+    "type": "solid"
+}

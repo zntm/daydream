@@ -1,12 +1,4 @@
-vertex_format_begin();
 
-vertex_format_add_position();
-vertex_format_add_texcoord();
-// vertex_format_add_colour();
-
-vertex_format_add_custom(vertex_type_float2, vertex_usage_texcoord);
-
-global.chunk_format_perspective = vertex_format_end();
 
 function render_chunk(_page, _position, _texel_width, _texel_height, _inst, _z)
 {
@@ -33,6 +25,41 @@ function render_chunk(_page, _position, _texel_width, _texel_height, _inst, _z)
             var _data = _item_data[$ _id];
             
             if (!_data.get_is_visible()) continue;
+            
+            // Precalculated Occlusion Culling: Skip if this tile is marked as occluded
+            // Precalculated Occlusion Culling: Skip if this tile AND all 4 neighbors are marked as occluded
+            // We "erode" the occlusion mask by ANDing with neighbors.
+            var _index_xy = tile_index_xy(_x, _y);
+            var _flags = _inst.chunk_occluded[_index_xy];
+            
+            // Check neighbors. If a neighbor is outside chunk bounds, we assume '0' (Visible/Not Occluded) for safety
+            // which effectively disables culling at chunk borders to prevent gaps.
+            if (_flags != 0)
+            {
+                // Left
+                if (_x > 0) _flags &= _inst.chunk_occluded[_index_xy - 1];
+                else _flags = 0;
+            }
+            if (_flags != 0)
+            {
+                // Right
+                if (_x < CHUNK_SIZE - 1) _flags &= _inst.chunk_occluded[_index_xy + 1];
+                else _flags = 0;
+            }
+            if (_flags != 0)
+            {
+                // Up
+                if (_y > 0) _flags &= _inst.chunk_occluded[_index_xy - CHUNK_SIZE];
+                else _flags = 0;
+            }
+            if (_flags != 0)
+            {
+                // Down
+                if (_y < CHUNK_SIZE - 1) _flags &= _inst.chunk_occluded[_index_xy + CHUNK_SIZE];
+                else _flags = 0;
+            }
+            
+            if (_flags & (1 << _z)) continue;
             
             var _index = _tile.get_index();
             var _index_offset = _tile.get_index_offset();
@@ -175,9 +202,10 @@ function render_chunk(_page, _position, _texel_width, _texel_height, _inst, _z)
         }
     }
     
+    vertex_end(_buffer);
+    
     _inst.chunk_vertex_buffer[@ _z] = _buffer;
     
-    vertex_end(_buffer);
     vertex_freeze(_buffer);
     
     return _buffer;

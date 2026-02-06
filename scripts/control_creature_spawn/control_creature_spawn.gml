@@ -6,15 +6,38 @@
 global.spawn_density_grid = {}
 global.spawn_last_cleanup_time = 0;
 
-function control_creature_spawn(_dt)
+function control_creature_spawn()
 {
     if (IS_DEVELOPER_MODE) && (!global.dbg_settings[$ "spawn_creatures"]) exit;
     
     // Optimized spawn function with density checking
     static __spawn = function(_world_time, _tile_x, _tile_y, _biome_data, _creature_data)
     {
+        // Find ground level - search downward from the given Y to find a solid tile to stand on
+        var _world_data = global.world_data[$ global.world_save_data.dimension];
+        var _world_height = _world_data.get_world_height();
+        var _ground_tile_y = _tile_y;
+        var _found_ground = false;
+        
+        // Search downward for solid ground (max 32 tiles to avoid infinite loops)
+        for (var _search_y = _tile_y; _search_y < min(_tile_y + 32, _world_height); ++_search_y)
+        {
+            var _tile_at = tile_get(_tile_x, _search_y, CHUNK_DEPTH_DEFAULT);
+            
+            if (_tile_at != TILE_EMPTY)
+            {
+                // Found solid ground - spawn one tile above it
+                _ground_tile_y = _search_y - 1;
+                _found_ground = true;
+                break;
+            }
+        }
+        
+        // If no ground found, skip this spawn attempt
+        if (!_found_ground) return false;
+        
         var _x = (_tile_x * TILE_SIZE);
-        var _y = ((_tile_y - 1) * TILE_SIZE) - (TILE_SIZE / 2);
+        var _y = (_ground_tile_y * TILE_SIZE) + (TILE_SIZE / 2);
         
         // Check spawn density for this grid cell
         var _grid_x = floor(_tile_x / SPAWN_DENSITY_GRID_SIZE);
@@ -28,7 +51,10 @@ function control_creature_spawn(_dt)
             return false; // Too many creatures in this area
         }
         
-        var _biome = _biome_data[$ bg_get_biome(_tile_x, _tile_y)];
+        var _biome_id = bg_get_biome(_tile_x, _tile_y);
+        var _biome = _biome_data[$ _biome_id];
+        
+        if (_biome == undefined) return false;
         
         var _spawn = _biome.get_creature();
         var _spawn_length = _biome.get_creature_length();
@@ -194,7 +220,7 @@ function control_creature_spawn(_dt)
         return false;
     }
     
-    timer_creature_spawn += _dt / GAME_TICK;
+    timer_creature_spawn += 1 / GAME_TICK;
     
     var _world_save_data = global.world_save_data;
     
@@ -225,7 +251,7 @@ function control_creature_spawn(_dt)
     var _tile_yend   = round((_camera_y + _camera_height) / TILE_SIZE) + 4;
     
     // Periodically clean up density grid (remove entries for destroyed creatures)
-    global.spawn_last_cleanup_time += _dt / GAME_TICK;
+    global.spawn_last_cleanup_time += 1 / GAME_TICK;
     
     if (global.spawn_last_cleanup_time >= 5.0) // Cleanup every 5 seconds
     {

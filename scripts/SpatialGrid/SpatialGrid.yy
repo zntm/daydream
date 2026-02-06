@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"SpatialGrid",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"SpatialGrid",
+  "parent":{
+    "name":"Physics",
+    "path":"folders/Scripts/Control/Physics.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

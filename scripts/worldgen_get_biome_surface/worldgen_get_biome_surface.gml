@@ -2,7 +2,7 @@ function worldgen_get_biome_surface(_x, _y, _surface_height, _seed, _world_data 
 {
     var _surface_biome_map = _world_data.get_surface_biome_map();
     
-    _y = max(_y, _surface_height + 8);
+    _y = max(_y, _surface_height + _world_data.get_surface_min_depth());
     
     return _surface_biome_map[
         (_humidity << WORLDGEN_SIZE_HEAT_BIT) |

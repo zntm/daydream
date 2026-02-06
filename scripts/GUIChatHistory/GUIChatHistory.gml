@@ -105,7 +105,7 @@ function GUIChatHistory(_x, _y, _width, _height, _max_messages = 8) : GUICompone
                 {
                     var _hint_part = _hint[i];
                     var _hint_text = _hint_part.text;
-                    var _hint_color = _hint_part.color;
+                    var _hint_colour = _hint_part.colour;
                     
                     draw_text_cuteify(
                         _hint_x,
@@ -114,7 +114,7 @@ function GUIChatHistory(_x, _y, _width, _height, _max_messages = 8) : GUICompone
                         _scale_x * 0.2,
                         _scale_y * 0.2,
                         0,
-                        _hint_color,
+                        _hint_colour,
                         0.8
                     );
                     

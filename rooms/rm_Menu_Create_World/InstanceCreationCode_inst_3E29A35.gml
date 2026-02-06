@@ -32,7 +32,7 @@ on_select_hold = function()
     global.world_save_data.difficulty = lerp(0.5, 2.5, _t);
 }
 
-on_draw_behind = function(_x, _y, _xscale, _yscale, _color)
+on_draw_behind = function(_x, _y, _xscale, _yscale, _colour)
 {
     var _width = (slider_x_max - slider_x_min) * _xscale;
     var _mid = (slider_x_max + slider_x_min) / 2;

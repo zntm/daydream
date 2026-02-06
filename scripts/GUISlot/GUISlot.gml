@@ -13,6 +13,95 @@ function GUISlot(_x, _y, _inventory_name, _slot_index, _sprite = spr_Inventory_S
     is_hovered = false;
     is_selected = false;
     
+    is_hovered = false;
+    is_selected = false;
+    
+    static update = function()
+    {
+        var _abs_x = get_absolute_x();
+        var _abs_y = get_absolute_y();
+        
+        var _gui_scale = global.gui_scale;
+        var _base_scale_x = _gui_scale * (global.gui_width / 960);
+        var _base_scale_y = _gui_scale * (global.gui_width / 540); // Standardize aspect logic
+        
+        var _scale_x = _base_scale_x * scale;
+        var _scale_y = _base_scale_y * scale;
+        
+        var _mx = device_mouse_x_to_gui(0);
+        var _my = device_mouse_y_to_gui(0);
+        
+        // Use standard GML precise check or simple AABB
+        var _left   = _abs_x * _base_scale_x;
+        var _top    = _abs_y * _base_scale_y;
+        var _right  = _left + (16 * _scale_x);
+        var _bottom = _top + (16 * _scale_y);
+        
+        if (_mx >= _left && _mx <= _right && _my >= _top && _my <= _bottom)
+        {
+            is_hovered = true;
+            
+            if (mouse_check_button_pressed(mb_left))
+            {
+                if (keyboard_check(vk_shift))
+                {
+                    // Shift + Click Transfer
+                    var _inv = global.inventory;
+                    var _source_list = _inv[$ inventory_name];
+                    var _item = _source_list[slot_index];
+                    
+                    if (_item != INVENTORY_EMPTY)
+                    {
+                        var _target_pool = [];
+                        if (inventory_name == "base")
+                        {
+                            if (array_length(_inv._container) > 0)
+                            {
+                                inventory_transfer(inventory_name, slot_index, "_container");
+                            }
+                            else
+                            {
+                                // Hotbar <-> Inventory logic? 
+                                // For now, let's keep it simple: if in inventory, try to move to earlier slots (hotbar)?
+                                // Actually, inventory_transfer logic fills first available slots.
+                                // If we want to swap between hotbar (0-9) and rest (10+):
+                                /*
+                                if (slot_index < 10) inventory_transfer(inventory_name, slot_index, "base", -1, 10); // Move to main
+                                else inventory_transfer(inventory_name, slot_index, "base", -1, 0, 10); // Move to hotbar
+                                */
+                                // Since "base" is one big array, transfering to self needs offset support.
+                                // For this iteration, let's just support Container <-> Player transfer.
+                            }
+                        }
+                        else if (inventory_name == "_container")
+                        {
+                            inventory_transfer(inventory_name, slot_index, "base");
+                            
+                            // Broadcast update if needed (will be handled by inventory system generally)
+                        }
+                        
+                        sfx_play("phantasia:sfx/ui/click", global.settings.audio_sfx);
+                    }
+                }
+                else
+                {
+                    // Regular Click (Selection/Drag handled by global control usually)
+                    // But we can set selected hotbar here if clicking hotbar
+                    if (inventory_name == "base" && slot_index < 10)
+                    {
+                        global.inventory_selected_hotbar = slot_index;
+                        if (instance_exists(obj_Player)) obj_Player.selected_hotbar = slot_index;
+                        sfx_play("phantasia:sfx/ui/click", global.settings.audio_sfx);
+                    }
+                }
+            }
+        }
+        else
+        {
+            is_hovered = false;
+        }
+    }
+    
     static draw_content = function()
     {
         var _abs_x = get_absolute_x();
@@ -53,8 +142,8 @@ function GUISlot(_x, _y, _inventory_name, _slot_index, _sprite = spr_Inventory_S
                 var _spr = asset_get_index(icon_sprite);
                 if (_spr != -1)
                 {
-                    var _idx = (struct_exists(self, "icon_index")) ? icon_index : 0;
-                    draw_sprite_ext(_spr, _idx, _abs_x * _base_scale_x, _abs_y * _base_scale_y, _scale_x, _scale_y, 0, c_white, 1);
+                    var _index = (struct_exists(self, "icon_index")) ? icon_index : 0;
+                    draw_sprite_ext(_spr, _index, _abs_x * _base_scale_x, _abs_y * _base_scale_y, _scale_x, _scale_y, 0, c_white, 1);
                 }
             }
             exit;
@@ -95,8 +184,8 @@ function GUISlot(_x, _y, _inventory_name, _slot_index, _sprite = spr_Inventory_S
                 draw_sprite_ext(spr_Square, 0, _bar_x, _bar_y, _bar_width * _scale_x, _bar_height * _scale_y, 0, c_black, 0.5);
                 
                 // Durability fill
-                var _color = make_color_rgb(lerp(255, 0, _ratio), lerp(0, 255, _ratio), 0);
-                draw_sprite_ext(spr_Square, 0, _bar_x, _bar_y, _bar_width * _ratio * _scale_x, _bar_height * _scale_y, 0, _color, 1);
+                var _colour = make_colour_rgb(lerp(255, 0, _ratio), lerp(0, 255, _ratio), 0);
+                draw_sprite_ext(spr_Square, 0, _bar_x, _bar_y, _bar_width * _ratio * _scale_x, _bar_height * _scale_y, 0, _colour, 1);
             }
         }
         

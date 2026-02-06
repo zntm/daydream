@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"control_chunk_fade",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"control_chunk_fade",
+  "parent":{
+    "name":"Control",
+    "path":"folders/Scripts/Control.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

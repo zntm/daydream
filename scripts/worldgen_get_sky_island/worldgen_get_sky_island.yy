@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"worldgen_get_sky_island",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"worldgen_get_sky_island",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

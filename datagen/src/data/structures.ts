@@ -46,11 +46,37 @@ export class StructurePlacement {
     }
 }
 
+export enum StructureTerrainModifierType {
+    Clear = "clear",      // Village-style: clear surface above structure
+    Carve = "carve",      // Trial chamber-style: carve into terrain
+    Elevate = "elevate",  // Raise terrain around structure
+}
+
+export class StructureTerrainModifier {
+    private type: StructureTerrainModifierType;
+    private depth: number;        // How deep to carve / how high to elevate
+    private radius?: number;      // Horizontal radius around structure to affect
+    private blend?: boolean;      // Smooth transition at edges
+
+    constructor(
+        type: StructureTerrainModifierType,
+        depth: number,
+        radius?: number,
+        blend: boolean = true
+    ) {
+        this.type = type;
+        this.depth = depth;
+        if (radius) this.radius = radius;
+        if (!blend) this.blend = false;
+    }
+}
+
 export class Structure {
     public width: number | string | SmartValue;
     public height: number | string | SmartValue;
     public placement: StructurePlacement;
     public function: StructureFunction;
+    private terrain_modifier?: StructureTerrainModifier;
 
     constructor(
         width: number | string | SmartValue,
@@ -62,6 +88,11 @@ export class Structure {
         this.height = height;
         this.placement = placement;
         this.function = data;
+    }
+
+    setTerrainModifier(modifier: StructureTerrainModifier) {
+        this.terrain_modifier = modifier;
+        return this;
     }
 }
 

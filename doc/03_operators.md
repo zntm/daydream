@@ -96,3 +96,49 @@ var whole = [0, ...parts, 3]; // [0, 1, 2, 3]
 
 var m = max(...whole); // Calls max(0, 1, 2, 3)
 ```
+
+### In Operator (`in`)
+
+Checks if a value exists in a collection.
+
+```javascript
+// Strings (substring check)
+if "world" in "hello world" { ... }
+
+// Arrays (element presence)
+if 5 in [1, 2, 3, 5] { ... }
+
+// Struct (explicit key check)
+if "key" in key { key: "value" } { ... }
+
+// Struct (value check)
+if "value" in value { key: "value" } { ... }
+```
+
+### Optional Chaining (`?.`)
+
+Safe access to properties or indices of potentially `undefined` or `null` values.
+
+```javascript
+var user = undefined;
+var name = user?.name; // undefined (no error)
+var item = user?.items?.[0]; // undefined
+```
+
+### String & Array Access
+
+You can access characters in a string or elements in an array using square brackets `[]`.
+
+```javascript
+var str = "Hello";
+var char = str[0]; // "H"
+```
+
+#### Slicing
+
+You can slice strings and arrays using the range operator `..`.
+
+```javascript
+var str = "Hello World";
+var sub = str[0..4]; // "Hello" (inclusive)
+```

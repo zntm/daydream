@@ -19,7 +19,9 @@ function player_build(_dt, _x, _y)
     {
         for (var i = 0; i < _on_item_use_length; ++i)
         {
-            function_execute(_on_item_use[i], _x, _y, CHUNK_DEPTH_DEFAULT, 1, 1, _dt);
+            function_execute(_on_item_use[i], _x, _y, CHUNK_DEPTH_DEFAULT, 1, 1, id, _item);
+            
+            event_emit(new EventDataItemUse(_item, id, _x, _y));
         }
         
         cooldown_build = 0.15;
@@ -61,6 +63,14 @@ function player_build(_dt, _x, _y)
     
     tile_instance_create(_x, _y, _z, _tile);
     
+    var _on_place = _data.get_on_place();
+    var _on_place_length = _data.get_on_place_length();
+    
+    for (var i = 0; i < _on_place_length; ++i)
+    {
+        function_execute(_on_place[i], _x * TILE_SIZE, _y * TILE_SIZE, _z, 1, 1);
+    }
+    
     if (_data.has_light())
     {
         obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.LIGHTING;
@@ -68,13 +78,13 @@ function player_build(_dt, _x, _y)
     
     inventory_item_decrement("base", _inventory_selected_hotbar);
     
-    surface_refresh |= ((is_opened & IS_OPENED_BOOLEAN.INVENTORY) ? SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK : SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR);
+    obj_Game_Control.surface_refresh |= ((obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.INVENTORY) ? SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK : SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR);
     
     var _sfx = _data.get_tile_sfx().get_build().get_id();
     
     if (_sfx != undefined)
     {
-        sfx_diegetic_play(obj_Player.audio_emitter, _x * TILE_SIZE, _y * TILE_SIZE, _sfx, global.settings.audio_tile);
+        sfx_diegetic_play(audio_emitter, _x * TILE_SIZE, _y * TILE_SIZE, _sfx, global.settings.audio_tile);
     }
     
     cooldown_build = 0.15;

@@ -16,11 +16,12 @@ function achievement_init()
     global.achievement_data ??= {}
     
     // Subscribe to events for achievement checking
-    event_subscribe(GAME_EVENT.TILE_CHANGED, achievement_on_tile_changed);
-    event_subscribe(GAME_EVENT.ENTITY_DEATH, achievement_on_entity_death);
-    event_subscribe(GAME_EVENT.ITEM_COLLECTED, achievement_on_item_collected);
-    event_subscribe(GAME_EVENT.CRAFTING_COMPLETE, achievement_on_crafting_complete);
-    event_subscribe(GAME_EVENT.STATISTIC_CHANGED, achievement_on_statistic_changed);
+    // Subscribe to events for achievement checking
+    event_subscribe(GAME_EVENT.TILE_PLACE, achievement_on_tile_place);
+    event_subscribe(GAME_EVENT.TILE_UPDATE, achievement_on_tile_update);
+    event_subscribe(GAME_EVENT.ENTITY_DIE, achievement_on_entity_die);
+    event_subscribe(GAME_EVENT.ENTITY_ITEM_COLLECT, achievement_on_entity_item_collect);
+    event_subscribe(GAME_EVENT.ITEM_CRAFT, achievement_on_item_craft);
 }
 
 /// @function achievement_unlock(_id)
@@ -61,10 +62,8 @@ function achievement_unlock(_id)
     }*/
     
     // Emit event
-    event_emit(GAME_EVENT.ACHIEVEMENT_UNLOCKED, {
-        id: _id,
-        data: _data
-    });
+    // Note: ACHIEVEMENT_UNLOCKED is not a diegetic game event, so we don't emit it
+    // UI should listen to specific callbacks or poll for changes
     
     return true;
 }
@@ -146,9 +145,21 @@ function achievement_check_condition(_condition, _event_data)
     // Check item match
     if (_item_id != undefined)
     {
-        var _event_item = _event_data[$ "id"] ?? _event_data[$ "item_id"];
+        var _event_item = _event_data[$ "item"];
+        var _event_item_id = undefined;
         
-        if (_event_item == undefined) return false;
+        if (is_struct(_event_item))
+        {
+             // Handle Item/Inventory struct or simple struct
+             if (variable_struct_exists(_event_item, "get_id")) _event_item_id = _event_item.get_id();
+             else _event_item_id = _event_item[$ "id"];
+        }
+        else
+        {
+            _event_item_id = _event_item; // Fallback if string passed
+        }
+        
+        if (_event_item_id == undefined) return false;
         
         // Handle comma-separated list
         if (string_pos(",", _item_id) > 0)
@@ -158,7 +169,7 @@ function achievement_check_condition(_condition, _event_data)
             
             for (var i = 0; i < array_length(_items); i++)
             {
-                if (_event_item == _items[i])
+                if (_event_item_id == _items[i])
                 {
                     _found = true;
                     break;
@@ -167,7 +178,7 @@ function achievement_check_condition(_condition, _event_data)
             
             if (!_found) return false;
         }
-        else if (_event_item != _item_id)
+        else if (_event_item_id != _item_id)
         {
             return false;
         }
@@ -176,9 +187,15 @@ function achievement_check_condition(_condition, _event_data)
     // Check entity match
     if (_entity_id != undefined)
     {
-        var _event_entity = _event_data[$ "entity_id"] ?? _event_data[$ "id"];
+        var _event_entity = _event_data[$ "entity"];
+        var _event_entity_id = undefined;
         
-        if (_event_entity != _entity_id) return false;
+        if (is_struct(_event_entity) && variable_struct_exists(_event_entity, "_id"))
+        {
+            _event_entity_id = _event_entity._id;
+        }
+        
+        if (_event_entity_id != _entity_id) return false;
     }
     
     // Check statistic threshold
@@ -194,30 +211,69 @@ function achievement_check_condition(_condition, _event_data)
 
 #region Event Handlers
 
-function achievement_on_tile_changed(_data)
+function achievement_on_tile_place(_data)
 {
-    achievement_check_event("TILE_CHANGED", _data);
+    // Remap data to something check_condition understands (it looks for "item")
+    // For tiles, we treat the tile as the "item" for ID purposes
+    var _check_data = {
+        item: _data.tile, 
+        x: _data.x, 
+        y: _data.y, 
+        z: _data.z
+    }
+    achievement_check_event("TILE_PLACE", _check_data);
 }
 
-function achievement_on_entity_death(_data)
+function achievement_on_tile_update(_data)
 {
-    if (_data[$ "killed_by_player"])
+    // Only check destruction (when tile != undefined)
+    if (_data.tile != undefined)
     {
-        achievement_check_event("ENTITY_DEATH", _data);
+        // For tile breaking, passed tile is the one broken
+        var _check_data = {
+            item: _data.tile,
+            x: _data.x, 
+            y: _data.y, 
+            z: _data.z
+        }
+        achievement_check_event("TILE_UPDATE", _check_data);
     }
 }
 
-function achievement_on_item_collected(_data)
+function achievement_on_entity_die(_data)
 {
-    achievement_check_event("ITEM_COLLECTED", _data);
+    var _killer = _data.killer;
+    
+    // Check if player killed it
+    var _killer_is_player = is_struct(_killer) ? false : (instance_exists(_killer) && _killer.object_index == obj_Player);
+    
+    if (_killer_is_player)
+    {
+        // Pass the entity that died
+        achievement_check_event("ENTITY_DIE", _data); 
+    }
 }
 
-function achievement_on_crafting_complete(_data)
+function achievement_on_entity_item_collect(_data)
 {
-    achievement_check_event("CRAFTING_COMPLETE", _data);
+    // Pass the item collected
+    achievement_check_event("ENTITY_ITEM_COLLECT", _data);
 }
 
-function achievement_on_statistic_changed(_data)
+function achievement_on_item_craft(_data)
+{
+    // result is the item crafted
+    var _check_data = {
+        item: _data.result,
+        recipe: _data.recipe,
+        crafter: _data.crafter
+    }
+    achievement_check_event("ITEM_CRAFT", _check_data);
+}
+
+/// @function achievement_check_statistic(_stat_id)
+/// @desc Called by statistics system when a stat changes
+function achievement_check_statistic(_stat_id)
 {
     // Check all statistic-based achievements
     var _names = struct_get_names(global.achievement_data);
@@ -236,7 +292,7 @@ function achievement_on_statistic_changed(_data)
         
         var _stat = _condition[$ "statistic"];
         
-        if (_stat != undefined && _stat == _data.id)
+        if (_stat != undefined && _stat == _stat_id)
         {
             if (achievement_check_condition(_condition, {}))
             {

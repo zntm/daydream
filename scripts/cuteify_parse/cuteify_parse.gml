@@ -1,4 +1,7 @@
-global.cuteify_data = {}
+global.cuteify_data = {
+    happy: spr_Null,
+    sad: spr_Null
+}
 
 /// @function cuteify_parse(_string, _asset_prefix)
 /// @desc Parses a cuteify-formatted string into structured data
@@ -83,6 +86,49 @@ function cuteify_parse(_string, _asset_prefix = "")
             continue;
         }
         
+        if (_char == ":") && (i < _string_length)
+        {
+            var _next_colon = 0;
+            for (var j = i + 1; j <= _string_length; ++j)
+            {
+                var _c = string_char_at(_string, j);
+                if (_c == ":") { _next_colon = j; break; }
+                if (_c == " ") || (_c == "\n") || (_c == CUTEIFY_BRACKET_OPEN) || (_c == CUTEIFY_BRACKET_CLOSE) break;
+            }
+            
+            if (_next_colon > i + 1)
+            {
+                var _tag_content = string_copy(_string, i + 1, _next_colon - i - 1);
+                var _emote = undefined;
+                
+                if (_cuteify_data != undefined)
+                {
+                    _emote = _cuteify_data[$ $"{_asset_prefix}{_tag_content}"];
+                }
+                
+                if (_emote != undefined)
+                {
+                    if (i > _slice_start)
+                    {
+                        var _part = string_copy(_string, _slice_start, i - _slice_start);
+                        _data[@ _index2][@ _index] = __data(_part);
+                        _string_width[@ _index2] += string_width(_part);
+                        ++_index;
+                    }
+                    
+                    _data[@ _index2][@ _index] = __data(_emote, CUTEIFY_TYPE.SPRITE);
+                    
+                    var _norm = (string_height("I")) / sprite_get_height(_emote);
+                    _string_width[@ _index2] += sprite_get_width(_emote) * _norm;
+                    ++_index;
+                    
+                    i = _next_colon;
+                    _slice_start = i + 1;
+                    continue;
+                }
+            }
+        }
+        
         if (_char == CUTEIFY_BRACKET_CLOSE) && (_index >= 1) && (string_ends_with(_data[_index2][_index - 1][0], CUTEIFY_BRACKET_OPEN))
         {
             var _tag_content = "";
@@ -139,6 +185,20 @@ function cuteify_parse(_string, _asset_prefix = "")
                     {
                         _processed_content = "";
                         _type = CUTEIFY_TYPE.UNDERLINE;
+                    }
+                    else if (string_starts_with(_tag_content, CUTEIFY_BRACKET_SHAKE + ":"))
+                    {
+                        // Shake tag: {*s:N}
+                        var _param_str = string_delete(_tag_content, 1, string_length(CUTEIFY_BRACKET_SHAKE) + 1);
+                        _processed_content = real(_param_str);
+                        _type = CUTEIFY_TYPE.SHAKE;
+                    }
+                    else if (string_starts_with(_tag_content, CUTEIFY_BRACKET_WAVE + ":"))
+                    {
+                        // Wave tag: {*w:N}
+                        var _param_str = string_delete(_tag_content, 1, string_length(CUTEIFY_BRACKET_WAVE) + 1);
+                        _processed_content = real(_param_str);
+                        _type = CUTEIFY_TYPE.WAVE;
                     }
                     else
                     {

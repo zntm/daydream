@@ -1,3 +1,6 @@
+
+#macro IS_MULTIPLAYER_ENABLED 0
+
 #region Chunk
 
 #macro TILE_EMPTY 0

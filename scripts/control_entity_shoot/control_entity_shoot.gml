@@ -1,4 +1,4 @@
-function control_entity_shoot(_entity, _item_id, _x, _y, _angle)
+function control_entity_shoot(_entity, _item_id, _x, _y, _angle, _inventory_target = global.inventory, _out_changed_slots = undefined)
 {
     var _data = global.item_data[$ _item_id];
     
@@ -15,8 +15,8 @@ function control_entity_shoot(_entity, _item_id, _x, _y, _angle)
         var _ammo_item = undefined;
         
         // Search inventory for matching ammo
-        var _inventory_base = global.inventory.base;
-        var _inventory_length_base = global.inventory_length.base;
+        var _inventory_base = _inventory_target.base;
+        var _inventory_length_base = array_length(_inventory_base);
         
         for (var i = 0; i < _inventory_length_base; ++i)
         {
@@ -49,12 +49,11 @@ function control_entity_shoot(_entity, _item_id, _x, _y, _angle)
         if (_ammo_found_index == -1)
         {
             // No ammo found
-            // TODO: Play "click" empty sound?
             return false;
         }
         
         // Consume ammo
-        inventory_item_decrement("base", _ammo_found_index);
+        inventory_item_decrement("base", _ammo_found_index, _inventory_target, _out_changed_slots);
     }
     
     // If we have a projectile to shoot
@@ -93,6 +92,10 @@ function control_entity_shoot(_entity, _item_id, _x, _y, _angle)
             // We override it with shooting angle?
             image_angle = _angle;
         }
+        
+        var _event = new EventDataProjectileShoot(_entity, _inst, _x, _y, _angle, _damage);
+        
+        event_emit(_event);
         
         return true;
     }

@@ -2,6 +2,7 @@
 /// @param {Struct.Attribute} _attribute The attribute configuration for this body
 
 enum MOVEMENT_MODE {
+    NONE,
     GROUND,    // Normal gravity-based horizontal movement
     FLY,       // No gravity, 360° movement
     SWIM,      // Buoyancy, drag, 360° movement  
@@ -11,6 +12,9 @@ enum MOVEMENT_MODE {
 
 function PhysicsBody(_attribute = undefined) constructor
 {
+    // Owner Instance ID (for SpatialGrid)
+    id = noone;
+    
     // Position
     pos_x = 0;
     pos_y = 0;
@@ -56,6 +60,7 @@ function PhysicsBody(_attribute = undefined) constructor
     /// @desc Sync position from instance
     static sync_from_instance = function(_inst)
     {
+        id = _inst.id;
         pos_x = _inst.x;
         pos_y = _inst.y;
         scale_x = _inst.image_xscale;
@@ -68,6 +73,16 @@ function PhysicsBody(_attribute = undefined) constructor
     {
         _inst.x = pos_x;
         _inst.y = pos_y;
+        return self;
+    }
+    
+    /// @desc Reset collision flags (called before physics step)
+    static reset_collision = function()
+    {
+        collision.ground = false;
+        collision.ceiling = false;
+        collision.wall_left = false;
+        collision.wall_right = false;
         return self;
     }
     

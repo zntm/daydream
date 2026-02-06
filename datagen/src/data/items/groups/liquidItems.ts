@@ -2,7 +2,7 @@ import { DatagenReturnData } from "../../../lib/DatagenReturnData";
 import { ItemType } from "../lib/ItemType";
 import { TileItem, TileItemProperties } from "../lib/TileItem";
 import { ItemComponent } from "../lib/ItemComponent";
-import { ItemFunction } from "../lib/ItemFunction";
+import { ItemScript } from "../lib/ProgLang";
 import { UseableItem } from "../lib/Item";
 
 export default [
@@ -46,7 +46,7 @@ export default [
                     .addComponent("level", ItemComponent.u8(8, 1, 8))
                     .addComponent("flow_direction", ItemComponent.s8(0, -1, 1))
                     .addOnUse([
-                        new ItemFunction("phantasia:bucket_pickup", {
+                        new ItemScript("items/bucket_pickup", {
                             bucket_id: "phantasia:bucket",
                             filled_bucket_id: `phantasia:${id}_bucket`,
                             tick_delay,
@@ -63,7 +63,7 @@ export default [
                 )
                     .addComponent("level", ItemComponent.u8(8, 1, 8))
                     .addOnUse([
-                        new ItemFunction("phantasia:bucket_place", {
+                        new ItemScript("items/bucket_place", {
                             liquid_id: `phantasia:${id}`,
                             empty_bucket_id: "phantasia:bucket",
                             tick_delay,

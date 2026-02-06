@@ -1,0 +1,60 @@
+{
+  "name": "vscode-daydream-extension",
+  "displayName": "Daydream",
+  "description": "Syntax highlighting for Daydream (.daydream) files",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "activationEvents": [
+    "onLanguage:daydream",
+    "onLanguage:markdown",
+    "onCommand:markdown.showPreview",
+    "onCommand:markdown.showPreviewToSide"
+  ],
+  "main": "./src/extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "daydream",
+        "aliases": [
+          "Daydream",
+          "daydream"
+        ],
+        "extensions": [
+          ".daydream"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "daydream",
+        "scopeName": "source.daydream",
+        "path": "./syntaxes/daydream.tmLanguage.json"
+      },
+      {
+        "scopeName": "text.html.markdown.daydream",
+        "path": "./syntaxes/daydream.markdown.tmLanguage.json",
+        "injectTo": [
+          "text.html.markdown"
+        ]
+      }
+    ],
+    "snippets": [
+      {
+        "language": "daydream",
+        "path": "./snippets/snippets.json"
+      }
+    ],
+    "markdown.previewStyles": [
+      "./media/daydream.css"
+    ],
+    "markdown.itPlugins": [
+      "./src/markdown-highlighter.js"
+    ]
+  }
+}

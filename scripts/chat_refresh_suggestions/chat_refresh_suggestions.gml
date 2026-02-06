@@ -40,8 +40,8 @@ function chat_refresh_suggestions()
     if (_part_count == 1)
     {
         var _names = global.command_data_names;
-        var _len = array_length(_names);
-        for (var i = 0; i < _len; ++i)
+        var _length = array_length(_names);
+        for (var i = 0; i < _length; ++i)
         {
             if (string_pos(_current_text, _names[i]) == 1)
             {
@@ -90,8 +90,8 @@ function chat_refresh_suggestions()
                 var _names = _pointer.get_subcommand_names();
                 if (_names != undefined)
                 {
-                    var _len = array_length(_names);
-                    for (var i = 0; i < _len; ++i)
+                    var _length = array_length(_names);
+                    for (var i = 0; i < _length; ++i)
                     {
                         if (string_pos(_current_text, _names[i]) == 1)
                         {
@@ -113,10 +113,10 @@ function chat_refresh_suggestions()
             // Suggest Parameter Choice
             else
             {
-                var _param_idx = (_part_count - 1) - _arg_start;
+                var _param_index = (_part_count - 1) - _arg_start;
                 
-                // Build parameter hint array with colored entries
-                // Format: [ { text: "...", color: c_xxx }, ... ]
+                // Build parameter hint array with coloured entries
+                // Format: [ { text: "...", colour: c_xxx }, ... ]
                 var _hint_parts = [];
                 var _param_len = _pointer.get_parameter_length();
                 
@@ -139,44 +139,44 @@ function chat_refresh_suggestions()
                         default: _type_name = "?";
                     }
                     
-                    var _hint_color = #555555; // Default gray
+                    var _hint_colour = #555555; // Default gray
                     var _hint_text = "";
                     
-                    if (i < _param_idx)
+                    if (i < _param_index)
                     {
-                        // Already filled in - show the value with validation color
+                        // Already filled in - show the value with validation colour
                         var _value = _parts[_arg_start + i];
                         var _valid = chat_validate_parameter(_value, _param_type);
-                        _hint_color = _valid ? #7ecfff : #ff6b6b; // Light blue if valid, red if invalid
+                        _hint_colour = _valid ? #7ecfff : #ff6b6b; // Light blue if valid, red if invalid
                         _hint_text = $"[{_value}]";
                     }
-                    else if (i == _param_idx)
+                    else if (i == _param_index)
                     {
                         // Currently typing - yellow
-                        _hint_color = #ffd369;
+                        _hint_colour = #ffd369;
                         _hint_text = $"<{_p.get_name()}: {_type_name}>";
                     }
                     else
                     {
                         // Not yet typed - gray
-                        _hint_color = #666666;
+                        _hint_colour = #666666;
                         _hint_text = $"<{_p.get_name()}: {_type_name}>";
                     }
                     
-                    array_push(_hint_parts, { text: _hint_text, color: _hint_color });
+                    array_push(_hint_parts, { text: _hint_text, colour: _hint_colour });
                 }
                 
                 global.chat_command_hint = _hint_parts;
                 
-                if (_param_idx < _param_len)
+                if (_param_index < _param_len)
                 {
-                    var _param = _pointer.get_parameter(_param_idx);
+                    var _param = _pointer.get_parameter(_param_index);
                     var _choices = _param.get_choices();
                     
                     if (_choices != undefined)
                     {
-                        var _len = array_length(_choices);
-                        for (var i = 0; i < _len; ++i)
+                        var _length = array_length(_choices);
+                        for (var i = 0; i < _length; ++i)
                         {
                              var _choice_str = string(_choices[i]);
                              if (string_pos(_current_text, _choice_str) == 1) array_push(_suggestions, _choice_str);

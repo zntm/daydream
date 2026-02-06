@@ -19,7 +19,7 @@ var _check_boundary = function(_surface_index)
     var _gui_mouse_x = global.gui_mouse_x;
     var _gui_mouse_y = global.gui_mouse_y;
     
-    return (_gui_mouse_x >= _struct.x_min) && (_gui_mouse_y >= _struct.y_min) && (_gui_mouse_x < _struct.x_max) && (_gui_mouse_y < _struct.y_max);
+    return true//(_gui_mouse_x >= _struct.x_min) && (_gui_mouse_y >= _struct.y_min) && (_gui_mouse_x < _struct.x_max) && (_gui_mouse_y < _struct.y_max);
 }
 
 var _number = instance_number(obj_Menu_Button);

@@ -44,7 +44,8 @@ function init_structure_recursive(_directory, _namespace, _id)
                 var _height = smart_value_parse(_json.height);
                 
                 global.structure_data[$ $"{_namespace}:{string_delete(_name, string_length(_name) - 4, 5)}"] = new StructureData(_width, _height, _json.placement, false, true)
-                    .set_function(_function_id, (_natural_structure_data[$ _function_id].get_parser())(_function[$ "parameters"]));
+                    .set_function(_function_id, (_natural_structure_data[$ _function_id].get_parser())(_function[$ "parameters"]))
+                    .set_terrain_modifier(_json[$ "terrain_modifier"]);
                 
                 delete _json;
                 
@@ -76,6 +77,15 @@ function init_structure_recursive(_directory, _namespace, _id)
             
             var _rectangle = _width * _height;
             
+            // Read Palette
+            var _palette_length = buffer_read(_buffer, buffer_u16);
+            var _palette = array_create(_palette_length);
+            
+            for (var m = 0; m < _palette_length; ++m)
+            {
+                _palette[@ m] = buffer_read(_buffer, buffer_string);
+            }
+            
             var _data = array_create(_rectangle * CHUNK_DEPTH, TILE_EMPTY);
             
             for (var j = 0; j < _width; ++j)
@@ -96,7 +106,7 @@ function init_structure_recursive(_directory, _namespace, _id)
                     
                     for (var m = 0; m < CHUNK_DEPTH; ++m)
                     {
-                        var _tile = file_load_snippet_tile(_buffer, _item_data);
+                        var _tile = file_load_snippet_tile(_buffer, _item_data, _palette);
                         
                         if (_tile != undefined)
                         {
@@ -109,7 +119,8 @@ function init_structure_recursive(_directory, _namespace, _id)
             buffer_delete(_buffer);
             
             global.structure_data[$ $"{_namespace}:{string_delete(_name, string_length(_name) - 3, 4)}"] = new StructureData(_width, _height, _json.placement, false, true)
-                .set_data(_data);
+                .set_data(_data)
+                .set_terrain_modifier(_json[$ "terrain_modifier"]);
             
             delete _json;
             

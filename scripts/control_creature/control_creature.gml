@@ -7,7 +7,8 @@ enum CREATURE_AI_STATE {
     WANDER,
     CHASE,
     FLEE,
-    ATTACK
+    ATTACK,
+    STUNNED
 }
 
 // AI Constants
@@ -23,10 +24,30 @@ enum CREATURE_AI_STATE {
 #macro AI_STUCK_CHECK_INTERVAL 0.5
 #macro AI_STUCK_THRESHOLD 4.0
 
-function control_creature(_dt)
+function control_creature()
 {
+    // --- REMOTE CREATURES ON CLIENT (INTERPOLATION) ---
+    if (global.network_role == NETWORK_ROLE.CLIENT)
+    {
+        if (variable_instance_exists(self, "interp_start_x"))
+        {
+            interp_timer += 1 / GAME_TICK;
+            var _t = clamp(interp_timer / interp_duration, 0, 1);
+            
+            x = lerp(interp_start_x, interp_target_x, _t);
+            y = lerp(interp_start_y, interp_target_y, _t);
+            
+            // Facing direction
+            if (interp_target_x != interp_start_x)
+            {
+                image_xscale = abs(image_xscale) * sign(interp_target_x - interp_start_x);
+            }
+        }
+        exit; // Skip AI/Physics on client
+    }
+    
     var _data = global.creature_data[$ _id];
-    var _dt_normalized = _dt / GAME_TICK;
+    var _dt_normalized = 1 / GAME_TICK;
     
     // --- TIMERS ---
     ai_decision_timer -= _dt_normalized;
@@ -70,6 +91,7 @@ function control_creature(_dt)
     
     // --- SENSORS ---
     physics_body.sync_from_instance(id);
+    global.spatial_grid.update(physics_body);
     entity_update_collision(physics_body);
     
     var _target = instance_nearest(x, y, obj_Player);
@@ -77,14 +99,23 @@ function control_creature(_dt)
     var _hostility_type = _data.get_hostility_type();
     
     // --- AI DECISION ---
-    if (ai_decision_timer <= 0)
+    if (ai_state == CREATURE_AI_STATE.STUNNED)
+    {
+        if (ai_state_timer <= 0)
+        {
+            ai_state = CREATURE_AI_STATE.IDLE;
+            ai_state_timer = AI_IDLE_DURATION;
+        }
+    }
+    
+    if (ai_state != CREATURE_AI_STATE.STUNNED) && (ai_decision_timer <= 0)
     {
         ai_decision_timer = AI_DECISION_INTERVAL;
         creature_evaluate_state(_hostility_type, _target, _distance_to_target, _data);
     }
     
     // --- PREY SCANNING ---
-    if (ai_state != CREATURE_AI_STATE.FLEE && ai_decision_timer == AI_DECISION_INTERVAL)
+    if (ai_state != CREATURE_AI_STATE.STUNNED) && (ai_state != CREATURE_AI_STATE.FLEE && ai_decision_timer == AI_DECISION_INTERVAL)
     {
         creature_scan_for_prey(_data, _dt_normalized);
     }
@@ -133,20 +164,27 @@ function control_creature(_dt)
     }
     
     // Movement direction
-    if (ai_target_direction != 0)
+    if (ai_state != CREATURE_AI_STATE.STUNNED)
     {
-        _move_x = ai_target_direction;
-        image_xscale = abs(image_xscale) * ai_target_direction;
-        
-        // Pathfinding - jump over obstacles
-        if (!_wants_jump && physics_body.collision.ground)
+        if (ai_target_direction != 0)
         {
-            creature_pathfinding(_target, _move_x, _wants_jump);
+            _move_x = ai_target_direction;
+            image_xscale = abs(image_xscale) * ai_target_direction;
+            
+            // Pathfinding - jump over obstacles
+            if (!_wants_jump && physics_body.collision.ground)
+            {
+                creature_pathfinding(_target, _move_x, _wants_jump);
+            }
         }
+        
+        // Set AI input
+        input_state.from_ai(_move_x, _move_y, _wants_jump, false);
     }
-    
-    // Set AI input
-    input_state.from_ai(_move_x, _move_y, _wants_jump, false);
+    else
+    {
+        input_state.clear();
+    }
     
     // --- PHYSICS ---
     // Set movement mode based on creature type
@@ -164,14 +202,14 @@ function control_creature(_dt)
         physics_body.mode = MOVEMENT_MODE.GROUND;
     }
     
-    physics_step(physics_body, input_state, _dt);
+    physics_step(physics_body, input_state);
     physics_body.sync_to_instance(id);
     
     // --- FALL DAMAGE ---
     creature_handle_fall_damage();
     
     // --- POST-PHYSICS ---
-    control_entity_sfx(_dt);
+    control_entity_sfx();
     control_entity_suffocation(id);
     
     if (attribute.has_boolean(ATTRIBUTE_BOOLEAN.HAS_REGENERATION))
@@ -272,19 +310,24 @@ function creature_scan_for_prey(_data, _dt_normalized)
     var _nearest_prey = noone;
     var _nearest_prey_dist = AI_HUNT_RANGE;
     
-    with (obj_Creature)
+    var _range = AI_HUNT_RANGE;
+    var _nearby = global.creature_quadtree.query_rect(x - _range, y - _range, x + _range, y + _range);
+    var _length = array_length(_nearby);
+    
+    for (var i = 0; i < _length; ++i)
     {
-        if (id == other.id) continue;
+        var _inst = _nearby[i];
+        if (_inst == id) continue;
         
-        var _prey_data = global.creature_data[$ _id];
+        var _prey_data = global.creature_data[$ _inst._id];
         var _predators = _prey_data.get_predators();
         
         if (array_contains(_predators, _my_id))
         {
-            var _dist = point_distance(other.x, other.y, x, y);
+            var _dist = point_distance(_inst.x, _inst.y, x, y);
             if (_dist < _nearest_prey_dist)
             {
-                _nearest_prey = id;
+                _nearest_prey = _inst;
                 _nearest_prey_dist = _dist;
             }
         }
@@ -366,7 +409,7 @@ function creature_handle_fall_damage()
     {
         if (physics_body.collision.ground)
         {
-            var _difference = max(0, y - y_last - (TILE_SIZE * 4));
+            var _difference = max(0, y - y_last - (TILE_SIZE * 8));
             var _value = floor(power(floor(_difference / TILE_SIZE) * 0.62, 1.25));
             
             if (_value > 0 && !attribute.has_boolean(ATTRIBUTE_BOOLEAN.IS_FALL_DAMAGE_RESISTANT))
@@ -383,7 +426,15 @@ function creature_handle_fall_damage()
                 
                 if (hp <= 0)
                 {
-                    instance_destroy();
+                    if (object_index == obj_Player)
+                    {
+                        obj_Game_Control.timer_respawn = 3;
+                    }
+                    else
+                    {
+                        global.spatial_grid.remove(physics_body);
+                        instance_destroy();
+                    }
                     exit;
                 }
             }

@@ -1,4 +1,4 @@
-function inventory_give(_x, _y, _item, _text = true)
+function inventory_give(_x, _y, _item, _inventory_target = global.inventory, _text = true, _out_changed_slots = undefined)
 {
     var _id = _item.get_id();
     var _amount = _item.get_amount();
@@ -12,7 +12,7 @@ function inventory_give(_x, _y, _item, _text = true)
     
     for (var i = 0; i < _length; ++i)
     {
-        var _inventory = global.inventory.base[i];
+        var _inventory = _inventory_target.base[i];
         
         if (_inventory != INVENTORY_EMPTY) && (_inventory.get_id() == _id)
         {
@@ -22,7 +22,9 @@ function inventory_give(_x, _y, _item, _text = true)
             {
                 if (_amount + _amount2 <= _inventory_max)
                 {
-                    global.inventory.base[@ i].add_amount(_amount);
+                    _inventory_target.base[@ i].add_amount(_amount);
+                    
+                    if (is_array(_out_changed_slots)) array_push(_out_changed_slots, i);
                     
                     delete _item;
                     
@@ -33,7 +35,9 @@ function inventory_give(_x, _y, _item, _text = true)
                     break;
                 }
                 
-                global.inventory.base[@ i].set_amount(_inventory_max);
+                _inventory_target.base[@ i].set_amount(_inventory_max);
+                
+                if (is_array(_out_changed_slots)) array_push(_out_changed_slots, i);
                 
                 var _amount3 = _inventory_max - _amount2;
                 
@@ -48,13 +52,15 @@ function inventory_give(_x, _y, _item, _text = true)
     {
         for (var i = 0; i < _length; ++i)
         {
-            var _inventory = global.inventory.base[i];
+            var _inventory = _inventory_target.base[i];
             
             if (_inventory == INVENTORY_EMPTY)
             {
                 if (_amount <= _inventory_max)
                 {
-                    global.inventory.base[@ i] = _item;
+                    _inventory_target.base[@ i] = _item;
+                    
+                    if (is_array(_out_changed_slots)) array_push(_out_changed_slots, i);
                     
                     _item = undefined;
                     
@@ -63,7 +69,9 @@ function inventory_give(_x, _y, _item, _text = true)
                     break;
                 }
                 
-                global.inventory.base[@ i] = variable_clone(_item).set_amount(_inventory_max);
+                _inventory_target.base[@ i] = variable_clone(_item).set_amount(_inventory_max);
+                
+                if (is_array(_out_changed_slots)) array_push(_out_changed_slots, i);
                 
                 _item.add_amount(-_inventory_max);
                 
@@ -74,19 +82,23 @@ function inventory_give(_x, _y, _item, _text = true)
     
     if (_pickup_amount > 0)
     {
-        obj_Game_Control.surface_refresh |= ((obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.INVENTORY) ? SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK : SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR);
-        
-        if (_text)
+        // Only show UI feedback if we modified the local player's inventory (global.inventory)
+        if (_inventory_target == global.inventory)
         {
-            var _loca = loca_translate($"{_data.get_namespace()}:item.{_data.get_id()}.name");
+            obj_Game_Control.surface_refresh |= ((obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.INVENTORY) ? SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK : SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR);
             
-            if (_pickup_amount > 1)
+            if (_text)
             {
-                spawn_floating_text(_x, _y, string(loca_translate("phantasia:gui.item_tooltip.header.amount"), _loca, _pickup_amount), 0, -3.9);
-            }
-            else
-            {
-            	spawn_floating_text(_x, _y, string(loca_translate("phantasia:gui.item_tooltip.header"), _loca), 0, -3.9);
+                var _loca = loca_translate($"{_data.get_namespace()}:item.{_data.get_id()}.name");
+                
+                if (_pickup_amount > 1)
+                {
+                    spawn_floating_text(_x, _y, string(loca_translate("phantasia:gui.item_tooltip.header.amount"), _loca, _pickup_amount), 0, -3.9);
+                }
+                else
+                {
+                    spawn_floating_text(_x, _y, string(loca_translate("phantasia:gui.item_tooltip.header"), _loca), 0, -3.9);
+                }
             }
         }
     }

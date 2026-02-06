@@ -137,6 +137,22 @@
             "gain": 0.7
         }
     ],
+    "shore_tiles": {
+        "base": [
+            {
+                "id": "phantasia:sand"
+            }
+        ],
+        "wall": [
+            {
+                "id": "phantasia:sandstone_wall",
+                "weight": 4
+            },
+            {
+                "id": "$EMPTY"
+            }
+        ]
+    },
     "sky_colour": {
         "dawn": {
             "base": "#371479",
@@ -177,30 +193,57 @@
             "generate_on": "#phantasia:tile/placement/plant_on"
         }
     ],
+    "terrain_modifier": {
+        "height_offset": 0
+    },
     "tile": {
         "top_layer": {
-            "base": {
-                "id": "phantasia:grass_block"
-            },
-            "wall": {
-                "id": "phantasia:dirt_wall"
-            }
+            "base": [
+                {
+                    "id": "phantasia:grass_block"
+                }
+            ],
+            "wall": [
+                {
+                    "id": "phantasia:dirt_wall",
+                    "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
+                }
+            ]
         },
         "middle_layer": {
-            "base": {
-                "id": "phantasia:dirt"
-            },
-            "wall": {
-                "id": "phantasia:dirt_wall"
-            }
+            "base": [
+                {
+                    "id": "phantasia:dirt"
+                }
+            ],
+            "wall": [
+                {
+                    "id": "phantasia:dirt_wall",
+                    "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
+                }
+            ]
         },
         "bottom_layer": {
-            "base": {
-                "id": "phantasia:stone"
-            },
-            "wall": {
-                "id": "phantasia:stone_wall"
-            }
+            "base": [
+                {
+                    "id": "phantasia:stone"
+                }
+            ],
+            "wall": [
+                {
+                    "id": "phantasia:stone_wall",
+                    "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
+                }
+            ]
         }
     }
 }

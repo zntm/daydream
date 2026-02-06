@@ -1,7 +1,6 @@
 function control_gametick(_delta_time)
 {
     var _item_data = global.item_data;
-    var _item_function = global.item_function;
     
     var _dt = GAME_TICK * _delta_time;
     
@@ -17,27 +16,75 @@ function control_gametick(_delta_time)
     
     while (global.tick_accumulator >= 1)
     {
-        var _tick = min(1, global.tick_accumulator);
-        
-        if (timer_respawn > 0)
+        with (obj_Player)
         {
-            timer_respawn -= _tick / GAME_TICK;
-            
-            if (timer_respawn <= 0)
+            if (timer_respawn > 0)
             {
-                obj_Player.x = obj_Player.spawn_x;
-                obj_Player.y = obj_Player.spawn_y;
-                obj_Player.y_last = obj_Player.y;
+                timer_respawn -= 1 / GAME_TICK;
                 
-                obj_Player.physics_body.vel_x = 0;
-                obj_Player.physics_body.vel_y = 0;
-                
-                obj_Player.hp = obj_Player.hp_max;
-                
-                _camera_x = obj_Player.x - (_camera_width  / 2);
-                _camera_y = obj_Player.y - (_camera_height / 2);
+                if (timer_respawn <= 0)
+                {
+                    x = spawn_x;
+                    y = spawn_y;
+                    y_last = y;
+                    
+                    if (physics_body != undefined)
+                    {
+                        physics_body.vel_x = 0;
+                        physics_body.vel_y = 0;
+                        physics_body.pos_x = x;
+                        physics_body.pos_y = y;
+                    }
+                    
+                    hp = hp_max;
+                }
+            }
+            
+            if (is_local)
+            {
+                _camera_x = x - (_camera_width  / 2);
+                _camera_y = y - (_camera_height / 2);
                 
                 control_camera_pos(_camera_x, _camera_y, true);
+            }
+            
+            if (is_local && !(obj_Game_Control.is_opened & (IS_OPENED_BOOLEAN.MENU | IS_OPENED_BOOLEAN.CHAT | IS_OPENED_BOOLEAN.INVENTORY)))
+            {
+                var _tile_x = round(mouse_x / TILE_SIZE);
+                var _tile_y = round(mouse_y / TILE_SIZE);
+                var _mouse_distance = rectangle_distance(mouse_x, mouse_y, bbox_left, bbox_top, bbox_right, bbox_bottom);
+                
+                if (cooldown_build <= 0) && (_mouse_distance < ATTRIBUTE_DEFAULT_BUILD_REACH) && (mouse_check_button(mb_right))
+                {
+                    player_build(1 / GAME_TICK, _tile_x, _tile_y);
+                }
+                else
+                {
+                    cooldown_build = max(0, cooldown_build - (1 / GAME_TICK));
+                }
+                
+                if (cooldown_harvest <= 0) && (_mouse_distance < ATTRIBUTE_DEFAULT_HARVEST_REACH) && (mouse_check_button(mb_left))
+                {
+                    player_harvest(1 / GAME_TICK, _tile_x, _tile_y);
+                }
+                else
+                {
+                    timer_sfx_harvest = max(0, timer_sfx_harvest - (1 / GAME_TICK));
+                    cooldown_harvest = max(0, cooldown_harvest - (1 / GAME_TICK));
+                }
+                
+                // Decay harvest progress
+                var _keys = struct_get_names(harvest_progress);
+                for (var _key_index = 0; _key_index < array_length(_keys); _key_index++)
+                {
+                    var _key = _keys[_key_index];
+                    if (_key != harvest_last_key)
+                    {
+                        harvest_progress[$ _key] = max(0, harvest_progress[$ _key] - (1 / GAME_TICK)); // Undoes 1 hardness per second
+                        if (harvest_progress[$ _key] <= 0) variable_struct_remove(harvest_progress, _key);
+                    }
+                }
+                harvest_last_key = undefined;
             }
         }
         
@@ -75,7 +122,7 @@ function control_gametick(_delta_time)
                 
                 for (var j = 0; j < _on_random_tick_length; ++j)
                 {
-                    function_execute(_on_random_tick[j], (_chunk_xstart + _x2) * TILE_SIZE, (_chunk_ystart + _y2) * TILE_SIZE, _z, 1, 1, _tick);
+                    function_execute(_on_random_tick[j], (_chunk_xstart + _x2) * TILE_SIZE, (_chunk_ystart + _y2) * TILE_SIZE, _z, 1, 1);
                 }
             }
         }
@@ -83,57 +130,26 @@ function control_gametick(_delta_time)
         // Process delayed function executions
         tick_delay_process();
         
-        control_creature_spawn(_tick);
+        // === SERVER-ONLY LOGIC ===
+        // These only run on Server (or Singleplayer/NONE)
+        var _is_server = (global.network_role == NETWORK_ROLE.SERVER) || (global.network_role == NETWORK_ROLE.NONE);
+        
+        if (_is_server)
+        {
+            control_creature_spawn();
+        }
         
         with (obj_Player)
         {
-            control_player(_tick);
+            control_player();
         }
         
-        if (mouse_check_button(mb_right))
+        with (obj_Client)
         {
-            var _inventory_selected_hotbar = global.inventory_selected_hotbar;
-            var _item_holding = global.inventory.base[_inventory_selected_hotbar];
-            
-            if (_item_holding != INVENTORY_EMPTY)
-            {
-                var _data = _item_data[$ _item_holding.get_id()];
-                var _item_consumable = _data.get_item_consumable();
-                
-                if (_item_consumable != undefined)
-                {
-                    var _hp = _item_consumable.get_hp();
-                    
-                    if (_hp != undefined) && (obj_Player.hp < obj_Player.hp_max)
-                    {
-                        var _cooldown = _item_consumable.get_cooldown();
-                        
-                        if (_cooldown != undefined)
-                        {
-                            obj_Player.hp = min(obj_Player.hp_max, obj_Player.hp + _hp);
-                            obj_Player.saturation += _item_consumable.get_saturation();
-                            
-                            item_cooldown[$ _cooldown.get_id()] = _cooldown.get_seconds();
-                            
-                            inventory_delete("base", _inventory_selected_hotbar);
-                            
-                            obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR | SURFACE_REFRESH_BOOLEAN.HP;
-                            
-                            var _sfx = _item_consumable.get_sfx();
-                            
-                            if (_sfx != undefined)
-                            {
-                                var _sfx_id = _sfx.get_id();
-                                var _sfx_gain = _sfx.get_gain();
-                                
-                                sfx_diegetic_play(obj_Player.audio_emitter, obj_Player.x, obj_Player.y, _sfx_id, _sfx_gain, global.settings.audio_sfx);
-                            }
-                        }
-                    }
-                }
-            }
+            control_client();
         }
         
+        // Restore cooldown update loop
         var _item_cooldown_names  = struct_get_names(item_cooldown);
         var _item_cooldown_length = array_length(_item_cooldown_names);
         
@@ -141,41 +157,62 @@ function control_gametick(_delta_time)
         {
             var _name = _item_cooldown_names[j];
             
-            item_cooldown[$ _name] = max(0, item_cooldown[$ _name] - (_tick / GAME_TICK));
+            item_cooldown[$ _name] = max(0, item_cooldown[$ _name] - (1 / GAME_TICK));
         }
         
-        with (obj_Projectile)
+        if (_is_server)
         {
-            control_projectile(_tick);
+            with (obj_Projectile)
+            {
+                control_projectile();
+            }
         }
         
-        with (obj_Particle)
+        control_chunk_fade();
+        
+        // Update pooled particles (physics for colliding particles)
+        global.particle_pool.update_physics();
+        
+        if (_is_server)
         {
-            control_particle(_tick);
+            with (obj_Creature)
+            {
+                control_creature();
+            }
+
+            control_quadtree_update();
+            control_resolve_collisions();
+            
+            with (obj_Item_Drop)
+            {
+                control_item_drop();
+            }
+            
+            with (obj_Falling_Tile)
+            {
+                control_falling_tile();
+            }
         }
         
-        with (obj_Creature)
-        {
-            control_creature(_tick);
-        }
-        
-        with (obj_Item_Drop)
-        {
-            control_item_drop(_tick);
-        }
-        
-        with (obj_Falling_Tile)
-        {
-            control_falling_tile(_tick);
-        }
-        
-        global.world_save_data.time += _tick / GAME_TICK;
+        global.world_save_data.time += 1 / GAME_TICK;
         
         if (global.world_save_data.time >= _time_length)
         {
             global.world_save_data.time %= _time_length;
             
             ++global.world_save_data.day;
+        }
+        
+        // --- NETWORK SYNC ---
+        // Server: Broadcast entity states to all clients
+        if (global.network_role == NETWORK_ROLE.SERVER)
+        {
+            network_broadcast_entities();
+        }
+        // Client: Send local player input to server
+        else if (global.network_role == NETWORK_ROLE.CLIENT)
+        {
+            network_send_input();
         }
         
         global.tick_accumulator -= 1;

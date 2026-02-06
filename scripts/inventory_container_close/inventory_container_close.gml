@@ -12,5 +12,12 @@ function inventory_container_close()
     
     _tile.set_index(0);
 	
-	inventory_resize("container", 0);
+	inventory_resize("_container", 0);
+
+    if (global.network_role == NETWORK_ROLE.CLIENT)
+    {
+        network_send_container_close();
+    }
+    
+    event_emit(new EventDataTileContainerClose(_x, _y, _z));
 }

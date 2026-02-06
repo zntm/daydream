@@ -1,5 +1,5 @@
 import { DatagenReturnData } from "../../../lib/DatagenReturnData";
-import { ItemFunction } from "../lib/ItemFunction";
+import { ItemScript } from "../lib/ProgLang";
 import { ItemType } from "../lib/ItemType";
 import {
     TileItem,
@@ -122,9 +122,9 @@ export default (
             .setTileSFX("#phantasia:tile/sfx/wood")
             .setAudioProperties(0.2, 0.0)
             .addOnRandomTick([
-                new ItemFunction("phantasia:leaf_decay", {
+                new ItemScript("tile/leaf_decay", {
                     particle: leavesParticleId,
-                }),
+                }, 0.03),
             ]),
     ),
     new DatagenReturnData(

@@ -17,11 +17,11 @@ function statistics_init()
     global.world_statistics ??= {}
     
     // Subscribe to game events for automatic tracking
-    event_subscribe(GAME_EVENT.TILE_CHANGED, statistics_on_tile_changed);
-    event_subscribe(GAME_EVENT.ENTITY_DAMAGED, statistics_on_entity_damaged);
-    event_subscribe(GAME_EVENT.ENTITY_DEATH, statistics_on_entity_death);
-    event_subscribe(GAME_EVENT.ITEM_COLLECTED, statistics_on_item_collected);
-    event_subscribe(GAME_EVENT.CHUNK_GENERATED, statistics_on_chunk_generated);
+    event_subscribe(GAME_EVENT.TILE_PLACE, statistics_on_tile_place);
+    event_subscribe(GAME_EVENT.TILE_UPDATE, statistics_on_tile_update);
+    event_subscribe(GAME_EVENT.ENTITY_DAMAGE, statistics_on_entity_damage);
+    event_subscribe(GAME_EVENT.ENTITY_DIE, statistics_on_entity_die);
+    event_subscribe(GAME_EVENT.ENTITY_ITEM_COLLECT, statistics_on_entity_item_collect);
 }
 
 /// @function statistics_increment(_stat_id, _amount)
@@ -41,12 +41,8 @@ function statistics_increment(_stat_id, _amount = 1)
     global.world_statistics[$ _stat_id][$ _player_uuid] ??= 0;
     global.world_statistics[$ _stat_id][$ _player_uuid] += _amount;
     
-    // Emit event for achievements/UI to react
-    event_emit(GAME_EVENT.STATISTIC_CHANGED, {
-        id: _stat_id,
-        player_value: global.player_statistics[$ _stat_id],
-        world_value: global.world_statistics[$ _stat_id][$ _player_uuid]
-    });
+    // Check for validation of achievements
+    achievement_check_statistic(_stat_id);
 }
 
 /// @function statistics_set_max(_stat_id, _value)
@@ -115,75 +111,93 @@ function statistics_get_world_total(_stat_id)
 
 #region Event Handlers
 
-/// @function statistics_on_tile_changed(_data)
-function statistics_on_tile_changed(_data)
+/// @function statistics_on_tile_place(_data)
+/// @desc Track tile placement
+function statistics_on_tile_place(_data)
 {
-    var _action = _data[$ "action"];
-    var _id = _data[$ "id"] ?? "";
+    var _tile = _data[$ "tile"];
+    var _tile_id = is_struct(_tile) ? _tile.get_id() : "";
     
-    if (_action == "break" || _action == "harvest")
+    statistics_increment("tiles_placed", 1);
+    statistics_increment($"tiles_placed_{_tile_id}", 1);
+}
+
+/// @function statistics_on_tile_update(_data)
+/// @desc Track tile destruction/updates
+function statistics_on_tile_update(_data)
+{
+    var _tile = _data[$ "tile"];
+    var _tile_id = is_struct(_tile) ? _tile.get_id() : "";
+    
+    // Tile update with a tile means destruction (tile_before passed)
+    if (_tile != undefined)
     {
         statistics_increment("tiles_broken", 1);
-        statistics_increment($"tiles_broken_{_id}", 1);
-    }
-    else if (_action == "place" || _action == "build")
-    {
-        statistics_increment("tiles_placed", 1);
-        statistics_increment($"tiles_placed_{_id}", 1);
+        statistics_increment($"tiles_broken_{_tile_id}", 1);
     }
 }
 
-/// @function statistics_on_entity_damaged(_data)
-function statistics_on_entity_damaged(_data)
+/// @function statistics_on_entity_damage(_data)
+/// @desc Track damage dealt and taken
+function statistics_on_entity_damage(_data)
 {
-    var _damage = _data[$ "damage"] ?? 0;
-    var _target_is_player = _data[$ "target_is_player"] ?? false;
-    var _source_is_player = _data[$ "source_is_player"] ?? false;
+    var _amount = _data[$ "amount"] ?? 0;
+    var _entity = _data[$ "entity"];
+    var _source = _data[$ "source"];
+    
+    // Check if player dealt or took damage
+    var _entity_is_player = is_struct(_entity) ? false : (instance_exists(_entity) && _entity.object_index == obj_Player);
+    var _source_is_player = is_struct(_source) ? false : (instance_exists(_source) && _source.object_index == obj_Player);
     
     if (_source_is_player)
     {
-        statistics_increment("damage_dealt", _damage);
+        statistics_increment("damage_dealt", _amount);
     }
     
-    if (_target_is_player)
+    if (_entity_is_player)
     {
-        statistics_increment("damage_taken", _damage);
+        statistics_increment("damage_taken", _amount);
     }
 }
 
-/// @function statistics_on_entity_death(_data)
-function statistics_on_entity_death(_data)
+/// @function statistics_on_entity_die(_data)
+/// @desc Track entity deaths and kills
+function statistics_on_entity_die(_data)
 {
-    var _killed_by_player = _data[$ "killed_by_player"] ?? false;
-    var _is_player = _data[$ "is_player"] ?? false;
-    var _entity_id = _data[$ "id"] ?? "";
+    var _entity = _data[$ "entity"];
+    var _killer = _data[$ "killer"];
     
-    if (_killed_by_player && !_is_player)
+    var _entity_is_player = is_struct(_entity) ? false : (instance_exists(_entity) && _entity.object_index == obj_Player);
+    var _killer_is_player = is_struct(_killer) ? false : (instance_exists(_killer) && _killer.object_index == obj_Player);
+    
+    if (_killer_is_player && !_entity_is_player)
     {
+        var _entity_id = "";
+        if (instance_exists(_entity) && variable_instance_exists(_entity, "_id"))
+        {
+            _entity_id = _entity._id;
+        }
+        
         statistics_increment("mobs_killed", 1);
-        statistics_increment($"mobs_killed_{_entity_id}", 1);
+        if (_entity_id != "") statistics_increment($"mobs_killed_{_entity_id}", 1);
     }
     
-    if (_is_player)
+    if (_entity_is_player)
     {
         statistics_increment("deaths", 1);
     }
 }
 
-/// @function statistics_on_item_collected(_data)
-function statistics_on_item_collected(_data)
+/// @function statistics_on_entity_item_collect(_data)
+/// @desc Track items collected
+function statistics_on_entity_item_collect(_data)
 {
     var _amount = _data[$ "amount"] ?? 1;
-    var _id = _data[$ "id"] ?? "";
+    var _item = _data[$ "item"];
+    var _item_id = is_struct(_item) ? _item.get_id() : "";
     
     statistics_increment("items_collected", _amount);
-    statistics_increment($"items_collected_{_id}", _amount);
-}
-
-/// @function statistics_on_chunk_generated(_data)
-function statistics_on_chunk_generated(_data)
-{
-    statistics_increment("chunks_explored", 1);
+    if (_item_id != "") statistics_increment($"items_collected_{_item_id}", _amount);
 }
 
 #endregion

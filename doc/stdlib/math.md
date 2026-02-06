@@ -1,242 +1,209 @@
 # Math Functions
 
-Mathematical functions for calculations, trigonometry, and vector operations.
-
----
-
-## Constants
-
-| Name       | Type   | Value (Approx) | Description                                       |
-| ---------- | ------ | -------------- | ------------------------------------------------- |
-| `PI`       | Number | 3.14159...     | Ratio of a circle's circumference to its diameter |
-| `TAU`      | Number | 6.28318...     | `2 * PI`                                          |
-| `E`        | Number | 2.71828...     | Euler's number                                    |
-| `PHI`      | Number | 1.61803...     | The Golden Ratio                                  |
-| `infinity` | Number | Infinity       | Positive infinity                                 |
-
----
-
-## Basic Math
-
-### `min(a, b)`: Number
-
-Returns the smaller of two values.
-
-**Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `a` | Number | First value |
-| `b` | Number | Second value |
-
-**Returns:** The smaller value.
-
-```javascript
-min(10, 5); // 5
-```
-
-### `max(a, b)`: Number
-
-Returns the larger of two values.
-
-**Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `a` | Number | First value |
-| `b` | Number | Second value |
-
-**Returns:** The larger value.
-
-```javascript
-max(10, 5); // 10
-```
-
-### `abs(n)`: Number
-
-Returns the absolute value.
-
-**Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `n` | Number | Input value |
-
-**Returns:** The absolute value (always positive).
-
-```javascript
-abs(-5); // 5
-```
-
-### `sign(n)`: Number
-
-Returns the sign of a number.
-
-**Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `n` | Number | Input value |
-
-**Returns:** `-1` if negative, `0` if zero, `1` if positive.
-
-```javascript
-sign(-50); // -1
-sign(0); // 0
-sign(42); // 1
-```
-
----
-
-## Rounding
-
-### `round(n)`: Number
-
-Rounds to the nearest integer.
-
-**Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `n` | Number | Value to round |
-
-**Returns:** The rounded integer.
-
-```javascript
-round(3.6); // 4
-round(3.4); // 3
-```
-
-### `floor(n)`: Number
+### `floor(n)`: number
 
 Rounds down to the nearest integer.
 
 **Arguments:**
 | Name | Type | Description |
 |------|------|-------------|
-| `n` | Number | Value to round down |
+| `n` | number | Value to round down |
 
-**Returns:** The floor value.
+**Returns:** number
 
 ```javascript
 floor(3.9); // 3
-floor(-3.1); // -4
 ```
 
-### `ceil(n)`: Number
+---
+
+### `ceil(n)`: number
 
 Rounds up to the nearest integer.
 
 **Arguments:**
 | Name | Type | Description |
 |------|------|-------------|
-| `n` | Number | Value to round up |
+| `n` | number | Value to round up |
 
-**Returns:** The ceiling value.
+**Returns:** number
 
 ```javascript
 ceil(3.1); // 4
-ceil(-3.9); // -3
-```
-
-### `frac(n)`: Number
-
-Returns the fractional part of a number.
-
-**Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `n` | Number | Input value |
-
-**Returns:** The fractional component (0 to 1).
-
-```javascript
-frac(3.75); // 0.75
 ```
 
 ---
 
-## Interpolation & Clamping
+### `round(n)`: number
 
-### `clamp(val, min, max)`: Number
+Rounds to the nearest integer.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `n` | number | Value to round |
+
+**Returns:** number
+
+```javascript
+round(3.6); // 4
+```
+
+---
+
+### `abs(n)`: number
+
+Returns the absolute value.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `n` | number | Input value |
+
+**Returns:** number
+
+```javascript
+abs(-5); // 5
+```
+
+---
+
+### `sign(n)`: number
+
+Returns the sign of a number.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `n` | number | Input value |
+
+**Returns:** number
+
+```javascript
+sign(-50); // -1
+```
+
+---
+
+### `min(a, b)`: number
+
+Returns the smaller of two values.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `a` | number | First value |
+| `b` | number | Second value |
+
+**Returns:** number
+
+```javascript
+min(10, 5); // 5
+```
+
+---
+
+### `max(a, b)`: number
+
+Returns the larger of two values.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `a` | number | First value |
+| `b` | number | Second value |
+
+**Returns:** number
+
+```javascript
+max(10, 5); // 10
+```
+
+---
+
+### `clamp(val, min, max)`: number
 
 Constrains a value between min and max.
 
 **Arguments:**
 | Name | Type | Description |
 |------|------|-------------|
-| `val` | Number | Value to constrain |
-| `min` | Number | Minimum bound |
-| `max` | Number | Maximum bound |
+| `val` | number | Value to constrain |
+| `min` | number | Minimum bound |
+| `max` | number | Maximum bound |
 
-**Returns:** The clamped value.
+**Returns:** number
 
 ```javascript
 clamp(15, 0, 10); // 10
-clamp(-5, 0, 10); // 0
-clamp(5, 0, 10); // 5
 ```
 
-### `lerp(a, b, t)`: Number
+---
+
+### `lerp(a, b, t)`: number
 
 Linearly interpolates between two values.
 
 **Arguments:**
 | Name | Type | Description |
 |------|------|-------------|
-| `a` | Number | Start value |
-| `b` | Number | End value |
-| `t` | Number | Interpolation factor (0-1) |
+| `a` | number | Start value |
+| `b` | number | End value |
+| `t` | number | Interpolation factor (0-1) |
 
-**Returns:** The interpolated value.
+**Returns:** number
 
 ```javascript
 lerp(0, 100, 0.5); // 50
-lerp(0, 100, 0.25); // 25
 ```
 
 ---
 
-## Power & Roots
-
-### `power(base, exp)`: Number
+### `power(base, exp)`: number
 
 Returns base raised to the power of exp.
 
 **Arguments:**
 | Name | Type | Description |
 |------|------|-------------|
-| `base` | Number | The base |
-| `exp` | Number | The exponent |
+| `base` | number | The base |
+| `exp` | number | The exponent |
 
-**Returns:** `base^exp`.
+**Returns:** number
 
 ```javascript
 power(2, 3); // 8
-power(10, 2); // 100
 ```
 
-### `sqrt(n)`: Number
+---
+
+### `sqrt(n)`: number
 
 Returns the square root.
 
 **Arguments:**
 | Name | Type | Description |
 |------|------|-------------|
-| `n` | Number | Value (must be >= 0) |
+| `n` | number | Value (must be >= 0) |
 
-**Returns:** The square root.
+**Returns:** number
 
 ```javascript
 sqrt(16); // 4
-sqrt(2); // 1.414...
 ```
 
-### `sqr(n)`: Number
+---
 
-Returns the square of a number (n \* n).
+### `sqr(n)`: number
+
+Returns the square of a number.
 
 **Arguments:**
 | Name | Type | Description |
 |------|------|-------------|
-| `n` | Number | Value to square |
+| `n` | number | Value to square |
 
-**Returns:** `n * n`.
+**Returns:** number
 
 ```javascript
 sqr(5); // 25
@@ -244,190 +211,289 @@ sqr(5); // 25
 
 ---
 
-## Exponentials & Logarithms
+### `frac(n)`: number
 
-### `exp(n)`: Number
+Returns the fractional part of a number.
 
-Returns `e^n`.
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `n` | number | Input value |
 
-```javascript
-exp(1); // 2.718...
-```
-
-### `ln(n)`: Number
-
-Returns the natural logarithm (base e).
+**Returns:** number
 
 ```javascript
-ln(E); // 1
-```
-
-### `log2(n)`: Number
-
-Returns the base-2 logarithm.
-
-```javascript
-log2(256); // 8
-```
-
-### `log10(n)`: Number
-
-Returns the base-10 logarithm.
-
-```javascript
-log10(100); // 2
+frac(3.75); // 0.75
 ```
 
 ---
 
-## Trigonometry (Radians)
-
-### `sin(x)`: Number
+### `sin(x)`: number
 
 Returns sine of x in radians.
 
-```javascript
-sin(0); // 0
-sin(pi / 2); // 1
-```
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `x` | number | Angle in radians |
 
-### `cos(x)`: Number
+**Returns:** number
+
+---
+
+### `cos(x)`: number
 
 Returns cosine of x in radians.
 
-```javascript
-cos(0); // 1
-cos(pi); // -1
-```
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `x` | number | Angle in radians |
 
-### `tan(x)`: Number
+**Returns:** number
+
+---
+
+### `tan(x)`: number
 
 Returns tangent of x in radians.
 
-```javascript
-tan(0); // 0
-tan(pi / 4); // 1
-```
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `x` | number | Angle in radians |
 
-### `arcsin(x)`: Number
-
-Returns the arcsine (inverse sine) in radians.
-
-### `arccos(x)`: Number
-
-Returns the arccosine (inverse cosine) in radians.
-
-### `arctan(x)`: Number
-
-Returns the arctangent (inverse tangent) in radians.
-
-### `arctan2(y, x)`: Number
-
-Returns the angle from origin to point (x, y) in radians.
+**Returns:** number
 
 ---
 
-## Trigonometry (Degrees)
-
-### `dsin(x)`: Number
+### `dsin(x)`: number
 
 Returns sine of x in degrees.
 
-```javascript
-dsin(90); // 1
-```
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `x` | number | Angle in degrees |
 
-### `dcos(x)`: Number
-
-Returns cosine of x in degrees.
-
-```javascript
-dcos(180); // -1
-```
-
-### `dtan(x)`: Number
-
-Returns tangent of x in degrees.
-
-```javascript
-dtan(45); // 1
-```
-
-### `degtorad(deg)`: Number
-
-Converts degrees to radians.
-
-### `radtodeg(rad)`: Number
-
-Converts radians to degrees.
+**Returns:** number
 
 ---
 
-## Vector Math
+### `dcos(x)`: number
 
-### `lengthdir_x(len, dir)`: Number
+Returns cosine of x in degrees.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `x` | number | Angle in degrees |
+
+**Returns:** number
+
+---
+
+### `dtan(x)`: number
+
+Returns tangent of x in degrees.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `x` | number | Angle in degrees |
+
+**Returns:** number
+
+---
+
+### `degtorad(deg)`: number
+
+Converts degrees to radians.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `deg` | number | Degrees |
+
+**Returns:** number
+
+---
+
+### `radtodeg(rad)`: number
+
+Converts radians to degrees.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `rad` | number | Radians |
+
+**Returns:** number
+
+---
+
+### `lengthdir_x(len, dir)`: number
 
 Returns the horizontal component of a vector.
 
 **Arguments:**
 | Name | Type | Description |
 |------|------|-------------|
-| `len` | Number | Vector length |
-| `dir` | Number | Direction in degrees |
+| `len` | number | Vector length |
+| `dir` | number | Direction in degrees |
 
-**Returns:** X component.
+**Returns:** number
 
-```javascript
-lengthdir_x(10, 0); // 10 (pointing right)
-lengthdir_x(10, 90); // 0  (pointing up)
-```
+---
 
-### `lengthdir_y(len, dir)`: Number
+### `lengthdir_y(len, dir)`: number
 
 Returns the vertical component of a vector.
 
 **Arguments:**
 | Name | Type | Description |
 |------|------|-------------|
-| `len` | Number | Vector length |
-| `dir` | Number | Direction in degrees |
+| `len` | number | Vector length |
+| `dir` | number | Direction in degrees |
 
-**Returns:** Y component.
+**Returns:** number
 
-```javascript
-lengthdir_y(10, 0); // 0  (pointing right)
-lengthdir_y(10, 90); // -10 (pointing up, Y increases downward)
-```
+---
 
-### `point_distance(x1, y1, x2, y2)`: Number
+### `point_distance(x1, y1, x2, y2)`: number
 
 Returns the distance between two points.
 
 **Arguments:**
 | Name | Type | Description |
 |------|------|-------------|
-| `x1`, `y1` | Number | First point coordinates |
-| `x2`, `y2` | Number | Second point coordinates |
+| `x1` | number | X of point 1 |
+| `y1` | number | Y of point 1 |
+| `x2` | number | X of point 2 |
+| `y2` | number | Y of point 2 |
 
-**Returns:** Distance as a positive number.
+**Returns:** number
 
-```javascript
-point_distance(0, 0, 3, 4); // 5
-```
+---
 
-### `point_direction(x1, y1, x2, y2)`: Number
+### `point_direction(x1, y1, x2, y2)`: number
 
 Returns the direction from point 1 to point 2.
 
 **Arguments:**
 | Name | Type | Description |
 |------|------|-------------|
-| `x1`, `y1` | Number | Origin point |
-| `x2`, `y2` | Number | Target point |
+| `x1` | number | X of point 1 |
+| `y1` | number | Y of point 1 |
+| `x2` | number | X of point 2 |
+| `y2` | number | Y of point 2 |
 
-**Returns:** Direction in degrees (0-360).
+**Returns:** number
 
-```javascript
-point_direction(0, 0, 10, 0); // 0 (right)
-point_direction(0, 0, 0, -10); // 90 (up)
-```
+---
+
+### `exp(n)`: number
+
+Returns e^n.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `n` | number | Exponent |
+
+**Returns:** number
+
+---
+
+### `ln(x)`: number
+
+Returns the natural logarithm function of x.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `x` | number | Input value |
+
+**Returns:** number
+
+---
+
+### `log2(n)`: number
+
+Returns the base-2 logarithm.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `n` | number | Input value |
+
+**Returns:** number
+
+---
+
+### `log10(n)`: number
+
+Returns the base-10 logarithm.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `n` | number | Input value |
+
+**Returns:** number
+
+---
+
+### `arcsin(x)`: number
+
+Returns the arcsine in radians.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `x` | number | Input value |
+
+**Returns:** number
+
+---
+
+### `arccos(x)`: number
+
+Returns the arccosine in radians.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `x` | number | Input value |
+
+**Returns:** number
+
+---
+
+### `arctan(x)`: number
+
+Returns the arctangent in radians.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `x` | number | Input value |
+
+**Returns:** number
+
+---
+
+### `arctan2(y, x)`: number
+
+Returns the angle from origin to (x, y) in radians.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `y` | number | Y coordinate |
+| `x` | number | X coordinate |
+
+**Returns:** number
+
+---
+

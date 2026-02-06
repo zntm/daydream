@@ -1,13 +1,13 @@
 {
-    "$GMScript": "v1",
-    "%Name": "physics_process_jump",
-    "isCompatibility": false,
-    "isDnD": false,
-    "name": "physics_process_jump",
-    "parent": {
-        "name": "Physics",
-        "path": "folders/Scripts/Entity/Physics.yy"
-    },
-    "resourceType": "GMScript",
-    "resourceVersion": "2.0"
+  "$GMScript":"v1",
+  "%Name":"physics_process_jump",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"physics_process_jump",
+  "parent":{
+    "name":"Physics",
+    "path":"folders/Scripts/Control/Physics.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
 }

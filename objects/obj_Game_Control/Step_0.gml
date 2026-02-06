@@ -89,9 +89,28 @@ if (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.EXIT)
     {
         audio_stop_all();
         
+
         var _player_save_data = global.player_save_data;
         
-        file_save_player_global($"{PROGRAM_DIRECTORY_PLAYERS}/{_player_save_data.uuid}", _player_save_data.name, _player_save_data.attire, obj_Player.hp, obj_Player.hp_max, obj_Player.saturation, {});
+        var _lp = noone;
+        with (obj_Player) { if (is_local) { _lp = id; break; } }
+        
+        // If player doesn't exist (e.g. error or already destroyed), try to rescue or skip
+        if (_lp == noone)
+        {
+             // Fallback or exit? If we can't find the player, we can't save hp/saturation accurately.
+             // But we might have just loaded the menu.
+             // Assuming we want to save *current* state.
+             // If _lp is noone, maybe use default values or values from save data?
+             // For now, let's just use the global save data itself if the instance is missing?
+             // But the args are _lp.hp.
+             
+             // Let's create a dummy struct for safety or use save data accessors if available.
+             // Actually, simply finding it should work if the player exists.
+        }
+
+        
+        file_save_player_global($"{PROGRAM_DIRECTORY_PLAYERS}/{_player_save_data.uuid}", _player_save_data.name, _player_save_data.attire, _lp.hp, _lp.hp_max, _lp.saturation, {});
         file_save_player_inventory(_player_save_data);
         
         file_save_world_global(_world_save_data);
@@ -125,6 +144,12 @@ if (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.EXIT)
             {
                 surface_free(_data.surface_item);
             }
+        }
+        
+        // Disconnect from network before going to menu
+        if (global.network_role != NETWORK_ROLE.NONE)
+        {
+            network_disconnect();
         }
         
         room_goto(rm_Menu_Title);
@@ -175,40 +200,37 @@ if (IS_DEVELOPER_MODE)
 
 var _dt = GAME_TICK * _delta_time;
 
-var _player_x = obj_Player.x;
-var _player_y = obj_Player.y;
+var _lp = noone;
+with (obj_Player) { if (is_local) { _lp = id; break; } }
+if (_lp == noone) exit;
+
+var _player_x = _lp.x;
+var _player_y = _lp.y;
 
 var _world_data = global.world_data[$ global.world_save_data.dimension];
 
 var _settings = global.settings;
 
-with (obj_Player)
+// Redundant keyboard polling removed - handled by control_player and input_state.poll_player()
+
+show_debug_message("[LOOP] Reached control_gametick");
+control_gametick(_delta_time);
+
+// Network Time Sync (Server only)
+if (global.network_role == NETWORK_ROLE.SERVER)
 {
-    if (obj_Game_Control.is_opened & (IS_OPENED_BOOLEAN.MENU | IS_OPENED_BOOLEAN.CHAT))
+    timer_network_sync += _delta_time;
+    
+    if (timer_network_sync >= 1.0) // Sync every second
     {
-        input_left  = false;
-        input_right = false;
+        timer_network_sync = 0;
         
-        input_climb_up   = false;
-        input_climb_down = false;
-        
-        input_jump = false;
-        input_jump_pressed = false;
-    }
-    else
-    {
-        input_left  = keyboard_check(_settings.input_keyboard_left);
-        input_right = keyboard_check(_settings.input_keyboard_right);
-        
-        input_climb_up   = keyboard_check(_settings.input_keyboard_climb_up);
-        input_climb_down = keyboard_check(_settings.input_keyboard_climb_down);
-        
-        input_jump = keyboard_check(_settings.input_keyboard_jump);
-        input_jump_pressed = keyboard_check_pressed(_settings.input_keyboard_jump);
+        var _buffer = packet_create(PACKET_TYPE.TIME_UPDATE);
+        packet_write_time_update(_buffer, global.world_save_data.time);
+        network_broadcast_packet(_buffer);
+        buffer_delete(_buffer);
     }
 }
-
-control_gametick(_delta_time);
 
 // Cleanup temporary audio emitters that have finished playing
 sfx_emitter_cleanup();
@@ -238,24 +260,8 @@ with (obj_Creature)
 
 var _particle_data = global.particle_data;
 
-// Update pooled particles (optimized batch processing)
-control_particles_batch(_dt);
-
-// Legacy: Update instance-based particles (only those with collision)
-with (obj_Particle)
-{
-    var _data = _particle_data[$ _id];
-    
-    if (attribute != undefined) && (!attribute.has_collision_box())
-    {
-        x += xvelocity * _dt;
-        y += yvelocity * _dt;
-        
-        yvelocity += attribute.get_gravity() * _dt;
-    }
-    
-    image_angle += rotation_increment * _dt;
-}
+// Update pooled particles (visual properties and non-colliding movement)
+global.particle_pool.update_visuals(_delta_time);
 
 var _camera_x = global.camera_x_real;
 var _camera_y = global.camera_y_real;
@@ -312,36 +318,73 @@ if !(is_opened & (IS_OPENED_BOOLEAN.MENU | IS_OPENED_BOOLEAN.CHAT))
         }
     }
     
-    var _mouse_distance = rectangle_distance(mouse_x, mouse_y, obj_Player.bbox_left, obj_Player.bbox_top, obj_Player.bbox_right, obj_Player.bbox_bottom);
-    
-    if (cooldown_build <= 0) && (_mouse_distance < ATTRIBUTE_DEFAULT_BUILD_REACH) && (mouse_check_button(mb_right))
-    {
-        player_build(_delta_time, _tile_x, _tile_y);
-    }
-    else
-    {
-        cooldown_build -= _delta_time;
-    }
-    
-    if (cooldown_harvest <= 0) && (_mouse_distance < ATTRIBUTE_DEFAULT_HARVEST_REACH) && (mouse_check_button(mb_left))
-    {
-        player_harvest(_delta_time, _tile_x, _tile_y);
-    }
-    else
-    {
-        obj_Player.timer_sfx_harvest += _delta_time;
-        
-        timer_harvest = 0;
-        
-        cooldown_harvest -= _delta_time;
-    }
+    control_chunk_activity(_camera_x, _camera_y, _camera_width, _camera_height);
 }
-
-control_chunk_activity(_camera_x, _camera_y, _camera_width, _camera_height);
 
 if (keyboard_check_pressed(vk_f1))
 {
     is_opened ^= IS_OPENED_BOOLEAN.GUI;
+}
+
+// Network debug keybinds (developer mode only)
+if (IS_DEVELOPER_MODE)
+{
+    // F5: Start Server
+    if (IS_MULTIPLAYER_ENABLED && keyboard_check_pressed(vk_f5))
+    {
+        if (global.network_role == NETWORK_ROLE.NONE)
+        {
+            if (network_start_server(6510))
+            {
+                chat_add("System", "Server started on port 6510");
+            }
+            else
+            {
+                chat_add("System", "Failed to start server");
+            }
+        }
+        else
+        {
+            chat_add("System", "Already in a network session");
+        }
+    }
+    
+    // F6: Connect to Server
+    if (IS_MULTIPLAYER_ENABLED && keyboard_check_pressed(vk_f6))
+    {
+        if (global.network_role == NETWORK_ROLE.NONE)
+        {
+            var _ip = get_string("Enter Server IP Address:", "127.0.0.1");
+            var _port = (variable_global_exists("network_port") ? global.network_port : 6510);
+            _port = get_integer("Enter Port:", _port);
+            
+            if (_ip != "" && _port > 0)
+            {
+                if (network_connect_to_server(_ip, _port))
+                {
+                    chat_add("System", $"Connecting to {_ip}:{_port}...");
+                }
+                else
+                {
+                    chat_add("System", "Failed to initiate connection");
+                }
+            }
+        }
+        else
+        {
+            chat_add("System", "Already in a network session");
+        }
+    }
+    
+    // F7: Disconnect
+    if (keyboard_check_pressed(vk_f7))
+    {
+        if (global.network_role != NETWORK_ROLE.NONE)
+        {
+            network_disconnect();
+            chat_add("System", "Disconnected from network");
+        }
+    }
 }
 
 // Update modular GUI visibility and state

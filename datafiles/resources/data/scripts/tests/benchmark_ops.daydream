@@ -1,0 +1,48 @@
+
+fn benchmark_add(n) {
+    var a = 1
+    var b = 2
+    var sum = 0
+    time_start("add_bench")
+    for (var i = 0; i < n; i++) {
+        sum = sum + a // a is variable, prevents folding? checks const_scope
+    }
+    var t = time_end("add_bench")
+    print("Add Loop (" + n + "): " + t + "ms")
+}
+
+fn benchmark_sub(n) {
+    var a = 1
+    var b = 2
+    var diff = 0
+    time_start("sub_bench")
+    for (var i = 0; i < n; i++) {
+        diff = diff - a
+    }
+    var t = time_end("sub_bench")
+    print("Sub Loop (" + n + "): " + t + "ms")
+}
+
+// defeat const optimization by using args
+fn benchmark_add_args(n, a, b) {
+    var sum = 0
+    time_start("add_args")
+    for (var i = 0; i < n; i++) {
+        sum = sum + a
+    }
+    var t = time_end("add_args")
+    print("Add Args (" + n + "): " + t + "ms")
+}
+
+fn benchmark_sub_args(n, a, b) {
+    var diff = 0
+    time_start("sub_args")
+    for (var i = 0; i < n; i++) {
+        diff = diff - a
+    }
+    var t = time_end("sub_args")
+    print("Sub Args (" + n + "): " + t + "ms")
+}
+
+benchmark_add_args(100000, 1, 2)
+benchmark_sub_args(100000, 1, 2)

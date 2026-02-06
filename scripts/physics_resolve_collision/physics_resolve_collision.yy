@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"physics_resolve_collision",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"physics_resolve_collision",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

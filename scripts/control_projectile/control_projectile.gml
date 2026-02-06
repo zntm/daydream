@@ -1,9 +1,29 @@
 /// @desc Projectile control using new physics system
 /// @param {Real} _dt Delta time
 
-function control_projectile(_dt)
+function control_projectile()
 {
-    timer_life -= _dt / GAME_TICK;
+    // --- REMOTE PROJECTILES ON CLIENT (INTERPOLATION) ---
+    if (global.network_role == NETWORK_ROLE.CLIENT)
+    {
+        if (variable_instance_exists(self, "interp_start_x"))
+        {
+            interp_timer += 1 / GAME_TICK;
+            var _t = clamp(interp_timer / interp_duration, 0, 1);
+            
+            x = lerp(interp_start_x, interp_target_x, _t);
+            y = lerp(interp_start_y, interp_target_y, _t);
+            
+            // Auto-rotate towards movement
+            if (interp_target_x != interp_start_x || interp_target_y != interp_start_y)
+            {
+                image_angle = point_direction(interp_start_x, interp_start_y, interp_target_x, interp_target_y);
+            }
+        }
+        exit;
+    }
+    
+    timer_life -= 1 / GAME_TICK;
     
     if (timer_life <= 0)
     {
@@ -22,6 +42,8 @@ function control_projectile(_dt)
         {
             control_entity_damage(_inst, (owner != undefined) ? owner : id, damage);
             
+            event_emit(new EventDataProjectileLand(id, x, y, _inst, "entity"));
+            
             if (_data.is_destroy_on_collision())
             {
                 instance_destroy();
@@ -34,22 +56,24 @@ function control_projectile(_dt)
     if (physics_body != undefined && attribute != undefined)
     {
         physics_body.sync_from_instance(id);
+        physics_body.reset_collision();
         
         // Apply gravity
         if (attribute.get_gravity() != 0)
         {
-            physics_body.vel_y += attribute.get_gravity() * _dt / 2;
+            physics_body.vel_y += attribute.get_gravity() / 2;
         }
         
         // Resolve collisions
-        physics_resolve_x(physics_body, _dt);
-        physics_resolve_y(physics_body, _dt);
+        physics_move_contact_x(physics_body);
+        physics_move_contact_y(physics_body);
         
         physics_body.sync_to_instance(id);
         
         // Tile collision behavior
         if (attribute.has_collision_box() && (tile_meeting(x, y - 1) || tile_meeting(x + 1, y) || tile_meeting(x, y + 1) || tile_meeting(x - 1, y)))
         {
+            event_emit(new EventDataProjectileLand(id, x, y, undefined, "tile"));
             if (_data.is_destroy_on_collision())
             {
                 instance_destroy();

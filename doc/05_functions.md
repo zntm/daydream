@@ -14,6 +14,21 @@ fn mysum(a, b) {
 print(mysum(10, 20)); // 30
 ```
 
+### Semicolons and Return
+
+Like `break` and `continue`, the `return` keyword is subject to ASI rules. If you want to return an expression, it MUST start on the same line as the `return` keyword.
+
+```javascript
+fn get_value() {
+    return 42; // Returns 42
+}
+
+fn get_nothing() {
+    return
+    42; // Returns undefined! 42 is treated as a separate expression statement.
+}
+```
+
 ### Optional Parameters
 
 Parameters can have default values.

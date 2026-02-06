@@ -3,7 +3,14 @@
     "item": {
         "armor": {
             "type": "breastplate",
-            "defense": 13
+            "defense": 13,
+            "on_double_horizontal_move": {
+                "id": "@phantasia:item/armor/dash",
+                "parameters": {
+                    "stamina_cost": 15,
+                    "velocity": 12
+                }
+            }
         },
         "durability": {
             "amount": 1041,

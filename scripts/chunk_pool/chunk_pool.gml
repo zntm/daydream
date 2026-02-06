@@ -32,6 +32,12 @@ function Chunk(_x, _y) constructor
     chunk_covered_surface = -1;
     chunk_covered_surface_refresh = true;
     chunk_render_state = [];
+    chunk_occluded = array_create(CHUNK_SIZE * CHUNK_SIZE, 0); // Bitwise occlusion flags per layer
+    
+    // Pooled objects (structs)
+    chunk_crafting_stations = [];
+    chunk_containers = [];
+    chunk_lights = [];
     
     // Skew arrays for foliage animation
     chunk_skew_back = array_create(CHUNK_SIZE * CHUNK_SIZE, 0);
@@ -51,6 +57,9 @@ function Chunk(_x, _y) constructor
     
     // State flags
     boolean = CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH;
+    
+    // Fade in timer (0 to 1)
+    timer_fade = 0;
 }
 
 /// @function ChunkPool()
@@ -58,6 +67,9 @@ function Chunk(_x, _y) constructor
 function ChunkPool() : Pool() constructor
 {
     max_size = 32;
+    
+    // Valid list of chunks currently fading in
+    fading_chunks = [];
     
     static create = function()
     {
@@ -94,6 +106,13 @@ function ChunkPool() : Pool() constructor
             _chunk.chunk_covered[@ i] = 0;
         }
         
+        // Clear occlusion flags
+        var _occluded_size = CHUNK_SIZE * CHUNK_SIZE;
+        for (var i = 0; i < _occluded_size; ++i)
+        {
+            _chunk.chunk_occluded[@ i] = 0;
+        }
+        
         // Clear count array
         for (var i = 0; i < CHUNK_DEPTH; ++i)
         {
@@ -114,7 +133,16 @@ function ChunkPool() : Pool() constructor
         _chunk.boolean = CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH;
         _chunk.chunk_covered_surface_refresh = true;
         
+        // Reset fade timer and add to fading list
+        _chunk.timer_fade = 0;
+        array_push(fading_chunks, _chunk);
+        
         global.render_state_pool.clear_list(_chunk.chunk_render_state);
+        
+        // Clear pooled objects
+        _chunk.chunk_crafting_stations = [];
+        _chunk.chunk_containers = [];
+        _chunk.chunk_lights = [];
         
         // Register at new position
         chunk_map_register(_chunk);
@@ -126,7 +154,31 @@ function ChunkPool() : Pool() constructor
         
         if (!_is_loaded)
         {
-            chunk_generate(_chunk);
+            // Cache worldgen context for performance (hoisted lookups)
+            if (variable_global_exists("worldgen_context") == false)
+            {
+                var _wsd = global.world_save_data;
+                var _wd = global.world_data[$ _wsd.dimension];
+                var _sky_id = _wd.get_sky_biome_id();
+                global.worldgen_context = {
+                    item_data: global.item_data,
+                    natural_structure_data: global.natural_structure_data,
+                    structure_data: global.structure_data,
+                    world_save_data: _wsd,
+                    world_data: _wd,
+                    biome_data: global.biome_data,
+                    world_height: _wd.get_world_height(),
+                    world_seed: _wsd.seed,
+                    sky_threshold: _wd.get_sky_biome_threshold(),
+                    sky_enabled: _wd.is_sky_biome_enabled(),
+                    sky_biome_id: _sky_id,
+                    sky_biome_data: global.biome_data[$ _sky_id],
+                    surface_start: _wd.get_surface_start(),
+                    blend_range: _wd.get_biome_blend_range()
+                };
+            }
+            
+            chunk_generate(_chunk, global.worldgen_context);
             _chunk.boolean |= CHUNK_BOOLEAN.GENERATED;
         }
         else
@@ -162,14 +214,19 @@ function ChunkPool() : Pool() constructor
             global.render_state_pool.clear_list(_chunk.chunk_render_state);
         }
         
+        // Clear pooled objects
+        _chunk.chunk_crafting_stations = [];
+        _chunk.chunk_containers = [];
+        _chunk.chunk_lights = [];
+        
         // Clear vertex buffers
         for (var i = 0; i < CHUNK_DEPTH; ++i)
         {
-             if (vertex_buffer_exists(_chunk.chunk_vertex_buffer[i]))
-             {
-                 vertex_delete_buffer(_chunk.chunk_vertex_buffer[i]);
-             }
-             _chunk.chunk_vertex_buffer[@ i] = -1;
+            if (vertex_buffer_exists(_chunk.chunk_vertex_buffer[i]))
+            {
+                vertex_delete_buffer(_chunk.chunk_vertex_buffer[i]);
+            }
+            _chunk.chunk_vertex_buffer[@ i] = -1;
         }
         
         // Free surfaces
@@ -182,6 +239,13 @@ function ChunkPool() : Pool() constructor
         {
             surface_free(_chunk.chunk_covered_surface);
             _chunk.chunk_covered_surface = -1;
+        }
+        
+        // Remove from fading list if present
+        var _index = array_get_index(fading_chunks, _chunk);
+        if (_index != -1)
+        {
+            array_delete(fading_chunks, _index, 1);
         }
     }
     
@@ -208,6 +272,11 @@ function ChunkPool() : Pool() constructor
             {
                 global.render_state_pool.clear_list(_chunk.chunk_render_state);
             }
+        
+            // Clear pooled objects
+            _chunk.chunk_crafting_stations = [];
+            _chunk.chunk_containers = [];
+            _chunk.chunk_lights = [];
             
             // Clean vertex buffers and surfaces
             on_release(_chunk);

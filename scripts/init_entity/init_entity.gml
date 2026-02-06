@@ -11,6 +11,7 @@ function init_entity(_hp, _hp_max, _attribute, _uuid = uuid_generate(irandom(0xf
     
     // Physics system
     physics_body = new PhysicsBody(attribute);
+    physics_body.id = id;
     physics_body.pos_x = x;
     physics_body.pos_y = y;
     
@@ -29,6 +30,7 @@ function init_entity(_hp, _hp_max, _attribute, _uuid = uuid_generate(irandom(0xf
     y_last = y;
     
     // Timers
+    timer_dash = 0;
     timer_regeneration = 0;
     timer_immunity = 0;
     timer_suffocation = 0;

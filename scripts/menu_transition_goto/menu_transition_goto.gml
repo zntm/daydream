@@ -19,7 +19,7 @@ function menu_transition_update()
 {
     if (global.menu_transition_phase == 0) return false;
     
-    var _duration = MENU_TRANSITION_DURATION;
+    var _duration = max(0.001, global.settings.graphics_menu_transition_fade_speed);
     var _dt = global.delta_time;
     
     global.menu_transition_progress += _dt / _duration;
