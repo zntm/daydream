@@ -1,7 +1,7 @@
 import type { ItemComponentData } from "./ItemComponent";
-import type { ItemFunction } from "./ItemFunction";
 import { ItemInventory } from "./ItemInventory";
 import { type ItemPropertiesType, TileItemProperties } from "./ItemProperties";
+import type { ItemScript } from "./ItemScript";
 import { ItemType } from "./ItemType";
 
 export class Item {
@@ -13,7 +13,7 @@ export class Item {
         components?: {
             [key: string]: ItemComponentData;
         };
-        on_use?: ItemFunction[];
+        on_use?: ItemScript[];
     };
 
     constructor(
@@ -42,7 +42,7 @@ export class Item {
         return this;
     }
 
-    setItemOnUse(on_use: ItemFunction[]): Item {
+    setItemOnUse(on_use: ItemScript[]): Item {
         this.item ??= {};
         this.item.on_use ??= [];
 

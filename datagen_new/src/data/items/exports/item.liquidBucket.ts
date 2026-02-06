@@ -1,5 +1,5 @@
 import { DatagenReturnData } from "../../../lib";
-import { Item, ItemComponent, ItemFunction, ItemType } from "../lib";
+import { Item, ItemComponent, ItemScript, ItemType } from "../lib";
 import { liquidRegistries } from "../registries";
 
 export default liquidRegistries.map(
@@ -13,9 +13,9 @@ export default liquidRegistries.map(
             )
                 .addItemComponent("level", ItemComponent.u8(8, 1, 8))
                 .setItemOnUse([
-                    new ItemFunction("phantasia:bucket_place", {
-                        liquid_id: `phantasia:${id}`,
-                        empty_bucket_id: "phantasia:bucket",
+                    new ItemScript("phantasia:bucket_place", {
+                        liquid_id: `${namespace}:${id}`,
+                        empty_bucket_id: `${namespace}:bucket`,
                         flow_speed,
                         fluid_collisions,
                     }),

@@ -1,3 +1,12 @@
+import {
+    Accessory,
+    ItemAccessory,
+    ItemAccessoryType,
+    HelmetItem,
+    BreastplateItem,
+    LeggingsItem,
+    AccessoryItem,
+} from "./AccessoryItem";
 import { ConsumableItem, ConsumableItemData } from "./ConsumableItem";
 import { Item } from "./Item";
 import { ItemCooldown } from "./ItemCooldown";
@@ -45,4 +54,11 @@ export {
     TileItemPlacementConditionType,
     TileItemPlacementConditionValue,
     ToolItem,
+    Accessory,
+    ItemAccessory,
+    ItemAccessoryType,
+    HelmetItem,
+    BreastplateItem,
+    LeggingsItem,
+    AccessoryItem,
 };

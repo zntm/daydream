@@ -1,5 +1,5 @@
 import { DatagenReturnData } from "../../../lib";
-import { ItemComponent, ItemType, TileItem, TileItemProperties } from "../lib";
+import { ItemComponent, ItemScript, ItemType, TileItem, TileItemProperties } from "../lib";
 import { liquidRegistries } from "../registries";
 
 export default liquidRegistries.map(
@@ -15,7 +15,7 @@ export default liquidRegistries.map(
                 .addTileComponent("level", ItemComponent.u8(8, 1, 8))
                 .addTileComponent("flow_direction", ItemComponent.s8(0, -1, 1))
                 .addOnUse([
-                    new ItemFunction("phantasia:bucket_pickup", {
+                    new ItemScript("@phantasia:item/bucket_pickup", {
                         bucket_id: "phantasia:bucket",
                         filled_bucket_id: `${namespace}:${id}_bucket`,
                         flow_speed,
