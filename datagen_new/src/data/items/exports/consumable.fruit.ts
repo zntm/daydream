@@ -29,6 +29,16 @@ export default [
             new Sound("phantasia:sfx/item/eat"),
         ),
     ),
+    new FruitConsumableItem(
+        "phantasia",
+        "rotten_flesh",
+        new ConsumableItemData(
+            2,
+            1,
+            new ItemCooldown("phantasia:food", 1),
+            new Sound("phantasia:sfx/item/eat"),
+        ),
+    ),
 ].map(
     ({ namespace, id, consumableItemData }) =>
         new DatagenReturnData(

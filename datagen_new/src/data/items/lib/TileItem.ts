@@ -32,6 +32,8 @@ export class TileItemCondition {
 
     setIndex(index?: number) {
         this.index = index;
+
+        return this;
     }
 }
 
