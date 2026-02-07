@@ -1,0 +1,11 @@
+{
+    "_id": "playground",
+    "_region_transition": {
+        "noise_amplitude": 8,
+        "noise_scale": 0.05,
+        "width": 32
+    },
+    "_spawn_interval": 14,
+    "_surface_biome_map": "phantasia:world/playground/map",
+    "_world_height": 1024
+}

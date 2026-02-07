@@ -6,8 +6,12 @@
         "phantasia:is_tile",
         "phantasia:is_wall"
     ],
-    "sprite": "phantasia:item/nightrock_wall",
+    "sprite": "phantasia:/item/nightrock_wall",
     "tile": {
+        "audio_properties": {
+            "lowpass": 0.7,
+            "reverb": 0.6
+        },
         "drops": [
             {
                 "id": "phantasia:nightrock_wall"
@@ -15,20 +19,13 @@
         ],
         "harvest": {
             "hardness": 0.52,
-            "level": 0,
+            "level": 2,
             "particle": {
                 "colour": "#phantasia:tile/particle_colour/nightrock",
                 "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
-            },
-            "condition": {
-                "id": "#phantasia:item/type/pickaxe"
             }
         },
-        "sfx": "#phantasia:tile/sfx/stone",
-        "audio_properties": {
-            "lowpass": 0.7,
-            "reverb": 0.6
-        }
+        "sfx": "#phantasia:tile/sfx/stone"
     },
-    "type": "untouchable"
+    "type": "solid"
 }

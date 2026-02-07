@@ -1,11 +1,11 @@
 {
     "background": {
-        "id": "phantasia:background/forest",
-        "blend": 0.7
+        "blend": 0.7,
+        "id": "phantasia:background/forest"
     },
     "creatures": [
         {
-            "id": "phantasia:chicken",
+            "id": "phantasia:rabbit",
             "amount": {
                 "values": {
                     "min": 1,
@@ -13,38 +13,7 @@
                 },
                 "type": "smart_value:irandom"
             },
-            "chance": 0.03,
-            "time_range_min": 0,
-            "time_range_max": 890,
-            "tile": "#phantasia:tile/creature_spawn/animal"
-        },
-        {
-            "id": "phantasia:rabbit",
-            "variant": {
-                "values": [
-                    {
-                        "value": "generic",
-                        "weight": 2
-                    },
-                    {
-                        "value": "white",
-                        "weight": 1
-                    },
-                    {
-                        "value": "spotted",
-                        "weight": 1
-                    }
-                ],
-                "type": "smart_value:choose_weighted"
-            },
-            "amount": {
-                "values": {
-                    "min": 1,
-                    "max": 4
-                },
-                "type": "smart_value:irandom"
-            },
-            "chance": 0.01,
+            "chance": 0.02,
             "time_range_min": 0,
             "time_range_max": 890,
             "tile": "#phantasia:tile/creature_spawn/animal"
@@ -54,67 +23,40 @@
             "amount": {
                 "values": {
                     "min": 1,
-                    "max": 3
+                    "max": 2
                 },
                 "type": "smart_value:irandom"
             },
-            "chance": 0.03
+            "chance": 0.02
         }
     ],
     "foliage": [
         {
             "id": "phantasia:short_grass",
-            "chance": 0.26,
+            "chance": 0.22,
             "generate_on": "#phantasia:tile/placement/plant_on"
         },
         {
             "id": "phantasia:tall_grass",
-            "chance": 0.04,
-            "generate_on": "#phantasia:tile/placement/plant_on"
-        },
-        {
-            "id": "phantasia:rock",
-            "chance": 0.04,
-            "generate_on": "#phantasia:tile/placement/plant_on"
-        },
-        {
-            "id": "phantasia:twig",
-            "chance": 0.05,
-            "generate_on": "#phantasia:tile/placement/plant_on"
-        },
-        {
-            "id": "phantasia:globeflower",
-            "chance": 0.05,
-            "generate_on": "#phantasia:tile/placement/plant_on"
-        },
-        {
-            "id": "phantasia:rose",
-            "chance": 0.07,
-            "generate_on": "#phantasia:tile/placement/plant_on"
-        },
-        {
-            "id": "phantasia:dendrobium",
-            "chance": 0.04,
-            "generate_on": "#phantasia:tile/placement/plant_on"
-        },
-        {
-            "id": "phantasia:dandelion",
             "chance": 0.03,
             "generate_on": "#phantasia:tile/placement/plant_on"
         },
         {
-            "id": "phantasia:seeding_dandelion",
-            "chance": 0.01,
+            "id": "phantasia:rock",
+            "chance": 0.03,
+            "generate_on": "#phantasia:tile/placement/plant_on"
+        },
+        {
+            "id": "phantasia:twig",
+            "chance": 0.06,
+            "generate_on": "#phantasia:tile/placement/plant_on"
+        },
+        {
+            "id": "phantasia:dendrobium",
+            "chance": 0.05,
             "generate_on": "#phantasia:tile/placement/plant_on"
         }
     ],
-    "light_colour": {
-        "dawn": "#374A91",
-        "day": "#FFFFFF",
-        "dusk": "#C68B69",
-        "night": "#141B35"
-    },
-    "map_colour": "#32B559",
     "music": [
         {
             "id": "phantasia:music/field_of_concourse",
@@ -153,59 +95,28 @@
             }
         ]
     },
-    "sky_colour": {
-        "dawn": {
-            "base": "#371479",
-            "gradient": "#4D1140"
-        },
-        "day": {
-            "base": "#5F91FE",
-            "gradient": "#244FE9"
-        },
-        "dusk": {
-            "base": "#C4502D",
-            "gradient": "#DA651C"
-        },
-        "night": {
-            "base": "#2B243F",
-            "gradient": "#1E1F2B"
-        }
-    },
     "structures": [
         {
-            "id": "phantasia:clump/moss",
-            "chance": 0.008,
-            "generate_on": "#phantasia:tile/placement/plant_on"
-        },
-        {
-            "id": "phantasia:tall_foliage/sunflower",
-            "chance": 0.04,
+            "id": "phantasia:tree/birch",
+            "chance": 0.14,
             "generate_on": "#phantasia:tile/placement/plant_on"
         },
         {
             "id": "phantasia:tree/oak",
-            "chance": 0.1,
-            "generate_on": "#phantasia:tile/placement/plant_on"
-        },
-        {
-            "id": "phantasia:tree/birch",
-            "chance": 0.07,
+            "chance": 0.02,
             "generate_on": "#phantasia:tile/placement/plant_on"
         }
     ],
-    "terrain_modifier": {
-        "height_offset": 0
-    },
     "tile": {
-        "top_layer": {
+        "bottom_layer": {
             "base": [
                 {
-                    "id": "phantasia:grass_block"
+                    "id": "phantasia:stone"
                 }
             ],
             "wall": [
                 {
-                    "id": "phantasia:dirt_wall",
+                    "id": "phantasia:stone_wall",
                     "weight": 4
                 },
                 {
@@ -229,15 +140,15 @@
                 }
             ]
         },
-        "bottom_layer": {
+        "top_layer": {
             "base": [
                 {
-                    "id": "phantasia:stone"
+                    "id": "phantasia:grass_block"
                 }
             ],
             "wall": [
                 {
-                    "id": "phantasia:stone_wall",
+                    "id": "phantasia:dirt_wall",
                     "weight": 4
                 },
                 {

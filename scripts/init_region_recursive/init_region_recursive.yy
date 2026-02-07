@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"init_region_recursive",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"init_region_recursive",
+  "parent":{
+    "name":"Data",
+    "path":"folders/Data.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

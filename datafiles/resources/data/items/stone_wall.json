@@ -6,8 +6,12 @@
         "phantasia:is_tile",
         "phantasia:is_wall"
     ],
-    "sprite": "phantasia:item/stone_wall",
+    "sprite": "phantasia:/item/stone_wall",
     "tile": {
+        "audio_properties": {
+            "lowpass": 0.7,
+            "reverb": 0.6
+        },
         "drops": [
             {
                 "id": "phantasia:stone_wall"
@@ -15,20 +19,13 @@
         ],
         "harvest": {
             "hardness": 0.36,
-            "level": 0,
+            "level": 2,
             "particle": {
                 "colour": "#phantasia:tile/particle_colour/stone",
                 "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
-            },
-            "condition": {
-                "id": "#phantasia:item/type/pickaxe"
             }
         },
-        "sfx": "#phantasia:tile/sfx/stone",
-        "audio_properties": {
-            "lowpass": 0.65,
-            "reverb": 0.5
-        }
+        "sfx": "#phantasia:tile/sfx/stone"
     },
-    "type": "untouchable"
+    "type": "solid"
 }

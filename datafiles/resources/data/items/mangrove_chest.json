@@ -2,27 +2,30 @@
     "inventory": "#phantasia:item/generic/inventory_tile",
     "sprite": "phantasia:item/mangrove_chest",
     "tile": {
+        "audio_properties": {
+            "lowpass": 0.4,
+            "reverb": 0.1
+        },
         "drops": [
             {
                 "id": "phantasia:mangrove_chest"
             }
         ],
         "harvest": {
+            "condition": {
+                "id": "#phantasia:item/type/axe"
+            },
             "hardness": 0.56,
             "level": 1,
             "particle": {
-                "colour": "#phantasia:tile/particle_colour/plank_mangrove",
+                "colour": [
+                    "#4D2D0B",
+                    "#3F2207"
+                ],
                 "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
-            },
-            "condition": {
-                "id": "#phantasia:item/type/axe"
             }
         },
-        "sfx": "#phantasia:tile/sfx/wood",
-        "audio_properties": {
-            "lowpass": 0.4,
-            "reverb": 0.1
-        }
+        "sfx": "#phantasia:tile/sfx/wood"
     },
     "type": "untouchable"
 }

@@ -1,0 +1,39 @@
+{
+    "biome_noise_scale": 0.008,
+    "biomes": [
+        "phantasia:surface/borea/surface",
+        "phantasia:surface/borea/peaks"
+    ],
+    "cave_biome_default": "phantasia:cave/chasm",
+    "cave_biomes": [
+        {
+            "biome": "phantasia:cave/depths",
+            "min_depth": 100,
+            "noise_threshold": 0.5
+        }
+    ],
+    "id": "borea",
+    "terrain": {
+        "amplitude_max": 60,
+        "amplitude_min": 30,
+        "base_height": 400,
+        "gradient_strength": 0.015,
+        "height_offset": 0,
+        "noise_scale": 0.015625
+    },
+    "visuals": {
+        "light_colour": {
+            "points": []
+        },
+        "sky_base": {
+            "points": []
+        },
+        "sky_gradient": {
+            "points": []
+        }
+    },
+    "voronoi": {
+        "cell_size": 256,
+        "jitter": 0.4
+    }
+}

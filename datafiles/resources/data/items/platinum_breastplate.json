@@ -2,21 +2,14 @@
     "inventory": "#phantasia:item/generic/inventory_tool",
     "item": {
         "armor": {
-            "type": "breastplate",
             "defense": 13,
-            "on_double_horizontal_move": {
-                "id": "@phantasia:item/armor/dash",
-                "parameters": {
-                    "stamina_cost": 15,
-                    "velocity": 12
-                }
-            }
+            "type": "breastplate"
         },
         "durability": {
             "amount": 1041,
-            "bar": "#phantasia:item/generic/inventory_armor"
+            "bar": "#phantasia:item/generic/durability_bar"
         }
     },
-    "sprite": "phantasia:item/platinum_breastplate",
-    "type": "tool"
+    "sprite": "phantasia:item/phantasia:platinum_breastplate",
+    "type": "accessory"
 }

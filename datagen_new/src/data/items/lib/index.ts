@@ -1,4 +1,4 @@
-import {
+export {
     Accessory,
     ItemAccessory,
     ItemAccessoryType,
@@ -7,19 +7,19 @@ import {
     LeggingsItem,
     AccessoryItem,
 } from "./AccessoryItem";
-import { ConsumableItem, ConsumableItemData } from "./ConsumableItem";
-import { Item } from "./Item";
-import { ItemCooldown } from "./ItemCooldown";
-import { ItemComponentType, ItemComponent } from "./ItemComponent";
-import { ItemDurability } from "./ItemDurability";
-import { ItemHarvest } from "./ItemHarvest";
-import { ItemInventory } from "./ItemInventory";
-import { ItemParticle } from "./ItemParticle";
-import { type ItemPropertiesType, TileItemProperties } from "./ItemProperties";
-import { ItemScript } from "./ItemScript";
-import { ItemSkill } from "./ItemSkill";
-import { ItemType } from "./ItemType";
-import {
+export { ConsumableItem, ConsumableItemData } from "./ConsumableItem";
+export { Item } from "./Item";
+export { ItemCooldown } from "./ItemCooldown";
+export { ItemComponentType, ItemComponent } from "./ItemComponent";
+export { ItemDurability } from "./ItemDurability";
+export { ItemHarvest } from "./ItemHarvest";
+export { ItemInventory } from "./ItemInventory";
+export { ItemParticle } from "./ItemParticle";
+export { type ItemPropertiesType, TileItemProperties } from "./ItemProperties";
+export { ItemScript } from "./ItemScript";
+export { ItemSkill } from "./ItemSkill";
+export { ItemType } from "./ItemType";
+export {
     TileItem,
     TileItemAudioProperties,
     TileItemCondition,
@@ -30,43 +30,4 @@ import {
     TileItemPlacementConditionType,
     TileItemPlacementConditionValue,
 } from "./TileItem";
-import { ToolItem, SwordItem, PickaxeItem, AxeItem, ShovelItem } from "./ToolItem";
-
-export {
-    ConsumableItem,
-    ConsumableItemData,
-    Item,
-    ItemCooldown,
-    ItemComponent,
-    ItemComponentType,
-    ItemDurability,
-    ItemHarvest,
-    ItemInventory,
-    ItemParticle,
-    type ItemPropertiesType,
-    ItemScript,
-    ItemSkill,
-    TileItemProperties,
-    ItemType,
-    TileItem,
-    TileItemAudioProperties,
-    TileItemCondition,
-    TileItemDrop,
-    TileItemHarvest,
-    TileItemPlacement,
-    TileItemPlacementCondition,
-    TileItemPlacementConditionType,
-    TileItemPlacementConditionValue,
-    ToolItem,
-    SwordItem,
-    PickaxeItem,
-    AxeItem,
-    ShovelItem,
-    Accessory,
-    ItemAccessory,
-    ItemAccessoryType,
-    HelmetItem,
-    BreastplateItem,
-    LeggingsItem,
-    AccessoryItem,
-};
+export { ToolItem, SwordItem, PickaxeItem, AxeItem, ShovelItem } from "./ToolItem";
