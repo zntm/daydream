@@ -261,17 +261,17 @@ function ProgCompiler(_context_keys = []) constructor
         "public": true, "private": true, "protected": true, "abstract": true, "interface": true, "implements": true
     }
     
-    // Emit instruction - packs opcode (8 bits) + arg (24 bits) into single integer
-    // Layout: [OPCODE: 8 bits | ARG: 24 bits]
+    // Emit instruction - packs opcode (16 bits) + arg (16 bits) into single integer
+    // Layout: [OPCODE: 16 bits | ARG: 16 bits]
     // This reduces instruction fetch overhead by 50% (1 array access instead of 2)
     static emit = function(_op, _arg = 0, _line = 0)
     {
         // Ensure arg is a valid integer (handle undefined/null)
         if (_arg == undefined) _arg = 0;
         
-        // Pack: opcode in high 8 bits, arg in low 24 bits
-        // Use bitwise AND to mask arg to 24 bits (0xFFFFFF = 16,777,215)
-        var _packed = (_op << 24) | (int64(_arg) & 0xFFFFFF);
+        // Pack: opcode in high 16 bits, arg in low 16 bits
+        // Use bitwise AND to mask arg to 16 bits (0xFFFF = 65,535)
+        var _packed = (_op << 16) | (int64(_arg) & 0xFFFF);
         
         array_push(bytecode.code, _packed);
         array_push(bytecode.lines, _line);
@@ -304,10 +304,10 @@ function ProgCompiler(_context_keys = []) constructor
     {
         // Extract opcode from existing packed instruction
         var _packed = bytecode.code[_address];
-        var _op = (_packed >> 24) & 0xFF;
+        var _op = (_packed >> 16) & 0xFFFF;
         
         // Re-pack with new target
-        bytecode.code[@ _address] = (_op << 24) | (int64(_target) & 0xFFFFFF);
+        bytecode.code[@ _address] = (_op << 16) | (int64(_target) & 0xFFFF);
     }
     
     /// @desc Compile AST to bytecode
@@ -341,7 +341,7 @@ function ProgCompiler(_context_keys = []) constructor
     
     /// @desc Peephole optimizer - replaces common instruction patterns with superinstructions
     /// Uses address mapping to correctly update jump targets after code shrinks
-    /// Works with packed instruction format: [OPCODE: 8 bits | ARG: 24 bits]
+    /// Works with packed instruction format: [OPCODE: 16 bits | ARG: 16 bits]
     static peephole_optimize = function()
     {
         var _code = bytecode.code;
@@ -350,11 +350,11 @@ function ProgCompiler(_context_keys = []) constructor
         if (_len < 2) return; // Too short to optimize
         
         // Helper to pack instruction
-        var _pack = function(_op, _arg) { return (_op << 24) | (int64(_arg) & 0xFFFFFF); };
+        var _pack = function(_op, _arg) { return (_op << 16) | (int64(_arg) & 0xFFFF); };
         
         // Helper to unpack instruction
-        var _unpack_op = function(_packed) { return (_packed >> 24) & 0xFF; };
-        var _unpack_arg = function(_packed) { return _packed & 0xFFFFFF; };
+        var _unpack_op = function(_packed) { return (_packed >> 16) & 0xFFFF; };
+        var _unpack_arg = function(_packed) { return _packed & 0xFFFF; };
         
         // Build new code and track old->new address mapping
         var _new_code = [];
