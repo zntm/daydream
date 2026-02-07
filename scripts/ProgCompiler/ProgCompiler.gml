@@ -76,7 +76,49 @@ enum PROG_OP
     LOAD_LOCAL_ADD,     // local[arg1] + local[arg2]
     PUSH_CONST_ADD,     // Push const[arg] + TOS (e.g., x + 1)
     PUSH_CONST_LT,      // TOS < const[arg]
-    PUSH_CONST_LE       // TOS <= const[arg]
+    PUSH_CONST_LE,      // TOS <= const[arg]
+    
+    // Math Functions (direct opcodes for performance)
+    // Unary math (1 arg from stack)
+    MATH_SIN, MATH_COS, MATH_TAN,
+    MATH_ASIN, MATH_ACOS, MATH_ATAN,
+    MATH_SQRT, MATH_EXP, MATH_LN, MATH_LOG2, MATH_LOG10,
+    MATH_FLOOR, MATH_CEIL, MATH_ROUND, MATH_TRUNC,
+    MATH_ABS, MATH_SIGN,
+    MATH_DEGTORAD, MATH_RADTODEG,
+    
+    // Binary math (2 args from stack)
+    MATH_MIN, MATH_MAX,
+    MATH_ATAN2, MATH_POWER, MATH_LOGN,
+    
+    // Random (special handling)
+    MATH_RANDOM,        // random(max)
+    MATH_IRANDOM,       // irandom(max)
+    MATH_RANDOM_RANGE,  // random_range(min, max)
+    MATH_IRANDOM_RANGE, // irandom_range(min, max)
+    MATH_RANDOMIZE,     // randomize()
+    
+    // Utility
+    MATH_CLAMP,         // clamp(val, min, max)
+    MATH_LERP,          // lerp(a, b, t)
+    MATH_FRAC,          // frac(x)
+    MATH_SQR,           // sqr(x)
+    
+    // Degrees trig
+    MATH_DSIN, MATH_DCOS, MATH_DTAN,
+    
+    // 2D Math
+    MATH_POINT_DIST,    // point_distance(x1,y1,x2,y2)
+    MATH_POINT_DIR,     // point_direction(x1,y1,x2,y2)
+    MATH_LENGTHDIR_X,   // lengthdir_x(len, dir)
+    MATH_LENGTHDIR_Y,   // lengthdir_y(len, dir)
+    
+    // Conversion & Collection
+    MATH_CHOOSE,        // choose(array)
+    MATH_TO_STRING,     // string(val)
+    MATH_TO_REAL,       // real(val)
+    
+    MATH_SQRTFAST       // Fast sqrt approximation
 }
 
 /// @desc Array indices for function data (replaces struct)
@@ -1621,9 +1663,77 @@ function ProgCompiler(_context_keys = []) constructor
                 }
                 else
                 {
-                    compile_node(_node.callee);
-                    for (var i = 0; i < array_length(_node.args); i++) compile_node(_node.args[i]);
-                    emit(PROG_OP.CALL, array_length(_node.args), _node.line);
+                    // Check for built-in math functions that can be compiled to direct opcodes
+                    var _math_opcode = undefined;
+                    var _math_arity = 0;
+                    
+                    if (_node.callee.type == PROG_AST.IDENTIFIER)
+                    {
+                        var _fn_name = _node.callee.name;
+                        
+                        // Unary functions (1 arg)
+                        if (_fn_name == "sin") { _math_opcode = PROG_OP.MATH_SIN; _math_arity = 1; }
+                        else if (_fn_name == "cos") { _math_opcode = PROG_OP.MATH_COS; _math_arity = 1; }
+                        else if (_fn_name == "tan") { _math_opcode = PROG_OP.MATH_TAN; _math_arity = 1; }
+                        else if (_fn_name == "asin" || _fn_name == "arcsin") { _math_opcode = PROG_OP.MATH_ASIN; _math_arity = 1; }
+                        else if (_fn_name == "acos" || _fn_name == "arccos") { _math_opcode = PROG_OP.MATH_ACOS; _math_arity = 1; }
+                        else if (_fn_name == "atan" || _fn_name == "arctan") { _math_opcode = PROG_OP.MATH_ATAN; _math_arity = 1; }
+                        else if (_fn_name == "sqrt") { _math_opcode = PROG_OP.MATH_SQRT; _math_arity = 1; }
+                        else if (_fn_name == "sqr") { _math_opcode = PROG_OP.MATH_SQR; _math_arity = 1; }
+                        else if (_fn_name == "exp") { _math_opcode = PROG_OP.MATH_EXP; _math_arity = 1; }
+                        else if (_fn_name == "ln") { _math_opcode = PROG_OP.MATH_LN; _math_arity = 1; }
+                        else if (_fn_name == "log2") { _math_opcode = PROG_OP.MATH_LOG2; _math_arity = 1; }
+                        else if (_fn_name == "log10") { _math_opcode = PROG_OP.MATH_LOG10; _math_arity = 1; }
+                        else if (_fn_name == "floor") { _math_opcode = PROG_OP.MATH_FLOOR; _math_arity = 1; }
+                        else if (_fn_name == "ceil") { _math_opcode = PROG_OP.MATH_CEIL; _math_arity = 1; }
+                        else if (_fn_name == "round") { _math_opcode = PROG_OP.MATH_ROUND; _math_arity = 1; }
+                        else if (_fn_name == "trunc") { _math_opcode = PROG_OP.MATH_TRUNC; _math_arity = 1; }
+                        else if (_fn_name == "frac") { _math_opcode = PROG_OP.MATH_FRAC; _math_arity = 1; }
+                        else if (_fn_name == "abs") { _math_opcode = PROG_OP.MATH_ABS; _math_arity = 1; }
+                        else if (_fn_name == "sign") { _math_opcode = PROG_OP.MATH_SIGN; _math_arity = 1; }
+                        else if (_fn_name == "degtorad") { _math_opcode = PROG_OP.MATH_DEGTORAD; _math_arity = 1; }
+                        else if (_fn_name == "radtodeg") { _math_opcode = PROG_OP.MATH_RADTODEG; _math_arity = 1; }
+                        else if (_fn_name == "dsin") { _math_opcode = PROG_OP.MATH_DSIN; _math_arity = 1; }
+                        else if (_fn_name == "dcos") { _math_opcode = PROG_OP.MATH_DCOS; _math_arity = 1; }
+                        else if (_fn_name == "dtan") { _math_opcode = PROG_OP.MATH_DTAN; _math_arity = 1; }
+                        else if (_fn_name == "random") { _math_opcode = PROG_OP.MATH_RANDOM; _math_arity = 1; }
+                        else if (_fn_name == "irandom") { _math_opcode = PROG_OP.MATH_IRANDOM; _math_arity = 1; }
+                        else if (_fn_name == "string") { _math_opcode = PROG_OP.MATH_TO_STRING; _math_arity = 1; }
+                        else if (_fn_name == "real") { _math_opcode = PROG_OP.MATH_TO_REAL; _math_arity = 1; }
+                        else if (_fn_name == "choose") { _math_opcode = PROG_OP.MATH_CHOOSE; _math_arity = 1; }
+                        // Nondary/Random Functions (0 args)
+                        else if (_fn_name == "randomize") { _math_opcode = PROG_OP.MATH_RANDOMIZE; _math_arity = 0; }
+                        // Binary functions (2 args)
+                        else if (_fn_name == "min") { _math_opcode = PROG_OP.MATH_MIN; _math_arity = 2; }
+                        else if (_fn_name == "max") { _math_opcode = PROG_OP.MATH_MAX; _math_arity = 2; }
+                        else if (_fn_name == "atan2" || _fn_name == "arctan2") { _math_opcode = PROG_OP.MATH_ATAN2; _math_arity = 2; }
+                        else if (_fn_name == "power" || _fn_name == "pow") { _math_opcode = PROG_OP.MATH_POWER; _math_arity = 2; }
+                        else if (_fn_name == "logn") { _math_opcode = PROG_OP.MATH_LOGN; _math_arity = 2; }
+                        else if (_fn_name == "random_range") { _math_opcode = PROG_OP.MATH_RANDOM_RANGE; _math_arity = 2; }
+                        else if (_fn_name == "irandom_range") { _math_opcode = PROG_OP.MATH_IRANDOM_RANGE; _math_arity = 2; }
+                        else if (_fn_name == "lengthdir_x") { _math_opcode = PROG_OP.MATH_LENGTHDIR_X; _math_arity = 2; }
+                        else if (_fn_name == "lengthdir_y") { _math_opcode = PROG_OP.MATH_LENGTHDIR_Y; _math_arity = 2; }
+                        // Ternary functions (3 args)
+                        else if (_fn_name == "clamp") { _math_opcode = PROG_OP.MATH_CLAMP; _math_arity = 3; }
+                        else if (_fn_name == "lerp") { _math_opcode = PROG_OP.MATH_LERP; _math_arity = 3; }
+                        // Quaternary functions (4 args)
+                        else if (_fn_name == "point_distance" || _fn_name == "point_dist") { _math_opcode = PROG_OP.MATH_POINT_DIST; _math_arity = 4; }
+                        else if (_fn_name == "point_direction" || _fn_name == "point_dir") { _math_opcode = PROG_OP.MATH_POINT_DIR; _math_arity = 4; }
+                    }
+                    
+                    if (_math_opcode != undefined && array_length(_node.args) == _math_arity)
+                    {
+                        // Compile args and emit math opcode directly
+                        for (var i = 0; i < _math_arity; i++) compile_node(_node.args[i]);
+                        emit(_math_opcode, 0, _node.line);
+                    }
+                    else
+                    {
+                        // Normal function call
+                        compile_node(_node.callee);
+                        for (var i = 0; i < array_length(_node.args); i++) compile_node(_node.args[i]);
+                        emit(PROG_OP.CALL, array_length(_node.args), _node.line);
+                    }
                 }
                 break;
                 

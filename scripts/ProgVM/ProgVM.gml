@@ -310,6 +310,118 @@ function proglang_vm_run(_vm, _entry_bytecode)
                         // TOS <= const[_arg]
                         _stack[@ _sp - 1] = _stack[_sp - 1] <= _constants[_arg];
                         break;
+                    
+                    // ========== MATH OPCODES ==========
+                    // Unary trig
+                    case PROG_OP.MATH_SIN: _stack[@ _sp - 1] = sin(_stack[_sp - 1]); break;
+                    case PROG_OP.MATH_COS: _stack[@ _sp - 1] = cos(_stack[_sp - 1]); break;
+                    case PROG_OP.MATH_TAN: _stack[@ _sp - 1] = tan(_stack[_sp - 1]); break;
+                    case PROG_OP.MATH_ASIN: _stack[@ _sp - 1] = arcsin(_stack[_sp - 1]); break;
+                    case PROG_OP.MATH_ACOS: _stack[@ _sp - 1] = arccos(_stack[_sp - 1]); break;
+                    case PROG_OP.MATH_ATAN: _stack[@ _sp - 1] = arctan(_stack[_sp - 1]); break;
+                    
+                    // Unary math
+                    case PROG_OP.MATH_SQRT: _stack[@ _sp - 1] = sqrt(_stack[_sp - 1]); break;
+                    case PROG_OP.MATH_EXP: _stack[@ _sp - 1] = exp(_stack[_sp - 1]); break;
+                    case PROG_OP.MATH_LN: _stack[@ _sp - 1] = ln(_stack[_sp - 1]); break;
+                    case PROG_OP.MATH_LOG2: _stack[@ _sp - 1] = log2(_stack[_sp - 1]); break;
+                    case PROG_OP.MATH_LOG10: _stack[@ _sp - 1] = log10(_stack[_sp - 1]); break;
+                    
+                    // Rounding
+                    case PROG_OP.MATH_FLOOR: _stack[@ _sp - 1] = floor(_stack[_sp - 1]); break;
+                    case PROG_OP.MATH_CEIL: _stack[@ _sp - 1] = ceil(_stack[_sp - 1]); break;
+                    case PROG_OP.MATH_ROUND: _stack[@ _sp - 1] = round(_stack[_sp - 1]); break;
+                    case PROG_OP.MATH_TRUNC: _stack[@ _sp - 1] = int64(_stack[_sp - 1]); break;
+                    case PROG_OP.MATH_FRAC: _stack[@ _sp - 1] = frac(_stack[_sp - 1]); break;
+                    
+                    // Utility unary
+                    case PROG_OP.MATH_ABS: _stack[@ _sp - 1] = abs(_stack[_sp - 1]); break;
+                    case PROG_OP.MATH_SIGN: _stack[@ _sp - 1] = sign(_stack[_sp - 1]); break;
+                    case PROG_OP.MATH_DEGTORAD: _stack[@ _sp - 1] = degtorad(_stack[_sp - 1]); break;
+                    case PROG_OP.MATH_RADTODEG: _stack[@ _sp - 1] = radtodeg(_stack[_sp - 1]); break;
+                    case PROG_OP.MATH_SQRTFAST: _stack[@ _sp - 1] = sqrt(_stack[_sp - 1]); break; // GML sqrt is already fast
+                    
+                    // Binary math (pop 2, push 1)
+                    case PROG_OP.MATH_MIN:
+                        _b = _stack[--_sp];
+                        _stack[@ _sp - 1] = min(_stack[_sp - 1], _b);
+                        break;
+                    case PROG_OP.MATH_MAX:
+                        _b = _stack[--_sp];
+                        _stack[@ _sp - 1] = max(_stack[_sp - 1], _b);
+                        break;
+                    case PROG_OP.MATH_ATAN2:
+                        _b = _stack[--_sp];
+                        _stack[@ _sp - 1] = arctan2(_stack[_sp - 1], _b);
+                        break;
+                    case PROG_OP.MATH_POWER:
+                        _b = _stack[--_sp];
+                        _stack[@ _sp - 1] = power(_stack[_sp - 1], _b);
+                        break;
+                    case PROG_OP.MATH_LOGN:
+                        _b = _stack[--_sp];
+                        _stack[@ _sp - 1] = logn(_b, _stack[_sp - 1]);
+                        break;
+                    
+                    // Random functions
+                    case PROG_OP.MATH_RANDOM:
+                        _stack[@ _sp - 1] = random(_stack[_sp - 1]);
+                        break;
+                    case PROG_OP.MATH_IRANDOM:
+                        _stack[@ _sp - 1] = irandom(_stack[_sp - 1]);
+                        break;
+                    case PROG_OP.MATH_RANDOM_RANGE:
+                        _b = _stack[--_sp];
+                        _stack[@ _sp - 1] = random_range(_stack[_sp - 1], _b);
+                        break;
+                    case PROG_OP.MATH_IRANDOM_RANGE:
+                        _b = _stack[--_sp];
+                        _stack[@ _sp - 1] = irandom_range(_stack[_sp - 1], _b);
+                        break;
+                    
+                    // Ternary functions (pop 3, push 1)
+                    case PROG_OP.MATH_CLAMP:
+                        var _max = _stack[--_sp];
+                        var _min = _stack[--_sp];
+                        _stack[@ _sp - 1] = clamp(_stack[_sp - 1], _min, _max);
+                        break;
+                    case PROG_OP.MATH_LERP:
+                        var _t = _stack[--_sp];
+                        _b = _stack[--_sp];
+                        _stack[@ _sp - 1] = lerp(_stack[_sp - 1], _b, _t);
+                        break;
+                        
+                    // New Math/Utility handlers
+                    case PROG_OP.MATH_DSIN: _stack[@ _sp - 1] = dsin(_stack[_sp - 1]); break;
+                    case PROG_OP.MATH_DCOS: _stack[@ _sp - 1] = dcos(_stack[_sp - 1]); break;
+                    case PROG_OP.MATH_DTAN: _stack[@ _sp - 1] = dtan(_stack[_sp - 1]); break;
+                    case PROG_OP.MATH_SQR: _val = _stack[_sp - 1]; _stack[@ _sp - 1] = _val * _val; break;
+                    case PROG_OP.MATH_RANDOMIZE: randomize(); _stack[@ _sp++] = undefined; break;
+                    case PROG_OP.MATH_POINT_DIST:
+                        var _y2 = _stack[--_sp]; var _x2 = _stack[--_sp];
+                        var _y1 = _stack[--_sp]; var _x1 = _stack[--_sp];
+                        _stack[@ _sp++] = point_distance(_x1, _y1, _x2, _y2);
+                        break;
+                    case PROG_OP.MATH_POINT_DIR:
+                        var _y2 = _stack[--_sp]; var _x2 = _stack[--_sp];
+                        var _y1 = _stack[--_sp]; var _x1 = _stack[--_sp];
+                        _stack[@ _sp++] = point_direction(_x1, _y1, _x2, _y2);
+                        break;
+                    case PROG_OP.MATH_LENGTHDIR_X:
+                        _b = _stack[--_sp]; _a = _stack[--_sp]; // len, dir
+                        _stack[@ _sp++] = lengthdir_x(_a, _b);
+                        break;
+                    case PROG_OP.MATH_LENGTHDIR_Y:
+                        _b = _stack[--_sp]; _a = _stack[--_sp]; // len, dir
+                        _stack[@ _sp++] = lengthdir_y(_a, _b);
+                        break;
+                    case PROG_OP.MATH_CHOOSE:
+                        _a = _stack[_sp - 1];
+                        if (is_array(_a) && array_length(_a) > 0) _stack[@ _sp - 1] = array_choose(_a);
+                        else _stack[@ _sp - 1] = undefined;
+                        break;
+                    case PROG_OP.MATH_TO_STRING: _stack[@ _sp - 1] = string(_stack[_sp - 1]); break;
+                    case PROG_OP.MATH_TO_REAL: _stack[@ _sp - 1] = real(_stack[_sp - 1]); break;
                         
                     // Arithmetic
                     case PROG_OP.ADD:
