@@ -201,8 +201,11 @@ function proglang_vm_run(_vm, _entry_bytecode)
                     return undefined;
                 }
                 
-                var _op = _code[_ip++];
-                var _arg = _code[_ip++];
+                // Fetch and unpack instruction
+                // Packed format: [OPCODE: 8 bits | ARG: 24 bits]
+                var _packed = _code[_ip++];
+                var _op = (_packed >> 24) & 0xFF;
+                var _arg = _packed & 0xFFFFFF;
                 
                 // DEBUG TRACE
                 if (_sp < 0) show_debug_message($"[VM CRITICAL] SP UNDERFLOW BEFORE OP: {_sp}");

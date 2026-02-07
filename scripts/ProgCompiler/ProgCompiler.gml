@@ -219,13 +219,23 @@ function ProgCompiler(_context_keys = []) constructor
         "public": true, "private": true, "protected": true, "abstract": true, "interface": true, "implements": true
     }
     
-    // Emit instruction
-    static emit = function(_op, _arg = undefined, _line = 0)
+    // Emit instruction - packs opcode (8 bits) + arg (24 bits) into single integer
+    // Layout: [OPCODE: 8 bits | ARG: 24 bits]
+    // This reduces instruction fetch overhead by 50% (1 array access instead of 2)
+    static emit = function(_op, _arg = 0, _line = 0)
     {
-        array_push(bytecode.code, _op, _arg);
+        // Ensure arg is a valid integer (handle undefined/null)
+        if (_arg == undefined) _arg = 0;
+        
+        // Pack: opcode in high 8 bits, arg in low 24 bits
+        // Use bitwise AND to mask arg to 24 bits (0xFFFFFF = 16,777,215)
+        var _packed = (_op << 24) | (int64(_arg) & 0xFFFFFF);
+        
+        array_push(bytecode.code, _packed);
         array_push(bytecode.lines, _line);
-        bytecode.code_size += 2;
-        return bytecode.code_size - 2;
+        bytecode.code_size++;
+        
+        return bytecode.code_size - 1;
     }
     
     // Add constant with deduplication
@@ -247,10 +257,15 @@ function ProgCompiler(_context_keys = []) constructor
         return _constants_length;
     }
     
-    // Patch jump address
+    // Patch jump address - for packed format, re-pack with new target
     static patch_jump = function(_address, _target)
     {
-        bytecode.code[@ _address + 1] = _target;
+        // Extract opcode from existing packed instruction
+        var _packed = bytecode.code[_address];
+        var _op = (_packed >> 24) & 0xFF;
+        
+        // Re-pack with new target
+        bytecode.code[@ _address] = (_op << 24) | (int64(_target) & 0xFFFFFF);
     }
     
     /// @desc Compile AST to bytecode
@@ -284,17 +299,25 @@ function ProgCompiler(_context_keys = []) constructor
     
     /// @desc Peephole optimizer - replaces common instruction patterns with superinstructions
     /// Uses address mapping to correctly update jump targets after code shrinks
+    /// Works with packed instruction format: [OPCODE: 8 bits | ARG: 24 bits]
     static peephole_optimize = function()
     {
         var _code = bytecode.code;
         var _len = bytecode.code_size;
         
-        if (_len < 4) return; // Too short to optimize
+        if (_len < 2) return; // Too short to optimize
+        
+        // Helper to pack instruction
+        var _pack = function(_op, _arg) { return (_op << 24) | (int64(_arg) & 0xFFFFFF); };
+        
+        // Helper to unpack instruction
+        var _unpack_op = function(_packed) { return (_packed >> 24) & 0xFF; };
+        var _unpack_arg = function(_packed) { return _packed & 0xFFFFFF; };
         
         // Build new code and track old->new address mapping
         var _new_code = [];
         var _new_lines = [];
-        var _addr_map = array_create(_len + 2, 0); // Map old addresses to new addresses
+        var _addr_map = array_create(_len + 2, 0);
         var _i = 0;
         
         while (_i < _len)
@@ -302,60 +325,66 @@ function ProgCompiler(_context_keys = []) constructor
             // Record address mapping: old position -> new position
             _addr_map[_i] = array_length(_new_code);
             
-            var _op1 = _code[_i];
-            var _arg1 = _code[_i + 1];
-            var _line1 = bytecode.lines[(_i div 2) < array_length(bytecode.lines) ? (_i div 2) : 0];
+            var _packed1 = _code[_i];
+            var _op1 = _unpack_op(_packed1);
+            var _arg1 = _unpack_arg(_packed1);
+            var _line1 = _i < array_length(bytecode.lines) ? bytecode.lines[_i] : 0;
             var _matched = false;
             
-            // Look ahead for patterns (need at least 4 more bytes for a 2-instruction pattern)
-            if (_i + 4 <= _len)
+            // Look ahead for patterns
+            if (_i + 2 <= _len)
             {
-                var _op2 = _code[_i + 2];
-                var _arg2 = _code[_i + 3];
+                var _packed2 = _code[_i + 1];
+                var _op2 = _unpack_op(_packed2);
+                var _arg2 = _unpack_arg(_packed2);
                 
                 // Pattern: LOAD_LOCAL + INC + STORE_LOCAL (same index) + POP -> INC_LOCAL
-                if (_op1 == PROG_OP.LOAD_LOCAL && _op2 == PROG_OP.INC && _i + 8 <= _len)
+                if (_op1 == PROG_OP.LOAD_LOCAL && _op2 == PROG_OP.INC && _i + 4 <= _len)
                 {
-                    var _op3 = _code[_i + 4];
-                    var _arg3 = _code[_i + 5];
-                    var _op4 = _code[_i + 6];
+                    var _packed3 = _code[_i + 2];
+                    var _op3 = _unpack_op(_packed3);
+                    var _arg3 = _unpack_arg(_packed3);
+                    var _packed4 = _code[_i + 3];
+                    var _op4 = _unpack_op(_packed4);
                     
                     if (_op3 == PROG_OP.STORE_LOCAL && _arg3 == _arg1 && _op4 == PROG_OP.POP)
                     {
-                        array_push(_new_code, PROG_OP.INC_LOCAL, _arg1);
+                        array_push(_new_code, _pack(PROG_OP.INC_LOCAL, _arg1));
                         array_push(_new_lines, _line1);
-                        // Map all consumed addresses
+                        _addr_map[_i + 1] = array_length(_new_code);
                         _addr_map[_i + 2] = array_length(_new_code);
-                        _addr_map[_i + 4] = array_length(_new_code);
-                        _addr_map[_i + 6] = array_length(_new_code);
-                        _i += 8;
+                        _addr_map[_i + 3] = array_length(_new_code);
+                        _i += 4;
                         _matched = true;
                     }
                 }
                 
                 // Pattern: LOAD_LOCAL + DEC + STORE_LOCAL (same index) + POP -> DEC_LOCAL
-                if (!_matched && _op1 == PROG_OP.LOAD_LOCAL && _op2 == PROG_OP.DEC && _i + 8 <= _len)
+                if (!_matched && _op1 == PROG_OP.LOAD_LOCAL && _op2 == PROG_OP.DEC && _i + 4 <= _len)
                 {
-                    var _op3 = _code[_i + 4];
-                    var _arg3 = _code[_i + 5];
-                    var _op4 = _code[_i + 6];
+                    var _packed3 = _code[_i + 2];
+                    var _op3 = _unpack_op(_packed3);
+                    var _arg3 = _unpack_arg(_packed3);
+                    var _packed4 = _code[_i + 3];
+                    var _op4 = _unpack_op(_packed4);
                     
                     if (_op3 == PROG_OP.STORE_LOCAL && _arg3 == _arg1 && _op4 == PROG_OP.POP)
                     {
-                        array_push(_new_code, PROG_OP.DEC_LOCAL, _arg1);
+                        array_push(_new_code, _pack(PROG_OP.DEC_LOCAL, _arg1));
                         array_push(_new_lines, _line1);
+                        _addr_map[_i + 1] = array_length(_new_code);
                         _addr_map[_i + 2] = array_length(_new_code);
-                        _addr_map[_i + 4] = array_length(_new_code);
-                        _addr_map[_i + 6] = array_length(_new_code);
-                        _i += 8;
+                        _addr_map[_i + 3] = array_length(_new_code);
+                        _i += 4;
                         _matched = true;
                     }
                 }
                 
                 // Pattern: LOAD_LOCAL + LOAD_LOCAL + (LT/LE/ADD) -> merged
-                if (!_matched && _op1 == PROG_OP.LOAD_LOCAL && _op2 == PROG_OP.LOAD_LOCAL && _i + 6 <= _len)
+                if (!_matched && _op1 == PROG_OP.LOAD_LOCAL && _op2 == PROG_OP.LOAD_LOCAL && _i + 3 <= _len)
                 {
-                    var _op3 = _code[_i + 4];
+                    var _packed3 = _code[_i + 2];
+                    var _op3 = _unpack_op(_packed3);
                     var _superop = undefined;
                     
                     if (_op3 == PROG_OP.LT) _superop = PROG_OP.LOAD_LOCAL_LT;
@@ -364,21 +393,22 @@ function ProgCompiler(_context_keys = []) constructor
                     
                     if (_superop != undefined)
                     {
-                        array_push(_new_code, PROG_OP.LOAD_LOCAL, _arg2);
+                        array_push(_new_code, _pack(PROG_OP.LOAD_LOCAL, _arg2));
                         array_push(_new_lines, _line1);
-                        array_push(_new_code, _superop, _arg1);
+                        array_push(_new_code, _pack(_superop, _arg1));
                         array_push(_new_lines, _line1);
-                        _addr_map[_i + 2] = array_length(_new_code) - 2;
-                        _addr_map[_i + 4] = array_length(_new_code);
-                        _i += 6;
+                        _addr_map[_i + 1] = array_length(_new_code) - 1;
+                        _addr_map[_i + 2] = array_length(_new_code);
+                        _i += 3;
                         _matched = true;
                     }
                 }
                 
                 // Pattern: LOAD_LOCAL + PUSH_CONST + (LT/LE/ADD) -> merged
-                if (!_matched && _op1 == PROG_OP.LOAD_LOCAL && _op2 == PROG_OP.PUSH_CONST && _i + 6 <= _len)
+                if (!_matched && _op1 == PROG_OP.LOAD_LOCAL && _op2 == PROG_OP.PUSH_CONST && _i + 3 <= _len)
                 {
-                    var _op3 = _code[_i + 4];
+                    var _packed3 = _code[_i + 2];
+                    var _op3 = _unpack_op(_packed3);
                     var _superop = undefined;
                     
                     if (_op3 == PROG_OP.LT) _superop = PROG_OP.PUSH_CONST_LT;
@@ -387,13 +417,13 @@ function ProgCompiler(_context_keys = []) constructor
                     
                     if (_superop != undefined)
                     {
-                        array_push(_new_code, PROG_OP.LOAD_LOCAL, _arg1);
+                        array_push(_new_code, _pack(PROG_OP.LOAD_LOCAL, _arg1));
                         array_push(_new_lines, _line1);
-                        array_push(_new_code, _superop, _arg2);
+                        array_push(_new_code, _pack(_superop, _arg2));
                         array_push(_new_lines, _line1);
-                        _addr_map[_i + 2] = array_length(_new_code) - 2;
-                        _addr_map[_i + 4] = array_length(_new_code);
-                        _i += 6;
+                        _addr_map[_i + 1] = array_length(_new_code) - 1;
+                        _addr_map[_i + 2] = array_length(_new_code);
+                        _i += 3;
                         _matched = true;
                     }
                 }
@@ -402,31 +432,31 @@ function ProgCompiler(_context_keys = []) constructor
             // No pattern matched, copy instruction as-is
             if (!_matched)
             {
-                array_push(_new_code, _op1, _arg1);
+                array_push(_new_code, _packed1);
                 array_push(_new_lines, _line1);
-                _i += 2;
+                _i++;
             }
         }
         
         // Final address mapping for end-of-code
         _addr_map[_len] = array_length(_new_code);
         
-        // Pass 2: Fix all jump targets
+        // Pass 2: Fix all jump targets (packed format)
         var _new_len = array_length(_new_code);
-        for (var j = 0; j < _new_len; j += 2)
+        for (var j = 0; j < _new_len; j++)
         {
-            var _op = _new_code[j];
+            var _packed = _new_code[j];
+            var _op = _unpack_op(_packed);
             
             // Check if this is a jump instruction
             if (_op == PROG_OP.JUMP || _op == PROG_OP.JUMP_IF_FALSE || 
                 _op == PROG_OP.JUMP_IF_TRUE || _op == PROG_OP.JUMP_IF_NULL || 
                 _op == PROG_OP.JUMP_IF_NOT_NULL)
             {
-                var _old_target = _new_code[j + 1];
-                // Look up the new address for this target
+                var _old_target = _unpack_arg(_packed);
                 if (_old_target >= 0 && _old_target <= _len)
                 {
-                    _new_code[@ j + 1] = _addr_map[_old_target];
+                    _new_code[@ j] = _pack(_op, _addr_map[_old_target]);
                 }
             }
         }
