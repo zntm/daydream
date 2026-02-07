@@ -35,7 +35,7 @@ switch (state) {
 
 ### break N (Multi-Level Break)
 
-You can break out of multiple nested loops by specifying a number after `break`:
+You can break out of multiple nested loops by specifying a literal number after `break`:
 
 ```javascript
 for (var i = 0; i < 10; i++) {
@@ -45,7 +45,24 @@ for (var i = 0; i < 10; i++) {
 }
 ```
 
-`break 1` is equivalent to `break`. The number must be a literal value.
+`break 1` is equivalent to `break`.
+
+## Semicolons and ASI
+
+Semicolons are generally optional in Daydream, as the parser uses **Automatic Semicolon Insertion (ASI)**. However, certain keywords have specific rules to avoid ambiguity:
+
+### `break` and `continue`
+
+The optional `amount` for `break` (or the end of the statement) must be on the same line as the keyword. If the next token is on a new line, the parser will treat the statement as complete without the optional modifier.
+
+```javascript
+for (var i = 0; i < 10; i++) {
+    if (found) break; // This works
+
+    if (found) break;
+    2; // Error: '2' is treated as a separate expression, not the break amount!
+}
+```
 
 ## Loops
 

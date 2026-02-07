@@ -9,9 +9,22 @@ function physics_mode_ground(_body, _input)
     
     // Horizontal movement
     var _move_speed = (_attr != undefined) ? _attr.get_movement_speed() : PHYSICS_MOVE_SPEED_GROUND;
+    
+    if (_input.sprint_held)
+    {
+        _move_speed *= 2.2;
+    }
+    
     var _target_vx = _input.move_x * _move_speed;
     
-    _body.vel_x = lerp_delta(_body.vel_x, _target_vx, PHYSICS_MOVE_ACCEL_GROUND, 1);
+    if (variable_instance_exists(_body.id, "timer_dash") && _body.id.timer_dash > 0)
+    {
+        // Skip horizontal acceleration during dash/knockback/special movement
+    }
+    else
+    {
+        _body.vel_x = lerp_delta(_body.vel_x, _target_vx, PHYSICS_MOVE_ACCEL_GROUND, 1);
+    }
     
     // Gravity
     var _gravity = (_attr != undefined) ? _attr.get_gravity() : PHYSICS_GRAVITY_DEFAULT;

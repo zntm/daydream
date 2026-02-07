@@ -23,6 +23,9 @@ enum PROG_TOKEN
     // Punctuation
     LPAREN, RPAREN, LBRACE, RBRACE, LBRACKET, RBRACKET,
     COMMA, DOT, SEMICOLON, COLON, QUESTION,
+    // Annotations
+    AT_INLINE,      // @inline annotation for function inlining
+    AT_MEMOIZE,     // @memoize annotation for result caching
     // Special
     EOF, ERROR
 }
@@ -317,8 +320,16 @@ function ProgLexer(_source) constructor
                 {
                     start_interpolation();
                 }
+                else if (is_hex_digit(peek()))
+                {
+                    scan_gml_hex();
+                }
                 else { had_error = true; error = $"Unexpected '$' at line {line}"; }
                 break;
+            
+            case "#": scan_hex_color(); break;
+            
+            case "@": scan_annotation(); break;
             
             default:
                 if (is_digit(_c)) scan_number();
@@ -465,6 +476,32 @@ function ProgLexer(_source) constructor
         }
     }
     
+    /// @desc Scan annotations starting with @
+    static scan_annotation = function()
+    {
+        // Read the annotation name
+        while (is_alpha_numeric(peek())) advance();
+        
+        var _text = string_copy(source, start, current - start);
+        
+        switch (_text)
+        {
+            case "@inline":
+                add_token(PROG_TOKEN.AT_INLINE);
+                break;
+            
+            case "@memoize":
+                add_token(PROG_TOKEN.AT_MEMOIZE);
+                break;
+            
+            default:
+                // Unknown annotation - treat as error
+                had_error = true;
+                error = $"Unknown annotation '{_text}' at line {line}";
+                break;
+        }
+    }
+    
     static scan_identifier = function()
     {
         while (is_alpha_numeric(peek())) advance();
@@ -474,6 +511,35 @@ function ProgLexer(_source) constructor
     
     static scan_number = function()
     {
+        // Hex support: 0x...
+        if (string_char_at(source, start) == "0") && (string_lower(peek()) == "x")
+        {
+            advance(); // Consume 'x'
+            
+            while (is_hex_digit(peek())) advance();
+            
+            var _hex_str = string_copy(source, start + 2, current - (start + 2));
+            // Convert hex to real using GML's $ prefix support in real() or a custom loop
+            // For simplicity in this environment, we'll assume a helper or use a loop if needed.
+            // In many GML versions, real("$" + _hex_str) works.
+            var _value = 0;
+            var _length = string_length(_hex_str);
+            for (var i = 1; i <= _length; i++)
+            {
+                var _c = string_char_at(_hex_str, i);
+                var _v = 0;
+                if (is_digit(_c)) _v = real(_c);
+                else
+                {
+                    _v = 10 + (ord(string_lower(_c)) - ord("a"));
+                }
+                _value = (_value << 4) | _v;
+            }
+            
+            add_token(PROG_TOKEN.NUMBER, _value);
+            return;
+        }
+
         // Support underscores in numbers (e.g., 10_000)
         while (is_digit(peek()) || peek() == "_") advance();
         if (peek() == "." && is_digit(peek_next()))
@@ -537,5 +603,77 @@ function ProgLexer(_source) constructor
     static is_alpha_numeric = function(_c)
     {
         return (is_alpha(_c)) || (is_digit(_c));
+    }
+
+    static is_hex_digit = function(_c)
+    {
+        return (is_digit(_c)) || ((string_lower(_c) >= "a") && (string_lower(_c) <= "f"));
+    }
+
+    static scan_hex_color = function()
+    {
+        var _start_hex = current; // Character after '#'
+        while (is_hex_digit(peek())) advance();
+        var _length = current - _start_hex;
+        var _hex = string_copy(source, _start_hex, _length);
+        
+        var _result = 0;
+        if (_length == 3)
+        {
+            var _r = string_char_at(_hex, 1);
+            var _g = string_char_at(_hex, 2);
+            var _b = string_char_at(_hex, 3);
+            var _rr = real("0x" + _r + _r);
+            var _gg = real("0x" + _g + _g);
+            var _bb = real("0x" + _b + _b);
+            _result = make_color_rgb(_rr, _gg, _bb);
+        }
+        else if (_length == 6)
+        {
+            var _rr = real("0x" + string_copy(_hex, 1, 2));
+            var _gg = real("0x" + string_copy(_hex, 3, 2));
+            var _bb = real("0x" + string_copy(_hex, 5, 2));
+            _result = make_color_rgb(_rr, _gg, _bb);
+        }
+        else if (_length == 8)
+        {
+            var _rr = real("0x" + string_copy(_hex, 1, 2));
+            var _gg = real("0x" + string_copy(_hex, 3, 2));
+            var _bb = real("0x" + string_copy(_hex, 5, 2));
+            var _aa = real("0x" + string_copy(_hex, 7, 2));
+            // Packed 32-bit as RRGGBBAA using multiplication to avoid overflow/sign issues in GML bitwise
+            // RRRRRRRR GGGGGGGG BBBBBBBB AAAAAAAA
+            _result = (_rr * 16777216) + (_gg * 65536) + (_bb * 256) + _aa;
+        }
+        else
+        {
+             had_error = true;
+             error = $"Invalid hex color format at line {line}. Use #RGB, #RRGGBB, or #RRGGBBAA.";
+             return;
+        }
+        
+        add_token(PROG_TOKEN.NUMBER, _result);
+    }
+
+    static scan_gml_hex = function()
+    {
+        while (is_hex_digit(peek())) advance();
+        
+        var _hex_str = string_copy(source, start + 1, current - (start + 1));
+        var _value = 0;
+        var _length = string_length(_hex_str);
+        for (var i = 1; i <= _length; i++)
+        {
+            var _c = string_char_at(_hex_str, i);
+            var _v = 0;
+            if (is_digit(_c)) _v = real(_c);
+            else
+            {
+                _v = 10 + (ord(string_lower(_c)) - ord("a"));
+            }
+            _value = (_value << 4) | _v;
+        }
+        
+        add_token(PROG_TOKEN.NUMBER, _value);
     }
 }

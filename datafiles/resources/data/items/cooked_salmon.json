@@ -1,0 +1,18 @@
+{
+    "inventory": "#phantasia:item/generic/inventory_default",
+    "item": {
+        "consumable": {
+            "cooldown": {
+                "id": "phantasia:food",
+                "seconds": 1
+            },
+            "hp": 14,
+            "saturation": 6,
+            "sfx": {
+                "id": "phantasia:sfx/item/eat"
+            }
+        }
+    },
+    "sprite": "phantasia:item/cooked_salmon",
+    "type": "default"
+}

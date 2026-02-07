@@ -7,7 +7,8 @@ enum CREATURE_AI_STATE {
     WANDER,
     CHASE,
     FLEE,
-    ATTACK
+    ATTACK,
+    STUNNED
 }
 
 // AI Constants
@@ -25,6 +26,26 @@ enum CREATURE_AI_STATE {
 
 function control_creature()
 {
+    // --- REMOTE CREATURES ON CLIENT (INTERPOLATION) ---
+    if (global.network_role == NETWORK_ROLE.CLIENT)
+    {
+        if (variable_instance_exists(self, "interp_start_x"))
+        {
+            interp_timer += 1 / GAME_TICK;
+            var _t = clamp(interp_timer / interp_duration, 0, 1);
+            
+            x = lerp(interp_start_x, interp_target_x, _t);
+            y = lerp(interp_start_y, interp_target_y, _t);
+            
+            // Facing direction
+            if (interp_target_x != interp_start_x)
+            {
+                image_xscale = abs(image_xscale) * sign(interp_target_x - interp_start_x);
+            }
+        }
+        exit; // Skip AI/Physics on client
+    }
+    
     var _data = global.creature_data[$ _id];
     var _dt_normalized = 1 / GAME_TICK;
     
@@ -78,14 +99,23 @@ function control_creature()
     var _hostility_type = _data.get_hostility_type();
     
     // --- AI DECISION ---
-    if (ai_decision_timer <= 0)
+    if (ai_state == CREATURE_AI_STATE.STUNNED)
+    {
+        if (ai_state_timer <= 0)
+        {
+            ai_state = CREATURE_AI_STATE.IDLE;
+            ai_state_timer = AI_IDLE_DURATION;
+        }
+    }
+    
+    if (ai_state != CREATURE_AI_STATE.STUNNED) && (ai_decision_timer <= 0)
     {
         ai_decision_timer = AI_DECISION_INTERVAL;
         creature_evaluate_state(_hostility_type, _target, _distance_to_target, _data);
     }
     
     // --- PREY SCANNING ---
-    if (ai_state != CREATURE_AI_STATE.FLEE && ai_decision_timer == AI_DECISION_INTERVAL)
+    if (ai_state != CREATURE_AI_STATE.STUNNED) && (ai_state != CREATURE_AI_STATE.FLEE && ai_decision_timer == AI_DECISION_INTERVAL)
     {
         creature_scan_for_prey(_data, _dt_normalized);
     }
@@ -134,20 +164,27 @@ function control_creature()
     }
     
     // Movement direction
-    if (ai_target_direction != 0)
+    if (ai_state != CREATURE_AI_STATE.STUNNED)
     {
-        _move_x = ai_target_direction;
-        image_xscale = abs(image_xscale) * ai_target_direction;
-        
-        // Pathfinding - jump over obstacles
-        if (!_wants_jump && physics_body.collision.ground)
+        if (ai_target_direction != 0)
         {
-            creature_pathfinding(_target, _move_x, _wants_jump);
+            _move_x = ai_target_direction;
+            image_xscale = abs(image_xscale) * ai_target_direction;
+            
+            // Pathfinding - jump over obstacles
+            if (!_wants_jump && physics_body.collision.ground)
+            {
+                creature_pathfinding(_target, _move_x, _wants_jump);
+            }
         }
+        
+        // Set AI input
+        input_state.from_ai(_move_x, _move_y, _wants_jump, false);
     }
-    
-    // Set AI input
-    input_state.from_ai(_move_x, _move_y, _wants_jump, false);
+    else
+    {
+        input_state.clear();
+    }
     
     // --- PHYSICS ---
     // Set movement mode based on creature type
@@ -275,9 +312,9 @@ function creature_scan_for_prey(_data, _dt_normalized)
     
     var _range = AI_HUNT_RANGE;
     var _nearby = global.creature_quadtree.query_rect(x - _range, y - _range, x + _range, y + _range);
-    var _len = array_length(_nearby);
+    var _length = array_length(_nearby);
     
-    for (var i = 0; i < _len; ++i)
+    for (var i = 0; i < _length; ++i)
     {
         var _inst = _nearby[i];
         if (_inst == id) continue;

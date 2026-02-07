@@ -32,6 +32,7 @@ function Chunk(_x, _y) constructor
     chunk_covered_surface = -1;
     chunk_covered_surface_refresh = true;
     chunk_render_state = [];
+    chunk_occluded = array_create(CHUNK_SIZE * CHUNK_SIZE, 0); // Bitwise occlusion flags per layer
     
     // Pooled objects (structs)
     chunk_crafting_stations = [];
@@ -105,6 +106,13 @@ function ChunkPool() : Pool() constructor
             _chunk.chunk_covered[@ i] = 0;
         }
         
+        // Clear occlusion flags
+        var _occluded_size = CHUNK_SIZE * CHUNK_SIZE;
+        for (var i = 0; i < _occluded_size; ++i)
+        {
+            _chunk.chunk_occluded[@ i] = 0;
+        }
+        
         // Clear count array
         for (var i = 0; i < CHUNK_DEPTH; ++i)
         {
@@ -146,7 +154,31 @@ function ChunkPool() : Pool() constructor
         
         if (!_is_loaded)
         {
-            chunk_generate(_chunk);
+            // Cache worldgen context for performance (hoisted lookups)
+            if (variable_global_exists("worldgen_context") == false)
+            {
+                var _wsd = global.world_save_data;
+                var _wd = global.world_data[$ _wsd.dimension];
+                var _sky_id = _wd.get_sky_biome_id();
+                global.worldgen_context = {
+                    item_data: global.item_data,
+                    natural_structure_data: global.natural_structure_data,
+                    structure_data: global.structure_data,
+                    world_save_data: _wsd,
+                    world_data: _wd,
+                    biome_data: global.biome_data,
+                    world_height: _wd.get_world_height(),
+                    world_seed: _wsd.seed,
+                    sky_threshold: _wd.get_sky_biome_threshold(),
+                    sky_enabled: _wd.is_sky_biome_enabled(),
+                    sky_biome_id: _sky_id,
+                    sky_biome_data: global.biome_data[$ _sky_id],
+                    surface_start: _wd.get_surface_start(),
+                    blend_range: _wd.get_biome_blend_range()
+                };
+            }
+            
+            chunk_generate(_chunk, global.worldgen_context);
             _chunk.boolean |= CHUNK_BOOLEAN.GENERATED;
         }
         else

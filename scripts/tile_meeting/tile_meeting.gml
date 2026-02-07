@@ -36,7 +36,11 @@ function tile_meeting(_x, _y, _z = CHUNK_DEPTH_DEFAULT, _type = ITEM_TYPE_BIT.SO
         
         for (var i = _xstart; i <= _xend; ++i)
         {
-            var _tile = tile_get(i, j, _z);
+            // FAST PATH: Check chunk display bitmask
+            var _chunk = chunk_map_get_by_tile(i, j);
+            if (_chunk != undefined && !(_chunk.chunk_display & (1 << _z))) continue;
+
+            var _tile = tile_get(i, j, _z, _world_height);
             
             if (_tile == TILE_EMPTY) continue;
             

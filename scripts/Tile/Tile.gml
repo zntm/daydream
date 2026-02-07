@@ -9,6 +9,19 @@ function Tile(_id, _item_data = global.item_data) constructor
     
     var _data = _item_data[$ _id];
     
+    if (_data == undefined)
+    {
+        get_tile_components_length = function() { return 0; }
+        get_tile_inventory_length = function() { return 0; }
+        get_tile_components_names = function() { return []; }
+        get_components_length = function() { return 0; }
+        get_component = function() { return undefined; }
+        get_inventory = function() { return undefined; }
+        
+        show_debug_message($"[TILE] Warning: Created tile with invalid ID: {_id}");
+        return; 
+    }
+    
     // set_offset(0, 0);
     // set_scale(1, 1);
     // ___value = 0;

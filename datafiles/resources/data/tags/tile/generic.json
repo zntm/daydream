@@ -12,6 +12,12 @@
         "phantasia:oak",
         "phantasia:pine"
     ],
+    "leaf": [
+        "phantasia:birch_leaves",
+        "phantasia:mangrove_leaves",
+        "phantasia:oak_leaves",
+        "phantasia:pine_leaves"
+    ],
     "workbench": [
         "phantasia:birch_workbench",
         "phantasia:mangrove_workbench",

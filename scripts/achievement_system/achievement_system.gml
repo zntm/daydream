@@ -220,7 +220,7 @@ function achievement_on_tile_place(_data)
         x: _data.x, 
         y: _data.y, 
         z: _data.z
-    };
+    }
     achievement_check_event("TILE_PLACE", _check_data);
 }
 
@@ -235,7 +235,7 @@ function achievement_on_tile_update(_data)
             x: _data.x, 
             y: _data.y, 
             z: _data.z
-        };
+        }
         achievement_check_event("TILE_UPDATE", _check_data);
     }
 }
@@ -267,7 +267,7 @@ function achievement_on_item_craft(_data)
         item: _data.result,
         recipe: _data.recipe,
         crafter: _data.crafter
-    };
+    }
     achievement_check_event("ITEM_CRAFT", _check_data);
 }
 

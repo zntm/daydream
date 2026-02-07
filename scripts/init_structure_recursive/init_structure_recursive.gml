@@ -77,6 +77,15 @@ function init_structure_recursive(_directory, _namespace, _id)
             
             var _rectangle = _width * _height;
             
+            // Read Palette
+            var _palette_length = buffer_read(_buffer, buffer_u16);
+            var _palette = array_create(_palette_length);
+            
+            for (var m = 0; m < _palette_length; ++m)
+            {
+                _palette[@ m] = buffer_read(_buffer, buffer_string);
+            }
+            
             var _data = array_create(_rectangle * CHUNK_DEPTH, TILE_EMPTY);
             
             for (var j = 0; j < _width; ++j)
@@ -97,7 +106,7 @@ function init_structure_recursive(_directory, _namespace, _id)
                     
                     for (var m = 0; m < CHUNK_DEPTH; ++m)
                     {
-                        var _tile = file_load_snippet_tile(_buffer, _item_data);
+                        var _tile = file_load_snippet_tile(_buffer, _item_data, _palette);
                         
                         if (_tile != undefined)
                         {

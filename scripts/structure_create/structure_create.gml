@@ -25,13 +25,9 @@ function structure_create(_x, _y, _id, _seed)
         return _v;
     }
     
-    var _structure_data = global.structure_data[$ _id];
-    
-    var _seed_current = random_get_seed();
-    
     if (!structure_valid(_x, _y, _id, _seed)) exit;
     
-    random_set_seed(_seed_current);
+    var _structure_data = global.structure_data[$ _id];
     
     var _width  = smart_value(_structure_data.get_width());
     var _height = smart_value(_structure_data.get_height());
@@ -52,16 +48,5 @@ function structure_create(_x, _y, _id, _seed)
     _x += (ceil(_width  / 2) + _xoffset) * TILE_SIZE;
     _y += (ceil(_height / 2) + _yoffset) * TILE_SIZE;
     
-    with (instance_create_layer(_x, _y, "Instances", obj_Structure))
-    {
-        image_xscale = _width;
-        image_yscale = _height;
-        
-        structure_xrelative = ceil(bbox_left / TILE_SIZE);
-        structure_yrelative = ceil(bbox_top  / TILE_SIZE);
-        
-        structure_id = _id;
-        
-        count = 0;
-    }
+    global.structure_pool.acquire(_x, _y, _width, _height, _id);
 }

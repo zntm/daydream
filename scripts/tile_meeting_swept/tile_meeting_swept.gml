@@ -1,4 +1,4 @@
-function tile_meeting_swept(_x_start, _y_start, _x_end, _y_end, _z = CHUNK_DEPTH_DEFAULT, _type = ITEM_TYPE_BIT.SOLID | ITEM_TYPE_BIT.PLATFORM, _world_height = global.world_data[$ global.world_save_data.dimension].get_world_height())
+function tile_meeting_swept(_x_start, _y_start, _x_end, _y_end, _z = CHUNK_DEPTH_DEFAULT, _type = ITEM_TYPE_BIT.SOLID | ITEM_TYPE_BIT.PLATFORM, _world_height = global.world_data[$ global.world_save_data.dimension].get_world_height(), _collision_width = undefined, _collision_height = undefined)
 {
     // Check bounds roughly
     var _min_y = min(_y_start, _y_end);
@@ -9,8 +9,24 @@ function tile_meeting_swept(_x_start, _y_start, _x_end, _y_end, _z = CHUNK_DEPTH
     
     var _item_data = global.item_data;
     
-    var _collision_width  = attribute.get_collision_box_width();
-    var _collision_height = attribute.get_collision_box_height();
+    // Get collision dimensions - prefer passed values, then context attribute, then defaults
+    if (_collision_width == undefined)
+    {
+        if (variable_instance_exists(id, "attribute") && attribute != undefined && attribute.has_collision_box())
+        {
+            _collision_width = attribute.get_collision_box_width();
+            _collision_height = attribute.get_collision_box_height();
+        }
+        else
+        {
+            _collision_width = 8;
+            _collision_height = 8;
+        }
+    }
+    else if (_collision_height == undefined)
+    {
+        _collision_height = _collision_width;
+    }
     
     var _xscale = abs(image_xscale);
     var _yscale = abs(image_yscale);

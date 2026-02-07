@@ -321,4 +321,37 @@ function Attribute() constructor
     {
         return self[$ "___regeneration_time"] ?? 60;
     }
+    
+    static set_hp_max = function(_hp_max)
+    {
+        ___hp_max = _hp_max;
+        return self;
+    }
+    
+    static get_hp_max = function()
+    {
+        return self[$ "___hp_max"] ?? 100;
+    }
+    
+    static set_harvest_reach = function(_reach)
+    {
+        ___harvest_reach = _reach;
+        return self;
+    }
+    
+    static get_harvest_reach = function()
+    {
+        return self[$ "___harvest_reach"] ?? ATTRIBUTE_DEFAULT_HARVEST_REACH;
+    }
+    
+    static set_build_reach = function(_reach)
+    {
+        ___build_reach = _reach;
+        return self;
+    }
+    
+    static get_build_reach = function()
+    {
+        return self[$ "___build_reach"] ?? ATTRIBUTE_DEFAULT_BUILD_REACH;
+    }
 }

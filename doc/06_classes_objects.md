@@ -61,6 +61,18 @@ class MathUtils {
 print(MathUtils.add(10, 5));
 ```
 
-## The `this` Keyword
-
 Inside a method, `this` refers to the current instance.
+
+## Keywords as Property Names
+
+Reserved keywords can be used as property names when accessed via the dot (`.`) or optional chaining (`?.`) operators.
+
+```javascript
+var obj = {
+    default: "Value",
+    if: true,
+};
+
+print(obj.default); // "Value"
+print(obj.if); // true
+```

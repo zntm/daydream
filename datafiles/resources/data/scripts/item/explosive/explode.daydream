@@ -1,0 +1,103 @@
+export fn explode(parameter, x, y, z) {
+  var radius = parameter.radius ?? 3
+  var damage = parameter.damage ?? 10
+  var destroy_tiles = parameter.destroy_tiles ?? true
+  var particle = parameter.particle
+  var sound = parameter.sound
+  var chain_react = parameter.chain_react ?? true
+
+  var world_x = x * TILE_SIZE
+  var world_y = y * TILE_SIZE
+
+  if (sound != undefined) {
+    sfx_diegetic_play(undefined, world_x, world_y, smart_value(sound))
+  }
+
+  event_emit(new EventDataExplosiveExplode(x, y, z, radius, damage))
+
+  if (particle != undefined) {
+    var particle_count = parameter.particle_count ?? (radius * 4)
+
+    for (var i = 0; i < particle_count; i++) {
+        var angle = irandom(360)
+        var dist = irandom(radius * TILE_SIZE)
+
+        spawn_particle(
+            smart_value(particle),
+            (world_x + lengthdir_x(dist, angle)) / TILE_SIZE,
+            (world_y + lengthdir_y(dist, angle)) / TILE_SIZE
+        )
+    }
+  }
+
+  if (destroy_tiles) {
+    for (var tx = -radius; tx <= radius; tx++) {
+        for (var ty = -radius; ty <= radius; ty++) {
+            var dist = point_distance(0, 0, tx, ty)
+
+            if (dist <= radius) {
+                var target_x = x + tx
+                var target_y = y + ty
+
+                for (var tz = 0; tz < 7; tz++) {
+                    var target_tile = tile_get(target_x, target_y, tz)
+
+                    if (target_tile != undefined) {
+                        if (chain_react && (target_x != x || target_y != y)) {
+                            var target_data = get_item(target_tile.id)
+                            var on_random_tick = target_data.get_on_random_tick()
+
+                            if (on_random_tick != undefined) {
+                                for (var j = 0; j < array_length(on_random_tick); j++) {
+                                    var func = on_random_tick[j]
+
+                                    if (func.id == "phantasia:explode") {
+                                        var chain_data = {
+                                            x: target_x,
+                                            y: target_y,
+                                            z: tz,
+                                            param: func.parameter
+                                        }
+                                        
+                                        tick_delay_add(irandom_range(2, 6), fn(data) {
+                                            explode(data.param, data.x, data.y, data.z)
+                                        }, chain_data)
+                                    }
+                                }
+                            }
+                        }
+
+                        tile_place(undefined, target_x, target_y, tz)
+                        tile_update_surrounding(target_x, target_y, tz)
+                    }
+                }
+            }
+        }
+    }
+  }
+
+  if (damage > 0) {
+    var damage_radius = radius * TILE_SIZE
+    var entities = entity_query_circle(world_x, world_y, damage_radius)
+    
+    for (var i = 0; i < array_length(entities); i++) {
+        var entity = entities[i]
+        
+        var ex = entity_get_x(entity)
+        var ey = entity_get_y(entity)
+        
+        var dist = point_distance(world_x, world_y, ex, ey)
+        
+        if (dist < damage_radius) {
+            var falloff = 1 - (dist / damage_radius)
+            var actual_damage = ceil(damage * falloff)
+            
+            control_entity_damage(entity, undefined, actual_damage)
+        }
+    }
+  }
+}
+
+if (parameter != undefined && x != undefined) {
+  explode(parameter, x, y, z)
+}

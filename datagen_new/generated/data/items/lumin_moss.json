@@ -1,0 +1,30 @@
+{
+    "inventory": "#phantasia:item/generic/inventory_tile",
+    "properties": [
+        "phantasia:can_flip",
+        "phantasia:can_mirror",
+        "phantasia:is_tile"
+    ],
+    "sprite": "phantasia:/item/lumin_moss",
+    "tile": {
+        "audio_properties": {
+            "lowpass": 0.05,
+            "reverb": 0
+        },
+        "drops": [
+            {
+                "id": "phantasia:lumin_moss"
+            }
+        ],
+        "harvest": {
+            "hardness": 0.26,
+            "level": 0,
+            "particle": {
+                "colour": "#phantasia:tile/particle_colour/lumin_moss",
+                "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
+            }
+        },
+        "sfx": "#phantasia:tile/sfx/foliage"
+    },
+    "type": "solid"
+}

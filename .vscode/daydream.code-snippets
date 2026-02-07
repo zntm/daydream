@@ -1,584 +1,584 @@
 {
     "abs": {
-        "prefix": "abs",
         "body": "abs(${1:n})",
         "description": "Returns the absolute value.\n\n**Parameters:**\n- `n` (number): Input value\n\n**Returns:** number\n\n**Example:**\n```\nabs(-5); // 5\n```",
+        "prefix": "abs",
         "scope": "daydream"
     },
     "arccos": {
-        "prefix": "arccos",
         "body": "arccos(${1:x})",
         "description": "Returns the arccosine in radians.\n\n**Parameters:**\n- `x` (number): Input value\n\n**Returns:** number\n\n",
+        "prefix": "arccos",
         "scope": "daydream"
     },
     "arcsin": {
-        "prefix": "arcsin",
         "body": "arcsin(${1:x})",
         "description": "Returns the arcsine in radians.\n\n**Parameters:**\n- `x` (number): Input value\n\n**Returns:** number\n\n",
+        "prefix": "arcsin",
         "scope": "daydream"
     },
     "arctan": {
-        "prefix": "arctan",
         "body": "arctan(${1:x})",
         "description": "Returns the arctangent in radians.\n\n**Parameters:**\n- `x` (number): Input value\n\n**Returns:** number\n\n",
+        "prefix": "arctan",
         "scope": "daydream"
     },
     "arctan2": {
-        "prefix": "arctan2",
         "body": "arctan2(${1:y}, ${2:x})",
         "description": "Returns the angle from origin to (x, y) in radians.\n\n**Parameters:**\n- `y` (number): Y coordinate\n- `x` (number): X coordinate\n\n**Returns:** number\n\n",
+        "prefix": "arctan2",
         "scope": "daydream"
     },
     "array_copy": {
-        "prefix": "array_copy",
         "body": "array_copy(${1:dest}, ${2:dest_index}, ${3:src}, ${4:src_index}, ${5:length})",
         "description": "Copies part of an array into another.\n\n**Parameters:**\n- `dest` (array): Destination array\n- `dest_index` (number): Start index in destination\n- `src` (array): Source array\n- `src_index` (number): Start index in source\n- `length` (number): Number of elements to copy\n\n**Returns:** void\n\n",
+        "prefix": "array_copy",
         "scope": "daydream"
     },
     "array_length": {
-        "prefix": "array_length",
         "body": "array_length(${1:array})",
         "description": "Returns the length of an array.\n\n**Parameters:**\n- `array` (array): Input array\n\n**Returns:** number\n\n",
+        "prefix": "array_length",
         "scope": "daydream"
     },
     "array_pop": {
-        "prefix": "array_pop",
         "body": "array_pop(${1:array})",
         "description": "Removes and returns the last element of an array.\n\n**Parameters:**\n- `array` (array): Target array\n\n**Returns:** any\n\n",
+        "prefix": "array_pop",
         "scope": "daydream"
     },
     "array_push": {
-        "prefix": "array_push",
         "body": "array_push(${1:array}, ${2:val})",
         "description": "Adds elements to the end of an array.\n\n**Parameters:**\n- `array` (array): Target array\n- `val` (any): Value(s) to push (Optional)\n\n**Returns:** void\n\n",
+        "prefix": "array_push",
         "scope": "daydream"
     },
     "array_resize": {
-        "prefix": "array_resize",
         "body": "array_resize(${1:array}, ${2:new_size})",
         "description": "Resizes an array.\n\n**Parameters:**\n- `array` (array): Target array\n- `new_size` (number): New size\n\n**Returns:** void\n\n",
+        "prefix": "array_resize",
         "scope": "daydream"
     },
     "assert": {
-        "prefix": "assert",
         "body": "assert(${1:condition}, ${2:message})",
         "description": "Throws an error if the condition is false.\n\n**Parameters:**\n- `condition` (boolean): Condition to check\n- `message` (string): Error message (Optional)\n\n**Returns:** void\n\n",
+        "prefix": "assert",
         "scope": "daydream"
     },
     "ceil": {
-        "prefix": "ceil",
         "body": "ceil(${1:n})",
         "description": "Rounds up to the nearest integer.\n\n**Parameters:**\n- `n` (number): Value to round up\n\n**Returns:** number\n\n**Example:**\n```\nceil(3.1); // 4\n```",
+        "prefix": "ceil",
         "scope": "daydream"
     },
     "chance": {
-        "prefix": "chance",
         "body": "chance(${1:probability})",
         "description": "Returns true with the given probability (0-1).\n\n**Parameters:**\n- `probability` (number): Probability (0.0 to 1.0)\n\n**Returns:** boolean\n\n",
+        "prefix": "chance",
         "scope": "daydream"
     },
     "choose": {
-        "prefix": "choose",
         "body": "choose(${1:array})",
         "description": "Returns a random element from an array.\n\n**Parameters:**\n- `array` (array): Array to choose from\n\n**Returns:** any\n\n",
+        "prefix": "choose",
         "scope": "daydream"
     },
     "chr": {
-        "prefix": "chr",
         "body": "chr(${1:code})",
         "description": "Converts an ASCII/Unicode value to a character.\n\n**Parameters:**\n- `code` (number): Character code\n\n**Returns:** string\n\n**Example:**\n```\nchr(65); // \"A\"\n```",
+        "prefix": "chr",
         "scope": "daydream"
     },
     "clamp": {
-        "prefix": "clamp",
         "body": "clamp(${1:val}, ${2:min}, ${3:max})",
         "description": "Constrains a value between min and max.\n\n**Parameters:**\n- `val` (number): Value to constrain\n- `min` (number): Minimum bound\n- `max` (number): Maximum bound\n\n**Returns:** number\n\n**Example:**\n```\nclamp(15, 0, 10); // 10\n```",
+        "prefix": "clamp",
         "scope": "daydream"
     },
     "cos": {
-        "prefix": "cos",
         "body": "cos(${1:x})",
         "description": "Returns cosine of x in radians.\n\n**Parameters:**\n- `x` (number): Angle in radians\n\n**Returns:** number\n\n",
+        "prefix": "cos",
         "scope": "daydream"
     },
     "dcos": {
-        "prefix": "dcos",
         "body": "dcos(${1:x})",
         "description": "Returns cosine of x in degrees.\n\n**Parameters:**\n- `x` (number): Angle in degrees\n\n**Returns:** number\n\n",
+        "prefix": "dcos",
         "scope": "daydream"
     },
     "degtorad": {
-        "prefix": "degtorad",
         "body": "degtorad(${1:deg})",
         "description": "Converts degrees to radians.\n\n**Parameters:**\n- `deg` (number): Degrees\n\n**Returns:** number\n\n",
+        "prefix": "degtorad",
         "scope": "daydream"
     },
     "dsin": {
-        "prefix": "dsin",
         "body": "dsin(${1:x})",
         "description": "Returns sine of x in degrees.\n\n**Parameters:**\n- `x` (number): Angle in degrees\n\n**Returns:** number\n\n",
+        "prefix": "dsin",
         "scope": "daydream"
     },
     "dtan": {
-        "prefix": "dtan",
         "body": "dtan(${1:x})",
         "description": "Returns tangent of x in degrees.\n\n**Parameters:**\n- `x` (number): Angle in degrees\n\n**Returns:** number\n\n",
+        "prefix": "dtan",
         "scope": "daydream"
     },
     "event_emit": {
-        "prefix": "event_emit",
         "body": "event_emit(${1:event_type}, ${2:data})",
         "description": "Emits an event.\n\n**Parameters:**\n- `event_type` (string): Type of event\n- `data` (struct): Event data (Optional)\n\n**Returns:** void\n\n",
+        "prefix": "event_emit",
         "scope": "daydream"
     },
     "event_subscribe": {
-        "prefix": "event_subscribe",
         "body": "event_subscribe(${1:event_type}, ${2:callback})",
         "description": "Subscribes to an event.\n\n**Parameters:**\n- `event_type` (string): Type of event\n- `callback` (function): Callback function\n\n**Returns:** number\n\n",
+        "prefix": "event_subscribe",
         "scope": "daydream"
     },
     "event_unsubscribe": {
-        "prefix": "event_unsubscribe",
         "body": "event_unsubscribe(${1:listener_id})",
         "description": "Unsubscribes from an event.\n\n**Parameters:**\n- `listener_id` (number): ID returned by event_subscribe\n\n**Returns:** void\n\n",
+        "prefix": "event_unsubscribe",
         "scope": "daydream"
     },
     "exp": {
-        "prefix": "exp",
         "body": "exp(${1:n})",
         "description": "Returns e^n.\n\n**Parameters:**\n- `n` (number): Exponent\n\n**Returns:** number\n\n",
+        "prefix": "exp",
         "scope": "daydream"
     },
     "floor": {
-        "prefix": "floor",
         "body": "floor(${1:n})",
         "description": "Rounds down to the nearest integer.\n\n**Parameters:**\n- `n` (number): Value to round down\n\n**Returns:** number\n\n**Example:**\n```\nfloor(3.9); // 3\n```",
+        "prefix": "floor",
         "scope": "daydream"
     },
     "frac": {
-        "prefix": "frac",
         "body": "frac(${1:n})",
         "description": "Returns the fractional part of a number.\n\n**Parameters:**\n- `n` (number): Input value\n\n**Returns:** number\n\n**Example:**\n```\nfrac(3.75); // 0.75\n```",
+        "prefix": "frac",
         "scope": "daydream"
     },
     "irandom": {
-        "prefix": "irandom",
         "body": "irandom(${1:x})",
         "description": "Returns a random integer between 0 and x.\n\n**Parameters:**\n- `x` (number): Upper bound\n\n**Returns:** number\n\n",
+        "prefix": "irandom",
         "scope": "daydream"
     },
     "irandom_range": {
-        "prefix": "irandom_range",
         "body": "irandom_range(${1:x1}, ${2:x2})",
         "description": "Returns a random integer between x1 and x2.\n\n**Parameters:**\n- `x1` (number): Lower bound\n- `x2` (number): Upper bound\n\n**Returns:** number\n\n",
+        "prefix": "irandom_range",
         "scope": "daydream"
     },
     "is_array": {
-        "prefix": "is_array",
         "body": "is_array(${1:val})",
         "description": "Returns true if the value is an array.\n\n**Parameters:**\n- `val` (any): Value to check\n\n**Returns:** boolean\n\n",
+        "prefix": "is_array",
         "scope": "daydream"
     },
     "is_bool": {
-        "prefix": "is_bool",
         "body": "is_bool(${1:val})",
         "description": "Returns true if the value is a boolean.\n\n**Parameters:**\n- `val` (any): Value to check\n\n**Returns:** boolean\n\n",
+        "prefix": "is_bool",
         "scope": "daydream"
     },
     "is_numeric": {
-        "prefix": "is_numeric",
         "body": "is_numeric(${1:val})",
         "description": "Returns true if the value is numeric (real or int64).\n\n**Parameters:**\n- `val` (any): Value to check\n\n**Returns:** boolean\n\n",
+        "prefix": "is_numeric",
         "scope": "daydream"
     },
     "is_real": {
-        "prefix": "is_real",
         "body": "is_real(${1:val})",
         "description": "Returns true if the value is a number.\n\n**Parameters:**\n- `val` (any): Value to check\n\n**Returns:** boolean\n\n",
+        "prefix": "is_real",
         "scope": "daydream"
     },
     "is_regex": {
-        "prefix": "is_regex",
         "body": "is_regex(${1:val})",
         "description": "Returns true if the value is a regex object.\n\n**Parameters:**\n- `val` (any): Value to check\n\n**Returns:** boolean\n\n",
+        "prefix": "is_regex",
         "scope": "daydream"
     },
     "is_string": {
-        "prefix": "is_string",
         "body": "is_string(${1:val})",
         "description": "Returns true if the value is a string.\n\n**Parameters:**\n- `val` (any): Value to check\n\n**Returns:** boolean\n\n",
+        "prefix": "is_string",
         "scope": "daydream"
     },
     "is_struct": {
-        "prefix": "is_struct",
         "body": "is_struct(${1:val})",
         "description": "Returns true if the value is a struct.\n\n**Parameters:**\n- `val` (any): Value to check\n\n**Returns:** boolean\n\n",
+        "prefix": "is_struct",
         "scope": "daydream"
     },
     "is_undefined": {
-        "prefix": "is_undefined",
         "body": "is_undefined(${1:val})",
         "description": "Returns true if the value is undefined.\n\n**Parameters:**\n- `val` (any): Value to check\n\n**Returns:** boolean\n\n",
+        "prefix": "is_undefined",
         "scope": "daydream"
     },
     "lengthdir_x": {
-        "prefix": "lengthdir_x",
         "body": "lengthdir_x(${1:len}, ${2:dir})",
         "description": "Returns the horizontal component of a vector.\n\n**Parameters:**\n- `len` (number): Vector length\n- `dir` (number): Direction in degrees\n\n**Returns:** number\n\n",
+        "prefix": "lengthdir_x",
         "scope": "daydream"
     },
     "lengthdir_y": {
-        "prefix": "lengthdir_y",
         "body": "lengthdir_y(${1:len}, ${2:dir})",
         "description": "Returns the vertical component of a vector.\n\n**Parameters:**\n- `len` (number): Vector length\n- `dir` (number): Direction in degrees\n\n**Returns:** number\n\n",
+        "prefix": "lengthdir_y",
         "scope": "daydream"
     },
     "lerp": {
-        "prefix": "lerp",
         "body": "lerp(${1:a}, ${2:b}, ${3:t})",
         "description": "Linearly interpolates between two values.\n\n**Parameters:**\n- `a` (number): Start value\n- `b` (number): End value\n- `t` (number): Interpolation factor (0-1)\n\n**Returns:** number\n\n**Example:**\n```\nlerp(0, 100, 0.5); // 50\n```",
+        "prefix": "lerp",
         "scope": "daydream"
     },
     "ln": {
-        "prefix": "ln",
         "body": "ln(${1:x})",
         "description": "Returns the natural logarithm function of x.\n\n**Parameters:**\n- `x` (number): Input value\n\n**Returns:** number\n\n",
+        "prefix": "ln",
         "scope": "daydream"
     },
     "log10": {
-        "prefix": "log10",
         "body": "log10(${1:n})",
         "description": "Returns the base-10 logarithm.\n\n**Parameters:**\n- `n` (number): Input value\n\n**Returns:** number\n\n",
+        "prefix": "log10",
         "scope": "daydream"
     },
     "log2": {
-        "prefix": "log2",
         "body": "log2(${1:n})",
         "description": "Returns the base-2 logarithm.\n\n**Parameters:**\n- `n` (number): Input value\n\n**Returns:** number\n\n",
+        "prefix": "log2",
         "scope": "daydream"
     },
     "max": {
-        "prefix": "max",
         "body": "max(${1:a}, ${2:b})",
         "description": "Returns the larger of two values.\n\n**Parameters:**\n- `a` (number): First value\n- `b` (number): Second value\n\n**Returns:** number\n\n**Example:**\n```\nmax(10, 5); // 10\n```",
+        "prefix": "max",
         "scope": "daydream"
     },
     "min": {
-        "prefix": "min",
         "body": "min(${1:a}, ${2:b})",
         "description": "Returns the smaller of two values.\n\n**Parameters:**\n- `a` (number): First value\n- `b` (number): Second value\n\n**Returns:** number\n\n**Example:**\n```\nmin(10, 5); // 5\n```",
+        "prefix": "min",
         "scope": "daydream"
     },
     "ord": {
-        "prefix": "ord",
         "body": "ord(${1:char})",
         "description": "Converts a character to its ASCII/Unicode value.\n\n**Parameters:**\n- `char` (string): Single character\n\n**Returns:** number\n\n**Example:**\n```\nord(\"A\"); // 65\n```",
+        "prefix": "ord",
         "scope": "daydream"
     },
     "point_direction": {
-        "prefix": "point_direction",
         "body": "point_direction(${1:x1}, ${2:y1}, ${3:x2}, ${4:y2})",
         "description": "Returns the direction from point 1 to point 2.\n\n**Parameters:**\n- `x1` (number): X of point 1\n- `y1` (number): Y of point 1\n- `x2` (number): X of point 2\n- `y2` (number): Y of point 2\n\n**Returns:** number\n\n",
+        "prefix": "point_direction",
         "scope": "daydream"
     },
     "point_distance": {
-        "prefix": "point_distance",
         "body": "point_distance(${1:x1}, ${2:y1}, ${3:x2}, ${4:y2})",
         "description": "Returns the distance between two points.\n\n**Parameters:**\n- `x1` (number): X of point 1\n- `y1` (number): Y of point 1\n- `x2` (number): X of point 2\n- `y2` (number): Y of point 2\n\n**Returns:** number\n\n",
+        "prefix": "point_distance",
         "scope": "daydream"
     },
     "power": {
-        "prefix": "power",
         "body": "power(${1:base}, ${2:exp})",
         "description": "Returns base raised to the power of exp.\n\n**Parameters:**\n- `base` (number): The base\n- `exp` (number): The exponent\n\n**Returns:** number\n\n**Example:**\n```\npower(2, 3); // 8\n```",
+        "prefix": "power",
         "scope": "daydream"
     },
     "print": {
-        "prefix": "print",
         "body": "print(${1:values})",
         "description": "Prints values to the debug console.\n\n**Parameters:**\n- `values` (any): Values to print (Optional)\n\n**Returns:** void\n\n**Example:**\n```\nprint(\"Hello\", 123);\n```",
+        "prefix": "print",
         "scope": "daydream"
     },
     "radtodeg": {
-        "prefix": "radtodeg",
         "body": "radtodeg(${1:rad})",
         "description": "Converts radians to degrees.\n\n**Parameters:**\n- `rad` (number): Radians\n\n**Returns:** number\n\n",
+        "prefix": "radtodeg",
         "scope": "daydream"
     },
     "random": {
-        "prefix": "random",
         "body": "random(${1:x})",
         "description": "Returns a random floating-point number between 0 and x.\n\n**Parameters:**\n- `x` (number): Upper bound\n\n**Returns:** number\n\n",
+        "prefix": "random",
         "scope": "daydream"
     },
     "random_range": {
-        "prefix": "random_range",
         "body": "random_range(${1:x1}, ${2:x2})",
         "description": "Returns a random floating-point number between x1 and x2.\n\n**Parameters:**\n- `x1` (number): Lower bound\n- `x2` (number): Upper bound\n\n**Returns:** number\n\n",
+        "prefix": "random_range",
         "scope": "daydream"
     },
     "real": {
-        "prefix": "real",
         "body": "real(${1:val})",
         "description": "Converts a string to a number.\n\n**Parameters:**\n- `val` (string): String containing a number\n\n**Returns:** number\n\n**Example:**\n```\nreal(\"42\"); // 42\n```",
+        "prefix": "real",
         "scope": "daydream"
     },
     "regex_match": {
-        "prefix": "regex_match",
         "body": "regex_match(${1:str}, ${2:regex})",
         "description": "Returns matches of the regex in the string.\n\n**Parameters:**\n- `str` (string): String to match\n- `regex` (regex): Regex object\n\n**Returns:** array\n\n**Example:**\n```\nregex_match(\"hello\", /l+/g);\n```",
+        "prefix": "regex_match",
         "scope": "daydream"
     },
     "regex_match_index": {
-        "prefix": "regex_match_index",
         "body": "regex_match_index(${1:str}, ${2:regex})",
         "description": "Returns the index of the match.\n\n**Parameters:**\n- `str` (string): String to match\n- `regex` (regex): Regex object\n\n**Returns:** number\n\n**Example:**\n```\nregex_match_index(\"hello\", /e/);\n```",
+        "prefix": "regex_match_index",
         "scope": "daydream"
     },
     "regex_parse": {
-        "prefix": "regex_parse",
         "body": "regex_parse(${1:pattern}, ${2:flags})",
         "description": "Creates a regex object.\n\n**Parameters:**\n- `pattern` (string): Regex pattern\n- `flags` (string): Regex flags (e.g. 'g', 'i') (Optional)\n\n**Returns:** regex\n\n",
+        "prefix": "regex_parse",
         "scope": "daydream"
     },
     "regex_replace": {
-        "prefix": "regex_replace",
         "body": "regex_replace(${1:str}, ${2:regex}, ${3:replacement})",
-        "description": "Replaces a match.\n\n**Parameters:**\n- `str` (string): Input string\n- `regex` (regex): Regex object\n- `replacement` (string): Replacement string\n\n**Returns:** string\n\n**Example:**\n```\nregex_replace(\"hello\", /l/ , \"L\");\n```",
+        "description": "Replaces a match.\n\n**Parameters:**\n- `str` (string): Input string\n- `regex` (regex): Regex object\n- `replacement` (string): Replacement string\n\n**Returns:** string\n\n**Example:**\n```\nregex_replace(\"hello\", /l/, \"L\");\n```",
+        "prefix": "regex_replace",
         "scope": "daydream"
     },
     "regex_replace_all": {
-        "prefix": "regex_replace_all",
         "body": "regex_replace_all(${1:str}, ${2:regex}, ${3:replacement})",
-        "description": "Replaces all matches.\n\n**Parameters:**\n- `str` (string): Input string\n- `regex` (regex): Regex object\n- `replacement` (string): Replacement string\n\n**Returns:** string\n\n**Example:**\n```\nregex_replace_all(\"ho ho ho\", /ho/ , \"he\");\n```",
+        "description": "Replaces all matches.\n\n**Parameters:**\n- `str` (string): Input string\n- `regex` (regex): Regex object\n- `replacement` (string): Replacement string\n\n**Returns:** string\n\n**Example:**\n```\nregex_replace_all(\"ho ho ho\", /ho/, \"he\");\n```",
+        "prefix": "regex_replace_all",
         "scope": "daydream"
     },
     "regex_split": {
-        "prefix": "regex_split",
         "body": "regex_split(${1:str}, ${2:regex})",
         "description": "Splits a string by the regex.\n\n**Parameters:**\n- `str` (string): Input string\n- `regex` (regex): Regex object\n\n**Returns:** array\n\n**Example:**\n```\nregex_split(\"a,b,c\", /,/);\n```",
+        "prefix": "regex_split",
         "scope": "daydream"
     },
     "regex_test": {
-        "prefix": "regex_test",
         "body": "regex_test(${1:str}, ${2:regex})",
         "description": "Tests if a string matches the regex.\n\n**Parameters:**\n- `str` (string): String to test\n- `regex` (regex): Regex object\n\n**Returns:** boolean\n\n**Example:**\n```\nregex_test(\"hello\", /h/);\n```",
+        "prefix": "regex_test",
         "scope": "daydream"
     },
     "render_circle": {
-        "prefix": "render_circle",
         "body": "render_circle(${1:x}, ${2:y}, ${3:r}, ${4:outline})",
         "description": "Draws a circle.\n\n**Parameters:**\n- `x` (number): Center X\n- `y` (number): Center Y\n- `r` (number): Radius\n- `outline` (boolean): Draw outline only (Optional)\n\n**Returns:** void\n\n",
+        "prefix": "render_circle",
         "scope": "daydream"
     },
     "render_rectangle": {
-        "prefix": "render_rectangle",
         "body": "render_rectangle(${1:x1}, ${2:y1}, ${3:x2}, ${4:y2}, ${5:outline})",
         "description": "Draws a rectangle.\n\n**Parameters:**\n- `x1` (number): Left\n- `y1` (number): Top\n- `x2` (number): Right\n- `y2` (number): Bottom\n- `outline` (boolean): Draw outline only (Optional)\n\n**Returns:** void\n\n",
+        "prefix": "render_rectangle",
         "scope": "daydream"
     },
     "render_sprite": {
-        "prefix": "render_sprite",
         "body": "render_sprite(${1:sprite}, ${2:x}, ${3:y}, ${4:frame})",
         "description": "Draws a sprite.\n\n**Parameters:**\n- `sprite` (string): Sprite name\n- `x` (number): X position\n- `y` (number): Y position\n- `frame` (number): Frame index (Optional)\n\n**Returns:** void\n\n",
+        "prefix": "render_sprite",
         "scope": "daydream"
     },
     "render_text": {
-        "prefix": "render_text",
         "body": "render_text(${1:text}, ${2:x}, ${3:y})",
         "description": "Draws text.\n\n**Parameters:**\n- `text` (string): Text to draw\n- `x` (number): X position\n- `y` (number): Y position\n\n**Returns:** void\n\n",
+        "prefix": "render_text",
         "scope": "daydream"
     },
     "round": {
-        "prefix": "round",
         "body": "round(${1:n})",
         "description": "Rounds to the nearest integer.\n\n**Parameters:**\n- `n` (number): Value to round\n\n**Returns:** number\n\n**Example:**\n```\nround(3.6); // 4\n```",
+        "prefix": "round",
         "scope": "daydream"
     },
     "runtime_error": {
-        "prefix": "runtime_error",
         "body": "runtime_error(${1:type}, ${2:message})",
         "description": "Throws a runtime error.\n\n**Parameters:**\n- `type` (string): Error type\n- `message` (string): Error message\n\n**Returns:** void\n\n",
+        "prefix": "runtime_error",
         "scope": "daydream"
     },
     "sign": {
-        "prefix": "sign",
         "body": "sign(${1:n})",
         "description": "Returns the sign of a number.\n\n**Parameters:**\n- `n` (number): Input value\n\n**Returns:** number\n\n**Example:**\n```\nsign(-50); // -1\n```",
+        "prefix": "sign",
         "scope": "daydream"
     },
     "sin": {
-        "prefix": "sin",
         "body": "sin(${1:x})",
         "description": "Returns sine of x in radians.\n\n**Parameters:**\n- `x` (number): Angle in radians\n\n**Returns:** number\n\n",
+        "prefix": "sin",
         "scope": "daydream"
     },
     "spawn_particle": {
-        "prefix": "spawn_particle",
         "body": "spawn_particle(${1:particle}, ${2:x}, ${3:y})",
         "description": "Spawns a particle at the specified position.\n\n**Parameters:**\n- `particle` (string): Particle name\n- `x` (number): X position in tiles\n- `y` (number): Y position in tiles\n\n**Returns:** void\n\n",
+        "prefix": "spawn_particle",
         "scope": "daydream"
     },
     "sqr": {
-        "prefix": "sqr",
         "body": "sqr(${1:n})",
         "description": "Returns the square of a number.\n\n**Parameters:**\n- `n` (number): Value to square\n\n**Returns:** number\n\n**Example:**\n```\nsqr(5); // 25\n```",
+        "prefix": "sqr",
         "scope": "daydream"
     },
     "sqrt": {
-        "prefix": "sqrt",
         "body": "sqrt(${1:n})",
         "description": "Returns the square root.\n\n**Parameters:**\n- `n` (number): Value (must be >= 0)\n\n**Returns:** number\n\n**Example:**\n```\nsqrt(16); // 4\n```",
+        "prefix": "sqrt",
         "scope": "daydream"
     },
     "string": {
-        "prefix": "string",
         "body": "string(${1:val})",
         "description": "Converts any value to its string representation.\n\n**Parameters:**\n- `val` (any): Value to convert\n\n**Returns:** string\n\n**Example:**\n```\nstring(123); // \"123\"\n```",
+        "prefix": "string",
         "scope": "daydream"
     },
     "string_delete": {
-        "prefix": "string_delete",
         "body": "string_delete(${1:str}, ${2:index}, ${3:count})",
         "description": "Removes a part of a string.\n\n**Parameters:**\n- `str` (string): Input string\n- `index` (number): Start position (1-indexed)\n- `count` (number): Number of characters to delete\n\n**Returns:** string\n\n**Example:**\n```\nstring_delete(\"Hello World\", 6, 6); // \"Hello\"\n```",
+        "prefix": "string_delete",
         "scope": "daydream"
     },
     "string_height": {
-        "prefix": "string_height",
         "body": "string_height(${1:str})",
         "description": "Returns the height of the string in pixels based on current font.\n\n**Parameters:**\n- `str` (string): Input string\n\n**Returns:** number\n\n",
+        "prefix": "string_height",
         "scope": "daydream"
     },
     "string_insert": {
-        "prefix": "string_insert",
         "body": "string_insert(${1:str}, ${2:substr}, ${3:index})",
         "description": "Inserts a substring into a string.\n\n**Parameters:**\n- `str` (string): Base string\n- `substr` (string): String to insert\n- `index` (number): Insertion position (1-indexed)\n\n**Returns:** string\n\n**Example:**\n```\nstring_insert(\"World\", \"Hello \", 1); // \"Hello World\"\n```",
+        "prefix": "string_insert",
         "scope": "daydream"
     },
     "string_length": {
-        "prefix": "string_length",
         "body": "string_length(${1:str})",
         "description": "Returns the length of a string.\n\n**Parameters:**\n- `str` (string): Input string\n\n**Returns:** number\n\n**Example:**\n```\nstring_length(\"Hello\"); // 5\n```",
+        "prefix": "string_length",
         "scope": "daydream"
     },
     "string_lower": {
-        "prefix": "string_lower",
         "body": "string_lower(${1:str})",
         "description": "Converts a string to lowercase.\n\n**Parameters:**\n- `str` (string): Input string\n\n**Returns:** string\n\n**Example:**\n```\nstring_lower(\"HELLO\"); // \"hello\"\n```",
+        "prefix": "string_lower",
         "scope": "daydream"
     },
     "string_pos": {
-        "prefix": "string_pos",
         "body": "string_pos(${1:substr}, ${2:str})",
         "description": "Finds the position of a substring within a string.\n\n**Parameters:**\n- `substr` (string): Substring to find\n- `str` (string): String to search in\n\n**Returns:** number\n\n**Example:**\n```\nstring_pos(\"lo\", \"Hello\"); // 4\n```",
+        "prefix": "string_pos",
         "scope": "daydream"
     },
     "string_replace": {
-        "prefix": "string_replace",
         "body": "string_replace(${1:str}, ${2:old}, ${3:new})",
         "description": "Replaces the first occurrence of a substring.\n\n**Parameters:**\n- `str` (string): Original string\n- `old` (string): Substring to replace\n- `new` (string): Replacement text\n\n**Returns:** string\n\n**Example:**\n```\nstring_replace(\"Hello World\", \"World\", \"Daydream\"); // \"Hello Daydream\"\n```",
+        "prefix": "string_replace",
         "scope": "daydream"
     },
     "string_replace_all": {
-        "prefix": "string_replace_all",
         "body": "string_replace_all(${1:str}, ${2:old}, ${3:new})",
         "description": "Replaces all occurrences of a substring.\n\n**Parameters:**\n- `str` (string): Original string\n- `old` (string): Substring to replace\n- `new` (string): Replacement text\n\n**Returns:** string\n\n**Example:**\n```\nstring_replace_all(\"ho ho ho\", \"ho\", \"he\"); // \"he he he\"\n```",
+        "prefix": "string_replace_all",
         "scope": "daydream"
     },
     "string_upper": {
-        "prefix": "string_upper",
         "body": "string_upper(${1:str})",
         "description": "Converts a string to uppercase.\n\n**Parameters:**\n- `str` (string): Input string\n\n**Returns:** string\n\n**Example:**\n```\nstring_upper(\"hello\"); // \"HELLO\"\n```",
+        "prefix": "string_upper",
         "scope": "daydream"
     },
     "string_width": {
-        "prefix": "string_width",
         "body": "string_width(${1:str})",
         "description": "Returns the width of the string in pixels based on current font.\n\n**Parameters:**\n- `str` (string): Input string\n\n**Returns:** number\n\n",
+        "prefix": "string_width",
         "scope": "daydream"
     },
     "struct_get_names": {
-        "prefix": "struct_get_names",
         "body": "struct_get_names(${1:struct})",
         "description": "Returns an array of property names in a struct.\n\n**Parameters:**\n- `struct` (struct): Input struct\n\n**Returns:** array\n\n",
+        "prefix": "struct_get_names",
         "scope": "daydream"
     },
     "struct_names_count": {
-        "prefix": "struct_names_count",
         "body": "struct_names_count(${1:struct})",
         "description": "Returns the number of variables in a struct.\n\n**Parameters:**\n- `struct` (struct): Input struct\n\n**Returns:** number\n\n",
+        "prefix": "struct_names_count",
         "scope": "daydream"
     },
     "struct_parse": {
-        "prefix": "struct_parse",
         "body": "struct_parse(${1:json})",
         "description": "Parses a JSON string into a struct/array.\n\n**Parameters:**\n- `json` (string): JSON string\n\n**Returns:** any\n\n",
+        "prefix": "struct_parse",
         "scope": "daydream"
     },
     "struct_stringify": {
-        "prefix": "struct_stringify",
         "body": "struct_stringify(${1:val})",
         "description": "Converts a struct/array to a JSON string.\n\n**Parameters:**\n- `val` (any): Value to stringify\n\n**Returns:** string\n\n",
+        "prefix": "struct_stringify",
         "scope": "daydream"
     },
     "tag_get": {
-        "prefix": "tag_get",
         "body": "tag_get(${1:tag_name})",
         "description": "Gets tag data.\n\n**Parameters:**\n- `tag_name` (string): Name of the tag (without #)\n\n**Returns:** any\n\n",
+        "prefix": "tag_get",
         "scope": "daydream"
     },
     "tan": {
-        "prefix": "tan",
         "body": "tan(${1:x})",
         "description": "Returns tangent of x in radians.\n\n**Parameters:**\n- `x` (number): Angle in radians\n\n**Returns:** number\n\n",
+        "prefix": "tan",
         "scope": "daydream"
     },
     "test": {
-        "prefix": "test",
         "body": "test(${1:name}, ${2:fn}, ${3:stop_on_fail})",
         "description": "Registers a test case.\n\n**Parameters:**\n- `name` (string): Test name\n- `fn` (function): Test function\n- `stop_on_fail` (boolean): Stop remaining tests if this fails (Optional)\n\n**Returns:** void\n\n",
+        "prefix": "test",
         "scope": "daydream"
     },
     "test_expect": {
-        "prefix": "test_expect",
         "body": "test_expect(${1:actual}, ${2:expected})",
         "description": "Asserts that a value equals the expected value.\n\n**Parameters:**\n- `actual` (any): Actual value\n- `expected` (any): Expected value\n\n**Returns:** boolean\n\n",
+        "prefix": "test_expect",
         "scope": "daydream"
     },
     "test_group": {
-        "prefix": "test_group",
         "body": "test_group(${1:name}, ${2:tests})",
         "description": "Registers a group of tests.\n\n**Parameters:**\n- `name` (string): Group name\n- `tests` (array): Array of tests\n\n**Returns:** void\n\n",
+        "prefix": "test_group",
         "scope": "daydream"
     },
     "tile_get": {
-        "prefix": "tile_get",
         "body": "tile_get(${1:x}, ${2:y}, ${3:z})",
         "description": "Gets the tile ID at the specified position.\n\n**Parameters:**\n- `x` (number): X position\n- `y` (number): Y position\n- `z` (number): Z position (layer)\n\n**Returns:** Tile?\n\n",
+        "prefix": "tile_get",
         "scope": "daydream"
     },
     "tile_place": {
-        "prefix": "tile_place",
         "body": "tile_place(${1:tile_id}, ${2:x}, ${3:y}, ${4:z})",
         "description": "Places a tile at the specified position.\n\n**Parameters:**\n- `tile_id` (any): Tile ID or name\n- `x` (number): X position\n- `y` (number): Y position\n- `z` (number): Z position (layer)\n\n**Returns:** void\n\n",
+        "prefix": "tile_place",
         "scope": "daydream"
     },
     "time_end": {
-        "prefix": "time_end",
         "body": "time_end(${1:name})",
         "description": "Ends a timer and returns elapsed milliseconds.\n\n**Parameters:**\n- `name` (string): Timer name\n\n**Returns:** number\n\n",
+        "prefix": "time_end",
         "scope": "daydream"
     },
     "time_start": {
-        "prefix": "time_start",
         "body": "time_start(${1:name})",
         "description": "Starts a timer.\n\n**Parameters:**\n- `name` (string): Timer name\n\n**Returns:** void\n\n",
+        "prefix": "time_start",
         "scope": "daydream"
     },
     "typeof": {
-        "prefix": "typeof",
         "body": "typeof(${1:val})",
         "description": "Returns a string describing the type of the value.\n\n**Parameters:**\n- `val` (any): Value to check\n\n**Returns:** string\n\n**Example:**\n```\ntypeof(123); // \"number\"\n```",
+        "prefix": "typeof",
         "scope": "daydream"
     }
 }

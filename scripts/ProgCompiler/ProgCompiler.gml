@@ -61,7 +61,64 @@ enum PROG_OP
     STRING_CONCAT,
     
     // Optimization Ops
-    LOAD_LOCAL, STORE_LOCAL
+    LOAD_LOCAL, STORE_LOCAL,
+    
+    // Annotation Ops
+    MEMOIZE_CHECK, MEMOIZE_STORE,
+    
+    // Superinstructions (merged opcodes for common patterns)
+    INC_LOCAL,          // ++local[arg] (increment local variable in-place)
+    DEC_LOCAL,          // --local[arg] (decrement local variable in-place)
+    LOAD_LOCAL_INC,     // Push local[arg], then increment it (postfix i++)
+    LOAD_LOCAL_DEC,     // Push local[arg], then decrement it (postfix i--)
+    LOAD_LOCAL_LT,      // local[arg1] < local[arg2] (loop condition)
+    LOAD_LOCAL_LE,      // local[arg1] <= local[arg2]
+    LOAD_LOCAL_ADD,     // local[arg1] + local[arg2]
+    PUSH_CONST_ADD,     // Push const[arg] + TOS (e.g., x + 1)
+    PUSH_CONST_LT,      // TOS < const[arg]
+    PUSH_CONST_LE,      // TOS <= const[arg]
+    
+    // Math Functions (direct opcodes for performance)
+    // Unary math (1 arg from stack)
+    MATH_SIN, MATH_COS, MATH_TAN,
+    MATH_ASIN, MATH_ACOS, MATH_ATAN,
+    MATH_SQRT, MATH_EXP, MATH_LN, MATH_LOG2, MATH_LOG10,
+    MATH_FLOOR, MATH_CEIL, MATH_ROUND, MATH_TRUNC,
+    MATH_ABS, MATH_SIGN,
+    MATH_DEGTORAD, MATH_RADTODEG,
+    
+    // Binary math (2 args from stack)
+    MATH_MIN, MATH_MAX,
+    MATH_ATAN2, MATH_POWER, MATH_LOGN,
+    
+    // Random (special handling)
+    MATH_RANDOM,        // random(max)
+    MATH_IRANDOM,       // irandom(max)
+    MATH_RANDOM_RANGE,  // random_range(min, max)
+    MATH_IRANDOM_RANGE, // irandom_range(min, max)
+    MATH_RANDOMIZE,     // randomize()
+    
+    // Utility
+    MATH_CLAMP,         // clamp(val, min, max)
+    MATH_LERP,          // lerp(a, b, t)
+    MATH_FRAC,          // frac(x)
+    MATH_SQR,           // sqr(x)
+    
+    // Degrees trig
+    MATH_DSIN, MATH_DCOS, MATH_DTAN,
+    
+    // 2D Math
+    MATH_POINT_DIST,    // point_distance(x1,y1,x2,y2)
+    MATH_POINT_DIR,     // point_direction(x1,y1,x2,y2)
+    MATH_LENGTHDIR_X,   // lengthdir_x(len, dir)
+    MATH_LENGTHDIR_Y,   // lengthdir_y(len, dir)
+    
+    // Conversion & Collection
+    MATH_CHOOSE,        // choose(array)
+    MATH_TO_STRING,     // string(val)
+    MATH_TO_REAL,       // real(val)
+    
+    MATH_SQRTFAST       // Fast sqrt approximation
 }
 
 /// @desc Array indices for function data (replaces struct)
@@ -73,6 +130,7 @@ enum PROG_FUNC
     BYTECODE,       // Compiled bytecode
     IS_GLOBAL,      // Boolean: is global function
     PARAM_COUNT,    // Number of parameters
+    IS_INLINE,      // Boolean: is inline function
     SIZE            // Array size
 }
 
@@ -119,10 +177,13 @@ function ProgCompiler(_context_keys = []) constructor
     had_error = false;
     error_message = "";
     
+    inline_functions = {}; // Map of inline function name -> AST node
+    inline_stack = []; // Stack for inline expansion contexts (handling returns)
+    
     // Build context keywords struct from provided keys
     context_keywords = {}
-    var _len = array_length(_context_keys);
-    for (var i = 0; i < _len; i++)
+    var _length = array_length(_context_keys);
+    for (var i = 0; i < _length; i++)
     {
         context_keywords[$ _context_keys[i]] = true;
     }
@@ -130,54 +191,60 @@ function ProgCompiler(_context_keys = []) constructor
     // Stack of declared variable sets per scope (for redeclaration checks)
     declared_vars = [{}];
     
+    memo_count = 0; // Unique ID counter for memoized functions
+    current_memo_id = undefined;
+    memo_id_stack = [];
+    
     // Stack of constant scopes (parallel to declared_vars)
     // Each entry is a struct of { varname: value }
     const_scopes = [{}]; 
     
     static invalidate_constants = function()
     {
-        // When control flow merges or loops, any variable could have changed.
-        // We must clear ALL known constants in ALL active scopes because an inner loop
-        // can modify an outer variable.
-        for (var i = 0; i < array_length(const_scopes); i++)
+        var _length = array_length(const_scopes);
+        
+        for (var i = 0; i < _length; ++i)
         {
-            const_scopes[i] = {}
+            const_scopes[@ i] = {}
         }
     }
     
     static get_const = function(_name)
     {
-        // Search from inner-most scope to outer-most
-        for (var i = array_length(const_scopes) - 1; i >= 0; i--)
+        for (var i = array_length(const_scopes) - 1; i >= 0; --i)
         {
-            if (struct_exists(const_scopes[i], _name)) return const_scopes[i][$ _name];
+            var _scope = const_scopes[i][$ _name];
+            
+            if (_scope != undefined)
+            {
+                return _scope;
+            }
         }
+        
         return undefined;
     }
     
     static set_const = function(_name, _value)
     {
-        // Update existing constant in the nearest scope it defines
-        for (var i = array_length(const_scopes) - 1; i >= 0; i--)
+        for (var i = array_length(const_scopes) - 1; i >= 0; --i)
         {
-            // If we find the variable in our tracking, update it
-            if (struct_exists(const_scopes[i], _name)) 
+            if (const_scopes[i][$ _name] != undefined) 
             {
-                const_scopes[i][$ _name] = _value;
+                const_scopes[@ i][$ _name] = _value;
+                
                 return;
             }
         }
-        // If not found, it might be a variable we aren't tracking as constant (or global unknown).
-        // Since we only track via VAR_DECL or distinct assignment to tracked vars, do nothing here.
     }
     
     static remove_const = function(_name)
     {
         for (var i = array_length(const_scopes) - 1; i >= 0; i--)
         {
-            if (struct_exists(const_scopes[i], _name)) 
+            if (const_scopes[i][$ _name] != undefined) 
             {
                 struct_remove(const_scopes[i], _name);
+                
                 return;
             }
         }
@@ -194,51 +261,252 @@ function ProgCompiler(_context_keys = []) constructor
         "public": true, "private": true, "protected": true, "abstract": true, "interface": true, "implements": true
     }
     
-    // Emit instruction
-    static emit = function(_op, _arg = undefined, _line = 0)
+    // Emit instruction - packs opcode (16 bits) + arg (16 bits) into single integer
+    // Layout: [OPCODE: 16 bits | ARG: 16 bits]
+    // This reduces instruction fetch overhead by 50% (1 array access instead of 2)
+    static emit = function(_op, _arg = 0, _line = 0)
     {
-        array_push(bytecode.code, _op, _arg);
+        // Ensure arg is a valid integer (handle undefined/null)
+        if (_arg == undefined) _arg = 0;
+        
+        // Pack: opcode in high 16 bits, arg in low 16 bits
+        // Use bitwise AND to mask arg to 16 bits (0xFFFF = 65,535)
+        var _packed = (_op << 16) | (int64(_arg) & 0xFFFF);
+        
+        array_push(bytecode.code, _packed);
         array_push(bytecode.lines, _line);
-        bytecode.code_size += 2;
-        return bytecode.code_size - 2;
+        bytecode.code_size++;
+        
+        return bytecode.code_size - 1;
     }
     
     // Add constant with deduplication
     static add_constant = function(_value)
     {
-        var _len = array_length(bytecode.constants);
-        for (var i = 0; i < _len; i++)
+        var _constants = bytecode.constants;
+        var _constants_length = array_length(_constants);
+        
+        for (var i = 0; i < _constants_length; ++i)
         {
-            if (bytecode.constants[i] == _value) return i;
+            if (_constants[i] == _value)
+            {
+                return i;
+            }
         }
-        array_push(bytecode.constants, _value);
-        return _len;
+        
+        array_push(_constants, _value);
+        
+        return _constants_length;
     }
     
-    // Patch jump address
-    static patch_jump = function(_addr, _target)
+    // Patch jump address - for packed format, re-pack with new target
+    static patch_jump = function(_address, _target)
     {
-        bytecode.code[_addr + 1] = _target;
+        // Extract opcode from existing packed instruction
+        var _packed = bytecode.code[_address];
+        var _op = (_packed >> 16) & 0xFFFF;
+        
+        // Re-pack with new target
+        bytecode.code[@ _address] = (_op << 16) | (int64(_target) & 0xFFFF);
     }
     
     /// @desc Compile AST to bytecode
     static compile = function(_ast)
     {
         invalidate_constants();
+        
         if (_ast.type == PROG_AST.BLOCK)
         {
-            for (var i = 0; i < array_length(_ast.statements); i++)
+            var _statements = _ast.statements;
+            var _statements_length = array_length(_statements);
+            
+            for (var i = 0; i < _statements_length; ++i)
             {
-                compile_node(_ast.statements[i]);
+                compile_node(_statements[i]);
             }
         }
         else
         {
             compile_node(_ast);
         }
+        
         emit(PROG_OP.PUSH_NULL);
         emit(PROG_OP.RETURN);
+        
+        // Run peephole optimization pass
+        peephole_optimize();
+        
         return bytecode;
+    }
+    
+    /// @desc Peephole optimizer - replaces common instruction patterns with superinstructions
+    /// Uses address mapping to correctly update jump targets after code shrinks
+    /// Works with packed instruction format: [OPCODE: 16 bits | ARG: 16 bits]
+    static peephole_optimize = function()
+    {
+        var _code = bytecode.code;
+        var _len = bytecode.code_size;
+        
+        if (_len < 2) return; // Too short to optimize
+        
+        // Helper to pack instruction
+        var _pack = function(_op, _arg) { return (_op << 16) | (int64(_arg) & 0xFFFF); };
+        
+        // Helper to unpack instruction
+        var _unpack_op = function(_packed) { return (_packed >> 16) & 0xFFFF; };
+        var _unpack_arg = function(_packed) { return _packed & 0xFFFF; };
+        
+        // Build new code and track old->new address mapping
+        var _new_code = [];
+        var _new_lines = [];
+        var _addr_map = array_create(_len + 2, 0);
+        var _i = 0;
+        
+        while (_i < _len)
+        {
+            // Record address mapping: old position -> new position
+            _addr_map[_i] = array_length(_new_code);
+            
+            var _packed1 = _code[_i];
+            var _op1 = _unpack_op(_packed1);
+            var _arg1 = _unpack_arg(_packed1);
+            var _line1 = _i < array_length(bytecode.lines) ? bytecode.lines[_i] : 0;
+            var _matched = false;
+            
+            // Look ahead for patterns
+            if (_i + 2 <= _len)
+            {
+                var _packed2 = _code[_i + 1];
+                var _op2 = _unpack_op(_packed2);
+                var _arg2 = _unpack_arg(_packed2);
+                
+                // Pattern: LOAD_LOCAL + INC + STORE_LOCAL (same index) + POP -> INC_LOCAL
+                if (_op1 == PROG_OP.LOAD_LOCAL && _op2 == PROG_OP.INC && _i + 4 <= _len)
+                {
+                    var _packed3 = _code[_i + 2];
+                    var _op3 = _unpack_op(_packed3);
+                    var _arg3 = _unpack_arg(_packed3);
+                    var _packed4 = _code[_i + 3];
+                    var _op4 = _unpack_op(_packed4);
+                    
+                    if (_op3 == PROG_OP.STORE_LOCAL && _arg3 == _arg1 && _op4 == PROG_OP.POP)
+                    {
+                        array_push(_new_code, _pack(PROG_OP.INC_LOCAL, _arg1));
+                        array_push(_new_lines, _line1);
+                        _addr_map[_i + 1] = array_length(_new_code);
+                        _addr_map[_i + 2] = array_length(_new_code);
+                        _addr_map[_i + 3] = array_length(_new_code);
+                        _i += 4;
+                        _matched = true;
+                    }
+                }
+                
+                // Pattern: LOAD_LOCAL + DEC + STORE_LOCAL (same index) + POP -> DEC_LOCAL
+                if (!_matched && _op1 == PROG_OP.LOAD_LOCAL && _op2 == PROG_OP.DEC && _i + 4 <= _len)
+                {
+                    var _packed3 = _code[_i + 2];
+                    var _op3 = _unpack_op(_packed3);
+                    var _arg3 = _unpack_arg(_packed3);
+                    var _packed4 = _code[_i + 3];
+                    var _op4 = _unpack_op(_packed4);
+                    
+                    if (_op3 == PROG_OP.STORE_LOCAL && _arg3 == _arg1 && _op4 == PROG_OP.POP)
+                    {
+                        array_push(_new_code, _pack(PROG_OP.DEC_LOCAL, _arg1));
+                        array_push(_new_lines, _line1);
+                        _addr_map[_i + 1] = array_length(_new_code);
+                        _addr_map[_i + 2] = array_length(_new_code);
+                        _addr_map[_i + 3] = array_length(_new_code);
+                        _i += 4;
+                        _matched = true;
+                    }
+                }
+                
+                // Pattern: LOAD_LOCAL + LOAD_LOCAL + (LT/LE/ADD) -> merged
+                if (!_matched && _op1 == PROG_OP.LOAD_LOCAL && _op2 == PROG_OP.LOAD_LOCAL && _i + 3 <= _len)
+                {
+                    var _packed3 = _code[_i + 2];
+                    var _op3 = _unpack_op(_packed3);
+                    var _superop = undefined;
+                    
+                    if (_op3 == PROG_OP.LT) _superop = PROG_OP.LOAD_LOCAL_LT;
+                    else if (_op3 == PROG_OP.LE) _superop = PROG_OP.LOAD_LOCAL_LE;
+                    else if (_op3 == PROG_OP.ADD) _superop = PROG_OP.LOAD_LOCAL_ADD;
+                    
+                    if (_superop != undefined)
+                    {
+                        array_push(_new_code, _pack(PROG_OP.LOAD_LOCAL, _arg2));
+                        array_push(_new_lines, _line1);
+                        array_push(_new_code, _pack(_superop, _arg1));
+                        array_push(_new_lines, _line1);
+                        _addr_map[_i + 1] = array_length(_new_code) - 1;
+                        _addr_map[_i + 2] = array_length(_new_code);
+                        _i += 3;
+                        _matched = true;
+                    }
+                }
+                
+                // Pattern: LOAD_LOCAL + PUSH_CONST + (LT/LE/ADD) -> merged
+                if (!_matched && _op1 == PROG_OP.LOAD_LOCAL && _op2 == PROG_OP.PUSH_CONST && _i + 3 <= _len)
+                {
+                    var _packed3 = _code[_i + 2];
+                    var _op3 = _unpack_op(_packed3);
+                    var _superop = undefined;
+                    
+                    if (_op3 == PROG_OP.LT) _superop = PROG_OP.PUSH_CONST_LT;
+                    else if (_op3 == PROG_OP.LE) _superop = PROG_OP.PUSH_CONST_LE;
+                    else if (_op3 == PROG_OP.ADD) _superop = PROG_OP.PUSH_CONST_ADD;
+                    
+                    if (_superop != undefined)
+                    {
+                        array_push(_new_code, _pack(PROG_OP.LOAD_LOCAL, _arg1));
+                        array_push(_new_lines, _line1);
+                        array_push(_new_code, _pack(_superop, _arg2));
+                        array_push(_new_lines, _line1);
+                        _addr_map[_i + 1] = array_length(_new_code) - 1;
+                        _addr_map[_i + 2] = array_length(_new_code);
+                        _i += 3;
+                        _matched = true;
+                    }
+                }
+            }
+            
+            // No pattern matched, copy instruction as-is
+            if (!_matched)
+            {
+                array_push(_new_code, _packed1);
+                array_push(_new_lines, _line1);
+                _i++;
+            }
+        }
+        
+        // Final address mapping for end-of-code
+        _addr_map[_len] = array_length(_new_code);
+        
+        // Pass 2: Fix all jump targets (packed format)
+        var _new_len = array_length(_new_code);
+        for (var j = 0; j < _new_len; j++)
+        {
+            var _packed = _new_code[j];
+            var _op = _unpack_op(_packed);
+            
+            // Check if this is a jump instruction
+            if (_op == PROG_OP.JUMP || _op == PROG_OP.JUMP_IF_FALSE || 
+                _op == PROG_OP.JUMP_IF_TRUE || _op == PROG_OP.JUMP_IF_NULL || 
+                _op == PROG_OP.JUMP_IF_NOT_NULL)
+            {
+                var _old_target = _unpack_arg(_packed);
+                if (_old_target >= 0 && _old_target <= _len)
+                {
+                    _new_code[@ j] = _pack(_op, _addr_map[_old_target]);
+                }
+            }
+        }
+        
+        // Replace bytecode with optimized version
+        bytecode.code = _new_code;
+        bytecode.code_size = _new_len;
+        bytecode.lines = _new_lines;
     }
     
     /// @desc Try constant folding for binary operations
@@ -338,22 +606,22 @@ function ProgCompiler(_context_keys = []) constructor
         // Check if index is a constant number or a range expression with constant bounds
         if (_node.index.type == PROG_AST.NUMBER_LITERAL)
         {
-            var _idx = floor(_node.index.value);
-            if (_idx >= 0 && _idx < string_length(_target_val))
+            var _index = floor(_node.index.value);
+            if (_index >= 0 && _index < string_length(_target_val))
             {
-                return string_char_at(_target_val, _idx + 1);
+                return string_char_at(_target_val, _index + 1);
             }
             return "";
         }
         else if (_node.index.type == PROG_AST.IDENTIFIER)
         {
-            var _idx_val = get_const(_node.index.name);
-            if (is_real(_idx_val))
+            var _index_val = get_const(_node.index.name);
+            if (is_real(_index_val))
             {
-                var _idx = floor(_idx_val);
-                if (_idx >= 0 && _idx < string_length(_target_val))
+                var _index = floor(_index_val);
+                if (_index >= 0 && _index < string_length(_target_val))
                 {
-                    return string_char_at(_target_val, _idx + 1);
+                    return string_char_at(_target_val, _index + 1);
                 }
                 return "";
             }
@@ -437,7 +705,7 @@ function ProgCompiler(_context_keys = []) constructor
             // Note: Since arguments are already on stack at BP+i, we map them directly.
             // We don't need to emit LOAD/DEFINE/POP logic anymore for basic args.
             
-            array_last(declared_vars)[$ _param.name] = { type: "local", index: i }
+            declared_vars[array_length(declared_vars) - 1][$ _param.name] = { type: "local", index: i }
             
             // Handle default values
             if (_param.default_value != undefined)
@@ -466,11 +734,28 @@ function ProgCompiler(_context_keys = []) constructor
         // We removed the LOAD/DEFINE/POP loop.
         // Now arguments are just locals 0..N-1.
         
+        // Save and restore memo context for nested functions
+        array_push(memo_id_stack, current_memo_id);
+        current_memo_id = struct_exists(_node, "is_memoize") && _node.is_memoize ? memo_count++ : undefined;
+        
+        if (current_memo_id != undefined)
+        {
+            emit(PROG_OP.MEMOIZE_CHECK, current_memo_id, _node.line);
+        }
+        
         compile_node(_node.body);
         
         // Pop function scope
         array_pop(declared_vars);
         const_scopes = _old_scopes;
+        
+        if (current_memo_id != undefined)
+        {
+            emit(PROG_OP.MEMOIZE_STORE, current_memo_id, _node.line);
+        }
+        
+        current_memo_id = array_pop(memo_id_stack);
+        
         emit(PROG_OP.PUSH_NULL);
         emit(PROG_OP.RETURN);
         
@@ -494,9 +779,16 @@ function ProgCompiler(_context_keys = []) constructor
         _func_arr[PROG_FUNC.BYTECODE] = _res.bytecode;
         _func_arr[PROG_FUNC.IS_GLOBAL] = struct_exists(_node, "is_global") ? _node.is_global : false;
         _func_arr[PROG_FUNC.PARAM_COUNT] = _res.param_count;
+        _func_arr[PROG_FUNC.IS_INLINE] = struct_exists(_node, "is_inline") ? _node.is_inline : false;
         
-        var _idx = add_constant(_func_arr);
-        emit(PROG_OP.PUSH_CONST, _idx, _node.line);
+        // Store inline function AST for call-site expansion
+        if (_func_arr[PROG_FUNC.IS_INLINE] && struct_exists(_node, "name"))
+        {
+            inline_functions[$ _node.name] = _node;
+        }
+        
+        var _index = add_constant(_func_arr);
+        emit(PROG_OP.PUSH_CONST, _index, _node.line);
         emit(PROG_OP.MAKE_CLOSURE, undefined, _node.line);
     }
     
@@ -516,25 +808,24 @@ function ProgCompiler(_context_keys = []) constructor
         
         // 2. Check locals (BP relative)
         // Search backwards from current scope until function boundary
-        var _idx = array_length(declared_vars) - 1;
-        while (_idx >= 0)
+        var _index = array_length(declared_vars) - 1;
+        
+        while (_index >= 0)
         {
-            var _scope = declared_vars[_idx];
-            if (struct_exists(_scope, _name))
+            var _scope = declared_vars[_index];
+            var _info = _scope[$ _name];
+            
+            if (_info != undefined) && (is_struct(_info)) && (_info.type == "local")
             {
-                var _info = _scope[$ _name];
-                if (is_struct(_info) && _info.type == "local")
-                {
-                    emit(PROG_OP.LOAD_LOCAL, _info.index, _node.line);
-                    return;
-                }
-                // If found but not local (e.g. shadowed by something?), stop.
-                // Actually, if we found it, we used it.
+                emit(PROG_OP.LOAD_LOCAL, _info.index, _node.line);
+                
+                return;
             }
             
             // Stop if we hit a function boundary
             if (struct_exists(_scope, "is_func") && _scope.is_func) break;
-            _idx--;
+            
+            _index--;
         }
         
         // Fallback or Capture?
@@ -817,6 +1108,7 @@ function ProgCompiler(_context_keys = []) constructor
                 {
                     had_error = true;
                     error_message = $"[Line {_node.line}] Error: Cannot use reserved keyword '{_node.name}' as variable name.";
+                    
                     return;
                 }
                 // Error: Check if name shadows a context variable
@@ -824,26 +1116,25 @@ function ProgCompiler(_context_keys = []) constructor
                 {
                     had_error = true;
                     error_message = $"[Line {_node.line}] Error: Cannot redeclare context variable '{_node.name}'.";
+                    
                     return;
                 }
                 
-                // Error: Check for redeclaration/shadowing in any active scope
-                for (var i = 0; i < array_length(declared_vars); i++)
+                // Error: Check for redeclaration in the current scope
+                var _current_scope = array_last(declared_vars);
+                if (struct_exists(_current_scope, _node.name))
                 {
-                    if (struct_exists(declared_vars[i], _node.name))
-                    {
-                        had_error = true;
-                        error_message = $"[Line {_node.line}] Error: Variable '{_node.name}' already declared in this scope chain.";
-                        return;
-                    }
+                    had_error = true;
+                    error_message = $"[Line {_node.line}] Error: Variable '{_node.name}' already declared in this scope.";
+                    
+                    return;
                 }
                 
                 // Add to current scope declarations
-                var _current_scope = array_last(declared_vars);
                 _current_scope[$ _node.name] = true;
                 
                 // Error: Check if global var declared inside nested scope
-                if (struct_exists(_node, "is_global") && _node.is_global && scope_depth > 0)
+                if (_node[$ "is_global"]) && (scope_depth > 0)
                 {
                     had_error = true;
                     error_message = $"[Line {_node.line}] Error: Global variables must be declared at top level, not inside statements.";
@@ -876,14 +1167,14 @@ function ProgCompiler(_context_keys = []) constructor
                     emit(PROG_OP.PUSH_NULL, undefined, _node.line);
                 }
                 
-                var _idx = add_constant(_node.name);
-                if (struct_exists(_node, "is_global") && _node.is_global)
+                var _index = add_constant(_node.name);
+                if (_node[$ "is_global"])
                 {
-                    emit(PROG_OP.STORE_GLOBAL, _idx, _node.line);
+                    emit(PROG_OP.STORE_GLOBAL, _index, _node.line);
                 }
                 else
                 {
-                    emit(PROG_OP.DEFINE, _idx, _node.line);
+                    emit(PROG_OP.DEFINE, _index, _node.line);
                     
                     // Track local constant
                     if (_init_const != undefined)
@@ -913,8 +1204,8 @@ function ProgCompiler(_context_keys = []) constructor
             case PROG_AST.FUNC_DECL:
                 compile_function_def(_node);
                 
-                var _name_idx = add_constant(_node.name);
-                emit(_node.is_global ? PROG_OP.STORE_GLOBAL : PROG_OP.STORE, _name_idx, _node.line);
+                var _name_index = add_constant(_node.name);
+                emit(_node.is_global ? PROG_OP.STORE_GLOBAL : PROG_OP.STORE, _name_index, _node.line);
                 emit(PROG_OP.POP);
                 break;
                 
@@ -960,13 +1251,13 @@ function ProgCompiler(_context_keys = []) constructor
             case PROG_AST.REPEAT_STMT:
                 invalidate_constants();
                 var _rep_var = "@rep_" + string(bytecode.code_size);
-                var _idx = add_constant(_rep_var);
+                var _index = add_constant(_rep_var);
                 compile_node(_node.count);
-                emit(PROG_OP.STORE, _idx, _node.line);
+                emit(PROG_OP.STORE, _index, _node.line);
                 emit(PROG_OP.POP);
                 
                 var _start = bytecode.code_size;
-                emit(PROG_OP.LOAD, _idx, _node.line);
+                emit(PROG_OP.LOAD, _index, _node.line);
                 emit(PROG_OP.PUSH_CONST, add_constant(0));
                 emit(PROG_OP.GT);
                 var _exit = emit(PROG_OP.JUMP_IF_FALSE, 0, _node.line);
@@ -975,10 +1266,10 @@ function ProgCompiler(_context_keys = []) constructor
                 
                 compile_node(_node.body);
                 
-                emit(PROG_OP.LOAD, _idx);
+                emit(PROG_OP.LOAD, _index);
                 emit(PROG_OP.PUSH_CONST, add_constant(1));
                 emit(PROG_OP.SUB);
-                emit(PROG_OP.STORE, _idx);
+                emit(PROG_OP.STORE, _index);
                 emit(PROG_OP.POP);
                 emit(PROG_OP.JUMP, _start);
                 patch_jump(_exit, bytecode.code_size);
@@ -1082,8 +1373,8 @@ function ProgCompiler(_context_keys = []) constructor
                         }
                     }
                     
-                    var _target_idx = array_length(loop_stack) - _amount;
-                    var _ctx = loop_stack[_target_idx];
+                    var _target_index = array_length(loop_stack) - _amount;
+                    var _ctx = loop_stack[_target_index];
                     array_push(_ctx.breaks, emit(PROG_OP.JUMP, 0, _node.line));
                 }
                 break;
@@ -1101,10 +1392,10 @@ function ProgCompiler(_context_keys = []) constructor
             case PROG_AST.PREFIX_OP:
                 if (_node.target.type == PROG_AST.IDENTIFIER)
                 {
-                    var _idx = add_constant(_node.target.name);
-                    emit(PROG_OP.LOAD, _idx, _node.line);
+                    var _index = add_constant(_node.target.name);
+                    emit(PROG_OP.LOAD, _index, _node.line);
                     emit(_node.op == PROG_TOKEN.PLUS_PLUS ? PROG_OP.INC : PROG_OP.DEC);
-                    emit(PROG_OP.STORE, _idx, _node.line);
+                    emit(PROG_OP.STORE, _index, _node.line);
                     
                     // Update constants for PREFIX
                     var _val = get_const(_node.target.name);
@@ -1139,11 +1430,11 @@ function ProgCompiler(_context_keys = []) constructor
             case PROG_AST.POSTFIX_OP:
                 if (_node.target.type == PROG_AST.IDENTIFIER)
                 {
-                    var _idx = add_constant(_node.target.name);
-                    emit(PROG_OP.LOAD, _idx, _node.line);
+                    var _index = add_constant(_node.target.name);
+                    emit(PROG_OP.LOAD, _index, _node.line);
                     emit(PROG_OP.DUP);
                     emit(_node.op == PROG_TOKEN.PLUS_PLUS ? PROG_OP.INC : PROG_OP.DEC);
-                    emit(PROG_OP.STORE, _idx, _node.line);
+                    emit(PROG_OP.STORE, _index, _node.line);
                     emit(PROG_OP.POP);
                     
                     // Update constants for POSTFIX (same internal upgrade)
@@ -1245,8 +1536,8 @@ function ProgCompiler(_context_keys = []) constructor
                 // Phase 4: Default body
                 if (_node.default_case != undefined)
                 {
-                    var _def_jmp_idx = array_length(_node.cases);
-                    patch_jump(_case_jumps[_def_jmp_idx], bytecode.code_size);
+                    var _def_jmp_index = array_length(_node.cases);
+                    patch_jump(_case_jumps[_def_jmp_index], bytecode.code_size);
                     compile_node(_node.default_case);
                 }
                 
@@ -1263,15 +1554,94 @@ function ProgCompiler(_context_keys = []) constructor
                 break;
                 
             case PROG_AST.CALL:
-                var _has_spread = false;
-                for (var i = 0; i < array_length(_node.args); i++)
+                var _is_inline_call = false;
+                var _func_node = undefined;
+                
+                // Check if inline
+                if (_node.callee.type == PROG_AST.IDENTIFIER)
                 {
-                    if (_node.args[i].type == PROG_AST.UNARY_OP && _node.args[i].op == PROG_TOKEN.SPREAD)
+                    if (struct_exists(inline_functions, _node.callee.name))
                     {
-                        _has_spread = true; break;
+                        _func_node = inline_functions[$ _node.callee.name];
+                        _is_inline_call = true;
                     }
                 }
-                if (_has_spread)
+                
+                var _has_spread = false;
+                if (!_is_inline_call)
+                {
+                    for (var i = 0; i < array_length(_node.args); i++)
+                    {
+                        if (_node.args[i].type == PROG_AST.UNARY_OP && _node.args[i].op == PROG_TOKEN.SPREAD)
+                        {
+                            _has_spread = true; break;
+                        }
+                    }
+                }
+                
+                if (_is_inline_call)
+                {
+                    // INLINE EXPANSION
+                    var _ret_var = "@inline_ret_" + string(bytecode.code_size);
+                    var _ctx = { ret_var: _ret_var, jumps: [], start_depth: scope_depth };
+                    array_push(inline_stack, _ctx);
+                    
+                    // Initialize return variable to undefined
+                    emit(PROG_OP.PUSH_NULL);
+                    emit(PROG_OP.DEFINE, add_constant(_ret_var), _node.line);
+                    emit(PROG_OP.POP);
+                    
+                    // Push Scope for function body
+                    emit(PROG_OP.PUSH_SCOPE, undefined, _node.line);
+                    
+                    // Bind Parameters
+                    var _params = _func_node.params;
+                    var _param_count = array_length(_params);
+                    var _arg_count = array_length(_node.args);
+                    
+                    for (var i = 0; i < _param_count; i++)
+                    {
+                        var _param = _params[i];
+                        
+                        if (i < _arg_count)
+                        {
+                            compile_node(_node.args[i]);
+                        }
+                        else
+                        {
+                            // Missing argument - use default or undefined
+                            if (_param.default_value != undefined) compile_node(_param.default_value);
+                            else emit(PROG_OP.PUSH_NULL);
+                        }
+                        
+                        emit(PROG_OP.DEFINE, add_constant(_param.name), _node.line);
+                        emit(PROG_OP.POP);
+                    }
+                    
+                    // Compile Body
+                    // Note: func_node.body is a BLOCK, which emits PUSH/POP SCOPE itself.
+                    // This means we have: InlineScope -> BlockScope.
+                    // This is fine, but maybe redundant. 
+                    // However, we need InlineScope to hold the params so they are local to the expansion
+                    // but visible to the body.
+                    compile_node(_func_node.body);
+                    
+                    // Patch Return Jumps
+                    for (var j = 0; j < array_length(_ctx.jumps); j++)
+                    {
+                        patch_jump(_ctx.jumps[j], bytecode.code_size);
+                    }
+                    
+                    // Pop Scope
+                    emit(PROG_OP.POP_SCOPE, undefined, _node.line);
+                    
+                    // Pop Context
+                    array_pop(inline_stack);
+                    
+                    // Load Result
+                    emit(PROG_OP.LOAD, add_constant(_ret_var), _node.line);
+                }
+                else if (_has_spread)
                 {
                     emit(PROG_OP.PUSH_ARRAY_EMPTY, undefined, _node.line);
                     for (var i = 0; i < array_length(_node.args); i++)
@@ -1293,9 +1663,77 @@ function ProgCompiler(_context_keys = []) constructor
                 }
                 else
                 {
-                    compile_node(_node.callee);
-                    for (var i = 0; i < array_length(_node.args); i++) compile_node(_node.args[i]);
-                    emit(PROG_OP.CALL, array_length(_node.args), _node.line);
+                    // Check for built-in math functions that can be compiled to direct opcodes
+                    var _math_opcode = undefined;
+                    var _math_arity = 0;
+                    
+                    if (_node.callee.type == PROG_AST.IDENTIFIER)
+                    {
+                        var _fn_name = _node.callee.name;
+                        
+                        // Unary functions (1 arg)
+                        if (_fn_name == "sin") { _math_opcode = PROG_OP.MATH_SIN; _math_arity = 1; }
+                        else if (_fn_name == "cos") { _math_opcode = PROG_OP.MATH_COS; _math_arity = 1; }
+                        else if (_fn_name == "tan") { _math_opcode = PROG_OP.MATH_TAN; _math_arity = 1; }
+                        else if (_fn_name == "asin" || _fn_name == "arcsin") { _math_opcode = PROG_OP.MATH_ASIN; _math_arity = 1; }
+                        else if (_fn_name == "acos" || _fn_name == "arccos") { _math_opcode = PROG_OP.MATH_ACOS; _math_arity = 1; }
+                        else if (_fn_name == "atan" || _fn_name == "arctan") { _math_opcode = PROG_OP.MATH_ATAN; _math_arity = 1; }
+                        else if (_fn_name == "sqrt") { _math_opcode = PROG_OP.MATH_SQRT; _math_arity = 1; }
+                        else if (_fn_name == "sqr") { _math_opcode = PROG_OP.MATH_SQR; _math_arity = 1; }
+                        else if (_fn_name == "exp") { _math_opcode = PROG_OP.MATH_EXP; _math_arity = 1; }
+                        else if (_fn_name == "ln") { _math_opcode = PROG_OP.MATH_LN; _math_arity = 1; }
+                        else if (_fn_name == "log2") { _math_opcode = PROG_OP.MATH_LOG2; _math_arity = 1; }
+                        else if (_fn_name == "log10") { _math_opcode = PROG_OP.MATH_LOG10; _math_arity = 1; }
+                        else if (_fn_name == "floor") { _math_opcode = PROG_OP.MATH_FLOOR; _math_arity = 1; }
+                        else if (_fn_name == "ceil") { _math_opcode = PROG_OP.MATH_CEIL; _math_arity = 1; }
+                        else if (_fn_name == "round") { _math_opcode = PROG_OP.MATH_ROUND; _math_arity = 1; }
+                        else if (_fn_name == "trunc") { _math_opcode = PROG_OP.MATH_TRUNC; _math_arity = 1; }
+                        else if (_fn_name == "frac") { _math_opcode = PROG_OP.MATH_FRAC; _math_arity = 1; }
+                        else if (_fn_name == "abs") { _math_opcode = PROG_OP.MATH_ABS; _math_arity = 1; }
+                        else if (_fn_name == "sign") { _math_opcode = PROG_OP.MATH_SIGN; _math_arity = 1; }
+                        else if (_fn_name == "degtorad") { _math_opcode = PROG_OP.MATH_DEGTORAD; _math_arity = 1; }
+                        else if (_fn_name == "radtodeg") { _math_opcode = PROG_OP.MATH_RADTODEG; _math_arity = 1; }
+                        else if (_fn_name == "dsin") { _math_opcode = PROG_OP.MATH_DSIN; _math_arity = 1; }
+                        else if (_fn_name == "dcos") { _math_opcode = PROG_OP.MATH_DCOS; _math_arity = 1; }
+                        else if (_fn_name == "dtan") { _math_opcode = PROG_OP.MATH_DTAN; _math_arity = 1; }
+                        else if (_fn_name == "random") { _math_opcode = PROG_OP.MATH_RANDOM; _math_arity = 1; }
+                        else if (_fn_name == "irandom") { _math_opcode = PROG_OP.MATH_IRANDOM; _math_arity = 1; }
+                        else if (_fn_name == "string") { _math_opcode = PROG_OP.MATH_TO_STRING; _math_arity = 1; }
+                        else if (_fn_name == "real") { _math_opcode = PROG_OP.MATH_TO_REAL; _math_arity = 1; }
+                        else if (_fn_name == "choose") { _math_opcode = PROG_OP.MATH_CHOOSE; _math_arity = 1; }
+                        // Nondary/Random Functions (0 args)
+                        else if (_fn_name == "randomize") { _math_opcode = PROG_OP.MATH_RANDOMIZE; _math_arity = 0; }
+                        // Binary functions (2 args)
+                        else if (_fn_name == "min") { _math_opcode = PROG_OP.MATH_MIN; _math_arity = 2; }
+                        else if (_fn_name == "max") { _math_opcode = PROG_OP.MATH_MAX; _math_arity = 2; }
+                        else if (_fn_name == "atan2" || _fn_name == "arctan2") { _math_opcode = PROG_OP.MATH_ATAN2; _math_arity = 2; }
+                        else if (_fn_name == "power" || _fn_name == "pow") { _math_opcode = PROG_OP.MATH_POWER; _math_arity = 2; }
+                        else if (_fn_name == "logn") { _math_opcode = PROG_OP.MATH_LOGN; _math_arity = 2; }
+                        else if (_fn_name == "random_range") { _math_opcode = PROG_OP.MATH_RANDOM_RANGE; _math_arity = 2; }
+                        else if (_fn_name == "irandom_range") { _math_opcode = PROG_OP.MATH_IRANDOM_RANGE; _math_arity = 2; }
+                        else if (_fn_name == "lengthdir_x") { _math_opcode = PROG_OP.MATH_LENGTHDIR_X; _math_arity = 2; }
+                        else if (_fn_name == "lengthdir_y") { _math_opcode = PROG_OP.MATH_LENGTHDIR_Y; _math_arity = 2; }
+                        // Ternary functions (3 args)
+                        else if (_fn_name == "clamp") { _math_opcode = PROG_OP.MATH_CLAMP; _math_arity = 3; }
+                        else if (_fn_name == "lerp") { _math_opcode = PROG_OP.MATH_LERP; _math_arity = 3; }
+                        // Quaternary functions (4 args)
+                        else if (_fn_name == "point_distance" || _fn_name == "point_dist") { _math_opcode = PROG_OP.MATH_POINT_DIST; _math_arity = 4; }
+                        else if (_fn_name == "point_direction" || _fn_name == "point_dir") { _math_opcode = PROG_OP.MATH_POINT_DIR; _math_arity = 4; }
+                    }
+                    
+                    if (_math_opcode != undefined && array_length(_node.args) == _math_arity)
+                    {
+                        // Compile args and emit math opcode directly
+                        for (var i = 0; i < _math_arity; i++) compile_node(_node.args[i]);
+                        emit(_math_opcode, 0, _node.line);
+                    }
+                    else
+                    {
+                        // Normal function call
+                        compile_node(_node.callee);
+                        for (var i = 0; i < array_length(_node.args); i++) compile_node(_node.args[i]);
+                        emit(PROG_OP.CALL, array_length(_node.args), _node.line);
+                    }
                 }
                 break;
                 
@@ -1305,10 +1743,10 @@ function ProgCompiler(_context_keys = []) constructor
                 break;
                 
             case PROG_AST.INDEX:
-                var _folded_idx = try_fold_index(_node);
-                if (_folded_idx != undefined)
+                var _folded_index = try_fold_index(_node);
+                if (_folded_index != undefined)
                 {
-                    emit(PROG_OP.PUSH_CONST, add_constant(_folded_idx), _node.line);
+                    emit(PROG_OP.PUSH_CONST, add_constant(_folded_index), _node.line);
                 }
                 else
                 {
@@ -1319,9 +1757,52 @@ function ProgCompiler(_context_keys = []) constructor
                 break;
                 
             case PROG_AST.RETURN_STMT:
-                if (_node.value) compile_node(_node.value);
-                else emit(PROG_OP.PUSH_NULL);
-                emit(PROG_OP.RETURN, undefined, _node.line);
+                if (array_length(inline_stack) > 0)
+                {
+                    // Inline return: Assign to ret var and jump to end
+                    var _ctx = array_last(inline_stack);
+                    
+                    if (_node.value) compile_node(_node.value);
+                    else emit(PROG_OP.PUSH_NULL);
+                    
+                    // Memoization in inline functions (if we ever support it, but for now we follow current_memo_id)
+                    // Wait, if an inline function is memoized, its result should be cached.
+                    // But currently we only handle @inline OR @memoize, usually not both.
+                    // If both are used, we follow current_memo_id.
+                    if (current_memo_id != undefined)
+                    {
+                        emit(PROG_OP.MEMOIZE_STORE, current_memo_id, _node.line);
+                    }
+                    
+                    // Store in return variable
+                    var _ret_idx = add_constant(_ctx.ret_var);
+                    // Use LOAD/STORE for locals in current scope? No, scope is handled by PUSH_SCOPE.
+                    // But we used add_constant for unique name.
+                    // We need to ensure we are addressing the variable correctly.
+                    // Since we are inside a PUSH_SCOPE block, we can use STORE.
+                    // But wait, STORE uses constants to find name in scope.
+                    emit(PROG_OP.STORE, _ret_idx, _node.line); 
+                    emit(PROG_OP.POP); // Consume value (STORE leaves it on stack)
+                    
+                    // Jump to end
+                    var _pop_count = scope_depth - _ctx.start_depth;
+                    for (var k = 0; k < _pop_count; k++) emit(PROG_OP.POP_SCOPE, undefined, _node.line);
+                    
+                    array_push(_ctx.jumps, emit(PROG_OP.JUMP, 0, _node.line));
+                }
+                else
+                {
+                    // Normal return
+                    if (_node.value) compile_node(_node.value);
+                    else emit(PROG_OP.PUSH_NULL);
+                    
+                    if (current_memo_id != undefined)
+                    {
+                        emit(PROG_OP.MEMOIZE_STORE, current_memo_id, _node.line);
+                    }
+                    
+                    emit(PROG_OP.RETURN, undefined, _node.line);
+                }
                 break;
                 
             case PROG_AST.FOR_IN_STMT:
@@ -1632,10 +2113,10 @@ function ProgCompiler(_context_keys = []) constructor
             }
         }
         
-        var _idx = add_constant(_descriptor);
-        emit(PROG_OP.CLASS_DEF, _idx, _node.line);
+        var _index = add_constant(_descriptor);
         
-        // Define the class variable if named
+        emit(PROG_OP.CLASS_DEF, _index, _node.line);
+        
         if (_node.name != undefined)
         {
             emit(PROG_OP.DEFINE, add_constant(_node.name), _node.line);
@@ -1644,47 +2125,57 @@ function ProgCompiler(_context_keys = []) constructor
     
     static compile_destructuring = function(_pattern)
     {
-        if (_pattern.type == "array")
+        var _pattern_type = _pattern.type;
+        
+        if (_pattern_type == "array")
         {
-            for (var i = 0; i < array_length(_pattern.elements); i++)
+            var _elements = _pattern.elements;
+            var _elements_length = array_length(_elements);
+            
+            for (var i = 0; i < _elements_length; ++i)
             {
-                var _el = _pattern.elements[i];
+                var _element = _elements[i];
+                
                 emit(PROG_OP.DUP);
                 emit(PROG_OP.PUSH_CONST, add_constant(i));
-                emit(PROG_OP.INDEX_GET); // Stack: [..., Arr, Val]
+                emit(PROG_OP.INDEX_GET);
                 
-                if (is_string(_el))
+                if (is_string(_element))
                 {
-                    emit(PROG_OP.STORE, add_constant(_el));
+                    emit(PROG_OP.STORE, add_constant(_element));
                 }
-                else if (is_struct(_el))
+                else if (is_struct(_element))
                 {
-                    // Nested pattern
-                    compile_destructuring(_el);
+                    compile_destructuring(_element);
                 }
                 
-                emit(PROG_OP.POP); // Consume Val
+                emit(PROG_OP.POP);
             }
         } 
-        else if (_pattern.type == "object")
+        else if (_pattern_type == "object")
         {
-            for (var i = 0; i < array_length(_pattern.elements); i++)
+            var _elements = _pattern.elements;
+            var _elements_length = array_length(_elements);
+            
+            for (var i = 0; i < _elements_length; ++i)
             {
-                var _el = _pattern.elements[i];
+                var _element = _elements[i];
+                
                 emit(PROG_OP.DUP);
-                emit(PROG_OP.MEMBER_GET, add_constant(_el.key)); // Stack: [..., Obj, Val]
+                emit(PROG_OP.MEMBER_GET, add_constant(_element.key));
                 
-                if (is_string(_el.target))
+                var _target = _element.target;
+                
+                if (is_string(_target))
                 {
-                    emit(PROG_OP.STORE, add_constant(_el.target));
+                    emit(PROG_OP.STORE, add_constant(_target));
                 }
-                else if (is_struct(_el.target))
+                else if (is_struct(_target))
                 {
-                    // Nested pattern (target is the pattern struct)
-                    compile_destructuring(_el.target);
+                    compile_destructuring(_target);
                 }
                 
-                emit(PROG_OP.POP); // Consume Val
+                emit(PROG_OP.POP);
             }
         }
     }
@@ -1692,96 +2183,236 @@ function ProgCompiler(_context_keys = []) constructor
     static compile_assignment = function(_node)
     {
         var _target = _node.target;
+        var _target_type = _target.type;
+        
         var _line = _node.line;
         var _op = _node.op;
         
-        if (_target.type == PROG_AST.IDENTIFIER)
+        if (_target_type == PROG_AST.IDENTIFIER)
         {
-            var _idx = add_constant(_target.name);
+            var _index = add_constant(_target.name);
+            
             if (_op != PROG_TOKEN.ASSIGN)
             {
-                emit(PROG_OP.LOAD, _idx, _line);
+                emit(PROG_OP.LOAD, _index, _line);
+                
                 compile_node(_node.value);
+                
                 switch (_op)
                 {
-                    case PROG_TOKEN.PLUS: case PROG_TOKEN.PLUS_ASSIGN: emit(PROG_OP.ADD); break;
-                    case PROG_TOKEN.MINUS: case PROG_TOKEN.MINUS_ASSIGN: emit(PROG_OP.SUB); break;
-                    case PROG_TOKEN.STAR: case PROG_TOKEN.STAR_ASSIGN: emit(PROG_OP.MUL); break;
-                    case PROG_TOKEN.SLASH: case PROG_TOKEN.SLASH_ASSIGN: emit(PROG_OP.DIV); break;
-                    case PROG_TOKEN.PERCENT: case PROG_TOKEN.PERCENT_ASSIGN: emit(PROG_OP.MOD); break;
-                    case PROG_TOKEN.POWER: case PROG_TOKEN.POWER_ASSIGN: emit(PROG_OP.POW); break;
-                    case PROG_TOKEN.LSHIFT: case PROG_TOKEN.LSHIFT_ASSIGN: emit(PROG_OP.SHL); break;
-                    case PROG_TOKEN.RSHIFT: case PROG_TOKEN.RSHIFT_ASSIGN: emit(PROG_OP.SHR); break;
-                    case PROG_TOKEN.AMP: case PROG_TOKEN.AMP_ASSIGN: emit(PROG_OP.BIT_AND); break;
-                    case PROG_TOKEN.PIPE: case PROG_TOKEN.PIPE_ASSIGN: emit(PROG_OP.BIT_OR); break;
-                    case PROG_TOKEN.CARET: case PROG_TOKEN.CARET_ASSIGN: emit(PROG_OP.BIT_XOR); break;
+                    case PROG_TOKEN.PLUS:
+                    case PROG_TOKEN.PLUS_ASSIGN:
+                        emit(PROG_OP.ADD);
+                        break;
+                    
+                    case PROG_TOKEN.MINUS:
+                    case PROG_TOKEN.MINUS_ASSIGN:
+                        emit(PROG_OP.SUB);
+                        break;
+                    
+                    case PROG_TOKEN.STAR:
+                    case PROG_TOKEN.STAR_ASSIGN:
+                        emit(PROG_OP.MUL);
+                        break;
+                    
+                    case PROG_TOKEN.SLASH:
+                    case PROG_TOKEN.SLASH_ASSIGN:
+                        emit(PROG_OP.DIV);
+                        break;
+                    
+                    case PROG_TOKEN.PERCENT:
+                    case PROG_TOKEN.PERCENT_ASSIGN:
+                        emit(PROG_OP.MOD);
+                        break;
+                    
+                    case PROG_TOKEN.POWER:
+                    case PROG_TOKEN.POWER_ASSIGN:
+                        emit(PROG_OP.POW);
+                        break;
+                    
+                    case PROG_TOKEN.LSHIFT:
+                    case PROG_TOKEN.LSHIFT_ASSIGN:
+                        emit(PROG_OP.SHL);
+                        break;
+                    
+                    case PROG_TOKEN.RSHIFT:
+                    case PROG_TOKEN.RSHIFT_ASSIGN:
+                        emit(PROG_OP.SHR);
+                        break;
+                    
+                    case PROG_TOKEN.AMP:
+                    case PROG_TOKEN.AMP_ASSIGN:
+                        emit(PROG_OP.BIT_AND);
+                        break;
+                    
+                    case PROG_TOKEN.PIPE:
+                    case PROG_TOKEN.PIPE_ASSIGN:
+                        emit(PROG_OP.BIT_OR);
+                        break;
+                    
+                    case PROG_TOKEN.CARET:
+                    case PROG_TOKEN.CARET_ASSIGN:
+                        emit(PROG_OP.BIT_XOR);
+                        break;
                 }
             }
             else
             {
                 compile_node(_node.value);
             }
-            emit(PROG_OP.STORE, _idx, _line);
+            emit(PROG_OP.STORE, _index, _line);
         }
-        else if (_target.type == PROG_AST.MEMBER)
+        else if (_target_type == PROG_AST.MEMBER)
         {
-            compile_node(_target.target); // Push Obj
+            compile_node(_target.target);
+            
             if (_op != PROG_TOKEN.ASSIGN)
             {
-                emit(PROG_OP.DUP); // Obj, Obj
-                emit(PROG_OP.MEMBER_GET, add_constant(_target.property), _line); // Obj, Val
-                compile_node(_node.value); // Obj, Val, RHS
+                emit(PROG_OP.DUP);
+                emit(PROG_OP.MEMBER_GET, add_constant(_target.property), _line);
+                
+                compile_node(_node.value);
+                
                 switch (_op)
                 {
-                    case PROG_TOKEN.PLUS: case PROG_TOKEN.PLUS_ASSIGN: emit(PROG_OP.ADD); break;
-                    case PROG_TOKEN.MINUS: case PROG_TOKEN.MINUS_ASSIGN: emit(PROG_OP.SUB); break;
-                    case PROG_TOKEN.STAR: case PROG_TOKEN.STAR_ASSIGN: emit(PROG_OP.MUL); break;
-                    case PROG_TOKEN.SLASH: case PROG_TOKEN.SLASH_ASSIGN: emit(PROG_OP.DIV); break;
-                    case PROG_TOKEN.PERCENT: case PROG_TOKEN.PERCENT_ASSIGN: emit(PROG_OP.MOD); break;
-                    case PROG_TOKEN.POWER: case PROG_TOKEN.POWER_ASSIGN: emit(PROG_OP.POW); break;
-                    case PROG_TOKEN.LSHIFT: case PROG_TOKEN.LSHIFT_ASSIGN: emit(PROG_OP.SHL); break;
-                    case PROG_TOKEN.RSHIFT: case PROG_TOKEN.RSHIFT_ASSIGN: emit(PROG_OP.SHR); break;
-                    case PROG_TOKEN.AMP: case PROG_TOKEN.AMP_ASSIGN: emit(PROG_OP.BIT_AND); break;
-                    case PROG_TOKEN.PIPE: case PROG_TOKEN.PIPE_ASSIGN: emit(PROG_OP.BIT_OR); break;
-                    case PROG_TOKEN.CARET: case PROG_TOKEN.CARET_ASSIGN: emit(PROG_OP.BIT_XOR); break;
+                    case PROG_TOKEN.PLUS:
+                    case PROG_TOKEN.PLUS_ASSIGN:
+                        emit(PROG_OP.ADD);
+                        break;
+                    
+                    case PROG_TOKEN.MINUS:
+                    case PROG_TOKEN.MINUS_ASSIGN:
+                        emit(PROG_OP.SUB);
+                        break;
+                    
+                    case PROG_TOKEN.STAR:
+                    case PROG_TOKEN.STAR_ASSIGN:
+                        emit(PROG_OP.MUL);
+                        break;
+                    
+                    case PROG_TOKEN.SLASH:
+                    case PROG_TOKEN.SLASH_ASSIGN:
+                        emit(PROG_OP.DIV);
+                        break;
+                    
+                    case PROG_TOKEN.PERCENT:
+                    case PROG_TOKEN.PERCENT_ASSIGN:
+                        emit(PROG_OP.MOD);
+                        break;
+                    
+                    case PROG_TOKEN.POWER:
+                    case PROG_TOKEN.POWER_ASSIGN:
+                        emit(PROG_OP.POW);
+                        break;
+                    
+                    case PROG_TOKEN.LSHIFT:
+                    case PROG_TOKEN.LSHIFT_ASSIGN:
+                        emit(PROG_OP.SHL);
+                        break;
+                    
+                    case PROG_TOKEN.RSHIFT:
+                    case PROG_TOKEN.RSHIFT_ASSIGN:
+                        emit(PROG_OP.SHR);
+                        break;
+                    
+                    case PROG_TOKEN.AMP:
+                    case PROG_TOKEN.AMP_ASSIGN:
+                        emit(PROG_OP.BIT_AND);
+                        break;
+                    
+                    case PROG_TOKEN.PIPE:
+                    case PROG_TOKEN.PIPE_ASSIGN:
+                        emit(PROG_OP.BIT_OR);
+                        break;
+                    
+                    case PROG_TOKEN.CARET:
+                    case PROG_TOKEN.CARET_ASSIGN:
+                        emit(PROG_OP.BIT_XOR);
+                        break;
                 }
-                // Stack: Obj, NewVal
             }
             else
             {
-                compile_node(_node.value); // Obj, NewVal
+                compile_node(_node.value);
             }
+            
             emit(PROG_OP.MEMBER_SET, add_constant(_target.property), _line);
         }
-        else if (_target.type == PROG_AST.INDEX)
+        else if (_target_type == PROG_AST.INDEX)
         {
-            compile_node(_target.target); // Arr
-            compile_node(_target.index); // Arr, Idx
+            compile_node(_target.target);
+            compile_node(_target.index);
+            
             if (_op != PROG_TOKEN.ASSIGN)
             {
-                emit(PROG_OP.DUP2); // Arr, Idx, Arr, Idx
-                emit(PROG_OP.INDEX_GET, undefined, _line); // Arr, Idx, Val
-                compile_node(_node.value); // Arr, Idx, Val, RHS
+                emit(PROG_OP.DUP2);
+                emit(PROG_OP.INDEX_GET, undefined, _line);
+                
+                compile_node(_node.value);
+                
                 switch (_op)
                 {
-                    case PROG_TOKEN.PLUS: case PROG_TOKEN.PLUS_ASSIGN: emit(PROG_OP.ADD); break;
-                    case PROG_TOKEN.MINUS: case PROG_TOKEN.MINUS_ASSIGN: emit(PROG_OP.SUB); break;
-                    case PROG_TOKEN.STAR: case PROG_TOKEN.STAR_ASSIGN: emit(PROG_OP.MUL); break;
-                    case PROG_TOKEN.SLASH: case PROG_TOKEN.SLASH_ASSIGN: emit(PROG_OP.DIV); break;
-                    case PROG_TOKEN.PERCENT: case PROG_TOKEN.PERCENT_ASSIGN: emit(PROG_OP.MOD); break;
-                    case PROG_TOKEN.POWER: case PROG_TOKEN.POWER_ASSIGN: emit(PROG_OP.POW); break;
-                    case PROG_TOKEN.LSHIFT: case PROG_TOKEN.LSHIFT_ASSIGN: emit(PROG_OP.SHL); break;
-                    case PROG_TOKEN.RSHIFT: case PROG_TOKEN.RSHIFT_ASSIGN: emit(PROG_OP.SHR); break;
-                    case PROG_TOKEN.AMP: case PROG_TOKEN.AMP_ASSIGN: emit(PROG_OP.BIT_AND); break;
-                    case PROG_TOKEN.PIPE: case PROG_TOKEN.PIPE_ASSIGN: emit(PROG_OP.BIT_OR); break;
-                    case PROG_TOKEN.CARET: case PROG_TOKEN.CARET_ASSIGN: emit(PROG_OP.BIT_XOR); break;
+                    case PROG_TOKEN.PLUS:
+                    case PROG_TOKEN.PLUS_ASSIGN:
+                        emit(PROG_OP.ADD);
+                        break;
+                    
+                    case PROG_TOKEN.MINUS:
+                    case PROG_TOKEN.MINUS_ASSIGN:
+                        emit(PROG_OP.SUB);
+                        break;
+                    
+                    case PROG_TOKEN.STAR:
+                    case PROG_TOKEN.STAR_ASSIGN:
+                        emit(PROG_OP.MUL);
+                        break;
+                    
+                    case PROG_TOKEN.SLASH:
+                    case PROG_TOKEN.SLASH_ASSIGN:
+                        emit(PROG_OP.DIV);
+                        break;
+                    
+                    case PROG_TOKEN.PERCENT:
+                    case PROG_TOKEN.PERCENT_ASSIGN:
+                        emit(PROG_OP.MOD);
+                        break;
+                    
+                    case PROG_TOKEN.POWER:
+                    case PROG_TOKEN.POWER_ASSIGN:
+                        emit(PROG_OP.POW);
+                        break;
+                    
+                    case PROG_TOKEN.LSHIFT:
+                    case PROG_TOKEN.LSHIFT_ASSIGN:
+                        emit(PROG_OP.SHL);
+                        break;
+                    
+                    case PROG_TOKEN.RSHIFT:
+                    case PROG_TOKEN.RSHIFT_ASSIGN:
+                        emit(PROG_OP.SHR);
+                        break;
+                    
+                    case PROG_TOKEN.AMP:
+                    case PROG_TOKEN.AMP_ASSIGN:
+                        emit(PROG_OP.BIT_AND);
+                        break;
+                    
+                    case PROG_TOKEN.PIPE:
+                    case PROG_TOKEN.PIPE_ASSIGN:
+                        emit(PROG_OP.BIT_OR);
+                        break;
+                    
+                    case PROG_TOKEN.CARET:
+                    case PROG_TOKEN.CARET_ASSIGN:
+                        emit(PROG_OP.BIT_XOR);
+                        break;
                 }
-                // Stack: Arr, Idx, NewVal
             }
             else
             {
-                compile_node(_node.value); // Arr, Idx, NewVal
+                compile_node(_node.value);
             }
+            
             emit(PROG_OP.INDEX_SET, undefined, _line);
         }
     }

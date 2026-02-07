@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"render_build_preview",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"render_build_preview",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

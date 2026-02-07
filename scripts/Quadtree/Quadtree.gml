@@ -158,10 +158,10 @@ function Quadtree(_x, _y, _w, _h, _max_objects = 10, _max_levels = 5, _level = 0
     static remove = function(_item)
     {
         // Try to find in current objects
-        var _idx = array_get_index(objects, _item);
-        if (_idx != -1)
+        var _index = array_get_index(objects, _item);
+        if (_index != -1)
         {
-            array_delete(objects, _idx, 1);
+            array_delete(objects, _index, 1);
             return true;
         }
         
@@ -205,10 +205,13 @@ function Quadtree(_x, _y, _w, _h, _max_objects = 10, _max_levels = 5, _level = 0
         // Add all objects in this node that overlap
         // (Note: Objects in this node definitely overlap the *area* covered by this node 
         //  but might not overlap the query rect)
-        var _len = array_length(objects);
-        for (var i = 0; i < _len; ++i)
+        var _length = array_length(objects);
+        for (var i = 0; i < _length; ++i)
         {
             var _obj = objects[i];
+            
+            // Safety check for destroyed instances (intra-tick death)
+            if (!is_struct(_obj) && !instance_exists(_obj)) continue;
             
             // Extract bounds 
              var _ox1, _oy1, _ox2, _oy2;
@@ -230,10 +233,12 @@ function Quadtree(_x, _y, _w, _h, _max_objects = 10, _max_levels = 5, _level = 0
             }
             else
             {
+                // Fallback for objects with x/y but not bbox (uncommon for instances)
+                if (!variable_instance_exists(_obj, "x")) continue;
                 _ox1 = _obj.x;
                 _oy1 = _obj.y;
-                _ox2 = _obj.x + _obj.width;
-                _oy2 = _obj.y + _obj.height;
+                _ox2 = _obj.x + (_obj.width ?? 0);
+                _oy2 = _obj.y + (_obj.height ?? 0);
             }
             
             if (_ox1 < _x2 && _ox2 > _x1 && _oy1 < _y2 && _oy2 > _y1)
@@ -264,13 +269,13 @@ function Quadtree(_x, _y, _w, _h, _max_objects = 10, _max_levels = 5, _level = 0
     static walk_collisions = function(_callback)
     {
         // 1. Check objects within this node against each other
-        var _len = array_length(objects);
-        for (var i = 0; i < _len; ++i)
+        var _length = array_length(objects);
+        for (var i = 0; i < _length; ++i)
         {
             var _obj_a = objects[i];
             
             // A vs other A's in this node
-            for (var j = i + 1; j < _len; ++j)
+            for (var j = i + 1; j < _length; ++j)
             {
                 var _obj_b = objects[j];
                 _callback(_obj_a, _obj_b);

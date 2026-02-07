@@ -58,6 +58,15 @@ function file_load_world_chunk(_world_save_data, _chunk)
     
     _chunk.chunk_display = _chunk_display;
     
+    // Read Master Palette
+    var _palette_length = buffer_read(_buffer, buffer_u16);
+    var _palette = array_create(_palette_length);
+    
+    for (var i = 0; i < _palette_length; ++i)
+    {
+        _palette[@ i] = buffer_read(_buffer, buffer_string);
+    }
+    
     if (_chunk_display)
     {
         for (var i = 0; i < CHUNK_SIZE; ++i)
@@ -75,7 +84,7 @@ function file_load_world_chunk(_world_save_data, _chunk)
             {
                 for (var l = 0; l < CHUNK_SIZE; ++l)
                 {
-                    _chunk.chunk[@ tile_index_xyz(l, j, i)] = file_load_snippet_tile(_buffer, _item_data);
+                    _chunk.chunk[@ tile_index_xyz(l, j, i)] = file_load_snippet_tile(_buffer, _item_data, _palette);
                 }
             }
         }
@@ -90,11 +99,14 @@ function file_load_world_chunk(_world_save_data, _chunk)
         var _timer_pickup = buffer_read(_buffer, buffer_f64);
         var _timer_life = buffer_read(_buffer, buffer_f64);
         
-        var _item = file_load_snippet_item(_buffer, _item_data);
+        var _item = file_load_snippet_item(_buffer, _item_data, _palette);
         
         var _inst_item = spawn_item_drop(0, 0, _item);
         
         file_load_snippet_position(_buffer, _inst_item);
+        
+        _inst_item.timer_pickup = _timer_pickup;
+        _inst_item.timer_life = _timer_life;
     }
     
     var _length_creature = buffer_read(_buffer, buffer_u32);
@@ -103,7 +115,10 @@ function file_load_world_chunk(_world_save_data, _chunk)
     {
         var _next = buffer_read(_buffer, buffer_u32); // Skip next ptr
         
-        var _id = buffer_read(_buffer, buffer_string);
+        // Read ID from Palette
+        var _id_index = buffer_read(_buffer, buffer_u16);
+        var _id = _palette[_id_index];
+        
         var _variant = buffer_read(_buffer, buffer_string);
         
         var _inst_creature = spawn_creature(0, 0, _id, ((_variant != "") ? _variant : undefined));
@@ -129,7 +144,7 @@ function file_load_world_chunk(_world_save_data, _chunk)
         
         if (_inventory_length > 0)
         {
-            _inst_creature.inventory = file_load_snippet_inventory(_buffer, _inventory_length, _item_data);
+            _inst_creature.inventory = file_load_snippet_inventory(_buffer, _inventory_length, _item_data, _palette);
         }
     }
     

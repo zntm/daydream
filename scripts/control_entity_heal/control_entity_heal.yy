@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"control_entity_heal",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"control_entity_heal",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

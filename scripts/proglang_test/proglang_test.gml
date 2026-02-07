@@ -1726,6 +1726,17 @@ function proglang_test() {
     // 3. Event Type Macro Check
     if (_assert("Event Type Macro", "return is_real(EVENT_TYPE.ENTITY_DIE)", true)) _passed++; else _failed++;
 
+    // ============ PHASE 14 TESTS: Optimizations ============
+    
+    // 1. Inline Functions
+    if (_assert("Inline Simple", "@inline fn add(a, b) { return a + b; } return add(10, 20)", 30)) _passed++; else _failed++;
+    if (_assert("Inline Scope", "var x = 10; @inline fn foo() { var x = 20; return x; } return foo() + x", 30)) _passed++; else _failed++;
+    if (_assert("Inline Early Return", "@inline fn check(v) { if (v) return 1; return 0; } return check(true) + check(false)", 1)) _passed++; else _failed++;
+
+
+    // 2. RAII List
+    if (_assert("RAII List", "fn test() { var l = ds_list_create(); ds_list_add(l, 10); return ds_list_size(l); } return test();", 1)) _passed++; else _failed++;
+    
     show_debug_message($"[Proglang Test] COMPLETE. Passed: {_passed}, Failed: {_failed}");
     return _failed == 0;
 }
@@ -1751,6 +1762,8 @@ if (IS_DEVELOPER_MODE)
             show_debug_message($"[ProglangTest] Executing: {_file}");
             proglang_execute(buffer_load_text(_dir), {}, _dir);
         }
+        
+        show_debug_message(struct_get_names(global.proglang_scripts))
     });
     
     test_quadtree();

@@ -33,7 +33,7 @@ function control_inventory()
             
             if (_item != INVENTORY_EMPTY)
             {
-                inventory_give(0, 0, _item, false);
+                inventory_give(0, 0, _item, global.inventory, false);
                 
                 global.inventory.mouse.item = INVENTORY_EMPTY;
             }
@@ -65,9 +65,9 @@ function control_inventory()
                 if (_chunk == undefined) continue;
                 
                 var _containers = _chunk.chunk_containers;
-                var _len = array_length(_containers);
+                var _length = array_length(_containers);
                 
-                for (var k = 0; k < _len; ++k)
+                for (var k = 0; k < _length; ++k)
                 {
                     var _cont = _containers[k];
                     var _d = point_distance(_player_x, _player_y, _cont.x, _cont.y);

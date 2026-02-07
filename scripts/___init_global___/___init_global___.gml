@@ -1,3 +1,13 @@
+vertex_format_begin();
+
+vertex_format_add_position();
+vertex_format_add_texcoord();
+// vertex_format_add_colour();
+
+vertex_format_add_custom(vertex_type_float2, vertex_usage_texcoord);
+
+global.chunk_format_perspective = vertex_format_end();
+
 global.inventory = {
     mouse: {
         item: INVENTORY_EMPTY,
@@ -185,6 +195,8 @@ global.window_height = window_get_height();
 global.window_focus = true;
 
 global.delta_time = delta_time / 1_000_000;
+
+global.camera_shake = 0;
 
 global.attribute_player = new Attribute()
     .set_boolean([

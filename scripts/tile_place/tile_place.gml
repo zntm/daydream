@@ -4,6 +4,27 @@ function tile_place(_x, _y, _z, _tile)
 {
     if (_y < 0) || (_y >= global.world_data[$ global.world_save_data.dimension].get_world_height()) exit;
     
+    // --- NETWORKING INTERCEPTION ---
+    // Handle Client Requests and Server Broadcasts
+    var _applying_packet = global.network_applying_packet ?? false;
+    
+    if (!_applying_packet)
+    {
+        if (global.network_role == NETWORK_ROLE.CLIENT)
+        {
+            // Client: Send Request to Server
+            // We still fall through to apply locally (Prediction)
+            var _id = (_tile == TILE_EMPTY) ? "base:empty" : _tile.get_id();
+            network_send_tile_request(_x, _y, _z, _id);
+        }
+        else if (global.network_role == NETWORK_ROLE.SERVER)
+        {
+            // Server/Integrated: Broadcast to Clients
+            var _id = (_tile == TILE_EMPTY) ? "base:empty" : _tile.get_id();
+            network_broadcast_tile_update(_x, _y, _z, _id);
+        }
+    }
+    
     var _chunk = chunk_map_get_by_tile(_x, _y);
     
     if (_chunk == undefined)
@@ -24,7 +45,11 @@ function tile_place(_x, _y, _z, _tile)
     {
         _chunk.chunk_display |= 1 << _z;
         
-        ++_chunk.chunk_count[@ _z];
+        // Only increment if we are replacing empty space
+        if (_tile_before == TILE_EMPTY)
+        {
+            ++_chunk.chunk_count[@ _z];
+        }
         
         var _data = global.item_data[$ _tile.get_id()];    
         
@@ -33,9 +58,14 @@ function tile_place(_x, _y, _z, _tile)
             array_push(_chunk.chunk_render_state, global.render_state_pool.acquire(_x, _y, _z, _data.get_render_state()));
         }
     }
-    else if (_tile_before != TILE_EMPTY) && (--_chunk.chunk_count[_z] <= 0)
+    else if (_tile_before != TILE_EMPTY)
     {
-        _chunk.chunk_display ^= 1 << _z;
+        // Decrement only if we are removing a tile
+        if (--_chunk.chunk_count[@ _z] <= 0)
+        {
+            _chunk.chunk_count[@ _z] = 0; // Safety clamp
+            _chunk.chunk_display &= ~(1 << _z); // Safety clear bit
+        }
         
         var _render_state = _chunk.chunk_render_state;
         var _length = array_length(_render_state);
@@ -84,11 +114,44 @@ function tile_place(_x, _y, _z, _tile)
     
     _chunk.chunk[@ _index] = _tile;
     
-    var _vertex_buffer = _chunk.chunk_vertex_buffer[_z];
+    // Recalculate occlusion for this column
+    var _local_x = _x mod CHUNK_SIZE;
+    var _local_y = _y mod CHUNK_SIZE;
+    if (_local_x < 0) _local_x += CHUNK_SIZE;
+    if (_local_y < 0) _local_y += CHUNK_SIZE;
     
-    if (vertex_buffer_exists(_vertex_buffer))
+    var _occluded = 0;
+    var _has_opaque_above = false;
+    var _item_data = global.item_data;
+    
+    for (var _zz = CHUNK_DEPTH_DEFAULT; _zz >= CHUNK_DEPTH_WALL; --_zz)
     {
-        vertex_delete_buffer(_vertex_buffer);
+        if (_has_opaque_above)
+        {
+            _occluded |= (1 << _zz);
+        }
+        
+        var _tile_check = _chunk.chunk[tile_index_xyz(_local_x, _local_y, _zz)];
+        if (_tile_check != TILE_EMPTY)
+        {
+            var _data = _item_data[$ _tile_check.get_id()];
+            if (_data != undefined && !_data.is_transparent() && _data.has_type(ITEM_TYPE_BIT.SOLID))
+            {
+                _has_opaque_above = true;
+            }
+        }
+    }
+    _chunk.chunk_occluded[@ tile_index_xy(_local_x, _local_y)] = _occluded;
+    
+    // Invalidate vertex buffers for all layers from WALL to _z
+    for (var _zz = CHUNK_DEPTH_WALL; _zz <= _z; ++_zz)
+    {
+        var _vertex_buffer = _chunk.chunk_vertex_buffer[_zz];
+        if (vertex_buffer_exists(_vertex_buffer))
+        {
+            vertex_delete_buffer(_vertex_buffer);
+            _chunk.chunk_vertex_buffer[@ _zz] = -1;
+        }
     }
     
     // Emit tile changed event

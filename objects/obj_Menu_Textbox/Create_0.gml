@@ -18,3 +18,5 @@ boolean =
     MENU_BUTTON_BOOLEAN.IS_BUTTON_VISIBLE;
 
 menu_layer = 0;
+
+__filter = undefined;
