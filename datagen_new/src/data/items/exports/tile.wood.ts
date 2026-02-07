@@ -18,7 +18,7 @@ import { tileBlockWallItems } from "../lib/groups";
 import { woodRegistries } from "../registries";
 
 export default woodRegistries.map(
-    ({ namespace, id, leavesParticles, logParticles, planksParticles }) => [
+    ({ namespace, id, leaves, logParticles, planksParticles }) => [
         new DatagenReturnData(
             `${id}.json`,
             new TileItem(
@@ -90,34 +90,41 @@ export default woodRegistries.map(
                 )
                 .setTileSFX("#phantasia:tile/sfx/wood"),
         ),
-        new DatagenReturnData(
-            `${id}_leaves.json`,
-            new TileItem(
-                ItemType.Untouchable,
-                `${namespace}:item/${id}_leaves`,
-                "#phantasia:item/generic/inventory_tile",
-                [
-                    TileItemProperties.CanFlip,
-                    TileItemProperties.CanMirror,
-                    TileItemProperties.IsTile,
-                ],
-            )
-                .setTileAudioProperties(new TileItemAudioProperties(0.4, 0.1))
-                .setTileHarvest(
-                    new TileItemHarvest(
-                        0.18,
-                        1,
-                        new ItemParticle(
-                            leavesParticles,
-                            "#phantasia:tile/generic/harvest_particle_frequency",
-                        ),
-                        new TileItemCondition("#phantasia:item/type/axe"),
-                    ),
-                )
-                .setTileSFX("#phantasia:tile/sfx/leaves")
-                .setTileOnRandomTick([
-                    new ItemScript("@phantasia:tile/leaf_decay", 0.1),
-                ]),
+        ...leaves.map(
+            (leaf) =>
+                new DatagenReturnData(
+                    `${leaf.id}.json`,
+                    new TileItem(
+                        ItemType.Untouchable,
+                        `${namespace}:item/${leaf.id}`,
+                        "#phantasia:item/generic/inventory_tile",
+                        [
+                            TileItemProperties.CanFlip,
+                            TileItemProperties.CanMirror,
+                            TileItemProperties.IsTile,
+                        ],
+                    )
+                        .setTileAudioProperties(
+                            new TileItemAudioProperties(0.4, 0.1),
+                        )
+                        .setTileHarvest(
+                            new TileItemHarvest(
+                                0.18,
+                                1,
+                                new ItemParticle(
+                                    leaf.particles,
+                                    "#phantasia:tile/generic/harvest_particle_frequency",
+                                ),
+                                new TileItemCondition(
+                                    "#phantasia:item/type/axe",
+                                ),
+                            ),
+                        )
+                        .setTileSFX("#phantasia:tile/sfx/leaves")
+                        .setTileOnRandomTick([
+                            new ItemScript("@phantasia:tile/leaf_decay", 0.1),
+                        ]),
+                ),
         ),
         tileBlockWallItems(
             namespace,
