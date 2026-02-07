@@ -1,0 +1,45 @@
+{
+    "pools": [
+        {
+            "entries": [
+                {
+                    "item": {
+                        "id": "phantasia:coal",
+                        "amount": {
+                            "values": {
+                                "min": 2,
+                                "max": 4
+                            },
+                            "type": "smart_value:irandom"
+                        }
+                    },
+                    "weight": 1
+                },
+                {
+                    "item": {
+                        "id": "phantasia:twig",
+                        "amount": {
+                            "values": {
+                                "min": 1,
+                                "max": 2
+                            },
+                            "type": "smart_value:irandom"
+                        }
+                    },
+                    "weight": 1
+                },
+                {
+                    "item": "$EMPTY",
+                    "weight": 2
+                }
+            ],
+            "rolls": {
+                "values": {
+                    "min": 3,
+                    "max": 8
+                },
+                "type": "smart_value:irandom"
+            }
+        }
+    ]
+}

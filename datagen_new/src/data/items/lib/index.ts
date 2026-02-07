@@ -13,6 +13,7 @@ export { ItemCooldown } from "./ItemCooldown";
 export { ItemComponentType, ItemComponent } from "./ItemComponent";
 export { ItemDurability } from "./ItemDurability";
 export { ItemHarvest } from "./ItemHarvest";
+export { ItemDrop } from "./ItemDrop";
 export { ItemInventory } from "./ItemInventory";
 export { ItemParticle } from "./ItemParticle";
 export { type ItemPropertiesType, TileItemProperties } from "./ItemProperties";

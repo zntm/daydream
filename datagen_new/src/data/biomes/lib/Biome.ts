@@ -61,11 +61,19 @@ export class BiomeFoliage {
     id: string;
     chance: number;
     generate_on: string;
+    range_min?: number;
+    range_max?: number;
 
     constructor(id: string, chance: number, generateOn: string = "#phantasia:tile/placement/plant_on") {
         this.id = id;
         this.chance = chance;
         this.generate_on = generateOn;
+    }
+
+    setRange(min: number, max: number): BiomeFoliage {
+        this.range_min = min;
+        this.range_max = max;
+        return this;
     }
 }
 
@@ -111,11 +119,19 @@ export class BiomeStructure {
     id: string;
     chance: number;
     generate_on: string;
+    range_min?: number;
+    range_max?: number;
 
     constructor(id: string, chance: number, generateOn: string = "#phantasia:tile/placement/plant_on") {
         this.id = id;
         this.chance = chance;
         this.generate_on = generateOn;
+    }
+
+    setRange(min: number, max: number): BiomeStructure {
+        this.range_min = min;
+        this.range_max = max;
+        return this;
     }
 }
 
@@ -146,6 +162,8 @@ export class Biome {
     private music: BiomeMusic[] = [];
     private shore_tiles?: BiomeTileLayer;
     private terrain_modifier?: { height_offset?: number; amplitude_scale?: number };
+    private is_ocean?: boolean;
+    private is_skyland?: boolean;
 
     constructor(id: string) {
         this.id = id;
@@ -193,6 +211,16 @@ export class Biome {
         return this;
     }
 
+    setIsOcean(value: boolean = true): Biome {
+        this.is_ocean = value;
+        return this;
+    }
+
+    setIsSkyland(value: boolean = true): Biome {
+        this.is_skyland = value;
+        return this;
+    }
+
     /**
      * Build the biome into a DatagenReturnData for export
      */
@@ -229,6 +257,14 @@ export class Biome {
 
         if (this.terrain_modifier) {
             data.terrain_modifier = this.terrain_modifier;
+        }
+
+        if (this.is_ocean) {
+            data.is_ocean = this.is_ocean;
+        }
+
+        if (this.is_skyland) {
+            data.is_skyland = this.is_skyland;
         }
 
         // Extract biome name from ID (e.g., "phantasia:surface/greenia" -> "greenia")

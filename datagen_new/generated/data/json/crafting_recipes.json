@@ -349,6 +349,39 @@
         ]
     },
     {
+        "id": "phantasia:copper_helmet",
+        "amount": 1,
+        "crafting_stations": "phantasia:anvil",
+        "ingredients": [
+            {
+                "id": "phantasia:copper",
+                "amount": 15
+            }
+        ]
+    },
+    {
+        "id": "phantasia:copper_breastplate",
+        "amount": 1,
+        "crafting_stations": "phantasia:anvil",
+        "ingredients": [
+            {
+                "id": "phantasia:copper",
+                "amount": 24
+            }
+        ]
+    },
+    {
+        "id": "phantasia:copper_leggings",
+        "amount": 1,
+        "crafting_stations": "phantasia:anvil",
+        "ingredients": [
+            {
+                "id": "phantasia:copper",
+                "amount": 18
+            }
+        ]
+    },
+    {
         "id": "phantasia:iron_sword",
         "amount": 1,
         "crafting_stations": "phantasia:anvil",
@@ -389,6 +422,39 @@
             {
                 "id": "phantasia:iron",
                 "amount": 8
+            }
+        ]
+    },
+    {
+        "id": "phantasia:iron_helmet",
+        "amount": 1,
+        "crafting_stations": "phantasia:anvil",
+        "ingredients": [
+            {
+                "id": "phantasia:iron",
+                "amount": 15
+            }
+        ]
+    },
+    {
+        "id": "phantasia:iron_breastplate",
+        "amount": 1,
+        "crafting_stations": "phantasia:anvil",
+        "ingredients": [
+            {
+                "id": "phantasia:iron",
+                "amount": 24
+            }
+        ]
+    },
+    {
+        "id": "phantasia:iron_leggings",
+        "amount": 1,
+        "crafting_stations": "phantasia:anvil",
+        "ingredients": [
+            {
+                "id": "phantasia:iron",
+                "amount": 18
             }
         ]
     },
@@ -437,6 +503,39 @@
         ]
     },
     {
+        "id": "phantasia:gold_helmet",
+        "amount": 1,
+        "crafting_stations": "phantasia:anvil",
+        "ingredients": [
+            {
+                "id": "phantasia:gold",
+                "amount": 15
+            }
+        ]
+    },
+    {
+        "id": "phantasia:gold_breastplate",
+        "amount": 1,
+        "crafting_stations": "phantasia:anvil",
+        "ingredients": [
+            {
+                "id": "phantasia:gold",
+                "amount": 24
+            }
+        ]
+    },
+    {
+        "id": "phantasia:gold_leggings",
+        "amount": 1,
+        "crafting_stations": "phantasia:anvil",
+        "ingredients": [
+            {
+                "id": "phantasia:gold",
+                "amount": 18
+            }
+        ]
+    },
+    {
         "id": "phantasia:platinum_sword",
         "amount": 1,
         "crafting_stations": "phantasia:anvil",
@@ -477,6 +576,39 @@
             {
                 "id": "phantasia:platinum",
                 "amount": 8
+            }
+        ]
+    },
+    {
+        "id": "phantasia:platinum_helmet",
+        "amount": 1,
+        "crafting_stations": "phantasia:anvil",
+        "ingredients": [
+            {
+                "id": "phantasia:platinum",
+                "amount": 15
+            }
+        ]
+    },
+    {
+        "id": "phantasia:platinum_breastplate",
+        "amount": 1,
+        "crafting_stations": "phantasia:anvil",
+        "ingredients": [
+            {
+                "id": "phantasia:platinum",
+                "amount": 24
+            }
+        ]
+    },
+    {
+        "id": "phantasia:platinum_leggings",
+        "amount": 1,
+        "crafting_stations": "phantasia:anvil",
+        "ingredients": [
+            {
+                "id": "phantasia:platinum",
+                "amount": 18
             }
         ]
     },

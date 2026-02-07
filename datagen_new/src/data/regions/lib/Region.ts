@@ -46,6 +46,7 @@ export class CaveBiomeRule {
  */
 export class Region {
     private id: string;
+    private category?: string;
     private biomes: string[] = [];
     private biome_noise_scale: number = 0.008;
 
@@ -73,6 +74,11 @@ export class Region {
 
     constructor(id: string) {
         this.id = id;
+    }
+
+    setCategory(category: string): Region {
+        this.category = category;
+        return this;
     }
 
     setBiomes(biomes: string[]): Region {
@@ -153,6 +159,7 @@ export class Region {
     toJSON(): any {
         const data: any = {
             id: this.id,
+            category: this.category,
             biomes: this.biomes,
             biome_noise_scale: this.biome_noise_scale,
             terrain: {
