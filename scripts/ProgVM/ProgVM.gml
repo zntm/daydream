@@ -69,6 +69,23 @@ enum PROG_FRAME {
     SIZE // 5
 }
 
+/// @desc Iterator types for array-based iteration (faster than structs)
+enum PROG_ITER_TYPE {
+    ARRAY,      // 0
+    STRUCT,     // 1
+    RANGE,      // 2
+    EMPTY       // 3
+}
+
+/// @desc Array indices for iterator data (replaces struct)
+enum PROG_ITER {
+    TYPE,       // PROG_ITER_TYPE
+    VAL,        // Source collection (array/struct) or undefined
+    IDX,        // Current index
+    LEN,        // Length (for array/struct) or range_end (for range)
+    KEYS,       // Keys array (for struct_iter only)
+    SIZE
+}
 
 #macro PROGLANG_MAX_STEP 1_000_000
 
@@ -1026,21 +1043,29 @@ function proglang_vm_run(_vm, _entry_bytecode)
                         }
                         break;
                         
-                    // Iteration
+                    // Iteration (Array-based for performance)
                     case PROG_OP.ITER_INIT:
                         var _coll = _stack[--_sp];
                         var _mode = _arg; // 0: Default, 1: Key, 2: Value, 3: Pair
-                        var _iter = undefined;
+                        var _iter = array_create(PROG_ITER.SIZE);
                         
                         // Check for range object (array with "range" marker)
                         if (is_array(_coll) && array_length(_coll) >= 3 && _coll[0] == "range")
                         {
                             // Range iterator: [1]=start, [2]=end (inclusive)
-                            _iter = { type: "range_iter", current: _coll[1], range_end: _coll[2], done: false }
+                            _iter[PROG_ITER.TYPE] = PROG_ITER_TYPE.RANGE;
+                            _iter[PROG_ITER.VAL] = undefined;
+                            _iter[PROG_ITER.IDX] = _coll[1]; // current value
+                            _iter[PROG_ITER.LEN] = _coll[2]; // range_end
+                            _iter[PROG_ITER.KEYS] = undefined;
                         }
                         else if (is_array(_coll))
                         {
-                            _iter = { type: "array_iter", val: _coll, idx: 0, len: array_length(_coll) }
+                            _iter[PROG_ITER.TYPE] = PROG_ITER_TYPE.ARRAY;
+                            _iter[PROG_ITER.VAL] = _coll;
+                            _iter[PROG_ITER.IDX] = 0;
+                            _iter[PROG_ITER.LEN] = array_length(_coll);
+                            _iter[PROG_ITER.KEYS] = undefined;
                         }
                         else if (is_struct(_coll))
                         {
@@ -1050,25 +1075,35 @@ function proglang_vm_run(_vm, _entry_bytecode)
                             }
                             
                             var _keys = struct_get_names(_coll);
-                            _iter = { type: "struct_iter", val: _coll, keys: _keys, idx: 0, len: array_length(_keys) }
+                            _iter[PROG_ITER.TYPE] = PROG_ITER_TYPE.STRUCT;
+                            _iter[PROG_ITER.VAL] = _coll;
+                            _iter[PROG_ITER.IDX] = 0;
+                            _iter[PROG_ITER.LEN] = array_length(_keys);
+                            _iter[PROG_ITER.KEYS] = _keys;
                         }
                         else
                         {
-                            _iter = { type: "empty", idx: 0, len: 0 }
+                            _iter[PROG_ITER.TYPE] = PROG_ITER_TYPE.EMPTY;
+                            _iter[PROG_ITER.VAL] = undefined;
+                            _iter[PROG_ITER.IDX] = 0;
+                            _iter[PROG_ITER.LEN] = 0;
+                            _iter[PROG_ITER.KEYS] = undefined;
                         }
                         _stack[@ _sp++] = _iter;
                         break;
                     
                     case PROG_OP.ITER_NEXT:
                         var _iter = _stack[_sp - 1]; // Peek
-                        if (_iter.type == "range_iter")
+                        var _iter_type = _iter[PROG_ITER.TYPE];
+                        
+                        if (_iter_type == PROG_ITER_TYPE.RANGE)
                         {
-                            if (!_iter.done && _iter.current <= _iter.range_end)
+                            var _current = _iter[PROG_ITER.IDX];
+                            var _range_end = _iter[PROG_ITER.LEN];
+                            if (_current <= _range_end)
                             {
-                                var _val = _iter.current;
-                                _iter.current++;
-                                if (_iter.current > _iter.range_end) _iter.done = true;
-                                _stack[@ _sp++] = _val;
+                                _iter[@ PROG_ITER.IDX] = _current + 1;
+                                _stack[@ _sp++] = _current;
                                 _stack[@ _sp++] = true;
                             }
                             else
@@ -1076,13 +1111,14 @@ function proglang_vm_run(_vm, _entry_bytecode)
                                 _stack[@ _sp++] = false;
                             }
                         }
-                        else if (_iter.idx < _iter.len)
+                        else if (_iter[PROG_ITER.IDX] < _iter[PROG_ITER.LEN])
                         {
+                            var _idx = _iter[PROG_ITER.IDX];
                             var _key = undefined;
-                            if (_iter.type == "array_iter") _key = _iter.idx;
-                            else if (_iter.type == "struct_iter") _key = _iter.keys[_iter.idx];
+                            if (_iter_type == PROG_ITER_TYPE.ARRAY) _key = _idx;
+                            else if (_iter_type == PROG_ITER_TYPE.STRUCT) _key = _iter[PROG_ITER.KEYS][_idx];
                             
-                            _iter.idx++;
+                            _iter[@ PROG_ITER.IDX] = _idx + 1;
                             _stack[@ _sp++] = _key;
                             _stack[@ _sp++] = true;
                         }
@@ -1094,19 +1130,22 @@ function proglang_vm_run(_vm, _entry_bytecode)
                     
                     case PROG_OP.ITER_GET_VAL:
                         var _iter = _stack[_sp - 1]; // Peek
+                        var _iter_type = _iter[PROG_ITER.TYPE];
                         var _val = undefined;
-                        if (_iter.type == "range_iter")
+                        var _idx = _iter[PROG_ITER.IDX] - 1; // IDX was already incremented
+                        
+                        if (_iter_type == PROG_ITER_TYPE.RANGE)
                         {
-                            _val = _iter.current - 1; // Current was already incremented
+                            _val = _idx + 1; // The value we just yielded (before increment)
                         }
-                        else if (_iter.type == "array_iter")
+                        else if (_iter_type == PROG_ITER_TYPE.ARRAY)
                         {
-                            _val = _iter.val[_iter.idx - 1];
+                            _val = _iter[PROG_ITER.VAL][_idx];
                         }
-                        else if (_iter.type == "struct_iter")
+                        else if (_iter_type == PROG_ITER_TYPE.STRUCT)
                         {
-                            var _key = _iter.keys[_iter.idx - 1];
-                            _val = _iter.val[$ _key];
+                            var _key = _iter[PROG_ITER.KEYS][_idx];
+                            _val = _iter[PROG_ITER.VAL][$ _key];
                         }
                         _stack[@ _sp++] = _val;
                         break;
