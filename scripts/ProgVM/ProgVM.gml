@@ -41,9 +41,10 @@ enum PROG_VM {
     SCOPE,          // Array [PROG_SCOPE]
     CONTEXT,        // Struct (External context)
     GLOBAL_REF,     // Struct (Global scope)
-    TRY_STACK,      // Array
+    TRY_STACK,      // Array (Flat stack: [HandlerIP, HandlerFP, HandlerSP])
+    TP,             // Real (Try Pointer)
     ACTIVE_MODULE,  // Struct (Module info)
-    FRAME_STACK,    // Array (Control Flow Stack: [ReturnIP, SavedBP, SavedScope, SavedBytecode])
+    FRAME_STACK,    // Array (Control Flow Stack: [ReturnIP, SavedBP, SavedScope, SavedBytecode, SavedGRef])
     FP,             // Real (Frame Pointer)
     CURRENT_THIS,   // Any
     ACTIVE_CLASS,   // Struct
@@ -51,6 +52,13 @@ enum PROG_VM {
     MEMO_CACHES,    // Struct (memo_id -> { hash -> value })
     MEMO_ARG_KEYS,  // Array (Stack of argument hashes for current calls)
     SIZE            // Total size
+}
+
+enum PROG_TRY {
+    HANDLER_IP,
+    HANDLER_FP,
+    HANDLER_SP,
+    SIZE // 3
 }
 
 enum PROG_SCOPE {
@@ -98,6 +106,8 @@ function proglang_vm_reset(_vm)
     _vm[@ PROG_VM.SP] = 0;
     _vm[@ PROG_VM.IP] = 0;
     _vm[@ PROG_VM.BP] = 0;
+    _vm[@ PROG_VM.FP] = 0;
+    _vm[@ PROG_VM.TP] = 0;
     _vm[@ PROG_VM.FP] = 0;
     
     // Pre-allocate or reset stacks
@@ -157,8 +167,6 @@ function proglang_vm_run(_vm, _entry_bytecode)
 {
     // === SINGLE LOOP VM (V2) ===
     
-
-    
     if (_entry_bytecode == undefined) return undefined;
     
     // Load entry instructions
@@ -174,6 +182,7 @@ function proglang_vm_run(_vm, _entry_bytecode)
     var _sp = _vm[PROG_VM.SP];
     var _fp = _vm[PROG_VM.FP];
     var _bp = _vm[PROG_VM.BP];
+    var _tp = _vm[PROG_VM.TP];
     var _ip = 0; 
     
     // Capture starting frame pointer to know when to yield/return from this run
@@ -182,6 +191,7 @@ function proglang_vm_run(_vm, _entry_bytecode)
     // Local Cache
     var _stack = _vm[PROG_VM.STACK];
     var _frames = _vm[PROG_VM.FRAME_STACK];
+    var _try_stack = _vm[PROG_VM.TRY_STACK];
     var _scope = _vm[PROG_VM.SCOPE];
     var _gref = _vm[PROG_VM.GLOBAL_REF];
     
@@ -731,12 +741,14 @@ function proglang_vm_run(_vm, _entry_bytecode)
                         
                     // Try/Catch
                     case PROG_OP.PUSH_TRY:
-                        // We push {ip, fp} to handle cross-frame catches
-                        array_push(_vm[PROG_VM.TRY_STACK], { ip: _arg, fp: _fp, sp: _sp });
+                        // Flat try stack: [IP, FP, SP]
+                        _try_stack[@ _tp++] = _arg;
+                        _try_stack[@ _tp++] = _fp;
+                        _try_stack[@ _tp++] = _sp;
                         break;
                     
                     case PROG_OP.POP_TRY:
-                        array_pop(_vm[PROG_VM.TRY_STACK]);
+                        _tp -= PROG_TRY.SIZE;
                         break;
                     
                     case PROG_OP.THROW:
@@ -1312,18 +1324,15 @@ function proglang_vm_run(_vm, _entry_bytecode)
                 }
             }
         } catch (_vm_exception) {
-                var _try_stack = _vm[PROG_VM.TRY_STACK];
-                if (array_length(_try_stack) == 0) throw _vm_exception;
+                if (_tp == 0) throw _vm_exception;
                 
-                var _handler = _try_stack[array_length(_try_stack) - 1];
-                
-                // Allow handler even if fp seems "earlier" (e.g. 0 vs 0), 
-                // as long as it's in the stack it was pushed by this VM instance.
-                
-                array_pop(_try_stack);
+                // Retrieve last handler
+                var _handler_sp = _try_stack[--_tp];
+                var _handler_fp = _try_stack[--_tp];
+                var _handler_ip = _try_stack[--_tp];
                 
                 // Unwind Frames until we reach handler's FP
-                while (_fp > _handler.fp)
+                while (_fp > _handler_fp)
                 {
                     _gref = _frames[--_fp];
                     _curr_bytecode = _frames[--_fp];
@@ -1340,11 +1349,11 @@ function proglang_vm_run(_vm, _entry_bytecode)
                 _code = _curr_bytecode.code;
                 _constants = _curr_bytecode.constants;
                 _length = array_length(_code);
-                _ip = _handler.ip;
+                _ip = _handler_ip;
                 _vm[@ PROG_VM.SCOPE] = _scope;
                 
                 // Push error to stack
-                _sp = _handler.sp;
+                _sp = _handler_sp;
                 _stack[@ _sp++] = _vm_exception;
                 
                 continue; // Back into the instruction loop
@@ -1379,6 +1388,11 @@ function proglang_vm_run(_vm, _entry_bytecode)
             }
             else
             {
+                // Preserve state on exit
+                _vm[@ PROG_VM.SP] = _sp;
+                _vm[@ PROG_VM.FP] = _fp;
+                _vm[@ PROG_VM.BP] = _bp;
+                _vm[@ PROG_VM.TP] = _tp;
                 return undefined;
             }
         }
@@ -1402,12 +1416,14 @@ function proglang_vm_pool_init()
 function proglang_vm_create_impl()
 {
     var _vm = array_create(PROG_VM.SIZE);
-    _vm[PROG_VM.STACK] = array_create(1024);
-    _vm[PROG_VM.FRAME_STACK] = array_create(256); // Initial frame stack
-    _vm[PROG_VM.SP] = 0;
-    _vm[PROG_VM.IP] = 0;
     _vm[PROG_VM.BP] = 0;
     _vm[PROG_VM.FP] = 0;
+    _vm[PROG_VM.TP] = 0;
+    
+    // Initial data structures
+    _vm[PROG_VM.STACK] = array_create(1024);
+    _vm[PROG_VM.FRAME_STACK] = array_create(256); 
+    _vm[PROG_VM.TRY_STACK] = array_create(128); // Try handlers stack
     
     // Initial scope
     var _scope = array_create(PROG_SCOPE.SIZE);
@@ -1418,7 +1434,6 @@ function proglang_vm_create_impl()
     _vm[PROG_VM.SCOPE] = _scope;
     _vm[PROG_VM.CONTEXT] = undefined;
     _vm[PROG_VM.GLOBAL_REF] = {}
-    _vm[PROG_VM.TRY_STACK] = [];
     _vm[PROG_VM.ACTIVE_MODULE] = undefined;
     // _vm[PROG_VM.CALL_STACK] = [];
     _vm[PROG_VM.CURRENT_THIS] = undefined;
