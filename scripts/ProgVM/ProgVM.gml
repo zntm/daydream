@@ -1194,7 +1194,7 @@ function proglang_vm_run(_vm, _entry_bytecode)
                         
                         if (_iter_type == PROG_ITER_TYPE.RANGE)
                         {
-                            _val = _idx + 1; // The value we just yielded (before increment)
+                            _val = _idx; // The value we just yielded (already offset in _idx)
                         }
                         else if (_iter_type == PROG_ITER_TYPE.ARRAY)
                         {
