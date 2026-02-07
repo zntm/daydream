@@ -242,6 +242,61 @@ function proglang_vm_run(_vm, _entry_bytecode)
                     
                     case PROG_OP.LOAD_LOCAL: _stack[@ _sp++] = _stack[_bp + _arg]; break;
                     case PROG_OP.STORE_LOCAL: _stack[@ _bp + _arg] = _stack[_sp - 1]; break; // Peek
+                    
+                    // Superinstructions (merged opcodes for common patterns)
+                    case PROG_OP.INC_LOCAL:
+                        // ++local[arg] - increment in-place, push new value
+                        _stack[@ _sp++] = ++_stack[@ _bp + _arg];
+                        break;
+                    
+                    case PROG_OP.DEC_LOCAL:
+                        // --local[arg] - decrement in-place, push new value
+                        _stack[@ _sp++] = --_stack[@ _bp + _arg];
+                        break;
+                    
+                    case PROG_OP.LOAD_LOCAL_INC:
+                        // local[arg]++ - push old value, then increment
+                        _val = _stack[_bp + _arg];
+                        _stack[@ _bp + _arg] = _val + 1;
+                        _stack[@ _sp++] = _val;
+                        break;
+                    
+                    case PROG_OP.LOAD_LOCAL_DEC:
+                        // local[arg]-- - push old value, then decrement
+                        _val = _stack[_bp + _arg];
+                        _stack[@ _bp + _arg] = _val - 1;
+                        _stack[@ _sp++] = _val;
+                        break;
+                    
+                    case PROG_OP.LOAD_LOCAL_LT:
+                        // local[_arg] < TOS - common loop condition (i < n)
+                        _stack[@ _sp - 1] = _stack[_bp + _arg] < _stack[_sp - 1];
+                        break;
+                    
+                    case PROG_OP.LOAD_LOCAL_LE:
+                        // local[_arg] <= TOS - common loop condition
+                        _stack[@ _sp - 1] = _stack[_bp + _arg] <= _stack[_sp - 1];
+                        break;
+                    
+                    case PROG_OP.LOAD_LOCAL_ADD:
+                        // local[_arg] + TOS - common arithmetic
+                        _stack[@ _sp - 1] = _stack[_bp + _arg] + _stack[_sp - 1];
+                        break;
+                    
+                    case PROG_OP.PUSH_CONST_ADD:
+                        // const[_arg] + TOS (e.g., x + 1)
+                        _stack[@ _sp - 1] = _constants[_arg] + _stack[_sp - 1];
+                        break;
+                    
+                    case PROG_OP.PUSH_CONST_LT:
+                        // TOS < const[_arg]
+                        _stack[@ _sp - 1] = _stack[_sp - 1] < _constants[_arg];
+                        break;
+                    
+                    case PROG_OP.PUSH_CONST_LE:
+                        // TOS <= const[_arg]
+                        _stack[@ _sp - 1] = _stack[_sp - 1] <= _constants[_arg];
+                        break;
                         
                     // Arithmetic
                     case PROG_OP.ADD:

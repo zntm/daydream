@@ -64,7 +64,19 @@ enum PROG_OP
     LOAD_LOCAL, STORE_LOCAL,
     
     // Annotation Ops
-    MEMOIZE_CHECK, MEMOIZE_STORE
+    MEMOIZE_CHECK, MEMOIZE_STORE,
+    
+    // Superinstructions (merged opcodes for common patterns)
+    INC_LOCAL,          // ++local[arg] (increment local variable in-place)
+    DEC_LOCAL,          // --local[arg] (decrement local variable in-place)
+    LOAD_LOCAL_INC,     // Push local[arg], then increment it (postfix i++)
+    LOAD_LOCAL_DEC,     // Push local[arg], then decrement it (postfix i--)
+    LOAD_LOCAL_LT,      // local[arg1] < local[arg2] (loop condition)
+    LOAD_LOCAL_LE,      // local[arg1] <= local[arg2]
+    LOAD_LOCAL_ADD,     // local[arg1] + local[arg2]
+    PUSH_CONST_ADD,     // Push const[arg] + TOS (e.g., x + 1)
+    PUSH_CONST_LT,      // TOS < const[arg]
+    PUSH_CONST_LE       // TOS <= const[arg]
 }
 
 /// @desc Array indices for function data (replaces struct)
@@ -264,7 +276,165 @@ function ProgCompiler(_context_keys = []) constructor
         emit(PROG_OP.PUSH_NULL);
         emit(PROG_OP.RETURN);
         
+        // Run peephole optimization pass
+        peephole_optimize();
+        
         return bytecode;
+    }
+    
+    /// @desc Peephole optimizer - replaces common instruction patterns with superinstructions
+    /// Uses address mapping to correctly update jump targets after code shrinks
+    static peephole_optimize = function()
+    {
+        var _code = bytecode.code;
+        var _len = bytecode.code_size;
+        
+        if (_len < 4) return; // Too short to optimize
+        
+        // Build new code and track old->new address mapping
+        var _new_code = [];
+        var _new_lines = [];
+        var _addr_map = array_create(_len + 2, 0); // Map old addresses to new addresses
+        var _i = 0;
+        
+        while (_i < _len)
+        {
+            // Record address mapping: old position -> new position
+            _addr_map[_i] = array_length(_new_code);
+            
+            var _op1 = _code[_i];
+            var _arg1 = _code[_i + 1];
+            var _line1 = bytecode.lines[(_i div 2) < array_length(bytecode.lines) ? (_i div 2) : 0];
+            var _matched = false;
+            
+            // Look ahead for patterns (need at least 4 more bytes for a 2-instruction pattern)
+            if (_i + 4 <= _len)
+            {
+                var _op2 = _code[_i + 2];
+                var _arg2 = _code[_i + 3];
+                
+                // Pattern: LOAD_LOCAL + INC + STORE_LOCAL (same index) + POP -> INC_LOCAL
+                if (_op1 == PROG_OP.LOAD_LOCAL && _op2 == PROG_OP.INC && _i + 8 <= _len)
+                {
+                    var _op3 = _code[_i + 4];
+                    var _arg3 = _code[_i + 5];
+                    var _op4 = _code[_i + 6];
+                    
+                    if (_op3 == PROG_OP.STORE_LOCAL && _arg3 == _arg1 && _op4 == PROG_OP.POP)
+                    {
+                        array_push(_new_code, PROG_OP.INC_LOCAL, _arg1);
+                        array_push(_new_lines, _line1);
+                        // Map all consumed addresses
+                        _addr_map[_i + 2] = array_length(_new_code);
+                        _addr_map[_i + 4] = array_length(_new_code);
+                        _addr_map[_i + 6] = array_length(_new_code);
+                        _i += 8;
+                        _matched = true;
+                    }
+                }
+                
+                // Pattern: LOAD_LOCAL + DEC + STORE_LOCAL (same index) + POP -> DEC_LOCAL
+                if (!_matched && _op1 == PROG_OP.LOAD_LOCAL && _op2 == PROG_OP.DEC && _i + 8 <= _len)
+                {
+                    var _op3 = _code[_i + 4];
+                    var _arg3 = _code[_i + 5];
+                    var _op4 = _code[_i + 6];
+                    
+                    if (_op3 == PROG_OP.STORE_LOCAL && _arg3 == _arg1 && _op4 == PROG_OP.POP)
+                    {
+                        array_push(_new_code, PROG_OP.DEC_LOCAL, _arg1);
+                        array_push(_new_lines, _line1);
+                        _addr_map[_i + 2] = array_length(_new_code);
+                        _addr_map[_i + 4] = array_length(_new_code);
+                        _addr_map[_i + 6] = array_length(_new_code);
+                        _i += 8;
+                        _matched = true;
+                    }
+                }
+                
+                // Pattern: LOAD_LOCAL + LOAD_LOCAL + (LT/LE/ADD) -> merged
+                if (!_matched && _op1 == PROG_OP.LOAD_LOCAL && _op2 == PROG_OP.LOAD_LOCAL && _i + 6 <= _len)
+                {
+                    var _op3 = _code[_i + 4];
+                    var _superop = undefined;
+                    
+                    if (_op3 == PROG_OP.LT) _superop = PROG_OP.LOAD_LOCAL_LT;
+                    else if (_op3 == PROG_OP.LE) _superop = PROG_OP.LOAD_LOCAL_LE;
+                    else if (_op3 == PROG_OP.ADD) _superop = PROG_OP.LOAD_LOCAL_ADD;
+                    
+                    if (_superop != undefined)
+                    {
+                        array_push(_new_code, PROG_OP.LOAD_LOCAL, _arg2);
+                        array_push(_new_lines, _line1);
+                        array_push(_new_code, _superop, _arg1);
+                        array_push(_new_lines, _line1);
+                        _addr_map[_i + 2] = array_length(_new_code) - 2;
+                        _addr_map[_i + 4] = array_length(_new_code);
+                        _i += 6;
+                        _matched = true;
+                    }
+                }
+                
+                // Pattern: LOAD_LOCAL + PUSH_CONST + (LT/LE/ADD) -> merged
+                if (!_matched && _op1 == PROG_OP.LOAD_LOCAL && _op2 == PROG_OP.PUSH_CONST && _i + 6 <= _len)
+                {
+                    var _op3 = _code[_i + 4];
+                    var _superop = undefined;
+                    
+                    if (_op3 == PROG_OP.LT) _superop = PROG_OP.PUSH_CONST_LT;
+                    else if (_op3 == PROG_OP.LE) _superop = PROG_OP.PUSH_CONST_LE;
+                    else if (_op3 == PROG_OP.ADD) _superop = PROG_OP.PUSH_CONST_ADD;
+                    
+                    if (_superop != undefined)
+                    {
+                        array_push(_new_code, PROG_OP.LOAD_LOCAL, _arg1);
+                        array_push(_new_lines, _line1);
+                        array_push(_new_code, _superop, _arg2);
+                        array_push(_new_lines, _line1);
+                        _addr_map[_i + 2] = array_length(_new_code) - 2;
+                        _addr_map[_i + 4] = array_length(_new_code);
+                        _i += 6;
+                        _matched = true;
+                    }
+                }
+            }
+            
+            // No pattern matched, copy instruction as-is
+            if (!_matched)
+            {
+                array_push(_new_code, _op1, _arg1);
+                array_push(_new_lines, _line1);
+                _i += 2;
+            }
+        }
+        
+        // Final address mapping for end-of-code
+        _addr_map[_len] = array_length(_new_code);
+        
+        // Pass 2: Fix all jump targets
+        var _new_len = array_length(_new_code);
+        for (var j = 0; j < _new_len; j += 2)
+        {
+            var _op = _new_code[j];
+            
+            // Check if this is a jump instruction
+            if (_op == PROG_OP.JUMP || _op == PROG_OP.JUMP_IF_FALSE || 
+                _op == PROG_OP.JUMP_IF_TRUE || _op == PROG_OP.JUMP_IF_NULL || 
+                _op == PROG_OP.JUMP_IF_NOT_NULL)
+            {
+                var _old_target = _new_code[j + 1];
+                // Look up the new address for this target
+                if (_old_target >= 0 && _old_target <= _len)
+                {
+                    _new_code[@ j + 1] = _addr_map[_old_target];
+                }
+            }
+        }
+        
+        // Replace bytecode with optimized version
+        bytecode.code = _new_code;
+        bytecode.code_size = _new_len;
+        bytecode.lines = _new_lines;
     }
     
     /// @desc Try constant folding for binary operations
