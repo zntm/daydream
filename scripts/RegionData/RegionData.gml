@@ -2,7 +2,7 @@ function RegionData(_id, _config = {}) constructor
 {
     ___id = _id;
     
-    ___surface_biome_id = _config[$ "surface_biome"] ?? "phantasia:surface/forest";
+    ___surface_biome_id = _config[$ "surface_biome"] ?? "phantasia:surface/greenia";
     ___biomes = _config[$ "biomes"] ?? [___surface_biome_id];
     ___biome_count = array_length(___biomes);
     ___biome_noise_scale = _config[$ "biome_noise_scale"] ?? 0.008;
@@ -405,7 +405,7 @@ function region_create_defaults()
         // Region 0: Forest (default)
         new RegionData("forest", {
             category: "temperate",
-            surface_biome: "phantasia:surface/forest",
+            surface_biome: "phantasia:surface/greenia",
             cave_biome_default: "phantasia:cave/chasm",
             cave_biomes: [
                 { biome: "phantasia:cave/depths", min_depth: 150, noise_threshold: 0.7, noise_scale: 0.015 }
@@ -415,7 +415,7 @@ function region_create_defaults()
         // Region 1: Desert
         new RegionData("desert", {
             category: "arid",
-            surface_biome: "phantasia:surface/desert",
+            surface_biome: "phantasia:surface/dune",
             cave_biome_default: "phantasia:cave/chasm",
             terrain: { height_offset: 10, base_height: 410, amplitude_min: 15, amplitude_max: 35 },
             cave_biomes: [
@@ -426,7 +426,7 @@ function region_create_defaults()
         // Region 2: Taiga (formerly tundra)
         new RegionData("taiga", {
             category: "cold",
-            surface_biome: "phantasia:surface/taiga",
+            surface_biome: "phantasia:surface/pinesteep",
             cave_biome_default: "phantasia:cave/chasm",
             terrain: { height_offset: -20, base_height: 380, amplitude_min: 20, amplitude_max: 50 },
             cave_biomes: [

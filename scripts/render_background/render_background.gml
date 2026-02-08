@@ -16,6 +16,12 @@ function render_background(_camera_x, _camera_y, _camera_width, _camera_height)
     
     shader_set_uniform_f(__u_colour, (sky_colour_base & 0xff) / 0xff, ((sky_colour_base >> 8) & 0xff) / 0xff, ((sky_colour_base >> 16) & 0xff) / 0xff);
     
+    if (_in_biome_data == undefined) || (_in_biome_transition_data == undefined)
+    {
+        shader_reset();
+        return;
+    }
+    
     var _in_biome_background = _in_biome_data.get_background();
     // var _in_biome_background_data = _background_data[$ _in_biome_background];
     

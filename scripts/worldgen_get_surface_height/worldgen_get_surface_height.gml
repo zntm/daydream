@@ -11,8 +11,19 @@ function worldgen_get_surface_height(_x, _seed, _world_data = global.world_data[
     
     // 2. Resolve surface biome at this position (for subtle modifiers)
     var _biome = _region.get_surface_biome(_x, 0, _seed);
-    var _biome_offset = _biome.get_terrain_height_offset();
-    var _biome_amp_scale = _biome.get_terrain_amplitude_scale();
+    
+    var _biome_offset = 0;
+    var _biome_amp_scale = 1;
+    
+    if (_biome != undefined)
+    {
+        _biome_offset = _biome.get_terrain_height_offset();
+        _biome_amp_scale = _biome.get_terrain_amplitude_scale();
+    }
+    else
+    {
+        show_debug_message($"[WorldGen] Warning: Surface biome undefined at x={_x}. Using defaults.");
+    }
     
     // 3. Extract terrain parameters
     var _base_height = _terrain.base_height + _terrain.height_offset + _biome_offset;

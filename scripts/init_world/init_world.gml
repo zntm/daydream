@@ -51,16 +51,29 @@ function init_world(_directory, _namespace = "phantasia", _type = 0)
         
         var _biome = _json.biome;
         
+        var _surface_biome = _biome[$ "surface"];
+        if (_surface_biome != undefined)
+        {
+            _world_data.set_surface_biome_data(_surface_biome);
+        }
+        
+        var _surface_settings = _json[$ "surface"];
+        if (_surface_settings != undefined)
+        {
+            _world_data.set_surface_settings(_surface_settings);
+        }
+
+        var _cave_biome = _biome[$ "cave"];
+        if (_cave_biome != undefined)
+        {
+            _world_data.set_cave_biome_data(_cave_biome);
+        }
+
         // var _sky_biome = _biome[$ "sky"];
         // if (_sky_biome != undefined)
         // {
         //     _world_data.set_sky_biome(_sky_biome);
         // }
-        
-        var _cave = _json.cave;
-        _world_data.set_cave(_cave);
-
-
         
         var _cave = _json.cave;
         _world_data.set_cave(_cave);

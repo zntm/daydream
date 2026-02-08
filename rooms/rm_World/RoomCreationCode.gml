@@ -97,13 +97,18 @@ if (obj_Game_Control.spawn_needs_init)
     {
         with (obj_Game_Control_Background)
         {
-            var _in_biome = bg_get_biome(round(_lp.x / TILE_SIZE), clamp(round(_lp.y / TILE_SIZE), 0, _world_data.get_world_height() - 1));
-            var _in_biome_data = global.biome_data[$ _in_biome];
+            var _p_x_cell = round(_lp.x / TILE_SIZE);
+            var _p_y_cell = clamp(round(_lp.y / TILE_SIZE), 0, _world_data.get_world_height() - 1);
             
-            in_biome = _in_biome;
-            in_biome_transition = _in_biome;
+            var _in_biome_id = bg_get_biome(_p_x_cell, _p_y_cell);
+            in_biome = _in_biome_id;
+            in_biome_transition = _in_biome_id;
             
-            bg_sky_colour(_in_biome_data, _in_biome_data);
+            var _in_region = global.region_generator.get_region(_lp.x, _lp.y, 0, _seed);
+            in_region = _in_region;
+            in_region_transition = _in_region;
+            
+            bg_sky_colour(_in_region, _in_region);
         }
     }
     
