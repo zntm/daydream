@@ -57,10 +57,19 @@ function ui_load(_path) {
 /// @param {Struct} _config Configuration including link context
 /// @returns {Struct} UI instance with spawned elements
 function ui_spawn(_definitions, _config = {}) {
+    // Normalize definitions to an array if it's a single struct
+    if (is_struct(_definitions) && variable_struct_exists(_definitions, "type") && _definitions.type == UI_AST.ELEMENT) {
+        _definitions = [_definitions];
+    }
+    
+    // Fallback for empty or invalid input
+    if (!is_array(_definitions)) {
+        show_debug_message("[UI Runtime] Warning: ui_spawn called with invalid definitions.");
+        return undefined;
+    }
+
     var _link = _config[$ "link"] ?? {};
     var _parent = _config[$ "parent"] ?? undefined;
-    var _x = _config[$ "x"] ?? 0;
-    var _y = _config[$ "y"] ?? 0;
     
     var _instance = {
         id: global.ui_instance_counter++,
@@ -83,8 +92,6 @@ function ui_spawn(_definitions, _config = {}) {
         if (_element != undefined) {
             _element.instance_id = _instance.id;
             _element.instance = _instance;
-            _element.x += _x;
-            _element.y += _y;
             
             if (_parent != undefined) {
                 _parent.add_child(_element);
