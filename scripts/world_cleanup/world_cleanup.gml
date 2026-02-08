@@ -57,5 +57,22 @@ function world_cleanup()
         obj_Game_Control.chunk_in_view_length = 0;
     }
     
+    // 9. Clear structure spawn tracking map (ds_map of ds_maps)
+    if (variable_global_exists("worldgen_structure"))
+    {
+        // Destroy nested ds_maps first
+        var _key = ds_map_find_first(global.worldgen_structure);
+        while (_key != undefined)
+        {
+            var _nested = global.worldgen_structure[? _key];
+            if (ds_exists(_nested, ds_type_map))
+            {
+                ds_map_destroy(_nested);
+            }
+            _key = ds_map_find_next(global.worldgen_structure, _key);
+        }
+        ds_map_clear(global.worldgen_structure);
+    }
+    
     show_debug_message("[WORLD_CLEANUP] World cleanup complete");
 }
