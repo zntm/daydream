@@ -1,4 +1,4 @@
-function worldgen_get_biome_surface(_x, _y, _surface_height, _seed, _world_data = global.world_data[$ global.world_save_data.dimension], _heat = worldgen_get_heat(_x, _y, _seed, _world_data), _humidity = worldgen_get_humidity(_x, _y, _seed, _world_data))
+function worldgen_get_biome_surface(_x, _y, _surface_height, _seed, _world_data = global.world_data[$ global.world_save_data.dimension], _heat = worldgen_get_heat(_x, _surface_height, _seed, _world_data), _humidity = worldgen_get_humidity(_x, _surface_height, _seed, _world_data))
 {
     var _surface_biome_map = _world_data.get_surface_biome_map();
     

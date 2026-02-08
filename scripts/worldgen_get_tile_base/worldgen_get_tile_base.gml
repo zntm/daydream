@@ -68,13 +68,13 @@ function worldgen_get_tile_base(_x, _y, _surface_biome, _cave_biome, _surface_he
     var _blend_range = _world_data.get_biome_blend_range();
     
     // Use pre-calculated params if available, otherwise fetch them (slow)
-    _heat ??= worldgen_get_heat(_x, 0, _seed, _world_data);
-    _humidity ??= worldgen_get_humidity(_x, 0, _seed, _world_data);
+    _heat ??= worldgen_get_heat(_x, _surface_height, _seed, _world_data);
+    _humidity ??= worldgen_get_humidity(_x, _surface_height, _seed, _world_data);
     
-    var _heat_left = worldgen_get_heat(_x - _blend_range, 0, _seed, _world_data);
-    var _heat_right = worldgen_get_heat(_x + _blend_range, 0, _seed, _world_data);
-    var _humidity_left = worldgen_get_humidity(_x - _blend_range, 0, _seed, _world_data);
-    var _humidity_right = worldgen_get_humidity(_x + _blend_range, 0, _seed, _world_data);
+    var _heat_left = worldgen_get_heat(_x - _blend_range, _surface_height, _seed, _world_data);
+    var _heat_right = worldgen_get_heat(_x + _blend_range, _surface_height, _seed, _world_data);
+    var _humidity_left = worldgen_get_humidity(_x - _blend_range, _surface_height, _seed, _world_data);
+    var _humidity_right = worldgen_get_humidity(_x + _blend_range, _surface_height, _seed, _world_data);
     
     var _is_boundary = (_heat != _heat_left) || (_heat != _heat_right) || 
                        (_humidity != _humidity_left) || (_humidity != _humidity_right);
