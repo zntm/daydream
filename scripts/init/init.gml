@@ -8,7 +8,7 @@ function init(_namespace)
         init_assets($"{PROGRAM_DIRECTORY_ASSETS}/{_files[i]}", _namespace);
     }
     
-    init_credit($"{PROGRAM_DIRECTORY_RESOURCES}\\credit\\data.json");
+    init_credit($"{PROGRAM_DIRECTORY_RESOURCES}/credit/data.json");
     
     init_rarity($"{PROGRAM_DIRECTORY_RESOURCES}/data/json/rarity_colours.json", _namespace);
     
@@ -16,13 +16,13 @@ function init(_namespace)
     
     init_attire($"{PROGRAM_DIRECTORY_RESOURCES}/data/attires", _namespace);
     
-    // init_sfx($"{PROGRAM_DIRECTORY_DATA}\\sfx", _namespace);
+    // init_sfx($"{PROGRAM_DIRECTORY_DATA}/sfx", _namespace);
     
     init_particle_recursive($"{PROGRAM_DIRECTORY_RESOURCES}/data/particles", _namespace);
     
     init_projectile($"{PROGRAM_DIRECTORY_RESOURCES}/data/projectiles", _namespace);
     
-    // init_music($"{PROGRAM_DIRECTORY_DATA}\\music", _namespace);
+    // init_music($"{PROGRAM_DIRECTORY_DATA}/music", _namespace);
     
     init_effect($"{PROGRAM_DIRECTORY_RESOURCES}/data/effects", _namespace);
 

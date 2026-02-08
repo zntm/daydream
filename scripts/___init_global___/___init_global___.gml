@@ -194,7 +194,7 @@ global.window_height = window_get_height();
 
 global.window_focus = true;
 
-global.delta_time = delta_time / 1_000_000;
+global.delta_time = max(0.0001, delta_time / 1_000_000);
 
 global.camera_shake = 0;
 

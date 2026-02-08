@@ -8,6 +8,8 @@ global.menu_transition_progress = 0;
 
 function menu_transition_goto(_room)
 {
+    if (global.menu_transition_phase != 0) exit;
+    
     global.menu_transition_target = _room;
     global.menu_transition_phase = 1;  // Start shrink+fade phase
     global.menu_transition_progress = 0;
