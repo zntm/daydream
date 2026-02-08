@@ -5,10 +5,34 @@ function player_build(_dt, _x, _y)
     var _inventory_selected_hotbar = global.inventory_selected_hotbar;
     var _item = global.inventory.base[_inventory_selected_hotbar];
     
+    // Check for tile interaction first (top-down through layers)
+    for (var _z_int = CHUNK_DEPTH - 1; _z_int >= 0; --_z_int)
+    {
+        var _tile_at = tile_get(_x, _y, _z_int);
+        if (_tile_at == TILE_EMPTY) continue;
+        
+        var _tile_data = _item_data[$ _tile_at.get_id()];
+        if (_tile_data != undefined)
+        {
+            var _on_tile_use = _tile_data.get_on_tile_use();
+            var _on_tile_use_length = _tile_data.get_on_tile_use_length() ?? 0;
+            
+            if (_on_tile_use_length > 0)
+            {
+                for (var i = 0; i < _on_tile_use_length; ++i)
+                {
+                    function_execute(_on_tile_use[i], _x * TILE_SIZE, _y * TILE_SIZE, _z_int, 1, 1, id, _item, _tile_at);
+                }
+                
+                cooldown_build = 0.15;
+                exit;
+            }
+        }
+    }
+    
     if (_item == INVENTORY_EMPTY) exit;
     
     var _id = _item.get_id();
-    
     var _data = _item_data[$ _id];
     
     // Check for item on_use functions (e.g., buckets, tools with special use)
@@ -19,7 +43,7 @@ function player_build(_dt, _x, _y)
     {
         for (var i = 0; i < _on_item_use_length; ++i)
         {
-            function_execute(_on_item_use[i], _x, _y, CHUNK_DEPTH_DEFAULT, 1, 1, id, _item);
+            function_execute(_on_item_use[i], _x * TILE_SIZE, _y * TILE_SIZE, CHUNK_DEPTH_DEFAULT, 1, 1, id, _item);
             
             event_emit(new EventDataItemUse(_item, id, _x, _y));
         }

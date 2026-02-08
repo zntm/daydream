@@ -188,17 +188,17 @@ function chunk_generate(_chunk, _context = undefined)
         var _xorshift_val = xorshift(_world_seed ^ ((_world_x + _chunk.chunk_ystart) * _surface_height));
         
         // HOIST: Biome Parameters (per column)
-        var _heat = worldgen_get_heat(_world_x, 0, _world_seed, _world_data);
-        var _humidity = worldgen_get_humidity(_world_x, 0, _world_seed, _world_data);
-        var _surface_biome = worldgen_get_biome_surface(_world_x, 0, _surface_height, _world_seed, _world_data, _heat, _humidity);
+        var _heat = worldgen_get_heat(_world_x, _surface_height, _world_seed, _world_data);
+        var _humidity = worldgen_get_humidity(_world_x, _surface_height, _world_seed, _world_data);
+        var _surface_biome = worldgen_get_biome_surface(_world_x, _surface_height, _surface_height, _world_seed, _world_data, _heat, _humidity);
         var _surface_biome_data = _global_biome_data[$ _surface_biome];
         
         // HOIST: Biome Blending Helpers (avoid 6 calls per tile)
         var _blend_range = (_context != undefined) ? _context.blend_range : _world_data.get_biome_blend_range();
-        var _heat_l = worldgen_get_heat(_world_x - _blend_range, 0, _world_seed, _world_data);
-        var _heat_r = worldgen_get_heat(_world_x + _blend_range, 0, _world_seed, _world_data);
-        var _humid_l = worldgen_get_humidity(_world_x - _blend_range, 0, _world_seed, _world_data);
-        var _humid_r = worldgen_get_humidity(_world_x + _blend_range, 0, _world_seed, _world_data);
+        var _heat_l = worldgen_get_heat(_world_x - _blend_range, _surface_height, _world_seed, _world_data);
+        var _heat_r = worldgen_get_heat(_world_x + _blend_range, _surface_height, _world_seed, _world_data);
+        var _humid_l = worldgen_get_humidity(_world_x - _blend_range, _surface_height, _world_seed, _world_data);
+        var _humid_r = worldgen_get_humidity(_world_x + _blend_range, _surface_height, _world_seed, _world_data);
         
         var _sky_biome_id = (_context != undefined) ? _context.sky_biome_id : _world_data.get_sky_biome_id();
         var _sky_biome_data = (_context != undefined) ? _context.sky_biome_data : _global_biome_data[$ _sky_biome_id];
