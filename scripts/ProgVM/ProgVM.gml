@@ -1132,6 +1132,12 @@ function proglang_vm_run(_vm, _entry_bytecode)
                         _stack[@ _sp++] = _exports;
                         break;
                         
+                    case PROG_OP.IMPORT_UI:
+                        var _ui_path = _constants[_arg];
+                        var _ui_def = ui_load(_ui_path);
+                        _stack[@ _sp++] = _ui_def;
+                        break;
+                        
                     case PROG_OP.EXPORT_SET:
                         var _name = _constants[_arg];
                         var _val = _stack[_sp - 1]; // Peek

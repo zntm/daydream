@@ -1,0 +1,408 @@
+/// @desc UI Runtime - handles loading, spawning, and managing UI instances
+/// Central system for the declarative UI language
+
+// Global UI definition cache
+global.ui_definitions = {};
+
+// Global UI instance registry
+global.ui_instances = {};
+global.ui_instance_counter = 0;
+
+/// @desc Load and parse a UI file, returning definitions
+/// @param {String} _path Path to .ui file
+/// @returns {Struct.UIASTDocument} Parsed UI document
+function ui_load(_path) {
+    // Check cache first
+    if (struct_exists(global.ui_definitions, _path)) {
+        return global.ui_definitions[$ _path];
+    }
+    
+    // Load file contents
+    var _source = buffer_load_text(_path);
+    
+    if (_source == undefined || _source == "") {
+        show_debug_message($"[UI Runtime] Failed to load UI file: {_path}");
+        return undefined;
+    }
+    
+    // Tokenize
+    var _lexer = new UILexer(_source);
+    var _tokens = _lexer.tokenize();
+    
+    if (_lexer.had_error) {
+        show_debug_message($"[UI Runtime] Lexer error in {_path}: {_lexer.error}");
+        return undefined;
+    }
+    
+    // Parse
+    var _parser = new UIParser(_tokens);
+    var _document = _parser.parse();
+    
+    if (_parser.had_error) {
+        show_debug_message($"[UI Runtime] Parser error in {_path}: {_parser.error}");
+        return undefined;
+    }
+    
+    // Cache and return
+    global.ui_definitions[$ _path] = {
+        document: _document,
+        variables: _parser.variables
+    };
+    
+    return global.ui_definitions[$ _path];
+}
+
+/// @desc Spawn UI instances from definitions
+/// @param {Array} _definitions Array of element names or AST elements to spawn  
+/// @param {Struct} _config Configuration including link context
+/// @returns {Struct} UI instance with spawned elements
+function ui_spawn(_definitions, _config = {}) {
+    var _link = _config[$ "link"] ?? {};
+    var _parent = _config[$ "parent"] ?? undefined;
+    var _x = _config[$ "x"] ?? 0;
+    var _y = _config[$ "y"] ?? 0;
+    
+    var _instance = {
+        id: global.ui_instance_counter++,
+        elements: {},
+        root_elements: [],
+        link_context: _link
+    };
+    
+    var _def_count = array_length(_definitions);
+    
+    for (var i = 0; i < _def_count; i++) {
+        var _def = _definitions[i];
+        var _element = undefined;
+        
+        if (is_struct(_def) && variable_struct_exists(_def, "type")) {
+            // It's an AST node - instantiate it
+            _element = ui_instantiate_element(_def, _link, {});
+        }
+        
+        if (_element != undefined) {
+            _element.x += _x;
+            _element.y += _y;
+            
+            if (_parent != undefined) {
+                _parent.add_child(_element);
+            }
+            
+            array_push(_instance.root_elements, _element);
+            _instance.elements[$ _element.element_name] = _element;
+            
+            // Register all nested elements by name
+            ui_register_nested_elements(_element, _instance.elements);
+        }
+    }
+    
+    // Store instance
+    global.ui_instances[$ string(_instance.id)] = _instance;
+    
+    return _instance;
+}
+
+/// @desc Register nested elements by name
+static ui_register_nested_elements = function(_element, _registry) {
+    var _child_count = array_length(_element.children);
+    
+    for (var i = 0; i < _child_count; i++) {
+        var _child = _element.children[i];
+        
+        if (variable_struct_exists(_child, "element_name") && _child.element_name != "") {
+            _registry[$ _child.element_name] = _child;
+        }
+        
+        if (variable_struct_exists(_child, "children")) {
+            ui_register_nested_elements(_child, _registry);
+        }
+    }
+}
+
+/// @desc Instantiate an element from AST node
+/// @param {Struct} _node AST element node
+/// @param {Struct} _link Link context
+/// @param {Struct} _variables Local variable scope
+/// @returns {Struct.UIElement} Instantiated element
+function ui_instantiate_element(_node, _link, _variables) {
+    if (_node.type != UI_AST.ELEMENT) return undefined;
+    
+    var _element = undefined;
+    
+    // Create element based on type
+    switch (_node.element_type) {
+        case "text":
+            _element = new UIText(0, 0, "");
+            break;
+        case "button":
+            _element = new UIButton(0, 0, 100, 24, "");
+            break;
+        case "window":
+            _element = new UIWindow(0, 0, 320, 180, "");
+            break;
+        case "area":
+            _element = new UIArea(0, 0, 100, 100);
+            break;
+        case "image":
+            _element = new UIImage(0, 0, undefined);
+            break;
+        case "slider":
+            _element = new UISlider(0, 0, 100, 0, 100, 50);
+            break;
+        case "textbox":
+            _element = new UITextbox(0, 0, 100, 24);
+            break;
+        case "bar":
+            _element = new UIBar(0, 0, 100, 8, 0, 100, 50);
+            break;
+        case "popup":
+            _element = new UIPopup(0, 0, 200, 150);
+            break;
+        case "page":
+            _element = new UIPage(0, 0, 100, 100, "");
+            break;
+        case "radio_button":
+            _element = new UIRadioButton(0, 0, "");
+            break;
+        default:
+            show_debug_message($"[UI Runtime] Unknown element type: {_node.element_type}");
+            _element = new UIElement(0, 0, 100, 100);
+            break;
+    }
+    
+    if (_element == undefined) return undefined;
+    
+    _element.element_name = _node.name;
+    _element.element_type = _node.element_type;
+    _element.set_link_context(_link);
+    
+    // Apply properties
+    var _prop_count = array_length(_node.properties);
+    for (var i = 0; i < _prop_count; i++) {
+        var _prop = _node.properties[i];
+        ui_apply_property(_element, _prop, _link, _variables);
+    }
+    
+    // Instantiate children
+    var _child_count = array_length(_node.children);
+    for (var i = 0; i < _child_count; i++) {
+        var _child_node = _node.children[i];
+        var _child = ui_instantiate_element(_child_node, _link, _variables);
+        if (_child != undefined) {
+            _element.add_child(_child);
+        }
+    }
+    
+    // Perform layout after all children added
+    _element.layout_children();
+    
+    return _element;
+}
+
+/// @desc Apply a property to an element
+/// @param {Struct.UIElement} _element Target element
+/// @param {Struct} _prop Property AST node
+/// @param {Struct} _link Link context
+/// @param {Struct} _variables Local variables
+function ui_apply_property(_element, _prop, _link, _variables) {
+    var _key = _prop.key;
+    var _value_node = _prop.value;
+    var _value = ui_resolve_value(_value_node, _link, _variables);
+    
+    // Handle special properties
+    switch (_key) {
+        case "size":
+            if (is_array(_value) && array_length(_value) >= 2) {
+                _element.width = _value[0];
+                _element.height = _value[1];
+            }
+            break;
+        
+        case "position":
+            if (is_array(_value) && array_length(_value) >= 2) {
+                _element.x = _value[0];
+                _element.y = _value[1];
+            }
+            break;
+        
+        case "layout":
+            if (is_string(_value)) {
+                switch (_value) {
+                    case "LAYOUT_VERTICAL": _element.layout = UI_LAYOUT.VERTICAL; break;
+                    case "LAYOUT_HORIZONTAL": _element.layout = UI_LAYOUT.HORIZONTAL; break;
+                    case "LAYOUT_GRID": _element.layout = UI_LAYOUT.GRID; break;
+                    default: _element.layout = UI_LAYOUT.NONE; break;
+                }
+            }
+            break;
+        
+        case "padding":
+            _element.set_padding(_value);
+            break;
+        
+        case "spacing":
+            _element.spacing = _value;
+            break;
+        
+        case "background":
+            if (is_struct(_value) && variable_struct_exists(_value, "color")) {
+                _element.background_color = _value.color;
+                _element.background_alpha = _value[$ "alpha"] ?? 1;
+            } else {
+                _element.background_color = _value;
+            }
+            break;
+        
+        case "colour":
+        case "color":
+            if (is_struct(_value) && variable_struct_exists(_value, "color")) {
+                _element.colour = _value.color;
+            } else {
+                _element.colour = _value;
+            }
+            break;
+        
+        default:
+            // Check for event handlers (on_*)
+            if (string_pos("on_", _key) == 1) {
+                if (_value_node.type == UI_AST.SCRIPT_REF) {
+                    _element.add_event_handler(_key, _value_node.script_id);
+                }
+            }
+            // Check for bindings
+            else if (_value_node.type == UI_AST.BINDING) {
+                _element.add_binding(_key, _value_node.name);
+            }
+            // Regular property - try to set directly
+            else {
+                if (variable_struct_exists(_element, _key)) {
+                    _element[$ _key] = _value;
+                }
+            }
+            break;
+    }
+}
+
+/// @desc Resolve a value AST node to a runtime value
+/// @param {Struct} _node Value AST node
+/// @param {Struct} _link Link context
+/// @param {Struct} _variables Local variables
+/// @returns {Any} Resolved value
+function ui_resolve_value(_node, _link, _variables) {
+    switch (_node.type) {
+        case UI_AST.NUMBER:
+            return _node.value;
+        
+        case UI_AST.STRING:
+            return _node.value;
+        
+        case UI_AST.BOOL:
+            return _node.value;
+        
+        case UI_AST.COLOR:
+            return { color: _node.color, alpha: _node.alpha };
+        
+        case UI_AST.TUPLE:
+            var _values = [];
+            var _count = array_length(_node.values);
+            for (var i = 0; i < _count; i++) {
+                array_push(_values, ui_resolve_value(_node.values[i], _link, _variables));
+            }
+            return _values;
+        
+        case UI_AST.ENUM:
+            return _node.name;
+        
+        case UI_AST.IDENTIFIER:
+            // Look up in local variables first
+            if (struct_exists(_variables, _node.name)) {
+                return _variables[$ _node.name];
+            }
+            return _node.name;
+        
+        case UI_AST.BINDING:
+            // Return a marker - actual binding happens at runtime
+            return undefined;
+        
+        case UI_AST.LOCA_KEY:
+            // Translate via localization system
+            return loca_translate(_node.key);
+        
+        case UI_AST.SCRIPT_REF:
+            // Return the script ID for event handlers
+            return _node.script_id;
+    }
+    
+    return undefined;
+}
+
+/// @desc Destroy a UI instance and all its elements
+/// @param {Struct} _instance UI instance to destroy
+function ui_destroy(_instance) {
+    if (_instance == undefined) return;
+    
+    // Destroy all root elements
+    var _count = array_length(_instance.root_elements);
+    for (var i = 0; i < _count; i++) {
+        // Elements are structs, just let GC handle them
+    }
+    
+    // Remove from registry
+    struct_remove(global.ui_instances, string(_instance.id));
+}
+
+/// @desc Get an element by name from a UI instance
+/// @param {Struct} _instance UI instance
+/// @param {String} _name Element name
+/// @returns {Struct.UIElement} Element or undefined
+function ui_get(_instance, _name) {
+    if (_instance == undefined) return undefined;
+    return _instance.elements[$ _name];
+}
+
+/// @desc Set a property on an element by name
+/// @param {Struct} _instance UI instance
+/// @param {String} _name Element name
+/// @param {String} _property Property name
+/// @param {Any} _value Value to set
+function ui_set(_instance, _name, _property, _value) {
+    var _element = ui_get(_instance, _name);
+    if (_element != undefined) {
+        _element[$ _property] = _value;
+    }
+}
+
+/// @desc Refresh all bindings in a UI instance
+/// @param {Struct} _instance UI instance
+function ui_refresh(_instance) {
+    if (_instance == undefined) return;
+    
+    var _count = array_length(_instance.root_elements);
+    for (var i = 0; i < _count; i++) {
+        if (variable_struct_exists(_instance.root_elements[i], "update_bindings")) {
+            _instance.root_elements[i].update_bindings();
+        }
+    }
+}
+
+/// @desc Update all root elements in a UI instance
+/// @param {Struct} _instance UI instance
+function ui_update(_instance) {
+    if (_instance == undefined) return;
+    
+    var _count = array_length(_instance.root_elements);
+    for (var i = 0; i < _count; i++) {
+        _instance.root_elements[i].update();
+    }
+}
+
+/// @desc Draw all root elements in a UI instance
+/// @param {Struct} _instance UI instance
+function ui_draw(_instance) {
+    if (_instance == undefined) return;
+    
+    var _count = array_length(_instance.root_elements);
+    for (var i = 0; i < _count; i++) {
+        _instance.root_elements[i].draw();
+    }
+}

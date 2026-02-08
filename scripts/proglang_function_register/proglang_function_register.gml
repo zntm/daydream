@@ -1304,3 +1304,48 @@ proglang_function_register("buffer_delete", function(_args) {
 });
 
 #endregion
+
+#region UI System
+
+proglang_function_register("ui_load", function(_args) {
+    var _path = _args[0];
+    return ui_load(_path);
+});
+
+proglang_function_register("ui_spawn", function(_args) {
+    var _definitions = _args[0];
+    var _config = (array_length(_args) > 1) ? _args[1] : {};
+    return ui_spawn(_definitions, _config);
+});
+
+proglang_function_register("ui_destroy", function(_args) {
+    ui_destroy(_args[0]);
+});
+
+proglang_function_register("ui_get", function(_args) {
+    var _instance = _args[0];
+    var _name = _args[1];
+    return ui_get(_instance, _name);
+});
+
+proglang_function_register("ui_set", function(_args) {
+    var _instance = _args[0];
+    var _name = _args[1];
+    var _property = _args[2];
+    var _value = _args[3];
+    ui_set(_instance, _name, _property, _value);
+});
+
+proglang_function_register("ui_refresh", function(_args) {
+    ui_refresh(_args[0]);
+});
+
+proglang_function_register("ui_update", function(_args) {
+    ui_update(_args[0]);
+});
+
+proglang_function_register("ui_draw", function(_args) {
+    ui_draw(_args[0]);
+});
+
+#endregion

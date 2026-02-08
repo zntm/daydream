@@ -39,7 +39,7 @@ enum PROG_OP
     PUSH_ARRAY_EMPTY, ARRAY_PUSH, ARRAY_SPREAD,
     
     // Module Ops
-    IMPORT, EXPORT_SET,
+    IMPORT, IMPORT_UI, EXPORT_SET,
     
     // Stack Ops Extra
     DUP2, POP_AND_KEEP,
@@ -1593,8 +1593,18 @@ function ProgCompiler(_context_keys = []) constructor
                 break;
             
             case PROG_AST.IMPORT_STMT:
-                emit(PROG_OP.IMPORT, add_constant(_node.module_path), _node.line);
-                // Stack: ExportsStruct
+                // Check if importing from a .ui file
+                var _is_ui = string_ends_with(_node.module_path, ".ui");
+                
+                if (_is_ui)
+                {
+                    emit(PROG_OP.IMPORT_UI, add_constant(_node.module_path), _node.line);
+                }
+                else
+                {
+                    emit(PROG_OP.IMPORT, add_constant(_node.module_path), _node.line);
+                }
+                // Stack: ExportsStruct (or UI definitions struct)
                 for (var i = 0; i < array_length(_node.imports); i++)
                 {
                     var _imp = _node.imports[i];
