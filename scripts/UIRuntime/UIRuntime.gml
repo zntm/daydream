@@ -81,6 +81,8 @@ function ui_spawn(_definitions, _config = {}) {
         }
         
         if (_element != undefined) {
+            _element.instance_id = _instance.id;
+            _element.instance = _instance;
             _element.x += _x;
             _element.y += _y;
             
@@ -103,7 +105,7 @@ function ui_spawn(_definitions, _config = {}) {
 }
 
 /// @desc Register nested elements by name
-static ui_register_nested_elements = function(_element, _registry) {
+function ui_register_nested_elements(_element, _registry) {
     var _child_count = array_length(_element.children);
     
     for (var i = 0; i < _child_count; i++) {

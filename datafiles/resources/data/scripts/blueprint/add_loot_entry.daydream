@@ -1,0 +1,19 @@
+var t = tile
+
+var loot_id = t.get_component("loot_id")
+var item_id = t.get_component("item_id")
+var weight = t.get_component("weight")
+
+if (loot_id == undefined || loot_id == "") {
+    show_debug_message("Error: Loot ID is empty");
+    return;
+}
+
+if (item_id == undefined || item_id == "") {
+    show_debug_message("Error: Item ID is empty");
+    return;
+}
+
+show_debug_message("Adding loot entry: " + item_id + " (weight: " + string(weight) + ") to table: " + loot_id);
+
+// logic to add entry to tile memory...

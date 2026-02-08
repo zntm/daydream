@@ -1,0 +1,22 @@
+import { loot_blueprint } from "ui/loot_blueprint.ui"
+
+// 'tile', 'x', 'y', 'z' are provided by the engine when running a tile script
+var t = tile
+
+// Spawn the UI instance with data bindings
+var instance = ui_spawn(loot_blueprint, {
+    link: {
+        // Bindings for loot editor textboxes
+        loot_id: fn() { return t.get_component("loot_id") },
+        item_id: fn() { return t.get_component("item_id") },
+        weight: fn() { return t.get_component("weight") },
+        
+        // Context variables
+        tile_x: x,
+        tile_y: y,
+        tile_z: z
+    }
+})
+
+// The UI instance is now registered in global.ui_instances
+// and will be updated/drawn by the central UI manager.

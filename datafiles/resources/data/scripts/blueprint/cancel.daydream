@@ -1,0 +1,4 @@
+// element is the UI element that triggered the script
+if (element != undefined && element.instance != undefined) {
+    ui_destroy(element.instance);
+}
