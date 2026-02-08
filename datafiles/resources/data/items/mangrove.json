@@ -1,24 +1,14 @@
 {
-    "inventory": "#phantasia:item/generic/inventory_tile",
-    "properties": [
-        "phantasia:is_tile"
-    ],
-    "sprite": "phantasia:/item/mangrove",
+    "inventory": "#phantasia:item/generic/inventory_default",
+    "sprite": "phantasia:item/mangrove",
     "tile": {
-        "audio_properties": {
-            "lowpass": 0.4,
-            "reverb": 0.1
-        },
         "drops": [
             {
                 "id": "phantasia:mangrove"
             }
         ],
         "harvest": {
-            "condition": {
-                "id": "#phantasia:item/type/axe"
-            },
-            "hardness": 0.44,
+            "hardness": 0.56,
             "level": 1,
             "particle": {
                 "colour": [
@@ -26,12 +16,19 @@
                     "#3F2207"
                 ],
                 "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
+            },
+            "condition": {
+                "id": "#phantasia:item/type/axe"
             }
         },
-        "sfx": "#phantasia:tile/sfx/wood"
-    },
-    "type": "solid"
-},
+        "sfx": "#phantasia:tile/sfx/wood",
+        "placement": {
+            "condition": {
+                "type": "every",
+                "values": [
+                    {
+                        "condition": {
+                            "type": "some",
                             "values": [
                                 {
                                     "xoffset": 0,
@@ -51,7 +48,10 @@
                 ]
             }
         },
-        "sfx": "#phantasia:tile/sfx/wood"
+        "audio_properties": {
+            "lowpass": 0.4,
+            "reverb": 0.1
+        }
     },
     "type": "untouchable"
 }

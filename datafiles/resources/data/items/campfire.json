@@ -1,13 +1,7 @@
 {
     "inventory": "#phantasia:item/generic/inventory_default",
-    "properties": [],
     "sprite": "phantasia:item/campfire",
     "tile": {
-        "animation_type": "increment",
-        "audio_properties": {
-            "lowpass": 0.1,
-            "reverb": 0
-        },
         "drops": [
             {
                 "id": "phantasia:campfire"
@@ -21,14 +15,22 @@
                 "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
             }
         },
+        "sfx": "#phantasia:tile/sfx/wood",
+        "audio_properties": {
+            "lowpass": 0.1,
+            "reverb": 0
+        },
         "light": "#EAC7A6",
+        "animation_type": "increment",
         "on_random_tick": [
             {
-                "id": "@phantasia:tile/ambient_fire",
+                "id": "@phantasia:items/sfx_play",
+                "parameters": {
+                    "id": "phantasia:sfx/tile/fire/ambient"
+                },
                 "chance": 0.24
             }
-        ],
-        "sfx": "#phantasia:tile/sfx/wood"
+        ]
     },
     "type": "untouchable"
 }

@@ -41,10 +41,9 @@ enum PROG_VM {
     SCOPE,          // Array [PROG_SCOPE]
     CONTEXT,        // Struct (External context)
     GLOBAL_REF,     // Struct (Global scope)
-    TRY_STACK,      // Array (Flat stack: [HandlerIP, HandlerFP, HandlerSP])
-    TP,             // Real (Try Pointer)
+    TRY_STACK,      // Array
     ACTIVE_MODULE,  // Struct (Module info)
-    FRAME_STACK,    // Array (Control Flow Stack: [ReturnIP, SavedBP, SavedScope, SavedBytecode, SavedGRef])
+    FRAME_STACK,    // Array (Control Flow Stack: [ReturnIP, SavedBP, SavedScope, SavedBytecode])
     FP,             // Real (Frame Pointer)
     CURRENT_THIS,   // Any
     ACTIVE_CLASS,   // Struct
@@ -52,13 +51,6 @@ enum PROG_VM {
     MEMO_CACHES,    // Struct (memo_id -> { hash -> value })
     MEMO_ARG_KEYS,  // Array (Stack of argument hashes for current calls)
     SIZE            // Total size
-}
-
-enum PROG_TRY {
-    HANDLER_IP,
-    HANDLER_FP,
-    HANDLER_SP,
-    SIZE // 3
 }
 
 enum PROG_SCOPE {
@@ -77,23 +69,6 @@ enum PROG_FRAME {
     SIZE // 5
 }
 
-/// @desc Iterator types for array-based iteration (faster than structs)
-enum PROG_ITER_TYPE {
-    ARRAY,      // 0
-    STRUCT,     // 1
-    RANGE,      // 2
-    EMPTY       // 3
-}
-
-/// @desc Array indices for iterator data (replaces struct)
-enum PROG_ITER {
-    TYPE,       // PROG_ITER_TYPE
-    VAL,        // Source collection (array/struct) or undefined
-    IDX,        // Current index
-    LEN,        // Length (for array/struct) or range_end (for range)
-    KEYS,       // Keys array (for struct_iter only)
-    SIZE
-}
 
 #macro PROGLANG_MAX_STEP 1_000_000
 
@@ -106,8 +81,6 @@ function proglang_vm_reset(_vm)
     _vm[@ PROG_VM.SP] = 0;
     _vm[@ PROG_VM.IP] = 0;
     _vm[@ PROG_VM.BP] = 0;
-    _vm[@ PROG_VM.FP] = 0;
-    _vm[@ PROG_VM.TP] = 0;
     _vm[@ PROG_VM.FP] = 0;
     
     // Pre-allocate or reset stacks
@@ -167,6 +140,8 @@ function proglang_vm_run(_vm, _entry_bytecode)
 {
     // === SINGLE LOOP VM (V2) ===
     
+
+    
     if (_entry_bytecode == undefined) return undefined;
     
     // Load entry instructions
@@ -182,7 +157,6 @@ function proglang_vm_run(_vm, _entry_bytecode)
     var _sp = _vm[PROG_VM.SP];
     var _fp = _vm[PROG_VM.FP];
     var _bp = _vm[PROG_VM.BP];
-    var _tp = _vm[PROG_VM.TP];
     var _ip = 0; 
     
     // Capture starting frame pointer to know when to yield/return from this run
@@ -191,7 +165,6 @@ function proglang_vm_run(_vm, _entry_bytecode)
     // Local Cache
     var _stack = _vm[PROG_VM.STACK];
     var _frames = _vm[PROG_VM.FRAME_STACK];
-    var _try_stack = _vm[PROG_VM.TRY_STACK];
     var _scope = _vm[PROG_VM.SCOPE];
     var _gref = _vm[PROG_VM.GLOBAL_REF];
     
@@ -211,11 +184,8 @@ function proglang_vm_run(_vm, _entry_bytecode)
                     return undefined;
                 }
                 
-                // Fetch and unpack instruction
-                // Packed format: [OPCODE: 16 bits | ARG: 16 bits]
-                var _packed = _code[_ip++];
-                var _op = (_packed >> 16) & 0xFFFF;
-                var _arg = _packed & 0xFFFF;
+                var _op = _code[_ip++];
+                var _arg = _code[_ip++];
                 
                 // DEBUG TRACE
                 if (_sp < 0) show_debug_message($"[VM CRITICAL] SP UNDERFLOW BEFORE OP: {_sp}");
@@ -255,173 +225,6 @@ function proglang_vm_run(_vm, _entry_bytecode)
                     
                     case PROG_OP.LOAD_LOCAL: _stack[@ _sp++] = _stack[_bp + _arg]; break;
                     case PROG_OP.STORE_LOCAL: _stack[@ _bp + _arg] = _stack[_sp - 1]; break; // Peek
-                    
-                    // Superinstructions (merged opcodes for common patterns)
-                    case PROG_OP.INC_LOCAL:
-                        // ++local[arg] - increment in-place, push new value
-                        _stack[@ _sp++] = ++_stack[@ _bp + _arg];
-                        break;
-                    
-                    case PROG_OP.DEC_LOCAL:
-                        // --local[arg] - decrement in-place, push new value
-                        _stack[@ _sp++] = --_stack[@ _bp + _arg];
-                        break;
-                    
-                    case PROG_OP.LOAD_LOCAL_INC:
-                        // local[arg]++ - push old value, then increment
-                        _val = _stack[_bp + _arg];
-                        _stack[@ _bp + _arg] = _val + 1;
-                        _stack[@ _sp++] = _val;
-                        break;
-                    
-                    case PROG_OP.LOAD_LOCAL_DEC:
-                        // local[arg]-- - push old value, then decrement
-                        _val = _stack[_bp + _arg];
-                        _stack[@ _bp + _arg] = _val - 1;
-                        _stack[@ _sp++] = _val;
-                        break;
-                    
-                    case PROG_OP.LOAD_LOCAL_LT:
-                        // local[_arg] < TOS - common loop condition (i < n)
-                        _stack[@ _sp - 1] = _stack[_bp + _arg] < _stack[_sp - 1];
-                        break;
-                    
-                    case PROG_OP.LOAD_LOCAL_LE:
-                        // local[_arg] <= TOS - common loop condition
-                        _stack[@ _sp - 1] = _stack[_bp + _arg] <= _stack[_sp - 1];
-                        break;
-                    
-                    case PROG_OP.LOAD_LOCAL_ADD:
-                        // local[_arg] + TOS - common arithmetic
-                        _stack[@ _sp - 1] = _stack[_bp + _arg] + _stack[_sp - 1];
-                        break;
-                    
-                    case PROG_OP.PUSH_CONST_ADD:
-                        // const[_arg] + TOS (e.g., x + 1)
-                        _stack[@ _sp - 1] = _constants[_arg] + _stack[_sp - 1];
-                        break;
-                    
-                    case PROG_OP.PUSH_CONST_LT:
-                        // TOS < const[_arg]
-                        _stack[@ _sp - 1] = _stack[_sp - 1] < _constants[_arg];
-                        break;
-                    
-                    case PROG_OP.PUSH_CONST_LE:
-                        // TOS <= const[_arg]
-                        _stack[@ _sp - 1] = _stack[_sp - 1] <= _constants[_arg];
-                        break;
-                    
-                    // ========== MATH OPCODES ==========
-                    // Unary trig
-                    case PROG_OP.MATH_SIN: _stack[@ _sp - 1] = sin(_stack[_sp - 1]); break;
-                    case PROG_OP.MATH_COS: _stack[@ _sp - 1] = cos(_stack[_sp - 1]); break;
-                    case PROG_OP.MATH_TAN: _stack[@ _sp - 1] = tan(_stack[_sp - 1]); break;
-                    case PROG_OP.MATH_ASIN: _stack[@ _sp - 1] = arcsin(_stack[_sp - 1]); break;
-                    case PROG_OP.MATH_ACOS: _stack[@ _sp - 1] = arccos(_stack[_sp - 1]); break;
-                    case PROG_OP.MATH_ATAN: _stack[@ _sp - 1] = arctan(_stack[_sp - 1]); break;
-                    
-                    // Unary math
-                    case PROG_OP.MATH_SQRT: _stack[@ _sp - 1] = sqrt(_stack[_sp - 1]); break;
-                    case PROG_OP.MATH_EXP: _stack[@ _sp - 1] = exp(_stack[_sp - 1]); break;
-                    case PROG_OP.MATH_LN: _stack[@ _sp - 1] = ln(_stack[_sp - 1]); break;
-                    case PROG_OP.MATH_LOG2: _stack[@ _sp - 1] = log2(_stack[_sp - 1]); break;
-                    case PROG_OP.MATH_LOG10: _stack[@ _sp - 1] = log10(_stack[_sp - 1]); break;
-                    
-                    // Rounding
-                    case PROG_OP.MATH_FLOOR: _stack[@ _sp - 1] = floor(_stack[_sp - 1]); break;
-                    case PROG_OP.MATH_CEIL: _stack[@ _sp - 1] = ceil(_stack[_sp - 1]); break;
-                    case PROG_OP.MATH_ROUND: _stack[@ _sp - 1] = round(_stack[_sp - 1]); break;
-                    case PROG_OP.MATH_TRUNC: _stack[@ _sp - 1] = int64(_stack[_sp - 1]); break;
-                    case PROG_OP.MATH_FRAC: _stack[@ _sp - 1] = frac(_stack[_sp - 1]); break;
-                    
-                    // Utility unary
-                    case PROG_OP.MATH_ABS: _stack[@ _sp - 1] = abs(_stack[_sp - 1]); break;
-                    case PROG_OP.MATH_SIGN: _stack[@ _sp - 1] = sign(_stack[_sp - 1]); break;
-                    case PROG_OP.MATH_DEGTORAD: _stack[@ _sp - 1] = degtorad(_stack[_sp - 1]); break;
-                    case PROG_OP.MATH_RADTODEG: _stack[@ _sp - 1] = radtodeg(_stack[_sp - 1]); break;
-                    case PROG_OP.MATH_SQRTFAST: _stack[@ _sp - 1] = sqrt(_stack[_sp - 1]); break; // GML sqrt is already fast
-                    
-                    // Binary math (pop 2, push 1)
-                    case PROG_OP.MATH_MIN:
-                        _b = _stack[--_sp];
-                        _stack[@ _sp - 1] = min(_stack[_sp - 1], _b);
-                        break;
-                    case PROG_OP.MATH_MAX:
-                        _b = _stack[--_sp];
-                        _stack[@ _sp - 1] = max(_stack[_sp - 1], _b);
-                        break;
-                    case PROG_OP.MATH_ATAN2:
-                        _b = _stack[--_sp];
-                        _stack[@ _sp - 1] = arctan2(_stack[_sp - 1], _b);
-                        break;
-                    case PROG_OP.MATH_POWER:
-                        _b = _stack[--_sp];
-                        _stack[@ _sp - 1] = power(_stack[_sp - 1], _b);
-                        break;
-                    case PROG_OP.MATH_LOGN:
-                        _b = _stack[--_sp];
-                        _stack[@ _sp - 1] = logn(_b, _stack[_sp - 1]);
-                        break;
-                    
-                    // Random functions
-                    case PROG_OP.MATH_RANDOM:
-                        _stack[@ _sp - 1] = random(_stack[_sp - 1]);
-                        break;
-                    case PROG_OP.MATH_IRANDOM:
-                        _stack[@ _sp - 1] = irandom(_stack[_sp - 1]);
-                        break;
-                    case PROG_OP.MATH_RANDOM_RANGE:
-                        _b = _stack[--_sp];
-                        _stack[@ _sp - 1] = random_range(_stack[_sp - 1], _b);
-                        break;
-                    case PROG_OP.MATH_IRANDOM_RANGE:
-                        _b = _stack[--_sp];
-                        _stack[@ _sp - 1] = irandom_range(_stack[_sp - 1], _b);
-                        break;
-                    
-                    // Ternary functions (pop 3, push 1)
-                    case PROG_OP.MATH_CLAMP:
-                        var _max = _stack[--_sp];
-                        var _min = _stack[--_sp];
-                        _stack[@ _sp - 1] = clamp(_stack[_sp - 1], _min, _max);
-                        break;
-                    case PROG_OP.MATH_LERP:
-                        var _t = _stack[--_sp];
-                        _b = _stack[--_sp];
-                        _stack[@ _sp - 1] = lerp(_stack[_sp - 1], _b, _t);
-                        break;
-                        
-                    // New Math/Utility handlers
-                    case PROG_OP.MATH_DSIN: _stack[@ _sp - 1] = dsin(_stack[_sp - 1]); break;
-                    case PROG_OP.MATH_DCOS: _stack[@ _sp - 1] = dcos(_stack[_sp - 1]); break;
-                    case PROG_OP.MATH_DTAN: _stack[@ _sp - 1] = dtan(_stack[_sp - 1]); break;
-                    case PROG_OP.MATH_SQR: _val = _stack[_sp - 1]; _stack[@ _sp - 1] = _val * _val; break;
-                    case PROG_OP.MATH_RANDOMIZE: randomize(); _stack[@ _sp++] = undefined; break;
-                    case PROG_OP.MATH_POINT_DIST:
-                        var _y2 = _stack[--_sp]; var _x2 = _stack[--_sp];
-                        var _y1 = _stack[--_sp]; var _x1 = _stack[--_sp];
-                        _stack[@ _sp++] = point_distance(_x1, _y1, _x2, _y2);
-                        break;
-                    case PROG_OP.MATH_POINT_DIR:
-                        var _y2 = _stack[--_sp]; var _x2 = _stack[--_sp];
-                        var _y1 = _stack[--_sp]; var _x1 = _stack[--_sp];
-                        _stack[@ _sp++] = point_direction(_x1, _y1, _x2, _y2);
-                        break;
-                    case PROG_OP.MATH_LENGTHDIR_X:
-                        _b = _stack[--_sp]; _a = _stack[--_sp]; // len, dir
-                        _stack[@ _sp++] = lengthdir_x(_a, _b);
-                        break;
-                    case PROG_OP.MATH_LENGTHDIR_Y:
-                        _b = _stack[--_sp]; _a = _stack[--_sp]; // len, dir
-                        _stack[@ _sp++] = lengthdir_y(_a, _b);
-                        break;
-                    case PROG_OP.MATH_CHOOSE:
-                        _a = _stack[_sp - 1];
-                        if (is_array(_a) && array_length(_a) > 0) _stack[@ _sp - 1] = array_choose(_a);
-                        else _stack[@ _sp - 1] = undefined;
-                        break;
-                    case PROG_OP.MATH_TO_STRING: _stack[@ _sp - 1] = string(_stack[_sp - 1]); break;
-                    case PROG_OP.MATH_TO_REAL: _stack[@ _sp - 1] = real(_stack[_sp - 1]); break;
                         
                     // Arithmetic
                     case PROG_OP.ADD:
@@ -853,14 +656,12 @@ function proglang_vm_run(_vm, _entry_bytecode)
                         
                     // Try/Catch
                     case PROG_OP.PUSH_TRY:
-                        // Flat try stack: [IP, FP, SP]
-                        _try_stack[@ _tp++] = _arg;
-                        _try_stack[@ _tp++] = _fp;
-                        _try_stack[@ _tp++] = _sp;
+                        // We push {ip, fp} to handle cross-frame catches
+                        array_push(_vm[PROG_VM.TRY_STACK], { ip: _arg, fp: _fp, sp: _sp });
                         break;
                     
                     case PROG_OP.POP_TRY:
-                        _tp -= PROG_TRY.SIZE;
+                        array_pop(_vm[PROG_VM.TRY_STACK]);
                         break;
                     
                     case PROG_OP.THROW:
@@ -1225,29 +1026,21 @@ function proglang_vm_run(_vm, _entry_bytecode)
                         }
                         break;
                         
-                    // Iteration (Array-based for performance)
+                    // Iteration
                     case PROG_OP.ITER_INIT:
                         var _coll = _stack[--_sp];
                         var _mode = _arg; // 0: Default, 1: Key, 2: Value, 3: Pair
-                        var _iter = array_create(PROG_ITER.SIZE);
+                        var _iter = undefined;
                         
                         // Check for range object (array with "range" marker)
                         if (is_array(_coll) && array_length(_coll) >= 3 && _coll[0] == "range")
                         {
                             // Range iterator: [1]=start, [2]=end (inclusive)
-                            _iter[PROG_ITER.TYPE] = PROG_ITER_TYPE.RANGE;
-                            _iter[PROG_ITER.VAL] = undefined;
-                            _iter[PROG_ITER.IDX] = _coll[1]; // current value
-                            _iter[PROG_ITER.LEN] = _coll[2]; // range_end
-                            _iter[PROG_ITER.KEYS] = undefined;
+                            _iter = { type: "range_iter", current: _coll[1], range_end: _coll[2], done: false }
                         }
                         else if (is_array(_coll))
                         {
-                            _iter[PROG_ITER.TYPE] = PROG_ITER_TYPE.ARRAY;
-                            _iter[PROG_ITER.VAL] = _coll;
-                            _iter[PROG_ITER.IDX] = 0;
-                            _iter[PROG_ITER.LEN] = array_length(_coll);
-                            _iter[PROG_ITER.KEYS] = undefined;
+                            _iter = { type: "array_iter", val: _coll, idx: 0, len: array_length(_coll) }
                         }
                         else if (is_struct(_coll))
                         {
@@ -1257,35 +1050,25 @@ function proglang_vm_run(_vm, _entry_bytecode)
                             }
                             
                             var _keys = struct_get_names(_coll);
-                            _iter[PROG_ITER.TYPE] = PROG_ITER_TYPE.STRUCT;
-                            _iter[PROG_ITER.VAL] = _coll;
-                            _iter[PROG_ITER.IDX] = 0;
-                            _iter[PROG_ITER.LEN] = array_length(_keys);
-                            _iter[PROG_ITER.KEYS] = _keys;
+                            _iter = { type: "struct_iter", val: _coll, keys: _keys, idx: 0, len: array_length(_keys) }
                         }
                         else
                         {
-                            _iter[PROG_ITER.TYPE] = PROG_ITER_TYPE.EMPTY;
-                            _iter[PROG_ITER.VAL] = undefined;
-                            _iter[PROG_ITER.IDX] = 0;
-                            _iter[PROG_ITER.LEN] = 0;
-                            _iter[PROG_ITER.KEYS] = undefined;
+                            _iter = { type: "empty", idx: 0, len: 0 }
                         }
                         _stack[@ _sp++] = _iter;
                         break;
                     
                     case PROG_OP.ITER_NEXT:
                         var _iter = _stack[_sp - 1]; // Peek
-                        var _iter_type = _iter[PROG_ITER.TYPE];
-                        
-                        if (_iter_type == PROG_ITER_TYPE.RANGE)
+                        if (_iter.type == "range_iter")
                         {
-                            var _current = _iter[PROG_ITER.IDX];
-                            var _range_end = _iter[PROG_ITER.LEN];
-                            if (_current <= _range_end)
+                            if (!_iter.done && _iter.current <= _iter.range_end)
                             {
-                                _iter[@ PROG_ITER.IDX] = _current + 1;
-                                _stack[@ _sp++] = _current;
+                                var _val = _iter.current;
+                                _iter.current++;
+                                if (_iter.current > _iter.range_end) _iter.done = true;
+                                _stack[@ _sp++] = _val;
                                 _stack[@ _sp++] = true;
                             }
                             else
@@ -1293,14 +1076,13 @@ function proglang_vm_run(_vm, _entry_bytecode)
                                 _stack[@ _sp++] = false;
                             }
                         }
-                        else if (_iter[PROG_ITER.IDX] < _iter[PROG_ITER.LEN])
+                        else if (_iter.idx < _iter.len)
                         {
-                            var _idx = _iter[PROG_ITER.IDX];
                             var _key = undefined;
-                            if (_iter_type == PROG_ITER_TYPE.ARRAY) _key = _idx;
-                            else if (_iter_type == PROG_ITER_TYPE.STRUCT) _key = _iter[PROG_ITER.KEYS][_idx];
+                            if (_iter.type == "array_iter") _key = _iter.idx;
+                            else if (_iter.type == "struct_iter") _key = _iter.keys[_iter.idx];
                             
-                            _iter[@ PROG_ITER.IDX] = _idx + 1;
+                            _iter.idx++;
                             _stack[@ _sp++] = _key;
                             _stack[@ _sp++] = true;
                         }
@@ -1312,22 +1094,19 @@ function proglang_vm_run(_vm, _entry_bytecode)
                     
                     case PROG_OP.ITER_GET_VAL:
                         var _iter = _stack[_sp - 1]; // Peek
-                        var _iter_type = _iter[PROG_ITER.TYPE];
                         var _val = undefined;
-                        var _idx = _iter[PROG_ITER.IDX] - 1; // IDX was already incremented
-                        
-                        if (_iter_type == PROG_ITER_TYPE.RANGE)
+                        if (_iter.type == "range_iter")
                         {
-                            _val = _idx; // The value we just yielded (already offset in _idx)
+                            _val = _iter.current - 1; // Current was already incremented
                         }
-                        else if (_iter_type == PROG_ITER_TYPE.ARRAY)
+                        else if (_iter.type == "array_iter")
                         {
-                            _val = _iter[PROG_ITER.VAL][_idx];
+                            _val = _iter.val[_iter.idx - 1];
                         }
-                        else if (_iter_type == PROG_ITER_TYPE.STRUCT)
+                        else if (_iter.type == "struct_iter")
                         {
-                            var _key = _iter[PROG_ITER.KEYS][_idx];
-                            _val = _iter[PROG_ITER.VAL][$ _key];
+                            var _key = _iter.keys[_iter.idx - 1];
+                            _val = _iter.val[$ _key];
                         }
                         _stack[@ _sp++] = _val;
                         break;
@@ -1436,15 +1215,18 @@ function proglang_vm_run(_vm, _entry_bytecode)
                 }
             }
         } catch (_vm_exception) {
-                if (_tp == 0) throw _vm_exception;
+                var _try_stack = _vm[PROG_VM.TRY_STACK];
+                if (array_length(_try_stack) == 0) throw _vm_exception;
                 
-                // Retrieve last handler
-                var _handler_sp = _try_stack[--_tp];
-                var _handler_fp = _try_stack[--_tp];
-                var _handler_ip = _try_stack[--_tp];
+                var _handler = _try_stack[array_length(_try_stack) - 1];
+                
+                // Allow handler even if fp seems "earlier" (e.g. 0 vs 0), 
+                // as long as it's in the stack it was pushed by this VM instance.
+                
+                array_pop(_try_stack);
                 
                 // Unwind Frames until we reach handler's FP
-                while (_fp > _handler_fp)
+                while (_fp > _handler.fp)
                 {
                     _gref = _frames[--_fp];
                     _curr_bytecode = _frames[--_fp];
@@ -1461,11 +1243,11 @@ function proglang_vm_run(_vm, _entry_bytecode)
                 _code = _curr_bytecode.code;
                 _constants = _curr_bytecode.constants;
                 _length = array_length(_code);
-                _ip = _handler_ip;
+                _ip = _handler.ip;
                 _vm[@ PROG_VM.SCOPE] = _scope;
                 
                 // Push error to stack
-                _sp = _handler_sp;
+                _sp = _handler.sp;
                 _stack[@ _sp++] = _vm_exception;
                 
                 continue; // Back into the instruction loop
@@ -1500,11 +1282,6 @@ function proglang_vm_run(_vm, _entry_bytecode)
             }
             else
             {
-                // Preserve state on exit
-                _vm[@ PROG_VM.SP] = _sp;
-                _vm[@ PROG_VM.FP] = _fp;
-                _vm[@ PROG_VM.BP] = _bp;
-                _vm[@ PROG_VM.TP] = _tp;
                 return undefined;
             }
         }
@@ -1528,14 +1305,12 @@ function proglang_vm_pool_init()
 function proglang_vm_create_impl()
 {
     var _vm = array_create(PROG_VM.SIZE);
+    _vm[PROG_VM.STACK] = array_create(1024);
+    _vm[PROG_VM.FRAME_STACK] = array_create(256); // Initial frame stack
+    _vm[PROG_VM.SP] = 0;
+    _vm[PROG_VM.IP] = 0;
     _vm[PROG_VM.BP] = 0;
     _vm[PROG_VM.FP] = 0;
-    _vm[PROG_VM.TP] = 0;
-    
-    // Initial data structures
-    _vm[PROG_VM.STACK] = array_create(1024);
-    _vm[PROG_VM.FRAME_STACK] = array_create(256); 
-    _vm[PROG_VM.TRY_STACK] = array_create(128); // Try handlers stack
     
     // Initial scope
     var _scope = array_create(PROG_SCOPE.SIZE);
@@ -1546,6 +1321,7 @@ function proglang_vm_create_impl()
     _vm[PROG_VM.SCOPE] = _scope;
     _vm[PROG_VM.CONTEXT] = undefined;
     _vm[PROG_VM.GLOBAL_REF] = {}
+    _vm[PROG_VM.TRY_STACK] = [];
     _vm[PROG_VM.ACTIVE_MODULE] = undefined;
     // _vm[PROG_VM.CALL_STACK] = [];
     _vm[PROG_VM.CURRENT_THIS] = undefined;

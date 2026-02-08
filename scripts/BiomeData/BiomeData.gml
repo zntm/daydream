@@ -19,6 +19,85 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
         return self[$ "___background"];
     }
     
+    static set_map_colour = function(_map_colour)
+    {
+        ___map_colour = hex_parse(_map_colour);
+        
+        return self;
+    }
+    
+    static get_map_colour = function()
+    {
+        return self[$ "___map_colour"];
+    }
+    
+    static set_sky_colour = function(_sky_colour)
+    {
+        var _names = struct_get_names(_sky_colour);
+        var _length = array_length(_names);
+        
+        ___sky_colour = {}
+        ___sky_colour_names = _names;
+        ___sky_colour_length = _length;
+        
+        for (var i = 0; i < _length; ++i)
+        {
+            var _name = _names[i];
+            var _data = _sky_colour[$ _name];
+            
+            ___sky_colour[$ _name] = (hex_parse(_data.gradient) << 24) | hex_parse(_data.base);
+        }
+        
+        return self;
+    }
+    
+    static get_sky_colour = function()
+    {
+        return ___sky_colour;
+    }
+    
+    static get_sky_colour_names = function()
+    {
+        return ___sky_colour_names;
+    }
+    
+    static get_sky_colour_length = function()
+    {
+        return ___sky_colour_length;
+    }
+    
+    static get_sky_colour_base = function(_diurnal)
+    {
+        return ___sky_colour[$ _diurnal] & 0xffffff;
+    }
+    
+    static get_sky_colour_gradient = function(_diurnal)
+    {
+        return (___sky_colour[$ _diurnal] >> 24) & 0xffffff;
+    }
+    
+    static set_light_colour = function(_light_colour)
+    {
+        ___light_colour = {}
+        
+        var _names = struct_get_names(_light_colour);
+        var _length = array_length(_names);
+        
+        for (var i = 0; i < _length; ++i)
+        {
+            var _name = _names[i];
+            
+            ___light_colour[$ _name] = hex_parse(_light_colour[$ _name]);
+        }
+        
+        return self;
+    }
+    
+    static get_light_colour = function(_diurnal)
+    {
+        return ___light_colour[$ _diurnal];
+    }
+    
     static set_music = function(_music)
     {
         ___music = [];

@@ -1,8 +1,0 @@
-{
-    "condition": {
-        "count": 1,
-        "event": "CRAFTING_COMPLETE",
-        "item_id": "phantasia:wooden_pickaxe,phantasia:stone_pickaxe,phantasia:copper_pickaxe"
-    },
-    "icon": "phantasia:achievement/craft_pickaxe"
-}

@@ -1,10 +1,7 @@
 import { DatagenReturnData } from "../../../lib";
-import { ToolItem, ItemDurability, ItemHarvest } from "../lib";
+import { ToolItem } from "../lib";
 
 export default new DatagenReturnData(
     "hatchet.json",
-    new ToolItem("phantasia:item/hatchet")
-        .setDamage(2)
-        .setItemDurability(new ItemDurability(68, "#phantasia:item/generic/durability_bar"))
-        .setItemHarvest(new ItemHarvest(1, 1)),
+    new ToolItem("hatchet", 2, 68, 1, 1),
 );

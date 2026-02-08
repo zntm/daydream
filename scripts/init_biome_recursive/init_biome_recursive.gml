@@ -29,6 +29,10 @@ function init_biome_recursive(_directory, _namespace = "phantasia", _id = undefi
         
         _biome_data.set_background(_json.background);
         
+        _biome_data.set_map_colour(_json.map_colour);
+        _biome_data.set_sky_colour(_json.sky_colour);
+        _biome_data.set_light_colour(_json.light_colour);
+        
         var _music = _json[$ "music"];
         
         if (_music != undefined)

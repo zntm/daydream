@@ -34,8 +34,10 @@ export default [
             .setTileLight("#EAC7A6")
             .setTileOnRandomTick([
                 new ItemScript(
-                    "@phantasia:tile/ambient_fire",
-                    undefined,
+                    "@sfx_play",
+                    {
+                        id: "phantasia:sfx/tile/fire/ambient",
+                    },
                     0.24,
                 ),
             ])
@@ -65,11 +67,13 @@ export default [
             .setTileLight("#EAC7A6")
             .setAnimationType("increment")
             .setTileOnRandomTick([
-                new ItemScript(
-                    "@phantasia:tile/ambient_fire",
-                    undefined,
-                    0.12,
+                new ItemFunction(
+                    "phantasia:sfx_play",
+                    {
+                        id: "phantasia:sfx/tile/fire/ambient",
+                    },
+                    0.24,
                 ),
-            ])
+            ]),
     ),
 ];

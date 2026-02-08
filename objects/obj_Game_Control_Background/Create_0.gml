@@ -1,32 +1,21 @@
-var _world_save_data = global.world_save_data;
-var _world_seed = _world_save_data.seed;
-var _world_height_cells = global.world_data[$ _world_save_data.dimension].get_world_height();
+var _in_biome = bg_get_biome(round(obj_Player.x / TILE_SIZE), clamp(round(obj_Player.y / TILE_SIZE), 0, global.world_data[$ global.world_save_data.dimension].get_world_height() - 1));
+var _in_biome_data = global.biome_data[$ _in_biome];
 
-var _p_x_cell = round(obj_Player.x / TILE_SIZE);
-var _p_y_cell = clamp(round(obj_Player.y / TILE_SIZE), 0, _world_height_cells - 1);
+in_biome = _in_biome;
+in_biome_transition = _in_biome;
 
-var _in_biome_id = bg_get_biome(_p_x_cell, _p_y_cell);
-var _in_biome_data = global.biome_data[$ _in_biome_id];
-
-in_biome = _in_biome_id;
-in_biome_transition = _in_biome_id;
 in_biome_transition_value = 0;
-
-var _in_region = global.region_generator.get_region(obj_Player.x, obj_Player.y, 0, _world_seed);
-in_region = _in_region;
-in_region_transition = _in_region;
-in_region_transition_value = 0;
 
 music_current = undefined;
 music_current_id = "";
 
-if (_in_biome_data != undefined)
+if (_in_biome_data == undefined) exit;
+
+var _music = _in_biome_data.get_music();
+
+if (_music != undefined)
 {
-    var _music = _in_biome_data.get_music();
-    if (_music != undefined)
-    {
-        bg_play_music(array_choose(_music));
-    }
+    bg_play_music(array_choose(_music));
 }
 
 music_pool = [];
@@ -37,6 +26,6 @@ sky_colour_gradient = c_black;
 
 light_colour = c_black;
 
-bg_sky_colour(in_region, in_region);
+bg_sky_colour(_in_biome_data, _in_biome_data);
 
 timer_refresh = 0;

@@ -1,26 +1,14 @@
-export {
-    Accessory,
-    ItemAccessory,
-    ItemAccessoryType,
-    HelmetItem,
-    BreastplateItem,
-    LeggingsItem,
-    AccessoryItem,
-} from "./AccessoryItem";
-export { ConsumableItem, ConsumableItemData } from "./ConsumableItem";
-export { Item } from "./Item";
-export { ItemCooldown } from "./ItemCooldown";
-export { ItemComponentType, ItemComponent } from "./ItemComponent";
-export { ItemDurability } from "./ItemDurability";
-export { ItemHarvest } from "./ItemHarvest";
-export { ItemDrop } from "./ItemDrop";
-export { ItemInventory } from "./ItemInventory";
-export { ItemParticle } from "./ItemParticle";
-export { type ItemPropertiesType, TileItemProperties } from "./ItemProperties";
-export { ItemScript } from "./ItemScript";
-export { ItemSkill } from "./ItemSkill";
-export { ItemType } from "./ItemType";
-export {
+import { ConsumableItem, ConsumableItemData } from "./ConsumableItem";
+import { Item } from "./Item";
+import { ItemCooldown } from "./ItemCooldown";
+import { ItemComponentType, ItemComponent } from "./ItemComponent";
+import { ItemDurability } from "./ItemDurability";
+import { ItemInventory } from "./ItemInventory";
+import { ItemParticle } from "./ItemParticle";
+import { type ItemPropertiesType, TileItemProperties } from "./ItemProperties";
+import { ItemScript } from "./ItemScript";
+import { ItemType } from "./ItemType";
+import {
     TileItem,
     TileItemAudioProperties,
     TileItemCondition,
@@ -31,4 +19,30 @@ export {
     TileItemPlacementConditionType,
     TileItemPlacementConditionValue,
 } from "./TileItem";
-export { ToolItem, SwordItem, PickaxeItem, AxeItem, ShovelItem } from "./ToolItem";
+import { ToolItem } from "./ToolItem";
+
+export {
+    ConsumableItem,
+    ConsumableItemData,
+    Item,
+    ItemCooldown,
+    ItemComponent,
+    ItemComponentType,
+    ItemDurability,
+    ItemInventory,
+    ItemParticle,
+    type ItemPropertiesType,
+    ItemScript,
+    TileItemProperties,
+    ItemType,
+    TileItem,
+    TileItemAudioProperties,
+    TileItemCondition,
+    TileItemDrop,
+    TileItemHarvest,
+    TileItemPlacement,
+    TileItemPlacementCondition,
+    TileItemPlacementConditionType,
+    TileItemPlacementConditionValue,
+    ToolItem,
+};

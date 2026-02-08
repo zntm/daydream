@@ -5,32 +5,13 @@
 /// @returns {Real} Surface height (in tiles)
 function worldgen_get_surface_height(_x, _seed, _world_data = global.world_data[$ global.world_save_data.dimension])
 {
-    // 1. Find region at this position
-    var _region = global.region_generator.get_region(_x, 0, 0, _seed);
-    var _terrain = _region.get_terrain();
+    var _base_amplitude = _world_data.get_surface_noise_offset_max() - _world_data.get_surface_noise_offset_min();
+    var _octaves = _world_data.get_surface_noise_offset_octaves();
+    var _surface_start = _world_data.get_surface_start();
     
-    // 2. Resolve surface biome at this position (for subtle modifiers)
-    var _biome = _region.get_surface_biome(_x, 0, _seed);
-    var _biome_offset = _biome.get_terrain_height_offset();
-    var _biome_amp_scale = _biome.get_terrain_amplitude_scale();
-    
-    // 3. Extract terrain parameters
-    var _base_height = _terrain.base_height + _terrain.height_offset + _biome_offset;
-    var _amplitude_min = _terrain.amplitude_min;
-    var _amplitude_max = _terrain.amplitude_max;
-    var _noise_scale = _terrain.noise_scale;
-    var _gradient_strength = _terrain.gradient_strength;
-    
-    // 4. Calculate terrain noise
-    // Using simple voronoi-influenced simplex noise for height
-    var _noise = open_simplex_noise(_x * _noise_scale, _seed * 0.1, 1.0, 3);
-    var _noise_norm = (_noise + 1) * 0.5;
-    
-    // Amplitude varies with noise
-    var _amplitude = lerp(_amplitude_min, _amplitude_max, _noise_norm) * _biome_amp_scale;
-    
-    // Final height calculation
-    var _height = _base_height + round(_noise * _amplitude);
+    // Calculate base terrain height for this position (uniform across all biomes)
+    var _base_noise = open_simplex_noise(_x * _world_data.get_surface_noise_scale(), _world_data.get_surface_seed_offset(), _base_amplitude, _octaves);
+    var _height = _surface_start - _world_data.get_surface_noise_offset_min() + round(_base_noise);
     
     return _height;
 }

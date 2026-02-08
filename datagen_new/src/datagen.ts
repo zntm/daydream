@@ -25,15 +25,7 @@ for (const dir of ["assets", "data"]) {
             if (!statSync(s).isFile() || !(e as string).endsWith(".ts"))
                 continue;
 
-            const module = await import(s);
-            let datagen = module.default;
-
-            if (!datagen) continue;
-
-            // Handle async exports (e.g. from Sound registry)
-            if (datagen instanceof Promise) {
-                datagen = await datagen;
-            }
+            const datagen: any[] = import.meta.require(s).default;
 
             try {
                 for (const d of Array.isArray(datagen)

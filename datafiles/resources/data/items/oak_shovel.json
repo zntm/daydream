@@ -1,5 +1,15 @@
 {
     "inventory": "#phantasia:item/generic/inventory_tool",
-    "sprite": "oak_shovel",
+    "item": {
+        "durability": {
+            "amount": 65,
+            "bar": "#phantasia:item/generic/durability_bar"
+        },
+        "harvest": {
+            "hardness": 1,
+            "level": 1
+        }
+    },
+    "sprite": "phantasia:item/oak_shovel",
     "type": "tool"
 }

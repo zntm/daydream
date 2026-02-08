@@ -2,14 +2,14 @@
     "inventory": "#phantasia:item/generic/inventory_tool",
     "item": {
         "armor": {
-            "defense": 5,
-            "type": "leggings"
+            "type": "leggings",
+            "defense": 5
         },
         "durability": {
             "amount": 244,
-            "bar": "#phantasia:item/generic/durability_bar"
+            "bar": "#phantasia:item/generic/inventory_armor"
         }
     },
-    "sprite": "phantasia:item/phantasia:iron_leggings",
-    "type": "accessory"
+    "sprite": "phantasia:item/iron_leggings",
+    "type": "tool"
 }

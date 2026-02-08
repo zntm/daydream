@@ -34,19 +34,7 @@ function init(_namespace)
     
     init_biome_recursive($"{PROGRAM_DIRECTORY_RESOURCES}/data/biomes", _namespace);
     
-    init_region_recursive($"{PROGRAM_DIRECTORY_RESOURCES}/data/regions", _namespace);
-    
     init_world($"{PROGRAM_DIRECTORY_RESOURCES}/data/worlds", _namespace);
-    
-    // Initialize global region generator with all loaded regions
-    var _regions = struct_get_names(global.region_data);
-    var _region_count = array_length(_regions);
-    var _region_array = array_create(_region_count);
-    for (var i = 0; i < _region_count; i++) {
-        _region_array[i] = global.region_data[$ _regions[i]];
-    }
-    global.region_generator = new RegionGenerator();
-    global.region_generator.set_regions(_region_array);
     
     init_menu($"{PROGRAM_DIRECTORY_RESOURCES}/data/json/menu/music.json");
     

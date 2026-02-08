@@ -5,12 +5,8 @@
         "phantasia:can_mirror",
         "phantasia:is_tile"
     ],
-    "sprite": "phantasia:/item/snow_bricks",
+    "sprite": "phantasia:item/snow_bricks",
     "tile": {
-        "audio_properties": {
-            "lowpass": 0.15,
-            "reverb": 0.05
-        },
         "drops": [
             {
                 "id": "phantasia:snow_bricks"
@@ -24,7 +20,11 @@
                 "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
             }
         },
-        "sfx": "#phantasia:tile/sfx/dirt"
+        "sfx": "#phantasia:tile/sfx/dirt",
+        "audio_properties": {
+            "lowpass": 0.15,
+            "reverb": 0.05
+        }
     },
     "type": "solid"
 }

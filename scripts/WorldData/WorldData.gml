@@ -115,10 +115,367 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         return ___celestial_length;
     }
     
+    static set_cave_biome = function(_cave_biome)
+    {
+        ___cave_biome_default = _cave_biome[$ "default"];
+        ___cave_biome_default_length = array_length(___cave_biome_default);
+        
+        ___cave_biome_depth_zones = _cave_biome[$ "depth_zones"] ?? [];
+        ___cave_biome_depth_zones_length = array_length(___cave_biome_depth_zones);
+        
+        var _map = _cave_biome[$ "map"];
+        
+        if (_map != undefined)
+        {
+            static __biome_map_buffer_cave  = -1;
+            static __biome_map_surface_cave = -1;
+            
+            if (!buffer_exists(__biome_map_buffer_cave))
+            {
+                __biome_map_buffer_cave = buffer_create(WORLDGEN_SIZE_HUMIDITY * WORLDGEN_SIZE_HEAT * 4, buffer_fixed, 1);
+            }
+            
+            if (!surface_exists(__biome_map_surface_cave))
+            {
+                __biome_map_surface_cave = surface_create(WORLDGEN_SIZE_HUMIDITY, WORLDGEN_SIZE_HEAT);
+            }
+            
+            ___cave_biome_map_id = _map;
+            
+            var _sprite = global.sprite_asset[$ _map].get_sprite();
+            
+            surface_set_target(__biome_map_surface_cave);
+            
+            draw_sprite(_sprite, 0, 0, 0);
+            
+            surface_reset_target();
+            
+            buffer_get_surface(__biome_map_buffer_cave, __biome_map_surface_cave, 0);
+            
+            surface_free(__biome_map_surface_cave);
+            __biome_map_surface_cave = -1;
+            
+            var _biome_data = global.biome_data;
+            
+            var _names = struct_get_names(_biome_data);
+            var _length = array_length(_names);
+            
+            var _cave_biome_map = array_create(WORLDGEN_SIZE_HUMIDITY * WORLDGEN_SIZE_HEAT, 0);
+            
+            for (var j = 0; j < _length; ++j)
+            {
+                var _name = _names[j];
+                
+                var _map_colour = _biome_data[$ _name].get_map_colour();
+                
+                if (_map_colour == undefined) continue;
+                
+                buffer_seek(__biome_map_buffer_cave, buffer_seek_start, 0);
+                
+                for (var l = 0; l < WORLDGEN_SIZE_HUMIDITY; ++l)
+                {
+                    var _index_humidity = l << WORLDGEN_SIZE_HEAT_BIT;
+                    
+                    for (var m = 0; m < WORLDGEN_SIZE_HEAT; ++m)
+                    {
+                        var _colour = buffer_read(__biome_map_buffer_cave, buffer_u32) & 0xffffff;
+                        
+                        if (_map_colour == _colour)
+                        {
+                            _cave_biome_map[@ _index_humidity | m] = _name;
+                        }
+                    }
+                }
+            }
+            
+            buffer_delete(__biome_map_buffer_cave);
+            __biome_map_buffer_cave = -1; // Reset since we delete it
+            
+            ___cave_biome_heat = _cave_biome.heat;
+            ___cave_biome_humidity = _cave_biome.humidity;
+            
+            if (___cave_biome_heat != undefined)
+            {
+                ___cave_heat_noise_scale_x = ___cave_biome_heat[$ "noise_scale_x"] ?? 0.015625;
+                ___cave_heat_noise_scale_y = ___cave_biome_heat[$ "noise_scale_y"] ?? 0.015625;
+                ___cave_heat_range = ___cave_biome_heat[$ "range"] ?? 63;
+            }
+            else
+            {
+                ___cave_heat_noise_scale_x = 0;
+                ___cave_heat_noise_scale_y = 0;
+                ___cave_heat_range = 0;
+            }
+            
+            if (___cave_biome_humidity != undefined)
+            {
+                ___cave_humidity_noise_scale_x = ___cave_biome_humidity[$ "noise_scale_x"] ?? 0.015625;
+                ___cave_humidity_noise_scale_y = ___cave_biome_humidity[$ "noise_scale_y"] ?? 0.015625;
+                ___cave_humidity_offset_y = ___cave_biome_humidity[$ "offset_y"] ?? 1000;
+                ___cave_humidity_range = ___cave_biome_humidity[$ "range"] ?? 63;
+                ___cave_humidity_octaves_offset = ___cave_biome_humidity[$ "octaves_offset"] ?? 16;
+            }
+            else
+            {
+                ___cave_humidity_noise_scale_x = 0;
+                ___cave_humidity_noise_scale_y = 0;
+                ___cave_humidity_offset_y = 0;
+                ___cave_humidity_range = 0;
+                ___cave_humidity_octaves_offset = 0;
+            }
+            
+            set_cave_biome_map(_cave_biome_map);
+        }
+        
+        return self;
+    }
+    
+    static get_cave_biome_default = function()
+    {
+        return ___cave_biome_default;
+    }
+    
+    static get_cave_biome_default_length = function()
+    {
+        return ___cave_biome_default_length;
+    }
+    
+    static get_cave_biome_depth_zones = function()
+    {
+        return ___cave_biome_depth_zones;
+    }
+    
+    static get_cave_biome_depth_zones_length = function()
+    {
+        return ___cave_biome_depth_zones_length;
+    }
+    
+    static set_cave_biome_map = function(_map)
+    {
+        ___cave_biome_map = _map;
+        
+        return self;
+    }
+    
+    static get_cave_biome_map = function()
+    {
+        return self[$ "___cave_biome_map"];
+    }
+    
+    static get_cave_biome_heat = function()
+    {
+        return self[$ "___cave_biome_heat"];
+    }
+    
+    static get_cave_biome_humidity = function()
+    {
+        return self[$ "___cave_biome_humidity"];
+    }
+    
+    static get_cave_heat_noise_scale_x = function() { return ___cave_heat_noise_scale_x; }
+    static get_cave_heat_noise_scale_y = function() { return ___cave_heat_noise_scale_y; }
+    static get_cave_heat_range = function() { return ___cave_heat_range; }
+    
+    static get_cave_humidity_noise_scale_x = function() { return ___cave_humidity_noise_scale_x; }
+    static get_cave_humidity_noise_scale_y = function() { return ___cave_humidity_noise_scale_y; }
+    static get_cave_humidity_offset_y = function() { return ___cave_humidity_offset_y; }
+    static get_cave_humidity_range = function() { return ___cave_humidity_range; }
+    static get_cave_humidity_octaves_offset = function() { return ___cave_humidity_octaves_offset; }
+    
+    static set_surface_biome = function(_surface_biome)
+    {
+        static __biome_map_buffer  = -1;
+        static __biome_map_surface = -1;
+        
+        if (!buffer_exists(__biome_map_buffer))
+        {
+            __biome_map_buffer = buffer_create(WORLDGEN_SIZE_HUMIDITY * WORLDGEN_SIZE_HEAT * 4, buffer_fixed, 1);
+        }
+        
+        if (!surface_exists(__biome_map_surface))
+        {
+            __biome_map_surface = surface_create(WORLDGEN_SIZE_HUMIDITY, WORLDGEN_SIZE_HEAT);
+        }
+        
+        ___surface_biome = _surface_biome;
+        
+        var _sprite = global.sprite_asset[$ _surface_biome.map].get_sprite();
+        
+        surface_set_target(__biome_map_surface);
+        
+        draw_sprite(_sprite, 0, 0, 0);
+        
+        surface_reset_target();
+        
+        buffer_get_surface(__biome_map_buffer, __biome_map_surface, 0);
+        
+        surface_free(__biome_map_surface);
+        __biome_map_surface = -1;
+        
+        var _biome_data = global.biome_data;
+        
+        var _names = struct_get_names(_biome_data);
+        var _length = array_length(_names);
+        
+        var _surface_biome_map = array_create(WORLDGEN_SIZE_HUMIDITY * WORLDGEN_SIZE_HEAT, 0);
+        
+        for (var j = 0; j < _length; ++j)
+        {
+            var _name = _names[j];
+            
+            var _map_colour = _biome_data[$ _name].get_map_colour();
+            
+            if (_map_colour == undefined) continue;
+            
+            buffer_seek(__biome_map_buffer, buffer_seek_start, 0);
+            
+            for (var l = 0; l < WORLDGEN_SIZE_HUMIDITY; ++l)
+            {
+                var _index_humidity = l << WORLDGEN_SIZE_HEAT_BIT;
+                
+                for (var m = 0; m < WORLDGEN_SIZE_HEAT; ++m)
+                {
+                    var _colour = buffer_read(__biome_map_buffer, buffer_u32) & 0xffffff;
+                    
+                    if (_map_colour == _colour)
+                    {
+                        _surface_biome_map[@ _index_humidity | m] = _name;
+                    }
+                }
+            }
+        }
+        
+        buffer_delete(__biome_map_buffer);
+        
+        ___surface_biome_heat = _surface_biome.heat;
+        ___surface_biome_humidity = _surface_biome.humidity;
+        
+        ___surface_heat_noise_scale = ___surface_biome_heat[$ "noise_scale"] ?? 0.015625;
+        ___surface_heat_offset = ___surface_biome_heat[$ "offset"] ?? -16;
+        ___surface_heat_range = ___surface_biome_heat[$ "range"] ?? 63;
+        
+        ___surface_humidity_noise_scale = ___surface_biome_humidity[$ "noise_scale"] ?? 0.015625;
+        ___surface_humidity_offset = ___surface_biome_humidity[$ "offset"] ?? -24;
+        ___surface_humidity_range = ___surface_biome_humidity[$ "range"] ?? 63;
+        
+        ___surface_heat_spline_x = ___surface_biome_heat[$ "spline_x"] == undefined ? undefined : ___surface_biome_heat.spline_x.points;
+        ___surface_heat_spline_y = ___surface_biome_heat[$ "spline_y"] == undefined ? undefined : ___surface_biome_heat.spline_y.points;
+        
+        ___surface_humidity_spline_x = ___surface_biome_humidity[$ "spline_x"] == undefined ? undefined : ___surface_biome_humidity.spline_x.points;
+        ___surface_humidity_spline_y = ___surface_biome_humidity[$ "spline_y"] == undefined ? undefined : ___surface_biome_humidity.spline_y.points;
+        
+        set_surface_biome_map(_surface_biome_map);
+        
+        return self;
+    }
+    
+    static get_surface_biome = function()
+    {
+        return ___surface_biome;
+    }
+    
+    static get_surface_biome_heat = function()
+    {
+        return ___surface_biome_heat;
+    }
+    
+    static get_surface_biome_humidity = function()
+    {
+        return ___surface_biome_humidity;
+    }
+    
+    static get_surface_heat_noise_scale = function() { return ___surface_heat_noise_scale; }
+    static get_surface_heat_offset = function() { return ___surface_heat_offset; }
+    static get_surface_heat_range = function() { return ___surface_heat_range; }
+    
+    static get_surface_humidity_noise_scale = function() { return ___surface_humidity_noise_scale; }
+    static get_surface_humidity_offset = function() { return ___surface_humidity_offset; }
+    static get_surface_humidity_range = function() { return ___surface_humidity_range; }
+    
+    static get_surface_heat_spline_x = function() { return ___surface_heat_spline_x; }
+    static get_surface_heat_spline_y = function() { return ___surface_heat_spline_y; }
+    
+    static get_surface_humidity_spline_x = function() { return ___surface_humidity_spline_x; }
+    static get_surface_humidity_spline_y = function() { return ___surface_humidity_spline_y; }
+    
+    static set_surface = function(_surface)
+    {
+        ___surface_start = _surface.start;
+        
+        var _noise_offset = _surface.noise_offset;
+        ___surface_noise_offset_max = _noise_offset.max;
+        ___surface_noise_offset_min = _noise_offset.min;
+        ___surface_noise_offset_octaves = _noise_offset.octaves;
+        ___surface_noise_offset_scale = _noise_offset[$ "scale"] ?? 0.015625;
+        ___surface_noise_offset_y = _noise_offset[$ "y_offset"] ?? -48;
+        
+        var _smoothing = _surface[$ "smoothing"];
+        ___surface_smoothing_range = _smoothing[$ "range"] ?? 32;
+        ___surface_smoothing_factor = _smoothing[$ "factor"] ?? 0.6;
+        
+        ___surface_noise_scale = _surface[$ "noise_scale"] ?? 0.015625;
+        ___surface_seed_offset = _surface[$ "seed_offset"] ?? -40;
+        ___surface_min_depth = _surface[$ "min_depth"] ?? 8;
+        
+        ___bedrock_depth = _surface[$ "bedrock_depth"] ?? 3;
+        ___bedrock_noise_scale = _surface[$ "bedrock_noise_scale"] ?? 0.3;
+        ___tile_variation_noise_scale = _surface[$ "tile_variation_noise_scale"] ?? 0.05;
+        ___biome_blend_range = _surface[$ "biome_blend_range"] ?? 24;
+        ___biome_blend_noise_scale = _surface[$ "biome_blend_noise_scale"] ?? 0.08;
+        
+        return self;
+    }
+    
+    static get_surface_start = function()
+    {
+        return ___surface_start;
+    }
+    
+    static get_surface_noise_offset_max = function()
+    {
+        return ___surface_noise_offset_max;
+    }
+    
+    static get_surface_noise_offset_min = function()
+    {
+        return ___surface_noise_offset_min;
+    }
+    
+    static get_surface_noise_offset_octaves = function()
+    {
+        return ___surface_noise_offset_octaves;
+    }
+
+    static get_surface_noise_offset_scale = function()
+    {
+        return ___surface_noise_offset_scale;
+    }
+
+    static get_surface_noise_offset_y = function()
+    {
+        return ___surface_noise_offset_y;
+    }
+    
+    static get_surface_smoothing_range = function()
+    {
+        return ___surface_smoothing_range;
+    }
+    
+    static get_surface_smoothing_factor = function()
+    {
+        return ___surface_smoothing_factor;
+    }
+    
+    static get_surface_noise_scale = function()
+    {
+        return ___surface_noise_scale;
+    }
+    
     static set_cave = function(_cave)
     {
         var _start = _cave.start;
         ___cave_start_max = _start.max;
+        ___cave_start_min = _start.min;
         ___cave_start_min = _start.min;
         ___cave_start_octaves = _start.octaves;
         ___cave_start_noise_scale = _start[$ "noise_scale"] ?? 0.015625;
@@ -449,31 +806,5 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
     static get_sky_detail_noise_octaves = function()
     {
         return ___sky_detail_noise_octaves;
-    }
-    
-    // --- Region Transition Settings ---
-    
-    static set_region_transition = function(_config)
-    {
-        ___region_transition_width = _config[$ "width"] ?? 32;
-        ___region_transition_noise_scale = _config[$ "noise_scale"] ?? 0.05;
-        ___region_transition_noise_amplitude = _config[$ "noise_amplitude"] ?? 8;
-        
-        return self;
-    }
-    
-    static get_region_transition_width = function()
-    {
-        return self[$ "___region_transition_width"] ?? 32;
-    }
-    
-    static get_region_transition_noise_scale = function()
-    {
-        return self[$ "___region_transition_noise_scale"] ?? 0.05;
-    }
-    
-    static get_region_transition_noise_amplitude = function()
-    {
-        return self[$ "___region_transition_noise_amplitude"] ?? 8;
     }
 }

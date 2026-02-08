@@ -7,15 +7,8 @@
     ],
     "sprite": "phantasia:item/birch_leaves",
     "tile": {
-        "audio_properties": {
-            "lowpass": 0.4,
-            "reverb": 0.1
-        },
         "harvest": {
-            "condition": {
-                "id": "#phantasia:item/type/axe"
-            },
-            "hardness": 0.18,
+            "hardness": 0.44,
             "level": 1,
             "particle": {
                 "colour": [
@@ -23,15 +16,28 @@
                     "#041013"
                 ],
                 "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
+            },
+            "condition": {
+                "id": "#phantasia:item/type/axe"
             }
+        },
+        "sfx": "#phantasia:tile/sfx/wood",
+        "audio_properties": {
+            "lowpass": 0.2,
+            "reverb": 0
         },
         "on_random_tick": [
             {
                 "id": "@phantasia:tile/leaf_decay",
-                "parameters": 0.1
+                "parameters": {
+                    "particle": [
+                        "#051417",
+                        "#041013"
+                    ]
+                },
+                "chance": 0.03
             }
-        ],
-        "sfx": "#phantasia:tile/sfx/leaves"
+        ]
     },
     "type": "untouchable"
 }

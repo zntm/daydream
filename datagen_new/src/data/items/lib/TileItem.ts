@@ -2,11 +2,11 @@ import type { SmartValueValueType } from "../../../lib";
 import { Item } from "./Item";
 import type { ItemComponentData, ItemComponentType } from "./ItemComponent";
 import { ItemDrop } from "./ItemDrop";
+import { ItemFunction } from "./ItemFunction";
 import { ItemHarvest } from "./ItemHarvest";
 import type { ItemInventory } from "./ItemInventory";
 import type { ItemParticle } from "./ItemParticle";
 import { TileItemProperties } from "./ItemProperties";
-import { ItemScript } from "./ItemScript";
 import type { ItemSFX } from "./ItemSFX";
 import type { ItemType } from "./ItemType";
 
@@ -32,8 +32,6 @@ export class TileItemCondition {
 
     setIndex(index?: number) {
         this.index = index;
-
-        return this;
     }
 }
 
@@ -151,8 +149,8 @@ export class TileItem extends Item {
         placement?: string | TileItemPlacement;
         sfx?: string | ItemSFX;
         audio_properties?: TileItemAudioProperties;
-        on_use?: ItemScript[];
-        on_random_tick?: ItemScript[];
+        on_use?: ItemFunction[];
+        on_random_tick?: ItemFunction[];
         light?: string;
         animation_type?: string;
     };
@@ -231,7 +229,7 @@ export class TileItem extends Item {
         return this;
     }
 
-    setTileOnRandomTick(functions: ItemScript[]) {
+    setTileOnRandomTick(functions: ItemFunction[]) {
         this.tile ??= {};
         this.tile.on_random_tick ??= [];
         this.tile.on_random_tick.push(...functions);
@@ -239,7 +237,7 @@ export class TileItem extends Item {
         return this;
     }
 
-    addOnUse(functions: ItemScript[]) {
+    addOnUse(functions: ItemFunction[]) {
         this.tile ??= {};
         this.tile.on_use ??= [];
         this.tile.on_use.push(...functions);

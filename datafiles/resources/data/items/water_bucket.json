@@ -3,22 +3,22 @@
     "item": {
         "components": {
             "level": {
+                "type": "u8",
                 "default": 8,
-                "max": 8,
                 "min": 1,
-                "type": "u8"
+                "max": 8
             }
         },
         "on_use": [
             {
-                "id": "phantasia:bucket_place",
+                "id": "@phantasia:items/bucket_place",
                 "parameters": {
                     "liquid_id": "phantasia:water",
                     "empty_bucket_id": "phantasia:bucket",
-                    "flow_speed": 8,
+                    "tick_delay": 5,
                     "fluid_collisions": [
                         {
-                            "id": "phantasia:obsidian",
+                            "id": "phantasia:stone",
                             "liquid_id": "phantasia:lava"
                         }
                     ]

@@ -1,1 +1,45 @@
-"# Testing\n\n### `test(name, fn, stop_on_fail)`: void\n\nRegisters a test case.\n\n**Arguments:**\n| Name | Type | Description |\n|------|------|-------------|\n| `name` | string | Test name |\n| `fn` | function | Test function |\n| `stop_on_fail` | boolean | Stop remaining tests if this fails (Optional) |\n\n**Returns:** void\n\n---\n\n### `test_group(name, tests)`: void\n\nRegisters a group of tests.\n\n**Arguments:**\n| Name | Type | Description |\n|------|------|-------------|\n| `name` | string | Group name |\n| `tests` | array | Array of tests |\n\n**Returns:** void\n\n---\n\n### `test_expect(actual, expected)`: boolean\n\nAsserts that a value equals the expected value.\n\n**Arguments:**\n| Name | Type | Description |\n|------|------|-------------|\n| `actual` | any | Actual value |\n| `expected` | any | Expected value |\n\n**Returns:** boolean\n\n---\n\n"
+# Testing
+
+### `test(name, fn, stop_on_fail)`: void
+
+Registers a test case.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `name` | string | Test name |
+| `fn` | function | Test function |
+| `stop_on_fail` | boolean | Stop remaining tests if this fails (Optional) |
+
+**Returns:** void
+
+---
+
+### `test_group(name, tests)`: void
+
+Registers a group of tests.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `name` | string | Group name |
+| `tests` | array | Array of tests |
+
+**Returns:** void
+
+---
+
+### `test_expect(actual, expected)`: boolean
+
+Asserts that a value equals the expected value.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `actual` | any | Actual value |
+| `expected` | any | Expected value |
+
+**Returns:** boolean
+
+---
+

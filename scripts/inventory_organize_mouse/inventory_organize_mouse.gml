@@ -340,12 +340,7 @@ function inventory_organize_mouse(_inst)
         }
         else
         {
-            var _item = global.inventory.mouse.item;
-            
-            if (_item != INVENTORY_EMPTY)
-            {
-                inventory_give(0, 0, _item, global.inventory, false);
-            }
+            inventory_give(0, 0, global.inventory.mouse.item, global.inventory, false);
         }
         
         timer_crafting_max = 0.3;

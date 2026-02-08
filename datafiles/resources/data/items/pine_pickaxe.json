@@ -1,5 +1,15 @@
 {
     "inventory": "#phantasia:item/generic/inventory_tool",
-    "sprite": "pine_pickaxe",
+    "item": {
+        "durability": {
+            "amount": 73,
+            "bar": "#phantasia:item/generic/durability_bar"
+        },
+        "harvest": {
+            "hardness": 1,
+            "level": 1
+        }
+    },
+    "sprite": "phantasia:item/pine_pickaxe",
     "type": "tool"
 }

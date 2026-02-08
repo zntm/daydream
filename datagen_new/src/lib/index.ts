@@ -1,4 +1,5 @@
-export { DatagenReturnData } from "./DatagenReturnData";
-export { SmartValue, type SmartValueValueType } from "./SmartValue";
-export { Noise } from "./Noise";
-export { Spline, SplinePoint, SplineEasing } from "./Spline";
+import { DatagenReturnData } from "./DatagenReturnData";
+import { SmartValue, type SmartValueValueType } from "./SmartValue";
+
+export { DatagenReturnData, SmartValue };
+export type { SmartValueValueType };

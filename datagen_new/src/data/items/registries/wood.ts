@@ -1,41 +1,29 @@
-class LeafRegistry {
-    id: string;
-    particles: string[];
-
-    constructor(id: string, particles: string[]) {
-        this.id = id;
-        this.particles = particles;
-    }
-}
-
 class WoodRegistry {
     namespace: string;
     id: string;
-    leaves: LeafRegistry[];
+    leavesParticles: string[];
     logParticles: string[];
     planksParticles: string[];
+    leafVariants?: string[];
 
     constructor(
         namespace: string,
         id: string,
-        leaves: LeafRegistry[] | string[],
+        leavesParticles: string[],
         logParticles: string[],
         planksParticles: string[],
     ) {
         this.namespace = namespace;
         this.id = id;
+        this.leavesParticles = leavesParticles;
         this.logParticles = logParticles;
         this.planksParticles = planksParticles;
+    }
 
-        if (Array.isArray(leaves)) {
-            if (leaves.length > 0 && typeof leaves[0] === "string") {
-                this.leaves = [new LeafRegistry(`${id}_leaves`, leaves as string[])];
-            } else {
-                this.leaves = leaves as LeafRegistry[];
-            }
-        } else {
-            this.leaves = [leaves as LeafRegistry];
-        }
+    addLeafVariants(variants: string[]) {
+        this.leafVariants = variants;
+
+        return this;
     }
 }
 
@@ -43,10 +31,7 @@ export default [
     new WoodRegistry(
         "phantasia",
         "birch",
-        [
-            new LeafRegistry("birch_leaves", ["#051417", "#041013"]),
-            new LeafRegistry("golden_birch_leaves", ["#FFBC00", "#FFD700"]),
-        ],
+        ["#051417", "#041013"],
         ["#4F5263", "#3E4051"],
         ["#4F5263", "#3E4051"],
     ),
@@ -67,10 +52,7 @@ export default [
     new WoodRegistry(
         "phantasia",
         "pine",
-        [
-            new LeafRegistry("pine_leaves", ["#122D2B", "#0B2021"]),
-            new LeafRegistry("silver_pine_leaves", ["#C0C0C0", "#E0E0E0"]),
-        ],
+        ["#122D2B", "#0B2021"],
         ["#381D1E", "#301A1C"],
         ["#381D1E", "#301A1C"],
     ),

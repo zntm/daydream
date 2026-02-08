@@ -24,8 +24,11 @@
         "light": "#EAC7A6",
         "on_random_tick": [
             {
-                "id": "@phantasia:tile/ambient_fire",
-                "chance": 0.12
+                "id": "phantasia:sfx_play",
+                "parameters": {
+                    "id": "phantasia:sfx/tile/fire/ambient"
+                },
+                "chance": 0.24
             }
         ],
         "sfx": "#phantasia:tile/sfx/wood"

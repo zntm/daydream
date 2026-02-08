@@ -2,14 +2,14 @@
     "inventory": "#phantasia:item/generic/inventory_tool",
     "item": {
         "armor": {
-            "defense": 6,
-            "type": "helmet"
+            "type": "helmet",
+            "defense": 6
         },
         "durability": {
             "amount": 494,
-            "bar": "#phantasia:item/generic/durability_bar"
+            "bar": "#phantasia:item/generic/inventory_armor"
         }
     },
-    "sprite": "phantasia:item/phantasia:gold_helmet",
-    "type": "accessory"
+    "sprite": "phantasia:item/gold_helmet",
+    "type": "tool"
 }

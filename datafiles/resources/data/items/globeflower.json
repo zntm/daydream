@@ -6,10 +6,6 @@
     ],
     "sprite": "phantasia:item/globeflower",
     "tile": {
-        "audio_properties": {
-            "lowpass": 0.05,
-            "reverb": 0
-        },
         "drops": [
             {
                 "id": "phantasia:globeflower"
@@ -26,7 +22,11 @@
         "placement": {
             "condition": "#phantasia:tile/placement/condition_plant"
         },
-        "sfx": "#phantasia:tile/sfx/foliage"
+        "sfx": "#phantasia:tile/sfx/foliage",
+        "audio_properties": {
+            "lowpass": 0.05,
+            "reverb": 0
+        }
     },
     "type": "untouchable"
 }

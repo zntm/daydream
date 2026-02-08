@@ -34,7 +34,6 @@ export default [
     new CookableConsumableItems("phantasia", "frog_leg", 2, 6, 10, 4),
     new CookableConsumableItems("phantasia", "mutton", 6, 4, 12, 12),
     new CookableConsumableItems("phantasia", "salmon", 3, 3, 14, 6),
-    new CookableConsumableItems("phantasia", "rabbit", 6, 4, 12, 12),
 ].map(
     ({
         namespace,
