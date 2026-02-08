@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"EntityTracker",
+  "%Name":"RelayNetworkManager",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"EntityTracker",
+  "name":"RelayNetworkManager",
   "parent":{
-    "name":"Scripts",
-    "path":"folders/Scripts.yy",
+    "name":"Network",
+    "path":"folders/Scripts/Network.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

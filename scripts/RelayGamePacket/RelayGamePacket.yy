@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"NetworkPacket",
+  "%Name":"RelayGamePacket",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"NetworkPacket",
+  "name":"RelayGamePacket",
   "parent":{
     "name":"Network",
     "path":"folders/Scripts/Network.yy",

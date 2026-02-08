@@ -147,9 +147,9 @@ if (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.EXIT)
         }
         
         // Disconnect from network before going to menu
-        if (global.network_role != NETWORK_ROLE.NONE)
+        if (global.relay != undefined && global.relay.role != RELAY_ROLE.NONE)
         {
-            network_disconnect();
+            global.relay_manager.leave_session();
         }
         
         room_goto(rm_Menu_Title);
@@ -216,20 +216,22 @@ var _settings = global.settings;
 show_debug_message("[LOOP] Reached control_gametick");
 control_gametick(_delta_time);
 
-// Network Time Sync (Server only)
-if (global.network_role == NETWORK_ROLE.SERVER)
+// Network Time Sync (Host only)
+if (global.relay != undefined && global.relay.role == RELAY_ROLE.HOST)
 {
     timer_network_sync += _delta_time;
     
     if (timer_network_sync >= 1.0) // Sync every second
     {
         timer_network_sync = 0;
-        
-        var _buffer = packet_create(PACKET_TYPE.TIME_UPDATE);
-        packet_write_time_update(_buffer, global.world_save_data.time);
-        network_broadcast_packet(_buffer);
-        buffer_delete(_buffer);
+        relay_send_time_update(global.world_save_data.time);
     }
+}
+
+// Update relay validator (P2P validation checks)
+if (global.relay_manager != undefined)
+{
+    global.relay_manager.update();
 }
 
 // Cleanup temporary audio emitters that have finished playing
@@ -329,60 +331,61 @@ if (keyboard_check_pressed(vk_f1))
 // Network debug keybinds (developer mode only)
 if (IS_DEVELOPER_MODE)
 {
-    // F5: Start Server
+    // F5: Host Session
     if (IS_MULTIPLAYER_ENABLED && keyboard_check_pressed(vk_f5))
     {
-        if (global.network_role == NETWORK_ROLE.NONE)
+        if (global.relay == undefined || global.relay.role == RELAY_ROLE.NONE)
         {
-            if (network_start_server(6510))
+            var _code = global.relay_manager.host_session(6510);
+            if (_code != "")
             {
-                chat_add("System", "Server started on port 6510");
+                chat_add("System", $"Hosting session! Invite code: {invite_code_format(_code)}");
+                invite_code_copy();
+                chat_add("System", "Invite code copied to clipboard");
             }
             else
             {
-                chat_add("System", "Failed to start server");
+                chat_add("System", "Failed to start session");
             }
         }
         else
         {
-            chat_add("System", "Already in a network session");
+            chat_add("System", "Already in a session");
         }
     }
     
-    // F6: Connect to Server
+    // F6: Join Session
     if (IS_MULTIPLAYER_ENABLED && keyboard_check_pressed(vk_f6))
     {
-        if (global.network_role == NETWORK_ROLE.NONE)
+        if (global.relay == undefined || global.relay.role == RELAY_ROLE.NONE)
         {
-            var _ip = get_string("Enter Server IP Address:", "127.0.0.1");
-            var _port = (variable_global_exists("network_port") ? global.network_port : 6510);
-            _port = get_integer("Enter Port:", _port);
+            var _code = get_string("Enter Invite Code:", "");
             
-            if (_ip != "" && _port > 0)
+            if (_code != "")
             {
-                if (network_connect_to_server(_ip, _port))
+                if (global.relay_manager.join_session(_code))
                 {
-                    chat_add("System", $"Connecting to {_ip}:{_port}...");
+                    chat_add("System", "Connecting...");
                 }
                 else
                 {
-                    chat_add("System", "Failed to initiate connection");
+                    chat_add("System", "Failed to join session - invalid code?");
                 }
             }
         }
         else
         {
-            chat_add("System", "Already in a network session");
+            chat_add("System", "Already in a session");
         }
     }
     
-    // F7: Disconnect
+    // F7: Leave Session
     if (keyboard_check_pressed(vk_f7))
     {
-        if (global.network_role != NETWORK_ROLE.NONE)
+        if (global.relay != undefined && global.relay.role != RELAY_ROLE.NONE)
         {
-            network_disconnect();
-            chat_add("System", "Disconnected from network");
+            global.relay_manager.leave_session();
+            chat_add("System", "Left session");
         }
     }
 }

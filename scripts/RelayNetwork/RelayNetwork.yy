@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"NetworkManager",
+  "%Name":"RelayNetwork",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"NetworkManager",
+  "name":"RelayNetwork",
   "parent":{
     "name":"Network",
     "path":"folders/Scripts/Network.yy",
