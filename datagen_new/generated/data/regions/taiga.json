@@ -1,0 +1,32 @@
+{
+    "amplitude_max": 50,
+    "amplitude_min": 20,
+    "base_height": 380,
+    "biome_noise_scale": 0.008,
+    "biomes": [
+        "phantasia:surface/taiga"
+    ],
+    "category": "cold",
+    "cave_biome_default": "phantasia:cave/chasm",
+    "cave_biomes": [
+        {
+            "biome": "phantasia:cave/depths",
+            "min_depth": 100,
+            "max_depth": 1024,
+            "noise_threshold": 0.5
+        }
+    ],
+    "gradient_strength": 0.015,
+    "height_offset": -20,
+    "id": "taiga",
+    "light_colour": {
+        "points": []
+    },
+    "sky_base": {
+        "points": []
+    },
+    "sky_gradient": {
+        "points": []
+    },
+    "terrain_noise_scale": 0.015625
+}

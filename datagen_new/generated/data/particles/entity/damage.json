@@ -1,0 +1,79 @@
+{
+    "direction": {
+        "direction_max": {
+            "type": "smart_value:random",
+            "values": {
+                "max": 340,
+                "min": 200
+            }
+        },
+        "direction_min": {
+            "type": "smart_value:random",
+            "values": {
+                "max": 340,
+                "min": 200
+            }
+        }
+    },
+    "gravity": {
+        "gravity_amount": 0.1,
+        "gravity_direction": 270
+    },
+    "lifetime": {
+        "type": "smart_value:random",
+        "values": {
+            "max": 1,
+            "min": 0.5
+        }
+    },
+    "properties": [
+        "phantasia:has_stretch_animation"
+    ],
+    "size": {
+        "xscale_max": {
+            "type": "smart_value:random",
+            "values": {
+                "max": 1.1,
+                "min": 0.9
+            }
+        },
+        "xscale_min": {
+            "type": "smart_value:random",
+            "values": {
+                "max": 1.1,
+                "min": 0.9
+            }
+        },
+        "yscale_max": {
+            "type": "smart_value:random",
+            "values": {
+                "max": 1.1,
+                "min": 0.9
+            }
+        },
+        "yscale_min": {
+            "type": "smart_value:random",
+            "values": {
+                "max": 1.1,
+                "min": 0.9
+            }
+        }
+    },
+    "speed": {
+        "speed_max": {
+            "type": "smart_value:random",
+            "values": {
+                "max": 1.8,
+                "min": 0.8
+            }
+        },
+        "speed_min": {
+            "type": "smart_value:random",
+            "values": {
+                "max": 1.8,
+                "min": 0.8
+            }
+        }
+    },
+    "sprite": "phantasia:particle/entity/damage"
+}

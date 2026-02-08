@@ -1,0 +1,15 @@
+{
+    "inventory": "#phantasia:item/generic/inventory_tool",
+    "item": {
+        "armor": {
+            "defense": 4,
+            "type": "breastplate"
+        },
+        "durability": {
+            "amount": 136,
+            "bar": "#phantasia:item/generic/durability_bar"
+        }
+    },
+    "sprite": "phantasia:item/phantasia:copper_breastplate",
+    "type": "accessory"
+}
