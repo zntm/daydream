@@ -1,2 +1,1 @@
-/// @desc Cleanup networking
-network_eid_unregister(self);
+// Obsolete networking call removed (network_eid_unregister)

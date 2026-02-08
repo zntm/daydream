@@ -453,7 +453,10 @@ function RelayNetworkManager() constructor
         
         // Apply tile update
         var _tile = (_tile_id != "" && _tile_id != "undefined") ? new Tile(_tile_id) : TILE_EMPTY;
+        
+        global.network_applying_packet = true;
         tile_place(_x, _y, _z, _tile);
+        global.network_applying_packet = false;
     }
     
     /// @desc Handle inventory update packet

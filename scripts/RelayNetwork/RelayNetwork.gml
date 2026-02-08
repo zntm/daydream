@@ -4,6 +4,7 @@
 
 global.relay = undefined;
 global.network_role = RELAY_ROLE.NONE;
+global.network_applying_packet = false;
 
 /// @desc Legacy network role enum for compatibility
 enum NETWORK_ROLE {

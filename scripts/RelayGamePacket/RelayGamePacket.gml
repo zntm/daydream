@@ -366,7 +366,9 @@ function relay_request_tile_change(_x, _y, _z, _tile_id, _prev_tile_id = "")
     if (global.relay == undefined || global.relay.role == RELAY_ROLE.NONE)
     {
         var _tile = (_tile_id != "" && _tile_id != "undefined") ? new Tile(_tile_id) : TILE_EMPTY;
+        global.network_applying_packet = true;
         tile_place(_x, _y, _z, _tile);
+        global.network_applying_packet = false;
         return;
     }
     
@@ -382,7 +384,9 @@ function relay_request_tile_change(_x, _y, _z, _tile_id, _prev_tile_id = "")
     
     // Apply optimistically
     var _tile = (_tile_id != "" && _tile_id != "undefined") ? new Tile(_tile_id) : TILE_EMPTY;
+    global.network_applying_packet = true;
     tile_place(_x, _y, _z, _tile);
+    global.network_applying_packet = false;
     
     var _action_id = global.validator.request_validation(_action_type, _data);
     global.validator.pending[$ _action_id].applied_optimistically = true;
