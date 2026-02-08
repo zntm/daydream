@@ -140,8 +140,6 @@ function proglang_vm_run(_vm, _entry_bytecode)
 {
     // === SINGLE LOOP VM (V2) ===
     
-
-    
     if (_entry_bytecode == undefined) return undefined;
     
     // Load entry instructions

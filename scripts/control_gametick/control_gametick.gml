@@ -101,7 +101,7 @@ function control_gametick(_delta_time)
             var _chunk_count = _chunk.chunk_count;
             var _chunk_display = _chunk.chunk_display;
             
-            repeat (4)
+            repeat (16)
             {
                 var _x2 = irandom(CHUNK_SIZE - 1);
                 var _y2 = irandom(CHUNK_SIZE - 1);

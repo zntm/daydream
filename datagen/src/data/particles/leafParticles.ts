@@ -11,7 +11,7 @@ import {
     ParticleOrientation,
 } from "./lib/Particle";
 
-export default ["birch", "oak", "pine"].map((id) => {
+export default ["birch", "mangrove", "oak", "pine"].map((id) => {
     return new DatagenReturnData(
         `generated/data/particles/tile/leaf/${id}.json`,
         new Particle(`phantasia:particle/tile/leaf/${id}`)

@@ -444,6 +444,7 @@ proglang_function_register("camera_shake", function(_args) {
 });
 
 proglang_function_register("spawn_particle", function(_args) {
+    show_debug_message(_args)
     var _x = _args[1];
     
     if (_x == undefined) exit;

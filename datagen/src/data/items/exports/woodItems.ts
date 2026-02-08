@@ -119,8 +119,8 @@ export default [
                 .setTileSFX("#phantasia:tile/sfx/wood")
                 .setTileAudioProperties(new TileItemAudioProperties(0.2, 0.0))
                 .setTileOnRandomTick([
-                    new ItemScript("tile/leaf_decay", {
-                        particle: leavesParticles,
+                    new ItemScript("@phantasia:tile/nature/leaf_decay", {
+                        id: `phantasia:tile/leaf/${id}`,
                     }, 0.03),
                 ]),
         ),
