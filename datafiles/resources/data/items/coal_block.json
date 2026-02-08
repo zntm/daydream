@@ -5,31 +5,31 @@
     ],
     "sprite": "phantasia:item/coal_block",
     "tile": {
+        "audio_properties": {
+            "lowpass": 0.65,
+            "reverb": 0.5
+        },
         "drops": [
             {
                 "id": "phantasia:item/coal_block",
                 "condition": {
                     "id": "#phantasia:item/type/pickaxe",
-                    "level": 0
+                    "level": 1
                 }
             }
         ],
         "harvest": {
+            "condition": {
+                "id": "#phantasia:item/type/pickaxe"
+            },
             "hardness": 0.58,
             "level": 1,
             "particle": {
                 "colour": "#phantasia:tile/particle_colour/stone",
                 "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
-            },
-            "condition": {
-                "id": "#phantasia:item/type/pickaxe"
             }
         },
-        "sfx": "#phantasia:tile/sfx/stone",
-        "audio_properties": {
-            "lowpass": 0.65,
-            "reverb": 0.5
-        }
+        "sfx": "#phantasia:tile/sfx/stone"
     },
     "type": "solid"
 }

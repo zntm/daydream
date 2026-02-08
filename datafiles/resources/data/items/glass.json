@@ -12,14 +12,14 @@
             }
         ],
         "harvest": {
+            "condition": {
+                "id": "#phantasia:item/type/pickaxe"
+            },
             "hardness": 0.08,
             "level": 0,
             "particle": {
                 "colour": "#phantasia:tile/particle_colour/stone",
                 "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
-            },
-            "condition": {
-                "id": "#phantasia:item/type/pickaxe"
             }
         },
         "sfx": "#phantasia:tile/sfx/stone"

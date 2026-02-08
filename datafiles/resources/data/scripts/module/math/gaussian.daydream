@@ -1,6 +1,0 @@
-export fn gaussian_distribution(value, mean, std) {
-    var numerator = power(value - mean, 2)
-    var denominator = power(2 * std, 2)
-    
-    return power(E, -numerator / denominator)
-}

@@ -7,12 +7,15 @@
     ],
     "sprite": "phantasia:item/sand",
     "tile": {
+        "audio_properties": {
+            "lowpass": 0.2,
+            "reverb": 0
+        },
         "drops": [
             {
                 "id": "phantasia:sand",
                 "condition": {
-                    "id": "#phantasia:item/type/shovel",
-                    "level": 0
+                    "id": "#phantasia:item/type/shovel"
                 }
             }
         ],
@@ -24,11 +27,7 @@
                 "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
             }
         },
-        "sfx": "#phantasia:tile/sfx/sand",
-        "audio_properties": {
-            "lowpass": 0.2,
-            "reverb": 0
-        }
+        "sfx": "#phantasia:tile/sfx/sand"
     },
     "type": "solid"
 }

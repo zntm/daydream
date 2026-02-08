@@ -1,9 +1,0 @@
-var projectile_id = parameter.id
-if (projectile_id == undefined) return
-
-var damage = parameter.damage ?? 1
-
-var world_x = x * TILE_SIZE
-var world_y = y * TILE_SIZE
-
-spawn_projectile(world_x, world_y, smart_value(projectile_id), damage, xscale, yscale)

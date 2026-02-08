@@ -1,18 +1,18 @@
 {
     "direction": {
-        "direction_min": {
-            "values": {
-                "min": 200,
-                "max": 340
-            },
-            "type": "smart_value:random"
-        },
         "direction_max": {
+            "type": "smart_value:random",
             "values": {
-                "min": 200,
-                "max": 340
-            },
-            "type": "smart_value:random"
+                "max": 340,
+                "min": 200
+            }
+        },
+        "direction_min": {
+            "type": "smart_value:random",
+            "values": {
+                "max": 340,
+                "min": 200
+            }
         }
     },
     "gravity": {
@@ -20,59 +20,59 @@
         "gravity_direction": 270
     },
     "lifetime": {
+        "type": "smart_value:random",
         "values": {
-            "min": 0.5,
-            "max": 1
-        },
-        "type": "smart_value:random"
+            "max": 1,
+            "min": 0.5
+        }
     },
     "properties": [
         "phantasia:has_stretch_animation"
     ],
     "size": {
-        "xscale_min": {
-            "values": {
-                "min": 0.9,
-                "max": 1.1
-            },
-            "type": "smart_value:random"
-        },
         "xscale_max": {
+            "type": "smart_value:random",
             "values": {
-                "min": 0.9,
-                "max": 1.1
-            },
-            "type": "smart_value:random"
+                "max": 1.1,
+                "min": 0.9
+            }
         },
-        "yscale_min": {
+        "xscale_min": {
+            "type": "smart_value:random",
             "values": {
-                "min": 0.9,
-                "max": 1.1
-            },
-            "type": "smart_value:random"
+                "max": 1.1,
+                "min": 0.9
+            }
         },
         "yscale_max": {
+            "type": "smart_value:random",
             "values": {
-                "min": 0.9,
-                "max": 1.1
-            },
-            "type": "smart_value:random"
+                "max": 1.1,
+                "min": 0.9
+            }
+        },
+        "yscale_min": {
+            "type": "smart_value:random",
+            "values": {
+                "max": 1.1,
+                "min": 0.9
+            }
         }
     },
     "speed": {
-        "speed_min": {
-            "values": {
-                "min": 0.8,
-                "max": 1.8
-            },
-            "type": "smart_value:random"
-        },
         "speed_max": {
+            "type": "smart_value:random",
             "values": {
-                "min": 0.8,
-                "max": 1.8
-            },
-            "type": "smart_value:random"
+                "max": 1.8,
+                "min": 0.8
+            }
+        },
+        "speed_min": {
+            "type": "smart_value:random",
+            "values": {
+                "max": 1.8,
+                "min": 0.8
+            }
         }
     },
     "sprite": "phantasia:particle/entity/damage_critical"

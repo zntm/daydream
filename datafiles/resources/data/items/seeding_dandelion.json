@@ -6,6 +6,10 @@
     ],
     "sprite": "phantasia:item/seeding_dandelion",
     "tile": {
+        "audio_properties": {
+            "lowpass": 0.05,
+            "reverb": 0
+        },
         "drops": [
             {
                 "id": "phantasia:seeding_dandelion"
@@ -19,22 +23,18 @@
                 "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
             }
         },
-        "placement": {
-            "condition": "#phantasia:tile/placement/condition_plant"
-        },
-        "sfx": "#phantasia:tile/sfx/foliage",
-        "audio_properties": {
-            "lowpass": 0.05,
-            "reverb": 0
-        },
         "on_random_tick": [
             {
-                "id": "@phantasia:items/spawn_particle",
+                "id": "items/spawn_particle",
                 "parameters": {
                     "id": "phantasia:tile/seeding_dandelion"
                 }
             }
-        ]
+        ],
+        "placement": {
+            "condition": "#phantasia:tile/placement/condition_plant"
+        },
+        "sfx": "#phantasia:tile/sfx/foliage"
     },
     "type": "untouchable"
 }

@@ -2,141 +2,66 @@
     "inventory": "#phantasia:item/generic/inventory_default",
     "sprite": "phantasia:item/structure_blueprint",
     "tile": {
+        "audio_properties": {
+            "lowpass": 0.65,
+            "reverb": 0.5
+        },
         "components": {
             "id": {
-                "type": "string",
-                "default": "id",
-                "max": 80
+                "default": "",
+                "max": 80,
+                "min": 0,
+                "type": "string"
             },
             "turns_into": {
-                "type": "string",
-                "default": "turns_into",
-                "max": 80
+                "default": "",
+                "max": 80,
+                "min": 0,
+                "type": "string"
             },
             "xoffset": {
-                "type": "s32",
-                "default": "xoffset",
+                "default": 0,
+                "max": 127,
                 "min": -128,
-                "max": 127
-            },
-            "yoffset": {
-                "type": "s32",
-                "default": "yoffset",
-                "min": -128,
-                "max": 127
+                "type": "s8"
             },
             "xscale": {
-                "type": "s32",
-                "default": "xscale",
+                "default": 1,
+                "max": 255,
                 "min": 1,
-                "max": 255
+                "type": "u8"
+            },
+            "yoffset": {
+                "default": 0,
+                "max": 127,
+                "min": -128,
+                "type": "s8"
             },
             "yscale": {
-                "type": "s32",
-                "default": "yscale",
+                "default": 1,
+                "max": 255,
                 "min": 1,
-                "max": 255
+                "type": "u8"
             }
         },
         "on_use": [
             {
-                "id": "phantasia:open_menu",
-                "parameters": [
-                    {
-                        "type": "button",
-                        "x": 56,
-                        "y": 56,
-                        "on_select_release": "exit"
-                    },
-                    {
-                        "type": "anchor",
-                        "x": 480,
-                        "y": 84,
-                        "text": "phantasia:tile.structure_blueprint.structure_id"
-                    },
-                    {
-                        "type": "textbox_string",
-                        "x": 480,
-                        "y": 132,
-                        "width": 17,
-                        "height": 3,
-                        "placeholder": "ID",
-                        "max_length": 80,
-                        "component": "id"
-                    },
-                    {
-                        "type": "anchor",
-                        "x": 480,
-                        "y": 248,
-                        "text": "phantasia:tile.structure_blueprint.offset"
-                    },
-                    {
-                        "type": "textbox_string",
-                        "x": 408,
-                        "y": 552,
-                        "width": 17,
-                        "height": 3,
-                        "placeholder": "phantasia:tile.structure_blueprint.xoffset",
-                        "minNumber": -128,
-                        "maxNumber": 127,
-                        "component": "xoffset"
-                    },
-                    {
-                        "type": "textbox_string",
-                        "x": 408,
-                        "y": 552,
-                        "width": 17,
-                        "height": 3,
-                        "placeholder": "phantasia:tile.structure_blueprint.yoffset",
-                        "minNumber": -128,
-                        "maxNumber": 127,
-                        "component": "yoffset"
-                    },
-                    {
-                        "type": "anchor",
-                        "x": 480,
-                        "y": 316,
-                        "text": "phantasia:tile.structure_blueprint.scale"
-                    },
-                    {
-                        "type": "textbox_string",
-                        "x": 408,
-                        "y": 552,
-                        "width": 17,
-                        "height": 3,
-                        "placeholder": "phantasia:tile.structure_blueprint.xscale",
-                        "minNumber": 1,
-                        "maxNumber": 255,
-                        "component": "xscale"
-                    },
-                    {
-                        "type": "textbox_string",
-                        "x": 408,
-                        "y": 552,
-                        "width": 17,
-                        "height": 3,
-                        "placeholder": "phantasia:tile.structure_blueprint.yscale",
-                        "minNumber": 1,
-                        "maxNumber": 255,
-                        "component": "yscale"
-                    },
-                    {
-                        "type": "button",
-                        "x": 480,
-                        "y": 480,
-                        "width": 17,
-                        "height": 3,
-                        "text": "Export",
-                        "on_select_release": "phantasia:export_structure"
+                "id": "@phantasia:open_ui",
+                "parameters": {
+                    "ui": "ui/structure_blueprint.ui",
+                    "definition": "structure_blueprint_menu",
+                    "bindings": {
+                        "id": "component:id",
+                        "turns_into": "component:turns_into",
+                        "xoffset": "component:xoffset",
+                        "yoffset": "component:yoffset",
+                        "xscale": "component:xscale",
+                        "yscale": "component:yscale"
                     }
-                ]
+                }
             }
         ],
-        "sfx": "#phantasia:tile/sfx/stone",
-        "audio_properties": {
-            "lowpass": 0.65,
-            "reverb": 0.5
-        }
+        "sfx": "#phantasia:tile/sfx/stone"
     },
     "type": "solid"
 }

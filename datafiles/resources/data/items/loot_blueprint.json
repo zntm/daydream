@@ -2,51 +2,38 @@
     "inventory": "#phantasia:item/generic/inventory_default",
     "sprite": "phantasia:item/loot_blueprint",
     "tile": {
+        "audio_properties": {
+            "lowpass": 0.65,
+            "reverb": 0.5
+        },
         "components": {
             "id": {
-                "type": "string",
-                "default": "id",
-                "max": 80
+                "default": "",
+                "max": 80,
+                "min": 0,
+                "type": "string"
             },
             "turns_into": {
-                "type": "string",
-                "default": "turns_into",
-                "max": 80
+                "default": "",
+                "max": 80,
+                "min": 0,
+                "type": "string"
             }
         },
         "on_use": [
             {
-                "id": "phantasia:open_menu",
-                "parameters": [
-                    {
-                        "type": "button",
-                        "x": 56,
-                        "y": 56,
-                        "on_select_release": "exit"
-                    },
-                    {
-                        "type": "anchor",
-                        "x": 480,
-                        "y": 84,
-                        "text": "phantasia:tile.structure_blueprint.structure_id"
-                    },
-                    {
-                        "type": "textbox_string",
-                        "x": 480,
-                        "y": 132,
-                        "width": 17,
-                        "height": 3,
-                        "placeholder": "ID",
-                        "max_length": 80
+                "id": "@phantasia:open_ui",
+                "parameters": {
+                    "ui": "ui/loot_blueprint.ui",
+                    "definition": "loot_blueprint_menu",
+                    "bindings": {
+                        "id": "component:id",
+                        "turns_into": "component:turns_into"
                     }
-                ]
+                }
             }
         ],
-        "sfx": "#phantasia:tile/sfx/stone",
-        "audio_properties": {
-            "lowpass": 0.65,
-            "reverb": 0.5
-        }
+        "sfx": "#phantasia:tile/sfx/stone"
     },
     "type": "solid"
 }

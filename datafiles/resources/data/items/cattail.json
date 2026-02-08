@@ -5,10 +5,15 @@
     ],
     "sprite": "phantasia:item/cattail",
     "tile": {
+        "audio_properties": {
+            "lowpass": 0.05,
+            "reverb": 0
+        },
         "drops": [
             {
                 "id": "phantasia:cattail",
                 "condition": {
+                    "id": "cattail",
                     "index": 2
                 }
             }
@@ -47,11 +52,7 @@
                 ]
             }
         },
-        "sfx": "#phantasia:tile/sfx/foliage",
-        "audio_properties": {
-            "lowpass": 0.05,
-            "reverb": 0
-        }
+        "sfx": "#phantasia:tile/sfx/foliage"
     },
     "type": "untouchable"
 }

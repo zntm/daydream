@@ -5,6 +5,10 @@
     ],
     "sprite": "phantasia:item/twig",
     "tile": {
+        "audio_properties": {
+            "lowpass": 0.05,
+            "reverb": 0
+        },
         "drops": [
             {
                 "id": "phantasia:twig"
@@ -20,18 +24,14 @@
         },
         "placement": {
             "index": {
+                "type": "smart_value:irandom",
                 "values": {
-                    "min": 1,
-                    "max": 3
-                },
-                "type": "smart_value:irandom"
+                    "max": 3,
+                    "min": 1
+                }
             }
         },
-        "sfx": "#phantasia:tile/sfx/wood",
-        "audio_properties": {
-            "lowpass": 0.05,
-            "reverb": 0
-        }
+        "sfx": "#phantasia:tile/sfx/wood"
     },
     "type": "untouchable"
 }

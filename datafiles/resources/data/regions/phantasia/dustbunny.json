@@ -4,7 +4,6 @@
         "phantasia:surface/dustbunny/dunes",
         "phantasia:surface/dustbunny/oasis"
     ],
-    "category": "arid",
     "cave_biome_default": "phantasia:cave/chasm",
     "cave_biomes": [
         {
@@ -23,46 +22,66 @@
         "noise_scale": 0.015625
     },
     "visuals": {
-        "light_colour": [
-            {
-                "time": 0,
-                "colour": "#0F142A"
-            },
-            {
-                "time": 0.3,
-                "colour": "#FFD4A1"
-            },
-            {
-                "time": 0.5,
-                "colour": "#FFF4E5"
-            },
-            {
-                "time": 0.75,
-                "colour": "#FF9D6E"
-            }
-        ],
-        "sky_colour": [
-            {
-                "time": 0,
-                "base": "#0B0B1A",
-                "gradient": "#050508"
-            },
-            {
-                "time": 0.3,
-                "base": "#FFB085",
-                "gradient": "#4B66FF"
-            },
-            {
-                "time": 0.5,
-                "base": "#FFE9D2",
-                "gradient": "#7BBFFF"
-            },
-            {
-                "time": 0.75,
-                "base": "#FF8E5C",
-                "gradient": "#1E1F2B"
-            }
-        ]
+        "light_colour": {
+            "points": [
+                {
+                    "time": 0,
+                    "value": "#0F142A"
+                },
+                {
+                    "time": 0.3,
+                    "value": "#FFD4A1"
+                },
+                {
+                    "time": 0.5,
+                    "value": "#FFF4E5"
+                },
+                {
+                    "time": 0.75,
+                    "value": "#FF9D6E"
+                }
+            ]
+        },
+        "sky_base": {
+            "points": [
+                {
+                    "time": 0,
+                    "value": "#0B0B1A"
+                },
+                {
+                    "time": 0.3,
+                    "value": "#FFB085"
+                },
+                {
+                    "time": 0.5,
+                    "value": "#FFE9D2"
+                },
+                {
+                    "time": 0.75,
+                    "value": "#FF8E5C"
+                }
+            ]
+        },
+        "sky_gradient": {
+            "points": [
+                {
+                    "time": 0,
+                    "value": "#050508"
+                },
+                {
+                    "time": 0.3,
+                    "value": "#4B66FF"
+                },
+                {
+                    "time": 0.5,
+                    "value": "#7BBFFF"
+                },
+                {
+                    "time": 0.75,
+                    "value": "#1E1F2B"
+                }
+            ]
+        }
     },
     "voronoi": {
         "cell_size": 256,

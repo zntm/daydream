@@ -94,10 +94,10 @@
     "props": {
         "anchor_x": "center",
         "anchor_y": "bottom",
-        "x": 0,
-        "y": 16,
+        "height": 16,
         "width": 160,
-        "height": 16
+        "x": 0,
+        "y": 16
     },
     "type": "panel"
 }

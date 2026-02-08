@@ -1,7 +1,7 @@
 export class Sprite {
-    private xoffset: number;
-    private yoffset: number;
-    private length: number;
+    public xoffset: number;
+    public yoffset: number;
+    public length: number;
 
     constructor(xoffset: number, yoffset: number, length: number = 1) {
         this.xoffset = xoffset;

@@ -1,2 +1,0 @@
-// This module throws during evaluation to test import-time errors
-throw { type: ERROR_TYPE.RUNTIME, message: "init fail" }

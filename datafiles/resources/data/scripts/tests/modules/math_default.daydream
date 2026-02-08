@@ -1,5 +1,0 @@
-export var def = 100
-
-export fn inc(a) {
-    return a + 1
-}

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"open_ui",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"open_ui",
+  "parent":{
+    "name":"UI",
+    "path":"folders/Scripts/Proglang/UI.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

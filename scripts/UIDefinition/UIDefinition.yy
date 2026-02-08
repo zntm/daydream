@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"UIDefinition",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"UIDefinition",
+  "parent":{
+    "name":"UI",
+    "path":"folders/Scripts/Proglang/UI.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

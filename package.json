@@ -7,13 +7,13 @@
         "@types/bun": "latest"
     },
     "peerDependencies": {
-        "typescript": "^5"
+        "typescript": "^5.9.3"
     },
     "scripts": {
         "datagen": "bun run datagen/index.ts"
     },
     "dependencies": {
-        "exifreader": "^4.32.0",
-        "music-metadata": "^11.9.0"
+        "exifreader": "^4.36.1",
+        "music-metadata": "^11.11.2"
     }
 }

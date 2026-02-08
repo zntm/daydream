@@ -6,6 +6,10 @@
     ],
     "sprite": "phantasia:item/grass_block_swamp",
     "tile": {
+        "audio_properties": {
+            "lowpass": 0.15,
+            "reverb": 0.05
+        },
         "drops": [
             {
                 "id": "phantasia:dirt"
@@ -19,11 +23,7 @@
                 "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
             }
         },
-        "sfx": "#phantasia:tile/sfx/dirt",
-        "audio_properties": {
-            "lowpass": 0.15,
-            "reverb": 0.05
-        }
+        "sfx": "#phantasia:tile/sfx/dirt"
     },
     "type": "solid"
 }
