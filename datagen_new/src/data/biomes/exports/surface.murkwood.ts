@@ -19,20 +19,22 @@ const STONE_WALL = new BiomeTileEntry("phantasia:stone_wall", 4);
 const murkwood = new Biome("phantasia:surface/murkwood")
     .setBackground("phantasia:background/swamp", 0.7)
     .setTerrainModifier(-12, 0.7)
-    .setTile(new BiomeTile(
-        new BiomeTileLayer(
-            [new BiomeTileEntry("phantasia:grass_block_swamp")],
-            [DIRT_WALL, EMPTY_WALL]
+    .setTile(
+        new BiomeTile(
+            new BiomeTileLayer(
+                [new BiomeTileEntry("phantasia:grass_block_swamp")],
+                [DIRT_WALL, EMPTY_WALL],
+            ),
+            new BiomeTileLayer(
+                [new BiomeTileEntry("phantasia:dirt")],
+                [DIRT_WALL, EMPTY_WALL],
+            ),
+            new BiomeTileLayer(
+                [new BiomeTileEntry("phantasia:stone")],
+                [STONE_WALL, EMPTY_WALL],
+            ),
         ),
-        new BiomeTileLayer(
-            [new BiomeTileEntry("phantasia:dirt")],
-            [DIRT_WALL, EMPTY_WALL]
-        ),
-        new BiomeTileLayer(
-            [new BiomeTileEntry("phantasia:stone")],
-            [STONE_WALL, EMPTY_WALL]
-        )
-    ))
+    )
     .addFoliage(new BiomeFoliage("phantasia:short_grass_swamp", 0.26))
     .addFoliage(new BiomeFoliage("phantasia:tall_grass_swamp", 0.04))
     .addFoliage(new BiomeFoliage("phantasia:globeflower", 0.05))
@@ -53,6 +55,4 @@ const murkwood = new Biome("phantasia:surface/murkwood")
     .addMusic(new BiomeMusic("phantasia:music/sol_y_luna", 0.6))
     .addMusic(new BiomeMusic("phantasia:music/tense", 0.7));
 
-export default [
-    murkwood.build(),
-];
+export default [murkwood.build()];

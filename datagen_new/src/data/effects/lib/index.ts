@@ -1,5 +1,3 @@
-import { Effect, EffectType } from "./Effect";
-import { EffectModifier } from "./EffectModifier";
-import { EffectParticle } from "./EffectParticle";
-
-export { Effect, EffectType, EffectModifier, EffectParticle };
+export { Effect, EffectType } from "./Effect";
+export { EffectModifier, EffectOperation } from "./EffectModifier";
+export { EffectParticle, particle } from "./EffectParticle";

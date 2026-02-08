@@ -13,11 +13,11 @@
         },
         "drops": [
             {
-                "id": "phantasia:item/coal_ore",
                 "condition": {
                     "id": "#phantasia:item/type/pickaxe",
                     "level": 1
-                }
+                },
+                "id": "phantasia:item/coal_ore"
             }
         ],
         "harvest": {

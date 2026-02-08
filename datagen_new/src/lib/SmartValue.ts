@@ -1,76 +1,80 @@
-enum SmartValueType {
-    Choose = "smart_value:choose",
-    ChooseWeighted = "smart_value:choose_weighted",
-    FloatRandom = "smart_value:random",
-    IntRandom = "smart_value:irandom",
+/**
+ * SmartValue types for runtime-evaluated values in the game engine.
+ * These serialize to JSON with a `type` discriminator.
+ */
+
+// Type discriminators
+const TYPE_CHOOSE = "smart_value:choose";
+const TYPE_CHOOSE_WEIGHTED = "smart_value:choose_weighted";
+const TYPE_FLOAT_RANDOM = "smart_value:random";
+const TYPE_INT_RANDOM = "smart_value:irandom";
+
+// Data structures - simple objects, not classes
+export interface WeightedOption<T = unknown> {
+    readonly value: T;
+    readonly weight: number;
+}
+
+interface ChooseValue<T = unknown> {
+    readonly type: typeof TYPE_CHOOSE;
+    readonly values: readonly T[];
+}
+
+interface ChooseWeightedValue<T = unknown> {
+    readonly type: typeof TYPE_CHOOSE_WEIGHTED;
+    readonly values: readonly WeightedOption<T>[];
+}
+
+interface FloatRandomValue {
+    readonly type: typeof TYPE_FLOAT_RANDOM;
+    readonly values: { readonly min: number; readonly max: number };
+}
+
+interface IntRandomValue {
+    readonly type: typeof TYPE_INT_RANDOM;
+    readonly values: { readonly min: number; readonly max: number };
 }
 
 export type SmartValueValueType =
-    | SmartValueChoose
-    | SmartValueChooseWeighted
-    | SmartValueFloatRandom
-    | SmartValueIntRandom;
+    | ChooseValue
+    | ChooseWeightedValue
+    | FloatRandomValue
+    | IntRandomValue;
 
-class SmartValueChoose {
-    values: any[];
-    type: string = SmartValueType.Choose;
+/**
+ * Factory functions for creating SmartValue objects.
+ * No class overhead - just returns plain objects that serialize correctly.
+ */
+export const SmartValue = {
+    /** Pick a random value from the array at runtime */
+    Choose: <T>(values: T[]): ChooseValue<T> => ({
+        type: TYPE_CHOOSE,
+        values,
+    }),
 
-    constructor(values: any[]) {
-        this.values = values;
-    }
-}
+    /** Pick a weighted random value at runtime */
+    ChooseWeighted: <T>(
+        values: WeightedOption<T>[],
+    ): ChooseWeightedValue<T> => ({
+        type: TYPE_CHOOSE_WEIGHTED,
+        values,
+    }),
 
-class SmartValueChooseWeighted {
-    values: SmartValueChooseWeightedOption[];
-    type: string = SmartValueType.ChooseWeighted;
+    /** Random float in range [min, max] */
+    FloatRandom: (min: number, max: number): FloatRandomValue => ({
+        type: TYPE_FLOAT_RANDOM,
+        values: { min, max },
+    }),
 
-    constructor(values: SmartValueChooseWeightedOption[]) {
-        this.values = values;
-    }
-}
+    /** Random int in range [min, max] */
+    IntRandom: (min: number, max: number): IntRandomValue => ({
+        type: TYPE_INT_RANDOM,
+        values: { min, max },
+    }),
 
-class SmartValueChooseWeightedOption {
-    value: any;
-    weight: number;
-
-    constructor(value: any, weight: number) {
-        this.value = value;
-        this.weight = weight;
-    }
-}
-
-class SmartValueFloatRandom {
-    values: { min: number; max: number };
-    type: string = SmartValueType.FloatRandom;
-
-    constructor(min: number, max: number) {
-        this.values = { min, max };
-    }
-}
-
-class SmartValueIntRandom {
-    values: { min: number; max: number };
-    type: string = SmartValueType.IntRandom;
-
-    constructor(min: number, max: number) {
-        this.values = { min, max };
-    }
-}
-
-export abstract class SmartValue {
-    static Choose(values: any[]) {
-        return new SmartValueChoose(values);
-    }
-
-    static ChooseWeighted(values: SmartValueChooseWeightedOption[]) {
-        return new SmartValueChooseWeighted(values);
-    }
-
-    static FloatRandom(min: number, max: number) {
-        return new SmartValueFloatRandom(min, max);
-    }
-
-    static IntRandom(min: number, max: number) {
-        return new SmartValueIntRandom(min, max);
-    }
-}
+    /** Helper to create a weighted option */
+    weighted: <T>(value: T, weight: number): WeightedOption<T> => ({
+        value,
+        weight,
+    }),
+} as const;

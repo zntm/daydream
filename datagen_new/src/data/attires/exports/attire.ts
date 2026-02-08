@@ -6,7 +6,7 @@ import { Attire } from "../lib/Attire";
 const types = ["eyes", "footwear", "hair", "pants", "shirt", "shirt_detail"];
 const attireSourceDir = join(
     __dirname,
-    "../../../../../datagen/src/data/sprites/attire"
+    "../../../../../datagen/src/data/sprites/attire",
 );
 
 export default types
@@ -21,9 +21,7 @@ export default types
                 let white: string | undefined;
                 try {
                     if (
-                        readdirSync(basePath).some((f) =>
-                            f.startsWith("white")
-                        )
+                        readdirSync(basePath).some((f) => f.startsWith("white"))
                     ) {
                         white = `phantasia:attire/${type}/${file}/white`;
                     }
@@ -36,8 +34,8 @@ export default types
                     new Attire(
                         colour,
                         `phantasia:attire/${type}/${file}/icon`,
-                        white
-                    )
+                        white,
+                    ),
                 );
             });
         } catch (e) {

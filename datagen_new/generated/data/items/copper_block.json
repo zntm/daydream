@@ -11,11 +11,11 @@
         },
         "drops": [
             {
-                "id": "phantasia:item/copper_block",
                 "condition": {
                     "id": "#phantasia:item/type/pickaxe",
                     "level": 1
-                }
+                },
+                "id": "phantasia:item/copper_block"
             }
         ],
         "harvest": {

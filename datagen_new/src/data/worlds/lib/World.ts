@@ -63,7 +63,7 @@ export class WorldCaveBiome {
         id: string,
         start: number,
         end: number,
-        transition: Noise | { type: WorldCaveBiomeTransitionType }
+        transition: Noise | { type: WorldCaveBiomeTransitionType },
     ) {
         this.id = id;
         this.start = start;
@@ -93,7 +93,7 @@ export class WorldSky {
 
     constructor(
         enabled: boolean = true,
-        id: string = "phantasia:sky/floating_islands"
+        id: string = "phantasia:sky/floating_islands",
     ) {
         this.enabled = enabled;
         this.id = id;
@@ -106,7 +106,12 @@ export class WorldSky {
         this.noise_scale_detail = 0.3;
     }
 
-    setRegionNoise(offsetY: number, range: number, octaves: number, threshold: number): this {
+    setRegionNoise(
+        offsetY: number,
+        range: number,
+        octaves: number,
+        threshold: number,
+    ): this {
         this.region_offset_y = offsetY;
         this.region_range = range;
         this.region_octaves = octaves;
@@ -152,7 +157,7 @@ export class WorldBiome {
         surfaceHeat: Noise,
         surfaceHumidity: Noise,
         surfaceMap: string,
-        surfaceOffset: Noise
+        surfaceOffset: Noise,
     ) {
         this.cave = {
             default: defaultCaveBiomes,
@@ -232,14 +237,21 @@ export class WorldSurface {
         biome_blend_range?: number;
         biome_blend_noise?: number;
     }): this {
-        if (config.noise_scale !== undefined) this.noise_scale = config.noise_scale;
-        if (config.seed_offset !== undefined) this.seed_offset = config.seed_offset;
+        if (config.noise_scale !== undefined)
+            this.noise_scale = config.noise_scale;
+        if (config.seed_offset !== undefined)
+            this.seed_offset = config.seed_offset;
         if (config.min_depth !== undefined) this.min_depth = config.min_depth;
-        if (config.bedrock_depth !== undefined) this.bedrock_depth = config.bedrock_depth;
-        if (config.bedrock_noise_scale !== undefined) this.bedrock_noise_scale = config.bedrock_noise_scale;
-        if (config.tile_variation !== undefined) this.tile_variation_noise_scale = config.tile_variation;
-        if (config.biome_blend_range !== undefined) this.biome_blend_range = config.biome_blend_range;
-        if (config.biome_blend_noise !== undefined) this.biome_blend_noise_scale = config.biome_blend_noise;
+        if (config.bedrock_depth !== undefined)
+            this.bedrock_depth = config.bedrock_depth;
+        if (config.bedrock_noise_scale !== undefined)
+            this.bedrock_noise_scale = config.bedrock_noise_scale;
+        if (config.tile_variation !== undefined)
+            this.tile_variation_noise_scale = config.tile_variation;
+        if (config.biome_blend_range !== undefined)
+            this.biome_blend_range = config.biome_blend_range;
+        if (config.biome_blend_noise !== undefined)
+            this.biome_blend_noise_scale = config.biome_blend_noise;
         return this;
     }
 }
@@ -274,7 +286,7 @@ export class WorldAquifer {
         octaves: number = 3,
         fillLevel: number = 8,
         noiseScale: number = 0.02,
-        range: number = 255
+        range: number = 255,
     ) {
         this.type = type;
         this.depth_min = depthMin;

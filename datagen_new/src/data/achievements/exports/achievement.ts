@@ -14,8 +14,8 @@ export default [
             new AchievementCondition()
                 .setEvent(AchievementTrigger.TileChanged)
                 .setItemId("phantasia:oak_log")
-                .setCount(1)
-        )
+                .setCount(1),
+        ),
     ),
 
     new DatagenReturnData(
@@ -29,8 +29,8 @@ export default [
                     "phantasia:stone_axe",
                     "phantasia:copper_axe",
                 ])
-                .setCount(1)
-        )
+                .setCount(1),
+        ),
     ),
 
     new DatagenReturnData(
@@ -40,8 +40,8 @@ export default [
             new AchievementCondition()
                 .setEvent(AchievementTrigger.TileChanged)
                 .setItemId("phantasia:stone")
-                .setCount(1)
-        )
+                .setCount(1),
+        ),
     ),
 
     new DatagenReturnData(
@@ -55,8 +55,8 @@ export default [
                     "phantasia:stone_pickaxe",
                     "phantasia:copper_pickaxe",
                 ])
-                .setCount(1)
-        )
+                .setCount(1),
+        ),
     ),
 
     new DatagenReturnData(
@@ -66,8 +66,8 @@ export default [
             new AchievementCondition()
                 .setEvent(AchievementTrigger.CraftingComplete)
                 .setItemId("phantasia:copper_pickaxe")
-                .setCount(1)
-        )
+                .setCount(1),
+        ),
     ),
 
     // Combat achievements
@@ -75,16 +75,16 @@ export default [
         "first_kill.json",
         new Achievement(
             "phantasia:achievement/first_kill",
-            new AchievementCondition().setStatistic("mobs_killed", 1)
-        )
+            new AchievementCondition().setStatistic("mobs_killed", 1),
+        ),
     ),
 
     new DatagenReturnData(
         "monster_hunter.json",
         new Achievement(
             "phantasia:achievement/monster_hunter",
-            new AchievementCondition().setStatistic("mobs_killed", 50)
-        )
+            new AchievementCondition().setStatistic("mobs_killed", 50),
+        ),
     ),
 
     // Mining achievements
@@ -92,16 +92,16 @@ export default [
         "miner.json",
         new Achievement(
             "phantasia:achievement/miner",
-            new AchievementCondition().setStatistic("tiles_broken", 100)
-        )
+            new AchievementCondition().setStatistic("tiles_broken", 100),
+        ),
     ),
 
     new DatagenReturnData(
         "deep_miner.json",
         new Achievement(
             "phantasia:achievement/deep_miner",
-            new AchievementCondition().setStatistic("tiles_broken", 1000)
-        )
+            new AchievementCondition().setStatistic("tiles_broken", 1000),
+        ),
     ),
 
     // Exploration achievements
@@ -109,7 +109,7 @@ export default [
         "explorer.json",
         new Achievement(
             "phantasia:achievement/explorer",
-            new AchievementCondition().setStatistic("chunks_explored", 25)
-        )
+            new AchievementCondition().setStatistic("chunks_explored", 25),
+        ),
     ),
 ];

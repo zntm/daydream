@@ -6,6 +6,5 @@ export {
     BiomeTileEntry,
     BiomeCreature,
     BiomeStructure,
-    BiomeMusic
+    BiomeMusic,
 } from "./Biome";
-

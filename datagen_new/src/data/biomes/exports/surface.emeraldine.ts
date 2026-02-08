@@ -19,7 +19,7 @@ const SANDSTONE_WALL = new BiomeTileEntry("phantasia:sandstone_wall", 4);
 
 const DEFAULT_SHORE = new BiomeTileLayer(
     [SAND_SHORE_BASE],
-    [SANDSTONE_WALL, EMPTY_WALL]
+    [SANDSTONE_WALL, EMPTY_WALL],
 );
 
 const FOREST_FOLIAGE = [
@@ -47,61 +47,65 @@ const FOREST_MUSIC = [
  */
 const greenia = new Biome("phantasia:surface/greenia")
     .setBackground("phantasia:background/forest", 0.7)
-    .setTile(new BiomeTile(
-        new BiomeTileLayer(
-            [new BiomeTileEntry("phantasia:grass_block")],
-            [DIRT_WALL, EMPTY_WALL]
+    .setTile(
+        new BiomeTile(
+            new BiomeTileLayer(
+                [new BiomeTileEntry("phantasia:grass_block")],
+                [DIRT_WALL, EMPTY_WALL],
+            ),
+            new BiomeTileLayer(
+                [new BiomeTileEntry("phantasia:dirt")],
+                [DIRT_WALL, EMPTY_WALL],
+            ),
+            new BiomeTileLayer(
+                [new BiomeTileEntry("phantasia:stone")],
+                [STONE_WALL, EMPTY_WALL],
+            ),
         ),
-        new BiomeTileLayer(
-            [new BiomeTileEntry("phantasia:dirt")],
-            [DIRT_WALL, EMPTY_WALL]
-        ),
-        new BiomeTileLayer(
-            [new BiomeTileEntry("phantasia:stone")],
-            [STONE_WALL, EMPTY_WALL]
-        )
-    ))
+    )
     .setShoreTiles(DEFAULT_SHORE)
     .addCreature(
         new BiomeCreature("phantasia:chicken", SmartValue.IntRandom(1, 3), 0.03)
             .setTimeRange(0, 890)
-            .setTile("#phantasia:tile/creature_spawn/animal")
+            .setTile("#phantasia:tile/creature_spawn/animal"),
     )
     .addCreature(
         new BiomeCreature("phantasia:rabbit", SmartValue.IntRandom(1, 4), 0.01)
             .setTimeRange(0, 890)
-            .setTile("#phantasia:tile/creature_spawn/animal")
+            .setTile("#phantasia:tile/creature_spawn/animal"),
     )
     .addCreature(
-        new BiomeCreature("phantasia:fox", SmartValue.IntRandom(1, 3), 0.03)
+        new BiomeCreature("phantasia:fox", SmartValue.IntRandom(1, 3), 0.03),
     )
     .addStructure(new BiomeStructure("phantasia:clump/moss", 0.008))
     .addStructure(new BiomeStructure("phantasia:tree/oak", 0.1))
     .addStructure(new BiomeStructure("phantasia:tree/birch", 0.05));
 
 // Add foliage
-FOREST_FOLIAGE.forEach(f => greenia.addFoliage(f));
-FOREST_MUSIC.forEach(m => greenia.addMusic(m));
+FOREST_FOLIAGE.forEach((f) => greenia.addFoliage(f));
+FOREST_MUSIC.forEach((m) => greenia.addMusic(m));
 
 /**
  * Sunflora - Sunflower fields biome
  */
 const sunflora = new Biome("phantasia:surface/sunflora")
     .setBackground("phantasia:background/forest", 0.7)
-    .setTile(new BiomeTile(
-        new BiomeTileLayer(
-            [new BiomeTileEntry("phantasia:grass_block")],
-            [DIRT_WALL, EMPTY_WALL]
+    .setTile(
+        new BiomeTile(
+            new BiomeTileLayer(
+                [new BiomeTileEntry("phantasia:grass_block")],
+                [DIRT_WALL, EMPTY_WALL],
+            ),
+            new BiomeTileLayer(
+                [new BiomeTileEntry("phantasia:dirt")],
+                [DIRT_WALL, EMPTY_WALL],
+            ),
+            new BiomeTileLayer(
+                [new BiomeTileEntry("phantasia:stone")],
+                [STONE_WALL, EMPTY_WALL],
+            ),
         ),
-        new BiomeTileLayer(
-            [new BiomeTileEntry("phantasia:dirt")],
-            [DIRT_WALL, EMPTY_WALL]
-        ),
-        new BiomeTileLayer(
-            [new BiomeTileEntry("phantasia:stone")],
-            [STONE_WALL, EMPTY_WALL]
-        )
-    ))
+    )
     .setShoreTiles(DEFAULT_SHORE)
     .addFoliage(new BiomeFoliage("phantasia:short_grass", 0.2))
     .addFoliage(new BiomeFoliage("phantasia:tall_grass", 0.02))
@@ -112,35 +116,37 @@ const sunflora = new Biome("phantasia:surface/sunflora")
     .addCreature(
         new BiomeCreature("phantasia:chicken", SmartValue.IntRandom(1, 4), 0.04)
             .setTimeRange(0, 890)
-            .setTile("#phantasia:tile/creature_spawn/animal")
+            .setTile("#phantasia:tile/creature_spawn/animal"),
     )
     .addCreature(
         new BiomeCreature("phantasia:rabbit", SmartValue.IntRandom(1, 5), 0.02)
             .setTimeRange(0, 890)
-            .setTile("#phantasia:tile/creature_spawn/animal")
+            .setTile("#phantasia:tile/creature_spawn/animal"),
     );
 
-FOREST_MUSIC.forEach(m => sunflora.addMusic(m));
+FOREST_MUSIC.forEach((m) => sunflora.addMusic(m));
 
 /**
  * Birchwoods - Birch forest biome
  */
 const birchwoods = new Biome("phantasia:surface/birchwoods")
     .setBackground("phantasia:background/forest", 0.7)
-    .setTile(new BiomeTile(
-        new BiomeTileLayer(
-            [new BiomeTileEntry("phantasia:grass_block")],
-            [DIRT_WALL, EMPTY_WALL]
+    .setTile(
+        new BiomeTile(
+            new BiomeTileLayer(
+                [new BiomeTileEntry("phantasia:grass_block")],
+                [DIRT_WALL, EMPTY_WALL],
+            ),
+            new BiomeTileLayer(
+                [new BiomeTileEntry("phantasia:dirt")],
+                [DIRT_WALL, EMPTY_WALL],
+            ),
+            new BiomeTileLayer(
+                [new BiomeTileEntry("phantasia:stone")],
+                [STONE_WALL, EMPTY_WALL],
+            ),
         ),
-        new BiomeTileLayer(
-            [new BiomeTileEntry("phantasia:dirt")],
-            [DIRT_WALL, EMPTY_WALL]
-        ),
-        new BiomeTileLayer(
-            [new BiomeTileEntry("phantasia:stone")],
-            [STONE_WALL, EMPTY_WALL]
-        )
-    ))
+    )
     .setShoreTiles(DEFAULT_SHORE)
     .addFoliage(new BiomeFoliage("phantasia:short_grass", 0.22))
     .addFoliage(new BiomeFoliage("phantasia:tall_grass", 0.03))
@@ -152,33 +158,35 @@ const birchwoods = new Biome("phantasia:surface/birchwoods")
     .addCreature(
         new BiomeCreature("phantasia:rabbit", SmartValue.IntRandom(1, 3), 0.02)
             .setTimeRange(0, 890)
-            .setTile("#phantasia:tile/creature_spawn/animal")
+            .setTile("#phantasia:tile/creature_spawn/animal"),
     )
     .addCreature(
-        new BiomeCreature("phantasia:fox", SmartValue.IntRandom(1, 2), 0.02)
+        new BiomeCreature("phantasia:fox", SmartValue.IntRandom(1, 2), 0.02),
     );
 
-FOREST_MUSIC.forEach(m => birchwoods.addMusic(m));
+FOREST_MUSIC.forEach((m) => birchwoods.addMusic(m));
 
 /**
  * Cherrylis - Cherry blossom forest biome
  */
 const cherrylis = new Biome("phantasia:surface/cherrylis")
     .setBackground("phantasia:background/forest", 0.7)
-    .setTile(new BiomeTile(
-        new BiomeTileLayer(
-            [new BiomeTileEntry("phantasia:grass_block")],
-            [DIRT_WALL, EMPTY_WALL]
+    .setTile(
+        new BiomeTile(
+            new BiomeTileLayer(
+                [new BiomeTileEntry("phantasia:grass_block")],
+                [DIRT_WALL, EMPTY_WALL],
+            ),
+            new BiomeTileLayer(
+                [new BiomeTileEntry("phantasia:dirt")],
+                [DIRT_WALL, EMPTY_WALL],
+            ),
+            new BiomeTileLayer(
+                [new BiomeTileEntry("phantasia:stone")],
+                [STONE_WALL, EMPTY_WALL],
+            ),
         ),
-        new BiomeTileLayer(
-            [new BiomeTileEntry("phantasia:dirt")],
-            [DIRT_WALL, EMPTY_WALL]
-        ),
-        new BiomeTileLayer(
-            [new BiomeTileEntry("phantasia:stone")],
-            [STONE_WALL, EMPTY_WALL]
-        )
-    ))
+    )
     .setShoreTiles(DEFAULT_SHORE)
     .addFoliage(new BiomeFoliage("phantasia:short_grass", 0.18))
     .addFoliage(new BiomeFoliage("phantasia:tall_grass", 0.02))
@@ -189,10 +197,10 @@ const cherrylis = new Biome("phantasia:surface/cherrylis")
     .addCreature(
         new BiomeCreature("phantasia:rabbit", SmartValue.IntRandom(1, 4), 0.015)
             .setTimeRange(0, 890)
-            .setTile("#phantasia:tile/creature_spawn/animal")
+            .setTile("#phantasia:tile/creature_spawn/animal"),
     );
 
-FOREST_MUSIC.forEach(m => cherrylis.addMusic(m));
+FOREST_MUSIC.forEach((m) => cherrylis.addMusic(m));
 
 export default [
     greenia.build(),

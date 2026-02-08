@@ -15,7 +15,7 @@ export class BiomeTileEntry {
         if (weight !== undefined) this.weight = weight;
     }
 
-    setNoiseRange(min: number, max?: number): BiomeTileEntry {
+    setNoiseRange(min: number, max?: number): this {
         this.noise_min = min;
         if (max !== undefined) this.noise_max = max;
         return this;
@@ -46,7 +46,7 @@ export class BiomeTile {
     constructor(
         top: BiomeTileLayer,
         middle: BiomeTileLayer,
-        bottom: BiomeTileLayer
+        bottom: BiomeTileLayer,
     ) {
         this.top_layer = top;
         this.middle_layer = middle;
@@ -64,13 +64,17 @@ export class BiomeFoliage {
     range_min?: number;
     range_max?: number;
 
-    constructor(id: string, chance: number, generateOn: string = "#phantasia:tile/placement/plant_on") {
+    constructor(
+        id: string,
+        chance: number,
+        generateOn = "#phantasia:tile/placement/plant_on",
+    ) {
         this.id = id;
         this.chance = chance;
         this.generate_on = generateOn;
     }
 
-    setRange(min: number, max: number): BiomeFoliage {
+    setRange(min: number, max: number): this {
         this.range_min = min;
         this.range_max = max;
         return this;
@@ -89,24 +93,28 @@ export class BiomeCreature {
     tile?: string;
     variant?: SmartValueValueType;
 
-    constructor(id: string, amount: SmartValueValueType | number, chance: number) {
+    constructor(
+        id: string,
+        amount: SmartValueValueType | number,
+        chance: number,
+    ) {
         this.id = id;
         this.amount = amount;
         this.chance = chance;
     }
 
-    setTimeRange(min: number, max: number): BiomeCreature {
+    setTimeRange(min: number, max: number): this {
         this.time_range_min = min;
         this.time_range_max = max;
         return this;
     }
 
-    setTile(tile: string): BiomeCreature {
+    setTile(tile: string): this {
         this.tile = tile;
         return this;
     }
 
-    setVariant(variant: SmartValueValueType): BiomeCreature {
+    setVariant(variant: SmartValueValueType): this {
         this.variant = variant;
         return this;
     }
@@ -122,13 +130,17 @@ export class BiomeStructure {
     range_min?: number;
     range_max?: number;
 
-    constructor(id: string, chance: number, generateOn: string = "#phantasia:tile/placement/plant_on") {
+    constructor(
+        id: string,
+        chance: number,
+        generateOn = "#phantasia:tile/placement/plant_on",
+    ) {
         this.id = id;
         this.chance = chance;
         this.generate_on = generateOn;
     }
 
-    setRange(min: number, max: number): BiomeStructure {
+    setRange(min: number, max: number): this {
         this.range_min = min;
         this.range_max = max;
         return this;
@@ -142,7 +154,7 @@ export class BiomeMusic {
     id: string;
     gain: number;
 
-    constructor(id: string, gain: number = 0.7) {
+    constructor(id: string, gain = 0.7) {
         this.id = id;
         this.gain = gain;
     }
@@ -161,7 +173,10 @@ export class Biome {
     private structures: BiomeStructure[] = [];
     private music: BiomeMusic[] = [];
     private shore_tiles?: BiomeTileLayer;
-    private terrain_modifier?: { height_offset?: number; amplitude_scale?: number };
+    private terrain_modifier?: {
+        height_offset?: number;
+        amplitude_scale?: number;
+    };
     private is_ocean?: boolean;
     private is_skyland?: boolean;
 
@@ -169,110 +184,89 @@ export class Biome {
         this.id = id;
     }
 
-    setBackground(id: string, blend: number = 0.7): Biome {
+    setBackground(id: string, blend = 0.7): this {
         this.background = { id, blend };
         return this;
     }
 
-    setTile(tile: BiomeTile): Biome {
+    setTile(tile: BiomeTile): this {
         this.tile = tile;
         return this;
     }
 
-    addFoliage(foliage: BiomeFoliage): Biome {
+    addFoliage(foliage: BiomeFoliage): this {
         this.foliage.push(foliage);
         return this;
     }
 
-    addCreature(creature: BiomeCreature): Biome {
+    addCreature(creature: BiomeCreature): this {
         this.creatures.push(creature);
         return this;
     }
 
-    addStructure(structure: BiomeStructure): Biome {
+    addStructure(structure: BiomeStructure): this {
         this.structures.push(structure);
         return this;
     }
 
-    addMusic(music: BiomeMusic): Biome {
+    addMusic(music: BiomeMusic): this {
         this.music.push(music);
         return this;
     }
 
-    setShoreTiles(layer: BiomeTileLayer): Biome {
+    setShoreTiles(layer: BiomeTileLayer): this {
         this.shore_tiles = layer;
         return this;
     }
 
-    setTerrainModifier(heightOffset?: number, amplitudeScale?: number): Biome {
+    setTerrainModifier(heightOffset?: number, amplitudeScale?: number): this {
         this.terrain_modifier = {};
-        if (heightOffset !== undefined) this.terrain_modifier.height_offset = heightOffset;
-        if (amplitudeScale !== undefined) this.terrain_modifier.amplitude_scale = amplitudeScale;
+        if (heightOffset !== undefined)
+            this.terrain_modifier.height_offset = heightOffset;
+        if (amplitudeScale !== undefined)
+            this.terrain_modifier.amplitude_scale = amplitudeScale;
         return this;
     }
 
-    setIsOcean(value: boolean = true): Biome {
+    setIsOcean(value = true): this {
         this.is_ocean = value;
         return this;
     }
 
-    setIsSkyland(value: boolean = true): Biome {
+    setIsSkyland(value = true): this {
         this.is_skyland = value;
         return this;
     }
 
     /**
-     * Build the biome into a DatagenReturnData for export
+     * Build the biome into a DatagenReturnData for export.
+     * Only includes fields that have values - no empty arrays or undefined.
      */
-    build(category: string = "surface"): DatagenReturnData {
-        const data: any = {};
+    build(category = "surface"): DatagenReturnData {
+        const data: Record<string, unknown> = {};
 
-        if (this.background) {
-            data.background = this.background;
-        }
+        // Helper to conditionally add non-empty arrays
+        const addIfNotEmpty = (key: string, arr: unknown[]) => {
+            if (arr.length) data[key] = arr;
+        };
 
-        if (this.tile) {
-            data.tile = this.tile;
-        }
+        // Helper to conditionally add truthy values
+        const addIfPresent = (key: string, val: unknown) => {
+            if (val !== undefined) data[key] = val;
+        };
 
-        if (this.foliage.length > 0) {
-            data.foliage = this.foliage;
-        }
+        addIfPresent("background", this.background);
+        addIfPresent("tile", this.tile);
+        addIfNotEmpty("foliage", this.foliage);
+        addIfNotEmpty("creatures", this.creatures);
+        addIfNotEmpty("structures", this.structures);
+        addIfNotEmpty("music", this.music);
+        addIfPresent("shore_tiles", this.shore_tiles);
+        addIfPresent("terrain_modifier", this.terrain_modifier);
+        addIfPresent("is_ocean", this.is_ocean);
+        addIfPresent("is_skyland", this.is_skyland);
 
-        if (this.creatures.length > 0) {
-            data.creatures = this.creatures;
-        }
-
-        if (this.structures.length > 0) {
-            data.structures = this.structures;
-        }
-
-        if (this.music.length > 0) {
-            data.music = this.music;
-        }
-
-        if (this.shore_tiles) {
-            data.shore_tiles = this.shore_tiles;
-        }
-
-        if (this.terrain_modifier) {
-            data.terrain_modifier = this.terrain_modifier;
-        }
-
-        if (this.is_ocean) {
-            data.is_ocean = this.is_ocean;
-        }
-
-        if (this.is_skyland) {
-            data.is_skyland = this.is_skyland;
-        }
-
-        // Extract biome name from ID (e.g., "phantasia:surface/greenia" -> "greenia")
         const biomeName = this.id.split("/").pop() || this.id;
-
-        return new DatagenReturnData(
-            `${category}/${biomeName}.json`,
-            data
-        );
+        return new DatagenReturnData(`${category}/${biomeName}.json`, data);
     }
 }

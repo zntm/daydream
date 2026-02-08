@@ -36,31 +36,50 @@ const CAVE_MUSIC = [
  */
 const chasm = new Biome("phantasia:cave/chasm")
     .setBackground("phantasia:background/chasm", 0.7)
-    .setTile(new BiomeTile(
-        new BiomeTileLayer([new BiomeTileEntry("phantasia:stone")], [STONE_WALL, EMPTY_WALL]),
-        new BiomeTileLayer([new BiomeTileEntry("phantasia:stone")], [STONE_WALL, EMPTY_WALL]),
-        new BiomeTileLayer([new BiomeTileEntry("phantasia:stone")], [STONE_WALL, EMPTY_WALL])
-    ));
+    .setTile(
+        new BiomeTile(
+            new BiomeTileLayer(
+                [new BiomeTileEntry("phantasia:stone")],
+                [STONE_WALL, EMPTY_WALL],
+            ),
+            new BiomeTileLayer(
+                [new BiomeTileEntry("phantasia:stone")],
+                [STONE_WALL, EMPTY_WALL],
+            ),
+            new BiomeTileLayer(
+                [new BiomeTileEntry("phantasia:stone")],
+                [STONE_WALL, EMPTY_WALL],
+            ),
+        ),
+    );
 
 /**
  * Depths - Lower cave biome
  */
 const depths = new Biome("phantasia:cave/depths")
     .setBackground("phantasia:background/depths", 0.7)
-    .setTile(new BiomeTile(
-        new BiomeTileLayer([new BiomeTileEntry("phantasia:nightrock")], [NIGHTROCK_WALL, EMPTY_WALL]),
-        new BiomeTileLayer([new BiomeTileEntry("phantasia:nightrock")], [NIGHTROCK_WALL, EMPTY_WALL]),
-        new BiomeTileLayer([new BiomeTileEntry("phantasia:nightrock")], [NIGHTROCK_WALL, EMPTY_WALL])
-    ));
+    .setTile(
+        new BiomeTile(
+            new BiomeTileLayer(
+                [new BiomeTileEntry("phantasia:nightrock")],
+                [NIGHTROCK_WALL, EMPTY_WALL],
+            ),
+            new BiomeTileLayer(
+                [new BiomeTileEntry("phantasia:nightrock")],
+                [NIGHTROCK_WALL, EMPTY_WALL],
+            ),
+            new BiomeTileLayer(
+                [new BiomeTileEntry("phantasia:nightrock")],
+                [NIGHTROCK_WALL, EMPTY_WALL],
+            ),
+        ),
+    );
 
 // Shared decorations
-[chasm, depths].forEach(b => {
-    CAVE_FOLIAGE.forEach(f => b.addFoliage(f));
-    CAVE_ORES.forEach(o => b.addStructure(o));
-    CAVE_MUSIC.forEach(m => b.addMusic(m));
+[chasm, depths].forEach((b) => {
+    CAVE_FOLIAGE.forEach((f) => b.addFoliage(f));
+    CAVE_ORES.forEach((o) => b.addStructure(o));
+    CAVE_MUSIC.forEach((m) => b.addMusic(m));
 });
 
-export default [
-    chasm.build("cave"),
-    depths.build("cave"),
-];
+export default [chasm.build("cave"), depths.build("cave")];

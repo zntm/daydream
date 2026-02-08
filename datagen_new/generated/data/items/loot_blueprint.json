@@ -24,12 +24,12 @@
             {
                 "id": "@phantasia:open_ui",
                 "parameters": {
-                    "ui": "ui/loot_blueprint.ui",
-                    "definition": "loot_blueprint_menu",
                     "bindings": {
                         "id": "component:id",
                         "turns_into": "component:turns_into"
-                    }
+                    },
+                    "definition": "loot_blueprint_menu",
+                    "ui": "ui/loot_blueprint.ui"
                 }
             }
         ],

@@ -62,7 +62,10 @@ const imageGroups = new Map<string, Dirent[]>();
 
 for (const file of allFiles) {
     const match = file.name.match(sequentialRegex);
-    const relDir = file.parentPath.replace(sourceImageDir, "").replace(/\\/g, "/").substring(1);
+    const relDir = file.parentPath
+        .replace(sourceImageDir, "")
+        .replace(/\\/g, "/")
+        .substring(1);
 
     if (match) {
         const groupKey = relDir;
@@ -79,7 +82,10 @@ for (const file of allFiles) {
 
 const individualPromises = individualFiles.map(async (file) => {
     const sourcePath = join(file.parentPath, file.name);
-    const relDir = file.parentPath.replace(sourceImageDir, "").replace(/\\/g, "/").substring(1);
+    const relDir = file.parentPath
+        .replace(sourceImageDir, "")
+        .replace(/\\/g, "/")
+        .substring(1);
 
     let [name, xoffsetStr, yoffsetStr, lengthStr]: any = file.name
         .replace(/\.png$/, "")
@@ -103,8 +109,9 @@ const individualPromises = individualFiles.map(async (file) => {
     const destFilePath = join(destImageDir, relDir, outputFileName);
     const destination = join(relDir, `${name}.png.json`).replace(/\\/g, "/");
 
-    await Bun.write(destFilePath, arrayBuffer, { createPath: true }).catch((error) =>
-        console.error(`Error writing file ${destFilePath}: ${error}`),
+    await Bun.write(destFilePath, arrayBuffer, { createPath: true }).catch(
+        (error) =>
+            console.error(`Error writing file ${destFilePath}: ${error}`),
     );
 
     return new DatagenReturnData(destination, data);

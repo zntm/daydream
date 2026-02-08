@@ -1,67 +1,74 @@
 import { DatagenReturnData } from "../../../../lib";
 import {
-    BreastplateItem,
-    HelmetItem,
+    Helmet,
+    Breastplate,
+    Leggings,
     ItemAccessory,
     ItemAccessoryType,
     ItemDurability,
-    LeggingsItem,
 } from "../";
 
 export class ArmorDataRegistry {
     defense: number;
     durability: number;
-
     constructor(defense: number, durability: number) {
         this.defense = defense;
         this.durability = durability;
     }
 }
 
-export default (
+// Create ArmorDataRegistry helper
+export const armor = (defense: number, durability: number): ArmorDataRegistry =>
+    new ArmorDataRegistry(defense, durability);
+
+interface ArmorSet {
+    helmet: ArmorDataRegistry;
+    breastplate: ArmorDataRegistry;
+    leggings: ArmorDataRegistry;
+}
+
+const DURABILITY_BAR = "#phantasia:item/generic/durability_bar";
+
+const makeArmor = (
+    factory: (id: string) => ReturnType<typeof Helmet>,
+    type: ItemAccessoryType,
     namespace: string,
     id: string,
-    armor: {
-        helmet: ArmorDataRegistry;
-        breastplate: ArmorDataRegistry;
-        leggings: ArmorDataRegistry;
-    },
-) => [
-        new DatagenReturnData(
-            `${id}_helmet.json`,
-            new HelmetItem(`${namespace}:${id}_helmet`)
-                .setItemAccessory(new ItemAccessory(ItemAccessoryType.Helmet, armor.helmet.defense))
-                .setItemDurability(
-                    new ItemDurability(
-                        armor.helmet.durability,
-                        "#phantasia:item/generic/durability_bar",
-                    ),
-                ),
-        ),
-        new DatagenReturnData(
-            `${id}_breastplate.json`,
-            new BreastplateItem(`${namespace}:${id}_breastplate`)
-                .setItemAccessory(
-                    new ItemAccessory(ItemAccessoryType.Breastplate, armor.breastplate.defense),
-                )
-                .setItemDurability(
-                    new ItemDurability(
-                        armor.breastplate.durability,
-                        "#phantasia:item/generic/durability_bar",
-                    ),
-                ),
-        ),
-        new DatagenReturnData(
-            `${id}_leggings.json`,
-            new LeggingsItem(`${namespace}:${id}_leggings`)
-                .setItemAccessory(
-                    new ItemAccessory(ItemAccessoryType.Leggings, armor.leggings.defense),
-                )
-                .setItemDurability(
-                    new ItemDurability(
-                        armor.leggings.durability,
-                        "#phantasia:item/generic/durability_bar",
-                    ),
-                ),
-        ),
-    ];
+    slot: string,
+    data: ArmorDataRegistry,
+) =>
+    new DatagenReturnData(
+        `${id}_${slot}.json`,
+        factory(`${namespace}:${id}_${slot}`)
+            .setItemAccessory(new ItemAccessory(type, data.defense))
+            .setItemDurability(
+                new ItemDurability(data.durability, DURABILITY_BAR),
+            ),
+    );
+
+export default (namespace: string, id: string, armor: ArmorSet) => [
+    makeArmor(
+        Helmet,
+        ItemAccessoryType.Helmet,
+        namespace,
+        id,
+        "helmet",
+        armor.helmet,
+    ),
+    makeArmor(
+        Breastplate,
+        ItemAccessoryType.Breastplate,
+        namespace,
+        id,
+        "breastplate",
+        armor.breastplate,
+    ),
+    makeArmor(
+        Leggings,
+        ItemAccessoryType.Leggings,
+        namespace,
+        id,
+        "leggings",
+        armor.leggings,
+    ),
+];

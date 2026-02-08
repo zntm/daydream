@@ -38,7 +38,9 @@ export default [
                     "#phantasia:item/generic/inventory_default",
                     [TileItemProperties.CanMirror],
                 )
-                    .setTileAudioProperties(new TileItemAudioProperties(0.05, 0))
+                    .setTileAudioProperties(
+                        new TileItemAudioProperties(0.05, 0),
+                    )
                     .setTileDrops([
                         new TileItemDrop(`phantasia:${id}`).setCondition(
                             dropIndex !== undefined
@@ -107,9 +109,14 @@ export default [
                     ItemType.Untouchable,
                     `phantasia:item/${id}`,
                     "#phantasia:item/generic/inventory_default",
-                    [TileItemProperties.CanMirror, TileItemProperties.IsFoliage],
+                    [
+                        TileItemProperties.CanMirror,
+                        TileItemProperties.IsFoliage,
+                    ],
                 )
-                    .setTileAudioProperties(new TileItemAudioProperties(0.05, 0))
+                    .setTileAudioProperties(
+                        new TileItemAudioProperties(0.05, 0),
+                    )
                     .setTileDrops([new TileItemDrop(`phantasia:${drop || id}`)])
                     .setTileHarvest(
                         new TileItemHarvest(
@@ -117,7 +124,7 @@ export default [
                             0,
                             new ItemParticle(
                                 particles ||
-                                "#phantasia:tile/particle_colour/twig",
+                                    "#phantasia:tile/particle_colour/twig",
                                 "#phantasia:tile/generic/harvest_particle_frequency",
                             ),
                         ),

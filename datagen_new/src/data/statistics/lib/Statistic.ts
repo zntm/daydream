@@ -22,7 +22,7 @@ export class Statistic {
     constructor(
         type: StatisticType,
         category: StatisticCategory,
-        defaultValue?: number
+        defaultValue?: number,
     ) {
         this.type = type;
         this.category = category;

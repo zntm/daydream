@@ -1,171 +1,123 @@
 import { ItemScript, ItemSkill } from "../lib";
 import { ArmorDataRegistry } from "../lib/groups/accessory.armor";
 
-class ToolDataRegistry {
+// Simple data interfaces instead of classes
+interface ToolData {
     damage: number;
     durability: number;
     skill?: ItemSkill;
-
-    constructor(damage: number, durability: number, skill?: ItemSkill) {
-        this.damage = damage;
-        this.durability = durability;
-        this.skill = skill;
-    }
 }
 
-class HarvestRegistry {
+interface HarvestData {
     hardness: number;
     level: number;
-
-    constructor(hardness: number, level: number) {
-        this.hardness = hardness;
-        this.level = level;
-    }
 }
 
-class TierRegistry {
+interface ArmorSet {
+    helmet: ArmorDataRegistry;
+    breastplate: ArmorDataRegistry;
+    leggings: ArmorDataRegistry;
+}
+
+interface ToolSet {
+    sword: ToolData;
+    pickaxe: ToolData;
+    axe: ToolData;
+    shovel: ToolData;
+}
+
+export interface TierData {
     namespace: string;
     id: string;
-    armor: {
-        helmet: ArmorDataRegistry;
-        breastplate: ArmorDataRegistry;
-        leggings: ArmorDataRegistry;
-    };
-    tools: {
-        sword: ToolDataRegistry;
-        pickaxe: ToolDataRegistry;
-        axe: ToolDataRegistry;
-        shovel: ToolDataRegistry;
-    };
-    harvest: HarvestRegistry;
-
-    constructor(
-        namespace: string,
-        id: string,
-        armor: {
-            helmet: ArmorDataRegistry;
-            breastplate: ArmorDataRegistry;
-            leggings: ArmorDataRegistry;
-        },
-        tools: {
-            sword: ToolDataRegistry;
-            pickaxe: ToolDataRegistry;
-            axe: ToolDataRegistry;
-            shovel: ToolDataRegistry;
-        },
-        harvest: HarvestRegistry,
-    ) {
-        this.namespace = namespace;
-        this.id = id;
-        this.armor = armor;
-        this.tools = tools;
-        this.harvest = harvest;
-    }
+    armor: ArmorSet;
+    tools: ToolSet;
+    harvest: HarvestData;
 }
 
-export default [
-    new TierRegistry("phantasia", "copper", {
-        helmet: new ArmorDataRegistry(2, 100),
-        breastplate: new ArmorDataRegistry(4, 136),
-        leggings: new ArmorDataRegistry(3, 108),
-    }, {
-        sword: new ToolDataRegistry(5, 162, new ItemSkill(
-            "charge",
-            0.5,
-            20,
-            new ItemScript(
-                "@phantasia:item/tool/sword_dash",
-                { power: 6 },
-            ),
-        )),
-        pickaxe: new ToolDataRegistry(4, 141, new ItemSkill(
-            "charge",
-            1.0,
-            25,
-            new ItemScript(
-                "@phantasia:item/tool/mine_area",
-                { count: 2 },
-            ),
-        )),
-        axe: new ToolDataRegistry(4, 133),
-        shovel: new ToolDataRegistry(3, 125),
-    }, new HarvestRegistry(1.12, 2)),
-    new TierRegistry("phantasia", "iron", {
-        helmet: new ArmorDataRegistry(4, 277),
-        breastplate: new ArmorDataRegistry(7, 308),
-        leggings: new ArmorDataRegistry(5, 244),
-    }, {
-        sword: new ToolDataRegistry(7, 367, new ItemSkill(
-            "charge",
-            0.5,
-            20,
-            new ItemScript(
-                "@phantasia:item/tool/sword_dash",
-                { power: 8 },
-            ),
-        )),
-        pickaxe: new ToolDataRegistry(6, 319, new ItemSkill(
-            "charge",
-            1.0,
-            25,
-            new ItemScript(
-                "@phantasia:item/tool/mine_area",
-                { count: 3 },
-            ),
-        )),
-        axe: new ToolDataRegistry(6, 300),
-        shovel: new ToolDataRegistry(4, 283),
-    }, new HarvestRegistry(1.19, 3)),
-    new TierRegistry("phantasia", "gold", {
-        helmet: new ArmorDataRegistry(6, 494),
-        breastplate: new ArmorDataRegistry(11, 671),
-        leggings: new ArmorDataRegistry(8, 531),
-    }, {
-        sword: new ToolDataRegistry(8, 799, new ItemSkill(
-            "charge",
-            0.5,
-            20,
-            new ItemScript(
-                "@phantasia:item/tool/sword_dash",
-                { power: 10 },
-            ),
-        )),
-        pickaxe: new ToolDataRegistry(7, 695, new ItemSkill(
-            "charge",
-            1.0,
-            25,
-            new ItemScript(
-                "@phantasia:item/tool/mine_area",
-                { count: 4 },
-            ),
-        )),
-        axe: new ToolDataRegistry(7, 653),
-        shovel: new ToolDataRegistry(5, 616),
-    }, new HarvestRegistry(1.25, 4)),
-    new TierRegistry("phantasia", "platinum", {
-        helmet: new ArmorDataRegistry(7, 766),
-        breastplate: new ArmorDataRegistry(13, 1041),
-        leggings: new ArmorDataRegistry(9, 823),
-    }, {
-        sword: new ToolDataRegistry(13, 1239, new ItemSkill(
-            "charge",
-            0.5,
-            20,
-            new ItemScript(
-                "@phantasia:item/tool/sword_dash",
-                { power: 11 },
-            ),
-        )),
-        pickaxe: new ToolDataRegistry(11, 1078, new ItemSkill(
-            "charge",
-            1.0,
-            25,
-            new ItemScript(
-                "@phantasia:item/tool/mine_area",
-                { count: 5 },
-            ),
-        )),
-        axe: new ToolDataRegistry(10, 1012),
-        shovel: new ToolDataRegistry(7, 955),
-    }, new HarvestRegistry(1.31, 5)),
+// Helper to create sword skill
+const swordSkill = (power: number) =>
+    new ItemSkill(
+        "charge",
+        0.5,
+        20,
+        new ItemScript("@phantasia:item/tool/sword_dash", { power }),
+    );
+
+// Helper to create pickaxe skill
+const pickaxeSkill = (count: number) =>
+    new ItemSkill(
+        "charge",
+        1.0,
+        25,
+        new ItemScript("@phantasia:item/tool/mine_area", { count }),
+    );
+
+// Plain data - no class constructors needed
+const TIERS: TierData[] = [
+    {
+        namespace: "phantasia",
+        id: "copper",
+        armor: {
+            helmet: new ArmorDataRegistry(2, 100),
+            breastplate: new ArmorDataRegistry(4, 136),
+            leggings: new ArmorDataRegistry(3, 108),
+        },
+        tools: {
+            sword: { damage: 5, durability: 162, skill: swordSkill(6) },
+            pickaxe: { damage: 4, durability: 141, skill: pickaxeSkill(2) },
+            axe: { damage: 4, durability: 133 },
+            shovel: { damage: 3, durability: 125 },
+        },
+        harvest: { hardness: 1.12, level: 2 },
+    },
+    {
+        namespace: "phantasia",
+        id: "iron",
+        armor: {
+            helmet: new ArmorDataRegistry(4, 277),
+            breastplate: new ArmorDataRegistry(7, 308),
+            leggings: new ArmorDataRegistry(5, 244),
+        },
+        tools: {
+            sword: { damage: 7, durability: 367, skill: swordSkill(8) },
+            pickaxe: { damage: 6, durability: 319, skill: pickaxeSkill(3) },
+            axe: { damage: 6, durability: 300 },
+            shovel: { damage: 4, durability: 283 },
+        },
+        harvest: { hardness: 1.19, level: 3 },
+    },
+    {
+        namespace: "phantasia",
+        id: "gold",
+        armor: {
+            helmet: new ArmorDataRegistry(6, 494),
+            breastplate: new ArmorDataRegistry(11, 671),
+            leggings: new ArmorDataRegistry(8, 531),
+        },
+        tools: {
+            sword: { damage: 8, durability: 799, skill: swordSkill(10) },
+            pickaxe: { damage: 7, durability: 695, skill: pickaxeSkill(4) },
+            axe: { damage: 7, durability: 653 },
+            shovel: { damage: 5, durability: 616 },
+        },
+        harvest: { hardness: 1.25, level: 4 },
+    },
+    {
+        namespace: "phantasia",
+        id: "platinum",
+        armor: {
+            helmet: new ArmorDataRegistry(7, 766),
+            breastplate: new ArmorDataRegistry(13, 1041),
+            leggings: new ArmorDataRegistry(9, 823),
+        },
+        tools: {
+            sword: { damage: 13, durability: 1239, skill: swordSkill(11) },
+            pickaxe: { damage: 11, durability: 1078, skill: pickaxeSkill(5) },
+            axe: { damage: 10, durability: 1012 },
+            shovel: { damage: 7, durability: 955 },
+        },
+        harvest: { hardness: 1.31, level: 5 },
+    },
 ];
+
+export default TIERS;

@@ -15,6 +15,4 @@ const debris = new Particle("phantasia:particle/tile/harvest")
     .setDirection(new ParticleDirection(SmartValue.FloatRandom(200, 340)))
     .setGravity(new ParticleGravity().setDirectional(0.2));
 
-export default [
-    new DatagenReturnData("debris.json", debris),
-];
+export default [new DatagenReturnData("debris.json", debris)];

@@ -15,7 +15,7 @@ class PassiveCreature extends Creature {
         hp: number,
         movementType: CreatureMovementType,
         sprite: CreatureSprite | { [key: string]: CreatureSprite },
-        attribute: Attribute
+        attribute: Attribute,
     ) {
         super(
             id,
@@ -23,7 +23,7 @@ class PassiveCreature extends Creature {
             CreatureHostilityType.Passive,
             movementType,
             sprite,
-            attribute
+            attribute,
         );
     }
 }
@@ -37,19 +37,31 @@ export default [
         {
             black: new CreatureSprite(
                 new CreatureSpriteData("phantasia:creature/rabbit/idle/black"),
-                new CreatureSpriteData("phantasia:creature/rabbit/moving/black")
+                new CreatureSpriteData(
+                    "phantasia:creature/rabbit/moving/black",
+                ),
             ),
             default: new CreatureSprite(
-                new CreatureSpriteData("phantasia:creature/rabbit/idle/default"),
-                new CreatureSpriteData("phantasia:creature/rabbit/moving/default")
+                new CreatureSpriteData(
+                    "phantasia:creature/rabbit/idle/default",
+                ),
+                new CreatureSpriteData(
+                    "phantasia:creature/rabbit/moving/default",
+                ),
             ),
             spotted: new CreatureSprite(
-                new CreatureSpriteData("phantasia:creature/rabbit/idle/spotted"),
-                new CreatureSpriteData("phantasia:creature/rabbit/moving/spotted")
+                new CreatureSpriteData(
+                    "phantasia:creature/rabbit/idle/spotted",
+                ),
+                new CreatureSpriteData(
+                    "phantasia:creature/rabbit/moving/spotted",
+                ),
             ),
             white: new CreatureSprite(
                 new CreatureSpriteData("phantasia:creature/rabbit/idle/white"),
-                new CreatureSpriteData("phantasia:creature/rabbit/moving/white")
+                new CreatureSpriteData(
+                    "phantasia:creature/rabbit/moving/white",
+                ),
             ),
         },
         new Attribute()
@@ -58,7 +70,7 @@ export default [
             .setEyeLevel(3)
             .setGravity(0.5)
             .setJump(2.2, 4.9, 11)
-            .setMovementSpeed(0.4)
+            .setMovementSpeed(0.4),
     )
         .setDrops([new ItemDrop("phantasia:raw_rabbit")])
         .setPredators(["phantasia:fox"])
@@ -72,15 +84,23 @@ export default [
         {
             cold: new CreatureSprite(
                 new CreatureSpriteData("phantasia:creature/chicken/idle/cold"),
-                new CreatureSpriteData("phantasia:creature/chicken/moving/cold")
+                new CreatureSpriteData(
+                    "phantasia:creature/chicken/moving/cold",
+                ),
             ),
             default: new CreatureSprite(
-                new CreatureSpriteData("phantasia:creature/chicken/idle/default"),
-                new CreatureSpriteData("phantasia:creature/chicken/moving/default")
+                new CreatureSpriteData(
+                    "phantasia:creature/chicken/idle/default",
+                ),
+                new CreatureSpriteData(
+                    "phantasia:creature/chicken/moving/default",
+                ),
             ),
             warm: new CreatureSprite(
                 new CreatureSpriteData("phantasia:creature/chicken/idle/warm"),
-                new CreatureSpriteData("phantasia:creature/chicken/moving/warm")
+                new CreatureSpriteData(
+                    "phantasia:creature/chicken/moving/warm",
+                ),
             ),
         },
         new Attribute()
@@ -90,15 +110,11 @@ export default [
             .setEyeLevel(3)
             .setGravity(0.5)
             .setJump(2.2, 4.6, 10)
-            .setMovementSpeed(0.4)
+            .setMovementSpeed(0.4),
     )
         .setDrops([
             new ItemDrop("phantasia:raw_chicken"),
-            new ItemDrop(
-                "phantasia:feather",
-                SmartValue.IntRandom(1, 3),
-                0.7
-            ),
+            new ItemDrop("phantasia:feather", SmartValue.IntRandom(1, 3), 0.7),
         ])
         .build(),
 
@@ -110,15 +126,15 @@ export default [
         {
             brown: new CreatureSprite(
                 new CreatureSpriteData("phantasia:creature/fox/idle/brown"),
-                new CreatureSpriteData("phantasia:creature/fox/moving/brown")
+                new CreatureSpriteData("phantasia:creature/fox/moving/brown"),
             ),
             default: new CreatureSprite(
                 new CreatureSpriteData("phantasia:creature/fox/idle/default"),
-                new CreatureSpriteData("phantasia:creature/fox/moving/default")
+                new CreatureSpriteData("phantasia:creature/fox/moving/default"),
             ),
             snow: new CreatureSprite(
                 new CreatureSpriteData("phantasia:creature/fox/idle/snow"),
-                new CreatureSpriteData("phantasia:creature/fox/moving/snow")
+                new CreatureSpriteData("phantasia:creature/fox/moving/snow"),
             ),
         },
         new Attribute()
@@ -127,7 +143,7 @@ export default [
             .setEyeLevel(3)
             .setGravity(0.5)
             .setJump(2.2, 4.9, 10)
-            .setMovementSpeed(0.5)
+            .setMovementSpeed(0.5),
     )
         .setContactDamage(3)
         .build(),

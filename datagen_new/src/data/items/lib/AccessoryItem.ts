@@ -9,29 +9,37 @@ export enum ItemAccessoryType {
     Accessory = "accessory",
 }
 
+interface AttributeModifier {
+    attribute: string;
+    modifier: unknown;
+}
+
 export class ItemAccessory {
     private type: ItemAccessoryType;
     private defense: number;
-    private attributes?: { attribute: string; modifier: any }[];
+    private attributes?: AttributeModifier[];
 
     constructor(type: ItemAccessoryType, defense: number) {
         this.type = type;
         this.defense = defense;
     }
 
-    addAttribute(attribute: string, modifier: any) {
+    addAttribute(attribute: string, modifier: unknown): this {
         this.attributes ??= [];
         this.attributes.push({ attribute, modifier });
         return this;
     }
 }
 
-export abstract class Accessory extends Item {
-    // @ts-ignore
-    protected item?: {
+/**
+ * Base accessory item - armor pieces and accessories.
+ */
+export class Accessory extends Item {
+    // @ts-ignore - override parent item
+    protected item: {
         armor?: ItemAccessory;
         durability?: ItemDurability;
-    };
+    } = {};
 
     constructor(id: string) {
         super(
@@ -41,48 +49,29 @@ export abstract class Accessory extends Item {
         );
     }
 
-    setItemAccessory(armor: ItemAccessory) {
-        this.item ??= {};
+    setItemAccessory(armor: ItemAccessory): this {
         this.item.armor = armor;
-
         return this;
     }
 
-    setItemDurability(durability: ItemDurability) {
-        this.item ??= {};
+    setItemDurability(durability: ItemDurability): this {
         this.item.durability = durability;
-
         return this;
     }
 
-    addAttribute(attribute: string, modifier: any) {
-        if (this.item?.armor) {
-            this.item.armor.addAttribute(attribute, modifier);
-        }
+    addAttribute(attribute: string, modifier: unknown): this {
+        this.item.armor?.addAttribute(attribute, modifier);
         return this;
     }
 }
 
-export class HelmetItem extends Accessory {
-    constructor(id: string) {
-        super(id);
-    }
-}
+// Empty subclasses kept for semantic distinction and export compatibility
+export class HelmetItem extends Accessory {}
+export class BreastplateItem extends Accessory {}
+export class LeggingsItem extends Accessory {}
+export class AccessoryItem extends Accessory {}
 
-export class BreastplateItem extends Accessory {
-    constructor(id: string) {
-        super(id);
-    }
-}
-
-export class LeggingsItem extends Accessory {
-    constructor(id: string) {
-        super(id);
-    }
-}
-
-export class AccessoryItem extends Accessory {
-    constructor(id: string) {
-        super(id);
-    }
-}
+// Factory functions for cleaner call sites
+export const Helmet = (id: string) => new HelmetItem(id);
+export const Breastplate = (id: string) => new BreastplateItem(id);
+export const Leggings = (id: string) => new LeggingsItem(id);

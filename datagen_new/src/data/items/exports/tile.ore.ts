@@ -40,7 +40,9 @@ export default oreRegistries.map(
                     [TileItemProperties.IsTile],
                 )
                     .setTileDrops([
-                        new TileItemDrop(`${namespace}:item/${id}_block`).setCondition(
+                        new TileItemDrop(
+                            `${namespace}:item/${id}_block`,
+                        ).setCondition(
                             new TileItemCondition(
                                 "#phantasia:item/type/pickaxe",
                                 harvestLevel,
@@ -55,11 +57,15 @@ export default oreRegistries.map(
                                 particles,
                                 "#phantasia:tile/generic/harvest_particle_frequency",
                             ),
-                            new TileItemCondition("#phantasia:item/type/pickaxe"),
+                            new TileItemCondition(
+                                "#phantasia:item/type/pickaxe",
+                            ),
                         ),
                     )
                     .setTileSFX("#phantasia:tile/sfx/stone")
-                    .setTileAudioProperties(new TileItemAudioProperties(0.65, 0.5)),
+                    .setTileAudioProperties(
+                        new TileItemAudioProperties(0.65, 0.5),
+                    ),
             ),
             new DatagenReturnData(
                 `${id}_ore.json`,
@@ -74,7 +80,9 @@ export default oreRegistries.map(
                     ],
                 )
                     .setTileDrops([
-                        new TileItemDrop(`${namespace}:item/${id}_ore`).setCondition(
+                        new TileItemDrop(
+                            `${namespace}:item/${id}_ore`,
+                        ).setCondition(
                             new TileItemCondition(
                                 "#phantasia:item/type/pickaxe",
                                 harvestLevel,
@@ -89,11 +97,15 @@ export default oreRegistries.map(
                                 particles,
                                 "#phantasia:tile/generic/harvest_particle_frequency",
                             ),
-                            new TileItemCondition("#phantasia:item/type/pickaxe"),
+                            new TileItemCondition(
+                                "#phantasia:item/type/pickaxe",
+                            ),
                         ),
                     )
                     .setTileSFX("#phantasia:tile/sfx/stone")
-                    .setTileAudioProperties(new TileItemAudioProperties(0.65, 0.5)),
+                    .setTileAudioProperties(
+                        new TileItemAudioProperties(0.65, 0.5),
+                    ),
             ),
         ];
 

@@ -15,6 +15,4 @@ const harvest = new Particle("phantasia:particle/tile/harvest")
     .setDirection(new ParticleDirection(SmartValue.FloatRandom(20, 160)))
     .setGravity(new ParticleGravity().setDirectional(3));
 
-export default [
-    new DatagenReturnData("tile/harvest.json", harvest),
-];
+export default [new DatagenReturnData("tile/harvest.json", harvest)];

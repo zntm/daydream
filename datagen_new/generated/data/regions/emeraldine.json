@@ -14,8 +14,8 @@
         {
             "biome": "phantasia:cave/depths",
             "min_depth": 150,
-            "noise_threshold": 0.7,
-            "noise_scale": 0.015
+            "noise_scale": 0.015,
+            "noise_threshold": 0.7
         }
     ],
     "gradient_strength": 0.015,

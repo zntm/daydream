@@ -1,5 +1,11 @@
 import { DatagenReturnData } from "../../../lib";
-import { ItemComponent, ItemScript, ItemType, TileItem, TileItemProperties } from "../lib";
+import {
+    ItemComponent,
+    ItemScript,
+    ItemType,
+    TileItem,
+    TileItemProperties,
+} from "../lib";
 import { liquidRegistries } from "../registries";
 
 export default liquidRegistries.map(

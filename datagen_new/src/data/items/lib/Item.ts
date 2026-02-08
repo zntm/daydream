@@ -4,15 +4,16 @@ import { type ItemPropertiesType, TileItemProperties } from "./ItemProperties";
 import type { ItemScript } from "./ItemScript";
 import { ItemType } from "./ItemType";
 
+/**
+ * Base Item class - the foundation for all game items.
+ */
 export class Item {
     private type: ItemType;
     private sprite: string;
     private inventory: string | ItemInventory;
     private properties?: ItemPropertiesType[];
-    private item?: {
-        components?: {
-            [key: string]: ItemComponentData;
-        };
+    protected item?: {
+        components?: Record<string, ItemComponentData>;
         on_use?: ItemScript[];
     };
 
@@ -26,28 +27,21 @@ export class Item {
         this.sprite = sprite;
         this.inventory = inventory;
 
-        if (properties !== undefined) {
-            this.properties = Array.isArray(properties)
-                ? properties.toSorted()
-                : [properties];
+        if (properties?.length) {
+            this.properties = [...properties].sort();
         }
     }
 
-    addItemComponent(key: string, component: ItemComponentData): Item {
+    addItemComponent(key: string, component: ItemComponentData): this {
         this.item ??= {};
         this.item.components ??= {};
-
         this.item.components[key] = component;
-
         return this;
     }
 
-    setItemOnUse(on_use: ItemScript[]): Item {
+    setItemOnUse(scripts: ItemScript[]): this {
         this.item ??= {};
-        this.item.on_use ??= [];
-
-        this.item.on_use.push(...on_use);
-
+        this.item.on_use = [...(this.item.on_use ?? []), ...scripts];
         return this;
     }
 }

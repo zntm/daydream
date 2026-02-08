@@ -18,23 +18,23 @@ const crest = new Biome("phantasia:surface/crest")
     .setBackground("phantasia:background/ocean", 0.7)
     .setIsOcean()
     .setTerrainModifier(-80, 0.3)
-    .setTile(new BiomeTile(
-        new BiomeTileLayer(
-            [new BiomeTileEntry("phantasia:sand")],
-            [SANDSTONE_WALL, EMPTY_WALL]
+    .setTile(
+        new BiomeTile(
+            new BiomeTileLayer(
+                [new BiomeTileEntry("phantasia:sand")],
+                [SANDSTONE_WALL, EMPTY_WALL],
+            ),
+            new BiomeTileLayer(
+                [new BiomeTileEntry("phantasia:gravel")],
+                [STONE_WALL, EMPTY_WALL],
+            ),
+            new BiomeTileLayer(
+                [new BiomeTileEntry("phantasia:stone")],
+                [STONE_WALL, EMPTY_WALL],
+            ),
         ),
-        new BiomeTileLayer(
-            [new BiomeTileEntry("phantasia:gravel")],
-            [STONE_WALL, EMPTY_WALL]
-        ),
-        new BiomeTileLayer(
-            [new BiomeTileEntry("phantasia:stone")],
-            [STONE_WALL, EMPTY_WALL]
-        )
-    ))
+    )
     .addMusic(new BiomeMusic("phantasia:music/12_hours_at_ease", 0.6))
     .addMusic(new BiomeMusic("phantasia:music/liminal", 0.7));
 
-export default [
-    crest.build(),
-];
+export default [crest.build()];

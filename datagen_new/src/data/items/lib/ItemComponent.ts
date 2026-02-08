@@ -12,6 +12,7 @@ export enum ItemComponentType {
     String = "string",
 }
 
+/** Component data for tile/item custom properties */
 class ItemComponentData {
     private type: ItemComponentType;
     private default: string | number;
@@ -26,160 +27,33 @@ class ItemComponentData {
     ) {
         this.type = type;
         this.default = defaultValue;
-
-        if (min !== undefined) {
-            this.min = min;
-        }
-
-        if (max !== undefined) {
-            this.max = max;
-        }
+        if (min !== undefined) this.min = min;
+        if (max !== undefined) this.max = max;
     }
 }
 
-export abstract class ItemComponent {
-    static u8(
-        defaultValue: number,
-        min?: number,
-        max?: number,
-    ): ItemComponentData {
-        return new ItemComponentData(
-            ItemComponentType.U8,
-            defaultValue,
-            min,
-            max,
-        );
-    }
+// Factory helper - DRYs up the repetitive factory methods
+const makeFactory =
+    (type: ItemComponentType) =>
+    (defaultValue: number, min?: number, max?: number) =>
+        new ItemComponentData(type, defaultValue, min, max);
 
-    static u16(
-        defaultValue: number,
-        min?: number,
-        max?: number,
-    ): ItemComponentData {
-        return new ItemComponentData(
-            ItemComponentType.U16,
-            defaultValue,
-            min,
-            max,
-        );
-    }
-
-    static u32(
-        defaultValue: number,
-        min?: number,
-        max?: number,
-    ): ItemComponentData {
-        return new ItemComponentData(
-            ItemComponentType.U32,
-            defaultValue,
-            min,
-            max,
-        );
-    }
-
-    static u64(
-        defaultValue: number,
-        min?: number,
-        max?: number,
-    ): ItemComponentData {
-        return new ItemComponentData(
-            ItemComponentType.U64,
-            defaultValue,
-            min,
-            max,
-        );
-    }
-
-    static s8(
-        defaultValue: number,
-        min?: number,
-        max?: number,
-    ): ItemComponentData {
-        return new ItemComponentData(
-            ItemComponentType.S8,
-            defaultValue,
-            min,
-            max,
-        );
-    }
-
-    static s16(
-        defaultValue: number,
-        min?: number,
-        max?: number,
-    ): ItemComponentData {
-        return new ItemComponentData(
-            ItemComponentType.S16,
-            defaultValue,
-            min,
-            max,
-        );
-    }
-
-    static s32(
-        defaultValue: number,
-        min?: number,
-        max?: number,
-    ): ItemComponentData {
-        return new ItemComponentData(
-            ItemComponentType.S32,
-            defaultValue,
-            min,
-            max,
-        );
-    }
-
-    static f16(
-        defaultValue: number,
-        min?: number,
-        max?: number,
-    ): ItemComponentData {
-        return new ItemComponentData(
-            ItemComponentType.F16,
-            defaultValue,
-            min,
-            max,
-        );
-    }
-
-    static f32(
-        defaultValue: number,
-        min?: number,
-        max?: number,
-    ): ItemComponentData {
-        return new ItemComponentData(
-            ItemComponentType.F32,
-            defaultValue,
-            min,
-            max,
-        );
-    }
-
-    static f64(
-        defaultValue: number,
-        min?: number,
-        max?: number,
-    ): ItemComponentData {
-        return new ItemComponentData(
-            ItemComponentType.F64,
-            defaultValue,
-            min,
-            max,
-        );
-    }
-
-    static string(
-        defaultValue: string,
-        min?: number,
-        max?: number,
-    ): ItemComponentData {
-        return new ItemComponentData(
-            ItemComponentType.String,
-            defaultValue,
-            min,
-            max,
-        );
-    }
-}
+/**
+ * Factory functions for creating typed item components.
+ */
+export const ItemComponent = {
+    u8: makeFactory(ItemComponentType.U8),
+    u16: makeFactory(ItemComponentType.U16),
+    u32: makeFactory(ItemComponentType.U32),
+    u64: makeFactory(ItemComponentType.U64),
+    s8: makeFactory(ItemComponentType.S8),
+    s16: makeFactory(ItemComponentType.S16),
+    s32: makeFactory(ItemComponentType.S32),
+    f16: makeFactory(ItemComponentType.F16),
+    f32: makeFactory(ItemComponentType.F32),
+    f64: makeFactory(ItemComponentType.F64),
+    string: (defaultValue: string, min?: number, max?: number) =>
+        new ItemComponentData(ItemComponentType.String, defaultValue, min, max),
+} as const;
 
 export type { ItemComponentData };

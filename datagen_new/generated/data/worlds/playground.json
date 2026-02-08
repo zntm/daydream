@@ -3,25 +3,25 @@
         "cave": {
             "default": [
                 {
+                    "end": 1024,
                     "id": "phantasia:cave/depths",
                     "start": 768,
-                    "end": 1024,
                     "transition": {
-                        "type": "random",
-                        "octaves": 4,
+                        "max": 22,
                         "min": 2,
-                        "max": 22
+                        "octaves": 4,
+                        "type": "random"
                     }
                 },
                 {
+                    "end": 800,
                     "id": "phantasia:cave/chasm",
                     "start": 0,
-                    "end": 800,
                     "transition": {
-                        "type": "random",
-                        "octaves": 0,
+                        "max": 22,
                         "min": 2,
-                        "max": 22
+                        "octaves": 0,
+                        "type": "random"
                     }
                 }
             ],
@@ -37,14 +37,14 @@
                 "spline_y": {
                     "points": [
                         {
+                            "easing": "linear",
                             "position": 0,
-                            "value": -1,
-                            "easing": "linear"
+                            "value": -1
                         },
                         {
+                            "easing": "linear",
                             "position": 1024,
-                            "value": 1,
-                            "easing": "linear"
+                            "value": 1
                         }
                     ],
                     "type": "spline"
@@ -70,14 +70,14 @@
                 "spline_x": {
                     "points": [
                         {
+                            "easing": "linear",
                             "position": 0,
-                            "value": -1,
-                            "easing": "linear"
+                            "value": -1
                         },
                         {
+                            "easing": "linear",
                             "position": 1024,
-                            "value": 1,
-                            "easing": "linear"
+                            "value": 1
                         }
                     ],
                     "type": "spline"
@@ -98,24 +98,24 @@
     "cave": {
         "aquifers": [
             {
-                "type": "phantasia:water",
-                "depth_min": 20,
                 "depth_max": 200,
-                "threshold": 200,
-                "octaves": 3,
+                "depth_min": 20,
                 "fill_level": 8,
                 "noise_scale": 0.02,
-                "range": 255
+                "octaves": 3,
+                "range": 255,
+                "threshold": 200,
+                "type": "phantasia:water"
             },
             {
-                "type": "phantasia:lava",
-                "depth_min": 350,
                 "depth_max": 450,
-                "threshold": 220,
-                "octaves": 2,
+                "depth_min": 350,
                 "fill_level": 8,
                 "noise_scale": 0.02,
-                "range": 255
+                "octaves": 2,
+                "range": 255,
+                "threshold": 220,
+                "type": "phantasia:lava"
             }
         ],
         "breach_depth": -8,
@@ -128,9 +128,9 @@
         "depth_smoothing": {
             "points": [
                 {
+                    "easing": "ease_out",
                     "position": 0,
-                    "value": 0,
-                    "easing": "ease_out"
+                    "value": 0
                 },
                 {
                     "position": 16,
@@ -151,15 +151,15 @@
         },
         "system": [
             {
-                "range_min": 50,
                 "range_max": 70,
+                "range_min": 50,
                 "threshold": {
                     "octaves": 4
                 }
             },
             {
-                "range_min": 116,
                 "range_max": 140,
+                "range_min": 116,
                 "threshold": {
                     "octaves": 4
                 }
@@ -174,13 +174,13 @@
     "celestials": [
         {
             "id": "phantasia:world/playground/celestial/sun",
-            "time_range_min": 0,
-            "time_range_max": 890
+            "time_range_max": 890,
+            "time_range_min": 0
         },
         {
             "id": "phantasia:world/playground/celestial/moon",
-            "time_range_min": 890,
-            "time_range_max": 1200
+            "time_range_max": 1200,
+            "time_range_min": 890
         }
     ],
     "id": "playground",
@@ -214,23 +214,23 @@
         "diurnal": [
             {
                 "id": "dawn",
-                "time_range_min": 0,
-                "time_range_max": 240
+                "time_range_max": 240,
+                "time_range_min": 0
             },
             {
                 "id": "day",
-                "time_range_min": 240,
-                "time_range_max": 820
+                "time_range_max": 820,
+                "time_range_min": 240
             },
             {
                 "id": "dusk",
-                "time_range_min": 820,
-                "time_range_max": 890
+                "time_range_max": 890,
+                "time_range_min": 820
             },
             {
                 "id": "night",
-                "time_range_min": 890,
-                "time_range_max": 1200
+                "time_range_max": 1200,
+                "time_range_min": 890
             }
         ],
         "length": 1200,

@@ -1,15 +1,21 @@
+import { Item } from "./Item";
 import { ItemInventory } from "./ItemInventory";
+import { ItemCooldown } from "./ItemCooldown";
+import { ItemSFX } from "./ItemSFX";
 import { ItemType } from "./ItemType";
-
-const { Item } = import.meta.require("./Item");
 
 export class ConsumableItemData {
     private hp: number;
     private saturation: number;
-    private cooldown: any;
-    private sfx: any;
+    private cooldown: ItemCooldown;
+    private sfx: ItemSFX;
 
-    constructor(hp: number, saturation: number, cooldown: any, sfx: any) {
+    constructor(
+        hp: number,
+        saturation: number,
+        cooldown: ItemCooldown,
+        sfx: ItemSFX,
+    ) {
         this.hp = hp;
         this.saturation = saturation;
         this.cooldown = cooldown;
@@ -18,9 +24,10 @@ export class ConsumableItemData {
 }
 
 export class ConsumableItem extends Item {
-    private item?: {
+    // @ts-ignore - override parent item with consumable-specific fields
+    protected item: {
         consumable?: ConsumableItemData;
-    };
+    } = {};
 
     constructor(
         sprite: string,
@@ -28,14 +35,11 @@ export class ConsumableItem extends Item {
         consumable: ConsumableItemData,
     ) {
         super(ItemType.Default, sprite, inventory);
-
-        this.setItemConsumable(consumable);
+        this.item.consumable = consumable;
     }
 
-    setItemConsumable(consumable: ConsumableItemData) {
-        this.item ??= {};
+    setItemConsumable(consumable: ConsumableItemData): this {
         this.item.consumable = consumable;
-
         return this;
     }
 }

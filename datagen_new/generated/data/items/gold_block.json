@@ -11,11 +11,11 @@
         },
         "drops": [
             {
-                "id": "phantasia:item/gold_block",
                 "condition": {
                     "id": "#phantasia:item/type/pickaxe",
                     "level": 1
-                }
+                },
+                "id": "phantasia:item/gold_block"
             }
         ],
         "harvest": {

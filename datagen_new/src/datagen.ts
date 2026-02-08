@@ -1,60 +1,85 @@
 import { existsSync, readdirSync, statSync } from "fs";
 import { join } from "path";
 
-const recursiveSort = (obj: any): any => {
-    if (typeof obj === "object" && !Array.isArray(obj)) {
-        obj = Object.fromEntries(Object.entries(obj).sort());
+/** Recursively sort object keys for deterministic JSON output */
+const sortKeys = (obj: unknown): unknown => {
+    if (obj === null || typeof obj !== "object") return obj;
+    if (Array.isArray(obj)) return obj.map(sortKeys);
 
-        for (const [key, value] of Object.entries(obj)) {
-            obj[key] = recursiveSort(value);
-        }
-    }
-
-    return obj;
+    return Object.fromEntries(
+        Object.entries(obj)
+            .sort(([a], [b]) => a.localeCompare(b))
+            .map(([k, v]) => [k, sortKeys(v)]),
+    );
 };
 
-for (const dir of ["assets", "data"]) {
-    if (!existsSync(join(__dirname, dir))) continue;
+/** Collect all export files from a directory */
+const getExportFiles = (baseDir: string): string[] => {
+    const exportDir = join(baseDir, "exports");
+    if (!existsSync(exportDir)) return [];
 
-    for (const type of readdirSync(join(__dirname, dir))) {
-        for (const e of readdirSync(
-            join(__dirname, `./${dir}/${type}/exports`),
-        )) {
-            const s = join(__dirname, `./${dir}/${type}/exports/${e}`);
+    return readdirSync(exportDir)
+        .filter(
+            (f) => f.endsWith(".ts") && statSync(join(exportDir, f)).isFile(),
+        )
+        .map((f) => join(exportDir, f));
+};
 
-            if (!statSync(s).isFile() || !(e as string).endsWith(".ts"))
-                continue;
+/** Main datagen loop */
+const runDatagen = async () => {
+    const srcDir = __dirname;
+    const outDir = join(srcDir, "../generated");
+    let fileCount = 0;
 
-            const module = await import(s);
-            let datagen = module.default;
+    for (const category of ["assets", "data"]) {
+        const categoryDir = join(srcDir, category);
+        if (!existsSync(categoryDir)) continue;
 
-            if (!datagen) continue;
+        for (const type of readdirSync(categoryDir)) {
+            const typeDir = join(categoryDir, type);
+            const exportFiles = getExportFiles(typeDir);
 
-            // Handle async exports (e.g. from Sound registry)
-            if (datagen instanceof Promise) {
-                datagen = await datagen;
-            }
+            for (const file of exportFiles) {
+                try {
+                    const module = await import(file);
+                    let datagen = module.default;
+                    if (!datagen) continue;
 
-            try {
-                for (const d of Array.isArray(datagen)
-                    ? datagen.flat(Infinity)
-                    : [datagen]) {
-                    d.data = recursiveSort(d.data);
+                    // Handle async exports
+                    if (datagen instanceof Promise) {
+                        datagen = await datagen;
+                    }
 
-                    Bun.write(
-                        join(
-                            __dirname,
-                            `../generated/${dir}/${type}/${d.destination}`,
-                        ),
-                        JSON.stringify(d.data, null, "    "),
-                        {
-                            mode: 0o644,
-                        },
-                    );
+                    // Flatten and write each entry
+                    const entries = Array.isArray(datagen)
+                        ? datagen.flat(Infinity)
+                        : [datagen];
+
+                    for (const entry of entries) {
+                        const dest = join(
+                            outDir,
+                            category,
+                            type,
+                            entry.destination,
+                        );
+                        const json = JSON.stringify(
+                            sortKeys(entry.data),
+                            null,
+                            "    ",
+                        );
+
+                        await Bun.write(dest, json, { mode: 0o644 });
+                        fileCount++;
+                    }
+                } catch (err) {
+                    const relPath = file.replace(srcDir, "");
+                    console.error(`Error processing ${relPath}:`, err);
                 }
-            } catch (error) {
-                console.error(`Error generating ${dir}/${type}/${e}:`, error);
             }
         }
     }
-}
+
+    console.log(`Generated ${fileCount} files.`);
+};
+
+runDatagen();

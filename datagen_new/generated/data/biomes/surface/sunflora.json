@@ -5,76 +5,76 @@
     },
     "creatures": [
         {
-            "id": "phantasia:chicken",
             "amount": {
+                "type": "smart_value:irandom",
                 "values": {
-                    "min": 1,
-                    "max": 4
-                },
-                "type": "smart_value:irandom"
+                    "max": 4,
+                    "min": 1
+                }
             },
             "chance": 0.04,
-            "time_range_min": 0,
+            "id": "phantasia:chicken",
+            "tile": "#phantasia:tile/creature_spawn/animal",
             "time_range_max": 890,
-            "tile": "#phantasia:tile/creature_spawn/animal"
+            "time_range_min": 0
         },
         {
-            "id": "phantasia:rabbit",
             "amount": {
+                "type": "smart_value:irandom",
                 "values": {
-                    "min": 1,
-                    "max": 5
-                },
-                "type": "smart_value:irandom"
+                    "max": 5,
+                    "min": 1
+                }
             },
             "chance": 0.02,
-            "time_range_min": 0,
+            "id": "phantasia:rabbit",
+            "tile": "#phantasia:tile/creature_spawn/animal",
             "time_range_max": 890,
-            "tile": "#phantasia:tile/creature_spawn/animal"
+            "time_range_min": 0
         }
     ],
     "foliage": [
         {
-            "id": "phantasia:short_grass",
             "chance": 0.2,
-            "generate_on": "#phantasia:tile/placement/plant_on"
+            "generate_on": "#phantasia:tile/placement/plant_on",
+            "id": "phantasia:short_grass"
         },
         {
-            "id": "phantasia:tall_grass",
             "chance": 0.02,
-            "generate_on": "#phantasia:tile/placement/plant_on"
+            "generate_on": "#phantasia:tile/placement/plant_on",
+            "id": "phantasia:tall_grass"
         },
         {
-            "id": "phantasia:dandelion",
             "chance": 0.06,
-            "generate_on": "#phantasia:tile/placement/plant_on"
+            "generate_on": "#phantasia:tile/placement/plant_on",
+            "id": "phantasia:dandelion"
         },
         {
-            "id": "phantasia:seeding_dandelion",
             "chance": 0.02,
-            "generate_on": "#phantasia:tile/placement/plant_on"
+            "generate_on": "#phantasia:tile/placement/plant_on",
+            "id": "phantasia:seeding_dandelion"
         }
     ],
     "music": [
         {
-            "id": "phantasia:music/field_of_concourse",
-            "gain": 0.7
+            "gain": 0.7,
+            "id": "phantasia:music/field_of_concourse"
         },
         {
-            "id": "phantasia:music/liminal",
-            "gain": 0.7
+            "gain": 0.7,
+            "id": "phantasia:music/liminal"
         },
         {
-            "id": "phantasia:music/red_apple",
-            "gain": 0.6
+            "gain": 0.6,
+            "id": "phantasia:music/red_apple"
         },
         {
-            "id": "phantasia:music/soft_hour",
-            "gain": 0.6
+            "gain": 0.6,
+            "id": "phantasia:music/soft_hour"
         },
         {
-            "id": "phantasia:music/someday_it_will_rain",
-            "gain": 0.7
+            "gain": 0.7,
+            "id": "phantasia:music/someday_it_will_rain"
         }
     ],
     "shore_tiles": {
@@ -95,14 +95,14 @@
     },
     "structures": [
         {
-            "id": "phantasia:tall_foliage/sunflower",
             "chance": 0.15,
-            "generate_on": "#phantasia:tile/placement/plant_on"
+            "generate_on": "#phantasia:tile/placement/plant_on",
+            "id": "phantasia:tall_foliage/sunflower"
         },
         {
-            "id": "phantasia:tree/oak",
             "chance": 0.03,
-            "generate_on": "#phantasia:tile/placement/plant_on"
+            "generate_on": "#phantasia:tile/placement/plant_on",
+            "id": "phantasia:tree/oak"
         }
     ],
     "tile": {

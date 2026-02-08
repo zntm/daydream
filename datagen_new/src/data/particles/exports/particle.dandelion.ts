@@ -10,7 +10,7 @@ import {
 
 const seedingDandelion = new Particle(
     "phantasia:particle/tile/seeding_dandelion",
-    [ParticleProperties.HasCollision]
+    [ParticleProperties.HasCollision],
 )
     .setLifetime(SmartValue.FloatRandom(0.75, 2.5))
     .setSize(new ParticleSize().setScale(SmartValue.FloatRandom(1, 2)))

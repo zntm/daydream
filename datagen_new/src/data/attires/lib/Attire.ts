@@ -6,7 +6,7 @@ export class Attire {
     constructor(
         colour: string | string[],
         icon: string,
-        white?: string | string[]
+        white?: string | string[],
     ) {
         this.colour = colour;
         this.icon = icon;

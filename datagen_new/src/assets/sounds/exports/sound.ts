@@ -33,7 +33,10 @@ const sfxRegex = /^([a-zA-Z_]+)(\d+)\.ogg$/;
 
 // Paths relative to this file
 // d:\GitHub\daydream\datagen_new\src\assets\sounds\exports\sound.ts
-const sourceAudioDir = join(__dirname, "../../../../../datagen/src/data/sounds");
+const sourceAudioDir = join(
+    __dirname,
+    "../../../../../datagen/src/data/sounds",
+);
 const destAudioDir = join(__dirname, "../../../../generated/assets/sounds");
 
 const allFiles = readdirSync(sourceAudioDir, {
@@ -92,7 +95,8 @@ const individualPromises = individualFiles.map(async (file) => {
     const destFilePath = join(destAudioDir, relDir, `${id}.ogg`);
     const f = Bun.file(sourcePath);
 
-    await f.arrayBuffer()
+    await f
+        .arrayBuffer()
         .then((arrayBuffer) => {
             Bun.write(destFilePath, arrayBuffer, {
                 createPath: true,
@@ -104,7 +108,7 @@ const individualPromises = individualFiles.map(async (file) => {
 
     return new DatagenReturnData(
         join(relDir, `${id}.ogg.json`).replace(/\\/g, "/"),
-        new Music(duration, title, author)
+        new Music(duration, title, author),
     );
 });
 
@@ -135,14 +139,15 @@ const groupPromises = Array.from(sfxGroups.entries()).map(
             }
 
             const f = Bun.file(sourcePath);
-            await f.arrayBuffer()
+            await f
+                .arrayBuffer()
                 .then((arrayBuffer) => {
                     Bun.write(destPath, arrayBuffer, {
                         createPath: true,
                     });
                 })
                 .catch((error) =>
-                    console.error(`Error writing file ${destPath}: ${error}`)
+                    console.error(`Error writing file ${destPath}: ${error}`),
                 );
 
             return { duration };
@@ -152,9 +157,9 @@ const groupPromises = Array.from(sfxGroups.entries()).map(
 
         return new DatagenReturnData(
             `${groupKey}.ogg.json`.replace(/\\/g, "/"),
-            durationData
+            durationData,
         );
-    }
+    },
 );
 
 export default await Promise.all([...individualPromises, ...groupPromises]);

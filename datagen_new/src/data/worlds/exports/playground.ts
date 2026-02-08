@@ -13,7 +13,13 @@ import {
     WorldAquifer,
     WorldSky,
 } from "../lib";
-import { DatagenReturnData, Noise, Spline, SplinePoint, SplineEasing } from "../../../lib";
+import {
+    DatagenReturnData,
+    Noise,
+    Spline,
+    SplinePoint,
+    SplineEasing,
+} from "../../../lib";
 
 /**
  * Playground - Main test world ported with full parity
@@ -36,11 +42,19 @@ const playground = new World("playground")
                 new WorldTimeDiurnal("dusk", 820, 890),
                 new WorldTimeDiurnal("night", 890, 1200),
             ],
-            1200
-        )
+            1200,
+        ),
     )
-    .addCelestial(new WorldCelestial("phantasia:world/playground/celestial/sun", 0, 890))
-    .addCelestial(new WorldCelestial("phantasia:world/playground/celestial/moon", 890, 1200))
+    .addCelestial(
+        new WorldCelestial("phantasia:world/playground/celestial/sun", 0, 890),
+    )
+    .addCelestial(
+        new WorldCelestial(
+            "phantasia:world/playground/celestial/moon",
+            890,
+            1200,
+        ),
+    )
     .setBiome(
         new WorldBiome(
             [
@@ -59,7 +73,7 @@ const playground = new World("playground")
                     new Spline([
                         new SplinePoint(0, -1, SplineEasing.Linear),
                         new SplinePoint(1024, 1, SplineEasing.Linear),
-                    ])
+                    ]),
                 ),
             new Noise(4.5)
                 .setScale(0.005)
@@ -67,14 +81,14 @@ const playground = new World("playground")
                     new Spline([
                         new SplinePoint(0, -1, SplineEasing.Linear),
                         new SplinePoint(1024, 1, SplineEasing.Linear),
-                    ])
+                    ]),
                 ),
             new Noise(2.75).setScale(0.005),
             "phantasia:world/playground/map",
-            new Noise(2, 22, 34)
+            new Noise(2, 22, 34),
         )
             .setCaveMetadata(new Noise(4.5), new Noise(2.75))
-            .setSky(new WorldSky())
+            .setSky(new WorldSky()),
     )
     .setSurface(new WorldSurface(512, new Noise(4, 40, 96)))
     .setCave(
@@ -91,8 +105,10 @@ const playground = new World("playground")
                     new SplinePoint(0, 0, SplineEasing.EaseOut),
                     new SplinePoint(16, 0.3),
                     new SplinePoint(64, 1),
-                ])
-            )
+                ]),
+            ),
     );
 
-export default [new DatagenReturnData(`${playground.getId()}.json`, playground)];
+export default [
+    new DatagenReturnData(`${playground.getId()}.json`, playground),
+];

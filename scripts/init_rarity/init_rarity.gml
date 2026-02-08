@@ -4,6 +4,8 @@ function init_rarity(_directory, _namespace = "phantasia", _type = 0)
 {
     var _data = buffer_load_json(_directory);
     
+    if (!is_struct(_data)) return;
+    
     var _names  = struct_get_names(_data);
     var _length = array_length(_names);
     

@@ -4,40 +4,40 @@
             "entries": [
                 {
                     "item": {
-                        "id": "phantasia:twig",
                         "amount": {
+                            "type": "smart_value:irandom",
                             "values": {
-                                "min": 2,
-                                "max": 3
-                            },
-                            "type": "smart_value:irandom"
-                        }
+                                "max": 3,
+                                "min": 2
+                            }
+                        },
+                        "id": "phantasia:twig"
                     },
                     "weight": 3
                 },
                 {
                     "item": {
-                        "id": "phantasia:rock",
                         "amount": {
+                            "type": "smart_value:irandom",
                             "values": {
-                                "min": 2,
-                                "max": 3
-                            },
-                            "type": "smart_value:irandom"
-                        }
+                                "max": 3,
+                                "min": 2
+                            }
+                        },
+                        "id": "phantasia:rock"
                     },
                     "weight": 3
                 },
                 {
                     "item": {
-                        "id": "phantasia:coal",
                         "amount": {
+                            "type": "smart_value:irandom",
                             "values": {
-                                "min": 1,
-                                "max": 2
-                            },
-                            "type": "smart_value:irandom"
-                        }
+                                "max": 2,
+                                "min": 1
+                            }
+                        },
+                        "id": "phantasia:coal"
                     },
                     "weight": 1
                 }

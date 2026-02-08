@@ -26,20 +26,19 @@ const TAIGA_MUSIC = [
  */
 const pinesteep = new Biome("phantasia:surface/pinesteep")
     .setBackground("phantasia:background/taiga", 0.7)
-    .setTile(new BiomeTile(
-        new BiomeTileLayer(
-            [SNOW_BASE],
-            [DIRT_WALL, EMPTY_WALL]
+    .setTile(
+        new BiomeTile(
+            new BiomeTileLayer([SNOW_BASE], [DIRT_WALL, EMPTY_WALL]),
+            new BiomeTileLayer(
+                [new BiomeTileEntry("phantasia:dirt")],
+                [DIRT_WALL, EMPTY_WALL],
+            ),
+            new BiomeTileLayer(
+                [new BiomeTileEntry("phantasia:stone")],
+                [STONE_WALL, EMPTY_WALL],
+            ),
         ),
-        new BiomeTileLayer(
-            [new BiomeTileEntry("phantasia:dirt")],
-            [DIRT_WALL, EMPTY_WALL]
-        ),
-        new BiomeTileLayer(
-            [new BiomeTileEntry("phantasia:stone")],
-            [STONE_WALL, EMPTY_WALL]
-        )
-    ))
+    )
     .addFoliage(new BiomeFoliage("phantasia:snow_pile", 0.15))
     .addFoliage(new BiomeFoliage("phantasia:rock", 0.04))
     .addFoliage(new BiomeFoliage("phantasia:twig", 0.03))
@@ -48,30 +47,29 @@ const pinesteep = new Biome("phantasia:surface/pinesteep")
     .addCreature(
         new BiomeCreature("phantasia:rabbit", SmartValue.IntRandom(1, 2), 0.01)
             .setTimeRange(0, 890)
-            .setTile("#phantasia:tile/creature_spawn/animal")
+            .setTile("#phantasia:tile/creature_spawn/animal"),
     );
 
-TAIGA_MUSIC.forEach(m => pinesteep.addMusic(m));
+TAIGA_MUSIC.forEach((m) => pinesteep.addMusic(m));
 
 /**
  * Silversteep - Taiga with silver pine variant (more silver pine leaves)
  */
 const silversteep = new Biome("phantasia:surface/silversteep")
     .setBackground("phantasia:background/taiga", 0.7)
-    .setTile(new BiomeTile(
-        new BiomeTileLayer(
-            [SNOW_BASE],
-            [DIRT_WALL, EMPTY_WALL]
+    .setTile(
+        new BiomeTile(
+            new BiomeTileLayer([SNOW_BASE], [DIRT_WALL, EMPTY_WALL]),
+            new BiomeTileLayer(
+                [new BiomeTileEntry("phantasia:dirt")],
+                [DIRT_WALL, EMPTY_WALL],
+            ),
+            new BiomeTileLayer(
+                [new BiomeTileEntry("phantasia:stone")],
+                [STONE_WALL, EMPTY_WALL],
+            ),
         ),
-        new BiomeTileLayer(
-            [new BiomeTileEntry("phantasia:dirt")],
-            [DIRT_WALL, EMPTY_WALL]
-        ),
-        new BiomeTileLayer(
-            [new BiomeTileEntry("phantasia:stone")],
-            [STONE_WALL, EMPTY_WALL]
-        )
-    ))
+    )
     .addFoliage(new BiomeFoliage("phantasia:snow_pile", 0.18))
     .addFoliage(new BiomeFoliage("phantasia:rock", 0.03))
     .addStructure(new BiomeStructure("phantasia:tree/silver_pine", 0.14))
@@ -79,12 +77,9 @@ const silversteep = new Biome("phantasia:surface/silversteep")
     .addCreature(
         new BiomeCreature("phantasia:rabbit", SmartValue.IntRandom(1, 2), 0.008)
             .setTimeRange(0, 890)
-            .setTile("#phantasia:tile/creature_spawn/animal")
+            .setTile("#phantasia:tile/creature_spawn/animal"),
     );
 
-TAIGA_MUSIC.forEach(m => silversteep.addMusic(m));
+TAIGA_MUSIC.forEach((m) => silversteep.addMusic(m));
 
-export default [
-    pinesteep.build(),
-    silversteep.build(),
-];
+export default [pinesteep.build(), silversteep.build()];

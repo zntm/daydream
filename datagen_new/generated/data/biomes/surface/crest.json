@@ -6,12 +6,12 @@
     "is_ocean": true,
     "music": [
         {
-            "id": "phantasia:music/12_hours_at_ease",
-            "gain": 0.6
+            "gain": 0.6,
+            "id": "phantasia:music/12_hours_at_ease"
         },
         {
-            "id": "phantasia:music/liminal",
-            "gain": 0.7
+            "gain": 0.7,
+            "id": "phantasia:music/liminal"
         }
     ],
     "terrain_modifier": {

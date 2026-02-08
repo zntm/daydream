@@ -104,12 +104,18 @@ export class Region {
         noise_scale?: number;
         gradient_strength?: number;
     }): Region {
-        if (config.height_offset !== undefined) this.height_offset = config.height_offset;
-        if (config.base_height !== undefined) this.base_height = config.base_height;
-        if (config.amplitude_min !== undefined) this.amplitude_min = config.amplitude_min;
-        if (config.amplitude_max !== undefined) this.amplitude_max = config.amplitude_max;
-        if (config.noise_scale !== undefined) this.terrain_noise_scale = config.noise_scale;
-        if (config.gradient_strength !== undefined) this.gradient_strength = config.gradient_strength;
+        if (config.height_offset !== undefined)
+            this.height_offset = config.height_offset;
+        if (config.base_height !== undefined)
+            this.base_height = config.base_height;
+        if (config.amplitude_min !== undefined)
+            this.amplitude_min = config.amplitude_min;
+        if (config.amplitude_max !== undefined)
+            this.amplitude_max = config.amplitude_max;
+        if (config.noise_scale !== undefined)
+            this.terrain_noise_scale = config.noise_scale;
+        if (config.gradient_strength !== undefined)
+            this.gradient_strength = config.gradient_strength;
         return this;
     }
 

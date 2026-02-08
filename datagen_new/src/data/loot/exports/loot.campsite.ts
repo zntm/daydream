@@ -6,11 +6,11 @@ const abandonedCampsite = new Loot([
     new LootPool(SmartValue.IntRandom(3, 8), [
         new LootEntry(
             new LootEntryItem("phantasia:coal", SmartValue.IntRandom(2, 4)),
-            1
+            1,
         ),
         new LootEntry(
             new LootEntryItem("phantasia:twig", SmartValue.IntRandom(1, 2)),
-            1
+            1,
         ),
         new LootEntry("$EMPTY", 2),
     ]),

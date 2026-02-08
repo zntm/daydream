@@ -9,7 +9,7 @@ const regions = [
         .addCaveBiome(
             new CaveBiomeRule("phantasia:cave/depths")
                 .setDepthRange(150, 1024)
-                .setNoiseThreshold(0.7, 0.015)
+                .setNoiseThreshold(0.7, 0.015),
         ),
 
     new Region("desert")
@@ -25,7 +25,7 @@ const regions = [
         .addCaveBiome(
             new CaveBiomeRule("phantasia:cave/depths")
                 .setDepthRange(250, 1024)
-                .setNoiseThreshold(0.6)
+                .setNoiseThreshold(0.6),
         ),
 
     new Region("taiga")
@@ -41,11 +41,10 @@ const regions = [
         .addCaveBiome(
             new CaveBiomeRule("phantasia:cave/depths")
                 .setDepthRange(100, 1024)
-                .setNoiseThreshold(0.5)
+                .setNoiseThreshold(0.5),
         ),
 ];
 
 export default regions.map(
-    (region) =>
-        new DatagenReturnData(`${region.getId()}.json`, region)
+    (region) => new DatagenReturnData(`${region.getId()}.json`, region),
 );

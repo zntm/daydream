@@ -5,32 +5,32 @@
     },
     "foliage": [
         {
-            "id": "phantasia:dead_bush",
             "chance": 0.02,
-            "generate_on": "#phantasia:tile/placement/plant_on"
+            "generate_on": "#phantasia:tile/placement/plant_on",
+            "id": "phantasia:dead_bush"
         },
         {
-            "id": "phantasia:rock",
             "chance": 0.03,
-            "generate_on": "#phantasia:tile/placement/plant_on"
+            "generate_on": "#phantasia:tile/placement/plant_on",
+            "id": "phantasia:rock"
         }
     ],
     "music": [
         {
-            "id": "phantasia:music/desert_wind",
-            "gain": 0.6
+            "gain": 0.6,
+            "id": "phantasia:music/desert_wind"
         }
     ],
     "structures": [
         {
-            "id": "phantasia:cactus/small",
             "chance": 0.05,
-            "generate_on": "#phantasia:tile/placement/plant_on"
+            "generate_on": "#phantasia:tile/placement/plant_on",
+            "id": "phantasia:cactus/small"
         },
         {
-            "id": "phantasia:cactus/large",
             "chance": 0.02,
-            "generate_on": "#phantasia:tile/placement/plant_on"
+            "generate_on": "#phantasia:tile/placement/plant_on",
+            "id": "phantasia:cactus/large"
         }
     ],
     "terrain_modifier": {

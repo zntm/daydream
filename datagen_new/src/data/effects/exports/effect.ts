@@ -2,12 +2,7 @@ import { DatagenReturnData } from "../../../lib";
 import { Attribute } from "../../../lib/Attribute";
 import { Effect, EffectModifier, EffectParticle } from "../lib";
 
-export default [
-    "bad_luck",
-    "speed",
-    "poison",
-    "regeneration",
-].map((id) => {
+export default ["bad_luck", "speed", "poison", "regeneration"].map((id) => {
     let effect: Effect;
 
     switch (id) {
@@ -21,8 +16,8 @@ export default [
                     EffectParticle.sprite(
                         "phantasia:particle/entity/effect",
                         0.1,
-                        "#5E5E5E"
-                    )
+                        "#5E5E5E",
+                    ),
                 );
             break;
         case "speed":
@@ -34,8 +29,8 @@ export default [
                     EffectParticle.sprite(
                         "phantasia:particle/entity/effect",
                         0.2,
-                        "#FFFFFF"
-                    )
+                        "#FFFFFF",
+                    ),
                 );
             break;
         case "poison":
@@ -48,8 +43,8 @@ export default [
                     EffectParticle.sprite(
                         "phantasia:particle/entity/effect",
                         0.2,
-                        "#74C242"
-                    )
+                        "#74C242",
+                    ),
                 );
             break;
         case "regeneration":
@@ -61,8 +56,8 @@ export default [
                     EffectParticle.sprite(
                         "phantasia:particle/entity/effect",
                         0.1,
-                        "#FF6666"
-                    )
+                        "#FF6666",
+                    ),
                 );
             break;
         default:

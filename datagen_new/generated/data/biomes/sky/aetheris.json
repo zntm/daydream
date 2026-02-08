@@ -6,12 +6,12 @@
     "is_skyland": true,
     "music": [
         {
-            "id": "phantasia:music/ornaments_of_the_sky",
-            "gain": 0.7
+            "gain": 0.7,
+            "id": "phantasia:music/ornaments_of_the_sky"
         },
         {
-            "id": "phantasia:music/soft_hour",
-            "gain": 0.6
+            "gain": 0.6,
+            "id": "phantasia:music/soft_hour"
         }
     ],
     "terrain_modifier": {

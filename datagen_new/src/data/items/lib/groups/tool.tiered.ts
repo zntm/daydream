@@ -1,74 +1,62 @@
 import { DatagenReturnData } from "../../../../lib";
 import {
-    AxeItem,
     ItemDurability,
     ItemHarvest,
-    PickaxeItem,
-    ShovelItem,
-    SwordItem,
     ItemSkill,
+    Sword,
+    Pickaxe,
+    Axe,
+    Shovel,
 } from "../";
+
+interface ToolData {
+    damage: number;
+    durability: number;
+    skill?: ItemSkill;
+}
+
+interface HarvestData {
+    hardness: number;
+    level: number;
+}
+
+interface ToolsConfig {
+    sword: ToolData;
+    pickaxe: ToolData;
+    axe: ToolData;
+    shovel: ToolData;
+}
+
+const DURABILITY_BAR = "#phantasia:item/generic/durability_bar";
+
+const makeTool = (
+    factory: (sprite: string) => ReturnType<typeof Sword>,
+    namespace: string,
+    id: string,
+    toolType: string,
+    data: ToolData,
+    harvest?: HarvestData,
+) => {
+    const tool = factory(`${namespace}:item/${id}_${toolType}`)
+        .setDamage(data.damage)
+        .setItemDurability(new ItemDurability(data.durability, DURABILITY_BAR))
+        .setSkill(data.skill);
+
+    if (harvest) {
+        tool.setItemHarvest(new ItemHarvest(harvest.hardness, harvest.level));
+    }
+
+    return new DatagenReturnData(`${id}_${toolType}.json`, tool);
+};
 
 export default (
     namespace: string,
     id: string,
-    tools: {
-        sword: { damage: number; durability: number; skill?: ItemSkill };
-        pickaxe: { damage: number; durability: number; skill?: ItemSkill };
-        axe: { damage: number; durability: number; skill?: ItemSkill };
-        shovel: { damage: number; durability: number; skill?: ItemSkill };
-    },
-    harvest: { hardness: number; level: number },
+    tools: ToolsConfig,
+    harvest: HarvestData,
 ) => [
-        new DatagenReturnData(
-            `${id}_sword.json`,
-            new SwordItem(`${namespace}:item/${id}_sword`)
-                .setDamage(tools.sword.damage)
-                .setItemDurability(
-                    new ItemDurability(
-                        tools.sword.durability,
-                        "#phantasia:item/generic/durability_bar",
-                    ),
-                )
-                .setSkill(tools.sword.skill!),
-        ),
-        new DatagenReturnData(
-            `${id}_pickaxe.json`,
-            new PickaxeItem(`${namespace}:item/${id}_pickaxe`)
-                .setDamage(tools.pickaxe.damage)
-                .setItemDurability(
-                    new ItemDurability(
-                        tools.pickaxe.durability,
-                        "#phantasia:item/generic/durability_bar",
-                    ),
-                )
-                .setItemHarvest(new ItemHarvest(harvest.hardness, harvest.level))
-                .setSkill(tools.pickaxe.skill!),
-        ),
-        new DatagenReturnData(
-            `${id}_axe.json`,
-            new AxeItem(`${namespace}:item/${id}_axe`)
-                .setDamage(tools.axe.damage)
-                .setItemDurability(
-                    new ItemDurability(
-                        tools.axe.durability,
-                        "#phantasia:item/generic/durability_bar",
-                    ),
-                )
-                .setItemHarvest(new ItemHarvest(harvest.hardness, harvest.level))
-                .setSkill(tools.axe.skill!),
-        ),
-        new DatagenReturnData(
-            `${id}_shovel.json`,
-            new ShovelItem(`${namespace}:item/${id}_shovel`)
-                .setDamage(tools.shovel.damage)
-                .setItemDurability(
-                    new ItemDurability(
-                        tools.shovel.durability,
-                        "#phantasia:item/generic/durability_bar",
-                    ),
-                )
-                .setItemHarvest(new ItemHarvest(harvest.hardness, harvest.level))
-                .setSkill(tools.shovel.skill!),
-        ),
-    ];
+    makeTool(Sword, namespace, id, "sword", tools.sword),
+    makeTool(Pickaxe, namespace, id, "pickaxe", tools.pickaxe, harvest),
+    makeTool(Axe, namespace, id, "axe", tools.axe, harvest),
+    makeTool(Shovel, namespace, id, "shovel", tools.shovel, harvest),
+];

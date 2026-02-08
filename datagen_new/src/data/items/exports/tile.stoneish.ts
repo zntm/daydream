@@ -259,7 +259,9 @@ export default [
                     ),
                 )
                 .setTileSFX("#phantasia:tile/sfx/dirt")
-                .setTileAudioProperties(new TileItemAudioProperties(0.15, 0.05)),
+                .setTileAudioProperties(
+                    new TileItemAudioProperties(0.15, 0.05),
+                ),
         );
     }),
 ];

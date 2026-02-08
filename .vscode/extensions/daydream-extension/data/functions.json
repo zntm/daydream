@@ -1,1551 +1,1551 @@
 [
     {
-        "name": "string",
         "description": "Converts any value to its string representation.",
         "example": "string(123); // \"123\"",
+        "name": "string",
         "parameters": [
             {
+                "description": "Value to convert",
                 "name": "val",
-                "type": "any",
-                "description": "Value to convert"
+                "type": "any"
             }
         ],
         "returnType": "string"
     },
     {
-        "name": "real",
         "description": "Converts a string to a number.",
         "example": "real(\"42\"); // 42",
+        "name": "real",
         "parameters": [
             {
+                "description": "String containing a number",
                 "name": "val",
-                "type": "string",
-                "description": "String containing a number"
+                "type": "string"
             }
         ],
         "returnType": "number"
     },
     {
-        "name": "string_length",
         "description": "Returns the length of a string.",
         "example": "string_length(\"Hello\"); // 5",
+        "name": "string_length",
         "parameters": [
             {
+                "description": "Input string",
                 "name": "str",
-                "type": "string",
-                "description": "Input string"
+                "type": "string"
             }
         ],
         "returnType": "number"
     },
     {
-        "name": "string_pos",
         "description": "Finds the position of a substring within a string.",
         "example": "string_pos(\"lo\", \"Hello\"); // 4",
+        "name": "string_pos",
         "parameters": [
             {
+                "description": "Substring to find",
                 "name": "substr",
-                "type": "string",
-                "description": "Substring to find"
+                "type": "string"
             },
             {
+                "description": "String to search in",
                 "name": "str",
-                "type": "string",
-                "description": "String to search in"
+                "type": "string"
             }
         ],
         "returnType": "number"
     },
     {
-        "name": "string_delete",
         "description": "Removes a part of a string.",
         "example": "string_delete(\"Hello World\", 6, 6); // \"Hello\"",
+        "name": "string_delete",
         "parameters": [
             {
+                "description": "Input string",
                 "name": "str",
-                "type": "string",
-                "description": "Input string"
+                "type": "string"
             },
             {
+                "description": "Start position (1-indexed)",
                 "name": "index",
-                "type": "number",
-                "description": "Start position (1-indexed)"
+                "type": "number"
             },
             {
+                "description": "Number of characters to delete",
                 "name": "count",
-                "type": "number",
-                "description": "Number of characters to delete"
+                "type": "number"
             }
         ],
         "returnType": "string"
     },
     {
-        "name": "string_insert",
         "description": "Inserts a substring into a string.",
         "example": "string_insert(\"World\", \"Hello \", 1); // \"Hello World\"",
+        "name": "string_insert",
         "parameters": [
             {
+                "description": "Base string",
                 "name": "str",
-                "type": "string",
-                "description": "Base string"
+                "type": "string"
             },
             {
+                "description": "String to insert",
                 "name": "substr",
-                "type": "string",
-                "description": "String to insert"
+                "type": "string"
             },
             {
+                "description": "Insertion position (1-indexed)",
                 "name": "index",
-                "type": "number",
-                "description": "Insertion position (1-indexed)"
+                "type": "number"
             }
         ],
         "returnType": "string"
     },
     {
-        "name": "string_replace",
         "description": "Replaces the first occurrence of a substring.",
         "example": "string_replace(\"Hello World\", \"World\", \"Daydream\"); // \"Hello Daydream\"",
+        "name": "string_replace",
         "parameters": [
             {
+                "description": "Original string",
                 "name": "str",
-                "type": "string",
-                "description": "Original string"
+                "type": "string"
             },
             {
+                "description": "Substring to replace",
                 "name": "old",
-                "type": "string",
-                "description": "Substring to replace"
+                "type": "string"
             },
             {
+                "description": "Replacement text",
                 "name": "new",
-                "type": "string",
-                "description": "Replacement text"
+                "type": "string"
             }
         ],
         "returnType": "string"
     },
     {
-        "name": "string_replace_all",
         "description": "Replaces all occurrences of a substring.",
         "example": "string_replace_all(\"ho ho ho\", \"ho\", \"he\"); // \"he he he\"",
+        "name": "string_replace_all",
         "parameters": [
             {
+                "description": "Original string",
                 "name": "str",
-                "type": "string",
-                "description": "Original string"
+                "type": "string"
             },
             {
+                "description": "Substring to replace",
                 "name": "old",
-                "type": "string",
-                "description": "Substring to replace"
+                "type": "string"
             },
             {
+                "description": "Replacement text",
                 "name": "new",
-                "type": "string",
-                "description": "Replacement text"
+                "type": "string"
             }
         ],
         "returnType": "string"
     },
     {
-        "name": "string_upper",
         "description": "Converts a string to uppercase.",
         "example": "string_upper(\"hello\"); // \"HELLO\"",
+        "name": "string_upper",
         "parameters": [
             {
+                "description": "Input string",
                 "name": "str",
-                "type": "string",
-                "description": "Input string"
+                "type": "string"
             }
         ],
         "returnType": "string"
     },
     {
-        "name": "string_lower",
         "description": "Converts a string to lowercase.",
         "example": "string_lower(\"HELLO\"); // \"hello\"",
+        "name": "string_lower",
         "parameters": [
             {
+                "description": "Input string",
                 "name": "str",
-                "type": "string",
-                "description": "Input string"
+                "type": "string"
             }
         ],
         "returnType": "string"
     },
     {
-        "name": "string_width",
         "description": "Returns the width of the string in pixels based on current font.",
+        "name": "string_width",
         "parameters": [
             {
+                "description": "Input string",
                 "name": "str",
-                "type": "string",
-                "description": "Input string"
+                "type": "string"
             }
         ],
         "returnType": "number"
     },
     {
-        "name": "string_height",
         "description": "Returns the height of the string in pixels based on current font.",
+        "name": "string_height",
         "parameters": [
             {
+                "description": "Input string",
                 "name": "str",
-                "type": "string",
-                "description": "Input string"
+                "type": "string"
             }
         ],
         "returnType": "number"
     },
     {
-        "name": "chr",
         "description": "Converts an ASCII/Unicode value to a character.",
         "example": "chr(65); // \"A\"",
+        "name": "chr",
         "parameters": [
             {
+                "description": "Character code",
                 "name": "code",
-                "type": "number",
-                "description": "Character code"
+                "type": "number"
             }
         ],
         "returnType": "string"
     },
     {
-        "name": "ord",
         "description": "Converts a character to its ASCII/Unicode value.",
         "example": "ord(\"A\"); // 65",
+        "name": "ord",
         "parameters": [
             {
+                "description": "Single character",
                 "name": "char",
-                "type": "string",
-                "description": "Single character"
+                "type": "string"
             }
         ],
         "returnType": "number"
     },
     {
-        "name": "is_string",
         "description": "Returns true if the value is a string.",
+        "name": "is_string",
         "parameters": [
             {
+                "description": "Value to check",
                 "name": "val",
-                "type": "any",
-                "description": "Value to check"
+                "type": "any"
             }
         ],
         "returnType": "boolean"
     },
     {
-        "name": "is_real",
         "description": "Returns true if the value is a number.",
+        "name": "is_real",
         "parameters": [
             {
+                "description": "Value to check",
                 "name": "val",
-                "type": "any",
-                "description": "Value to check"
+                "type": "any"
             }
         ],
         "returnType": "boolean"
     },
     {
-        "name": "is_numeric",
         "description": "Returns true if the value is numeric (real or int64).",
+        "name": "is_numeric",
         "parameters": [
             {
+                "description": "Value to check",
                 "name": "val",
-                "type": "any",
-                "description": "Value to check"
+                "type": "any"
             }
         ],
         "returnType": "boolean"
     },
     {
-        "name": "is_bool",
         "description": "Returns true if the value is a boolean.",
+        "name": "is_bool",
         "parameters": [
             {
+                "description": "Value to check",
                 "name": "val",
-                "type": "any",
-                "description": "Value to check"
+                "type": "any"
             }
         ],
         "returnType": "boolean"
     },
     {
-        "name": "is_array",
         "description": "Returns true if the value is an array.",
+        "name": "is_array",
         "parameters": [
             {
+                "description": "Value to check",
                 "name": "val",
-                "type": "any",
-                "description": "Value to check"
+                "type": "any"
             }
         ],
         "returnType": "boolean"
     },
     {
-        "name": "is_struct",
         "description": "Returns true if the value is a struct.",
+        "name": "is_struct",
         "parameters": [
             {
+                "description": "Value to check",
                 "name": "val",
-                "type": "any",
-                "description": "Value to check"
+                "type": "any"
             }
         ],
         "returnType": "boolean"
     },
     {
-        "name": "is_undefined",
         "description": "Returns true if the value is undefined.",
+        "name": "is_undefined",
         "parameters": [
             {
+                "description": "Value to check",
                 "name": "val",
-                "type": "any",
-                "description": "Value to check"
+                "type": "any"
             }
         ],
         "returnType": "boolean"
     },
     {
-        "name": "is_regex",
         "description": "Returns true if the value is a regex object.",
+        "name": "is_regex",
         "parameters": [
             {
+                "description": "Value to check",
                 "name": "val",
-                "type": "any",
-                "description": "Value to check"
+                "type": "any"
             }
         ],
         "returnType": "boolean"
     },
     {
-        "name": "typeof",
         "description": "Returns a string describing the type of the value.",
         "example": "typeof(123); // \"number\"",
+        "name": "typeof",
         "parameters": [
             {
+                "description": "Value to check",
                 "name": "val",
-                "type": "any",
-                "description": "Value to check"
+                "type": "any"
             }
         ],
         "returnType": "string"
     },
     {
-        "name": "floor",
         "description": "Rounds down to the nearest integer.",
         "example": "floor(3.9); // 3",
+        "name": "floor",
         "parameters": [
             {
+                "description": "Value to round down",
                 "name": "n",
-                "type": "number",
-                "description": "Value to round down"
+                "type": "number"
             }
         ],
         "returnType": "number"
     },
     {
-        "name": "ceil",
         "description": "Rounds up to the nearest integer.",
         "example": "ceil(3.1); // 4",
+        "name": "ceil",
         "parameters": [
             {
+                "description": "Value to round up",
                 "name": "n",
-                "type": "number",
-                "description": "Value to round up"
+                "type": "number"
             }
         ],
         "returnType": "number"
     },
     {
-        "name": "round",
         "description": "Rounds to the nearest integer.",
         "example": "round(3.6); // 4",
+        "name": "round",
         "parameters": [
             {
+                "description": "Value to round",
                 "name": "n",
-                "type": "number",
-                "description": "Value to round"
+                "type": "number"
             }
         ],
         "returnType": "number"
     },
     {
-        "name": "abs",
         "description": "Returns the absolute value.",
         "example": "abs(-5); // 5",
+        "name": "abs",
         "parameters": [
             {
+                "description": "Input value",
                 "name": "n",
-                "type": "number",
-                "description": "Input value"
+                "type": "number"
             }
         ],
         "returnType": "number"
     },
     {
-        "name": "sign",
         "description": "Returns the sign of a number.",
         "example": "sign(-50); // -1",
+        "name": "sign",
         "parameters": [
             {
+                "description": "Input value",
                 "name": "n",
-                "type": "number",
-                "description": "Input value"
+                "type": "number"
             }
         ],
         "returnType": "number"
     },
     {
-        "name": "min",
         "description": "Returns the smaller of two values.",
         "example": "min(10, 5); // 5",
+        "name": "min",
         "parameters": [
             {
+                "description": "First value",
                 "name": "a",
-                "type": "number",
-                "description": "First value"
+                "type": "number"
             },
             {
+                "description": "Second value",
                 "name": "b",
-                "type": "number",
-                "description": "Second value"
+                "type": "number"
             }
         ],
         "returnType": "number"
     },
     {
-        "name": "max",
         "description": "Returns the larger of two values.",
         "example": "max(10, 5); // 10",
+        "name": "max",
         "parameters": [
             {
+                "description": "First value",
                 "name": "a",
-                "type": "number",
-                "description": "First value"
+                "type": "number"
             },
             {
+                "description": "Second value",
                 "name": "b",
-                "type": "number",
-                "description": "Second value"
+                "type": "number"
             }
         ],
         "returnType": "number"
     },
     {
-        "name": "clamp",
         "description": "Constrains a value between min and max.",
         "example": "clamp(15, 0, 10); // 10",
+        "name": "clamp",
         "parameters": [
             {
+                "description": "Value to constrain",
                 "name": "val",
-                "type": "number",
-                "description": "Value to constrain"
+                "type": "number"
             },
             {
+                "description": "Minimum bound",
                 "name": "min",
-                "type": "number",
-                "description": "Minimum bound"
+                "type": "number"
             },
             {
+                "description": "Maximum bound",
                 "name": "max",
-                "type": "number",
-                "description": "Maximum bound"
+                "type": "number"
             }
         ],
         "returnType": "number"
     },
     {
-        "name": "lerp",
         "description": "Linearly interpolates between two values.",
         "example": "lerp(0, 100, 0.5); // 50",
+        "name": "lerp",
         "parameters": [
             {
+                "description": "Start value",
                 "name": "a",
-                "type": "number",
-                "description": "Start value"
+                "type": "number"
             },
             {
+                "description": "End value",
                 "name": "b",
-                "type": "number",
-                "description": "End value"
+                "type": "number"
             },
             {
+                "description": "Interpolation factor (0-1)",
                 "name": "t",
-                "type": "number",
-                "description": "Interpolation factor (0-1)"
+                "type": "number"
             }
         ],
         "returnType": "number"
     },
     {
-        "name": "power",
         "description": "Returns base raised to the power of exp.",
         "example": "power(2, 3); // 8",
+        "name": "power",
         "parameters": [
             {
+                "description": "The base",
                 "name": "base",
-                "type": "number",
-                "description": "The base"
+                "type": "number"
             },
             {
+                "description": "The exponent",
                 "name": "exp",
-                "type": "number",
-                "description": "The exponent"
+                "type": "number"
             }
         ],
         "returnType": "number"
     },
     {
-        "name": "sqrt",
         "description": "Returns the square root.",
         "example": "sqrt(16); // 4",
+        "name": "sqrt",
         "parameters": [
             {
+                "description": "Value (must be >= 0)",
                 "name": "n",
-                "type": "number",
-                "description": "Value (must be >= 0)"
+                "type": "number"
             }
         ],
         "returnType": "number"
     },
     {
-        "name": "sqr",
         "description": "Returns the square of a number.",
         "example": "sqr(5); // 25",
+        "name": "sqr",
         "parameters": [
             {
+                "description": "Value to square",
                 "name": "n",
-                "type": "number",
-                "description": "Value to square"
+                "type": "number"
             }
         ],
         "returnType": "number"
     },
     {
-        "name": "frac",
         "description": "Returns the fractional part of a number.",
         "example": "frac(3.75); // 0.75",
+        "name": "frac",
         "parameters": [
             {
+                "description": "Input value",
                 "name": "n",
-                "type": "number",
-                "description": "Input value"
+                "type": "number"
             }
         ],
         "returnType": "number"
     },
     {
-        "name": "sin",
         "description": "Returns sine of x in radians.",
+        "name": "sin",
         "parameters": [
             {
+                "description": "Angle in radians",
                 "name": "x",
-                "type": "number",
-                "description": "Angle in radians"
+                "type": "number"
             }
         ],
         "returnType": "number"
     },
     {
-        "name": "cos",
         "description": "Returns cosine of x in radians.",
+        "name": "cos",
         "parameters": [
             {
+                "description": "Angle in radians",
                 "name": "x",
-                "type": "number",
-                "description": "Angle in radians"
+                "type": "number"
             }
         ],
         "returnType": "number"
     },
     {
-        "name": "tan",
         "description": "Returns tangent of x in radians.",
+        "name": "tan",
         "parameters": [
             {
+                "description": "Angle in radians",
                 "name": "x",
-                "type": "number",
-                "description": "Angle in radians"
+                "type": "number"
             }
         ],
         "returnType": "number"
     },
     {
-        "name": "dsin",
         "description": "Returns sine of x in degrees.",
+        "name": "dsin",
         "parameters": [
             {
+                "description": "Angle in degrees",
                 "name": "x",
-                "type": "number",
-                "description": "Angle in degrees"
+                "type": "number"
             }
         ],
         "returnType": "number"
     },
     {
-        "name": "dcos",
         "description": "Returns cosine of x in degrees.",
+        "name": "dcos",
         "parameters": [
             {
+                "description": "Angle in degrees",
                 "name": "x",
-                "type": "number",
-                "description": "Angle in degrees"
+                "type": "number"
             }
         ],
         "returnType": "number"
     },
     {
-        "name": "dtan",
         "description": "Returns tangent of x in degrees.",
+        "name": "dtan",
         "parameters": [
             {
+                "description": "Angle in degrees",
                 "name": "x",
-                "type": "number",
-                "description": "Angle in degrees"
+                "type": "number"
             }
         ],
         "returnType": "number"
     },
     {
-        "name": "degtorad",
         "description": "Converts degrees to radians.",
+        "name": "degtorad",
         "parameters": [
             {
+                "description": "Degrees",
                 "name": "deg",
-                "type": "number",
-                "description": "Degrees"
+                "type": "number"
             }
         ],
         "returnType": "number"
     },
     {
-        "name": "radtodeg",
         "description": "Converts radians to degrees.",
+        "name": "radtodeg",
         "parameters": [
             {
+                "description": "Radians",
                 "name": "rad",
-                "type": "number",
-                "description": "Radians"
+                "type": "number"
             }
         ],
         "returnType": "number"
     },
     {
-        "name": "lengthdir_x",
         "description": "Returns the horizontal component of a vector.",
+        "name": "lengthdir_x",
         "parameters": [
             {
+                "description": "Vector length",
                 "name": "len",
-                "type": "number",
-                "description": "Vector length"
+                "type": "number"
             },
             {
+                "description": "Direction in degrees",
                 "name": "dir",
-                "type": "number",
-                "description": "Direction in degrees"
+                "type": "number"
             }
         ],
         "returnType": "number"
     },
     {
-        "name": "lengthdir_y",
         "description": "Returns the vertical component of a vector.",
+        "name": "lengthdir_y",
         "parameters": [
             {
+                "description": "Vector length",
                 "name": "len",
-                "type": "number",
-                "description": "Vector length"
+                "type": "number"
             },
             {
+                "description": "Direction in degrees",
                 "name": "dir",
-                "type": "number",
-                "description": "Direction in degrees"
+                "type": "number"
             }
         ],
         "returnType": "number"
     },
     {
-        "name": "point_distance",
         "description": "Returns the distance between two points.",
+        "name": "point_distance",
         "parameters": [
             {
+                "description": "X of point 1",
                 "name": "x1",
-                "type": "number",
-                "description": "X of point 1"
+                "type": "number"
             },
             {
+                "description": "Y of point 1",
                 "name": "y1",
-                "type": "number",
-                "description": "Y of point 1"
+                "type": "number"
             },
             {
+                "description": "X of point 2",
                 "name": "x2",
-                "type": "number",
-                "description": "X of point 2"
+                "type": "number"
             },
             {
+                "description": "Y of point 2",
                 "name": "y2",
-                "type": "number",
-                "description": "Y of point 2"
+                "type": "number"
             }
         ],
         "returnType": "number"
     },
     {
-        "name": "point_direction",
         "description": "Returns the direction from point 1 to point 2.",
+        "name": "point_direction",
         "parameters": [
             {
+                "description": "X of point 1",
                 "name": "x1",
-                "type": "number",
-                "description": "X of point 1"
+                "type": "number"
             },
             {
+                "description": "Y of point 1",
                 "name": "y1",
-                "type": "number",
-                "description": "Y of point 1"
+                "type": "number"
             },
             {
+                "description": "X of point 2",
                 "name": "x2",
-                "type": "number",
-                "description": "X of point 2"
+                "type": "number"
             },
             {
+                "description": "Y of point 2",
                 "name": "y2",
-                "type": "number",
-                "description": "Y of point 2"
+                "type": "number"
             }
         ],
         "returnType": "number"
     },
     {
-        "name": "exp",
         "description": "Returns e^n.",
+        "name": "exp",
         "parameters": [
             {
+                "description": "Exponent",
                 "name": "n",
-                "type": "number",
-                "description": "Exponent"
+                "type": "number"
             }
         ],
         "returnType": "number"
     },
     {
-        "name": "ln",
         "description": "Returns the natural logarithm function of x.",
+        "name": "ln",
         "parameters": [
             {
+                "description": "Input value",
                 "name": "x",
-                "type": "number",
-                "description": "Input value"
+                "type": "number"
             }
         ],
         "returnType": "number"
     },
     {
-        "name": "log2",
         "description": "Returns the base-2 logarithm.",
+        "name": "log2",
         "parameters": [
             {
+                "description": "Input value",
                 "name": "n",
-                "type": "number",
-                "description": "Input value"
+                "type": "number"
             }
         ],
         "returnType": "number"
     },
     {
-        "name": "log10",
         "description": "Returns the base-10 logarithm.",
+        "name": "log10",
         "parameters": [
             {
+                "description": "Input value",
                 "name": "n",
-                "type": "number",
-                "description": "Input value"
+                "type": "number"
             }
         ],
         "returnType": "number"
     },
     {
-        "name": "arcsin",
         "description": "Returns the arcsine in radians.",
+        "name": "arcsin",
         "parameters": [
             {
+                "description": "Input value",
                 "name": "x",
-                "type": "number",
-                "description": "Input value"
+                "type": "number"
             }
         ],
         "returnType": "number"
     },
     {
-        "name": "arccos",
         "description": "Returns the arccosine in radians.",
+        "name": "arccos",
         "parameters": [
             {
+                "description": "Input value",
                 "name": "x",
-                "type": "number",
-                "description": "Input value"
+                "type": "number"
             }
         ],
         "returnType": "number"
     },
     {
-        "name": "arctan",
         "description": "Returns the arctangent in radians.",
+        "name": "arctan",
         "parameters": [
             {
+                "description": "Input value",
                 "name": "x",
-                "type": "number",
-                "description": "Input value"
+                "type": "number"
             }
         ],
         "returnType": "number"
     },
     {
-        "name": "arctan2",
         "description": "Returns the angle from origin to (x, y) in radians.",
+        "name": "arctan2",
         "parameters": [
             {
+                "description": "Y coordinate",
                 "name": "y",
-                "type": "number",
-                "description": "Y coordinate"
+                "type": "number"
             },
             {
+                "description": "X coordinate",
                 "name": "x",
-                "type": "number",
-                "description": "X coordinate"
+                "type": "number"
             }
         ],
         "returnType": "number"
     },
     {
-        "name": "random",
         "description": "Returns a random floating-point number between 0 and x.",
+        "name": "random",
         "parameters": [
             {
+                "description": "Upper bound",
                 "name": "x",
-                "type": "number",
-                "description": "Upper bound"
+                "type": "number"
             }
         ],
         "returnType": "number"
     },
     {
-        "name": "irandom",
         "description": "Returns a random integer between 0 and x.",
+        "name": "irandom",
         "parameters": [
             {
+                "description": "Upper bound",
                 "name": "x",
-                "type": "number",
-                "description": "Upper bound"
+                "type": "number"
             }
         ],
         "returnType": "number"
     },
     {
-        "name": "random_range",
         "description": "Returns a random floating-point number between x1 and x2.",
+        "name": "random_range",
         "parameters": [
             {
+                "description": "Lower bound",
                 "name": "x1",
-                "type": "number",
-                "description": "Lower bound"
+                "type": "number"
             },
             {
+                "description": "Upper bound",
                 "name": "x2",
-                "type": "number",
-                "description": "Upper bound"
+                "type": "number"
             }
         ],
         "returnType": "number"
     },
     {
-        "name": "irandom_range",
         "description": "Returns a random integer between x1 and x2.",
+        "name": "irandom_range",
         "parameters": [
             {
+                "description": "Lower bound",
                 "name": "x1",
-                "type": "number",
-                "description": "Lower bound"
+                "type": "number"
             },
             {
+                "description": "Upper bound",
                 "name": "x2",
-                "type": "number",
-                "description": "Upper bound"
+                "type": "number"
             }
         ],
         "returnType": "number"
     },
     {
-        "name": "choose",
         "description": "Returns a random element from an array.",
+        "name": "choose",
         "parameters": [
             {
+                "description": "Array to choose from",
                 "name": "array",
-                "type": "array",
-                "description": "Array to choose from"
+                "type": "array"
             }
         ],
         "returnType": "any"
     },
     {
-        "name": "chance",
         "description": "Returns true with the given probability (0-1).",
+        "name": "chance",
         "parameters": [
             {
+                "description": "Probability (0.0 to 1.0)",
                 "name": "probability",
-                "type": "number",
-                "description": "Probability (0.0 to 1.0)"
+                "type": "number"
             }
         ],
         "returnType": "boolean"
     },
     {
-        "name": "array_length",
         "description": "Returns the length of an array.",
+        "name": "array_length",
         "parameters": [
             {
+                "description": "Input array",
                 "name": "array",
-                "type": "array",
-                "description": "Input array"
+                "type": "array"
             }
         ],
         "returnType": "number"
     },
     {
-        "name": "array_push",
         "description": "Adds elements to the end of an array.",
+        "name": "array_push",
         "parameters": [
             {
+                "description": "Target array",
                 "name": "array",
-                "type": "array",
-                "description": "Target array"
+                "type": "array"
             },
             {
-                "name": "val",
-                "type": "any",
                 "description": "Value(s) to push",
-                "optional": true
+                "name": "val",
+                "optional": true,
+                "type": "any"
             }
         ],
         "returnType": "void"
     },
     {
-        "name": "array_pop",
         "description": "Removes and returns the last element of an array.",
+        "name": "array_pop",
         "parameters": [
             {
+                "description": "Target array",
                 "name": "array",
-                "type": "array",
-                "description": "Target array"
+                "type": "array"
             }
         ],
         "returnType": "any"
     },
     {
-        "name": "array_resize",
         "description": "Resizes an array.",
+        "name": "array_resize",
         "parameters": [
             {
+                "description": "Target array",
                 "name": "array",
-                "type": "array",
-                "description": "Target array"
+                "type": "array"
             },
             {
+                "description": "New size",
                 "name": "new_size",
-                "type": "number",
-                "description": "New size"
+                "type": "number"
             }
         ],
         "returnType": "void"
     },
     {
-        "name": "array_copy",
         "description": "Copies part of an array into another.",
+        "name": "array_copy",
         "parameters": [
             {
+                "description": "Destination array",
                 "name": "dest",
-                "type": "array",
-                "description": "Destination array"
+                "type": "array"
             },
             {
+                "description": "Start index in destination",
                 "name": "dest_index",
-                "type": "number",
-                "description": "Start index in destination"
+                "type": "number"
             },
             {
+                "description": "Source array",
                 "name": "src",
-                "type": "array",
-                "description": "Source array"
+                "type": "array"
             },
             {
+                "description": "Start index in source",
                 "name": "src_index",
-                "type": "number",
-                "description": "Start index in source"
+                "type": "number"
             },
             {
+                "description": "Number of elements to copy",
                 "name": "length",
-                "type": "number",
-                "description": "Number of elements to copy"
+                "type": "number"
             }
         ],
         "returnType": "void"
     },
     {
-        "name": "struct_get_names",
         "description": "Returns an array of property names in a struct.",
+        "name": "struct_get_names",
         "parameters": [
             {
+                "description": "Input struct",
                 "name": "struct",
-                "type": "struct",
-                "description": "Input struct"
+                "type": "struct"
             }
         ],
         "returnType": "array"
     },
     {
-        "name": "struct_names_count",
         "description": "Returns the number of variables in a struct.",
+        "name": "struct_names_count",
         "parameters": [
             {
+                "description": "Input struct",
                 "name": "struct",
-                "type": "struct",
-                "description": "Input struct"
+                "type": "struct"
             }
         ],
         "returnType": "number"
     },
     {
-        "name": "struct_stringify",
         "description": "Converts a struct/array to a JSON string.",
+        "name": "struct_stringify",
         "parameters": [
             {
+                "description": "Value to stringify",
                 "name": "val",
-                "type": "any",
-                "description": "Value to stringify"
+                "type": "any"
             }
         ],
         "returnType": "string"
     },
     {
-        "name": "struct_parse",
         "description": "Parses a JSON string into a struct/array.",
+        "name": "struct_parse",
         "parameters": [
             {
+                "description": "JSON string",
                 "name": "json",
-                "type": "string",
-                "description": "JSON string"
+                "type": "string"
             }
         ],
         "returnType": "any"
     },
     {
-        "name": "tile_get",
         "description": "Gets the tile ID at the specified position.",
+        "name": "tile_get",
         "parameters": [
             {
+                "description": "X position",
                 "name": "x",
-                "type": "number",
-                "description": "X position"
+                "type": "number"
             },
             {
+                "description": "Y position",
                 "name": "y",
-                "type": "number",
-                "description": "Y position"
+                "type": "number"
             },
             {
+                "description": "Z position (layer)",
                 "name": "z",
-                "type": "number",
-                "description": "Z position (layer)"
+                "type": "number"
             }
         ],
         "returnType": "Tile?"
     },
     {
-        "name": "tile_place",
         "description": "Places a tile at the specified position.",
+        "name": "tile_place",
         "parameters": [
             {
+                "description": "Tile ID or name",
                 "name": "tile_id",
-                "type": "any",
-                "description": "Tile ID or name"
+                "type": "any"
             },
             {
+                "description": "X position",
                 "name": "x",
-                "type": "number",
-                "description": "X position"
+                "type": "number"
             },
             {
+                "description": "Y position",
                 "name": "y",
-                "type": "number",
-                "description": "Y position"
+                "type": "number"
             },
             {
+                "description": "Z position (layer)",
                 "name": "z",
-                "type": "number",
-                "description": "Z position (layer)"
+                "type": "number"
             }
         ],
         "returnType": "void"
     },
     {
-        "name": "spawn_particle",
         "description": "Spawns a particle at the specified position.",
+        "name": "spawn_particle",
         "parameters": [
             {
+                "description": "Particle name",
                 "name": "particle",
-                "type": "string",
-                "description": "Particle name"
+                "type": "string"
             },
             {
+                "description": "X position in tiles",
                 "name": "x",
-                "type": "number",
-                "description": "X position in tiles"
+                "type": "number"
             },
             {
+                "description": "Y position in tiles",
                 "name": "y",
-                "type": "number",
-                "description": "Y position in tiles"
+                "type": "number"
             }
         ],
         "returnType": "void"
     },
     {
-        "name": "tag_get",
         "description": "Gets tag data.",
+        "name": "tag_get",
         "parameters": [
             {
+                "description": "Name of the tag (without #)",
                 "name": "tag_name",
-                "type": "string",
-                "description": "Name of the tag (without #)"
+                "type": "string"
             }
         ],
         "returnType": "any"
     },
     {
-        "name": "print",
         "description": "Prints values to the debug console.",
         "example": "print(\"Hello\", 123);",
+        "name": "print",
         "parameters": [
             {
-                "name": "values",
-                "type": "any",
                 "description": "Values to print",
-                "optional": true
+                "name": "values",
+                "optional": true,
+                "type": "any"
             }
         ],
         "returnType": "void"
     },
     {
-        "name": "event_emit",
         "description": "Emits an event.",
+        "name": "event_emit",
         "parameters": [
             {
+                "description": "Type of event",
                 "name": "event_type",
-                "type": "string",
-                "description": "Type of event"
+                "type": "string"
             },
             {
-                "name": "data",
-                "type": "struct",
                 "description": "Event data",
-                "optional": true
+                "name": "data",
+                "optional": true,
+                "type": "struct"
             }
         ],
         "returnType": "void"
     },
     {
-        "name": "event_subscribe",
         "description": "Subscribes to an event.",
+        "name": "event_subscribe",
         "parameters": [
             {
+                "description": "Type of event",
                 "name": "event_type",
-                "type": "string",
-                "description": "Type of event"
+                "type": "string"
             },
             {
+                "description": "Callback function",
                 "name": "callback",
-                "type": "function",
-                "description": "Callback function"
+                "type": "function"
             }
         ],
         "returnType": "number"
     },
     {
-        "name": "event_unsubscribe",
         "description": "Unsubscribes from an event.",
+        "name": "event_unsubscribe",
         "parameters": [
             {
+                "description": "ID returned by event_subscribe",
                 "name": "listener_id",
-                "type": "number",
-                "description": "ID returned by event_subscribe"
+                "type": "number"
             }
         ],
         "returnType": "void"
     },
     {
-        "name": "time_start",
         "description": "Starts a timer.",
+        "name": "time_start",
         "parameters": [
             {
+                "description": "Timer name",
                 "name": "name",
-                "type": "string",
-                "description": "Timer name"
+                "type": "string"
             }
         ],
         "returnType": "void"
     },
     {
-        "name": "time_end",
         "description": "Ends a timer and returns elapsed milliseconds.",
+        "name": "time_end",
         "parameters": [
             {
+                "description": "Timer name",
                 "name": "name",
-                "type": "string",
-                "description": "Timer name"
+                "type": "string"
             }
         ],
         "returnType": "number"
     },
     {
-        "name": "runtime_error",
         "description": "Throws a runtime error.",
+        "name": "runtime_error",
         "parameters": [
             {
+                "description": "Error type",
                 "name": "type",
-                "type": "string",
-                "description": "Error type"
+                "type": "string"
             },
             {
-                "name": "message",
-                "type": "string",
-                "description": "Error message"
-            }
-        ],
-        "returnType": "void"
-    },
-    {
-        "name": "assert",
-        "description": "Throws an error if the condition is false.",
-        "parameters": [
-            {
-                "name": "condition",
-                "type": "boolean",
-                "description": "Condition to check"
-            },
-            {
-                "name": "message",
-                "type": "string",
                 "description": "Error message",
-                "optional": true
+                "name": "message",
+                "type": "string"
             }
         ],
         "returnType": "void"
     },
     {
-        "name": "regex_parse",
-        "description": "Creates a regex object.",
+        "description": "Throws an error if the condition is false.",
+        "name": "assert",
         "parameters": [
             {
-                "name": "pattern",
-                "type": "string",
-                "description": "Regex pattern"
+                "description": "Condition to check",
+                "name": "condition",
+                "type": "boolean"
             },
             {
-                "name": "flags",
-                "type": "string",
+                "description": "Error message",
+                "name": "message",
+                "optional": true,
+                "type": "string"
+            }
+        ],
+        "returnType": "void"
+    },
+    {
+        "description": "Creates a regex object.",
+        "name": "regex_parse",
+        "parameters": [
+            {
+                "description": "Regex pattern",
+                "name": "pattern",
+                "type": "string"
+            },
+            {
                 "description": "Regex flags (e.g. 'g', 'i')",
-                "optional": true
+                "name": "flags",
+                "optional": true,
+                "type": "string"
             }
         ],
         "returnType": "regex"
     },
     {
-        "name": "regex_test",
         "description": "Tests if a string matches the regex.",
         "example": "regex_test(\"hello\", /h/);",
+        "name": "regex_test",
         "parameters": [
             {
+                "description": "String to test",
                 "name": "str",
-                "type": "string",
-                "description": "String to test"
+                "type": "string"
             },
             {
+                "description": "Regex object",
                 "name": "regex",
-                "type": "regex",
-                "description": "Regex object"
+                "type": "regex"
             }
         ],
         "returnType": "boolean"
     },
     {
-        "name": "regex_match",
         "description": "Returns matches of the regex in the string.",
         "example": "regex_match(\"hello\", /l+/g);",
+        "name": "regex_match",
         "parameters": [
             {
+                "description": "String to match",
                 "name": "str",
-                "type": "string",
-                "description": "String to match"
+                "type": "string"
             },
             {
+                "description": "Regex object",
                 "name": "regex",
-                "type": "regex",
-                "description": "Regex object"
+                "type": "regex"
             }
         ],
         "returnType": "array"
     },
     {
-        "name": "regex_match_index",
         "description": "Returns the index of the match.",
         "example": "regex_match_index(\"hello\", /e/);",
+        "name": "regex_match_index",
         "parameters": [
             {
+                "description": "String to match",
                 "name": "str",
-                "type": "string",
-                "description": "String to match"
+                "type": "string"
             },
             {
+                "description": "Regex object",
                 "name": "regex",
-                "type": "regex",
-                "description": "Regex object"
+                "type": "regex"
             }
         ],
         "returnType": "number"
     },
     {
-        "name": "regex_replace",
         "description": "Replaces a match.",
         "example": "regex_replace(\"hello\", /l/, \"L\");",
+        "name": "regex_replace",
         "parameters": [
             {
+                "description": "Input string",
                 "name": "str",
-                "type": "string",
-                "description": "Input string"
+                "type": "string"
             },
             {
+                "description": "Regex object",
                 "name": "regex",
-                "type": "regex",
-                "description": "Regex object"
+                "type": "regex"
             },
             {
+                "description": "Replacement string",
                 "name": "replacement",
-                "type": "string",
-                "description": "Replacement string"
+                "type": "string"
             }
         ],
         "returnType": "string"
     },
     {
-        "name": "regex_replace_all",
         "description": "Replaces all matches.",
         "example": "regex_replace_all(\"ho ho ho\", /ho/, \"he\");",
+        "name": "regex_replace_all",
         "parameters": [
             {
+                "description": "Input string",
                 "name": "str",
-                "type": "string",
-                "description": "Input string"
+                "type": "string"
             },
             {
+                "description": "Regex object",
                 "name": "regex",
-                "type": "regex",
-                "description": "Regex object"
+                "type": "regex"
             },
             {
+                "description": "Replacement string",
                 "name": "replacement",
-                "type": "string",
-                "description": "Replacement string"
+                "type": "string"
             }
         ],
         "returnType": "string"
     },
     {
-        "name": "regex_split",
         "description": "Splits a string by the regex.",
         "example": "regex_split(\"a,b,c\", /,/);",
+        "name": "regex_split",
         "parameters": [
             {
+                "description": "Input string",
                 "name": "str",
-                "type": "string",
-                "description": "Input string"
+                "type": "string"
             },
             {
+                "description": "Regex object",
                 "name": "regex",
-                "type": "regex",
-                "description": "Regex object"
+                "type": "regex"
             }
         ],
         "returnType": "array"
     },
     {
-        "name": "render_rectangle",
         "description": "Draws a rectangle.",
+        "name": "render_rectangle",
         "parameters": [
             {
+                "description": "Left",
                 "name": "x1",
-                "type": "number",
-                "description": "Left"
+                "type": "number"
             },
             {
+                "description": "Top",
                 "name": "y1",
-                "type": "number",
-                "description": "Top"
+                "type": "number"
             },
             {
+                "description": "Right",
                 "name": "x2",
-                "type": "number",
-                "description": "Right"
+                "type": "number"
             },
             {
+                "description": "Bottom",
                 "name": "y2",
-                "type": "number",
-                "description": "Bottom"
+                "type": "number"
             },
             {
-                "name": "outline",
-                "type": "boolean",
                 "description": "Draw outline only",
-                "optional": true
+                "name": "outline",
+                "optional": true,
+                "type": "boolean"
             }
         ],
         "returnType": "void"
     },
     {
-        "name": "render_circle",
         "description": "Draws a circle.",
+        "name": "render_circle",
         "parameters": [
             {
+                "description": "Center X",
                 "name": "x",
-                "type": "number",
-                "description": "Center X"
+                "type": "number"
             },
             {
+                "description": "Center Y",
                 "name": "y",
-                "type": "number",
-                "description": "Center Y"
+                "type": "number"
             },
             {
+                "description": "Radius",
                 "name": "r",
-                "type": "number",
-                "description": "Radius"
+                "type": "number"
             },
             {
-                "name": "outline",
-                "type": "boolean",
                 "description": "Draw outline only",
-                "optional": true
+                "name": "outline",
+                "optional": true,
+                "type": "boolean"
             }
         ],
         "returnType": "void"
     },
     {
-        "name": "render_text",
         "description": "Draws text.",
+        "name": "render_text",
         "parameters": [
             {
+                "description": "Text to draw",
                 "name": "text",
-                "type": "string",
-                "description": "Text to draw"
+                "type": "string"
             },
             {
+                "description": "X position",
                 "name": "x",
-                "type": "number",
-                "description": "X position"
+                "type": "number"
             },
             {
+                "description": "Y position",
                 "name": "y",
-                "type": "number",
-                "description": "Y position"
+                "type": "number"
             }
         ],
         "returnType": "void"
     },
     {
-        "name": "render_sprite",
         "description": "Draws a sprite.",
+        "name": "render_sprite",
         "parameters": [
             {
+                "description": "Sprite name",
                 "name": "sprite",
-                "type": "string",
-                "description": "Sprite name"
+                "type": "string"
             },
             {
+                "description": "X position",
                 "name": "x",
-                "type": "number",
-                "description": "X position"
+                "type": "number"
             },
             {
+                "description": "Y position",
                 "name": "y",
-                "type": "number",
-                "description": "Y position"
+                "type": "number"
             },
             {
-                "name": "frame",
-                "type": "number",
                 "description": "Frame index",
-                "optional": true
+                "name": "frame",
+                "optional": true,
+                "type": "number"
             }
         ],
         "returnType": "void"
     },
     {
-        "name": "test",
         "description": "Registers a test case.",
+        "name": "test",
         "parameters": [
             {
+                "description": "Test name",
                 "name": "name",
-                "type": "string",
-                "description": "Test name"
+                "type": "string"
             },
             {
+                "description": "Test function",
                 "name": "fn",
-                "type": "function",
-                "description": "Test function"
+                "type": "function"
             },
             {
-                "name": "stop_on_fail",
-                "type": "boolean",
                 "description": "Stop remaining tests if this fails",
-                "optional": true
+                "name": "stop_on_fail",
+                "optional": true,
+                "type": "boolean"
             }
         ],
         "returnType": "void"
     },
     {
-        "name": "test_group",
         "description": "Registers a group of tests.",
+        "name": "test_group",
         "parameters": [
             {
+                "description": "Group name",
                 "name": "name",
-                "type": "string",
-                "description": "Group name"
+                "type": "string"
             },
             {
+                "description": "Array of tests",
                 "name": "tests",
-                "type": "array",
-                "description": "Array of tests"
+                "type": "array"
             }
         ],
         "returnType": "void"
     },
     {
-        "name": "test_expect",
         "description": "Asserts that a value equals the expected value.",
+        "name": "test_expect",
         "parameters": [
             {
+                "description": "Actual value",
                 "name": "actual",
-                "type": "any",
-                "description": "Actual value"
+                "type": "any"
             },
             {
+                "description": "Expected value",
                 "name": "expected",
-                "type": "any",
-                "description": "Expected value"
+                "type": "any"
             }
         ],
         "returnType": "boolean"

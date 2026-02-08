@@ -10,7 +10,12 @@ export class ParticleSize {
     private yscale_increment?: number | SmartValueValueType;
     private yscale_wiggle?: number | SmartValueValueType;
 
-    setXScale(min: number | SmartValueValueType, max?: number | SmartValueValueType, increment?: number | SmartValueValueType, wiggle?: number | SmartValueValueType): this {
+    setXScale(
+        min: number | SmartValueValueType,
+        max?: number | SmartValueValueType,
+        increment?: number | SmartValueValueType,
+        wiggle?: number | SmartValueValueType,
+    ): this {
         this.xscale_min = min;
         this.xscale_max = max ?? min;
         this.xscale_increment = increment;
@@ -18,7 +23,12 @@ export class ParticleSize {
         return this;
     }
 
-    setYScale(min: number | SmartValueValueType, max?: number | SmartValueValueType, increment?: number | SmartValueValueType, wiggle?: number | SmartValueValueType): this {
+    setYScale(
+        min: number | SmartValueValueType,
+        max?: number | SmartValueValueType,
+        increment?: number | SmartValueValueType,
+        wiggle?: number | SmartValueValueType,
+    ): this {
         this.yscale_min = min;
         this.yscale_max = max ?? min;
         this.yscale_increment = increment;
@@ -26,7 +36,12 @@ export class ParticleSize {
         return this;
     }
 
-    setScale(min: number | SmartValueValueType, max?: number | SmartValueValueType, increment?: number | SmartValueValueType, wiggle?: number | SmartValueValueType): this {
+    setScale(
+        min: number | SmartValueValueType,
+        max?: number | SmartValueValueType,
+        increment?: number | SmartValueValueType,
+        wiggle?: number | SmartValueValueType,
+    ): this {
         this.setXScale(min, max, increment, wiggle);
         this.setYScale(min, max, increment, wiggle);
         return this;
@@ -40,7 +55,13 @@ export class ParticleOrientation {
     private angle_wiggle?: number | SmartValueValueType;
     private angle_relative?: boolean;
 
-    constructor(min: number | SmartValueValueType, max?: number | SmartValueValueType, increment?: number | SmartValueValueType, wiggle?: number | SmartValueValueType, relative?: boolean) {
+    constructor(
+        min: number | SmartValueValueType,
+        max?: number | SmartValueValueType,
+        increment?: number | SmartValueValueType,
+        wiggle?: number | SmartValueValueType,
+        relative?: boolean,
+    ) {
         this.angle_min = min;
         this.angle_max = max ?? min;
         this.angle_increment = increment;
@@ -64,7 +85,11 @@ export class ParticleColor {
         return this;
     }
 
-    setAlpha(a1: number | SmartValueValueType, a2?: number | SmartValueValueType, a3?: number | SmartValueValueType): this {
+    setAlpha(
+        a1: number | SmartValueValueType,
+        a2?: number | SmartValueValueType,
+        a3?: number | SmartValueValueType,
+    ): this {
         this.alpha1 = a1;
         this.alpha2 = a2;
         this.alpha3 = a3;
@@ -78,7 +103,12 @@ export class ParticleSpeed {
     private speed_increment?: number | SmartValueValueType;
     private speed_wiggle?: number | SmartValueValueType;
 
-    constructor(min: number | SmartValueValueType, max?: number | SmartValueValueType, increment?: number | SmartValueValueType, wiggle?: number | SmartValueValueType) {
+    constructor(
+        min: number | SmartValueValueType,
+        max?: number | SmartValueValueType,
+        increment?: number | SmartValueValueType,
+        wiggle?: number | SmartValueValueType,
+    ) {
         this.speed_min = min;
         this.speed_max = max ?? min;
         this.speed_increment = increment;
@@ -92,7 +122,12 @@ export class ParticleDirection {
     private direction_increment?: number | SmartValueValueType;
     private direction_wiggle?: number | SmartValueValueType;
 
-    constructor(min: number | SmartValueValueType, max?: number | SmartValueValueType, increment?: number | SmartValueValueType, wiggle?: number | SmartValueValueType) {
+    constructor(
+        min: number | SmartValueValueType,
+        max?: number | SmartValueValueType,
+        increment?: number | SmartValueValueType,
+        wiggle?: number | SmartValueValueType,
+    ) {
         this.direction_min = min;
         this.direction_max = max ?? min;
         this.direction_increment = increment;
@@ -106,13 +141,20 @@ export class ParticleGravity {
     private gravity_point_x?: number | SmartValueValueType;
     private gravity_point_y?: number | SmartValueValueType;
 
-    setDirectional(amount: number | SmartValueValueType, direction?: number | SmartValueValueType): this {
+    setDirectional(
+        amount: number | SmartValueValueType,
+        direction?: number | SmartValueValueType,
+    ): this {
         this.gravity_amount = amount;
         this.gravity_direction = direction ?? 270;
         return this;
     }
 
-    setPoint(x: number | SmartValueValueType, y: number | SmartValueValueType, force?: number | SmartValueValueType): this {
+    setPoint(
+        x: number | SmartValueValueType,
+        y: number | SmartValueValueType,
+        force?: number | SmartValueValueType,
+    ): this {
         this.gravity_point_x = x;
         this.gravity_point_y = y;
         if (force !== undefined) {

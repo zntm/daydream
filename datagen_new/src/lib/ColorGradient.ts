@@ -17,6 +17,6 @@ export class ColorGradient {
      * Returns array of [time, color] tuples.
      */
     toJSON() {
-        return this.points.map(p => [p.time, p.value]);
+        return this.points.map((p) => [p.time, p.value]);
     }
 }

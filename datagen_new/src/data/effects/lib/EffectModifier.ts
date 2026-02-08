@@ -6,6 +6,7 @@ export enum EffectOperation {
     Power = "power",
 }
 
+// Keep class for export compatibility
 export class EffectModifier {
     private value: string | number;
     private operation: EffectOperation;
@@ -15,27 +16,23 @@ export class EffectModifier {
         this.operation = operation;
     }
 
-    static add(value: string | number): EffectModifier {
+    // Factory methods
+    static add(value: string | number) {
         return new EffectModifier(value, EffectOperation.Add);
     }
-
-    static subtract(value: string | number): EffectModifier {
+    static subtract(value: string | number) {
         return new EffectModifier(value, EffectOperation.Subtract);
     }
-
-    static multiply(value: string | number): EffectModifier {
+    static multiply(value: string | number) {
         return new EffectModifier(value, EffectOperation.Multiply);
     }
-
-    static divide(value: string | number): EffectModifier {
+    static divide(value: string | number) {
         return new EffectModifier(value, EffectOperation.Divide);
     }
-
-    static power(value: string | number): EffectModifier {
+    static power(value: string | number) {
         return new EffectModifier(value, EffectOperation.Power);
     }
-
-    static multiplyByLevel(): EffectModifier {
+    static multiplyByLevel() {
         return new EffectModifier("level", EffectOperation.Multiply);
     }
 }

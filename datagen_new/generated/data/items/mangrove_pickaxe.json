@@ -1,5 +1,6 @@
 {
     "inventory": "#phantasia:item/generic/inventory_tool",
+    "item": {},
     "sprite": "mangrove_pickaxe",
     "type": "tool"
 }

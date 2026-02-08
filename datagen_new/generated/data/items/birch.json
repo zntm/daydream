@@ -31,27 +31,4 @@
         "sfx": "#phantasia:tile/sfx/wood"
     },
     "type": "solid"
-},
-                            "values": [
-                                {
-                                    "xoffset": 0,
-                                    "yoffset": 1,
-                                    "z": "default",
-                                    "id": "#phantasia:tile/placement/plant_on"
-                                },
-                                {
-                                    "xoffset": 0,
-                                    "yoffset": 1,
-                                    "z": "z",
-                                    "id": "$ID"
-                                }
-                            ]
-                        }
-                    }
-                ]
-            }
-        },
-        "sfx": "#phantasia:tile/sfx/wood"
-    },
-    "type": "untouchable"
 }

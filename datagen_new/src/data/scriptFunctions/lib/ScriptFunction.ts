@@ -16,7 +16,7 @@ export class ScriptFunction {
         name: string,
         description: string,
         returnType: string = "void",
-        parameters: ScriptFunctionParameter[] = []
+        parameters: ScriptFunctionParameter[] = [],
     ) {
         this.name = name;
         this.description = description;
@@ -40,18 +40,20 @@ export class ScriptFunction {
         if (this.parameters.length > 0) {
             description += `**Parameters:**\n`;
             this.parameters.forEach((p) => {
-                description += `- \`${p.name}\` (${p.type}): ${p.description}${p.optional ? " (Optional)" : ""
-                    }\n`;
+                description += `- \`${p.name}\` (${p.type}): ${p.description}${
+                    p.optional ? " (Optional)" : ""
+                }\n`;
             });
             description += `\n`;
         }
         description += `**Returns:** ${this.returnType}\n\n`;
 
         if (this.example) {
-            description += `**Example:**\n\`\`\`\n${Array.isArray(this.example)
+            description += `**Example:**\n\`\`\`\n${
+                Array.isArray(this.example)
                     ? this.example.join("\n")
                     : this.example
-                }\n\`\`\``;
+            }\n\`\`\``;
         }
 
         return {
@@ -104,7 +106,7 @@ export class ScriptFunction {
             .join(", ");
 
         return `${jsdoc}\ndeclare function ${this.name}(${params}): ${mapType(
-            this.returnType
+            this.returnType,
         )};\n`;
     }
 }

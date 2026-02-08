@@ -61,4 +61,3 @@ export default [
             .setTileAudioProperties(new TileItemAudioProperties(0.65, 0.5)),
     ),
 ];
-

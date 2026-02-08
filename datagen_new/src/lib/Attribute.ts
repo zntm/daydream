@@ -42,7 +42,7 @@ export class Attribute {
         falloff: number,
         height: number,
         time: number,
-        countMax?: number
+        countMax?: number,
     ): this {
         this.jump_falloff = falloff;
         this.jump_height = height;

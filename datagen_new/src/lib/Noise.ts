@@ -21,7 +21,7 @@ export class Noise {
         scale?: number,
         offset?: number,
         y_offset?: number,
-        range?: number
+        range?: number,
     ) {
         this.octaves = octaves;
         this.min = min;

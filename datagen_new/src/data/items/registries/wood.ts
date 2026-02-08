@@ -29,7 +29,9 @@ class WoodRegistry {
 
         if (Array.isArray(leaves)) {
             if (leaves.length > 0 && typeof leaves[0] === "string") {
-                this.leaves = [new LeafRegistry(`${id}_leaves`, leaves as string[])];
+                this.leaves = [
+                    new LeafRegistry(`${id}_leaves`, leaves as string[]),
+                ];
             } else {
                 this.leaves = leaves as LeafRegistry[];
             }

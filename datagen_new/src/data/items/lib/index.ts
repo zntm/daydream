@@ -6,6 +6,9 @@ export {
     BreastplateItem,
     LeggingsItem,
     AccessoryItem,
+    Helmet,
+    Breastplate,
+    Leggings,
 } from "./AccessoryItem";
 export { ConsumableItem, ConsumableItemData } from "./ConsumableItem";
 export { Item } from "./Item";
@@ -31,4 +34,14 @@ export {
     TileItemPlacementConditionType,
     TileItemPlacementConditionValue,
 } from "./TileItem";
-export { ToolItem, SwordItem, PickaxeItem, AxeItem, ShovelItem } from "./ToolItem";
+export {
+    ToolItem,
+    SwordItem,
+    PickaxeItem,
+    AxeItem,
+    ShovelItem,
+    Sword,
+    Pickaxe,
+    Axe,
+    Shovel,
+} from "./ToolItem";
