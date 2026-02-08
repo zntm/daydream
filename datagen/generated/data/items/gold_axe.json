@@ -1,16 +1,16 @@
 {
     "inventory": "#phantasia:item/generic/inventory_tool",
     "item": {
+        "damage": 7,
         "durability": {
             "amount": 653,
             "bar": "#phantasia:item/generic/durability_bar"
         },
-        "damage": 7,
         "harvest": {
             "hardness": 1.25,
             "level": 4
         }
     },
-    "sprite": "phantasia:item/gold_axe",
+    "sprite": "gold_axe",
     "type": "tool"
 }

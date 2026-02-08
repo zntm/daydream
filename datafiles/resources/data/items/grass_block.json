@@ -1,29 +1,31 @@
 {
     "inventory": "#phantasia:item/generic/inventory_tile",
+    "item": {
+        "tile": {
+            "audio_properties": {
+                "lowpass": 0.15,
+                "reverb": 0.05
+            },
+            "drops": [
+                {
+                    "id": "phantasia:dirt"
+                }
+            ],
+            "harvest": {
+                "hardness": 0.36,
+                "level": 0,
+                "particle": {
+                    "frequency": "#phantasia:tile/generic/harvest_particle_frequency",
+                    "id": "#phantasia:tile/particle_colour/dirt"
+                }
+            },
+            "sfx": "#phantasia:tile/sfx/dirt"
+        }
+    },
     "properties": [
         "phantasia:can_mirror",
         "phantasia:is_tile"
     ],
     "sprite": "phantasia:item/grass_block",
-    "tile": {
-        "drops": [
-            {
-                "id": "phantasia:dirt"
-            }
-        ],
-        "harvest": {
-            "hardness": 0.36,
-            "level": 0,
-            "particle": {
-                "colour": "#phantasia:tile/particle_colour/dirt",
-                "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
-            }
-        },
-        "sfx": "#phantasia:tile/sfx/dirt",
-        "audio_properties": {
-            "lowpass": 0.15,
-            "reverb": 0.05
-        }
-    },
     "type": "solid"
 }

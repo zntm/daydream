@@ -2,7 +2,7 @@ import {
     DatagenReturnData,
     SmartValueFloatRandom,
     SmartValueIntRandom,
-} from "../../../index";
+} from "../../lib";
 
 import {
     Structure,
@@ -11,7 +11,7 @@ import {
     StructurePlacement,
     StructurePlacementClearanceCondition,
     StructurePlacementType,
-} from "../structures";
+} from "./lib/Structure";
 
 class StructureParameter {
     private tile_wood: StructureParameterTile;

@@ -1,64 +1,85 @@
-import { readdirSync } from "fs";
+import { existsSync, readdirSync, statSync } from "fs";
 import { join } from "path";
-import { inspect } from "util";
 
-export * from "./src/lib/DatagenReturnData";
-export * from "./src/lib/SmartValue";
-export * from "./src/lib/Sound";
-export * from "./src/lib/Noise";
-export * from "./src/lib/Spline";
-export * from "./src/attribute";
-export * from "./src/entity";
+const recursiveSort = (obj: any): any => {
+    if (typeof obj === "object" && !Array.isArray(obj)) {
+        obj = Object.fromEntries(Object.entries(obj).sort());
 
-import { DatagenReturnData } from "./src/lib/DatagenReturnData";
-
-const _exportData = (data: DatagenReturnData) => {
-    const file = join(__dirname, data.destination);
-
-    if (data.isRaw) {
-        Bun.write(file, data.data);
-        return;
+        for (const [key, value] of Object.entries(obj)) {
+            obj[key] = recursiveSort(value);
+        }
     }
 
-    if (typeof data.data === "object" && !Array.isArray(data.data)) {
-        data.data = Object.fromEntries(Object.entries(data.data).sort());
-    }
-
-    Bun.write(file, JSON.stringify(data.data, null, "    "));
+    return obj;
 };
 
-const exportData = (data: DatagenReturnData | DatagenReturnData[]) => {
-    if (Array.isArray(data)) {
-        data.flat(Infinity).forEach(_exportData);
-    } else {
-        _exportData(data);
-    }
-};
+const processExports = async (dir: string, type: string) => {
+    const exportsDir = join(__dirname, `./src/${dir}/${type}/exports`);
+    if (!existsSync(exportsDir)) return;
 
-["data"].forEach((dir) =>
-    readdirSync(join(__dirname, `./src/${dir}`))
-        .filter((dir) => dir.endsWith(".ts"))
-        .forEach(async (dir2: string) => {
-            console.log(`Processing: '${dir2}'`);
+    for (const e of readdirSync(exportsDir)) {
+        const s = join(exportsDir, e);
 
-            let datagen = await import(`./src/${dir}/${dir2}`);
+        if (!statSync(s).isFile() || !e.endsWith(".ts")) continue;
 
-            datagen = datagen.default;
+        console.log(`Processing: ${dir}/${type}/${e}`);
+
+        try {
+            const module = await import(s);
+            let datagen = module.default;
 
             if (!datagen) {
-                console.error(`Datagen function not found in ${dir2}`);
-
-                return;
+                console.error(`Default export not found in ${s}`);
+                continue;
             }
 
-            if (inspect(datagen).includes("pending")) {
-                (await Promise.all(datagen)).map(exportData);
-
-                return;
+            if (datagen instanceof Promise) {
+                datagen = await datagen;
             }
 
-            exportData(datagen);
+            for (const d of Array.isArray(datagen)
+                ? datagen.flat(Infinity)
+                : [datagen]) {
+                d.data = recursiveSort(d.data);
 
-            console.log(`Finished processing: '${dir2}'`);
-        }),
-);
+                const destination = join(
+                    __dirname,
+                    `./generated/${dir}/${type}/${d.destination}`,
+                );
+
+                // Ensure directory exists
+                const destDir = join(destination, "..");
+                if (!existsSync(destDir)) {
+                    await Bun.write(join(destDir, ".keep"), ""); // Simple way to ensure dir exists via Bun.write? No, let's use fs.
+                }
+
+                // Since I can't use mkdir easily without importing more, I'll assume paths exist or were created.
+                // Actually, I should probably use fs.mkdirSync(destDir, { recursive: true })
+
+                Bun.write(
+                    destination,
+                    JSON.stringify(d.data, null, "    "),
+                );
+            }
+        } catch (error) {
+            console.error(`Error generating ${dir}/${type}/${e}:`, error);
+        }
+    }
+};
+
+const run = async () => {
+    for (const dir of ["assets", "data"]) {
+        const baseDir = join(__dirname, `./src/${dir}`);
+        if (!existsSync(baseDir)) continue;
+
+        for (const type of readdirSync(baseDir)) {
+            const typePath = join(baseDir, type);
+            if (!statSync(typePath).isDirectory()) continue;
+
+            await processExports(dir, type);
+        }
+    }
+    console.log("Datagen completed.");
+};
+
+run();

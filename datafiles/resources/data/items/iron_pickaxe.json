@@ -1,16 +1,16 @@
 {
     "inventory": "#phantasia:item/generic/inventory_tool",
     "item": {
+        "damage": 6,
         "durability": {
             "amount": 319,
             "bar": "#phantasia:item/generic/durability_bar"
         },
-        "damage": 6,
         "harvest": {
             "hardness": 1.19,
             "level": 3
         }
     },
-    "sprite": "phantasia:item/iron_pickaxe",
+    "sprite": "iron_pickaxe",
     "type": "tool"
 }

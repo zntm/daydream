@@ -2,7 +2,7 @@ import {
     DatagenReturnData,
     type SmartValue,
     ChooseWeightedOption,
-} from "../../../index";
+} from "../../lib";
 import {
     SmartValueChooseWeighted,
     SmartValueIntRandom,
@@ -15,7 +15,7 @@ import {
     StructurePlacement,
     StructurePlacementClearanceCondition,
     StructurePlacementType,
-} from "../structures";
+} from "./lib/Structure";
 
 class StructureParameter {
     private tile_top: StructureParameterTile;

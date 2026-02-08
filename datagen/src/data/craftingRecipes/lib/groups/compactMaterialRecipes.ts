@@ -1,0 +1,23 @@
+import {
+    CraftingIngredient,
+    CraftingRecipe,
+    IngredientAmount,
+} from "../Recipe";
+
+export default (
+    material: string,
+    block: string,
+    workbench: string | string[],
+) => [
+        new CraftingRecipe(block)
+            .setCraftingStations(workbench)
+            .setIngredients(
+                new CraftingIngredient(
+                    material,
+                    IngredientAmount.MaterialCompact,
+                ),
+            ),
+        new CraftingRecipe(material, IngredientAmount.MaterialCompact)
+            .setCraftingStations(workbench)
+            .setIngredients(new CraftingIngredient(block)),
+    ];

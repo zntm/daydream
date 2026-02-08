@@ -10,8 +10,8 @@ on_window_resize = undefined;
 on_window_focus   = undefined;
 on_window_unfocus = undefined;
 
-// Initialize network globals if not already done (needed for menu connect)
-if (!variable_global_exists("network_role") || global.network_role == undefined)
+// Initialize network globals ONLY if not already in a session
+if (global.relay == undefined || global.relay.role == RELAY_ROLE.NONE)
 {
-    network_init();
+    relay_manager_init();
 }

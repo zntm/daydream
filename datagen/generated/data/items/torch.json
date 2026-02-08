@@ -1,36 +1,38 @@
 {
     "inventory": "#phantasia:item/generic/inventory_default",
-    "sprite": "phantasia:item/torch",
-    "tile": {
-        "drops": [
-            {
-                "id": "phantasia:torch"
-            }
-        ],
-        "harvest": {
-            "hardness": 0.38,
-            "level": 0,
-            "particle": {
-                "colour": "#phantasia:tile/particle_colour/twig",
-                "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
-            }
-        },
-        "sfx": "#phantasia:tile/sfx/wood",
-        "audio_properties": {
-            "lowpass": 0.05,
-            "reverb": 0
-        },
-        "light": "#D89172",
-        "animation_type": "increment",
-        "on_random_tick": [
-            {
-                "id": "@phantasia:items/sfx_play",
-                "parameters": {
-                    "id": "phantasia:sfx/tile/fire/ambient"
-                },
-                "chance": 0.18
-            }
-        ]
+    "item": {
+        "tile": {
+            "animation_type": "increment",
+            "audio_properties": {
+                "lowpass": 0.05,
+                "reverb": 0
+            },
+            "drops": [
+                {
+                    "id": "phantasia:torch"
+                }
+            ],
+            "harvest": {
+                "hardness": 0.38,
+                "level": 0,
+                "particle": {
+                    "frequency": "#phantasia:tile/generic/harvest_particle_frequency",
+                    "id": "#phantasia:tile/particle_colour/twig"
+                }
+            },
+            "light": "#D89172",
+            "on_random_tick": [
+                {
+                    "id": "items/sfx_play",
+                    "parameters": {
+                        "id": "phantasia:sfx/tile/fire/ambient"
+                    },
+                    "chance": 0.18
+                }
+            ],
+            "sfx": "#phantasia:tile/sfx/wood"
+        }
     },
+    "sprite": "phantasia:item/torch",
     "type": "untouchable"
 }

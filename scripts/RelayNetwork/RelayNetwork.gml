@@ -3,6 +3,14 @@
 /// Host acts as the relay server, forwarding messages between peers
 
 global.relay = undefined;
+global.network_role = RELAY_ROLE.NONE;
+
+/// @desc Legacy network role enum for compatibility
+enum NETWORK_ROLE {
+    NONE = RELAY_ROLE.NONE,
+    SERVER = RELAY_ROLE.HOST,
+    CLIENT = RELAY_ROLE.CLIENT
+}
 
 /// @desc Initialize the relay network system
 function relay_init()
@@ -18,6 +26,7 @@ function relay_init()
 function RelayNetwork() constructor
 {
     role = RELAY_ROLE.NONE;
+    global.network_role = role;
     local_peer_id = "";
     room_code = "";
     
@@ -63,6 +72,7 @@ function RelayNetwork() constructor
         }
         
         role = RELAY_ROLE.HOST;
+        global.network_role = role;
         local_peer_id = uuid_generate(irandom(0xffffffff));
         
         // Generate room code from local IP
@@ -125,6 +135,7 @@ function RelayNetwork() constructor
         }
         
         role = RELAY_ROLE.CLIENT;
+        global.network_role = role;
         local_peer_id = uuid_generate(irandom(0xffffffff));
         room_code = _clean_code;
         _host_socket = _socket;
@@ -277,6 +288,7 @@ function RelayNetwork() constructor
         
         // Clear state
         role = RELAY_ROLE.NONE;
+        global.network_role = role;
         peers = {};
         ds_map_clear(_socket_to_peer);
         local_peer_id = "";
@@ -393,6 +405,7 @@ function RelayNetwork() constructor
             }
             
             role = RELAY_ROLE.NONE;
+            global.network_role = role;
             peers = {};
             _host_socket = undefined;
             

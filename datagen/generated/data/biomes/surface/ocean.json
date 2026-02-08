@@ -1,7 +1,7 @@
 {
     "background": {
-        "id": "phantasia:background/ocean",
-        "blend": 0.7
+        "blend": 0.7,
+        "id": "phantasia:background/ocean"
     },
     "creatures": [],
     "foliage": [],
@@ -43,19 +43,19 @@
     },
     "structures": [],
     "terrain_modifier": {
-        "height_offset": -80,
-        "amplitude_scale": 0.3
+        "amplitude_scale": 0.3,
+        "height_offset": -80
     },
     "tile": {
-        "top_layer": {
+        "bottom_layer": {
             "base": [
                 {
-                    "id": "phantasia:sand"
+                    "id": "phantasia:stone"
                 }
             ],
             "wall": [
                 {
-                    "id": "phantasia:sandstone_wall",
+                    "id": "phantasia:stone_wall",
                     "weight": 4
                 },
                 {
@@ -79,15 +79,15 @@
                 }
             ]
         },
-        "bottom_layer": {
+        "top_layer": {
             "base": [
                 {
-                    "id": "phantasia:stone"
+                    "id": "phantasia:sand"
                 }
             ],
             "wall": [
                 {
-                    "id": "phantasia:stone_wall",
+                    "id": "phantasia:sandstone_wall",
                     "weight": 4
                 },
                 {

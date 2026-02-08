@@ -1,37 +1,39 @@
 {
     "inventory": "#phantasia:item/generic/inventory_default",
+    "item": {
+        "tile": {
+            "audio_properties": {
+                "lowpass": 0.05,
+                "reverb": 0
+            },
+            "drops": [
+                {
+                    "id": "phantasia:rock"
+                }
+            ],
+            "harvest": {
+                "hardness": 0.11,
+                "level": 0,
+                "particle": {
+                    "frequency": "#phantasia:tile/generic/harvest_particle_frequency",
+                    "id": "#phantasia:tile/particle_colour/stone"
+                }
+            },
+            "placement": {
+                "index": {
+                    "type": "smart_value:irandom",
+                    "values": {
+                        "max": 4,
+                        "min": 1
+                    }
+                }
+            },
+            "sfx": "#phantasia:tile/sfx/stone"
+        }
+    },
     "properties": [
         "phantasia:can_mirror"
     ],
     "sprite": "phantasia:item/rock",
-    "tile": {
-        "drops": [
-            {
-                "id": "phantasia:rock"
-            }
-        ],
-        "harvest": {
-            "hardness": 0.11,
-            "level": 0,
-            "particle": {
-                "colour": "#phantasia:tile/particle_colour/stone",
-                "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
-            }
-        },
-        "placement": {
-            "index": {
-                "values": {
-                    "min": 1,
-                    "max": 4
-                },
-                "type": "smart_value:irandom"
-            }
-        },
-        "sfx": "#phantasia:tile/sfx/stone",
-        "audio_properties": {
-            "lowpass": 0.05,
-            "reverb": 0
-        }
-    },
     "type": "untouchable"
 }

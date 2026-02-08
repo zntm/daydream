@@ -1,7 +1,7 @@
 import {
     DatagenReturnData,
     SmartValueFloatRandom,
-} from "../../..";
+} from "../../lib";
 import {
     Particle,
     ParticleSize,
@@ -9,7 +9,7 @@ import {
     ParticleSpeed,
     ParticleDirection,
     ParticleOrientation,
-} from "../particles";
+} from "./lib/Particle";
 
 export default ["birch", "oak", "pine"].map((id) => {
     return new DatagenReturnData(

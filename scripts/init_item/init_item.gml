@@ -8,76 +8,71 @@ function init_item(_directory, _namespace)
     for (var i = 0; i < _files_length; ++i)
     {
         var _file = _files[i];
-        var _id = string_delete(_file, string_length(_file) - 4, 5);
         
-        dbg_timer("init_item0");
-        
-        var _json = tag_value_parse(buffer_load_json($"{_directory}/{_file}"));
-        
-        var _item_data = new ItemData(_namespace, _id);
-        
-        var _sprite = _json.sprite;
-        
-        _item_data.set_sprite(_sprite);
-        
-        _item_data.set_inventory(_json.inventory);
-        _item_data.set_item(_json[$ "item"]);
-        _item_data.set_tile(_json[$ "tile"]);
-        _item_data.set_properties(_json[$ "properties"]);
-        _item_data.set_type(_json.type);
-        
-        /*
-        _item_data.set_type(_json.type);
-        _item_data.set_rarity(_json[$ "rarity"]);
-        _item_data.set_inventory(_json[$ "inventory"]);
-        _item_data.set_animation_type(_json[$ "animation_type"]);
-        _item_data.set_properties(_json[$ "properties"]);
-        _item_data.set_item(_json[$ "item"]);
-        _item_data.set_tile(_json[$ "tile"]);
-        _item_data.set_placement(_json[$ "placement"]);
-        _item_data.set_harvest(_json[$ "harvest"]);
-        _item_data.set_drop(_json[$ "drop"]);
-        _item_data.set_sfx(_json[$ "sfx"]);
-        _item_data.set_tile_audio_properties(_json[$ "audio_properties"]);
-        _item_data.set_on_random_tick(_json[$ "on_random_tick"]);
-        _item_data.set_on_attack(_json[$ "on_attack"]);
-        _item_data.set_on_item_use(_json[$ "on_item_use"]);
-        _item_data.set_on_tile_use(_json[$ "on_tile_use"]);
-        _item_data.set_light(_json[$ "light"]);
-        _item_data.set_container(_json[$ "container"]);
-        _item_data.set_components(_json[$ "components"]);
-        
-        var _sprite_data = _json.sprite;
-        
-        var _sprite_xoffset = _sprite_data.xoffset;
-        var _sprite_yoffset = _sprite_data.yoffset;
-        
-        var _sprite = sprite_add($"{_directory}/{_file}/sprite.png", _sprite_data.length, false, false, _sprite_xoffset, _sprite_yoffset);
-        
-        _item_data.set_sprite(_sprite);
-        
-        var _collision_box = _json[$ "collision_box"];
-        
-        _item_data.set_collision_box(_collision_box ?? {
-            left: _sprite_xoffset,
-            top:  _sprite_yoffset,
-            right:  sprite_get_width(_sprite),
-            bottom: sprite_get_height(_sprite),
-            type: "rectangle"
-        });
-        
-        _item_data.set_edge_padding(_sprite_data[$ "edge_padding"]);
-        */
-        
-        if (_item_data.get_type() & (ITEM_TYPE_BIT.PLATFORM | ITEM_TYPE_BIT.SOLID | ITEM_TYPE_BIT.UNTOUCHABLE))
+        if (string_ends_with(_file, ".json"))
         {
-            atla_push("item", global.sprite_asset[$ _sprite].get_sprite(), _sprite);
+            var _id = string_delete(_file, string_length(_file) - 4, 5);
+            
+            dbg_timer("init_item0");
+            
+            var _json = tag_value_parse(buffer_load_json($"{_directory}/{_file}"));
+            
+            if (is_struct(_json))
+            {
+                var _item_data = new ItemData(_namespace, _id);
+                
+                var _sprite = _json.sprite;
+                
+                _item_data.set_sprite(_sprite);
+                
+                var _item = _json[$ "item"];
+                
+                _item_data.set_inventory(_json.inventory);
+                _item_data.set_item(_item);
+                
+                if (_item != undefined)
+                {
+                    _item_data.set_tile(_item[$ "tile"]);
+                }
+                
+                _item_data.set_properties(_json[$ "properties"]);
+                _item_data.set_type(_json.type);
+                
+                var _sprite_asset_obj = global.sprite_asset[$ _sprite];
+                if (_sprite_asset_obj != undefined)
+                {
+                    var _real_sprite = _sprite_asset_obj.get_sprite();
+                    var _col_box = _json[$ "collision_box"];
+                    
+                    var _type_box = TILE_COLLISION_BOX_TYPE.RECTANGLE;
+                    var _left     = -sprite_get_xoffset(_real_sprite);
+                    var _top      = -sprite_get_yoffset(_real_sprite);
+                    var _width    = sprite_get_width(_real_sprite);
+                    var _height   = sprite_get_height(_real_sprite);
+                    
+                    if (_col_box != undefined)
+                    {
+                        if (_col_box[$ "type"] == "triangle") _type_box = TILE_COLLISION_BOX_TYPE.TRIANGLE;
+                        if (_col_box[$ "left"] != undefined)   _left   = _col_box.left;
+                        if (_col_box[$ "top"] != undefined)    _top    = _col_box.top;
+                        if (_col_box[$ "right"] != undefined)  _width  = _col_box.right;
+                        if (_col_box[$ "bottom"] != undefined) _height = _col_box.bottom;
+                    }
+                    
+                    _item_data.set_collision_box(_type_box, _left, _top, _width, _height);
+                }
+                
+                if (_item_data.get_type() & (ITEM_TYPE_BIT.PLATFORM | ITEM_TYPE_BIT.SOLID | ITEM_TYPE_BIT.UNTOUCHABLE))
+                {
+                    atla_push("item", global.sprite_asset[$ _sprite].get_sprite(), _sprite);
+                }
+                
+                global.item_data[$ $"{_namespace}:{_id}"] = _item_data;
+                
+                delete _json;
+                
+                dbg_timer("init_item", $"[Init] Loaded Item: \'{_id}\'");
+            }
         }
-        
-        global.item_data[$ $"{_namespace}:{_id}"] = _item_data;
-        
-        delete _json;
-        
-        dbg_timer("init_item", $"[Init] Loaded Item: \'{_id}\'");
     }
 }

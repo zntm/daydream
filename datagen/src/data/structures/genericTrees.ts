@@ -1,4 +1,4 @@
-import { DatagenReturnData, SmartValueIntRandom } from "../../../index";
+import { DatagenReturnData, SmartValueIntRandom } from "../../lib";
 
 import {
     Structure,
@@ -7,7 +7,7 @@ import {
     StructurePlacement,
     StructurePlacementClearanceCondition,
     StructurePlacementType,
-} from "../structures";
+} from "./lib/Structure";
 
 const { StructureParameter: StructureOreParameter } = import.meta.require(
     "./ores",

@@ -1,0 +1,59 @@
+{
+    "function": {
+        "id": "phantasia:tree/coniferous",
+        "parameters": {
+            "cone_offset": {
+                "type": "smart_value:random",
+                "values": {
+                    "max": 0,
+                    "min": -0.2
+                }
+            },
+            "cone_roundness": {
+                "type": "smart_value:random",
+                "values": {
+                    "max": 3,
+                    "min": 1
+                }
+            },
+            "cone_steepness": {
+                "type": "smart_value:random",
+                "values": {
+                    "max": 0.3,
+                    "min": 0.1
+                }
+            },
+            "cone_width": 1,
+            "index": 1,
+            "index_bottom": 3,
+            "index_top": 2,
+            "tile_leaves": {
+                "id": "phantasia:pine_leaves"
+            },
+            "tile_wood": {
+                "id": "phantasia:pine"
+            }
+        }
+    },
+    "height": {
+        "type": "smart_value:irandom",
+        "values": {
+            "max": 14,
+            "min": 9
+        }
+    },
+    "placement": {
+        "clearance_condition": [
+            {
+                "xoffset": -4,
+                "yoffset": "-height",
+                "width": "width",
+                "height": 8
+            }
+        ],
+        "type": "floor",
+        "xoffset": -4,
+        "yoffset": "-height"
+    },
+    "width": 9
+}

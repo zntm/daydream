@@ -1,0 +1,43 @@
+{
+    "lifetime": {
+        "type": "smart_value:random",
+        "values": {
+            "max": 1,
+            "min": 0.5
+        }
+    },
+    "properties": [
+        "phantasia:has_stretch_animation"
+    ],
+    "size": {
+        "xscale_max": {
+            "type": "smart_value:random",
+            "values": {
+                "max": 1.1,
+                "min": 0.9
+            }
+        },
+        "xscale_min": {
+            "type": "smart_value:random",
+            "values": {
+                "max": 1.1,
+                "min": 0.9
+            }
+        },
+        "yscale_max": {
+            "type": "smart_value:random",
+            "values": {
+                "max": 1.1,
+                "min": 0.9
+            }
+        },
+        "yscale_min": {
+            "type": "smart_value:random",
+            "values": {
+                "max": 1.1,
+                "min": 0.9
+            }
+        }
+    },
+    "sprite": "phantasia:particle/explosion"
+}

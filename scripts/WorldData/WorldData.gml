@@ -196,8 +196,8 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
             
             if (___cave_biome_heat != undefined)
             {
-                ___cave_heat_noise_scale_x = ___cave_biome_heat[$ "noise_scale_x"] ?? 0.015625;
-                ___cave_heat_noise_scale_y = ___cave_biome_heat[$ "noise_scale_y"] ?? 0.015625;
+                ___cave_heat_noise_scale_x = ___cave_biome_heat[$ "noise_scale_x"] ?? ___cave_biome_heat[$ "scale_x"] ?? 0.015625;
+                ___cave_heat_noise_scale_y = ___cave_biome_heat[$ "noise_scale_y"] ?? ___cave_biome_heat[$ "scale_y"] ?? 0.015625;
                 ___cave_heat_range = ___cave_biome_heat[$ "range"] ?? 63;
             }
             else
@@ -209,8 +209,8 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
             
             if (___cave_biome_humidity != undefined)
             {
-                ___cave_humidity_noise_scale_x = ___cave_biome_humidity[$ "noise_scale_x"] ?? 0.015625;
-                ___cave_humidity_noise_scale_y = ___cave_biome_humidity[$ "noise_scale_y"] ?? 0.015625;
+                ___cave_humidity_noise_scale_x = ___cave_biome_humidity[$ "noise_scale_x"] ?? ___cave_biome_humidity[$ "scale_x"] ?? 0.015625;
+                ___cave_humidity_noise_scale_y = ___cave_biome_humidity[$ "noise_scale_y"] ?? ___cave_biome_humidity[$ "scale_y"] ?? 0.015625;
                 ___cave_humidity_offset_y = ___cave_biome_humidity[$ "offset_y"] ?? 1000;
                 ___cave_humidity_range = ___cave_biome_humidity[$ "range"] ?? 63;
                 ___cave_humidity_octaves_offset = ___cave_biome_humidity[$ "octaves_offset"] ?? 16;
@@ -350,11 +350,11 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         ___surface_biome_heat = _surface_biome.heat;
         ___surface_biome_humidity = _surface_biome.humidity;
         
-        ___surface_heat_noise_scale = ___surface_biome_heat[$ "noise_scale"] ?? 0.015625;
+        ___surface_heat_noise_scale = ___surface_biome_heat[$ "noise_scale"] ?? ___surface_biome_heat[$ "scale"] ?? 0.015625;
         ___surface_heat_offset = ___surface_biome_heat[$ "offset"] ?? -16;
         ___surface_heat_range = ___surface_biome_heat[$ "range"] ?? 63;
         
-        ___surface_humidity_noise_scale = ___surface_biome_humidity[$ "noise_scale"] ?? 0.015625;
+        ___surface_humidity_noise_scale = ___surface_biome_humidity[$ "noise_scale"] ?? ___surface_biome_humidity[$ "scale"] ?? 0.015625;
         ___surface_humidity_offset = ___surface_biome_humidity[$ "offset"] ?? -24;
         ___surface_humidity_range = ___surface_biome_humidity[$ "range"] ?? 63;
         
@@ -413,7 +413,7 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         ___surface_smoothing_range = _smoothing[$ "range"] ?? 32;
         ___surface_smoothing_factor = _smoothing[$ "factor"] ?? 0.6;
         
-        ___surface_noise_scale = _surface[$ "noise_scale"] ?? 0.015625;
+        ___surface_noise_scale = _surface[$ "noise_scale"] ?? _surface[$ "scale"] ?? 0.015625;
         ___surface_seed_offset = _surface[$ "seed_offset"] ?? -40;
         ___surface_min_depth = _surface[$ "min_depth"] ?? 8;
         
@@ -478,7 +478,7 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         ___cave_start_min = _start.min;
         ___cave_start_min = _start.min;
         ___cave_start_octaves = _start.octaves;
-        ___cave_start_noise_scale = _start[$ "noise_scale"] ?? 0.015625;
+        ___cave_start_noise_scale = _start[$ "noise_scale"] ?? _start[$ "scale"] ?? 0.015625;
         ___cave_start_offset = _start[$ "offset"] ?? -8;
         
         ___cave_system = _cave.system;
@@ -503,7 +503,7 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
             ___aquifers_length = 0;
         }
         
-        ___cave_noise_scale = _cave[$ "noise_scale"] ?? 0.015625;
+        ___cave_noise_scale = _cave[$ "noise_scale"] ?? _cave[$ "scale"] ?? 0.015625;
         ___cave_breach_threshold = _cave[$ "breach_threshold"] ?? 242;
         ___cave_breach_depth = _cave[$ "breach_depth"] ?? -8;
         ___cave_transition_threshold = _cave[$ "transition_threshold"] ?? 220;

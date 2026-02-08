@@ -1,7 +1,7 @@
 {
     "background": {
-        "id": "phantasia:background/depths",
-        "blend": 0.7
+        "blend": 0.7,
+        "id": "phantasia:background/depths"
     },
     "foliage": [
         {
@@ -81,7 +81,7 @@
         }
     ],
     "tile": {
-        "top_layer": {
+        "bottom_layer": {
             "base": [
                 {
                     "id": "phantasia:nightrock"
@@ -113,7 +113,7 @@
                 }
             ]
         },
-        "bottom_layer": {
+        "top_layer": {
             "base": [
                 {
                     "id": "phantasia:nightrock"

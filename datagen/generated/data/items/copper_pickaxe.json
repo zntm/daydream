@@ -1,16 +1,16 @@
 {
     "inventory": "#phantasia:item/generic/inventory_tool",
     "item": {
+        "damage": 4,
         "durability": {
             "amount": 141,
             "bar": "#phantasia:item/generic/durability_bar"
         },
-        "damage": 4,
         "harvest": {
             "hardness": 1.12,
             "level": 2
         }
     },
-    "sprite": "phantasia:item/copper_pickaxe",
+    "sprite": "copper_pickaxe",
     "type": "tool"
 }

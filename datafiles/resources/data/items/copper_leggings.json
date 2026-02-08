@@ -2,8 +2,8 @@
     "inventory": "#phantasia:item/generic/inventory_tool",
     "item": {
         "armor": {
-            "type": "leggings",
-            "defense": 3
+            "defense": 3,
+            "type": "leggings"
         },
         "durability": {
             "amount": 108,

@@ -1,14 +1,14 @@
 import { DatagenReturnData } from "../../lib/DatagenReturnData";
 import { SmartValueIntRandom } from "../../lib/SmartValue";
-import { Attribute, AttributeBoolean } from "../../attribute";
+import { Attribute, AttributeBoolean } from "../../lib";
 import {
     Creature,
     CreatureHostilityType,
     CreatureMovementType,
     CreatureSprite,
     CreatureSpriteData,
-} from "../creatures";
-import { ItemDrop } from "../items";
+} from "./lib/Creature";
+import { ItemDrop } from "../items/lib";
 
 class PassiveCreature extends Creature {
     constructor(

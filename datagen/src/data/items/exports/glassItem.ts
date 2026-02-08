@@ -1,0 +1,37 @@
+import { DatagenReturnData } from "../../../lib";
+import {
+    TileItem,
+    TileItemCondition,
+    TileItemDrop,
+    TileItemHarvest,
+    ItemParticle,
+} from "../lib/TileItem";
+import { ItemType } from "../lib/ItemType";
+
+export default [
+    new DatagenReturnData(
+        "glass.json",
+        new TileItem(
+            ItemType.Untouchable,
+            "phantasia:item/glass",
+            "#phantasia:item/generic/inventory_default",
+        )
+            .setTileDrops([
+                new TileItemDrop("phantasia:item/glass").setCondition(
+                    new TileItemCondition("#phantasia:item/type/pickaxe", 1),
+                ),
+            ])
+            .setTileHarvest(
+                new TileItemHarvest(
+                    0.08,
+                    0,
+                    new ItemParticle(
+                        "#phantasia:tile/particle_colour/stone",
+                        "#phantasia:tile/generic/harvest_particle_frequency",
+                    ),
+                    new TileItemCondition("#phantasia:item/type/pickaxe"),
+                ),
+            )
+            .setTileSFX("#phantasia:tile/sfx/stone"),
+    ),
+];

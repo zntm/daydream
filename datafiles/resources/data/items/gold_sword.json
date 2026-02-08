@@ -1,23 +1,16 @@
 {
     "inventory": "#phantasia:item/generic/inventory_tool",
     "item": {
+        "damage": 8,
         "durability": {
             "amount": 799,
             "bar": "#phantasia:item/generic/durability_bar"
         },
-        "damage": 8,
-        "skill": {
-            "type": "charge",
-            "threshold": 0.5,
-            "stamina_cost": 20,
-            "on_trigger": {
-                "id": "phantasia:item/tool/sword_dash",
-                "parameters": {
-                    "power": 12
-                }
-            }
+        "harvest": {
+            "hardness": 0,
+            "level": 0
         }
     },
-    "sprite": "phantasia:item/gold_sword",
+    "sprite": "gold_sword",
     "type": "tool"
 }

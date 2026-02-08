@@ -1,0 +1,76 @@
+{
+    "direction": {
+        "direction_max": {
+            "type": "smart_value:random",
+            "values": {
+                "max": 160,
+                "min": 20
+            }
+        },
+        "direction_min": {
+            "type": "smart_value:random",
+            "values": {
+                "max": 160,
+                "min": 20
+            }
+        }
+    },
+    "gravity": {
+        "gravity_amount": 3,
+        "gravity_direction": 270
+    },
+    "lifetime": {
+        "type": "smart_value:random",
+        "values": {
+            "max": 1.25,
+            "min": 0.5
+        }
+    },
+    "size": {
+        "xscale_max": {
+            "type": "smart_value:random",
+            "values": {
+                "max": 3,
+                "min": 1
+            }
+        },
+        "xscale_min": {
+            "type": "smart_value:random",
+            "values": {
+                "max": 3,
+                "min": 1
+            }
+        },
+        "yscale_max": {
+            "type": "smart_value:random",
+            "values": {
+                "max": 3,
+                "min": 1
+            }
+        },
+        "yscale_min": {
+            "type": "smart_value:random",
+            "values": {
+                "max": 3,
+                "min": 1
+            }
+        }
+    },
+    "speed": {
+        "speed_max": {
+            "type": "smart_value:random",
+            "values": {
+                "max": 1.8,
+                "min": 0.8
+            }
+        },
+        "speed_min": {
+            "type": "smart_value:random",
+            "values": {
+                "max": 1.8,
+                "min": 0.8
+            }
+        }
+    },
+    "sprite": "phantasia:particle/tile/harvest"
+}

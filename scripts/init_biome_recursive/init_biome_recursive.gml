@@ -19,53 +19,70 @@ function init_biome_recursive(_directory, _namespace = "phantasia", _id = undefi
             continue;
         }
         
-        dbg_timer("init_biome");
-        
-        var _json = tag_value_parse(buffer_load_json(_subdirectory));
-        
-        var _id2 = string_delete(_file, string_length(_file) - 4, 5);
-        
-        var _biome_data = new BiomeData(_namespace, _name);
-        
-        _biome_data.set_background(_json.background);
-        
-        _biome_data.set_map_colour(_json.map_colour);
-        _biome_data.set_sky_colour(_json.sky_colour);
-        _biome_data.set_light_colour(_json.light_colour);
-        
-        var _music = _json[$ "music"];
-        
-        if (_music != undefined)
+        if (string_ends_with(_file, ".json"))
         {
-            _biome_data.set_music(_music);
+            dbg_timer("init_biome");
+            
+            var _json = tag_value_parse(buffer_load_json(_subdirectory));
+            
+            if (is_struct(_json))
+            {
+                var _id2 = string_delete(_file, string_length(_file) - 4, 5);
+                
+                var _biome_data = new BiomeData(_namespace, _name);
+                
+                if (_json[$ "background"] != undefined)
+                {
+                    _biome_data.set_background(_json.background);
+                }
+                
+                _biome_data.set_map_colour(_json[$ "map_colour"]);
+                _biome_data.set_sky_colour(_json[$ "sky_colour"]);
+                _biome_data.set_light_colour(_json[$ "light_colour"]);
+                
+                var _music = _json[$ "music"];
+                
+                if (_music != undefined)
+                {
+                    _biome_data.set_music(_music);
+                }
+                
+                var _tile = _json[$ "tile"];
+                
+                if (_tile != undefined)
+                {
+                    _biome_data.set_tile_top_layer(_tile.top_layer);
+                    _biome_data.set_tile_middle_layer(_tile.middle_layer);
+                    _biome_data.set_tile_bottom_layer(_tile.bottom_layer);
+                }
+                
+                var _foliage = _json[$ "foliage"];
+                
+                if (_foliage != undefined)
+                {
+                    _biome_data.set_tile_foliage(_foliage);
+                }
+                
+                _biome_data.set_creature(_json[$ "creatures"]);
+                
+                _biome_data.set_structure(_json[$ "structures"]);
+                
+                _biome_data.set_terrain_modifier(_json[$ "terrain_modifier"]);
+                
+                _biome_data.set_is_ocean(_json[$ "is_ocean"]);
+                
+                _biome_data.set_shore_tiles(_json[$ "shore_tiles"]);
+                
+                _biome_data.set_is_skyland(_json[$ "is_skyland"]);
+                
+                var _name2 = string_delete(_name, string_length(_name) - 4, 5);
+                
+                global.biome_data[$ $"{_namespace}:{_name2}"] = _biome_data;
+                
+                delete _json;
+                
+                dbg_timer("init_biome", $"[Init] Loaded Biome: \'{_name2}\'");
+            }
         }
-        
-        var _tile = _json.tile;
-        
-        _biome_data.set_tile_top_layer(_tile.top_layer);
-        _biome_data.set_tile_middle_layer(_tile.middle_layer);
-        _biome_data.set_tile_bottom_layer(_tile.bottom_layer);
-        
-        _biome_data.set_tile_foliage(_json.foliage);
-        
-        _biome_data.set_creature(_json[$ "creatures"]);
-        
-        _biome_data.set_structure(_json[$ "structures"]);
-        
-        _biome_data.set_terrain_modifier(_json[$ "terrain_modifier"]);
-        
-        _biome_data.set_is_ocean(_json[$ "is_ocean"]);
-        
-        _biome_data.set_shore_tiles(_json[$ "shore_tiles"]);
-        
-        _biome_data.set_is_skyland(_json[$ "is_skyland"]);
-        
-        var _name2 = string_delete(_name, string_length(_name) - 4, 5);
-        
-        global.biome_data[$ $"{_namespace}:{_name2}"] = _biome_data;
-        
-        delete _json;
-        
-        dbg_timer("init_biome", $"[Init] Loaded Biome: \'{_name2}\'");
     }
 }

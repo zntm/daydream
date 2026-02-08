@@ -2,15 +2,8 @@
     "inventory": "#phantasia:item/generic/inventory_tool",
     "item": {
         "armor": {
-            "type": "breastplate",
             "defense": 13,
-            "on_double_horizontal_move": {
-                "id": "@phantasia:item/armor/dash",
-                "parameters": {
-                    "stamina_cost": 15,
-                    "velocity": 12
-                }
-            }
+            "type": "breastplate"
         },
         "durability": {
             "amount": 1041,
