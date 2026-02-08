@@ -35,7 +35,7 @@ for var dx in -radius..radius {
                     var connected = false
                     var check_radius = 4
                     
-                    'outer: for var cdx in -check_radius..check_radius {
+                    for var cdx in -check_radius..check_radius {
                         for var cdy in -check_radius..check_radius {
                             if abs(cdx) + abs(cdy) > check_radius {
                                 continue
@@ -49,7 +49,7 @@ for var dx in -radius..radius {
                             var ct = tile_get(lx + cdx, ly + cdy, lz - 1)
                             if ct?.get_id() in wood {
                                 connected = true
-                                break 'outer
+                                break 2
                             }
                         }
                     }
