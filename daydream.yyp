@@ -2203,6 +2203,7 @@
     {"id":{"name":"UIWindow","path":"scripts/UIWindow/UIWindow.yy",},},
     {"id":{"name":"unix_to_datetime","path":"scripts/unix_to_datetime/unix_to_datetime.yy",},},
     {"id":{"name":"uuid_generate","path":"scripts/uuid_generate/uuid_generate.yy",},},
+    {"id":{"name":"world_cleanup","path":"scripts/world_cleanup/world_cleanup.yy",},},
     {"id":{"name":"world_get_reference","path":"scripts/world_get_reference/world_get_reference.yy",},},
     {"id":{"name":"WorldData","path":"scripts/WorldData/WorldData.yy",},},
     {"id":{"name":"worldgen_get_aquifer","path":"scripts/worldgen_get_aquifer/worldgen_get_aquifer.yy",},},

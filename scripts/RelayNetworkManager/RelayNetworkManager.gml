@@ -226,12 +226,8 @@ function RelayNetworkManager() constructor
         // Re-seed noise
         open_simplex_noise_seed(_welcome_data.world_seed);
         
-        // Clear chunks for regeneration with new seed
-        if (variable_global_exists("chunk_pool"))
-        {
-            chunk_map_clear();
-            global.chunk_pool.fading_chunks = [];
-        }
+        // Clear all world state for regeneration with new seed
+        world_cleanup();
         
         // Spawn remote player instances for existing peers
         for (var i = 0; i < array_length(_welcome_data.peers); ++i)

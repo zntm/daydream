@@ -152,6 +152,8 @@ if (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.EXIT)
             global.relay_manager.leave_session();
         }
         
+        world_cleanup();
+        
         room_goto(rm_Menu_Title);
         
         exit;

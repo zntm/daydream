@@ -255,6 +255,19 @@ function ChunkPool() : Pool() constructor
         on_release(_chunk);
     }
     
+    /// @function clear_all()
+    /// @desc Clear all chunks and free resources
+    static clear_all = function()
+    {
+        // Clean up all pooled chunks
+        for (var i = 0; i < array_length(pool); ++i)
+        {
+            on_release(pool[i]);
+        }
+        pool = [];
+        fading_chunks = [];
+    }
+    
     // Override release to check capacity
     static release = function(_chunk)
     {

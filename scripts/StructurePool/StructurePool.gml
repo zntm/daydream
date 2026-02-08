@@ -98,6 +98,14 @@ function StructurePool() : Pool() constructor
         return _results;
     }
     
+    /// @function clear_all()
+    /// @desc Clear all active structures and pool
+    static clear_all = function()
+    {
+        active_structures = [];
+        pool = [];
+    }
+    
     /// @function query_position(_x, _y)
     /// @desc Returns a structure at the specific tile point
     static query_position = function(_x, _y)
