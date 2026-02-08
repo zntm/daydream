@@ -20,10 +20,10 @@ function chunk_generate(_chunk, _context = undefined)
     }
     
     var _structures = global.structure_pool.query_range(
-        _chunk.x - (TILE_SIZE / 2),
-        _chunk.y - (TILE_SIZE / 2),
-        _chunk.x - (TILE_SIZE / 2) + CHUNK_SIZE_DIMENSION,
-        _chunk.y - (TILE_SIZE / 2) + CHUNK_SIZE_DIMENSION
+        _chunk.chunk_xstart,
+        _chunk.chunk_ystart,
+        _chunk.chunk_xstart + CHUNK_SIZE,
+        _chunk.chunk_ystart + CHUNK_SIZE
     );
     var _structure_rectangle_length = array_length(_structures);
     var __structure_array = _structures;
@@ -124,18 +124,18 @@ function chunk_generate(_chunk, _context = undefined)
         for (var l = 0; l < _structure_rectangle_length; ++l)
         {
             var _inst = __structure_array[l];
-            var _xscale = _inst.image_xscale;
-            var _yscale = _inst.image_yscale;
-            var _rectangle = _xscale * _yscale;
+            var _width  = _inst.width;
+            var _height = _inst.height;
+            var _rectangle = _width * _height;
             var _data = _inst.data;
             
-            var _rel_x = _inst.structure_xrelative - _chunk.chunk_xstart;
-            var _rel_y = _inst.structure_yrelative - _chunk.chunk_ystart;
+            var _rel_x = _inst.x - _chunk.chunk_xstart;
+            var _rel_y = _inst.y - _chunk.chunk_ystart;
             
             var _sx_start = max(0, -_rel_x);
-            var _sx_end = min(_xscale, CHUNK_SIZE - _rel_x);
+            var _sx_end = min(_width, CHUNK_SIZE - _rel_x);
             var _sy_start = max(0, -_rel_y);
-            var _sy_end = min(_yscale, CHUNK_SIZE - _rel_y);
+            var _sy_end = min(_height, CHUNK_SIZE - _rel_y);
             
             if (_sx_start >= _sx_end || _sy_start >= _sy_end) continue;
             
@@ -145,7 +145,7 @@ function chunk_generate(_chunk, _context = undefined)
                 for (var _sx = _sx_start; _sx < _sx_end; ++_sx)
                 {
                     var _chunk_x = _rel_x + _sx;
-                    var _structure_index = _sx + (_sy * _xscale);
+                    var _structure_index = _sx + (_sy * _width);
                     var _chunk_index = _chunk_x + (_chunk_y * CHUNK_SIZE);
                     
                     for (var m = CHUNK_DEPTH - 1; m >= 0; --m)

@@ -122,7 +122,7 @@ function control_structure(_x, _y)
                         {
                             var _id2 = _id[m];
                             // random_set_seed(_struct_seed + m * 100);
-                            if (!structure_valid(i * TILE_SIZE, j * TILE_SIZE, _id2, _world_seed))
+                            if (!structure_valid(i, j, _id2, _world_seed))
                             {
                                 _generate = false;
                                 break;
@@ -135,8 +135,7 @@ function control_structure(_x, _y)
                         for (var m = 0; m < _id_length; ++m)
                         {
                             var _id2 = _id[m];
-                            // random_set_seed(_struct_seed + m * 100);
-                            structure_create(i * TILE_SIZE, j * TILE_SIZE, _id2, _world_seed);
+                            structure_create(i, j, _id2, _world_seed);
                         }
                     }
                 }
@@ -151,19 +150,19 @@ function control_structure(_x, _y)
                     {
                         if (_placement_type == STRUCTURE_PLACEMENT_TYPE.FLOOR)
                         {
-                            structure_create(i * TILE_SIZE, j * TILE_SIZE, _id, _world_seed);
+                            structure_create(i, j, _id, _world_seed);
                         }
                     }
                     else if (_queue & 0b001)
                     {
                         if (_placement_type == STRUCTURE_PLACEMENT_TYPE.CEILING)
                         {
-                            structure_create(i * TILE_SIZE, j * TILE_SIZE, _id, _world_seed);
+                            structure_create(i, j, _id, _world_seed);
                         }
                     }
                     else if (_placement_type == STRUCTURE_PLACEMENT_TYPE.INSIDE)
                     {
-                        structure_create(i * TILE_SIZE, j * TILE_SIZE, _id, _world_seed);
+                        structure_create(i, j, _id, _world_seed);
                     }
                 }
             }

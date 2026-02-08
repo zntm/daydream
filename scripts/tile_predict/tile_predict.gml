@@ -7,7 +7,7 @@ function tile_predict(_x, _y, _z)
     var _global_biome_data = global.biome_data;
     
     // PASS 1: Structures (Highest Priority)
-    var _inst = global.structure_pool.query_position(_x * TILE_SIZE, _y * TILE_SIZE);
+    var _inst = global.structure_pool.query_position(_x, _y);
     
     if (_inst != noone)
     {
@@ -17,16 +17,16 @@ function tile_predict(_x, _y, _z)
             structure_generate(_inst, _world_seed, _item_data, global.structure_data, global.natural_structure_data);
         }
         
-        var _xscale = _inst.image_xscale;
-        var _yscale = _inst.image_yscale;
-        var _rectangle = _xscale * _yscale;
+        var _width  = _inst.width;
+        var _height = _inst.height;
+        var _rectangle = _width * _height;
         
-        var _sx = _x - _inst.structure_xrelative;
-        var _sy = _y - _inst.structure_yrelative;
+        var _sx = _x - _inst.x;
+        var _sy = _y - _inst.y;
         
-        if (_sx >= 0 && _sx < _xscale && _sy >= 0 && _sy < _yscale)
+        if (_sx >= 0 && _sx < _width && _sy >= 0 && _sy < _height)
         {
-            var _tile = _inst.data[_sx + (_sy * _xscale) + (_z * _rectangle)];
+            var _tile = _inst.data[_sx + (_sy * _width) + (_z * _rectangle)];
             if (_tile != TILE_STRUCTURE_VOID) return _tile;
         }
     }
