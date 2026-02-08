@@ -27,8 +27,8 @@
         },
         "on_random_tick": [
             {
-                "id": "@phantasia:tile/leaf_decay",
-                "parameters": 0.1
+                "chance": 0.1,
+                "id": "@phantasia:tile/leaf_decay"
             }
         ],
         "sfx": "#phantasia:tile/sfx/leaves"

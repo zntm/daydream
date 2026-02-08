@@ -5,62 +5,62 @@
     },
     "creatures": [
         {
-            "id": "phantasia:rabbit",
             "amount": {
+                "type": "smart_value:irandom",
                 "values": {
-                    "min": 1,
-                    "max": 4
-                },
-                "type": "smart_value:irandom"
+                    "max": 4,
+                    "min": 1
+                }
             },
             "chance": 0.015,
-            "time_range_min": 0,
+            "id": "phantasia:rabbit",
+            "tile": "#phantasia:tile/creature_spawn/animal",
             "time_range_max": 890,
-            "tile": "#phantasia:tile/creature_spawn/animal"
+            "time_range_min": 0
         }
     ],
     "foliage": [
         {
-            "id": "phantasia:short_grass",
             "chance": 0.18,
-            "generate_on": "#phantasia:tile/placement/plant_on"
+            "generate_on": "#phantasia:tile/placement/plant_on",
+            "id": "phantasia:short_grass"
         },
         {
-            "id": "phantasia:tall_grass",
             "chance": 0.02,
-            "generate_on": "#phantasia:tile/placement/plant_on"
+            "generate_on": "#phantasia:tile/placement/plant_on",
+            "id": "phantasia:tall_grass"
         },
         {
-            "id": "phantasia:rose",
             "chance": 0.08,
-            "generate_on": "#phantasia:tile/placement/plant_on"
+            "generate_on": "#phantasia:tile/placement/plant_on",
+            "id": "phantasia:rose"
         },
         {
-            "id": "phantasia:globeflower",
             "chance": 0.06,
-            "generate_on": "#phantasia:tile/placement/plant_on"
+            "generate_on": "#phantasia:tile/placement/plant_on",
+            "id": "phantasia:globeflower"
         }
     ],
     "music": [
         {
-            "id": "phantasia:music/field_of_concourse",
-            "gain": 0.7
+            "gain": 0.7,
+            "id": "phantasia:music/field_of_concourse"
         },
         {
-            "id": "phantasia:music/liminal",
-            "gain": 0.7
+            "gain": 0.7,
+            "id": "phantasia:music/liminal"
         },
         {
-            "id": "phantasia:music/red_apple",
-            "gain": 0.6
+            "gain": 0.6,
+            "id": "phantasia:music/red_apple"
         },
         {
-            "id": "phantasia:music/soft_hour",
-            "gain": 0.6
+            "gain": 0.6,
+            "id": "phantasia:music/soft_hour"
         },
         {
-            "id": "phantasia:music/someday_it_will_rain",
-            "gain": 0.7
+            "gain": 0.7,
+            "id": "phantasia:music/someday_it_will_rain"
         }
     ],
     "shore_tiles": {
@@ -81,14 +81,14 @@
     },
     "structures": [
         {
-            "id": "phantasia:tree/cherry",
             "chance": 0.12,
-            "generate_on": "#phantasia:tile/placement/plant_on"
+            "generate_on": "#phantasia:tile/placement/plant_on",
+            "id": "phantasia:tree/cherry"
         },
         {
-            "id": "phantasia:tree/oak",
             "chance": 0.02,
-            "generate_on": "#phantasia:tile/placement/plant_on"
+            "generate_on": "#phantasia:tile/placement/plant_on",
+            "id": "phantasia:tree/oak"
         }
     ],
     "tile": {

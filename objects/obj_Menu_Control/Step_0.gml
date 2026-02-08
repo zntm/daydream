@@ -21,4 +21,4 @@ global.gui_mouse_y = device_mouse_y_to_gui(0);
 menu_transition_update();
 
 // Update new UI system
-menu_ui_update();
+// menu_ui_update();

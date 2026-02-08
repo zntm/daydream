@@ -10,5 +10,6 @@ export default new DatagenReturnData(
                 import.meta.require(join(__dirname, "./craftingRecipes", file))
                     .default,
         )
-        .flat(Infinity),
+        .flat(Infinity)
+        .filter((recipe) => recipe !== undefined && recipe !== null),
 );

@@ -194,7 +194,7 @@ export default [
             "#phantasia:item/generic/inventory_default",
         )
             .setTileDrops([
-                new TileItemDrop("phantasia:item/glass").setCondition(
+                new TileItemDrop("phantasia:glass").setCondition(
                     new TileItemCondition("#phantasia:item/type/pickaxe", 1),
                 ),
             ])
@@ -219,7 +219,7 @@ export default [
             "#phantasia:item/generic/inventory_default",
         )
             .setTileDrops([
-                new TileItemDrop("phantasia:item/furnace").setCondition(
+                new TileItemDrop("phantasia:furnace").setCondition(
                     new TileItemCondition("#phantasia:item/type/pickaxe", 1),
                 ),
             ])

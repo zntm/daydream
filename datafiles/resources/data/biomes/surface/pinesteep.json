@@ -5,57 +5,57 @@
     },
     "creatures": [
         {
-            "id": "phantasia:rabbit",
             "amount": {
+                "type": "smart_value:irandom",
                 "values": {
-                    "min": 1,
-                    "max": 2
-                },
-                "type": "smart_value:irandom"
+                    "max": 2,
+                    "min": 1
+                }
             },
             "chance": 0.01,
-            "time_range_min": 0,
+            "id": "phantasia:rabbit",
+            "tile": "#phantasia:tile/creature_spawn/animal",
             "time_range_max": 890,
-            "tile": "#phantasia:tile/creature_spawn/animal"
+            "time_range_min": 0
         }
     ],
     "foliage": [
         {
-            "id": "phantasia:snow_pile",
             "chance": 0.15,
-            "generate_on": "#phantasia:tile/placement/plant_on"
+            "generate_on": "#phantasia:tile/placement/plant_on",
+            "id": "phantasia:snow_pile"
         },
         {
-            "id": "phantasia:rock",
             "chance": 0.04,
-            "generate_on": "#phantasia:tile/placement/plant_on"
+            "generate_on": "#phantasia:tile/placement/plant_on",
+            "id": "phantasia:rock"
         },
         {
-            "id": "phantasia:twig",
             "chance": 0.03,
-            "generate_on": "#phantasia:tile/placement/plant_on"
+            "generate_on": "#phantasia:tile/placement/plant_on",
+            "id": "phantasia:twig"
         }
     ],
     "music": [
         {
-            "id": "phantasia:music/frozen_meadow",
-            "gain": 0.6
+            "gain": 0.6,
+            "id": "phantasia:music/frozen_meadow"
         },
         {
-            "id": "phantasia:music/winter_wind",
-            "gain": 0.5
+            "gain": 0.5,
+            "id": "phantasia:music/winter_wind"
         }
     ],
     "structures": [
         {
-            "id": "phantasia:tree/pine",
             "chance": 0.12,
-            "generate_on": "#phantasia:tile/placement/plant_on"
+            "generate_on": "#phantasia:tile/placement/plant_on",
+            "id": "phantasia:tree/pine"
         },
         {
-            "id": "phantasia:tree/spruce",
             "chance": 0.06,
-            "generate_on": "#phantasia:tile/placement/plant_on"
+            "generate_on": "#phantasia:tile/placement/plant_on",
+            "id": "phantasia:tree/spruce"
         }
     ],
     "tile": {

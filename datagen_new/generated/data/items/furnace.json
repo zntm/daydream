@@ -8,7 +8,7 @@
                     "id": "#phantasia:item/type/pickaxe",
                     "level": 1
                 },
-                "id": "phantasia:item/furnace"
+                "id": "phantasia:furnace"
             }
         ],
         "harvest": {

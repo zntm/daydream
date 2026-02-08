@@ -1,0 +1,27 @@
+{
+    "harvest_particle_frequency": {
+        "type": "smart_value:irandom",
+        "values": {
+            "min": 4,
+            "max": 10
+        }
+    },
+    "wood": [
+        "phantasia:birch",
+        "phantasia:mangrove",
+        "phantasia:oak",
+        "phantasia:pine"
+    ],
+    "leaf": [
+        "phantasia:birch_leaves",
+        "phantasia:mangrove_leaves",
+        "phantasia:oak_leaves",
+        "phantasia:pine_leaves"
+    ],
+    "workbench": [
+        "phantasia:birch_workbench",
+        "phantasia:mangrove_workbench",
+        "phantasia:oak_workbench",
+        "phantasia:pine_workbench"
+    ]
+}

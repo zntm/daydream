@@ -592,6 +592,9 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
             */
         }
         
+        show_debug_message(get_sprite());
+        show_debug_message(global.sprite_asset[$ get_sprite()]);
+        
         var _sprite = global.sprite_asset[$ get_sprite()].get_sprite();
         
         set_collision_box(

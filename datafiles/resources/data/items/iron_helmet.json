@@ -10,6 +10,6 @@
             "bar": "#phantasia:item/generic/durability_bar"
         }
     },
-    "sprite": "phantasia:item/phantasia:iron_helmet",
+    "sprite": "phantasia:item/iron_helmet",
     "type": "accessory"
 }

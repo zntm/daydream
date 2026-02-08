@@ -1,5 +1,5 @@
 import { DatagenReturnData } from "../../../../lib";
-import { TileItemProperties, type ItemPropertiesType } from "../ItemProperties";
+import { TileItemProperties } from "../ItemProperties";
 import { ItemSFX } from "../ItemSFX";
 import { ItemType } from "../ItemType";
 import {
@@ -21,7 +21,7 @@ export default (
         `${id}.json`,
         new TileItem(
             ItemType.Solid,
-            `${namespace}:/item/${id}`,
+            `${namespace}:item/${id}`,
             "#phantasia:item/generic/inventory_tile",
             properties,
         )
@@ -34,7 +34,7 @@ export default (
         `${id}_wall.json`,
         new TileItem(
             ItemType.Solid,
-            `${namespace}:/item/${id}_wall`,
+            `${namespace}:item/${id}_wall`,
             "#phantasia:item/generic/inventory_tile",
             [...properties, TileItemProperties.IsWall],
         )

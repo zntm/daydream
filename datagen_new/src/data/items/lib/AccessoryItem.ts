@@ -41,10 +41,10 @@ export class Accessory extends Item {
         durability?: ItemDurability;
     } = {};
 
-    constructor(id: string) {
+    constructor(sprite: string) {
         super(
             ItemType.Accessory,
-            `phantasia:item/${id}`,
+            sprite,
             "#phantasia:item/generic/inventory_tool",
         );
     }
@@ -66,12 +66,12 @@ export class Accessory extends Item {
 }
 
 // Empty subclasses kept for semantic distinction and export compatibility
-export class HelmetItem extends Accessory {}
-export class BreastplateItem extends Accessory {}
-export class LeggingsItem extends Accessory {}
-export class AccessoryItem extends Accessory {}
+export class HelmetItem extends Accessory { }
+export class BreastplateItem extends Accessory { }
+export class LeggingsItem extends Accessory { }
+export class AccessoryItem extends Accessory { }
 
 // Factory functions for cleaner call sites
-export const Helmet = (id: string) => new HelmetItem(id);
-export const Breastplate = (id: string) => new BreastplateItem(id);
-export const Leggings = (id: string) => new LeggingsItem(id);
+export const Helmet = (sprite: string) => new HelmetItem(sprite);
+export const Breastplate = (sprite: string) => new BreastplateItem(sprite);
+export const Leggings = (sprite: string) => new LeggingsItem(sprite);

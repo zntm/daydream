@@ -9,6 +9,7 @@
             "hp": 8,
             "saturation": 4,
             "sfx": {
+                "gain": 1,
                 "id": "phantasia:sfx/item/eat"
             }
         }

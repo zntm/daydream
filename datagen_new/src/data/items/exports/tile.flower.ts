@@ -13,16 +13,12 @@ import {
 export default [
     "bluebells",
     "daisy",
-    "daffodil",
     "dandelion",
     "dendrobium",
     "globeflower",
     "lilybell",
-    "marigold",
     "orchids",
-    "petunia",
     "rose",
-    "sweet_pea",
 ].map(
     (id: string) =>
         new DatagenReturnData(

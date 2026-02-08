@@ -48,16 +48,16 @@
             {
                 "id": "@phantasia:open_ui",
                 "parameters": {
-                    "ui": "ui/structure_blueprint.ui",
-                    "definition": "structure_blueprint_menu",
                     "bindings": {
                         "id": "component:id",
                         "turns_into": "component:turns_into",
                         "xoffset": "component:xoffset",
-                        "yoffset": "component:yoffset",
                         "xscale": "component:xscale",
+                        "yoffset": "component:yoffset",
                         "yscale": "component:yscale"
-                    }
+                    },
+                    "definition": "structure_blueprint_menu",
+                    "ui": "ui/structure_blueprint.ui"
                 }
             }
         ],

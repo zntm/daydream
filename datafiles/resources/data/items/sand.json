@@ -13,10 +13,10 @@
         },
         "drops": [
             {
-                "id": "phantasia:sand",
                 "condition": {
                     "id": "#phantasia:item/type/shovel"
-                }
+                },
+                "id": "phantasia:sand"
             }
         ],
         "harvest": {

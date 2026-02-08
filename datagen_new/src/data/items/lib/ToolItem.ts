@@ -39,10 +39,10 @@ export class ToolItem extends Item {
 
 // Export classes for backward compatibility (even though they're empty)
 // These exist for semantic distinction in code, not behavioral differences
-export class SwordItem extends ToolItem {}
-export class PickaxeItem extends ToolItem {}
-export class AxeItem extends ToolItem {}
-export class ShovelItem extends ToolItem {}
+export class SwordItem extends ToolItem { }
+export class PickaxeItem extends ToolItem { }
+export class AxeItem extends ToolItem { }
+export class ShovelItem extends ToolItem { }
 
 // Factory functions for cleaner call sites
 export const Sword = (sprite: string) => new SwordItem(sprite);

@@ -13,11 +13,11 @@
         },
         "drops": [
             {
-                "id": "phantasia:item/platinum_ore",
                 "condition": {
                     "id": "#phantasia:item/type/pickaxe",
                     "level": 1
-                }
+                },
+                "id": "phantasia:platinum_ore"
             }
         ],
         "harvest": {

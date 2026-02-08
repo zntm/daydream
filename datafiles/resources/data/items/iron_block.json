@@ -11,11 +11,11 @@
         },
         "drops": [
             {
-                "id": "phantasia:item/iron_block",
                 "condition": {
                     "id": "#phantasia:item/type/pickaxe",
                     "level": 1
-                }
+                },
+                "id": "phantasia:iron_block"
             }
         ],
         "harvest": {

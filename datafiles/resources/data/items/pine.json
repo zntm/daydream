@@ -1,14 +1,7 @@
 {
-    "inventory": "#phantasia:item/generic/inventory_tile",
-    "properties": [
-        "phantasia:is_tile"
-    ],
-    "sprite": "phantasia:/item/pine",
+    "inventory": "#phantasia:item/generic/inventory_default",
+    "sprite": "phantasia:item/pine",
     "tile": {
-        "audio_properties": {
-            "lowpass": 0.4,
-            "reverb": 0.1
-        },
         "drops": [
             {
                 "id": "phantasia:pine"
@@ -18,7 +11,7 @@
             "condition": {
                 "id": "#phantasia:item/type/axe"
             },
-            "hardness": 0.44,
+            "hardness": 0.56,
             "level": 1,
             "particle": {
                 "colour": [
@@ -28,22 +21,25 @@
                 "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
             }
         },
-        "sfx": "#phantasia:tile/sfx/wood"
-    },
-    "type": "solid"
-},
+        "placement": {
+            "condition": {
+                "type": "every",
+                "values": [
+                    {
+                        "condition": {
+                            "type": "some",
                             "values": [
                                 {
+                                    "id": "#phantasia:tile/placement/plant_on",
                                     "xoffset": 0,
                                     "yoffset": 1,
-                                    "z": "default",
-                                    "id": "#phantasia:tile/placement/plant_on"
+                                    "z": "default"
                                 },
                                 {
+                                    "id": "$ID",
                                     "xoffset": 0,
                                     "yoffset": 1,
-                                    "z": "z",
-                                    "id": "$ID"
+                                    "z": "z"
                                 }
                             ]
                         }
@@ -53,5 +49,5 @@
         },
         "sfx": "#phantasia:tile/sfx/wood"
     },
-    "type": "untouchable"
+    "type": "solid"
 }

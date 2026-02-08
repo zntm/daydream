@@ -1,6 +1,11 @@
 {
     "inventory": "#phantasia:item/generic/inventory_tool",
-    "item": {},
-    "sprite": "pine_pickaxe",
+    "item": {
+        "durability": {
+            "amount": 73,
+            "bar": "#phantasia:item/generic/durability_bar"
+        }
+    },
+    "sprite": "phantasia:item/pine_pickaxe",
     "type": "tool"
 }

@@ -10,6 +10,6 @@
             "bar": "#phantasia:item/generic/durability_bar"
         }
     },
-    "sprite": "phantasia:item/phantasia:iron_breastplate",
+    "sprite": "phantasia:item/iron_breastplate",
     "type": "accessory"
 }

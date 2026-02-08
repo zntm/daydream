@@ -24,7 +24,7 @@ export class Item {
         properties?: ItemPropertiesType[],
     ) {
         this.type = type;
-        this.sprite = sprite;
+        this.sprite = sprite.includes(":") ? sprite : `phantasia:item/${sprite}`;
         this.inventory = inventory;
 
         if (properties?.length) {

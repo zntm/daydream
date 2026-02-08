@@ -39,7 +39,7 @@ const makeArmor = (
 ) =>
     new DatagenReturnData(
         `${id}_${slot}.json`,
-        factory(`${namespace}:${id}_${slot}`)
+        factory(`${namespace}:item/${id}_${slot}`)
             .setItemAccessory(new ItemAccessory(type, data.defense))
             .setItemDurability(
                 new ItemDurability(data.durability, DURABILITY_BAR),

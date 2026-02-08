@@ -4,27 +4,27 @@
             "entries": [
                 {
                     "item": {
-                        "id": "phantasia:coal",
                         "amount": {
+                            "type": "smart_value:irandom",
                             "values": {
-                                "min": 2,
-                                "max": 4
-                            },
-                            "type": "smart_value:irandom"
-                        }
+                                "max": 4,
+                                "min": 2
+                            }
+                        },
+                        "id": "phantasia:coal"
                     },
                     "weight": 1
                 },
                 {
                     "item": {
-                        "id": "phantasia:twig",
                         "amount": {
+                            "type": "smart_value:irandom",
                             "values": {
-                                "min": 1,
-                                "max": 2
-                            },
-                            "type": "smart_value:irandom"
-                        }
+                                "max": 2,
+                                "min": 1
+                            }
+                        },
+                        "id": "phantasia:twig"
                     },
                     "weight": 1
                 },
@@ -34,11 +34,11 @@
                 }
             ],
             "rolls": {
+                "type": "smart_value:irandom",
                 "values": {
-                    "min": 3,
-                    "max": 8
-                },
-                "type": "smart_value:irandom"
+                    "max": 8,
+                    "min": 3
+                }
             }
         }
     ]

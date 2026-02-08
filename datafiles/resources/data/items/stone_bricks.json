@@ -3,7 +3,7 @@
     "properties": [
         "phantasia:is_tile"
     ],
-    "sprite": "phantasia:/item/stone_bricks",
+    "sprite": "phantasia:item/stone_bricks",
     "tile": {
         "audio_properties": {
             "lowpass": 0.7,

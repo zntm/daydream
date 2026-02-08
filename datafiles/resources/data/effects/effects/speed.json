@@ -4,8 +4,8 @@
     "icon": "phantasia:item/stone",
     "modifiers": [
         {
-            "value": "level",
-            "operation": "multiply"
+            "operation": "multiply",
+            "value": "level"
         }
     ],
     "particle": {

@@ -1,0 +1,13 @@
+[
+    {
+        "value": "phantasia:surface/desert"
+    },
+    {
+        "value": "phantasia:surface/forest",
+        "weight": 4
+    },
+    {
+        "value": "phantasia:surface/taiga",
+        "weight": 2
+    }
+]

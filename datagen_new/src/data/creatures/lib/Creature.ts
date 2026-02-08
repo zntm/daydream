@@ -108,6 +108,6 @@ export class Creature {
         if (this.contact_damage !== undefined)
             data.contact_damage = this.contact_damage;
 
-        return new DatagenReturnData(`creatures/${this.id}.json`, data);
+        return new DatagenReturnData(`${this.id}.json`, data);
     }
 }

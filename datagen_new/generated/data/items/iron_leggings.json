@@ -10,6 +10,6 @@
             "bar": "#phantasia:item/generic/durability_bar"
         }
     },
-    "sprite": "phantasia:item/phantasia:iron_leggings",
+    "sprite": "phantasia:item/iron_leggings",
     "type": "accessory"
 }

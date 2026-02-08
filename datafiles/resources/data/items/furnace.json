@@ -4,11 +4,11 @@
     "tile": {
         "drops": [
             {
-                "id": "phantasia:item/furnace",
                 "condition": {
                     "id": "#phantasia:item/type/pickaxe",
                     "level": 1
-                }
+                },
+                "id": "phantasia:furnace"
             }
         ],
         "harvest": {

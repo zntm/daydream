@@ -21,15 +21,18 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
     
     static set_music = function(_music)
     {
-        ___music = [];
-        
-        var _length = array_length(_music);
-        
-        for (var i = 0; i < _length; ++i)
+        if (is_array(_music))
         {
-            var _ = _music[i];
+            ___music = [];
             
-            array_push(___music, new Sound(_.id, _.gain));
+            var _length = array_length(_music);
+            
+            for (var i = 0; i < _length; ++i)
+            {
+                var _ = _music[i];
+                
+                array_push(___music, new Sound(_.id, _.gain));
+            }
         }
         
         return self;
@@ -126,8 +129,11 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
     
     static set_tile_top_layer = function(_data)
     {
-        ___tile_top_layer_base = __parse_tile_array(_data.base);
-        ___tile_top_layer_wall = __parse_tile_array(_data.wall);
+        if (_data != undefined)
+        {
+            ___tile_top_layer_base = __parse_tile_array(_data[$ "base"]);
+            ___tile_top_layer_wall = __parse_tile_array(_data[$ "wall"]);
+        }
         
         return self;
     }
@@ -144,8 +150,11 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
     
     static set_tile_middle_layer = function(_data)
     {
-        ___tile_middle_layer_base = __parse_tile_array(_data.base);
-        ___tile_middle_layer_wall = __parse_tile_array(_data.wall);
+        if (_data != undefined)
+        {
+            ___tile_middle_layer_base = __parse_tile_array(_data[$ "base"]);
+            ___tile_middle_layer_wall = __parse_tile_array(_data[$ "wall"]);
+        }
         
         return self;
     }
@@ -162,8 +171,11 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
     
     static set_tile_bottom_layer = function(_data)
     {
-        ___tile_bottom_layer_base = __parse_tile_array(_data.base);
-        ___tile_bottom_layer_wall = __parse_tile_array(_data.wall);
+        if (_data != undefined)
+        {
+            ___tile_bottom_layer_base = __parse_tile_array(_data[$ "base"]);
+            ___tile_bottom_layer_wall = __parse_tile_array(_data[$ "wall"]);
+        }
         
         return self;
     }
@@ -258,8 +270,15 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
     
     static set_tile_foliage = function(_foliage)
     {
-        ___tile_foliage = _foliage;
-        ___tile_foliage_length = array_length(_foliage);
+        if (is_array(_foliage))
+        {
+            ___tile_foliage = _foliage;
+            ___tile_foliage_length = array_length(_foliage);
+        }
+        else
+        {
+            ___tile_foliage_length = 0;
+        }
         
         return self;
     }
@@ -313,8 +332,15 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
     
     static set_structure = function(_structure)
     {
-        ___structure = _structure;
-        ___structure_length = array_length(_structure);
+        if (is_array(_structure))
+        {
+            ___structure = _structure;
+            ___structure_length = array_length(_structure);
+        }
+        else
+        {
+            ___structure_length = 0;
+        }
         
         return self;
     }

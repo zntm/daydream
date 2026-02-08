@@ -1,14 +1,16 @@
 import { DatagenReturnData } from "../../../lib";
-import { ToolItem } from "../lib";
+import { ItemDurability, ToolItem } from "../lib";
 import { woodRegistries } from "../registries";
 
-export default woodRegistries.map(({ id }) => [
+export default woodRegistries.map(({ namespace, id }) => [
     new DatagenReturnData(
         `${id}_pickaxe.json`,
-        new ToolItem(`${id}_pickaxe`, 1, 73, 1, 1),
+        new ToolItem(`phantasia:item/${id}_pickaxe`)
+            .setItemDurability(new ItemDurability(73, "#phantasia:item/generic/durability_bar")),
     ),
     new DatagenReturnData(
         `${id}_shovel.json`,
-        new ToolItem(`${id}_shovel`, 1, 65, 1, 1),
+        new ToolItem(`phantasia:item/${id}_shovel`)
+            .setItemDurability(new ItemDurability(65, "#phantasia:item/generic/durability_bar")),
     ),
 ]);

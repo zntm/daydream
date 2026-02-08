@@ -1,94 +1,94 @@
 {
     "children": [
         {
-            "type": "slot",
             "props": {
+                "inventory_name": "base",
+                "slot_index": 0,
                 "x": 0,
-                "y": 0,
-                "inventory_name": "base",
-                "slot_index": 0
-            }
+                "y": 0
+            },
+            "type": "slot"
         },
         {
-            "type": "slot",
             "props": {
+                "inventory_name": "base",
+                "slot_index": 1,
                 "x": 16,
-                "y": 0,
-                "inventory_name": "base",
-                "slot_index": 1
-            }
+                "y": 0
+            },
+            "type": "slot"
         },
         {
-            "type": "slot",
             "props": {
+                "inventory_name": "base",
+                "slot_index": 2,
                 "x": 32,
-                "y": 0,
-                "inventory_name": "base",
-                "slot_index": 2
-            }
+                "y": 0
+            },
+            "type": "slot"
         },
         {
-            "type": "slot",
             "props": {
+                "inventory_name": "base",
+                "slot_index": 3,
                 "x": 48,
-                "y": 0,
-                "inventory_name": "base",
-                "slot_index": 3
-            }
+                "y": 0
+            },
+            "type": "slot"
         },
         {
-            "type": "slot",
             "props": {
+                "inventory_name": "base",
+                "slot_index": 4,
                 "x": 64,
-                "y": 0,
-                "inventory_name": "base",
-                "slot_index": 4
-            }
+                "y": 0
+            },
+            "type": "slot"
         },
         {
-            "type": "slot",
             "props": {
+                "inventory_name": "base",
+                "slot_index": 5,
                 "x": 80,
-                "y": 0,
-                "inventory_name": "base",
-                "slot_index": 5
-            }
+                "y": 0
+            },
+            "type": "slot"
         },
         {
-            "type": "slot",
             "props": {
+                "inventory_name": "base",
+                "slot_index": 6,
                 "x": 96,
-                "y": 0,
-                "inventory_name": "base",
-                "slot_index": 6
-            }
+                "y": 0
+            },
+            "type": "slot"
         },
         {
-            "type": "slot",
             "props": {
+                "inventory_name": "base",
+                "slot_index": 7,
                 "x": 112,
-                "y": 0,
-                "inventory_name": "base",
-                "slot_index": 7
-            }
+                "y": 0
+            },
+            "type": "slot"
         },
         {
-            "type": "slot",
             "props": {
+                "inventory_name": "base",
+                "slot_index": 8,
                 "x": 128,
-                "y": 0,
-                "inventory_name": "base",
-                "slot_index": 8
-            }
+                "y": 0
+            },
+            "type": "slot"
         },
         {
-            "type": "slot",
             "props": {
-                "x": 144,
-                "y": 0,
                 "inventory_name": "base",
-                "slot_index": 9
-            }
+                "slot_index": 9,
+                "x": 144,
+                "y": 0
+            },
+            "type": "slot"
         }
     ],
     "props": {

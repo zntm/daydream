@@ -87,6 +87,18 @@ function SoundAsset(_sound, _duration, _author = undefined, _title = undefined, 
     }
 }
 
+/// @function __strip_first_folder(_path)
+/// @desc Strips the first folder from a path (e.g., "sprites/item/foo" -> "item/foo")
+function __strip_first_folder(_path)
+{
+    var _slash_pos = string_pos("/", _path);
+    if (_slash_pos > 0)
+    {
+        return string_delete(_path, 1, _slash_pos);
+    }
+    return _path;
+}
+
 function init_assets(_directory, _namespace, _folder = "")
 {
     var _files = file_read_directory(_directory);
@@ -126,11 +138,13 @@ function init_assets(_directory, _namespace, _folder = "")
                     array_push(_array, _asset);
                 }
                 
-                global.sound_asset[$ $"{_namespace}:{_folder}/{_file2}"] = _array;
+                var _key_folder = __strip_first_folder(_folder);
+                global.sound_asset[$ $"{_namespace}:{_key_folder}/{_file2}"] = _array;
             }
             else
             {
-            	global.sound_asset[$ $"{_namespace}:{_folder}/{_file2}"] = new SoundAsset(audio_create_stream($"{_directory}/{string_delete(_file, string_length(_file) - 4, 5)}"), _json.duration, _json[$ "author"], _json[$ "title"]);
+                var _key_folder = __strip_first_folder(_folder);
+            	global.sound_asset[$ $"{_namespace}:{_key_folder}/{_file2}"] = new SoundAsset(audio_create_stream($"{_directory}/{string_delete(_file, string_length(_file) - 4, 5)}"), _json.duration, _json[$ "author"], _json[$ "title"]);
             }
             
             continue;
@@ -167,7 +181,8 @@ function init_assets(_directory, _namespace, _folder = "")
                     array_push(_array, _asset);
                 }
                 
-                global.sprite_asset[$ $"{_namespace}:{_folder}/{_file2}"] = _array;
+                var _key_folder = __strip_first_folder(_folder);
+                global.sprite_asset[$ $"{_namespace}:{_key_folder}/{_file2}"] = _array;
             }
             else
             {
@@ -182,7 +197,8 @@ function init_assets(_directory, _namespace, _folder = "")
                 
                 var _asset = new SpriteAsset(_sprite, _xoffset, _yoffset, sprite_get_width(_sprite), sprite_get_height(_sprite), _length);
                 
-                global.sprite_asset[$ $"{_namespace}:{_folder}/{_file2}"] = _asset;
+                var _key_folder = __strip_first_folder(_folder);
+                global.sprite_asset[$ $"{_namespace}:{_key_folder}/{_file2}"] = _asset;
             }
             
             continue;

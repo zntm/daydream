@@ -27,7 +27,11 @@ function init_biome_recursive(_directory, _namespace = "phantasia", _id = undefi
         
         var _biome_data = new BiomeData(_namespace, _name);
         
-        _biome_data.set_background(_json.background);
+        var _background = _json[$ "background"];
+        if (_background != undefined)
+        {
+            _biome_data.set_background(_background);
+        }
         
         var _music = _json[$ "music"];
         
@@ -36,13 +40,15 @@ function init_biome_recursive(_directory, _namespace = "phantasia", _id = undefi
             _biome_data.set_music(_music);
         }
         
-        var _tile = _json.tile;
+        var _tile = _json[$ "tile"];
+        if (_tile != undefined)
+        {
+            _biome_data.set_tile_top_layer(_tile[$ "top_layer"]);
+            _biome_data.set_tile_middle_layer(_tile[$ "middle_layer"]);
+            _biome_data.set_tile_bottom_layer(_tile[$ "bottom_layer"]);
+        }
         
-        _biome_data.set_tile_top_layer(_tile.top_layer);
-        _biome_data.set_tile_middle_layer(_tile.middle_layer);
-        _biome_data.set_tile_bottom_layer(_tile.bottom_layer);
-        
-        _biome_data.set_tile_foliage(_json.foliage);
+        _biome_data.set_tile_foliage(_json[$ "foliage"]);
         
         _biome_data.set_creature(_json[$ "creatures"]);
         

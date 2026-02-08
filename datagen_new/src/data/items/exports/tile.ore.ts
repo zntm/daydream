@@ -41,7 +41,7 @@ export default oreRegistries.map(
                 )
                     .setTileDrops([
                         new TileItemDrop(
-                            `${namespace}:item/${id}_block`,
+                            `${namespace}:${id}_block`,
                         ).setCondition(
                             new TileItemCondition(
                                 "#phantasia:item/type/pickaxe",
@@ -81,7 +81,7 @@ export default oreRegistries.map(
                 )
                     .setTileDrops([
                         new TileItemDrop(
-                            `${namespace}:item/${id}_ore`,
+                            `${namespace}:${id}_ore`,
                         ).setCondition(
                             new TileItemCondition(
                                 "#phantasia:item/type/pickaxe",

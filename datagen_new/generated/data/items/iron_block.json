@@ -15,7 +15,7 @@
                     "id": "#phantasia:item/type/pickaxe",
                     "level": 1
                 },
-                "id": "phantasia:item/iron_block"
+                "id": "phantasia:iron_block"
             }
         ],
         "harvest": {

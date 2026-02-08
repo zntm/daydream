@@ -17,7 +17,7 @@
                     "id": "#phantasia:item/type/pickaxe",
                     "level": 1
                 },
-                "id": "phantasia:item/coal_ore"
+                "id": "phantasia:coal_ore"
             }
         ],
         "harvest": {

@@ -13,7 +13,6 @@
             {
                 "id": "@phantasia:item/bucket_place",
                 "parameters": {
-                    "liquid_id": "phantasia:water",
                     "empty_bucket_id": "phantasia:bucket",
                     "flow_speed": 8,
                     "fluid_collisions": [
@@ -21,7 +20,8 @@
                             "id": "phantasia:obsidian",
                             "liquid_id": "phantasia:lava"
                         }
-                    ]
+                    ],
+                    "liquid_id": "phantasia:water"
                 }
             }
         ]

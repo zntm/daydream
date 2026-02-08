@@ -1,5 +1,11 @@
 {
     "inventory": "#phantasia:item/generic/inventory_tool",
-    "sprite": "birch_shovel",
+    "item": {
+        "durability": {
+            "amount": 65,
+            "bar": "#phantasia:item/generic/durability_bar"
+        }
+    },
+    "sprite": "phantasia:item/birch_shovel",
     "type": "tool"
 }

@@ -303,7 +303,6 @@
             }
         ]
     },
-    null,
     {
         "amount": 1,
         "crafting_stations": "phantasia:anvil",

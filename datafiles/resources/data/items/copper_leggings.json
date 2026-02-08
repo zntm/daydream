@@ -10,6 +10,6 @@
             "bar": "#phantasia:item/generic/durability_bar"
         }
     },
-    "sprite": "phantasia:item/phantasia:copper_leggings",
+    "sprite": "phantasia:item/copper_leggings",
     "type": "accessory"
 }

@@ -17,7 +17,7 @@
                     "id": "#phantasia:item/type/pickaxe",
                     "level": 1
                 },
-                "id": "phantasia:item/gold_ore"
+                "id": "phantasia:gold_ore"
             }
         ],
         "harvest": {

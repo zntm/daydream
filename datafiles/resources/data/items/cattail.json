@@ -11,11 +11,11 @@
         },
         "drops": [
             {
-                "id": "phantasia:cattail",
                 "condition": {
                     "id": "cattail",
                     "index": 2
-                }
+                },
+                "id": "phantasia:cattail"
             }
         ],
         "harvest": {
@@ -35,16 +35,16 @@
                             "type": "some",
                             "values": [
                                 {
+                                    "id": "#phantasia:tile/placement/plant_on",
                                     "xoffset": 0,
                                     "yoffset": 1,
-                                    "z": "default",
-                                    "id": "#phantasia:tile/placement/plant_on"
+                                    "z": "default"
                                 },
                                 {
+                                    "id": "$ID",
                                     "xoffset": 0,
                                     "yoffset": 1,
-                                    "z": "z",
-                                    "id": "$ID"
+                                    "z": "z"
                                 }
                             ]
                         }

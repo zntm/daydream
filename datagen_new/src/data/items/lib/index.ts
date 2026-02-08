@@ -22,6 +22,7 @@ export { ItemParticle } from "./ItemParticle";
 export { type ItemPropertiesType, TileItemProperties } from "./ItemProperties";
 export { ItemScript } from "./ItemScript";
 export { ItemSkill } from "./ItemSkill";
+export { ItemSFX } from "./ItemSFX";
 export { ItemType } from "./ItemType";
 export {
     TileItem,

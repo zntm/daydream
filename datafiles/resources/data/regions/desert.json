@@ -11,8 +11,8 @@
     "cave_biomes": [
         {
             "biome": "phantasia:cave/depths",
-            "min_depth": 250,
             "max_depth": 1024,
+            "min_depth": 250,
             "noise_threshold": 0.6
         }
     ],

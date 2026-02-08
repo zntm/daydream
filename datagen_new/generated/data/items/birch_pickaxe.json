@@ -1,6 +1,11 @@
 {
     "inventory": "#phantasia:item/generic/inventory_tool",
-    "item": {},
-    "sprite": "birch_pickaxe",
+    "item": {
+        "durability": {
+            "amount": 73,
+            "bar": "#phantasia:item/generic/durability_bar"
+        }
+    },
+    "sprite": "phantasia:item/birch_pickaxe",
     "type": "tool"
 }
