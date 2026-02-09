@@ -29,8 +29,8 @@
     "lifetime": {
         "type": "smart_value:random",
         "values": {
-            "max": 4,
-            "min": 2
+            "max": 8,
+            "min": 4
         }
     },
     "orientation": {
@@ -56,6 +56,9 @@
             }
         }
     },
+    "properties": [
+        "phantasia:has_collision"
+    ],
     "size": {
         "xscale_max": {
             "type": "smart_value:random",
@@ -90,15 +93,15 @@
         "speed_max": {
             "type": "smart_value:random",
             "values": {
-                "max": 1.1,
-                "min": 0.6
+                "max": 0.5,
+                "min": 0.2
             }
         },
         "speed_min": {
             "type": "smart_value:random",
             "values": {
-                "max": 1.1,
-                "min": 0.6
+                "max": 0.5,
+                "min": 0.2
             }
         },
         "speed_wiggle": {
@@ -109,5 +112,6 @@
             }
         }
     },
-    "sprite": "phantasia:particle/tile/leaf/oak"
+    "sprite": "phantasia:particle/tile/leaf/oak",
+    "wind_factor": 1.5
 }

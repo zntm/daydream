@@ -184,6 +184,7 @@ export class Particle {
     private speed?: ParticleSpeed;
     private direction?: ParticleDirection;
     private gravity?: ParticleGravity;
+    private wind_factor?: number | string | SmartValue;
 
     constructor(
         sprite: string,
@@ -231,6 +232,12 @@ export class Particle {
 
     setGravity(gravity: ParticleGravity) {
         this.gravity = gravity;
+
+        return this;
+    }
+
+    setWindFactor(windFactor: number | string | SmartValue) {
+        this.wind_factor = windFactor;
 
         return this;
     }

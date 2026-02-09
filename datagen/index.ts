@@ -53,13 +53,7 @@ const processExports = async (dir: string, type: string) => {
                     await Bun.write(join(destDir, ".keep"), ""); // Simple way to ensure dir exists via Bun.write? No, let's use fs.
                 }
 
-                // Since I can't use mkdir easily without importing more, I'll assume paths exist or were created.
-                // Actually, I should probably use fs.mkdirSync(destDir, { recursive: true })
-
-                Bun.write(
-                    destination,
-                    JSON.stringify(d.data, null, "    "),
-                );
+                Bun.write(destination, JSON.stringify(d.data, null, "    "));
             }
         } catch (error) {
             console.error(`Error generating ${dir}/${type}/${e}:`, error);

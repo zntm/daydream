@@ -48,6 +48,7 @@ function init_particle_recursive(_directory, _namespace, _id)
                 _particle_data.set_speed(_json[$ "speed"]);
                 _particle_data.set_direction(_json[$ "direction"]);
                 _particle_data.set_gravity(_json[$ "gravity"]);
+                _particle_data.set_wind_factor(_json[$ "wind_factor"]);
                 
                 global.particle_data[$ $"{_namespace}:{string_delete(_name, string_length(_name) - 4, 5)}"] = _particle_data; 
                 
