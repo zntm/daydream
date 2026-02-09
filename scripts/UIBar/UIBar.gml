@@ -20,8 +20,8 @@ function UIBar(_x, _y, _width, _height, _min, _max, _value) : UIElement(_x, _y, 
     slice_left = 1;   // Left edge pixels to preserve
     slice_right = 4;  // Right edge pixels to preserve
     
-    // Color-based fallback styling
-    background_color = #1a1a2a;
+    // Color-based styling (only used if explicitly set, otherwise sprites-only)
+    background_color = undefined;  // No background by default for sprite mode
     fill_color = #4aff4a;
     border_color = #3a3a4a;
     
