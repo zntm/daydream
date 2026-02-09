@@ -180,39 +180,8 @@ function UIBar(_x, _y, _width, _height, _min, _max, _value) : UIElement(_x, _y, 
                         c_white, 1);
                 }
             }
-        } else {
-            // Fallback: Color-based rendering
-            var _x2 = _x1 + _draw_width;
-            var _y2 = _y1 + _draw_height;
-            
-            // Draw background
-            draw_rectangle_colour(_x1, _y1, _x2, _y2,
-                background_color, background_color, background_color, background_color, false);
-            
-            // Draw fill
-            var _fill_x2 = lerp(_x1, _x2, _t);
-            if (_fill_x2 > _x1) {
-                if (edge_fade) {
-                    var _fade_start = _fill_x2 - (edge_fade_width * _base_scale.x);
-                    if (_fade_start > _x1) {
-                        draw_rectangle_colour(_x1, _y1, _fade_start, _y2,
-                            fill_color, fill_color, fill_color, fill_color, false);
-                        draw_rectangle_colour(_fade_start, _y1, _fill_x2, _y2,
-                            fill_color, background_color, background_color, fill_color, false);
-                    } else {
-                        draw_rectangle_colour(_x1, _y1, _fill_x2, _y2,
-                            fill_color, fill_color, fill_color, fill_color, false);
-                    }
-                } else {
-                    draw_rectangle_colour(_x1, _y1, _fill_x2, _y2,
-                        fill_color, fill_color, fill_color, fill_color, false);
-                }
-            }
-            
-            // Draw border
-            draw_rectangle_colour(_x1, _y1, _x2, _y2,
-                border_color, border_color, border_color, border_color, true);
         }
+        // No fallback - sprites required for bar rendering
     }
     
     /// @desc Set the current value

@@ -176,13 +176,22 @@ function UIParser(_tokens) constructor {
             return new UIASTBinding(_name_token.literal ?? _name_token.lexeme);
         }
         
-        // Localization key: $"key" or just $ followed by string in quotes
+        // Localization key: $"key" or $sprite(...) { ... }
         if (match(UI_TOKEN.DOLLAR)) {
+            // Check for $sprite(...) { ... }
+            if (check(UI_TOKEN.IDENTIFIER)) {
+                var _id = peek().lexeme;
+                if (_id == "sprite") {
+                    advance(); // consume "sprite"
+                    return parse_sprite_def();
+                }
+            }
+            // Localization key: $"string"
             if (check(UI_TOKEN.STRING)) {
                 var _key_token = advance();
                 return new UIASTLocaKey(_key_token.literal);
             }
-            error_at_current("Expected string after '$' for localization key.");
+            error_at_current("Expected 'sprite' or string after '$'.");
             return new UIASTString("");
         }
         
@@ -261,5 +270,32 @@ function UIParser(_tokens) constructor {
         consume(UI_TOKEN.RPAREN, "Expected ')' after tuple values.");
         
         return new UIASTTuple(_values);
+    }
+    
+    /// @desc Parse $sprite(name) { properties }
+    static parse_sprite_def = function() {
+        consume(UI_TOKEN.LPAREN, "Expected '(' after '$sprite'.");
+        var _name_token = consume(UI_TOKEN.IDENTIFIER, "Expected sprite name.");
+        var _name = _name_token.literal ?? _name_token.lexeme;
+        consume(UI_TOKEN.RPAREN, "Expected ')' after sprite name.");
+        
+        var _properties = [];
+        
+        // Optional property block { ... }
+        if (match(UI_TOKEN.LBRACE)) {
+            while (!check(UI_TOKEN.RBRACE) && !is_at_end()) {
+                if (check(UI_TOKEN.IDENTIFIER)) {
+                    var _prop = parse_property();
+                    if (_prop != undefined) {
+                        array_push(_properties, _prop);
+                    }
+                } else {
+                    advance(); // Skip unknown tokens
+                }
+            }
+            consume(UI_TOKEN.RBRACE, "Expected '}' after sprite properties.");
+        }
+        
+        return new UIASTSpriteDef(_name, _properties);
     }
 }

@@ -361,6 +361,29 @@ function ui_apply_property(_element, _prop, _link, _variables) {
             else if (_value_node.type == UI_AST.BINDING) {
                 _element.add_binding(_key, _value_node.name);
             }
+            // Handle sprite definitions for sprite_empty/sprite_fill
+            else if ((_key == "sprite_empty" || _key == "sprite_fill") && 
+                     is_struct(_value) && _value[$ "is_sprite_def"] == true) {
+                // Set the sprite via setter
+                var _setter_name = "set_" + _key;
+                if (variable_struct_exists(_element, _setter_name)) {
+                    var _setter = _element[$ _setter_name];
+                    if (is_callable(_setter)) {
+                        var _m = method(_element, _setter);
+                        _m(_value.sprite_name);
+                    }
+                }
+                // Apply slice properties
+                if (_value.slice_left != 0) _element.slice_left = _value.slice_left;
+                if (_value.slice_right != 0) _element.slice_right = _value.slice_right;
+                // Top/bottom could be used for vertical bars in future
+                if (_value.slice_top != 0 && variable_struct_exists(_element, "slice_top")) {
+                    _element.slice_top = _value.slice_top;
+                }
+                if (_value.slice_bottom != 0 && variable_struct_exists(_element, "slice_bottom")) {
+                    _element.slice_bottom = _value.slice_bottom;
+                }
+            }
             // Regular property - try to set via setter or directly
             else {
                 // Special handling for color values in arbitrary properties
@@ -419,7 +442,12 @@ function ui_resolve_value(_node, _link, _variables) {
         case UI_AST.IDENTIFIER:
             // Look up in local variables first
             if (struct_exists(_variables, _node.name)) {
-                return _variables[$ _node.name];
+                var _var_value = _variables[$ _node.name];
+                // If the stored value is an AST node, resolve it recursively
+                if (is_struct(_var_value) && variable_struct_exists(_var_value, "type")) {
+                    return ui_resolve_value(_var_value, _link, _variables);
+                }
+                return _var_value;
             }
             return _node.name;
         
@@ -434,6 +462,46 @@ function ui_resolve_value(_node, _link, _variables) {
         case UI_AST.SCRIPT_REF:
             // Return the script ID for event handlers
             return _node.script_id;
+        
+        case UI_AST.SPRITE_DEF:
+            // Resolve $sprite(name) { properties } to a runtime struct
+            var _sprite_def = {
+                is_sprite_def: true,
+                sprite_name: _node.sprite_name,
+                slice_left: 0,
+                slice_right: 0,
+                slice_top: 0,
+                slice_bottom: 0
+            };
+            // Resolve nested properties (slices, etc.)
+            var _prop_count = array_length(_node.properties);
+            for (var i = 0; i < _prop_count; i++) {
+                var _prop = _node.properties[i];
+                var _key = _prop.key;
+                var _val = ui_resolve_value(_prop.value, _link, _variables);
+                
+                // Handle individual slice properties
+                if (_key == "slice_left") _sprite_def.slice_left = _val;
+                else if (_key == "slice_right") _sprite_def.slice_right = _val;
+                else if (_key == "slice_top") _sprite_def.slice_top = _val;
+                else if (_key == "slice_bottom") _sprite_def.slice_bottom = _val;
+                // Handle tuple slices = (left, top, right, bottom) or (left, right)
+                else if (_key == "slices" && is_array(_val)) {
+                    var _len = array_length(_val);
+                    if (_len == 2) {
+                        // (left, right) shorthand
+                        _sprite_def.slice_left = _val[0];
+                        _sprite_def.slice_right = _val[1];
+                    } else if (_len >= 4) {
+                        // (left, top, right, bottom)
+                        _sprite_def.slice_left = _val[0];
+                        _sprite_def.slice_top = _val[1];
+                        _sprite_def.slice_right = _val[2];
+                        _sprite_def.slice_bottom = _val[3];
+                    }
+                }
+            }
+            return _sprite_def;
     }
     
     return undefined;

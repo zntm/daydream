@@ -20,7 +20,8 @@ enum UI_AST {
     TUPLE,        // (x, y) or (x, y, z, w)
     COLOR,        // #RRGGBB or #RRGGBBAA
     IDENTIFIER,   // variable reference (e.g. _padding)
-    ENUM          // LAYOUT_VERTICAL, etc.
+    ENUM,         // LAYOUT_VERTICAL, etc.
+    SPRITE_DEF    // $sprite(name) { slices/margins }
 }
 
 // =============================================================================
@@ -135,4 +136,13 @@ function UIASTIdentifier(_name) constructor {
 function UIASTEnum(_name) constructor {
     type = UI_AST.ENUM;
     name = _name;
+}
+
+/// @desc Sprite definition - $sprite(name) { properties }
+/// @param {String} _sprite_name Sprite asset name
+/// @param {Array} _properties Array of property AST nodes (slice configs, etc.)
+function UIASTSpriteDef(_sprite_name, _properties) constructor {
+    type = UI_AST.SPRITE_DEF;
+    sprite_name = _sprite_name;
+    properties = _properties;
 }
