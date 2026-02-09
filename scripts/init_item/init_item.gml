@@ -64,7 +64,11 @@ function init_item(_directory, _namespace)
                 
                 if (_item_data.get_type() & (ITEM_TYPE_BIT.PLATFORM | ITEM_TYPE_BIT.SOLID | ITEM_TYPE_BIT.UNTOUCHABLE))
                 {
-                    atla_push("item", global.sprite_asset[$ _sprite].get_sprite(), _sprite);
+                    var _spr_asset = global.sprite_asset[$ _sprite];
+                    if (_spr_asset != undefined)
+                    {
+                        atla_push("item", _spr_asset.get_sprite(), _sprite);
+                    }
                 }
                 
                 global.item_data[$ $"{_namespace}:{_id}"] = _item_data;
