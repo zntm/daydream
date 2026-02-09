@@ -1,24 +1,16 @@
-// Stat Bars UI
-// Declarative definition for player HP and Stamina bars
-// Uses custom nine-slice rendering for proper pixel scaling
-
-// Shared empty bar definition
 var bar_empty = $sprite(spr_GUI_Stat_Bar_Empty) {
-    slices = (1, 4)
+    slices = (1, 0, 4, 0)
 }
 
-// HP Bar Container - positioned above hotbar (with gap above stamina)
 @area(hp_container) {
     position = (1, -14)
     size = (160, 7)
     
-    // Icon to the left (center-origin sprite)
     @image(hp_icon) {
         position = (0, 0)
         source = "spr_GUI_Stat_Icon_HP"
     }
     
-    // Bar to the right of icon - closer to icon (sprite concave provides visual gap)
     @bar(hp_fill) {
         position = (7, 1)
         size = (140, 5)
@@ -26,23 +18,20 @@ var bar_empty = $sprite(spr_GUI_Stat_Bar_Empty) {
         max = *hp_max
         sprite_empty = bar_empty
         sprite_fill = $sprite(spr_GUI_Stat_Bar_HP) {
-            slices = (1, 4)
+            slices = (1, 0, 4, 0)
         }
     }
 }
 
-// Stamina Bar Container - positioned below HP bar
 @area(stamina_container) {
     position = (1, -7)
     size = (160, 7)
     
-    // Icon to the left (center-origin sprite)
     @image(stamina_icon) {
         position = (0, 0)
         source = "spr_GUI_Stat_Icon_Stamina"
     }
     
-    // Bar to the right of icon
     @bar(stamina_fill) {
         position = (7, 1)
         size = (140, 5)
@@ -50,7 +39,7 @@ var bar_empty = $sprite(spr_GUI_Stat_Bar_Empty) {
         max = *stamina_max
         sprite_empty = bar_empty
         sprite_fill = $sprite(spr_GUI_Stat_Bar_Stamina) {
-            slices = (1, 4)
+            slices = (1, 0, 4, 0)
         }
     }
 }

@@ -364,24 +364,13 @@ function ui_apply_property(_element, _prop, _link, _variables) {
             // Handle sprite definitions for sprite_empty/sprite_fill
             else if ((_key == "sprite_empty" || _key == "sprite_fill") && 
                      is_struct(_value) && _value[$ "is_sprite_def"] == true) {
-                // Set the sprite via setter
                 var _setter_name = "set_" + _key;
                 if (variable_struct_exists(_element, _setter_name)) {
                     var _setter = _element[$ _setter_name];
                     if (is_callable(_setter)) {
                         var _m = method(_element, _setter);
-                        _m(_value.sprite_name);
+                        _m(_value);
                     }
-                }
-                // Apply slice properties
-                if (_value.slice_left != 0) _element.slice_left = _value.slice_left;
-                if (_value.slice_right != 0) _element.slice_right = _value.slice_right;
-                // Top/bottom could be used for vertical bars in future
-                if (_value.slice_top != 0 && variable_struct_exists(_element, "slice_top")) {
-                    _element.slice_top = _value.slice_top;
-                }
-                if (_value.slice_bottom != 0 && variable_struct_exists(_element, "slice_bottom")) {
-                    _element.slice_bottom = _value.slice_bottom;
                 }
             }
             // Regular property - try to set via setter or directly

@@ -1,8 +1,5 @@
 import hp_container, stamina_container from "ui/stat_bars.ui"
 
-// Spawn HP bar with bindings
-// arg0: player object
-// arg1: parent element (e.g. hotbar panel)
 var p = arg0
 var par = arg1
 
