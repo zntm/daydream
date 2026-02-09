@@ -242,13 +242,7 @@ function UIElement(_x, _y, _width, _height) : GUIComponent(_x, _y, _width, _heig
     /// @desc Get absolute X position in logical units (960-based)
     static get_absolute_x = function() {
         if (parent != undefined) {
-            var _p_abs = parent.get_absolute_x();
-            // Check if parent is from the old system (GUIComponent vs UIElement)
-            // Old system units are 960/gui_scale based, new system is 960 based
-            if (!variable_struct_exists(parent, "element_type")) { 
-                return (_p_abs * global.gui_scale) + x;
-            }
-            return _p_abs + x;
+            return parent.get_absolute_x() + x;
         }
         return x;
     }
@@ -256,11 +250,7 @@ function UIElement(_x, _y, _width, _height) : GUIComponent(_x, _y, _width, _heig
     /// @desc Get absolute Y position in logical units (960-based)
     static get_absolute_y = function() {
         if (parent != undefined) {
-            var _p_abs = parent.get_absolute_y();
-            if (!variable_struct_exists(parent, "element_type")) { 
-                return (_p_abs * global.gui_scale) + y;
-            }
-            return _p_abs + y;
+            return parent.get_absolute_y() + y;
         }
         return y;
     }

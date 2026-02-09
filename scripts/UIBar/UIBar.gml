@@ -64,6 +64,18 @@ function UIBar(_x, _y, _width, _height, _min, _max, _value) : UIElement(_x, _y, 
         return self;
     }
     
+    /// @desc Set the left slice margin
+    static set_slice_left = function(_value) {
+        if (is_real(_value)) slice_left = _value;
+        return self;
+    }
+    
+    /// @desc Set the right slice margin
+    static set_slice_right = function(_value) {
+        if (is_real(_value)) slice_right = _value;
+        return self;
+    }
+    
     static update = function() {
         if (!visible) return;
         

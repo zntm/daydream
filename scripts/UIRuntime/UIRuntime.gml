@@ -445,10 +445,12 @@ function ui_get_base_scale() {
     // Standard target is 960x540
     var _w = variable_global_exists("gui_width") ? global.gui_width : 960;
     var _h = variable_global_exists("gui_height") ? global.gui_height : 540;
+    var _gui_scale = variable_global_exists("gui_scale") ? global.gui_scale : 1.0;
     
+    // Scale is a combination of resolution ratio and user setting
     return {
-        x: _w / 960,
-        y: _h / 540
+        x: (_w / 960) * _gui_scale,
+        y: (_h / 540) * _gui_scale
     };
 }
 
