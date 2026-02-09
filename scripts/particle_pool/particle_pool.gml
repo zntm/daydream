@@ -108,6 +108,25 @@ function ParticlePool() : Pool() constructor
         --active_count;
     }
     
+    /// @function clear_all()
+    /// @desc Clear all active particles and reset the pool
+    static clear_all = function()
+    {
+        active_count = 0;
+        collision_count = 0;
+        collision_indices = [];
+        
+        for (var i = 0; i < pool_size; ++i)
+        {
+            active[@ i] = false;
+            free_stack[@ i] = i;
+        }
+        
+        free_stack_top = pool_size - 1;
+        
+        show_debug_message($"[PARTICLE_POOL] Cleared all particles");
+    }
+    
     static spawn = function(_x, _y, _particle_id, _tint = c_white)
     {
         var _data = global.particle_data[$ _particle_id];

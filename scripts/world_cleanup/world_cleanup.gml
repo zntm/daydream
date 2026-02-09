@@ -35,15 +35,26 @@ function world_cleanup()
     chunk_map_clear();
     
     // 5. Clear chunk pool completely
-    global.chunk_pool.pool = [];
-    global.chunk_pool.fading_chunks = [];
+    global.chunk_pool.clear_all();
     
     // 6. Clear structure pool
     var _structure_count = array_length(global.structure_pool.active_structures);
-    global.structure_pool.active_structures = [];
-    global.structure_pool.pool = [];
+    global.structure_pool.clear_all();
     
     show_debug_message($"[WORLD_CLEANUP] Cleared {_structure_count} active structures");
+    
+    // 10. Clear particle pool
+    global.particle_pool.clear_all();
+    
+    // 11. Clear SFX pool
+    global.sfx_pool.clear();
+    
+    // 12. Clear render state pool
+    global.render_state_pool.clear();
+    
+    // 13. Clear floating text pool and active list
+    global.floating_text_pool.clear();
+    global.floating_text_active = [];
     
     // 7. Invalidate worldgen context (will be recreated on next chunk gen)
     if (variable_global_exists("worldgen_context"))
