@@ -488,12 +488,21 @@ function proglang_vm_run(_vm, _entry_bytecode)
                             _vm[@ PROG_VM.GLOBAL_REF] = _gref;
                             
                             // Legacy Argument Support (Populate argN)
+                            // Legacy Argument Support & New 'parameter' array
                             var _vars = _new_scope[PROG_SCOPE.VARS];
+                            var _param_array = array_create(_param_count);
                             for (var i = 0; i < _param_count; i++)
                             {
-                                _vars[$ "arg" + string(i)] = _stack[_bp + i];
+                                var _val_arg = _stack[_bp + i];
+                                _vars[$ "arg" + string(i)] = _val_arg;
+                                _param_array[i] = _val_arg;
                             }
                             _vars[$ "argc"] = _param_count;
+                            if (_param_count == 1 && is_struct(_param_array[0])) {
+                                _vars[$ "parameter"] = _param_array[0];
+                            } else {
+                                _vars[$ "parameter"] = _param_array;
+                            }
                         }
                         // 2. Built-in Function (Struct wrapper)
                         else if (is_struct(_val) && struct_exists(_val, "function"))
@@ -547,11 +556,19 @@ function proglang_vm_run(_vm, _entry_bytecode)
                             _scope = _new_scope;
                             
                             var _vars = _new_scope[PROG_SCOPE.VARS];
+                            var _param_array = array_create(_param_count);
                             for (var i = 0; i < _param_count; i++)
                             {
-                                _vars[$ "arg" + string(i)] = _stack[_bp + i];
+                                var _val_arg = _stack[_bp + i];
+                                _vars[$ "arg" + string(i)] = _val_arg;
+                                _param_array[i] = _val_arg;
                             }
                             _vars[$ "argc"] = _param_count;
+                            if (_param_count == 1 && is_struct(_param_array[0])) {
+                                _vars[$ "parameter"] = _param_array[0];
+                            } else {
+                                _vars[$ "parameter"] = _param_array;
+                            }
                         }
                         else
                         {

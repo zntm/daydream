@@ -21,7 +21,8 @@ enum UI_AST {
     COLOR,        // #RRGGBB or #RRGGBBAA
     IDENTIFIER,   // variable reference (e.g. _padding)
     ENUM,         // LAYOUT_VERTICAL, etc.
-    SPRITE_DEF    // $sprite(name) { slices/margins }
+    SPRITE_DEF,   // $sprite(name) { slices/margins }
+    SURFACE_DEF   // $surface(name) { properties }
 }
 
 // =============================================================================
@@ -144,5 +145,14 @@ function UIASTEnum(_name) constructor {
 function UIASTSpriteDef(_sprite_name, _properties) constructor {
     type = UI_AST.SPRITE_DEF;
     sprite_name = _sprite_name;
+    properties = _properties;
+}
+
+/// @desc Surface definition - $surface(name) { properties }
+/// @param {String} _surface_name Surface variable/binding name
+/// @param {Array} _properties Array of property AST nodes
+function UIASTSurfaceDef(_surface_name, _properties) constructor {
+    type = UI_AST.SURFACE_DEF;
+    surface_name = _surface_name;
     properties = _properties;
 }

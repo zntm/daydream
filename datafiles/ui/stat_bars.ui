@@ -3,16 +3,16 @@ var bar_empty = $sprite(spr_GUI_Stat_Bar_Empty) {
 }
 
 @area(hp_container) {
-    position = (1, -14)
+    position = (1, -15)
     size = (160, 7)
     
     @image(hp_icon) {
-        position = (0, 0)
-        source = "spr_GUI_Stat_Icon_HP"
+        position = (0, -1)
+        source = $sprite(spr_GUI_Stat_Icon_HP)
     }
     
     @bar(hp_fill) {
-        position = (7, 1)
+        position = (7, 0)
         size = (140, 5)
         value = *hp_value
         max = *hp_max
@@ -29,7 +29,7 @@ var bar_empty = $sprite(spr_GUI_Stat_Bar_Empty) {
     
     @image(stamina_icon) {
         position = (0, 0)
-        source = "spr_GUI_Stat_Icon_Stamina"
+        source = $sprite(spr_GUI_Stat_Icon_Stamina)
     }
     
     @bar(stamina_fill) {

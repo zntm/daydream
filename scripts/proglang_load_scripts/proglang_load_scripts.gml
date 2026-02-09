@@ -359,6 +359,14 @@ function proglang_call(_name, _args = [], _context = {}) {
     }
     _vm[PROG_VM.SCOPE][PROG_SCOPE.VARS][$ "argc"] = array_length(_args);
     
+    // Inject 'parameter' variable
+    var _arg_count = array_length(_args);
+    if (_arg_count == 1 && is_struct(_args[0])) {
+        _vm[PROG_VM.SCOPE][PROG_SCOPE.VARS][$ "parameter"] = _args[0];
+    } else {
+        _vm[PROG_VM.SCOPE][PROG_SCOPE.VARS][$ "parameter"] = _args;
+    }
+    
     var _result = proglang_vm_run(_vm, _bytecode);
     proglang_vm_free(_vm);
     return _result;

@@ -491,6 +491,22 @@ function ui_resolve_value(_node, _link, _variables) {
                 }
             }
             return _sprite_def;
+        
+        case UI_AST.SURFACE_DEF:
+            // Resolve $surface(name) { properties } to a runtime struct
+            var _surface_def = {
+                is_surface_def: true,
+                surface_name: _node.surface_name,
+            };
+            // Resolve any nested properties
+            var _surf_prop_count = array_length(_node.properties);
+            for (var i = 0; i < _surf_prop_count; i++) {
+                var _prop = _node.properties[i];
+                var _key = _prop.key;
+                var _val = ui_resolve_value(_prop.value, _link, _variables);
+                _surface_def[$ _key] = _val;
+            }
+            return _surface_def;
     }
     
     return undefined;

@@ -176,14 +176,17 @@ function UIParser(_tokens) constructor {
             return new UIASTBinding(_name_token.literal ?? _name_token.lexeme);
         }
         
-        // Localization key: $"key" or $sprite(...) { ... }
+        // Localization key: $"key" or $sprite/$surface(...) { ... }
         if (match(UI_TOKEN.DOLLAR)) {
-            // Check for $sprite(...) { ... }
+            // Check for $sprite(...) or $surface(...)
             if (check(UI_TOKEN.IDENTIFIER)) {
                 var _id = peek().lexeme;
                 if (_id == "sprite") {
-                    advance(); // consume "sprite"
+                    advance();
                     return parse_sprite_def();
+                } else if (_id == "surface") {
+                    advance();
+                    return parse_surface_def();
                 }
             }
             // Localization key: $"string"
@@ -191,7 +194,7 @@ function UIParser(_tokens) constructor {
                 var _key_token = advance();
                 return new UIASTLocaKey(_key_token.literal);
             }
-            error_at_current("Expected 'sprite' or string after '$'.");
+            error_at_current("Expected 'sprite', 'surface', or string after '$'.");
             return new UIASTString("");
         }
         
@@ -297,5 +300,31 @@ function UIParser(_tokens) constructor {
         }
         
         return new UIASTSpriteDef(_name, _properties);
+    }
+    
+    /// @desc Parse $surface(name) { properties }
+    static parse_surface_def = function() {
+        consume(UI_TOKEN.LPAREN, "Expected '(' after '$surface'.");
+        var _name_token = consume(UI_TOKEN.IDENTIFIER, "Expected surface name.");
+        var _name = _name_token.literal ?? _name_token.lexeme;
+        consume(UI_TOKEN.RPAREN, "Expected ')' after surface name.");
+        
+        var _properties = [];
+        
+        if (match(UI_TOKEN.LBRACE)) {
+            while (!check(UI_TOKEN.RBRACE) && !is_at_end()) {
+                if (check(UI_TOKEN.IDENTIFIER)) {
+                    var _prop = parse_property();
+                    if (_prop != undefined) {
+                        array_push(_properties, _prop);
+                    }
+                } else {
+                    advance();
+                }
+            }
+            consume(UI_TOKEN.RBRACE, "Expected '}' after surface properties.");
+        }
+        
+        return new UIASTSurfaceDef(_name, _properties);
     }
 }

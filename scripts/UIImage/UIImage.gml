@@ -13,27 +13,48 @@ function UIImage(_x, _y, _source) : UIElement(_x, _y, 0, 0) constructor {
     alpha = 1;
     
     /// @desc Set the image source
-    /// @param {Asset.GMSprite|Id.Surface|String} _source New source
+    /// @param {Asset.GMSprite|Id.Surface|String|Struct} _source New source
     static set_source = function(_source) {
-        source = _source;
-        
-        // Resolve string to asset index
-        if (is_string(source)) {
-            var _asset = asset_get_index(source);
-            if (_asset != -1 && asset_get_type(source) == asset_sprite) {
+        // Handle $sprite(name) definition
+        if (is_struct(_source) && _source[$ "is_sprite_def"]) {
+            is_surface = false;
+            var _name = _source.sprite_name;
+            var _asset = asset_get_index(_name);
+            if (_asset != -1 && asset_get_type(_name) == asset_sprite) {
                 source = _asset;
             } else {
-                show_debug_message($"[UIImage] Warning: Could not resolve sprite asset '{source}'");
+                show_debug_message($"[UIImage] Warning: Could not resolve sprite '{_name}'");
                 source = undefined;
             }
+        }
+        // Handle $surface(name) definition
+        else if (is_struct(_source) && _source[$ "is_surface_def"]) {
+            is_surface = true;
+            // Surface name is stored - actual surface ID resolved at runtime via binding
+            source = _source.surface_name;
+        }
+        // Handle string name (legacy)
+        else if (is_string(_source)) {
+            is_surface = false;
+            var _asset = asset_get_index(_source);
+            if (_asset != -1 && asset_get_type(_source) == asset_sprite) {
+                source = _asset;
+            } else {
+                show_debug_message($"[UIImage] Warning: Could not resolve sprite asset '{_source}'");
+                source = undefined;
+            }
+        }
+        // Handle direct sprite/surface asset
+        else {
+            source = _source;
         }
         
         // Update dimensions
         if (source != undefined) {
-            if (is_surface) {
+            if (is_surface && surface_exists(source)) {
                 width = surface_get_width(source);
                 height = surface_get_height(source);
-            } else if (sprite_exists(source)) {
+            } else if (!is_surface && sprite_exists(source)) {
                 width = sprite_get_width(source);
                 height = sprite_get_height(source);
             }
