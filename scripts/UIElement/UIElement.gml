@@ -70,12 +70,28 @@ function UIElement(_x, _y, _width, _height) : GUIComponent(_x, _y, _width, _heig
                 // If resolver is a function, call it to get value
                 if (is_method(_resolver)) {
                     _value = _resolver();
+                } else if (is_array(_resolver)) {
+                    // It might be a Proglang closure/function
+                    _value = function_execute(_resolver);
                 } else {
                     _value = _resolver;
                 }
                 
-                // Set the property value
-                self[$ _property] = _value;
+                // Set the property value via setter if it exists, otherwise directly
+                if (_value == undefined) {
+                    show_debug_message($"[UI Runtime] Warning: Binding '{_binding_name}' for property '{_property}' in element '{element_name}' resolved to undefined.");
+                }
+                
+                var _setter_name = "set_" + _property;
+                if (variable_struct_exists(self, _setter_name)) {
+                    var _setter = self[$ _setter_name];
+                    if (is_callable(_setter)) {
+                        var _m = method(self, _setter);
+                        _m(_value);
+                    }
+                } else {
+                    self[$ _property] = _value;
+                }
             }
         }
         
@@ -223,6 +239,32 @@ function UIElement(_x, _y, _width, _height) : GUIComponent(_x, _y, _width, _heig
     // Override GUIComponent methods
     // =============================================================================
     
+    /// @desc Get absolute X position in logical units (960-based)
+    static get_absolute_x = function() {
+        if (parent != undefined) {
+            var _p_abs = parent.get_absolute_x();
+            // Check if parent is from the old system (GUIComponent vs UIElement)
+            // Old system units are 960/gui_scale based, new system is 960 based
+            if (!variable_struct_exists(parent, "element_type")) { 
+                return (_p_abs * global.gui_scale) + x;
+            }
+            return _p_abs + x;
+        }
+        return x;
+    }
+    
+    /// @desc Get absolute Y position in logical units (960-based)
+    static get_absolute_y = function() {
+        if (parent != undefined) {
+            var _p_abs = parent.get_absolute_y();
+            if (!variable_struct_exists(parent, "element_type")) { 
+                return (_p_abs * global.gui_scale) + y;
+            }
+            return _p_abs + y;
+        }
+        return y;
+    }
+    
     static update = function() {
         if (!visible) return;
         
@@ -239,23 +281,26 @@ function UIElement(_x, _y, _width, _height) : GUIComponent(_x, _y, _width, _heig
     static draw = function() {
         if (!visible) return;
         
+        var _base_scale = ui_get_base_scale();
+        var _abs_x = get_absolute_x();
+        var _abs_y = get_absolute_y();
+        
+        var _x1 = _abs_x * _base_scale.x;
+        var _y1 = _abs_y * _base_scale.y;
+        var _x2 = _x1 + (width * _base_scale.x);
+        var _y2 = _y1 + (height * _base_scale.y);
+
         // Draw background if set
         if (background_color != undefined) {
-            var _abs_x = get_absolute_x();
-            var _abs_y = get_absolute_y();
-            
             draw_set_alpha(background_alpha);
-            draw_rectangle_colour(_abs_x, _abs_y, _abs_x + width, _abs_y + height,
+            draw_rectangle_colour(_x1, _y1, _x2, _y2,
                 background_color, background_color, background_color, background_color, false);
             draw_set_alpha(1);
         }
         
         // Draw border if set
         if (border_color != undefined && border_width > 0) {
-            var _abs_x = get_absolute_x();
-            var _abs_y = get_absolute_y();
-            
-            draw_rectangle_colour(_abs_x, _abs_y, _abs_x + width, _abs_y + height,
+            draw_rectangle_colour(_x1, _y1, _x2, _y2,
                 border_color, border_color, border_color, border_color, true);
         }
         

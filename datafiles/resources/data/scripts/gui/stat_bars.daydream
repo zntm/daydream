@@ -1,0 +1,17 @@
+import hp_container, stamina_container from "ui/stat_bars.ui"
+
+// Spawn HP bar with bindings
+// arg0: player object
+// arg1: parent element (e.g. hotbar panel)
+var p = arg0
+var par = arg1
+
+ui_spawn([hp_container, stamina_container], {
+    parent: par,
+    link: {
+        hp_value: fn() { return p.hp },
+        hp_max: fn() { return p.hp_max },
+        stamina_value: fn() { return p.stamina },
+        stamina_max: fn() { return p.stamina_max }
+    }
+})

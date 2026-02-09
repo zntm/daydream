@@ -3,6 +3,7 @@
 /// @param {Real} _y Y position
 /// @param {Asset.GMSprite|Id.Surface} _source Image source
 function UIImage(_x, _y, _source) : UIElement(_x, _y, 0, 0) constructor {
+    is_surface = false;
     source = _source;
     image_index = 0;
     image_xscale = 1;
@@ -11,13 +12,21 @@ function UIImage(_x, _y, _source) : UIElement(_x, _y, 0, 0) constructor {
     colour = c_white;
     alpha = 1;
     
-    // Source type
-    is_surface = false;
-    
     /// @desc Set the image source
-    /// @param {Asset.GMSprite|Id.Surface} _source New source
+    /// @param {Asset.GMSprite|Id.Surface|String} _source New source
     static set_source = function(_source) {
         source = _source;
+        
+        // Resolve string to asset index
+        if (is_string(source)) {
+            var _asset = asset_get_index(source);
+            if (_asset != -1 && asset_get_type(source) == asset_sprite) {
+                source = _asset;
+            } else {
+                show_debug_message($"[UIImage] Warning: Could not resolve sprite asset '{source}'");
+                source = undefined;
+            }
+        }
         
         // Update dimensions
         if (source != undefined) {
@@ -36,27 +45,36 @@ function UIImage(_x, _y, _source) : UIElement(_x, _y, 0, 0) constructor {
     static draw_content = function() {
         if (source == undefined) return;
         
+        var _base_scale = ui_get_base_scale();
         var _abs_x = get_absolute_x();
         var _abs_y = get_absolute_y();
         
-        var _gui_scale = global.gui_scale;
-        var _base_scale_x = _gui_scale * (global.gui_width / 960);
-        var _base_scale_y = _gui_scale * (global.gui_height / 540);
-        
-        var _draw_x = _abs_x * _base_scale_x;
-        var _draw_y = _abs_y * _base_scale_y;
+        // Use base_scale for uniform pixel scaling to match positions
+        var _pixel_scale_x = _base_scale.x;
+        var _pixel_scale_y = _base_scale.y;
         
         if (is_surface) {
             if (surface_exists(source)) {
+                var _draw_x = _abs_x * _base_scale.x;
+                var _draw_y = _abs_y * _base_scale.y;
                 draw_surface_ext(source, _draw_x, _draw_y, 
-                    image_xscale * _base_scale_x, 
-                    image_yscale * _base_scale_y, 
+                    image_xscale * _pixel_scale_x, 
+                    image_yscale * _pixel_scale_y, 
                     image_angle, colour, alpha);
             }
         } else if (sprite_exists(source)) {
+            // Get sprite origin for correct positioning
+            var _ox = sprite_get_xoffset(source);
+            var _oy = sprite_get_yoffset(source);
+            
+            // Calculate draw position accounting for origin offset
+            // The position in .ui is the top-left corner, but draw_sprite_ext draws from origin
+            var _draw_x = (_abs_x * _base_scale.x) + (_ox * _pixel_scale_x * image_xscale);
+            var _draw_y = (_abs_y * _base_scale.y) + (_oy * _pixel_scale_y * image_yscale);
+            
             draw_sprite_ext(source, image_index, _draw_x, _draw_y,
-                image_xscale * _base_scale_x,
-                image_yscale * _base_scale_y,
+                image_xscale * _pixel_scale_x,
+                image_yscale * _pixel_scale_y,
                 image_angle, colour, alpha);
         }
     }

@@ -1,0 +1,47 @@
+// Stat Bars UI
+// Declarative definition for player HP and Stamina bars
+// Uses custom nine-slice rendering for proper pixel scaling
+
+// HP Bar Container - positioned above hotbar
+@area(hp_container) {
+    position = (0, -20)
+    size = (160, 7)
+    
+    // Icon to the left (center-origin sprite)
+    @image(hp_icon) {
+        position = (0, 0)
+        source = "spr_GUI_Stat_Icon_HP"
+    }
+    
+    // Bar to the right of icon - stretched to fill the space
+    @bar(hp_fill) {
+        position = (10, 1)
+        size = (150, 5)
+        value = *hp_value
+        max = *hp_max
+        sprite_empty = "spr_GUI_Stat_Bar_Empty"
+        sprite_fill = "spr_GUI_Stat_Bar_HP"
+    }
+}
+
+// Stamina Bar Container - positioned below HP bar
+@area(stamina_container) {
+    position = (0, -12)
+    size = (160, 7)
+    
+    // Icon to the left (center-origin sprite)
+    @image(stamina_icon) {
+        position = (0, 0)
+        source = "spr_GUI_Stat_Icon_Stamina"
+    }
+    
+    // Bar to the right of icon
+    @bar(stamina_fill) {
+        position = (10, 1)
+        size = (150, 5)
+        value = *stamina_value
+        max = *stamina_max
+        sprite_empty = "spr_GUI_Stat_Bar_Empty"
+        sprite_fill = "spr_GUI_Stat_Bar_Stamina"
+    }
+}

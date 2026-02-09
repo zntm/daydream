@@ -14,14 +14,32 @@ global.ui_instance_counter = 0;
 function ui_load(_path) {
     // Check cache first
     if (struct_exists(global.ui_definitions, _path)) {
+        show_debug_message($"[UI Runtime] Using cached definition for: {_path}");
         return global.ui_definitions[$ _path];
     }
     
+    // Resolve full path - UI files are in datafiles/ui/
+    var _full_path = _path;
+    var _datafiles = PROGRAM_DIRECTORY_DATAFILES;
+    if (_datafiles != "") {
+        _full_path = $"{_datafiles}/{_path}";
+    }
+    
+    show_debug_message($"[UI Runtime] Attempting to load UI file: '{_path}' -> '{_full_path}' (cwd: {working_directory})");
+    show_debug_message($"[UI Runtime] File exists (full): {file_exists(_full_path)}");
+    
     // Load file contents
-    var _source = buffer_load_text(_path);
+    var _source = buffer_load_text(_full_path);
+    
+    // Fallback: Try relative path directly if full path failed
+    if (_source == undefined && _full_path != _path) {
+        show_debug_message($"[UI Runtime] Falling back to relative path: '{_path}'");
+        show_debug_message($"[UI Runtime] File exists (rel): {file_exists(_path)}");
+        _source = buffer_load_text(_path);
+    }
     
     if (_source == undefined || _source == "") {
-        show_debug_message($"[UI Runtime] Failed to load UI file: {_path}");
+        show_debug_message($"[UI Runtime] ERROR: Failed to load UI file content from: {_full_path} OR {_path}");
         return undefined;
     }
     
@@ -44,12 +62,27 @@ function ui_load(_path) {
     }
     
     // Cache and return
-    global.ui_definitions[$ _path] = {
+    var _ui_def = {
         document: _document,
         variables: _parser.variables
     };
     
-    return global.ui_definitions[$ _path];
+    // Expose top-level elements by name for importing in Daydream
+    var _defs = _document.definitions;
+    for (var i = 0; i < array_length(_defs); i++) {
+        var _el = _defs[i];
+        if (is_struct(_el) && _el.type == UI_AST.ELEMENT) {
+            _ui_def[$ _el.name] = _el;
+            
+            // Attach variables to the element so ui_spawn can find them if this element is spawned alone
+            _el.variables = _parser.variables;
+        }
+    }
+    
+    global.ui_definitions[$ _path] = _ui_def;
+    show_debug_message($"[UI Runtime] Successfully loaded UI file: {_full_path}");
+    
+    return _ui_def;
 }
 
 /// @desc Spawn UI instances from definitions
@@ -61,6 +94,10 @@ function ui_spawn(_definitions, _config = {}) {
     if (is_struct(_definitions) && variable_struct_exists(_definitions, "type") && _definitions.type == UI_AST.ELEMENT) {
         _definitions = [_definitions];
     }
+    
+    var _def_count = array_length(_definitions);
+    var _parent_name = is_struct(_config.parent) && struct_exists(_config.parent, "element_name") ? _config.parent.element_name : "unknown";
+    show_debug_message($"[UI Runtime] ui_spawn: Spawning {_def_count} definitions into parent '{_parent_name}'");
     
     // Fallback for empty or invalid input
     if (!is_array(_definitions)) {
@@ -80,28 +117,54 @@ function ui_spawn(_definitions, _config = {}) {
     
     var _def_count = array_length(_definitions);
     
+    // Get variables from definition if available
+    var _variables = {};
+    if (is_struct(_definitions) && struct_exists(_definitions, "variables")) {
+        _variables = _definitions.variables;
+    }
+    
     for (var i = 0; i < _def_count; i++) {
         var _def = _definitions[i];
+        
+        if (_def == undefined) {
+            show_debug_message($"[UI Runtime] Warning: Definition at index {i} is undefined. Check your imports.");
+            continue;
+        }
+        
+        // Handle definition struct wrapping
+        if (is_struct(_def) && struct_exists(_def, "document")) {
+            _variables = _def.variables;
+            _def = _def.document.definitions;
+            
+            // If it's an array of elements from the document, recurse or loop
+            if (is_array(_def)) {
+                for (var j = 0; j < array_length(_def); j++) {
+                    var _sub_def = _def[j];
+                    var _sub_vars = _variables;
+                    if (is_struct(_sub_def) && struct_exists(_sub_def, "variables")) _sub_vars = _sub_def.variables;
+                    
+                    var _sub_element = ui_instantiate_element(_sub_def, _link, _sub_vars);
+                    if (_sub_element != undefined) {
+                        ui_process_spawned_element(_sub_element, _instance, _parent);
+                    }
+                }
+                continue;
+            }
+        }
+        
         var _element = undefined;
         
         if (is_struct(_def) && variable_struct_exists(_def, "type")) {
+            // Pick up variables from the element if available
+            var _el_vars = _variables;
+            if (struct_exists(_def, "variables")) _el_vars = _def.variables;
+            
             // It's an AST node - instantiate it
-            _element = ui_instantiate_element(_def, _link, {});
+            _element = ui_instantiate_element(_def, _link, _el_vars);
         }
         
         if (_element != undefined) {
-            _element.instance_id = _instance.id;
-            _element.instance = _instance;
-            
-            if (_parent != undefined) {
-                _parent.add_child(_element);
-            }
-            
-            array_push(_instance.root_elements, _element);
-            _instance.elements[$ _element.element_name] = _element;
-            
-            // Register all nested elements by name
-            ui_register_nested_elements(_element, _instance.elements);
+            ui_process_spawned_element(_element, _instance, _parent);
         }
     }
     
@@ -109,6 +172,22 @@ function ui_spawn(_definitions, _config = {}) {
     global.ui_instances[$ string(_instance.id)] = _instance;
     
     return _instance;
+}
+
+/// @desc Internal helper to process a spawned element
+function ui_process_spawned_element(_element, _instance, _parent) {
+    _element.instance_id = _instance.id;
+    _element.instance = _instance;
+    
+    if (_parent != undefined) {
+        _parent.add_child(_element);
+    }
+    
+    array_push(_instance.root_elements, _element);
+    _instance.elements[$ _element.element_name] = _element;
+    
+    // Register all nested elements by name
+    ui_register_nested_elements(_element, _instance.elements);
 }
 
 /// @desc Register nested elements by name
@@ -282,10 +361,25 @@ function ui_apply_property(_element, _prop, _link, _variables) {
             else if (_value_node.type == UI_AST.BINDING) {
                 _element.add_binding(_key, _value_node.name);
             }
-            // Regular property - try to set directly
+            // Regular property - try to set via setter or directly
             else {
-                if (variable_struct_exists(_element, _key)) {
-                    _element[$ _key] = _value;
+                // Special handling for color values in arbitrary properties
+                var _final_value = _value;
+                if (is_struct(_value) && variable_struct_exists(_value, "color")) {
+                    _final_value = _value.color;
+                    // If the property is something like 'border_color', we might also want alpha
+                    // but most GML functions expect just the color. UIElement handles background/border specially.
+                }
+                
+                var _setter_name = "set_" + _key;
+                if (variable_struct_exists(_element, _setter_name)) {
+                    var _setter = _element[$ _setter_name];
+                    if (is_callable(_setter)) {
+                        var _m = method(_element, _setter);
+                        _m(_final_value);
+                    }
+                } else if (variable_struct_exists(_element, _key)) {
+                    _element[$ _key] = _final_value;
                 }
             }
             break;
@@ -343,6 +437,19 @@ function ui_resolve_value(_node, _link, _variables) {
     }
     
     return undefined;
+}
+
+/// @desc Get the base GUI scale for UI elements
+/// @returns {Struct} {x: real, y: real}
+function ui_get_base_scale() {
+    // Standard target is 960x540
+    var _w = variable_global_exists("gui_width") ? global.gui_width : 960;
+    var _h = variable_global_exists("gui_height") ? global.gui_height : 540;
+    
+    return {
+        x: _w / 960,
+        y: _h / 540
+    };
 }
 
 /// @desc Destroy a UI instance and all its elements

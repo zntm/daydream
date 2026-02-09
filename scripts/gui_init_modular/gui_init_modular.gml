@@ -12,6 +12,7 @@
 
 function gui_init_modular()
 {
+    show_debug_message("[Daydream] gui_init_modular called");
     // Register component types
     gui_register_component("panel", GUIPanel);
     gui_register_component("slot", GUISlot);
@@ -53,16 +54,12 @@ function gui_init_modular()
         }
     }
     
-    // Create HP Bar attached to hotbar
-    // The HP bar is positioned above the hotbar (y = -height)
-    // and matches the width of the hotbar.
-    if (variable_global_exists("gui_panel_hotbar_modular"))
-    {
-        var _hp_bar_width = global.gui_panel_hotbar_modular.width;
-        
-        global.gui_hp_bar = new GUIHPBar(0, -GUI_HP_BAR_HEIGHT, _hp_bar_width, GUI_HP_BAR_HEIGHT);
-        global.gui_panel_hotbar_modular.add_child(global.gui_hp_bar);
+    // Stat Bars are now spawned in obj_Player's Create event to ensure player context
+    /*
+    if (instance_exists(obj_Player) && variable_global_exists("gui_panel_hotbar_modular")) {
+        proglang_call("phantasia:gui/stat_bars", [obj_Player.id, global.gui_panel_hotbar_modular]);
     }
+    */
     
     // Load inventory layout
     var _inventory_path = "resources/data/guis/inventory.json";

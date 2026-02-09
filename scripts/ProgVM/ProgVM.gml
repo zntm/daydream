@@ -852,7 +852,7 @@ function proglang_vm_run(_vm, _entry_bytecode)
                             }
                             else
                             {
-                                runtime_error(PROGLANG_ERROR_TYPE.MEMBER, "Cannot access property of non-object.");
+                                runtime_error(PROGLANG_ERROR_TYPE.MEMBER, $"Cannot access property '{_prop}' of non-object (value is {string(_obj)}).");
                             }
                         }
                         _stack[@ _sp++] = _val;

@@ -148,6 +148,15 @@ function UILexer(_source) constructor {
                 add_token(UI_TOKEN.DOLLAR);
                 break;
             
+            case "-":
+                if (is_digit(peek())) {
+                    scan_number();
+                } else {
+                    had_error = true;
+                    error = $"Unexpected character '-' at line {line}";
+                }
+                break;
+            
             case "#":
                 scan_color();
                 break;

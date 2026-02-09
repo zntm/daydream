@@ -321,6 +321,7 @@ function proglang_load_module(_module_path, _importer_path = "") {
 /// @param {struct} _context Execution context
 /// @returns {any} Result
 function proglang_call(_name, _args = [], _context = {}) {
+    show_debug_message($"[Daydream] Proglang Call: {_name}");
     var _bytecode = undefined;
     
     if (struct_exists(global.proglang_exports, _name)) {
