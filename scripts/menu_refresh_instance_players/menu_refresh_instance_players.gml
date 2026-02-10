@@ -1,6 +1,6 @@
 function menu_refresh_instance_players()
 {
-    static __on_draw = function(_x, _y, _colour)
+    static __on_draw = function(_x, _y, _sx, _sy, _colour)
     {
         var _data = global.file_players[index];
         
@@ -12,14 +12,14 @@ function menu_refresh_instance_players()
         var _hp = _data.get_hp();
         var _hp_max = _data.get_hp_max();
         
-        render_text(_x, _y - 10, string(loca_translate("phantasia:gui.hp.header"), _hp, _hp_max), 1, 1, 0, _colour, 1);
+        render_text(_x, _y - (10 * _sy), string(loca_translate("phantasia:gui.hp.header"), _hp, _hp_max), _sx, _sy, 0, _colour, 1);
         
         draw_set_valign(fa_top);
         
-        render_text(_x - 84, _y + 20, _data.get_name(), 1, 1, 0, _colour, 1);
-        render_text(_x - 84, _y + 20 + 24, date_datetime_string(_data.get_last_opened()), 0.75, 0.75, 0, _colour, 1);
+        render_text(_x - (84 * _sx), _y + (20 * _sy), _data.get_name(), _sx, _sy, 0, _colour, 1);
+        render_text(_x - (84 * _sx), _y + (20 * _sy) + (24 * _sy), date_datetime_string(_data.get_last_opened()), 0.75 * _sx, 0.75 * _sy, 0, _colour, 1);
         
-        render_attire(_data.get_attire(), 0, _x - 56, _y + 24, 3, 3);
+        render_attire(_data.get_attire(), 0, _x - (56 * _sx), _y + (24 * _sy), 3 * _sx, 3 * _sy);
         
         draw_set_align(_halign, _valign);
     }

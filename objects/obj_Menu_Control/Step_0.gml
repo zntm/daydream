@@ -11,9 +11,6 @@ if (!audio_is_playing(global.menu_music))
 }
 
 // Ensure GUI variables are set (since obj_Game_Control might not be present)
-global.gui_width = display_get_gui_width();
-global.gui_height = display_get_gui_height();
-
 global.gui_mouse_x = device_mouse_x_to_gui(0);
 global.gui_mouse_y = device_mouse_y_to_gui(0);
 

@@ -1,6 +1,6 @@
 function menu_refresh_instance_worlds()
 {
-    static __on_draw = function(_x, _y)
+    static __on_draw = function(_x, _y, _sx, _sy, _c)
     {
         var _data = global.file_worlds[index];
         
@@ -9,10 +9,10 @@ function menu_refresh_instance_worlds()
         
         draw_set_align(fa_left, fa_top);
         
-        render_text(_x, _y - 64, _data.get_name());
-        render_text(_x, _y - 32, date_datetime_string(_data.get_last_opened()));
+        render_text(_x, _y - (64 * _sy), _data.get_name(), _sx, _sy);
+        render_text(_x, _y - (32 * _sy), date_datetime_string(_data.get_last_opened()), 0.75 * _sx, 0.75 * _sy);
         
-        render_text(_x, _y, date_datetime_string(_data.get_last_opened()));
+        render_text(_x, _y, date_datetime_string(_data.get_last_opened()), 0.75 * _sx, 0.75 * _sy);
         
         draw_set_align(_halign, _valign);
     }

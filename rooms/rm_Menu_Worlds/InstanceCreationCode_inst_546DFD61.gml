@@ -46,5 +46,5 @@ on_draw_behind = function(_x, _y, _render_xscale, _render_yscale, _colour)
 	var _a = (_y1 + _y2) / 2;
 	var _scale = (_y2 - _y1) / 8;
 	
-	draw_sprite_ext(spr_Menu_Indent, 0, _x * _render_xscale, _a, _render_yscale, _scale, 0, c_white, 1);
+	draw_sprite_ext(spr_Menu_Indent, 0, _x, _a, _render_yscale, _scale, 0, c_white, 1);
 }

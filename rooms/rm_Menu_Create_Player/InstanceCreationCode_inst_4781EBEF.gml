@@ -16,17 +16,14 @@ on_select_release = function()
             
             menu_layer = 1;
             
-            on_draw = function(_x, _y, _xscale, _yscale)
+            on_draw = function(_x, _y, _xscale, _yscale, _c)
             {
-                var _x2 = x * _xscale;
-                var _y2 = y * _yscale;
-                
                 var _halign = draw_get_halign();
                 var _valign = draw_get_valign();
                 
                 draw_set_align(fa_center, fa_middle);
                 
-                render_text(_x2, _y2, text, _xscale, _yscale);
+                render_text(_x, _y, text, _xscale, _yscale);
                 
                 draw_set_align(_halign, _valign);
             }

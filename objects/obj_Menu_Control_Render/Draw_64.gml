@@ -75,7 +75,9 @@ for (var j = 0; j <= _max_layer; ++j)
         
         if (_surface_index == j) && (on_draw != undefined)
         {
-            on_draw(_render_xoffset, _render_yoffset, _render_xscale, _render_yscale);
+            var _x = (_render_xoffset + x) * _render_xscale;
+            var _y = (_render_yoffset + y) * _render_yscale;
+            on_draw(_x, _y, _render_xscale, _render_yscale);
         }
     }
     
@@ -278,11 +280,11 @@ for (var j = 0; j <= _max_layer; ++j)
         {
             if (boolean & (MENU_BUTTON_BOOLEAN.IS_SELECTED | MENU_BUTTON_BOOLEAN.IS_HOLDING))
             {
-                on_draw(_x, _y + _asset_offset, c_ltgray);
+                on_draw(_x, _y + _asset_offset, _render_xscale, _render_yscale, c_ltgray);
             }
             else
             {
-                on_draw(_x, _y, c_white);
+                on_draw(_x, _y, _render_xscale, _render_yscale, c_white);
             }
         }
     }

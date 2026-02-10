@@ -200,6 +200,7 @@ global.camera_shake = 0;
 
 global.resolution_height_reference = 540;
 global.resolution_width_reference = 960;
+global.gui_scale = 2;
 
 global.attribute_player = new Attribute()
     .set_boolean([

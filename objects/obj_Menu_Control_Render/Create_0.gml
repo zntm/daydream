@@ -10,6 +10,17 @@ surface_index_length = 1;
 
 surfaces = [];
 
+// Initial centering logic (will be updated by obj_Menu_Control on resize)
+var _gui_scale = global.gui_scale;
+var _gui_width = display_get_gui_width();
+var _gui_height = display_get_gui_height();
+
+xoffset = (_gui_width / _gui_scale - 960) / 2;
+yoffset = (_gui_height / _gui_scale - 540) / 2;
+
+xscale = _gui_scale;
+yscale = _gui_scale;
+
 // Fix for stuck transition state when entering game world
 if (room == rm_World)
 {
@@ -17,16 +28,4 @@ if (room == rm_World)
     global.menu_transition_alpha = 1;
     global.menu_transition_scale = 1;
     global.menu_blur_alpha = 0;
-    
-    // Center the pause menu on the surface
-    // Center is 480, 270 (Base 960x540 resolution)
-    // Surface Center Target = 480, 270
-    // Matrix Scale = 0.5
-    // Render Scale = 1
-    // Formula: (Offset + Center) * RenderScale * MatrixScale = Target
-    // (Off + 480) * 1 * 0.5 = 480 -> Off + 480 = 960 -> Off = 480
-    xscale = 1;
-    yscale = 1;
-    xoffset = 480;
-    yoffset = 270;
 }
