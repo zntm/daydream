@@ -77,7 +77,7 @@ function GUIChoicePanel(_x, _y, _width = 200) : GUIComponent(_x, _y, _width, 0) 
         var _gui_height = global.gui_height;
         
         // Convert mouse to logical GUI coordinates
-        var _gui_scale = global.gui_scale * (_gui_width / 960);
+        var _gui_scale = global.gui_scale * (_gui_height / global.resolution_height_reference);
         var _mouse_x = (window_mouse_get_x() / _window_width) * _gui_width / _gui_scale;
         var _mouse_y = (window_mouse_get_y() / _window_height) * _gui_height / _gui_scale;
         
@@ -140,7 +140,7 @@ function GUIChoicePanel(_x, _y, _width = 200) : GUIComponent(_x, _y, _width, 0) 
         var _abs_y = get_absolute_y();
         
         var _gui_scale = global.gui_scale;
-        var _base_scale_x = _gui_scale * (global.gui_width / 960);
+        var _base_scale_x = _gui_scale * (global.gui_height / global.resolution_height_reference);
         var _base_scale_y = _gui_scale * (global.gui_height / 540);
         
         var _scale_x = _base_scale_x * scale;

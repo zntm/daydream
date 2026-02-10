@@ -122,16 +122,16 @@ surface_hp = -1;
 chunk_saved_count = 0;
 chunk_saved_count_max = 0;
 
-var _camera_width  = camera_get_view_width(view_camera[0]);
-var _camera_height = camera_get_view_height(view_camera[0]);
+var _camera_height = global.resolution_height_reference;
+var _camera_width  = _camera_height * (global.window_width / global.window_height);
 
 var _camera_x = 0 - (_camera_width  / 2);
 var _camera_y = 0 - (_camera_height / 2);
 
 var _gui_scale = 2;
 
-var _gui_width  = round(_gui_scale * global.window_width);
-var _gui_height = round(_gui_scale * global.window_height);
+var _gui_height = round(_gui_scale * global.resolution_height_reference);
+var _gui_width  = round(_gui_height * (global.window_width / global.window_height));
 
 global.camera_width  = _camera_width;
 global.camera_height = _camera_height;
@@ -148,6 +148,27 @@ global.camera_y_real = _camera_y;
 global.gui_scale = _gui_scale;
 
 control_update_gui_size(_gui_width, _gui_height);
+
+obj_Control.on_window_resize = function()
+{
+    var _window_width  = global.window_width;
+    var _window_height = global.window_height;
+    
+    var _camera_height = global.resolution_height_reference;
+    var _camera_width  = _camera_height * (_window_width / _window_height);
+    
+    global.camera_width  = _camera_width;
+    global.camera_height = _camera_height;
+    
+    camera_set_view_size(view_camera[0], _camera_width, _camera_height);
+    
+    var _gui_scale = global.gui_scale;
+    var _gui_height = round(_gui_scale * global.resolution_height_reference);
+    var _gui_width  = round(_gui_height * (_window_width / _window_height));
+    
+    control_update_gui_size(_gui_width, _gui_height);
+}
+
 
 control_camera_pos(_camera_x, _camera_y);
 camera_set_view_size(view_camera[0], _camera_width, _camera_height);

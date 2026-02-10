@@ -320,8 +320,8 @@ function ui_apply_property(_element, _prop, _link, _variables) {
         case "position":
             if (is_array(_value) && array_length(_value) >= 2) {
                 // Resolve percentages against GUI dimensions for top-level position
-                var _gui_w = variable_global_exists("gui_width") ? global.gui_width : 960;
-                var _gui_h = variable_global_exists("gui_height") ? global.gui_height : 540;
+                var _gui_w = variable_global_exists("gui_width") ? global.gui_width : global.resolution_width_reference;
+                var _gui_h = variable_global_exists("gui_height") ? global.gui_height : global.resolution_height_reference;
                 _element.x = ui_resolve_percentage(_value[0], _gui_w);
                 _element.y = ui_resolve_percentage(_value[1], _gui_h);
             }
@@ -701,15 +701,18 @@ function ui_resolve_percentage(_value, _reference) {
 /// @desc Get the base GUI scale for UI elements
 /// @returns {Struct} {x: real, y: real}
 function ui_get_base_scale() {
-    // Standard target is 960x540
-    var _w = variable_global_exists("gui_width") ? global.gui_width : 960;
-    var _h = variable_global_exists("gui_height") ? global.gui_height : 540;
+    // Standard target height is 540. Width is dynamic.
+    var _w = variable_global_exists("gui_width") ? global.gui_width : global.resolution_width_reference;
+    var _h = variable_global_exists("gui_height") ? global.gui_height : global.resolution_height_reference;
     var _gui_scale = variable_global_exists("gui_scale") ? global.gui_scale : 1.0;
     
     // Scale is a combination of resolution ratio and user setting
+    // We scale uniformly based on height to maintain vertical view consistency
+    var _uniform_scale = (_h / global.resolution_height_reference) * _gui_scale;
+    
     return {
-        x: (_w / 960) * _gui_scale,
-        y: (_h / 540) * _gui_scale
+        x: _uniform_scale,
+        y: _uniform_scale
     };
 }
 

@@ -22,7 +22,7 @@ function GUISlot(_x, _y, _inventory_name, _slot_index, _sprite = spr_Inventory_S
         var _abs_y = get_absolute_y();
         
         var _gui_scale = global.gui_scale;
-        var _base_scale_x = _gui_scale * (global.gui_width / 960);
+        var _base_scale_x = _gui_scale * (global.gui_height / global.resolution_height_reference);
         var _base_scale_y = _gui_scale * (global.gui_width / 540); // Standardize aspect logic
         
         var _scale_x = _base_scale_x * scale;
@@ -109,7 +109,7 @@ function GUISlot(_x, _y, _inventory_name, _slot_index, _sprite = spr_Inventory_S
         
         // Base GUI scale from resolution
         var _gui_scale = global.gui_scale;
-        var _base_scale_x = _gui_scale * (global.gui_width / 960);
+        var _base_scale_x = _gui_scale * (global.gui_height / global.resolution_height_reference);
         var _base_scale_y = _gui_scale * (global.gui_height / 540);
         
         // Apply component scale from datagen

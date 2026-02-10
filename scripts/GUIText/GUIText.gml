@@ -54,7 +54,7 @@ function GUIText(_x, _y, _text = "") : GUIComponent(_x, _y, 0, 0) constructor
         var _abs_y = get_absolute_y();
         
         var _gui_scale = global.gui_scale;
-        var _base_scale_x = _gui_scale * (global.gui_width / 960);
+        var _base_scale_x = _gui_scale * (global.gui_height / global.resolution_height_reference);
         var _base_scale_y = _gui_scale * (global.gui_height / 540);
         
         var _scale_x = _base_scale_x * scale * text_scale;

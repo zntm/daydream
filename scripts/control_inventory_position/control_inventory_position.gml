@@ -1,7 +1,7 @@
 function control_inventory_position()
 {
     var _gui_scale = global.gui_scale;
-    var _scale_x = _gui_scale * (global.gui_width / 960);
+    var _scale_x = _gui_scale * (global.gui_height / global.resolution_height_reference);
     var _scale_y = _gui_scale * (global.gui_height / 540);
     
     // Position inventory slots based on modular GUI components

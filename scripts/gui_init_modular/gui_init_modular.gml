@@ -26,8 +26,8 @@ function gui_init_modular()
     
     global.gui_deferred_text = [];
     
-    // Create root panel using logical dimensions (reference width 960)
-    var _gui_scale = global.gui_scale * (global.gui_width / 960);
+    // Create root panel using logical dimensions (reference height 540, width is dynamic)
+    var _gui_scale = global.gui_scale * (global.gui_height / global.resolution_height_reference);
     var _logical_width = global.gui_width / _gui_scale;
     var _logical_height = global.gui_height / _gui_scale;
     
@@ -124,8 +124,8 @@ function GUIHPBar(_x, _y, _width, _height) : GUIComponent(_x, _y, _width, _heigh
     static draw_content = function()
     {
         var _gui_scale = global.gui_scale;
-        var _base_scale_x = _gui_scale * (global.gui_width / 960);
-        var _base_scale_y = _gui_scale * (global.gui_height / 540);
+        var _base_scale_x = _gui_scale * (global.gui_height / global.resolution_height_reference);
+        var _base_scale_y = _gui_scale * (global.gui_height / global.resolution_height_reference);
         
         var _abs_x = get_absolute_x();
         var _abs_y = get_absolute_y();

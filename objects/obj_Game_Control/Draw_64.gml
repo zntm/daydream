@@ -19,8 +19,8 @@ var _gui_height = global.gui_height;
 
 var _gui_scale = global.gui_scale;
 
-var _gui_scale_width  = _gui_scale * (_gui_width  / 960);
-var _gui_scale_height = _gui_scale * (_gui_height / 540);
+var _gui_scale_height = _gui_scale * (_gui_height / global.resolution_height_reference);
+var _gui_scale_width  = _gui_scale_height;
 
 if (is_opened & IS_OPENED_BOOLEAN.GENERATING_WORLD)
 {

@@ -30,7 +30,7 @@ function UITextbox(_x, _y, _width, _height) : UIElement(_x, _y, _width, _height)
         var _abs_y = get_absolute_y();
         
         var _gui_scale = global.gui_scale;
-        var _base_scale_x = _gui_scale * (global.gui_width / 960);
+        var _base_scale_x = _gui_scale * (global.gui_height / global.resolution_height_reference);
         var _base_scale_y = _gui_scale * (global.gui_height / 540);
         
         var _mx = (window_mouse_get_x() / global.window_width) * global.gui_width;
@@ -99,7 +99,7 @@ function UITextbox(_x, _y, _width, _height) : UIElement(_x, _y, _width, _height)
         var _abs_y = get_absolute_y();
         
         var _gui_scale = global.gui_scale;
-        var _base_scale_x = _gui_scale * (global.gui_width / 960);
+        var _base_scale_x = _gui_scale * (global.gui_height / global.resolution_height_reference);
         var _base_scale_y = _gui_scale * (global.gui_height / 540);
         
         var _x1 = _abs_x * _base_scale_x;

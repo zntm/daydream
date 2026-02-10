@@ -47,7 +47,7 @@ function UIPopup(_x, _y, _width, _height) : UIElement(_x, _y, _width, _height) c
         if (!visible && alpha < 0.01) return;
         
         var _gui_scale = global.gui_scale;
-        var _base_scale_x = _gui_scale * (global.gui_width / 960);
+        var _base_scale_x = _gui_scale * (global.gui_height / global.resolution_height_reference);
         var _base_scale_y = _gui_scale * (global.gui_height / 540);
         
         // Draw overlay

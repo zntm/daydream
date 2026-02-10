@@ -198,6 +198,9 @@ global.delta_time = max(0.0001, delta_time / 1_000_000);
 
 global.camera_shake = 0;
 
+global.resolution_height_reference = 540;
+global.resolution_width_reference = 960;
+
 global.attribute_player = new Attribute()
     .set_boolean([
         "phantasia:has_regeneration"
