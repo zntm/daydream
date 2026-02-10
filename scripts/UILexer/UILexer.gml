@@ -15,12 +15,20 @@ enum UI_TOKEN {
     // Operators
     EQUALS,    // =
     COMMA,     // ,
-    STAR,      // * (binding prefix)
+    STAR,      // * (binding prefix OR multiplication depending on context)
     DOLLAR,    // $ (loca key prefix)
     HASH,      // # (color prefix)
     
+    // Math operators
+    PLUS,      // +
+    MINUS,     // -
+    SLASH,     // /
+    PERCENT,   // % (modulo, standalone)
+    POWER,     // **
+    
     // Keywords
     VAR,
+    EXPORT,
     
     // Layout enums (treated as identifiers but reserved)
     LAYOUT_VERTICAL,
@@ -48,6 +56,7 @@ function UILexer(_source) constructor {
     /// @desc Keyword lookup table
     static keywords = {
         "var": UI_TOKEN.VAR,
+        "export": UI_TOKEN.EXPORT,
         "true": UI_TOKEN.TRUE,
         "false": UI_TOKEN.FALSE,
         "undefined": UI_TOKEN.UNDEFINED,
@@ -141,20 +150,31 @@ function UILexer(_source) constructor {
                 break;
             
             case "*":
-                add_token(UI_TOKEN.STAR);
+                if (match("*")) {
+                    add_token(UI_TOKEN.POWER);
+                } else {
+                    add_token(UI_TOKEN.STAR);
+                }
                 break;
             
             case "$":
                 add_token(UI_TOKEN.DOLLAR);
                 break;
             
+            case "+":
+                add_token(UI_TOKEN.PLUS);
+                break;
+            
             case "-":
                 if (is_digit(peek())) {
                     scan_number();
                 } else {
-                    had_error = true;
-                    error = $"Unexpected character '-' at line {line}";
+                    add_token(UI_TOKEN.MINUS);
                 }
+                break;
+            
+            case "%":
+                add_token(UI_TOKEN.PERCENT);
                 break;
             
             case "#":
@@ -179,8 +199,7 @@ function UILexer(_source) constructor {
                         advance();
                     }
                 } else {
-                    had_error = true;
-                    error = $"Unexpected '/' at line {line}";
+                    add_token(UI_TOKEN.SLASH);
                 }
                 break;
             
@@ -270,7 +289,15 @@ function UILexer(_source) constructor {
         }
         
         var _text = string_copy(source, start, current - start);
-        add_token(UI_TOKEN.NUMBER, real(_text));
+        var _value = real(_text);
+        
+        // Check for percentage suffix: 50% (no space before %)
+        if (peek() == "%") {
+            advance(); // consume %
+            add_token(UI_TOKEN.NUMBER, { value: _value, is_percent: true });
+        } else {
+            add_token(UI_TOKEN.NUMBER, _value);
+        }
     }
     
     static scan_color = function() {

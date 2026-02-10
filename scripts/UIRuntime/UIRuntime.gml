@@ -69,15 +69,26 @@ function ui_load(_path) {
     
     // Expose top-level elements by name for importing in Daydream
     var _defs = _document.definitions;
+    var _exports = {};
     for (var i = 0; i < array_length(_defs); i++) {
         var _el = _defs[i];
-        if (is_struct(_el) && _el.type == UI_AST.ELEMENT) {
-            _ui_def[$ _el.name] = _el;
-            
-            // Attach variables to the element so ui_spawn can find them if this element is spawned alone
-            _el.variables = _parser.variables;
+        if (is_struct(_el)) {
+            if (_el.type == UI_AST.ELEMENT) {
+                _ui_def[$ _el.name] = _el;
+                _el.variables = _parser.variables;
+            }
+            // Collect exports
+            else if (_el.type == UI_AST.EXPORT_VAR) {
+                _exports[$ _el.name] = _el.value;
+            }
+            else if (_el.type == UI_AST.EXPORT_ELEMENT && is_struct(_el.element)) {
+                _exports[$ _el.element.name] = _el.element;
+                _ui_def[$ _el.element.name] = _el.element;
+                _el.element.variables = _parser.variables;
+            }
         }
     }
+    _ui_def.exports = _exports;
     
     global.ui_definitions[$ _path] = _ui_def;
     show_debug_message($"[UI Runtime] Successfully loaded UI file: {_full_path}");
@@ -308,8 +319,11 @@ function ui_apply_property(_element, _prop, _link, _variables) {
         
         case "position":
             if (is_array(_value) && array_length(_value) >= 2) {
-                _element.x = _value[0];
-                _element.y = _value[1];
+                // Resolve percentages against GUI dimensions for top-level position
+                var _gui_w = variable_global_exists("gui_width") ? global.gui_width : 960;
+                var _gui_h = variable_global_exists("gui_height") ? global.gui_height : 540;
+                _element.x = ui_resolve_percentage(_value[0], _gui_w);
+                _element.y = ui_resolve_percentage(_value[1], _gui_h);
             }
             break;
         
@@ -429,7 +443,13 @@ function ui_resolve_value(_node, _link, _variables) {
             return _node.name;
         
         case UI_AST.IDENTIFIER:
-            // Look up in local variables first
+            // Check for ORIGIN_* macros first
+            var _origin_val = ui_resolve_origin(_node.name);
+            if (_origin_val != undefined) {
+                return _origin_val;
+            }
+            
+            // Look up in local variables
             if (struct_exists(_variables, _node.name)) {
                 var _var_value = _variables[$ _node.name];
                 // If the stored value is an AST node, resolve it recursively
@@ -507,9 +527,175 @@ function ui_resolve_value(_node, _link, _variables) {
                 _surface_def[$ _key] = _val;
             }
             return _surface_def;
+        
+        case UI_AST.PERCENTAGE:
+            // Return a special struct that defers resolution to the property handler
+            return { is_percent: true, value: _node.value };
+        
+        case UI_AST.UNARY_OP:
+            var _right_val = ui_resolve_value(_node.right, _link, _variables);
+            if (_node.op == "-") {
+                if (is_struct(_right_val) && _right_val[$ "is_percent"] == true) {
+                    return { is_percent: true, value: -_right_val.value };
+                }
+                return -_right_val;
+            }
+            return _right_val;
+        
+        case UI_AST.BINARY_OP:
+            var _lv = ui_resolve_value(_node.left, _link, _variables);
+            var _rv = ui_resolve_value(_node.right, _link, _variables);
+            return ui_calc_binary_op(_node.op, _lv, _rv);
     }
     
     return undefined;
+}
+
+/// @desc Resolve an ORIGIN_* macro name to a percentage-based coordinate tuple
+/// @param {String} _name Origin name (e.g. "ORIGIN_BOTTOM_CENTER")
+/// @returns {Array|undefined} [x%, y%] percentage tuple or undefined if not an origin
+function ui_resolve_origin(_name) {
+    switch (_name) {
+        case "ORIGIN_TOP_LEFT":      return [0, 0];
+        case "ORIGIN_TOP_CENTER":    return [{ is_percent: true, value: 50 }, 0];
+        case "ORIGIN_TOP_RIGHT":     return [{ is_percent: true, value: 100 }, 0];
+        case "ORIGIN_MIDDLE_LEFT":   return [0, { is_percent: true, value: 50 }];
+        case "ORIGIN_CENTER":        return [{ is_percent: true, value: 50 }, { is_percent: true, value: 50 }];
+        case "ORIGIN_MIDDLE_RIGHT":  return [{ is_percent: true, value: 100 }, { is_percent: true, value: 50 }];
+        case "ORIGIN_BOTTOM_LEFT":   return [0, { is_percent: true, value: 100 }];
+        case "ORIGIN_BOTTOM_CENTER": return [{ is_percent: true, value: 50 }, { is_percent: true, value: 100 }];
+        case "ORIGIN_BOTTOM_RIGHT":  return [{ is_percent: true, value: 100 }, { is_percent: true, value: 100 }];
+        default: return undefined;
+    }
+}
+
+/// @desc Perform a binary math operation on two resolved values
+/// Supports: number op number, tuple op tuple (element-wise), number op tuple (broadcast)
+/// @param {String} _op Operator string
+/// @param {Any} _left Left value
+/// @param {Any} _right Right value
+/// @returns {Any} Result
+function ui_calc_binary_op(_op, _left, _right) {
+    // Both arrays (tuples) → element-wise
+    if (is_array(_left) && is_array(_right)) {
+        var _len = max(array_length(_left), array_length(_right));
+        var _result = [];
+        for (var i = 0; i < _len; i++) {
+            var _l = (i < array_length(_left)) ? _left[i] : 0;
+            var _r = (i < array_length(_right)) ? _right[i] : 0;
+            array_push(_result, ui_calc_binary_op(_op, _l, _r));
+        }
+        return _result;
+    }
+    
+    // One is array, other is scalar → broadcast
+    if (is_array(_left)) {
+        var _result = [];
+        for (var i = 0; i < array_length(_left); i++) {
+            array_push(_result, ui_calc_binary_op(_op, _left[i], _right));
+        }
+        return _result;
+    }
+    if (is_array(_right)) {
+        var _result = [];
+        for (var i = 0; i < array_length(_right); i++) {
+            array_push(_result, ui_calc_binary_op(_op, _left, _right[i]));
+        }
+        return _result;
+    }
+    
+    // Extract numeric values (handle percentage structs)
+    var _lv = _left;
+    var _rv = _right;
+    var _l_pct = false;
+    var _r_pct = false;
+    var _l_calc = false;
+    var _r_calc = false;
+    
+    if (is_struct(_left) && _left[$ "is_calc"] == true) {
+        _l_calc = true;
+    }
+    else if (is_struct(_left) && _left[$ "is_percent"] == true) {
+        _lv = _left.value;
+        _l_pct = true;
+    }
+    if (is_struct(_right) && _right[$ "is_calc"] == true) {
+        _r_calc = true;
+    }
+    else if (is_struct(_right) && _right[$ "is_percent"] == true) {
+        _rv = _right.value;
+        _r_pct = true;
+    }
+    
+    // Handle calc struct combinations for + and -
+    if ((_op == "+" || _op == "-") && (_l_pct || _r_pct || _l_calc || _r_calc)) {
+        // Extract percent and absolute components
+        var _pct_part = 0;
+        var _abs_part = 0;
+        
+        // Left operand
+        if (_l_calc) {
+            _pct_part += _left.percent_value;
+            _abs_part += _left.absolute_offset;
+        } else if (_l_pct) {
+            _pct_part += _lv;
+        } else {
+            _abs_part += _lv;
+        }
+        
+        // Right operand (negate if subtracting)
+        var _sign = (_op == "+") ? 1 : -1;
+        if (_r_calc) {
+            _pct_part += _sign * _right.percent_value;
+            _abs_part += _sign * _right.absolute_offset;
+        } else if (_r_pct) {
+            _pct_part += _sign * _rv;
+        } else {
+            _abs_part += _sign * _rv;
+        }
+        
+        // If no percent component, return plain number
+        if (_pct_part == 0) return _abs_part;
+        // If no absolute component, return pure percentage
+        if (_abs_part == 0) return { is_percent: true, value: _pct_part };
+        // Mixed: return calc struct
+        return { is_calc: true, percent_value: _pct_part, absolute_offset: _abs_part };
+    }
+    
+    // Perform the arithmetic
+    var _val = 0;
+    switch (_op) {
+        case "+":  _val = _lv + _rv; break;
+        case "-":  _val = _lv - _rv; break;
+        case "*":  _val = _lv * _rv; break;
+        case "/":  _val = (_rv != 0) ? _lv / _rv : 0; break;
+        case "%":  _val = (_rv != 0) ? _lv mod _rv : 0; break;
+        case "**": _val = power(_lv, _rv); break;
+        default:   _val = _lv; break;
+    }
+    
+    // If both operands were percentages, keep result as percentage
+    if (_l_pct && _r_pct) {
+        return { is_percent: true, value: _val };
+    }
+    
+    return _val;
+}
+
+/// @desc Resolve a value that might be a percentage, calc, or plain number
+/// @param {Any} _value Number, { is_percent, value }, or { is_calc, percent_value, absolute_offset }
+/// @param {Real} _reference Reference dimension (e.g. gui_width, parent_width)
+/// @returns {Real} Resolved absolute value
+function ui_resolve_percentage(_value, _reference) {
+    if (is_struct(_value)) {
+        if (_value[$ "is_calc"] == true) {
+            return _reference * (_value.percent_value / 100) + _value.absolute_offset;
+        }
+        if (_value[$ "is_percent"] == true) {
+            return _reference * (_value.value / 100);
+        }
+    }
+    return _value;
 }
 
 /// @desc Get the base GUI scale for UI elements

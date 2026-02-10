@@ -83,6 +83,20 @@ function UIParser(_tokens) constructor {
     // =============================================================================
     
     static parse_definition = function() {
+        // Export declaration: export var ... or export @element ...
+        if (match(UI_TOKEN.EXPORT)) {
+            if (match(UI_TOKEN.VAR)) {
+                var _decl = parse_var_declaration();
+                return new UIASTExportVar(_decl.name, _decl.value);
+            }
+            if (match(UI_TOKEN.AT)) {
+                var _element = parse_element();
+                return new UIASTExportElement(_element);
+            }
+            error_at_current("Expected 'var' or '@' after 'export'.");
+            return undefined;
+        }
+        
         // Variable declaration: var _name = value
         if (match(UI_TOKEN.VAR)) {
             return parse_var_declaration();
@@ -166,10 +180,81 @@ function UIParser(_tokens) constructor {
     }
     
     // =============================================================================
-    // Value Parsing
+    // Expression Parsing (PEMDAS Precedence)
     // =============================================================================
+    // 
+    // Precedence chain (lowest to highest):
+    //   parse_value -> parse_addition -> parse_multiplication -> parse_unary -> parse_power -> parse_primary
+    //
+    // This allows expressions like:
+    //   ORIGIN_BOTTOM_CENTER + (0, -10)
+    //   (100 * 2, 50%)
+    //   ORIGIN_CENTER + (-25%, 0)
     
     static parse_value = function() {
+        return parse_addition();
+    }
+    
+    /// @desc Parse addition/subtraction level: + -
+    static parse_addition = function() {
+        var _left = parse_multiplication();
+        
+        while (check(UI_TOKEN.PLUS) || check(UI_TOKEN.MINUS)) {
+            var _op_token = advance();
+            var _op = (_op_token.type == UI_TOKEN.PLUS) ? "+" : "-";
+            var _right = parse_multiplication();
+            _left = new UIASTBinaryOp(_op, _left, _right);
+        }
+        
+        return _left;
+    }
+    
+    /// @desc Parse multiplication/division/modulo level: * / %
+    static parse_multiplication = function() {
+        var _left = parse_unary();
+        
+        while (check(UI_TOKEN.STAR) || check(UI_TOKEN.SLASH) || check(UI_TOKEN.PERCENT)) {
+            var _op_token = advance();
+            var _op;
+            switch (_op_token.type) {
+                case UI_TOKEN.STAR: _op = "*"; break;
+                case UI_TOKEN.SLASH: _op = "/"; break;
+                case UI_TOKEN.PERCENT: _op = "%"; break;
+            }
+            var _right = parse_unary();
+            _left = new UIASTBinaryOp(_op, _left, _right);
+        }
+        
+        return _left;
+    }
+    
+    /// @desc Parse unary prefix: - (negation)
+    static parse_unary = function() {
+        if (match(UI_TOKEN.MINUS)) {
+            var _right = parse_unary();
+            return new UIASTUnaryOp("-", _right);
+        }
+        
+        return parse_power();
+    }
+    
+    /// @desc Parse exponentiation: ** (right-associative)
+    static parse_power = function() {
+        var _left = parse_primary();
+        
+        if (match(UI_TOKEN.POWER)) {
+            var _right = parse_unary(); // Right-associative: recurse through unary
+            _left = new UIASTBinaryOp("**", _left, _right);
+        }
+        
+        return _left;
+    }
+    
+    // =============================================================================
+    // Primary Value Parsing
+    // =============================================================================
+    
+    static parse_primary = function() {
         // Binding: *variable
         if (match(UI_TOKEN.STAR)) {
             var _name_token = consume(UI_TOKEN.IDENTIFIER, "Expected variable name after '*'.");
@@ -213,9 +298,14 @@ function UIParser(_tokens) constructor {
             return parse_tuple();
         }
         
-        // Number or Color
+        // Number or Color or Percentage
         if (match(UI_TOKEN.NUMBER)) {
             var _lit = previous().literal;
+            
+            // Check if it's a percentage struct { value, is_percent: true }
+            if (is_struct(_lit) && (_lit[$ "is_percent"] == true)) {
+                return new UIASTPercentage(_lit.value);
+            }
             
             // Check if it's a color struct
             if (is_struct(_lit) && (_lit[$ "is_color"] == true)) {
@@ -252,7 +342,7 @@ function UIParser(_tokens) constructor {
             return new UIASTEnum("LAYOUT_NONE");
         }
         
-        // Identifier (variable reference)
+        // Identifier (variable reference, including ORIGIN_* macros)
         if (match(UI_TOKEN.IDENTIFIER)) {
             return new UIASTIdentifier(previous().literal ?? previous().lexeme);
         }

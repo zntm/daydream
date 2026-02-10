@@ -22,7 +22,16 @@ enum UI_AST {
     IDENTIFIER,   // variable reference (e.g. _padding)
     ENUM,         // LAYOUT_VERTICAL, etc.
     SPRITE_DEF,   // $sprite(name) { slices/margins }
-    SURFACE_DEF   // $surface(name) { properties }
+    SURFACE_DEF,  // $surface(name) { properties }
+    
+    // Math expressions
+    BINARY_OP,    // left op right (e.g. ORIGIN_CENTER + (10, 20))
+    UNARY_OP,     // -expr (negation)
+    PERCENTAGE,   // 50% (percentage value)
+    
+    // Export declarations
+    EXPORT_VAR,     // export var name = value
+    EXPORT_ELEMENT  // export @type(name) { ... }
 }
 
 // =============================================================================
@@ -155,4 +164,47 @@ function UIASTSurfaceDef(_surface_name, _properties) constructor {
     type = UI_AST.SURFACE_DEF;
     surface_name = _surface_name;
     properties = _properties;
+}
+
+/// @desc Binary operation node - left op right
+/// @param {String} _op Operator string ("+", "-", "*", "/", "%", "**")
+/// @param {Struct} _left Left operand AST node
+/// @param {Struct} _right Right operand AST node
+function UIASTBinaryOp(_op, _left, _right) constructor {
+    type = UI_AST.BINARY_OP;
+    op = _op;
+    left = _left;
+    right = _right;
+}
+
+/// @desc Unary operation node - op right
+/// @param {String} _op Operator string ("-")
+/// @param {Struct} _right Operand AST node
+function UIASTUnaryOp(_op, _right) constructor {
+    type = UI_AST.UNARY_OP;
+    op = _op;
+    right = _right;
+}
+
+/// @desc Percentage literal - 50%
+/// @param {Real} _value Raw numeric value (e.g. 50 for 50%)
+function UIASTPercentage(_value) constructor {
+    type = UI_AST.PERCENTAGE;
+    value = _value;
+}
+
+/// @desc Exported variable declaration - export var name = value
+/// @param {String} _name Variable name
+/// @param {Struct} _value Value AST node
+function UIASTExportVar(_name, _value) constructor {
+    type = UI_AST.EXPORT_VAR;
+    name = _name;
+    value = _value;
+}
+
+/// @desc Exported element - export @type(name) { ... }
+/// @param {Struct} _element UIASTElement node
+function UIASTExportElement(_element) constructor {
+    type = UI_AST.EXPORT_ELEMENT;
+    element = _element;
 }

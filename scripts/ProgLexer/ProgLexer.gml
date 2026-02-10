@@ -19,7 +19,7 @@ enum PROG_TOKEN
     AMP, PIPE, CARET, TILDE, LSHIFT, RSHIFT,
     ASSIGN, PLUS_ASSIGN, MINUS_ASSIGN, STAR_ASSIGN, SLASH_ASSIGN, PERCENT_ASSIGN, POWER_ASSIGN,
     LSHIFT_ASSIGN, RSHIFT_ASSIGN, AMP_ASSIGN, PIPE_ASSIGN, CARET_ASSIGN,
-    NULL_COALESCE, SPREAD, QUESTION_DOT, RANGE,
+    NULL_COALESCE, SPREAD, QUESTION_DOT, RANGE, ARROW,
     // Punctuation
     LPAREN, RPAREN, LBRACE, RBRACE, LBRACKET, RBRACKET,
     COMMA, DOT, SEMICOLON, COLON, QUESTION,
@@ -217,7 +217,10 @@ function ProgLexer(_source) constructor
                 break;
             
             case "-":
-                add_token(match("-") ? PROG_TOKEN.MINUS_MINUS : (match("=") ? PROG_TOKEN.MINUS_ASSIGN : PROG_TOKEN.MINUS));
+                if (match(">")) add_token(PROG_TOKEN.ARROW);
+                else if (match("-")) add_token(PROG_TOKEN.MINUS_MINUS);
+                else if (match("=")) add_token(PROG_TOKEN.MINUS_ASSIGN);
+                else add_token(PROG_TOKEN.MINUS);
                 break;
             
             case "*":
