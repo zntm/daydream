@@ -198,6 +198,10 @@ if (IS_DEVELOPER_MODE)
     global.camera_height = global.camera_height_base * _size;
     
     camera_set_view_size(view_camera[0], global.camera_width, global.camera_height);
+    
+    // Ensure viewport port matches window size (fixes stretching if window resized)
+    view_set_wport(0, global.window_width);
+    view_set_hport(0, global.window_height);
 }
 
 var _dt = GAME_TICK * _delta_time;

@@ -160,7 +160,12 @@ obj_Control.on_window_resize = function()
     global.camera_width  = _camera_width;
     global.camera_height = _camera_height;
     
+    global.camera_width_base  = _camera_width;
+    global.camera_height_base = _camera_height;
+    
     camera_set_view_size(view_camera[0], _camera_width, _camera_height);
+    view_set_wport(0, _window_width);
+    view_set_hport(0, _window_height);
     
     var _gui_scale = global.gui_scale;
     var _gui_height = round(_gui_scale * global.resolution_height_reference);
