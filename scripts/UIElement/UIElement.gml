@@ -72,7 +72,7 @@ function UIElement(_x, _y, _width, _height) : GUIComponent(_x, _y, _width, _heig
                     _value = _resolver();
                 } else if (is_array(_resolver)) {
                     // It might be a Proglang closure/function
-                    _value = function_execute(_resolver);
+                    _value = proglang_runtime_call(_resolver);
                 } else {
                     _value = _resolver;
                 }
@@ -156,7 +156,7 @@ function UIElement(_x, _y, _width, _height) : GUIComponent(_x, _y, _width, _heig
                 }
             }
             
-            function_execute(_script_id, _context);
+            proglang_runtime_call(_script_id, [], _context);
         }
     }
     

@@ -805,49 +805,57 @@ function proglang_vm_run(_vm, _entry_bytecode)
                             }
                             if (!_found) runtime_error(PROGLANG_ERROR_TYPE.MEMBER, $"Property '{_prop}' not found in super class.");
                         }
-                        // Regular instance lookup
-                        else if (is_struct(_obj))
+                        // Regular instance lookup (Struct or GML Instance)
+                        else if (is_struct(_obj) || (is_numeric(_obj) && instance_exists(_obj)))
                         {
-                            if (struct_exists(_obj, _prop))
-                            {
-                                _val = _obj[$ _prop];
-                            }
-                            // Class instance method lookup
-                            else if (struct_exists(_obj, "__class__"))
-                            {
-                                var _class = _obj.__class__;
-                                var _curr = _class;
-                                var _found = false;
-                                while(_curr != undefined)
+                            if (is_struct(_obj)) {
+                                if (struct_exists(_obj, _prop))
                                 {
-                                    if (struct_exists(_curr.methods, _prop))
+                                    _val = _obj[$ _prop];
+                                }
+                                // Class instance method lookup
+                                else if (struct_exists(_obj, "__class__"))
+                                {
+                                    var _class = _obj.__class__;
+                                    var _curr = _class;
+                                    var _found = false;
+                                    while(_curr != undefined)
                                     {
-                                        var _method_entry = _curr.methods[$ _prop];
-                                        _val = array_create(PROG_CLOSURE.SIZE);
-                                        _val[PROG_CLOSURE.TYPE] = "closure";
-                                        _val[PROG_CLOSURE.BYTECODE] = _method_entry.bytecode;
-                                        _val[PROG_CLOSURE.ENV] = _vm[PROG_VM.SCOPE]; // Methods capture current scope (for globals etc)
-                                        _val[PROG_CLOSURE.NAME] = _prop;
-                                        _val[PROG_CLOSURE.PARAM_COUNT] = struct_exists(_method_entry, "param_count") ? _method_entry.param_count : 0;
-                                        _val[PROG_CLOSURE.DEFINING_CLASS] = _curr;
-                                        _val[PROG_CLOSURE.RECEIVER] = _obj;
-                                        _val[PROG_CLOSURE.GLOBAL_REF] = _gref;
-                                        _found = true;
-                                        break;
+                                        if (struct_exists(_curr.methods, _prop))
+                                        {
+                                            var _method_entry = _curr.methods[$ _prop];
+                                            _val = array_create(PROG_CLOSURE.SIZE);
+                                            _val[PROG_CLOSURE.TYPE] = "closure";
+                                            _val[PROG_CLOSURE.BYTECODE] = _method_entry.bytecode;
+                                            _val[PROG_CLOSURE.ENV] = _vm[PROG_VM.SCOPE]; // Methods capture current scope (for globals etc)
+                                            _val[PROG_CLOSURE.NAME] = _prop;
+                                            _val[PROG_CLOSURE.PARAM_COUNT] = struct_exists(_method_entry, "param_count") ? _method_entry.param_count : 0;
+                                            _val[PROG_CLOSURE.DEFINING_CLASS] = _curr;
+                                            _val[PROG_CLOSURE.RECEIVER] = _obj;
+                                            _val[PROG_CLOSURE.GLOBAL_REF] = _gref;
+                                            _found = true;
+                                            break;
+                                        }
+                                        _curr = _curr.super_class;
                                     }
-                                    _curr = _curr.super_class;
+                                    
+                                    if (!_found)
+                                    {
+                                        runtime_error(PROGLANG_ERROR_TYPE.MEMBER, $"Property or method '{_prop}' not found.");
+                                    }
                                 }
-                                
-                                if (!_found)
+                                else
                                 {
-                                    runtime_error(PROGLANG_ERROR_TYPE.MEMBER, $"Property or method '{_prop}' not found.");
+                                    _val = undefined;
                                 }
                             }
-                            else
-                            {
-                                // Not found on regular struct
-                                //  runtime_error(PROGLANG_ERROR_TYPE.MEMBER, $"Property '{_prop}' not found.");
-                                _val = undefined;
+                            else {
+                                // GML Instance
+                                if (variable_instance_exists(_obj, _prop)) {
+                                    _val = variable_instance_get(_obj, _prop);
+                                } else {
+                                    _val = undefined;
+                                }
                             }
                         }
                         else
@@ -884,6 +892,10 @@ function proglang_vm_run(_vm, _entry_bytecode)
                         if (is_struct(_obj))
                         {
                             _obj[$ _prop] = _val;
+                        }
+                        else if (is_numeric(_obj) && instance_exists(_obj))
+                        {
+                            variable_instance_set(_obj, _prop, _val);
                         }
                         else
                         {
