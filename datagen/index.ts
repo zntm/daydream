@@ -40,7 +40,7 @@ const processExports = async (dir: string, type: string) => {
             for (const d of Array.isArray(datagen)
                 ? datagen.flat(Infinity)
                 : [datagen]) {
-                d.data = recursiveSort(d.data);
+                d.data = recursiveSort(JSON.parse(JSON.stringify(d.data)));
 
                 const destination = join(
                     __dirname,

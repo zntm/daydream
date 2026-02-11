@@ -55,6 +55,7 @@
                 "height": 6
             }
         ],
+        "if_clear": true,
         "type": "floor",
         "xoffset": -3,
         "yoffset": "-height"

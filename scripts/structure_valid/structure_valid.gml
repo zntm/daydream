@@ -19,6 +19,7 @@ function structure_valid(_tx, _ty, _id, _seed)
     {
         var _clearance_condition = _structure_data.get_placement_clearance_condition();
         var _clearance_condition_length = _structure_data.get_placement_clearance_condition_length();
+        var _if_clear = _structure_data.get_if_clear();
         
         for (var i = 0; i < _clearance_condition_length; ++i)
         {
@@ -37,6 +38,10 @@ function structure_valid(_tx, _ty, _id, _seed)
             {
                 var _x2 = _tx + j + _xoffset;
                 var _surface_height = worldgen_get_surface_height(_x2, _seed, _world_data);
+                
+                // If if_clear is true, ensure the structure's footprint is not below the local surface
+                // We check if the bottom of where the structure would be (top + height) is deeper than the surface
+                if (_if_clear) && (_ty + _height > _surface_height) return false;
                 
                 if (_ty + _abs_clearance_condition_height + _yoffset < _surface_height) continue;
                 

@@ -30,17 +30,20 @@ export class StructurePlacement {
     xoffset: number | string | SmartValue;
     yoffset: number | string | SmartValue;
     clearance_condition?: StructurePlacementClearanceCondition[];
+    public if_clear?: boolean;
 
     constructor(
         type: StructurePlacementType,
         xoffset: number | string | SmartValue,
         yoffset: number | string | SmartValue,
         clearance_condition?: StructurePlacementClearanceCondition[],
+        ifClear?: boolean,
     ) {
         this.type = type;
         this.xoffset = xoffset;
         this.yoffset = yoffset;
         this.clearance_condition = clearance_condition;
+        this.if_clear = ifClear;
     }
 }
 

@@ -2,31 +2,28 @@
     "function": {
         "id": "phantasia:tall_foliage",
         "parameters": {
-            "tile_top": {
+            "tile_bottom": {
                 "id": "phantasia:cattail",
-                "index": 2
+                "index": 1
             },
             "tile_middle": {
                 "id": "phantasia:cattail",
                 "index": 1
             },
-            "tile_bottom": {
+            "tile_top": {
                 "id": "phantasia:cattail",
-                "index": 1
+                "index": 2
             }
         }
     },
     "height": {
+        "type": "smart_value:irandom",
         "values": {
-            "min": 3,
-            "max": 8
-        },
-        "type": "smart_value:irandom"
+            "max": 8,
+            "min": 3
+        }
     },
     "placement": {
-        "type": "floor",
-        "xoffset": 0,
-        "yoffset": "-height",
         "clearance_condition": [
             {
                 "xoffset": 0,
@@ -34,7 +31,11 @@
                 "width": 1,
                 "height": "height"
             }
-        ]
+        ],
+        "if_clear": true,
+        "type": "floor",
+        "xoffset": 0,
+        "yoffset": "-height"
     },
     "width": 1
 }

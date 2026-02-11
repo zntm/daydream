@@ -50,7 +50,7 @@ class StructureParameter {
 export default [
     // Pine
     new DatagenReturnData(
-        "generated/data/structures/tree/pine.json",
+        "tree/pine.json",
         new Structure(
             9,
             new SmartValueIntRandom(9, 14),
@@ -61,7 +61,7 @@ export default [
                     "width",
                     8,
                 ),
-            ]),
+            ], true),
             new StructureFunction(
                 "phantasia:tree/coniferous",
                 new StructureParameter(

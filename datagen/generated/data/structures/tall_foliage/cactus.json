@@ -2,43 +2,40 @@
     "function": {
         "id": "phantasia:tall_foliage",
         "parameters": {
-            "tile_top": {
+            "tile_bottom": {
                 "id": "phantasia:cactus",
-                "index": 5
+                "index": {
+                    "type": "smart_value:irandom",
+                    "values": {
+                        "max": 4,
+                        "min": 1
+                    }
+                }
             },
             "tile_middle": {
                 "id": "phantasia:cactus",
                 "index": {
+                    "type": "smart_value:irandom",
                     "values": {
-                        "min": 1,
-                        "max": 4
-                    },
-                    "type": "smart_value:irandom"
+                        "max": 4,
+                        "min": 1
+                    }
                 }
             },
-            "tile_bottom": {
+            "tile_top": {
                 "id": "phantasia:cactus",
-                "index": {
-                    "values": {
-                        "min": 1,
-                        "max": 4
-                    },
-                    "type": "smart_value:irandom"
-                }
+                "index": 5
             }
         }
     },
     "height": {
+        "type": "smart_value:irandom",
         "values": {
-            "min": 2,
-            "max": 6
-        },
-        "type": "smart_value:irandom"
+            "max": 6,
+            "min": 2
+        }
     },
     "placement": {
-        "type": "floor",
-        "xoffset": 0,
-        "yoffset": "-height",
         "clearance_condition": [
             {
                 "xoffset": 0,
@@ -46,7 +43,11 @@
                 "width": 1,
                 "height": "height"
             }
-        ]
+        ],
+        "if_clear": true,
+        "type": "floor",
+        "xoffset": 0,
+        "yoffset": "-height"
     },
     "width": 1
 }

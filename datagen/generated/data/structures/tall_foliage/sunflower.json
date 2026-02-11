@@ -2,13 +2,14 @@
     "function": {
         "id": "phantasia:tall_foliage",
         "parameters": {
-            "tile_top": {
+            "tile_bottom": {
                 "id": "phantasia:sunflower",
-                "index": 0
+                "index": 1
             },
             "tile_middle": {
                 "id": "phantasia:sunflower",
                 "index": {
+                    "type": "smart_value:choose_weighted",
                     "values": [
                         {
                             "value": 2,
@@ -18,27 +19,23 @@
                             "value": 3,
                             "weight": 3
                         }
-                    ],
-                    "type": "smart_value:choose_weighted"
+                    ]
                 }
             },
-            "tile_bottom": {
+            "tile_top": {
                 "id": "phantasia:sunflower",
-                "index": 1
+                "index": 0
             }
         }
     },
     "height": {
+        "type": "smart_value:irandom",
         "values": {
-            "min": 3,
-            "max": 6
-        },
-        "type": "smart_value:irandom"
+            "max": 6,
+            "min": 3
+        }
     },
     "placement": {
-        "type": "floor",
-        "xoffset": 0,
-        "yoffset": "-height",
         "clearance_condition": [
             {
                 "xoffset": 0,
@@ -46,7 +43,11 @@
                 "width": 1,
                 "height": "height"
             }
-        ]
+        ],
+        "if_clear": true,
+        "type": "floor",
+        "xoffset": 0,
+        "yoffset": "-height"
     },
     "width": 1
 }
