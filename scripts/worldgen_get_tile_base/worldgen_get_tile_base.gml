@@ -37,7 +37,7 @@ function worldgen_get_tile_base(_x, _y, _surface_biome, _cave_biome, _surface_he
     // Cave biome tiles
     if (_cave_biome != undefined)
     {
-        var _cb = _biome_data[$ _cave_biome];
+        var _cb = _biome_data[$ worldgen_resolve_id(_cave_biome)];
         if (_cb != undefined) return _cb.get_tile_middle_layer_base(_noise);
     }
     
@@ -47,14 +47,14 @@ function worldgen_get_tile_base(_x, _y, _surface_biome, _cave_biome, _surface_he
         var _default_caves = _world_data.get_cave_biome_default();
         if (array_length(_default_caves) > 0)
         {
-            var _def_biome = _default_caves[array_length(_default_caves) - 1].id; 
+            var _def_biome = worldgen_resolve_id(_default_caves[array_length(_default_caves) - 1].id); 
             var _cb = _biome_data[$ _def_biome];
             if (_cb != undefined) return _cb.get_tile_middle_layer_base(_noise);
         }
     }
     
     // Surface tiles
-    var _sb = _biome_data[$ _surface_biome];
+    var _sb = _biome_data[$ worldgen_resolve_id(_surface_biome)];
     if (_sb == undefined) return TILE_EMPTY;
     
     return _cave_above ? _sb.get_tile_top_layer_base(_noise) : _sb.get_tile_middle_layer_base(_noise);

@@ -84,12 +84,12 @@ function tile_predict(_x, _y, _z)
     var _slope = max(abs(_surface_height - _h_left), abs(_h_right - _surface_height));
     
     var _surface_biome = worldgen_get_biome_surface(_x, _surface_height, _surface_height, _world_seed, _world_data, _slope);
-    var _surface_biome_data = _global_biome_data[$ _surface_biome];
+    var _surface_biome_data = _global_biome_data[$ worldgen_resolve_id(_surface_biome)];
     
     // --- OCEAN WATER ---
     if (_z == CHUNK_DEPTH_LIQUID)
     {
-        if (_y < _surface_height) && (_y >= _world_data.get_surface_start()) && (_surface_biome_data.is_ocean())
+        if (_y < _surface_height) && (_y >= _world_data.get_surface_start()) && (_surface_biome_data != undefined) && (_surface_biome_data.is_ocean())
         {
             return new Tile("phantasia:water").set_component("level", 8);
         }

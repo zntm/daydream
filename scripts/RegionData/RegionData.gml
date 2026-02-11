@@ -52,14 +52,16 @@ function RegionData(_id, _config = {}) constructor
     var _terrain_config = _config[$ "terrain"] ?? {};
     ___terrain = {
         height_offset: _terrain_config[$ "height_offset"] ?? 0,
-        base_height: _terrain_config[$ "base_height"] ?? 400,
+        base_height: _terrain_config[$ "base_height"] ?? 0,
         amplitude_min: _terrain_config[$ "amplitude_min"] ?? 30,
         amplitude_max: _terrain_config[$ "amplitude_max"] ?? 60,
         noise_scale: _terrain_config[$ "noise_scale"] ?? 0.015625,
     };
     
     ___category = _config[$ "category"] ?? ___id;
-    ___map_color = hex_parse(_config[$ "map_color"] ?? "#000000");
+    ___map_color = is_string(_config[$ "map_color"]) ? hex_parse(_config[$ "map_color"]) : (_config[$ "map_color"] ?? c_white);
+    ___fog_color = undefined;
+    ___particles = undefined;
     
     static get_id = function()
     {
@@ -207,7 +209,7 @@ function RegionData(_id, _config = {}) constructor
         // Simple average for now
         var _amp = (_t.amplitude_min + _t.amplitude_max) * 0.5;
         
-        return _t.height_offset + (_noise * _amp);
+        return _t.height_offset + _t.base_height + (_noise * _amp);
     }
     
     static set_fog_color = function(_color)

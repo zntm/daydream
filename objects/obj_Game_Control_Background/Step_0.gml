@@ -74,7 +74,7 @@ if (timer_refresh >= 1) || (in_biome_transition_value > 0)
         }
     }
     
-    if (!audio_is_playing(music_current))
+    if (music_current == undefined || !audio_is_playing(music_current))
     {
         music_current_id = "";
         

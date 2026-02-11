@@ -142,7 +142,7 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
     {
         ___vignette_ystart = _ystart;
         ___vignette_yend = _yend;
-        ___vignette_colour = _colour;
+        ___vignette_colour = is_string(_colour) ? hex_parse(_colour) : _colour;
         
         return self;
     }
@@ -726,18 +726,42 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
     
     static __resolve_regions = function()
     {
-        if (___regions_ids == undefined) return;
-        
-        var _len = array_length(___regions_ids);
-        ___regions_objects = array_create(_len);
-        
-        for(var i = 0; i < _len; ++i)
+        if (___regions_ids == undefined || array_length(___regions_ids) == 0) 
         {
-            ___regions_objects[i] = global.region_data[$ ___regions_ids[i]];
-            if (___regions_objects[i] == undefined)
+            // Create a fallback region if none specified
+            var _fallback = new RegionData("fallback", {
+                biomes: [{ id: "phantasia:surface/forest", weight: 1 }],
+                cave_biome_default: "phantasia:cave/chasm"
+            });
+            ___regions_objects = [_fallback];
+        }
+        else
+        {
+            var _len = array_length(___regions_ids);
+            ___regions_objects = [];
+            
+            for(var i = 0; i < _len; ++i)
             {
-                show_debug_message("WorldData: Region not found: " + string(___regions_ids[i]));
-                // Fallback?
+                var _id = worldgen_resolve_id(___regions_ids[i]);
+                var _obj = global.region_data[$ _id];
+                if (_obj != undefined)
+                {
+                    array_push(___regions_objects, _obj);
+                }
+                else
+                {
+                    show_debug_message("WorldData: Region not found: " + string(_id));
+                }
+            }
+            
+            // If all failed, ensure at least one object exists
+            if (array_length(___regions_objects) == 0)
+            {
+                 var _fallback = new RegionData("fallback", {
+                    biomes: [{ id: "phantasia:surface/forest", weight: 1 }],
+                    cave_biome_default: "phantasia:cave/chasm"
+                });
+                array_push(___regions_objects, _fallback);
             }
         }
         

@@ -5,6 +5,14 @@ enum BIOME_TYPE {
     CAVE
 }
 
+/// @desc Safely resolve a namespaced ID
+function worldgen_resolve_id(_id, _namespace = "phantasia")
+{
+    if (_id == undefined) return undefined;
+    if (string_pos(":", _id) > 0) return _id;
+    return $"{_namespace}:{_id}";
+}
+
 /// @desc Safely get sky colour from a biome/ID/region object
 function worldgen_get_sky_colour(_target, _time)
 {
@@ -13,10 +21,11 @@ function worldgen_get_sky_colour(_target, _time)
     // Resolve ID if string
     if (is_string(_target))
     {
-        var _biome = global.biome_data[$ _target];
+        var _id = worldgen_resolve_id(_target);
+        var _biome = global.biome_data[$ _id];
         if (_biome != undefined) return _biome.get_sky_colour(_time);
         
-        var _region = global.region_data[$ _target];
+        var _region = global.region_data[$ _id];
         if (_region != undefined) return _region.get_sky_colour(_time);
         
         return c_black;
@@ -39,10 +48,11 @@ function worldgen_get_light_colour(_target, _time)
     // Resolve ID if string
     if (is_string(_target))
     {
-        var _biome = global.biome_data[$ _target];
+        var _id = worldgen_resolve_id(_target);
+        var _biome = global.biome_data[$ _id];
         if (_biome != undefined) return _biome.get_light_colour(_time);
         
-        var _region = global.region_data[$ _target];
+        var _region = global.region_data[$ _id];
         if (_region != undefined) return _region.get_light_colour(_time);
         
         return c_white;
@@ -65,10 +75,11 @@ function worldgen_get_background(_target)
     // Resolve ID if string
     if (is_string(_target))
     {
-        var _biome = global.biome_data[$ _target];
+        var _id = worldgen_resolve_id(_target);
+        var _biome = global.biome_data[$ _id];
         if (_biome != undefined) return _biome.get_background();
         
-        var _region = global.region_data[$ _target];
+        var _region = global.region_data[$ _id];
         if (_region != undefined) return _region.get_background();
         
         return undefined;
@@ -91,10 +102,11 @@ function worldgen_get_music(_target)
     // Resolve ID if string
     if (is_string(_target))
     {
-        var _biome = global.biome_data[$ _target];
+        var _id = worldgen_resolve_id(_target);
+        var _biome = global.biome_data[$ _id];
         if (_biome != undefined) return _biome.get_music();
         
-        var _region = global.region_data[$ _target];
+        var _region = global.region_data[$ _id];
         if (_region != undefined) return _region.get_music();
         
         return undefined;
@@ -111,6 +123,34 @@ function worldgen_get_music(_target)
 
 function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
 {
+    ___background = undefined;
+    ___sky_colour_points = [];
+    ___light_colour_points = [];
+    ___music = [];
+    
+    ___tile_top_layer_base = { entries: [], total_weight: 0 };
+    ___tile_top_layer_wall = { entries: [], total_weight: 0 };
+    ___tile_middle_layer_base = { entries: [], total_weight: 0 };
+    ___tile_middle_layer_wall = { entries: [], total_weight: 0 };
+    ___tile_bottom_layer_base = { entries: [], total_weight: 0 };
+    ___tile_bottom_layer_wall = { entries: [], total_weight: 0 };
+    
+    ___terrain_height_offset = 0;
+    ___terrain_amplitude_scale = 1;
+    ___is_ocean = false;
+    ___has_shore_tiles = false;
+    ___shore_tiles_base = { entries: [], total_weight: 0 };
+    ___shore_tiles_wall = { entries: [], total_weight: 0 };
+    ___is_skyland = false;
+    
+    ___tile_foliage = [];
+    ___tile_foliage_length = 0;
+    ___creature = [];
+    ___creature_length = 0;
+    ___structure = [];
+    ___structure_length = 0;
+    ___salt = 0;
+    
     static set_background = function(_background)
     {
         ___background = _background;
@@ -127,17 +167,43 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
     
     static set_sky_colour = function(_sky_colour)
     {
+        if (_sky_colour == undefined) return self;
+        
         var _points = _sky_colour[$ "points"];
-        var _length = array_length(_points);
-        
-        ___sky_colour_points = array_create(_length);
-        
-        for (var i = 0; i < _length; ++i)
+        if (_points != undefined)
         {
-            ___sky_colour_points[i] = {
-                position: _points[i].position,
-                color: hex_parse(_points[i].color)
-            };
+            var _length = array_length(_points);
+            ___sky_colour_points = array_create(_length);
+            
+            for (var i = 0; i < _length; ++i)
+            {
+                ___sky_colour_points[i] = {
+                    position: _points[i].position,
+                    color: is_string(_points[i].color) ? hex_parse(_points[i].color) : _points[i].color
+                };
+            }
+        }
+        else
+        {
+            // Legacy / Keyed format (dawn, day, dusk, night)
+            var _keys = ["dawn", "day", "dusk", "night"];
+            var _pos = [0.1, 0.5, 0.8, 1.0]; // Default positions for keyed format
+            ___sky_colour_points = [];
+            
+            for (var i = 0; i < 4; ++i)
+            {
+                var _k = _keys[i];
+                var _val = _sky_colour[$ _k];
+                if (_val != undefined)
+                {
+                    // Handle both color string and struct with base/gradient
+                    var _c = is_struct(_val) ? (_val[$ "base"] ?? _val[$ "gradient"]) : _val;
+                    array_push(___sky_colour_points, {
+                        position: _pos[i],
+                        color: is_string(_c) ? hex_parse(_c) : _c
+                    });
+                }
+            }
         }
         
         // Sort by position just in case
@@ -160,7 +226,7 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
             if (_time >= _p0.position && _time <= _p1.position)
             {
                 var _t = (_time - _p0.position) / (_p1.position - _p0.position);
-                return merge_color(_p0.color, _p1.color, _t);
+                return merge_colour(_p0.color, _p1.color, _t);
             }
         }
         
@@ -173,7 +239,7 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
              var _len = (1.0 - _last.position) + _first.position;
              var _pos = (_time + (1.0 - _last.position));
              var _t = _pos / _len;
-             return merge_color(_last.color, _first.color, _t);
+             return merge_colour(_last.color, _first.color, _t);
         }
         
         if (_time > _last.position)
@@ -181,7 +247,7 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
              var _len = (1.0 - _last.position) + _first.position;
              var _pos = (_time - _last.position);
              var _t = _pos / _len;
-             return merge_color(_last.color, _first.color, _t);
+             return merge_colour(_last.color, _first.color, _t);
         }
         
         return _first.color;
@@ -195,19 +261,45 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
     
     static set_light_colour = function(_light_colour)
     {
+        if (_light_colour == undefined) return self;
+        
         var _points = _light_colour[$ "points"];
-        var _length = array_length(_points);
-        
-        ___light_colour_points = array_create(_length);
-        
-        for (var i = 0; i < _length; ++i)
+        if (_points != undefined)
         {
-            ___light_colour_points[i] = {
-                position: _points[i].position,
-                color: hex_parse(_points[i].color)
-            };
+            var _length = array_length(_points);
+            ___light_colour_points = array_create(_length);
+            
+            for (var i = 0; i < _length; ++i)
+            {
+                ___light_colour_points[i] = {
+                    position: _points[i].position,
+                    color: is_string(_points[i].color) ? hex_parse(_points[i].color) : _points[i].color
+                };
+            }
+        }
+        else
+        {
+            // Legacy / Keyed format
+            var _keys = ["dawn", "day", "dusk", "night"];
+            var _pos = [0.1, 0.5, 0.8, 1.0];
+            ___light_colour_points = [];
+            
+            for (var i = 0; i < 4; ++i)
+            {
+                var _k = _keys[i];
+                var _val = _light_colour[$ _k];
+                if (_val != undefined)
+                {
+                    var _c = is_struct(_val) ? (_val[$ "base"] ?? _val[$ "gradient"]) : _val;
+                    array_push(___light_colour_points, {
+                        position: _pos[i],
+                        color: is_string(_c) ? hex_parse(_c) : _c
+                    });
+                }
+            }
         }
         
+        // Sort by position just in case
         array_sort(___light_colour_points, function(_a, _b) { return _a.position - _b.position; });
         
         return self;
@@ -219,17 +311,17 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
         return __get_gradient_colour(___light_colour_points, _time);
     }
     
-    static set_music = function(_music)
+    static set_music = function(_music_list)
     {
-        ___music = [];
+        if (_music_list == undefined) return self;
         
-        var _length = array_length(_music);
+        ___music = [];
+        var _length = array_length(_music_list);
         
         for (var i = 0; i < _length; ++i)
         {
-            var _ = _music[i];
-            
-            array_push(___music, new Sound(_.id, _.gain));
+            var _entry = _music_list[i];
+            array_push(___music, new Sound(_entry.id, _entry.gain));
         }
         
         return self;
@@ -243,6 +335,11 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
     /// @desc Parse tile array data into weighted entry format
     static __parse_tile_array = function(_data)
     {
+        if (_data == undefined)
+        {
+            return { entries: [], total_weight: 0 };
+        }
+        
         if (is_array(_data))
         {
             var _length = array_length(_data);
@@ -272,7 +369,9 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
         else
         {
             // Legacy single-entry format
-            var _id = _data.id;
+            var _id = _data[$ "id"];
+            if (_id == undefined) return { entries: [], total_weight: 0 };
+            
             if (_id == "$EMPTY") _id = TILE_EMPTY;
             
             return { entries: [{ id: _id, weight: 1, cumulative_weight: 1 }], total_weight: 1 }
@@ -284,6 +383,8 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
     {
         var _entries = _parsed.entries;
         var _total = _parsed.total_weight;
+        
+        if (array_length(_entries) == 0) return TILE_EMPTY;
         
         if (array_length(_entries) == 1)
         {
@@ -326,8 +427,9 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
     
     static set_tile_top_layer = function(_data)
     {
-        ___tile_top_layer_base = __parse_tile_array(_data.base);
-        ___tile_top_layer_wall = __parse_tile_array(_data.wall);
+        if (_data == undefined) return self;
+        ___tile_top_layer_base = __parse_tile_array(_data[$ "base"]);
+        ___tile_top_layer_wall = __parse_tile_array(_data[$ "wall"]);
         
         return self;
     }
@@ -344,8 +446,9 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
     
     static set_tile_middle_layer = function(_data)
     {
-        ___tile_middle_layer_base = __parse_tile_array(_data.base);
-        ___tile_middle_layer_wall = __parse_tile_array(_data.wall);
+        if (_data == undefined) return self;
+        ___tile_middle_layer_base = __parse_tile_array(_data[$ "base"]);
+        ___tile_middle_layer_wall = __parse_tile_array(_data[$ "wall"]);
         
         return self;
     }
@@ -362,8 +465,9 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
     
     static set_tile_bottom_layer = function(_data)
     {
-        ___tile_bottom_layer_base = __parse_tile_array(_data.base);
-        ___tile_bottom_layer_wall = __parse_tile_array(_data.wall);
+        if (_data == undefined) return self;
+        ___tile_bottom_layer_base = __parse_tile_array(_data[$ "base"]);
+        ___tile_bottom_layer_wall = __parse_tile_array(_data[$ "wall"]);
         
         return self;
     }
@@ -415,8 +519,8 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
     {
         if (_tiles != undefined)
         {
-            ___shore_tiles_base = __parse_tile_array(_tiles.base);
-            ___shore_tiles_wall = __parse_tile_array(_tiles.wall);
+            ___shore_tiles_base = __parse_tile_array(_tiles[$ "base"]);
+            ___shore_tiles_wall = __parse_tile_array(_tiles[$ "wall"]);
             ___has_shore_tiles = true;
         }
         else
@@ -458,6 +562,7 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
     
     static set_tile_foliage = function(_foliage)
     {
+        if (_foliage == undefined) return self;
         ___tile_foliage = _foliage;
         ___tile_foliage_length = array_length(_foliage);
         
@@ -513,6 +618,7 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
     
     static set_structure = function(_structure)
     {
+        if (_structure == undefined) return self;
         ___structure = _structure;
         ___structure_length = array_length(_structure);
         

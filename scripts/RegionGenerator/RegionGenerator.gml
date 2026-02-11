@@ -76,6 +76,8 @@ function RegionGenerator(_config = {}) constructor
     {
         var _region_id = ___voronoi_lookup_id(_x, _y, _seed);
         
+        if (___region_count <= 0) return undefined;
+        
         if (_region_id < 0 || _region_id >= ___region_count)
         {
             return ___regions[0]; // Fallback to first region

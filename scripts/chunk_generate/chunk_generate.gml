@@ -193,7 +193,7 @@ function chunk_generate(_chunk, _context = undefined)
         var _slope = max(abs(_surface_height - _h_left), abs(_h_right - _surface_height));
         
         var _surface_biome = worldgen_get_biome_surface(_world_x, _surface_height, _surface_height, _world_seed, _world_data, _slope);
-        var _surface_biome_data = _global_biome_data[$ _surface_biome];
+        var _surface_biome_data = _global_biome_data[$ worldgen_resolve_id(_surface_biome)];
         
         // HOIST: Biome Blending Helpers (removed in Region Update)
         // var _blend_range = ...
@@ -240,7 +240,7 @@ function chunk_generate(_chunk, _context = undefined)
             }
             
             // --- OCEAN WATER ---
-            if (_world_y < _surface_height) && (_world_y >= _world_surface_start) && (_surface_biome_data.is_ocean())
+            if (_surface_biome_data != undefined) && (_world_y < _surface_height) && (_world_y >= _world_surface_start) && (_surface_biome_data.is_ocean())
             {
                 if !(_skip_z & (1 << CHUNK_DEPTH_LIQUID))
                 {
@@ -255,11 +255,12 @@ function chunk_generate(_chunk, _context = undefined)
                 }
             }
             
-            // --- CAVES AND SOLID TERRAIN ---
             if (_world_y >= _surface_height - 1)
             {
                 var _cave_biome = worldgen_get_biome_cave(_world_x, _world_y, _surface_height, _world_seed, _world_data);
                 var _is_cave = (_cave_bit_stream >> (j + 1)) & 1;
+                
+                var _cave_biome_id = worldgen_resolve_id(_cave_biome);
                 
                 if !(_skip_z & (1 << CHUNK_DEPTH_DEFAULT)) && !_is_cave && _world_y >= _surface_height
                 {
