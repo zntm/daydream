@@ -57,8 +57,8 @@ if (keyboard_check_pressed(vk_f2))
     
     var _gui_scale = global.gui_scale;
     
-    var _gui_scale_width  = _gui_scale * (global.gui_width  / 960);
-    var _gui_scale_height = _gui_scale * (global.gui_height / 540);
+    var _gui_scale_width  = _gui_scale * (global.gui_width  / global.resolution_width_reference);
+    var _gui_scale_height = _gui_scale * (global.gui_height / global.resolution_height_reference);
     
     render_lighting(_camera_x, _camera_y, _window_width * _gui_scale_width, _window_height * _gui_scale_height);
     

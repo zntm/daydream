@@ -154,6 +154,9 @@ obj_Control.on_window_resize = function()
     var _window_width  = global.window_width;
     var _window_height = global.window_height;
     
+    // Repair texture atlases after resize
+    atla_repair_all();
+    
     var _camera_height = global.resolution_height_reference;
     var _camera_width  = _camera_height * (_window_width / _window_height);
     
@@ -172,11 +175,45 @@ obj_Control.on_window_resize = function()
     var _gui_width  = round(_gui_height * (_window_width / _window_height));
     
     control_update_gui_size(_gui_width, _gui_height);
+    
+    // Refresh surfaces that depend on window size
+    if (is_opened & IS_OPENED_BOOLEAN.INVENTORY)
+    {
+        surface_refresh |=
+            SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK |
+            SURFACE_REFRESH_BOOLEAN.INVENTORY_CRAFTABLE;
+    }
+    else
+    {
+        surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR;
+    }
+    
+    surface_refresh |= 
+        SURFACE_REFRESH_BOOLEAN.HP |
+        SURFACE_REFRESH_BOOLEAN.LIGHTING;
+    
+    // Refresh chunk lighting for all visible chunks
+    for (var i = 0; i < chunk_in_view_length; ++i)
+    {
+        var _inst = chunk_in_view[i];
+        
+        if (_inst == undefined) continue;
+        
+        _inst.boolean |= CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH;
+    }
 }
 
 
 control_camera_pos(_camera_x, _camera_y);
 camera_set_view_size(view_camera[0], _camera_width, _camera_height);
+
+// Ensure viewport port matches current window (room .yy has hardcoded 1920x1080)
+var _ww = global.window_width;
+var _wh = global.window_height;
+view_set_wport(0, _ww);
+view_set_hport(0, _wh);
+room_set_viewport(room, 0, true, 0, 0, _ww, _wh);
+surface_resize(application_surface, _ww, _wh);
 
 init_inventory_instance();
 

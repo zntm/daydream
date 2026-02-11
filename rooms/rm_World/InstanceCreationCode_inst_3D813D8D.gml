@@ -4,8 +4,8 @@ on_window_resize = function()
     
     var _gui_scale = global.gui_scale;
     
-    var _gui_width  = round(_gui_scale * global.window_width);
-    var _gui_height = round(_gui_scale * global.window_height);
+    var _gui_height = round(_gui_scale * global.resolution_height_reference);
+    var _gui_width  = round(_gui_height * (global.window_width / global.window_height));
     
     global.gui_scale = _gui_scale;
     
