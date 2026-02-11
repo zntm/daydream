@@ -32,6 +32,8 @@ function init(_namespace)
     
     init_structure($"{PROGRAM_DIRECTORY_RESOURCES}/data/structures", _namespace);
     
+    init_region_recursive($"{PROGRAM_DIRECTORY_RESOURCES}/data/regions", _namespace);
+    
     init_biome_recursive($"{PROGRAM_DIRECTORY_RESOURCES}/data/biomes", _namespace);
     
     init_world($"{PROGRAM_DIRECTORY_RESOURCES}/data/worlds", _namespace);

@@ -17,22 +17,14 @@ function menu_refresh_value_background()
     
     global.menu_background_id = _id;
     
-    // Safety check for color names
+    // Use a random time on the biome's sky color gradient (0.0 - 1.0)
     if (_biome != undefined)
     {
-        var _names = _biome.get_sky_colour_names();
-        if (array_length(_names) > 0)
-        {
-            global.menu_background_colour = array_choose(_names);
-        }
-        else
-        {
-            global.menu_background_colour = c_black;
-        }
+        global.menu_background_colour = random(1.0);
     }
     else
     {
-        global.menu_background_colour = c_black;
+        global.menu_background_colour = 0.0;
     }
     
     global.menu_background_offset = 0;

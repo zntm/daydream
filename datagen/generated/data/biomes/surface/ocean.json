@@ -7,10 +7,24 @@
     "foliage": [],
     "is_ocean": true,
     "light_colour": {
-        "dawn": "#374A91",
-        "day": "#FFFFFF",
-        "dusk": "#C68B69",
-        "night": "#141B35"
+        "points": [
+            {
+                "position": 0.15,
+                "color": "#374A91"
+            },
+            {
+                "position": 0.45,
+                "color": "#FFFFFF"
+            },
+            {
+                "position": 0.72,
+                "color": "#C68B69"
+            },
+            {
+                "position": 0.9,
+                "color": "#141B35"
+            }
+        ]
     },
     "map_colour": "#2563A8",
     "music": [
@@ -24,22 +38,24 @@
         }
     ],
     "sky_colour": {
-        "dawn": {
-            "base": "#292231",
-            "gradient": "#37232C"
-        },
-        "day": {
-            "base": "#5F91FE",
-            "gradient": "#244FE9"
-        },
-        "dusk": {
-            "base": "#C4502D",
-            "gradient": "#DA651C"
-        },
-        "night": {
-            "base": "#2B243F",
-            "gradient": "#1E1F2B"
-        }
+        "points": [
+            {
+                "position": 0.15,
+                "color": "#292231"
+            },
+            {
+                "position": 0.45,
+                "color": "#5F91FE"
+            },
+            {
+                "position": 0.72,
+                "color": "#C4502D"
+            },
+            {
+                "position": 0.9,
+                "color": "#2b243f"
+            }
+        ]
     },
     "structures": [],
     "terrain_modifier": {

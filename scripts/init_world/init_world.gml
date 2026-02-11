@@ -33,6 +33,7 @@ function init_world(_directory, _namespace = "phantasia", _type = 0)
                 var _world_data = new WorldData(_namespace, _id, _json[$ "world_height"]);
                 
                 _world_data.set_spawn_interval(_json[$ "spawn_interval"]);
+                _world_data.set_biome_transition_smoothing(_json[$ "biome_transition_smoothing"] ?? 0.5);
                 
                 var _vignette = _json[$ "vignette"];
                 if (_vignette != undefined)

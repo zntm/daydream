@@ -176,6 +176,85 @@ function RegionGenerator(_config = {}) constructor
         }
         
         // Distance to boundary is approximately half the difference
-        return (_second_best_dist - _best_dist) * 0.5;
+        return (_second_best_dist - _best_dist) / 2.0;
+    }
+    
+    /// @desc Get data for blending between regions
+    /// @param {Real} _x World X position
+    /// @param {Real} _y World Y position
+    /// @param {Real} _z World Z position
+    /// @param {Real} _seed World seed
+    /// @returns {Struct} { r1: RegionData, r2: RegionData, factor: Real }
+    static get_blend_data = function(_x, _y, _z, _seed)
+    {
+        var _warp_x = open_simplex_noise(_x * ___warp_scale, _y * ___warp_scale, 1.0, 2) * ___warp_power;
+        var _warp_y = open_simplex_noise(_x * ___warp_scale + 1000, _y * ___warp_scale + 1000, 1.0, 2) * ___warp_power;
+        
+        var _wx = _x + _warp_x;
+        var _wy = _y + _warp_y;
+        
+        var _cell_x = floor(_wx / ___cell_size);
+        var _cell_y = floor(_wy / ___cell_size);
+        
+        var _best_dist = infinity;
+        var _second_best_dist = infinity;
+        var _best_region_id = 0;
+        var _second_best_region_id = 0;
+        
+        for (var _cx = _cell_x - 1; _cx <= _cell_x + 1; _cx++)
+        {
+            for (var _cy = _cell_y - 1; _cy <= _cell_y + 1; _cy++)
+            {
+                var _cell_seed = abs(_cx * 73856093) ^ abs(_cy * 19349663) ^ (_seed + ___seed_offset);
+                
+                var _jitter_x = frac(sin(_cell_seed * 0.0001) * 43758.5453) * 0.8 + 0.1;
+                var _jitter_y = frac(sin(_cell_seed * 0.0002) * 22578.1459) * 0.8 + 0.1;
+                
+                var _point_x = (_cx + _jitter_x) * ___cell_size;
+                var _point_y = (_cy + _jitter_y) * ___cell_size;
+                
+                var _dx = _wx - _point_x;
+                var _dy = _wy - _point_y;
+                var _dist_sq = _dx * _dx + _dy * _dy;
+                // Avoid sqrt for comparison if possible, but we need linear dist for blending math usually.
+                // Standard Voronoi F2-F1 uses linear distance.
+                var _dist = sqrt(_dist_sq);
+                
+                var _region_id = abs(_cell_seed) mod ___region_count;
+                
+                if (_dist < _best_dist)
+                {
+                    _second_best_dist = _best_dist;
+                    _second_best_region_id = _best_region_id;
+                    _best_dist = _dist;
+                    _best_region_id = _region_id;
+                }
+                else if (_dist < _second_best_dist)
+                {
+                    _second_best_dist = _dist;
+                    _second_best_region_id = _region_id;
+                }
+            }
+        }
+        
+        var _r1 = ___regions[_best_region_id];
+        var _r2 = ___regions[_second_best_region_id];
+        
+        // F2 - F1. 
+        // If 0, we are at edge. If large, we are deep inside cell.
+        // We want factor = 0 when deep in r1, 0.5 at edge?
+        // Actually, for simple linear blend:
+        // factor = 0.5 - (d2-d1)/(2*width)?
+        //
+        // Common approach:
+        // edge_dist = (d2 - d1) / 2
+        //
+        // We return just d2 - d1 for flexibility.
+        
+        return {
+            r1: _r1,
+            r2: _r2,
+            diff: _second_best_dist - _best_dist
+        };
     }
 }

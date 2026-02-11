@@ -5,6 +5,7 @@ import { Attribute, AttributeBoolean } from "./Attribute";
 import { EntityPhysics, EntityPhysicsValue, EntityPhysicsValueType } from "./Entity";
 import { Noise } from "./Noise";
 import { Spline, SplinePoint, SplineEasing } from "./Spline";
+import { ColorGradient, ColorPoint } from "./ColorGradient";
 
 export {
     DatagenReturnData,
@@ -24,5 +25,7 @@ export {
     Noise,
     Spline,
     SplinePoint,
-    SplineEasing
+    SplineEasing,
+    ColorGradient,
+    ColorPoint
 };

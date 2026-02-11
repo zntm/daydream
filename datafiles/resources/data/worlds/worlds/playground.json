@@ -103,6 +103,7 @@
             }
         }
     },
+    "biome_transition_smoothing": 0.5,
     "cave": {
         "aquifers": [
             {
@@ -190,6 +191,13 @@
             "time_range_min": 890,
             "time_range_max": 1200
         }
+    ],
+    "regions": [
+        "emeraldine",
+        "rotfens",
+        "dustbunny",
+        "borea",
+        "glacien"
     ],
     "spawn_interval": 14,
     "surface": {

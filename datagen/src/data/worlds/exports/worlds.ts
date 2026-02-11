@@ -84,6 +84,14 @@ export default [
                 new SplinePoint(16, 0.3),                      // 16 blocks deep: 30% cave size
                 new SplinePoint(64, 1),                        // 64 blocks deep: full caves
             ])),
+            0.5,
+            [
+                "emeraldine",
+                "rotfens",
+                "dustbunny",
+                "borea",
+                "glacien"
+            ]
         ),
     ),
 ];

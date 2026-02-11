@@ -1,0 +1,125 @@
+{
+    "background": {
+        "blend": 0.7,
+        "id": "phantasia:background/desert"
+    },
+    "creatures": [],
+    "foliage": [
+        {
+            "id": "phantasia:rock",
+            "chance": 0.08,
+            "generate_on": "#phantasia:tile/placement/dry_plant_on"
+        },
+        {
+            "id": "phantasia:dead_bush",
+            "chance": 0.06,
+            "generate_on": "#phantasia:tile/placement/dry_plant_on"
+        }
+    ],
+    "light_colour": {
+        "points": [
+            {
+                "position": 0.15,
+                "color": "#C68B69"
+            },
+            {
+                "position": 0.45,
+                "color": "#FFFFFF"
+            },
+            {
+                "position": 0.72,
+                "color": "#C68B69"
+            },
+            {
+                "position": 0.9,
+                "color": "#141B35"
+            }
+        ]
+    },
+    "map_colour": "#A65030",
+    "music": [
+        {
+            "id": "phantasia:music/field_of_concourse",
+            "gain": 0.4
+        },
+        {
+            "id": "phantasia:music/tense",
+            "gain": 0.5
+        }
+    ],
+    "sky_colour": {
+        "points": [
+            {
+                "position": 0.15,
+                "color": "#292231"
+            },
+            {
+                "position": 0.45,
+                "color": "#D3BEA9"
+            },
+            {
+                "position": 0.72,
+                "color": "#C66448"
+            },
+            {
+                "position": 0.9,
+                "color": "#17121D"
+            }
+        ]
+    },
+    "structures": [],
+    "terrain_modifier": {
+        "amplitude_scale": 1.4,
+        "height_offset": 12
+    },
+    "tile": {
+        "bottom_layer": {
+            "base": [
+                {
+                    "id": "phantasia:stone"
+                }
+            ],
+            "wall": [
+                {
+                    "id": "phantasia:stone_wall",
+                    "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
+                }
+            ]
+        },
+        "middle_layer": {
+            "base": [
+                {
+                    "id": "phantasia:stone"
+                }
+            ],
+            "wall": [
+                {
+                    "id": "phantasia:stone_wall",
+                    "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
+                }
+            ]
+        },
+        "top_layer": {
+            "base": [
+                {
+                    "id": "phantasia:stone"
+                }
+            ],
+            "wall": [
+                {
+                    "id": "phantasia:stone_wall",
+                    "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
+                }
+            ]
+        }
+    }
+}

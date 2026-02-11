@@ -286,6 +286,7 @@
     {"name":"init_music","order":1,"path":"scripts/init_music/init_music.yy",},
     {"name":"init_particle_recursive","order":1,"path":"scripts/init_particle_recursive/init_particle_recursive.yy",},
     {"name":"init_projectile","order":1,"path":"scripts/init_projectile/init_projectile.yy",},
+    {"name":"init_region_recursive","order":24,"path":"scripts/init_region_recursive/init_region_recursive.yy",},
     {"name":"init_setting","order":1,"path":"scripts/init_setting/init_setting.yy",},
     {"name":"init_sfx_asset","order":1,"path":"scripts/init_sfx_asset/init_sfx_asset.yy",},
     {"name":"init_sfx","order":2,"path":"scripts/init_sfx/init_sfx.yy",},

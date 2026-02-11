@@ -1,10 +1,10 @@
-import { type SmartValue, Sound } from "../../../lib";
+import { type SmartValue, Sound, ColorGradient } from "../../../lib";
 
 export class Biome {
     private background: BiomeBackground;
-    private map_colour: string;
-    private sky_colour: any;
-    private light_colour: any;
+    private map_colour?: string;
+    private sky_colour: ColorGradient;
+    private light_colour: ColorGradient;
     private tile: {
         [key: string]: BiomeTile;
     };
@@ -20,15 +20,15 @@ export class Biome {
 
     constructor(
         background: BiomeBackground,
-        mapColor: string,
-        skyColor: any,
-        lightColor: any,
+        mapColor: string | undefined,
+        skyColor: ColorGradient,
+        lightColor: ColorGradient,
         tile: {
             [key: string]: BiomeTile;
         },
     ) {
         this.background = background;
-        this.map_colour = mapColor;
+        if (mapColor) this.map_colour = mapColor;
         this.sky_colour = skyColor;
         this.light_colour = lightColor;
         this.tile = tile;
@@ -109,17 +109,6 @@ export class BiomeBackground {
     }
 }
 
-export class BiomeSkyColor {
-    private base: string;
-    private gradient: string;
-
-    constructor(base: string, gradient: string) {
-        this.base = /\#[0-9a-fA-F]{6}/.test(base) ? base.toUpperCase() : base;
-        this.gradient = /\#[0-9a-fA-F]{6}/.test(gradient)
-            ? gradient.toUpperCase()
-            : gradient;
-    }
-}
 
 export class TileEntry {
     private id: string;

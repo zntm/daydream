@@ -78,9 +78,12 @@ function tile_predict(_x, _y, _z)
     }
     
     // HOIST: Biome Parameters
-    var _heat = worldgen_get_heat(_x, _surface_height, _world_seed, _world_data);
-    var _humidity = worldgen_get_humidity(_x, _surface_height, _world_seed, _world_data);
-    var _surface_biome = worldgen_get_biome_surface(_x, _surface_height, _surface_height, _world_seed, _world_data, _heat, _humidity);
+    // Calculate Slope for Biome Selection (0 = flat, 1 = steep)
+    var _h_left = worldgen_get_surface_height(_x - 1, _world_seed, _world_data);
+    var _h_right = worldgen_get_surface_height(_x + 1, _world_seed, _world_data);
+    var _slope = max(abs(_surface_height - _h_left), abs(_h_right - _surface_height));
+    
+    var _surface_biome = worldgen_get_biome_surface(_x, _surface_height, _surface_height, _world_seed, _world_data, _slope);
     var _surface_biome_data = _global_biome_data[$ _surface_biome];
     
     // --- OCEAN WATER ---
@@ -95,16 +98,14 @@ function tile_predict(_x, _y, _z)
     // --- CAVES AND SOLID TERRAIN ---
     if (_y >= _surface_height - 1)
     {
-        var _heat_c = worldgen_get_cave_heat(_x, _y, _world_seed, _world_data);
-        var _humid_c = worldgen_get_cave_humidity(_x, _y, _world_seed, _world_data);
-        var _cave_biome = worldgen_get_biome_cave(_x, _y, _surface_height, _world_seed, _world_data, _heat_c, _humid_c);
+        var _cave_biome = worldgen_get_biome_cave(_x, _y, _surface_height, _world_seed, _world_data);
         var _cave_start = worldgen_get_cave_start(_x, _world_seed, _world_data);
         var _is_cave = worldgen_get_cave(_x, _y, _surface_height, _cave_start, _world_seed, _world_data);
         
         if (_z == CHUNK_DEPTH_DEFAULT && !_is_cave && _y >= _surface_height)
         {
             var _cave_above = worldgen_get_cave(_x, _y - 1, _surface_height, _cave_start, _world_seed, _world_data);
-            var _tile_base = worldgen_get_tile_base(_x, _y, _surface_biome, _cave_biome, _surface_height, _cave_above, _world_seed, _world_data, _global_biome_data, _heat, _humidity);
+            var _tile_base = worldgen_get_tile_base(_x, _y, _surface_biome, _cave_biome, _surface_height, _cave_above, _world_seed, _world_data, _global_biome_data);
             if (_tile_base != TILE_EMPTY)
             {
                 var _d = _item_data[$ _tile_base];
@@ -154,7 +155,7 @@ function tile_predict(_x, _y, _z)
         var _is_floor = _is_cave && !_is_cave_below;
         if (_is_floor)
         {
-            var _tile_next = worldgen_get_tile_base(_x, _y + 1, _surface_biome, undefined, _surface_height, true, _world_seed, _world_data, _global_biome_data, _heat, _humidity);
+            var _tile_next = worldgen_get_tile_base(_x, _y + 1, _surface_biome, undefined, _surface_height, true, _world_seed, _world_data, _global_biome_data);
             var _foliage_id = worldgen_get_tile_foliage(_x, _y, _surface_biome, undefined, _tile_next, _surface_height, _world_seed, _global_biome_data);
             
             if (_foliage_id != TILE_EMPTY)

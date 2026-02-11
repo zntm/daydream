@@ -31,13 +31,6 @@ if !(obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.PAUSE)
         {
             in_biome_transition_value = 0;
             
-            /*
-            if (!instance_exists(obj_Toast))
-            {
-                spawn_toast(GAME_TICK * 8, toast_biome);
-            }
-            */
-            
             if (music_current != undefined)
             {
                 audio_sound_gain(music_current, 0, BACKGROUND_MUSIC_FADE_TIME);
@@ -48,16 +41,11 @@ if !(obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.PAUSE)
                 }
             }
             
-            var _music = _in_biome_transition_data.get_music();
+            var _music = worldgen_get_music(in_biome_transition);
             
             if (_music != undefined) && (!array_contains(_music, music_current_id))
             {
-                var _music_transition = _biome_data[$ in_biome_transition].get_music();
-                
-                if (_music_transition != undefined)
-                {
-                    bg_play_music(array_choose(_music_transition));
-                }
+                bg_play_music(array_choose(_music));
             }
             
             in_biome = in_biome_transition;
@@ -92,36 +80,14 @@ if (timer_refresh >= 1) || (in_biome_transition_value > 0)
         
         if (music_current != undefined)
         {
-            if (in_biome_transition_value <= 0)
+            var _music = (in_biome_transition_value <= 0) ? worldgen_get_music(in_biome) : worldgen_get_music(in_biome_transition);
+            
+            if (_music != undefined)
             {
-                var _music = _in_biome_data.get_music();
-                
-                if (_music != undefined)
-                {
-                    var _music_transition = _biome_data[$ in_biome].get_music();
-                    
-                    if (_music_transition != undefined)
-                    {
-                        bg_play_music(array_choose(_music_transition));
-                    }
-                }
-            }
-            else
-            {
-                var _music = _in_biome_transition_data.get_music();
-                
-                if (_music != undefined)
-                {
-                    var _music_transition = _biome_data[$ in_biome_transition].get_music();
-                    
-                    if (_music_transition != undefined)
-                    {
-                        bg_play_music(array_choose(_music_transition));
-                    }
-                }
+                bg_play_music(array_choose(_music));
             }
         }
     }
     
-    bg_sky_colour(_in_biome_data, _in_biome_transition_data);
+    bg_sky_colour(in_biome, in_biome_transition);
 }

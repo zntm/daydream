@@ -1,15 +1,76 @@
-import { DatagenReturnData } from "../../../../lib";
-import { Sound } from "../../../../lib";
+import { DatagenReturnData, Sound, ColorGradient } from "../../../../lib";
 
 import {
     Biome,
     BiomeBackground,
-    BiomeSkyColor,
     BiomeTile,
     BiomeFoliage,
     BiomeStructure,
     TileEntry,
 } from "../../lib/Biome";
+
+const CAVE_SKY = new ColorGradient([
+    { position: 0.15, color: "#180738" }, // Dawn
+    { position: 0.45, color: "#5F91FE" }, // Day
+    { position: 0.72, color: "#C4502D" }, // Dusk
+    { position: 0.90, color: "#000019" }, // Night
+]);
+
+const CAVE_LIGHT = new ColorGradient([
+    { position: 0.15, color: "#374A91" },
+    { position: 0.45, color: "#FFFFFF" },
+    { position: 0.72, color: "#C68B69" },
+    { position: 0.90, color: "#141B35" },
+]);
+
+// Helper for nightrock tiles
+const TILES_NIGHTROCK = {
+    top_layer: new BiomeTile(
+        "phantasia:nightrock",
+        [
+            new TileEntry("phantasia:nightrock_wall", 4),
+            new TileEntry("$EMPTY", 1),
+        ],
+    ),
+    middle_layer: new BiomeTile(
+        "phantasia:nightrock",
+        [
+            new TileEntry("phantasia:nightrock_wall", 4),
+            new TileEntry("$EMPTY", 1),
+        ],
+    ),
+    bottom_layer: new BiomeTile(
+        "phantasia:nightrock",
+        [
+            new TileEntry("phantasia:nightrock_wall", 4),
+            new TileEntry("$EMPTY", 1),
+        ],
+    ),
+};
+
+const TILES_STONE = {
+    top_layer: new BiomeTile(
+        "phantasia:stone",
+        [
+            new TileEntry("phantasia:stone_wall", 4),
+            new TileEntry("$EMPTY", 1),
+        ],
+    ),
+    middle_layer: new BiomeTile(
+        "phantasia:stone",
+        [
+            new TileEntry("phantasia:stone_wall", 4),
+            new TileEntry("$EMPTY", 1),
+        ],
+    ),
+    bottom_layer: new BiomeTile(
+        "phantasia:stone",
+        [
+            new TileEntry("phantasia:stone_wall", 4),
+            new TileEntry("$EMPTY", 1),
+        ],
+    ),
+};
 
 export default [
     // Chasm
@@ -18,41 +79,9 @@ export default [
         new Biome(
             new BiomeBackground("phantasia:background/chasm", 0.7),
             "#000000",
-            {
-                dawn: new BiomeSkyColor("#180738", "#2A1504"),
-                day: new BiomeSkyColor("#5F91FE", "#244FE9"),
-                dusk: new BiomeSkyColor("#C4502D", "#DA651C"),
-                night: new BiomeSkyColor("#000019", "#020008"),
-            },
-            {
-                dawn: "#374A91",
-                day: "#FFFFFF",
-                dusk: "#C68B69",
-                night: "#141B35",
-            },
-            {
-                top_layer: new BiomeTile(
-                    "phantasia:stone",
-                    [
-                        new TileEntry("phantasia:stone_wall", 4),
-                        new TileEntry("$EMPTY", 1),
-                    ],
-                ),
-                middle_layer: new BiomeTile(
-                    "phantasia:stone",
-                    [
-                        new TileEntry("phantasia:stone_wall", 4),
-                        new TileEntry("$EMPTY", 1),
-                    ],
-                ),
-                bottom_layer: new BiomeTile(
-                    "phantasia:stone",
-                    [
-                        new TileEntry("phantasia:stone_wall", 4),
-                        new TileEntry("$EMPTY", 1),
-                    ],
-                ),
-            },
+            CAVE_SKY,
+            CAVE_LIGHT,
+            TILES_STONE,
         )
             .setMusic([
                 new Sound("phantasia:music/12_hours_at_ease", 0.6),
@@ -91,41 +120,9 @@ export default [
         new Biome(
             new BiomeBackground("phantasia:background/depths", 0.7),
             "#000000",
-            {
-                dawn: new BiomeSkyColor("#180738", "#2A1504"),
-                day: new BiomeSkyColor("#5F91FE", "#244FE9"),
-                dusk: new BiomeSkyColor("#C4502D", "#DA651C"),
-                night: new BiomeSkyColor("#000019", "#020008"),
-            },
-            {
-                dawn: "#374A91",
-                day: "#FFFFFF",
-                dusk: "#C68B69",
-                night: "#141B35",
-            },
-            {
-                top_layer: new BiomeTile(
-                    "phantasia:nightrock",
-                    [
-                        new TileEntry("phantasia:nightrock_wall", 4),
-                        new TileEntry("$EMPTY", 1),
-                    ],
-                ),
-                middle_layer: new BiomeTile(
-                    "phantasia:nightrock",
-                    [
-                        new TileEntry("phantasia:nightrock_wall", 4),
-                        new TileEntry("$EMPTY", 1),
-                    ],
-                ),
-                bottom_layer: new BiomeTile(
-                    "phantasia:nightrock",
-                    [
-                        new TileEntry("phantasia:nightrock_wall", 4),
-                        new TileEntry("$EMPTY", 1),
-                    ],
-                ),
-            },
+            CAVE_SKY,
+            CAVE_LIGHT,
+            TILES_NIGHTROCK,
         )
             .setMusic([
                 new Sound("phantasia:music/12_hours_at_ease", 0.7),
@@ -159,5 +156,3 @@ export default [
             ]),
     ),
 ];
-
-

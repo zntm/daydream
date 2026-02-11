@@ -58,9 +58,12 @@ function control_structure(_x, _y)
             // If current tile (bit 1) is not cave
             if (_queue & 0b010) continue;
             
-            var _heat = worldgen_get_heat(i, _surface_height, _world_seed, _world_data);
-            var _humidity = worldgen_get_humidity(i, _surface_height, _world_seed, _world_data);
-            var _data = _biome_data[$ bg_get_biome(i, j, _surface_height, _heat, _humidity)];
+            var _h_left = worldgen_get_surface_height(i - 1, _world_seed, _world_data);
+            var _h_right = worldgen_get_surface_height(i + 1, _world_seed, _world_data);
+            var _slope = max(abs(_surface_height - _h_left), abs(_h_right - _surface_height));
+            
+            var _biome_id = worldgen_get_biome_surface(i, _surface_height, _surface_height, _world_seed, _world_data, _slope);
+            var _data = _biome_data[$ _biome_id];
             
             if (_data == undefined) continue;
             

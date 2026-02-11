@@ -1,11 +1,10 @@
-function worldgen_get_biome_surface(_x, _y, _surface_height, _seed, _world_data = global.world_data[$ global.world_save_data.dimension], _heat = worldgen_get_heat(_x, _surface_height, _seed, _world_data), _humidity = worldgen_get_humidity(_x, _surface_height, _seed, _world_data))
+function worldgen_get_biome_surface(_x, _y, _surface_height, _seed, _world_data = global.world_data[$ global.world_save_data.dimension], _slope = 0)
 {
-    var _surface_biome_map = _world_data.get_surface_biome_map();
+    var _blend = _world_data.get_region_blend_data(_x, 0, _seed);
+    if (_blend == undefined) return undefined;
     
-    _y = max(_y, _surface_height + _world_data.get_surface_min_depth());
+    // Pick dominant region
+    var _region = _blend.r1;
     
-    return _surface_biome_map[
-        (_humidity << WORLDGEN_SIZE_HEAT_BIT) |
-        (_heat)
-    ];
+    return _region.get_surface_biome_id(_x, _surface_height, _seed, _slope);
 }

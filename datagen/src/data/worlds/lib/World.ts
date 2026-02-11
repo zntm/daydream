@@ -340,6 +340,8 @@ export class World {
     private biome: WorldBiome;
     private surface: WorldSurface;
     private cave: WorldCave;
+    private biome_transition_smoothing: number;
+    private regions: string[];
 
     constructor(
         world_height: number,
@@ -350,6 +352,8 @@ export class World {
         biome: WorldBiome,
         surface: WorldSurface,
         cave: WorldCave,
+        biomeTransitionSmoothing: number = 0.5,
+        regions: string[] = [],
     ) {
         this.world_height = world_height;
         this.spawn_interval = spawn_interval;
@@ -359,5 +363,7 @@ export class World {
         this.biome = biome;
         this.surface = surface;
         this.cave = cave;
+        this.biome_transition_smoothing = biomeTransitionSmoothing;
+        this.regions = regions;
     }
 }

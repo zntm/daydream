@@ -5,6 +5,110 @@ enum BIOME_TYPE {
     CAVE
 }
 
+/// @desc Safely get sky colour from a biome/ID/region object
+function worldgen_get_sky_colour(_target, _time)
+{
+    if (_target == undefined) return c_black;
+    
+    // Resolve ID if string
+    if (is_string(_target))
+    {
+        var _biome = global.biome_data[$ _target];
+        if (_biome != undefined) return _biome.get_sky_colour(_time);
+        
+        var _region = global.region_data[$ _target];
+        if (_region != undefined) return _region.get_sky_colour(_time);
+        
+        return c_black;
+    }
+    
+    // Check for method directly
+    if (variable_struct_exists(_target, "get_sky_colour"))
+    {
+        return _target.get_sky_colour(_time);
+    }
+    
+    return c_black;
+}
+
+/// @desc Safely get light colour from a biome/ID/region object
+function worldgen_get_light_colour(_target, _time)
+{
+    if (_target == undefined) return c_white;
+    
+    // Resolve ID if string
+    if (is_string(_target))
+    {
+        var _biome = global.biome_data[$ _target];
+        if (_biome != undefined) return _biome.get_light_colour(_time);
+        
+        var _region = global.region_data[$ _target];
+        if (_region != undefined) return _region.get_light_colour(_time);
+        
+        return c_white;
+    }
+    
+    // Check for method directly
+    if (variable_struct_exists(_target, "get_light_colour"))
+    {
+        return _target.get_light_colour(_time);
+    }
+    
+    return c_white;
+}
+
+/// @desc Safely get background data from a biome/ID/region object
+function worldgen_get_background(_target)
+{
+    if (_target == undefined) return undefined;
+    
+    // Resolve ID if string
+    if (is_string(_target))
+    {
+        var _biome = global.biome_data[$ _target];
+        if (_biome != undefined) return _biome.get_background();
+        
+        var _region = global.region_data[$ _target];
+        if (_region != undefined) return _region.get_background();
+        
+        return undefined;
+    }
+    
+    // Check for method directly
+    if (variable_struct_exists(_target, "get_background"))
+    {
+        return _target.get_background();
+    }
+    
+    return undefined;
+}
+
+/// @desc Safely get music data from a biome/ID/region object
+function worldgen_get_music(_target)
+{
+    if (_target == undefined) return undefined;
+    
+    // Resolve ID if string
+    if (is_string(_target))
+    {
+        var _biome = global.biome_data[$ _target];
+        if (_biome != undefined) return _biome.get_music();
+        
+        var _region = global.region_data[$ _target];
+        if (_region != undefined) return _region.get_music();
+        
+        return undefined;
+    }
+    
+    // Check for method directly
+    if (variable_struct_exists(_target, "get_music"))
+    {
+        return _target.get_music();
+    }
+    
+    return undefined;
+}
+
 function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
 {
     static set_background = function(_background)
@@ -19,83 +123,100 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
         return self[$ "___background"];
     }
     
-    static set_map_colour = function(_map_colour)
-    {
-        ___map_colour = hex_parse(_map_colour);
-        
-        return self;
-    }
     
-    static get_map_colour = function()
-    {
-        return self[$ "___map_colour"];
-    }
     
     static set_sky_colour = function(_sky_colour)
     {
-        var _names = struct_get_names(_sky_colour);
-        var _length = array_length(_names);
+        var _points = _sky_colour[$ "points"];
+        var _length = array_length(_points);
         
-        ___sky_colour = {}
-        ___sky_colour_names = _names;
-        ___sky_colour_length = _length;
+        ___sky_colour_points = array_create(_length);
         
         for (var i = 0; i < _length; ++i)
         {
-            var _name = _names[i];
-            var _data = _sky_colour[$ _name];
-            
-            ___sky_colour[$ _name] = (hex_parse(_data.gradient) << 24) | hex_parse(_data.base);
+            ___sky_colour_points[i] = {
+                position: _points[i].position,
+                color: hex_parse(_points[i].color)
+            };
         }
+        
+        // Sort by position just in case
+        array_sort(___sky_colour_points, function(_a, _b) { return _a.position - _b.position; });
         
         return self;
     }
     
-    static get_sky_colour = function()
+    static __get_gradient_colour = function(_points, _time)
     {
-        return ___sky_colour;
+        var _cnt = array_length(_points);
+        if (_cnt == 0) return c_black;
+        
+        // Check segments
+        for (var i = 0; i < _cnt - 1; ++i)
+        {
+            var _p0 = _points[i];
+            var _p1 = _points[i+1];
+            
+            if (_time >= _p0.position && _time <= _p1.position)
+            {
+                var _t = (_time - _p0.position) / (_p1.position - _p0.position);
+                return merge_color(_p0.color, _p1.color, _t);
+            }
+        }
+        
+        // Handle wrapping (Night -> Dawn)
+        var _first = _points[0];
+        var _last = _points[_cnt-1];
+        
+        if (_time < _first.position)
+        {
+             var _len = (1.0 - _last.position) + _first.position;
+             var _pos = (_time + (1.0 - _last.position));
+             var _t = _pos / _len;
+             return merge_color(_last.color, _first.color, _t);
+        }
+        
+        if (_time > _last.position)
+        {
+             var _len = (1.0 - _last.position) + _first.position;
+             var _pos = (_time - _last.position);
+             var _t = _pos / _len;
+             return merge_color(_last.color, _first.color, _t);
+        }
+        
+        return _first.color;
     }
     
-    static get_sky_colour_names = function()
+    static get_sky_colour = function(_time)
     {
-        return ___sky_colour_names;
-    }
-    
-    static get_sky_colour_length = function()
-    {
-        return ___sky_colour_length;
-    }
-    
-    static get_sky_colour_base = function(_diurnal)
-    {
-        return ___sky_colour[$ _diurnal] & 0xffffff;
-    }
-    
-    static get_sky_colour_gradient = function(_diurnal)
-    {
-        return (___sky_colour[$ _diurnal] >> 24) & 0xffffff;
+        if (___sky_colour_points == undefined) return c_black;
+        return __get_gradient_colour(___sky_colour_points, _time);
     }
     
     static set_light_colour = function(_light_colour)
     {
-        ___light_colour = {}
+        var _points = _light_colour[$ "points"];
+        var _length = array_length(_points);
         
-        var _names = struct_get_names(_light_colour);
-        var _length = array_length(_names);
+        ___light_colour_points = array_create(_length);
         
         for (var i = 0; i < _length; ++i)
         {
-            var _name = _names[i];
-            
-            ___light_colour[$ _name] = hex_parse(_light_colour[$ _name]);
+            ___light_colour_points[i] = {
+                position: _points[i].position,
+                color: hex_parse(_points[i].color)
+            };
         }
+        
+        array_sort(___light_colour_points, function(_a, _b) { return _a.position - _b.position; });
         
         return self;
     }
     
-    static get_light_colour = function(_diurnal)
+    static get_light_colour = function(_time)
     {
-        return ___light_colour[$ _diurnal];
+        if (___light_colour_points == undefined) return c_white;
+        return __get_gradient_colour(___light_colour_points, _time);
     }
     
     static set_music = function(_music)

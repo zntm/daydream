@@ -4,7 +4,6 @@ export class RegionTerrain {
     amplitude_min?: number;
     amplitude_max?: number;
     noise_scale?: number;
-    gradient_strength?: number;
 
     constructor(opts: {
         heightOffset?: number,
@@ -12,14 +11,12 @@ export class RegionTerrain {
         amplitudeMin?: number,
         amplitudeMax?: number,
         noiseScale?: number,
-        gradientStrength?: number
     } = {}) {
         if (opts.heightOffset !== undefined) this.height_offset = opts.heightOffset;
         if (opts.baseHeight !== undefined) this.base_height = opts.baseHeight;
         if (opts.amplitudeMin !== undefined) this.amplitude_min = opts.amplitudeMin;
         if (opts.amplitudeMax !== undefined) this.amplitude_max = opts.amplitudeMax;
         if (opts.noiseScale !== undefined) this.noise_scale = opts.noiseScale;
-        if (opts.gradientStrength !== undefined) this.gradient_strength = opts.gradientStrength;
     }
 }
 
@@ -50,32 +47,46 @@ export class RegionCaveBiome {
     }
 }
 
+export type TerrainPreference = "flat" | "hilly" | "any";
+
+export class RegionBiome {
+    id: string;
+    weight: number;
+    terrain_preference: TerrainPreference;
+
+    constructor(id: string, weight: number = 1, terrainPreference: TerrainPreference = "any") {
+        this.id = id;
+        this.weight = weight;
+        this.terrain_preference = terrainPreference;
+    }
+}
+
 export class Region {
     id: string;
     category?: string;
-    surface_biome: string;
+    biomes: RegionBiome[];
     cave_biome_default: string;
     cave_biomes?: RegionCaveBiome[];
     terrain?: RegionTerrain;
-    fog_color?: number;
-    fog_density?: number;
+    biome_noise_scale?: number;
+    map_color: string;
 
     constructor(id: string, opts: {
         category?: string,
-        surfaceBiome?: string,
+        biomes: RegionBiome[],
         caveBiomeDefault?: string,
         caveBiomes?: RegionCaveBiome[],
         terrain?: RegionTerrain,
-        fogColor?: number,
-        fogDensity?: number
+        biomeNoiseScale?: number,
+        mapColor?: string,
     }) {
         this.id = id;
         this.category = opts.category;
-        this.surface_biome = opts.surfaceBiome ?? "phantasia:surface/forest";
+        this.biomes = opts.biomes;
+        this.map_color = opts.mapColor ?? "#000000";
         this.cave_biome_default = opts.caveBiomeDefault ?? "phantasia:cave/chasm";
         if (opts.caveBiomes) this.cave_biomes = opts.caveBiomes;
         if (opts.terrain) this.terrain = opts.terrain;
-        if (opts.fogColor !== undefined) this.fog_color = opts.fogColor;
-        if (opts.fogDensity !== undefined) this.fog_density = opts.fogDensity;
+        if (opts.biomeNoiseScale !== undefined) this.biome_noise_scale = opts.biomeNoiseScale;
     }
 }

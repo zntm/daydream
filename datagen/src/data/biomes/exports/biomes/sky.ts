@@ -1,14 +1,26 @@
-import { DatagenReturnData } from "../../../../lib";
-import { Sound } from "../../../../lib";
+import { DatagenReturnData, Sound, ColorGradient } from "../../../../lib";
 
 import {
     Biome,
     BiomeBackground,
-    BiomeSkyColor,
     BiomeTile,
     BiomeTerrainModifier,
     TileEntry,
 } from "../../lib/Biome";
+
+const SKYZEN_SKY = new ColorGradient([
+    { position: 0.15, color: "#371479" }, // Dawn
+    { position: 0.45, color: "#87CEEB" }, // Day
+    { position: 0.72, color: "#C4502D" }, // Dusk
+    { position: 0.90, color: "#2b243f" }, // Night
+]);
+
+const SKYZEN_LIGHT = new ColorGradient([
+    { position: 0.15, color: "#374A91" },
+    { position: 0.45, color: "#FFFFFF" },
+    { position: 0.72, color: "#C68B69" },
+    { position: 0.90, color: "#141B35" },
+]);
 
 export default [
     // Floating Islands
@@ -17,18 +29,8 @@ export default [
         new Biome(
             new BiomeBackground("phantasia:background/forest", 0.7),
             "#87CEEB",
-            {
-                dawn: new BiomeSkyColor("#371479", "#4d1140"),
-                day: new BiomeSkyColor("#87CEEB", "#5F91FE"),
-                dusk: new BiomeSkyColor("#C4502D", "#DA651C"),
-                night: new BiomeSkyColor("#2b243f", "#1e1f2b"),
-            },
-            {
-                dawn: "#374A91",
-                day: "#FFFFFF",
-                dusk: "#C68B69",
-                night: "#141B35",
-            },
+            SKYZEN_SKY,
+            SKYZEN_LIGHT,
             {
                 top_layer: new BiomeTile(
                     "phantasia:grass_block",

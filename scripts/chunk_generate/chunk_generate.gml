@@ -187,18 +187,16 @@ function chunk_generate(_chunk, _context = undefined)
         
         var _xorshift_val = xorshift(_world_seed ^ ((_world_x + _chunk.chunk_ystart) * _surface_height));
         
-        // HOIST: Biome Parameters (per column)
-        var _heat = worldgen_get_heat(_world_x, _surface_height, _world_seed, _world_data);
-        var _humidity = worldgen_get_humidity(_world_x, _surface_height, _world_seed, _world_data);
-        var _surface_biome = worldgen_get_biome_surface(_world_x, _surface_height, _surface_height, _world_seed, _world_data, _heat, _humidity);
+        // Calculate Slope for Biome Selection (0 = flat, 1 = steep)
+        var _h_left = worldgen_get_surface_height(_world_x - 1, _world_seed, _world_data);
+        var _h_right = worldgen_get_surface_height(_world_x + 1, _world_seed, _world_data);
+        var _slope = max(abs(_surface_height - _h_left), abs(_h_right - _surface_height));
+        
+        var _surface_biome = worldgen_get_biome_surface(_world_x, _surface_height, _surface_height, _world_seed, _world_data, _slope);
         var _surface_biome_data = _global_biome_data[$ _surface_biome];
         
-        // HOIST: Biome Blending Helpers (avoid 6 calls per tile)
-        var _blend_range = (_context != undefined) ? _context.blend_range : _world_data.get_biome_blend_range();
-        var _heat_l = worldgen_get_heat(_world_x - _blend_range, _surface_height, _world_seed, _world_data);
-        var _heat_r = worldgen_get_heat(_world_x + _blend_range, _surface_height, _world_seed, _world_data);
-        var _humid_l = worldgen_get_humidity(_world_x - _blend_range, _surface_height, _world_seed, _world_data);
-        var _humid_r = worldgen_get_humidity(_world_x + _blend_range, _surface_height, _world_seed, _world_data);
+        // HOIST: Biome Blending Helpers (removed in Region Update)
+        // var _blend_range = ...
         
         var _sky_biome_id = (_context != undefined) ? _context.sky_biome_id : _world_data.get_sky_biome_id();
         var _sky_biome_data = (_context != undefined) ? _context.sky_biome_data : _global_biome_data[$ _sky_biome_id];
@@ -260,14 +258,12 @@ function chunk_generate(_chunk, _context = undefined)
             // --- CAVES AND SOLID TERRAIN ---
             if (_world_y >= _surface_height - 1)
             {
-                var _heat_c = worldgen_get_cave_heat(_world_x, _world_y, _world_seed, _world_data);
-                var _humid_c = worldgen_get_cave_humidity(_world_x, _world_y, _world_seed, _world_data);
-                var _cave_biome = worldgen_get_biome_cave(_world_x, _world_y, _surface_height, _world_seed, _world_data, _heat_c, _humid_c);
+                var _cave_biome = worldgen_get_biome_cave(_world_x, _world_y, _surface_height, _world_seed, _world_data);
                 var _is_cave = (_cave_bit_stream >> (j + 1)) & 1;
                 
                 if !(_skip_z & (1 << CHUNK_DEPTH_DEFAULT)) && !_is_cave && _world_y >= _surface_height
                 {
-                    var _tile_base = worldgen_get_tile_base(_world_x, _world_y, _surface_biome, _cave_biome, _surface_height, (_cave_bit_stream >> j) & 1, _world_seed, _world_data, _global_biome_data, _heat, _humidity);
+                    var _tile_base = worldgen_get_tile_base(_world_x, _world_y, _surface_biome, _cave_biome, _surface_height, (_cave_bit_stream >> j) & 1, _world_seed, _world_data, _global_biome_data);
                     if (_tile_base != TILE_EMPTY)
                     {
                         var _d = _item_data[$ _tile_base];
@@ -336,7 +332,7 @@ function chunk_generate(_chunk, _context = undefined)
                 var _is_floor = (_cave_bit_stream >> (j + 1)) & 1 && !((_cave_bit_stream >> (j + 2)) & 1);
                 if (_is_floor)
                 {
-                    var _tile_next = worldgen_get_tile_base(_world_x, _world_y + 1, _surface_biome, undefined, _surface_height, true, _world_seed, _world_data, _global_biome_data, _heat, _humidity);
+                    var _tile_next = worldgen_get_tile_base(_world_x, _world_y + 1, _surface_biome, undefined, _surface_height, true, _world_seed, _world_data, _global_biome_data);
                     var _foliage_id = worldgen_get_tile_foliage(_world_x, _world_y, _surface_biome, undefined, _tile_next, _surface_height, _world_seed, _global_biome_data);
                     
                     if (_foliage_id != TILE_EMPTY)
