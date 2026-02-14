@@ -11,6 +11,6 @@
             "level": 0
         }
     },
-    "sprite": "gold_sword",
+    "sprite": "phantasia:item/gold_sword",
     "type": "tool"
 }

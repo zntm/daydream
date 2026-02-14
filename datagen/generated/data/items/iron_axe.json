@@ -11,6 +11,6 @@
             "level": 3
         }
     },
-    "sprite": "iron_axe",
+    "sprite": "phantasia:item/iron_axe",
     "type": "tool"
 }

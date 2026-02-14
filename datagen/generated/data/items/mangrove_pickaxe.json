@@ -11,6 +11,6 @@
             "level": 1
         }
     },
-    "sprite": "mangrove_pickaxe",
+    "sprite": "phantasia:item/mangrove_pickaxe",
     "type": "tool"
 }

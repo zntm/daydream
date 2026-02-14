@@ -11,6 +11,6 @@
             "level": 4
         }
     },
-    "sprite": "gold_axe",
+    "sprite": "phantasia:item/gold_axe",
     "type": "tool"
 }

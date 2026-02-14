@@ -11,6 +11,6 @@
             "level": 5
         }
     },
-    "sprite": "platinum_pickaxe",
+    "sprite": "phantasia:item/platinum_pickaxe",
     "type": "tool"
 }

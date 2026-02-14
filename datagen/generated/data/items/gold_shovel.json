@@ -11,6 +11,6 @@
             "level": 4
         }
     },
-    "sprite": "gold_shovel",
+    "sprite": "phantasia:item/gold_shovel",
     "type": "tool"
 }

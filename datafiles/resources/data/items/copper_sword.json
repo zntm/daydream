@@ -11,6 +11,6 @@
             "level": 0
         }
     },
-    "sprite": "copper_sword",
+    "sprite": "phantasia:item/copper_sword",
     "type": "tool"
 }

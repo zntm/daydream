@@ -11,6 +11,6 @@
             "level": 1
         }
     },
-    "sprite": "oak_shovel",
+    "sprite": "phantasia:item/oak_shovel",
     "type": "tool"
 }

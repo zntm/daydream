@@ -211,5 +211,5 @@ global.attribute_player = new Attribute()
     .set_jump_height(8.2)
     .set_jump_time(12)
     .set_movement_speed(3.1)
-    .set_regeneration_amount(0)
-    .set_regeneration_time(60);
+    .set_regeneration_amount(1)
+    .set_regeneration_time(1.0);

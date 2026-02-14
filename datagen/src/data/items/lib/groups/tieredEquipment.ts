@@ -45,7 +45,7 @@ export default (
         new DatagenReturnData(
             `${id}_sword.json`,
             new ToolItem(
-                `${id}_sword`,
+                `phantasia:item/${id}_sword`,
                 sword.damage,
                 sword.durability,
                 0, // harvestHardness (swords don't usually mine)
@@ -55,7 +55,7 @@ export default (
         new DatagenReturnData(
             `${id}_pickaxe.json`,
             new ToolItem(
-                `${id}_pickaxe`,
+                `phantasia:item/${id}_pickaxe`,
                 pickaxe.damage,
                 pickaxe.durability,
                 harvest.hardness,
@@ -65,7 +65,7 @@ export default (
         new DatagenReturnData(
             `${id}_axe.json`,
             new ToolItem(
-                `${id}_axe`,
+                `phantasia:item/${id}_axe`,
                 axe.damage,
                 axe.durability,
                 harvest.hardness,
@@ -75,7 +75,7 @@ export default (
         new DatagenReturnData(
             `${id}_shovel.json`,
             new ToolItem(
-                `${id}_shovel`,
+                `phantasia:item/${id}_shovel`,
                 shovel.damage,
                 shovel.durability,
                 harvest.hardness,

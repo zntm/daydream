@@ -11,6 +11,6 @@
             "level": 3
         }
     },
-    "sprite": "iron_pickaxe",
+    "sprite": "phantasia:item/iron_pickaxe",
     "type": "tool"
 }

@@ -5,8 +5,12 @@ if (_window_width <= 0) || (_window_height <= 0) exit;
 
 gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_src_alpha, bm_one);
 
-var _player_x = obj_Player.x;
-var _player_y = obj_Player.y;
+var _lp = noone;
+with (obj_Player) { if (is_local) { _lp = id; break; } }
+if (_lp == noone) exit;
+
+var _player_x = _lp.x;
+var _player_y = _lp.y;
 
 var _camera_x = global.camera_x;
 var _camera_y = global.camera_y;
@@ -82,8 +86,8 @@ var _gui_mouse_y = (window_mouse_get_y() / _window_height) * _gui_height;
 
 render_gui_vignette(_player_y, _gui_width, _gui_height);
 
-var _hp     = obj_Player.hp;
-var _hp_max = obj_Player.hp_max;
+var _hp     = _lp.hp;
+var _hp_max = _lp.hp_max;
 
 render_hud(_gui_width, _gui_height);
 

@@ -11,6 +11,6 @@
             "level": 1
         }
     },
-    "sprite": "birch_shovel",
+    "sprite": "phantasia:item/birch_shovel",
     "type": "tool"
 }

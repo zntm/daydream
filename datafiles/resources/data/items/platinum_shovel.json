@@ -11,6 +11,6 @@
             "level": 5
         }
     },
-    "sprite": "platinum_shovel",
+    "sprite": "phantasia:item/platinum_shovel",
     "type": "tool"
 }

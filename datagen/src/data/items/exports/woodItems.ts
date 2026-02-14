@@ -127,7 +127,7 @@ export default [
         new DatagenReturnData(
             `${id}_pickaxe.json`,
             new ToolItem(
-                `${id}_pickaxe`,
+                `phantasia:item/${id}_pickaxe`,
                 1, // damage
                 73, // durability
                 1, // harvestHardness
@@ -153,7 +153,7 @@ export default [
         new DatagenReturnData(
             `${id}_shovel.json`,
             new ToolItem(
-                `${id}_shovel`,
+                `phantasia:item/${id}_shovel`,
                 1, // damage
                 65, // durability
                 1, // harvestHardness
