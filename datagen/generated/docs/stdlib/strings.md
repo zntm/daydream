@@ -1,5 +1,7 @@
 # Strings and Types
 
+## Functions
+
 ### `string(val)`: string
 
 Converts any value to its string representation.
@@ -359,4 +361,3 @@ typeof(123); // "number"
 ```
 
 ---
-

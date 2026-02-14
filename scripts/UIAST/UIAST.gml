@@ -59,8 +59,8 @@ function UIASTElement(_element_type, _name, _properties, _children) constructor 
     name = _name;
     properties = _properties;
     children = _children;
-    multiple_count = undefined;  // Number of copies to create
-    multiple_var = undefined;    // Loop variable name
+    repeat_count = undefined;  // Number of copies to create
+    repeat_var = undefined;    // Loop variable name
 }
 
 /// @desc Property node - key = value

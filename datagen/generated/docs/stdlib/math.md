@@ -1,5 +1,7 @@
 # Math Functions
 
+## Functions
+
 ### `floor(n)`: number
 
 Rounds down to the nearest integer.
@@ -496,4 +498,3 @@ Returns the angle from origin to (x, y) in radians.
 **Returns:** number
 
 ---
-

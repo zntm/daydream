@@ -40,8 +40,6 @@ const processExports = async (dir: string, type: string) => {
             for (const d of Array.isArray(datagen)
                 ? datagen.flat(Infinity)
                 : [datagen]) {
-                d.data = recursiveSort(JSON.parse(JSON.stringify(d.data)));
-
                 const destination = join(
                     __dirname,
                     `./generated/${dir}/${type}/${d.destination}`,
@@ -53,7 +51,12 @@ const processExports = async (dir: string, type: string) => {
                     await Bun.write(join(destDir, ".keep"), ""); // Simple way to ensure dir exists via Bun.write? No, let's use fs.
                 }
 
-                Bun.write(destination, JSON.stringify(d.data, null, "    "));
+                if (destination.endsWith(".md")) {
+                    Bun.write(destination, String(d.data));
+                } else {
+                    d.data = recursiveSort(JSON.parse(JSON.stringify(d.data)));
+                    Bun.write(destination, JSON.stringify(d.data, null, "    "));
+                }
             }
         } catch (error) {
             console.error(`Error generating ${dir}/${type}/${e}:`, error);
@@ -62,7 +65,7 @@ const processExports = async (dir: string, type: string) => {
 };
 
 const run = async () => {
-    for (const dir of ["assets", "data"]) {
+    for (const dir of ["assets", "data", "docs", "ui"]) {
         const baseDir = join(__dirname, `./src/${dir}`);
         if (!existsSync(baseDir)) continue;
 

@@ -1,5 +1,7 @@
 # Rendering
 
+## Functions
+
 ### `render_rectangle(x1, y1, x2, y2, outline)`: void
 
 Draws a rectangle.
@@ -63,4 +65,3 @@ Draws a sprite.
 **Returns:** void
 
 ---
-

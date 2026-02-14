@@ -1,5 +1,7 @@
 # Regular Expressions
 
+## Functions
+
 ### `regex_parse(pattern, flags)`: regex
 
 Creates a regex object.
@@ -123,4 +125,3 @@ regex_split("a,b,c", /,/);
 ```
 
 ---
-

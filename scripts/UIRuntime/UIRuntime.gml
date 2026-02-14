@@ -331,34 +331,34 @@ function ui_instantiate_element(_node, _link, _variables) {
     for (var i = 0; i < _child_count; i++) {
         var _child_node = _node.children[i];
         
-        // Handle multiple(count, var) expansion
-        if (_child_node.multiple_count != undefined) {
-            var _mult_count = _child_node.multiple_count;
-            var _mult_var = _child_node.multiple_var;
+        // Handle repeat(count, var) expansion
+        if (_child_node.repeat_count != undefined) {
+            var _repeat_count = _child_node.repeat_count;
+            var _repeat_var = _child_node.repeat_var;
             var _base_name = _child_node.name;
             
-            for (var j = 0; j < _mult_count; j++) {
+            for (var j = 0; j < _repeat_count; j++) {
                 // Create a copy of the variables scope with the loop variable
                 var _loop_vars = {};
                 var _var_names = struct_get_names(_variables);
                 for (var k = 0; k < array_length(_var_names); k++) {
                     _loop_vars[$ _var_names[k]] = _variables[$ _var_names[k]];
                 }
-                _loop_vars[$ _mult_var] = j;
+                _loop_vars[$ _repeat_var] = j;
                 
                 // Override the element name for each copy
                 var _saved_name = _child_node.name;
                 _child_node.name = _base_name + "_" + string(j);
                 
-                // Temporarily clear multiple to prevent infinite recursion
-                var _saved_count = _child_node.multiple_count;
-                _child_node.multiple_count = undefined;
+                // Temporarily clear repeat to prevent infinite recursion
+                var _saved_count = _child_node.repeat_count;
+                _child_node.repeat_count = undefined;
                 
                 var _child = ui_instantiate_element(_child_node, _link, _loop_vars);
                 
                 // Restore original values
                 _child_node.name = _saved_name;
-                _child_node.multiple_count = _saved_count;
+                _child_node.repeat_count = _saved_count;
                 
                 if (_child != undefined) {
                     _element.add_child(_child);

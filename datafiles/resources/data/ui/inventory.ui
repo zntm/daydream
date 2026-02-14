@@ -1,12 +1,12 @@
 @area(inventory_container) {
-    position = ORIGIN_BOTTOM_CENTER + (0, 100)
-    size = (224, 72)
+    position = ORIGIN_BOTTOM_CENTER + (8, 47)
+    size = (216, 64)
     
     @area(inventory_grid) {
-        position = ORIGIN_CENTER
+        position = ORIGIN_MIDDLE_RIGHT
         size = (160, 64)
 
-        @slot(inventory_slots) multiple(40, index) {
+        @slot(inventory_slots) repeat(40, index) {
             inventory_name = "base"
             slot_index = index + 10
             position = (index % 10 * 16, floor(index / 10) * 16)
@@ -41,7 +41,7 @@
     }
 
     @area(accessory_grid) {
-        position = ORIGIN_MIDDLE_RIGHT
+        position = ORIGIN_MIDDLE_LEFT + (32, 0)
         size = (32, 48)
 
         @slot(acc_0) {

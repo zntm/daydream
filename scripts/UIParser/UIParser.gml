@@ -139,17 +139,17 @@ function UIParser(_tokens) constructor {
         var _name = _name_token.literal ?? _name_token.lexeme;
         consume(UI_TOKEN.RPAREN, "Expected ')' after element name.");
         
-        // Optional multiple(count, var) modifier
-        var _multiple_count = undefined;
-        var _multiple_var = undefined;
-        if (match(UI_TOKEN.MULTIPLE)) {
-            consume(UI_TOKEN.LPAREN, "Expected '(' after 'multiple'.");
-            var _count_token = consume(UI_TOKEN.NUMBER, "Expected count in multiple().");
-            _multiple_count = _count_token.literal;
-            consume(UI_TOKEN.COMMA, "Expected ',' after count in multiple().");
-            var _var_token = consume(UI_TOKEN.IDENTIFIER, "Expected variable name in multiple().");
-            _multiple_var = _var_token.literal ?? _var_token.lexeme;
-            consume(UI_TOKEN.RPAREN, "Expected ')' after multiple arguments.");
+        // Optional repeat(count, var) modifier
+        var _repeat_count = undefined;
+        var _repeat_var = undefined;
+        if (match(UI_TOKEN.REPEAT)) {
+            consume(UI_TOKEN.LPAREN, "Expected '(' after 'repeat'.");
+            var _count_token = consume(UI_TOKEN.NUMBER, "Expected count in repeat().");
+            _repeat_count = _count_token.literal;
+            consume(UI_TOKEN.COMMA, "Expected ',' after count in repeat().");
+            var _var_token = consume(UI_TOKEN.IDENTIFIER, "Expected variable name in repeat().");
+            _repeat_var = _var_token.literal ?? _var_token.lexeme;
+            consume(UI_TOKEN.RPAREN, "Expected ')' after repeat arguments.");
         }
         
         // Element body
@@ -181,8 +181,8 @@ function UIParser(_tokens) constructor {
         consume(UI_TOKEN.RBRACE, "Expected '}' after element body.");
         
         var _element = new UIASTElement(_element_type, _name, _properties, _children);
-        _element.multiple_count = _multiple_count;
-        _element.multiple_var = _multiple_var;
+        _element.repeat_count = _repeat_count;
+        _element.repeat_var = _repeat_var;
         return _element;
     }
     

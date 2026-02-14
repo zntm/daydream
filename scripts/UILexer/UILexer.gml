@@ -29,7 +29,7 @@ enum UI_TOKEN {
     // Keywords
     VAR,
     EXPORT,
-    MULTIPLE,    // multiple(count, var)
+    REPEAT,      // repeat(count, var)
     
     // Built-in functions
     FLOOR,       // floor(expr)
@@ -61,7 +61,7 @@ function UILexer(_source) constructor {
     static keywords = {
         "var": UI_TOKEN.VAR,
         "export": UI_TOKEN.EXPORT,
-        "multiple": UI_TOKEN.MULTIPLE,
+        "repeat": UI_TOKEN.REPEAT,
         "true": UI_TOKEN.TRUE,
         "false": UI_TOKEN.FALSE,
         "undefined": UI_TOKEN.UNDEFINED,

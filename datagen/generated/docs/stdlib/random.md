@@ -1,5 +1,7 @@
 # Random Functions
 
+## Functions
+
 ### `random(x)`: number
 
 Returns a random floating-point number between 0 and x.
@@ -79,4 +81,3 @@ Returns true with the given probability (0-1).
 **Returns:** boolean
 
 ---
-

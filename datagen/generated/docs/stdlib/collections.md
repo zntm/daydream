@@ -1,5 +1,7 @@
 # Data Structures
 
+## Functions
+
 ### `array_length(array)`: number
 
 Returns the length of an array.
@@ -122,4 +124,3 @@ Parses a JSON string into a struct/array.
 **Returns:** any
 
 ---
-

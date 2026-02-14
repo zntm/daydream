@@ -1,5 +1,7 @@
 # System & Environment
 
+## Functions
+
 ### `print(values)`: void
 
 Prints values to the debug console.
@@ -111,4 +113,3 @@ Throws an error if the condition is false.
 **Returns:** void
 
 ---
-

@@ -1,5 +1,7 @@
 # Game API
 
+## Functions
+
 ### `tile_get(x, y, z)`: Tile?
 
 Gets the tile ID at the specified position.
@@ -58,4 +60,3 @@ Gets tag data.
 **Returns:** any
 
 ---
-

@@ -1,5 +1,7 @@
 # Testing
 
+## Functions
+
 ### `test(name, fn, stop_on_fail)`: void
 
 Registers a test case.
@@ -42,4 +44,3 @@ Asserts that a value equals the expected value.
 **Returns:** boolean
 
 ---
-

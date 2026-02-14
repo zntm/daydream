@@ -1,5 +1,5 @@
 @area(crafting_panel) {
-    position = ORIGIN_BOTTOM_CENTER + (0, 104)
+    position = ORIGIN_BOTTOM_CENTER + (8, 115)
     size = (160, 16)
     layout = LAYOUT_HORIZONTAL
 }
