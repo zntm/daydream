@@ -1,37 +1,11 @@
 {
     "inventory": "#phantasia:item/generic/inventory_tile",
-    "item": {
-        "tile": {
-            "audio_properties": {
-                "lowpass": 0.7,
-                "reverb": 0.6
-            },
-            "drops": [
-                {
-                    "id": "phantasia:nightrock"
-                }
-            ],
-            "harvest": {
-                "condition": {
-                    "id": "#phantasia:item/type/pickaxe"
-                },
-                "hardness": 0.52,
-                "level": 0,
-                "particle": {
-                    "frequency": "#phantasia:tile/generic/harvest_particle_frequency",
-                    "id": "#phantasia:tile/particle_colour/nightrock"
-                }
-            },
-            "sfx": "#phantasia:tile/sfx/stone"
-        }
-    },
     "properties": [
         "phantasia:can_flip",
         "phantasia:can_mirror",
         "phantasia:is_tile"
     ],
     "sprite": "phantasia:item/nightrock",
-<<<<<<< HEAD
     "tile": {
         "audio_properties": {
             "lowpass": 0.7,
@@ -52,7 +26,5 @@
         },
         "sfx": "#phantasia:tile/sfx/stone"
     },
-=======
->>>>>>> region
     "type": "solid"
 }

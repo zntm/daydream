@@ -1,7 +1,7 @@
 import {
     DatagenReturnData,
     SmartValueFloatRandom,
-} from "../../lib";
+} from "../../..";
 import {
     Particle,
     ParticleSize,
@@ -9,22 +9,18 @@ import {
     ParticleSpeed,
     ParticleDirection,
     ParticleOrientation,
-    ParticleProperties,
-} from "./lib/Particle";
+} from "../particles";
 
-export default ["birch", "mangrove", "oak", "pine"].map((id) => {
+export default ["birch", "oak", "pine"].map((id) => {
     return new DatagenReturnData(
-        `tile/leaf/${id}.json`,
-        new Particle(`phantasia:particle/tile/leaf/${id}`, [
-            ParticleProperties.HasCollision,
-        ])
-            .setLifetime(new SmartValueFloatRandom(4, 8))
-            .setWindFactor(1.5)
+        `generated/data/particles/tile/leaf/${id}.json`,
+        new Particle(`phantasia:particle/tile/leaf/${id}`)
+            .setLifetime(new SmartValueFloatRandom(2, 4))
             .setSize(new ParticleSize().setScale(
                 new SmartValueFloatRandom(0.75, 1.25),
             ))
             .setSpeed(new ParticleSpeed(
-                new SmartValueFloatRandom(0.2, 0.5),
+                new SmartValueFloatRandom(0.6, 1.1),
                 undefined,
                 undefined,
                 new SmartValueFloatRandom(0.1, 0.3), // wiggle

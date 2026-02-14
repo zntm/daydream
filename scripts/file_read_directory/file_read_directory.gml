@@ -4,8 +4,6 @@ function file_read_directory(_directory, _recursive = false, _prefix = "")
     
     for (var _file = file_find_first($"{_directory}/*", fa_directory); _file != ""; _file = file_find_next())
     {
-        if (_file == ".") || (_file == "..") continue;
-        
         array_push(_files, $"{_prefix}{_file}");
     }
     

@@ -1,6 +1,6 @@
 enum PARTICLE_PROPERTIES_BOOLEAN {
     IS_ADDITIVE             = 1 << 0,
-    can_destroy_on_tile_collision = 1 << 1,
+    IS_DESTROY_ON_COLLISION = 1 << 1,
     HAS_COLLISION           = 1 << 2,
     HAS_STRETCHED_ANIMATION = 1 << 3
 }
@@ -43,7 +43,7 @@ function ParticleData(_namespace, _id, _sprite) : ParentData(_namespace, _id) co
     {
         static __properties = {
             "phantasia:is_additive":             PARTICLE_PROPERTIES_BOOLEAN.IS_ADDITIVE,
-            "phantasia:can_destroy_on_tile_collision": PARTICLE_PROPERTIES_BOOLEAN.can_destroy_on_tile_collision,
+            "phantasia:is_destroy_on_collision": PARTICLE_PROPERTIES_BOOLEAN.IS_DESTROY_ON_COLLISION,
             "phantasia:has_collision":           PARTICLE_PROPERTIES_BOOLEAN.HAS_COLLISION,
             "phantasia:has_stretch_animation":   PARTICLE_PROPERTIES_BOOLEAN.HAS_STRETCHED_ANIMATION
         }
@@ -68,9 +68,9 @@ function ParticleData(_namespace, _id, _sprite) : ParentData(_namespace, _id) co
         return !!(___properties & PARTICLE_PROPERTIES_BOOLEAN.IS_ADDITIVE);
     }
     
-    static can_destroy_on_tile_collision = function()
+    static is_destroy_on_collision = function()
     {
-        return !!(___properties & PARTICLE_PROPERTIES_BOOLEAN.can_destroy_on_tile_collision);
+        return !!(___properties & PARTICLE_PROPERTIES_BOOLEAN.IS_DESTROY_ON_COLLISION);
     }
     
     static has_collision = function()
@@ -81,20 +81,6 @@ function ParticleData(_namespace, _id, _sprite) : ParentData(_namespace, _id) co
     static has_stretch_animation = function()
     {
         return !!(___properties & PARTICLE_PROPERTIES_BOOLEAN.HAS_STRETCHED_ANIMATION);
-    }
-    
-    ___wind_factor = 0;
-    
-    static set_wind_factor = function(_wind_factor)
-    {
-        ___wind_factor = smart_value_parse(_wind_factor);
-        
-        return self;
-    }
-    
-    static get_wind_factor = function()
-    {
-        return ___wind_factor;
     }
     
     #endregion

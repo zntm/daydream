@@ -1,13 +1,76 @@
-function worldgen_get_biome_cave(_x, _y, _surface_height, _seed, _world_data = global.world_data[$ global.world_save_data.dimension])
+enum WORLDGEN_CAVE_TRANSITION_TYPE {
+    LINEAR,
+    RANDOM,
+    SPIKE
+}
+
+function worldgen_get_biome_cave(_x, _y, _surface_height, _seed, _world_data = global.world_data[$ global.world_save_data.dimension], _heat = worldgen_get_cave_heat(_x, _y, _seed, _world_data), _humidity = worldgen_get_cave_humidity(_x, _y, _seed, _world_data))
 {
-    var _blend = _world_data.get_region_blend_data(_x, 0, _seed);
-    if (_blend == undefined) return undefined;
+    var _surface_offset = worldgen_get_surface_noise_offset(_x, _seed);
     
-    var _depth = _y - _surface_height;
-    if (_depth <= 8) return undefined;
+    if (_y <= _surface_height + 8)
+    {
+        return undefined;
+    }
     
-    var _region = _blend.r1;
+    // Debug
+    // show_debug_message($"Checking cave biome at {_y} (Surf: {_surface_height})");
     
-    // Assuming default layer (1) for main cave generation
-    return _region.get_cave_biome_id(_x, _y, 1, _depth, _seed);
+    // Check for optional image-based cave biome map
+    /*
+    var _cave_map = _world_data.get_cave_biome_map();
+    
+    if (_cave_map != undefined)
+    {
+        var _biome = _cave_map[(_humidity << WORLDGEN_SIZE_HEAT_BIT) | _heat];
+        
+        if (_biome != 0 && _biome != undefined)
+        {
+            return _biome;
+        }
+    }
+    */
+    
+    var _default = _world_data.get_cave_biome_default();
+    var _default_length = _world_data.get_cave_biome_default_length();
+    
+    for (var i = 0; i < _default_length; ++i)
+    {
+        var _data = _default[i];
+        var _start = _data.start;
+        
+        if (_y < _start) continue;
+        
+        var _transition = _data.transition;
+        
+        var _type = _transition.type;
+        
+        // if (_type == WORLDGEN_CAVE_TRANSITION_TYPE.RANDOM)
+        if (_type == "random")
+        {
+            var _ = _seed + ((((_x * _y) + (i << 9)) * 244) * ((_y & 0xf) * 188));
+            
+            if (_y < round(_start + _transition.min + random_seeded(_transition.max - _transition.min, _))) continue;
+            
+            return _data.id;
+        }
+        
+        var _end = _data[$ "end"];
+        
+        if (_y < _end)
+        {
+            return _data.id;
+        }
+        
+        /*
+        if (_type == "phantasia:linear")
+        {
+            if (_y >= _range_max + (noise(_x, _y, _world_data.get_default_cave_transition_octaves(i), _seed - (1024 * i)) * _world_data.get_default_cave_transition_amplitude(i))) continue;
+            
+            return _world_data.get_default_cave_id(i);
+        }
+        */
+    }
+    
+    return undefined;
 }

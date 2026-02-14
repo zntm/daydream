@@ -54,7 +54,6 @@ function StructureData(_width, _height, _placement, _is_persistent, _is_natural)
     ___placement_xoffset = _placement[$ "xoffset"];
     ___placement_yoffset = _placement[$ "yoffset"];
     ___placement_type = __structure_placement_type[$ _placement[$ "type"]];
-    ___placement_if_clear = _placement[$ "if_clear"] ?? false;
     
     var _clearance_condition = _placement[$ "clearance_condition"];
     
@@ -91,11 +90,6 @@ function StructureData(_width, _height, _placement, _is_persistent, _is_natural)
     static get_placement_type = function()
     {
         return ___placement_type;
-    }
-    
-    static get_if_clear = function()
-    {
-        return ___placement_if_clear;
     }
     
     static get_placement_clearance_condition = function()

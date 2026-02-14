@@ -2,15 +2,21 @@
     "function": {
         "id": "phantasia:tree/generic",
         "parameters": {
-            "index": {
-                "type": "smart_value:irandom",
-                "values": {
-                    "max": 3,
-                    "min": 1
-                }
+            "tile_wood": {
+                "id": "phantasia:mangrove"
             },
-            "index_bottom": 5,
+            "tile_leaves": {
+                "id": "phantasia:mangrove_leaves"
+            },
+            "index": {
+                "values": {
+                    "min": 1,
+                    "max": 3
+                },
+                "type": "smart_value:irandom"
+            },
             "index_top": 4,
+            "index_bottom": 5,
             "layers": [
                 {
                     "width": 3,
@@ -30,23 +36,20 @@
                     "yscale": 1,
                     "index_offset": 5
                 }
-            ],
-            "tile_leaves": {
-                "id": "phantasia:mangrove_leaves"
-            },
-            "tile_wood": {
-                "id": "phantasia:mangrove"
-            }
+            ]
         }
     },
     "height": {
-        "type": "smart_value:irandom",
         "values": {
-            "max": 10,
-            "min": 7
-        }
+            "min": 7,
+            "max": 10
+        },
+        "type": "smart_value:irandom"
     },
     "placement": {
+        "type": "floor",
+        "xoffset": -3,
+        "yoffset": "-height",
         "clearance_condition": [
             {
                 "xoffset": -3,
@@ -54,11 +57,7 @@
                 "width": "width",
                 "height": 6
             }
-        ],
-        "if_clear": true,
-        "type": "floor",
-        "xoffset": -3,
-        "yoffset": "-height"
+        ]
     },
     "width": 7
 }

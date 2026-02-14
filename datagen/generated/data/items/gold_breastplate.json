@@ -2,8 +2,8 @@
     "inventory": "#phantasia:item/generic/inventory_tool",
     "item": {
         "armor": {
-            "defense": 11,
-            "type": "breastplate"
+            "type": "breastplate",
+            "defense": 11
         },
         "durability": {
             "amount": 671,

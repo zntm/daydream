@@ -75,13 +75,6 @@ enum INVENTORY_SLOT_TYPE {
 function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
 {
     ___type = 0;
-    ___collision_box = 0;
-    
-    ___sfx = new ItemTileSFX(
-        new Sound(undefined),
-        new Sound(undefined),
-        new Sound(undefined)
-    );
     
     static set_type = function(_value)
     {
@@ -394,7 +387,7 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     {
         ___item_armor = new ItemArmor(_armor.type, _armor.defense);
         
-        var _attributes = _armor[$ "attributes"];
+        var _attributes = _armor[$ "attrbutes"];
         
         if (_attributes != undefined)
         {
@@ -493,8 +486,6 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     
     static set_tile = function(_tile)
     {
-        show_debug_message(_tile);
-        
         if (_tile != undefined)
         {
             var _animation_type = _tile[$ "animation_type"];
@@ -599,24 +590,8 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
                 ___render_state_length = array_length(_render_state);
             }
             */
-            
-            var _sprite_asset = global.sprite_asset[$ get_sprite()];
-            
-            if (_sprite_asset != undefined)
-            {
-                var _sprite = _sprite_asset.get_sprite();
-                
-                set_collision_box(
-                    TILE_COLLISION_BOX_TYPE.RECTANGLE,
-                    -sprite_get_xoffset(_sprite),
-                    -sprite_get_yoffset(_sprite),
-                    sprite_get_width(_sprite),
-                    sprite_get_height(_sprite)
-                );
-            }
         }
         
-<<<<<<< HEAD
         show_debug_message(get_sprite());
         show_debug_message(global.sprite_asset[$ get_sprite()]);
         
@@ -630,8 +605,6 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
             sprite_get_height(_sprite),
         );
         
-=======
->>>>>>> region
         return self;
     }
     
@@ -733,29 +706,11 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     
     static set_tile_sfx = function(_sfx)
     {
-        if (is_string(_sfx))
-        {
-            var _id = _sfx;
-            
-            if (string_starts_with(_id, "#"))
-            {
-                _id = string_delete(_id, 1, 1);
-            }
-            
-            ___sfx = new ItemTileSFX(
-                new Sound(_id + "/build"),
-                new Sound(_id + "/harvest"),
-                new Sound(_id + "/step")
-            );
-        }
-        else
-        {
-            ___sfx = new ItemTileSFX(
-                new Sound(_sfx.build),
-                new Sound(_sfx.harvest),
-                new Sound(_sfx.step)
-            );
-        }
+        ___sfx = new ItemTileSFX(
+            new Sound(_sfx.build),
+            new Sound(_sfx.harvest),
+            new Sound(_sfx.step)
+        );
     }
     
     static get_tile_sfx = function()

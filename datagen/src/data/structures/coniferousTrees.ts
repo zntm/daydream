@@ -2,7 +2,7 @@ import {
     DatagenReturnData,
     SmartValueFloatRandom,
     SmartValueIntRandom,
-} from "../../lib";
+} from "../../../index";
 
 import {
     Structure,
@@ -11,7 +11,7 @@ import {
     StructurePlacement,
     StructurePlacementClearanceCondition,
     StructurePlacementType,
-} from "./lib/Structure";
+} from "../structures";
 
 class StructureParameter {
     private tile_wood: StructureParameterTile;
@@ -50,7 +50,7 @@ class StructureParameter {
 export default [
     // Pine
     new DatagenReturnData(
-        "tree/pine.json",
+        "generated/data/structures/tree/pine.json",
         new Structure(
             9,
             new SmartValueIntRandom(9, 14),
@@ -61,7 +61,7 @@ export default [
                     "width",
                     8,
                 ),
-            ], true),
+            ]),
             new StructureFunction(
                 "phantasia:tree/coniferous",
                 new StructureParameter(

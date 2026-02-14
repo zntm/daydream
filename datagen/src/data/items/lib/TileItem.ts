@@ -1,36 +1,39 @@
+import { DatagenReturnData } from "../../../lib/DatagenReturnData";
 import { Item } from "./Item";
-import type { ItemComponentData } from "./ItemComponent";
 import { ItemDrop } from "./ItemDrop";
-import { ItemScript } from "./ItemScript";
+import { ItemSprite } from "./ItemSprite";
+import { ItemInventory } from "./ItemInventory";
+import { ItemDurability } from "./ItemDurability";
 import { ItemHarvest } from "./ItemHarvest";
-import type { ItemInventory } from "./ItemInventory";
-import { ItemParticle } from "./ItemParticle";
-import { TileItemProperties } from "./ItemProperties";
 import { ItemType } from "./ItemType";
+import { ItemComponent } from "./ItemComponent";
+import { ItemFunction } from "./ItemFunction";
+import type { SmartValue } from "../../../lib/SmartValue";
 
-export { ItemParticle };
+export class TileItemParticle {
+    private colour: string | string[];
+    private frequency: number | string;
 
-export class TileItemAudioProperties {
-    private lowpass: number;
-    private reverb: number;
-
-    constructor(lowpass: number, reverb: number) {
-        this.lowpass = lowpass;
-        this.reverb = reverb;
+    constructor(colour: string | string[], frequency: number | string) {
+        this.colour = colour;
+        this.frequency = frequency;
     }
 }
 
 export class TileItemCondition {
     private id: string;
     private level?: number;
-    private index?: number;
 
     constructor(id: string, level?: number) {
         this.id = id;
         this.level = level;
     }
+}
 
-    setIndex(index?: number) {
+export class TileItemDropCondition {
+    private index?: number;
+
+    setIndex(index: number) {
         this.index = index;
 
         return this;
@@ -38,13 +41,13 @@ export class TileItemCondition {
 }
 
 export class TileItemDrop extends ItemDrop {
-    private condition?: TileItemCondition;
+    private condition?: TileItemCondition | TileItemDropCondition;
 
     constructor(id: string, amount?: number, chance?: number) {
         super(id, amount, chance);
     }
 
-    setCondition(condition?: TileItemCondition) {
+    setCondition(condition?: TileItemCondition | TileItemDropCondition) {
         this.condition = condition;
 
         return this;
@@ -52,13 +55,13 @@ export class TileItemDrop extends ItemDrop {
 }
 
 export class TileItemHarvest extends ItemHarvest {
-    private particle: ItemParticle;
+    private particle: TileItemParticle;
     private condition?: TileItemCondition;
 
     constructor(
-        hardness: number | string,
-        level: number | string,
-        particle: ItemParticle,
+        hardness: number,
+        level: number,
+        particle: TileItemParticle,
         condition?: TileItemCondition,
     ) {
         super(hardness, level);
@@ -69,11 +72,25 @@ export class TileItemHarvest extends ItemHarvest {
             this.condition = condition;
         }
     }
+}
 
-    setCondition(condition?: TileItemCondition) {
-        this.condition = condition;
+export class ItemSFX {
+    private id: string;
+    private gain?: string | number;
 
-        return this;
+    constructor(id: string, gain?: string | number) {
+        this.id = id;
+        this.gain = gain;
+    }
+}
+
+export class ItemAudioProperties {
+    private lowpass: number;
+    private reverb: number;
+
+    constructor(lowpass: number, reverb: number) {
+        this.lowpass = lowpass;
+        this.reverb = reverb;
     }
 }
 
@@ -81,18 +98,21 @@ export class TileItemPlacement {
     private condition?:
         | string
         | TileItemPlacementCondition
-        | TileItemPlacement[];
-    private index?: string | number | any;
+        | TileItemPlacementCondition[];
+    private index?: string | number | SmartValue;
 
     setCondition(
-        condition: string | TileItemPlacementCondition | TileItemPlacement[],
+        condition:
+            | string
+            | TileItemPlacementCondition
+            | TileItemPlacementCondition[],
     ) {
         this.condition = condition;
 
         return this;
     }
 
-    setIndex(index: string | number | any) {
+    setIndex(index: string | number | SmartValue) {
         this.index = index;
 
         return this;
@@ -106,11 +126,17 @@ export enum TileItemPlacementConditionType {
 
 export class TileItemPlacementCondition {
     private type: TileItemPlacementConditionType;
-    private values: Array<TileItemPlacement | TileItemPlacementConditionValue>;
+    private values: Array<
+        | { condition: TileItemPlacementCondition }
+        | TileItemPlacementConditionValue
+    >;
 
     constructor(
         type: TileItemPlacementConditionType,
-        values: Array<TileItemPlacement | TileItemPlacementConditionValue>,
+        values: Array<
+            | { condition: TileItemPlacementCondition }
+            | TileItemPlacementConditionValue
+        >,
     ) {
         this.type = type;
         this.values = values;
@@ -143,38 +169,43 @@ export class TileItemPlacementConditionValue {
     }
 }
 
+export enum TileItemProperties {
+    CanMirror = "phantasia:can_mirror",
+    CanFlip = "phantasia:can_flip",
+    IsFoliage = "phantasia:is_foliage",
+    IsLiquid = "phantasia:is_liquid",
+    IsTile = "phantasia:is_tile",
+    IsWall = "phantasia:is_wall",
+}
+
 export class TileItem extends Item {
-    protected override item?: {
-        components?: { [key: string]: ItemComponentData };
-        on_use?: ItemScript[];
-        tile?: {
-            components?: { [key: string]: ItemComponentData };
-            drops?: string | TileItemDrop[];
-            harvest?: string | TileItemHarvest;
-            placement?: string | TileItemPlacement;
-            sfx?: string;
-            audio_properties?: TileItemAudioProperties;
-            on_use?: ItemScript[];
-            on_random_tick?: ItemScript[];
-            light?: string;
-            animation_type?: string;
-        };
-    } = {};
+    private tile: {
+        components?: string | { [key: string]: ItemComponent };
+        drops?: string | TileItemDrop[];
+        harvest?: string | TileItemHarvest;
+        placement?: string | TileItemPlacement;
+        sfx?: string | ItemSFX;
+        audio_properties?: ItemAudioProperties;
+        on_use?: ItemFunction[];
+        on_random_tick?: ItemFunction[];
+        light?: string;
+        animation_type?: string;
+    };
 
     constructor(
         type: ItemType,
-        sprite: string,
+        sprite: string | ItemSprite,
         inventory: string | ItemInventory,
-        properties?: TileItemProperties[],
+        properties?: TileItemProperties | TileItemProperties[],
     ) {
         super(type, sprite, inventory, properties);
+
+        this.tile = {};
     }
 
     setTileDrops(drop?: string | TileItemDrop[]) {
         if (drop) {
-            this.item ??= {};
-            this.item.tile ??= {};
-            this.item.tile.drops = drop;
+            this.tile.drops = drop;
         }
 
         return this;
@@ -182,9 +213,7 @@ export class TileItem extends Item {
 
     setTileHarvest(harvest?: string | TileItemHarvest) {
         if (harvest) {
-            this.item ??= {};
-            this.item.tile ??= {};
-            this.item.tile.harvest = harvest;
+            this.tile.harvest = harvest;
         }
 
         return this;
@@ -192,71 +221,58 @@ export class TileItem extends Item {
 
     setTilePlacement(placement?: string | TileItemPlacement) {
         if (placement) {
-            this.item ??= {};
-            this.item.tile ??= {};
-            this.item.tile.placement = placement;
+            this.tile.placement = placement;
         }
 
         return this;
     }
 
-    setTileSFX(sfx?: string) {
+    setTileSFX(sfx?: string | ItemSFX) {
         if (sfx) {
-            this.item ??= {};
-            this.item.tile ??= {};
-            this.item.tile.sfx = sfx;
+            this.tile.sfx = sfx;
         }
 
         return this;
     }
 
-    setTileAudioProperties(audioProperties: TileItemAudioProperties) {
-        this.item ??= {};
-        this.item.tile ??= {};
-        this.item.tile.audio_properties = audioProperties;
+    setAudioProperties(lowpass: number, reverb: number) {
+        this.tile.audio_properties = new ItemAudioProperties(lowpass, reverb);
 
         return this;
     }
 
-    addTileComponent(key: string, value: ItemComponentData) {
-        this.item ??= {};
-        this.item.tile ??= {};
-        this.item.tile.components ??= {};
-        this.item.tile.components[key] = value;
+    addComponent(key: string, value: ItemComponent) {
+        if (typeof this.tile.components === "string") {
+            this.tile.components = {};
+        }
+        this.tile.components ??= {};
+        (this.tile.components as { [key: string]: ItemComponent })[key] = value;
 
         return this;
     }
 
     setTileLight(color: string) {
-        this.item ??= {};
-        this.item.tile ??= {};
-        this.item.tile.light = color;
+        this.tile.light = color;
 
         return this;
     }
 
     setAnimationType(type: string) {
-        this.item ??= {};
-        this.item.tile ??= {};
-        this.item.tile.animation_type = type;
+        this.tile.animation_type = type;
 
         return this;
     }
 
-    setTileOnRandomTick(functions: ItemScript[]) {
-        this.item ??= {};
-        this.item.tile ??= {};
-        this.item.tile.on_random_tick ??= [];
-        this.item.tile.on_random_tick.push(...functions);
+    addOnRandomTick(functions: ItemFunction[]) {
+        this.tile.on_random_tick ??= [];
+        this.tile.on_random_tick.push(...functions);
 
         return this;
     }
 
-    addOnUse(functions: ItemScript[]) {
-        this.item ??= {};
-        this.item.tile ??= {};
-        this.item.tile.on_use ??= [];
-        this.item.tile.on_use.push(...functions);
+    addOnUse(functions: ItemFunction[]) {
+        this.tile.on_use ??= [];
+        this.tile.on_use.push(...functions);
 
         return this;
     }

@@ -1737,47 +1737,6 @@ function proglang_test() {
     // 2. RAII List
     if (_assert("RAII List", "fn test() { var l = ds_list_create(); ds_list_add(l, 10); return ds_list_size(l); } return test();", 1)) _passed++; else _failed++;
     
-    // ============ PHASE 18 TESTS: Lambda / Arrow Functions ============
-    
-    // 1. Basic Lambda (expression body)
-    if (_assert("Lambda Expr Body", 
-        $"var double = (x) -> x * 2\n" +
-        $"return double(5)"
-    , 10)) _passed++; else _failed++;
-    
-    // 2. Lambda block body
-    if (_assert("Lambda Block Body", 
-        $"var add = (a, b) -> \{\n" +
-        $"    var sum = a + b\n" +
-        $"    return sum\n" +
-        $"\}\n" +
-        $"return add(3, 4)"
-    , 7)) _passed++; else _failed++;
-    
-    // 3. Zero-parameter lambda
-    if (_assert("Lambda No Params", 
-        $"var greet = () -> 'hello'\n" +
-        $"return greet()"
-    , "hello")) _passed++; else _failed++;
-    
-    // 4. Lambda with default params
-    if (_assert("Lambda Default Params", 
-        $"var inc = (x, step = 1) -> x + step\n" +
-        $"return inc(10) + inc(10, 5)" // 11 + 15 = 26
-    , 26)) _passed++; else _failed++;
-    
-    // 5. Nested lambdas (currying)
-    if (_assert("Lambda Currying", 
-        $"var add = (a) -> (b) -> a + b\n" +
-        $"return add(3)(7)"
-    , 10)) _passed++; else _failed++;
-    
-    // 6. Lambda as callback
-    if (_assert("Lambda Callback", 
-        $"fn apply(f, val) \{ return f(val) \}\n" +
-        $"return apply((x) -> x ** 2, 4)" // 16
-    , 16)) _passed++; else _failed++;
-    
     show_debug_message($"[Proglang Test] COMPLETE. Passed: {_passed}, Failed: {_failed}");
     return _failed == 0;
 }

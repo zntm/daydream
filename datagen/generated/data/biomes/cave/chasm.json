@@ -1,7 +1,7 @@
 {
     "background": {
-        "blend": 0.7,
-        "id": "phantasia:background/chasm"
+        "id": "phantasia:background/chasm",
+        "blend": 0.7
     },
     "foliage": [
         {
@@ -20,24 +20,10 @@
         }
     ],
     "light_colour": {
-        "points": [
-            {
-                "position": 0.15,
-                "color": "#374A91"
-            },
-            {
-                "position": 0.45,
-                "color": "#FFFFFF"
-            },
-            {
-                "position": 0.72,
-                "color": "#C68B69"
-            },
-            {
-                "position": 0.9,
-                "color": "#141B35"
-            }
-        ]
+        "dawn": "#374A91",
+        "day": "#FFFFFF",
+        "dusk": "#C68B69",
+        "night": "#141B35"
     },
     "map_colour": "#000000",
     "music": [
@@ -51,24 +37,22 @@
         }
     ],
     "sky_colour": {
-        "points": [
-            {
-                "position": 0.15,
-                "color": "#180738"
-            },
-            {
-                "position": 0.45,
-                "color": "#5F91FE"
-            },
-            {
-                "position": 0.72,
-                "color": "#C4502D"
-            },
-            {
-                "position": 0.9,
-                "color": "#000019"
-            }
-        ]
+        "dawn": {
+            "base": "#180738",
+            "gradient": "#2A1504"
+        },
+        "day": {
+            "base": "#5F91FE",
+            "gradient": "#244FE9"
+        },
+        "dusk": {
+            "base": "#C4502D",
+            "gradient": "#DA651C"
+        },
+        "night": {
+            "base": "#000019",
+            "gradient": "#020008"
+        }
     },
     "structures": [
         {
@@ -97,7 +81,7 @@
         }
     ],
     "tile": {
-        "bottom_layer": {
+        "top_layer": {
             "base": [
                 {
                     "id": "phantasia:stone"
@@ -129,7 +113,7 @@
                 }
             ]
         },
-        "top_layer": {
+        "bottom_layer": {
             "base": [
                 {
                     "id": "phantasia:stone"

@@ -1,73 +1,10 @@
-function __get_program_directory_datafiles()
-{
-    static _res = undefined;
-    if (_res != undefined) return _res;
-    
-    if (GM_build_type == "run")
-    {
-        var _proj = GM_project_filename;
-        if (_proj != "")
-        {
-            var _path = string_replace_all(filename_dir(_proj) + "/datafiles", "\\", "/");
-            if (directory_exists(_path))
-            {
-                _res = _path;
-                return _res;
-            }
-        }
-    }
-    
-    _res = "";
-    return _res;
-}
+#macro PROGRAM_DIRECTORY_DATAFILES ((GM_build_type == "run") ? $"{filename_dir(GM_project_filename)}/datafiles" : "")
+#macro PROGRAM_DIRECTORY_RESOURCES ((GM_build_type == "run") ? $"{filename_dir(GM_project_filename)}/datafiles/resources" : "resources")
+#macro PROGRAM_DIRECTORY_ASSETS $"{PROGRAM_DIRECTORY_RESOURCES}/assets"
 
-function __get_program_directory_resources()
-{
-    static _res = undefined;
-    if (_res != undefined) return _res;
-    
-    var _datafiles = __get_program_directory_datafiles();
-    if (_datafiles != "")
-    {
-        var _path = _datafiles + "/resources";
-        if (directory_exists(_path))
-        {
-            _res = _path;
-            return _res;
-        }
-    }
-    
-    _res = "resources";
-    return _res;
-}
+#macro PROGRAM_DIRECTORY_DATA      ((GM_build_type == "run") ? $"{filename_dir(GM_project_filename)}/datafiles/data" : "data")
 
-function __get_program_directory_data()
-{
-    static _res = undefined;
-    if (_res != undefined) return _res;
-    
-    var _datafiles = __get_program_directory_datafiles();
-    if (_datafiles != "")
-    {
-        var _path = _datafiles + "/data";
-        if (directory_exists(_path))
-        {
-            _res = _path;
-            return _res;
-        }
-    }
-    
-    _res = "data";
-    return _res;
-}
-
-#macro PROGRAM_DIRECTORY_DATAFILES __get_program_directory_datafiles()
-#macro PROGRAM_DIRECTORY_RESOURCES __get_program_directory_resources()
-#macro PROGRAM_DIRECTORY_ASSETS    $"{PROGRAM_DIRECTORY_RESOURCES}/assets"
-
-#macro PROGRAM_DIRECTORY_DATA      __get_program_directory_data()
-
-#macro PROGRAM_DIRECTORY_APPDATA ((os_type == os_windows) ? $"{environment_get_variable("LOCALAPPDATA")}/{PROGRAM_NAME}" : $"{environment_get_variable("HOME")}/.config/{PROGRAM_NAME}")
+#macro PROGRAM_DIRECTORY_APPDATA $"{environment_get_variable("LOCALAPPDATA")}/{PROGRAM_NAME}"
 
 #macro PROGRAM_DIRECTORY_CRASH_LOG   $"{PROGRAM_DIRECTORY_APPDATA}/crash_log"
 #macro PROGRAM_DIRECTORY_PLAYERS     $"{PROGRAM_DIRECTORY_APPDATA}/players"

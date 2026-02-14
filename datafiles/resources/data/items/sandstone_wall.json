@@ -1,30 +1,5 @@
 {
     "inventory": "#phantasia:item/generic/inventory_tile",
-    "item": {
-        "tile": {
-            "audio_properties": {
-                "lowpass": 0.55,
-                "reverb": 0.4
-            },
-            "drops": [
-                {
-                    "id": "phantasia:sandstone_wall"
-                }
-            ],
-            "harvest": {
-                "condition": {
-                    "id": "#phantasia:item/type/pickaxe"
-                },
-                "hardness": 0.22,
-                "level": 0,
-                "particle": {
-                    "frequency": "#phantasia:tile/generic/harvest_particle_frequency",
-                    "id": "#phantasia:tile/particle_colour/sand"
-                }
-            },
-            "sfx": "#phantasia:tile/sfx/stone"
-        }
-    },
     "properties": [
         "phantasia:can_flip",
         "phantasia:can_mirror",
@@ -32,7 +7,6 @@
         "phantasia:is_wall"
     ],
     "sprite": "phantasia:item/sandstone_wall",
-<<<<<<< HEAD
     "tile": {
         "audio_properties": {
             "lowpass": 0.7,
@@ -54,7 +28,4 @@
         "sfx": "#phantasia:tile/sfx/stone"
     },
     "type": "solid"
-=======
-    "type": "untouchable"
->>>>>>> region
 }

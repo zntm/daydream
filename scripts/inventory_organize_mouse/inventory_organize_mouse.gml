@@ -74,12 +74,12 @@ function inventory_organize_mouse(_inst)
                         
                         _item2.add_amount(_amount - _inventory_max);
                         
-                        if (_item2 != INVENTORY_EMPTY) inventory_give(0, 0, _item2, global.inventory, false);
+                        inventory_give(0, 0, _item2, global.inventory, false);
                     }
                 }
                 else
                 {
-                    if (_item2 != INVENTORY_EMPTY) inventory_give(0, 0, _item2, global.inventory, false);
+                    inventory_give(0, 0, _item2, global.inventory, false);
                 }
             }
             else
@@ -189,12 +189,12 @@ function inventory_organize_mouse(_inst)
                         
                         _item2.add_amount(_amount - _inventory_max);
                         
-                        if (_item2 != INVENTORY_EMPTY) inventory_give(0, 0, _item2, global.inventory, false);
+                        inventory_give(0, 0, _item2, global.inventory, false);
                     }
                 }
                 else
                 {
-                    if (_item2 != INVENTORY_EMPTY) inventory_give(0, 0, _item2, global.inventory, false);
+                    inventory_give(0, 0, _item2, global.inventory, false);
                 }
             }
             else
@@ -325,12 +325,12 @@ function inventory_organize_mouse(_inst)
                         
                         _item2.add_amount(_amount - _inventory_max);
                         
-                        if (_item2 != INVENTORY_EMPTY) inventory_give(0, 0, _item2, global.inventory, false);
+                        inventory_give(0, 0, _item2, global.inventory, false);
                     }
                 }
                 else
                 {
-                    if (_item2 != INVENTORY_EMPTY) inventory_give(0, 0, _item2, global.inventory, false);
+                    inventory_give(0, 0, _item2, global.inventory, false);
                 }
             }
             else
@@ -340,8 +340,12 @@ function inventory_organize_mouse(_inst)
         }
         else
         {
-            var _item_mouse = global.inventory.mouse.item;
-            if (_item_mouse != INVENTORY_EMPTY) inventory_give(0, 0, _item_mouse, global.inventory, false);
+            var _item = global.inventory.mouse.item;
+            
+            if (_item != INVENTORY_EMPTY)
+            {
+                inventory_give(0, 0, _item, global.inventory, false);
+            }
         }
         
         timer_crafting_max = 0.3;

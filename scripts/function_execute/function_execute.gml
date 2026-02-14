@@ -19,7 +19,7 @@ function function_execute(_function, _x, _y, _z, _xscale, _yscale, _inst = undef
     var _tx = round(_x / TILE_SIZE);
     var _ty = round(_y / TILE_SIZE);
     var _context = {}
-    
+
     if (_inst != undefined) && (instance_exists(_inst))
     {
         _context.type = "unknown";
@@ -48,10 +48,8 @@ function function_execute(_function, _x, _y, _z, _xscale, _yscale, _inst = undef
     }
     else if (instance_exists(obj_Player))
     {
-        _context.player = obj_Player;
+         _context.player = obj_Player;
     }
-    
-    show_debug_message(_function);
     
     // Always provide spatial context
     _context.caller = _inst;
@@ -63,12 +61,10 @@ function function_execute(_function, _x, _y, _z, _xscale, _yscale, _inst = undef
     _context.tile = tile_get(_tx, _ty, _z);
     _context.item = _item;
     _context.inventory = global.inventory;
-    
+
     if (_id != undefined)
     {
         _context.parameter = _parameter;
-        
-        show_debug_message(global.proglang_scripts[$ _id]);
         
         // Handle direct script call
         if (struct_exists(global.proglang_scripts, _id))

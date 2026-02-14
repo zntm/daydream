@@ -75,31 +75,6 @@ proglang_function_register("event_unsubscribe", function(_args)
 
 #region Math
 
-proglang_function_register("floor", function(_args)
-{
-    return floor(_args[0]);
-});
-
-proglang_function_register("ceil", function(_args)
-{
-    return ceil(_args[0]);
-});
-
-proglang_function_register("round", function(_args)
-{
-    return round(_args[0]);
-});
-
-proglang_function_register("abs", function(_args)
-{
-    return abs(_args[0]);
-});
-
-proglang_function_register("sign", function(_args)
-{
-    return sign(_args[0]);
-});
-
 proglang_function_register("min", function(_args) {
     if (array_length(_args) == 0) return 0;
     var _min = _args[0];
@@ -114,14 +89,6 @@ proglang_function_register("max", function(_args) {
     return _max;
 });
 
-proglang_function_register("clamp", function(_args) {
-    return clamp(_args[0], _args[1], _args[2]);
-});
-
-proglang_function_register("lerp", function(_args) {
-    return lerp(_args[0], _args[1], _args[2]);
-});
-
 proglang_function_register("point_distance", function(_args) {
     return point_distance(_args[0], _args[1], _args[2], _args[3]);
 });
@@ -130,130 +97,7 @@ proglang_function_register("point_direction", function(_args) {
     return point_direction(_args[0], _args[1], _args[2], _args[3]);
 });
 
-proglang_function_register("power", function(_args) {
-    return power(_args[0], _args[1]);
-});
-
-proglang_function_register("sqrt", function(_args) {
-    return sqrt(_args[0]);
-});
-
-proglang_function_register("sqr", function(_args) {
-    return sqr(_args[0]);
-});
-
-proglang_function_register("frac", function(_args) {
-    return frac(_args[0]);
-});
-
-proglang_function_register("sin", function(_args) {
-    return sin(_args[0]);
-});
-
-proglang_function_register("cos", function(_args) {
-    return cos(_args[0]);
-});
-
-proglang_function_register("tan", function(_args) {
-    return tan(_args[0]);
-});
-
-proglang_function_register("dsin", function(_args) {
-    return dsin(_args[0]);
-});
-
-proglang_function_register("dcos", function(_args) {
-    return dcos(_args[0]);
-});
-
-proglang_function_register("dtan", function(_args) {
-    return dtan(_args[0]);
-});
-
-proglang_function_register("degtorad", function(_args) {
-    return degtorad(_args[0]);
-});
-
-proglang_function_register("radtodeg", function(_args) {
-    return radtodeg(_args[0]);
-});
-
-
-
-proglang_function_register("exp", function(_args) {
-    return exp(_args[0]);
-});
-
-proglang_function_register("ln", function(_args) {
-    return ln(_args[0]);
-});
-
-proglang_function_register("log2", function(_args) {
-    return log2(_args[0]);
-});
-
-proglang_function_register("log10", function(_args) {
-    return log10(_args[0]);
-});
-
-proglang_function_register("arcsin", function(_args) {
-    return arcsin(_args[0]);
-});
-
-proglang_function_register("arccos", function(_args) {
-    return arccos(_args[0]);
-});
-
-proglang_function_register("arctan", function(_args) {
-    return arctan(_args[0]);
-});
-
-proglang_function_register("arctan2", function(_args) {
-    return arctan2(_args[0], _args[1]);
-});
-
-
-proglang_function_register("randomize", function(_args) {
-    randomize();
-});
-
-proglang_function_register("random", function(_args) {
-    return random(_args[0]);
-});
-
-proglang_function_register("irandom", function(_args) {
-    return irandom(_args[0]);
-});
-
-proglang_function_register("random_range", function(_args) {
-    return random_range(_args[0], _args[1]);
-});
-
-proglang_function_register("choose", function(_args) {
-    if (!is_array(_args[0]) || array_length(_args[0]) == 0) {
-        return undefined;
-    }
-
-    return array_choose(_args[0]);
-});
-
-proglang_function_register("string", function(_args) {
-    return string(_args[0]);
-});
-
-proglang_function_register("real", function(_args) {
-    return real(_args[0]);
-});
-
 #endregion
-
-proglang_function_register("lengthdir_x", function(_args) {
-    return lengthdir_x(_args[0], _args[1]);
-});
-
-proglang_function_register("lengthdir_y", function(_args) {
-    return lengthdir_y(_args[0], _args[1]);
-});
 
 #endregion
 proglang_function_register("worldgen_get_heat", function(_args)
@@ -444,7 +288,6 @@ proglang_function_register("camera_shake", function(_args) {
 });
 
 proglang_function_register("spawn_particle", function(_args) {
-    show_debug_message(_args)
     var _x = _args[1];
     
     if (_x == undefined) exit;
@@ -1302,51 +1145,6 @@ proglang_function_register("buffer_create", function(_args, _vm) {
 
 proglang_function_register("buffer_delete", function(_args) {
     if (buffer_exists(_args[0])) buffer_delete(_args[0]);
-});
-
-#endregion
-
-#region UI System
-
-proglang_function_register("ui_load", function(_args) {
-    var _path = _args[0];
-    return ui_load(_path);
-});
-
-proglang_function_register("ui_spawn", function(_args) {
-    var _definitions = _args[0];
-    var _config = (array_length(_args) > 1) ? _args[1] : {};
-    return ui_spawn(_definitions, _config);
-});
-
-proglang_function_register("ui_destroy", function(_args) {
-    ui_destroy(_args[0]);
-});
-
-proglang_function_register("ui_get", function(_args) {
-    var _instance = _args[0];
-    var _name = _args[1];
-    return ui_get(_instance, _name);
-});
-
-proglang_function_register("ui_set", function(_args) {
-    var _instance = _args[0];
-    var _name = _args[1];
-    var _property = _args[2];
-    var _value = _args[3];
-    ui_set(_instance, _name, _property, _value);
-});
-
-proglang_function_register("ui_refresh", function(_args) {
-    ui_refresh(_args[0]);
-});
-
-proglang_function_register("ui_update", function(_args) {
-    ui_update(_args[0]);
-});
-
-proglang_function_register("ui_draw", function(_args) {
-    ui_draw(_args[0]);
 });
 
 #endregion

@@ -245,9 +245,9 @@ global.chat_command_hint = undefined;
 gui_init_modular();
 
 // Initialize network globals ONLY if not already in a session
-if (global.relay == undefined || global.relay.role == RELAY_ROLE.NONE)
+if (is_undefined(global.network_role) || global.network_role == NETWORK_ROLE.NONE)
 {
-    relay_manager_init();
+    network_init();
 }
 
 timer_network_sync = 0;

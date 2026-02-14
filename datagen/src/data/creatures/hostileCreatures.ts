@@ -1,5 +1,5 @@
 import { DatagenReturnData } from "../../lib/DatagenReturnData";
-import { Attribute, AttributeBoolean } from "../../lib";
+import { Attribute, AttributeBoolean } from "../../attribute";
 import {
     Creature,
     CreatureHostilityType,
@@ -7,8 +7,8 @@ import {
     CreatureProperties,
     CreatureSprite,
     CreatureSpriteData,
-} from "./lib/Creature";
-import { ItemDrop } from "../items/lib";
+} from "../creatures";
+import { ItemDrop } from "../items";
 import { SmartValueIntRandom } from "../../lib/SmartValue";
 
 class HostileCreature extends Creature {

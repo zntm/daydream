@@ -1,0 +1,86 @@
+{
+    "amplitude_max": 120,
+    "amplitude_min": 40,
+    "base_height": 480,
+    "biome_noise_scale": 0.008,
+    "biomes": [
+        "phantasia:surface/pinesteep",
+        "phantasia:surface/silversteep"
+    ],
+    "cave_biome_default": "phantasia:cave/chasm",
+    "cave_biomes": [
+        {
+            "biome": "phantasia:cave/depths",
+            "min_depth": 100,
+            "noise_threshold": 0.5
+        }
+    ],
+    "gradient_strength": 0.02,
+    "height_offset": 0,
+    "id": "borea",
+    "light_colour": {
+        "points": [
+            {
+                "time": 0,
+                "value": "#050515"
+            },
+            {
+                "time": 0.3,
+                "value": "#A0B0FF"
+            },
+            {
+                "time": 0.5,
+                "value": "#E0E8FF"
+            },
+            {
+                "time": 0.75,
+                "value": "#B0A0FF"
+            }
+        ]
+    },
+    "sky_base": {
+        "points": [
+            {
+                "time": 0,
+                "value": "#050510"
+            },
+            {
+                "time": 0.3,
+                "value": "#203050"
+            },
+            {
+                "time": 0.5,
+                "value": "#6080A0"
+            },
+            {
+                "time": 0.75,
+                "value": "#302040"
+            }
+        ]
+    },
+    "sky_gradient": {
+        "points": [
+            {
+                "time": 0,
+                "value": "#020205"
+            },
+            {
+                "time": 0.3,
+                "value": "#405080"
+            },
+            {
+                "time": 0.5,
+                "value": "#8090C0"
+            },
+            {
+                "time": 0.75,
+                "value": "#201030"
+            }
+        ]
+    },
+    "terrain_noise_scale": 0.015625,
+    "voronoi": {
+        "cell_size": 256,
+        "jitter": 0.4
+    }
+}

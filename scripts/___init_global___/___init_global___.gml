@@ -37,7 +37,7 @@ global.inventory_length = {
     armor_breastplate: 1,
     armor_leggings:    1,
     accessory:         INVENTORY_LENGTH.ACCESSORY,
-    _container:        0
+    _container:         0
 }
 
 global.inventory_instance = {
@@ -194,7 +194,7 @@ global.window_height = window_get_height();
 
 global.window_focus = true;
 
-global.delta_time = max(0.0001, delta_time / 1_000_000);
+global.delta_time = delta_time / 1_000_000;
 
 global.camera_shake = 0;
 
@@ -211,5 +211,5 @@ global.attribute_player = new Attribute()
     .set_jump_height(8.2)
     .set_jump_time(12)
     .set_movement_speed(3.1)
-    .set_regeneration_amount(1)
-    .set_regeneration_time(1.0);
+    .set_regeneration_amount(0)
+    .set_regeneration_time(60);

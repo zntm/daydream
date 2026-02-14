@@ -1,0 +1,17 @@
+{
+    "attribute": "movement_speed",
+    "base_value": 0.2,
+    "icon": "phantasia:item/stone",
+    "modifiers": [
+        {
+            "operation": "multiply",
+            "value": "level"
+        }
+    ],
+    "particle": {
+        "chance": 0.2,
+        "colour": "#FFFFFF",
+        "id": "phantasia:particle/entity/effect"
+    },
+    "type": "constant"
+}

@@ -1,59 +1,57 @@
 {
     "inventory": "#phantasia:item/generic/inventory_default",
-    "item": {
-        "tile": {
-            "audio_properties": {
-                "lowpass": 0.4,
-                "reverb": 0.1
+    "sprite": "phantasia:item/oak",
+    "tile": {
+        "drops": [
+            {
+                "id": "phantasia:oak"
+            }
+        ],
+        "harvest": {
+            "hardness": 0.56,
+            "level": 1,
+            "particle": {
+                "colour": [
+                    "#3B160A",
+                    "#2D0B04"
+                ],
+                "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
             },
-            "drops": [
-                {
-                    "id": "phantasia:oak"
-                }
-            ],
-            "harvest": {
-                "condition": {
-                    "id": "#phantasia:item/type/axe"
-                },
-                "hardness": 0.56,
-                "level": 1,
-                "particle": {
-                    "frequency": "#phantasia:tile/generic/harvest_particle_frequency",
-                    "id": [
-                        "#3B160A",
-                        "#2D0B04"
-                    ]
-                }
-            },
-            "placement": {
-                "condition": {
-                    "type": "every",
-                    "values": [
-                        {
-                            "condition": {
-                                "type": "some",
-                                "values": [
-                                    {
-                                        "xoffset": 0,
-                                        "yoffset": 1,
-                                        "z": "default",
-                                        "id": "#phantasia:tile/placement/plant_on"
-                                    },
-                                    {
-                                        "xoffset": 0,
-                                        "yoffset": 1,
-                                        "z": "z",
-                                        "id": "$ID"
-                                    }
-                                ]
-                            }
+            "condition": {
+                "id": "#phantasia:item/type/axe"
+            }
+        },
+        "sfx": "#phantasia:tile/sfx/wood",
+        "placement": {
+            "condition": {
+                "type": "every",
+                "values": [
+                    {
+                        "condition": {
+                            "type": "some",
+                            "values": [
+                                {
+                                    "xoffset": 0,
+                                    "yoffset": 1,
+                                    "z": "default",
+                                    "id": "#phantasia:tile/placement/plant_on"
+                                },
+                                {
+                                    "xoffset": 0,
+                                    "yoffset": 1,
+                                    "z": "z",
+                                    "id": "$ID"
+                                }
+                            ]
                         }
-                    ]
-                }
-            },
-            "sfx": "#phantasia:tile/sfx/wood"
+                    }
+                ]
+            }
+        },
+        "audio_properties": {
+            "lowpass": 0.4,
+            "reverb": 0.1
         }
     },
-    "sprite": "phantasia:item/oak",
     "type": "untouchable"
 }

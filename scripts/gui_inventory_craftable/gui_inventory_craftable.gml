@@ -124,11 +124,6 @@ function gui_inventory_craftable(_gui_multiplier_x, _gui_multiplier_y)
         var _xscale = _gui_multiplier_x * _inventory_scale * INVENTORY_ITEM_SCALE_MODIFIER;
         var _yscale = _gui_multiplier_y * _inventory_scale * INVENTORY_ITEM_SCALE_MODIFIER;
         
-        if (global.sprite_asset[$ _sprite] == undefined) {
-            show_debug_message($"[GUI] Skipping craftable draw for item '{_item.get_id()}': sprite '{_sprite}' not found.");
-            continue;
-        }
-        
         draw_sprite_ext(global.sprite_asset[$ _sprite].get_sprite(), _index, _x, _y, _xscale, _yscale, 0, c_white, 1);
     }
     

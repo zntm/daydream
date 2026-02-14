@@ -1,5 +1,6 @@
 {
     "inventory": "#phantasia:item/generic/inventory_default",
+    "item": {},
     "sprite": "phantasia:item/bucket",
     "type": "default"
 }

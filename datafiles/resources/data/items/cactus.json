@@ -1,61 +1,9 @@
 {
     "inventory": "#phantasia:item/generic/inventory_default",
-    "item": {
-        "tile": {
-            "audio_properties": {
-                "lowpass": 0.05,
-                "reverb": 0
-            },
-            "drops": [
-                {
-                    "id": "phantasia:cactus"
-                }
-            ],
-            "harvest": {
-                "hardness": 0.38,
-                "level": 0,
-                "particle": {
-                    "frequency": "#phantasia:tile/generic/harvest_particle_frequency",
-                    "id": [
-                        "#113402",
-                        "#032802"
-                    ]
-                }
-            },
-            "placement": {
-                "condition": {
-                    "type": "every",
-                    "values": [
-                        {
-                            "condition": {
-                                "type": "some",
-                                "values": [
-                                    {
-                                        "xoffset": 0,
-                                        "yoffset": 1,
-                                        "z": "default",
-                                        "id": "#phantasia:tile/placement/plant_on"
-                                    },
-                                    {
-                                        "xoffset": 0,
-                                        "yoffset": 1,
-                                        "z": "z",
-                                        "id": "$ID"
-                                    }
-                                ]
-                            }
-                        }
-                    ]
-                }
-            },
-            "sfx": "#phantasia:tile/sfx/foliage"
-        }
-    },
     "properties": [
         "phantasia:can_mirror"
     ],
     "sprite": "phantasia:item/cactus",
-<<<<<<< HEAD
     "tile": {
         "audio_properties": {
             "lowpass": 0.05,
@@ -102,7 +50,5 @@
         },
         "sfx": "#phantasia:tile/sfx/foliage"
     },
-=======
->>>>>>> region
     "type": "untouchable"
 }

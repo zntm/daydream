@@ -154,8 +154,8 @@ function control_player()
             // Determine dash direction from input
             var _dash_dir = input_state.move_left_double_pressed ? -1 : 1;
             
-            // Check equipped armor and accessories for on_double_horizontal_move
-            var _armor_slots = array_concat([_inv_target.armor_helmet[0], _inv_target.armor_breastplate[0], _inv_target.armor_leggings[0]], _inv_target.accessory);
+            // Check equipped armor for on_double_horizontal_move
+            var _armor_slots = [_inv_target.armor_helmet[0], _inv_target.armor_breastplate[0], _inv_target.armor_leggings[0]];
             
             for (var k = 0; k < array_length(_armor_slots); ++k)
             {
@@ -184,8 +184,8 @@ function control_player()
             // Determine vertical dash direction from input
             var _dash_dir_v = input_state.move_up_double_pressed ? -1 : 1;
             
-            // Check equipped armor and accessories for on_double_vertical_move
-            var _armor_slots = array_concat([_inv_target.armor_helmet[0], _inv_target.armor_breastplate[0], _inv_target.armor_leggings[0]], _inv_target.accessory);
+            // Check equipped armor for on_double_vertical_move
+            var _armor_slots = [_inv_target.armor_helmet[0], _inv_target.armor_breastplate[0], _inv_target.armor_leggings[0]];
             
             for (var k = 0; k < array_length(_armor_slots); ++k)
             {

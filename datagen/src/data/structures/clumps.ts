@@ -1,7 +1,7 @@
 import {
     DatagenReturnData,
     type SmartValue,
-} from "../../lib";
+} from "../../../index";
 
 import {
     Structure,
@@ -9,7 +9,7 @@ import {
     StructureParameterTile,
     StructurePlacement,
     StructurePlacementType,
-} from "./lib/Structure";
+} from "../structures";
 
 class StructureParameter {
     private tile_base: StructureParameterTile;

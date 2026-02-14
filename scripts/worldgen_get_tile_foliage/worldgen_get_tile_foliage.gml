@@ -1,4 +1,4 @@
-function worldgen_get_tile_foliage(_x, _y, _surface_biome, _cave_biome, _top_tile, _surface_height, _seed, _biome_data = undefined)
+function worldgen_get_tile_foliage(_x, _y, _surface_biome, _cave_biome, _top_tile, _surface_height, _seed)
 {
     var _biome_id = _cave_biome;
     
@@ -16,10 +16,7 @@ function worldgen_get_tile_foliage(_x, _y, _surface_biome, _cave_biome, _top_til
         }
     }
 
-    _biome_data ??= global.biome_data;
-    var _foliage = _biome_data[$ worldgen_resolve_id(_biome_id)];
-    if (_foliage == undefined) return TILE_EMPTY;
-    
+    var _foliage = global.biome_data[$ _biome_id];
     var _foliage_length = _foliage.get_tile_middle_layer_foliage_length();
     
     for (var i = 0; i < _foliage_length; ++i)

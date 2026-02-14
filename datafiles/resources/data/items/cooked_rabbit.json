@@ -6,13 +6,8 @@
                 "id": "phantasia:food",
                 "seconds": 1
             },
-<<<<<<< HEAD
             "hp": 12,
             "saturation": 12,
-=======
-            "hp": 6,
-            "saturation": 4,
->>>>>>> region
             "sfx": {
                 "gain": 1,
                 "id": "phantasia:sfx/item/eat"

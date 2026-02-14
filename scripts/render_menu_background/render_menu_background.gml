@@ -1,27 +1,26 @@
-function render_menu_background(_id, _colour)
+function render_menu_background(_id, _region_data, _time)
 {
     gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_src_alpha, bm_one);
     
     static __u_colour = shader_get_uniform(shd_Background, "u_colour");
     static __u_strength = shader_get_uniform(shd_Background, "u_strength");
     
-    // Color lookups now handle IDs robustly
+    var _biome_data = global.biome_data[$ _id];
+    if (_biome_data == undefined) exit;
     
-    var _sky_colour = worldgen_get_sky_colour(_id, _colour);
-    var _light_colour = worldgen_get_light_colour(_id, _colour);
-    
-    var _sky_colour_base = _sky_colour;
-    var _sky_colour_gradient = _sky_colour;
+    var _sky_colour_base = _region_data.get_sky_colour_base(_time);
+    var _sky_colour_gradient = _region_data.get_sky_colour_gradient(_time);
     
     draw_sprite_ext(spr_Square, 0, 0, 0, room_width, room_height, 0, _sky_colour_base, 1);
     draw_sprite_general(spr_Glow_Corner, 0, 0, 0, 128, 1, 0, room_height, room_height / 128, room_width, 90, _sky_colour_gradient, _sky_colour_gradient, _sky_colour_gradient, _sky_colour_gradient, 1);
+    
+    var _light_colour = _region_data.get_light_colour(_time);
     
     if (global.settings.display_background)
     {
         var _offset = global.menu_background_offset;
         
-        var _background = worldgen_get_background(_id);
-        if (_background == undefined) return;
+        var _background = _biome_data.get_background();
         
         var _background_sprites = global.sprite_asset[$ _background.id];
         

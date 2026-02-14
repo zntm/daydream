@@ -4,6 +4,11 @@ function render_background(_camera_x, _camera_y, _camera_width, _camera_height)
     static __u_strength = shader_get_uniform(shd_Background, "u_strength");
     
     var _background_data = global.background_data;
+    var _biome_data = global.biome_data;
+    
+    var _in_biome_data = _biome_data[$ in_biome];
+    var _in_biome_transition_data = _biome_data[$ in_biome_transition];
+    
     var _player_x = obj_Player.x;
     var _player_y = obj_Player.y;
     
@@ -11,7 +16,6 @@ function render_background(_camera_x, _camera_y, _camera_width, _camera_height)
     
     shader_set_uniform_f(__u_colour, (sky_colour_base & 0xff) / 0xff, ((sky_colour_base >> 8) & 0xff) / 0xff, ((sky_colour_base >> 16) & 0xff) / 0xff);
     
-<<<<<<< HEAD
     if (_in_biome_data == undefined) || (_in_biome_transition_data == undefined)
     {
         shader_reset();
@@ -20,10 +24,6 @@ function render_background(_camera_x, _camera_y, _camera_width, _camera_height)
     
     var _in_biome_background = _in_biome_data.get_background();
     // var _in_biome_background_data = _background_data[$ _in_biome_background];
-=======
-    var _in_biome_background = worldgen_get_background(in_biome);
-    if (_in_biome_background == undefined) return;
->>>>>>> region
     
     var _in_biome_background_id = _in_biome_background.id;
     var _in_biome_background_blend = _in_biome_background.blend;
@@ -31,8 +31,8 @@ function render_background(_camera_x, _camera_y, _camera_width, _camera_height)
     
     var _in_biome_background_length = array_length(_in_biome_background_data);
     
-    var _in_biome_transition_background = worldgen_get_background(in_biome_transition);
-    if (_in_biome_transition_background == undefined) return;
+    var _in_biome_transition_background = _in_biome_transition_data.get_background();
+    // var _in_biome_transition_background_data = _background_data[$ _in_biome_transition_background];
     
     var _in_biome_transition_background_id = _in_biome_transition_background.id;
     var _in_biome_transition_background_blend = _in_biome_transition_background.blend;

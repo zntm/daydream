@@ -1,0 +1,106 @@
+{
+    "background": {
+        "blend": 0.7,
+        "id": "phantasia:background/taiga"
+    },
+    "creatures": [
+        {
+            "amount": {
+                "type": "smart_value:irandom",
+                "values": {
+                    "max": 2,
+                    "min": 1
+                }
+            },
+            "chance": 0.008,
+            "id": "phantasia:rabbit",
+            "tile": "#phantasia:tile/creature_spawn/animal",
+            "time_range_max": 890,
+            "time_range_min": 0
+        }
+    ],
+    "foliage": [
+        {
+            "chance": 0.18,
+            "generate_on": "#phantasia:tile/placement/plant_on",
+            "id": "phantasia:snow_pile"
+        },
+        {
+            "chance": 0.03,
+            "generate_on": "#phantasia:tile/placement/plant_on",
+            "id": "phantasia:rock"
+        }
+    ],
+    "music": [
+        {
+            "gain": 0.6,
+            "id": "phantasia:music/frozen_meadow"
+        },
+        {
+            "gain": 0.5,
+            "id": "phantasia:music/winter_wind"
+        }
+    ],
+    "structures": [
+        {
+            "chance": 0.14,
+            "generate_on": "#phantasia:tile/placement/plant_on",
+            "id": "phantasia:tree/silver_pine"
+        },
+        {
+            "chance": 0.04,
+            "generate_on": "#phantasia:tile/placement/plant_on",
+            "id": "phantasia:tree/pine"
+        }
+    ],
+    "tile": {
+        "bottom_layer": {
+            "base": [
+                {
+                    "id": "phantasia:stone"
+                }
+            ],
+            "wall": [
+                {
+                    "id": "phantasia:stone_wall",
+                    "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
+                }
+            ]
+        },
+        "middle_layer": {
+            "base": [
+                {
+                    "id": "phantasia:dirt"
+                }
+            ],
+            "wall": [
+                {
+                    "id": "phantasia:dirt_wall",
+                    "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
+                }
+            ]
+        },
+        "top_layer": {
+            "base": [
+                {
+                    "id": "phantasia:snow_block"
+                }
+            ],
+            "wall": [
+                {
+                    "id": "phantasia:dirt_wall",
+                    "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
+                }
+            ]
+        }
+    }
+}

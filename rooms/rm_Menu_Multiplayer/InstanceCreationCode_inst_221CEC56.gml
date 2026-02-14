@@ -4,46 +4,32 @@ text = loca_translate("phantasia:menu.multiplayer.connect");
 
 on_select_release = function()
 {
-    // Find invite code textbox
-    var _code_textbox = noone;
+    // Find IP and Port textboxes
+    var _ip_textbox = noone;
+    var _port_textbox = noone;
     
     with (obj_Menu_Textbox)
     {
-        if (placeholder == loca_translate("menu.multiplayer.textbox.invite_code"))
+        if (placeholder == loca_translate("menu.multiplayer.textbox.ip"))
         {
-            _code_textbox = id;
+            _ip_textbox = id;
+        }
+        else if (placeholder == loca_translate("menu.multiplayer.textbox.port"))
+        {
+            _port_textbox = id;
         }
     }
     
-    if (_code_textbox != noone)
+    if (_ip_textbox != noone && _port_textbox != noone)
     {
-        var _code = _code_textbox.text;
+        var _ip = _ip_textbox.text;
+        var _port = real(_port_textbox.text);
         
-        // Remove dashes if formatted (e.g., "C0A8-0164-19E6" -> "C0A80164-19E6")
-        _code = string_replace_all(_code, "-", "");
-        _code = string_replace_all(_code, " ", "");
-        
-        if (string_length(_code) > 0)
-        {
-            show_debug_message($"[MENU] Joining session with code: {_code}");
-            
-            if (global.relay_manager.join_session(_code))
-            {
-                // Connection initiated
-                show_debug_message("[MENU] Connection initiated...");
-            }
-            else
-            {
-                show_debug_message("[MENU] Failed to join session - invalid code?");
-            }
-        }
-        else
-        {
-            show_debug_message("[MENU] Please enter an invite code");
-        }
+        show_debug_message($"[MENU] Connecting to {_ip}:{_port}...");
+        network_connect_to_server(_ip, _port);
     }
     else
     {
-        show_debug_message("[MENU] Could not find invite code textbox!");
+        show_debug_message("[MENU] Could not find IP or Port textbox!");
     }
 }

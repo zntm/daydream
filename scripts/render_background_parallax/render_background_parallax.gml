@@ -3,14 +3,17 @@ function render_background_parallax(_sprite, _index, _x, _y, _camera_x, _camera_
     var _sprite_xoffset = sprite_get_xoffset(_sprite);
     var _width = sprite_get_width(_sprite);
     
-    var _parallax_factor = (_index + 1) * 0.05;
-    var _xoffset = (_x - _camera_x * _parallax_factor) % _width;
+    var _xoffset = (_x * (_index + 1) * 0.05) % _width;
     
     var _xsize = ceil(_camera_width / _width) + 1;
     
-    for (var i = -1; i <= _xsize; ++i)
+    for (var i = -_xsize; i <= _xsize; ++i)
     {
-        var _x2 = _camera_x + _xoffset + (i * _width);
+        var _x2 = _x + _xoffset + (i * _width);
+        
+        var _ = _x2 - _sprite_xoffset;
+        
+        if (_ + _width < _camera_x) || (_ >= _camera_x + _camera_width) continue;
         
         draw_sprite_ext(_sprite, 0, _x2, _y + _camera_height, 1, 1, 0, _colour, _alpha);
     }

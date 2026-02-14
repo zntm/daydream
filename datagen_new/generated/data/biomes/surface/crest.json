@@ -1,0 +1,71 @@
+{
+    "background": {
+        "blend": 0.7,
+        "id": "phantasia:background/ocean"
+    },
+    "is_ocean": true,
+    "music": [
+        {
+            "gain": 0.6,
+            "id": "phantasia:music/12_hours_at_ease"
+        },
+        {
+            "gain": 0.7,
+            "id": "phantasia:music/liminal"
+        }
+    ],
+    "terrain_modifier": {
+        "amplitude_scale": 0.3,
+        "height_offset": -80
+    },
+    "tile": {
+        "bottom_layer": {
+            "base": [
+                {
+                    "id": "phantasia:stone"
+                }
+            ],
+            "wall": [
+                {
+                    "id": "phantasia:stone_wall",
+                    "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
+                }
+            ]
+        },
+        "middle_layer": {
+            "base": [
+                {
+                    "id": "phantasia:gravel"
+                }
+            ],
+            "wall": [
+                {
+                    "id": "phantasia:stone_wall",
+                    "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
+                }
+            ]
+        },
+        "top_layer": {
+            "base": [
+                {
+                    "id": "phantasia:sand"
+                }
+            ],
+            "wall": [
+                {
+                    "id": "phantasia:sandstone_wall",
+                    "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
+                }
+            ]
+        }
+    }
+}

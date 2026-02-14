@@ -1,4 +1,4 @@
-global.region_data = {};
+global.region_data = {}
 
 function init_region_recursive(_directory, _namespace = "phantasia", _id = undefined)
 {
@@ -15,28 +15,23 @@ function init_region_recursive(_directory, _namespace = "phantasia", _id = undef
         if (directory_exists(_subdirectory))
         {
             init_region_recursive(_subdirectory, _namespace, _name);
+            
             continue;
         }
         
-        if (string_ends_with(_file, ".json"))
-        {
-            dbg_timer("init_region");
-            
-            var _json = tag_value_parse(buffer_load_json(_subdirectory));
-            
-            if (is_struct(_json))
-            {
-                var _name_clean = string_delete(_name, string_length(_name) - 4, 5);
-                var _full_id = $"{_namespace}:{_name_clean}";
-                
-                var _region_data = new RegionData(_full_id, _json);
-                
-                global.region_data[$ _full_id] = _region_data;
-                
-                delete _json;
-                
-                dbg_timer("init_region", $"[Init] Loaded Region: \'{_name_clean}\'");
-            }
-        }
+        dbg_timer("init_region");
+        
+        var _json = tag_value_parse(buffer_load_json(_subdirectory));
+        
+        var _id2 = string_delete(_file, string_length(_file) - 4, 5);
+        var _full_name = (_id == undefined) ? _id2 : $"{_id}/{_id2}";
+        
+        var _region_data = new RegionData(_full_name, _json);
+        
+        global.region_data[$ $"{_namespace}:{_full_name}"] = _region_data;
+        
+        delete _json;
+        
+        dbg_timer("init_region", $"[Init] Loaded Region: \'{_full_name}\'");
     }
 }

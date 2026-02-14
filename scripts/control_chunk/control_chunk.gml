@@ -46,7 +46,9 @@ function control_chunk(_player_x, _player_y, _camera_x, _camera_y, _camera_width
     {
         var _chunk = chunk_in_view[i];
         
-        if (_chunk == undefined) || (_chunk.boolean & (CHUNK_BOOLEAN.GENERATED | CHUNK_BOOLEAN.QUEUED)) continue;
+        if (_chunk == undefined) continue;
+        if (_chunk.boolean & CHUNK_BOOLEAN.GENERATED) continue;
+        if (_chunk.boolean & CHUNK_BOOLEAN.QUEUED) continue;
         
         // Calculate priority based on distance to player (lower = higher priority)
         var _priority = point_distance(_player_x, _player_y, _chunk.xcenter, _chunk.ycenter);

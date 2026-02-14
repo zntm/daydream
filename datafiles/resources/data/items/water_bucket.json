@@ -11,17 +11,13 @@
         },
         "on_use": [
             {
-<<<<<<< HEAD
                 "id": "@phantasia:item/bucket_place",
-=======
-                "id": "items/bucket_place",
->>>>>>> region
                 "parameters": {
                     "empty_bucket_id": "phantasia:bucket",
-                    "tick_delay": 5,
+                    "flow_speed": 8,
                     "fluid_collisions": [
                         {
-                            "id": "phantasia:stone",
+                            "id": "phantasia:obsidian",
                             "liquid_id": "phantasia:lava"
                         }
                     ],

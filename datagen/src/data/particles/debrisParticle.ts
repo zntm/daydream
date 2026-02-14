@@ -1,14 +1,14 @@
 import {
     DatagenReturnData,
     SmartValueFloatRandom,
-} from "../../lib";
+} from "../../..";
 import {
     Particle,
     ParticleSize,
     ParticleGravity,
     ParticleSpeed,
     ParticleDirection,
-} from "./lib/Particle";
+} from "../particles";
 
 export default [
     new DatagenReturnData(

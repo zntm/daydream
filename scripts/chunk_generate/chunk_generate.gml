@@ -20,10 +20,10 @@ function chunk_generate(_chunk, _context = undefined)
     }
     
     var _structures = global.structure_pool.query_range(
-        _chunk.chunk_xstart,
-        _chunk.chunk_ystart,
-        _chunk.chunk_xstart + CHUNK_SIZE,
-        _chunk.chunk_ystart + CHUNK_SIZE
+        _chunk.x - (TILE_SIZE / 2),
+        _chunk.y - (TILE_SIZE / 2),
+        _chunk.x - (TILE_SIZE / 2) + CHUNK_SIZE_DIMENSION,
+        _chunk.y - (TILE_SIZE / 2) + CHUNK_SIZE_DIMENSION
     );
     var _structure_rectangle_length = array_length(_structures);
     var __structure_array = _structures;
@@ -124,18 +124,18 @@ function chunk_generate(_chunk, _context = undefined)
         for (var l = 0; l < _structure_rectangle_length; ++l)
         {
             var _inst = __structure_array[l];
-            var _width  = _inst.width;
-            var _height = _inst.height;
-            var _rectangle = _width * _height;
+            var _xscale = _inst.image_xscale;
+            var _yscale = _inst.image_yscale;
+            var _rectangle = _xscale * _yscale;
             var _data = _inst.data;
             
-            var _rel_x = _inst.x - _chunk.chunk_xstart;
-            var _rel_y = _inst.y - _chunk.chunk_ystart;
+            var _rel_x = _inst.structure_xrelative - _chunk.chunk_xstart;
+            var _rel_y = _inst.structure_yrelative - _chunk.chunk_ystart;
             
             var _sx_start = max(0, -_rel_x);
-            var _sx_end = min(_width, CHUNK_SIZE - _rel_x);
+            var _sx_end = min(_xscale, CHUNK_SIZE - _rel_x);
             var _sy_start = max(0, -_rel_y);
-            var _sy_end = min(_height, CHUNK_SIZE - _rel_y);
+            var _sy_end = min(_yscale, CHUNK_SIZE - _rel_y);
             
             if (_sx_start >= _sx_end || _sy_start >= _sy_end) continue;
             
@@ -145,7 +145,7 @@ function chunk_generate(_chunk, _context = undefined)
                 for (var _sx = _sx_start; _sx < _sx_end; ++_sx)
                 {
                     var _chunk_x = _rel_x + _sx;
-                    var _structure_index = _sx + (_sy * _width);
+                    var _structure_index = _sx + (_sy * _xscale);
                     var _chunk_index = _chunk_x + (_chunk_y * CHUNK_SIZE);
                     
                     for (var m = CHUNK_DEPTH - 1; m >= 0; --m)
@@ -187,16 +187,18 @@ function chunk_generate(_chunk, _context = undefined)
         
         var _xorshift_val = xorshift(_world_seed ^ ((_world_x + _chunk.chunk_ystart) * _surface_height));
         
-        // Calculate Slope for Biome Selection (0 = flat, 1 = steep)
-        var _h_left = worldgen_get_surface_height(_world_x - 1, _world_seed, _world_data);
-        var _h_right = worldgen_get_surface_height(_world_x + 1, _world_seed, _world_data);
-        var _slope = max(abs(_surface_height - _h_left), abs(_h_right - _surface_height));
+        // HOIST: Biome Parameters (per column)
+        var _heat = worldgen_get_heat(_world_x, 0, _world_seed, _world_data);
+        var _humidity = worldgen_get_humidity(_world_x, 0, _world_seed, _world_data);
+        var _surface_biome = worldgen_get_biome_surface(_world_x, 0, _surface_height, _world_seed, _world_data, _heat, _humidity);
+        var _surface_biome_data = _global_biome_data[$ _surface_biome];
         
-        var _surface_biome = worldgen_get_biome_surface(_world_x, _surface_height, _surface_height, _world_seed, _world_data, _slope);
-        var _surface_biome_data = _global_biome_data[$ worldgen_resolve_id(_surface_biome)];
-        
-        // HOIST: Biome Blending Helpers (removed in Region Update)
-        // var _blend_range = ...
+        // HOIST: Biome Blending Helpers (avoid 6 calls per tile)
+        var _blend_range = (_context != undefined) ? _context.blend_range : _world_data.get_biome_blend_range();
+        var _heat_l = worldgen_get_heat(_world_x - _blend_range, 0, _world_seed, _world_data);
+        var _heat_r = worldgen_get_heat(_world_x + _blend_range, 0, _world_seed, _world_data);
+        var _humid_l = worldgen_get_humidity(_world_x - _blend_range, 0, _world_seed, _world_data);
+        var _humid_r = worldgen_get_humidity(_world_x + _blend_range, 0, _world_seed, _world_data);
         
         var _sky_biome_id = (_context != undefined) ? _context.sky_biome_id : _world_data.get_sky_biome_id();
         var _sky_biome_data = (_context != undefined) ? _context.sky_biome_data : _global_biome_data[$ _sky_biome_id];
@@ -240,7 +242,7 @@ function chunk_generate(_chunk, _context = undefined)
             }
             
             // --- OCEAN WATER ---
-            if (_surface_biome_data != undefined) && (_world_y < _surface_height) && (_world_y >= _world_surface_start) && (_surface_biome_data.is_ocean())
+            if (_world_y < _surface_height) && (_world_y >= _world_surface_start) && (_surface_biome_data.is_ocean())
             {
                 if !(_skip_z & (1 << CHUNK_DEPTH_LIQUID))
                 {
@@ -255,16 +257,17 @@ function chunk_generate(_chunk, _context = undefined)
                 }
             }
             
+            // --- CAVES AND SOLID TERRAIN ---
             if (_world_y >= _surface_height - 1)
             {
-                var _cave_biome = worldgen_get_biome_cave(_world_x, _world_y, _surface_height, _world_seed, _world_data);
+                var _heat_c = worldgen_get_cave_heat(_world_x, _world_y, _world_seed, _world_data);
+                var _humid_c = worldgen_get_cave_humidity(_world_x, _world_y, _world_seed, _world_data);
+                var _cave_biome = worldgen_get_biome_cave(_world_x, _world_y, _surface_height, _world_seed, _world_data, _heat_c, _humid_c);
                 var _is_cave = (_cave_bit_stream >> (j + 1)) & 1;
-                
-                var _cave_biome_id = worldgen_resolve_id(_cave_biome);
                 
                 if !(_skip_z & (1 << CHUNK_DEPTH_DEFAULT)) && !_is_cave && _world_y >= _surface_height
                 {
-                    var _tile_base = worldgen_get_tile_base(_world_x, _world_y, _surface_biome, _cave_biome, _surface_height, (_cave_bit_stream >> j) & 1, _world_seed, _world_data, _global_biome_data);
+                    var _tile_base = worldgen_get_tile_base(_world_x, _world_y, _surface_biome, _cave_biome, _surface_height, (_cave_bit_stream >> j) & 1, _world_seed, _world_data, _global_biome_data, _heat, _humidity);
                     if (_tile_base != TILE_EMPTY)
                     {
                         var _d = _item_data[$ _tile_base];
@@ -333,7 +336,7 @@ function chunk_generate(_chunk, _context = undefined)
                 var _is_floor = (_cave_bit_stream >> (j + 1)) & 1 && !((_cave_bit_stream >> (j + 2)) & 1);
                 if (_is_floor)
                 {
-                    var _tile_next = worldgen_get_tile_base(_world_x, _world_y + 1, _surface_biome, undefined, _surface_height, true, _world_seed, _world_data, _global_biome_data);
+                    var _tile_next = worldgen_get_tile_base(_world_x, _world_y + 1, _surface_biome, undefined, _surface_height, true, _world_seed, _world_data, _global_biome_data, _heat, _humidity);
                     var _foliage_id = worldgen_get_tile_foliage(_world_x, _world_y, _surface_biome, undefined, _tile_next, _surface_height, _world_seed, _global_biome_data);
                     
                     if (_foliage_id != TILE_EMPTY)

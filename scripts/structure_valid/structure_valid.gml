@@ -1,11 +1,27 @@
-function structure_valid(_tx, _ty, _id, _seed)
+function structure_valid(_x, _y, _id, _seed)
 {
     static __size = function(_v, _width, _height)
     {
-        if (_v == "width")   return _width;
-        if (_v == "-width")  return -_width;
-        if (_v == "height")  return _height;
-        if (_v == "-height") return -_height;
+        if (_v == "width")
+        {
+            return _width;
+        }
+        
+        if (_v == "-width")
+        {
+            return -_width;
+        }
+        
+        if (_v == "height")
+        {
+            return _height;
+        }
+        
+        if (_v == "-height")
+        {
+            return -_height;
+        }
+        
         return _v;
     }
     
@@ -15,11 +31,23 @@ function structure_valid(_tx, _ty, _id, _seed)
     var _width  = smart_value(_structure_data.get_width());
     var _height = smart_value(_structure_data.get_height());
     
+    if (_width & 1)
+    {
+        _x -= TILE_SIZE / 2;
+    }
+    
+    if (_height & 1)
+    {
+        _y -= TILE_SIZE / 2;
+    }
+    
     if (_structure_data.has_clearance_condition())
     {
         var _clearance_condition = _structure_data.get_placement_clearance_condition();
         var _clearance_condition_length = _structure_data.get_placement_clearance_condition_length();
-        var _if_clear = _structure_data.get_if_clear();
+        
+        var _tile_x = round(_x / TILE_SIZE);
+        var _tile_y = round(_y / TILE_SIZE);
         
         for (var i = 0; i < _clearance_condition_length; ++i)
         {
@@ -36,17 +64,15 @@ function structure_valid(_tx, _ty, _id, _seed)
             
             for (var j = 0; j < _abs_clearance_condition_width; ++j)
             {
-                var _x2 = _tx + j + _xoffset;
+                var _x2 = _tile_x + j + _xoffset;
+                
                 var _surface_height = worldgen_get_surface_height(_x2, _seed, _world_data);
                 
-                // If if_clear is true, ensure the structure's footprint is not below the local surface
-                // We check if the bottom of where the structure would be (top + height) is deeper than the surface
-                if (_if_clear) && (_ty + _height > _surface_height) return false;
-                
-                if (_ty + _abs_clearance_condition_height + _yoffset < _surface_height) continue;
+                if (_tile_y + _abs_clearance_condition_height + _yoffset < _surface_height) continue;
                 
                 var l = 0;
-                while (_ty + l + _yoffset < _surface_height) && (l < _abs_clearance_condition_height)
+                
+                while (_tile_y + l + _yoffset < _surface_height) && (l < _abs_clearance_condition_height)
                 {
                     ++l;
                 }
@@ -55,7 +81,8 @@ function structure_valid(_tx, _ty, _id, _seed)
                 
                 for (; l < _abs_clearance_condition_height; ++l)
                 {
-                    var _y2 = _ty + l + _yoffset;
+                    var _y2 = _tile_y + l + _yoffset;
+                    
                     if (!worldgen_get_cave(_x2, _y2, _surface_height, _cave_start, _seed, _world_data)) return false;
                 }
             }

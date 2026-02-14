@@ -1,14 +1,14 @@
-/// @desc Get surface height at world x position (uniform across all biomes within a region, blended at edges)
+/// @desc Get surface height at world x position (uniform across all biomes)
 /// @param {Real} _x World X position
 /// @param {Real} _seed World seed
 /// @param {Struct} _world_data World data struct
 /// @returns {Real} Surface height (in tiles)
 function worldgen_get_surface_height(_x, _seed, _world_data = global.world_data[$ global.world_save_data.dimension])
 {
-    var _surface_start = _world_data.get_surface_start();
-    var _smoothing = _world_data.get_biome_transition_smoothing();
+    // 1. Find region at this position
+    var _region = global.region_generator.get_region(_x, 0, 0, _seed);
+    var _terrain = _region.get_terrain();
     
-<<<<<<< HEAD
     // 2. Resolve surface biome at this position (for subtle modifiers)
     var _biome = _region.get_surface_biome(_x, 0, _seed);
     
@@ -24,23 +24,24 @@ function worldgen_get_surface_height(_x, _seed, _world_data = global.world_data[
     {
         show_debug_message($"[WorldGen] Warning: Surface biome undefined at x={_x}. Using defaults.");
     }
-=======
-    var _blend = _world_data.get_region_blend_data(_x, 0, _seed);
->>>>>>> region
     
-    if (_blend == undefined) return _surface_start;
+    // 3. Extract terrain parameters
+    var _base_height = _terrain.base_height + _terrain.height_offset + _biome_offset;
+    var _amplitude_min = _terrain.amplitude_min;
+    var _amplitude_max = _terrain.amplitude_max;
+    var _noise_scale = _terrain.noise_scale;
+    var _gradient_strength = _terrain.gradient_strength;
     
-    var _h1 = _blend.r1.get_surface_height(_x, _seed);
+    // 4. Calculate terrain noise
+    // Using simple voronoi-influenced simplex noise for height
+    var _noise = open_simplex_noise(_x * _noise_scale, _seed * 0.1, 1.0, 3);
+    var _noise_norm = (_noise + 1) * 0.5;
     
-    // Calculate blend factor (0.5 at edge, 1.0 at smoothing distance)
-    var _factor = 0.5 + (_blend.diff / (2 * _smoothing));
+    // Amplitude varies with noise
+    var _amplitude = lerp(_amplitude_min, _amplitude_max, _noise_norm) * _biome_amp_scale;
     
-    if (_factor >= 1.0)
-    {
-        return round(_surface_start + _h1);
-    }
+    // Final height calculation
+    var _height = _base_height + round(_noise * _amplitude);
     
-    var _h2 = _blend.r2.get_surface_height(_x, _seed);
-    
-    return round(_surface_start + lerp(_h2, _h1, _factor));
+    return _height;
 }

@@ -2,8 +2,8 @@
     "inventory": "#phantasia:item/generic/inventory_tool",
     "item": {
         "armor": {
-            "defense": 6,
-            "type": "helmet"
+            "type": "helmet",
+            "defense": 6
         },
         "durability": {
             "amount": 494,

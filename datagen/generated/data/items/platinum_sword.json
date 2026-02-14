@@ -1,15 +1,11 @@
 {
     "inventory": "#phantasia:item/generic/inventory_tool",
     "item": {
-        "damage": 13,
         "durability": {
             "amount": 1239,
             "bar": "#phantasia:item/generic/durability_bar"
         },
-        "harvest": {
-            "hardness": 0,
-            "level": 0
-        }
+        "damage": 13
     },
     "sprite": "phantasia:item/platinum_sword",
     "type": "tool"

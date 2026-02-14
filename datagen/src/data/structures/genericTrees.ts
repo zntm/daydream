@@ -1,4 +1,4 @@
-import { DatagenReturnData, SmartValueIntRandom } from "../../lib";
+import { DatagenReturnData, SmartValueIntRandom } from "../../../index";
 
 import {
     Structure,
@@ -7,7 +7,7 @@ import {
     StructurePlacement,
     StructurePlacementClearanceCondition,
     StructurePlacementType,
-} from "./lib/Structure";
+} from "../structures";
 
 const { StructureParameter: StructureOreParameter } = import.meta.require(
     "./ores",
@@ -51,7 +51,7 @@ class StructureParameter {
 export default [
     // Birch
     new DatagenReturnData(
-        "tree/birch.json",
+        "generated/data/structures/tree/birch.json",
         new Structure(
             7,
             new SmartValueIntRandom(9, 12),
@@ -67,7 +67,6 @@ export default [
                         4,
                     ),
                 ],
-                true,
             ),
             new StructureFunction(
                 "phantasia:tree/generic",
@@ -89,7 +88,7 @@ export default [
     ),
     // Mangrove
     new DatagenReturnData(
-        "tree/mangrove.json",
+        "generated/data/structures/tree/mangrove.json",
         new Structure(
             7,
             new SmartValueIntRandom(7, 10),
@@ -105,7 +104,6 @@ export default [
                         6,
                     ),
                 ],
-                true,
             ),
             new StructureFunction(
                 "phantasia:tree/generic",
@@ -127,7 +125,7 @@ export default [
     ),
     // Mangrove Roots
     new DatagenReturnData(
-        "tree/mangrove_roots.json",
+        "generated/data/structures/tree/mangrove_roots.json",
         new Structure(
             5,
             5,
@@ -145,7 +143,7 @@ export default [
     ),
     // Oak
     new DatagenReturnData(
-        "tree/oak.json",
+        "generated/data/structures/tree/oak.json",
         new Structure(
             5,
             new SmartValueIntRandom(6, 9),
@@ -161,7 +159,6 @@ export default [
                         4,
                     ),
                 ],
-                true,
             ),
             new StructureFunction(
                 "phantasia:tree/generic",

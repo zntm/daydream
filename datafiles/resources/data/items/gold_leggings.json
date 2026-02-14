@@ -7,13 +7,9 @@
         },
         "durability": {
             "amount": 531,
-            "bar": "#phantasia:item/generic/inventory_armor"
+            "bar": "#phantasia:item/generic/durability_bar"
         }
     },
     "sprite": "phantasia:item/gold_leggings",
-<<<<<<< HEAD
     "type": "accessory"
-=======
-    "type": "tool"
->>>>>>> region
 }

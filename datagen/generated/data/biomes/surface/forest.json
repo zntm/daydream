@@ -1,7 +1,7 @@
 {
     "background": {
-        "blend": 0.7,
-        "id": "phantasia:background/forest"
+        "id": "phantasia:background/forest",
+        "blend": 0.7
     },
     "creatures": [
         {
@@ -197,15 +197,15 @@
         "height_offset": 0
     },
     "tile": {
-        "bottom_layer": {
+        "top_layer": {
             "base": [
                 {
-                    "id": "phantasia:stone"
+                    "id": "phantasia:grass_block"
                 }
             ],
             "wall": [
                 {
-                    "id": "phantasia:stone_wall",
+                    "id": "phantasia:dirt_wall",
                     "weight": 4
                 },
                 {
@@ -229,15 +229,15 @@
                 }
             ]
         },
-        "top_layer": {
+        "bottom_layer": {
             "base": [
                 {
-                    "id": "phantasia:grass_block"
+                    "id": "phantasia:stone"
                 }
             ],
             "wall": [
                 {
-                    "id": "phantasia:dirt_wall",
+                    "id": "phantasia:stone_wall",
                     "weight": 4
                 },
                 {

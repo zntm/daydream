@@ -1,0 +1,17 @@
+{
+    "attribute": "regeneration_amount",
+    "base_value": 1,
+    "icon": "phantasia:item/stone",
+    "modifiers": [
+        {
+            "operation": "multiply",
+            "value": "level"
+        }
+    ],
+    "particle": {
+        "chance": 0.1,
+        "colour": "#FF6666",
+        "id": "phantasia:particle/entity/effect"
+    },
+    "type": "constant"
+}

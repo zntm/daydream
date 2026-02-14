@@ -16,8 +16,7 @@ function init_setting(_category, _type, _data)
     global.settings[$ _type] = _data.get_default_value();
 }
 
-global.loca_directories = file_read_directory($"{PROGRAM_DIRECTORY_RESOURCES}/loca");
-var _loca = global.loca_directories;
+var _loca = file_read_directory($"{PROGRAM_DIRECTORY_RESOURCES}\\loca");
 
 #region General
 
@@ -41,12 +40,11 @@ init_setting("accessibility", "global_refresh_rate", new SettingsData(SETTINGS_T
 init_setting("accessibility", "global_localization", new SettingsData(SETTINGS_TYPE.ARROW, 0)
     .add_values(array_map(_loca, function(_value)
     {
-        var _split = string_split(_value, ". ");
-        return (array_length(_split) > 1) ? _split[1] : _value;
+        return string_split(_value, ". ")[1];
     }))
     .set_on_update(function(_name, _value)
     {
-        init_loca($"{PROGRAM_DIRECTORY_RESOURCES}/loca/{global.loca_directories[_value]}", "phantasia");
+        init_loca($"{PROGRAM_DIRECTORY_RESOURCES}\\loca\\{_loca[_value]}", "phantasia");
     }));
 
 #endregion
@@ -184,4 +182,4 @@ if (file_exists("settings.dat"))
 
 audio_set_master_gain(0, global.settings.audio_master);
 
-init_loca($"{PROGRAM_DIRECTORY_RESOURCES}/loca/{global.loca_directories[global.settings.global_localization]}", "phantasia");
+init_loca($"{PROGRAM_DIRECTORY_RESOURCES}\\loca\\{_loca[global.settings.global_localization]}", "phantasia");

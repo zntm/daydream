@@ -7,13 +7,9 @@
         },
         "durability": {
             "amount": 494,
-            "bar": "#phantasia:item/generic/inventory_armor"
+            "bar": "#phantasia:item/generic/durability_bar"
         }
     },
     "sprite": "phantasia:item/gold_helmet",
-<<<<<<< HEAD
     "type": "accessory"
-=======
-    "type": "tool"
->>>>>>> region
 }

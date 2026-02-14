@@ -51,10 +51,8 @@ function ParticlePool() : Pool() constructor
     gravity_point_y = array_create(PARTICLE_POOL_SIZE, undefined);
     gravity_point_function = array_create(PARTICLE_POOL_SIZE, undefined);
     
-    wind_factor = array_create(PARTICLE_POOL_SIZE, 0);
-    
     is_additive = array_create(PARTICLE_POOL_SIZE, false);
-    can_destroy_on_tile_collision = array_create(PARTICLE_POOL_SIZE, false);
+    is_destroy_on_collision = array_create(PARTICLE_POOL_SIZE, false);
     
     active_count = 0;
     pool_size = PARTICLE_POOL_SIZE;
@@ -106,25 +104,6 @@ function ParticlePool() : Pool() constructor
         free_stack[@ ++free_stack_top] = _index;
         
         --active_count;
-    }
-    
-    /// @function clear_all()
-    /// @desc Clear all active particles and reset the pool
-    static clear_all = function()
-    {
-        active_count = 0;
-        collision_count = 0;
-        collision_indices = [];
-        
-        for (var i = 0; i < pool_size; ++i)
-        {
-            active[@ i] = false;
-            free_stack[@ i] = i;
-        }
-        
-        free_stack_top = pool_size - 1;
-        
-        show_debug_message($"[PARTICLE_POOL] Cleared all particles");
     }
     
     static spawn = function(_x, _y, _particle_id, _tint = c_white)
@@ -219,10 +198,8 @@ function ParticlePool() : Pool() constructor
         
         gravity_point_function[@ _index] = _data.get_gravity_point_function();
         
-        wind_factor[@ _index] = smart_value(_data.get_wind_factor());
-        
         has_collision[@ _index] = _data.has_collision();
-        can_destroy_on_tile_collision[@ _index] = _data.can_destroy_on_tile_collision();
+        is_destroy_on_collision[@ _index] = _data.is_destroy_on_collision();
         
         if (has_collision[_index])
         {
@@ -397,13 +374,6 @@ function ParticlePool() : Pool() constructor
                     }
                 }
                 
-                var _wind = global.world_save_data.weather_wind;
-                
-                if (_wind != 0) && (wind_factor[i] != 0)
-                {
-                    xvelocity[@ i] += _wind * wind_factor[i] * _dt;
-                }
-                
                 px[@ i] += xvelocity[i] * _dt;
                 py[@ i] += yvelocity[i] * _dt;
             }
@@ -430,21 +400,44 @@ function ParticlePool() : Pool() constructor
                 yvelocity[@ i] += lengthdir_y(gravity_amount[i], gravity_direction[i]);
             }
             
-            var _wind = global.world_save_data.weather_wind;
+            var _gravity_point_x = gravity_point_x[i];
+            var _gravity_point_y = gravity_point_y[i];
             
-            if (_wind != 0) && (wind_factor[i] != 0)
+            var _gravity_point_function = gravity_point_function[i];
+            
+            if (_gravity_point_function != undefined)
             {
-                var _target_wind_vel = _wind * wind_factor[i] * 5; // Target horizontal speed from wind
-                xvelocity[@ i] += (_target_wind_vel - xvelocity[i]) * 0.1; 
+                try
+                {
+                    var _result = proglang_execute(_gravity_point_function);
+                    
+                    if (is_struct(_result))
+                    {
+                        _gravity_point_x = _result[$ "x"] ?? _gravity_point_x;
+                        _gravity_point_y = _result[$ "y"] ?? _gravity_point_y;
+                    }
+                }
+                catch (e)
+                {
+                }
             }
             
-            // Apply general air resistance/damping
-            xvelocity[@ i] *= 0.98;
-            yvelocity[@ i] *= 0.99;
+            if (_gravity_point_x != undefined) && (_gravity_point_y != undefined)
+            {
+                var _dist = point_distance(px[i], py[i], _gravity_point_x, _gravity_point_y);
+                
+                if (_dist > 1)
+                {
+                    var _force = gravity_amount[i] / max(1, _dist * 0.1);
+                    
+                    var _gravity_point_direction = point_direction(px[i], py[i], _gravity_point_x, _gravity_point_y);
+                    
+                    xvelocity[@ i] += lengthdir_x(_force, _gravity_point_direction);
+                    yvelocity[@ i] += lengthdir_y(_force, _gravity_point_direction);
+                }
+            }
             
-            var _particle_data = global.particle_data[$ particle_id[i]];
-            var _sprite_name = _particle_data.get_sprite();
-            var _sprite = _sprite_asset[$ _sprite_name].get_sprite();
+            var _sprite = _sprite_asset[$ global.particle_data[$ particle_id[i]].get_sprite()].get_sprite();
             
             var _xoffset = sprite_get_xoffset(_sprite);
             var _yoffset = sprite_get_yoffset(_sprite);
@@ -468,25 +461,14 @@ function ParticlePool() : Pool() constructor
                 var _x2 = _new_x + max(_bbox_l, _bbox_r);
                 var _y2 = py[i]  + max(_bbox_t, _bbox_b);
                 
-                var _hit_tile = tile_rectangle_meeting(_x1, _y1, _x2, _y2);
-                if (_hit_tile != false)
+                if (tile_rectangle_meeting(_x1, _y1, _x2, _y2))
                 {
-                    if (can_destroy_on_tile_collision[i])
+                    // todo: replace with proglang
+                    if (is_destroy_on_collision[i])
                     {
                         release(i);
+                        
                         continue;
-                    }
-                    
-                    // Snap to wall
-                    if (_xvelocity > 0)
-                    {
-                        var _collision_x = floor(_x2 / TILE_SIZE) * TILE_SIZE;
-                        px[@ i] = _collision_x - max(_bbox_l, _bbox_r) - 0.01;
-                    }
-                    else
-                    {
-                        var _collision_x = ceil(_x1 / TILE_SIZE) * TILE_SIZE;
-                        px[@ i] = _collision_x - min(_bbox_l, _bbox_r) + 0.01;
                     }
                     
                     xvelocity[@ i] = 0;
@@ -508,28 +490,14 @@ function ParticlePool() : Pool() constructor
                 var _x2 = px[i]  + max(_bbox_l, _bbox_r);
                 var _y2 = _new_y + max(_bbox_t, _bbox_b);
                 
-                var _hit_tile = tile_rectangle_meeting(_x1, _y1, _x2, _y2);
-                if (_hit_tile != false)
+                if (tile_rectangle_meeting(_x1, _y1, _x2, _y2))
                 {
-                    if (can_destroy_on_tile_collision[i])
+                    // todo: replace with proglang
+                    if (is_destroy_on_collision[i])
                     {
                         release(i);
-                        continue;
-                    }
-                    
-                    // Snap to floor/ceiling
-                    if (_yvelocity > 0)
-                    {
-                        var _collision_y = floor(_y2 / TILE_SIZE) * TILE_SIZE;
-                        py[@ i] = _collision_y - max(_bbox_t, _bbox_b) - 0.01;
                         
-                        // Apply ground friction
-                        xvelocity[@ i] *= 0.5;
-                    }
-                    else
-                    {
-                        var _collision_y = ceil(_y1 / TILE_SIZE) * TILE_SIZE;
-                        py[@ i] = _collision_y - min(_bbox_t, _bbox_b) + 0.01;
+                        continue;
                     }
                     
                     yvelocity[@ i] = 0;

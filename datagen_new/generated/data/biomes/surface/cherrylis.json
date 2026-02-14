@@ -1,0 +1,144 @@
+{
+    "background": {
+        "blend": 0.7,
+        "id": "phantasia:background/forest"
+    },
+    "creatures": [
+        {
+            "amount": {
+                "type": "smart_value:irandom",
+                "values": {
+                    "max": 4,
+                    "min": 1
+                }
+            },
+            "chance": 0.015,
+            "id": "phantasia:rabbit",
+            "tile": "#phantasia:tile/creature_spawn/animal",
+            "time_range_max": 890,
+            "time_range_min": 0
+        }
+    ],
+    "foliage": [
+        {
+            "chance": 0.18,
+            "generate_on": "#phantasia:tile/placement/plant_on",
+            "id": "phantasia:short_grass"
+        },
+        {
+            "chance": 0.02,
+            "generate_on": "#phantasia:tile/placement/plant_on",
+            "id": "phantasia:tall_grass"
+        },
+        {
+            "chance": 0.08,
+            "generate_on": "#phantasia:tile/placement/plant_on",
+            "id": "phantasia:rose"
+        },
+        {
+            "chance": 0.06,
+            "generate_on": "#phantasia:tile/placement/plant_on",
+            "id": "phantasia:globeflower"
+        }
+    ],
+    "music": [
+        {
+            "gain": 0.7,
+            "id": "phantasia:music/field_of_concourse"
+        },
+        {
+            "gain": 0.7,
+            "id": "phantasia:music/liminal"
+        },
+        {
+            "gain": 0.6,
+            "id": "phantasia:music/red_apple"
+        },
+        {
+            "gain": 0.6,
+            "id": "phantasia:music/soft_hour"
+        },
+        {
+            "gain": 0.7,
+            "id": "phantasia:music/someday_it_will_rain"
+        }
+    ],
+    "shore_tiles": {
+        "base": [
+            {
+                "id": "phantasia:sand"
+            }
+        ],
+        "wall": [
+            {
+                "id": "phantasia:sandstone_wall",
+                "weight": 4
+            },
+            {
+                "id": "$EMPTY"
+            }
+        ]
+    },
+    "structures": [
+        {
+            "chance": 0.12,
+            "generate_on": "#phantasia:tile/placement/plant_on",
+            "id": "phantasia:tree/cherry"
+        },
+        {
+            "chance": 0.02,
+            "generate_on": "#phantasia:tile/placement/plant_on",
+            "id": "phantasia:tree/oak"
+        }
+    ],
+    "tile": {
+        "bottom_layer": {
+            "base": [
+                {
+                    "id": "phantasia:stone"
+                }
+            ],
+            "wall": [
+                {
+                    "id": "phantasia:stone_wall",
+                    "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
+                }
+            ]
+        },
+        "middle_layer": {
+            "base": [
+                {
+                    "id": "phantasia:dirt"
+                }
+            ],
+            "wall": [
+                {
+                    "id": "phantasia:dirt_wall",
+                    "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
+                }
+            ]
+        },
+        "top_layer": {
+            "base": [
+                {
+                    "id": "phantasia:grass_block"
+                }
+            ],
+            "wall": [
+                {
+                    "id": "phantasia:dirt_wall",
+                    "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
+                }
+            ]
+        }
+    }
+}

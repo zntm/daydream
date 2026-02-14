@@ -23,103 +23,6 @@ function WorldCelestial(_id, _time_range_min, _time_range_max) constructor
 function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id) constructor
 {
     ___world_height = _world_height;
-    ___region_generator = undefined;
-    ___regions_ids = undefined;
-    ___regions_objects = undefined;
-    ___biome_transition_smoothing = 0.5;
-    ___surface_biome = undefined;
-    ___cave_biome = undefined;
-    ___sky_biome = undefined;
-    ___surface_start = 0;
-    ___spawn_interval = 2.0;
-    ___vignette_ystart = 0;
-    ___vignette_yend = 0;
-    ___vignette_colour = c_black;
-    ___time_start = 0;
-    ___time_diurnal = [];
-    ___time_diurnal_length = 0;
-    ___time_length = 1200;
-    ___celestial = [];
-    ___celestial_length = 0;
-    
-    // Surface Generation
-    ___surface_noise_offset_max = 0;
-    ___surface_noise_offset_min = 0;
-    ___surface_noise_offset_octaves = 1;
-    ___surface_noise_offset_scale = 0.01;
-    ___surface_noise_offset_y = 0;
-    ___surface_smoothing_range = 32;
-    ___surface_smoothing_factor = 0.6;
-    ___surface_noise_scale = 0.01;
-    ___surface_seed_offset = 0;
-    ___surface_min_depth = 8;
-    ___bedrock_depth = 3;
-    ___bedrock_noise_scale = 0.3;
-    ___tile_variation_noise_scale = 0.05;
-    ___biome_blend_range = 24;
-    ___biome_blend_noise_scale = 0.08;
-    ___surface_biome_map = undefined;
-    
-    // Cave Generation
-    ___cave_start_max = 0;
-    ___cave_start_min = 0;
-    ___cave_start_octaves = 1;
-    ___cave_start_noise_scale = 0.01;
-    ___cave_start_offset = 0;
-    ___cave_system = [];
-    ___cave_system_length = 0;
-    ___aquifers = [];
-    ___aquifers_length = 0;
-    ___cave_noise_scale = 0.01;
-    ___cave_breach_threshold = 242;
-    ___cave_breach_depth = -8;
-    ___cave_transition_threshold = 220;
-    ___cave_breach_noise_scale_x = 0.03;
-    ___cave_breach_noise_scale_y = 0.03;
-    ___cave_breach_noise_offset_y = 1000;
-    ___cave_breach_noise_range = 255;
-    ___cave_breach_noise_octaves = 2;
-    ___cave_transition_noise_scale_x = 0.02;
-    ___cave_transition_noise_scale_y = 0.02;
-    ___cave_transition_noise_range = 255;
-    ___cave_transition_noise_octaves = 3;
-    ___cave_depth_smoothing = [{ position: 0, value: 1 }];
-    
-    // Cave Biomes (Legacy/Fallback)
-    ___cave_biome_default = [];
-    ___cave_biome_default_length = 0;
-    ___cave_biome_depth_zones = [];
-    ___cave_biome_depth_zones_length = 0;
-    ___cave_biome_map = undefined;
-    ___cave_biome_heat = undefined;
-    ___cave_biome_humidity = undefined;
-    ___cave_heat_noise_scale_x = 0;
-    ___cave_heat_noise_scale_y = 0;
-    ___cave_heat_range = 0;
-    ___cave_humidity_noise_scale_x = 0;
-    ___cave_humidity_noise_scale_y = 0;
-    ___cave_humidity_offset_y = 0;
-    ___cave_humidity_range = 0;
-    ___cave_humidity_octaves_offset = 0;
-    
-    // Sky Biomes
-    ___sky_biome_threshold = 256;
-    ___sky_biome_id = "phantasia:sky/floating_islands";
-    ___sky_biome_enabled = true;
-    ___sky_island_spacing = 32;
-    ___sky_island_radius = 18;
-    ___sky_island_thickness = 10;
-    ___sky_noise_scale_region = 0.12;
-    ___sky_noise_scale_edge = 0.15;
-    ___sky_noise_scale_detail = 0.3;
-    ___sky_region_offset_y = 1000;
-    ___sky_region_range = 255;
-    ___sky_region_octaves = 2;
-    ___sky_region_threshold = 60;
-    ___sky_edge_noise_amplitude = 1;
-    ___sky_edge_noise_octaves = 1;
-    ___sky_detail_noise_amplitude = 1;
-    ___sky_detail_noise_octaves = 1;
     
     static get_world_height = function()
     {
@@ -142,7 +45,7 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
     {
         ___vignette_ystart = _ystart;
         ___vignette_yend = _yend;
-        ___vignette_colour = is_string(_colour) ? hex_parse(_colour) : _colour;
+        ___vignette_colour = _colour;
         
         return self;
     }
@@ -212,171 +115,13 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         return ___celestial_length;
     }
     
-    static set_cave_biome = function(_cave_biome)
-    {
-        ___cave_biome = _cave_biome;
-        
-        // Note: Legacy cave biome map parsing removed.
-        // Biome selection is now handled via Regions.
-        
-        return self;
-    }
-    
-    static get_cave_biome_default = function()
-    {
-        return ___cave_biome_default;
-    }
-    
-    static get_cave_biome_default_length = function()
-    {
-        return ___cave_biome_default_length;
-    }
-    
-    static get_cave_biome_depth_zones = function()
-    {
-        return ___cave_biome_depth_zones;
-    }
-    
-    static get_cave_biome_depth_zones_length = function()
-    {
-        return ___cave_biome_depth_zones_length;
-    }
-    
-    static set_cave_biome_map = function(_map)
-    {
-        ___cave_biome_map = _map;
-        
-        return self;
-    }
-    
-    static get_cave_biome_map = function()
-    {
-        return self[$ "___cave_biome_map"];
-    }
-    
-    static get_cave_biome_heat = function()
-    {
-        return self[$ "___cave_biome_heat"];
-    }
-    
-    static get_cave_biome_humidity = function()
-    {
-        return self[$ "___cave_biome_humidity"];
-    }
-    
-    static get_cave_heat_noise_scale_x = function() { return ___cave_heat_noise_scale_x; }
-    static get_cave_heat_noise_scale_y = function() { return ___cave_heat_noise_scale_y; }
-    static get_cave_heat_range = function() { return ___cave_heat_range; }
-    
-    static get_cave_humidity_noise_scale_x = function() { return ___cave_humidity_noise_scale_x; }
-    static get_cave_humidity_noise_scale_y = function() { return ___cave_humidity_noise_scale_y; }
-    static get_cave_humidity_offset_y = function() { return ___cave_humidity_offset_y; }
-    static get_cave_humidity_range = function() { return ___cave_humidity_range; }
-    static get_cave_humidity_octaves_offset = function() { return ___cave_humidity_octaves_offset; }
-    
-    static set_surface_biome = function(_surface_biome)
-    {
-        ___surface_biome = _surface_biome;
-        
-        // Note: Legacy surface biome map parsing removed.
-        // Biome selection is now handled via Regions.
-        
-        return self;
-    }
-    
-    static get_surface_biome = function()
-    {
-        return ___surface_biome;
-    }
-    
-    static set_surface = function(_surface)
-    {
-        ___surface_start = _surface.start;
-        
-        var _noise_offset = _surface.noise_offset;
-        ___surface_noise_offset_max = _noise_offset.max;
-        ___surface_noise_offset_min = _noise_offset.min;
-        ___surface_noise_offset_octaves = _noise_offset.octaves;
-        ___surface_noise_offset_scale = _noise_offset[$ "scale"] ?? 0.015625;
-        ___surface_noise_offset_y = _noise_offset[$ "y_offset"] ?? -48;
-        
-        var _smoothing = _surface[$ "smoothing"];
-        ___surface_smoothing_range = _smoothing[$ "range"] ?? 32;
-        ___surface_smoothing_factor = _smoothing[$ "factor"] ?? 0.6;
-        
-        
-        ___surface_noise_scale = _surface[$ "noise_scale"] ?? _surface[$ "scale"] ?? 0.015625;
-        ___surface_seed_offset = _surface[$ "seed_offset"] ?? -40;
-        ___surface_min_depth = _surface[$ "min_depth"] ?? 8;
-        
-        ___bedrock_depth = _surface[$ "bedrock_depth"] ?? 3;
-        ___bedrock_noise_scale = _surface[$ "bedrock_noise_scale"] ?? 0.3;
-        ___tile_variation_noise_scale = _surface[$ "tile_variation_noise_scale"] ?? 0.05;
-        ___biome_blend_range = _surface[$ "biome_blend_range"] ?? 24;
-        ___biome_blend_noise_scale = _surface[$ "biome_blend_noise_scale"] ?? 0.08;
-        
-        return self;
-    }
-    
-    static set_biome_transition_smoothing = function(_smoothing)
-    {
-        ___biome_transition_smoothing = _smoothing;
-        return self;
-    }
-    
-    static get_surface_start = function()
-    {
-        return ___surface_start;
-    }
-    
-    static get_surface_noise_offset_max = function()
-    {
-        return ___surface_noise_offset_max;
-    }
-    
-    static get_surface_noise_offset_min = function()
-    {
-        return ___surface_noise_offset_min;
-    }
-    
-    static get_surface_noise_offset_octaves = function()
-    {
-        return ___surface_noise_offset_octaves;
-    }
-
-    static get_surface_noise_offset_scale = function()
-    {
-        return ___surface_noise_offset_scale;
-    }
-
-    static get_surface_noise_offset_y = function()
-    {
-        return ___surface_noise_offset_y;
-    }
-    
-    static get_surface_smoothing_range = function()
-    {
-        return ___surface_smoothing_range;
-    }
-    
-    static get_surface_smoothing_factor = function()
-    {
-        return ___surface_smoothing_factor;
-    }
-    
-    static get_surface_noise_scale = function()
-    {
-        return ___surface_noise_scale;
-    }
-    
     static set_cave = function(_cave)
     {
         var _start = _cave.start;
         ___cave_start_max = _start.max;
         ___cave_start_min = _start.min;
-        ___cave_start_min = _start.min;
         ___cave_start_octaves = _start.octaves;
-        ___cave_start_noise_scale = _start[$ "noise_scale"] ?? _start[$ "scale"] ?? 0.015625;
+        ___cave_start_noise_scale = _start[$ "noise_scale"] ?? 0.015625;
         ___cave_start_offset = _start[$ "offset"] ?? -8;
         
         ___cave_system = _cave.system;
@@ -401,7 +146,7 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
             ___aquifers_length = 0;
         }
         
-        ___cave_noise_scale = _cave[$ "noise_scale"] ?? _cave[$ "scale"] ?? 0.015625;
+        ___cave_noise_scale = _cave[$ "noise_scale"] ?? 0.015625;
         ___cave_breach_threshold = _cave[$ "breach_threshold"] ?? 242;
         ___cave_breach_depth = _cave[$ "breach_depth"] ?? -8;
         ___cave_transition_threshold = _cave[$ "transition_threshold"] ?? 220;
@@ -755,122 +500,7 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
     {
         return ___sky_edge_noise_octaves;
     }
-    
-    static get_sky_detail_noise_amplitude = function() { return ___sky_detail_noise_amplitude; }
-    static get_sky_detail_noise_octaves = function() { return ___sky_detail_noise_octaves; }
-    
-    static set_biome_transition_smoothing = function(_smoothing)
-    {
-        ___biome_transition_smoothing = _smoothing;
-        return self;
-    }
-    
-    static get_biome_transition_smoothing = function()
-    {
-        return ___biome_transition_smoothing ?? 0.5;
-    }
-    
-    static set_regions = function(_regions)
-    {
-        ___regions_ids = _regions;
-        ___regions_objects = undefined;
-        ___region_generator = undefined;
-        
-        return self;
-    }
-    
-    static get_regions_ids = function()
-    {
-        return ___regions_ids;
-    }
-    
-    static __resolve_regions = function()
-    {
-        if (___regions_ids == undefined || array_length(___regions_ids) == 0) 
-        {
-            // Create a fallback region if none specified
-            var _fallback = new RegionData("fallback", {
-                biomes: [{ id: "phantasia:surface/forest", weight: 1 }],
-                cave_biome_default: "phantasia:cave/chasm"
-            });
-            ___regions_objects = [_fallback];
-        }
-        else
-        {
-            var _len = array_length(___regions_ids);
-            ___regions_objects = [];
-            
-            for(var i = 0; i < _len; ++i)
-            {
-                var _id = worldgen_resolve_id(___regions_ids[i]);
-                var _obj = global.region_data[$ _id];
-                if (_obj != undefined)
-                {
-                    array_push(___regions_objects, _obj);
-                }
-                else
-                {
-                    show_debug_message("WorldData: Region not found: " + string(_id));
-                }
-            }
-            
-            // If all failed, ensure at least one object exists
-            if (array_length(___regions_objects) == 0)
-            {
-                 var _fallback = new RegionData("fallback", {
-                    biomes: [{ id: "phantasia:surface/forest", weight: 1 }],
-                    cave_biome_default: "phantasia:cave/chasm"
-                });
-                array_push(___regions_objects, _fallback);
-            }
-        }
-        
-        ___region_generator = new RegionGenerator({
-            regions: ___regions_objects,
-            // Large regions configuration
-            cell_size: 2048, 
-            warp_scale: 0.0015,
-            warp_power: 384,
-            seed_offset: 12345 
-        });
-    }
-    
-    static get_region_at = function(_x, _y, _seed)
-    {
-        if (___region_generator == undefined)
-        {
-            __resolve_regions();
-        }
-        
-        if (___region_generator == undefined) return undefined;
-        
-        return ___region_generator.get_region(_x, _y, 0, _seed);
-    }
-    
-    static get_region_boundary_distance = function(_x, _y, _seed)
-    {
-        if (___region_generator == undefined)
-        {
-            __resolve_regions();
-        }
-        
-        if (___region_generator == undefined) return 0;
-        
-        return ___region_generator.get_boundary_distance(_x, _y, 0, _seed);
-    }
-    
-    static get_region_blend_data = function(_x, _y, _seed)
-    {
-        if (___region_generator == undefined)
-        {
-            __resolve_regions();
-        }
-        
-        if (___region_generator == undefined) return undefined;
-        
-        return ___region_generator.get_blend_data(_x, _y, 0, _seed);
-    }
-    
+
     static get_sky_detail_noise_amplitude = function()
     {
         return ___sky_detail_noise_amplitude;
@@ -880,7 +510,6 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
     {
         return ___sky_detail_noise_octaves;
     }
-<<<<<<< HEAD
     
     // --- Region Transition Settings ---
     
@@ -1077,6 +706,4 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
     {
         return ___cave_biome_humidity[$ "octaves_offset"] ?? 0;
     }
-=======
->>>>>>> region
 }

@@ -2,15 +2,21 @@
     "function": {
         "id": "phantasia:tree/generic",
         "parameters": {
-            "index": {
-                "type": "smart_value:irandom",
-                "values": {
-                    "max": 3,
-                    "min": 1
-                }
+            "tile_wood": {
+                "id": "phantasia:oak"
             },
-            "index_bottom": 5,
+            "tile_leaves": {
+                "id": "phantasia:oak_leaves"
+            },
+            "index": {
+                "values": {
+                    "min": 1,
+                    "max": 3
+                },
+                "type": "smart_value:irandom"
+            },
             "index_top": 4,
+            "index_bottom": 5,
             "layers": [
                 {
                     "width": 3,
@@ -30,23 +36,20 @@
                     "yscale": 1,
                     "index_offset": 5
                 }
-            ],
-            "tile_leaves": {
-                "id": "phantasia:oak_leaves"
-            },
-            "tile_wood": {
-                "id": "phantasia:oak"
-            }
+            ]
         }
     },
     "height": {
-        "type": "smart_value:irandom",
         "values": {
-            "max": 9,
-            "min": 6
-        }
+            "min": 6,
+            "max": 9
+        },
+        "type": "smart_value:irandom"
     },
     "placement": {
+        "type": "floor",
+        "xoffset": -2,
+        "yoffset": "-height",
         "clearance_condition": [
             {
                 "xoffset": -2,
@@ -54,11 +57,7 @@
                 "width": "width",
                 "height": 4
             }
-        ],
-        "if_clear": true,
-        "type": "floor",
-        "xoffset": -2,
-        "yoffset": "-height"
+        ]
     },
     "width": 5
 }
