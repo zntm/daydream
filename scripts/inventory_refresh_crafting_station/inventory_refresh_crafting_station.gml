@@ -11,7 +11,7 @@ function inventory_refresh_crafting_station(_refresh = false)
     {
         var _station = _crafting_stations[i];
         
-        _previously_available[$ _station] = (global.crafting_stations_distance[$ _station] <= TILE_SIZE * 4);
+        _previously_available[$ _station] = ((global.crafting_stations_distance[$ _station] ?? infinity) <= TILE_SIZE * 4);
         
         // Reset distance
         global.crafting_stations_distance[$ _station] = infinity;

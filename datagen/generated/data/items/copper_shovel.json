@@ -11,6 +11,6 @@
             "level": 2
         }
     },
-    "sprite": "copper_shovel",
+    "sprite": "phantasia:item/copper_shovel",
     "type": "tool"
 }

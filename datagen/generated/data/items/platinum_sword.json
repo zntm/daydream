@@ -11,6 +11,6 @@
             "level": 0
         }
     },
-    "sprite": "platinum_sword",
+    "sprite": "phantasia:item/platinum_sword",
     "type": "tool"
 }

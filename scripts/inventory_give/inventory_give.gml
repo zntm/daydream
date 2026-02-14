@@ -1,5 +1,7 @@
 function inventory_give(_x, _y, _item, _inventory_target = global.inventory, _text = true, _out_changed_slots = undefined)
 {
+    if (_item == INVENTORY_EMPTY) return INVENTORY_EMPTY;
+    
     var _id = _item.get_id();
     var _amount = _item.get_amount();
     

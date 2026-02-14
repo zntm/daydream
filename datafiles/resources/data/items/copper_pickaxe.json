@@ -11,6 +11,6 @@
             "level": 2
         }
     },
-    "sprite": "copper_pickaxe",
+    "sprite": "phantasia:item/copper_pickaxe",
     "type": "tool"
 }

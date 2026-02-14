@@ -135,12 +135,16 @@ function GUIHPBar(_x, _y, _width, _height) : GUIComponent(_x, _y, _width, _heigh
         // The component width is in logical units.
         var _screen_width = width * _base_scale_x;
         
-        var _hp = obj_Player.hp;
-        var _hp_max = obj_Player.hp_max;
+        var _lp = noone;
+        with (obj_Player) { if (is_local) { _lp = id; break; } }
+        if (_lp == noone) return;
+        
+        var _hp = _lp.hp;
+        var _hp_max = _lp.hp_max;
         var _hp_ratio = clamp(_hp / _hp_max, 0, 1);
         
-        var _stamina = obj_Player.stamina;
-        var _stamina_max = obj_Player.stamina_max;
+        var _stamina = _lp.stamina;
+        var _stamina_max = _lp.stamina_max;
         var _stamina_ratio = clamp(_stamina / _stamina_max, 0, 1);
         
         // Heart Icon Settings

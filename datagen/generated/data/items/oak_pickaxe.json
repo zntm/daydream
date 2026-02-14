@@ -11,6 +11,6 @@
             "level": 1
         }
     },
-    "sprite": "oak_pickaxe",
+    "sprite": "phantasia:item/oak_pickaxe",
     "type": "tool"
 }

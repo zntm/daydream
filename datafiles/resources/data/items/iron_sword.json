@@ -11,6 +11,6 @@
             "level": 0
         }
     },
-    "sprite": "iron_sword",
+    "sprite": "phantasia:item/iron_sword",
     "type": "tool"
 }

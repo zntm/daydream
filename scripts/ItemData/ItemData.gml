@@ -394,7 +394,7 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     {
         ___item_armor = new ItemArmor(_armor.type, _armor.defense);
         
-        var _attributes = _armor[$ "attrbutes"];
+        var _attributes = _armor[$ "attributes"];
         
         if (_attributes != undefined)
         {

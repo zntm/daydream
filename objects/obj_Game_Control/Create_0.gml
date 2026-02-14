@@ -251,6 +251,3 @@ if (global.relay == undefined || global.relay.role == RELAY_ROLE.NONE)
 }
 
 timer_network_sync = 0;
-
-global.inventory.base[0] = new Inventory("phantasia:structure_blueprint");
-global.inventory.base[1] = new Inventory("phantasia:loot_blueprint");
