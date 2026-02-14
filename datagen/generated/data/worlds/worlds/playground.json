@@ -199,6 +199,25 @@
         "borea",
         "glacien"
     ],
+    "sky_objects": {
+        "config": {
+            "alpha_max": 0.9,
+            "alpha_min": 0.4,
+            "count": 12,
+            "scale_max": 2.5,
+            "scale_min": 1,
+            "speed_max": 24,
+            "speed_min": 12,
+            "wind_factor": 4,
+            "y_max": 128,
+            "y_min": 32
+        },
+        "script": "phantasia:sky/playground_clouds",
+        "sprites": [
+            "phantasia:world/playground/cloud/default",
+            "phantasia:world/playground/cloud/windy"
+        ]
+    },
     "spawn_interval": 14,
     "surface": {
         "bedrock_depth": 3,

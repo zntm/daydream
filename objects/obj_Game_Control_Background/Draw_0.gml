@@ -16,6 +16,11 @@ if (global.settings.display_background)
         render_background_celestial(global.world_save_data.time, _camera_x, _camera_y, _camera_width, _camera_height);
     }
     
+    if (!IS_DEVELOPER_MODE) || (global.dbg_settings[$ "display_background_clouds"] ?? true)
+    {
+        render_background_clouds(_camera_x, _camera_y, _camera_width, _camera_height);
+    }
+    
     if (!IS_DEVELOPER_MODE) || (global.dbg_settings[$ "display_background_parallax"])
     {
         render_background(_camera_x, _camera_y, _camera_width, _camera_height);

@@ -385,6 +385,7 @@
     {"name":"RelayPacket","order":6,"path":"scripts/RelayPacket/RelayPacket.yy",},
     {"name":"render_attire","order":10,"path":"scripts/render_attire/render_attire.yy",},
     {"name":"render_background_celestial","order":1,"path":"scripts/render_background_celestial/render_background_celestial.yy",},
+    {"name":"render_background_clouds","order":94,"path":"scripts/render_background_clouds/render_background_clouds.yy",},
     {"name":"render_background_parallax","order":2,"path":"scripts/render_background_parallax/render_background_parallax.yy",},
     {"name":"render_build_preview","order":89,"path":"scripts/render_build_preview/render_build_preview.yy",},
     {"name":"render_chunk","order":4,"path":"scripts/render_chunk/render_chunk.yy",},

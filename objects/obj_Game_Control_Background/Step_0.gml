@@ -91,3 +91,5 @@ if (timer_refresh >= 1) || (in_biome_transition_value > 0)
     
     bg_sky_colour(in_biome, in_biome_transition);
 }
+
+update_background_clouds(_delta_time, global.camera_width);

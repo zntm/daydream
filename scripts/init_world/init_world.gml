@@ -73,6 +73,12 @@ function init_world(_directory, _namespace = "phantasia", _type = 0)
                     }
                 }
                 
+                var _sky_objects = _json[$ "sky_objects"];
+                if (_sky_objects != undefined)
+                {
+                    _world_data.set_sky_objects(_sky_objects);
+                }
+                
                 var _surface = _json[$ "surface"];
                 if (_surface != undefined)
                 {

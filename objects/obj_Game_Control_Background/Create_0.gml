@@ -23,3 +23,5 @@ if (_music != undefined)
 }
 
 bg_sky_colour(_in_biome_data, _in_biome_data);
+
+init_background_clouds();

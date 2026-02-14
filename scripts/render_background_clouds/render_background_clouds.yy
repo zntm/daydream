@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"render_background_clouds",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"render_background_clouds",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

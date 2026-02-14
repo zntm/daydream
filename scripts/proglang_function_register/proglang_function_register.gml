@@ -1363,3 +1363,46 @@ proglang_function_register("ui_clear_events", function(_args) {
 });
 
 #endregion
+
+#region Cloud System
+
+proglang_function_register("cloud_spawn", function(_args) {
+    var _sprite_id = _args[0];
+    var _x = _args[1];
+    var _y = _args[2];
+    var _scale = (array_length(_args) > 3) ? _args[3] : 1;
+    var _alpha = (array_length(_args) > 4) ? _args[4] : 1;
+    var _speed = (array_length(_args) > 5) ? _args[5] : 8;
+    
+    return cloud_spawn(_sprite_id, _x, _y, _scale, _alpha, _speed);
+});
+
+proglang_function_register("cloud_clear", function(_args) {
+    cloud_clear();
+});
+
+proglang_function_register("cloud_set_tint", function(_args) {
+    cloud_set_tint(_args[0]);
+});
+
+proglang_function_register("cloud_set_wind_factor", function(_args) {
+    cloud_set_wind_factor(_args[0]);
+});
+
+proglang_function_register("cloud_set_sprites", function(_args) {
+    cloud_set_sprites(_args[0]);
+});
+
+proglang_function_register("cloud_set_speed", function(_args) {
+    cloud_set_speed(_args[0]);
+});
+
+proglang_function_register("cloud_get_wind", function(_args) {
+    return global.world_save_data.weather_wind;
+});
+
+proglang_function_register("cloud_get_time", function(_args) {
+    return global.world_save_data.time;
+});
+
+#endregion

@@ -42,6 +42,11 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
     ___celestial = [];
     ___celestial_length = 0;
     
+    // Sky Objects (clouds, etc.)
+    ___sky_objects_script = undefined;
+    ___sky_objects_sprites = [];
+    ___sky_objects_config = {};
+    
     // Surface Generation
     ___surface_noise_offset_max = 0;
     ___surface_noise_offset_min = 0;
@@ -819,5 +824,29 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
     static get_sky_detail_noise_octaves = function()
     {
         return ___sky_detail_noise_octaves;
+    }
+    
+    static set_sky_objects = function(_sky_objects)
+    {
+        ___sky_objects_script = _sky_objects[$ "script"];
+        ___sky_objects_sprites = _sky_objects[$ "sprites"] ?? [];
+        ___sky_objects_config = _sky_objects[$ "config"] ?? {};
+        
+        return self;
+    }
+    
+    static get_sky_objects_script = function()
+    {
+        return ___sky_objects_script;
+    }
+    
+    static get_sky_objects_sprites = function()
+    {
+        return ___sky_objects_sprites;
+    }
+    
+    static get_sky_objects_config = function()
+    {
+        return ___sky_objects_config;
     }
 }

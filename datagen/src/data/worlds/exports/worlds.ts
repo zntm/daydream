@@ -9,6 +9,7 @@ import {
     WorldCaveBiome,
     WorldCaveBiomeTransitionType,
     WorldSky,
+    WorldSkyObjects,
     WorldSurface,
     WorldCave,
     WorldCaveSystem,
@@ -91,7 +92,26 @@ export default [
                 "dustbunny",
                 "borea",
                 "glacien"
-            ]
+            ],
+            new WorldSkyObjects(
+                "phantasia:sky/playground_clouds",
+                [
+                    "phantasia:world/playground/cloud/default",
+                    "phantasia:world/playground/cloud/windy",
+                ],
+                {
+                    count: 12,
+                    y_min: 32,
+                    y_max: 128,
+                    scale_min: 1.0,
+                    scale_max: 2.5,
+                    alpha_min: 0.4,
+                    alpha_max: 0.9,
+                    speed_min: 12,
+                    speed_max: 24,
+                    wind_factor: 4.0,
+                },
+            ),
         ),
     ),
 ];

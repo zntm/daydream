@@ -1,0 +1,24 @@
+var sprites = parameter.sprites
+var config = parameter.config
+var count = config.count ?? 6
+
+repeat count {
+    var sprite = sprites[irandom(array_length(sprites) - 1)]
+    cloud_spawn(
+        sprite,
+        random(parameter.camera_width * 2),
+        random_range(config.y_min ?? 8, config.y_max ?? 48),
+        random_range(config.scale_min ?? 0.8, config.scale_max ?? 1.5),
+        random_range(config.alpha_min ?? 0.4, config.alpha_max ?? 0.8),
+        random_range(config.speed_min ?? 4, config.speed_max ?? 12)
+    )
+}
+
+// Subscribe to potential events
+event_subscribe("world_blood_moon", fn(_data) {
+    cloud_set_tint("#F00")
+})
+
+event_subscribe("world_blood_moon_end", fn(_data) {
+    cloud_set_tint("#FFF")
+})

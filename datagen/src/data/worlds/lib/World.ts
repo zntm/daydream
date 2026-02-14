@@ -331,6 +331,22 @@ export class WorldCave {
     }
 }
 
+export class WorldSkyObjects {
+    public script: string;
+    public sprites: string[];
+    public config: Record<string, any>;
+
+    constructor(
+        script: string,
+        sprites: string[],
+        config: Record<string, any> = {},
+    ) {
+        this.script = script;
+        this.sprites = sprites;
+        this.config = config;
+    }
+}
+
 export class World {
     private world_height: number;
     private spawn_interval: number;
@@ -340,8 +356,9 @@ export class World {
     private biome: WorldBiome;
     private surface: WorldSurface;
     private cave: WorldCave;
-    private biome_transition_smoothing: number;
-    private regions: string[];
+    public biome_transition_smoothing: number;
+    public regions: string[];
+    public sky_objects?: WorldSkyObjects;
 
     constructor(
         world_height: number,
@@ -354,6 +371,7 @@ export class World {
         cave: WorldCave,
         biomeTransitionSmoothing: number = 0.5,
         regions: string[] = [],
+        skyObjects?: WorldSkyObjects,
     ) {
         this.world_height = world_height;
         this.spawn_interval = spawn_interval;
@@ -365,5 +383,6 @@ export class World {
         this.cave = cave;
         this.biome_transition_smoothing = biomeTransitionSmoothing;
         this.regions = regions;
+        if (skyObjects) this.sky_objects = skyObjects;
     }
 }
