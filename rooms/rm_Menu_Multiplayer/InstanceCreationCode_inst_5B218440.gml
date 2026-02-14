@@ -1,1 +1,2 @@
-placeholder = loca_translate("menu.multiplayer.textbox.port");
+// Hide the port textbox - we only need invite code now
+visible = false;

@@ -20,20 +20,20 @@ function init_loca(_directory, _namespace)
         struct_remove(global.loca_data, _names[i]);
     }
     
-    if (file_exists($"{_directory}\\font.ttf"))
+    if (file_exists($"{_directory}/font.ttf"))
     {
-        var _data = json_parse(buffer_load_text($"{_directory}\\font.json"));
+        var _data = json_parse(buffer_load_text($"{_directory}/font.json"));
         
-        global.loca_font = font_add($"{_directory}\\font.ttf", _data.size, false, false, _data.first, _data.last);
+        global.loca_font = font_add($"{_directory}/font.ttf", _data.size, false, false, _data.first, _data.last);
         global.loca_font_scale = _data.scale;
         
         font_enable_sdf(global.loca_font, true);
     }
-    else if (file_exists($"{_directory}\\font.otf"))
+    else if (file_exists($"{_directory}/font.otf"))
     {
-        var _data = json_parse(buffer_load_text($"{_directory}\\font.json"));
+        var _data = json_parse(buffer_load_text($"{_directory}/font.json"));
         
-        global.loca_font = font_add($"{_directory}\\font.otf", _data.size, false, false, _data.first, _data.last);
+        global.loca_font = font_add($"{_directory}/font.otf", _data.size, false, false, _data.first, _data.last);
         global.loca_font_scale = _data.scale;
         
         font_enable_sdf(global.loca_font, true);
@@ -44,7 +44,7 @@ function init_loca(_directory, _namespace)
         global.loca_font_scale = 0.38;
     }
     
-    var _json = buffer_load_json($"{_directory}\\data.json");
+    var _json = buffer_load_json($"{_directory}/data.json");
     
     var _names2  = struct_get_names(_json);
     var _length2 = array_length(_names2);

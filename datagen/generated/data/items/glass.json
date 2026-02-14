@@ -1,28 +1,30 @@
 {
     "inventory": "#phantasia:item/generic/inventory_default",
-    "sprite": "phantasia:item/glass",
-    "tile": {
-        "drops": [
-            {
-                "id": "phantasia:item/glass",
-                "condition": {
-                    "id": "#phantasia:item/type/pickaxe",
-                    "level": 1
+    "item": {
+        "tile": {
+            "drops": [
+                {
+                    "id": "phantasia:item/glass",
+                    "condition": {
+                        "id": "#phantasia:item/type/pickaxe",
+                        "level": 1
+                    }
                 }
-            }
-        ],
-        "harvest": {
-            "hardness": 0.08,
-            "level": 0,
-            "particle": {
-                "colour": "#phantasia:tile/particle_colour/stone",
-                "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
+            ],
+            "harvest": {
+                "condition": {
+                    "id": "#phantasia:item/type/pickaxe"
+                },
+                "hardness": 0.08,
+                "level": 0,
+                "particle": {
+                    "frequency": "#phantasia:tile/generic/harvest_particle_frequency",
+                    "id": "#phantasia:tile/particle_colour/stone"
+                }
             },
-            "condition": {
-                "id": "#phantasia:item/type/pickaxe"
-            }
-        },
-        "sfx": "#phantasia:tile/sfx/stone"
+            "sfx": "#phantasia:tile/sfx/stone"
+        }
     },
+    "sprite": "phantasia:item/glass",
     "type": "untouchable"
 }

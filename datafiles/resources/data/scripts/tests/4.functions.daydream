@@ -1,0 +1,182 @@
+
+test_group("simple func", [
+    test("func declaration", fn() {
+        fn add(a, b) {
+            return a + b
+        }
+        test_expect(add(3, 5), 8)
+    }),
+    test("func nesting", fn() {
+        fn double(x) {
+            return x * 2
+        }
+
+        fn quadruple(x) {
+            return double(double(x))
+        }
+
+        test_expect(quadruple(5), 20)
+    }),
+    test("func no params", fn() {
+        fn get_ten() {
+            return 10
+        }
+        test_expect(get_ten(), 10)
+    }),
+    test("func multiple params", fn() {
+        fn sum3(a, b, c) {
+            return a + b + c
+        }
+        test_expect(sum3(1, 2, 3), 6)
+    }),
+    test("func with control flow", fn() {
+        fn is_positive(n) {
+            if (n > 0) {
+                return true
+            }
+            return false
+        }
+        test_expect(is_positive(5), true)
+    }),
+    test("function wrapper", fn() {
+        fn logger(function, arg) {
+            var res = function(arg)
+            return res
+        }
+
+        fn double_it(n) {
+            return n * 2
+        }
+
+        test_expect(logger(double_it, 21), 42)
+    }),
+    test("scope shadowing", fn() {
+        var x = 10
+        fn test(x) {
+            var y = 20
+            return x + y // param x (5) + y (20) = 25
+        }
+        test_expect(test(5) + x, 35) // 25 + 10 = 35
+    })
+])
+
+test_group("advanced func", [
+    test("recursion factorial", fn() {
+        fn fact(n) {
+            if (n <= 1) {
+                return 1
+            }
+
+            return n * fact(n - 1)
+        }
+
+        test_expect(fact(5), 120)
+    }),
+    test("recursion fibonacci", fn() {
+        fn fib(n) {
+            if (n <= 1) {
+                return n
+            }
+
+            return fib(n - 1) + fib(n - 2)
+        }
+
+        test_expect(fib(10), 55)
+    }),
+    test("closure counter", fn() {
+        fn make_counter(start) {
+            var count = start
+
+            fn increment() {
+                count = count + 1
+
+                return count
+            }
+
+            return increment
+        }
+
+        var c = make_counter(10)
+        c() // 11
+
+        test_expect(c(), 12)
+    }),
+    test("higher order map", fn() {
+        fn map(arr, f) {
+            var res = []
+
+            for (var i = 0; i < array_length(arr); i++) {
+                res[i] = f(arr[i])
+            }
+
+            return res
+        }
+
+        fn square(x) {
+            return x * x
+        }
+
+        var numbers = [ 1, 2, 3 ]
+        var squared = map(numbers, square)
+
+        test_expect(squared[2], 9)
+    }),
+    test("object method simulation", fn() {
+        fn create_player(name) {
+            var p = { name: name, hp: 100 }
+
+            p.heal = fn(amount) {
+                // 'p' is captured by closure
+                p.hp += amount
+                return p.hp
+            }
+
+            return p
+        }
+
+        var player = create_player("Hero")
+        player.heal(50)
+
+        test_expect(player.hp, 150)
+    })
+])
+
+test_group("optional parameters", [
+    test("opt param implicit", fn() {
+        fn opt_implicit(a, b) {
+            return [ a, b ]
+        }
+
+        var res = opt_implicit(10)
+
+        test_expect(res[1], undefined)
+    }),
+    test("opt param default", fn() {
+        fn opt_def(a = 100) {
+            return a
+        }
+
+        test_expect(opt_def(), 100)
+    }),
+    test("opt param override", fn() {
+        fn opt_def2(a = 100) {
+            return a
+        }
+
+        test_expect(opt_def2(50), 50)
+    }),
+    test("opt param mixed", fn() {
+        fn opt_mixed(a, b = 2) {
+            return a + b
+        }
+
+        test_expect(opt_mixed(1), 3)
+    }),
+    test("opt param expr", fn() {
+        fn opt_expr(a = 1 + 2) {
+            return a
+        }
+
+        test_expect(opt_expr(), 3)
+    })
+])

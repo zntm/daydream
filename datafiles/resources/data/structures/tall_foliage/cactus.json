@@ -1,0 +1,52 @@
+{
+    "function": {
+        "id": "phantasia:tall_foliage",
+        "parameters": {
+            "tile_top": {
+                "id": "phantasia:cactus",
+                "index": 5
+            },
+            "tile_middle": {
+                "id": "phantasia:cactus",
+                "index": {
+                    "values": {
+                        "min": 1,
+                        "max": 4
+                    },
+                    "type": "smart_value:irandom"
+                }
+            },
+            "tile_bottom": {
+                "id": "phantasia:cactus",
+                "index": {
+                    "values": {
+                        "min": 1,
+                        "max": 4
+                    },
+                    "type": "smart_value:irandom"
+                }
+            }
+        }
+    },
+    "height": {
+        "values": {
+            "min": 2,
+            "max": 6
+        },
+        "type": "smart_value:irandom"
+    },
+    "placement": {
+        "type": "floor",
+        "xoffset": 0,
+        "yoffset": "-height",
+        "clearance_condition": [
+            {
+                "xoffset": 0,
+                "yoffset": "-height",
+                "width": 1,
+                "height": "height"
+            }
+        ]
+    },
+    "width": 1
+}

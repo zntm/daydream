@@ -1,0 +1,7 @@
+export fn schedule(parameter, x, y, z) {
+  var delay = parameter.tick_delay ?? 8
+  tick_delay_add(delay, fn(data) {
+     import flow from "./flow"
+     flow(data.parameter, data.x, data.y, data.z)
+  }, { x: x, y: y, z: z, parameter: parameter })
+}

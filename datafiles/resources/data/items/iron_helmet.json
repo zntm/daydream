@@ -7,9 +7,9 @@
         },
         "durability": {
             "amount": 277,
-            "bar": "#phantasia:item/generic/durability_bar"
+            "bar": "#phantasia:item/generic/inventory_armor"
         }
     },
     "sprite": "phantasia:item/iron_helmet",
-    "type": "accessory"
+    "type": "tool"
 }

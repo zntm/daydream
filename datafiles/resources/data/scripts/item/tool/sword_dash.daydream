@@ -1,0 +1,12 @@
+var power = parameter.power ?? 18
+
+// Apply dash velocity to the player
+if (caller != undefined) {
+    entity_set_velocity(caller, xscale * power, -2)
+    entity_set_dash_timer(caller, 0.25) // 15 frames of dash
+    
+    // Visual feedback
+    // x and y are pixel coordinates from context
+    spawn_particle("phantasia:entity/dash", x / 16, y / 16)
+    sfx_play("phantasia:sfx/event/dash", 0.6)
+}

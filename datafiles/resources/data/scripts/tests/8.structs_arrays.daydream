@@ -1,0 +1,243 @@
+
+test_group("arrays", [
+    test("array access", fn() {
+        var a = [ 1, 2, 3 ]
+        test_expect(a[1], 2)
+    }),
+    test("array set", fn() {
+        var a = [ 1, 2, 3 ]
+        a[0] = 5
+        test_expect(a[0], 5)
+    }),
+    test("spread array", fn() {
+        var a = [ 1, 2 ]
+        var b = [ 0, ...a, 3 ]
+        test_expect(b[2], 2)
+    }),
+    test("array length", fn() {
+        test_expect(array_length([ 1, 2, 3 ]), 3)
+    }),
+    test("array push", fn() {
+        var a = [1]
+
+        array_push(a, 2)
+
+        test_expect(a[1], 2)
+    }),
+    test("array pop", fn() {
+        var a = [ 1, 5 ]
+        var v = array_pop(a)
+
+        test_expect(v, 5)
+    }),
+    test("in operator (arrays)", fn() {
+        test_expect(2 in [ 1, 2, 3 ], true)
+        test_expect(5 in [ 1, 2, 3 ], false)
+    })
+])
+
+test_group("structs", [
+    test("object create", fn() {
+        var o = { x: 10 }
+
+        test_expect(o.x, 10)
+    }),
+    test("object set", fn() {
+        var o = { x: 1 }
+        o.x = 5
+
+        test_expect(o.x, 5)
+    }),
+    test("deep nesting", fn() {
+        var config = {
+            graphics: {
+                resolution: { w: 1920, h: 1080 },
+                settings: { bloom: true }
+            }
+        }
+
+        config.graphics.resolution.w = 2560
+
+        test_expect(config.graphics.resolution.w, 2560)
+    }),
+    test("vector struct dot", fn() {
+        fn dot(v1, v2) {
+            return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z
+        }
+
+        var a = { x: 1, y: 2, z: 3 }
+        var b = { x: 4, y: -5, z: 6 }
+
+        test_expect(dot(a, b), 12)
+    }),
+    test("struct get names", fn() {
+        var s = { a: 1, b: 2 }
+        var names = struct_get_names(s)
+
+        test_expect(array_length(names), 2)
+    }),
+    test("struct json roundtrip", fn() {
+        var s = { a: 10, b: "hello" }
+        var json = struct_stringify(s)
+        var s2 = struct_parse(json)
+
+        test_expect(s2.a == 10 && s2.b == "hello", true)
+    })
+])
+
+test_group("destructuring", [
+    test("destruct array", fn() {
+        var [ a, b ] = [ 10, 20 ]
+
+        test_expect(a + b, 30)
+    }),
+    test("destruct object", fn() {
+        var { x, y } = { x: 5, y: 6 }
+
+        test_expect(x * y, 30)
+    }),
+    test("destruct alias", fn() {
+        var { x: a } = { x: 10 }
+
+        test_expect(a, 10)
+    })
+])
+
+test_group("iteration", [
+    test("for in array", fn() {
+        var arr = [ 1, 2, 3 ]
+        var sum = 0
+
+        for (var v in arr) {
+            sum += v
+        }
+
+        test_expect(sum, 6)
+    }),
+    test("for in array with index", fn() {
+        var arr = [ 1, 2, 3 ]
+        var sum = 0
+
+        for (var v, i in arr) {
+            sum += v + i
+        }
+
+        test_expect(sum, 9)
+    }),
+    test("for in key struct", fn() {
+        var obj = { a: 1, b: 2 }
+        var count = 0
+
+        for (var k in key obj) {
+            count++
+        }
+
+        test_expect(count, 2)
+    }),
+    test("for in value struct", fn() {
+        var obj = { a: 1, b: 2 }
+        var count = 0
+
+        for (var v in value obj) {
+            count++
+        }
+
+        test_expect(count, 2)
+    }),
+    test("for in struct with value", fn() {
+        var obj = { a: 1, b: 2 }
+        var sum = 0
+
+        for (var k, v in obj) {
+            sum += v
+        }
+
+        test_expect(sum, 3)
+    })
+])
+
+test_group("algorithms", [
+    test("bubble sort", fn() {
+        var arr = [5, 1, 4, 2, 8]
+        var n = array_length(arr)
+
+        for (var i = 0; i < n; i++) {
+            for (var j = 0; j < n - i - 1; j++) {
+                if (arr[j] > arr[j + 1]) {
+                    var temp = arr[j]
+
+                    arr[j] = arr[j + 1]
+                    arr[j + 1] = temp
+                }
+            }
+        }
+
+        // 1 + 8
+        test_expect(arr[0] + arr[4], 9)
+    }),
+    test("binary search", fn() {
+        fn binary_search(arr, target) {
+            var left = 0
+            var right = array_length(arr) - 1
+
+            while (left <= right) {
+                var mid = floor((left + right) / 2)
+                if (arr[mid] == target) {
+                    return mid
+                }
+
+                if (arr[mid] < target) {
+                    left = mid + 1
+                }
+                else {
+                    right = mid - 1
+                }
+            }
+
+            return -1
+        }
+
+        var sorted = [10, 20, 30, 40, 50]
+
+        test_expect(binary_search(sorted, 40), 3)
+    }),
+    test("matrix add", fn() {
+        var m1 = [[1, 2], [3, 4]]
+        var m2 = [[5, 6], [7, 8]]
+        var res = [[0, 0], [0, 0]]
+
+        for (var r = 0; r < 2; r++) {
+            for (var c = 0; c < 2; c++) {
+                res[r][c] = m1[r][c] + m2[r][c]
+            }
+        }
+
+        // 4 + 8 = 12
+        test_expect(res[1][1], 12)
+    }),
+    test("inventory manager", fn() {
+        var inv = [
+            { id: "sword", qty: 1 },
+            { id: "potion", qty: 5 },
+            { id: "shield", qty: 1 }
+        ]
+
+        fn find_item(items, name) {
+            for (var item in items) {
+                if (item.id == name) {
+                    return item
+                }
+            }
+
+            return undefined
+        }
+
+        var potion = find_item(inv, "potion")
+
+        if (potion != undefined) {
+            potion.qty += 3
+        }
+
+        test_expect(potion.qty, 8)
+    })
+])

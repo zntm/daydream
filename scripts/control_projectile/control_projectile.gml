@@ -44,7 +44,7 @@ function control_projectile()
             
             event_emit(new EventDataProjectileLand(id, x, y, _inst, "entity"));
             
-            if (_data.is_destroy_on_collision())
+            if (_data.can_destroy_on_tile_collision())
             {
                 instance_destroy();
                 exit;
@@ -74,7 +74,7 @@ function control_projectile()
         if (attribute.has_collision_box() && (tile_meeting(x, y - 1) || tile_meeting(x + 1, y) || tile_meeting(x, y + 1) || tile_meeting(x - 1, y)))
         {
             event_emit(new EventDataProjectileLand(id, x, y, undefined, "tile"));
-            if (_data.is_destroy_on_collision())
+            if (_data.can_destroy_on_tile_collision())
             {
                 instance_destroy();
                 exit;

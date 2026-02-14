@@ -20,79 +20,77 @@ function init_world(_directory, _namespace = "phantasia", _type = 0)
     {
         var _file = _files[i];
         
-        dbg_timer("init_world");
-        
-        var _json = tag_value_parse(buffer_load_json($"{_directory}/{_file}"));
-        
-        var _id = string_delete(_file, string_length(_file) - 4, 5);
-        
-        var _world_data = new WorldData(_namespace, _id, _json.world_height);
-        
-        _world_data.set_spawn_interval(_json.spawn_interval);
-        
-        var _vignette = _json.vignette;
-        _world_data.set_vignette(_vignette.ystart, _vignette.yend, _vignette.colour);
-        
-        _world_data.set_time(_json.time);
-        
-        var _c = [];
-        
-        var _celestials = _json.celestials;
-        var _celestials_length = array_length(_celestials);
-        
-        for (var j = 0; j < _celestials_length; ++j)
+        if (string_ends_with(_file, ".json"))
         {
-            var _celestial = _celestials[j];
+            dbg_timer("init_world");
             
-            _c[@ j] = new WorldCelestial(_celestial.id, _celestial.time_range_min, _celestial.time_range_max);
+            var _json = tag_value_parse(buffer_load_json($"{_directory}/{_file}"));
+            
+            if (is_struct(_json))
+            {
+                var _id = string_delete(_file, string_length(_file) - 4, 5);
+                
+                var _world_data = new WorldData(_namespace, _id, _json[$ "world_height"]);
+                
+                _world_data.set_spawn_interval(_json[$ "spawn_interval"]);
+                _world_data.set_biome_transition_smoothing(_json[$ "biome_transition_smoothing"] ?? 0.5);
+                
+                var _vignette = _json[$ "vignette"];
+                if (_vignette != undefined)
+                {
+                    _world_data.set_vignette(_vignette.ystart, _vignette.yend, _vignette.colour);
+                }
+                
+                _world_data.set_time(_json[$ "time"]);
+                
+                var _celestials = _json[$ "celestials"];
+                if (_celestials != undefined)
+                {
+                    var _c = [];
+                    var _celestials_length = array_length(_celestials);
+                    
+                    for (var j = 0; j < _celestials_length; ++j)
+                    {
+                        var _celestial = _celestials[j];
+                        
+                        _c[@ j] = new WorldCelestial(_celestial.id, _celestial.time_range_min, _celestial.time_range_max);
+                    }
+                    
+                    _world_data.set_celestials(_c);
+                }
+                
+                var _biome = _json[$ "biome"];
+                if (_biome != undefined)
+                {
+                    _world_data.set_cave_biome(_biome.cave);
+                    _world_data.set_surface_biome(_biome.surface);
+                    
+                    // Parse sky biome configuration (optional)
+                    var _sky_biome = _biome[$ "sky"];
+                    if (_sky_biome != undefined)
+                    {
+                        _world_data.set_sky_biome(_sky_biome);
+                    }
+                }
+                
+                var _surface = _json[$ "surface"];
+                if (_surface != undefined)
+                {
+                    _world_data.set_surface(_surface);
+                }
+                
+                var _cave = _json[$ "cave"];
+                if (_cave != undefined)
+                {
+                    _world_data.set_cave(_cave);
+                }
+                
+                global.world_data[$ $"{_namespace}:{_id}"] = _world_data;
+                
+                delete _json;
+                
+                dbg_timer("init_world", $"[Init] Loaded World: \'{_id}\'");
+            }
         }
-        
-        _world_data.set_celestials(_c);
-        
-        var _biome = _json.biome;
-        
-        var _surface_biome = _biome[$ "surface"];
-        if (_surface_biome != undefined)
-        {
-            _world_data.set_surface_biome_data(_surface_biome);
-        }
-        
-        var _surface_settings = _json[$ "surface"];
-        if (_surface_settings != undefined)
-        {
-            _world_data.set_surface_settings(_surface_settings);
-        }
-
-        var _cave_biome = _biome[$ "cave"];
-        if (_cave_biome != undefined)
-        {
-            _world_data.set_cave_biome_data(_cave_biome);
-        }
-
-        // var _sky_biome = _biome[$ "sky"];
-        // if (_sky_biome != undefined)
-        // {
-        //     _world_data.set_sky_biome(_sky_biome);
-        // }
-        
-        var _cave = _json.cave;
-        _world_data.set_cave(_cave);
-        
-        // Region transition settings
-        var _region_transition = _json[$ "region_transition"];
-        if (_region_transition != undefined)
-        {
-            _world_data.set_region_transition(_region_transition);
-        }
-        
-        global.world_data[$ $"{_namespace}:{_id}"] = _world_data;
-        
-
-
-
-
-        delete _json;
-        
-        dbg_timer("init_world", $"[Init] Loaded World: \'{_id}\'");
     }
 }

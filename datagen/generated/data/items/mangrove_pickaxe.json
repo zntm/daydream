@@ -1,6 +1,7 @@
 {
     "inventory": "#phantasia:item/generic/inventory_tool",
     "item": {
+        "damage": 1,
         "durability": {
             "amount": 73,
             "bar": "#phantasia:item/generic/durability_bar"

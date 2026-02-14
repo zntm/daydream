@@ -1,39 +1,31 @@
 {
     "inventory": "#phantasia:item/generic/inventory_default",
-    "sprite": "phantasia:item/loot_blueprint",
-    "tile": {
-        "audio_properties": {
-            "lowpass": 0.65,
-            "reverb": 0.5
-        },
-        "components": {
-            "id": {
-                "default": "",
-                "max": 80,
-                "min": 0,
-                "type": "string"
+    "item": {
+        "tile": {
+            "audio_properties": {
+                "lowpass": 0.65,
+                "reverb": 0.5
             },
-            "turns_into": {
-                "default": "",
-                "max": 80,
-                "min": 0,
-                "type": "string"
-            }
-        },
-        "on_use": [
-            {
-                "id": "@phantasia:open_ui",
-                "parameters": {
-                    "bindings": {
-                        "id": "component:id",
-                        "turns_into": "component:turns_into"
-                    },
-                    "definition": "loot_blueprint_menu",
-                    "ui": "ui/loot_blueprint.ui"
+            "components": {
+                "id": {
+                    "default": "id",
+                    "max": 80,
+                    "type": "string"
+                },
+                "turns_into": {
+                    "default": "turns_into",
+                    "max": 80,
+                    "type": "string"
                 }
-            }
-        ],
-        "sfx": "#phantasia:tile/sfx/stone"
+            },
+            "on_use": [
+                {
+                    "id": "phantasia:ui/loot_blueprint"
+                }
+            ],
+            "sfx": "#phantasia:tile/sfx/stone"
+        }
     },
+    "sprite": "phantasia:item/loot_blueprint",
     "type": "solid"
 }

@@ -1,0 +1,14 @@
+import hp_container, stamina_container from "ui/stat_bars.ui"
+
+var player = parameter.player
+var parent = parameter.parent
+
+ui_spawn([hp_container, stamina_container], {
+    parent: parent,
+    link: {
+        hp_value: fn() { return player.hp },
+        hp_max: fn() { return player.hp_max },
+        stamina_value: fn() { return player.stamina },
+        stamina_max: fn() { return player.stamina_max }
+    }
+})

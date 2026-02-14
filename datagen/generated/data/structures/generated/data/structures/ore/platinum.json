@@ -1,0 +1,32 @@
+{
+    "function": {
+        "id": "phantasia:ore",
+        "parameters": {
+            "clumpiness": 0.2,
+            "roundedness": 0.5,
+            "threshold": 0.6,
+            "tile": {
+                "id": "phantasia:platinum_ore"
+            }
+        }
+    },
+    "height": {
+        "type": "smart_value:irandom",
+        "values": {
+            "max": 3,
+            "min": 1
+        }
+    },
+    "placement": {
+        "type": "inside",
+        "xoffset": 0,
+        "yoffset": 0
+    },
+    "width": {
+        "type": "smart_value:irandom",
+        "values": {
+            "max": 3,
+            "min": 1
+        }
+    }
+}

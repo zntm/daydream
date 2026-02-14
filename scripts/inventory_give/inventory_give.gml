@@ -1,20 +1,13 @@
 function inventory_give(_x, _y, _item, _inventory_target = global.inventory, _text = true, _out_changed_slots = undefined)
 {
-    if (_item == INVENTORY_EMPTY) || (_item == undefined) return _item;
+    if (_item == INVENTORY_EMPTY) return INVENTORY_EMPTY;
     
-    // Safety: Ensure target is a valid struct/instance and has the 'base' array
-    if (!is_struct(_inventory_target)) && (!instance_exists(_inventory_target)) return _item;
-    if (!variable_struct_exists(_inventory_target, "base")) && (!variable_instance_exists(_inventory_target, "base")) return _item;
-
     var _id = _item.get_id();
     var _amount = _item.get_amount();
     
     var _pickup_amount = 0;
     
     var _data = global.item_data[$ _id];
-    
-    if (_data == undefined) return _item;
-    
     var _inventory_max = _data.get_inventory_max();
     
     var _length = global.inventory_length.base;

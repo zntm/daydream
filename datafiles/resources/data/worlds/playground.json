@@ -3,65 +3,54 @@
         "cave": {
             "default": [
                 {
-                    "end": 1024,
                     "id": "phantasia:cave/depths",
                     "start": 768,
+                    "end": 1024,
                     "transition": {
-                        "max": 22,
-                        "min": 2,
+                        "type": "random",
                         "octaves": 4,
-                        "type": "random"
+                        "min": 2,
+                        "max": 22
                     }
                 },
                 {
-                    "end": 800,
                     "id": "phantasia:cave/chasm",
                     "start": 0,
+                    "end": 800,
                     "transition": {
-                        "max": 22,
-                        "min": 2,
+                        "type": "random",
                         "octaves": 0,
-                        "type": "random"
+                        "min": 2,
+                        "max": 22
                     }
                 }
             ],
-            "heat": {
-                "octaves": 4.5
-            },
-            "humidity": {
-                "octaves": 2.75
-            },
             "noise": {
                 "octaves": 4,
                 "scale": 0.005,
                 "spline_y": {
                     "points": [
                         {
-                            "easing": "linear",
                             "position": 0,
-                            "value": -1
+                            "value": -1,
+                            "easing": "linear"
                         },
                         {
-                            "easing": "linear",
                             "position": 1024,
-                            "value": 1
+                            "value": 1,
+                            "easing": "linear"
                         }
                     ],
                     "type": "spline"
                 }
             },
-            "options": []
-        },
-        "sky": {
-            "enabled": true,
-            "id": "phantasia:sky/floating_islands",
-            "noise_scale_detail": 0.3,
-            "noise_scale_edge": 0.15,
-            "noise_scale_region": 0.12,
-            "radius": 18,
-            "spacing": 32,
-            "thickness": 10,
-            "threshold": 256
+            "options": [],
+            "heat": {
+                "octaves": 4.5
+            },
+            "humidity": {
+                "octaves": 2.75
+            }
         },
         "surface": {
             "heat": {
@@ -70,14 +59,14 @@
                 "spline_x": {
                     "points": [
                         {
-                            "easing": "linear",
                             "position": 0,
-                            "value": -1
+                            "value": -1,
+                            "easing": "linear"
                         },
                         {
-                            "easing": "linear",
                             "position": 1024,
-                            "value": 1
+                            "value": 1,
+                            "easing": "linear"
                         }
                     ],
                     "type": "spline"
@@ -89,48 +78,81 @@
             },
             "map": "phantasia:world/playground/map",
             "offset": {
-                "max": 34,
+                "octaves": 2,
                 "min": 22,
-                "octaves": 2
+                "max": 34
             }
+        },
+        "sky": {
+            "enabled": true,
+            "id": "phantasia:sky/floating_islands",
+            "threshold": 256,
+            "spacing": 32,
+            "radius": 18,
+            "thickness": 10,
+            "noise_scale_region": 0.12,
+            "noise_scale_edge": 0.15,
+            "noise_scale_detail": 0.3,
+            "region_offset_y": 1000,
+            "region_range": 255,
+            "region_octaves": 2,
+            "region_threshold": 60,
+            "edge_noise_amplitude": 0.5,
+            "edge_noise_octaves": 3,
+            "detail_noise_amplitude": 0.25,
+            "detail_noise_octaves": 2
         }
     },
     "cave": {
-        "aquifers": [
+        "start": {
+            "octaves": 0,
+            "min": 12,
+            "max": 2
+        },
+        "system": [
             {
-                "depth_max": 200,
-                "depth_min": 20,
-                "fill_level": 8,
-                "noise_scale": 0.02,
-                "octaves": 3,
-                "range": 255,
-                "threshold": 200,
-                "type": "phantasia:water"
+                "range_min": 50,
+                "range_max": 70,
+                "threshold": {
+                    "octaves": 4
+                }
             },
             {
-                "depth_max": 450,
-                "depth_min": 350,
-                "fill_level": 8,
-                "noise_scale": 0.02,
-                "octaves": 2,
-                "range": 255,
-                "threshold": 220,
-                "type": "phantasia:lava"
+                "range_min": 116,
+                "range_max": 140,
+                "threshold": {
+                    "octaves": 4
+                }
             }
         ],
-        "breach_depth": -8,
-        "breach_noise_octaves": 2,
-        "breach_noise_offset_y": 1000,
-        "breach_noise_range": 255,
-        "breach_noise_scale_x": 0.03,
-        "breach_noise_scale_y": 0.03,
-        "breach_threshold": 242,
+        "aquifers": [
+            {
+                "type": "phantasia:water",
+                "depth_min": 20,
+                "depth_max": 200,
+                "threshold": 200,
+                "octaves": 3,
+                "fill_level": 8,
+                "noise_scale": 0.02,
+                "range": 255
+            },
+            {
+                "type": "phantasia:lava",
+                "depth_min": 350,
+                "depth_max": 450,
+                "threshold": 220,
+                "octaves": 2,
+                "fill_level": 8,
+                "noise_scale": 0.02,
+                "range": 255
+            }
+        ],
         "depth_smoothing": {
             "points": [
                 {
-                    "easing": "ease_out",
                     "position": 0,
-                    "value": 0
+                    "value": 0,
+                    "easing": "ease_out"
                 },
                 {
                     "position": 16,
@@ -144,102 +166,82 @@
             "type": "spline"
         },
         "noise_scale": 0.015625,
-        "start": {
-            "max": 2,
-            "min": 12,
-            "octaves": 0
-        },
-        "system": [
-            {
-                "range_max": 70,
-                "range_min": 50,
-                "threshold": {
-                    "octaves": 4
-                }
-            },
-            {
-                "range_max": 140,
-                "range_min": 116,
-                "threshold": {
-                    "octaves": 4
-                }
-            }
-        ],
-        "transition_noise_octaves": 3,
-        "transition_noise_range": 255,
+        "breach_threshold": 242,
+        "breach_depth": -8,
+        "transition_threshold": 220,
+        "breach_noise_scale_x": 0.03,
+        "breach_noise_scale_y": 0.03,
+        "breach_noise_offset_y": 1000,
+        "breach_noise_range": 255,
+        "breach_noise_octaves": 2,
         "transition_noise_scale_x": 0.02,
         "transition_noise_scale_y": 0.02,
-        "transition_threshold": 220
+        "transition_noise_range": 255,
+        "transition_noise_octaves": 3
     },
     "celestials": [
         {
             "id": "phantasia:world/playground/celestial/sun",
-            "time_range_max": 890,
-            "time_range_min": 0
+            "time_range_min": 0,
+            "time_range_max": 890
         },
         {
             "id": "phantasia:world/playground/celestial/moon",
-            "time_range_max": 1200,
-            "time_range_min": 890
+            "time_range_min": 890,
+            "time_range_max": 1200
         }
     ],
-    "id": "playground",
-    "region_transition": {
-        "noise_amplitude": 8,
-        "noise_scale": 0.05,
-        "width": 32
-    },
     "spawn_interval": 14,
     "surface": {
-        "bedrock_depth": 3,
-        "bedrock_noise_scale": 0.3,
-        "biome_blend_noise_scale": 0.08,
-        "biome_blend_range": 24,
-        "min_depth": 8,
+        "start": 512,
         "noise_offset": {
-            "max": 96,
+            "octaves": 4,
             "min": 40,
-            "octaves": 4
+            "max": 96
+        },
+        "smoothing": {
+            "range": 32,
+            "factor": 0.6
         },
         "noise_scale": 0.015625,
         "seed_offset": -40,
-        "smoothing": {
-            "factor": 0.6,
-            "range": 32
-        },
-        "start": 512,
-        "tile_variation_noise_scale": 0.05
+        "min_depth": 8,
+        "bedrock_depth": 3,
+        "bedrock_noise_scale": 0.3,
+        "tile_variation_noise_scale": 0.05,
+        "biome_blend_range": 24,
+        "biome_blend_noise_scale": 0.08
     },
     "time": {
+        "start": 240,
         "diurnal": [
             {
                 "id": "dawn",
-                "time_range_max": 240,
-                "time_range_min": 0
+                "time_range_min": 0,
+                "time_range_max": 240
             },
             {
                 "id": "day",
-                "time_range_max": 820,
-                "time_range_min": 240
+                "time_range_min": 240,
+                "time_range_max": 820
             },
             {
                 "id": "dusk",
-                "time_range_max": 890,
-                "time_range_min": 820
+                "time_range_min": 820,
+                "time_range_max": 890
             },
             {
                 "id": "night",
-                "time_range_max": 1200,
-                "time_range_min": 890
+                "time_range_min": 890,
+                "time_range_max": 1200
             }
         ],
-        "length": 1200,
-        "start": 240
+        "length": 1200
     },
     "vignette": {
-        "colour": "#000000",
+        "ystart": 768,
         "yend": 1024,
-        "ystart": 768
+        "colour": "#000000"
     },
     "world_height": 1024
 }

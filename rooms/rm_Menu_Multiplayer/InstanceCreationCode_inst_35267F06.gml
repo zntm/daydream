@@ -1,1 +1,1 @@
-placeholder = loca_translate("menu.multiplayer.textbox.ip");
+placeholder = loca_translate("menu.multiplayer.textbox.invite_code");

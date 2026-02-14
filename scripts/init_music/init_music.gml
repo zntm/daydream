@@ -9,17 +9,28 @@ function init_music(_directory, _namespace = "phantasia", _type = 0)
     {
         var _file = _files[i];
         
-        dbg_timer("init_music");
-        
-        var _name = $"{_namespace}:{_file}";
-        
-        var _audio = audio_create_stream($"{_directory}/{_file}/audio.ogg");
-        var _json = buffer_load_json($"{_directory}/{_file}/data.json");
-        
-        global.music_data[$ _name] = new MusicData(_audio, _json.title, _json.author, _json.length);
-        
-        delete _json;
-        
-        dbg_timer("init_music", $"[Init] Loaded Music: \'{_file}\'");
+        if (directory_exists($"{_directory}/{_file}"))
+        {
+            dbg_timer("init_music");
+            
+            var _name = $"{_namespace}:{_file}";
+            var _data_file = $"{_directory}/{_file}/data.json";
+            
+            if (file_exists(_data_file))
+            {
+                var _json = buffer_load_json(_data_file);
+                
+                if (is_struct(_json))
+                {
+                    var _audio = audio_create_stream($"{_directory}/{_file}/audio.ogg");
+                    
+                    global.music_data[$ _name] = new MusicData(_audio, _json[$ "title"], _json[$ "author"], _json[$ "length"]);
+                    
+                    delete _json;
+                    
+                    dbg_timer("init_music", $"[Init] Loaded Music: \'{_file}\'");
+                }
+            }
+        }
     }
 }

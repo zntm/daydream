@@ -5,34 +5,21 @@
 
 /// @function Structure(_x, _y, _width, _height, _id)
 /// @desc Constructor for structure data struct - replaces obj_Structure
-/// @param {real} _x Pixel X position
-/// @param {real} _y Pixel Y position
-/// @param {real} _width Width in tiles (or pixels if matches sprite)
-/// @param {real} _height Height in tiles (or pixels if matches sprite)
+/// @param {real} _x Tile X position (top-left)
+/// @param {real} _y Tile Y position (top-left)
+/// @param {real} _width Width in tiles
+/// @param {real} _height Height in tiles
 /// @param {string} _id Structure ID
 function Structure(_x, _y, _width, _height, _id) constructor
 {
-    // Properties matching obj_Structure for compatibility
     x = _x;
     y = _y;
-    image_xscale = _width; // Kept as image_xscale for compatibility
-    image_yscale = _height; // Kept as image_yscale for compatibility
+    width = _width;
+    height = _height;
     structure_id = _id;
     
-    var _half_width_pixels = (_width * TILE_SIZE) / 2;
-    var _half_height_pixels = (_height * TILE_SIZE) / 2;
-    
-    // Calculated properties
-    bbox_left = _x - _half_width_pixels;
-    bbox_top = _y - _half_height_pixels;
-    bbox_right = _x + _half_width_pixels;
-    bbox_bottom = _y + _half_height_pixels;
-    
-    structure_xrelative = ceil(bbox_left / TILE_SIZE);
-    structure_yrelative = ceil(bbox_top  / TILE_SIZE);
-    
     // Data storage
-    data = undefined;
+    data  = undefined;
     count = 0;
 }
 
@@ -56,22 +43,11 @@ function StructurePool() : Pool() constructor
         // Initialize
         _struct.x = _x;
         _struct.y = _y;
-        _struct.image_xscale = _width;
-        _struct.image_yscale = _height;
+        _struct.width  = _width;
+        _struct.height = _height;
         _struct.structure_id = _id;
         
-        var _half_width_pixels = (_width * TILE_SIZE) / 2;
-        var _half_height_pixels = (_height * TILE_SIZE) / 2;
-        
-        _struct.bbox_left = _x - _half_width_pixels;
-        _struct.bbox_top = _y - _half_height_pixels;
-        _struct.bbox_right = _x + _half_width_pixels;
-        _struct.bbox_bottom = _y + _half_height_pixels;
-        
-        _struct.structure_xrelative = ceil(_struct.bbox_left / TILE_SIZE);
-        _struct.structure_yrelative = ceil(_struct.bbox_top  / TILE_SIZE);
-        
-        _struct.data = undefined;
+        _struct.data  = undefined;
         _struct.count = 0;
         
         array_push(active_structures, _struct);
@@ -96,17 +72,12 @@ function StructurePool() : Pool() constructor
         }
         
         // Parent release puts it back in pool array
-        // We call the base Pool.release
         on_release(_struct);
         array_push(pool, _struct);
     }
     
     /// @function query_range(_x1, _y1, _x2, _y2)
-    /// @desc Returns an array of structures overlapping the rectangle
-    /// @param {real} _x1 Left coordinate
-    /// @param {real} _y1 Top coordinate
-    /// @param {real} _x2 Right coordinate
-    /// @param {real} _y2 Bottom coordinate
+    /// @desc Returns an array of structures overlapping the rectangle (tile coords)
     static query_range = function(_x1, _y1, _x2, _y2)
     {
         var _results = [];
@@ -116,12 +87,9 @@ function StructurePool() : Pool() constructor
         {
             var _struct = active_structures[i];
             
-            // AABB Overlap check
-            // Rectangle 1: _x1, _y1, _x2, _y2
-            // Rectangle 2: _struct.bbox_left, _struct.bbox_top, _struct.bbox_right, _struct.bbox_bottom
-            
-            if (_struct.bbox_left < _x2 && _struct.bbox_right > _x1 &&
-                _struct.bbox_top < _y2 && _struct.bbox_bottom > _y1)
+            // Tile-based overlap check
+            if (_struct.x < _x2 && (_struct.x + _struct.width) > _x1 &&
+                _struct.y < _y2 && (_struct.y + _struct.height) > _y1)
             {
                 array_push(_results, _struct);
             }
@@ -130,10 +98,16 @@ function StructurePool() : Pool() constructor
         return _results;
     }
     
+    /// @function clear_all()
+    /// @desc Clear all active structures and pool
+    static clear_all = function()
+    {
+        active_structures = [];
+        pool = [];
+    }
+    
     /// @function query_position(_x, _y)
-    /// @desc Returns a structure at the specific point (or undefined)
-    /// @param {real} _x X coordinate
-    /// @param {real} _y Y coordinate
+    /// @desc Returns a structure at the specific tile point
     static query_position = function(_x, _y)
     {
         var _count = array_length(active_structures);
@@ -142,8 +116,8 @@ function StructurePool() : Pool() constructor
         {
             var _struct = active_structures[i];
             
-            if (_x >= _struct.bbox_left && _x < _struct.bbox_right &&
-                _y >= _struct.bbox_top && _y < _struct.bbox_bottom)
+            if (_x >= _struct.x && _x < (_struct.x + _struct.width) &&
+                _y >= _struct.y && _y < (_struct.y + _struct.height))
             {
                 return _struct;
             }

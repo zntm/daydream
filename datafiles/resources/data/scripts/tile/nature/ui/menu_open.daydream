@@ -1,0 +1,105 @@
+var exit_menu = fn() {
+    var game_ctrl = global_get("game_control")
+    game_ctrl.is_opened = game_ctrl.is_opened ^ IS_OPENED_BOOLEAN.MENU
+}
+
+var update_float = fn() {
+    var t = tile_get(tile_x, tile_y, tile_z)
+    var target_data = get_item(t.id)
+    var component = target_data.get_tile_component(tile_component)
+    
+    var val = real(text)
+    if (component.min != undefined && val < component.min) val = component.min
+    if (component.max != undefined && val > component.max) val = component.max
+    
+    t.variable[tile_component] = val
+}
+
+var update_integer = fn() {
+    var t = tile_get(tile_x, tile_y, tile_z)
+    var target_data = get_item(t.id)
+    var component = target_data.get_tile_component(tile_component)
+    
+    var val = round(real(text))
+    if (component.min != undefined && val < component.min) val = component.min
+    if (component.max != undefined && val > component.max) val = component.max
+    
+    t.variable[tile_component] = val
+}
+
+var update_string = fn() {
+    var t = tile_get(tile_x, tile_y, tile_z)
+    if (text == "") {
+        var target_data = get_item(t.id)
+        t.variable[tile_component] = target_data.get_tile_component(tile_component).default
+    } else {
+        t.variable[tile_component] = text
+    }
+}
+
+var camera_x = CAMERA_X
+var camera_y = CAMERA_Y
+
+var menu_layer_id = layer_get_id("Menu_Item")
+var data = parameter.data
+
+for (var i = 0; i < array_length(data); i++) {
+    var item = data[i]
+    var type = item.type
+    
+    if (type == "button") {
+        var inst = instance_create_layer(camera_x + item.x, camera_y + item.y, menu_layer_id, "obj_Menu_Button")
+        inst.image_xscale = item.xscale ?? 1
+        inst.image_yscale = item.yscale ?? 1
+        inst.text = item.text
+        inst.tile_x = x
+        inst.tile_y = y
+        inst.tile_z = z
+        
+        if (item.on_select_release != undefined) {
+            if (item.on_select_release == "exit") {
+                inst.on_select_release = exit_menu
+            } else {
+                var osr_id = item.on_select_release
+                var x_coord = x
+                var y_coord = y
+                var z_coord = z
+                inst.on_select_release = fn() {
+                    function_execute({ id: osr_id, parameters: {} }, x_coord, y_coord, z_coord)
+                }
+            }
+        }
+    } else if (type == "textbox-float" || type == "textbox-integer" || type == "textbox-string") {
+        var inst = instance_create_layer(camera_x + item.x, camera_y + item.y, menu_layer_id, "obj_Menu_Textbox")
+        inst.image_xscale = (item.xscale ?? 1) * 2
+        inst.image_yscale = (item.yscale ?? 1) * 2
+        inst.placeholder = item.placeholder
+        
+        var tile_obj = tile_get(x, y, z)
+        if (item.component != undefined) {
+            var val = string(tile_obj.variable[item.component])
+            inst.text = val
+            inst.text_display = val
+        }
+        
+        inst.tile_x = x
+        inst.tile_y = y
+        inst.tile_z = z
+        inst.tile_component = item.component
+        
+        if (type == "textbox-float") inst.on_update = update_float
+        else if (type == "textbox-integer") inst.on_update = update_integer
+        else if (type == "textbox-string") {
+            inst.on_update = update_string
+            inst.text_length = item.max ?? 24
+        }
+    } else if (type == "anchor") {
+        var inst = instance_create_layer(camera_x + item.x, camera_y + item.y, menu_layer_id, "obj_Menu_Anchor")
+        inst.text = item.text
+        inst.image_xscale = (item.xscale ?? 1) * 2
+        inst.image_yscale = (item.yscale ?? 1) * 2
+    }
+}
+
+var game_ctrl = global_get("game_control")
+game_ctrl.is_opened = game_ctrl.is_opened | IS_OPENED_BOOLEAN.MENU

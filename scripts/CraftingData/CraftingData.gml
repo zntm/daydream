@@ -27,15 +27,7 @@ function CraftingData(_id, _amount) constructor
                 {
                     array_push(global.crafting_stations, _crafting_stations);
                     
-                    var _station_data = global.item_data[$ _crafting_stations];
-                    if (_station_data != undefined)
-                    {
-                        _station_data.set_is_crafting_station(true); 
-                    }
-                    else
-                    {
-                        show_debug_message($"[CraftingData] Warning: Crafting station '{_crafting_stations}' not found in global.item_data");
-                    }
+                    global.item_data[$ _crafting_stations].set_is_crafting_station(true); 
                 }
                 
                 return self;
@@ -52,15 +44,7 @@ function CraftingData(_id, _amount) constructor
                 {
                     array_push(global.crafting_stations, _station);
                     
-                    var _station_data = global.item_data[$ _station];
-                    if (_station_data != undefined)
-                    {
-                        _station_data.set_is_crafting_station(true);
-                    }
-                    else
-                    {
-                        show_debug_message($"[CraftingData] Warning: Crafting station '{_station}' not found in global.item_data");
-                    }
+                    global.item_data[$ _station].set_is_crafting_station(true);
                 }
             }
         }

@@ -1,17 +1,17 @@
 [
     {
-        "length": 1,
         "xoffset": 16,
-        "yoffset": 32
+        "yoffset": 32,
+        "length": 1
     },
     {
-        "length": 8,
         "xoffset": 16,
-        "yoffset": 32
+        "yoffset": 32,
+        "length": 8
     },
     {
-        "length": 14,
         "xoffset": 16,
-        "yoffset": 32
+        "yoffset": 32,
+        "length": 14
     }
 ]

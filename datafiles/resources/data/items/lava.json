@@ -1,34 +1,36 @@
 {
     "inventory": "#phantasia:item/generic/inventory_default",
+    "item": {
+        "tile": {
+            "components": {
+                "flow_direction": {
+                    "default": 0,
+                    "max": 1,
+                    "min": -1,
+                    "type": "s8"
+                },
+                "level": {
+                    "default": 8,
+                    "max": 8,
+                    "min": 1,
+                    "type": "u8"
+                }
+            },
+            "on_use": [
+                {
+                    "id": "items/bucket_pickup",
+                    "parameters": {
+                        "bucket_id": "phantasia:bucket",
+                        "filled_bucket_id": "phantasia:lava_bucket",
+                        "tick_delay": 1
+                    }
+                }
+            ]
+        }
+    },
     "properties": [
         "phantasia:is_liquid"
     ],
     "sprite": "phantasia:item/lava",
-    "tile": {
-        "components": {
-            "flow_direction": {
-                "default": 0,
-                "max": 1,
-                "min": -1,
-                "type": "s8"
-            },
-            "level": {
-                "default": 8,
-                "max": 8,
-                "min": 1,
-                "type": "u8"
-            }
-        },
-        "on_use": [
-            {
-                "id": "@phantasia:item/bucket_pickup",
-                "parameters": {
-                    "bucket_id": "phantasia:bucket",
-                    "filled_bucket_id": "phantasia:lava_bucket",
-                    "flow_speed": 24
-                }
-            }
-        ]
-    },
     "type": "untouchable"
 }

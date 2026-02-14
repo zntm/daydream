@@ -1,37 +1,39 @@
 {
     "inventory": "#phantasia:item/generic/inventory_default",
+    "item": {
+        "tile": {
+            "audio_properties": {
+                "lowpass": 0.65,
+                "reverb": 0.5
+            },
+            "drops": [
+                {
+                    "id": "phantasia:item/platinum_ore",
+                    "condition": {
+                        "id": "#phantasia:item/type/pickaxe",
+                        "level": 0
+                    }
+                }
+            ],
+            "harvest": {
+                "condition": {
+                    "id": "#phantasia:item/type/pickaxe"
+                },
+                "hardness": 0.72,
+                "level": 0,
+                "particle": {
+                    "frequency": "#phantasia:tile/generic/harvest_particle_frequency",
+                    "id": "#phantasia:tile/particle_colour/stone"
+                }
+            },
+            "sfx": "#phantasia:tile/sfx/stone"
+        }
+    },
     "properties": [
         "phantasia:can_flip",
         "phantasia:can_mirror",
         "phantasia:is_tile"
     ],
     "sprite": "phantasia:item/platinum_ore",
-    "tile": {
-        "audio_properties": {
-            "lowpass": 0.65,
-            "reverb": 0.5
-        },
-        "drops": [
-            {
-                "condition": {
-                    "id": "#phantasia:item/type/pickaxe",
-                    "level": 1
-                },
-                "id": "phantasia:platinum_ore"
-            }
-        ],
-        "harvest": {
-            "condition": {
-                "id": "#phantasia:item/type/pickaxe"
-            },
-            "hardness": 0.72,
-            "level": 0,
-            "particle": {
-                "colour": "#phantasia:tile/particle_colour/stone",
-                "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
-            }
-        },
-        "sfx": "#phantasia:tile/sfx/stone"
-    },
     "type": "solid"
 }

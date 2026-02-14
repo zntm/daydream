@@ -1,0 +1,16 @@
+var tile_id = parameter.id
+var level = parameter.level ?? 0
+var dz = parameter.z ?? 0
+
+var target_z = z + dz
+
+if (tile_id == undefined || tile_id == "empty") {
+    tile_place(undefined, x, y, target_z)
+} else {
+    var new_tile = new Tile(tile_id)
+    if (level > 0) new_tile.variable.level = level
+    
+    tile_place(new_tile, x, y, target_z)
+}
+
+tile_update_surrounding(x, y, target_z)

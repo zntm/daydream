@@ -39,7 +39,7 @@ enum PROG_OP
     PUSH_ARRAY_EMPTY, ARRAY_PUSH, ARRAY_SPREAD,
     
     // Module Ops
-    IMPORT, EXPORT_SET,
+    IMPORT, IMPORT_UI, EXPORT_SET,
     
     // Stack Ops Extra
     DUP2, POP_AND_KEEP,
@@ -64,61 +64,7 @@ enum PROG_OP
     LOAD_LOCAL, STORE_LOCAL,
     
     // Annotation Ops
-    MEMOIZE_CHECK, MEMOIZE_STORE,
-    
-    // Superinstructions (merged opcodes for common patterns)
-    INC_LOCAL,          // ++local[arg] (increment local variable in-place)
-    DEC_LOCAL,          // --local[arg] (decrement local variable in-place)
-    LOAD_LOCAL_INC,     // Push local[arg], then increment it (postfix i++)
-    LOAD_LOCAL_DEC,     // Push local[arg], then decrement it (postfix i--)
-    LOAD_LOCAL_LT,      // local[arg1] < local[arg2] (loop condition)
-    LOAD_LOCAL_LE,      // local[arg1] <= local[arg2]
-    LOAD_LOCAL_ADD,     // local[arg1] + local[arg2]
-    PUSH_CONST_ADD,     // Push const[arg] + TOS (e.g., x + 1)
-    PUSH_CONST_LT,      // TOS < const[arg]
-    PUSH_CONST_LE,      // TOS <= const[arg]
-    
-    // Math Functions (direct opcodes for performance)
-    // Unary math (1 arg from stack)
-    MATH_SIN, MATH_COS, MATH_TAN,
-    MATH_ASIN, MATH_ACOS, MATH_ATAN,
-    MATH_SQRT, MATH_EXP, MATH_LN, MATH_LOG2, MATH_LOG10,
-    MATH_FLOOR, MATH_CEIL, MATH_ROUND, MATH_TRUNC,
-    MATH_ABS, MATH_SIGN,
-    MATH_DEGTORAD, MATH_RADTODEG,
-    
-    // Binary math (2 args from stack)
-    MATH_MIN, MATH_MAX,
-    MATH_ATAN2, MATH_POWER, MATH_LOGN,
-    
-    // Random (special handling)
-    MATH_RANDOM,        // random(max)
-    MATH_IRANDOM,       // irandom(max)
-    MATH_RANDOM_RANGE,  // random_range(min, max)
-    MATH_IRANDOM_RANGE, // irandom_range(min, max)
-    MATH_RANDOMIZE,     // randomize()
-    
-    // Utility
-    MATH_CLAMP,         // clamp(val, min, max)
-    MATH_LERP,          // lerp(a, b, t)
-    MATH_FRAC,          // frac(x)
-    MATH_SQR,           // sqr(x)
-    
-    // Degrees trig
-    MATH_DSIN, MATH_DCOS, MATH_DTAN,
-    
-    // 2D Math
-    MATH_POINT_DIST,    // point_distance(x1,y1,x2,y2)
-    MATH_POINT_DIR,     // point_direction(x1,y1,x2,y2)
-    MATH_LENGTHDIR_X,   // lengthdir_x(len, dir)
-    MATH_LENGTHDIR_Y,   // lengthdir_y(len, dir)
-    
-    // Conversion & Collection
-    MATH_CHOOSE,        // choose(array)
-    MATH_TO_STRING,     // string(val)
-    MATH_TO_REAL,       // real(val)
-    
-    MATH_SQRTFAST       // Fast sqrt approximation
+    MEMOIZE_CHECK, MEMOIZE_STORE
 }
 
 /// @desc Array indices for function data (replaces struct)
@@ -261,23 +207,13 @@ function ProgCompiler(_context_keys = []) constructor
         "public": true, "private": true, "protected": true, "abstract": true, "interface": true, "implements": true
     }
     
-    // Emit instruction - packs opcode (16 bits) + arg (16 bits) into single integer
-    // Layout: [OPCODE: 16 bits | ARG: 16 bits]
-    // This reduces instruction fetch overhead by 50% (1 array access instead of 2)
-    static emit = function(_op, _arg = 0, _line = 0)
+    // Emit instruction
+    static emit = function(_op, _arg = undefined, _line = 0)
     {
-        // Ensure arg is a valid integer (handle undefined/null)
-        if (_arg == undefined) _arg = 0;
-        
-        // Pack: opcode in high 16 bits, arg in low 16 bits
-        // Use bitwise AND to mask arg to 16 bits (0xFFFF = 65,535)
-        var _packed = (_op << 16) | (int64(_arg) & 0xFFFF);
-        
-        array_push(bytecode.code, _packed);
+        array_push(bytecode.code, _op, _arg);
         array_push(bytecode.lines, _line);
-        bytecode.code_size++;
-        
-        return bytecode.code_size - 1;
+        bytecode.code_size += 2;
+        return bytecode.code_size - 2;
     }
     
     // Add constant with deduplication
@@ -299,15 +235,10 @@ function ProgCompiler(_context_keys = []) constructor
         return _constants_length;
     }
     
-    // Patch jump address - for packed format, re-pack with new target
+    // Patch jump address
     static patch_jump = function(_address, _target)
     {
-        // Extract opcode from existing packed instruction
-        var _packed = bytecode.code[_address];
-        var _op = (_packed >> 16) & 0xFFFF;
-        
-        // Re-pack with new target
-        bytecode.code[@ _address] = (_op << 16) | (int64(_target) & 0xFFFF);
+        bytecode.code[@ _address + 1] = _target;
     }
     
     /// @desc Compile AST to bytecode
@@ -333,180 +264,7 @@ function ProgCompiler(_context_keys = []) constructor
         emit(PROG_OP.PUSH_NULL);
         emit(PROG_OP.RETURN);
         
-        // Run peephole optimization pass
-        peephole_optimize();
-        
         return bytecode;
-    }
-    
-    /// @desc Peephole optimizer - replaces common instruction patterns with superinstructions
-    /// Uses address mapping to correctly update jump targets after code shrinks
-    /// Works with packed instruction format: [OPCODE: 16 bits | ARG: 16 bits]
-    static peephole_optimize = function()
-    {
-        var _code = bytecode.code;
-        var _len = bytecode.code_size;
-        
-        if (_len < 2) return; // Too short to optimize
-        
-        // Helper to pack instruction
-        var _pack = function(_op, _arg) { return (_op << 16) | (int64(_arg) & 0xFFFF); };
-        
-        // Helper to unpack instruction
-        var _unpack_op = function(_packed) { return (_packed >> 16) & 0xFFFF; };
-        var _unpack_arg = function(_packed) { return _packed & 0xFFFF; };
-        
-        // Build new code and track old->new address mapping
-        var _new_code = [];
-        var _new_lines = [];
-        var _addr_map = array_create(_len + 2, 0);
-        var _i = 0;
-        
-        while (_i < _len)
-        {
-            // Record address mapping: old position -> new position
-            _addr_map[_i] = array_length(_new_code);
-            
-            var _packed1 = _code[_i];
-            var _op1 = _unpack_op(_packed1);
-            var _arg1 = _unpack_arg(_packed1);
-            var _line1 = _i < array_length(bytecode.lines) ? bytecode.lines[_i] : 0;
-            var _matched = false;
-            
-            // Look ahead for patterns
-            if (_i + 2 <= _len)
-            {
-                var _packed2 = _code[_i + 1];
-                var _op2 = _unpack_op(_packed2);
-                var _arg2 = _unpack_arg(_packed2);
-                
-                // Pattern: LOAD_LOCAL + INC + STORE_LOCAL (same index) + POP -> INC_LOCAL
-                if (_op1 == PROG_OP.LOAD_LOCAL && _op2 == PROG_OP.INC && _i + 4 <= _len)
-                {
-                    var _packed3 = _code[_i + 2];
-                    var _op3 = _unpack_op(_packed3);
-                    var _arg3 = _unpack_arg(_packed3);
-                    var _packed4 = _code[_i + 3];
-                    var _op4 = _unpack_op(_packed4);
-                    
-                    if (_op3 == PROG_OP.STORE_LOCAL && _arg3 == _arg1 && _op4 == PROG_OP.POP)
-                    {
-                        array_push(_new_code, _pack(PROG_OP.INC_LOCAL, _arg1));
-                        array_push(_new_lines, _line1);
-                        _addr_map[_i + 1] = array_length(_new_code);
-                        _addr_map[_i + 2] = array_length(_new_code);
-                        _addr_map[_i + 3] = array_length(_new_code);
-                        _i += 4;
-                        _matched = true;
-                    }
-                }
-                
-                // Pattern: LOAD_LOCAL + DEC + STORE_LOCAL (same index) + POP -> DEC_LOCAL
-                if (!_matched && _op1 == PROG_OP.LOAD_LOCAL && _op2 == PROG_OP.DEC && _i + 4 <= _len)
-                {
-                    var _packed3 = _code[_i + 2];
-                    var _op3 = _unpack_op(_packed3);
-                    var _arg3 = _unpack_arg(_packed3);
-                    var _packed4 = _code[_i + 3];
-                    var _op4 = _unpack_op(_packed4);
-                    
-                    if (_op3 == PROG_OP.STORE_LOCAL && _arg3 == _arg1 && _op4 == PROG_OP.POP)
-                    {
-                        array_push(_new_code, _pack(PROG_OP.DEC_LOCAL, _arg1));
-                        array_push(_new_lines, _line1);
-                        _addr_map[_i + 1] = array_length(_new_code);
-                        _addr_map[_i + 2] = array_length(_new_code);
-                        _addr_map[_i + 3] = array_length(_new_code);
-                        _i += 4;
-                        _matched = true;
-                    }
-                }
-                
-                // Pattern: LOAD_LOCAL + LOAD_LOCAL + (LT/LE/ADD) -> merged
-                if (!_matched && _op1 == PROG_OP.LOAD_LOCAL && _op2 == PROG_OP.LOAD_LOCAL && _i + 3 <= _len)
-                {
-                    var _packed3 = _code[_i + 2];
-                    var _op3 = _unpack_op(_packed3);
-                    var _superop = undefined;
-                    
-                    if (_op3 == PROG_OP.LT) _superop = PROG_OP.LOAD_LOCAL_LT;
-                    else if (_op3 == PROG_OP.LE) _superop = PROG_OP.LOAD_LOCAL_LE;
-                    else if (_op3 == PROG_OP.ADD) _superop = PROG_OP.LOAD_LOCAL_ADD;
-                    
-                    if (_superop != undefined)
-                    {
-                        array_push(_new_code, _pack(PROG_OP.LOAD_LOCAL, _arg2));
-                        array_push(_new_lines, _line1);
-                        array_push(_new_code, _pack(_superop, _arg1));
-                        array_push(_new_lines, _line1);
-                        _addr_map[_i + 1] = array_length(_new_code) - 1;
-                        _addr_map[_i + 2] = array_length(_new_code);
-                        _i += 3;
-                        _matched = true;
-                    }
-                }
-                
-                // Pattern: LOAD_LOCAL + PUSH_CONST + (LT/LE/ADD) -> merged
-                if (!_matched && _op1 == PROG_OP.LOAD_LOCAL && _op2 == PROG_OP.PUSH_CONST && _i + 3 <= _len)
-                {
-                    var _packed3 = _code[_i + 2];
-                    var _op3 = _unpack_op(_packed3);
-                    var _superop = undefined;
-                    
-                    if (_op3 == PROG_OP.LT) _superop = PROG_OP.PUSH_CONST_LT;
-                    else if (_op3 == PROG_OP.LE) _superop = PROG_OP.PUSH_CONST_LE;
-                    else if (_op3 == PROG_OP.ADD) _superop = PROG_OP.PUSH_CONST_ADD;
-                    
-                    if (_superop != undefined)
-                    {
-                        array_push(_new_code, _pack(PROG_OP.LOAD_LOCAL, _arg1));
-                        array_push(_new_lines, _line1);
-                        array_push(_new_code, _pack(_superop, _arg2));
-                        array_push(_new_lines, _line1);
-                        _addr_map[_i + 1] = array_length(_new_code) - 1;
-                        _addr_map[_i + 2] = array_length(_new_code);
-                        _i += 3;
-                        _matched = true;
-                    }
-                }
-            }
-            
-            // No pattern matched, copy instruction as-is
-            if (!_matched)
-            {
-                array_push(_new_code, _packed1);
-                array_push(_new_lines, _line1);
-                _i++;
-            }
-        }
-        
-        // Final address mapping for end-of-code
-        _addr_map[_len] = array_length(_new_code);
-        
-        // Pass 2: Fix all jump targets (packed format)
-        var _new_len = array_length(_new_code);
-        for (var j = 0; j < _new_len; j++)
-        {
-            var _packed = _new_code[j];
-            var _op = _unpack_op(_packed);
-            
-            // Check if this is a jump instruction
-            if (_op == PROG_OP.JUMP || _op == PROG_OP.JUMP_IF_FALSE || 
-                _op == PROG_OP.JUMP_IF_TRUE || _op == PROG_OP.JUMP_IF_NULL || 
-                _op == PROG_OP.JUMP_IF_NOT_NULL)
-            {
-                var _old_target = _unpack_arg(_packed);
-                if (_old_target >= 0 && _old_target <= _len)
-                {
-                    _new_code[@ j] = _pack(_op, _addr_map[_old_target]);
-                }
-            }
-        }
-        
-        // Replace bytecode with optimized version
-        bytecode.code = _new_code;
-        bytecode.code_size = _new_len;
-        bytecode.lines = _new_lines;
     }
     
     /// @desc Try constant folding for binary operations
@@ -1663,77 +1421,9 @@ function ProgCompiler(_context_keys = []) constructor
                 }
                 else
                 {
-                    // Check for built-in math functions that can be compiled to direct opcodes
-                    var _math_opcode = undefined;
-                    var _math_arity = 0;
-                    
-                    if (_node.callee.type == PROG_AST.IDENTIFIER)
-                    {
-                        var _fn_name = _node.callee.name;
-                        
-                        // Unary functions (1 arg)
-                        if (_fn_name == "sin") { _math_opcode = PROG_OP.MATH_SIN; _math_arity = 1; }
-                        else if (_fn_name == "cos") { _math_opcode = PROG_OP.MATH_COS; _math_arity = 1; }
-                        else if (_fn_name == "tan") { _math_opcode = PROG_OP.MATH_TAN; _math_arity = 1; }
-                        else if (_fn_name == "asin" || _fn_name == "arcsin") { _math_opcode = PROG_OP.MATH_ASIN; _math_arity = 1; }
-                        else if (_fn_name == "acos" || _fn_name == "arccos") { _math_opcode = PROG_OP.MATH_ACOS; _math_arity = 1; }
-                        else if (_fn_name == "atan" || _fn_name == "arctan") { _math_opcode = PROG_OP.MATH_ATAN; _math_arity = 1; }
-                        else if (_fn_name == "sqrt") { _math_opcode = PROG_OP.MATH_SQRT; _math_arity = 1; }
-                        else if (_fn_name == "sqr") { _math_opcode = PROG_OP.MATH_SQR; _math_arity = 1; }
-                        else if (_fn_name == "exp") { _math_opcode = PROG_OP.MATH_EXP; _math_arity = 1; }
-                        else if (_fn_name == "ln") { _math_opcode = PROG_OP.MATH_LN; _math_arity = 1; }
-                        else if (_fn_name == "log2") { _math_opcode = PROG_OP.MATH_LOG2; _math_arity = 1; }
-                        else if (_fn_name == "log10") { _math_opcode = PROG_OP.MATH_LOG10; _math_arity = 1; }
-                        else if (_fn_name == "floor") { _math_opcode = PROG_OP.MATH_FLOOR; _math_arity = 1; }
-                        else if (_fn_name == "ceil") { _math_opcode = PROG_OP.MATH_CEIL; _math_arity = 1; }
-                        else if (_fn_name == "round") { _math_opcode = PROG_OP.MATH_ROUND; _math_arity = 1; }
-                        else if (_fn_name == "trunc") { _math_opcode = PROG_OP.MATH_TRUNC; _math_arity = 1; }
-                        else if (_fn_name == "frac") { _math_opcode = PROG_OP.MATH_FRAC; _math_arity = 1; }
-                        else if (_fn_name == "abs") { _math_opcode = PROG_OP.MATH_ABS; _math_arity = 1; }
-                        else if (_fn_name == "sign") { _math_opcode = PROG_OP.MATH_SIGN; _math_arity = 1; }
-                        else if (_fn_name == "degtorad") { _math_opcode = PROG_OP.MATH_DEGTORAD; _math_arity = 1; }
-                        else if (_fn_name == "radtodeg") { _math_opcode = PROG_OP.MATH_RADTODEG; _math_arity = 1; }
-                        else if (_fn_name == "dsin") { _math_opcode = PROG_OP.MATH_DSIN; _math_arity = 1; }
-                        else if (_fn_name == "dcos") { _math_opcode = PROG_OP.MATH_DCOS; _math_arity = 1; }
-                        else if (_fn_name == "dtan") { _math_opcode = PROG_OP.MATH_DTAN; _math_arity = 1; }
-                        else if (_fn_name == "random") { _math_opcode = PROG_OP.MATH_RANDOM; _math_arity = 1; }
-                        else if (_fn_name == "irandom") { _math_opcode = PROG_OP.MATH_IRANDOM; _math_arity = 1; }
-                        else if (_fn_name == "string") { _math_opcode = PROG_OP.MATH_TO_STRING; _math_arity = 1; }
-                        else if (_fn_name == "real") { _math_opcode = PROG_OP.MATH_TO_REAL; _math_arity = 1; }
-                        else if (_fn_name == "choose") { _math_opcode = PROG_OP.MATH_CHOOSE; _math_arity = 1; }
-                        // Nondary/Random Functions (0 args)
-                        else if (_fn_name == "randomize") { _math_opcode = PROG_OP.MATH_RANDOMIZE; _math_arity = 0; }
-                        // Binary functions (2 args)
-                        else if (_fn_name == "min") { _math_opcode = PROG_OP.MATH_MIN; _math_arity = 2; }
-                        else if (_fn_name == "max") { _math_opcode = PROG_OP.MATH_MAX; _math_arity = 2; }
-                        else if (_fn_name == "atan2" || _fn_name == "arctan2") { _math_opcode = PROG_OP.MATH_ATAN2; _math_arity = 2; }
-                        else if (_fn_name == "power" || _fn_name == "pow") { _math_opcode = PROG_OP.MATH_POWER; _math_arity = 2; }
-                        else if (_fn_name == "logn") { _math_opcode = PROG_OP.MATH_LOGN; _math_arity = 2; }
-                        else if (_fn_name == "random_range") { _math_opcode = PROG_OP.MATH_RANDOM_RANGE; _math_arity = 2; }
-                        else if (_fn_name == "irandom_range") { _math_opcode = PROG_OP.MATH_IRANDOM_RANGE; _math_arity = 2; }
-                        else if (_fn_name == "lengthdir_x") { _math_opcode = PROG_OP.MATH_LENGTHDIR_X; _math_arity = 2; }
-                        else if (_fn_name == "lengthdir_y") { _math_opcode = PROG_OP.MATH_LENGTHDIR_Y; _math_arity = 2; }
-                        // Ternary functions (3 args)
-                        else if (_fn_name == "clamp") { _math_opcode = PROG_OP.MATH_CLAMP; _math_arity = 3; }
-                        else if (_fn_name == "lerp") { _math_opcode = PROG_OP.MATH_LERP; _math_arity = 3; }
-                        // Quaternary functions (4 args)
-                        else if (_fn_name == "point_distance" || _fn_name == "point_dist") { _math_opcode = PROG_OP.MATH_POINT_DIST; _math_arity = 4; }
-                        else if (_fn_name == "point_direction" || _fn_name == "point_dir") { _math_opcode = PROG_OP.MATH_POINT_DIR; _math_arity = 4; }
-                    }
-                    
-                    if (_math_opcode != undefined && array_length(_node.args) == _math_arity)
-                    {
-                        // Compile args and emit math opcode directly
-                        for (var i = 0; i < _math_arity; i++) compile_node(_node.args[i]);
-                        emit(_math_opcode, 0, _node.line);
-                    }
-                    else
-                    {
-                        // Normal function call
-                        compile_node(_node.callee);
-                        for (var i = 0; i < array_length(_node.args); i++) compile_node(_node.args[i]);
-                        emit(PROG_OP.CALL, array_length(_node.args), _node.line);
-                    }
+                    compile_node(_node.callee);
+                    for (var i = 0; i < array_length(_node.args); i++) compile_node(_node.args[i]);
+                    emit(PROG_OP.CALL, array_length(_node.args), _node.line);
                 }
                 break;
                 
@@ -1903,8 +1593,18 @@ function ProgCompiler(_context_keys = []) constructor
                 break;
             
             case PROG_AST.IMPORT_STMT:
-                emit(PROG_OP.IMPORT, add_constant(_node.module_path), _node.line);
-                // Stack: ExportsStruct
+                // Check if importing from a .ui file
+                var _is_ui = string_ends_with(_node.module_path, ".ui");
+                
+                if (_is_ui)
+                {
+                    emit(PROG_OP.IMPORT_UI, add_constant(_node.module_path), _node.line);
+                }
+                else
+                {
+                    emit(PROG_OP.IMPORT, add_constant(_node.module_path), _node.line);
+                }
+                // Stack: ExportsStruct (or UI definitions struct)
                 for (var i = 0; i < array_length(_node.imports); i++)
                 {
                     var _imp = _node.imports[i];

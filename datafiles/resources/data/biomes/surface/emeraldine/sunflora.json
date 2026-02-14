@@ -1,0 +1,140 @@
+{
+    "background": {
+        "blend": 0.7,
+        "id": "phantasia:background/forest"
+    },
+    "creatures": [],
+    "foliage": [
+        {
+            "id": "phantasia:short_grass",
+            "chance": 0.24,
+            "generate_on": "#phantasia:tile/placement/plant_on"
+        },
+        {
+            "id": "phantasia:tall_grass",
+            "chance": 0.04,
+            "generate_on": "#phantasia:tile/placement/plant_on"
+        },
+        {
+            "id": "phantasia:dandelion",
+            "chance": 0.05,
+            "generate_on": "#phantasia:tile/placement/plant_on"
+        }
+    ],
+    "light_colour": {
+        "points": [
+            {
+                "position": 0.15,
+                "color": "#374A91"
+            },
+            {
+                "position": 0.45,
+                "color": "#FFFFFF"
+            },
+            {
+                "position": 0.72,
+                "color": "#C68B69"
+            },
+            {
+                "position": 0.9,
+                "color": "#141B35"
+            }
+        ]
+    },
+    "map_colour": "#E8D040",
+    "music": [
+        {
+            "id": "phantasia:music/field_of_concourse",
+            "gain": 0.7
+        },
+        {
+            "id": "phantasia:music/red_apple",
+            "gain": 0.6
+        }
+    ],
+    "sky_colour": {
+        "points": [
+            {
+                "position": 0.15,
+                "color": "#371479"
+            },
+            {
+                "position": 0.45,
+                "color": "#5F91FE"
+            },
+            {
+                "position": 0.72,
+                "color": "#C4502D"
+            },
+            {
+                "position": 0.9,
+                "color": "#2b243f"
+            }
+        ]
+    },
+    "structures": [
+        {
+            "id": "phantasia:tall_foliage/sunflower",
+            "chance": 0.08,
+            "generate_on": "#phantasia:tile/placement/plant_on"
+        },
+        {
+            "id": "phantasia:tree/oak",
+            "chance": 0.04,
+            "generate_on": "#phantasia:tile/placement/plant_on"
+        }
+    ],
+    "terrain_modifier": {
+        "height_offset": 2
+    },
+    "tile": {
+        "bottom_layer": {
+            "base": [
+                {
+                    "id": "phantasia:stone"
+                }
+            ],
+            "wall": [
+                {
+                    "id": "phantasia:stone_wall",
+                    "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
+                }
+            ]
+        },
+        "middle_layer": {
+            "base": [
+                {
+                    "id": "phantasia:dirt"
+                }
+            ],
+            "wall": [
+                {
+                    "id": "phantasia:dirt_wall",
+                    "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
+                }
+            ]
+        },
+        "top_layer": {
+            "base": [
+                {
+                    "id": "phantasia:grass_block"
+                }
+            ],
+            "wall": [
+                {
+                    "id": "phantasia:dirt_wall",
+                    "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
+                }
+            ]
+        }
+    }
+}

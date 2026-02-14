@@ -5,54 +5,95 @@
     },
     "foliage": [
         {
+            "id": "phantasia:rock",
             "chance": 0.07,
-            "generate_on": "phantasia:stone",
-            "id": "phantasia:rock"
+            "generate_on": [
+                "phantasia:stone"
+            ]
         },
         {
+            "id": "phantasia:twig",
             "chance": 0.0007,
-            "generate_on": "phantasia:stone",
-            "id": "phantasia:twig"
+            "generate_on": [
+                "phantasia:stone"
+            ]
         }
     ],
+    "light_colour": {
+        "points": [
+            {
+                "position": 0.15,
+                "color": "#374A91"
+            },
+            {
+                "position": 0.45,
+                "color": "#FFFFFF"
+            },
+            {
+                "position": 0.72,
+                "color": "#C68B69"
+            },
+            {
+                "position": 0.9,
+                "color": "#141B35"
+            }
+        ]
+    },
+    "map_colour": "#000000",
     "music": [
         {
-            "gain": 0.6,
-            "id": "phantasia:music/12_hours_at_ease"
+            "id": "phantasia:music/12_hours_at_ease",
+            "gain": 0.7
         },
         {
-            "gain": 0.5,
-            "id": "phantasia:music/behind"
+            "id": "phantasia:music/behind",
+            "gain": 0.6
         }
     ],
+    "sky_colour": {
+        "points": [
+            {
+                "position": 0.15,
+                "color": "#180738"
+            },
+            {
+                "position": 0.45,
+                "color": "#5F91FE"
+            },
+            {
+                "position": 0.72,
+                "color": "#C4502D"
+            },
+            {
+                "position": 0.9,
+                "color": "#000019"
+            }
+        ]
+    },
     "structures": [
         {
-            "chance": 0.003,
-            "generate_on": "#phantasia:tile/placement/plant_on",
             "id": "phantasia:ore/coal",
-            "range_max": 768,
-            "range_min": 0
+            "chance": 0.003,
+            "range_min": 0,
+            "range_max": 768
         },
         {
-            "chance": 0.003,
-            "generate_on": "#phantasia:tile/placement/plant_on",
             "id": "phantasia:ore/copper",
-            "range_max": 768,
-            "range_min": 0
+            "chance": 0.003,
+            "range_min": 0,
+            "range_max": 768
         },
         {
-            "chance": 0.003,
-            "generate_on": "#phantasia:tile/placement/plant_on",
             "id": "phantasia:ore/iron",
-            "range_max": 768,
-            "range_min": 640
+            "chance": 0.003,
+            "range_min": 640,
+            "range_max": 768
         },
         {
-            "chance": 0.003,
-            "generate_on": "#phantasia:tile/placement/plant_on",
             "id": "phantasia:ore/iron",
-            "range_max": 768,
-            "range_min": 712
+            "chance": 0.003,
+            "range_min": 712,
+            "range_max": 768
         }
     ],
     "tile": {

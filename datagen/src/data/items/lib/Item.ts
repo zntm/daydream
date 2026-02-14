@@ -1,20 +1,26 @@
+import type { ItemComponentData } from "./ItemComponent";
+import type { ItemScript } from "./ItemScript";
 import { ItemInventory } from "./ItemInventory";
-import { ItemSprite } from "./ItemSprite";
+import { type ItemPropertiesType } from "./ItemProperties";
 import { ItemType } from "./ItemType";
-import { ItemComponent } from "./ItemComponent";
-import { ItemFunction } from "./ItemFunction";
 
 export class Item {
     private type: ItemType;
-    private sprite: string | ItemSprite;
+    private sprite: string;
     private inventory: string | ItemInventory;
-    private properties?: any;
+    private properties?: ItemPropertiesType[];
+    protected item?: {
+        components?: {
+            [key: string]: ItemComponentData;
+        };
+        on_use?: ItemScript[];
+    };
 
     constructor(
         type: ItemType,
-        sprite: string | ItemSprite,
+        sprite: string,
         inventory: string | ItemInventory,
-        properties?: any,
+        properties?: ItemPropertiesType[],
     ) {
         this.type = type;
         this.sprite = sprite;
@@ -26,70 +32,22 @@ export class Item {
                 : [properties];
         }
     }
-}
 
-/**
- * Useable item - a non-tile item that can have on_use functions and components
- * Used for tools, buckets, consumables, etc.
- */
-export class UseableItem extends Item {
-    private item: {
-        components?: { [key: string]: ItemComponent };
-        on_use?: ItemFunction[];
-        ammo_type?: string;
-        projectile?: string;
-        on_item_double_attack?: ItemFunction[];
-        on_item_double_use?: ItemFunction[];
-        on_item_double_move?: ItemFunction[];
-    };
-
-    constructor(
-        type: ItemType,
-        sprite: string | ItemSprite,
-        inventory: string | ItemInventory,
-        properties?: any,
-    ) {
-        super(type, sprite, inventory, properties);
-        this.item = {};
-    }
-
-    addComponent(key: string, value: ItemComponent) {
+    addItemComponent(key: string, component: ItemComponentData): Item {
+        this.item ??= {};
         this.item.components ??= {};
-        this.item.components[key] = value;
+
+        this.item.components[key] = component;
+
         return this;
     }
 
-    addOnUse(functions: ItemFunction[]) {
+    setItemOnUse(on_use: ItemScript[]): Item {
+        this.item ??= {};
         this.item.on_use ??= [];
-        this.item.on_use.push(...functions);
-        return this;
-    }
 
-    addOnItemDoubleAttack(functions: ItemFunction[]) {
-        this.item.on_item_double_attack ??= [];
-        this.item.on_item_double_attack.push(...functions);
-        return this;
-    }
+        this.item.on_use.push(...on_use);
 
-    addOnItemDoubleUse(functions: ItemFunction[]) {
-        this.item.on_item_double_use ??= [];
-        this.item.on_item_double_use.push(...functions);
-        return this;
-    }
-
-    addOnItemDoubleMove(functions: ItemFunction[]) {
-        this.item.on_item_double_move ??= [];
-        this.item.on_item_double_move.push(...functions);
-        return this;
-    }
-
-    setAmmoType(ammoType: string) {
-        this.item.ammo_type = ammoType;
-        return this;
-    }
-
-    setProjectile(projectile: string) {
-        this.item.projectile = projectile;
         return this;
     }
 }

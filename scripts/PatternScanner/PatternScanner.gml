@@ -258,7 +258,7 @@ function PatternActionSpawnStructure(_structure_id, _offset_x = 0, _offset_y = 0
         var _target_x = _context.x + ___offset_x;
         var _target_y = _context.y + ___offset_y;
         
-        structure_create(___structure_id, _target_x * TILE_SIZE, _target_y * TILE_SIZE, _context.seed);
+        structure_create(_target_x, _target_y, ___structure_id, _context.seed);
     }
 }
 

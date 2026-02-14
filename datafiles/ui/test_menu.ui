@@ -1,0 +1,56 @@
+// Example UI file demonstrating declarative syntax
+
+var _padding = 10
+var _spacing = 8
+
+@window(main_menu) {
+    size = (320, 200)
+    position = (320, 170)
+    movable = true
+    resizable = false
+    title = "Main Menu"
+    background = #1a1a2e
+    
+    @area(content) {
+        padding = _padding
+        layout = LAYOUT_VERTICAL
+        spacing = _spacing
+        
+        @text(world_name) {
+            text = *name
+            colour = #ffffff
+            text_scale = 1.2
+        }
+        
+        @text(player_hp_label) {
+            text = "Health:"
+            colour = #aaaaaa
+        }
+        
+        @bar(hp_bar) {
+            size = (280, 12)
+            min_value = 0
+            max_value = *max_hp
+            value = *current_hp
+            fill_color = #ff4a4a
+        }
+        
+        @button(play_btn) {
+            text = "$phantasia:menu.button.play"
+            size = (280, 32)
+            on_select_release = "@phantasia:menu/play"
+        }
+        
+        @button(settings_btn) {
+            text = "$phantasia:menu.button.settings"
+            size = (280, 32)
+            on_select_release = "@phantasia:menu/settings"
+        }
+        
+        @button(close_btn) {
+            text = "$phantasia:menu.button.close"
+            size = (280, 32)
+            on_select_release = "@phantasia:menu/close"
+        }
+    }
+}

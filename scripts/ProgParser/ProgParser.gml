@@ -1410,6 +1410,52 @@ function ProgParser(_tokens) constructor
         
         if (match(PROG_TOKEN.LPAREN))
         {
+            // Check if this is a lambda: () -> expr  or  (a, b) -> expr
+            // Use lookahead: save position, scan for matching RPAREN then ARROW
+            var _saved = current;
+            var _is_lambda = false;
+            
+            // Quick check: if we see RPAREN immediately, check for ->
+            if (check(PROG_TOKEN.RPAREN))
+            {
+                advance(); // consume )
+                if (check(PROG_TOKEN.ARROW))
+                {
+                    _is_lambda = true;
+                }
+                current = _saved; // restore either way
+            }
+            else
+            {
+                // Tentatively scan ahead: skip identifiers, commas, defaults
+                // looking for matching RPAREN then ARROW
+                var _depth = 1;
+                while (!is_at_end() && _depth > 0)
+                {
+                    var _t = peek().type;
+                    if (_t == PROG_TOKEN.LPAREN) _depth++;
+                    else if (_t == PROG_TOKEN.RPAREN) _depth--;
+                    
+                    if (_depth > 0) advance();
+                }
+                
+                if (_depth == 0)
+                {
+                    advance(); // consume the matching )
+                    if (check(PROG_TOKEN.ARROW))
+                    {
+                        _is_lambda = true;
+                    }
+                }
+                current = _saved; // restore
+            }
+            
+            if (_is_lambda)
+            {
+                return parse_lambda();
+            }
+            
+            // Normal grouped expression
             var _expression = parse_expression();
             consume(PROG_TOKEN.RPAREN, "Expect ')' after expression.");
             return _expression;
@@ -1462,5 +1508,47 @@ function ProgParser(_tokens) constructor
         error_at_current("Expect expression.");
         
         return new ProgASTLiteral(PROG_AST.UNDEFINED_LITERAL, undefined);
+    }
+    
+    /// @desc Parse lambda expression: (params) -> body
+    /// At entry, current is positioned after the initial LPAREN was matched
+    static parse_lambda = function()
+    {
+        // Parse parameter list (we're already past the LPAREN)
+        var _params = [];
+        if (!check(PROG_TOKEN.RPAREN))
+        {
+            do
+            {
+                var _param_name = consume(PROG_TOKEN.IDENTIFIER, "Expected parameter name.").lexeme;
+                var _default = undefined;
+                if (match(PROG_TOKEN.ASSIGN) || match(PROG_TOKEN.EQ))
+                {
+                    _default = parse_assignment();
+                }
+                array_push(_params, { name: _param_name, default_value: _default });
+            } until (!match(PROG_TOKEN.COMMA));
+        }
+        consume(PROG_TOKEN.RPAREN, "Expected ')' after lambda parameters.");
+        
+        // Consume the ->
+        consume(PROG_TOKEN.ARROW, "Expected '->' after lambda parameters.");
+        
+        // Parse body
+        var _body;
+        if (check(PROG_TOKEN.LBRACE))
+        {
+            // Block body: (x) -> { ... }
+            advance(); // consume {
+            _body = new ProgASTBlock(parse_block());
+        }
+        else
+        {
+            // Expression body: (x) -> x * 2  (implicit return)
+            var _expr = parse_assignment();
+            _body = new ProgASTBlock([new ProgASTReturnStmt(_expr)]);
+        }
+        
+        return new ProgASTFuncExpr(undefined, _params, _body);
     }
 }

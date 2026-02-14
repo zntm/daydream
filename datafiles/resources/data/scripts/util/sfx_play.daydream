@@ -1,0 +1,10 @@
+var sound = parameter.id
+if (sound == undefined) return
+
+var world_x = x * TILE_SIZE
+var world_y = y * TILE_SIZE
+
+var volume = parameter.volume ?? 1
+var pitch = parameter.pitch ?? 1
+
+sfx_diegetic_play(undefined, world_x, world_y, smart_value(sound), volume, pitch)

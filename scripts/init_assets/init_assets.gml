@@ -87,8 +87,6 @@ function SoundAsset(_sound, _duration, _author = undefined, _title = undefined, 
     }
 }
 
-
-
 function init_assets(_directory, _namespace, _folder = "")
 {
     var _files = file_read_directory(_directory);

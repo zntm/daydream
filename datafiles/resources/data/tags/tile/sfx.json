@@ -14,11 +14,6 @@
         "harvest": "phantasia:sfx/tile/grass/step",
         "step": "phantasia:sfx/tile/grass/harvest"
     },
-    "leaves": {
-        "build": "phantasia:sfx/tile/leaves/harvest",
-        "harvest": "phantasia:sfx/tile/leaves/step",
-        "step": "phantasia:sfx/tile/leaves/harvest"
-    },
     "metal": {
         "build": "phantasia:sfx/tile/metal/harvest",
         "harvest": "phantasia:sfx/tile/metal/harvest",
