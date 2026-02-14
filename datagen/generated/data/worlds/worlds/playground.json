@@ -11,7 +11,7 @@
         "cloud_y_max": 240,
         "cloud_y_min": 0,
         "parallax_factor": 0.005,
-        "parallax_scale": 0.6,
+        "parallax_scale": 0.8,
         "script": "phantasia:sky/playground_clouds",
         "sprites": [
             "phantasia:world/playground/cloud/default",

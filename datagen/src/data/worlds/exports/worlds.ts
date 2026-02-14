@@ -100,7 +100,7 @@ export default [
                     "phantasia:world/playground/cloud/windy",
                 ],
                 0.005,  // parallax_factor
-                0.6,    // parallax_scale
+                0.8,    // parallax_scale
                 48,     // cloud_count
                 0,      // cloud_y_min
                 240,    // cloud_y_max
