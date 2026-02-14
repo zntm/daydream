@@ -7,9 +7,13 @@
         },
         "durability": {
             "amount": 100,
-            "bar": "#phantasia:item/generic/durability_bar"
+            "bar": "#phantasia:item/generic/inventory_armor"
         }
     },
     "sprite": "phantasia:item/copper_helmet",
+<<<<<<< HEAD
     "type": "accessory"
+=======
+    "type": "tool"
+>>>>>>> region
 }

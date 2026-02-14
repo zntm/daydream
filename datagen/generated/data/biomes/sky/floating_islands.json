@@ -1,16 +1,30 @@
 {
     "background": {
-        "id": "phantasia:background/forest",
-        "blend": 0.7
+        "blend": 0.7,
+        "id": "phantasia:background/forest"
     },
     "creatures": [],
     "foliage": [],
     "is_skyland": true,
     "light_colour": {
-        "dawn": "#374A91",
-        "day": "#FFFFFF",
-        "dusk": "#C68B69",
-        "night": "#141B35"
+        "points": [
+            {
+                "position": 0.15,
+                "color": "#374A91"
+            },
+            {
+                "position": 0.45,
+                "color": "#FFFFFF"
+            },
+            {
+                "position": 0.72,
+                "color": "#C68B69"
+            },
+            {
+                "position": 0.9,
+                "color": "#141B35"
+            }
+        ]
     },
     "map_colour": "#87CEEB",
     "music": [
@@ -24,38 +38,40 @@
         }
     ],
     "sky_colour": {
-        "dawn": {
-            "base": "#371479",
-            "gradient": "#4D1140"
-        },
-        "day": {
-            "base": "#87CEEB",
-            "gradient": "#5F91FE"
-        },
-        "dusk": {
-            "base": "#C4502D",
-            "gradient": "#DA651C"
-        },
-        "night": {
-            "base": "#2B243F",
-            "gradient": "#1E1F2B"
-        }
+        "points": [
+            {
+                "position": 0.15,
+                "color": "#371479"
+            },
+            {
+                "position": 0.45,
+                "color": "#87CEEB"
+            },
+            {
+                "position": 0.72,
+                "color": "#C4502D"
+            },
+            {
+                "position": 0.9,
+                "color": "#2b243f"
+            }
+        ]
     },
     "structures": [],
     "terrain_modifier": {
-        "height_offset": 0,
-        "amplitude_scale": 0.5
+        "amplitude_scale": 0.5,
+        "height_offset": 0
     },
     "tile": {
-        "top_layer": {
+        "bottom_layer": {
             "base": [
                 {
-                    "id": "phantasia:grass_block"
+                    "id": "phantasia:stone"
                 }
             ],
             "wall": [
                 {
-                    "id": "phantasia:dirt_wall",
+                    "id": "phantasia:stone_wall",
                     "weight": 4
                 },
                 {
@@ -79,15 +95,15 @@
                 }
             ]
         },
-        "bottom_layer": {
+        "top_layer": {
             "base": [
                 {
-                    "id": "phantasia:stone"
+                    "id": "phantasia:grass_block"
                 }
             ],
             "wall": [
                 {
-                    "id": "phantasia:stone_wall",
+                    "id": "phantasia:dirt_wall",
                     "weight": 4
                 },
                 {

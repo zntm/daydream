@@ -1,9 +1,41 @@
 {
     "inventory": "#phantasia:item/generic/inventory_default",
+    "item": {
+        "tile": {
+            "audio_properties": {
+                "lowpass": 0.05,
+                "reverb": 0
+            },
+            "drops": [
+                {
+                    "id": "phantasia:twig"
+                }
+            ],
+            "harvest": {
+                "hardness": 0.11,
+                "level": 0,
+                "particle": {
+                    "frequency": "#phantasia:tile/generic/harvest_particle_frequency",
+                    "id": "#phantasia:tile/particle_colour/twig"
+                }
+            },
+            "placement": {
+                "index": {
+                    "type": "smart_value:irandom",
+                    "values": {
+                        "max": 3,
+                        "min": 1
+                    }
+                }
+            },
+            "sfx": "#phantasia:tile/sfx/wood"
+        }
+    },
     "properties": [
         "phantasia:can_mirror"
     ],
     "sprite": "phantasia:item/twig",
+<<<<<<< HEAD
     "tile": {
         "audio_properties": {
             "lowpass": 0.05,
@@ -33,5 +65,7 @@
         },
         "sfx": "#phantasia:tile/sfx/wood"
     },
+=======
+>>>>>>> region
     "type": "untouchable"
 }

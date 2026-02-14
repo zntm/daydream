@@ -1,0 +1,170 @@
+{
+    "background": {
+        "blend": 0.7,
+        "id": "phantasia:background/taiga"
+    },
+    "creatures": [],
+    "foliage": [
+        {
+<<<<<<< HEAD:datagen_new/generated/data/biomes/cave/chasm.json
+            "chance": 0.07,
+            "generate_on": "phantasia:stone",
+            "id": "phantasia:rock"
+        },
+        {
+            "chance": 0.0007,
+            "generate_on": "phantasia:stone",
+            "id": "phantasia:twig"
+=======
+            "id": "phantasia:rock",
+            "chance": 0.1,
+            "generate_on": "#phantasia:tile/placement/plant_on"
+>>>>>>> region:datagen/generated/data/biomes/surface/glacien/flakerocks.json
+        }
+    ],
+    "light_colour": {
+        "points": [
+            {
+                "position": 0.15,
+                "color": "#374A91"
+            },
+            {
+                "position": 0.45,
+                "color": "#FFFFFF"
+            },
+            {
+                "position": 0.72,
+                "color": "#C68B69"
+            },
+            {
+                "position": 0.9,
+                "color": "#141B35"
+            }
+        ]
+    },
+    "map_colour": "#808898",
+    "music": [
+        {
+<<<<<<< HEAD:datagen_new/generated/data/biomes/cave/chasm.json
+            "gain": 0.6,
+            "id": "phantasia:music/12_hours_at_ease"
+        },
+        {
+            "gain": 0.5,
+            "id": "phantasia:music/behind"
+        }
+    ],
+    "structures": [
+        {
+            "chance": 0.003,
+            "generate_on": "#phantasia:tile/placement/plant_on",
+            "id": "phantasia:ore/coal",
+            "range_max": 768,
+            "range_min": 0
+        },
+        {
+            "chance": 0.003,
+            "generate_on": "#phantasia:tile/placement/plant_on",
+            "id": "phantasia:ore/copper",
+            "range_max": 768,
+            "range_min": 0
+        },
+        {
+            "chance": 0.003,
+            "generate_on": "#phantasia:tile/placement/plant_on",
+            "id": "phantasia:ore/iron",
+            "range_max": 768,
+            "range_min": 640
+        },
+        {
+            "chance": 0.003,
+            "generate_on": "#phantasia:tile/placement/plant_on",
+            "id": "phantasia:ore/iron",
+            "range_max": 768,
+            "range_min": 712
+=======
+            "id": "phantasia:music/winter_2012",
+            "gain": 0.7
+        },
+        {
+            "id": "phantasia:music/tense",
+            "gain": 0.6
+>>>>>>> region:datagen/generated/data/biomes/surface/glacien/flakerocks.json
+        }
+    ],
+    "sky_colour": {
+        "points": [
+            {
+                "position": 0.15,
+                "color": "#394A6B"
+            },
+            {
+                "position": 0.45,
+                "color": "#8BAED4"
+            },
+            {
+                "position": 0.72,
+                "color": "#9A6A5F"
+            },
+            {
+                "position": 0.9,
+                "color": "#1A1830"
+            }
+        ]
+    },
+    "structures": [],
+    "terrain_modifier": {
+        "amplitude_scale": 1.4,
+        "height_offset": 6
+    },
+    "tile": {
+        "bottom_layer": {
+            "base": [
+                {
+                    "id": "phantasia:stone"
+                }
+            ],
+            "wall": [
+                {
+                    "id": "phantasia:stone_wall",
+                    "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
+                }
+            ]
+        },
+        "middle_layer": {
+            "base": [
+                {
+                    "id": "phantasia:stone"
+                }
+            ],
+            "wall": [
+                {
+                    "id": "phantasia:stone_wall",
+                    "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
+                }
+            ]
+        },
+        "top_layer": {
+            "base": [
+                {
+                    "id": "phantasia:stone"
+                }
+            ],
+            "wall": [
+                {
+                    "id": "phantasia:stone_wall",
+                    "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
+                }
+            ]
+        }
+    }
+}

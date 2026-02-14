@@ -1,5 +1,6 @@
 {
     "inventory": "#phantasia:item/generic/inventory_default",
+<<<<<<< HEAD
     "sprite": "phantasia:item/glass",
     "tile": {
         "drops": [
@@ -23,6 +24,33 @@
             }
         },
         "sfx": "#phantasia:tile/sfx/stone"
+=======
+    "item": {
+        "tile": {
+            "drops": [
+                {
+                    "id": "phantasia:item/glass",
+                    "condition": {
+                        "id": "#phantasia:item/type/pickaxe",
+                        "level": 1
+                    }
+                }
+            ],
+            "harvest": {
+                "condition": {
+                    "id": "#phantasia:item/type/pickaxe"
+                },
+                "hardness": 0.08,
+                "level": 0,
+                "particle": {
+                    "frequency": "#phantasia:tile/generic/harvest_particle_frequency",
+                    "id": "#phantasia:tile/particle_colour/stone"
+                }
+            },
+            "sfx": "#phantasia:tile/sfx/stone"
+        }
+>>>>>>> region
     },
+    "sprite": "phantasia:item/glass",
     "type": "untouchable"
 }

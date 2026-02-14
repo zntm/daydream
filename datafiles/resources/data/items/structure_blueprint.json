@@ -1,5 +1,6 @@
 {
     "inventory": "#phantasia:item/generic/inventory_default",
+<<<<<<< HEAD
     "sprite": "phantasia:item/structure_blueprint",
     "tile": {
         "audio_properties": {
@@ -62,6 +63,58 @@
             }
         ],
         "sfx": "#phantasia:tile/sfx/stone"
+=======
+    "item": {
+        "tile": {
+            "audio_properties": {
+                "lowpass": 0.65,
+                "reverb": 0.5
+            },
+            "components": {
+                "id": {
+                    "default": "id",
+                    "max": 80,
+                    "type": "string"
+                },
+                "turns_into": {
+                    "default": "turns_into",
+                    "max": 80,
+                    "type": "string"
+                },
+                "xoffset": {
+                    "default": 0,
+                    "max": 127,
+                    "min": -128,
+                    "type": "s32"
+                },
+                "xscale": {
+                    "default": 1,
+                    "max": 255,
+                    "min": 1,
+                    "type": "s32"
+                },
+                "yoffset": {
+                    "default": 0,
+                    "max": 127,
+                    "min": -128,
+                    "type": "s32"
+                },
+                "yscale": {
+                    "default": 1,
+                    "max": 255,
+                    "min": 1,
+                    "type": "s32"
+                }
+            },
+            "on_use": [
+                {
+                    "id": "phantasia:ui/structure_blueprint"
+                }
+            ],
+            "sfx": "#phantasia:tile/sfx/stone"
+        }
+>>>>>>> region
     },
+    "sprite": "phantasia:item/structure_blueprint",
     "type": "solid"
 }

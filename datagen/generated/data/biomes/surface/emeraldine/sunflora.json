@@ -1,0 +1,221 @@
+{
+    "background": {
+        "blend": 0.7,
+        "id": "phantasia:background/forest"
+    },
+<<<<<<< HEAD:datafiles/resources/data/biomes/surface/sunflora.json
+    "creatures": [
+        {
+            "amount": {
+                "type": "smart_value:irandom",
+                "values": {
+                    "max": 4,
+                    "min": 1
+                }
+            },
+            "chance": 0.04,
+            "id": "phantasia:chicken",
+            "tile": "#phantasia:tile/creature_spawn/animal",
+            "time_range_max": 890,
+            "time_range_min": 0
+        },
+        {
+            "amount": {
+                "type": "smart_value:irandom",
+                "values": {
+                    "max": 5,
+                    "min": 1
+                }
+            },
+            "chance": 0.02,
+            "id": "phantasia:rabbit",
+            "tile": "#phantasia:tile/creature_spawn/animal",
+            "time_range_max": 890,
+            "time_range_min": 0
+        }
+    ],
+    "foliage": [
+        {
+            "chance": 0.2,
+            "generate_on": "#phantasia:tile/placement/plant_on",
+            "id": "phantasia:short_grass"
+        },
+        {
+            "chance": 0.02,
+            "generate_on": "#phantasia:tile/placement/plant_on",
+            "id": "phantasia:tall_grass"
+        },
+        {
+            "chance": 0.06,
+            "generate_on": "#phantasia:tile/placement/plant_on",
+            "id": "phantasia:dandelion"
+        },
+        {
+            "chance": 0.02,
+            "generate_on": "#phantasia:tile/placement/plant_on",
+            "id": "phantasia:seeding_dandelion"
+=======
+    "creatures": [],
+    "foliage": [
+        {
+            "id": "phantasia:short_grass",
+            "chance": 0.24,
+            "generate_on": "#phantasia:tile/placement/plant_on"
+        },
+        {
+            "id": "phantasia:tall_grass",
+            "chance": 0.04,
+            "generate_on": "#phantasia:tile/placement/plant_on"
+        },
+        {
+            "id": "phantasia:dandelion",
+            "chance": 0.05,
+            "generate_on": "#phantasia:tile/placement/plant_on"
+>>>>>>> region:datagen/generated/data/biomes/surface/emeraldine/sunflora.json
+        }
+    ],
+    "light_colour": {
+        "points": [
+            {
+                "position": 0.15,
+                "color": "#374A91"
+            },
+            {
+                "position": 0.45,
+                "color": "#FFFFFF"
+            },
+            {
+                "position": 0.72,
+                "color": "#C68B69"
+            },
+            {
+                "position": 0.9,
+                "color": "#141B35"
+            }
+        ]
+    },
+    "map_colour": "#E8D040",
+    "music": [
+        {
+            "gain": 0.7,
+            "id": "phantasia:music/field_of_concourse"
+        },
+        {
+<<<<<<< HEAD:datafiles/resources/data/biomes/surface/sunflora.json
+            "gain": 0.7,
+            "id": "phantasia:music/liminal"
+        },
+        {
+            "gain": 0.6,
+            "id": "phantasia:music/red_apple"
+        },
+        {
+            "gain": 0.6,
+            "id": "phantasia:music/soft_hour"
+        },
+        {
+            "gain": 0.7,
+            "id": "phantasia:music/someday_it_will_rain"
+=======
+            "id": "phantasia:music/red_apple",
+            "gain": 0.6
+>>>>>>> region:datagen/generated/data/biomes/surface/emeraldine/sunflora.json
+        }
+    ],
+    "sky_colour": {
+        "points": [
+            {
+                "position": 0.15,
+                "color": "#371479"
+            },
+            {
+                "position": 0.45,
+                "color": "#5F91FE"
+            },
+            {
+                "position": 0.72,
+                "color": "#C4502D"
+            },
+            {
+                "position": 0.9,
+                "color": "#2b243f"
+            }
+        ]
+    },
+    "structures": [
+        {
+<<<<<<< HEAD:datafiles/resources/data/biomes/surface/sunflora.json
+            "chance": 0.15,
+            "generate_on": "#phantasia:tile/placement/plant_on",
+            "id": "phantasia:tall_foliage/sunflower"
+        },
+        {
+            "chance": 0.03,
+            "generate_on": "#phantasia:tile/placement/plant_on",
+            "id": "phantasia:tree/oak"
+=======
+            "id": "phantasia:tall_foliage/sunflower",
+            "chance": 0.08,
+            "generate_on": "#phantasia:tile/placement/plant_on"
+        },
+        {
+            "id": "phantasia:tree/oak",
+            "chance": 0.04,
+            "generate_on": "#phantasia:tile/placement/plant_on"
+>>>>>>> region:datagen/generated/data/biomes/surface/emeraldine/sunflora.json
+        }
+    ],
+    "terrain_modifier": {
+        "height_offset": 2
+    },
+    "tile": {
+        "bottom_layer": {
+            "base": [
+                {
+                    "id": "phantasia:stone"
+                }
+            ],
+            "wall": [
+                {
+                    "id": "phantasia:stone_wall",
+                    "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
+                }
+            ]
+        },
+        "middle_layer": {
+            "base": [
+                {
+                    "id": "phantasia:dirt"
+                }
+            ],
+            "wall": [
+                {
+                    "id": "phantasia:dirt_wall",
+                    "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
+                }
+            ]
+        },
+        "top_layer": {
+            "base": [
+                {
+                    "id": "phantasia:grass_block"
+                }
+            ],
+            "wall": [
+                {
+                    "id": "phantasia:dirt_wall",
+                    "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
+                }
+            ]
+        }
+    }
+}

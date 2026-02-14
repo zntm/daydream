@@ -1,1 +1,362 @@
-"# Strings and Types\n\n### `string(val)`: string\n\nConverts any value to its string representation.\n\n**Arguments:**\n| Name | Type | Description |\n|------|------|-------------|\n| `val` | any | Value to convert |\n\n**Returns:** string\n\n```javascript\nstring(123); // \"123\"\n```\n\n---\n\n### `real(val)`: number\n\nConverts a string to a number.\n\n**Arguments:**\n| Name | Type | Description |\n|------|------|-------------|\n| `val` | string | String containing a number |\n\n**Returns:** number\n\n```javascript\nreal(\"42\"); // 42\n```\n\n---\n\n### `string_length(str)`: number\n\nReturns the length of a string.\n\n**Arguments:**\n| Name | Type | Description |\n|------|------|-------------|\n| `str` | string | Input string |\n\n**Returns:** number\n\n```javascript\nstring_length(\"Hello\"); // 5\n```\n\n---\n\n### `string_pos(substr, str)`: number\n\nFinds the position of a substring within a string.\n\n**Arguments:**\n| Name | Type | Description |\n|------|------|-------------|\n| `substr` | string | Substring to find |\n| `str` | string | String to search in |\n\n**Returns:** number\n\n```javascript\nstring_pos(\"lo\", \"Hello\"); // 4\n```\n\n---\n\n### `string_delete(str, index, count)`: string\n\nRemoves a part of a string.\n\n**Arguments:**\n| Name | Type | Description |\n|------|------|-------------|\n| `str` | string | Input string |\n| `index` | number | Start position (1-indexed) |\n| `count` | number | Number of characters to delete |\n\n**Returns:** string\n\n```javascript\nstring_delete(\"Hello World\", 6, 6); // \"Hello\"\n```\n\n---\n\n### `string_insert(str, substr, index)`: string\n\nInserts a substring into a string.\n\n**Arguments:**\n| Name | Type | Description |\n|------|------|-------------|\n| `str` | string | Base string |\n| `substr` | string | String to insert |\n| `index` | number | Insertion position (1-indexed) |\n\n**Returns:** string\n\n```javascript\nstring_insert(\"World\", \"Hello \", 1); // \"Hello World\"\n```\n\n---\n\n### `string_replace(str, old, new)`: string\n\nReplaces the first occurrence of a substring.\n\n**Arguments:**\n| Name | Type | Description |\n|------|------|-------------|\n| `str` | string | Original string |\n| `old` | string | Substring to replace |\n| `new` | string | Replacement text |\n\n**Returns:** string\n\n```javascript\nstring_replace(\"Hello World\", \"World\", \"Daydream\"); // \"Hello Daydream\"\n```\n\n---\n\n### `string_replace_all(str, old, new)`: string\n\nReplaces all occurrences of a substring.\n\n**Arguments:**\n| Name | Type | Description |\n|------|------|-------------|\n| `str` | string | Original string |\n| `old` | string | Substring to replace |\n| `new` | string | Replacement text |\n\n**Returns:** string\n\n```javascript\nstring_replace_all(\"ho ho ho\", \"ho\", \"he\"); // \"he he he\"\n```\n\n---\n\n### `string_upper(str)`: string\n\nConverts a string to uppercase.\n\n**Arguments:**\n| Name | Type | Description |\n|------|------|-------------|\n| `str` | string | Input string |\n\n**Returns:** string\n\n```javascript\nstring_upper(\"hello\"); // \"HELLO\"\n```\n\n---\n\n### `string_lower(str)`: string\n\nConverts a string to lowercase.\n\n**Arguments:**\n| Name | Type | Description |\n|------|------|-------------|\n| `str` | string | Input string |\n\n**Returns:** string\n\n```javascript\nstring_lower(\"HELLO\"); // \"hello\"\n```\n\n---\n\n### `string_width(str)`: number\n\nReturns the width of the string in pixels based on current font.\n\n**Arguments:**\n| Name | Type | Description |\n|------|------|-------------|\n| `str` | string | Input string |\n\n**Returns:** number\n\n---\n\n### `string_height(str)`: number\n\nReturns the height of the string in pixels based on current font.\n\n**Arguments:**\n| Name | Type | Description |\n|------|------|-------------|\n| `str` | string | Input string |\n\n**Returns:** number\n\n---\n\n### `chr(code)`: string\n\nConverts an ASCII/Unicode value to a character.\n\n**Arguments:**\n| Name | Type | Description |\n|------|------|-------------|\n| `code` | number | Character code |\n\n**Returns:** string\n\n```javascript\nchr(65); // \"A\"\n```\n\n---\n\n### `ord(char)`: number\n\nConverts a character to its ASCII/Unicode value.\n\n**Arguments:**\n| Name | Type | Description |\n|------|------|-------------|\n| `char` | string | Single character |\n\n**Returns:** number\n\n```javascript\nord(\"A\"); // 65\n```\n\n---\n\n### `is_string(val)`: boolean\n\nReturns true if the value is a string.\n\n**Arguments:**\n| Name | Type | Description |\n|------|------|-------------|\n| `val` | any | Value to check |\n\n**Returns:** boolean\n\n---\n\n### `is_real(val)`: boolean\n\nReturns true if the value is a number.\n\n**Arguments:**\n| Name | Type | Description |\n|------|------|-------------|\n| `val` | any | Value to check |\n\n**Returns:** boolean\n\n---\n\n### `is_numeric(val)`: boolean\n\nReturns true if the value is numeric (real or int64).\n\n**Arguments:**\n| Name | Type | Description |\n|------|------|-------------|\n| `val` | any | Value to check |\n\n**Returns:** boolean\n\n---\n\n### `is_bool(val)`: boolean\n\nReturns true if the value is a boolean.\n\n**Arguments:**\n| Name | Type | Description |\n|------|------|-------------|\n| `val` | any | Value to check |\n\n**Returns:** boolean\n\n---\n\n### `is_array(val)`: boolean\n\nReturns true if the value is an array.\n\n**Arguments:**\n| Name | Type | Description |\n|------|------|-------------|\n| `val` | any | Value to check |\n\n**Returns:** boolean\n\n---\n\n### `is_struct(val)`: boolean\n\nReturns true if the value is a struct.\n\n**Arguments:**\n| Name | Type | Description |\n|------|------|-------------|\n| `val` | any | Value to check |\n\n**Returns:** boolean\n\n---\n\n### `is_undefined(val)`: boolean\n\nReturns true if the value is undefined.\n\n**Arguments:**\n| Name | Type | Description |\n|------|------|-------------|\n| `val` | any | Value to check |\n\n**Returns:** boolean\n\n---\n\n### `is_regex(val)`: boolean\n\nReturns true if the value is a regex object.\n\n**Arguments:**\n| Name | Type | Description |\n|------|------|-------------|\n| `val` | any | Value to check |\n\n**Returns:** boolean\n\n---\n\n### `typeof(val)`: string\n\nReturns a string describing the type of the value.\n\n**Arguments:**\n| Name | Type | Description |\n|------|------|-------------|\n| `val` | any | Value to check |\n\n**Returns:** string\n\n```javascript\ntypeof(123); // \"number\"\n```\n\n---\n\n"
+# Strings and Types
+
+### `string(val)`: string
+
+Converts any value to its string representation.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `val` | any | Value to convert |
+
+**Returns:** string
+
+```javascript
+string(123); // "123"
+```
+
+---
+
+### `real(val)`: number
+
+Converts a string to a number.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `val` | string | String containing a number |
+
+**Returns:** number
+
+```javascript
+real("42"); // 42
+```
+
+---
+
+### `string_length(str)`: number
+
+Returns the length of a string.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `str` | string | Input string |
+
+**Returns:** number
+
+```javascript
+string_length("Hello"); // 5
+```
+
+---
+
+### `string_pos(substr, str)`: number
+
+Finds the position of a substring within a string.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `substr` | string | Substring to find |
+| `str` | string | String to search in |
+
+**Returns:** number
+
+```javascript
+string_pos("lo", "Hello"); // 4
+```
+
+---
+
+### `string_delete(str, index, count)`: string
+
+Removes a part of a string.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `str` | string | Input string |
+| `index` | number | Start position (1-indexed) |
+| `count` | number | Number of characters to delete |
+
+**Returns:** string
+
+```javascript
+string_delete("Hello World", 6, 6); // "Hello"
+```
+
+---
+
+### `string_insert(str, substr, index)`: string
+
+Inserts a substring into a string.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `str` | string | Base string |
+| `substr` | string | String to insert |
+| `index` | number | Insertion position (1-indexed) |
+
+**Returns:** string
+
+```javascript
+string_insert("World", "Hello ", 1); // "Hello World"
+```
+
+---
+
+### `string_replace(str, old, new)`: string
+
+Replaces the first occurrence of a substring.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `str` | string | Original string |
+| `old` | string | Substring to replace |
+| `new` | string | Replacement text |
+
+**Returns:** string
+
+```javascript
+string_replace("Hello World", "World", "Daydream"); // "Hello Daydream"
+```
+
+---
+
+### `string_replace_all(str, old, new)`: string
+
+Replaces all occurrences of a substring.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `str` | string | Original string |
+| `old` | string | Substring to replace |
+| `new` | string | Replacement text |
+
+**Returns:** string
+
+```javascript
+string_replace_all("ho ho ho", "ho", "he"); // "he he he"
+```
+
+---
+
+### `string_upper(str)`: string
+
+Converts a string to uppercase.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `str` | string | Input string |
+
+**Returns:** string
+
+```javascript
+string_upper("hello"); // "HELLO"
+```
+
+---
+
+### `string_lower(str)`: string
+
+Converts a string to lowercase.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `str` | string | Input string |
+
+**Returns:** string
+
+```javascript
+string_lower("HELLO"); // "hello"
+```
+
+---
+
+### `string_width(str)`: number
+
+Returns the width of the string in pixels based on current font.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `str` | string | Input string |
+
+**Returns:** number
+
+---
+
+### `string_height(str)`: number
+
+Returns the height of the string in pixels based on current font.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `str` | string | Input string |
+
+**Returns:** number
+
+---
+
+### `chr(code)`: string
+
+Converts an ASCII/Unicode value to a character.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `code` | number | Character code |
+
+**Returns:** string
+
+```javascript
+chr(65); // "A"
+```
+
+---
+
+### `ord(char)`: number
+
+Converts a character to its ASCII/Unicode value.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `char` | string | Single character |
+
+**Returns:** number
+
+```javascript
+ord("A"); // 65
+```
+
+---
+
+### `is_string(val)`: boolean
+
+Returns true if the value is a string.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `val` | any | Value to check |
+
+**Returns:** boolean
+
+---
+
+### `is_real(val)`: boolean
+
+Returns true if the value is a number.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `val` | any | Value to check |
+
+**Returns:** boolean
+
+---
+
+### `is_numeric(val)`: boolean
+
+Returns true if the value is numeric (real or int64).
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `val` | any | Value to check |
+
+**Returns:** boolean
+
+---
+
+### `is_bool(val)`: boolean
+
+Returns true if the value is a boolean.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `val` | any | Value to check |
+
+**Returns:** boolean
+
+---
+
+### `is_array(val)`: boolean
+
+Returns true if the value is an array.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `val` | any | Value to check |
+
+**Returns:** boolean
+
+---
+
+### `is_struct(val)`: boolean
+
+Returns true if the value is a struct.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `val` | any | Value to check |
+
+**Returns:** boolean
+
+---
+
+### `is_undefined(val)`: boolean
+
+Returns true if the value is undefined.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `val` | any | Value to check |
+
+**Returns:** boolean
+
+---
+
+### `is_regex(val)`: boolean
+
+Returns true if the value is a regex object.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `val` | any | Value to check |
+
+**Returns:** boolean
+
+---
+
+### `typeof(val)`: string
+
+Returns a string describing the type of the value.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `val` | any | Value to check |
+
+**Returns:** string
+
+```javascript
+typeof(123); // "number"
+```
+
+---
+

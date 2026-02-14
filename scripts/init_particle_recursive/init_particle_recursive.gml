@@ -22,33 +22,40 @@ function init_particle_recursive(_directory, _namespace, _id)
             continue;
         }
         
-        dbg_timer("init_particle");
-        
-        if (_id != undefined)
+        if (string_ends_with(_file, ".json"))
         {
-            global.particle_data[$ $"{_namespace}:{_id}"] ??= [];
+            dbg_timer("init_particle");
             
-            array_push(global.particle_data[$ $"{_namespace}:{_id}"], $"{_namespace}:{_name}");
+            if (_id != undefined)
+            {
+                global.particle_data[$ $"{_namespace}:{_id}"] ??= [];
+                
+                array_push(global.particle_data[$ $"{_namespace}:{_id}"], $"{_namespace}:{_name}");
+            }
+            
+            var _json = buffer_load_json(_subdirectory);
+            
+            if (is_struct(_json))
+            {
+                var _particle_data = new ParticleData(_namespace, _id, _json[$ "sprite"]);
+                
+                _particle_data.set_properties(_json[$ "properties"]);
+                _particle_data.set_lifetime(_json[$ "lifetime"]);
+                
+                _particle_data.set_size(_json[$ "size"]);
+                _particle_data.set_orientation(_json[$ "orientation"]);
+                _particle_data.set_colour(_json[$ "colour"]);
+                _particle_data.set_speed(_json[$ "speed"]);
+                _particle_data.set_direction(_json[$ "direction"]);
+                _particle_data.set_gravity(_json[$ "gravity"]);
+                _particle_data.set_wind_factor(_json[$ "wind_factor"]);
+                
+                global.particle_data[$ $"{_namespace}:{string_delete(_name, string_length(_name) - 4, 5)}"] = _particle_data; 
+                
+                delete _json;
+                
+                dbg_timer("init_particle", $"[Init] Loaded Particle: \'{string_delete(_name, string_length(_name) - 4, 5)}\'");
+            }
         }
-        
-        var _json = buffer_load_json(_subdirectory);
-        
-        var _particle_data = new ParticleData(_namespace, _id, _json.sprite);
-        
-        _particle_data.set_properties(_json[$ "properties"]);
-        _particle_data.set_lifetime(_json.lifetime);
-        
-        _particle_data.set_size(_json[$ "size"]);
-        _particle_data.set_orientation(_json[$ "orientation"]);
-        _particle_data.set_colour(_json[$ "colour"]);
-        _particle_data.set_speed(_json[$ "speed"]);
-        _particle_data.set_direction(_json[$ "direction"]);
-        _particle_data.set_gravity(_json[$ "gravity"]);
-        
-        global.particle_data[$ $"{_namespace}:{string_delete(_name, string_length(_name) - 4, 5)}"] = _particle_data; 
-        
-        delete _json;
-        
-        dbg_timer("init_particle", $"[Init] Loaded Particle: \'{string_delete(_name, string_length(_name) - 4, 5)}\'");
     }
 }

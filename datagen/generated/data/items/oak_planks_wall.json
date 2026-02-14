@@ -1,32 +1,37 @@
 {
     "inventory": "#phantasia:item/generic/inventory_tile",
+    "item": {
+        "tile": {
+            "audio_properties": {
+                "lowpass": 0.4,
+                "reverb": 0.1
+            },
+            "drops": [
+                {
+                    "id": "phantasia:oak_planks_wall"
+                }
+            ],
+            "harvest": {
+                "condition": {
+                    "id": "#phantasia:item/type/axe"
+                },
+                "hardness": 0.44,
+                "level": 1,
+                "particle": {
+                    "frequency": "#phantasia:tile/generic/harvest_particle_frequency",
+                    "id": [
+                        "#3B160A",
+                        "#2D0B04"
+                    ]
+                }
+            },
+            "sfx": "#phantasia:tile/sfx/wood"
+        }
+    },
     "properties": [
         "phantasia:is_tile",
         "phantasia:is_wall"
     ],
     "sprite": "phantasia:item/oak_planks_wall",
-    "tile": {
-        "drops": [
-            {
-                "id": "phantasia:oak_planks_wall"
-            }
-        ],
-        "harvest": {
-            "hardness": 0.44,
-            "level": 1,
-            "particle": {
-                "colour": "#phantasia:tile/particle_colour/plank_oak",
-                "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
-            },
-            "condition": {
-                "id": "#phantasia:item/type/axe"
-            }
-        },
-        "sfx": "#phantasia:tile/sfx/wood",
-        "audio_properties": {
-            "lowpass": 0.4,
-            "reverb": 0.1
-        }
-    },
     "type": "untouchable"
 }

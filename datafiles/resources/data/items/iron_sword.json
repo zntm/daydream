@@ -6,16 +6,9 @@
             "amount": 367,
             "bar": "#phantasia:item/generic/durability_bar"
         },
-        "skill": {
-            "on_trigger": {
-                "id": "@phantasia:item/tool/sword_dash",
-                "parameters": {
-                    "power": 8
-                }
-            },
-            "stamina_cost": 20,
-            "threshold": 0.5,
-            "type": "charge"
+        "harvest": {
+            "hardness": 0,
+            "level": 0
         }
     },
     "sprite": "phantasia:item/iron_sword",

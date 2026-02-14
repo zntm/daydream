@@ -1,10 +1,31 @@
 {
     "inventory": "#phantasia:item/generic/inventory_default",
+    "item": {
+        "tile": {
+            "audio_properties": {
+                "lowpass": 0.05,
+                "reverb": 0
+            },
+            "harvest": {
+                "hardness": 0.38,
+                "level": 0,
+                "particle": {
+                    "frequency": "#phantasia:tile/generic/harvest_particle_frequency",
+                    "id": "#phantasia:tile/particle_colour/plant"
+                }
+            },
+            "placement": {
+                "condition": "#phantasia:tile/placement/condition_plant"
+            },
+            "sfx": "#phantasia:tile/sfx/foliage"
+        }
+    },
     "properties": [
         "phantasia:can_mirror",
         "phantasia:is_foliage"
     ],
     "sprite": "phantasia:item/tall_grass_swamp",
+<<<<<<< HEAD
     "tile": {
         "audio_properties": {
             "lowpass": 0.05,
@@ -23,5 +44,7 @@
         },
         "sfx": "#phantasia:tile/sfx/foliage"
     },
+=======
+>>>>>>> region
     "type": "untouchable"
 }

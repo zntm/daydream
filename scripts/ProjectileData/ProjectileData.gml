@@ -1,6 +1,6 @@
 enum PROJECTILE_PROPERTIES_BOOLEAN {
     IS_ADDITIVE             = 1 << 0,
-    IS_DESTROY_ON_COLLISION = 1 << 1,
+    can_destroy_on_tile_collision = 1 << 1,
     IS_FADE_OUT             = 1 << 2,
     HAS_COLLISION           = 1 << 3,
     HAS_STRETCHED_ANIMATION = 1 << 4
@@ -49,7 +49,7 @@ function ProjectileData(_namespace, _id, _sprite) : ParentData(_namespace, _id) 
     {
         static __properties = {
             "phantasia:is_additive":             PROJECTILE_PROPERTIES_BOOLEAN.IS_ADDITIVE,
-            "phantasia:is_destroy_on_collision": PROJECTILE_PROPERTIES_BOOLEAN.IS_DESTROY_ON_COLLISION,
+            "phantasia:can_destroy_on_tile_collision": PROJECTILE_PROPERTIES_BOOLEAN.can_destroy_on_tile_collision,
             "phantasia:is_fade_out":             PROJECTILE_PROPERTIES_BOOLEAN.IS_FADE_OUT,
             "phantasia:has_collision":           PROJECTILE_PROPERTIES_BOOLEAN.HAS_COLLISION,
             "phantasia:has_stretch_animation":   PROJECTILE_PROPERTIES_BOOLEAN.HAS_STRETCHED_ANIMATION
@@ -75,9 +75,9 @@ function ProjectileData(_namespace, _id, _sprite) : ParentData(_namespace, _id) 
         return !!(___properties & PROJECTILE_PROPERTIES_BOOLEAN.IS_ADDITIVE);
     }
     
-    static is_destroy_on_collision = function()
+    static can_destroy_on_tile_collision = function()
     {
-        return !!(___properties & PROJECTILE_PROPERTIES_BOOLEAN.IS_DESTROY_ON_COLLISION);
+        return !!(___properties & PROJECTILE_PROPERTIES_BOOLEAN.can_destroy_on_tile_collision);
     }
     
     static is_fade_out = function()

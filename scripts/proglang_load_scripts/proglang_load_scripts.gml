@@ -321,6 +321,7 @@ function proglang_load_module(_module_path, _importer_path = "") {
 /// @param {struct} _context Execution context
 /// @returns {any} Result
 function proglang_call(_name, _args = [], _context = {}) {
+    show_debug_message($"[Daydream] Proglang Call: {_name}");
     var _bytecode = undefined;
     
     if (struct_exists(global.proglang_exports, _name)) {
@@ -358,7 +359,100 @@ function proglang_call(_name, _args = [], _context = {}) {
     }
     _vm[PROG_VM.SCOPE][PROG_SCOPE.VARS][$ "argc"] = array_length(_args);
     
+    // Inject 'parameter' variable
+    var _arg_count = array_length(_args);
+    if (_arg_count == 1 && is_struct(_args[0])) {
+        _vm[PROG_VM.SCOPE][PROG_SCOPE.VARS][$ "parameter"] = _args[0];
+    } else {
+        _vm[PROG_VM.SCOPE][PROG_SCOPE.VARS][$ "parameter"] = _args;
+    }
+    
     var _result = proglang_vm_run(_vm, _bytecode);
     proglang_vm_free(_vm);
     return _result;
+}
+
+/// @desc Execute a Proglang closure from GML
+/// @param {Array} _closure The closure array [type, bytecode, env, ...]
+/// @param {Array} _args Arguments array
+/// @param {Struct} _context Execution context
+/// @returns {Any} Result
+function proglang_call_closure(_closure, _args = [], _context = {}) {
+    if (!is_array(_closure) || array_length(_closure) < PROG_CLOSURE.SIZE || _closure[PROG_CLOSURE.TYPE] != "closure") {
+        return undefined;
+    }
+    
+    var _vm = proglang_vm_create();
+    _vm[@ PROG_VM.CONTEXT] = _context;
+    
+    // Set up the closure environment
+    var _closure_env = _closure[PROG_CLOSURE.ENV];
+    var _new_scope = array_create(PROG_SCOPE.SIZE);
+    _new_scope[PROG_SCOPE.VARS] = {}
+    _new_scope[PROG_SCOPE.PARENT] = _closure_env;
+    _vm[@ PROG_VM.SCOPE] = _new_scope;
+    
+    // Captured global ref (for cross-module calls/imports)
+    _vm[@ PROG_VM.GLOBAL_REF] = _closure[PROG_CLOSURE.GLOBAL_REF];
+
+    // Arguments
+    var _arg_count = array_length(_args);
+    var _vars = _new_scope[PROG_SCOPE.VARS];
+    for (var i = 0; i < _arg_count; i++) {
+        _vars[$ "arg" + string(i)] = _args[i];
+    }
+    _vars[$ "argc"] = _arg_count;
+    
+    // Inject 'parameter' variable (standard for Daydream calls)
+    if (_arg_count == 1 && is_struct(_args[0])) {
+        _vars[$ "parameter"] = _args[0];
+    } else {
+        _vars[$ "parameter"] = _args;
+    }
+    
+    // Run bytecode
+    var _result = proglang_vm_run(_vm, _closure[PROG_CLOSURE.BYTECODE]);
+    proglang_vm_free(_vm);
+    
+    return _result;
+}
+
+/// @desc Unified execution helper for any callable value
+/// @param {Any} _callable String name, Closure array, Method, or Function struct
+/// @param {Array} _args Arguments array
+/// @param {Struct} _context execution context
+/// @returns {Any} Result
+function proglang_runtime_call(_callable, _args = [], _context = {}) {
+    if (_callable == undefined) return undefined;
+    
+    // 1. Script name (String)
+    if (is_string(_callable)) {
+        return proglang_call(_callable, _args, _context);
+    }
+    
+    // 2. Proglang Closure (Array)
+    if (is_array(_callable) && array_length(_callable) >= PROG_CLOSURE.SIZE && _callable[PROG_CLOSURE.TYPE] == "closure") {
+        return proglang_call_closure(_callable, _args, _context);
+    }
+    
+    // 3. GML Method
+    if (is_method(_callable)) {
+        return method_call(_callable, _args);
+    }
+    
+    // 4. Built-in function wrapper (Struct)
+    if (is_struct(_callable) && struct_exists(_callable, "function")) {
+        return _callable.function(_args, undefined);
+    }
+    
+    // 5. Raw Bytecode (Struct with .code)
+    if (is_struct(_callable) && struct_exists(_callable, "code")) {
+        var _vm = proglang_vm_create();
+        _vm[@ PROG_VM.CONTEXT] = _context;
+        var _res = proglang_vm_run(_vm, _callable);
+        proglang_vm_free(_vm);
+        return _res;
+    }
+    
+    return undefined;
 }

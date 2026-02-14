@@ -1,0 +1,74 @@
+// Loot Blueprint UI
+// Used for defining loot tables in the loot editor
+
+var _padding = 8
+var _spacing = 6
+
+@window(loot_blueprint) {
+    size = (280, 240)
+    position = (8, 100)
+    movable = true
+    resizable = false
+    title = "Loot Blueprint"
+    background = #1a1a2e
+    
+    @area(content) {
+        padding = _padding
+        layout = LAYOUT_VERTICAL
+        spacing = _spacing
+        
+        @text(id_label) {
+            text = "Loot Table ID:"
+            colour = #aaaaaa
+            text_scale = 0.8
+        }
+        
+        @textbox(id_input) {
+            size = (260, 24)
+            text = *loot_id
+            placeholder = "namespace:loot/name"
+        }
+        
+        @text(item_label) {
+            text = "Item ID:"
+            colour = #aaaaaa
+            text_scale = 0.8
+        }
+        
+        @textbox(item_input) {
+            size = (260, 24)
+            text = *item_id
+            placeholder = "namespace:item/name"
+        }
+        
+        @text(weight_label) {
+            text = "Weight:"
+            colour = #aaaaaa
+            text_scale = 0.8
+        }
+        
+        @textbox(weight_input) {
+            size = (260, 24)
+            mode = "integer"
+            text = *weight
+            placeholder = "100"
+        }
+        
+        @area(button_row) {
+            layout = LAYOUT_HORIZONTAL
+            spacing = 8
+            
+            @button(add_btn) {
+                text = "Add Entry"
+                size = (120, 28)
+                on_select_release = "@phantasia:blueprint/add_loot_entry"
+            }
+            
+            @button(export_btn) {
+                text = "Export"
+                size = (120, 28)
+                on_select_release = "@phantasia:blueprint/export_loot"
+            }
+        }
+    }
+}

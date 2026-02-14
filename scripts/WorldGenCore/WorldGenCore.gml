@@ -36,7 +36,17 @@ function WorldGenState(_world_data) constructor
 /// @desc Get the 1D surface height at a specific X position, factoring in biome modifiers
 function worldgen_get_surface_height_at(_x, _seed, _config = global.chunk_pool.worldgen_config)
 {
-    return worldgen_get_surface_height(_x, _seed);
+    var _noise_scale = _config.surface_noise_scale;
+    var _octaves = _config.surface_noise_octaves;
+    var _range_min = _config.surface_noise_range_min;
+    var _range_max = _config.surface_noise_range_max;
+    
+    var _noise = open_simplex_noise(_x * _noise_scale, _seed * 100, 1.0, _octaves);
+    var _noise_norm = (_noise + 1) * 0.5;
+    
+    var _range = lerp(_range_min, _range_max, _noise_norm);
+    
+    return _config.base_height + _range;
 }
 
 function worldgen_get_density(_x, _y, _z, _seed, _config = global.chunk_pool.worldgen_config, _surface_height = undefined)

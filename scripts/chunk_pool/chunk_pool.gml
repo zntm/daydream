@@ -173,8 +173,7 @@ function ChunkPool() : Pool() constructor
                     sky_enabled: _wd.is_sky_biome_enabled(),
                     sky_biome_id: _sky_id,
                     sky_biome_data: global.biome_data[$ _sky_id],
-                    surface_start: _wd.get_surface_start(),
-                    blend_range: _wd.get_biome_blend_range()
+                    surface_start: _wd.get_surface_start()
                 };
             }
             
@@ -253,6 +252,19 @@ function ChunkPool() : Pool() constructor
     {
         // Cleanup resources before GC
         on_release(_chunk);
+    }
+    
+    /// @function clear_all()
+    /// @desc Clear all chunks and free resources
+    static clear_all = function()
+    {
+        // Clean up all pooled chunks
+        for (var i = 0; i < array_length(pool); ++i)
+        {
+            on_release(pool[i]);
+        }
+        pool = [];
+        fading_chunks = [];
     }
     
     // Override release to check capacity

@@ -1,4 +1,4 @@
-import { DatagenReturnData, SmartValueIntRandom } from "../../../index";
+import { DatagenReturnData, SmartValueIntRandom } from "../../lib";
 
 import {
     Structure,
@@ -6,7 +6,7 @@ import {
     StructureParameterTile,
     StructurePlacement,
     StructurePlacementType,
-} from "../structures";
+} from "./lib/Structure";
 
 export class StructureParameter {
     private tile: StructureParameterTile;

@@ -1,0 +1,59 @@
+{
+    "attribute": {
+        "collision_box_height": 17,
+        "collision_box_width": 17,
+        "eye_level": 3,
+        "gravity": 0.5,
+        "hit_box_height": 16,
+        "hit_box_width": 15,
+        "jump_falloff": 2.2,
+        "jump_height": 4.9,
+        "jump_time": 11,
+        "movement_speed": 0.4
+    },
+    "drops": [
+        {
+            "id": "phantasia:raw_rabbit"
+        }
+    ],
+    "hostility_type": "passive",
+    "hp": 12,
+    "movement_type": "ground",
+    "predators": [
+        "phantasia:fox"
+    ],
+    "sprite": {
+        "black": {
+            "idle": {
+                "id": "phantasia:creature/rabbit/idle/black"
+            },
+            "moving": {
+                "id": "phantasia:creature/rabbit/moving/black"
+            }
+        },
+        "default": {
+            "idle": {
+                "id": "phantasia:creature/rabbit/idle/default"
+            },
+            "moving": {
+                "id": "phantasia:creature/rabbit/moving/default"
+            }
+        },
+        "spotted": {
+            "idle": {
+                "id": "phantasia:creature/rabbit/idle/spotted"
+            },
+            "moving": {
+                "id": "phantasia:creature/rabbit/moving/spotted"
+            }
+        },
+        "white": {
+            "idle": {
+                "id": "phantasia:creature/rabbit/idle/white"
+            },
+            "moving": {
+                "id": "phantasia:creature/rabbit/moving/white"
+            }
+        }
+    }
+}

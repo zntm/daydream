@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"P2PValidator",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"P2PValidator",
+  "parent":{
+    "name":"Network",
+    "path":"folders/Scripts/Network.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

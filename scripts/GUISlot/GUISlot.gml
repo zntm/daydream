@@ -154,7 +154,10 @@ function GUISlot(_x, _y, _inventory_name, _slot_index, _sprite = spr_Inventory_S
         
         // Draw item sprite
         var _sprite_name = _item_data.get_sprite();
-        var _sprite = global.sprite_asset[$ _sprite_name].get_sprite();
+        var _sprite_asset = global.sprite_asset[$ _sprite_name];
+        if (_sprite_asset == undefined) exit;
+        
+        var _sprite = _sprite_asset.get_sprite();
         var _index = _item_data.get_inventory_index();
         var _inventory_scale = _item_data.get_inventory_scale();
         

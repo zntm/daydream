@@ -1,7 +1,7 @@
 import {
     DatagenReturnData,
     SmartValueFloatRandom,
-} from "../../..";
+} from "../../lib";
 import {
     Particle,
     ParticleProperties,
@@ -9,7 +9,7 @@ import {
     ParticleGravity,
     ParticleSpeed,
     ParticleDirection,
-} from "../particles";
+} from "./lib/Particle";
 
 export default ["damage", "damage_critical"].map((id) => {
     return new DatagenReturnData(

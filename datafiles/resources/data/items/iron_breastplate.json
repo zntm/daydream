@@ -7,9 +7,13 @@
         },
         "durability": {
             "amount": 308,
-            "bar": "#phantasia:item/generic/durability_bar"
+            "bar": "#phantasia:item/generic/inventory_armor"
         }
     },
     "sprite": "phantasia:item/iron_breastplate",
+<<<<<<< HEAD
     "type": "accessory"
+=======
+    "type": "tool"
+>>>>>>> region
 }

@@ -1,6 +1,7 @@
 import { Item } from "./Item";
-import { ItemInventory } from "./ItemInventory";
+import type { ItemComponentData } from "./ItemComponent";
 import { ItemDurability } from "./ItemDurability";
+import type { ItemScript } from "./ItemScript";
 import { ItemType } from "./ItemType";
 import { EffectModifier } from "../../effects/lib/EffectModifier";
 
@@ -29,9 +30,11 @@ export enum ItemAccessoryType {
 }
 
 export class AccessoryItem extends Item {
-    private item?: {
+    protected override item?: {
         armor?: ItemAccessory;
         durability?: ItemDurability;
+        components?: { [key: string]: ItemComponentData };
+        on_use?: ItemScript[];
     };
 
     constructor(
@@ -42,7 +45,7 @@ export class AccessoryItem extends Item {
         durabilityBar: string,
     ) {
         super(ItemType.Tool, `phantasia:item/${id}`, "#phantasia:item/generic/inventory_tool");
-        
+
         this.setItemAccessory(new ItemAccessory(armorType, armorDefense));
         this.setItemDurability(new ItemDurability(durabilityAmount, durabilityBar));
     }
@@ -61,11 +64,6 @@ export class AccessoryItem extends Item {
         return this;
     }
 
-    /**
-     * Add an attribute modifier to the armor
-     * @param attribute - Attribute to modify (e.g., "gravity", "movement_speed")
-     * @param modifier - The EffectModifier to apply
-     */
     addAttributeModifier(attribute: string, modifier: EffectModifier) {
         if (this.item?.armor) {
             this.item.armor.addAttribute(attribute, modifier);

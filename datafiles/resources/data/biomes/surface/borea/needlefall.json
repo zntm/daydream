@@ -1,0 +1,198 @@
+{
+    "background": {
+        "blend": 0.7,
+        "id": "phantasia:background/taiga"
+    },
+<<<<<<< HEAD:datagen_new/generated/data/biomes/surface/pinesteep.json
+    "creatures": [
+        {
+            "amount": {
+                "type": "smart_value:irandom",
+                "values": {
+                    "max": 2,
+                    "min": 1
+                }
+            },
+            "chance": 0.01,
+            "id": "phantasia:rabbit",
+            "tile": "#phantasia:tile/creature_spawn/animal",
+            "time_range_max": 890,
+            "time_range_min": 0
+        }
+    ],
+    "foliage": [
+        {
+            "chance": 0.15,
+            "generate_on": "#phantasia:tile/placement/plant_on",
+            "id": "phantasia:snow_pile"
+        },
+        {
+=======
+    "creatures": [],
+    "foliage": [
+        {
+            "id": "phantasia:short_grass_taiga",
+            "chance": 0.22,
+            "generate_on": "#phantasia:tile/placement/plant_on"
+        },
+        {
+            "id": "phantasia:tall_grass_taiga",
+>>>>>>> region:datafiles/resources/data/biomes/surface/borea/needlefall.json
+            "chance": 0.04,
+            "generate_on": "#phantasia:tile/placement/plant_on",
+            "id": "phantasia:rock"
+        },
+        {
+<<<<<<< HEAD:datagen_new/generated/data/biomes/surface/pinesteep.json
+            "chance": 0.03,
+            "generate_on": "#phantasia:tile/placement/plant_on",
+            "id": "phantasia:twig"
+=======
+            "id": "phantasia:twig",
+            "chance": 0.06,
+            "generate_on": "#phantasia:tile/placement/plant_on"
+        },
+        {
+            "id": "phantasia:daisy",
+            "chance": 0.04,
+            "generate_on": "#phantasia:tile/placement/plant_on"
+>>>>>>> region:datafiles/resources/data/biomes/surface/borea/needlefall.json
+        }
+    ],
+    "light_colour": {
+        "points": [
+            {
+                "position": 0.15,
+                "color": "#374A91"
+            },
+            {
+                "position": 0.45,
+                "color": "#FFFFFF"
+            },
+            {
+                "position": 0.72,
+                "color": "#C68B69"
+            },
+            {
+                "position": 0.9,
+                "color": "#141B35"
+            }
+        ]
+    },
+    "map_colour": "#3A7A55",
+    "music": [
+        {
+<<<<<<< HEAD:datagen_new/generated/data/biomes/surface/pinesteep.json
+            "gain": 0.6,
+            "id": "phantasia:music/frozen_meadow"
+        },
+        {
+            "gain": 0.5,
+            "id": "phantasia:music/winter_wind"
+=======
+            "id": "phantasia:music/fall",
+            "gain": 0.6
+        },
+        {
+            "id": "phantasia:music/tense",
+            "gain": 0.6
+>>>>>>> region:datafiles/resources/data/biomes/surface/borea/needlefall.json
+        }
+    ],
+    "sky_colour": {
+        "points": [
+            {
+                "position": 0.15,
+                "color": "#371479"
+            },
+            {
+                "position": 0.45,
+                "color": "#5F91FE"
+            },
+            {
+                "position": 0.72,
+                "color": "#C4502D"
+            },
+            {
+                "position": 0.9,
+                "color": "#2b243f"
+            }
+        ]
+    },
+    "structures": [
+        {
+<<<<<<< HEAD:datagen_new/generated/data/biomes/surface/pinesteep.json
+            "chance": 0.12,
+            "generate_on": "#phantasia:tile/placement/plant_on",
+            "id": "phantasia:tree/pine"
+        },
+        {
+            "chance": 0.06,
+            "generate_on": "#phantasia:tile/placement/plant_on",
+            "id": "phantasia:tree/spruce"
+=======
+            "id": "phantasia:tree/pine",
+            "chance": 0.1,
+            "generate_on": "#phantasia:tile/placement/plant_on"
+        },
+        {
+            "id": "phantasia:clump/moss",
+            "chance": 0.006,
+            "generate_on": "#phantasia:tile/placement/plant_on"
+>>>>>>> region:datafiles/resources/data/biomes/surface/borea/needlefall.json
+        }
+    ],
+    "terrain_modifier": {
+        "height_offset": 0
+    },
+    "tile": {
+        "bottom_layer": {
+            "base": [
+                {
+                    "id": "phantasia:stone"
+                }
+            ],
+            "wall": [
+                {
+                    "id": "phantasia:stone_wall",
+                    "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
+                }
+            ]
+        },
+        "middle_layer": {
+            "base": [
+                {
+                    "id": "phantasia:dirt"
+                }
+            ],
+            "wall": [
+                {
+                    "id": "phantasia:dirt_wall",
+                    "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
+                }
+            ]
+        },
+        "top_layer": {
+            "base": [
+                {
+                    "id": "phantasia:grass_block_taiga"
+                }
+            ],
+            "wall": [
+                {
+                    "id": "phantasia:dirt_wall",
+                    "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
+                }
+            ]
+        }
+    }
+}

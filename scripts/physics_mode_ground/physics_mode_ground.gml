@@ -12,7 +12,7 @@ function physics_mode_ground(_body, _input)
     
     if (_input.sprint_held)
     {
-        _move_speed *= 2.2;
+        _move_speed *= 1.25;
     }
     
     var _target_vx = _input.move_x * _move_speed;

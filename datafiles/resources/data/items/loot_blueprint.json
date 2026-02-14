@@ -1,5 +1,6 @@
 {
     "inventory": "#phantasia:item/generic/inventory_default",
+<<<<<<< HEAD
     "sprite": "phantasia:item/loot_blueprint",
     "tile": {
         "audio_properties": {
@@ -34,6 +35,34 @@
             }
         ],
         "sfx": "#phantasia:tile/sfx/stone"
+=======
+    "item": {
+        "tile": {
+            "audio_properties": {
+                "lowpass": 0.65,
+                "reverb": 0.5
+            },
+            "components": {
+                "id": {
+                    "default": "id",
+                    "max": 80,
+                    "type": "string"
+                },
+                "turns_into": {
+                    "default": "turns_into",
+                    "max": 80,
+                    "type": "string"
+                }
+            },
+            "on_use": [
+                {
+                    "id": "phantasia:ui/loot_blueprint"
+                }
+            ],
+            "sfx": "#phantasia:tile/sfx/stone"
+        }
+>>>>>>> region
     },
+    "sprite": "phantasia:item/loot_blueprint",
     "type": "solid"
 }

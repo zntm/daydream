@@ -9,17 +9,6 @@
         "harvest": {
             "hardness": 1.25,
             "level": 4
-        },
-        "skill": {
-            "on_trigger": {
-                "id": "@phantasia:item/tool/mine_area",
-                "parameters": {
-                    "count": 4
-                }
-            },
-            "stamina_cost": 25,
-            "threshold": 1,
-            "type": "charge"
         }
     },
     "sprite": "phantasia:item/gold_pickaxe",

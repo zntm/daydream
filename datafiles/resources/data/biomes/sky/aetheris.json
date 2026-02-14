@@ -4,6 +4,30 @@
         "id": "phantasia:background/forest"
     },
     "is_skyland": true,
+<<<<<<< HEAD:datafiles/resources/data/biomes/sky/aetheris.json
+=======
+    "light_colour": {
+        "points": [
+            {
+                "position": 0.15,
+                "color": "#374A91"
+            },
+            {
+                "position": 0.45,
+                "color": "#FFFFFF"
+            },
+            {
+                "position": 0.72,
+                "color": "#C68B69"
+            },
+            {
+                "position": 0.9,
+                "color": "#141B35"
+            }
+        ]
+    },
+    "map_colour": "#87CEEB",
+>>>>>>> region:datafiles/resources/data/biomes/sky/floating_islands.json
     "music": [
         {
             "gain": 0.7,
@@ -14,6 +38,30 @@
             "id": "phantasia:music/soft_hour"
         }
     ],
+<<<<<<< HEAD:datafiles/resources/data/biomes/sky/aetheris.json
+=======
+    "sky_colour": {
+        "points": [
+            {
+                "position": 0.15,
+                "color": "#371479"
+            },
+            {
+                "position": 0.45,
+                "color": "#87CEEB"
+            },
+            {
+                "position": 0.72,
+                "color": "#C4502D"
+            },
+            {
+                "position": 0.9,
+                "color": "#2b243f"
+            }
+        ]
+    },
+    "structures": [],
+>>>>>>> region:datafiles/resources/data/biomes/sky/floating_islands.json
     "terrain_modifier": {
         "amplitude_scale": 0.5,
         "height_offset": 0

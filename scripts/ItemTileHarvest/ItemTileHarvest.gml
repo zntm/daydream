@@ -2,11 +2,14 @@ function ItemTileParticle(_colours, _frequency) constructor
 {
     ___colours = [];
     
-    var _length = array_length(_colours);
-    
-    for (var i = 0; i < _length; ++i)
+    if (_colours != undefined)
     {
-        array_push(___colours, hex_parse(_colours[i]));
+        var _length = array_length(_colours);
+        
+        for (var i = 0; i < _length; ++i)
+        {
+            array_push(___colours, hex_parse(_colours[i]));
+        }
     }
     
     ___frequency = _frequency;
@@ -24,7 +27,8 @@ function ItemTileParticle(_colours, _frequency) constructor
 
 function ItemTileHarvest(_hardness, _level, _particle, _condition = undefined) : ItemHarvest(_hardness, _level) constructor
 {
-    ___particle = new ItemTileParticle(_particle.colour, smart_value_parse(_particle.frequency));
+    var _colours = _particle[$ "id"] ?? _particle[$ "colour"];
+    ___particle = new ItemTileParticle(_colours, smart_value_parse(_particle.frequency));
     
     if (_condition != undefined)
     {

@@ -1,9 +1,20 @@
 {
     "inventory": "#phantasia:item/generic/inventory_tool",
     "item": {
+<<<<<<< HEAD
         "durability": {
             "amount": 65,
             "bar": "#phantasia:item/generic/durability_bar"
+=======
+        "damage": 1,
+        "durability": {
+            "amount": 65,
+            "bar": "#phantasia:item/generic/durability_bar"
+        },
+        "harvest": {
+            "hardness": 1,
+            "level": 1
+>>>>>>> region
         }
     },
     "sprite": "phantasia:item/mangrove_shovel",

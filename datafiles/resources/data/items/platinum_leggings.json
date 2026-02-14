@@ -7,9 +7,13 @@
         },
         "durability": {
             "amount": 823,
-            "bar": "#phantasia:item/generic/durability_bar"
+            "bar": "#phantasia:item/generic/inventory_armor"
         }
     },
     "sprite": "phantasia:item/platinum_leggings",
+<<<<<<< HEAD
     "type": "accessory"
+=======
+    "type": "tool"
+>>>>>>> region
 }

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"RelayNetwork",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"RelayNetwork",
+  "parent":{
+    "name":"Network",
+    "path":"folders/Scripts/Network.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

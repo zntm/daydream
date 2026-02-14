@@ -1,1 +1,61 @@
-"# Game API\n\n### `tile_get(x, y, z)`: Tile?\n\nGets the tile ID at the specified position.\n\n**Arguments:**\n| Name | Type | Description |\n|------|------|-------------|\n| `x` | number | X position |\n| `y` | number | Y position |\n| `z` | number | Z position (layer) |\n\n**Returns:** Tile?\n\n---\n\n### `tile_place(tile_id, x, y, z)`: void\n\nPlaces a tile at the specified position.\n\n**Arguments:**\n| Name | Type | Description |\n|------|------|-------------|\n| `tile_id` | any | Tile ID or name |\n| `x` | number | X position |\n| `y` | number | Y position |\n| `z` | number | Z position (layer) |\n\n**Returns:** void\n\n---\n\n### `spawn_particle(particle, x, y)`: void\n\nSpawns a particle at the specified position.\n\n**Arguments:**\n| Name | Type | Description |\n|------|------|-------------|\n| `particle` | string | Particle name |\n| `x` | number | X position in tiles |\n| `y` | number | Y position in tiles |\n\n**Returns:** void\n\n---\n\n### `tag_get(tag_name)`: any\n\nGets tag data.\n\n**Arguments:**\n| Name | Type | Description |\n|------|------|-------------|\n| `tag_name` | string | Name of the tag (without #) |\n\n**Returns:** any\n\n---\n\n"
+# Game API
+
+### `tile_get(x, y, z)`: Tile?
+
+Gets the tile ID at the specified position.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `x` | number | X position |
+| `y` | number | Y position |
+| `z` | number | Z position (layer) |
+
+**Returns:** Tile?
+
+---
+
+### `tile_place(tile_id, x, y, z)`: void
+
+Places a tile at the specified position.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `tile_id` | any | Tile ID or name |
+| `x` | number | X position |
+| `y` | number | Y position |
+| `z` | number | Z position (layer) |
+
+**Returns:** void
+
+---
+
+### `spawn_particle(particle, x, y)`: void
+
+Spawns a particle at the specified position.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `particle` | string | Particle name |
+| `x` | number | X position in tiles |
+| `y` | number | Y position in tiles |
+
+**Returns:** void
+
+---
+
+### `tag_get(tag_name)`: any
+
+Gets tag data.
+
+**Arguments:**
+| Name | Type | Description |
+|------|------|-------------|
+| `tag_name` | string | Name of the tag (without #) |
+
+**Returns:** any
+
+---
+

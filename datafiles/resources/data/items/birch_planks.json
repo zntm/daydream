@@ -1,9 +1,38 @@
 {
     "inventory": "#phantasia:item/generic/inventory_tile",
+    "item": {
+        "tile": {
+            "audio_properties": {
+                "lowpass": 0.4,
+                "reverb": 0.1
+            },
+            "drops": [
+                {
+                    "id": "phantasia:birch_planks"
+                }
+            ],
+            "harvest": {
+                "condition": {
+                    "id": "#phantasia:item/type/axe"
+                },
+                "hardness": 0.44,
+                "level": 1,
+                "particle": {
+                    "frequency": "#phantasia:tile/generic/harvest_particle_frequency",
+                    "id": [
+                        "#4F5263",
+                        "#3E4051"
+                    ]
+                }
+            },
+            "sfx": "#phantasia:tile/sfx/wood"
+        }
+    },
     "properties": [
         "phantasia:is_tile"
     ],
     "sprite": "phantasia:item/birch_planks",
+<<<<<<< HEAD
     "tile": {
         "audio_properties": {
             "lowpass": 0.4,
@@ -30,5 +59,7 @@
         },
         "sfx": "#phantasia:tile/sfx/wood"
     },
+=======
+>>>>>>> region
     "type": "solid"
 }

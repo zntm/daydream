@@ -2,7 +2,7 @@ import {
     DatagenReturnData,
     type SmartValue,
     ChooseWeightedOption,
-} from "../../../index";
+} from "../../lib";
 import {
     SmartValueChooseWeighted,
     SmartValueIntRandom,
@@ -15,7 +15,7 @@ import {
     StructurePlacement,
     StructurePlacementClearanceCondition,
     StructurePlacementType,
-} from "../structures";
+} from "./lib/Structure";
 
 class StructureParameter {
     private tile_top: StructureParameterTile;
@@ -36,7 +36,7 @@ class StructureParameter {
 export default [
     // Cactus
     new DatagenReturnData(
-        "generated/data/structures/tall_foliage/cactus.json",
+        "tall_foliage/cactus.json",
         new Structure(
             1,
             new SmartValueIntRandom(2, 6),
@@ -47,7 +47,7 @@ export default [
                     1,
                     "height",
                 ),
-            ]),
+            ], true),
             new StructureFunction(
                 "phantasia:tall_foliage",
                 new StructureParameter(
@@ -66,7 +66,7 @@ export default [
     ),
     // Cattail
     new DatagenReturnData(
-        "generated/data/structures/tall_foliage/cattail.json",
+        "tall_foliage/cattail.json",
         new Structure(
             1,
             new SmartValueIntRandom(3, 8),
@@ -77,7 +77,7 @@ export default [
                     1,
                     "height",
                 ),
-            ]),
+            ], true),
             new StructureFunction(
                 "phantasia:tall_foliage",
                 new StructureParameter(
@@ -90,7 +90,7 @@ export default [
     ),
     // Sunflower
     new DatagenReturnData(
-        "generated/data/structures/tall_foliage/sunflower.json",
+        "tall_foliage/sunflower.json",
         new Structure(
             1,
             new SmartValueIntRandom(3, 6),
@@ -101,7 +101,7 @@ export default [
                     1,
                     "height",
                 ),
-            ]),
+            ], true),
             new StructureFunction(
                 "phantasia:tall_foliage",
                 new StructureParameter(

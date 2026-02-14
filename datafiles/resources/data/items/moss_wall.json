@@ -1,5 +1,27 @@
 {
     "inventory": "#phantasia:item/generic/inventory_tile",
+    "item": {
+        "tile": {
+            "audio_properties": {
+                "lowpass": 0.05,
+                "reverb": 0
+            },
+            "drops": [
+                {
+                    "id": "phantasia:moss_wall"
+                }
+            ],
+            "harvest": {
+                "hardness": 0.26,
+                "level": 0,
+                "particle": {
+                    "frequency": "#phantasia:tile/generic/harvest_particle_frequency",
+                    "id": "#phantasia:tile/particle_colour/moss"
+                }
+            },
+            "sfx": "#phantasia:tile/sfx/foliage"
+        }
+    },
     "properties": [
         "phantasia:can_flip",
         "phantasia:can_mirror",
@@ -7,6 +29,7 @@
         "phantasia:is_wall"
     ],
     "sprite": "phantasia:item/moss_wall",
+<<<<<<< HEAD
     "tile": {
         "audio_properties": {
             "lowpass": 0.05,
@@ -28,4 +51,7 @@
         "sfx": "#phantasia:tile/sfx/foliage"
     },
     "type": "solid"
+=======
+    "type": "untouchable"
+>>>>>>> region
 }
