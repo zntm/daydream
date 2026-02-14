@@ -105,6 +105,12 @@ function ui_load(_path) {
 /// @param {Array|undefined} _events Optional array of event strings that trigger re-renders
 /// @returns {Struct} UI instance with spawned elements
 function ui_spawn(_definitions, _config = {}, _events = undefined) {
+    // Handle ui_load() result struct (has .document property)
+    if (is_struct(_definitions) && variable_struct_exists(_definitions, "document")) {
+        var _doc = _definitions.document;
+        _definitions = _doc.definitions;
+    }
+    
     // Normalize definitions to an array if it's a single struct
     if (is_struct(_definitions) && variable_struct_exists(_definitions, "type") && _definitions.type == UI_AST.ELEMENT) {
         _definitions = [_definitions];
@@ -129,7 +135,8 @@ function ui_spawn(_definitions, _config = {}, _events = undefined) {
         root_elements: [],
         link_context: _link,
         render_events: _events,   // Array of event strings, or undefined for every-frame
-        dirty: true               // Start dirty so first frame always renders
+        dirty: true,              // Start dirty so first frame always renders
+        visible: true             // Control visibility of all root elements
     };
     
     var _def_count = array_length(_definitions);
@@ -197,7 +204,20 @@ function ui_process_spawned_element(_element, _instance, _parent) {
     _element.instance = _instance;
     
     if (_parent != undefined) {
-        _parent.add_child(_element);
+        // Handle UIElement or GUIComponent parent
+        if (variable_struct_exists(_parent, "add_child")) {
+            _parent.add_child(_element);
+        } 
+        // Handle UIInstance struct parent (result of ui_spawn)
+        else if (variable_struct_exists(_parent, "root_elements") && array_length(_parent.root_elements) > 0) {
+            var _actual_parent = _parent.root_elements[0];
+            if (variable_struct_exists(_actual_parent, "add_child")) {
+                _actual_parent.add_child(_element);
+            }
+        }
+        else {
+            show_debug_message($"[UI Runtime] Warning: Parent object is incompatible (missing add_child). Element '{_element.element_name}' will be a root element.");
+        }
     }
     
     array_push(_instance.root_elements, _element);
@@ -205,6 +225,21 @@ function ui_process_spawned_element(_element, _instance, _parent) {
     
     // Register all nested elements by name
     ui_register_nested_elements(_element, _instance.elements);
+}
+
+/// @desc Recursively collect all elements with specific properties
+/// @param {Struct.UIElement} _element Root element to start from
+/// @param {Array} _out Array to collect matching elements into
+function ui_collect_slots(_element, _out) {
+    if (variable_struct_exists(_element, "inventory_name") && variable_struct_exists(_element, "slot_index")) {
+        array_push(_out, _element);
+    }
+    
+    var _children = _element.children;
+    var _count = array_length(_children);
+    for (var i = 0; i < _count; i++) {
+        ui_collect_slots(_children[i], _out);
+    }
 }
 
 /// @desc Register nested elements by name
@@ -295,9 +330,45 @@ function ui_instantiate_element(_node, _link, _variables) {
     var _child_count = array_length(_node.children);
     for (var i = 0; i < _child_count; i++) {
         var _child_node = _node.children[i];
-        var _child = ui_instantiate_element(_child_node, _link, _variables);
-        if (_child != undefined) {
-            _element.add_child(_child);
+        
+        // Handle multiple(count, var) expansion
+        if (_child_node.multiple_count != undefined) {
+            var _mult_count = _child_node.multiple_count;
+            var _mult_var = _child_node.multiple_var;
+            var _base_name = _child_node.name;
+            
+            for (var j = 0; j < _mult_count; j++) {
+                // Create a copy of the variables scope with the loop variable
+                var _loop_vars = {};
+                var _var_names = struct_get_names(_variables);
+                for (var k = 0; k < array_length(_var_names); k++) {
+                    _loop_vars[$ _var_names[k]] = _variables[$ _var_names[k]];
+                }
+                _loop_vars[$ _mult_var] = j;
+                
+                // Override the element name for each copy
+                var _saved_name = _child_node.name;
+                _child_node.name = _base_name + "_" + string(j);
+                
+                // Temporarily clear multiple to prevent infinite recursion
+                var _saved_count = _child_node.multiple_count;
+                _child_node.multiple_count = undefined;
+                
+                var _child = ui_instantiate_element(_child_node, _link, _loop_vars);
+                
+                // Restore original values
+                _child_node.name = _saved_name;
+                _child_node.multiple_count = _saved_count;
+                
+                if (_child != undefined) {
+                    _element.add_child(_child);
+                }
+            }
+        } else {
+            var _child = ui_instantiate_element(_child_node, _link, _variables);
+            if (_child != undefined) {
+                _element.add_child(_child);
+            }
         }
     }
     
@@ -328,11 +399,61 @@ function ui_apply_property(_element, _prop, _link, _variables) {
         
         case "position":
             if (is_array(_value) && array_length(_value) >= 2) {
-                // Resolve percentages against GUI dimensions for top-level position
-                var _gui_w = variable_global_exists("gui_width") ? global.gui_width : 960;
-                var _gui_h = variable_global_exists("gui_height") ? global.gui_height : 540;
-                _element.x = ui_resolve_percentage(_value[0], _gui_w);
-                _element.y = ui_resolve_percentage(_value[1], _gui_h);
+                var _vx = _value[0];
+                var _vy = _value[1];
+                
+                // Auto-detect anchors from percentages
+                var _ax = undefined;
+                var _ay = undefined;
+                
+                if (is_struct(_vx)) {
+                    var _p = _vx[$ "percent_value"] ?? _vx[$ "value"];
+                    if (_p == 0) _ax = "left";
+                    else if (_p == 50) _ax = "center";
+                    else if (_p == 100) _ax = "right";
+                }
+                if (is_struct(_vy)) {
+                    var _p = _vy[$ "percent_value"] ?? _vy[$ "value"];
+                    if (_p == 0) _ay = "top";
+                    else if (_p == 50) _ay = "middle";
+                    else if (_p == 100) _ay = "bottom";
+                }
+                
+                if (_ax != undefined || _ay != undefined) {
+                    _element.set_anchor(_ax ?? _element.anchor_x ?? "left", _ay ?? _element.anchor_y ?? "top");
+                }
+                
+                // Resolve to pixels for the offset
+                var _ref_w = 960;
+                var _ref_h = 540;
+                var _rx = ui_resolve_percentage(_vx, _ref_w);
+                var _ry = ui_resolve_percentage(_vy, _ref_h);
+                
+                // If it was a clean percentage, the offset should be 0 relative to that anchor
+                // e.g. ORIGIN_CENTER + (10, 0) -> anchor=center, offset=10
+                if (is_struct(_vx) && _vx[$ "is_calc"] == true) _rx = _vx.absolute_offset;
+                else if (is_struct(_vx) && _vx[$ "is_percent"] == true) _rx = 0;
+                
+                if (is_struct(_vy) && _vy[$ "is_calc"] == true) _ry = _vy.absolute_offset;
+                else if (is_struct(_vy) && _vy[$ "is_percent"] == true) _ry = 0;
+
+                _element.offset_x = _rx;
+                _element.offset_y = _ry;
+                _element.x = _rx;
+                _element.y = _ry;
+                _element.recalculate_layout();
+            }
+            break;
+            
+        case "anchor":
+            if (is_array(_value) && array_length(_value) >= 2) {
+                var _ax = _value[0];
+                var _ay = _value[1];
+                // Support both ORIGIN_* aliases and raw strings
+                if (is_array(_ax)) _ax = "center"; // fallback for weirdness
+                if (is_array(_ay)) _ay = "middle";
+                
+                _element.set_anchor(_ax, _ay);
             }
             break;
         
@@ -353,6 +474,10 @@ function ui_apply_property(_element, _prop, _link, _variables) {
         
         case "spacing":
             _element.spacing = _value;
+            break;
+        
+        case "grid_columns":
+            _element.grid_columns = floor(_value);
             break;
         
         case "background":
@@ -555,6 +680,15 @@ function ui_resolve_value(_node, _link, _variables) {
             var _lv = ui_resolve_value(_node.left, _link, _variables);
             var _rv = ui_resolve_value(_node.right, _link, _variables);
             return ui_calc_binary_op(_node.op, _lv, _rv);
+        
+        case UI_AST.FUNC_CALL:
+            var _arg_val = ui_resolve_value(_node.arg, _link, _variables);
+            switch (_node.func_name) {
+                case "floor": return floor(_arg_val);
+                default:
+                    show_debug_message($"[UI Runtime] Unknown function: {_node.func_name}");
+                    return _arg_val;
+            }
     }
     
     return undefined;
@@ -819,10 +953,17 @@ function ui_refresh(_instance) {
 /// @param {Struct} _instance UI instance
 function ui_update(_instance) {
     if (_instance == undefined) return;
+    
+    // Sync visibility to root elements
+    var _is_visible = _instance[$ "visible"] ?? true;
+    var _root_count = array_length(_instance.root_elements);
+    for (var i = 0; i < _root_count; i++) {
+        _instance.root_elements[i].visible = _is_visible;
+    }
+    
     if (!ui_should_render(_instance)) return;
     
-    var _count = array_length(_instance.root_elements);
-    for (var i = 0; i < _count; i++) {
+    for (var i = 0; i < _root_count; i++) {
         _instance.root_elements[i].update();
     }
 }

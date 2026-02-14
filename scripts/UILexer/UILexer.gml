@@ -29,6 +29,10 @@ enum UI_TOKEN {
     // Keywords
     VAR,
     EXPORT,
+    MULTIPLE,    // multiple(count, var)
+    
+    // Built-in functions
+    FLOOR,       // floor(expr)
     
     // Layout enums (treated as identifiers but reserved)
     LAYOUT_VERTICAL,
@@ -57,9 +61,11 @@ function UILexer(_source) constructor {
     static keywords = {
         "var": UI_TOKEN.VAR,
         "export": UI_TOKEN.EXPORT,
+        "multiple": UI_TOKEN.MULTIPLE,
         "true": UI_TOKEN.TRUE,
         "false": UI_TOKEN.FALSE,
         "undefined": UI_TOKEN.UNDEFINED,
+        "floor": UI_TOKEN.FLOOR,
         "LAYOUT_VERTICAL": UI_TOKEN.LAYOUT_VERTICAL,
         "LAYOUT_HORIZONTAL": UI_TOKEN.LAYOUT_HORIZONTAL,
         "LAYOUT_GRID": UI_TOKEN.LAYOUT_GRID,

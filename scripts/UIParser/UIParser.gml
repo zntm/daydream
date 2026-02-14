@@ -131,11 +131,26 @@ function UIParser(_tokens) constructor {
         var _type_token = consume(UI_TOKEN.IDENTIFIER, "Expected element type after '@'.");
         var _element_type = _type_token.literal ?? _type_token.lexeme;
         
+        show_debug_message($"[UI Parser] Parsing element: @{_element_type}...");
+        
         // Element name in parentheses
         consume(UI_TOKEN.LPAREN, "Expected '(' after element type.");
         var _name_token = consume(UI_TOKEN.IDENTIFIER, "Expected element name.");
         var _name = _name_token.literal ?? _name_token.lexeme;
         consume(UI_TOKEN.RPAREN, "Expected ')' after element name.");
+        
+        // Optional multiple(count, var) modifier
+        var _multiple_count = undefined;
+        var _multiple_var = undefined;
+        if (match(UI_TOKEN.MULTIPLE)) {
+            consume(UI_TOKEN.LPAREN, "Expected '(' after 'multiple'.");
+            var _count_token = consume(UI_TOKEN.NUMBER, "Expected count in multiple().");
+            _multiple_count = _count_token.literal;
+            consume(UI_TOKEN.COMMA, "Expected ',' after count in multiple().");
+            var _var_token = consume(UI_TOKEN.IDENTIFIER, "Expected variable name in multiple().");
+            _multiple_var = _var_token.literal ?? _var_token.lexeme;
+            consume(UI_TOKEN.RPAREN, "Expected ')' after multiple arguments.");
+        }
         
         // Element body
         consume(UI_TOKEN.LBRACE, "Expected '{' before element body.");
@@ -165,12 +180,17 @@ function UIParser(_tokens) constructor {
         
         consume(UI_TOKEN.RBRACE, "Expected '}' after element body.");
         
-        return new UIASTElement(_element_type, _name, _properties, _children);
+        var _element = new UIASTElement(_element_type, _name, _properties, _children);
+        _element.multiple_count = _multiple_count;
+        _element.multiple_var = _multiple_var;
+        return _element;
     }
     
     static parse_property = function() {
         var _key_token = consume(UI_TOKEN.IDENTIFIER, "Expected property name.");
         var _key = _key_token.literal ?? _key_token.lexeme;
+        
+        show_debug_message($"[UI Parser]   Property: {_key}...");
         
         consume(UI_TOKEN.EQUALS, "Expected '=' after property name.");
         
@@ -215,6 +235,7 @@ function UIParser(_tokens) constructor {
         
         while (check(UI_TOKEN.STAR) || check(UI_TOKEN.SLASH) || check(UI_TOKEN.PERCENT)) {
             var _op_token = advance();
+            show_debug_message($"[UI Parser]       Binary op: {_op_token.lexeme}");
             var _op;
             switch (_op_token.type) {
                 case UI_TOKEN.STAR: _op = "*"; break;
@@ -345,6 +366,14 @@ function UIParser(_tokens) constructor {
         // Identifier (variable reference, including ORIGIN_* macros)
         if (match(UI_TOKEN.IDENTIFIER)) {
             return new UIASTIdentifier(previous().literal ?? previous().lexeme);
+        }
+        
+        // Built-in functions: floor(expr)
+        if (match(UI_TOKEN.FLOOR)) {
+            consume(UI_TOKEN.LPAREN, "Expected '(' after 'floor'.");
+            var _func_arg = parse_value();
+            consume(UI_TOKEN.RPAREN, "Expected ')' after floor argument.");
+            return new UIASTFuncCall("floor", _func_arg);
         }
         
         error_at_current("Expected value.");

@@ -31,7 +31,10 @@ enum UI_AST {
     
     // Export declarations
     EXPORT_VAR,     // export var name = value
-    EXPORT_ELEMENT  // export @type(name) { ... }
+    EXPORT_ELEMENT, // export @type(name) { ... }
+    
+    // Function calls
+    FUNC_CALL       // floor(expr), etc.
 }
 
 // =============================================================================
@@ -56,6 +59,8 @@ function UIASTElement(_element_type, _name, _properties, _children) constructor 
     name = _name;
     properties = _properties;
     children = _children;
+    multiple_count = undefined;  // Number of copies to create
+    multiple_var = undefined;    // Loop variable name
 }
 
 /// @desc Property node - key = value
@@ -207,4 +212,13 @@ function UIASTExportVar(_name, _value) constructor {
 function UIASTExportElement(_element) constructor {
     type = UI_AST.EXPORT_ELEMENT;
     element = _element;
+}
+
+/// @desc Function call - floor(expr)
+/// @param {String} _func_name Function name
+/// @param {Struct} _arg Argument AST node
+function UIASTFuncCall(_func_name, _arg) constructor {
+    type = UI_AST.FUNC_CALL;
+    func_name = _func_name;
+    arg = _arg;
 }

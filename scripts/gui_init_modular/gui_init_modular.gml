@@ -33,60 +33,31 @@ function gui_init_modular()
     
     global.gui_root = new GUIPanel(0, 0, _logical_width, _logical_height);
     
-    // Load hotbar layout
-    var _hotbar_path = "resources/data/guis/hotbar.json";
-    if (file_exists(_hotbar_path))
-    {
-        var _hotbar_json = buffer_load_json(_hotbar_path);
-        global.gui_panel_hotbar_modular = gui_load_layout(_hotbar_json, global.gui_root);
-        global.gui_panel_hotbar_modular.visible = true;
-    }
-    else
-    {
-        // Create hotbar programmatically as fallback
-        global.gui_panel_hotbar_modular = new GUIPanel(16, 16, INVENTORY_SLOT_DIMENSION * INVENTORY_LENGTH.ROW, INVENTORY_SLOT_DIMENSION);
-        global.gui_root.add_child(global.gui_panel_hotbar_modular);
-        
-        for (var i = 0; i < INVENTORY_LENGTH.ROW; ++i)
-        {
-            var _slot = new GUISlot(i * INVENTORY_SLOT_DIMENSION, 0, "base", i);
-            global.gui_panel_hotbar_modular.add_child(_slot);
-        }
-    }
+    // Load hotbar from declarative .ui system
+    var _hotbar_def = ui_load("ui/hotbar.ui");
+    global.ui_hotbar = ui_spawn(_hotbar_def, {
+        link: {},
+        parent: global.gui_root
+    }, ["inventory_changed"]);
+    // Legacy alias for control_inventory_position
+    global.gui_panel_hotbar_modular = global.ui_hotbar;
     
     // Stat Bars are now spawned in obj_Player's Create event to ensure player context
-    /*
-    if (instance_exists(obj_Player) && variable_global_exists("gui_panel_hotbar_modular")) {
-        proglang_call("phantasia:gui/stat_bars", [obj_Player.id, global.gui_panel_hotbar_modular]);
-    }
-    */
     
-    // Load inventory layout
-    var _inventory_path = "resources/data/guis/inventory.json";
-    if (file_exists(_inventory_path))
-    {
-        var _inventory_json = buffer_load_json(_inventory_path);
-        global.gui_panel_inventory_modular = gui_load_layout(_inventory_json, global.gui_root);
-    }
-    else
-    {
-        // Create inventory programmatically as fallback
-        global.gui_panel_inventory_modular = new GUIPanel(16, 16, INVENTORY_SLOT_DIMENSION * INVENTORY_LENGTH.ROW, INVENTORY_SLOT_DIMENSION * (INVENTORY_LENGTH.BASE div INVENTORY_LENGTH.ROW));
-        global.gui_root.add_child(global.gui_panel_inventory_modular);
-        
-        for (var i = 0; i < INVENTORY_LENGTH.BASE; ++i)
-        {
-            var _col = i mod INVENTORY_LENGTH.ROW;
-            var _row = i div INVENTORY_LENGTH.ROW;
-            var _slot = new GUISlot(_col * INVENTORY_SLOT_DIMENSION, _row * INVENTORY_SLOT_DIMENSION, "base", i);
-            global.gui_panel_inventory_modular.add_child(_slot);
-        }
-    }
+    // Load inventory from declarative .ui system
+    var _inventory_def = ui_load("ui/inventory.ui");
+    global.ui_inventory = ui_spawn(_inventory_def, {
+        link: {},
+        parent: global.gui_root
+    }, ["inventory_changed"]);
+    global.gui_panel_inventory_modular = global.ui_inventory;
+    // Start hidden
+    global.ui_inventory.visible = false;
     
-    // Position inventory at top-left with small offset
-    // global.gui_panel_inventory_modular.x = 16;
-    // global.gui_panel_inventory_modular.y = 16;
-    global.gui_panel_inventory_modular.visible = false;
+    // Note: Inventory visibility is controlled by ui_inventory.visible in control_inventory()
+    // and its root elements will follow that visibility if we sync them.
+    // However, the cleanest way is often to just let the individual elements handle their visibility
+    // based on the global state.
     
     // Create crafting panel (dynamic)
     global.gui_panel_crafting_modular = new GUIPanel(0, 0, 0, 0);

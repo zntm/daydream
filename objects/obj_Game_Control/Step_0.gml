@@ -414,6 +414,17 @@ if (global.gui_root != undefined)
     }
     
     global.gui_root.update();
+    
+    // Update new declarative UI instances
+    if (variable_global_exists("ui_hotbar") && global.ui_hotbar != undefined) {
+        ui_mark_dirty(global.ui_hotbar);
+        ui_update(global.ui_hotbar);
+    }
+    if (variable_global_exists("ui_inventory") && global.ui_inventory != undefined) {
+        ui_mark_dirty(global.ui_inventory);
+        ui_update(global.ui_inventory);
+    }
+    ui_clear_events();
 }
 
 // Chat panel visibility

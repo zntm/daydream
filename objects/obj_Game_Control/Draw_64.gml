@@ -91,10 +91,18 @@ var _hp_max = _lp.hp_max;
 
 render_hud(_gui_width, _gui_height);
 
-// Draw modular GUI
+// Draw modular GUI (including parented declarative UI instances)
 if (global.gui_root != undefined)
 {
     global.gui_root.draw();
+}
+
+// Draw any standalone declarative UI instances (not parented to gui_root)
+if (variable_global_exists("ui_hotbar") && global.ui_hotbar != undefined && array_length(global.ui_hotbar.root_elements) > 0 && global.ui_hotbar.root_elements[0].parent == undefined) {
+    ui_draw(global.ui_hotbar);
+}
+if (variable_global_exists("ui_inventory") && global.ui_inventory != undefined && global.ui_inventory.visible && array_length(global.ui_inventory.root_elements) > 0 && global.ui_inventory.root_elements[0].parent == undefined) {
+    ui_draw(global.ui_inventory);
 }
 
 // Draw deferred text

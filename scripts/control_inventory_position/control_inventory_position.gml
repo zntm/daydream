@@ -4,60 +4,43 @@ function control_inventory_position()
     var _scale_x = _gui_scale * (global.gui_width / 960);
     var _scale_y = _gui_scale * (global.gui_height / 540);
     
-    // Position inventory slots based on modular GUI components
-    // The modular GUI has GUISlot components that know their correct absolute position
-    
     var _inventory_instance = global.inventory_instance;
     
-    // List of panels to process for inventory slot positioning
-    var _panels = [];
+    // Build list of UI instances to process
+    var _ui_instances = [];
     
-    // Always include hotbar if it exists
-    if (variable_global_exists("gui_panel_hotbar_modular"))
-    {
-        array_push(_panels, global.gui_panel_hotbar_modular);
+    // Always include hotbar
+    if (variable_global_exists("ui_hotbar") && global.ui_hotbar != undefined) {
+        array_push(_ui_instances, { instance: global.ui_hotbar, visible: true });
     }
     
     // Include inventory if open
-    if (is_opened & IS_OPENED_BOOLEAN.INVENTORY)
-    {
-        if (variable_global_exists("gui_panel_inventory_modular"))
-        {
-            array_push(_panels, global.gui_panel_inventory_modular);
+    if (is_opened & IS_OPENED_BOOLEAN.INVENTORY) {
+        if (variable_global_exists("ui_inventory") && global.ui_inventory != undefined) {
+            array_push(_ui_instances, { instance: global.ui_inventory, visible: true });
+        }
+    } else {
+        // Still process inventory slots but mark as hidden
+        if (variable_global_exists("ui_inventory") && global.ui_inventory != undefined) {
+            array_push(_ui_instances, { instance: global.ui_inventory, visible: false });
         }
     }
     
-    // Crafting Panel (Visible only if Inventory Open & Has Content)
+    // Crafting Panel (old system, keep for now)
     if (variable_global_exists("gui_panel_crafting_modular"))
     {
         var _panel = global.gui_panel_crafting_modular;
         _panel.visible = (is_opened & IS_OPENED_BOOLEAN.INVENTORY) && (array_length(_panel.children) > 0);
         
-        array_push(_panels, _panel);
-    }
-    
-    var _panels_length = array_length(_panels);
-    
-    // Iterate through all active panels
-    for (var p = 0; p < _panels_length; ++p)
-    {
-        var _panel = _panels[p];
-        if (_panel == undefined) continue;
-        
-        var _children = _panel.children;
-        var _length = array_length(_children);
-        
-        for (var i = 0; i < _length; ++i)
-        {
-            var _slot = _children[i];
-            
-            // Check if this is a GUISlot (has inventory_name property)
+        // Process crafting slots from old system
+        var _craft_children = _panel.children;
+        var _craft_length = array_length(_craft_children);
+        for (var ci = 0; ci < _craft_length; ++ci) {
+            var _slot = _craft_children[ci];
             if (!struct_exists(_slot, "inventory_name")) continue;
             
             var _inv_name = _slot.inventory_name;
             var _inv_index = _slot.slot_index;
-            
-            // Get the corresponding obj_Inventory instance
             var _instances = _inventory_instance[$ _inv_name];
             if (_instances == undefined) continue;
             if (_inv_index >= array_length(_instances)) continue;
@@ -65,32 +48,58 @@ function control_inventory_position()
             var _inst = _instances[_inv_index];
             if (!instance_exists(_inst)) continue;
             
-            // Get absolute position from the modular GUI slot (same as rendering)
-            var _abs_x = _slot.get_absolute_x();
-            var _abs_y = _slot.get_absolute_y();
-            
-            // Get component scale from datagen
-            var _slot_scale = _slot.scale;
-            
-            // Position obj_Inventory at the scaled GUI position (checing visibility)
-            if (_panel.visible)
-            {
+            if (_panel.visible) {
+                var _abs_x = _slot.get_absolute_x();
+                var _abs_y = _slot.get_absolute_y();
                 _inst.x = _abs_x * _scale_x;
                 _inst.y = _abs_y * _scale_y;
-                
-                // Scale instances to match visual rendering (base scale * component scale)
+                var _slot_scale = _slot.scale;
                 _inst.image_xscale = _scale_x * _slot_scale;
                 _inst.image_yscale = _scale_y * _slot_scale;
-            }
-            else
-            {
+            } else {
                 _inst.x = -10000;
                 _inst.y = -10000;
             }
         }
     }
     
-    // Note: Armor and accessory positioning should be handled by the modular inventory panel definition (datagen).
-    // The previous legacy fallback has been removed.
+    // Process new UI instances (hotbar, inventory)
+    for (var p = 0; p < array_length(_ui_instances); p++) {
+        var _entry = _ui_instances[p];
+        var _ui_inst = _entry.instance;
+        var _is_visible = _entry.visible;
+        
+        // Collect all UISlot elements from this instance
+        var _slots = [];
+        var _roots = _ui_inst.root_elements;
+        for (var r = 0; r < array_length(_roots); r++) {
+            ui_collect_slots(_roots[r], _slots);
+        }
+        
+        for (var i = 0; i < array_length(_slots); i++) {
+            var _slot = _slots[i];
+            var _inv_name = _slot.inventory_name;
+            var _inv_index = _slot.slot_index;
+            
+            var _instances = _inventory_instance[$ _inv_name];
+            if (_instances == undefined) continue;
+            if (_inv_index >= array_length(_instances)) continue;
+            
+            var _inst = _instances[_inv_index];
+            if (!instance_exists(_inst)) continue;
+            
+            if (_is_visible) {
+                var _abs_x = _slot.get_absolute_x();
+                var _abs_y = _slot.get_absolute_y();
+                _inst.x = _abs_x * _scale_x;
+                _inst.y = _abs_y * _scale_y;
+                _inst.image_xscale = _scale_x;
+                _inst.image_yscale = _scale_y;
+            } else {
+                _inst.x = -10000;
+                _inst.y = -10000;
+            }
+        }
+    }
 }
 

@@ -1,0 +1,90 @@
+@area(inventory_container) {
+    position = ORIGIN_CENTER
+    size = (280, 80)
+    
+    @area(inventory_grid) {
+        position = ORIGIN_CENTER
+        size = (160, 64)
+
+        @slot(inventory_slots) multiple(40, index) {
+            inventory_name = "base"
+            slot_index = index + 10
+            position = (index % 10 * 16, floor(index / 10) * 16)
+        }
+    }
+
+    @area(armor_column) {
+        position = ORIGIN_MIDDLE_LEFT + (40, 0)
+        size = (16, 48)
+
+        @slot(armor_helmet) {
+            position = (0, 0)
+            inventory_name = "armor_helmet"
+            slot_index = 0
+            icon_sprite = "spr_Inventory_Slot_Icon"
+            icon_index = 0
+        }
+        @slot(armor_breastplate) {
+            position = (0, 16)
+            inventory_name = "armor_breastplate"
+            slot_index = 0
+            icon_sprite = "spr_Inventory_Slot_Icon"
+            icon_index = 1
+        }
+        @slot(armor_leggings) {
+            position = (0, 32)
+            inventory_name = "armor_leggings"
+            slot_index = 0
+            icon_sprite = "spr_Inventory_Slot_Icon"
+            icon_index = 2
+        }
+    }
+
+    @area(accessory_grid) {
+        position = ORIGIN_MIDDLE_RIGHT + (40, 0)
+        size = (32, 48)
+
+        @slot(acc_0) {
+            position = (0, 0)
+            inventory_name = "accessory"
+            slot_index = 0
+            icon_sprite = "spr_Inventory_Slot_Icon"
+            icon_index = 3
+        }
+        @slot(acc_1) {
+            position = (16, 0)
+            inventory_name = "accessory"
+            slot_index = 1
+            icon_sprite = "spr_Inventory_Slot_Icon"
+            icon_index = 3
+        }
+        @slot(acc_2) {
+            position = (0, 16)
+            inventory_name = "accessory"
+            slot_index = 2
+            icon_sprite = "spr_Inventory_Slot_Icon"
+            icon_index = 3
+        }
+        @slot(acc_3) {
+            position = (16, 16)
+            inventory_name = "accessory"
+            slot_index = 3
+            icon_sprite = "spr_Inventory_Slot_Icon"
+            icon_index = 3
+        }
+        @slot(acc_4) {
+            position = (0, 32)
+            inventory_name = "accessory"
+            slot_index = 4
+            icon_sprite = "spr_Inventory_Slot_Icon"
+            icon_index = 3
+        }
+        @slot(acc_5) {
+            position = (16, 32)
+            inventory_name = "accessory"
+            slot_index = 5
+            icon_sprite = "spr_Inventory_Slot_Icon"
+            icon_index = 3
+        }
+    }
+}

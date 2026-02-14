@@ -50,6 +50,6 @@ cooldown_build = 0;
 cooldown_harvest = 0;
 
 // Initialize Stat Bars (HP/Stamina)
-if (is_local && variable_global_exists("gui_panel_hotbar_modular") && global.gui_panel_hotbar_modular != undefined) {
-    proglang_call("phantasia:gui/stat_bars", [{ player: id, parent: global.gui_panel_hotbar_modular }]);
+if (is_local && variable_global_exists("gui_root") && global.gui_root != undefined) {
+    proglang_call("phantasia:gui/stat_bars", [{ player: id, parent: global.gui_root }]);
 }

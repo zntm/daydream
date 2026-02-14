@@ -72,6 +72,14 @@ if (keyboard_check_pressed(vk_f2))
         global.gui_root.draw();
     }
     
+    // Draw new declarative UI for screenshot
+    if (variable_global_exists("ui_hotbar") && global.ui_hotbar != undefined) {
+        ui_draw(global.ui_hotbar);
+    }
+    if (variable_global_exists("ui_inventory") && global.ui_inventory != undefined && global.ui_inventory.visible) {
+        ui_draw(global.ui_inventory);
+    }
+    
     // Draw deferred text for screenshot
     var _deferred_text_length = array_length(global.gui_deferred_text);
     

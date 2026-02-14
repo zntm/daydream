@@ -33,6 +33,7 @@ function UIElement(_x, _y, _width, _height) : GUIComponent(_x, _y, _width, _heig
     padding_right = 0;
     padding_bottom = 0;
     padding_left = 0;
+    grid_columns = 10;  // Default columns for grid layout
     
     // Visual properties
     background_color = undefined;
@@ -230,9 +231,23 @@ function UIElement(_x, _y, _width, _height) : GUIComponent(_x, _y, _width, _heig
     }
     
     static layout_grid = function() {
-        // TODO: Implement grid layout with columns
-        // For now, fall back to vertical
-        layout_vertical();
+        var _col = 0;
+        var _row = 0;
+        var _child_count = array_length(children);
+        
+        for (var i = 0; i < _child_count; i++) {
+            var _child = children[i];
+            if (!_child.visible) continue;
+            
+            _child.x = padding_left + (_col * (_child.width + spacing));
+            _child.y = padding_top + (_row * (_child.height + spacing));
+            
+            _col++;
+            if (_col >= grid_columns) {
+                _col = 0;
+                _row++;
+            }
+        }
     }
     
     // =============================================================================
