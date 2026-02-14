@@ -37,7 +37,7 @@ global.inventory_length = {
     armor_breastplate: 1,
     armor_leggings:    1,
     accessory:         INVENTORY_LENGTH.ACCESSORY,
-    _container:         0
+    _container:        0
 }
 
 global.inventory_instance = {
