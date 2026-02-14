@@ -1,17 +1,20 @@
 var sprites = parameter.sprites
-var config = parameter.config
-var count = config.count ?? 6
+var count = parameter.count ?? 8
 
 repeat count {
-    var sprite = sprites[irandom(array_length(sprites) - 1)]
-    cloud_spawn(
-        sprite,
-        random(parameter.camera_width * 2),
-        random_range(config.y_min ?? 8, config.y_max ?? 48),
-        random_range(config.scale_min ?? 0.8, config.scale_max ?? 1.5),
-        random_range(config.alpha_min ?? 0.4, config.alpha_max ?? 0.8),
-        random_range(config.speed_min ?? 4, config.speed_max ?? 12)
-    )
+    if (array_length(sprites) > 0) {
+        var idx = irandom(array_length(sprites) - 1)
+        var sprite = sprites[idx]
+        
+        cloud_spawn(
+            sprite,
+            random(parameter.camera_width * 2),
+            random_range(parameter.y_min, parameter.y_max),
+            random_range(parameter.scale_min, parameter.scale_max),
+            random_range(parameter.alpha_min, parameter.alpha_max),
+            random_range(parameter.speed_min, parameter.speed_max)
+        )
+    }
 }
 
 // Subscribe to potential events
@@ -21,4 +24,23 @@ event_subscribe("world_blood_moon", fn(_data) {
 
 event_subscribe("world_blood_moon_end", fn(_data) {
     cloud_set_tint("#FFF")
+})
+
+event_subscribe("background_render", fn(_data) {
+    var celestial = celestial_get_active(_data.time)
+    
+    if (celestial != undefined) {
+        var t = celestial.t
+        var sprite = celestial.id
+        
+        var sprite_width = sprite_get_width(sprite)
+        
+        var start_x = _data.camera_x - sprite_width
+        var end_x = _data.camera_x + _data.camera_width + sprite_width
+        
+        var x = lerp(start_x, end_x, t)
+        var y = _data.camera_y + 32
+        
+        draw_sprite(sprite, 0, x, y)
+    }
 })

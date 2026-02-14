@@ -42,10 +42,21 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
     ___celestial = [];
     ___celestial_length = 0;
     
-    // Sky Objects (clouds, etc.)
-    ___sky_objects_script = undefined;
-    ___sky_objects_sprites = [];
-    ___sky_objects_config = {};
+    // Background (clouds, celestials, parallax)
+    ___background_script = undefined;
+    ___background_sprites = [];
+    ___background_parallax_factor = 0.005;
+    ___background_parallax_scale = 1;
+    ___background_cloud_count = 8;
+    ___background_cloud_y_min = 16;
+    ___background_cloud_y_max = 80;
+    ___background_cloud_scale_min = 1.2;
+    ___background_cloud_scale_max = 2.0;
+    ___background_cloud_alpha_min = 0.3;
+    ___background_cloud_alpha_max = 0.7;
+    ___background_cloud_speed_min = 1;
+    ___background_cloud_speed_max = 4;
+    ___background_cloud_wind_factor = 0.5;
     
     // Surface Generation
     ___surface_noise_offset_max = 0;
@@ -826,27 +837,54 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         return ___sky_detail_noise_octaves;
     }
     
-    static set_sky_objects = function(_sky_objects)
+    static set_background = function(_bg)
     {
-        ___sky_objects_script = _sky_objects[$ "script"];
-        ___sky_objects_sprites = _sky_objects[$ "sprites"] ?? [];
-        ___sky_objects_config = _sky_objects[$ "config"] ?? {};
+        ___background_script = _bg[$ "script"];
+        ___background_sprites = _bg[$ "sprites"] ?? [];
+        ___background_parallax_factor = _bg[$ "parallax_factor"] ?? 0.005;
+        ___background_parallax_scale = _bg[$ "parallax_scale"] ?? 1;
+        ___background_cloud_count = _bg[$ "cloud_count"] ?? 8;
+        ___background_cloud_y_min = _bg[$ "cloud_y_min"] ?? 16;
+        ___background_cloud_y_max = _bg[$ "cloud_y_max"] ?? 80;
+        ___background_cloud_scale_min = _bg[$ "cloud_scale_min"] ?? 1.2;
+        ___background_cloud_scale_max = _bg[$ "cloud_scale_max"] ?? 2.0;
+        ___background_cloud_alpha_min = _bg[$ "cloud_alpha_min"] ?? 0.3;
+        ___background_cloud_alpha_max = _bg[$ "cloud_alpha_max"] ?? 0.7;
+        ___background_cloud_speed_min = _bg[$ "cloud_speed_min"] ?? 1;
+        ___background_cloud_speed_max = _bg[$ "cloud_speed_max"] ?? 4;
+        ___background_cloud_wind_factor = _bg[$ "cloud_wind_factor"] ?? 0.5;
         
         return self;
     }
     
-    static get_sky_objects_script = function()
+    static get_background_script = function()
     {
-        return ___sky_objects_script;
+        return ___background_script;
     }
     
-    static get_sky_objects_sprites = function()
+    static get_background_sprites = function()
     {
-        return ___sky_objects_sprites;
+        return ___background_sprites;
     }
     
-    static get_sky_objects_config = function()
+    static get_background_parallax_factor = function()
     {
-        return ___sky_objects_config;
+        return ___background_parallax_factor;
     }
+    
+    static get_background_parallax_scale = function()
+    {
+        return ___background_parallax_scale;
+    }
+    
+    static get_background_cloud_count = function() { return ___background_cloud_count; }
+    static get_background_cloud_y_min = function() { return ___background_cloud_y_min; }
+    static get_background_cloud_y_max = function() { return ___background_cloud_y_max; }
+    static get_background_cloud_scale_min = function() { return ___background_cloud_scale_min; }
+    static get_background_cloud_scale_max = function() { return ___background_cloud_scale_max; }
+    static get_background_cloud_alpha_min = function() { return ___background_cloud_alpha_min; }
+    static get_background_cloud_alpha_max = function() { return ___background_cloud_alpha_max; }
+    static get_background_cloud_speed_min = function() { return ___background_cloud_speed_min; }
+    static get_background_cloud_speed_max = function() { return ___background_cloud_speed_max; }
+    static get_background_cloud_wind_factor = function() { return ___background_cloud_wind_factor; }
 }

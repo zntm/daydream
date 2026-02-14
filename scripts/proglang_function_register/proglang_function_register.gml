@@ -1406,3 +1406,96 @@ proglang_function_register("cloud_get_time", function(_args) {
 });
 
 #endregion
+
+#region Drawing
+
+proglang_function_register("draw_sprite", function(_args) {
+    if (array_length(_args) < 4) return;
+    
+    var _id = _args[0];
+    var _subimg = _args[1];
+    var _x = _args[2];
+    var _y = _args[3];
+    
+    if (is_string(_id)) {
+        var _asset = global.sprite_asset[$ _id];
+        if (_asset != undefined) {
+             var _spr = _asset.get_sprite();
+             if (_spr != -1) draw_sprite(_spr, _subimg, _x, _y);
+        }
+    } else {
+        draw_sprite(_id, _subimg, _x, _y);
+    }
+});
+
+proglang_function_register("draw_sprite_ext", function(_args) {
+    if (array_length(_args) < 9) return;
+    
+    var _id = _args[0];
+    var _subimg = _args[1];
+    var _x = _args[2];
+    var _y = _args[3];
+    var _xscale = _args[4];
+    var _yscale = _args[5];
+    var _rot = _args[6];
+    var _col = _args[7];
+    var _alpha = _args[8];
+    
+    if (is_string(_col)) _col = hex_parse(_col);
+    
+    if (is_string(_id)) {
+        var _asset = global.sprite_asset[$ _id];
+        if (_asset != undefined) {
+             var _spr = _asset.get_sprite();
+             if (_spr != -1) draw_sprite_ext(_spr, _subimg, _x, _y, _xscale, _yscale, _rot, _col, _alpha);
+        }
+    } else {
+        draw_sprite_ext(_id, _subimg, _x, _y, _xscale, _yscale, _rot, _col, _alpha);
+    }
+});
+
+proglang_function_register("celestial_get_active", function(_args) {
+    return celestial_get_active(_args[0]);
+});
+
+proglang_function_register("array_length", function(_args) {
+    if (!is_array(_args[0])) return 0;
+    return array_length(_args[0]);
+});
+
+proglang_function_register("debug_log", function(_args) {
+    var _str = "";
+    if (array_length(_args) > 0) _str = string(_args[0]);
+    for (var i = 1; i < array_length(_args); i++) {
+        _str += " " + string(_args[i]);
+    }
+    show_debug_message("[Daydream Script] " + _str);
+});
+
+proglang_function_register("sprite_get_width", function(_args) {
+    var _id = _args[0];
+    if (is_string(_id)) {
+        var _asset = global.sprite_asset[$ _id];
+         if (_asset != undefined) {
+             var _spr = _asset.get_sprite();
+             if (_spr != -1) return sprite_get_width(_spr);
+        }
+        return 0;
+    }
+    return sprite_get_width(_id);
+});
+
+proglang_function_register("sprite_get_height", function(_args) {
+    var _id = _args[0];
+    if (is_string(_id)) {
+        var _asset = global.sprite_asset[$ _id];
+         if (_asset != undefined) {
+             var _spr = _asset.get_sprite();
+             if (_spr != -1) return sprite_get_height(_spr);
+        }
+        return 0;
+    }
+    return sprite_get_height(_id);
+});
+
+#endregion

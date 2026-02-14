@@ -13,7 +13,13 @@ if (global.settings.display_background)
 {
     if (!IS_DEVELOPER_MODE) || (global.dbg_settings[$ "display_background_celestial"])
     {
-        render_background_celestial(global.world_save_data.time, _camera_x, _camera_y, _camera_width, _camera_height);
+        event_emit("background_render", {
+            time: global.world_save_data.time,
+            camera_x: _camera_x,
+            camera_y: _camera_y,
+            camera_width: _camera_width,
+            camera_height: _camera_height
+        });
     }
     
     if (!IS_DEVELOPER_MODE) || (global.dbg_settings[$ "display_background_clouds"] ?? true)

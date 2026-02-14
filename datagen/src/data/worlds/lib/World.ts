@@ -331,19 +331,52 @@ export class WorldCave {
     }
 }
 
-export class WorldSkyObjects {
-    public script: string;
-    public sprites: string[];
-    public config: Record<string, any>;
+export class WorldBackground {
+    private script: string;
+    private sprites: string[];
+    private parallax_factor: number;
+    private parallax_scale: number;
+    private cloud_count: number;
+    private cloud_y_min: number;
+    private cloud_y_max: number;
+    private cloud_scale_min: number;
+    private cloud_scale_max: number;
+    private cloud_alpha_min: number;
+    private cloud_alpha_max: number;
+    private cloud_speed_min: number;
+    private cloud_speed_max: number;
+    private cloud_wind_factor: number;
 
     constructor(
         script: string,
         sprites: string[],
-        config: Record<string, any> = {},
+        parallaxFactor: number = 0.005,
+        parallaxScale: number = 1,
+        cloudCount: number = 8,
+        cloudYMin: number = 16,
+        cloudYMax: number = 80,
+        cloudScaleMin: number = 1.2,
+        cloudScaleMax: number = 2.0,
+        cloudAlphaMin: number = 0.3,
+        cloudAlphaMax: number = 0.7,
+        cloudSpeedMin: number = 1,
+        cloudSpeedMax: number = 4,
+        cloudWindFactor: number = 0.5,
     ) {
         this.script = script;
         this.sprites = sprites;
-        this.config = config;
+        this.parallax_factor = parallaxFactor;
+        this.parallax_scale = parallaxScale;
+        this.cloud_count = cloudCount;
+        this.cloud_y_min = cloudYMin;
+        this.cloud_y_max = cloudYMax;
+        this.cloud_scale_min = cloudScaleMin;
+        this.cloud_scale_max = cloudScaleMax;
+        this.cloud_alpha_min = cloudAlphaMin;
+        this.cloud_alpha_max = cloudAlphaMax;
+        this.cloud_speed_min = cloudSpeedMin;
+        this.cloud_speed_max = cloudSpeedMax;
+        this.cloud_wind_factor = cloudWindFactor;
     }
 }
 
@@ -358,7 +391,7 @@ export class World {
     private cave: WorldCave;
     public biome_transition_smoothing: number;
     public regions: string[];
-    public sky_objects?: WorldSkyObjects;
+    public background?: WorldBackground;
 
     constructor(
         world_height: number,
@@ -371,7 +404,7 @@ export class World {
         cave: WorldCave,
         biomeTransitionSmoothing: number = 0.5,
         regions: string[] = [],
-        skyObjects?: WorldSkyObjects,
+        background?: WorldBackground,
     ) {
         this.world_height = world_height;
         this.spawn_interval = spawn_interval;
@@ -383,6 +416,6 @@ export class World {
         this.cave = cave;
         this.biome_transition_smoothing = biomeTransitionSmoothing;
         this.regions = regions;
-        if (skyObjects) this.sky_objects = skyObjects;
+        if (background) this.background = background;
     }
 }

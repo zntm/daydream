@@ -5,146 +5,131 @@
 
 function CloudInstance() constructor
 {
+    active = false;
     x = 0;
     y = 0;
     scale = 1;
     alpha = 1;
-    speed = 8;
-    sprite_id = "";
+    speed = 0;
+    sprite_id = undefined;
     sprite_sub = 0;
     tint = c_white;
-    active = false;
+    variant_index = 0;
 }
 
 // Global cloud state
-global.cloud_pool = [];
-global.cloud_pool_count = 0;
-global.cloud_tint = c_white;
-global.cloud_wind_factor = 2.0;
-global.cloud_active_sprite_set = "";
-
+global.cloud_pool = array_create(CLOUD_POOL_MAX);
 for (var i = 0; i < CLOUD_POOL_MAX; ++i)
 {
-    global.cloud_pool[@ i] = new CloudInstance();
+    global.cloud_pool[i] = new CloudInstance();
 }
 
+global.cloud_pool_count = 0;
+global.cloud_tint = c_white;
+global.cloud_wind_factor = 1.0;
+global.cloud_active_sprite_set = "phantasia:world/playground/cloud/default";
+
 /// @function cloud_spawn(_sprite_id, _x, _y, _scale, _alpha, _speed)
-/// @desc Spawn a cloud instance into the pool
+/// @desc Spawn a cloud instance
 function cloud_spawn(_sprite_id, _x, _y, _scale, _alpha, _speed)
 {
     if (global.cloud_pool_count >= CLOUD_POOL_MAX) return -1;
     
-    for (var i = 0; i < CLOUD_POOL_MAX; ++i)
+    // Find first inactive slot
+    var i = 0;
+    for (i = 0; i < CLOUD_POOL_MAX; ++i)
     {
-        var _cloud = global.cloud_pool[i];
-        
-        if (!_cloud.active)
+        if (!global.cloud_pool[i].active) break;
+    }
+    
+    if (i >= CLOUD_POOL_MAX) return -1;
+    
+    var _cloud = global.cloud_pool[i];
+    
+    _cloud.active = true;
+    _cloud.x = _x;
+    _cloud.y = _y;
+    _cloud.scale = _scale;
+    _cloud.alpha = _alpha;
+    _cloud.speed = _speed;
+    _cloud.sprite_id = _sprite_id;
+    _cloud.tint = global.cloud_tint;
+    _cloud.variant_index = irandom(9999);
+    
+    // Pick a random sub-image, handling both single and array assets
+    var _sprite_data = global.sprite_asset[$ _sprite_id];
+    var _spr = -1;
+    
+    if (is_array(_sprite_data) && array_length(_sprite_data) > 0)
+    {
+        _sprite_data = _sprite_data[_cloud.variant_index % array_length(_sprite_data)];
+    }
+    
+    if (_sprite_data != undefined && !is_array(_sprite_data)) 
+    {
+        _spr = _sprite_data.get_sprite();
+        if (_spr != -1)
         {
-            _cloud.active = true;
-            _cloud.sprite_id = _sprite_id;
-            _cloud.x = _x;
-            _cloud.y = _y;
-            _cloud.scale = _scale;
-            _cloud.alpha = _alpha;
-            _cloud.speed = _speed;
-            _cloud.tint = global.cloud_tint;
-            
-            show_debug_message($"[Clouds] Spawned at {_x}, {_y} with sprite {_sprite_id}");
-            
-            // Pick a random sub-image from the sprite set if it's an array
-            var _sprite_data = global.sprite_asset[$ _sprite_id];
-            if (is_array(_sprite_data))
-            {
-                _cloud.sprite_sub = irandom(array_length(_sprite_data) - 1);
-            }
-            else if (_sprite_data != undefined)
-            {
-                // Single sprite might still have multiple sub-images in GML
-                var _spr = _sprite_data.get_sprite();
-                if (_spr != -1) _cloud.sprite_sub = irandom(sprite_get_number(_spr) - 1);
-            }
-            else
-            {
-                _cloud.sprite_sub = 0;
-            }
-            
-            ++global.cloud_pool_count;
-            
-            return i;
+            _cloud.sprite_sub = irandom(sprite_get_number(_spr) - 1);
         }
     }
     
-    return -1;
+    show_debug_message($"[Clouds] Spawned at {_x}, {_y} with sprite {_sprite_id}");
+    
+    global.cloud_pool_count++;
+    return i;
 }
 
 /// @function cloud_clear()
-/// @desc Clear all cloud instances
+/// @desc Clear all active clouds
 function cloud_clear()
 {
     for (var i = 0; i < CLOUD_POOL_MAX; ++i)
     {
         global.cloud_pool[i].active = false;
     }
-    
     global.cloud_pool_count = 0;
 }
 
-/// @function cloud_set_tint(_colour)
-/// @desc Set the tint colour for all clouds
-function cloud_set_tint(_colour)
+/// @function cloud_set_tint(_tint)
+/// @desc Set tint for all active and future clouds
+function cloud_set_tint(_tint)
 {
-    global.cloud_tint = is_string(_colour) ? hex_parse(_colour) : _colour;
+    if (is_string(_tint)) _tint = color_get_value(_tint);
+    
+    global.cloud_tint = _tint;
     
     for (var i = 0; i < CLOUD_POOL_MAX; ++i)
     {
         if (global.cloud_pool[i].active)
         {
-            global.cloud_pool[i].tint = global.cloud_tint;
+            global.cloud_pool[i].tint = _tint;
         }
     }
 }
 
 /// @function cloud_set_wind_factor(_factor)
-/// @desc Set the wind influence multiplier for clouds
+/// @desc Set wind factor for clouds
 function cloud_set_wind_factor(_factor)
 {
     global.cloud_wind_factor = _factor;
 }
 
-/// @function cloud_set_sprites(_sprite_set_id)
-/// @desc Swap all active clouds to a different sprite set
-function cloud_set_sprites(_sprite_set_id)
+/// @function cloud_set_sprites(_sprites)
+/// @desc Set default sprite set
+function cloud_set_sprites(_sprites)
 {
-    global.cloud_active_sprite_set = _sprite_set_id;
-    
-    for (var i = 0; i < CLOUD_POOL_MAX; ++i)
+    if (array_length(_sprites) > 0)
     {
-        var _cloud = global.cloud_pool[i];
-        
-        if (_cloud.active)
-        {
-            _cloud.sprite_id = _sprite_set_id;
-            
-            var _sprite_data = global.sprite_asset[$ _sprite_set_id];
-            if (is_array(_sprite_data))
-            {
-                _cloud.sprite_sub = irandom(array_length(_sprite_data) - 1);
-            }
-        }
+        global.cloud_active_sprite_set = _sprites[0];
     }
 }
 
-/// @function cloud_set_speed(_speed)
-/// @desc Override base speed for all active clouds
-function cloud_set_speed(_speed)
+/// @function cloud_set_speed(_min, _max)
+/// @desc Set speed range for active clouds? No, this function seems unused or placeholder
+function cloud_set_speed(_min, _max)
 {
-    for (var i = 0; i < CLOUD_POOL_MAX; ++i)
-    {
-        if (global.cloud_pool[i].active)
-        {
-            global.cloud_pool[i].speed = _speed;
-        }
-    }
+    // Implementation pending or not needed if handled by spawn parameters
 }
 
 /// @function update_background_clouds(_dt, _camera_width)
@@ -164,8 +149,15 @@ function update_background_clouds(_dt, _camera_width)
         
         // Get sprite width for wrapping
         var _sprite_width = 64; // Default fallback
+        
         var _sprite_data = global.sprite_asset[$ _cloud.sprite_id];
-        if (_sprite_data != undefined)
+        
+        if (is_array(_sprite_data) && array_length(_sprite_data) > 0)
+        {
+             _sprite_data = _sprite_data[_cloud.variant_index % array_length(_sprite_data)];
+        }
+        
+        if (_sprite_data != undefined && !is_array(_sprite_data))
         {
             var _spr = _sprite_data.get_sprite();
             if (_spr != -1) _sprite_width = sprite_get_width(_spr) * _cloud.scale;
@@ -190,7 +182,10 @@ function update_background_clouds(_dt, _camera_width)
 /// @desc Draw all active cloud instances
 function render_background_clouds(_camera_x, _camera_y, _camera_width, _camera_height)
 {
-    if (global.cloud_pool_count <= 0) return;
+    if (global.cloud_pool_count <= 0) 
+    {
+        return;
+    }
     
     for (var i = 0; i < CLOUD_POOL_MAX; ++i)
     {
@@ -199,7 +194,20 @@ function render_background_clouds(_camera_x, _camera_y, _camera_width, _camera_h
         if (!_cloud.active) continue;
         
         var _sprite_data = global.sprite_asset[$ _cloud.sprite_id];
-        if (_sprite_data == undefined) continue;
+        
+        if (is_array(_sprite_data) && array_length(_sprite_data) > 0)
+        {
+             _sprite_data = _sprite_data[_cloud.variant_index % array_length(_sprite_data)];
+        }
+        
+        if (_sprite_data == undefined || is_array(_sprite_data)) 
+        {
+            // Only log errors occasionally to avoid spam
+            if (global.time % 300 == 0) {
+                 show_debug_message($"[Clouds] ERROR: Sprite missing for cloud {i}: {_cloud.sprite_id}");
+            }
+            continue;
+        }
         
         var _spr = _sprite_data.get_sprite();
         if (_spr != -1)
@@ -207,11 +215,16 @@ function render_background_clouds(_camera_x, _camera_y, _camera_width, _camera_h
             var _draw_x = _camera_x + _cloud.x;
             var _draw_y = _camera_y + _cloud.y;
             
-            // Only log once every 60 frames to avoid spam, or if it's the first few frames
-            if (global.time % 60 == 0)
+            /*
+            // Only log occasionaly to avoid spam
+            static _draw_counter = 0;
+            _draw_counter++;
+            
+            if (_draw_counter % 300 == 0) // Less frequent (every 5 seconds at 60fps)
             {
-                show_debug_message($"[Clouds] Drawing cloud {i} at world ({_draw_x}, {_draw_y}), screen ({_cloud.x}, {_cloud.y}), scale {_cloud.scale}, alpha {_cloud.alpha}");
+                show_debug_message($"[Clouds] Drawing cloud {i} at world ({_draw_x}, {_draw_y}), screen ({_cloud.x}, {_cloud.y}), scale {_cloud.scale}, alpha {_cloud.alpha}, sprite {_cloud.sprite_id}");
             }
+            */
             
             draw_sprite_ext(
                 _spr, _cloud.sprite_sub,
@@ -222,6 +235,14 @@ function render_background_clouds(_camera_x, _camera_y, _camera_width, _camera_h
                 _cloud.tint,
                 _cloud.alpha
             );
+        }
+        else
+        {
+            static _err_counter = 0;
+            _err_counter++;
+            if (_err_counter % 300 == 0) {
+                show_debug_message($"[Clouds] ERROR: get_sprite() returned -1 for cloud {i}: {_cloud.sprite_id}");
+            }
         }
     }
 }
@@ -235,14 +256,21 @@ function init_background_clouds()
     var _world_data = global.world_data[$ global.world_save_data.dimension];
     if (_world_data == undefined) return;
     
-    var _script_id = _world_data.get_sky_objects_script();
+    var _script_id = _world_data.get_background_script();
     if (_script_id == undefined) return;
     
-    var _sprites = _world_data.get_sky_objects_sprites();
-    var _config = _world_data.get_sky_objects_config();
+    // Strip @ prefix if present
+    if (string_char_at(_script_id, 1) == "@")
+    {
+        _script_id = string_delete(_script_id, 1, 1);
+    }
+    
+    show_debug_message($"[Clouds] init_background_clouds starting. Script: {_script_id}");
+    
+    var _sprites = _world_data.get_background_sprites();
     
     // Set wind factor from config
-    global.cloud_wind_factor = _config[$ "wind_factor"] ?? 2.0;
+    global.cloud_wind_factor = _world_data.get_background_cloud_wind_factor();
     
     // Set the default sprite set
     if (array_length(_sprites) > 0)
@@ -261,12 +289,22 @@ function init_background_clouds()
     
     var _parameter = {
         sprites: _sprites,
-        config: _config,
         camera_width: _camera_width,
         camera_height: _camera_height,
+        
+        // Pass all the config values
+        count: _world_data.get_background_cloud_count(),
+        y_min: _world_data.get_background_cloud_y_min(),
+        y_max: _world_data.get_background_cloud_y_max(),
+        scale_min: _world_data.get_background_cloud_scale_min(),
+        scale_max: _world_data.get_background_cloud_scale_max(),
+        alpha_min: _world_data.get_background_cloud_alpha_min(),
+        alpha_max: _world_data.get_background_cloud_alpha_max(),
+        speed_min: _world_data.get_background_cloud_speed_min(),
+        speed_max: _world_data.get_background_cloud_speed_max(),
+        wind_factor: _world_data.get_background_cloud_wind_factor(),
     };
     
-    show_debug_message($"[Clouds] init_background_clouds starting. Script: {_script_id}");
     if (struct_exists(global.proglang_scripts, _script_id))
     {
         proglang_call(_script_id, [_parameter], _context);
