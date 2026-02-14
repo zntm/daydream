@@ -969,7 +969,6 @@ function ui_update(_instance) {
 }
 
 /// @desc Draw all root elements in a UI instance
-/// @param {Struct} _instance UI instance
 function ui_draw(_instance) {
     if (_instance == undefined) return;
     
@@ -982,4 +981,28 @@ function ui_draw(_instance) {
     if (_instance.render_events != undefined) {
         _instance.dirty = false;
     }
+}
+
+/// @desc Cleanly destroy a UI instance
+function ui_instance_destroy(_instance) {
+    if (_instance == undefined) return;
+    
+    // Unparent root elements
+    var _count = array_length(_instance.root_elements);
+    for (var i = 0; i < _count; i++) {
+        var _root = _instance.root_elements[i];
+        if (_root.parent != undefined) {
+            var _p_children = _root.parent.children;
+            for (var j = 0; j < array_length(_p_children); j++) {
+                if (_p_children[j] == _root) {
+                    array_delete(_p_children, j, 1);
+                    break;
+                }
+            }
+        }
+    }
+    
+    // Remove from registry
+    variable_global_get("ui_instances")[$ string(_instance.id)] = undefined;
+    struct_remove(global.ui_instances, string(_instance.id));
 }

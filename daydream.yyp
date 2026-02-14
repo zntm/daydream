@@ -1750,6 +1750,8 @@
     {"$GMIncludedFile":"","%Name":"particle_colour.json","CopyToMask":-1,"filePath":"datafiles/resources/data/tags/tile","name":"particle_colour.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"placement.json","CopyToMask":-1,"filePath":"datafiles/resources/data/tags/tile","name":"placement.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"sfx.json","CopyToMask":-1,"filePath":"datafiles/resources/data/tags/tile","name":"sfx.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"crafting_slot.ui","CopyToMask":-1,"filePath":"datafiles/resources/data/ui","name":"crafting_slot.ui","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"crafting.ui","CopyToMask":-1,"filePath":"datafiles/resources/data/ui","name":"crafting.ui","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"hotbar.ui","CopyToMask":-1,"filePath":"datafiles/resources/data/ui","name":"hotbar.ui","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"inventory.ui","CopyToMask":-1,"filePath":"datafiles/resources/data/ui","name":"inventory.ui","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"loot_blueprint.ui","CopyToMask":-1,"filePath":"datafiles/resources/data/ui","name":"loot_blueprint.ui","resourceType":"GMIncludedFile","resourceVersion":"2.0",},

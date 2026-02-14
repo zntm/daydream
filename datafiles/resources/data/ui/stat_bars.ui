@@ -13,7 +13,7 @@ var bar_empty = $sprite(spr_GUI_Stat_Bar_Empty) {
     
     @bar(hp_fill) {
         position = ORIGIN_TOP_LEFT + (7, 0)
-        size = (140, 5)
+        size = (153, 5)
         value = *hp_value
         max = *hp_max
         sprite_empty = bar_empty
@@ -34,7 +34,7 @@ var bar_empty = $sprite(spr_GUI_Stat_Bar_Empty) {
     
     @bar(stamina_fill) {
         position = ORIGIN_TOP_LEFT + (7, 1)
-        size = (140, 5)
+        size = (153, 5)
         value = *stamina_value
         max = *stamina_max
         sprite_empty = bar_empty

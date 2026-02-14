@@ -59,11 +59,17 @@ function gui_init_modular()
     // However, the cleanest way is often to just let the individual elements handle their visibility
     // based on the global state.
     
-    // Create crafting panel (dynamic)
-    global.gui_panel_crafting_modular = new GUIPanel(0, 0, 0, 0);
-    global.gui_panel_crafting_modular.set_anchor("center", "bottom");
-    global.gui_panel_crafting_modular.visible = false;
-    global.gui_root.add_child(global.gui_panel_crafting_modular);
+    // Load crafting UI definitions
+    global.ui_crafting_def = ui_load("ui/crafting.ui");
+    global.ui_crafting_slot_def = ui_load("ui/crafting_slot.ui");
+    
+    // Spawn crafting panel
+    global.ui_crafting = ui_spawn(global.ui_crafting_def, {
+        link: {},
+        parent: global.gui_root
+    });
+    global.ui_crafting.visible = false;
+    global.gui_panel_crafting_modular = global.ui_crafting.root_elements[0];
     
     // Create chat history panel (bottom-left)
     global.gui_panel_chat = new GUIChatHistory(8, _logical_height - 160, 300, 128, 8);

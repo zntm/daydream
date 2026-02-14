@@ -1,6 +1,6 @@
 @area(inventory_container) {
-    position = ORIGIN_CENTER
-    size = (280, 80)
+    position = ORIGIN_BOTTOM_CENTER + (0, 100)
+    size = (224, 72)
     
     @area(inventory_grid) {
         position = ORIGIN_CENTER
@@ -14,7 +14,7 @@
     }
 
     @area(armor_column) {
-        position = ORIGIN_MIDDLE_LEFT + (40, 0)
+        position = ORIGIN_MIDDLE_LEFT + (8, 0)
         size = (16, 48)
 
         @slot(armor_helmet) {
@@ -41,7 +41,7 @@
     }
 
     @area(accessory_grid) {
-        position = ORIGIN_MIDDLE_RIGHT + (40, 0)
+        position = ORIGIN_MIDDLE_RIGHT
         size = (32, 48)
 
         @slot(acc_0) {

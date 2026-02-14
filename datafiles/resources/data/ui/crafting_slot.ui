@@ -1,0 +1,4 @@
+@slot(slot) {
+    inventory_name = "_craftable"
+    slot_index = *slot_index
+}

@@ -14,10 +14,15 @@ function inventory_refresh_craftable()
     // Clear inventory item data for rendering
     global.inventory._craftable = [];
     
-    // Clear modular panel children
-    if (variable_global_exists("gui_panel_crafting_modular"))
+    // Clear modular panel children and instances
+    if (variable_global_exists("ui_crafting"))
     {
-        global.gui_panel_crafting_modular.children = [];
+        if (!variable_global_exists("ui_crafting_slots")) global.ui_crafting_slots = [];
+        
+        while (array_length(global.ui_crafting_slots) > 0) {
+            var _inst = array_pop(global.ui_crafting_slots);
+            ui_instance_destroy(_inst);
+        }
         
         var _inventory = global.inventory.base;
         var _offset = 0;
@@ -74,39 +79,22 @@ function inventory_refresh_craftable()
             var _item_render = new Inventory(_data.get_id(), _data.get_amount());
             global.inventory._craftable[@ _offset] = _item_render;
             
-            // Create Visual GUISlot (horizontal layout)
-            var _slot = new GUISlot(_offset * INVENTORY_SLOT_DIMENSION, 0, "_craftable", _offset);
-            global.gui_panel_crafting_modular.add_child(_slot);
+            // Spawn Categorized UI Slot
+            var _slot_inst = ui_spawn(global.ui_crafting_slot_def, {
+                link: { slot_index: _offset },
+                parent: global.ui_crafting.root_elements[0]
+            });
+            array_push(global.ui_crafting_slots, _slot_inst);
             
             ++_offset;
         }
         
-        // Update Panel Layout
-        var _width = _offset * INVENTORY_SLOT_DIMENSION;
-        var _height = INVENTORY_SLOT_DIMENSION;
+        // Update Panel Layout and Visibility
+        global.ui_crafting.visible = (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.INVENTORY) && (_offset > 0);
         
-        global.gui_panel_crafting_modular.width = _width;
-        global.gui_panel_crafting_modular.height = _height;
-        
-        // Position: Bottom Center, above backpack
-        // Backpack (bottom=36), Height=64 (4 rows). Top = 100 from bottom.
-        // We want crafting at ~104 from bottom.
-        global.gui_panel_crafting_modular.offset_y = 104;
-        
-        // Ensure anchor is correct (initially set, but good to ensure)
-        global.gui_panel_crafting_modular.anchor_x = "center";
-        global.gui_panel_crafting_modular.anchor_y = "bottom";
-        
-        global.gui_panel_crafting_modular.recalculate_layout();
-        
-        // Set visibility based on inventory state and content
-        if ((obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.INVENTORY) && (_offset > 0))
-        {
-            global.gui_panel_crafting_modular.visible = true;
-        }
-        else
-        {
-            global.gui_panel_crafting_modular.visible = false;
+        if (variable_instance_exists(global.ui_crafting.root_elements[0], "width")) {
+            global.ui_crafting.root_elements[0].width = _offset * 16;
+            global.ui_crafting.root_elements[0].recalculate_layout();
         }
         
         // Refresh surfaces (still needed for other systems?)
