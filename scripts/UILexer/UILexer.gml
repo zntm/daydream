@@ -280,15 +280,18 @@ function UILexer(_source) constructor {
     }
     
     static scan_number = function() {
-        while (is_digit(peek())) advance();
+        // Support underscores in numbers (e.g., 10_000)
+        while (is_digit(peek()) || peek() == "_") advance();
         
         // Look for decimal
         if (peek() == "." && is_digit(peek_next())) {
             advance(); // consume .
-            while (is_digit(peek())) advance();
+            while (is_digit(peek()) || peek() == "_") advance();
         }
         
+        // Remove underscores before parsing
         var _text = string_copy(source, start, current - start);
+        _text = string_replace_all(_text, "_", "");
         var _value = real(_text);
         
         // Check for percentage suffix: 50% (no space before %)

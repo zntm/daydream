@@ -1316,7 +1316,8 @@ proglang_function_register("ui_load", function(_args) {
 proglang_function_register("ui_spawn", function(_args) {
     var _definitions = _args[0];
     var _config = (array_length(_args) > 1) ? _args[1] : {};
-    return ui_spawn(_definitions, _config);
+    var _events = (array_length(_args) > 2) ? _args[2] : undefined;
+    return ui_spawn(_definitions, _config, _events);
 });
 
 proglang_function_register("ui_destroy", function(_args) {
@@ -1347,6 +1348,18 @@ proglang_function_register("ui_update", function(_args) {
 
 proglang_function_register("ui_draw", function(_args) {
     ui_draw(_args[0]);
+});
+
+proglang_function_register("ui_event", function(_args) {
+    ui_event(_args[0]);
+});
+
+proglang_function_register("ui_mark_dirty", function(_args) {
+    ui_mark_dirty(_args[0]);
+});
+
+proglang_function_register("ui_clear_events", function(_args) {
+    ui_clear_events();
 });
 
 #endregion

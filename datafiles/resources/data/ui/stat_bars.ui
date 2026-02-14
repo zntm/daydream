@@ -3,7 +3,7 @@ var bar_empty = $sprite(spr_GUI_Stat_Bar_Empty) {
 }
 
 @area(hp_container) {
-    position = (1, -15)
+    position = (0, -15)
     size = (160, 7)
     
     @image(hp_icon) {
@@ -24,7 +24,7 @@ var bar_empty = $sprite(spr_GUI_Stat_Bar_Empty) {
 }
 
 @area(stamina_container) {
-    position = (1, -7)
+    position = (0, -7)
     size = (160, 7)
     
     @image(stamina_icon) {

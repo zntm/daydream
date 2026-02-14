@@ -8,6 +8,9 @@ global.ui_definitions = {};
 global.ui_instances = {};
 global.ui_instance_counter = 0;
 
+// Global UI event bus - tracks which events have been fired this frame
+global.ui_pending_events = {};
+
 /// @desc Load and parse a UI file, returning definitions
 /// @param {String} _path Path to .ui file
 /// @returns {Struct.UIASTDocument} Parsed UI document
@@ -18,11 +21,11 @@ function ui_load(_path) {
         return global.ui_definitions[$ _path];
     }
     
-    // Resolve full path - UI files are in datafiles/ui/
+    // Resolve full path - UI files are in resources/data/ui/
     var _full_path = _path;
-    var _datafiles = PROGRAM_DIRECTORY_DATAFILES;
-    if (_datafiles != "") {
-        _full_path = $"{_datafiles}/{_path}";
+    var _resources = PROGRAM_DIRECTORY_RESOURCES;
+    if (_resources != "") {
+        _full_path = $"{_resources}/data/{_path}";
     }
     
     show_debug_message($"[UI Runtime] Attempting to load UI file: '{_path}' -> '{_full_path}' (cwd: {working_directory})");
@@ -99,8 +102,9 @@ function ui_load(_path) {
 /// @desc Spawn UI instances from definitions
 /// @param {Array} _definitions Array of element names or AST elements to spawn  
 /// @param {Struct} _config Configuration including link context
+/// @param {Array|undefined} _events Optional array of event strings that trigger re-renders
 /// @returns {Struct} UI instance with spawned elements
-function ui_spawn(_definitions, _config = {}) {
+function ui_spawn(_definitions, _config = {}, _events = undefined) {
     // Normalize definitions to an array if it's a single struct
     if (is_struct(_definitions) && variable_struct_exists(_definitions, "type") && _definitions.type == UI_AST.ELEMENT) {
         _definitions = [_definitions];
@@ -123,7 +127,9 @@ function ui_spawn(_definitions, _config = {}) {
         id: global.ui_instance_counter++,
         elements: {},
         root_elements: [],
-        link_context: _link
+        link_context: _link,
+        render_events: _events,   // Array of event strings, or undefined for every-frame
+        dirty: true               // Start dirty so first frame always renders
     };
     
     var _def_count = array_length(_definitions);
@@ -253,6 +259,9 @@ function ui_instantiate_element(_node, _link, _variables) {
             break;
         case "bar":
             _element = new UIBar(0, 0, 100, 8, 0, 100, 50);
+            break;
+        case "slot":
+            _element = new UISlot(0, 0);
             break;
         case "popup":
             _element = new UIPopup(0, 0, 200, 150);
@@ -749,10 +758,54 @@ function ui_set(_instance, _name, _property, _value) {
     }
 }
 
+/// @desc Fire a UI event - marks all instances listening for this event as dirty
+/// @param {String} _event_name Event identifier (e.g. "inventory_changed", "hp_changed")
+function ui_event(_event_name) {
+    global.ui_pending_events[$ _event_name] = true;
+    
+    // Mark matching instances as dirty
+    var _keys = struct_get_names(global.ui_instances);
+    var _key_count = array_length(_keys);
+    for (var i = 0; i < _key_count; i++) {
+        var _inst = global.ui_instances[$ _keys[i]];
+        if (_inst.render_events != undefined) {
+            var _ev_count = array_length(_inst.render_events);
+            for (var j = 0; j < _ev_count; j++) {
+                if (_inst.render_events[j] == _event_name) {
+                    _inst.dirty = true;
+                    break;
+                }
+            }
+        }
+    }
+}
+
+/// @desc Manually mark a UI instance as needing a re-render
+/// @param {Struct} _instance UI instance
+function ui_mark_dirty(_instance) {
+    if (_instance != undefined) _instance.dirty = true;
+}
+
+/// @desc Clear the global event bus (call at end of frame)
+function ui_clear_events() {
+    global.ui_pending_events = {};
+}
+
+/// @desc Check if a UI instance should render this frame
+/// @param {Struct} _instance UI instance
+/// @returns {Bool} True if instance should render
+function ui_should_render(_instance) {
+    // No event filter = always render (backwards compatible)
+    if (_instance.render_events == undefined) return true;
+    // Has event filter = only render when dirty
+    return _instance.dirty;
+}
+
 /// @desc Refresh all bindings in a UI instance
 /// @param {Struct} _instance UI instance
 function ui_refresh(_instance) {
     if (_instance == undefined) return;
+    if (!ui_should_render(_instance)) return;
     
     var _count = array_length(_instance.root_elements);
     for (var i = 0; i < _count; i++) {
@@ -766,6 +819,7 @@ function ui_refresh(_instance) {
 /// @param {Struct} _instance UI instance
 function ui_update(_instance) {
     if (_instance == undefined) return;
+    if (!ui_should_render(_instance)) return;
     
     var _count = array_length(_instance.root_elements);
     for (var i = 0; i < _count; i++) {
@@ -781,5 +835,10 @@ function ui_draw(_instance) {
     var _count = array_length(_instance.root_elements);
     for (var i = 0; i < _count; i++) {
         _instance.root_elements[i].draw();
+    }
+    
+    // Clear dirty flag after drawing
+    if (_instance.render_events != undefined) {
+        _instance.dirty = false;
     }
 }
