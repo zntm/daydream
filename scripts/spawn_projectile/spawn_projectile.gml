@@ -17,6 +17,9 @@ function spawn_projectile(_x, _y, _id, _damage, _xscale = 1, _yscale = 1, _owner
         damage = _damage;
         owner = _owner;
         
+        entity_xscale = 1;
+        entity_yscale = 1;
+        
         attribute = _data.get_attribute();
         
         // Create physics body

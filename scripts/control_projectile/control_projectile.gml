@@ -44,7 +44,7 @@ function control_projectile()
             
             event_emit(new EventDataProjectileLand(id, x, y, _inst, "entity"));
             
-            if (_data.can_destroy_on_tile_collision())
+            if (_data.can_destroy_on_entity_collision())
             {
                 instance_destroy();
                 exit;

@@ -1,9 +1,10 @@
 enum PROJECTILE_PROPERTIES_BOOLEAN {
     IS_ADDITIVE             = 1 << 0,
-    can_destroy_on_tile_collision = 1 << 1,
+    CAN_DESTROY_ON_TILE_COLLISION = 1 << 1,
     IS_FADE_OUT             = 1 << 2,
     HAS_COLLISION           = 1 << 3,
-    HAS_STRETCHED_ANIMATION = 1 << 4
+    HAS_STRETCHED_ANIMATION = 1 << 4,
+    CAN_DESTROY_ON_ENTITY_COLLISION = 1 << 5
 }
 
 enum PROJECTILE_MOVEMENT_TYPE {
@@ -13,6 +14,8 @@ enum PROJECTILE_MOVEMENT_TYPE {
 
 function ProjectileData(_namespace, _id, _sprite) : ParentData(_namespace, _id) constructor
 {
+    ___sprite = _sprite;
+    
     static __set_value = function(_name, _value)
     {
         if (_value != undefined)
@@ -49,10 +52,11 @@ function ProjectileData(_namespace, _id, _sprite) : ParentData(_namespace, _id) 
     {
         static __properties = {
             "phantasia:is_additive":             PROJECTILE_PROPERTIES_BOOLEAN.IS_ADDITIVE,
-            "phantasia:can_destroy_on_tile_collision": PROJECTILE_PROPERTIES_BOOLEAN.can_destroy_on_tile_collision,
+            "phantasia:can_destroy_on_tile_collision": PROJECTILE_PROPERTIES_BOOLEAN.CAN_DESTROY_ON_TILE_COLLISION,
             "phantasia:is_fade_out":             PROJECTILE_PROPERTIES_BOOLEAN.IS_FADE_OUT,
             "phantasia:has_collision":           PROJECTILE_PROPERTIES_BOOLEAN.HAS_COLLISION,
-            "phantasia:has_stretch_animation":   PROJECTILE_PROPERTIES_BOOLEAN.HAS_STRETCHED_ANIMATION
+            "phantasia:has_stretch_animation":   PROJECTILE_PROPERTIES_BOOLEAN.HAS_STRETCHED_ANIMATION,
+            "phantasia:can_destroy_on_entity_collision": PROJECTILE_PROPERTIES_BOOLEAN.CAN_DESTROY_ON_ENTITY_COLLISION
         }
         
         if (_properties != undefined)
@@ -77,7 +81,7 @@ function ProjectileData(_namespace, _id, _sprite) : ParentData(_namespace, _id) 
     
     static can_destroy_on_tile_collision = function()
     {
-        return !!(___properties & PROJECTILE_PROPERTIES_BOOLEAN.can_destroy_on_tile_collision);
+        return !!(___properties & PROJECTILE_PROPERTIES_BOOLEAN.CAN_DESTROY_ON_TILE_COLLISION);
     }
     
     static is_fade_out = function()
@@ -93,6 +97,11 @@ function ProjectileData(_namespace, _id, _sprite) : ParentData(_namespace, _id) 
     static has_stretch_animation = function()
     {
         return !!(___properties & PROJECTILE_PROPERTIES_BOOLEAN.HAS_STRETCHED_ANIMATION);
+    }
+    
+    static can_destroy_on_entity_collision = function()
+    {
+        return !!(___properties & PROJECTILE_PROPERTIES_BOOLEAN.CAN_DESTROY_ON_ENTITY_COLLISION);
     }
     
     #endregion
@@ -222,6 +231,8 @@ function ProjectileData(_namespace, _id, _sprite) : ParentData(_namespace, _id) 
     
     static set_attribute = function(_attributes)
     {
+        ___attributes = _attributes;
+        
         if (_attributes != undefined)
         {
             __set_smart_value("___gravity", _attributes[$ "gravity"]);

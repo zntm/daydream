@@ -5,9 +5,9 @@ import { Attire } from "../lib/Attire";
 
 export default [
     ["eyes", "footwear", "hair", "pants", "shirt", "shirt_detail"].map((type) =>
-        readdirSync(join(__dirname, `../../sprites/attire/${type}`))
+        readdirSync(join(__dirname, `../../../assets/sprites/attire/${type}`))
             .map((file) => {
-                const basePath = join(__dirname, `../../sprites/attire/${type}/${file}`);
+                const basePath = join(__dirname, `../../../assets/sprites/attire/${type}/${file}`);
 
                 let colour = `phantasia:attire/${type}/${file}/colour`;
 

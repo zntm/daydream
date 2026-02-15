@@ -10,6 +10,7 @@ import {
     ItemParticle,
     TileItemProperties,
 } from "../lib";
+import { ArrowItem } from "../lib/ArrowItem";
 
 export default [
     new DatagenReturnData(
@@ -19,6 +20,19 @@ export default [
             "phantasia:item/feather",
             "#phantasia:item/generic/inventory_default",
         ),
+    ),
+    new DatagenReturnData(
+        "silk.json",
+        new Item(
+            ItemType.Default,
+            "phantasia:item/silk",
+            "#phantasia:item/generic/inventory_default",
+        ),
+    ),
+    new DatagenReturnData(
+        "arrow.json",
+        new ArrowItem("phantasia:item/arrow", 2)
+            .setProjectile("phantasia:arrow"),
     ),
     new DatagenReturnData(
         "sand.json",

@@ -5,7 +5,7 @@ function control_entity_shoot(_entity, _item_id, _x, _y, _angle, _inventory_targ
     if (_data == undefined) exit;
     
     var _projectile_id = _data.get_item_projectile();
-    var _ammo_type = _data.get_item_ammo_type();
+    var _ammo_type = _data.get_item_ammo_requirement();
     var _damage_bonus = 0;
     
     // If we need ammo and this is a player
@@ -72,20 +72,13 @@ function control_entity_shoot(_entity, _item_id, _x, _y, _angle, _inventory_targ
             // But spawn_projectile sets xvelocity based on xscale if not rotated.
             // If we rotate it, we need to decompose the speed.
             
-            // Re-calculate velocity based on the defined speed in ProjectileData but directed along _angle
-            var _p_data = global.projectile_data[$ _projectile_id];
-            var _speed_val = smart_value(_p_data.get_xspeed()); // Usually assume xspeed is the forward speed?
-            
-            // HACK: Most projectiles might rely on xvelocity being set by spawn_projectile.
-            // If we rotate, we want to align velocity vector.
-            // Currently spawn_projectile sets xvelocity = xscale * speed.
-            
             // Let's overwrite velocity to match angle
-            var _speed = sqrt(sqr(xvelocity) + sqr(yvelocity)); 
+            var _p_data = global.projectile_data[$ _projectile_id];
+            var _speed = smart_value(_p_data.get_xspeed());
             if (_speed == 0) _speed = 5; // Fallback default
             
-            xvelocity = lengthdir_x(_speed, _angle);
-            yvelocity = lengthdir_y(_speed, _angle);
+            physics_body.vel_x = lengthdir_x(_speed, _angle);
+            physics_body.vel_y = lengthdir_y(_speed, _angle);
             
             // Propagate rotation?
             // spawn_projectile sets image_angle = zero or data.rotation

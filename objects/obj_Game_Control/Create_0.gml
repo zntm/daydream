@@ -251,3 +251,6 @@ if (global.relay == undefined || global.relay.role == RELAY_ROLE.NONE)
 }
 
 timer_network_sync = 0;
+
+inventory_give(obj_Player.x, obj_Player.y, new Inventory("phantasia:iron_bow"))
+inventory_give(obj_Player.x, obj_Player.y, new Inventory("phantasia:arrow", 999))

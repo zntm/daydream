@@ -11,6 +11,7 @@ export default [
             pickaxe: { damage: 4, durability: 141 },
             axe: { damage: 4, durability: 133 },
             shovel: { damage: 3, durability: 125 },
+            bow: { damage: 4, durability: 150 },
             harvest: {
                 hardness: 1.12,
                 level: 2,
@@ -25,6 +26,7 @@ export default [
             pickaxe: { damage: 6, durability: 319 },
             axe: { damage: 6, durability: 300 },
             shovel: { damage: 4, durability: 283 },
+            bow: { damage: 6, durability: 340 },
             harvest: {
                 hardness: 1.19,
                 level: 3,
@@ -39,6 +41,7 @@ export default [
             pickaxe: { damage: 7, durability: 695 },
             axe: { damage: 7, durability: 653 },
             shovel: { damage: 5, durability: 616 },
+            bow: { damage: 7, durability: 740 },
             harvest: {
                 hardness: 1.25,
                 level: 4,
@@ -53,6 +56,7 @@ export default [
             pickaxe: { damage: 11, durability: 1078 },
             axe: { damage: 10, durability: 1012 },
             shovel: { damage: 7, durability: 955 },
+            bow: { damage: 11, durability: 1150 },
             harvest: {
                 hardness: 1.31,
                 level: 5,
@@ -68,6 +72,7 @@ export default [
             pickaxe,
             axe,
             shovel,
+            bow,
             harvest,
         }) =>
             tieredEquipmentItems(
@@ -79,6 +84,7 @@ export default [
                 pickaxe,
                 axe,
                 shovel,
+                bow,
                 harvest,
             ),
     ),

@@ -311,6 +311,13 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
                 ___item_ammo_type = _ammo_type;
             }
             
+            var _ammo_requirement = _data[$ "ammo_requirement"];
+            
+            if (_ammo_requirement != undefined)
+            {
+                ___item_ammo_requirement = _ammo_requirement;
+            }
+            
             var _projectile = _data[$ "projectile"];
             
             if (_projectile != undefined)
@@ -488,6 +495,11 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     static get_item_ammo_type = function()
     {
         return self[$ "___item_ammo_type"];
+    }
+    
+    static get_item_ammo_requirement = function()
+    {
+        return self[$ "___item_ammo_requirement"] ?? get_item_ammo_type();
     }
     
     static get_item_projectile = function()

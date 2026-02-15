@@ -1,5 +1,6 @@
 import { DatagenReturnData } from "../../../../lib";
 import { AccessoryItem, ItemAccessoryType, ToolItem } from "../index";
+import { BowItem } from "../BowItem";
 
 export default (
     id: string,
@@ -10,6 +11,7 @@ export default (
     pickaxe: any,
     axe: any,
     shovel: any,
+    bow: any,
     harvest: any,
 ) => [
         new DatagenReturnData(
@@ -82,4 +84,13 @@ export default (
                 harvest.level,
             ),
         ),
+        new DatagenReturnData(
+            `${id}_bow.json`,
+            new BowItem(
+                `phantasia:item/${id}_bow`,
+                bow.damage,
+                bow.durability,
+            ),
+        ),
     ];
+

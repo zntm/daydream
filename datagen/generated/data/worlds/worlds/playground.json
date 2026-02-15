@@ -243,23 +243,23 @@
         "diurnal": [
             {
                 "id": "dawn",
-                "time_range_min": 0,
-                "time_range_max": 240
+                "start": 0,
+                "end": 240
             },
             {
                 "id": "day",
-                "time_range_min": 240,
-                "time_range_max": 820
+                "start": 240,
+                "end": 820
             },
             {
                 "id": "dusk",
-                "time_range_min": 820,
-                "time_range_max": 890
+                "start": 820,
+                "end": 890
             },
             {
                 "id": "night",
-                "time_range_min": 890,
-                "time_range_max": 1200
+                "start": 890,
+                "end": 1200
             }
         ],
         "length": 1200,

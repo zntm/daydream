@@ -1,5 +1,5 @@
 import { DatagenReturnData, Attribute, EntityPhysics } from "../../../lib";
-import { Projectile } from "../lib/Projectile";
+import { Projectile, ProjectileProperties } from "../lib/Projectile";
 
 export default [
     new DatagenReturnData(
@@ -9,6 +9,18 @@ export default [
             .setPhysics(new EntityPhysics(14, 0))
             .setAttribute(
                 new Attribute().setCollisionBox(32, 64).setHitBox(32, 64),
+            ),
+    ),
+    new DatagenReturnData(
+        "projectiles/arrow.json",
+        new Projectile("phantasia:projectile/arrow", [
+            ProjectileProperties.CanDestroyOnEntityCollision,
+            ProjectileProperties.CanDestroyOnTileCollision,
+        ])
+            .setLifetime(3)
+            .setPhysics(new EntityPhysics(12, 0))
+            .setAttribute(
+                new Attribute().setCollisionBox(8, 8).setHitBox(8, 8),
             ),
     ),
 ];

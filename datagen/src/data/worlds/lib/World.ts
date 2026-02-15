@@ -13,12 +13,26 @@ export class WorldVignette {
 }
 
 
+export class WorldTimeDiurnal {
+    private id: string;
+    private start: number;
+    private end: number;
+
+    constructor(id: string, start: number, end: number) {
+        this.id = id;
+        this.start = start;
+        this.end = end;
+    }
+}
+
 export class WorldTime {
     private start: number;
+    private diurnal: WorldTimeDiurnal[];
     private length: number;
 
-    constructor(start: number, length: number) {
+    constructor(start: number, diurnal: WorldTimeDiurnal[], length: number) {
         this.start = start;
+        this.diurnal = diurnal;
         this.length = length;
     }
 }

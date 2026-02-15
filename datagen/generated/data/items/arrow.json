@@ -1,0 +1,10 @@
+{
+    "inventory": "#phantasia:item/generic/inventory_default",
+    "item": {
+        "ammo_type": "arrow",
+        "damage": 2,
+        "projectile": "phantasia:arrow"
+    },
+    "sprite": "phantasia:item/arrow",
+    "type": "default"
+}

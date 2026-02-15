@@ -1,0 +1,15 @@
+{
+    "inventory": "#phantasia:item/generic/inventory_tool",
+    "item": {
+        "ammo_requirement": "arrow",
+        "damage": 11,
+        "durability": {
+            "amount": 1150,
+            "bar": "#phantasia:item/generic/durability_bar"
+        },
+        "hold_type": "bow",
+        "projectile": "phantasia:arrow"
+    },
+    "sprite": "phantasia:item/platinum_bow",
+    "type": "tool"
+}
