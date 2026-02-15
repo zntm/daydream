@@ -2,11 +2,12 @@
     "attribute": {
         "collision_box_height": 8,
         "collision_box_width": 8,
+        "gravity": 0.5,
         "hit_box_height": 8,
         "hit_box_width": 8
     },
-    "lifetime": 3,
-    "on_land": [
+    "lifetime": 60,
+    "on_hit_tile": [
         {
             "id": "@phantasia:spawn_item_drop",
             "item": "phantasia:item/arrow",

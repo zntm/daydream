@@ -479,6 +479,14 @@ function ui_apply_property(_element, _prop, _link, _variables) {
         case "grid_columns":
             _element.grid_columns = floor(_value);
             break;
+            
+        case "smooth":
+            if (variable_struct_exists(_element, "set_smooth")) {
+                _element.set_smooth(_value);
+            } else {
+                _element.smooth = _value;
+            }
+            break;
         
         case "background":
             if (is_struct(_value) && variable_struct_exists(_value, "color")) {

@@ -17,12 +17,12 @@ export default [
             ProjectileProperties.CanDestroyOnEntityCollision,
             ProjectileProperties.CanDestroyOnTileCollision,
         ])
-            .setLifetime(3)
+            .setLifetime(60)
             .setPhysics(new EntityPhysics(12, 0))
             .setAttribute(
-                new Attribute().setCollisionBox(8, 8).setHitBox(8, 8),
+                new Attribute().setCollisionBox(8, 8).setHitBox(8, 8).setGravity(0.5),
             )
-            .setOnLand([
+            .setOnHitTile([
                 {
                     id: "phantasia:spawn_item_drop",
                     item: "phantasia:item/arrow",

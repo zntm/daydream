@@ -59,32 +59,82 @@ function control_entity_shoot(_entity, _item_id, _x, _y, _angle, _inventory_targ
     // If we have a projectile to shoot
     if (_projectile_id != undefined)
     {
+        var _p_data = global.projectile_data[$ _projectile_id];
+        var _max_speed = smart_value(_p_data.get_xspeed());
+        if (_max_speed == 0) _max_speed = 5;
+        
+        var _speed = _max_speed * _power;
+        
+        // Recalculate aim angle from spawn point to mouse for accuracy
+        var _aim_angle = _angle;
+        if (instance_exists(_entity) && _entity.object_index == obj_Player)
+        {
+            var _dx = mouse_x - _x;
+            var _dy = mouse_y - _y;
+            var _dist_sq = _dx*_dx + _dy*_dy;
+            
+            if (_dist_sq > 1)
+            {
+                var _dist = sqrt(_dist_sq);
+                var _g = _p_data.get_gravity();
+                
+                // If there's gravity, solve for trajectory angle
+                if (_g != 0)
+                {
+                    // A*tan^2 + B*tan + C = 0
+                    // A = g*dx^2 / 2v^2, B = dx, C = A - dy
+                    // Using abs(dx) to simplify and then adjusting sign
+                    var _adx = abs(_dx);
+                    var _v2 = _speed * _speed;
+                    var _a = (_g * _adx * _adx) / (2 * _v2);
+                    var _b = _adx;
+                    var _c = _a - _dy;
+                    
+                    var _d = _b*_b - 4*_a*_c;
+                    
+                    if (_d >= 0)
+                    {
+                        // Use the solution that points "up" more (lower arc for y-down GML)
+                        var _tan = (-_b + sqrt(_d)) / (2 * _a);
+                        _aim_angle = radtodeg(arctan2(_tan, 1));
+                        
+                        // Flip if shooting left
+                        if (_dx < 0) _aim_angle = 180 - _aim_angle;
+                    }
+                    else
+                    {
+                        // Target out of reach, fall back to direct aim
+                        _aim_angle = point_direction(_x, _y, mouse_x, mouse_y);
+                    }
+                }
+                else
+                {
+                    _aim_angle = point_direction(_x, _y, mouse_x, mouse_y);
+                }
+            }
+        }
+        
+        // Velocity-based damage formula:
+        // damage = max(min_damage, launcher_mult * ammo_damage * power(velocity / max_velocity, exp_curve))
         var _launcher_mult = _data.get_item_damage();
         var _ammo_damage = _damage_bonus;
         var _exp_curve = 1.5;
         var _min_damage = 1;
+        var _velocity_ratio = clamp(_speed / _max_speed, 0, 1);
         
-        var _damage = max(_min_damage, _launcher_mult * _ammo_damage * power(_power, _exp_curve));
+        var _damage = max(_min_damage, _launcher_mult * _ammo_damage * power(_velocity_ratio, _exp_curve));
         
         var _inst = spawn_projectile(_x, _y, _projectile_id, _damage, 1, 1, _entity);
         
         with (_inst)
         {
-            image_angle = _angle;
+            physics_body.vel_x = lengthdir_x(_speed, _aim_angle);
+            physics_body.vel_y = lengthdir_y(_speed, _aim_angle);
             
-            var _p_data = global.projectile_data[$ _projectile_id];
-            var _max_speed = smart_value(_p_data.get_xspeed());
-            if (_max_speed == 0) _max_speed = 5;
-            
-            var _speed = _max_speed * _power;
-            
-            physics_body.vel_x = lengthdir_x(_speed, _angle);
-            physics_body.vel_y = lengthdir_y(_speed, _angle);
-            
-            image_angle = _angle;
+            image_angle = _aim_angle;
         }
         
-        var _event = new EventDataProjectileShoot(_entity, _inst, _x, _y, _angle, _damage);
+        var _event = new EventDataProjectileShoot(_entity, _inst, _x, _y, _aim_angle, _damage);
         
         event_emit(_event);
         

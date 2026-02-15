@@ -17,7 +17,7 @@ function UIBar(_x, _y, _width, _height, _min, _max, _value) : UIElement(_x, _y, 
     
     // Color-based styling (only used if explicitly set, otherwise sprites-only)
     background_color = undefined;
-    fill_color = #4aff4a;
+    colour = #4aff4a;
     border_color = #3a3a4a;
     
     // Animation
@@ -177,6 +177,29 @@ function UIBar(_x, _y, _width, _height, _min, _max, _value) : UIElement(_x, _y, 
                 }
             }
         }
+        // Rectangle fallback
+        else {
+            if (background_color != undefined) {
+                draw_set_color(background_color);
+                draw_set_alpha(background_alpha);
+                draw_rectangle(_x1, _y1, _x1 + _draw_width, _y1 + _draw_height, false);
+            }
+            
+            if (colour != undefined && _t > 0) {
+                draw_set_color(colour);
+                draw_set_alpha(1); // Fill is usually opaque
+                draw_rectangle(_x1, _y1, _x1 + (_draw_width * _t), _y1 + _draw_height, false);
+            }
+            
+            if (border_color != undefined && border_width > 0) {
+                draw_set_color(border_color);
+                draw_set_alpha(1);
+                draw_rectangle(_x1, _y1, _x1 + _draw_width, _y1 + _draw_height, true);
+            }
+            
+            draw_set_alpha(1);
+            draw_set_color(c_white);
+        }
     }
     
     /// @desc Set the current value
@@ -191,6 +214,13 @@ function UIBar(_x, _y, _width, _height, _min, _max, _value) : UIElement(_x, _y, 
         if (!is_real(_max)) return self;
         max_value = _max;
         value = clamp(value, min_value, max_value);
+        return self;
+    }
+    
+    /// @desc Set whether smoothing is enabled
+    static set_smooth = function(_smooth) {
+        smooth = _smooth;
+        if (!smooth) display_value = value;
         return self;
     }
 }

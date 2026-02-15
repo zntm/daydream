@@ -334,6 +334,38 @@ function control_player()
                 spawn_particle(x + random_range(-12, 12), y - 20 + random_range(-12, 12), "phantasia:entity/glow_ready");
             }
             
+            // --- Launcher Charge UI ---
+            if (_data.get_hold_type() == ITEM_HOLD_TYPE.LAUNCHER)
+            {
+                // Spawn charge UI if not yet created
+                if (charge_ui == undefined)
+                {
+                    var _charge_def = ui_load("ui/launcher_charge.ui");
+                    if (_charge_def != undefined)
+                    {
+                        charge_ui_link = {
+                            is_visible: true,
+                            charge_value: 0,
+                            charge_max: _skill.threshold
+                        };
+                        charge_ui = ui_spawn(_charge_def, {
+                            link: charge_ui_link,
+                            parent: global.gui_root
+                        });
+                        show_debug_message("[Launcher] Charge UI spawned");
+                    }
+                }
+                
+                // Update charge UI bindings
+                if (charge_ui != undefined)
+                {
+                    charge_ui_link.charge_value = charge_time;
+                    charge_ui_link.charge_max = _skill.threshold;
+                    charge_ui_link.is_visible = true;
+                    ui_mark_dirty(charge_ui);
+                }
+            }
+            
             // Ensure tool visual exists while charging
             if (!instance_exists(inst_item))
             {
@@ -354,7 +386,7 @@ function control_player()
             // Release Charge (Early release supported for Launchers)
             var _threshold = _skill.threshold;
             var _is_launcher = (_data.get_hold_type() == ITEM_HOLD_TYPE.LAUNCHER);
-            var _can_trigger = (charge_time >= _threshold) || (_is_launcher && charge_time > 0.1);
+            var _can_trigger = (charge_time >= _threshold) || (_is_launcher && charge_time > 0);
             
             if (_can_trigger)
             {
@@ -406,6 +438,15 @@ function control_player()
                 }
             }
             charge_time = 0;
+            
+            // Hide charge UI on release
+            if (charge_ui != undefined)
+            {
+                charge_ui_link.is_visible = false;
+                ui_mark_dirty(charge_ui);
+                ui_instance_destroy(charge_ui);
+                charge_ui = undefined;
+            }
         }
     }
     
@@ -416,6 +457,31 @@ function control_player()
         {
             charge_time += 1 / GAME_TICK;
             charge_threshold = 0.5; // Default threshold
+            
+            // --- Launcher Charge UI (non-skill fallback) ---
+            if (charge_ui == undefined)
+            {
+                var _charge_def = ui_load("ui/launcher_charge.ui");
+                if (_charge_def != undefined)
+                {
+                    charge_ui_link = {
+                        is_visible: true,
+                        charge_value: 0,
+                        charge_max: 0.5
+                    };
+                    charge_ui = ui_spawn(_charge_def, {
+                        link: charge_ui_link,
+                        parent: global.gui_root
+                    });
+                }
+            }
+            if (charge_ui != undefined)
+            {
+                charge_ui_link.charge_value = charge_time;
+                charge_ui_link.charge_max = 0.5;
+                charge_ui_link.is_visible = true;
+                ui_mark_dirty(charge_ui);
+            }
         }
         else if (charge_time > 0)
         {
@@ -429,6 +495,13 @@ function control_player()
                 timer_attack = _data.get_item_cooldown();
             }
             charge_time = 0;
+            
+            // Hide charge UI on release
+            if (charge_ui != undefined)
+            {
+                ui_instance_destroy(charge_ui);
+                charge_ui = undefined;
+            }
         }
     }
 
@@ -672,8 +745,14 @@ function control_player()
              var _aim_angle = input_state.aim_angle;
              var _recoil = 0;
              
-             // Recoil animation
-             if (timer_attack > 0.2) // Just fired (0.3 to 0.2)
+             // Charge pull-back animation (while holding)
+             if (charge_time > 0 && charge_threshold > 0)
+             {
+                 var _t_charge = clamp(charge_time / charge_threshold, 0, 1);
+                 _recoil = _t_charge * 6; // Pull back up to 6 pixels while charging
+             }
+             // Fire recoil animation (after releasing)
+             else if (timer_attack > 0.2) // Just fired (0.3 to 0.2)
              {
                  var _t_recoil = (timer_attack - 0.2) / 0.1; // 0 to 1
                  _recoil = sin(_t_recoil * pi) * 4; // Kick back 4 pixels
@@ -688,8 +767,6 @@ function control_player()
                  
                  image_angle = _aim_angle;
                  image_yscale = 1; 
-                 // Ensure sprite is upright? Launchers usually point right. 
-                 // If aiming left, we might need to flip yscale if we want it to look "up"
                  if (_aim_angle > 90 && _aim_angle < 270) image_yscale = -1;
              }
         }

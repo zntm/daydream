@@ -94,15 +94,22 @@ function control_projectile()
         physics_body.sync_from_instance(id);
         physics_body.reset_collision();
         
-        // Apply gravity
-        if (attribute.get_gravity() != 0)
+        // Apply gravity (Verlet integration part 1)
+        var _gravity = attribute.get_gravity();
+        if (_gravity != 0)
         {
-            physics_body.vel_y += attribute.get_gravity() / 2;
+            physics_body.vel_y += _gravity / 2;
         }
         
         // Resolve collisions
         physics_move_contact_x(physics_body);
         physics_move_contact_y(physics_body);
+        
+        // Apply gravity (Verlet integration part 2)
+        if (_gravity != 0)
+        {
+            physics_body.vel_y += _gravity / 2;
+        }
         
         physics_body.sync_to_instance(id);
         
