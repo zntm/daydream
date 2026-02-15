@@ -8,10 +8,10 @@ function menu_refresh_value_background()
     var _id = choose_weighted(global.menu_data.biomes);
     var _biome = global.biome_data[$ _id];
     
-    // Fallback to forest if biome is missing
+    // Fallback to greenia if biome is missing
     if (_biome == undefined)
     {
-        _id = "phantasia:surface/forest";
+        _id = "phantasia:surface/emeraldine/greenia";
         _biome = global.biome_data[$ _id];
     }
     

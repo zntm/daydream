@@ -1,13 +1,13 @@
 [
     {
-        "value": "phantasia:surface/desert"
+        "value": "phantasia:surface/dustbunny/dune"
     },
     {
-        "value": "phantasia:surface/forest",
+        "value": "phantasia:surface/emeraldine/greenia",
         "weight": 4
     },
     {
-        "value": "phantasia:surface/taiga",
+        "value": "phantasia:surface/borea/pineling",
         "weight": 2
     }
 ]

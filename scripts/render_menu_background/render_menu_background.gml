@@ -24,6 +24,11 @@ function render_menu_background(_id, _colour)
         if (_background == undefined) return;
         
         var _background_sprites = global.sprite_asset[$ _background.id];
+        if (_background_sprites == undefined)
+        {
+            show_debug_message($"render_menu_background: Background asset not found: {_background.id}");
+            return;
+        }
         
         var _background_blend  = _background.blend;
         var _background_length = array_length(_background_sprites);
@@ -36,7 +41,11 @@ function render_menu_background(_id, _colour)
         {
             shader_set_uniform_f(__u_strength, _background_blend * (1 - ((i + 1) / _background_length)));
             
-            render_background_parallax(_background_sprites[i].get_sprite(), i, _offset, 0, 0, 0, room_width, room_height, c_white, 1);
+            var _sprite_asset = _background_sprites[i];
+            if (_sprite_asset != undefined)
+            {
+                render_background_parallax(_sprite_asset.get_sprite(), i, _offset, 0, 0, 0, room_width, room_height, c_white, 1);
+            }
         }
         
         shader_reset();
