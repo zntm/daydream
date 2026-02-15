@@ -588,7 +588,8 @@ export default [
                 new BiomeFoliage("phantasia:bluebells", 0.08).setGenerateOn("#phantasia:tile/placement/plant_on"),
                 new BiomeFoliage("phantasia:seeding_dandelion", 0.03).setGenerateOn("#phantasia:tile/placement/plant_on"),
             ])
-            .setStructures([]),
+            .setStructures([])
+            .setSkyScript("phantasia:sky/borea_aurora"),
     ),
 
     // ========================================================================

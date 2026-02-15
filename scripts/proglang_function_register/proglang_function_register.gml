@@ -1540,3 +1540,40 @@ proglang_function_register("sprite_get_height", function(_args) {
 });
 
 #endregion
+proglang_function_register("noise_seed", function(_args)
+{
+    open_simplex_noise_seed(_args[0]);
+});
+
+proglang_function_register("noise2d", function(_args)
+{
+    var _x = _args[0];
+    var _y = _args[1];
+    var _octaves   = (array_length(_args) > 2) ? _args[2] : 1;
+    var _amplitude = (array_length(_args) > 3) ? _args[3] : 1;
+    
+    return open_simplex_noise(_x, _y, _octaves, _amplitude);
+});
+
+proglang_function_register("noise3d", function(_args)
+{
+    var _x = _args[0];
+    var _y = _args[1];
+    var _z = _args[2];
+    var _octaves   = (array_length(_args) > 3) ? _args[3] : 1;
+    var _amplitude = (array_length(_args) > 4) ? _args[4] : 1;
+    
+    return open_simplex_noise_3d(_x, _y, _z, _octaves, _amplitude);
+});
+
+proglang_function_register("noise4d", function(_args)
+{
+    var _x = _args[0];
+    var _y = _args[1];
+    var _z = _args[2];
+    var _w = _args[3];
+    var _octaves   = (array_length(_args) > 4) ? _args[4] : 1;
+    var _amplitude = (array_length(_args) > 5) ? _args[5] : 1;
+    
+    return open_simplex_noise_4d(_x, _y, _z, _w, _octaves, _amplitude);
+});

@@ -13,13 +13,31 @@ if (global.settings.display_background)
 {
     if (!IS_DEVELOPER_MODE) || (global.dbg_settings[$ "display_background_celestial"])
     {
+        var _biome_1_script = global.biome_data[$ in_biome].get_sky_script();
+        var _biome_2_script = (in_biome_transition_value > 0) ? global.biome_data[$ in_biome_transition].get_sky_script() : undefined;
+
         event_emit("background_render", {
             time: global.world_save_data.time,
             camera_x: _camera_x,
             camera_y: _camera_y,
             camera_width: _camera_width,
-            camera_height: _camera_height
+            camera_height: _camera_height,
+            blend: 1.0 - in_biome_transition_value,
+            biome_script: _biome_1_script
         });
+        
+        if (_biome_2_script != undefined)
+        {
+            event_emit("background_render", {
+                time: global.world_save_data.time,
+                camera_x: _camera_x,
+                camera_y: _camera_y,
+                camera_width: _camera_width,
+                camera_height: _camera_height,
+                blend: in_biome_transition_value,
+                biome_script: _biome_2_script
+            });
+        }
     }
     
     if (!IS_DEVELOPER_MODE) || (global.dbg_settings[$ "display_background_clouds"] ?? true)

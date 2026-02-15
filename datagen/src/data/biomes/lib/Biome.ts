@@ -17,6 +17,7 @@ export class Biome {
     private shore_tiles?: BiomeTile;
     private is_skyland?: boolean;
     private salt?: number;
+    private sky_script?: string;
 
     constructor(
         background: BiomeBackground,
@@ -84,6 +85,12 @@ export class Biome {
 
     setSalt(salt: number) {
         this.salt = salt;
+
+        return this;
+    }
+
+    setSkyScript(script: string) {
+        this.sky_script = script;
 
         return this;
     }

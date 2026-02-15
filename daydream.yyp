@@ -1325,6 +1325,7 @@
     {"$GMIncludedFile":"","%Name":"sword_dash.daydream","CopyToMask":-1,"filePath":"datafiles/resources/data/scripts/item/tool","name":"sword_dash.daydream","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"projectile_spawn.daydream","CopyToMask":-1,"filePath":"datafiles/resources/data/scripts/item/weapon","name":"projectile_spawn.daydream","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"gaussian.daydream","CopyToMask":-1,"filePath":"datafiles/resources/data/scripts/module/math","name":"gaussian.daydream","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"borea_aurora.daydream","CopyToMask":-1,"filePath":"datafiles/resources/data/scripts/sky","name":"borea_aurora.daydream","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"playground_clouds.daydream","CopyToMask":-1,"filePath":"datafiles/resources/data/scripts/sky","name":"playground_clouds.daydream","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"0.math.daydream","CopyToMask":-1,"filePath":"datafiles/resources/data/scripts/tests","name":"0.math.daydream","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"1.val_type.daydream","CopyToMask":-1,"filePath":"datafiles/resources/data/scripts/tests","name":"1.val_type.daydream","resourceType":"GMIncludedFile","resourceVersion":"2.0",},

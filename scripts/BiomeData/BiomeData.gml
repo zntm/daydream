@@ -127,6 +127,7 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
     ___sky_colour_points = [];
     ___light_colour_points = [];
     ___music = [];
+    ___sky_script = undefined;
     
     ___tile_top_layer_base = { entries: [], total_weight: 0 };
     ___tile_top_layer_wall = { entries: [], total_weight: 0 };
@@ -645,5 +646,17 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
     static get_salt = function()
     {
         return self[$ "___salt"] ?? 0;
+    }
+    
+    static set_sky_script = function(_script)
+    {
+        ___sky_script = _script;
+        
+        return self;
+    }
+    
+    static get_sky_script = function()
+    {
+        return self[$ "___sky_script"];
     }
 }

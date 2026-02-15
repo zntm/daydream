@@ -24,4 +24,6 @@ if (_music != undefined)
 
 bg_sky_colour(_in_biome_data, _in_biome_data);
 
+sky_scripts = {};
+
 init_background_clouds();

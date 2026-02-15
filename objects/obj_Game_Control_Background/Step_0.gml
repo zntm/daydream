@@ -51,6 +51,27 @@ if !(obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.PAUSE)
             in_biome = in_biome_transition;
         }
     }
+    
+    // Manage sky scripts
+    var _biomes = [in_biome, (in_biome_transition_value > 0) ? in_biome_transition : undefined];
+    for (var i = 0; i < 2; i++)
+    {
+        var _b_id = _biomes[i];
+        if (_b_id == undefined) continue;
+        
+        var _b_data = global.biome_data[$ _b_id];
+        if (_b_data == undefined) continue;
+        
+        var _script_id = _b_data.get_sky_script();
+        if (_script_id != undefined) && (!struct_exists(sky_scripts, _script_id))
+        {
+            if (struct_exists(global.proglang_scripts, _script_id))
+            {
+                proglang_call(_script_id, [], id);
+                sky_scripts[$ _script_id] = true;
+            }
+        }
+    }
 }
 
 timer_refresh += _delta_time;

@@ -72,6 +72,7 @@
             }
         ]
     },
+    "sky_script": "phantasia:sky/borea_aurora",
     "structures": [],
     "terrain_modifier": {
         "height_offset": -2
