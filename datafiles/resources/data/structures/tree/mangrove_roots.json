@@ -2,12 +2,12 @@
     "function": {
         "id": "phantasia:ore",
         "parameters": {
+            "clumpiness": 0.8,
+            "roundedness": 0.8,
+            "threshold": 0.4,
             "tile": {
                 "id": "phantasia:mangrove_roots"
-            },
-            "threshold": 0.4,
-            "clumpiness": 0.8,
-            "roundedness": 0.8
+            }
         }
     },
     "height": 5,

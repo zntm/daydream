@@ -1,4 +1,23 @@
 {
+    "background": {
+        "cloud_alpha_max": 0.7,
+        "cloud_alpha_min": 0.3,
+        "cloud_count": 48,
+        "cloud_scale_max": 2,
+        "cloud_scale_min": 1.2,
+        "cloud_speed_max": 4,
+        "cloud_speed_min": 1,
+        "cloud_wind_factor": 0.5,
+        "cloud_y_max": 240,
+        "cloud_y_min": 0,
+        "parallax_factor": 0.005,
+        "parallax_scale": 0.8,
+        "script": "phantasia:sky/playground_clouds",
+        "sprites": [
+            "phantasia:world/playground/cloud/default",
+            "phantasia:world/playground/cloud/windy"
+        ]
+    },
     "biome": {
         "cave": {
             "default": [

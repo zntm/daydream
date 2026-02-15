@@ -183,28 +183,6 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
                 };
             }
         }
-        else
-        {
-            // Legacy / Keyed format (dawn, day, dusk, night)
-            var _keys = ["dawn", "day", "dusk", "night"];
-            var _pos = [0.1, 0.5, 0.8, 1.0]; // Default positions for keyed format
-            ___sky_colour_points = [];
-            
-            for (var i = 0; i < 4; ++i)
-            {
-                var _k = _keys[i];
-                var _val = _sky_colour[$ _k];
-                if (_val != undefined)
-                {
-                    // Handle both color string and struct with base/gradient
-                    var _c = is_struct(_val) ? (_val[$ "base"] ?? _val[$ "gradient"]) : _val;
-                    array_push(___sky_colour_points, {
-                        position: _pos[i],
-                        color: is_string(_c) ? hex_parse(_c) : _c
-                    });
-                }
-            }
-        }
         
         // Sort by position just in case
         array_sort(___sky_colour_points, function(_a, _b) { return _a.position - _b.position; });
@@ -275,27 +253,6 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
                     position: _points[i].position,
                     color: is_string(_points[i].color) ? hex_parse(_points[i].color) : _points[i].color
                 };
-            }
-        }
-        else
-        {
-            // Legacy / Keyed format
-            var _keys = ["dawn", "day", "dusk", "night"];
-            var _pos = [0.1, 0.5, 0.8, 1.0];
-            ___light_colour_points = [];
-            
-            for (var i = 0; i < 4; ++i)
-            {
-                var _k = _keys[i];
-                var _val = _light_colour[$ _k];
-                if (_val != undefined)
-                {
-                    var _c = is_struct(_val) ? (_val[$ "base"] ?? _val[$ "gradient"]) : _val;
-                    array_push(___light_colour_points, {
-                        position: _pos[i],
-                        color: is_string(_c) ? hex_parse(_c) : _c
-                    });
-                }
             }
         }
         

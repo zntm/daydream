@@ -36,8 +36,6 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
     ___vignette_yend = 0;
     ___vignette_colour = c_black;
     ___time_start = 0;
-    ___time_diurnal = [];
-    ___time_diurnal_length = 0;
     ___time_length = 1200;
     ___celestial = [];
     ___celestial_length = 0;
@@ -182,8 +180,6 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
     {
         ___time_start = _time.start;
         
-        ___time_diurnal = _time.diurnal;
-        ___time_diurnal_length = array_length(___time_diurnal);
         
         ___time_length = _time.length;
         
@@ -195,15 +191,6 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         return ___time_start;
     }
     
-    static get_time_diurnal = function()
-    {
-        return ___time_diurnal;
-    }
-    
-    static get_time_diurnal_length = function()
-    {
-        return ___time_diurnal_length;
-    }
     
     static get_time_length = function()
     {
