@@ -65,6 +65,12 @@ function init_world(_directory, _namespace = "phantasia", _type = 0)
                     _world_data.set_cave_biome(_biome.cave);
                     _world_data.set_surface_biome(_biome.surface);
                     
+                    // Set surface biome map if provided
+                    if (variable_struct_exists(_biome.surface, "map"))
+                    {
+                        _world_data.set_surface_biome_map(_biome.surface.map);
+                    }
+
                     // Parse sky biome configuration (optional)
                     var _sky_biome = _biome[$ "sky"];
                     if (_sky_biome != undefined)
@@ -73,6 +79,12 @@ function init_world(_directory, _namespace = "phantasia", _type = 0)
                     }
                 }
                 
+                var _regions = _json[$ "regions"];
+                if (_regions != undefined)
+                {
+                    _world_data.set_regions(_regions);
+                }
+
                 var _background = _json[$ "background"];
                 if (_background != undefined)
                 {

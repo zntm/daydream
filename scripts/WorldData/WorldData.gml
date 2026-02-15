@@ -73,6 +73,9 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
     ___biome_blend_range = 24;
     ___biome_blend_noise_scale = 0.08;
     ___surface_biome_map = undefined;
+    ___map_buffer = undefined;
+    ___map_width = 0;
+    ___map_height = 0;
     
     // Cave Generation
     ___cave_start_max = 0;
@@ -733,7 +736,7 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         {
             // Create a fallback region if none specified
             var _fallback = new RegionData("fallback", {
-                biomes: [{ id: "phantasia:surface/forest", weight: 1 }],
+                biomes: [{ id: "phantasia:surface/emeraldine/greenia", weight: 1 }],
                 cave_biome_default: "phantasia:cave/chasm"
             });
             ___regions_objects = [_fallback];
@@ -761,15 +764,46 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
             if (array_length(___regions_objects) == 0)
             {
                  var _fallback = new RegionData("fallback", {
-                    biomes: [{ id: "phantasia:surface/forest", weight: 1 }],
+                    biomes: [{ id: "phantasia:surface/emeraldine/greenia", weight: 1 }],
                     cave_biome_default: "phantasia:cave/chasm"
                 });
                 array_push(___regions_objects, _fallback);
             }
         }
         
+        // Load map buffer if specified
+        if (___surface_biome_map != undefined)
+        {
+            var _asset = global.sprite_asset[$ ___surface_biome_map];
+            if (_asset != undefined)
+            {
+                var _sprite = _asset.get_sprite();
+                ___map_width = sprite_get_width(_sprite);
+                ___map_height = sprite_get_height(_sprite);
+                
+                var _surf = surface_create(___map_width, ___map_height);
+                surface_set_target(_surf);
+                draw_clear_alpha(c_black, 0);
+                draw_sprite(_sprite, 0, 0, 0);
+                surface_reset_target();
+                
+                ___map_buffer = buffer_create(___map_width * ___map_height * 4, buffer_fixed, 1);
+                buffer_get_surface(___map_buffer, _surf, 0);
+                surface_free(_surf);
+                
+                show_debug_message($"WorldData: Resolved Region Map '{___surface_biome_map}' ({___map_width}x{___map_height})");
+            }
+            else
+            {
+                show_debug_message($"WorldData: Map asset not found: {___surface_biome_map}");
+            }
+        }
+
         ___region_generator = new RegionGenerator({
             regions: ___regions_objects,
+            map_buffer: ___map_buffer,
+            map_width: ___map_width,
+            map_height: ___map_height,
             // Large regions configuration
             cell_size: 2048, 
             warp_scale: 0.0015,

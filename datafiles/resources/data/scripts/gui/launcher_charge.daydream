@@ -6,8 +6,8 @@ var parent = parameter.parent
 ui_spawn([launcher_charge_container], {
     parent: parent,
     link: {
-        charge_value: fn() { return player.charge_time },
-        charge_max: fn() { return player.charge_threshold },
-        is_visible: fn() { return player.charge_time > 0 }
+        charge_value: () -> player.charge_time,
+        charge_max: () -> player.charge_threshold,
+        is_visible: () -> player.charge_time > 0,
     }
 })

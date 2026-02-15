@@ -68,6 +68,11 @@ function RegionData(_id, _config = {}) constructor
         return ___id;
     }
     
+    static get_map_color = function()
+    {
+        return ___map_color;
+    }
+    
     /// @desc Get surface biome ID based on position, seed, and terrain slope
     /// @param {Real} _x World X position
     /// @param {Real} _y World Y position (typically surface height)

@@ -13,8 +13,11 @@ if (global.settings.display_background)
 {
     if (!IS_DEVELOPER_MODE) || (global.dbg_settings[$ "display_background_celestial"])
     {
-        var _biome_1_script = global.biome_data[$ in_biome].get_sky_script();
-        var _biome_2_script = (in_biome_transition_value > 0) ? global.biome_data[$ in_biome_transition].get_sky_script() : undefined;
+        var _biome_1 = global.biome_data[$ in_biome];
+        var _biome_1_script = (_biome_1 != undefined) ? _biome_1.get_sky_script() : undefined;
+        
+        var _biome_2 = (in_biome_transition_value > 0) ? global.biome_data[$ in_biome_transition] : undefined;
+        var _biome_2_script = (_biome_2 != undefined) ? _biome_2.get_sky_script() : undefined;
 
         event_emit("background_render", {
             time: global.world_save_data.time,
