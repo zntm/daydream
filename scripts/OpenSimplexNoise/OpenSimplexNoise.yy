@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"OpenSimplexNoise",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"OpenSimplexNoise",
+  "parent":{
+    "name":"daydream",
+    "path":"daydream.yyp",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
