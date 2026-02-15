@@ -7,6 +7,13 @@ enum ITEM_TYPE {
     ACCESSORY
 }
 
+enum ITEM_HOLD_TYPE {
+    SWING,
+    BOW,
+    SPEAR,
+    WHIP
+}
+
 enum ITEM_TYPE_BIT {
     DEFAULT     = 1 << ITEM_TYPE.DEFAULT,
     SOLID       = 1 << ITEM_TYPE.SOLID,
@@ -317,6 +324,13 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
             {
                 set_skill(_skill);
             }
+            
+            var _hold_type = _data[$ "hold_type"];
+            
+            if (_hold_type != undefined)
+            {
+                set_hold_type(_hold_type);
+            }
         }
         
         /*
@@ -479,6 +493,53 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     static get_item_projectile = function()
     {
         return self[$ "___item_projectile"];
+    }
+    
+    static set_hold_type = function(_type_or_struct)
+    {
+        static __hold_types = {
+            "swing": ITEM_HOLD_TYPE.SWING,
+            "bow":   ITEM_HOLD_TYPE.BOW,
+            "spear": ITEM_HOLD_TYPE.SPEAR,
+            "whip":  ITEM_HOLD_TYPE.WHIP
+        };
+        
+        if (is_string(_type_or_struct))
+        {
+            ___item_hold_type = __hold_types[$ _type_or_struct] ?? ITEM_HOLD_TYPE.SWING;
+        }
+        else if (is_struct(_type_or_struct))
+        {
+            var _type_name = _type_or_struct[$ "type"];
+            ___item_hold_type = __hold_types[$ _type_name] ?? ITEM_HOLD_TYPE.SWING;
+            
+            if (___item_hold_type == ITEM_HOLD_TYPE.WHIP)
+            {
+                var _segments = _type_or_struct[$ "segments"];
+                
+                if (_segments != undefined)
+                {
+                    ___item_hold_whip_segments = {
+                        icon: _segments[$ "icon"] ?? 0,
+                        hold: _segments[$ "hold"] ?? 1,
+                        mid:  smart_value_parse(_segments[$ "mid"] ?? 2),
+                        tip:  _segments[$ "tip"] ?? 3
+                    };
+                }
+            }
+        }
+        
+        return self;
+    }
+    
+    static get_hold_type = function()
+    {
+        return self[$ "___item_hold_type"] ?? ITEM_HOLD_TYPE.SWING;
+    }
+    
+    static get_hold_whip_segments = function()
+    {
+        return self[$ "___item_hold_whip_segments"];
     }
     
     static get_item_durability_bar = function()

@@ -220,6 +220,86 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 }
             }
             
+            with (obj_Tool)
+            {
+                if (variable_instance_exists(id, "hold_type") && hold_type == ITEM_HOLD_TYPE.WHIP)
+                {
+                    var _segments = variable_instance_exists(id, "whip_segments") ? whip_segments : undefined;
+                    var _sprite = sprite_index;
+                    
+                    if (_segments != undefined)
+                    {
+                        var _frame_hold = _segments.hold;
+                        
+                        draw_sprite_ext(_sprite, _frame_hold, x, y, image_xscale, image_yscale, image_angle, image_blend, image_alpha);
+                        
+                        if (instance_exists(inst_owner))
+                        {
+                            var _x_start = x;
+                            var _y_start = y;
+                            var _aim_angle = inst_owner.input_state.aim_angle;
+                            
+                            // Animation Progress
+                            var _timer = inst_owner.timer_attack;
+                            var _duration = 0.3; // Matches control_player attack timer
+                            var _progress = clamp((_duration - _timer) / _duration, 0, 1);
+                            
+                            // Length calculation (Extend and Retract)
+                            var _max_range = 64; 
+                             // Use sine wave for smooth extend-retract
+                            var _extension = sin(_progress * pi); 
+                            
+                            var _len = _max_range * _extension;
+                            
+                            var _x_end = _x_start + lengthdir_x(_len, _aim_angle);
+                            var _y_end = _y_start + lengthdir_y(_len, _aim_angle);
+                            
+                            // Curve Control Point (P1)
+                            var _mid_x = (_x_start + _x_end) / 2;
+                            var _mid_y = (_y_start + _y_end) / 2;
+                            
+                            // Wave/Snap Effect: Offset P1 perpendicular to aim
+                            var _wave_mag = 32 * sin(_progress * pi);
+                            var _wave_dir = (_progress < 0.5) ? 1 : -1;
+                            
+                            var _p1_x = _mid_x + lengthdir_x(_wave_mag * _wave_dir, _aim_angle + 90);
+                            var _p1_y = _mid_y + lengthdir_y(_wave_mag * _wave_dir, _aim_angle + 90);
+                            
+                            var _dist = point_distance(_x_start, _y_start, _x_end, _y_end);
+                            
+                            if (_dist > 4)
+                            {
+                                var _segment_count = 8;
+                                var _last_x = _x_start;
+                                var _last_y = _y_start;
+                                
+                                for (var i = 1; i <= _segment_count; ++i)
+                                {
+                                    var _t = i / _segment_count;
+                                    
+                                    // Quadratic Bezier Formula
+                                    // B(t) = (1-t)^2 * P0 + 2(1-t)t * P1 + t^2 * P2
+                                    var _one_minus_t = 1 - _t;
+                                    var _bx = (_one_minus_t * _one_minus_t * _x_start) + (2 * _one_minus_t * _t * _p1_x) + (_t * _t * _x_end);
+                                    var _by = (_one_minus_t * _one_minus_t * _y_start) + (2 * _one_minus_t * _t * _p1_y) + (_t * _t * _y_end);
+                                    
+                                    // Angle from last segment
+                                    var _seg_angle = point_direction(_last_x, _last_y, _bx, _by);
+                                    
+                                    // Determine sprite frame
+                                    var _frame = (i == _segment_count) ? _segments.tip : smart_value(_segments.mid);
+                                    
+                                    draw_sprite_ext(_sprite, _frame, _bx, _by, 1, 1, _seg_angle, c_white, 1);
+                                    
+                                    _last_x = _bx;
+                                    _last_y = _by;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
             gpu_set_blendmode(bm_add);
             
             with (obj_Projectile)

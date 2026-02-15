@@ -390,6 +390,13 @@ function control_player()
                 inst_item.image_index = _data.get_inventory_index();
                 inst_item.image_speed = 0;
                 inst_item.inst_owner = id;
+                
+                inst_item.hold_type = _data.get_hold_type();
+                
+                if (inst_item.hold_type == ITEM_HOLD_TYPE.WHIP)
+                {
+                    inst_item.whip_segments = _data.get_hold_whip_segments();
+                }
             }
             
             // Shooting logic
@@ -551,28 +558,107 @@ function control_player()
     {
         // Weapon swing animation
         var _direction = sign(image_xscale);
-        var _t = power((0.3 - timer_attack) / 0.3, 1 / 4);
-        var _angle = (45 * cos(_t * pi)) + 15;
+        var _id = inst_item._id;
+        var _data = global.item_data[$ _id];
+        var _hold_type = _data.get_hold_type();
         
-        with (inst_item)
+        // Default Swing Logic (Refactored into case)
+        if (_hold_type == ITEM_HOLD_TYPE.SWING)
         {
-            var _id = self._id;
-            var _sprite_width = sprite_get_width(sprite_index);
-            var _sprite_height = sprite_get_height(sprite_index);
+            var _t = power((0.3 - timer_attack) / 0.3, 1 / 4);
+            var _angle = (45 * cos(_t * pi)) + 15;
             
-            image_yscale = _direction;
-            
-            x = other.x + (lengthdir_x(_sprite_width, _angle) * _direction);
-            y = other.y - 24 + (lengthdir_y(_sprite_height, _angle));
-            
-            if (_direction > 0)
+            with (inst_item)
             {
-                image_angle = _angle - ((global.item_data[$ _id].has_type(ITEM_TYPE_BIT.TOOL)) ? 45 : 90);
+                var _sprite_width = sprite_get_width(sprite_index);
+                var _sprite_height = sprite_get_height(sprite_index);
+                
+                image_yscale = _direction;
+                
+                x = other.x + (lengthdir_x(_sprite_width, _angle) * _direction);
+                y = other.y - 24 + (lengthdir_y(_sprite_height, _angle));
+                
+                if (_direction > 0)
+                {
+                    image_angle = _angle - ((global.item_data[$ _id].has_type(ITEM_TYPE_BIT.TOOL)) ? 45 : 90);
+                }
+                else
+                {
+                    image_angle = 180 - _angle + ((global.item_data[$ _id].has_type(ITEM_TYPE_BIT.TOOL)) ? 45 : 90);
+                }
             }
-            else
-            {
-                image_angle = 180 - _angle + ((global.item_data[$ _id].has_type(ITEM_TYPE_BIT.TOOL)) ? 45 : 90);
-            }
+        }
+        else if (_hold_type == ITEM_HOLD_TYPE.BOW)
+        {
+             var _aim_angle = input_state.aim_angle;
+             var _recoil = 0;
+             
+             // Recoil animation
+             if (timer_attack > 0.2) // Just fired (0.3 to 0.2)
+             {
+                 var _t_recoil = (timer_attack - 0.2) / 0.1; // 0 to 1
+                 _recoil = sin(_t_recoil * pi) * 4; // Kick back 4 pixels
+             }
+             
+             with (inst_item)
+             {
+                 var _dist = 12 - _recoil;
+                 
+                 x = other.x + lengthdir_x(_dist, _aim_angle);
+                 y = other.y - 24 + lengthdir_y(_dist, _aim_angle);
+                 
+                 image_angle = _aim_angle;
+                 image_yscale = 1; 
+                 // Ensure sprite is upright? Bows usually point right. 
+                 // If aiming left, we might need to flip yscale if we want it to look "up"
+                 if (_aim_angle > 90 && _aim_angle < 270) image_yscale = -1;
+             }
+        }
+        else if (_hold_type == ITEM_HOLD_TYPE.SPEAR)
+        {
+             var _aim_angle = input_state.aim_angle;
+             var _t = 0;
+             
+             if (timer_attack > 0)
+             {
+                 // Poke out and in
+                 // 0.3 total time. 
+                 // 0.3 -> 0.15: Extend
+                 // 0.15 -> 0.0: Retract
+                 
+                 if (timer_attack > 0.15)
+                 {
+                     _t = (0.3 - timer_attack) / 0.15; // 0 to 1
+                 }
+                 else
+                 {
+                     _t = timer_attack / 0.15; // 1 to 0
+                 }
+             }
+             
+             var _dist = 8 + (_t * 24); // 8 base, +24 extend
+             
+             with (inst_item)
+             {
+                 x = other.x + lengthdir_x(_dist, _aim_angle);
+                 y = other.y - 24 + lengthdir_y(_dist, _aim_angle);
+                 image_angle = _aim_angle; 
+                 if (_aim_angle > 90 && _aim_angle < 270) image_yscale = -1; 
+             }
+        }
+        else if (_hold_type == ITEM_HOLD_TYPE.WHIP)
+        {
+             // Whip logic is mostly in Draw event, but we position the handle here
+             var _aim_angle = input_state.aim_angle;
+             
+             with (inst_item)
+             {
+                 var _dist = 8;
+                 x = other.x + lengthdir_x(_dist, _aim_angle);
+                 y = other.y - 24 + lengthdir_y(_dist, _aim_angle);
+                 image_angle = _aim_angle;
+                 if (_aim_angle > 90 && _aim_angle < 270) image_yscale = -1; 
+             }
         }
     }
     
