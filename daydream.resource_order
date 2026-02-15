@@ -89,6 +89,7 @@
   "ResourceOrderSettings":[
     {"name":"execute_shell_simple_ext","order":1,"path":"extensions/execute_shell_simple_ext/execute_shell_simple_ext.yy",},
     {"name":"Extensions","order":4,"path":"extensions/Extensions/Extensions.yy",},
+    {"name":"OpenSimplexNoise","order":6,"path":"extensions/OpenSimplexNoise/OpenSimplexNoise.yy",},
     {"name":"sysinfo","order":5,"path":"extensions/sysinfo/sysinfo.yy",},
     {"name":"window_taskbar","order":2,"path":"extensions/window_taskbar/window_taskbar.yy",},
     {"name":"obj_Client","order":2,"path":"objects/obj_Client/obj_Client.yy",},
@@ -343,7 +344,6 @@
     {"name":"NaturalStructureData","order":1,"path":"scripts/NaturalStructureData/NaturalStructureData.yy",},
     {"name":"normalize","order":7,"path":"scripts/normalize/normalize.yy",},
     {"name":"number_format_thousandths","order":8,"path":"scripts/number_format_thousandths/number_format_thousandths.yy",},
-    {"name":"OpenSimplexNoise","order":1098,"path":"scripts/OpenSimplexNoise/OpenSimplexNoise.yy",},
     {"name":"P2PValidator","order":2,"path":"scripts/P2PValidator/P2PValidator.yy",},
     {"name":"ParentData","order":1,"path":"scripts/ParentData/ParentData.yy",},
     {"name":"particle_pool","order":42,"path":"scripts/particle_pool/particle_pool.yy",},
