@@ -61,7 +61,7 @@ enum PROG_OP
     STRING_CONCAT,
     
     // Optimization Ops
-    LOAD_LOCAL, STORE_LOCAL,
+    LOAD_LOCAL, STORE_LOCAL, INC_LOCAL, DEC_LOCAL, ADD_CONST,
     
     // Annotation Ops
     MEMOIZE_CHECK, MEMOIZE_STORE
@@ -111,6 +111,8 @@ function ProgBytecode() constructor
     code_size = 0;
     constants = [];
     lines = [];
+    param_count = 0;
+    is_constructor = false;
 }
 
 /// @desc Bytecode compiler for Proglang
@@ -205,6 +207,20 @@ function ProgCompiler(_context_keys = []) constructor
         "fn": true, "import": true, "export": true, "from": true, "as": true,
         "class": true, "new": true, "this": true, "extends": true, "super": true, "static": true,
         "public": true, "private": true, "protected": true, "abstract": true, "interface": true, "implements": true
+    }
+    
+    static get_local_info = function(_name)
+    {
+        var _idx = array_length(declared_vars) - 1;
+        while (_idx >= 0)
+        {
+            var _scope = declared_vars[_idx];
+            var _info = _scope[$ _name];
+            if (_info != undefined && is_struct(_info) && _info.type == "local") return _info;
+            if (struct_exists(_scope, "is_func") && _scope.is_func) break;
+            _idx--;
+        }
+        return undefined;
     }
     
     // Emit instruction
@@ -432,6 +448,7 @@ function ProgCompiler(_context_keys = []) constructor
     {
         var _parent = bytecode;
         bytecode = new ProgBytecode();
+        bytecode.param_count = array_length(_node.params);
         
         // Push function scope with marker
         array_push(declared_vars, { is_func: true });
@@ -715,6 +732,22 @@ function ProgCompiler(_context_keys = []) constructor
                     
                     patch_jump(_jmp_end, bytecode.code_size);
                     break;
+                }
+                
+                if (_node.op == PROG_TOKEN.PLUS)
+                {
+                    if (_node.right.type == PROG_AST.NUMBER_LITERAL)
+                    {
+                        compile_node(_node.left);
+                        emit(PROG_OP.ADD_CONST, add_constant(_node.right.value), _node.line);
+                        break;
+                    }
+                    if (_node.left.type == PROG_AST.NUMBER_LITERAL)
+                    {
+                        compile_node(_node.right);
+                        emit(PROG_OP.ADD_CONST, add_constant(_node.left.value), _node.line);
+                        break;
+                    }
                 }
                 
                 compile_node(_node.left);
@@ -1150,6 +1183,18 @@ function ProgCompiler(_context_keys = []) constructor
             case PROG_AST.PREFIX_OP:
                 if (_node.target.type == PROG_AST.IDENTIFIER)
                 {
+                    var _info = get_local_info(_node.target.name);
+                    if (_info != undefined)
+                    {
+                        emit(_node.op == PROG_TOKEN.PLUS_PLUS ? PROG_OP.INC_LOCAL : PROG_OP.DEC_LOCAL, _info.index, _node.line);
+                        emit(PROG_OP.LOAD_LOCAL, _info.index, _node.line);
+                        
+                        var _val = get_const(_node.target.name);
+                        if (_val != undefined && is_real(_val)) set_const(_node.target.name, _val + (_node.op == PROG_TOKEN.PLUS_PLUS ? 1 : -1));
+                        else remove_const(_node.target.name);
+                        break;
+                    }
+                    
                     var _index = add_constant(_node.target.name);
                     emit(PROG_OP.LOAD, _index, _node.line);
                     emit(_node.op == PROG_TOKEN.PLUS_PLUS ? PROG_OP.INC : PROG_OP.DEC);
@@ -1188,6 +1233,18 @@ function ProgCompiler(_context_keys = []) constructor
             case PROG_AST.POSTFIX_OP:
                 if (_node.target.type == PROG_AST.IDENTIFIER)
                 {
+                    var _info = get_local_info(_node.target.name);
+                    if (_info != undefined)
+                    {
+                        emit(PROG_OP.LOAD_LOCAL, _info.index, _node.line);
+                        emit(_node.op == PROG_TOKEN.PLUS_PLUS ? PROG_OP.INC_LOCAL : PROG_OP.DEC_LOCAL, _info.index, _node.line);
+                        
+                        var _val = get_const(_node.target.name);
+                        if (_val != undefined && is_real(_val)) set_const(_node.target.name, _val + (_node.op == PROG_TOKEN.PLUS_PLUS ? 1 : -1));
+                        else remove_const(_node.target.name);
+                        break;
+                    }
+                    
                     var _index = add_constant(_node.target.name);
                     emit(PROG_OP.LOAD, _index, _node.line);
                     emit(PROG_OP.DUP);
@@ -1735,7 +1792,9 @@ function ProgCompiler(_context_keys = []) constructor
         if (_node.class_constructor != undefined)
         {
             var _ctor = _node.class_constructor;
-            _descriptor.constructor_code = compile_func_body(_ctor).bytecode;
+            var _compiled = compile_func_body(_ctor);
+            _descriptor.constructor_code = _compiled.bytecode;
+            _descriptor.constructor_code.is_constructor = true;
             _descriptor.constructor_params = array_length(_ctor.params);
         }
         
@@ -1891,6 +1950,27 @@ function ProgCompiler(_context_keys = []) constructor
         if (_target_type == PROG_AST.IDENTIFIER)
         {
             var _index = add_constant(_target.name);
+            
+            // Optimization: INC_LOCAL / DEC_LOCAL for local variable += 1 / -= 1
+            if (_node.value.type == PROG_AST.NUMBER_LITERAL && _node.value.value == 1)
+            {
+                var _info = get_local_info(_target.name);
+                if (_info != undefined)
+                {
+                    if (_op == PROG_TOKEN.PLUS_ASSIGN)
+                    {
+                        emit(PROG_OP.INC_LOCAL, _info.index, _line);
+                        emit(PROG_OP.LOAD_LOCAL, _info.index, _line); // Result of expression is the new value
+                        return;
+                    }
+                    else if (_op == PROG_TOKEN.MINUS_ASSIGN)
+                    {
+                        emit(PROG_OP.DEC_LOCAL, _info.index, _line);
+                        emit(PROG_OP.LOAD_LOCAL, _info.index, _line);
+                        return;
+                    }
+                }
+            }
             
             if (_op != PROG_TOKEN.ASSIGN)
             {

@@ -43,7 +43,11 @@ enum PROG_VM {
     GLOBAL_REF,     // Struct (Global scope)
     TRY_STACK,      // Array
     ACTIVE_MODULE,  // Struct (Module info)
-    FRAME_STACK,    // Array (Control Flow Stack: [ReturnIP, SavedBP, SavedScope, SavedBytecode])
+    FRAME_IP,       // Array (Real: Return Instruction Pointer)
+    FRAME_BP,       // Array (Real: Saved Base Pointer)
+    FRAME_SCOPE,    // Array (Array: Saved Scope)
+    FRAME_BYTECODE, // Array (Struct: Saved Bytecode object)
+    FRAME_GREF,     // Array (Struct: Saved Global Reference)
     FP,             // Real (Frame Pointer)
     CURRENT_THIS,   // Any
     ACTIVE_CLASS,   // Struct
@@ -60,16 +64,6 @@ enum PROG_SCOPE {
     SIZE
 }
 
-enum PROG_FRAME {
-    RETURN_IP,
-    SAVED_BP,
-    SAVED_SCOPE,
-    SAVED_BYTECODE,
-    SAVED_GREF, // Added for module scope restoration
-    SIZE // 5
-}
-
-
 #macro PROGLANG_MAX_STEP 1_000_000
 
 // ========== CORE VM FUNCTIONS ==========
@@ -85,8 +79,14 @@ function proglang_vm_reset(_vm)
     
     // Pre-allocate or reset stacks
     if (array_length(_vm[PROG_VM.STACK]) < 10000) _vm[@ PROG_VM.STACK] = array_create(10000); // 10k slots
-    // Using a flat array for frames roughly 1000 deep * 5 items
-    if (array_length(_vm[PROG_VM.FRAME_STACK]) < 5000) _vm[@ PROG_VM.FRAME_STACK] = array_create(5000);
+    
+    // Pre-allocate framing SoA (1000 depth)
+    if (array_length(_vm[PROG_VM.FRAME_IP]) < 1000) _vm[@ PROG_VM.FRAME_IP] = array_create(1000);
+    if (array_length(_vm[PROG_VM.FRAME_BP]) < 1000) _vm[@ PROG_VM.FRAME_BP] = array_create(1000);
+    if (array_length(_vm[PROG_VM.FRAME_SCOPE]) < 1000) _vm[@ PROG_VM.FRAME_SCOPE] = array_create(1000);
+    if (array_length(_vm[PROG_VM.FRAME_BYTECODE]) < 1000) _vm[@ PROG_VM.FRAME_BYTECODE] = array_create(1000);
+    if (array_length(_vm[PROG_VM.FRAME_GREF]) < 1000) _vm[@ PROG_VM.FRAME_GREF] = array_create(1000);
+
     
     // Create new root scope
     var _scope = array_create(PROG_SCOPE.SIZE);
@@ -103,33 +103,6 @@ function proglang_vm_reset(_vm)
     _vm[@ PROG_VM.ACTIVE_MODULE] = undefined;
     _vm[@ PROG_VM.MEMO_CACHES] = {};
     _vm[@ PROG_VM.MEMO_ARG_KEYS] = [];
-}
-
-/// @desc Find variable in scope chain
-/// @param {Array<PROG_VM>} _vm
-/// @param {string} _name
-function proglang_vm_find_var_scope(_vm, _name)
-{
-    var _s = _vm[PROG_VM.SCOPE];
-    
-    while (_s != undefined)
-    {
-        if (struct_exists(_s[PROG_SCOPE.VARS], _name))
-        {
-            return _s;
-        }
-        
-        _s = _s[PROG_SCOPE.PARENT];
-    }
-    
-    return undefined;
-}
-
-/// @desc DEPRECATED: Internal Call Execution (Now Inlined in Run)
-function proglang_vm_exec_call(_vm, _func, _args)
-{
-    show_error("proglang_vm_exec_call is deprecated and should not be used.", true);
-    return undefined;
 }
 
 /// @desc Execute bytecode
@@ -162,7 +135,12 @@ function proglang_vm_run(_vm, _entry_bytecode)
     
     // Local Cache
     var _stack = _vm[PROG_VM.STACK];
-    var _frames = _vm[PROG_VM.FRAME_STACK];
+    var _f_ip = _vm[PROG_VM.FRAME_IP];
+    var _f_bp = _vm[PROG_VM.FRAME_BP];
+    var _f_scope = _vm[PROG_VM.FRAME_SCOPE];
+    var _f_bytecode = _vm[PROG_VM.FRAME_BYTECODE];
+    var _f_gref = _vm[PROG_VM.FRAME_GREF];
+    
     var _scope = _vm[PROG_VM.SCOPE];
     var _gref = _vm[PROG_VM.GLOBAL_REF];
     
@@ -223,6 +201,9 @@ function proglang_vm_run(_vm, _entry_bytecode)
                     
                     case PROG_OP.LOAD_LOCAL: _stack[@ _sp++] = _stack[_bp + _arg]; break;
                     case PROG_OP.STORE_LOCAL: _stack[@ _bp + _arg] = _stack[_sp - 1]; break; // Peek
+                    case PROG_OP.INC_LOCAL: ++_stack[@ _bp + _arg]; break;
+                    case PROG_OP.DEC_LOCAL: --_stack[@ _bp + _arg]; break;
+                    case PROG_OP.ADD_CONST: _stack[@ _sp - 1] += _constants[_arg]; break;
                         
                     // Arithmetic
                     case PROG_OP.ADD:
@@ -251,7 +232,11 @@ function proglang_vm_run(_vm, _entry_bytecode)
                         break;
                     case PROG_OP.SUB: _b = _stack[--_sp]; _stack[@ _sp - 1] -= _b; break;
                     case PROG_OP.MUL: _b = _stack[--_sp]; _stack[@ _sp - 1] *= _b; break;
-                    case PROG_OP.DIV: _b = _stack[--_sp]; _stack[@ _sp - 1] /= _b; break;
+                    case PROG_OP.DIV: 
+                        _b = _stack[--_sp]; 
+                        if (_b == 0) runtime_error(PROGLANG_ERROR_TYPE.DIVIDE_BY_ZERO, "Division by zero.");
+                        _stack[@ _sp - 1] /= _b; 
+                        break;
                     case PROG_OP.MOD: _b = _stack[--_sp]; _stack[@ _sp - 1] %= _b; break;
                     case PROG_OP.POW: _b = _stack[--_sp]; _stack[@ _sp - 1] = power(_stack[_sp - 1], _b); break;
                     case PROG_OP.NEG: _stack[@ _sp - 1] = -_stack[_sp - 1]; break;
@@ -275,21 +260,38 @@ function proglang_vm_run(_vm, _entry_bytecode)
                     case PROG_OP.SHL: _b = _stack[--_sp]; _stack[@ _sp - 1] = floor(_stack[_sp - 1]) << floor(_b); break;
                     case PROG_OP.SHR: _b = _stack[--_sp]; _stack[@ _sp - 1] = floor(_stack[_sp - 1]) >> floor(_b); break;
                     
-                    // Variable Access (Legacy/Fallback)
                     case PROG_OP.LOAD:
                         _name = _constants[_arg];
-                        var _s = proglang_vm_find_var_scope(_vm, _name);
-                        if (_s != undefined)
+                        
+                        // Fast path: Current Scope
+                        if (struct_exists(_scope[PROG_SCOPE.VARS], _name))
                         {
-                            _val = _s[PROG_SCOPE.VARS][$ _name];
-                            _stack[@ _sp++] = _val; 
+                            _stack[@ _sp++] = _scope[PROG_SCOPE.VARS][$ _name];
+                            break;
                         }
-                        else if (_vm[PROG_VM.CONTEXT] != undefined && struct_exists(_vm[PROG_VM.CONTEXT], _name))
+                        
+                        // Walk Parent Chain
+                        var _s_load = _scope[PROG_SCOPE.PARENT];
+                        var _found_load = false;
+                        while (_s_load != undefined)
+                        {
+                            if (struct_exists(_s_load[PROG_SCOPE.VARS], _name))
+                            {
+                                _stack[@ _sp++] = _s_load[PROG_SCOPE.VARS][$ _name];
+                                _found_load = true;
+                                break;
+                            }
+                            _s_load = _s_load[PROG_SCOPE.PARENT];
+                        }
+                        if (_found_load) break;
+                        
+                        // Global Context & Fallbacks
+                        if (_vm[PROG_VM.CONTEXT] != undefined && struct_exists(_vm[PROG_VM.CONTEXT], _name))
                         {
                             _val = _vm[PROG_VM.CONTEXT][$ _name];
                             _stack[@ _sp++] = is_method(_val) ? method_call(_val, []) : _val;
-                        } 
-                        else if (variable_global_exists("proglang_macros") && struct_exists(global.proglang_macros, _name))
+                        }
+                        else if (struct_exists(global.proglang_macros, _name))
                         {
                             _val = global.proglang_macros[$ _name];
                             _stack[@ _sp++] = is_method(_val) ? method_call(_val, []) : _val;
@@ -298,42 +300,46 @@ function proglang_vm_run(_vm, _entry_bytecode)
                         {
                             _stack[@ _sp++] = _gref[$ _name];
                         }
-                        else if (variable_global_exists("proglang_exports") && struct_exists(global.proglang_exports, _name))
+                        else if (struct_exists(global.proglang_exports, _name))
                         {
                             _stack[@ _sp++] = global.proglang_exports[$ _name];
                         }
-                        else if (variable_global_exists("proglang_scripts") && struct_exists(global.proglang_scripts, _name))
+                        else if (struct_exists(global.proglang_scripts, _name))
                         {
                             _stack[@ _sp++] = global.proglang_scripts[$ _name];
                         }
-                        else if (variable_global_exists("proglang_functions") && struct_exists(global.proglang_functions, _name))
+                        else if (struct_exists(global.proglang_functions, _name))
                         {
                             _stack[@ _sp++] = global.proglang_functions[$ _name];
                         }
                         else if (_name == "global") { _stack[@ _sp++] = global; }
                         else if (struct_exists(global, _name)) { _stack[@ _sp++] = global[$ _name]; }
-                        else if (variable_global_exists(_name)) { _stack[@ _sp++] = variable_global_get(_name); } // Simplified global check
                         else
                         { 
-                            // Relax strictness for "argN"
-                            if (string_pos("arg", _name) == 1 && string_digits(_name) == string_delete(_name, 1, 3))
-                            {
-                                _stack[@ _sp++] = undefined;
-                            }
-                            else
-                            {
-                                runtime_error(PROGLANG_ERROR_TYPE.VARIABLE, $"Variable '{_name}' not found.");
-                            }
+                            runtime_error(PROGLANG_ERROR_TYPE.VARIABLE, $"Variable '{_name}' not found.");
                         }
                         break;
                         
                     case PROG_OP.STORE:
                         _val = _stack[_sp - 1];
                         _name = _constants[_arg];
-                        var _s_store = proglang_vm_find_var_scope(_vm, _name);
-                        if (_s_store != undefined)
+                        
+                        // Find Target Scope Inline
+                        var _s_store = _scope;
+                        var _target_s = undefined;
+                        while (_s_store != undefined)
                         {
-                            _s_store[@ PROG_SCOPE.VARS][$ _name] = _val;
+                            if (struct_exists(_s_store[PROG_SCOPE.VARS], _name))
+                            {
+                                _target_s = _s_store;
+                                break;
+                            }
+                            _s_store = _s_store[PROG_SCOPE.PARENT];
+                        }
+                        
+                        if (_target_s != undefined)
+                        {
+                            _target_s[@ PROG_SCOPE.VARS][$ _name] = _val;
                         }
                         else if (_vm[PROG_VM.CONTEXT] != undefined) && (struct_exists(_vm[PROG_VM.CONTEXT], _name))
                         {
@@ -345,7 +351,7 @@ function proglang_vm_run(_vm, _entry_bytecode)
                         }
                         else
                         {
-                            _vm[@ PROG_VM.SCOPE][@ PROG_SCOPE.VARS][$ _name] = _val;
+                            _scope[@ PROG_SCOPE.VARS][$ _name] = _val;
                         }
                         break;
                         
@@ -461,11 +467,12 @@ function proglang_vm_run(_vm, _entry_bytecode)
                             }
     
                             // Push Frame
-                            _frames[@ _fp++] = _ip;
-                            _frames[@ _fp++] = _bp;
-                            _frames[@ _fp++] = _scope;
-                            _frames[@ _fp++] = _curr_bytecode;
-                            _frames[@ _fp++] = _gref;
+                            _f_ip[@ _fp] = _ip;
+                            _f_bp[@ _fp] = _bp;
+                            _f_scope[@ _fp] = _scope;
+                            _f_bytecode[@ _fp] = _curr_bytecode;
+                            _f_gref[@ _fp] = _gref;
+                            _fp++;
                             
                             // Switch Context
                             _curr_bytecode = _val[PROG_CLOSURE.BYTECODE];
@@ -486,23 +493,6 @@ function proglang_vm_run(_vm, _entry_bytecode)
                             // Restore captured global ref
                             _gref = _val[PROG_CLOSURE.GLOBAL_REF];
                             _vm[@ PROG_VM.GLOBAL_REF] = _gref;
-                            
-                            // Legacy Argument Support (Populate argN)
-                            // Legacy Argument Support & New 'parameter' array
-                            var _vars = _new_scope[PROG_SCOPE.VARS];
-                            var _param_array = array_create(_param_count);
-                            for (var i = 0; i < _param_count; i++)
-                            {
-                                var _val_arg = _stack[_bp + i];
-                                _vars[$ "arg" + string(i)] = _val_arg;
-                                _param_array[i] = _val_arg;
-                            }
-                            _vars[$ "argc"] = _param_count;
-                            if (_param_count == 1 && is_struct(_param_array[0])) {
-                                _vars[$ "parameter"] = _param_array[0];
-                            } else {
-                                _vars[$ "parameter"] = _param_array;
-                            }
                         }
                         // 2. Built-in Function (Struct wrapper)
                         else if (is_struct(_val) && struct_exists(_val, "function"))
@@ -536,11 +526,12 @@ function proglang_vm_run(_vm, _entry_bytecode)
                         else if (is_struct(_val) && struct_exists(_val, "code"))
                         {
                             // Push Frame (Same as closure but fresh scope)
-                            _frames[@ _fp++] = _ip;
-                            _frames[@ _fp++] = _bp;
-                            _frames[@ _fp++] = _scope;
-                            _frames[@ _fp++] = _curr_bytecode;
-                            _frames[@ _fp++] = _gref; // No change in gref for raw bytecode usually, but consistent frame push
+                            _f_ip[@ _fp] = _ip;
+                            _f_bp[@ _fp] = _bp;
+                            _f_scope[@ _fp] = _scope;
+                            _f_bytecode[@ _fp] = _curr_bytecode;
+                            _f_gref[@ _fp] = _gref;
+                            _fp++;
                             
                             _curr_bytecode = _val;
                             _code = _curr_bytecode.code;
@@ -554,21 +545,6 @@ function proglang_vm_run(_vm, _entry_bytecode)
                             _new_scope[PROG_SCOPE.PARENT] = undefined; // Top level
                             _vm[@ PROG_VM.SCOPE] = _new_scope;
                             _scope = _new_scope;
-                            
-                            var _vars = _new_scope[PROG_SCOPE.VARS];
-                            var _param_array = array_create(_param_count);
-                            for (var i = 0; i < _param_count; i++)
-                            {
-                                var _val_arg = _stack[_bp + i];
-                                _vars[$ "arg" + string(i)] = _val_arg;
-                                _param_array[i] = _val_arg;
-                            }
-                            _vars[$ "argc"] = _param_count;
-                            if (_param_count == 1 && is_struct(_param_array[0])) {
-                                _vars[$ "parameter"] = _param_array[0];
-                            } else {
-                                _vars[$ "parameter"] = _param_array;
-                            }
                         }
                         else
                         {
@@ -579,11 +555,16 @@ function proglang_vm_run(_vm, _entry_bytecode)
                         break;
                         
                     case PROG_OP.RETURN:
-                        _val = _stack[--_sp];
+                        var _val = _stack[--_sp];
                         
-                        if (_fp == _start_fp)
-                        {
-                            // Sync VM state before exit
+                        // RAII Cleanup
+                        proglang_scope_cleanup(_scope);
+                        
+                        // Constructor override: Always return 'this'
+                        if (_curr_bytecode.is_constructor) _val = _vm[PROG_VM.CURRENT_THIS];
+                        
+                        // Standard RETURN logic
+                        if (_fp == _start_fp) {
                             _vm[@ PROG_VM.SP] = _sp;
                             _vm[@ PROG_VM.IP] = _ip;
                             _vm[@ PROG_VM.BP] = _bp;
@@ -591,82 +572,21 @@ function proglang_vm_run(_vm, _entry_bytecode)
                             return _val;
                         }
                         
-                        // Capture current (Callee's) BP to restore SP correctly later
                         var _return_bp = _bp;
-                        
-                        // Pop Frame
-                        _gref = _frames[--_fp];
-                        _curr_bytecode = _frames[--_fp];
-                        _scope = _frames[--_fp];
-                        _bp = _frames[--_fp];
-                        _ip = _frames[--_fp];
+                        _fp--;
+                        _gref = _f_gref[_fp];
+                        _curr_bytecode = _f_bytecode[_fp];
+                        _scope = _f_scope[_fp];
+                        _bp = _f_bp[_fp];
+                        _ip = _f_ip[_fp];
                         
                         _vm[@ PROG_VM.SCOPE] = _scope;
                         _vm[@ PROG_VM.GLOBAL_REF] = _gref;
-                        
                         _code = _curr_bytecode.code;
                         _constants = _curr_bytecode.constants;
                         _length = array_length(_code);
-                        
-                        // Return Value placement
-                        // Previous stack: [... Caller Locals ... | Callee | Arg1 ... ArgN | ... Callee Locals ...]
-                        // _return_bp was pointing to Arg1.
-                        // We want to reset SP to point to where Callee was, and push the return value there.
-                        // Callee was at _return_bp - 1.
-                        
                         _sp = _return_bp - 1;
                         _stack[@ _sp++] = _val;
-                        break;
-                        
-                    case PROG_OP.MEMOIZE_CHECK:
-                        var _memo_id = _arg;
-                        var _param_count = _sp - _bp;
-                        var _hash = "";
-                        for (var i = 0; i < _param_count; i++) {
-                            _hash += string(_stack[_bp + i]) + "|";
-                        }
-                        array_push(_vm[PROG_VM.MEMO_ARG_KEYS], _hash);
-                        
-                        var _caches = _vm[PROG_VM.MEMO_CACHES];
-                        if (struct_exists(_caches, _memo_id)) {
-                            var _cache = _caches[$ _memo_id];
-                            if (struct_exists(_cache, _hash)) {
-                                _val = _cache[$ _hash];
-                                array_pop(_vm[PROG_VM.MEMO_ARG_KEYS]);
-                                
-                                // Return logic (same as PROG_OP.RETURN)
-                                if (_fp == _start_fp) {
-                                    _vm[@ PROG_VM.SP] = _sp;
-                                    _vm[@ PROG_VM.IP] = _ip;
-                                    _vm[@ PROG_VM.BP] = _bp;
-                                    _vm[@ PROG_VM.FP] = _fp;
-                                    return _val;
-                                }
-                                var _return_bp = _bp;
-                                _gref = _frames[--_fp];
-                                _curr_bytecode = _frames[--_fp];
-                                _scope = _frames[--_fp];
-                                _bp = _frames[--_fp];
-                                _ip = _frames[--_fp];
-                                _vm[@ PROG_VM.SCOPE] = _scope;
-                                _vm[@ PROG_VM.GLOBAL_REF] = _gref;
-                                _code = _curr_bytecode.code;
-                                _constants = _curr_bytecode.constants;
-                                _length = array_length(_code);
-                                _sp = _return_bp - 1;
-                                _stack[@ _sp++] = _val;
-                            }
-                        }
-                        break;
-                        
-                    case PROG_OP.MEMOIZE_STORE:
-                        var _memo_id = _arg;
-                        var _memo_val = _stack[_sp - 1];
-                        var _memo_hash = array_pop(_vm[PROG_VM.MEMO_ARG_KEYS]);
-                        var _caches = _vm[PROG_VM.MEMO_CACHES];
-                        if (!struct_exists(_caches, _memo_id)) _caches[$ _memo_id] = {};
-                        var _cache = _caches[$ _memo_id];
-                        _cache[$ _memo_hash] = _memo_val;
                         break;
                         
                     // Try/Catch
@@ -999,30 +919,33 @@ function proglang_vm_run(_vm, _entry_bytecode)
                         
                         if (struct_exists(_class, "constructor_code") && _class.constructor_code != undefined)
                         {
-                            var _args_arr = array_create(_arg_count);
-                            for (var i = _arg_count - 1; i >= 0; i--) _args_arr[i] = _stack[--_sp];
+                            // Inlined Constructor Call (V2 Optimization)
+                            _f_ip[@ _fp] = _ip;
+                            _f_bp[@ _fp] = _bp;
+                            _f_scope[@ _fp] = _scope;
+                            _f_bytecode[@ _fp] = _curr_bytecode;
+                            _f_gref[@ _fp] = _gref;
+                            _fp++;
                             
-                            var _new_vm = proglang_vm_create();
-                            _new_vm[@ PROG_VM.CONTEXT] = _vm[PROG_VM.CONTEXT];
-                            // _new_vm[@ PROG_VM.CALL_STACK] = variable_clone(_vm[PROG_VM.CALL_STACK]); // don't debug new callstack deeper?
-                            _new_vm[@ PROG_VM.CURRENT_THIS] = _inst;
+                            _vm[@ PROG_VM.CURRENT_THIS] = _inst;
+                            _curr_bytecode = _class.constructor_code;
+                            _code = _curr_bytecode.code;
+                            _constants = _curr_bytecode.constants;
+                            _length = array_length(_code);
+                            _ip = 0;
                             
-                            var _vars = _new_vm[PROG_VM.SCOPE][PROG_SCOPE.VARS];
-                            for (var j = 0; j < _arg_count; j++)
-                            {
-                                _vars[$ $"arg{j}"] = _args_arr[j];
-                            }
-                            _vars[$ "argc"] = _arg_count;
-                            
-                            proglang_vm_run(_new_vm, _class.constructor_code);
-                            proglang_vm_free(_new_vm);
+                            var _c_scope = array_create(PROG_SCOPE.SIZE);
+                            _c_scope[PROG_SCOPE.VARS] = {}
+                            _c_scope[PROG_SCOPE.PARENT] = undefined;
+                            _c_scope[PROG_SCOPE.TRACKED_RESOURCES] = [];
+                            _scope = _c_scope;
+                            _bp = _sp - _arg_count;
                         }
                         else
                         {
                             _sp -= _arg_count; 
+                            _stack[@ _sp++] = _inst;
                         }
-                        
-                        _stack[@ _sp++] = _inst;
                         break;
                     
                     case PROG_OP.LOAD_SUPER:
@@ -1151,9 +1074,17 @@ function proglang_vm_run(_vm, _entry_bytecode)
                     case PROG_OP.IMPORT:
                         var _path = _constants[_arg];
                         var _cur_file = "";
-                        var _scope_file = proglang_vm_find_var_scope(_vm, "__filename");
-                        if (_scope_file != undefined)
-                            _cur_file = _scope_file[PROG_SCOPE.VARS][$ "__filename"];
+                        // Manual inlined search for __filename
+                        var _s_import = _scope;
+                        while (_s_import != undefined)
+                        {
+                            if (struct_exists(_s_import[PROG_SCOPE.VARS], "__filename"))
+                            {
+                                _cur_file = _s_import[PROG_SCOPE.VARS][$ "__filename"];
+                                break;
+                            }
+                            _s_import = _s_import[PROG_SCOPE.PARENT];
+                        }
                         
                         var _exports = proglang_load_module(_path, _cur_file);
                         _stack[@ _sp++] = _exports;
@@ -1183,24 +1114,16 @@ function proglang_vm_run(_vm, _entry_bytecode)
                     
                     case PROG_OP.IN_CHECK:
                         // lhs in rhs: string in string, value in array
-                        // Structs require explicit 'in key' or 'in value'
                         var _rhs = _stack[--_sp];
                         var _lhs = _stack[--_sp];
                         var _result = false;
-                        if (is_string(_rhs) && is_string(_lhs))
+                        if (is_array(_rhs))
                         {
-                            _result = (string_pos(_lhs, _rhs) > 0);
+                            for (var i = 0; i < array_length(_rhs); i++) if (_rhs[i] == _lhs) { _result = true; break; }
                         }
-                        else if (is_array(_rhs))
+                        else if (is_string(_rhs))
                         {
-                            for (var i = 0; i < array_length(_rhs); i++)
-                            {
-                                if (_rhs[i] == _lhs)
-                                {
-                                    _result = true;
-                                    break;
-                                }
-                            }
+                            _result = (string_pos(string(_lhs), _rhs) > 0);
                         }
                         _stack[@ _sp++] = _result;
                         break;
@@ -1245,6 +1168,44 @@ function proglang_vm_run(_vm, _entry_bytecode)
                         var _range = ["range", _start, _end];
                         _stack[@ _sp++] = _range;
                         break;
+
+                    case PROG_OP.MEMOIZE_CHECK:
+                        var _memo_id = _arg;
+                        var _p_count = _curr_bytecode.param_count;
+                        var _args = array_create(_p_count);
+                        for (var i = 0; i < _p_count; i++) _args[i] = _stack[_bp + i];
+                        var _hash = string(_args);
+                        array_push(_vm[PROG_VM.MEMO_ARG_KEYS], _hash);
+                        
+                        var _cache = _vm[PROG_VM.MEMO_CACHES][$ _memo_id];
+                        if (_cache != undefined && struct_exists(_cache, _hash))
+                        {
+                            var _val = _cache[$ _hash];
+                            array_pop(_vm[PROG_VM.MEMO_ARG_KEYS]);
+                            var _return_bp = _bp;
+                            _fp--;
+                            _gref = _f_gref[_fp];
+                            _curr_bytecode = _f_bytecode[_fp];
+                            _scope = _f_scope[_fp];
+                            _bp = _f_bp[_fp];
+                            _ip = _f_ip[_fp];
+                            _vm[@ PROG_VM.SCOPE] = _scope;
+                            _vm[@ PROG_VM.GLOBAL_REF] = _gref;
+                            _code = _curr_bytecode.code;
+                            _constants = _curr_bytecode.constants;
+                            _length = array_length(_code);
+                            _sp = _return_bp - 1;
+                            _stack[@ _sp++] = _val;
+                        }
+                        break;
+                        
+                    case PROG_OP.MEMOIZE_STORE:
+                        var _memo_id = _arg;
+                        var _val = _stack[_sp - 1];
+                        var _hash = array_pop(_vm[PROG_VM.MEMO_ARG_KEYS]);
+                        if (!struct_exists(_vm[PROG_VM.MEMO_CACHES], _memo_id)) _vm[@ PROG_VM.MEMO_CACHES][$ _memo_id] = {};
+                        _vm[PROG_VM.MEMO_CACHES][$ _memo_id][$ _hash] = _val;
+                        break;
                 }
             }
         } catch (_vm_exception) {
@@ -1261,11 +1222,12 @@ function proglang_vm_run(_vm, _entry_bytecode)
                 // Unwind Frames until we reach handler's FP
                 while (_fp > _handler.fp)
                 {
-                    _gref = _frames[--_fp];
-                    _curr_bytecode = _frames[--_fp];
-                    _scope = _frames[--_fp];
-                    _bp = _frames[--_fp];
-                    _ip = _frames[--_fp];
+                    _fp--;
+                    _gref = _f_gref[_fp];
+                    _curr_bytecode = _f_bytecode[_fp];
+                    _scope = _f_scope[_fp];
+                    _bp = _f_bp[_fp];
+                    _ip = _f_ip[_fp];
                 }
                 
                 // Restore VM state to match unwind
@@ -1339,7 +1301,11 @@ function proglang_vm_create_impl()
 {
     var _vm = array_create(PROG_VM.SIZE);
     _vm[PROG_VM.STACK] = array_create(1024);
-    _vm[PROG_VM.FRAME_STACK] = array_create(256); // Initial frame stack
+    _vm[PROG_VM.FRAME_IP] = array_create(256);
+    _vm[PROG_VM.FRAME_BP] = array_create(256);
+    _vm[PROG_VM.FRAME_SCOPE] = array_create(256);
+    _vm[PROG_VM.FRAME_BYTECODE] = array_create(256);
+    _vm[PROG_VM.FRAME_GREF] = array_create(256);
     _vm[PROG_VM.SP] = 0;
     _vm[PROG_VM.IP] = 0;
     _vm[PROG_VM.BP] = 0;
@@ -1375,7 +1341,15 @@ function proglang_vm_create()
     // Auto-GC check
     if (global.proglang_vm_alloc_count >= global.proglang_vm_gc_threshold)
     {
-        proglang_vm_gc();
+        // Clear excess pool entries
+        while (array_length(global.proglang_vm_pool) > global.proglang_vm_pool_max / 2)
+        {
+            array_pop(global.proglang_vm_pool);
+        }
+        
+        // Force GML garbage collection
+        gc_collect();
+        
         global.proglang_vm_alloc_count = 0;
     }
     
@@ -1470,21 +1444,6 @@ function proglang_scope_track_resource(_scope, _type, _handle)
     array_push(_resources, [_type, _handle]);
 }
 
-/// @desc Garbage collection - clear unused VMs from pool
-function proglang_vm_gc()
-{
-    proglang_vm_pool_init();
-    
-    // Clear excess pool entries
-    while (array_length(global.proglang_vm_pool) > global.proglang_vm_pool_max / 2)
-    {
-        array_pop(global.proglang_vm_pool);
-    }
-    
-    // Force GML garbage collection
-    gc_collect();
-}
-
 /// @desc Throw a runtime error
 /// @param {real} _type Error type
 /// @param {string} _msg Error message
@@ -1492,3 +1451,25 @@ function runtime_error(_type, _msg)
 {
     throw { type: _type, message: _msg, stacktrace: debug_get_callstack() }
 }
+
+/// @desc Search for a variable in the scope chain and return the scope array it resides in
+/// @param {Array<PROG_VM>} _vm The VM array
+/// @param {string} _name Name of the variable to find
+/// @returns {Array<PROG_SCOPE>} The scope array, or undefined if not found
+function proglang_vm_find_var_scope(_vm, _name)
+{
+    var _scope = _vm[PROG_VM.SCOPE];
+    
+    // 1. Search Scope Chain
+    while (_scope != undefined)
+    {
+        if (struct_exists(_scope[PROG_SCOPE.VARS], _name))
+        {
+            return _scope;
+        }
+        _scope = _scope[PROG_SCOPE.PARENT];
+    }
+    
+    return undefined;
+}
+
