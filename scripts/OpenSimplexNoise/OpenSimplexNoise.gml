@@ -1761,7 +1761,7 @@ function open_simplex_noise(_x, _y, _amplitude = 1.0, _octaves = 1)
     
     for (var i = 0; i < _octaves; ++i)
     {
-        var _frequency = 1 << _i;
+        var _frequency = 1 << i;
         
         _total += __osn_eval2d(_x * _frequency, _y * _frequency) * _amp;
         _max_value += _amp;
