@@ -9,7 +9,7 @@ enum ITEM_TYPE {
 
 enum ITEM_HOLD_TYPE {
     SWING,
-    BOW,
+    LAUNCHER,
     SPEAR,
     WHIP
 }
@@ -261,6 +261,13 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
             {
                 ___item_damage = smart_value_parse(_damage);
             }
+
+            var _cooldown = _data[$ "cooldown"];
+            
+            if (_cooldown != undefined)
+            {
+                ___item_cooldown = _cooldown;
+            }
             
             var _durability = _data[$ "durability"];
             
@@ -452,6 +459,11 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
         return self[$ "___item_damage"] ?? 1;
     }
     
+    static get_item_cooldown = function()
+    {
+        return self[$ "___item_cooldown"] ?? 0.3;
+    }
+    
     static set_item_durability = function(_durability)
     {
         ___item_durability = new ItemDurability(_durability.amount, _durability.bar);
@@ -510,10 +522,10 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     static set_hold_type = function(_type_or_struct)
     {
         static __hold_types = {
-            "swing": ITEM_HOLD_TYPE.SWING,
-            "bow":   ITEM_HOLD_TYPE.BOW,
-            "spear": ITEM_HOLD_TYPE.SPEAR,
-            "whip":  ITEM_HOLD_TYPE.WHIP
+            "swing":    ITEM_HOLD_TYPE.SWING,
+            "launcher": ITEM_HOLD_TYPE.LAUNCHER,
+            "spear":    ITEM_HOLD_TYPE.SPEAR,
+            "whip":     ITEM_HOLD_TYPE.WHIP
         };
         
         if (is_string(_type_or_struct))

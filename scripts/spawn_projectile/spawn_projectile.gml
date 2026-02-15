@@ -69,6 +69,17 @@ function spawn_projectile(_x, _y, _id, _damage, _xscale = 1, _yscale = 1, _owner
         interp_timer = 0;
         interp_duration = 0.05;
         
+        // Trigger on_shoot hook
+        var _on_shoot = _data.get_on_shoot();
+        if (_on_shoot != undefined)
+        {
+            var _on_shoot_length = array_length(_on_shoot);
+            for (var i = 0; i < _on_shoot_length; i++)
+            {
+                function_execute(_on_shoot[i], x, y, CHUNK_DEPTH_DEFAULT, _xscale, _yscale, id, _owner);
+            }
+        }
+        
         return id;
     }
 }

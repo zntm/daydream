@@ -321,6 +321,8 @@ function proglang_load_module(_module_path, _importer_path = "") {
 /// @param {struct} _context Execution context
 /// @returns {any} Result
 function proglang_call(_name, _args = [], _context = {}) {
+    if (string_char_at(_name, 1) == "@") _name = string_delete(_name, 1, 1);
+    
     show_debug_message($"[Daydream] Proglang Call: {_name}");
     var _bytecode = undefined;
     

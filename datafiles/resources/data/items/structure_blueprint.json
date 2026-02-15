@@ -44,7 +44,7 @@
             },
             "on_use": [
                 {
-                    "id": "phantasia:ui/structure_blueprint"
+                    "id": "@phantasia:ui/structure_blueprint"
                 }
             ],
             "sfx": "#phantasia:tile/sfx/stone"

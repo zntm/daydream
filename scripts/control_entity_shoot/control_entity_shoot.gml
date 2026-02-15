@@ -1,4 +1,4 @@
-function control_entity_shoot(_entity, _item_id, _x, _y, _angle, _inventory_target = global.inventory, _out_changed_slots = undefined)
+function control_entity_shoot(_entity, _item_id, _x, _y, _angle, _inventory_target = global.inventory, _out_changed_slots = undefined, _power = 1.0)
 {
     var _data = global.item_data[$ _item_id];
     
@@ -59,7 +59,12 @@ function control_entity_shoot(_entity, _item_id, _x, _y, _angle, _inventory_targ
     // If we have a projectile to shoot
     if (_projectile_id != undefined)
     {
-        var _damage = _data.get_item_damage() + _damage_bonus;
+        var _launcher_mult = _data.get_item_damage();
+        var _ammo_damage = _damage_bonus;
+        var _exp_curve = 1.5;
+        var _min_damage = 1;
+        
+        var _damage = max(_min_damage, _launcher_mult * _ammo_damage * power(_power, _exp_curve));
         
         var _inst = spawn_projectile(_x, _y, _projectile_id, _damage, 1, 1, _entity);
         
@@ -67,22 +72,15 @@ function control_entity_shoot(_entity, _item_id, _x, _y, _angle, _inventory_targ
         {
             image_angle = _angle;
             
-            // Apply velocity based on angle
-            // Projectile speed is internal to spawn_projectile/Physics, usually xvelocity/yvelocity.
-            // But spawn_projectile sets xvelocity based on xscale if not rotated.
-            // If we rotate it, we need to decompose the speed.
-            
-            // Let's overwrite velocity to match angle
             var _p_data = global.projectile_data[$ _projectile_id];
-            var _speed = smart_value(_p_data.get_xspeed());
-            if (_speed == 0) _speed = 5; // Fallback default
+            var _max_speed = smart_value(_p_data.get_xspeed());
+            if (_max_speed == 0) _max_speed = 5;
+            
+            var _speed = _max_speed * _power;
             
             physics_body.vel_x = lengthdir_x(_speed, _angle);
             physics_body.vel_y = lengthdir_y(_speed, _angle);
             
-            // Propagate rotation?
-            // spawn_projectile sets image_angle = zero or data.rotation
-            // We override it with shooting angle?
             image_angle = _angle;
         }
         

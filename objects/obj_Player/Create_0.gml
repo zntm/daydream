@@ -36,6 +36,7 @@ stamina = 100;
 stamina_max = 100;
 stamina_regen_timer = 0;
 charge_time = 0;
+charge_threshold = 1.0;
 
 // Visuals
 attire = undefined;

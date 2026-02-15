@@ -1,6 +1,6 @@
 import { DatagenReturnData } from "../../../../lib";
 import { AccessoryItem, ItemAccessoryType, ToolItem } from "../index";
-import { BowItem } from "../BowItem";
+import { LauncherItem } from "../LauncherItem";
 
 export default (
     id: string,
@@ -86,7 +86,7 @@ export default (
         ),
         new DatagenReturnData(
             `${id}_bow.json`,
-            new BowItem(
+            new LauncherItem(
                 `phantasia:item/${id}_bow`,
                 bow.damage,
                 bow.durability,

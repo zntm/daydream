@@ -36,6 +36,12 @@ function init_projectile(_directory, _namespace = "phantasia")
                     );
                 }
                 
+                _data.set_on_shoot(_json[$ "on_shoot"]);
+                _data.set_on_land(_json[$ "on_land"]);
+                _data.set_on_hit_entity(_json[$ "on_hit_entity"]);
+                _data.set_on_hit_tile(_json[$ "on_hit_tile"]);
+                _data.set_particles(_json[$ "particles"]);
+                
                 global.projectile_data[$ $"{_namespace}:{_id}"] = _data;
                 
                 dbg_timer("init_projectile", $"[Init] Loaded Projectile: '{_id}'");

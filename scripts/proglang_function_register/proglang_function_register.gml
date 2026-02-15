@@ -229,6 +229,10 @@ proglang_function_register("random_range", function(_args) {
     return random_range(_args[0], _args[1]);
 });
 
+proglang_function_register("chance", function(_args) {
+    return chance(_args[0]);
+});
+
 proglang_function_register("choose", function(_args) {
     if (!is_array(_args[0]) || array_length(_args[0]) == 0) {
         return undefined;
@@ -519,6 +523,18 @@ proglang_function_register("loca_translate", function(_args) {
 
 proglang_function_register("spawn_projectile", function(_args) {
     return spawn_projectile(_args[0], _args[1], _args[2], _args[3], _args[4] ?? 1, _args[5] ?? 1);
+});
+
+proglang_function_register("inventory_item_create", function(_args) {
+    return new Inventory(_args[0], _args[1] ?? 1);
+});
+
+proglang_function_register("spawn_item_drop", function(_args) {
+    var _x = _args[0] * TILE_SIZE;
+    var _y = _args[1] * TILE_SIZE;
+    var _item = _args[2];
+    
+    spawn_item_drop(_x, _y, _item);
 });
 
 proglang_function_register("menu_popup_create", function(_args) {
@@ -1452,6 +1468,31 @@ proglang_function_register("draw_sprite_ext", function(_args) {
     } else {
         draw_sprite_ext(_id, _subimg, _x, _y, _xscale, _yscale, _rot, _col, _alpha);
     }
+});
+
+proglang_function_register("draw_set_color", function(_args) {
+    if (array_length(_args) < 1) return;
+    var _col = _args[0];
+    if (is_string(_col)) _col = hex_parse(_col);
+    draw_set_color(_col);
+});
+
+proglang_function_register("draw_set_alpha", function(_args) {
+    if (array_length(_args) < 1) return;
+    draw_set_alpha(_args[0]);
+});
+
+proglang_function_register("draw_rectangle", function(_args) {
+    if (array_length(_args) < 5) return;
+    draw_rectangle(_args[0], _args[1], _args[2], _args[3], _args[4]);
+});
+
+proglang_function_register("gui_get_width", function(_args) {
+    return display_get_gui_width();
+});
+
+proglang_function_register("gui_get_height", function(_args) {
+    return display_get_gui_height();
 });
 
 proglang_function_register("celestial_get_active", function(_args) {

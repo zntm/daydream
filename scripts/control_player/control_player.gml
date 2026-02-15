@@ -318,21 +318,45 @@ function control_player()
         {
             charge_time += 1 / GAME_TICK;
             
+            if (_data.get_hold_type() == ITEM_HOLD_TYPE.LAUNCHER)
+            {
+                charge_threshold = _skill.threshold;
+            }
+            
             // Visual feedback for charging
             var _t = clamp(charge_time / _skill.threshold, 0, 1);
             if (chance(0.3 * _t))
             {
-                spawn_particle(x + random_range(-8, 8), y - 12 + random_range(-8, 8), "phantasia:entity/glow");
+                spawn_particle(x + random_range(-8, 8), y - 10 + random_range(-8, 8), "phantasia:entity/glow");
             }
             if (_t >= 1 && chance(0.5))
             {
-                spawn_particle(x + random_range(-12, 12), y - 24 + random_range(-12, 12), "phantasia:entity/glow_ready");
+                spawn_particle(x + random_range(-12, 12), y - 20 + random_range(-12, 12), "phantasia:entity/glow_ready");
             }
+            
+            // Ensure tool visual exists while charging
+            if (!instance_exists(inst_item))
+            {
+                inst_item = instance_create_layer(x, y, "Instances", obj_Tool);
+                inst_item._id = _id;
+                inst_item.sprite_index = global.sprite_asset[$ _data.get_sprite()].get_sprite();
+                inst_item.image_index = _data.get_inventory_index();
+                inst_item.image_speed = 0;
+                inst_item.inst_owner = id;
+                inst_item.hold_type = _data.get_hold_type();
+            }
+            
+            // Set attack timer to keep tool alive
+            timer_attack = 0.1; 
         }
         else if (charge_time > 0)
         {
-            // Release Charge
-            if (charge_time >= _skill.threshold)
+            // Release Charge (Early release supported for Launchers)
+            var _threshold = _skill.threshold;
+            var _is_launcher = (_data.get_hold_type() == ITEM_HOLD_TYPE.LAUNCHER);
+            var _can_trigger = (charge_time >= _threshold) || (_is_launcher && charge_time > 0.1);
+            
+            if (_can_trigger)
             {
                 var _stamina_cost = _skill.stamina_cost;
                 if (stamina >= _stamina_cost)
@@ -340,9 +364,12 @@ function control_player()
                     stamina -= _stamina_cost;
                     stamina_regen_timer = 2.0;
                     
-                    // Trigger Skill
-                    global.camera_shake = 5;
-                    sfx_play("phantasia:sfx/event/lightning", 0.7); 
+                    // Trigger Skill effects
+                    if (charge_time >= _threshold)
+                    {
+                        global.camera_shake = 5;
+                        sfx_play("phantasia:sfx/event/lightning", 0.7); 
+                    }
                     
                     var _on_trigger = _skill.on_trigger ?? _data.get_on_item_double_attack();
                     var _on_trigger_length = _skill.on_trigger_length ?? _data.get_on_item_double_attack_length();
@@ -354,15 +381,62 @@ function control_player()
                             function_execute(_on_trigger[j], x, y, CHUNK_DEPTH_DEFAULT, sign(image_xscale), sign(image_yscale), id, _item);
                         }
                     }
+
+                    // Launcher Shoot logic with power scaling
+                    if (_is_launcher)
+                    {
+                        var _angle = input_state.aim_angle;
+                        var _changed_slots = (global.network_role == NETWORK_ROLE.SERVER && !is_local) ? [] : undefined;
+                        var _power = clamp(charge_time / _threshold, 0.1, 1.0);
+                        
+                        if (control_entity_shoot(id, _id, x, y - 20, _angle, _inv_target, _changed_slots, _power))
+                        {
+                            timer_attack = _data.get_item_cooldown();
+                            
+                            if (_changed_slots != undefined && array_length(_changed_slots) > 0)
+                            {
+                                var _client = global.network_clients[? socket_id];
+                                if (!is_undefined(_client))
+                                {
+                                    _network_broadcast_inventory_update(_client, "base", _changed_slots);
+                                }
+                            }
+                        }
+                    }
                 }
             }
             charge_time = 0;
         }
     }
     
+    // Fallback charging for non-skill launchers or early release support
+    if (is_local && _skill == undefined && _data != undefined && _data.get_hold_type() == ITEM_HOLD_TYPE.LAUNCHER)
+    {
+        if (input_state.attack_held && !(obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.MENU))
+        {
+            charge_time += 1 / GAME_TICK;
+            charge_threshold = 0.5; // Default threshold
+        }
+        else if (charge_time > 0)
+        {
+            // Release logic for non-skill launchers
+            var _angle = input_state.aim_angle;
+            var _changed_slots = undefined;
+            var _power = clamp(charge_time / 0.5, 0.1, 1.0);
+            
+            if (control_entity_shoot(id, _id, x, y - 20, _angle, _inv_target, _changed_slots, _power))
+            {
+                timer_attack = _data.get_item_cooldown();
+            }
+            charge_time = 0;
+        }
+    }
+
     var _can_swing = (timer_attack <= 0) && (input_state.attack_held);
     // For charge skills, only allow the initial swing or very slow repeat (optional, let's just do initial)
     if (_skill != undefined && _skill.type == "charge" && charge_time > 0.1) _can_swing = false;
+    // For launchers, don't allow regular swinging if we are charging
+    if (_data != undefined && _data.get_hold_type() == ITEM_HOLD_TYPE.LAUNCHER && charge_time > 0) _can_swing = false;
 
     if !(obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.MENU) && _can_swing
     {
@@ -400,19 +474,24 @@ function control_player()
             }
             
             // Shooting logic
-            var _angle = input_state.aim_angle;
-            
-            var _changed_slots = (global.network_role == NETWORK_ROLE.SERVER && !is_local) ? [] : undefined;
-            
-            if (control_entity_shoot(id, _id, x, y - 24, _angle, _inv_target, _changed_slots))
+            if (inst_item.hold_type != ITEM_HOLD_TYPE.LAUNCHER)
             {
-                // Shot something...
-                if (_changed_slots != undefined && array_length(_changed_slots) > 0)
+                var _angle = input_state.aim_angle;
+                
+                var _changed_slots = (global.network_role == NETWORK_ROLE.SERVER && !is_local) ? [] : undefined;
+                
+                if (control_entity_shoot(id, _id, x, y - 20, _angle, _inv_target, _changed_slots))
                 {
-                    var _client = global.network_clients[? socket_id];
-                    if (!is_undefined(_client))
+                    // Shot something...
+                    timer_attack = _data.get_item_cooldown();
+                    
+                    if (_changed_slots != undefined && array_length(_changed_slots) > 0)
                     {
-                        _network_broadcast_inventory_update(_client, "base", _changed_slots);
+                        var _client = global.network_clients[? socket_id];
+                        if (!is_undefined(_client))
+                        {
+                            _network_broadcast_inventory_update(_client, "base", _changed_slots);
+                        }
                     }
                 }
             }
@@ -442,7 +521,7 @@ function control_player()
                 {
                     if (chance(0.5))
                     {
-                        spawn_particle(x + random_range(-12, 12), y - 24 + random_range(-12, 12), "phantasia:entity/glow_ready");
+                        spawn_particle(x + random_range(-12, 12), y - 20 + random_range(-12, 12), "phantasia:entity/glow_ready");
                     }
                 }
                 
@@ -462,8 +541,8 @@ function control_player()
                         sfx_play("phantasia:sfx/event/lightning", 0.7); 
                         
                         // MULTISHOT SPECIAL (Projectiles)
-                        if (control_entity_shoot(id, _id, x, y - 24, _angle - 15, _inv_target, _changed_slots)) {}
-                        if (control_entity_shoot(id, _id, x, y - 24, _angle + 15, _inv_target, _changed_slots)) {}
+                        if (control_entity_shoot(id, _id, x, y - 20, _angle - 15, _inv_target, _changed_slots)) {}
+                        if (control_entity_shoot(id, _id, x, y - 20, _angle + 15, _inv_target, _changed_slots)) {}
                         
                         var _on_trigger = _skill.on_trigger ?? _data.get_on_item_double_attack();
                         var _on_trigger_length = _skill.on_trigger_length ?? _data.get_on_item_double_attack_length();
@@ -576,7 +655,7 @@ function control_player()
                 image_yscale = _direction;
                 
                 x = other.x + (lengthdir_x(_sprite_width, _angle) * _direction);
-                y = other.y - 24 + (lengthdir_y(_sprite_height, _angle));
+                y = other.y - 20 + (lengthdir_y(_sprite_height, _angle));
                 
                 if (_direction > 0)
                 {
@@ -588,7 +667,7 @@ function control_player()
                 }
             }
         }
-        else if (_hold_type == ITEM_HOLD_TYPE.BOW)
+        else if (_hold_type == ITEM_HOLD_TYPE.LAUNCHER)
         {
              var _aim_angle = input_state.aim_angle;
              var _recoil = 0;
@@ -605,11 +684,11 @@ function control_player()
                  var _dist = 12 - _recoil;
                  
                  x = other.x + lengthdir_x(_dist, _aim_angle);
-                 y = other.y - 24 + lengthdir_y(_dist, _aim_angle);
+                 y = other.y - 20 + lengthdir_y(_dist, _aim_angle);
                  
                  image_angle = _aim_angle;
                  image_yscale = 1; 
-                 // Ensure sprite is upright? Bows usually point right. 
+                 // Ensure sprite is upright? Launchers usually point right. 
                  // If aiming left, we might need to flip yscale if we want it to look "up"
                  if (_aim_angle > 90 && _aim_angle < 270) image_yscale = -1;
              }

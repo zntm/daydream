@@ -345,4 +345,64 @@ function ProjectileData(_namespace, _id, _sprite) : ParentData(_namespace, _id) 
     {
         return self[$ "___attributes"];
     }
+    
+    static set_on_shoot = function(_on_shoot)
+    {
+        ___on_shoot = _on_shoot;
+        
+        return self;
+    }
+    
+    static get_on_shoot = function()
+    {
+        return self[$ "___on_shoot"];
+    }
+    
+    static set_on_land = function(_on_land)
+    {
+        ___on_land = _on_land;
+        
+        return self;
+    }
+    
+    static get_on_land = function()
+    {
+        return self[$ "___on_land"];
+    }
+    
+    static set_on_hit_entity = function(_on_hit_entity)
+    {
+        ___on_hit_entity = _on_hit_entity;
+        
+        return self;
+    }
+    
+    static get_on_hit_entity = function()
+    {
+        return self[$ "___on_hit_entity"];
+    }
+    
+    static set_on_hit_tile = function(_on_hit_tile)
+    {
+        ___on_hit_tile = _on_hit_tile;
+        
+        return self;
+    }
+    
+    static get_on_hit_tile = function()
+    {
+        return self[$ "___on_hit_tile"];
+    }
+    
+    static set_particles = function(_particles)
+    {
+        ___particles = _particles;
+        
+        return self;
+    }
+    
+    static get_particles = function()
+    {
+        return self[$ "___particles"];
+    }
 }

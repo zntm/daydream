@@ -6,6 +6,14 @@
         "hit_box_width": 8
     },
     "lifetime": 3,
+    "on_land": [
+        {
+            "id": "@phantasia:spawn_item_drop",
+            "item": "phantasia:item/arrow",
+            "amount": 1,
+            "chance": 1
+        }
+    ],
     "physics": {
         "rotation": 0,
         "scale": 1,

@@ -1,0 +1,10 @@
+var item_id = parameter.item
+if (item_id == undefined) return
+
+var amount = parameter.amount ?? 1
+var chance_val = parameter.chance ?? 1.0
+
+if (chance(chance_val)) {
+    var item = inventory_item_create(item_id, amount)
+    spawn_item_drop(x, y, item)
+}

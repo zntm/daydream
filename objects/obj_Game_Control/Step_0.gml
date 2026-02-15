@@ -215,7 +215,6 @@ var _settings = global.settings;
 
 // Redundant keyboard polling removed - handled by control_player and input_state.poll_player()
 
-show_debug_message("[LOOP] Reached control_gametick");
 control_gametick(_delta_time);
 
 // Network Time Sync (Host only)

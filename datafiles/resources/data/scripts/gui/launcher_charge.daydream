@@ -1,0 +1,13 @@
+import launcher_charge_container from "ui/launcher_charge.ui"
+
+var player = parameter.player
+var parent = parameter.parent
+
+ui_spawn([launcher_charge_container], {
+    parent: parent,
+    link: {
+        charge_value: fn() { return player.charge_time },
+        charge_max: fn() { return player.charge_threshold },
+        is_visible: fn() { return player.charge_time > 0 }
+    }
+})

@@ -10,7 +10,7 @@ export class ItemScript {
         chance?: string | number,
         repeat?: string | number,
     ) {
-        this.id = id;
+        this.id = id.startsWith("@") ? id : "@" + id;
 
         if (parameters !== undefined) {
             this.parameters = parameters;

@@ -33,6 +33,21 @@ function control_projectile()
     
     var _data = global.projectile_data[$ _id];
     
+    // --- Particles ---
+    var _particles = _data.get_particles();
+    if (_particles != undefined)
+    {
+        var _len = array_length(_particles);
+        for (var i = 0; i < _len; i++)
+        {
+            var _p = _particles[i];
+            if (chance(_p[$ "frequency"] ?? 0.1))
+            {
+                spawn_particle(x + (_p[$ "offset_x"] ?? 0), y + (_p[$ "offset_y"] ?? 0), _p.id);
+            }
+        }
+    }
+    
     // --- Entity Collision ---
     if (damage > 0)
     {
@@ -43,6 +58,27 @@ function control_projectile()
             control_entity_damage(_inst, (owner != undefined) ? owner : id, damage);
             
             event_emit(new EventDataProjectileLand(id, x, y, _inst, "entity"));
+            
+            // Proglang Hooks
+            var _on_hit_entity = _data.get_on_hit_entity();
+            if (_on_hit_entity != undefined)
+            {
+                var _len = array_length(_on_hit_entity);
+                for (var i = 0; i < _len; i++)
+                {
+                    function_execute(_on_hit_entity[i], x, y, CHUNK_DEPTH_DEFAULT, image_xscale, image_yscale, id, _inst);
+                }
+            }
+            
+            var _on_land = _data.get_on_land();
+            if (_on_land != undefined)
+            {
+                var _len = array_length(_on_land);
+                for (var i = 0; i < _len; i++)
+                {
+                    function_execute(_on_land[i], x, y, CHUNK_DEPTH_DEFAULT, image_xscale, image_yscale, id, _inst);
+                }
+            }
             
             if (_data.can_destroy_on_entity_collision())
             {
@@ -74,6 +110,28 @@ function control_projectile()
         if (attribute.has_collision_box() && (tile_meeting(x, y - 1) || tile_meeting(x + 1, y) || tile_meeting(x, y + 1) || tile_meeting(x - 1, y)))
         {
             event_emit(new EventDataProjectileLand(id, x, y, undefined, "tile"));
+            
+            // Proglang Hooks
+            var _on_hit_tile = _data.get_on_hit_tile();
+            if (_on_hit_tile != undefined)
+            {
+                var _len = array_length(_on_hit_tile);
+                for (var i = 0; i < _len; i++)
+                {
+                    function_execute(_on_hit_tile[i], x, y, CHUNK_DEPTH_DEFAULT, image_xscale, image_yscale, id, undefined);
+                }
+            }
+            
+            var _on_land = _data.get_on_land();
+            if (_on_land != undefined)
+            {
+                var _len = array_length(_on_land);
+                for (var i = 0; i < _len; i++)
+                {
+                    function_execute(_on_land[i], x, y, CHUNK_DEPTH_DEFAULT, image_xscale, image_yscale, id, undefined);
+                }
+            }
+            
             if (_data.can_destroy_on_tile_collision())
             {
                 instance_destroy();
