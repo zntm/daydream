@@ -7,22 +7,20 @@ function control_chunk_activity(_camera_x, _camera_y, _camera_width, _camera_hei
     
     var _collect = false;
     
-    // Get all chunks from the map
     var _chunks = chunk_map_get_all();
-    var _chunk_count = array_length(_chunks);
     
-    for (var i = 0; i < _chunk_count; ++i)
+    for (var i = array_length(_chunks) - 1; i >= 0; --i)
     {
-        var _chunk = _chunks[i];
+        var _c = _chunks[i];
         
-        var _x3 = _chunk.x - (TILE_SIZE / 2);
-        var _y3 = _chunk.y - (TILE_SIZE / 2);
+        var _x3 = _c.x - (TILE_SIZE / 2);
+        var _y3 = _c.y - (TILE_SIZE / 2);
         var _x4 = _x3 + CHUNK_SIZE_DIMENSION;
         var _y4 = _y3 + CHUNK_SIZE_DIMENSION;
         
         if (!rectangle_in_rectangle(_x1, _y1, _x2, _y2, _x3, _y3, _x4, _y4))
         {
-            chunk_clear(_chunk);
+            chunk_clear(_c);
             
             _collect = true;
         }

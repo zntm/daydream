@@ -14,6 +14,8 @@ function control_entity_heal(_target, _amount, _source = undefined)
     // Skip if already at max health
     if (_hp_before >= _hp_max) return 0;
     
+    var _effect_data = global.effect_data;
+    
     // Apply heal
     var _new_hp = min(_hp_max, _hp_before + _amount);
     _target.hp = _new_hp;
@@ -22,14 +24,12 @@ function control_entity_heal(_target, _amount, _source = undefined)
     
     // Trigger on_heal effects
     var _effects = _target.effects;
-    var _effect_names = struct_get_names(_effects);
-    var _effect_names_length = array_length(_effect_names);
-    var _effect_data = global.effect_data;
-    var _effect_data = global.effect_data;
+    var _names = struct_get_names(_effects);
     
-    for (var i = 0; i < _effect_names_length; ++i)
+    
+    for (var i = array_length(_names) - 1; i >= 0; --i)
     {
-        var _name = _effect_names[i];
+        var _name = _names[i];
         var _data = _effect_data[$ _name];
         
         if (_data == undefined) continue;
@@ -39,6 +39,7 @@ function control_entity_heal(_target, _amount, _source = undefined)
         if (_on_heal != undefined)
         {
             var _params = variable_clone(_on_heal[$ "parameters"] ?? {});
+            
             _params[$ "heal_amount"] = _actual_heal;
             _params[$ "source"] = _source;
             _params[$ "target"] = _target;

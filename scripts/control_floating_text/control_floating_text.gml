@@ -12,7 +12,6 @@ function control_floating_text(_dt)
     for (var i = array_length(_active) - 1; i >= 0; --i)
     {
         var _inst = _active[i];
-        var _dead = false;
         
         with (_inst)
         {
