@@ -65,17 +65,17 @@ function control_inventory()
                 if (_chunk == undefined) continue;
                 
                 var _containers = _chunk.chunk_containers;
-                var _length = array_length(_containers);
                 
-                for (var k = 0; k < _length; ++k)
+                for (var k = array_length(_containers) - 1; k >= 0; --k)
                 {
-                    var _cont = _containers[k];
-                    var _d = point_distance(_player_x, _player_y, _cont.x, _cont.y);
+                    var _container = _containers[k];
+                    
+                    var _d = point_distance(_player_x, _player_y, _container.x, _container.y);
                     
                     if (_d <= _nearest_dist)
                     {
                         _nearest_dist = _d;
-                        _nearest_struct = _cont;
+                        _nearest_struct = _container;
                     }
                 }
             }
@@ -87,45 +87,46 @@ function control_inventory()
         }
     }
     
-    if (is_opened & IS_OPENED_BOOLEAN.INVENTORY)
+    var _is_inventory_opened = is_opened & IS_OPENED_BOOLEAN.INVENTORY;
+    
+    if (_is_inventory_opened)
     {
         inventory_refresh_crafting_station();
     }
     
     for (var i = 0; i < INVENTORY_LENGTH.ROW; ++i)
     {
-        if (keyboard_check_pressed(__keyboard_hotbar_ord[i]))
+        if (!keyboard_check_pressed(__keyboard_hotbar_ord[i])) continue;
+        
+        global.inventory_selected_hotbar = i;
+        
+        if (!_is_inventory_opened)
         {
-            if (is_opened & IS_OPENED_BOOLEAN.INVENTORY)
-            {
-                surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK;
-                
-                if (keyboard_check(vk_shift))
-                {
-                    // Convert mouse to GUI coordinates for collision detection
-                    var _gui_mouse_x = (window_mouse_get_x() / global.window_width) * global.gui_width;
-                    var _gui_mouse_y = (window_mouse_get_y() / global.window_height) * global.gui_height;
-                    var _inst = instance_position(_gui_mouse_x, _gui_mouse_y, obj_Inventory);
-                    
-                    if (instance_exists(_inst))
-                    {
-                        sfx_play("phantasia:sfx/item/collect", global.settings.audio_sfx);
-                        
-                        inventory_switch(_inst.inventory_type, _inst.inventory_index, "base", i); 
-                        
-                        break;
-                    }
-                }
-            }
-            else
-            {
-                surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR;
-            }
-            
-            global.inventory_selected_hotbar = i;
-            
+            surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR;
+
             break;
         }
+        
+        surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK;
+
+        /* fast switch from inventory to hotbar */
+        if (keyboard_check(vk_shift))
+        {
+            /* convert mouse to gui pos for collision detection */
+            var _gui_mouse_x = (window_mouse_get_x() / global.window_width)  * global.gui_width;
+            var _gui_mouse_y = (window_mouse_get_y() / global.window_height) * global.gui_height;
+            
+            var _inst = instance_position(_gui_mouse_x, _gui_mouse_y, obj_Inventory);
+            
+            if (instance_exists(_inst))
+            {
+                sfx_play("phantasia:sfx/item/collect", global.settings.audio_sfx);
+                
+                inventory_switch(_inst.inventory_type, _inst.inventory_index, "base", i);
+            }
+        }
+
+        break;
     }
     
     var _mouse_wheel = mouse_wheel_down() - mouse_wheel_up();
@@ -134,23 +135,24 @@ function control_inventory()
     {
         global.inventory_selected_hotbar = (global.inventory_selected_hotbar + _mouse_wheel + INVENTORY_LENGTH.ROW) % INVENTORY_LENGTH.ROW;
         
-        surface_refresh |= ((is_opened & IS_OPENED_BOOLEAN.INVENTORY) ? SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK : SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR);
+        surface_refresh |= (_is_inventory_opened)
+            ? SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK
+            : SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR;
     }
-    
-    if !(is_opened & IS_OPENED_BOOLEAN.INVENTORY)
+
+    /* update pos for inventory instances */
+    if (_is_inventory_opened)
     {
-        exit;
+        control_inventory_position();
+        
+        /* convert mouse to gui pos for collision detection */
+        var _gui_mouse_x = (window_mouse_get_x() / global.window_width) * global.gui_width;
+        var _gui_mouse_y = (window_mouse_get_y() / global.window_height) * global.gui_height;
+        
+        var _inst = instance_position(_gui_mouse_x, _gui_mouse_y, obj_Inventory);
+        
+        inventory_organize_mouse(_inst);
+        
+        global.inventory_selected_hover = _inst;
     }
-    
-    control_inventory_position();
-    
-    // Convert mouse to GUI coordinates for collision detection
-    var _gui_mouse_x = (window_mouse_get_x() / global.window_width) * global.gui_width;
-    var _gui_mouse_y = (window_mouse_get_y() / global.window_height) * global.gui_height;
-    
-    var _inst = instance_position(_gui_mouse_x, _gui_mouse_y, obj_Inventory);
-    
-    inventory_organize_mouse(_inst);
-    
-    global.inventory_selected_hover = _inst;
 }
