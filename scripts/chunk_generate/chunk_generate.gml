@@ -102,20 +102,6 @@ function chunk_generate(_chunk, _context = undefined)
     var _in_sky_zone = (_chunk.chunk_ystart <= _sky_threshold) && _sky_enabled;
     if (_structure_rectangle_length <= 0) && (_surface_height_max > _chunk.chunk_ystart + CHUNK_SIZE - 1) && (!_in_sky_zone) exit;
     
-    // NEW SYSTEM: Pattern Scanner Pass (from Old Version)
-    static __pattern_scanner = new PatternScanner()
-         .add_pattern(new PatternTreeRootOverCave());
-         
-    var _pattern_matches = __pattern_scanner.scan_chunk(_chunk, _world_data, _world_seed);
-    if (array_length(_pattern_matches) > 0)
-    {
-        for (var p = 0; p < array_length(_pattern_matches); ++p)
-        {
-            var _match = _pattern_matches[p];
-            _match.pattern.generate(_match.x, _match.y, _chunk);
-        }
-    }
-    
     // Apply Structures to Chunk
     if (_structure_rectangle_length > 0)
     {
