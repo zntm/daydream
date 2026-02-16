@@ -1274,7 +1274,7 @@ function ProgParser(_tokens) constructor
     {
         var _expression = parse_primary();
         
-        while (true)
+        for (;;)
         {
             if (match(PROG_TOKEN.LPAREN))
             {

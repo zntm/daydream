@@ -6,7 +6,7 @@
   "name":"UIRadioButton",
   "parent":{
     "name":"UI",
-    "path":"folders/Scripts/UI.yy",
+    "path":"folders/Scripts/Proglang/UI.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

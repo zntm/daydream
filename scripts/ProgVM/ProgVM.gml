@@ -148,7 +148,7 @@ function proglang_vm_run(_vm, _entry_bytecode)
     var _a, _b, _val, _index, _name, _arr, _obj, _prop, _vm_thrown_error;
     var _steps = 0;
     
-    while (true)
+    for (;;)
     {
         try
         {
@@ -421,7 +421,11 @@ function proglang_vm_run(_vm, _entry_bytecode)
                             
                             // Re-push callee and args to unify stack Call format
                             _stack[@ _sp++] = _val;
-                            for (var i = 0; i < _param_count; i++) _stack[@ _sp++] = _args_arr[i];
+                            
+                            for (var i = 0; i < _param_count; ++i)
+                            {
+                                _stack[@ _sp++] = _args_arr[i];
+                            }
                             
                             _callee_index = _sp - _param_count - 1;
                         }
@@ -1381,46 +1385,53 @@ function proglang_vm_free(_vm)
 function proglang_scope_cleanup(_scope)
 {
     var _resources = _scope[PROG_SCOPE.TRACKED_RESOURCES];
-    if (_resources == undefined) return;
     
-    var _len = array_length(_resources);
-    for (var i = 0; i < _len; i++)
+    if (_resources == undefined) exit;
+    
+    for (var i = array_length(_resources) - 1; i >= 0; --i)
     {
-        var _res = _resources[i];
+        var _resource = _resources[i];
         
-        // Handle different resource types
-        if (is_array(_res) && array_length(_res) >= 2)
+        if (!is_array(_resource)) || (array_length(_resource) < 2) continue;
+        
+        var _value = _resource[1];
+        
+        switch (_resource[0])
         {
-            var _type = _res[0];
-            switch (_type)
-            {
-                case "__buffer__":
-                    // Buffer cleanup
-                    if (buffer_exists(_res[1])) buffer_delete(_res[1]);
-                    break;
-                    
-                case "__surface__":
-                    // Surface cleanup
-                    if (surface_exists(_res[1])) surface_free(_res[1]);
-                    break;
-                    
-                case "__ds_list__":
-                    // DS List cleanup
-                    if (ds_exists(_res[1], ds_type_list)) ds_list_destroy(_res[1]);
-                    break;
-                    
-                case "__ds_map__":
-                    // DS Map cleanup
-                    if (ds_exists(_res[1], ds_type_map)) ds_map_destroy(_res[1]);
-                    break;
-                    
-                case "__ds_grid__":
-                    // DS Grid cleanup
-                    if (ds_exists(_res[1], ds_type_grid)) ds_grid_destroy(_res[1]);
-                    break;
-                    
-                // Add more resource types as needed
-            }
+            case "__buffer__":
+                if (buffer_exists(_value))
+                {
+                    buffer_delete(_value);
+                }
+                break;
+                
+            case "__surface__":
+                if (surface_exists(_value))
+                {
+                    surface_free(_value);
+                }
+                break;
+                
+            case "__ds_list__":
+                if (ds_exists(_value, ds_type_list))
+                {
+                    ds_list_destroy(_value);
+                }
+                break;
+                
+            case "__ds_map__":
+                if (ds_exists(_value, ds_type_map))
+                {
+                    ds_map_destroy(_value);
+                }
+                break;
+                
+            case "__ds_grid__":
+                if (ds_exists(_value, ds_type_grid))
+                {
+                    ds_grid_destroy(_value);
+                }
+                break;
         }
     }
     

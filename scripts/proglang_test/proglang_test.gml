@@ -1339,7 +1339,7 @@ function proglang_test() {
     // 17. Break from Infinite Loop
     if (_assert("Break Infinite", 
         $"var i = 0\n" +
-        $"while (true) \{\n" +
+        $"for (;;) \{\n" +
         $"    i++\n" +
         $"    if (i > 5) break\n" +
         $"\}\n" +

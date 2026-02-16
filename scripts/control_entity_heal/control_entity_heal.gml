@@ -26,7 +26,6 @@ function control_entity_heal(_target, _amount, _source = undefined)
     var _effects = _target.effects;
     var _names = struct_get_names(_effects);
     
-    
     for (var i = array_length(_names) - 1; i >= 0; --i)
     {
         var _name = _names[i];

@@ -98,7 +98,7 @@
     {"$GMFolder":"","%Name":"String","folderPath":"folders/Scripts/String.yy","name":"String","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Tile","folderPath":"folders/Scripts/Tile.yy","name":"Tile","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Connected","folderPath":"folders/Scripts/Tile/Connected.yy","name":"Connected","resourceType":"GMFolder","resourceVersion":"2.0",},
-    {"$GMFolder":"","%Name":"UI","folderPath":"folders/Scripts/UI.yy","name":"UI","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"UI","folderPath":"folders/Scripts/Proglang/UI.yy","name":"UI","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"World Generation","folderPath":"folders/Scripts/World Generation.yy","name":"World Generation","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Biome","folderPath":"folders/Scripts/World Generation/Biome.yy","name":"Biome","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Chunk","folderPath":"folders/Scripts/World Generation/Chunk.yy","name":"Chunk","resourceType":"GMFolder","resourceVersion":"2.0",},

@@ -107,8 +107,8 @@ function control_gametick(_delta_time)
             var _chunk_xstart = _c.chunk_xstart;
             var _chunk_ystart = _c.chunk_ystart;
             
-            var _chunk = _c.chunk;
-            var _chunk_count = _c.chunk_count;
+            var _chunk         = _c.chunk;
+            var _chunk_count   = _c.chunk_count;
             var _chunk_display = _c.chunk_display;
             
             repeat (16)
@@ -131,9 +131,12 @@ function control_gametick(_delta_time)
                 
                 if (_on_random_tick != undefined)
                 {
+                    var _x = (_chunk_xstart + _x2) * TILE_SIZE;
+                    var _y = (_chunk_ystart + _y2) * TILE_SIZE;
+                    
                     for (var j = _data.get_on_random_tick_length() - 1; j >= 0; --j)
                     {
-                        function_execute(_on_random_tick[j], (_chunk_xstart + _x2) * TILE_SIZE, (_chunk_ystart + _y2) * TILE_SIZE, _z, 1, 1);
+                        function_execute(_on_random_tick[j], _x, _y, _z, 1, 1);
                     }
                 }
             }

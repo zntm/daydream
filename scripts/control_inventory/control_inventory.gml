@@ -51,16 +51,14 @@ function control_inventory()
         var _nearest_dist = TILE_SIZE * 6;
         var _nearest_struct = undefined;
         
-        // Check 3x3 neighbors or current chunk? 
-        // 6 tiles is small, but if we are at edge of chunk, nearest could be in neighbor.
-        var _chunk_x = floor(_player_x / CHUNK_SIZE_DIMENSION) * CHUNK_SIZE_DIMENSION;
-        var _chunk_y = floor(_player_y / CHUNK_SIZE_DIMENSION) * CHUNK_SIZE_DIMENSION;
+        var _chunk_x = floor(_player_x / CHUNK_SIZE_DIMENSION);
+        var _chunk_y = floor(_player_y / CHUNK_SIZE_DIMENSION);
         
-        for (var _cx = -CHUNK_SIZE_DIMENSION; _cx <= CHUNK_SIZE_DIMENSION; _cx += CHUNK_SIZE_DIMENSION)
+        for (var _cx = -CHUNK_SIZE; _cx <= CHUNK_SIZE; ++_cx)
         {
-            for (var _cy = -CHUNK_SIZE_DIMENSION; _cy <= CHUNK_SIZE_DIMENSION; _cy += CHUNK_SIZE_DIMENSION)
+            for (var _cy = -CHUNK_SIZE; _cy <= CHUNK_SIZE; ++_cy)
             {
-                var _chunk = chunk_map_get(_chunk_x + _cx, _chunk_y + _cy);
+                var _chunk = chunk_map_get((_chunk_x + _cx) * TILE_SIZE, (_chunk_y + _cy) * TILE_SIZE);
                 
                 if (_chunk == undefined) continue;
                 
@@ -103,12 +101,12 @@ function control_inventory()
         if (!_is_inventory_opened)
         {
             surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR;
-
+            
             break;
         }
         
         surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK;
-
+        
         /* fast switch from inventory to hotbar */
         if (keyboard_check(vk_shift))
         {
@@ -125,7 +123,7 @@ function control_inventory()
                 inventory_switch(_inst.inventory_type, _inst.inventory_index, "base", i);
             }
         }
-
+        
         break;
     }
     

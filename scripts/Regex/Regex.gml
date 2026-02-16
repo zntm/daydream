@@ -245,7 +245,8 @@ function Regex(_pattern, _flags = "") constructor
         
         array_push(_offsets, 0);
         
-        while (true) {
+        for (;;)
+        {
             var _length = match_single(_str, _curr, _sub_node);
             if (_length == -1) break;
             if (_length == 0) break;
