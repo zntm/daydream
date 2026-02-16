@@ -276,18 +276,18 @@ function RegionData(_id, _config = {}) constructor
     static ___evaluate_cave_rule = function(_rule, _x, _y, _z, _depth, _seed)
     {
         // 1. Check depth range
-        if (variable_struct_exists(_rule, "min_depth"))
+        if (struct_exists(_rule, "min_depth"))
         {
             if (_depth < _rule.min_depth) return false;
         }
         
-        if (variable_struct_exists(_rule, "max_depth"))
+        if (struct_exists(_rule, "max_depth"))
         {
             if (_depth > _rule.max_depth) return false;
         }
         
         // 2. Check noise threshold (for scattered sub-biomes)
-        if (variable_struct_exists(_rule, "noise_threshold"))
+        if (struct_exists(_rule, "noise_threshold"))
         {
             var _noise_scale = _rule[$ "noise_scale"] ?? 0.02;
             var _noise = open_simplex_noise(
@@ -304,7 +304,7 @@ function RegionData(_id, _config = {}) constructor
         }
         
         // 3. Check weight/chance (for random variation)
-        if (variable_struct_exists(_rule, "weight") && _rule.weight < 1.0)
+        if (struct_exists(_rule, "weight") && _rule.weight < 1.0)
         {
             var _roll_seed = abs(_x * 73856093) ^ abs(_y * 19349663) ^ _seed;
             var _roll = frac(sin(_roll_seed * 0.0001) * 43758.5453);
@@ -313,7 +313,7 @@ function RegionData(_id, _config = {}) constructor
         }
         
         // 4. Check Z-layer (0 = back, 1 = mid, 2 = front)
-        if (variable_struct_exists(_rule, "z_layer"))
+        if (struct_exists(_rule, "z_layer"))
         {
             if (_z != _rule.z_layer) return false;
         }

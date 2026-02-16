@@ -231,7 +231,7 @@ function menu_popup_player_statistics(_data)
             menu_layer = _logic_layer;
             surface_index = _popup_scroll_layer;
             
-            if (variable_struct_exists(_item, "value"))
+            if (struct_exists(_item, "value"))
             {
                 value = _item.value;
                 on_draw = function(_x, _y, _xscale, _yscale)

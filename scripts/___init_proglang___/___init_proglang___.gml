@@ -5,6 +5,40 @@ global.proglang_macros = {}
 global.proglang_modules = {}
 global.proglang_scripts = {}
 
+// ========== SHAPE REGISTRY FOR ARRAY-BASED STRUCTS ==========
+// Map of field names -> indices for each unique "shape" (set of fields)
+global.proglang_shapes = [] // Array of { fields: {name: index}, size: N }
+global.proglang_shape_map = {} // Map of JSON.stringify(sorted_fields) -> shape_id
+
+function proglang_get_shape_id(_fields_array)
+{
+    array_sort(_fields_array, true);
+    var _key = string(_fields_array);
+    
+    if (struct_exists(global.proglang_shape_map, _key))
+    {
+        return global.proglang_shape_map[$ _key];
+    }
+    
+    var _id = array_length(global.proglang_shapes);
+    var _fields_struct = {};
+    var _len = array_length(_fields_array);
+    for (var i = 0; i < _len; i++)
+    {
+        _fields_struct[$ _fields_array[i]] = i + 1; // Index 0 is reserved for shape_id
+    }
+    
+    var _shape = {
+        fields: _fields_struct,
+        size: _len + 1
+    };
+    
+    array_push(global.proglang_shapes, _shape);
+    global.proglang_shape_map[$ _key] = _id;
+    
+    return _id;
+}
+
 global.proglang_macros[$ "infinity"] = infinity;
 global.proglang_macros[$ "PI"] = pi;
 global.proglang_macros[$ "TAU"] = pi * 2;
@@ -457,3 +491,50 @@ global.proglang_classes[$ "WorldData"] = WorldData;
 
 // Pre-load all scripts
 init_proglang_recursive(PROGLANG_BASE_DIR, "phantasia");
+
+/// @desc Recursively convert Proglang array-based objects back to GML structs for interop
+function proglang_to_gml(_val) 
+{
+    if (_val == undefined) return undefined;
+    
+    if (is_array(_val)) 
+    {
+        // Check if it's a Proglang array-based object/instance
+        if (array_length(_val) > 0 && is_real(_val[0]) && _val[0] < array_length(global.proglang_shapes)) 
+        {
+            var _shape_id = _val[0];
+            var _shape = global.proglang_shapes[_shape_id];
+            var _struct = {};
+            var _fields = struct_get_names(_shape.fields);
+            for (var i = 0; i < array_length(_fields); i++) 
+            {
+                var _name = _fields[i];
+                var _idx = _shape.fields[$ _name];
+                _struct[$ _name] = proglang_to_gml(_val[_idx]);
+            }
+            return _struct;
+        }
+        
+        // Regular array
+        var _new_arr = array_create(array_length(_val));
+        for (var i = 0; i < array_length(_val); i++) 
+        {
+            _new_arr[i] = proglang_to_gml(_val[i]);
+        }
+        return _new_arr;
+    }
+    
+    if (is_struct(_val)) 
+    {
+        var _names = struct_get_names(_val);
+        var _new_struct = {};
+        for (var i = 0; i < array_length(_names); i++) 
+        {
+            var _name = _names[i];
+            _new_struct[$ _name] = proglang_to_gml(_val[$ _name]);
+        }
+        return _new_struct;
+    }
+    
+    return _val;
+}

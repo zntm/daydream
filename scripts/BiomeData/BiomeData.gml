@@ -32,7 +32,7 @@ function worldgen_get_sky_colour(_target, _time)
     }
     
     // Check for method directly
-    if (variable_struct_exists(_target, "get_sky_colour"))
+    if (struct_exists(_target, "get_sky_colour"))
     {
         return _target.get_sky_colour(_time);
     }
@@ -59,7 +59,7 @@ function worldgen_get_light_colour(_target, _time)
     }
     
     // Check for method directly
-    if (variable_struct_exists(_target, "get_light_colour"))
+    if (struct_exists(_target, "get_light_colour"))
     {
         return _target.get_light_colour(_time);
     }
@@ -86,7 +86,7 @@ function worldgen_get_background(_target)
     }
     
     // Check for method directly
-    if (variable_struct_exists(_target, "get_background"))
+    if (struct_exists(_target, "get_background"))
     {
         return _target.get_background();
     }
@@ -113,7 +113,7 @@ function worldgen_get_music(_target)
     }
     
     // Check for method directly
-    if (variable_struct_exists(_target, "get_music"))
+    if (struct_exists(_target, "get_music"))
     {
         return _target.get_music();
     }

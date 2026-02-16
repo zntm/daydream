@@ -18,7 +18,7 @@ function player_harvest(_dt, _x, _y)
     var _key = string(_x) + "_" + string(_y) + "_" + string(_z);
     
     // Mark as active so it doesn't decay this tick
-    harvest_last_key = _key;
+    harvest_current = _key;
     
     var _item_data = global.item_data;
     
@@ -132,8 +132,8 @@ function player_harvest(_dt, _x, _y)
             spawn_particle(_x * TILE_SIZE, _y * TILE_SIZE, "phantasia:tile/harvest", is_array_choose(_particle_colour));
         }
         
-        variable_struct_remove(harvest_progress, _key);
-        harvest_last_key = undefined;
+        struct_remove(harvest_progress, _key);
+        harvest_current = undefined;
         
         if (_item_hardness < _harvest_hardness)
         {

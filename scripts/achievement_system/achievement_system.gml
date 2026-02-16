@@ -151,7 +151,7 @@ function achievement_check_condition(_condition, _event_data)
         if (is_struct(_event_item))
         {
              // Handle Item/Inventory struct or simple struct
-             if (variable_struct_exists(_event_item, "get_id")) _event_item_id = _event_item.get_id();
+             if (struct_exists(_event_item, "get_id")) _event_item_id = _event_item.get_id();
              else _event_item_id = _event_item[$ "id"];
         }
         else
@@ -190,7 +190,7 @@ function achievement_check_condition(_condition, _event_data)
         var _event_entity = _event_data[$ "entity"];
         var _event_entity_id = undefined;
         
-        if (is_struct(_event_entity) && variable_struct_exists(_event_entity, "_id"))
+        if (is_struct(_event_entity) && struct_exists(_event_entity, "_id"))
         {
             _event_entity_id = _event_entity._id;
         }

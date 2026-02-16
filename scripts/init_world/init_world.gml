@@ -66,7 +66,7 @@ function init_world(_directory, _namespace = "phantasia", _type = 0)
                     _world_data.set_surface_biome(_biome.surface);
                     
                     // Set surface biome map if provided
-                    if (variable_struct_exists(_biome.surface, "map"))
+                    if (struct_exists(_biome.surface, "map"))
                     {
                         _world_data.set_surface_biome_map(_biome.surface.map);
                     }

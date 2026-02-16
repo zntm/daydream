@@ -7,7 +7,6 @@ function control_entity_effect()
     if (_names_length == 0) exit;
     
     var _effect_data = global.effect_data;
-    var _effect_data = global.effect_data;
     var _refresh_buffs = false;
     
     for (var i = 0; i < _names_length; ++i)

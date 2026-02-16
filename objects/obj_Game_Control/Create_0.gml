@@ -5,35 +5,34 @@ audio_stop_all();
 
 enum SURFACE_REFRESH_BOOLEAN {
     GENERATING_WORLD    = 1 << 0,
-    PAUSE               = 1 << 1,
-    INVENTORY_HOTBAR    = 1 << 2,
-    INVENTORY_BACKPACK  = 1 << 3,
-    INVENTORY_CRAFTABLE = 1 << 4,
+    LIGHTING            = 1 << 1,
+    INVENTORY_BACKPACK  = 1 << 2,
+    INVENTORY_CRAFTABLE = 1 << 3,
+    INVENTORY_HOTBAR    = 1 << 4,
     HP                  = 1 << 5,
-    LIGHTING            = 1 << 6,
+    PAUSE               = 1 << 6,
 }
 
-surface_refresh =
-    SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR    |
-    SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK  |
-    SURFACE_REFRESH_BOOLEAN.INVENTORY_CRAFTABLE |
-    SURFACE_REFRESH_BOOLEAN.HP                  |
-    SURFACE_REFRESH_BOOLEAN.LIGHTING;
+surface_refresh = SURFACE_REFRESH_BOOLEAN.HP
+    | SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK
+    | SURFACE_REFRESH_BOOLEAN.INVENTORY_CRAFTABLE
+    | SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR
+    | SURFACE_REFRESH_BOOLEAN.LIGHTING;
 
 enum IS_OPENED_BOOLEAN {
-    GENERATING_WORLD    = 1 << 0,
-    GUI                 = 1 << 1,
-    INVENTORY           = 1 << 2,
-    INVENTORY_CONTAINER = 1 << 3,
-    PAUSE               = 1 << 4,
-    MENU                = 1 << 5,
-    EXIT                = 1 << 6,
-    CHAT                = 1 << 7
+    CHAT                = 1 << 0,
+    EXIT                = 1 << 1,
+    GENERATING_WORLD    = 1 << 2,
+    GUI                 = 1 << 3,
+    INVENTORY           = 1 << 4,
+    INVENTORY_CONTAINER = 1 << 5,
+    PAUSE               = 1 << 6,
+    MENU                = 1 << 7,
+
 }
 
-is_opened =
-    IS_OPENED_BOOLEAN.GENERATING_WORLD |
-    IS_OPENED_BOOLEAN.GUI;
+is_opened = IS_OPENED_BOOLEAN.GENERATING_WORLD
+    | IS_OPENED_BOOLEAN.GUI;
 
 tile_container_x = 0;
 tile_container_y = 0;

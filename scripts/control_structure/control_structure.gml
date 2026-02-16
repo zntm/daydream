@@ -30,26 +30,24 @@ function control_structure(_x, _y)
             {
                 // Skip already processed blocks
                 j = (((j >> CHUNK_SIZE_BIT) + 1) << CHUNK_SIZE_BIT) - 1;
-                _queue_valid = false; // Must re-initialize after skip
+                _queue_valid = false;
+                
                 continue;
             }
             
-            // Calculate surface height and cave start only once per column if needed
             var _surface_height = worldgen_get_surface_height(i, _world_seed, _world_data);
             var _cave_start = worldgen_get_cave_start(i, _world_seed, _world_data);
             
-            // Maintain a small sliding window for cave noise
             if (!_queue_valid)
             {
-                _queue =
-                    (worldgen_get_cave(i, j + 1, _surface_height, _cave_start, _world_seed, _world_data) << 0) |
-                    (worldgen_get_cave(i, j + 0, _surface_height, _cave_start, _world_seed, _world_data) << 1) |
-                    (worldgen_get_cave(i, j - 1, _surface_height, _cave_start, _world_seed, _world_data) << 2);
+                _queue = (worldgen_get_cave(i, j + 1, _surface_height, _cave_start, _world_seed, _world_data) << 0)
+                    | (worldgen_get_cave(i, j + 0, _surface_height, _cave_start, _world_seed, _world_data) << 1)
+                    | (worldgen_get_cave(i, j - 1, _surface_height, _cave_start, _world_seed, _world_data) << 2);
+                
                 _queue_valid = true;
             }
             else
             {
-                // Shift and add next
                 _queue = ((_queue & 0b011) << 1) | worldgen_get_cave(i, j + 1, _surface_height, _cave_start, _world_seed, _world_data);
             }
             
@@ -82,9 +80,11 @@ function control_structure(_x, _y)
                 if (_range != undefined)
                 {
                     var _min = _range[$ "min"];
+                    
                     if (_min != undefined) && (j < _min) continue;
                     
                     var _max = _range[$ "max"];
+                    
                     if (_max != undefined) && (j >= _max) continue;
                 }
                 
@@ -92,42 +92,46 @@ function control_structure(_x, _y)
                 
                 if (is_array(_id))
                 {
-                    var _id_length = array_length(_id);
-                    var _generate = true;
-                    var _struct_seed = _chance_seed ^ (_id_length * 521.123);
+                    var _id_max_idx = array_length(_id) - 1;
                     
-                    for (var m = 0; m < _id_length; ++m)
+                    var _generate = true;
+                    var _struct_seed = _chance_seed ^ (_id_max_idx * 521.123);
+                    
+                    for (var m = _id_max_idx; m >= 0; --i)
                     {
                         var _id2 = _id[m];
                         var _struct_data_ptr = _structure_data[$ _id2];
-                        if (_struct_data_ptr == undefined) { _generate = false; break; }
                         
-                        var _placement_type = _struct_data_ptr.get_placement_type();
-                        
-                        // Placement Type Check
-                        if ((_queue & 0b100) && !(_queue & 0b001)) // Floor check: solid above, air below
+                        /* continue if bottom tile is air */
+                        if ((_queue & 0b100) && !(_queue & 0b001))
                         {
-                            if (_placement_type == STRUCTURE_PLACEMENT_TYPE.FLOOR) continue;
+                            if (_struct_data_ptr.get_placement_type() == STRUCTURE_PLACEMENT_TYPE.FLOOR) continue;
                         }
-                        else if (_queue & 0b001) // Ceiling check: air above
+                        /* continue if if top tile is air */
+                        else if (_queue & 0b001)
                         {
-                            if (_placement_type == STRUCTURE_PLACEMENT_TYPE.CEILING) continue;
+                            if (_struct_data_ptr.get_placement_type() == STRUCTURE_PLACEMENT_TYPE.CEILING) continue;
                         }
-                        else if (_placement_type == STRUCTURE_PLACEMENT_TYPE.INSIDE) continue;
+                        else
+                        {
+                            if (_struct_data_ptr.get_placement_type() == STRUCTURE_PLACEMENT_TYPE.INSIDE) continue;
+                        }
                         
                         _generate = false;
+                        
                         break;
                     }
                     
                     if (_generate)
                     {
-                        for (var m = 0; m < _id_length; ++m)
+                        for (var m = _id_max_idx; m >= 0; --i)
                         {
                             var _id2 = _id[m];
-                            // random_set_seed(_struct_seed + m * 100);
+                            
                             if (!structure_valid(i, j, _id2, _world_seed))
                             {
                                 _generate = false;
+                                
                                 break;
                             }
                         }
@@ -135,9 +139,10 @@ function control_structure(_x, _y)
                     
                     if (_generate)
                     {
-                        for (var m = 0; m < _id_length; ++m)
+                        for (var m = _id_max_idx; m >= 0; --i)
                         {
                             var _id2 = _id[m];
+                            
                             structure_create(i, j, _id2, _world_seed);
                         }
                     }
@@ -145,7 +150,6 @@ function control_structure(_x, _y)
                 else
                 {
                     var _struct_data_ptr = _structure_data[$ _id];
-                    if (_struct_data_ptr == undefined) continue;
                     
                     var _placement_type = _struct_data_ptr.get_placement_type();
                     

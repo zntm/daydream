@@ -84,7 +84,7 @@ function UIElement(_x, _y, _width, _height) : GUIComponent(_x, _y, _width, _heig
                 }
                 
                 var _setter_name = "set_" + _property;
-                if (variable_struct_exists(self, _setter_name)) {
+                if (struct_exists(self, _setter_name)) {
                     var _setter = self[$ _setter_name];
                     if (is_callable(_setter)) {
                         var _m = method(self, _setter);
@@ -99,7 +99,7 @@ function UIElement(_x, _y, _width, _height) : GUIComponent(_x, _y, _width, _heig
         // Propagate to children
         var _child_count = array_length(children);
         for (var i = 0; i < _child_count; i++) {
-            if (variable_struct_exists(children[i], "update_bindings")) {
+            if (struct_exists(children[i], "update_bindings")) {
                 children[i].update_bindings();
             }
         }
@@ -113,7 +113,7 @@ function UIElement(_x, _y, _width, _height) : GUIComponent(_x, _y, _width, _heig
         // Propagate to children
         var _child_count = array_length(children);
         for (var i = 0; i < _child_count; i++) {
-            if (variable_struct_exists(children[i], "set_link_context")) {
+            if (struct_exists(children[i], "set_link_context")) {
                 children[i].set_link_context(_context);
             }
         }

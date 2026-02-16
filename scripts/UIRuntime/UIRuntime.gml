@@ -106,13 +106,13 @@ function ui_load(_path) {
 /// @returns {Struct} UI instance with spawned elements
 function ui_spawn(_definitions, _config = {}, _events = undefined) {
     // Handle ui_load() result struct (has .document property)
-    if (is_struct(_definitions) && variable_struct_exists(_definitions, "document")) {
+    if (is_struct(_definitions) && struct_exists(_definitions, "document")) {
         var _doc = _definitions.document;
         _definitions = _doc.definitions;
     }
     
     // Normalize definitions to an array if it's a single struct
-    if (is_struct(_definitions) && variable_struct_exists(_definitions, "type") && _definitions.type == UI_AST.ELEMENT) {
+    if (is_struct(_definitions) && struct_exists(_definitions, "type") && _definitions.type == UI_AST.ELEMENT) {
         _definitions = [_definitions];
     }
     
@@ -178,7 +178,7 @@ function ui_spawn(_definitions, _config = {}, _events = undefined) {
         
         var _element = undefined;
         
-        if (is_struct(_def) && variable_struct_exists(_def, "type")) {
+        if (is_struct(_def) && struct_exists(_def, "type")) {
             // Pick up variables from the element if available
             var _el_vars = _variables;
             if (struct_exists(_def, "variables")) _el_vars = _def.variables;
@@ -205,13 +205,13 @@ function ui_process_spawned_element(_element, _instance, _parent) {
     
     if (_parent != undefined) {
         // Handle UIElement or GUIComponent parent
-        if (variable_struct_exists(_parent, "add_child")) {
+        if (struct_exists(_parent, "add_child")) {
             _parent.add_child(_element);
         } 
         // Handle UIInstance struct parent (result of ui_spawn)
-        else if (variable_struct_exists(_parent, "root_elements") && array_length(_parent.root_elements) > 0) {
+        else if (struct_exists(_parent, "root_elements") && array_length(_parent.root_elements) > 0) {
             var _actual_parent = _parent.root_elements[0];
-            if (variable_struct_exists(_actual_parent, "add_child")) {
+            if (struct_exists(_actual_parent, "add_child")) {
                 _actual_parent.add_child(_element);
             }
         }
@@ -231,7 +231,7 @@ function ui_process_spawned_element(_element, _instance, _parent) {
 /// @param {Struct.UIElement} _element Root element to start from
 /// @param {Array} _out Array to collect matching elements into
 function ui_collect_slots(_element, _out) {
-    if (variable_struct_exists(_element, "inventory_name") && variable_struct_exists(_element, "slot_index")) {
+    if (struct_exists(_element, "inventory_name") && struct_exists(_element, "slot_index")) {
         array_push(_out, _element);
     }
     
@@ -249,11 +249,11 @@ function ui_register_nested_elements(_element, _registry) {
     for (var i = 0; i < _child_count; i++) {
         var _child = _element.children[i];
         
-        if (variable_struct_exists(_child, "element_name") && _child.element_name != "") {
+        if (struct_exists(_child, "element_name") && _child.element_name != "") {
             _registry[$ _child.element_name] = _child;
         }
         
-        if (variable_struct_exists(_child, "children")) {
+        if (struct_exists(_child, "children")) {
             ui_register_nested_elements(_child, _registry);
         }
     }
@@ -481,7 +481,7 @@ function ui_apply_property(_element, _prop, _link, _variables) {
             break;
             
         case "smooth":
-            if (variable_struct_exists(_element, "set_smooth")) {
+            if (struct_exists(_element, "set_smooth")) {
                 _element.set_smooth(_value);
             } else {
                 _element.smooth = _value;
@@ -489,7 +489,7 @@ function ui_apply_property(_element, _prop, _link, _variables) {
             break;
         
         case "background":
-            if (is_struct(_value) && variable_struct_exists(_value, "color")) {
+            if (is_struct(_value) && struct_exists(_value, "color")) {
                 _element.background_color = _value.color;
                 _element.background_alpha = _value[$ "alpha"] ?? 1;
             } else {
@@ -499,7 +499,7 @@ function ui_apply_property(_element, _prop, _link, _variables) {
         
         case "colour":
         case "color":
-            if (is_struct(_value) && variable_struct_exists(_value, "color")) {
+            if (is_struct(_value) && struct_exists(_value, "color")) {
                 _element.colour = _value.color;
             } else {
                 _element.colour = _value;
@@ -521,7 +521,7 @@ function ui_apply_property(_element, _prop, _link, _variables) {
             else if ((_key == "sprite_empty" || _key == "sprite_fill") && 
                      is_struct(_value) && _value[$ "is_sprite_def"] == true) {
                 var _setter_name = "set_" + _key;
-                if (variable_struct_exists(_element, _setter_name)) {
+                if (struct_exists(_element, _setter_name)) {
                     var _setter = _element[$ _setter_name];
                     if (is_callable(_setter)) {
                         var _m = method(_element, _setter);
@@ -533,20 +533,20 @@ function ui_apply_property(_element, _prop, _link, _variables) {
             else {
                 // Special handling for color values in arbitrary properties
                 var _final_value = _value;
-                if (is_struct(_value) && variable_struct_exists(_value, "color")) {
+                if (is_struct(_value) && struct_exists(_value, "color")) {
                     _final_value = _value.color;
                     // If the property is something like 'border_color', we might also want alpha
                     // but most GML functions expect just the color. UIElement handles background/border specially.
                 }
                 
                 var _setter_name = "set_" + _key;
-                if (variable_struct_exists(_element, _setter_name)) {
+                if (struct_exists(_element, _setter_name)) {
                     var _setter = _element[$ _setter_name];
                     if (is_callable(_setter)) {
                         var _m = method(_element, _setter);
                         _m(_final_value);
                     }
-                } else if (variable_struct_exists(_element, _key)) {
+                } else if (struct_exists(_element, _key)) {
                     _element[$ _key] = _final_value;
                 }
             }
@@ -595,7 +595,7 @@ function ui_resolve_value(_node, _link, _variables) {
             if (struct_exists(_variables, _node.name)) {
                 var _var_value = _variables[$ _node.name];
                 // If the stored value is an AST node, resolve it recursively
-                if (is_struct(_var_value) && variable_struct_exists(_var_value, "type")) {
+                if (is_struct(_var_value) && struct_exists(_var_value, "type")) {
                     return ui_resolve_value(_var_value, _link, _variables);
                 }
                 return _var_value;
@@ -951,7 +951,7 @@ function ui_refresh(_instance) {
     
     var _count = array_length(_instance.root_elements);
     for (var i = 0; i < _count; i++) {
-        if (variable_struct_exists(_instance.root_elements[i], "update_bindings")) {
+        if (struct_exists(_instance.root_elements[i], "update_bindings")) {
             _instance.root_elements[i].update_bindings();
         }
     }

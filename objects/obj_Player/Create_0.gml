@@ -48,7 +48,7 @@ if (is_local)
 }
 
 harvest_progress = {}
-harvest_last_key = undefined;
+harvest_current = undefined;
 cooldown_build = 0;
 cooldown_harvest = 0;
 

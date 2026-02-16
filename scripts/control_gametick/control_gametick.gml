@@ -26,6 +26,7 @@ function control_gametick(_delta_time)
                 {
                     x = spawn_x;
                     y = spawn_y;
+                    
                     y_last = y;
                     
                     if (physics_body != undefined)
@@ -52,6 +53,7 @@ function control_gametick(_delta_time)
             {
                 var _tile_x = round(mouse_x / TILE_SIZE);
                 var _tile_y = round(mouse_y / TILE_SIZE);
+                
                 var _mouse_distance = rectangle_distance(mouse_x, mouse_y, bbox_left, bbox_top, bbox_right, bbox_bottom);
                 
                 if (cooldown_build <= 0) && (_mouse_distance < ATTRIBUTE_DEFAULT_BUILD_REACH) && (mouse_check_button(mb_right))
@@ -73,18 +75,24 @@ function control_gametick(_delta_time)
                     cooldown_harvest = max(0, cooldown_harvest - (1 / GAME_TICK));
                 }
                 
-                // Decay harvest progress
+                /* harvest decay */
                 var _keys = struct_get_names(harvest_progress);
-                for (var _key_index = 0; _key_index < array_length(_keys); _key_index++)
+                
+                for (var i = array_length(_keys) - 1; i >= 0; --i)
                 {
-                    var _key = _keys[_key_index];
-                    if (_key != harvest_last_key)
+                    var _key = _keys[i];
+                    
+                    if (_key == harvest_current) continue;
+                    
+                    harvest_progress[$ _key] -= (1 / GAME_TICK);
+                    
+                    if (harvest_progress[$ _key] <= 0)
                     {
-                        harvest_progress[$ _key] = max(0, harvest_progress[$ _key] - (1 / GAME_TICK)); // Undoes 1 hardness per second
-                        if (harvest_progress[$ _key] <= 0) variable_struct_remove(harvest_progress, _key);
+                        struct_remove(harvest_progress, _key);
                     }
                 }
-                harvest_last_key = undefined;
+                
+                harvest_current = undefined;
             }
         }
         
@@ -170,7 +178,6 @@ function control_gametick(_delta_time)
         
         control_chunk_fade();
         
-        // Update pooled particles (physics for colliding particles)
         global.particle_pool.update_physics();
         
         if (_is_server)
@@ -203,13 +210,10 @@ function control_gametick(_delta_time)
             ++global.world_save_data.day;
         }
         
-        // --- NETWORK SYNC ---
-        // Server: Broadcast entity states to all clients
         if (global.network_role == NETWORK_ROLE.SERVER)
         {
             network_broadcast_entities();
         }
-        // Client: Send local player input to server
         else if (global.network_role == NETWORK_ROLE.CLIENT)
         {
             network_send_input();
