@@ -9,9 +9,7 @@ function control_floating_text(_dt)
     var _camera_width  = global.camera_width;
     var _camera_height = global.camera_height;
     
-    var i = 0;
-    
-    while (i < array_length(_active))
+    for (var i = array_length(_active) - 1; i >= 0; --i)
     {
         var _inst = _active[i];
         var _dead = false;
@@ -22,34 +20,30 @@ function control_floating_text(_dt)
             
             if (timer_life <= 0)
             {
-                _dead = true;
+                array_delete(_active, i, 1);
+                
+                _pool.release(_inst);
+                
+                break;
             }
-            else
+            
+            var _acceleration = 0.14 * _dt / 2;
+            
+            yvelocity = clamp(yvelocity + _acceleration, -PHYSICS_TERMINAL_VELOCITY, PHYSICS_TERMINAL_VELOCITY);
+            
+            y += yvelocity * _dt;
+            
+            yvelocity = clamp(yvelocity + _acceleration, -PHYSICS_TERMINAL_VELOCITY, PHYSICS_TERMINAL_VELOCITY);
+            
+            var _string_width  = string_width(text) / 2;
+            var _string_height = string_height(text);
+            
+            if (!rectangle_in_rectangle(x - _string_width, y - _string_height, x + _string_width, y + _string_height, _camera_x, _camera_y, _camera_x + _camera_width, _camera_y + _camera_height))
             {
-                var _acceleration = 0.14 * _dt / 2;
+                array_delete(_active, i, 1);
                 
-                yvelocity = clamp(yvelocity + _acceleration, -PHYSICS_TERMINAL_VELOCITY, PHYSICS_TERMINAL_VELOCITY);
-                y += yvelocity * _dt;
-                yvelocity = clamp(yvelocity + _acceleration, -PHYSICS_TERMINAL_VELOCITY, PHYSICS_TERMINAL_VELOCITY);
-                
-                var _string_width  = string_width(text) / 2;
-                var _string_height = string_height(text);
-                
-                if (!rectangle_in_rectangle(x - _string_width, y - _string_height, x + _string_width, y + _string_height, _camera_x, _camera_y, _camera_x + _camera_width, _camera_y + _camera_height))
-                {
-                    _dead = true;
-                }
+                _pool.release(_inst);
             }
-        }
-        
-        if (_dead)
-        {
-            array_delete(_active, i, 1);
-            _pool.release(_inst);
-        }
-        else
-        {
-            ++i;
         }
     }
 }

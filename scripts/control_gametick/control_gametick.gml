@@ -49,30 +49,32 @@ function control_gametick(_delta_time)
                 control_camera_pos(_camera_x, _camera_y, true);
             }
             
-            if (is_local && !(obj_Game_Control.is_opened & (IS_OPENED_BOOLEAN.MENU | IS_OPENED_BOOLEAN.CHAT | IS_OPENED_BOOLEAN.INVENTORY)))
+            if (is_local) && !(obj_Game_Control.is_opened & (IS_OPENED_BOOLEAN.MENU | IS_OPENED_BOOLEAN.CHAT | IS_OPENED_BOOLEAN.INVENTORY))
             {
-                var _tile_x = round(mouse_x / TILE_SIZE);
-                var _tile_y = round(mouse_y / TILE_SIZE);
+                var _tx = round(mouse_x / TILE_SIZE);
+                var _ty = round(mouse_y / TILE_SIZE);
                 
                 var _mouse_distance = rectangle_distance(mouse_x, mouse_y, bbox_left, bbox_top, bbox_right, bbox_bottom);
                 
+                /* we don't need to add a max of 0 for cooldown variables since we're checking if the value is equal or lower than 0 */
                 if (cooldown_build <= 0) && (_mouse_distance < ATTRIBUTE_DEFAULT_BUILD_REACH) && (mouse_check_button(mb_right))
                 {
-                    player_build(1 / GAME_TICK, _tile_x, _tile_y);
+                    player_build(1 / GAME_TICK, _tx, _ty);
                 }
                 else
                 {
-                    cooldown_build = max(0, cooldown_build - (1 / GAME_TICK));
+                    cooldown_build -= 1 / GAME_TICK;
                 }
                 
                 if (cooldown_harvest <= 0) && (_mouse_distance < ATTRIBUTE_DEFAULT_HARVEST_REACH) && (mouse_check_button(mb_left))
                 {
-                    player_harvest(1 / GAME_TICK, _tile_x, _tile_y);
+                    player_harvest(1 / GAME_TICK, _tx, _ty);
                 }
                 else
                 {
                     timer_sfx_harvest = max(0, timer_sfx_harvest - (1 / GAME_TICK));
-                    cooldown_harvest = max(0, cooldown_harvest - (1 / GAME_TICK));
+                    
+                    cooldown_harvest -= 1 / GAME_TICK;
                 }
                 
                 /* harvest decay */
@@ -98,16 +100,16 @@ function control_gametick(_delta_time)
         
         for (var i = 0; i < chunk_in_view_length; ++i)
         {
-            var _chunk = chunk_in_view[i];
+            var _c = chunk_in_view[i];
             
-            if (_chunk == undefined) || !(_chunk.boolean & CHUNK_BOOLEAN.GENERATED) continue;
+            if (_c == undefined) || !(_c.boolean & CHUNK_BOOLEAN.GENERATED) continue;
             
-            var _chunk_xstart = _chunk.chunk_xstart;
-            var _chunk_ystart = _chunk.chunk_ystart;
+            var _chunk_xstart = _c.chunk_xstart;
+            var _chunk_ystart = _c.chunk_ystart;
             
-            var _chunk_data = _chunk.chunk;
-            var _chunk_count = _chunk.chunk_count;
-            var _chunk_display = _chunk.chunk_display;
+            var _chunk = _c.chunk;
+            var _chunk_count = _c.chunk_count;
+            var _chunk_display = _c.chunk_display;
             
             repeat (16)
             {
@@ -119,18 +121,20 @@ function control_gametick(_delta_time)
                 
                 if !(_chunk_display & _bitmask) || (_chunk_count[_z] <= 0) continue;
                 
-                var _tile = _chunk_data[tile_index_xyz(_x2, _y2, _z)];
+                var _tile = _chunk[tile_index_xyz(_x2, _y2, _z)];
                 
                 if (_tile == TILE_EMPTY) continue;
                 
                 var _data = _item_data[$ _tile.get_id()];
                 
                 var _on_random_tick = _data.get_on_random_tick();
-                var _on_random_tick_length = _data.get_on_random_tick_length();
                 
-                for (var j = 0; j < _on_random_tick_length; ++j)
+                if (_on_random_tick != undefined)
                 {
-                    function_execute(_on_random_tick[j], (_chunk_xstart + _x2) * TILE_SIZE, (_chunk_ystart + _y2) * TILE_SIZE, _z, 1, 1);
+                    for (var j = _data.get_on_random_tick_length() - 1; j >= 0; --j)
+                    {
+                        function_execute(_on_random_tick[j], (_chunk_xstart + _x2) * TILE_SIZE, (_chunk_ystart + _y2) * TILE_SIZE, _z, 1, 1);
+                    }
                 }
             }
         }
@@ -157,11 +161,9 @@ function control_gametick(_delta_time)
             control_client();
         }
         
-        // Restore cooldown update loop
         var _item_cooldown_names  = struct_get_names(item_cooldown);
-        var _item_cooldown_length = array_length(_item_cooldown_names);
         
-        for (var j = 0; j < _item_cooldown_length; ++j)
+        for (var j = array_length(_item_cooldown_names) - 1; j >= 0; --j)
         {
             var _name = _item_cooldown_names[j];
             

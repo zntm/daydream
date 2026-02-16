@@ -40,10 +40,8 @@ function Chunk(_x, _y) constructor
     chunk_lights = [];
     
     // Skew arrays for foliage animation
-    chunk_skew_back = array_create(CHUNK_SIZE * CHUNK_SIZE, 0);
-    chunk_skew_back_to = array_create(CHUNK_SIZE * CHUNK_SIZE, 0);
-    chunk_skew_front = array_create(CHUNK_SIZE * CHUNK_SIZE, 0);
-    chunk_skew_front_to = array_create(CHUNK_SIZE * CHUNK_SIZE, 0);
+    chunk_skew = array_create(CHUNK_SIZE * CHUNK_SIZE, 0);
+    chunk_skew_to = array_create(CHUNK_SIZE * CHUNK_SIZE, 0);
     
     // Liquid wave arrays
     chunk_wave = array_create(CHUNK_SIZE * CHUNK_SIZE, 0);
@@ -123,10 +121,8 @@ function ChunkPool() : Pool() constructor
         var _skew_size = CHUNK_SIZE * CHUNK_SIZE;
         for (var i = 0; i < _skew_size; ++i)
         {
-            _chunk.chunk_skew_back[@ i] = 0;
-            _chunk.chunk_skew_back_to[@ i] = 0;
-            _chunk.chunk_skew_front[@ i] = 0;
-            _chunk.chunk_skew_front_to[@ i] = 0;
+            _chunk.chunk_skew[@ i] = 0;
+            _chunk.chunk_skew_to[@ i] = 0;
         }
         
         _chunk.chunk_display = 0;

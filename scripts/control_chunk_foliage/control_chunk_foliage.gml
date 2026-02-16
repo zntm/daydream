@@ -13,106 +13,56 @@ function control_chunk_foliage(_dt, _player_x, _player_y, _camera_x, _camera_y, 
     
     for (var i = chunk_in_view_length - 1; i >= 0; --i)
     {
-        var _chunk = chunk_in_view[i];
+        var _c = chunk_in_view[i];
         
-        if (_chunk == undefined) || !(_chunk.boolean & CHUNK_BOOLEAN.GENERATED) continue;
+        if (_c == undefined) || !(_c.boolean & CHUNK_BOOLEAN.GENERATED) continue;
         
-        var _chunk_display = _chunk.chunk_display;
-        var _chunk_count   = _chunk.chunk_count;
+        var _chunk         = _c.chunk;
+        var _chunk_count   = _c.chunk_count;
+        var _chunk_covered = _c.chunk_covered;
+        var _chunk_display = _c.chunk_display;
         
-        if (_chunk_display & (1 << CHUNK_DEPTH_FOLIAGE_BACK)) && (_chunk_count[CHUNK_DEPTH_FOLIAGE_BACK] > 0)
+        if (_chunk_display & ((1 << CHUNK_DEPTH_FOLIAGE_BACK) | (1 << CHUNK_DEPTH_FOLIAGE_FRONT))) && ((_chunk_count[CHUNK_DEPTH_FOLIAGE_BACK] > 0) || (_chunk_count[CHUNK_DEPTH_FOLIAGE_FRONT] > 0))
         {
-            var _skew_back = _chunk.chunk_skew_back;
-            var _skew_back_to = _chunk.chunk_skew_back_to;
+            var _chunk_skew = _c.chunk_skew;
+            var _chunk_skew_to = _c.chunk_skew_to;
             
             for (var j = 0; j < CHUNK_SIZE; ++j)
             {
-                var _chunk_covered = _chunk.chunk_covered[j];
+                var _covered = _chunk_covered[j];
                 
                 for (var k = 0; k < CHUNK_SIZE; ++k)
                 {
                     var _skew_idx = (k << CHUNK_SIZE_BIT) | j;
-
-                    /* (CHUNK_SIZE_BIT * 2) is the z index for the flat array */
-                    var _tile = _chunk.chunk[(CHUNK_DEPTH_FOLIAGE_BACK << (CHUNK_SIZE_BIT * 2)) | _skew_idx];
                     
-                    if (_chunk_covered & (1 << k))
-                    {
-                        if (_tile != TILE_EMPTY)
-                        {
-                            var _skew = _skew_back[_skew_idx];
-                            var _skew_to = _skew_back_to[_skew_idx];
-                            
-                            _chunk.chunk_skew_back[@ _skew_idx] = lerp_delta(_skew, _skew_to, CHUNK_FOLIAGE_LERP_V, _dt);
-                        }
-                        
-                        continue;
-                    }
+                    /* (CHUNK_SIZE_BIT * 2) is the z index for the flat array */
+                    var _tile = _chunk[(CHUNK_DEPTH_FOLIAGE_BACK << (CHUNK_SIZE_BIT * 2)) | _skew_idx];
                     
                     if (_tile == TILE_EMPTY) || (!_item_data[$ _tile.get_id()].is_foliage()) continue;
                     
-                    if (chance(CHUNK_FOLIAGE_UPDATE_CHANCE))
+                    if (_covered & (1 << k))
                     {
-                        _chunk.chunk_skew_back_to[@ _skew_idx] = random(_skew_strength) * (TILE_SIZE / 2);
+                        var _skew = _chunk_skew[_skew_idx];
+                        var _skew_to = _chunk_skew_to[_skew_idx];
+                        
+                        _c.chunk_skew[@ _skew_idx] = lerp_delta(_skew, _skew_to, CHUNK_FOLIAGE_LERP_V, _dt);
                         
                         continue;
                     }
-                    
-                    var _skew = _skew_back[_skew_idx];
-                    var _skew_to = _skew_back_to[_skew_idx];
-                    
-                    if (_skew != _skew_to)
-                    {
-                        _chunk.chunk_skew_back[@ _skew_idx] = lerp_delta(_skew, _skew_to, CHUNK_FOLIAGE_LERP_V, _dt);
-                    }
-                }
-            }
-        }
-        
-        if (_chunk_display & (1 << CHUNK_DEPTH_FOLIAGE_FRONT)) && (_chunk_count[CHUNK_DEPTH_FOLIAGE_FRONT] > 0)
-        {
-            var _skew_front = _chunk.chunk_skew_front;
-            var _skew_front_to = _chunk.chunk_skew_front_to;
-            
-            for (var j = 0; j < CHUNK_SIZE; ++j)
-            {
-                var _chunk_covered = _chunk.chunk_covered[j];
-                
-                for (var k = 0; k < CHUNK_SIZE; ++k)
-                {
-                    var _skew_idx = (k << CHUNK_SIZE_BIT) | j;
-
-                    /* (CHUNK_SIZE_BIT * 2) is the z index for the flat array */
-                    var _tile = _chunk.chunk[(CHUNK_DEPTH_FOLIAGE_FRONT << (CHUNK_SIZE_BIT * 2)) | _skew_idx];
-                    
-                    if (_chunk_covered & (1 << k))
-                    {
-                        if (_tile != TILE_EMPTY)
-                        {
-                            var _skew = _skew_front[_skew_idx];
-                            var _skew_to = _skew_front_to[_skew_idx];
-                            
-                            _chunk.chunk_skew_front[@ _skew_idx] = lerp_delta(_skew, _skew_to, CHUNK_FOLIAGE_LERP_V, _dt);
-                        }
-                        
-                        continue;
-                    }
-                    
-                    if (_tile == TILE_EMPTY) || (!_item_data[$ _tile.get_id()].is_foliage()) continue;
                     
                     if (chance(CHUNK_FOLIAGE_UPDATE_CHANCE))
                     {
-                        _chunk.chunk_skew_front_to[@ _skew_idx] = random(_skew_strength) * (TILE_SIZE / 2);
+                        _c.chunk_skew_to[@ _skew_idx] = random(_skew_strength) * (TILE_SIZE / 2);
                         
                         continue;
                     }
                     
-                    var _skew = _skew_front[_skew_idx];
-                    var _skew_to = _skew_front_to[_skew_idx];
+                    var _skew = _chunk_skew[_skew_idx];
+                    var _skew_to = _chunk_skew_to[_skew_idx];
                     
                     if (_skew != _skew_to)
                     {
-                        _chunk.chunk_skew_front[@ _skew_idx] = lerp_delta(_skew, _skew_to, CHUNK_FOLIAGE_LERP_V, _dt);
+                        _c.chunk_skew[@ _skew_idx] = lerp_delta(_skew, _skew_to, CHUNK_FOLIAGE_LERP_V, _dt);
                     }
                 }
             }

@@ -71,13 +71,9 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
             
             var _chunk_count_arr = _chunk.chunk_count;
             
-            if (_z == CHUNK_DEPTH_FOLIAGE_BACK) && (_chunk_count_arr[CHUNK_DEPTH_FOLIAGE_BACK] > 0)
+            if ((_z == CHUNK_DEPTH_FOLIAGE_BACK) || (_z == CHUNK_DEPTH_FOLIAGE_FRONT)) && ((_chunk_count_arr[CHUNK_DEPTH_FOLIAGE_BACK] > 0) || (_chunk_count_arr[CHUNK_DEPTH_FOLIAGE_FRONT] > 0))
             {
-                shader_set_uniform_f_array(__u_skew, _chunk.chunk_skew_back);
-            }
-            else if (_z == CHUNK_DEPTH_FOLIAGE_FRONT) && (_chunk_count_arr[CHUNK_DEPTH_FOLIAGE_FRONT] > 0)
-            {
-                shader_set_uniform_f_array(__u_skew, _chunk.chunk_skew_front);
+                shader_set_uniform_f_array(__u_skew, _chunk.chunk_skew);
             }
             else if (_z == CHUNK_DEPTH_LIQUID) && (_chunk_count_arr[CHUNK_DEPTH_LIQUID] > 0)
             {

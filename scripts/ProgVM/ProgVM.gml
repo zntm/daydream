@@ -1424,9 +1424,8 @@ function proglang_scope_cleanup(_scope)
         }
     }
     
-    // Clear the tracked resources array and scope variables
+    // Clear the tracked resources array
     _scope[@ PROG_SCOPE.TRACKED_RESOURCES] = [];
-    _scope[@ PROG_SCOPE.VARS] = {};
 }
 
 /// @desc Track a resource for RAII cleanup when scope exits

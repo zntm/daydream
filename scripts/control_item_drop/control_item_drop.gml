@@ -116,6 +116,7 @@ function control_item_drop()
         
         // Emit item collected event
         var _collected_amount = _amount_before - ((item != undefined) ? item.get_amount() : 0);
+        
         if (_collected_amount > 0)
         {
             event_emit(new EventDataEntityItemCollect(inst, _item_before, _collected_amount));
@@ -123,10 +124,10 @@ function control_item_drop()
             // Server: Notify client of inventory change
             if (global.network_role == NETWORK_ROLE.SERVER && !is_undefined(_client))
             {
-                // Optimization - only send changed slots.
-                for (var i = 0; i < array_length(_changed_slots); ++i)
+                for (var i = array_length(_changed_slots) - 1; i >= 0; --i)
                 {
                     var _index = _changed_slots[i];
+                    
                     network_send_inventory_update(inst.socket_id, "base", _index, _inv_target.base[_index]);
                 }
             }
