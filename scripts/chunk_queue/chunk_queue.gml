@@ -23,11 +23,10 @@ function chunk_queue_init()
 /// @param {real} _priority Priority (lower = higher priority, typically distance to player)
 function chunk_queue_add(_chunk, _priority)
 {
-    if (_chunk == undefined) exit;
-    if (_chunk.boolean & CHUNK_BOOLEAN.GENERATED) exit;
-    if (_chunk.boolean & CHUNK_BOOLEAN.QUEUED) exit;
+    if (_chunk == undefined) || (_chunk.boolean & (CHUNK_BOOLEAN.GENERATED | CHUNK_BOOLEAN.QUEUED)) exit;
     
     _chunk.boolean |= CHUNK_BOOLEAN.QUEUED;
+    
     ds_priority_add(global.chunk_gen_queue, _chunk, _priority);
 }
 

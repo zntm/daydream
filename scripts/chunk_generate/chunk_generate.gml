@@ -57,7 +57,6 @@ function chunk_generate(_chunk, _context = undefined)
         _sky_threshold = _world_data.get_sky_biome_threshold();
         _sky_enabled = _world_data.is_sky_biome_enabled();
     }
-
     
     // PASS 1: Calculate heights and bitmasks (Caves + Sky)
     for (var i = 0; i < CHUNK_SIZE; ++i)
