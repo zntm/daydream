@@ -563,6 +563,7 @@ function control_player()
                     if (_changed_slots != undefined && array_length(_changed_slots) > 0)
                     {
                         var _client = global.network_clients[? socket_id];
+                        
                         if (!is_undefined(_client))
                         {
                             _network_broadcast_inventory_update(_client, "base", _changed_slots);
@@ -571,13 +572,19 @@ function control_player()
                 }
             }
             
-            // Regular Attack Events
             var _on_attack = _data.get_on_attack();
-            var _on_attack_length = _data.get_on_attack_length();
             
-            for (var j = _on_attack_length - 1; j >= 0; --j)
+            if (_on_attack != undefined)
             {
-                function_execute(_on_attack[j], round(x / TILE_SIZE), round(y / TILE_SIZE), CHUNK_DEPTH_DEFAULT, sign(image_xscale), sign(image_yscale), id, _item);
+                var _tx = round(x / TILE_SIZE);
+                var _ty = round(y / TILE_SIZE);
+                
+                var _on_attack_length = _data.get_on_attack_length();
+                
+                for (var j = _on_attack_length - 1; j >= 0; --j)
+                {
+                    function_execute(_on_attack[j], _tx, _ty, CHUNK_DEPTH_DEFAULT, sign(image_xscale), sign(image_yscale), id, _item);
+                }
             }
             
             // Combo Skill logic

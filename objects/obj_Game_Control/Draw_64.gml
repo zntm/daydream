@@ -100,14 +100,6 @@ if (is_opened & IS_OPENED_BOOLEAN.GUI)
         global.gui_root.draw();
     }
     
-    // Draw any standalone declarative UI instances (not parented to gui_root)
-    if (variable_global_exists("ui_hotbar") && global.ui_hotbar != undefined && array_length(global.ui_hotbar.root_elements) > 0 && global.ui_hotbar.root_elements[0].parent == undefined) {
-        ui_draw(global.ui_hotbar);
-    }
-    if (variable_global_exists("ui_inventory") && global.ui_inventory != undefined && global.ui_inventory.visible && array_length(global.ui_inventory.root_elements) > 0 && global.ui_inventory.root_elements[0].parent == undefined) {
-        ui_draw(global.ui_inventory);
-    }
-    
     /* draw dynamically spawned UI instances (blueprints, etc.) */
     if (variable_global_exists("ui_instances"))
     {
@@ -118,7 +110,13 @@ if (is_opened & IS_OPENED_BOOLEAN.GUI)
         {
             var _ui_inst = global.ui_instances[$ _ui_keys[i]];
             
-            if (_ui_inst != undefined) ui_draw(_ui_inst);
+            if (_ui_inst != undefined) {
+                // Only draw if the instance's root elements are not parented
+                // (otherwise they are drawn via the parent's draw() call, usually gui_root)
+                if (array_length(_ui_inst.root_elements) > 0 && _ui_inst.root_elements[0].parent == undefined) {
+                    ui_draw(_ui_inst);
+                }
+            }
         }
     }
     
