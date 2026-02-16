@@ -8,8 +8,6 @@ function chat_disable()
     obj_Game_Control.chat_message = "";
     
     obj_Game_Control.is_opened &= ~IS_OPENED_BOOLEAN.CHAT;
-
     
-    // Hide any open choice panels
     chat_hide_choices();
 }

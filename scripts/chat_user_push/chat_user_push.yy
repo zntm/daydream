@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"chat_add",
+  "%Name":"chat_user_push",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"chat_add",
+  "name":"chat_user_push",
   "parent":{
     "name":"Chat",
     "path":"folders/Scripts/Chat.yy",

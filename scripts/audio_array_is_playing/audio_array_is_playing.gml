@@ -10,9 +10,7 @@ function audio_array_is_playing(_audio)
         return audio_is_playing(_audio);
     }
     
-    var _length = array_length(_audio);
-    
-    for (var i = 0; i < _length; ++i)
+    for (var i = array_length(_audio) - 1; i >= 0; --i)
     {
         var _ = _audio[i];
         

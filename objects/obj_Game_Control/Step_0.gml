@@ -343,18 +343,18 @@ if (IS_DEVELOPER_MODE)
             var _code = global.relay_manager.host_session(6510);
             if (_code != "")
             {
-                chat_add("System", $"Hosting session! Invite code: {invite_code_format(_code)}");
+                chat_system_push($"Hosting session! Invite code: {invite_code_format(_code)}");
                 invite_code_copy();
-                chat_add("System", "Invite code copied to clipboard");
+                chat_system_push("Invite code copied to clipboard");
             }
             else
             {
-                chat_add("System", "Failed to start session");
+                chat_system_push("Failed to start session");
             }
         }
         else
         {
-            chat_add("System", "Already in a session");
+            chat_system_push("Already in a session");
         }
     }
     
@@ -369,17 +369,17 @@ if (IS_DEVELOPER_MODE)
             {
                 if (global.relay_manager.join_session(_code))
                 {
-                    chat_add("System", "Connecting...");
+                    chat_system_push("Connecting...");
                 }
                 else
                 {
-                    chat_add("System", "Failed to join session - invalid code?");
+                    chat_system_push("Failed to join session - invalid code?");
                 }
             }
         }
         else
         {
-            chat_add("System", "Already in a session");
+            chat_system_push("Already in a session");
         }
     }
     
@@ -389,7 +389,7 @@ if (IS_DEVELOPER_MODE)
         if (global.relay != undefined && global.relay.role != RELAY_ROLE.NONE)
         {
             global.relay_manager.leave_session();
-            chat_add("System", "Left session");
+            chat_system_push("Left session");
         }
     }
 }
@@ -473,8 +473,7 @@ if (is_opened & IS_OPENED_BOOLEAN.CHAT)
             }
             else
             {
-                // Add as regular chat message
-                chat_add(global.player_save_data.name, _message);
+                chat_user_push(global.player_save_data.name, _message);
             }
             
             // Add to message history

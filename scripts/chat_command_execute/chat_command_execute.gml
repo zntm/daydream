@@ -30,7 +30,7 @@ function chat_command_execute(_command)
     
     if (_data == undefined)
     {
-        chat_add(undefined, $"Invalid command. Type /help for a list of commands.", CHAT_COMMAND_ERROR);
+        chat_system_push($"Invalid command. Type /help for a list of commands.", CHAT_COMMAND_ERROR);
         
         exit;
     }
@@ -43,7 +43,7 @@ function chat_command_execute(_command)
 		{
 			if (_data.get_parameter_length() > 0) break;
 			
-			chat_add(undefined, $"Invalid command. Type /help for a list of commands.", CHAT_COMMAND_ERROR);
+			chat_system_push($"Invalid command. Type /help for a list of commands.", CHAT_COMMAND_ERROR);
 			
 			exit;
 		}
@@ -71,7 +71,7 @@ function chat_command_execute(_command)
 				
 				if (_default_value == undefined)
 				{
-					chat_add(undefined, $"Command contains invalid argument count.", CHAT_COMMAND_ERROR);
+					chat_system_push($"Command contains invalid argument count.", CHAT_COMMAND_ERROR);
 					
 					exit;
 				}
@@ -92,7 +92,7 @@ function chat_command_execute(_command)
 	}
 	else if (_command_parsed_length - 1 != _name_index)
 	{
-		chat_add(undefined, $"Command contains invalid argument count.", CHAT_COMMAND_ERROR);
+		chat_system_push($"Command contains invalid argument count.", CHAT_COMMAND_ERROR);
 		
 		exit;
 	}

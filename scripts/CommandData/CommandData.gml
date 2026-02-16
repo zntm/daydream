@@ -210,7 +210,7 @@ global.command_data[$ "summon"] = new CommandData()
         .set_description("Summons a boss")
         .set_function(function(_id)
         {
-            chat_add(undefined, "WIP");
+            chat_system_push("WIP");
         }))
     .add_subcommand("creature", new CommandData()
         .add_parameter(new CommandParameter("id", COMMAND_PARAMETER_TYPE.STRING))
@@ -234,7 +234,7 @@ global.command_data[$ "time"] = new CommandData()
         {
             global.world.time = _time;
             
-            chat_add(undefined, $"Set time to {global.world.time}");
+            chat_system_push($"Set time to {global.world.time}");
         }))
     .set_description("Displays the current time")
     .set_permissions(CHAT_COMMAND_PERMISSION.MANAGE_WORLD_TIME)
@@ -242,7 +242,7 @@ global.command_data[$ "time"] = new CommandData()
     {
         var _time = global.world.time;
         
-        chat_add(undefined, $"Current time is {_time}");
+        chat_system_push($"Current time is {_time}");
         
         return _time;
     });
@@ -286,7 +286,7 @@ global.command_data[$ "tp"] = new CommandData()
         chunk_update_near_light();
         chunk_update_near_inst();
 		
-		chat_add(undefined, $"Teleported {_user.name} to [{_x}, {_y}]");
+		chat_system_push($"Teleported {_user.name} to [{_x}, {_y}]");
 	});
 
 global.command_data[$ "value"] = new CommandData()
@@ -297,21 +297,21 @@ global.command_data[$ "value"] = new CommandData()
         {
             if (global.command_value[$ _name] != undefined)
             {
-                chat_add(undefined, $"Value '{_name}' already exists");
+                chat_system_push($"Value '{_name}' already exists");
                 
                 exit;
             }
             
             if (array_length(struct_get_names(global.command_value[$ _name])) >= 1024)
             {
-                chat_add(undefined, $"Values cannot exceed maximum of 1024");
+                chat_system_push($"Values cannot exceed maximum of 1024");
                 
                 exit;
             }
             
             global.command_value[$ _name] = _value;
             
-            chat_add(undefined, $"Created value '{_name}' with value '{_value}'");
+            chat_system_push($"Created value '{_name}' with value '{_value}'");
         }))
     .add_subcommand("destroy", new CommandData()
         .add_parameter(new CommandParameter("name", COMMAND_PARAMETER_TYPE.STRING))
@@ -319,14 +319,14 @@ global.command_data[$ "value"] = new CommandData()
         {
             if (global.command_value[$ _name] == undefined)
             {
-                chat_add(undefined, $"Value '{_name}' does not exist");
+                chat_system_push($"Value '{_name}' does not exist");
                 
                 exit;
             }
             
             struct_remove(global.command_value, _name);
             
-            chat_add(undefined, $"Destroyed value '{_name}'"); 
+            chat_system_push($"Destroyed value '{_name}'"); 
         }));
 
 global.command_data_names = struct_get_names(global.command_data);

@@ -8,7 +8,7 @@ function chat_command_resolve_id(_id, _data, _type)
         
         if (_data[$ _id] == undefined)
         {
-            chat_add(undefined, $"{_type} '{_id}' does not exist");
+            chat_system_push($"{_type} '{_id}' does not exist");
             
             return undefined;
         }

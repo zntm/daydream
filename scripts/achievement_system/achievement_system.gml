@@ -16,7 +16,6 @@ function achievement_init()
     global.achievement_data ??= {}
     
     // Subscribe to events for achievement checking
-    // Subscribe to events for achievement checking
     event_subscribe(GAME_EVENT.TILE_PLACE, achievement_on_tile_place);
     event_subscribe(GAME_EVENT.TILE_UPDATE, achievement_on_tile_update);
     event_subscribe(GAME_EVENT.ENTITY_DIE, achievement_on_entity_die);

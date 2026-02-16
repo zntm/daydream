@@ -1,9 +1,5 @@
-function chat_add(_name, _message, _colour = undefined, _sprite_prefix = "emote_")
+function chat_user_push(_name, _message, _colour = undefined, _sprite_prefix = "emote_")
 {
-	_message = string_trim(_message);
-	
-	if (_message == "") exit;
-	
     array_insert(global.chat_history, 0, new Chat(_name, _message)
         .set_colour(_colour));
     
@@ -16,9 +12,5 @@ function chat_add(_name, _message, _colour = undefined, _sprite_prefix = "emote_
         array_resize(global.chat_history, CHAT_HISTORY_MAX);
     }
 	
-	// Save message history if function exists
-	if (script_exists(file_save_message_history))
-	{
-		file_save_message_history();
-	}
+	file_save_message_history();
 }

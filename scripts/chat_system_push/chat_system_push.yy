@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"chat_system_push",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"chat_system_push",
+  "parent":{
+    "name":"Chat",
+    "path":"folders/Scripts/Chat.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

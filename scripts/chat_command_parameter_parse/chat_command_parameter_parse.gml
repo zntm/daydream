@@ -15,7 +15,7 @@ function chat_command_parameter_parse(_value, _parameter, _index, _user, _return
             
             if (_return)
             {
-                chat_add(undefined, $"Argument {_index} is not a valid position", CHAT_COMMAND_ERROR);
+                chat_system_push($"Argument {_index} is not a valid position", CHAT_COMMAND_ERROR);
             }
             
             return undefined;
@@ -31,7 +31,7 @@ function chat_command_parameter_parse(_value, _parameter, _index, _user, _return
             {
                 if (_return)
                 {
-                    chat_add(undefined, $"Argument {_index} is not a valid position", CHAT_COMMAND_ERROR);
+                    chat_system_push($"Argument {_index} is not a valid position", CHAT_COMMAND_ERROR);
                 }
                 
                 return undefined;
@@ -41,7 +41,7 @@ function chat_command_parameter_parse(_value, _parameter, _index, _user, _return
             {
                 if (_return)
                 {
-                    chat_add(undefined, $"Argument {_index} is not a valid entity", CHAT_COMMAND_ERROR);
+                    chat_system_push($"Argument {_index} is not a valid entity", CHAT_COMMAND_ERROR);
                 }
                 
                 return undefined;
@@ -61,7 +61,7 @@ function chat_command_parameter_parse(_value, _parameter, _index, _user, _return
                 {
                     if (_return)
                     {
-                        chat_add(undefined, $"Argument {_index} is not a valid position", CHAT_COMMAND_ERROR);
+                        chat_system_push($"Argument {_index} is not a valid position", CHAT_COMMAND_ERROR);
                     }
                     
                     return undefined;
@@ -77,7 +77,7 @@ function chat_command_parameter_parse(_value, _parameter, _index, _user, _return
                 {
                     if (_return)
                     {
-                        chat_add(undefined, $"Argument {_index} is not a valid position", CHAT_COMMAND_ERROR);
+                        chat_system_push($"Argument {_index} is not a valid position", CHAT_COMMAND_ERROR);
                     }
                     
                     return undefined;
@@ -124,7 +124,7 @@ function chat_command_parameter_parse(_value, _parameter, _index, _user, _return
 		{
 			if (_return)
 			{
-				chat_add(undefined, $"Argument {_index} is not a valid position", CHAT_COMMAND_ERROR);
+				chat_system_push($"Argument {_index} is not a valid position", CHAT_COMMAND_ERROR);
 			}
 			
 			return undefined;
@@ -146,7 +146,7 @@ function chat_command_parameter_parse(_value, _parameter, _index, _user, _return
 		{
 			if (_return)
 			{
-				chat_add(undefined, $"Argument {_index} can only have a length between {_parameter_min} and {_parameter_max}");
+				chat_system_push($"Argument {_index} can only have a length between {_parameter_min} and {_parameter_max}");
 			}
 			
 			return undefined;
@@ -160,7 +160,7 @@ function chat_command_parameter_parse(_value, _parameter, _index, _user, _return
 			{
 				if (_return)
 				{
-					chat_add(undefined, $"Argument {_index} is not an valid integer");
+					chat_system_push($"Argument {_index} is not an valid integer");
 				}
 				
 				return undefined;
@@ -172,7 +172,7 @@ function chat_command_parameter_parse(_value, _parameter, _index, _user, _return
 			{
 				if (_return)
 				{
-					chat_add(undefined, $"Argument {_index} is not an valid integer");
+					chat_system_push($"Argument {_index} is not an valid integer");
 				}
 				
 				return undefined;
@@ -182,7 +182,7 @@ function chat_command_parameter_parse(_value, _parameter, _index, _user, _return
 		{
 			if (_return)
 			{
-				chat_add(undefined, $"Argument {_index} is not an integer");
+				chat_system_push($"Argument {_index} is not an integer");
 			}
 			
 			return undefined;
@@ -196,7 +196,7 @@ function chat_command_parameter_parse(_value, _parameter, _index, _user, _return
 			{
 				if (_return)
 				{
-					chat_add(undefined, $"Argument {_index} is not a number");
+					chat_system_push($"Argument {_index} is not a number");
 				}
 				
 				return undefined;
@@ -208,7 +208,7 @@ function chat_command_parameter_parse(_value, _parameter, _index, _user, _return
 		{
 			if (_return)
 			{
-				chat_add(undefined, $"Argument {_index} is not a valid number");
+				chat_system_push($"Argument {_index} is not a valid number");
 			}
 			
 			return undefined;
@@ -228,7 +228,7 @@ function chat_command_parameter_parse(_value, _parameter, _index, _user, _return
 		{
 			if (_return)
 			{
-				chat_add(undefined, $"Argument {_index} is not a valid boolean");
+				chat_system_push($"Argument {_index} is not a valid boolean");
 			}
 			
 			return undefined;
@@ -256,7 +256,7 @@ function chat_command_parameter_parse(_value, _parameter, _index, _user, _return
 	{
 		if (_return)
 		{
-			chat_add(undefined, $"Argument {_index} is not included in choices");
+			chat_system_push($"Argument {_index} is not included in choices");
 		}
 		
 		return undefined;
