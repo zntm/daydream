@@ -233,8 +233,15 @@ function proglang_vm_run(_vm, _entry_bytecode)
                     case PROG_OP.SUB: _b = _stack[--_sp]; _stack[@ _sp - 1] -= _b; break;
                     case PROG_OP.MUL: _b = _stack[--_sp]; _stack[@ _sp - 1] *= _b; break;
                     case PROG_OP.DIV: 
-                        _b = _stack[--_sp]; 
-                        if (_b == 0) runtime_error(PROGLANG_ERROR_TYPE.DIVIDE_BY_ZERO, "Division by zero.");
+                        _b = _stack[--_sp];
+                        
+                        if (_b == 0)
+                        {
+                            runtime_error(PROGLANG_ERROR_TYPE.DIVIDE_BY_ZERO, "Division by zero.");
+                            
+                            break;
+                        }
+                        
                         _stack[@ _sp - 1] /= _b; 
                         break;
                     case PROG_OP.MOD: _b = _stack[--_sp]; _stack[@ _sp - 1] %= _b; break;
@@ -267,6 +274,7 @@ function proglang_vm_run(_vm, _entry_bytecode)
                         if (struct_exists(_scope[PROG_SCOPE.VARS], _name))
                         {
                             _stack[@ _sp++] = _scope[PROG_SCOPE.VARS][$ _name];
+                            
                             break;
                         }
                         
