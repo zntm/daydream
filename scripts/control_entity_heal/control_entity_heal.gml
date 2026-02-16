@@ -1,9 +1,9 @@
 /// @function control_entity_heal(_target, _amount, _source)
 /// @desc Unified heal handler for all entities. Triggers on_heal effects.
-/// @param {Id.Instance} _target - The entity being healed
-/// @param {Real} _amount - Amount of HP to heal
-/// @param {Id.Instance} _source - The source of the healing (optional)
-/// @return {Real} Returns the actual amount healed
+/// @param {Id.Instance} _target The entity being healed.
+/// @param {Real} _amount Amount of HP to heal.
+/// @param {Id.Instance} _source The source of the healing (optional).
+/// @return {Real} Returns the actual amount healed.
 function control_entity_heal(_target, _amount, _source = undefined)
 {
     if (_amount <= 0) return 0;
