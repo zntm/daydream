@@ -49,7 +49,19 @@ enum PACKET_TYPE {
     ENTITY_DESTROY,
     ENTITY_MOVE,
     
+    INVENTORY_ACTION,
+    CONTAINER_OPEN,
+    CONTAINER_CLOSE,
+    
     __SIZE
+}
+
+enum RELAY_INVENTORY_ACTION {
+    MOVE,
+    SPLIT,
+    DROP,
+    CRAFT,
+    USE
 }
 
 /// @desc Create a new relay packet buffer

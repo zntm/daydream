@@ -380,6 +380,18 @@ function RelayNetworkManager() constructor
                 _handle_entity_spawn(_buffer);
                 break;
                 
+            case PACKET_TYPE.INVENTORY_ACTION:
+                if (is_host) _handle_inventory_action(_from_peer_id, _buffer);
+                break;
+                
+            case PACKET_TYPE.CONTAINER_OPEN:
+                if (is_host) _handle_container_open(_from_peer_id, _buffer);
+                break;
+                
+            case PACKET_TYPE.CONTAINER_CLOSE:
+                if (is_host) _handle_container_close(_from_peer_id, _buffer);
+                break;
+                
             case PACKET_TYPE.ENTITY_DESTROY:
                 _handle_entity_destroy(_buffer);
                 break;
@@ -470,6 +482,95 @@ function RelayNetworkManager() constructor
                 _arr[@ _update.index] = _update.item;
             }
         }
+    }
+    
+    /// @desc Handle inventory action packet (host only)
+    static _handle_inventory_action = function(_from_peer_id, _buffer)
+    {
+        var _data = relay_read_inventory_action(_buffer);
+        var _peer = global.relay.peers[$ _from_peer_id];
+        if (_peer == undefined) return;
+        
+        // Host: Process inventory action on peer's inventory
+        // (Simplified: just perform the move/split/etc. on the host's copy of their inventory)
+        // In a real scenario, we'd validate this against the host's game state
+        
+        // For now, let's just use the existing inventory_move/split logic if it's available for generic inventories
+        // Actually, since it's just a struct, we can manipulate it here.
+        
+        var _inv = _peer.inventory;
+        if (_inv == undefined) return;
+        
+        switch (_data.action)
+        {
+            case RELAY_INVENTORY_ACTION.MOVE:
+                var _item = _inv[$ _data.from_inv][_data.from_idx];
+                _inv[$ _data.from_inv][@ _data.from_idx] = INVENTORY_EMPTY;
+                _inv[$ _data.to_inv][@ _data.to_idx] = _item;
+                break;
+                
+            case RELAY_INVENTORY_ACTION.SPLIT:
+                var _item = _inv[$ _data.from_inv][_data.from_idx];
+                if (_item != INVENTORY_EMPTY)
+                {
+                    var _split_amount = _data.amount;
+                    var _new_item = variable_clone(_item).set_amount(_split_amount);
+                    _item.add_amount(-_split_amount);
+                    
+                    _inv[$ _data.to_inv][@ _data.to_idx] = _new_item;
+                    
+                    if (_item.get_amount() <= 0) _inv[$ _data.from_inv][@ _data.from_idx] = INVENTORY_EMPTY;
+                }
+                break;
+                
+            case RELAY_INVENTORY_ACTION.DROP:
+                var _item = _inv[$ _data.from_inv][_data.from_idx];
+                if (_item != INVENTORY_EMPTY)
+                {
+                    var _amount = min(_item.get_amount(), _data.amount);
+                    var _drop_item = variable_clone(_item).set_amount(_amount);
+                    _item.add_amount(-_amount);
+                    
+                    if (_item.get_amount() <= 0) _inv[$ _data.from_inv][@ _data.from_idx] = INVENTORY_EMPTY;
+                    
+                    // Note: Host handles actual item drop spawning elsewhere or here
+                }
+                break;
+                
+            case RELAY_INVENTORY_ACTION.CRAFT:
+                // Handle crafting consumption and output
+                // (Simplified for now as the host doesn't track recipe registry fully)
+                _inv[$ _data.to_inv][@ _data.to_idx] = new Inventory("mouse", _data.amount); // Placeholder
+                break;
+        }
+        
+        // After processing, host should broadcast the update to keep everyone in sync
+        // Or at least send it back to the client as confirmation
+        relay_send_inventory_update(_from_peer_id, _data.to_inv, _data.to_idx, _inv[$ _data.to_inv][_data.to_idx]);
+        relay_send_inventory_update(_from_peer_id, _data.from_inv, _data.from_idx, _inv[$ _data.from_inv][_data.from_idx]);
+    }
+    
+    /// @desc Handle container open packet (host only)
+    static _handle_container_open = function(_from_peer_id, _buffer)
+    {
+        var _x = buffer_read(_buffer, buffer_s32);
+        var _y = buffer_read(_buffer, buffer_s32);
+        var _z = buffer_read(_buffer, buffer_s32);
+        
+        var _peer = global.relay.peers[$ _from_peer_id];
+        if (_peer == undefined) return;
+        
+        _peer.open_container = { x: _x, y: _y, z: _z };
+        show_debug_message($"[RELAY_MGR] Peer {_from_peer_id} opened container at {_x}, {_y}, {_z}");
+    }
+    
+    /// @desc Handle container close packet (host only)
+    static _handle_container_close = function(_from_peer_id, _buffer)
+    {
+        var _peer = global.relay.peers[$ _from_peer_id];
+        if (_peer == undefined) return;
+        
+        _peer.open_container = undefined;
     }
     
     /// @desc Handle chunk request (host only)
@@ -667,6 +768,21 @@ function RelayNetworkManager() constructor
         if (_peer != undefined)
         {
             _peer.player_instance = _player;
+            
+            // Re-initialize inventory for the remote player
+            _peer.inventory = {
+                mouse: {
+                    item: INVENTORY_EMPTY,
+                    type:  "",
+                    index: -1
+                },
+                base:              array_create(INVENTORY_LENGTH.BASE, INVENTORY_EMPTY),
+                armor_helmet:      array_create(1, INVENTORY_EMPTY),
+                armor_breastplate: array_create(1, INVENTORY_EMPTY),
+                armor_leggings:    array_create(1, INVENTORY_EMPTY),
+                accessory:         array_create(INVENTORY_LENGTH.ACCESSORY, INVENTORY_EMPTY),
+                _container:         []
+            };
         }
         
         if (on_player_spawned != undefined)
@@ -723,6 +839,18 @@ function RelayNetworkManager() constructor
         {
             var _peer = global.relay.peers[$ _peer_ids[i]];
             if (_peer.uuid == _uuid) return _peer;
+        }
+        return undefined;
+    }
+    
+    /// @desc Find a peer by their player instance
+    static _find_peer_by_instance = function(_inst)
+    {
+        var _peer_ids = struct_get_names(global.relay.peers);
+        for (var i = 0; i < array_length(_peer_ids); ++i)
+        {
+            var _peer = global.relay.peers[$ _peer_ids[i]];
+            if (_peer.player_instance == _inst) return _peer;
         }
         return undefined;
     }

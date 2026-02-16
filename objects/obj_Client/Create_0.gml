@@ -5,16 +5,10 @@ timer_sfx_harvest = 0;
 if (!variable_instance_exists(id, "is_local")) is_local = true;
 if (!variable_instance_exists(id, "uuid"))     uuid = global.player_save_data.uuid;
 
-socket_id = undefined;    // Socket ID (for server tracking remote players)
-network_input = undefined; // Input received from network (for remote players)
 
-// Client-Side Prediction state
-input_history = [];          // Ring buffer of { tick, input, predicted_x, predicted_y }
-input_history_max = 128;     // Max inputs to keep for reconciliation
-current_tick = 0;            // Local tick counter
-last_server_tick = 0;        // Last tick acknowledged by server
-server_verified_x = 0;       // Last server-verified position X
-server_verified_y = 0;       // Last server-verified position Y
+// Peer tracking (relay system)
+peer_id = undefined;       // Relay peer ID (for host tracking remote players)
+
 
 // Interpolation state (for remote players)
 interp_start_x = 0;

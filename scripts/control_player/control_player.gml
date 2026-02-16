@@ -88,10 +88,10 @@ function control_player()
         
         if (global.network_role == RELAY_ROLE.HOST && !is_local)
         {
-            var _client = global.network_clients[? socket_id];
-            if (!is_undefined(_client))
+            var _peer = obj_Game_Control.relay_manager._find_peer_by_instance(id);
+            if (_peer != undefined)
             {
-                _inv_target = _client.inventory;
+                _inv_target = _peer.inventory;
                 _hotbar_index = selected_hotbar;
             }
         }
@@ -429,10 +429,14 @@ function control_player()
                             
                             if (_changed_slots != undefined && array_length(_changed_slots) > 0)
                             {
-                                var _client = global.network_clients[? socket_id];
-                                if (!is_undefined(_client))
+                                var _peer = obj_Game_Control.relay_manager._find_peer_by_instance(id);
+                                if (_peer != undefined)
                                 {
-                                    _network_broadcast_inventory_update(_client, "base", _changed_slots);
+                                    for (var i = 0; i < array_length(_changed_slots); ++i)
+                                    {
+                                        var _slot = _changed_slots[i];
+                                        relay_send_inventory_update(_peer.peer_id, "base", _slot, _inv_target.base[_slot]);
+                                    }
                                 }
                             }
                         }
@@ -562,11 +566,14 @@ function control_player()
                     
                     if (_changed_slots != undefined && array_length(_changed_slots) > 0)
                     {
-                        var _client = global.network_clients[? socket_id];
-                        
-                        if (!is_undefined(_client))
+                        var _peer = obj_Game_Control.relay_manager._find_peer_by_instance(id);
+                        if (_peer != undefined)
                         {
-                            _network_broadcast_inventory_update(_client, "base", _changed_slots);
+                            for (var i = 0; i < array_length(_changed_slots); ++i)
+                            {
+                                var _slot = _changed_slots[i];
+                                relay_send_inventory_update(_peer.peer_id, "base", _slot, _inv_target.base[_slot]);
+                            }
                         }
                     }
                 }
@@ -682,8 +689,15 @@ function control_player()
                         
                         if (_changed_slots != undefined && array_length(_changed_slots) > 0)
                         {
-                            var _client = global.network_clients[? socket_id];
-                            if (!is_undefined(_client)) _network_broadcast_inventory_update(_client, "base", _changed_slots);
+                            var _peer = obj_Game_Control.relay_manager._find_peer_by_instance(id);
+                            if (_peer != undefined)
+                            {
+                                for (var i = 0; i < array_length(_changed_slots); ++i)
+                                {
+                                    var _slot = _changed_slots[i];
+                                    relay_send_inventory_update(_peer.peer_id, "base", _slot, _inv_target.base[_slot]);
+                                }
+                            }
                         }
                         
                         if (is_local) obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR | SURFACE_REFRESH_BOOLEAN.HP;

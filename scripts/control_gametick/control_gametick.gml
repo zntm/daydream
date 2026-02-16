@@ -215,15 +215,6 @@ function control_gametick(_delta_time)
             ++global.world_save_data.day;
         }
         
-        if (global.network_role == RELAY_ROLE.HOST)
-        {
-            network_broadcast_entities();
-        }
-        else if (global.network_role == RELAY_ROLE.CLIENT)
-        {
-            network_send_input();
-        }
-        
         global.tick_accumulator -= 1;
     }
 }

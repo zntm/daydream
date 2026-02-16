@@ -51,8 +51,8 @@ function EntityState() constructor
             var _inv = global.inventory;
             if (global.network_role == RELAY_ROLE.HOST && !_inst.is_local)
             {
-                var _client = global.network_clients[? _inst.socket_id];
-                if (!is_undefined(_client)) _inv = _client.inventory;
+                var _peer = obj_Game_Control.relay_manager._find_peer_by_instance(_inst);
+                if (_peer != undefined) _inv = _peer.inventory;
             }
             
             var _item = _inv.base[_inst.selected_hotbar];

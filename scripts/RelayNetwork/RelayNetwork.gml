@@ -79,6 +79,7 @@ function RelayNetwork() constructor
             uuid: global.player_save_data.uuid,
             player_instance: noone,
             attire: global.player_save_data.attire ?? {},
+            inventory: global.inventory,
             is_local: true
         };
         
@@ -526,6 +527,7 @@ function RelayNetwork() constructor
             uuid: _uuid,
             player_instance: noone,
             attire: _data.attire,
+            inventory: undefined, // Set by RelayNetworkManager on join
             is_local: false
         };
         ds_map_add(_socket_to_peer, _socket, _peer_id);

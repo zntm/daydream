@@ -11,9 +11,10 @@ function inventory_organize_mouse(_inst)
             
             if (_item != INVENTORY_EMPTY)
             {
+                var _amount = _item.get_amount();
                 if (global.network_role == RELAY_ROLE.CLIENT)
                 {
-                    network_send_inventory_action(INVENTORY_ACTION_TYPE.SPLIT, _type, _index, "mouse", 0, ceil(_amount / 2));
+                    relay_send_inventory_action(RELAY_INVENTORY_ACTION.SPLIT, _type, _index, "mouse", 0, ceil(_amount / 2));
                 }
                 
                 var _amount2 = floor(_amount / 2);
@@ -42,7 +43,7 @@ function inventory_organize_mouse(_inst)
             
             if (global.network_role == RELAY_ROLE.CLIENT)
             {
-                network_send_inventory_action(INVENTORY_ACTION_TYPE.SPLIT, "mouse", 0, _type, _index, 1);
+                relay_send_inventory_action(RELAY_INVENTORY_ACTION.SPLIT, "mouse", 0, _type, _index, 1);
             }
             
             var _item = global.inventory[$ _type][_index];
@@ -133,7 +134,7 @@ function inventory_organize_mouse(_inst)
                 
                 if (global.network_role == RELAY_ROLE.CLIENT)
                 {
-                    network_send_inventory_action(INVENTORY_ACTION_TYPE.MOVE, _type, _index, "mouse", 0, _item.get_amount());
+                    relay_send_inventory_action(RELAY_INVENTORY_ACTION.MOVE, _type, _index, "mouse", 0, _item.get_amount());
                 }
                 
                 global.inventory[$ _type][@ _index] = INVENTORY_EMPTY;
@@ -157,7 +158,7 @@ function inventory_organize_mouse(_inst)
             
             if (global.network_role == RELAY_ROLE.CLIENT)
             {
-                network_send_inventory_action(INVENTORY_ACTION_TYPE.MOVE, "mouse", 0, _type, _index, global.inventory.mouse.item.get_amount());
+                relay_send_inventory_action(RELAY_INVENTORY_ACTION.MOVE, "mouse", 0, _type, _index, global.inventory.mouse.item.get_amount());
             }
             
             var _item = global.inventory[$ _type][_index];
@@ -268,7 +269,7 @@ function inventory_organize_mouse(_inst)
                 
                 if (global.network_role == RELAY_ROLE.CLIENT)
                 {
-                    network_send_inventory_action(INVENTORY_ACTION_TYPE.CRAFT, "base", _index, "mouse", 0, _amount);
+                    relay_send_inventory_action(RELAY_INVENTORY_ACTION.CRAFT, "base", _index, "mouse", 0, _amount);
                 }
                 
                 inventory_craft_clear(_index);

@@ -97,10 +97,10 @@ function control_item_drop()
         {
             if (!inst.is_local)
             {
-                _client = global.network_clients[? inst.socket_id];
-                if (!is_undefined(_client))
+                var _peer = obj_Game_Control.relay_manager._find_peer_by_instance(inst);
+                if (_peer != undefined)
                 {
-                    _inv_target = _client.inventory;
+                    _inv_target = _peer.inventory;
                 }
             }
         }
@@ -121,14 +121,17 @@ function control_item_drop()
         {
             event_emit(new EventDataEntityItemCollect(inst, _item_before, _collected_amount));
             
-            // Server: Notify client of inventory change
-            if (global.network_role == RELAY_ROLE.HOST && !is_undefined(_client))
+            // Host: Notify client of inventory change
+            if (global.network_role == RELAY_ROLE.HOST)
             {
-                for (var i = array_length(_changed_slots) - 1; i >= 0; --i)
+                var _peer = obj_Game_Control.relay_manager._find_peer_by_instance(inst);
+                if (_peer != undefined)
                 {
-                    var _index = _changed_slots[i];
-                    
-                    network_send_inventory_update(inst.socket_id, "base", _index, _inv_target.base[_index]);
+                    for (var i = array_length(_changed_slots) - 1; i >= 0; --i)
+                    {
+                        var _index = _changed_slots[i];
+                        relay_send_inventory_update(_peer.peer_id, "base", _index, _inv_target.base[_index]);
+                    }
                 }
             }
         }

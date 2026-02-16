@@ -12,7 +12,7 @@ function inventory_drop()
     {
         if (global.network_role == RELAY_ROLE.CLIENT)
         {
-            network_send_inventory_action(INVENTORY_ACTION_TYPE.DROP, "base", _inventory_selected_hotbar, "", 0, _item.get_amount());
+            relay_send_inventory_action(RELAY_INVENTORY_ACTION.DROP, "base", _inventory_selected_hotbar, "", 0, _item.get_amount());
         }
         
         spawn_item_drop(x, y - TILE_SIZE, _item, sign(image_xscale), image_xscale * INVENTORY_DROP_XVELOCITY, -INVENTORY_DROP_YVELOCITY, GAME_TICK * 3);
@@ -24,7 +24,7 @@ function inventory_drop()
     
     if (global.network_role == RELAY_ROLE.CLIENT)
     {
-        network_send_inventory_action(INVENTORY_ACTION_TYPE.DROP, "base", _inventory_selected_hotbar, "", 0, 1);
+        relay_send_inventory_action(RELAY_INVENTORY_ACTION.DROP, "base", _inventory_selected_hotbar, "", 0, 1);
     }
     
     spawn_item_drop(x, y - TILE_SIZE, variable_clone(_item).set_amount(1), sign(image_xscale), image_xscale * INVENTORY_DROP_XVELOCITY, -INVENTORY_DROP_YVELOCITY, GAME_TICK * 3);

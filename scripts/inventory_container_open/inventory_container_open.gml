@@ -17,7 +17,7 @@ function inventory_container_open(_x, _y, _inst)
     
     if (global.network_role == RELAY_ROLE.CLIENT)
     {
-        network_send_container_open(_tile_x, _tile_y, _tile_z);
+        relay_send_container_open(_tile_x, _tile_y, _tile_z);
     }
     
     event_emit(new EventDataTileContainerOpen(_tile_x, _tile_y, _tile_z, obj_Player.id));

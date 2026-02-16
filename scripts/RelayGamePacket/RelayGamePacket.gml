@@ -190,6 +190,30 @@ function relay_read_inventory_update(_buffer)
     };
 }
 
+/// @desc Write inventory action
+function relay_write_inventory_action(_buffer, _action, _from_inv, _from_idx, _to_inv, _to_idx, _amount)
+{
+    buffer_write(_buffer, buffer_u8, _action);
+    buffer_write(_buffer, buffer_string, _from_inv);
+    buffer_write(_buffer, buffer_u16, _from_idx);
+    buffer_write(_buffer, buffer_string, _to_inv);
+    buffer_write(_buffer, buffer_u16, _to_idx);
+    buffer_write(_buffer, buffer_u16, _amount);
+}
+
+/// @desc Read inventory action
+function relay_read_inventory_action(_buffer)
+{
+    return {
+        action: buffer_read(_buffer, buffer_u8),
+        from_inv: buffer_read(_buffer, buffer_string),
+        from_idx: buffer_read(_buffer, buffer_u16),
+        to_inv: buffer_read(_buffer, buffer_string),
+        to_idx: buffer_read(_buffer, buffer_u16),
+        amount: buffer_read(_buffer, buffer_u16)
+    };
+}
+
 /// @desc Write time update
 function relay_write_time_update(_buffer, _time)
 {
@@ -480,5 +504,41 @@ function relay_send_entity_move(_uuid, _x, _y)
     relay_write_entity_move(_buf, _uuid, _x, _y);
     
     relay_broadcast_game_packet(PACKET_TYPE.ENTITY_MOVE, _buf);
+    buffer_delete(_buf);
+}
+
+/// @desc Send inventory action to host
+function relay_send_inventory_action(_action, _from_inv, _from_idx, _to_inv, _to_idx, _amount)
+{
+    if (global.relay == undefined || global.relay.role == RELAY_ROLE.NONE) return;
+    
+    var _buf = buffer_create(128, buffer_grow, 1);
+    relay_write_inventory_action(_buf, _action, _from_inv, _from_idx, _to_inv, _to_idx, _amount);
+    
+    relay_broadcast_game_packet(PACKET_TYPE.INVENTORY_ACTION, _buf);
+    buffer_delete(_buf);
+}
+
+/// @desc Send container open to host
+function relay_send_container_open(_x, _y, _z)
+{
+    if (global.relay == undefined || global.relay.role == RELAY_ROLE.NONE) return;
+    
+    var _buf = buffer_create(16, buffer_grow, 1);
+    buffer_write(_buf, buffer_s32, _x);
+    buffer_write(_buf, buffer_s32, _y);
+    buffer_write(_buf, buffer_s32, _z);
+    
+    relay_broadcast_game_packet(PACKET_TYPE.CONTAINER_OPEN, _buf);
+    buffer_delete(_buf);
+}
+
+/// @desc Send container close to host
+function relay_send_container_close()
+{
+    if (global.relay == undefined || global.relay.role == RELAY_ROLE.NONE) return;
+    
+    var _buf = buffer_create(1, buffer_grow, 1);
+    relay_broadcast_game_packet(PACKET_TYPE.CONTAINER_CLOSE, _buf);
     buffer_delete(_buf);
 }

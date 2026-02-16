@@ -16,7 +16,7 @@ function inventory_container_close()
 
     if (global.network_role == RELAY_ROLE.CLIENT)
     {
-        network_send_container_close();
+        relay_send_container_close();
     }
     
     event_emit(new EventDataTileContainerClose(_x, _y, _z));
