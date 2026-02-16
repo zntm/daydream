@@ -444,7 +444,7 @@ function proglang_runtime_call(_callable, _args = [], _context = {}) {
     
     // 4. Built-in function wrapper (Struct)
     if (is_struct(_callable) && struct_exists(_callable, "function")) {
-        return _callable.function(_args, undefined);
+        return _callable[$ "function"](_args, undefined);
     }
     
     // 5. Raw Bytecode (Struct with .code)

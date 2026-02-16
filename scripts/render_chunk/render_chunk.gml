@@ -99,8 +99,6 @@ function render_chunk(_page, _position, _texel_width, _texel_height, _inst, _z)
             
             if (_data.is_foliage())
             {
-                var _index_xy = tile_index_xy(_x, _y);
-                
                 chunk_vertex_foliage(
                     _buffer,
                     _texel_width,

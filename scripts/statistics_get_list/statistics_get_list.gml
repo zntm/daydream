@@ -40,7 +40,7 @@ function statistics_get_list(_stats, _category)
             if (string_pos("distance", _key) == 1)
             {
                 var _blocks = _val / TILE_SIZE;
-                _val_str = $"{number_format_thousandths(_blocks, 2)} m";
+                _val_str = $"{number_format_thousandths(_blocks)} m";
             }
             
             array_push(_list, { name: _name, value: _val_str });

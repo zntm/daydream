@@ -23,9 +23,9 @@ function tile_meeting_swept(_x_start, _y_start, _x_end, _y_end, _z = CHUNK_DEPTH
             _collision_height = 8;
         }
     }
-    else if (_collision_height == undefined)
+    else
     {
-        _collision_height = _collision_width;
+        _collision_height ??= _collision_width;
     }
     
     var _xscale = abs(image_xscale);
