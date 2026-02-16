@@ -240,8 +240,58 @@ if (!variable_global_exists("message_history"))
 // Initialize command hint
 global.chat_command_hint = undefined;
 
-// Initialize the modular GUI system
-gui_init_modular();
+// Initialize deferred text rendering
+global.gui_deferred_text = [];
+
+// Initialize the new declarative UI system
+var _gui_scale = global.gui_scale * (global.gui_width / 960);
+var _logical_width = global.gui_width / _gui_scale;
+var _logical_height = global.gui_height / _gui_scale;
+
+global.gui_root = new UIElement(0, 0, _logical_width, _logical_height);
+
+// Load hotbar
+var _hotbar_def = ui_load("ui/hotbar.ui");
+global.ui_hotbar = ui_spawn(_hotbar_def, {
+    link: {},
+    parent: global.gui_root
+}, ["inventory_changed"]);
+global.gui_panel_hotbar_modular = global.ui_hotbar;
+
+// Load inventory
+var _inventory_def = ui_load("ui/inventory.ui");
+global.ui_inventory = ui_spawn(_inventory_def, {
+    link: {},
+    parent: global.gui_root
+}, ["inventory_changed"]);
+global.gui_panel_inventory_modular = global.ui_inventory;
+global.ui_inventory.visible = false;
+
+// Load crafting
+global.ui_crafting_def = ui_load("ui/crafting.ui");
+global.ui_crafting_slot_def = ui_load("ui/crafting_slot.ui");
+global.ui_crafting = ui_spawn(global.ui_crafting_def, {
+    link: {},
+    parent: global.gui_root
+});
+global.ui_crafting.visible = false;
+global.gui_panel_crafting_modular = global.ui_crafting.root_elements[0];
+
+// Initialize HUD components (refactored to UIElement)
+global.gui_panel_chat = new GUIChatHistory(8, _logical_height - 160, 300, 128, 8);
+global.gui_root.add_child(global.gui_panel_chat);
+
+global.gui_panel_choices = new GUIChoicePanel((_logical_width - 300) / 2, _logical_height / 2 - 50, 300);
+global.gui_panel_choices.visible = false;
+global.gui_root.add_child(global.gui_panel_choices);
+
+global.gui_panel_effects = new GUIEffectPanel(0, 0);
+global.gui_panel_effects.offset_x = 16;
+global.gui_panel_effects.offset_y = 16;
+global.gui_panel_effects.set_anchor("right", "bottom");
+global.gui_root.add_child(global.gui_panel_effects);
+
+show_debug_message("[Daydream] New UI system initialized");
 
 // Initialize network globals ONLY if not already in a session
 if (global.relay == undefined || global.relay.role == RELAY_ROLE.NONE)

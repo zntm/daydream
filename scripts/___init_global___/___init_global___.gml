@@ -213,3 +213,5 @@ global.attribute_player = new Attribute()
     .set_movement_speed(3.1)
     .set_regeneration_amount(1)
     .set_regeneration_time(1.0);
+
+global.gui_deferred_text = [];

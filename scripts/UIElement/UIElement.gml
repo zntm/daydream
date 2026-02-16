@@ -12,7 +12,24 @@ enum UI_LAYOUT {
 /// @param {Real} _y Y position  
 /// @param {Real} _width Element width
 /// @param {Real} _height Element height
-function UIElement(_x, _y, _width, _height) : GUIComponent(_x, _y, _width, _height) constructor {
+function UIElement(_x, _y, _width, _height) constructor {
+    // Core properties (formerly from GUIComponent)
+    x = _x;
+    y = _y;
+    width = _width;
+    height = _height;
+    
+    visible = true;
+    parent = undefined;
+    children = [];
+    
+    anchor_x = undefined; // "left", "center", "right"
+    anchor_y = undefined; // "top", "middle", "bottom"
+    offset_x = _x;
+    offset_y = _y;
+    
+    scale = 1.0; 
+
     // Element identification
     element_name = "";
     element_type = "";
@@ -105,6 +122,64 @@ function UIElement(_x, _y, _width, _height) : GUIComponent(_x, _y, _width, _heig
         }
     }
     
+    /// @desc Add a child element
+    /// @param {Struct.UIElement} _child Child element to add
+    static add_child = function(_child) {
+        _child.parent = self;
+        array_push(children, _child);
+        _child.recalculate_layout();
+        return _child;
+    }
+    
+    /// @desc Remove a child element
+    /// @param {Struct.UIElement} _child Child element to remove
+    static remove_child = function(_child) {
+        var _count = array_length(children);
+        for (var i = 0; i < _count; i++) {
+            if (children[i] == _child) {
+                array_delete(children, i, 1);
+                _child.parent = undefined;
+                recalculate_layout();
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    /// @desc Set anchors and update layout
+    static set_anchor = function(_anchor_x, _anchor_y) {
+        anchor_x = _anchor_x;
+        anchor_y = _anchor_y;
+        recalculate_layout();
+        return self;
+    }
+    
+    /// @desc Recalculate position based on anchors
+    static recalculate_layout = function() {
+        if (parent == undefined) exit;
+        
+        if (anchor_x != undefined) {
+            switch (anchor_x) {
+                case "left":   x = offset_x; break;
+                case "center": x = (parent.width / 2) - (width / 2) + offset_x; break;
+                case "right":  x = parent.width - width - offset_x; break;
+            }
+        }
+        
+        if (anchor_y != undefined) {
+            switch (anchor_y) {
+                case "top":    y = offset_y; break;
+                case "middle": y = (parent.height / 2) - (height / 2) + offset_y; break;
+                case "bottom": y = parent.height - height - offset_y; break;
+            }
+        }
+        
+        var _length = array_length(children);
+        for (var i = 0; i < _length; ++i) {
+            children[i].recalculate_layout();
+        }
+    }
+
     /// @desc Set the link context for data binding
     /// @param {Struct} _context Link context from Proglang
     static set_link_context = function(_context) {
@@ -281,6 +356,11 @@ function UIElement(_x, _y, _width, _height) : GUIComponent(_x, _y, _width, _heig
         for (var i = 0; i < _child_count; i++) {
             children[i].update();
         }
+    }
+    
+    /// @desc Custom drawing for the element. Overridden by subclasses.
+    static draw_content = function() {
+        // Default implementation does nothing
     }
     
     static draw = function() {

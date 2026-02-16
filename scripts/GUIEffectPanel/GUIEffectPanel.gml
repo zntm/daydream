@@ -1,4 +1,4 @@
-function GUIEffectPanel(_x, _y) : GUIComponent(_x, _y, 0, 16) constructor
+function GUIEffectPanel(_x, _y) : UIElement(_x, _y, 0, 16) constructor
 {
     // Effect icon size (16x16 with 2px spacing)
     static ICON_SIZE = 16;
@@ -51,18 +51,7 @@ function GUIEffectPanel(_x, _y) : GUIComponent(_x, _y, 0, 16) constructor
                 // Effect is not active, remove icon if exists
                 if (effect_icons[$ _effect_id] != undefined)
                 {
-                    var _icon = effect_icons[$ _effect_id];
-                    
-                    // Remove from children array
-                    var _children_length = array_length(children);
-                    for (var j = 0; j < _children_length; ++j)
-                    {
-                        if (children[j] == _icon)
-                        {
-                            array_delete(children, j, 1);
-                            break;
-                        }
-                    }
+                    remove_child(_icon);
                     
                     delete effect_icons[$ _effect_id];
                     effect_icons[$ _effect_id] = undefined;
@@ -74,10 +63,11 @@ function GUIEffectPanel(_x, _y) : GUIComponent(_x, _y, 0, 16) constructor
         width = _active_count * (ICON_SIZE + ICON_SPACING);
         
         // Update children
-        var _length = array_length(children);
-        for (var i = 0; i < _length; ++i)
-        {
+        var _child_count = array_length(children);
+        for (var i = 0; i < _child_count; i++) {
             children[i].update();
         }
+        
+        update_bindings();
     }
 }

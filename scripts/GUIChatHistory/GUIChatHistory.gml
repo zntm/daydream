@@ -5,7 +5,7 @@
 /// @param {Real} _height Component height
 /// @param {Real} _max_messages Maximum number of messages to display
 
-function GUIChatHistory(_x, _y, _width, _height, _max_messages = 8) : GUIComponent(_x, _y, _width, _height) constructor
+function GUIChatHistory(_x, _y, _width, _height, _max_messages = 8) : UIElement(_x, _y, _width, _height) constructor
 {
     max_messages = _max_messages;
     line_height = 10;
@@ -15,9 +15,9 @@ function GUIChatHistory(_x, _y, _width, _height, _max_messages = 8) : GUICompone
         var _abs_x = get_absolute_x();
         var _abs_y = get_absolute_y();
         
-        var _gui_scale = global.gui_scale;
-        var _base_scale_x = _gui_scale * (global.gui_width / 960);
-        var _base_scale_y = _gui_scale * (global.gui_height / 540);
+        var _base_scale = ui_get_base_scale();
+        var _base_scale_x = _base_scale.x;
+        var _base_scale_y = _base_scale.y;
         
         var _scale_x = _base_scale_x * scale;
         var _scale_y = _base_scale_y * scale;
@@ -127,6 +127,8 @@ function GUIChatHistory(_x, _y, _width, _height, _max_messages = 8) : GUICompone
     
     static update = function()
     {
+        if (!visible) return;
+        
         // Update chat timers
         var _chat_history = global.chat_history;
         var _length = array_length(_chat_history);
@@ -137,5 +139,13 @@ function GUIChatHistory(_x, _y, _width, _height, _max_messages = 8) : GUICompone
             var _chat = _chat_history[i];
             _chat.add_timer(-_delta * GAME_TICK);
         }
+        
+        // Update children
+        var _child_count = array_length(children);
+        for (var i = 0; i < _child_count; i++) {
+            children[i].update();
+        }
+        
+        update_bindings();
     }
 }

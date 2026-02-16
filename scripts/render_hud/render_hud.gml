@@ -10,18 +10,18 @@ function render_hud(_gui_width, _gui_height)
     
     if (_hp > 0) && (is_opened & IS_OPENED_BOOLEAN.GUI) && !(is_opened & IS_OPENED_BOOLEAN.MENU)
     {
-        // Note: Hotbar and inventory rendering now handled by modular GUI system
-        // (GUISlot components in global.gui_root)
+        // Note: Hotbar and inventory rendering now handled by declarative UI system
+        // (UIElement objects in global.gui_root)
         
-        // Craftable panel now handled by modular GUI system
+        // Craftable panel now handled by declarative UI system
         
-        // HP bar rendering now handled by modular GUI (see gui_init_modular)
+        // HP bar rendering now handled by declarative UI (see stat_bars.ui)
         
         var _gui_inventory = global.gui_inventory;
         
         if (is_opened & IS_OPENED_BOOLEAN.INVENTORY)
         {
-            // Craftable panel rendering handled by modular GUI
+            // Craftable panel rendering handled by declarative UI
             
             // Tooltip rendering
             var _inst = global.inventory_selected_hover;
@@ -64,6 +64,6 @@ function render_hud(_gui_width, _gui_height)
                 }
             }
         }
-        // Note: Hotbar rendering when inventory is closed is now handled by modular GUI
+        // Note: Hotbar rendering when inventory is closed is now handled by declarative UI
     }
 }

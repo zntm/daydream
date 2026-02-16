@@ -3,7 +3,7 @@
 /// @param {Real} _y Y position relative to parent
 /// @param {String} _effect_id Effect ID (e.g., "phantasia:poison")
 
-function GUIEffectIcon(_x, _y, _effect_id) : GUIComponent(_x, _y, 16, 16) constructor
+function GUIEffectIcon(_x, _y, _effect_id) : UIElement(_x, _y, 16, 16) constructor
 {
     effect_id = _effect_id;
     
@@ -15,12 +15,11 @@ function GUIEffectIcon(_x, _y, _effect_id) : GUIComponent(_x, _y, 16, 16) constr
         var _abs_x = get_absolute_x();
         var _abs_y = get_absolute_y();
         
-        // Base GUI scale from resolution
-        var _gui_scale = global.gui_scale;
-        var _base_scale_x = _gui_scale * (global.gui_width / 960);
-        var _base_scale_y = _gui_scale * (global.gui_height / 540);
+        var _base_scale = ui_get_base_scale();
+        var _base_scale_x = _base_scale.x;
+        var _base_scale_y = _base_scale.y;
         
-        // Apply component scale
+        // Apply element scale
         var _scale_x = _base_scale_x * scale;
         var _scale_y = _base_scale_y * scale;
         
@@ -99,11 +98,8 @@ function GUIEffectIcon(_x, _y, _effect_id) : GUIComponent(_x, _y, 16, 16) constr
             });
         }
         
-        // Tooltip logic
         // As per request, copying inventory tooltip placement logic (manual scaling)
-        // CRITICAL: Use window_get_width() directly as global.window_width may not be updated on resize
-        var _window_width  = window_get_width();
-        var _window_height = window_get_height();
+        var _base_scale = ui_get_base_scale();
         var _gui_width = global.gui_width;
         var _gui_height = global.gui_height;
         
