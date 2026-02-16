@@ -424,6 +424,20 @@ if (global.gui_root != undefined)
         ui_update(global.ui_inventory);
     }
     ui_clear_events();
+    
+    /* update dynamically spawned UI instances (blueprints, etc.) */
+    if (variable_global_exists("ui_instances"))
+    {
+        var _ui_keys = struct_get_names(global.ui_instances);
+        var _ui_count = array_length(_ui_keys);
+        
+        for (var i = _ui_count - 1; i >= 0; --i)
+        {
+            var _ui_inst = global.ui_instances[$ _ui_keys[i]];
+            
+            if (_ui_inst != undefined) ui_update(_ui_inst);
+        }
+    }
 }
 
 // Chat panel visibility

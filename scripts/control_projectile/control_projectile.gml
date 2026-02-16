@@ -1,14 +1,14 @@
 /// @desc Projectile control using new physics system
 /// @param {Real} _dt Delta time
 
-function control_projectile()
+function control_projectile(_dt = 1.0)
 {
     // --- REMOTE PROJECTILES ON CLIENT (INTERPOLATION) ---
     if (global.network_role == NETWORK_ROLE.CLIENT)
     {
         if (variable_instance_exists(self, "interp_start_x"))
         {
-            interp_timer += 1 / GAME_TICK;
+            interp_timer += _dt / GAME_TICK;
             var _t = clamp(interp_timer / interp_duration, 0, 1);
             
             x = lerp(interp_start_x, interp_target_x, _t);
@@ -23,7 +23,7 @@ function control_projectile()
         exit;
     }
     
-    timer_life -= 1 / GAME_TICK;
+    timer_life -= _dt / GAME_TICK;
     
     if (timer_life <= 0)
     {
@@ -37,11 +37,10 @@ function control_projectile()
     var _particles = _data.get_particles();
     if (_particles != undefined)
     {
-        var _len = array_length(_particles);
-        for (var i = 0; i < _len; i++)
+        for (var i = array_length(_particles) - 1; i >= 0; i--)
         {
             var _p = _particles[i];
-            if (chance(_p[$ "frequency"] ?? 0.1))
+            if (chance((_p[$ "frequency"] ?? 0.1) * _dt))
             {
                 spawn_particle(x + (_p[$ "offset_x"] ?? 0), y + (_p[$ "offset_y"] ?? 0), _p.id);
             }
@@ -63,8 +62,7 @@ function control_projectile()
             var _on_hit_entity = _data.get_on_hit_entity();
             if (_on_hit_entity != undefined)
             {
-                var _len = array_length(_on_hit_entity);
-                for (var i = 0; i < _len; i++)
+                for (var i = array_length(_on_hit_entity) - 1; i >= 0; i--)
                 {
                     function_execute(_on_hit_entity[i], x, y, CHUNK_DEPTH_DEFAULT, image_xscale, image_yscale, id, _inst);
                 }
@@ -73,8 +71,7 @@ function control_projectile()
             var _on_land = _data.get_on_land();
             if (_on_land != undefined)
             {
-                var _len = array_length(_on_land);
-                for (var i = 0; i < _len; i++)
+                for (var i = array_length(_on_land) - 1; i >= 0; i--)
                 {
                     function_execute(_on_land[i], x, y, CHUNK_DEPTH_DEFAULT, image_xscale, image_yscale, id, _inst);
                 }
@@ -98,7 +95,7 @@ function control_projectile()
         var _gravity = attribute.get_gravity();
         if (_gravity != 0)
         {
-            physics_body.vel_y += _gravity / 2;
+            physics_body.vel_y += (_gravity * _dt) / 2;
         }
         
         // Resolve collisions
@@ -108,7 +105,7 @@ function control_projectile()
         // Apply gravity (Verlet integration part 2)
         if (_gravity != 0)
         {
-            physics_body.vel_y += _gravity / 2;
+            physics_body.vel_y += (_gravity * _dt) / 2;
         }
         
         physics_body.sync_to_instance(id);
@@ -122,8 +119,7 @@ function control_projectile()
             var _on_hit_tile = _data.get_on_hit_tile();
             if (_on_hit_tile != undefined)
             {
-                var _len = array_length(_on_hit_tile);
-                for (var i = 0; i < _len; i++)
+                for (var i = array_length(_on_hit_tile) - 1; i >= 0; i--)
                 {
                     function_execute(_on_hit_tile[i], x, y, CHUNK_DEPTH_DEFAULT, image_xscale, image_yscale, id, undefined);
                 }
@@ -132,8 +128,7 @@ function control_projectile()
             var _on_land = _data.get_on_land();
             if (_on_land != undefined)
             {
-                var _len = array_length(_on_land);
-                for (var i = 0; i < _len; i++)
+                for (var i = array_length(_on_land) - 1; i >= 0; i--)
                 {
                     function_execute(_on_land[i], x, y, CHUNK_DEPTH_DEFAULT, image_xscale, image_yscale, id, undefined);
                 }

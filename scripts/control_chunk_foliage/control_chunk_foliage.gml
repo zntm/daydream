@@ -34,11 +34,11 @@ function control_chunk_foliage(_dt)
         var _chunk_skew = _c.chunk_skew;
         var _chunk_skew_to = _c.chunk_skew_to;
         
-        for (var j = 0; j < CHUNK_SIZE; ++j)
+        for (var j = CHUNK_SIZE - 1; j >= 0; --j)
         {
             var _covered = _chunk_covered[j];
             
-            for (var k = 0; k < CHUNK_SIZE; ++k)
+            for (var k = CHUNK_SIZE - 1; k >= 0; --k)
             {
                 var _skew_idx = (k << CHUNK_SIZE_BIT) | j;
                 

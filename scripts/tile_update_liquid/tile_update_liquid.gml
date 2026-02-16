@@ -1,177 +1,306 @@
-function tile_update_liquid(_x, _y, _z)
+#macro LIQUID_LEVEL_MAX 8
+#macro LIQUID_FLOW_TICK_DELAY 8
+
+/* complete liquid flow simulation — replaces flow.daydream */
+function liquid_flow(_x, _y, _z, _parameter = {})
 {
-    var _inst = chunk_map_get_by_tile(_x, _y);
+    var _tile = tile_get(_x, _y, _z);
     
-    if (!instance_exists(_inst)) exit;
+    if (_tile == TILE_EMPTY) return;
     
-    // Check if we have liquid at this position
-    var _index = tile_index_xyz(_x, _y, _z);
-    var _tile = _inst.chunk[_index];
+    var _id    = _tile.get_id();
+    var _level = _tile.get_component("level") ?? LIQUID_LEVEL_MAX;
+    var _flow_dir = _tile.get_component("flow_direction") ?? 0;
     
-    // If empty or not liquid, check surroundings to see if liquid should flow INTO this tile
-    if (_tile == TILE_EMPTY)
+    var _tick_delay = _parameter[$ "tick_delay"] ?? LIQUID_FLOW_TICK_DELAY;
+    
+    /* resolve fluid collision table (water+lava=stone etc.) */
+    var _fluid_collisions = _parameter[$ "fluid_collisions"];
+    
+    if (_fluid_collisions == undefined)
     {
-        // Check ABOVE
-        var _inst_above = chunk_map_get_by_tile(_x, _y - 1);
-        if (instance_exists(_inst_above))
-        {
-            var _index_above = tile_index_xyz(_x, _y - 1, _z);
-            var _tile_above = _inst_above.chunk[_index_above];
-            
-            if (_tile_above != TILE_EMPTY)
-            {
-                var _data_above = global.item_data[$ _tile_above.get_id()];
-                if (_data_above.is_liquid())
-                {
-                    // Liquid falls down - inherit parent level
-                    var _source_level = _tile_above.get_component("level") ?? 8;
-                    tile_place(_x, _y, _z, new Tile(_tile_above.get_id()).set_component("level", _source_level));
-                    tile_place(_x, _y - 1, _z, TILE_EMPTY); // Conservation: Clear source
-                    tile_update(_x, _y - 1, _z);
-                    tile_update(_x, _y, _z);
-                    return;
-                }
-            }
-        }
+        if (_id == "phantasia:water")
+            _fluid_collisions = [{ result_id: "phantasia:stone", liquid_id: "phantasia:lava" }];
+        else if (_id == "phantasia:lava")
+            _fluid_collisions = [{ result_id: "phantasia:stone", liquid_id: "phantasia:water" }];
+        else
+            _fluid_collisions = [];
         
-        // Check SIDES (slow spread)
-        var _spread = false;
-        var _liquid_id = undefined;
-        var _max_level = 0;
-        
-        var _check_side = function(_xs, _ys, _zs)
-        {
-            var _is = chunk_map_get_by_tile(_xs, _ys);
-            if (!instance_exists(_is)) return undefined;
-            
-            var _index = tile_index_xyz(_xs, _ys, _zs);
-            var _t = _is.chunk[_index];
-            
-            if (_t == TILE_EMPTY) return undefined;
-             
-            var _d = global.item_data[$ _t.get_id()];
-            if (!_d.is_liquid()) return undefined;
-            
-            return {
-                id: _t.get_id(),
-                level: _t.get_component("level") ?? 8
-            }
-        }
-        
-        // Left
-        var _l = _check_side(_x - 1, _y, _z);
-        if (_l != undefined && _l.level > 1) { _spread = true; _liquid_id = _l.id; _max_level = max(_max_level, _l.level); }
-        
-        // Right
-        var _r = _check_side(_x + 1, _y, _z);
-        if (_r != undefined && _r.level > 1) { _spread = true; _liquid_id = _r.id; _max_level = max(_max_level, _r.level); }
-        
-        if (_spread)
-        {
-            // Split liquid logic for conservation
-            // Identify which neighbor provided the max level (prioritize one if both equal)
-            var _source_is_left = (_l != undefined && _l.level == _max_level);
-            var _source_is_right = (_r != undefined && _r.level == _max_level);
-            // If both, pick random or fixed? Fixed left for stability.
-            if (_source_is_left && _source_is_right) _source_is_right = false;
-            
-            var _source_x = _source_is_left ? (_x - 1) : (_x + 1);
-            
-            // Calculate split
-            var _new_level = _max_level div 2;
-            var _rem_level = _max_level - _new_level;
-            
-            if (_new_level > 0)
-            {
-                // Update Source Tile (Reduce level)
-                tile_place(_source_x, _y, _z, new Tile(_liquid_id).set_component("level", _rem_level));
-                
-                // Place New Liquid (Half level)
-                tile_place(_x, _y, _z, new Tile(_liquid_id).set_component("level", _new_level));
-                
-                tile_update(_source_x, _y, _z);
-                tile_update(_x, _y, _z);
-            }
-        }
-        
+        _parameter[$ "fluid_collisions"] = _fluid_collisions;
+        _parameter[$ "tick_delay"] = _tick_delay;
+    }
+    
+    /* empty tile — remove */
+    if (_level <= 0)
+    {
+        tile_place(_x, _y, _z, TILE_EMPTY);
         return;
     }
     
-    var _data = global.item_data[$ _tile.get_id()];
+    var _flowed = false;
+    var _new_positions = [];
     
-    if (_data == undefined) || (!_data.is_liquid()) return;
+    /* --- phase 1: gravity (flow down) --- */
     
-    // If IS liquid, try to flow DOWN or SIDES
+    var _solid_down = tile_get(_x, _y + 1, CHUNK_DEPTH_DEFAULT);
     
-    // Flow DOWN
-    var _inst_below = chunk_map_get_by_tile(_x, _y + 1);
-    if (instance_exists(_inst_below))
+    if (_solid_down == TILE_EMPTY)
     {
-        var _index_below = tile_index_xyz(_x, _y + 1, _z);
-        var _tile_below = _inst_below.chunk[_index_below];
+        var _tile_down = tile_get(_x, _y + 1, _z);
         
-        if (_tile_below == TILE_EMPTY)
+        if (_tile_down == TILE_EMPTY)
         {
-            // Flow down - inherit parent level
-            var _source_level = _tile.get_component("level") ?? 8;
-            tile_place(_x, _y + 1, _z, new Tile(_tile.get_id()).set_component("level", _source_level));
-            tile_place(_x, _y, _z, TILE_EMPTY); // Conservation: Clear self (Move)
+            /* empty below — move entire tile down */
+            var _new_tile = new Tile(_id);
+            _new_tile.set_component("level", _level);
+            _new_tile.set_component("flow_direction", _flow_dir);
+            tile_place(_x, _y + 1, _z, _new_tile);
+            tile_place(_x, _y, _z, TILE_EMPTY);
+            array_push(_new_positions, { x: _x, y: _y + 1, z: _z });
+            _flowed = true;
+            _level = 0;
+        }
+        else if (_tile_down.get_id() == _id)
+        {
+            /* same liquid below — transfer level */
+            var _level_down = _tile_down.get_component("level") ?? 0;
+            var _space_down = LIQUID_LEVEL_MAX - _level_down;
             
-            tile_update(_x, _y + 1, _z);
-            tile_update(_x, _y, _z);
-            return;
+            if (_space_down > 0)
+            {
+                var _transfer = min(_level, _space_down);
+                _level -= _transfer;
+                _tile_down.set_component("level", _level_down + _transfer);
+                
+                if (_level <= 0)
+                    tile_place(_x, _y, _z, TILE_EMPTY);
+                else
+                    _tile.set_component("level", _level);
+                
+                array_push(_new_positions, { x: _x, y: _y + 1, z: _z });
+                _flowed = true;
+            }
+        }
+        else
+        {
+            /* different liquid below — check fluid collision */
+            var _interaction = liquid_flow_check_collision(_fluid_collisions, _tile_down.get_id());
+            
+            if (_interaction != undefined)
+            {
+                tile_place(_x, _y + 1, _z, new Tile(_interaction));
+            }
         }
     }
     
-    // Flow SIDES if supported below
-    // (Simple logic: if grounded, spread)
-    var _grounded = false;
-    if (instance_exists(_inst_below))
+    /* --- phase 2: diagonal flow (down-left / down-right) --- */
+    
+    if (!_flowed && _level > 0)
     {
-        var _index_below = tile_index_xyz(_x, _y + 1, _z);
-        var _tile_below = _inst_below.chunk[_index_below];
-        if (_tile_below != TILE_EMPTY)
+        var _diag_dirs = (irandom(1) == 0) ? [-1, 1] : [1, -1];
+        
+        for (var i = 0; i < 2; ++i)
         {
-            var _data_below = global.item_data[$ _tile_below.get_id()];
-            if (_data_below.has_type(ITEM_TYPE_BIT.SOLID))
+            var _dx = _diag_dirs[i];
+            var _diag_x = _x + _dx;
+            var _diag_y = _y + 1;
+            
+            var _solid_side = tile_get(_diag_x, _y, CHUNK_DEPTH_DEFAULT);
+            var _solid_diag = tile_get(_diag_x, _diag_y, CHUNK_DEPTH_DEFAULT);
+            
+            if (_solid_side != TILE_EMPTY) || (_solid_diag != TILE_EMPTY) continue;
+            
+            var _tile_diag = tile_get(_diag_x, _diag_y, _z);
+            
+            if (_tile_diag == TILE_EMPTY)
             {
-                _grounded = true;
+                /* empty diagonal — move entire tile */
+                var _new_tile = new Tile(_id);
+                _new_tile.set_component("level", _level);
+                _new_tile.set_component("flow_direction", _dx);
+                tile_place(_diag_x, _diag_y, _z, _new_tile);
+                tile_place(_x, _y, _z, TILE_EMPTY);
+                array_push(_new_positions, { x: _diag_x, y: _diag_y, z: _z });
+                _flowed = true;
+                _level = 0;
+                break;
             }
-            else if (_data_below.is_liquid())
+            else if (_tile_diag.get_id() == _id)
             {
-                // If liquid below is full, we are "grounded" on it? No.
-                // If liquid below is not full, it should be executing its own flow.
+                /* same liquid diagonal — transfer */
+                var _level_diag = _tile_diag.get_component("level") ?? 0;
+                var _space_diag = LIQUID_LEVEL_MAX - _level_diag;
+                
+                if (_space_diag > 0)
+                {
+                    var _transfer = min(_level, _space_diag);
+                    _level -= _transfer;
+                    _tile_diag.set_component("level", _level_diag + _transfer);
+                    _tile.set_component("level", _level);
+                    
+                    if (_level <= 0)
+                        tile_place(_x, _y, _z, TILE_EMPTY);
+                    
+                    array_push(_new_positions, { x: _diag_x, y: _diag_y, z: _z });
+                    _flowed = true;
+                    break;
+                }
+            }
+            else
+            {
+                var _interaction = liquid_flow_check_collision(_fluid_collisions, _tile_diag.get_id());
+                
+                if (_interaction != undefined)
+                    tile_place(_diag_x, _diag_y, _z, new Tile(_interaction));
             }
         }
     }
     
-    if (_grounded)
+    /* --- phase 3: horizontal spreading --- */
+    
+    if (!_flowed && _level > 0)
     {
-        var _level = _tile.get_component("level") ?? 8;
+        var _dirs = (_flow_dir != 0)
+            ? [_flow_dir]
+            : ((irandom(1) == 0) ? [1, -1] : [-1, 1]);
         
-        if (_level > 1)
+        var _blocked = true;
+        
+        for (var i = array_length(_dirs) - 1; i >= 0; --i)
         {
-            // Try Left
-            var _inst_left = chunk_map_get_by_tile(_x - 1, _y);
-            if (instance_exists(_inst_left))
+            var _dx = _dirs[i];
+            var _tx = _x + _dx;
+            
+            var _solid_target = tile_get(_tx, _y, CHUNK_DEPTH_DEFAULT);
+            
+            if (_solid_target != TILE_EMPTY) continue;
+            
+            var _target = tile_get(_tx, _y, _z);
+            var _can_flow = false;
+            var _target_level = 0;
+            
+            if (_target == TILE_EMPTY)
             {
-                var _index_left = tile_index_xyz(_x - 1, _y, _z);
-                if (_inst_left.chunk[_index_left] == TILE_EMPTY)
+                _can_flow = true;
+            }
+            else if (_target.get_id() == _id)
+            {
+                _target_level = _target.get_component("level") ?? 0;
+                
+                if (_target_level < _level - 1)
+                    _can_flow = true;
+            }
+            else
+            {
+                var _interaction = liquid_flow_check_collision(_fluid_collisions, _target.get_id());
+                
+                if (_interaction != undefined)
                 {
-                    tile_update_liquid(_x - 1, _y, _z); // Trigger check on empty neighbor
+                    tile_place(_tx, _y, _z, new Tile(_interaction));
+                    _blocked = true;
+                    continue;
                 }
             }
             
-            // Try Right
-            var _inst_right = chunk_map_get_by_tile(_x + 1, _y);
-            if (instance_exists(_inst_right))
+            if (_can_flow)
             {
-                var _index_right = tile_index_xyz(_x + 1, _y, _z);
-                if (_inst_right.chunk[_index_right] == TILE_EMPTY)
+                _blocked = false;
+                var _total = _level + _target_level;
+                var _new_level_target = _total div 2;
+                var _transfer = _new_level_target - _target_level;
+                
+                if (_transfer > 0)
                 {
-                    tile_update_liquid(_x + 1, _y, _z); // Trigger check on empty neighbor
+                    _level -= _transfer;
+                    _tile.set_component("level", _level);
+                    
+                    if (_level > 0) _tile.set_component("flow_direction", _dx);
+                    
+                    if (_target == TILE_EMPTY)
+                    {
+                        _target = new Tile(_id);
+                        tile_place(_tx, _y, _z, _target);
+                    }
+                    
+                    _target.set_component("level", _target_level + _transfer);
+                    _target.set_component("flow_direction", _dx);
+                    
+                    array_push(_new_positions, { x: _tx, y: _y, z: _z });
+                    _flowed = true;
+                    
+                    if (_level <= 0)
+                        tile_place(_x, _y, _z, TILE_EMPTY);
                 }
+                
+                break;
             }
         }
+        
+        /* reverse flow direction when blocked */
+        if (_blocked && _level > 0 && _flow_dir != 0)
+        {
+            _tile.set_component("flow_direction", -_flow_dir);
+        }
+    }
+    
+    /* --- schedule follow-up ticks --- */
+    
+    for (var i = array_length(_new_positions) - 1; i >= 0; --i)
+    {
+        var _pos = _new_positions[i];
+        liquid_flow_schedule(_pos.x, _pos.y, _pos.z, _parameter);
+    }
+    
+    if (_level > 0)
+    {
+        liquid_flow_schedule(_x, _y, _z, _parameter);
+    }
+}
+
+/* check fluid collision table — returns result tile id or undefined */
+function liquid_flow_check_collision(_collisions, _other_id)
+{
+    for (var i = array_length(_collisions) - 1; i >= 0; --i)
+    {
+        if (_collisions[i].liquid_id == _other_id)
+            return _collisions[i].result_id;
+    }
+    
+    return undefined;
+}
+
+/* thin wrapper called from tile_update.gml on block break */
+function tile_update_liquid(_x, _y, _z)
+{
+    var _item_data = global.item_data;
+    
+    /* check neighbours for liquid that should flow into this position */
+    
+    /* above */
+    var _above = tile_get(_x, _y - 1, CHUNK_DEPTH_LIQUID);
+    if (_above != TILE_EMPTY && _item_data[$ _above.get_id()].is_liquid())
+    {
+        liquid_flow_schedule(_x, _y - 1, CHUNK_DEPTH_LIQUID);
+    }
+    
+    /* left */
+    var _left = tile_get(_x - 1, _y, CHUNK_DEPTH_LIQUID);
+    if (_left != TILE_EMPTY && _item_data[$ _left.get_id()].is_liquid())
+    {
+        liquid_flow_schedule(_x - 1, _y, CHUNK_DEPTH_LIQUID);
+    }
+    
+    /* right */
+    var _right = tile_get(_x + 1, _y, CHUNK_DEPTH_LIQUID);
+    if (_right != TILE_EMPTY && _item_data[$ _right.get_id()].is_liquid())
+    {
+        liquid_flow_schedule(_x + 1, _y, CHUNK_DEPTH_LIQUID);
+    }
+    
+    /* below */
+    var _below = tile_get(_x, _y + 1, CHUNK_DEPTH_LIQUID);
+    if (_below != TILE_EMPTY && _item_data[$ _below.get_id()].is_liquid())
+    {
+        liquid_flow_schedule(_x, _y + 1, CHUNK_DEPTH_LIQUID);
     }
 }

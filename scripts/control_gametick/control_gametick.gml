@@ -98,7 +98,7 @@ function control_gametick(_delta_time)
             }
         }
         
-        for (var i = 0; i < chunk_in_view_length; ++i)
+        for (var i = chunk_in_view_length - 1; i >= 0; --i)
         {
             var _c = chunk_in_view[i];
             
@@ -174,7 +174,7 @@ function control_gametick(_delta_time)
         {
             with (obj_Projectile)
             {
-                control_projectile();
+                control_projectile(1.0);
             }
         }
         

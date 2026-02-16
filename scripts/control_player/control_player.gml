@@ -39,7 +39,9 @@ function control_player()
     if (is_local)
     {
         // Stamina
-        var _is_sprinting = input_state.sprint_held && (input_state.move_x != 0);
+        var _wall_blocked = (input_state.move_x < 0 && physics_body.collision.wall_left)
+                          || (input_state.move_x > 0 && physics_body.collision.wall_right);
+        var _is_sprinting = input_state.sprint_held && (input_state.move_x != 0) && !_wall_blocked;
         
         if (_is_sprinting)
         {
@@ -110,7 +112,7 @@ function control_player()
                     
                     if (_on_event != undefined)
                     {
-                        for (var j = 0; j < _on_event_length; ++j)
+                        for (var j = _on_event_length - 1; j >= 0; --j)
                         {
                             function_execute(_on_event[j], x, y, CHUNK_DEPTH_DEFAULT, sign(image_xscale), sign(image_yscale), id, _item);
                         }
@@ -125,7 +127,7 @@ function control_player()
                     
                     if (_on_event != undefined)
                     {
-                        for (var j = 0; j < _on_event_length; ++j)
+                        for (var j = _on_event_length - 1; j >= 0; --j)
                         {
                             function_execute(_on_event[j], x, y, CHUNK_DEPTH_DEFAULT, sign(image_xscale), sign(image_yscale), id, _item);
                         }
@@ -139,7 +141,7 @@ function control_player()
                     
                     if (_on_event != undefined)
                     {
-                        for (var j = 0; j < _on_event_length; ++j)
+                        for (var j = _on_event_length - 1; j >= 0; --j)
                         {
                             function_execute(_on_event[j], x, y, CHUNK_DEPTH_DEFAULT, sign(image_xscale), sign(image_yscale), id, _item);
                         }
@@ -157,7 +159,7 @@ function control_player()
             // Check equipped armor and accessories for on_double_horizontal_move
             var _armor_slots = array_concat([_inv_target.armor_helmet[0], _inv_target.armor_breastplate[0], _inv_target.armor_leggings[0]], _inv_target.accessory);
             
-            for (var k = 0; k < array_length(_armor_slots); ++k)
+            for (var k = array_length(_armor_slots) - 1; k >= 0; --k)
             {
                 var _armor_item = _armor_slots[k];
                 if (_armor_item == INVENTORY_EMPTY) continue;
@@ -187,7 +189,7 @@ function control_player()
             // Check equipped armor and accessories for on_double_vertical_move
             var _armor_slots = array_concat([_inv_target.armor_helmet[0], _inv_target.armor_breastplate[0], _inv_target.armor_leggings[0]], _inv_target.accessory);
             
-            for (var k = 0; k < array_length(_armor_slots); ++k)
+            for (var k = array_length(_armor_slots) - 1; k >= 0; --k)
             {
                 var _armor_item = _armor_slots[k];
                 if (_armor_item == INVENTORY_EMPTY) continue;
@@ -408,7 +410,7 @@ function control_player()
                     
                     if (_on_trigger != undefined)
                     {
-                        for (var j = 0; j < _on_trigger_length; ++j)
+                        for (var j = _on_trigger_length - 1; j >= 0; --j)
                         {
                             function_execute(_on_trigger[j], x, y, CHUNK_DEPTH_DEFAULT, sign(image_xscale), sign(image_yscale), id, _item);
                         }
@@ -573,7 +575,7 @@ function control_player()
             var _on_attack = _data.get_on_attack();
             var _on_attack_length = _data.get_on_attack_length();
             
-            for (var j = 0; j < _on_attack_length; ++j)
+            for (var j = _on_attack_length - 1; j >= 0; --j)
             {
                 function_execute(_on_attack[j], round(x / TILE_SIZE), round(y / TILE_SIZE), CHUNK_DEPTH_DEFAULT, sign(image_xscale), sign(image_yscale), id, _item);
             }
@@ -622,7 +624,7 @@ function control_player()
                         
                         if (_on_trigger != undefined)
                         {
-                            for (var j = 0; j < _on_trigger_length; ++j)
+                            for (var j = _on_trigger_length - 1; j >= 0; --j)
                             {
                                 function_execute(_on_trigger[j], x, y, CHUNK_DEPTH_DEFAULT, sign(image_xscale), sign(image_yscale), id, _item);
                             }

@@ -89,68 +89,86 @@ render_gui_vignette(_player_y, _gui_width, _gui_height);
 var _hp     = _lp.hp;
 var _hp_max = _lp.hp_max;
 
-render_hud(_gui_width, _gui_height);
-
-// Draw modular GUI (including parented declarative UI instances)
-if (global.gui_root != undefined)
+/* only draw HUD elements when GUI is toggled on */
+if (is_opened & IS_OPENED_BOOLEAN.GUI)
 {
-    global.gui_root.draw();
-}
-
-// Draw any standalone declarative UI instances (not parented to gui_root)
-if (variable_global_exists("ui_hotbar") && global.ui_hotbar != undefined && array_length(global.ui_hotbar.root_elements) > 0 && global.ui_hotbar.root_elements[0].parent == undefined) {
-    ui_draw(global.ui_hotbar);
-}
-if (variable_global_exists("ui_inventory") && global.ui_inventory != undefined && global.ui_inventory.visible && array_length(global.ui_inventory.root_elements) > 0 && global.ui_inventory.root_elements[0].parent == undefined) {
-    ui_draw(global.ui_inventory);
-}
-
-// Draw deferred text
-var _deferred_text_length = array_length(global.gui_deferred_text);
-
-if (_deferred_text_length > 0)
-{
-    draw_set_halign(fa_right);
-    draw_set_valign(fa_bottom);
+    render_hud(_gui_width, _gui_height);
     
-    for (var i = 0; i < _deferred_text_length; ++i)
+    // Draw modular GUI (including parented declarative UI instances)
+    if (global.gui_root != undefined)
     {
-        var _ = global.gui_deferred_text[i];
-        
-        if (struct_exists(_, "halign")) draw_set_halign(_.halign);
-        else draw_set_halign(fa_right);
-        
-        if (struct_exists(_, "valign")) draw_set_valign(_.valign);
-        else draw_set_valign(fa_bottom);
-        
-        render_text(_.x, _.y, _.text, _.xscale, _.yscale, 0, _.colour, _.alpha);
+        global.gui_root.draw();
     }
     
-    draw_set_halign(fa_left);
-    draw_set_valign(fa_top);
+    // Draw any standalone declarative UI instances (not parented to gui_root)
+    if (variable_global_exists("ui_hotbar") && global.ui_hotbar != undefined && array_length(global.ui_hotbar.root_elements) > 0 && global.ui_hotbar.root_elements[0].parent == undefined) {
+        ui_draw(global.ui_hotbar);
+    }
+    if (variable_global_exists("ui_inventory") && global.ui_inventory != undefined && global.ui_inventory.visible && array_length(global.ui_inventory.root_elements) > 0 && global.ui_inventory.root_elements[0].parent == undefined) {
+        ui_draw(global.ui_inventory);
+    }
     
-    array_resize(global.gui_deferred_text, 0);
-}
-
-// Display held item name
-if !(is_opened & IS_OPENED_BOOLEAN.INVENTORY)
-{
-    var _item = global.inventory.base[global.inventory_selected_hotbar];
-    
-    if (_item != INVENTORY_EMPTY)
+    /* draw dynamically spawned UI instances (blueprints, etc.) */
+    if (variable_global_exists("ui_instances"))
     {
-        var _data = global.item_data[$ _item.get_id()];
+        var _ui_keys = struct_get_names(global.ui_instances);
+        var _ui_count = array_length(_ui_keys);
         
-        var _text_x = _gui_width / 2;
-        var _text_y = _gui_height - (INVENTORY_SLOT_DIMENSION_SCALED + (96 * _gui_scale));
-        
-        draw_set_halign(fa_center);
+        for (var i = _ui_count - 1; i >= 0; --i)
+        {
+            var _ui_inst = global.ui_instances[$ _ui_keys[i]];
+            
+            if (_ui_inst != undefined) ui_draw(_ui_inst);
+        }
+    }
+    
+    // Draw deferred text
+    var _deferred_text_length = array_length(global.gui_deferred_text);
+    
+    if (_deferred_text_length > 0)
+    {
+        draw_set_halign(fa_right);
         draw_set_valign(fa_bottom);
         
-        render_text(_text_x, _text_y, loca_translate($"{_data.get_namespace()}:item.{_data.get_id()}.name"), 1.5 * _gui_scale, 1.5 * _gui_scale);
+        for (var i = _deferred_text_length - 1; i >= 0; --i)
+        {
+            var _ = global.gui_deferred_text[i];
+            
+            if (struct_exists(_, "halign")) draw_set_halign(_.halign);
+            else draw_set_halign(fa_right);
+            
+            if (struct_exists(_, "valign")) draw_set_valign(_.valign);
+            else draw_set_valign(fa_bottom);
+            
+            render_text(_.x, _.y, _.text, _.xscale, _.yscale, 0, _.colour, _.alpha);
+        }
         
         draw_set_halign(fa_left);
         draw_set_valign(fa_top);
+        
+        array_resize(global.gui_deferred_text, 0);
+    }
+    
+    // Display held item name
+    if !(is_opened & IS_OPENED_BOOLEAN.INVENTORY)
+    {
+        var _item = global.inventory.base[global.inventory_selected_hotbar];
+        
+        if (_item != INVENTORY_EMPTY)
+        {
+            var _data = global.item_data[$ _item.get_id()];
+            
+            var _text_x = _gui_width / 2;
+            var _text_y = _gui_height - (INVENTORY_SLOT_DIMENSION_SCALED + (96 * _gui_scale));
+            
+            draw_set_halign(fa_center);
+            draw_set_valign(fa_bottom);
+            
+            render_text(_text_x, _text_y, loca_translate($"{_data.get_namespace()}:item.{_data.get_id()}.name"), 1.5 * _gui_scale, 1.5 * _gui_scale);
+            
+            draw_set_halign(fa_left);
+            draw_set_valign(fa_top);
+        }
     }
 }
 

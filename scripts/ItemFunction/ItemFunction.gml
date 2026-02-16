@@ -3,10 +3,10 @@
 /// @desc Schedule liquid flow with proper delay
 function liquid_flow_schedule(_x, _y, _z, _parameter = {})
 {
-    var _tick_delay = _parameter[$ "tick_delay"] ?? 8;
+    var _tick_delay = _parameter[$ "tick_delay"] ?? LIQUID_FLOW_TICK_DELAY;
 
     tick_delay_add(_tick_delay, function(_chain) {
-        function_execute({ id: "@phantasia:tile/liquid/flow", parameters: _chain.parameter }, _chain.x * TILE_SIZE, _chain.y * TILE_SIZE, _chain.z);
+        liquid_flow(_chain.x, _chain.y, _chain.z, _chain.parameter);
     }, [{ x: _x, y: _y, z: _z, parameter: _parameter }]);
 }
 
