@@ -15,7 +15,7 @@ function inventory_container_open(_x, _y, _inst)
     var _data = global.item_data[$ _tile.get_id()];
     var _container_length = _data.get_container_length();
     
-    if (global.network_role == NETWORK_ROLE.CLIENT)
+    if (global.network_role == RELAY_ROLE.CLIENT)
     {
         network_send_container_open(_tile_x, _tile_y, _tile_z);
     }

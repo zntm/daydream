@@ -1,7 +1,7 @@
 function control_item_drop()
 {
     // --- REMOTE ITEMS ON CLIENT (INTERPOLATION) ---
-    if (global.network_role == NETWORK_ROLE.CLIENT)
+    if (global.network_role == RELAY_ROLE.CLIENT)
     {
         if (variable_instance_exists(self, "interp_start_x"))
         {
@@ -93,7 +93,7 @@ function control_item_drop()
         var _inv_target = global.inventory;
         var _client = undefined;
         
-        if (global.network_role == NETWORK_ROLE.SERVER)
+        if (global.network_role == RELAY_ROLE.HOST)
         {
             if (!inst.is_local)
             {
@@ -109,7 +109,7 @@ function control_item_drop()
         var _changed_slots = [];
         item = inventory_give(x, y, item, _inv_target, true, _changed_slots);
         
-        if (global.network_role != NETWORK_ROLE.SERVER)
+        if (global.network_role != RELAY_ROLE.HOST)
         {
             sfx_diegetic_play(obj_Player.audio_emitter, x, y, "phantasia:sfx/item/collect", global.settings.audio_sfx);
         }
@@ -122,7 +122,7 @@ function control_item_drop()
             event_emit(new EventDataEntityItemCollect(inst, _item_before, _collected_amount));
             
             // Server: Notify client of inventory change
-            if (global.network_role == NETWORK_ROLE.SERVER && !is_undefined(_client))
+            if (global.network_role == RELAY_ROLE.HOST && !is_undefined(_client))
             {
                 for (var i = array_length(_changed_slots) - 1; i >= 0; --i)
                 {
@@ -133,7 +133,7 @@ function control_item_drop()
             }
         }
         
-        if (global.network_role != NETWORK_ROLE.SERVER)
+        if (global.network_role != RELAY_ROLE.HOST)
         {
             inventory_refresh_craftable();
         }

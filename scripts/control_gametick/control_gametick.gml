@@ -145,9 +145,9 @@ function control_gametick(_delta_time)
         // Process delayed function executions
         tick_delay_process();
         
-        // === SERVER-ONLY LOGIC ===
-        // These only run on Server (or Singleplayer/NONE)
-        var _is_server = (global.network_role == NETWORK_ROLE.SERVER) || (global.network_role == NETWORK_ROLE.NONE);
+        // === HOST-ONLY LOGIC ===
+        // These only run on Host (or Singleplayer/NONE)
+        var _is_server = (global.network_role == RELAY_ROLE.HOST) || (global.network_role == RELAY_ROLE.NONE);
         
         if (_is_server)
         {
@@ -215,11 +215,11 @@ function control_gametick(_delta_time)
             ++global.world_save_data.day;
         }
         
-        if (global.network_role == NETWORK_ROLE.SERVER)
+        if (global.network_role == RELAY_ROLE.HOST)
         {
             network_broadcast_entities();
         }
-        else if (global.network_role == NETWORK_ROLE.CLIENT)
+        else if (global.network_role == RELAY_ROLE.CLIENT)
         {
             network_send_input();
         }

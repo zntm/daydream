@@ -49,7 +49,7 @@ function EntityState() constructor
             
             // Resolve item ID for visual sync
             var _inv = global.inventory;
-            if (global.network_role == NETWORK_ROLE.SERVER && !_inst.is_local)
+            if (global.network_role == RELAY_ROLE.HOST && !_inst.is_local)
             {
                 var _client = global.network_clients[? _inst.socket_id];
                 if (!is_undefined(_client)) _inv = _client.inventory;

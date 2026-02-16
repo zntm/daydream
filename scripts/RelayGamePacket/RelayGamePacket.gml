@@ -1,5 +1,5 @@
-/// @desc Relay Game Packet - Wraps existing PACKET_TYPE packets for relay transmission
-/// Bridges between the old NetworkPacket system and the new relay system
+/// @desc Relay Game Packet - Game-level packet serialization for relay transmission
+/// Handles serialization/deserialization of game data (entities, tiles, inventory, etc.)
 
 /// @desc Send a game packet through the relay to a specific peer
 /// @param {String} _peer_id Target peer
@@ -324,7 +324,7 @@ function relay_send_entity_update(_entity)
     var _buf = buffer_create(256, buffer_grow, 1);
     
     // Write count=1 for compatibility with old ENTITY_UPDATE list format if needed,
-    // or just write the state. The old format in NetworkManager _handle_entity_update
+    // Write the entity state to the buffer
     // read a count (u16) then loop. Let's keep that format for now.
     buffer_write(_buf, buffer_u16, 1); 
     _state.to_buffer(_buf);

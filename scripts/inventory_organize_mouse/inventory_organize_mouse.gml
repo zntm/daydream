@@ -11,7 +11,7 @@ function inventory_organize_mouse(_inst)
             
             if (_item != INVENTORY_EMPTY)
             {
-                if (global.network_role == NETWORK_ROLE.CLIENT)
+                if (global.network_role == RELAY_ROLE.CLIENT)
                 {
                     network_send_inventory_action(INVENTORY_ACTION_TYPE.SPLIT, _type, _index, "mouse", 0, ceil(_amount / 2));
                 }
@@ -40,7 +40,7 @@ function inventory_organize_mouse(_inst)
             var _type  = _inst.inventory_type;
             var _index = _inst.inventory_index;
             
-            if (global.network_role == NETWORK_ROLE.CLIENT)
+            if (global.network_role == RELAY_ROLE.CLIENT)
             {
                 network_send_inventory_action(INVENTORY_ACTION_TYPE.SPLIT, "mouse", 0, _type, _index, 1);
             }
@@ -131,7 +131,7 @@ function inventory_organize_mouse(_inst)
                 global.inventory_selected_backpack.type  = _type;
                 global.inventory_selected_backpack.index = _index;
                 
-                if (global.network_role == NETWORK_ROLE.CLIENT)
+                if (global.network_role == RELAY_ROLE.CLIENT)
                 {
                     network_send_inventory_action(INVENTORY_ACTION_TYPE.MOVE, _type, _index, "mouse", 0, _item.get_amount());
                 }
@@ -155,7 +155,7 @@ function inventory_organize_mouse(_inst)
             var _type  = _inst.inventory_type;
             var _index = _inst.inventory_index;
             
-            if (global.network_role == NETWORK_ROLE.CLIENT)
+            if (global.network_role == RELAY_ROLE.CLIENT)
             {
                 network_send_inventory_action(INVENTORY_ACTION_TYPE.MOVE, "mouse", 0, _type, _index, global.inventory.mouse.item.get_amount());
             }
@@ -266,7 +266,7 @@ function inventory_organize_mouse(_inst)
                     inventory_mouse_select_type = INVENTORY_MOUSE_SELECT_TYPE.CRAFTING;
                 }
                 
-                if (global.network_role == NETWORK_ROLE.CLIENT)
+                if (global.network_role == RELAY_ROLE.CLIENT)
                 {
                     network_send_inventory_action(INVENTORY_ACTION_TYPE.CRAFT, "base", _index, "mouse", 0, _amount);
                 }

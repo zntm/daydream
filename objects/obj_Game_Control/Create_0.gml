@@ -28,7 +28,6 @@ enum IS_OPENED_BOOLEAN {
     INVENTORY_CONTAINER = 1 << 5,
     PAUSE               = 1 << 6,
     MENU                = 1 << 7,
-
 }
 
 is_opened = IS_OPENED_BOOLEAN.GENERATING_WORLD
@@ -179,7 +178,7 @@ chunk_in_view_length = 0;
 chunk_queue_init();
 
 // Initialize seed - SKIP for clients, they receive the seed via WELCOME packet
-if (global.network_role != NETWORK_ROLE.CLIENT)
+if (global.network_role != RELAY_ROLE.CLIENT)
 {
     open_simplex_noise_seed(global.world_save_data.seed);
 }

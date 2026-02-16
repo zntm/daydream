@@ -10,7 +10,7 @@ function inventory_drop()
     
     if (keyboard_check(vk_shift))
     {
-        if (global.network_role == NETWORK_ROLE.CLIENT)
+        if (global.network_role == RELAY_ROLE.CLIENT)
         {
             network_send_inventory_action(INVENTORY_ACTION_TYPE.DROP, "base", _inventory_selected_hotbar, "", 0, _item.get_amount());
         }
@@ -22,7 +22,7 @@ function inventory_drop()
         exit;
     }
     
-    if (global.network_role == NETWORK_ROLE.CLIENT)
+    if (global.network_role == RELAY_ROLE.CLIENT)
     {
         network_send_inventory_action(INVENTORY_ACTION_TYPE.DROP, "base", _inventory_selected_hotbar, "", 0, 1);
     }

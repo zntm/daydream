@@ -5,12 +5,12 @@ function control_client()
 {
     if (hp <= 0) 
     {
-        if (global.network_role == NETWORK_ROLE.SERVER) show_debug_message($"[NET-PHYS] Client {uuid} is DEAD, skipping");
+        if (global.network_role == RELAY_ROLE.HOST) show_debug_message($"[NET-PHYS] Client {uuid} is DEAD, skipping");
         exit;
     }
     
     // --- CLIENT SIDE: REMOTES (INTERPOLATION) ---
-    if (global.network_role == NETWORK_ROLE.CLIENT)
+    if (global.network_role == RELAY_ROLE.CLIENT)
     {
         interp_timer += 1 / GAME_TICK;
         var _t = clamp(interp_timer / interp_duration, 0, 1);
@@ -96,8 +96,8 @@ function control_client()
         exit; // End client logic
     }
     
-    // --- SERVER SIDE: PHYSICS ---
-    if (global.network_role == NETWORK_ROLE.SERVER)
+    // --- HOST SIDE: PHYSICS ---
+    if (global.network_role == RELAY_ROLE.HOST)
     {
         var _x_prev = x;
         var _y_prev = y;

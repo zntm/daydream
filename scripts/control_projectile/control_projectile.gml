@@ -4,7 +4,7 @@
 function control_projectile(_dt = 1.0)
 {
     // --- REMOTE PROJECTILES ON CLIENT (INTERPOLATION) ---
-    if (global.network_role == NETWORK_ROLE.CLIENT)
+    if (global.network_role == RELAY_ROLE.CLIENT)
     {
         if (variable_instance_exists(self, "interp_start_x"))
         {

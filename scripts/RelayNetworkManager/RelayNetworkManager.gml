@@ -1,6 +1,6 @@
 /// @desc Relay Network Manager - High-level API for the P2P relay netcode system
 /// This manages the relay network, P2P validation, and game packet handling
-/// Provides a simpler API than the old NetworkManager
+/// Manages relay session lifecycle, player spawning, and game packet routing
 
 // ============================================================================
 // GLOBALS

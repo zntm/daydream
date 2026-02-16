@@ -27,7 +27,7 @@ enum CREATURE_AI_STATE {
 function control_creature()
 {
     // --- REMOTE CREATURES ON CLIENT (INTERPOLATION) ---
-    if (global.network_role == NETWORK_ROLE.CLIENT)
+    if (global.network_role == RELAY_ROLE.CLIENT)
     {
         if (variable_instance_exists(self, "interp_start_x"))
         {

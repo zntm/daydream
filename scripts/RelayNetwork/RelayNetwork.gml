@@ -6,13 +6,6 @@ global.relay = undefined;
 global.network_role = RELAY_ROLE.NONE;
 global.network_applying_packet = false;
 
-/// @desc Legacy network role enum for compatibility
-enum NETWORK_ROLE {
-    NONE = RELAY_ROLE.NONE,
-    SERVER = RELAY_ROLE.HOST,
-    CLIENT = RELAY_ROLE.CLIENT
-}
-
 /// @desc Initialize the relay network system
 function relay_init()
 {
@@ -42,7 +35,7 @@ function RelayNetwork() constructor
     // Network buffer for packet assembly
     _recv_buffer = buffer_create(8192, buffer_grow, 1);
     
-    // Callbacks (set by NetworkManager)
+    // Callbacks (set by RelayNetworkManager)
     on_peer_joined = undefined;     // function(peer_id, uuid, attire)
     on_peer_left = undefined;       // function(peer_id)
     on_game_packet = undefined;     // function(from_peer_id, packet_type, buffer)

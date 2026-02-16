@@ -14,7 +14,7 @@ function inventory_container_close()
 	
 	inventory_resize("_container", 0);
 
-    if (global.network_role == NETWORK_ROLE.CLIENT)
+    if (global.network_role == RELAY_ROLE.CLIENT)
     {
         network_send_container_close();
     }

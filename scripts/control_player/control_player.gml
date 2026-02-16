@@ -4,14 +4,14 @@
 function control_player()
 {
     // Debug entry
-    if (global.network_role == NETWORK_ROLE.SERVER && !is_local) 
+    if (global.network_role == RELAY_ROLE.HOST && !is_local) 
     {
         // show_debug_message($"[NET-PHYS] control_player running for proxy {uuid}, hp={hp}");
     }
 
     if (hp <= 0) 
     {
-        if (global.network_role == NETWORK_ROLE.SERVER && !is_local) show_debug_message($"[NET-PHYS] Player {uuid} is DEAD, skipping");
+        if (global.network_role == RELAY_ROLE.HOST && !is_local) show_debug_message($"[NET-PHYS] Player {uuid} is DEAD, skipping");
         exit;
     }
     
@@ -86,7 +86,7 @@ function control_player()
         var _inv_target = global.inventory;
         var _hotbar_index = global.inventory_selected_hotbar;
         
-        if (global.network_role == NETWORK_ROLE.SERVER && !is_local)
+        if (global.network_role == RELAY_ROLE.HOST && !is_local)
         {
             var _client = global.network_clients[? socket_id];
             if (!is_undefined(_client))
@@ -295,7 +295,7 @@ function control_player()
     physics_body.sync_to_instance(id);
     
     // Post-step debug
-    if (global.network_role == NETWORK_ROLE.SERVER && !is_local && input_state.move_x != 0)
+    if (global.network_role == RELAY_ROLE.HOST && !is_local && input_state.move_x != 0)
     {
         show_debug_message($"[NET-PHYS] Player {uuid} post-step: VelX={physics_body.vel_x}, NewPosX={x}, Grounded={physics_body.collision.ground}");
     }
@@ -420,7 +420,7 @@ function control_player()
                     if (_is_launcher)
                     {
                         var _angle = input_state.aim_angle;
-                        var _changed_slots = (global.network_role == NETWORK_ROLE.SERVER && !is_local) ? [] : undefined;
+                        var _changed_slots = (global.network_role == RELAY_ROLE.HOST && !is_local) ? [] : undefined;
                         var _power = clamp(charge_time / _threshold, 0.1, 1.0);
                         
                         if (control_entity_shoot(id, _id, x, y - 20, _angle, _inv_target, _changed_slots, _power))
@@ -553,7 +553,7 @@ function control_player()
             {
                 var _angle = input_state.aim_angle;
                 
-                var _changed_slots = (global.network_role == NETWORK_ROLE.SERVER && !is_local) ? [] : undefined;
+                var _changed_slots = (global.network_role == RELAY_ROLE.HOST && !is_local) ? [] : undefined;
                 
                 if (control_entity_shoot(id, _id, x, y - 20, _angle, _inv_target, _changed_slots))
                 {
@@ -677,7 +677,7 @@ function control_player()
                              obj_Game_Control.item_cooldown[$ _cooldown_id] = _cooldown.get_seconds();
                         }
                         
-                        var _changed_slots = (global.network_role == NETWORK_ROLE.SERVER && !is_local) ? [] : undefined;
+                        var _changed_slots = (global.network_role == RELAY_ROLE.HOST && !is_local) ? [] : undefined;
                         inventory_item_decrement("base", _hotbar_index, _inv_target, _changed_slots);
                         
                         if (_changed_slots != undefined && array_length(_changed_slots) > 0)

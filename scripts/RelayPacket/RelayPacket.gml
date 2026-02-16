@@ -35,6 +35,23 @@ enum RELAY_PACKET {
     __SIZE
 }
 
+/// @desc Game-level packet types (sent inside RELAY_PACKET.GAME_PACKET wrappers)
+enum PACKET_TYPE {
+    PLAYER_INPUT,
+    ENTITY_UPDATE,
+    TILE_UPDATE,
+    INVENTORY_UPDATE,
+    CHUNK_REQUEST,
+    CHUNK_DATA,
+    TIME_UPDATE,
+    PLAYER_INFO,
+    ENTITY_SPAWN,
+    ENTITY_DESTROY,
+    ENTITY_MOVE,
+    
+    __SIZE
+}
+
 /// @desc Create a new relay packet buffer
 /// @param {Enum.RELAY_PACKET} _type
 /// @returns {Id.Buffer}
@@ -71,12 +88,9 @@ function relay_packet_send(_socket, _buffer)
 function relay_buffer_copy(_dest, _src)
 {
     var _src_size = buffer_tell(_src);
-    buffer_seek(_src, buffer_seek_start, 0);
-    
-    for (var i = 0; i < _src_size; ++i)
-    {
-        buffer_write(_dest, buffer_u8, buffer_read(_src, buffer_u8));
-    }
+    var _dest_pos = buffer_tell(_dest);
+    buffer_copy(_src, 0, _src_size, _dest, _dest_pos);
+    buffer_seek(_dest, buffer_seek_start, _dest_pos + _src_size);
 }
 
 /// @desc Copy buffer contents from source starting at offset
@@ -86,12 +100,9 @@ function relay_buffer_copy(_dest, _src)
 /// @param {Real} _length Number of bytes to copy
 function relay_buffer_copy_range(_dest, _src, _offset, _length)
 {
-    buffer_seek(_src, buffer_seek_start, _offset);
-    
-    for (var i = 0; i < _length; ++i)
-    {
-        buffer_write(_dest, buffer_u8, buffer_read(_src, buffer_u8));
-    }
+    var _dest_pos = buffer_tell(_dest);
+    buffer_copy(_src, _offset, _length, _dest, _dest_pos);
+    buffer_seek(_dest, buffer_seek_start, _dest_pos + _length);
 }
 
 // ============================================================================

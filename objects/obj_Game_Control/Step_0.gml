@@ -42,37 +42,38 @@ if (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.GENERATING_WORLD)
     
     for (var i = 0; i < chunk_in_view_length; ++i)
     {
-        var _chunk = chunk_in_view[i];
+        var _c = chunk_in_view[i];
         
-        if (_chunk == undefined) || (_chunk.boolean & CHUNK_BOOLEAN.GENERATED) continue;
+        if (_c == undefined) || (_c.boolean & CHUNK_BOOLEAN.GENERATED) continue;
         
-        _chunk.boolean |= CHUNK_BOOLEAN.GENERATED | CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH;
+        _c.boolean |= CHUNK_BOOLEAN.GENERATED | CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH;
         
-        // Trigger global lighting refresh for newly generated chunks
         surface_refresh |= SURFACE_REFRESH_BOOLEAN.LIGHTING;
         
-        var _chunk_data = _chunk.chunk;
+        var _chunk_xstart = _c.chunk_xstart;
+        var _chunk_ystart = _c.chunk_ystart;
         
-        for (var _tile_z = 0; _tile_z < CHUNK_DEPTH; ++_tile_z)
+        var _chunk = _c.chunk;
+        var _chunk_display = _c.chunk_display;
+        
+        for (var _tz = CHUNK_DEPTH - 1; _tz >= 0; --_tz)
         {
-            if !(_chunk.chunk_display & (1 << _tile_z)) continue;
+            if !(_chunk_display & (1 << _tz)) continue;
             
-            for (var _tile_y = 0; _tile_y < CHUNK_SIZE; ++_tile_y)
+            for (var _ty = CHUNK_SIZE - 1; _ty >= 0; --_ty)
             {
-                for (var _tile_x = 0; _tile_x < CHUNK_SIZE; ++_tile_x)
+                for (var _tx = CHUNK_SIZE - 1; _tx >= 0; --_tx)
                 {
-                    var _world_x = _chunk.chunk_xstart + _tile_x;
-                    var _world_y = _chunk.chunk_ystart + _tile_y;
+                    var _x = _chunk_xstart + _tx;
+                    var _y = _chunk_ystart + _ty;
                     
-                    var _tile = _chunk_data[tile_index_xyz(_world_x, _world_y, _tile_z)];
+                    var _tile = _chunk[tile_index_xyz(_x, _y, _tz)];
                     
                     if (_tile == TILE_EMPTY) continue;
                     
-                    var _data = _item_data[$ _tile.get_id()];
+                    tile_instance_create(_x, _y, _tz, _tile);
                     
-                    tile_instance_create(_world_x, _world_y, _tile_z, _tile);
-                    
-                    tile_connect(_world_x, _world_y, _tile_z, _tile);
+                    tile_connect(_x, _y, _tz, _tile);
                 }
             }
         }
@@ -161,15 +162,16 @@ if (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.EXIT)
     
     ++chunk_saved_count;
     
-    window_progress(window_progress_normal, chunk_saved_count, chunk_saved_count_max);
-    
-    // Clear all chunks using chunk_map
-    var _all_chunks = chunk_map_get_all();
-    var _chunks_length = array_length(_all_chunks);
-    
-    for (var i = 0; i < _chunks_length; ++i)
+    if (os_type == os_windows)
     {
-        chunk_clear(_all_chunks[i]);
+        window_progress(window_progress_normal, chunk_saved_count, chunk_saved_count_max);
+    }
+    
+    var _chunks = chunk_map_get_all();
+    
+    for (var i = array_length(_chunks) - 1; i >= 0; --i)
+    {
+        chunk_clear(_chunks[i]);
     }
     
     exit;
@@ -304,20 +306,21 @@ if !(is_opened & (IS_OPENED_BOOLEAN.MENU | IS_OPENED_BOOLEAN.CHAT))
         {
             var _tile = tile_get(_tile_x, _tile_y, i);
             
-            if (_tile != TILE_EMPTY)
+            if (_tile == TILE_EMPTY) continue;
+            
+            var _data = _item_data[$ _tile.get_id()];
+            
+            var _on_tile_use = _data.get_on_tile_use();
+            
+            if (_on_tile_use != undefined)
             {
-                var _data = _item_data[$ _tile.get_id()];
-                
-                var _on_tile_use = _data.get_on_tile_use();
-                var _on_tile_use_length = _data.get_on_tile_use_length();
-                
-                for (var j = 0; j < _on_tile_use_length; ++j)
+                for (var j = _data.get_on_tile_use_length() - 1; j >= 0; --j)
                 {
                     function_execute(_on_tile_use[j], _tile_x, _tile_y, i, 1, 1, 1);
                 }
-                
-                break;
             }
+            
+            break;
         }
     }
     
