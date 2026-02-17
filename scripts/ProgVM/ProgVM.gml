@@ -930,9 +930,11 @@ function proglang_vm_run(_vm, _entry_bytecode)
                         if (struct_exists(_class, "fields"))
                         {
                             var _fields = _class.fields;
-                            for (var k = 0; k < array_length(_fields); k++)
+                            
+                            for (var k = array_length(_fields) - 1; k >= 0; --k)
                             {
                                 var _field = _fields[k];
+                                
                                 _inst[$ _field.name] = _field.value;
                             }
                         }
@@ -1136,15 +1138,25 @@ function proglang_vm_run(_vm, _entry_bytecode)
                         // lhs in rhs: string in string, value in array
                         var _rhs = _stack[--_sp];
                         var _lhs = _stack[--_sp];
+                        
                         var _result = false;
+                        
                         if (is_array(_rhs))
                         {
-                            for (var i = 0; i < array_length(_rhs); i++) if (_rhs[i] == _lhs) { _result = true; break; }
+                            for (var i = array_length(_rhs); i >= 0; --i)
+                            {
+                                if (_rhs[i] != _lhs) continue;
+                                
+                                _result = true;
+                                
+                                break;
+                            }
                         }
                         else if (is_string(_rhs))
                         {
-                            _result = (string_pos(string(_lhs), _rhs) > 0);
+                            _result = string_contains(string(_lhs), _rhs);
                         }
+                        
                         _stack[@ _sp++] = _result;
                         break;
                         
@@ -1153,10 +1165,12 @@ function proglang_vm_run(_vm, _entry_bytecode)
                         var _rhs = _stack[--_sp];
                         var _lhs = _stack[--_sp];
                         var _result = false;
+                        
                         if (is_struct(_rhs))
                         {
                             _result = struct_exists(_rhs, _lhs);
                         }
+                        
                         _stack[@ _sp++] = _result;
                         break;
                         
@@ -1165,18 +1179,21 @@ function proglang_vm_run(_vm, _entry_bytecode)
                         var _rhs = _stack[--_sp];
                         var _lhs = _stack[--_sp];
                         var _result = false;
+                        
                         if (is_struct(_rhs))
                         {
                             var _names = struct_get_names(_rhs);
-                            for (var i = 0; i < array_length(_names); i++)
+                            
+                            for (var i = array_length(_names) - 1; i >= 0; --i)
                             {
-                                if (_rhs[$ _names[i]] == _lhs)
-                                {
-                                    _result = true;
-                                    break;
-                                }
+                                if (_rhs[$ _names[i]] != _lhs) continue;
+                                
+                                _result = true;
+                                
+                                break;
                             }
                         }
+                        
                         _stack[@ _sp++] = _result;
                         break;
                         
@@ -1188,7 +1205,7 @@ function proglang_vm_run(_vm, _entry_bytecode)
                         var _range = ["range", _start, _end];
                         _stack[@ _sp++] = _range;
                         break;
-
+                    
                     case PROG_OP.MEMOIZE_CHECK:
                         var _memo_id = _arg;
                         var _p_count = _curr_bytecode.param_count;
@@ -1223,7 +1240,10 @@ function proglang_vm_run(_vm, _entry_bytecode)
                         var _memo_id = _arg;
                         var _val = _stack[_sp - 1];
                         var _hash = array_pop(_vm[PROG_VM.MEMO_ARG_KEYS]);
-                        if (!struct_exists(_vm[PROG_VM.MEMO_CACHES], _memo_id)) _vm[@ PROG_VM.MEMO_CACHES][$ _memo_id] = {}
+                        if (!struct_exists(_vm[PROG_VM.MEMO_CACHES], _memo_id))
+                        {
+                            _vm[@ PROG_VM.MEMO_CACHES][$ _memo_id] = {}
+                        }
                         _vm[PROG_VM.MEMO_CACHES][$ _memo_id][$ _hash] = _val;
                         break;
                 }
