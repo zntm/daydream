@@ -108,7 +108,7 @@
         "top_layer": {
             "base": [
                 {
-                    "id": "phantasia:grass_block_taiga"
+                    "id": "phantasia:snow_block"
                 }
             ],
             "wall": [

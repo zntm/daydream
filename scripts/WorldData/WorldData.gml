@@ -119,6 +119,12 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
     ___cave_humidity_range = 0;
     ___cave_humidity_octaves_offset = 0;
     
+    // Climate Generation
+    ___surface_heat_noise_scale = 0.005;
+    ___surface_heat_noise_octaves = 4;
+    ___surface_humidity_noise_scale = 0.005;
+    ___surface_humidity_noise_octaves = 4;
+    
     // Sky Biomes
     ___sky_biome_threshold = 256;
     ___sky_biome_id = "phantasia:sky/floating_islands";
@@ -280,12 +286,30 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
     static get_cave_humidity_range = function() { return ___cave_humidity_range; }
     static get_cave_humidity_octaves_offset = function() { return ___cave_humidity_octaves_offset; }
     
+    // Climate Accessors
+    static get_surface_heat_noise_scale = function() { return ___surface_heat_noise_scale; }
+    static get_surface_heat_noise_octaves = function() { return ___surface_heat_noise_octaves; }
+    static get_surface_humidity_noise_scale = function() { return ___surface_humidity_noise_scale; }
+    static get_surface_humidity_noise_octaves = function() { return ___surface_humidity_noise_octaves; }
+    
     static set_surface_biome = function(_surface_biome)
     {
         ___surface_biome = _surface_biome;
         
-        // Note: Legacy surface biome map parsing removed.
-        // Biome selection is now handled via Regions.
+        // Parse heat/humidity configuration
+        var _heat = _surface_biome[$ "heat"];
+        if (_heat != undefined)
+        {
+            ___surface_heat_noise_scale = _heat[$ "scale"] ?? ___surface_heat_noise_scale;
+            ___surface_heat_noise_octaves = _heat[$ "octaves"] ?? ___surface_heat_noise_octaves;
+        }
+        
+        var _humidity = _surface_biome[$ "humidity"];
+        if (_humidity != undefined)
+        {
+            ___surface_humidity_noise_scale = _humidity[$ "scale"] ?? ___surface_humidity_noise_scale;
+            ___surface_humidity_noise_octaves = _humidity[$ "octaves"] ?? ___surface_humidity_noise_octaves;
+        }
         
         return self;
     }
@@ -768,6 +792,11 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
                     cave_biome_default: "phantasia:cave/chasm"
                 });
                 array_push(___regions_objects, _fallback);
+                show_debug_message("WorldData: FAILED to resolve any regions, using emeraldine fallback.");
+            }
+            else
+            {
+                show_debug_message($"WorldData: Resolved {array_length(___regions_objects)} regions: {___regions_ids}");
             }
         }
         

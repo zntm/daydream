@@ -93,7 +93,7 @@
         "surface": {
             "heat": {
                 "octaves": 4.5,
-                "scale": 0.005,
+                "scale": 0.0005,
                 "spline_x": {
                     "points": [
                         {
@@ -112,7 +112,7 @@
             },
             "humidity": {
                 "octaves": 2.75,
-                "scale": 0.005
+                "scale": 0.0005
             },
             "map": "phantasia:world/playground/map",
             "offset": {

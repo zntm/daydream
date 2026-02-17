@@ -87,7 +87,7 @@
         "middle_layer": {
             "base": [
                 {
-                    "id": "phantasia:stone"
+                    "id": "phantasia:snow_block"
                 }
             ],
             "wall": [
@@ -103,7 +103,7 @@
         "top_layer": {
             "base": [
                 {
-                    "id": "phantasia:stone"
+                    "id": "phantasia:snow_block"
                 }
             ],
             "wall": [

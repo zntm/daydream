@@ -178,8 +178,53 @@ function RegionGenerator(_config = {}) constructor
                 if (_dist_sq < _best_dist)
                 {
                     _best_dist = _dist_sq;
-                    // Determine which region this cell belongs to
-                    _best_region_id = abs(_cell_seed) mod ___region_count;
+                    
+                    // --- Climate-Based Region Selection ---
+                    // Sample heat and humidity at the cell point
+                    var _heat = worldgen_get_heat(_point_x, _point_y, _seed);
+                    var _humid = worldgen_get_humidity(_point_x, _point_y, _seed);
+                    
+                    var _best_score = infinity;
+                    _best_region_id = 0;
+                    
+                    for (var r = 0; r < ___region_count; ++r)
+                    {
+                        var _region = ___regions[r];
+                        var _cat = _region.get_category();
+                        
+                        // Target climate for each category
+                        var _target_heat = 0;
+                        var _target_humid = 0;
+                        
+                        switch(_cat)
+                        {
+                            case "frozen":    _target_heat = -0.8; _target_humid = -0.6; break;
+                            case "cold":      _target_heat = -0.4; _target_humid = -0.1; break;
+                            case "temperate": _target_heat = 0.1;  _target_humid = 0.3;  break;
+                            case "humid":     _target_heat = 0.3;  _target_humid = 0.8;  break;
+                            case "arid":      _target_heat = 0.8;  _target_humid = -0.7; break;
+                            default:          _target_heat = 0;    _target_humid = 0;    break;
+                        }
+                        
+                        // Euclidean distance in climate space
+                        var _dh = _heat - _target_heat;
+                        var _dw = _humid - _target_humid;
+                        var _score = _dh * _dh + _dw * _dw;
+                        
+                        if (_score < _best_score)
+                        {
+                            _best_score = _score;
+                            _best_region_id = r;
+                        }
+                    }
+                    
+                    static _count = 0;
+                    if (_count < 20)
+                    {
+                        _count++;
+                        var _chosen = ___regions[_best_region_id];
+                        show_debug_message($"RegionGenerator: Cell at ({_point_x}, {_point_y}) -> Heat: {_heat}, Humid: {_humid}, Category: {_chosen.get_category()}, Region: {_chosen.get_id()}");
+                    }
                 }
             }
         }

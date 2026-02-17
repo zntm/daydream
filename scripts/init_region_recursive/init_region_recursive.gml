@@ -24,18 +24,30 @@ function init_region_recursive(_directory, _namespace = "phantasia", _id = undef
             
             var _json = tag_value_parse(buffer_load_json(_subdirectory));
             
-            if (is_struct(_json))
+            if (is_struct(_json) || is_array(_json))
             {
                 var _name_clean = string_delete(_name, string_length(_name) - 4, 5);
-                var _full_id = $"{_namespace}:{_name_clean}";
                 
-                var _region_data = new RegionData(_full_id, _json);
+                // Handle both single region (struct) and multi-region (array) files
+                var _region_list = is_array(_json) ? _json : [_json];
+                var _region_count = array_length(_region_list);
                 
-                global.region_data[$ _full_id] = _region_data;
+                for (var j = 0; j < _region_count; ++j)
+                {
+                    var _data = _region_list[j];
+                    
+                    // Use internal ID if provided, otherwise fallback to namespaced filename
+                    // Example: "emeraldine" -> "phantasia:emeraldine"
+                    var _internal_id = _data[$ "id"] ?? _name_clean;
+                    var _full_id = (string_pos(":", _internal_id) > 0) ? _internal_id : $"{_namespace}:{_internal_id}";
+                    
+                    var _region_data = new RegionData(_full_id, _data);
+                    global.region_data[$ _full_id] = _region_data;
+                    
+                    dbg_timer("init_region", $"[Init] Loaded Region: \'{_full_id}\'");
+                }
                 
                 delete _json;
-                
-                dbg_timer("init_region", $"[Init] Loaded Region: \'{_name_clean}\'");
             }
         }
     }
