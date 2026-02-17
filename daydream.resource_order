@@ -459,8 +459,6 @@
     {"name":"world_cleanup","order":93,"path":"scripts/world_cleanup/world_cleanup.yy",},
     {"name":"worldgen_get_aquifer","order":65,"path":"scripts/worldgen_get_aquifer/worldgen_get_aquifer.yy",},
     {"name":"worldgen_get_biome_surface","order":1,"path":"scripts/worldgen_get_biome_surface/worldgen_get_biome_surface.yy",},
-    {"name":"worldgen_get_cave_heat","order":46,"path":"scripts/worldgen_get_cave_heat/worldgen_get_cave_heat.yy",},
-    {"name":"worldgen_get_cave_humidity","order":47,"path":"scripts/worldgen_get_cave_humidity/worldgen_get_cave_humidity.yy",},
     {"name":"worldgen_get_cave_start","order":5,"path":"scripts/worldgen_get_cave_start/worldgen_get_cave_start.yy",},
     {"name":"worldgen_get_cave","order":4,"path":"scripts/worldgen_get_cave/worldgen_get_cave.yy",},
     {"name":"worldgen_get_heat","order":2,"path":"scripts/worldgen_get_heat/worldgen_get_heat.yy",},

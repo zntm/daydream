@@ -63,11 +63,7 @@ function region_gen_map_lookup(_gen, _x, _y)
     // Convert to GML color (BGR)
     var _color = (_b << 16) | (_g << 8) | _r;
     
-    var _region = _gen.color_lookup[$ _color];
-    if (_region == undefined)
-    {
-        _region = _gen.color_lookup[$ string(_color)];
-    }
+    var _region = _gen.color_lookup[$ _color] ?? _gen.color_lookup[$ string(_color)];
 
     return _region;
 }
@@ -133,7 +129,7 @@ function region_gen_climate_pick(_gen, _heat, _humid)
 
     // show_debug_message($"region_gen_climate_pick: heat={_heat}, humid={_humid}");
 
-    for (var i = 0; i < _gen.region_count; ++i)
+    for (var i = _gen.region_count - 1; i >= 0; --i)
     {
         var _region = _gen.regions[i];
         var _th = _region.get_heat_target();
@@ -204,9 +200,9 @@ function region_gen_get_region(_gen, _x, _y, _seed)
     var _best_dist = infinity;
     var _best_region_id = 0;
 
-    for (var _cx = _cx0 - 1; _cx <= _cx0 + 1; _cx++)
+    for (var _cx = _cx0 - 1; _cx <= _cx0 + 1; ++_cx)
     {
-        for (var _cy = _cy0 - 1; _cy <= _cy0 + 1; _cy++)
+        for (var _cy = _cy0 - 1; _cy <= _cy0 + 1; ++_cy)
         {
             var _cseed = __region_cell_seed(_cx, _cy, _so);
             var _pt = __region_cell_point(_cx, _cy, _cs, _cseed);
@@ -329,9 +325,9 @@ function region_gen_get_boundary_distance(_gen, _x, _y, _seed)
     var _best_dist = infinity;
     var _second_dist = infinity;
     
-    for (var _cx = _cx0 - 1; _cx <= _cx0 + 1; _cx++)
+    for (var _cx = _cx0 - 1; _cx <= _cx0 + 1; ++_cx)
     {
-        for (var _cy = _cy0 - 1; _cy <= _cy0 + 1; _cy++)
+        for (var _cy = _cy0 - 1; _cy <= _cy0 + 1; ++_cy)
         {
             var _cseed = __region_cell_seed(_cx, _cy, _so);
             var _pt = __region_cell_point(_cx, _cy, _cs, _cseed);

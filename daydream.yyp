@@ -2033,8 +2033,6 @@
     {"id":{"name":"worldgen_get_aquifer","path":"scripts/worldgen_get_aquifer/worldgen_get_aquifer.yy",},},
     {"id":{"name":"worldgen_get_biome_cave","path":"scripts/worldgen_get_biome_cave/worldgen_get_biome_cave.yy",},},
     {"id":{"name":"worldgen_get_biome_surface","path":"scripts/worldgen_get_biome_surface/worldgen_get_biome_surface.yy",},},
-    {"id":{"name":"worldgen_get_cave_heat","path":"scripts/worldgen_get_cave_heat/worldgen_get_cave_heat.yy",},},
-    {"id":{"name":"worldgen_get_cave_humidity","path":"scripts/worldgen_get_cave_humidity/worldgen_get_cave_humidity.yy",},},
     {"id":{"name":"worldgen_get_cave_start","path":"scripts/worldgen_get_cave_start/worldgen_get_cave_start.yy",},},
     {"id":{"name":"worldgen_get_cave","path":"scripts/worldgen_get_cave/worldgen_get_cave.yy",},},
     {"id":{"name":"worldgen_get_heat","path":"scripts/worldgen_get_heat/worldgen_get_heat.yy",},},
