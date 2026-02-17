@@ -12,7 +12,6 @@ function function_execute(_function, _x, _y, _z, _xscale, _yscale, _inst = undef
     if (_chance != undefined) && (!chance(_chance)) exit;
     
     var _id = _function[$ "id"];
-    if (_id != undefined && string_pos("@", _id) == 1) _id = string_delete(_id, 1, 1);
     var _parameter = _function[$ "parameters"] ?? {}
     
     // Build Context

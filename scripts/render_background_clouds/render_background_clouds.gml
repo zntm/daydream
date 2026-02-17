@@ -259,12 +259,6 @@ function init_background_clouds()
     var _script_id = _world_data.get_background_script();
     if (_script_id == undefined) return;
     
-    // Strip @ prefix if present
-    if (string_char_at(_script_id, 1) == "@")
-    {
-        _script_id = string_delete(_script_id, 1, 1);
-    }
-    
     show_debug_message($"[Clouds] init_background_clouds starting. Script: {_script_id}");
     
     var _sprites = _world_data.get_background_sprites();

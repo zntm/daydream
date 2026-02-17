@@ -99,12 +99,12 @@ function init_proglang_recursive(_directory, _namespace = "", _path = "") {
             }
             
             if (!_has_functions) {
-                global.proglang_scripts[$ _script_id] = _bytecode;
+                global.proglang_scripts[$ $"@{_script_id}"] = _bytecode;
             } else {
                 var _module = array_create(PROG_MODULE.SIZE);
                 _module[PROG_MODULE.MAIN] = _bytecode;
                 _module[PROG_MODULE.SCOPE] = _file_scope;
-                global.proglang_scripts[$ _script_id] = _module;
+                global.proglang_scripts[$ $"@{_script_id}"] = _module;
             }
         }
     }
@@ -321,8 +321,6 @@ function proglang_load_module(_module_path, _importer_path = "") {
 /// @param {struct} _context Execution context
 /// @returns {any} Result
 function proglang_call(_name, _args = [], _context = {}) {
-    if (string_char_at(_name, 1) == "@") _name = string_delete(_name, 1, 1);
-    
     show_debug_message($"[Daydream] Proglang Call: {_name}");
     var _bytecode = undefined;
     
