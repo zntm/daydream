@@ -1,14 +1,14 @@
-global.sprite_asset = {}
-global.sound_asset = {}
+global.sprite_asset = {};
+global.sound_asset  = {};
 
-function SpriteAsset(_sprite, _xoffset, _yoffset, _width, _height, _length) constructor
+function SpriteAsset(_path, _xoffset, _yoffset, _length) constructor
 {
-    ___sprite = _sprite;
     ___xoffset = _xoffset;
     ___yoffset = _yoffset;
-    ___width = _width;
-    ___height = _height;
-    ___length = _length;
+    ___length  = _length;
+    ___sprite  = sprite_add(_path, _length, false, false, _xoffset, _yoffset);
+    ___width   = sprite_get_width(___sprite);
+    ___height  = sprite_get_height(___sprite);
     
     static get_sprite = function()
     {
@@ -41,20 +41,14 @@ function SpriteAsset(_sprite, _xoffset, _yoffset, _width, _height, _length) cons
     }
 }
 
-function SoundAsset(_sound, _duration, _author = undefined, _title = undefined, _falloff_reference = undefined, _falloff_max = undefined) constructor
+function SoundAsset(_path, _duration, _author = undefined, _title = undefined, _falloff_ref = undefined, _falloff_max = undefined) constructor
 {
-    ___sound = _sound;
-    ___duration = _duration;
-    
-    if (_author != undefined)
-    {
-        ___author = _author;
-    }
-    
-    if (_title != undefined)
-    {
-        ___title = _title;
-    }
+    ___sound             = audio_create_stream(_path);
+    ___duration          = _duration;
+    ___author            = _author;
+    ___title             = _title;
+    ___falloff_reference = _falloff_ref;
+    ___falloff_max       = _falloff_max;
     
     static get_sound = function()
     {
@@ -87,105 +81,88 @@ function SoundAsset(_sound, _duration, _author = undefined, _title = undefined, 
     }
 }
 
-function init_assets(_directory, _namespace, _folder = "")
+/// @desc Loads all assets from a directory into the global asset tables.
+/// @param {String} _namespace The namespace to register assets under.
+/// @param {String} _directory The directory to load assets from.
+function init_assets(_namespace, _directory)
 {
-    var _files = file_read_directory(_directory);
-    var _files_length = array_length(_files);
+    var _files = file_read_directory(_directory, true);
     
-    for (var i = 0; i < _files_length; ++i)
+    for (var i = array_length(_files) - 1; i >= 0; --i)
     {
         var _file = _files[i];
-        var _id = (_folder != "") ? $"{_folder}/{_file}" : _file;
-        
-        if (directory_exists($"{_directory}/{_file}"))
-        {
-            init_assets($"{_directory}/{_file}", _namespace, _id);
-            
-            continue;
-        }
         
         if (string_ends_with(_file, ".ogg.json"))
         {
             var _json = buffer_load_json($"{_directory}/{_file}");
-            var _file2 = string_delete(_file, string_length(_file) - 8, 9);
+            /* magic numbers are from string length of '.ogg.json' */
+            var _id = string_delete(_file, string_length(_file) - 8, 9);
             
-            if (directory_exists($"{_directory}/{_file2}"))
+            if (!directory_exists($"{_directory}/{_id}"))
             {
-                var _array = [];
+                global.sound_asset[$ $"{_namespace}:{_id}"] = new SoundAsset(
+                    /* magic numbers are from string length of '.json' */
+                    $"{_directory}/{string_delete(_file, string_length(_file) - 4, 5)}",
+                    _json.duration,
+                    _json[$ "author"],
+                    _json[$ "title"]
+                );
                 
-                var _sound_files = file_read_directory($"{_directory}/{_file2}");
-                var _sound_files_length = array_length(_sound_files);
-                
-                for (var j = 0; j < _sound_files_length; ++j)
-                {
-                    var _sound_file = _sound_files[j];
-                    var _data = _json[j];
-                    
-                    var _asset = new SoundAsset(audio_create_stream($"{_directory}/{_file2}/{_sound_file}"), _data.duration, _data[$ "author"], _data[$ "title"]);
-                    
-                    array_push(_array, _asset);
-                }
-                
-                global.sound_asset[$ $"{_namespace}:{_folder}/{_file2}"] = _array;
-            }
-            else
-            {
-            	global.sound_asset[$ $"{_namespace}:{_folder}/{_file2}"] = new SoundAsset(audio_create_stream($"{_directory}/{string_delete(_file, string_length(_file) - 4, 5)}"), _json.duration, _json[$ "author"], _json[$ "title"]);
+                continue;
             }
             
-            continue;
+            var _array = [];
+            var _subfiles = file_read_directory($"{_directory}/{_id}");
+            
+            for (var j = array_length(_subfiles) - 1; j >= 0; --j)
+            {
+                var _data = _json[j];
+                
+                _array[@ j] = new SoundAsset(
+                    $"{_directory}/{_id}/{_subfiles[j]}",
+                    _data.duration,
+                    _data[$ "author"],
+                    _data[$ "title"]
+                );
+            }
+            
+            global.sound_asset[$ $"{_namespace}:{_id}"] = _array;
         }
-        
-        if (string_ends_with(_file, ".png.json"))
+        else if (string_ends_with(_file, ".png.json"))
         {
             var _json = buffer_load_json($"{_directory}/{_file}");
-            var _file2 = string_delete(_file, string_length(_file) - 8, 9);
+            /* magic numbers are from string length of '.png.json' */
+            var _id = string_delete(_file, string_length(_file) - 8, 9);
             
-            if (directory_exists($"{_directory}/{_file2}"))
+            if (!directory_exists($"{_directory}/{_id}"))
             {
-                var _array = [];
+                global.sprite_asset[$ $"{_namespace}:{_id}"] = new SpriteAsset(
+                    /* magic numbers are from string length of '.json' */
+                    $"{_directory}/{string_delete(_file, string_length(_file) - 4, 5)}",
+                    _json[$ "xoffset"] ?? 0,
+                    _json[$ "yoffset"] ?? 0,
+                    _json[$ "length"]  ?? 1
+                );
                 
-                var _sprite_files = file_read_directory($"{_directory}/{_file2}");
-                var _sprite_files_length = array_length(_sprite_files);
-                
-                for (var j = 0; j < _sprite_files_length; ++j)
-                {
-                    var _sprite_file = _sprite_files[j];
-                    var _data = _json[j];
-                    
-                    var _xoffset = _data[$ "xoffset"] ?? 0;
-                    var _yoffset = _data[$ "yoffset"] ?? 0;
-                    var _length  = _data[$ "length"]  ?? 1;
-                    
-                    var _full_path = $"{_directory}/{_file2}/{_sprite_file}";
-                    show_debug_message($"[init_assets] Loading sprite: {_full_path} (length: {_length})");
-                    
-                    var _sprite = sprite_add(_full_path, _length, false, false, _xoffset, _yoffset);
-                    
-                    var _asset = new SpriteAsset(_sprite, _xoffset, _yoffset, sprite_get_width(_sprite), sprite_get_height(_sprite), _length);
-                    
-                    array_push(_array, _asset);
-                }
-                
-                global.sprite_asset[$ $"{_namespace}:{_folder}/{_file2}"] = _array;
-            }
-            else
-            {
-                var _xoffset = _json[$ "xoffset"] ?? 0;
-                var _yoffset = _json[$ "yoffset"] ?? 0;
-                var _length  = _json[$ "length"]  ?? 1;
-                
-                var _full_path = $"{_directory}/{string_delete(_file, string_length(_file) - 4, 5)}";
-                show_debug_message($"[init_assets] Loading sprite (single): {_full_path} (length: {_length})");
-                
-                var _sprite = sprite_add(_full_path, _length, false, false, _xoffset, _yoffset);
-                
-                var _asset = new SpriteAsset(_sprite, _xoffset, _yoffset, sprite_get_width(_sprite), sprite_get_height(_sprite), _length);
-                
-                global.sprite_asset[$ $"{_namespace}:{_folder}/{_file2}"] = _asset;
+                continue;
             }
             
-            continue;
+            var _array = [];
+            var _subfiles = file_read_directory($"{_directory}/{_id}");
+            
+            for (var j = array_length(_subfiles) - 1; j >= 0; --j)
+            {
+                var _data = _json[j];
+                
+                _array[@ j] = new SpriteAsset(
+                    $"{_directory}/{_id}/{_subfiles[j]}",
+                    _data[$ "xoffset"] ?? 0,
+                    _data[$ "yoffset"] ?? 0,
+                    _data[$ "length"]  ?? 1
+                );
+            }
+            
+            global.sprite_asset[$ $"{_namespace}:{_id}"] = _array;
         }
     }
 }

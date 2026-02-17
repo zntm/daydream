@@ -249,7 +249,6 @@
     {"name":"file_save_world_chunk","order":2,"path":"scripts/file_save_world_chunk/file_save_world_chunk.yy",},
     {"name":"file_save_world_global","order":5,"path":"scripts/file_save_world_global/file_save_world_global.yy",},
     {"name":"file_save_world_spawn","order":1,"path":"scripts/file_save_world_spawn/file_save_world_spawn.yy",},
-    {"name":"file_version_registry","order":34,"path":"scripts/file_version_registry/file_version_registry.yy",},
     {"name":"FilePlayer","order":2,"path":"scripts/FilePlayer/FilePlayer.yy",},
     {"name":"FileWorld","order":3,"path":"scripts/FileWorld/FileWorld.yy",},
     {"name":"function_execute","order":29,"path":"scripts/function_execute/function_execute.yy",},

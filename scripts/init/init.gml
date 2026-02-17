@@ -1,11 +1,10 @@
 function init(_namespace)
 {
     var _files = file_read_directory(PROGRAM_DIRECTORY_ASSETS);
-    var _files_length = array_length(_files);
     
-    for (var i = 0; i < _files_length; ++i)
+    for (var i = array_length(_files) - 1; i >= 0; --i)
     {
-        init_assets($"{PROGRAM_DIRECTORY_ASSETS}/{_files[i]}", _namespace);
+        init_assets(_namespace, $"{PROGRAM_DIRECTORY_ASSETS}/{_files[i]}");
     }
     
     init_credit($"{PROGRAM_DIRECTORY_RESOURCES}/credit/data.json");

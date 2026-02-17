@@ -1,8 +1,11 @@
+/// @desc Starts or stops a named timer and logs the elapsed time.
+/// @param {String} _name  The timer identifier.
+/// @param {String} _string The message to log alongside the elapsed time.
 function dbg_timer(_name, _string = undefined)
 {
-    static __timers = {}
+    if (!IS_DEVELOPER_MODE) exit;
     
-    // if (!DEVELOPER_LOG) exit;
+    static __timers = {}
     
     var _timer = __timers[$ _name];
     

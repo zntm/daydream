@@ -16,12 +16,6 @@ function liquid_flow_start(_x, _y, _z, _parameter = {})
     liquid_flow_schedule(_x, _y, _z, _parameter);
 }
 
-// ... collision helper removed/ignored ...
-
-
-
-
-// Subscribe to tile changes to trigger water flow when blocks are broken
 // Subscribe to tile changes to trigger water flow when blocks are broken
 event_subscribe(GAME_EVENT.TILE_UPDATE, function(_data) {
     if (_data.tile == undefined) exit; // Only care about broken tiles (which populate 'tile' in update)
@@ -67,11 +61,6 @@ event_subscribe(GAME_EVENT.TILE_UPDATE, function(_data) {
     }
 });
 
-// Leaf Decay System
-// Minecraft-style leaf decay: natural leaves decay when no wood is nearby
-
-
-// Subscribe to tile changes to speed up leaf decay when wood is destroyed
 // Subscribe to tile changes to speed up leaf decay when wood is destroyed
 event_subscribe(GAME_EVENT.TILE_UPDATE, function(_data) {
     if (_data.tile == undefined) exit;
@@ -115,21 +104,3 @@ event_subscribe(GAME_EVENT.TILE_UPDATE, function(_data) {
         }
     }
 });
-
-
-
-
-
-
-
-
-
-
-
-/// @desc Bucket picks up liquid tile (call from tile on_use)
-/// Converts empty bucket in hotbar to filled bucket with liquid level
-
-
-/// @desc Bucket places liquid tile (call from player_build or item use)
-/// Places liquid with stored level and converts filled bucket to empty bucket
-

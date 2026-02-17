@@ -1,41 +1,38 @@
-function file_read_directory(_directory, _recursive = false, _prefix = "")
+/// @desc Reads all files in a directory and returns them as an array of file paths.
+/// @param {String} _directory The directory to read.
+/// @param {Bool} _recursive OPTIONAL! Whether to also read subdirectories.
+/// @returns {Array<String>}
+function file_read_directory(_directory, _recursive = false)
 {
     var _files = [];
     
     for (var _file = file_find_first($"{_directory}/*", fa_directory); _file != ""; _file = file_find_next())
     {
-        if (_file == ".") || (_file == "..") continue;
-        
-        array_push(_files, $"{_prefix}{_file}");
+        array_push(_files, _file);
     }
     
     file_find_close();
     
-    if (!_recursive)
+    if (_recursive)
     {
-        return _files;
-    }
-    
-    var _result = _files;
-    var _length = array_length(_files);
-    
-    for (var i = 0; i < _length; ++i)
-    {
-        var _file = _files[i];
+        /* clone because _files contains dir names and is being appended to */
+        var _dirs = variable_clone(_files);
         
-        if (directory_exists($"{_directory}/{_file}"))
+        for (var i = array_length(_dirs) - 1; i >= 0; --i)
         {
-            show_debug_message($"{_directory}/{_file}");
+            var _dir = _dirs[i];
             
-            _result = array_concat(_result, file_read_directory($"{_directory}/{_file}", true, $"{_file}/"));
+            var _subfiles = file_read_directory($"{_directory}/{_dir}", true);
             
-            continue;
+            for (var j = array_length(_subfiles) - 1; j >= 0; --j)
+            {
+                /* concat _dir to subfile to add the filepath */
+                array_push(_files, $"{_dir}/{_subfiles[j]}");
+            }
         }
         
-        array_push(_result, _file);
+        array_sort(_files, sort_alphabetical_descending);
     }
     
-    return _result;
+    return _files;
 }
-
-show_debug_message($"ts: {file_read_directory(PROGRAM_DIRECTORY_RESOURCES, true)}")

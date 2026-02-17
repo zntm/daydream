@@ -1745,7 +1745,6 @@
     {"id":{"name":"file_save_world_chunk","path":"scripts/file_save_world_chunk/file_save_world_chunk.yy",},},
     {"id":{"name":"file_save_world_global","path":"scripts/file_save_world_global/file_save_world_global.yy",},},
     {"id":{"name":"file_save_world_spawn","path":"scripts/file_save_world_spawn/file_save_world_spawn.yy",},},
-    {"id":{"name":"file_version_registry","path":"scripts/file_version_registry/file_version_registry.yy",},},
     {"id":{"name":"FilePlayer","path":"scripts/FilePlayer/FilePlayer.yy",},},
     {"id":{"name":"FileWorld","path":"scripts/FileWorld/FileWorld.yy",},},
     {"id":{"name":"FloatingTextPool","path":"scripts/FloatingTextPool/FloatingTextPool.yy",},},
