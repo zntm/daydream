@@ -19,7 +19,7 @@ global.inventory = {
     armor_breastplate: array_create(1, INVENTORY_EMPTY),
     armor_leggings:    array_create(1, INVENTORY_EMPTY),
     accessory:         array_create(INVENTORY_LENGTH.ACCESSORY, INVENTORY_EMPTY),
-    _container:         []
+    _container:        []
 }
 
 global.inventory_names = [

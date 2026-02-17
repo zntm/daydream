@@ -1,13 +1,11 @@
 var _player_save_data = global.player_save_data;
 var _world_save_data = global.world_save_data;
 
-// Clear all chunks using chunk_map
-var _all_chunks = chunk_map_get_all();
-var _chunks_length = array_length(_all_chunks);
+var _chunks = chunk_map_get_all();
 
-for (var i = 0; i < _chunks_length; ++i)
+for (var i = array_length(_chunks) - 1; i >= 0; --i)
 {
-    chunk_clear(_all_chunks[i]);
+    chunk_clear(_chunks[i]);
 }
 
 file_save_player_global($"{PROGRAM_DIRECTORY_PLAYERS}/{_player_save_data.uuid}", _player_save_data.name, _player_save_data.attire, obj_Player.hp, obj_Player.hp_max, obj_Player.saturation, {});

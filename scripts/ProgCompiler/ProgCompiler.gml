@@ -149,9 +149,7 @@ function ProgCompiler(_context_keys = []) constructor
     
     static invalidate_constants = function()
     {
-        var _length = array_length(const_scopes);
-        
-        for (var i = 0; i < _length; ++i)
+        for (var i = array_length(const_scopes) - 1; i >= 0; --i)
         {
             const_scopes[@ i] = {}
         }
@@ -187,7 +185,7 @@ function ProgCompiler(_context_keys = []) constructor
     
     static remove_const = function(_name)
     {
-        for (var i = array_length(const_scopes) - 1; i >= 0; i--)
+        for (var i = array_length(const_scopes) - 1; i >= 0; --i)
         {
             if (const_scopes[i][$ _name] != undefined) 
             {
@@ -474,27 +472,10 @@ function ProgCompiler(_context_keys = []) constructor
                 return { bytecode: new ProgBytecode(), params: [], param_count: 0 }
             }
             
-    
-            
-            // Track local variable mapping
-            // Note: Since arguments are already on stack at BP+i, we map them directly.
-            // We don't need to emit LOAD/DEFINE/POP logic anymore for basic args.
-            
             declared_vars[array_length(declared_vars) - 1][$ _param.name] = { type: "local", index: i }
             
-            // Handle default values
             if (_param.default_value != undefined)
             {
-                 // Default value logic is tricky with pre-pushed args.
-                 // We need to check if the passed arg (at stack[BP+i]) is undefined (or missing).
-                 // Actually, if missing, Call opcode pushes undefined? 
-                 // My Call opcode pushes args.
-                 // If call has fewer args, the stack slots are NOT filled.
-                 // So BP+i might be garbage or old stack data if we didn't push undefined.
-                 // In CALL logic, we didn't fill missing args with undefined.
-                 // We need to fix CALL or handle here.
-                 // For now, let's assume CALL pushed undefined (I need to verify/fix that).
-                 
                  emit(PROG_OP.LOAD_LOCAL, i, _node.line);
                  emit(PROG_OP.PUSH_NULL);
                  emit(PROG_OP.EQ);
@@ -505,9 +486,6 @@ function ProgCompiler(_context_keys = []) constructor
                  patch_jump(_skip, bytecode.code_size);
             }
         }
-        
-        // We removed the LOAD/DEFINE/POP loop.
-        // Now arguments are just locals 0..N-1.
         
         // Save and restore memo context for nested functions
         array_push(memo_id_stack, current_memo_id);

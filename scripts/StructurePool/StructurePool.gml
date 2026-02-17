@@ -81,15 +81,13 @@ function StructurePool() : Pool() constructor
     static query_range = function(_x1, _y1, _x2, _y2)
     {
         var _results = [];
-        var _count = array_length(active_structures);
         
-        for (var i = 0; i < _count; ++i)
+        for (var i = array_length(active_structures) - 1; i >= 0; --i)
         {
             var _struct = active_structures[i];
             
-            // Tile-based overlap check
-            if (_struct.x < _x2 && (_struct.x + _struct.width) > _x1 &&
-                _struct.y < _y2 && (_struct.y + _struct.height) > _y1)
+            if (_struct.x < _x2) && (_struct.x + _struct.width > _x1)
+                && (_struct.y < _y2) && (_struct.y + _struct.height > _y1)
             {
                 array_push(_results, _struct);
             }
@@ -99,25 +97,30 @@ function StructurePool() : Pool() constructor
     }
     
     /// @function clear_all()
-    /// @desc Clear all active structures and pool
+    /// @desc Clear all active structures and pool.
     static clear_all = function()
     {
-        active_structures = [];
-        pool = [];
+        for (var i = array_length(active_structures) - 1; i >= 0; --i)
+        {
+            array_delete(active_structures, i, 1);
+        }
+        
+        for (var i = array_length(pool) - 1; i >= 0; --i)
+        {
+            array_delete(pool, i, 1);
+        }
     }
     
     /// @function query_position(_x, _y)
-    /// @desc Returns a structure at the specific tile point
+    /// @desc Returns a structure at the specific tile point.
     static query_position = function(_x, _y)
     {
-        var _count = array_length(active_structures);
-        
-        for (var i = 0; i < _count; ++i)
+        for (var i = array_length(active_structures) - 1; i >= 0; --i)
         {
             var _struct = active_structures[i];
             
-            if (_x >= _struct.x && _x < (_struct.x + _struct.width) &&
-                _y >= _struct.y && _y < (_struct.y + _struct.height))
+            if (_x >= _struct.x) && (_x < _struct.x + _struct.width)
+                && (_y >= _struct.y) && (_y < _struct.y + _struct.height)
             {
                 return _struct;
             }
