@@ -94,6 +94,9 @@ export default [
                 new BiomeFoliage("phantasia:twig", 0.0007).setGenerateOn([
                     "phantasia:stone",
                 ]),
+                new BiomeFoliage("phantasia:cave_roots", 0.04).setGenerateOn([
+                    "phantasia:stone",
+                ]),
             ])
             .setStructures([
                 new BiomeStructure("phantasia:ore/coal", 0.003).setRange(
@@ -133,6 +136,9 @@ export default [
                     "phantasia:stone",
                 ]),
                 new BiomeFoliage("phantasia:twig", 0.0007).setGenerateOn([
+                    "phantasia:stone",
+                ]),
+                new BiomeFoliage("phantasia:cave_roots", 0.04).setGenerateOn([
                     "phantasia:stone",
                 ]),
             ])

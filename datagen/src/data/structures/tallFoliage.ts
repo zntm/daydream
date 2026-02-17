@@ -118,4 +118,41 @@ export default [
             ),
         ),
     ),
+    // Bamboo
+    new DatagenReturnData(
+        "tall_foliage/bamboo.json",
+        new Structure(
+            1,
+            new SmartValueIntRandom(4, 10),
+            new StructurePlacement(StructurePlacementType.Floor, 0, "-height", [
+                new StructurePlacementClearanceCondition(
+                    0,
+                    "-height",
+                    1,
+                    "height",
+                ),
+            ], true),
+            new StructureFunction(
+                "phantasia:tall_foliage",
+                new StructureParameter(
+                    new StructureParameterTile("phantasia:bamboo", 4),
+                    new StructureParameterTile(
+                        "phantasia:bamboo",
+                        new SmartValueChooseWeighted([
+                            new ChooseWeightedOption(1, 4),
+                            new ChooseWeightedOption(2, 4),
+                            new ChooseWeightedOption(3, 1),
+                        ]),
+                    ),
+                    new StructureParameterTile(
+                        "phantasia:bamboo",
+                        new SmartValueChooseWeighted([
+                            new ChooseWeightedOption(1, 1),
+                            new ChooseWeightedOption(2, 1),
+                        ]),
+                    ),
+                ),
+            ),
+        ),
+    ),
 ];

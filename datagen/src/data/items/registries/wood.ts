@@ -42,4 +42,10 @@ export default [
         ["#381D1E", "#301A1C"],
         ["#381D1E", "#301A1C"],
     ),
+    new WoodRegistry(
+        "cherry",
+        ["#E8A0C0", "#D890B0"],
+        ["#5E3A24", "#4A2E1C"],
+        ["#5E3A24", "#4A2E1C"],
+    ),
 ];

@@ -9,6 +9,11 @@
             "id": "phantasia:rock",
             "chance": 0.1,
             "generate_on": "#phantasia:tile/placement/plant_on"
+        },
+        {
+            "id": "phantasia:anemone",
+            "chance": 0.02,
+            "generate_on": "#phantasia:tile/placement/plant_on"
         }
     ],
     "light_colour": {
@@ -62,18 +67,7 @@
             }
         ]
     },
-    "structures": [
-        {
-            "id": "phantasia:tree/pine",
-            "chance": 0.1,
-            "generate_on": "#phantasia:tile/placement/plant_on"
-        },
-        {
-            "id": "phantasia:clump/moss",
-            "chance": 0.006,
-            "generate_on": "#phantasia:tile/placement/plant_on"
-        }
-    ],
+    "structures": [],
     "terrain_modifier": {
         "amplitude_scale": 1.4,
         "height_offset": 6

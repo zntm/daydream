@@ -77,6 +77,11 @@
             "id": "phantasia:tree/oak",
             "chance": 0.06,
             "generate_on": "#phantasia:tile/placement/plant_on"
+        },
+        {
+            "id": "phantasia:tall_foliage/bamboo",
+            "chance": 0.15,
+            "generate_on": "#phantasia:tile/placement/plant_on"
         }
     ],
     "terrain_modifier": {

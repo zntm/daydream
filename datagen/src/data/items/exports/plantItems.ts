@@ -61,26 +61,25 @@ export default [
                             new TileItemPlacementCondition(
                                 TileItemPlacementConditionType.Every,
                                 [
-                                    {
-                                        condition:
-                                            new TileItemPlacementCondition(
-                                                TileItemPlacementConditionType.Some,
-                                                [
-                                                    new TileItemPlacementConditionValue(
-                                                        0,
-                                                        1,
-                                                        "default",
-                                                    ).setId(
-                                                        "#phantasia:tile/placement/plant_on",
-                                                    ),
-                                                    new TileItemPlacementConditionValue(
-                                                        0,
-                                                        1,
-                                                        "z",
-                                                    ).setId("$ID"),
-                                                ],
-                                            ),
-                                    },
+                                    new TileItemPlacement().setCondition(
+                                        new TileItemPlacementCondition(
+                                            TileItemPlacementConditionType.Some,
+                                            [
+                                                new TileItemPlacementConditionValue(
+                                                    0,
+                                                    1,
+                                                    "default",
+                                                ).setId(
+                                                    "#phantasia:tile/placement/plant_on",
+                                                ),
+                                                new TileItemPlacementConditionValue(
+                                                    0,
+                                                    1,
+                                                    "z",
+                                                ).setId("$ID"),
+                                            ],
+                                        ),
+                                    ),
                                 ],
                             ),
                         ),
@@ -152,6 +151,8 @@ export default [
         "lilybell",
         "orchids",
         "rose",
+        "anemone",
+        "cave_roots",
     ].map(
         (id: string) =>
             new DatagenReturnData(
@@ -184,6 +185,33 @@ export default [
                     .setTileSFX("#phantasia:tile/sfx/foliage")
                     .setTileAudioProperties(new TileItemAudioProperties(0.05, 0.0)),
             ),
+    ),
+    new DatagenReturnData(
+        "bamboo.json",
+        new TileItem(
+            ItemType.Untouchable,
+            "phantasia:item/bamboo",
+            "#phantasia:item/generic/inventory_default",
+            [TileItemProperties.CanMirror, TileItemProperties.IsFoliage],
+        )
+            .setTileDrops([new TileItemDrop("phantasia:bamboo")])
+            .setTileHarvest(
+                new TileItemHarvest(
+                    0.38,
+                    0,
+                    new ItemParticle(
+                        "#phantasia:tile/particle_colour/plant",
+                        "#phantasia:tile/generic/harvest_particle_frequency",
+                    ),
+                ),
+            )
+            .setTilePlacement(
+                new TileItemPlacement().setCondition(
+                    "#phantasia:tile/placement/condition_plant",
+                ),
+            )
+            .setTileSFX("#phantasia:tile/sfx/foliage")
+            .setTileAudioProperties(new TileItemAudioProperties(0.05, 0.0)),
     ),
     new DatagenReturnData(
         "seeding_dandelion.json",

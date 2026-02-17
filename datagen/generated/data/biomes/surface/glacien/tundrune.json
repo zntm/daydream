@@ -14,6 +14,11 @@
             "id": "phantasia:rock",
             "chance": 0.06,
             "generate_on": "#phantasia:tile/placement/plant_on"
+        },
+        {
+            "id": "phantasia:anemone",
+            "chance": 0.02,
+            "generate_on": "#phantasia:tile/placement/plant_on"
         }
     ],
     "light_colour": {

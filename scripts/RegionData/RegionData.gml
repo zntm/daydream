@@ -56,6 +56,7 @@ function RegionData(_id, _config = {}) constructor
         amplitude_min: _terrain_config[$ "amplitude_min"] ?? 30,
         amplitude_max: _terrain_config[$ "amplitude_max"] ?? 60,
         noise_scale: _terrain_config[$ "noise_scale"] ?? 0.015625,
+        octaves: _terrain_config[$ "octaves"] ?? 4,
     }
     
     ___category = _config[$ "category"] ?? ___id;
@@ -226,7 +227,7 @@ function RegionData(_id, _config = {}) constructor
         var _t = ___terrain;
         
         // Base terrain noise
-        var _noise = open_simplex_noise(_x * _t.noise_scale, _seed * 0.5, 1.0, 4);
+        var _noise = open_simplex_noise(_x * _t.noise_scale, _seed * 0.5, 1.0, _t.octaves);
         
         // Amplitude (interpolate min/max based on noise?)
         // Or just average?
@@ -369,6 +370,7 @@ function RegionData(_id, _config = {}) constructor
             ___terrain.amplitude_min = _terrain_config[$ "amplitude_min"] ?? ___terrain.amplitude_min;
             ___terrain.amplitude_max = _terrain_config[$ "amplitude_max"] ?? ___terrain.amplitude_max;
             ___terrain.noise_scale = _terrain_config[$ "noise_scale"] ?? ___terrain.noise_scale;
+            ___terrain.octaves = _terrain_config[$ "octaves"] ?? ___terrain.octaves;
         }
         return self;
     }

@@ -29,6 +29,11 @@
             "id": "phantasia:bluebells",
             "chance": 0.05,
             "generate_on": "#phantasia:tile/placement/plant_on"
+        },
+        {
+            "id": "phantasia:anemone",
+            "chance": 0.02,
+            "generate_on": "#phantasia:tile/placement/plant_on"
         }
     ],
     "light_colour": {

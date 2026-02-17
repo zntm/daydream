@@ -114,6 +114,7 @@
                 "octaves": 2.75,
                 "scale": 0.005
             },
+            "map": "phantasia:world/playground/map",
             "offset": {
                 "max": 34,
                 "min": 22,

@@ -1,0 +1,33 @@
+{
+    "inventory": "#phantasia:item/generic/inventory_tile",
+    "item": {
+        "tile": {
+            "audio_properties": {
+                "lowpass": 0.4,
+                "reverb": 0.1
+            },
+            "drops": [
+                {
+                    "id": "phantasia:cherry_workbench"
+                }
+            ],
+            "harvest": {
+                "condition": {
+                    "id": "#phantasia:item/type/axe"
+                },
+                "hardness": 0.36,
+                "level": 1,
+                "particle": {
+                    "frequency": "#phantasia:tile/generic/harvest_particle_frequency",
+                    "id": [
+                        "#5E3A24",
+                        "#4A2E1C"
+                    ]
+                }
+            },
+            "sfx": "#phantasia:tile/sfx/wood"
+        }
+    },
+    "sprite": "phantasia:item/cherry_workbench",
+    "type": "untouchable"
+}

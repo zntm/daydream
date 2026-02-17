@@ -17,6 +17,13 @@
             "generate_on": [
                 "phantasia:stone"
             ]
+        },
+        {
+            "id": "phantasia:cave_roots",
+            "chance": 0.04,
+            "generate_on": [
+                "phantasia:stone"
+            ]
         }
     ],
     "light_colour": {

@@ -1,0 +1,33 @@
+{
+    "inventory": "#phantasia:item/generic/inventory_tile",
+    "item": {
+        "tile": {
+            "audio_properties": {
+                "lowpass": 0.4,
+                "reverb": 0.1
+            },
+            "drops": [
+                {
+                    "id": "phantasia:anvil"
+                }
+            ],
+            "harvest": {
+                "condition": {
+                    "id": "#phantasia:item/type/pickaxe"
+                },
+                "hardness": 0.36,
+                "level": 1,
+                "particle": {
+                    "frequency": "#phantasia:tile/generic/harvest_particle_frequency",
+                    "id": "#phantasia:tile/particle_colour/stone"
+                }
+            },
+            "sfx": "#phantasia:tile/sfx/stone"
+        }
+    },
+    "properties": [
+        "phantasia:is_crafting_station"
+    ],
+    "sprite": "phantasia:item/anvil",
+    "type": "untouchable"
+}

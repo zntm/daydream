@@ -1177,6 +1177,7 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
             "phantasia:is_tile":        set_property_is_tile,
             "phantasia:is_transparent": set_property_is_transparent,
             "phantasia:is_wall":        set_property_is_wall,
+            "phantasia:is_crafting_station": set_is_crafting_station,
         }
         
         if (_properties != undefined)
