@@ -1,5 +1,9 @@
 #macro CAMERA_SPEED 0.2
 
+/// @desc Control camera position.
+/// @param {real} _x The x position.
+/// @param {real} _y The y position.
+/// @param {bool} [_force] OPTIONAL! Force the camera to the new position.
 function control_camera_pos(_x, _y, _force = false)
 {
     var _camera_x, _camera_y;
@@ -23,5 +27,12 @@ function control_camera_pos(_x, _y, _force = false)
     global.camera_x_real = _x;
     global.camera_y_real = _y;
     
-    camera_set_view_pos_subpixel(view_camera[0], _camera_x, _camera_y);
+    /* fix sub-pixel camera positioning to minimize chunk edge visual bugs */
+    var _ratio = camera_get_view_width(view_camera[0]) / surface_get_width(application_surface);
+    
+    camera_set_view_pos(
+        view_camera[0],
+        round(_camera_x / _ratio) * _ratio,
+        round(_camera_y / _ratio) * _ratio
+    );
 }

@@ -1361,11 +1361,8 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     {
         if (_data != undefined)
         {
-            var _ = function_parse(_data);
-            var _length = array_length(_);
-            
-            ___on_random_tick = _;
-            ___on_random_tick_length = _length;
+            ___on_random_tick = _data;
+            ___on_random_tick_length = array_length(_data);
         }
         
         return self;
@@ -1385,11 +1382,8 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     {
         if (_data != undefined)
         {
-            var _ = function_parse(_data);
-            var _length = array_length(_);
-            
-            ___on_attack = _;
-            ___on_attack_length = _length;
+            ___on_attack = _data;
+            ___on_attack_length = array_length(_data);
         }
         
         return self;
@@ -1409,11 +1403,8 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     {
         if (_data != undefined)
         {
-            var _ = function_parse(_data);
-            var _length = array_length(_);
-            
-            ___on_item_use = _;
-            ___on_item_use_length = _length;
+            ___on_item_use = _data;
+            ___on_item_use_length = array_length(_data);
         }
         
         return self;
@@ -1433,11 +1424,8 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     {
         if (_data != undefined)
         {
-            var _ = function_parse(_data);
-            var _length = array_length(_);
-            
-            ___on_tile_use = _;
-            ___on_tile_use_length = _length;
+            ___on_tile_use = _data;
+            ___on_tile_use_length = array_length(_data);
         }
         
         return self;
@@ -1457,11 +1445,8 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     {
         if (_data != undefined)
         {
-            var _ = function_parse(_data);
-            var _length = array_length(_);
-            
-            ___on_item_double_attack = _;
-            ___on_item_double_attack_length = _length;
+            ___on_item_double_attack = _data;
+            ___on_item_double_attack = array_length(_data);
         }
         
         return self;
@@ -1481,11 +1466,8 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     {
         if (_data != undefined)
         {
-            var _ = function_parse(_data);
-            var _length = array_length(_);
-            
-            ___on_item_double_use = _;
-            ___on_item_double_use_length = _length;
+            ___on_item_double_use = _data;
+            ___on_item_double_use = array_length(_data);
         }
         
         return self;
@@ -1505,11 +1487,8 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     {
         if (_data != undefined)
         {
-            var _ = function_parse(_data);
-            var _length = array_length(_);
-            
-            ___on_item_double_move = _;
-            ___on_item_double_move_length = _length;
+            ___on_item_double_move = _data;
+            ___on_item_double_move = array_length(_data);
         }
         
         return self;
@@ -1530,14 +1509,13 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
         if (_skill != undefined)
         {
             var _on_trigger = _skill[$ "on_trigger"];
-            var _ = (_on_trigger != undefined) ? function_parse(_on_trigger) : undefined;
             
             ___item_skill = {
                 type: _skill[$ "type"] ?? "combo", // "combo" (hit based) or "charge" (hold based)
                 threshold: smart_value_parse(_skill[$ "threshold"] ?? 10),
                 stamina_cost: smart_value_parse(_skill[$ "stamina_cost"] ?? 30),
-                on_trigger: _,
-                on_trigger_length: (_ != undefined) ? array_length(_) : 0
+                on_trigger: _on_trigger,
+                on_trigger_length: (_on_trigger != undefined) ? array_length(_) : 0
             }
         }
         
@@ -1585,11 +1563,8 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     {
         if (_data != undefined)
         {
-            var _ = function_parse(_data);
-            var _length = array_length(_);
-            
-            ___on_place = _;
-            ___on_place_length = _length;
+            ___on_place = _data;
+            ___on_place_length = array_length(_data);;
         }
         
         return self;
@@ -1609,11 +1584,8 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     {
         if (_data != undefined)
         {
-            var _ = function_parse(_data);
-            var _length = array_length(_);
-            
-            ___on_harvest = _;
-            ___on_harvest_length = _length;
+            ___on_harvest = _data;
+            ___on_harvest_length = array_length(_data);
         }
         
         return self;
