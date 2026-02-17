@@ -3,7 +3,7 @@
     "item": {
         "ammo_type": "arrow",
         "damage": 2,
-        "projectile": "phantasia:arrow"
+        "projectile": "phantasia:projectiles/arrow"
     },
     "sprite": "phantasia:item/arrow",
     "type": "default"

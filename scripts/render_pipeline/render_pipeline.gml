@@ -301,14 +301,15 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
             with (obj_Projectile)
             {
                 var _data = _projectile_data[$ _id];
+                var _bool = _data.get_boolean();
                 
-                if (!_data.is_additive()) continue;
+                if !(_bool & PROJECTILE_BOOLEAN.ADDITIVE) continue;
                 
                 var _sprite = _sprite_asset[$ _data.get_sprite()];
                 
                 var _index = 0;
                 
-                if (_data.has_stretch_animation())
+                if (_bool & PROJECTILE_BOOLEAN.STRETCH_ANIMATION)
                 {
                     _index = floor(_sprite.get_length() * (1 - (timer_life / timer_life_max)));
                 }
@@ -316,7 +317,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 var _xscale = entity_xscale * sign(image_xscale);
                 var _yscale = entity_yscale * sign(image_yscale);
                 
-                draw_sprite_ext(_sprite.get_sprite(), _index, x + (_xscale * (_sprite.get_xoffset() - (attribute.get_collision_box_width() / 2))), y + (_yscale * (_sprite.get_yoffset() - attribute.get_collision_box_height())), _xscale, _yscale, image_angle, image_blend, image_alpha * (_data.is_fade_out() ? timer_life / timer_life_max : 1));
+                draw_sprite_ext(_sprite.get_sprite(), _index, x + (_xscale * (_sprite.get_xoffset() - (attribute.get_collision_box_width() / 2))), y + (_yscale * (_sprite.get_yoffset() - attribute.get_collision_box_height())), _xscale, _yscale, image_angle, image_blend, image_alpha * ((_bool & PROJECTILE_BOOLEAN.FADE_OUT) ? timer_life / timer_life_max : 1));
             }
             
             gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_src_alpha, bm_one);
@@ -324,14 +325,15 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
             with (obj_Projectile)
             {
                 var _data = _projectile_data[$ _id];
+                var _bool = _data.get_boolean();
                 
-                if (_data.is_additive()) continue;
+                if (_bool & PROJECTILE_BOOLEAN.ADDITIVE) continue;
                 
                 var _sprite = _sprite_asset[$ _data.get_sprite()];
                 
                 var _index = 0;
                 
-                if (_data.has_stretch_animation())
+                if (_bool & PROJECTILE_BOOLEAN.STRETCH_ANIMATION)
                 {
                     _index = floor(_sprite.get_length() * (1 - (timer_life / timer_life_max)));
                 }
@@ -339,7 +341,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 var _xscale = entity_xscale * sign(image_xscale);
                 var _yscale = entity_yscale * sign(image_yscale);
                 
-                draw_sprite_ext(_sprite.get_sprite(), _index, x + (_xscale * (_sprite.get_xoffset() - (attribute.get_collision_box_width() / 2))), y + (_yscale * (_sprite.get_yoffset() - attribute.get_collision_box_height())), _xscale, _yscale, image_angle, image_blend, image_alpha * (_data.is_fade_out() ? timer_life / timer_life_max : 1));
+                draw_sprite_ext(_sprite.get_sprite(), _index, x + (_xscale * (_sprite.get_xoffset() - (attribute.get_collision_box_width() / 2))), y + (_yscale * (_sprite.get_yoffset() - attribute.get_collision_box_height())), _xscale, _yscale, image_angle, image_blend, image_alpha * ((_bool & PROJECTILE_BOOLEAN.FADE_OUT) ? timer_life / timer_life_max : 1));
             }
         }
     }

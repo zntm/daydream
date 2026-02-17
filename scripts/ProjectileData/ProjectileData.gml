@@ -1,408 +1,159 @@
-enum PROJECTILE_PROPERTIES_BOOLEAN {
-    IS_ADDITIVE             = 1 << 0,
-    CAN_DESTROY_ON_TILE_COLLISION = 1 << 1,
-    IS_FADE_OUT             = 1 << 2,
-    HAS_COLLISION           = 1 << 3,
-    HAS_STRETCHED_ANIMATION = 1 << 4,
-    CAN_DESTROY_ON_ENTITY_COLLISION = 1 << 5
+enum PROJECTILE_BOOLEAN {
+    DESTROY_ON_TILE    = 1 << 0,
+    DESTROY_ON_ENTITY  = 1 << 1,
+    ADDITIVE           = 1 << 2,
+    FADE_OUT           = 1 << 3,
+    HAS_COLLISION      = 1 << 4,
+    STRETCH_ANIMATION  = 1 << 5
 }
 
-enum PROJECTILE_MOVEMENT_TYPE {
-    CONSTANT,
-    REFERENCE
+enum PROJECTILE_PARTICLE_MODE {
+    TICK,
+    SHOOT,
+    LAND
 }
 
+#macro PROJECTILE_PROPERTIES_MAP global.___projectile_properties_map
+
+PROJECTILE_PROPERTIES_MAP = {
+    "phantasia:can_destroy_on_tile_collision":   PROJECTILE_BOOLEAN.DESTROY_ON_TILE,
+    "phantasia:can_destroy_on_entity_collision": PROJECTILE_BOOLEAN.DESTROY_ON_ENTITY,
+    "phantasia:is_additive":                    PROJECTILE_BOOLEAN.ADDITIVE,
+    "phantasia:is_fade_out":                    PROJECTILE_BOOLEAN.FADE_OUT,
+    "phantasia:has_collision":                  PROJECTILE_BOOLEAN.HAS_COLLISION,
+    "phantasia:has_stretch_animation":          PROJECTILE_BOOLEAN.STRETCH_ANIMATION
+};
+
+/// @desc Projectile data constructor.
+/// @param {String} _namespace
+/// @param {String} _id
+/// @param {String} _sprite
 function ProjectileData(_namespace, _id, _sprite) : ParentData(_namespace, _id) constructor
 {
-    ___sprite = _sprite;
+    ___sprite   = _sprite;
+    ___boolean  = 0;
+    ___lifetime = 60;
+    ___gravity  = 0;
     
-    static __set_value = function(_name, _value)
-    {
-        if (_value != undefined)
-        {
-            self[$ _name] = _value;
-        }
-    }
+    /* launch physics */
+    ___speed              = 0;
+    ___speed_y            = 0;
+    ___scale              = 1;
+    ___rotation           = 0;
+    ___rotation_increment = 0;
     
-    static __set_smart_value = function(_name, _value)
-    {
-        if (_value != undefined)
-        {
-            self[$ _name] = smart_value_parse(_value);
-        }
-    }
+    /* on-collision physics override */
+    ___on_collision_speed_x = undefined;
+    ___on_collision_speed_y = undefined;
     
-    static set_sprite = function(_sprite)
-    {
-        ___sprite = _sprite;
-        
-        return self;
-    }
+    /* attribute (collision/hit box) */
+    ___attribute = undefined;
     
-    static get_sprite = function()
-    {
-        return ___sprite;
-    }
+    /* particles: array of { id, mode, frequency, offset_x, offset_y } */
+    ___particles = undefined;
     
-    #region Properties
+    /* proglang script hook arrays */
+    ___on_shoot      = undefined;
+    ___on_tick       = undefined;
+    ___on_hit_entity = undefined;
+    ___on_hit_tile   = undefined;
+    ___on_land       = undefined;
     
-    ___properties = 0;
+    #region Setters
     
-    static set_properties = function(_properties)
-    {
-        static __properties = {
-            "phantasia:is_additive":             PROJECTILE_PROPERTIES_BOOLEAN.IS_ADDITIVE,
-            "phantasia:can_destroy_on_tile_collision": PROJECTILE_PROPERTIES_BOOLEAN.CAN_DESTROY_ON_TILE_COLLISION,
-            "phantasia:is_fade_out":             PROJECTILE_PROPERTIES_BOOLEAN.IS_FADE_OUT,
-            "phantasia:has_collision":           PROJECTILE_PROPERTIES_BOOLEAN.HAS_COLLISION,
-            "phantasia:has_stretch_animation":   PROJECTILE_PROPERTIES_BOOLEAN.HAS_STRETCHED_ANIMATION,
-            "phantasia:can_destroy_on_entity_collision": PROJECTILE_PROPERTIES_BOOLEAN.CAN_DESTROY_ON_ENTITY_COLLISION
-        }
-        
-        if (_properties != undefined)
-        {
-            var _length = array_length(_properties);
-            
-            for (var i = 0; i < _length; ++i)
-            {
-                var _property = _properties[i];
-                
-                ___properties |= __properties[$ _property];
-            }
-        }
-        
-        return self;
-    }
-    
-    static is_additive = function()
-    {
-        return !!(___properties & PROJECTILE_PROPERTIES_BOOLEAN.IS_ADDITIVE);
-    }
-    
-    static can_destroy_on_tile_collision = function()
-    {
-        return !!(___properties & PROJECTILE_PROPERTIES_BOOLEAN.CAN_DESTROY_ON_TILE_COLLISION);
-    }
-    
-    static is_fade_out = function()
-    {
-        return !!(___properties & PROJECTILE_PROPERTIES_BOOLEAN.IS_FADE_OUT);
-    }
-    
-    static has_collision = function()
-    {
-        return !!(___properties & PROJECTILE_PROPERTIES_BOOLEAN.HAS_COLLISION);
-    }
-    
-    static has_stretch_animation = function()
-    {
-        return !!(___properties & PROJECTILE_PROPERTIES_BOOLEAN.HAS_STRETCHED_ANIMATION);
-    }
-    
-    static can_destroy_on_entity_collision = function()
-    {
-        return !!(___properties & PROJECTILE_PROPERTIES_BOOLEAN.CAN_DESTROY_ON_ENTITY_COLLISION);
-    }
+    static set_sprite = function(_v) { ___sprite = _v; return self; }
+    static set_boolean = function(_v) { ___boolean = _v; return self; }
+    static set_lifetime = function(_v) { ___lifetime = _v; return self; }
+    static set_gravity = function(_v) { ___gravity = _v; return self; }
+    static set_speed = function(_v) { ___speed = _v; return self; }
+    static set_speed_y = function(_v) { ___speed_y = _v; return self; }
+    static set_scale = function(_v) { ___scale = _v; return self; }
+    static set_rotation = function(_v) { ___rotation = _v; return self; }
+    static set_rotation_increment = function(_v) { ___rotation_increment = _v; return self; }
+    static set_on_collision_speed_x = function(_v) { ___on_collision_speed_x = _v; return self; }
+    static set_on_collision_speed_y = function(_v) { ___on_collision_speed_y = _v; return self; }
+    static set_attribute = function(_v) { ___attribute = _v; return self; }
+    static set_particles = function(_v) { ___particles = _v; return self; }
+    static set_on_shoot = function(_v) { ___on_shoot = _v; return self; }
+    static set_on_tick = function(_v) { ___on_tick = _v; return self; }
+    static set_on_hit_entity = function(_v) { ___on_hit_entity = _v; return self; }
+    static set_on_hit_tile = function(_v) { ___on_hit_tile = _v; return self; }
+    static set_on_land = function(_v) { ___on_land = _v; return self; }
     
     #endregion
     
-    static set_lifetime = function(_lifetime)
+    #region Getters
+    
+    static get_sprite = function() { return ___sprite; }
+    static get_boolean = function() { return ___boolean; }
+    static get_lifetime = function() { return ___lifetime; }
+    static get_gravity = function() { return ___gravity; }
+    static get_speed = function() { return ___speed; }
+    static get_speed_y = function() { return ___speed_y; }
+    static get_scale = function() { return ___scale; }
+    static get_rotation = function() { return ___rotation; }
+    static get_rotation_increment = function() { return ___rotation_increment; }
+    static get_on_collision_speed_x = function() { return ___on_collision_speed_x; }
+    static get_on_collision_speed_y = function() { return ___on_collision_speed_y; }
+    static get_attribute = function() { return ___attribute; }
+    static get_particles = function() { return ___particles; }
+    static get_on_shoot = function() { return ___on_shoot; }
+    static get_on_tick = function() { return ___on_tick; }
+    static get_on_hit_entity = function() { return ___on_hit_entity; }
+    static get_on_hit_tile = function() { return ___on_hit_tile; }
+    static get_on_land = function() { return ___on_land; }
+    
+    #endregion
+}
+
+/// @desc Parse boolean properties from a JSON array of property strings.
+/// @param {Array} _properties
+/// @returns {Real} bitfield
+function projectile_parse_properties(_properties)
+{
+    if (_properties == undefined) return 0;
+    
+    var _bits = 0;
+    var _len  = array_length(_properties);
+    
+    for (var i = 0; i < _len; ++i)
     {
-        ___lifetime = smart_value_parse(_lifetime);
+        var _flag = PROJECTILE_PROPERTIES_MAP[$ _properties[i]];
         
-        return self;
+        if (_flag != undefined) _bits |= _flag;
     }
     
-    static get_lifetime = function()
-    {
-        return ___lifetime;
-    }
+    return _bits;
+}
+
+/// @desc Parse a particle array from JSON into runtime format with mode enums.
+/// @param {Array} _particles_json
+/// @returns {Array|Undefined}
+function projectile_parse_particles(_particles_json)
+{
+    if (_particles_json == undefined) return undefined;
     
-    static set_physics = function(_physics)
+    var _len = array_length(_particles_json);
+    
+    if (_len == 0) return undefined;
+    
+    var _out = array_create(_len);
+    
+    for (var i = 0; i < _len; ++i)
     {
-        if (_physics != undefined)
-        {
-            // Handle xspeed directly under physics
-            var _xspeed = _physics[$ "xspeed"];
-            
-            if (_xspeed != undefined)
-            {
-                var _type = _xspeed[$ "type"];
-                
-                if (_type == "reference")
-                {
-                    __set_value("___xspeed_type", PARTICLE_MOVEMENT_TYPE.REFERENCE);
-                    __set_value("___xspeed", _xspeed.value);
-                }
-                else// if (_type == "smart_value:random" or other)
-                {
-                    __set_value("___xspeed_type", PARTICLE_MOVEMENT_TYPE.CONSTANT);
-                    __set_smart_value("___xspeed", _xspeed);
-                }
-                
-                __set_smart_value("___xspeed_offset", _xspeed[$ "offset"]);
-                __set_smart_value("___xspeed_multiplier", _xspeed[$ "multiplier"]);
-            }
-            
-            // Handle yspeed directly under physics
-            var _yspeed = _physics[$ "yspeed"];
-            
-            if (_yspeed != undefined)
-            {
-                var _type = _yspeed[$ "type"];
-                
-                if (_type == "reference")
-                {
-                    __set_value("___yspeed_type", PARTICLE_MOVEMENT_TYPE.REFERENCE);
-                    __set_value("___yspeed", _yspeed.value);
-                }
-                else// if (_type == "smart_value:random" or other)
-                {
-                    __set_value("___yspeed_type", PARTICLE_MOVEMENT_TYPE.CONSTANT);
-                    __set_smart_value("___yspeed", _yspeed);
-                }
-                
-                __set_smart_value("___yspeed_offset", _yspeed[$ "offset"]);
-                __set_smart_value("___yspeed_multiplier", _yspeed[$ "multiplier"]);
-            }
-            
-            __set_smart_value("___scale", _physics[$ "scale"]);
-            
-            var _rotation = _physics[$ "rotation"];
-            
-            if (_rotation != undefined)
-            {
-                __set_smart_value("___rotation_increment", _rotation[$ "increment"]);
-                __set_smart_value("___rotation", _rotation[$ "value"]);
-            }
-            
-            var _on_collision = _physics[$ "on_collision"];
-            
-            if (_on_collision != undefined)
-            {
-                // Handle on_collision xspeed
-                var _x = _on_collision[$ "xspeed"];
-                
-                if (_x != undefined)
-                {
-                    var _type = _x[$ "type"];
-                    
-                    if (_type == "reference")
-                    {
-                        __set_value("___on_collision_xspeed_type", PARTICLE_MOVEMENT_TYPE.REFERENCE);
-                        __set_value("___on_collision_xspeed", _x.value);
-                    }
-                    else// if (_type == "smart_value:random" or other)
-                    {
-                        __set_value("___on_collision_xspeed_type", PARTICLE_MOVEMENT_TYPE.CONSTANT);
-                        __set_smart_value("___on_collision_xspeed", _x);
-                    }
-                    
-                    __set_smart_value("___on_collision_xspeed_offset", _x[$ "offset"]);
-                    __set_smart_value("___on_collision_xspeed_multiplier", _x[$ "multiplier"]);
-                }
-                
-                // Handle on_collision yspeed
-                var _y = _on_collision[$ "yspeed"];
-                
-                if (_y != undefined)
-                {
-                    var _type = _y[$ "type"];
-                    
-                    if (_type == "reference")
-                    {
-                        __set_value("___on_collision_yspeed_type", PARTICLE_MOVEMENT_TYPE.REFERENCE);
-                        __set_value("___on_collision_yspeed", _y.value);
-                    }
-                    else// if (_type == "smart_value:random" or other)
-                    {
-                        __set_value("___on_collision_yspeed_type", PARTICLE_MOVEMENT_TYPE.CONSTANT);
-                        __set_smart_value("___on_collision_yspeed", _y);
-                    }
-                    
-                    __set_smart_value("___on_collision_yspeed_offset", _y[$ "offset"]);
-                    __set_smart_value("___on_collision_yspeed_multiplier", _y[$ "multiplier"]);
-                }
-            }
-        }
+        var _p    = _particles_json[i];
+        var _mode = _p[$ "mode"] ?? "tick";
         
-        return self;
+        _out[i] = {
+            id:        _p[$ "id"],
+            mode: (_mode == "shoot") ? PROJECTILE_PARTICLE_MODE.SHOOT
+                : ((_mode == "land") ? PROJECTILE_PARTICLE_MODE.LAND
+                    : PROJECTILE_PARTICLE_MODE.TICK),
+            frequency: _p[$ "frequency"] ?? 0.1,
+            offset_x:  _p[$ "offset_x"]  ?? 0,
+            offset_y:  _p[$ "offset_y"]  ?? 0
+        };
     }
     
-    static set_attribute = function(_attributes)
-    {
-        ___attributes = _attributes;
-        
-        if (_attributes != undefined)
-        {
-            __set_smart_value("___gravity", _attributes[$ "gravity"]);
-        }
-        
-        return self;
-    }
-    
-    static get_gravity = function()
-    {
-        return self[$ "___gravity"] ?? 0;
-    }
-    
-    static get_xspeed_type = function()
-    {
-        return self[$ "___xspeed_type"] ?? PARTICLE_MOVEMENT_TYPE.CONSTANT;
-    }
-    
-    static get_xspeed = function()
-    {
-        return self[$ "___xspeed"] ?? 0;
-    }
-    
-    static get_xspeed_offset = function()
-    {
-        return self[$ "___xspeed_offset"] ?? 0;
-    }
-    
-    static get_xspeed_multiplier = function()
-    {
-        return self[$ "___xspeed_multiplier"] ?? 1;
-    }
-    
-    static get_yspeed_type = function()
-    {
-        return self[$ "___yspeed_type"] ?? PARTICLE_MOVEMENT_TYPE.CONSTANT;
-    }
-    
-    static get_yspeed = function()
-    {
-        return self[$ "___yspeed"] ?? 0;
-    }
-    
-    static get_yspeed_offset = function()
-    {
-        return self[$ "___yspeed_offset"] ?? 0;
-    }
-    
-    static get_yspeed_multiplier = function()
-    {
-        return self[$ "___yspeed_multiplier"] ?? 1;
-    }
-    
-    static get_scale = function()
-    {
-        return self[$ "___scale"] ?? 1;
-    }
-    
-    static get_rotation_increment = function()
-    {
-        return self[$ "___rotation_increment"] ?? 0;
-    }
-    
-    static get_rotation = function()
-    {
-        return self[$ "___rotation"] ?? 0;
-    }
-    
-    static get_on_collision_xspeed_type = function()
-    {
-        return self[$ "___on_collision_xspeed_type"] ?? PARTICLE_MOVEMENT_TYPE.CONSTANT;
-    }
-    
-    static get_on_collision_xspeed = function()
-    {
-        return self[$ "___on_collision_xspeed"] ?? 0;
-    }
-    
-    static get_on_collision_xspeed_offset = function()
-    {
-        return self[$ "___on_collision_xspeed_offset"] ?? 0;
-    }
-    
-    static get_on_collision_xspeed_multiplier = function()
-    {
-        return self[$ "___on_collision_xspeed_multiplier"] ?? 1;
-    }
-    
-    static get_on_collision_yspeed_type = function()
-    {
-        return self[$ "___on_collision_yspeed_type"] ?? PARTICLE_MOVEMENT_TYPE.CONSTANT;
-    }
-    
-    static get_on_collision_yspeed = function()
-    {
-        return self[$ "___on_collision_yspeed"] ?? 0;
-    }
-    
-    static get_on_collision_yspeed_offset = function()
-    {
-        return self[$ "___on_collision_yspeed_offset"] ?? 0;
-    }
-    
-    static get_on_collision_yspeed_multiplier = function()
-    {
-        return self[$ "___on_collision_yspeed_multiplier"] ?? 1;
-    }
-    
-    static get_attribute = function()
-    {
-        return self[$ "___attributes"];
-    }
-    
-    static set_on_shoot = function(_on_shoot)
-    {
-        ___on_shoot = _on_shoot;
-        
-        return self;
-    }
-    
-    static get_on_shoot = function()
-    {
-        return self[$ "___on_shoot"];
-    }
-    
-    static set_on_land = function(_on_land)
-    {
-        ___on_land = _on_land;
-        
-        return self;
-    }
-    
-    static get_on_land = function()
-    {
-        return self[$ "___on_land"];
-    }
-    
-    static set_on_hit_entity = function(_on_hit_entity)
-    {
-        ___on_hit_entity = _on_hit_entity;
-        
-        return self;
-    }
-    
-    static get_on_hit_entity = function()
-    {
-        return self[$ "___on_hit_entity"];
-    }
-    
-    static set_on_hit_tile = function(_on_hit_tile)
-    {
-        ___on_hit_tile = _on_hit_tile;
-        
-        return self;
-    }
-    
-    static get_on_hit_tile = function()
-    {
-        return self[$ "___on_hit_tile"];
-    }
-    
-    static set_particles = function(_particles)
-    {
-        ___particles = _particles;
-        
-        return self;
-    }
-    
-    static get_particles = function()
-    {
-        return self[$ "___particles"];
-    }
+    return _out;
 }

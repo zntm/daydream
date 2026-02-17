@@ -522,7 +522,13 @@ proglang_function_register("loca_translate", function(_args) {
 });
 
 proglang_function_register("spawn_projectile", function(_args) {
-    return spawn_projectile(_args[0], _args[1], _args[2], _args[3], _args[4] ?? 1, _args[5] ?? 1);
+    return spawn_projectile(
+        _args[0], _args[1], _args[2], _args[3],
+        _args[4] ?? 1, _args[5] ?? 1, noone,
+        (array_length(_args) > 6) ? _args[6] : undefined,
+        (array_length(_args) > 7) ? _args[7] : undefined,
+        (array_length(_args) > 8) ? _args[8] : 1.0
+    );
 });
 
 proglang_function_register("inventory_item_create", function(_args) {
