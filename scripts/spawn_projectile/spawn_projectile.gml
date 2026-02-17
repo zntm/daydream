@@ -36,62 +36,50 @@ function spawn_projectile(_x, _y, _id, _damage, _xscale = 1, _yscale = 1, _owner
         image_xscale = physics_body.scale_x;
         image_yscale = physics_body.scale_y;
         
-        /* base speed from data */
         var _max_speed = smart_value(_data.get_speed());
-        if (_max_speed == 0) _max_speed = 5;
         
         var _speed = _max_speed * _power;
         
-        /* --- trajectory solver --- */
         var _aim_angle = (_xscale >= 0) ? 0 : 180;
         
-        if (_target_x != undefined && _target_y != undefined)
+        if (_target_x != undefined) && (_target_y != undefined)
         {
             var _dx = _target_x - _x;
             var _dy = _target_y - _y;
-            var _dist_sq = _dx * _dx + _dy * _dy;
             
-            if (_dist_sq > 1)
+            var _g = _data.get_gravity();
+            
+            /*
+            * ballistic arc: solve for launch angle so the trajectory
+            * passes through (_target_x, _target_y).
+            *
+            * a * tan^2(θ) + b * tan(θ) + c = 0
+            * a = g * dx^2 / (2 * v^2)
+            * b = dx
+            * c = a - dy
+            */
+            var _adx = abs(_dx);
+            var _v2  = _speed * _speed;
+            var _a   = (_g * _adx * _adx) / (2 * _v2);
+            var _b   = _adx;
+            var _c   = _a - _dy;
+            var _d   = _b * _b - 4 * _a * _c;
+            
+            if (_d >= 0)
             {
-                var _g = _data.get_gravity();
+                /* pick the low-arc solution */
+                var _tan = (-_b + sqrt(_d)) / (2 * _a);
+                _aim_angle = radtodeg(arctan2(_tan, 1));
                 
-                if (_g != 0)
+                if (_dx < 0)
                 {
-                    /*
-                     * Ballistic arc: solve for launch angle so the trajectory
-                     * passes through (_target_x, _target_y).
-                     *
-                     * A·tan²(θ) + B·tan(θ) + C = 0
-                     * A = g·dx² / (2·v²)
-                     * B = dx
-                     * C = A - dy
-                     */
-                    var _adx = abs(_dx);
-                    var _v2  = _speed * _speed;
-                    var _a   = (_g * _adx * _adx) / (2 * _v2);
-                    var _b   = _adx;
-                    var _c   = _a - _dy;
-                    var _d   = _b * _b - 4 * _a * _c;
-                    
-                    if (_d >= 0)
-                    {
-                        /* pick the low-arc solution */
-                        var _tan = (-_b + sqrt(_d)) / (2 * _a);
-                        _aim_angle = radtodeg(arctan2(_tan, 1));
-                        
-                        /* flip if aiming left */
-                        if (_dx < 0) _aim_angle = 180 - _aim_angle;
-                    }
-                    else
-                    {
-                        /* target out of range, fall back to direct aim */
-                        _aim_angle = point_direction(_x, _y, _target_x, _target_y);
-                    }
+                    _aim_angle = 180 - _aim_angle;
                 }
-                else
-                {
-                    _aim_angle = point_direction(_x, _y, _target_x, _target_y);
-                }
+            }
+            else
+            {
+                /* target out of range, fall back to direct aim */
+                _aim_angle = point_direction(_x, _y, _target_x, _target_y);
             }
         }
         
