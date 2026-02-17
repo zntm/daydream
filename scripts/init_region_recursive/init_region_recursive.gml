@@ -1,4 +1,4 @@
-global.region_data = {};
+global.region_data = {}
 
 function init_region_recursive(_directory, _namespace = "phantasia", _id = undefined)
 {

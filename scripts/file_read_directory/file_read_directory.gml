@@ -16,7 +16,7 @@ function file_read_directory(_directory, _recursive = false, _prefix = "")
         return _files;
     }
     
-    var _result = [];
+    var _result = _files;
     var _length = array_length(_files);
     
     for (var i = 0; i < _length; ++i)

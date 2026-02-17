@@ -526,7 +526,7 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
             "launcher": ITEM_HOLD_TYPE.LAUNCHER,
             "spear":    ITEM_HOLD_TYPE.SPEAR,
             "whip":     ITEM_HOLD_TYPE.WHIP
-        };
+        }
         
         if (is_string(_type_or_struct))
         {
@@ -548,7 +548,7 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
                         hold: _segments[$ "hold"] ?? 1,
                         mid:  smart_value_parse(_segments[$ "mid"] ?? 2),
                         tip:  _segments[$ "tip"] ?? 3
-                    };
+                    }
                 }
             }
         }

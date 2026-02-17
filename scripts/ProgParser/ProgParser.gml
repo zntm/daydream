@@ -117,7 +117,7 @@ function ProgParser(_tokens) constructor
         var _annotations = {
             is_inline: false,
             is_memoize: false
-        };
+        }
         
         while (check(PROG_TOKEN.AT_INLINE) || check(PROG_TOKEN.AT_MEMOIZE))
         {

@@ -828,12 +828,11 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
             }
         }
 
-        ___region_generator = new RegionGenerator({
+        ___region_generator = region_gen_create({
             regions: ___regions_objects,
             map_buffer: ___map_buffer,
             map_width: ___map_width,
             map_height: ___map_height,
-            // Large regions configuration
             cell_size: 2048, 
             warp_scale: 0.0015,
             warp_power: 384,
@@ -850,7 +849,7 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         
         if (___region_generator == undefined) return undefined;
         
-        return ___region_generator.get_region(_x, _y, 0, _seed);
+        return region_gen_get_region(___region_generator, _x, _y, _seed);
     }
     
     static get_region_boundary_distance = function(_x, _y, _seed)
@@ -862,7 +861,7 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         
         if (___region_generator == undefined) return 0;
         
-        return ___region_generator.get_boundary_distance(_x, _y, 0, _seed);
+        return region_gen_get_boundary_distance(___region_generator, _x, _y, _seed);
     }
     
     static get_region_blend_data = function(_x, _y, _seed)
@@ -874,7 +873,7 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         
         if (___region_generator == undefined) return undefined;
         
-        return ___region_generator.get_blend_data(_x, _y, 0, _seed);
+        return region_gen_get_blend_data(___region_generator, _x, _y, _seed);
     }
     
     static get_sky_detail_noise_amplitude = function()

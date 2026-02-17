@@ -8,7 +8,7 @@ function UIParser(_tokens) constructor {
     error = "";
     
     // Variable scope for local vars (var _padding = 10)
-    variables = {};
+    variables = {}
     
     // =============================================================================
     // Helpers
@@ -48,7 +48,7 @@ function UIParser(_tokens) constructor {
         if (check(_type)) return advance();
         
         error_at_current(_message);
-        return { type: UI_TOKEN.ERROR, lexeme: "", literal: undefined, line: peek().line };
+        return { type: UI_TOKEN.ERROR, lexeme: "", literal: undefined, line: peek().line }
     }
     
     static error_at_current = function(_message) {

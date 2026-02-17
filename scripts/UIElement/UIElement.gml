@@ -35,10 +35,10 @@ function UIElement(_x, _y, _width, _height) constructor {
     element_type = "";
     
     // Data bindings: property_name -> binding_name
-    bindings = {};
+    bindings = {}
     
     // Event handlers: event_name -> script_id
-    event_handlers = {};
+    event_handlers = {}
     
     // Link context (provided by Proglang at spawn time)
     link_context = undefined;
@@ -221,7 +221,7 @@ function UIElement(_x, _y, _width, _height) constructor {
                 element_name: element_name,
                 event: _event,
                 data: _data
-            };
+            }
             
             // Merge with link context
             if (link_context != undefined) {

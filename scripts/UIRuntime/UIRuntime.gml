@@ -2,14 +2,14 @@
 /// Central system for the declarative UI language
 
 // Global UI definition cache
-global.ui_definitions = {};
+global.ui_definitions = {}
 
 // Global UI instance registry
-global.ui_instances = {};
+global.ui_instances = {}
 global.ui_instance_counter = 0;
 
 // Global UI event bus - tracks which events have been fired this frame
-global.ui_pending_events = {};
+global.ui_pending_events = {}
 
 /// @desc Load and parse a UI file, returning definitions
 /// @param {String} _path Path to .ui file
@@ -68,11 +68,11 @@ function ui_load(_path) {
     var _ui_def = {
         document: _document,
         variables: _parser.variables
-    };
+    }
     
     // Expose top-level elements by name for importing in Daydream
     var _defs = _document.definitions;
-    var _exports = {};
+    var _exports = {}
     for (var i = 0; i < array_length(_defs); i++) {
         var _el = _defs[i];
         if (is_struct(_el)) {
@@ -126,7 +126,7 @@ function ui_spawn(_definitions, _config = {}, _events = undefined) {
         return undefined;
     }
 
-    var _link = _config[$ "link"] ?? {};
+    var _link = _config[$ "link"] ?? {}
     var _parent = _config[$ "parent"] ?? undefined;
     
     var _instance = {
@@ -137,12 +137,12 @@ function ui_spawn(_definitions, _config = {}, _events = undefined) {
         render_events: _events,   // Array of event strings, or undefined for every-frame
         dirty: true,              // Start dirty so first frame always renders
         visible: true             // Control visibility of all root elements
-    };
+    }
     
     var _def_count = array_length(_definitions);
     
     // Get variables from definition if available
-    var _variables = {};
+    var _variables = {}
     if (is_struct(_definitions) && struct_exists(_definitions, "variables")) {
         _variables = _definitions.variables;
     }
@@ -339,7 +339,7 @@ function ui_instantiate_element(_node, _link, _variables) {
             
             for (var j = 0; j < _repeat_count; j++) {
                 // Create a copy of the variables scope with the loop variable
-                var _loop_vars = {};
+                var _loop_vars = {}
                 var _var_names = struct_get_names(_variables);
                 for (var k = 0; k < array_length(_var_names); k++) {
                     _loop_vars[$ _var_names[k]] = _variables[$ _var_names[k]];
@@ -571,7 +571,7 @@ function ui_resolve_value(_node, _link, _variables) {
             return _node.value;
         
         case UI_AST.COLOR:
-            return { color: _node.color, alpha: _node.alpha };
+            return { color: _node.color, alpha: _node.alpha }
         
         case UI_AST.TUPLE:
             var _values = [];
@@ -623,7 +623,7 @@ function ui_resolve_value(_node, _link, _variables) {
                 slice_right: 0,
                 slice_top: 0,
                 slice_bottom: 0
-            };
+            }
             // Resolve nested properties (slices, etc.)
             var _prop_count = array_length(_node.properties);
             for (var i = 0; i < _prop_count; i++) {
@@ -659,7 +659,7 @@ function ui_resolve_value(_node, _link, _variables) {
             var _surface_def = {
                 is_surface_def: true,
                 surface_name: _node.surface_name,
-            };
+            }
             // Resolve any nested properties
             var _surf_prop_count = array_length(_node.properties);
             for (var i = 0; i < _surf_prop_count; i++) {
@@ -672,13 +672,13 @@ function ui_resolve_value(_node, _link, _variables) {
         
         case UI_AST.PERCENTAGE:
             // Return a special struct that defers resolution to the property handler
-            return { is_percent: true, value: _node.value };
+            return { is_percent: true, value: _node.value }
         
         case UI_AST.UNARY_OP:
             var _right_val = ui_resolve_value(_node.right, _link, _variables);
             if (_node.op == "-") {
                 if (is_struct(_right_val) && _right_val[$ "is_percent"] == true) {
-                    return { is_percent: true, value: -_right_val.value };
+                    return { is_percent: true, value: -_right_val.value }
                 }
                 return -_right_val;
             }
@@ -808,9 +808,9 @@ function ui_calc_binary_op(_op, _left, _right) {
         // If no percent component, return plain number
         if (_pct_part == 0) return _abs_part;
         // If no absolute component, return pure percentage
-        if (_abs_part == 0) return { is_percent: true, value: _pct_part };
+        if (_abs_part == 0) return { is_percent: true, value: _pct_part }
         // Mixed: return calc struct
-        return { is_calc: true, percent_value: _pct_part, absolute_offset: _abs_part };
+        return { is_calc: true, percent_value: _pct_part, absolute_offset: _abs_part }
     }
     
     // Perform the arithmetic
@@ -827,7 +827,7 @@ function ui_calc_binary_op(_op, _left, _right) {
     
     // If both operands were percentages, keep result as percentage
     if (_l_pct && _r_pct) {
-        return { is_percent: true, value: _val };
+        return { is_percent: true, value: _val }
     }
     
     return _val;
@@ -861,7 +861,7 @@ function ui_get_base_scale() {
     return {
         x: (_w / 960) * _gui_scale,
         y: (_h / 540) * _gui_scale
-    };
+    }
 }
 
 /// @desc Destroy a UI instance and all its elements
@@ -930,7 +930,7 @@ function ui_mark_dirty(_instance) {
 
 /// @desc Clear the global event bus (call at end of frame)
 function ui_clear_events() {
-    global.ui_pending_events = {};
+    global.ui_pending_events = {}
 }
 
 /// @desc Check if a UI instance should render this frame

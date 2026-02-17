@@ -40,7 +40,7 @@ function file_save_world_chunk(_world_save_data, _chunk)
 // ------------------------------------------------------------------------------------------
             // 2. BUILD MASTER PALETTE
             // ------------------------------------------------------------------------------------------
-            var _palette_map = {};
+            var _palette_map = {}
             var _palette_array = [];
             var _palette_index = 0;
             

@@ -22,7 +22,7 @@ function RegionData(_id, _config = {}) constructor
             id: _b[$ "id"] ?? _b,
             weight: _b[$ "weight"] ?? 1,
             terrain_preference: _b[$ "terrain_preference"] ?? "any"
-        };
+        }
         array_push(___biomes, _entry);
         
         var _pref = _entry.terrain_preference;
@@ -49,19 +49,35 @@ function RegionData(_id, _config = {}) constructor
     ___cave_biome_count = array_length(___cave_biomes);
     ___cave_biome_default = _config[$ "cave_biome_default"] ?? "phantasia:cave/default";
     
-    var _terrain_config = _config[$ "terrain"] ?? {};
+    var _terrain_config = _config[$ "terrain"] ?? {}
     ___terrain = {
         height_offset: _terrain_config[$ "height_offset"] ?? 0,
         base_height: _terrain_config[$ "base_height"] ?? 0,
         amplitude_min: _terrain_config[$ "amplitude_min"] ?? 30,
         amplitude_max: _terrain_config[$ "amplitude_max"] ?? 60,
         noise_scale: _terrain_config[$ "noise_scale"] ?? 0.015625,
-    };
+    }
     
     ___category = _config[$ "category"] ?? ___id;
     ___map_color = is_string(_config[$ "map_color"]) ? hex_parse(_config[$ "map_color"]) : (_config[$ "map_color"] ?? c_white);
     ___fog_color = undefined;
     ___particles = undefined;
+    
+    // Heat & humidity climate targets (for region selection)
+    // Range: [0, 63) matching open_simplex_noise output
+    // Default targets based on category if not explicitly set
+    var _default_heat = 31;
+    var _default_humid = 31;
+    switch (___category)
+    {
+        case "frozen":    _default_heat = 6;  _default_humid = 13; break;
+        case "cold":      _default_heat = 19; _default_humid = 28; break;
+        case "temperate": _default_heat = 35; _default_humid = 41; break;
+        case "humid":     _default_heat = 41; _default_humid = 57; break;
+        case "arid":      _default_heat = 57; _default_humid = 9;  break;
+    }
+    ___heat_target = _config[$ "heat"] ?? _default_heat;
+    ___humidity_target = _config[$ "humidity"] ?? _default_humid;
     
     static get_id = function()
     {
@@ -106,15 +122,17 @@ function RegionData(_id, _config = {}) constructor
             }
         }
         
-        // Use noise to pick a biome coherently across space
+        // Use noise to pick a biome coherently across horizontal space
+        // NOTE: Only use _x for coherence — using _y (surface height) caused rapid
+        // biome alternation because surface height varies per column at high frequency.
         var _noise = open_simplex_noise(
             _x * ___biome_noise_scale,
-            _y * ___biome_noise_scale + _seed * 0.1,
+            _seed * 0.1,
             1.0, 2
         );
         
-        // Map noise from [-1, 1] to [0, total_weight)
-        var _pick = ((_noise + 1) * 0.5) * _total_weight;
+        // Map noise from [0, 1) to [0, total_weight)
+        var _pick = _noise * _total_weight;
         
         // Weighted selection
         var _accum = 0;
@@ -146,15 +164,20 @@ function RegionData(_id, _config = {}) constructor
         return ___category;
     }
     
-    static get_map_color = function()
-    {
-        return ___map_color;
-    }
-    
     static set_map_color = function(_color)
     {
         ___map_color = hex_parse(_color);
         return self;
+    }
+    
+    static get_heat_target = function()
+    {
+        return ___heat_target;
+    }
+    
+    static get_humidity_target = function()
+    {
+        return ___humidity_target;
     }
     
     static get_sky_colour = function(_time)

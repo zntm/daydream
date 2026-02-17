@@ -285,7 +285,7 @@ function init_background_clouds()
     var _context = {
         camera_width: _camera_width,
         camera_height: _camera_height,
-    };
+    }
     
     var _parameter = {
         sprites: _sprites,
@@ -303,7 +303,7 @@ function init_background_clouds()
         speed_min: _world_data.get_background_cloud_speed_min(),
         speed_max: _world_data.get_background_cloud_speed_max(),
         wind_factor: _world_data.get_background_cloud_wind_factor(),
-    };
+    }
     
     if (struct_exists(global.proglang_scripts, _script_id))
     {

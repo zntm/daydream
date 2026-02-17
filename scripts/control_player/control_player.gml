@@ -349,7 +349,7 @@ function control_player()
                             is_visible: true,
                             charge_value: 0,
                             charge_max: _skill.threshold
-                        };
+                        }
                         charge_ui = ui_spawn(_charge_def, {
                             link: charge_ui_link,
                             parent: global.gui_root
@@ -474,7 +474,7 @@ function control_player()
                         is_visible: true,
                         charge_value: 0,
                         charge_max: 0.5
-                    };
+                    }
                     charge_ui = ui_spawn(_charge_def, {
                         link: charge_ui_link,
                         parent: global.gui_root

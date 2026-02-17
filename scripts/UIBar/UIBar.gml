@@ -49,12 +49,12 @@ function UIBar(_x, _y, _width, _height, _min, _max, _value) : UIElement(_x, _y, 
                 slice_top: _source.slice_top,
                 slice_right: _source.slice_right,
                 slice_bottom: _source.slice_bottom
-            };
+            }
         } else {
             sprite_empty_config = {
                 asset: resolve_sprite(_source),
                 slice_left: 0, slice_top: 0, slice_right: 0, slice_bottom: 0
-            };
+            }
         }
         return self;
     }
@@ -68,12 +68,12 @@ function UIBar(_x, _y, _width, _height, _min, _max, _value) : UIElement(_x, _y, 
                 slice_top: _source.slice_top,
                 slice_right: _source.slice_right,
                 slice_bottom: _source.slice_bottom
-            };
+            }
         } else {
             sprite_fill_config = {
                 asset: resolve_sprite(_source),
                 slice_left: 0, slice_top: 0, slice_right: 0, slice_bottom: 0
-            };
+            }
         }
         return self;
     }

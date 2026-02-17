@@ -27,14 +27,14 @@ function P2PValidator() constructor
 {
     // Pending actions awaiting validation
     // action_id -> { type, data, votes: { peer_id: bool }, submitted_at, local, callback }
-    pending = {};
+    pending = {}
     
     // Configuration
     validation_timeout_ms = 2000;   // 2 seconds to collect votes
     movement_check_interval = 30;   // Validate movement every 30 ticks (~1 second)
     
     // Movement tracking for validation
-    _last_validated_positions = {};  // peer_id -> { x, y, tick }
+    _last_validated_positions = {}  // peer_id -> { x, y, tick }
     _movement_tick_counter = 0;
     
     // Speed limits (pixels per tick)
@@ -64,7 +64,7 @@ function P2PValidator() constructor
             local: true,
             callback: _on_result,
             applied_optimistically: false
-        };
+        }
         
         // Build validation request packet
         var _buf = relay_packet_create(RELAY_PACKET.VALIDATE_REQUEST);
@@ -125,7 +125,7 @@ function P2PValidator() constructor
                 data: _data,
                 requester: _requester_id,
                 local: false
-            };
+            }
         }
     }
     
@@ -264,7 +264,7 @@ function P2PValidator() constructor
                 x: _data.x,
                 y: _data.y,
                 tick: _data.tick
-            };
+            }
             return true;
         }
         
@@ -294,7 +294,7 @@ function P2PValidator() constructor
                 x: _data.x,
                 y: _data.y,
                 tick: _data.tick
-            };
+            }
         }
         
         return _valid;
@@ -526,7 +526,7 @@ function P2PValidator() constructor
                 y: _player.y,
                 tick: current_time,  // Using current_time as tick proxy
                 is_flying: _is_flying
-            };
+            }
             
             var _valid = _validate_movement(_movement_data, _pid);
             
@@ -595,7 +595,7 @@ function P2PValidator() constructor
                     y: buffer_read(_buffer, buffer_f32),
                     tick: buffer_read(_buffer, buffer_u32),
                     is_flying: buffer_read(_buffer, buffer_bool)
-                };
+                }
                 
             case ACTION_TYPE.TILE_PLACE:
             case ACTION_TYPE.TILE_BREAK:
@@ -605,7 +605,7 @@ function P2PValidator() constructor
                     z: buffer_read(_buffer, buffer_u8),
                     tile_id: buffer_read(_buffer, buffer_string),
                     previous_tile_id: buffer_read(_buffer, buffer_string)
-                };
+                }
                 
             case ACTION_TYPE.ATTACK:
                 return {
@@ -613,7 +613,7 @@ function P2PValidator() constructor
                     target_y: buffer_read(_buffer, buffer_f32),
                     target_uuid: buffer_read(_buffer, buffer_string),
                     damage: buffer_read(_buffer, buffer_f32)
-                };
+                }
                 
             case ACTION_TYPE.ITEM_DROP:
             case ACTION_TYPE.ITEM_PICKUP:
@@ -622,11 +622,11 @@ function P2PValidator() constructor
                     item_y: buffer_read(_buffer, buffer_f32),
                     item_id: buffer_read(_buffer, buffer_string),
                     amount: buffer_read(_buffer, buffer_u16)
-                };
+                }
                 
             default:
                 var _json = buffer_read(_buffer, buffer_string);
-                try { return json_parse(_json); } catch(_e) { return {}; }
+                try { return json_parse(_json); } catch(_e) { return {} }
         }
     }
 }

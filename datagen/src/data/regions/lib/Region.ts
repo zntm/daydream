@@ -64,6 +64,8 @@ export class RegionBiome {
 export class Region {
     id: string;
     category?: string;
+    heat?: number;
+    humidity?: number;
     biomes: RegionBiome[];
     cave_biome_default: string;
     cave_biomes?: RegionCaveBiome[];
@@ -73,6 +75,8 @@ export class Region {
 
     constructor(id: string, opts: {
         category?: string,
+        heat?: number,
+        humidity?: number,
         biomes: RegionBiome[],
         caveBiomeDefault?: string,
         caveBiomes?: RegionCaveBiome[],
@@ -82,6 +86,8 @@ export class Region {
     }) {
         this.id = id;
         this.category = opts.category;
+        if (opts.heat !== undefined) this.heat = opts.heat;
+        if (opts.humidity !== undefined) this.humidity = opts.humidity;
         this.biomes = opts.biomes;
         this.map_color = opts.mapColor ?? "#000000";
         this.cave_biome_default = opts.caveBiomeDefault ?? "phantasia:cave/chasm";

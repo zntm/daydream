@@ -55,7 +55,7 @@ function menu_textbox_randomize_player_name()
     
     var _is_consonant = function(_char) {
         return !array_contains(menu_textbox_randomize_player_name.__vowels, string_lower(_char)) && _char != "" && _char != " ";
-    };
+    }
     
     for (var i = 1; i <= string_length(_text) - 2; ++i)
     {

@@ -42,7 +42,7 @@ function invite_code_decode(_code)
             return {
                 ip: _parts[0],
                 port: real(_parts[1])
-            };
+            }
         }
         return undefined;
     }
@@ -77,7 +77,7 @@ function invite_code_decode(_code)
     return {
         ip: _ip,
         port: _port
-    };
+    }
 }
 
 /// @desc Convert a byte (0-255) to 2-character hex string

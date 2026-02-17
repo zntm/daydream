@@ -13,6 +13,7 @@ global.proglang_shape_map = {} // Map of JSON.stringify(sorted_fields) -> shape_
 function proglang_get_shape_id(_fields_array)
 {
     array_sort(_fields_array, true);
+    
     var _key = string(_fields_array);
     
     if (struct_exists(global.proglang_shape_map, _key))
@@ -21,9 +22,10 @@ function proglang_get_shape_id(_fields_array)
     }
     
     var _id = array_length(global.proglang_shapes);
-    var _fields_struct = {};
-    var _len = array_length(_fields_array);
-    for (var i = 0; i < _len; i++)
+    
+    var _fields_struct = {}
+    
+    for (var i = array_length(_fields_array) - 1; i >= 0; --i)
     {
         _fields_struct[$ _fields_array[i]] = i + 1; // Index 0 is reserved for shape_id
     }
@@ -31,7 +33,7 @@ function proglang_get_shape_id(_fields_array)
     var _shape = {
         fields: _fields_struct,
         size: _len + 1
-    };
+    }
     
     array_push(global.proglang_shapes, _shape);
     global.proglang_shape_map[$ _key] = _id;
@@ -492,7 +494,7 @@ function proglang_to_gml(_val)
         {
             var _shape_id = _val[0];
             var _shape = global.proglang_shapes[_shape_id];
-            var _struct = {};
+            var _struct = {}
             var _fields = struct_get_names(_shape.fields);
             for (var i = 0; i < array_length(_fields); i++) 
             {
@@ -515,7 +517,7 @@ function proglang_to_gml(_val)
     if (is_struct(_val)) 
     {
         var _names = struct_get_names(_val);
-        var _new_struct = {};
+        var _new_struct = {}
         for (var i = 0; i < array_length(_names); i++) 
         {
             var _name = _names[i];

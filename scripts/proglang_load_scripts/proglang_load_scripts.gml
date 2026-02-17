@@ -4,9 +4,9 @@
 /// Base directory for all proglang scripts (sandbox root)
 #macro PROGLANG_BASE_DIR ($"{PROGRAM_DIRECTORY_RESOURCES}/data/scripts")
 
-if (!variable_global_exists("proglang_scripts")) global.proglang_scripts = {};
-if (!variable_global_exists("proglang_exports")) global.proglang_exports = {};
-if (!variable_global_exists("proglang_modules")) global.proglang_modules = {};
+if (!variable_global_exists("proglang_scripts")) global.proglang_scripts = {}
+if (!variable_global_exists("proglang_exports")) global.proglang_exports = {}
+if (!variable_global_exists("proglang_modules")) global.proglang_modules = {}
 
 /// @desc Initialize proglang by recursively loading all .daydream scripts
 /// @param {string} _directory Directory to load from
@@ -73,7 +73,7 @@ function init_proglang_recursive(_directory, _namespace = "", _path = "") {
             
             // Handle Exports / Functions
             var _has_functions = false;
-            var _file_scope = {};
+            var _file_scope = {}
             
             for (var j = 0; j < array_length(_bytecode.constants); j++) {
                 var _const = _bytecode.constants[j];

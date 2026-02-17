@@ -67,7 +67,18 @@
             }
         ]
     },
-    "structures": [],
+    "structures": [
+        {
+            "id": "phantasia:tree/pine",
+            "chance": 0.1,
+            "generate_on": "#phantasia:tile/placement/plant_on"
+        },
+        {
+            "id": "phantasia:clump/moss",
+            "chance": 0.006,
+            "generate_on": "#phantasia:tile/placement/plant_on"
+        }
+    ],
     "terrain_modifier": {
         "amplitude_scale": 0.6,
         "height_offset": -6
@@ -108,7 +119,7 @@
         "top_layer": {
             "base": [
                 {
-                    "id": "phantasia:snow_block"
+                    "id": "phantasia:grass_block_taiga"
                 }
             ],
             "wall": [

@@ -62,7 +62,18 @@
             }
         ]
     },
-    "structures": [],
+    "structures": [
+        {
+            "id": "phantasia:tree/pine",
+            "chance": 0.1,
+            "generate_on": "#phantasia:tile/placement/plant_on"
+        },
+        {
+            "id": "phantasia:clump/moss",
+            "chance": 0.006,
+            "generate_on": "#phantasia:tile/placement/plant_on"
+        }
+    ],
     "terrain_modifier": {
         "amplitude_scale": 1.4,
         "height_offset": 6
@@ -87,7 +98,7 @@
         "middle_layer": {
             "base": [
                 {
-                    "id": "phantasia:snow_block"
+                    "id": "phantasia:stone"
                 }
             ],
             "wall": [
@@ -103,7 +114,7 @@
         "top_layer": {
             "base": [
                 {
-                    "id": "phantasia:snow_block"
+                    "id": "phantasia:stone"
                 }
             ],
             "wall": [

@@ -53,7 +53,7 @@ function relay_read_game_packet(_buffer)
     return {
         packet_type: _packet_type,
         payload: _payload
-    };
+    }
 }
 
 // ============================================================================
@@ -86,7 +86,7 @@ function relay_read_input(_buffer)
         tick:            buffer_read(_buffer, buffer_u32),
         move_x:          buffer_read(_buffer, buffer_f32),
         move_y:          buffer_read(_buffer, buffer_f32),
-    };
+    }
     
     var _flags = buffer_read(_buffer, buffer_u16);
     _data.jump_held      = !!(_flags & (1 << 0));
@@ -187,7 +187,7 @@ function relay_read_inventory_update(_buffer)
         inv_name: buffer_read(_buffer, buffer_string),
         index: buffer_read(_buffer, buffer_u16),
         item: relay_read_item(_buffer)
-    };
+    }
 }
 
 /// @desc Write inventory action
@@ -211,7 +211,7 @@ function relay_read_inventory_action(_buffer)
         to_inv: buffer_read(_buffer, buffer_string),
         to_idx: buffer_read(_buffer, buffer_u16),
         amount: buffer_read(_buffer, buffer_u16)
-    };
+    }
 }
 
 /// @desc Write time update
@@ -265,7 +265,7 @@ function relay_read_chunk_data(_buffer)
         chunk_x: _chunk_x,
         chunk_y: _chunk_y,
         tiles: _tiles
-    };
+    }
 }
 
 /// @desc Write player info
@@ -280,13 +280,13 @@ function relay_read_player_info(_buffer)
 {
     var _uuid = buffer_read(_buffer, buffer_string);
     var _json = buffer_read(_buffer, buffer_string);
-    var _attire = {};
+    var _attire = {}
     try { _attire = json_parse(_json); } catch(_e) {}
     
     return {
         uuid: _uuid,
         attire: _attire
-    };
+    }
 }
 
 /// @desc Write entity spawn
@@ -330,7 +330,7 @@ function relay_read_entity_move(_buffer)
         uuid: buffer_read(_buffer, buffer_string),
         x: buffer_read(_buffer, buffer_f32),
         y: buffer_read(_buffer, buffer_f32)
-    };
+    }
 }
 
 // ============================================================================
@@ -404,7 +404,7 @@ function relay_request_tile_change(_x, _y, _z, _tile_id, _prev_tile_id = "")
         x: _x, y: _y, z: _z,
         tile_id: _tile_id,
         previous_tile_id: _prev_tile_id
-    };
+    }
     
     // Apply optimistically
     var _tile = (_tile_id != "" && _tile_id != "undefined") ? new Tile(_tile_id) : TILE_EMPTY;

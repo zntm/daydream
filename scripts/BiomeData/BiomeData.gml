@@ -129,19 +129,19 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
     ___music = [];
     ___sky_script = undefined;
     
-    ___tile_top_layer_base = { entries: [], total_weight: 0 };
-    ___tile_top_layer_wall = { entries: [], total_weight: 0 };
-    ___tile_middle_layer_base = { entries: [], total_weight: 0 };
-    ___tile_middle_layer_wall = { entries: [], total_weight: 0 };
-    ___tile_bottom_layer_base = { entries: [], total_weight: 0 };
-    ___tile_bottom_layer_wall = { entries: [], total_weight: 0 };
+    ___tile_top_layer_base = { entries: [], total_weight: 0 }
+    ___tile_top_layer_wall = { entries: [], total_weight: 0 }
+    ___tile_middle_layer_base = { entries: [], total_weight: 0 }
+    ___tile_middle_layer_wall = { entries: [], total_weight: 0 }
+    ___tile_bottom_layer_base = { entries: [], total_weight: 0 }
+    ___tile_bottom_layer_wall = { entries: [], total_weight: 0 }
     
     ___terrain_height_offset = 0;
     ___terrain_amplitude_scale = 1;
     ___is_ocean = false;
     ___has_shore_tiles = false;
-    ___shore_tiles_base = { entries: [], total_weight: 0 };
-    ___shore_tiles_wall = { entries: [], total_weight: 0 };
+    ___shore_tiles_base = { entries: [], total_weight: 0 }
+    ___shore_tiles_wall = { entries: [], total_weight: 0 }
     ___is_skyland = false;
     
     ___tile_foliage = [];
@@ -181,7 +181,7 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
                 ___sky_colour_points[i] = {
                     position: _points[i].position,
                     color: is_string(_points[i].color) ? hex_parse(_points[i].color) : _points[i].color
-                };
+                }
             }
         }
         else
@@ -275,7 +275,7 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
                 ___light_colour_points[i] = {
                     position: _points[i].position,
                     color: is_string(_points[i].color) ? hex_parse(_points[i].color) : _points[i].color
-                };
+                }
             }
         }
         else
@@ -338,7 +338,7 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
     {
         if (_data == undefined)
         {
-            return { entries: [], total_weight: 0 };
+            return { entries: [], total_weight: 0 }
         }
         
         if (is_array(_data))
@@ -371,7 +371,7 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
         {
             // Legacy single-entry format
             var _id = _data[$ "id"];
-            if (_id == undefined) return { entries: [], total_weight: 0 };
+            if (_id == undefined) return { entries: [], total_weight: 0 }
             
             if (_id == "$EMPTY") _id = TILE_EMPTY;
             

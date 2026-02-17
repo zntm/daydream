@@ -57,7 +57,7 @@ function RelayNetworkManager() constructor
     local_player = noone;
     
     // Persistent data for reconnection
-    persistent_data = {};  // uuid -> { inventory, ... }
+    persistent_data = {}  // uuid -> { inventory, ... }
     
     // Callbacks for game events
     on_session_started = undefined;     // function(room_code)
@@ -560,7 +560,7 @@ function RelayNetworkManager() constructor
         var _peer = global.relay.peers[$ _from_peer_id];
         if (_peer == undefined) return;
         
-        _peer.open_container = { x: _x, y: _y, z: _z };
+        _peer.open_container = { x: _x, y: _y, z: _z }
         show_debug_message($"[RELAY_MGR] Peer {_from_peer_id} opened container at {_x}, {_y}, {_z}");
     }
     
@@ -646,7 +646,7 @@ function RelayNetworkManager() constructor
         var _params = {
             uuid: _state.uuid,
             image_xscale: 1, image_yscale: 1, image_angle: 0
-        };
+        }
         
         if (_state.entity_type == "player")
         {
@@ -782,7 +782,7 @@ function RelayNetworkManager() constructor
                 armor_leggings:    array_create(1, INVENTORY_EMPTY),
                 accessory:         array_create(INVENTORY_LENGTH.ACCESSORY, INVENTORY_EMPTY),
                 _container:         []
-            };
+            }
         }
         
         if (on_player_spawned != undefined)

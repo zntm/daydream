@@ -29,7 +29,7 @@ function celestial_get_active(_time)
                 t: _t,
                 time_min: _time_range_min,
                 time_max: _time_range_max
-            };
+            }
         }
     }
     

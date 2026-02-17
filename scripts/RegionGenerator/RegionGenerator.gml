@@ -1,353 +1,358 @@
-/// @desc Zone Generator with 2D Voronoi + Domain Warping
-/// @description Divides the world into distinct geographic regions (Zones)
-///              using 3D noise to distort boundaries for natural appearance.
+/// @desc Functional Region Generator
+/// @description Selects regions via domain-warped Voronoi cells + heat/humidity climate matching.
+///              Supports optional map buffer override for hand-painted region maps.
 
-function RegionGenerator(_config = {}) constructor
+/// @desc Create a region generator config struct
+/// @param {Struct} _config Configuration
+/// @returns {Struct} Generator config
+function region_gen_create(_config = {})
 {
-    // Configuration with defaults
-    ___cell_size = _config[$ "cell_size"] ?? 256;
-    ___warp_scale = _config[$ "warp_scale"] ?? 0.008;
-    ___warp_power = _config[$ "warp_power"] ?? 48;
-    ___warp_z_scale = _config[$ "warp_z_scale"] ?? 0.015; // Z-axis contributes to warping
-    ___regions = _config[$ "regions"] ?? [];
-    ___region_count = array_length(___regions);
-    ___seed_offset = _config[$ "seed_offset"] ?? 0;
-    
-    // Map Buffer Support
-    ___map_buffer = _config[$ "map_buffer"];
-    ___map_width = _config[$ "map_width"] ?? 0;
-    ___map_height = _config[$ "map_height"] ?? 0;
-    
-    // Build color lookup table for regions
-    ___map_color_to_region = {};
-    for (var i = 0; i < ___region_count; ++i)
+    var _regions = _config[$ "regions"] ?? [];
+    var _region_count = array_length(_regions);
+
+    // Build color lookup table for map-based regions
+    var _color_lookup = {}
+    for (var i = 0; i < _region_count; ++i)
     {
-        var _r = ___regions[i];
+        var _r = _regions[i];
         var _color = _r.get_map_color();
-        // Store both as number and string for robustness
-        ___map_color_to_region[$ string(_color)] = _r;
-        ___map_color_to_region[$ _color] = _r;
+        _color_lookup[$ string(_color)] = _r;
+        _color_lookup[$ _color] = _r;
     }
     
-    /// @desc Set regions data array
-    /// @param {Array<Struct.RegionData>} _regions Array of RegionData structs
-    static set_regions = function(_regions)
-    {
-        ___regions = _regions;
-        ___region_count = array_length(_regions);
-        
-        // Re-build lookup table
-        ___map_color_to_region = {};
-        for (var i = 0; i < ___region_count; ++i)
-        {
-            var _r = ___regions[i];
-            var _color = _r.get_map_color();
-            ___map_color_to_region[$ string(_color)] = _r;
-            ___map_color_to_region[$ _color] = _r;
-        }
-        
-        return self;
-    }
-    
-    /// @desc Get region from map buffer using world coordinates
-    /// @private
-    static ___get_region_from_map = function(_x, _y)
-    {
-        if (___map_buffer == undefined) return undefined;
-        
-        // Map world coordinate to pixel coordinate
-        // Assuming 1 pixel = ___cell_size in world space
-        var _px = floor(_x / ___cell_size);
-        var _py = floor(_y / ___cell_size);
-        
-        // Clamp to map boundaries
-        _px = clamp(_px, 0, ___map_width - 1);
-        _py = clamp(_py, 0, ___map_height - 1);
-        
-        // Sample buffer (RGBA format)
-        var _pos = (_py * ___map_width + _px) * 4;
-        var _r = buffer_peek(___map_buffer, _pos,     buffer_u8);
-        var _g = buffer_peek(___map_buffer, _pos + 1, buffer_u8);
-        var _b = buffer_peek(___map_buffer, _pos + 2, buffer_u8);
-        
-        // Convert to GML color (BGR)
-        var _color = (_b << 16) | (_g << 8) | _r;
-        
-        var _region = ___map_color_to_region[$ _color];
-        if (_region == undefined)
-        {
-             // Try string key lookup
-             _region = ___map_color_to_region[$ string(_color)];
-        }
-        
-        static _count = 0;
-        if (_count < 10)
-        {
-            _count++;
-            show_debug_message($"RegionGenerator: Map Lookup at ({_x}, {_y}) -> Pixel ({_px}, {_py}), Color: {ptr(_color)}, Region: {(_region != undefined ? _region.get_id() : "NONE")}");
-        }
-        
-        return _region;
-    }
-    
-    /// @desc Get region at world position
-    static get_region = function(_x, _y, _z, _seed)
-    {
-        // 1. Try Map Image Lookup First
-        var _map_region = ___get_region_from_map(_x, _y);
-        if (_map_region != undefined) return _map_region;
-        
-        // 2. Fallback to Domain warped Voronoi
-        var _warp_x = open_simplex_noise(_x * ___warp_scale, _y * ___warp_scale, 1.0, 2) * ___warp_power;
-        var _warp_y = open_simplex_noise(_x * ___warp_scale + 1000, _y * ___warp_scale + 1000, 1.0, 2) * ___warp_power;
-        
-        var _wx = _x + _warp_x;
-        var _wy = _y + _warp_y;
-        
-        return ___voronoi_lookup(_wx, _wy, _seed);
-    }
-    
-    /// @desc Get region ID at position (faster, returns index only)
-    static get_region_id = function(_x, _y, _z, _seed)
-    {
-        var _map_region = ___get_region_from_map(_x, _y);
-        if (_map_region != undefined)
-        {
-            for (var i = 0; i < ___region_count; ++i)
-            {
-                if (___regions[i] == _map_region) return i;
-            }
-        }
-        
-        var _warp_x = open_simplex_noise(_x * ___warp_scale, _y * ___warp_scale, 1.0, 2) * ___warp_power;
-        var _warp_y = open_simplex_noise(_x * ___warp_scale + 1000, _y * ___warp_scale + 1000, 1.0, 2) * ___warp_power;
-        
-        var _wx = _x + _warp_x;
-        var _wy = _y + _warp_y;
-        
-        return ___voronoi_lookup_id(_wx, _wy, _seed);
-    }
-    
-    /// @desc 2D Voronoi cell lookup returning RegionData
-    /// @private
-    static ___voronoi_lookup = function(_x, _y, _seed)
-    {
-        var _region_id = ___voronoi_lookup_id(_x, _y, _seed);
-        
-        if (___region_count <= 0) return undefined;
-        
-        if (_region_id < 0 || _region_id >= ___region_count)
-        {
-            return ___regions[0]; // Fallback to first region
-        }
-        
-        return ___regions[_region_id];
-    }
-    
-    /// @desc 2D Voronoi cell lookup returning region index
-    /// @private
-    static ___voronoi_lookup_id = function(_x, _y, _seed)
-    {
-        // Find which cell we're in
-        var _cell_x = floor(_x / ___cell_size);
-        var _cell_y = floor(_y / ___cell_size);
-        
-        var _best_dist = infinity;
-        var _best_region_id = 0;
-        
-        // Check this cell and 8 neighbors
-        for (var _cx = _cell_x - 1; _cx <= _cell_x + 1; _cx++)
-        {
-            for (var _cy = _cell_y - 1; _cy <= _cell_y + 1; _cy++)
-            {
-                // Generate deterministic cell center
-                var _cell_seed = abs(_cx * 73856093) ^ abs(_cy * 19349663) ^ (_seed + ___seed_offset);
-                
-                // Jitter: random offset within cell for the Voronoi point
-                var _jitter_x = frac(sin(_cell_seed * 0.0001) * 43758.5453) * 0.8 + 0.1;
-                var _jitter_y = frac(sin(_cell_seed * 0.0002) * 22578.1459) * 0.8 + 0.1;
-                
-                var _point_x = (_cx + _jitter_x) * ___cell_size;
-                var _point_y = (_cy + _jitter_y) * ___cell_size;
-                
-                // Calculate squared distance to this cell's point
-                var _dx = _x - _point_x;
-                var _dy = _y - _point_y;
-                var _dist_sq = _dx * _dx + _dy * _dy;
-                
-                if (_dist_sq < _best_dist)
-                {
-                    _best_dist = _dist_sq;
-                    
-                    // --- Climate-Based Region Selection ---
-                    // Sample heat and humidity at the cell point
-                    var _heat = worldgen_get_heat(_point_x, _point_y, _seed);
-                    var _humid = worldgen_get_humidity(_point_x, _point_y, _seed);
-                    
-                    var _best_score = infinity;
-                    _best_region_id = 0;
-                    
-                    for (var r = 0; r < ___region_count; ++r)
-                    {
-                        var _region = ___regions[r];
-                        var _cat = _region.get_category();
-                        
-                        // Target climate for each category
-                        var _target_heat = 0;
-                        var _target_humid = 0;
-                        
-                        switch(_cat)
-                        {
-                            case "frozen":    _target_heat = -0.8; _target_humid = -0.6; break;
-                            case "cold":      _target_heat = -0.4; _target_humid = -0.1; break;
-                            case "temperate": _target_heat = 0.1;  _target_humid = 0.3;  break;
-                            case "humid":     _target_heat = 0.3;  _target_humid = 0.8;  break;
-                            case "arid":      _target_heat = 0.8;  _target_humid = -0.7; break;
-                            default:          _target_heat = 0;    _target_humid = 0;    break;
-                        }
-                        
-                        // Euclidean distance in climate space
-                        var _dh = _heat - _target_heat;
-                        var _dw = _humid - _target_humid;
-                        var _score = _dh * _dh + _dw * _dw;
-                        
-                        if (_score < _best_score)
-                        {
-                            _best_score = _score;
-                            _best_region_id = r;
-                        }
-                    }
-                    
-                    static _count = 0;
-                    if (_count < 20)
-                    {
-                        _count++;
-                        var _chosen = ___regions[_best_region_id];
-                        show_debug_message($"RegionGenerator: Cell at ({_point_x}, {_point_y}) -> Heat: {_heat}, Humid: {_humid}, Category: {_chosen.get_category()}, Region: {_chosen.get_id()}");
-                    }
-                }
-            }
-        }
-        
-        return _best_region_id;
-    }
-    
-    /// @desc Get distance to nearest region boundary (for blending)
-    static get_boundary_distance = function(_x, _y, _z, _seed)
-    {
-        if (___map_buffer != undefined) return 1000; // No blending for map-based lookups yet
-        
-        var _warp_x = open_simplex_noise(_x * ___warp_scale, _y * ___warp_scale, 1.0, 2) * ___warp_power;
-        var _warp_y = open_simplex_noise(_x * ___warp_scale + 1000, _y * ___warp_scale + 1000, 1.0, 2) * ___warp_power;
-        
-        var _wx = _x + _warp_x;
-        var _wy = _y + _warp_y;
-        
-        var _cell_x = floor(_wx / ___cell_size);
-        var _cell_y = floor(_wy / ___cell_size);
-        
-        var _best_dist = infinity;
-        var _second_best_dist = infinity;
-        
-        for (var _cx = _cell_x - 1; _cx <= _cell_x + 1; _cx++)
-        {
-            for (var _cy = _cell_y - 1; _cy <= _cell_y + 1; _cy++)
-            {
-                var _cell_seed = abs(_cx * 73856093) ^ abs(_cy * 19349663) ^ (_seed + ___seed_offset);
-                
-                var _jitter_x = frac(sin(_cell_seed * 0.0001) * 43758.5453) * 0.8 + 0.1;
-                var _jitter_y = frac(sin(_cell_seed * 0.0002) * 22578.1459) * 0.8 + 0.1;
-                
-                var _point_x = (_cx + _jitter_x) * ___cell_size;
-                var _point_y = (_cy + _jitter_y) * ___cell_size;
-                
-                var _dx = _wx - _point_x;
-                var _dy = _wy - _point_y;
-                var _dist = sqrt(_dx * _dx + _dy * _dy);
-                
-                if (_dist < _best_dist)
-                {
-                    _second_best_dist = _best_dist;
-                    _best_dist = _dist;
-                }
-                else if (_dist < _second_best_dist)
-                {
-                    _second_best_dist = _dist;
-                }
-            }
-        }
-        
-        return (_second_best_dist - _best_dist) / 2.0;
-    }
-    
-    /// @desc Get data for blending between regions
-    static get_blend_data = function(_x, _y, _z, _seed)
-    {
-        var _map_region = ___get_region_from_map(_x, _y);
-        if (_map_region != undefined)
-        {
-            return {
-                r1: _map_region,
-                r2: _map_region,
-                diff: 1000
-            };
-        }
-        
-        var _warp_x = open_simplex_noise(_x * ___warp_scale, _y * ___warp_scale, 1.0, 2) * ___warp_power;
-        var _warp_y = open_simplex_noise(_x * ___warp_scale + 1000, _y * ___warp_scale + 1000, 1.0, 2) * ___warp_power;
-        
-        var _wx = _x + _warp_x;
-        var _wy = _y + _warp_y;
-        
-        var _cell_x = floor(_wx / ___cell_size);
-        var _cell_y = floor(_wy / ___cell_size);
-        
-        var _best_dist = infinity;
-        var _second_best_dist = infinity;
-        var _best_region_id = 0;
-        var _second_best_region_id = 0;
-        
-        for (var _cx = _cell_x - 1; _cx <= _cell_x + 1; _cx++)
-        {
-            for (var _cy = _cell_y - 1; _cy <= _cell_y + 1; _cy++)
-            {
-                var _cell_seed = abs(_cx * 73856093) ^ abs(_cy * 19349663) ^ (_seed + ___seed_offset);
-                
-                var _jitter_x = frac(sin(_cell_seed * 0.0001) * 43758.5453) * 0.8 + 0.1;
-                var _jitter_y = frac(sin(_cell_seed * 0.0002) * 22578.1459) * 0.8 + 0.1;
-                
-                var _point_x = (_cx + _jitter_x) * ___cell_size;
-                var _point_y = (_cy + _jitter_y) * ___cell_size;
-                
-                var _dx = _wx - _point_x;
-                var _dy = _wy - _point_y;
-                var _dist_sq = _dx * _dx + _dy * _dy;
-                var _dist = sqrt(_dist_sq);
-                
-                var _region_id = abs(_cell_seed) mod ___region_count;
-                
-                if (_dist < _best_dist)
-                {
-                    _second_best_dist = _best_dist;
-                    _second_best_region_id = _best_region_id;
-                    _best_dist = _dist;
-                    _best_region_id = _region_id;
-                }
-                else if (_dist < _second_best_dist)
-                {
-                    _second_best_dist = _dist;
-                    _second_best_region_id = _region_id;
-                }
-            }
-        }
-        
-        var _r1 = ___regions[_best_region_id];
-        var _r2 = ___regions[_second_best_region_id];
-        
-        return {
-            r1: _r1,
-            r2: _r2,
-            diff: _second_best_dist - _best_dist
-        };
+    return {
+        regions: _regions,
+        region_count: _region_count,
+        cell_size: _config[$ "cell_size"] ?? 2048,
+        warp_scale: _config[$ "warp_scale"] ?? 0.0015,
+        warp_power: _config[$ "warp_power"] ?? 384,
+        seed_offset: _config[$ "seed_offset"] ?? 12345,
+        climate_scale: _config[$ "climate_scale"] ?? 0.0003,
+        map_buffer: _config[$ "map_buffer"],
+        map_width: _config[$ "map_width"] ?? 0,
+        map_height: _config[$ "map_height"] ?? 0,
+        color_lookup: _color_lookup,
     }
 }
+
+#region --- Map Buffer Lookup ---
+
+/// @desc Try to get a region from a painted map buffer
+/// @param {Struct} _gen Generator config
+/// @param {Real} _x World X
+/// @param {Real} _y World Y
+/// @returns {Struct|undefined} RegionData or undefined
+function region_gen_map_lookup(_gen, _x, _y)
+{
+    if (_gen.map_buffer == undefined)
+    {
+        return undefined;
+    }
+    
+    var _px = clamp(floor(_x / _gen.cell_size), 0, _gen.map_width - 1);
+    var _py = clamp(floor(_y / _gen.cell_size), 0, _gen.map_height - 1);
+    
+    show_debug_message($"region_gen_map_lookup: x={_x}, y={_y}, cell_size={_gen.cell_size} -> px={_px}, py={_py}");
+    
+    // Sample buffer (RGBA format)
+    var _pos = (_py * _gen.map_width + _px) * 4;
+    var _r = buffer_peek(_gen.map_buffer, _pos,     buffer_u8);
+    var _g = buffer_peek(_gen.map_buffer, _pos + 1, buffer_u8);
+    var _b = buffer_peek(_gen.map_buffer, _pos + 2, buffer_u8);
+    
+    // Convert to GML color (BGR)
+    var _color = (_b << 16) | (_g << 8) | _r;
+    
+    var _region = _gen.color_lookup[$ _color];
+    if (_region == undefined)
+    {
+        _region = _gen.color_lookup[$ string(_color)];
+    }
+
+    return _region;
+}
+
+#endregion
+
+#region --- Domain Warping ---
+
+/// @desc Apply domain warping to a position
+/// @returns {Array<Real>} [warped_x, warped_y]
+function region_gen_warp(_gen, _x, _y)
+{
+    var _ws = _gen.warp_scale;
+    var _wp = _gen.warp_power;
+    
+    var _warp_x = open_simplex_noise(_x * _ws, _y * _ws, 1.0, 2) * _wp;
+    var _warp_y = open_simplex_noise(_x * _ws + 1000, _y * _ws + 1000, 1.0, 2) * _wp;
+    
+    return [_x + _warp_x, _y + _warp_y];
+}
+
+#endregion
+
+#region --- Climate-Based Region Selection ---
+
+/// @desc Sample region-level heat at a position
+/// @desc Uses a MUCH coarser noise scale than worldgen_get_heat (per-tile = 0.005).
+///       Region climate varies slowly — smooth zones spanning many Voronoi cells.
+/// @param {Real} _x World X
+/// @param {Real} _y World Y (unused, kept for API consistency)
+/// @param {Real} _seed World seed
+/// @param {Real} _scale Climate noise scale
+/// @returns {Real} Heat value (-1 to 1)
+function region_gen_sample_heat(_x, _y, _seed, _scale)
+{
+    return clamp(open_simplex_noise(
+        _x * _scale,
+        _seed * 0.1,
+        63, 4
+    ), 0, 63);
+}
+
+/// @desc Sample region-level humidity at a position
+/// @returns {Real} Humidity value (-1 to 1)
+function region_gen_sample_humidity(_x, _y, _seed, _scale)
+{
+    return clamp(open_simplex_noise(
+        _x * _scale,
+        _seed * 0.2 + 1000,
+        63, 4
+    ), 0, 63);
+}
+
+/// @desc Pick the best-matching region for a climate point
+/// @param {Struct} _gen Generator config
+/// @param {Real} _heat Heat value (-1 to 1)
+/// @param {Real} _humid Humidity value (-1 to 1)
+/// @returns {Real} Region index
+function region_gen_climate_pick(_gen, _heat, _humid)
+{
+    var _best_score = infinity;
+    var _best_id = 0;
+
+    // show_debug_message($"region_gen_climate_pick: heat={_heat}, humid={_humid}");
+
+    for (var i = 0; i < _gen.region_count; ++i)
+    {
+        var _region = _gen.regions[i];
+        var _th = _region.get_heat_target();
+        var _tw = _region.get_humidity_target();
+        
+        var _dh = _heat - _th;
+        var _dw = _humid - _tw; 
+        var _score = _dh * _dh + _dw * _dw;
+        
+        if (_score < _best_score)
+        {
+            _best_score = _score;
+            _best_id = i;
+        }
+    }
+
+    return _best_id;
+}
+
+#endregion
+
+#region --- Voronoi Cell Helpers ---
+
+/// @desc Calculate a deterministic cell seed
+function __region_cell_seed(_cx, _cy, _seed_offset)
+{
+    return abs(_cx * 73856093) ^ abs(_cy * 19349663) ^ _seed_offset;
+}
+
+/// @desc Calculate a deterministic jittered cell center point
+/// @returns {Array<Real>} [point_x, point_y]
+function __region_cell_point(_cx, _cy, _cell_size, _cell_seed)
+{
+    var _jx = frac(sin(_cell_seed * 0.0001) * 43758.5453) * 0.8 + 0.1;
+    var _jy = frac(sin(_cell_seed * 0.0002) * 22578.1459) * 0.8 + 0.1;
+    
+    return [(_cx + _jx) * _cell_size, (_cy + _jy) * _cell_size];
+}
+
+#endregion
+
+#region --- Main Lookup Functions ---
+
+/// @desc Get region at world position
+/// @param {Struct} _gen Generator config
+/// @param {Real} _x World X
+/// @param {Real} _y World Y
+/// @param {Real} _seed World seed
+/// @returns {Struct} RegionData struct
+function region_gen_get_region(_gen, _x, _y, _seed)
+{
+    // 1. Map override
+    var _map_region = region_gen_map_lookup(_gen, _x, _y);
+    if (_map_region != undefined) return _map_region;
+
+    // 2. Domain-warped Voronoi + climate
+    var _warped = region_gen_warp(_gen, _x, _y);
+    var _wx = _warped[0];
+    var _wy = _warped[1];
+
+    show_debug_message($"region_gen_get_region: x={_x}, y={_y} -> wx={_wx}, wy={_wy}");
+
+    var _cs = _gen.cell_size;
+    var _so = _seed + _gen.seed_offset;
+    var _cx0 = floor(_wx / _cs);
+    var _cy0 = floor(_wy / _cs);
+
+    var _best_dist = infinity;
+    var _best_region_id = 0;
+
+    for (var _cx = _cx0 - 1; _cx <= _cx0 + 1; _cx++)
+    {
+        for (var _cy = _cy0 - 1; _cy <= _cy0 + 1; _cy++)
+        {
+            var _cseed = __region_cell_seed(_cx, _cy, _so);
+            var _pt = __region_cell_point(_cx, _cy, _cs, _cseed);
+
+            var _dx = _wx - _pt[0];
+            var _dy = _wy - _pt[1];
+            var _dist_sq = _dx * _dx + _dy * _dy;
+
+            if (_dist_sq < _best_dist)
+            {
+                _best_dist = _dist_sq;
+
+                // Climate selection at cell center (using region-level coarse noise)
+                var _heat = region_gen_sample_heat(_pt[0], _pt[1], _seed, _gen.climate_scale);
+                var _humid = region_gen_sample_humidity(_pt[0], _pt[1], _seed, _gen.climate_scale);
+                _best_region_id = region_gen_climate_pick(_gen, _heat, _humid);
+                
+                var _r = _gen.regions[clamp(_best_region_id, 0, _gen.region_count - 1)];
+                show_debug_message($"  New best cell: cx={_cx}, cy={_cy}, heat={_heat}, humid={_humid} -> region='{_r.get_id()}'");
+            }
+        }
+    }
+
+    if (_gen.region_count <= 0) return undefined;
+    return _gen.regions[clamp(_best_region_id, 0, _gen.region_count - 1)];
+}
+
+/// @desc Get blend data between the two nearest Voronoi cells
+/// @param {Struct} _gen Generator config
+/// @param {Real} _x World X
+/// @param {Real} _y World Y
+/// @param {Real} _seed World seed
+/// @returns {Struct} { r1, r2, diff }
+function region_gen_get_blend_data(_gen, _x, _y, _seed)
+{
+    // Map override — no blending
+    var _map_region = region_gen_map_lookup(_gen, _x, _y);
+    if (_map_region != undefined)
+    {
+        return { r1: _map_region, r2: _map_region, diff: 1000 }
+    }
+
+    var _warped = region_gen_warp(_gen, _x, _y);
+    var _wx = _warped[0];
+    var _wy = _warped[1];
+
+    var _cs = _gen.cell_size;
+    var _so = _seed + _gen.seed_offset;
+    var _cx0 = floor(_wx / _cs);
+    var _cy0 = floor(_wy / _cs);
+
+    var _best_dist = infinity;
+    var _second_dist = infinity;
+    var _best_region_id = 0;
+    var _second_region_id = 0;
+
+    for (var _cx = _cx0 - 1; _cx <= _cx0 + 1; _cx++)
+    {
+        for (var _cy = _cy0 - 1; _cy <= _cy0 + 1; _cy++)
+        {
+            var _cseed = __region_cell_seed(_cx, _cy, _so);
+            var _pt = __region_cell_point(_cx, _cy, _cs, _cseed);
+
+            var _dx = _wx - _pt[0];
+            var _dy = _wy - _pt[1];
+            var _dist = sqrt(_dx * _dx + _dy * _dy);
+
+            // Climate-based region pick for this cell (using region-level coarse noise)
+            var _heat = region_gen_sample_heat(_pt[0], _pt[1], _seed, _gen.climate_scale);
+            var _humid = region_gen_sample_humidity(_pt[0], _pt[1], _seed, _gen.climate_scale);
+            var _rid = region_gen_climate_pick(_gen, _heat, _humid);
+
+            if (_dist < _best_dist)
+            {
+                _second_dist = _best_dist;
+                _second_region_id = _best_region_id;
+                _best_dist = _dist;
+                _best_region_id = _rid;
+            }
+            else if (_dist < _second_dist)
+            {
+                _second_dist = _dist;
+                _second_region_id = _rid;
+            }
+        }
+    }
+
+    if (_gen.region_count <= 0) return undefined;
+
+    var _rc = _gen.region_count;
+    var _r1 = _gen.regions[clamp(_best_region_id, 0, _rc - 1)];
+    var _r2 = _gen.regions[clamp(_second_region_id, 0, _rc - 1)];
+
+    return {
+        r1: _r1,
+        r2: _r2,
+        diff: _second_dist - _best_dist,
+    }
+}
+
+/// @desc Get distance to nearest region boundary (for transition blending)
+/// @param {Struct} _gen Generator config
+/// @param {Real} _x World X
+/// @param {Real} _y World Y
+/// @param {Real} _seed World seed
+/// @returns {Real} Boundary distance
+function region_gen_get_boundary_distance(_gen, _x, _y, _seed)
+{
+    if (_gen.map_buffer != undefined) return 1000;
+    
+    var _warped = region_gen_warp(_gen, _x, _y);
+    var _wx = _warped[0];
+    var _wy = _warped[1];
+    
+    var _cs = _gen.cell_size;
+    var _so = _seed + _gen.seed_offset;
+    var _cx0 = floor(_wx / _cs);
+    var _cy0 = floor(_wy / _cs);
+    
+    var _best_dist = infinity;
+    var _second_dist = infinity;
+    
+    for (var _cx = _cx0 - 1; _cx <= _cx0 + 1; _cx++)
+    {
+        for (var _cy = _cy0 - 1; _cy <= _cy0 + 1; _cy++)
+        {
+            var _cseed = __region_cell_seed(_cx, _cy, _so);
+            var _pt = __region_cell_point(_cx, _cy, _cs, _cseed);
+            
+            var _dx = _wx - _pt[0];
+            var _dy = _wy - _pt[1];
+            var _dist = sqrt(_dx * _dx + _dy * _dy);
+            
+            if (_dist < _best_dist)
+            {
+                _second_dist = _best_dist;
+                _best_dist = _dist;
+            }
+            else if (_dist < _second_dist)
+            {
+                _second_dist = _dist;
+            }
+        }
+    }
+    
+    return (_second_dist - _best_dist) / 2.0;
+}
+
+#endregion

@@ -125,7 +125,7 @@ function ProgCompiler(_context_keys = []) constructor
     had_error = false;
     error_message = "";
     
-    inline_functions = {}; // Map of inline function name -> AST node
+    inline_functions = {} // Map of inline function name -> AST node
     inline_stack = []; // Stack for inline expansion contexts (handling returns)
     
     // Build context keywords struct from provided keys
@@ -1376,7 +1376,7 @@ function ProgCompiler(_context_keys = []) constructor
                 {
                     // INLINE EXPANSION
                     var _ret_var = "@inline_ret_" + string(bytecode.code_size);
-                    var _ctx = { ret_var: _ret_var, jumps: [], start_depth: scope_depth };
+                    var _ctx = { ret_var: _ret_var, jumps: [], start_depth: scope_depth }
                     array_push(inline_stack, _ctx);
                     
                     // Initialize return variable to undefined

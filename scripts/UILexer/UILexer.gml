@@ -70,7 +70,7 @@ function UILexer(_source) constructor {
         "LAYOUT_HORIZONTAL": UI_TOKEN.LAYOUT_HORIZONTAL,
         "LAYOUT_GRID": UI_TOKEN.LAYOUT_GRID,
         "LAYOUT_NONE": UI_TOKEN.LAYOUT_NONE
-    };
+    }
     
     /// @desc Tokenize the source code
     /// @returns {Array} Array of token structs

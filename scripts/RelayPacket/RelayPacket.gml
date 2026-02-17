@@ -142,14 +142,14 @@ function relay_read_hello(_buffer)
     var _uuid = buffer_read(_buffer, buffer_string);
     var _attire_json = buffer_read(_buffer, buffer_string);
     
-    var _attire = {};
+    var _attire = {}
     try { _attire = json_parse(_attire_json); } catch(_e) {}
     
     return {
         peer_id: _peer_id,
         uuid: _uuid,
         attire: _attire
-    };
+    }
 }
 
 /// @desc Write WELCOME packet data
@@ -191,7 +191,7 @@ function relay_read_welcome(_buffer)
         var _p_uuid = buffer_read(_buffer, buffer_string);
         var _p_attire_json = buffer_read(_buffer, buffer_string);
         
-        var _p_attire = {};
+        var _p_attire = {}
         try { _p_attire = json_parse(_p_attire_json); } catch(_e) {}
         
         array_push(_peers, {
@@ -206,7 +206,7 @@ function relay_read_welcome(_buffer)
         world_seed: _world_seed,
         world_time: _world_time,
         peers: _peers
-    };
+    }
 }
 
 /// @desc Write PEER_JOINED packet data
@@ -230,14 +230,14 @@ function relay_read_peer_joined(_buffer)
     var _uuid = buffer_read(_buffer, buffer_string);
     var _attire_json = buffer_read(_buffer, buffer_string);
     
-    var _attire = {};
+    var _attire = {}
     try { _attire = json_parse(_attire_json); } catch(_e) {}
     
     return {
         peer_id: _peer_id,
         uuid: _uuid,
         attire: _attire
-    };
+    }
 }
 
 /// @desc Write PEER_LEFT packet data
@@ -311,5 +311,5 @@ function relay_read_routed(_buffer)
     return {
         from_peer_id: _from_peer_id,
         payload: _payload
-    };
+    }
 }

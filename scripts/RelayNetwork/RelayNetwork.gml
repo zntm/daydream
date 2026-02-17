@@ -25,7 +25,7 @@ function RelayNetwork() constructor
     room_code = "";
     
     // Peer tracking: peer_id -> { socket, uuid, player_instance, attire }
-    peers = {};
+    peers = {}
     
     // Socket state
     _server_socket = undefined;     // Host's listening socket
@@ -81,7 +81,7 @@ function RelayNetwork() constructor
             attire: global.player_save_data.attire ?? {},
             inventory: global.inventory,
             is_local: true
-        };
+        }
         
         show_debug_message($"[RELAY] Hosting on port {_port}");
         show_debug_message($"[RELAY] Room code: {room_code}");
@@ -284,7 +284,7 @@ function RelayNetwork() constructor
         // Clear state
         role = RELAY_ROLE.NONE;
         global.network_role = role;
-        peers = {};
+        peers = {}
         ds_map_clear(_socket_to_peer);
         local_peer_id = "";
         room_code = "";
@@ -401,7 +401,7 @@ function RelayNetwork() constructor
             
             role = RELAY_ROLE.NONE;
             global.network_role = role;
-            peers = {};
+            peers = {}
             _host_socket = undefined;
             
             if (on_disconnected != undefined)
@@ -529,7 +529,7 @@ function RelayNetwork() constructor
             attire: _data.attire,
             inventory: undefined, // Set by RelayNetworkManager on join
             is_local: false
-        };
+        }
         ds_map_add(_socket_to_peer, _socket, _peer_id);
         
         // Build peer list for WELCOME
@@ -735,7 +735,7 @@ function RelayNetwork() constructor
                 player_instance: noone,
                 attire: _p.attire,
                 is_local: (_p.peer_id == local_peer_id)
-            };
+            }
         }
         
         // Callback with world data
@@ -763,7 +763,7 @@ function RelayNetwork() constructor
             player_instance: noone,
             attire: _data.attire,
             is_local: false
-        };
+        }
         
         if (on_peer_joined != undefined)
         {

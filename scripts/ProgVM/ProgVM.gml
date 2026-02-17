@@ -101,7 +101,7 @@ function proglang_vm_reset(_vm)
     _vm[@ PROG_VM.CURRENT_THIS] = undefined;
     _vm[@ PROG_VM.ACTIVE_CLASS] = undefined;
     _vm[@ PROG_VM.ACTIVE_MODULE] = undefined;
-    _vm[@ PROG_VM.MEMO_CACHES] = {};
+    _vm[@ PROG_VM.MEMO_CACHES] = {}
     _vm[@ PROG_VM.MEMO_ARG_KEYS] = [];
 }
 
@@ -229,7 +229,7 @@ function proglang_vm_run(_vm, _entry_bytecode)
                         var _sa = is_string(_a) ? _a : ((is_bool(_a)) ? ((_a) ? "true" : "false") : string(_a));
                         var _sb = is_string(_b) ? _b : ((is_bool(_b)) ? ((_b) ? "true" : "false") : string(_b));
                         _stack[@ _sp - 1] = _sa + _sb;
-                        break;
+                        break;  
                     case PROG_OP.SUB: _b = _stack[--_sp]; _stack[@ _sp - 1] -= _b; break;
                     case PROG_OP.MUL: _b = _stack[--_sp]; _stack[@ _sp - 1] *= _b; break;
                     case PROG_OP.DIV: 
@@ -320,8 +320,14 @@ function proglang_vm_run(_vm, _entry_bytecode)
                         {
                             _stack[@ _sp++] = global.proglang_functions[$ _name];
                         }
-                        else if (_name == "global") { _stack[@ _sp++] = global; }
-                        else if (struct_exists(global, _name)) { _stack[@ _sp++] = global[$ _name]; }
+                        else if (_name == "global")
+                        {
+                            _stack[@ _sp++] = global;
+                        }
+                        else if (struct_exists(global, _name))
+                        {
+                            _stack[@ _sp++] = global[$ _name];
+                        }
                         else
                         { 
                             runtime_error(PROGLANG_ERROR_TYPE.VARIABLE, $"Variable '{_name}' not found.");
@@ -337,11 +343,13 @@ function proglang_vm_run(_vm, _entry_bytecode)
                         var _target_s = undefined;
                         while (_s_store != undefined)
                         {
-                            if (struct_exists(_s_store[PROG_SCOPE.VARS], _name))
+                            if (_s_store[PROG_SCOPE.VARS][$ _name] != undefined)
                             {
                                 _target_s = _s_store;
+                                
                                 break;
                             }
+                            
                             _s_store = _s_store[PROG_SCOPE.PARENT];
                         }
                         
@@ -1215,7 +1223,7 @@ function proglang_vm_run(_vm, _entry_bytecode)
                         var _memo_id = _arg;
                         var _val = _stack[_sp - 1];
                         var _hash = array_pop(_vm[PROG_VM.MEMO_ARG_KEYS]);
-                        if (!struct_exists(_vm[PROG_VM.MEMO_CACHES], _memo_id)) _vm[@ PROG_VM.MEMO_CACHES][$ _memo_id] = {};
+                        if (!struct_exists(_vm[PROG_VM.MEMO_CACHES], _memo_id)) _vm[@ PROG_VM.MEMO_CACHES][$ _memo_id] = {}
                         _vm[PROG_VM.MEMO_CACHES][$ _memo_id][$ _hash] = _val;
                         break;
                 }

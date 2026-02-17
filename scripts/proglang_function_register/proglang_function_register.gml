@@ -1331,7 +1331,7 @@ proglang_function_register("ui_load", function(_args) {
 
 proglang_function_register("ui_spawn", function(_args) {
     var _definitions = _args[0];
-    var _config = (array_length(_args) > 1) ? _args[1] : {};
+    var _config = (array_length(_args) > 1) ? _args[1] : {}
     var _events = (array_length(_args) > 2) ? _args[2] : undefined;
     return ui_spawn(_definitions, _config, _events);
 });
