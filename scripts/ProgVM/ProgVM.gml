@@ -157,6 +157,7 @@ function proglang_vm_run(_vm, _entry_bytecode)
                 if (++_steps > PROGLANG_MAX_STEP)
                 {
                     show_debug_message("[ProgVM] Infinite loop protection triggered");
+                    
                     return undefined;
                 }
                 
@@ -164,7 +165,10 @@ function proglang_vm_run(_vm, _entry_bytecode)
                 var _arg = _code[_ip++];
                 
                 // DEBUG TRACE
-                if (_sp < 0) show_debug_message($"[VM CRITICAL] SP UNDERFLOW BEFORE OP: {_sp}");
+                if (_sp < 0)
+                {
+                    show_debug_message($"[VM CRITICAL] SP UNDERFLOW BEFORE OP: {_sp}");
+                }
                 
                 switch (_op)
                 {
@@ -343,7 +347,7 @@ function proglang_vm_run(_vm, _entry_bytecode)
                         var _target_s = undefined;
                         while (_s_store != undefined)
                         {
-                            if (_s_store[PROG_SCOPE.VARS][$ _name] != undefined)
+                            if (struct_exists(_s_store[PROG_SCOPE.VARS], _name))
                             {
                                 _target_s = _s_store;
                                 
@@ -1098,13 +1102,18 @@ function proglang_vm_run(_vm, _entry_bytecode)
                         var _cur_file = "";
                         // Manual inlined search for __filename
                         var _s_import = _scope;
+                        
                         while (_s_import != undefined)
                         {
-                            if (struct_exists(_s_import[PROG_SCOPE.VARS], "__filename"))
+                            var _filename = _s_import[PROG_SCOPE.VARS][$ "__filename"];
+                            
+                            if (_filename != undefined)
                             {
-                                _cur_file = _s_import[PROG_SCOPE.VARS][$ "__filename"];
+                                _cur_file = _filename;
+                                
                                 break;
                             }
+                            
                             _s_import = _s_import[PROG_SCOPE.PARENT];
                         }
                         
@@ -1143,7 +1152,7 @@ function proglang_vm_run(_vm, _entry_bytecode)
                         
                         if (is_array(_rhs))
                         {
-                            for (var i = array_length(_rhs); i >= 0; --i)
+                            for (var i = array_length(_rhs) - 1; i >= 0; --i)
                             {
                                 if (_rhs[i] != _lhs) continue;
                                 
@@ -1154,7 +1163,7 @@ function proglang_vm_run(_vm, _entry_bytecode)
                         }
                         else if (is_string(_rhs))
                         {
-                            _result = string_contains(string(_lhs), _rhs);
+                            _result = string_contains(string(_rhs), _lhs);
                         }
                         
                         _stack[@ _sp++] = _result;

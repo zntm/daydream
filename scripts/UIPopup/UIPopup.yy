@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"UIPopup",
   "parent":{
-    "name":"UI",
-    "path":"folders/Scripts/Proglang/UI.yy",
+    "name":"Elements",
+    "path":"folders/Scripts/Proglang/UI/Elements.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

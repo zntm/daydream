@@ -1011,7 +1011,8 @@ function ProgCompiler(_context_keys = []) constructor
                 patch_jump(_exit, bytecode.code_size);
                 
                 var _loop = array_pop(loop_stack);
-                for (var i = 0; i < array_length(_loop.breaks); i++)
+                
+                for (var i = array_length(_loop.breaks) - 1; i >= 0; --i)
                 {
                     patch_jump(_loop.breaks[i], bytecode.code_size);
                 }
@@ -1044,7 +1045,8 @@ function ProgCompiler(_context_keys = []) constructor
                 patch_jump(_exit, bytecode.code_size);
                 
                 var _loop = array_pop(loop_stack);
-                for (var i = 0; i < array_length(_loop.breaks); i++)
+                
+                for (var i = array_length(_loop.breaks) - 1; i >= 0; --i)
                 {
                     patch_jump(_loop.breaks[i], bytecode.code_size);
                 }
@@ -1078,7 +1080,7 @@ function ProgCompiler(_context_keys = []) constructor
                 compile_node(_node.body);
                 
                 var _inc_addr = bytecode.code_size;
-                for (var i = 0; i < array_length(_loop_ctx.continue_jumps); i++)
+                for (var i = array_length(_loop_ctx.continue_jumps) - 1; i >= 0; --i)
                 {
                     patch_jump(_loop_ctx.continue_jumps[i], _inc_addr);
                 }
@@ -1092,7 +1094,7 @@ function ProgCompiler(_context_keys = []) constructor
                 if (_exit != -1) patch_jump(_exit, bytecode.code_size);
                 
                 array_pop(loop_stack);
-                for (var i = 0; i < array_length(_loop_ctx.breaks); i++)
+                for (var i = array_length(_loop_ctx.breaks) - 1; i >= 0; --i)
                 {
                     patch_jump(_loop_ctx.breaks[i], bytecode.code_size);
                 }
@@ -1319,7 +1321,7 @@ function ProgCompiler(_context_keys = []) constructor
                 var _switch_ctx = { breaks: [] }
                 array_push(loop_stack, _switch_ctx);
                 
-                for (var i = 0; i < array_length(_node.cases); i++)
+                for (var i = array_length(_node.cases) - 1; i >= 0; --i)
                 {
                     var _case = _node.cases[i];
                     patch_jump(_case_jumps[i], bytecode.code_size);
@@ -1336,11 +1338,13 @@ function ProgCompiler(_context_keys = []) constructor
                 
                 // Phase 5: Patch all breaks and end jumps
                 array_pop(loop_stack);
-                for (var i = 0; i < array_length(_switch_ctx.breaks); i++)
+                
+                for (var i = array_length(_switch_ctx.breaks) - 1; i >= 0; --i)
                 {
                     patch_jump(_switch_ctx.breaks[i], bytecode.code_size);
                 }
-                for (var i = 0; i < array_length(_end_jumps); i++)
+                
+                for (var i = array_length(_end_jumps) - 1; i >= 0; --i)
                 {
                     patch_jump(_end_jumps[i], bytecode.code_size);
                 }
@@ -1780,6 +1784,7 @@ function ProgCompiler(_context_keys = []) constructor
         for (var i = 0; i < array_length(_node.members); i++)
         {
             var _mem = _node.members[i];
+            
             if (_mem.type == "method")
             {
                 if (_mem.node.body == undefined) continue;
@@ -1933,18 +1938,20 @@ function ProgCompiler(_context_keys = []) constructor
             if (_node.value.type == PROG_AST.NUMBER_LITERAL && _node.value.value == 1)
             {
                 var _info = get_local_info(_target.name);
+                
                 if (_info != undefined)
                 {
                     if (_op == PROG_TOKEN.PLUS_ASSIGN)
                     {
                         emit(PROG_OP.INC_LOCAL, _info.index, _line);
-                        emit(PROG_OP.LOAD_LOCAL, _info.index, _line); // Result of expression is the new value
+                        emit(PROG_OP.LOAD_LOCAL, _info.index, _line);
                         return;
                     }
                     else if (_op == PROG_TOKEN.MINUS_ASSIGN)
                     {
                         emit(PROG_OP.DEC_LOCAL, _info.index, _line);
                         emit(PROG_OP.LOAD_LOCAL, _info.index, _line);
+                        
                         return;
                     }
                 }
