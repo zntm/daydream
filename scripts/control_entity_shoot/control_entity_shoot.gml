@@ -14,8 +14,20 @@ function control_entity_shoot(_entity, _item_id, _x, _y, _angle, _inventory_targ
     if (_data == undefined) exit;
     
     var _projectile_id = _data.get_item_projectile();
-    var _ammo_type     = _data.get_item_ammo_requirement();
+    var _ammo_requirement = _data.get_item_ammo_requirement();
+    var _ammo_type = _data.get_item_ammo_type();
     var _damage_bonus  = 0;
+    
+    // Prevent throwing items that are strictly ammo (have an ammo_type)
+    // dedication throwables (like grenades) usually have a projectile but NO ammo_type.
+    if (_ammo_type != undefined)
+    {
+        // If we are not a launcher, we shouldn't be shooting this item because it IS ammo
+        if (_data.get_hold_type() != ITEM_HOLD_TYPE.LAUNCHER)
+        {
+            return false;
+        }
+    }
     
     /* --- ammo consumption (player only) --- */
     if (_ammo_type != undefined) && (_entity.object_index == obj_Player)

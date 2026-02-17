@@ -951,3 +951,15 @@ function control_player()
 
     control_entity_suffocation(id);
 }
+
+/// @desc Reset player charge state and UI.
+function player_reset_charge()
+{
+    charge_time = 0;
+    
+    if (charge_ui != undefined)
+    {
+        ui_instance_destroy(charge_ui);
+        charge_ui = undefined;
+    }
+}

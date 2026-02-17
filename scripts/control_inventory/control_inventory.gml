@@ -98,6 +98,11 @@ function control_inventory()
         
         global.inventory_selected_hotbar = i;
         
+        with (obj_Player)
+        {
+            if (is_local) player_reset_charge();
+        }
+        
         if (!_is_inventory_opened)
         {
             surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR;
@@ -132,6 +137,11 @@ function control_inventory()
     if (_mouse_wheel != 0)
     {
         global.inventory_selected_hotbar = (global.inventory_selected_hotbar + _mouse_wheel + INVENTORY_LENGTH.ROW) % INVENTORY_LENGTH.ROW;
+        
+        with (obj_Player)
+        {
+            if (is_local) player_reset_charge();
+        }
         
         surface_refresh |= (_is_inventory_opened)
             ? SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK
