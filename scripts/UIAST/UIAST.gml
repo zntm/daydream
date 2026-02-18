@@ -34,7 +34,10 @@ enum UI_AST {
     EXPORT_ELEMENT, // export @type(name) { ... }
     
     // Function calls
-    FUNC_CALL       // floor(expr), etc.
+    FUNC_CALL,      // floor(expr), etc.
+    
+    // Array indexing
+    ARRAY_INDEX     // *name[index]
 }
 
 // =============================================================================
@@ -221,4 +224,13 @@ function UIASTFuncCall(_func_name, _arg) constructor {
     type = UI_AST.FUNC_CALL;
     func_name = _func_name;
     arg = _arg;
+}
+
+/// @desc Array index binding - *name[index]
+/// @param {String} _name Binding name in link context
+/// @param {Struct} _index Index AST node
+function UIASTArrayIndex(_name, _index) constructor {
+    type = UI_AST.ARRAY_INDEX;
+    name = _name;
+    index = _index;
 }

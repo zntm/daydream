@@ -276,10 +276,18 @@ function UIParser(_tokens) constructor {
     // =============================================================================
     
     static parse_primary = function() {
-        // Binding: *variable
+        // Binding: *variable or *variable[index]
         if (match(UI_TOKEN.STAR)) {
             var _name_token = consume(UI_TOKEN.IDENTIFIER, "Expected variable name after '*'.");
-            return new UIASTBinding(_name_token.literal ?? _name_token.lexeme);
+            var _name = _name_token.literal ?? _name_token.lexeme;
+            
+            if (match(UI_TOKEN.LBRACKET)) {
+                var _index = parse_value();
+                consume(UI_TOKEN.RBRACKET, "Expected ']' after array index.");
+                return new UIASTArrayIndex(_name, _index);
+            }
+            
+            return new UIASTBinding(_name);
         }
         
         // Localization key: $"key" or $sprite/$surface(...) { ... }

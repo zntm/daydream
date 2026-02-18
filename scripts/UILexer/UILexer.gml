@@ -4,6 +4,7 @@ enum UI_TOKEN {
     AT,              // @
     LPAREN, RPAREN,  // ( )
     LBRACE, RBRACE,  // { }
+    LBRACKET, RBRACKET, // [ ]
     
     // Values
     NUMBER,
@@ -145,6 +146,14 @@ function UILexer(_source) constructor {
             
             case "}":
                 add_token(UI_TOKEN.RBRACE);
+                break;
+            
+            case "[":
+                add_token(UI_TOKEN.LBRACKET);
+                break;
+            
+            case "]":
+                add_token(UI_TOKEN.RBRACKET);
                 break;
             
             case "=":

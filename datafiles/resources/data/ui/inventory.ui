@@ -1,7 +1,7 @@
 @area(inventory_container) {
     position = ORIGIN_BOTTOM_CENTER + (8, 47)
     size = (216, 64)
-    
+
     @area(inventory_grid) {
         position = ORIGIN_MIDDLE_RIGHT
         size = (160, 64)
@@ -24,6 +24,7 @@
             icon_sprite = "spr_Inventory_Slot_Icon"
             icon_index = 0
         }
+
         @slot(armor_breastplate) {
             position = (0, 16)
             inventory_name = "armor_breastplate"
@@ -31,6 +32,7 @@
             icon_sprite = "spr_Inventory_Slot_Icon"
             icon_index = 1
         }
+
         @slot(armor_leggings) {
             position = (0, 32)
             inventory_name = "armor_leggings"
@@ -44,45 +46,10 @@
         position = ORIGIN_MIDDLE_LEFT + (32, 0)
         size = (32, 48)
 
-        @slot(acc_0) {
-            position = (0, 0)
+        @slot(acc) repeat(6, i) {
+            position = (i % 2 * 16, floor(i / 2) * 16)
             inventory_name = "accessory"
-            slot_index = 0
-            icon_sprite = "spr_Inventory_Slot_Icon"
-            icon_index = 3
-        }
-        @slot(acc_1) {
-            position = (16, 0)
-            inventory_name = "accessory"
-            slot_index = 1
-            icon_sprite = "spr_Inventory_Slot_Icon"
-            icon_index = 3
-        }
-        @slot(acc_2) {
-            position = (0, 16)
-            inventory_name = "accessory"
-            slot_index = 2
-            icon_sprite = "spr_Inventory_Slot_Icon"
-            icon_index = 3
-        }
-        @slot(acc_3) {
-            position = (16, 16)
-            inventory_name = "accessory"
-            slot_index = 3
-            icon_sprite = "spr_Inventory_Slot_Icon"
-            icon_index = 3
-        }
-        @slot(acc_4) {
-            position = (0, 32)
-            inventory_name = "accessory"
-            slot_index = 4
-            icon_sprite = "spr_Inventory_Slot_Icon"
-            icon_index = 3
-        }
-        @slot(acc_5) {
-            position = (16, 32)
-            inventory_name = "accessory"
-            slot_index = 5
+            slot_index = i
             icon_sprite = "spr_Inventory_Slot_Icon"
             icon_index = 3
         }

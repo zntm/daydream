@@ -517,6 +517,27 @@ function ui_apply_property(_element, _prop, _link, _variables) {
             else if (_value_node.type == UI_AST.BINDING) {
                 _element.add_binding(_key, _value_node.name);
             }
+            // Array-indexed binding: *name[index] — register as a callable resolver
+            else if (_value_node.type == UI_AST.ARRAY_INDEX) {
+                var _arr_name  = _value_node.name;
+                var _idx_node  = _value_node.index;
+                var _captured_link = _link;
+                var _captured_vars = _variables;
+                
+                /* wrap in a closure so update_bindings can call it each frame */
+                _element.add_binding(_key, _arr_name + "[]");
+                _element.link_context[$ _arr_name + "[]"] = method(
+                    { arr_name: _arr_name, idx_node: _idx_node, lnk: _captured_link, vars: _captured_vars },
+                    function() {
+                        var _arr = lnk[$ arr_name];
+                        if (is_method(_arr)) _arr = _arr();
+                        else if (is_array(_arr) && array_length(_arr) > 0 && is_array(_arr[0])) _arr = proglang_runtime_call(_arr);
+                        var _idx = ui_resolve_value(idx_node, lnk, vars);
+                        if (is_array(_arr) && _idx >= 0 && _idx < array_length(_arr)) return _arr[_idx];
+                        return undefined;
+                    }
+                );
+            }
             // Handle sprite definitions for sprite_empty/sprite_fill
             else if ((_key == "sprite_empty" || _key == "sprite_fill") && 
                      is_struct(_value) && _value[$ "is_sprite_def"] == true) {
@@ -604,6 +625,26 @@ function ui_resolve_value(_node, _link, _variables) {
         
         case UI_AST.BINDING:
             // Return a marker - actual binding happens at runtime
+            return undefined;
+        
+        case UI_AST.ARRAY_INDEX:
+            // Resolve *name[index] inline — look up array in link context, return element at index
+            if (_link != undefined && struct_exists(_link, _node.name)) {
+                var _arr = _link[$ _node.name];
+                if (is_method(_arr)) {
+                    _arr = _arr();
+                } else if (is_array(_arr) && !is_array(_arr[0])) {
+                    /* plain array — use as-is */
+                } else if (is_array(_arr)) {
+                    _arr = proglang_runtime_call(_arr);
+                }
+                
+                var _idx = ui_resolve_value(_node.index, _link, _variables);
+                
+                if (is_array(_arr) && _idx >= 0 && _idx < array_length(_arr)) {
+                    return _arr[_idx];
+                }
+            }
             return undefined;
         
         case UI_AST.LOCA_KEY:
