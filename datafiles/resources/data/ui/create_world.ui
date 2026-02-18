@@ -1,0 +1,107 @@
+@area(create_world_root) {
+    position = ORIGIN_TOP_CENTER + (0, 80)
+    size = (320, 360)
+
+    @text(label_name) {
+        position = (0, 0)
+        text = "World Name"
+        colour = #ffffff
+    }
+
+    @textbox(textbox_name) {
+        position = (0, 16)
+        size = (200, 24)
+        text = *world_name
+        placeholder = "Enter world name..."
+    }
+
+    @button(btn_randomize_name) {
+        position = (208, 16)
+        size = (24, 24)
+        text = "?"
+    }
+
+    @text(label_seed) {
+        position = (0, 48)
+        text = "Seed"
+        colour = #ffffff
+    }
+
+    @textbox(textbox_seed) {
+        position = (0, 64)
+        size = (200, 24)
+        text = *world_seed
+    }
+
+    @button(btn_randomize_seed) {
+        position = (208, 64)
+        size = (24, 24)
+        text = "?"
+    }
+
+    @text(label_difficulty) {
+        position = (0, 100)
+        text = "Difficulty"
+        colour = #ffffff
+    }
+
+    @slider(slider_difficulty) {
+        position = (0, 116)
+        size = (232, 16)
+        min_value = 0.5
+        max_value = 2.5
+        value = *difficulty
+        step = 0.5
+    }
+
+    @text(label_item_drop) {
+        position = (0, 148)
+        text = "Item Drop % on Death"
+        colour = #ffffff
+    }
+
+    @slider(slider_item_drop) {
+        position = (0, 164)
+        size = (232, 16)
+        min_value = 0
+        max_value = 1
+        value = *death_penalty_item_drop
+        step = 0.1
+    }
+
+    @text(label_item_durability) {
+        position = (0, 196)
+        text = "Durability Loss % on Death"
+        colour = #ffffff
+    }
+
+    @slider(slider_item_durability) {
+        position = (0, 212)
+        size = (232, 16)
+        min_value = 0
+        max_value = 1
+        value = *death_penalty_item_durability
+        step = 0.1
+    }
+
+    @text(label_backup) {
+        position = (0, 244)
+        text = "Backup Interval (minutes)"
+        colour = #ffffff
+    }
+
+    @slider(slider_backup) {
+        position = (0, 260)
+        size = (232, 16)
+        min_value = 0
+        max_value = 30
+        value = *backup_interval
+        step = 5
+    }
+
+    @button(btn_create) {
+        position = ORIGIN_BOTTOM_CENTER + (0, 8)
+        size = (232, 32)
+        text = "Create World"
+    }
+}

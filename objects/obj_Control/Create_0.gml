@@ -5,6 +5,12 @@ global.window_height = window_get_height();
 
 surface_resize(application_surface, global.window_width, global.window_height);
 
+global.gui_scale  = 1.0;
+global.gui_width  = global.window_width;
+global.gui_height = global.window_height;
+
+display_set_gui_size(global.gui_width, global.gui_height);
+
 on_window_resize = undefined;
 
 on_window_focus   = undefined;

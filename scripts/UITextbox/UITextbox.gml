@@ -172,7 +172,7 @@ function UITextbox(_x, _y, _width, _height) : UIElement(_x, _y, _width, _height)
         var _text_x = _x1 + 4 * _base_scale_x;
         var _text_y = (_y1 + _y2) / 2;
         
-        draw_text_cuteify(
+        render_text(
             _text_x, _text_y,
             _display_text,
             _base_scale_x * 0.8,

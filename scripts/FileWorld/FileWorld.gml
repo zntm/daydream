@@ -111,4 +111,40 @@ function FileWorld(_uuid, _name, _seed, _last_opened) constructor
     {
         return self[$ "___difficulty"] ?? 1.0;
     }
+    
+    static set_death_penalty_item_drop = function(_amount)
+    {
+        ___death_penalty_item_drop = _amount;
+        
+        return self;
+    }
+    
+    static get_death_penalty_item_drop = function()
+    {
+        return self[$ "___death_penalty_item_drop"] ?? 0.1;
+    }
+    
+    static set_death_penalty_item_durability = function(_amount)
+    {
+        ___death_penalty_item_durability = _amount;
+        
+        return self;
+    }
+    
+    static get_death_penalty_item_durability = function()
+    {
+        return self[$ "___death_penalty_item_durability"] ?? 0.1;
+    }
+    
+    static set_backup_interval = function(_interval)
+    {
+        ___backup_interval = _interval;
+        
+        return self;
+    }
+    
+    static get_backup_interval = function()
+    {
+        return self[$ "___backup_interval"] ?? 0;
+    }
 }

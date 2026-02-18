@@ -534,6 +534,12 @@ for (var j = 0; j <= _max_layer; ++j)
     }
 }
 
+if (variable_global_exists("ui_create_world") && global.ui_create_world != undefined)
+{
+    ui_update(global.ui_create_world);
+    ui_draw(global.ui_create_world);
+}
+
 draw_set_align(_halign, _valign);
 
 gpu_set_blendmode(bm_normal);

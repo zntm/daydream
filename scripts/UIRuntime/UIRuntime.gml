@@ -298,6 +298,9 @@ function ui_instantiate_element(_node, _link, _variables) {
         case "slot":
             _element = new UISlot(0, 0);
             break;
+        case "dropdown":
+            _element = new UIDropdown(0, 0, 100, 24);
+            break;
         case "popup":
             _element = new UIPopup(0, 0, 200, 150);
             break;
