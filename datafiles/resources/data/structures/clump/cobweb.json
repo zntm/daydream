@@ -1,6 +1,4 @@
 {
-    "id": "phantasia:clump/cobweb",
-    "type": "clump",
     "function": {
         "id": "phantasia:clump",
         "parameters": {
@@ -8,7 +6,7 @@
                 "id": "phantasia:cobweb"
             },
             "tile_wall": {
-                "id": "$EMPTY"
+                "id": "phantasia:stone_wall"
             }
         }
     },

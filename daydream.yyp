@@ -638,6 +638,8 @@
     {"$GMIncludedFile":"","%Name":"coal_ore.png.json","CopyToMask":-1,"filePath":"datafiles/resources/assets/sprites/item","name":"coal_ore.png.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"coal.png","CopyToMask":-1,"filePath":"datafiles/resources/assets/sprites/item","name":"coal.png","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"coal.png.json","CopyToMask":-1,"filePath":"datafiles/resources/assets/sprites/item","name":"coal.png.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"cobweb.png","CopyToMask":-1,"filePath":"datafiles/resources/assets/sprites/item","name":"cobweb.png","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"cobweb.png.json","CopyToMask":-1,"filePath":"datafiles/resources/assets/sprites/item","name":"cobweb.png.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"cooked_chicken.png","CopyToMask":-1,"filePath":"datafiles/resources/assets/sprites/item","name":"cooked_chicken.png","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"cooked_chicken.png.json","CopyToMask":-1,"filePath":"datafiles/resources/assets/sprites/item","name":"cooked_chicken.png.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"cooked_rabbit.png","CopyToMask":-1,"filePath":"datafiles/resources/assets/sprites/item","name":"cooked_rabbit.png","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
