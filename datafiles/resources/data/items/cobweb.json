@@ -14,7 +14,7 @@
             },
             "on_stay": [
                 {
-                    "id": "phantasia:tile/cobweb/stay"
+                    "id": "@phantasia:tile/cobweb/stay"
                 }
             ]
         }
