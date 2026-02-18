@@ -231,6 +231,38 @@ if (global.relay != undefined && global.relay.role == RELAY_ROLE.HOST)
     }
 }
 
+// Auto Backup
+if (IS_ENABLED_BACKUP)
+{
+    timer_auto_backup -= _delta_time;
+    
+    if (timer_auto_backup <= 0)
+    {
+        timer_auto_backup = BACKUP_INTERVAL_SECONDS;
+        
+        var _player_save_data = global.player_save_data;
+        var _lp = noone;
+        with (obj_Player) { if (is_local) { _lp = id; break; } }
+        
+        if (_lp != noone)
+        {
+            file_backup_player(_player_save_data, _lp);
+        }
+        
+        var _world_save_data = global.world_save_data;
+        file_backup_world_global(_world_save_data);
+        
+        // Backup chunks that are currently in memory
+        var _chunks = chunk_map_get_all();
+        for (var i = 0; i < array_length(_chunks); ++i)
+        {
+            file_backup_world_chunk(_world_save_data, _chunks[i]);
+        }
+        
+        chat_system_push("Auto-backup complete!");
+    }
+}
+
 // Update relay validator (P2P validation checks)
 if (global.relay_manager != undefined)
 {

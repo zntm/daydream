@@ -234,6 +234,7 @@
     {"name":"file_load_world_spawn","order":4,"path":"scripts/file_load_world_spawn/file_load_world_spawn.yy",},
     {"name":"file_load_worlds","order":2,"path":"scripts/file_load_worlds/file_load_worlds.yy",},
     {"name":"file_read_directory","order":4,"path":"scripts/file_read_directory/file_read_directory.yy",},
+    {"name":"file_save_backup","order":95,"path":"scripts/file_save_backup/file_save_backup.yy",},
     {"name":"file_save_message_history","order":6,"path":"scripts/file_save_message_history/file_save_message_history.yy",},
     {"name":"file_save_player_global","order":3,"path":"scripts/file_save_player_global/file_save_player_global.yy",},
     {"name":"file_save_player_inventory","order":4,"path":"scripts/file_save_player_inventory/file_save_player_inventory.yy",},

@@ -1769,6 +1769,7 @@
     {"id":{"name":"file_load_world_spawn","path":"scripts/file_load_world_spawn/file_load_world_spawn.yy",},},
     {"id":{"name":"file_load_worlds","path":"scripts/file_load_worlds/file_load_worlds.yy",},},
     {"id":{"name":"file_read_directory","path":"scripts/file_read_directory/file_read_directory.yy",},},
+    {"id":{"name":"file_save_backup","path":"scripts/file_save_backup/file_save_backup.yy",},},
     {"id":{"name":"file_save_message_history","path":"scripts/file_save_message_history/file_save_message_history.yy",},},
     {"id":{"name":"file_save_player_global","path":"scripts/file_save_player_global/file_save_player_global.yy",},},
     {"id":{"name":"file_save_player_inventory","path":"scripts/file_save_player_inventory/file_save_player_inventory.yy",},},
