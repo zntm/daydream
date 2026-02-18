@@ -97,7 +97,7 @@ function control_structure(_x, _y)
                     var _generate = true;
                     var _struct_seed = _chance_seed ^ (_id_max_idx * 521.123);
                     
-                    for (var m = _id_max_idx; m >= 0; --i)
+                    for (var m = _id_max_idx; m >= 0; --m)
                     {
                         var _id2 = _id[m];
                         var _struct_data_ptr = _structure_data[$ _id2];
@@ -107,7 +107,7 @@ function control_structure(_x, _y)
                         {
                             if (_struct_data_ptr.get_placement_type() == STRUCTURE_PLACEMENT_TYPE.FLOOR) continue;
                         }
-                        /* continue if if top tile is air */
+                        /* continue if top tile is air */
                         else if (_queue & 0b001)
                         {
                             if (_struct_data_ptr.get_placement_type() == STRUCTURE_PLACEMENT_TYPE.CEILING) continue;
@@ -124,7 +124,7 @@ function control_structure(_x, _y)
                     
                     if (_generate)
                     {
-                        for (var m = _id_max_idx; m >= 0; --i)
+                        for (var m = _id_max_idx; m >= 0; --m)
                         {
                             var _id2 = _id[m];
                             
@@ -139,7 +139,7 @@ function control_structure(_x, _y)
                     
                     if (_generate)
                     {
-                        for (var m = _id_max_idx; m >= 0; --i)
+                        for (var m = _id_max_idx; m >= 0; --m)
                         {
                             var _id2 = _id[m];
                             

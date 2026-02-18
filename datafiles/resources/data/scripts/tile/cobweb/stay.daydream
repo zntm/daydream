@@ -1,0 +1,6 @@
+// Apply slowing effect
+// duration: 2 ticks to ensure continuity between physics updates
+entity_add_effect(caller, "phantasia:cobweb_slow", 2, 1)
+
+// Negate fall damage by resetting the entity's fall starting position
+entity_reset_fall_distance(caller)

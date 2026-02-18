@@ -104,6 +104,10 @@
             "id": "phantasia:tree/oak",
             "chance": 0.1,
             "generate_on": "#phantasia:tile/placement/plant_on"
+        },
+        {
+            "id": "phantasia:clump/cobweb",
+            "chance": 0.02
         }
     ],
     "terrain_modifier": {

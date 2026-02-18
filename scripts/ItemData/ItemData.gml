@@ -638,6 +638,13 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
                 set_on_random_tick(_on_random_tick);
             }
             
+            var _on_stay = _tile[$ "on_stay"];
+            
+            if (_on_stay != undefined)
+            {
+                set_on_stay(_on_stay);
+            }
+            
             var _on_harvest = _tile[$ "on_harvest"];
             
             if (_on_harvest != undefined)
@@ -1397,6 +1404,27 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     static get_on_attack_length = function()
     {
         return self[$ "___on_attack_length"];
+    }
+    
+    static set_on_stay = function(_data)
+    {
+        if (_data != undefined)
+        {
+            ___on_stay = _data;
+            ___on_stay_length = array_length(_data);
+        }
+        
+        return self;
+    }
+    
+    static get_on_stay = function()
+    {
+        return self[$ "___on_stay"];
+    }
+    
+    static get_on_stay_length = function()
+    {
+        return self[$ "___on_stay_length"] ?? 0;
     }
     
     static set_on_item_use = function(_data)

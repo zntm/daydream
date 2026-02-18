@@ -44,6 +44,31 @@ function entity_update_collision(_body)
     
     _body.collision.in_liquid = false;
     _body.collision.liquid_type = "";
+    
+    // Trigger on_stay events
+    var _w = attribute.get_collision_box_width();
+    var _h = attribute.get_collision_box_height();
+    
+    var _tx1 = floor((x - _w/2) / TILE_SIZE);
+    var _tx2 = floor((x + _w/2) / TILE_SIZE);
+    var _ty1 = floor((y - _h) / TILE_SIZE);
+    var _ty2 = floor(y / TILE_SIZE);
+    
+    for (var _tx = _tx1; _tx <= _tx2; ++_tx)
+    {
+        for (var _ty = _ty1; _ty <= _ty2; ++_ty)
+        {
+            var _tile = tile_get(_tx, _ty, CHUNK_DEPTH_DEFAULT);
+            if (_tile != TILE_EMPTY)
+            {
+                var _data = global.item_data[$ _tile.get_id()];
+                if (_data != undefined && _data.get_on_stay_length() > 0)
+                {
+                    function_execute(_data.get_on_stay(), _tx, _ty, CHUNK_DEPTH_DEFAULT, 1, 1, id);
+                }
+            }
+        }
+    }
 }
 
 /// @desc Apply knockback to an entity

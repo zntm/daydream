@@ -512,6 +512,23 @@ proglang_function_register("control_entity_heal", function(_args) {
     return control_entity_heal(_args[0], _args[1], _args[2]);
 });
 
+proglang_function_register("entity_add_effect", function(_args) {
+    var _target = _args[0];
+    var _id = _args[1];
+    var _duration = _args[2];
+    var _level = (array_length(_args) > 3) ? _args[3] : 1;
+    var _source = (array_length(_args) > 4) ? _args[4] : undefined;
+    
+    control_entity_add_effect(_target, _id, _duration, _level, _source);
+});
+
+proglang_function_register("entity_reset_fall_distance", function(_args) {
+    var _target = _args[0];
+    if (instance_exists(_target)) {
+        _target.y_last = _target.y;
+    }
+});
+
 proglang_function_register("wait", function(_args, _vm)
 {
     if (array_length(_args) < 3) return;

@@ -1,0 +1,22 @@
+{
+    "id": "phantasia:clump/cobweb",
+    "type": "clump",
+    "function": {
+        "id": "phantasia:clump",
+        "parameters": {
+            "tile_base": {
+                "id": "phantasia:cobweb"
+            },
+            "tile_wall": {
+                "id": "$EMPTY"
+            }
+        }
+    },
+    "width": 5,
+    "height": 5,
+    "placement": {
+        "type": "ceiling",
+        "xoffset": -2,
+        "yoffset": -3
+    }
+}

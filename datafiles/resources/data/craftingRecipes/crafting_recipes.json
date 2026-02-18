@@ -1,5 +1,15 @@
 [
     {
+        "id": "phantasia:silk",
+        "amount": 1,
+        "ingredients": [
+            {
+                "id": "phantasia:cobweb",
+                "amount": 2
+            }
+        ]
+    },
+    {
         "id": "phantasia:platinum_sword",
         "amount": 1,
         "crafting_stations": "#phantasia:tile/generic/workbench",
