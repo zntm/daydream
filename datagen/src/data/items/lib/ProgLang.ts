@@ -3,7 +3,7 @@ import { ItemFunction } from "./ItemFunction";
 /**
  * Script reference for Proglang scripts.
  * Uses @ prefix to indicate a script file.
- * @example new ItemScript("items/spawn_particle", { id: "..." })
+ * @example new ItemScript("@phantasia:items/spawn_particle", { id: "..." })
  */
 export class ItemScript extends ItemFunction {
     constructor(script: string, parameters?: any, chance?: string | number, repeat?: string | number) {

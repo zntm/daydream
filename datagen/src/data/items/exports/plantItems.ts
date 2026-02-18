@@ -240,7 +240,7 @@ export default [
             .setTileSFX("#phantasia:tile/sfx/foliage")
             .setTileAudioProperties(new TileItemAudioProperties(0.05, 0.0))
             .setTileOnRandomTick([
-                new ItemScript("items/spawn_particle", {
+                new ItemScript("@phantasia:items/spawn_particle", {
                     id: "phantasia:tile/seeding_dandelion",
                 }),
             ]),

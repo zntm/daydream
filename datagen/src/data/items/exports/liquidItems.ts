@@ -35,7 +35,7 @@ export default [
                     .addTileComponent("level", ItemComponent.u8(8, 1, 8))
                     .addTileComponent("flow_direction", ItemComponent.s8(0, -1, 1))
                     .addOnUse([
-                        new ItemScript("items/bucket_pickup", {
+                        new ItemScript("@phantasia:items/bucket_pickup", {
                             bucket_id: "phantasia:bucket",
                             filled_bucket_id: `phantasia:${id}_bucket`,
                             tick_delay,
@@ -52,7 +52,7 @@ export default [
                 )
                     .addItemComponent("level", ItemComponent.u8(8, 1, 8))
                     .setItemOnUse([
-                        new ItemScript("items/bucket_place", {
+                        new ItemScript("@phantasia:items/bucket_place", {
                             liquid_id: `phantasia:${id}`,
                             empty_bucket_id: "phantasia:bucket",
                             tick_delay,

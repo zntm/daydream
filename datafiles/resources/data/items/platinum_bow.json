@@ -9,7 +9,7 @@
             "bar": "#phantasia:item/generic/durability_bar"
         },
         "hold_type": "launcher",
-        "projectile": "phantasia:projectiles/arrow",
+        "projectile": "phantasia:arrow",
         "skill": {
             "stamina_cost": 10,
             "threshold": 0.5,

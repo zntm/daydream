@@ -23,7 +23,7 @@
             "light": "#EAC7A6",
             "on_random_tick": [
                 {
-                    "id": "@items/sfx_play",
+                    "id": "@phantasia:items/sfx_play",
                     "parameters": {
                         "id": "phantasia:sfx/tile/fire/ambient"
                     },

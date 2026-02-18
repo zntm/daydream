@@ -21,7 +21,7 @@ export default [
                 new ItemStringComponent("turns_into", 80),
             )
             .addOnUse([
-                new ItemScript("phantasia:ui/loot_blueprint"),
+                new ItemScript("@phantasia:ui/loot_blueprint"),
             ])
             .setTileSFX("#phantasia:tile/sfx/stone")
             .setTileAudioProperties(new TileItemAudioProperties(0.65, 0.5)),
@@ -49,7 +49,7 @@ export default [
             .addTileComponent("xscale", new ItemIntegerComponent(1, 1, 255))
             .addTileComponent("yscale", new ItemIntegerComponent(1, 1, 255))
             .addOnUse([
-                new ItemScript("phantasia:ui/structure_blueprint"),
+                new ItemScript("@phantasia:ui/structure_blueprint"),
             ])
             .setTileSFX("#phantasia:tile/sfx/stone")
             .setTileAudioProperties(new TileItemAudioProperties(0.65, 0.5)),

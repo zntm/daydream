@@ -21,7 +21,7 @@
             },
             "on_random_tick": [
                 {
-                    "id": "@items/spawn_particle",
+                    "id": "@phantasia:items/spawn_particle",
                     "parameters": {
                         "id": "phantasia:tile/seeding_dandelion"
                     }

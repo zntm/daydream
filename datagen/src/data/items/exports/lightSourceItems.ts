@@ -34,7 +34,7 @@ export default [
             .setAnimationType("increment")
             .setTileOnRandomTick([
                 new ItemScript(
-                    "items/sfx_play",
+                    "@phantasia:items/sfx_play",
                     {
                         id: "phantasia:sfx/tile/fire/ambient",
                     },
@@ -67,7 +67,7 @@ export default [
             .setAnimationType("increment")
             .setTileOnRandomTick([
                 new ItemScript(
-                    "items/sfx_play",
+                    "@phantasia:items/sfx_play",
                     {
                         id: "phantasia:sfx/tile/fire/ambient",
                     },
