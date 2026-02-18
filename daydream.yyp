@@ -1089,7 +1089,6 @@
     {"$GMIncludedFile":"","%Name":"boggins.json","CopyToMask":-1,"filePath":"datafiles/resources/data/biomes/surface/rotfens","name":"boggins.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"mangroots.json","CopyToMask":-1,"filePath":"datafiles/resources/data/biomes/surface/rotfens","name":"mangroots.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"swamp.json","CopyToMask":-1,"filePath":"datafiles/resources/data/biomes/surface","name":"swamp.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
-    {"$GMIncludedFile":"","%Name":"taiga.json","CopyToMask":-1,"filePath":"datafiles/resources/data/biomes/surface","name":"taiga.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":".keep","CopyToMask":-1,"filePath":"datafiles/resources/data/craftingRecipes","name":".keep","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"crafting_recipes.json","CopyToMask":-1,"filePath":"datafiles/resources/data/craftingRecipes","name":"crafting_recipes.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"chicken.json","CopyToMask":-1,"filePath":"datafiles/resources/data/creatures","name":"chicken.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},

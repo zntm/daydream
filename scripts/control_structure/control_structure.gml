@@ -13,11 +13,16 @@ function control_structure(_x, _y)
     for (var i = _x - WORLDGEN_STRUCTURE_OFFSET; i <= _x + WORLDGEN_STRUCTURE_OFFSET; ++i)
     {
         var _ds = global.worldgen_structure[? i];
+        
         if (_ds == undefined)
         {
             _ds = ds_map_create();
+            
             global.worldgen_structure[? i] = _ds;
         }
+        
+        var _surface_height = worldgen_get_surface_height(i, _world_seed, _world_data);
+        var _cave_start = worldgen_get_cave_start(i, _world_seed, _world_data);
         
         var _ystart = _y - WORLDGEN_STRUCTURE_OFFSET;
         var _yend   = _y + WORLDGEN_STRUCTURE_OFFSET;
@@ -26,17 +31,15 @@ function control_structure(_x, _y)
         
         for (var j = _ystart; j <= _yend; ++j)
         {
+            /* skip already processed blocks */
             if (ds_map_exists(_ds, j))
             {
-                // Skip already processed blocks
                 j = (((j >> CHUNK_SIZE_BIT) + 1) << CHUNK_SIZE_BIT) - 1;
+                
                 _queue_valid = false;
                 
                 continue;
             }
-            
-            var _surface_height = worldgen_get_surface_height(i, _world_seed, _world_data);
-            var _cave_start = worldgen_get_cave_start(i, _world_seed, _world_data);
             
             if (!_queue_valid)
             {
@@ -53,7 +56,7 @@ function control_structure(_x, _y)
             
             global.worldgen_structure[? i][? j] = true;
             
-            // If current tile (bit 1) is not cave
+            /* if current tile (bit 1) is not cave (terrain is solid) */
             if (_queue & 0b010) continue;
             
             var _h_left = worldgen_get_surface_height(i - 1, _world_seed, _world_data);
@@ -67,13 +70,16 @@ function control_structure(_x, _y)
             
             var _length = _data.get_structure_length();
             
-            var _chance_seed = (_world_seed & 0xffff) ^ (abs(_world_seed) >> 16) ^ (i * 1_497.931) ^ (j * 693.571);
+            var _chance_seed = (_world_seed & 0xffff)
+                ^ (abs(_world_seed) >> 16)
+                ^ (i * 1_497_931)
+                ^ (j * 2_693_571);
             
             for (var l = 0; l < _length; ++l)
             {
                 var _structure = _data.get_structure(l);
                 
-                if (!chance_seeded(_structure.chance, _chance_seed ^ ((l + 1) * 341.113))) continue;
+                if (!chance_seeded(_structure.chance, _chance_seed ^ ((l + 1) * 2_341_113))) continue;
                 
                 var _range = _structure[$ "range"];
                 
@@ -95,26 +101,22 @@ function control_structure(_x, _y)
                     var _id_max_idx = array_length(_id) - 1;
                     
                     var _generate = true;
-                    var _struct_seed = _chance_seed ^ (_id_max_idx * 521.123);
                     
                     for (var m = _id_max_idx; m >= 0; --m)
                     {
-                        var _id2 = _id[m];
-                        var _struct_data_ptr = _structure_data[$ _id2];
-                        
                         /* continue if bottom tile is air */
-                        if ((_queue & 0b100) && !(_queue & 0b001))
+                        if (_queue & 0b100) && !(_queue & 0b001)
                         {
-                            if (_struct_data_ptr.get_placement_type() == STRUCTURE_PLACEMENT_TYPE.FLOOR) continue;
+                            if (_structure_data[$ _id[m]].get_placement_type() == STRUCTURE_PLACEMENT_TYPE.FLOOR) continue;
                         }
                         /* continue if top tile is air */
                         else if (_queue & 0b001)
                         {
-                            if (_struct_data_ptr.get_placement_type() == STRUCTURE_PLACEMENT_TYPE.CEILING) continue;
+                            if (_structure_data[$ _id[m]].get_placement_type() == STRUCTURE_PLACEMENT_TYPE.CEILING) continue;
                         }
                         else
                         {
-                            if (_struct_data_ptr.get_placement_type() == STRUCTURE_PLACEMENT_TYPE.INSIDE) continue;
+                            if (_structure_data[$ _id[m]].get_placement_type() == STRUCTURE_PLACEMENT_TYPE.INSIDE) continue;
                         }
                         
                         _generate = false;
@@ -126,14 +128,11 @@ function control_structure(_x, _y)
                     {
                         for (var m = _id_max_idx; m >= 0; --m)
                         {
-                            var _id2 = _id[m];
+                            if (structure_valid(i, j, _id[m], _world_seed)) continue;
                             
-                            if (!structure_valid(i, j, _id2, _world_seed))
-                            {
-                                _generate = false;
-                                
-                                break;
-                            }
+                            _generate = false;
+                            
+                            break;
                         }
                     }
                     
@@ -141,9 +140,7 @@ function control_structure(_x, _y)
                     {
                         for (var m = _id_max_idx; m >= 0; --m)
                         {
-                            var _id2 = _id[m];
-                            
-                            structure_create(i, j, _id2, _world_seed);
+                            structure_create(i, j, _id[m], _world_seed);
                         }
                     }
                 }
@@ -153,7 +150,7 @@ function control_structure(_x, _y)
                     
                     var _placement_type = _struct_data_ptr.get_placement_type();
                     
-                    if ((_queue & 0b100) && !(_queue & 0b001))
+                    if (_queue & 0b100) && !(_queue & 0b001)
                     {
                         if (_placement_type == STRUCTURE_PLACEMENT_TYPE.FLOOR)
                         {
