@@ -77,7 +77,7 @@ function UIRadioButton(_x, _y, _text = "") : UIElement(_x, _y, 100, 20) construc
             var _prev_valign = draw_get_valign();
             draw_set_align(fa_left, fa_middle);
             
-            render_text(
+            draw_text_cuteify(
                 _text_x, _text_y,
                 text,
                 _base_scale_x * 0.8,

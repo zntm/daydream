@@ -5,5 +5,3 @@ for (var i = 0, n = array_length(surfaces); i < n; ++i)
 		surface_free(surfaces[i]);
 	}
 }
-
-menu_create_world_cleanup();

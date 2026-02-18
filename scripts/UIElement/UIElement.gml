@@ -212,32 +212,28 @@ function UIElement(_x, _y, _width, _height) constructor {
     /// @param {String} _event Event name
     /// @param {Struct} _data Optional event data
     static emit_event = function(_event, _data = {}) {
-        var _handler = event_handlers[$ _event];
+        var _script_id = event_handlers[$ _event];
         
-        if (_handler == undefined) return;
-        
-        if (is_callable(_handler))
-        {
-            _handler(_data);
-            return;
-        }
-        
-        var _context = {
-            element: self,
-            element_name: element_name,
-            event: _event,
-            data: _data
-        }
-        
-        if (link_context != undefined) {
-            var _link_names = struct_get_names(link_context);
-            var _link_count = array_length(_link_names);
-            for (var i = 0; i < _link_count; i++) {
-                _context[$ _link_names[i]] = link_context[$ _link_names[i]];
+        if (_script_id != undefined) {
+            // Execute via Proglang
+            var _context = {
+                element: self,
+                element_name: element_name,
+                event: _event,
+                data: _data
             }
+            
+            // Merge with link context
+            if (link_context != undefined) {
+                var _link_names = struct_get_names(link_context);
+                var _link_count = array_length(_link_names);
+                for (var i = 0; i < _link_count; i++) {
+                    _context[$ _link_names[i]] = link_context[$ _link_names[i]];
+                }
+            }
+            
+            proglang_runtime_call(_script_id, [], _context);
         }
-        
-        proglang_runtime_call(_handler, [], _context);
     }
     
     // =============================================================================

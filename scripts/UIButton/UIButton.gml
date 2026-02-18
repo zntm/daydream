@@ -107,7 +107,7 @@ function UIButton(_x, _y, _width, _height, _text = "") : UIElement(_x, _y, _widt
             var _prev_valign = draw_get_valign();
             draw_set_align(fa_center, fa_middle);
             
-            render_text(
+            draw_text_cuteify(
                 _cx, _cy,
                 text,
                 _base_scale_x * text_scale,
