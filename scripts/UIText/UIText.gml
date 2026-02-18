@@ -1,8 +1,9 @@
-/// @desc UI Text Element - displays text with optional binding
-/// @param {Real} _x X position
-/// @param {Real} _y Y position
-/// @param {String} _text Initial text
-function UIText(_x, _y, _text = "") : UIElement(_x, _y, 0, 0) constructor {
+/* UI Text Element - displays text with optional binding
+   @param {Real} _x X position
+   @param {Real} _y Y position
+   @param {String} _text Initial text */
+function UIText(_x, _y, _text = "") : UIElement(_x, _y, 0, 0) constructor
+{
     text = _text;
     colour = c_white;
     alpha = 1;
@@ -10,13 +11,19 @@ function UIText(_x, _y, _text = "") : UIElement(_x, _y, 0, 0) constructor {
     halign = fa_left;
     valign = fa_top;
     
-    static set_text = function(_text) {
+    static set_text = function(_text)
+    {
         text = _text;
+        
         return self;
     }
     
-    static draw_content = function() {
-        if (text == "") return;
+    static draw_content = function()
+    {
+        if (text == "")
+        {
+             return;
+        }
         
         var _base_scale = ui_get_base_scale();
         var _abs_x = get_absolute_x();

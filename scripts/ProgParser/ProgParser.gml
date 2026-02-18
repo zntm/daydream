@@ -1,5 +1,4 @@
-
-/// @desc Parser for Proglang
+/* Parser for Proglang */
 function ProgParser(_tokens) constructor
 {
     tokens = _tokens;
@@ -7,10 +6,6 @@ function ProgParser(_tokens) constructor
     current = 0;
     had_error = false;
     error = "";
-    
-    // ----------------------------------------------------------------------------
-    // Helpers
-    // ----------------------------------------------------------------------------
     
     static is_at_end = function()
     {
@@ -73,7 +68,10 @@ function ProgParser(_tokens) constructor
     
     static error_at_current = function(_message)
     {
-        if (had_error) return; // Suppress cascade
+        if (had_error)
+        {
+             return; /* Suppress cascade */
+        }
         
         had_error = true;
         
@@ -82,9 +80,9 @@ function ProgParser(_tokens) constructor
         error = $"[Line {_token.line}] Error at '{_token.lexeme}': {_message}";
     }
     
-    // ----------------------------------------------------------------------------
-    // Entry Point
-    // ----------------------------------------------------------------------------
+    /* ----------------------------------------------------------------------------
+       Entry Point
+       ---------------------------------------------------------------------------- */
     
     static parse = function()
     {
@@ -107,53 +105,67 @@ function ProgParser(_tokens) constructor
         return new ProgASTBlock(_statements);
     }
     
-    // ----------------------------------------------------------------------------
-    // Statements
-    // ----------------------------------------------------------------------------
+    /* ----------------------------------------------------------------------------
+       Statements
+       ---------------------------------------------------------------------------- */
     
     static parse_statement = function()
     {
-        // Check for annotations
-        var _annotations = {
+        /* Check for annotations */
+        var _annotations = 
+        {
             is_inline: false,
             is_memoize: false
         }
         
         while (check(PROG_TOKEN.AT_INLINE) || check(PROG_TOKEN.AT_MEMOIZE))
         {
-            if (match(PROG_TOKEN.AT_INLINE)) _annotations.is_inline = true;
-            else if (match(PROG_TOKEN.AT_MEMOIZE)) _annotations.is_memoize = true;
+            if (match(PROG_TOKEN.AT_INLINE))
+            {
+                _annotations.is_inline = true;
+            }
+            else if (match(PROG_TOKEN.AT_MEMOIZE))
+            {
+                _annotations.is_memoize = true;
+            }
             
-            // STRICT CHECK: No braces allowed
+            /* STRICT CHECK: No braces allowed */
             if (check(PROG_TOKEN.LBRACE))
             {
                 error_at_current("Annotations must not be followed by braces ('{'). Use '@annotation declaration'.");
             }
         }
         
-        // Check for global prefix
+        /* Check for global prefix */
         var _is_global = false;
         
         if (match(PROG_TOKEN.GLOBAL))
         {
-            // Could be: global fn, global function, global var, or global.x
+            /* Could be: global fn, global function, global var, or global.x */
             if (check(PROG_TOKEN.FN))
             {
                 _is_global = true;
-                // Fall through to fn/function handling below
+                /* Fall through to fn/function handling below */
             }
             else if (check(PROG_TOKEN.VAR))
             {
-                // global var x
-                if (_annotations.is_inline || _annotations.is_memoize) error_at_current("Annotation can only be applied to functions.");
+                /* global var x */
+                if (_annotations.is_inline || _annotations.is_memoize)
+                {
+                    error_at_current("Annotation can only be applied to functions.");
+                }
                 
-                advance(); // consume VAR
-                return parse_var_decl(true); // is_global = true
+                advance(); /* consume VAR */
+                
+                return parse_var_decl(true); /* is_global = true */
             }
-            // Backtrack to let parse_expression_statement handle 'global.x'
+            /* Backtrack to let parse_expression_statement handle 'global.x' */
             else if (check(PROG_TOKEN.DOT))
             {
-                if (_annotations.is_inline || _annotations.is_memoize) error_at_current("Annotation can only be applied to functions.");
+                if (_annotations.is_inline || _annotations.is_memoize)
+                {
+                    error_at_current("Annotation can only be applied to functions.");
+                }
                 
                 --current;
                 
@@ -162,6 +174,7 @@ function ProgParser(_tokens) constructor
             else
             {
                 error_at_current("Expected 'var', 'fn', or '.' after 'global'.");
+                
                 return new ProgASTStatement();
             }
         }
@@ -174,33 +187,63 @@ function ProgParser(_tokens) constructor
             return _decl;
         }
         
-        // Class Declaration
+        /* Class Declaration */
         if (match(PROG_TOKEN.CLASS))
         {
-            if (_annotations.is_inline || _annotations.is_memoize) error_at_current("@inline/@memoize cannot be applied to classes.");
-            if (_is_global) error_at_current("Global classes not supported.");
+            if (_annotations.is_inline || _annotations.is_memoize)
+            {
+                error_at_current("@inline/@memoize cannot be applied to classes.");
+            }
+            
+            if (_is_global)
+            {
+                error_at_current("Global classes not supported.");
+            }
             
             return parse_class_decl(_annotations);
         }
         
-        // Error if annotation was used without correct target
+        /* Error if annotation was used without correct target */
         if (_annotations.is_inline || _annotations.is_memoize)
         {
             error_at_current("Annotations must be followed by a function declaration (fn).");
         }
         
-        if (match(PROG_TOKEN.VAR)) return parse_var_decl(false);
+        if (match(PROG_TOKEN.VAR))
+        {
+            return parse_var_decl(false);
+        }
         
-        if (match(PROG_TOKEN.IF)) return parse_if_stmt();
-        if (match(PROG_TOKEN.WHILE)) return parse_while_stmt();
-        if (match(PROG_TOKEN.FOR)) return parse_for_stmt();
-        if (match(PROG_TOKEN.REPEAT)) return parse_repeat_stmt();
+        if (match(PROG_TOKEN.IF))
+        {
+            return parse_if_stmt();
+        }
         
-        if (match(PROG_TOKEN.TRY)) return parse_try_stmt();
+        if (match(PROG_TOKEN.WHILE))
+        {
+            return parse_while_stmt();
+        }
+        
+        if (match(PROG_TOKEN.FOR))
+        {
+            return parse_for_stmt();
+        }
+        
+        if (match(PROG_TOKEN.REPEAT))
+        {
+            return parse_repeat_stmt();
+        }
+        
+        if (match(PROG_TOKEN.TRY))
+        {
+            return parse_try_stmt();
+        }
+        
         if (match(PROG_TOKEN.BREAK))
         {
             var _brk_token = previous();
-            // Parse optional amount expression (for break 2, break n, etc.)
+            
+            /* Parse optional amount expression (for break 2, break n, etc.) */
             var _amount = undefined;
             
             if (!check(PROG_TOKEN.SEMICOLON) && !check(PROG_TOKEN.RBRACE) && (!is_at_end() && peek().line == _brk_token.line))
@@ -210,13 +253,18 @@ function ProgParser(_tokens) constructor
                     _amount = parse_expression();
                 }
             }
-            match(PROG_TOKEN.SEMICOLON); // Optional
+            
+            match(PROG_TOKEN.SEMICOLON); /* Optional */
+            
             return new ProgASTBreakStmt(_amount);
         }
+        
         if (match(PROG_TOKEN.CONTINUE))
         {
              var _con_token = previous();
+             
              match(PROG_TOKEN.SEMICOLON);
+             
              return new ProgASTContinueStmt();
         }
         
@@ -230,7 +278,8 @@ function ProgParser(_tokens) constructor
                 _value = parse_expression();
             }
             
-            match(PROG_TOKEN.SEMICOLON); // Optional
+            match(PROG_TOKEN.SEMICOLON); /* Optional */
+            
             return new ProgASTReturnStmt(_value);
         }
         
@@ -277,7 +326,7 @@ function ProgParser(_tokens) constructor
     {
         var _imports = [];
         
-        // Simplified imports: import a, b from "path"
+        /* Simplified imports: import a, b from "path" */
         do
         {
             var _name = consume(PROG_TOKEN.IDENTIFIER, "Expected imported name.").lexeme;
@@ -289,13 +338,14 @@ function ProgParser(_tokens) constructor
             }
             
             array_push(_imports, { name: _name, alias: _alias });
-        } until (!match(PROG_TOKEN.COMMA));
+        }
+        until (!match(PROG_TOKEN.COMMA));
         
         consume(PROG_TOKEN.FROM, "Expected 'from' after imports.");
         
         var _path = consume(PROG_TOKEN.STRING, "Expected module path.").literal;
         
-        match(PROG_TOKEN.SEMICOLON); // Optional semicolon
+        match(PROG_TOKEN.SEMICOLON); /* Optional semicolon */
         
         return new ProgASTImportStmt(_imports, _path);
     }
@@ -310,7 +360,7 @@ function ProgParser(_tokens) constructor
             _is_default = true;
             _decl = parse_expression();
             
-            match(PROG_TOKEN.SEMICOLON); // Optional
+            match(PROG_TOKEN.SEMICOLON); /* Optional */
         }
         else
         {
@@ -358,9 +408,19 @@ function ProgParser(_tokens) constructor
         while (!check(PROG_TOKEN.RBRACE) && !is_at_end())
         {
             var _access = "public";
-            if (match(PROG_TOKEN.PUBLIC)) _access = "public";
-            else if (match(PROG_TOKEN.PRIVATE)) _access = "private";
-            else if (match(PROG_TOKEN.PROTECTED)) _access = "protected";
+            
+            if (match(PROG_TOKEN.PUBLIC))
+            {
+                _access = "public";
+            }
+            else if (match(PROG_TOKEN.PRIVATE))
+            {
+                _access = "private";
+            }
+            else if (match(PROG_TOKEN.PROTECTED))
+            {
+                _access = "protected";
+            }
             
             var _is_static = match(PROG_TOKEN.STATIC);
             var _is_abstract_method = match(PROG_TOKEN.ABSTRACT);
@@ -383,15 +443,20 @@ function ProgParser(_tokens) constructor
                             do
                             {
                                 var _p_name = consume(PROG_TOKEN.IDENTIFIER, "Expected parameter name.").lexeme;
+                                
                                 array_push(_params, { name: _p_name, default_value: undefined });
-                            } until (!match(PROG_TOKEN.COMMA));
+                            }
+                            until (!match(PROG_TOKEN.COMMA));
                         }
+                        
                         consume(PROG_TOKEN.RPAREN, "Expected ')' after parameters.");
                         
                         var _body = undefined;
+                        
                         if (check(PROG_TOKEN.LBRACE))
                         {
-                            consume(PROG_TOKEN.LBRACE, "Expected '{' before function body.");;
+                            consume(PROG_TOKEN.LBRACE, "Expected '{' before function body.");
+                            
                             _body = new ProgASTBlock(parse_block());
                         }
                         
@@ -411,25 +476,29 @@ function ProgParser(_tokens) constructor
                 }
                 else
                 {
-                    // Maybe constructor or method without 'fn'?
+                    /* Maybe constructor or method without 'fn'? */
                     var _name_token = peek();
+                    
                     if (_name_token.type == PROG_TOKEN.IDENTIFIER)
                     {
-                        // Check if next is LPAREN -> Method
-                        if (tokens[current+1].type == PROG_TOKEN.LPAREN)
+                        /* Check if next is LPAREN -> Method */
+                        if (tokens[current + 1].type == PROG_TOKEN.LPAREN)
                         {
                             var _m_name = advance().lexeme;
                             var _data = parse_function_body();
+                            
                             _decl = new ProgASTFuncDecl(_m_name, _data.params, _data.body, false);
                             _is_method = true;
                         }
                         else
                         {
-                            // Property without 'var'? "x = 10;"
-                            // Let's enforce 'var' for properties for now to be safe or support it.
-                            // Error for now.
+                            /* Property without 'var'? "x = 10;" */
+                            /* Let's enforce 'var' for properties for now to be safe or support it. */
+                            /* Error for now. */
                             error_at_current("Expected 'fn' or 'var' in class body.");
+                            
                             advance();
+                            
                             continue;
                         }
                     }
@@ -442,17 +511,17 @@ function ProgParser(_tokens) constructor
                 
                 if (_decl != undefined)
                 {
-                    // Attach metadata
-                    // Since _decl is AST node, we wrap or modify it? 
-                    // Better to wrap in member struct
+                    /* Attach metadata */
+                    /* Since _decl is AST node, we wrap or modify it? */
+                    /* Better to wrap in member struct */
                     if (_is_method && _decl.name == "constructor")
                     {
                         _constructor = _decl;
                     }
                     else
                     {
-                        // Store as plain struct or new AST?
-                        // The VM will iterate this list.
+                        /* Store as plain struct or new AST? */
+                        /* The VM will iterate this list. */
                         array_push(_members, { 
                             type: _is_method ? "method" : "field",
                             node: _decl, 
@@ -478,51 +547,69 @@ function ProgParser(_tokens) constructor
     static parse_new_expr = function()
     {
         var _class_name = consume(PROG_TOKEN.IDENTIFIER, "Expected class name.").lexeme;
+        
         consume(PROG_TOKEN.LPAREN, "Expected '(' after class name.");
+        
         var _args = [];
+        
         if (!check(PROG_TOKEN.RPAREN))
         {
             do
             {
                 array_push(_args, parse_assignment());
-            } until (!match(PROG_TOKEN.COMMA));
+            } 
+            until (!match(PROG_TOKEN.COMMA));
         }
+        
         consume(PROG_TOKEN.RPAREN, "Expected ')' after arguments.");
+        
         return new ProgASTNewExpr(_class_name, _args);
     }
     
     static parse_block = function()
     {
         var _statements = [];
+        
         while (!check(PROG_TOKEN.RBRACE) && !is_at_end())
         {
             var _start = current;
+            
             array_push(_statements, parse_statement());
+            
             if (current == _start && !check(PROG_TOKEN.RBRACE) && !is_at_end())
             {
                 error_at_current("Parser block stuck: Infinite loop detected. Forcing advance.");
+                
                 advance();
             }
         }
+        
         consume(PROG_TOKEN.RBRACE, "Expected '}' after block.");
+        
         return _statements;
     }
     
     static parse_var_decl = function(_is_global = false, _require_semi = true)
     {
-        // Destructuring: var {a, b} = ... OR var [a, b] = ...
+        /* Destructuring: var {a, b} = ... OR var [a, b] = ... */
         if (check(PROG_TOKEN.LBRACE) || check(PROG_TOKEN.LBRACKET))
         {
             var _pattern = parse_destructuring_pattern();
-            consume(PROG_TOKEN.ASSIGN, "Expected '=' in destructuring declaration.");
-            var _initializer = parse_expression();
-            if (_require_semi) match(PROG_TOKEN.SEMICOLON);
             
-            // Reuse existing AST Node but structurally richer
+            consume(PROG_TOKEN.ASSIGN, "Expected '=' in destructuring declaration.");
+            
+            var _initializer = parse_expression();
+            
+            if (_require_semi)
+            {
+                match(PROG_TOKEN.SEMICOLON);
+            }
+            
+            /* Reuse existing AST Node but structurally richer */
             return new ProgASTDestructuringDecl(_pattern.type, _pattern.elements, _initializer);
         }
         
-        // Normal Declaration
+        /* Normal Declaration */
         var _name = consume(PROG_TOKEN.IDENTIFIER, "Expected variable name.").lexeme;
         var _initializer = undefined;
         
@@ -531,10 +618,15 @@ function ProgParser(_tokens) constructor
             _initializer = parse_expression();
         }
         
-        if (_require_semi) match(PROG_TOKEN.SEMICOLON);
+        if (_require_semi)
+        {
+            match(PROG_TOKEN.SEMICOLON);
+        }
         
         var _node = new ProgASTVarDecl(_name, _initializer);
+        
         _node.is_global = _is_global;
+        
         return _node;
     }
     
@@ -542,49 +634,59 @@ function ProgParser(_tokens) constructor
     {
         if (match(PROG_TOKEN.LBRACE))
         {
-            // Object Pattern
+            /* Object Pattern */
             var _elements = [];
+            
             do
             {
                 var _key = consume(PROG_TOKEN.IDENTIFIER, "Expected key in destructuring.").lexeme;
-                var _target = _key; // Default to var name same as key
+                var _target = _key; /* Default to var name same as key */
                 
                 if (match(PROG_TOKEN.COLON))
                 {
                     if (check(PROG_TOKEN.LBRACE) || check(PROG_TOKEN.LBRACKET))
                     {
-                        // Nested pattern
+                        /* Nested pattern */
                         _target = parse_destructuring_pattern();
                     }
                     else
                     {
-                        // Alias variable
+                        /* Alias variable */
                         _target = consume(PROG_TOKEN.IDENTIFIER, "Expected variable name.").lexeme;
                     }
                 }
+                
                 array_push(_elements, { key: _key, target: _target });
-            } until (!match(PROG_TOKEN.COMMA));
+            } 
+            until (!match(PROG_TOKEN.COMMA));
+            
             consume(PROG_TOKEN.RBRACE, "Expected '}' after object pattern.");
+            
             return { type: "object", elements: _elements }
         } 
         else if (match(PROG_TOKEN.LBRACKET))
         {
-            // Array Pattern
+            /* Array Pattern */
             var _elements = [];
+            
             do
             {
                 if (check(PROG_TOKEN.LBRACE) || check(PROG_TOKEN.LBRACKET))
                 {
-                    // Nested pattern
+                    /* Nested pattern */
                     array_push(_elements, parse_destructuring_pattern());
                 }
                 else
                 {
                     var _name = consume(PROG_TOKEN.IDENTIFIER, "Expected variable name.").lexeme;
+                    
                     array_push(_elements, _name);
                 }
-            } until (!match(PROG_TOKEN.COMMA));
+            } 
+            until (!match(PROG_TOKEN.COMMA));
+            
             consume(PROG_TOKEN.RBRACKET, "Expected ']' after array pattern.");
+            
             return { type: "array", elements: _elements } 
         }
         
@@ -607,11 +709,15 @@ function ProgParser(_tokens) constructor
     static parse_function_expr = function()
     {
         var _name = undefined;
+        
         if (check(PROG_TOKEN.IDENTIFIER))
-        { // Optional name for recursion
+        { 
+            /* Optional name for recursion */
              _name = advance().lexeme;
         }
+        
         var _data = parse_function_body();
+        
         return new ProgASTFuncExpr(_name, _data.params, _data.body);
     }
 
@@ -620,22 +726,28 @@ function ProgParser(_tokens) constructor
         consume(PROG_TOKEN.LPAREN, "Expected '(' after function name.");
         
         var _params = [];
+        
         if (!check(PROG_TOKEN.RPAREN))
         {
             do
             {
                 var _param_name = consume(PROG_TOKEN.IDENTIFIER, "Expected parameter name.").lexeme;
                 var _default = undefined;
+                
                 if (match(PROG_TOKEN.ASSIGN) || match(PROG_TOKEN.EQ))
                 {
                     _default = parse_assignment();
                 }
+                
                 array_push(_params, { name: _param_name, default_value: _default });
-            } until (!match(PROG_TOKEN.COMMA));
+            } 
+            until (!match(PROG_TOKEN.COMMA));
         }
+        
         consume(PROG_TOKEN.RPAREN, "Expected ')' after parameters.");
         
         consume(PROG_TOKEN.LBRACE, "Expected '{' before function body.");
+        
         var _body = new ProgASTBlock(parse_block());
         
         return { params: _params, body: _body }
@@ -690,72 +802,92 @@ function ProgParser(_tokens) constructor
         
         if (match(PROG_TOKEN.VAR))
         {
-            // var decl
-            // Must NOT consume semicolon yet to check for IN
-            _init = parse_var_decl(false, false); // _require_semi = false
+            /* var decl */
+            /* Must NOT consume semicolon yet to check for IN */
+            _init = parse_var_decl(false, false); /* _require_semi = false */
             
             if (check(PROG_TOKEN.COMMA))
-            { // Check for comma
-                advance(); // consume comma
+            { 
+                /* Check for comma */
+                advance(); /* consume comma */
+                
                 var _val_token = consume(PROG_TOKEN.IDENTIFIER, "Expected value variable name.");
+                
                 _for_in_val_var = _val_token.lexeme;
             }
 
             if (match(PROG_TOKEN.IN))
-            { // CHANGED check to match
+            { 
+                /* CHANGED check to match */
                 _is_for_in = true;
                 
-                // Check for modifier (key/value)
+                /* Check for modifier (key/value) */
                 if (check(PROG_TOKEN.IDENTIFIER))
                 {
                     var _next = peek();
+                    
                     if (_next.lexeme == "key" || _next.lexeme == "value")
                     {
                         _for_in_modifier = advance().lexeme;
                     }
                 }
+                
                 _is_for_in = true;
-                // Extract variable name from decl
-                if (_init.type == PROG_AST.VAR_DECL) _for_in_var = _init.name;
-                else if (_init.type == PROG_AST.DESTRUCTURING_DECL) error_at_current("Destructuring in for-in not yet supported.");
+                
+                /* Extract variable name from decl */
+                if (_init.type == PROG_AST.VAR_DECL)
+                {
+                    _for_in_var = _init.name;
+                }
+                else if (_init.type == PROG_AST.DESTRUCTURING_DECL)
+                {
+                    error_at_current("Destructuring in for-in not yet supported.");
+                }
             }
             else
             {
-                if (_for_in_val_var != undefined) error_at_current("Unexpected comma in variable declaration.");
-                match(PROG_TOKEN.SEMICOLON); // Consume the semi we skipped
+                if (_for_in_val_var != undefined)
+                {
+                    error_at_current("Unexpected comma in variable declaration.");
+                }
+                
+                match(PROG_TOKEN.SEMICOLON); /* Consume the semi we skipped */
             }
         } 
         else if (!match(PROG_TOKEN.SEMICOLON))
         {
-            // Expression init: "for (i in list)" or "for (i = 0; ...)"
-            // Parse expression first, then check for IN keyword
+            /* Expression init: "for (i in list)" or "for (i = 0; ...)" */
+            /* Parse expression first, then check for IN keyword */
             var _expression = parse_assignment();
             
-            // Check if parsing consumed 'in' operator (e.g. "for (item in items)")
-            // If so, error because we require 'var'
+            /* Check if parsing consumed 'in' operator (e.g. "for (item in items)") */
+            /* If so, error because we require 'var' */
             if (_expression.type == PROG_AST.IN_EXPR || check(PROG_TOKEN.COMMA) || check(PROG_TOKEN.IN))
             {
                  error_at_current("'for-in' loops require 'var' declaration (e.g. 'for (var i in list)').");
             }
             
-            // It's a normal for loop init. Convert to assignment if needed, then expect semicolon.
+            /* It's a normal for loop init. Convert to assignment if needed, then expect semicolon. */
             _expression = _convert_to_assignment(_expression);
+            
             match(PROG_TOKEN.SEMICOLON);
+            
             _init = new ProgASTExpressionStmt(_expression);
         }
         
         if (_is_for_in)
         {
             var _collection = undefined;
-            if (_init != undefined && _init.type == PROG_AST.VAR_DECL) // Var declaration case
+            
+            if (_init != undefined && _init.type == PROG_AST.VAR_DECL) /* Var declaration case */
             {
                  _collection = parse_expression();
             }
-            else if (_expression != undefined && _expression.type == PROG_AST.IN_EXPR) // Binary IN expression case
+            else if (_expression != undefined && _expression.type == PROG_AST.IN_EXPR) /* Binary IN expression case */
             {
                  _collection = _expression.right;
             }
-            else // Normal assignment case where IN was matched
+            else /* Normal assignment case where IN was matched */
             {
                  _collection = parse_expression();
             }
@@ -829,10 +961,14 @@ function ProgParser(_tokens) constructor
     
     static parse_switch_stmt = function()
     {
-        // switch (expr) { case val: body... default: body }
+        /* switch (expr) { case val: body... default: body } */
         var _paren = match(PROG_TOKEN.LPAREN);
         var _expression = parse_expression();
-        if (_paren) consume(PROG_TOKEN.RPAREN, "Expected ')' after switch expression.");
+        
+        if (_paren)
+        {
+            consume(PROG_TOKEN.RPAREN, "Expected ')' after switch expression.");
+        }
         
         consume(PROG_TOKEN.LBRACE, "Expected '{' before switch cases.");
         
@@ -844,30 +980,37 @@ function ProgParser(_tokens) constructor
             if (match(PROG_TOKEN.CASE))
             {
                 var _case_val = parse_expression();
+                
                 consume(PROG_TOKEN.COLON, "Expected ':' after case value.");
                 
-                // Parse body statements until next case/default/rbrace
+                /* Parse body statements until next case/default/rbrace */
                 var _stmts = [];
+                
                 while (!check(PROG_TOKEN.CASE) && !check(PROG_TOKEN.DEFAULT) && !check(PROG_TOKEN.RBRACE) && !is_at_end())
                 {
                     array_push(_stmts, parse_statement());
                 }
+                
                 array_push(_cases, { value: _case_val, body: new ProgASTBlock(_stmts) });
             }
             else if (match(PROG_TOKEN.DEFAULT))
             {
                 consume(PROG_TOKEN.COLON, "Expected ':' after default.");
+                
                 var _stmts = [];
+                
                 while (!check(PROG_TOKEN.CASE) && !check(PROG_TOKEN.RBRACE) && !is_at_end())
                 {
                     array_push(_stmts, parse_statement());
                 }
+                
                 _default_case = new ProgASTBlock(_stmts);
             }
             else
             {
-                // Unexpected token
+                /* Unexpected token */
                 error_at_current("Expected 'case' or 'default' in switch.");
+                
                 break;
             }
         }
@@ -889,12 +1032,13 @@ function ProgParser(_tokens) constructor
     
     static _convert_to_assignment = function(_expression)
     {
-        // Check for compound assignment tokens (+=, -=) that appear AFTER the expression
-        // parse_expression() stops at them.
+        /* Check for compound assignment tokens (+=, -=) that appear AFTER the expression */
+        /* parse_expression() stops at them. */
         
         if (match(PROG_TOKEN.ASSIGN))
         {
             var _rhs = parse_expression();
+            
             return new ProgASTAssignment(_expression, _rhs, PROG_TOKEN.ASSIGN);
         }
         
@@ -902,7 +1046,7 @@ function ProgParser(_tokens) constructor
         {
             var _rhs = parse_expression();
             
-            return new ProgASTAssignment(_expression, _rhs, PROG_TOKEN.PLUS); // Op is logic to apply
+            return new ProgASTAssignment(_expression, _rhs, PROG_TOKEN.PLUS); /* Op is logic to apply */
         }
         
         if (match(PROG_TOKEN.MINUS_ASSIGN))
@@ -975,14 +1119,6 @@ function ProgParser(_tokens) constructor
             return new ProgASTAssignment(_expression, _rhs, PROG_TOKEN.CARET);
         }
         
-        /*
-        if (match(PROG_TOKEN.ASSIGN)) || (match(PROG_TOKEN.EQ))
-        {
-            // Handle explicit 'target = value' where parser stopped at '=' (if treating as simple expr)
-            // But my parser treats '=' as operator, so it IS in '_expression' as BinaryOp
-        }
-        */
-        
         return _expression;
     }
     
@@ -1014,13 +1150,16 @@ function ProgParser(_tokens) constructor
             match(PROG_TOKEN.AMP_ASSIGN) || match(PROG_TOKEN.PIPE_ASSIGN) || match(PROG_TOKEN.CARET_ASSIGN))
         {
             var _op = tokens[current - 1].type;
-            var _value = parse_expression(); // Right associative? usually parse_assignment() to allow a=b=c
-                                            // parse_expression calls parse_assignment so it works.
-                                            
+            
+            /* Right associative? usually parse_assignment() to allow a=b=c */
+            /* parse_expression calls parse_assignment so it works. */
+            var _value = parse_expression();
+                                             
             if (_expression.type == PROG_AST.IDENTIFIER || _expression.type == PROG_AST.INDEX || _expression.type == PROG_AST.MEMBER)
             {
                 return new ProgASTAssignment(_expression, _value, _op);
             }
+            
             error_at_current("Invalid assignment target.");
         }
         
@@ -1127,9 +1266,9 @@ function ProgParser(_tokens) constructor
     {
         var _expression = parse_comparison();
         
-        // Only handle == and != as equality operators
-        // Strict assignment (=) is handled by parse_assignment/expression statement
-        while (check(PROG_TOKEN.EQ)) || (check(PROG_TOKEN.NE))
+        /* Only handle == and != as equality operators */
+        /* Strict assignment (=) is handled by parse_assignment/expression statement */
+        while (check(PROG_TOKEN.EQ) || check(PROG_TOKEN.NE))
         {
             var _op = advance().type;
             var _right = parse_comparison();
@@ -1144,29 +1283,34 @@ function ProgParser(_tokens) constructor
     {
         var _expression = parse_shift();
         
-        while (check(PROG_TOKEN.GT)) || (check(PROG_TOKEN.GE)) || (check(PROG_TOKEN.LT)) || (check(PROG_TOKEN.LE)) || (check(PROG_TOKEN.IN))
+        while (check(PROG_TOKEN.GT) || check(PROG_TOKEN.GE) || check(PROG_TOKEN.LT) || check(PROG_TOKEN.LE) || check(PROG_TOKEN.IN))
         {
             var _op = advance().type;
             
-            // Handle 'in' operator with optional key/value modifier
+            /* Handle 'in' operator with optional key/value modifier */
             if (_op == PROG_TOKEN.IN)
             {
                 var _modifier = undefined;
-                // Check for 'key' or 'value' modifier
+                
+                /* Check for 'key' or 'value' modifier */
                 if (check(PROG_TOKEN.IDENTIFIER))
                 {
                     var _next = peek();
+                    
                     if (_next.lexeme == "key" || _next.lexeme == "value")
                     {
                         _modifier = advance().lexeme;
                     }
                 }
+                
                 var _right = parse_shift();
+                
                 _expression = new ProgASTInExpr(_expression, _right, _modifier);
             }
             else
             {
                 var _right = parse_shift();
+                
                 _expression = new ProgASTBinaryOp(_op, _expression, _right);
             }
         }
@@ -1178,7 +1322,7 @@ function ProgParser(_tokens) constructor
     {
         var _expression = parse_range();
         
-        while (check(PROG_TOKEN.LSHIFT)) || (check(PROG_TOKEN.RSHIFT))
+        while (check(PROG_TOKEN.LSHIFT) || check(PROG_TOKEN.RSHIFT))
         {
             var _op = advance().type;
             var _right = parse_range();
@@ -1207,7 +1351,7 @@ function ProgParser(_tokens) constructor
     {
         var _expression = parse_factor();
         
-        while (check(PROG_TOKEN.PLUS)) || (check(PROG_TOKEN.MINUS))
+        while (check(PROG_TOKEN.PLUS) || check(PROG_TOKEN.MINUS))
         {
             var _op = advance().type;
             var _right = parse_factor();
@@ -1222,7 +1366,7 @@ function ProgParser(_tokens) constructor
     {
         var _expression = parse_unary();
         
-        while (check(PROG_TOKEN.STAR)) || (check(PROG_TOKEN.SLASH)) || (check(PROG_TOKEN.PERCENT))
+        while (check(PROG_TOKEN.STAR) || check(PROG_TOKEN.SLASH) || check(PROG_TOKEN.PERCENT))
         {
             var _op = advance().type;
             var _right = parse_unary();
@@ -1235,7 +1379,7 @@ function ProgParser(_tokens) constructor
     
     static parse_unary = function()
     {
-        // Prefix increment/decrement
+        /* Prefix increment/decrement */
         if (match(PROG_TOKEN.PLUS_PLUS) || match(PROG_TOKEN.MINUS_MINUS))
         {
             var _op = previous().type;
@@ -1244,7 +1388,7 @@ function ProgParser(_tokens) constructor
             return new ProgASTPrefixOp(_op, _target);
         }
         
-        if (check(PROG_TOKEN.SPREAD)) || (check(PROG_TOKEN.NOT)) || (check(PROG_TOKEN.MINUS)) || (check(PROG_TOKEN.TILDE))
+        if (check(PROG_TOKEN.SPREAD) || check(PROG_TOKEN.NOT) || check(PROG_TOKEN.MINUS) || check(PROG_TOKEN.TILDE))
         {
             var _op = advance().type;
             var _right = parse_unary();
@@ -1259,10 +1403,10 @@ function ProgParser(_tokens) constructor
     {
         var _expression = parse_call();
         
-        // Right associative? 2**3**4 -> 2**(3**4)? 
+        /* Right associative? 2**3**4 -> 2**(3**4)? */
         if (match(PROG_TOKEN.POWER))
         {
-            var _right = parse_unary(); // Recursion for right associativity
+            var _right = parse_unary(); /* Recursion for right associativity */
             
             _expression = new ProgASTBinaryOp(PROG_TOKEN.POWER, _expression, _right);
         }
@@ -1312,9 +1456,9 @@ function ProgParser(_tokens) constructor
                 
                 _expression = new ProgASTIndex(_expression, _index);
             }
-            else if (match(PROG_TOKEN.PLUS_PLUS)) || (match(PROG_TOKEN.MINUS_MINUS))
+            else if (match(PROG_TOKEN.PLUS_PLUS) || match(PROG_TOKEN.MINUS_MINUS))
             {
-                // Postfix increment/decrement
+                /* Postfix increment/decrement */
                 _expression = new ProgASTPostfixOp(previous().type, _expression);
             }
             else break;
@@ -1332,7 +1476,8 @@ function ProgParser(_tokens) constructor
             do
             {
                 array_push(_args, parse_assignment());
-            } until (!match(PROG_TOKEN.COMMA));
+            } 
+            until (!match(PROG_TOKEN.COMMA));
         }
         
         consume(PROG_TOKEN.RPAREN, "Expected ')' after arguments.");
@@ -1381,10 +1526,10 @@ function ProgParser(_tokens) constructor
         
         if (match(PROG_TOKEN.SUPER))
         {
-            // Check for super(args) call vs super.method()
-            // super() is usually in constructor call. 
-            // Parsing it as primitive allows it to be used in ParseCall.
-            // ParseCall sees Primary(SUPER) then LPAREN -> Call(Super).
+            /* Check for super(args) call vs super.method() */
+            /* super() is usually in constructor call. */
+            /* Parsing it as primitive allows it to be used in ParseCall. */
+            /* ParseCall sees Primary(SUPER) then LPAREN -> Call(Super). */
             return new ProgASTSuperExpr();
         }
         
@@ -1405,7 +1550,7 @@ function ProgParser(_tokens) constructor
         
         if (match(PROG_TOKEN.GLOBAL))
         {
-            return new ProgASTIdentifier("global"); // Allow 'global' as identifier
+            return new ProgASTIdentifier("global"); /* Allow 'global' as identifier */
         }
         
         if (match(PROG_TOKEN.LPAREN))
@@ -1469,10 +1614,14 @@ function ProgParser(_tokens) constructor
             {
                 do
                 {
-                    if (check(PROG_TOKEN.RBRACKET)) break; // Trailing comma
+                    if (check(PROG_TOKEN.RBRACKET))
+                    {
+                        break; /* Trailing comma */
+                    }
                     
                     array_push(_elements, parse_assignment());
-                } until (!match(PROG_TOKEN.COMMA));
+                } 
+                until (!match(PROG_TOKEN.COMMA));
             }
             
             consume(PROG_TOKEN.RBRACKET, "Expected ']' after array.");
@@ -1488,7 +1637,10 @@ function ProgParser(_tokens) constructor
             {
                 do
                 {
-                    if (check(PROG_TOKEN.RBRACE)) break; // Trailing comma
+                    if (check(PROG_TOKEN.RBRACE))
+                    {
+                        break; /* Trailing comma */
+                    }
                     
                     var _key = consume(PROG_TOKEN.IDENTIFIER, "Expected key name.");
                     
@@ -1497,7 +1649,8 @@ function ProgParser(_tokens) constructor
                     var _val = parse_assignment();
                     
                     array_push(_pairs, { key: _key.lexeme, value: _val });
-                } until (!match(PROG_TOKEN.COMMA));
+                } 
+                until (!match(PROG_TOKEN.COMMA));
             }
             
             consume(PROG_TOKEN.RBRACE, "Expected '}' after object.");
@@ -1510,42 +1663,50 @@ function ProgParser(_tokens) constructor
         return new ProgASTLiteral(PROG_AST.UNDEFINED_LITERAL, undefined);
     }
     
-    /// @desc Parse lambda expression: (params) -> body
-    /// At entry, current is positioned after the initial LPAREN was matched
+    /* @desc Parse lambda expression: (params) -> body */
+    /* At entry, current is positioned after the initial LPAREN was matched */
     static parse_lambda = function()
     {
-        // Parse parameter list (we're already past the LPAREN)
+        /* Parse parameter list (we're already past the LPAREN) */
         var _params = [];
+        
         if (!check(PROG_TOKEN.RPAREN))
         {
             do
             {
                 var _param_name = consume(PROG_TOKEN.IDENTIFIER, "Expected parameter name.").lexeme;
                 var _default = undefined;
+                
                 if (match(PROG_TOKEN.ASSIGN) || match(PROG_TOKEN.EQ))
                 {
                     _default = parse_assignment();
                 }
+                
                 array_push(_params, { name: _param_name, default_value: _default });
-            } until (!match(PROG_TOKEN.COMMA));
+            } 
+            until (!match(PROG_TOKEN.COMMA));
         }
+        
         consume(PROG_TOKEN.RPAREN, "Expected ')' after lambda parameters.");
         
-        // Consume the ->
+        /* Consume the -> */
         consume(PROG_TOKEN.ARROW, "Expected '->' after lambda parameters.");
         
-        // Parse body
+        /* Parse body */
         var _body;
+        
         if (check(PROG_TOKEN.LBRACE))
         {
-            // Block body: (x) -> { ... }
-            advance(); // consume {
+            /* Block body: (x) -> { ... } */
+            advance(); /* consume { */
+            
             _body = new ProgASTBlock(parse_block());
         }
         else
         {
-            // Expression body: (x) -> x * 2  (implicit return)
+            /* Expression body: (x) -> x * 2  (implicit return) */
             var _expr = parse_assignment();
+            
             _body = new ProgASTBlock([new ProgASTReturnStmt(_expr)]);
         }
         

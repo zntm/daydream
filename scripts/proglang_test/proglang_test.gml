@@ -5,18 +5,24 @@ if (IS_DEVELOPER_MODE)
         var _files = file_read_directory($"{PROGRAM_DIRECTORY_RESOURCES}/data/scripts/tests");
         var _length = array_length(_files);
         
-        for (var i = 0; i < _length; ++i)
+        for (var i = _length - 1; i >= 0; --i)
         {
             var _file = _files[i];
-            
             var _dir = $"{PROGRAM_DIRECTORY_RESOURCES}/data/scripts/tests/{_file}";
             
-            // Skip directories and non-.daydream files
-            if (directory_exists(_dir)) continue;
-            if (!string_ends_with(_file, ".daydream")) continue;
-            //if (_file != "debug_crash.daydream") continue;
+            /* Skip directories and non-.daydream files */
+            if (directory_exists(_dir))
+            {
+                continue;
+            }
+            
+            if (!string_ends_with(_file, ".daydream"))
+            {
+                continue;
+            }
             
             show_debug_message($"[ProglangTest] Executing: {_file}");
+            
             proglang_execute(buffer_load_text(_dir), {}, _dir);
         }
         

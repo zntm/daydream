@@ -1,110 +1,110 @@
-/// @desc VM Opcodes for Proglang bytecode
+/* VM Opcodes for Proglang bytecode */
 enum PROG_OP
 {
-    // Stack operations
+    /* Stack operations */
     PUSH_NULL, PUSH_TRUE, PUSH_FALSE, PUSH_CONST, PUSH_GLOBAL_REF,
     POP, DUP,
     
-    // Arithmetic
+    /* Arithmetic */
     ADD, SUB, MUL, DIV, MOD, POW, NEG,
     
-    // Comparison
+    /* Comparison */
     EQ, NE, LT, GT, LE, GE,
     
-    // Logical/Bitwise
+    /* Logical/Bitwise */
     NOT, AND, OR, BIT_AND, BIT_OR, BIT_XOR, BIT_NOT, SHL, SHR,
     
-    // Variables
+    /* Variables */
     LOAD, STORE, DEFINE, LOAD_GLOBAL, STORE_GLOBAL,
     
-    // Structure access
+    /* Structure access */
     INDEX_GET, INDEX_SET, MEMBER_GET, MEMBER_SET,
     
-    // Creation
+    /* Creation */
     ARRAY_NEW, OBJECT_NEW, MAKE_REGEX,
     
-    // Control flow
+    /* Control flow */
     JUMP, JUMP_IF_FALSE, JUMP_IF_TRUE, JUMP_IF_NULL, JUMP_IF_NOT_NULL, BREAK_N,
     
-    // Functions
+    /* Functions */
     CALL, RETURN, CALL_SPREAD, MAKE_CLOSURE,
     
-    // Iteration
+    /* Iteration */
     ITER_INIT, ITER_NEXT, ITER_GET_VAL,
     
-    // Exceptions
+    /* Exceptions */
     PUSH_TRY, POP_TRY, THROW,
     
-    // Spread operations
+    /* Spread operations */
     PUSH_ARRAY_EMPTY, ARRAY_PUSH, ARRAY_SPREAD,
     
-    // Module Ops
+    /* Module Ops */
     IMPORT, IMPORT_UI, EXPORT_SET,
     
-    // Stack Ops Extra
+    /* Stack Ops Extra */
     DUP2, POP_AND_KEEP,
     
-    // Optimization Ops
+    /* Optimization Ops */
     INC, DEC,
     
-    // Class System
+    /* Class System */
     CLASS_DEF, NEW_INSTANCE, LOAD_THIS, LOAD_SUPER, ACCESS_CHECK,
     
-    // Scoping
+    /* Scoping */
     PUSH_SCOPE, POP_SCOPE,
     
-    // Debug
+    /* Debug */
     DEBUG_LINE,
     
-    // New v2 Ops
+    /* New v2 Ops */
     IN_CHECK, IN_KEY, IN_VALUE, MAKE_RANGE,
     STRING_CONCAT,
     
-    // Optimization Ops
+    /* Optimization Ops */
     LOAD_LOCAL, STORE_LOCAL, INC_LOCAL, DEC_LOCAL, ADD_CONST,
     
-    // Annotation Ops
+    /* Annotation Ops */
     MEMOIZE_CHECK, MEMOIZE_STORE
 }
 
-/// @desc Array indices for function data (replaces struct)
-/// Usage: func_arr = [PROG_FUNC_TYPE, name, bytecode, is_global, param_count]
+/* Array indices for function data (replaces struct)
+   Usage: func_arr = [PROG_FUNC_TYPE, name, bytecode, is_global, param_count] */
 enum PROG_FUNC
 {
-    TYPE,           // Always "function"
-    NAME,           // Function name
-    BYTECODE,       // Compiled bytecode
-    IS_GLOBAL,      // Boolean: is global function
-    PARAM_COUNT,    // Number of parameters
-    IS_INLINE,      // Boolean: is inline function
-    SIZE            // Array size
+    TYPE,           /* Always "function" */
+    NAME,           /* Function name */
+    BYTECODE,       /* Compiled bytecode */
+    IS_GLOBAL,      /* Boolean: is global function */
+    PARAM_COUNT,    /* Number of parameters */
+    IS_INLINE,      /* Boolean: is inline function */
+    SIZE            /* Array size */
 }
 
-/// @desc Array indices for closure data (replaces struct)
-/// Usage: closure_arr = [PROG_CLOSURE_TYPE, bytecode, env]
+/* Array indices for closure data (replaces struct)
+   Usage: closure_arr = [PROG_CLOSURE_TYPE, bytecode, env] */
 enum PROG_CLOSURE
 {
-    TYPE,           // Always "closure"
-    BYTECODE,       // Compiled bytecode
-    ENV,            // Captured scope environment
-    NAME,           // Function name (for debug/recursion)
-    PARAM_COUNT,    // Number of parameters
-    DEFINING_CLASS, // Class where method was defined
-    RECEIVER,       // Bound 'this' instance
-    GLOBAL_REF,     // Captured global scope for module exports
-    SIZE            // Array size
+    TYPE,           /* Always "closure" */
+    BYTECODE,       /* Compiled bytecode */
+    ENV,            /* Captured scope environment */
+    NAME,           /* Function name (for debug/recursion) */
+    PARAM_COUNT,    /* Number of parameters */
+    DEFINING_CLASS, /* Class where method was defined */
+    RECEIVER,       /* Bound 'this' instance */
+    GLOBAL_REF,     /* Captured global scope for module exports */
+    SIZE            /* Array size */
 }
 
-/// @desc Array indices for script module data (replaces struct)
-/// Usage: module_arr = [main_bytecode, scope_struct]
+/* Array indices for script module data (replaces struct)
+   Usage: module_arr = [main_bytecode, scope_struct] */
 enum PROG_MODULE
 {
-    MAIN,           // Main bytecode
-    SCOPE,          // Scope with local functions
-    SIZE            // Array size
+    MAIN,           /* Main bytecode */
+    SCOPE,          /* Scope with local functions */
+    SIZE            /* Array size */
 }
 
-/// @desc Bytecode container
+/* Bytecode container */
 function ProgBytecode() constructor
 {
     code = [];
@@ -115,36 +115,38 @@ function ProgBytecode() constructor
     is_constructor = false;
 }
 
-/// @desc Bytecode compiler for Proglang
-/// @param {Array} _context_keys Optional array of context variable names that cannot be redeclared
+/* Bytecode compiler for Proglang
+   @param {Array} _context_keys Optional array of context variable names that cannot be redeclared */
 function ProgCompiler(_context_keys = []) constructor
 {
     bytecode = new ProgBytecode();
-    loop_stack = []; // Stack of { start, continue, breaks[] }
-    scope_depth = 0; // Track nesting depth for error checking
+    loop_stack = []; /* Stack of { start, continue, breaks[] } */
+    scope_depth = 0; /* Track nesting depth for error checking */
     had_error = false;
     error_message = "";
     
-    inline_functions = {} // Map of inline function name -> AST node
-    inline_stack = []; // Stack for inline expansion contexts (handling returns)
+    inline_functions = {} /* Map of inline function name -> AST node */
+    inline_stack = []; /* Stack for inline expansion contexts (handling returns) */
     
-    // Build context keywords struct from provided keys
+    /* Build context keywords struct from provided keys */
     context_keywords = {}
+    
     var _length = array_length(_context_keys);
-    for (var i = 0; i < _length; i++)
+    
+    for (var i = _length - 1; i >= 0; --i)
     {
         context_keywords[$ _context_keys[i]] = true;
     }
     
-    // Stack of declared variable sets per scope (for redeclaration checks)
+    /* Stack of declared variable sets per scope (for redeclaration checks) */
     declared_vars = [{}];
     
-    memo_count = 0; // Unique ID counter for memoized functions
+    memo_count = 0; /* Unique ID counter for memoized functions */
     current_memo_id = undefined;
     memo_id_stack = [];
     
-    // Stack of constant scopes (parallel to declared_vars)
-    // Each entry is a struct of { varname: value }
+    /* Stack of constant scopes (parallel to declared_vars)
+       Each entry is a struct of { varname: value } */
     const_scopes = [{}]; 
     
     static invalidate_constants = function()
@@ -196,7 +198,7 @@ function ProgCompiler(_context_keys = []) constructor
         }
     }
     
-    /// @desc Reserved keywords that cannot be used as variable names
+    /* Reserved keywords that cannot be used as variable names */
     static reserved_keywords = {
         "var": true, "global": true, "if": true, "else": true, "for": true, "in": true,
         "while": true, "repeat": true, "break": true, "continue": true, "return": true,
@@ -210,33 +212,45 @@ function ProgCompiler(_context_keys = []) constructor
     static get_local_info = function(_name)
     {
         var _idx = array_length(declared_vars) - 1;
+        
         while (_idx >= 0)
         {
             var _scope = declared_vars[_idx];
             var _info = _scope[$ _name];
-            if (_info != undefined && is_struct(_info) && _info.type == "local") return _info;
-            if (struct_exists(_scope, "is_func") && _scope.is_func) break;
-            _idx--;
+            
+            if (_info != undefined && is_struct(_info) && _info.type == "local")
+            {
+                return _info;
+            }
+            
+            if (struct_exists(_scope, "is_func") && _scope.is_func)
+            {
+                break;
+            }
+            
+            --_idx;
         }
+        
         return undefined;
     }
     
-    // Emit instruction
+    /* Emit instruction */
     static emit = function(_op, _arg = undefined, _line = 0)
     {
         array_push(bytecode.code, _op, _arg);
         array_push(bytecode.lines, _line);
         bytecode.code_size += 2;
+        
         return bytecode.code_size - 2;
     }
     
-    // Add constant with deduplication
+    /* Add constant with deduplication */
     static add_constant = function(_value)
     {
         var _constants = bytecode.constants;
         var _constants_length = array_length(_constants);
         
-        for (var i = 0; i < _constants_length; ++i)
+        for (var i = _constants_length - 1; i >= 0; --i)
         {
             if (_constants[i] == _value)
             {
@@ -249,13 +263,13 @@ function ProgCompiler(_context_keys = []) constructor
         return _constants_length;
     }
     
-    // Patch jump address
+    /* Patch jump address */
     static patch_jump = function(_address, _target)
     {
         bytecode.code[@ _address + 1] = _target;
     }
     
-    /// @desc Compile AST to bytecode
+    /* Compile AST to bytecode */
     static compile = function(_ast)
     {
         invalidate_constants();
@@ -281,36 +295,45 @@ function ProgCompiler(_context_keys = []) constructor
         return bytecode;
     }
     
-    /// @desc Try constant folding for binary operations
+    /* Try constant folding for binary operations */
     static try_fold_binary = function(_node)
     {
-        // Try to simplify operands if they are identifiers known to be constant
+        /* Try to simplify operands if they are identifiers known to be constant */
         var _left = _node.left;
         var _right = _node.right;
         
         var _l_val = (_left.type == PROG_AST.IDENTIFIER) ? get_const(_left.name) : undefined;
+        
         if (_l_val != undefined)
         {
-            _left = { type: (is_string(_l_val) ? PROG_AST.STRING_LITERAL : (is_bool(_l_val) ? PROG_AST.BOOL_LITERAL : PROG_AST.NUMBER_LITERAL)), value: _l_val }
+            _left = { 
+                type: (is_string(_l_val) ? PROG_AST.STRING_LITERAL : (is_bool(_l_val) ? PROG_AST.BOOL_LITERAL : PROG_AST.NUMBER_LITERAL)), 
+                value: _l_val 
+            }
         }
         
         var _r_val = (_right.type == PROG_AST.IDENTIFIER) ? get_const(_right.name) : undefined;
+        
         if (_r_val != undefined)
         {
-            _right = { type: (is_string(_r_val) ? PROG_AST.STRING_LITERAL : (is_bool(_r_val) ? PROG_AST.BOOL_LITERAL : PROG_AST.NUMBER_LITERAL)), value: _r_val }
+            _right = { 
+                type: (is_string(_r_val) ? PROG_AST.STRING_LITERAL : (is_bool(_r_val) ? PROG_AST.BOOL_LITERAL : PROG_AST.NUMBER_LITERAL)), 
+                value: _r_val 
+            }
         }
         
-        var _is_num_left = _left.type == PROG_AST.NUMBER_LITERAL;
-        var _is_num_right = _right.type == PROG_AST.NUMBER_LITERAL;
-        var _is_str_left = _left.type == PROG_AST.STRING_LITERAL;
-        var _is_str_right = _right.type == PROG_AST.STRING_LITERAL;
-        var _is_bool_left = _left.type == PROG_AST.BOOL_LITERAL;
-        var _is_bool_right = _right.type == PROG_AST.BOOL_LITERAL;
+        var _is_num_left = (_left.type == PROG_AST.NUMBER_LITERAL);
+        var _is_num_right = (_right.type == PROG_AST.NUMBER_LITERAL);
+        var _is_str_left = (_left.type == PROG_AST.STRING_LITERAL);
+        var _is_str_right = (_right.type == PROG_AST.STRING_LITERAL);
+        var _is_bool_left = (_left.type == PROG_AST.BOOL_LITERAL);
+        var _is_bool_right = (_right.type == PROG_AST.BOOL_LITERAL);
     
         if (_is_num_left && _is_num_right)
         {
             var _a = _left.value;
             var _b = _right.value;
+            
             switch (_node.op)
             {
                 case PROG_TOKEN.PLUS: return _a + _b;
@@ -333,6 +356,7 @@ function ProgCompiler(_context_keys = []) constructor
         {
             var _a = _left.value;
             var _b = _right.value;
+            
             switch (_node.op)
             {
                 case PROG_TOKEN.PLUS: return _a + _b;
@@ -346,6 +370,7 @@ function ProgCompiler(_context_keys = []) constructor
         {
             var _a = _left.value;
             var _b = _right.value;
+            
             switch (_node.op)
             {
                 case PROG_TOKEN.EQ: return _a == _b;
@@ -359,11 +384,12 @@ function ProgCompiler(_context_keys = []) constructor
         return undefined;
     }
     
-    /// @desc Try constant folding for index access (str[i] or str[start..end])
+    /* Try constant folding for index access (str[i] or str[start..end]) */
     static try_fold_index = function(_node)
     {
-        // Check if target is a known constant string
+        /* Check if target is a known constant string */
         var _target_val = undefined;
+        
         if (_node.target.type == PROG_AST.STRING_LITERAL)
         {
             _target_val = _node.target.value;
@@ -373,34 +399,42 @@ function ProgCompiler(_context_keys = []) constructor
             _target_val = get_const(_node.target.name);
         }
         
-        if (!is_string(_target_val)) return undefined;
+        if (!is_string(_target_val))
+        {
+            return undefined;
+        }
         
-        // Check if index is a constant number or a range expression with constant bounds
+        /* Check if index is a constant number or a range expression with constant bounds */
         if (_node.index.type == PROG_AST.NUMBER_LITERAL)
         {
             var _index = floor(_node.index.value);
+            
             if (_index >= 0 && _index < string_length(_target_val))
             {
                 return string_char_at(_target_val, _index + 1);
             }
+            
             return "";
         }
         else if (_node.index.type == PROG_AST.IDENTIFIER)
         {
             var _index_val = get_const(_node.index.name);
+            
             if (is_real(_index_val))
             {
                 var _index = floor(_index_val);
+                
                 if (_index >= 0 && _index < string_length(_target_val))
                 {
                     return string_char_at(_target_val, _index + 1);
                 }
+                
                 return "";
             }
         }
         else if (_node.index.type == PROG_AST.RANGE_EXPR)
         {
-            // Get start and end values
+            /* Get start and end values */
             var _start_val = undefined;
             var _end_val = undefined;
             
@@ -411,7 +445,11 @@ function ProgCompiler(_context_keys = []) constructor
             else if (_node.index.range_start.type == PROG_AST.IDENTIFIER)
             {
                 _start_val = get_const(_node.index.range_start.name);
-                if (is_real(_start_val)) _start_val = floor(_start_val);
+                
+                if (is_real(_start_val))
+                {
+                    _start_val = floor(_start_val);
+                }
             }
             
             if (_node.index.range_end.type == PROG_AST.NUMBER_LITERAL)
@@ -421,20 +459,34 @@ function ProgCompiler(_context_keys = []) constructor
             else if (_node.index.range_end.type == PROG_AST.IDENTIFIER)
             {
                 _end_val = get_const(_node.index.range_end.name);
-                if (is_real(_end_val)) _end_val = floor(_end_val);
+                
+                if (is_real(_end_val))
+                {
+                    _end_val = floor(_end_val);
+                }
             }
             
             if (is_real(_start_val) && is_real(_end_val))
             {
                 var _str_len = string_length(_target_val);
-                if (_start_val < 0) _start_val = 0;
-                if (_end_val >= _str_len) _end_val = _str_len - 1;
+                
+                if (_start_val < 0)
+                {
+                    _start_val = 0;
+                }
+                
+                if (_end_val >= _str_len)
+                {
+                    _end_val = _str_len - 1;
+                }
                 
                 var _slice_len = _end_val - _start_val + 1;
+                
                 if (_slice_len > 0)
                 {
                     return string_copy(_target_val, _start_val + 1, _slice_len);
                 }
+                
                 return "";
             }
         }
@@ -445,30 +497,38 @@ function ProgCompiler(_context_keys = []) constructor
     static compile_func_body = function(_node)
     {
         var _parent = bytecode;
+        
         bytecode = new ProgBytecode();
         bytecode.param_count = array_length(_node.params);
         
-        // Push function scope with marker
+        /* Push function scope with marker */
         array_push(declared_vars, { is_func: true });
-        // Push const scope logic is handled via const_scopes stack BUT functions isolate scope completely
-        // so we can't share const_scopes. We must save/restore.
+        
+        /* Push const scope logic is handled via const_scopes stack BUT functions isolate scope completely
+           so we can't share const_scopes. We must save/restore. */
         var _old_scopes = const_scopes;
-        const_scopes = [{}]; // Reset for new function
+        
+        const_scopes = [{}]; /* Reset for new function */
         
         var _param_names = [];
-        for (var i = 0; i < array_length(_node.params); i++)
+        var _params_length = array_length(_node.params);
+        
+        for (var i = 0; i < _params_length; ++i)
         {
             var _param = _node.params[i];
+            
             array_push(_param_names, _param.name);
             
-            // Error: Check context keywords
             if (struct_exists(context_keywords, _param.name)) 
             {
                 had_error = true;
                 error_message = $"[Line {_node.line}] Error: Context variable '{_param.name}' cannot be used as argument name.";
                 bytecode = _parent;
+                
                 array_pop(declared_vars);
+                
                 const_scopes = _old_scopes;
+                
                 return { bytecode: new ProgBytecode(), params: [], param_count: 0 }
             }
             
@@ -476,20 +536,25 @@ function ProgCompiler(_context_keys = []) constructor
             
             if (_param.default_value != undefined)
             {
-                 emit(PROG_OP.LOAD_LOCAL, i, _node.line);
-                 emit(PROG_OP.PUSH_NULL);
-                 emit(PROG_OP.EQ);
-                 var _skip = emit(PROG_OP.JUMP_IF_FALSE, 0);
-                 compile_node(_param.default_value); // Pushes default value
-                 emit(PROG_OP.STORE_LOCAL, i, _node.line); // Update local (BP+i)
-                 emit(PROG_OP.POP); // Consume result of store (peek)
-                 patch_jump(_skip, bytecode.code_size);
+                emit(PROG_OP.LOAD_LOCAL, i, _node.line);
+                emit(PROG_OP.PUSH_NULL);
+                emit(PROG_OP.EQ);
+                
+                var _skip = emit(PROG_OP.JUMP_IF_FALSE, 0);
+                
+                compile_node(_param.default_value); /* Pushes default value */
+                
+                emit(PROG_OP.STORE_LOCAL, i, _node.line); /* Update local (BP+i) */
+                emit(PROG_OP.POP); /* Consume result of store (peek) */
+                
+                patch_jump(_skip, bytecode.code_size);
             }
         }
         
-        // Save and restore memo context for nested functions
+        /* Save and restore memo context for nested functions */
         array_push(memo_id_stack, current_memo_id);
-        current_memo_id = struct_exists(_node, "is_memoize") && _node.is_memoize ? memo_count++ : undefined;
+        
+        current_memo_id = (struct_exists(_node, "is_memoize") && _node.is_memoize) ? (memo_count++) : undefined;
         
         if (current_memo_id != undefined)
         {
@@ -498,8 +563,9 @@ function ProgCompiler(_context_keys = []) constructor
         
         compile_node(_node.body);
         
-        // Pop function scope
+        /* Pop function scope */
         array_pop(declared_vars);
+        
         const_scopes = _old_scopes;
         
         if (current_memo_id != undefined)
@@ -519,6 +585,7 @@ function ProgCompiler(_context_keys = []) constructor
         }
         
         bytecode = _parent;
+        
         return _res;
     }
     
@@ -549,18 +616,29 @@ function ProgCompiler(_context_keys = []) constructor
     {
         var _name = _node.name;
         
-        // 1. Check constants/macros
+        /* 1. Check constants/macros */
         if (!_is_assignment && struct_exists(global.proglang_macros, _name))
         {
             var _val = global.proglang_macros[$ _name];
-            if (is_bool(_val)) emit(_val ? PROG_OP.PUSH_TRUE : PROG_OP.PUSH_FALSE, undefined, _node.line);
-            else if (is_string(_val) || is_real(_val)) emit(PROG_OP.PUSH_CONST, add_constant(_val), _node.line);
-            else emit(PROG_OP.LOAD, add_constant(_name), _node.line);
+            
+            if (is_bool(_val))
+            {
+                emit(_val ? PROG_OP.PUSH_TRUE : PROG_OP.PUSH_FALSE, undefined, _node.line);
+            }
+            else if (is_string(_val) || is_real(_val))
+            {
+                emit(PROG_OP.PUSH_CONST, add_constant(_val), _node.line);
+            }
+            else
+            {
+                emit(PROG_OP.LOAD, add_constant(_name), _node.line);
+            }
+            
             return;
         }
         
-        // 2. Check locals (BP relative)
-        // Search backwards from current scope until function boundary
+        /* 2. Check locals (BP relative) */
+        /* Search backwards from current scope until function boundary */
         var _index = array_length(declared_vars) - 1;
         
         while (_index >= 0)
@@ -568,24 +646,27 @@ function ProgCompiler(_context_keys = []) constructor
             var _scope = declared_vars[_index];
             var _info = _scope[$ _name];
             
-            if (_info != undefined) && (is_struct(_info)) && (_info.type == "local")
+            if ((_info != undefined) && (is_struct(_info)) && (_info.type == "local"))
             {
                 emit(PROG_OP.LOAD_LOCAL, _info.index, _node.line);
                 
                 return;
             }
             
-            // Stop if we hit a function boundary
-            if (struct_exists(_scope, "is_func") && _scope.is_func) break;
+            /* Stop if we hit a function boundary */
+            if (struct_exists(_scope, "is_func") && _scope.is_func)
+            {
+                break;
+            }
             
-            _index--;
+            --_index;
         }
         
-        // Fallback or Capture?
-        // If not found in local scopes, it loops back to LOAD name.
-        // Captures are handled by runtime lookup in v2 (or closure env).
+        /* Fallback or Capture?
+           If not found in local scopes, it loops back to LOAD name.
+           Captures are handled by runtime lookup in v2 (or closure env). */
         
-        // Fallback to standard named load
+        /* Fallback to standard named load */
         emit(PROG_OP.LOAD, add_constant(_name), _node.line);
     }
     
@@ -609,19 +690,26 @@ function ProgCompiler(_context_keys = []) constructor
                 
             case PROG_AST.ARRAY_LITERAL:
                 var _has_spread = false;
-                for (var i = 0; i < array_length(_node.elements); i++)
+                var _elements_length = array_length(_node.elements);
+                
+                for (var i = 0; i < _elements_length; ++i)
                 {
                     if (_node.elements[i].type == PROG_AST.UNARY_OP && _node.elements[i].op == PROG_TOKEN.SPREAD)
                     {
-                        _has_spread = true; break;
+                        _has_spread = true; 
+                        
+                        break;
                     }
                 }
+                
                 if (_has_spread)
                 {
                     emit(PROG_OP.PUSH_ARRAY_EMPTY, undefined, _node.line);
-                    for (var i = 0; i < array_length(_node.elements); i++)
+                    
+                    for (var i = 0; i < _elements_length; ++i)
                     {
                         var _el = _node.elements[i];
+                        
                         if (_el.type == PROG_AST.UNARY_OP && _el.op == PROG_TOKEN.SPREAD)
                         {
                             compile_node(_el.right);
@@ -636,18 +724,25 @@ function ProgCompiler(_context_keys = []) constructor
                 }
                 else
                 {
-                    for (var i = 0; i < array_length(_node.elements); i++) compile_node(_node.elements[i]);
-                    emit(PROG_OP.ARRAY_NEW, array_length(_node.elements), _node.line);
+                    for (var i = 0; i < _elements_length; ++i)
+                    {
+                        compile_node(_node.elements[i]);
+                    }
+                    
+                    emit(PROG_OP.ARRAY_NEW, _elements_length, _node.line);
                 }
                 break;
                 
             case PROG_AST.OBJECT_LITERAL:
-                for (var i = 0; i < array_length(_node.pairs); i++)
+                var _pairs_length = array_length(_node.pairs);
+                
+                for (var i = 0; i < _pairs_length; ++i)
                 {
                     emit(PROG_OP.PUSH_CONST, add_constant(_node.pairs[i].key), _node.line);
                     compile_node(_node.pairs[i].value);
                 }
-                emit(PROG_OP.OBJECT_NEW, array_length(_node.pairs), _node.line);
+                
+                emit(PROG_OP.OBJECT_NEW, _pairs_length, _node.line);
                 break;
                 
             case PROG_AST.REGEX_LITERAL:
@@ -684,23 +779,27 @@ function ProgCompiler(_context_keys = []) constructor
                     break;
                 }
                 
-                // Logical AND short-circuit
+            /* Logical AND short-circuit */
                 if (_node.op == PROG_TOKEN.AND)
                 {
                     compile_node(_node.left);
                     emit(PROG_OP.DUP, undefined, _node.line);
+                    
                     var _jmp = emit(PROG_OP.JUMP_IF_FALSE, 0, _node.line);
+                    
                     emit(PROG_OP.POP, undefined, _node.line);
                     compile_node(_node.right);
+                    
                     patch_jump(_jmp, bytecode.code_size);
                     break;
                 }
                 
-                // Logical OR short-circuit
+                /* Logical OR short-circuit */
                 if (_node.op == PROG_TOKEN.OR)
                 {
                     compile_node(_node.left);
                     emit(PROG_OP.DUP, undefined, _node.line);
+                    
                     var _jmp_eval = emit(PROG_OP.JUMP_IF_FALSE, 0, _node.line);
                     var _jmp_end = emit(PROG_OP.JUMP, 0, _node.line);
                     
@@ -718,12 +817,15 @@ function ProgCompiler(_context_keys = []) constructor
                     {
                         compile_node(_node.left);
                         emit(PROG_OP.ADD_CONST, add_constant(_node.right.value), _node.line);
+                        
                         break;
                     }
+                    
                     if (_node.left.type == PROG_AST.NUMBER_LITERAL)
                     {
                         compile_node(_node.right);
                         emit(PROG_OP.ADD_CONST, add_constant(_node.left.value), _node.line);
+                        
                         break;
                     }
                 }
@@ -732,10 +834,11 @@ function ProgCompiler(_context_keys = []) constructor
                 compile_node(_node.right);
                 
                 var _opcode;
+                
                 switch (_node.op)
                 {
                     case PROG_TOKEN.PLUS: 
-                        // Check if we can infer string type from literals or constants
+                        /* Check if we can infer string type from literals or constants */
                         var _is_str_left = (_node.left.type == PROG_AST.STRING_LITERAL) || 
                                            (_node.left.type == PROG_AST.IDENTIFIER && is_string(get_const(_node.left.name)));
                         var _is_str_right = (_node.right.type == PROG_AST.STRING_LITERAL) || 
@@ -791,28 +894,33 @@ function ProgCompiler(_context_keys = []) constructor
                 var _known_const = undefined;
                 var _invalidate = true;
                 
-                // 1. Analyze if we can predict the new constant value
+                /* 1. Analyze if we can predict the new constant value */
                 if (_node.target.type == PROG_AST.IDENTIFIER)
                 {
-                    // For straight assignment (=)
+                    /* For straight assignment (=) */
                     if (_node.op == PROG_TOKEN.ASSIGN)
                     {
-                        // Check Literal
+                        /* Check Literal */
                         if (_node.value.type == PROG_AST.NUMBER_LITERAL || _node.value.type == PROG_AST.STRING_LITERAL || _node.value.type == PROG_AST.BOOL_LITERAL)
                         {
                             _known_const = _node.value.value;
                             _invalidate = false;
                         }
-                        // Check Identifier (known)
+                        /* Check Identifier (known) */
                         else if (_node.value.type == PROG_AST.IDENTIFIER)
                         {
                             _known_const = get_const(_node.value.name);
-                            if (_known_const != undefined) _invalidate = false;
+                            
+                            if (_known_const != undefined)
+                            {
+                                 _invalidate = false;
+                            }
                         }
-                        // Check Binary Fold
+                        /* Check Binary Fold */
                         else if (_node.value.type == PROG_AST.BINARY_OP)
                         {
                             var _folded = try_fold_binary(_node.value);
+                            
                             if (_folded != undefined)
                             {
                                 _known_const = _folded;
@@ -820,18 +928,28 @@ function ProgCompiler(_context_keys = []) constructor
                             }
                         }
                     }
-                    // For compound assignment (+=, -=, etc)
+                    /* For compound assignment (+=, -=, etc) */
                     else 
                     {
                         var _old_val = get_const(_node.target.name);
+                        
                         if (_old_val != undefined)
                         {
                             var _rhs_val = undefined;
                             
-                            // Determine RHS value
-                            if (_node.value.type == PROG_AST.NUMBER_LITERAL) _rhs_val = _node.value.value;
-                            else if (_node.value.type == PROG_AST.IDENTIFIER) _rhs_val = get_const(_node.value.name);
-                            else if (_node.value.type == PROG_AST.BINARY_OP) _rhs_val = try_fold_binary(_node.value);
+                            /* Determine RHS value */
+                            if (_node.value.type == PROG_AST.NUMBER_LITERAL)
+                            {
+                                 _rhs_val = _node.value.value;
+                            }
+                            else if (_node.value.type == PROG_AST.IDENTIFIER)
+                            {
+                                 _rhs_val = get_const(_node.value.name);
+                            }
+                            else if (_node.value.type == PROG_AST.BINARY_OP)
+                            {
+                                 _rhs_val = try_fold_binary(_node.value);
+                            }
                             
                             if (_rhs_val != undefined && is_real(_old_val) && is_real(_rhs_val))
                             {
@@ -854,10 +972,10 @@ function ProgCompiler(_context_keys = []) constructor
                     }
                 }
                 
-                // 2. Compile the assignment
+                /* 2. Compile the assignment */
                 compile_assignment(_node);
                 
-                // 3. Update Constant State
+                /* 3. Update Constant State */
                 if (_node.target.type == PROG_AST.IDENTIFIER)
                 {
                     if (!_invalidate && _known_const != undefined)
@@ -869,10 +987,11 @@ function ProgCompiler(_context_keys = []) constructor
                         remove_const(_node.target.name);
                     }
                 }
+                
                 break;
                 
             case PROG_AST.VAR_DECL:
-                // Error: Check if name is a reserved keyword
+                /* Error: Check if name is a reserved keyword */
                 if (struct_exists(reserved_keywords, _node.name))
                 {
                     had_error = true;
@@ -880,7 +999,8 @@ function ProgCompiler(_context_keys = []) constructor
                     
                     return;
                 }
-                // Error: Check if name shadows a context variable
+                
+                /* Error: Check if name shadows a context variable */
                 if (struct_exists(context_keywords, _node.name))
                 {
                     had_error = true;
@@ -889,8 +1009,9 @@ function ProgCompiler(_context_keys = []) constructor
                     return;
                 }
                 
-                // Error: Check for redeclaration in the current scope
+                /* Error: Check for redeclaration in the current scope */
                 var _current_scope = array_last(declared_vars);
+                
                 if (struct_exists(_current_scope, _node.name))
                 {
                     had_error = true;
@@ -899,21 +1020,23 @@ function ProgCompiler(_context_keys = []) constructor
                     return;
                 }
                 
-                // Add to current scope declarations
+                /* Add to current scope declarations */
                 _current_scope[$ _node.name] = true;
                 
-                // Error: Check if global var declared inside nested scope
-                if (_node[$ "is_global"]) && (scope_depth > 0)
+                /* Error: Check if global var declared inside nested scope */
+                if (_node[$ "is_global"] && scope_depth > 0)
                 {
                     had_error = true;
                     error_message = $"[Line {_node.line}] Error: Global variables must be declared at top level, not inside statements.";
+                    
                     return;
                 }
                 
                 var _init_const = undefined;
+                
                 if (_node.initializer != undefined) 
                 {
-                    // Constant tracking
+                    /* Constant tracking */
                     if (_node.initializer.type == PROG_AST.NUMBER_LITERAL || _node.initializer.type == PROG_AST.STRING_LITERAL || _node.initializer.type == PROG_AST.BOOL_LITERAL)
                     {
                         _init_const = _node.initializer.value;
@@ -925,18 +1048,23 @@ function ProgCompiler(_context_keys = []) constructor
                     else if (_node.initializer.type == PROG_AST.BINARY_OP)
                     {
                         var _folded = try_fold_binary(_node.initializer);
-                        if (_folded != undefined) _init_const = _folded;
+                        
+                        if (_folded != undefined)
+                        {
+                             _init_const = _folded;
+                        }
                     }
                     
                     compile_node(_node.initializer);
                 }
                 else 
                 {
-                    // Undefined is not treated as a foldable constant currently (simplifies logic)
+                    /* Undefined is not treated as a foldable constant currently (simplifies logic) */
                     emit(PROG_OP.PUSH_NULL, undefined, _node.line);
                 }
                 
                 var _index = add_constant(_node.name);
+                
                 if (_node[$ "is_global"])
                 {
                     emit(PROG_OP.STORE_GLOBAL, _index, _node.line);
@@ -945,28 +1073,38 @@ function ProgCompiler(_context_keys = []) constructor
                 {
                     emit(PROG_OP.DEFINE, _index, _node.line);
                     
-                    // Track local constant
+                    /* Track local constant */
                     if (_init_const != undefined)
                     {
                         var _scope = array_last(const_scopes);
+                        
                         _scope[$ _node.name] = _init_const;
                     }
                 }
+                
                 emit(PROG_OP.POP, undefined, _node.line);
                 break;
                 
             case PROG_AST.BLOCK:
                 scope_depth++;
+                
                 array_push(declared_vars, {});
-                array_push(const_scopes, {}); // Start new constant scope
+                array_push(const_scopes, {}); /* Start new constant scope */
+                
                 emit(PROG_OP.PUSH_SCOPE, undefined, _node.line);
-                for (var i = 0; i < array_length(_node.statements); i++)
+                
+                var _statements_length = array_length(_node.statements);
+                
+                for (var i = 0; i < _statements_length; ++i)
                 {
                     compile_node(_node.statements[i]);
                 }
+                
                 emit(PROG_OP.POP_SCOPE, undefined, _node.line);
-                array_pop(const_scopes); // End constant scope
+                
+                array_pop(const_scopes); /* End constant scope */
                 array_pop(declared_vars);
+                
                 scope_depth--;
                 break;
                 
@@ -989,12 +1127,22 @@ function ProgCompiler(_context_keys = []) constructor
                 
             case PROG_AST.IF_STMT:
                 compile_node(_node.condition);
-                invalidate_constants(); // Invalidate on branches
+                
+                invalidate_constants(); /* Invalidate on branches */
+                
                 var _jmp_else = emit(PROG_OP.JUMP_IF_FALSE, 0, _node.line);
+                
                 compile_node(_node.then_branch);
+                
                 var _jmp_end = emit(PROG_OP.JUMP, 0, _node.line);
+                
                 patch_jump(_jmp_else, bytecode.code_size);
-                if (_node.else_branch != undefined) compile_node(_node.else_branch);
+                
+                if (_node.else_branch != undefined)
+                {
+                     compile_node(_node.else_branch);
+                }
+                
                 patch_jump(_jmp_end, bytecode.code_size);
                 break;
                 
@@ -1020,16 +1168,21 @@ function ProgCompiler(_context_keys = []) constructor
                 
             case PROG_AST.REPEAT_STMT:
                 invalidate_constants();
+                
                 var _rep_var = "@rep_" + string(bytecode.code_size);
                 var _index = add_constant(_rep_var);
+                
                 compile_node(_node.count);
+                
                 emit(PROG_OP.STORE, _index, _node.line);
                 emit(PROG_OP.POP);
                 
                 var _start = bytecode.code_size;
+                
                 emit(PROG_OP.LOAD, _index, _node.line);
                 emit(PROG_OP.PUSH_CONST, add_constant(0));
                 emit(PROG_OP.GT);
+                
                 var _exit = emit(PROG_OP.JUMP_IF_FALSE, 0, _node.line);
                 
                 array_push(loop_stack, { start: _start, continue_addr: _start, breaks: [] });
@@ -1042,6 +1195,7 @@ function ProgCompiler(_context_keys = []) constructor
                 emit(PROG_OP.STORE, _index);
                 emit(PROG_OP.POP);
                 emit(PROG_OP.JUMP, _start);
+                
                 patch_jump(_exit, bytecode.code_size);
                 
                 var _loop = array_pop(loop_stack);
@@ -1053,21 +1207,31 @@ function ProgCompiler(_context_keys = []) constructor
                 break;
                 
             case PROG_AST.FOR_STMT:
-                // Initialize scope for For loop variable if VarDecl
-                // Note: PROG_AST.FOR usually has its own block scope logic if we implemented let/const strictly,
-                // but here var is function-scoped. However, for constant tracking, we treat initializer as current scope.
+                /* Initialize scope for For loop variable if VarDecl
+                   Note: PROG_AST.FOR usually has its own block scope logic if we implemented let/const strictly,
+                   but here var is function-scoped. However, for constant tracking, we treat initializer as current scope. */
                 
                 if (_node.initializer)
                 {
-                    if (_node.initializer.type == PROG_AST.VAR_DECL) compile_node(_node.initializer);
-                    else { compile_node(_node.initializer); emit(PROG_OP.POP); }
+                    if (_node.initializer.type == PROG_AST.VAR_DECL)
+                    {
+                         compile_node(_node.initializer);
+                    }
+                    else 
+                    { 
+                        compile_node(_node.initializer);
+                        
+                        emit(PROG_OP.POP); 
+                    }
                 }
                 
-                // Loop starts: invalidate constants as we re-enter this block
+                /* Loop starts: invalidate constants as we re-enter this block */
                 var _start = bytecode.code_size;
+                
                 invalidate_constants(); 
                 
                 var _exit = -1;
+                
                 if (_node.condition)
                 {
                     compile_node(_node.condition);
@@ -1075,19 +1239,23 @@ function ProgCompiler(_context_keys = []) constructor
                 }
                 
                 var _loop_ctx = { start: _start, continue_jumps: [], breaks: [] }
+                
                 array_push(loop_stack, _loop_ctx);
                 
                 compile_node(_node.body);
                 
                 var _inc_addr = bytecode.code_size;
-                for (var i = array_length(_loop_ctx.continue_jumps) - 1; i >= 0; --i)
+                var _cont_jumps_length = array_length(_loop_ctx.continue_jumps);
+                
+                for (var i = 0; i < _cont_jumps_length; ++i)
                 {
                     patch_jump(_loop_ctx.continue_jumps[i], _inc_addr);
                 }
                 
                 if (_node.increment)
                 {
-                    compile_node(_node.increment); emit(PROG_OP.POP);
+                    compile_node(_node.increment); 
+                    emit(PROG_OP.POP);
                 }
 
                 emit(PROG_OP.JUMP, _start, _node.line);
@@ -1104,6 +1272,7 @@ function ProgCompiler(_context_keys = []) constructor
                 if (array_length(loop_stack) > 0)
                 {
                     var _ctx = array_last(loop_stack);
+                    
                     if (struct_exists(_ctx, "continue_addr"))
                     {
                         emit(PROG_OP.JUMP, _ctx.continue_addr, _node.line);
@@ -1113,12 +1282,14 @@ function ProgCompiler(_context_keys = []) constructor
                         array_push(_ctx.continue_jumps, emit(PROG_OP.JUMP, 0, _node.line));
                     }
                 }
+                
                 break;
     
             case PROG_AST.BREAK_STMT:
                 if (array_length(loop_stack) > 0)
                 {
                     var _amount = 1;
+                    
                     if (_node.amount != undefined)
                     {
                         if (_node.amount.type == PROG_AST.NUMBER_LITERAL)
@@ -1127,17 +1298,18 @@ function ProgCompiler(_context_keys = []) constructor
                         }
                         else
                         {
-                            // Error: break amount must be a number literal
+                            /* Error: break amount must be a number literal */
                             _amount = 1;
                         }
                     }
                     _amount = clamp(_amount, 1, array_length(loop_stack));
                     
-                    // Pop items for each loop level being broken out of
-                    for (var i = 0; i < _amount; i++)
+                    /* Pop items for each loop level being broken out of */
+                    for (var i = 0; i < _amount; ++i)
                     {
                         var _lidx = array_length(loop_stack) - 1 - i;
                         var _l = loop_stack[_lidx];
+                        
                         if (struct_exists(_l, "needs_pop") && _l.needs_pop)
                         {
                             emit(PROG_OP.POP, undefined, _node.line);
@@ -1146,8 +1318,10 @@ function ProgCompiler(_context_keys = []) constructor
                     
                     var _target_index = array_length(loop_stack) - _amount;
                     var _ctx = loop_stack[_target_index];
+                    
                     array_push(_ctx.breaks, emit(PROG_OP.JUMP, 0, _node.line));
                 }
+                
                 break;
                 
             case PROG_AST.TERNARY:
@@ -1164,24 +1338,35 @@ function ProgCompiler(_context_keys = []) constructor
                 if (_node.target.type == PROG_AST.IDENTIFIER)
                 {
                     var _info = get_local_info(_node.target.name);
+                    
                     if (_info != undefined)
                     {
                         emit(_node.op == PROG_TOKEN.PLUS_PLUS ? PROG_OP.INC_LOCAL : PROG_OP.DEC_LOCAL, _info.index, _node.line);
                         emit(PROG_OP.LOAD_LOCAL, _info.index, _node.line);
                         
                         var _val = get_const(_node.target.name);
-                        if (_val != undefined && is_real(_val)) set_const(_node.target.name, _val + (_node.op == PROG_TOKEN.PLUS_PLUS ? 1 : -1));
-                        else remove_const(_node.target.name);
+                        
+                        if (_val != undefined && is_real(_val))
+                        {
+                             set_const(_node.target.name, _val + (_node.op == PROG_TOKEN.PLUS_PLUS ? 1 : -1));
+                        }
+                        else
+                        {
+                             remove_const(_node.target.name);
+                        }
+                        
                         break;
                     }
                     
                     var _index = add_constant(_node.target.name);
+                    
                     emit(PROG_OP.LOAD, _index, _node.line);
                     emit(_node.op == PROG_TOKEN.PLUS_PLUS ? PROG_OP.INC : PROG_OP.DEC);
                     emit(PROG_OP.STORE, _index, _node.line);
                     
-                    // Update constants for PREFIX
+                    /* Update constants for PREFIX */
                     var _val = get_const(_node.target.name);
+                    
                     if (_val != undefined && is_real(_val))
                     {
                         set_const(_node.target.name, _val + (_node.op == PROG_TOKEN.PLUS_PLUS ? 1 : -1));
@@ -1214,26 +1399,37 @@ function ProgCompiler(_context_keys = []) constructor
                 if (_node.target.type == PROG_AST.IDENTIFIER)
                 {
                     var _info = get_local_info(_node.target.name);
+                    
                     if (_info != undefined)
                     {
                         emit(PROG_OP.LOAD_LOCAL, _info.index, _node.line);
                         emit(_node.op == PROG_TOKEN.PLUS_PLUS ? PROG_OP.INC_LOCAL : PROG_OP.DEC_LOCAL, _info.index, _node.line);
                         
                         var _val = get_const(_node.target.name);
-                        if (_val != undefined && is_real(_val)) set_const(_node.target.name, _val + (_node.op == PROG_TOKEN.PLUS_PLUS ? 1 : -1));
-                        else remove_const(_node.target.name);
+                        
+                        if (_val != undefined && is_real(_val))
+                        {
+                             set_const(_node.target.name, _val + (_node.op == PROG_TOKEN.PLUS_PLUS ? 1 : -1));
+                        }
+                        else
+                        {
+                             remove_const(_node.target.name);
+                        }
+                        
                         break;
                     }
                     
                     var _index = add_constant(_node.target.name);
+                    
                     emit(PROG_OP.LOAD, _index, _node.line);
                     emit(PROG_OP.DUP);
                     emit(_node.op == PROG_TOKEN.PLUS_PLUS ? PROG_OP.INC : PROG_OP.DEC);
                     emit(PROG_OP.STORE, _index, _node.line);
                     emit(PROG_OP.POP);
                     
-                    // Update constants for POSTFIX (same internal upgrade)
+                    /* Update constants for POSTFIX (same internal upgrade) */
                     var _val = get_const(_node.target.name);
+                    
                     if (_val != undefined && is_real(_val))
                     {
                         set_const(_node.target.name, _val + (_node.op == PROG_TOKEN.PLUS_PLUS ? 1 : -1));
@@ -1283,60 +1479,72 @@ function ProgCompiler(_context_keys = []) constructor
             case PROG_AST.SWITCH_STMT:
                 compile_node(_node.expr);
                 
-                // Switch involves jumps, so invalidate
+                /* Switch involves jumps, so invalidate */
                 invalidate_constants();
                 
-                var _case_jumps = []; // Jumps from checks to their bodies
-                var _end_jumps = [];  // Jumps to the end of switch
+                var _case_jumps = []; /* Jumps from checks to their bodies */
+                var _end_jumps = [];  /* Jumps to the end of switch */
+                var _cases_length = array_length(_node.cases);
                 
-                // Phase 1: Emit all case checks
-                for (var i = 0; i < array_length(_node.cases); i++)
+                /* Phase 1: Emit all case checks */
+                for (var i = 0; i < _cases_length; ++i)
                 {
                     var _case = _node.cases[i];
-                    emit(PROG_OP.DUP); // Keep expr for comparison
+                    
+                    emit(PROG_OP.DUP); /* Keep expr for comparison */
                     compile_node(_case.value);
                     emit(PROG_OP.EQ);
-                    // If NOT equal, skip to next check
+                    
+                    /* If NOT equal, skip to next check */
                     var _skip_to_next = emit(PROG_OP.JUMP_IF_FALSE, 0);
-                    emit(PROG_OP.POP); // Match! Consume duplicated expr
+                    
+                    emit(PROG_OP.POP); /* Match! Consume duplicated expr */
+                    
                     var _jump_to_body = emit(PROG_OP.JUMP, 0);
+                    
                     array_push(_case_jumps, _jump_to_body);
                     patch_jump(_skip_to_next, bytecode.code_size);
                 }
                 
-                // Phase 2: After all checks, handle default or end
-                emit(PROG_OP.POP); // Pop expr (no case matched)
+                /* Phase 2: After all checks, handle default or end */
+                emit(PROG_OP.POP); /* Pop expr (no case matched) */
+                
                 if (_node.default_case != undefined)
                 {
                     var _to_default = emit(PROG_OP.JUMP, 0); 
+                    
                     array_push(_case_jumps, _to_default);
                 }
                 else
                 {
                     var _to_end = emit(PROG_OP.JUMP, 0); 
+                    
                     array_push(_end_jumps, _to_end);
                 }
                 
-                // Phase 3: Emit case bodies
+                /* Phase 3: Emit case bodies */
                 var _switch_ctx = { breaks: [] }
+                
                 array_push(loop_stack, _switch_ctx);
                 
-                for (var i = array_length(_node.cases) - 1; i >= 0; --i)
+                for (var i = 0; i < _cases_length; ++i)
                 {
                     var _case = _node.cases[i];
+                    
                     patch_jump(_case_jumps[i], bytecode.code_size);
                     compile_node(_case.body);
                 }
                 
-                // Phase 4: Default body
+                /* Phase 4: Default body */
                 if (_node.default_case != undefined)
                 {
-                    var _def_jmp_index = array_length(_node.cases);
+                    var _def_jmp_index = _cases_length;
+                    
                     patch_jump(_case_jumps[_def_jmp_index], bytecode.code_size);
                     compile_node(_node.default_case);
                 }
                 
-                // Phase 5: Patch all breaks and end jumps
+                /* Phase 5: Patch all breaks and end jumps */
                 array_pop(loop_stack);
                 
                 for (var i = array_length(_switch_ctx.breaks) - 1; i >= 0; --i)
@@ -1348,13 +1556,14 @@ function ProgCompiler(_context_keys = []) constructor
                 {
                     patch_jump(_end_jumps[i], bytecode.code_size);
                 }
+                
                 break;
                 
             case PROG_AST.CALL:
                 var _is_inline_call = false;
                 var _func_node = undefined;
                 
-                // Check if inline
+                /* Check if inline */
                 if (_node.callee.type == PROG_AST.IDENTIFIER)
                 {
                     if (struct_exists(inline_functions, _node.callee.name))
@@ -1365,38 +1574,43 @@ function ProgCompiler(_context_keys = []) constructor
                 }
                 
                 var _has_spread = false;
+                var _args_length = array_length(_node.args);
+                
                 if (!_is_inline_call)
                 {
-                    for (var i = 0; i < array_length(_node.args); i++)
+                    for (var i = 0; i < _args_length; ++i)
                     {
                         if (_node.args[i].type == PROG_AST.UNARY_OP && _node.args[i].op == PROG_TOKEN.SPREAD)
                         {
-                            _has_spread = true; break;
+                            _has_spread = true; 
+                            
+                            break;
                         }
                     }
                 }
                 
                 if (_is_inline_call)
                 {
-                    // INLINE EXPANSION
+                    /* INLINE EXPANSION */
                     var _ret_var = "@inline_ret_" + string(bytecode.code_size);
                     var _ctx = { ret_var: _ret_var, jumps: [], start_depth: scope_depth }
+                    
                     array_push(inline_stack, _ctx);
                     
-                    // Initialize return variable to undefined
+                    /* Initialize return variable to undefined */
                     emit(PROG_OP.PUSH_NULL);
                     emit(PROG_OP.DEFINE, add_constant(_ret_var), _node.line);
                     emit(PROG_OP.POP);
                     
-                    // Push Scope for function body
+                    /* Push Scope for function body */
                     emit(PROG_OP.PUSH_SCOPE, undefined, _node.line);
                     
-                    // Bind Parameters
+                    /* Bind Parameters */
                     var _params = _func_node.params;
                     var _param_count = array_length(_params);
                     var _arg_count = array_length(_node.args);
                     
-                    for (var i = 0; i < _param_count; i++)
+                    for (var i = 0; i < _param_count; ++i)
                     {
                         var _param = _params[i];
                         
@@ -1406,44 +1620,54 @@ function ProgCompiler(_context_keys = []) constructor
                         }
                         else
                         {
-                            // Missing argument - use default or undefined
-                            if (_param.default_value != undefined) compile_node(_param.default_value);
-                            else emit(PROG_OP.PUSH_NULL);
+                            /* Missing argument - use default or undefined */
+                            if (_param.default_value != undefined)
+                            {
+                                 compile_node(_param.default_value);
+                            }
+                            else
+                            {
+                                 emit(PROG_OP.PUSH_NULL);
+                            }
                         }
                         
                         emit(PROG_OP.DEFINE, add_constant(_param.name), _node.line);
                         emit(PROG_OP.POP);
                     }
                     
-                    // Compile Body
-                    // Note: func_node.body is a BLOCK, which emits PUSH/POP SCOPE itself.
-                    // This means we have: InlineScope -> BlockScope.
-                    // This is fine, but maybe redundant. 
-                    // However, we need InlineScope to hold the params so they are local to the expansion
-                    // but visible to the body.
+                    /* Compile Body
+                       Note: func_node.body is a BLOCK, which emits PUSH/POP SCOPE itself.
+                       This means we have: InlineScope -> BlockScope.
+                       This is fine, but maybe redundant. 
+                       However, we need InlineScope to hold the params so they are local to the expansion
+                       but visible to the body. */
                     compile_node(_func_node.body);
                     
-                    // Patch Return Jumps
-                    for (var j = 0; j < array_length(_ctx.jumps); j++)
+                    /* Patch Return Jumps */
+                    var _jumps_length = array_length(_ctx.jumps);
+                    
+                    for (var j = 0; j < _jumps_length; ++j)
                     {
                         patch_jump(_ctx.jumps[j], bytecode.code_size);
                     }
                     
-                    // Pop Scope
+                    /* Pop Scope */
                     emit(PROG_OP.POP_SCOPE, undefined, _node.line);
                     
-                    // Pop Context
+                    /* Pop Context */
                     array_pop(inline_stack);
                     
-                    // Load Result
+                    /* Load Result */
                     emit(PROG_OP.LOAD, add_constant(_ret_var), _node.line);
                 }
                 else if (_has_spread)
                 {
                     emit(PROG_OP.PUSH_ARRAY_EMPTY, undefined, _node.line);
-                    for (var i = 0; i < array_length(_node.args); i++)
+                    
+                    for (var i = 0; i < _args_length; ++i)
                     {
                         var _arg = _node.args[i];
+                        
                         if (_arg.type == PROG_AST.UNARY_OP && _arg.op == PROG_TOKEN.SPREAD)
                         {
                             compile_node(_arg.right);
@@ -1455,15 +1679,22 @@ function ProgCompiler(_context_keys = []) constructor
                             emit(PROG_OP.ARRAY_PUSH, undefined, _node.line);
                         }
                     }
+                    
                     compile_node(_node.callee);
                     emit(PROG_OP.CALL_SPREAD, undefined, _node.line);
                 }
                 else
                 {
                     compile_node(_node.callee);
-                    for (var i = 0; i < array_length(_node.args); i++) compile_node(_node.args[i]);
-                    emit(PROG_OP.CALL, array_length(_node.args), _node.line);
+                    
+                    for (var i = 0; i < _args_length; ++i)
+                    {
+                         compile_node(_node.args[i]);
+                    }
+                    
+                    emit(PROG_OP.CALL, _args_length, _node.line);
                 }
+                
                 break;
                 
             case PROG_AST.MEMBER:
@@ -1473,6 +1704,7 @@ function ProgCompiler(_context_keys = []) constructor
                 
             case PROG_AST.INDEX:
                 var _folded_index = try_fold_index(_node);
+                
                 if (_folded_index != undefined)
                 {
                     emit(PROG_OP.PUSH_CONST, add_constant(_folded_index), _node.line);
@@ -1488,42 +1720,59 @@ function ProgCompiler(_context_keys = []) constructor
             case PROG_AST.RETURN_STMT:
                 if (array_length(inline_stack) > 0)
                 {
-                    // Inline return: Assign to ret var and jump to end
+                    /* Inline return: Assign to ret var and jump to end */
                     var _ctx = array_last(inline_stack);
                     
-                    if (_node.value) compile_node(_node.value);
-                    else emit(PROG_OP.PUSH_NULL);
+                    if (_node.value)
+                    {
+                         compile_node(_node.value);
+                    }
+                    else
+                    {
+                         emit(PROG_OP.PUSH_NULL);
+                    }
                     
-                    // Memoization in inline functions (if we ever support it, but for now we follow current_memo_id)
-                    // Wait, if an inline function is memoized, its result should be cached.
-                    // But currently we only handle @inline OR @memoize, usually not both.
-                    // If both are used, we follow current_memo_id.
+                    /* Memoization in inline functions (if we ever support it, but for now we follow current_memo_id)
+                       Wait, if an inline function is memoized, its result should be cached.
+                       But currently we only handle @inline OR @memoize, usually not both.
+                       If both are used, we follow current_memo_id. */
                     if (current_memo_id != undefined)
                     {
                         emit(PROG_OP.MEMOIZE_STORE, current_memo_id, _node.line);
                     }
                     
-                    // Store in return variable
+                    /* Store in return variable
+                       Use LOAD/STORE for locals in current scope? No, scope is handled by PUSH_SCOPE.
+                       But we used add_constant for unique name.
+                       We need to ensure we are addressing the variable correctly.
+                       Since we are inside a PUSH_SCOPE block, we can use STORE.
+                       But wait, STORE uses constants to find name in scope. */
                     var _ret_idx = add_constant(_ctx.ret_var);
-                    // Use LOAD/STORE for locals in current scope? No, scope is handled by PUSH_SCOPE.
-                    // But we used add_constant for unique name.
-                    // We need to ensure we are addressing the variable correctly.
-                    // Since we are inside a PUSH_SCOPE block, we can use STORE.
-                    // But wait, STORE uses constants to find name in scope.
-                    emit(PROG_OP.STORE, _ret_idx, _node.line); 
-                    emit(PROG_OP.POP); // Consume value (STORE leaves it on stack)
                     
-                    // Jump to end
+                    emit(PROG_OP.STORE, _ret_idx, _node.line); 
+                    emit(PROG_OP.POP); /* Consume value (STORE leaves it on stack) */
+                    
+                    /* Jump to end */
                     var _pop_count = scope_depth - _ctx.start_depth;
-                    for (var k = 0; k < _pop_count; k++) emit(PROG_OP.POP_SCOPE, undefined, _node.line);
+                    
+                    for (var k = 0; k < _pop_count; ++k)
+                    {
+                         emit(PROG_OP.POP_SCOPE, undefined, _node.line);
+                    }
                     
                     array_push(_ctx.jumps, emit(PROG_OP.JUMP, 0, _node.line));
                 }
                 else
                 {
-                    // Normal return
-                    if (_node.value) compile_node(_node.value);
-                    else emit(PROG_OP.PUSH_NULL);
+                    /* Normal return */
+                    if (_node.value)
+                    {
+                         compile_node(_node.value);
+                    }
+                    else
+                    {
+                         emit(PROG_OP.PUSH_NULL);
+                    }
                     
                     if (current_memo_id != undefined)
                     {
@@ -1532,32 +1781,47 @@ function ProgCompiler(_context_keys = []) constructor
                     
                     emit(PROG_OP.RETURN, undefined, _node.line);
                 }
+                
                 break;
                 
             case PROG_AST.FOR_IN_STMT:
-                invalidate_constants(); // Invalidate before loop
+                invalidate_constants(); /* Invalidate before loop */
                 compile_node(_node.collection);
                 
-                // Determine Iteration Mode
-                // 0: Default (Single var, no modifier) -> Error on struct
-                // 1: Key (modifier == "key")
-                // 2: Value (modifier == "value")
-                // 3: Pair (Two variables) -> OK on struct (implicit key iteration, fetching value manual)
+                /* Determine Iteration Mode
+                   0: Default (Single var, no modifier) -> Error on struct
+                   1: Key (modifier == "key")
+                   2: Value (modifier == "value")
+                   3: Pair (Two variables) -> OK on struct (implicit key iteration, fetching value manual) */
                 
                 var _mode = 0;
-                
                 var _mod = undefined;
-                if (struct_exists(_node, "modifier")) _mod = _node.modifier;
                 
-                if (_mod == "key") _mode = 1;
-                else if (_mod == "value") _mode = 2;
-                else if (struct_exists(_node, "value_var") && _node.value_var != undefined) _mode = 3;
+                if (struct_exists(_node, "modifier"))
+                {
+                     _mod = _node.modifier;
+                }
+                
+                if (_mod == "key")
+                {
+                     _mode = 1;
+                }
+                else if (_mod == "value")
+                {
+                     _mode = 2;
+                }
+                else if (struct_exists(_node, "value_var") && _node.value_var != undefined)
+                {
+                     _mode = 3;
+                }
                 
                 emit(PROG_OP.ITER_INIT, _mode, _node.line);
+                
                 var _start = bytecode.code_size;
                 
-                // Track loop for break/continue
+                /* Track loop for break/continue */
                 var _loop_ctx = { start: _start, continue_addr: _start, breaks: [], needs_pop: true }
+                
                 array_push(loop_stack, _loop_ctx);
                 
                 emit(PROG_OP.ITER_NEXT, undefined, _node.line);
@@ -1565,59 +1829,70 @@ function ProgCompiler(_context_keys = []) constructor
                 
                 if (_mod == "key")
                 {
-                    // Key iteration: Variable becomes the key
+                    /* Key iteration: Variable becomes the key */
                     emit(PROG_OP.DEFINE, add_constant(_node.variable), _node.line);
                     emit(PROG_OP.POP);
                 }
                 else if (_mod == "value")
                 {
-                    // Value iteration: Variable becomes the value
-                    emit(PROG_OP.POP); // Discard Key
+                    /* Value iteration: Variable becomes the value */
+                    emit(PROG_OP.POP); /* Discard Key */
                     emit(PROG_OP.ITER_GET_VAL, undefined, _node.line);
                     emit(PROG_OP.DEFINE, add_constant(_node.variable), _node.line);
                     emit(PROG_OP.POP);
                 }
                 else if (struct_exists(_node, "value_var") && _node.value_var != undefined)
                 {
-                    // If two variables requested (k, v in arr): first is key, second is value
-                    // _node.variable is the key, _node.value_var is the value (per AST definition)
-                    emit(PROG_OP.DEFINE, add_constant(_node.variable), _node.line); // Define Key
-                    emit(PROG_OP.POP); // Consume Key
-                    emit(PROG_OP.ITER_GET_VAL, undefined, _node.line); // Pushes Value using Iterator
-                    emit(PROG_OP.DEFINE, add_constant(_node.value_var), _node.line); // Define Value
-                    emit(PROG_OP.POP); // Consume Value
+                    /* If two variables requested (k, v in arr): first is key, second is value
+                       _node.variable is the key, _node.value_var is the value (per AST definition) */
+                    emit(PROG_OP.DEFINE, add_constant(_node.variable), _node.line); /* Define Key */
+                    emit(PROG_OP.POP); /* Consume Key */
+                    emit(PROG_OP.ITER_GET_VAL, undefined, _node.line); /* Pushes Value using Iterator */
+                    emit(PROG_OP.DEFINE, add_constant(_node.value_var), _node.line); /* Define Value */
+                    emit(PROG_OP.POP); /* Consume Value */
                 }
                 else
                 {
-                    // Single variable default: iterate over VALUES (not keys)
-                    // Stack: Iter, Key - but we want the value
-                    emit(PROG_OP.POP); // Pop the key, we don't need it
-                    emit(PROG_OP.ITER_GET_VAL, undefined, _node.line); // Push value
-                    emit(PROG_OP.DEFINE, add_constant(_node.variable), _node.line); // Define Value
-                    emit(PROG_OP.POP); // Consume Value
+                    /* Single variable default: iterate over VALUES (not keys)
+                       Stack: Iter, Key - but we want the value */
+                    emit(PROG_OP.POP); /* Pop the key, we don't need it */
+                    emit(PROG_OP.ITER_GET_VAL, undefined, _node.line); /* Push value */
+                    emit(PROG_OP.DEFINE, add_constant(_node.variable), _node.line); /* Define Value */
+                    emit(PROG_OP.POP); /* Consume Value */
                 }
                 
                 compile_node(_node.body);
                 emit(PROG_OP.JUMP, _start, _node.line);
+                
                 patch_jump(_exit, bytecode.code_size);
-                emit(PROG_OP.POP); // Pop iterator
+                
+                emit(PROG_OP.POP); /* Pop iterator */
                 
                 array_pop(loop_stack);
-                for (var i = 0; i < array_length(_loop_ctx.breaks); i++)
+                
+                var _breaks_length = array_length(_loop_ctx.breaks);
+                
+                for (var i = 0; i < _breaks_length; ++i)
                 {
                     patch_jump(_loop_ctx.breaks[i], bytecode.code_size);
                 }
                 break;
                 
             case PROG_AST.TRY_STMT:
-                invalidate_constants(); // Conservative
+                invalidate_constants(); /* Conservative */
+                
                 var _catch_jmp = emit(PROG_OP.PUSH_TRY, 0, _node.line);
+                
                 compile_node(_node.try_block);
+                
                 emit(PROG_OP.POP_TRY, undefined, _node.line);
+                
                 var _end_jmp = emit(PROG_OP.JUMP, 0, _node.line);
+                
                 patch_jump(_catch_jmp, bytecode.code_size);
                 
-                invalidate_constants(); // Catch block entry
+                invalidate_constants(); /* Catch block entry */
+                
                 if (_node.catch_var != undefined)
                 {
                     emit(PROG_OP.STORE, add_constant(_node.catch_var), _node.line);
@@ -1627,12 +1902,17 @@ function ProgCompiler(_context_keys = []) constructor
                 {
                     emit(PROG_OP.POP);
                 }
-                if (_node.catch_block != undefined) compile_node(_node.catch_block);
+                
+                if (_node.catch_block != undefined)
+                {
+                     compile_node(_node.catch_block);
+                }
+                
                 patch_jump(_end_jmp, bytecode.code_size);
                 break;
             
             case PROG_AST.IMPORT_STMT:
-                // Check if importing from a .ui file
+                /* Check if importing from a .ui file */
                 var _is_ui = string_ends_with(_node.module_path, ".ui");
                 
                 if (_is_ui)
@@ -1643,11 +1923,16 @@ function ProgCompiler(_context_keys = []) constructor
                 {
                     emit(PROG_OP.IMPORT, add_constant(_node.module_path), _node.line);
                 }
-                // Stack: ExportsStruct (or UI definitions struct)
-                for (var i = 0; i < array_length(_node.imports); i++)
+                
+                /* Stack: ExportsStruct (or UI definitions struct) */
+                var _imports_length = array_length(_node.imports);
+                
+                for (var i = 0; i < _imports_length; ++i)
                 {
                     var _imp = _node.imports[i];
-                    emit(PROG_OP.DUP); // Exports, Exports
+                    
+                    emit(PROG_OP.DUP); /* Exports, Exports */
+                    
                     if (struct_exists(_imp, "is_default") && _imp.is_default)
                     {
                         emit(PROG_OP.MEMBER_GET, add_constant(_imp.name), _node.line);
@@ -1656,11 +1941,13 @@ function ProgCompiler(_context_keys = []) constructor
                     {
                         emit(PROG_OP.MEMBER_GET, add_constant(_imp.name), _node.line);
                     }
-                    // Stack: Exports, Val
+                    
+                    /* Stack: Exports, Val */
                     emit(PROG_OP.DEFINE, add_constant(_imp.alias), _node.line);
-                    emit(PROG_OP.POP); // Exports
+                    emit(PROG_OP.POP); /* Exports */
                 }
-                emit(PROG_OP.POP); // Pop Exports
+                
+                emit(PROG_OP.POP); /* Pop Exports */
                 break;
                 
             case PROG_AST.EXPORT_STMT:
@@ -1694,8 +1981,14 @@ function ProgCompiler(_context_keys = []) constructor
                 break;
                 
             case PROG_AST.DESTRUCTURING_DECL:
-                if (_node.initializer != undefined) compile_node(_node.initializer);
-                else emit(PROG_OP.PUSH_NULL);
+                if (_node.initializer != undefined)
+                {
+                     compile_node(_node.initializer);
+                }
+                else
+                {
+                     emit(PROG_OP.PUSH_NULL);
+                }
                 
                 compile_destructuring({ type: _node.pattern_type, elements: _node.elements });
                 
@@ -1707,13 +2000,15 @@ function ProgCompiler(_context_keys = []) constructor
                 break;
                 
             case PROG_AST.NEW_EXPR:
-                for (var i = 0; i < array_length(_node.args); i++)
+                var _args_length = array_length(_node.args);
+                
+                for (var i = 0; i < _args_length; ++i)
                 {
                     compile_node(_node.args[i]);
                 }
                 
                 emit(PROG_OP.LOAD, add_constant(_node.class_name), _node.line);
-                emit(PROG_OP.NEW_INSTANCE, array_length(_node.args), _node.line);
+                emit(PROG_OP.NEW_INSTANCE, _args_length, _node.line);
                 break;
                 
             case PROG_AST.THIS_EXPR:
@@ -1724,14 +2019,25 @@ function ProgCompiler(_context_keys = []) constructor
                 emit(PROG_OP.LOAD_SUPER, undefined, _node.line);
                 break;
                 
-            // ========== NEW V2 FEATURES ==========
+            /* ========== NEW V2 FEATURES ========== */
             
             case PROG_AST.IN_EXPR:
                 compile_node(_node.left);
                 compile_node(_node.right);
-                if (_node.modifier == "key") emit(PROG_OP.IN_KEY, undefined, _node.line);
-                else if (_node.modifier == "value") emit(PROG_OP.IN_VALUE, undefined, _node.line);
-                else emit(PROG_OP.IN_CHECK, undefined, _node.line);
+                
+                if (_node.modifier == "key")
+                {
+                     emit(PROG_OP.IN_KEY, undefined, _node.line);
+                }
+                else if (_node.modifier == "value")
+                {
+                     emit(PROG_OP.IN_VALUE, undefined, _node.line);
+                }
+                else
+                {
+                     emit(PROG_OP.IN_CHECK, undefined, _node.line);
+                }
+                
                 break;
                 
             case PROG_AST.RANGE_EXPR:
@@ -1770,28 +2076,35 @@ function ProgCompiler(_context_keys = []) constructor
             __type__: "class"
         }
         
-        // Constructor
+        /* Constructor */
         if (_node.class_constructor != undefined)
         {
             var _ctor = _node.class_constructor;
             var _compiled = compile_func_body(_ctor);
+            
             _descriptor.constructor_code = _compiled.bytecode;
             _descriptor.constructor_code.is_constructor = true;
             _descriptor.constructor_params = array_length(_ctor.params);
         }
         
-        // Members
-        for (var i = 0; i < array_length(_node.members); i++)
+        /* Members */
+        var _members_length = array_length(_node.members);
+        
+        for (var i = 0; i < _members_length; ++i)
         {
             var _mem = _node.members[i];
             
             if (_mem.type == "method")
             {
-                if (_mem.node.body == undefined) continue;
+                if (_mem.node.body == undefined)
+                {
+                     continue;
+                }
+                
                 var _bc = compile_func_body(_mem.node);
                 var _entry = { 
                     bytecode: _bc.bytecode, 
-                    params: _bc.params, // Param names
+                    params: _bc.params, /* Param names */
                     param_count: _bc.param_count,
                     access: _mem.access 
                 }
@@ -1807,14 +2120,16 @@ function ProgCompiler(_context_keys = []) constructor
             }
             else
             {
-                // Field (instance or static)
+                /* Field (instance or static) */
                 if (_mem.is_static)
                 {
-                    // Static field: extract literal value if possible
+                    /* Static field: extract literal value if possible */
                     var _value = undefined;
+                    
                     if (_mem.node.initializer != undefined)
                     {
                         var _init = _mem.node.initializer;
+                        
                         if (_init.type == PROG_AST.NUMBER_LITERAL || _init.type == PROG_AST.STRING_LITERAL)
                         {
                             _value = _init.value;
@@ -1828,15 +2143,18 @@ function ProgCompiler(_context_keys = []) constructor
                             _value = undefined;
                         }
                     }
+                    
                     _descriptor.statics[$ _mem.node.name] = { type: "field", value: _value, access: _mem.access }
                 }
                 else
                 {
-                    // Instance field - extract literal value if possible
+                    /* Instance field - extract literal value if possible */
                     var _value = undefined;
+                    
                     if (_mem.node.initializer != undefined)
                     {
                         var _init = _mem.node.initializer;
+                        
                         if (_init.type == PROG_AST.NUMBER_LITERAL || _init.type == PROG_AST.STRING_LITERAL)
                         {
                             _value = _init.value;
@@ -1850,6 +2168,7 @@ function ProgCompiler(_context_keys = []) constructor
                             _value = undefined;
                         }
                     }
+                    
                     array_push(_descriptor.fields, { name: _mem.node.name, value: _value, access: _mem.access, is_static: false });
                 }
             }
@@ -1934,7 +2253,7 @@ function ProgCompiler(_context_keys = []) constructor
         {
             var _index = add_constant(_target.name);
             
-            // Optimization: INC_LOCAL / DEC_LOCAL for local variable += 1 / -= 1
+            /* Optimization: INC_LOCAL / DEC_LOCAL for local variable += 1 / -= 1 */
             if (_node.value.type == PROG_AST.NUMBER_LITERAL && _node.value.value == 1)
             {
                 var _info = get_local_info(_target.name);
@@ -1945,6 +2264,7 @@ function ProgCompiler(_context_keys = []) constructor
                     {
                         emit(PROG_OP.INC_LOCAL, _info.index, _line);
                         emit(PROG_OP.LOAD_LOCAL, _info.index, _line);
+                        
                         return;
                     }
                     else if (_op == PROG_TOKEN.MINUS_ASSIGN)
@@ -2025,6 +2345,7 @@ function ProgCompiler(_context_keys = []) constructor
             {
                 compile_node(_node.value);
             }
+            
             emit(PROG_OP.STORE, _index, _line);
         }
         else if (_target_type == PROG_AST.MEMBER)

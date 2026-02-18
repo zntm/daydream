@@ -1,18 +1,22 @@
-/// @desc Proglang Token Types
+/* Proglang Token Types */
 enum PROG_TOKEN
 {
-    // Literals
+    /* Literals */
     NUMBER, STRING, REGEX, TRUE, FALSE, UNDEFINED,
-    // Identifiers
+    
+    /* Identifiers */
     IDENTIFIER,
-    // Keywords
+    
+    /* Keywords */
     VAR, GLOBAL, IF, ELSE, FOR, IN, WHILE, REPEAT, BREAK, CONTINUE, RETURN,
     TRY, CATCH, THROW, AND, OR, NOT, SWITCH, CASE, DEFAULT, FN,
     IMPORT, EXPORT, FROM, AS,
-    // Class keywords
+    
+    /* Class keywords */
     CLASS, NEW, THIS, EXTENDS, SUPER, STATIC,
     PUBLIC, PRIVATE, PROTECTED, ABSTRACT, INTERFACE, IMPLEMENTS,
-    // Operators
+    
+    /* Operators */
     PLUS, MINUS, STAR, SLASH, PERCENT, POWER,
     PLUS_PLUS, MINUS_MINUS,
     EQ, NE, LT, GT, LE, GE,
@@ -20,32 +24,38 @@ enum PROG_TOKEN
     ASSIGN, PLUS_ASSIGN, MINUS_ASSIGN, STAR_ASSIGN, SLASH_ASSIGN, PERCENT_ASSIGN, POWER_ASSIGN,
     LSHIFT_ASSIGN, RSHIFT_ASSIGN, AMP_ASSIGN, PIPE_ASSIGN, CARET_ASSIGN,
     NULL_COALESCE, SPREAD, QUESTION_DOT, RANGE, ARROW,
-    // Punctuation
+    
+    /* Punctuation */
     LPAREN, RPAREN, LBRACE, RBRACE, LBRACKET, RBRACKET,
     COMMA, DOT, SEMICOLON, COLON, QUESTION,
-    // Annotations
-    AT_INLINE,      // @inline annotation for function inlining
-    AT_MEMOIZE,     // @memoize annotation for result caching
-    // Special
+    
+    /* Annotations */
+    AT_INLINE,      /* @inline annotation for function inlining */
+    AT_MEMOIZE,     /* @memoize annotation for result caching */
+    
+    /* Special */
     EOF, ERROR
 }
 
-/// @desc Lexer for Proglang - tokenizes source code into tokens
-/// @param {string} _source The source code to tokenize
+/* Lexer for Proglang - tokenizes source code into tokens */
+/* @param {string} _source The source code to tokenize */
 function ProgLexer(_source) constructor
 {
     source = _source;
     length = string_length(_source);
+    
     start = 1;
     current = 1;
     line = 1;
     tokens = [];
     had_error = false;
     error = "";
-    interp_stack = []; // String interpolation state tracking
     
-    /// @desc Keyword lookup table
-    static keywords = {
+    interp_stack = []; /* String interpolation state tracking */
+    
+    /* Keyword lookup table */
+    static keywords = 
+    {
         "var": PROG_TOKEN.VAR, "global": PROG_TOKEN.GLOBAL,
         "if": PROG_TOKEN.IF, "else": PROG_TOKEN.ELSE,
         "for": PROG_TOKEN.FOR, "in": PROG_TOKEN.IN,
@@ -58,17 +68,19 @@ function ProgLexer(_source) constructor
         "switch": PROG_TOKEN.SWITCH, "case": PROG_TOKEN.CASE, "default": PROG_TOKEN.DEFAULT,
         "fn": PROG_TOKEN.FN,
         "import": PROG_TOKEN.IMPORT, "export": PROG_TOKEN.EXPORT, "from": PROG_TOKEN.FROM, "as": PROG_TOKEN.AS,
-        // Class keywords
+        
+        /* Class keywords */
         "class": PROG_TOKEN.CLASS, "new": PROG_TOKEN.NEW, "this": PROG_TOKEN.THIS,
         "extends": PROG_TOKEN.EXTENDS, "super": PROG_TOKEN.SUPER, "static": PROG_TOKEN.STATIC,
         "public": PROG_TOKEN.PUBLIC, "private": PROG_TOKEN.PRIVATE, "protected": PROG_TOKEN.PROTECTED,
         "abstract": PROG_TOKEN.ABSTRACT, "interface": PROG_TOKEN.INTERFACE, "implements": PROG_TOKEN.IMPLEMENTS,
-        // In operator modifiers
+        
+        /* In operator modifiers */
         "key": PROG_TOKEN.IDENTIFIER, "value": PROG_TOKEN.IDENTIFIER
     }
     
-    /// @desc Tokenize the source code
-    /// @returns {array} Array of token structs
+    /* Tokenize the source code */
+    /* @returns {array} Array of token structs */
     static tokenize = function()
     {
         tokens = [];
@@ -82,7 +94,7 @@ function ProgLexer(_source) constructor
         {
             start = current;
             
-            if (array_length(interp_stack) > 0) && (interp_stack[array_length(interp_stack) - 1] == -1)
+            if (array_length(interp_stack) > 0 && interp_stack[array_length(interp_stack) - 1] == -1)
             {
                 scan_interpolation();
             }
@@ -109,17 +121,17 @@ function ProgLexer(_source) constructor
     
     static peek = function()
     {
-        return ((is_at_end()) ? "" : string_char_at(source, current));
+        return (is_at_end() ? "" : string_char_at(source, current));
     }
     
     static peek_next = function()
     {
-        return ((current + 1 > length) ? "" : string_char_at(source, current + 1));
+        return (current + 1 > length ? "" : string_char_at(source, current + 1));
     }
     
     static match = function(_expected)
     {
-        if (is_at_end()) || (string_char_at(source, current) != _expected)
+        if (is_at_end() || string_char_at(source, current) != _expected)
         {
             return false;
         }
@@ -131,7 +143,7 @@ function ProgLexer(_source) constructor
     
     static add_token = function(_type, _literal = undefined)
     {
-        var _text = ((current >= start) ? string_copy(source, start, current - start) : "");
+        var _text = (current >= start ? string_copy(source, start, current - start) : "");
         
         array_push(tokens, { type: _type, lexeme: _text, literal: _literal, line: line });
     }
@@ -195,7 +207,7 @@ function ProgLexer(_source) constructor
             case ".":
                 if (match("."))
                 {
-                    // Could be .. (RANGE) or ... (SPREAD)
+                    /* Could be .. (RANGE) or ... (SPREAD) */
                     add_token(match(".") ? PROG_TOKEN.SPREAD : PROG_TOKEN.RANGE);
                 }
                 else
@@ -217,10 +229,22 @@ function ProgLexer(_source) constructor
                 break;
             
             case "-":
-                if (match(">")) add_token(PROG_TOKEN.ARROW);
-                else if (match("-")) add_token(PROG_TOKEN.MINUS_MINUS);
-                else if (match("=")) add_token(PROG_TOKEN.MINUS_ASSIGN);
-                else add_token(PROG_TOKEN.MINUS);
+                if (match(">"))
+                {
+                    add_token(PROG_TOKEN.ARROW);
+                }
+                else if (match("-"))
+                {
+                    add_token(PROG_TOKEN.MINUS_MINUS);
+                }
+                else if (match("="))
+                {
+                    add_token(PROG_TOKEN.MINUS_ASSIGN);
+                }
+                else
+                {
+                    add_token(PROG_TOKEN.MINUS);
+                }
                 break;
             
             case "*":
@@ -230,7 +254,7 @@ function ProgLexer(_source) constructor
             case "/": 
                 if (match("/"))
                 {
-                    while (peek() != "\n") && (!is_at_end())
+                    while (peek() != "\n" && !is_at_end())
                     {
                         advance();
                     }
@@ -239,7 +263,7 @@ function ProgLexer(_source) constructor
                 {
                     while (!is_at_end())
                     {
-                        if (peek() == "*") && (peek_next() == "/")
+                        if (peek() == "*" && peek_next() == "/")
                         {
                             advance();
                             advance();
@@ -257,12 +281,17 @@ function ProgLexer(_source) constructor
                 }
                 else
                 { 
-                    // Regex vs Division check
+                    /* Regex vs Division check */
                     var _is_regex = false;
-                    if (array_length(tokens) == 0) _is_regex = true;
+                    
+                    if (array_length(tokens) == 0)
+                    {
+                        _is_regex = true;
+                    }
                     else
                     {
                         var _last = tokens[array_length(tokens) - 1].type;
+                        
                         if (_last == PROG_TOKEN.LPAREN || _last == PROG_TOKEN.COMMA || 
                             _last == PROG_TOKEN.ASSIGN || _last == PROG_TOKEN.COLON ||
                             _last == PROG_TOKEN.SEMICOLON || _last == PROG_TOKEN.LBRACE ||
@@ -283,41 +312,106 @@ function ProgLexer(_source) constructor
                         }
                     }
                     
-                    if (match("=")) add_token(PROG_TOKEN.SLASH_ASSIGN);
-                    else if (_is_regex) scan_regex();
-                    else add_token(PROG_TOKEN.SLASH);
+                    if (match("="))
+                    {
+                        add_token(PROG_TOKEN.SLASH_ASSIGN);
+                    }
+                    else if (_is_regex)
+                    {
+                        scan_regex();
+                    }
+                    else
+                    {
+                        add_token(PROG_TOKEN.SLASH);
+                    }
                 }
                 break;
-            case "%": add_token(match("=") ? PROG_TOKEN.PERCENT_ASSIGN : PROG_TOKEN.PERCENT); break;
             
-            case "!": add_token(match("=") ? PROG_TOKEN.NE : PROG_TOKEN.NOT); break;
+            case "%":
+                add_token(match("=") ? PROG_TOKEN.PERCENT_ASSIGN : PROG_TOKEN.PERCENT);
+                break;
+            
+            case "!":
+                add_token(match("=") ? PROG_TOKEN.NE : PROG_TOKEN.NOT);
+                break;
+            
             case "=": 
-                if (match("=")) add_token(PROG_TOKEN.EQ);
-                else add_token(PROG_TOKEN.ASSIGN);
+                if (match("="))
+                {
+                    add_token(PROG_TOKEN.EQ);
+                }
+                else
+                {
+                    add_token(PROG_TOKEN.ASSIGN);
+                }
                 break; 
+            
             case "<": 
-                if (match("<")) add_token(match("=") ? PROG_TOKEN.LSHIFT_ASSIGN : PROG_TOKEN.LSHIFT);
-                else add_token(match("=") ? PROG_TOKEN.LE : PROG_TOKEN.LT);
+                if (match("<"))
+                {
+                    add_token(match("=") ? PROG_TOKEN.LSHIFT_ASSIGN : PROG_TOKEN.LSHIFT);
+                }
+                else
+                {
+                    add_token(match("=") ? PROG_TOKEN.LE : PROG_TOKEN.LT);
+                }
                 break;
+            
             case ">": 
-                if (match(">")) add_token(match("=") ? PROG_TOKEN.RSHIFT_ASSIGN : PROG_TOKEN.RSHIFT);
-                else add_token(match("=") ? PROG_TOKEN.GE : PROG_TOKEN.GT);
+                if (match(">"))
+                {
+                    add_token(match("=") ? PROG_TOKEN.RSHIFT_ASSIGN : PROG_TOKEN.RSHIFT);
+                }
+                else
+                {
+                    add_token(match("=") ? PROG_TOKEN.GE : PROG_TOKEN.GT);
+                }
                 break;
             
-            case "&": add_token(match("&") ? PROG_TOKEN.AND : (match("=") ? PROG_TOKEN.AMP_ASSIGN : PROG_TOKEN.AMP)); break;
-            case "|": add_token(match("|") ? PROG_TOKEN.OR : (match("=") ? PROG_TOKEN.PIPE_ASSIGN : PROG_TOKEN.PIPE)); break;
-            case "^": add_token(match("=") ? PROG_TOKEN.CARET_ASSIGN : PROG_TOKEN.CARET); break;
-            case "~": add_token(PROG_TOKEN.TILDE); break;
+            case "&":
+                add_token(match("&") ? PROG_TOKEN.AND : (match("=") ? PROG_TOKEN.AMP_ASSIGN : PROG_TOKEN.AMP));
+                break;
+            
+            case "|":
+                add_token(match("|") ? PROG_TOKEN.OR : (match("=") ? PROG_TOKEN.PIPE_ASSIGN : PROG_TOKEN.PIPE));
+                break;
+            
+            case "^":
+                add_token(match("=") ? PROG_TOKEN.CARET_ASSIGN : PROG_TOKEN.CARET);
+                break;
+            
+            case "~":
+                add_token(PROG_TOKEN.TILDE);
+                break;
+            
             case "?":
-                if (match("?")) add_token(PROG_TOKEN.NULL_COALESCE);
-                else if (match(".")) add_token(PROG_TOKEN.QUESTION_DOT);
-                else add_token(PROG_TOKEN.QUESTION);
+                if (match("?"))
+                {
+                    add_token(PROG_TOKEN.NULL_COALESCE);
+                }
+                else if (match("."))
+                {
+                    add_token(PROG_TOKEN.QUESTION_DOT);
+                }
+                else
+                {
+                    add_token(PROG_TOKEN.QUESTION);
+                }
                 break;
             
-            case " ": case "\r": case "\t": break;
-            case "\n": line++; break;
-            case "\"": scan_string("\""); break;
-            // case "'": scan_string("'"); break; // Single quote support
+            case " ":
+            case "\r":
+            case "\t":
+                break;
+            
+            case "\n":
+                line++;
+                break;
+            
+            case "\"":
+                scan_string("\"");
+                break;
+            
             case "$": 
                 if (match("\""))
                 {
@@ -327,17 +421,35 @@ function ProgLexer(_source) constructor
                 {
                     scan_gml_hex();
                 }
-                else { had_error = true; error = $"Unexpected '$' at line {line}"; }
+                else
+                {
+                    had_error = true;
+                    error = $"Unexpected '$' at line {line}";
+                }
                 break;
             
-            case "#": scan_hex_color(); break;
+            case "#":
+                scan_hex_color();
+                break;
             
-            case "@": scan_annotation(); break;
+            case "@":
+                scan_annotation();
+                break;
             
             default:
-                if (is_digit(_c)) scan_number();
-                else if (is_alpha(_c)) scan_identifier();
-                else { had_error = true; error = $"Unexpected '{_c}' at line {line}"; }
+                if (is_digit(_c))
+                {
+                    scan_number();
+                }
+                else if (is_alpha(_c))
+                {
+                    scan_identifier();
+                }
+                else
+                {
+                    had_error = true;
+                    error = $"Unexpected '{_c}' at line {line}";
+                }
                 break;
         }
     }
@@ -364,9 +476,13 @@ function ProgLexer(_source) constructor
             {
                 advance(); // Consume backslash
                 
-                if (is_at_end()) break;
+                if (is_at_end())
+                {
+                    break;
+                }
                 
                 var _next = advance();
+                
                 switch (_next)
                 {
                     case "n": _res += "\n"; break;
@@ -376,8 +492,10 @@ function ProgLexer(_source) constructor
                     case "f": _res += "\f"; break;
                     case "\\": _res += "\\"; break;
                     case "\"": _res += "\""; break;
-                    // case "'": _res += "'"; break;
-                    default: _res += _next; break; // Unknown escape, keep literal
+                    default:
+                        /* Unknown escape, keep literal */
+                        _res += _next;
+                        break;
                 }
             }
             else
@@ -429,9 +547,13 @@ function ProgLexer(_source) constructor
             {
                 advance(); // Consume backslash
                 
-                if (is_at_end()) break;
+                if (is_at_end())
+                {
+                    break;
+                }
                 
                 var _next = advance();
+                
                 switch (_next)
                 {
                     case "n": _res += "\n"; break;
@@ -441,8 +563,7 @@ function ProgLexer(_source) constructor
                     case "f": _res += "\f"; break;
                     case "\\": _res += "\\"; break;
                     case "\"": _res += "\""; break;
-                    // case "'": _res += "'"; break;
-                    case "{": _res += "{"; break; // Allow escaping opening brace in interpolation
+                    case "{": _res += "{"; break; /* Allow escaping opening brace in interpolation */
                     case "}": _res += "}"; break; 
                     default: _res += _next; break; 
                 }
@@ -479,11 +600,14 @@ function ProgLexer(_source) constructor
         }
     }
     
-    /// @desc Scan annotations starting with @
+    /* Scan annotations starting with @ */
     static scan_annotation = function()
     {
-        // Read the annotation name
-        while (is_alpha_numeric(peek())) advance();
+        /* Read the annotation name */
+        while (is_alpha_numeric(peek()))
+        {
+            advance();
+        }
         
         var _text = string_copy(source, start, current - start);
         
@@ -498,7 +622,7 @@ function ProgLexer(_source) constructor
                 break;
             
             default:
-                // Unknown annotation - treat as error
+                /* Unknown annotation - treat as error */
                 had_error = true;
                 error = $"Unknown annotation '{_text}' at line {line}";
                 break;
@@ -507,52 +631,79 @@ function ProgLexer(_source) constructor
     
     static scan_identifier = function()
     {
-        while (is_alpha_numeric(peek())) advance();
+        while (is_alpha_numeric(peek()))
+        {
+            advance();
+        }
+        
         var _text = string_copy(source, start, current - start);
+        
         add_token(struct_exists(keywords, _text) ? keywords[$ _text] : PROG_TOKEN.IDENTIFIER);
     }
     
     static scan_number = function()
     {
-        // Hex support: 0x...
-        if (string_char_at(source, start) == "0") && (string_lower(peek()) == "x")
+        /* Hex support: 0x... */
+        if (string_char_at(source, start) == "0" && string_lower(peek()) == "x")
         {
-            advance(); // Consume 'x'
+            advance(); /* Consume 'x' */
             
-            while (is_hex_digit(peek())) advance();
+            while (is_hex_digit(peek()))
+            {
+                advance();
+            }
             
             var _hex_str = string_copy(source, start + 2, current - (start + 2));
-            // Convert hex to real using GML's $ prefix support in real() or a custom loop
-            // For simplicity in this environment, we'll assume a helper or use a loop if needed.
-            // In many GML versions, real("$" + _hex_str) works.
+            
+            /* Convert hex to real using GML's $ prefix support in real() or a custom loop */
+            /* For simplicity in this environment, we'll assume a helper or use a loop if needed. */
+            /* In many GML versions, real("$" + _hex_str) works. */
             var _value = 0;
             var _length = string_length(_hex_str);
-            for (var i = 1; i <= _length; i++)
+            
+            for (var i = 1; i <= _length; ++i)
             {
                 var _c = string_char_at(_hex_str, i);
                 var _v = 0;
-                if (is_digit(_c)) _v = real(_c);
+                
+                if (is_digit(_c))
+                {
+                    _v = real(_c);
+                }
                 else
                 {
                     _v = 10 + (ord(string_lower(_c)) - ord("a"));
                 }
+                
                 _value = (_value << 4) | _v;
             }
             
             add_token(PROG_TOKEN.NUMBER, _value);
+            
             return;
         }
 
-        // Support underscores in numbers (e.g., 10_000)
-        while (is_digit(peek()) || peek() == "_") advance();
+        /* Support underscores in numbers (e.g., 10_000) */
+        while (is_digit(peek()) || peek() == "_")
+        {
+            advance();
+        }
+        
         if (peek() == "." && is_digit(peek_next()))
         {
             advance();
-            while (is_digit(peek()) || peek() == "_") advance();
+            
+            while (is_digit(peek()) || peek() == "_")
+            {
+                advance();
+            }
         }
-        // Remove underscores before parsing
+        
+        /* Remove underscores before parsing */
         var _num_str = string_copy(source, start, current - start);
+        
         _num_str = string_replace_all(_num_str, "_", "");
+        
         add_token(PROG_TOKEN.NUMBER, real(_num_str));
     }
     
@@ -615,8 +766,13 @@ function ProgLexer(_source) constructor
 
     static scan_hex_color = function()
     {
-        var _start_hex = current; // Character after '#'
-        while (is_hex_digit(peek())) advance();
+        var _start_hex = current; /* Character after '#' */
+        
+        while (is_hex_digit(peek()))
+        {
+            advance();
+        }
+        
         var _length = current - _start_hex;
         var _hex = string_copy(source, _start_hex, _length);
         
@@ -660,20 +816,29 @@ function ProgLexer(_source) constructor
 
     static scan_gml_hex = function()
     {
-        while (is_hex_digit(peek())) advance();
+        while (is_hex_digit(peek()))
+        {
+            advance();
+        }
         
         var _hex_str = string_copy(source, start + 1, current - (start + 1));
         var _value = 0;
         var _length = string_length(_hex_str);
-        for (var i = 1; i <= _length; i++)
+        
+        for (var i = 1; i <= _length; ++i)
         {
             var _c = string_char_at(_hex_str, i);
             var _v = 0;
-            if (is_digit(_c)) _v = real(_c);
+            
+            if (is_digit(_c))
+            {
+                _v = real(_c);
+            }
             else
             {
                 _v = 10 + (ord(string_lower(_c)) - ord("a"));
             }
+            
             _value = (_value << 4) | _v;
         }
         

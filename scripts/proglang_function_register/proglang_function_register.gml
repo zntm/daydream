@@ -13,39 +13,42 @@ proglang_function_register("event_emit", function(_args)
     event_emit(_args[0], (array_length(_args) > 1) ? _args[1] : undefined);
 });
 
-proglang_function_register("event_subscribe", function(_args, _vm) {
+proglang_function_register("event_subscribe", function(_args, _vm)
+{
     var _event = _args[0];
     var _func = _args[1];
 
-    // Create a bridge method that will be called by GML
-    var _bridge = method({ 
+    /* Create a bridge method that will be called by GML */
+    var _bridge = method(
+    { 
         func: _func, 
-        base_vm_gref: _vm[PROG_VM.GLOBAL_REF] // Capture global ref from registrar
-    }, function(_event_data) {
-        
-        // Prepare VM for execution
+        base_vm_gref: _vm[PROG_VM.GLOBAL_REF] /* Capture global ref from registrar */
+    },
+    function(_event_data)
+    {
+        /* Prepare VM for execution */
         var _exec_vm = proglang_vm_create();
         
-        // Restore global context
+        /* Restore global context */
         _exec_vm[@ PROG_VM.GLOBAL_REF] = base_vm_gref;
         
-        // Execute the Proglang function/closure
+        /* Execute the Proglang function/closure */
         if (is_array(func) && array_length(func) >= PROG_CLOSURE.SIZE && func[PROG_CLOSURE.TYPE] == "closure")
         {
-            // Set parent scope to closure environment
-            _exec_vm[PROG_VM.SCOPE][@ PROG_SCOPE.PARENT] = func[PROG_CLOSURE.ENV];
+            /* Set parent scope to closure environment */
+            _exec_vm[@ PROG_VM.SCOPE][@ PROG_SCOPE.PARENT] = func[PROG_CLOSURE.ENV];
             
             var _params = func[PROG_CLOSURE.PARAM_COUNT];
             
-            // Push arguments
+            /* Push arguments */
             if (_params > 0)
             {
-                // We only have 1 argument: _event_data
+                /* We only have 1 argument: _event_data */
                 _exec_vm[@ PROG_VM.STACK][@ 0] = _event_data;
                 _exec_vm[@ PROG_VM.SP] = 1;
                 
-                // Pad rest with undefined if needed
-                for (var i = 1; i < _params; i++)
+                /* Pad rest with undefined if needed */
+                for (var i = _params - 1; i >= 1; --i)
                 {
                     _exec_vm[@ PROG_VM.STACK][@ i] = undefined;
                     _exec_vm[@ PROG_VM.SP]++;
@@ -56,7 +59,7 @@ proglang_function_register("event_subscribe", function(_args, _vm) {
         }
         else if (is_struct(func) && struct_exists(func, "function"))
         {
-            // Native function wrapper
+            /* Native function wrapper */
             func[$ "function"]([_event_data], _exec_vm);
         }
         
@@ -100,17 +103,31 @@ proglang_function_register("sign", function(_args)
     return sign(_args[0]);
 });
 
-proglang_function_register("min", function(_args) {
+proglang_function_register("min", function(_args)
+{
     if (array_length(_args) == 0) return 0;
+    
     var _min = _args[0];
-    for (var i = 1; i < array_length(_args); i++) _min = min(_min, _args[i]);
+    
+    for (var i = array_length(_args) - 1; i >= 1; --i)
+    {
+        _min = min(_min, _args[i]);
+    }
+    
     return _min;
 });
 
-proglang_function_register("max", function(_args) {
+proglang_function_register("max", function(_args)
+{
     if (array_length(_args) == 0) return 0;
+    
     var _max = _args[0];
-    for (var i = 1; i < array_length(_args); i++) _max = max(_max, _args[i]);
+    
+    for (var i = array_length(_args) - 1; i >= 1; --i)
+    {
+        _max = max(_max, _args[i]);
+    }
+    
     return _max;
 });
 
@@ -233,8 +250,10 @@ proglang_function_register("chance", function(_args) {
     return chance(_args[0]);
 });
 
-proglang_function_register("choose", function(_args) {
-    if (!is_array(_args[0]) || array_length(_args[0]) == 0) {
+proglang_function_register("choose", function(_args)
+{
+    if (!is_array(_args[0]) || array_length(_args[0]) == 0)
+    {
         return undefined;
     }
 
@@ -354,7 +373,11 @@ proglang_function_register("array_length", function(_args)
 proglang_function_register("array_push", function(_args)
 { 
     var _arr = _args[0];
-    for(var i=1; i<array_length(_args); i++) array_push(_arr, _args[i]);
+    
+    for (var i = array_length(_args) - 1; i >= 1; --i)
+    {
+        array_push(_arr, _args[i]);
+    }
 });
 
 proglang_function_register("array_pop", function(_args)
@@ -489,7 +512,8 @@ proglang_function_register("control_entity_heal", function(_args) {
     return control_entity_heal(_args[0], _args[1], _args[2]);
 });
 
-proglang_function_register("wait", function(_args, _vm) {
+proglang_function_register("wait", function(_args, _vm)
+{
     if (array_length(_args) < 3) return;
     
     var _callback = _args[0];
@@ -498,16 +522,24 @@ proglang_function_register("wait", function(_args, _vm) {
     
     if (!is_array(_params)) _params = [_params];
 
-    // If _callback is a Proglang closure, we need to handle its execution
-    if (is_array(_callback) && array_length(_callback) >= PROG_CLOSURE.SIZE && _callback[PROG_CLOSURE.TYPE] == "closure") {
-        call_later(_seconds, time_source_units_seconds, function(_data) {
+    /* If _callback is a Proglang closure, we need to handle its execution */
+    if (is_array(_callback) && array_length(_callback) >= PROG_CLOSURE.SIZE && _callback[PROG_CLOSURE.TYPE] == "closure")
+    {
+        call_later(_seconds, time_source_units_seconds, function(_data)
+        {
             var _vm = proglang_vm_create();
-            _vm[PROG_VM.SCOPE][@ PROG_SCOPE.PARENT] = _data.env;
+            
+            _vm[@ PROG_VM.SCOPE][@ PROG_SCOPE.PARENT] = _data.env;
+            
             proglang_vm_run(_vm, _data.bytecode, _data.args);
+            
             proglang_vm_free(_vm);
         }, false, { bytecode: _callback[PROG_CLOSURE.BYTECODE], env: _callback[PROG_CLOSURE.ENV], args: _params });
-    } else {
-        call_later(_seconds, time_source_units_seconds, function(_data) {
+    }
+    else
+    {
+        call_later(_seconds, time_source_units_seconds, function(_data)
+        {
             _data.func(_data.args);
         }, false, { func: _callback, args: _params });
     }
@@ -771,14 +803,14 @@ proglang_function_register("tag_value_parse", function(_args) {
 
 
 
-// Print
+/* Print */
 proglang_function_register("print", function(_args)
 {
     var _length = array_length(_args);
-    
     var _string = "";
     
-    for (var i = 0; i < _length; i++)
+    /* Using forward loop for print as order is critical for naturally looking output */
+    for (var i = 0; i < _length; ++i)
     {
         if (i > 0)
         {
@@ -884,15 +916,16 @@ proglang_function_register("is_regex", function(_args)
     return (is_instanceof(_val, Regex)) || (is_struct(_val) && struct_exists(_val, "__type__") && _val.__type__ == "regex");
 });
 
-// Runtime error function (throws an error that can be caught)
+/* Runtime error function (throws an error that can be caught) */
 proglang_function_register("runtime_error", function(_args)
 {
     var _type = (array_length(_args) > 0) ? _args[0] : PROGLANG_ERROR_TYPE.RUNTIME;
     var _msg = (array_length(_args) > 1) ? _args[1] : "Runtime error";
+    
     throw { type: _type, message: _msg }
 });
 
-// Debug & Utils
+/* Debug & Utils */
 proglang_function_register("assert", function(_args)
 {
     if (!_args[0])
@@ -905,20 +938,29 @@ proglang_function_register("assert", function(_args)
 proglang_function_register("time_start", function(_args)
 {
     var _name = _args[0];
-    if (!variable_global_exists("proglang_timers")) global.proglang_timers = {}
+    
+    if (!variable_global_exists("proglang_timers"))
+    {
+        global.proglang_timers = {}
+    }
+    
     global.proglang_timers[$ _name] = get_timer();
 });
 
 proglang_function_register("time_end", function(_args)
 {
     var _name = _args[0];
+    
     if (!variable_global_exists("proglang_timers") || !struct_exists(global.proglang_timers, _name))
     {
         throw { type: PROGLANG_ERROR_TYPE.RUNTIME, message: $"Timer '{_name}' does not exist." }
     }
+    
     var _start = global.proglang_timers[$ _name];
-    var _time = (get_timer() - _start) / 1000; // ms
+    var _time = (get_timer() - _start) / 1000; /* ms */
+    
     struct_remove(global.proglang_timers, _name);
+    
     return _time;
 });
 
@@ -995,7 +1037,7 @@ global.proglang_test_state = {
 
 proglang_function_register("test_expect", function(_args, _vm = undefined)
 {
-    // Guard: test_expect must be called inside a test
+    /* Guard: test_expect must be called inside a test */
     if (!global.proglang_test_state.in_test)
     {
         throw { type: PROGLANG_ERROR_TYPE.RUNTIME, message: "test_expect() can only be called inside a test or test_group." }
@@ -1004,14 +1046,21 @@ proglang_function_register("test_expect", function(_args, _vm = undefined)
     var _actual = _args[0];
     var _expected = _args[1];
     
-    // Execute actual if it's a closure/function
+    /* Execute actual if it's a closure/function */
     if (is_array(_actual) && array_length(_actual) >= PROG_CLOSURE.SIZE && _actual[PROG_CLOSURE.TYPE] == "closure")
     {
         var _eval_vm = proglang_vm_create();
-        // Propagate global_ref from calling VM
-        if (_vm != undefined) _eval_vm[@ PROG_VM.GLOBAL_REF] = _vm[PROG_VM.GLOBAL_REF];
-        _eval_vm[PROG_VM.SCOPE][@ PROG_SCOPE.PARENT] = _actual[PROG_CLOSURE.ENV];
+        
+        /* Propagate global_ref from calling VM */
+        if (_vm != undefined)
+        {
+            _eval_vm[@ PROG_VM.GLOBAL_REF] = _vm[PROG_VM.GLOBAL_REF];
+        }
+        
+        _eval_vm[@ PROG_VM.SCOPE][@ PROG_SCOPE.PARENT] = _actual[PROG_CLOSURE.ENV];
+        
         _actual = proglang_vm_run(_eval_vm, _actual[PROG_CLOSURE.BYTECODE]);
+        
         proglang_vm_free(_eval_vm);
     }
     else if (is_struct(_actual) && struct_exists(_actual, "function"))
@@ -1019,14 +1068,21 @@ proglang_function_register("test_expect", function(_args, _vm = undefined)
         _actual = _actual[$ "function"]([]);
     }
     
-    // Execute expected if it's a closure/function
+    /* Execute expected if it's a closure/function */
     if (is_array(_expected) && array_length(_expected) >= PROG_CLOSURE.SIZE && _expected[PROG_CLOSURE.TYPE] == "closure")
     {
         var _eval_vm = proglang_vm_create();
-        // Propagate global_ref from calling VM
-        if (_vm != undefined) _eval_vm[@ PROG_VM.GLOBAL_REF] = _vm[PROG_VM.GLOBAL_REF];
-        _eval_vm[PROG_VM.SCOPE][@ PROG_SCOPE.PARENT] = _expected[PROG_CLOSURE.ENV];
+        
+        /* Propagate global_ref from calling VM */
+        if (_vm != undefined)
+        {
+            _eval_vm[@ PROG_VM.GLOBAL_REF] = _vm[PROG_VM.GLOBAL_REF];
+        }
+        
+        _eval_vm[@ PROG_VM.SCOPE][@ PROG_SCOPE.PARENT] = _expected[PROG_CLOSURE.ENV];
+        
         _expected = proglang_vm_run(_eval_vm, _expected[PROG_CLOSURE.BYTECODE]);
+        
         proglang_vm_free(_eval_vm);
     }
     else if (is_struct(_expected) && struct_exists(_expected, "function"))
@@ -1039,9 +1095,12 @@ proglang_function_register("test_expect", function(_args, _vm = undefined)
     if (_actual != _expected)
     {
         var _msg = $"Expected {_expected}, got {_actual}";
+        
         array_push(global.proglang_test_state.current_failures, _msg);
+        
         return false;
     }
+    
     return true;
 });
 
@@ -1057,16 +1116,21 @@ function proglang_reset_pending()
 function proglang_run_pending()
 {
     var _tests = global.proglang_pending_tests;
-    for (var i = 0; i < array_length(_tests); i++)
+    
+    /* Using forward loop for tests to maintain execution order */
+    for (var i = 0; i < array_length(_tests); ++i)
     {
         var _test = _tests[i];
         
-        // Skip handled tests (ones that were inside a group)
-        if (is_struct(_test) && struct_exists(_test, "handled") && _test.handled) continue;
+        /* Skip handled tests (ones that were inside a group) */
+        if (is_struct(_test) && struct_exists(_test, "handled") && _test.handled)
+        {
+            continue;
+        }
         
         if (struct_exists(_test, "__type__") && _test.__type__ == "Group")
         {
-            // Execute Group
+            /* Execute Group */
             var _group_name = _test.name;
             var _group_tests = _test.tests;
             
@@ -1077,7 +1141,7 @@ function proglang_run_pending()
             
             show_debug_message($"━━━ {_group_name} ━━━");
             
-            for (var j = 0; j < _total; j++)
+            for (var j = 0; j < _total; ++j)
             {
                 var _t_res = _proglang_run_test_internal(_group_tests[j], $"Test {j + 1}");
                 
@@ -1096,7 +1160,7 @@ function proglang_run_pending()
                     
                     show_debug_message($"  ✗ {_t_name} ({_t_time}ms)");
                     
-                    for (var k = 0; k < array_length(_t_res.failures); k++)
+                    for (var k = 0; k < array_length(_t_res.failures); ++k)
                     {
                         show_debug_message($"    - {_t_res.failures[k]}");
                     }
@@ -1111,12 +1175,19 @@ function proglang_run_pending()
             }
             
             var _total_time = (get_timer() - _start) / 1000;
-            if (_failed == 0) show_debug_message($"━━━ {_passed}/{_total} passed ({_total_time}ms) ━━━");
-            else show_debug_message($"━━━ {_passed}/{_total} passed, {_failed} failed ({_total_time}ms) ━━━");
+            
+            if (_failed == 0)
+            {
+                show_debug_message($"━━━ {_passed}/{_total} passed ({_total_time}ms) ━━━");
+            }
+            else
+            {
+                show_debug_message($"━━━ {_passed}/{_total} passed, {_failed} failed ({_total_time}ms) ━━━");
+            }
         }
         else if (struct_exists(_test, "__type__") && _test.__type__ == "Test")
         {
-            // Execute Single Test
+            /* Execute Single Test */
             var _t_res = _proglang_run_test_internal(_test, _test.name);
             var _t_time = _t_res.time_ms;
             
@@ -1127,13 +1198,16 @@ function proglang_run_pending()
             else
             {
                 show_debug_message($"✗ {_test.name} ({_t_time}ms)");
-                for (var k = 0; k < array_length(_t_res.failures); k++)
+                
+                for (var k = 0; k < array_length(_t_res.failures); ++k)
                 {
                     show_debug_message($"  - {_t_res.failures[k]}");
                 }
+                
                 if (_t_res.error != undefined)
                 {
                     var _err_msg = is_struct(_t_res.error) && struct_exists(_t_res.error, "message") ? _t_res.error.message : string(_t_res.error);
+                    
                     show_debug_message($"  - Error: {_err_msg}");
                 }
             }
@@ -1177,25 +1251,28 @@ function _proglang_run_test_internal(_test_struct, _default_name)
     
     try
     {
-        // Execute the test function
+        /* Execute the test function */
         if (is_array(_fn) && array_length(_fn) >= PROG_CLOSURE.SIZE && _fn[PROG_CLOSURE.TYPE] == "closure")
         {
             var _vm = proglang_vm_create();
-            // Use captured global_ref if available
+            
+            /* Use captured global_ref if available */
             if (is_struct(_test_struct) && struct_exists(_test_struct, "global_ref") && _test_struct.global_ref != undefined)
             {
                 _vm[@ PROG_VM.GLOBAL_REF] = _test_struct.global_ref;
             }
-            _vm[PROG_VM.SCOPE][@ PROG_SCOPE.PARENT] = _fn[PROG_CLOSURE.ENV];
             
-            // Propagate __filename for import resolution
+            _vm[@ PROG_VM.SCOPE][@ PROG_SCOPE.PARENT] = _fn[PROG_CLOSURE.ENV];
+            
+            /* Propagate __filename for import resolution */
             if (is_struct(_test_struct) && struct_exists(_test_struct, "__filename") && _test_struct.__filename != undefined)
             {
-                _vm[PROG_VM.SCOPE][PROG_SCOPE.VARS][$ "__filename"] = _test_struct.__filename;
-                _vm[PROG_VM.SCOPE][PROG_SCOPE.VARS][$ "__dirname"] = proglang_get_directory(_test_struct.__filename);
+                _vm[@ PROG_VM.SCOPE][PROG_SCOPE.VARS][$ "__filename"] = _test_struct.__filename;
+                _vm[@ PROG_VM.SCOPE][PROG_SCOPE.VARS][$ "__dirname"] = proglang_get_directory(_test_struct.__filename);
             }
             
             proglang_vm_run(_vm, _fn[PROG_CLOSURE.BYTECODE]);
+            
             proglang_vm_free(_vm);
         }
         else if (is_struct(_fn)) && (struct_exists(_fn, "function"))
@@ -1264,14 +1341,15 @@ proglang_function_register("test_group", function(_args, _vm = undefined)
     var _group_name = _args[0];
     var _tests = _args[1];
     
-    for (var i = 0; i < array_length(_tests); i++)
+    for (var i = array_length(_tests) - 1; i >= 0; --i)
     {
         var _t = _tests[i];
         
         if (is_struct(_t)) && (_t[$ "__type__"] == "Test")
         {
             _t.handled = true;
-            // Propagate global_ref if not already set
+            
+            /* Propagate global_ref if not already set */
             if (!struct_exists(_t, "global_ref") || _t.global_ref == undefined)
             {
                 _t.global_ref = (_vm != undefined) ? _vm[PROG_VM.GLOBAL_REF] : undefined;
@@ -1322,65 +1400,84 @@ proglang_function_register("buffer_create", function(_args, _vm) {
     return _buf;
 });
 
-proglang_function_register("buffer_delete", function(_args) {
-    if (buffer_exists(_args[0])) buffer_delete(_args[0]);
+proglang_function_register("buffer_delete", function(_args)
+{
+    if (buffer_exists(_args[0]))
+    {
+        buffer_delete(_args[0]);
+    }
 });
 
 #endregion
 
 #region UI System
 
-proglang_function_register("ui_load", function(_args) {
+proglang_function_register("ui_load", function(_args)
+{
     var _path = _args[0];
+    
     return ui_load(_path);
 });
 
-proglang_function_register("ui_spawn", function(_args) {
+proglang_function_register("ui_spawn", function(_args)
+{
     var _definitions = _args[0];
     var _config = (array_length(_args) > 1) ? _args[1] : {}
     var _events = (array_length(_args) > 2) ? _args[2] : undefined;
+    
     return ui_spawn(_definitions, _config, _events);
 });
 
-proglang_function_register("ui_destroy", function(_args) {
+proglang_function_register("ui_destroy", function(_args)
+{
     ui_destroy(_args[0]);
 });
 
-proglang_function_register("ui_get", function(_args) {
+proglang_function_register("ui_get", function(_args)
+{
     var _instance = _args[0];
     var _name = _args[1];
+    
     return ui_get(_instance, _name);
 });
 
-proglang_function_register("ui_set", function(_args) {
+proglang_function_register("ui_set", function(_args)
+{
     var _instance = _args[0];
     var _name = _args[1];
     var _property = _args[2];
     var _value = _args[3];
+    
     ui_set(_instance, _name, _property, _value);
 });
 
-proglang_function_register("ui_refresh", function(_args) {
+proglang_function_register("ui_refresh", function(_args)
+{
     ui_refresh(_args[0]);
 });
 
-proglang_function_register("ui_update", function(_args) {
+proglang_function_register("ui_update", function(_args)
+{
     ui_update(_args[0]);
 });
 
-proglang_function_register("ui_draw", function(_args) {
+proglang_function_register("ui_draw", function(_args)
+{
     ui_draw(_args[0]);
 });
 
-proglang_function_register("ui_event", function(_args) {
+proglang_function_register("ui_event", function(_args)
+{
     ui_event(_args[0]);
 });
 
-proglang_function_register("ui_mark_dirty", function(_args) {
+proglang_function_register("ui_mark_dirty", function(_args)
+{
     ui_mark_dirty(_args[0]);
 });
 
-proglang_function_register("ui_clear_events", function(_args) {
+proglang_function_register("ui_clear_events", function(_args)
+{
     ui_clear_events();
 });
 
@@ -1510,12 +1607,21 @@ proglang_function_register("array_length", function(_args) {
     return array_length(_args[0]);
 });
 
-proglang_function_register("debug_log", function(_args) {
+proglang_function_register("debug_log", function(_args)
+{
     var _str = "";
-    if (array_length(_args) > 0) _str = string(_args[0]);
-    for (var i = 1; i < array_length(_args); i++) {
+    
+    if (array_length(_args) > 0)
+    {
+        _str = string(_args[0]);
+    }
+    
+    /* Using forward loop to maintain string order */
+    for (var i = 1; i < array_length(_args); ++i)
+    {
         _str += " " + string(_args[i]);
     }
+    
     show_debug_message("[Daydream Script] " + _str);
 });
 

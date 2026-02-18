@@ -1,10 +1,10 @@
 
 global.proglang_cache = {}
 
-/// @desc Compile Proglang source to bytecode (cached)
-/// @param {string} _source The script source code
-/// @param {array} _context_keys Optional array of context variable names
-/// @returns {Any} ProgBytecode or undefined on error
+/* Compile Proglang source to bytecode (cached) */
+/* @param {string} _source The script source code */
+/* @param {array} _context_keys Optional array of context variable names */
+/* @returns {Any} ProgBytecode or undefined on error */
 function proglang_compile(_source, _context_keys = [])
 {
     if (_source == undefined)
