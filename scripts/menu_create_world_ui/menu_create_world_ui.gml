@@ -57,17 +57,14 @@ function menu_create_world_ui_open()
             /* Layout children first */
             _curr.layout_children();
             
-            /* If it's a scroll area, recalculate its content height and clamp scroll */
+            /* If it's a scroll area, recalculate its content height */
             if (_curr.element_type == "scroll_area")
             {
                 _curr.recalculate_content_height();
-                
-                /* Clamp scroll offset to new bounds */
-                var _max_scroll = _curr.get_max_scroll();
-                _curr.scroll_offset = clamp(_curr.scroll_offset, 0, _max_scroll);
             }
-            /* If it's an auto-height area, update its height to fit children */
-            else if (_curr.element_type == "area" && _curr.auto_height)
+            /* If it's an area (container), update its height to fit children */
+            /* Skip if it's a fixed-size container like scroll_area or window */
+            else if (_curr.element_type == "area")
             {
                 var _children = _curr.children;
                 var _child_count = array_length(_children);
