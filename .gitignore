@@ -7,7 +7,6 @@ sprites.info.json
 node_modules/
 
 build/
-
-bevy/
+datagen/generated/
 
 old/
