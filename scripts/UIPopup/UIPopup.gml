@@ -26,7 +26,7 @@ function UIPopup(_x, _y, _width, _height) : UIElement(_x, _y, _width, _height) c
             visible = false;
         }
         
-        if (!visible) return;
+        if (!visible) exit;
         
         // Center on screen if needed
         if (center_on_screen) {
@@ -44,11 +44,11 @@ function UIPopup(_x, _y, _width, _height) : UIElement(_x, _y, _width, _height) c
     }
     
     static draw = function() {
-        if (!visible && alpha < 0.01) return;
+        if (!visible && alpha < 0.01) exit;
         
-        var _gui_scale = global.gui_scale;
-        var _base_scale_x = _gui_scale * (global.gui_width / 960);
-        var _base_scale_y = _gui_scale * (global.gui_height / 540);
+        var _base_scale = ui_get_base_scale();
+        var _base_scale_x = _base_scale.x;
+        var _base_scale_y = _base_scale.y;
         
         // Draw overlay
         draw_set_alpha(overlay_alpha * alpha);

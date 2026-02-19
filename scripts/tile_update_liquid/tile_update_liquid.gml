@@ -6,7 +6,7 @@ function liquid_flow(_x, _y, _z, _parameter = {})
 {
     var _tile = tile_get(_x, _y, _z);
     
-    if (_tile == TILE_EMPTY) return;
+    if (_tile == TILE_EMPTY) exit;
     
     var _id    = _tile.get_id();
     var _level = _tile.get_component("level") ?? LIQUID_LEVEL_MAX;
@@ -34,7 +34,7 @@ function liquid_flow(_x, _y, _z, _parameter = {})
     if (_level <= 0)
     {
         tile_place(_x, _y, _z, TILE_EMPTY);
-        return;
+        exit;
     }
     
     var _flowed = false;

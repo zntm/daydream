@@ -10,7 +10,7 @@ function physics_mode_mounted(_body, _input)
     if (_mount == undefined)
     {
         _body.mode = MOVEMENT_MODE.GROUND;
-        return;
+        exit;
     }
     
     // Get mount data for offsets
@@ -74,7 +74,7 @@ function mount_creature(_rider, _mount)
 /// @param {Struct.PhysicsBody} _rider
 function mount_dismount(_rider)
 {
-    if (_rider.mount == undefined) return;
+    if (_rider.mount == undefined) exit;
     
     var _mount = _rider.mount;
     

@@ -4,8 +4,8 @@
 /// @param {real} [_push_strength=0.5]
 function physics_resolve_collision(_body, _other, _push_strength = 0.5)
 {
-    if (_other == _body) return;
-    if (_other[$ "static"] == true && _body[$ "static"] == true) return;
+    if (_other == _body) exit;
+    if (_other[$ "static"] == true && _body[$ "static"] == true) exit;
     
     // Get dimensions
     var _half_w = (_body[$ "width"] ?? 8) / 2;
@@ -25,7 +25,7 @@ function physics_resolve_collision(_body, _other, _push_strength = 0.5)
     // AABB overlap check
     if (_x1 >= _ox2 || _x2 <= _ox1 || _y1 >= _oy2 || _y2 <= _oy1)
     {
-        return;
+        exit;
     }
     
     // Calculate overlap on each axis

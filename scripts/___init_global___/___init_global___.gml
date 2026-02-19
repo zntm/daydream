@@ -50,6 +50,8 @@ global.inventory_instance = {
     _craftable: []
 }
 
+global.gui_root = undefined;
+
 global.inventory_instance_names = [
     "base",
     "armor_helmet",
@@ -215,3 +217,7 @@ global.attribute_player = new Attribute()
     .set_regeneration_time(1.0);
 
 global.gui_deferred_text = [];
+
+global.gui_scale  = 1.0;
+global.gui_width  = 960;
+global.gui_height = 540;

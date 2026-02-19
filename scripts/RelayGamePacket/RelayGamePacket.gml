@@ -107,7 +107,7 @@ function relay_write_item(_buffer, _item)
     if (_item == INVENTORY_EMPTY || _item == undefined)
     {
         buffer_write(_buffer, buffer_u8, 0); 
-        return;
+        exit;
     }
     
     var _id = _item.get_id();
@@ -340,7 +340,7 @@ function relay_read_entity_move(_buffer)
 /// @desc Send entity state update to all peers
 function relay_send_entity_update(_entity)
 {
-    if (global.relay == undefined || global.relay.role == RELAY_ROLE.NONE) return;
+    if (global.relay == undefined || global.relay.role == RELAY_ROLE.NONE) exit;
     
     var _state = new EntityState();
     _state.from_instance(_entity);
@@ -360,7 +360,7 @@ function relay_send_entity_update(_entity)
 /// @desc Send player input to all peers
 function relay_send_player_input(_input)
 {
-    if (global.relay == undefined || global.relay.role == RELAY_ROLE.NONE) return;
+    if (global.relay == undefined || global.relay.role == RELAY_ROLE.NONE) exit;
     
     var _buf = buffer_create(64, buffer_grow, 1);
     relay_write_input(_buf, _input);
@@ -372,7 +372,7 @@ function relay_send_player_input(_input)
 /// @desc Send tile update to all peers
 function relay_send_tile_update(_x, _y, _z, _tile_id)
 {
-    if (global.relay == undefined || global.relay.role == RELAY_ROLE.NONE) return;
+    if (global.relay == undefined || global.relay.role == RELAY_ROLE.NONE) exit;
     
     var _buf = buffer_create(64, buffer_grow, 1);
     buffer_write(_buf, buffer_s32, _x);
@@ -393,7 +393,7 @@ function relay_request_tile_change(_x, _y, _z, _tile_id, _prev_tile_id = "")
         global.network_applying_packet = true;
         tile_place(_x, _y, _z, _tile);
         global.network_applying_packet = false;
-        return;
+        exit;
     }
     
     var _action_type = (_tile_id == "" || _tile_id == "undefined") 
@@ -419,7 +419,7 @@ function relay_request_tile_change(_x, _y, _z, _tile_id, _prev_tile_id = "")
 /// @desc Send inventory update to a specific peer
 function relay_send_inventory_update(_peer_id, _inv_name, _index, _item)
 {
-    if (global.relay == undefined || global.relay.role == RELAY_ROLE.NONE) return;
+    if (global.relay == undefined || global.relay.role == RELAY_ROLE.NONE) exit;
     
     var _buf = buffer_create(256, buffer_grow, 1);
     relay_write_inventory_update(_buf, _inv_name, _index, _item);
@@ -431,7 +431,7 @@ function relay_send_inventory_update(_peer_id, _inv_name, _index, _item)
 /// @desc Send time update to all peers
 function relay_send_time_update(_time)
 {
-    if (global.relay == undefined || global.relay.role == RELAY_ROLE.NONE) return;
+    if (global.relay == undefined || global.relay.role == RELAY_ROLE.NONE) exit;
     
     var _buf = buffer_create(8, buffer_grow, 1);
     relay_write_time_update(_buf, _time);
@@ -443,7 +443,7 @@ function relay_send_time_update(_time)
 /// @desc Send chunk data to a specific peer
 function relay_send_chunk_data(_peer_id, _chunk_x, _chunk_y, _tiles)
 {
-    if (global.relay == undefined || global.relay.role == RELAY_ROLE.NONE) return;
+    if (global.relay == undefined || global.relay.role == RELAY_ROLE.NONE) exit;
     
     var _buf = buffer_create(4096, buffer_grow, 1);
     relay_write_chunk_data(_buf, _chunk_x, _chunk_y, _tiles);
@@ -455,7 +455,7 @@ function relay_send_chunk_data(_peer_id, _chunk_x, _chunk_y, _tiles)
 /// @desc Send player info to all peers
 function relay_send_player_info(_uuid, _attire)
 {
-    if (global.relay == undefined || global.relay.role == RELAY_ROLE.NONE) return;
+    if (global.relay == undefined || global.relay.role == RELAY_ROLE.NONE) exit;
     
     var _buf = buffer_create(256, buffer_grow, 1);
     relay_write_player_info(_buf, _uuid, _attire);
@@ -467,7 +467,7 @@ function relay_send_player_info(_uuid, _attire)
 /// @desc Send entity spawn to all peers (or specific if needed)
 function relay_send_entity_spawn(_entity, _target_peer_id = undefined)
 {
-    if (global.relay == undefined || global.relay.role == RELAY_ROLE.NONE) return;
+    if (global.relay == undefined || global.relay.role == RELAY_ROLE.NONE) exit;
     
     var _state = new EntityState();
     _state.capture(_entity);
@@ -486,7 +486,7 @@ function relay_send_entity_spawn(_entity, _target_peer_id = undefined)
 /// @desc Send entity destroy to all peers
 function relay_send_entity_destroy(_uuid)
 {
-    if (global.relay == undefined || global.relay.role == RELAY_ROLE.NONE) return;
+    if (global.relay == undefined || global.relay.role == RELAY_ROLE.NONE) exit;
     
     var _buf = buffer_create(64, buffer_grow, 1);
     relay_write_entity_destroy(_buf, _uuid);
@@ -498,7 +498,7 @@ function relay_send_entity_destroy(_uuid)
 /// @desc Send entity move to all peers
 function relay_send_entity_move(_uuid, _x, _y)
 {
-    if (global.relay == undefined || global.relay.role == RELAY_ROLE.NONE) return;
+    if (global.relay == undefined || global.relay.role == RELAY_ROLE.NONE) exit;
     
     var _buf = buffer_create(64, buffer_grow, 1);
     relay_write_entity_move(_buf, _uuid, _x, _y);
@@ -510,7 +510,7 @@ function relay_send_entity_move(_uuid, _x, _y)
 /// @desc Send inventory action to host
 function relay_send_inventory_action(_action, _from_inv, _from_idx, _to_inv, _to_idx, _amount)
 {
-    if (global.relay == undefined || global.relay.role == RELAY_ROLE.NONE) return;
+    if (global.relay == undefined || global.relay.role == RELAY_ROLE.NONE) exit;
     
     var _buf = buffer_create(128, buffer_grow, 1);
     relay_write_inventory_action(_buf, _action, _from_inv, _from_idx, _to_inv, _to_idx, _amount);
@@ -522,7 +522,7 @@ function relay_send_inventory_action(_action, _from_inv, _from_idx, _to_inv, _to
 /// @desc Send container open to host
 function relay_send_container_open(_x, _y, _z)
 {
-    if (global.relay == undefined || global.relay.role == RELAY_ROLE.NONE) return;
+    if (global.relay == undefined || global.relay.role == RELAY_ROLE.NONE) exit;
     
     var _buf = buffer_create(16, buffer_grow, 1);
     buffer_write(_buf, buffer_s32, _x);
@@ -536,7 +536,7 @@ function relay_send_container_open(_x, _y, _z)
 /// @desc Send container close to host
 function relay_send_container_close()
 {
-    if (global.relay == undefined || global.relay.role == RELAY_ROLE.NONE) return;
+    if (global.relay == undefined || global.relay.role == RELAY_ROLE.NONE) exit;
     
     var _buf = buffer_create(1, buffer_grow, 1);
     relay_broadcast_game_packet(PACKET_TYPE.CONTAINER_CLOSE, _buf);

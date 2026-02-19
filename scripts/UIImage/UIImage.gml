@@ -85,10 +85,7 @@ function UIImage(_x, _y, _source) : UIElement(_x, _y, 0, 0) constructor
     
     static draw_content = function()
     {
-        if (source == undefined)
-        {
-             return;
-        }
+        if (source == undefined) exit;
         
         var _base_scale = ui_get_base_scale();
         var _abs_x = get_absolute_x();

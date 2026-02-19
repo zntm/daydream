@@ -68,7 +68,7 @@ function UISlot(_x, _y) : UIElement(_x, _y, 16, 16) constructor {
     }
     
     static update = function() {
-        if (!visible) return;
+        if (!visible) exit;
         
         var _base_scale = ui_get_base_scale();
         var _abs_x = get_absolute_x();
@@ -150,7 +150,7 @@ function UISlot(_x, _y) : UIElement(_x, _y, 16, 16) constructor {
         
         // Get item at this slot
         var _inventory = global.inventory[$ inventory_name];
-        if (_inventory == undefined) return;
+        if (_inventory == undefined) exit;
         
         var _item = _inventory[slot_index];
         if (_item == INVENTORY_EMPTY) {
@@ -161,17 +161,17 @@ function UISlot(_x, _y) : UIElement(_x, _y, 16, 16) constructor {
                     draw_sprite_ext(_spr, icon_index, _x1, _y1, _sx, _sy, 0, c_white, 1);
                 }
             }
-            return;
+            exit;
         }
         
         // Resolve item data
         var _item_data = global.item_data[$ _item.get_id()];
-        if (_item_data == undefined) return;
+        if (_item_data == undefined) exit;
         
         // Draw item sprite
         var _sprite_name = _item_data.get_sprite();
         var _sprite_asset = global.sprite_asset[$ _sprite_name];
-        if (_sprite_asset == undefined) return;
+        if (_sprite_asset == undefined) exit;
         
         var _sprite = _sprite_asset.get_sprite();
         var _index = _item_data.get_inventory_index();

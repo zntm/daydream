@@ -52,7 +52,7 @@ function UIParser(_tokens) constructor {
     }
     
     static error_at_current = function(_message) {
-        if (had_error) return;
+        if (had_error) exit;
         
         had_error = true;
         var _token = peek();
@@ -327,6 +327,11 @@ function UIParser(_tokens) constructor {
             return parse_tuple();
         }
         
+        // Array: [item1, item2, ...]
+        if (match(UI_TOKEN.LBRACKET)) {
+            return parse_array();
+        }
+        
         // Number or Color or Percentage
         if (match(UI_TOKEN.NUMBER)) {
             var _lit = previous().literal;
@@ -400,6 +405,20 @@ function UIParser(_tokens) constructor {
         consume(UI_TOKEN.RPAREN, "Expected ')' after tuple values.");
         
         return new UIASTTuple(_values);
+    }
+    
+    static parse_array = function() {
+        var _values = [];
+        
+        if (!check(UI_TOKEN.RBRACKET)) {
+            do {
+                array_push(_values, parse_value());
+            } until (!match(UI_TOKEN.COMMA));
+        }
+        
+        consume(UI_TOKEN.RBRACKET, "Expected ']' after array values.");
+        
+        return new UIASTArray(_values);
     }
     
     /// @desc Parse $sprite(name) { properties }

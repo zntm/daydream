@@ -153,11 +153,7 @@ function RelayNetwork() constructor
     /// @param {Id.Buffer} _buffer Packet to send
     static send_to_peer = function(_peer_id, _buffer)
     {
-        if (_peer_id == local_peer_id)
-        {
-            // Don't send to self
-            return;
-        }
+        if (_peer_id == local_peer_id) exit;
         
         if (role == RELAY_ROLE.HOST)
         {
@@ -574,7 +570,7 @@ function RelayNetwork() constructor
         var _payload_size = buffer_read(_buffer, buffer_u16);
         
         var _from_peer_id = _socket_to_peer[? _socket];
-        if (_from_peer_id == undefined) return;
+        if (_from_peer_id == undefined) exit;
         
         // Check if target is the host
         if (_target_peer_id == local_peer_id)
@@ -614,7 +610,7 @@ function RelayNetwork() constructor
     {
         var _payload_size = buffer_read(_buffer, buffer_u16);
         var _from_peer_id = _socket_to_peer[? _socket];
-        if (_from_peer_id == undefined) return;
+        if (_from_peer_id == undefined) exit;
         
         // Save payload start position
         var _payload_start = buffer_tell(_buffer);

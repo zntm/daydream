@@ -52,7 +52,7 @@ function UIDropdown(_x, _y, _width, _height) : UIElement(_x, _y, _width, _height
     }
     
     static update = function() {
-        if (!visible) return;
+        if (!visible) exit;
         
         var _base_scale = ui_get_base_scale();
         var _abs_x = get_absolute_x();

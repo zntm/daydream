@@ -56,7 +56,7 @@ function UIArea(_x, _y, _width, _height) : UIElement(_x, _y, _width, _height) co
     
     /// @desc Override draw to add fade overlay after children
     static draw = function() {
-        if (!visible) return;
+        if (!visible) exit;
         
         var _base_scale = ui_get_base_scale();
         var _abs_x = get_absolute_x();

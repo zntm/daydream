@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"UIScrollArea",
+  "%Name":"menu_create_world_ui",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"UIScrollArea",
+  "name":"menu_create_world_ui",
   "parent":{
-    "name":"Elements",
-    "path":"folders/Scripts/Proglang/UI/Elements.yy",
+    "name":"Menu",
+    "path":"folders/Scripts/Menu.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

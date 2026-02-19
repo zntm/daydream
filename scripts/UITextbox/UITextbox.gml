@@ -19,14 +19,14 @@ function UITextbox(_x, _y, _width, _height) : UIElement(_x, _y, _width, _height)
     
     static update = function()
     {
-        if (!visible) return;
+        if (!visible) exit;
         
         var _abs_x = get_absolute_x();
         var _abs_y = get_absolute_y();
         
-        var _gui_scale    = global.gui_scale;
-        var _base_scale_x = _gui_scale * (global.gui_width  / 960);
-        var _base_scale_y = _gui_scale * (global.gui_height / 540);
+        var _base_scale = ui_get_base_scale();
+        var _base_scale_x = _base_scale.x;
+        var _base_scale_y = _base_scale.y;
         
         var _mx = (window_mouse_get_x() / global.window_width)  * global.gui_width;
         var _my = (window_mouse_get_y() / global.window_height) * global.gui_height;
@@ -146,9 +146,9 @@ function UITextbox(_x, _y, _width, _height) : UIElement(_x, _y, _width, _height)
         var _abs_x = get_absolute_x();
         var _abs_y = get_absolute_y();
         
-        var _gui_scale    = global.gui_scale;
-        var _base_scale_x = _gui_scale * (global.gui_width  / 960);
-        var _base_scale_y = _gui_scale * (global.gui_height / 540);
+        var _base_scale = ui_get_base_scale();
+        var _base_scale_x = _base_scale.x;
+        var _base_scale_y = _base_scale.y;
         
         var _x1 = _abs_x * _base_scale_x;
         var _y1 = _abs_y * _base_scale_y;
@@ -172,7 +172,10 @@ function UITextbox(_x, _y, _width, _height) : UIElement(_x, _y, _width, _height)
         var _text_x = _x1 + 4 * _base_scale_x;
         var _text_y = (_y1 + _y2) / 2;
         
-        draw_text_cuteify(
+        /* Set scissor clipping for the text area */
+        gpu_set_scissor(_x1, _y1, _x2 - _x1, _y2 - _y1);
+        
+        render_text(
             _text_x, _text_y,
             _display_text,
             _base_scale_x * 0.8,
@@ -181,6 +184,9 @@ function UITextbox(_x, _y, _width, _height) : UIElement(_x, _y, _width, _height)
             _display_color,
             1
         );
+        
+        /* Restore scissor */
+        gpu_set_scissor(0, 0, display_get_gui_width(), display_get_gui_height());
         
         if (is_focused && cursor_blink < 30)
         {

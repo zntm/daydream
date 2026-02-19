@@ -183,7 +183,7 @@ function ProgLexer(_source) constructor
                         
                         interp_stack[@ array_length(interp_stack) - 1] = -1;
                         
-                        return;
+                        exit;
                     }
                     
                     --interp_stack[@ array_length(interp_stack) - 1];
@@ -508,7 +508,7 @@ function ProgLexer(_source) constructor
         {
             had_error = true; 
             error = $"Unterminated string at line {line}"; 
-            return;
+            exit;
         }
         
         advance(); // Closing quote
@@ -578,7 +578,7 @@ function ProgLexer(_source) constructor
         {
             had_error = true; 
             error = $"Unterminated interpolated string at line {line}"; 
-            return;
+            exit;
         }
         
         add_token(PROG_TOKEN.STRING, _res);
@@ -680,7 +680,7 @@ function ProgLexer(_source) constructor
             
             add_token(PROG_TOKEN.NUMBER, _value);
             
-            return;
+            exit;
         }
 
         /* Support underscores in numbers (e.g., 10_000) */
@@ -718,7 +718,7 @@ function ProgLexer(_source) constructor
                 had_error = true;
                 error = $"Unterminated regex at line {line}";
                 
-                return;
+                exit;
             }
             
             // Exit if not escaped
@@ -808,7 +808,7 @@ function ProgLexer(_source) constructor
         {
              had_error = true;
              error = $"Invalid hex color format at line {line}. Use #RGB, #RRGGBB, or #RRGGBBAA.";
-             return;
+             exit;
         }
         
         add_token(PROG_TOKEN.NUMBER, _result);

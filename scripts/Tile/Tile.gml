@@ -19,7 +19,7 @@ function Tile(_id, _item_data = global.item_data) constructor
         get_inventory = function() { return undefined; }
         
         show_debug_message($"[TILE] Warning: Created tile with invalid ID: {_id}");
-        return; 
+        exit; 
     }
     
     // set_offset(0, 0);

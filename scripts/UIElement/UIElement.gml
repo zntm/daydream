@@ -77,10 +77,7 @@ function UIElement(_x, _y, _width, _height) constructor
     /* Update all bound properties from link context */
     static update_bindings = function()
     {
-        if (link_context == undefined)
-        {
-             return;
-        }
+        if (link_context == undefined) exit;
         
         var _names = struct_get_names(bindings);
         var _count = array_length(_names);
@@ -307,6 +304,35 @@ function UIElement(_x, _y, _width, _height) constructor
             padding_bottom = _padding[$ "bottom"] ?? 0;
             padding_left = _padding[$ "left"] ?? 0;
         }
+        else if (is_array(_padding))
+        {
+            var _len = array_length(_padding);
+            
+            switch (_len)
+            {
+                case 1:
+                    padding_top = _padding[0];
+                    padding_right = _padding[0];
+                    padding_bottom = _padding[0];
+                    padding_left = _padding[0];
+                    break;
+                case 2:
+                    padding_top = _padding[0];
+                    padding_right = _padding[1];
+                    padding_bottom = _padding[0];
+                    padding_left = _padding[1];
+                    break;
+                case 4:
+                    padding_top = _padding[0];
+                    padding_right = _padding[1];
+                    padding_bottom = _padding[2];
+                    padding_left = _padding[3];
+                    break;
+                default:
+                    show_debug_message($"[UI Runtime] Warning: Unsupported padding array length ({_len}) in '{element_name}'. Expected 1, 2, or 4.");
+                    break;
+            }
+        }
         else
         {
             padding_top = _padding;
@@ -323,10 +349,7 @@ function UIElement(_x, _y, _width, _height) constructor
     /* Layout children based on layout mode */
     static layout_children = function()
     {
-        if (array_length(children) == 0)
-        {
-             return;
-        }
+        if (array_length(children) == 0) exit;
         
         switch (layout)
         {
@@ -440,10 +463,7 @@ function UIElement(_x, _y, _width, _height) constructor
     
     static update = function()
     {
-        if (!visible)
-        {
-             return;
-        }
+        if (!visible) exit;
         
         /* Update bindings each frame */
         update_bindings();
@@ -465,19 +485,16 @@ function UIElement(_x, _y, _width, _height) constructor
     
     static draw = function()
     {
-        if (!visible)
-        {
-             return;
-        }
+        if (!visible) exit;
         
         var _base_scale = ui_get_base_scale();
         var _abs_x = get_absolute_x();
         var _abs_y = get_absolute_y();
         
-        var _x1 = _abs_x * _base_scale.x;
-        var _y1 = _abs_y * _base_scale.y;
-        var _x2 = _x1 + (width * _base_scale.x);
-        var _y2 = _y1 + (height * _base_scale.y);
+        var _x1 = floor(_abs_x * _base_scale.x);
+        var _y1 = floor(_abs_y * _base_scale.y);
+        var _x2 = floor(_x1 + (width * _base_scale.x));
+        var _y2 = floor(_y1 + (height * _base_scale.y));
 
         /* Draw background if set */
         if (background_color != undefined)

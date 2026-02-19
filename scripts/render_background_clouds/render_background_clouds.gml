@@ -136,7 +136,7 @@ function cloud_set_speed(_min, _max)
 /// @desc Update cloud positions (drift + wind)
 function update_background_clouds(_dt, _camera_width)
 {
-    if (global.cloud_pool_count <= 0) return;
+    if (global.cloud_pool_count <= 0) exit;
     
     var _wind = global.world_save_data.weather_wind;
     var _wind_factor = global.cloud_wind_factor;
@@ -182,10 +182,7 @@ function update_background_clouds(_dt, _camera_width)
 /// @desc Draw all active cloud instances
 function render_background_clouds(_camera_x, _camera_y, _camera_width, _camera_height)
 {
-    if (global.cloud_pool_count <= 0) 
-    {
-        return;
-    }
+    if (global.cloud_pool_count <= 0) exit;
     
     for (var i = 0; i < CLOUD_POOL_MAX; ++i)
     {
@@ -254,10 +251,10 @@ function init_background_clouds()
     cloud_clear();
     
     var _world_data = global.world_data[$ global.world_save_data.dimension];
-    if (_world_data == undefined) return;
+    if (_world_data == undefined) exit;
     
     var _script_id = _world_data.get_background_script();
-    if (_script_id == undefined) return;
+    if (_script_id == undefined) exit;
     
     show_debug_message($"[Clouds] init_background_clouds starting. Script: {_script_id}");
     

@@ -28,7 +28,7 @@ function UILinePath(_x, _y) : UIElement(_x, _y, 0, 0) constructor {
             width = 0;
             height = 0;
             
-            return;
+            exit;
         }
         
         var _min_x = infinity;
@@ -77,12 +77,12 @@ function UILinePath(_x, _y) : UIElement(_x, _y, 0, 0) constructor {
     
     /// @desc Draw a sprite at a point with rotation
     static draw_sprite_at = function(_sprite_def, _px, _py, _angle, _base_scale) {
-        if (_sprite_def == undefined) return;
+        if (_sprite_def == undefined) exit;
         
         var _sprite_name = _sprite_def[$ "sprite_name"] ?? "";
         var _spr = asset_get_index(_sprite_name);
         
-        if (_spr < 0) return;
+        if (_spr < 0) exit;
         
         draw_sprite_ext(
             _spr, 0,
@@ -95,7 +95,7 @@ function UILinePath(_x, _y) : UIElement(_x, _y, 0, 0) constructor {
     static draw_content = function() {
         var _count = array_length(points);
         
-        if (_count < 2) return;
+        if (_count < 2) exit;
         
         var _base_scale = ui_get_base_scale();
         var _abs_x = get_absolute_x();
