@@ -31,7 +31,7 @@ function UIScrollArea(_x, _y, _width, _height) : UIElement(_x, _y, _width, _heig
         if (_child_count == 0) {
             content_height = 0;
             
-            exit;
+            return;
         }
         
         var _max_y = 0;
@@ -85,7 +85,7 @@ function UIScrollArea(_x, _y, _width, _height) : UIElement(_x, _y, _width, _heig
     }
     
     static update = function() {
-        if (!visible) exit;
+        if (!visible) return;
         
         recalculate_content_height();
         
@@ -164,16 +164,16 @@ function UIScrollArea(_x, _y, _width, _height) : UIElement(_x, _y, _width, _heig
     
     /// @desc Override draw to clip children and draw scrollbar
     static draw = function() {
-        if (!visible) exit;
+        if (!visible) return;
         
         var _base_scale = ui_get_base_scale();
         var _abs_x = get_absolute_x();
         var _abs_y = get_absolute_y();
         
-        var _x1 = floor(_abs_x * _base_scale.x);
-        var _y1 = floor(_abs_y * _base_scale.y);
-        var _x2 = floor(_x1 + (width * _base_scale.x));
-        var _y2 = floor(_y1 + (height * _base_scale.y));
+        var _x1 = _abs_x * _base_scale.x;
+        var _y1 = _abs_y * _base_scale.y;
+        var _x2 = _x1 + (width * _base_scale.x);
+        var _y2 = _y1 + (height * _base_scale.y);
         
         /* Draw background if set */
         if (background_color != undefined) {
@@ -186,8 +186,8 @@ function UIScrollArea(_x, _y, _width, _height) : UIElement(_x, _y, _width, _heig
         /* Draw content */
         draw_content();
         
-        /* Set scissor clipping to area bounds (vertical only to prevent narrow-scissor issues) */
-        gpu_set_scissor(0, _y1, display_get_gui_width(), _y2 - _y1);
+        /* Set scissor clipping to area bounds */
+        gpu_set_scissor(_x1, _y1, _x2 - _x1, _y2 - _y1);
         
         /* Draw children with scroll offset applied */
         var _child_count = array_length(children);
@@ -203,8 +203,8 @@ function UIScrollArea(_x, _y, _width, _height) : UIElement(_x, _y, _width, _heig
             _child.y = _saved_y;
         }
         
-        /* Restore scissor to full GUI surface dimensions */
-        gpu_set_scissor(0, 0, display_get_gui_width(), display_get_gui_height());
+        /* Restore scissor */
+        gpu_set_scissor(0, 0, global.gui_width, global.gui_height);
         
         /* Draw scrollbar if content overflows */
         if (content_height > height) {

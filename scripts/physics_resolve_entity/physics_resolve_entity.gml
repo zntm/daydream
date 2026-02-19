@@ -25,7 +25,7 @@ function physics_resolve_entity(_body, _entities, _push_strength = 0.5)
     }
     else
     {
-        exit;
+        return;
     }
     
     var _count = array_length(_nearby);

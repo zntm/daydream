@@ -37,8 +37,7 @@ enum UI_AST {
     FUNC_CALL,      // floor(expr), etc.
     
     // Array indexing
-    ARRAY_INDEX,    // *name[index]
-    ARRAY           // [item1, item2, ...]
+    ARRAY_INDEX     // *name[index]
 }
 
 // =============================================================================
@@ -234,11 +233,4 @@ function UIASTArrayIndex(_name, _index) constructor {
     type = UI_AST.ARRAY_INDEX;
     name = _name;
     index = _index;
-}
-
-/// @desc Array literal - [item1, item2, ...]
-/// @param {Array} _values Array of value AST nodes
-function UIASTArray(_values) constructor {
-    type = UI_AST.ARRAY;
-    values = _values;
 }

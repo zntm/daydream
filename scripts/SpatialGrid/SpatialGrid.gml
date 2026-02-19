@@ -76,7 +76,7 @@ function SpatialGrid(_cell_size = TILE_SIZE * 2) constructor
         var _id = _body.id;
         var _keys = body_cells[$ _id];
         
-        if (_keys == undefined) exit;
+        if (_keys == undefined) return;
         
         for (var i = 0; i < array_length(_keys); ++i)
         {

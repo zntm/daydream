@@ -24,14 +24,14 @@ function UIButton(_x, _y, _width, _height, _text = "") : UIElement(_x, _y, _widt
     
     static update = function()
     {
-        if (!visible || is_disabled) exit;
+        if (!visible || is_disabled) return;
         
         var _abs_x = get_absolute_x();
         var _abs_y = get_absolute_y();
         
-        var _base_scale = ui_get_base_scale();
-        var _base_scale_x = _base_scale.x;
-        var _base_scale_y = _base_scale.y;
+        var _gui_scale = global.gui_scale;
+        var _base_scale_x = _gui_scale * (global.gui_width / 960);
+        var _base_scale_y = _gui_scale * (global.gui_height / 540);
         
         var _mx = (window_mouse_get_x() / global.window_width) * global.gui_width;
         var _my = (window_mouse_get_y() / global.window_height) * global.gui_height;
@@ -84,9 +84,9 @@ function UIButton(_x, _y, _width, _height, _text = "") : UIElement(_x, _y, _widt
         var _abs_x = get_absolute_x();
         var _abs_y = get_absolute_y();
         
-        var _base_scale = ui_get_base_scale();
-        var _base_scale_x = _base_scale.x;
-        var _base_scale_y = _base_scale.y;
+        var _gui_scale = global.gui_scale;
+        var _base_scale_x = _gui_scale * (global.gui_width / 960);
+        var _base_scale_y = _gui_scale * (global.gui_height / 540);
         
         var _x1 = _abs_x * _base_scale_x;
         var _y1 = _abs_y * _base_scale_y;
@@ -126,7 +126,7 @@ function UIButton(_x, _y, _width, _height, _text = "") : UIElement(_x, _y, _widt
             
             draw_set_align(fa_center, fa_middle);
             
-            render_text(
+            draw_text_cuteify(
                 _cx, _cy,
                 text,
                 _base_scale_x * text_scale,

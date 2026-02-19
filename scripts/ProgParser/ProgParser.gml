@@ -68,7 +68,10 @@ function ProgParser(_tokens) constructor
     
     static error_at_current = function(_message)
     {
-        if (had_error) exit;
+        if (had_error)
+        {
+             return; /* Suppress cascade */
+        }
         
         had_error = true;
         

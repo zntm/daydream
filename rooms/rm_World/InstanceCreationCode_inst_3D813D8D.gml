@@ -11,7 +11,7 @@ on_window_resize = function()
     
     control_update_gui_size(_gui_width, _gui_height);
     
-    if (!instance_exists(obj_Game_Control)) exit;
+    if (!instance_exists(obj_Game_Control)) return;
     
     if (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.INVENTORY)
     {
@@ -45,7 +45,7 @@ on_window_focus = function()
 {
     atla_repair_all();
     
-    if (!instance_exists(obj_Game_Control)) exit;
+    if (!instance_exists(obj_Game_Control)) return;
     
     if (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.INVENTORY)
     {
@@ -65,7 +65,7 @@ on_window_focus = function()
 
 on_window_unfocus = function()
 {
-    if (!instance_exists(obj_Game_Control)) exit;
+    if (!instance_exists(obj_Game_Control)) return;
     
     if (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.GENERATING_WORLD) exit;
     

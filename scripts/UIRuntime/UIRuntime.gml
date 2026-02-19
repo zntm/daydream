@@ -128,18 +128,10 @@ function ui_load(_path)
 /// @returns {Struct} UI instance with spawned elements
 function ui_spawn(_definitions, _config = {}, _events = undefined)
 {
-    /* Get variables from definition if available */
-    var _variables = {};
-    
     /* Handle ui_load() result struct (has .document property) */
     if (is_struct(_definitions) && struct_exists(_definitions, "document"))
     {
         var _doc = _definitions.document;
-        
-        if (struct_exists(_definitions, "variables"))
-        {
-            _variables = _definitions.variables;
-        }
         
         _definitions = _doc.definitions;
     }
@@ -151,8 +143,7 @@ function ui_spawn(_definitions, _config = {}, _events = undefined)
     }
     
     var _def_count = array_length(_definitions);
-    var _parent_cfg = _config[$ "parent"];
-    var _parent_name = is_struct(_parent_cfg) && struct_exists(_parent_cfg, "element_name") ? _parent_cfg.element_name : "unknown";
+    var _parent_name = is_struct(_config.parent) && struct_exists(_config.parent, "element_name") ? _config.parent.element_name : "unknown";
     
     show_debug_message($"[UI Runtime] ui_spawn: Spawning {_def_count} definitions into parent '{_parent_name}'");
     
@@ -177,6 +168,14 @@ function ui_spawn(_definitions, _config = {}, _events = undefined)
         visible: true             /* Control visibility of all root elements */
     }
         
+    /* Get variables from definition if available */
+    var _variables = {}
+    
+    if (is_struct(_definitions) && struct_exists(_definitions, "variables"))
+    {
+        _variables = _definitions.variables;
+    }
+    
     for (var i = 0; i < _def_count; ++i)
     {
         var _def = _definitions[i];
@@ -809,7 +808,6 @@ function ui_resolve_value(_node, _link, _variables)
             return { color: _node.color, alpha: _node.alpha }
         
         case UI_AST.TUPLE:
-        case UI_AST.ARRAY:
             var _values = [];
             var _count = array_length(_node.values);
             
@@ -1218,11 +1216,9 @@ function ui_get_base_scale()
     var _w = variable_global_exists("gui_width") ? global.gui_width : _lw;
     var _h = variable_global_exists("gui_height") ? global.gui_height : _lh;
     
-    var _gs = global.gui_scale;
-    
     return {
-        x: (_w / _lw) * _gs,
-        y: (_h / _lh) * _gs
+        x: _w / _lw,
+        y: _h / _lh
     }
 }
 
@@ -1230,7 +1226,7 @@ function ui_get_base_scale()
 /// @param {Struct} _instance UI instance to destroy
 function ui_destroy(_instance)
 {
-    if (_instance == undefined) exit;
+    if (_instance == undefined) return;
     
     /* Destroy all root elements */
     var _count = array_length(_instance.root_elements);
@@ -1330,8 +1326,8 @@ function ui_should_render(_instance)
 /// @param {Struct} _instance UI instance
 function ui_refresh(_instance)
 {
-    if (_instance == undefined) exit;
-    if (!ui_should_render(_instance)) exit;
+    if (_instance == undefined) return;
+    if (!ui_should_render(_instance)) return;
     
     var _count = array_length(_instance.root_elements);
     
@@ -1348,7 +1344,7 @@ function ui_refresh(_instance)
 /// @param {Struct} _instance UI instance
 function ui_update(_instance)
 {
-    if (_instance == undefined) exit;
+    if (_instance == undefined) return;
     
     /* Sync visibility to root elements */
     var _is_visible = _instance[$ "visible"] ?? true;
@@ -1359,7 +1355,7 @@ function ui_update(_instance)
         _instance.root_elements[i].visible = _is_visible;
     }
     
-    if (!ui_should_render(_instance)) exit;
+    if (!ui_should_render(_instance)) return;
     
     for (var i = _root_count - 1; i >= 0; --i)
     {
@@ -1370,7 +1366,7 @@ function ui_update(_instance)
 /// @desc Draw all root elements in a UI instance
 function ui_draw(_instance)
 {
-    if (_instance == undefined) exit;
+    if (_instance == undefined) return;
     
     var _count = array_length(_instance.root_elements);
     
@@ -1389,7 +1385,7 @@ function ui_draw(_instance)
 /// @desc Cleanly destroy a UI instance
 function ui_instance_destroy(_instance)
 {
-    if (_instance == undefined) exit;
+    if (_instance == undefined) return;
     
     /* Unparent root elements */
     var _count = array_length(_instance.root_elements);

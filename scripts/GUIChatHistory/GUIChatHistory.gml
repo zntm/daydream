@@ -127,7 +127,7 @@ function GUIChatHistory(_x, _y, _width, _height, _max_messages = 8) : UIElement(
     
     static update = function()
     {
-        if (!visible) exit;
+        if (!visible) return;
         
         // Update chat timers
         var _chat_history = global.chat_history;

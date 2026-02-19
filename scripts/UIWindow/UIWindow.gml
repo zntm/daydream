@@ -28,7 +28,7 @@ function UIWindow(_x, _y, _width, _height, _title = "") : UIElement(_x, _y, _wid
     fade_speed = 0.1;
     
     static update = function() {
-        if (!visible) exit;
+        if (!visible) return;
         
         // Fade animation
         alpha = lerp(alpha, target_alpha, fade_speed);
@@ -36,9 +36,9 @@ function UIWindow(_x, _y, _width, _height, _title = "") : UIElement(_x, _y, _wid
         var _abs_x = get_absolute_x();
         var _abs_y = get_absolute_y();
         
-        var _base_scale = ui_get_base_scale();
-        var _base_scale_x = _base_scale.x;
-        var _base_scale_y = _base_scale.y;
+        var _gui_scale = global.gui_scale;
+        var _base_scale_x = _gui_scale * (global.gui_width / 960);
+        var _base_scale_y = _gui_scale * (global.gui_height / 540);
         
         var _mx = (window_mouse_get_x() / global.window_width) * global.gui_width;
         var _my = (window_mouse_get_y() / global.window_height) * global.gui_height;
@@ -83,9 +83,9 @@ function UIWindow(_x, _y, _width, _height, _title = "") : UIElement(_x, _y, _wid
         var _abs_x = get_absolute_x();
         var _abs_y = get_absolute_y();
         
-        var _base_scale = ui_get_base_scale();
-        var _base_scale_x = _base_scale.x;
-        var _base_scale_y = _base_scale.y;
+        var _gui_scale = global.gui_scale;
+        var _base_scale_x = _gui_scale * (global.gui_width / 960);
+        var _base_scale_y = _gui_scale * (global.gui_height / 540);
         
         var _x1 = _abs_x * _base_scale_x;
         var _y1 = _abs_y * _base_scale_y;
@@ -113,7 +113,7 @@ function UIWindow(_x, _y, _width, _height, _title = "") : UIElement(_x, _y, _wid
             var _prev_valign = draw_get_valign();
             draw_set_align(fa_center, fa_middle);
             
-            render_text(
+            draw_text_cuteify(
                 (_x1 + _x2) / 2,
                 (_y1 + _title_y2) / 2,
                 title,

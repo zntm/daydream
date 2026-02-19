@@ -121,7 +121,7 @@ function Quadtree(_x, _y, _w, _h, _max_objects = 10, _max_levels = 5, _level = 0
             if (_index != -1)
             {
                 nodes[_index].insert(_item);
-                exit;
+                return;
             }
         }
         

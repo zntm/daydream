@@ -287,7 +287,7 @@ function UILexer(_source) constructor {
         if (is_at_end()) {
             had_error = true;
             error = $"Unterminated string at line {line}";
-            exit;
+            return;
         }
         
         advance(); // Closing "

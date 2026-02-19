@@ -4,7 +4,7 @@ function physics_move_contact_x(_body)
 {
     var _vx = _body.vel_x;
     
-    if (_vx == 0) exit;
+    if (_vx == 0) return;
     
     var _distance = abs(_vx);
     var _direction = sign(_vx);
@@ -21,7 +21,7 @@ function physics_move_contact_x(_body)
     if (!tile_meeting_swept(_body.pos_x, _body.pos_y, _body.pos_x + _vx, _body.pos_y, CHUNK_DEPTH_DEFAULT, _collision_mask, undefined, _coll_w, _coll_h))
     {
         _body.pos_x += _vx;
-        exit;
+        return;
     }
     
     // 2. Binary Chop
@@ -60,7 +60,7 @@ function physics_move_contact_y(_body)
 {
     var _vy = _body.vel_y;
     
-    if (_vy == 0) exit;
+    if (_vy == 0) return;
     
     var _distance = abs(_vy);
     var _direction = sign(_vy);
@@ -80,7 +80,7 @@ function physics_move_contact_y(_body)
     if (!tile_meeting_swept(_body.pos_x, _body.pos_y, _body.pos_x, _body.pos_y + _vy, CHUNK_DEPTH_DEFAULT, _collision_mask, undefined, _coll_w, _coll_h))
     {
         _body.pos_y += _vy;
-        exit;
+        return;
     }
     
     // 2. Binary Chop

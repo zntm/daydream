@@ -180,7 +180,7 @@ function ProgCompiler(_context_keys = []) constructor
             {
                 const_scopes[@ i][$ _name] = _value;
                 
-                exit;
+                return;
             }
         }
     }
@@ -193,7 +193,7 @@ function ProgCompiler(_context_keys = []) constructor
             {
                 struct_remove(const_scopes[i], _name);
                 
-                exit;
+                return;
             }
         }
     }
@@ -634,7 +634,7 @@ function ProgCompiler(_context_keys = []) constructor
                 emit(PROG_OP.LOAD, add_constant(_name), _node.line);
             }
             
-            exit;
+            return;
         }
         
         /* 2. Check locals (BP relative) */
@@ -650,7 +650,7 @@ function ProgCompiler(_context_keys = []) constructor
             {
                 emit(PROG_OP.LOAD_LOCAL, _info.index, _node.line);
                 
-                exit;
+                return;
             }
             
             /* Stop if we hit a function boundary */
@@ -997,7 +997,7 @@ function ProgCompiler(_context_keys = []) constructor
                     had_error = true;
                     error_message = $"[Line {_node.line}] Error: Cannot use reserved keyword '{_node.name}' as variable name.";
                     
-                    exit;
+                    return;
                 }
                 
                 /* Error: Check if name shadows a context variable */
@@ -1006,7 +1006,7 @@ function ProgCompiler(_context_keys = []) constructor
                     had_error = true;
                     error_message = $"[Line {_node.line}] Error: Cannot redeclare context variable '{_node.name}'.";
                     
-                    exit;
+                    return;
                 }
                 
                 /* Error: Check for redeclaration in the current scope */
@@ -1017,7 +1017,7 @@ function ProgCompiler(_context_keys = []) constructor
                     had_error = true;
                     error_message = $"[Line {_node.line}] Error: Variable '{_node.name}' already declared in this scope.";
                     
-                    exit;
+                    return;
                 }
                 
                 /* Add to current scope declarations */
@@ -1029,7 +1029,7 @@ function ProgCompiler(_context_keys = []) constructor
                     had_error = true;
                     error_message = $"[Line {_node.line}] Error: Global variables must be declared at top level, not inside statements.";
                     
-                    exit;
+                    return;
                 }
                 
                 var _init_const = undefined;
@@ -2265,14 +2265,14 @@ function ProgCompiler(_context_keys = []) constructor
                         emit(PROG_OP.INC_LOCAL, _info.index, _line);
                         emit(PROG_OP.LOAD_LOCAL, _info.index, _line);
                         
-                        exit;
+                        return;
                     }
                     else if (_op == PROG_TOKEN.MINUS_ASSIGN)
                     {
                         emit(PROG_OP.DEC_LOCAL, _info.index, _line);
                         emit(PROG_OP.LOAD_LOCAL, _info.index, _line);
                         
-                        exit;
+                        return;
                     }
                 }
             }

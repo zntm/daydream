@@ -21,13 +21,13 @@ function render_menu_background(_id, _colour)
         var _offset = global.menu_background_offset;
         
         var _background = worldgen_get_background(_id);
-        if (_background == undefined) exit;
+        if (_background == undefined) return;
         
         var _background_sprites = global.sprite_asset[$ _background.id];
         if (_background_sprites == undefined)
         {
             show_debug_message($"render_menu_background: Background asset not found: {_background.id}");
-            exit;
+            return;
         }
         
         var _background_blend  = _background.blend;

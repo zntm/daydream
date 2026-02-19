@@ -18,14 +18,14 @@ function UIRadioButton(_x, _y, _text = "") : UIElement(_x, _y, 100, 20) construc
     is_hovered = false;
     
     static update = function() {
-        if (!visible) exit;
+        if (!visible) return;
         
         var _abs_x = get_absolute_x();
         var _abs_y = get_absolute_y();
         
-        var _base_scale = ui_get_base_scale();
-        var _base_scale_x = _base_scale.x;
-        var _base_scale_y = _base_scale.y;
+        var _gui_scale = global.gui_scale;
+        var _base_scale_x = _gui_scale * (global.gui_width / 960);
+        var _base_scale_y = _gui_scale * (global.gui_height / 540);
         
         var _mx = (window_mouse_get_x() / global.window_width) * global.gui_width;
         var _my = (window_mouse_get_y() / global.window_height) * global.gui_height;
@@ -52,9 +52,9 @@ function UIRadioButton(_x, _y, _text = "") : UIElement(_x, _y, 100, 20) construc
         var _abs_x = get_absolute_x();
         var _abs_y = get_absolute_y();
         
-        var _base_scale = ui_get_base_scale();
-        var _base_scale_x = _base_scale.x;
-        var _base_scale_y = _base_scale.y;
+        var _gui_scale = global.gui_scale;
+        var _base_scale_x = _gui_scale * (global.gui_width / 960);
+        var _base_scale_y = _gui_scale * (global.gui_height / 540);
         
         var _circle_x = (_abs_x + circle_size) * _base_scale_x;
         var _circle_y = (_abs_y + height / 2) * _base_scale_y;
@@ -77,7 +77,7 @@ function UIRadioButton(_x, _y, _text = "") : UIElement(_x, _y, 100, 20) construc
             var _prev_valign = draw_get_valign();
             draw_set_align(fa_left, fa_middle);
             
-            render_text(
+            draw_text_cuteify(
                 _text_x, _text_y,
                 text,
                 _base_scale_x * 0.8,

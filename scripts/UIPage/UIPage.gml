@@ -10,7 +10,7 @@ function UIPage(_x, _y, _width, _height, _page_name) : UIElement(_x, _y, _width,
     
     static update = function() {
         // Only update if this page is active
-        if (page_name != active_page) exit;
+        if (page_name != active_page) return;
         
         update_bindings();
         
@@ -22,7 +22,7 @@ function UIPage(_x, _y, _width, _height, _page_name) : UIElement(_x, _y, _width,
     
     static draw = function() {
         // Only draw if this page is active
-        if (page_name != active_page) exit;
+        if (page_name != active_page) return;
         
         draw_content();
         

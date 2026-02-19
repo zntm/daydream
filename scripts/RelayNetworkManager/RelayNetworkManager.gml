@@ -119,7 +119,7 @@ function RelayNetworkManager() constructor
     /// @desc Leave the current session
     static leave_session = function()
     {
-        if (!is_connected) exit;
+        if (!is_connected) return;
         
         // Destroy all remote player instances
         var _peer_ids = struct_get_names(global.relay.peers);
@@ -193,14 +193,14 @@ function RelayNetworkManager() constructor
     /// @param {Real} _type The async_load[? "type"] value
     static handle_async = function(_type)
     {
-        if (global.relay == undefined) exit;
+        if (global.relay == undefined) return;
         global.relay.handle_async(_type);
     }
     
     /// @desc Update step (call from game loop)
     static update = function()
     {
-        if (!is_connected) exit;
+        if (!is_connected) return;
         
         // Update validator (timeout checks, periodic movement validation)
         if (global.validator != undefined)
@@ -310,22 +310,22 @@ function RelayNetworkManager() constructor
         {
             case RELAY_PACKET.VALIDATE_REQUEST:
                 global.validator.on_validation_request(_from_peer_id, _buffer);
-                exit;
+                return;
                 
             case RELAY_PACKET.VALIDATE_VOTE:
                 global.validator.on_vote(_from_peer_id, _buffer);
-                exit;
+                return;
                 
             case RELAY_PACKET.VALIDATE_RESULT:
                 global.validator.on_result(_from_peer_id, _buffer);
-                exit;
+                return;
                 
             case RELAY_PACKET.GAME_PACKET:
                 // Unwrap game packet
                 var _game_data = relay_read_game_packet(_buffer);
                 _handle_game_packet(_from_peer_id, _game_data.packet_type, _game_data.payload);
                 buffer_delete(_game_data.payload);
-                exit;
+                return;
         }
         
         // For other types, try to handle as game packet
@@ -418,7 +418,7 @@ function RelayNetworkManager() constructor
     /// @desc Handle entity update packet
     static _handle_entity_update = function(_from_peer_id, _buffer)
     {
-        if (room != rm_World) exit;
+        if (room != rm_World) return;
         
         // NOTE: relay_send_entity_update writes count=1 (u16) before state 
         var _entity_count = buffer_read(_buffer, buffer_u16);
@@ -489,7 +489,7 @@ function RelayNetworkManager() constructor
     {
         var _data = relay_read_inventory_action(_buffer);
         var _peer = global.relay.peers[$ _from_peer_id];
-        if (_peer == undefined) exit;
+        if (_peer == undefined) return;
         
         // Host: Process inventory action on peer's inventory
         // (Simplified: just perform the move/split/etc. on the host's copy of their inventory)
@@ -499,7 +499,7 @@ function RelayNetworkManager() constructor
         // Actually, since it's just a struct, we can manipulate it here.
         
         var _inv = _peer.inventory;
-        if (_inv == undefined) exit;
+        if (_inv == undefined) return;
         
         switch (_data.action)
         {
@@ -558,7 +558,7 @@ function RelayNetworkManager() constructor
         var _z = buffer_read(_buffer, buffer_s32);
         
         var _peer = global.relay.peers[$ _from_peer_id];
-        if (_peer == undefined) exit;
+        if (_peer == undefined) return;
         
         _peer.open_container = { x: _x, y: _y, z: _z }
         show_debug_message($"[RELAY_MGR] Peer {_from_peer_id} opened container at {_x}, {_y}, {_z}");
@@ -568,7 +568,7 @@ function RelayNetworkManager() constructor
     static _handle_container_close = function(_from_peer_id, _buffer)
     {
         var _peer = global.relay.peers[$ _from_peer_id];
-        if (_peer == undefined) exit;
+        if (_peer == undefined) return;
         
         _peer.open_container = undefined;
     }
@@ -581,7 +581,7 @@ function RelayNetworkManager() constructor
         
         // Get chunk data
         var _chunk = chunk_get(_chunk_x, _chunk_y);
-        if (_chunk == undefined) exit;
+        if (_chunk == undefined) return;
         
         // Serialize and send
         var _tiles = _chunk.get_sparse_tile_data();
@@ -639,7 +639,7 @@ function RelayNetworkManager() constructor
         var _state = relay_read_entity_spawn(_buffer);
         
         // Check if already exists
-        if (_find_entity_by_uuid(_state.uuid) != noone) exit;
+        if (_find_entity_by_uuid(_state.uuid) != noone) return;
         
         // Spawn based on type
         var _obj_index = noone;

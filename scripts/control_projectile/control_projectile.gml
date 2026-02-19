@@ -196,7 +196,7 @@ function projectile_emit_land_particles(_data, _x, _y)
 {
     var _particles = _data.get_particles();
     
-    if (_particles == undefined) exit;
+    if (_particles == undefined) return;
     
     for (var i = array_length(_particles) - 1; i >= 0; --i)
     {

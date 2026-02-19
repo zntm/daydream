@@ -6,22 +6,22 @@ function render_build_preview()
     // Get local player
     var _lp = noone;
     with (obj_Player) { if (is_local) { _lp = id; break; } }
-    if (_lp == noone) exit;
+    if (_lp == noone) return;
     
     // Only show preview if GUI is not covering the world
-    if (obj_Game_Control.is_opened & (IS_OPENED_BOOLEAN.MENU | IS_OPENED_BOOLEAN.CHAT | IS_OPENED_BOOLEAN.INVENTORY)) exit;
+    if (obj_Game_Control.is_opened & (IS_OPENED_BOOLEAN.MENU | IS_OPENED_BOOLEAN.CHAT | IS_OPENED_BOOLEAN.INVENTORY)) return;
     
     var _inventory_selected_hotbar = global.inventory_selected_hotbar;
     var _item = global.inventory.base[_inventory_selected_hotbar];
     
-    if (_item == INVENTORY_EMPTY) exit;
+    if (_item == INVENTORY_EMPTY) return;
     
     var _id = _item.get_id();
     var _data = _item_data[$ _id];
     
     // Some items shouldn't show a tile preview (like tools with only on_use)
     var _on_item_use_length = _data.get_on_item_use_length() ?? 0;
-    if (_on_item_use_length > 0) exit;
+    if (_on_item_use_length > 0) return;
     
     var _z = CHUNK_DEPTH_DEFAULT;
     
@@ -37,7 +37,7 @@ function render_build_preview()
             _z = CHUNK_DEPTH_FOLIAGE_FRONT;
         }
     }
-    else if !(_data.has_type(ITEM_TYPE_BIT.SOLID | ITEM_TYPE_BIT.PLATFORM)) exit;
+    else if !(_data.has_type(ITEM_TYPE_BIT.SOLID | ITEM_TYPE_BIT.PLATFORM)) return;
     
     // Calculate snapped position
     var _tile_x = round(mouse_x / TILE_SIZE);
@@ -55,7 +55,7 @@ function render_build_preview()
     
     // Render the preview
     var _sprite = _sprite_asset[$ _data.get_sprite()];
-    if (_sprite == undefined) exit;
+    if (_sprite == undefined) return;
     
     var _color = _is_valid ? c_white : c_red;
     var _alpha = 0.5;

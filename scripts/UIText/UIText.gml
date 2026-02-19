@@ -20,7 +20,10 @@ function UIText(_x, _y, _text = "") : UIElement(_x, _y, 0, 0) constructor
     
     static draw_content = function()
     {
-        if (text == "") exit;
+        if (text == "")
+        {
+             return;
+        }
         
         var _base_scale = ui_get_base_scale();
         var _abs_x = get_absolute_x();
@@ -33,7 +36,7 @@ function UIText(_x, _y, _text = "") : UIElement(_x, _y, 0, 0) constructor
         var _prev_valign = draw_get_valign();
         draw_set_align(halign, valign);
         
-        render_text(
+        draw_text_cuteify(
             _abs_x * _base_scale.x,
             _abs_y * _base_scale.y,
             text,

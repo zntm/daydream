@@ -38,7 +38,7 @@ function entity_update_collision(_body)
         {
             _body.collision.in_liquid = true;
             _body.collision.liquid_type = _tile_at.get_id();
-            exit;
+            return;
         }
     }
     

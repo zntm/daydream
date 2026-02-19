@@ -79,7 +79,7 @@ function UIBar(_x, _y, _width, _height, _min, _max, _value) : UIElement(_x, _y, 
     }
     
     static update = function() {
-        if (!visible) exit;
+        if (!visible) return;
         
         // Smooth animation
         if (smooth) {
@@ -100,7 +100,7 @@ function UIBar(_x, _y, _width, _height, _min, _max, _value) : UIElement(_x, _y, 
     /// @param {Real} _scale Uniform pixel scale
     static draw_nine_slice_bar = function(_config, _dx, _dy, _target_width, _target_height, _scale) {
         var _sprite = _config.asset;
-        if (!sprite_exists(_sprite)) exit;
+        if (!sprite_exists(_sprite)) return;
         
         var _sw = sprite_get_width(_sprite);
         var _sh = sprite_get_height(_sprite);
@@ -116,7 +116,7 @@ function UIBar(_x, _y, _width, _height, _min, _max, _value) : UIElement(_x, _y, 
         // Avoid negative middle widths
         if (_mid_target_w < 0) {
             draw_sprite_stretched(_sprite, 0, _dx, _dy, _target_width, _target_height);
-            exit;
+            return;
         }
         
         // Draw left edge
