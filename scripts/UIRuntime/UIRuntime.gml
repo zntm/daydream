@@ -983,7 +983,7 @@ function ui_calc_binary_op(_op, _left, _right)
         var _len = max(array_length(_left), array_length(_right));
         var _result = [];
         
-        for (var i = _len - 1; i >= 0; --i)
+        for (var i = 0; i < _len; ++i)
         {
             var _l = (i < array_length(_left)) ? _left[i] : 0;
             var _r = (i < array_length(_right)) ? _right[i] : 0;
@@ -998,8 +998,9 @@ function ui_calc_binary_op(_op, _left, _right)
     if (is_array(_left))
     {
         var _result = [];
+        var _length = array_length(_left);
         
-        for (var i = array_length(_left) - 1; i >= 0; --i)
+        for (var i = 0; i < _length; ++i)
         {
             array_push(_result, ui_calc_binary_op(_op, _left[i], _right));
         }
@@ -1010,14 +1011,16 @@ function ui_calc_binary_op(_op, _left, _right)
     if (is_array(_right))
     {
         var _result = [];
+        var _length = array_length(_right);
         
-        for (var i = array_length(_right) - 1; i >= 0; --i)
+        for (var i = 0; i < _length; ++i)
         {
             array_push(_result, ui_calc_binary_op(_op, _left, _right[i]));
         }
         
         return _result;
     }
+
     
     /* Extract numeric values (handle percentage structs) */
     var _lv = _left;
@@ -1146,14 +1149,13 @@ function ui_resolve_percentage(_value, _reference)
 function ui_get_base_scale()
 {
     /* Standard target is 960x540 */
+    /* gui_width/gui_height already incorporate gui_scale, so no extra multiply needed */
     var _w = variable_global_exists("gui_width") ? global.gui_width : 960;
     var _h = variable_global_exists("gui_height") ? global.gui_height : 540;
-    var _gui_scale = variable_global_exists("gui_scale") ? global.gui_scale : 1.0;
     
-    /* Scale is a combination of resolution ratio and user setting */
     return {
-        x: (_w / 960) * _gui_scale,
-        y: (_h / 540) * _gui_scale
+        x: _w / 960,
+        y: _h / 540
     }
 }
 
