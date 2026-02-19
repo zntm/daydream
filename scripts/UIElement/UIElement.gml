@@ -53,6 +53,7 @@ function UIElement(_x, _y, _width, _height) constructor
     padding_bottom = 0;
     padding_left = 0;
     grid_columns = 10;  /* Default columns for grid layout */
+    auto_height = false; /* When true, height is recalculated from children during layout refresh */
     
     /* Visual properties */
     background_color = undefined;

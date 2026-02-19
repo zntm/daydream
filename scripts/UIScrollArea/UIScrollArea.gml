@@ -186,14 +186,14 @@ function UIScrollArea(_x, _y, _width, _height) : UIElement(_x, _y, _width, _heig
         /* Draw content */
         draw_content();
         
-        /* Set scissor clipping to area bounds (vertical only to prevent narrow-scissor issues) */
-        gpu_set_scissor(0, _y1, display_get_gui_width(), _y2 - _y1);
-        
         /* Draw children with scroll offset applied */
         var _child_count = array_length(children);
         
         for (var i = 0; i < _child_count; ++i) {
             var _child = children[i];
+            
+            /* Re-apply scissor clipping before each child (in case a previous child reset it) */
+            gpu_set_scissor(0, _y1, display_get_gui_width(), _y2 - _y1);
             
             /* Temporarily offset child for scrolling */
             var _saved_y = _child.y;

@@ -397,12 +397,21 @@ function ui_instantiate_element(_node, _link, _variables)
     
     /* Apply properties */
     var _prop_count = array_length(_node.properties);
+    var _has_explicit_size = false;
     
     for (var i = 0; i < _prop_count; ++i)
     {
         var _prop = _node.properties[i];
         
+        if (_prop.key == "size") _has_explicit_size = true;
+        
         ui_apply_property(_element, _prop, _link, _variables);
+    }
+    
+    /* Mark area elements without explicit size as auto-height */
+    if (_node.element_type == "area" && !_has_explicit_size)
+    {
+        _element.auto_height = true;
     }
     
     /* Instantiate children */
