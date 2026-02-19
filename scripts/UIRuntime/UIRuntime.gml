@@ -367,6 +367,18 @@ function ui_instantiate_element(_node, _link, _variables)
         case "radio_button":
             _element = new UIRadioButton(0, 0, "");
             break;
+        case "line":
+            _element = new UILine(0, 0);
+            break;
+        case "line_path":
+            _element = new UILinePath(0, 0);
+            break;
+        case "dropdown":
+            _element = new UIDropdown(0, 0, 100, 16);
+            break;
+        case "scroll_area":
+            _element = new UIScrollArea(0, 0, 100, 100);
+            break;
         default:
             show_debug_message($"[UI Runtime] Unknown element type: {_node.element_type}");
             
@@ -619,6 +631,55 @@ function ui_apply_property(_element, _prop, _link, _variables)
             else
             {
                 _element.colour = _value;
+            }
+            break;
+        
+        /* Line element properties */
+        case "start":
+            if (struct_exists(_element, "set_start"))
+            {
+                _element.set_start(_value);
+            }
+            break;
+        
+        case "end":
+            if (struct_exists(_element, "set_end"))
+            {
+                _element.set_end(_value);
+            }
+            break;
+        
+        case "points":
+            if (struct_exists(_element, "set_points"))
+            {
+                _element.set_points(_value);
+            }
+            break;
+        
+        case "thickness":
+            _element.thickness = _value;
+            break;
+        
+        /* Area fade property */
+        case "fade":
+            if (struct_exists(_element, "set_fade"))
+            {
+                _element.set_fade(_value);
+            }
+            break;
+        
+        /* Dropdown properties */
+        case "options":
+            if (struct_exists(_element, "set_options"))
+            {
+                _element.set_options(_value);
+            }
+            break;
+        
+        case "selected":
+            if (struct_exists(_element, "set_selected"))
+            {
+                _element.set_selected(_value);
             }
             break;
         

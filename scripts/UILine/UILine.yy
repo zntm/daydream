@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"UILine",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"UILine",
+  "parent":{
+    "name":"Elements",
+    "path":"folders/Scripts/Proglang/UI/Elements.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
