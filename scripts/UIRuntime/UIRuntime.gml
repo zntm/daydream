@@ -514,8 +514,8 @@ function ui_apply_property(_element, _prop, _link, _variables)
                 }
                 
                 /* Resolve to pixels for the offset */
-                var _ref_w = 960;
-                var _ref_h = 540;
+                var _ref_w = (global.gui_root != undefined) ? global.gui_root.width : 960;
+                var _ref_h = (global.gui_root != undefined) ? global.gui_root.height : 540;
                 var _rx = ui_resolve_percentage(_vx, _ref_w);
                 var _ry = ui_resolve_percentage(_vy, _ref_h);
                 
@@ -1148,14 +1148,16 @@ function ui_resolve_percentage(_value, _reference)
 /// @returns {Struct} {x: real, y: real}
 function ui_get_base_scale()
 {
-    /* Standard target is 960x540 */
-    /* gui_width/gui_height already incorporate gui_scale, so no extra multiply needed */
-    var _w = variable_global_exists("gui_width") ? global.gui_width : 960;
-    var _h = variable_global_exists("gui_height") ? global.gui_height : 540;
+    /* Use root element dimensions for logical units */
+    var _lw = (global.gui_root != undefined) ? global.gui_root.width : 960;
+    var _lh = (global.gui_root != undefined) ? global.gui_root.height : 540;
+    
+    var _w = variable_global_exists("gui_width") ? global.gui_width : _lw;
+    var _h = variable_global_exists("gui_height") ? global.gui_height : _lh;
     
     return {
-        x: _w / 960,
-        y: _h / 540
+        x: _w / _lw,
+        y: _h / _lh
     }
 }
 

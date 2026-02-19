@@ -244,11 +244,9 @@ global.gui_deferred_text = [];
 
 // Initialize the new declarative UI system
 var _design_w = 960;
-var _design_h = 540;
 
-var _gui_scale_factor = global.gui_width / _design_w;
-var _logical_width = _design_w;
-var _logical_height = global.gui_height / _gui_scale_factor;
+var _logical_width = _design_w / global.gui_scale;
+var _logical_height = global.gui_height / (global.gui_width / _logical_width);
 
 global.gui_root = new UIElement(0, 0, _logical_width, _logical_height);
 
