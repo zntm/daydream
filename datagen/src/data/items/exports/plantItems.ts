@@ -245,4 +245,25 @@ export default [
                 }),
             ]),
     ),
+    new DatagenReturnData(
+        "cobweb.json",
+        new TileItem(
+            ItemType.Untouchable,
+            "phantasia:item/cobweb",
+            "#phantasia:item/generic/inventory_default",
+        )
+            .setTileOnStay([new ItemScript("@phantasia:tile/cobweb/stay")])
+            .setTileSFX("#phantasia:tile/sfx/foliage")
+            .setTileAudioProperties(new TileItemAudioProperties(0.5, 0.3))
+            .setTileHarvest(
+                new TileItemHarvest(
+                    0,
+                    0,
+                    new ItemParticle(
+                        "#phantasia:tile/particle_colour/plant",
+                        "#phantasia:tile/generic/harvest_particle_frequency",
+                    ),
+                ),
+            ),
+    ),
 ];

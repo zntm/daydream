@@ -156,6 +156,7 @@ export class TileItem extends Item {
             audio_properties?: TileItemAudioProperties;
             on_use?: ItemScript[];
             on_random_tick?: ItemScript[];
+            on_stay?: ItemScript[];
             light?: string;
             animation_type?: string;
         };
@@ -248,6 +249,15 @@ export class TileItem extends Item {
         this.item.tile ??= {};
         this.item.tile.on_random_tick ??= [];
         this.item.tile.on_random_tick.push(...functions);
+
+        return this;
+    }
+
+    setTileOnStay(functions: ItemScript[]) {
+        this.item ??= {};
+        this.item.tile ??= {};
+        this.item.tile.on_stay ??= [];
+        this.item.tile.on_stay.push(...functions);
 
         return this;
     }
