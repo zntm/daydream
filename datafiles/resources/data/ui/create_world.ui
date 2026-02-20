@@ -1,13 +1,13 @@
 // create world menu layout
 
-var _panel_width = 200
-var _panel_height = 260
-var _slider_width = 180
-var _textbox_width = 160
-var _textbox_height = 16
-var _button_height = 16
-var _section_spacing = 4
-var _inner_spacing = 2
+var PANEL_WIDTH = 200
+var PANEL_HEIGHT = 260
+var SLIDER_WIDTH = 180
+var TEXTBOX_WIDTH = 160
+var TEXTBOX_HEIGHT = 16
+var BUTTON_HEIGHT = 16
+var SECTION_SPACING = 4
+var INNER_SPACING = 2
 
 @area(create_world) {
     size = (440, 340)
@@ -16,7 +16,7 @@ var _inner_spacing = 2
 
     @area(left_panel) {
         position = ORIGIN_TOP_LEFT + (8, 32)
-        size = (_panel_width, _panel_height)
+        size = (PANEL_WIDTH, PANEL_HEIGHT)
 
         @area(preview) {
             position = ORIGIN_TOP_CENTER
@@ -26,12 +26,12 @@ var _inner_spacing = 2
 
         @area(world_info) {
             position = ORIGIN_TOP_LEFT + (0, 88)
-            size = (_panel_width, 160)
+            size = (PANEL_WIDTH, 160)
             layout = LAYOUT_VERTICAL
             spacing = 8
 
             @area(name_label_row) {
-                size = (_panel_width, 14)
+                size = (PANEL_WIDTH, 14)
                 @text(label_name) {
                     text = "name"
                     colour = #aaaaaa
@@ -40,18 +40,18 @@ var _inner_spacing = 2
             }
 
             @area(name_row) {
-                size = (_panel_width, _textbox_height)
+                size = (PANEL_WIDTH, TEXTBOX_HEIGHT)
                 layout = LAYOUT_HORIZONTAL
                 spacing = 2
 
                 @textbox(world_name) {
-                    size = (168, _textbox_height)
+                    size = (168, TEXTBOX_HEIGHT)
                     placeholder = "enter name..."
                     text_length = 40
                 }
 
                 @button(btn_randomize_name) {
-                    size = (24, _textbox_height)
+                    size = (24, TEXTBOX_HEIGHT)
                     icon = "spr_Icon_Random"
                     icon_xscale = 1
                     icon_yscale = 1
@@ -59,7 +59,7 @@ var _inner_spacing = 2
             }
 
             @area(seed_label_row) {
-                size = (_panel_width, 14)
+                size = (PANEL_WIDTH, 14)
                 @text(label_seed) {
                     text = "seed"
                     colour = #aaaaaa
@@ -68,17 +68,17 @@ var _inner_spacing = 2
             }
 
             @area(seed_row) {
-                size = (_panel_width, _textbox_height)
+                size = (PANEL_WIDTH, TEXTBOX_HEIGHT)
                 layout = LAYOUT_HORIZONTAL
                 spacing = 2
 
                 @textbox(world_seed) {
-                    size = (168, _textbox_height)
+                    size = (168, TEXTBOX_HEIGHT)
                     placeholder = "enter seed..."
                 }
 
                 @button(btn_randomize_seed) {
-                    size = (24, _textbox_height)
+                    size = (24, TEXTBOX_HEIGHT)
                     icon = "spr_Icon_Random"
                     icon_xscale = 1
                     icon_yscale = 1
@@ -86,7 +86,7 @@ var _inner_spacing = 2
             }
 
             @area(difficulty_label_row) {
-                size = (_panel_width, 14)
+                size = (PANEL_WIDTH, 14)
                 @text(label_difficulty) {
                     text = "difficulty"
                     colour = #aaaaaa
@@ -95,7 +95,7 @@ var _inner_spacing = 2
             }
 
             @slider(difficulty) {
-                size = (_slider_width, 16)
+                size = (SLIDER_WIDTH, 16)
                 min_value = 0
                 max_value = 4
                 value = 1
@@ -114,23 +114,23 @@ var _inner_spacing = 2
 
     @area(right_panel) {
         position = ORIGIN_TOP_RIGHT + (-8, 32)
-        size = (_panel_width, _panel_height)
+        size = (PANEL_WIDTH, PANEL_HEIGHT)
 
         @scroll_area(options_scroll) {
             position = ORIGIN_TOP_LEFT
-            size = (_panel_width, _panel_height)
+            size = (PANEL_WIDTH, PANEL_HEIGHT)
             layout = LAYOUT_VERTICAL
-            spacing = _section_spacing
+            spacing = SECTION_SPACING
 
             @button(btn_death_penalty) {
                 text = "death penalty"
-                size = (_slider_width, _button_height)
+                size = (SLIDER_WIDTH, BUTTON_HEIGHT)
             }
 
             @area(death_penalty_content) {
-                size = (_slider_width, 60)
+                size = (SLIDER_WIDTH, 60)
                 layout = LAYOUT_VERTICAL
-                spacing = _inner_spacing
+                spacing = INNER_SPACING
                 visible = false
 
                 @text(label_item_drop) {
@@ -140,7 +140,7 @@ var _inner_spacing = 2
                 }
 
                 @slider(item_drop_pct) {
-                    size = (_slider_width, 16)
+                    size = (SLIDER_WIDTH, 16)
                     min_value = 0
                     max_value = 100
                     value = 0
@@ -154,7 +154,7 @@ var _inner_spacing = 2
                 }
 
                 @slider(item_durability_pct) {
-                    size = (_slider_width, 16)
+                    size = (SLIDER_WIDTH, 16)
                     min_value = 0
                     max_value = 100
                     value = 0
@@ -164,24 +164,24 @@ var _inner_spacing = 2
 
             @button(btn_advanced) {
                 text = "advanced options"
-                size = (_slider_width, _button_height)
+                size = (SLIDER_WIDTH, BUTTON_HEIGHT)
             }
 
             @area(advanced_content) {
-                size = (_slider_width, 400)
+                size = (SLIDER_WIDTH, 400)
                 layout = LAYOUT_VERTICAL
-                spacing = _section_spacing
+                spacing = SECTION_SPACING
                 visible = false
 
                 @button(btn_backup) {
                     text = "backup"
-                    size = (_slider_width, _button_height)
+                    size = (SLIDER_WIDTH, BUTTON_HEIGHT)
                 }
 
                 @area(backup_content) {
-                    size = (_slider_width, 60)
+                    size = (SLIDER_WIDTH, 60)
                     layout = LAYOUT_VERTICAL
-                    spacing = _inner_spacing
+                    spacing = INNER_SPACING
                     visible = false
 
                     @text(label_backup_interval) {
@@ -191,7 +191,7 @@ var _inner_spacing = 2
                     }
 
                     @slider(backup_interval) {
-                        size = (_slider_width, 16)
+                        size = (SLIDER_WIDTH, 16)
                         min_value = 0
                         max_value = 60
                         value = 0
@@ -205,7 +205,7 @@ var _inner_spacing = 2
                     }
 
                     @slider(backup_slots) {
-                        size = (_slider_width, 16)
+                        size = (SLIDER_WIDTH, 16)
                         min_value = 0
                         max_value = 10
                         value = 0
@@ -220,20 +220,20 @@ var _inner_spacing = 2
                 }
 
                 @dropdown(permissions) {
-                    size = (_slider_width, 16)
+                    size = (SLIDER_WIDTH, 16)
                     choices = ("none", "min", "max")
                     choice_index = 0
                 }
 
                 @button(btn_game_rules) {
                     text = "game rules"
-                    size = (_slider_width, _button_height)
+                    size = (SLIDER_WIDTH, BUTTON_HEIGHT)
                 }
 
                 @area(game_rules_content) {
-                    size = (_slider_width, 300)
+                    size = (SLIDER_WIDTH, 300)
                     layout = LAYOUT_VERTICAL
-                    spacing = _inner_spacing
+                    spacing = INNER_SPACING
                     visible = false
 
                     @text(label_advance_time) {
@@ -243,7 +243,7 @@ var _inner_spacing = 2
                     }
 
                     @slider(advance_time) {
-                        size = (_slider_width, 16)
+                        size = (SLIDER_WIDTH, 16)
                         min_value = 0
                         max_value = 32
                         value = 1
@@ -258,30 +258,30 @@ var _inner_spacing = 2
 
                     @radio_button(friendly_fire) {
                         text = "enabled"
-                        size = (_slider_width, 16)
+                        size = (SLIDER_WIDTH, 16)
                         selected = false
                     }
 
                     @button(btn_item_drops) {
                         text = "item drops"
-                        size = (_slider_width, _button_height)
+                        size = (SLIDER_WIDTH, BUTTON_HEIGHT)
                     }
 
                     @area(item_drops_content) {
-                        size = (_slider_width, 40)
+                        size = (SLIDER_WIDTH, 40)
                         layout = LAYOUT_VERTICAL
-                        spacing = _inner_spacing
+                        spacing = INNER_SPACING
                         visible = false
 
                         @radio_button(entity_drops) {
                             text = "entity drops"
-                            size = (_slider_width, 16)
+                            size = (SLIDER_WIDTH, 16)
                             selected = false
                         }
 
                         @radio_button(tile_drops) {
                             text = "tile drops"
-                            size = (_slider_width, 16)
+                            size = (SLIDER_WIDTH, 16)
                             selected = false
                         }
                     }
@@ -293,7 +293,7 @@ var _inner_spacing = 2
                     }
 
                     @slider(natural_regen) {
-                        size = (_slider_width, 16)
+                        size = (SLIDER_WIDTH, 16)
                         min_value = 0
                         max_value = 4
                         value = 1
