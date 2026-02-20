@@ -1,64 +1,82 @@
-/// @desc UI Token Types for Declarative UI Language
-enum UI_TOKEN {
-    // Element declaration
-    AT,              // @
-    LPAREN, RPAREN,  // ( )
-    LBRACE, RBRACE,  // { }
-    LBRACKET, RBRACKET, // [ ]
+/* ui token types for declarative ui language */
+enum UI_TOKEN 
+{
+    /* element declaration */
+    AT,              /* @ */
+    LPAREN, RPAREN,  /* ( ) */
+    LBRACE, RBRACE,  /* { } */
+    LBRACKET, RBRACKET, /* [ ] */
     
-    // Values
+    
+    /* values */
     NUMBER,
     STRING,
     TRUE, FALSE,
     UNDEFINED,
     IDENTIFIER,
     
-    // Operators
-    EQUALS,    // =
-    COMMA,     // ,
-    STAR,      // * (binding prefix OR multiplication depending on context)
-    DOLLAR,    // $ (loca key prefix)
-    HASH,      // # (color prefix)
     
-    // Math operators
-    PLUS,      // +
-    MINUS,     // -
-    SLASH,     // /
-    PERCENT,   // % (modulo, standalone)
-    POWER,     // **
+    /* operators */
+    EQUALS,    /* = */
+    COMMA,     /* , */
+    STAR,      /* * (binding prefix OR multiplication depending on context) */
+    DOLLAR,    /* $ (loca key prefix) */
+    HASH,      /* # (color prefix) */
     
-    // Keywords
+    
+    /* math operators */
+    PLUS,      /* + */
+    MINUS,     /* - */
+    SLASH,     /* / */
+    PERCENT,   /* % (modulo, standalone) */
+    POWER,     /* ** */
+    
+    
+    /* keywords */
     VAR,
     EXPORT,
-    REPEAT,      // repeat(count, var)
+    REPEAT,      /* repeat(count, var) */
     
-    // Built-in functions
-    FLOOR,       // floor(expr)
     
-    // Layout enums (treated as identifiers but reserved)
+    /* built-in functions */
+    FLOOR,       /* floor(expr) */
+    
+    
+    /* layout enums (treated as identifiers but reserved) */
     LAYOUT_VERTICAL,
     LAYOUT_HORIZONTAL,
     LAYOUT_GRID,
     LAYOUT_NONE,
     
-    // Special
+    
+    /* special */
     EOF,
     ERROR
 }
 
-/// @desc Lexer for UI Language - tokenizes .ui source into tokens
-/// @param {String} _source The source code to tokenize
-function UILexer(_source) constructor {
+
+/* lexer for ui language - tokenizes .ui source into tokens */
+/* @param {string} _source the source code to tokenize */
+function UILexer(_source) constructor 
+{
     source = _source;
+    
     length = string_length(_source);
+    
     start = 1;
+    
     current = 1;
+    
     line = 1;
+    
     tokens = [];
+    
     had_error = false;
+    
     error = "";
     
-    /// @desc Keyword lookup table
+    
+    /* keyword lookup table */
     static keywords = {
         "var": UI_TOKEN.VAR,
         "export": UI_TOKEN.EXPORT,
@@ -71,63 +89,94 @@ function UILexer(_source) constructor {
         "LAYOUT_HORIZONTAL": UI_TOKEN.LAYOUT_HORIZONTAL,
         "LAYOUT_GRID": UI_TOKEN.LAYOUT_GRID,
         "LAYOUT_NONE": UI_TOKEN.LAYOUT_NONE
-    }
+    };
     
-    /// @desc Tokenize the source code
-    /// @returns {Array} Array of token structs
-    static tokenize = function() {
+    
+    /* tokenize the source code */
+    /* @returns {array} array of token structs */
+    static tokenize = function() 
+    {
         tokens = [];
         start = 1;
         current = 1;
         line = 1;
         had_error = false;
         
-        while (!is_at_end()) {
+        
+        while !(is_at_end()) 
+        {
             start = current;
+            
             scan_token();
         }
+        
         
         array_push(tokens, { type: UI_TOKEN.EOF, lexeme: "", literal: undefined, line: line });
         
         return tokens;
     }
     
-    static is_at_end = function() {
-        return current > length;
+    
+    static is_at_end = function() 
+    {
+        return (current > length);
     }
     
-    static advance = function() {
+    
+    static advance = function() 
+    {
         var _c = string_char_at(source, current);
-        current++;
+        
+        pre ++current;
+        
         return _c;
     }
     
-    static peek = function() {
+    
+    static peek = function() 
+    {
         if (is_at_end()) return "";
+        
         return string_char_at(source, current);
     }
     
-    static peek_next = function() {
+    
+    static peek_next = function() 
+    {
         if (current + 1 > length) return "";
+        
         return string_char_at(source, current + 1);
     }
     
-    static match = function(_expected) {
+    
+    static match = function(_expected) 
+    {
         if (is_at_end()) return false;
+        
         if (string_char_at(source, current) != _expected) return false;
-        current++;
+        
+        
+        pre ++current;
+        
         return true;
     }
     
-    static add_token = function(_type, _literal = undefined) {
+    
+    static add_token = function(_type, _literal = undefined) 
+    {
         var _text = (current >= start) ? string_copy(source, start, current - start) : "";
+        
         array_push(tokens, { type: _type, lexeme: _text, literal: _literal, line: line });
     }
     
-    static scan_token = function() {
+    
+    static scan_token = function() 
+    {
         var _c = advance();
         
-        switch (_c) {
+        
+        switch (_c) 
+        {
             case "@":
                 add_token(UI_TOKEN.AT);
                 break;
@@ -165,9 +214,12 @@ function UILexer(_source) constructor {
                 break;
             
             case "*":
-                if (match("*")) {
+                if (match("*")) 
+                {
                     add_token(UI_TOKEN.POWER);
-                } else {
+                } 
+                else 
+                {
                     add_token(UI_TOKEN.STAR);
                 }
                 break;
@@ -181,9 +233,12 @@ function UILexer(_source) constructor {
                 break;
             
             case "-":
-                if (is_digit(peek())) {
+                if (is_digit(peek())) 
+                {
                     scan_number();
-                } else {
+                } 
+                else 
+                {
                     add_token(UI_TOKEN.MINUS);
                 }
                 break;
@@ -197,33 +252,47 @@ function UILexer(_source) constructor {
                 break;
             
             case "/":
-                if (match("/")) {
-                    // Line comment - skip to end of line
-                    while (peek() != "\n" && !is_at_end()) {
+                if (match("/")) 
+                {
+                    /* line comment - skip to end of line */
+                    while (peek() != "\n" && !(is_at_end())) 
+                    {
                         advance();
                     }
-                } else if (match("*")) {
-                    // Block comment
-                    while (!is_at_end()) {
-                        if (peek() == "*" && peek_next() == "/") {
-                            advance(); // consume *
-                            advance(); // consume /
+                } 
+                else if (match("*")) 
+                {
+                    /* block comment */
+                    while !(is_at_end()) 
+                    {
+                        if (peek() == "*" && peek_next() == "/") 
+                        {
+                            advance(); /* consume * */
+                            advance(); /* consume / */
+                            
                             break;
                         }
-                        if (peek() == "\n") line++;
+                        
+                        
+                        if (peek() == "\n") pre ++line;
+                        
                         advance();
                     }
-                } else {
+                } 
+                else 
+                {
                     add_token(UI_TOKEN.SLASH);
                 }
                 break;
             
-            case " ": case "\r": case "\t":
-                // Ignore whitespace
+            case " ": 
+            case "\r": 
+            case "\t":
+                /* ignore whitespace */
                 break;
             
             case "\n":
-                line++;
+                pre ++line;
                 break;
             
             case "\"":
@@ -231,47 +300,68 @@ function UILexer(_source) constructor {
                 break;
             
             default:
-                if (is_digit(_c)) {
+                if (is_digit(_c)) 
+                {
                     scan_number();
-                } else if (is_alpha(_c)) {
+                } 
+                else if (is_alpha(_c)) 
+                {
                     scan_identifier();
-                } else {
+                } 
+                else 
+                {
                     had_error = true;
-                    error = $"Unexpected character '{_c}' at line {line}";
+                    
+                    error = $"unexpected character '{_c}' at line {line}";
                 }
                 break;
         }
     }
     
-    static is_digit = function(_c) {
+    
+    static is_digit = function(_c) 
+    {
         return (_c >= "0" && _c <= "9");
     }
     
-    static is_alpha = function(_c) {
-        return (_c >= "a" && _c <= "z") ||
-               (_c >= "A" && _c <= "Z") ||
-               _c == "_";
+    
+    static is_alpha = function(_c) 
+    {
+        return (_c >= "a" && _c <= "z") || (_c >= "A" && _c <= "Z") || _c == "_";
     }
     
-    static is_alphanumeric = function(_c) {
+    
+    static is_alphanumeric = function(_c) 
+    {
         return is_alpha(_c) || is_digit(_c);
     }
     
-    static is_hex = function(_c) {
-        return is_digit(_c) ||
-               (_c >= "a" && _c <= "f") ||
-               (_c >= "A" && _c <= "F");
+    
+    static is_hex = function(_c) 
+    {
+        return is_digit(_c) || (_c >= "a" && _c <= "f") || (_c >= "A" && _c <= "F");
     }
     
-    static scan_string = function() {
+    
+    static scan_string = function() 
+    {
         var _value = "";
         
-        while (peek() != "\"" && !is_at_end()) {
-            if (peek() == "\n") line++;
-            if (peek() == "\\") {
+        
+        while (peek() != "\"" && !(is_at_end())) 
+        {
+            if (peek() == "\n") pre ++line;
+            
+            
+            if (peek() == "\\") 
+            {
                 advance();
+                
                 var _escaped = advance();
-                switch (_escaped) {
+                
+                
+                switch (_escaped) 
+                {
                     case "n": _value += "\n"; break;
                     case "t": _value += "\t"; break;
                     case "r": _value += "\r"; break;
@@ -279,93 +369,142 @@ function UILexer(_source) constructor {
                     case "\\": _value += "\\"; break;
                     default: _value += _escaped; break;
                 }
-            } else {
+            } 
+            else 
+            {
                 _value += advance();
             }
         }
         
-        if (is_at_end()) {
+        
+        if (is_at_end()) 
+        {
             had_error = true;
-            error = $"Unterminated string at line {line}";
-            return;
+            
+            error = $"unterminated string at line {line}";
+            
+            exit;
         }
         
-        advance(); // Closing "
+        
+        advance(); /* closing " */
+        
         add_token(UI_TOKEN.STRING, _value);
     }
     
-    static scan_number = function() {
-        // Support underscores in numbers (e.g., 10_000)
+    
+    static scan_number = function() 
+    {
+        /* support underscores in numbers (e.g., 10_000) */
         while (is_digit(peek()) || peek() == "_") advance();
         
-        // Look for decimal
-        if (peek() == "." && is_digit(peek_next())) {
-            advance(); // consume .
+        
+        /* look for decimal */
+        if (peek() == "." && is_digit(peek_next())) 
+        {
+            advance(); /* consume . */
+            
             while (is_digit(peek()) || peek() == "_") advance();
         }
         
-        // Remove underscores before parsing
+        
+        /* remove underscores before parsing */
         var _text = string_copy(source, start, current - start);
+        
         _text = string_replace_all(_text, "_", "");
+        
         var _value = real(_text);
         
-        // Check for percentage suffix: 50% (no space before %)
-        if (peek() == "%") {
-            advance(); // consume %
+        
+        /* check for percentage suffix: 50% (no space before %) */
+        if (peek() == "%") 
+        {
+            advance(); /* consume % */
+            
             add_token(UI_TOKEN.NUMBER, { value: _value, is_percent: true });
-        } else {
+        } 
+        else 
+        {
             add_token(UI_TOKEN.NUMBER, _value);
         }
     }
     
-    static scan_color = function() {
-        // Already consumed #
+    
+    static scan_color = function() 
+    {
+        /* already consumed # */
         var _hex = "";
         
-        while (is_hex(peek())) {
+        
+        while (is_hex(peek())) 
+        {
             _hex += advance();
         }
         
+        
         var _len = string_length(_hex);
         
-        if (_len == 6 || _len == 8) {
-            // Parse RGB or RGBA
+        
+        if (_len == 6 || _len == 8) 
+        {
+            /* parse rgb or rgba */
             var _r = hex_parse_byte(string_copy(_hex, 1, 2));
             var _g = hex_parse_byte(string_copy(_hex, 3, 2));
             var _b = hex_parse_byte(string_copy(_hex, 5, 2));
+            
             var _a = (_len == 8) ? hex_parse_byte(string_copy(_hex, 7, 2)) / 255 : 1;
             
+            
             var _color = make_colour_rgb(_r, _g, _b);
+            
             add_token(UI_TOKEN.NUMBER, { color: _color, alpha: _a, is_color: true });
-        } else if (_len == 3) {
-            // Short form #RGB
+        } 
+        else if (_len == 3) 
+        {
+            /* short form #RGB */
             var _r = hex_parse_byte(string_repeat(string_char_at(_hex, 1), 2));
             var _g = hex_parse_byte(string_repeat(string_char_at(_hex, 2), 2));
             var _b = hex_parse_byte(string_repeat(string_char_at(_hex, 3), 2));
             
+            
             var _color = make_colour_rgb(_r, _g, _b);
+            
             add_token(UI_TOKEN.NUMBER, { color: _color, alpha: 1, is_color: true });
-        } else {
+        } 
+        else 
+        {
             had_error = true;
-            error = $"Invalid color format '#{_hex}' at line {line}. Expected #RGB, #RRGGBB, or #RRGGBBAA";
+            
+            error = $"invalid color format '#{_hex}' at line {line}. expected #RGB, #RRGGBB, or #RRGGBBAA";
         }
     }
     
-    static hex_parse_byte = function(_hex) {
+    
+    static hex_parse_byte = function(_hex) 
+    {
         var _result = 0;
         var _len = string_length(_hex);
         
-        for (var i = 1; i <= _len; i++) {
+        
+        for (var i = 1; i <= _len; pre ++i) 
+        {
             var _c = string_char_at(_hex, i);
             var _val = 0;
             
-            if (_c >= "0" && _c <= "9") {
+            
+            if (_c >= "0" && _c <= "9") 
+            {
                 _val = ord(_c) - ord("0");
-            } else if (_c >= "a" && _c <= "f") {
+            } 
+            else if (_c >= "a" && _c <= "f") 
+            {
                 _val = ord(_c) - ord("a") + 10;
-            } else if (_c >= "A" && _c <= "F") {
+            } 
+            else if (_c >= "A" && _c <= "F") 
+            {
                 _val = ord(_c) - ord("A") + 10;
             }
+            
             
             _result = _result * 16 + _val;
         }
@@ -373,15 +512,21 @@ function UILexer(_source) constructor {
         return _result;
     }
     
-    static scan_identifier = function() {
+    
+    static scan_identifier = function() 
+    {
         while (is_alphanumeric(peek())) advance();
+        
         
         var _text = string_copy(source, start, current - start);
         var _type = keywords[$ _text];
         
-        if (_type == undefined) {
+        
+        if (_type == undefined) 
+        {
             _type = UI_TOKEN.IDENTIFIER;
         }
+        
         
         add_token(_type, _text);
     }
