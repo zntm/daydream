@@ -14,7 +14,7 @@ if (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.GENERATING_WORLD)
     var _a = ceil(_camera_width  / (2 * CHUNK_SIZE_DIMENSION)) + 1;
     var _b = ceil(_camera_height / (2 * CHUNK_SIZE_DIMENSION)) + 1;
     
-    var _world_data = global.world_data[$ global.world_save_data.dimension];
+    var _world_data = global.world_data[$ global.current_world.dimension];
     var _world_height = _world_data.get_world_height();
     
     var _refresh = false;
@@ -84,14 +84,14 @@ if (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.GENERATING_WORLD)
 
 if (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.EXIT)
 {
-    var _world_save_data = global.world_save_data;
+    var _current_world = global.current_world;
     
     if (chunk_saved_count >= chunk_saved_count_max)
     {
         audio_stop_all();
         
 
-        var _player_save_data = global.player_save_data;
+        var _current_player = global.current_player;
         
         var _lp = noone;
         with (obj_Player) { if (is_local) { _lp = id; break; } }
@@ -99,26 +99,32 @@ if (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.EXIT)
         // If player doesn't exist (e.g. error or already destroyed), try to rescue or skip
         if (_lp == noone)
         {
-             // Fallback or exit? If we can't find the player, we can't save hp/saturation accurately.
-             // But we might have just loaded the menu.
-             // Assuming we want to save *current* state.
-             // If _lp is noone, maybe use default values or values from save data?
-             // For now, let's just use the global save data itself if the instance is missing?
-             // But the args are _lp.hp.
-             
-             // Let's create a dummy struct for safety or use save data accessors if available.
-             // Actually, simply finding it should work if the player exists.
+            // Fallback or exit? If we can't find the player, we can't save hp/saturation accurately.
+            // But we might have just loaded the menu.
+            // Assuming we want to save *current* state.
+            // If _lp is noone, maybe use default values or values from save data?
+            // For now, let's just use the global save data itself if the instance is missing?
+            // But the args are _lp.hp.
+            
+            // Let's create a dummy struct for safety or use save data accessors if available.
+            // Actually, simply finding it should work if the player exists.
         }
 
         
-        file_save_player_global($"{PROGRAM_DIRECTORY_PLAYERS}/{_player_save_data.uuid}", _player_save_data.name, _player_save_data.attire, _lp.hp, _lp.hp_max, _lp.saturation, {});
-        file_save_player_inventory(_player_save_data);
+        if (_lp != noone)
+        {
+            _current_player.hp = _lp.hp;
+            _current_player.hp_max = _lp.hp_max;
+        }
+
+        file_save_player_global(_current_player);
+        file_save_player_inventory(_current_player);
         
-        file_save_world_global(_world_save_data);
+        file_save_world_global(_current_world);
         
         with (obj_Player)
         {
-            file_save_world_spawn(_world_save_data, id);
+            if (is_local) file_save_world_spawn(_current_world, id);
         }
         
         window_progress(window_progress_none);
@@ -211,7 +217,7 @@ if (_lp == noone) exit;
 var _player_x = _lp.x;
 var _player_y = _lp.y;
 
-var _world_data = global.world_data[$ global.world_save_data.dimension];
+var _world_data = global.world_data[$ global.current_world.dimension];
 
 var _settings = global.settings;
 
@@ -227,7 +233,7 @@ if (global.relay != undefined && global.relay.role == RELAY_ROLE.HOST)
     if (timer_network_sync >= 1.0) // Sync every second
     {
         timer_network_sync = 0;
-        relay_send_time_update(global.world_save_data.time);
+        relay_send_time_update(global.current_world.time);
     }
 }
 
@@ -240,23 +246,23 @@ if (IS_ENABLED_BACKUP)
     {
         timer_auto_backup = BACKUP_INTERVAL_SECONDS;
         
-        var _player_save_data = global.player_save_data;
+        var _current_player = global.current_player;
         var _lp = noone;
         with (obj_Player) { if (is_local) { _lp = id; break; } }
         
         if (_lp != noone)
         {
-            file_backup_player(_player_save_data, _lp);
+            file_backup_player(_current_player, _lp);
         }
         
-        var _world_save_data = global.world_save_data;
-        file_backup_world_global(_world_save_data);
+        var _current_world = global.current_world;
+        file_backup_world_global(_current_world);
         
         // Backup chunks that are currently in memory
         var _chunks = chunk_map_get_all();
         for (var i = 0; i < array_length(_chunks); ++i)
         {
-            file_backup_world_chunk(_world_save_data, _chunks[i]);
+            file_backup_world_chunk(_current_world, _chunks[i]);
         }
         
         chat_system_push("Auto-backup complete!");
@@ -505,7 +511,7 @@ if (is_opened & IS_OPENED_BOOLEAN.CHAT)
             }
             else
             {
-                chat_user_push(global.player_save_data.name, _message);
+                chat_user_push(global.current_player.name, _message);
             }
             
             // Add to message history

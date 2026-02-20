@@ -1,6 +1,6 @@
-if (global.world_save_data[$ "difficulty"] == undefined)
+if (global.current_world[$ "difficulty"] == undefined)
 {
-    global.world_save_data.difficulty = 1.0;
+    global.current_world.difficulty = 1.0;
 }
 
 slider_x_min = 344;
@@ -8,7 +8,7 @@ slider_x_max = 608;
 
 xoffset = 0;
 
-var _t = normalize(global.world_save_data.difficulty, 0.5, 2.5);
+var _t = normalize(global.current_world.difficulty, 0.5, 2.5);
 x = lerp(slider_x_min, slider_x_max, _t);
 
 on_select = function()
@@ -29,7 +29,7 @@ on_select_hold = function()
     
     x = lerp(slider_x_min, slider_x_max, _t);
     
-    global.world_save_data.difficulty = lerp(0.5, 2.5, _t);
+    global.current_world.difficulty = lerp(0.5, 2.5, _t);
 }
 
 on_draw_behind = function(_x, _y, _xscale, _yscale, _colour)
@@ -49,7 +49,7 @@ on_draw_behind = function(_x, _y, _xscale, _yscale, _colour)
     
     draw_sprite_ext(spr_Menu_Indent, 0, _screen_track_x, _screen_track_y, _width / 8, 16 / 8, 0, c_white, 1); 
     
-    var _difficulty = global.world_save_data.difficulty;
+    var _difficulty = global.current_world.difficulty;
     
     var _halign = draw_get_halign();
     var _valign = draw_get_valign();

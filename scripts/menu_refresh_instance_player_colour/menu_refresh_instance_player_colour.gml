@@ -27,12 +27,12 @@ function menu_refresh_instance_player_colour()
         
         sprite_index = spr_Menu_Button_Secondary;
         
-        global.player_save_data.attire[$ global.attire_elements[global.menu_player_attire_index]].colour = data_index;
+        global.current_player.attire[$ global.attire_elements[global.menu_player_attire_index]].colour = data_index;
     }
     
     var _name = global.attire_elements[global.menu_player_attire_index];
     
-    var _attire = global.player_save_data.attire[$ _name];
+    var _attire = global.current_player.attire[$ _name];
     
     if (_name == "body") || (global.attire_data[$ _name] == undefined) || (global.attire_data[$ _name][_attire.index] == undefined)
     {

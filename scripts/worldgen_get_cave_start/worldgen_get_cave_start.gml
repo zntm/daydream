@@ -1,4 +1,4 @@
-function worldgen_get_cave_start(_x, _seed, _world_data = global.world_data[$ global.world_save_data.dimension])
+function worldgen_get_cave_start(_x, _seed, _world_data = global.world_data[$ global.current_world.dimension])
 {
     var _amplitude = _world_data.get_cave_start_max() - _world_data.get_cave_start_min();
     var _octaves = _world_data.get_cave_start_octaves();

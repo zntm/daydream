@@ -397,7 +397,7 @@ function ParticlePool() : Pool() constructor
                     }
                 }
                 
-                var _wind = global.world_save_data.weather_wind;
+                var _wind = global.current_world.weather.wind;
                 
                 if (_wind != 0) && (wind_factor[i] != 0)
                 {
@@ -430,7 +430,7 @@ function ParticlePool() : Pool() constructor
                 yvelocity[@ i] += lengthdir_y(gravity_amount[i], gravity_direction[i]);
             }
             
-            var _wind = global.world_save_data.weather_wind;
+            var _wind = global.current_world.weather.wind;
             
             if (_wind != 0) && (wind_factor[i] != 0)
             {

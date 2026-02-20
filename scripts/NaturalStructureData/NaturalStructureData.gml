@@ -132,7 +132,7 @@ global.natural_structure_data[$ "phantasia:ore"] = new NaturalStructureData()
     {
         static __cave = [];
         
-        var _world_seed = global.world_save_data.seed;
+        var _world_seed = global.current_world.seed;
         
         var _rectangle = _width * _height;
         var _data = array_create(_rectangle * CHUNK_DEPTH, (_parameter[NATURAL_STRUCTURE_ORE.USE_TILE_STRUCTURE_VOID] ? TILE_STRUCTURE_VOID : TILE_EMPTY));

@@ -3,19 +3,19 @@
 /// @param {Struct.WorldData} _world_data
 function WorldGenState(_world_data) constructor
 {
-    base_height = _world_data.get_surface_start();
-    
-    // Simplified system parameters (1D surface)
-    surface_noise_octaves = _world_data.get_surface_noise_offset_octaves();
-    surface_noise_scale = _world_data.get_surface_noise_scale();
+    // Flattened parameters for fast access
+    base_height = 0; 
+    surface_noise_octaves = 4;
+    surface_noise_scale = 0.01;
 }
+
 
 function worldgen_get_density(_x, _y, _z, _seed, _config = global.chunk_pool.worldgen_config, _surface_height = undefined)
 {
     if (_config == undefined) return -1.0;
     
     // 1. Calculate 1D Surface Height (bypass if provided)
-    _surface_height ??= worldgen_get_surface_height(_x, _seed, global.world_data[$ global.world_save_data.dimension]);
+    _surface_height ??= worldgen_get_surface_height(_x, _seed, global.world_data[$ global.current_world.dimension]);
     
     if (_y < _surface_height) return -1.0;
     

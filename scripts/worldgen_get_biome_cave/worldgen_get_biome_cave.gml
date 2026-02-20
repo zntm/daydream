@@ -1,4 +1,4 @@
-function worldgen_get_biome_cave(_x, _y, _surface_height, _seed, _world_data = global.world_data[$ global.world_save_data.dimension])
+function worldgen_get_biome_cave(_x, _y, _surface_height, _seed, _world_data = global.world_data[$ global.current_world.dimension])
 {
     var _blend = _world_data.get_region_blend_data(_x, 0, _seed);
     if (_blend == undefined) return undefined;

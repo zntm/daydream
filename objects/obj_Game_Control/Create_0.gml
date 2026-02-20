@@ -46,9 +46,9 @@ timer_crafting = timer_crafting_max;
 surface_harvest = -1;
 surface_pause = [ -1, -1 ];
 
-var _world_save_data = global.world_save_data;
+var _current_world = global.current_world;
 
-var _world_data = global.world_data[$ _world_save_data.dimension];
+var _world_data = global.world_data[$ _current_world.dimension];
 
 //Defer spawn calculation to Room Creation Code after all instances are created
 spawn_needs_init = true;
@@ -180,7 +180,7 @@ chunk_queue_init();
 // Initialize seed - SKIP for clients, they receive the seed via WELCOME packet
 if (global.network_role != RELAY_ROLE.CLIENT)
 {
-    open_simplex_noise_seed(global.world_save_data.seed);
+    open_simplex_noise_seed(global.current_world.seed);
 }
 
 item_cooldown = {}

@@ -247,8 +247,8 @@ function debug_step()
             $"Mouse: ({mouse_x}, {mouse_y})\n\n" +
             
             "World:\n" +
-            $"Time: {global.world_save_data.time}\n" +
-            $"Seed: {global.world_save_data.seed}\n" +
+            $"Time: {global.current_world.time}\n" +
+            $"Seed: {global.current_world.seed}\n" +
             $"Chunks Loaded: {chunk_map_count()}\n" +
             $"Total Instances: {instance_number(all)}\n\n" +
             

@@ -2,7 +2,7 @@ placeholder = loca_translate("menu.generic.textbox.enter_name");
 
 text_length = 40;
 
-var _text = global.world_save_data.name;
+var _text = global.current_world.name;
 
 if (_text != "")
 {

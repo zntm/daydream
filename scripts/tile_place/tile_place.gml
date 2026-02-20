@@ -2,7 +2,7 @@
 /// @desc Place a tile at the specified position
 function tile_place(_x, _y, _z, _tile)
 {
-    if (_y < 0) || (_y >= global.world_data[$ global.world_save_data.dimension].get_world_height()) exit;
+    if (_y < 0) || (_y >= global.world_data[$ global.current_world.dimension].get_world_height()) exit;
     
     // --- NETWORKING INTERCEPTION ---
     // Handle Client Requests and Host Broadcasts

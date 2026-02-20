@@ -146,25 +146,25 @@ function ChunkPool() : Pool() constructor
         // Regenerate structures and generate chunk
         control_structure(_chunk.chunk_xstart, _chunk.chunk_ystart);
         
-        var _is_loaded = file_load_world_chunk(global.world_save_data, _chunk);
+        var _is_loaded = file_load_world_chunk(global.current_world, _chunk);
         
         if (!_is_loaded)
         {
             // Cache worldgen context for performance (hoisted lookups)
             if (variable_global_exists("worldgen_context") == false)
             {
-                var _wsd = global.world_save_data;
-                var _wd = global.world_data[$ _wsd.dimension];
+                var _current_world = global.current_world;
+                var _wd = global.world_data[$ _current_world.dimension];
                 var _sky_id = _wd.get_sky_biome_id();
                 global.worldgen_context = {
                     item_data: global.item_data,
                     natural_structure_data: global.natural_structure_data,
                     structure_data: global.structure_data,
-                    world_save_data: _wsd,
+                    current_world: _current_world,
                     world_data: _wd,
                     biome_data: global.biome_data,
                     world_height: _wd.get_world_height(),
-                    world_seed: _wsd.seed,
+                    world_seed: _current_world.seed,
                     sky_threshold: _wd.get_sky_biome_threshold(),
                     sky_enabled: _wd.is_sky_biome_enabled(),
                     sky_biome_id: _sky_id,

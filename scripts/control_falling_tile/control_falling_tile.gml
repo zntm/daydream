@@ -132,7 +132,7 @@ function control_falling_tile()
     }
     
     // Check world bounds
-    var _world_data = global.world_data[$ global.world_save_data.dimension];
+    var _world_data = global.world_data[$ global.current_world.dimension];
     var _world_height = _world_data.get_world_height();
     
     if (_world_y_new >= _world_height)

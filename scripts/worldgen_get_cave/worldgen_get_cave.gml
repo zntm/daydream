@@ -1,4 +1,4 @@
-function worldgen_get_cave(_x, _y, _surface_height, _cave_start, _seed, _world_data = global.world_data[$ global.world_save_data.dimension])
+function worldgen_get_cave(_x, _y, _surface_height, _cave_start, _seed, _world_data = global.world_data[$ global.current_world.dimension])
 {
     // Surface breach zone: allow caves to occasionally breach the surface
     var _depth_from_surface = _y - _surface_height;

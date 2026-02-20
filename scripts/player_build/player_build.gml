@@ -76,7 +76,7 @@ function player_build(_dt, _x, _y)
     
     if (_data.is_foliage())
     {
-        _tile.set_xscale((xorshift(round(global.world_save_data.time)) & 1) ? -1 : 1);
+        _tile.set_xscale((xorshift(round(global.current_world.time)) & 1) ? -1 : 1);
     }
     
     tile_place(_x, _y, _z, _tile);

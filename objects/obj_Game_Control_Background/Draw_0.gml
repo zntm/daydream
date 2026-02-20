@@ -20,7 +20,7 @@ if (global.settings.display_background)
         var _biome_2_script = (_biome_2 != undefined) ? _biome_2.get_sky_script() : undefined;
 
         event_emit("background_render", {
-            time: global.world_save_data.time,
+            time: global.current_world.time,
             camera_x: _camera_x,
             camera_y: _camera_y,
             camera_width: _camera_width,
@@ -32,7 +32,7 @@ if (global.settings.display_background)
         if (_biome_2_script != undefined)
         {
             event_emit("background_render", {
-                time: global.world_save_data.time,
+                time: global.current_world.time,
                 camera_x: _camera_x,
                 camera_y: _camera_y,
                 camera_width: _camera_width,

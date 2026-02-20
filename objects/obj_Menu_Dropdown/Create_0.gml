@@ -24,7 +24,7 @@ on_draw        = undefined;
 on_draw_behind = undefined;
 
 boolean =
-    MENU_BUTTON_BOOLEAN.IS_BUTTON_VISIBLE;
+    MENU_BUTTON_BOOLEAN.IS_VISIBLE;
 
 area = undefined;
 

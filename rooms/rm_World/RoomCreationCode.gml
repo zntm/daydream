@@ -1,11 +1,11 @@
 // Initialize player spawn position after all instances are created
 if (obj_Game_Control.spawn_needs_init)
 {
-    var _world_save_data = global.world_save_data;
-    var _world_data = global.world_data[$ _world_save_data.dimension];
+    var _current_world = global.current_world;
+    var _world_data = global.world_data[$ _current_world.dimension];
     global.chunk_pool.worldgen_config = new WorldGenState(_world_data);
     
-    var _seed = _world_save_data.seed;
+    var _seed = _current_world.seed;
     var _base_tile_x = 0;
     with (obj_Player) { if (is_local) _base_tile_x = round(x / TILE_SIZE); }
     
@@ -66,18 +66,18 @@ if (obj_Game_Control.spawn_needs_init)
         }
     }
     
-    if (!directory_exists($"{PROGRAM_DIRECTORY_WORLDS}/{_world_save_data.uuid}"))
+    if (!directory_exists($"{PROGRAM_DIRECTORY_WORLDS}/{_current_world.uuid}"))
     {
-        global.world_save_data.time = _world_data.get_time_start();
+        global.current_world.time = _world_data.get_time_start();
         
-        global.world_save_data.weather_wind  = 0;
-        global.world_save_data.weather_storm = 0;
+        global.current_world.weather.wind  = 0;
+        global.current_world.weather.storm = 0;
     }
     else
     {
         with (obj_Player)
         {
-            if (is_local) file_load_world_spawn(global.world_save_data, id, global.player_save_data.uuid);
+            if (is_local) file_load_world_spawn(global.current_world, id, global.current_player.uuid);
         }
     }
     

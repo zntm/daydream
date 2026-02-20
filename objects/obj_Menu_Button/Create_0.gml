@@ -24,14 +24,14 @@ on_draw        = undefined;
 on_draw_behind = undefined;
 
 enum MENU_BUTTON_BOOLEAN {
-    IS_BUTTON_VISIBLE = 1 << 0,
-    IS_HOVER          = 1 << 1,
-    IS_SELECTED       = 1 << 2,
-    IS_HOLDING        = 1 << 3
+    IS_VISIBLE  = 1 << 0,
+    IS_HOVER    = 1 << 1,
+    IS_SELECTED = 1 << 2,
+    IS_HOLDING  = 1 << 3
 }
 
 boolean =
-    MENU_BUTTON_BOOLEAN.IS_BUTTON_VISIBLE;
+    MENU_BUTTON_BOOLEAN.IS_VISIBLE;
 
 area = undefined;
 

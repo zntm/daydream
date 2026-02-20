@@ -269,7 +269,7 @@ function UIDropdown(_x, _y, _width, _height) : UIElement(_x, _y, _width, _height
             var _opt_count = array_length(choices);
             
             
-            for (var i = 0; i < _opt_count; pre ++i)
+            for (var i = 0; i < _opt_count; ++i)
             {
                 var _opt_top = _header_y2 + (i * option_height * _base_scale.y);
                 var _opt_bottom = _opt_top + (option_height * _base_scale.y);

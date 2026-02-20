@@ -1,6 +1,6 @@
 placeholder = loca_translate("phantasia:menu.generic.textbox.enter_name");
 
-var _text = global.player_save_data.name;
+var _text = global.current_player.name;
 
 if (_text != "")
 {
@@ -14,12 +14,12 @@ else
     }
     until (string_length(text) <= text_length);
     
-    global.player_save_data.name = text;
+    global.current_player.name = text;
 }
 
 text_display = text;
 
 on_update = function()
 {
-    global.player_save_data.name = text;
+    global.current_player.name = text;
 }

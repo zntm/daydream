@@ -1,6 +1,6 @@
 function control_update_chunk_in_view()
 {
-    var _world_height = global.world_data[$ global.world_save_data.dimension].get_world_height();
+    var _world_height = global.world_data[$ global.current_world.dimension].get_world_height();
     
     var _camera_x = global.camera_x_real;
     var _camera_y = global.camera_y_real;

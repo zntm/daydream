@@ -220,8 +220,8 @@ function RelayNetworkManager() constructor
         is_host = false;
         
         // Apply world data
-        global.world_save_data.seed = _welcome_data.world_seed;
-        global.world_save_data.time = _welcome_data.world_time;
+        global.current_world.seed = _welcome_data.world_seed;
+        global.current_world.time = _welcome_data.world_time;
         
         // Re-seed noise
         open_simplex_noise_seed(_welcome_data.world_seed);
@@ -237,7 +237,7 @@ function RelayNetworkManager() constructor
             if (_peer_data.peer_id == global.relay.local_peer_id)
             {
                 // This is us, update our player
-                global.player_save_data.uuid = _peer_data.uuid;
+                global.current_player.uuid = _peer_data.uuid;
                 _setup_local_player();
             }
             else
@@ -617,7 +617,7 @@ function RelayNetworkManager() constructor
     static _handle_time_update = function(_buffer)
     {
         var _time = relay_read_time_update(_buffer);
-        global.world_save_data.time = _time;
+        global.current_world.time = _time;
     }
     
     /// @desc Handle player info packet
@@ -735,7 +735,7 @@ function RelayNetworkManager() constructor
         if (_peer != undefined)
         {
             _peer.player_instance = local_player;
-            _peer.uuid = global.player_save_data.uuid;
+            _peer.uuid = global.current_player.uuid;
         }
     }
     
@@ -799,7 +799,7 @@ function RelayNetworkManager() constructor
     static _send_world_state_to_peer = function(_peer_id)
     {
         // Send time
-        relay_send_time_update(global.world_save_data.time);
+        relay_send_time_update(global.current_world.time);
         
         // Send existing entities (Creatures, Items, Projectiles)
         // Note: Players are handled by PEER_JOINED and WELCOME

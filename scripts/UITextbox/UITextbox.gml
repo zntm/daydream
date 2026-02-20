@@ -108,7 +108,7 @@ function UITextbox(_x, _y, _width, _height) : UIElement(_x, _y, _width, _height)
         
         if (boolean & MENU_BUTTON_BOOLEAN.IS_SELECTED)
         {
-            pre ++cursor_blink;
+            ++cursor_blink;
             
             if (cursor_blink >= 60)
             {
@@ -126,7 +126,7 @@ function UITextbox(_x, _y, _width, _height) : UIElement(_x, _y, _width, _height)
                     var _filtered = "";
                     var _len = string_length(_new_text);
                     
-                    for (var i = 1; i <= _len; pre ++i)
+                    for (var i = 1; i <= _len; ++i)
                     {
                         var _c = string_char_at(_new_text, i);
                         
@@ -143,7 +143,7 @@ function UITextbox(_x, _y, _width, _height) : UIElement(_x, _y, _width, _height)
                     var _has_dot = false;
                     var _len = string_length(_new_text);
                     
-                    for (var i = 1; i <= _len; pre ++i)
+                    for (var i = 1; i <= _len; ++i)
                     {
                         var _c = string_char_at(_new_text, i);
                         
@@ -172,7 +172,7 @@ function UITextbox(_x, _y, _width, _height) : UIElement(_x, _y, _width, _height)
                     var _filtered = "";
                     var _len = string_length(_new_text);
                     
-                    for (var i = 1; i <= _len; pre ++i)
+                    for (var i = 1; i <= _len; ++i)
                     {
                         var _c = string_char_at(_new_text, i);
                         
@@ -188,7 +188,7 @@ function UITextbox(_x, _y, _width, _height) : UIElement(_x, _y, _width, _height)
                     var _filtered = "";
                     var _len = string_length(_new_text);
                     
-                    for (var i = 1; i <= _len; pre ++i)
+                    for (var i = 1; i <= _len; ++i)
                     {
                         var _c = string_char_at(_new_text, i);
                         

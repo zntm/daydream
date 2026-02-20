@@ -1,8 +1,8 @@
 function tile_predict(_x, _y, _z)
 {
-    var _world_save_data = global.world_save_data;
-    var _world_seed = _world_save_data.seed;
-    var _world_data = global.world_data[$ _world_save_data.dimension];
+    var _current_world = global.current_world;
+    var _world_seed = _current_world.seed;
+    var _world_data = global.world_data[$ _current_world.dimension];
     var _item_data = global.item_data;
     var _global_biome_data = global.biome_data;
     

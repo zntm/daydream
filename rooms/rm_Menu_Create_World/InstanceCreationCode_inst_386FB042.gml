@@ -79,8 +79,8 @@ on_select_release = function()
         _seed = string_get_seed(_seed);
     }
     
-    global.world_save_data.name = _name;
-    global.world_save_data.seed = _seed;
+    global.current_world.name = _name;
+    global.current_world.seed = _seed;
     
     randomize();
     
@@ -93,7 +93,7 @@ on_select_release = function()
     }
     until (!directory_exists($"{PROGRAM_DIRECTORY_WORLDS}/{_uuid}"));
     
-    global.world_save_data.uuid = _uuid;
+    global.current_world.uuid = _uuid;
     
     room_goto(rm_World);
 }

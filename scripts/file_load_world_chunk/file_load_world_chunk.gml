@@ -1,9 +1,9 @@
-/// @function file_load_world_chunk(_world_save_data, _chunk)
+/// @function file_load_world_chunk(_current_world, _chunk)
 /// @param {Struct.Chunk} _chunk The chunk struct to load into
-function file_load_world_chunk(_world_save_data, _chunk)
+function file_load_world_chunk(_current_world, _chunk)
 {
     var _item_data = global.item_data;
-    var _world_data = global.world_data[$ _world_save_data.dimension];
+    var _world_data = global.world_data[$ _current_world.dimension];
     
     var _chunk_x = _chunk.chunk_xstart / CHUNK_SIZE;
     var _chunk_y = _chunk.chunk_ystart / CHUNK_SIZE;
@@ -11,7 +11,7 @@ function file_load_world_chunk(_world_save_data, _chunk)
     var _region_x = floor(_chunk_x / CHUNK_REGION_SIZE);
     var _region_y = floor(_chunk_y / CHUNK_REGION_SIZE);
     
-    var _directory = $"{PROGRAM_DIRECTORY_WORLDS}/{_world_save_data.uuid}/dim/{_world_data.get_namespace()}/{_world_data.get_id()}/r{_region_x}_{_region_y}.dat";
+    var _directory = $"{PROGRAM_DIRECTORY_WORLDS}/{_current_world.uuid}/dim/{_world_data.get_namespace()}/{_world_data.get_id()}/r{_region_x}_{_region_y}.dat";
     
     if (!file_exists(_directory))
     {

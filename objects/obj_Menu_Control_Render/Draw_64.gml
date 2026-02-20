@@ -108,7 +108,7 @@ for (var j = 0; j <= _max_layer; ++j)
             }
         }
         
-        if (boolean & MENU_BUTTON_BOOLEAN.IS_BUTTON_VISIBLE)
+        if (boolean & MENU_BUTTON_BOOLEAN.IS_VISIBLE)
         {
             if (boolean & (MENU_BUTTON_BOOLEAN.IS_SELECTED | MENU_BUTTON_BOOLEAN.IS_HOLDING))
             {
@@ -301,7 +301,7 @@ for (var j = 0; j <= _max_layer; ++j)
         
         var _choices_length = array_length(choices);
         
-        if (boolean & MENU_BUTTON_BOOLEAN.IS_BUTTON_VISIBLE)
+        if (boolean & MENU_BUTTON_BOOLEAN.IS_VISIBLE)
         {
             if (boolean & (MENU_BUTTON_BOOLEAN.IS_SELECTED | MENU_BUTTON_BOOLEAN.IS_HOLDING))
             {
@@ -362,7 +362,7 @@ for (var j = 0; j <= _max_layer; ++j)
         var _xscale = image_xscale * _render_xscale;
         var _yscale = image_yscale * _render_yscale;
         
-        if (boolean & MENU_BUTTON_BOOLEAN.IS_BUTTON_VISIBLE)
+        if (boolean & MENU_BUTTON_BOOLEAN.IS_VISIBLE)
         {
             if (boolean & (MENU_BUTTON_BOOLEAN.IS_SELECTED | MENU_BUTTON_BOOLEAN.IS_HOLDING))
             {

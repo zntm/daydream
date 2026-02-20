@@ -40,7 +40,7 @@ function chunk_save_queue_process()
     
     var _start = get_timer();
     var _budget_us = global.chunk_save_budget_ms * 1000;
-    var _world_save_data = global.world_save_data;
+    var _current_world = global.current_world;
     
     while (array_length(_queue) > 0)
     {
@@ -52,7 +52,7 @@ function chunk_save_queue_process()
         
         if (_chunk != undefined)
         {
-            file_save_world_chunk(_world_save_data, _chunk);
+            file_save_world_chunk(_current_world, _chunk);
         }
     }
 }
@@ -62,7 +62,7 @@ function chunk_save_queue_process()
 function chunk_save_queue_flush()
 {
     var _queue = global.chunk_save_queue;
-    var _world_save_data = global.world_save_data;
+    var _current_world = global.current_world;
     
     while (array_length(_queue) > 0)
     {
@@ -71,7 +71,7 @@ function chunk_save_queue_flush()
         
         if (_chunk != undefined)
         {
-            file_save_world_chunk(_world_save_data, _chunk);
+            file_save_world_chunk(_current_world, _chunk);
         }
     }
 }

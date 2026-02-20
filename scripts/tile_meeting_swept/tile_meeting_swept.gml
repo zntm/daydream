@@ -1,4 +1,4 @@
-function tile_meeting_swept(_x_start, _y_start, _x_end, _y_end, _z = CHUNK_DEPTH_DEFAULT, _type = ITEM_TYPE_BIT.SOLID | ITEM_TYPE_BIT.PLATFORM, _world_height = global.world_data[$ global.world_save_data.dimension].get_world_height(), _collision_width = undefined, _collision_height = undefined)
+function tile_meeting_swept(_x_start, _y_start, _x_end, _y_end, _z = CHUNK_DEPTH_DEFAULT, _type = ITEM_TYPE_BIT.SOLID | ITEM_TYPE_BIT.PLATFORM, _world_height = global.world_data[$ global.current_world.dimension].get_world_height(), _collision_width = undefined, _collision_height = undefined)
 {
     // Check bounds roughly
     var _min_y = min(_y_start, _y_end);

@@ -12,7 +12,7 @@
 function worldgen_get_tile_base(_x, _y, _surface_biome, _cave_biome, _surface_height, _cave_above, _seed, _world_data = undefined, _biome_data = undefined)
 {
     // Get world data for bedrock/lava calculations
-    _world_data ??= global.world_data[$ global.world_save_data.dimension];
+    _world_data ??= global.world_data[$ global.current_world.dimension];
     _biome_data ??= global.biome_data;
     
     var _world_height = _world_data.get_world_height();

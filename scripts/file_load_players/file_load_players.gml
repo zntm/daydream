@@ -22,71 +22,36 @@ function file_load_players()
         
         if (!directory_exists($"{PROGRAM_DIRECTORY_PLAYERS}/{_file}")) continue;
         
-        var _buffer = buffer_load_decompressed($"{PROGRAM_DIRECTORY_PLAYERS}/{_file}/global.dat");
+        var _player_data_path = $"{PROGRAM_DIRECTORY_PLAYERS}/{_file}/global.dat";
+        if (!file_exists(_player_data_path)) continue;
         
-        var _version = buffer_read(_buffer, buffer_u32);
+        var _buffer = buffer_load_decompressed(_player_data_path);
+        if (_buffer == -1) continue;
         
-        var _last_opened = unix_to_datetime(buffer_read(_buffer, buffer_f64));
-        
-        var _name = buffer_read(_buffer, buffer_string);
-        
-        var _attire = {}
-        
-        for (var j = 0; j < _length; ++j)
-        {
-            var _attire_name = buffer_read(_buffer, buffer_string);
-            var _attire_colour = buffer_read(_buffer, buffer_u16);
-            
-            _attire[$ _attire_name] = {}
-            
-            _attire[$ _attire_name].colour = _attire_colour;
-            
-            if (_attire_name != "body")
-            {
-                var _attire_index = buffer_read(_buffer, buffer_u16);
-                
-                _attire[$ _attire_name].index = _attire_index;
-            }
-        }
-        
-        var _hp = buffer_read(_buffer, buffer_u16);
-        var _hp_max = buffer_read(_buffer, buffer_u16);
-        
-        var _saturation = buffer_read(_buffer, buffer_u16);
-        
-        var _effects = file_load_snippet_effects(_buffer);
-        
-        // Skip hotbar byte (u8) which is saved after effects
-        if (buffer_tell(_buffer) < buffer_get_size(_buffer))
-        {
-            buffer_read(_buffer, buffer_u8);
-        }
-        
-        var _statistics = undefined;
-        var _achievements = undefined;
-        
-        if (buffer_tell(_buffer) < buffer_get_size(_buffer))
-        {
-            _statistics = statistics_load_player(_buffer);
-        }
-        
-        if (buffer_tell(_buffer) < buffer_get_size(_buffer))
-        {
-            _achievements = achievement_load_player(_buffer);
-        }
+        var _uuid         = buffer_read(_buffer, buffer_string);
+        var _name         = buffer_read(_buffer, buffer_string);
+        var _hp           = buffer_read(_buffer, buffer_u16);
+        var _hp_max       = buffer_read(_buffer, buffer_u16);
+        var _last_opened  = buffer_read(_buffer, buffer_string);
+        var _version      = buffer_read(_buffer, buffer_string);
+        var _attire       = json_parse(buffer_read(_buffer, buffer_string));
+        var _statistics   = json_parse(buffer_read(_buffer, buffer_string));
+        var _achievements = json_parse(buffer_read(_buffer, buffer_string));
+        var _extra        = json_parse(buffer_read(_buffer, buffer_string));
         
         buffer_delete(_buffer);
         
         array_push(global.file_players_uuid, _file);
         
-        array_push(global.file_players, new FilePlayer(_file, _name, _last_opened)
+        array_push(global.file_players, new FilePlayer(_file, _name, unix_to_datetime(datetime_to_unix())) 
             .set_version(_version)
             .set_attire(_attire)
             .set_hp(_hp, _hp_max)
-            .set_effects(_effects)
             .set_statistics(_statistics)
-            .set_achievements(_achievements));
+            .set_achievements(_achievements)
+            .set_effects(_extra[$ "effects"] ?? {}));
     }
+
     
     array_sort(global.file_players, __sort);
 }

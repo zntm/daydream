@@ -1,9 +1,9 @@
 function bg_sky_colour(_in_biome_data, _in_biome_transition_data)
 {
-    var _world_save_data = global.world_save_data;
-    var _world_time = _world_save_data.time;
+    var _current_world = global.current_world;
+    var _world_time = _current_world.time;
     
-    var _world_data = global.world_data[$ _world_save_data.dimension];
+    var _world_data = global.world_data[$ _current_world.dimension];
     var _time_length = _world_data.get_time_length();
     
     // Normalize time to 0.0 - 1.0

@@ -11,7 +11,7 @@ function control_chunk(_player_x, _player_y, _camera_x, _camera_y, _camera_width
     var _a = ceil(_camera_width  / (2 * CHUNK_SIZE_DIMENSION)) + 1;
     var _b = ceil(_camera_height / (2 * CHUNK_SIZE_DIMENSION)) + 1;
     
-    var _world_data = global.world_data[$ global.world_save_data.dimension];
+    var _world_data = global.world_data[$ global.current_world.dimension];
     var _world_height = _world_data.get_world_height();
     
     var _refresh = false;

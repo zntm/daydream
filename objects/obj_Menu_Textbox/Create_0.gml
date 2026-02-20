@@ -15,7 +15,7 @@ on_select_release = undefined;
 on_update = undefined;
 
 boolean =
-    MENU_BUTTON_BOOLEAN.IS_BUTTON_VISIBLE;
+    MENU_BUTTON_BOOLEAN.IS_VISIBLE;
 
 menu_layer = 0;
 

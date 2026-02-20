@@ -9,7 +9,7 @@ function control_chunk_foliage(_dt)
     var _item_data = global.item_data;
     
     var _skew_strength = clamp(
-        global.world_save_data.weather_wind + random_range(
+        global.current_world.weather.wind + random_range(
             -CHUNK_FOLIAGE_WIND_MAX_OFFSET,
              CHUNK_FOLIAGE_WIND_MAX_OFFSET
         ),

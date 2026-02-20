@@ -138,7 +138,7 @@ function update_background_clouds(_dt, _camera_width)
 {
     if (global.cloud_pool_count <= 0) return;
     
-    var _wind = global.world_save_data.weather_wind;
+    var _wind = global.current_world.weather.wind;
     var _wind_factor = global.cloud_wind_factor;
     
     for (var i = 0; i < CLOUD_POOL_MAX; ++i)
@@ -253,7 +253,7 @@ function init_background_clouds()
 {
     cloud_clear();
     
-    var _world_data = global.world_data[$ global.world_save_data.dimension];
+    var _world_data = global.world_data[$ global.current_world.dimension];
     if (_world_data == undefined) return;
     
     var _script_id = _world_data.get_background_script();

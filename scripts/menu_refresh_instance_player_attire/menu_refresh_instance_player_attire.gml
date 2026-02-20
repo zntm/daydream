@@ -27,7 +27,7 @@ function menu_refresh_instance_player_attire()
         
         sprite_index = spr_Menu_Button_Secondary;
         
-        global.player_save_data.attire[$ global.attire_elements[global.menu_player_attire_index]].index = index;
+        global.current_player.attire[$ global.attire_elements[global.menu_player_attire_index]].index = index;
         
         menu_refresh_instance_player_colour();
     }
@@ -48,7 +48,7 @@ function menu_refresh_instance_player_attire()
         inst_5F2060E.y = inst_5F2060E.ystart;
     }
     
-    var _current_index = global.player_save_data.attire[$ _name][$ "index"];
+    var _current_index = global.current_player.attire[$ _name][$ "index"];
     
     var _start_index = global.menu_player_attire_page * 6;
     

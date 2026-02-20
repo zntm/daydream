@@ -35,7 +35,7 @@ function statistics_increment(_stat_id, _amount = 1)
     global.player_statistics[$ _stat_id] += _amount;
     
     // Update world statistics (track per-player)
-    var _player_uuid = global.player_save_data.uuid;
+    var _player_uuid = global.current_player.uuid;
     
     global.world_statistics[$ _stat_id] ??= {}
     global.world_statistics[$ _stat_id][$ _player_uuid] ??= 0;
@@ -58,7 +58,7 @@ function statistics_set_max(_stat_id, _value)
         global.player_statistics[$ _stat_id] = _value;
         
         // Update world stats too
-        var _player_uuid = global.player_save_data.uuid;
+        var _player_uuid = global.current_player.uuid;
         global.world_statistics[$ _stat_id] ??= {}
         global.world_statistics[$ _stat_id][$ _player_uuid] = _value;
     }
@@ -80,7 +80,7 @@ function statistics_get(_stat_id)
 /// @returns {real} Statistic value
 function statistics_get_world(_stat_id, _player_uuid = undefined)
 {
-    _player_uuid ??= global.player_save_data.uuid;
+    _player_uuid ??= global.current_player.uuid;
     
     var _stat = global.world_statistics[$ _stat_id];
     if (_stat == undefined) return 0;

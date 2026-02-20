@@ -4,7 +4,7 @@
 /// @param {Real} _seed World seed
 /// @param {Struct} _world_data World data struct
 /// @returns {Bool} True if this position should be solid sky island
-function worldgen_get_sky_island(_x, _y, _seed, _world_data = global.world_data[$ global.world_save_data.dimension])
+function worldgen_get_sky_island(_x, _y, _seed, _world_data = global.world_data[$ global.current_world.dimension])
 {
     // Check if sky biome is enabled
     if (!_world_data.is_sky_biome_enabled())

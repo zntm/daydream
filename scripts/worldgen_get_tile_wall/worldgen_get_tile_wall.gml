@@ -2,7 +2,7 @@ function worldgen_get_tile_wall(_x, _y, _surface_biome, _cave_biome, _surface_he
 {
     if (_y < _surface_height) return TILE_EMPTY;
     
-    _world_data ??= global.world_data[$ global.world_save_data.dimension];
+    _world_data ??= global.world_data[$ global.current_world.dimension];
     _biome_data ??= global.biome_data;
     
     // Generate noise value (0..1) for coherent tile variation

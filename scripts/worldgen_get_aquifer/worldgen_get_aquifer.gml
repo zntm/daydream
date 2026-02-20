@@ -5,7 +5,7 @@
 /// @param {Real} _seed World seed
 /// @param {Struct} _world_data World data struct
 /// @returns {Struct|Undefined} { type: "tile_id", fill_level: 1-8 } or undefined
-function worldgen_get_aquifer(_x, _y, _surface_height, _seed, _world_data = global.world_data[$ global.world_save_data.dimension])
+function worldgen_get_aquifer(_x, _y, _surface_height, _seed, _world_data = global.world_data[$ global.current_world.dimension])
 {
     var _depth = _y - _surface_height;
     

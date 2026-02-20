@@ -281,12 +281,12 @@ global.proglang_macros[$ "GUI_MOUSE_Y"] = function()
 
 global.proglang_macros[$ "WORLD_SEED"] = function()
 {
-    return global.world_save_data.seed;
+    return global.current_world.seed;
 }
 
 global.proglang_macros[$ "WORLD_TIME"] = function()
 {
-    return global.world_save_data.time;
+    return global.current_world.time;
 }
 
 global.proglang_macros[$ "IS_OPENED_BOOLEAN"] = {
@@ -317,12 +317,12 @@ global.proglang_macros[$ "PROGRAM_VERSION_NUMBER"] = PROGRAM_VERSION_NUMBER;
 
 global.proglang_macros[$ "WORLD_NAME"] = function()
 {
-    return global.world_save_data.name;
+    return global.current_world.name;
 }
 
 global.proglang_macros[$ "WORLD_DIMENSION"] = function()
 {
-    return global.world_save_data.dimension;
+    return global.current_world.dimension;
 }
 
 global.proglang_macros[$ "ERROR_TYPE"] = {

@@ -1,6 +1,6 @@
 function worldgen_get_surface_noise_offset(_x, _seed)
 {
-    var _world_data = global.world_data[$ global.world_save_data.dimension];
+    var _world_data = global.world_data[$ global.current_world.dimension];
     
     var _amplitude = _world_data.get_surface_noise_offset_max() - _world_data.get_surface_noise_offset_min();
     var _octaves = _world_data.get_surface_noise_offset_octaves();

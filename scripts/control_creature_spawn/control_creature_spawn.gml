@@ -14,7 +14,7 @@ function control_creature_spawn()
     static __spawn = function(_world_time, _tile_x, _tile_y, _biome_data, _creature_data)
     {
         // Find ground level - search downward from the given Y to find a solid tile to stand on
-        var _world_data = global.world_data[$ global.world_save_data.dimension];
+        var _world_data = global.world_data[$ global.current_world.dimension];
         var _world_height = _world_data.get_world_height();
         var _ground_tile_y = _tile_y;
         var _found_ground = false;
@@ -222,9 +222,9 @@ function control_creature_spawn()
     
     timer_creature_spawn += 1 / GAME_TICK;
     
-    var _world_save_data = global.world_save_data;
+    var _current_world = global.current_world;
     
-    var _spawn_interval = global.world_data[$ _world_save_data.dimension].get_spawn_interval();
+    var _spawn_interval = global.world_data[$ _current_world.dimension].get_spawn_interval();
     
     if (timer_creature_spawn < _spawn_interval) exit;
     
@@ -236,7 +236,7 @@ function control_creature_spawn()
     
     timer_creature_spawn -= _spawn_interval;
     
-    var _world_time = _world_save_data.time;
+    var _world_time = _current_world.time;
     
     var _camera_x = global.camera_x;
     var _camera_y = global.camera_y;

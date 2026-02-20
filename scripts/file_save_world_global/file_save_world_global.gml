@@ -1,27 +1,19 @@
-function file_save_world_global(_world_save_data)
+function file_save_world_global(_current_world)
 {
-    var _buffer = buffer_create(0xff, buffer_grow, 1);
+    var _buffer = buffer_create(1024, buffer_grow, 1);
     
-    buffer_write(_buffer, buffer_u32, PROGRAM_VERSION_NUMBER);
+    buffer_write(_buffer, buffer_string, _current_world.uuid);
+    buffer_write(_buffer, buffer_string, _current_world.name);
+    buffer_write(_buffer, buffer_f64,    _current_world.seed);
+    buffer_write(_buffer, buffer_f64,    _current_world.time);
+    buffer_write(_buffer, buffer_f64,    _current_world.day);
+    buffer_write(_buffer, buffer_f64,    _current_world.weather.wind);
+    buffer_write(_buffer, buffer_f64,    _current_world.weather.storm);
+    buffer_write(_buffer, buffer_f64,    _current_world[$ "difficulty"] ?? 1.0);
+    buffer_write(_buffer, buffer_string, _current_world.dimension);
+    buffer_write(_buffer, buffer_string, date_datetime_string(date_current_datetime()));
+    buffer_write(_buffer, buffer_string, PROGRAM_VERSION_NUMBER);
     
-    buffer_write(_buffer, buffer_f64, datetime_to_unix());
-    
-    buffer_write(_buffer, buffer_string, _world_save_data.name);
-    buffer_write(_buffer, buffer_f64, _world_save_data.seed);
-    
-    buffer_write(_buffer, buffer_string, _world_save_data.dimension);
-    
-    buffer_write(_buffer, buffer_f64, _world_save_data.time);
-    buffer_write(_buffer, buffer_u64, _world_save_data.day);
-    
-    buffer_write(_buffer, buffer_f32, _world_save_data.weather_wind);
-    buffer_write(_buffer, buffer_f32, _world_save_data.weather_storm);
-    
-    statistics_save_world(_buffer);
-    
-    buffer_write(_buffer, buffer_f32, _world_save_data.difficulty);
-    
-    buffer_save_compressed(_buffer, $"{PROGRAM_DIRECTORY_WORLDS}/{_world_save_data.uuid}/global.dat");
-    
+    buffer_save_compressed(_buffer, $"{PROGRAM_DIRECTORY_WORLDS}/{_current_world.uuid}/global.dat");
     buffer_delete(_buffer);
 }

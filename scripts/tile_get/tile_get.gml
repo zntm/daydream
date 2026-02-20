@@ -1,7 +1,7 @@
 /// @function tile_get(_x, _y, _z)
 /// @desc Get tile at specified position
 /// @returns {Struct.Tile} Tile at position or TILE_EMPTY
-function tile_get(_x, _y, _z, _world_height = global.world_data[$ global.world_save_data.dimension].get_world_height())
+function tile_get(_x, _y, _z, _world_height = global.world_data[$ global.current_world.dimension].get_world_height())
 {
     if (_y < 0) || (_y >= _world_height)
     {

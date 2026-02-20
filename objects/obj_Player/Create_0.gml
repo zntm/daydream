@@ -3,7 +3,7 @@ timer_sfx_harvest = 0;
 // Multiplayer & Identity Initialization
 // These may be set via the struct parameter in instance_create_depth
 if (!variable_instance_exists(id, "is_local")) is_local = true;
-if (!variable_instance_exists(id, "uuid"))     uuid = global.player_save_data.uuid;
+if (!variable_instance_exists(id, "uuid"))     uuid = global.current_player.uuid;
 
 
 // Peer tracking (relay system)
@@ -38,7 +38,7 @@ charge_ui_link = undefined;
 attire = undefined;
 if (is_local)
 {
-    attire = global.player_save_data.attire;
+    attire = global.current_player.attire;
 }
 
 harvest_progress = {}

@@ -12,17 +12,6 @@ function UIButton(_x, _y, _width, _height, _text = "") : UIElement(_x, _y, _widt
     
     text_scale = 1;
     
-    
-    /* button states (aligned with obj_Menu_Button) */
-    enum MENU_BUTTON_BOOLEAN 
-    {
-        IS_VISIBLE  = 1 << 0,
-        IS_HOVER    = 1 << 1,
-        IS_SELECTED = 1 << 2,
-        IS_HOLDING  = 1 << 3
-    }
-    
-    
     boolean = MENU_BUTTON_BOOLEAN.IS_VISIBLE;
     
     

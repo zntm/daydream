@@ -487,13 +487,13 @@ function UIElement(_x, _y, _width, _height) constructor
             _child.y = padding_top + (_row * (_child.height + spacing));
             
             
-            pre ++_col;
+            ++_col;
             
             if (_col >= grid_columns)
             {
                 _col = 0;
                 
-                pre ++_row;
+                ++_row;
             }
         }
     }

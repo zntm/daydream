@@ -7,7 +7,7 @@ event_subscribe("background_render", fn(_data) {
     var time = _data.time / 5000
     var blend = _data.blend ?? 1.0
     
-    // Check if it's night (time is 0..1 circular, but world_save_data.time is likely in frames or seconds)
+    // Check if it's night (time is 0..1 circular, but current_world.time is likely in frames or seconds)
     // Actually, celestial system might have better time awareness. 
     // For now, let's assume we want it visible or slightly visible depending on some time factor if we can find it.
     // However, the prompt implies we just want it in Borea.

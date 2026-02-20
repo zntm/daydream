@@ -76,9 +76,9 @@ function RelayNetwork() constructor
         // Add self as first peer
         peers[$ local_peer_id] = {
             socket: undefined,  // Host has no socket to self
-            uuid: global.player_save_data.uuid,
+            uuid: global.current_player.uuid,
             player_instance: noone,
-            attire: global.player_save_data.attire ?? {},
+            attire: global.current_player.attire ?? {},
             inventory: global.inventory,
             is_local: true
         }
@@ -138,8 +138,8 @@ function RelayNetwork() constructor
         // Send HELLO to host
         var _buf = relay_packet_create(RELAY_PACKET.HELLO);
         relay_write_hello(_buf, local_peer_id, 
-            global.player_save_data.uuid, 
-            global.player_save_data.attire ?? {});
+            global.current_player.uuid, 
+            global.current_player.attire ?? {});
         relay_packet_send(_host_socket, _buf);
         buffer_delete(_buf);
         
@@ -497,7 +497,7 @@ function RelayNetwork() constructor
         var _collision = false;
         
         // Check against host
-        if (_uuid == global.player_save_data.uuid) _collision = true;
+        if (_uuid == global.current_player.uuid) _collision = true;
         
         // Check against other peers
         if (!_collision)
@@ -549,8 +549,8 @@ function RelayNetwork() constructor
         // Send WELCOME to new peer
         var _welcome_buf = relay_packet_create(RELAY_PACKET.WELCOME);
         relay_write_welcome(_welcome_buf, _peer_id, _peer_list, 
-            global.world_save_data.seed, 
-            global.world_save_data.time);
+            global.current_world.seed, 
+            global.current_world.time);
         relay_packet_send(_socket, _welcome_buf);
         buffer_delete(_welcome_buf);
         

@@ -28,7 +28,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
     var _texel_width  = 1 / _surface_width;
     var _texel_height = 1 / _surface_height;
     
-    var _animation_index = round(global.world_save_data.time * 8);
+    var _animation_index = round(global.current_world.time * 8);
     
     var _sprite_asset = global.sprite_asset;
     

@@ -63,9 +63,14 @@ on_select_release = function()
     }
     until (!directory_exists($"{PROGRAM_DIRECTORY_PLAYERS}/{_uuid}"));
     
-    var _attire = global.player_save_data.attire;
+    var _attire = global.current_player.attire;
     
-    file_save_player_global($"{PROGRAM_DIRECTORY_PLAYERS}/{_uuid}", _name, _attire, 100, 100, 0, {});
+    global.current_player.uuid = _uuid;
+    global.current_player.name = _name;
+    global.current_player.hp = 100;
+    global.current_player.hp_max = 100;
+    
+    file_save_player_global(global.current_player);
     
     array_insert(global.file_players, 0, new FilePlayer(_uuid, _name, date_current_datetime())
         .set_version(PROGRAM_VERSION_NUMBER)

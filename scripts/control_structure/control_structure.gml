@@ -5,10 +5,10 @@ global.worldgen_structure = ds_map_create();
 function control_structure(_x, _y)
 {
     var _biome_data = global.biome_data;
-    var _world_data = global.world_data[$ global.world_save_data.dimension];
+    var _world_data = global.world_data[$ global.current_world.dimension];
     var _structure_data = global.structure_data;
     
-    var _world_seed = global.world_save_data.seed;
+    var _world_seed = global.current_world.seed;
     
     for (var i = _x - WORLDGEN_STRUCTURE_OFFSET; i <= _x + WORLDGEN_STRUCTURE_OFFSET; ++i)
     {

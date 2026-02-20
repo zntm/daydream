@@ -85,20 +85,20 @@ function menu_refresh_instance_worlds()
             exit;
         }
         
-        global.world_save_data.name = _data.get_name();
-        global.world_save_data.seed = _data.get_seed();
+        global.current_world.name = _data.get_name();
+        global.current_world.seed = _data.get_seed();
         
-        global.world_save_data.dimension = _data.get_dimension();
+        global.current_world.dimension = _data.get_dimension();
         
-        global.world_save_data.time = _data.get_time();
-        global.world_save_data.day  = _data.get_day();
+        global.current_world.time = _data.get_time();
+        global.current_world.day  = _data.get_day();
         
-        global.world_save_data.weather_wind  = _data.get_weather_wind();
-        global.world_save_data.weather_storm = _data.get_weather_storm();
+        global.current_world.weather.wind  = _data.get_weather_wind();
+        global.current_world.weather.storm = _data.get_weather_storm();
         
-        global.world_save_data.uuid = _uuid;
+        global.current_world.uuid = _uuid;
         
-        global.world_save_data.difficulty = _data.get_difficulty();
+        global.current_world.difficulty = _data.get_difficulty();
         
         global.world_statistics = _data.get_statistics() ?? {}
         

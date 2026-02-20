@@ -225,7 +225,7 @@ function ui_spawn(_definitions, _config = {}, _events = undefined)
     }
     
     
-    for (var i = 0; i < _def_count; pre ++i)
+    for (var i = 0; i < _def_count; ++i)
     {
         var _def = _definitions[i];
         
@@ -250,7 +250,7 @@ function ui_spawn(_definitions, _config = {}, _events = undefined)
             {
                 var _sub_count = array_length(_def);
                 
-                for (var j = 0; j < _sub_count; pre ++j)
+                for (var j = 0; j < _sub_count; ++j)
                 {
                     var _sub_def = _def[j];
                     var _sub_vars = _variables;
@@ -314,6 +314,11 @@ function ui_process_spawned_element(_element, _instance, _parent)
     _element.instance = _instance;
     
     
+    /* ALWAYS add top-level elements of this spawn call to root_elements */
+    /* this allows global.ui_*.root_elements[0] to work even if a parent was provided */
+    array_push(_instance.root_elements, _element);
+    
+    
     if (_parent != undefined)
     {
         /* handle uielement or guicomponent parent */
@@ -332,16 +337,6 @@ function ui_process_spawned_element(_element, _instance, _parent)
                 _actual_parent.add_child(_element);
             }
         }
-        else
-        {
-            show_debug_message($"[UI Runtime] warning: parent object is incompatible (missing add_child). element '{_element.element_name}' will be a root element.");
-            
-            array_push(_instance.root_elements, _element);
-        }
-    }
-    else
-    {
-        array_push(_instance.root_elements, _element);
     }
     
     
@@ -507,7 +502,7 @@ function ui_instantiate_element(_node, _link, _variables)
     var _prop_count = array_length(_node.properties);
     
     
-    for (var i = 0; i < _prop_count; pre ++i)
+    for (var i = 0; i < _prop_count; ++i)
     {
         var _prop = _node.properties[i];
         
@@ -520,7 +515,7 @@ function ui_instantiate_element(_node, _link, _variables)
     var _child_count = array_length(_node.children);
     
     
-    for (var i = 0; i < _child_count; pre ++i)
+    for (var i = 0; i < _child_count; ++i)
     {
         var _child_node = _node.children[i];
         
@@ -533,7 +528,7 @@ function ui_instantiate_element(_node, _link, _variables)
             var _base_name = _child_node.name;
             
             
-            for (var j = 0; j < _repeat_count; pre ++j)
+            for (var j = 0; j < _repeat_count; ++j)
             {
                 /* create a copy of the variables scope with the loop variable */
                 var _loop_vars = {};
@@ -981,7 +976,7 @@ function ui_resolve_value(_node, _link, _variables)
             var _count = array_length(_node.values);
             
             
-            for (var i = 0; i < _count; pre ++i)
+            for (var i = 0; i < _count; ++i)
             {
                 array_push(_values, ui_resolve_value(_node.values[i], _link, _variables));
             }
@@ -1073,7 +1068,7 @@ function ui_resolve_value(_node, _link, _variables)
             var _prop_count = array_length(_node.properties);
             
             
-            for (var i = 0; i < _prop_count; pre ++i)
+            for (var i = 0; i < _prop_count; ++i)
             {
                 var _prop = _node.properties[i];
                 var _key = _prop.key;
@@ -1120,7 +1115,7 @@ function ui_resolve_value(_node, _link, _variables)
             var _surf_prop_count = array_length(_node.properties);
             
             
-            for (var i = 0; i < _surf_prop_count; pre ++i)
+            for (var i = 0; i < _surf_prop_count; ++i)
             {
                 var _prop = _node.properties[i];
                 var _key = _prop.key;
@@ -1205,7 +1200,7 @@ function ui_calc_binary_op(_op, _left, _right)
         var _result = [];
         
         
-        for (var i = 0; i < _len; pre ++i)
+        for (var i = 0; i < _len; ++i)
         {
             var _l = (i < array_length(_left)) ? _left[i] : 0;
             var _r = (i < array_length(_right)) ? _right[i] : 0;
@@ -1224,7 +1219,7 @@ function ui_calc_binary_op(_op, _left, _right)
         var _length = array_length(_left);
         
         
-        for (var i = 0; i < _length; pre ++i)
+        for (var i = 0; i < _length; ++i)
         {
             array_push(_result, ui_calc_binary_op(_op, _left[i], _right));
         }
@@ -1239,7 +1234,7 @@ function ui_calc_binary_op(_op, _left, _right)
         var _length = array_length(_right);
         
         
-        for (var i = 0; i < _length; pre ++i)
+        for (var i = 0; i < _length; ++i)
         {
             array_push(_result, ui_calc_binary_op(_op, _left, _right[i]));
         }

@@ -1,6 +1,6 @@
 /// @desc Samples the humidity map at the given position.
 /// @returns {Real} Humidity value (-1 to 1)
-function worldgen_get_humidity(_x, _y, _seed, _world_data = global.world_data[$ global.world_save_data.dimension])
+function worldgen_get_humidity(_x, _y, _seed, _world_data = global.world_data[$ global.current_world.dimension])
 {
 	if (_world_data == undefined) return 0;
 	

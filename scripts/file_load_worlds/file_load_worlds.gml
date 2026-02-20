@@ -20,55 +20,36 @@ function file_load_worlds()
         
         if (!directory_exists($"{PROGRAM_DIRECTORY_WORLDS}/{_file}")) continue;
         
-        try
-        {
-            var _buffer = buffer_load_decompressed($"{PROGRAM_DIRECTORY_WORLDS}/{_file}/global.dat");
-            
-            var _version = buffer_read(_buffer, buffer_u32);
-            
-            var _last_opened = unix_to_datetime(buffer_read(_buffer, buffer_f64));
-            
-            var _name = buffer_read(_buffer, buffer_string);
-            var _seed = buffer_read(_buffer, buffer_f64);
-            
-            var _dimension = buffer_read(_buffer, buffer_string);
-            
-            var _time = buffer_read(_buffer, buffer_f64);
-            var _day = buffer_read(_buffer, buffer_f64);
-            
-            var _weather_wind  = buffer_read(_buffer, buffer_f32);
-            var _weather_storm = buffer_read(_buffer, buffer_f32);
-            
-            var _statistics = undefined;
-            
-            if (buffer_tell(_buffer) < buffer_get_size(_buffer))
-            {
-                _statistics = statistics_load_world(_buffer);
-            }
-            
-            var _difficulty = 1.0;
-            
-            if (buffer_tell(_buffer) < buffer_get_size(_buffer))
-            {
-                _difficulty = buffer_read(_buffer, buffer_f32);
-            }
-            
-            buffer_delete(_buffer);
-            
-            array_push(global.file_worlds_uuid, _file);
-            
-            array_push(global.file_worlds, new FileWorld(_file, _name, _seed, _last_opened)
-                .set_version(_version)
-                .set_dimension(_dimension)
-                .set_time(_time, _day)
-                .set_weather(_weather_wind, _weather_storm)
-                .set_statistics(_statistics)
-                .set_difficulty(_difficulty));
-        }
-        catch (_error)
-        {
-        }
+        var _world_data_path = $"{PROGRAM_DIRECTORY_WORLDS}/{_file}/global.dat";
+        if (!file_exists(_world_data_path)) continue;
+        
+        var _buffer = buffer_load_decompressed(_world_data_path);
+        if (_buffer == -1) continue;
+        
+        var _uuid        = buffer_read(_buffer, buffer_string);
+        var _name        = buffer_read(_buffer, buffer_string);
+        var _seed        = buffer_read(_buffer, buffer_f64);
+        var _time        = buffer_read(_buffer, buffer_f64);
+        var _day         = buffer_read(_buffer, buffer_f64);
+        var _wind        = buffer_read(_buffer, buffer_f64);
+        var _storm       = buffer_read(_buffer, buffer_f64);
+        var _difficulty  = buffer_read(_buffer, buffer_f64);
+        var _dimension   = buffer_read(_buffer, buffer_string);
+        var _last_opened = buffer_read(_buffer, buffer_string);
+        var _version     = buffer_read(_buffer, buffer_string);
+        
+        buffer_delete(_buffer);
+        
+        array_push(global.file_worlds_uuid, _file);
+        
+        array_push(global.file_worlds, new FileWorld(_file, _name, _seed, unix_to_datetime(datetime_to_unix())) 
+            .set_version(_version)
+            .set_dimension(_dimension)
+            .set_time(_time, _day)
+            .set_weather(_wind, _storm)
+            .set_difficulty(_difficulty));
     }
+
     
     array_sort(global.file_worlds, __sort);
 }

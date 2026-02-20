@@ -1,8 +1,8 @@
-function file_save_player_inventory(_player_save_data)
+function file_save_player_inventory(_current_player)
 {
     var _item_data = global.item_data;
     
-    var _uuid = _player_save_data.uuid;
+    var _uuid = _current_player.uuid;
     
     var _inventory = global.inventory;
     var _inventory_length = global.inventory_length;

@@ -12,11 +12,11 @@ function buffer_save_compressed_async(_buffer, _path)
     return _id;
 }
 
-function file_backup_player(_player_save_data, _lp)
+function file_backup_player(_current_player, _lp)
 {
     if (!IS_ENABLED_BACKUP) exit;
     
-    var _uuid = _player_save_data.uuid;
+    var _uuid = _current_player.uuid;
     var _timestamp = datetime_to_unix();
     var _backup_dir = $"{PROGRAM_DIRECTORY_PLAYERS}/{_uuid}/backups/{_timestamp}";
     
@@ -24,14 +24,14 @@ function file_backup_player(_player_save_data, _lp)
     var _buffer_global = buffer_create(0xff, buffer_grow, 1);
     buffer_write(_buffer_global, buffer_u32, PROGRAM_VERSION_NUMBER);
     buffer_write(_buffer_global, buffer_f64, _timestamp);
-    buffer_write(_buffer_global, buffer_string, _player_save_data.name);
+    buffer_write(_buffer_global, buffer_string, _current_player.name);
     
     var _names = global.attire_elements;
     var _length = array_length(_names);
     for (var i = 0; i < _length; ++i)
     {
         var _name = _names[i];
-        var _attire = _player_save_data.attire[$ _name];
+        var _attire = _current_player.attire[$ _name];
         buffer_write(_buffer_global, buffer_string, _name);
         buffer_write(_buffer_global, buffer_u16, _attire.colour);
         if (_name != "body") buffer_write(_buffer_global, buffer_u16, _attire.index);
@@ -107,19 +107,19 @@ function file_backup_player(_player_save_data, _lp)
     }
 }
 
-function file_backup_world_chunk(_world_save_data, _chunk)
+function file_backup_world_chunk(_current_world, _chunk)
 {
     if (!IS_ENABLED_BACKUP) exit;
     
     var _creature_data = global.creature_data;
     var _item_data = global.item_data;
-    var _world_data = global.world_data[$ _world_save_data.dimension];
+    var _world_data = global.world_data[$ _current_world.dimension];
     
     var _chunk_x = _chunk.chunk_xstart / CHUNK_SIZE;
     var _chunk_y = _chunk.chunk_ystart / CHUNK_SIZE;
     
     var _timestamp = datetime_to_unix();
-    var _backup_dir = $"{PROGRAM_DIRECTORY_WORLDS}/{_world_save_data.uuid}/backups/{_timestamp}/dim/{_world_data.get_namespace()}/{_world_data.get_id()}";
+    var _backup_dir = $"{PROGRAM_DIRECTORY_WORLDS}/{_current_world.uuid}/backups/{_timestamp}/dim/{_world_data.get_namespace()}/{_world_data.get_id()}";
     var _path = $"{_backup_dir}/c{_chunk_x}_{_chunk_y}.dat";
 
     // Start by writing the *current* chunk to a temporary buffer
@@ -214,27 +214,29 @@ function file_backup_world_chunk(_world_save_data, _chunk)
     buffer_delete(_current_chunk_buffer);
 }
 
-function file_backup_world_global(_world_save_data)
+function file_backup_world_global(_current_world)
 {
     if (!IS_ENABLED_BACKUP) exit;
     
     var _timestamp = datetime_to_unix();
-    var _backup_dir = $"{PROGRAM_DIRECTORY_WORLDS}/{_world_save_data.uuid}/backups/{_timestamp}";
+    var _backup_dir = $"{PROGRAM_DIRECTORY_WORLDS}/{_current_world.uuid}/backups/{_timestamp}";
     var _path = $"{_backup_dir}/global.dat";
     
-    var _buffer = buffer_create(0xff, buffer_grow, 1);
-    buffer_write(_buffer, buffer_u32, PROGRAM_VERSION_NUMBER);
-    buffer_write(_buffer, buffer_f64, _timestamp);
-    buffer_write(_buffer, buffer_string, _world_save_data.name);
-    buffer_write(_buffer, buffer_f64, _world_save_data.seed);
-    buffer_write(_buffer, buffer_string, _world_save_data.dimension);
-    buffer_write(_buffer, buffer_f64, _world_save_data.time);
-    buffer_write(_buffer, buffer_u64, _world_save_data.day);
-    buffer_write(_buffer, buffer_f32, _world_save_data.weather_wind);
-    buffer_write(_buffer, buffer_f32, _world_save_data.weather_storm);
-    statistics_save_world(_buffer);
-    buffer_write(_buffer, buffer_f32, _world_save_data.difficulty);
+    var _buffer = buffer_create(1024, buffer_grow, 1);
+    
+    buffer_write(_buffer, buffer_string, _current_world.uuid);
+    buffer_write(_buffer, buffer_string, _current_world.name);
+    buffer_write(_buffer, buffer_f64,    _current_world.seed);
+    buffer_write(_buffer, buffer_f64,    _current_world.time);
+    buffer_write(_buffer, buffer_f64,    _current_world.day);
+    buffer_write(_buffer, buffer_f64,    _current_world.weather.wind);
+    buffer_write(_buffer, buffer_f64,    _current_world.weather.storm);
+    buffer_write(_buffer, buffer_f64,    _current_world[$ "difficulty"] ?? 1.0);
+    buffer_write(_buffer, buffer_string, _current_world.dimension);
+    buffer_write(_buffer, buffer_string, date_datetime_string(date_current_datetime()));
+    buffer_write(_buffer, buffer_string, PROGRAM_VERSION_NUMBER);
     
     buffer_save_compressed_async(_buffer, _path);
     buffer_delete(_buffer);
 }
+

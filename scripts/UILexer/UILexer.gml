@@ -127,7 +127,7 @@ function UILexer(_source) constructor
     {
         var _c = string_char_at(source, current);
         
-        pre ++current;
+        ++current;
         
         return _c;
     }
@@ -156,7 +156,7 @@ function UILexer(_source) constructor
         if (string_char_at(source, current) != _expected) return false;
         
         
-        pre ++current;
+        ++current;
         
         return true;
     }
@@ -274,7 +274,10 @@ function UILexer(_source) constructor
                         }
                         
                         
-                        if (peek() == "\n") pre ++line;
+                        if (peek() == "\n")
+                        {
+                            ++line;
+                        }
                         
                         advance();
                     }
@@ -292,7 +295,7 @@ function UILexer(_source) constructor
                 break;
             
             case "\n":
-                pre ++line;
+                ++line;
                 break;
             
             case "\"":
@@ -350,7 +353,10 @@ function UILexer(_source) constructor
         
         while (peek() != "\"" && !(is_at_end())) 
         {
-            if (peek() == "\n") pre ++line;
+            if (peek() == "\n")
+            {
+                ++line;
+            }
             
             
             if (peek() == "\\") 
@@ -486,7 +492,7 @@ function UILexer(_source) constructor
         var _len = string_length(_hex);
         
         
-        for (var i = 1; i <= _len; pre ++i) 
+        for (var i = 1; i <= _len; ++i) 
         {
             var _c = string_char_at(_hex, i);
             var _val = 0;

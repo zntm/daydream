@@ -460,8 +460,8 @@ proglang_function_register("get_item", function(_args) {
 
 proglang_function_register("global_get", function(_args) {
     var _key = _args[0];
-    if (_key == "world_data") return global.world_data[$ global.world_save_data.dimension];
-    if (_key == "world") return global.world_save_data;  
+    if (_key == "world_data") return global.world_data[$ global.current_world.dimension];
+    if (_key == "world") return global.current_world;  
     if (_key == "item_data") return global.item_data;
     return undefined;
 });
@@ -1534,11 +1534,11 @@ proglang_function_register("cloud_set_speed", function(_args) {
 });
 
 proglang_function_register("cloud_get_wind", function(_args) {
-    return global.world_save_data.weather_wind;
+    return global.current_world.weather.wind;
 });
 
 proglang_function_register("cloud_get_time", function(_args) {
-    return global.world_save_data.time;
+    return global.current_world.time;
 });
 
 #endregion

@@ -6,7 +6,7 @@ function control_gametick(_delta_time)
     
     global.tick_accumulator += _dt;
     
-    var _time_length = global.world_data[$ global.world_save_data.dimension].get_time_length();
+    var _time_length = global.world_data[$ global.current_world.dimension].get_time_length();
     
     var _camera_x = global.camera_x_real;
     var _camera_y = global.camera_y_real;
@@ -206,13 +206,13 @@ function control_gametick(_delta_time)
             }
         }
         
-        global.world_save_data.time += 1 / GAME_TICK;
+        global.current_world.time += 1 / GAME_TICK;
         
-        if (global.world_save_data.time >= _time_length)
+        if (global.current_world.time >= _time_length)
         {
-            global.world_save_data.time %= _time_length;
+            global.current_world.time %= _time_length;
             
-            ++global.world_save_data.day;
+            ++global.current_world.day;
         }
         
         global.tick_accumulator -= 1;

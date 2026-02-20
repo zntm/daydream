@@ -1,6 +1,6 @@
 function rpc_world(_x, _y)
 {
-    var _world = global.world;
+    var _world = global.current_world;
     
     var _id = bg_get_biome(_x, _y);
     var _data = global.biome_data[$ _id];

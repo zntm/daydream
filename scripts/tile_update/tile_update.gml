@@ -1,6 +1,6 @@
 function tile_update(_x, _y, _z)
 {
-    var _world_height = global.world_data[$ global.world_save_data.dimension].get_world_height();
+    var _world_height = global.world_data[$ global.current_world.dimension].get_world_height();
     
     if (_y < 0) || (_y >= _world_height) exit;
     

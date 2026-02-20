@@ -8,7 +8,7 @@ function control_camera_pos(_x, _y, _force = false)
 {
     var _camera_x, _camera_y;
     
-    _y = clamp(_y, 0, global.world_data[$ global.world_save_data.dimension].get_world_height() * TILE_SIZE);
+    _y = clamp(_y, 0, global.world_data[$ global.current_world.dimension].get_world_height() * TILE_SIZE);
     
     if (_force)
     {

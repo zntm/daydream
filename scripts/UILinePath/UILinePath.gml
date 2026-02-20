@@ -129,7 +129,7 @@ function UILinePath(_x, _y) : UIElement(_x, _y, 0, 0) constructor
         
         
         /* draw line segments */
-        for (var i = 0; i < _count - 1; pre ++i) 
+        for (var i = 0; i < _count - 1; ++i) 
         {
             var _p1 = points[i];
             var _p2 = points[i + 1];
@@ -184,7 +184,7 @@ function UILinePath(_x, _y) : UIElement(_x, _y, 0, 0) constructor
         /* draw turn sprites at intermediate points */
         if (sprite_turn != undefined && _count >= 3) 
         {
-            for (var i = 1; i < _count - 1; pre ++i) 
+            for (var i = 1; i < _count - 1; ++i) 
             {
                 var _prev = points[i - 1];
                 var _curr = points[i];

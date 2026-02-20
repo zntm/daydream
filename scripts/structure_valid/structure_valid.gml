@@ -26,7 +26,7 @@ function structure_valid(_tx, _ty, _id, _seed)
     }
     
     var _structure_data = global.structure_data[$ _id];
-    var _world_data = global.world_data[$ global.world_save_data.dimension];
+    var _world_data = global.world_data[$ global.current_world.dimension];
     
     var _width  = smart_value(_structure_data.get_width());
     var _height = smart_value(_structure_data.get_height());

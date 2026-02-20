@@ -29,14 +29,14 @@ function chunk_generate(_chunk, _context = undefined)
     var __structure_array = _structures;
     
     // Support data-driven value caching via context
-    var _item_data, _natural_structure_data, _structure_data, _world_save_data, _world_data, _global_biome_data, _world_height, _world_seed, _sky_threshold, _sky_enabled;
+    var _item_data, _natural_structure_data, _structure_data, _current_world, _world_data, _global_biome_data, _world_height, _world_seed, _sky_threshold, _sky_enabled;
     
     if (_context != undefined)
     {
         _item_data = _context.item_data;
         _natural_structure_data = _context.natural_structure_data;
         _structure_data = _context.structure_data;
-        _world_save_data = _context.world_save_data;
+        _current_world = _context.current_world;
         _world_data = _context.world_data;
         _global_biome_data = _context.biome_data;
         _world_height = _context.world_height;
@@ -49,11 +49,11 @@ function chunk_generate(_chunk, _context = undefined)
         _item_data = global.item_data;
         _natural_structure_data = global.natural_structure_data;
         _structure_data = global.structure_data;
-        _world_save_data = global.world_save_data;
-        _world_data = global.world_data[$ _world_save_data.dimension];
+        _current_world = global.current_world;
+        _world_data = global.world_data[$ _current_world.dimension];
         _global_biome_data = global.biome_data;
         _world_height = _world_data.get_world_height();
-        _world_seed = _world_save_data.seed;
+        _world_seed = _current_world.seed;
         _sky_threshold = _world_data.get_sky_biome_threshold();
         _sky_enabled = _world_data.is_sky_biome_enabled();
     }

@@ -2,8 +2,8 @@
 /// @desc Returns the active world celestial struct for the given time, or undefined
 function celestial_get_active(_time)
 {
-    var _world_save_data = global.world_save_data;
-    var _world_data = global.world_data[$ _world_save_data.dimension];
+    var _current_world = global.current_world;
+    var _world_data = global.world_data[$ _current_world.dimension];
     if (_world_data == undefined) return undefined;
     
     var _celestials = _world_data.get_celestials();

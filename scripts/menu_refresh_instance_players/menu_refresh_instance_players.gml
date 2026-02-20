@@ -92,14 +92,14 @@ function menu_refresh_instance_players()
             exit;
         }
         
-        global.player_save_data.name = _data.get_name();
+        global.current_player.name = _data.get_name();
         
-        global.player_save_data.hp = _data.get_hp();
-        global.player_save_data.hp_max = _data.get_hp_max();
+        global.current_player.hp = _data.get_hp();
+        global.current_player.hp_max = _data.get_hp_max();
         
-        global.player_save_data.attire = _data.get_attire();
+        global.current_player.attire = _data.get_attire();
         
-        global.player_save_data.uuid = _uuid;
+        global.current_player.uuid = _uuid;
         
         global.player_statistics = _data.get_statistics() ?? {}
         global.player_achievements = _data.get_achievements() ?? {}

@@ -41,7 +41,10 @@ function UIParser(_tokens) constructor
     
     static advance = function() 
     {
-        if !(is_at_end()) pre ++current;
+        if !(is_at_end())
+        {
+            ++current;
+        }
         
         return previous();
     }

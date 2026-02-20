@@ -18,8 +18,8 @@ function render_background(_camera_x, _camera_y, _camera_width, _camera_height)
     
     var _in_biome_background_length = array_length(_in_biome_background_data);
     
-    var _parallax_base = global.world_data[$ global.world_save_data.dimension].get_background_parallax_factor();
-    var _parallax_scale = global.world_data[$ global.world_save_data.dimension].get_background_parallax_scale();
+    var _parallax_base = global.world_data[$ global.current_world.dimension].get_background_parallax_factor();
+    var _parallax_scale = global.world_data[$ global.current_world.dimension].get_background_parallax_scale();
     
     var _in_biome_transition_background = worldgen_get_background(in_biome_transition);
     if (_in_biome_transition_background == undefined) return;

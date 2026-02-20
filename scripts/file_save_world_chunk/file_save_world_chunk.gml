@@ -1,15 +1,15 @@
 #macro CHUNK_REGION_SIZE 8
 
-/// @function file_save_world_chunk(_world_save_data, _chunk)
+/// @function file_save_world_chunk(_current_world, _chunk)
 /// @param {Struct.Chunk} _chunk The chunk struct to save
-function file_save_world_chunk(_world_save_data, _chunk)
+function file_save_world_chunk(_current_world, _chunk)
 {
     // ==========================================================================================
     // 1. PREPARE DATA & CONTEXT
     // ==========================================================================================
     var _creature_data = global.creature_data;
     var _item_data = global.item_data;
-    var _world_data = global.world_data[$ _world_save_data.dimension];
+    var _world_data = global.world_data[$ _current_world.dimension];
     
     var _chunk_x = _chunk.chunk_xstart / CHUNK_SIZE;
     var _chunk_y = _chunk.chunk_ystart / CHUNK_SIZE;
@@ -17,7 +17,7 @@ function file_save_world_chunk(_world_save_data, _chunk)
     var _region_x = floor(_chunk_x / CHUNK_REGION_SIZE);
     var _region_y = floor(_chunk_y / CHUNK_REGION_SIZE);
     
-    var _directory = $"{PROGRAM_DIRECTORY_WORLDS}/{_world_save_data.uuid}/dim/{_world_data.get_namespace()}/{_world_data.get_id()}/r{_region_x}_{_region_y}.dat";
+    var _directory = $"{PROGRAM_DIRECTORY_WORLDS}/{_current_world.uuid}/dim/{_world_data.get_namespace()}/{_world_data.get_id()}/r{_region_x}_{_region_y}.dat";
 
     // Start by writing the *current* chunk to a temporary buffer so we know its exact size.
     var _current_chunk_buffer = buffer_create(1024, buffer_grow, 1);

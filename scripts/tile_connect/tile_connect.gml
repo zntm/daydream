@@ -2,9 +2,9 @@ function tile_connect(_x, _y, _z, _tile)
 {
     static _tile_connected_index = global.tile_connected_index;
     
-    var _world_save_data = global.world_save_data;
+    var _current_world = global.current_world;
     
-    var _world_height = global.world_data[$ _world_save_data.dimension].get_world_height();
+    var _world_height = global.world_data[$ _current_world.dimension].get_world_height();
     
     var _id = _tile.get_id();
     
@@ -28,7 +28,7 @@ function tile_connect(_x, _y, _z, _tile)
             _value |= tile_condition_connected(_x2, _y2, _z, _id, _data, _item_data, _world_height) << l;
         }
         
-        var _seed = round(_world_save_data.seed + (_x * 97.27) + (_y * 48.23) - (_z * 11.91));
+        var _seed = round(_current_world.seed + (_x * 97.27) + (_y * 48.23) - (_z * 11.91));
         
         var _ = tile_connected_index(_value);
         
@@ -53,7 +53,7 @@ function tile_connect(_x, _y, _z, _tile)
             _value |= tile_condition_connected_to_self(_x2, _y2, _z, _id, _data, _item_data, _world_height) << l;
         }
         
-        var _seed = round(_world_save_data.seed + (_x * 97.27) + (_y * 48.23) - (_z * 11.91));
+        var _seed = round(_current_world.seed + (_x * 97.27) + (_y * 48.23) - (_z * 11.91));
         
         var _ = tile_connected_index(_value);
         
