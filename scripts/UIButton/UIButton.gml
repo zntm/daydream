@@ -27,6 +27,86 @@ function UIButton(_x, _y, _width, _height, _text = "") : UIElement(_x, _y, _widt
     sprite_index = spr_Menu_Button_Main;
     
     
+    /* =============================================================================
+       setters
+       ============================================================================= */
+    
+    /* set the button sprite */
+    /* @param {asset.gmsprite|string|struct} _sprite new sprite */
+    static set_sprite_index = function(_sprite)
+    {
+    	if (is_struct(_sprite) && _sprite[$ "is_sprite_def"])
+    	{
+    		var _name = _sprite.sprite_name;
+    		var _asset = asset_get_index(_name);
+    		
+    		
+    		if (_asset != -1 && asset_get_type(_name) == asset_sprite)
+    		{
+    			sprite_index = _asset;
+    		}
+    	}
+    	else if (is_string(_sprite))
+    	{
+    		var _asset = asset_get_index(_sprite);
+    		
+    		
+    		if (_asset != -1 && asset_get_type(_sprite) == asset_sprite)
+    		{
+    			sprite_index = _asset;
+    		}
+    		else
+    		{
+    			show_debug_message($"[UIButton] warning: could not resolve sprite asset '{_sprite}'");
+    		}
+    	}
+    	else
+    	{
+    		sprite_index = _sprite;
+    	}
+    	
+    	return self;
+    }
+    
+    
+    /* set the button icon */
+    /* @param {asset.gmsprite|string|struct} _icon new icon */
+    static set_icon = function(_icon)
+    {
+    	if (is_struct(_icon) && _icon[$ "is_sprite_def"])
+    	{
+    		var _name = _icon.sprite_name;
+    		var _asset = asset_get_index(_name);
+    		
+    		
+    		if (_asset != -1 && asset_get_type(_name) == asset_sprite)
+    		{
+    			icon = _asset;
+    		}
+    	}
+    	else if (is_string(_icon))
+    	{
+    		var _asset = asset_get_index(_icon);
+    		
+    		
+    		if (_asset != -1 && asset_get_type(_icon) == asset_sprite)
+    		{
+    			icon = _asset;
+    		}
+    		else
+    		{
+    			show_debug_message($"[UIButton] warning: could not resolve icon asset '{_icon}'");
+    		}
+    	}
+    	else
+    	{
+    		icon = _icon;
+    	}
+    	
+    	return self;
+    }
+    
+    
     static update = function()
     {
         if !(visible) exit;

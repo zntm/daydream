@@ -19,3 +19,32 @@ global.gui_mouse_y = device_mouse_y_to_gui(0);
 
 // Update menu transition animation
 menu_transition_update();
+
+
+/* update proglang ui system */
+if (variable_global_exists("gui_root")) && (global.gui_root != undefined)
+{
+	global.gui_root.update();
+	
+	
+	/* update dynamically spawned UI instances (unparented ones) */
+	if (variable_global_exists("ui_instances"))
+	{
+		var _ui_keys = struct_get_names(global.ui_instances);
+		var _ui_count = array_length(_ui_keys);
+		
+		
+		for (var i = _ui_count - 1; i >= 0; --i)
+		{
+			var _ui_inst = global.ui_instances[$ _ui_keys[i]];
+			
+			
+			if (_ui_inst != undefined) && (array_length(_ui_inst.root_elements) > 0) && (_ui_inst.root_elements[0].parent == undefined)
+			{
+				ui_update(_ui_inst);
+			}
+		}
+	}
+	
+	ui_clear_events();
+}

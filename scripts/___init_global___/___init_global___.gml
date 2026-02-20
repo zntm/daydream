@@ -215,3 +215,5 @@ global.attribute_player = new Attribute()
     .set_regeneration_time(1.0);
 
 global.gui_deferred_text = [];
+
+global.gui_scale = 2;

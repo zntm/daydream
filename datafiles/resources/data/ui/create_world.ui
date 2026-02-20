@@ -1,0 +1,306 @@
+// create world menu layout
+
+var _panel_width = 200
+var _panel_height = 260
+var _slider_width = 180
+var _textbox_width = 160
+var _textbox_height = 16
+var _button_height = 16
+var _section_spacing = 4
+var _inner_spacing = 2
+
+@window(create_world) {
+    size = (440, 300)
+    position = ORIGIN_CENTER
+    movable = false
+    resizable = false
+    title = "Create World"
+    background = #1a1a2e
+
+    @area(left_panel) {
+        position = ORIGIN_TOP_LEFT + (8, 8)
+        size = (_panel_width, _panel_height)
+
+        @area(preview) {
+            position = ORIGIN_TOP_CENTER
+            size = (120, 80)
+            background = #0e0e1a
+        }
+
+        @area(world_info) {
+            position = ORIGIN_TOP_LEFT + (0, 88)
+            size = (_panel_width, 160)
+            layout = LAYOUT_VERTICAL
+            spacing = _section_spacing
+
+            @text(label_name) {
+                text = "name"
+                colour = #aaaaaa
+                text_scale = 0.8
+            }
+
+            @area(name_row) {
+                size = (_panel_width, _textbox_height)
+                layout = LAYOUT_HORIZONTAL
+                spacing = 2
+
+                @textbox(world_name) {
+                    size = (_textbox_width, _textbox_height)
+                    placeholder = "enter name..."
+                    text_length = 40
+                }
+
+                @button(btn_randomize_name) {
+                    size = (24, _textbox_height)
+                    icon = "spr_Icon_Random"
+                    icon_xscale = 1
+                    icon_yscale = 1
+                }
+            }
+
+            @text(label_seed) {
+                text = "seed"
+                colour = #aaaaaa
+                text_scale = 0.8
+            }
+
+            @area(seed_row) {
+                size = (_panel_width, _textbox_height)
+                layout = LAYOUT_HORIZONTAL
+                spacing = 2
+
+                @textbox(world_seed) {
+                    size = (_textbox_width, _textbox_height)
+                    placeholder = "enter seed..."
+                }
+
+                @button(btn_randomize_seed) {
+                    size = (24, _textbox_height)
+                    icon = "spr_Icon_Random"
+                    icon_xscale = 1
+                    icon_yscale = 1
+                }
+            }
+
+            @text(label_difficulty) {
+                text = "difficulty"
+                colour = #aaaaaa
+                text_scale = 0.8
+            }
+
+            @slider(difficulty) {
+                size = (_slider_width, 16)
+                min_value = 0
+                max_value = 4
+                value = 1
+                step = 1
+            }
+        }
+    }
+
+    @line(divider) {
+        position = ORIGIN_CENTER
+        start = (0, -120)
+        end = (0, 120)
+        thickness = 1
+        colour = #3a3a4a
+    }
+
+    @area(right_panel) {
+        position = ORIGIN_TOP_RIGHT + (-8, 8)
+        size = (_panel_width, _panel_height)
+
+        @scroll_area(options_scroll) {
+            position = ORIGIN_TOP_LEFT
+            size = (_panel_width, _panel_height)
+            layout = LAYOUT_VERTICAL
+            spacing = _section_spacing
+
+            @button(btn_death_penalty) {
+                text = "death penalty"
+                size = (_slider_width, _button_height)
+            }
+
+            @area(death_penalty_content) {
+                size = (_slider_width, 60)
+                layout = LAYOUT_VERTICAL
+                spacing = _inner_spacing
+                visible = false
+
+                @text(label_item_drop) {
+                    text = "item drop %"
+                    colour = #aaaaaa
+                    text_scale = 0.8
+                }
+
+                @slider(item_drop_pct) {
+                    size = (_slider_width, 16)
+                    min_value = 0
+                    max_value = 100
+                    value = 0
+                    step = 5
+                }
+
+                @text(label_item_durability) {
+                    text = "item durability %"
+                    colour = #aaaaaa
+                    text_scale = 0.8
+                }
+
+                @slider(item_durability_pct) {
+                    size = (_slider_width, 16)
+                    min_value = 0
+                    max_value = 100
+                    value = 0
+                    step = 5
+                }
+            }
+
+            @button(btn_advanced) {
+                text = "advanced options"
+                size = (_slider_width, _button_height)
+            }
+
+            @area(advanced_content) {
+                size = (_slider_width, 400)
+                layout = LAYOUT_VERTICAL
+                spacing = _section_spacing
+                visible = false
+
+                @button(btn_backup) {
+                    text = "backup"
+                    size = (_slider_width, _button_height)
+                }
+
+                @area(backup_content) {
+                    size = (_slider_width, 60)
+                    layout = LAYOUT_VERTICAL
+                    spacing = _inner_spacing
+                    visible = false
+
+                    @text(label_backup_interval) {
+                        text = "backup interval"
+                        colour = #aaaaaa
+                        text_scale = 0.8
+                    }
+
+                    @slider(backup_interval) {
+                        size = (_slider_width, 16)
+                        min_value = 0
+                        max_value = 60
+                        value = 0
+                        step = 5
+                    }
+
+                    @text(label_backup_slots) {
+                        text = "backup slots"
+                        colour = #aaaaaa
+                        text_scale = 0.8
+                    }
+
+                    @slider(backup_slots) {
+                        size = (_slider_width, 16)
+                        min_value = 0
+                        max_value = 10
+                        value = 0
+                        step = 1
+                    }
+                }
+
+                @text(label_permissions) {
+                    text = "permissions"
+                    colour = #aaaaaa
+                    text_scale = 0.8
+                }
+
+                @dropdown(permissions) {
+                    size = (_slider_width, 16)
+                    choices = ("none", "min", "max")
+                    choice_index = 0
+                }
+
+                @button(btn_game_rules) {
+                    text = "game rules"
+                    size = (_slider_width, _button_height)
+                }
+
+                @area(game_rules_content) {
+                    size = (_slider_width, 300)
+                    layout = LAYOUT_VERTICAL
+                    spacing = _inner_spacing
+                    visible = false
+
+                    @text(label_advance_time) {
+                        text = "advance time"
+                        colour = #aaaaaa
+                        text_scale = 0.8
+                    }
+
+                    @slider(advance_time) {
+                        size = (_slider_width, 16)
+                        min_value = 0
+                        max_value = 32
+                        value = 1
+                        step = 1
+                    }
+
+                    @text(label_friendly_fire) {
+                        text = "friendly fire"
+                        colour = #aaaaaa
+                        text_scale = 0.8
+                    }
+
+                    @radio_button(friendly_fire) {
+                        text = "enabled"
+                        size = (_slider_width, 16)
+                        selected = false
+                    }
+
+                    @button(btn_item_drops) {
+                        text = "item drops"
+                        size = (_slider_width, _button_height)
+                    }
+
+                    @area(item_drops_content) {
+                        size = (_slider_width, 40)
+                        layout = LAYOUT_VERTICAL
+                        spacing = _inner_spacing
+                        visible = false
+
+                        @radio_button(entity_drops) {
+                            text = "entity drops"
+                            size = (_slider_width, 16)
+                            selected = false
+                        }
+
+                        @radio_button(tile_drops) {
+                            text = "tile drops"
+                            size = (_slider_width, 16)
+                            selected = false
+                        }
+                    }
+
+                    @text(label_natural_regen) {
+                        text = "natural regeneration"
+                        colour = #aaaaaa
+                        text_scale = 0.8
+                    }
+
+                    @slider(natural_regen) {
+                        size = (_slider_width, 16)
+                        min_value = 0
+                        max_value = 4
+                        value = 1
+                        step = 1
+                    }
+                }
+            }
+        }
+    }
+
+    @button(btn_create_world) {
+        position = ORIGIN_BOTTOM_CENTER + (0, -8)
+        text = "create world"
+        size = (200, 24)
+    }
+}

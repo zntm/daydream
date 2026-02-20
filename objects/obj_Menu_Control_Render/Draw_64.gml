@@ -399,6 +399,38 @@ for (var j = 0; j <= _max_layer; ++j)
     
     matrix_set(matrix_world, _matrix_saved);
     surface_reset_target();
+    
+    
+    /* draw proglang ui on top layer */
+    if (j == _max_layer) && (variable_global_exists("gui_root")) && (global.gui_root != undefined)
+    {
+    	surface_set_target(surfaces[j]);
+    	
+    	/* matrix is already reset to world identity by matrix_saved above */
+    	global.gui_root.draw();
+    	
+    	
+    	/* draw dynamically spawned UI instances (unparented ones) */
+    	if (variable_global_exists("ui_instances"))
+    	{
+    		var _ui_keys = struct_get_names(global.ui_instances);
+    		var _ui_count = array_length(_ui_keys);
+    		
+    		
+    		for (var i = _ui_count - 1; i >= 0; --i)
+    		{
+    			var _ui_inst = global.ui_instances[$ _ui_keys[i]];
+    			
+    			
+    			if (_ui_inst != undefined) && (array_length(_ui_inst.root_elements) > 0) && (_ui_inst.root_elements[0].parent == undefined)
+    			{
+    				ui_draw(_ui_inst);
+    			}
+    		}
+    	}
+    	
+    	surface_reset_target();
+    }
 }
 
 // 1. Capture background for blur (if requested by transition)
