@@ -338,30 +338,38 @@ function UIElement(_x, _y, _width, _height) constructor
         
         if (_script_id != undefined)
         {
-            /* execute via proglang */
-            var _context = {
-                element: self,
-                element_name: element_name,
-                event: _event,
-                data: _data
-            }
-            
-            
-            /* merge with link context */
-            if (link_context != undefined)
+            /* handle gml methods directly (registered via add_event_handler) */
+            if (is_method(_script_id))
             {
-                var _link_names = struct_get_names(link_context);
-                var _link_count = array_length(_link_names);
-                
-                
-                for (var i = _link_count - 1; i >= 0; --i)
-                {
-                    _context[$ _link_names[i]] = link_context[$ _link_names[i]];
-                }
+                _script_id(_data);
             }
-            
-            
-            proglang_runtime_call(_script_id, [], _context);
+            /* handle proglang closures (registered via .ui event syntax) */
+            else
+            {
+                var _context = {
+                    element: self,
+                    element_name: element_name,
+                    event: _event,
+                    data: _data
+                }
+                
+                
+                /* merge with link context */
+                if (link_context != undefined)
+                {
+                    var _link_names = struct_get_names(link_context);
+                    var _link_count = array_length(_link_names);
+                    
+                    
+                    for (var i = _link_count - 1; i >= 0; --i)
+                    {
+                        _context[$ _link_names[i]] = link_context[$ _link_names[i]];
+                    }
+                }
+                
+                
+                proglang_runtime_call(_script_id, [], _context);
+            }
         }
     }
     

@@ -68,9 +68,9 @@ function UIPopup(_x, _y, _width, _height) : UIElement(_x, _y, _width, _height) c
         if !(visible) && (alpha < 0.01) exit;
         
         
-        var _gui_scale = global.gui_scale;
-        var _base_scale_x = _gui_scale * (global.gui_width / 960);
-        var _base_scale_y = _gui_scale * (global.gui_height / 540);
+        var _base_scale = ui_get_base_scale();
+        var _base_scale_x = _base_scale.x;
+        var _base_scale_y = _base_scale.y;
         
         
         /* draw overlay */
@@ -96,11 +96,17 @@ function UIPopup(_x, _y, _width, _height) : UIElement(_x, _y, _width, _height) c
         
         
         /* draw background */
-        draw_rectangle_colour(_x1, _y1, _x2, _y2, background_color, background_color, background_color, background_color, false);
+        if (background_color != undefined)
+        {
+            draw_rectangle_colour(_x1, _y1, _x2, _y2, background_color, background_color, background_color, background_color, false);
+        }
         
         
         /* draw border */
-        draw_rectangle_colour(_x1, _y1, _x2, _y2, border_color, border_color, border_color, border_color, true);
+        if (border_color != undefined)
+        {
+            draw_rectangle_colour(_x1, _y1, _x2, _y2, border_color, border_color, border_color, border_color, true);
+        }
         
         
         draw_set_alpha(1);

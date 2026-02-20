@@ -9,16 +9,13 @@ var _button_height = 16
 var _section_spacing = 4
 var _inner_spacing = 2
 
-@window(create_world) {
-    size = (440, 300)
+@area(create_world) {
+    size = (440, 340)
     position = ORIGIN_CENTER
-    movable = false
-    resizable = false
     title = "Create World"
-    background = #1a1a2e
 
     @area(left_panel) {
-        position = ORIGIN_TOP_LEFT + (8, 8)
+        position = ORIGIN_TOP_LEFT + (8, 32)
         size = (_panel_width, _panel_height)
 
         @area(preview) {
@@ -31,12 +28,15 @@ var _inner_spacing = 2
             position = ORIGIN_TOP_LEFT + (0, 88)
             size = (_panel_width, 160)
             layout = LAYOUT_VERTICAL
-            spacing = _section_spacing
+            spacing = 8
 
-            @text(label_name) {
-                text = "name"
-                colour = #aaaaaa
-                text_scale = 0.8
+            @area(name_label_row) {
+                size = (_panel_width, 14)
+                @text(label_name) {
+                    text = "name"
+                    colour = #aaaaaa
+                    text_scale = 0.8
+                }
             }
 
             @area(name_row) {
@@ -45,7 +45,7 @@ var _inner_spacing = 2
                 spacing = 2
 
                 @textbox(world_name) {
-                    size = (_textbox_width, _textbox_height)
+                    size = (168, _textbox_height)
                     placeholder = "enter name..."
                     text_length = 40
                 }
@@ -58,10 +58,13 @@ var _inner_spacing = 2
                 }
             }
 
-            @text(label_seed) {
-                text = "seed"
-                colour = #aaaaaa
-                text_scale = 0.8
+            @area(seed_label_row) {
+                size = (_panel_width, 14)
+                @text(label_seed) {
+                    text = "seed"
+                    colour = #aaaaaa
+                    text_scale = 0.8
+                }
             }
 
             @area(seed_row) {
@@ -70,7 +73,7 @@ var _inner_spacing = 2
                 spacing = 2
 
                 @textbox(world_seed) {
-                    size = (_textbox_width, _textbox_height)
+                    size = (168, _textbox_height)
                     placeholder = "enter seed..."
                 }
 
@@ -82,10 +85,13 @@ var _inner_spacing = 2
                 }
             }
 
-            @text(label_difficulty) {
-                text = "difficulty"
-                colour = #aaaaaa
-                text_scale = 0.8
+            @area(difficulty_label_row) {
+                size = (_panel_width, 14)
+                @text(label_difficulty) {
+                    text = "difficulty"
+                    colour = #aaaaaa
+                    text_scale = 0.8
+                }
             }
 
             @slider(difficulty) {
@@ -100,14 +106,14 @@ var _inner_spacing = 2
 
     @line(divider) {
         position = ORIGIN_CENTER
-        start = (0, -120)
-        end = (0, 120)
+        start = (0, -126)
+        end = (0, 126)
         thickness = 1
         colour = #3a3a4a
     }
 
     @area(right_panel) {
-        position = ORIGIN_TOP_RIGHT + (-8, 8)
+        position = ORIGIN_TOP_RIGHT + (-8, 32)
         size = (_panel_width, _panel_height)
 
         @scroll_area(options_scroll) {

@@ -39,9 +39,9 @@ function UISlider(_x, _y, _width, _min, _max, _value) : UIElement(_x, _y, _width
         var _abs_y = get_absolute_y();
         
         
-        var _gui_scale = global.gui_scale;
-        var _base_scale_x = _gui_scale * (global.gui_width / 960);
-        var _base_scale_y = _gui_scale * (global.gui_height / 540);
+        var _base_scale = ui_get_base_scale();
+        var _base_scale_x = _base_scale.x;
+        var _base_scale_y = _base_scale.y;
         
         
         var _mx = (window_mouse_get_x() / global.window_width) * global.gui_width;
@@ -104,9 +104,9 @@ function UISlider(_x, _y, _width, _min, _max, _value) : UIElement(_x, _y, _width
         var _abs_y = get_absolute_y();
         
         
-        var _gui_scale = global.gui_scale;
-        var _base_scale_x = _gui_scale * (global.gui_width / 960);
-        var _base_scale_y = _gui_scale * (global.gui_height / 540);
+        var _base_scale = ui_get_base_scale();
+        var _base_scale_x = _base_scale.x;
+        var _base_scale_y = _base_scale.y;
         
         
         var _x1 = _abs_x * _base_scale_x;

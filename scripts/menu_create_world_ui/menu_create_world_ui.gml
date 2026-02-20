@@ -10,13 +10,19 @@ function menu_create_world_ui_load()
 	/* ensure gui_root exists (menu rooms don't create one) */
 	if (!variable_global_exists("gui_root")) || (global.gui_root == undefined)
 	{
-		var _design_w = 960;
-		
-		var _logical_width  = _design_w / global.gui_scale;
-		var _logical_height = global.gui_height / (global.gui_width / _logical_width);
-		
-		global.gui_root = new UIElement(0, 0, _logical_width, _logical_height);
+		global.gui_root = new UIElement(0, 0, 960, 540);
 		global.gui_root.element_name = "gui_root";
+	}
+	
+	
+	/* reload definition if it exists in cache */
+	if (variable_global_exists("ui_definitions"))
+	{
+		var _full_path = "resources/data/ui/create_world.ui";
+		if (struct_exists(global.ui_definitions, _full_path))
+		{
+			struct_remove(global.ui_definitions, _full_path);
+		}
 	}
 	
 	
@@ -359,26 +365,9 @@ function menu_create_world_ui_submit(_instance)
 
 function menu_create_world_ui_cleanup_legacy()
 {
-	with (obj_Menu_Anchor)
-	{
-		y = -1000;
-	}
-	
-	
-	with (obj_Menu_Button)
-	{
-		y = -1000;
-	}
-	
-	
-	with (obj_Menu_Dropdown)
-	{
-		y = -1000;
-	}
-	
-	
-	with (obj_Menu_Textbox)
-	{
-		y = -1000;
-	}
+	/* destroy legacy room instances */
+	instance_destroy(obj_Menu_Anchor);
+	instance_destroy(obj_Menu_Button);
+	instance_destroy(obj_Menu_Dropdown);
+	instance_destroy(obj_Menu_Textbox);
 }

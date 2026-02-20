@@ -227,11 +227,17 @@ function UIDropdown(_x, _y, _width, _height) : UIElement(_x, _y, _width, _height
         
         
         /* draw header background */
-        draw_rectangle_colour(_x1, _y1, _x2, _header_y2, dropdown_color, dropdown_color, dropdown_color, dropdown_color, false);
+        if (dropdown_color != undefined)
+        {
+            draw_rectangle_colour(_x1, _y1, _x2, _header_y2, dropdown_color, dropdown_color, dropdown_color, dropdown_color, false);
+        }
         
         
         /* draw header border */
-        draw_rectangle_colour(_x1, _y1, _x2, _header_y2, border_color, border_color, border_color, border_color, true);
+        if (border_color != undefined)
+        {
+            draw_rectangle_colour(_x1, _y1, _x2, _header_y2, border_color, border_color, border_color, border_color, true);
+        }
         
         
         /* draw selected text */
@@ -278,11 +284,17 @@ function UIDropdown(_x, _y, _width, _height) : UIElement(_x, _y, _width, _height
                 /* background (highlighted if hovered) */
                 var _bg = (i == hovered_option) ? hover_color : dropdown_color;
                 
-                draw_rectangle_colour(_x1, _opt_top, _x2, _opt_bottom, _bg, _bg, _bg, _bg, false);
+                if (_bg != undefined)
+                {
+                    draw_rectangle_colour(_x1, _opt_top, _x2, _opt_bottom, _bg, _bg, _bg, _bg, false);
+                }
                 
                 
                 /* border */
-                draw_rectangle_colour(_x1, _opt_top, _x2, _opt_bottom, border_color, border_color, border_color, border_color, true);
+                if (border_color != undefined)
+                {
+                    draw_rectangle_colour(_x1, _opt_top, _x2, _opt_bottom, border_color, border_color, border_color, border_color, true);
+                }
                 
                 
                 /* text */

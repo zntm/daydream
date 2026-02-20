@@ -18,7 +18,7 @@ function UIWindow(_x, _y, _width, _height, _title = "") : UIElement(_x, _y, _wid
     /* window styling */
     title_height = 24;
     
-    background_color = #1a1a2e;
+    background_color = undefined;
     
     title_color = #2a2a3e;
     
@@ -56,9 +56,9 @@ function UIWindow(_x, _y, _width, _height, _title = "") : UIElement(_x, _y, _wid
         var _abs_y = get_absolute_y();
         
         
-        var _gui_scale = global.gui_scale;
-        var _base_scale_x = _gui_scale * (global.gui_width / 960);
-        var _base_scale_y = _gui_scale * (global.gui_height / 540);
+        var _base_scale = ui_get_base_scale();
+        var _base_scale_x = _base_scale.x;
+        var _base_scale_y = _base_scale.y;
         
         
         var _mx = (window_mouse_get_x() / global.window_width) * global.gui_width;
@@ -122,9 +122,9 @@ function UIWindow(_x, _y, _width, _height, _title = "") : UIElement(_x, _y, _wid
         var _abs_y = get_absolute_y();
         
         
-        var _gui_scale = global.gui_scale;
-        var _base_scale_x = _gui_scale * (global.gui_width / 960);
-        var _base_scale_y = _gui_scale * (global.gui_height / 540);
+        var _base_scale = ui_get_base_scale();
+        var _base_scale_x = _base_scale.x;
+        var _base_scale_y = _base_scale.y;
         
         
         var _x1 = _abs_x * _base_scale_x;
@@ -137,17 +137,26 @@ function UIWindow(_x, _y, _width, _height, _title = "") : UIElement(_x, _y, _wid
         
         
         /* draw background */
-        draw_rectangle_colour(_x1, _y1, _x2, _y2, background_color, background_color, background_color, background_color, false);
+        if (background_color != undefined)
+        {
+            draw_rectangle_colour(_x1, _y1, _x2, _y2, background_color, background_color, background_color, background_color, false);
+        }
         
         
         /* draw title bar */
         var _title_y2 = _y1 + (title_height * _base_scale_y);
         
-        draw_rectangle_colour(_x1, _y1, _x2, _title_y2, title_color, title_color, title_color, title_color, false);
+        if (title_color != undefined)
+        {
+            draw_rectangle_colour(_x1, _y1, _x2, _title_y2, title_color, title_color, title_color, title_color, false);
+        }
         
         
         /* draw border */
-        draw_rectangle_colour(_x1, _y1, _x2, _y2, border_color, border_color, border_color, border_color, true);
+        if (border_color != undefined)
+        {
+            draw_rectangle_colour(_x1, _y1, _x2, _y2, border_color, border_color, border_color, border_color, true);
+        }
         
         
         /* draw title text */

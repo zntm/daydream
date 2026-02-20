@@ -406,7 +406,9 @@ for (var j = 0; j <= _max_layer; ++j)
     {
     	surface_set_target(surfaces[j]);
     	
-    	/* matrix is already reset to world identity by matrix_saved above */
+    	/* apply the same scaling matrix as above */
+    	matrix_set(matrix_world, _matrix_scale);
+    	
     	global.gui_root.draw();
     	
     	
@@ -429,6 +431,7 @@ for (var j = 0; j <= _max_layer; ++j)
     		}
     	}
     	
+    	matrix_set(matrix_world, _matrix_saved);
     	surface_reset_target();
     }
 }
