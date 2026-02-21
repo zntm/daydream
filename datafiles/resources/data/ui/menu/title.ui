@@ -43,7 +43,7 @@
     }
 
     @area(version_anchor) {
-        position = ORIGIN_BOTTOM_RIGHT + (-16, -16)
+        position = ORIGIN_BOTTOM_RIGHT + (-24, -24)
         size = (0, 0)
         
         @area(version_graphic) {

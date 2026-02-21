@@ -5,34 +5,34 @@
     position = ORIGIN_CENTER
 
     @button(btn_back) {
-        position = ORIGIN_TOP_LEFT + (8, 8)
+        position = ORIGIN_TOP_LEFT + (24, 24)
         size = (48, 24)
         text = "Back"
     }
 
     @text(title) {
-        position = ORIGIN_TOP_CENTER + (0, 16)
+        position = ORIGIN_TOP_CENTER + (0, 32)
         text = "Players"
         text_scale = 1.5
     }
 
     @button(btn_view_toggle) {
-        position = ORIGIN_TOP_RIGHT + (-8, 8)
+        position = ORIGIN_TOP_RIGHT + (-24, 24)
         size = (32, 24)
         text = "Grid"
     }
 
     @area(content_area) {
         position = ORIGIN_CENTER + (0, 16)
-        size = (920, 440)
+        size = (880, 400)
 
         @scroll_area(players_scroll) {
             position = ORIGIN_TOP_LEFT
-            size = (920, 440)
+            size = (880, 400)
 
             @area(players_container) {
                 position = ORIGIN_TOP_LEFT
-                size = (920, 440)
+                size = (880, 400)
                 layout = LAYOUT_VERTICAL
                 spacing = 4
 
@@ -46,7 +46,7 @@
     }
 
     @button(btn_create_player) {
-        position = ORIGIN_BOTTOM_CENTER + (0, -8)
+        position = ORIGIN_BOTTOM_CENTER + (0, -24)
         text = "Create Player"
         size = (180, 28)
     }

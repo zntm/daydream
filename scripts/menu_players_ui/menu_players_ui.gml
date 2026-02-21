@@ -235,12 +235,14 @@ function menu_players_ui_build_cards(_container, _players, _ystart, _is_grid, _i
 			
 			var _ew = self.width * _xscale;
 			var _eh = self.height * _yscale;
+			var _alpha = global.menu_transition_alpha ?? 1;
 			
 			/* background */
-			draw_set_alpha(0.5);
+			draw_set_alpha(0.5 * _alpha);
 			draw_rectangle_colour(_x, _y, _x + _ew, _y + _eh, c_black, c_black, c_black, c_black, false);
-			draw_set_alpha(1);
+			draw_set_alpha(_alpha);
 			draw_rectangle_colour(_x, _y, _x + _ew, _y + _eh, #3a3a4a, #3a3a4a, #3a3a4a, #3a3a4a, true);
+			draw_set_alpha(1);
 			
 			var _halign = draw_get_halign();
 			var _valign = draw_get_valign();
@@ -253,12 +255,12 @@ function menu_players_ui_build_cards(_container, _players, _ystart, _is_grid, _i
 				var _cx = _x + (_ew / 2);
 				var _cy = _y + 8;
 				
-				render_attire_ext(_data.get_attire(), _cx, _cy + 40, 2, 2, 0, c_white, 1);
+				render_attire_ext(_data.get_attire(), _cx, _cy + 40, 2, 2, 0, c_white, _alpha);
 				
 				draw_set_align(fa_center, fa_top);
 
-				render_text(_cx, _y + _eh - 40, _data.get_name(), 0.9, 0.9);
-				render_text(_cx, _y + _eh - 24, date_datetime_string(_data.get_last_opened()), 0.6, 0.6);
+				render_text(_cx, _y + _eh - 40, _data.get_name(), 0.9, 0.9, 0, c_white, _alpha);
+				render_text(_cx, _y + _eh - 24, date_datetime_string(_data.get_last_opened()), 0.6, 0.6, 0, c_white, _alpha);
 			}
 			else
 			{
@@ -266,10 +268,10 @@ function menu_players_ui_build_cards(_container, _players, _ystart, _is_grid, _i
 				var _cx = _x + 24;
 				var _cy = _y + (_eh / 2);
 				
-				render_attire_ext(_data.get_attire(), _cx, _cy + 8, 1.5, 1.5, 0, c_white, 1);
+				render_attire_ext(_data.get_attire(), _cx, _cy + 8, 1.5, 1.5, 0, c_white, _alpha);
 				
-				render_text(_x + 56, _y + 8, _data.get_name());
-				render_text(_x + 56, _y + 28, date_datetime_string(_data.get_last_opened()), 0.7, 0.7);
+				render_text(_x + 56, _y + 8, _data.get_name(), 1, 1, 0, c_white, _alpha);
+				render_text(_x + 56, _y + 28, date_datetime_string(_data.get_last_opened()), 0.7, 0.7, 0, c_white, _alpha);
 			}
 			
 			draw_set_align(_halign, _valign);
@@ -288,13 +290,14 @@ function menu_players_ui_build_cards(_container, _players, _ystart, _is_grid, _i
 		_btn_pin.add_event_handler("on_draw", method(_btn_pin, function(_x, _y, _xscale, _yscale) {
 			var _halign = draw_get_halign();
 			var _valign = draw_get_valign();
+			var _alpha = global.menu_transition_alpha ?? 1;
 
 			draw_set_align(fa_center, fa_middle);
 
 			var _cx = _x + (self.width * _xscale / 2);
 			var _cy = _y + (self.height * _yscale / 2);
 
-			render_text(_cx, _cy, "Pin", 0.6, 0.6);
+			render_text(_cx, _cy, "I", 0.8, 0.8, 0, c_white, _alpha);
 
 			draw_set_align(_halign, _valign);
 		}));
@@ -316,13 +319,14 @@ function menu_players_ui_build_cards(_container, _players, _ystart, _is_grid, _i
 		_btn_gear.add_event_handler("on_draw", method(_btn_gear, function(_x, _y, _xscale, _yscale) {
 			var _halign = draw_get_halign();
 			var _valign = draw_get_valign();
+			var _alpha = global.menu_transition_alpha ?? 1;
 
 			draw_set_align(fa_center, fa_middle);
 
 			var _cx = _x + (self.width * _xscale / 2);
 			var _cy = _y + (self.height * _yscale / 2);
 
-			render_text(_cx, _cy, "Opt", 0.6, 0.6);
+			render_text(_cx, _cy, "O", 0.8, 0.8, 0, c_white, _alpha);
 
 			draw_set_align(_halign, _valign);
 		}));
@@ -349,7 +353,7 @@ function menu_players_ui_build_cards(_container, _players, _ystart, _is_grid, _i
 			global.current_player.uuid   = _uuid;
 			global.current_player.attire = _data.get_attire();
 			
-			room_goto(rm_Menu_Worlds);
+			menu_transition_goto(rm_Menu_Worlds);
 		}));
 		
 		array_push(_container.children, _entry);

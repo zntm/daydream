@@ -5,24 +5,24 @@
     position = ORIGIN_CENTER
 
     @button(btn_back) {
-        position = ORIGIN_TOP_LEFT + (8, 8)
+        position = ORIGIN_TOP_LEFT + (24, 24)
         size = (48, 24)
         text = "Back"
     }
 
     @text(title) {
-        position = ORIGIN_TOP_CENTER + (0, 16)
+        position = ORIGIN_TOP_CENTER + (0, 32)
         text = "Create Player"
         text_scale = 1.5
     }
 
     @area(main_content) {
         position = ORIGIN_CENTER + (0, 0)
-        size = (920, 380)
+        size = (880, 360)
 
         @area(left_column) {
             position = ORIGIN_TOP_LEFT
-            size = (280, 380)
+            size = (280, 360)
             
             @area(preview_renderer) {
                 position = ORIGIN_TOP_CENTER + (0, 16)
@@ -32,15 +32,15 @@
 
 		@line(divider) {
 			position = ORIGIN_CENTER
-			start = (0, -170)
-			end = (0, 170)
+			start = (0, -160)
+			end = (0, 160)
 			thickness = 1
 			colour = #3a3a4a
 		}
 
         @area(right_column) {
             position = ORIGIN_TOP_RIGHT
-            size = (600, 380)
+            size = (560, 360)
 
             @text(label_body_design) {
                 position = ORIGIN_TOP_LEFT + (16, 16)
@@ -51,7 +51,7 @@
 
             @area(body_design_row) {
                 position = ORIGIN_TOP_LEFT + (16, 36)
-                size = (560, 48)
+                size = (520, 48)
                 layout = LAYOUT_HORIZONTAL
                 spacing = 8
                 // icons injected via GML
@@ -66,7 +66,7 @@
 
             @area(colour_row) {
                 position = ORIGIN_TOP_LEFT + (16, 116)
-                size = (560, 48)
+                size = (520, 48)
                 layout = LAYOUT_HORIZONTAL
                 spacing = 8
                 // color swatches injected via GML
@@ -74,19 +74,19 @@
 
             @scroll_area(design_scroll) {
                 position = ORIGIN_TOP_LEFT + (16, 176)
-                size = (560, 200)
+                size = (520, 180)
 
                 @area(design_list) {
                     position = ORIGIN_TOP_LEFT
-                    size = (560, 200)
+                    size = (520, 180)
                 }
             }
         }
     }
 
     @area(bottom_fields) {
-        position = ORIGIN_BOTTOM_CENTER + (0, -48)
-        size = (920, 32)
+        position = ORIGIN_BOTTOM_CENTER + (0, -64)
+        size = (880, 32)
         layout = LAYOUT_HORIZONTAL
         spacing = 8
 
@@ -108,7 +108,7 @@
     }
 
     @button(btn_create_player) {
-        position = ORIGIN_BOTTOM_RIGHT + (-16, -8)
+        position = ORIGIN_BOTTOM_RIGHT + (-24, -24)
         size = (160, 28)
         text = "Create Player"
     }

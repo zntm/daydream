@@ -5,24 +5,24 @@
     position = ORIGIN_CENTER
 
     @button(btn_back) {
-        position = ORIGIN_TOP_LEFT + (8, 8)
+        position = ORIGIN_TOP_LEFT + (24, 24)
         size = (48, 24)
         text = "Back"
     }
 
     @text(title) {
-        position = ORIGIN_TOP_CENTER + (0, 16)
+        position = ORIGIN_TOP_CENTER + (0, 32)
         text = "Settings"
         text_scale = 1.5
     }
 
     @area(main_content) {
         position = ORIGIN_CENTER + (0, 16)
-        size = (920, 460)
+        size = (880, 420)
 
         @area(left_column) {
             position = ORIGIN_TOP_LEFT
-            size = (200, 460)
+            size = (200, 420)
             layout = LAYOUT_VERTICAL
             spacing = 4
             
@@ -54,15 +54,15 @@
 
         @area(right_column) {
             position = ORIGIN_TOP_RIGHT
-            size = (700, 460)
+            size = (660, 420)
 
             @scroll_area(settings_scroll) {
                 position = ORIGIN_TOP_LEFT
-                size = (700, 460)
+                size = (660, 420)
 
                 @area(settings_list) {
                     position = ORIGIN_TOP_LEFT
-                    size = (700, 460)
+                    size = (660, 420)
                     layout = LAYOUT_VERTICAL
                     spacing = 8
                 }
