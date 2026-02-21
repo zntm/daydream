@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"tile_connected_index",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"tile_connected_index",
+  "parent":{
+    "name":"daydream",
+    "path":"daydream.yyp",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

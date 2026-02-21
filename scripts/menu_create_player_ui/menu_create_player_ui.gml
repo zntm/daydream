@@ -52,10 +52,16 @@ function menu_create_player_ui_init()
 	global.current_player.uuid = uuid_generate(irandom(0xffffffff));
 	
 	/* ensure attire array has enough elements */
+	if (!is_array(global.current_player.attire))
+	{
+	    global.current_player.attire = [];
+	}
+	
 	while (array_length(global.current_player.attire) < 5)
 	{
 	    array_push(global.current_player.attire, 0);
 	}
+
 	
 	with (obj_Menu_Control)
 	{
@@ -82,21 +88,21 @@ function menu_create_player_ui_init()
 		_btn_create_player.text = loca_translate("phantasia:menu.players.create");
 		
 		_btn_create_player.add_event_handler("on_select_release", function() {
-			var _index = global.players_list_length;
+			var _index = array_length(global.file_players);
 			
 			global.file_players[@ _index] = new FilePlayer(
                 global.current_player.uuid,
                 global.current_player.name,
-                global.current_player.attire
+                unix_to_datetime(datetime_to_unix())
             );
             
             var _data = global.file_players[_index];
+            _data.set_attire(global.current_player.attire);
+            _data.set_hp(global.current_player.hp, global.current_player.hp_max);
             _data.save();
             
             global.player_statistics = {};
             global.player_achievements = {};
-            
-            file_write_directory(PROGRAM_DIRECTORY_PLAYERS);
             
 			menu_transition_goto(rm_Menu_Worlds);
 		});
@@ -161,7 +167,7 @@ function menu_create_player_ui_init()
 		menu_create_player_ui_build_option_row(
 			_body_design_row,
 			1,
-			array_length(global.player_var_attire_hair)
+			array_length(global.attire_data.hair)
 		);
 	}
 	
@@ -173,7 +179,7 @@ function menu_create_player_ui_init()
 		menu_create_player_ui_build_colour_row(
 			_colour_row,
 			0,
-			array_length(global.player_var_colour_fill)
+			array_length(global.attire_colour_data)
 		);
 	}
 	
@@ -187,7 +193,7 @@ function menu_create_player_ui_init()
 		
 		_y_pos = menu_create_player_ui_build_labeled_row(
 			_design_list, _y_pos, "phantasia:menu.players.shirt", 2,
-			array_length(global.player_var_attire_shirt)
+			array_length(global.attire_data.shirt)
 		);
 		
 		/* voice button */
@@ -264,15 +270,19 @@ function menu_create_player_ui_build_option_row(_parent, _attire_index, _max_opt
 			
 			if (self.attire_index == 1)
 			{
-				var _ha = global.player_var_attire_hair[self.option_value];
+				var _ha = global.attire_data.hair[self.option_value];
+				var _sprite_asset = _ha.get_sprite_colour();
+				var _sprite = is_array(_sprite_asset) ? _sprite_asset[0].get_sprite() : _sprite_asset.get_sprite();
 
-				draw_sprite_ext(_ha.sprite, 0, _cx, _cy + 8, 2, 2, 0, c_white, 1);
+				draw_sprite_ext(_sprite, 0, _cx, _cy + 8, 2, 2, 0, c_white, 1);
 			}
 			else if (self.attire_index == 2)
 			{
-				var _sa = global.player_var_attire_shirt[self.option_value];
+				var _sa = global.attire_data.shirt[self.option_value];
+				var _sprite_asset = _sa.get_sprite_colour();
+				var _sprite = is_array(_sprite_asset) ? _sprite_asset[0].get_sprite() : _sprite_asset.get_sprite();
 
-				draw_sprite_ext(_sa.sprite, 0, _cx, _cy + 8, 2, 2, 0, c_white, 1);
+				draw_sprite_ext(_sprite, 0, _cx, _cy + 8, 2, 2, 0, c_white, 1);
 			}
 		}));
 		
@@ -301,7 +311,8 @@ function menu_create_player_ui_build_colour_row(_parent, _attire_index, _max_opt
 		
 		_btn.add_event_handler("on_draw", method(_btn, function(_x, _y, _xs, _ys) {
 			var _selected = global.current_player.attire[self.attire_index] == self.option_value;
-			var _c = global.player_var_colour_fill[self.option_value];
+			var _palette = global.attire_colour_data[self.option_value];
+			var _c = _palette[0];
 			
 			var _w = self.width * _xs;
 			var _h = self.height * _ys;
@@ -360,21 +371,26 @@ function menu_create_player_ui_build_labeled_row(_parent, _y, _label_key, _attir
 			
 			if (self.attire_index == 2)
 			{
-				var _sa = global.player_var_attire_shirt[self.option_value];
+				var _sa = global.attire_data.shirt[self.option_value];
+				var _sprite_asset = _sa.get_sprite_colour();
+				var _sprite = is_array(_sprite_asset) ? _sprite_asset[0].get_sprite() : _sprite_asset.get_sprite();
 
-				draw_sprite_ext(_sa.sprite, 0, _cx, _cy + 8, 2, 2, 0, c_white, 1);
+				draw_sprite_ext(_sprite, 0, _cx, _cy + 8, 2, 2, 0, c_white, 1);
 			}
 			else if (self.attire_index == 0)
 			{
-				var _c = global.player_var_colour_fill[self.option_value];
+				var _palette = global.attire_colour_data[self.option_value];
+				var _c = _palette[0];
 
 				draw_sprite_ext(spr_Player_Base, 0, _cx, _cy + 8, 2, 2, 0, _c, 1);
 			}
 			else if (self.attire_index == 1)
 			{
-				var _ha = global.player_var_attire_hair[self.option_value];
+				var _ha = global.attire_data.hair[self.option_value];
+				var _sprite_asset = _ha.get_sprite_colour();
+				var _sprite = is_array(_sprite_asset) ? _sprite_asset[0].get_sprite() : _sprite_asset.get_sprite();
 
-				draw_sprite_ext(_ha.sprite, 0, _cx, _cy + 8, 2, 2, 0, c_white, 1);
+				draw_sprite_ext(_sprite, 0, _cx, _cy + 8, 2, 2, 0, c_white, 1);
 			}
 		}));
 		
@@ -387,3 +403,4 @@ function menu_create_player_ui_build_labeled_row(_parent, _y, _label_key, _attir
 	
 	return _row_y + _btn_size + 8;
 }
+

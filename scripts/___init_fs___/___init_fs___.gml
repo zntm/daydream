@@ -67,7 +67,41 @@ function __get_program_directory_data()
 
 #macro PROGRAM_DIRECTORY_DATA      __get_program_directory_data()
 
-#macro PROGRAM_DIRECTORY_APPDATA ((os_type == os_windows) ? $"{environment_get_variable("LOCALAPPDATA")}/{PROGRAM_NAME}" : $"{environment_get_variable("HOME")}/.config/{PROGRAM_NAME}")
+function file_system_get_appdata_path()
+{
+    static _res = undefined;
+    if (_res != undefined) return _res;
+    
+    switch (os_type)
+    {
+        case os_windows:
+            _res = $"{environment_get_variable("LOCALAPPDATA")}/{PROGRAM_NAME}";
+            break;
+            
+        case os_linux:
+            _res = $"{environment_get_variable("HOME")}/.config/{PROGRAM_NAME}";
+            break;
+            
+        case os_macosx:
+            _res = $"{environment_get_variable("HOME")}/Library/Application Support/{PROGRAM_NAME}";
+            break;
+            
+        default:
+            // Fallback for other platforms (Android, iOS, etc.)
+            _res = string_replace_all(game_save_id, "\\", "/");
+            // Remove trailing slash if present
+            if (string_byte_at(_res, string_byte_length(_res)) == ord("/"))
+            {
+                _res = string_copy(_res, 1, string_length(_res) - 1);
+            }
+            break;
+    }
+    
+    return _res;
+}
+
+#macro PROGRAM_DIRECTORY_APPDATA file_system_get_appdata_path()
+
 
 #macro PROGRAM_DIRECTORY_CRASH_LOG   $"{PROGRAM_DIRECTORY_APPDATA}/crash_log"
 #macro PROGRAM_DIRECTORY_PLAYERS     $"{PROGRAM_DIRECTORY_APPDATA}/players"

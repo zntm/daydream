@@ -1,6 +1,6 @@
 function tile_connect(_x, _y, _z, _tile)
 {
-    static _tile_connected_index = global.tile_connected_index;
+    static _tile_connected_index = global.tile_neighbor_offsets;
     
     var _current_world = global.current_world;
     

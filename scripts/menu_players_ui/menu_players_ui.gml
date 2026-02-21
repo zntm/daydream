@@ -351,7 +351,7 @@ function menu_players_ui_build_cards(_container, _players, _ystart, _is_grid, _i
 			var _data = self.player_ref;
 			var _uuid = _data.get_uuid();
 			
-			if (!directory_exists(PROGRAM_DIRECTORY_PLAYERS + "\\" + _uuid))
+			if (!directory_exists(PROGRAM_DIRECTORY_PLAYERS + "/" + _uuid))
 			{
 				show_debug_message("Player folder not found: " + string(_uuid));
 

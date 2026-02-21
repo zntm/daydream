@@ -98,4 +98,17 @@ function FilePlayer(_uuid, _name, _last_opened) constructor
     {
         return self[$ "___achievements"];
     }
+    
+    static save = function()
+    {
+        var _player_info = {
+            uuid: ___uuid,
+            name: ___name,
+            hp: ___hp,
+            hp_max: ___hp_max,
+            attire: ___attire
+        };
+        
+        file_save_player_global(_player_info);
+    }
 }

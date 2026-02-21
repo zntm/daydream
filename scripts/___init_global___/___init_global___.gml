@@ -91,7 +91,7 @@ global.attire_elements_ordered = [
     "footwear"
 ];
 
-global.tile_connected_index = [
+global.tile_neighbor_offsets = [
      1,  1,
      0,  1,
     -1,  1,

@@ -37,12 +37,15 @@ function render_attire(_attire, _index, _x, _y, _xscale, _yscale, _is_blinking =
         draw_sprite_ext(_sprite, _index, _x, _y, _xscale, _yscale, _angle, c_white, 1);
     }
     
-    var _attire_data  = global.attire_data;
+    var _attire_is_array = is_array(_attire);
+    var _attire_data     = global.attire_data;
     
     var _colour_data  = global.attire_colour_data;
     var _colour_white = global.attire_colour_white_data;
     
-    var _colour_body = _colour_data[_attire.body.colour];
+    // Body colour is usually at index 0 in the array or in body.colour in struct
+    var _body_colour_index = _attire_is_array ? _attire[0] : _attire.body.colour;
+    var _colour_body = _colour_data[_body_colour_index];
     
     var _attire_elements = global.attire_elements_ordered;
     
@@ -54,7 +57,7 @@ function render_attire(_attire, _index, _x, _y, _xscale, _yscale, _is_blinking =
         
         if (instance_exists(_item)) && (_element == "body_arm_left")
         {
-            draw_sprite_ext(_item.sprite_index, _item.image_index, _item.x, _item.y, _item.image_xscale, _item.image_yscale, _item._angle, c_white, 1);
+            draw_sprite_ext(_item.sprite_index, _item.image_index, _item.x, _item.y, _item.image_xscale, _item.image_yscale, _item.image_angle, c_white, 1);
         }
         
         var _sprite_body = __sprite_body[$ _element];
@@ -68,155 +71,101 @@ function render_attire(_attire, _index, _x, _y, _xscale, _yscale, _is_blinking =
         
         if (_is_blinking) && (_element == "eyes") continue;
         
-        if (is_array(_element))
+        var _element_name  = is_array(_element) ? _element[0] : _element;
+        var _element_index = is_array(_element) ? _element[1] : 0;
+        
+        var _data = _attire_data[$ _element_name];
+        if (_data == undefined) continue;
+        
+        var _part_index  = 0;
+        var _part_colour = 0;
+        
+        if (_attire_is_array)
         {
-            var _element_name  = _element[0];
-            var _element_index = _element[1];
-            
-            var _data = _attire_data[$ _element_name];
-            
-            if (_data == undefined) continue;
-            
-            var _part = _attire[$ _element_name];
-            
-            var _part_index  = _part.index;
-            var _part_colour = _part.colour;
-            
-            var _ = _data[_part_index];
-            
-            var _image_index_arm = ((_index_arm != undefined) && ((_element_name == "shirt") || (_element_name == "shirt_detail")) && (_element_index == 2) ? _index_arm : _index);
-            
-            if (_ == undefined) continue;
-            
-            var _sprite_colour = _.get_sprite_colour();
-            
-            if (_sprite_colour != undefined)
+            // Map element name to array index
+            switch (_element_name)
             {
-                // Check if colour sprites are stored as top-level array (multiple parts like shirt)
-                if (is_array(_sprite_colour) && (_element_index < _.get_sprite_colour_length()))
-                {
-                    // Top-level array - get the sprite for this element index
-                    var _sprite_asset_at_index = _sprite_colour[_element_index];
-                    
-                    if (is_array(_sprite_asset_at_index))
-                    {
-                        // Nested array - folder-based multi-frame sprites
-                        if (_image_index_arm < array_length(_sprite_asset_at_index))
-                        {
-                            __draw_body(_sprite_asset_at_index[_image_index_arm], 0, _x, _y, _xscale, _yscale, _angle, _colour_white, _colour_data[_part_colour]);
-                        }
-                    }
-                    else
-                    {
-                        // Single SpriteAsset for this part
-                        __draw_body(_sprite_asset_at_index, _image_index_arm, _x, _y, _xscale, _yscale, _angle, _colour_white, _colour_data[_part_colour]);
-                    }
-                }
-                else if (is_array(_sprite_colour))
-                {
-                    // Folder-based array of SpriteAssets (multi-frame animation)
-                    if (_image_index_arm < array_length(_sprite_colour))
-                    {
-                        __draw_body(_sprite_colour[_image_index_arm], 0, _x, _y, _xscale, _yscale, _angle, _colour_white, _colour_data[_part_colour]);
-                    }
-                }
-                else
-                {
-                    // Single SpriteAsset
-                    __draw_body(_sprite_colour, _image_index_arm, _x, _y, _xscale, _yscale, _angle, _colour_white, _colour_data[_part_colour]);
-                }
-            }
-            
-            var _sprite_white = _.get_sprite_white();
-            
-            if (_sprite_white != undefined)
-            {
-                // Check if white sprites are stored as top-level array (multiple parts like shirt)
-                if (is_array(_sprite_white) && (_element_index < _.get_sprite_white_length()))
-                {
-                    // Top-level array - get the sprite for this element index
-                    var _sprite_asset_at_index = _sprite_white[_element_index];
-                    
-                    if (is_array(_sprite_asset_at_index))
-                    {
-                        // Nested array - folder-based multi-frame sprites
-                        if (_image_index_arm < array_length(_sprite_asset_at_index))
-                        {
-                            __draw_sprite_white(_sprite_asset_at_index[_image_index_arm], 0, _x, _y, _xscale, _yscale, _angle);
-                        }
-                    }
-                    else
-                    {
-                        // Single SpriteAsset for this part
-                        __draw_sprite_white(_sprite_asset_at_index, _image_index_arm, _x, _y, _xscale, _yscale, _angle);
-                    }
-                }
-                else if (is_array(_sprite_white))
-                {
-                    // Folder-based array of SpriteAssets (multi-frame animation)
-                    if (_image_index_arm < array_length(_sprite_white))
-                    {
-                        __draw_sprite_white(_sprite_white[_image_index_arm], 0, _x, _y, _xscale, _yscale, _angle);
-                    }
-                }
-                else
-                {
-                    // Single SpriteAsset
-                    __draw_sprite_white(_sprite_white, _image_index_arm, _x, _y, _xscale, _yscale, _angle);
-                }
+                case "body":         _part_index = 0; _part_colour = _attire[0]; break;
+                case "headwear":     _part_index = 0; _part_colour = 0;          break; // Headwear index not in current array?
+                case "hair":         _part_index = _attire[1]; _part_colour = 0; break;
+                case "eyes":         _part_index = 0; _part_colour = 0;          break;
+                case "face":         _part_index = 0; _part_colour = 0;          break;
+                case "shirt":        _part_index = _attire[2]; _part_colour = 0; break;
+                case "shirt_detail": _part_index = 0; _part_colour = 0;          break;
+                case "pants":        _part_index = 0; _part_colour = 0;          break;
+                case "footwear":     _part_index = 0; _part_colour = 0;          break;
             }
         }
         else
         {
-            var _data = _attire_data[$ _element];
-            
-            if (_data == undefined) continue;
-            
-            var _part = _attire[$ _element];
-            
-            var _part_index  = _part.index;
-            var _part_colour = _part.colour;
-            
-            var _ = _data[_part_index];
-            
-            if (_ == undefined) continue;
-            
-            var _sprite_colour = _.get_sprite_colour();
-            
-            if (_sprite_colour != undefined)
+            var _part = _attire[$ _element_name];
+            _part_index  = _part.index;
+            _part_colour = _part.colour;
+        }
+        
+        var _ = _data[_part_index];
+        if (_ == undefined) continue;
+        
+        var _image_index = ((_index_arm != undefined) && ((_element_name == "shirt") || (_element_name == "shirt_detail")) && (_element_index == 2) ? _index_arm : _index);
+        
+        var _sprite_colour = _.get_sprite_colour();
+        
+        if (_sprite_colour != undefined)
+        {
+            if (is_array(_sprite_colour))
             {
-                if (is_array(_sprite_colour))
+                // Handle complex cases (nested arrays or frame-based arrays)
+                if (is_array(_element) && (_element_index < array_length(_sprite_colour)))
                 {
-                    // Folder-based array of SpriteAssets (multi-frame animation)
-                    if (_index < array_length(_sprite_colour))
+                    var _s = _sprite_colour[_element_index];
+                    if (is_array(_s))
                     {
-                        __draw_body(_sprite_colour[_index], 0, _x, _y, _xscale, _yscale, _angle, _colour_white, _colour_data[_part_colour]);
+                         if (_image_index < array_length(_s))
+                             __draw_body(_s[_image_index], 0, _x, _y, _xscale, _yscale, _angle, _colour_white, _colour_data[_part_colour]);
+                    }
+                    else
+                    {
+                         __draw_body(_s, _image_index, _x, _y, _xscale, _yscale, _angle, _colour_white, _colour_data[_part_colour]);
                     }
                 }
-                else
+                else if (_image_index < array_length(_sprite_colour))
                 {
-                    // Single SpriteAsset
-                    __draw_body(_sprite_colour, _index, _x, _y, _xscale, _yscale, _angle, _colour_white, _colour_data[_part_colour]);
+                    __draw_body(_sprite_colour[_image_index], 0, _x, _y, _xscale, _yscale, _angle, _colour_white, _colour_data[_part_colour]);
                 }
             }
-            
-            var _sprite_white = _.get_sprite_white();
-            
-            if (_sprite_white != undefined)
+            else
             {
-                if (is_array(_sprite_white))
+                __draw_body(_sprite_colour, _image_index, _x, _y, _xscale, _yscale, _angle, _colour_white, _colour_data[_part_colour]);
+            }
+        }
+        
+        var _sprite_white = _.get_sprite_white();
+        
+        if (_sprite_white != undefined)
+        {
+            if (is_array(_sprite_white))
+            {
+                if (is_array(_element) && (_element_index < array_length(_sprite_white)))
                 {
-                    // Folder-based array of SpriteAssets (multi-frame animation)
-                    if (_index < array_length(_sprite_white))
+                    var _s = _sprite_white[_element_index];
+                    if (is_array(_s))
                     {
-                        __draw_sprite_white(_sprite_white[_index], 0, _x, _y, _xscale, _yscale, _angle);
+                         if (_image_index < array_length(_s))
+                             __draw_sprite_white(_s[_image_index], 0, _x, _y, _xscale, _yscale, _angle);
+                    }
+                    else
+                    {
+                         __draw_sprite_white(_s, _image_index, _x, _y, _xscale, _yscale, _angle);
                     }
                 }
-                else
+                else if (_image_index < array_length(_sprite_white))
                 {
-                    // Single SpriteAsset
-                    __draw_sprite_white(_sprite_white, _index, _x, _y, _xscale, _yscale, _angle);
+                    __draw_sprite_white(_sprite_white[_image_index], 0, _x, _y, _xscale, _yscale, _angle);
                 }
+            }
+            else
+            {
+                __draw_sprite_white(_sprite_white, _image_index, _x, _y, _xscale, _yscale, _angle);
             }
         }
     }
