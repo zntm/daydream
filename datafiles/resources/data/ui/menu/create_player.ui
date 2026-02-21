@@ -1,0 +1,95 @@
+@area(create_player_menu) {
+    size = (960, 540)
+    position = ORIGIN_TOP_LEFT
+
+    @text(title) {
+        position = ORIGIN_TOP_CENTER + (0, 32)
+        text = "Create Player"
+        text_scale = 2
+    }
+
+    @area(main_content) {
+        position = ORIGIN_CENTER
+        size = (800, 380)
+
+        @area(left_column) {
+            position = ORIGIN_TOP_LEFT
+            size = (320, 380)
+            
+            @button(preview_renderer) {
+                position = ORIGIN_TOP_CENTER + (0, 32)
+                size = (128, 128)
+            }
+
+            @textbox(input_name) {
+                position = ORIGIN_TOP_CENTER + (0, 192)
+                size = (256, 32)
+                placeholder = "enter name..."
+            }
+
+            @button(btn_voice) {
+                position = ORIGIN_TOP_CENTER + (0, 240)
+                size = (256, 32)
+                text = "Voice"
+            }
+
+            @area(pitch_container) {
+                position = ORIGIN_TOP_CENTER + (0, 288)
+                size = (256, 32)
+
+                @text(label_pitch) {
+                    position = ORIGIN_MIDDLE_LEFT
+                    text = "Pitch"
+                    text_scale = 1
+                }
+
+                @slider(slider_pitch) {
+                    position = ORIGIN_MIDDLE_RIGHT
+                    size = (160, 16)
+                    min_value = 0.5
+                    max_value = 1.5
+                    value = 1.0
+                    step = 0.1
+                }
+            }
+        }
+
+        @area(right_column) {
+            position = ORIGIN_TOP_RIGHT
+            size = (480, 380)
+
+            @text(label_design) {
+                position = ORIGIN_TOP_CENTER + (0, 16)
+                text = "Design"
+            }
+
+            @scroll_area(design_scroll) {
+                position = ORIGIN_TOP_CENTER + (0, 48)
+                size = (480, 320)
+
+                // Handled in GML
+                @area(design_list) {
+                    position = ORIGIN_TOP_LEFT
+                    size = (480, 320)
+                }
+            }
+        }
+    }
+
+    @area(bottom_buttons) {
+        position = ORIGIN_BOTTOM_CENTER + (0, -32)
+        size = (800, 48)
+
+        @button(btn_back) {
+            position = ORIGIN_MIDDLE_LEFT
+            size = (128, 48)
+            text = "Back"
+        }
+
+        @button(btn_create_player) {
+            position = ORIGIN_CENTER
+            size = (256, 48)
+            text = "Create Player"
+        }
+    }
+}

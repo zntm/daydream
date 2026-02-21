@@ -52,25 +52,23 @@ function tile_place(_x, _y, _z, _tile)
         // Decrement only if we are removing a tile
         if (--_chunk.chunk_count[@ _z] <= 0)
         {
-            _chunk.chunk_count[@ _z] = 0; // Safety clamp
-            _chunk.chunk_display &= ~(1 << _z); // Safety clear bit
+            _chunk.chunk_count[@ _z] = 0;
+            _chunk.chunk_display &= ~(1 << _z);
         }
         
         var _render_state = _chunk.chunk_render_state;
-        var _length = array_length(_render_state);
         
-        for (var i = 0; i < _length; ++i)
+        for (var i = array_length(_render_state) - 1; i >= 0; --i)
         {
             var _ = _render_state[i];
             
-            if (_.x == _x) && (_.y == _y) && (_.z == _z)
-            {
-                global.render_state_pool.release(_);
-                
-                array_delete(_render_state, i, 1);
-                
-                break;
-            }
+            if (_.x != _x) || (_.y != _y) || (_.z != _z) continue;
+            
+            global.render_state_pool.release(_);
+            
+            array_delete(_render_state, i, 1);
+            
+            break;
         }
     }
     
@@ -78,26 +76,38 @@ function tile_place(_x, _y, _z, _tile)
     {
         var _instance_crafting_station = _tile_before.get_instance_crafting_station();
         
-        if (_instance_crafting_station != noone)
+        if (instance_exists(_instance_crafting_station))
         {
             var _index_inst = array_get_index(_chunk.chunk_crafting_stations, _instance_crafting_station);
-            if (_index_inst != -1) array_delete(_chunk.chunk_crafting_stations, _index_inst, 1);
+            
+            if (_index_inst != -1)
+            {
+                array_delete(_chunk.chunk_crafting_stations, _index_inst, 1);
+            }
         }
         
         var _instance_container = _tile_before.get_instance_container();
         
-        if (_instance_container != noone)
+        if (instance_exists(_instance_container))
         {
             var _index_inst = array_get_index(_chunk.chunk_containers, _instance_container);
-            if (_index_inst != -1) array_delete(_chunk.chunk_containers, _index_inst, 1);
+            
+            if (_index_inst != -1)
+            {
+                array_delete(_chunk.chunk_containers, _index_inst, 1);
+            }
         }
         
         var _instance_light = _tile_before.get_instance_light();
         
-        if (_instance_light != noone)
+        if (instance_exists(_instance_light))
         {
             var _index_inst = array_get_index(_chunk.chunk_lights, _instance_light);
-            if (_index_inst != -1) array_delete(_chunk.chunk_lights, _index_inst, 1);
+            
+            if (_index_inst != -1)
+            {
+                array_delete(_chunk.chunk_lights, _index_inst, 1);
+            }
         }
     }
     
@@ -136,9 +146,11 @@ function tile_place(_x, _y, _z, _tile)
     for (var _zz = CHUNK_DEPTH_WALL; _zz <= _z; ++_zz)
     {
         var _vertex_buffer = _chunk.chunk_vertex_buffer[_zz];
+        
         if (vertex_buffer_exists(_vertex_buffer))
         {
             vertex_delete_buffer(_vertex_buffer);
+            
             _chunk.chunk_vertex_buffer[@ _zz] = -1;
         }
     }

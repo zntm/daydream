@@ -5,9 +5,8 @@ function tile_harvest_drop(_x, _y, _z, _tile, _harvest_id = INVENTORY_EMPTY)
     var _data = _item_data[$ _tile.get_id()];
     
     var _drops = _data.get_tile_drops();
-    var _drop_length = _data.get_tile_drops_length();
     
-    for (var i = 0; i < _drop_length; ++i)
+    for (var i = _data.get_tile_drops_length() - 1; i >= 0; --i)
     {
         var _drop_item = _drops[i];
         

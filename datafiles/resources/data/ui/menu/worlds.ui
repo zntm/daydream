@@ -1,0 +1,51 @@
+@area(worlds_menu) {
+    size = (960, 540)
+    position = ORIGIN_TOP_LEFT
+
+    @text(title) {
+        position = ORIGIN_TOP_CENTER + (0, 32)
+        text = "Select World"
+        text_scale = 2
+    }
+
+    @area(worlds_list_container) {
+        position = ORIGIN_CENTER + (0, -16)
+        size = (800, 380)
+        background = #000000
+        
+        // Use a scroll area for dynamic items
+        @scroll_area(worlds_scroll) {
+            position = ORIGIN_TOP_LEFT
+            size = (800, 380)
+            
+            // The list of worlds will be injected here via GML (menu_worlds_ui_init)
+            @area(worlds_container) {
+                position = ORIGIN_TOP_LEFT
+                size = (800, 380)
+            }
+        }
+    }
+
+    @area(bottom_buttons) {
+        position = ORIGIN_BOTTOM_CENTER + (0, -32)
+        size = (800, 48)
+
+        @button(btn_back) {
+            position = ORIGIN_MIDDLE_LEFT
+            size = (128, 48)
+            text = "Back"
+        }
+
+        @button(btn_create_world) {
+            position = ORIGIN_CENTER
+            size = (256, 48)
+            text = "Create World"
+        }
+
+        @button(btn_open_folder) {
+            position = ORIGIN_MIDDLE_RIGHT
+            size = (128, 48)
+            text = "Folder"
+        }
+    }
+}

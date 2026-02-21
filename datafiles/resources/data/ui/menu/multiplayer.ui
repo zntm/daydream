@@ -1,0 +1,40 @@
+@area(multiplayer_menu) {
+    size = (960, 540)
+    position = ORIGIN_TOP_LEFT
+    
+    @text(title) {
+        position = ORIGIN_TOP_CENTER + (0, 32)
+        text = "Join Multiplayer"
+        text_scale = 2
+    }
+    
+    @area(content) {
+        position = ORIGIN_CENTER
+        size = (400, 200)
+        background = #000000
+        
+        @text(label_invite) {
+            position = ORIGIN_TOP_CENTER + (0, 32)
+            text = "Enter Invite Code"
+            text_scale = 1
+        }
+        
+        @textbox(input_invite_code) {
+            position = ORIGIN_CENTER + (0, -16)
+            size = (256, 32)
+            placeholder = "enter invite code..."
+        }
+        
+        @button(btn_connect) {
+            position = ORIGIN_CENTER + (0, 32)
+            size = (128, 32)
+            text = "Connect"
+        }
+    }
+    
+    @button(btn_back) {
+        position = ORIGIN_BOTTOM_LEFT + (32, -32)
+        size = (48, 48)
+        icon = "spr_Icon_Arrow_Left"
+    }
+}

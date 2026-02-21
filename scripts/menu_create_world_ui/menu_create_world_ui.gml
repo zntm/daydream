@@ -3,6 +3,8 @@ global.ui_create_world = undefined;
 
 function menu_create_world_ui_load()
 {
+	menu_ui_clear_all();
+	
 	/* hide legacy room instances */
 	menu_create_world_ui_cleanup_legacy();
 	
@@ -18,7 +20,7 @@ function menu_create_world_ui_load()
 	/* reload definition if it exists in cache */
 	if (variable_global_exists("ui_definitions"))
 	{
-		var _full_path = "resources/data/ui/create_world.ui";
+		var _full_path = "resources/data/ui/menu/create_world.ui";
 		if (struct_exists(global.ui_definitions, _full_path))
 		{
 			struct_remove(global.ui_definitions, _full_path);
@@ -26,7 +28,7 @@ function menu_create_world_ui_load()
 	}
 	
 	
-	var _def = ui_load("ui/create_world.ui");
+	var _def = ui_load("ui/menu/create_world.ui");
 	
 	if (_def == undefined)
 	{

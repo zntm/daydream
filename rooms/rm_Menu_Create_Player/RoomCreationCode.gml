@@ -1,2 +1,1 @@
-menu_refresh_instance_player_attire();
-menu_refresh_instance_player_colour();
+menu_create_player_ui_load();
