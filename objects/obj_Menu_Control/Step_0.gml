@@ -24,6 +24,8 @@ menu_transition_update();
 /* update proglang ui system */
 if (variable_global_exists("gui_root")) && (global.gui_root != undefined)
 {
+	global.ui_input_consumed = false;
+	
 	global.gui_root.update();
 	
 	

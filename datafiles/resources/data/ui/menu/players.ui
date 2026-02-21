@@ -1,9 +1,8 @@
 // players screen layout
 
 @area(players_menu) {
-    size = (640, 480)
+    size = (960, 540)
     position = ORIGIN_CENTER
-	background = #0e0e1a
 
     @button(btn_back) {
         position = ORIGIN_TOP_LEFT + (8, 8)
@@ -25,15 +24,15 @@
 
     @area(content_area) {
         position = ORIGIN_CENTER + (0, 16)
-        size = (600, 380)
+        size = (920, 440)
 
         @scroll_area(players_scroll) {
             position = ORIGIN_TOP_LEFT
-            size = (600, 380)
+            size = (920, 440)
 
             @area(players_container) {
                 position = ORIGIN_TOP_LEFT
-                size = (600, 380)
+                size = (920, 440)
                 layout = LAYOUT_VERTICAL
                 spacing = 4
 

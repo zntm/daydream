@@ -170,13 +170,15 @@ function UIScrollArea(_x, _y, _width, _height) : UIElement(_x, _y, _width, _heig
         is_scrollbar_hovered = (_mx >= _thumb.x && _mx <= _thumb.x + _thumb.w && _my >= _thumb.y && _my <= _thumb.y + _thumb.h);
         
         
-        if (mouse_check_button_pressed(mb_left)) 
+        if !(global.ui_input_consumed) && (mouse_check_button_pressed(mb_left)) 
         {
             if (is_scrollbar_hovered) 
             {
                 is_scrollbar_dragging = true;
                 
                 scrollbar_drag_offset = _my - _thumb.y;
+                
+                global.ui_input_consumed = true;
                 
                 sfx_play("phantasia:sfx/menu/button/select");
             } 
@@ -186,6 +188,8 @@ function UIScrollArea(_x, _y, _width, _height) : UIElement(_x, _y, _width, _heig
                 var _click_ratio = (_my - _track.y) / _track.h;
                 
                 scroll_offset = clamp(_click_ratio * _max_scroll, 0, _max_scroll);
+                
+                global.ui_input_consumed = true;
                 
                 sfx_play("phantasia:sfx/menu/button/select");
             }

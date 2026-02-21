@@ -1,9 +1,8 @@
 // create player screen layout
 
 @area(create_player_menu) {
-    size = (640, 480)
+    size = (960, 540)
     position = ORIGIN_CENTER
-	background = #0e0e1a
 
     @button(btn_back) {
         position = ORIGIN_TOP_LEFT + (8, 8)
@@ -19,29 +18,29 @@
 
     @area(main_content) {
         position = ORIGIN_CENTER + (0, 0)
-        size = (600, 340)
+        size = (920, 380)
 
         @area(left_column) {
             position = ORIGIN_TOP_LEFT
-            size = (200, 340)
+            size = (280, 380)
             
             @area(preview_renderer) {
                 position = ORIGIN_TOP_CENTER + (0, 16)
-                size = (160, 200)
+                size = (200, 240)
             }
         }
 
 		@line(divider) {
 			position = ORIGIN_CENTER
-			start = (0, -150)
-			end = (0, 150)
+			start = (0, -170)
+			end = (0, 170)
 			thickness = 1
 			colour = #3a3a4a
 		}
 
         @area(right_column) {
             position = ORIGIN_TOP_RIGHT
-            size = (360, 340)
+            size = (600, 380)
 
             @text(label_body_design) {
                 position = ORIGIN_TOP_LEFT + (16, 16)
@@ -52,7 +51,7 @@
 
             @area(body_design_row) {
                 position = ORIGIN_TOP_LEFT + (16, 36)
-                size = (340, 48)
+                size = (560, 48)
                 layout = LAYOUT_HORIZONTAL
                 spacing = 8
                 // icons injected via GML
@@ -67,7 +66,7 @@
 
             @area(colour_row) {
                 position = ORIGIN_TOP_LEFT + (16, 116)
-                size = (340, 48)
+                size = (560, 48)
                 layout = LAYOUT_HORIZONTAL
                 spacing = 8
                 // color swatches injected via GML
@@ -75,11 +74,11 @@
 
             @scroll_area(design_scroll) {
                 position = ORIGIN_TOP_LEFT + (16, 176)
-                size = (340, 160)
+                size = (560, 200)
 
                 @area(design_list) {
                     position = ORIGIN_TOP_LEFT
-                    size = (340, 160)
+                    size = (560, 200)
                 }
             }
         }
@@ -87,23 +86,23 @@
 
     @area(bottom_fields) {
         position = ORIGIN_BOTTOM_CENTER + (0, -48)
-        size = (600, 32)
+        size = (920, 32)
         layout = LAYOUT_HORIZONTAL
         spacing = 8
 
         @textbox(input_name) {
-            size = (200, 24)
+            size = (300, 24)
             placeholder = "name..."
             text_length = 40
         }
 
         @textbox(input_age) {
-            size = (80, 24)
+            size = (120, 24)
             placeholder = "age..."
         }
 
         @textbox(input_plan) {
-            size = (200, 24)
+            size = (300, 24)
             placeholder = "plan..."
         }
     }

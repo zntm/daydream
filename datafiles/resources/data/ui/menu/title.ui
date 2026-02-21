@@ -1,12 +1,11 @@
 // title screen layout
 
 @area(title_menu) {
-    size = (440, 340)
+    size = (960, 540)
     position = ORIGIN_CENTER
-	background = #0e0e1a
 
     @area(title_graphic) {
-        position = ORIGIN_TOP_CENTER + (0, 32)
+        position = ORIGIN_TOP_CENTER + (0, 64)
         size = (0, 0)
     }
 

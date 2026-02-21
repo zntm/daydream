@@ -81,11 +81,13 @@ function UITextbox(_x, _y, _width, _height) : UIElement(_x, _y, _width, _height)
             var _was_focused = (boolean & MENU_BUTTON_BOOLEAN.IS_SELECTED);
             
             
-            if (_is_hovered)
+            if (_is_hovered) && !(global.ui_input_consumed)
             {
                 if !(_was_focused)
                 {
                     boolean |= MENU_BUTTON_BOOLEAN.IS_SELECTED;
+                    
+                    global.ui_input_consumed = true;
                     
                     keyboard_string = text;
                     

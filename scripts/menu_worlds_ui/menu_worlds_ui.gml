@@ -161,7 +161,7 @@ function menu_worlds_ui_populate()
 		_ypos = menu_worlds_ui_build_cards(_container, _pinned, _ypos, _is_grid, _instance);
 		
 		/* divider */
-		var _divider = new UILine(0, _ypos + 4, 600, 1);
+		var _divider = new UILine(0, _ypos + 4, 920, 1);
 		_divider.colour = #3a3a4a;
 		_divider.parent = _container;
 
@@ -206,12 +206,12 @@ function menu_worlds_ui_build_cards(_container, _worlds, _ystart, _is_grid, _ins
 		{
 			_card_w  = 140;
 			_card_h  = 120;
-			_xoffset = floor(i % 4) * (_card_w + 8);
-			_yoffset = _ystart + floor(i / 4) * (_card_h + 8);
+			_xoffset = floor(i % 6) * (_card_w + 8);
+			_yoffset = _ystart + floor(i / 6) * (_card_h + 8);
 		}
 		else
 		{
-			_card_w  = 580;
+			_card_w  = 900;
 			_card_h  = 56;
 			_xoffset = 0;
 			_yoffset = _ystart + i * (_card_h + 4);
@@ -370,7 +370,7 @@ function menu_worlds_ui_build_cards(_container, _worlds, _ystart, _is_grid, _ins
 	/* calculate final y position */
 	if (_is_grid)
 	{
-		var _rows = ceil(_len / 4);
+		var _rows = ceil(_len / 6);
 		
 		return _ystart + _rows * 128;
 	}

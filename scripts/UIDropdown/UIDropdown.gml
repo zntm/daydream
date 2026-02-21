@@ -131,11 +131,13 @@ function UIDropdown(_x, _y, _width, _height) : UIElement(_x, _y, _width, _height
         }
         
         
-        if (mouse_check_button_pressed(mb_left))
+        if !(global.ui_input_consumed) && (mouse_check_button_pressed(mb_left))
         {
             /* check if clicking the header (toggle area) */
             if (_is_header_hovered)
             {
+                global.ui_input_consumed = true;
+                
                 toggle_open();
             }
             /* check if clicking an option */
@@ -153,6 +155,8 @@ function UIDropdown(_x, _y, _width, _height) : UIElement(_x, _y, _width, _height
                     if (_mx >= _left && _mx <= _right && _my >= _opt_top && _my <= _opt_bottom)
                     {
                         choice_index = i;
+                        
+                        global.ui_input_consumed = true;
                         
                         toggle_open(); /* close after selecting */
                         

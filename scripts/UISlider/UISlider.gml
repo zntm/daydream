@@ -54,11 +54,13 @@ function UISlider(_x, _y, _width, _min, _max, _value) : UIElement(_x, _y, _width
         var _bottom = _top + (height * _base_scale_y);
         
         
-        if (mouse_check_button_pressed(mb_left)) 
+        if !(global.ui_input_consumed) && (mouse_check_button_pressed(mb_left)) 
         {
             if (_mx >= _left && _mx <= _right && _my >= _top && _my <= _bottom) 
             {
                 is_dragging = true;
+                
+                global.ui_input_consumed = true;
                 
                 sfx_play("phantasia:sfx/menu/button/select");
             }

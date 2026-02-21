@@ -16,6 +16,10 @@ global.ui_instance_counter = 0;
 global.ui_pending_events = {};
 
 
+/* global input consumption flag - prevents click-through on overlapping elements */
+global.ui_input_consumed = false;
+
+
 /* =============================================================================
    loading and parsing
    ============================================================================= */

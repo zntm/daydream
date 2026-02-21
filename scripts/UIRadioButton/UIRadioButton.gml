@@ -54,11 +54,13 @@ function UIRadioButton(_x, _y, _text = "") : UIElement(_x, _y, 100, 20) construc
         is_hovered = (_mx >= _left && _mx <= _right && _my >= _top && _my <= _bottom);
         
         
-        if (is_hovered && mouse_check_button_pressed(mb_left)) 
+        if (is_hovered) && !(global.ui_input_consumed) && (mouse_check_button_pressed(mb_left)) 
         {
             if !(selected) 
             {
                 selected = true;
+                
+                global.ui_input_consumed = true;
                 
                 emit_event("on_select", { value: value, group: group });
                 

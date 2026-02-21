@@ -1,17 +1,16 @@
 // create world screen layout
 
-var PANEL_WIDTH = 260
-var SLIDER_WIDTH = 240
-var TEXTBOX_WIDTH = 200
+var PANEL_WIDTH = 400
+var SLIDER_WIDTH = 380
+var TEXTBOX_WIDTH = 340
 var TEXTBOX_HEIGHT = 20
 var BUTTON_HEIGHT = 20
 var SECTION_SPACING = 4
 var INNER_SPACING = 2
 
 @area(create_world) {
-    size = (640, 480)
+    size = (960, 540)
     position = ORIGIN_CENTER
-	background = #0e0e1a
 
     @button(btn_back) {
         position = ORIGIN_TOP_LEFT + (8, 8)
@@ -27,11 +26,11 @@ var INNER_SPACING = 2
 
     @area(main_content) {
         position = ORIGIN_CENTER + (0, 16)
-        size = (600, 360)
+        size = (920, 420)
 
         @area(left_panel) {
             position = ORIGIN_TOP_LEFT
-            size = (PANEL_WIDTH, 360)
+            size = (PANEL_WIDTH, 420)
             layout = LAYOUT_VERTICAL
             spacing = 8
 
@@ -93,11 +92,11 @@ var INNER_SPACING = 2
 
         @area(right_panel) {
             position = ORIGIN_TOP_RIGHT
-            size = (PANEL_WIDTH, 360)
+            size = (PANEL_WIDTH, 420)
 
             @scroll_area(options_scroll) {
                 position = ORIGIN_TOP_LEFT
-                size = (PANEL_WIDTH, 360)
+                size = (PANEL_WIDTH, 420)
                 layout = LAYOUT_VERTICAL
                 spacing = SECTION_SPACING
 

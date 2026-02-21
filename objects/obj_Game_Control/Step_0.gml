@@ -453,6 +453,8 @@ if (global.gui_root != undefined)
         global.gui_panel_crafting_modular.visible = (is_opened & IS_OPENED_BOOLEAN.INVENTORY) && !(is_opened & IS_OPENED_BOOLEAN.CHAT) && (array_length(global.gui_panel_crafting_modular.children) > 0);
     }
     
+    global.ui_input_consumed = false;
+    
     global.gui_root.update();
     
     // Update new declarative UI instances

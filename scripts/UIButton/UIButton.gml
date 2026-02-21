@@ -141,9 +141,11 @@ function UIButton(_x, _y, _width, _height, _text = "") : UIElement(_x, _y, _widt
             boolean |= MENU_BUTTON_BOOLEAN.IS_HOVER;
             
             
-            if (mouse_check_button_pressed(mb_left))
+            if !(global.ui_input_consumed) && (mouse_check_button_pressed(mb_left))
             {
                 boolean |= MENU_BUTTON_BOOLEAN.IS_HOLDING;
+                
+                global.ui_input_consumed = true;
                 
                 
                 if !(boolean & MENU_BUTTON_BOOLEAN.IS_SELECTED)
