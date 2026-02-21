@@ -14,7 +14,6 @@ function file_save_snippet_item(_buffer, _item, _item_data, _palette_map)
     var _seek = buffer_tell(_buffer);
     
     buffer_write(_buffer, buffer_u32, 0);
-    
     buffer_write(_buffer, buffer_u16, _item.get_amount());
     
     var _data = _item_data[$ _id];
@@ -23,42 +22,6 @@ function file_save_snippet_item(_buffer, _item, _item_data, _palette_map)
     
     file_save_snippet_item_component(_buffer, _item);
     
-    /*
-    var _charm_length = _data.get_charm_length();
-    
-    buffer_write(_buffer, buffer_u8, _charm_length);
-    
-    for (var j = 0; j < _charm_length; ++j)
-    {
-        var _charm = _item.get_charm(j);
-        
-        if (_charm == undefined)
-        {
-            buffer_write(_buffer, buffer_bool, false);
-            
-            continue;
-        }
-        
-        buffer_write(_buffer, buffer_bool, true);
-        
-        buffer_write(_buffer, buffer_string, _charm.id);
-        buffer_write(_buffer, buffer_u8, _charm.level);
-        
-        var _taint = _charm[$ "taint"];
-        
-        if (_taint != undefined)
-        {
-            buffer_write(_buffer, buffer_bool, true);
-            
-            buffer_write(_buffer, buffer_string, _taint.id);
-            buffer_write(_buffer, buffer_u8, _taint.level);
-        }
-        else
-        {
-            buffer_write(_buffer, buffer_bool, false);
-        }
-    }
-    */
     var _inventory_length = _data.get_item_inventory_length();
     
     buffer_write(_buffer, buffer_u8, _inventory_length);

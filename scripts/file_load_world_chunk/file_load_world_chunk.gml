@@ -2,7 +2,7 @@
 /// @param {Struct.Chunk} _chunk The chunk struct to load into
 function file_load_world_chunk(_current_world, _chunk)
 {
-    var _item_data = global.item_data;
+    var _item_data  = global.item_data;
     var _world_data = global.world_data[$ _current_world.dimension];
     
     var _chunk_x = _chunk.chunk_xstart / CHUNK_SIZE;
@@ -20,33 +20,35 @@ function file_load_world_chunk(_current_world, _chunk)
     
     var _buffer = buffer_load_decompressed(_directory);
     
-    // Validate File Size (Must accommodate at least the 512 byte header)
+    /* validate file size (must accommodate at least the 512 byte header) */
     if (buffer_get_size(_buffer) < 512)
     {
         buffer_delete(_buffer);
+        
         return false; 
     }
     
     var _chunk_relative_x = ((_chunk_x % CHUNK_REGION_SIZE) + CHUNK_REGION_SIZE) % CHUNK_REGION_SIZE;
     var _chunk_relative_y = ((_chunk_y % CHUNK_REGION_SIZE) + CHUNK_REGION_SIZE) % CHUNK_REGION_SIZE;
-    var _chunk_index = _chunk_relative_y * CHUNK_REGION_SIZE + _chunk_relative_x;
+    var _chunk_index      = _chunk_relative_y * CHUNK_REGION_SIZE + _chunk_relative_x;
     
-    // READ HEADER
-    var _offset = buffer_peek(_buffer, _chunk_index * 8, buffer_u32);
+    /* read header */
+    var _offset = buffer_peek(_buffer, _chunk_index * 8,     buffer_u32);
     var _length = buffer_peek(_buffer, _chunk_index * 8 + 4, buffer_u32);
     
-    // Validate Chunk Entry
-    if (_length == 0 || _offset < 512 || (_offset + _length > buffer_get_size(_buffer)))
+    /* validate chunk entry */
+    if (_length == 0) || (_offset < 512) || (_offset + _length > buffer_get_size(_buffer))
     {
         buffer_delete(_buffer);
+        
         return false;
     }
     
-    // SEEK AND READ
+    /* seek and read */
     buffer_seek(_buffer, buffer_seek_start, _offset);
     
-    // Standard Chunk Read
-    var _version = buffer_read(_buffer, buffer_u32);
+    /* standard chunk read */
+    var _version  = buffer_read(_buffer, buffer_u32);
     var _datetime = unix_to_datetime(buffer_read(_buffer, buffer_f64));
     
     if (buffer_read(_buffer, buffer_bool))
@@ -58,9 +60,9 @@ function file_load_world_chunk(_current_world, _chunk)
     
     _chunk.chunk_display = _chunk_display;
     
-    // Read Master Palette
+    /* read master palette */
     var _palette_length = buffer_read(_buffer, buffer_u16);
-    var _palette = array_create(_palette_length);
+    var _palette        = array_create(_palette_length);
     
     for (var i = 0; i < _palette_length; ++i)
     {
@@ -94,10 +96,10 @@ function file_load_world_chunk(_current_world, _chunk)
     
     for (var i = 0; i < _length_item; ++i)
     {
-        var _next = buffer_read(_buffer, buffer_u32); // Skip next ptr
+        var _next = buffer_read(_buffer, buffer_u32); /* skip next ptr */
         
         var _timer_pickup = buffer_read(_buffer, buffer_f64);
-        var _timer_life = buffer_read(_buffer, buffer_f64);
+        var _timer_life   = buffer_read(_buffer, buffer_f64);
         
         var _item = file_load_snippet_item(_buffer, _item_data, _palette);
         
@@ -106,24 +108,24 @@ function file_load_world_chunk(_current_world, _chunk)
         file_load_snippet_position(_buffer, _inst_item);
         
         _inst_item.timer_pickup = _timer_pickup;
-        _inst_item.timer_life = _timer_life;
+        _inst_item.timer_life   = _timer_life;
     }
     
     var _length_creature = buffer_read(_buffer, buffer_u32);
     
     for (var i = 0; i < _length_creature; ++i)
     {
-        var _next = buffer_read(_buffer, buffer_u32); // Skip next ptr
+        var _next = buffer_read(_buffer, buffer_u32); /* skip next ptr */
         
-        // Read ID from Palette
+        /* read id from palette */
         var _id_index = buffer_read(_buffer, buffer_u16);
-        var _id = _palette[_id_index];
+        var _id       = _palette[_id_index];
         
         var _variant = buffer_read(_buffer, buffer_string);
         
         var _inst_creature = spawn_creature(0, 0, _id, ((_variant != "") ? _variant : undefined));
         
-        _inst_creature.hp = buffer_read(_buffer, buffer_u16);
+        _inst_creature.hp     = buffer_read(_buffer, buffer_u16);
         _inst_creature.hp_max = buffer_read(_buffer, buffer_u16);
         
         var _xscale = buffer_read(_buffer, buffer_f64);
@@ -137,7 +139,9 @@ function file_load_world_chunk(_current_world, _chunk)
         _inst_creature.uuid = buffer_read(_buffer, buffer_string);
         
         file_load_snippet_position(_buffer, _inst_creature);
+        
         _inst_creature.y_last = buffer_read(_buffer, buffer_f64);
+        
         file_load_snippet_effects(_buffer, _inst_creature);
         
         var _inventory_length = buffer_read(_buffer, buffer_u8);

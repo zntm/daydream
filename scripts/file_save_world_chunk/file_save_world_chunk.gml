@@ -5,12 +5,12 @@
 /// @param {bool} [_sync=false] Optional flag to force synchronous saving
 function file_save_world_chunk(_current_world, _chunk, _sync = false)
 {
-    // ==========================================================================================
-    // 1. PREPARE DATA & CONTEXT
-    // ==========================================================================================
+    /* ========================================================================================== */
+    /* 1. prepare data & context */
+    /* ========================================================================================== */
     var _creature_data = global.creature_data;
-    var _item_data = global.item_data;
-    var _world_data = global.world_data[$ _current_world.dimension];
+    var _item_data     = global.item_data;
+    var _world_data    = global.world_data[$ _current_world.dimension];
     
     var _chunk_x = _chunk.chunk_xstart / CHUNK_SIZE;
     var _chunk_y = _chunk.chunk_ystart / CHUNK_SIZE;
@@ -20,306 +20,373 @@ function file_save_world_chunk(_current_world, _chunk, _sync = false)
     
     var _directory = $"{PROGRAM_DIRECTORY_WORLDS}/{_current_world.uuid}/dim/{_world_data.get_namespace()}/{_world_data.get_id()}/r{_region_x}_{_region_y}.dat";
 
-    // Start by writing the *current* chunk to a temporary buffer so we know its exact size.
+    /* start by writing the *current* chunk to a temporary buffer so we know its exact size. */
     var _current_chunk_buffer = buffer_create(1024, buffer_grow, 1);
     
-    // ------------------------------------------------------------------------------------------
-    // Write Chunk Header (internal versioning/metadata for the chunk itself)
-    // ------------------------------------------------------------------------------------------
+    /* ------------------------------------------------------------------------------------------ */
+    /* write chunk header (internal versioning/metadata for the chunk itself) */
+    /* ------------------------------------------------------------------------------------------ */
     buffer_write(_current_chunk_buffer, buffer_u32, PROGRAM_VERSION_NUMBER);
     buffer_write(_current_chunk_buffer, buffer_f64, datetime_to_unix());
     
-    var _is_generated = !!(_chunk.boolean & CHUNK_BOOLEAN.GENERATED);
+    var _is_generated  = !!(_chunk.boolean & CHUNK_BOOLEAN.GENERATED);
     var _chunk_display = _chunk.chunk_display;
     
     buffer_write(_current_chunk_buffer, buffer_bool, _is_generated);
-    buffer_write(_current_chunk_buffer, buffer_u16, _chunk_display);
+    buffer_write(_current_chunk_buffer, buffer_u16,  _chunk_display);
     
-    // ------------------------------------------------------------------------------------------
-    // Write Tiles
-    // ------------------------------------------------------------------------------------------
-// ------------------------------------------------------------------------------------------
-            // 2. BUILD MASTER PALETTE
-            // ------------------------------------------------------------------------------------------
-            var _palette_map = {}
-            var _palette_array = [];
-            var _palette_index = 0;
+    /* ------------------------------------------------------------------------------------------ */
+    /* 2. build master palette */
+    /* ------------------------------------------------------------------------------------------ */
+    var _palette_map   = {};
+    var _palette_array = [];
+    var _palette_index = 0;
+    
+    var _index_ref = [_palette_index];
+    
+    var _collect_id = function(_id, _map, _array, _index_ref)
+    {
+        if (!struct_exists(_map, _id))
+        {
+            _map[$ _id] = _index_ref[0]++;
             
-            var _index_ref = [_palette_index];
+            array_push(_array, _id);
+        }
+    }
+    
+    var _collect_inventory_ids = function(_inventory, _length, _item_data, _map, _array, _index_ref, _self_func)
+    {
+        for (var k = 0; k < _length; ++k)
+        {
+            var _item = _inventory[k];
             
-            var _collect_id = function(_id, _map, _array, _index_ref)
+            if (_item == INVENTORY_EMPTY) continue;
+            
+            var _iid = _item.get_id();
+            
+            if (!struct_exists(_map, _iid))
             {
-                if (!struct_exists(_map, _id))
-                {
-                    _map[$ _id] = _index_ref[0]++;
-                    array_push(_array, _id);
-                }
+                _map[$ _iid] = _index_ref[0]++;
+                
+                array_push(_array, _iid);
             }
             
-            var _collect_inventory_ids = function(_inventory, _length, _item_data, _map, _array, _index_ref, _self_func)
+            var _idata = _item_data[$ _iid];
+            
+            if (_idata != undefined)
             {
-                for (var k = 0; k < _length; ++k)
+                var _ilen = _idata.get_item_inventory_length();
+                
+                if (_ilen > 0)
                 {
-                    var _item = _inventory[k];
-                    if (_item == INVENTORY_EMPTY) continue;
+                    var _inv_sub = _item.get_inventory();
                     
-                    var _iid = _item.get_id();
-                    if (!struct_exists(_map, _iid))
+                    if (is_array(_inv_sub))
                     {
-                        _map[$ _iid] = _index_ref[0]++;
-                        array_push(_array, _iid);
+                        _self_func(_inv_sub, _ilen, _item_data, _map, _array, _index_ref, _self_func);
                     }
+                }
+            }
+        }
+    }
+    
+    /* --- collect from tiles --- */
+    if (_chunk_display)
+    {
+        var _chunk2 = _chunk.chunk;
+        
+        for (var i = 0; i < CHUNK_DEPTH; ++i)
+        {
+            if !(_chunk_display & (1 << i)) continue;
+            
+            for (var j = 0; j < CHUNK_SIZE; ++j)
+            {
+                for (var l = 0; l < CHUNK_SIZE; ++l)
+                {
+                    var _tile = _chunk2[tile_index_xyz(l, j, i)];
                     
-                    var _idata = _item_data[$ _iid];
-                    if (_idata != undefined)
+                    if (_tile != TILE_EMPTY)
                     {
-                        var _ilen = _idata.get_item_inventory_length();
-                        if (_ilen > 0)
+                        var _id = _tile.get_id();
+                        
+                        _collect_id(_id, _palette_map, _palette_array, _index_ref);
+                        
+                        var _tdata = _item_data[$ _id];
+                        
+                        if (_tdata != undefined)
                         {
-                            var _inv_sub = _item.get_inventory();
-                             if (is_array(_inv_sub))
+                            var _tlen = _tdata.get_tile_inventory_length();
+                            
+                            if (_tlen > 0)
                             {
-                                _self_func(_inv_sub, _ilen, _item_data, _map, _array, _index_ref, _self_func);
-                            }
-                        }
-                    }
-                }
-            }
-            
-            // --- Collect from Tiles ---
-            if (_chunk_display) {
-                var _chunk2 = _chunk.chunk;
-                for (var i = 0; i < CHUNK_DEPTH; ++i) {
-                    if !(_chunk_display & (1 << i)) continue;
-                    for (var j = 0; j < CHUNK_SIZE; ++j) {
-                        for (var l = 0; l < CHUNK_SIZE; ++l) {
-                            var _tile = _chunk2[tile_index_xyz(l, j, i)];
-                            if (_tile != TILE_EMPTY) {
-                                var _id = _tile.get_id();
-                                _collect_id(_id, _palette_map, _palette_array, _index_ref);
-                                var _tdata = _item_data[$ _id];
-                                if (_tdata != undefined) {
-                                    var _tlen = _tdata.get_tile_inventory_length();
-                                    if (_tlen > 0) {
-                                        var _inventory = _tile.get_inventory();
-                                        if (!is_string(_inventory)) {
-                                            _collect_inventory_ids(_inventory, _tlen, _item_data, _palette_map, _palette_array, _index_ref, _collect_inventory_ids);
-                                        }
-                                    }
+                                var _inventory = _tile.get_inventory();
+                                
+                                if (!is_string(_inventory))
+                                {
+                                    _collect_inventory_ids(_inventory, _tlen, _item_data, _palette_map, _palette_array, _index_ref, _collect_inventory_ids);
                                 }
                             }
                         }
                     }
                 }
             }
+        }
+    }
 
-            // --- Collect from Items ---
-            var _xcenter = _chunk.xcenter;
-            var _ycenter = _chunk.ycenter;
-            var _bbox_l = _xcenter - (CHUNK_SIZE_DIMENSION / 2);
-            var _bbox_t = _ycenter - (CHUNK_SIZE_DIMENSION / 2);
-            var _bbox_r = _xcenter + (CHUNK_SIZE_DIMENSION / 2);
-            var _bbox_b = _ycenter + (CHUNK_SIZE_DIMENSION / 2);
+    /* --- collect from items --- */
+    var _xcenter = _chunk.xcenter;
+    var _ycenter = _chunk.ycenter;
+    var _bbox_l  = _xcenter - (CHUNK_SIZE_DIMENSION / 2);
+    var _bbox_t  = _ycenter - (CHUNK_SIZE_DIMENSION / 2);
+    var _bbox_r  = _xcenter + (CHUNK_SIZE_DIMENSION / 2);
+    var _bbox_b  = _ycenter + (CHUNK_SIZE_DIMENSION / 2);
 
-            var _inst_item = [];
-            var _length_item = 0;
+    var _inst_item   = [];
+    var _length_item = 0;
+    
+    with (obj_Item_Drop)
+    {
+        if (rectangle_in_rectangle(bbox_left, bbox_top, bbox_right, bbox_bottom, _bbox_l, _bbox_t, _bbox_r, _bbox_b))
+        {
+            _inst_item[@ _length_item++] = id;
+        }
+    }
+
+    for (var i = 0; i < _length_item; ++i)
+    {
+        var _inst = _inst_item[i];
+        var _item = _inst.item;
+        
+        /* item drops themselves are items */
+        if (_item != INVENTORY_EMPTY)
+        {
+            var _iid = _item.get_id();
             
-            with (obj_Item_Drop) {
-                if (rectangle_in_rectangle(bbox_left, bbox_top, bbox_right, bbox_bottom, _bbox_l, _bbox_t, _bbox_r, _bbox_b)) {
-                    _inst_item[@ _length_item++] = id;
-                }
-            }
-
-            for (var i = 0; i < _length_item; ++i) {
-                var _inst = _inst_item[i];
-                var _item = _inst.item;
-                // Item drops themselves are items
-                if (_item != INVENTORY_EMPTY) {
-                    var _iid = _item.get_id();
-                    _collect_id(_iid, _palette_map, _palette_array, _index_ref);
+            _collect_id(_iid, _palette_map, _palette_array, _index_ref);
+            
+            /* and check their contents */
+            var _idata = _item_data[$ _iid];
+            
+            if (_idata != undefined)
+            {
+                var _ilen = _idata.get_item_inventory_length();
+                
+                if (_ilen > 0)
+                {
+                    var _inv_sub = _item.get_inventory();
                     
-                    // And check their contents
-                    var _idata = _item_data[$ _iid];
-                    if (_idata != undefined) {
-                        var _ilen = _idata.get_item_inventory_length();
-                        
-                        if (_ilen > 0) {
-                            var _inv_sub = _item.get_inventory();
-                            
-                            if (is_array(_inv_sub)) {
-                                _collect_inventory_ids(_inv_sub, _ilen, _item_data, _palette_map, _palette_array, _index_ref, _collect_inventory_ids);
-                            }
-                        }
+                    if (is_array(_inv_sub))
+                    {
+                        _collect_inventory_ids(_inv_sub, _ilen, _item_data, _palette_map, _palette_array, _index_ref, _collect_inventory_ids);
                     }
                 }
             }
+        }
+    }
 
-            // --- Collect from Creatures ---
-            var _inst_creature = [];
-            var _length_creature = 0;
-            
-            with (obj_Creature) {
-                if (rectangle_in_rectangle(bbox_left, bbox_top, bbox_right, bbox_bottom, _bbox_l, _bbox_t, _bbox_r, _bbox_b)) {
-                    _inst_creature[@ _length_creature++] = id;
-                }
-            }
+    /* --- collect from creatures --- */
+    var _inst_creature   = [];
+    var _length_creature = 0;
+    
+    with (obj_Creature)
+    {
+        if (rectangle_in_rectangle(bbox_left, bbox_top, bbox_right, bbox_bottom, _bbox_l, _bbox_t, _bbox_r, _bbox_b))
+        {
+            _inst_creature[@ _length_creature++] = id;
+        }
+    }
 
-            for (var i = 0; i < _length_creature; ++i) {
-                var _inst = _inst_creature[i];
-                // Creature ID
-                _collect_id(_inst._id, _palette_map, _palette_array, _index_ref);
-                
-                // Creature Inventory
-                var _inventory = _inst[$ "inventory"];
-                if (_inventory != undefined) {
-                    var _ilen = array_length(_inventory);
-                    if (_ilen > 0) {
-                        _collect_inventory_ids(_inventory, _ilen, _item_data, _palette_map, _palette_array, _index_ref, _collect_inventory_ids);
-                    }
-                }
-            }
+    for (var i = 0; i < _length_creature; ++i)
+    {
+        var _inst = _inst_creature[i];
+        
+        /* creature id */
+        _collect_id(_inst._id, _palette_map, _palette_array, _index_ref);
+        
+        /* creature inventory */
+        var _inventory = _inst[$ "inventory"];
+        
+        if (_inventory != undefined)
+        {
+            var _ilen = array_length(_inventory);
             
-            _palette_index = _index_ref[0];
-            
-            // ------------------------------------------------------------------------------------------
-            // 3. WRITE TO BUFFER
-            // ------------------------------------------------------------------------------------------
-            
-            // -- Palette --
-            buffer_write(_current_chunk_buffer, buffer_u16, _palette_index);
-            for (var i = 0; i < _palette_index; ++i) {
-                buffer_write(_current_chunk_buffer, buffer_string, _palette_array[i]);
-            }
-
-            // -- Tiles --
-            var _chunk_covered = _chunk.chunk_covered;
-            var _chunk_count = _chunk.chunk_count;
-            
-            for (var i = 0; i < CHUNK_SIZE; ++i) {
-                buffer_write(_current_chunk_buffer, buffer_u16, _chunk_covered[i]);
-            }
-            
-            for (var i = 0; i < CHUNK_DEPTH; ++i) {
-                if !(_chunk_display & (1 << i)) continue;
-                buffer_write(_current_chunk_buffer, buffer_u16, _chunk_count[i]);
-                for (var j = 0; j < CHUNK_SIZE; ++j) {
-                    for (var l = 0; l < CHUNK_SIZE; ++l) {
-                        var _tile = _chunk.chunk[tile_index_xyz(l, j, i)];
-                        file_save_snippet_tile(_current_chunk_buffer, _tile, _item_data, _palette_map);
-                    }
-                }
-            }
-
-            // -- Items --
-            buffer_write(_current_chunk_buffer, buffer_u32, _length_item);
-            for (var i = 0; i < _length_item; ++i)
+            if (_ilen > 0)
             {
-                var _ = _inst_item[i];
-                var _pos_start = buffer_tell(_current_chunk_buffer);
-                buffer_write(_current_chunk_buffer, buffer_u32, 0); 
-                
-                buffer_write(_current_chunk_buffer, buffer_f64, _.timer_pickup);
-                buffer_write(_current_chunk_buffer, buffer_f64, _.timer_life);
-                file_save_snippet_item(_current_chunk_buffer, _.item, _item_data, _palette_map);
-                file_save_snippet_position(_current_chunk_buffer, _);
-                
-                var _pos_end = buffer_tell(_current_chunk_buffer);
-                buffer_poke(_current_chunk_buffer, _pos_start, buffer_u32, _pos_end); 
+                _collect_inventory_ids(_inventory, _ilen, _item_data, _palette_map, _palette_array, _index_ref, _collect_inventory_ids);
             }
+        }
+    }
+    
+    _palette_index = _index_ref[0];
+    
+    /* ------------------------------------------------------------------------------------------ */
+    /* 3. write to buffer */
+    /* ------------------------------------------------------------------------------------------ */
+    
+    /* -- palette -- */
+    buffer_write(_current_chunk_buffer, buffer_u16, _palette_index);
+    
+    for (var i = 0; i < _palette_index; ++i)
+    {
+        buffer_write(_current_chunk_buffer, buffer_string, _palette_array[i]);
+    }
 
-            // -- Creatures --
-            buffer_write(_current_chunk_buffer, buffer_u32, _length_creature);
-            for (var i = 0; i < _length_creature; ++i)
+    /* -- tiles -- */
+    var _chunk_covered = _chunk.chunk_covered;
+    var _chunk_count   = _chunk.chunk_count;
+    
+    for (var i = 0; i < CHUNK_SIZE; ++i)
+    {
+        buffer_write(_current_chunk_buffer, buffer_u16, _chunk_covered[i]);
+    }
+    
+    for (var i = 0; i < CHUNK_DEPTH; ++i)
+    {
+        if !(_chunk_display & (1 << i)) continue;
+        
+        buffer_write(_current_chunk_buffer, buffer_u16, _chunk_count[i]);
+        
+        for (var j = 0; j < CHUNK_SIZE; ++j)
+        {
+            for (var l = 0; l < CHUNK_SIZE; ++l)
             {
-                var _ = _inst_creature[i];
-                var _pos_start = buffer_tell(_current_chunk_buffer);
-                buffer_write(_current_chunk_buffer, buffer_u32, 0); 
+                var _tile = _chunk.chunk[tile_index_xyz(l, j, i)];
                 
-                // Use palette index for Creature ID
-                buffer_write(_current_chunk_buffer, buffer_u16, _palette_map[$ _._id]);
-                
-                buffer_write(_current_chunk_buffer, buffer_string, _[$ "variant"] ?? "");
-                buffer_write(_current_chunk_buffer, buffer_u16, _.hp);
-                buffer_write(_current_chunk_buffer, buffer_u16, _.hp_max);
-                buffer_write(_current_chunk_buffer, buffer_f64, _.entity_xscale);
-                buffer_write(_current_chunk_buffer, buffer_f64, _.entity_yscale);
-                buffer_write(_current_chunk_buffer, buffer_string, _.uuid);
-                
-                file_save_snippet_position(_current_chunk_buffer, _);
-                buffer_write(_current_chunk_buffer, buffer_f64, _.y_last);
-                file_save_snippet_effects(_current_chunk_buffer, _[$ "effects"]);
-                
-                var _inventory = _[$ "inventory"];
-                if (_inventory != undefined) {
-                    var _ilen = array_length(_inventory);
-                    buffer_write(_current_chunk_buffer, buffer_u8, _ilen);
-                    if (_ilen > 0)
-                        file_save_snippet_inventory(_current_chunk_buffer, _inventory, _ilen, _item_data, _palette_map);
-                } else {
-                    buffer_write(_current_chunk_buffer, buffer_u8, 0);
-                }
-                
-                var _pos_end = buffer_tell(_current_chunk_buffer);
-                buffer_poke(_current_chunk_buffer, _pos_start, buffer_u32, _pos_end);
+                file_save_snippet_tile(_current_chunk_buffer, _tile, _item_data, _palette_map);
             }
+        }
+    }
 
-    // ==========================================================================================
-    // 2. REBUILD REGION FILE
-    // ==========================================================================================
+    /* -- items -- */
+    buffer_write(_current_chunk_buffer, buffer_u32, _length_item);
+    
+    for (var i = 0; i < _length_item; ++i)
+    {
+        var _          = _inst_item[i];
+        var _pos_start = buffer_tell(_current_chunk_buffer);
+        
+        buffer_write(_current_chunk_buffer, buffer_u32, 0); 
+        
+        buffer_write(_current_chunk_buffer, buffer_f64, _.timer_pickup);
+        buffer_write(_current_chunk_buffer, buffer_f64, _.timer_life);
+        
+        file_save_snippet_item(_current_chunk_buffer, _.item, _item_data, _palette_map);
+        file_save_snippet_position(_current_chunk_buffer, _);
+        
+        var _pos_end = buffer_tell(_current_chunk_buffer);
+        
+        buffer_poke(_current_chunk_buffer, _pos_start, buffer_u32, _pos_end); 
+    }
+
+    /* -- creatures -- */
+    buffer_write(_current_chunk_buffer, buffer_u32, _length_creature);
+    
+    for (var i = 0; i < _length_creature; ++i)
+    {
+        var _          = _inst_creature[i];
+        var _pos_start = buffer_tell(_current_chunk_buffer);
+        
+        buffer_write(_current_chunk_buffer, buffer_u32, 0); 
+        
+        /* use palette index for creature id */
+        buffer_write(_current_chunk_buffer, buffer_u16, _palette_map[$ _._id]);
+        
+        buffer_write(_current_chunk_buffer, buffer_string, _[$ "variant"] ?? "");
+        buffer_write(_current_chunk_buffer, buffer_u16,    _.hp);
+        buffer_write(_current_chunk_buffer, buffer_u16,    _.hp_max);
+        buffer_write(_current_chunk_buffer, buffer_f64,    _.entity_xscale);
+        buffer_write(_current_chunk_buffer, buffer_f64,    _.entity_yscale);
+        buffer_write(_current_chunk_buffer, buffer_string, _.uuid);
+        
+        file_save_snippet_position(_current_chunk_buffer, _);
+        
+        buffer_write(_current_chunk_buffer, buffer_f64, _.y_last);
+        
+        file_save_snippet_effects(_current_chunk_buffer, _[$ "effects"]);
+        
+        var _inventory = _[$ "inventory"];
+        
+        if (_inventory != undefined)
+        {
+            var _ilen = array_length(_inventory);
+            
+            buffer_write(_current_chunk_buffer, buffer_u8, _ilen);
+            
+            if (_ilen > 0)
+            {
+                file_save_snippet_inventory(_current_chunk_buffer, _inventory, _ilen, _item_data, _palette_map);
+            }
+        }
+        else
+        {
+            buffer_write(_current_chunk_buffer, buffer_u8, 0);
+        }
+        
+        var _pos_end = buffer_tell(_current_chunk_buffer);
+        
+        buffer_poke(_current_chunk_buffer, _pos_start, buffer_u32, _pos_end);
+    }
+
+    /* ========================================================================================== */
+    /* 2. rebuild region file */
+    /* ========================================================================================== */
     
     var _old_region_buffer = -1;
+    
     if (file_exists(_directory))
     {
         _old_region_buffer = buffer_load_decompressed(_directory);
     }
     
-    // Output buffer: Start with 512 bytes for header, then append data.
+    /* output buffer: start with 512 bytes for header, then append data. */
     var _new_region_buffer = buffer_create(512, buffer_grow, 1);
-    buffer_fill(_new_region_buffer, 0, buffer_u32, 0, 512); // Zero out header initially
+    
+    buffer_fill(_new_region_buffer, 0, buffer_u32, 0, 512); /* zero out header initially */
     
     var _current_chunk_rel_x = ((_chunk_x % CHUNK_REGION_SIZE) + CHUNK_REGION_SIZE) % CHUNK_REGION_SIZE;
     var _current_chunk_rel_y = ((_chunk_y % CHUNK_REGION_SIZE) + CHUNK_REGION_SIZE) % CHUNK_REGION_SIZE;
     var _current_chunk_index = _current_chunk_rel_y * CHUNK_REGION_SIZE + _current_chunk_rel_x;
     
-    var _write_offset = 512; // Start writing data after header
+    var _write_offset = 512; /* start writing data after header */
     
-    for (var i = 0; i < 64; ++i) // 8x8 = 64 chunks
+    for (var i = 0; i < 64; ++i) /* 8x8 = 64 chunks */
     {
-        // Position buffer to write this chunk's header entry
+        /* position buffer to write this chunk's header entry */
         buffer_seek(_new_region_buffer, buffer_seek_start, i * 8);
         
         if (i == _current_chunk_index)
         {
-            // CASE A: This is the chunk we are saving RIGHT NOW.
+            /* case a: this is the chunk we are saving RIGHT NOW. */
             var _length = buffer_tell(_current_chunk_buffer);
             
-            // Write Header
+            /* write header */
             buffer_write(_new_region_buffer, buffer_u32, _write_offset);
             buffer_write(_new_region_buffer, buffer_u32, _length);
             
-            // Copy data to end of new buffer
+            /* copy data to end of new buffer */
             buffer_copy(_current_chunk_buffer, 0, _length, _new_region_buffer, _write_offset);
             
             _write_offset += _length;
         }
         else
         {
-            // CASE B: Copy from old buffer if it exists.
+            /* case b: copy from old buffer if it exists. */
             var _copied = false;
             
-            if (_old_region_buffer != -1 && buffer_get_size(_old_region_buffer) >= 512)
+            if (_old_region_buffer != -1) && (buffer_get_size(_old_region_buffer) >= 512)
             {
-                var _off = buffer_peek(_old_region_buffer, i*8, buffer_u32);
-                var _length = buffer_peek(_old_region_buffer, i*8+4, buffer_u32);
+                var _off    = buffer_peek(_old_region_buffer, i * 8,     buffer_u32);
+                var _length = buffer_peek(_old_region_buffer, i * 8 + 4, buffer_u32);
                 
-                // Validate offset/len
-                // Note: Only strictly valid New Format entries are copied. 
-                // Any garbage data or "Old Format" blobs are ignored/discarded as per user request.
-                if (_length > 0 && _off >= 512 && (_off + _length <= buffer_get_size(_old_region_buffer)))
+                /* validate offset/len */
+                /* note: only strictly valid new format entries are copied. */
+                /* any garbage data or "old format" blobs are ignored/discarded as per user request. */
+                if (_length > 0) && (_off >= 512) && (_off + _length <= buffer_get_size(_old_region_buffer))
                 {
                     buffer_write(_new_region_buffer, buffer_u32, _write_offset);
                     buffer_write(_new_region_buffer, buffer_u32, _length);
                     buffer_copy(_old_region_buffer, _off, _length, _new_region_buffer, _write_offset);
+                    
                     _write_offset += _length;
                     _copied = true;
                 }
@@ -327,19 +394,20 @@ function file_save_world_chunk(_current_world, _chunk, _sync = false)
             
             if (!_copied)
             {
-                // Write Empty Header
+                /* write empty header */
                 buffer_write(_new_region_buffer, buffer_u32, 0);
                 buffer_write(_new_region_buffer, buffer_u32, 0);
             }
         }
     }
     
-    // ------------------------------------------------------------------------------------------
-    // 3. FLUSH TO DISK
-    // ------------------------------------------------------------------------------------------
+    /* ------------------------------------------------------------------------------------------ */
+    /* 3. flush to disk */
+    /* ------------------------------------------------------------------------------------------ */
     if (_sync)
     {
         buffer_save_compressed(_new_region_buffer, _directory);
+        
         _chunk.boolean &= ~CHUNK_BOOLEAN.SAVING;
     }
     else
@@ -351,8 +419,12 @@ function file_save_world_chunk(_current_world, _chunk, _sync = false)
         global.async_chunk_save_map[$ string(_id)] = _chunk;
     }
     
-    // Cleanup
+    /* cleanup */
     buffer_delete(_current_chunk_buffer);
     buffer_delete(_new_region_buffer);
-    if (_old_region_buffer != -1) buffer_delete(_old_region_buffer);
+    
+    if (_old_region_buffer != -1)
+    {
+        buffer_delete(_old_region_buffer);
+    }
 }

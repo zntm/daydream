@@ -8,9 +8,9 @@ function file_load_message_history()
     
     try
     {
-        var _version = buffer_read(_buffer, buffer_u32);
+        var _version   = buffer_read(_buffer, buffer_u32);
         var _timestamp = buffer_read(_buffer, buffer_f64);
-        var _length = buffer_read(_buffer, buffer_u16);
+        var _length    = buffer_read(_buffer, buffer_u16);
         
         global.message_history = array_create(_length);
         
@@ -19,7 +19,7 @@ function file_load_message_history()
             global.message_history[i] = buffer_read(_buffer, buffer_string);
         }
         
-        // Reset navigation index
+        /* reset navigation index */
         obj_Game_Control.chat_message_history_index = _length;
     }
     catch (_error)

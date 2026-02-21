@@ -11,6 +11,7 @@ function file_load_world_spawn(_current_world, _inst, _uuid = _inst.uuid)
     var _version = buffer_read(_buffer, buffer_u32);
     
     file_load_snippet_position(_buffer, _inst);
+    
     _inst.y_last = buffer_read(_buffer, buffer_f64);
     
     buffer_delete(_buffer);

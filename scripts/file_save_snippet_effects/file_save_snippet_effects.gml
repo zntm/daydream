@@ -35,8 +35,8 @@ function file_save_snippet_effects(_buffer, _effects)
             continue;
         }
         
-        buffer_write(_buffer, buffer_u8, _effect.level);
-        buffer_write(_buffer, buffer_f64, _effect.timer);
+        buffer_write(_buffer, buffer_u8,   _effect.level);
+        buffer_write(_buffer, buffer_f64,  _effect.timer);
         buffer_write(_buffer, buffer_bool, _effect.particle);
         
         buffer_poke(_buffer, _seek, buffer_u32, buffer_tell(_buffer));
