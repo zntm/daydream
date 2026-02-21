@@ -58,6 +58,19 @@ function menu_create_world_ui_init()
 	var _world = global.current_world;
 	
 	
+	/* back button */
+	var _btn_back = _elements[$ "btn_back"];
+	
+	if (_btn_back != undefined)
+	{
+		_btn_back.text = loca_translate("phantasia:menu.generic.back");
+		
+		_btn_back.add_event_handler("on_select_release", function() {
+			menu_transition_goto(rm_Menu_Worlds);
+		});
+	}
+	
+	
 	/* world name */
 	var _name_box = _elements[$ "world_name"];
 	

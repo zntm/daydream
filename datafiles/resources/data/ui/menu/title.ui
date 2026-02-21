@@ -1,14 +1,13 @@
-// Title menu layout
+// title screen layout
 
 @area(title_menu) {
     size = (440, 340)
     position = ORIGIN_CENTER
 	background = #0e0e1a
 
-    @text(title_text) {
+    @area(title_graphic) {
         position = ORIGIN_TOP_CENTER + (0, 32)
-        text = "Phantasia"
-		text_scale = 2
+        size = (0, 0)
     }
 
     @area(menu_options) {
@@ -48,7 +47,7 @@
         position = ORIGIN_BOTTOM_RIGHT + (-16, -16)
         size = (0, 0)
         
-        @button(version_graphic) {
+        @area(version_graphic) {
             position = ORIGIN_CENTER
             size = (0, 0)
         }

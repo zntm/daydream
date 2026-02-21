@@ -1,104 +1,116 @@
+// create player screen layout
+
 @area(create_player_menu) {
     size = (640, 480)
     position = ORIGIN_CENTER
 	background = #0e0e1a
 
+    @button(btn_back) {
+        position = ORIGIN_TOP_LEFT + (8, 8)
+        size = (48, 24)
+        text = "Back"
+    }
+
     @text(title) {
-        position = ORIGIN_TOP_CENTER + (0, 32)
+        position = ORIGIN_TOP_CENTER + (0, 16)
         text = "Create Player"
-        text_scale = 2
+        text_scale = 1.5
     }
 
     @area(main_content) {
-        position = ORIGIN_CENTER + (0, -16)
-        size = (600, 320)
+        position = ORIGIN_CENTER + (0, 0)
+        size = (600, 340)
 
         @area(left_column) {
             position = ORIGIN_TOP_LEFT
-            size = (280, 320)
+            size = (200, 340)
             
-            @button(preview_renderer) {
+            @area(preview_renderer) {
                 position = ORIGIN_TOP_CENTER + (0, 16)
-                size = (128, 128)
-            }
-
-            @textbox(input_name) {
-                position = ORIGIN_TOP_CENTER + (0, 160)
-                size = (200, 24)
-                placeholder = "enter name..."
-            }
-
-            @button(btn_voice) {
-                position = ORIGIN_TOP_CENTER + (0, 200)
-                size = (200, 24)
-                text = "Voice"
-            }
-
-            @area(pitch_container) {
-                position = ORIGIN_TOP_CENTER + (0, 240)
-                size = (200, 24)
-
-                @text(label_pitch) {
-                    position = ORIGIN_MIDDLE_LEFT
-                    text = "Pitch"
-                    text_scale = 1
-                }
-
-                @slider(slider_pitch) {
-                    position = ORIGIN_MIDDLE_RIGHT
-                    size = (120, 16)
-                    min_value = 0.5
-                    max_value = 1.5
-                    value = 1.0
-                    step = 0.1
-                }
+                size = (160, 200)
             }
         }
 
 		@line(divider) {
 			position = ORIGIN_CENTER
-			start = (0, -140)
-			end = (0, 140)
+			start = (0, -150)
+			end = (0, 150)
 			thickness = 1
 			colour = #3a3a4a
 		}
 
         @area(right_column) {
             position = ORIGIN_TOP_RIGHT
-            size = (280, 320)
+            size = (360, 340)
 
-            @text(label_design) {
-                position = ORIGIN_TOP_CENTER + (0, 16)
-                text = "Design"
+            @text(label_body_design) {
+                position = ORIGIN_TOP_LEFT + (16, 16)
+                text = "Body Design"
+                text_scale = 0.8
+                colour = #aaaaaa
+            }
+
+            @area(body_design_row) {
+                position = ORIGIN_TOP_LEFT + (16, 36)
+                size = (340, 48)
+                layout = LAYOUT_HORIZONTAL
+                spacing = 8
+                // icons injected via GML
+            }
+
+            @text(label_colour) {
+                position = ORIGIN_TOP_LEFT + (16, 96)
+                text = "Color"
+                text_scale = 0.8
+                colour = #aaaaaa
+            }
+
+            @area(colour_row) {
+                position = ORIGIN_TOP_LEFT + (16, 116)
+                size = (340, 48)
+                layout = LAYOUT_HORIZONTAL
+                spacing = 8
+                // color swatches injected via GML
             }
 
             @scroll_area(design_scroll) {
-                position = ORIGIN_TOP_CENTER + (0, 48)
-                size = (280, 272)
+                position = ORIGIN_TOP_LEFT + (16, 176)
+                size = (340, 160)
 
-                // Handled in GML
                 @area(design_list) {
                     position = ORIGIN_TOP_LEFT
-                    size = (280, 272)
+                    size = (340, 160)
                 }
             }
         }
     }
 
-    @area(bottom_buttons) {
-        position = ORIGIN_BOTTOM_CENTER + (0, -16)
-        size = (600, 48)
+    @area(bottom_fields) {
+        position = ORIGIN_BOTTOM_CENTER + (0, -48)
+        size = (600, 32)
+        layout = LAYOUT_HORIZONTAL
+        spacing = 8
 
-        @button(btn_back) {
-            position = ORIGIN_MIDDLE_LEFT
-            size = (96, 32)
-            text = "Back"
+        @textbox(input_name) {
+            size = (200, 24)
+            placeholder = "name..."
+            text_length = 40
         }
 
-        @button(btn_create_player) {
-            position = ORIGIN_CENTER
-            size = (180, 32)
-            text = "Create Player"
+        @textbox(input_age) {
+            size = (80, 24)
+            placeholder = "age..."
         }
+
+        @textbox(input_plan) {
+            size = (200, 24)
+            placeholder = "plan..."
+        }
+    }
+
+    @button(btn_create_player) {
+        position = ORIGIN_BOTTOM_RIGHT + (-16, -8)
+        size = (160, 28)
+        text = "Create Player"
     }
 }

@@ -1,3 +1,5 @@
+// worlds screen layout
+
 @area(worlds_menu) {
     size = (640, 480)
     position = ORIGIN_CENTER
@@ -11,47 +13,38 @@
 
     @text(title) {
         position = ORIGIN_TOP_CENTER + (0, 16)
-        text = "Select World"
+        text = "Worlds"
         text_scale = 1.5
     }
 
+    @button(btn_view_toggle) {
+        position = ORIGIN_TOP_RIGHT + (-8, 8)
+        size = (32, 24)
+        text = "Grid"
+    }
+
     @area(content_area) {
-        position = ORIGIN_CENTER + (0, 8)
-        size = (600, 420)
-        layout = LAYOUT_VERTICAL
-        spacing = 8
+        position = ORIGIN_CENTER + (0, 16)
+        size = (600, 380)
 
-        @area(top_row) {
-            size = (600, 32)
-            layout = LAYOUT_HORIZONTAL
-            spacing = 8
-            
-            @button(btn_create_world) {
-                size = (180, 32)
-                text = "Create World"
-            }
-
-            @button(btn_open_folder) {
-                size = (96, 32)
-                text = "Folder"
-            }
-        }
-
-        @area(worlds_list_container) {
+        @scroll_area(worlds_scroll) {
+            position = ORIGIN_TOP_LEFT
             size = (600, 380)
-            background = #000000
-            
-            // Use a scroll area for dynamic items
-            @scroll_area(worlds_scroll) {
+
+            @area(worlds_container) {
                 position = ORIGIN_TOP_LEFT
                 size = (600, 380)
-                
-                // The list of worlds will be injected here via GML (menu_worlds_ui_init)
-                @area(worlds_container) {
-                    position = ORIGIN_TOP_LEFT
-                    size = (600, 380)
-                }
+                layout = LAYOUT_VERTICAL
+                spacing = 4
+
+                // pinned section, divider, normal section injected via GML
             }
         }
+    }
+
+    @button(btn_create_world) {
+        position = ORIGIN_BOTTOM_CENTER + (0, -8)
+        text = "Create World"
+        size = (180, 28)
     }
 }
