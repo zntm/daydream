@@ -406,13 +406,13 @@ function file_save_world_chunk(_current_world, _chunk, _sync = false)
     /* ------------------------------------------------------------------------------------------ */
     if (_sync)
     {
-        buffer_save_compressed(_new_region_buffer, _directory);
+        buffer_save_ext(_new_region_buffer, _directory, 0, _write_offset);
         
         _chunk.boolean &= ~CHUNK_BOOLEAN.SAVING;
     }
     else
     {
-        var _id = buffer_save_compressed_async(_new_region_buffer, _directory);
+        var _id = buffer_save_async(_new_region_buffer, _directory, 0, _write_offset);
         
         if (!variable_global_exists("async_chunk_save_map")) global.async_chunk_save_map = {};
         

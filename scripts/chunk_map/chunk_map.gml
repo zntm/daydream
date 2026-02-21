@@ -12,7 +12,7 @@ function chunk_map_key(_x, _y)
 {
     gml_pragma("forceinline");
     
-    return $"{floor(_x / CHUNK_SIZE_DIMENSION)}_{floor(_y / CHUNK_SIZE_DIMENSION)}";
+    return string(floor(_x / CHUNK_SIZE_DIMENSION)) + "_" + string(floor(_y / CHUNK_SIZE_DIMENSION));
 }
 
 /// @function chunk_map_get(_x, _y)

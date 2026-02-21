@@ -1,7 +1,6 @@
 /// @desc Chunk pooling system using constructor-based structs
 /// Replaces obj_Chunk instances with lightweight struct management
 
-// Note: Ensure Pool script is loaded before this or in same group
 function array_fill(_array, _index, _count, _value)
 {
     for (var i = _index + _count - 1; i >= _index; --i)
@@ -128,13 +127,13 @@ function ChunkPool() : Pool() constructor
         // Register at new position
         chunk_map_register(_chunk);
         
-        // Regenerate structures and generate chunk
-        control_structure(_chunk.chunk_xstart, _chunk.chunk_ystart);
-        
         var _is_loaded = file_load_world_chunk(global.current_world, _chunk);
         
         if (!_is_loaded)
         {
+            // Regenerate structures and generate chunk
+            control_structure(_chunk.chunk_xstart, _chunk.chunk_ystart);
+            
             // Cache worldgen context for performance (hoisted lookups)
             if (variable_global_exists("worldgen_context") == false)
             {
