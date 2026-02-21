@@ -2,6 +2,13 @@
 /// Replaces obj_Chunk instances with lightweight struct management
 
 // Note: Ensure Pool script is loaded before this or in same group
+function array_fill(_array, _index, _count, _value)
+{
+    for (var i = _index + _count - 1; i >= _index; --i)
+    {
+        _array[@ i] = _value;
+    }
+}
 
 /// Chunk state flags
 enum CHUNK_BOOLEAN {
@@ -65,7 +72,7 @@ function Chunk(_x, _y) constructor
 /// @desc Pool manager for chunk structs
 function ChunkPool() : Pool() constructor
 {
-    max_size = 32;
+    max_size = 128;
     
     // Valid list of chunks currently fading in
     fading_chunks = [];
@@ -87,44 +94,21 @@ function ChunkPool() : Pool() constructor
         _chunk.xcenter = _x - (TILE_SIZE / 2) + (CHUNK_SIZE_DIMENSION / 2);
         _chunk.ycenter = _y - (TILE_SIZE / 2) + (CHUNK_SIZE_DIMENSION / 2);
         
-        // Clear tile data
-        var _chunk_size = CHUNK_SIZE * CHUNK_SIZE * CHUNK_DEPTH;
-        for (var i = 0; i < _chunk_size; ++i)
-        {
-            var _tile = _chunk.chunk[i];
-            if (_tile != TILE_EMPTY)
-            {
-                delete _tile;
-            }
-            _chunk.chunk[@ i] = TILE_EMPTY;
-        }
+        // Clear tile data (references already cleared by array_fill in on_release)
+        // No manual loop here to avoid per-chunk lag spikes
         
         // Clear chunk covered
-        for (var i = 0; i < CHUNK_SIZE; ++i)
-        {
-            _chunk.chunk_covered[@ i] = 0;
-        }
+        array_fill(_chunk.chunk_covered, 0, CHUNK_SIZE, 0);
         
         // Clear occlusion flags
-        var _occluded_size = CHUNK_SIZE * CHUNK_SIZE;
-        for (var i = 0; i < _occluded_size; ++i)
-        {
-            _chunk.chunk_occluded[@ i] = 0;
-        }
+        array_fill(_chunk.chunk_occluded, 0, CHUNK_SIZE * CHUNK_SIZE, 0);
         
         // Clear count array
-        for (var i = 0; i < CHUNK_DEPTH; ++i)
-        {
-            _chunk.chunk_count[@ i] = 0;
-        }
+        array_fill(_chunk.chunk_count, 0, CHUNK_DEPTH, 0);
         
         // Clear skew arrays (16x16 = 256)
-        var _skew_size = CHUNK_SIZE * CHUNK_SIZE;
-        for (var i = 0; i < _skew_size; ++i)
-        {
-            _chunk.chunk_skew[@ i] = 0;
-            _chunk.chunk_skew_to[@ i] = 0;
-        }
+        array_fill(_chunk.chunk_skew, 0, CHUNK_SIZE * CHUNK_SIZE, 0);
+        array_fill(_chunk.chunk_skew_to, 0, CHUNK_SIZE * CHUNK_SIZE, 0);
         
         _chunk.chunk_display = 0;
         _chunk.boolean = CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH;
@@ -204,6 +188,9 @@ function ChunkPool() : Pool() constructor
         // Unregister from map
         chunk_map_unregister(_chunk);
         
+        // Clear tile array refs efficiently to prevent "GC bombs" on chunk collection
+        array_fill(_chunk.chunk, 0, array_length(_chunk.chunk), TILE_EMPTY);
+        
         // Clean render states
         if (is_array(_chunk.chunk_render_state))
         {
@@ -256,7 +243,7 @@ function ChunkPool() : Pool() constructor
     static clear_all = function()
     {
         // Clean up all pooled chunks
-        for (var i = 0; i < array_length(pool); ++i)
+        for (var i = array_length(pool) - 1; i >= 0; --i)
         {
             on_release(pool[i]);
         }
@@ -274,20 +261,6 @@ function ChunkPool() : Pool() constructor
         }
         else
         {
-            // Pool full - cleanup and let GC handle
-            chunk_map_unregister(_chunk);
-            
-            if (is_array(_chunk.chunk_render_state))
-            {
-                global.render_state_pool.clear_list(_chunk.chunk_render_state);
-            }
-        
-            // Clear pooled objects
-            _chunk.chunk_crafting_stations = [];
-            _chunk.chunk_containers = [];
-            _chunk.chunk_lights = [];
-            
-            // Clean vertex buffers and surfaces
             on_release(_chunk);
         }
     }

@@ -2,74 +2,55 @@ function Tile(_id, _item_data = global.item_data) constructor
 {
     ___id = _id;
     
-    get_id = function()
+    static get_id = function()
     {
         return ___id;
     }
     
     var _data = _item_data[$ _id];
     
-    if (_data == undefined)
-    {
-        get_tile_components_length = function() { return 0; }
-        get_tile_inventory_length = function() { return 0; }
-        get_tile_components_names = function() { return []; }
-        get_components_length = function() { return 0; }
-        get_component = function() { return undefined; }
-        get_inventory = function() { return undefined; }
-        
-        show_debug_message($"[TILE] Warning: Created tile with invalid ID: {_id}");
-        return; 
-    }
-    
-    // set_offset(0, 0);
-    // set_scale(1, 1);
-    // ___value = 0;
-    
     ___value = (9 << 28) | (9 << 24) | (8 << 4) | (8 << 0);
     
-    set_offset = function(_xoffset, _yoffset)
+    static set_offset = function(_xoffset, _yoffset)
     {
         ___value = (___value & 0b111111111_1111_1111_11111111_11111111_0000_0000) | ((_yoffset + 8) << 4) | ((_xoffset + 8) << 0);
         
         return self;
     }
     
-    set_xoffset = function(_xoffset)
+    static set_xoffset = function(_xoffset)
     {
         ___value = (___value & 0b111111111_1111_0000_11111111_11111111_1111_0000) | ((_xoffset + 8) << 0);
         
         return self;
     }
     
-    set_yoffset = function(_yoffset)
+    static set_yoffset = function(_yoffset)
     {
         ___value = (___value & 0b111111111_0000_1111_11111111_11111111_0000_1111) | ((_yoffset + 8) << 4);
         
         return self;
     }
     
-    get_xoffset = function()
+    static get_xoffset = function()
     {
         return ((___value >> 0) & 0b1111) - 8;
     }
     
-    get_yoffset = function()
+    static get_yoffset = function()
     {
         return ((___value >> 4) & 0b1111) - 8;
     }
     
-    set_scale = function(_xscale, _yscale)
+    static set_scale = function(_xscale, _yscale)
     {
-        // ___value = (___value & 0b111111111_0000_0000_11111111_11111111_1111_1111) | ((_yscale + 8) << 28) | ((_xscale + 8) << 24);
-        
         set_xscale(_xscale);
         set_yscale(_yscale);
         
         return self;
     }
     
-    set_xscale = function(_xscale)
+    static set_xscale = function(_xscale)
     {
         if (_xscale != undefined)
         {
@@ -79,41 +60,39 @@ function Tile(_id, _item_data = global.item_data) constructor
         return self;
     }
     
-    set_yscale = function(_yscale)
+    static set_yscale = function(_yscale)
     {
         if (_yscale != undefined)
         {
             ___value = (___value & 0b111111111_1111_0000_11111111_11111111_1111_1111) | ((_yscale + 8) << 24);
         }
         
-        // ___value = (___value & 0b111111111_0000_1111_11111111_11111111_1111_1111) | ((_yscale + 8) << 28);
-        
         return self;
     }
     
-    get_xscale = function()
+    static get_xscale = function()
     {
         return ((___value >> 24) & 0b1111) - 8;
     }
     
-    get_yscale = function()
+    static get_yscale = function()
     {
         return ((___value >> 28) & 0b1111) - 8;
     }
     
-    set_index = function(_index)
+    static set_index = function(_index)
     {
         ___value = (___value & 0b111111111_1111_1111_11111111_00000000_1111_1111) | (_index << 8);
         
         return self;
     }
     
-    get_index = function()
+    static get_index = function()
     {
         return (___value >> 8) & 0b11111111;
     }
     
-    set_index_offset = function(_index)
+    static set_index_offset = function(_index)
     {
         if (_index != undefined)
         {
@@ -123,12 +102,12 @@ function Tile(_id, _item_data = global.item_data) constructor
         return self;
     }
     
-    get_index_offset = function()
+    static get_index_offset = function()
     {
         return (___value >> 16) & 0b11111111;
     }
     
-    set_rotation = function(_rotation)
+    static set_rotation = function(_rotation)
     {
         _rotation = ((_rotation % 360) + 360) % 360;
         
@@ -137,12 +116,12 @@ function Tile(_id, _item_data = global.item_data) constructor
         return self;
     }
     
-    get_rotation = function()
+    static get_rotation = function()
     {
         return (___value >> 32) & 0b111111111;
     }
     
-    set_component = function(_name, _value)
+    static set_component = function(_name, _value)
     {
         self[$ "___components"] ??= {}
         
@@ -150,10 +129,10 @@ function Tile(_id, _item_data = global.item_data) constructor
         
         var _component = _data.get_tile_component(_name);
         
-        // If component definition doesn't exist, just store the value directly
         if (_component == undefined)
         {
             ___components[$ _name] = _value;
+
             return self;
         }
         
@@ -226,7 +205,7 @@ function Tile(_id, _item_data = global.item_data) constructor
         }
     }
     
-    get_component = function(_name)
+    static get_component = function(_name)
     {
         if (_name == undefined)
         {
@@ -243,7 +222,7 @@ function Tile(_id, _item_data = global.item_data) constructor
         return _component[$ _name];
     }
     
-    get_components_length = function()
+    static get_components_length = function()
     {
         return self[$ "___components_length"] ?? 0;
     }
@@ -255,50 +234,50 @@ function Tile(_id, _item_data = global.item_data) constructor
         ___inventory = array_create(_inventory_length, INVENTORY_EMPTY);
     }
     
-    set_inventory = function(_inventory)
+    static set_inventory = function(_inventory)
     {
         ___inventory = _inventory;
         
         return self;
     }
     
-    get_inventory = function()
+    static get_inventory = function()
     {
         return self[$ "___inventory"];
     }
     
-    set_instance_light = function(_id)
+    static set_instance_light = function(_id)
     {
         ___instance_light = _id;
         
         return self;
     }
     
-    get_instance_light = function()
+    static get_instance_light = function()
     {
         return self[$ "___instance_light"] ?? noone;
     }
     
-    set_instance_crafting_station = function(_id)
+    static set_instance_crafting_station = function(_id)
     {
         ___instance_crafting_station = _id;
         
         return self;
     }
     
-    get_instance_crafting_station = function()
+    static get_instance_crafting_station = function()
     {
         return self[$ "___instance_crafting_station"] ?? noone;
     }
     
-    set_instance_container = function(_id)
+    static set_instance_container = function(_id)
     {
         ___instance_container = _id;
         
         return self;
     }
     
-    get_instance_container = function()
+    static get_instance_container = function()
     {
         return self[$ "___instance_container"] ?? noone;
     }

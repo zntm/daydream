@@ -5,6 +5,52 @@
 /// @param {bool} [_sync=false] Optional flag to force synchronous saving
 function file_save_world_chunk(_current_world, _chunk, _sync = false)
 {
+    static _collect_id = function(_id, _map, _array, _index_ref)
+    {
+        if (!struct_exists(_map, _id))
+        {
+            _map[$ _id] = _index_ref[0]++;
+            
+            array_push(_array, _id);
+        }
+    }
+    
+    static _collect_inventory_ids = function(_inventory, _length, _item_data, _map, _array, _index_ref)
+    {
+        for (var k = 0; k < _length; ++k)
+        {
+            var _item = _inventory[k];
+            
+            if (_item == INVENTORY_EMPTY) continue;
+            
+            var _iid = _item.get_id();
+            
+            if (!struct_exists(_map, _iid))
+            {
+                _map[$ _iid] = _index_ref[0]++;
+                
+                array_push(_array, _iid);
+            }
+            
+            var _idata = _item_data[$ _iid];
+            
+            if (_idata != undefined)
+            {
+                var _ilen = _idata.get_item_inventory_length();
+                
+                if (_ilen > 0)
+                {
+                    var _inv_sub = _item.get_inventory();
+                    
+                    if (is_array(_inv_sub))
+                    {
+                        _collect_inventory_ids(_inv_sub, _ilen, _item_data, _map, _array, _index_ref);
+                    }
+                }
+            }
+        }
+    }
+
     /* ========================================================================================== */
     /* 1. prepare data & context */
     /* ========================================================================================== */
@@ -44,52 +90,6 @@ function file_save_world_chunk(_current_world, _chunk, _sync = false)
     
     var _index_ref = [_palette_index];
     
-    var _collect_id = function(_id, _map, _array, _index_ref)
-    {
-        if (!struct_exists(_map, _id))
-        {
-            _map[$ _id] = _index_ref[0]++;
-            
-            array_push(_array, _id);
-        }
-    }
-    
-    var _collect_inventory_ids = function(_inventory, _length, _item_data, _map, _array, _index_ref, _self_func)
-    {
-        for (var k = 0; k < _length; ++k)
-        {
-            var _item = _inventory[k];
-            
-            if (_item == INVENTORY_EMPTY) continue;
-            
-            var _iid = _item.get_id();
-            
-            if (!struct_exists(_map, _iid))
-            {
-                _map[$ _iid] = _index_ref[0]++;
-                
-                array_push(_array, _iid);
-            }
-            
-            var _idata = _item_data[$ _iid];
-            
-            if (_idata != undefined)
-            {
-                var _ilen = _idata.get_item_inventory_length();
-                
-                if (_ilen > 0)
-                {
-                    var _inv_sub = _item.get_inventory();
-                    
-                    if (is_array(_inv_sub))
-                    {
-                        _self_func(_inv_sub, _ilen, _item_data, _map, _array, _index_ref, _self_func);
-                    }
-                }
-            }
-        }
-    }
-    
     /* --- collect from tiles --- */
     if (_chunk_display)
     {
@@ -123,7 +123,7 @@ function file_save_world_chunk(_current_world, _chunk, _sync = false)
                                 
                                 if (!is_string(_inventory))
                                 {
-                                    _collect_inventory_ids(_inventory, _tlen, _item_data, _palette_map, _palette_array, _index_ref, _collect_inventory_ids);
+                                    _collect_inventory_ids(_inventory, _tlen, _item_data, _palette_map, _palette_array, _index_ref);
                                 }
                             }
                         }
@@ -177,7 +177,7 @@ function file_save_world_chunk(_current_world, _chunk, _sync = false)
                     
                     if (is_array(_inv_sub))
                     {
-                        _collect_inventory_ids(_inv_sub, _ilen, _item_data, _palette_map, _palette_array, _index_ref, _collect_inventory_ids);
+                        _collect_inventory_ids(_inv_sub, _ilen, _item_data, _palette_map, _palette_array, _index_ref);
                     }
                 }
             }
@@ -212,7 +212,7 @@ function file_save_world_chunk(_current_world, _chunk, _sync = false)
             
             if (_ilen > 0)
             {
-                _collect_inventory_ids(_inventory, _ilen, _item_data, _palette_map, _palette_array, _index_ref, _collect_inventory_ids);
+                _collect_inventory_ids(_inventory, _ilen, _item_data, _palette_map, _palette_array, _index_ref);
             }
         }
     }

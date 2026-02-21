@@ -94,7 +94,7 @@ export default [
                 "glacien"
             ],
             new WorldBackground(
-                "phantasia:sky/playground_clouds",
+                "@phantasia:sky/playground_clouds",
                 [
                     "phantasia:world/playground/cloud/default",
                     "phantasia:world/playground/cloud/windy",
