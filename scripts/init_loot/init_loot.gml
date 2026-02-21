@@ -1,3 +1,5 @@
+global.loot_data = {}
+
 function init_loot(_directory, _namespace = "phantasia")
 {
     var _files = file_read_directory(_directory, true);
@@ -6,6 +8,6 @@ function init_loot(_directory, _namespace = "phantasia")
     {
         var _file = _files[i];
         
-        // global.sound_asset[$ $"{_namespace}:{_id}"] = _array;
+        // global.loot_data[$ $"{_namespace}:{_id}"] = _array;
     }
 }

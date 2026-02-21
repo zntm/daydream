@@ -21,9 +21,8 @@ function tick_delay_add(_ticks, _func, _args = [])
 function tick_delay_process()
 {
     var _queue = global.tick_delay_queue;
-    var _length = array_length(_queue);
     
-    for (var i = _length - 1; i >= 0; --i)
+    for (var i = array_length(_queue) - 1; i >= 0; --i)
     {
         var _entry = _queue[i];
         
@@ -31,14 +30,8 @@ function tick_delay_process()
         
         if (_entry.ticks <= 0)
         {
-            // Execute the function with args
-            var _func = _entry[$ "function"];
-            var _args = _entry.args;
-            
-            var _args_length = array_length(_args);
-            
-            script_execute_ext(_func, _args);
-            
+            script_execute_ext(_entry[$ "function"], _entry.args);
+
             array_delete(_queue, i, 1);
         }
     }
