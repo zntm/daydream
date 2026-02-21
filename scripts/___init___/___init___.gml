@@ -19,8 +19,9 @@ enum VERISON_TYPE {
 
 #macro GAME_TICK 60
 
-#macro SITE_BLUESKY "https://bsky.app/profile/phantasiagame.bsky.social"
 #macro SITE_DISCORD "https://discord.gg/MetyWwT8fs"
+
+#macro SITE_BLUESKY "https://bsky.app/profile/phantasiagame.bsky.social"
 #macro SITE_TWITTER "https://x.com/PhantasiaGame"
 
 cursor_sprite = spr_Mouse;
@@ -39,7 +40,7 @@ sysinfo_init();
 #macro NOISE_TRANSITION_INV 0.0078125
 #macro NOISE_INV_255        0.00392156862745098
 
-global.noise_array = [];
+global.noise_buffer = buffer_create(NOISE_SIZE * NOISE_SIZE * 4, buffer_fixed, 4);
 global.noise_seed = 0;
 
 var _buffer = buffer_create(NOISE_SIZE * NOISE_SIZE, buffer_fast, 1);
@@ -55,9 +56,10 @@ buffer_get_surface(_buffer, _surface, 0);
 
 buffer_seek(_buffer, buffer_seek_start, 0);
 
-for (var i = (1024 * 1024) - 1; i >= 0; --i)
+// Convert u8 noise data to f32 in a contiguous buffer for fast lookup
+for (var i = 0; i < 1024 * 1024; ++i)
 {
-    global.noise_array[@ i] = buffer_read(_buffer, buffer_u8) * NOISE_INV_255;
+    buffer_poke(global.noise_buffer, i << 2, buffer_f32, buffer_read(_buffer, buffer_u8) * NOISE_INV_255);
 }
 
 buffer_delete(_buffer);
@@ -68,9 +70,11 @@ function open_simplex_noise_seed(_seed)
     global.noise_seed = floor(_seed);
 }
 
+/// @desc Sample noise from buffer with cell hashing (inlined into vnoise for performance)
+/// Kept as a standalone for any external callers
 function vnoise_raw(_cx, _cy, _lx, _ly)
 {
-    static _array = global.noise_array;
+    static _buf = global.noise_buffer;
     
     var _state = global.noise_seed ^ (_cx * 374761393) ^ (_cy * 668265263);
     
@@ -90,11 +94,14 @@ function vnoise_raw(_cx, _cy, _lx, _ly)
         _ny = _temp;
     }
     
-    return _array[(_ny << NOISE_SIZE_BIT) | _nx];
+    return buffer_peek(_buf, ((_ny << NOISE_SIZE_BIT) | _nx) << 2, buffer_f32);
 }
 
 function vnoise(_x, _y)
 {
+    static _buf = global.noise_buffer;
+    static _seed_ref = global.noise_seed;
+    
     var _cx = _x >> NOISE_SIZE_BIT;
     var _cy = _y >> NOISE_SIZE_BIT;
     
@@ -141,30 +148,89 @@ function vnoise(_x, _y)
         _wy = 0.5 + 0.5 * (_t * _t * (3 - 2 * _t));
     }
     
+    // --- Inline vnoise_raw for _cx, _cy ---
+    var _seed = global.noise_seed;
+    
+    var _state = _seed ^ (_cx * 374761393) ^ (_cy * 668265263);
+    _state ^= _state << 13;
+    _state ^= _state >> 17;
+    _state ^= _state << 5;
+    var _o = _state & 7;
+    var _nx = (_o & 1) ? ((NOISE_SIZE - 1) - _lx) : _lx;
+    var _ny = (_o & 2) ? ((NOISE_SIZE - 1) - _ly) : _ly;
+    if (_o & 4) { var _tmp = _nx; _nx = _ny; _ny = _tmp; }
+    var _v11 = buffer_peek(_buf, ((_ny << NOISE_SIZE_BIT) | _nx) << 2, buffer_f32);
+    
     if (_cx == _cx2) && (_cy == _cy2)
     {
-        return vnoise_raw(_cx, _cy, _lx, _ly);
+        return _v11;
     }
-    
-    var _v11 = vnoise_raw(_cx,  _cy,  _lx, _ly);
     
     if (_cx != _cx2) && (_cy == _cy2)
     {
-        var _v21 = vnoise_raw(_cx2, _cy,  _lx, _ly);
+        // Inline vnoise_raw for _cx2, _cy
+        _state = _seed ^ (_cx2 * 374761393) ^ (_cy * 668265263);
+        _state ^= _state << 13;
+        _state ^= _state >> 17;
+        _state ^= _state << 5;
+        _o = _state & 7;
+        _nx = (_o & 1) ? ((NOISE_SIZE - 1) - _lx) : _lx;
+        _ny = (_o & 2) ? ((NOISE_SIZE - 1) - _ly) : _ly;
+        if (_o & 4) { _tmp = _nx; _nx = _ny; _ny = _tmp; }
+        var _v21 = buffer_peek(_buf, ((_ny << NOISE_SIZE_BIT) | _nx) << 2, buffer_f32);
         
         return lerp(_v21, _v11, _wx);
     }
     
     if (_cx == _cx2) && (_cy != _cy2)
     {
-        var _v12 = vnoise_raw(_cx,  _cy2, _lx, _ly);
+        // Inline vnoise_raw for _cx, _cy2
+        _state = _seed ^ (_cx * 374761393) ^ (_cy2 * 668265263);
+        _state ^= _state << 13;
+        _state ^= _state >> 17;
+        _state ^= _state << 5;
+        _o = _state & 7;
+        _nx = (_o & 1) ? ((NOISE_SIZE - 1) - _lx) : _lx;
+        _ny = (_o & 2) ? ((NOISE_SIZE - 1) - _ly) : _ly;
+        if (_o & 4) { _tmp = _nx; _nx = _ny; _ny = _tmp; }
+        var _v12 = buffer_peek(_buf, ((_ny << NOISE_SIZE_BIT) | _nx) << 2, buffer_f32);
         
         return lerp(_v12, _v11, _wy);
     }
     
-    var _v21 = vnoise_raw(_cx2, _cy,  _lx, _ly);
-    var _v12 = vnoise_raw(_cx,  _cy2, _lx, _ly);
-    var _v22 = vnoise_raw(_cx2, _cy2, _lx, _ly);
+    // Full bilinear: need _v21, _v12, _v22
+    // Inline vnoise_raw for _cx2, _cy
+    _state = _seed ^ (_cx2 * 374761393) ^ (_cy * 668265263);
+    _state ^= _state << 13;
+    _state ^= _state >> 17;
+    _state ^= _state << 5;
+    _o = _state & 7;
+    _nx = (_o & 1) ? ((NOISE_SIZE - 1) - _lx) : _lx;
+    _ny = (_o & 2) ? ((NOISE_SIZE - 1) - _ly) : _ly;
+    if (_o & 4) { _tmp = _nx; _nx = _ny; _ny = _tmp; }
+    var _v21 = buffer_peek(_buf, ((_ny << NOISE_SIZE_BIT) | _nx) << 2, buffer_f32);
+    
+    // Inline vnoise_raw for _cx, _cy2
+    _state = _seed ^ (_cx * 374761393) ^ (_cy2 * 668265263);
+    _state ^= _state << 13;
+    _state ^= _state >> 17;
+    _state ^= _state << 5;
+    _o = _state & 7;
+    _nx = (_o & 1) ? ((NOISE_SIZE - 1) - _lx) : _lx;
+    _ny = (_o & 2) ? ((NOISE_SIZE - 1) - _ly) : _ly;
+    if (_o & 4) { _tmp = _nx; _nx = _ny; _ny = _tmp; }
+    var _v12 = buffer_peek(_buf, ((_ny << NOISE_SIZE_BIT) | _nx) << 2, buffer_f32);
+    
+    // Inline vnoise_raw for _cx2, _cy2
+    _state = _seed ^ (_cx2 * 374761393) ^ (_cy2 * 668265263);
+    _state ^= _state << 13;
+    _state ^= _state >> 17;
+    _state ^= _state << 5;
+    _o = _state & 7;
+    _nx = (_o & 1) ? ((NOISE_SIZE - 1) - _lx) : _lx;
+    _ny = (_o & 2) ? ((NOISE_SIZE - 1) - _ly) : _ly;
+    if (_o & 4) { _tmp = _nx; _nx = _ny; _ny = _tmp; }
+    var _v22 = buffer_peek(_buf, ((_ny << NOISE_SIZE_BIT) | _nx) << 2, buffer_f32);
     
     var _vx1 = lerp(_v21, _v11, _wx);
     var _vx2 = lerp(_v22, _v12, _wx);
@@ -174,8 +240,10 @@ function vnoise(_x, _y)
 
 function open_simplex_noise(_x, _y, _amplitude, _octaves)
 {
-    _x *= 32;
-    _y *= 32;
+    // Floor once upfront — _freq is always a power-of-2 integer,
+    // so subsequent multiplications stay integral
+    _x = floor(_x * 32);
+    _y = floor(_y * 32);
     
     var _result = 0;
     var _amp    = _amplitude;
@@ -185,7 +253,7 @@ function open_simplex_noise(_x, _y, _amplitude, _octaves)
     {
         _amp *= 0.5;
         
-        _result += vnoise(floor(_x * _freq), floor(_y * _freq)) * _amp;
+        _result += vnoise(_x * _freq, _y * _freq) * _amp;
         
         _freq = _freq << 1;
     }
