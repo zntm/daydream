@@ -230,7 +230,7 @@ function menu_players_ui_build_cards(_container, _players, _ystart, _is_grid, _i
 		_entry.player_ref   = _player;
 		_entry.is_grid_mode = _is_grid;
 		
-		_entry.add_event_handler("on_draw", method(_entry, function(_x, _y, _xscale, _yscale) {
+		_entry.on_draw = method(_entry, function(_x, _y, _xscale, _yscale) {
 			var _data = self.player_ref;
 			
 			var _ew = self.width * _xscale;
@@ -255,7 +255,9 @@ function menu_players_ui_build_cards(_container, _players, _ystart, _is_grid, _i
 				var _cx = _x + (_ew / 2);
 				var _cy = _y + 8;
 				
-				render_attire_ext(_data.get_attire(), _cx, _cy + 40, 2, 2, 0, c_white, _alpha);
+				draw_set_alpha(_alpha);
+				render_attire(_data.get_attire(), 0, _cx, _cy + 40, 2, 2);
+				draw_set_alpha(1);
 				
 				draw_set_align(fa_center, fa_top);
 
@@ -268,14 +270,16 @@ function menu_players_ui_build_cards(_container, _players, _ystart, _is_grid, _i
 				var _cx = _x + 24;
 				var _cy = _y + (_eh / 2);
 				
-				render_attire_ext(_data.get_attire(), _cx, _cy + 8, 1.5, 1.5, 0, c_white, _alpha);
+				draw_set_alpha(_alpha);
+				render_attire(_data.get_attire(), 0, _cx, _cy + 8, 1.5, 1.5);
+				draw_set_alpha(1);
 				
 				render_text(_x + 56, _y + 8, _data.get_name(), 1, 1, 0, c_white, _alpha);
 				render_text(_x + 56, _y + 28, date_datetime_string(_data.get_last_opened()), 0.7, 0.7, 0, c_white, _alpha);
 			}
 			
 			draw_set_align(_halign, _valign);
-		}));
+		});
 		
 		/* pin icon */
 		var _pin_w  = 24;
@@ -287,7 +291,7 @@ function menu_players_ui_build_cards(_container, _players, _ystart, _is_grid, _i
 		_btn_pin.player_ref = _player;
 		_btn_pin.parent     = _entry;
 
-		_btn_pin.add_event_handler("on_draw", method(_btn_pin, function(_x, _y, _xscale, _yscale) {
+		_btn_pin.on_draw = method(_btn_pin, function(_x, _y, _xscale, _yscale) {
 			var _halign = draw_get_halign();
 			var _valign = draw_get_valign();
 			var _alpha = global.menu_transition_alpha ?? 1;
@@ -300,13 +304,15 @@ function menu_players_ui_build_cards(_container, _players, _ystart, _is_grid, _i
 			render_text(_cx, _cy, "I", 0.8, 0.8, 0, c_white, _alpha);
 
 			draw_set_align(_halign, _valign);
-		}));
+		});
 
 		_btn_pin.add_event_handler("on_select_release", method(_btn_pin, function() {
 			var _p = self.player_ref;
 			_p[$ "pinned"] = !(_p[$ "pinned"] == true);
 
 			menu_players_ui_populate();
+			
+			global.ui_input_consumed = true;
 		}));
 		
 		/* gear icon */
@@ -316,7 +322,7 @@ function menu_players_ui_build_cards(_container, _players, _ystart, _is_grid, _i
 		_btn_gear.player_ref = _player;
 		_btn_gear.parent     = _entry;
 
-		_btn_gear.add_event_handler("on_draw", method(_btn_gear, function(_x, _y, _xscale, _yscale) {
+		_btn_gear.on_draw = method(_btn_gear, function(_x, _y, _xscale, _yscale) {
 			var _halign = draw_get_halign();
 			var _valign = draw_get_valign();
 			var _alpha = global.menu_transition_alpha ?? 1;
@@ -329,16 +335,19 @@ function menu_players_ui_build_cards(_container, _players, _ystart, _is_grid, _i
 			render_text(_cx, _cy, "O", 0.8, 0.8, 0, c_white, _alpha);
 
 			draw_set_align(_halign, _valign);
-		}));
+		});
 
 		_btn_gear.add_event_handler("on_select_release", method(_btn_gear, function() {
 			show_debug_message("Player options: " + string(self.player_ref.get_name()));
+			global.ui_input_consumed = true;
 		}));
 		
 		array_push(_entry.children, _btn_pin, _btn_gear);
 		
 		/* select player */
 		_entry.add_event_handler("on_select_release", method(_entry, function() {
+			if (global.ui_input_consumed) exit;
+			
 			var _data = self.player_ref;
 			var _uuid = _data.get_uuid();
 			
@@ -346,7 +355,7 @@ function menu_players_ui_build_cards(_container, _players, _ystart, _is_grid, _i
 			{
 				show_debug_message("Player folder not found: " + string(_uuid));
 
-				return;
+				exit;
 			}
 			
 			global.current_player.name   = _data.get_name();

@@ -9,7 +9,7 @@ function physics_step(_body, _input)
     if (_body.mount != undefined)
     {
         physics_mode_mounted(_body, _input);
-        return;
+        exit;
     }
     
     // Detect and handle mode transitions
@@ -65,14 +65,14 @@ function physics_detect_mode(_body)
     if (_body.mount != undefined)
     {
         _body.mode = MOVEMENT_MODE.MOUNTED;
-        return;
+        exit;
     }
     
     // Check for liquid (swim mode)
     if (_body.collision.in_liquid)
     {
         _body.mode = MOVEMENT_MODE.SWIM;
-        return;
+        exit;
     }
     
     // Check for wall cling (climb mode) - requires attribute support
@@ -83,7 +83,7 @@ function physics_detect_mode(_body)
         if (_can_climb && (_body.collision.wall_left || _body.collision.wall_right))
         {
             _body.mode = MOVEMENT_MODE.CLIMB;
-            return;
+            exit;
         }
         
         // Check for flight ability
@@ -92,7 +92,7 @@ function physics_detect_mode(_body)
         if (_can_fly)
         {
             _body.mode = MOVEMENT_MODE.FLY;
-            return;
+            exit;
         }
     }
     

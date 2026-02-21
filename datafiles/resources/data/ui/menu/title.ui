@@ -11,7 +11,7 @@
 
     @area(menu_options) {
         position = ORIGIN_CENTER + (0, 48)
-        size = (200, 160)
+        size = (160, 160)
         layout = LAYOUT_VERTICAL
         spacing = 8
 

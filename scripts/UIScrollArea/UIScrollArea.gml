@@ -127,12 +127,21 @@ function UIScrollArea(_x, _y, _width, _height) : UIElement(_x, _y, _width, _heig
         if !(visible) exit;
         
         
+        /* update children first */
+        var _child_count = array_length(children);
+        
+        for (var i = _child_count - 1; i >= 0; --i) 
+        {
+            children[i].update();
+        }
+        
+        
         recalculate_content_height();
         
         
         var _base_scale = ui_get_base_scale();
         var _abs_x = get_absolute_x();
-        var _abs_y = get_absolute_y();
+        var _abs_y = get_interaction_y();
         
         
         var _mx = (window_mouse_get_x() / global.window_width) * global.gui_width;
@@ -221,15 +230,6 @@ function UIScrollArea(_x, _y, _width, _height) : UIElement(_x, _y, _width, _heig
         
         
         update_bindings();
-        
-        
-        /* update children */
-        var _child_count = array_length(children);
-        
-        for (var i = _child_count - 1; i >= 0; --i) 
-        {
-            children[i].update();
-        }
     }
     
     

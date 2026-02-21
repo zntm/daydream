@@ -149,7 +149,7 @@ function menu_create_player_ui_init()
 			var _rx = _x + (self.width * _xscale / 2);
 			var _ry = _y + (self.height * _yscale / 2) + 32;
 			
-			render_attire_ext(global.current_player.attire, _rx, _ry, 8, 8, 0, c_white, 1);
+			render_attire(global.current_player.attire, 0, _rx, _ry, 8, 8);
 		}));
 	}
 	

@@ -70,7 +70,7 @@ function ProgParser(_tokens) constructor
     {
         if (had_error)
         {
-             return; /* Suppress cascade */
+             exit; /* Suppress cascade */
         }
         
         had_error = true;

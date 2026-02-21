@@ -79,7 +79,10 @@ function UIElement(_x, _y, _width, _height) constructor
     background_alpha = 1;
     
     border_color = undefined;
-    border_width = 0;
+    border_width = 1;
+    
+    
+    on_draw = undefined;
     
     
     /* =============================================================================
@@ -255,7 +258,7 @@ function UIElement(_x, _y, _width, _height) constructor
                     break;
                     
                 case "right":
-                    x = parent.width - width - offset_x;
+                    x = parent.width - width + offset_x;
                     break;
             }
         }
@@ -274,7 +277,7 @@ function UIElement(_x, _y, _width, _height) constructor
                     break;
                     
                 case "bottom":
-                    y = parent.height - height - offset_y;
+                    y = parent.height - height + offset_y;
                     break;
             }
         }
@@ -535,23 +538,41 @@ function UIElement(_x, _y, _width, _height) constructor
     }
     
     
+    /* get physics/interaction y position, factoring in scroll offsets */
+    static get_interaction_y = function()
+    {
+        var _scroll_offset = 0;
+        
+        if (parent != undefined)
+        {
+            if (instanceof(parent) == "UIScrollArea")
+            {
+                _scroll_offset = parent.scroll_offset;
+            }
+            
+            return parent.get_interaction_y() + y - _scroll_offset;
+        }
+        
+        return y - _scroll_offset;
+    }
+    
+    
     static update = function()
     {
         if !(visible) exit;
         
         
-        /* update bindings each frame */
-        update_bindings();
-        
-        
         /* update children */
         var _child_count = array_length(children);
-        
         
         for (var i = _child_count - 1; i >= 0; --i)
         {
             children[i].update();
         }
+        
+        
+        /* update bindings each frame */
+        update_bindings();
     }
     
     
@@ -599,6 +620,13 @@ function UIElement(_x, _y, _width, _height) constructor
         
         /* draw content */
         draw_content();
+        
+        
+        /* execute custom draw callback if set */
+        if (on_draw != undefined)
+        {
+            on_draw(_x1, _y1, _base_scale.x, _base_scale.y);
+        }
         
         
         /* draw children */

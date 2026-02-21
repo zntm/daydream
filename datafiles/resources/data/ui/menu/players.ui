@@ -46,7 +46,7 @@
     }
 
     @button(btn_create_player) {
-        position = ORIGIN_BOTTOM_CENTER + (0, -24)
+        position = ORIGIN_BOTTOM_CENTER + (0, -40)
         text = "Create Player"
         size = (180, 28)
     }

@@ -531,7 +531,7 @@ proglang_function_register("entity_reset_fall_distance", function(_args) {
 
 proglang_function_register("wait", function(_args, _vm)
 {
-    if (array_length(_args) < 3) return;
+    if (array_length(_args) < 3) exit;
     
     var _callback = _args[0];
     var _params = _args[1];
@@ -655,7 +655,7 @@ proglang_function_register("entity_get_stamina", function(_args) {
 proglang_function_register("entity_set_stamina", function(_args) {
     var _id = _args[0];
     var _val = _args[1];
-    if (!instance_exists(_id)) return;
+    if (!instance_exists(_id)) exit;
     if (variable_instance_exists(_id, "stamina")) _id.stamina = _val;
 });
 
@@ -664,7 +664,7 @@ proglang_function_register("entity_set_velocity", function(_args) {
     var _vx = _args[1];
     var _vy = _args[2];
     
-    if (!instance_exists(_id)) return;
+    if (!instance_exists(_id)) exit;
     
     if (variable_instance_exists(_id, "physics_body"))
     {
@@ -785,7 +785,7 @@ proglang_function_register("inventory_set", function(_args) {
     
     if (_uuid == "player") {
         var _inv = global.inventory[$ _type];
-        if (_inv == undefined) return;
+        if (_inv == undefined) exit;
         
         if (is_array(_inv)) {
             if (_index >= 0 && _index < array_length(_inv)) {
@@ -1546,7 +1546,7 @@ proglang_function_register("cloud_get_time", function(_args) {
 #region Drawing
 
 proglang_function_register("draw_sprite", function(_args) {
-    if (array_length(_args) < 4) return;
+    if (array_length(_args) < 4) exit;
     
     var _id = _args[0];
     var _subimg = _args[1];
@@ -1565,7 +1565,7 @@ proglang_function_register("draw_sprite", function(_args) {
 });
 
 proglang_function_register("draw_sprite_ext", function(_args) {
-    if (array_length(_args) < 9) return;
+    if (array_length(_args) < 9) exit;
     
     var _id = _args[0];
     var _subimg = _args[1];
@@ -1591,19 +1591,19 @@ proglang_function_register("draw_sprite_ext", function(_args) {
 });
 
 proglang_function_register("draw_set_color", function(_args) {
-    if (array_length(_args) < 1) return;
+    if (array_length(_args) < 1) exit;
     var _col = _args[0];
     if (is_string(_col)) _col = hex_parse(_col);
     draw_set_color(_col);
 });
 
 proglang_function_register("draw_set_alpha", function(_args) {
-    if (array_length(_args) < 1) return;
+    if (array_length(_args) < 1) exit;
     draw_set_alpha(_args[0]);
 });
 
 proglang_function_register("draw_rectangle", function(_args) {
-    if (array_length(_args) < 5) return;
+    if (array_length(_args) < 5) exit;
     draw_rectangle(_args[0], _args[1], _args[2], _args[3], _args[4]);
 });
 

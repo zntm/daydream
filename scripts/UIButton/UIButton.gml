@@ -112,8 +112,17 @@ function UIButton(_x, _y, _width, _height, _text = "") : UIElement(_x, _y, _widt
         if !(visible) exit;
         
         
+        /* update children */
+        var _child_count = array_length(children);
+        
+        for (var i = _child_count - 1; i >= 0; --i)
+        {
+            children[i].update();
+        }
+        
+        
         var _abs_x = get_absolute_x();
-        var _abs_y = get_absolute_y();
+        var _abs_y = get_interaction_y();
         
         
         var _base_scale = ui_get_base_scale();
@@ -135,11 +144,32 @@ function UIButton(_x, _y, _width, _height, _text = "") : UIElement(_x, _y, _widt
         
         var _is_hovered = (_mx >= _left && _mx <= _right && _my >= _top && _my <= _bottom);
         
+        /* check if clipped by a parent scroll area's scissor */
+        var _p = parent;
+        while (_p != undefined)
+        {
+            if (instanceof(_p) == "UIScrollArea")
+            {
+                var _p_base = ui_get_base_scale();
+                var _p_left = _p.get_absolute_x() * _p_base.x;
+                var _p_top = _p.get_absolute_y() * _p_base.y;
+                var _p_right = _p_left + (_p.width * _p_base.x);
+                var _p_bottom = _p_top + (_p.height * _p_base.y);
+                
+                if (_mx < _p_left || _mx > _p_right || _my < _p_top || _my > _p_bottom)
+                {
+                    _is_hovered = false;
+                    break;
+                }
+            }
+            _p = _p.parent;
+        }
         
-        if (_is_hovered)
+        if (_is_hovered && !(global.ui_hover_consumed ?? false))
         {
             boolean |= MENU_BUTTON_BOOLEAN.IS_HOVER;
             
+            global.ui_hover_consumed = true;
             
             if !(global.ui_input_consumed) && (mouse_check_button_pressed(mb_left))
             {
@@ -210,16 +240,6 @@ function UIButton(_x, _y, _width, _height, _text = "") : UIElement(_x, _y, _widt
         
         /* update bindings */
         update_bindings();
-        
-        
-        /* update children */
-        var _child_count = array_length(children);
-        
-        
-        for (var i = _child_count - 1; i >= 0; --i)
-        {
-            children[i].update();
-        }
     }
     
     

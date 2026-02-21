@@ -10,7 +10,7 @@ function render_background(_camera_x, _camera_y, _camera_width, _camera_height)
     shader_set_uniform_f(__u_colour, (sky_colour_base & 0xff) / 0xff, ((sky_colour_base >> 8) & 0xff) / 0xff, ((sky_colour_base >> 16) & 0xff) / 0xff);
     
     var _in_biome_background = worldgen_get_background(in_biome);
-    if (_in_biome_background == undefined) return;
+    if (_in_biome_background == undefined) exit;
     
     var _in_biome_background_id = _in_biome_background.id;
     var _in_biome_background_blend = _in_biome_background.blend;
@@ -22,7 +22,7 @@ function render_background(_camera_x, _camera_y, _camera_width, _camera_height)
     var _parallax_scale = global.world_data[$ global.current_world.dimension].get_background_parallax_scale();
     
     var _in_biome_transition_background = worldgen_get_background(in_biome_transition);
-    if (_in_biome_transition_background == undefined) return;
+    if (_in_biome_transition_background == undefined) exit;
     
     var _in_biome_transition_background_id = _in_biome_transition_background.id;
     var _in_biome_transition_background_blend = _in_biome_transition_background.blend;

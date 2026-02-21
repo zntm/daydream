@@ -230,7 +230,7 @@ function menu_worlds_ui_build_cards(_container, _worlds, _ystart, _is_grid, _ins
 		_entry.world_ref    = _world;
 		_entry.is_grid_mode = _is_grid;
 		
-		_entry.add_event_handler("on_draw", method(_entry, function(_x, _y, _xscale, _yscale) {
+		_entry.on_draw = method(_entry, function(_x, _y, _xscale, _yscale) {
 			var _data = self.world_ref;
 			
 			var _ew = self.width * _xscale;
@@ -278,7 +278,7 @@ function menu_worlds_ui_build_cards(_container, _worlds, _ystart, _is_grid, _ins
 			}
 			
 			draw_set_align(_halign, _valign);
-		}));
+		});
 		
 		/* pin icon */
 		var _pin_w  = 24;
@@ -290,7 +290,7 @@ function menu_worlds_ui_build_cards(_container, _worlds, _ystart, _is_grid, _ins
 		_btn_pin.world_ref = _world;
 		_btn_pin.parent    = _entry;
 
-		_btn_pin.add_event_handler("on_draw", method(_btn_pin, function(_x, _y, _xscale, _yscale) {
+		_btn_pin.on_draw = method(_btn_pin, function(_x, _y, _xscale, _yscale) {
 			var _halign = draw_get_halign();
 			var _valign = draw_get_valign();
 			var _alpha = global.menu_transition_alpha ?? 1;
@@ -303,13 +303,15 @@ function menu_worlds_ui_build_cards(_container, _worlds, _ystart, _is_grid, _ins
 			render_text(_cx, _cy, "I", 0.8, 0.8, 0, c_white, _alpha);
 
 			draw_set_align(_halign, _valign);
-		}));
+		});
 
 		_btn_pin.add_event_handler("on_select_release", method(_btn_pin, function() {
 			var _w = self.world_ref;
 			_w[$ "pinned"] = !(_w[$ "pinned"] == true);
 
 			menu_worlds_ui_populate();
+			
+			global.ui_input_consumed = true;
 		}));
 		
 		/* gear icon */
@@ -319,7 +321,7 @@ function menu_worlds_ui_build_cards(_container, _worlds, _ystart, _is_grid, _ins
 		_btn_gear.world_ref = _world;
 		_btn_gear.parent    = _entry;
 
-		_btn_gear.add_event_handler("on_draw", method(_btn_gear, function(_x, _y, _xscale, _yscale) {
+		_btn_gear.on_draw = method(_btn_gear, function(_x, _y, _xscale, _yscale) {
 			var _halign = draw_get_halign();
 			var _valign = draw_get_valign();
 			var _alpha = global.menu_transition_alpha ?? 1;
@@ -332,16 +334,19 @@ function menu_worlds_ui_build_cards(_container, _worlds, _ystart, _is_grid, _ins
 			render_text(_cx, _cy, "O", 0.8, 0.8, 0, c_white, _alpha);
 
 			draw_set_align(_halign, _valign);
-		}));
+		});
 
 		_btn_gear.add_event_handler("on_select_release", method(_btn_gear, function() {
 			show_debug_message("World options: " + string(self.world_ref.get_name()));
+			global.ui_input_consumed = true;
 		}));
 		
 		array_push(_entry.children, _btn_pin, _btn_gear);
 		
 		/* select world */
 		_entry.add_event_handler("on_select_release", method(_entry, function() {
+			if (global.ui_input_consumed) exit;
+			
 			var _data = self.world_ref;
 			var _uuid = _data.get_uuid();
 			
@@ -349,7 +354,7 @@ function menu_worlds_ui_build_cards(_container, _worlds, _ystart, _is_grid, _ins
 			{
 				show_debug_message("World folder not found: " + string(_uuid));
 
-				return;
+				exit;
 			}
 			
 			global.current_world.name = _data.get_name();

@@ -1,8 +1,9 @@
 function xorshift(_state)
 {
-    _state ^= _state << 13;
-    _state ^= _state >> 17;
-    _state ^= _state << 5;
+    _state = int64(_state);
+    _state = _state ^ (_state << 12);
+    _state = _state ^ (_state >> 25);
+    _state = _state ^ (_state << 27);
     
-    return _state;
+    return int64(_state * 2685821657736338717);
 }

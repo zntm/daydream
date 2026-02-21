@@ -25,6 +25,7 @@ menu_transition_update();
 if (variable_global_exists("gui_root")) && (global.gui_root != undefined)
 {
 	global.ui_input_consumed = false;
+	global.ui_hover_consumed = false;
 	
 	global.gui_root.update();
 	

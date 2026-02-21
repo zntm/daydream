@@ -59,7 +59,7 @@ function menu_title_ui_init()
 		var _splash_current_date = _splash_data[$ $"{current_month}_{current_day}"];
 		var _splash_text = array_choose(((chance(0.1)) && (_splash_current_date != undefined)) ? _splash_current_date : _splash_data.generic);
 		
-		_title_graphic.add_event_handler("on_draw", method(
+		_title_graphic.on_draw = method(
 			{ _text: _splash_text },
 			function(_x, _y, _xscale, _yscale)
 			{
@@ -75,7 +75,7 @@ function menu_title_ui_init()
 			    
 			    draw_set_align(_halign, _valign);
 			}
-		));
+		);
 	}
 	
 	
@@ -84,7 +84,7 @@ function menu_title_ui_init()
 	
 	if (_version_graphic != undefined)
 	{
-		_version_graphic.add_event_handler("on_draw", method(
+		_version_graphic.on_draw = method(
 			{},
 			function(_x, _y, _xscale, _yscale)
 			{
@@ -97,7 +97,7 @@ function menu_title_ui_init()
 			    
 			    draw_set_align(_halign, _valign);
 			}
-		));
+		);
 	}
 	
 	

@@ -87,7 +87,7 @@ function P2PValidator() constructor
     static apply_optimistic = function(_action_id)
     {
         var _action = pending[$ _action_id];
-        if (_action == undefined) return;
+        if (_action == undefined) exit;
         
         _action.applied_optimistically = true;
         _apply_action(_action.type, _action.data);
@@ -138,7 +138,7 @@ function P2PValidator() constructor
         var _valid = buffer_read(_buffer, buffer_bool);
         
         var _action = pending[$ _action_id];
-        if (_action == undefined || !_action.local) return;
+        if (_action == undefined || !_action.local) exit;
         
         _action.votes[$ _voter_id] = _valid;
         
@@ -157,7 +157,7 @@ function P2PValidator() constructor
         var _approved = buffer_read(_buffer, buffer_bool);
         
         var _action = pending[$ _action_id];
-        if (_action == undefined) return;
+        if (_action == undefined) exit;
         
         var _is_approved = _approved ? "APPROVED" : "REJECTED";
         
@@ -372,7 +372,7 @@ function P2PValidator() constructor
     static _check_consensus = function(_action_id)
     {
         var _action = pending[$ _action_id];
-        if (_action == undefined || !_action.local) return;
+        if (_action == undefined || !_action.local) exit;
         
         var _peer_count = global.relay.get_peer_count() - 1;  // Exclude self
         
@@ -380,13 +380,13 @@ function P2PValidator() constructor
         if (_peer_count == 0)
         {
             _finalize_action(_action_id, true);
-            return;
+            exit;
         }
         
         var _vote_count = array_length(struct_get_names(_action.votes));
         
         // Not enough votes yet
-        if (_vote_count < _peer_count) return;
+        if (_vote_count < _peer_count) exit;
         
         // Tally votes
         var _yes = 0, _no = 0;
@@ -407,7 +407,7 @@ function P2PValidator() constructor
     static _finalize_action = function(_action_id, _approved)
     {
         var _action = pending[$ _action_id];
-        if (_action == undefined) return;
+        if (_action == undefined) exit;
         
         var _is_approved = _approved ? "APPROVED" : "REJECTED";
         

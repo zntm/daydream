@@ -45,6 +45,8 @@ function render_attire(_attire, _index, _x, _y, _xscale, _yscale, _is_blinking =
     var _colour_body = _colour_data[_attire.body.colour];
     
     var _attire_elements = global.attire_elements_ordered;
+    
+    var _angle = self[$ "image_angle"] ?? 0;
      
     for (var i = 0; i < ATTIRE_ELEMENTS_ORDERED_LENGTH; ++i)
     {
@@ -52,14 +54,14 @@ function render_attire(_attire, _index, _x, _y, _xscale, _yscale, _is_blinking =
         
         if (instance_exists(_item)) && (_element == "body_arm_left")
         {
-            draw_sprite_ext(_item.sprite_index, _item.image_index, _item.x, _item.y, _item.image_xscale, _item.image_yscale, _item.image_angle, c_white, 1);
+            draw_sprite_ext(_item.sprite_index, _item.image_index, _item.x, _item.y, _item.image_xscale, _item.image_yscale, _item._angle, c_white, 1);
         }
         
         var _sprite_body = __sprite_body[$ _element];
         
         if (_sprite_body != undefined)
         {
-            __draw_body(_sprite_body, ((_index_arm != undefined) && (_element == "body_arm_left") ? _index_arm : _index), _x, _y, _xscale, _yscale, image_angle, _colour_white, _colour_body);
+            __draw_body(_sprite_body, ((_index_arm != undefined) && (_element == "body_arm_left") ? _index_arm : _index), _x, _y, _xscale, _yscale, _angle, _colour_white, _colour_body);
             
             continue;
         }
@@ -101,13 +103,13 @@ function render_attire(_attire, _index, _x, _y, _xscale, _yscale, _is_blinking =
                         // Nested array - folder-based multi-frame sprites
                         if (_image_index_arm < array_length(_sprite_asset_at_index))
                         {
-                            __draw_body(_sprite_asset_at_index[_image_index_arm], 0, _x, _y, _xscale, _yscale, image_angle, _colour_white, _colour_data[_part_colour]);
+                            __draw_body(_sprite_asset_at_index[_image_index_arm], 0, _x, _y, _xscale, _yscale, _angle, _colour_white, _colour_data[_part_colour]);
                         }
                     }
                     else
                     {
                         // Single SpriteAsset for this part
-                        __draw_body(_sprite_asset_at_index, _image_index_arm, _x, _y, _xscale, _yscale, image_angle, _colour_white, _colour_data[_part_colour]);
+                        __draw_body(_sprite_asset_at_index, _image_index_arm, _x, _y, _xscale, _yscale, _angle, _colour_white, _colour_data[_part_colour]);
                     }
                 }
                 else if (is_array(_sprite_colour))
@@ -115,13 +117,13 @@ function render_attire(_attire, _index, _x, _y, _xscale, _yscale, _is_blinking =
                     // Folder-based array of SpriteAssets (multi-frame animation)
                     if (_image_index_arm < array_length(_sprite_colour))
                     {
-                        __draw_body(_sprite_colour[_image_index_arm], 0, _x, _y, _xscale, _yscale, image_angle, _colour_white, _colour_data[_part_colour]);
+                        __draw_body(_sprite_colour[_image_index_arm], 0, _x, _y, _xscale, _yscale, _angle, _colour_white, _colour_data[_part_colour]);
                     }
                 }
                 else
                 {
                     // Single SpriteAsset
-                    __draw_body(_sprite_colour, _image_index_arm, _x, _y, _xscale, _yscale, image_angle, _colour_white, _colour_data[_part_colour]);
+                    __draw_body(_sprite_colour, _image_index_arm, _x, _y, _xscale, _yscale, _angle, _colour_white, _colour_data[_part_colour]);
                 }
             }
             
@@ -140,13 +142,13 @@ function render_attire(_attire, _index, _x, _y, _xscale, _yscale, _is_blinking =
                         // Nested array - folder-based multi-frame sprites
                         if (_image_index_arm < array_length(_sprite_asset_at_index))
                         {
-                            __draw_sprite_white(_sprite_asset_at_index[_image_index_arm], 0, _x, _y, _xscale, _yscale, image_angle);
+                            __draw_sprite_white(_sprite_asset_at_index[_image_index_arm], 0, _x, _y, _xscale, _yscale, _angle);
                         }
                     }
                     else
                     {
                         // Single SpriteAsset for this part
-                        __draw_sprite_white(_sprite_asset_at_index, _image_index_arm, _x, _y, _xscale, _yscale, image_angle);
+                        __draw_sprite_white(_sprite_asset_at_index, _image_index_arm, _x, _y, _xscale, _yscale, _angle);
                     }
                 }
                 else if (is_array(_sprite_white))
@@ -154,13 +156,13 @@ function render_attire(_attire, _index, _x, _y, _xscale, _yscale, _is_blinking =
                     // Folder-based array of SpriteAssets (multi-frame animation)
                     if (_image_index_arm < array_length(_sprite_white))
                     {
-                        __draw_sprite_white(_sprite_white[_image_index_arm], 0, _x, _y, _xscale, _yscale, image_angle);
+                        __draw_sprite_white(_sprite_white[_image_index_arm], 0, _x, _y, _xscale, _yscale, _angle);
                     }
                 }
                 else
                 {
                     // Single SpriteAsset
-                    __draw_sprite_white(_sprite_white, _image_index_arm, _x, _y, _xscale, _yscale, image_angle);
+                    __draw_sprite_white(_sprite_white, _image_index_arm, _x, _y, _xscale, _yscale, _angle);
                 }
             }
         }
@@ -188,13 +190,13 @@ function render_attire(_attire, _index, _x, _y, _xscale, _yscale, _is_blinking =
                     // Folder-based array of SpriteAssets (multi-frame animation)
                     if (_index < array_length(_sprite_colour))
                     {
-                        __draw_body(_sprite_colour[_index], 0, _x, _y, _xscale, _yscale, image_angle, _colour_white, _colour_data[_part_colour]);
+                        __draw_body(_sprite_colour[_index], 0, _x, _y, _xscale, _yscale, _angle, _colour_white, _colour_data[_part_colour]);
                     }
                 }
                 else
                 {
                     // Single SpriteAsset
-                    __draw_body(_sprite_colour, _index, _x, _y, _xscale, _yscale, image_angle, _colour_white, _colour_data[_part_colour]);
+                    __draw_body(_sprite_colour, _index, _x, _y, _xscale, _yscale, _angle, _colour_white, _colour_data[_part_colour]);
                 }
             }
             
@@ -207,13 +209,13 @@ function render_attire(_attire, _index, _x, _y, _xscale, _yscale, _is_blinking =
                     // Folder-based array of SpriteAssets (multi-frame animation)
                     if (_index < array_length(_sprite_white))
                     {
-                        __draw_sprite_white(_sprite_white[_index], 0, _x, _y, _xscale, _yscale, image_angle);
+                        __draw_sprite_white(_sprite_white[_index], 0, _x, _y, _xscale, _yscale, _angle);
                     }
                 }
                 else
                 {
                     // Single SpriteAsset
-                    __draw_sprite_white(_sprite_white, _index, _x, _y, _xscale, _yscale, image_angle);
+                    __draw_sprite_white(_sprite_white, _index, _x, _y, _xscale, _yscale, _angle);
                 }
             }
         }

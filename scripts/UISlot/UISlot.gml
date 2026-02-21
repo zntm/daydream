@@ -124,9 +124,11 @@ function UISlot(_x, _y) : UIElement(_x, _y, 16, 16) constructor
         var _my = device_mouse_y_to_gui(0);
         
         
-        if !(global.ui_input_consumed) && (_mx >= _x1 && _mx <= _x1 + _w && _my >= _y1 && _my <= _y1 + _h) 
+        if !(global.ui_input_consumed) && (_mx >= _x1 && _mx <= _x1 + _w && _my >= _y1 && _my <= _y1 + _h) && !(global.ui_hover_consumed ?? false) 
         {
             is_hovered = true;
+            
+            global.ui_hover_consumed = true;
             
             
             if (mouse_check_button_pressed(mb_left)) 

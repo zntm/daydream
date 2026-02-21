@@ -39,8 +39,17 @@ function UITextbox(_x, _y, _width, _height) : UIElement(_x, _y, _width, _height)
         if !(visible) exit;
         
         
+        /* update children */
+        var _child_count = array_length(children);
+        
+        for (var i = _child_count - 1; i >= 0; --i)
+        {
+            children[i].update();
+        }
+        
+        
         var _abs_x = get_absolute_x();
-        var _abs_y = get_absolute_y();
+        var _abs_y = get_interaction_y();
         
         
         var _base_scale = ui_get_base_scale();
@@ -63,9 +72,11 @@ function UITextbox(_x, _y, _width, _height) : UIElement(_x, _y, _width, _height)
         var _is_hovered = (_mx >= _left && _mx <= _right && _my >= _top && _my <= _bottom);
         
         
-        if (_is_hovered)
+        if (_is_hovered && !(global.ui_hover_consumed ?? false))
         {
             boolean |= MENU_BUTTON_BOOLEAN.IS_HOVER;
+            
+            global.ui_hover_consumed = true;
         }
         else
         {
@@ -231,16 +242,6 @@ function UITextbox(_x, _y, _width, _height) : UIElement(_x, _y, _width, _height)
         
         /* update bindings */
         update_bindings();
-        
-        
-        /* update children */
-        var _child_count = array_length(children);
-        
-        
-        for (var i = _child_count - 1; i >= 0; --i)
-        {
-            children[i].update();
-        }
     }
     
     

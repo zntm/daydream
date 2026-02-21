@@ -111,7 +111,7 @@ function menu_settings_ui_populate_list()
 	
 	if (_category_data == undefined)
 	{
-		return;
+		exit;
 	}
 	
     var _length = array_length(_category_data);
