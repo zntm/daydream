@@ -1,15 +1,16 @@
-/// @function world_cleanup()
-/// @desc Cleanup all world state when exiting a world or changing dimensions
-/// Call this before transitioning away from rm_World or when reconnecting with a new seed
-function world_cleanup()
+/// @param {bool} [_async=false] Whether to save chunks asynchronously
+function world_cleanup(_async = false)
 {
     show_debug_message("[WORLD_CLEANUP] Starting world cleanup...");
     
     // 1. Flush any pending chunk saves
     if (variable_global_exists("chunk_save_queue"))
     {
-        chunk_save_queue_flush();
-        chunk_save_queue_clear();
+        if (!_async)
+        {
+            chunk_save_queue_flush();
+            chunk_save_queue_clear();
+        }
     }
     
     // 2. Clear chunk generation queue

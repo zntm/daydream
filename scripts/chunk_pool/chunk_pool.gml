@@ -9,7 +9,8 @@ enum CHUNK_BOOLEAN {
     SURFACE_LIGHTING_REFRESH = 1 << 1,
     QUEUED                   = 1 << 2,
     DIRTY                    = 1 << 3,
-    TILE_PROCESSED           = 1 << 4
+    TILE_PROCESSED           = 1 << 4,
+    SAVING                   = 1 << 5
 }
 
 /// @function Chunk(_x, _y)

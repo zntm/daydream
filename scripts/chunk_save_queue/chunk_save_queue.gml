@@ -71,7 +71,7 @@ function chunk_save_queue_flush()
         
         if (_chunk != undefined)
         {
-            file_save_world_chunk(_current_world, _chunk);
+            file_save_world_chunk(_current_world, _chunk, true);
         }
     }
 }

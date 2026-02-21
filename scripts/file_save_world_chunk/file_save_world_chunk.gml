@@ -2,7 +2,8 @@
 
 /// @function file_save_world_chunk(_current_world, _chunk)
 /// @param {Struct.Chunk} _chunk The chunk struct to save
-function file_save_world_chunk(_current_world, _chunk)
+/// @param {bool} [_sync=false] Optional flag to force synchronous saving
+function file_save_world_chunk(_current_world, _chunk, _sync = false)
 {
     // ==========================================================================================
     // 1. PREPARE DATA & CONTEXT
@@ -72,7 +73,7 @@ function file_save_world_chunk(_current_world, _chunk)
                     var _idata = _item_data[$ _iid];
                     if (_idata != undefined)
                     {
-                         var _ilen = _idata.get_item_inventory_length();
+                        var _ilen = _idata.get_item_inventory_length();
                         if (_ilen > 0)
                         {
                             var _inv_sub = _item.get_inventory();
@@ -89,8 +90,8 @@ function file_save_world_chunk(_current_world, _chunk)
             if (_chunk_display) {
                 var _chunk2 = _chunk.chunk;
                 for (var i = 0; i < CHUNK_DEPTH; ++i) {
-                     if !(_chunk_display & (1 << i)) continue;
-                     for (var j = 0; j < CHUNK_SIZE; ++j) {
+                    if !(_chunk_display & (1 << i)) continue;
+                    for (var j = 0; j < CHUNK_SIZE; ++j) {
                         for (var l = 0; l < CHUNK_SIZE; ++l) {
                             var _tile = _chunk2[tile_index_xyz(l, j, i)];
                             if (_tile != TILE_EMPTY) {
@@ -108,7 +109,7 @@ function file_save_world_chunk(_current_world, _chunk)
                                 }
                             }
                         }
-                     }
+                    }
                 }
             }
 
@@ -132,22 +133,24 @@ function file_save_world_chunk(_current_world, _chunk)
             for (var i = 0; i < _length_item; ++i) {
                 var _inst = _inst_item[i];
                 var _item = _inst.item;
-                 // Item drops themselves are items
+                // Item drops themselves are items
                 if (_item != INVENTORY_EMPTY) {
-                     var _iid = _item.get_id();
-                     _collect_id(_iid, _palette_map, _palette_array, _index_ref);
-                     
-                     // And check their contents
-                     var _idata = _item_data[$ _iid];
-                     if (_idata != undefined) {
-                         var _ilen = _idata.get_item_inventory_length();
-                         if (_ilen > 0) {
+                    var _iid = _item.get_id();
+                    _collect_id(_iid, _palette_map, _palette_array, _index_ref);
+                    
+                    // And check their contents
+                    var _idata = _item_data[$ _iid];
+                    if (_idata != undefined) {
+                        var _ilen = _idata.get_item_inventory_length();
+                        
+                        if (_ilen > 0) {
                             var _inv_sub = _item.get_inventory();
+                            
                             if (is_array(_inv_sub)) {
                                 _collect_inventory_ids(_inv_sub, _ilen, _item_data, _palette_map, _palette_array, _index_ref, _collect_inventory_ids);
                             }
-                         }
-                     }
+                        }
+                    }
                 }
             }
 
@@ -156,7 +159,7 @@ function file_save_world_chunk(_current_world, _chunk)
             var _length_creature = 0;
             
             with (obj_Creature) {
-                 if (rectangle_in_rectangle(bbox_left, bbox_top, bbox_right, bbox_bottom, _bbox_l, _bbox_t, _bbox_r, _bbox_b)) {
+                if (rectangle_in_rectangle(bbox_left, bbox_top, bbox_right, bbox_bottom, _bbox_l, _bbox_t, _bbox_r, _bbox_b)) {
                     _inst_creature[@ _length_creature++] = id;
                 }
             }
@@ -169,10 +172,10 @@ function file_save_world_chunk(_current_world, _chunk)
                 // Creature Inventory
                 var _inventory = _inst[$ "inventory"];
                 if (_inventory != undefined) {
-                     var _ilen = array_length(_inventory);
-                     if (_ilen > 0) {
+                    var _ilen = array_length(_inventory);
+                    if (_ilen > 0) {
                         _collect_inventory_ids(_inventory, _ilen, _item_data, _palette_map, _palette_array, _index_ref, _collect_inventory_ids);
-                     }
+                    }
                 }
             }
             
@@ -189,10 +192,10 @@ function file_save_world_chunk(_current_world, _chunk)
             }
 
             // -- Tiles --
-             var _chunk_covered = _chunk.chunk_covered;
-             var _chunk_count = _chunk.chunk_count;
-             
-             for (var i = 0; i < CHUNK_SIZE; ++i) {
+            var _chunk_covered = _chunk.chunk_covered;
+            var _chunk_count = _chunk.chunk_count;
+            
+            for (var i = 0; i < CHUNK_SIZE; ++i) {
                 buffer_write(_current_chunk_buffer, buffer_u16, _chunk_covered[i]);
             }
             
@@ -203,7 +206,6 @@ function file_save_world_chunk(_current_world, _chunk)
                     for (var l = 0; l < CHUNK_SIZE; ++l) {
                         var _tile = _chunk.chunk[tile_index_xyz(l, j, i)];
                         file_save_snippet_tile(_current_chunk_buffer, _tile, _item_data, _palette_map);
-                        if (_tile != TILE_EMPTY) delete _tile;
                     }
                 }
             }
@@ -223,7 +225,6 @@ function file_save_world_chunk(_current_world, _chunk)
                 
                 var _pos_end = buffer_tell(_current_chunk_buffer);
                 buffer_poke(_current_chunk_buffer, _pos_start, buffer_u32, _pos_end); 
-                instance_destroy(_);
             }
 
             // -- Creatures --
@@ -260,7 +261,6 @@ function file_save_world_chunk(_current_world, _chunk)
                 
                 var _pos_end = buffer_tell(_current_chunk_buffer);
                 buffer_poke(_current_chunk_buffer, _pos_start, buffer_u32, _pos_end);
-                instance_destroy(_);
             }
 
     // ==========================================================================================
@@ -337,7 +337,19 @@ function file_save_world_chunk(_current_world, _chunk)
     // ------------------------------------------------------------------------------------------
     // 3. FLUSH TO DISK
     // ------------------------------------------------------------------------------------------
-    buffer_save_compressed(_new_region_buffer, _directory);
+    if (_sync)
+    {
+        buffer_save_compressed(_new_region_buffer, _directory);
+        _chunk.boolean &= ~CHUNK_BOOLEAN.SAVING;
+    }
+    else
+    {
+        var _id = buffer_save_compressed_async(_new_region_buffer, _directory);
+        
+        if (!variable_global_exists("async_chunk_save_map")) global.async_chunk_save_map = {};
+        
+        global.async_chunk_save_map[$ string(_id)] = _chunk;
+    }
     
     // Cleanup
     buffer_delete(_current_chunk_buffer);

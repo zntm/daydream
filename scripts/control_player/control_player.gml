@@ -12,6 +12,7 @@ function control_player()
     if (hp <= 0) 
     {
         if (global.network_role == RELAY_ROLE.HOST && !is_local) show_debug_message($"[NET-PHYS] Player {uuid} is DEAD, skipping");
+        
         exit;
     }
     
@@ -415,7 +416,7 @@ function control_player()
                             function_execute(_on_trigger[j], x, y, CHUNK_DEPTH_DEFAULT, sign(image_xscale), sign(image_yscale), id, _item);
                         }
                     }
-
+                    
                     // Launcher Shoot logic with power scaling
                     if (_is_launcher)
                     {
