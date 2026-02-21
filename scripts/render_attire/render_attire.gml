@@ -15,9 +15,9 @@ function render_attire(_attire, _index, _x, _y, _xscale, _yscale, _is_blinking =
         
         shader_set(shd_Colour_Replace);
         
-        shader_set_uniform_i_array(__u_match, _colour_match);
-        shader_set_uniform_i_array(__u_replace, _colour_replace);
-        shader_set_uniform_i(__u_length, ATTIRE_COLOUR_AMOUNT);
+        shader_set_uniform_f_array(__u_match, _colour_match);
+        shader_set_uniform_f_array(__u_replace, _colour_replace);
+        shader_set_uniform_f(__u_length, ATTIRE_COLOUR_AMOUNT);
         
         // Get sprite ID from SpriteAsset object or use raw sprite ID
         // Sprite origin is already set by sprite_add, so draw at base position

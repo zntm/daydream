@@ -573,7 +573,7 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     
     static get_item_durability_bar_length = function()
     {
-        return self[$ "___item_durability_bar_length"];
+        return self[$ "___item_durability_bar_length"] ?? 0;
     }
     
     static set_tile = function(_tile)
@@ -794,7 +794,7 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     
     static get_tile_drops_length = function()
     {
-        return self[$ "___tile_drops_length"];
+        return self[$ "___tile_drops_length"] ?? 0;
     }
     
     static set_tile_harvest = function(_harvest)
@@ -1382,7 +1382,7 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     
     static get_on_random_tick_length = function()
     {
-        return self[$ "___on_random_tick_length"];
+        return self[$ "___on_random_tick_length"] ?? 0;
     }
     
     static set_on_attack = function(_data)
@@ -1403,7 +1403,7 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     
     static get_on_attack_length = function()
     {
-        return self[$ "___on_attack_length"];
+        return self[$ "___on_attack_length"] ?? 0;
     }
     
     static set_on_stay = function(_data)
@@ -1445,7 +1445,7 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     
     static get_on_item_use_length = function()
     {
-        return self[$ "___on_item_use_length"];
+        return self[$ "___on_item_use_length"] ?? 0;
     }
     
     static set_on_tile_use = function(_data)
@@ -1466,7 +1466,7 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     
     static get_on_tile_use_length = function()
     {
-        return self[$ "___on_tile_use_length"];
+        return self[$ "___on_tile_use_length"] ?? 0;
     }
     
     static set_on_item_double_attack = function(_data)
@@ -1487,7 +1487,7 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     
     static get_on_item_double_attack_length = function()
     {
-        return self[$ "___on_item_double_attack_length"];
+        return self[$ "___on_item_double_attack_length"] ?? 0;
     }
     
     static set_on_item_double_use = function(_data)
@@ -1508,7 +1508,7 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     
     static get_on_item_double_use_length = function()
     {
-        return self[$ "___on_item_double_use_length"];
+        return self[$ "___on_item_double_use_length"] ?? 0;
     }
     
     static set_on_item_double_move = function(_data)
@@ -1529,7 +1529,7 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     
     static get_on_item_double_move_length = function()
     {
-        return self[$ "___on_item_double_move_length"];
+        return self[$ "___on_item_double_move_length"] ?? 0;
     }
     
     static set_skill = function(_skill)

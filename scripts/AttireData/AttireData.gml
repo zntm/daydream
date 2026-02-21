@@ -75,7 +75,7 @@ function AttireData(_icon, _colour, _white) constructor
     
     static get_sprite_colour_length = function()
     {
-        return self[$ "___sprite_colour_length"];
+        return self[$ "___sprite_colour_length"] ?? 0;
     }
     
     static get_sprite_white = function()
@@ -85,6 +85,6 @@ function AttireData(_icon, _colour, _white) constructor
     
     static get_sprite_white_length = function()
     {
-        return self[$ "___sprite_white_length"];
+        return self[$ "___sprite_white_length"] ?? 0;
     }
 }

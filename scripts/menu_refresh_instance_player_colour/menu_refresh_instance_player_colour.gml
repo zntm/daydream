@@ -90,7 +90,7 @@ function menu_refresh_instance_player_colour()
             u_replace: _attire_colour_data[_index],
             u_match: global.attire_colour_white_data,
             u_length: array_length(global.attire_colour_white_data),
-            _use_int: true
+            _use_int: false
         }
         
         _inst.on_select_release = method(_inst, __on_select_release);
