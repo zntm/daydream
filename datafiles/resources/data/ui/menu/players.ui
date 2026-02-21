@@ -1,51 +1,57 @@
 @area(players_menu) {
-    size = (960, 540)
-    position = ORIGIN_TOP_LEFT
+    size = (640, 480)
+    position = ORIGIN_CENTER
+	background = #0e0e1a
+
+    @button(btn_back) {
+        position = ORIGIN_TOP_LEFT + (8, 8)
+        size = (48, 24)
+        text = "Back"
+    }
 
     @text(title) {
-        position = ORIGIN_TOP_CENTER + (0, 32)
+        position = ORIGIN_TOP_CENTER + (0, 16)
         text = "Select Player"
-        text_scale = 2
+        text_scale = 1.5
     }
 
-    @area(players_list_container) {
-        position = ORIGIN_CENTER + (0, -16)
-        size = (800, 380)
-        background = #000000
-        
-        // Use a scroll area for dynamic items
-        @scroll_area(players_scroll) {
-            position = ORIGIN_TOP_LEFT
-            size = (800, 380)
+    @area(content_area) {
+        position = ORIGIN_CENTER + (0, 8)
+        size = (600, 420)
+        layout = LAYOUT_VERTICAL
+        spacing = 8
+
+        @area(top_row) {
+            size = (600, 32)
+            layout = LAYOUT_HORIZONTAL
+            spacing = 8
             
-            // The list of players will be injected here via GML (menu_players_ui_init)
-            @area(players_container) {
-                position = ORIGIN_TOP_LEFT
-                size = (800, 380)
+            @button(btn_create_player) {
+                size = (180, 32)
+                text = "Create Player"
+            }
+
+            @button(btn_open_folder) {
+                size = (96, 32)
+                text = "Folder"
             }
         }
-    }
 
-    @area(bottom_buttons) {
-        position = ORIGIN_BOTTOM_CENTER + (0, -32)
-        size = (800, 48)
-
-        @button(btn_back) {
-            position = ORIGIN_MIDDLE_LEFT
-            size = (128, 48)
-            text = "Back"
-        }
-
-        @button(btn_create_player) {
-            position = ORIGIN_CENTER
-            size = (256, 48)
-            text = "Create Player"
-        }
-
-        @button(btn_open_folder) {
-            position = ORIGIN_MIDDLE_RIGHT
-            size = (128, 48)
-            text = "Folder"
+        @area(players_list_container) {
+            size = (600, 380)
+            background = #000000
+            
+            // Use a scroll area for dynamic items
+            @scroll_area(players_scroll) {
+                position = ORIGIN_TOP_LEFT
+                size = (600, 380)
+                
+                // The list of players will be injected here via GML (menu_players_ui_init)
+                @area(players_container) {
+                    position = ORIGIN_TOP_LEFT
+                    size = (600, 380)
+                }
+            }
         }
     }
 }

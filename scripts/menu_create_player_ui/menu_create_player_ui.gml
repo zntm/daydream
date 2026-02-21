@@ -49,7 +49,7 @@ function menu_create_player_ui_init()
 	
 	/* Set initial data for a new player */
 	global.current_player.name = "";
-	global.current_player.uuid = file_generate_uuid();
+	global.current_player.uuid = uuid_generate(irandom(0xffffffff));
 	
 	/* Note: attire components mapping:
 	 * 0: Base Body/Color

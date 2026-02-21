@@ -10,8 +10,9 @@ var SECTION_SPACING = 4
 var INNER_SPACING = 2
 
 @area(create_world) {
-    size = (440, 340)
+    size = (640, 480)
     position = ORIGIN_CENTER
+	background = #0e0e1a
     title = "Create World"
 
     @area(left_panel) {

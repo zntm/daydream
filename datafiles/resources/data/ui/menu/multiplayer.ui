@@ -1,6 +1,7 @@
 @area(multiplayer_menu) {
-    size = (960, 540)
-    position = ORIGIN_TOP_LEFT
+    size = (440, 340)
+    position = ORIGIN_CENTER
+	background = #0e0e1a
     
     @text(title) {
         position = ORIGIN_TOP_CENTER + (0, 32)
@@ -11,7 +12,6 @@
     @area(content) {
         position = ORIGIN_CENTER
         size = (400, 200)
-        background = #000000
         
         @text(label_invite) {
             position = ORIGIN_TOP_CENTER + (0, 32)
@@ -32,9 +32,14 @@
         }
     }
     
-    @button(btn_back) {
-        position = ORIGIN_BOTTOM_LEFT + (32, -32)
-        size = (48, 48)
-        icon = "spr_Icon_Arrow_Left"
+    @area(bottom_buttons) {
+        position = ORIGIN_BOTTOM_CENTER + (0, -16)
+        size = (400, 32)
+
+        @button(btn_back) {
+            position = ORIGIN_MIDDLE_LEFT
+            size = (96, 32)
+            text = "Back"
+        }
     }
 }

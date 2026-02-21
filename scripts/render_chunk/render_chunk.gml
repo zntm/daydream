@@ -12,6 +12,7 @@ function render_chunk(_page, _position, _texel_width, _texel_height, _inst, _z)
     var _ystart = _inst.y;
     
     var _chunk = _inst.chunk;
+    var _chunk_occluded = _inst.chunk_occluded;
     
     for (var _x = 0; _x < CHUNK_SIZE; ++_x)
     {
@@ -37,25 +38,25 @@ function render_chunk(_page, _position, _texel_width, _texel_height, _inst, _z)
             if (_flags != 0)
             {
                 // Left
-                if (_x > 0) _flags &= _inst.chunk_occluded[_index_xy - 1];
+                if (_x > 0) _flags &= _chunk_occluded[_index_xy - 1];
                 else _flags = 0;
             }
             if (_flags != 0)
             {
                 // Right
-                if (_x < CHUNK_SIZE - 1) _flags &= _inst.chunk_occluded[_index_xy + 1];
+                if (_x < CHUNK_SIZE - 1) _flags &= _chunk_occluded[_index_xy + 1];
                 else _flags = 0;
             }
             if (_flags != 0)
             {
                 // Up
-                if (_y > 0) _flags &= _inst.chunk_occluded[_index_xy - CHUNK_SIZE];
+                if (_y > 0) _flags &= _chunk_occluded[_index_xy - CHUNK_SIZE];
                 else _flags = 0;
             }
             if (_flags != 0)
             {
                 // Down
-                if (_y < CHUNK_SIZE - 1) _flags &= _inst.chunk_occluded[_index_xy + CHUNK_SIZE];
+                if (_y < CHUNK_SIZE - 1) _flags &= _chunk_occluded[_index_xy + CHUNK_SIZE];
                 else _flags = 0;
             }
             

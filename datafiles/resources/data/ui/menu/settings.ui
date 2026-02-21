@@ -1,6 +1,7 @@
 @area(settings_menu) {
-    size = (960, 540)
-    position = ORIGIN_TOP_LEFT
+    size = (640, 480)
+    position = ORIGIN_CENTER
+	background = #0e0e1a
 
     @text(title) {
         position = ORIGIN_TOP_CENTER + (0, 32)
@@ -9,54 +10,54 @@
     }
 
     @area(main_content) {
-        position = ORIGIN_CENTER
-        size = (800, 380)
+        position = ORIGIN_CENTER + (0, -16)
+        size = (600, 320)
 
         @area(left_column) {
             position = ORIGIN_TOP_LEFT
-            size = (240, 380)
+            size = (180, 320)
             layout = LAYOUT_VERTICAL
             spacing = 8
             
             @button(btn_cat_general) {
-                size = (240, 48)
+                size = (180, 40)
                 text = "General"
             }
             
             @button(btn_cat_graphics) {
-                size = (240, 48)
+                size = (180, 40)
                 text = "Graphics"
             }
             
             @button(btn_cat_audio) {
-                size = (240, 48)
+                size = (180, 40)
                 text = "Audio"
             }
             
             @button(btn_cat_controls) {
-                size = (240, 48)
+                size = (180, 40)
                 text = "Controls"
             }
             
             @button(btn_cat_game) {
-                size = (240, 48)
+                size = (180, 40)
                 text = "Game"
             }
         }
 
         @area(right_column) {
             position = ORIGIN_TOP_RIGHT
-            size = (540, 380)
+            size = (400, 320)
             background = #000000
 
             @scroll_area(settings_scroll) {
                 position = ORIGIN_TOP_LEFT
-                size = (540, 380)
+                size = (400, 320)
 
                 // The settings list injected via GML
                 @area(settings_list) {
                     position = ORIGIN_TOP_LEFT
-                    size = (540, 380)
+                    size = (400, 320)
                     layout = LAYOUT_VERTICAL
                     spacing = 8
                 }
@@ -65,12 +66,12 @@
     }
 
     @area(bottom_buttons) {
-        position = ORIGIN_BOTTOM_CENTER + (0, -32)
-        size = (800, 48)
+        position = ORIGIN_BOTTOM_CENTER + (0, -16)
+        size = (600, 48)
 
         @button(btn_back) {
             position = ORIGIN_MIDDLE_LEFT
-            size = (128, 48)
+            size = (96, 32)
             text = "Back"
         }
     }

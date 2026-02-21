@@ -1,46 +1,47 @@
 // Title menu layout
 
 @area(title_menu) {
-    position = ORIGIN_TOP_LEFT
-    size = (960, 540)
+    size = (440, 340)
+    position = ORIGIN_CENTER
+	background = #0e0e1a
 
-    @area(splash) {
-        // Logo and splash texts rendering logic can just anchor here or handled via draw override
-        position = ORIGIN_TOP_CENTER + (0, 96)
-        size = (480, 160)
-        
-        // This button can act as an anchor point for the title text drawing
-        @button(title_graphic) {
-            position = ORIGIN_CENTER
-            size = (0, 0) // No actual dimensions needed, it's just an anchor
-        }
+    @text(title_text) {
+        position = ORIGIN_TOP_CENTER + (0, 32)
+        text = "Phantasia"
+		text_scale = 2
     }
 
     @area(menu_options) {
-        position = ORIGIN_CENTER + (0, 128)
-        size = (200, 260)
+        position = ORIGIN_CENTER + (0, 48)
+        size = (200, 160)
         layout = LAYOUT_VERTICAL
-        spacing = 4
+        spacing = 8
 
         @button(btn_play) {
             text = "Play"
-            size = (136, 24)
+            size = (160, 24)
         }
 
         @button(btn_settings) {
             text = "Settings"
-            size = (136, 24)
+            size = (160, 24)
         }
 
-        @button(btn_credits) {
-            text = "Credits"
-            size = (64, 24)
-        }
+		@area(bottom_buttons) {
+			size = (160, 24)
+			layout = LAYOUT_HORIZONTAL
+			spacing = 8
 
-        @button(btn_exit) {
-            text = "Exit"
-            size = (64, 24)
-        }
+			@button(btn_credits) {
+				text = "Credits"
+				size = (76, 24)
+			}
+
+			@button(btn_exit) {
+				text = "Exit"
+				size = (76, 24)
+			}
+		}
     }
 
     @area(version_anchor) {

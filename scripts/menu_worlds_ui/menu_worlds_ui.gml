@@ -123,19 +123,42 @@ function menu_worlds_ui_init()
 			_entry.add_event_handler("on_draw", method(_entry, function(_x, _y, _xscale, _yscale) {
 				var _data = global.file_worlds[self.world_index];
 				
+				/* world entry visual size based on UI size */
+				var _ew = self.width * _xscale;
+				var _eh = self.height * _yscale;
+				
+				/* Draw entry background and border */
+				draw_set_alpha(0.5);
+				draw_rectangle_colour(_x, _y, _x + _ew, _y + _eh, c_black, c_black, c_black, c_black, false);
+				draw_set_alpha(1);
+				draw_rectangle_colour(_x, _y, _x + _ew, _y + _eh, #3a3a4a, #3a3a4a, #3a3a4a, #3a3a4a, true);
+				
 				var _halign = draw_get_halign();
 		        var _valign = draw_get_valign();
 		        
 		        draw_set_align(fa_left, fa_top);
 		        
-				/* button sprite draws itself since it inherits, so we just add the text */
-				/* UI is anchored differently from legacy, so _x, _y are top-left of the button bounds usually depending on anchor */
-				/* but let's emulate the legacy look */
-		        render_text(_x + 16, _y + 16, _data.get_name());
-		        render_text(_x + 16, _y + 48, date_datetime_string(_data.get_last_opened()));
+		        render_text(_x + 72, _y + 16, _data.get_name());
+		        render_text(_x + 72, _y + 56, date_datetime_string(_data.get_last_opened()), 0.8, 0.8);
 				
+				/* Thumbnail placeholder */
+				var _cx = _x + 8;
+				var _cy = _y + _eh - 72;
+				draw_rectangle_colour(_cx, _cy, _cx + 56, _cy + 56, c_dkgray, c_dkgray, c_dkgray, c_dkgray, false);
+		        
 		        draw_set_align(_halign, _valign);
 			}));
+			
+			/* Adding Pin / Options sub-buttons over the entry */
+			var _btn_pin = new UIButton(192 - 40, 4, 32, 24, "");
+			_btn_pin.on_select_release = function() { show_debug_message("Pin clicked"); };
+			_btn_pin.parent = _entry; // add to entry to be drawn together
+			
+			var _btn_opt = new UIButton(192 - 40, 32, 32, 24, "");
+			_btn_opt.on_select_release = function() { show_debug_message("Options clicked"); };
+			_btn_opt.parent = _entry;
+			
+			array_push(_entry.children, _btn_pin, _btn_opt);
 			
 			_entry.add_event_handler("on_select_release", method(_entry, function() {
 				var _data = global.file_worlds[self.world_index];
