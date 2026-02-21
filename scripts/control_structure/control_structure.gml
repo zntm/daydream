@@ -15,10 +15,6 @@ function control_structure(_x, _y)
     var _cy_start = floor((_y - WORLDGEN_STRUCTURE_OFFSET) / CHUNK_SIZE);
     var _cy_end   = floor((_y + WORLDGEN_STRUCTURE_OFFSET) / CHUNK_SIZE);
     
-    static __surface_height_array = array_create(CHUNK_SIZE);
-    static __cave_start_array = array_create(CHUNK_SIZE);
-    static __slope_array = array_create(CHUNK_SIZE);
-    
     for (var _cx = _cx_start; _cx <= _cx_end; ++_cx)
     {
         var _ds = global.worldgen_structure[? _cx];
@@ -32,7 +28,8 @@ function control_structure(_x, _y)
         
         var _xstart = _cx * CHUNK_SIZE;
         var _xend   = _xstart + CHUNK_SIZE;
-        var _arrays_populated = false;
+        
+        var _process_mask = 0;
         
         for (var _cy = _cy_start; _cy <= _cy_end; ++_cy)
         {
@@ -41,35 +38,27 @@ function control_structure(_x, _y)
             
             global.worldgen_structure[? _cx][? _cy] = true;
             
-            var _ystart = _cy * CHUNK_SIZE;
-            var _yend   = _ystart + CHUNK_SIZE;
+            _process_mask |= 1 << (_cy - _cy_start);
+        }
+        
+        if (!_process_mask) continue;
+        
+        for (var i = _xstart; i < _xend; ++i)
+        {
+            var _surface_height = worldgen_get_surface_height(i, _world_seed, _world_data);
+            var _cave_start = worldgen_get_cave_start(i, _world_seed, _world_data);
             
-            if (!_arrays_populated)
-            {
-                for (var i = _xstart; i < _xend; ++i)
-                {
-                    var _idx = i - _xstart;
-                    
-                    var _surface_height = worldgen_get_surface_height(i, _world_seed, _world_data);
-                    
-                    __surface_height_array[@ _idx] = _surface_height;
-                    __cave_start_array[@ _idx] = worldgen_get_cave_start(i, _world_seed, _world_data);
-                    
-                    var _h_left = worldgen_get_surface_height(i - 1, _world_seed, _world_data);
-                    var _h_right = worldgen_get_surface_height(i + 1, _world_seed, _world_data);
-                    
-                    __slope_array[@ _idx] = max(abs(_surface_height - _h_left), abs(_h_right - _surface_height));
-                }
-                
-                _arrays_populated = true;
-            }
+            var _h_left = worldgen_get_surface_height(i - 1, _world_seed, _world_data);
+            var _h_right = worldgen_get_surface_height(i + 1, _world_seed, _world_data);
             
-            for (var i = _xstart; i < _xend; ++i)
+            var _slope = max(abs(_surface_height - _h_left), abs(_h_right - _surface_height));
+            
+            for (var _cy = _cy_start; _cy <= _cy_end; ++_cy)
             {
-                var _idx = i - _xstart;
+                if !(_process_mask & (1 << (_cy - _cy_start))) continue;
                 
-                var _surface_height = __surface_height_array[_idx];
-                var _cave_start = __cave_start_array[_idx];
+                var _ystart = _cy * CHUNK_SIZE;
+                var _yend   = _ystart + CHUNK_SIZE;
                 
                 var _queue = 0;
                 var _queue_valid = false;
@@ -92,7 +81,7 @@ function control_structure(_x, _y)
                     /* if current tile (bit 1) is not cave (terrain is solid) */
                     if (_queue & 0b010) continue;
                     
-                    var _biome_id = worldgen_get_biome_surface(i, _surface_height, _surface_height, _world_seed, _world_data, __slope_array[_idx]);
+                    var _biome_id = worldgen_get_biome_surface(i, _surface_height, _surface_height, _world_seed, _world_data, _slope);
                     var _data = _biome_data[$ _biome_id];
                     
                     if (_data == undefined) continue;
