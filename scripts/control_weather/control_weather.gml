@@ -33,7 +33,52 @@ function control_weather(_dt, _camera_x, _camera_y, _camera_w, _camera_h)
         var _px = _camera_x + random(_camera_w);
         var _py = _camera_y + random(_camera_h);
         
-        spawn_particle(_px, _py, "phantasia:particle/entity/damage");
+        spawn_particle(_px, _py, "phantasia:entity/damage");
+    }
+    
+    /* --- rain particles near entities --- */
+    var _ent_rain_count = ceil(4 * _storm * _strength);
+    
+    with (obj_Player)
+    {
+        if (x < _camera_x - TILE_SIZE * 4) || (x > _camera_x + _camera_w + TILE_SIZE * 4)
+            || (y < _camera_y - TILE_SIZE * 4) || (y > _camera_y + _camera_h + TILE_SIZE * 4) continue;
+            
+        repeat (_ent_rain_count)
+        {
+            var _px = x + random_range(-TILE_SIZE * 2, TILE_SIZE * 2);
+            var _py = y + random_range(-TILE_SIZE * 3, TILE_SIZE);
+            
+            spawn_particle(_px, _py, "phantasia:entity/damage");
+        }
+    }
+    
+    with (obj_Creature)
+    {
+        if (x < _camera_x - TILE_SIZE * 4) || (x > _camera_x + _camera_w + TILE_SIZE * 4)
+            || (y < _camera_y - TILE_SIZE * 4) || (y > _camera_y + _camera_h + TILE_SIZE * 4) continue;
+            
+        repeat (_ent_rain_count)
+        {
+            var _px = x + random_range(-TILE_SIZE * 2, TILE_SIZE * 2);
+            var _py = y + random_range(-TILE_SIZE * 3, TILE_SIZE);
+            
+            spawn_particle(_px, _py, "phantasia:entity/damage");
+        }
+    }
+
+    with (obj_Item_Drop)
+    {
+        if (x < _camera_x - TILE_SIZE * 4) || (x > _camera_x + _camera_w + TILE_SIZE * 4)
+            || (y < _camera_y - TILE_SIZE * 4) || (y > _camera_y + _camera_h + TILE_SIZE * 4) continue;
+            
+        repeat (_ent_rain_count)
+        {
+            var _px = x + random_range(-TILE_SIZE, TILE_SIZE);
+            var _py = y + random_range(-TILE_SIZE, TILE_SIZE);
+            
+            spawn_particle(_px, _py, "phantasia:entity/damage");
+        }
     }
     
     for (var i = chunk_in_view_length - 1; i >= 0; --i)
@@ -58,7 +103,7 @@ function control_weather(_dt, _camera_x, _camera_y, _camera_w, _camera_h)
                 var _px = _light.x + random_range(-TILE_SIZE * 3, TILE_SIZE * 3);
                 var _py = _light.y + random_range(-TILE_SIZE * 4, -TILE_SIZE);
                 
-                spawn_particle(_px, _py, "phantasia:particle/entity/damage");
+                spawn_particle(_px, _py, "phantasia:entity/damage");
             }
         }
     }

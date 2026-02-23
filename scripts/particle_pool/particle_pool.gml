@@ -432,9 +432,9 @@ function ParticlePool() : Pool() constructor
             
             var _wind = global.current_world.weather.wind;
             
-            if (_wind != 0) && ((wind_factor[i] ?? 0) != 0)
+            if (_wind != 0) && (wind_factor[i] != 0)
             {
-                var _target_wind_vel = _wind * (wind_factor[i] ?? 0) * 5; // Target horizontal speed from wind
+                var _target_wind_vel = _wind * wind_factor[i] * 5; // Target horizontal speed from wind
                 xvelocity[@ i] += (_target_wind_vel - xvelocity[i]) * 0.1; 
             }
             

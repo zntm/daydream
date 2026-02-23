@@ -218,7 +218,7 @@ function LightningPool() : Pool() constructor
                             spawn_particle(
                                 _bolt.target_x + random_range(-8, 8),
                                 _bolt.target_y + random_range(-8, 8),
-                                "phantasia:particle/entity/damage_critical"
+                                "phantasia:entity/damage_critical"
                             );
                         }
                         

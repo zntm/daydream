@@ -94,7 +94,7 @@ function ParticleData(_namespace, _id, _sprite) : ParentData(_namespace, _id) co
     
     static get_wind_factor = function()
     {
-        return ___wind_factor;
+        return self[$ "___wind_factor"] ?? 0;
     }
     
     #endregion
@@ -247,7 +247,7 @@ function ParticleData(_namespace, _id, _sprite) : ParentData(_namespace, _id) co
     
     static get_alpha2 = function()
     {
-        return self[$ "___alpha2"]
+        return self[$ "___alpha2"];
     }
     
     static get_alpha3 = function()
