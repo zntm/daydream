@@ -302,7 +302,9 @@ if (global.relay == undefined || global.relay.role == RELAY_ROLE.NONE)
 timer_network_sync = 0;
 
 timer_auto_backup = BACKUP_INTERVAL_SECONDS;
-global.async_save_map = {};
+global.async_save_map = {}
 
-inventory_give(obj_Player.x, obj_Player.y, new Inventory("phantasia:iron_bow"))
 inventory_give(obj_Player.x, obj_Player.y, new Inventory("phantasia:arrow", 999))
+
+/* register storm pass once */
+__storm_pass_registered = false;

@@ -30,7 +30,8 @@
         }
     },
     "properties": [
-        "phantasia:is_tile"
+        "phantasia:is_tile",
+        "phantasia:is_conductive"
     ],
     "sprite": "phantasia:item/platinum_block",
     "type": "solid"

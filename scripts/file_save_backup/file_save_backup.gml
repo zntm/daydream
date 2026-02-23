@@ -5,7 +5,7 @@ function buffer_save_compressed_async(_buffer, _path)
     /* store for cleanup in async system event */
     var _id = buffer_save_async(_buffer_compressed, _path, 0, buffer_get_size(_buffer_compressed));
     
-    if (!variable_global_exists("async_save_map")) global.async_save_map = {};
+    if (!variable_global_exists("async_save_map")) global.async_save_map = {}
     
     global.async_save_map[$ string(_id)] = _buffer_compressed;
     
@@ -79,7 +79,7 @@ function file_backup_player(_current_player, _lp)
         buffer_write(_buffer_inv, buffer_u32, PROGRAM_VERSION_NUMBER);
         
         var _palette_list   = [];
-        var _palette_lookup = {};
+        var _palette_lookup = {}
         
         var _collect = function(_inv, _l, _idata, _map, _list, _self_func)
         {
@@ -113,13 +113,13 @@ function file_backup_player(_current_player, _lp)
                     }
                 }
             }
-        };
+        }
         
         _collect(_v, _len, _item_data, _palette_lookup, _palette_list, _collect);
         array_sort(_palette_list, true);
         
         var _p_len = array_length(_palette_list);
-        var _p_map = {};
+        var _p_map = {}
         
         buffer_write(_buffer_inv, buffer_u16, _p_len);
         
@@ -165,7 +165,7 @@ function file_backup_world_chunk(_current_world, _chunk)
     buffer_write(_current_chunk_buffer, buffer_u16,  _chunk_display);
     
     /* we need to replicate the palette collection and serialization from file_save_world_chunk.gml */
-    var _palette_map   = {};
+    var _palette_map   = {}
     var _palette_array = [];
     var _palette_index = 0;
     var _index_ref     = [_palette_index];
@@ -177,7 +177,7 @@ function file_backup_world_chunk(_current_world, _chunk)
             _map[$ _id] = _index_ref[0]++;
             array_push(_array, _id);
         }
-    };
+    }
     
     var _collect_inventory_ids = function(_inventory, _length, _item_data, _map, _array, _index_ref, _self_func)
     {
@@ -212,7 +212,7 @@ function file_backup_world_chunk(_current_world, _chunk)
                 }
             }
         }
-    };
+    }
     
     /* abridged collection for backup - similar to file_save_world_chunk.gml */
     if (_chunk_display)

@@ -11,7 +11,7 @@ function file_load_snippet_effects(_buffer)
         return undefined;
     }
     
-    var _data = {};
+    var _data = {}
     
     for (var i = 0; i < _effects_length; ++i)
     {
@@ -28,7 +28,7 @@ function file_load_snippet_effects(_buffer)
             level: _level,
             timer: _timer,
             particle: _particle
-        };
+        }
     }
     
     return _data;

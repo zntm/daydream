@@ -14,6 +14,29 @@ var _camera_width  = global.camera_width;
 var _camera_height = global.camera_height;
 
 render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height);
+
+/* render lightning bolts on top of the scene */
+global.lightning_pool.render();
+
+/* register storm pass once */
+if (!__storm_pass_registered)
+{
+    __storm_pass_registered = true;
+    
+    global.post_process.add_pass(shd_Storm, function()
+    {
+        shader_set_uniform_f(
+            shader_get_uniform(shd_Storm, "u_storm_intensity"),
+            clamp(global.current_world.weather.storm, 0, 1)
+        );
+    }, false);
+}
+
+/* apply all post-processing passes */
+global.post_process.apply(
+    surface_get_width(application_surface),
+    surface_get_height(application_surface)
+);
 /*
 if (!is_opened)
 {

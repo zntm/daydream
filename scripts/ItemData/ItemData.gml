@@ -47,7 +47,8 @@ enum ITEM_PROPERTIES_BOOLEAN {
     IS_TRANSPARENT      = 1 << 4,
     CAN_FLIP_ON_X       = 1 << 5,
     CAN_FLIP_ON_Y       = 1 << 6,
-    IS_LIQUID       = 1 << 7,
+    IS_LIQUID           = 1 << 7,
+    IS_CONDUCTIVE       = 1 << 8,
 }
 
 enum TILE_ANIMATION_TYPE {
@@ -1180,10 +1181,11 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
             "phantasia:can_mirror":     set_property_can_mirror,
             "phantasia:can_flip":       set_property_can_flip,
             "phantasia:is_foliage":     set_property_is_foliage,
-            "phantasia:is_liquid":     set_property_is_liquid,
-            "phantasia:is_tile":        set_property_is_tile,
-            "phantasia:is_transparent": set_property_is_transparent,
-            "phantasia:is_wall":        set_property_is_wall,
+            "phantasia:is_liquid":          set_property_is_liquid,
+            "phantasia:is_conductive":      set_property_is_conductive,
+            "phantasia:is_tile":            set_property_is_tile,
+            "phantasia:is_transparent":     set_property_is_transparent,
+            "phantasia:is_wall":            set_property_is_wall,
             "phantasia:is_crafting_station": set_is_crafting_station,
         }
         
@@ -1264,6 +1266,21 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     static is_liquid = function()
     {
         return !!(___properties & ITEM_PROPERTIES_BOOLEAN.IS_LIQUID);
+    }
+    
+    static set_property_is_conductive = function(_is_conductive)
+    {
+        if (_is_conductive)
+        {
+            ___properties |= ITEM_PROPERTIES_BOOLEAN.IS_CONDUCTIVE;
+        }
+        
+        return self;
+    }
+    
+    static is_conductive = function()
+    {
+        return !!(___properties & ITEM_PROPERTIES_BOOLEAN.IS_CONDUCTIVE);
     }
     
     static set_is_crafting_station = function(_is_crafting_station)

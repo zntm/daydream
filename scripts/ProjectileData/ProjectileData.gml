@@ -22,7 +22,7 @@ PROJECTILE_PROPERTIES_MAP = {
     "phantasia:is_fade_out":                    PROJECTILE_BOOLEAN.FADE_OUT,
     "phantasia:has_collision":                  PROJECTILE_BOOLEAN.HAS_COLLISION,
     "phantasia:has_stretch_animation":          PROJECTILE_BOOLEAN.STRETCH_ANIMATION
-};
+}
 
 /// @desc Projectile data constructor.
 /// @param {String} _namespace
@@ -152,7 +152,7 @@ function projectile_parse_particles(_particles_json)
             frequency: _p[$ "frequency"] ?? 0.1,
             offset_x:  _p[$ "offset_x"]  ?? 0,
             offset_y:  _p[$ "offset_y"]  ?? 0
-        };
+        }
     }
     
     return _out;

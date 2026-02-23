@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"PostProcess",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"PostProcess",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

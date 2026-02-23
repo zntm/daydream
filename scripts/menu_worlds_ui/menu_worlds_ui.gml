@@ -372,7 +372,7 @@ function menu_worlds_ui_build_cards(_container, _worlds, _ystart, _is_grid, _ins
 			
 			global.current_world.difficulty = _data.get_difficulty();
 			
-			global.world_statistics = _data.get_statistics() ?? {};
+			global.world_statistics = _data.get_statistics() ?? {}
 			
 			menu_transition_goto(rm_World);
 		}));

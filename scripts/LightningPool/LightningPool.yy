@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"LightningPool",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"LightningPool",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -50,11 +50,11 @@ function UIElement(_x, _y, _width, _height) constructor
     
     
     /* data bindings: property_name -> binding_name */
-    bindings = {};
+    bindings = {}
     
     
     /* event handlers: event_name -> script_id */
-    event_handlers = {};
+    event_handlers = {}
     
     
     /* link context (provided by proglang at spawn time) */

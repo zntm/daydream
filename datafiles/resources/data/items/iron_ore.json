@@ -32,7 +32,8 @@
     "properties": [
         "phantasia:can_flip",
         "phantasia:can_mirror",
-        "phantasia:is_tile"
+        "phantasia:is_tile",
+        "phantasia:is_conductive"
     ],
     "sprite": "phantasia:item/iron_ore",
     "type": "solid"

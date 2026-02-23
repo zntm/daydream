@@ -1,5 +1,5 @@
-global.sprite_asset = {};
-global.sound_asset  = {};
+global.sprite_asset = {}
+global.sound_asset  = {}
 
 function SpriteAsset(_path, _xoffset, _yoffset, _length) constructor
 {

@@ -84,7 +84,7 @@ function file_save_world_chunk(_current_world, _chunk, _sync = false)
     /* ------------------------------------------------------------------------------------------ */
     /* 2. build master palette */
     /* ------------------------------------------------------------------------------------------ */
-    var _palette_map   = {};
+    var _palette_map   = {}
     var _palette_array = [];
     var _palette_index = 0;
     
@@ -414,7 +414,7 @@ function file_save_world_chunk(_current_world, _chunk, _sync = false)
     {
         var _id = buffer_save_async(_new_region_buffer, _directory, 0, _write_offset);
         
-        if (!variable_global_exists("async_chunk_save_map")) global.async_chunk_save_map = {};
+        if (!variable_global_exists("async_chunk_save_map")) global.async_chunk_save_map = {}
         
         global.async_chunk_save_map[$ string(_id)] = _chunk;
     }

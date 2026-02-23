@@ -3,17 +3,17 @@
 
 
 /* global ui definition cache */
-global.ui_definitions = {};
+global.ui_definitions = {}
 
 
 /* global ui instance registry */
-global.ui_instances = {};
+global.ui_instances = {}
 
 global.ui_instance_counter = 0;
 
 
 /* global ui event bus - tracks which events have been fired this frame */
-global.ui_pending_events = {};
+global.ui_pending_events = {}
 
 
 /* global input consumption flag - prevents click-through on overlapping elements */
@@ -110,7 +110,7 @@ function ui_load(_path)
     
     /* expose top-level elements by name for importing in daydream */
     var _defs = _document.definitions;
-    var _exports = {};
+    var _exports = {}
     var _def_count = array_length(_defs);
     
     
@@ -202,7 +202,7 @@ function ui_spawn(_definitions, _config = {}, _events = undefined)
     show_debug_message($"[UI Runtime] ui_spawn: spawning {_def_count} definitions into parent '{_parent_name}'");
     
     
-    var _link = _config[$ "link"] ?? {};
+    var _link = _config[$ "link"] ?? {}
     var _parent = _config[$ "parent"] ?? undefined;
     
     
@@ -221,7 +221,7 @@ function ui_spawn(_definitions, _config = {}, _events = undefined)
     
     
     /* get variables from definition if available */
-    var _variables = {};
+    var _variables = {}
     
     if (is_struct(_definitions) && struct_exists(_definitions, "variables"))
     {
@@ -535,7 +535,7 @@ function ui_instantiate_element(_node, _link, _variables)
             for (var j = 0; j < _repeat_count; ++j)
             {
                 /* create a copy of the variables scope with the loop variable */
-                var _loop_vars = {};
+                var _loop_vars = {}
                 var _var_names = struct_get_names(_variables);
                 var _var_count = array_length(_var_names);
                 
@@ -973,7 +973,7 @@ function ui_resolve_value(_node, _link, _variables)
             return _node.value;
             
         case UI_AST.COLOR:
-            return { color: _node.color, alpha: _node.alpha };
+            return { color: _node.color, alpha: _node.alpha }
             
         case UI_AST.TUPLE:
             var _values = [];
@@ -1066,7 +1066,7 @@ function ui_resolve_value(_node, _link, _variables)
                 slice_right: 0,
                 slice_top: 0,
                 slice_bottom: 0
-            };
+            }
             
             
             var _prop_count = array_length(_node.properties);
@@ -1113,7 +1113,7 @@ function ui_resolve_value(_node, _link, _variables)
             var _surface_def = {
                 is_surface_def: true,
                 surface_name: _node.surface_name
-            };
+            }
             
             
             var _surf_prop_count = array_length(_node.properties);
@@ -1131,7 +1131,7 @@ function ui_resolve_value(_node, _link, _variables)
             return _surface_def;
             
         case UI_AST.PERCENTAGE:
-            return { is_percent: true, value: _node.value };
+            return { is_percent: true, value: _node.value }
             
         case UI_AST.UNARY_OP:
             var _right_val = ui_resolve_value(_node.right, _link, _variables);
@@ -1141,7 +1141,7 @@ function ui_resolve_value(_node, _link, _variables)
             {
                 if (is_struct(_right_val) && _right_val[$ "is_percent"] == true)
                 {
-                    return { is_percent: true, value: -(_right_val.value) };
+                    return { is_percent: true, value: -(_right_val.value) }
                 }
                 
                 return -(_right_val);
@@ -1322,9 +1322,9 @@ function ui_calc_binary_op(_op, _left, _right)
         
         if (_pct_part == 0) return _abs_part;
         
-        if (_abs_part == 0) return { is_percent: true, value: _pct_part };
+        if (_abs_part == 0) return { is_percent: true, value: _pct_part }
         
-        return { is_calc: true, percent_value: _pct_part, absolute_offset: _abs_part };
+        return { is_calc: true, percent_value: _pct_part, absolute_offset: _abs_part }
     }
     
     
@@ -1345,7 +1345,7 @@ function ui_calc_binary_op(_op, _left, _right)
     
     if (_l_pct && _r_pct)
     {
-        return { is_percent: true, value: _val };
+        return { is_percent: true, value: _val }
     }
     
     return _val;
@@ -1386,7 +1386,7 @@ function ui_get_base_scale()
     return {
         x: _w / _lw,
         y: _h / _lh
-    };
+    }
 }
 
 
@@ -1473,7 +1473,7 @@ function ui_mark_dirty(_instance)
 /* clear the global event bus */
 function ui_clear_events()
 {
-    global.ui_pending_events = {};
+    global.ui_pending_events = {}
 }
 
 

@@ -326,6 +326,8 @@ if (timer_foliage_sway >= 0.04)
 // Update liquid wave forces (for splash effects)
 control_chunk_liquid(_delta_time, _player_x, _player_y, _camera_x, _camera_y, _camera_width, _camera_height);
 
+control_weather(_delta_time, _camera_x, _camera_y, _camera_width, _camera_height);
+
 var _tile_x = round(mouse_x / TILE_SIZE);
 var _tile_y = round(mouse_y / TILE_SIZE);
 

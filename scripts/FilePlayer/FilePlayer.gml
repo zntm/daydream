@@ -107,7 +107,7 @@ function FilePlayer(_uuid, _name, _last_opened) constructor
             hp: ___hp,
             hp_max: ___hp_max,
             attire: ___attire
-        };
+        }
         
         file_save_player_global(_player_info);
     }

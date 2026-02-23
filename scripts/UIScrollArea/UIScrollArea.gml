@@ -93,7 +93,7 @@ function UIScrollArea(_x, _y, _width, _height) : UIElement(_x, _y, _width, _heig
         var _track_h = height * _base_scale.y;
         
         
-        return { x: _track_x, y: _track_y, w: _track_w, h: _track_h };
+        return { x: _track_x, y: _track_y, w: _track_w, h: _track_h }
     }
     
     
@@ -107,7 +107,7 @@ function UIScrollArea(_x, _y, _width, _height) : UIElement(_x, _y, _width, _heig
         if (content_height <= 0 || content_height <= height) 
         {
             /* thumb fills entire track (no scrolling needed) */
-            return { x: _track.x, y: _track.y, w: _track.w, h: _track.h };
+            return { x: _track.x, y: _track.y, w: _track.w, h: _track.h }
         }
         
         
@@ -118,7 +118,7 @@ function UIScrollArea(_x, _y, _width, _height) : UIElement(_x, _y, _width, _heig
         var _thumb_y = _track.y + (_track.h - _thumb_h) * _scroll_ratio;
         
         
-        return { x: _track.x, y: _thumb_y, w: _track.w, h: _thumb_h };
+        return { x: _track.x, y: _thumb_y, w: _track.w, h: _thumb_h }
     }
     
     

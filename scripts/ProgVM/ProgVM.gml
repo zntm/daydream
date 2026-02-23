@@ -1321,7 +1321,7 @@ function proglang_vm_run(_vm, _entry_bytecode)
                                     val: _coll,
                                     idx: 0,
                                     len: array_length(_coll)
-                                };
+                                }
                         }
                         else if (is_struct(_coll))
                         {

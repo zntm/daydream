@@ -14,7 +14,7 @@ function UIParser(_tokens) constructor
     
     
     /* variable scope for local vars (var _padding = 10) */
-    variables = {};
+    variables = {}
     
     
     /* =============================================================================
@@ -78,7 +78,7 @@ function UIParser(_tokens) constructor
         
         error_at_current(_message);
         
-        return { type: UI_TOKEN.ERROR, lexeme: "", literal: undefined, line: peek().line };
+        return { type: UI_TOKEN.ERROR, lexeme: "", literal: undefined, line: peek().line }
     }
     
     

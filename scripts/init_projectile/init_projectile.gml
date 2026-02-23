@@ -1,4 +1,4 @@
-global.projectile_data = {};
+global.projectile_data = {}
 
 /// @desc Recursively load all projectile definitions from a directory tree of JSON files.
 /// @param {String} _directory  Path to the projectile JSON directory.

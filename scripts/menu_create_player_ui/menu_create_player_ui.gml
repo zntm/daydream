@@ -101,8 +101,8 @@ function menu_create_player_ui_init()
             _data.set_hp(global.current_player.hp, global.current_player.hp_max);
             _data.save();
             
-            global.player_statistics = {};
-            global.player_achievements = {};
+            global.player_statistics = {}
+            global.player_achievements = {}
             
 			menu_transition_goto(rm_Menu_Worlds);
 		});
