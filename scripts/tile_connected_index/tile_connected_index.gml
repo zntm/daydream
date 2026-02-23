@@ -1,41 +1,46 @@
+/// @desc Checks for symmetry within a 8-bit connected tile bitmask to determine if flipping is visually safe.
+/// @param {real} _bitmask The 8-bit connection mask.
 function tile_connected_index(_bitmask)
 {
     var _res = 0;
     
-    // Flip X (Horizontal symmetry check)
-    // Neighbors Map (from global.tile_neighbor_offsets):
-    // 0: (1, 1) BR, 1: (0, 1) B, 2: (-1, 1) BL
-    // 3: (1, 0) R,               4: (-1, 0) L
-    // 5: (1, -1) TR, 6: (0, -1) T, 7: (-1, -1) TL
+    /* 
+       Neighbor bits mapping (bit indices):
+       7 6 5
+       4   3
+       2 1 0
+       
+       where:
+       0: BR, 1: B, 2: BL
+       3: R,  4: L
+       5: TR, 6: T, 7: TL
+    */
     
-    // Symmetry across X-axis (Left <-> Right)
-    // Left (4) <-> Right (3)
-    // Top Left (7) <-> Top Right (5)
-    // Bottom Left (2) <-> Bottom Right (0)
-    var _left   = (_bitmask >> 4) & 1;
-    var _right  = (_bitmask >> 3) & 1;
-    var _tl     = (_bitmask >> 7) & 1;
-    var _tr     = (_bitmask >> 5) & 1;
-    var _bl     = (_bitmask >> 2) & 1;
-    var _br     = (_bitmask >> 0) & 1;
+    /* check horizontal symmetry (swap Left <-> Right) */
+    /* pairs: 3<->4, 7<->5, 2<->0 */
+    var _r = (_bitmask >> 3) & 1;
+    var _l = (_bitmask >> 4) & 1;
     
-    if (_left == _right && _tl == _tr && _bl == _br)
+    var _tl = (_bitmask >> 7) & 1;
+    var _tr = (_bitmask >> 5) & 1;
+    
+    var _bl = (_bitmask >> 2) & 1;
+    var _br = (_bitmask >> 0) & 1;
+    
+    if (_l == _r) && (_tl == _tr) && (_bl == _br)
     {
-        _res |= 1; // Can flip on X
+        _res |= 1; /* can flip on X */
     }
     
-    // Flip Y (Vertical symmetry check)
-    // Symmetry across Y-axis (Top <-> Bottom)
-    // Top (6) <-> Bottom (1)
-    // Top Left (7) <-> Bottom Left (2)
-    // Top Right (5) <-> Bottom Right (0)
-    var _top    = (_bitmask >> 6) & 1;
-    var _bottom = (_bitmask >> 1) & 1;
+    /* check vertical symmetry (swap Top <-> Bottom) */
+    /* pairs: 6<->1, 7<->2, 5<->0 */
+    var _t = (_bitmask >> 6) & 1;
+    var _b = (_bitmask >> 1) & 1;
     
-    // Using already extracted _tl, _bl, _tr, _br
-    if (_top == _bottom && _tl == _bl && _tr == _br)
+    /* tl, tr, bl, br already extracted */
+    if (_t == _b) && (_tl == _bl) && (_tr == _br)
     {
-        _res |= 2; // Can flip on Y
+        _res |= 2; /* can flip on Y */
     }
     
     return _res;

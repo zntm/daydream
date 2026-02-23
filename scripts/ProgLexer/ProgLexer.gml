@@ -661,21 +661,16 @@ function ProgLexer(_source) constructor
             var _value = 0;
             var _length = string_length(_hex_str);
             
+            static __hex_to_dec = function(_c) {
+                var _v = ord(string_lower(_c));
+                if (_v >= ord("0") && _v <= ord("9")) return _v - ord("0");
+                if (_v >= ord("a") && _v <= ord("f")) return 10 + (_v - ord("a"));
+                return 0;
+            }
+
             for (var i = 1; i <= _length; ++i)
             {
-                var _c = string_char_at(_hex_str, i);
-                var _v = 0;
-                
-                if (is_digit(_c))
-                {
-                    _v = real(_c);
-                }
-                else
-                {
-                    _v = 10 + (ord(string_lower(_c)) - ord("a"));
-                }
-                
-                _value = (_value << 4) | _v;
+                _value = (_value << 4) | __hex_to_dec(string_char_at(_hex_str, i));
             }
             
             add_token(PROG_TOKEN.NUMBER, _value);
@@ -776,32 +771,42 @@ function ProgLexer(_source) constructor
         var _length = current - _start_hex;
         var _hex = string_copy(source, _start_hex, _length);
         
+        static __hex_to_dec = function(_c) {
+            var _v = ord(string_lower(_c));
+            if (_v >= ord("0") && _v <= ord("9")) return _v - ord("0");
+            if (_v >= ord("a") && _v <= ord("f")) return 10 + (_v - ord("a"));
+            return 0;
+        }
+
+        static __hex_byte = function(_s, _pos) {
+            return (__hex_to_dec(string_char_at(_s, _pos)) << 4) | __hex_to_dec(string_char_at(_s, _pos + 1));
+        }
+
         var _result = 0;
         if (_length == 3)
         {
-            var _r = string_char_at(_hex, 1);
-            var _g = string_char_at(_hex, 2);
-            var _b = string_char_at(_hex, 3);
-            var _rr = real("0x" + _r + _r);
-            var _gg = real("0x" + _g + _g);
-            var _bb = real("0x" + _b + _b);
+            var _r = __hex_to_dec(string_char_at(_hex, 1));
+            var _g = __hex_to_dec(string_char_at(_hex, 2));
+            var _b = __hex_to_dec(string_char_at(_hex, 3));
+            var _rr = (_r << 4) | _r;
+            var _gg = (_g << 4) | _g;
+            var _bb = (_b << 4) | _b;
             _result = make_color_rgb(_rr, _gg, _bb);
         }
         else if (_length == 6)
         {
-            var _rr = real("0x" + string_copy(_hex, 1, 2));
-            var _gg = real("0x" + string_copy(_hex, 3, 2));
-            var _bb = real("0x" + string_copy(_hex, 5, 2));
+            var _rr = __hex_byte(_hex, 1);
+            var _gg = __hex_byte(_hex, 3);
+            var _bb = __hex_byte(_hex, 5);
             _result = make_color_rgb(_rr, _gg, _bb);
         }
         else if (_length == 8)
         {
-            var _rr = real("0x" + string_copy(_hex, 1, 2));
-            var _gg = real("0x" + string_copy(_hex, 3, 2));
-            var _bb = real("0x" + string_copy(_hex, 5, 2));
-            var _aa = real("0x" + string_copy(_hex, 7, 2));
+            var _rr = __hex_byte(_hex, 1);
+            var _gg = __hex_byte(_hex, 3);
+            var _bb = __hex_byte(_hex, 5);
+            var _aa = __hex_byte(_hex, 7);
             // Packed 32-bit as RRGGBBAA using multiplication to avoid overflow/sign issues in GML bitwise
-            // RRRRRRRR GGGGGGGG BBBBBBBB AAAAAAAA
             _result = (_rr * 16777216) + (_gg * 65536) + (_bb * 256) + _aa;
         }
         else
@@ -827,19 +832,7 @@ function ProgLexer(_source) constructor
         
         for (var i = 1; i <= _length; ++i)
         {
-            var _c = string_char_at(_hex_str, i);
-            var _v = 0;
-            
-            if (is_digit(_c))
-            {
-                _v = real(_c);
-            }
-            else
-            {
-                _v = 10 + (ord(string_lower(_c)) - ord("a"));
-            }
-            
-            _value = (_value << 4) | _v;
+            _value = (_value << 4) | __hex_to_dec(string_char_at(_hex_str, i));
         }
         
         add_token(PROG_TOKEN.NUMBER, _value);

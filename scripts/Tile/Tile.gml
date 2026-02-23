@@ -64,7 +64,7 @@ function Tile(_id, _item_data = global.item_data) constructor
     {
         if (_yscale != undefined)
         {
-            ___value = (___value & 0b111111111_1111_0000_11111111_11111111_1111_1111) | ((_yscale + 8) << 24);
+            ___value = (___value & 0b111111111_0000_1111_11111111_11111111_1111_1111) | ((_yscale + 8) << 28);
         }
         
         return self;

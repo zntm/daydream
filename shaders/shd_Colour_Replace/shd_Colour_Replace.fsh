@@ -14,7 +14,7 @@ void main()
 {
     vec4 base = texture2D(gm_BaseTexture, v_vTexcoord);
     
-    for (int i = 0; i < int(u_length); ++i)
+    for (int i = int(u_length) - 1; i >= 0; --i)
     {
         float matched = u_match[i];
         
