@@ -1,7 +1,3 @@
-//
-// Storm post-processing fragment shader
-// Darkens and desaturates based on storm intensity
-//
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
@@ -11,14 +7,13 @@ void main()
 {
     vec4 color = texture2D(gm_BaseTexture, v_vTexcoord);
     
-    /* desaturate via luminance blend */
-    vec3 luma = vec3(0.299, 0.587, 0.114);
-    float grey = dot(color.rgb, luma);
+    /* desaturate */
+    float grey = dot(color.rgb, vec3(0.299, 0.587, 0.114));
+    color.rgb  = mix(color.rgb, vec3(grey), u_storm_intensity * 0.6);
     
-    color.rgb = mix(color.rgb, vec3(grey), u_storm_intensity * 0.5);
-    
-    /* darken */
-    color.rgb *= mix(1.0, 0.4, u_storm_intensity);
+    /* tint slightly blue-grey for storm feel */
+    vec3 storm_tint = vec3(0.75, 0.82, 0.9);
+    color.rgb = mix(color.rgb, color.rgb * storm_tint, u_storm_intensity * 0.4);
     
     gl_FragColor = vec4(color.rgb, 1.0);
 }

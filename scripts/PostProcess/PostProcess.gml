@@ -107,7 +107,9 @@ function PostProcess() constructor
         var _src = surface_a;
         var _dst = surface_b;
         
-        for (var i = 0; i < array_length(passes); ++i)
+        var _length = array_length(passes);
+        
+        for (var i = 0; i < _length; ++i)
         {
             var _pass = passes[i];
             
@@ -136,19 +138,27 @@ function PostProcess() constructor
             _dst = _tmp;
         }
         
-        /* draw final result back into application_surface */
-        surface_set_target(application_surface);
+        /* draw final result back into application_surface
+         * we are already inside the Draw event which targets application_surface —
+         * surface_set_target(application_surface) keeps world matrices active so
+         * draw_surface at (0,0) lands at world origin, not the viewport.
+         * instead: draw directly in camera-world space so the result fills the view.
+         */
+        var _cam   = view_camera[0];
+        var _cam_x = camera_get_view_x(_cam);
+        var _cam_y = camera_get_view_y(_cam);
+        var _cam_w = camera_get_view_width(_cam);
+        var _cam_h = camera_get_view_height(_cam);
+        
         draw_clear_alpha(c_black, 0);
         
         gpu_set_blendmode_ext(bm_one, bm_zero);
         
-        draw_surface(_src, 0, 0);
+        draw_surface_stretched(_src, _cam_x, _cam_y, _cam_w, _cam_h);
         
         gpu_set_blendmode(bm_normal);
         
-        surface_reset_target();
-        
-        /* restore original target if it wasn't application_surface */
+        /* restore original target if something else was active before */
         if (_old_target != -1) && (_old_target != application_surface)
         {
             surface_set_target(_old_target);
@@ -163,7 +173,7 @@ function PostProcess() constructor
         {
             surface_free(surface_a);
         }
-
+        
         if (surface_exists(surface_b))
         {
             surface_free(surface_b);

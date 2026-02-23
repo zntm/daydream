@@ -34,17 +34,22 @@ gml_pragma("MarkTagAsUsed", "include_me");
 
 sysinfo_init();
 
-#macro NOISE_SIZE           1024
-#macro NOISE_SIZE_BIT       10
-#macro NOISE_TRANSITION     128
-#macro NOISE_TRANSITION_INV 0.0078125
+#macro NOISE_SIZE           256
+#macro NOISE_SIZE_BIT       8
+#macro NOISE_TRANSITION     32
+#macro NOISE_TRANSITION_INV 0.03125
 #macro NOISE_INV_255        0.00392156862745098
+#macro NOISE_PIXEL_COUNT    65536
 
-global.noise_buffer = buffer_create(NOISE_SIZE * NOISE_SIZE * 4, buffer_fixed, 4);
+global.noise_buffer_r = buffer_create(NOISE_PIXEL_COUNT * 4, buffer_fixed, 4);
+global.noise_buffer_g = buffer_create(NOISE_PIXEL_COUNT * 4, buffer_fixed, 4);
+global.noise_buffer_b = buffer_create(NOISE_PIXEL_COUNT * 4, buffer_fixed, 4);
 global.noise_seed = 0;
 
-var _buffer = buffer_create(NOISE_SIZE * NOISE_SIZE, buffer_fast, 1);
-var _surface = surface_create(NOISE_SIZE, NOISE_SIZE, surface_r8unorm);
+/* read 256x256 RGBA from spr_Noise into a raw buffer */
+var _raw_size = NOISE_SIZE * NOISE_SIZE * 4;
+var _buffer   = buffer_create(_raw_size, buffer_fast, 1);
+var _surface  = surface_create(NOISE_SIZE, NOISE_SIZE);
 
 surface_set_target(_surface);
 
@@ -54,16 +59,27 @@ surface_reset_target();
 
 buffer_get_surface(_buffer, _surface, 0);
 
+/* split RGBA bytes into 3 separate f32 buffers */
 buffer_seek(_buffer, buffer_seek_start, 0);
 
-// Convert u8 noise data to f32 in a contiguous buffer for fast lookup
-for (var i = 0; i < 1024 * 1024; ++i)
+for (var i = 0; i < NOISE_PIXEL_COUNT; ++i)
 {
-    buffer_poke(global.noise_buffer, i << 2, buffer_f32, buffer_read(_buffer, buffer_u8) * NOISE_INV_255);
+    var _r = buffer_read(_buffer, buffer_u8);
+    var _g = buffer_read(_buffer, buffer_u8);
+    var _b = buffer_read(_buffer, buffer_u8);
+
+    buffer_read(_buffer, buffer_u8); /* skip alpha */
+
+    buffer_poke(global.noise_buffer_r, i << 2, buffer_f32, _r * NOISE_INV_255);
+    buffer_poke(global.noise_buffer_g, i << 2, buffer_f32, _g * NOISE_INV_255);
+    buffer_poke(global.noise_buffer_b, i << 2, buffer_f32, _b * NOISE_INV_255);
 }
 
 buffer_delete(_buffer);
 surface_free(_surface);
+
+/* default channel for backwards compat */
+global.noise_buffer = global.noise_buffer_r;
 
 function open_simplex_noise_seed(_seed)
 {
@@ -74,7 +90,7 @@ function open_simplex_noise_seed(_seed)
 /// Kept as a standalone for any external callers
 function vnoise_raw(_cx, _cy, _lx, _ly)
 {
-    static _buf = global.noise_buffer;
+    var _buf = global.noise_buffer;
     
     var _state = global.noise_seed ^ (_cx * 374761393) ^ (_cy * 668265263);
     
@@ -99,8 +115,7 @@ function vnoise_raw(_cx, _cy, _lx, _ly)
 
 function vnoise(_x, _y)
 {
-    static _buf = global.noise_buffer;
-    static _seed_ref = global.noise_seed;
+    var _buf = global.noise_buffer;
     
     var _cx = _x >> NOISE_SIZE_BIT;
     var _cy = _y >> NOISE_SIZE_BIT;
