@@ -91,6 +91,12 @@ function init_world(_directory, _namespace = "phantasia", _type = 0)
                     _world_data.set_background(_background);
                 }
                 
+                var _colorgrade = _json[$ "colorgrade"];
+                if (_colorgrade != undefined)
+                {
+                    _world_data.set_colorgrade(_colorgrade);
+                }
+                
                 var _surface = _json[$ "surface"];
                 if (_surface != undefined)
                 {

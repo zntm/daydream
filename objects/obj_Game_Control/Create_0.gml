@@ -306,5 +306,5 @@ global.async_save_map = {}
 
 inventory_give(obj_Player.x, obj_Player.y, new Inventory("phantasia:arrow", 999))
 
-/* register storm pass once */
-__storm_pass_registered = false;
+/* register colorgrade pass once */
+__colorgrade_pass_registered = false;

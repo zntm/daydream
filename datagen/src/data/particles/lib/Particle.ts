@@ -180,7 +180,7 @@ export class Particle {
     private lifetime?: number | string | SmartValue;
     private size?: ParticleSize;
     private orientation?: ParticleOrientation;
-    private color?: ParticleColor;
+    private colour?: ParticleColor;
     private speed?: ParticleSpeed;
     private direction?: ParticleDirection;
     private gravity?: ParticleGravity;
@@ -212,8 +212,8 @@ export class Particle {
         return this;
     }
 
-    setColor(color: ParticleColor) {
-        this.color = color;
+    setColor(colour: ParticleColor) {
+        this.colour = colour;
 
         return this;
     }

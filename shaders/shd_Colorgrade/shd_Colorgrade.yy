@@ -1,7 +1,7 @@
 {
   "$GMShader":"",
-  "%Name":"shd_Storm",
-  "name":"shd_Storm",
+  "%Name":"shd_Colorgrade",
+  "name":"shd_Colorgrade",
   "parent":{
     "name":"Shaders",
     "path":"folders/Shaders.yy",

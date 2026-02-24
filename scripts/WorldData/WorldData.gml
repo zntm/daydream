@@ -56,6 +56,13 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
     ___background_cloud_speed_max = 4;
     ___background_cloud_wind_factor = 0.5;
     
+    // Colorgrade
+    ___colorgrade_saturation    = 1;
+    ___colorgrade_tint_r        = 1;
+    ___colorgrade_tint_g        = 1;
+    ___colorgrade_tint_b        = 1;
+    ___colorgrade_tint_strength = 0;
+    
     // Surface Generation
     ___surface_noise_offset_max = 0;
     ___surface_noise_offset_min = 0;
@@ -936,4 +943,29 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
     static get_background_cloud_speed_min = function() { return ___background_cloud_speed_min; }
     static get_background_cloud_speed_max = function() { return ___background_cloud_speed_max; }
     static get_background_cloud_wind_factor = function() { return ___background_cloud_wind_factor; }
+    
+    static set_colorgrade = function(_colorgrade)
+    {
+        ___colorgrade_saturation    = _colorgrade[$ "saturation"] ?? 1;
+        ___colorgrade_tint_strength = _colorgrade[$ "tint_strength"] ?? 0;
+        
+        var _tint = _colorgrade[$ "tint"];
+        
+        if (is_string(_tint))
+        {
+            var _col = hex_parse(_tint);
+            
+            ___colorgrade_tint_r = colour_get_red(_col)   / 255;
+            ___colorgrade_tint_g = colour_get_green(_col) / 255;
+            ___colorgrade_tint_b = colour_get_blue(_col)  / 255;
+        }
+        
+        return self;
+    }
+    
+    static get_colorgrade_saturation    = function() { return ___colorgrade_saturation; }
+    static get_colorgrade_tint_r        = function() { return ___colorgrade_tint_r; }
+    static get_colorgrade_tint_g        = function() { return ___colorgrade_tint_g; }
+    static get_colorgrade_tint_b        = function() { return ___colorgrade_tint_b; }
+    static get_colorgrade_tint_strength = function() { return ___colorgrade_tint_strength; }
 }

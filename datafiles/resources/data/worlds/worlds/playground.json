@@ -123,6 +123,11 @@
         }
     },
     "biome_transition_smoothing": 0.5,
+    "colorgrade": {
+        "saturation": 1.0,
+        "tint": "#FFFFFF",
+        "tint_strength": 0.0
+    },
     "cave": {
         "aquifers": [
             {

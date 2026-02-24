@@ -12,7 +12,7 @@
         "cloud_y_min": 0,
         "parallax_factor": 0.005,
         "parallax_scale": 0.8,
-        "script": "phantasia:sky/playground_clouds",
+        "script": "@phantasia:sky/playground_clouds",
         "sprites": [
             "phantasia:world/playground/cloud/default",
             "phantasia:world/playground/cloud/windy"

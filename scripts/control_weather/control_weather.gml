@@ -1,4 +1,4 @@
-#macro WEATHER_RAIN_PARTICLES_PER_LIGHT 2
+#macro WEATHER_RAIN_PARTICLES_PER_LIGHT 1
 #macro WEATHER_LIGHTNING_INTERVAL_MIN   3.0
 #macro WEATHER_LIGHTNING_INTERVAL_MAX   8.0
 
@@ -12,12 +12,7 @@ function control_weather(_dt, _camera_x, _camera_y, _camera_w, _camera_h)
 {
     var _storm = global.current_world.weather.storm;
     
-    if (_storm <= 0)
-    {
-        global.post_process.set_enabled(shd_Storm, false);
-
-        exit;
-    }
+    if (_storm <= 0) exit;
     
     var _wind     = global.current_world.weather.wind;
     var _strength = global.settings.display_strength_weather;
@@ -26,30 +21,32 @@ function control_weather(_dt, _camera_x, _camera_y, _camera_w, _camera_h)
     var _rain_count = ceil(WEATHER_RAIN_PARTICLES_PER_LIGHT * _storm * _strength);
     
     /* sparse background rain */
-    var _bg_rain_count = ceil(4 * _storm * _strength);
+    var _bg_rain_count = ceil(2 * _storm * _strength);
     
     repeat (_bg_rain_count)
     {
         var _px = _camera_x + random(_camera_w);
         var _py = _camera_y + random(_camera_h);
         
-        spawn_particle(_px, _py, "phantasia:entity/damage");
+        spawn_particle(_px, _py, "phantasia:weather/raindrop");
     }
     
     /* --- rain particles near entities --- */
-    var _ent_rain_count = ceil(4 * _storm * _strength);
+    var _player_rain_count = ceil(2 * _storm * _strength);
+    var _creature_rain_count = ceil(1 * _storm * _strength);
+    var _item_rain_count = ceil(1 * _storm * _strength);
     
     with (obj_Player)
     {
         if (x < _camera_x - TILE_SIZE * 4) || (x > _camera_x + _camera_w + TILE_SIZE * 4)
             || (y < _camera_y - TILE_SIZE * 4) || (y > _camera_y + _camera_h + TILE_SIZE * 4) continue;
-            
-        repeat (_ent_rain_count)
+        
+        repeat (_player_rain_count)
         {
             var _px = x + random_range(-TILE_SIZE * 2, TILE_SIZE * 2);
             var _py = y + random_range(-TILE_SIZE * 3, TILE_SIZE);
             
-            spawn_particle(_px, _py, "phantasia:entity/damage");
+            spawn_particle(_px, _py, "phantasia:weather/raindrop");
         }
     }
     
@@ -57,27 +54,27 @@ function control_weather(_dt, _camera_x, _camera_y, _camera_w, _camera_h)
     {
         if (x < _camera_x - TILE_SIZE * 4) || (x > _camera_x + _camera_w + TILE_SIZE * 4)
             || (y < _camera_y - TILE_SIZE * 4) || (y > _camera_y + _camera_h + TILE_SIZE * 4) continue;
-            
-        repeat (_ent_rain_count)
+        
+        repeat (_creature_rain_count)
         {
             var _px = x + random_range(-TILE_SIZE * 2, TILE_SIZE * 2);
             var _py = y + random_range(-TILE_SIZE * 3, TILE_SIZE);
             
-            spawn_particle(_px, _py, "phantasia:entity/damage");
+            spawn_particle(_px, _py, "phantasia:weather/raindrop");
         }
     }
-
+    
     with (obj_Item_Drop)
     {
         if (x < _camera_x - TILE_SIZE * 4) || (x > _camera_x + _camera_w + TILE_SIZE * 4)
             || (y < _camera_y - TILE_SIZE * 4) || (y > _camera_y + _camera_h + TILE_SIZE * 4) continue;
-            
-        repeat (_ent_rain_count)
+        
+        repeat (_item_rain_count)
         {
             var _px = x + random_range(-TILE_SIZE, TILE_SIZE);
             var _py = y + random_range(-TILE_SIZE, TILE_SIZE);
             
-            spawn_particle(_px, _py, "phantasia:entity/damage");
+            spawn_particle(_px, _py, "phantasia:weather/raindrop");
         }
     }
     
@@ -103,7 +100,7 @@ function control_weather(_dt, _camera_x, _camera_y, _camera_w, _camera_h)
                 var _px = _light.x + random_range(-TILE_SIZE * 3, TILE_SIZE * 3);
                 var _py = _light.y + random_range(-TILE_SIZE * 4, -TILE_SIZE);
                 
-                spawn_particle(_px, _py, "phantasia:entity/damage");
+                spawn_particle(_px, _py, "phantasia:weather/raindrop");
             }
         }
     }
@@ -129,7 +126,4 @@ function control_weather(_dt, _camera_x, _camera_y, _camera_w, _camera_h)
     
     /* update lightning state machine */
     global.lightning_pool.update(_dt);
-    
-    /* update storm shader intensity */
-    global.post_process.set_enabled(shd_Storm, true);
 }

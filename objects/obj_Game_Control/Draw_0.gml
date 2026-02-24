@@ -18,18 +18,53 @@ render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height);
 /* render lightning bolts on top of the scene */
 global.lightning_pool.render();
 
-/* register storm pass once */
-if (!__storm_pass_registered)
+/* register colorgrade pass once */
+if (!__colorgrade_pass_registered)
 {
-    __storm_pass_registered = true;
+    __colorgrade_pass_registered = true;
     
-    global.post_process.add_pass(shd_Storm, function()
+    global.post_process.add_pass(shd_Colorgrade, function()
     {
+        var _world_data = global.world_data[$ global.current_world.dimension];
+        var _weather    = global.current_world.weather;
+        var _storm      = clamp(_weather.storm, 0, 1);
+        
+        /* base from world data, storm desaturates on top */
+        var _saturation    = _world_data.get_colorgrade_saturation() * (1 - _storm * 0.6);
+        var _tint_r        = _world_data.get_colorgrade_tint_r();
+        var _tint_g        = _world_data.get_colorgrade_tint_g();
+        var _tint_b        = _world_data.get_colorgrade_tint_b();
+        var _tint_strength = _world_data.get_colorgrade_tint_strength();
+        
+        /* storm layers a blue-grey tint on top */
+        if (_storm > 0)
+        {
+            var _storm_r = 0.75;
+            var _storm_g = 0.82;
+            var _storm_b = 0.90;
+            var _storm_t = _storm * 0.4;
+            
+            _tint_r        = lerp(_tint_r, _storm_r, _storm_t);
+            _tint_g        = lerp(_tint_g, _storm_g, _storm_t);
+            _tint_b        = lerp(_tint_b, _storm_b, _storm_t);
+            _tint_strength = clamp(_tint_strength + _storm_t, 0, 1);
+        }
+        
         shader_set_uniform_f(
-            shader_get_uniform(shd_Storm, "u_storm_intensity"),
-            clamp(global.current_world.weather.storm, 0, 1)
+            shader_get_uniform(shd_Colorgrade, "u_saturation"),
+            _saturation
         );
-    }, false);
+        
+        shader_set_uniform_f(
+            shader_get_uniform(shd_Colorgrade, "u_tint_color"),
+            _tint_r, _tint_g, _tint_b
+        );
+        
+        shader_set_uniform_f(
+            shader_get_uniform(shd_Colorgrade, "u_tint_strength"),
+            _tint_strength
+        );
+    }, true);
 }
 
 /* apply all post-processing passes */
