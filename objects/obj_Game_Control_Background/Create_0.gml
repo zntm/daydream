@@ -26,4 +26,11 @@ bg_sky_colour(_in_biome_data, _in_biome_data);
 
 sky_scripts = {}
 
+/* force-load aurora for testing */
+if (struct_exists(global.proglang_scripts, "phantasia:sky/borea_aurora"))
+{
+    proglang_call("@phantasia:sky/borea_aurora", [], id);
+    sky_scripts[$ "@phantasia:sky/borea_aurora"] = true;
+}
+
 init_background_clouds();

@@ -1,48 +1,30 @@
 var colors = ["#4ECCA3", "#45EBA5", "#21BF73", "#B0EACD"]
+var sprite = "phantasia:background/effect/aurora"
+var columns = 18
 var layers = 3
 
 event_subscribe("background_render", fn(_data) {
-    if (_data.biome_script != "phantasia:sky/borea_aurora") return
-
     var time = _data.time / 5000
     var blend = _data.blend ?? 1.0
-    
-    // Check if it's night (time is 0..1 circular, but current_world.time is likely in frames or seconds)
-    // Actually, celestial system might have better time awareness. 
-    // For now, let's assume we want it visible or slightly visible depending on some time factor if we can find it.
-    // However, the prompt implies we just want it in Borea.
-    
+
+    var col_width = _data.camera_width / columns
+
     for (var i = 0; i < layers; i++) {
-        var layer_time = time + (i * 0.5)
-        var alpha = (0.2 + (0.1 * i)) * blend
-        
-        // Use noise3d for wave motion
-        // x/y are camera space or screen space? data.camera_x is passed.
-        // Let's use screen space for the pattern but offset by camera for parallax if needed.
-        // Actually, aurora is usually very far, so static screen space with noise-based shifting is fine.
-        
-        var count = 20
-        var width = _data.camera_width / count
-        
-        for (var j = 0; j <= count; j++) {
-            var nx = j / count
-            var ny = i / layers
-            
-            // Noise params: x, y, z
-            var val = noise3d(nx * 2, ny * 2, layer_time, 2, 1)
-            var h_offset = val * 50
-            var height = 100 + (val * 150)
-            
-            var px = _data.camera_x + (j * width)
-            var py = _data.camera_y + 50 + (i * 30) + h_offset
-            
-            draw_set_color(colors[i % array_length(colors)])
-            draw_set_alpha(alpha * (1.0 - (j / count) * 0.5)) // Fade slightly to one side
-            
-            // Draw a vertical strip
-            draw_rectangle(px, py, px + width, py + height, false)
+        var layer_speed = 0.3 + (i * 0.15)
+        var layer_t = time * layer_speed + (i * 2.1)
+        var base_alpha = (0.15 + (0.08 * i)) * blend
+        var color = colors[i % array_length(colors)]
+        var y_scale = 4 + i * 1.5
+
+        for (var j = 0; j <= columns; j++) {
+            var phase = (j / columns) * 3.14159 * 2 + layer_t
+            var y_offset = sin(phase) * 30 + sin(phase * 0.7 + 1.3) * 15
+            var alpha = base_alpha * (0.5 + 0.5 * sin(phase * 0.5 + 0.8))
+
+            var px = _data.camera_x + (j * col_width)
+            var py = _data.camera_y + 20 + (i * 16) + y_offset
+
+            draw_sprite_ext(sprite, 0, px, py, col_width / 32, y_scale, 0, color, alpha)
         }
     }
-    
-    draw_set_alpha(1.0)
 })

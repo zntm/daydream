@@ -88,6 +88,7 @@
   ],
   "ResourceOrderSettings":[
     {"name":"execute_shell_simple_ext","order":1,"path":"extensions/execute_shell_simple_ext/execute_shell_simple_ext.yy",},
+    {"name":"OpenSimplexNoise","order":6,"path":"extensions/OpenSimplexNoise/OpenSimplexNoise.yy",},
     {"name":"sysinfo","order":5,"path":"extensions/sysinfo/sysinfo.yy",},
     {"name":"window_taskbar","order":2,"path":"extensions/window_taskbar/window_taskbar.yy",},
     {"name":"obj_Client","order":2,"path":"objects/obj_Client/obj_Client.yy",},
