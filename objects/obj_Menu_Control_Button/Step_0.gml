@@ -1,5 +1,8 @@
 if (menu_transition_is_active()) exit;
 
+/* block all menu input while ui editor is open */
+if (variable_global_exists("ui_editor")) && (global.ui_editor != undefined) && (global.ui_editor.active) exit;
+
 var _menu_layer = menu_layer;
 
 var _check_boundary = function(_surface_index)

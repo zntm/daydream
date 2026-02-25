@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"ui_editor_panels",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"ui_editor_panels",
+  "parent":{
+    "name":"Debug",
+    "path":"folders/Scripts/Debug.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

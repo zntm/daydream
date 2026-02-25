@@ -158,6 +158,8 @@ function debug_init()
     global.debug_sysinfo_index = 0;
     global.debug_sysinfo_text = "";
     global.debug_sysinfo_timer = 0;
+    
+    ui_editor_init();
 }
 
 /// @function debug_cleanup()
@@ -183,6 +185,14 @@ function debug_step()
         var _is_enabled = is_debug_overlay_open();
         show_debug_overlay(!_is_enabled);
     }
+    
+    /* toggle ui editor with F4 */
+    if (keyboard_check_pressed(vk_f4))
+    {
+        ui_editor_toggle();
+    }
+    
+    ui_editor_step();
     
     // Only update text if overlay is visible
     if (is_debug_overlay_open())

@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"ui_editor_serialize",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"ui_editor_serialize",
+  "parent":{
+    "name":"Debug",
+    "path":"folders/Scripts/Debug.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

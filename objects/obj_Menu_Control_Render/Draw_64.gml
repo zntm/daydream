@@ -572,3 +572,5 @@ for (var j = 0; j <= _max_layer; ++j)
 draw_set_align(_halign, _valign);
 
 gpu_set_blendmode(bm_normal);
+
+ui_editor_draw();

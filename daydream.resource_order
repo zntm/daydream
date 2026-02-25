@@ -30,6 +30,7 @@
     {"name":"Gameplay","order":3,"path":"folders/Objects/Gameplay.yy",},
     {"name":"Menu","order":2,"path":"folders/Objects/Menu.yy",},
     {"name":"Rooms","order":1096,"path":"folders/Rooms.yy",},
+    {"name":"Editor","order":5,"path":"folders/Rooms/Editor.yy",},
     {"name":"Menu","order":3,"path":"folders/Rooms/Menu.yy",},
     {"name":"Scripts","order":1092,"path":"folders/Scripts.yy",},
     {"name":"Background","order":6,"path":"folders/Scripts/Background.yy",},

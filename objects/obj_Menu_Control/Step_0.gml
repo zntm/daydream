@@ -21,8 +21,10 @@ global.gui_mouse_y = device_mouse_y_to_gui(0);
 menu_transition_update();
 
 
-/* update proglang ui system */
-if (variable_global_exists("gui_root")) && (global.gui_root != undefined)
+/* update proglang ui system (skip when editor is active to block input) */
+var _ui_editor_active = (variable_global_exists("ui_editor")) && (global.ui_editor != undefined) && (global.ui_editor.active);
+
+if (variable_global_exists("gui_root")) && (global.gui_root != undefined) && (!_ui_editor_active)
 {
 	global.ui_input_consumed = false;
 	global.ui_hover_consumed = false;
@@ -50,4 +52,20 @@ if (variable_global_exists("gui_root")) && (global.gui_root != undefined)
 	}
 	
 	ui_clear_events();
+}
+
+/* ui editor toggle (dev mode only) */
+if (IS_DEVELOPER_MODE)
+{
+    if (!variable_global_exists("ui_editor")) || (global.ui_editor == undefined)
+    {
+        ui_editor_init();
+    }
+
+    if (keyboard_check_pressed(vk_f4))
+    {
+        ui_editor_toggle();
+    }
+
+    ui_editor_step();
 }

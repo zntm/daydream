@@ -7,7 +7,12 @@ gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_src_alpha, bm_
 
 var _lp = noone;
 with (obj_Player) { if (is_local) { _lp = id; break; } }
-if (_lp == noone) exit;
+if (_lp == noone)
+{
+    ui_editor_draw();
+
+    exit;
+}
 
 var _player_x = _lp.x;
 var _player_y = _lp.y;
@@ -77,6 +82,8 @@ if (is_opened & IS_OPENED_BOOLEAN.GENERATING_WORLD)
         matrix_set(matrix_world, _matrix_saved);
     }
     
+    ui_editor_draw();
+    
     exit;
 }
 
@@ -110,6 +117,8 @@ if (is_opened & (IS_OPENED_BOOLEAN.PAUSE | IS_OPENED_BOOLEAN.EXIT))
         
         global.gui_root.draw();
     }
+    
+    ui_editor_draw();
     
     exit;
 }
@@ -204,3 +213,5 @@ if (is_opened & IS_OPENED_BOOLEAN.GUI)
 }
 
 gpu_set_blendmode(bm_normal);
+
+ui_editor_draw();
