@@ -46,14 +46,36 @@ if (is_opened & IS_OPENED_BOOLEAN.GENERATING_WORLD)
         gpu_set_texfilter(false);
     }
     
-    var _halign = draw_get_halign();
-    var _valign = draw_get_valign();
+    /* spawn loading ui if not yet created */
+    if (!variable_instance_exists(id, "ui_loading")) || (ui_loading == undefined)
+    {
+        var _loading_def = ui_load("ui/menu/loading.ui");
+        
+        if (_loading_def != undefined)
+        {
+            ui_loading_link = {
+                loading_text: loca_translate("phantasia:menu.loading_world.title")
+            }
+            
+            ui_loading = ui_spawn(_loading_def, {
+                link: ui_loading_link
+            });
+        }
+    }
     
-    draw_set_align(fa_center, fa_middle);
-    
-    render_text(_gui_width / 2, _gui_height / 2, loca_translate("phantasia:menu.loading_world.title"), 2 * _gui_scale, 2 * _gui_scale);
-    
-    draw_set_align(_halign, _valign);
+    /* draw loading ui */
+    if (ui_loading != undefined)
+    {
+        var _base_scale = ui_get_base_scale();
+        var _matrix_saved = matrix_get(matrix_world);
+        var _matrix_scale = matrix_build(0, 0, 0, 0, 0, 0, _base_scale.x, _base_scale.y, 1);
+        
+        matrix_set(matrix_world, _matrix_scale);
+        
+        ui_draw(ui_loading);
+        
+        matrix_set(matrix_world, _matrix_saved);
+    }
     
     exit;
 }
@@ -76,6 +98,17 @@ if (is_opened & (IS_OPENED_BOOLEAN.PAUSE | IS_OPENED_BOOLEAN.EXIT))
         draw_surface_stretched_ext(surface_pause[@ 1], 0, 0, _gui_width + GUI_PAUSE_BLUR_RESIZE, _gui_height + GUI_PAUSE_BLUR_RESIZE, c_white, _display_blur);
         
         gpu_set_texfilter(false);
+    }
+    
+    /* draw pause ui buttons */
+    if (variable_instance_exists(id, "ui_pause")) && (ui_pause != undefined)
+    {
+        global.ui_hover_consumed = false;
+        global.ui_input_consumed = false;
+        
+        ui_update(ui_pause);
+        
+        global.gui_root.draw();
     }
     
     exit;

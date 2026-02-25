@@ -28,7 +28,7 @@
     
     @button(btn_back) {
         position = ORIGIN_BOTTOM_LEFT + (32, -32)
-        size = (48, 48)
-        icon = "spr_Icon_Arrow_Left"
+        size = (64, 32)
+        text = "Back"
     }
 }

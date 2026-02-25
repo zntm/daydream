@@ -1562,6 +1562,7 @@
     {"$GMIncludedFile":"","%Name":"particle_colour.json","CopyToMask":-1,"filePath":"datafiles/resources/data/tags/tile","name":"particle_colour.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"placement.json","CopyToMask":-1,"filePath":"datafiles/resources/data/tags/tile","name":"placement.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"sfx.json","CopyToMask":-1,"filePath":"datafiles/resources/data/tags/tile","name":"sfx.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"ammo_load.ui","CopyToMask":-1,"filePath":"datafiles/resources/data/ui","name":"ammo_load.ui","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"crafting_slot.ui","CopyToMask":-1,"filePath":"datafiles/resources/data/ui","name":"crafting_slot.ui","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"crafting.ui","CopyToMask":-1,"filePath":"datafiles/resources/data/ui","name":"crafting.ui","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"hotbar.ui","CopyToMask":-1,"filePath":"datafiles/resources/data/ui","name":"hotbar.ui","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
@@ -1571,8 +1572,11 @@
     {"$GMIncludedFile":"","%Name":"create_player.ui","CopyToMask":-1,"filePath":"datafiles/resources/data/ui/menu","name":"create_player.ui","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"create_world.ui","CopyToMask":-1,"filePath":"datafiles/resources/data/ui/menu","name":"create_world.ui","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"credits.ui","CopyToMask":-1,"filePath":"datafiles/resources/data/ui/menu","name":"credits.ui","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"loading.ui","CopyToMask":-1,"filePath":"datafiles/resources/data/ui/menu","name":"loading.ui","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"multiplayer.ui","CopyToMask":-1,"filePath":"datafiles/resources/data/ui/menu","name":"multiplayer.ui","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"pause.ui","CopyToMask":-1,"filePath":"datafiles/resources/data/ui/menu","name":"pause.ui","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"players.ui","CopyToMask":-1,"filePath":"datafiles/resources/data/ui/menu","name":"players.ui","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"saving.ui","CopyToMask":-1,"filePath":"datafiles/resources/data/ui/menu","name":"saving.ui","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"settings.ui","CopyToMask":-1,"filePath":"datafiles/resources/data/ui/menu","name":"settings.ui","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"title.ui","CopyToMask":-1,"filePath":"datafiles/resources/data/ui/menu","name":"title.ui","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"worlds.ui","CopyToMask":-1,"filePath":"datafiles/resources/data/ui/menu","name":"worlds.ui","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
@@ -1598,7 +1602,7 @@
   "isEcma":false,
   "LibraryEmitters":[],
   "MetaData":{
-    "IDEVersion":"2024.1400.4.1003",
+    "IDEVersion":"2024.14.3.217",
   },
   "name":"daydream",
   "resources":[

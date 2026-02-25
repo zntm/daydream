@@ -1,0 +1,34 @@
+// pause menu layout
+
+@area(pause_menu) {
+    size = (960, 540)
+    position = ORIGIN_CENTER
+
+    @text(title) {
+        position = ORIGIN_CENTER + (0, -64)
+        text = "Paused"
+        text_scale = 2
+    }
+
+    @area(menu_options) {
+        position = ORIGIN_CENTER + (0, 16)
+        size = (160, 140)
+        layout = LAYOUT_VERTICAL
+        spacing = 12
+
+        @button(btn_resume) {
+            text = "Resume"
+            size = (160, 32)
+        }
+
+        @button(btn_settings) {
+            text = "Settings"
+            size = (160, 32)
+        }
+
+        @button(btn_save_quit) {
+            text = "Save & Quit"
+            size = (160, 32)
+        }
+    }
+}

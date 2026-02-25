@@ -150,7 +150,8 @@ function menu_worlds_ui_populate()
 	{
 		var _label_pinned = new UIText(8, _ypos, "");
 		_label_pinned.text = "Pinned";
-		_label_pinned.text_halign = "fa_left";
+		_label_pinned.halign = fa_left;
+		_label_pinned.valign = fa_top;
 		_label_pinned.text_scale = 0.8;
 		_label_pinned.colour = c_ltgray;
 		_label_pinned.parent = _container;
@@ -175,7 +176,8 @@ function menu_worlds_ui_populate()
 	{
 		var _label_normal = new UIText(8, _ypos, "");
 		_label_normal.text = (array_length(_pinned) > 0) ? "Worlds" : "";
-		_label_normal.text_halign = "fa_left";
+		_label_normal.halign = fa_left;
+		_label_normal.valign = fa_top;
 		_label_normal.text_scale = 0.8;
 		_label_normal.colour = c_ltgray;
 		_label_normal.parent = _container;

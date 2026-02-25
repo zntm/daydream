@@ -4,7 +4,6 @@
     visible = *is_visible
     
     @bar(charge_bar) {
-        anchor = ORIGIN_CENTER
         position = (0, 0)
         size = (60, 2)
         value = *charge_value

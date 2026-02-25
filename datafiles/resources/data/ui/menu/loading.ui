@@ -1,0 +1,12 @@
+// loading screen layout
+
+@area(loading_menu) {
+    size = (960, 540)
+    position = ORIGIN_CENTER
+
+    @text(loading_text) {
+        position = ORIGIN_CENTER
+        text = *loading_text
+        text_scale = 2
+    }
+}

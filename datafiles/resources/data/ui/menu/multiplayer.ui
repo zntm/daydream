@@ -27,7 +27,7 @@
         
         @button(btn_connect) {
             position = ORIGIN_CENTER + (0, 32)
-            size = (128, 32)
+            size = (160, 32)
             text = "Connect"
         }
     }

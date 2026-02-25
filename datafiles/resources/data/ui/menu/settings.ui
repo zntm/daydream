@@ -6,7 +6,7 @@
 
     @button(btn_back) {
         position = ORIGIN_TOP_LEFT + (24, 24)
-        size = (48, 24)
+        size = (64, 32)
         text = "Back"
     }
 
@@ -27,27 +27,27 @@
             spacing = 4
             
             @button(btn_cat_general) {
-                size = (200, 32)
+                size = (200, 36)
                 text = "General"
             }
             
             @button(btn_cat_graphics) {
-                size = (200, 32)
+                size = (200, 36)
                 text = "Graphics"
             }
             
             @button(btn_cat_controls) {
-                size = (200, 32)
+                size = (200, 36)
                 text = "Controls"
             }
             
             @button(btn_cat_audio) {
-                size = (200, 32)
+                size = (200, 36)
                 text = "Audio"
             }
             
             @button(btn_cat_accessibility) {
-                size = (200, 32)
+                size = (200, 36)
                 text = "Accessibility"
             }
         }

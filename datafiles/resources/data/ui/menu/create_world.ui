@@ -4,7 +4,7 @@ var PANEL_WIDTH = 400
 var SLIDER_WIDTH = 380
 var TEXTBOX_WIDTH = 340
 var TEXTBOX_HEIGHT = 20
-var BUTTON_HEIGHT = 20
+var BUTTON_HEIGHT = 24
 var SECTION_SPACING = 4
 var INNER_SPACING = 2
 
@@ -14,7 +14,7 @@ var INNER_SPACING = 2
 
     @button(btn_back) {
         position = ORIGIN_TOP_LEFT + (24, 24)
-        size = (48, 24)
+        size = (64, 32)
         text = "Back"
     }
 
@@ -27,6 +27,14 @@ var INNER_SPACING = 2
     @area(main_content) {
         position = ORIGIN_CENTER + (0, 16)
         size = (880, 400)
+
+        @line(divider) {
+            position = ORIGIN_TOP_LEFT + (PANEL_WIDTH, 0)
+            start = (0, 0)
+            end = (0, 400)
+            thickness = 1
+            colour = #3a3a4a
+        }
 
         @area(left_panel) {
             position = ORIGIN_TOP_LEFT
@@ -62,32 +70,6 @@ var INNER_SPACING = 2
                 }
             }
 
-            @area(seed_label_row) {
-                size = (PANEL_WIDTH, 14)
-                @text(label_seed) {
-                    text = "seed"
-                    colour = #aaaaaa
-                    text_scale = 0.8
-                }
-            }
-
-            @area(seed_row) {
-                size = (PANEL_WIDTH, TEXTBOX_HEIGHT)
-                layout = LAYOUT_HORIZONTAL
-                spacing = 2
-
-                @textbox(world_seed) {
-                    size = (TEXTBOX_WIDTH, TEXTBOX_HEIGHT)
-                    placeholder = "enter seed..."
-                }
-
-                @button(btn_randomize_seed) {
-                    size = (24, TEXTBOX_HEIGHT)
-                    icon = "spr_Icon_Random"
-                    icon_xscale = 1
-                    icon_yscale = 1
-                }
-            }
         }
 
         @area(right_panel) {
@@ -300,9 +282,28 @@ var INNER_SPACING = 2
         }
     }
 
+    @area(bottom_fields) {
+        position = ORIGIN_BOTTOM_LEFT + (40, -36)
+        size = (PANEL_WIDTH - 40, TEXTBOX_HEIGHT)
+        layout = LAYOUT_HORIZONTAL
+        spacing = 2
+
+        @textbox(world_seed) {
+            size = (TEXTBOX_WIDTH, TEXTBOX_HEIGHT)
+            placeholder = "enter seed..."
+        }
+
+        @button(btn_randomize_seed) {
+            size = (24, TEXTBOX_HEIGHT)
+            icon = "spr_Icon_Random"
+            icon_xscale = 1
+            icon_yscale = 1
+        }
+    }
+
     @button(btn_create_world) {
-        position = ORIGIN_BOTTOM_CENTER + (0, -24)
+        position = ORIGIN_BOTTOM_RIGHT + (-24, -24)
         text = "create world"
-        size = (200, 28)
+        size = (200, 32)
     }
 }

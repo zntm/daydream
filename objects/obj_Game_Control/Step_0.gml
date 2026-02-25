@@ -266,6 +266,48 @@ if (IS_ENABLED_BACKUP)
         }
         
         chat_system_push("Auto-backup complete!");
+        
+        /* show saving indicator */
+        if (!variable_instance_exists(id, "ui_saving")) || (ui_saving == undefined)
+        {
+            var _saving_def = ui_load("ui/menu/saving.ui");
+            
+            if (_saving_def != undefined)
+            {
+                ui_saving_link = {
+                    is_visible: true
+                }
+                
+                ui_saving = ui_spawn(_saving_def, {
+                    link: ui_saving_link,
+                    parent: global.gui_root
+                });
+            }
+        }
+        else
+        {
+            ui_saving_link.is_visible = true;
+            
+            ui_mark_dirty(ui_saving);
+        }
+        
+        timer_saving_ui = 2.0;
+    }
+    
+    /* hide saving indicator after timeout */
+    if (variable_instance_exists(id, "timer_saving_ui")) && (timer_saving_ui > 0)
+    {
+        timer_saving_ui -= _delta_time;
+        
+        if (timer_saving_ui <= 0)
+        {
+            if (variable_instance_exists(id, "ui_saving")) && (ui_saving != undefined)
+            {
+                ui_saving_link.is_visible = false;
+                
+                ui_mark_dirty(ui_saving);
+            }
+        }
     }
 }
 

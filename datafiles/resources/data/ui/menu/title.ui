@@ -13,31 +13,31 @@
         position = ORIGIN_CENTER + (0, 48)
         size = (160, 160)
         layout = LAYOUT_VERTICAL
-        spacing = 8
+        spacing = 12
 
         @button(btn_play) {
             text = "Play"
-            size = (160, 24)
+            size = (160, 32)
         }
 
         @button(btn_settings) {
             text = "Settings"
-            size = (160, 24)
+            size = (160, 32)
         }
 
 		@area(bottom_buttons) {
-			size = (160, 24)
+			size = (160, 32)
 			layout = LAYOUT_HORIZONTAL
-			spacing = 8
+			spacing = 12
 
 			@button(btn_credits) {
 				text = "Credits"
-				size = (76, 24)
+				size = (76, 32)
 			}
 
 			@button(btn_exit) {
 				text = "Exit"
-				size = (76, 24)
+				size = (76, 32)
 			}
 		}
     }

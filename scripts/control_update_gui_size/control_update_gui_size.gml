@@ -5,9 +5,7 @@ function control_update_gui_size(_width, _height)
     
     display_set_gui_size(_width, _height);
     
-    // Account for gui_scale since menus are rendered on the GUI layer which is already scaled
-    var _gui_scale = global.gui_scale;
-    // Account for gui_scale since menus are rendered on the GUI layer which is already scaled
+    /* account for gui_scale since menus are rendered on the GUI layer which is already scaled */
     var _gui_scale = global.gui_scale;
     var _cam_w = variable_global_exists("camera_width") ? global.camera_width : 960;
     var _cam_h = variable_global_exists("camera_height") ? global.camera_height : 540;

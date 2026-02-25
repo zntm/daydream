@@ -12,8 +12,8 @@ function UIText(_x, _y, _text = "") : UIElement(_x, _y, 0, 0) constructor
     
     text_scale = 1;
     
-    halign = fa_left;
-    valign = fa_top;
+    halign = fa_center;
+    valign = fa_middle;
     
     
     static set_text = function(_text)
@@ -28,7 +28,7 @@ function UIText(_x, _y, _text = "") : UIElement(_x, _y, 0, 0) constructor
     {
         if (text == "")
         {
-             exit;
+            exit;
         }
         
         

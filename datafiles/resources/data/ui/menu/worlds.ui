@@ -6,7 +6,7 @@
 
     @button(btn_back) {
         position = ORIGIN_TOP_LEFT + (24, 24)
-        size = (48, 24)
+        size = (64, 32)
         text = "Back"
     }
 
@@ -18,7 +18,7 @@
 
     @button(btn_view_toggle) {
         position = ORIGIN_TOP_RIGHT + (-24, 24)
-        size = (32, 24)
+        size = (48, 32)
         text = "Grid"
     }
 
@@ -44,6 +44,6 @@
     @button(btn_create_world) {
         position = ORIGIN_BOTTOM_CENTER + (0, -40)
         text = "Create World"
-        size = (180, 28)
+        size = (180, 32)
     }
 }

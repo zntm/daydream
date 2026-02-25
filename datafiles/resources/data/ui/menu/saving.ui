@@ -1,0 +1,14 @@
+// saving indicator layout
+
+@area(saving_indicator) {
+    position = ORIGIN_BOTTOM_RIGHT + (-32, -32)
+    size = (120, 24)
+    visible = *is_visible
+
+    @text(saving_text) {
+        position = ORIGIN_CENTER
+        text = "Saving..."
+        text_scale = 0.8
+        colour = #aaaaaa
+    }
+}

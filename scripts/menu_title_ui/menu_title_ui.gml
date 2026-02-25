@@ -142,56 +142,50 @@ function menu_title_ui_init()
 
 function menu_title_ui_popup_exit()
 {
-	/* legacy exit popup (can port to ui later, using legacy for now for promptness) */
-    var _inst_header = instance_create_layer(480, 224, "Instances", obj_Menu_Anchor);
-    
-    with (_inst_header)
-    {
-        text = loca_translate("phantasia:menu.exit.header");
-        menu_layer = 1;
-        
-        on_draw = function(_x, _y, _xscale, _yscale)
-        {
-            var _x2 = x * _xscale;
-            var _y2 = y * _yscale;
-            
-            var _halign = draw_get_halign();
-            var _valign = draw_get_valign();
-            
-            draw_set_align(fa_center, fa_middle);
-            render_text(_x2, _y2, text, _xscale, _yscale);
-            draw_set_align(_halign, _valign);
-        }
-    }
-    
-    var _inst_no = instance_create_layer(412, 300, "Instances", obj_Menu_Button);
-    
-    with (_inst_no)
-    {
-        text = loca_translate("phantasia:menu.generic.no");
-        image_xscale = 8;
-        image_yscale = 3;
-        menu_layer = 1;
-        on_select_release = menu_popup_destroy;
-    }
-    
-    var _inst_yes = instance_create_layer(548, 300, "Instances", obj_Menu_Button);
-    
-    with (_inst_yes)
-    {
-        text = loca_translate("phantasia:menu.generic.yes");
-        image_xscale = 8;
-        image_yscale = 3;
-        menu_layer = 1;
-        on_select_release = function()
-        {
-            game_end();
-        }
-    }
-    
-    menu_popup_create([
-        _inst_header,
-        _inst_no,
-        _inst_yes
-    ]);
+	/* create popup container */
+	var _popup_root = new UIElement(0, 0, 960, 540);
+
+	var _bg = new UIElement(300, 196, 360, 148);
+	_bg.background_color = #1e1e2e;
+	_bg.border_color = #3a3a4a;
+	_bg.parent = _popup_root;
+	array_push(_popup_root.children, _bg);
+
+	var _header = new UIText(0, 0, loca_translate("phantasia:menu.exit.header"));
+	_header.halign = fa_center;
+	_header.valign = fa_middle;
+	_header.parent = _bg;
+	_header.x = _bg.width / 2;
+	_header.y = 36;
+	array_push(_bg.children, _header);
+
+	var _btn_no = new UIButton(40, 80, 120, 32, loca_translate("phantasia:menu.generic.no"));
+	_btn_no.parent = _bg;
+	_btn_no.add_event_handler("on_select_release", method({ _root: _popup_root }, function()
+	{
+		/* remove popup from gui_root */
+		var _children = global.gui_root.children;
+
+		for (var i = array_length(_children) - 1; i >= 0; --i)
+		{
+			if (_children[i] == _root)
+			{
+				array_delete(_children, i, 1);
+
+				break;
+			}
+		}
+	}));
+	array_push(_bg.children, _btn_no);
+
+	var _btn_yes = new UIButton(200, 80, 120, 32, loca_translate("phantasia:menu.generic.yes"));
+	_btn_yes.parent = _bg;
+	_btn_yes.add_event_handler("on_select_release", function()
+	{
+		game_end();
+	});
+	array_push(_bg.children, _btn_yes);
+
+	_popup_root.parent = global.gui_root;
+	array_push(global.gui_root.children, _popup_root);
 }
