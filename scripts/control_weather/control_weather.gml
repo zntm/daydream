@@ -24,6 +24,8 @@ function control_weather_tick(_dt, _camera_x, _camera_y, _camera_w, _camera_h)
         var _px = _camera_x + random(_camera_w);
         var _py = _camera_y + random(_camera_h);
 
+        if (tile_get(floor(_px / TILE_SIZE), floor(_py / TILE_SIZE), CHUNK_DEPTH_WALL) != TILE_EMPTY) continue;
+
         spawn_particle(_px, _py, "phantasia:weather/raindrop");
     }
 
@@ -42,6 +44,8 @@ function control_weather_tick(_dt, _camera_x, _camera_y, _camera_w, _camera_h)
             var _px = x + random_range(-TILE_SIZE * 2, TILE_SIZE * 2);
             var _py = y + random_range(-TILE_SIZE * 3, TILE_SIZE);
 
+            if (tile_get(floor(_px / TILE_SIZE), floor(_py / TILE_SIZE), CHUNK_DEPTH_WALL) != TILE_EMPTY) continue;
+
             spawn_particle(_px, _py, "phantasia:weather/raindrop");
         }
     }
@@ -56,6 +60,8 @@ function control_weather_tick(_dt, _camera_x, _camera_y, _camera_w, _camera_h)
             var _px = x + random_range(-TILE_SIZE * 2, TILE_SIZE * 2);
             var _py = y + random_range(-TILE_SIZE * 3, TILE_SIZE);
 
+            if (tile_get(floor(_px / TILE_SIZE), floor(_py / TILE_SIZE), CHUNK_DEPTH_WALL) != TILE_EMPTY) continue;
+
             spawn_particle(_px, _py, "phantasia:weather/raindrop");
         }
     }
@@ -69,6 +75,8 @@ function control_weather_tick(_dt, _camera_x, _camera_y, _camera_w, _camera_h)
         {
             var _px = x + random_range(-TILE_SIZE, TILE_SIZE);
             var _py = y + random_range(-TILE_SIZE, TILE_SIZE);
+
+            if (tile_get(floor(_px / TILE_SIZE), floor(_py / TILE_SIZE), CHUNK_DEPTH_WALL) != TILE_EMPTY) continue;
 
             spawn_particle(_px, _py, "phantasia:weather/raindrop");
         }
@@ -98,6 +106,8 @@ function control_weather_tick(_dt, _camera_x, _camera_y, _camera_w, _camera_h)
             {
                 var _px = _light.x + random_range(-TILE_SIZE * 3, TILE_SIZE * 3);
                 var _py = _light.y + random_range(-TILE_SIZE * 4, -TILE_SIZE);
+
+                if (tile_get(floor(_px / TILE_SIZE), floor(_py / TILE_SIZE), CHUNK_DEPTH_WALL) != TILE_EMPTY) continue;
 
                 spawn_particle(_px, _py, "phantasia:weather/raindrop");
             }
