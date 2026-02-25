@@ -72,6 +72,44 @@ const TILES_STONE = {
     ),
 };
 
+const TILES_LUMIN_MOSS = {
+    top_layer: new BiomeTile(
+        "phantasia:lumin_moss",
+        [
+            new TileEntry("phantasia:lumin_moss_wall", 4),
+            new TileEntry("$EMPTY", 1),
+        ],
+    ),
+    middle_layer: new BiomeTile(
+        "phantasia:lumin_moss",
+        [
+            new TileEntry("phantasia:lumin_moss_wall", 4),
+            new TileEntry("$EMPTY", 1),
+        ],
+    ),
+    bottom_layer: new BiomeTile(
+        "phantasia:lumin_moss",
+        [
+            new TileEntry("phantasia:lumin_moss_wall", 4),
+            new TileEntry("$EMPTY", 1),
+        ],
+    ),
+};
+
+const MOONFALL_SKY = new ColorGradient([
+    { position: 0.15, color: "#0A1628" },
+    { position: 0.45, color: "#2A4A7A" },
+    { position: 0.72, color: "#1A3058" },
+    { position: 0.90, color: "#050A14" },
+]);
+
+const MOONFALL_LIGHT = new ColorGradient([
+    { position: 0.15, color: "#1B2A4A" },
+    { position: 0.45, color: "#7BA8D4" },
+    { position: 0.72, color: "#3D5A8E" },
+    { position: 0.90, color: "#0D1526" },
+]);
+
 export default [
     // Chasm
     new DatagenReturnData(
@@ -159,6 +197,21 @@ export default [
                     712,
                     768,
                 ),
+            ]),
+    ),
+    // Moonfall (Lumin cave region)
+    new DatagenReturnData(
+        "cave/moonfall.json",
+        new Biome(
+            new BiomeBackground("phantasia:background/chasm", 0.7),
+            "#1B4A3A",
+            MOONFALL_SKY,
+            MOONFALL_LIGHT,
+            TILES_LUMIN_MOSS,
+        )
+            .setMusic([
+                new Sound("phantasia:music/12_hours_at_ease", 0.7),
+                new Sound("phantasia:music/behind", 0.6),
             ]),
     ),
 ];
