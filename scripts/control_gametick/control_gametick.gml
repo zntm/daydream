@@ -206,6 +206,8 @@ function control_gametick(_delta_time)
             }
         }
         
+        control_weather_tick(1 / GAME_TICK, _camera_x, _camera_y, _camera_width, _camera_height);
+        
         global.current_world.time += 1 / GAME_TICK;
         
         if (global.current_world.time >= _time_length)

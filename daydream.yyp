@@ -1598,7 +1598,7 @@
   "isEcma":false,
   "LibraryEmitters":[],
   "MetaData":{
-    "IDEVersion":"2024.14.3.217",
+    "IDEVersion":"2024.1400.4.1003",
   },
   "name":"daydream",
   "resources":[
@@ -2131,7 +2131,6 @@
     {"id":{"name":"spr_Menu_Square","path":"sprites/spr_Menu_Square/spr_Menu_Square.yy",},},
     {"id":{"name":"spr_Menu_Title","path":"sprites/spr_Menu_Title/spr_Menu_Title.yy",},},
     {"id":{"name":"spr_Mouse","path":"sprites/spr_Mouse/spr_Mouse.yy",},},
-    {"id":{"name":"spr_Noise","path":"sprites/spr_Noise/spr_Noise.yy",},},
     {"id":{"name":"spr_Null","path":"sprites/spr_Null/spr_Null.yy",},},
     {"id":{"name":"spr_Square","path":"sprites/spr_Square/spr_Square.yy",},},
     {"id":{"name":"spr_Vignette_Corner","path":"sprites/spr_Vignette_Corner/spr_Vignette_Corner.yy",},},
