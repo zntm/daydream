@@ -1,4 +1,4 @@
-import { type SmartValue, Sound, ColorGradient } from "../../../lib";
+import { type SmartValue, type SmartValueChooseWeighted, Sound, ColorGradient } from "../../../lib";
 
 export class Biome {
     private background: BiomeBackground;
@@ -118,13 +118,13 @@ export class BiomeBackground {
 
 
 export class TileEntry {
-    private id: string;
+    private id: string | SmartValueChooseWeighted;
     private weight?: number;
     private noise_min?: number;
     private noise_max?: number;
     private context?: string[];
 
-    constructor(id: string, weight: number = 1, context?: string[]) {
+    constructor(id: string | SmartValueChooseWeighted, weight: number = 1, context?: string[]) {
         this.id = id;
         if (weight !== 1) this.weight = weight;
         if (context) this.context = context;

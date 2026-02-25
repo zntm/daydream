@@ -1,9 +1,5 @@
 {
-    "inventory": {
-        "index": 5,
-        "size": 10,
-        "max": 999
-    },
+    "inventory": "#phantasia:item/generic/inventory_default",
     "item": {
         "tile": {
             "audio_properties": {
@@ -14,8 +10,8 @@
                 "hardness": 0,
                 "level": 0,
                 "particle": {
-                    "colour": "#phantasia:tile/particle_colour/plant",
                     "frequency": "#phantasia:tile/generic/harvest_particle_frequency",
+                    "id": "#phantasia:tile/particle_colour/plant"
                 }
             },
             "on_stay": [

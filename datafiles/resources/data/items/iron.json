@@ -1,8 +1,5 @@
 {
     "inventory": "#phantasia:item/generic/inventory_default",
     "sprite": "phantasia:item/iron",
-    "properties": [
-        "phantasia:is_conductive"
-    ],
     "type": "default"
 }

@@ -153,6 +153,8 @@ export default [
         "rose",
         "anemone",
         "cave_roots",
+        "lumin_blossom",
+        "lumin_sprouts",
     ].map(
         (id: string) =>
             new DatagenReturnData(

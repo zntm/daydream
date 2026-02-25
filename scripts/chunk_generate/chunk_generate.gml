@@ -318,8 +318,8 @@ function chunk_generate(_chunk, _context = undefined)
                 var _is_floor = (_cave_bit_stream >> (j + 1)) & 1 && !((_cave_bit_stream >> (j + 2)) & 1);
                 if (_is_floor)
                 {
-                    var _tile_next = worldgen_get_tile_base(_world_x, _world_y + 1, _surface_biome, undefined, _surface_height, true, _world_seed, _world_data, _global_biome_data);
-                    var _foliage_id = worldgen_get_tile_foliage(_world_x, _world_y, _surface_biome, undefined, _tile_next, _surface_height, _world_seed, _global_biome_data);
+                    var _tile_next = worldgen_get_tile_base(_world_x, _world_y + 1, _surface_biome, _cave_biome, _surface_height, true, _world_seed, _world_data, _global_biome_data);
+                    var _foliage_id = worldgen_get_tile_foliage(_world_x, _world_y, _surface_biome, _cave_biome, _tile_next, _surface_height, _world_seed, _global_biome_data);
                     
                     if (_foliage_id != TILE_EMPTY)
                     {

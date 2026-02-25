@@ -125,6 +125,26 @@ export default [
             lowpass: 0.7,
             reverb: 0.6,
         },
+        {
+            id: "petrilumin",
+            properties: [
+                TileItemProperties.CanFlip,
+                TileItemProperties.CanMirror,
+                TileItemProperties.IsTile,
+            ],
+            harvest: new TileItemHarvest(
+                0.36,
+                0,
+                new ItemParticle(
+                    "#phantasia:tile/particle_colour/lumin_moss",
+                    "#phantasia:tile/generic/harvest_particle_frequency",
+                ),
+                new TileItemCondition("#phantasia:item/type/pickaxe"),
+            ),
+            sfx: "#phantasia:tile/sfx/stone",
+            lowpass: 0.65,
+            reverb: 0.5,
+        },
     ]
         .map(({ id, properties, harvest, sfx, lowpass, reverb }) =>
             blockWallItems(id, properties, harvest, sfx, lowpass, reverb),

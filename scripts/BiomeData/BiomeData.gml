@@ -353,7 +353,8 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
                 var _weight = _entry[$ "weight"] ?? 1;
                 
                 var _id = _entry.id;
-                if (_id == "$EMPTY") _id = TILE_EMPTY;
+                if (is_string(_id)) && (_id == "$EMPTY") _id = TILE_EMPTY;
+                else _id = smart_value_parse(_id);
                 
                 _total_weight += _weight;
                 _entries[@ i] = {
@@ -406,7 +407,7 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
                 
                 if (_noise_255 >= _min) && (_noise_255 < _max)
                 {
-                    return _e.id;
+                    return smart_value(_e.id);
                 }
             }
         }
@@ -419,7 +420,7 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
         {
             if (_roll < _entries[i].cumulative_weight)
             {
-                return _entries[i].id;
+                return smart_value(_entries[i].id);
             }
         }
         

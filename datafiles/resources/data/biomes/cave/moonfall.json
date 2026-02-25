@@ -3,6 +3,24 @@
         "blend": 0.7,
         "id": "phantasia:background/chasm"
     },
+    "foliage": [
+        {
+            "id": "phantasia:lumin_sprouts",
+            "chance": 0.3,
+            "generate_on": [
+                "phantasia:lumin_moss",
+                "phantasia:petrilumin"
+            ]
+        },
+        {
+            "id": "phantasia:lumin_blossom",
+            "chance": 0.08,
+            "generate_on": [
+                "phantasia:lumin_moss",
+                "phantasia:petrilumin"
+            ]
+        }
+    ],
     "light_colour": {
         "points": [
             {
@@ -58,48 +76,135 @@
         "bottom_layer": {
             "base": [
                 {
-                    "id": "phantasia:lumin_moss"
+                    "id": "phantasia:petrilumin",
+                    "noise_min": 0,
+                    "noise_max": 60
+                },
+                {
+                    "id": {
+                        "values": [
+                            {
+                                "value": "phantasia:lumin_moss",
+                                "weight": 99
+                            },
+                            {
+                                "value": "phantasia:lumin_bulb",
+                                "weight": 1
+                            }
+                        ],
+                        "type": "smart_value:choose_weighted"
+                    },
+                    "weight": 4,
+                    "noise_min": 60,
+                    "noise_max": 256
                 }
             ],
             "wall": [
                 {
-                    "id": "phantasia:lumin_moss_wall",
-                    "weight": 4
+                    "id": "phantasia:petrilumin_wall",
+                    "noise_min": 0,
+                    "noise_max": 60
                 },
                 {
-                    "id": "$EMPTY"
+                    "id": "phantasia:lumin_moss_wall",
+                    "weight": 4,
+                    "noise_min": 60,
+                    "noise_max": 252
+                },
+                {
+                    "id": "$EMPTY",
+                    "noise_min": 252,
+                    "noise_max": 256
                 }
             ]
         },
         "middle_layer": {
             "base": [
                 {
-                    "id": "phantasia:lumin_moss"
+                    "id": "phantasia:petrilumin",
+                    "noise_min": 0,
+                    "noise_max": 60
+                },
+                {
+                    "id": {
+                        "values": [
+                            {
+                                "value": "phantasia:lumin_moss",
+                                "weight": 99
+                            },
+                            {
+                                "value": "phantasia:lumin_bulb",
+                                "weight": 1
+                            }
+                        ],
+                        "type": "smart_value:choose_weighted"
+                    },
+                    "weight": 4,
+                    "noise_min": 60,
+                    "noise_max": 256
                 }
             ],
             "wall": [
                 {
-                    "id": "phantasia:lumin_moss_wall",
-                    "weight": 4
+                    "id": "phantasia:petrilumin_wall",
+                    "noise_min": 0,
+                    "noise_max": 60
                 },
                 {
-                    "id": "$EMPTY"
+                    "id": "phantasia:lumin_moss_wall",
+                    "weight": 4,
+                    "noise_min": 60,
+                    "noise_max": 252
+                },
+                {
+                    "id": "$EMPTY",
+                    "noise_min": 252,
+                    "noise_max": 256
                 }
             ]
         },
         "top_layer": {
             "base": [
                 {
-                    "id": "phantasia:lumin_moss"
+                    "id": "phantasia:petrilumin",
+                    "noise_min": 0,
+                    "noise_max": 60
+                },
+                {
+                    "id": {
+                        "values": [
+                            {
+                                "value": "phantasia:lumin_moss",
+                                "weight": 99
+                            },
+                            {
+                                "value": "phantasia:lumin_bulb",
+                                "weight": 1
+                            }
+                        ],
+                        "type": "smart_value:choose_weighted"
+                    },
+                    "weight": 4,
+                    "noise_min": 60,
+                    "noise_max": 256
                 }
             ],
             "wall": [
                 {
-                    "id": "phantasia:lumin_moss_wall",
-                    "weight": 4
+                    "id": "phantasia:petrilumin_wall",
+                    "noise_min": 0,
+                    "noise_max": 60
                 },
                 {
-                    "id": "$EMPTY"
+                    "id": "phantasia:lumin_moss_wall",
+                    "weight": 4,
+                    "noise_min": 60,
+                    "noise_max": 252
+                },
+                {
+                    "id": "$EMPTY",
+                    "noise_min": 252,
+                    "noise_max": 256
                 }
             ]
         }

@@ -1,4 +1,4 @@
-import { DatagenReturnData, Sound, ColorGradient } from "../../../../lib";
+import { DatagenReturnData, Sound, ColorGradient, SmartValue, ChooseWeightedOption } from "../../../../lib";
 
 import {
     Biome,
@@ -72,28 +72,30 @@ const TILES_STONE = {
     ),
 };
 
-const TILES_LUMIN_MOSS = {
-    top_layer: new BiomeTile(
-        "phantasia:lumin_moss",
-        [
-            new TileEntry("phantasia:lumin_moss_wall", 4),
-            new TileEntry("$EMPTY", 1),
-        ],
-    ),
-    middle_layer: new BiomeTile(
-        "phantasia:lumin_moss",
-        [
-            new TileEntry("phantasia:lumin_moss_wall", 4),
-            new TileEntry("$EMPTY", 1),
-        ],
-    ),
-    bottom_layer: new BiomeTile(
-        "phantasia:lumin_moss",
-        [
-            new TileEntry("phantasia:lumin_moss_wall", 4),
-            new TileEntry("$EMPTY", 1),
-        ],
-    ),
+const MOONFALL_LAYER = (base: TileEntry[], wall: TileEntry[]) =>
+    new BiomeTile(base, wall);
+
+const MOONFALL_BASE = [
+    new TileEntry("phantasia:petrilumin", 1).setNoiseRange(0, 60),
+    new TileEntry(
+        SmartValue.ChooseWeighted([
+            new ChooseWeightedOption("phantasia:lumin_moss", 99),
+            new ChooseWeightedOption("phantasia:lumin_bulb", 1),
+        ]),
+        4,
+    ).setNoiseRange(60, 256),
+];
+
+const MOONFALL_WALL = [
+    new TileEntry("phantasia:petrilumin_wall", 1).setNoiseRange(0, 60),
+    new TileEntry("phantasia:lumin_moss_wall", 4).setNoiseRange(60, 252),
+    new TileEntry("$EMPTY", 1).setNoiseRange(252, 256),
+];
+
+const TILES_MOONFALL = {
+    top_layer: MOONFALL_LAYER(MOONFALL_BASE, MOONFALL_WALL),
+    middle_layer: MOONFALL_LAYER(MOONFALL_BASE, MOONFALL_WALL),
+    bottom_layer: MOONFALL_LAYER(MOONFALL_BASE, MOONFALL_WALL),
 };
 
 const MOONFALL_SKY = new ColorGradient([
@@ -207,11 +209,21 @@ export default [
             "#1B4A3A",
             MOONFALL_SKY,
             MOONFALL_LIGHT,
-            TILES_LUMIN_MOSS,
+            TILES_MOONFALL,
         )
             .setMusic([
                 new Sound("phantasia:music/12_hours_at_ease", 0.7),
                 new Sound("phantasia:music/behind", 0.6),
+            ])
+            .setFoliage([
+                new BiomeFoliage("phantasia:lumin_sprouts", 0.3).setGenerateOn([
+                    "phantasia:lumin_moss",
+                    "phantasia:petrilumin",
+                ]),
+                new BiomeFoliage("phantasia:lumin_blossom", 0.08).setGenerateOn([
+                    "phantasia:lumin_moss",
+                    "phantasia:petrilumin",
+                ]),
             ]),
     ),
 ];

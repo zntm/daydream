@@ -42,7 +42,7 @@ const processExports = async (dir: string, type: string) => {
                 : [datagen]) {
                 const destination = join(
                     __dirname,
-                    `./generated/${dir}/${type}/${d.destination}`,
+                    `../datafiles/resources/${dir}/${type}/${d.destination}`,
                 );
 
                 // Ensure directory exists

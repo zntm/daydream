@@ -155,8 +155,9 @@ function tile_predict(_x, _y, _z)
         var _is_floor = _is_cave && !_is_cave_below;
         if (_is_floor)
         {
-            var _tile_next = worldgen_get_tile_base(_x, _y + 1, _surface_biome, undefined, _surface_height, true, _world_seed, _world_data, _global_biome_data);
-            var _foliage_id = worldgen_get_tile_foliage(_x, _y, _surface_biome, undefined, _tile_next, _surface_height, _world_seed, _global_biome_data);
+            var _cave_biome_foliage = worldgen_get_biome_cave(_x, _y, _surface_height, _world_seed, _world_data);
+            var _tile_next = worldgen_get_tile_base(_x, _y + 1, _surface_biome, _cave_biome_foliage, _surface_height, true, _world_seed, _world_data, _global_biome_data);
+            var _foliage_id = worldgen_get_tile_foliage(_x, _y, _surface_biome, _cave_biome_foliage, _tile_next, _surface_height, _world_seed, _global_biome_data);
             
             if (_foliage_id != TILE_EMPTY)
             {
