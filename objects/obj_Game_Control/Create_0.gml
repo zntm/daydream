@@ -74,6 +74,8 @@ surface_lighting = -1;
 surface_lighting_x = -1;
 surface_lighting_y = -1;
 
+surface_lighting_colour = -1;
+
 surface_inventory = {
     tooltip: {
         surface: -1,
