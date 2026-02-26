@@ -371,14 +371,14 @@ control_chunk_liquid(_delta_time, _player_x, _player_y, _camera_x, _camera_y, _c
 var _tile_x = round(mouse_x / TILE_SIZE);
 var _tile_y = round(mouse_y / TILE_SIZE);
 
-if !(is_opened & IS_OPENED_BOOLEAN.CHAT)
+if !(is_opened & IS_OPENED_BOOLEAN.CHAT) && (_lp.hp > 0)
 {
     control_inventory();
 }
 
 control_chunk_clear(_camera_x, _camera_y, _camera_width, _camera_height);
 
-if !(is_opened & (IS_OPENED_BOOLEAN.MENU | IS_OPENED_BOOLEAN.CHAT))
+if !(is_opened & (IS_OPENED_BOOLEAN.MENU | IS_OPENED_BOOLEAN.CHAT)) && (_lp.hp > 0)
 {
     if (mouse_check_button_pressed(mb_right))
     {
@@ -480,19 +480,19 @@ if (global.gui_root != undefined)
     // Hotbar: visible when GUI is open and not in menu or chat
     if (global.gui_panel_hotbar_modular != undefined)
     {
-        global.gui_panel_hotbar_modular.visible = ((is_opened & IS_OPENED_BOOLEAN.GUI) && !(is_opened & IS_OPENED_BOOLEAN.MENU) && !(is_opened & IS_OPENED_BOOLEAN.CHAT)) || ((is_opened & IS_OPENED_BOOLEAN.INVENTORY) && !(is_opened & IS_OPENED_BOOLEAN.CHAT));
+        global.gui_panel_hotbar_modular.visible = !(is_opened & IS_OPENED_BOOLEAN.GENERATING_WORLD) && (((is_opened & IS_OPENED_BOOLEAN.GUI) && !(is_opened & IS_OPENED_BOOLEAN.MENU) && !(is_opened & IS_OPENED_BOOLEAN.CHAT)) || ((is_opened & IS_OPENED_BOOLEAN.INVENTORY) && !(is_opened & IS_OPENED_BOOLEAN.CHAT)));
     }
     
     // Inventory: visible when inventory is open and chat is not open
     if (global.gui_panel_inventory_modular != undefined)
     {
-        global.gui_panel_inventory_modular.visible = (is_opened & IS_OPENED_BOOLEAN.INVENTORY) && !(is_opened & IS_OPENED_BOOLEAN.CHAT);
+        global.gui_panel_inventory_modular.visible = !(is_opened & IS_OPENED_BOOLEAN.GENERATING_WORLD) && (is_opened & IS_OPENED_BOOLEAN.INVENTORY) && !(is_opened & IS_OPENED_BOOLEAN.CHAT);
     }
     
     // Crafting: visible when inventory is open, chat is not open, and has content
     if (variable_global_exists("gui_panel_crafting_modular")) && (global.gui_panel_crafting_modular != undefined)
     {
-        global.gui_panel_crafting_modular.visible = (is_opened & IS_OPENED_BOOLEAN.INVENTORY) && !(is_opened & IS_OPENED_BOOLEAN.CHAT) && (array_length(global.gui_panel_crafting_modular.children) > 0);
+        global.gui_panel_crafting_modular.visible = !(is_opened & IS_OPENED_BOOLEAN.GENERATING_WORLD) && (is_opened & IS_OPENED_BOOLEAN.INVENTORY) && !(is_opened & IS_OPENED_BOOLEAN.CHAT) && (array_length(global.gui_panel_crafting_modular.children) > 0);
     }
     
     global.ui_input_consumed = false;

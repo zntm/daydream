@@ -24,8 +24,13 @@ function control_gametick(_delta_time)
                 
                 if (timer_respawn <= 0)
                 {
-                    x = spawn_x;
-                    y = spawn_y;
+                    timer_respawn = 0;
+                    
+                    if (variable_instance_exists(id, "spawn_x")) && (variable_instance_exists(id, "spawn_y"))
+                    {
+                        x = spawn_x;
+                        y = spawn_y;
+                    }
                     
                     y_last = y;
                     
@@ -37,7 +42,15 @@ function control_gametick(_delta_time)
                         physics_body.pos_y = y;
                     }
                     
-                    hp = hp_max;
+                    hp     = hp_max;
+                    effects = {};
+                    
+                    timer_immunity = 3;
+                    
+                    if (is_local)
+                    {
+                        obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.HP;
+                    }
                 }
             }
             

@@ -1,5 +1,5 @@
 @area(hotbar_row) {
-    position = ORIGIN_BOTTOM_CENTER + (8, 8)
+    position = ORIGIN_BOTTOM_CENTER + (8, -8)
     size = (160, 16)
     layout = LAYOUT_HORIZONTAL
 

@@ -33,22 +33,29 @@ var _gui_scale_height = _gui_scale * (_gui_height / 540);
 
 if (is_opened & IS_OPENED_BOOLEAN.GENERATING_WORLD)
 {
-    if !(surface_refresh & SURFACE_REFRESH_BOOLEAN.GENERATING_WORLD) || (!surface_exists(surface_pause[0])) || (!surface_exists(surface_pause[1]))
+    if !(surface_refresh & SURFACE_REFRESH_BOOLEAN.GENERATING_WORLD)
     {
         surface_refresh |= SURFACE_REFRESH_BOOLEAN.GENERATING_WORLD;
         
         render_pause();
     }
     
-    var _display_blur = global.settings.display_blur;
-    
-    if (_display_blur > 0)
+    if (surface_exists(surface_pause[1]))
     {
-        gpu_set_texfilter(true);
+        var _display_blur = global.settings.display_blur;
         
-        draw_surface_stretched_ext(surface_pause[@ 1], 0, 0, _gui_width + GUI_PAUSE_BLUR_RESIZE, _gui_height + GUI_PAUSE_BLUR_RESIZE, c_white, _display_blur);
-        
-        gpu_set_texfilter(false);
+        if (_display_blur > 0)
+        {
+            gpu_set_texfilter(true);
+            
+            draw_surface_stretched_ext(surface_pause[@ 1], 0, 0, _gui_width + GUI_PAUSE_BLUR_RESIZE, _gui_height + GUI_PAUSE_BLUR_RESIZE, c_white, _display_blur);
+            
+            gpu_set_texfilter(false);
+        }
+    }
+    else
+    {
+        draw_clear(c_black);
     }
     
     /* spawn loading ui if not yet created */

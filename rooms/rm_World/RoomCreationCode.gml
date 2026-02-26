@@ -70,8 +70,8 @@ if (obj_Game_Control.spawn_needs_init)
     {
         global.current_world.time = _world_data.get_time_start();
         
-        global.current_world.weather.wind  = 1;
-        global.current_world.weather.storm = 1;
+        global.current_world.weather.wind  = 0;
+        global.current_world.weather.storm = 0;
     }
     else
     {
