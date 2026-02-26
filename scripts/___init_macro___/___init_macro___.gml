@@ -82,6 +82,36 @@
 
 #endregion
 
+#region Blendmode
+
+#macro BLENDMODE_NORMAL   gpu_set_blendmode(bm_normal)
+#macro BLENDMODE_ADD      gpu_set_blendmode(bm_add)
+#macro BLENDMODE_SUBTRACT gpu_set_blendmode(bm_subtract)
+#macro BLENDMODE_MAX      gpu_set_blendmode(bm_max)
+
+#macro BLENDMODE_MULTIPLY gpu_set_blendmode_ext(bm_dest_colour, bm_zero)
+#macro BLENDMODE_SCREEN   gpu_set_blendmode_ext(bm_one, bm_inv_src_colour)
+#macro BLENDMODE_GLOW     gpu_set_blendmode_ext(bm_src_alpha, bm_one)
+#macro BLENDMODE_INVERT   gpu_set_blendmode_ext(bm_inv_dest_colour, bm_inv_src_colour)
+#macro BLENDMODE_XOR      gpu_set_blendmode_ext(bm_inv_dest_alpha, bm_inv_src_alpha)
+#macro BLENDMODE_ERASE    gpu_set_blendmode_ext(bm_zero, bm_inv_src_alpha)
+
+/* porter-duff */
+#macro BLENDMODE_SRC_IN   gpu_set_blendmode_ext(bm_dest_alpha, bm_zero)
+#macro BLENDMODE_SRC_OUT  gpu_set_blendmode_ext(bm_inv_dest_alpha, bm_zero)
+#macro BLENDMODE_SRC_ATOP gpu_set_blendmode_ext(bm_dest_alpha, bm_inv_src_alpha)
+#macro BLENDMODE_DST_IN   gpu_set_blendmode_ext(bm_zero, bm_src_alpha)
+#macro BLENDMODE_DST_OUT  gpu_set_blendmode_ext(bm_zero, bm_inv_src_alpha)
+#macro BLENDMODE_DST_ATOP gpu_set_blendmode_ext(bm_inv_dest_alpha, bm_src_alpha)
+
+/* standard blendmode for surfaces to preserve alpha correctly */
+#macro BLENDMODE_SURFACE  gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_src_alpha, bm_one)
+
+/* tint blendmode for colored lighting */
+#macro BLENDMODE_TINT     gpu_set_blendmode_ext(bm_dest_colour, bm_one)
+
+#endregion
+
 #macro GUI_SAFE_ZONE_X 24
 #macro GUI_SAFE_ZONE_Y 24
 

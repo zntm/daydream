@@ -303,7 +303,7 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
     
     if (surface_exists(surface_lighting_colour))
     {
-        gpu_set_blendmode(bm_add);
+        BLENDMODE_TINT;
         
         var _x2 = _surface_x - RENDER_LIGHTING_PADDING - (RENDER_LIGHTING_PADDING / 2) + TILE_SIZE;
         var _y2 = _surface_y - RENDER_LIGHTING_PADDING - (RENDER_LIGHTING_PADDING / 2) + TILE_SIZE;
@@ -317,9 +317,9 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
         gpu_set_tex_filter(false);
     }
     
-    // draw_sprite_ext(spr_Square, 0, _camera_x, _camera_y, _camera_width + _camera_width, _camera_y + _camera_height, 0, obj_Game_Control_Background.light_colour, 1);
+    BLENDMODE_SURFACE;
     
-    gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_src_alpha, bm_one);
+    exit;
 }
 
 /*
