@@ -168,10 +168,10 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
             var _xdraw = _xf + 0.5;
             var _ydraw = _yf + 8 - 1 + 0.5;
             
-            draw_sprite_ext(spr_Light, 0, _xdraw + 1, _ydraw, 1, 1, 0, c_white,      (_xnormalized) * 0.5);
+            draw_sprite_ext(spr_Light, 0, _xdraw + 1, _ydraw, 1, 1, 0, c_white,     (_xnormalized) * 0.5);
             draw_sprite_ext(spr_Light, 0, _xdraw - 1, _ydraw, 1, 1, 0, c_white, (1 - _xnormalized) * 0.5);
             
-            draw_sprite_ext(spr_Light, 0, _xdraw, _ydraw + 1, 1, 1, 0, c_white,      (_ynormalized) * 0.5);
+            draw_sprite_ext(spr_Light, 0, _xdraw, _ydraw + 1, 1, 1, 0, c_white,     (_ynormalized) * 0.5);
             draw_sprite_ext(spr_Light, 0, _xdraw, _ydraw - 1, 1, 1, 0, c_white, (1 - _ynormalized) * 0.5);
         }
         */
@@ -200,10 +200,10 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
                 var _xdraw = _xf + 0.5;
                 var _ydraw = _yf + 8 + 0.5;
                 
-                draw_sprite_ext(spr_Light, 0, _xdraw + 1, _ydraw, 1, 1, 0, _light.image_blend,      (_xnormalized) * 0.5);
+                draw_sprite_ext(spr_Light, 0, _xdraw + 1, _ydraw, 1, 1, 0, _light.image_blend,     (_xnormalized) * 0.5);
                 draw_sprite_ext(spr_Light, 0, _xdraw - 1, _ydraw, 1, 1, 0, _light.image_blend, (1 - _xnormalized) * 0.5);
                 
-                draw_sprite_ext(spr_Light, 0, _xdraw, _ydraw + 1, 1, 1, 0, _light.image_blend,      (_ynormalized) * 0.5);
+                draw_sprite_ext(spr_Light, 0, _xdraw, _ydraw + 1, 1, 1, 0, _light.image_blend,     (_ynormalized) * 0.5);
                 draw_sprite_ext(spr_Light, 0, _xdraw, _ydraw - 1, 1, 1, 0, _light.image_blend, (1 - _ynormalized) * 0.5);
             }
         }
@@ -236,10 +236,10 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
             var _xdraw = _xf + 0.5;
             var _ydraw = _yf + 8 - 1 + 0.5;
             
-            draw_sprite_ext(spr_Light, 0, _xdraw + 1, _ydraw, 1, 1, 0, c_white,      (_xnormalized) * 0.5);
+            draw_sprite_ext(spr_Light, 0, _xdraw + 1, _ydraw, 1, 1, 0, c_white,     (_xnormalized) * 0.5);
             draw_sprite_ext(spr_Light, 0, _xdraw - 1, _ydraw, 1, 1, 0, c_white, (1 - _xnormalized) * 0.5);
             
-            draw_sprite_ext(spr_Light, 0, _xdraw, _ydraw + 1, 1, 1, 0, c_white,      (_ynormalized) * 0.5);
+            draw_sprite_ext(spr_Light, 0, _xdraw, _ydraw + 1, 1, 1, 0, c_white,     (_ynormalized) * 0.5);
             draw_sprite_ext(spr_Light, 0, _xdraw, _ydraw - 1, 1, 1, 0, c_white, (1 - _ynormalized) * 0.5);
         }
         */
@@ -268,10 +268,10 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
                 var _xdraw = _xf + 0.5;
                 var _ydraw = _yf + 8 + 0.5;
                 
-                draw_sprite_ext(spr_Light, 0, _xdraw + 1, _ydraw, 1, 1, 0, _light.image_blend,      (_xnormalized) * 0.5);
+                draw_sprite_ext(spr_Light, 0, _xdraw + 1, _ydraw, 1, 1, 0, _light.image_blend,     (_xnormalized) * 0.5);
                 draw_sprite_ext(spr_Light, 0, _xdraw - 1, _ydraw, 1, 1, 0, _light.image_blend, (1 - _xnormalized) * 0.5);
                 
-                draw_sprite_ext(spr_Light, 0, _xdraw, _ydraw + 1, 1, 1, 0, _light.image_blend,      (_ynormalized) * 0.5);
+                draw_sprite_ext(spr_Light, 0, _xdraw, _ydraw + 1, 1, 1, 0, _light.image_blend,     (_ynormalized) * 0.5);
                 draw_sprite_ext(spr_Light, 0, _xdraw, _ydraw - 1, 1, 1, 0, _light.image_blend, (1 - _ynormalized) * 0.5);
             }
         }
