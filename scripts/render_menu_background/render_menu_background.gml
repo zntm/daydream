@@ -1,6 +1,6 @@
 function render_menu_background(_id, _colour)
 {
-    BLENDMODE_TINT;
+    gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_src_alpha, bm_one);
     
     static __u_colour = shader_get_uniform(shd_Background, "u_colour");
     static __u_strength = shader_get_uniform(shd_Background, "u_strength");
@@ -51,9 +51,9 @@ function render_menu_background(_id, _colour)
         shader_reset();
     }
     
-    BLENDMODE_MULTIPLY;
+    gpu_set_blendmode_ext(bm_dest_colour, bm_zero);
     
     draw_sprite_ext(spr_Square, 0, 0, 0, room_width, room_height, 0, _light_colour, 1);
     
-    BLENDMODE_NORMAL;
+    gpu_set_blendmode(bm_normal);
 }

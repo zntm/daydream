@@ -1,4 +1,4 @@
-BLENDMODE_ADD;
+gpu_set_blendmode(bm_add);
 
 var _halign = draw_get_halign();
 var _valign = draw_get_valign();
@@ -22,7 +22,7 @@ for (var i = 0; i < glow_length; ++i)
     draw_glow(((dsin(_glow.value) + 1) / 2) * room_width, room_height, _glow.scale, _colour, 1);
 }
 
-BLENDMODE_TINT;
+gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_src_alpha, bm_one);
 
 var _string_height = font_get_size(draw_get_font()) + 8;
 
@@ -70,4 +70,4 @@ draw_vignette(0, 0, room_width, room_height, c_black, 0.5);
 
 draw_set_align(_halign, _valign);
 
-BLENDMODE_NORMAL;
+gpu_set_blendmode(bm_normal);

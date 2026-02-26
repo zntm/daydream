@@ -5,7 +5,7 @@ var _window_height = global.window_height;
 
 if (_window_width <= 0) || (_window_height <= 0) exit;
 
-BLENDMODE_TINT;
+gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_src_alpha, bm_one);
 
 var _camera_x = global.camera_x;
 var _camera_y = global.camera_y;
@@ -169,4 +169,4 @@ if (keyboard_check_pressed(vk_f2))
     surface_free(_surface);
 }
 
-BLENDMODE_NORMAL;
+gpu_set_blendmode(bm_normal);

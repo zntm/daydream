@@ -3,7 +3,7 @@ var _window_height = global.window_height;
 
 if (_window_width <= 0) || (_window_height <= 0) exit;
 
-BLENDMODE_TINT;
+gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_src_alpha, bm_one);
 
 var _lp = noone;
 with (obj_Player) { if (is_local) { _lp = id; break; } }
@@ -219,6 +219,6 @@ if (is_opened & IS_OPENED_BOOLEAN.GUI)
     }
 }
 
-BLENDMODE_NORMAL;
+gpu_set_blendmode(bm_normal);
 
 ui_editor_draw();

@@ -30,7 +30,7 @@ function render_particles_batch()
 
     var _pool_size = _pool.pool_size;
     
-    BLENDMODE_ADD;
+    gpu_set_blendmode(bm_add);
     
     for (var i = 0; i < _pool_size; ++i)
     {
@@ -53,7 +53,7 @@ function render_particles_batch()
         );
     }
     
-    BLENDMODE_TINT;
+    gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_src_alpha, bm_one);
     
     for (var i = 0; i < _pool_size; ++i)
     {
@@ -76,5 +76,5 @@ function render_particles_batch()
         );
     }
     
-    BLENDMODE_NORMAL;
+    gpu_set_blendmode(bm_normal);
 }
