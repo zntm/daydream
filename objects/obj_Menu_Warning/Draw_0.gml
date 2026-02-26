@@ -1,6 +1,6 @@
 var _delta_time = global.delta_time;
 
-gpu_set_blendmode(bm_add);
+BLENDMODE_ADD;
 
 for (var i = 0; i < glow_length; ++i)
 {
@@ -9,7 +9,7 @@ for (var i = 0; i < glow_length; ++i)
     draw_glow(_glow.x, _glow.y, _glow.scale, _glow.colour, 1);
 }
 
-gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_src_alpha, bm_one);
+BLENDMODE_TINT;
 
 var _loca_font_scale = global.loca_font_scale;
 
@@ -24,4 +24,4 @@ draw_set_align(fa_center, fa_middle);
 render_text(_x, _y, text_header, 4, 4);
 render_text(_x, _y + (_header_height / 2) + 8, text_description);
 
-gpu_set_blendmode(bm_normal);
+BLENDMODE_NORMAL;

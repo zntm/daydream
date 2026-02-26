@@ -122,11 +122,11 @@ function PostProcess() constructor
             
             _pass.uniforms_fn();
             
-            gpu_set_blendmode_ext(bm_one, bm_zero);
+            BLENDMODE_MULTIPLY;
             
             draw_surface(_src, 0, 0);
             
-            gpu_set_blendmode(bm_normal);
+            BLENDMODE_NORMAL;
             
             shader_reset();
             surface_reset_target();
@@ -152,11 +152,11 @@ function PostProcess() constructor
         
         draw_clear_alpha(c_black, 0);
         
-        gpu_set_blendmode_ext(bm_one, bm_zero);
+        BLENDMODE_MULTIPLY;
         
         draw_surface_stretched(_src, _cam_x, _cam_y, _cam_w, _cam_h);
         
-        gpu_set_blendmode(bm_normal);
+        BLENDMODE_NORMAL;
         
         /* restore original target if something else was active before */
         if (_old_target != -1) && (_old_target != application_surface)

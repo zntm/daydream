@@ -42,7 +42,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
         
         // Ensure blending is enabled for fade effect
         gpu_set_blendenable(true);
-        gpu_set_blendmode(bm_normal);
+        BLENDMODE_NORMAL;
         
         // properties
         if (array_length(global.chunk_pool.fading_chunks) > 0)
@@ -271,7 +271,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 }
             }
             
-            gpu_set_blendmode(bm_add);
+            BLENDMODE_ADD;
             
             with (obj_Projectile)
             {
@@ -295,7 +295,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 draw_sprite_ext(_sprite.get_sprite(), _index, x + (_xscale * (_sprite.get_xoffset() - (attribute.get_collision_box_width() / 2))), y + (_yscale * (_sprite.get_yoffset() - attribute.get_collision_box_height())), _xscale, _yscale, image_angle, image_blend, image_alpha * ((_bool & PROJECTILE_BOOLEAN.FADE_OUT) ? timer_life / timer_life_max : 1));
             }
             
-            gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_src_alpha, bm_one);
+            BLENDMODE_TINT;
             
             with (obj_Projectile)
             {
