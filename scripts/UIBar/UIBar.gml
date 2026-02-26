@@ -24,7 +24,7 @@ function UIBar(_x, _y, _width, _height, _min, _max, _value) : UIElement(_x, _y, 
     
     colour = #4aff4a;
     
-    border_color = #3a3a4a;
+    border_color = undefined;
     
     
     /* animation */
