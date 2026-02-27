@@ -312,7 +312,9 @@ timer_network_sync = 0;
 timer_auto_backup = BACKUP_INTERVAL_SECONDS;
 global.async_save_map = {}
 
+inventory_give(obj_Player.x, obj_Player.y, new Inventory("phantasia:copper_bow", 1))
 inventory_give(obj_Player.x, obj_Player.y, new Inventory("phantasia:arrow", 999))
+inventory_give(obj_Player.x, obj_Player.y, new Inventory("phantasia:oak_chest", 999))
 
 /* register colorgrade pass once */
 __colorgrade_pass_registered = false;

@@ -26,7 +26,10 @@
                     ]
                 }
             },
-            "sfx": "#phantasia:tile/sfx/wood"
+            "sfx": "#phantasia:tile/sfx/wood",
+            "container": {
+                "length": 20
+            }
         }
     },
     "sprite": "phantasia:item/oak_chest",

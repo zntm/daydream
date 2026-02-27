@@ -688,6 +688,13 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
                 set_falling(_falling);
             }
             
+            var _container = _tile[$ "container"];
+            
+            if (_container != undefined)
+            {
+                set_container(_container);
+            }
+            
             /*
             ___tile_is_visible = _tile[$ "is_visible"];
             
@@ -1386,10 +1393,7 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
         return self[$ "___tile_inventory_length"] ?? 0;
     }
     
-    static get_container_length = function()
-    {
-        return self[$ "___tile_inventory_length"] ?? self[$ "___item_inventory_length"] ?? 0;
-    }
+
     
     static set_inventory_slot_sprite = function(_sprite)
     {

@@ -12,23 +12,19 @@ function inventory_get_nearby_containers(_x, _y, _range)
     {
         var _c = chunk_in_view[i];
         
-        if (_c == undefined) || !(_c.boolean & CHUNK_BOOLEAN.GENERATED) continue;
+        if (_c == undefined) || !(_c.boolean & CHUNK_BOOL.GENERATED) continue;
         
         var _containers = _c.chunk_containers;
-        var _container_count = array_length(_containers);
         
-        for (var j = 0; j < _container_count; ++j)
+        for (var j = array_length(_containers) - 1; j >= 0; --j)
         {
-            var _coords = _containers[j];
-            var _cx = (_coords & CHUNK_SIZE_MASK) * TILE_SIZE + _c.x;
-            var _cy = ((_coords >> CHUNK_SIZE_BIT) & CHUNK_SIZE_MASK) * TILE_SIZE + _c.y;
+            var _container = _containers[j];
             
-            var _dist_sq = point_distance_sq(_x, _y, _cx, _cy);
+            var _dist_sq = point_distance_sq(_x, _y, _container.x, _container.y);
             
             if (_dist_sq <= _range_sq)
             {
-                var _cz = (_coords >> (CHUNK_SIZE_BIT * 2));
-                var _tile = tile_get(_x_to_tile(_cx), _y_to_tile(_cy), _cz);
+                var _tile = tile_get(_container.tile_x, _container.tile_y, _container.tile_z);
                 
                 if (_tile != undefined)
                 {

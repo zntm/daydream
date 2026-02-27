@@ -76,7 +76,7 @@ function tile_place(_x, _y, _z, _tile)
     {
         var _instance_crafting_station = _tile_before.get_instance_crafting_station();
         
-        if (instance_exists(_instance_crafting_station))
+        if (is_struct(_instance_crafting_station))
         {
             var _index_inst = array_get_index(_chunk.chunk_crafting_stations, _instance_crafting_station);
             
@@ -88,7 +88,7 @@ function tile_place(_x, _y, _z, _tile)
         
         var _instance_container = _tile_before.get_instance_container();
         
-        if (instance_exists(_instance_container))
+        if (is_struct(_instance_container))
         {
             var _index_inst = array_get_index(_chunk.chunk_containers, _instance_container);
             
@@ -100,7 +100,7 @@ function tile_place(_x, _y, _z, _tile)
         
         var _instance_light = _tile_before.get_instance_light();
         
-        if (instance_exists(_instance_light))
+        if (is_struct(_instance_light))
         {
             var _index_inst = array_get_index(_chunk.chunk_lights, _instance_light);
             

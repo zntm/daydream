@@ -143,7 +143,7 @@ function UISlot(_x, _y) : UIElement(_x, _y, 16, 16) constructor
                     var _source_list = _inv[$ inventory_name];
                     
                     
-                    if (_source_list != undefined) 
+                    if (_source_list != undefined) && (slot_index < array_length(_source_list))
                     {
                         var _item = _source_list[slot_index];
                         
@@ -237,6 +237,8 @@ function UISlot(_x, _y) : UIElement(_x, _y, 16, 16) constructor
         
         if (_inventory == undefined) exit;
         
+        
+        if (slot_index >= array_length(_inventory)) exit;
         
         var _item = _inventory[slot_index];
         

@@ -58,7 +58,7 @@ function control_inventory()
         {
             for (var _cy = -CHUNK_SIZE; _cy <= CHUNK_SIZE; ++_cy)
             {
-                var _chunk = chunk_map_get((_chunk_x + _cx) * TILE_SIZE, (_chunk_y + _cy) * TILE_SIZE);
+                var _chunk = chunk_map_get((_chunk_x + _cx) * CHUNK_SIZE_DIMENSION, (_chunk_y + _cy) * CHUNK_SIZE_DIMENSION);
                 
                 if (_chunk == undefined) continue;
                 

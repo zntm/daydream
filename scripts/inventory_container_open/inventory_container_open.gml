@@ -50,7 +50,12 @@ function inventory_container_open(_x, _y, _inst)
             
             if (global.ui_inventory_container != undefined)
             {
-                ui_instance_destroy(global.ui_inventory_container);
+                var _prev = global.ui_inventory_container;
+                
+                if (struct_exists(_prev, "parent") && _prev.parent != undefined)
+                {
+                    _prev.parent.remove_child(_prev);
+                }
             }
             
             var _rows = ceil(_container_length / INVENTORY_LENGTH.ROW);
@@ -59,7 +64,7 @@ function inventory_container_open(_x, _y, _inst)
             var _panel_w = _cols * 16;
             var _panel_h = _rows * 16;
             
-            var _container_ui = new UIContainer(0, -(_panel_h + 8), _panel_w, _panel_h);
+            var _container_ui = new UIArea(0, -(_panel_h + 8), _panel_w, _panel_h);
             _container_ui.set_anchor("center", "bottom");
             
             for (var i = 0; i < _container_length; ++i)

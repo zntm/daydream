@@ -229,6 +229,11 @@ function Tile(_id, _item_data = global.item_data) constructor
     
     var _inventory_length = _data.get_tile_inventory_length();
     
+    if (_inventory_length <= 0)
+    {
+        _inventory_length = _data.get_container_length();
+    }
+    
     if (_inventory_length > 0)
     {
         ___inventory = array_create(_inventory_length, INVENTORY_EMPTY);

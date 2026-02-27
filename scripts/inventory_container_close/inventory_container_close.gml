@@ -12,11 +12,19 @@ function inventory_container_close()
     
     _tile.set_index(0);
 	
-	inventory_resize("_container", 0);
+	global.inventory._container = [];
+    global.inventory_instance._container = [];
+    global.inventory_length._container = 0;
     
     if (variable_global_exists("ui_inventory_container") && global.ui_inventory_container != undefined)
     {
-        ui_instance_destroy(global.ui_inventory_container);
+        var _container = global.ui_inventory_container;
+        
+        if (struct_exists(_container, "parent") && _container.parent != undefined)
+        {
+            _container.parent.remove_child(_container);
+        }
+        
         global.ui_inventory_container = undefined;
     }
 
