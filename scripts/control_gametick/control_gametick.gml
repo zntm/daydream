@@ -49,7 +49,7 @@ function control_gametick(_delta_time)
                     
                     if (is_local)
                     {
-                        obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.HP;
+                        obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOL.HP;
                     }
                 }
             }
@@ -62,7 +62,7 @@ function control_gametick(_delta_time)
                 control_camera_pos(_camera_x, _camera_y, true);
             }
             
-            if (is_local) && !(obj_Game_Control.is_opened & (IS_OPENED_BOOLEAN.MENU | IS_OPENED_BOOLEAN.CHAT | IS_OPENED_BOOLEAN.INVENTORY))
+            if (is_local) && !(obj_Game_Control.is_opened & (WORLD_OPENED_BOOL.MENU | WORLD_OPENED_BOOL.CHAT | WORLD_OPENED_BOOL.INVENTORY))
             {
                 var _tx = round(mouse_x / TILE_SIZE);
                 var _ty = round(mouse_y / TILE_SIZE);
@@ -115,7 +115,7 @@ function control_gametick(_delta_time)
         {
             var _c = chunk_in_view[i];
             
-            if (_c == undefined) || !(_c.boolean & CHUNK_BOOLEAN.GENERATED) continue;
+            if (_c == undefined) || !(_c.boolean & CHUNK_BOOL.GENERATED) continue;
             
             var _chunk_xstart = _c.chunk_xstart;
             var _chunk_ystart = _c.chunk_ystart;

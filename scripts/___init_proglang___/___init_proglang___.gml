@@ -289,15 +289,15 @@ global.proglang_macros[$ "WORLD_TIME"] = function()
     return global.current_world.time;
 }
 
-global.proglang_macros[$ "IS_OPENED_BOOLEAN"] = {
-    GENERATING_WORLD:    IS_OPENED_BOOLEAN.GENERATING_WORLD,
-    GUI:                 IS_OPENED_BOOLEAN.GUI,
-    INVENTORY:           IS_OPENED_BOOLEAN.INVENTORY,
-    INVENTORY_CONTAINER: IS_OPENED_BOOLEAN.INVENTORY_CONTAINER,
-    PAUSE:               IS_OPENED_BOOLEAN.PAUSE,
-    MENU:                IS_OPENED_BOOLEAN.MENU,
-    EXIT:                IS_OPENED_BOOLEAN.EXIT,
-    CHAT:                IS_OPENED_BOOLEAN.CHAT,
+global.proglang_macros[$ "WORLD_OPENED_BOOL"] = {
+    GENERATING_WORLD:    WORLD_OPENED_BOOL.GENERATING_WORLD,
+    GUI:                 WORLD_OPENED_BOOL.GUI,
+    INVENTORY:           WORLD_OPENED_BOOL.INVENTORY,
+    INVENTORY_CONTAINER: WORLD_OPENED_BOOL.INVENTORY_CONTAINER,
+    PAUSE:               WORLD_OPENED_BOOL.PAUSE,
+    MENU:                WORLD_OPENED_BOOL.MENU,
+    EXIT:                WORLD_OPENED_BOOL.EXIT,
+    CHAT:                WORLD_OPENED_BOOL.CHAT,
 }
 
 global.proglang_macros[$ "FS"] = {

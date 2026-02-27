@@ -87,7 +87,7 @@ if (obj_Game_Control.spawn_needs_init)
     }
     
     // Refresh lighting surface with correct position
-    obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.LIGHTING;
+    obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOL.LIGHTING;
     
     // Update sky and light colours based on initialized time
     var _lp = noone;

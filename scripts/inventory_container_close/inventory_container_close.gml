@@ -1,8 +1,8 @@
 function inventory_container_close()
 {
-    if !(obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.INVENTORY_CONTAINER) exit;
+    if !(obj_Game_Control.is_opened & WORLD_OPENED_BOOL.INVENTORY_CONTAINER) exit;
     
-    obj_Game_Control.is_opened ^= IS_OPENED_BOOLEAN.INVENTORY_CONTAINER;
+    obj_Game_Control.is_opened ^= WORLD_OPENED_BOOL.INVENTORY_CONTAINER;
     
     var _x = obj_Game_Control.tile_container_x;
     var _y = obj_Game_Control.tile_container_y;
@@ -13,6 +13,12 @@ function inventory_container_close()
     _tile.set_index(0);
 	
 	inventory_resize("_container", 0);
+    
+    if (variable_global_exists("ui_inventory_container") && global.ui_inventory_container != undefined)
+    {
+        ui_instance_destroy(global.ui_inventory_container);
+        global.ui_inventory_container = undefined;
+    }
 
     if (global.network_role == RELAY_ROLE.CLIENT)
     {

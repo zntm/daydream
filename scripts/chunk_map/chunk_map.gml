@@ -23,6 +23,7 @@ function chunk_map_key(_x, _y)
 function chunk_map_get(_x, _y)
 {
     var _key = chunk_map_key(_x, _y);
+    
     return global.chunk_map[$ _key];
 }
 
@@ -42,6 +43,7 @@ function chunk_map_get_by_tile(_tile_x, _tile_y)
 function chunk_map_register(_chunk)
 {
     var _key = chunk_map_key(_chunk.x, _chunk.y);
+    
     global.chunk_map[$ _key] = _chunk;
 }
 
@@ -69,6 +71,7 @@ function chunk_map_clear()
 function chunk_map_exists(_x, _y)
 {
     var _key = chunk_map_key(_x, _y);
+    
     return struct_exists(global.chunk_map, _key);
 }
 
@@ -77,13 +80,13 @@ function chunk_map_exists(_x, _y)
 /// @returns {array} Array of Chunk structs
 function chunk_map_get_all()
 {
-    var _keys = struct_get_names(global.chunk_map);
-    var _count = array_length(_keys);
-    var _chunks = array_create(_count);
+    var _names = struct_get_names(global.chunk_map);
     
-    for (var i = 0; i < _count; ++i)
+    var _chunks = [];
+    
+    for (var i = array_length(_names) - 1; i >= 0; --i)
     {
-        _chunks[i] = global.chunk_map[$ _keys[i]];
+        _chunks[@ i] = global.chunk_map[$ _names[i]];
     }
     
     return _chunks;

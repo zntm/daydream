@@ -212,7 +212,7 @@ function control_creature()
     control_entity_sfx();
     control_entity_suffocation(id);
     
-    if (attribute.has_boolean(ATTRIBUTE_BOOLEAN.HAS_REGENERATION))
+    if (attribute.has_boolean(ATTRIBUTE_BOOL.HAS_REGENERATION))
     {
         control_entity_regeneration(_dt_normalized);
     }
@@ -412,7 +412,7 @@ function creature_handle_fall_damage()
             var _difference = max(0, y - y_last - (TILE_SIZE * 8));
             var _value = floor(power(floor(_difference / TILE_SIZE) * 0.62, 1.25));
             
-            if (_value > 0 && !attribute.has_boolean(ATTRIBUTE_BOOLEAN.IS_FALL_DAMAGE_RESISTANT))
+            if (_value > 0 && !attribute.has_boolean(ATTRIBUTE_BOOL.IS_FALL_DAMAGE_RESISTANT))
             {
                 hp -= _value;
                 y_last = y;

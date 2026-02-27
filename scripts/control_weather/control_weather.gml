@@ -89,7 +89,7 @@ function control_weather_tick(_dt, _camera_x, _camera_y, _camera_w, _camera_h)
     {
         var _c = chunk_in_view[i];
 
-        if (_c == undefined) || !(_c.boolean & CHUNK_BOOLEAN.GENERATED) continue;
+        if (_c == undefined) || !(_c.boolean & CHUNK_BOOL.GENERATED) continue;
 
         var _lights        = _c.chunk_lights;
         var _lights_length = array_length(_lights);

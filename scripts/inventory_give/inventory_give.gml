@@ -87,7 +87,7 @@ function inventory_give(_x, _y, _item, _inventory_target = global.inventory, _te
         // Only show UI feedback if we modified the local player's inventory (global.inventory)
         if (_inventory_target == global.inventory)
         {
-            obj_Game_Control.surface_refresh |= ((obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.INVENTORY) ? SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK : SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR);
+            obj_Game_Control.surface_refresh |= ((obj_Game_Control.is_opened & WORLD_OPENED_BOOL.INVENTORY) ? SURFACE_REFRESH_BOOL.INVENTORY_BACKPACK : SURFACE_REFRESH_BOOL.INVENTORY_HOTBAR);
             
             if (_text)
             {

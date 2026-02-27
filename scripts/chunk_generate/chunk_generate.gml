@@ -339,5 +339,5 @@ function chunk_generate(_chunk, _context = undefined)
             }
         }
     }
-    obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.LIGHTING;
+    obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOL.LIGHTING;
 }

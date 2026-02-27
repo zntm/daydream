@@ -31,11 +31,11 @@ var _gui_scale = global.gui_scale;
 var _gui_scale_width  = _gui_scale * (_gui_width  / 960);
 var _gui_scale_height = _gui_scale * (_gui_height / 540);
 
-if (is_opened & IS_OPENED_BOOLEAN.GENERATING_WORLD)
+if (is_opened & WORLD_OPENED_BOOL.GENERATING_WORLD)
 {
-    if !(surface_refresh & SURFACE_REFRESH_BOOLEAN.GENERATING_WORLD)
+    if !(surface_refresh & SURFACE_REFRESH_BOOL.GENERATING_WORLD)
     {
-        surface_refresh |= SURFACE_REFRESH_BOOLEAN.GENERATING_WORLD;
+        surface_refresh |= SURFACE_REFRESH_BOOL.GENERATING_WORLD;
         
         render_pause();
     }
@@ -94,11 +94,11 @@ if (is_opened & IS_OPENED_BOOLEAN.GENERATING_WORLD)
     exit;
 }
 
-if (is_opened & (IS_OPENED_BOOLEAN.PAUSE | IS_OPENED_BOOLEAN.EXIT))
+if (is_opened & (WORLD_OPENED_BOOL.PAUSE | WORLD_OPENED_BOOL.EXIT))
 {
-    if !(surface_refresh & SURFACE_REFRESH_BOOLEAN.PAUSE) || (!surface_exists(surface_pause[0])) || (!surface_exists(surface_pause[1]))
+    if !(surface_refresh & SURFACE_REFRESH_BOOL.PAUSE) || (!surface_exists(surface_pause[0])) || (!surface_exists(surface_pause[1]))
     {
-        surface_refresh |= SURFACE_REFRESH_BOOLEAN.PAUSE;
+        surface_refresh |= SURFACE_REFRESH_BOOL.PAUSE;
         
         render_pause();
     }
@@ -139,7 +139,7 @@ var _hp     = _lp.hp;
 var _hp_max = _lp.hp_max;
 
 /* only draw HUD elements when GUI is toggled on */
-if (is_opened & IS_OPENED_BOOLEAN.GUI)
+if (is_opened & WORLD_OPENED_BOOL.GUI)
 {
     render_hud(_gui_width, _gui_height);
     
@@ -197,7 +197,7 @@ if (is_opened & IS_OPENED_BOOLEAN.GUI)
     }
     
     // Display held item name
-    if !(is_opened & IS_OPENED_BOOLEAN.INVENTORY)
+    if !(is_opened & WORLD_OPENED_BOOL.INVENTORY)
     {
         var _item = global.inventory.base[global.inventory_selected_hotbar];
         

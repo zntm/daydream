@@ -1,4 +1,4 @@
-enum CUTEIFY_BOOLEAN {
+enum CUTEIFY_BOOL {
     OBSTRUCT = 1,
     UNDERLINE = 2
 }
@@ -138,14 +138,14 @@ function draw_text_cuteify(_x, _y, _string, _xscale = 1, _yscale = 1, _angle = 0
             
             if (_type == CUTEIFY_TYPE.OBSTRUCT)
             {
-                _boolean ^= CUTEIFY_BOOLEAN.OBSTRUCT;
+                _boolean ^= CUTEIFY_BOOL.OBSTRUCT;
                 
                 continue;
             }
             
             if (_type == CUTEIFY_TYPE.UNDERLINE)
             {
-                _boolean ^= CUTEIFY_BOOLEAN.UNDERLINE;
+                _boolean ^= CUTEIFY_BOOL.UNDERLINE;
                 
                 continue;
             }
@@ -169,7 +169,7 @@ function draw_text_cuteify(_x, _y, _string, _xscale = 1, _yscale = 1, _angle = 0
             var _xoffset_cos = _xoffset * _cos;
             var _xoffset_sin = _xoffset * _sin;
             
-            if (_boolean & CUTEIFY_BOOLEAN.OBSTRUCT)
+            if (_boolean & CUTEIFY_BOOL.OBSTRUCT)
             {
                 var _xstart = _x + (_yoffset * _cos_90);
                 var _ystart = _y + (_yoffset * _sin_90);
@@ -286,7 +286,7 @@ function draw_text_cuteify(_x, _y, _string, _xscale = 1, _yscale = 1, _angle = 0
                 }
             }
             
-            if (_boolean & CUTEIFY_BOOLEAN.UNDERLINE)
+            if (_boolean & CUTEIFY_BOOL.UNDERLINE)
             {
                 var _yoffset2_cos = _x + ((_yoffset + _string_height) * _cos_90);
                 var _yoffset2_sin = _y + ((_yoffset + _string_height) * _sin_90);

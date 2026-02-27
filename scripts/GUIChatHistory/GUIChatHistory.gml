@@ -25,7 +25,7 @@ function GUIChatHistory(_x, _y, _width, _height, _max_messages = 8) : UIElement(
         var _chat_history = global.chat_history;
         var _length = min(array_length(_chat_history), max_messages);
         
-        var _is_chat_open = (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.CHAT);
+        var _is_chat_open = (obj_Game_Control.is_opened & WORLD_OPENED_BOOL.CHAT);
         
         for (var i = 0; i < _length; ++i)
         {

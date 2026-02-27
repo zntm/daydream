@@ -1,8 +1,8 @@
-if (obj_Game_Control.is_opened & (IS_OPENED_BOOLEAN.GENERATING_WORLD | IS_OPENED_BOOLEAN.EXIT)) exit;
+if (obj_Game_Control.is_opened & (WORLD_OPENED_BOOL.GENERATING_WORLD | WORLD_OPENED_BOOL.EXIT)) exit;
 
 if (global.window_width <= 0) || (global.window_height <= 0)
 {
-    is_opened |= IS_OPENED_BOOLEAN.PAUSE;
+    is_opened |= WORLD_OPENED_BOOL.PAUSE;
     
     with (obj_Menu_Anchor)
     {
@@ -24,9 +24,9 @@ if (global.window_width <= 0) || (global.window_height <= 0)
         y = -1000;
     }
     
-    if (is_opened & IS_OPENED_BOOLEAN.MENU)
+    if (is_opened & WORLD_OPENED_BOOL.MENU)
     {
-        is_opened ^= IS_OPENED_BOOLEAN.MENU;
+        is_opened ^= WORLD_OPENED_BOOL.MENU;
         
         var _layer = layer_get_id("Menu_Item");
         
@@ -41,7 +41,7 @@ if (global.window_width <= 0) || (global.window_height <= 0)
     
     control_instance_pause();
 }
-else if (keyboard_check_pressed(global.settings.input_keyboard_pause) && !(is_opened & IS_OPENED_BOOLEAN.CHAT))
+else if (keyboard_check_pressed(global.settings.input_keyboard_pause) && !(is_opened & WORLD_OPENED_BOOL.CHAT))
 {
     with (obj_Menu_Anchor)
     {
@@ -63,9 +63,9 @@ else if (keyboard_check_pressed(global.settings.input_keyboard_pause) && !(is_op
         y = -1000;
     }
     
-    if (is_opened & IS_OPENED_BOOLEAN.MENU)
+    if (is_opened & WORLD_OPENED_BOOL.MENU)
     {
-        is_opened ^= IS_OPENED_BOOLEAN.MENU;
+        is_opened ^= WORLD_OPENED_BOOL.MENU;
         
         var _layer = layer_get_id("Menu_Item");
         
@@ -79,15 +79,15 @@ else if (keyboard_check_pressed(global.settings.input_keyboard_pause) && !(is_op
     }
     else
     {
-        is_opened ^= IS_OPENED_BOOLEAN.PAUSE;
+        is_opened ^= WORLD_OPENED_BOOL.PAUSE;
         
-        if (is_opened & IS_OPENED_BOOLEAN.PAUSE)
+        if (is_opened & WORLD_OPENED_BOOL.PAUSE)
         {
             control_instance_pause();
             
-            if (surface_refresh & SURFACE_REFRESH_BOOLEAN.PAUSE)
+            if (surface_refresh & SURFACE_REFRESH_BOOL.PAUSE)
             {
-                surface_refresh ^= SURFACE_REFRESH_BOOLEAN.PAUSE;
+                surface_refresh ^= SURFACE_REFRESH_BOOL.PAUSE;
             }
             
             /* spawn pause ui */
@@ -110,7 +110,7 @@ else if (keyboard_check_pressed(global.settings.input_keyboard_pause) && !(is_op
                     {
                         _btn_resume.add_event_handler("on_select_release", function()
                         {
-                            obj_Game_Control.is_opened ^= IS_OPENED_BOOLEAN.PAUSE;
+                            obj_Game_Control.is_opened ^= WORLD_OPENED_BOOL.PAUSE;
                             
                             control_instance_unpause();
                             
@@ -131,7 +131,7 @@ else if (keyboard_check_pressed(global.settings.input_keyboard_pause) && !(is_op
                         _btn_settings.add_event_handler("on_select_release", function()
                         {
                             /* open in-game settings menu */
-                            obj_Game_Control.is_opened |= IS_OPENED_BOOLEAN.MENU;
+                            obj_Game_Control.is_opened |= WORLD_OPENED_BOOL.MENU;
                             
                             menu_refresh_instance_settings();
                         });
@@ -143,7 +143,7 @@ else if (keyboard_check_pressed(global.settings.input_keyboard_pause) && !(is_op
                     {
                         _btn_save_quit.add_event_handler("on_select_release", function()
                         {
-                            obj_Game_Control.is_opened |= IS_OPENED_BOOLEAN.EXIT;
+                            obj_Game_Control.is_opened |= WORLD_OPENED_BOOL.EXIT;
                         });
                     }
                 }

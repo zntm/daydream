@@ -25,7 +25,7 @@ if (variable_global_exists("async_chunk_save_map"))
     {
         struct_remove(global.async_chunk_save_map, string(_id));
         
-        _chunk.boolean &= ~CHUNK_BOOLEAN.SAVING;
+        _chunk.boolean &= ~CHUNK_BOOL.SAVING;
         
         var _is_active = false;
         

@@ -108,7 +108,7 @@ function player_harvest(_dt, _x, _y)
         
         if (_data.has_light())
         {
-            obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.LIGHTING;
+            obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOL.LIGHTING;
         }
         
         sfx_diegetic_play(audio_emitter, _x * TILE_SIZE, _y * TILE_SIZE, _sfx, global.settings.audio_tile);
@@ -122,7 +122,7 @@ function player_harvest(_dt, _x, _y)
                 inventory_delete("base", _inventory_selected_hotbar);
             }
             
-            obj_Game_Control.surface_refresh |= ((obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.INVENTORY) ? SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK : SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR);
+            obj_Game_Control.surface_refresh |= ((obj_Game_Control.is_opened & WORLD_OPENED_BOOL.INVENTORY) ? SURFACE_REFRESH_BOOL.INVENTORY_BACKPACK : SURFACE_REFRESH_BOOL.INVENTORY_HOTBAR);
         }
         
         var _particle_colour = _particle.get_colours();

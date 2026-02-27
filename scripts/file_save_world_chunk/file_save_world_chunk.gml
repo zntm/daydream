@@ -75,7 +75,7 @@ function file_save_world_chunk(_current_world, _chunk, _sync = false)
     buffer_write(_current_chunk_buffer, buffer_u32, PROGRAM_VERSION_NUMBER);
     buffer_write(_current_chunk_buffer, buffer_f64, datetime_to_unix());
     
-    var _is_generated  = !!(_chunk.boolean & CHUNK_BOOLEAN.GENERATED);
+    var _is_generated  = !!(_chunk.boolean & CHUNK_BOOL.GENERATED);
     var _chunk_display = _chunk.chunk_display;
     
     buffer_write(_current_chunk_buffer, buffer_bool, _is_generated);
@@ -408,7 +408,7 @@ function file_save_world_chunk(_current_world, _chunk, _sync = false)
     {
         buffer_save_ext(_new_region_buffer, _directory, 0, _write_offset);
         
-        _chunk.boolean &= ~CHUNK_BOOLEAN.SAVING;
+        _chunk.boolean &= ~CHUNK_BOOL.SAVING;
     }
     else
     {

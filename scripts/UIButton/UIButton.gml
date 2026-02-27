@@ -12,7 +12,7 @@ function UIButton(_x, _y, _width, _height, _text = "") : UIElement(_x, _y, _widt
     
     text_scale = 1;
     
-    boolean = MENU_BUTTON_BOOLEAN.IS_VISIBLE;
+    boolean = MENU_BUTTON_BOOL.IS_VISIBLE;
     
     
     /* visual properties */
@@ -167,20 +167,20 @@ function UIButton(_x, _y, _width, _height, _text = "") : UIElement(_x, _y, _widt
         
         if (_is_hovered && !(global.ui_hover_consumed ?? false))
         {
-            boolean |= MENU_BUTTON_BOOLEAN.IS_HOVER;
+            boolean |= MENU_BUTTON_BOOL.IS_HOVER;
             
             global.ui_hover_consumed = true;
             
             if !(global.ui_input_consumed) && (mouse_check_button_pressed(mb_left))
             {
-                boolean |= MENU_BUTTON_BOOLEAN.IS_HOLDING;
+                boolean |= MENU_BUTTON_BOOL.IS_HOLDING;
                 
                 global.ui_input_consumed = true;
                 
                 
-                if !(boolean & MENU_BUTTON_BOOLEAN.IS_SELECTED)
+                if !(boolean & MENU_BUTTON_BOOL.IS_SELECTED)
                 {
-                    boolean |= MENU_BUTTON_BOOLEAN.IS_SELECTED;
+                    boolean |= MENU_BUTTON_BOOL.IS_SELECTED;
                     
                     
                     sfx_play("phantasia:sfx/menu/button/select", global.settings.audio_ui);
@@ -192,23 +192,23 @@ function UIButton(_x, _y, _width, _height, _text = "") : UIElement(_x, _y, _widt
         }
         else
         {
-            if (boolean & MENU_BUTTON_BOOLEAN.IS_HOVER)
+            if (boolean & MENU_BUTTON_BOOL.IS_HOVER)
             {
-                boolean ^= MENU_BUTTON_BOOLEAN.IS_HOVER;
+                boolean ^= MENU_BUTTON_BOOL.IS_HOVER;
             }
             
             
-            if (boolean & MENU_BUTTON_BOOLEAN.IS_SELECTED)
+            if (boolean & MENU_BUTTON_BOOL.IS_SELECTED)
             {
                 sfx_play("phantasia:sfx/menu/button/deselect", global.settings.audio_ui);
                 
                 
-                boolean ^= MENU_BUTTON_BOOLEAN.IS_SELECTED;
+                boolean ^= MENU_BUTTON_BOOL.IS_SELECTED;
             }
         }
         
         
-        if (boolean & MENU_BUTTON_BOOLEAN.IS_HOLDING)
+        if (boolean & MENU_BUTTON_BOOL.IS_HOLDING)
         {
             emit_event("on_select_hold");
         }
@@ -216,12 +216,12 @@ function UIButton(_x, _y, _width, _height, _text = "") : UIElement(_x, _y, _widt
         
         if (mouse_check_button_released(mb_left))
         {
-            if (boolean & MENU_BUTTON_BOOLEAN.IS_SELECTED)
+            if (boolean & MENU_BUTTON_BOOL.IS_SELECTED)
             {
                 sfx_play("phantasia:sfx/menu/button/deselect", global.settings.audio_ui);
                 
                 
-                boolean ^= MENU_BUTTON_BOOLEAN.IS_SELECTED;
+                boolean ^= MENU_BUTTON_BOOL.IS_SELECTED;
                 
                 
                 if (_is_hovered)
@@ -231,9 +231,9 @@ function UIButton(_x, _y, _width, _height, _text = "") : UIElement(_x, _y, _widt
             }
             
             
-            if (boolean & MENU_BUTTON_BOOLEAN.IS_HOLDING)
+            if (boolean & MENU_BUTTON_BOOL.IS_HOLDING)
             {
-                boolean ^= MENU_BUTTON_BOOLEAN.IS_HOLDING;
+                boolean ^= MENU_BUTTON_BOOL.IS_HOLDING;
             }
         }
         
@@ -275,16 +275,16 @@ function UIButton(_x, _y, _width, _height, _text = "") : UIElement(_x, _y, _widt
         
         
         /* determine if selected/holding for visual offset */
-        var _is_active = (boolean & (MENU_BUTTON_BOOLEAN.IS_SELECTED | MENU_BUTTON_BOOLEAN.IS_HOLDING));
+        var _is_active = (boolean & (MENU_BUTTON_BOOL.IS_SELECTED | MENU_BUTTON_BOOL.IS_HOLDING));
         
         var _color = (_is_active ? c_ltgray : c_white);
         var _offset = (_is_active ? _asset_offset : 0);
         
         
-        if (boolean & MENU_BUTTON_BOOLEAN.IS_VISIBLE)
+        if (boolean & MENU_BUTTON_BOOL.IS_VISIBLE)
         {
             /* draw hover selection frame */
-            if (boolean & MENU_BUTTON_BOOLEAN.IS_HOVER) || (_is_active)
+            if (boolean & MENU_BUTTON_BOOL.IS_HOVER) || (_is_active)
             {
                 var _sw = (width * _base_scale_x) + 2;
                 var _sh = (height * _base_scale_y) + 2;

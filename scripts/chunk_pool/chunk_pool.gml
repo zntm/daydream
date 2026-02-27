@@ -10,7 +10,7 @@ function array_fill(_array, _index, _count, _value)
 }
 
 /// Chunk state flags
-enum CHUNK_BOOLEAN {
+enum CHUNK_BOOL {
     GENERATED                = 1 << 0,
     SURFACE_LIGHTING_REFRESH = 1 << 1,
     QUEUED                   = 1 << 2,
@@ -61,7 +61,7 @@ function Chunk(_x, _y) constructor
     surface_lighting = -1;
     
     // State flags
-    boolean = CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH;
+    boolean = CHUNK_BOOL.SURFACE_LIGHTING_REFRESH;
     
     // Fade in timer (0 to 1)
     timer_fade = 0;
@@ -110,7 +110,7 @@ function ChunkPool() : Pool() constructor
         array_fill(_chunk.chunk_skew_to, 0, CHUNK_SIZE * CHUNK_SIZE, 0);
         
         _chunk.chunk_display = 0;
-        _chunk.boolean = CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH;
+        _chunk.boolean = CHUNK_BOOL.SURFACE_LIGHTING_REFRESH;
         _chunk.chunk_covered_surface_refresh = true;
         
         // Reset fade timer and add to fading list
@@ -158,15 +158,15 @@ function ChunkPool() : Pool() constructor
             }
             
             chunk_generate(_chunk, global.worldgen_context);
-            _chunk.boolean |= CHUNK_BOOLEAN.GENERATED;
+            _chunk.boolean |= CHUNK_BOOL.GENERATED;
         }
         else
         {
-            _chunk.boolean |= CHUNK_BOOLEAN.GENERATED;
+            _chunk.boolean |= CHUNK_BOOL.GENERATED;
         }
         
         // Trigger lighting refresh
-        obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.LIGHTING;
+        obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOL.LIGHTING;
         
         // Defer tile processing to the queue for smooth loading
         array_push(global.chunk_tile_process_queue, _chunk);

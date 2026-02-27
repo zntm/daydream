@@ -1,4 +1,4 @@
-if (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.GENERATING_WORLD) exit;
+if (obj_Game_Control.is_opened & WORLD_OPENED_BOOL.GENERATING_WORLD) exit;
 
 var _window_width  = global.window_width;
 var _window_height = global.window_height;

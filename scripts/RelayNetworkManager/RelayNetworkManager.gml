@@ -194,6 +194,7 @@ function RelayNetworkManager() constructor
     static handle_async = function(_type)
     {
         if (global.relay == undefined) exit;
+        
         global.relay.handle_async(_type);
     }
     

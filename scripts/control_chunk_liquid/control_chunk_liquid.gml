@@ -2,7 +2,14 @@
 #macro CHUNK_LIQUID_WAVE_DECAY_V 0.95
 #macro CHUNK_LIQUID_WAVE_EPSILON 0.01
 
-/* update liquid wave forces for all visible chunks */
+/// @desc Function Description
+/// @param {real} _dt Description
+/// @param {any*} _player_x Description
+/// @param {any*} _player_y Description
+/// @param {any*} _camera_x Description
+/// @param {any*} _camera_y Description
+/// @param {any*} _camera_width Description
+/// @param {any*} _camera_height Description
 function control_chunk_liquid(_dt, _player_x, _player_y, _camera_x, _camera_y, _camera_width, _camera_height)
 {
     var _item_data = global.item_data;
@@ -11,7 +18,7 @@ function control_chunk_liquid(_dt, _player_x, _player_y, _camera_x, _camera_y, _
     {
         var _c = chunk_in_view[i];
         
-        if (_c == undefined) || !(_c.boolean & CHUNK_BOOLEAN.GENERATED) || !(_c.chunk_display & (1 << CHUNK_DEPTH_LIQUID)) continue;
+        if (_c == undefined) || !(_c.boolean & CHUNK_BOOL.GENERATED) || !(_c.chunk_display & (1 << CHUNK_DEPTH_LIQUID)) continue;
         
         var _chunk         = _c.chunk;
         var _chunk_wave    = _c.chunk_wave;

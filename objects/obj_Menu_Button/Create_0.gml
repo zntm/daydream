@@ -23,7 +23,7 @@ on_step = undefined;
 on_draw        = undefined;
 on_draw_behind = undefined;
 
-enum MENU_BUTTON_BOOLEAN {
+enum MENU_BUTTON_BOOL {
     IS_VISIBLE  = 1 << 0,
     IS_HOVER    = 1 << 1,
     IS_SELECTED = 1 << 2,
@@ -31,7 +31,7 @@ enum MENU_BUTTON_BOOLEAN {
 }
 
 boolean =
-    MENU_BUTTON_BOOLEAN.IS_VISIBLE;
+    MENU_BUTTON_BOOL.IS_VISIBLE;
 
 area = undefined;
 

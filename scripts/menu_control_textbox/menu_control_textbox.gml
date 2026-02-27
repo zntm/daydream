@@ -4,7 +4,7 @@ function menu_control_textbox()
 
     with (obj_Menu_Textbox)
     {
-        if !(boolean & MENU_BUTTON_BOOLEAN.IS_SELECTED) continue;
+        if !(boolean & MENU_BUTTON_BOOL.IS_SELECTED) continue;
         
         if (keyboard_check(vk_control))
         {

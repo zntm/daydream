@@ -28,7 +28,7 @@ function inventory_refresh_crafting_station(_refresh = false)
         var _chunk = _chunks[i];
         
         // We can check if chunk is generated but usually pooled chunks are.
-        // if !(_chunk.boolean & CHUNK_BOOLEAN.GENERATED) continue; 
+        // if !(_chunk.boolean & CHUNK_BOOL.GENERATED) continue; 
         
         var _stations = _chunk.chunk_crafting_stations;
         var _stations_length = array_length(_stations);

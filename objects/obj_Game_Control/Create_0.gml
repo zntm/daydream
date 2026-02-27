@@ -3,7 +3,7 @@ os_powersave_enable(false); // Fix for server stopping when window loses focus
 
 audio_stop_all();
 
-enum SURFACE_REFRESH_BOOLEAN {
+enum SURFACE_REFRESH_BOOL {
     GENERATING_WORLD    = 1 << 0,
     LIGHTING            = 1 << 1,
     INVENTORY_BACKPACK  = 1 << 2,
@@ -13,13 +13,13 @@ enum SURFACE_REFRESH_BOOLEAN {
     PAUSE               = 1 << 6,
 }
 
-surface_refresh = SURFACE_REFRESH_BOOLEAN.HP
-    | SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK
-    | SURFACE_REFRESH_BOOLEAN.INVENTORY_CRAFTABLE
-    | SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR
-    | SURFACE_REFRESH_BOOLEAN.LIGHTING;
+surface_refresh = SURFACE_REFRESH_BOOL.HP
+    | SURFACE_REFRESH_BOOL.INVENTORY_BACKPACK
+    | SURFACE_REFRESH_BOOL.INVENTORY_CRAFTABLE
+    | SURFACE_REFRESH_BOOL.INVENTORY_HOTBAR
+    | SURFACE_REFRESH_BOOL.LIGHTING;
 
-enum IS_OPENED_BOOLEAN {
+enum WORLD_OPENED_BOOL {
     CHAT                = 1 << 0,
     EXIT                = 1 << 1,
     GENERATING_WORLD    = 1 << 2,
@@ -30,8 +30,8 @@ enum IS_OPENED_BOOLEAN {
     MENU                = 1 << 7,
 }
 
-is_opened = IS_OPENED_BOOLEAN.GENERATING_WORLD
-    | IS_OPENED_BOOLEAN.GUI;
+is_opened = WORLD_OPENED_BOOL.GENERATING_WORLD
+    | WORLD_OPENED_BOOL.GUI;
 
 tile_container_x = 0;
 tile_container_y = 0;
@@ -48,9 +48,6 @@ surface_pause = [ -1, -1 ];
 
 var _current_world = global.current_world;
 
-var _world_data = global.world_data[$ _current_world.dimension];
-
-//Defer spawn calculation to Room Creation Code after all instances are created
 spawn_needs_init = true;
 
 global.inventory_selected_hotbar = 0;
@@ -71,10 +68,10 @@ inventory_mouse_select_type = INVENTORY_MOUSE_SELECT_TYPE.NONE;
 global.inventory_selected_hover = noone;
 
 surface_lighting = -1;
+surface_lighting_colour = -1;
+
 surface_lighting_x = -1;
 surface_lighting_y = -1;
-
-surface_lighting_colour = -1;
 
 surface_inventory = {
     tooltip: {
@@ -175,7 +172,6 @@ chunk_in_view_y = infinity;
 chunk_in_view = [];
 chunk_in_view_length = 0;
 
-// Initialize chunk generation queue for time-sliced worldgen
 chunk_queue_init();
 
 // Initialize seed - SKIP for clients, they receive the seed via WELCOME packet
@@ -217,7 +213,7 @@ if (IS_DEVELOPER_MODE)
 // Global command values
 global.command_value = {}
 
-// Note: Chat open state is now in is_opened & IS_OPENED_BOOLEAN.CHAT
+// Note: Chat open state is now in is_opened & WORLD_OPENED_BOOL.CHAT
 chat_message = "";
 chat_message_history_index = 0;
 
@@ -276,6 +272,17 @@ global.ui_crafting = ui_spawn(global.ui_crafting_def, {
     parent: global.gui_root
 });
 global.ui_crafting.visible = false;
+
+var _chest_pull_btn = global.ui_crafting.elements[$ "btn_chest_pull"];
+if (_chest_pull_btn != undefined)
+{
+    _chest_pull_btn.add_event_handler("on_select_release", function() {
+        global.crafting_pull_from_chests = !global.crafting_pull_from_chests;
+        self.text = "PULL FROM CHESTS is " + (global.crafting_pull_from_chests ? "ON" : "OFF");
+        inventory_refresh_craftable();
+    });
+}
+
 global.gui_panel_crafting_modular = global.ui_crafting.root_elements[0];
 
 // Initialize HUD components (refactored to UIElement)

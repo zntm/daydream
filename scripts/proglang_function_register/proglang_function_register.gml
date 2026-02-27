@@ -796,7 +796,7 @@ proglang_function_register("inventory_set", function(_args) {
         }
     }
     
-    obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR;
+    obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOL.INVENTORY_HOTBAR;
 });
 
 proglang_function_register("instance_exists", function(_args) {

@@ -28,7 +28,7 @@ function inventory_organize_mouse(_inst)
                     _item.set_amount(_amount2);
                 }
                 
-                surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK;
+                surface_refresh |= SURFACE_REFRESH_BOOL.INVENTORY_BACKPACK;
             }
         }
     }
@@ -111,7 +111,7 @@ function inventory_organize_mouse(_inst)
         global.inventory.mouse.type  = "";
         global.inventory.mouse.index = -1;
         
-        surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK;
+        surface_refresh |= SURFACE_REFRESH_BOOL.INVENTORY_BACKPACK;
     }
     
     if (mouse_check_button_pressed(mb_left)) && (inventory_mouse_select_type == INVENTORY_MOUSE_SELECT_TYPE.NONE)
@@ -143,7 +143,7 @@ function inventory_organize_mouse(_inst)
                 global.inventory.mouse.type  = _type;
                 global.inventory.mouse.index = _index;
                 
-                surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK;
+                surface_refresh |= SURFACE_REFRESH_BOOL.INVENTORY_BACKPACK;
             }
         }
     }
@@ -226,7 +226,7 @@ function inventory_organize_mouse(_inst)
         global.inventory.mouse.type  = "";
         global.inventory.mouse.index = -1;
         
-        surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK;
+        surface_refresh |= SURFACE_REFRESH_BOOL.INVENTORY_BACKPACK;
     }
     
     if (mouse_check_button(mb_left)) && ((inventory_mouse_select_type == INVENTORY_MOUSE_SELECT_TYPE.NONE) || (inventory_mouse_select_type == INVENTORY_MOUSE_SELECT_TYPE.CRAFTING))
@@ -284,7 +284,7 @@ function inventory_organize_mouse(_inst)
                 
                 inventory_refresh_craftable();
                 
-                surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK | SURFACE_REFRESH_BOOLEAN.INVENTORY_CRAFTABLE;
+                surface_refresh |= SURFACE_REFRESH_BOOL.INVENTORY_BACKPACK | SURFACE_REFRESH_BOOL.INVENTORY_CRAFTABLE;
             }
         }
     }
@@ -365,6 +365,6 @@ function inventory_organize_mouse(_inst)
         global.inventory.mouse.type  = "";
         global.inventory.mouse.index = -1;
         
-        surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK | SURFACE_REFRESH_BOOLEAN.INVENTORY_CRAFTABLE;
+        surface_refresh |= SURFACE_REFRESH_BOOL.INVENTORY_BACKPACK | SURFACE_REFRESH_BOOL.INVENTORY_CRAFTABLE;
     }
 }

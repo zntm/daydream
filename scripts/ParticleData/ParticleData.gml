@@ -1,4 +1,4 @@
-enum PARTICLE_PROPERTIES_BOOLEAN {
+enum PARTICLE_PROPERTIES_BOOL {
     IS_ADDITIVE             = 1 << 0,
     can_destroy_on_tile_collision = 1 << 1,
     HAS_COLLISION           = 1 << 2,
@@ -42,10 +42,10 @@ function ParticleData(_namespace, _id, _sprite) : ParentData(_namespace, _id) co
     static set_properties = function(_properties)
     {
         static __properties = {
-            "phantasia:is_additive":             PARTICLE_PROPERTIES_BOOLEAN.IS_ADDITIVE,
-            "phantasia:can_destroy_on_tile_collision": PARTICLE_PROPERTIES_BOOLEAN.can_destroy_on_tile_collision,
-            "phantasia:has_collision":           PARTICLE_PROPERTIES_BOOLEAN.HAS_COLLISION,
-            "phantasia:has_stretch_animation":   PARTICLE_PROPERTIES_BOOLEAN.HAS_STRETCHED_ANIMATION
+            "phantasia:is_additive":             PARTICLE_PROPERTIES_BOOL.IS_ADDITIVE,
+            "phantasia:can_destroy_on_tile_collision": PARTICLE_PROPERTIES_BOOL.can_destroy_on_tile_collision,
+            "phantasia:has_collision":           PARTICLE_PROPERTIES_BOOL.HAS_COLLISION,
+            "phantasia:has_stretch_animation":   PARTICLE_PROPERTIES_BOOL.HAS_STRETCHED_ANIMATION
         }
         
         if (_properties != undefined)
@@ -65,22 +65,22 @@ function ParticleData(_namespace, _id, _sprite) : ParentData(_namespace, _id) co
     
     static is_additive = function()
     {
-        return !!(___properties & PARTICLE_PROPERTIES_BOOLEAN.IS_ADDITIVE);
+        return !!(___properties & PARTICLE_PROPERTIES_BOOL.IS_ADDITIVE);
     }
     
     static can_destroy_on_tile_collision = function()
     {
-        return !!(___properties & PARTICLE_PROPERTIES_BOOLEAN.can_destroy_on_tile_collision);
+        return !!(___properties & PARTICLE_PROPERTIES_BOOL.can_destroy_on_tile_collision);
     }
     
     static has_collision = function()
     {
-        return !!(___properties & PARTICLE_PROPERTIES_BOOLEAN.HAS_COLLISION);
+        return !!(___properties & PARTICLE_PROPERTIES_BOOL.HAS_COLLISION);
     }
     
     static has_stretch_animation = function()
     {
-        return !!(___properties & PARTICLE_PROPERTIES_BOOLEAN.HAS_STRETCHED_ANIMATION);
+        return !!(___properties & PARTICLE_PROPERTIES_BOOL.HAS_STRETCHED_ANIMATION);
     }
     
     ___wind_factor = 0;

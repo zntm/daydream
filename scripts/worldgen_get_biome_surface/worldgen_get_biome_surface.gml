@@ -1,7 +1,11 @@
 function worldgen_get_biome_surface(_x, _y, _surface_height, _seed, _world_data = global.world_data[$ global.current_world.dimension], _slope = 0)
 {
     var _blend = _world_data.get_region_blend_data(_x, 0, _seed);
-    if (_blend == undefined) return undefined;
+    
+    if (_blend == undefined)
+    {
+        return undefined;
+    }
     
     // Pick dominant region
     var _region = _blend.r1;

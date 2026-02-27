@@ -1,4 +1,4 @@
-enum PROJECTILE_BOOLEAN {
+enum PROJECTILE_BOOL {
     DESTROY_ON_TILE    = 1 << 0,
     DESTROY_ON_ENTITY  = 1 << 1,
     ADDITIVE           = 1 << 2,
@@ -16,12 +16,12 @@ enum PROJECTILE_PARTICLE_MODE {
 #macro PROJECTILE_PROPERTIES_MAP global.___projectile_properties_map
 
 PROJECTILE_PROPERTIES_MAP = {
-    "phantasia:can_destroy_on_tile_collision":   PROJECTILE_BOOLEAN.DESTROY_ON_TILE,
-    "phantasia:can_destroy_on_entity_collision": PROJECTILE_BOOLEAN.DESTROY_ON_ENTITY,
-    "phantasia:is_additive":                    PROJECTILE_BOOLEAN.ADDITIVE,
-    "phantasia:is_fade_out":                    PROJECTILE_BOOLEAN.FADE_OUT,
-    "phantasia:has_collision":                  PROJECTILE_BOOLEAN.HAS_COLLISION,
-    "phantasia:has_stretch_animation":          PROJECTILE_BOOLEAN.STRETCH_ANIMATION
+    "phantasia:can_destroy_on_tile_collision":   PROJECTILE_BOOL.DESTROY_ON_TILE,
+    "phantasia:can_destroy_on_entity_collision": PROJECTILE_BOOL.DESTROY_ON_ENTITY,
+    "phantasia:is_additive":                    PROJECTILE_BOOL.ADDITIVE,
+    "phantasia:is_fade_out":                    PROJECTILE_BOOL.FADE_OUT,
+    "phantasia:has_collision":                  PROJECTILE_BOOL.HAS_COLLISION,
+    "phantasia:has_stretch_animation":          PROJECTILE_BOOL.STRETCH_ANIMATION
 }
 
 /// @desc Projectile data constructor.

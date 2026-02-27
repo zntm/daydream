@@ -53,7 +53,7 @@ function file_load_world_chunk(_current_world, _chunk)
     
     if (buffer_read(_buffer, buffer_bool))
     {
-        _chunk.boolean |= CHUNK_BOOLEAN.GENERATED;
+        _chunk.boolean |= CHUNK_BOOL.GENERATED;
     }
     
     var _chunk_display = buffer_read(_buffer, buffer_u16);

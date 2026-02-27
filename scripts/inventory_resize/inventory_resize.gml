@@ -9,7 +9,7 @@ function inventory_resize(_type, _value)
     {
         var _item = _inventory[i];
         
-        if (_item != INVENTORY_EMPTY)
+        if (_type != "_container") && (_item != INVENTORY_EMPTY)
         {
             delete _item;
         }

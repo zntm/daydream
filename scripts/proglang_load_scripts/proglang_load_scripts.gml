@@ -111,19 +111,6 @@ function init_proglang_recursive(_directory, _namespace = "", _path = "")
                         _has_functions = true;
                     }
                 }
-                else if (is_struct(_const) && struct_exists(_const, "type") && _const.type == "function")
-                {
-                    if (_const.is_global)
-                    {
-                        global.proglang_exports[$ _const.name] = _const.bytecode;
-                        _has_functions = true;
-                    }
-                    else
-                    {
-                        _file_scope[$ _const.name] = _const.bytecode;
-                        _has_functions = true;
-                    }
-                }
             }
             
             if (!_has_functions)

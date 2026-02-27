@@ -21,7 +21,7 @@ function control_chunk_foliage(_dt)
     {
         var _c = chunk_in_view[i];
         
-        if (_c == undefined) || !(_c.boolean & CHUNK_BOOLEAN.GENERATED) continue;
+        if (_c == undefined) || !(_c.boolean & CHUNK_BOOL.GENERATED) continue;
         
         var _chunk         = _c.chunk;
         var _chunk_count   = _c.chunk_count;

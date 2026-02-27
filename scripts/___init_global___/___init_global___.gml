@@ -214,6 +214,8 @@ global.attribute_player = new Attribute()
     .set_regeneration_amount(1)
     .set_regeneration_time(1.0);
 
+global.crafting_pull_from_chests = false;
+
 global.gui_deferred_text = [];
 
 global.gui_scale = 2;

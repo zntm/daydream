@@ -4,13 +4,13 @@ function menu_control_keybind()
     {
         // Only process buttons that are currently "selected" (waiting for input)
         // and have a 'setting_name' variable, indicating they are keybind buttons.
-        if !(boolean & MENU_BUTTON_BOOLEAN.IS_SELECTED) || (variable_instance_get(id, "setting_name") == undefined) continue;
+        if !(boolean & MENU_BUTTON_BOOL.IS_SELECTED) || (variable_instance_get(id, "setting_name") == undefined) continue;
         
         // If Escape is pressed, cancel the remapping
         if (keyboard_check_pressed(vk_escape))
         {
             sfx_play("phantasia:sfx/menu/button/deselect", global.settings.audio_ui);
-            boolean ^= MENU_BUTTON_BOOLEAN.IS_SELECTED;
+            boolean ^= MENU_BUTTON_BOOL.IS_SELECTED;
             
             // Revert text to original just in case (though it shouldn't have changed yet)
             var _current_key = global.settings[$ setting_name];
@@ -46,7 +46,7 @@ function menu_control_keybind()
             text = $"{display_text}: {_key_name}";
             
             // Deselect
-            boolean ^= MENU_BUTTON_BOOLEAN.IS_SELECTED;
+            boolean ^= MENU_BUTTON_BOOL.IS_SELECTED;
             
             // Play success sound
             sfx_play("phantasia:sfx/menu/button/select", global.settings.audio_ui);

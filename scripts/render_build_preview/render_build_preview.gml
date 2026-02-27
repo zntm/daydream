@@ -9,7 +9,7 @@ function render_build_preview()
     if (_lp == noone) exit;
     
     // Only show preview if GUI is not covering the world
-    if (obj_Game_Control.is_opened & (IS_OPENED_BOOLEAN.MENU | IS_OPENED_BOOLEAN.CHAT | IS_OPENED_BOOLEAN.INVENTORY)) exit;
+    if (obj_Game_Control.is_opened & (WORLD_OPENED_BOOL.MENU | WORLD_OPENED_BOOL.CHAT | WORLD_OPENED_BOOL.INVENTORY)) exit;
     
     var _inventory_selected_hotbar = global.inventory_selected_hotbar;
     var _item = global.inventory.base[_inventory_selected_hotbar];

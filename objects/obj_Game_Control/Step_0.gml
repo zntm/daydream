@@ -1,6 +1,6 @@
 var _item_data = global.item_data;
 
-if (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.GENERATING_WORLD)
+if (obj_Game_Control.is_opened & WORLD_OPENED_BOOL.GENERATING_WORLD)
 {
     var _camera_x = global.camera_x_real;
     var _camera_y = global.camera_y_real;
@@ -44,11 +44,11 @@ if (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.GENERATING_WORLD)
     {
         var _c = chunk_in_view[i];
         
-        if (_c == undefined) || (_c.boolean & CHUNK_BOOLEAN.GENERATED) continue;
+        if (_c == undefined) || (_c.boolean & CHUNK_BOOL.GENERATED) continue;
         
-        _c.boolean |= CHUNK_BOOLEAN.GENERATED | CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH;
+        _c.boolean |= CHUNK_BOOL.GENERATED | CHUNK_BOOL.SURFACE_LIGHTING_REFRESH;
         
-        surface_refresh |= SURFACE_REFRESH_BOOLEAN.LIGHTING;
+        surface_refresh |= SURFACE_REFRESH_BOOL.LIGHTING;
         
         var _chunk_xstart = _c.chunk_xstart;
         var _chunk_ystart = _c.chunk_ystart;
@@ -79,10 +79,10 @@ if (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.GENERATING_WORLD)
         }
     }
     
-    obj_Game_Control.is_opened ^= IS_OPENED_BOOLEAN.GENERATING_WORLD;
+    obj_Game_Control.is_opened ^= WORLD_OPENED_BOOL.GENERATING_WORLD;
 }
 
-if (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.EXIT)
+if (obj_Game_Control.is_opened & WORLD_OPENED_BOOL.EXIT)
 {
     var _current_world = global.current_world;
     
@@ -90,33 +90,17 @@ if (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.EXIT)
     {
         audio_stop_all();
         
-
         var _current_player = global.current_player;
         
         var _lp = noone;
         with (obj_Player) { if (is_local) { _lp = id; break; } }
-        
-        // If player doesn't exist (e.g. error or already destroyed), try to rescue or skip
-        if (_lp == noone)
-        {
-            // Fallback or exit? If we can't find the player, we can't save hp/saturation accurately.
-            // But we might have just loaded the menu.
-            // Assuming we want to save *current* state.
-            // If _lp is noone, maybe use default values or values from save data?
-            // For now, let's just use the global save data itself if the instance is missing?
-            // But the args are _lp.hp.
-            
-            // Let's create a dummy struct for safety or use save data accessors if available.
-            // Actually, simply finding it should work if the player exists.
-        }
-
         
         if (_lp != noone)
         {
             _current_player.hp = _lp.hp;
             _current_player.hp_max = _lp.hp_max;
         }
-
+        
         file_save_player_global(_current_player);
         file_save_player_inventory(_current_player);
         
@@ -183,7 +167,7 @@ if (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.EXIT)
     exit;
 }
 
-if (is_opened & IS_OPENED_BOOLEAN.PAUSE) exit;
+if (is_opened & WORLD_OPENED_BOOL.PAUSE) exit;
 
 var _delta_time = global.delta_time;
 
@@ -371,14 +355,14 @@ control_chunk_liquid(_delta_time, _player_x, _player_y, _camera_x, _camera_y, _c
 var _tile_x = round(mouse_x / TILE_SIZE);
 var _tile_y = round(mouse_y / TILE_SIZE);
 
-if !(is_opened & IS_OPENED_BOOLEAN.CHAT) && (_lp.hp > 0)
+if !(is_opened & WORLD_OPENED_BOOL.CHAT) && (_lp.hp > 0)
 {
     control_inventory();
 }
 
 control_chunk_clear(_camera_x, _camera_y, _camera_width, _camera_height);
 
-if !(is_opened & (IS_OPENED_BOOLEAN.MENU | IS_OPENED_BOOLEAN.CHAT)) && (_lp.hp > 0)
+if !(is_opened & (WORLD_OPENED_BOOL.MENU | WORLD_OPENED_BOOL.CHAT)) && (_lp.hp > 0)
 {
     if (mouse_check_button_pressed(mb_right))
     {
@@ -409,7 +393,7 @@ if !(is_opened & (IS_OPENED_BOOLEAN.MENU | IS_OPENED_BOOLEAN.CHAT)) && (_lp.hp >
 
 if (keyboard_check_pressed(vk_f1))
 {
-    is_opened ^= IS_OPENED_BOOLEAN.GUI;
+    is_opened ^= WORLD_OPENED_BOOL.GUI;
 }
 
 // Network debug keybinds (developer mode only)
@@ -480,19 +464,19 @@ if (global.gui_root != undefined)
     // Hotbar: visible when GUI is open and not in menu or chat
     if (global.gui_panel_hotbar_modular != undefined)
     {
-        global.gui_panel_hotbar_modular.visible = !(is_opened & IS_OPENED_BOOLEAN.GENERATING_WORLD) && (((is_opened & IS_OPENED_BOOLEAN.GUI) && !(is_opened & IS_OPENED_BOOLEAN.MENU) && !(is_opened & IS_OPENED_BOOLEAN.CHAT)) || ((is_opened & IS_OPENED_BOOLEAN.INVENTORY) && !(is_opened & IS_OPENED_BOOLEAN.CHAT)));
+        global.gui_panel_hotbar_modular.visible = !(is_opened & WORLD_OPENED_BOOL.GENERATING_WORLD) && (((is_opened & WORLD_OPENED_BOOL.GUI) && !(is_opened & WORLD_OPENED_BOOL.MENU) && !(is_opened & WORLD_OPENED_BOOL.CHAT)) || ((is_opened & WORLD_OPENED_BOOL.INVENTORY) && !(is_opened & WORLD_OPENED_BOOL.CHAT)));
     }
     
     // Inventory: visible when inventory is open and chat is not open
     if (global.gui_panel_inventory_modular != undefined)
     {
-        global.gui_panel_inventory_modular.visible = !(is_opened & IS_OPENED_BOOLEAN.GENERATING_WORLD) && (is_opened & IS_OPENED_BOOLEAN.INVENTORY) && !(is_opened & IS_OPENED_BOOLEAN.CHAT);
+        global.gui_panel_inventory_modular.visible = !(is_opened & WORLD_OPENED_BOOL.GENERATING_WORLD) && (is_opened & WORLD_OPENED_BOOL.INVENTORY) && !(is_opened & WORLD_OPENED_BOOL.CHAT);
     }
     
     // Crafting: visible when inventory is open, chat is not open, and has content
     if (variable_global_exists("gui_panel_crafting_modular")) && (global.gui_panel_crafting_modular != undefined)
     {
-        global.gui_panel_crafting_modular.visible = !(is_opened & IS_OPENED_BOOLEAN.GENERATING_WORLD) && (is_opened & IS_OPENED_BOOLEAN.INVENTORY) && !(is_opened & IS_OPENED_BOOLEAN.CHAT) && (array_length(global.gui_panel_crafting_modular.children) > 0);
+        global.gui_panel_crafting_modular.visible = !(is_opened & WORLD_OPENED_BOOL.GENERATING_WORLD) && (is_opened & WORLD_OPENED_BOOL.INVENTORY) && !(is_opened & WORLD_OPENED_BOOL.CHAT) && (array_length(global.gui_panel_crafting_modular.children) > 0);
     }
     
     global.ui_input_consumed = false;
@@ -528,11 +512,11 @@ if (global.gui_root != undefined)
 // Chat panel visibility
 if (variable_global_exists("gui_panel_chat") && (global.gui_panel_chat != undefined))
 {
-    global.gui_panel_chat.visible = (is_opened & IS_OPENED_BOOLEAN.GUI) && !(is_opened & IS_OPENED_BOOLEAN.MENU);
+    global.gui_panel_chat.visible = (is_opened & WORLD_OPENED_BOOL.GUI) && !(is_opened & WORLD_OPENED_BOOL.MENU);
 }
 
 // Chat input handling
-if (is_opened & IS_OPENED_BOOLEAN.CHAT)
+if (is_opened & WORLD_OPENED_BOOL.CHAT)
 {
     // Update chat message from keyboard_string
     chat_message = keyboard_string;
@@ -637,12 +621,12 @@ if (is_opened & IS_OPENED_BOOLEAN.CHAT)
 else
 {
     // Open chat with T key
-    if (keyboard_check_pressed(ord("T"))) && !(is_opened & IS_OPENED_BOOLEAN.MENU) && !(is_opened & IS_OPENED_BOOLEAN.INVENTORY)
+    if (keyboard_check_pressed(ord("T"))) && !(is_opened & WORLD_OPENED_BOOL.MENU) && !(is_opened & WORLD_OPENED_BOOL.INVENTORY)
     {
         chat_enable();
     }
     // Open command prompt with / key
-    else if (keyboard_check_pressed(vk_divide) || keyboard_check_pressed(191)) && !(is_opened & IS_OPENED_BOOLEAN.MENU) && !(is_opened & IS_OPENED_BOOLEAN.INVENTORY)
+    else if (keyboard_check_pressed(vk_divide) || keyboard_check_pressed(191)) && !(is_opened & WORLD_OPENED_BOOL.MENU) && !(is_opened & WORLD_OPENED_BOOL.INVENTORY)
     {
         chat_enable();
         keyboard_string = "/";

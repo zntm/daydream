@@ -54,7 +54,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
         {
             var _chunk = chunk_in_view[i];
             
-            if (_chunk == undefined) || !(_chunk.boolean & CHUNK_BOOLEAN.GENERATED) || !(_chunk.boolean & CHUNK_BOOLEAN.TILE_PROCESSED) || !(_chunk.chunk_display & _bitmask) || (_chunk.chunk_count[_z] <= 0) continue;
+            if (_chunk == undefined) || !(_chunk.boolean & CHUNK_BOOL.GENERATED) || !(_chunk.boolean & CHUNK_BOOL.TILE_PROCESSED) || !(_chunk.chunk_display & _bitmask) || (_chunk.chunk_count[_z] <= 0) continue;
             
             var _buffer = _chunk.chunk_vertex_buffer[_z];
             
@@ -148,9 +148,6 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 }
             }
             
-
-
-            
             with (obj_Player)
             {
                 var _xscale = entity_xscale * sign(image_xscale);
@@ -159,15 +156,21 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 if (physics_body.vel_y == 0) && (input_state.move_x != 0)
                 {
                     var _index_body = (_animation_index * 2) % 8;
-                    var _index_arm = ((timer_attack > 0) ? round(lerp(13, 8, timer_attack / 0.3)) : _index_body);
+                    var _index_arm = (timer_attack > 0) ? round(lerp(13, 8, timer_attack / 0.3)) : _index_body;
                     
-                    if (attire != undefined) render_attire(attire, _index_body, x, y, _xscale, _yscale, false, _index_arm, inst_item);
+                    if (attire != undefined)
+                    {
+                        render_attire(attire, _index_body, x, y, _xscale, _yscale, false, _index_arm, inst_item);
+                    }
                 }
                 else
                 {
-                    var _index_arm = ((timer_attack > 0) ? round(lerp(13, 8, timer_attack / 0.3)) : 0);
+                    var _index_arm = (timer_attack > 0) ? round(lerp(13, 8, timer_attack / 0.3)) : 0;
                     
-                    if (attire != undefined) render_attire(attire, 0, x, y, _xscale, _yscale, false, _index_arm, inst_item);
+                    if (attire != undefined)
+                    {
+                        render_attire(attire, 0, x, y, _xscale, _yscale, false, _index_arm, inst_item);
+                    }
                 }
             }
             
@@ -181,13 +184,19 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                     var _index_body = (_animation_index * 2) % 8;
                     var _index_arm = ((timer_attack > 0) ? round(lerp(13, 8, timer_attack / 0.3)) : _index_body);
                     
-                    if (attire != undefined) render_attire(attire, _index_body, x, y, _xscale, _yscale, false, _index_arm, inst_item);
+                    if (attire != undefined)
+                    {
+                        render_attire(attire, _index_body, x, y, _xscale, _yscale, false, _index_arm, inst_item);
+                    }
                 }
                 else
                 {
                     var _index_arm = ((timer_attack > 0) ? round(lerp(13, 8, timer_attack / 0.3)) : 0);
                     
-                    if (attire != undefined) render_attire(attire, 0, x, y, _xscale, _yscale, false, _index_arm, inst_item);
+                    if (attire != undefined)
+                    {
+                        render_attire(attire, 0, x, y, _xscale, _yscale, false, _index_arm, inst_item);
+                    }
                 }
             }
             
@@ -278,13 +287,13 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 var _data = _projectile_data[$ _id];
                 var _bool = _data.get_boolean();
                 
-                if !(_bool & PROJECTILE_BOOLEAN.ADDITIVE) continue;
+                if !(_bool & PROJECTILE_BOOL.ADDITIVE) continue;
                 
                 var _sprite = _sprite_asset[$ _data.get_sprite()];
                 
                 var _index = 0;
                 
-                if (_bool & PROJECTILE_BOOLEAN.STRETCH_ANIMATION)
+                if (_bool & PROJECTILE_BOOL.STRETCH_ANIMATION)
                 {
                     _index = floor(_sprite.get_length() * (1 - (timer_life / timer_life_max)));
                 }
@@ -292,7 +301,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 var _xscale = entity_xscale * sign(image_xscale);
                 var _yscale = entity_yscale * sign(image_yscale);
                 
-                draw_sprite_ext(_sprite.get_sprite(), _index, x + (_xscale * (_sprite.get_xoffset() - (attribute.get_collision_box_width() / 2))), y + (_yscale * (_sprite.get_yoffset() - attribute.get_collision_box_height())), _xscale, _yscale, image_angle, image_blend, image_alpha * ((_bool & PROJECTILE_BOOLEAN.FADE_OUT) ? timer_life / timer_life_max : 1));
+                draw_sprite_ext(_sprite.get_sprite(), _index, x + (_xscale * (_sprite.get_xoffset() - (attribute.get_collision_box_width() / 2))), y + (_yscale * (_sprite.get_yoffset() - attribute.get_collision_box_height())), _xscale, _yscale, image_angle, image_blend, image_alpha * ((_bool & PROJECTILE_BOOL.FADE_OUT) ? timer_life / timer_life_max : 1));
             }
             
             gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_src_alpha, bm_one);
@@ -302,13 +311,13 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 var _data = _projectile_data[$ _id];
                 var _bool = _data.get_boolean();
                 
-                if (_bool & PROJECTILE_BOOLEAN.ADDITIVE) continue;
+                if (_bool & PROJECTILE_BOOL.ADDITIVE) continue;
                 
                 var _sprite = _sprite_asset[$ _data.get_sprite()];
                 
                 var _index = 0;
                 
-                if (_bool & PROJECTILE_BOOLEAN.STRETCH_ANIMATION)
+                if (_bool & PROJECTILE_BOOL.STRETCH_ANIMATION)
                 {
                     _index = floor(_sprite.get_length() * (1 - (timer_life / timer_life_max)));
                 }
@@ -316,7 +325,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 var _xscale = entity_xscale * sign(image_xscale);
                 var _yscale = entity_yscale * sign(image_yscale);
                 
-                draw_sprite_ext(_sprite.get_sprite(), _index, x + (_xscale * (_sprite.get_xoffset() - (attribute.get_collision_box_width() / 2))), y + (_yscale * (_sprite.get_yoffset() - attribute.get_collision_box_height())), _xscale, _yscale, image_angle, image_blend, image_alpha * ((_bool & PROJECTILE_BOOLEAN.FADE_OUT) ? timer_life / timer_life_max : 1));
+                draw_sprite_ext(_sprite.get_sprite(), _index, x + (_xscale * (_sprite.get_xoffset() - (attribute.get_collision_box_width() / 2))), y + (_yscale * (_sprite.get_yoffset() - attribute.get_collision_box_height())), _xscale, _yscale, image_angle, image_blend, image_alpha * ((_bool & PROJECTILE_BOOL.FADE_OUT) ? timer_life / timer_life_max : 1));
             }
         }
     }

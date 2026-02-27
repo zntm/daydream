@@ -1,17 +1,12 @@
 
 global.proglang_cache = {}
 
-/* Compile Proglang source to bytecode (cached) */
-/* @param {string} _source The script source code */
-/* @param {array} _context_keys Optional array of context variable names */
-/* @returns {Any} ProgBytecode or undefined on error */
+/// Compile Proglang source to bytecode (cached)
+/// @param {string} _source The script source code
+/// @param {array} _context_keys Optional array of context variable names
+/// @returns {Any} ProgBytecode or undefined on error
 function proglang_compile(_source, _context_keys = [])
 {
-    if (_source == undefined)
-    {
-        return undefined;
-    }
-    
     var _hash = md5_string_utf8(_source + json_stringify(_context_keys));
     
     var _cache = global.proglang_cache[$ _hash];

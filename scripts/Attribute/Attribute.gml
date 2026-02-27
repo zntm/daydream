@@ -1,4 +1,4 @@
-enum ATTRIBUTE_BOOLEAN {
+enum ATTRIBUTE_BOOL {
     IS_FALL_DAMAGE_RESISTANT = 1 << 0,
     HAS_REGENERATION         = 1 << 1
 }
@@ -27,8 +27,8 @@ function Attribute() constructor
     static set_boolean = function(_boolean)
     {
         static __boolean = {
-            "phantasia:is_fall_damage_resistant": ATTRIBUTE_BOOLEAN.IS_FALL_DAMAGE_RESISTANT,
-            "phantasia:has_regeneration": ATTRIBUTE_BOOLEAN.HAS_REGENERATION
+            "phantasia:is_fall_damage_resistant": ATTRIBUTE_BOOL.IS_FALL_DAMAGE_RESISTANT,
+            "phantasia:has_regeneration": ATTRIBUTE_BOOL.HAS_REGENERATION
         }
         
         ___boolean = 0;

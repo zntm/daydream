@@ -7,7 +7,7 @@ function control_chunk_fade()
         var _chunk = _fading_chunks[i];
         
         /* wait for tile processing to complete before starting fade (to prevent pop-in if queue is slow) */
-        if !(_chunk.boolean & CHUNK_BOOLEAN.TILE_PROCESSED) continue;
+        if !(_chunk.boolean & CHUNK_BOOL.TILE_PROCESSED) continue;
         
         var _time = global.settings.graphics_chunk_fade_time;
         

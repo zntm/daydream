@@ -23,9 +23,9 @@ function chunk_queue_init()
 /// @param {real} _priority Priority (lower = higher priority, typically distance to player)
 function chunk_queue_add(_chunk, _priority)
 {
-    if (_chunk == undefined) || (_chunk.boolean & (CHUNK_BOOLEAN.GENERATED | CHUNK_BOOLEAN.QUEUED)) exit;
+    if (_chunk == undefined) || (_chunk.boolean & (CHUNK_BOOL.GENERATED | CHUNK_BOOL.QUEUED)) exit;
     
-    _chunk.boolean |= CHUNK_BOOLEAN.QUEUED;
+    _chunk.boolean |= CHUNK_BOOL.QUEUED;
     
     ds_priority_add(global.chunk_gen_queue, _chunk, _priority);
 }
@@ -60,18 +60,18 @@ function chunk_queue_process(_player_x, _player_y)
         if (_chunk == undefined) continue;
         
         // Clear queued flag
-        _chunk.boolean &= ~CHUNK_BOOLEAN.QUEUED;
+        _chunk.boolean &= ~CHUNK_BOOL.QUEUED;
         
         // Skip if already generated
-        if (_chunk.boolean & CHUNK_BOOLEAN.GENERATED) continue;
+        if (_chunk.boolean & CHUNK_BOOL.GENERATED) continue;
         
         // Generate the chunk (just creates tile data, doesn't connect)
         chunk_generate(_chunk, global[$ "worldgen_context"]);
         
-        _chunk.boolean |= CHUNK_BOOLEAN.GENERATED | CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH;
+        _chunk.boolean |= CHUNK_BOOL.GENERATED | CHUNK_BOOL.SURFACE_LIGHTING_REFRESH;
         
         // Trigger global lighting refresh
-        obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.LIGHTING;
+        obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOL.LIGHTING;
         
         // Queue for deferred tile processing
         array_push(global.chunk_tile_process_queue, _chunk);
@@ -133,7 +133,7 @@ function chunk_tile_process_queue_process()
         }
         
         // Mark chunk as ready for rendering
-        _chunk.boolean |= CHUNK_BOOLEAN.TILE_PROCESSED;
+        _chunk.boolean |= CHUNK_BOOL.TILE_PROCESSED;
         
         array_delete(_queue, 0, 1);
     }
@@ -150,7 +150,7 @@ function chunk_queue_clear()
         
         if (_chunk != undefined)
         {
-            _chunk.boolean &= ~CHUNK_BOOLEAN.QUEUED;
+            _chunk.boolean &= ~CHUNK_BOOL.QUEUED;
         }
     }
 }

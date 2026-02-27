@@ -7,11 +7,11 @@ function control_inventory()
     
     if (keyboard_check_pressed(global.settings.input_keyboard_inventory))
     {
-        is_opened ^= IS_OPENED_BOOLEAN.INVENTORY;
+        is_opened ^= WORLD_OPENED_BOOL.INVENTORY;
         
-        if (is_opened & IS_OPENED_BOOLEAN.INVENTORY)
+        if (is_opened & WORLD_OPENED_BOOL.INVENTORY)
         {
-            surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK;
+            surface_refresh |= SURFACE_REFRESH_BOOL.INVENTORY_BACKPACK;
             
             instance_activate_object(obj_Inventory);
             
@@ -19,7 +19,7 @@ function control_inventory()
         }
         else
         {
-            surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR;
+            surface_refresh |= SURFACE_REFRESH_BOOL.INVENTORY_HOTBAR;
             
             with (obj_Inventory)
             {
@@ -85,7 +85,7 @@ function control_inventory()
         }
     }
     
-    var _is_inventory_opened = is_opened & IS_OPENED_BOOLEAN.INVENTORY;
+    var _is_inventory_opened = is_opened & WORLD_OPENED_BOOL.INVENTORY;
     
     if (_is_inventory_opened)
     {
@@ -105,12 +105,12 @@ function control_inventory()
         
         if (!_is_inventory_opened)
         {
-            surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR;
+            surface_refresh |= SURFACE_REFRESH_BOOL.INVENTORY_HOTBAR;
             
             break;
         }
         
-        surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK;
+        surface_refresh |= SURFACE_REFRESH_BOOL.INVENTORY_BACKPACK;
         
         /* fast switch from inventory to hotbar */
         if (keyboard_check(vk_shift))
@@ -144,8 +144,8 @@ function control_inventory()
         }
         
         surface_refresh |= (_is_inventory_opened)
-            ? SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK
-            : SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR;
+            ? SURFACE_REFRESH_BOOL.INVENTORY_BACKPACK
+            : SURFACE_REFRESH_BOOL.INVENTORY_HOTBAR;
     }
 
     /* update pos for inventory instances */

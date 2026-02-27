@@ -3,12 +3,12 @@
 /// @param {Struct.Chunk} _chunk Chunk struct to clear
 function chunk_clear(_chunk)
 {
-    if (_chunk.boolean & CHUNK_BOOLEAN.SAVING) exit;
+    if (_chunk.boolean & CHUNK_BOOL.SAVING) exit;
     
     if (_chunk.chunk_display)
     {
-        _chunk.boolean |= CHUNK_BOOLEAN.SAVING;
-
+        _chunk.boolean |= CHUNK_BOOL.SAVING;
+        
         chunk_save_queue_add(_chunk);
     }
     else

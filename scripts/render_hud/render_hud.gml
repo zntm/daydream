@@ -8,7 +8,7 @@ function render_hud(_gui_width, _gui_height)
     var _hp     = obj_Player.hp;
     var _hp_max = obj_Player.hp_max;
     
-    if (_hp > 0) && (is_opened & IS_OPENED_BOOLEAN.GUI) && !(is_opened & IS_OPENED_BOOLEAN.MENU)
+    if (_hp > 0) && (is_opened & WORLD_OPENED_BOOL.GUI) && !(is_opened & WORLD_OPENED_BOOL.MENU)
     {
         // Note: Hotbar and inventory rendering now handled by declarative UI system
         // (UIElement objects in global.gui_root)
@@ -19,14 +19,14 @@ function render_hud(_gui_width, _gui_height)
         
         var _gui_inventory = global.gui_inventory;
         
-        if (is_opened & IS_OPENED_BOOLEAN.INVENTORY)
+        if (is_opened & WORLD_OPENED_BOOL.INVENTORY)
         {
             // Craftable panel rendering handled by declarative UI
             
             // Tooltip rendering
             var _inst = global.inventory_selected_hover;
             
-            if (instance_exists(_inst)) && !(is_opened & IS_OPENED_BOOLEAN.CHAT)
+            if (instance_exists(_inst)) && !(is_opened & WORLD_OPENED_BOOL.CHAT)
             {
                 if (_inst.slot_type != INVENTORY_SLOT_TYPE.CRAFTABLE)
                 {

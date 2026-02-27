@@ -27,8 +27,8 @@ function UITextbox(_x, _y, _width, _height) : UIElement(_x, _y, _width, _height)
     placeholder_color = #6a6a7a;
     
     
-    /* state bitmask (aligned with MENU_BUTTON_BOOLEAN) */
-    boolean = MENU_BUTTON_BOOLEAN.IS_VISIBLE;
+    /* state bitmask (aligned with MENU_BUTTON_BOOL) */
+    boolean = MENU_BUTTON_BOOL.IS_VISIBLE;
     
     
     cursor_blink = 0;
@@ -74,29 +74,29 @@ function UITextbox(_x, _y, _width, _height) : UIElement(_x, _y, _width, _height)
         
         if (_is_hovered && !(global.ui_hover_consumed ?? false))
         {
-            boolean |= MENU_BUTTON_BOOLEAN.IS_HOVER;
+            boolean |= MENU_BUTTON_BOOL.IS_HOVER;
             
             global.ui_hover_consumed = true;
         }
         else
         {
-            if (boolean & MENU_BUTTON_BOOLEAN.IS_HOVER)
+            if (boolean & MENU_BUTTON_BOOL.IS_HOVER)
             {
-                boolean ^= MENU_BUTTON_BOOLEAN.IS_HOVER;
+                boolean ^= MENU_BUTTON_BOOL.IS_HOVER;
             }
         }
         
         
         if (mouse_check_button_pressed(mb_left))
         {
-            var _was_focused = (boolean & MENU_BUTTON_BOOLEAN.IS_SELECTED);
+            var _was_focused = (boolean & MENU_BUTTON_BOOL.IS_SELECTED);
             
             
             if (_is_hovered) && !(global.ui_input_consumed)
             {
                 if !(_was_focused)
                 {
-                    boolean |= MENU_BUTTON_BOOLEAN.IS_SELECTED;
+                    boolean |= MENU_BUTTON_BOOL.IS_SELECTED;
                     
                     global.ui_input_consumed = true;
                     
@@ -109,7 +109,7 @@ function UITextbox(_x, _y, _width, _height) : UIElement(_x, _y, _width, _height)
             {
                 if (_was_focused)
                 {
-                    boolean ^= MENU_BUTTON_BOOLEAN.IS_SELECTED;
+                    boolean ^= MENU_BUTTON_BOOL.IS_SELECTED;
                     
                     emit_event("on_blur");
                     
@@ -119,7 +119,7 @@ function UITextbox(_x, _y, _width, _height) : UIElement(_x, _y, _width, _height)
         }
         
         
-        if (boolean & MENU_BUTTON_BOOLEAN.IS_SELECTED)
+        if (boolean & MENU_BUTTON_BOOL.IS_SELECTED)
         {
             ++cursor_blink;
             
@@ -233,7 +233,7 @@ function UITextbox(_x, _y, _width, _height) : UIElement(_x, _y, _width, _height)
             
             if (keyboard_check_pressed(vk_enter))
             {
-                boolean ^= MENU_BUTTON_BOOLEAN.IS_SELECTED;
+                boolean ^= MENU_BUTTON_BOOL.IS_SELECTED;
                 
                 emit_event("on_submit", { value: text });
             }
@@ -267,7 +267,7 @@ function UITextbox(_x, _y, _width, _height) : UIElement(_x, _y, _width, _height)
         draw_rectangle_colour(_x1, _y1, _x2, _y2, background_color, background_color, background_color, background_color, false);
         
         
-        var _is_focused = (boolean & MENU_BUTTON_BOOLEAN.IS_SELECTED);
+        var _is_focused = (boolean & MENU_BUTTON_BOOL.IS_SELECTED);
         
         var _b_color = (_is_focused ? focus_border_color : border_color);
         
@@ -307,7 +307,7 @@ function UITextbox(_x, _y, _width, _height) : UIElement(_x, _y, _width, _height)
     {
         text = string(_value);
         
-        if (boolean & MENU_BUTTON_BOOLEAN.IS_SELECTED)
+        if (boolean & MENU_BUTTON_BOOL.IS_SELECTED)
         {
             keyboard_string = text;
         }

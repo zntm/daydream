@@ -32,7 +32,7 @@ function UIDropdown(_x, _y, _width, _height) : UIElement(_x, _y, _width, _height
     
     
     /* interaction state */
-    boolean = MENU_BUTTON_BOOLEAN.IS_VISIBLE;
+    boolean = MENU_BUTTON_BOOL.IS_VISIBLE;
     
     hovered_option = -1;
     
@@ -129,15 +129,15 @@ function UIDropdown(_x, _y, _width, _height) : UIElement(_x, _y, _width, _height
         
         if (_is_header_hovered && !(global.ui_hover_consumed ?? false))
         {
-            boolean |= MENU_BUTTON_BOOLEAN.IS_HOVER;
+            boolean |= MENU_BUTTON_BOOL.IS_HOVER;
             
             global.ui_hover_consumed = true;
         }
         else
         {
-            if (boolean & MENU_BUTTON_BOOLEAN.IS_HOVER)
+            if (boolean & MENU_BUTTON_BOOL.IS_HOVER)
             {
-                boolean ^= MENU_BUTTON_BOOLEAN.IS_HOVER;
+                boolean ^= MENU_BUTTON_BOOL.IS_HOVER;
             }
         }
         

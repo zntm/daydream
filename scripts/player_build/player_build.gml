@@ -97,12 +97,12 @@ function player_build(_dt, _x, _y)
     
     if (_data.has_light())
     {
-        obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.LIGHTING;
+        obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOL.LIGHTING;
     }
     
     inventory_item_decrement("base", _inventory_selected_hotbar);
     
-    obj_Game_Control.surface_refresh |= ((obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.INVENTORY) ? SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK : SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR);
+    obj_Game_Control.surface_refresh |= ((obj_Game_Control.is_opened & WORLD_OPENED_BOOL.INVENTORY) ? SURFACE_REFRESH_BOOL.INVENTORY_BACKPACK : SURFACE_REFRESH_BOOL.INVENTORY_HOTBAR);
     
     var _sfx = _data.get_tile_sfx().get_build().get_id();
     

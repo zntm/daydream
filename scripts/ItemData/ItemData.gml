@@ -39,7 +39,7 @@ global.item_armor_type = {
     accessory: INVENTORY_SLOT_TYPE.ACCESSORY
 }
 
-enum ITEM_PROPERTIES_BOOLEAN {
+enum ITEM_PROPERTIES_BOOL {
     IS_TILE             = 1 << 0,
     IS_WALL             = 1 << 1,
     IS_FOLIAGE          = 1 << 2,
@@ -639,6 +639,13 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
                 set_on_random_tick(_on_random_tick);
             }
             
+            var _inventory_slot_sprite = _tile[$ "inventory_slot_sprite"];
+            
+            if (_inventory_slot_sprite != undefined)
+            {
+                set_inventory_slot_sprite(_inventory_slot_sprite);
+            }
+            
             var _on_stay = _tile[$ "on_stay"];
             
             if (_on_stay != undefined)
@@ -1208,7 +1215,7 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     {
         if (_is_tile)
         {
-            ___properties |= ITEM_PROPERTIES_BOOLEAN.IS_TILE;
+            ___properties |= ITEM_PROPERTIES_BOOL.IS_TILE;
             
             set_animation_type("connected");
         }
@@ -1218,14 +1225,14 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     
     static is_tile = function()
     {
-        return !!(___properties & ITEM_PROPERTIES_BOOLEAN.IS_TILE);
+        return !!(___properties & ITEM_PROPERTIES_BOOL.IS_TILE);
     }
     
     static set_property_is_wall = function(_is_wall)
     {
         if (_is_wall)
         {
-            ___properties |= ITEM_PROPERTIES_BOOLEAN.IS_WALL;
+            ___properties |= ITEM_PROPERTIES_BOOL.IS_WALL;
         }
         
         return self;
@@ -1233,14 +1240,14 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     
     static is_wall = function()
     {
-        return !!(___properties & ITEM_PROPERTIES_BOOLEAN.IS_WALL);
+        return !!(___properties & ITEM_PROPERTIES_BOOL.IS_WALL);
     }
     
     static set_property_is_foliage = function(_is_foliage)
     {
         if (_is_foliage)
         {
-            ___properties |= ITEM_PROPERTIES_BOOLEAN.IS_FOLIAGE;
+            ___properties |= ITEM_PROPERTIES_BOOL.IS_FOLIAGE;
             
             set_animation_type("foliage");
         }
@@ -1250,14 +1257,14 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     
     static is_foliage = function()
     {
-        return !!(___properties & ITEM_PROPERTIES_BOOLEAN.IS_FOLIAGE);
+        return !!(___properties & ITEM_PROPERTIES_BOOL.IS_FOLIAGE);
     }
     
     static set_property_is_liquid = function(_is_liquid)
     {
         if (_is_liquid)
         {
-            ___properties |= ITEM_PROPERTIES_BOOLEAN.IS_LIQUID;
+            ___properties |= ITEM_PROPERTIES_BOOL.IS_LIQUID;
         }
         
         return self;
@@ -1265,14 +1272,14 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     
     static is_liquid = function()
     {
-        return !!(___properties & ITEM_PROPERTIES_BOOLEAN.IS_LIQUID);
+        return !!(___properties & ITEM_PROPERTIES_BOOL.IS_LIQUID);
     }
     
     static set_property_is_conductive = function(_is_conductive)
     {
         if (_is_conductive)
         {
-            ___properties |= ITEM_PROPERTIES_BOOLEAN.IS_CONDUCTIVE;
+            ___properties |= ITEM_PROPERTIES_BOOL.IS_CONDUCTIVE;
         }
         
         return self;
@@ -1280,14 +1287,14 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     
     static is_conductive = function()
     {
-        return !!(___properties & ITEM_PROPERTIES_BOOLEAN.IS_CONDUCTIVE);
+        return !!(___properties & ITEM_PROPERTIES_BOOL.IS_CONDUCTIVE);
     }
     
     static set_is_crafting_station = function(_is_crafting_station)
     {
         if (_is_crafting_station)
         {
-            ___properties |= ITEM_PROPERTIES_BOOLEAN.IS_CRAFTING_STATION;
+            ___properties |= ITEM_PROPERTIES_BOOL.IS_CRAFTING_STATION;
         }
         
         return self;
@@ -1295,14 +1302,14 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     
     static is_crafting_station = function()
     {
-        return !!(___properties & ITEM_PROPERTIES_BOOLEAN.IS_CRAFTING_STATION);
+        return !!(___properties & ITEM_PROPERTIES_BOOL.IS_CRAFTING_STATION);
     }
     
     static set_property_is_transparent = function(_is_transparent)
     {
         if (_is_transparent)
         {
-            ___properties |= ITEM_PROPERTIES_BOOLEAN.IS_TRANSPARENT;
+            ___properties |= ITEM_PROPERTIES_BOOL.IS_TRANSPARENT;
         }
         
         return self;
@@ -1310,27 +1317,27 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     
     static is_transparent = function()
     {
-        return !!(___properties & ITEM_PROPERTIES_BOOLEAN.IS_TRANSPARENT);
+        return !!(___properties & ITEM_PROPERTIES_BOOL.IS_TRANSPARENT);
     }
     
     static set_property_can_mirror = function()
     {
-        ___properties |= ITEM_PROPERTIES_BOOLEAN.CAN_FLIP_ON_X;
+        ___properties |= ITEM_PROPERTIES_BOOL.CAN_FLIP_ON_X;
     }
     
     static can_flip_on_x = function()
     {
-        return !!(___properties & ITEM_PROPERTIES_BOOLEAN.CAN_FLIP_ON_X);
+        return !!(___properties & ITEM_PROPERTIES_BOOL.CAN_FLIP_ON_X);
     }
     
     static set_property_can_flip = function()
     {
-        ___properties |= ITEM_PROPERTIES_BOOLEAN.CAN_FLIP_ON_Y;
+        ___properties |= ITEM_PROPERTIES_BOOL.CAN_FLIP_ON_Y;
     }
     
     static can_flip_on_y = function()
     {
-        return !!(___properties & ITEM_PROPERTIES_BOOLEAN.CAN_FLIP_ON_Y);
+        return !!(___properties & ITEM_PROPERTIES_BOOL.CAN_FLIP_ON_Y);
     }
     
     #endregion
@@ -1377,6 +1384,26 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     static get_tile_inventory_length = function()
     {
         return self[$ "___tile_inventory_length"] ?? 0;
+    }
+    
+    static get_container_length = function()
+    {
+        return self[$ "___tile_inventory_length"] ?? self[$ "___item_inventory_length"] ?? 0;
+    }
+    
+    static set_inventory_slot_sprite = function(_sprite)
+    {
+        if (_sprite != undefined)
+        {
+            ___inventory_slot_sprite = _sprite;
+        }
+        
+        return self;
+    }
+    
+    static get_inventory_slot_sprite = function()
+    {
+        return self[$ "___inventory_slot_sprite"];
     }
     
     #endregion

@@ -49,7 +49,7 @@ function init(_namespace)
     
     init_achievement($"{PROGRAM_DIRECTORY_RESOURCES}/data/achievements", _namespace);
     
-    init_loot($"{PROGRAM_DIRECTORY_RESOURCES}/data/loot", _namespace);
+    init_loot(_namespace, $"{PROGRAM_DIRECTORY_RESOURCES}/data/loot");
 }
 
 call_later(8, time_source_units_frames, function()

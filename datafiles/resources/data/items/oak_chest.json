@@ -11,6 +11,7 @@
                     "id": "phantasia:oak_chest"
                 }
             ],
+            "inventory_slot_sprite": "spr_Inventory_Slot_Chest",
             "harvest": {
                 "condition": {
                     "id": "#phantasia:item/type/axe"

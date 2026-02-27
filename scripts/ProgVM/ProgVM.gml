@@ -1218,7 +1218,7 @@ function proglang_vm_run(_vm, _entry_bytecode)
                         var _arg_count = _arg;
                         var _class = _stack[--_sp];
                         
-                        if (!is_struct(_class)) || (!struct_exists(_class, "__type__")) || (_class.__type__ != "class")
+                        if (!is_struct(_class)) || (_class[$ "__type__"] != "class")
                         {
                             runtime_error(PROGLANG_ERROR_TYPE.TYPE, "Target is not a class.");
                         }
@@ -1515,6 +1515,7 @@ function proglang_vm_run(_vm, _entry_bytecode)
                     case PROG_OP.IN_VALUE:
                         _rhs = _stack[--_sp];
                         _lhs = _stack[--_sp];
+                        
                         _result = false;
                         
                         if (is_struct(_rhs))
@@ -1604,13 +1605,14 @@ function proglang_vm_run(_vm, _entry_bytecode)
         catch (_vm_exception)
         {
             var _try_stack = _vm[PROG_VM.TRY_STACK];
+            var _try_stack_length = array_length(_try_stack);
             
-            if (array_length(_try_stack) == 0)
+            if (_try_stack_length == 0)
             {
                 throw _vm_exception;
             }
             
-            var _handler = _try_stack[array_length(_try_stack) - 1];
+            var _handler = _try_stack[_try_stack_length - 1];
             
             array_pop(_try_stack);
             

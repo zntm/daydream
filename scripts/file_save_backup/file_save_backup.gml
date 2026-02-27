@@ -1,11 +1,11 @@
+global.async_save_map = {}
+
 function buffer_save_compressed_async(_buffer, _path)
 {
     var _buffer_compressed = buffer_compress(_buffer, 0, buffer_get_size(_buffer));
     
     /* store for cleanup in async system event */
     var _id = buffer_save_async(_buffer_compressed, _path, 0, buffer_get_size(_buffer_compressed));
-    
-    if (!variable_global_exists("async_save_map")) global.async_save_map = {}
     
     global.async_save_map[$ string(_id)] = _buffer_compressed;
     
@@ -158,7 +158,7 @@ function file_backup_world_chunk(_current_world, _chunk)
     buffer_write(_current_chunk_buffer, buffer_u32, PROGRAM_VERSION_NUMBER);
     buffer_write(_current_chunk_buffer, buffer_f64, _timestamp);
     
-    var _is_generated  = !!(_chunk.boolean & CHUNK_BOOLEAN.GENERATED);
+    var _is_generated  = !!(_chunk.boolean & CHUNK_BOOL.GENERATED);
     var _chunk_display = _chunk.chunk_display;
     
     buffer_write(_current_chunk_buffer, buffer_bool, _is_generated);

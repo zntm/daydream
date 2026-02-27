@@ -42,21 +42,21 @@ function cuteify_get_width(_string, _asset_prefix = "")
             
             if (_type == CUTEIFY_TYPE.OBSTRUCT)
             {
-                _boolean ^= CUTEIFY_BOOLEAN.OBSTRUCT;
+                _boolean ^= CUTEIFY_BOOL.OBSTRUCT;
                 
                 continue;
             }
             
             if (_type == CUTEIFY_TYPE.UNDERLINE)
             {
-                _boolean ^= CUTEIFY_BOOLEAN.UNDERLINE;
+                _boolean ^= CUTEIFY_BOOL.UNDERLINE;
                 
                 continue;
             }
             
             var _text_length = string_length(_text);
             
-            if (_boolean & CUTEIFY_BOOLEAN.OBSTRUCT)
+            if (_boolean & CUTEIFY_BOOL.OBSTRUCT)
             {
                 for (var l = 1; l <= _text_length; ++l)
                 {

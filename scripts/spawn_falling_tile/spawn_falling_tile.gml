@@ -66,7 +66,7 @@ function spawn_falling_tile(_world_x, _world_y, _tile_z, _tile)
     var _chunk = chunk_map_get(_pixel_x, _pixel_y);
     if (_chunk != undefined)
     {
-        _chunk.boolean |= CHUNK_BOOLEAN.DIRTY;
+        _chunk.boolean |= CHUNK_BOOL.DIRTY;
     }
     
     return _inst;

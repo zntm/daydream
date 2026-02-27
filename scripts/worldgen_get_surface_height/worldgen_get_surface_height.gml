@@ -14,7 +14,7 @@ function worldgen_get_surface_height(_x, _seed, _world_data = global.world_data[
     
     var _h1 = _blend.r1.get_surface_height(_x, _seed);
     
-    // Calculate blend factor (0.5 at edge, 1.0 at smoothing distance)
+    /* calculate blend factor (0.5 at edge, 1.0 at smoothing distance) */
     var _factor = 0.5 + (_blend.diff / (2 * _smoothing));
     
     if (_factor >= 1.0)

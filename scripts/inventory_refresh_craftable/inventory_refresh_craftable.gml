@@ -47,6 +47,7 @@ function inventory_refresh_craftable()
                     if (_crafting_stations_distance[$ _crafting_stations[j]] <= TILE_SIZE * 4)
                     {
                         _continue = false;
+                        
                         break;
                     }
                 }
@@ -58,10 +59,50 @@ function inventory_refresh_craftable()
             var _ingredients_length = _data.get_ingredients_length();
             var _count = 0;
             
+            var _chest_inventories = (global.crafting_pull_from_chests)
+                ? inventory_get_nearby_containers(obj_Player.x, obj_Player.y, TILE_SIZE * 4)
+                : [];
+            
             for (var j = 0; j < _ingredients_length; ++j)
             {
                 var _ingredient = _ingredients[j];
-                if (!inventory_contains(_ingredient.id, _ingredient.amount, _inventory)) break;
+                var _id = _ingredient.id;
+                var _amount_needed = _ingredient.amount;
+                
+                var _total_count = 0;
+                
+                // Check player inventory first
+                for (var k = 0; k < array_length(_inventory); ++k)
+                {
+                    var _slot = _inventory[k];
+                    if (_slot == INVENTORY_EMPTY) continue;
+                    var _sid = _slot.get_id();
+                    if (is_array(_id) ? (!array_contains(_id, _sid)) : (_sid != _id)) continue;
+                    _total_count += _slot.get_amount();
+                    if (_total_count >= _amount_needed) break;
+                }
+                
+                // Check nearby chests if still needed
+                if (_total_count < _amount_needed)
+                {
+                    for (var k = 0; k < array_length(_chest_inventories); ++k)
+                    {
+                        var _chest_inv = _chest_inventories[k];
+                        for (var l = 0; l < array_length(_chest_inv); ++l)
+                        {
+                            var _slot = _chest_inv[l];
+                            if (_slot == INVENTORY_EMPTY) continue;
+                            var _sid = _slot.get_id();
+                            if (is_array(_id) ? (!array_contains(_id, _sid)) : (_sid != _id)) continue;
+                            _total_count += _slot.get_amount();
+                            if (_total_count >= _amount_needed) break;
+                        }
+                        if (_total_count >= _amount_needed) break;
+                    }
+                }
+                
+                if (_total_count < _amount_needed) break;
+                
                 ++_count;
             }
             
@@ -90,7 +131,7 @@ function inventory_refresh_craftable()
         }
         
         // Update Panel Layout and Visibility
-        global.ui_crafting.visible = (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.INVENTORY) && (_offset > 0);
+        global.ui_crafting.visible = (obj_Game_Control.is_opened & WORLD_OPENED_BOOL.INVENTORY) && (_offset > 0);
         
         if (variable_instance_exists(global.ui_crafting.root_elements[0], "width")) {
             global.ui_crafting.root_elements[0].width = _offset * 16;
@@ -98,9 +139,9 @@ function inventory_refresh_craftable()
         }
         
         // Refresh surfaces (still needed for other systems?)
-        if (obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.INVENTORY)
+        if (obj_Game_Control.is_opened & WORLD_OPENED_BOOL.INVENTORY)
         {
-            obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_CRAFTABLE;
+            obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOL.INVENTORY_CRAFTABLE;
         }
     }
 }

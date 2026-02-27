@@ -2,4 +2,10 @@
     position = ORIGIN_BOTTOM_CENTER + (8, 115)
     size = (160, 16)
     layout = LAYOUT_HORIZONTAL
+
+    @button(btn_chest_pull) {
+        position = (0, -20)
+        size = (160, 16)
+        text = "PULL FROM CHESTS is OFF"
+    }
 }

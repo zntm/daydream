@@ -82,7 +82,7 @@ function control_player()
     }
     
     // --- DOUBLE INPUT ---
-    if !(obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.MENU)
+    if !(obj_Game_Control.is_opened & WORLD_OPENED_BOOL.MENU)
     {
         var _inv_target = global.inventory;
         var _hotbar_index = global.inventory_selected_hotbar;
@@ -226,7 +226,7 @@ function control_player()
             {
                 var _died = control_entity_damage(id, _inst, _data.get_contact_damage());
                 
-                obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.HP;
+                obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOL.HP;
                 
                 if (_died) exit;
                 
@@ -317,7 +317,7 @@ function control_player()
     // Update Charge Logic (Local Player Only)
     if (is_local && _skill != undefined && _skill.type == "charge")
     {
-        if (input_state.attack_held && !(obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.MENU))
+        if (input_state.attack_held && !(obj_Game_Control.is_opened & WORLD_OPENED_BOOL.MENU))
         {
             charge_time += 1 / GAME_TICK;
             
@@ -460,7 +460,7 @@ function control_player()
     // Fallback charging for non-skill launchers or early release support
     if (is_local && _skill == undefined && _data != undefined && _data.get_hold_type() == ITEM_HOLD_TYPE.LAUNCHER)
     {
-        if (input_state.attack_held && !(obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.MENU))
+        if (input_state.attack_held && !(obj_Game_Control.is_opened & WORLD_OPENED_BOOL.MENU))
         {
             charge_time += 1 / GAME_TICK;
             charge_threshold = 0.5; // Default threshold
@@ -518,7 +518,7 @@ function control_player()
     // For launchers, don't allow regular swinging if we are charging
     if (_data != undefined && _data.get_hold_type() == ITEM_HOLD_TYPE.LAUNCHER && charge_time > 0) _can_swing = false;
 
-    if !(obj_Game_Control.is_opened & IS_OPENED_BOOLEAN.MENU) && _can_swing
+    if !(obj_Game_Control.is_opened & WORLD_OPENED_BOOL.MENU) && _can_swing
     {
         // Regular swings are now free, but delay regen
         if (is_local)
@@ -701,7 +701,7 @@ function control_player()
                             }
                         }
                         
-                        if (is_local) obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR | SURFACE_REFRESH_BOOLEAN.HP;
+                        if (is_local) obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOL.INVENTORY_HOTBAR | SURFACE_REFRESH_BOOL.HP;
                         
                         var _sfx = _item_consumable.get_sfx();
                         if (_sfx != undefined) sfx_diegetic_play(audio_emitter, x, y, _sfx.get_id(), _sfx.get_gain(), global.settings.audio_sfx);
@@ -851,9 +851,9 @@ function control_player()
             var _difference = max(0, y - y_last - (TILE_SIZE * 8));
             var _value = floor(power(floor(_difference / TILE_SIZE) * 0.62, 1.25));
             
-            if (_value > 0 && !attribute.has_boolean(ATTRIBUTE_BOOLEAN.IS_FALL_DAMAGE_RESISTANT))
+            if (_value > 0 && !attribute.has_boolean(ATTRIBUTE_BOOL.IS_FALL_DAMAGE_RESISTANT))
             {
-                obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.HP;
+                obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOL.HP;
                 hp -= _value;
                 y_last = y;
                 
@@ -902,7 +902,7 @@ function control_player()
     
     // Regeneration
     var _is_regenerated = false;
-    if (attribute.has_boolean(ATTRIBUTE_BOOLEAN.HAS_REGENERATION))
+    if (attribute.has_boolean(ATTRIBUTE_BOOL.HAS_REGENERATION))
     {
         _is_regenerated = control_entity_regeneration(1 / GAME_TICK);
     }
@@ -911,13 +911,13 @@ function control_player()
     
     if (_is_regenerated)
     {
-        obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.HP;
+        obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOL.HP;
     }
     
     // Chunk visibility - ONLY for local player to prevent remote players from hijacking view center
     if (is_local && (physics_body.vel_x != 0 || physics_body.vel_y != 0))
     {
-        obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.LIGHTING;
+        obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOL.LIGHTING;
         
         var _camera_x = global.camera_x;
         var _camera_y = global.camera_y;

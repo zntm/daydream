@@ -119,7 +119,7 @@ function debug_init()
         
         if (instance_exists(obj_Game_Control))
         {
-            obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR | SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK;
+            obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOL.INVENTORY_HOTBAR | SURFACE_REFRESH_BOOL.INVENTORY_BACKPACK;
             inventory_refresh_craftable(true);
         }
     });
@@ -131,7 +131,7 @@ function debug_init()
         global.inventory.base = array_create(global.inventory_length.base, INVENTORY_EMPTY);
         if (instance_exists(obj_Game_Control))
         {
-            obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOLEAN.INVENTORY_HOTBAR | SURFACE_REFRESH_BOOLEAN.INVENTORY_BACKPACK;
+            obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOL.INVENTORY_HOTBAR | SURFACE_REFRESH_BOOL.INVENTORY_BACKPACK;
         }
     });
 

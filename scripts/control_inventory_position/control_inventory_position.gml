@@ -15,7 +15,7 @@ function control_inventory_position()
     }
     
     // Include inventory if open
-    if (is_opened & IS_OPENED_BOOLEAN.INVENTORY) {
+    if (is_opened & WORLD_OPENED_BOOL.INVENTORY) {
         if (variable_global_exists("ui_inventory") && global.ui_inventory != undefined) {
             array_push(_ui_instances, { instance: global.ui_inventory, visible: true });
         }
@@ -30,7 +30,7 @@ function control_inventory_position()
     if (variable_global_exists("gui_panel_crafting_modular"))
     {
         var _panel = global.gui_panel_crafting_modular;
-        _panel.visible = (is_opened & IS_OPENED_BOOLEAN.INVENTORY) && (array_length(_panel.children) > 0);
+        _panel.visible = (is_opened & WORLD_OPENED_BOOL.INVENTORY) && (array_length(_panel.children) > 0);
         
         // Process crafting slots from old system
         var _craft_children = _panel.children;

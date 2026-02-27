@@ -16,21 +16,21 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
     {
         var _chunk = chunk_in_view[i];
         
-        if (_chunk != undefined) && (_chunk.boolean & CHUNK_BOOLEAN.GENERATED) && (_chunk.boolean & CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH)
+        if (_chunk != undefined) && (_chunk.boolean & CHUNK_BOOL.GENERATED) && (_chunk.boolean & CHUNK_BOOL.SURFACE_LIGHTING_REFRESH)
         {
-            surface_refresh |= SURFACE_REFRESH_BOOLEAN.LIGHTING;
+            surface_refresh |= SURFACE_REFRESH_BOOL.LIGHTING;
             break;
         }
     }
     
     if (_surface_x != obj_Game_Control.surface_lighting_x) || (_surface_y != obj_Game_Control.surface_lighting_y)
     {
-        surface_refresh |= SURFACE_REFRESH_BOOLEAN.LIGHTING;
+        surface_refresh |= SURFACE_REFRESH_BOOL.LIGHTING;
     }
     
-    if (surface_refresh & SURFACE_REFRESH_BOOLEAN.LIGHTING)
+    if (surface_refresh & SURFACE_REFRESH_BOOL.LIGHTING)
     {
-        surface_refresh ^= SURFACE_REFRESH_BOOLEAN.LIGHTING;
+        surface_refresh ^= SURFACE_REFRESH_BOOL.LIGHTING;
         
         obj_Game_Control.surface_lighting_x = _surface_x;
         obj_Game_Control.surface_lighting_y = _surface_y;
@@ -43,7 +43,7 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
         {
             var _chunk = chunk_in_view[i];
             
-            if (_chunk == undefined) || !(_chunk.boolean & CHUNK_BOOLEAN.GENERATED) continue;
+            if (_chunk == undefined) || !(_chunk.boolean & CHUNK_BOOL.GENERATED) continue;
             
             // Check if surface needs updating
             var _needs_update = false;
@@ -57,9 +57,9 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
             }
             
             // Check refresh flag
-            if (_chunk.boolean & CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH)
+            if (_chunk.boolean & CHUNK_BOOL.SURFACE_LIGHTING_REFRESH)
             {
-                _chunk.boolean ^= CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH;
+                _chunk.boolean ^= CHUNK_BOOL.SURFACE_LIGHTING_REFRESH;
                 
                 _needs_update = true;
             }
@@ -143,7 +143,7 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
         {
             var _chunk = chunk_in_view[i];
             
-            if (_chunk == undefined) || !(_chunk.boolean & CHUNK_BOOLEAN.GENERATED) continue;
+            if (_chunk == undefined) || !(_chunk.boolean & CHUNK_BOOL.GENERATED) continue;
             
             if (surface_exists(_chunk.surface_lighting))
             {
@@ -179,7 +179,7 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
         {
             var _chunk = chunk_in_view[i];
             
-            if (_chunk == undefined) || !(_chunk.boolean & CHUNK_BOOLEAN.GENERATED) continue;
+            if (_chunk == undefined) || !(_chunk.boolean & CHUNK_BOOL.GENERATED) continue;
             
             var _lights = _chunk.chunk_lights;
             var _lights_length = array_length(_lights);
@@ -247,7 +247,7 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
         {
             var _chunk = chunk_in_view[i];
             
-            if (_chunk == undefined) || !(_chunk.boolean & CHUNK_BOOLEAN.GENERATED) continue;
+            if (_chunk == undefined) || !(_chunk.boolean & CHUNK_BOOL.GENERATED) continue;
             
             var _lights = _chunk.chunk_lights;
             var _lights_length = array_length(_lights);
@@ -341,21 +341,21 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
     {
         var _chunk = chunk_in_view[i];
         
-        if (_chunk != undefined) && (_chunk.boolean & CHUNK_BOOLEAN.GENERATED) && (_chunk.boolean & CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH)
+        if (_chunk != undefined) && (_chunk.boolean & CHUNK_BOOL.GENERATED) && (_chunk.boolean & CHUNK_BOOL.SURFACE_LIGHTING_REFRESH)
         {
-            surface_refresh |= SURFACE_REFRESH_BOOLEAN.LIGHTING;
+            surface_refresh |= SURFACE_REFRESH_BOOL.LIGHTING;
             break;
         }
     }
     
     if (_surface_x != obj_Game_Control.surface_lighting_x) || (_surface_y != obj_Game_Control.surface_lighting_y)
     {
-        surface_refresh |= SURFACE_REFRESH_BOOLEAN.LIGHTING;
+        surface_refresh |= SURFACE_REFRESH_BOOL.LIGHTING;
     }
     
-    if (surface_refresh & SURFACE_REFRESH_BOOLEAN.LIGHTING)
+    if (surface_refresh & SURFACE_REFRESH_BOOL.LIGHTING)
     {
-        surface_refresh ^= SURFACE_REFRESH_BOOLEAN.LIGHTING;
+        surface_refresh ^= SURFACE_REFRESH_BOOL.LIGHTING;
         
         obj_Game_Control.surface_lighting_x = _surface_x;
         obj_Game_Control.surface_lighting_y = _surface_y;
@@ -368,7 +368,7 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
         {
             var _chunk = chunk_in_view[i];
             
-            if (_chunk == undefined) || !(_chunk.boolean & CHUNK_BOOLEAN.GENERATED) continue;
+            if (_chunk == undefined) || !(_chunk.boolean & CHUNK_BOOL.GENERATED) continue;
             
             // Check if surface needs updating
             var _needs_update = false;
@@ -382,9 +382,9 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
             }
             
             // Check refresh flag
-            if (_chunk.boolean & CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH)
+            if (_chunk.boolean & CHUNK_BOOL.SURFACE_LIGHTING_REFRESH)
             {
-                _chunk.boolean ^= CHUNK_BOOLEAN.SURFACE_LIGHTING_REFRESH;
+                _chunk.boolean ^= CHUNK_BOOL.SURFACE_LIGHTING_REFRESH;
                 
                 _needs_update = true;
             }
@@ -477,7 +477,7 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
         {
             var _chunk = chunk_in_view[i];
             
-            if (_chunk == undefined) || !(_chunk.boolean & CHUNK_BOOLEAN.GENERATED) continue;
+            if (_chunk == undefined) || !(_chunk.boolean & CHUNK_BOOL.GENERATED) continue;
             
             if (surface_exists(_chunk.surface_lighting))
             {
@@ -515,7 +515,7 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
         {
             var _chunk = chunk_in_view[i];
             
-            if (_chunk == undefined) || !(_chunk.boolean & CHUNK_BOOLEAN.GENERATED) continue;
+            if (_chunk == undefined) || !(_chunk.boolean & CHUNK_BOOL.GENERATED) continue;
             
             var _lights = _chunk.chunk_lights;
             var _lights_length = array_length(_lights);
@@ -599,7 +599,7 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
         {
             var _chunk = chunk_in_view[i];
             
-            if (_chunk == undefined) || !(_chunk.boolean & CHUNK_BOOLEAN.GENERATED) continue;
+            if (_chunk == undefined) || !(_chunk.boolean & CHUNK_BOOL.GENERATED) continue;
             
             var _lights = _chunk.chunk_lights;
             var _lights_length = array_length(_lights);

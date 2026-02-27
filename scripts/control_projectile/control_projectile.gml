@@ -97,7 +97,7 @@ function control_projectile(_dt = 1.0)
                 }
             }
             
-            if (_boolean & PROJECTILE_BOOLEAN.DESTROY_ON_ENTITY)
+            if (_boolean & PROJECTILE_BOOL.DESTROY_ON_ENTITY)
             {
                 instance_destroy();
                 exit;
@@ -159,7 +159,7 @@ function control_projectile(_dt = 1.0)
                 }
             }
             
-            if (_boolean & PROJECTILE_BOOLEAN.DESTROY_ON_TILE)
+            if (_boolean & PROJECTILE_BOOL.DESTROY_ON_TILE)
             {
                 instance_destroy();
                 exit;
