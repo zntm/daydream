@@ -3,7 +3,6 @@ if (obj_Game_Control.spawn_needs_init)
 {
     var _current_world = global.current_world;
     var _world_data = global.world_data[$ _current_world.dimension];
-    global.chunk_pool.worldgen_config = new WorldGenState(_world_data);
     
     var _seed = _current_world.seed;
     var _base_tile_x = 0;
@@ -21,14 +20,13 @@ if (obj_Game_Control.spawn_needs_init)
         
         var _player_tile_x = _base_tile_x + _offset;
         var _surface_height = worldgen_get_surface_height(_player_tile_x, _seed);
+        var _cave_start     = worldgen_get_cave_start(_player_tile_x, _seed);
         
         // Verify spawn position using functional WorldGen
         // Check solidity: Y (floor) is solid, Y-1 (feet) is air, Y-2 (head) is air
-        var _is_solid_floor = worldgen_is_solid(_player_tile_x, _surface_height, _seed);
-        var _is_air_feet    = !worldgen_is_solid(_player_tile_x, _surface_height - 1, _seed);
-        var _is_air_head    = !worldgen_is_solid(_player_tile_x, _surface_height - 2, _seed);
+        var _is_solid_floor = !worldgen_get_cave(_player_tile_x, _surface_height, _surface_height, _cave_start, _seed);
         
-        if (_is_solid_floor && _is_air_feet && _is_air_head)
+        if (_is_solid_floor)
         {
             // Valid spawn position found
             with (obj_Player)
