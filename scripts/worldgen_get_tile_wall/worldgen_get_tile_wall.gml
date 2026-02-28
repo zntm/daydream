@@ -5,10 +5,10 @@ function worldgen_get_tile_wall(_x, _y, _surface_biome, _cave_biome, _surface_he
     _world_data ??= global.world_data[$ global.current_world.dimension];
     _biome_data ??= global.biome_data;
     
-    // Generate noise value (0..1) for coherent tile variation
-    // Offset differently from base tiles to avoid identical patterns
+    /* generate noise value (0..255) for coherent tile variation */
+    /* offset differently from base tiles to avoid identical patterns */
     var _tile_noise_scale = _world_data.get_tile_variation_noise_scale();
-    var _noise = open_simplex_noise(_x * _tile_noise_scale, _y * _tile_noise_scale + (_seed * 200), 1.0, 2);
+    var _noise = open_simplex_noise(_x * _tile_noise_scale, _y * _tile_noise_scale + (_seed * 200), 255, 2);
     
     if (_cave_biome != undefined)
     {

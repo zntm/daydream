@@ -380,52 +380,6 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
         }
     }
     
-    /// @desc Get random tile ID from weighted entries using noise value (0..1)
-    static __get_weighted_tile = function(_parsed, _noise)
-    {
-        var _entries = _parsed.entries;
-        var _total = _parsed.total_weight;
-        
-        if (array_length(_entries) == 0) return TILE_EMPTY;
-        
-        if (array_length(_entries) == 1)
-        {
-            return smart_value(_entries[0].id);
-        }
-        
-        // Scale noise to 0..255 for range checks
-        var _noise_255 = frac(abs(_noise)) * 255;
-        
-        // 1. Check explicit ranges
-        for (var i = 0; i < array_length(_entries); ++i)
-        {
-            var _e = _entries[i];
-            if (_e.noise_min != undefined)
-            {
-                var _min = _e.noise_min;
-                var _max = _e.noise_max ?? 256;
-                
-                if (_noise_255 >= _min) && (_noise_255 < _max)
-                {
-                    return smart_value(_e.id);
-                }
-            }
-        }
-        
-        // 2. Fallback to weighted selection
-        // Use noise value (0..1) mapped to total weight
-        var _roll = frac(abs(_noise)) * _total;
-        
-        for (var i = 0; i < array_length(_entries); ++i)
-        {
-            if (_roll < _entries[i].cumulative_weight)
-            {
-                return smart_value(_entries[i].id);
-            }
-        }
-        
-        return smart_value(_entries[0].id);
-    }
     
     static set_tile_top_layer = function(_data)
     {
@@ -436,14 +390,14 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
         return self;
     }
     
-    static get_tile_top_layer_base = function(_seed = 0)
+    static get_tile_top_layer_base = function(_noise = 0)
     {
-        return __get_weighted_tile(___tile_top_layer_base, _seed);
+        return biome_get_weighted_tile(___tile_top_layer_base, _noise);
     }
     
-    static get_tile_top_layer_wall = function(_seed = 0)
+    static get_tile_top_layer_wall = function(_noise = 0)
     {
-        return __get_weighted_tile(___tile_top_layer_wall, _seed);
+        return biome_get_weighted_tile(___tile_top_layer_wall, _noise);
     }
     
     static set_tile_middle_layer = function(_data)
@@ -455,14 +409,14 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
         return self;
     }
     
-    static get_tile_middle_layer_base = function(_seed = 0)
+    static get_tile_middle_layer_base = function(_noise = 0)
     {
-        return __get_weighted_tile(___tile_middle_layer_base, _seed);
+        return biome_get_weighted_tile(___tile_middle_layer_base, _noise);
     }
     
-    static get_tile_middle_layer_wall = function(_seed = 0)
+    static get_tile_middle_layer_wall = function(_noise = 0)
     {
-        return __get_weighted_tile(___tile_middle_layer_wall, _seed);
+        return biome_get_weighted_tile(___tile_middle_layer_wall, _noise);
     }
     
     static set_tile_bottom_layer = function(_data)
@@ -474,14 +428,14 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
         return self;
     }
     
-    static get_tile_bottom_layer_base = function(_seed = 0)
+    static get_tile_bottom_layer_base = function(_noise = 0)
     {
-        return __get_weighted_tile(___tile_bottom_layer_base, _seed);
+        return biome_get_weighted_tile(___tile_bottom_layer_base, _noise);
     }
     
-    static get_tile_bottom_layer_wall = function(_seed = 0)
+    static get_tile_bottom_layer_wall = function(_noise = 0)
     {
-        return __get_weighted_tile(___tile_bottom_layer_wall, _seed);
+        return biome_get_weighted_tile(___tile_bottom_layer_wall, _noise);
     }
     
     static set_terrain_modifier = function(_modifier)
@@ -538,16 +492,16 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
         return self[$ "___has_shore_tiles"] ?? false;
     }
     
-    static get_shore_tile_base = function(_seed = 0)
+    static get_shore_tile_base = function(_noise = 0)
     {
         if (!has_shore_tiles()) return undefined;
-        return __get_weighted_tile(___shore_tiles_base, _seed);
+        return biome_get_weighted_tile(___shore_tiles_base, _noise);
     }
     
-    static get_shore_tile_wall = function(_seed = 0)
+    static get_shore_tile_wall = function(_noise = 0)
     {
         if (!has_shore_tiles()) return undefined;
-        return __get_weighted_tile(___shore_tiles_wall, _seed);
+        return biome_get_weighted_tile(___shore_tiles_wall, _noise);
     }
     
     static set_is_skyland = function(_value)

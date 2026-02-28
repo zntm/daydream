@@ -20,7 +20,7 @@
                 }
             },
             "placement": {
-                "condition": "#phantasia:tile/placement/condition_plant"
+                "condition": "#phantasia:tile/placement/condition_bamboo"
             },
             "sfx": "#phantasia:tile/sfx/foliage"
         }

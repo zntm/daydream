@@ -30,9 +30,9 @@ function worldgen_get_tile_base(_x, _y, _surface_biome, _cave_biome, _surface_he
     
     if (_y < _surface_height) return TILE_EMPTY;
     
-    // Generate noise value (0..1) for coherent tile variation
+    /* generate noise value (0..255) for coherent tile variation */
     var _tile_noise_scale = _world_data.get_tile_variation_noise_scale();
-    var _noise = open_simplex_noise(_x * _tile_noise_scale, _y * _tile_noise_scale + (_seed * 100), 1.0, 2);
+    var _noise = open_simplex_noise(_x * _tile_noise_scale, _y * _tile_noise_scale + (_seed * 100), 255, 2);
     
     // Cave biome tiles
     if (_cave_biome != undefined)
