@@ -124,10 +124,10 @@ var _camera_height = camera_get_view_height(view_camera[0]);
 var _camera_x = 0 - (_camera_width  / 2);
 var _camera_y = 0 - (_camera_height / 2);
 
-var _gui_scale = 2;
+var _gui_scale = 1;
 
-var _gui_width  = round(_gui_scale * global.window_width);
-var _gui_height = round(_gui_scale * global.window_height);
+var _gui_width  = global.window_width;
+var _gui_height = global.window_height;
 
 global.camera_width  = _camera_width;
 global.camera_height = _camera_height;

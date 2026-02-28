@@ -77,8 +77,7 @@
             "base": [
                 {
                     "id": "phantasia:petrilumin",
-                    "noise_min": 0,
-                    "noise_max": 60
+                    "weight": 1
                 },
                 {
                     "id": {
@@ -94,27 +93,21 @@
                         ],
                         "type": "smart_value:choose_weighted"
                     },
-                    "weight": 4,
-                    "noise_min": 60,
-                    "noise_max": 256
+                    "weight": 4
                 }
             ],
             "wall": [
                 {
                     "id": "phantasia:petrilumin_wall",
-                    "noise_min": 0,
-                    "noise_max": 60
+                    "weight": 1
                 },
                 {
                     "id": "phantasia:lumin_moss_wall",
-                    "weight": 4,
-                    "noise_min": 60,
-                    "noise_max": 252
+                    "weight": 4
                 },
                 {
                     "id": "$EMPTY",
-                    "noise_min": 252,
-                    "noise_max": 256
+                    "weight": 1
                 }
             ]
         },
@@ -122,8 +115,7 @@
             "base": [
                 {
                     "id": "phantasia:petrilumin",
-                    "noise_min": 0,
-                    "noise_max": 60
+                    "weight": 1
                 },
                 {
                     "id": {
@@ -139,27 +131,21 @@
                         ],
                         "type": "smart_value:choose_weighted"
                     },
-                    "weight": 4,
-                    "noise_min": 60,
-                    "noise_max": 256
+                    "weight": 4
                 }
             ],
             "wall": [
                 {
                     "id": "phantasia:petrilumin_wall",
-                    "noise_min": 0,
-                    "noise_max": 60
+                    "weight": 1
                 },
                 {
                     "id": "phantasia:lumin_moss_wall",
-                    "weight": 4,
-                    "noise_min": 60,
-                    "noise_max": 252
+                    "weight": 4
                 },
                 {
                     "id": "$EMPTY",
-                    "noise_min": 252,
-                    "noise_max": 256
+                    "weight": 1
                 }
             ]
         },
@@ -167,8 +153,7 @@
             "base": [
                 {
                     "id": "phantasia:petrilumin",
-                    "noise_min": 0,
-                    "noise_max": 60
+                    "weight": 1
                 },
                 {
                     "id": {
@@ -184,27 +169,21 @@
                         ],
                         "type": "smart_value:choose_weighted"
                     },
-                    "weight": 4,
-                    "noise_min": 60,
-                    "noise_max": 256
+                    "weight": 4
                 }
             ],
             "wall": [
                 {
                     "id": "phantasia:petrilumin_wall",
-                    "noise_min": 0,
-                    "noise_max": 60
+                    "weight": 1
                 },
                 {
                     "id": "phantasia:lumin_moss_wall",
-                    "weight": 4,
-                    "noise_min": 60,
-                    "noise_max": 252
+                    "weight": 4
                 },
                 {
                     "id": "$EMPTY",
-                    "noise_min": 252,
-                    "noise_max": 256
+                    "weight": 1
                 }
             ]
         }

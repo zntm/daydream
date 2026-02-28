@@ -78,15 +78,11 @@ if (is_opened & WORLD_OPENED_BOOL.GENERATING_WORLD)
     /* draw loading ui */
     if (ui_loading != undefined)
     {
-        var _base_scale = ui_get_base_scale();
-        var _matrix_saved = matrix_get(matrix_world);
-        var _matrix_scale = matrix_build(0, 0, 0, 0, 0, 0, _base_scale.x, _base_scale.y, 1);
+        /* update to process bindings (loading text) */
+        ui_update(ui_loading);
         
-        matrix_set(matrix_world, _matrix_scale);
-        
+        /* ui_draw handles scaling internally via ui_get_base_scale */
         ui_draw(ui_loading);
-        
-        matrix_set(matrix_world, _matrix_saved);
     }
     
     ui_editor_draw();

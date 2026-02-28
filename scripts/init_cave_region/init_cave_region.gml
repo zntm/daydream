@@ -6,7 +6,7 @@ function init_cave_region()
         new CaveRegionData("lumin", {
             biome: "phantasia:cave/moonfall",
             noise_scale: 0.008,
-            noise_threshold: 0.4,
+            noise_threshold: 0.2,
             min_depth: 20,
             salt: 0x7A3F
         })

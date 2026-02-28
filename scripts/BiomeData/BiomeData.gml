@@ -390,7 +390,7 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
         
         if (array_length(_entries) == 1)
         {
-            return _entries[0].id;
+            return smart_value(_entries[0].id);
         }
         
         // Scale noise to 0..255 for range checks
@@ -412,7 +412,7 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
             }
         }
         
-        // 2. Fallback to weighted random
+        // 2. Fallback to weighted selection
         // Use noise value (0..1) mapped to total weight
         var _roll = frac(abs(_noise)) * _total;
         
@@ -424,7 +424,7 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
             }
         }
         
-        return _entries[0].id;
+        return smart_value(_entries[0].id);
     }
     
     static set_tile_top_layer = function(_data)

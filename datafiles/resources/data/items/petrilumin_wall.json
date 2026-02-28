@@ -32,5 +32,6 @@
         "phantasia:is_wall"
     ],
     "sprite": "phantasia:item/petrilumin_wall",
-    "type": "untouchable"
+    "type": "untouchable",
+    "light": "#DBEDFF"
 }

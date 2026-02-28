@@ -79,6 +79,13 @@ if (obj_Game_Control.is_opened & WORLD_OPENED_BOOL.GENERATING_WORLD)
         }
     }
     
+    if (variable_instance_exists(id, "ui_loading")) && (ui_loading != undefined)
+    {
+        ui_instance_destroy(ui_loading);
+        
+        ui_loading = undefined;
+    }
+    
     obj_Game_Control.is_opened ^= WORLD_OPENED_BOOL.GENERATING_WORLD;
 }
 
