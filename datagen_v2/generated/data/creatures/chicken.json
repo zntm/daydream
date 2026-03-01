@@ -1,0 +1,62 @@
+{
+    "attribute": {
+        "boolean": [
+            "phantasia:is_fall_damage_resistant"
+        ],
+        "collision_box_height": 16,
+        "collision_box_width": 10,
+        "eye_level": 3,
+        "gravity": 0.5,
+        "hit_box_height": 15,
+        "hit_box_width": 14,
+        "jump_falloff": 2.2,
+        "jump_height": 4.6,
+        "jump_time": 10,
+        "movement_speed": 0.4
+    },
+    "drops": [
+        {
+            "id": "phantasia:raw_chicken"
+        },
+        {
+            "id": "phantasia:feather",
+            "amount": {
+                "values": {
+                    "min": 1,
+                    "max": 3
+                },
+                "type": "smart_value:irandom"
+            },
+            "chance": 0.7
+        }
+    ],
+    "hostility_type": "passive",
+    "hp": 12,
+    "movement_type": "ground",
+    "sprite": {
+        "cold": {
+            "idle": {
+                "id": "phantasia:creature/chicken/idle/cold"
+            },
+            "moving": {
+                "id": "phantasia:creature/chicken/moving/cold"
+            }
+        },
+        "default": {
+            "idle": {
+                "id": "phantasia:creature/chicken/idle/default"
+            },
+            "moving": {
+                "id": "phantasia:creature/chicken/moving/default"
+            }
+        },
+        "warm": {
+            "idle": {
+                "id": "phantasia:creature/chicken/idle/warm"
+            },
+            "moving": {
+                "id": "phantasia:creature/chicken/moving/warm"
+            }
+        }
+    }
+}

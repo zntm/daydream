@@ -1,0 +1,20 @@
+{
+    "function": {
+        "id": "phantasia:clump",
+        "parameters": {
+            "tile_base": {
+                "id": "phantasia:moss"
+            },
+            "tile_wall": {
+                "id": "phantasia:moss_wall"
+            }
+        }
+    },
+    "height": 5,
+    "placement": {
+        "type": "floor",
+        "xoffset": -2,
+        "yoffset": -3
+    },
+    "width": 5
+}
