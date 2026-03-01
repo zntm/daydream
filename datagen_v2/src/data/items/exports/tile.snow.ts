@@ -1,8 +1,17 @@
-import { ItemParticle, TileItemProperties } from "../lib";
+import { DatagenReturnData } from "../../../lib";
+import { Item, ItemType, ItemParticle, TileItemProperties } from "../lib";
 import { TileItemAudioProperties, TileItemHarvest } from "../lib/TileItem";
-import { tileBlockWallItems } from "../lib/groups/";
+import { tileBlockWallItems } from "../lib/groups";
 
 export default [
+    new DatagenReturnData(
+        `snowball.json`,
+        new Item(
+            ItemType.Default,
+            "phantasia:item/snowball",
+            "#phantasia:item/generic/inventory_default",
+        ),
+    ),
     tileBlockWallItems(
         "phantasia",
         "snow_block",

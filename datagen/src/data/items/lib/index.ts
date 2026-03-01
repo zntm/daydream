@@ -1,5 +1,5 @@
 import { AccessoryItem, ItemAccessory, ItemAccessoryType } from "./AccessoryItem";
-import { ArrowItem } from "./ArrowItem";
+import { AmmoItem } from "./AmmoItem";
 import { LauncherItem } from "./LauncherItem";
 import { ConsumableItem, ConsumableItemData } from "./ConsumableItem";
 import { Item } from "./Item";
@@ -28,7 +28,7 @@ import { ToolItem } from "./ToolItem";
 
 export {
     AccessoryItem,
-    ArrowItem,
+    AmmoItem,
     LauncherItem,
     ItemAccessory,
     ItemAccessoryType,

@@ -18,7 +18,7 @@ export class ConsumableItemData {
 }
 
 export class ConsumableItem extends Item {
-    private item?: {
+    declare protected item?: {
         consumable?: ConsumableItemData;
     };
 

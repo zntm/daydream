@@ -7,6 +7,7 @@ import {
     TileItemAudioProperties,
     TileItemDrop,
     TileItemHarvest,
+    TileItemProperties,
 } from "../lib";
 
 export default [
@@ -75,5 +76,32 @@ export default [
                     0.24,
                 ),
             ]),
+    ),
+    new DatagenReturnData(
+        "lumin_bulb.json",
+        new TileItem(
+            ItemType.Solid,
+            "phantasia:item/lumin_bulb",
+            "#phantasia:item/generic/inventory_tile",
+            [
+                TileItemProperties.CanFlip,
+                TileItemProperties.CanMirror,
+                TileItemProperties.IsTile,
+            ],
+        )
+            .setTileDrops([new TileItemDrop("phantasia:lumin_bulb")])
+            .setTileHarvest(
+                new TileItemHarvest(
+                    0.26,
+                    0,
+                    new ItemParticle(
+                        "#phantasia:tile/particle_colour/lumin_moss",
+                        "#phantasia:tile/generic/harvest_particle_frequency",
+                    ),
+                ),
+            )
+            .setTileSFX("#phantasia:tile/sfx/foliage")
+            .setTileAudioProperties(new TileItemAudioProperties(0.05, 0))
+            .setTileLight("#DBEDFF"),
     ),
 ];

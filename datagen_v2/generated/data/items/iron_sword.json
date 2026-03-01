@@ -1,0 +1,16 @@
+{
+    "inventory": "#phantasia:item/generic/inventory_tool",
+    "item": {
+        "damage": 7,
+        "durability": {
+            "amount": 367,
+            "bar": "#phantasia:item/generic/durability_bar"
+        },
+        "harvest": {
+            "hardness": 0,
+            "level": 0
+        }
+    },
+    "sprite": "phantasia:item/iron_sword",
+    "type": "tool"
+}

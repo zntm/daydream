@@ -5,6 +5,7 @@ export enum TileItemProperties {
     IsLiquid = "phantasia:is_liquid",
     IsTile = "phantasia:is_tile",
     IsWall = "phantasia:is_wall",
+    IsCraftingStation = "phantasia:is_crafting_station",
 }
 
 export type ItemPropertiesType = TileItemProperties;

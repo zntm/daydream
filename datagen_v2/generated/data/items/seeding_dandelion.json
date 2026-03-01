@@ -23,6 +23,14 @@
                 "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
             }
         },
+        "on_random_tick": [
+            {
+                "id": "@phantasia:items/spawn_particle",
+                "parameters": {
+                    "id": "phantasia:tile/seeding_dandelion"
+                }
+            }
+        ],
         "placement": {
             "condition": "#phantasia:tile/placement/condition_plant"
         },

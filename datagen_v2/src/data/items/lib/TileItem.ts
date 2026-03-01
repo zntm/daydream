@@ -30,8 +30,10 @@ export class TileItemCondition {
         this.level = level;
     }
 
-    setIndex(index?: number) {
+    setIndex(index?: number): TileItemCondition {
         this.index = index;
+
+        return this;
     }
 }
 
@@ -150,9 +152,10 @@ export class TileItem extends Item {
         sfx?: string | ItemSFX;
         audio_properties?: TileItemAudioProperties;
         on_use?: ItemScript[];
-        on_random_tick?: ItemScript[];
         light?: string;
         animation_type?: string;
+        on_stay?: ItemScript[];
+        on_random_tick?: ItemScript[];
     };
 
     constructor(
@@ -233,6 +236,14 @@ export class TileItem extends Item {
         this.tile ??= {};
         this.tile.on_random_tick ??= [];
         this.tile.on_random_tick.push(...functions);
+
+        return this;
+    }
+
+    setTileOnStay(functions: ItemScript[]) {
+        this.tile ??= {};
+        this.tile.on_stay ??= [];
+        this.tile.on_stay.push(...functions);
 
         return this;
     }
