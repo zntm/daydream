@@ -21,6 +21,16 @@ class FruitConsumableItem {
 export default [
     new FruitConsumableItem(
         "phantasia",
+        "lumin_vine_berry",
+        new ConsumableItemData(
+            6,
+            2,
+            new ItemCooldown("phantasia:food", 0.5),
+            new Sound("phantasia:sfx/item/eat"),
+        ),
+    ),
+    new FruitConsumableItem(
+        "phantasia",
         "apple",
         new ConsumableItemData(
             8,

@@ -210,6 +210,12 @@ export default [
                 new BiomeFoliage("phantasia:lumin_blossom", 0.08).setGenerateOn(
                     ["phantasia:lumin_moss", "phantasia:petrilumin"],
                 ),
+            ])
+            .setStructures([
+                new BiomeStructure(
+                    "phantasia:tall_foliage/lumin_vine",
+                    0.05,
+                ),
             ]),
     ),
 ];

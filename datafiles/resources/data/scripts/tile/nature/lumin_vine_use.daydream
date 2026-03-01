@@ -1,0 +1,8 @@
+/* Harvesting berries from lumin vines */
+if (tile.get_index_offset() == 3) {
+    tile.set_index_offset(0)
+    
+    /* drop a berry */
+    var item = new Tile("phantasia:lumin_vine")
+    tile_place(item, x, y, z)
+}
