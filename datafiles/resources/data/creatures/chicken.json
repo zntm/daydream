@@ -1,18 +1,18 @@
 {
     "attribute": {
-        "collision_box_width": 10,
+        "boolean": [
+            "phantasia:is_fall_damage_resistant"
+        ],
         "collision_box_height": 16,
-        "hit_box_width": 14,
-        "hit_box_height": 15,
+        "collision_box_width": 10,
         "eye_level": 3,
         "gravity": 0.5,
+        "hit_box_height": 15,
+        "hit_box_width": 14,
         "jump_falloff": 2.2,
         "jump_height": 4.6,
         "jump_time": 10,
-        "movement_speed": 0.4,
-        "boolean": [
-            "phantasia:is_fall_damage_resistant"
-        ]
+        "movement_speed": 0.4
     },
     "drops": [
         {

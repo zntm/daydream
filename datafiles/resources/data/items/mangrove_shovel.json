@@ -11,6 +11,6 @@
             "level": 1
         }
     },
-    "sprite": "phantasia:item/mangrove_shovel",
+    "sprite": "mangrove_shovel",
     "type": "tool"
 }

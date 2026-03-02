@@ -1,34 +1,27 @@
 {
     "inventory": "#phantasia:item/generic/inventory_default",
-    "item": {
-        "tile": {
-            "audio_properties": {
-                "lowpass": 0.05,
-                "reverb": 0
-            },
-            "drops": [
-                {
-                    "id": "phantasia:twig"
-                }
-            ],
-            "harvest": {
-                "hardness": 0.38,
-                "level": 0,
-                "particle": {
-                    "frequency": "#phantasia:tile/generic/harvest_particle_frequency",
-                    "id": "#phantasia:tile/particle_colour/twig"
-                }
-            },
-            "placement": {
-                "condition": "#phantasia:tile/placement/condition_dry_plant"
-            },
-            "sfx": "#phantasia:tile/sfx/wood"
-        }
-    },
     "properties": [
         "phantasia:can_mirror",
         "phantasia:is_foliage"
     ],
     "sprite": "phantasia:item/dead_bush",
+    "tile": {
+        "audio_properties": {
+            "lowpass": 0.05,
+            "reverb": 0
+        },
+        "harvest": {
+            "hardness": 0.38,
+            "level": 0,
+            "particle": {
+                "colour": "#phantasia:tile/particle_colour/twig",
+                "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
+            }
+        },
+        "placement": {
+            "condition": "#phantasia:tile/placement/condition_dry_plant"
+        },
+        "sfx": "#phantasia:tile/sfx/wood"
+    },
     "type": "untouchable"
 }

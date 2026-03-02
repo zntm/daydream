@@ -10,9 +10,9 @@
         }
     ],
     "particle": {
-        "id": "phantasia:particle/entity/effect",
         "chance": 0.2,
-        "colour": "#74C242"
+        "colour": "#74C242",
+        "id": "phantasia:particle/entity/effect"
     },
     "type": "constant"
 }

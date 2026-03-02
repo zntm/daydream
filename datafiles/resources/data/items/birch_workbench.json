@@ -1,33 +1,36 @@
 {
     "inventory": "#phantasia:item/generic/inventory_tile",
-    "item": {
-        "tile": {
-            "audio_properties": {
-                "lowpass": 0.4,
-                "reverb": 0.1
-            },
-            "drops": [
-                {
-                    "id": "phantasia:birch_workbench"
-                }
-            ],
-            "harvest": {
-                "condition": {
-                    "id": "#phantasia:item/type/axe"
-                },
-                "hardness": 0.36,
-                "level": 1,
-                "particle": {
-                    "frequency": "#phantasia:tile/generic/harvest_particle_frequency",
-                    "id": [
-                        "#4F5263",
-                        "#3E4051"
-                    ]
-                }
-            },
-            "sfx": "#phantasia:tile/sfx/wood"
-        }
-    },
+    "properties": [
+        "phantasia:can_flip",
+        "phantasia:can_mirror",
+        "phantasia:is_tile"
+    ],
     "sprite": "phantasia:item/birch_workbench",
+    "tile": {
+        "audio_properties": {
+            "lowpass": 0.4,
+            "reverb": 0.1
+        },
+        "drops": [
+            {
+                "id": "phantasia:birch_workbench"
+            }
+        ],
+        "harvest": {
+            "condition": {
+                "id": "#phantasia:item/type/axe"
+            },
+            "hardness": 0.56,
+            "level": 1,
+            "particle": {
+                "colour": [
+                    "#4F5263",
+                    "#3E4051"
+                ],
+                "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
+            }
+        },
+        "sfx": "#phantasia:tile/sfx/wood"
+    },
     "type": "untouchable"
 }

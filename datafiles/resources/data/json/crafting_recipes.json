@@ -1,261 +1,388 @@
 [
     {
-        "id": "phantasia:cooked_chicken",
-        "amount": 8,
-        "crafting_stations": "phantasia:furnace",
-        "ingredients": [
-            {
-                "id": "phantasia:raw_chicken",
-                "amount": 1
-            }
-        ]
-    },
-    {
-        "id": "phantasia:cooked_rabbit",
-        "amount": 8,
-        "crafting_stations": "phantasia:furnace",
-        "ingredients": [
-            {
-                "id": "phantasia:raw_rabbit",
-                "amount": 1
-            }
-        ]
-    },
-    {
-        "id": "phantasia:platinum_sword",
+        "id": "phantasia:birch_chest",
         "amount": 1,
-        "crafting_stations": "#phantasia:tile/generic/workbench",
         "ingredients": [
             {
-                "id": "phantasia:platinum",
-                "amount": 12
-            }
-        ]
-    },
-    {
-        "id": "phantasia:platinum_pickaxe",
-        "amount": 1,
-        "crafting_stations": "#phantasia:tile/generic/workbench",
-        "ingredients": [
-            {
-                "id": "phantasia:platinum",
-                "amount": 10
-            }
-        ]
-    },
-    {
-        "id": "phantasia:platinum_axe",
-        "amount": 1,
-        "crafting_stations": "#phantasia:tile/generic/workbench",
-        "ingredients": [
-            {
-                "id": "phantasia:platinum",
-                "amount": 10
-            }
-        ]
-    },
-    {
-        "id": "phantasia:platinum_shovel",
-        "amount": 1,
-        "crafting_stations": "#phantasia:tile/generic/workbench",
-        "ingredients": [
-            {
-                "id": "phantasia:platinum",
-                "amount": 8
-            }
-        ]
-    },
-    {
-        "id": "phantasia:platinum_block",
-        "amount": 1,
-        "crafting_stations": "#phantasia:tile/generic/workbench",
-        "ingredients": [
-            {
-                "id": "phantasia:platinum",
-                "amount": 8
-            }
-        ]
-    },
-    {
-        "id": "phantasia:platinum",
-        "amount": 8,
-        "crafting_stations": "#phantasia:tile/generic/workbench",
-        "ingredients": [
-            {
-                "id": "phantasia:platinum_block",
-                "amount": 1
-            }
-        ]
-    },
-    {
-        "id": "phantasia:platinum",
-        "amount": 1,
-        "crafting_stations": "phantasia:furnace",
-        "ingredients": [
-            {
-                "id": "phantasia:raw_platinum",
-                "amount": 1
-            }
-        ]
-    },
-    {
-        "id": "phantasia:gold_sword",
-        "amount": 1,
-        "crafting_stations": "#phantasia:tile/generic/workbench",
-        "ingredients": [
-            {
-                "id": "phantasia:gold",
-                "amount": 12
-            }
-        ]
-    },
-    {
-        "id": "phantasia:gold_pickaxe",
-        "amount": 1,
-        "crafting_stations": "#phantasia:tile/generic/workbench",
-        "ingredients": [
-            {
-                "id": "phantasia:gold",
-                "amount": 10
-            }
-        ]
-    },
-    {
-        "id": "phantasia:gold_axe",
-        "amount": 1,
-        "crafting_stations": "#phantasia:tile/generic/workbench",
-        "ingredients": [
-            {
-                "id": "phantasia:gold",
-                "amount": 10
-            }
-        ]
-    },
-    {
-        "id": "phantasia:gold_shovel",
-        "amount": 1,
-        "crafting_stations": "#phantasia:tile/generic/workbench",
-        "ingredients": [
-            {
-                "id": "phantasia:gold",
-                "amount": 8
-            }
-        ]
-    },
-    {
-        "id": "phantasia:gold_block",
-        "amount": 1,
-        "crafting_stations": "#phantasia:tile/generic/workbench",
-        "ingredients": [
-            {
-                "id": "phantasia:gold",
-                "amount": 8
-            }
-        ]
-    },
-    {
-        "id": "phantasia:gold",
-        "amount": 8,
-        "crafting_stations": "#phantasia:tile/generic/workbench",
-        "ingredients": [
-            {
-                "id": "phantasia:gold_block",
-                "amount": 1
-            }
-        ]
-    },
-    {
-        "id": "phantasia:gold",
-        "amount": 1,
-        "crafting_stations": "phantasia:furnace",
-        "ingredients": [
-            {
-                "id": "phantasia:raw_gold",
-                "amount": 1
-            }
-        ]
-    },
-    {
-        "id": "phantasia:iron_sword",
-        "amount": 1,
-        "crafting_stations": "#phantasia:tile/generic/workbench",
-        "ingredients": [
+                "id": "phantasia:birch",
+                "amount": 2
+            },
             {
                 "id": "phantasia:iron",
-                "amount": 12
+                "amount": 2
             }
         ]
     },
     {
-        "id": "phantasia:iron_pickaxe",
+        "id": "phantasia:birch_workbench",
+        "amount": 1,
+        "ingredients": [
+            {
+                "id": "phantasia:birch",
+                "amount": 4
+            }
+        ]
+    },
+    {
+        "id": "phantasia:birch_planks",
+        "amount": 1,
+        "ingredients": [
+            {
+                "id": "phantasia:birch",
+                "amount": 3
+            }
+        ]
+    },
+    {
+        "id": "phantasia:birch_planks",
         "amount": 1,
         "crafting_stations": "#phantasia:tile/generic/workbench",
         "ingredients": [
             {
-                "id": "phantasia:iron",
-                "amount": 10
+                "id": "phantasia:birch_planks_wall",
+                "amount": 3
             }
         ]
     },
     {
-        "id": "phantasia:iron_axe",
-        "amount": 1,
+        "id": "phantasia:birch_planks_wall",
+        "amount": 2,
         "crafting_stations": "#phantasia:tile/generic/workbench",
         "ingredients": [
             {
-                "id": "phantasia:iron",
-                "amount": 10
-            }
-        ]
-    },
-    {
-        "id": "phantasia:iron_shovel",
-        "amount": 1,
-        "crafting_stations": "#phantasia:tile/generic/workbench",
-        "ingredients": [
-            {
-                "id": "phantasia:iron",
-                "amount": 8
-            }
-        ]
-    },
-    {
-        "id": "phantasia:iron_block",
-        "amount": 1,
-        "crafting_stations": "#phantasia:tile/generic/workbench",
-        "ingredients": [
-            {
-                "id": "phantasia:iron",
-                "amount": 8
-            }
-        ]
-    },
-    {
-        "id": "phantasia:iron",
-        "amount": 8,
-        "crafting_stations": "#phantasia:tile/generic/workbench",
-        "ingredients": [
-            {
-                "id": "phantasia:iron_block",
+                "id": "phantasia:birch_planks",
                 "amount": 1
             }
         ]
     },
     {
-        "id": "phantasia:iron",
+        "id": "phantasia:birch_pickaxe",
         "amount": 1,
-        "crafting_stations": "phantasia:furnace",
         "ingredients": [
             {
-                "id": "phantasia:raw_iron",
+                "id": "phantasia:birch",
+                "amount": 10
+            }
+        ]
+    },
+    {
+        "id": "phantasia:birch_shovel",
+        "amount": 1,
+        "ingredients": [
+            {
+                "id": "phantasia:birch",
+                "amount": 8
+            }
+        ]
+    },
+    {
+        "id": "phantasia:cherry_chest",
+        "amount": 1,
+        "ingredients": [
+            {
+                "id": "phantasia:cherry",
+                "amount": 2
+            },
+            {
+                "id": "phantasia:iron",
+                "amount": 2
+            }
+        ]
+    },
+    {
+        "id": "phantasia:cherry_workbench",
+        "amount": 1,
+        "ingredients": [
+            {
+                "id": "phantasia:cherry",
+                "amount": 4
+            }
+        ]
+    },
+    {
+        "id": "phantasia:cherry_planks",
+        "amount": 1,
+        "ingredients": [
+            {
+                "id": "phantasia:cherry",
+                "amount": 3
+            }
+        ]
+    },
+    {
+        "id": "phantasia:cherry_planks",
+        "amount": 1,
+        "crafting_stations": "#phantasia:tile/generic/workbench",
+        "ingredients": [
+            {
+                "id": "phantasia:cherry_planks_wall",
+                "amount": 3
+            }
+        ]
+    },
+    {
+        "id": "phantasia:cherry_planks_wall",
+        "amount": 2,
+        "crafting_stations": "#phantasia:tile/generic/workbench",
+        "ingredients": [
+            {
+                "id": "phantasia:cherry_planks",
                 "amount": 1
+            }
+        ]
+    },
+    {
+        "id": "phantasia:cherry_pickaxe",
+        "amount": 1,
+        "ingredients": [
+            {
+                "id": "phantasia:cherry",
+                "amount": 10
+            }
+        ]
+    },
+    {
+        "id": "phantasia:cherry_shovel",
+        "amount": 1,
+        "ingredients": [
+            {
+                "id": "phantasia:cherry",
+                "amount": 8
+            }
+        ]
+    },
+    {
+        "id": "phantasia:mangrove_chest",
+        "amount": 1,
+        "ingredients": [
+            {
+                "id": "phantasia:mangrove",
+                "amount": 2
+            },
+            {
+                "id": "phantasia:iron",
+                "amount": 2
+            }
+        ]
+    },
+    {
+        "id": "phantasia:mangrove_workbench",
+        "amount": 1,
+        "ingredients": [
+            {
+                "id": "phantasia:mangrove",
+                "amount": 4
+            }
+        ]
+    },
+    {
+        "id": "phantasia:mangrove_planks",
+        "amount": 1,
+        "ingredients": [
+            {
+                "id": "phantasia:mangrove",
+                "amount": 3
+            }
+        ]
+    },
+    {
+        "id": "phantasia:mangrove_planks",
+        "amount": 1,
+        "crafting_stations": "#phantasia:tile/generic/workbench",
+        "ingredients": [
+            {
+                "id": "phantasia:mangrove_planks_wall",
+                "amount": 3
+            }
+        ]
+    },
+    {
+        "id": "phantasia:mangrove_planks_wall",
+        "amount": 2,
+        "crafting_stations": "#phantasia:tile/generic/workbench",
+        "ingredients": [
+            {
+                "id": "phantasia:mangrove_planks",
+                "amount": 1
+            }
+        ]
+    },
+    {
+        "id": "phantasia:mangrove_pickaxe",
+        "amount": 1,
+        "ingredients": [
+            {
+                "id": "phantasia:mangrove",
+                "amount": 10
+            }
+        ]
+    },
+    {
+        "id": "phantasia:mangrove_shovel",
+        "amount": 1,
+        "ingredients": [
+            {
+                "id": "phantasia:mangrove",
+                "amount": 8
+            }
+        ]
+    },
+    {
+        "id": "phantasia:oak_chest",
+        "amount": 1,
+        "ingredients": [
+            {
+                "id": "phantasia:oak",
+                "amount": 2
+            },
+            {
+                "id": "phantasia:iron",
+                "amount": 2
+            }
+        ]
+    },
+    {
+        "id": "phantasia:oak_workbench",
+        "amount": 1,
+        "ingredients": [
+            {
+                "id": "phantasia:oak",
+                "amount": 4
+            }
+        ]
+    },
+    {
+        "id": "phantasia:oak_planks",
+        "amount": 1,
+        "ingredients": [
+            {
+                "id": "phantasia:oak",
+                "amount": 3
+            }
+        ]
+    },
+    {
+        "id": "phantasia:oak_planks",
+        "amount": 1,
+        "crafting_stations": "#phantasia:tile/generic/workbench",
+        "ingredients": [
+            {
+                "id": "phantasia:oak_planks_wall",
+                "amount": 3
+            }
+        ]
+    },
+    {
+        "id": "phantasia:oak_planks_wall",
+        "amount": 2,
+        "crafting_stations": "#phantasia:tile/generic/workbench",
+        "ingredients": [
+            {
+                "id": "phantasia:oak_planks",
+                "amount": 1
+            }
+        ]
+    },
+    {
+        "id": "phantasia:oak_pickaxe",
+        "amount": 1,
+        "ingredients": [
+            {
+                "id": "phantasia:oak",
+                "amount": 10
+            }
+        ]
+    },
+    {
+        "id": "phantasia:oak_shovel",
+        "amount": 1,
+        "ingredients": [
+            {
+                "id": "phantasia:oak",
+                "amount": 8
+            }
+        ]
+    },
+    {
+        "id": "phantasia:pine_chest",
+        "amount": 1,
+        "ingredients": [
+            {
+                "id": "phantasia:pine",
+                "amount": 2
+            },
+            {
+                "id": "phantasia:iron",
+                "amount": 2
+            }
+        ]
+    },
+    {
+        "id": "phantasia:pine_workbench",
+        "amount": 1,
+        "ingredients": [
+            {
+                "id": "phantasia:pine",
+                "amount": 4
+            }
+        ]
+    },
+    {
+        "id": "phantasia:pine_planks",
+        "amount": 1,
+        "ingredients": [
+            {
+                "id": "phantasia:pine",
+                "amount": 3
+            }
+        ]
+    },
+    {
+        "id": "phantasia:pine_planks",
+        "amount": 1,
+        "crafting_stations": "#phantasia:tile/generic/workbench",
+        "ingredients": [
+            {
+                "id": "phantasia:pine_planks_wall",
+                "amount": 3
+            }
+        ]
+    },
+    {
+        "id": "phantasia:pine_planks_wall",
+        "amount": 2,
+        "crafting_stations": "#phantasia:tile/generic/workbench",
+        "ingredients": [
+            {
+                "id": "phantasia:pine_planks",
+                "amount": 1
+            }
+        ]
+    },
+    {
+        "id": "phantasia:pine_pickaxe",
+        "amount": 1,
+        "ingredients": [
+            {
+                "id": "phantasia:pine",
+                "amount": 10
+            }
+        ]
+    },
+    {
+        "id": "phantasia:pine_shovel",
+        "amount": 1,
+        "ingredients": [
+            {
+                "id": "phantasia:pine",
+                "amount": 8
             }
         ]
     },
     {
         "id": "phantasia:copper_sword",
         "amount": 1,
-        "crafting_stations": "#phantasia:tile/generic/workbench",
+        "crafting_stations": "phantasia:anvil",
         "ingredients": [
             {
                 "id": "phantasia:copper",
@@ -266,7 +393,7 @@
     {
         "id": "phantasia:copper_pickaxe",
         "amount": 1,
-        "crafting_stations": "#phantasia:tile/generic/workbench",
+        "crafting_stations": "phantasia:anvil",
         "ingredients": [
             {
                 "id": "phantasia:copper",
@@ -277,7 +404,7 @@
     {
         "id": "phantasia:copper_axe",
         "amount": 1,
-        "crafting_stations": "#phantasia:tile/generic/workbench",
+        "crafting_stations": "phantasia:anvil",
         "ingredients": [
             {
                 "id": "phantasia:copper",
@@ -288,7 +415,7 @@
     {
         "id": "phantasia:copper_shovel",
         "amount": 1,
-        "crafting_stations": "#phantasia:tile/generic/workbench",
+        "crafting_stations": "phantasia:anvil",
         "ingredients": [
             {
                 "id": "phantasia:copper",
@@ -297,35 +424,134 @@
         ]
     },
     {
-        "id": "phantasia:copper_block",
+        "id": "phantasia:iron_sword",
         "amount": 1,
-        "crafting_stations": "#phantasia:tile/generic/workbench",
+        "crafting_stations": "phantasia:anvil",
         "ingredients": [
             {
-                "id": "phantasia:copper",
+                "id": "phantasia:iron",
+                "amount": 12
+            }
+        ]
+    },
+    {
+        "id": "phantasia:iron_pickaxe",
+        "amount": 1,
+        "crafting_stations": "phantasia:anvil",
+        "ingredients": [
+            {
+                "id": "phantasia:iron",
+                "amount": 10
+            }
+        ]
+    },
+    {
+        "id": "phantasia:iron_axe",
+        "amount": 1,
+        "crafting_stations": "phantasia:anvil",
+        "ingredients": [
+            {
+                "id": "phantasia:iron",
+                "amount": 10
+            }
+        ]
+    },
+    {
+        "id": "phantasia:iron_shovel",
+        "amount": 1,
+        "crafting_stations": "phantasia:anvil",
+        "ingredients": [
+            {
+                "id": "phantasia:iron",
                 "amount": 8
             }
         ]
     },
     {
-        "id": "phantasia:copper",
-        "amount": 8,
-        "crafting_stations": "#phantasia:tile/generic/workbench",
+        "id": "phantasia:gold_sword",
+        "amount": 1,
+        "crafting_stations": "phantasia:anvil",
         "ingredients": [
             {
-                "id": "phantasia:copper_block",
-                "amount": 1
+                "id": "phantasia:gold",
+                "amount": 12
             }
         ]
     },
     {
-        "id": "phantasia:copper",
+        "id": "phantasia:gold_pickaxe",
         "amount": 1,
-        "crafting_stations": "phantasia:furnace",
+        "crafting_stations": "phantasia:anvil",
         "ingredients": [
             {
-                "id": "phantasia:raw_copper",
-                "amount": 1
+                "id": "phantasia:gold",
+                "amount": 10
+            }
+        ]
+    },
+    {
+        "id": "phantasia:gold_axe",
+        "amount": 1,
+        "crafting_stations": "phantasia:anvil",
+        "ingredients": [
+            {
+                "id": "phantasia:gold",
+                "amount": 10
+            }
+        ]
+    },
+    {
+        "id": "phantasia:gold_shovel",
+        "amount": 1,
+        "crafting_stations": "phantasia:anvil",
+        "ingredients": [
+            {
+                "id": "phantasia:gold",
+                "amount": 8
+            }
+        ]
+    },
+    {
+        "id": "phantasia:platinum_sword",
+        "amount": 1,
+        "crafting_stations": "phantasia:anvil",
+        "ingredients": [
+            {
+                "id": "phantasia:platinum",
+                "amount": 12
+            }
+        ]
+    },
+    {
+        "id": "phantasia:platinum_pickaxe",
+        "amount": 1,
+        "crafting_stations": "phantasia:anvil",
+        "ingredients": [
+            {
+                "id": "phantasia:platinum",
+                "amount": 10
+            }
+        ]
+    },
+    {
+        "id": "phantasia:platinum_axe",
+        "amount": 1,
+        "crafting_stations": "phantasia:anvil",
+        "ingredients": [
+            {
+                "id": "phantasia:platinum",
+                "amount": 10
+            }
+        ]
+    },
+    {
+        "id": "phantasia:platinum_shovel",
+        "amount": 1,
+        "crafting_stations": "phantasia:anvil",
+        "ingredients": [
+            {
+                "id": "phantasia:platinum",
+                "amount": 8
             }
         ]
     },
@@ -352,299 +578,100 @@
         ]
     },
     {
-        "id": "phantasia:birch_workbench",
-        "amount": 1,
-        "ingredients": [
-            {
-                "id": "phantasia:birch",
-                "amount": 4
-            }
-        ]
-    },
-    {
-        "id": "phantasia:birch_chest",
+        "id": "phantasia:copper_block",
         "amount": 1,
         "crafting_stations": "#phantasia:tile/generic/workbench",
         "ingredients": [
             {
-                "id": "phantasia:birch",
-                "amount": 2
-            },
-            {
-                "id": "phantasia:iron",
-                "amount": 2
-            }
-        ]
-    },
-    {
-        "id": "phantasia:birch_pickaxe",
-        "amount": 1,
-        "crafting_stations": "#phantasia:tile/generic/workbench",
-        "ingredients": [
-            {
-                "id": "phantasia:birch",
-                "amount": 10
-            }
-        ]
-    },
-    {
-        "id": "phantasia:birch_shovel",
-        "amount": 1,
-        "crafting_stations": "#phantasia:tile/generic/workbench",
-        "ingredients": [
-            {
-                "id": "phantasia:birch",
+                "id": "phantasia:copper",
                 "amount": 8
             }
         ]
     },
     {
-        "id": "phantasia:birch_planks",
-        "amount": 3,
+        "id": "phantasia:copper",
+        "amount": 8,
         "crafting_stations": "#phantasia:tile/generic/workbench",
         "ingredients": [
             {
-                "id": "phantasia:birch",
+                "id": "phantasia:copper_block",
                 "amount": 1
             }
         ]
     },
     {
-        "id": "phantasia:birch_planks_wall",
-        "amount": 2,
-        "crafting_stations": "#phantasia:tile/generic/workbench",
-        "ingredients": [
-            {
-                "id": "phantasia:birch_planks",
-                "amount": 3
-            }
-        ]
-    },
-    {
-        "id": "phantasia:oak_workbench",
-        "amount": 1,
-        "ingredients": [
-            {
-                "id": "phantasia:oak",
-                "amount": 4
-            }
-        ]
-    },
-    {
-        "id": "phantasia:oak_chest",
+        "id": "phantasia:iron_block",
         "amount": 1,
         "crafting_stations": "#phantasia:tile/generic/workbench",
         "ingredients": [
-            {
-                "id": "phantasia:oak",
-                "amount": 2
-            },
             {
                 "id": "phantasia:iron",
-                "amount": 2
-            }
-        ]
-    },
-    {
-        "id": "phantasia:oak_pickaxe",
-        "amount": 1,
-        "crafting_stations": "#phantasia:tile/generic/workbench",
-        "ingredients": [
-            {
-                "id": "phantasia:oak",
-                "amount": 10
-            }
-        ]
-    },
-    {
-        "id": "phantasia:oak_shovel",
-        "amount": 1,
-        "crafting_stations": "#phantasia:tile/generic/workbench",
-        "ingredients": [
-            {
-                "id": "phantasia:oak",
                 "amount": 8
             }
         ]
     },
     {
-        "id": "phantasia:oak_planks",
-        "amount": 3,
+        "id": "phantasia:iron",
+        "amount": 8,
         "crafting_stations": "#phantasia:tile/generic/workbench",
         "ingredients": [
             {
-                "id": "phantasia:oak",
+                "id": "phantasia:iron_block",
                 "amount": 1
             }
         ]
     },
     {
-        "id": "phantasia:oak_planks_wall",
-        "amount": 2,
-        "crafting_stations": "#phantasia:tile/generic/workbench",
-        "ingredients": [
-            {
-                "id": "phantasia:oak_planks",
-                "amount": 3
-            }
-        ]
-    },
-    {
-        "id": "phantasia:mangrove_workbench",
-        "amount": 1,
-        "ingredients": [
-            {
-                "id": "phantasia:mangrove",
-                "amount": 4
-            }
-        ]
-    },
-    {
-        "id": "phantasia:mangrove_chest",
+        "id": "phantasia:gold_block",
         "amount": 1,
         "crafting_stations": "#phantasia:tile/generic/workbench",
         "ingredients": [
             {
-                "id": "phantasia:mangrove",
-                "amount": 2
-            },
-            {
-                "id": "phantasia:iron",
-                "amount": 2
-            }
-        ]
-    },
-    {
-        "id": "phantasia:mangrove_pickaxe",
-        "amount": 1,
-        "crafting_stations": "#phantasia:tile/generic/workbench",
-        "ingredients": [
-            {
-                "id": "phantasia:mangrove",
-                "amount": 10
-            }
-        ]
-    },
-    {
-        "id": "phantasia:mangrove_shovel",
-        "amount": 1,
-        "crafting_stations": "#phantasia:tile/generic/workbench",
-        "ingredients": [
-            {
-                "id": "phantasia:mangrove",
+                "id": "phantasia:gold",
                 "amount": 8
             }
         ]
     },
     {
-        "id": "phantasia:mangrove_planks",
-        "amount": 3,
+        "id": "phantasia:gold",
+        "amount": 8,
         "crafting_stations": "#phantasia:tile/generic/workbench",
         "ingredients": [
             {
-                "id": "phantasia:mangrove",
+                "id": "phantasia:gold_block",
                 "amount": 1
             }
         ]
     },
     {
-        "id": "phantasia:mangrove_planks_wall",
-        "amount": 2,
-        "crafting_stations": "#phantasia:tile/generic/workbench",
-        "ingredients": [
-            {
-                "id": "phantasia:mangrove_planks",
-                "amount": 3
-            }
-        ]
-    },
-    {
-        "id": "phantasia:pine_workbench",
-        "amount": 1,
-        "ingredients": [
-            {
-                "id": "phantasia:pine",
-                "amount": 4
-            }
-        ]
-    },
-    {
-        "id": "phantasia:pine_chest",
+        "id": "phantasia:platinum_block",
         "amount": 1,
         "crafting_stations": "#phantasia:tile/generic/workbench",
         "ingredients": [
             {
-                "id": "phantasia:pine",
-                "amount": 2
-            },
-            {
-                "id": "phantasia:iron",
-                "amount": 2
-            }
-        ]
-    },
-    {
-        "id": "phantasia:pine_pickaxe",
-        "amount": 1,
-        "crafting_stations": "#phantasia:tile/generic/workbench",
-        "ingredients": [
-            {
-                "id": "phantasia:pine",
-                "amount": 10
-            }
-        ]
-    },
-    {
-        "id": "phantasia:pine_shovel",
-        "amount": 1,
-        "crafting_stations": "#phantasia:tile/generic/workbench",
-        "ingredients": [
-            {
-                "id": "phantasia:pine",
+                "id": "phantasia:platinum",
                 "amount": 8
             }
         ]
     },
     {
-        "id": "phantasia:pine_planks",
-        "amount": 3,
+        "id": "phantasia:platinum",
+        "amount": 8,
         "crafting_stations": "#phantasia:tile/generic/workbench",
         "ingredients": [
             {
-                "id": "phantasia:pine",
+                "id": "phantasia:platinum_block",
                 "amount": 1
             }
         ]
     },
     {
-        "id": "phantasia:pine_planks_wall",
-        "amount": 2,
+        "id": "phantasia:moss",
+        "amount": 1,
         "crafting_stations": "#phantasia:tile/generic/workbench",
         "ingredients": [
             {
-                "id": "phantasia:pine_planks",
-                "amount": 3
-            }
-        ]
-    },
-    {
-        "id": "phantasia:dirt_wall",
-        "amount": 2,
-        "crafting_stations": "#phantasia:tile/generic/workbench",
-        "ingredients": [
-            {
-                "id": "phantasia:dirt",
-                "amount": 3
-            }
-        ]
-    },
-    {
-        "id": "phantasia:nightrock_wall",
-        "amount": 2,
-        "crafting_stations": "#phantasia:tile/generic/workbench",
-        "ingredients": [
-            {
-                "id": "phantasia:nightrock",
+                "id": "phantasia:moss_wall",
                 "amount": 3
             }
         ]
@@ -656,58 +683,51 @@
         "ingredients": [
             {
                 "id": "phantasia:moss",
-                "amount": 3
+                "amount": 1
             }
         ]
     },
     {
-        "id": "phantasia:sandstone_wall",
-        "amount": 2,
-        "crafting_stations": "#phantasia:tile/generic/workbench",
-        "ingredients": [
-            {
-                "id": "phantasia:sandstone",
-                "amount": 3
-            }
-        ]
-    },
-    {
-        "id": "phantasia:stone_wall",
-        "amount": 2,
-        "crafting_stations": "#phantasia:tile/generic/workbench",
-        "ingredients": [
-            {
-                "id": "phantasia:stone",
-                "amount": 3
-            }
-        ]
-    },
-    {
-        "id": "phantasia:torch",
-        "amount": 6,
-        "crafting_stations": "#phantasia:tile/generic/workbench",
-        "ingredients": [
-            {
-                "id": "#phantasia:item/generic/wood",
-                "amount": 2
-            },
-            {
-                "id": "phantasia:coal",
-                "amount": 2
-            }
-        ]
-    },
-    {
-        "id": "phantasia:hatchet",
+        "id": "phantasia:auburn_moss",
         "amount": 1,
+        "crafting_stations": "#phantasia:tile/generic/workbench",
         "ingredients": [
             {
-                "id": "phantasia:twig",
-                "amount": 2
-            },
+                "id": "phantasia:auburn_moss_wall",
+                "amount": 3
+            }
+        ]
+    },
+    {
+        "id": "phantasia:auburn_moss_wall",
+        "amount": 2,
+        "crafting_stations": "#phantasia:tile/generic/workbench",
+        "ingredients": [
             {
-                "id": "phantasia:rock",
-                "amount": 2
+                "id": "phantasia:auburn_moss",
+                "amount": 1
+            }
+        ]
+    },
+    {
+        "id": "phantasia:lumin_moss",
+        "amount": 1,
+        "crafting_stations": "#phantasia:tile/generic/workbench",
+        "ingredients": [
+            {
+                "id": "phantasia:lumin_moss_wall",
+                "amount": 3
+            }
+        ]
+    },
+    {
+        "id": "phantasia:lumin_moss_wall",
+        "amount": 2,
+        "crafting_stations": "#phantasia:tile/generic/workbench",
+        "ingredients": [
+            {
+                "id": "phantasia:lumin_moss",
+                "amount": 1
             }
         ]
     }

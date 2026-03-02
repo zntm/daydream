@@ -1,59 +1,53 @@
 {
     "inventory": "#phantasia:item/generic/inventory_default",
-    "item": {
-        "tile": {
-            "audio_properties": {
-                "lowpass": 0.4,
-                "reverb": 0.1
-            },
-            "drops": [
-                {
-                    "id": "phantasia:cherry"
-                }
-            ],
-            "harvest": {
-                "condition": {
-                    "id": "#phantasia:item/type/axe"
-                },
-                "hardness": 0.56,
-                "level": 1,
-                "particle": {
-                    "frequency": "#phantasia:tile/generic/harvest_particle_frequency",
-                    "id": [
-                        "#5E3A24",
-                        "#4A2E1C"
-                    ]
-                }
-            },
-            "placement": {
-                "condition": {
-                    "type": "every",
-                    "values": [
-                        {
-                            "condition": {
-                                "type": "some",
-                                "values": [
-                                    {
-                                        "xoffset": 0,
-                                        "yoffset": 1,
-                                        "z": "default",
-                                        "id": "#phantasia:tile/placement/plant_on"
-                                    },
-                                    {
-                                        "xoffset": 0,
-                                        "yoffset": 1,
-                                        "z": "z",
-                                        "id": "$ID"
-                                    }
-                                ]
-                            }
-                        }
-                    ]
-                }
-            },
-            "sfx": "#phantasia:tile/sfx/wood"
-        }
-    },
     "sprite": "phantasia:item/cherry",
+    "tile": {
+        "drops": [
+            {
+                "id": "phantasia:item/cherry"
+            }
+        ],
+        "harvest": {
+            "condition": {
+                "id": "#phantasia:item/type/axe"
+            },
+            "hardness": 0.56,
+            "level": 1,
+            "particle": {
+                "colour": [
+                    "#23261B",
+                    "#1C1F14"
+                ],
+                "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
+            }
+        },
+        "placement": {
+            "condition": {
+                "type": "every",
+                "values": [
+                    {
+                        "condition": {
+                            "type": "some",
+                            "values": [
+                                {
+                                    "xoffset": 0,
+                                    "yoffset": 1,
+                                    "z": "default",
+                                    "id": "#phantasia:tile/placement/plant_on"
+                                },
+                                {
+                                    "xoffset": 0,
+                                    "yoffset": 1,
+                                    "z": "z",
+                                    "id": "$ID"
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "sfx": "#phantasia:tile/sfx/wood"
+    },
     "type": "untouchable"
 }

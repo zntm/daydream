@@ -11,6 +11,6 @@
             "level": 1
         }
     },
-    "sprite": "phantasia:item/cherry_shovel",
+    "sprite": "cherry_shovel",
     "type": "tool"
 }
