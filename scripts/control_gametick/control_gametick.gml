@@ -99,7 +99,7 @@ function control_gametick(_delta_time)
                     
                     if (_key == harvest_current) continue;
                     
-                    harvest_progress[$ _key] -= (1 / GAME_TICK);
+                    harvest_progress[$ _key] -= (1 / GAME_TICK) / 4;
                     
                     if (harvest_progress[$ _key] <= 0)
                     {
