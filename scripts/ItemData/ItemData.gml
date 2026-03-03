@@ -579,8 +579,6 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     
     static set_tile = function(_tile)
     {
-        PRINT(_tile);
-        
         if (_tile != undefined)
         {
             var _animation_type = _tile[$ "animation_type"];

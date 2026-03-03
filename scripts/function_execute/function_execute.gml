@@ -50,8 +50,6 @@ function function_execute(_function, _x, _y, _z, _xscale, _yscale, _inst = undef
         _context.player = obj_Player;
     }
     
-    PRINT(_function);
-    
     // Always provide spatial context
     _context.caller = _inst;
     _context.x = _tx;
@@ -67,8 +65,6 @@ function function_execute(_function, _x, _y, _z, _xscale, _yscale, _inst = undef
     {
         _context.parameter = _parameter;
         
-        PRINT(global.proglang_scripts[$ _id]);
-        
         // Handle direct script call
         if (struct_exists(global.proglang_scripts, _id))
         {
@@ -79,7 +75,6 @@ function function_execute(_function, _x, _y, _z, _xscale, _yscale, _inst = undef
             // Debugging aid
             // PRINT(struct_get_names(global.proglang_scripts));
             PRINT($"[Daydream] Script not found: '{_id}'");
-            PRINT(global.proglang_scripts)
         }
     }
 }

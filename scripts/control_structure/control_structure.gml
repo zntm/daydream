@@ -74,9 +74,13 @@ function control_structure(_x, _y)
                 {
                     if (!_queue_valid)
                     {
-                        _queue = (worldgen_get_cave(i, j + 1, _surface_height, _cave_start, _world_seed, _world_data, _cave_below) << 0)
-                            | (worldgen_get_cave(i, j + 0, _surface_height, _cave_start, _world_seed, _world_data, _cave_below) << 1)
-                            | (worldgen_get_cave(i, j - 1, _surface_height, _cave_start, _world_seed, _world_data, _cave_below) << 2);
+                        var _is_cave_p1 = worldgen_get_cave(i, j + 1, _surface_height, _cave_start, _world_seed, _world_data, _cave_below);
+                        var _is_cave_0  = worldgen_get_cave(i, j + 0, _surface_height, _cave_start, _world_seed, _world_data, _cave_below);
+                        var _is_cave_m1 = worldgen_get_cave(i, j - 1, _surface_height, _cave_start, _world_seed, _world_data, _cave_below);
+                        
+                        _queue = (_is_cave_p1 << 0)
+                            | (_is_cave_0  << 1)
+                            | (_is_cave_m1 << 2);
                         
                         _queue_valid = true;
                     }
@@ -85,12 +89,28 @@ function control_structure(_x, _y)
                         _queue = ((_queue & 0b011) << 1) | worldgen_get_cave(i, j + 1, _surface_height, _cave_start, _world_seed, _world_data, _cave_below);
                     }
                     
-                    /* if current tile (bit 1) is not cave (terrain is solid) */
-                    if (_queue & 0b010) continue;
+                    var _is_cave = (_queue & 0b010);
                     
-                    if (_data == undefined) continue;
+                    /* resolve relevant biome for this tile */
+                    var _target_data = _data;
                     
-                    var _length = _data.get_structure_length();
+                    if (_is_cave)
+                    {
+                        var _cave_biome_id = worldgen_get_biome_cave(i, j, _surface_height, _world_seed, _world_data);
+                        
+                        if (_cave_biome_id != undefined)
+                        {
+                            _target_data = _biome_data[$ worldgen_resolve_id(_cave_biome_id)];
+                        }
+                        else
+                        {
+                            continue;
+                        }
+                    }
+                    
+                    if (_target_data == undefined) continue;
+                    
+                    var _length = _target_data.get_structure_length();
                     
                     var _chance_seed = (_world_seed & 0xffff)
                         ^ (abs(_world_seed) >> 16)
@@ -99,7 +119,7 @@ function control_structure(_x, _y)
                     
                     for (var l = 0; l < _length; ++l)
                     {
-                        var _structure = _data.get_structure(l);
+                        var _structure = _target_data.get_structure(l);
                         
                         if (!chance_seeded(_structure.chance, _chance_seed ^ ((l + 1) * 2_341_113))) continue;
                         
@@ -131,8 +151,8 @@ function control_structure(_x, _y)
                                 {
                                     if (_structure_data[$ _id[m]].get_placement_type() == STRUCTURE_PLACEMENT_TYPE.FLOOR) continue;
                                 }
-                                /* continue if top tile is air */
-                                else if (_queue & 0b001)
+                                /* continue if top tile is solid */
+                                else if !(_queue & 0b100) && (_queue & 0b001)
                                 {
                                     if (_structure_data[$ _id[m]].get_placement_type() == STRUCTURE_PLACEMENT_TYPE.CEILING) continue;
                                 }
@@ -179,7 +199,7 @@ function control_structure(_x, _y)
                                     structure_create(i, j, _id, _world_seed);
                                 }
                             }
-                            else if (_queue & 0b001)
+                            else if !(_queue & 0b100) && (_queue & 0b001)
                             {
                                 if (_placement_type == STRUCTURE_PLACEMENT_TYPE.CEILING)
                                 {

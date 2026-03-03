@@ -57,7 +57,7 @@ function structure_valid(_tx, _ty, _id, _seed)
             
             // If if_clear is true, ensure the structure's footprint is not below the local surface
             // We check if the bottom of where the structure would be (top + height) is deeper than the surface
-            if (_if_clear) && (_ty + _height > _surface_height)
+            if (_if_clear) && (_ty < _surface_height) && (_ty + _height > _surface_height)
             {
                 return false;
             }

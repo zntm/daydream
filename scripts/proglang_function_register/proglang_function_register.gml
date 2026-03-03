@@ -471,7 +471,6 @@ proglang_function_register("camera_shake", function(_args) {
 });
 
 proglang_function_register("spawn_particle", function(_args) {
-    PRINT(_args)
     var _x = _args[1];
     
     if (_x == undefined) exit;
@@ -479,8 +478,6 @@ proglang_function_register("spawn_particle", function(_args) {
     var _y = _args[2];
     
     if (_y == undefined) exit;
-    
-    PRINT($"{_x} {_y}")
     
     spawn_particle(_x * TILE_SIZE, _y * TILE_SIZE, _args[0]);
 });
