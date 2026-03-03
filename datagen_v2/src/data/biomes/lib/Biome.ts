@@ -148,11 +148,18 @@ export class TileEntry {
 export class BiomeTile {
     private base: TileEntry[];
     private wall: TileEntry[];
+    private noise_scale?: number;
 
     constructor(base: string | TileEntry[], wall: string | TileEntry[]) {
         // Support both legacy string format and new array format
         this.base = typeof base === "string" ? [new TileEntry(base)] : base;
         this.wall = typeof wall === "string" ? [new TileEntry(wall)] : wall;
+    }
+
+    setNoiseScale(scale: number) {
+        this.noise_scale = scale;
+
+        return this;
     }
 }
 
@@ -217,5 +224,5 @@ export class BiomeFeature {
     }
 }
 
-export class BiomeFoliage extends BiomeFeature {}
-export class BiomeStructure extends BiomeFeature {}
+export class BiomeFoliage extends BiomeFeature { }
+export class BiomeStructure extends BiomeFeature { }

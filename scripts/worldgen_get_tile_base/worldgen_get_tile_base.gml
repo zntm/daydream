@@ -1,14 +1,3 @@
-/// @desc Get base tile for terrain generation
-/// @param {Real} _x World X position
-/// @param {Real} _y World Y position
-/// @param {String} _surface_biome Surface biome ID
-/// @param {String} _cave_biome Cave biome ID (or undefined)
-/// @param {Real} _surface_height Surface height at this position
-/// @param {Bool} _cave_above Whether there is a cave above this position
-/// @param {Real} _seed World seed
-/// @param {Struct} _world_data Optional: World data struct
-/// @param {Struct} _biome_data Optional: Biome data struct
-/// @returns {String} Tile ID
 function worldgen_get_tile_base(_x, _y, _surface_biome, _cave_biome, _surface_height, _cave_above, _seed, _world_data = undefined, _biome_data = undefined)
 {
     // Get world data for bedrock/lava calculations
@@ -32,14 +21,24 @@ function worldgen_get_tile_base(_x, _y, _surface_biome, _cave_biome, _surface_he
     
     /* generate noise value (0..255) for coherent tile variation */
     var _tile_noise_scale = _world_data.get_tile_variation_noise_scale();
-    var _noise = open_simplex_noise(_x * _tile_noise_scale, _y * _tile_noise_scale + (_seed * 100), 255, 2);
+    var _noise = open_simplex_noise(_x * _tile_noise_scale, _y * _tile_noise_scale + (_seed / 1_000_000 * 100), 255, 2);
     
     // Cave biome tiles
     if (_cave_biome != undefined)
     {
         var _cb = _biome_data[$ worldgen_resolve_id(_cave_biome)];
         
-        if (_cb != undefined) return _cb.get_tile_middle_layer_base(_noise);
+        if (_cb != undefined)
+        {
+            var _custom_scale = _cb.get_tile_middle_layer_noise_scale();
+            
+            if (_custom_scale != undefined)
+            {
+                _noise = open_simplex_noise(_x * _custom_scale, _y * _custom_scale + (_seed / 1_000_000 * 100), 255, 2);
+            }
+            
+            return _cb.get_tile_middle_layer_base(_noise);
+        }
     }
     
     // Fallback if underground but no cave biome found
@@ -56,5 +55,24 @@ function worldgen_get_tile_base(_x, _y, _surface_biome, _cave_biome, _surface_he
     
     var _sb = _biome_data[$ worldgen_resolve_id(_surface_biome)];
     
-    return (_cave_above) ? _sb.get_tile_top_layer_base(_noise) : _sb.get_tile_middle_layer_base(_noise);
+    if (_cave_above)
+    {
+        var _custom_scale = _sb.get_tile_top_layer_noise_scale();
+        
+        if (_custom_scale != undefined)
+        {
+            _noise = open_simplex_noise(_x * _custom_scale, _y * _custom_scale + (_seed / 1_000_000 * 100), 255, 2);
+        }
+        
+        return _sb.get_tile_top_layer_base(_noise);
+    }
+    
+    var _custom_scale = _sb.get_tile_middle_layer_noise_scale();
+    
+    if (_custom_scale != undefined)
+    {
+        _noise = open_simplex_noise(_x * _custom_scale, _y * _custom_scale + (_seed / 1_000_000 * 100), 255, 2);
+    }
+    
+    return _sb.get_tile_middle_layer_base(_noise);
 }

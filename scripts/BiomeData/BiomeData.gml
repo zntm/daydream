@@ -131,10 +131,13 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
     
     ___tile_top_layer_base = { entries: [], total_weight: 0 }
     ___tile_top_layer_wall = { entries: [], total_weight: 0 }
+    ___tile_top_layer_noise_scale = undefined;
     ___tile_middle_layer_base = { entries: [], total_weight: 0 }
     ___tile_middle_layer_wall = { entries: [], total_weight: 0 }
+    ___tile_middle_layer_noise_scale = undefined;
     ___tile_bottom_layer_base = { entries: [], total_weight: 0 }
     ___tile_bottom_layer_wall = { entries: [], total_weight: 0 }
+    ___tile_bottom_layer_noise_scale = undefined;
     
     ___terrain_height_offset = 0;
     ___terrain_amplitude_scale = 1;
@@ -386,6 +389,7 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
         if (_data == undefined) return self;
         ___tile_top_layer_base = __parse_tile_array(_data[$ "base"]);
         ___tile_top_layer_wall = __parse_tile_array(_data[$ "wall"]);
+        ___tile_top_layer_noise_scale = _data[$ "noise_scale"];
         
         return self;
     }
@@ -405,6 +409,7 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
         if (_data == undefined) return self;
         ___tile_middle_layer_base = __parse_tile_array(_data[$ "base"]);
         ___tile_middle_layer_wall = __parse_tile_array(_data[$ "wall"]);
+        ___tile_middle_layer_noise_scale = _data[$ "noise_scale"];
         
         return self;
     }
@@ -424,6 +429,7 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
         if (_data == undefined) return self;
         ___tile_bottom_layer_base = __parse_tile_array(_data[$ "base"]);
         ___tile_bottom_layer_wall = __parse_tile_array(_data[$ "wall"]);
+        ___tile_bottom_layer_noise_scale = _data[$ "noise_scale"];
         
         return self;
     }
@@ -436,6 +442,21 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
     static get_tile_bottom_layer_wall = function(_noise = 0)
     {
         return biome_get_weighted_tile(___tile_bottom_layer_wall, _noise);
+    }
+    
+    static get_tile_top_layer_noise_scale = function()
+    {
+        return self[$ "___tile_top_layer_noise_scale"];
+    }
+    
+    static get_tile_middle_layer_noise_scale = function()
+    {
+        return self[$ "___tile_middle_layer_noise_scale"];
+    }
+    
+    static get_tile_bottom_layer_noise_scale = function()
+    {
+        return self[$ "___tile_bottom_layer_noise_scale"];
     }
     
     static set_terrain_modifier = function(_modifier)

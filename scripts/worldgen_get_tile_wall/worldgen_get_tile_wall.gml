@@ -13,7 +13,18 @@ function worldgen_get_tile_wall(_x, _y, _surface_biome, _cave_biome, _surface_he
     if (_cave_biome != undefined)
     {
         var _cb = _biome_data[$ worldgen_resolve_id(_cave_biome)];
-        if (_cb != undefined) return _cb.get_tile_middle_layer_wall(_noise);
+        
+        if (_cb != undefined)
+        {
+            var _custom_scale = _cb.get_tile_middle_layer_noise_scale();
+            
+            if (_custom_scale != undefined)
+            {
+                _noise = open_simplex_noise(_x * _custom_scale, _y * _custom_scale + (_seed * 200), 255, 2);
+            }
+            
+            return _cb.get_tile_middle_layer_wall(_noise);
+        }
     }
     
     // Fallback if underground but no cave biome found

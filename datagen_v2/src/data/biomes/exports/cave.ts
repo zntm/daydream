@@ -62,22 +62,22 @@ const TILES_STONE = {
 };
 
 const MOONFALL_LAYER = (base: TileEntry[], wall: TileEntry[]) =>
-    new BiomeTile(base, wall);
+    new BiomeTile(base, wall).setNoiseScale(0.15);
 
 const MOONFALL_BASE = [
-    new TileEntry("phantasia:petrilumin", 1).setNoiseRange(0, 60),
+    new TileEntry("phantasia:petrilumin", 1).setNoiseRange(0, 128),
     new TileEntry(
         SmartValue.ChooseWeighted([
             new ChooseWeightedOption("phantasia:lumin_moss", 99),
             new ChooseWeightedOption("phantasia:lumin_bulb", 1),
         ]),
         4,
-    ).setNoiseRange(60, 256),
+    ).setNoiseRange(128, 256),
 ];
 
 const MOONFALL_WALL = [
-    new TileEntry("phantasia:petrilumin_wall", 1).setNoiseRange(0, 60),
-    new TileEntry("phantasia:lumin_moss_wall", 4).setNoiseRange(60, 252),
+    new TileEntry("phantasia:petrilumin_wall", 1).setNoiseRange(0, 128),
+    new TileEntry("phantasia:lumin_moss_wall", 4).setNoiseRange(128, 252),
     new TileEntry("$EMPTY", 1).setNoiseRange(252, 256),
 ];
 
