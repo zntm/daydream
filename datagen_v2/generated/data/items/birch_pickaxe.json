@@ -11,6 +11,6 @@
             "level": 1
         }
     },
-    "sprite": "birch_pickaxe",
+    "sprite": "phantasia:item/birch_pickaxe",
     "type": "tool"
 }

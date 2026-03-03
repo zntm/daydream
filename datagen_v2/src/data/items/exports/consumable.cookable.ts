@@ -2,62 +2,29 @@ import { Sound } from "../../../assets/sounds/lib/Sound";
 import { ConsumableItemData, ItemCooldown } from "../lib";
 import { consumableCookableItems } from "../lib/groups/";
 
-class CookableConsumableItems {
-    namespace: string;
-    id: string;
-    rawConsumableHp: number;
-    rawConsumableSaturation: number;
-    cookedConsumableHp: number;
-    cookedConsumableSaturation: number;
-
-    constructor(
-        namespace: string,
-        id: string,
-        rawConsumableHp: number,
-        rawConsumableSaturation: number,
-        cookedConsumableHp: number,
-        cookedConsumableSaturation: number,
-    ) {
-        this.namespace = namespace;
-        this.id = id;
-        this.rawConsumableHp = rawConsumableHp;
-        this.rawConsumableSaturation = rawConsumableSaturation;
-        this.cookedConsumableHp = cookedConsumableHp;
-        this.cookedConsumableSaturation = cookedConsumableSaturation;
-    }
-}
-
 export default [
-    new CookableConsumableItems("phantasia", "beef", 6, 4, 12, 12),
-    new CookableConsumableItems("phantasia", "chicken", 4, 2, 8, 4),
-    new CookableConsumableItems("phantasia", "cod", 3, 3, 14, 6),
-    new CookableConsumableItems("phantasia", "frog_leg", 2, 6, 10, 4),
-    new CookableConsumableItems("phantasia", "mutton", 6, 4, 12, 12),
-    new CookableConsumableItems("phantasia", "rabbit", 3, 2, 6, 4),
-    new CookableConsumableItems("phantasia", "salmon", 3, 3, 14, 6),
-].map(
-    ({
+    { namespace: "phantasia", id: "beef", rawHp: 6, rawSat: 4, cookedHp: 12, cookedSat: 12 },
+    { namespace: "phantasia", id: "chicken", rawHp: 4, rawSat: 2, cookedHp: 8, cookedSat: 8 },
+    { namespace: "phantasia", id: "cod", rawHp: 3, rawSat: 3, cookedHp: 14, cookedSat: 6 },
+    { namespace: "phantasia", id: "frog_leg", rawHp: 2, rawSat: 6, cookedHp: 10, cookedSat: 4 },
+    { namespace: "phantasia", id: "mutton", rawHp: 6, rawSat: 4, cookedHp: 12, cookedSat: 12 },
+    { namespace: "phantasia", id: "rabbit", rawHp: 3, rawSat: 2, cookedHp: 6, cookedSat: 4 },
+    { namespace: "phantasia", id: "salmon", rawHp: 3, rawSat: 3, cookedHp: 14, cookedSat: 6 },
+].map(({ namespace, id, rawHp, rawSat, cookedHp, cookedSat }) =>
+    consumableCookableItems(
         namespace,
         id,
-        rawConsumableHp,
-        rawConsumableSaturation,
-        cookedConsumableHp,
-        cookedConsumableSaturation,
-    }) =>
-        consumableCookableItems(
-            namespace,
-            id,
-            new ConsumableItemData(
-                rawConsumableHp,
-                rawConsumableSaturation,
-                new ItemCooldown("phantasia:food", 1),
-                new Sound("phantasia:sfx/item/eat"),
-            ),
-            new ConsumableItemData(
-                cookedConsumableHp,
-                cookedConsumableSaturation,
-                new ItemCooldown("phantasia:food", 1),
-                new Sound("phantasia:sfx/item/eat"),
-            ),
+        new ConsumableItemData(
+            rawHp,
+            rawSat,
+            new ItemCooldown("phantasia:food", 1),
+            new Sound("phantasia:sfx/item/eat"),
         ),
+        new ConsumableItemData(
+            cookedHp,
+            cookedSat,
+            new ItemCooldown("phantasia:food", 1),
+            new Sound("phantasia:sfx/item/eat"),
+        ),
+    ),
 );

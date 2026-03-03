@@ -22,7 +22,7 @@
                     "parameters": {
                         "bucket_id": "phantasia:bucket",
                         "filled_bucket_id": "phantasia:water_bucket",
-                        "tick_delay": 5
+                        "tick_delay": 8
                     }
                 }
             ]

@@ -1,8 +1,34 @@
 [
     {
-        "id": "forest",
+        "id": "emeraldine",
         "category": "temperate",
-        "surface_biome": "phantasia:surface/forest",
+        "biomes": [
+            {
+                "id": "phantasia:surface/emeraldine/greenia",
+                "weight": 3,
+                "terrain_preference": "flat"
+            },
+            {
+                "id": "phantasia:surface/emeraldine/birchwoods",
+                "weight": 2,
+                "terrain_preference": "flat"
+            },
+            {
+                "id": "phantasia:surface/emeraldine/sakurai",
+                "weight": 1,
+                "terrain_preference": "flat"
+            },
+            {
+                "id": "phantasia:surface/emeraldine/sunflora",
+                "weight": 2,
+                "terrain_preference": "flat"
+            },
+            {
+                "id": "phantasia:surface/emeraldine/honeygrove",
+                "weight": 1,
+                "terrain_preference": "flat"
+            }
+        ],
         "cave_biome_default": "phantasia:cave/chasm",
         "cave_biomes": [
             {
@@ -11,12 +37,74 @@
                 "noise_threshold": 0.7,
                 "noise_scale": 0.015
             }
-        ]
+        ],
+        "terrain": {
+            "height_offset": 0,
+            "amplitude_min": 30,
+            "amplitude_max": 60
+        },
+        "map_color": "#2D5A27"
     },
     {
-        "id": "desert",
+        "id": "rotfens",
+        "category": "humid",
+        "biomes": [
+            {
+                "id": "phantasia:surface/rotfens/mangroots",
+                "weight": 2,
+                "terrain_preference": "any"
+            },
+            {
+                "id": "phantasia:surface/rotfens/boggins",
+                "weight": 3,
+                "terrain_preference": "flat"
+            }
+        ],
+        "cave_biome_default": "phantasia:cave/chasm",
+        "cave_biomes": [
+            {
+                "biome": "phantasia:cave/depths",
+                "min_depth": 200,
+                "noise_threshold": 0.6
+            }
+        ],
+        "terrain": {
+            "height_offset": -12,
+            "amplitude_min": 15,
+            "amplitude_max": 30
+        },
+        "map_color": "#3D3D2D"
+    },
+    {
+        "id": "dustbunny",
         "category": "arid",
-        "surface_biome": "phantasia:surface/desert",
+        "biomes": [
+            {
+                "id": "phantasia:surface/dustbunny/dune",
+                "weight": 3,
+                "terrain_preference": "flat"
+            },
+            {
+                "id": "phantasia:surface/dustbunny/redwaste",
+                "weight": 2,
+                "terrain_preference": "flat"
+            },
+            {
+                "id": "phantasia:surface/dustbunny/badlands",
+                "weight": 2,
+                "terrain_preference": "hilly"
+            },
+            {
+                "id": "phantasia:surface/dustbunny/oasin",
+                "weight": 1,
+                "terrain_preference": "flat"
+            },
+            {
+                "id": "phantasia:surface/dustbunny/goldgrass",
+                "weight": 2,
+                "terrain_preference": "any"
+            }
+        ],
         "cave_biome_default": "phantasia:cave/chasm",
         "cave_biomes": [
             {
@@ -26,16 +114,37 @@
             }
         ],
         "terrain": {
-            "height_offset": 10,
-            "base_height": 410,
-            "amplitude_min": 15,
-            "amplitude_max": 35
-        }
+            "height_offset": 8,
+            "amplitude_min": 20,
+            "amplitude_max": 50
+        },
+        "map_color": "#C2B280"
     },
     {
-        "id": "taiga",
+        "id": "borea",
         "category": "cold",
-        "surface_biome": "phantasia:surface/taiga",
+        "biomes": [
+            {
+                "id": "phantasia:surface/borea/pineling",
+                "weight": 3,
+                "terrain_preference": "any"
+            },
+            {
+                "id": "phantasia:surface/borea/silversteep",
+                "weight": 2,
+                "terrain_preference": "hilly"
+            },
+            {
+                "id": "phantasia:surface/borea/needlefall",
+                "weight": 2,
+                "terrain_preference": "flat"
+            },
+            {
+                "id": "phantasia:surface/borea/aurospring",
+                "weight": 1,
+                "terrain_preference": "flat"
+            }
+        ],
         "cave_biome_default": "phantasia:cave/chasm",
         "cave_biomes": [
             {
@@ -45,10 +154,45 @@
             }
         ],
         "terrain": {
-            "height_offset": -20,
-            "base_height": 380,
+            "height_offset": 4,
+            "amplitude_min": 30,
+            "amplitude_max": 65
+        },
+        "map_color": "#7BA1C7"
+    },
+    {
+        "id": "glacien",
+        "category": "frozen",
+        "biomes": [
+            {
+                "id": "phantasia:surface/glacien/tundrune",
+                "weight": 3,
+                "terrain_preference": "any"
+            },
+            {
+                "id": "phantasia:surface/glacien/flakerocks",
+                "weight": 2,
+                "terrain_preference": "hilly"
+            },
+            {
+                "id": "phantasia:surface/glacien/frostenisle",
+                "weight": 2,
+                "terrain_preference": "flat"
+            }
+        ],
+        "cave_biome_default": "phantasia:cave/chasm",
+        "cave_biomes": [
+            {
+                "biome": "phantasia:cave/depths",
+                "min_depth": 80,
+                "noise_threshold": 0.4
+            }
+        ],
+        "terrain": {
+            "height_offset": -4,
             "amplitude_min": 20,
-            "amplitude_max": 50
-        }
+            "amplitude_max": 45
+        },
+        "map_color": "#E0FFFF"
     }
 ]

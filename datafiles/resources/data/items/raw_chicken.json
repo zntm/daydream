@@ -2,12 +2,12 @@
     "inventory": "#phantasia:item/generic/inventory_default",
     "item": {
         "consumable": {
-            "hp": 4,
-            "saturation": 2,
             "cooldown": {
                 "id": "phantasia:food",
                 "seconds": 1
             },
+            "hp": 4,
+            "saturation": 2,
             "sfx": {
                 "id": "phantasia:sfx/item/eat"
             }

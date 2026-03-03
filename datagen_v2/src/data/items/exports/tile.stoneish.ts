@@ -7,72 +7,52 @@ import {
 } from "../lib";
 import { tileBlockWallItems } from "../lib/groups/";
 
-class StoneishItems {
-    namespace: string;
-    id: string;
-    harvest: TileItemHarvest;
-    sfx: string;
-    audioProperties: TileItemAudioProperties;
-
-    constructor(
-        namespace: string,
-        id: string,
-        harvest: TileItemHarvest,
-        sfx: string,
-        audioProperties: TileItemAudioProperties,
-    ) {
-        this.namespace = namespace;
-        this.id = id;
-        this.harvest = harvest;
-        this.sfx = sfx;
-        this.audioProperties = audioProperties;
-    }
-}
-
 export default [
-    new StoneishItems(
-        "phantasia",
-        "nightrock",
-        new TileItemHarvest(
+    {
+        namespace: "phantasia",
+        id: "nightrock",
+        harvest: new TileItemHarvest(
             0.52,
-            2,
+            0,
             new ItemParticle(
                 "#phantasia:tile/particle_colour/nightrock",
                 "#phantasia:tile/generic/harvest_particle_frequency",
             ),
             new TileItemCondition("#phantasia:item/type/pickaxe"),
         ),
-        "#phantasia:tile/sfx/stone",
-        new TileItemAudioProperties(0.7, 0.6),
-    ),
-    new StoneishItems(
-        "phantasia",
-        "sandstone",
-        new TileItemHarvest(
+        sfx: "#phantasia:tile/sfx/stone",
+        audioProperties: new TileItemAudioProperties(0.7, 0.6),
+    },
+    {
+        namespace: "phantasia",
+        id: "sandstone",
+        harvest: new TileItemHarvest(
             0.22,
-            2,
+            0,
             new ItemParticle(
                 "#phantasia:tile/particle_colour/sand",
                 "#phantasia:tile/generic/harvest_particle_frequency",
             ),
+            new TileItemCondition("#phantasia:item/type/pickaxe"),
         ),
-        "#phantasia:tile/sfx/stone",
-        new TileItemAudioProperties(0.55, 0.4),
-    ),
-    new StoneishItems(
-        "phantasia",
-        "stone",
-        new TileItemHarvest(
+        sfx: "#phantasia:tile/sfx/stone",
+        audioProperties: new TileItemAudioProperties(0.55, 0.4),
+    },
+    {
+        namespace: "phantasia",
+        id: "stone",
+        harvest: new TileItemHarvest(
             0.36,
-            2,
+            0,
             new ItemParticle(
                 "#phantasia:tile/particle_colour/stone",
                 "#phantasia:tile/generic/harvest_particle_frequency",
             ),
+            new TileItemCondition("#phantasia:item/type/pickaxe"),
         ),
-        "#phantasia:tile/sfx/stone",
-        new TileItemAudioProperties(0.65, 0.5),
-    ),
+        sfx: "#phantasia:tile/sfx/stone",
+        audioProperties: new TileItemAudioProperties(0.65, 0.5),
+    },
 ].map(({ namespace, id, harvest, sfx, audioProperties }) => [
     tileBlockWallItems(
         namespace,

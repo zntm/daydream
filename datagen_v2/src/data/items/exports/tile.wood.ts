@@ -67,6 +67,9 @@ export default [
                                 ],
                             ),
                         ),
+                    )
+                    .setTileAudioProperties(
+                        new TileItemAudioProperties(0.4, 0.1),
                     ),
             ),
             new DatagenReturnData(
@@ -76,9 +79,6 @@ export default [
                     `${namespace}:item/${id}_chest`,
                     "#phantasia:item/generic/inventory_tile",
                 )
-                    .setTileAudioProperties(
-                        new TileItemAudioProperties(0.4, 0.1),
-                    )
                     .setTileDrops([
                         new TileItemDrop(`${namespace}:${id}_chest`),
                     ])
@@ -93,7 +93,10 @@ export default [
                             new TileItemCondition("#phantasia:item/type/axe"),
                         ),
                     )
-                    .setTileSFX("#phantasia:tile/sfx/wood"),
+                    .setTileSFX("#phantasia:tile/sfx/wood")
+                    .setTileAudioProperties(
+                        new TileItemAudioProperties(0.4, 0.1),
+                    ),
             ),
             leafRegistries?.map((leaf) => {
                 const leafId =
@@ -113,12 +116,9 @@ export default [
                             TileItemProperties.IsTile,
                         ],
                     )
-                        .setTileAudioProperties(
-                            new TileItemAudioProperties(0.4, 0.1),
-                        )
                         .setTileHarvest(
                             new TileItemHarvest(
-                                0.18,
+                                0.44,
                                 1,
                                 new ItemParticle(
                                     leaf.particles,
@@ -130,10 +130,16 @@ export default [
                             ),
                         )
                         .setTileSFX("#phantasia:tile/sfx/wood")
+                        .setTileAudioProperties(
+                            new TileItemAudioProperties(0.2, 0.0),
+                        )
                         .setTileOnRandomTick([
                             new ItemScript(
                                 "@phantasia:tile/nature/leaf_decay",
-                                0.1,
+                                {
+                                    id: `phantasia:tile/leaf/${id}`,
+                                },
+                                0.03,
                             ),
                         ]),
                 );
@@ -161,15 +167,12 @@ export default [
                     `phantasia:item/${id}_workbench`,
                     "#phantasia:item/generic/inventory_tile",
                 )
-                    .setTileAudioProperties(
-                        new TileItemAudioProperties(0.4, 0.1),
-                    )
                     .setTileDrops([
                         new TileItemDrop(`${namespace}:${id}_workbench`),
                     ])
                     .setTileHarvest(
                         new TileItemHarvest(
-                            0.56,
+                            0.36,
                             1,
                             new ItemParticle(
                                 planksParticles,
@@ -178,7 +181,10 @@ export default [
                             new TileItemCondition("#phantasia:item/type/axe"),
                         ),
                     )
-                    .setTileSFX("#phantasia:tile/sfx/wood"),
+                    .setTileSFX("#phantasia:tile/sfx/wood")
+                    .setTileAudioProperties(
+                        new TileItemAudioProperties(0.4, 0.1),
+                    ),
             ),
         ],
     ),
@@ -194,7 +200,7 @@ export default [
                 TileItemProperties.IsTile,
             ],
         )
-            .setTileDrops([new TileItemDrop("phantasia:item/mangrove")])
+            .setTileDrops([new TileItemDrop("phantasia:mangrove")])
             .setTileHarvest(
                 new TileItemHarvest(
                     0.56,

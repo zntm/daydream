@@ -4,6 +4,7 @@ import {
     ItemType,
     TileItem,
     TileItemAudioProperties,
+    TileItemCondition,
     TileItemDrop,
     TileItemHarvest,
     TileItemProperties,
@@ -60,6 +61,7 @@ export default [
                     "#phantasia:tile/particle_colour/lumin_moss",
                     "#phantasia:tile/generic/harvest_particle_frequency",
                 ),
+                new TileItemCondition("#phantasia:item/type/pickaxe"),
             ),
             sfx: "#phantasia:tile/sfx/stone",
             audio: new TileItemAudioProperties(0.65, 0.5),
@@ -77,6 +79,14 @@ export default [
             sfx,
             audio,
         ),
+        tileBlockWallItems(
+            "phantasia",
+            `${id}_bricks`,
+            [TileItemProperties.IsTile],
+            harvest,
+            sfx,
+            audio,
+        ),
     ]),
     /* grass blocks */
     ...["grass_block", "grass_block_taiga", "grass_block_swamp"].map(
@@ -89,9 +99,6 @@ export default [
                     "#phantasia:item/generic/inventory_tile",
                     [TileItemProperties.CanMirror, TileItemProperties.IsTile],
                 )
-                    .setTileAudioProperties(
-                        new TileItemAudioProperties(0.15, 0.05),
-                    )
                     .setTileDrops([new TileItemDrop("phantasia:dirt")])
                     .setTileHarvest(
                         new TileItemHarvest(
@@ -103,7 +110,10 @@ export default [
                             ),
                         ),
                     )
-                    .setTileSFX("#phantasia:tile/sfx/dirt"),
+                    .setTileSFX("#phantasia:tile/sfx/dirt")
+                    .setTileAudioProperties(
+                        new TileItemAudioProperties(0.15, 0.05),
+                    ),
             ),
     ),
 ];

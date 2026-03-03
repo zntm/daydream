@@ -645,3 +645,57 @@ global.natural_structure_data[$ "phantasia:tall_foliage"] = new NaturalStructure
         
         return _data;
     });
+
+enum NATURAL_STRUCTURE_VINE {
+    USE_STRUCTURE_VOID,
+    TILE_TOP,
+    INDEX_TOP,
+    TILE_MIDDLE,
+    INDEX_MIDDLE,
+    TILE_BOTTOM,
+    INDEX_BOTTOM,
+    LENGTH
+}
+
+global.natural_structure_data[$ "phantasia:vine"] = new NaturalStructureData()
+    .set_parser(function(_parameter)
+    {
+        var _data = array_create(NATURAL_STRUCTURE_VINE.LENGTH);
+        
+        _data[@ NATURAL_STRUCTURE_VINE.USE_STRUCTURE_VOID] = _parameter[$ "use_structure_void"] ?? true;
+        
+        var _tile_top    = _parameter.tile_top;
+        var _tile_middle = _parameter.tile_middle;
+        var _tile_bottom = _parameter.tile_bottom;
+        
+        _data[@ NATURAL_STRUCTURE_VINE.TILE_TOP]     = smart_value_parse(_tile_top.id);
+        _data[@ NATURAL_STRUCTURE_VINE.INDEX_TOP]    = smart_value_parse(_tile_top[$ "index"]) ?? 0;
+        
+        _data[@ NATURAL_STRUCTURE_VINE.TILE_MIDDLE]  = smart_value_parse(_tile_middle.id);
+        _data[@ NATURAL_STRUCTURE_VINE.INDEX_MIDDLE] = smart_value_parse(_tile_middle[$ "index"]) ?? 0;
+        
+        _data[@ NATURAL_STRUCTURE_VINE.TILE_BOTTOM]  = smart_value_parse(_tile_bottom.id);
+        _data[@ NATURAL_STRUCTURE_VINE.INDEX_BOTTOM] = smart_value_parse(_tile_bottom[$ "index"]) ?? 0;
+        
+        return _data;
+    })
+    .set_function(function(_x, _y, _width, _height, _seed, _parameter, _item_data)
+    {
+        var _rectangle = _width * _height;
+        var _data      = array_create(_rectangle * CHUNK_DEPTH, (_parameter[NATURAL_STRUCTURE_VINE.USE_STRUCTURE_VOID] ? TILE_STRUCTURE_VOID : TILE_EMPTY));
+        var _depth     = _rectangle * CHUNK_DEPTH_FOLIAGE;
+        
+        _data[@ 0 + _depth] = new Tile(smart_value(_parameter[NATURAL_STRUCTURE_VINE.TILE_TOP]), _item_data)
+            .set_index(smart_value(_parameter[NATURAL_STRUCTURE_VINE.INDEX_TOP]));
+        
+        _data[@ 0 + ((_height - 1) * _width) + _depth] = new Tile(smart_value(_parameter[NATURAL_STRUCTURE_VINE.TILE_BOTTOM]), _item_data)
+            .set_index(smart_value(_parameter[NATURAL_STRUCTURE_VINE.INDEX_BOTTOM]));
+        
+        for (var i = _height - 2; i >= 1; --i)
+        {
+            _data[@ 0 + (i * _width) + _depth] = new Tile(smart_value(_parameter[NATURAL_STRUCTURE_VINE.TILE_MIDDLE]), _item_data)
+                .set_index(smart_value(_parameter[NATURAL_STRUCTURE_VINE.INDEX_MIDDLE]));
+        }
+        
+        return _data;
+    });

@@ -1,42 +1,42 @@
 {
     "lifetime": {
+        "type": "smart_value:random",
         "values": {
-            "min": 0.5,
-            "max": 1
-        },
-        "type": "smart_value:random"
+            "max": 1,
+            "min": 0.5
+        }
     },
     "properties": [
         "phantasia:has_stretch_animation"
     ],
     "size": {
-        "xscale_min": {
-            "values": {
-                "min": 0.9,
-                "max": 1.1
-            },
-            "type": "smart_value:random"
-        },
         "xscale_max": {
+            "type": "smart_value:random",
             "values": {
-                "min": 0.9,
-                "max": 1.1
-            },
-            "type": "smart_value:random"
+                "max": 1.1,
+                "min": 0.9
+            }
         },
-        "yscale_min": {
+        "xscale_min": {
+            "type": "smart_value:random",
             "values": {
-                "min": 0.9,
-                "max": 1.1
-            },
-            "type": "smart_value:random"
+                "max": 1.1,
+                "min": 0.9
+            }
         },
         "yscale_max": {
+            "type": "smart_value:random",
             "values": {
-                "min": 0.9,
-                "max": 1.1
-            },
-            "type": "smart_value:random"
+                "max": 1.1,
+                "min": 0.9
+            }
+        },
+        "yscale_min": {
+            "type": "smart_value:random",
+            "values": {
+                "max": 1.1,
+                "min": 0.9
+            }
         }
     },
     "sprite": "phantasia:particle/explosion"

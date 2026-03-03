@@ -13,10 +13,10 @@ export default liquidRegistries.map(
             )
                 .addItemComponent("level", ItemComponent.u8(8, 1, 8))
                 .setItemOnUse([
-                    new ItemScript("@phantasia:bucket_place", {
+                    new ItemScript("@phantasia:items/bucket_place", {
                         liquid_id: `phantasia:${id}`,
                         empty_bucket_id: "phantasia:bucket",
-                        flow_speed,
+                        tick_delay: flow_speed,
                         fluid_collisions: fluidCollisions,
                     }),
                 ]),

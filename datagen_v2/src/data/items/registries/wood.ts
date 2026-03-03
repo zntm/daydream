@@ -47,10 +47,10 @@ export default [
     new WoodRegistry(
         "phantasia",
         "cherry",
-        ["#23261B", "#1C1F14"],
-        ["#7F4551", "#63313E"],
+        ["#5E3A24", "#4A2E1C"],
+        ["#5E3A24", "#4A2E1C"],
     )
-        .addLeafRegistry(new LeafRegistry("", ["#980B33", "#7F0A2A"]))
+        .addLeafRegistry(new LeafRegistry("", ["#E8A0C0", "#D890B0"]))
         .addLeafRegistry(new LeafRegistry("golden", ["#C56052", "#B64845"])),
     new WoodRegistry(
         "phantasia",

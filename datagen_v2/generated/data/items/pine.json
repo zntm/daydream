@@ -1,53 +1,59 @@
 {
     "inventory": "#phantasia:item/generic/inventory_default",
-    "sprite": "phantasia:item/pine",
-    "tile": {
-        "drops": [
-            {
-                "id": "phantasia:pine"
-            }
-        ],
-        "harvest": {
-            "condition": {
-                "id": "#phantasia:item/type/axe"
+    "item": {
+        "tile": {
+            "audio_properties": {
+                "lowpass": 0.4,
+                "reverb": 0.1
             },
-            "hardness": 0.56,
-            "level": 1,
-            "particle": {
-                "colour": [
-                    "#381D1E",
-                    "#301A1C"
-                ],
-                "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
-            }
-        },
-        "placement": {
-            "condition": {
-                "type": "every",
-                "values": [
-                    {
-                        "condition": {
-                            "type": "some",
-                            "values": [
-                                {
-                                    "xoffset": 0,
-                                    "yoffset": 1,
-                                    "z": "default",
-                                    "id": "#phantasia:tile/placement/plant_on"
-                                },
-                                {
-                                    "xoffset": 0,
-                                    "yoffset": 1,
-                                    "z": "z",
-                                    "id": "$ID"
-                                }
-                            ]
+            "drops": [
+                {
+                    "id": "phantasia:pine"
+                }
+            ],
+            "harvest": {
+                "condition": {
+                    "id": "#phantasia:item/type/axe"
+                },
+                "hardness": 0.56,
+                "level": 1,
+                "particle": {
+                    "colour": [
+                        "#381D1E",
+                        "#301A1C"
+                    ],
+                    "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
+                }
+            },
+            "placement": {
+                "condition": {
+                    "type": "every",
+                    "values": [
+                        {
+                            "condition": {
+                                "type": "some",
+                                "values": [
+                                    {
+                                        "xoffset": 0,
+                                        "yoffset": 1,
+                                        "z": "default",
+                                        "id": "#phantasia:tile/placement/plant_on"
+                                    },
+                                    {
+                                        "xoffset": 0,
+                                        "yoffset": 1,
+                                        "z": "z",
+                                        "id": "$ID"
+                                    }
+                                ]
+                            }
                         }
-                    }
-                ]
-            }
-        },
-        "sfx": "#phantasia:tile/sfx/wood"
+                    ]
+                }
+            },
+            "sfx": "#phantasia:tile/sfx/wood"
+        }
     },
+    "sprite": "phantasia:item/pine",
     "type": "untouchable"
 }

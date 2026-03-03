@@ -96,12 +96,14 @@ export default [
             ]),
     ),
     /* grass-like */
-    ["dry", "swampy", "boreal"]
-        .map((i) => {
-            return [`tall_${i}_grass`, `short_${i}_grass`];
+    ["", "dry", "swamp", "taiga"]
+        .map((variant) => {
+            const id = variant !== "" ? `grass_${variant}` : "grass";
+
+            return [`short_${id}`, `tall_${id}`];
         })
         .flat()
-        .concat(["cave_roots", "lumin_sprouts", "short_grass", "tall_grass"])
+        .concat(["cave_roots", "lumin_sprouts"])
         .map(
             (id: string) =>
                 new DatagenReturnData(
@@ -115,9 +117,6 @@ export default [
                             TileItemProperties.IsFoliage,
                         ],
                     )
-                        .setTileAudioProperties(
-                            new TileItemAudioProperties(0.05, 0),
-                        )
                         .setTileHarvest(
                             new TileItemHarvest(
                                 0.38,
@@ -133,7 +132,10 @@ export default [
                                 "#phantasia:tile/placement/condition_plant",
                             ),
                         )
-                        .setTileSFX("#phantasia:tile/sfx/foliage"),
+                        .setTileSFX("#phantasia:tile/sfx/foliage")
+                        .setTileAudioProperties(
+                            new TileItemAudioProperties(0.05, 0.0),
+                        ),
                 ),
         ),
 ];

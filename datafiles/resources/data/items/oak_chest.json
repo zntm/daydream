@@ -11,7 +11,6 @@
                     "id": "phantasia:oak_chest"
                 }
             ],
-            "inventory_slot_sprite": "spr_Inventory_Slot_Chest",
             "harvest": {
                 "condition": {
                     "id": "#phantasia:item/type/axe"
@@ -19,17 +18,14 @@
                 "hardness": 0.56,
                 "level": 1,
                 "particle": {
-                    "frequency": "#phantasia:tile/generic/harvest_particle_frequency",
-                    "id": [
+                    "colour": [
                         "#3B160A",
                         "#2D0B04"
-                    ]
+                    ],
+                    "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
                 }
             },
-            "sfx": "#phantasia:tile/sfx/wood",
-            "container": {
-                "length": 20
-            }
+            "sfx": "#phantasia:tile/sfx/wood"
         }
     },
     "sprite": "phantasia:item/oak_chest",

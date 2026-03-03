@@ -43,10 +43,7 @@ export default [
                     ItemType.Untouchable,
                     `phantasia:item/${id}`,
                     "#phantasia:item/generic/inventory_default",
-                    [
-                        TileItemProperties.CanMirror,
-                        TileItemProperties.IsFoliage,
-                    ],
+                    [TileItemProperties.CanMirror],
                 )
                     .setTileDrops([
                         new TileItemDrop(`phantasia:${id}`).setCondition(

@@ -53,17 +53,17 @@ export default [
             .setTileDrops([new TileItemDrop("phantasia:torch")])
             .setTileHarvest(
                 new TileItemHarvest(
-                    0,
+                    0.38,
                     0,
                     new ItemParticle(
-                        "#phantasia:tile/particle_colour/wood",
+                        "#phantasia:tile/particle_colour/twig",
                         "#phantasia:tile/generic/harvest_particle_frequency",
                     ),
                 ),
             )
             .setTileSFX("#phantasia:tile/sfx/wood")
             .setTileAudioProperties(new TileItemAudioProperties(0.05, 0))
-            .setTileLight("EAC7A6")
+            .setTileLight("#D89172")
             .setAnimationType("increment")
             .setTileOnRandomTick([
                 new ItemScript(
@@ -71,7 +71,7 @@ export default [
                     {
                         id: "phantasia:sfx/tile/fire/ambient",
                     },
-                    0.24,
+                    0.18,
                 ),
             ]),
     ),

@@ -1,11 +1,11 @@
 {
     "attribute": {
-        "collision_box_width": 22,
         "collision_box_height": 18,
-        "hit_box_width": 22,
-        "hit_box_height": 19,
+        "collision_box_width": 22,
         "eye_level": 3,
         "gravity": 0.5,
+        "hit_box_height": 19,
+        "hit_box_width": 22,
         "jump_falloff": 2.2,
         "jump_height": 4.9,
         "jump_time": 10,

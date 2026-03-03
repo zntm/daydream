@@ -3,5 +3,5 @@ import { ToolItem } from "../lib";
 
 export default new DatagenReturnData(
     "hatchet.json",
-    new ToolItem("hatchet", 2, 68, 1, 1),
+    new ToolItem("phantasia:item/hatchet", 2, 68, 1, 1),
 );

@@ -1,31 +1,33 @@
 {
     "inventory": "#phantasia:item/generic/inventory_default",
+    "item": {
+        "tile": {
+            "audio_properties": {
+                "lowpass": 0.05,
+                "reverb": 0
+            },
+            "drops": [
+                {
+                    "id": "phantasia:cactus_flower"
+                }
+            ],
+            "harvest": {
+                "hardness": 0.38,
+                "level": 0,
+                "particle": {
+                    "colour": "#phantasia:tile/particle_colour/twig",
+                    "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
+                }
+            },
+            "placement": {
+                "condition": "#phantasia:tile/placement/condition_dry_plant"
+            },
+            "sfx": "#phantasia:tile/sfx/foliage"
+        }
+    },
     "properties": [
         "phantasia:is_foliage"
     ],
     "sprite": "phantasia:item/cactus_flower",
-    "tile": {
-        "audio_properties": {
-            "lowpass": 0.05,
-            "reverb": 0
-        },
-        "drops": [
-            {
-                "id": "phantasia:cactus_flower"
-            }
-        ],
-        "harvest": {
-            "hardness": 0.38,
-            "level": 0,
-            "particle": {
-                "colour": "#phantasia:tile/particle_colour/twig",
-                "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
-            }
-        },
-        "placement": {
-            "condition": "#phantasia:tile/placement/condition_dry_plant"
-        },
-        "sfx": "#phantasia:tile/sfx/foliage"
-    },
     "type": "untouchable"
 }

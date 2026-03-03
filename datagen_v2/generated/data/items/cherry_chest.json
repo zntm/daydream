@@ -1,31 +1,33 @@
 {
     "inventory": "#phantasia:item/generic/inventory_tile",
-    "sprite": "phantasia:item/cherry_chest",
-    "tile": {
-        "audio_properties": {
-            "lowpass": 0.4,
-            "reverb": 0.1
-        },
-        "drops": [
-            {
-                "id": "phantasia:cherry_chest"
-            }
-        ],
-        "harvest": {
-            "condition": {
-                "id": "#phantasia:item/type/axe"
+    "item": {
+        "tile": {
+            "audio_properties": {
+                "lowpass": 0.4,
+                "reverb": 0.1
             },
-            "hardness": 0.56,
-            "level": 1,
-            "particle": {
-                "colour": [
-                    "#7F4551",
-                    "#63313E"
-                ],
-                "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
-            }
-        },
-        "sfx": "#phantasia:tile/sfx/wood"
+            "drops": [
+                {
+                    "id": "phantasia:cherry_chest"
+                }
+            ],
+            "harvest": {
+                "condition": {
+                    "id": "#phantasia:item/type/axe"
+                },
+                "hardness": 0.56,
+                "level": 1,
+                "particle": {
+                    "colour": [
+                        "#5E3A24",
+                        "#4A2E1C"
+                    ],
+                    "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
+                }
+            },
+            "sfx": "#phantasia:tile/sfx/wood"
+        }
     },
+    "sprite": "phantasia:item/cherry_chest",
     "type": "untouchable"
 }

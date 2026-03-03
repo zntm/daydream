@@ -72,14 +72,19 @@
             }
         ]
     },
+    "structures": [
+        {
+            "id": "phantasia:tall_foliage/lumin_vine",
+            "chance": 0.05
+        }
+    ],
     "tile": {
         "bottom_layer": {
             "base": [
                 {
                     "id": "phantasia:petrilumin",
-                    "weight": 1,
                     "noise_min": 0,
-                    "noise_max": 190
+                    "noise_max": 60
                 },
                 {
                     "id": {
@@ -96,27 +101,25 @@
                         "type": "smart_value:choose_weighted"
                     },
                     "weight": 4,
-                    "noise_min": 190,
+                    "noise_min": 60,
                     "noise_max": 256
                 }
             ],
             "wall": [
                 {
                     "id": "phantasia:petrilumin_wall",
-                    "weight": 1,
                     "noise_min": 0,
-                    "noise_max": 190
+                    "noise_max": 60
                 },
                 {
                     "id": "phantasia:lumin_moss_wall",
                     "weight": 4,
-                    "noise_min": 190,
-                    "noise_max": 256
+                    "noise_min": 60,
+                    "noise_max": 252
                 },
                 {
                     "id": "$EMPTY",
-                    "weight": 1,
-                    "noise_min": 190,
+                    "noise_min": 252,
                     "noise_max": 256
                 }
             ]
@@ -125,9 +128,8 @@
             "base": [
                 {
                     "id": "phantasia:petrilumin",
-                    "weight": 1,
                     "noise_min": 0,
-                    "noise_max": 190
+                    "noise_max": 60
                 },
                 {
                     "id": {
@@ -144,27 +146,25 @@
                         "type": "smart_value:choose_weighted"
                     },
                     "weight": 4,
-                    "noise_min": 190,
+                    "noise_min": 60,
                     "noise_max": 256
                 }
             ],
             "wall": [
                 {
                     "id": "phantasia:petrilumin_wall",
-                    "weight": 1,
                     "noise_min": 0,
-                    "noise_max": 190
+                    "noise_max": 60
                 },
                 {
                     "id": "phantasia:lumin_moss_wall",
                     "weight": 4,
-                    "noise_min": 190,
-                    "noise_max": 256
+                    "noise_min": 60,
+                    "noise_max": 252
                 },
                 {
                     "id": "$EMPTY",
-                    "weight": 1,
-                    "noise_min": 190,
+                    "noise_min": 252,
                     "noise_max": 256
                 }
             ]
@@ -173,9 +173,8 @@
             "base": [
                 {
                     "id": "phantasia:petrilumin",
-                    "weight": 1,
                     "noise_min": 0,
-                    "noise_max": 190
+                    "noise_max": 60
                 },
                 {
                     "id": {
@@ -192,27 +191,25 @@
                         "type": "smart_value:choose_weighted"
                     },
                     "weight": 4,
-                    "noise_min": 190,
+                    "noise_min": 60,
                     "noise_max": 256
                 }
             ],
             "wall": [
                 {
                     "id": "phantasia:petrilumin_wall",
-                    "weight": 1,
                     "noise_min": 0,
-                    "noise_max": 190
+                    "noise_max": 60
                 },
                 {
                     "id": "phantasia:lumin_moss_wall",
                     "weight": 4,
-                    "noise_min": 190,
-                    "noise_max": 256
+                    "noise_min": 60,
+                    "noise_max": 252
                 },
                 {
                     "id": "$EMPTY",
-                    "weight": 1,
-                    "noise_min": 190,
+                    "noise_min": 252,
                     "noise_max": 256
                 }
             ]

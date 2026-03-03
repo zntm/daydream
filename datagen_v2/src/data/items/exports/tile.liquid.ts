@@ -38,7 +38,7 @@ export default [
                             "flow_direction",
                             ItemComponent.s8(0, -1, 1),
                         )
-                        .setItemOnUse([
+                        .addOnUse([
                             new ItemScript("@phantasia:items/bucket_pickup", {
                                 bucket_id: "phantasia:bucket",
                                 filled_bucket_id: `${namespace}:${id}_bucket`,

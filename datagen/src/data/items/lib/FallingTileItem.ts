@@ -10,12 +10,12 @@ import type { ItemInventory } from "./ItemInventory";
 export class FallingTileItem extends TileItem {
     constructor(
         type: ItemType,
-        sprite: string | ItemSprite,
+        sprite: string,
         inventory: string | ItemInventory,
         properties?: TileItemProperties | TileItemProperties[],
     ) {
         super(type, sprite, inventory, properties);
-        
+
         // Initialize falling with default enabled
         (this as any).tile.falling = {
             enabled: true
@@ -39,7 +39,7 @@ export class FallingTileItem extends TileItem {
         (this as any).tile.falling.gravity = gravity;
         return this;
     }
-    
+
     /**
      * Disable falling behavior (useful for toggling)
      */

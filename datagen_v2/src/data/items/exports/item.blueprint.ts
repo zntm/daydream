@@ -12,12 +12,14 @@ export default [
             "phantasia:item/loot_blueprint",
             "#phantasia:item/generic/inventory_default",
         )
-            .addItemComponent("id", ItemComponent.string("id", undefined, 80))
-            .addItemComponent(
+            .addTileComponent("id", ItemComponent.string("id", undefined, 80))
+            .addTileComponent(
                 "turns_into",
                 ItemComponent.string("turns_into", undefined, 80),
             )
-            .setItemOnUse([new ItemScript("@phantasia:ui/loot_blueprint")]),
+            .addOnUse([new ItemScript("@phantasia:ui/loot_blueprint")])
+            .setTileSFX("#phantasia:tile/sfx/stone")
+            .setTileAudioProperties(new TileItemAudioProperties(0.65, 0.5)),
     ),
     new DatagenReturnData(
         "structure_blueprint.json",
@@ -35,8 +37,10 @@ export default [
             .addTileComponent("yoffset", ItemComponent.s16(0, -128, 127))
             .addTileComponent("xscale", ItemComponent.u8(1, 1, 255))
             .addTileComponent("yscale", ItemComponent.u8(1, 1, 255))
-            .setItemOnUse([
+            .addOnUse([
                 new ItemScript("@phantasia:ui/structure_blueprint"),
-            ]),
+            ])
+            .setTileSFX("#phantasia:tile/sfx/stone")
+            .setTileAudioProperties(new TileItemAudioProperties(0.65, 0.5)),
     ),
 ];

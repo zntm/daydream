@@ -22,8 +22,8 @@
                 "hardness": 0.78,
                 "level": 1,
                 "particle": {
-                    "frequency": "#phantasia:tile/generic/harvest_particle_frequency",
-                    "id": "#phantasia:tile/particle_colour/stone"
+                    "colour": "#phantasia:tile/particle_colour/stone",
+                    "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
                 }
             },
             "sfx": "#phantasia:tile/sfx/stone"
