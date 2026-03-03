@@ -1,50 +1,55 @@
 {
     "inventory": "#phantasia:item/generic/inventory_default",
     "item": {
-        "on_use": [
-            {
-                "id": "@phantasia:ui/structure_blueprint"
-            }
-        ]
-    },
-    "sprite": "phantasia:item/structure_blueprint",
-    "tile": {
-        "components": {
-            "id": {
-                "default": "id",
-                "max": 80,
-                "type": "string"
+        "tile": {
+            "audio_properties": {
+                "lowpass": 0.65,
+                "reverb": 0.5
             },
-            "turns_into": {
-                "default": "turns_into",
-                "max": 80,
-                "type": "string"
+            "components": {
+                "id": {
+                    "default": "id",
+                    "max": 80,
+                    "type": "string"
+                },
+                "turns_into": {
+                    "default": "turns_into",
+                    "max": 80,
+                    "type": "string"
+                },
+                "xoffset": {
+                    "default": 0,
+                    "max": 127,
+                    "min": -128,
+                    "type": "s32"
+                },
+                "xscale": {
+                    "default": 1,
+                    "max": 255,
+                    "min": 1,
+                    "type": "s32"
+                },
+                "yoffset": {
+                    "default": 0,
+                    "max": 127,
+                    "min": -128,
+                    "type": "s32"
+                },
+                "yscale": {
+                    "default": 1,
+                    "max": 255,
+                    "min": 1,
+                    "type": "s32"
+                }
             },
-            "xoffset": {
-                "default": 0,
-                "max": 127,
-                "min": -128,
-                "type": "s16"
-            },
-            "xscale": {
-                "default": 1,
-                "max": 255,
-                "min": 1,
-                "type": "u8"
-            },
-            "yoffset": {
-                "default": 0,
-                "max": 127,
-                "min": -128,
-                "type": "s16"
-            },
-            "yscale": {
-                "default": 1,
-                "max": 255,
-                "min": 1,
-                "type": "u8"
-            }
+            "on_use": [
+                {
+                    "id": "@phantasia:ui/structure_blueprint"
+                }
+            ],
+            "sfx": "#phantasia:tile/sfx/stone"
         }
     },
+    "sprite": "phantasia:item/structure_blueprint",
     "type": "solid"
 }

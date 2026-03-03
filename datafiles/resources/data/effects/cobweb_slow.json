@@ -1,0 +1,12 @@
+{
+    "attribute": "movement_speed",
+    "base_value": -0.75,
+    "icon": "phantasia:item/cobweb",
+    "modifiers": [
+        {
+            "value": "level",
+            "operation": "multiply"
+        }
+    ],
+    "type": "constant"
+}

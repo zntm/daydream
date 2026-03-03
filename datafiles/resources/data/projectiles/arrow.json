@@ -2,7 +2,7 @@
     "attribute": {
         "collision_box_height": 8,
         "collision_box_width": 8,
-        "gravity": 0.5,
+        "gravity": 0.2,
         "hit_box_height": 8,
         "hit_box_width": 8
     },

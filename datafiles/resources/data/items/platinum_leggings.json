@@ -1,17 +1,15 @@
 {
     "inventory": "#phantasia:item/generic/inventory_tool",
     "item": {
-        "accessory": {
-            "attribute": {
-                "defense": 9
-            },
+        "armor": {
+            "defense": 9,
             "type": "leggings"
         },
         "durability": {
             "amount": 823,
-            "bar": "#phantasia:item/generic/durability_bar"
+            "bar": "#phantasia:item/generic/inventory_armor"
         }
     },
     "sprite": "phantasia:item/platinum_leggings",
-    "type": "accessory"
+    "type": "tool"
 }

@@ -2,20 +2,20 @@
     "function": {
         "id": "phantasia:ore",
         "parameters": {
-            "clumpiness": 0.5,
-            "roundedness": 0.4,
-            "threshold": 0.7,
             "tile": {
                 "id": "phantasia:gold_ore"
-            }
+            },
+            "threshold": 0.7,
+            "clumpiness": 0.5,
+            "roundedness": 0.4
         }
     },
     "height": {
-        "type": "smart_value:irandom",
         "values": {
-            "max": 4,
-            "min": 1
-        }
+            "min": 1,
+            "max": 4
+        },
+        "type": "smart_value:irandom"
     },
     "placement": {
         "type": "inside",
@@ -23,10 +23,10 @@
         "yoffset": 0
     },
     "width": {
-        "type": "smart_value:irandom",
         "values": {
-            "max": 4,
-            "min": 1
-        }
+            "min": 1,
+            "max": 4
+        },
+        "type": "smart_value:irandom"
     }
 }

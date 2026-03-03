@@ -93,7 +93,7 @@
         "surface": {
             "heat": {
                 "octaves": 4.5,
-                "scale": 0.005,
+                "scale": 0.0005,
                 "spline_x": {
                     "points": [
                         {
@@ -112,9 +112,8 @@
             },
             "humidity": {
                 "octaves": 2.75,
-                "scale": 0.005
+                "scale": 0.0005
             },
-            "map": "phantasia:world/playground/map",
             "offset": {
                 "max": 34,
                 "min": 22,
@@ -243,23 +242,23 @@
         "diurnal": [
             {
                 "id": "dawn",
-                "start": 0,
-                "end": 240
+                "time_range_min": 0,
+                "time_range_max": 240
             },
             {
                 "id": "day",
-                "start": 240,
-                "end": 820
+                "time_range_min": 240,
+                "time_range_max": 820
             },
             {
                 "id": "dusk",
-                "start": 820,
-                "end": 890
+                "time_range_min": 820,
+                "time_range_max": 890
             },
             {
                 "id": "night",
-                "start": 890,
-                "end": 1200
+                "time_range_min": 890,
+                "time_range_max": 1200
             }
         ],
         "length": 1200,

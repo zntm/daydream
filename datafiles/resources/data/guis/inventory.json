@@ -463,10 +463,10 @@
     "props": {
         "anchor_x": "center",
         "anchor_y": "bottom",
-        "height": 64,
-        "width": 160,
         "x": 0,
-        "y": 36
+        "y": 36,
+        "width": 160,
+        "height": 64
     },
     "type": "panel"
 }

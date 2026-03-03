@@ -15,7 +15,7 @@
                 "parameters": {
                     "liquid_id": "phantasia:lava",
                     "empty_bucket_id": "phantasia:bucket",
-                    "tick_delay": 24,
+                    "tick_delay": 1,
                     "fluid_collisions": [
                         {
                             "id": "phantasia:stone",
