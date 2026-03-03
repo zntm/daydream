@@ -1,0 +1,17 @@
+{
+    "inventory": "#phantasia:item/generic/inventory_tool",
+    "item": {
+        "accessory": {
+            "attribute": {
+                "defense": 3
+            },
+            "type": "leggings"
+        },
+        "durability": {
+            "amount": 108,
+            "bar": "#phantasia:item/generic/durability_bar"
+        }
+    },
+    "sprite": "phantasia:item/copper_leggings",
+    "type": "accessory"
+}

@@ -1,0 +1,8 @@
+{
+    "condition": {
+        "count": 1,
+        "event": "TILE_CHANGED",
+        "item_id": "phantasia:stone"
+    },
+    "icon": "phantasia:achievement/mine_stone"
+}

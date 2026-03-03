@@ -1,0 +1,29 @@
+{
+    "attribute": {
+        "collision_box_height": 8,
+        "collision_box_width": 8,
+        "gravity": 0.5,
+        "hit_box_height": 8,
+        "hit_box_width": 8
+    },
+    "lifetime": 60,
+    "on_hit_tile": [
+        {
+            "id": "@phantasia:spawn_item_drop",
+            "item": "phantasia:item/arrow",
+            "amount": 1,
+            "chance": 1
+        }
+    ],
+    "physics": {
+        "rotation": 0,
+        "scale": 1,
+        "xspeed": 12,
+        "yspeed": 0
+    },
+    "properties": [
+        "phantasia:can_destroy_on_entity_collision",
+        "phantasia:can_destroy_on_tile_collision"
+    ],
+    "sprite": "phantasia:projectile/arrow"
+}

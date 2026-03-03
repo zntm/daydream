@@ -1,0 +1,21 @@
+{
+    "inventory": "#phantasia:item/generic/inventory_tool",
+    "item": {
+        "ammo_requirement": "arrow",
+        "cooldown": 0.3,
+        "damage": 7,
+        "durability": {
+            "amount": 740,
+            "bar": "#phantasia:item/generic/durability_bar"
+        },
+        "hold_type": "launcher",
+        "projectile": "phantasia:arrow",
+        "skill": {
+            "stamina_cost": 10,
+            "threshold": 0.5,
+            "type": "charge"
+        }
+    },
+    "sprite": "phantasia:item/gold_bow",
+    "type": "tool"
+}

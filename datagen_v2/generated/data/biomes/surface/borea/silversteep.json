@@ -1,0 +1,136 @@
+{
+    "background": {
+        "blend": 0.7,
+        "id": "phantasia:background/taiga"
+    },
+    "creatures": [],
+    "foliage": [
+        {
+            "id": "phantasia:short_grass_taiga",
+            "chance": 0.18,
+            "generate_on": "#phantasia:tile/placement/plant_on"
+        },
+        {
+            "id": "phantasia:rock",
+            "chance": 0.08,
+            "generate_on": "#phantasia:tile/placement/plant_on"
+        },
+        {
+            "id": "phantasia:anemone",
+            "chance": 0.02,
+            "generate_on": "#phantasia:tile/placement/plant_on"
+        }
+    ],
+    "light_colour": {
+        "points": [
+            {
+                "position": 0.15,
+                "color": "#374A91"
+            },
+            {
+                "position": 0.45,
+                "color": "#FFFFFF"
+            },
+            {
+                "position": 0.72,
+                "color": "#C68B69"
+            },
+            {
+                "position": 0.9,
+                "color": "#141B35"
+            }
+        ]
+    },
+    "map_colour": "#708888",
+    "music": [
+        {
+            "id": "phantasia:music/12_hours_at_ease",
+            "gain": 0.6
+        },
+        {
+            "id": "phantasia:music/soliloquy",
+            "gain": 0.4
+        }
+    ],
+    "sky_colour": {
+        "points": [
+            {
+                "position": 0.15,
+                "color": "#371479"
+            },
+            {
+                "position": 0.45,
+                "color": "#5F91FE"
+            },
+            {
+                "position": 0.72,
+                "color": "#C4502D"
+            },
+            {
+                "position": 0.9,
+                "color": "#2B243F"
+            }
+        ]
+    },
+    "structures": [
+        {
+            "id": "phantasia:tree/pine",
+            "chance": 0.08,
+            "generate_on": "#phantasia:tile/placement/plant_on"
+        }
+    ],
+    "terrain_modifier": {
+        "amplitude_scale": 1.5,
+        "height_offset": 8
+    },
+    "tile": {
+        "bottom_layer": {
+            "base": [
+                {
+                    "id": "phantasia:stone"
+                }
+            ],
+            "wall": [
+                {
+                    "id": "phantasia:stone_wall",
+                    "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
+                }
+            ]
+        },
+        "middle_layer": {
+            "base": [
+                {
+                    "id": "phantasia:dirt"
+                }
+            ],
+            "wall": [
+                {
+                    "id": "phantasia:dirt_wall",
+                    "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
+                }
+            ]
+        },
+        "top_layer": {
+            "base": [
+                {
+                    "id": "phantasia:grass_block_taiga"
+                }
+            ],
+            "wall": [
+                {
+                    "id": "phantasia:dirt_wall",
+                    "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
+                }
+            ]
+        }
+    }
+}

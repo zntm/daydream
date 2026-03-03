@@ -1,0 +1,82 @@
+{
+    "colour": {
+        "alpha1": 0,
+        "alpha2": 1,
+        "alpha3": 1
+    },
+    "direction": {
+        "direction_max": {
+            "type": "smart_value:random",
+            "values": {
+                "max": 290,
+                "min": 250
+            }
+        },
+        "direction_min": {
+            "type": "smart_value:random",
+            "values": {
+                "max": 290,
+                "min": 250
+            }
+        }
+    },
+    "gravity": {
+        "gravity_amount": 0.3,
+        "gravity_direction": 270
+    },
+    "lifetime": {
+        "type": "smart_value:random",
+        "values": {
+            "max": 0.8,
+            "min": 0.4
+        }
+    },
+    "size": {
+        "xscale_max": {
+            "type": "smart_value:random",
+            "values": {
+                "max": 1.2,
+                "min": 0.8
+            }
+        },
+        "xscale_min": {
+            "type": "smart_value:random",
+            "values": {
+                "max": 1.2,
+                "min": 0.8
+            }
+        },
+        "yscale_max": {
+            "type": "smart_value:random",
+            "values": {
+                "max": 1.2,
+                "min": 0.8
+            }
+        },
+        "yscale_min": {
+            "type": "smart_value:random",
+            "values": {
+                "max": 1.2,
+                "min": 0.8
+            }
+        }
+    },
+    "speed": {
+        "speed_max": {
+            "type": "smart_value:random",
+            "values": {
+                "max": 6,
+                "min": 4
+            }
+        },
+        "speed_min": {
+            "type": "smart_value:random",
+            "values": {
+                "max": 6,
+                "min": 4
+            }
+        }
+    },
+    "sprite": "phantasia:particle/weather/raindrop",
+    "wind_factor": 1
+}

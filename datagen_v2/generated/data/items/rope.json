@@ -1,0 +1,28 @@
+{
+    "inventory": "#phantasia:item/generic/inventory_tile",
+    "properties": [
+        "phantasia:is_foliage"
+    ],
+    "sprite": "phantasia:item/rope",
+    "tile": {
+        "audio_properties": {
+            "lowpass": 0.05,
+            "reverb": 0
+        },
+        "drops": [
+            {
+                "id": "phantasia:rope"
+            }
+        ],
+        "harvest": {
+            "hardness": 0.24,
+            "level": 0,
+            "particle": {
+                "colour": "#8B5A2B",
+                "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
+            }
+        },
+        "sfx": "#phantasia:tile/sfx/foliage"
+    },
+    "type": "untouchable"
+}

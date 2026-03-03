@@ -1,0 +1,36 @@
+{
+    "inventory": "#phantasia:item/generic/inventory_default",
+    "item": {
+        "on_use": [
+            {
+                "id": "@phantasia:items/bucket_pickup",
+                "parameters": {
+                    "bucket_id": "phantasia:bucket",
+                    "filled_bucket_id": "phantasia:water_bucket",
+                    "tick_delay": 8
+                }
+            }
+        ]
+    },
+    "properties": [
+        "phantasia:is_liquid"
+    ],
+    "sprite": "phantasia:item/water",
+    "tile": {
+        "components": {
+            "flow_direction": {
+                "default": 0,
+                "max": 1,
+                "min": -1,
+                "type": "s8"
+            },
+            "level": {
+                "default": 8,
+                "max": 8,
+                "min": 1,
+                "type": "u8"
+            }
+        }
+    },
+    "type": "untouchable"
+}
