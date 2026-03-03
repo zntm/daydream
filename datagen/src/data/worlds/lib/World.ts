@@ -12,6 +12,7 @@ export class WorldVignette {
     }
 }
 
+
 export class WorldTimeDiurnal {
     private id: string;
     private start: number;
@@ -108,7 +109,7 @@ export class WorldSky {
         edgeNoiseAmplitude: number = 0.5,
         edgeNoiseOctaves: number = 3,
         detailNoiseAmplitude: number = 0.25,
-        detailNoiseOctaves: number = 2,
+        detailNoiseOctaves: number = 2
     ) {
         this.enabled = enabled;
         this.id = id;
@@ -214,7 +215,7 @@ export class WorldSurface {
         bedrockNoiseScale: number = 0.3,
         tileVariationNoiseScale: number = 0.05,
         biomeBlendRange: number = 24,
-        biomeBlendNoiseScale: number = 0.08,
+        biomeBlendNoiseScale: number = 0.08
     ) {
         this.start = start;
         this.noise_offset = noiseOffset;
@@ -260,7 +261,7 @@ export class WorldAquifer {
         octaves: number = 3,
         fillLevel: number = 8,
         noiseScale: number = 0.02,
-        range: number = 255,
+        range: number = 255
     ) {
         this.type = type;
         this.depth_min = depthMin;
@@ -309,7 +310,7 @@ export class WorldCave {
         transitionNoiseScaleX: number = 0.02,
         transitionNoiseScaleY: number = 0.02,
         transitionNoiseRange: number = 255,
-        transitionNoiseOctaves: number = 3,
+        transitionNoiseOctaves: number = 3
     ) {
         this.start = start;
         this.system = system;

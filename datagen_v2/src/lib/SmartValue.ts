@@ -29,7 +29,7 @@ class SmartValueChooseWeighted {
     }
 }
 
-export class SmartValueChooseWeightedOption {
+class SmartValueChooseWeightedOption {
     value: any;
     weight: number;
 

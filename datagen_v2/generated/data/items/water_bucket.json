@@ -11,11 +11,11 @@
         },
         "on_use": [
             {
-                "id": "@phantasia:items/bucket_place",
+                "id": "@phantasia:bucket_place",
                 "parameters": {
                     "liquid_id": "phantasia:water",
                     "empty_bucket_id": "phantasia:bucket",
-                    "tick_delay": 8,
+                    "flow_speed": 8,
                     "fluid_collisions": [
                         {
                             "id": "phantasia:obsidian",

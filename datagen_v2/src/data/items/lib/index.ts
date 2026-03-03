@@ -1,10 +1,3 @@
-import {
-    AccessoryItem,
-    ItemAccessoryType,
-    ItemAccessory,
-} from "./AccessoryItem";
-import { LauncherItem } from "./LauncherItem";
-import { AmmoItem } from "./AmmoItem";
 import { ConsumableItem, ConsumableItemData } from "./ConsumableItem";
 import { Item } from "./Item";
 import { ItemCooldown } from "./ItemCooldown";
@@ -29,9 +22,6 @@ import {
 import { ToolItem } from "./ToolItem";
 
 export {
-    AccessoryItem,
-    ItemAccessoryType,
-    ItemAccessory,
     ConsumableItem,
     ConsumableItemData,
     Item,
@@ -55,6 +45,4 @@ export {
     TileItemPlacementConditionType,
     TileItemPlacementConditionValue,
     ToolItem,
-    LauncherItem,
-    AmmoItem,
 };

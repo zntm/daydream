@@ -10,7 +10,7 @@ import {
     ItemParticle,
     TileItemProperties,
 } from "../lib";
-import { AmmoItem } from "../lib/AmmoItem";
+import { ArrowItem } from "../lib/ArrowItem";
 
 export default [
     new DatagenReturnData(
@@ -31,7 +31,7 @@ export default [
     ),
     new DatagenReturnData(
         "arrow.json",
-        new AmmoItem("phantasia:item/arrow", 2)
+        new ArrowItem("phantasia:item/arrow", 2)
             .setProjectile("phantasia:arrow"),
     ),
     new DatagenReturnData(

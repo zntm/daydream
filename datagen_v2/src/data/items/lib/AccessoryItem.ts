@@ -3,7 +3,7 @@ import type { ItemComponentData } from "./ItemComponent";
 import { ItemDurability } from "./ItemDurability";
 import { ItemScript } from "./ItemScript";
 import { ItemType } from "./ItemType";
-import { Attribute } from "../../../lib";
+import { EffectModifier } from "../../effects/lib/EffectModifier";
 
 export enum ItemAccessoryType {
     Helmet = "helmet",
@@ -14,14 +14,15 @@ export enum ItemAccessoryType {
 
 export class ItemAccessory {
     private type: ItemAccessoryType;
-    private attribute?: Attribute;
+    private attributes?: { attribute: string; modifier: EffectModifier }[];
 
     constructor(type: ItemAccessoryType) {
         this.type = type;
     }
 
-    setAttribute(attribute: Attribute) {
-        this.attribute = attribute;
+    addAttribute(attribute: string, modifier: EffectModifier) {
+        this.attributes ??= [];
+        this.attributes.push({ attribute, modifier });
 
         return this;
     }

@@ -1,7 +1,7 @@
 import { Item } from "./Item";
 import { ItemType } from "./ItemType";
 
-export class AmmoItem extends Item {
+export class ArrowItem extends Item {
     // @ts-ignore
     private item?: {
         ammo_type?: string;
