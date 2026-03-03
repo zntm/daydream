@@ -8,7 +8,7 @@ function worldgen_get_tile_wall(_x, _y, _surface_biome, _cave_biome, _surface_he
     /* generate noise value (0..255) for coherent tile variation */
     /* offset differently from base tiles to avoid identical patterns */
     var _tile_noise_scale = _world_data.get_tile_variation_noise_scale();
-    var _noise = open_simplex_noise(_x * _tile_noise_scale, _y * _tile_noise_scale + (_seed * 200), 255, 2);
+    var _noise = open_simplex_noise(_x * _tile_noise_scale, _y * _tile_noise_scale + (_seed / 1_000_000 * 200), 255, 2);
     
     if (_cave_biome != undefined)
     {
@@ -20,7 +20,7 @@ function worldgen_get_tile_wall(_x, _y, _surface_biome, _cave_biome, _surface_he
             
             if (_custom_scale != undefined)
             {
-                _noise = open_simplex_noise(_x * _custom_scale, _y * _custom_scale + (_seed * 200), 255, 2);
+                _noise = open_simplex_noise(_x * _custom_scale, _y * _custom_scale + (_seed / 1_000_000 * 200), 255, 2);
             }
             
             return _cb.get_tile_middle_layer_wall(_noise);

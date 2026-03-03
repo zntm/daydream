@@ -13,7 +13,7 @@ function worldgen_get_tile_base(_x, _y, _surface_biome, _cave_biome, _surface_he
         if (_bedrock_depth <= 1) return "phantasia:bedrock";
         
         // Use noise for ragged bedrock edge
-        var _bedrock_noise = open_simplex_noise(_x * _world_data.get_bedrock_noise_scale(), _seed * 50, 1.0, 1);
+        var _bedrock_noise = open_simplex_noise(_x * _world_data.get_bedrock_noise_scale(), (_seed / 1_000_000 * 50), 1.0, 1);
         if (_bedrock_noise > (_bedrock_depth - 1) * 0.4) return "phantasia:bedrock";
     }
     
