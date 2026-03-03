@@ -4,7 +4,7 @@
         "phantasia:is_tile",
         "phantasia:is_wall"
     ],
-    "sprite": "phantasia:/item/nightrock_bricks_wall",
+    "sprite": "phantasia:item/nightrock_bricks_wall",
     "tile": {
         "audio_properties": {
             "lowpass": 0.7,
@@ -16,6 +16,9 @@
             }
         ],
         "harvest": {
+            "condition": {
+                "id": "#phantasia:item/type/pickaxe"
+            },
             "hardness": 0.52,
             "level": 2,
             "particle": {
@@ -25,5 +28,5 @@
         },
         "sfx": "#phantasia:tile/sfx/stone"
     },
-    "type": "solid"
+    "type": "untouchable"
 }

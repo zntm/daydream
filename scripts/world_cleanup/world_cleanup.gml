@@ -1,7 +1,7 @@
 /// @param {bool} [_async=false] Whether to save chunks asynchronously
 function world_cleanup(_async = false)
 {
-    show_debug_message("[WORLD_CLEANUP] Starting world cleanup...");
+    PRINT("[WORLD_CLEANUP] Starting world cleanup...");
     
     // 1. Flush any pending chunk saves
     if (variable_global_exists("chunk_save_queue"))
@@ -30,7 +30,7 @@ function world_cleanup(_async = false)
         global.chunk_pool.on_release(_chunk);
     }
     
-    show_debug_message($"[WORLD_CLEANUP] Released {_chunk_count} chunks");
+    PRINT($"[WORLD_CLEANUP] Released {_chunk_count} chunks");
     
     // 4. Clear chunk map
     chunk_map_clear();
@@ -42,7 +42,7 @@ function world_cleanup(_async = false)
     var _structure_count = array_length(global.structure_pool.active_structures);
     global.structure_pool.clear_all();
     
-    show_debug_message($"[WORLD_CLEANUP] Cleared {_structure_count} active structures");
+    PRINT($"[WORLD_CLEANUP] Cleared {_structure_count} active structures");
     
     // 10. Clear particle pool
     global.particle_pool.clear_all();
@@ -74,17 +74,21 @@ function world_cleanup(_async = false)
     {
         // Destroy nested ds_maps first
         var _key = ds_map_find_first(global.worldgen_structure);
+        
         while (_key != undefined)
         {
             var _nested = global.worldgen_structure[? _key];
+            
             if (ds_exists(_nested, ds_type_map))
             {
                 ds_map_destroy(_nested);
             }
+            
             _key = ds_map_find_next(global.worldgen_structure, _key);
         }
+        
         ds_map_clear(global.worldgen_structure);
     }
     
-    show_debug_message("[WORLD_CLEANUP] World cleanup complete");
+    PRINT("[WORLD_CLEANUP] World cleanup complete");
 }

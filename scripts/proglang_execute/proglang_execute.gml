@@ -15,7 +15,7 @@ function proglang_execute(_source, _context = {}, _filepath = "")
     {
         if (IS_DEVELOPER_MODE)
         {
-            show_debug_message("[Daydream] Compilation failed.");
+            PRINT("[Daydream] Compilation failed.");
         }
         
         return undefined;
@@ -50,7 +50,7 @@ function proglang_execute(_source, _context = {}, _filepath = "")
         _vm[@ PROG_VM.SCOPE][PROG_SCOPE.VARS][$ "z"] = _context.z;
     }
     
-    // show_debug_message(_bytecode);
+    // PRINT(_bytecode);
     
     var _result = proglang_vm_run(_vm, _bytecode);
     

@@ -6,5 +6,5 @@ function dbg_log(_string)
     
     if (!IS_DEVELOPER_MODE) exit;
     
-    show_debug_message($"[DEBUG] :: [{string_pad_start(current_hour, "0", 2)}:{string_pad_start(current_minute, "0", 2)}:{string_pad_start(current_second, "0", 2)}] {_string}");
+    PRINT($"[DEBUG] :: [{string_pad_start(current_hour, "0", 2)}:{string_pad_start(current_minute, "0", 2)}:{string_pad_start(current_second, "0", 2)}] {_string}");
 }

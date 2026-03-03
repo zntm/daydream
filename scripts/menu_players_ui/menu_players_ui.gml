@@ -27,7 +27,7 @@ function menu_players_ui_load()
 	
 	if (_def == undefined)
 	{
-		show_debug_message("[Menu Players] failed to load ui/menu/players.ui");
+		PRINT("[Menu Players] failed to load ui/menu/players.ui");
 		exit;
 	}
 	
@@ -340,7 +340,7 @@ function menu_players_ui_build_cards(_container, _players, _ystart, _is_grid, _i
 		});
 
 		_btn_gear.add_event_handler("on_select_release", method(_btn_gear, function() {
-			show_debug_message("Player options: " + string(self.player_ref.get_name()));
+			PRINT("Player options: " + string(self.player_ref.get_name()));
 			global.ui_input_consumed = true;
 		}));
 		
@@ -355,7 +355,7 @@ function menu_players_ui_build_cards(_container, _players, _ystart, _is_grid, _i
 			
 			if (!directory_exists(PROGRAM_DIRECTORY_PLAYERS + "/" + _uuid))
 			{
-				show_debug_message("Player folder not found: " + string(_uuid));
+				PRINT("Player folder not found: " + string(_uuid));
 
 				exit;
 			}

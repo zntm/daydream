@@ -3,7 +3,7 @@
     "properties": [
         "phantasia:is_tile"
     ],
-    "sprite": "phantasia:/item/oak_planks",
+    "sprite": "phantasia:item/oak_planks",
     "tile": {
         "audio_properties": {
             "lowpass": 0.4,

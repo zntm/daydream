@@ -32,7 +32,7 @@ function ui_load(_path)
     /* check cache first */
     if (struct_exists(global.ui_definitions, _path))
     {
-        show_debug_message($"[UI Runtime] using cached definition for: {_path}");
+        PRINT($"[UI Runtime] using cached definition for: {_path}");
         
         return global.ui_definitions[$ _path];
     }
@@ -49,8 +49,8 @@ function ui_load(_path)
     }
     
     
-    show_debug_message($"[UI Runtime] attempting to load ui file: '{_path}' -> '{_full_path}' (cwd: {working_directory})");
-    show_debug_message($"[UI Runtime] file exists (full): {file_exists(_full_path)}");
+    PRINT($"[UI Runtime] attempting to load ui file: '{_path}' -> '{_full_path}' (cwd: {working_directory})");
+    PRINT($"[UI Runtime] file exists (full): {file_exists(_full_path)}");
     
     
     /* load file contents */
@@ -60,8 +60,8 @@ function ui_load(_path)
     /* fallback: try relative path directly if full path failed */
     if (_source == undefined && _full_path != _path)
     {
-        show_debug_message($"[UI Runtime] falling back to relative path: '{_path}'");
-        show_debug_message($"[UI Runtime] file exists (rel): {file_exists(_path)}");
+        PRINT($"[UI Runtime] falling back to relative path: '{_path}'");
+        PRINT($"[UI Runtime] file exists (rel): {file_exists(_path)}");
         
         _source = buffer_load_text(_path);
     }
@@ -69,7 +69,7 @@ function ui_load(_path)
     
     if (_source == undefined || _source == "")
     {
-        show_debug_message($"[UI Runtime] ERROR: failed to load ui file content from: {_full_path} OR {_path}");
+        PRINT($"[UI Runtime] ERROR: failed to load ui file content from: {_full_path} OR {_path}");
         
         return undefined;
     }
@@ -82,7 +82,7 @@ function ui_load(_path)
     
     if (_lexer.had_error)
     {
-        show_debug_message($"[UI Runtime] lexer error in {_path}: {_lexer.error}");
+        PRINT($"[UI Runtime] lexer error in {_path}: {_lexer.error}");
         
         return undefined;
     }
@@ -95,7 +95,7 @@ function ui_load(_path)
     
     if (_parser.had_error)
     {
-        show_debug_message($"[UI Runtime] parser error in {_path}: {_parser.error}");
+        PRINT($"[UI Runtime] parser error in {_path}: {_parser.error}");
         
         return undefined;
     }
@@ -117,7 +117,6 @@ function ui_load(_path)
     for (var i = _def_count - 1; i >= 0; --i)
     {
         var _el = _defs[i];
-        
         
         if (is_struct(_el))
         {
@@ -152,7 +151,7 @@ function ui_load(_path)
     global.ui_definitions[$ _path] = _ui_def;
     
     
-    show_debug_message($"[UI Runtime] successfully loaded ui file: {_full_path}");
+    PRINT($"[UI Runtime] successfully loaded ui file: {_full_path}");
     
     return _ui_def;
 }
@@ -187,7 +186,7 @@ function ui_spawn(_definitions, _config = {}, _events = undefined)
     
     if !(is_array(_definitions))
     {
-        show_debug_message("[UI Runtime] warning: ui_spawn called with invalid definitions.");
+        PRINT("[UI Runtime] warning: ui_spawn called with invalid definitions.");
         
         return undefined;
     }
@@ -199,7 +198,7 @@ function ui_spawn(_definitions, _config = {}, _events = undefined)
     var _parent_name = (is_struct(_parent_val) && struct_exists(_parent_val, "element_name")) ? _parent_val.element_name : "unknown";
     
     
-    show_debug_message($"[UI Runtime] ui_spawn: spawning {_def_count} definitions into parent '{_parent_name}'");
+    PRINT($"[UI Runtime] ui_spawn: spawning {_def_count} definitions into parent '{_parent_name}'");
     
     
     var _link = _config[$ "link"] ?? {}
@@ -236,7 +235,7 @@ function ui_spawn(_definitions, _config = {}, _events = undefined)
         
         if (_def == undefined)
         {
-            show_debug_message($"[UI Runtime] warning: definition at index {i} is undefined. check your imports.");
+            PRINT($"[UI Runtime] warning: definition at index {i} is undefined. check your imports.");
             
             continue;
         }
@@ -484,7 +483,7 @@ function ui_instantiate_element(_node, _link, _variables)
             break;
             
         default:
-            show_debug_message($"[UI Runtime] unknown element type: {_node.element_type}");
+            PRINT($"[UI Runtime] unknown element type: {_node.element_type}");
             
             _element = new UIElement(0, 0, 100, 100);
             
@@ -1163,7 +1162,7 @@ function ui_resolve_value(_node, _link, _variables)
             {
                 case "floor": return floor(_arg_val);
                 default:
-                    show_debug_message($"[UI Runtime] unknown function: {_node.func_name}");
+                    PRINT($"[UI Runtime] unknown function: {_node.func_name}");
                     
                     return _arg_val;
             }

@@ -52,7 +52,7 @@ function region_gen_map_lookup(_gen, _x, _y)
     var _px = clamp(floor(_x / _gen.cell_size), 0, _gen.map_width - 1);
     var _py = clamp(floor(_y / _gen.cell_size), 0, _gen.map_height - 1);
     
-    show_debug_message($"region_gen_map_lookup: x={_x}, y={_y}, cell_size={_gen.cell_size} -> px={_px}, py={_py}");
+    PRINT($"region_gen_map_lookup: x={_x}, y={_y}, cell_size={_gen.cell_size} -> px={_px}, py={_py}");
     
     // Sample buffer (RGBA format)
     var _pos = (_py * _gen.map_width + _px) * 4;
@@ -127,7 +127,7 @@ function region_gen_climate_pick(_gen, _heat, _humid)
     var _best_score = infinity;
     var _best_id = 0;
 
-    // show_debug_message($"region_gen_climate_pick: heat={_heat}, humid={_humid}");
+    // PRINT($"region_gen_climate_pick: heat={_heat}, humid={_humid}");
 
     for (var i = _gen.region_count - 1; i >= 0; --i)
     {
@@ -190,7 +190,7 @@ function region_gen_get_region(_gen, _x, _y, _seed)
     var _wx = _warped[0];
     var _wy = _warped[1];
 
-    show_debug_message($"region_gen_get_region: x={_x}, y={_y} -> wx={_wx}, wy={_wy}");
+    PRINT($"region_gen_get_region: x={_x}, y={_y} -> wx={_wx}, wy={_wy}");
 
     var _cs = _gen.cell_size;
     var _so = _seed + _gen.seed_offset;
@@ -221,7 +221,7 @@ function region_gen_get_region(_gen, _x, _y, _seed)
                 _best_region_id = region_gen_climate_pick(_gen, _heat, _humid);
                 
                 var _r = _gen.regions[clamp(_best_region_id, 0, _gen.region_count - 1)];
-                show_debug_message($"  New best cell: cx={_cx}, cy={_cy}, heat={_heat}, humid={_humid} -> region='{_r.get_id()}'");
+                PRINT($"  New best cell: cx={_cx}, cy={_cy}, heat={_heat}, humid={_humid} -> region='{_r.get_id()}'");
             }
         }
     }

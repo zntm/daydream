@@ -89,14 +89,14 @@ function ui_editor_open()
     {
         ui_editor_load(_auto_path);
 
-        show_debug_message($"[UI Editor] auto-loaded: {_auto_path}");
+        PRINT($"[UI Editor] auto-loaded: {_auto_path}");
     }
     else
     {
         /* no match — show file browser */
         _editor.show_file_browser = true;
 
-        show_debug_message("[UI Editor] opened (file browser)");
+        PRINT("[UI Editor] opened (file browser)");
     }
 }
 
@@ -171,7 +171,7 @@ function ui_editor_load(_path)
 
     if (_source == undefined)
     {
-        show_debug_message($"[UI Editor] ERROR: could not read file: {_path}");
+        PRINT($"[UI Editor] ERROR: could not read file: {_path}");
 
         exit;
     }
@@ -182,7 +182,7 @@ function ui_editor_load(_path)
 
     if (_lexer.had_error)
     {
-        show_debug_message($"[UI Editor] lexer error: {_lexer.error}");
+        PRINT($"[UI Editor] lexer error: {_lexer.error}");
 
         exit;
     }
@@ -193,7 +193,7 @@ function ui_editor_load(_path)
 
     if (_parser.had_error)
     {
-        show_debug_message($"[UI Editor] parser error: {_parser.error}");
+        PRINT($"[UI Editor] parser error: {_parser.error}");
 
         exit;
     }
@@ -232,7 +232,7 @@ function ui_editor_load(_path)
     _editor.dirty             = false;
     _editor.drag_mode         = UI_EDITOR_DRAG.NONE;
 
-    show_debug_message($"[UI Editor] loaded: {_path} ({array_length(_document.definitions)} definitions)");
+    PRINT($"[UI Editor] loaded: {_path} ({array_length(_document.definitions)} definitions)");
 }
 
 
@@ -257,7 +257,7 @@ function ui_editor_close()
     _editor.loaded_path      = "";
     _editor.drag_mode        = UI_EDITOR_DRAG.NONE;
 
-    show_debug_message("[UI Editor] closed");
+    PRINT("[UI Editor] closed");
 }
 
 
@@ -279,7 +279,7 @@ function ui_editor_save()
 
     _editor.dirty = false;
 
-    show_debug_message($"[UI Editor] saved: {_full_path}");
+    PRINT($"[UI Editor] saved: {_full_path}");
 }
 
 
@@ -533,7 +533,7 @@ function ui_editor_drag_end(_editor)
     _editor.drag_mode = UI_EDITOR_DRAG.NONE;
     _editor.dirty     = true;
 
-    show_debug_message($"[UI Editor] drag applied (dx:{_moved_x} dy:{_moved_y} w:{_new_w} h:{_new_h})");
+    PRINT($"[UI Editor] drag applied (dx:{_moved_x} dy:{_moved_y} w:{_new_w} h:{_new_h})");
 }
 
 

@@ -1,6 +1,5 @@
 {
     "inventory": "#phantasia:item/generic/inventory_default",
-    "properties": [],
     "sprite": "phantasia:item/torch",
     "tile": {
         "animation_type": "increment",
@@ -21,10 +20,10 @@
                 "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
             }
         },
-        "light": "#EAC7A6",
+        "light": "EAC7A6",
         "on_random_tick": [
             {
-                "id": "@phantasia:sfx_play",
+                "id": "@phantasia:items/sfx_play",
                 "parameters": {
                     "id": "phantasia:sfx/tile/fire/ambient"
                 },

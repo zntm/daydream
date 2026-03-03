@@ -28,7 +28,7 @@ function menu_create_player_ui_load()
 	
 	if (_def == undefined)
 	{
-		show_debug_message("[Menu Create Player] failed to load ui/menu/create_player.ui");
+		PRINT("[Menu Create Player] failed to load ui/menu/create_player.ui");
 		exit;
 	}
 	

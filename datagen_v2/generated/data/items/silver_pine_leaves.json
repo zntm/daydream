@@ -27,11 +27,11 @@
         },
         "on_random_tick": [
             {
-                "id": "@phantasia:tile/leaf_decay",
+                "id": "@phantasia:tile/nature/leaf_decay",
                 "parameters": 0.1
             }
         ],
-        "sfx": "#phantasia:tile/sfx/leaves"
+        "sfx": "#phantasia:tile/sfx/wood"
     },
     "type": "untouchable"
 }

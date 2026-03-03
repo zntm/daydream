@@ -53,7 +53,7 @@ function RelayNetwork() constructor
     {
         if (role != RELAY_ROLE.NONE)
         {
-            show_debug_message("[RELAY] Cannot host: already in a session");
+            PRINT("[RELAY] Cannot host: already in a session");
             return "";
         }
         
@@ -61,7 +61,7 @@ function RelayNetwork() constructor
         
         if (_server_socket < 0)
         {
-            show_debug_message($"[RELAY] Failed to create server on port {_port}");
+            PRINT($"[RELAY] Failed to create server on port {_port}");
             return "";
         }
         
@@ -83,9 +83,9 @@ function RelayNetwork() constructor
             is_local: true
         }
         
-        show_debug_message($"[RELAY] Hosting on port {_port}");
-        show_debug_message($"[RELAY] Room code: {room_code}");
-        show_debug_message($"[RELAY] Formatted: {invite_code_format(room_code)}");
+        PRINT($"[RELAY] Hosting on port {_port}");
+        PRINT($"[RELAY] Room code: {room_code}");
+        PRINT($"[RELAY] Formatted: {invite_code_format(room_code)}");
         
         return room_code;
     }
@@ -97,7 +97,7 @@ function RelayNetwork() constructor
     {
         if (role != RELAY_ROLE.NONE)
         {
-            show_debug_message("[RELAY] Cannot join: already in a session");
+            PRINT("[RELAY] Cannot join: already in a session");
             return false;
         }
         
@@ -107,7 +107,7 @@ function RelayNetwork() constructor
         
         if (_decoded == undefined)
         {
-            show_debug_message($"[RELAY] Invalid invite code: {_code}");
+            PRINT($"[RELAY] Invalid invite code: {_code}");
             return false;
         }
         
@@ -116,7 +116,7 @@ function RelayNetwork() constructor
         
         if (_socket < 0)
         {
-            show_debug_message("[RELAY] Failed to create client socket");
+            PRINT("[RELAY] Failed to create client socket");
             return false;
         }
         
@@ -124,7 +124,7 @@ function RelayNetwork() constructor
         
         if (_result < 0)
         {
-            show_debug_message($"[RELAY] Failed to connect to {_decoded.ip}:{_decoded.port}");
+            PRINT($"[RELAY] Failed to connect to {_decoded.ip}:{_decoded.port}");
             network_destroy(_socket);
             return false;
         }
@@ -143,7 +143,7 @@ function RelayNetwork() constructor
         relay_packet_send(_host_socket, _buf);
         buffer_delete(_buf);
         
-        show_debug_message($"[RELAY] Connecting to {_decoded.ip}:{_decoded.port}...");
+        PRINT($"[RELAY] Connecting to {_decoded.ip}:{_decoded.port}...");
         
         return true;
     }
@@ -294,7 +294,7 @@ function RelayNetwork() constructor
             on_disconnected();
         }
         
-        show_debug_message("[RELAY] Disconnected");
+        PRINT("[RELAY] Disconnected");
     }
     
     /// @desc Full shutdown and cleanup
@@ -337,7 +337,7 @@ function RelayNetwork() constructor
         {
             // A client is connecting
             var _socket = async_load[? "socket"];
-            show_debug_message($"[RELAY] Client socket connected: {_socket}");
+            PRINT($"[RELAY] Client socket connected: {_socket}");
             
             // We'll register the peer when we receive their HELLO
             // For now, just track the socket
@@ -358,7 +358,7 @@ function RelayNetwork() constructor
             {
                 var _peer = peers[$ _peer_id];
                 
-                show_debug_message($"[RELAY] Peer disconnected: {_peer_id}");
+                PRINT($"[RELAY] Peer disconnected: {_peer_id}");
                 
                 // Notify other peers
                 var _leave_buf = relay_packet_create(RELAY_PACKET.PEER_LEFT);
@@ -386,7 +386,7 @@ function RelayNetwork() constructor
         else if (role == RELAY_ROLE.CLIENT)
         {
             // We got disconnected from host
-            show_debug_message("[RELAY] Disconnected from host (session ended)");
+            PRINT("[RELAY] Disconnected from host (session ended)");
             
             // Clean up all peers
             var _peer_ids = struct_get_names(peers);
@@ -490,7 +490,7 @@ function RelayNetwork() constructor
     {
         var _data = relay_read_hello(_buffer);
         
-        show_debug_message($"[RELAY] HELLO from {_data.peer_id} (uuid: {_data.uuid})");
+        PRINT($"[RELAY] HELLO from {_data.peer_id} (uuid: {_data.uuid})");
         
         // Check for UUID collision
         var _uuid = _data.uuid;
@@ -517,7 +517,7 @@ function RelayNetwork() constructor
         if (_collision)
         {
             _uuid = uuid_generate(irandom(0xffffffff));
-            show_debug_message($"[RELAY] UUID collision, assigned new: {_uuid}");
+            PRINT($"[RELAY] UUID collision, assigned new: {_uuid}");
         }
         
         // Register peer
@@ -685,7 +685,7 @@ function RelayNetwork() constructor
                 break;
                 
             case RELAY_PACKET.SESSION_END:
-                show_debug_message("[RELAY] Host ended the session");
+                PRINT("[RELAY] Host ended the session");
                 disconnect();
                 break;
                 
@@ -718,9 +718,9 @@ function RelayNetwork() constructor
     {
         var _data = relay_read_welcome(_buffer);
         
-        show_debug_message($"[RELAY] WELCOME received, peer_id: {_data.peer_id}");
-        show_debug_message($"[RELAY] World seed: {_data.world_seed}, time: {_data.world_time}");
-        show_debug_message($"[RELAY] {array_length(_data.peers)} peers in session");
+        PRINT($"[RELAY] WELCOME received, peer_id: {_data.peer_id}");
+        PRINT($"[RELAY] World seed: {_data.world_seed}, time: {_data.world_time}");
+        PRINT($"[RELAY] {array_length(_data.peers)} peers in session");
         
         // Update our peer_id if host assigned a different one
         local_peer_id = _data.peer_id;
@@ -755,7 +755,7 @@ function RelayNetwork() constructor
     {
         var _data = relay_read_peer_joined(_buffer);
         
-        show_debug_message($"[RELAY] Peer joined: {_data.peer_id} (uuid: {_data.uuid})");
+        PRINT($"[RELAY] Peer joined: {_data.peer_id} (uuid: {_data.uuid})");
         
         peers[$ _data.peer_id] = {
             socket: undefined,
@@ -776,7 +776,7 @@ function RelayNetwork() constructor
     {
         var _peer_id = relay_read_peer_left(_buffer);
         
-        show_debug_message($"[RELAY] Peer left: {_peer_id}");
+        PRINT($"[RELAY] Peer left: {_peer_id}");
         
         var _peer = peers[$ _peer_id];
         if (_peer != undefined && instance_exists(_peer.player_instance))

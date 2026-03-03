@@ -6,7 +6,7 @@
         "phantasia:is_tile",
         "phantasia:is_wall"
     ],
-    "sprite": "phantasia:/item/snow_block_wall",
+    "sprite": "phantasia:item/snow_block_wall",
     "tile": {
         "audio_properties": {
             "lowpass": 0.15,
@@ -27,5 +27,5 @@
         },
         "sfx": "#phantasia:tile/sfx/dirt"
     },
-    "type": "solid"
+    "type": "untouchable"
 }

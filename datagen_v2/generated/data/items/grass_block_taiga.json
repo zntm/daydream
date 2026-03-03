@@ -4,7 +4,7 @@
         "phantasia:can_mirror",
         "phantasia:is_tile"
     ],
-    "sprite": "phantasia:/item/grass_block_taiga",
+    "sprite": "phantasia:item/grass_block_taiga",
     "tile": {
         "audio_properties": {
             "lowpass": 0.15,
@@ -12,7 +12,7 @@
         },
         "drops": [
             {
-                "id": "phantasia:item/dirt"
+                "id": "phantasia:dirt"
             }
         ],
         "harvest": {

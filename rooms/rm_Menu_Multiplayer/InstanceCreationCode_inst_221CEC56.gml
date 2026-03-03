@@ -25,25 +25,25 @@ on_select_release = function()
         
         if (string_length(_code) > 0)
         {
-            show_debug_message($"[MENU] Joining session with code: {_code}");
+            PRINT($"[MENU] Joining session with code: {_code}");
             
             if (global.relay_manager.join_session(_code))
             {
                 // Connection initiated
-                show_debug_message("[MENU] Connection initiated...");
+                PRINT("[MENU] Connection initiated...");
             }
             else
             {
-                show_debug_message("[MENU] Failed to join session - invalid code?");
+                PRINT("[MENU] Failed to join session - invalid code?");
             }
         }
         else
         {
-            show_debug_message("[MENU] Please enter an invite code");
+            PRINT("[MENU] Please enter an invite code");
         }
     }
     else
     {
-        show_debug_message("[MENU] Could not find invite code textbox!");
+        PRINT("[MENU] Could not find invite code textbox!");
     }
 }

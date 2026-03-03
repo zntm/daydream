@@ -28,7 +28,7 @@ function menu_credits_ui_load()
 	
 	if (_def == undefined)
 	{
-		show_debug_message("[Menu Credits] failed to load ui/menu/credits.ui");
+		PRINT("[Menu Credits] failed to load ui/menu/credits.ui");
 		exit;
 	}
 	

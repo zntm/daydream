@@ -74,7 +74,7 @@ function cloud_spawn(_sprite_id, _x, _y, _scale, _alpha, _speed)
         }
     }
     
-    show_debug_message($"[Clouds] Spawned at {_x}, {_y} with sprite {_sprite_id}");
+    PRINT($"[Clouds] Spawned at {_x}, {_y} with sprite {_sprite_id}");
     
     global.cloud_pool_count++;
     return i;
@@ -204,7 +204,7 @@ function render_background_clouds(_camera_x, _camera_y, _camera_width, _camera_h
         {
             // Only log errors occasionally to avoid spam
             if (global.time % 300 == 0) {
-                 show_debug_message($"[Clouds] ERROR: Sprite missing for cloud {i}: {_cloud.sprite_id}");
+                 PRINT($"[Clouds] ERROR: Sprite missing for cloud {i}: {_cloud.sprite_id}");
             }
             continue;
         }
@@ -222,7 +222,7 @@ function render_background_clouds(_camera_x, _camera_y, _camera_width, _camera_h
             
             if (_draw_counter % 300 == 0) // Less frequent (every 5 seconds at 60fps)
             {
-                show_debug_message($"[Clouds] Drawing cloud {i} at world ({_draw_x}, {_draw_y}), screen ({_cloud.x}, {_cloud.y}), scale {_cloud.scale}, alpha {_cloud.alpha}, sprite {_cloud.sprite_id}");
+                PRINT($"[Clouds] Drawing cloud {i} at world ({_draw_x}, {_draw_y}), screen ({_cloud.x}, {_cloud.y}), scale {_cloud.scale}, alpha {_cloud.alpha}, sprite {_cloud.sprite_id}");
             }
             */
             
@@ -241,7 +241,7 @@ function render_background_clouds(_camera_x, _camera_y, _camera_width, _camera_h
             static _err_counter = 0;
             _err_counter++;
             if (_err_counter % 300 == 0) {
-                show_debug_message($"[Clouds] ERROR: get_sprite() returned -1 for cloud {i}: {_cloud.sprite_id}");
+                PRINT($"[Clouds] ERROR: get_sprite() returned -1 for cloud {i}: {_cloud.sprite_id}");
             }
         }
     }
@@ -259,7 +259,7 @@ function init_background_clouds()
     var _script_id = _world_data.get_background_script();
     if (_script_id == undefined) exit;
     
-    show_debug_message($"[Clouds] init_background_clouds starting. Script: {_script_id}");
+    PRINT($"[Clouds] init_background_clouds starting. Script: {_script_id}");
     
     var _sprites = _world_data.get_background_sprites();
     
@@ -302,12 +302,12 @@ function init_background_clouds()
     if (struct_exists(global.proglang_scripts, _script_id))
     {
         proglang_call(_script_id, [_parameter], _context);
-        show_debug_message($"[Clouds] Script called successfully. Active clouds: {global.cloud_pool_count}");
+        PRINT($"[Clouds] Script called successfully. Active clouds: {global.cloud_pool_count}");
     }
     else
     {
-        show_debug_message($"[Clouds] Sky script NOT found in global.proglang_scripts: '{_script_id}'");
+        PRINT($"[Clouds] Sky script NOT found in global.proglang_scripts: '{_script_id}'");
         var _keys = struct_get_names(global.proglang_scripts);
-        show_debug_message($"[Clouds] Available scripts: {string(_keys)}");
+        PRINT($"[Clouds] Available scripts: {string(_keys)}");
     }
 }

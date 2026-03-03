@@ -17,30 +17,30 @@ export default (
     sfx: string | ItemSFX,
     audioProperties: TileItemAudioProperties,
 ) => [
-    new DatagenReturnData(
-        `${id}.json`,
-        new TileItem(
-            ItemType.Solid,
-            `${namespace}:/item/${id}`,
-            "#phantasia:item/generic/inventory_tile",
-            properties,
-        )
-            .setTileAudioProperties(audioProperties)
-            .setTileDrops([new TileItemDrop(`${namespace}:${id}`)])
-            .setTileHarvest(harvest)
-            .setTileSFX(sfx),
-    ),
-    new DatagenReturnData(
-        `${id}_wall.json`,
-        new TileItem(
-            ItemType.Solid,
-            `${namespace}:/item/${id}_wall`,
-            "#phantasia:item/generic/inventory_tile",
-            [...properties, TileItemProperties.IsWall],
-        )
-            .setTileAudioProperties(audioProperties)
-            .setTileDrops([new TileItemDrop(`${namespace}:${id}_wall`)])
-            .setTileHarvest(harvest)
-            .setTileSFX(sfx),
-    ),
-];
+        new DatagenReturnData(
+            `${id}.json`,
+            new TileItem(
+                ItemType.Solid,
+                `${namespace}:item/${id}`,
+                "#phantasia:item/generic/inventory_tile",
+                properties,
+            )
+                .setTileAudioProperties(audioProperties)
+                .setTileDrops([new TileItemDrop(`${namespace}:${id}`)])
+                .setTileHarvest(harvest)
+                .setTileSFX(sfx),
+        ),
+        new DatagenReturnData(
+            `${id}_wall.json`,
+            new TileItem(
+                ItemType.Untouchable,
+                `${namespace}:item/${id}_wall`,
+                "#phantasia:item/generic/inventory_tile",
+                [...properties, TileItemProperties.IsWall],
+            )
+                .setTileAudioProperties(audioProperties)
+                .setTileDrops([new TileItemDrop(`${namespace}:${id}_wall`)])
+                .setTileHarvest(harvest)
+                .setTileSFX(sfx),
+        ),
+    ];

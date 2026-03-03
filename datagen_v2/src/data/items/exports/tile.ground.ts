@@ -64,7 +64,7 @@ export default [
             sfx: "#phantasia:tile/sfx/stone",
             audio: new TileItemAudioProperties(0.65, 0.5),
         },
-    ].flatMap(({ id, harvest, sfx, audio }) =>
+    ].flatMap(({ id, harvest, sfx, audio }) => [
         tileBlockWallItems(
             "phantasia",
             id,
@@ -77,7 +77,7 @@ export default [
             sfx,
             audio,
         ),
-    ),
+    ]),
     /* grass blocks */
     ...["grass_block", "grass_block_taiga", "grass_block_swamp"].map(
         (id) =>
@@ -85,12 +85,14 @@ export default [
                 `${id}.json`,
                 new TileItem(
                     ItemType.Solid,
-                    `phantasia:/item/${id}`,
+                    `phantasia:item/${id}`,
                     "#phantasia:item/generic/inventory_tile",
                     [TileItemProperties.CanMirror, TileItemProperties.IsTile],
                 )
-                    .setTileAudioProperties(new TileItemAudioProperties(0.15, 0.05))
-                    .setTileDrops([new TileItemDrop("phantasia:item/dirt")])
+                    .setTileAudioProperties(
+                        new TileItemAudioProperties(0.15, 0.05),
+                    )
+                    .setTileDrops([new TileItemDrop("phantasia:dirt")])
                     .setTileHarvest(
                         new TileItemHarvest(
                             0.36,

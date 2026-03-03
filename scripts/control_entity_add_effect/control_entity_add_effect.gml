@@ -17,7 +17,7 @@ function control_entity_add_effect(_target, _effect_id, _duration, _level = 1, _
     
     if (_effect_data == undefined)
     {
-        show_debug_message($"[Effect] Error: Unknown effect '{_effect_id}'");
+        PRINT($"[Effect] Error: Unknown effect '{_effect_id}'");
         exit;
     }
     

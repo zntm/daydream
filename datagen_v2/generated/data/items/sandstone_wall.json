@@ -6,11 +6,11 @@
         "phantasia:is_tile",
         "phantasia:is_wall"
     ],
-    "sprite": "phantasia:/item/sandstone_wall",
+    "sprite": "phantasia:item/sandstone_wall",
     "tile": {
         "audio_properties": {
-            "lowpass": 0.7,
-            "reverb": 0.6
+            "lowpass": 0.55,
+            "reverb": 0.4
         },
         "drops": [
             {
@@ -18,7 +18,7 @@
             }
         ],
         "harvest": {
-            "hardness": 0.34,
+            "hardness": 0.22,
             "level": 2,
             "particle": {
                 "colour": "#phantasia:tile/particle_colour/sand",
@@ -27,5 +27,5 @@
         },
         "sfx": "#phantasia:tile/sfx/stone"
     },
-    "type": "solid"
+    "type": "untouchable"
 }

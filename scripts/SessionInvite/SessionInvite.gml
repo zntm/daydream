@@ -118,7 +118,7 @@ function invite_code_copy()
     if (global.relay.room_code == "") return false;
     
     clipboard_set_text(global.relay.room_code);
-    show_debug_message($"[INVITE] Code copied to clipboard: {global.relay.room_code}");
+    PRINT($"[INVITE] Code copied to clipboard: {global.relay.room_code}");
     return true;
 }
 

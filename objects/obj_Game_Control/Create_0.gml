@@ -299,7 +299,7 @@ global.gui_panel_effects.offset_y = 16;
 global.gui_panel_effects.set_anchor("right", "bottom");
 global.gui_root.add_child(global.gui_panel_effects);
 
-show_debug_message("[Daydream] New UI system initialized");
+PRINT("[Daydream] New UI system initialized");
 
 // Initialize network globals ONLY if not already in a session
 if (global.relay == undefined || global.relay.role == RELAY_ROLE.NONE)

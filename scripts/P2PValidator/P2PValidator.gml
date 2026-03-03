@@ -77,7 +77,7 @@ function P2PValidator() constructor
         global.relay.broadcast(_buf);
         buffer_delete(_buf);
         
-        show_debug_message($"[VALIDATOR] Requested validation for {_type}, id: {_action_id}");
+        PRINT($"[VALIDATOR] Requested validation for {_type}, id: {_action_id}");
         
         return _action_id;
     }
@@ -107,7 +107,7 @@ function P2PValidator() constructor
         
         var _is_valid = _valid ? "VALID" : "INVALID";
         
-        show_debug_message($"[VALIDATOR] Validating action {_type} from {_requester_id}: {_is_valid}");
+        PRINT($"[VALIDATOR] Validating action {_type} from {_requester_id}: {_is_valid}");
         
         // Send vote back to requester
         var _vote_buf = relay_packet_create(RELAY_PACKET.VALIDATE_VOTE);
@@ -142,7 +142,7 @@ function P2PValidator() constructor
         
         _action.votes[$ _voter_id] = _valid;
         
-        show_debug_message($"[VALIDATOR] Vote from {_voter_id} on {_action_id}: {_valid}");
+        PRINT($"[VALIDATOR] Vote from {_voter_id} on {_action_id}: {_valid}");
         
         // Check if we have enough votes
         _check_consensus(_action_id);
@@ -161,7 +161,7 @@ function P2PValidator() constructor
         
         var _is_approved = _approved ? "APPROVED" : "REJECTED";
         
-        show_debug_message($"[VALIDATOR] Result for {_action_id}: {_is_approved}");
+        PRINT($"[VALIDATOR] Result for {_action_id}: {_is_approved}");
         
         if (_approved && !_action.local)
         {
@@ -197,7 +197,7 @@ function P2PValidator() constructor
             var _aid = _expired[i];
             var _action = pending[$ _aid];
             
-            show_debug_message($"[VALIDATOR] Action {_aid} timed out");
+            PRINT($"[VALIDATOR] Action {_aid} timed out");
             
             // If applied optimistically, need to rollback
             if (_action.applied_optimistically)
@@ -285,7 +285,7 @@ function P2PValidator() constructor
         
         if (!_valid)
         {
-            show_debug_message($"[VALIDATOR] Movement rejected: speed={_speed_per_tick}, max={_allowed_speed}");
+            PRINT($"[VALIDATOR] Movement rejected: speed={_speed_per_tick}, max={_allowed_speed}");
         }
         else
         {
@@ -321,7 +321,7 @@ function P2PValidator() constructor
         
         if (!_valid)
         {
-            show_debug_message($"[VALIDATOR] Tile action rejected: distance={_distance}, max={_max_reach}");
+            PRINT($"[VALIDATOR] Tile action rejected: distance={_distance}, max={_max_reach}");
         }
         
         return _valid;
@@ -411,7 +411,7 @@ function P2PValidator() constructor
         
         var _is_approved = _approved ? "APPROVED" : "REJECTED";
         
-        show_debug_message($"[VALIDATOR] Finalizing {_action_id}: {_is_approved}");
+        PRINT($"[VALIDATOR] Finalizing {_action_id}: {_is_approved}");
         
         if (_approved)
         {
@@ -487,7 +487,7 @@ function P2PValidator() constructor
             case ACTION_TYPE.TILE_PLACE:
                 // Revert to empty (or previous state if tracked)
                 tile_place(_data.x, _data.y, _data.z, TILE_EMPTY);
-                show_debug_message("[VALIDATOR] Rolled back tile placement");
+                PRINT("[VALIDATOR] Rolled back tile placement");
                 break;
                 
             case ACTION_TYPE.TILE_BREAK:
@@ -497,7 +497,7 @@ function P2PValidator() constructor
                     var _tile = new Tile(_data.previous_tile_id);
                     tile_place(_data.x, _data.y, _data.z, _tile);
                 }
-                show_debug_message("[VALIDATOR] Rolled back tile break");
+                PRINT("[VALIDATOR] Rolled back tile break");
                 break;
         }
     }
@@ -532,7 +532,7 @@ function P2PValidator() constructor
             
             if (!_valid)
             {
-                show_debug_message($"[VALIDATOR] Peer {_pid} failed movement validation!");
+                PRINT($"[VALIDATOR] Peer {_pid} failed movement validation!");
                 // Could implement penalty system here (kick, snap back, etc.)
             }
         }
