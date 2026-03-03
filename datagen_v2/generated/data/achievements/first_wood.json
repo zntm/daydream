@@ -1,8 +1,0 @@
-{
-    "condition": {
-        "count": 1,
-        "event": "TILE_CHANGED",
-        "item_id": "phantasia:oak_log"
-    },
-    "icon": "phantasia:achievement/first_wood"
-}

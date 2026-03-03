@@ -7,7 +7,6 @@ import { LauncherItem } from "./LauncherItem";
 import { AmmoItem } from "./AmmoItem";
 import { ConsumableItem, ConsumableItemData } from "./ConsumableItem";
 import { Item } from "./Item";
-import { ItemDrop } from "./ItemDrop";
 import { ItemCooldown } from "./ItemCooldown";
 import { ItemComponentType, ItemComponent } from "./ItemComponent";
 import { ItemDurability } from "./ItemDurability";
@@ -40,7 +39,6 @@ export {
     ItemComponent,
     ItemComponentType,
     ItemDurability,
-    ItemDrop,
     ItemInventory,
     ItemParticle,
     type ItemPropertiesType,

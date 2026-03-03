@@ -13,61 +13,41 @@ const recursiveSort = (obj: any): any => {
     return obj;
 };
 
-const run = async () => {
-    for (const dir of ["assets", "data"]) {
-        const baseDir = join(__dirname, dir);
-        if (!existsSync(baseDir)) continue;
+for (const dir of ["assets", "data"]) {
+    if (!existsSync(join(__dirname, dir))) continue;
 
-        for (const type of readdirSync(baseDir)) {
-            const exportsDir = join(baseDir, type, "exports");
-            if (!existsSync(exportsDir)) continue;
+    for (const type of readdirSync(join(__dirname, dir))) {
+        for (const e of readdirSync(
+            join(__dirname, `./${dir}/${type}/exports`),
+        )) {
+            const s = join(__dirname, `./${dir}/${type}/exports/${e}`);
 
-            for (const e of readdirSync(exportsDir)) {
-                const s = join(exportsDir, e);
+            if (!statSync(s).isFile() || !(e as string).endsWith(".ts"))
+                continue;
 
-                if (!statSync(s).isFile() || !e.endsWith(".ts")) continue;
+            const datagen: any[] = import.meta.require(s).default;
 
-                console.log(`Generating: ${dir}/${type}/${e}`);
+            let r = undefined;
+            try {
+                for (const d of Array.isArray(datagen)
+                    ? datagen.flat(Infinity)
+                    : [datagen]) {
+                    d.data = recursiveSort(d.data);
 
-                try {
-                    let datagen = (await import(s)).default;
-
-                    if (datagen instanceof Promise) {
-                        datagen = await datagen;
-                    }
-
-                    for (const d of Array.isArray(datagen)
-                        ? datagen.flat(Infinity)
-                        : [datagen]) {
-                        if (!d || !d.destination) continue;
-
-                        d.data = recursiveSort(d.data);
-
-                        const destination = join(
+                    Bun.write(
+                        join(
                             __dirname,
                             `../generated/${dir}/${type}/${d.destination}`,
-                        );
-
-                        // Ensure directory exists
-                        const destDir = join(destination, "..");
-                        if (!existsSync(destDir)) {
-                            // Recursively create directories
-                            const fs = await import("fs");
-                            fs.mkdirSync(destDir, { recursive: true });
-                        }
-
-                        await Bun.write(
-                            destination,
-                            JSON.stringify(d.data, null, "    "),
-                            { mode: 0o644 },
-                        );
-                    }
-                } catch (error) {
-                    console.error(`Error generating ${dir}/${type}/${e}:`, error);
+                        ),
+                        JSON.stringify(d.data, null, "    "),
+                        {
+                            mode: 0o644,
+                        },
+                    );
                 }
+            } catch (error) {
+                console.error(`Error generating ${dir}/${type}/${e}:`, error);
             }
         }
     }
-};
-
-run();
+}

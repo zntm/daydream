@@ -1,37 +1,28 @@
-import { Attribute, AttributeBoolean } from "./Attribute";
-import { ColorGradient, ColorGradientPoint } from "./ColorGradient";
 import { DatagenReturnData } from "./DatagenReturnData";
-import {
-    EntityPhysics,
-    EntityPhysicsValue,
-    EntityPhysicsValueType,
-} from "../../../datagen/src/lib";
-import { Noise } from "./Noise";
 import {
     SmartValue,
     SmartValueChooseWeightedOption,
     type SmartValueValueType,
 } from "./SmartValue";
 import { Sound } from "./Sound";
+import { Noise } from "./Noise";
 import { Spline, SplinePoint, SplineEasing } from "./Spline";
-import { Sprite } from "./Sprite";
+import { ColorGradient, ColorGradientPoint } from "./ColorGradient";
+
+import { Attribute, AttributeBoolean } from "./Attribute";
 
 export {
-    Attribute,
-    AttributeBoolean,
-    ColorGradient,
-    ColorGradientPoint,
     DatagenReturnData,
-    EntityPhysics,
-    EntityPhysicsValue,
-    EntityPhysicsValueType,
-    Noise,
     SmartValue,
     SmartValueChooseWeightedOption,
     type SmartValueValueType,
     Sound,
+    Noise,
     Spline,
     SplinePoint,
     SplineEasing,
-    Sprite,
+    ColorGradient,
+    ColorGradientPoint,
+    Attribute,
+    AttributeBoolean,
 };
