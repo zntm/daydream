@@ -1,1 +1,0 @@
-import { tieredRegistries } from "../registries";
