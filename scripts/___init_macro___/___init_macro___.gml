@@ -1,6 +1,8 @@
 
 #macro IS_MULTIPLAYER_ENABLED 0
 
+#macro PRINT if (IS_DEVELOPER_MODE) show_debug_message
+
 #region Chunk
 
 #macro TILE_EMPTY 0

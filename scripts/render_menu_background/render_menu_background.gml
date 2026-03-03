@@ -26,7 +26,7 @@ function render_menu_background(_id, _colour)
         var _background_sprites = global.sprite_asset[$ _background.id];
         if (_background_sprites == undefined)
         {
-            show_debug_message($"render_menu_background: Background asset not found: {_background.id}");
+            PRINT($"render_menu_background: Background asset not found: {_background.id}");
             exit;
         }
         

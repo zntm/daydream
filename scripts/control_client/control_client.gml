@@ -5,7 +5,7 @@ function control_client()
 {
     if (hp <= 0) 
     {
-        if (global.network_role == RELAY_ROLE.HOST) show_debug_message($"[NET-PHYS] Client {uuid} is DEAD, skipping");
+        if (global.network_role == RELAY_ROLE.HOST) PRINT($"[NET-PHYS] Client {uuid} is DEAD, skipping");
         exit;
     }
     
@@ -114,7 +114,7 @@ function control_client()
             // Debug Input
             if (network_input.move_x != 0 || network_input.move_y != 0) 
             {
-                // show_debug_message($"[NET-PHYS] Client {uuid} Input: X={network_input.move_x}, Y={network_input.move_y}");
+                // PRINT($"[NET-PHYS] Client {uuid} Input: X={network_input.move_x}, Y={network_input.move_y}");
             }
             
             input_state.move_x = network_input.move_x;

@@ -21,11 +21,11 @@ if (IS_DEVELOPER_MODE)
                 continue;
             }
             
-            show_debug_message($"[ProglangTest] Executing: {_file}");
+            PRINT($"[ProglangTest] Executing: {_file}");
             
             proglang_execute(buffer_load_text(_dir), {}, _dir);
         }
         
-        show_debug_message(struct_get_names(global.proglang_scripts))
+        PRINT(struct_get_names(global.proglang_scripts))
     });
 }

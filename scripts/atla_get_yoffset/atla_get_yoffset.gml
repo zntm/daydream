@@ -4,7 +4,7 @@ function atla_get_yoffset(_page, _name)
     
     if (_atla_page == undefined)
     {
-        show_debug_message($"[ATLA] Page '{_page}' does not exist!");
+        PRINT($"[ATLA] Page '{_page}' does not exist!");
         
         exit;
     }
@@ -13,7 +13,7 @@ function atla_get_yoffset(_page, _name)
     
     if (_data == undefined)
     {
-        show_debug_message($"[ATLA] Sprite '{_page}' does not exist!");
+        PRINT($"[ATLA] Sprite '{_page}' does not exist!");
         
         exit;
     }

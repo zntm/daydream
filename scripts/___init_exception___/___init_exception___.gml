@@ -149,6 +149,6 @@ exception_unhandled_handler(function(_exception)
     
     buffer_delete(_buffer);
     
-    show_debug_message(_message);
+    PRINT(_message);
     show_message(_message);
 });

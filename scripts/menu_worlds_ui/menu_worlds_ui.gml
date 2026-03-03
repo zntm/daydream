@@ -27,7 +27,7 @@ function menu_worlds_ui_load()
 	
 	if (_def == undefined)
 	{
-		show_debug_message("[Menu Worlds] failed to load ui/menu/worlds.ui");
+		PRINT("[Menu Worlds] failed to load ui/menu/worlds.ui");
 		exit;
 	}
 	
@@ -339,7 +339,7 @@ function menu_worlds_ui_build_cards(_container, _worlds, _ystart, _is_grid, _ins
 		});
 
 		_btn_gear.add_event_handler("on_select_release", method(_btn_gear, function() {
-			show_debug_message("World options: " + string(self.world_ref.get_name()));
+			PRINT("World options: " + string(self.world_ref.get_name()));
 			global.ui_input_consumed = true;
 		}));
 		
@@ -354,7 +354,7 @@ function menu_worlds_ui_build_cards(_container, _worlds, _ystart, _is_grid, _ins
 			
 			if (!directory_exists(PROGRAM_DIRECTORY_WORLDS + "\\" + _uuid))
 			{
-				show_debug_message("World folder not found: " + string(_uuid));
+				PRINT("World folder not found: " + string(_uuid));
 
 				exit;
 			}

@@ -164,7 +164,7 @@ function proglang_resolve_path(_path, _current_dir = "")
             }
             else
             {
-                if (IS_DEVELOPER_MODE) show_debug_message("[Daydream] PATH_SECURITY: Cannot access parent of base directory: " + _root);
+                if (IS_DEVELOPER_MODE) PRINT("[Daydream] PATH_SECURITY: Cannot access parent of base directory: " + _root);
                 
                 return undefined;
             }
@@ -359,7 +359,7 @@ function proglang_load_module(_module_path, _importer_path = "")
 /// @returns {any} Result
 function proglang_call(_name, _args = [], _context = {})
 {
-    show_debug_message($"[Daydream] Proglang Call: {_name}");
+    PRINT($"[Daydream] Proglang Call: {_name}");
     
     var _bytecode = undefined;
     
@@ -389,7 +389,7 @@ function proglang_call(_name, _args = [], _context = {})
     
     if (_bytecode == undefined)
     {
-        if (IS_DEVELOPER_MODE) show_debug_message($"[Daydream] Function not found: {_name}");
+        if (IS_DEVELOPER_MODE) PRINT($"[Daydream] Function not found: {_name}");
         
         return undefined;
     }

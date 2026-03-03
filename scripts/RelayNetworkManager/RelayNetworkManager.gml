@@ -27,7 +27,7 @@ function relay_manager_init()
     global.relay.on_peer_left = method(global.relay_manager, global.relay_manager._on_peer_left);
     global.relay.on_game_packet = method(global.relay_manager, global.relay_manager._on_game_packet);
     
-    show_debug_message("[RELAY_MGR] Initialized");
+    PRINT("[RELAY_MGR] Initialized");
 }
 
 /// @desc Shutdown the relay network system
@@ -42,7 +42,7 @@ function relay_manager_shutdown()
     global.relay_manager = undefined;
     global.validator = undefined;
     
-    show_debug_message("[RELAY_MGR] Shutdown");
+    PRINT("[RELAY_MGR] Shutdown");
 }
 
 // ============================================================================
@@ -92,7 +92,7 @@ function RelayNetworkManager() constructor
                 on_session_started(_code);
             }
             
-            show_debug_message($"[RELAY_MGR] Hosting session: {_code}");
+            PRINT($"[RELAY_MGR] Hosting session: {_code}");
         }
         
         return _code;
@@ -110,7 +110,7 @@ function RelayNetworkManager() constructor
         if (_result)
         {
             // Connection initiated, wait for WELCOME
-            show_debug_message($"[RELAY_MGR] Joining session: {_code}");
+            PRINT($"[RELAY_MGR] Joining session: {_code}");
         }
         
         return _result;
@@ -142,7 +142,7 @@ function RelayNetworkManager() constructor
             on_session_ended();
         }
         
-        show_debug_message("[RELAY_MGR] Left session");
+        PRINT("[RELAY_MGR] Left session");
     }
     
     /// @desc Get the current room code
@@ -259,7 +259,7 @@ function RelayNetworkManager() constructor
             room_goto(rm_World);
         }
         
-        show_debug_message("[RELAY_MGR] Connected to session");
+        PRINT("[RELAY_MGR] Connected to session");
     }
     
     /// @desc Called when disconnected from session
@@ -273,7 +273,7 @@ function RelayNetworkManager() constructor
             on_session_ended();
         }
         
-        show_debug_message("[RELAY_MGR] Disconnected from session");
+        PRINT("[RELAY_MGR] Disconnected from session");
     }
     
     /// @desc Called when a new peer joins (from host or via notification)
@@ -300,7 +300,7 @@ function RelayNetworkManager() constructor
             on_player_left(_peer_id);
         }
         
-        show_debug_message($"[RELAY_MGR] Peer left: {_peer_id}");
+        PRINT($"[RELAY_MGR] Peer left: {_peer_id}");
     }
     
     /// @desc Called when a game packet is received
@@ -562,7 +562,7 @@ function RelayNetworkManager() constructor
         if (_peer == undefined) exit;
         
         _peer.open_container = { x: _x, y: _y, z: _z }
-        show_debug_message($"[RELAY_MGR] Peer {_from_peer_id} opened container at {_x}, {_y}, {_z}");
+        PRINT($"[RELAY_MGR] Peer {_from_peer_id} opened container at {_x}, {_y}, {_z}");
     }
     
     /// @desc Handle container close packet (host only)
@@ -791,7 +791,7 @@ function RelayNetworkManager() constructor
             on_player_spawned(_peer_id, _player);
         }
         
-        show_debug_message($"[RELAY_MGR] Spawned remote player: {_uuid}");
+        PRINT($"[RELAY_MGR] Spawned remote player: {_uuid}");
         
         return _player;
     }

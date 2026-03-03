@@ -134,7 +134,7 @@ function input_check_double_pressed(_action)
         // to prevent "triple tap" being two double taps in a row.
         global.input_last_press_time[_action] = _is_double ? -1000 : _now;
         
-        if (_is_double) show_debug_message($"[Input] Double Tap Detected: Action {_action}");
+        if (_is_double) PRINT($"[Input] Double Tap Detected: Action {_action}");
         
         return _is_double;
     }

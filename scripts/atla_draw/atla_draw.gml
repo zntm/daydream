@@ -4,7 +4,7 @@ function atla_draw(_page, _name, _index, _x, _y, _xscale, _yscale, _rotation, _c
     
     if (_atla_page == undefined)
     {
-        show_debug_message($"[ATLA] Page '{_page}' does not exist!");
+        PRINT($"[ATLA] Page '{_page}' does not exist!");
         
         exit;
     }
@@ -13,7 +13,7 @@ function atla_draw(_page, _name, _index, _x, _y, _xscale, _yscale, _rotation, _c
     
     if (_data == undefined)
     {
-        show_debug_message($"[ATLA] Sprite '{_name}' in page '{_page}' does not exist!");
+        PRINT($"[ATLA] Sprite '{_name}' in page '{_page}' does not exist!");
         
         exit;
     }
@@ -26,7 +26,7 @@ function atla_draw(_page, _name, _index, _x, _y, _xscale, _yscale, _rotation, _c
         
         if (!buffer_exists(_buffer))
         {
-            show_debug_message($"[ATLA] Surface '{_page}' does not exist!");
+            PRINT($"[ATLA] Surface '{_page}' does not exist!");
             
             exit;
         }

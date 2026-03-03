@@ -124,7 +124,7 @@ function ParticlePool() : Pool() constructor
         
         free_stack_top = pool_size - 1;
         
-        show_debug_message($"[PARTICLE_POOL] Cleared all particles");
+        PRINT($"[PARTICLE_POOL] Cleared all particles");
     }
     
     static spawn = function(_x, _y, _particle_id, _tint = c_white)
