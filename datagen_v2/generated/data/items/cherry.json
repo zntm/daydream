@@ -1,5 +1,5 @@
 {
-    "inventory": "#phantasia:item/generic/inventory_default",
+    "inventory": "phantasia:item/generic/inventory_default",
     "sprite": "phantasia:item/cherry",
     "tile": {
         "drops": [

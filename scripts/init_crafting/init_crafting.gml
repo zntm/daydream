@@ -13,8 +13,6 @@ function init_crafting(_directory, _namespace = "phantasia", _type = 0)
     {
         var _data = _array[i];
         
-        if (!is_struct(_data)) continue;
-        
         array_push(global.crafting_data, new CraftingData(_data.id, _data[$ "amount"] ?? 1)
             .set_crafting_stations(_data[$ "crafting_stations"])
             .set_ingredients(_data.ingredients));

@@ -72,12 +72,6 @@
             }
         ]
     },
-    "structures": [
-        {
-            "id": "phantasia:tall_foliage/lumin_vine",
-            "chance": 0.05
-        }
-    ],
     "tile": {
         "bottom_layer": {
             "base": [

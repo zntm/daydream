@@ -32,7 +32,7 @@ const getMetadata = async (sourcePath: string) => {
 
 const sfxRegex = /^([a-zA-Z_]+)(\d+)\.ogg$/;
 
-const sourceAudioDir = join(__dirname, "..");
+const sourceAudioDir = join(__dirname, "../../sounds");
 const destAudioDir = join(__dirname, "../../../../generated/assets/sounds");
 
 const allFiles = readdirSync(sourceAudioDir, {
@@ -84,12 +84,18 @@ const individualPromises = individualFiles.map(async (file) => {
     const destFilePath = join(destAudioDir, relDir, `${id}.ogg`);
     const f = Bun.file(sourcePath);
 
-    await Bun.write(destFilePath, await f.arrayBuffer(), {
-        createPath: true,
-    });
+    f.arrayBuffer()
+        .then((arrayBuffer) => {
+            Bun.write(destFilePath, arrayBuffer, {
+                createPath: true,
+            });
+        })
+        .catch((error) => {
+            console.error(`Error writing file ${destFilePath}: ${error}`);
+        });
 
     return new DatagenReturnData(
-        join(relDir, `${id}.ogg.json`).replace(/\\/g, "/"),
+        `${id}.ogg.json`,
         new Music(Math.ceil(metadata.format.duration ?? 0), title, author),
     );
 });
@@ -122,9 +128,16 @@ const groupPromises = Array.from(sfxGroups.entries()).map(
             }
 
             const f = Bun.file(sourcePath);
-            await Bun.write(destPath, await f.arrayBuffer(), {
-                createPath: true,
-            });
+            await f
+                .arrayBuffer()
+                .then((arrayBuffer) => {
+                    Bun.write(destPath, arrayBuffer, {
+                        createPath: true,
+                    });
+                })
+                .catch((error) =>
+                    console.error(`Error writing file ${destPath}: ${error}`),
+                );
 
             return { duration };
         });
