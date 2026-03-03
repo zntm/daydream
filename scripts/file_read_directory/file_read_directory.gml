@@ -35,7 +35,7 @@ function file_read_directory(_directory, _recursive = false)
         
         array_sort(_files, sort_alphabetical_descending);
         
-        PRINT($"{_directory}: {_files} {_dirs}")
+        show_debug_message($"{_directory}: {_files} {_dirs}")
     }
     
     return _files;

@@ -50,7 +50,7 @@ function debug_init()
     dbg_button("Reload Data", function()
     {
         // Placeholder for data reload logic
-        PRINT("Reloading data...");
+        show_debug_message("Reloading data...");
     });
     
     dbg_same_line();

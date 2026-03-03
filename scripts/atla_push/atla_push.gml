@@ -11,7 +11,7 @@ function atla_push(_page, _sprite, _name)
     }
     else if (global.___atla_page[$ _page][$ _name] != undefined)
     {
-        PRINT($"[ATLA] There already exists a sprite named '{_name}' in the atlas '{_page}'!");
+        show_debug_message($"[ATLA] There already exists a sprite named '{_name}' in the atlas '{_page}'!");
         
         exit;
     }

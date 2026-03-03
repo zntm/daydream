@@ -24,7 +24,7 @@ function file_load_message_history()
     }
     catch (_error)
     {
-        PRINT($"Failed to load chat history: {_error}");
+        show_debug_message($"Failed to load chat history: {_error}");
     }
     
     buffer_delete(_buffer);

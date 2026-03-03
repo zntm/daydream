@@ -4,7 +4,7 @@ function atla_get_surface_texture(_page)
     
     if (_surface_texture != undefined) || (!surface_exists(_surface_texture))
     {
-        PRINT($"[ATLA] Surface '{_page}' does not exist!");
+        show_debug_message($"[ATLA] Surface '{_page}' does not exist!");
         
         exit;
     }

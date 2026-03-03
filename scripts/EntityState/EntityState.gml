@@ -254,7 +254,7 @@ function EntityState() constructor
             }
             catch (_e)
             {
-                PRINT($"[NET] Error parsing effect '{_name}': {_e.message}");
+                show_debug_message($"[NET] Error parsing effect '{_name}': {_e.message}");
                 effects[$ _name] = {}
             }
         }

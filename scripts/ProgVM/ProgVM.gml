@@ -170,7 +170,7 @@ function proglang_vm_run(_vm, _entry_bytecode)
             {
                 if (++_steps > PROGLANG_MAX_STEP)
                 {
-                    PRINT("[ProgVM] Infinite loop protection triggered");
+                    show_debug_message("[ProgVM] Infinite loop protection triggered");
                     
                     return undefined;
                 }
@@ -180,7 +180,7 @@ function proglang_vm_run(_vm, _entry_bytecode)
                 
                 if (_sp < 0)
                 {
-                    PRINT($"[VM CRITICAL] SP UNDERFLOW BEFORE OP: {_sp}");
+                    show_debug_message($"[VM CRITICAL] SP UNDERFLOW BEFORE OP: {_sp}");
                 }
                 
                 switch (_op)
@@ -789,7 +789,7 @@ function proglang_vm_run(_vm, _entry_bytecode)
                         }
                         else
                         {
-                            PRINT($"[ProgVM] Error: Call to non-callable value: {_val}");
+                            show_debug_message($"[ProgVM] Error: Call to non-callable value: {_val}");
                             
                             _sp -= (_param_count + 1);
                             

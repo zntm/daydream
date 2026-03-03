@@ -3,7 +3,7 @@ function function_execute(_function, _x, _y, _z, _xscale, _yscale, _inst = undef
     // Handle simplified JSON object structure
     // { "id": "...", "chance": 0.1, "parameters": { ... } }
     
-    // PRINT(_function);
+    // show_debug_message(_function);
     
     if (!is_struct(_function)) exit;
     
@@ -50,6 +50,8 @@ function function_execute(_function, _x, _y, _z, _xscale, _yscale, _inst = undef
         _context.player = obj_Player;
     }
     
+    show_debug_message(_function);
+    
     // Always provide spatial context
     _context.caller = _inst;
     _context.x = _tx;
@@ -65,6 +67,8 @@ function function_execute(_function, _x, _y, _z, _xscale, _yscale, _inst = undef
     {
         _context.parameter = _parameter;
         
+        show_debug_message(global.proglang_scripts[$ _id]);
+        
         // Handle direct script call
         if (struct_exists(global.proglang_scripts, _id))
         {
@@ -72,7 +76,10 @@ function function_execute(_function, _x, _y, _z, _xscale, _yscale, _inst = undef
         }
         else if (IS_DEVELOPER_MODE)
         {
-            PRINT($"[Daydream] Script not found: '{_id}'");
+            // Debugging aid
+            // show_debug_message(struct_get_names(global.proglang_scripts));
+            show_debug_message($"[Daydream] Script not found: '{_id}'");
+            show_debug_message(global.proglang_scripts)
         }
     }
 }

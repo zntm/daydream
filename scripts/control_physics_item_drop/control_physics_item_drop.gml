@@ -51,7 +51,7 @@ function control_physics_item_drop(_id)
             var _grav = attribute.get_gravity();
             physics_body.vel_y += _grav;
             
-            // PRINT($"[PHYSICS] Item Drop {id}: Gravity={_grav}, VelY={physics_body.vel_y}, PosY={physics_body.pos_y}");
+            // show_debug_message($"[PHYSICS] Item Drop {id}: Gravity={_grav}, VelY={physics_body.vel_y}, PosY={physics_body.pos_y}");
             
             physics_move_contact_x(physics_body);
             physics_move_contact_y(physics_body);

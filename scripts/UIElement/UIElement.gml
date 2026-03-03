@@ -144,7 +144,7 @@ function UIElement(_x, _y, _width, _height) constructor
                 /* set the property value via setter if it exists, otherwise directly */
                 if (_value == undefined)
                 {
-                    PRINT($"[UI Runtime] warning: binding '{_binding_name}' for property '{_property}' in element '{element_name}' resolved to undefined.");
+                    show_debug_message($"[UI Runtime] warning: binding '{_binding_name}' for property '{_property}' in element '{element_name}' resolved to undefined.");
                 }
                 
                 

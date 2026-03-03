@@ -787,7 +787,7 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
                 }
                 else
                 {
-                    PRINT("WorldData: Region not found: " + string(_id));
+                    show_debug_message("WorldData: Region not found: " + string(_id));
                 }
             }
             
@@ -799,11 +799,11 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
                     cave_biome_default: "phantasia:cave/chasm"
                 });
                 array_push(___regions_objects, _fallback);
-                PRINT("WorldData: FAILED to resolve any regions, using emeraldine fallback.");
+                show_debug_message("WorldData: FAILED to resolve any regions, using emeraldine fallback.");
             }
             else
             {
-                PRINT($"WorldData: Resolved {array_length(___regions_objects)} regions: {___regions_ids}");
+                show_debug_message($"WorldData: Resolved {array_length(___regions_objects)} regions: {___regions_ids}");
             }
         }
         
@@ -827,11 +827,11 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
                 buffer_get_surface(___map_buffer, _surf, 0);
                 surface_free(_surf);
                 
-                PRINT($"WorldData: Resolved Region Map '{___surface_biome_map}' ({___map_width}x{___map_height})");
+                show_debug_message($"WorldData: Resolved Region Map '{___surface_biome_map}' ({___map_width}x{___map_height})");
             }
             else
             {
-                PRINT($"WorldData: Map asset not found: {___surface_biome_map}");
+                show_debug_message($"WorldData: Map asset not found: {___surface_biome_map}");
             }
         }
 

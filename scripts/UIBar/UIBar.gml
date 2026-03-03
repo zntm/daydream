@@ -51,7 +51,7 @@ function UIBar(_x, _y, _width, _height, _min, _max, _value) : UIElement(_x, _y, 
                 return _asset;
             }
             
-            PRINT($"[UIBar] warning: could not resolve sprite '{_source}'");
+            show_debug_message($"[UIBar] warning: could not resolve sprite '{_source}'");
             
             return undefined;
         } 

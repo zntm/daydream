@@ -32,7 +32,7 @@ function menu_create_world_ui_load()
 	
 	if (_def == undefined)
 	{
-		PRINT("[Create World] failed to load create_world.ui");
+		show_debug_message("[Create World] failed to load create_world.ui");
 		
 		exit;
 	}
@@ -287,7 +287,7 @@ function menu_create_world_ui_submit(_instance)
 	
 	if (_name == "")
 	{
-		PRINT("[Create World] empty name, aborting");
+		show_debug_message("[Create World] empty name, aborting");
 		
 		exit;
 	}

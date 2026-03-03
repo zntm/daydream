@@ -6,7 +6,7 @@
         "phantasia:is_tile",
         "phantasia:is_wall"
     ],
-    "sprite": "phantasia:item/petrilumin_wall",
+    "sprite": "phantasia:/item/petrilumin_wall",
     "tile": {
         "audio_properties": {
             "lowpass": 0.65,
@@ -27,5 +27,5 @@
         },
         "sfx": "#phantasia:tile/sfx/stone"
     },
-    "type": "untouchable"
+    "type": "solid"
 }

@@ -19,7 +19,7 @@ interp_timer = 0;
 interp_duration = 0.05;  // ~50ms for 20Hz updates
 
 init_entity(100, 100, global.attribute_player, uuid);
-PRINT($"[PLAYER] Initialized: UUID={uuid}, is_local={is_local}");
+show_debug_message($"[PLAYER] Initialized: UUID={uuid}, is_local={is_local}");
 
 timer_attack = 0;
 timer_respawn = 0;

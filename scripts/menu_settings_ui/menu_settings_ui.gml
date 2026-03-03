@@ -27,7 +27,7 @@ function menu_settings_ui_load()
 	
 	if (_def == undefined)
 	{
-		PRINT("[Menu Settings] failed to load ui/menu/settings.ui");
+		show_debug_message("[Menu Settings] failed to load ui/menu/settings.ui");
 		exit;
 	}
 	

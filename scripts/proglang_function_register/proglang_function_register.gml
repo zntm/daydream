@@ -471,7 +471,7 @@ proglang_function_register("camera_shake", function(_args) {
 });
 
 proglang_function_register("spawn_particle", function(_args) {
-    PRINT(_args)
+    show_debug_message(_args)
     var _x = _args[1];
     
     if (_x == undefined) exit;
@@ -480,7 +480,7 @@ proglang_function_register("spawn_particle", function(_args) {
     
     if (_y == undefined) exit;
     
-    PRINT($"{_x} {_y}")
+    show_debug_message($"{_x} {_y}")
     
     spawn_particle(_x * TILE_SIZE, _y * TILE_SIZE, _args[0]);
 });
@@ -837,7 +837,7 @@ proglang_function_register("print", function(_args)
         _string += string(_args[i]);
     }
     
-    PRINT(_string);
+    show_debug_message(_string);
 });
 
 // Type checking
@@ -1156,7 +1156,7 @@ function proglang_run_pending()
             var _passed = 0;
             var _failed = 0;
             
-            PRINT($"━━━ {_group_name} ━━━");
+            show_debug_message($"━━━ {_group_name} ━━━");
             
             for (var j = 0; j < _total; ++j)
             {
@@ -1169,24 +1169,24 @@ function proglang_run_pending()
                 {
                     ++_passed;
                     
-                    PRINT($"  ✓ {_t_name} ({_t_time}ms)");
+                    show_debug_message($"  ✓ {_t_name} ({_t_time}ms)");
                 }
                 else
                 {
                     ++_failed;
                     
-                    PRINT($"  ✗ {_t_name} ({_t_time}ms)");
+                    show_debug_message($"  ✗ {_t_name} ({_t_time}ms)");
                     
                     for (var k = 0; k < array_length(_t_res.failures); ++k)
                     {
-                        PRINT($"    - {_t_res.failures[k]}");
+                        show_debug_message($"    - {_t_res.failures[k]}");
                     }
                     
                     if (_t_res.error != undefined)
                     {
                         var _err_msg = is_struct(_t_res.error) && struct_exists(_t_res.error, "message") ? _t_res.error.message : string(_t_res.error);
                         
-                        PRINT($"    - Error: {_err_msg}");
+                        show_debug_message($"    - Error: {_err_msg}");
                     }
                 }
             }
@@ -1195,11 +1195,11 @@ function proglang_run_pending()
             
             if (_failed == 0)
             {
-                PRINT($"━━━ {_passed}/{_total} passed ({_total_time}ms) ━━━");
+                show_debug_message($"━━━ {_passed}/{_total} passed ({_total_time}ms) ━━━");
             }
             else
             {
-                PRINT($"━━━ {_passed}/{_total} passed, {_failed} failed ({_total_time}ms) ━━━");
+                show_debug_message($"━━━ {_passed}/{_total} passed, {_failed} failed ({_total_time}ms) ━━━");
             }
         }
         else if (struct_exists(_test, "__type__") && _test.__type__ == "Test")
@@ -1210,22 +1210,22 @@ function proglang_run_pending()
             
             if (_t_res.passed)
             {
-                PRINT($"✓ {_test.name} ({_t_time}ms)");
+                show_debug_message($"✓ {_test.name} ({_t_time}ms)");
             }
             else
             {
-                PRINT($"✗ {_test.name} ({_t_time}ms)");
+                show_debug_message($"✗ {_test.name} ({_t_time}ms)");
                 
                 for (var k = 0; k < array_length(_t_res.failures); ++k)
                 {
-                    PRINT($"  - {_t_res.failures[k]}");
+                    show_debug_message($"  - {_t_res.failures[k]}");
                 }
                 
                 if (_t_res.error != undefined)
                 {
                     var _err_msg = is_struct(_t_res.error) && struct_exists(_t_res.error, "message") ? _t_res.error.message : string(_t_res.error);
                     
-                    PRINT($"  - Error: {_err_msg}");
+                    show_debug_message($"  - Error: {_err_msg}");
                 }
             }
         }
@@ -1335,16 +1335,16 @@ proglang_function_register("test", function(_args, _vm = undefined)
         if (_s != undefined)
         {
             _test_struct.__filename = _s[PROG_SCOPE.VARS][$ "__filename"];
-            // PRINT($"[Test] Captured filename: {_test_struct.__filename}");
+            // show_debug_message($"[Test] Captured filename: {_test_struct.__filename}");
         }
         else
         {
-             if (IS_DEVELOPER_MODE) PRINT($"[Test] Warning: __filename not found in scope for test '{_name}'");
+             if (IS_DEVELOPER_MODE) show_debug_message($"[Test] Warning: __filename not found in scope for test '{_name}'");
         }
     }
     else
     {
-         if (IS_DEVELOPER_MODE) PRINT($"[Test] Warning: VM undefined for test '{_name}'");
+         if (IS_DEVELOPER_MODE) show_debug_message($"[Test] Warning: VM undefined for test '{_name}'");
     }
     
     array_push(global.proglang_pending_tests, _test_struct);
@@ -1639,7 +1639,7 @@ proglang_function_register("debug_log", function(_args)
         _str += " " + string(_args[i]);
     }
     
-    PRINT("[Daydream Script] " + _str);
+    show_debug_message("[Daydream Script] " + _str);
 });
 
 proglang_function_register("sprite_get_width", function(_args) {

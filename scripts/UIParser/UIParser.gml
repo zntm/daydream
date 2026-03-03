@@ -201,7 +201,7 @@ function UIParser(_tokens) constructor
         var _element_type = _type_token.literal ?? _type_token.lexeme;
         
         
-        PRINT($"[UI Parser] parsing element: @{_element_type}...");
+        show_debug_message($"[UI Parser] parsing element: @{_element_type}...");
         
         
         /* element name in parentheses */
@@ -294,7 +294,7 @@ function UIParser(_tokens) constructor
         var _key = _key_token.literal ?? _key_token.lexeme;
         
         
-        PRINT($"[UI Parser]   property: {_key}...");
+        show_debug_message($"[UI Parser]   property: {_key}...");
         
         
         consume(UI_TOKEN.EQUALS, "expected '=' after property name.");
@@ -356,7 +356,7 @@ function UIParser(_tokens) constructor
         {
             var _op_token = advance();
             
-            PRINT($"[UI Parser]       binary op: {_op_token.lexeme}");
+            show_debug_message($"[UI Parser]       binary op: {_op_token.lexeme}");
             
             var _op;
             

@@ -45,7 +45,7 @@ function init_effect(_directory, _namespace)
                 
                 var _full_id = $"{_namespace}:{_id}";
         
-                PRINT($"[init_effect] Loading effect: {_full_id} from {_file}");
+                show_debug_message($"[init_effect] Loading effect: {_full_id} from {_file}");
                 
                 global.effect_data[$ _full_id] = _effect_data;
                 array_push(global.effect_data_names, _full_id);

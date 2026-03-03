@@ -17,6 +17,7 @@ export default [
             ItemType.Untouchable,
             "phantasia:item/campfire",
             "#phantasia:item/generic/inventory_default",
+            [],
         )
             .setAnimationType("increment")
             .setTileAudioProperties(new TileItemAudioProperties(0.1, 0))
@@ -34,7 +35,7 @@ export default [
             .setTileLight("#EAC7A6")
             .setTileOnRandomTick([
                 new ItemScript(
-                    "@phantasia:items/sfx_play",
+                    "@sfx_play",
                     {
                         id: "phantasia:sfx/tile/fire/ambient",
                     },
@@ -49,6 +50,7 @@ export default [
             ItemType.Untouchable,
             "phantasia:item/torch",
             "#phantasia:item/generic/inventory_default",
+            [],
         )
             .setTileDrops([new TileItemDrop("phantasia:torch")])
             .setTileHarvest(
@@ -63,11 +65,11 @@ export default [
             )
             .setTileSFX("#phantasia:tile/sfx/wood")
             .setTileAudioProperties(new TileItemAudioProperties(0.05, 0))
-            .setTileLight("EAC7A6")
+            .setTileLight("#EAC7A6")
             .setAnimationType("increment")
             .setTileOnRandomTick([
                 new ItemScript(
-                    "@phantasia:items/sfx_play",
+                    "@phantasia:sfx_play",
                     {
                         id: "phantasia:sfx/tile/fire/ambient",
                     },

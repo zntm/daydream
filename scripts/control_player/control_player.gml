@@ -6,12 +6,12 @@ function control_player()
     // Debug entry
     if (global.network_role == RELAY_ROLE.HOST && !is_local) 
     {
-        // PRINT($"[NET-PHYS] control_player running for proxy {uuid}, hp={hp}");
+        // show_debug_message($"[NET-PHYS] control_player running for proxy {uuid}, hp={hp}");
     }
 
     if (hp <= 0) 
     {
-        if (global.network_role == RELAY_ROLE.HOST && !is_local) PRINT($"[NET-PHYS] Player {uuid} is DEAD, skipping");
+        if (global.network_role == RELAY_ROLE.HOST && !is_local) show_debug_message($"[NET-PHYS] Player {uuid} is DEAD, skipping");
         
         exit;
     }
@@ -175,7 +175,7 @@ function control_player()
                 var _on_double_horizontal_move = _item_armor.get_on_double_horizontal_move();
                 if (_on_double_horizontal_move != undefined)
                 {
-                    PRINT($"[Control] Armor Dash Triggered: {_on_double_horizontal_move.id}");
+                    show_debug_message($"[Control] Armor Dash Triggered: {_on_double_horizontal_move.id}");
                     function_execute(_on_double_horizontal_move, x, y, CHUNK_DEPTH_DEFAULT, _dash_dir, sign(image_yscale), id, _armor_item);
                 }
             }
@@ -298,7 +298,7 @@ function control_player()
     // Post-step debug
     if (global.network_role == RELAY_ROLE.HOST && !is_local && input_state.move_x != 0)
     {
-        PRINT($"[NET-PHYS] Player {uuid} post-step: VelX={physics_body.vel_x}, NewPosX={x}, Grounded={physics_body.collision.ground}");
+        show_debug_message($"[NET-PHYS] Player {uuid} post-step: VelX={physics_body.vel_x}, NewPosX={x}, Grounded={physics_body.collision.ground}");
     }
     
     // --- COMBAT & SKILLS ---
@@ -355,7 +355,7 @@ function control_player()
                             link: charge_ui_link,
                             parent: global.gui_root
                         });
-                        PRINT("[Launcher] Charge UI spawned");
+                        show_debug_message("[Launcher] Charge UI spawned");
                     }
                 }
                 

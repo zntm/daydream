@@ -1,5 +1,6 @@
 {
     "inventory": "#phantasia:item/generic/inventory_default",
+    "properties": [],
     "sprite": "phantasia:item/campfire",
     "tile": {
         "animation_type": "increment",
@@ -23,7 +24,7 @@
         "light": "#EAC7A6",
         "on_random_tick": [
             {
-                "id": "@phantasia:items/sfx_play",
+                "id": "@sfx_play",
                 "parameters": {
                     "id": "phantasia:sfx/tile/fire/ambient"
                 },

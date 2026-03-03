@@ -579,7 +579,7 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     
     static set_tile = function(_tile)
     {
-        PRINT(_tile);
+        show_debug_message(_tile);
         
         if (_tile != undefined)
         {

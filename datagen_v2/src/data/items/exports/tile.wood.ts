@@ -27,7 +27,7 @@ export default [
                     `${namespace}:item/${id}`,
                     "#phantasia:item/generic/inventory_default",
                 )
-                    .setTileDrops([new TileItemDrop(`${namespace}:${id}`)])
+                    .setTileDrops([new TileItemDrop(`${namespace}:item/${id}`)])
                     .setTileHarvest(
                         new TileItemHarvest(
                             0.56,
@@ -76,12 +76,8 @@ export default [
                     `${namespace}:item/${id}_chest`,
                     "#phantasia:item/generic/inventory_tile",
                 )
-                    .setTileAudioProperties(
-                        new TileItemAudioProperties(0.4, 0.1),
-                    )
-                    .setTileDrops([
-                        new TileItemDrop(`${namespace}:${id}_chest`),
-                    ])
+                    .setTileAudioProperties(new TileItemAudioProperties(0.4, 0.1))
+                    .setTileDrops([new TileItemDrop(`${namespace}:${id}_chest`)])
                     .setTileHarvest(
                         new TileItemHarvest(
                             0.56,
@@ -124,17 +120,12 @@ export default [
                                     leaf.particles,
                                     "#phantasia:tile/generic/harvest_particle_frequency",
                                 ),
-                                new TileItemCondition(
-                                    "#phantasia:item/type/axe",
-                                ),
+                                new TileItemCondition("#phantasia:item/type/axe"),
                             ),
                         )
-                        .setTileSFX("#phantasia:tile/sfx/wood")
+                        .setTileSFX("#phantasia:tile/sfx/leaves")
                         .setTileOnRandomTick([
-                            new ItemScript(
-                                "@phantasia:tile/nature/leaf_decay",
-                                0.1,
-                            ),
+                            new ItemScript("@phantasia:tile/leaf_decay", 0.1),
                         ]),
                 );
             }),
@@ -160,10 +151,13 @@ export default [
                     ItemType.Untouchable,
                     `phantasia:item/${id}_workbench`,
                     "#phantasia:item/generic/inventory_tile",
+                    [
+                        TileItemProperties.CanFlip,
+                        TileItemProperties.CanMirror,
+                        TileItemProperties.IsTile,
+                    ],
                 )
-                    .setTileAudioProperties(
-                        new TileItemAudioProperties(0.4, 0.1),
-                    )
+                    .setTileAudioProperties(new TileItemAudioProperties(0.4, 0.1))
                     .setTileDrops([
                         new TileItemDrop(`${namespace}:${id}_workbench`),
                     ])

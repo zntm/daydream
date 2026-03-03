@@ -12,7 +12,7 @@ if (variable_global_exists("async_save_map"))
         
         if (_status < 0)
         {
-            PRINT("[Backup] Async save failed for ID: " + string(_id));
+            show_debug_message("[Backup] Async save failed for ID: " + string(_id));
         }
     }
 }
@@ -45,7 +45,7 @@ if (variable_global_exists("async_chunk_save_map"))
         
         if (_status < 0)
         {
-            PRINT("[Save] Async chunk save failed for ID: " + string(_id));
+            show_debug_message("[Save] Async chunk save failed for ID: " + string(_id));
         }
     }
 }

@@ -23,7 +23,7 @@ function proglang_compile(_source, _context_keys = [])
     {
         if (IS_DEVELOPER_MODE)
         {
-            PRINT($"[Daydream] Lexer Error: {_lexer.error}");
+            show_debug_message($"[Daydream] Lexer Error: {_lexer.error}");
         }
         
         return undefined;
@@ -36,7 +36,7 @@ function proglang_compile(_source, _context_keys = [])
     {
         if (IS_DEVELOPER_MODE)
         {
-            PRINT($"[Daydream] Parser Error: {_parser.error}");
+            show_debug_message($"[Daydream] Parser Error: {_parser.error}");
         }
         
         return undefined;

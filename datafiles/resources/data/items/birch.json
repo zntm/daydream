@@ -4,7 +4,7 @@
     "tile": {
         "drops": [
             {
-                "id": "phantasia:birch"
+                "id": "phantasia:item/birch"
             }
         ],
         "harvest": {

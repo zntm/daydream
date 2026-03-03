@@ -5,11 +5,11 @@
         "phantasia:can_mirror",
         "phantasia:is_tile"
     ],
-    "sprite": "phantasia:item/sandstone",
+    "sprite": "phantasia:/item/sandstone",
     "tile": {
         "audio_properties": {
-            "lowpass": 0.55,
-            "reverb": 0.4
+            "lowpass": 0.7,
+            "reverb": 0.6
         },
         "drops": [
             {
@@ -17,7 +17,7 @@
             }
         ],
         "harvest": {
-            "hardness": 0.22,
+            "hardness": 0.34,
             "level": 2,
             "particle": {
                 "colour": "#phantasia:tile/particle_colour/sand",

@@ -4,7 +4,7 @@ function atla_get_data(_page, _name, _index)
     
     if (_atla_page == undefined)
     {
-        PRINT($"[ATLA] Page '{_page}' does not exist!");
+        show_debug_message($"[ATLA] Page '{_page}' does not exist!");
         
         exit;
     }
@@ -13,7 +13,7 @@ function atla_get_data(_page, _name, _index)
     
     if (_data == undefined)
     {
-        PRINT($"[ATLA] Sprite '{_page}' does not exist!");
+        show_debug_message($"[ATLA] Sprite '{_page}' does not exist!");
         
         exit;
     }

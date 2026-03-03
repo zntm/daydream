@@ -125,7 +125,7 @@ function gui_inventory_craftable(_gui_multiplier_x, _gui_multiplier_y)
         var _yscale = _gui_multiplier_y * _inventory_scale * INVENTORY_ITEM_SCALE_MODIFIER;
         
         if (global.sprite_asset[$ _sprite] == undefined) {
-            PRINT($"[GUI] Skipping craftable draw for item '{_item.get_id()}': sprite '{_sprite}' not found.");
+            show_debug_message($"[GUI] Skipping craftable draw for item '{_item.get_id()}': sprite '{_sprite}' not found.");
             continue;
         }
         

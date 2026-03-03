@@ -4,7 +4,7 @@ function atla_repair(_page)
     
     if (_atla_page == undefined)
     {
-        PRINT($"[ATLA] Page '{_page}' does not exist!");
+        show_debug_message($"[ATLA] Page '{_page}' does not exist!");
         
         exit;
     }

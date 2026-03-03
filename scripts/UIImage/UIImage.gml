@@ -40,7 +40,7 @@ function UIImage(_x, _y, _source) : UIElement(_x, _y, 0, 0) constructor
             } 
             else 
             {
-                PRINT($"[UIImage] warning: could not resolve sprite '{_name}'");
+                show_debug_message($"[UIImage] warning: could not resolve sprite '{_name}'");
                 
                 source = undefined;
             }
@@ -67,7 +67,7 @@ function UIImage(_x, _y, _source) : UIElement(_x, _y, 0, 0) constructor
             } 
             else 
             {
-                PRINT($"[UIImage] warning: could not resolve sprite asset '{_source}'");
+                show_debug_message($"[UIImage] warning: could not resolve sprite asset '{_source}'");
                 
                 source = undefined;
             }

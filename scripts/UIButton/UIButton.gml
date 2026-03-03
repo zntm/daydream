@@ -57,7 +57,7 @@ function UIButton(_x, _y, _width, _height, _text = "") : UIElement(_x, _y, _widt
     		}
     		else
     		{
-    			PRINT($"[UIButton] warning: could not resolve sprite asset '{_sprite}'");
+    			show_debug_message($"[UIButton] warning: could not resolve sprite asset '{_sprite}'");
     		}
     	}
     	else
@@ -95,7 +95,7 @@ function UIButton(_x, _y, _width, _height, _text = "") : UIElement(_x, _y, _widt
     		}
     		else
     		{
-    			PRINT($"[UIButton] warning: could not resolve icon asset '{_icon}'");
+    			show_debug_message($"[UIButton] warning: could not resolve icon asset '{_icon}'");
     		}
     	}
     	else

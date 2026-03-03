@@ -30,7 +30,7 @@ function menu_title_ui_load()
 	
 	if (_def == undefined)
 	{
-		PRINT("[Menu Title] failed to load ui/menu/title.ui");
+		show_debug_message("[Menu Title] failed to load ui/menu/title.ui");
 		exit;
 	}
 	

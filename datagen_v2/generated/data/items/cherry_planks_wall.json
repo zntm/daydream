@@ -4,7 +4,7 @@
         "phantasia:is_tile",
         "phantasia:is_wall"
     ],
-    "sprite": "phantasia:item/cherry_planks_wall",
+    "sprite": "phantasia:/item/cherry_planks_wall",
     "tile": {
         "audio_properties": {
             "lowpass": 0.4,
@@ -31,5 +31,5 @@
         },
         "sfx": "#phantasia:tile/sfx/wood"
     },
-    "type": "untouchable"
+    "type": "solid"
 }

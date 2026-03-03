@@ -4,7 +4,6 @@ import {
     ItemScript,
     TileItem,
     TileItemAudioProperties,
-    TileItemDrop,
     TileItemHarvest,
     ItemParticle,
     TileItemPlacement,
@@ -20,7 +19,6 @@ export default [
             "#phantasia:item/generic/inventory_default",
             [TileItemProperties.IsFoliage],
         )
-            .setTileDrops([new TileItemDrop("phantasia:cactus_flower")])
             .setTileHarvest(
                 new TileItemHarvest(
                     0.38,
@@ -47,7 +45,6 @@ export default [
             "#phantasia:item/generic/inventory_default",
             [TileItemProperties.CanMirror, TileItemProperties.IsFoliage],
         )
-            .setTileDrops([new TileItemDrop("phantasia:twig")])
             .setTileHarvest(
                 new TileItemHarvest(
                     0.38,

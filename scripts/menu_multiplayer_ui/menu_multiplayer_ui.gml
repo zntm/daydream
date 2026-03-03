@@ -28,7 +28,7 @@ function menu_multiplayer_ui_load()
 	
 	if (_def == undefined)
 	{
-		PRINT("[Menu Multiplayer] failed to load ui/menu/multiplayer.ui");
+		show_debug_message("[Menu Multiplayer] failed to load ui/menu/multiplayer.ui");
 		exit;
 	}
 	
@@ -69,20 +69,20 @@ function menu_multiplayer_ui_init()
 	        
 	        if (string_length(_code) > 0)
 	        {
-	            PRINT($"[MENU] Joining session with code: {_code}");
+	            show_debug_message($"[MENU] Joining session with code: {_code}");
 	            
 	            if (global.relay_manager.join_session(_code))
 	            {
-	                PRINT("[MENU] Connection initiated...");
+	                show_debug_message("[MENU] Connection initiated...");
 	            }
 	            else
 	            {
-	                PRINT("[MENU] Failed to join session - invalid code?");
+	                show_debug_message("[MENU] Failed to join session - invalid code?");
 	            }
 	        }
 	        else
 	        {
-	            PRINT("[MENU] Please enter an invite code");
+	            show_debug_message("[MENU] Please enter an invite code");
 	        }
 		}));
 	}

@@ -9,13 +9,13 @@ function effect_set(_type, _time, _level = 1, _object = id, _particle = true)
 {
     var _effect_data = global.effect_data;
     
-    PRINT($"[effect_set] Attempting to apply {_type} to {_object}");
+    show_debug_message($"[effect_set] Attempting to apply {_type} to {_object}");
     
     var _data = _effect_data[$ _type];
     
     if (_data == undefined) 
     {
-        PRINT($"[effect_set] ERROR: Effect data for {_type} is UNDEFINED. Available keys: {struct_get_names(_effect_data)}");
+        show_debug_message($"[effect_set] ERROR: Effect data for {_type} is UNDEFINED. Available keys: {struct_get_names(_effect_data)}");
         exit;
     }
     
