@@ -45,13 +45,20 @@ function control_structure(_x, _y)
         
         for (var i = _xstart; i < _xend; ++i)
         {
-            var _surface_height = worldgen_get_surface_height(i, _world_seed, _world_data);
+            var _blend_data = _world_data.get_region_blend_data(i, 0, _world_seed);
+            
+            var _surface_height = worldgen_get_surface_height(i, _world_seed, _world_data, _blend_data);
             var _cave_start = worldgen_get_cave_start(i, _world_seed, _world_data);
             
             var _h_left = worldgen_get_surface_height(i - 1, _world_seed, _world_data);
             var _h_right = worldgen_get_surface_height(i + 1, _world_seed, _world_data);
             
             var _slope = max(abs(_surface_height - _h_left), abs(_h_right - _surface_height));
+            
+            var _biome_id = worldgen_get_biome_surface(i, _surface_height, _surface_height, _world_seed, _world_data, _slope, _blend_data);
+            var _data = _biome_data[$ _biome_id];
+            
+            var _cave_below = worldgen_get_cave(i, _surface_height + 2, _surface_height, _cave_start, _world_seed, _world_data);
             
             for (var _cy = _cy_start; _cy <= _cy_end; ++_cy)
             {
@@ -67,22 +74,19 @@ function control_structure(_x, _y)
                 {
                     if (!_queue_valid)
                     {
-                        _queue = (worldgen_get_cave(i, j + 1, _surface_height, _cave_start, _world_seed, _world_data) << 0)
-                            | (worldgen_get_cave(i, j + 0, _surface_height, _cave_start, _world_seed, _world_data) << 1)
-                            | (worldgen_get_cave(i, j - 1, _surface_height, _cave_start, _world_seed, _world_data) << 2);
+                        _queue = (worldgen_get_cave(i, j + 1, _surface_height, _cave_start, _world_seed, _world_data, _cave_below) << 0)
+                            | (worldgen_get_cave(i, j + 0, _surface_height, _cave_start, _world_seed, _world_data, _cave_below) << 1)
+                            | (worldgen_get_cave(i, j - 1, _surface_height, _cave_start, _world_seed, _world_data, _cave_below) << 2);
                         
                         _queue_valid = true;
                     }
                     else
                     {
-                        _queue = ((_queue & 0b011) << 1) | worldgen_get_cave(i, j + 1, _surface_height, _cave_start, _world_seed, _world_data);
+                        _queue = ((_queue & 0b011) << 1) | worldgen_get_cave(i, j + 1, _surface_height, _cave_start, _world_seed, _world_data, _cave_below);
                     }
                     
                     /* if current tile (bit 1) is not cave (terrain is solid) */
                     if (_queue & 0b010) continue;
-                    
-                    var _biome_id = worldgen_get_biome_surface(i, _surface_height, _surface_height, _world_seed, _world_data, _slope);
-                    var _data = _biome_data[$ _biome_id];
                     
                     if (_data == undefined) continue;
                     

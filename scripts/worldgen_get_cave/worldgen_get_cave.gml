@@ -1,4 +1,4 @@
-function worldgen_get_cave(_x, _y, _surface_height, _cave_start, _seed, _world_data = global.world_data[$ global.current_world.dimension])
+function worldgen_get_cave(_x, _y, _surface_height, _cave_start, _seed, _world_data = global.world_data[$ global.current_world.dimension], _cave_below = undefined)
 {
     // Surface breach zone: allow caves to occasionally breach the surface
     var _depth_from_surface = _y - _surface_height;
@@ -16,8 +16,9 @@ function worldgen_get_cave(_x, _y, _surface_height, _cave_start, _seed, _world_d
             if (_breach_noise > _world_data.get_cave_breach_threshold())
             {
                 // Check if there's an actual cave below to connect to
-                var _cave_below = worldgen_get_cave(_x, _surface_height + 2, _surface_height, _cave_start, _seed, _world_data);
-                if (_cave_below)
+                var _is_cave_below = (_cave_below != undefined) ? _cave_below : worldgen_get_cave(_x, _surface_height + 2, _surface_height, _cave_start, _seed, _world_data);
+                
+                if (_is_cave_below)
                 {
                     return true; // This is a surface breach opening
                 }

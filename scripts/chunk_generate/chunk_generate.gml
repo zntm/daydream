@@ -5,8 +5,10 @@
 function chunk_generate(_chunk, _context = undefined)
 {
     static __cave_bit = array_create(CHUNK_SIZE);
+    static __cave_below = array_create(CHUNK_SIZE);
     static __sky_bit = array_create(CHUNK_SIZE);
     static __surface_height = array_create(CHUNK_SIZE);
+    static __blend_data = array_create(CHUNK_SIZE);
     static __skip_z_array = array_create(CHUNK_SIZE * CHUNK_SIZE);
     
     // Clear skip_z array
@@ -62,21 +64,26 @@ function chunk_generate(_chunk, _context = undefined)
     for (var i = 0; i < CHUNK_SIZE; ++i)
     {
         var _world_x = _chunk.chunk_xstart + i;
-        var _surface_height = worldgen_get_surface_height(_world_x, _world_seed, _world_data);
+        var _blend_data = _world_data.get_region_blend_data(_world_x, 0, _world_seed);
+        var _surface_height = worldgen_get_surface_height(_world_x, _world_seed, _world_data, _blend_data);
         
+        __blend_data[@ i] = _blend_data;
         __surface_height[@ i] = _surface_height;
         _surface_height_max = min(_surface_height_max, _surface_height);
         
         var _cave_bit = 0;
         var _sky_bit = 0;
         var _cave_start = worldgen_get_cave_start(_world_x, _world_seed, _world_data);
+        var _cave_below = worldgen_get_cave(_world_x, _surface_height + 2, _surface_height, _cave_start, _world_seed, _world_data);
+        
+        __cave_below[@ i] = _cave_below;
         
         for (var j = 0; j < CHUNK_SIZE + 2; ++j)
         {
             var _world_y = _chunk.chunk_ystart + j - 1;
             
             // Cave Mask
-            _cave_bit |= worldgen_get_cave(_world_x, _world_y, _surface_height, _cave_start, _world_seed, _world_data) << j;
+            _cave_bit |= worldgen_get_cave(_world_x, _world_y, _surface_height, _cave_start, _world_seed, _world_data, _cave_below) << j;
             
             // Sky Mask (Only if in sky zone)
             if (_sky_enabled && _world_y <= _sky_threshold)
@@ -167,17 +174,19 @@ function chunk_generate(_chunk, _context = undefined)
     {
         var _world_x = _chunk.chunk_xstart + i;
         var _surface_height = __surface_height[i];
+        var _blend_data = __blend_data[i];
         var _cave_bit_stream = __cave_bit[i];
+        var _cave_below = __cave_below[i];
         var _sky_bit_stream = __sky_bit[i];
         
         var _xorshift_val = xorshift(_world_seed ^ ((_world_x + _chunk.chunk_ystart) * _surface_height));
         
         // Calculate Slope for Biome Selection (0 = flat, 1 = steep)
-        var _h_left = worldgen_get_surface_height(_world_x - 1, _world_seed, _world_data);
-        var _h_right = worldgen_get_surface_height(_world_x + 1, _world_seed, _world_data);
+        var _h_left = (i > 0) ? __surface_height[i - 1] : worldgen_get_surface_height(_world_x - 1, _world_seed, _world_data);
+        var _h_right = (i < CHUNK_SIZE - 1) ? __surface_height[i + 1] : worldgen_get_surface_height(_world_x + 1, _world_seed, _world_data);
         var _slope = max(abs(_surface_height - _h_left), abs(_h_right - _surface_height));
         
-        var _surface_biome = worldgen_get_biome_surface(_world_x, _surface_height, _surface_height, _world_seed, _world_data, _slope);
+        var _surface_biome = worldgen_get_biome_surface(_world_x, _surface_height, _surface_height, _world_seed, _world_data, _slope, _blend_data);
         var _surface_biome_data = _global_biome_data[$ worldgen_resolve_id(_surface_biome)];
         
         // HOIST: Biome Blending Helpers (removed in Region Update)

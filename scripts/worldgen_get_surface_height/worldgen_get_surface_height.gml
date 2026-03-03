@@ -3,12 +3,12 @@
 /// @param {Real} _seed World seed
 /// @param {Struct} _world_data World data struct
 /// @returns {Real} Surface height (in tiles)
-function worldgen_get_surface_height(_x, _seed, _world_data = global.world_data[$ global.current_world.dimension])
+function worldgen_get_surface_height(_x, _seed, _world_data = global.world_data[$ global.current_world.dimension], _blend_data = undefined)
 {
     var _surface_start = _world_data.get_surface_start();
     var _smoothing = _world_data.get_biome_transition_smoothing();
     
-    var _blend = _world_data.get_region_blend_data(_x, 0, _seed);
+    var _blend = (_blend_data != undefined) ? _blend_data : _world_data.get_region_blend_data(_x, 0, _seed);
     
     if (_blend == undefined) return _surface_start;
     
