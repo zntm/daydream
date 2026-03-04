@@ -428,7 +428,7 @@ function creature_handle_fall_damage()
                 {
                     if (object_index == obj_Player)
                     {
-                        obj_Game_Control.timer_respawn = 3;
+                        timer_respawn = 3;
                     }
                     else
                     {

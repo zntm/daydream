@@ -279,25 +279,6 @@ proglang_function_register("lengthdir_y", function(_args) {
 });
 
 #endregion
-proglang_function_register("worldgen_get_heat", function(_args)
-{
-    var _x = _args[0] / TILE_SIZE;
-    var _y = _args[1] / TILE_SIZE;
-    var _seed = _args[2];
-    
-    return worldgen_get_heat(_x, _y, _seed);
-});
-
-proglang_function_register("worldgen_get_humidity", function(_args)
-{
-    var _x = _args[0] / TILE_SIZE;
-    var _y = _args[1] / TILE_SIZE;
-    var _seed = _args[2];
-    
-    return worldgen_get_humidity(_x, _y, _seed);
-});
-
-
 
 proglang_function_register("string_char_at", function(_args)
 {

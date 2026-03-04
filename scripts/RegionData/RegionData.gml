@@ -128,7 +128,7 @@ function RegionData(_id, _config = {}) constructor
         // biome alternation because surface height varies per column at high frequency.
         var _noise = open_simplex_noise(
             _x * ___biome_noise_scale,
-            _seed * 0.1,
+            1024,
             1.0, 2
         );
         
@@ -226,19 +226,9 @@ function RegionData(_id, _config = {}) constructor
     {
         var _t = ___terrain;
         
-        // Base terrain noise
-        var _noise = open_simplex_noise(_x * _t.noise_scale, _seed * 0.5, 1.0, _t.octaves);
+        var _noise = open_simplex_noise(_x * _t.noise_scale, -256, (_t.amplitude_min + _t.amplitude_max) * 0.5, _t.octaves);
         
-        // Amplitude (interpolate min/max based on noise?)
-        // Or just average?
-        // Using noise to interpolate between min/max amplitude gives more variation.
-        // var _amp_noise = open_simplex_noise(_x * _t.noise_scale * 0.5, _seed * 0.9, 1.0, 2);
-        // var _amp = lerp(_t.amplitude_min, _t.amplitude_max, (_amp_noise + 1) * 0.5);
-        
-        // Simple average for now
-        var _amp = (_t.amplitude_min + _t.amplitude_max) * 0.5;
-        
-        return _t.height_offset + _t.base_height + (_noise * _amp);
+        return _t.height_offset + _t.base_height + _noise;
     }
     
     static set_fog_color = function(_color)

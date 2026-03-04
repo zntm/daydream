@@ -17,7 +17,6 @@ function region_gen_create(_config = {})
         var _r = _regions[i];
         var _color = _r.get_map_color();
         _color_lookup[$ string(_color)] = _r;
-        _color_lookup[$ _color] = _r;
     }
     
     return {
@@ -52,20 +51,13 @@ function region_gen_map_lookup(_gen, _x, _y)
     var _px = clamp(floor(_x / _gen.cell_size), 0, _gen.map_width - 1);
     var _py = clamp(floor(_y / _gen.cell_size), 0, _gen.map_height - 1);
     
-    PRINT($"region_gen_map_lookup: x={_x}, y={_y}, cell_size={_gen.cell_size} -> px={_px}, py={_py}");
+    var _buffer = _gen.map_buffer;
     
-    // Sample buffer (RGBA format)
-    var _pos = (_py * _gen.map_width + _px) * 4;
-    var _r = buffer_peek(_gen.map_buffer, _pos,     buffer_u8);
-    var _g = buffer_peek(_gen.map_buffer, _pos + 1, buffer_u8);
-    var _b = buffer_peek(_gen.map_buffer, _pos + 2, buffer_u8);
+    buffer_seek(_buffer, buffer_seek_start, ((_py * _gen.map_width) + _px) * 4);
     
-    // Convert to GML color (BGR)
-    var _color = (_b << 16) | (_g << 8) | _r;
+    var _colour = buffer_read(_buffer, buffer_u32) & 0xffffff;
     
-    var _region = _gen.color_lookup[$ _color] ?? _gen.color_lookup[$ string(_color)];
-
-    return _region;
+    return _gen.color_lookup[$ string(_colour)];
 }
 
 #endregion
@@ -100,8 +92,8 @@ function region_gen_warp(_gen, _x, _y)
 function region_gen_sample_heat(_x, _y, _seed, _scale)
 {
     return clamp(open_simplex_noise(
-        _x * _scale,
-        _seed * 0.1,
+        _x * _scale + (_seed * 0.001),
+        _y * _scale + 2048,
         63, 4
     ), 0, 63);
 }
@@ -111,8 +103,8 @@ function region_gen_sample_heat(_x, _y, _seed, _scale)
 function region_gen_sample_humidity(_x, _y, _seed, _scale)
 {
     return clamp(open_simplex_noise(
-        _x * _scale,
-        _seed * 0.2 + 1000,
+        _x * _scale + (_seed * 0.001),
+        _y * _scale + 2048 + 32,
         63, 4
     ), 0, 63);
 }
