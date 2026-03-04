@@ -6,31 +6,45 @@
 
 global.world_data = {}
 
-function init_world(_directory, _namespace = "phantasia", _type = 0)
+/// @desc Load world data files recursively
+/// @param {String} _directory Directory to search
+/// @param {String} _namespace Namespace for IDs (default "phantasia")
+/// @param {String} [_path_id] Internal tracking for nested folder IDs
+function init_world(_directory, _namespace = "phantasia", _path_id = undefined)
 {
-    var _biome_data = global.biome_data;
-    
-    var _names = struct_get_names(_biome_data);
-    var _names_length = array_length(_names);
-     
     var _files = file_read_directory(_directory);
     var _files_length = array_length(_files);
     
     for (var i = 0; i < _files_length; ++i)
     {
         var _file = _files[i];
+        var _sub_path = $"{_directory}/{_file}";
+        
+        var _name = ((_path_id == undefined) ? _file : $"{_path_id}/{_file}");
+        
+        if (directory_exists(_sub_path))
+        {
+            init_world(_sub_path, _namespace, _name);
+            
+            continue;
+        }
         
         if (string_ends_with(_file, ".json"))
         {
             dbg_timer("init_world");
             
-            var _json = tag_value_parse(buffer_load_json($"{_directory}/{_file}"));
+            var _json = tag_value_parse(buffer_load_json(_sub_path));
             
             if (is_struct(_json))
             {
-                var _id = string_delete(_file, string_length(_file) - 4, 5);
+                var _name_clean = string_delete(_name, string_length(_name) - 4, 5);
                 
-                var _world_data = new WorldData(_namespace, _id, _json[$ "world_height"]);
+                // Use internal ID if provided, otherwise fallback to namespaced filename
+                // Example: "playground" -> "phantasia:playground"
+                var _internal_id = _json[$ "id"] ?? _name_clean;
+                var _full_id = (string_pos(":", _internal_id) > 0) ? _internal_id : $"{_namespace}:{_internal_id}";
+                
+                var _world_data = new WorldData(_namespace, _full_id, _json[$ "world_height"]);
                 
                 _world_data.set_spawn_interval(_json[$ "spawn_interval"]);
                 _world_data.set_biome_transition_smoothing(_json[$ "biome_transition_smoothing"] ?? 0.5);
@@ -109,11 +123,11 @@ function init_world(_directory, _namespace = "phantasia", _type = 0)
                     _world_data.set_cave(_cave);
                 }
                 
-                global.world_data[$ $"{_namespace}:{_id}"] = _world_data;
+                global.world_data[$ _full_id] = _world_data;
+                
+                dbg_timer("init_world", $"[Init] Loaded World: \'{_full_id}\'");
                 
                 delete _json;
-                
-                dbg_timer("init_world", $"[Init] Loaded World: \'{_id}\'");
             }
         }
     }

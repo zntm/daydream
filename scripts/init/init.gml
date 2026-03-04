@@ -63,4 +63,4 @@ call_later(8, time_source_units_frames, function()
     room_goto((global.settings.menu_skip_epilepsy) ? rm_Menu_Title : rm_Menu_Warning_Epilepsy);
     
     file_load_players();
-}, -1);
+}, false);

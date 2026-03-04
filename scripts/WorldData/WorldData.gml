@@ -818,9 +818,17 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
                 ___map_height = sprite_get_height(_sprite);
                 
                 var _surf = surface_create(___map_width, ___map_height);
+                
+                if (!surface_exists(_surf))
+                {
+                    PRINT($"WorldData: FAILED to create surface for map: {___surface_biome_map}");
+                    
+                    exit;
+                }
+                
                 surface_set_target(_surf);
                 draw_clear_alpha(c_black, 0);
-                draw_sprite(_sprite, 0, 0, 0);
+                draw_sprite(_sprite, 0, sprite_get_xoffset(_sprite), sprite_get_yoffset(_sprite));
                 surface_reset_target();
                 
                 ___map_buffer = buffer_create(___map_width * ___map_height * 4, buffer_fixed, 1);
