@@ -74,8 +74,8 @@ function worldgen_get_sky_island(_x, _y, _seed, _world_data = global.world_data[
             var _dist = sqrt(_horizontal_dist * _horizontal_dist + _vertical_dist * _vertical_dist);
             
             // ROUGHER edges - more noise amplitude and higher frequency
-            var _edge_noise = open_simplex_noise(_x * _world_data.get_sky_noise_scale_edge(), _y * _world_data.get_sky_noise_scale_edge() + _cell_seed * 0.001, _world_data.get_sky_edge_noise_amplitude(), _world_data.get_sky_edge_noise_octaves());
-            var _detail_noise = open_simplex_noise(_x * _world_data.get_sky_noise_scale_detail(), _y * _world_data.get_sky_noise_scale_detail() + _cell_seed * 0.002, _world_data.get_sky_detail_noise_amplitude(), _world_data.get_sky_detail_noise_octaves());
+            var _edge_noise = open_simplex_noise(_x * _world_data.get_sky_noise_scale_edge(), _y * _world_data.get_sky_noise_scale_edge() + (_cell_seed & 0xffff) * 0.001, _world_data.get_sky_edge_noise_amplitude(), _world_data.get_sky_edge_noise_octaves());
+            var _detail_noise = open_simplex_noise(_x * _world_data.get_sky_noise_scale_detail(), _y * _world_data.get_sky_noise_scale_detail() + (_cell_seed & 0xffff) * 0.002, _world_data.get_sky_detail_noise_amplitude(), _world_data.get_sky_detail_noise_octaves());
             
             if (_dist < 1.0 + _edge_noise + _detail_noise)
             {

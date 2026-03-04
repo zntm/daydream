@@ -851,7 +851,32 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
             map_cell_size: 2048,
             warp_scale: 0.0015,
             warp_power: 384,
+            climate_scale: ___surface_heat_noise_scale,
         });
+    }
+    
+    static get_climate_at = function(_x, _y)
+    {
+        if (___region_generator == undefined)
+        {
+            __resolve_regions();
+        }
+        
+        if (___region_generator == undefined)
+        {
+            return {
+                heat: 0,
+                humidity: 0
+            };
+        }
+        
+        var _gen    = ___region_generator;
+        var _warped = region_gen_warp(_gen, _x, _y);
+        
+        return {
+            heat: region_gen_sample_heat(_warped[0], _warped[1], _gen.climate_scale),
+            humidity: region_gen_sample_humidity(_warped[0], _warped[1], _gen.climate_scale)
+        };
     }
     
     static get_region_at = function(_x, _y, _seed)

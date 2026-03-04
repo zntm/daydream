@@ -208,6 +208,22 @@ function debug_step()
         
         var _semver = program_get_version();
         
+        /* climate and region info */
+        var _world_data  = global.world_data[$ global.current_world.dimension];
+        var _heat        = 0;
+        var _humid       = 0;
+        var _region_id   = "N/A";
+        
+        if (_world_data != undefined)
+        {
+            var _climate = _world_data.get_climate_at(_xplayer, _yplayer);
+            _heat  = _climate.heat;
+            _humid = _climate.humidity;
+            
+            var _region = _world_data.get_region_at(_xplayer, _yplayer, global.current_world.seed);
+            if (_region != undefined) _region_id = _region.get_id();
+        }
+        
         // Staggered Refresh: Update ONE stat per frame
         var _info = global.debug_sysinfo;
         switch (global.debug_sysinfo_index)
@@ -259,6 +275,8 @@ function debug_step()
             "World:\n" +
             $"Time: {global.current_world.time}\n" +
             $"Seed: {global.current_world.seed}\n" +
+            $"Heat: {string_format(_heat, 0, 1)} | Humid: {string_format(_humid, 0, 1)}\n" +
+            $"Region: {_region_id}\n" +
             $"Chunks Loaded: {chunk_map_count()}\n" +
             $"Total Instances: {instance_number(all)}\n\n" +
             

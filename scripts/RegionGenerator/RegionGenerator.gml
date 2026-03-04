@@ -1,66 +1,99 @@
 /// @desc Functional Region Generator
-/// @description Selects regions via domain-warped simplex noise climate matching.
-///              Samples heat + humidity at each position, picks the closest region.
-///              Supports optional map buffer override for hand-painted region maps.
+/// @description Selects regions via a pre-built 64x64 climate map.
+///              Heat + humidity noise values [0, 63] index directly into the map.
+///              The map is built from a painted region sprite (indexed by climate)
+///              or from region heat/humidity targets as a fallback.
+
+#macro REGION_MAP_SIZE 64
 
 /// @desc Create a region generator config struct
 /// @param {Struct} _config Configuration
 /// @returns {Struct} Generator config
 function region_gen_create(_config = {})
 {
-    var _regions = _config[$ "regions"] ?? [];
+    var _regions     = _config[$ "regions"] ?? [];
     var _region_count = array_length(_regions);
 
     /* build color lookup table for map-based regions */
     var _color_lookup = {}
-    for (var i = 0; i < _region_count; ++i)
+
+    for (var i = _region_count - 1; i >= 0; --i)
     {
-        var _r = _regions[i];
+        var _r     = _regions[i];
         var _color = _r.get_map_color();
-        _color_lookup[$ string(_color)] = _r;
+
+        _color_lookup[$ string(_color)] = i;
     }
-    
+
+    /* pre-build 64x64 region map */
+    var _map_total  = REGION_MAP_SIZE * REGION_MAP_SIZE;
+    var _region_map = array_create(_map_total, 0);
+    var _map_buffer = _config[$ "map_buffer"];
+    var _map_width  = _config[$ "map_width"] ?? 0;
+    var _map_height = _config[$ "map_height"] ?? 0;
+
+    if (_region_count > 0)
+    {
+        if (_map_buffer != undefined) && (_map_width > 0) && (_map_height > 0)
+        {
+            /* build from the painted region sprite — heat = row, humidity = column */
+            for (var _h = REGION_MAP_SIZE - 1; _h >= 0; --_h)
+            {
+                var _py = clamp(floor(_h / (REGION_MAP_SIZE - 1) * (_map_height - 1)), 0, _map_height - 1);
+
+                for (var _w = REGION_MAP_SIZE - 1; _w >= 0; --_w)
+                {
+                    var _px = clamp(floor(_w / (REGION_MAP_SIZE - 1) * (_map_width - 1)), 0, _map_width - 1);
+
+                    buffer_seek(_map_buffer, buffer_seek_start, (_py * _map_width + _px) * 4);
+
+                    var _colour = buffer_read(_map_buffer, buffer_u32) & 0xffffff;
+                    var _idx    = _color_lookup[$ string(_colour)];
+
+                    _region_map[@ _h * REGION_MAP_SIZE + _w] = (_idx != undefined) ? _idx : 0;
+                }
+            }
+        }
+        else
+        {
+            /* fallback: build from heat/humidity targets (voronoi) */
+            for (var _h = REGION_MAP_SIZE - 1; _h >= 0; --_h)
+            {
+                for (var _w = REGION_MAP_SIZE - 1; _w >= 0; --_w)
+                {
+                    var _best_score = infinity;
+                    var _best_id    = 0;
+
+                    for (var i = _region_count - 1; i >= 0; --i)
+                    {
+                        var _region = _regions[i];
+                        var _dh    = _h - _region.get_heat_target();
+                        var _dw    = _w - _region.get_humidity_target();
+                        var _score = _dh * _dh + _dw * _dw;
+
+                        if (_score < _best_score)
+                        {
+                            _best_score = _score;
+                            _best_id    = i;
+                        }
+                    }
+
+                    _region_map[@ _h * REGION_MAP_SIZE + _w] = _best_id;
+                }
+            }
+        }
+    }
+
     return {
         regions: _regions,
         region_count: _region_count,
+        region_map: _region_map,
         warp_scale: _config[$ "warp_scale"] ?? 0.0015,
         warp_power: _config[$ "warp_power"] ?? 384,
         climate_scale: _config[$ "climate_scale"] ?? 0.0003,
-        map_buffer: _config[$ "map_buffer"],
-        map_width: _config[$ "map_width"] ?? 0,
-        map_height: _config[$ "map_height"] ?? 0,
-        map_cell_size: _config[$ "map_cell_size"] ?? 2048,
         color_lookup: _color_lookup,
     }
 }
-
-#region --- Map Buffer Lookup ---
-
-/// @desc Try to get a region from a painted map buffer
-/// @param {Struct} _gen Generator config
-/// @param {Real} _x World X
-/// @param {Real} _y World Y
-/// @returns {Struct|undefined} RegionData or undefined
-function region_gen_map_lookup(_gen, _x, _y)
-{
-    if (_gen.map_buffer == undefined)
-    {
-        return undefined;
-    }
-    
-    var _px = clamp(floor(_x / _gen.map_cell_size), 0, _gen.map_width - 1);
-    var _py = clamp(floor(_y / _gen.map_cell_size), 0, _gen.map_height - 1);
-    
-    var _buffer = _gen.map_buffer;
-    
-    buffer_seek(_buffer, buffer_seek_start, ((_py * _gen.map_width) + _px) * 4);
-    
-    var _colour = buffer_read(_buffer, buffer_u32) & 0xffffff;
-    
-    return _gen.color_lookup[$ string(_colour)];
-}
-
-#endregion
 
 #region --- Domain Warping ---
 
@@ -70,10 +103,10 @@ function region_gen_warp(_gen, _x, _y)
 {
     var _ws = _gen.warp_scale;
     var _wp = _gen.warp_power;
-    
-    var _warp_x = open_simplex_noise(_x * _ws, _y * _ws, 1.0, 2) * _wp;
-    var _warp_y = open_simplex_noise(_x * _ws + 1000, _y * _ws + 1000, 1.0, 2) * _wp;
-    
+
+    var _warp_x = (open_simplex_noise(_x * _ws, _y * _ws, 1.0, 2) - 0.5) * _wp;
+    var _warp_y = (open_simplex_noise(_x * _ws + 1000, _y * _ws + 1000, 1.0, 2) - 0.5) * _wp;
+
     return [_x + _warp_x, _y + _warp_y];
 }
 
@@ -110,70 +143,64 @@ function region_gen_sample_humidity(_x, _y, _scale)
     ));
 }
 
-/// @desc Pick the best-matching region index for a climate point
+/// @desc Pick the best-matching region index via the pre-built region map
 /// @param {Struct} _gen Generator config
-/// @param {Real} _heat Heat value
-/// @param {Real} _humid Humidity value
+/// @param {Real} _heat Heat value [0, 63]
+/// @param {Real} _humid Humidity value [0, 63]
 /// @returns {Real} Region index
 function region_gen_climate_pick(_gen, _heat, _humid)
 {
-    var _best_score = infinity;
-    var _best_id = 0;
-
-    for (var i = _gen.region_count - 1; i >= 0; --i)
-    {
-        var _region = _gen.regions[i];
-        var _th = _region.get_heat_target();
-        var _tw = _region.get_humidity_target();
-        
-        var _dh = _heat - _th;
-        var _dw = _humid - _tw; 
-        var _score = _dh * _dh + _dw * _dw;
-        
-        if (_score < _best_score)
-        {
-            _best_score = _score;
-            _best_id = i;
-        }
-    }
-
-    return _best_id;
+    return _gen.region_map[_heat * REGION_MAP_SIZE + _humid];
 }
 
-/// @desc Pick the two best-matching regions and their score difference
+/// @desc Pick the two best-matching regions for transition blending
 /// @param {Struct} _gen Generator config
-/// @param {Real} _heat Heat value
-/// @param {Real} _humid Humidity value
-/// @returns {Array} [best_index, second_index, best_score, second_score]
+/// @param {Real} _heat Heat value [0, 63]
+/// @param {Real} _humid Humidity value [0, 63]
+/// @returns {Array} [best_index, second_index, blend_factor]
 function region_gen_climate_pick_two(_gen, _heat, _humid)
 {
-    var _best_score  = infinity;
-    var _second_score = infinity;
-    var _best_id   = 0;
-    var _second_id = 0;
+    var _map    = _gen.region_map;
+    var _best   = _map[_heat * REGION_MAP_SIZE + _humid];
+    var _second = _best;
+    var _min_dist = infinity;
 
-    for (var i = _gen.region_count - 1; i >= 0; --i)
+    /* search a small neighborhood for the nearest different-region cell */
+    var _radius = 4;
+
+    for (var _dh = -_radius; _dh <= _radius; ++_dh)
     {
-        var _region = _gen.regions[i];
-        var _dh = _heat - _region.get_heat_target();
-        var _dw = _humid - _region.get_humidity_target();
-        var _score = _dh * _dh + _dw * _dw;
+        var _sh = _heat + _dh;
 
-        if (_score < _best_score)
+        if (_sh < 0) || (_sh >= REGION_MAP_SIZE) continue;
+
+        for (var _dw = -_radius; _dw <= _radius; ++_dw)
         {
-            _second_score = _best_score;
-            _second_id    = _best_id;
-            _best_score   = _score;
-            _best_id      = i;
-        }
-        else if (_score < _second_score)
-        {
-            _second_score = _score;
-            _second_id    = i;
+            if (_dh == 0) && (_dw == 0) continue;
+
+            var _sw = _humid + _dw;
+
+            if (_sw < 0) || (_sw >= REGION_MAP_SIZE) continue;
+
+            var _neighbor = _map[_sh * REGION_MAP_SIZE + _sw];
+
+            if (_neighbor != _best)
+            {
+                var _d = _dh * _dh + _dw * _dw;
+
+                if (_d < _min_dist)
+                {
+                    _min_dist = _d;
+                    _second   = _neighbor;
+                }
+            }
         }
     }
 
-    return [_best_id, _second_id, _best_score, _second_score];
+    /* blend factor: 0 = right on the boundary, higher = deeper inside the region */
+    var _blend = (_second == _best) ? 1000 : sqrt(_min_dist);
+
+    return [_best, _second, _blend];
 }
 
 #endregion
@@ -188,9 +215,6 @@ function region_gen_climate_pick_two(_gen, _heat, _humid)
 /// @returns {Struct} RegionData struct
 function region_gen_get_region(_gen, _x, _y, _seed)
 {
-    var _map_region = region_gen_map_lookup(_gen, _x, _y);
-    if (_map_region != undefined) return _map_region;
-
     if (_gen.region_count <= 0) return undefined;
 
     /* domain-warp then sample climate */
@@ -211,13 +235,6 @@ function region_gen_get_region(_gen, _x, _y, _seed)
 /// @returns {Struct} { r1, r2, diff }
 function region_gen_get_blend_data(_gen, _x, _y, _seed)
 {
-    /* map override — no blending */
-    var _map_region = region_gen_map_lookup(_gen, _x, _y);
-    if (_map_region != undefined)
-    {
-        return { r1: _map_region, r2: _map_region, diff: 1000 }
-    }
-
     if (_gen.region_count <= 0) return undefined;
 
     /* domain-warp then sample climate */
@@ -231,11 +248,10 @@ function region_gen_get_blend_data(_gen, _x, _y, _seed)
     var _r1 = _gen.regions[clamp(_pick[0], 0, _rc - 1)];
     var _r2 = _gen.regions[clamp(_pick[1], 0, _rc - 1)];
 
-    /* diff = euclidean distance difference between the two closest regions */
     return {
         r1: _r1,
         r2: _r2,
-        diff: sqrt(_pick[3]) - sqrt(_pick[2]),
+        diff: _pick[2],
     }
 }
 
@@ -244,10 +260,9 @@ function region_gen_get_blend_data(_gen, _x, _y, _seed)
 /// @param {Real} _x World X
 /// @param {Real} _y World Y
 /// @param {Real} _seed World seed (unused, kept for API compatibility)
-/// @returns {Real} Boundary distance (climate score difference)
+/// @returns {Real} Boundary distance (cells to nearest different region)
 function region_gen_get_boundary_distance(_gen, _x, _y, _seed)
 {
-    if (_gen.map_buffer != undefined) return 1000;
     if (_gen.region_count <= 1) return 1000;
 
     /* domain-warp then sample climate */
@@ -257,7 +272,7 @@ function region_gen_get_boundary_distance(_gen, _x, _y, _seed)
     var _humid = region_gen_sample_humidity(_warped[0], _warped[1], _gen.climate_scale);
     var _pick  = region_gen_climate_pick_two(_gen, _heat, _humid);
 
-    return (sqrt(_pick[3]) - sqrt(_pick[2])) / 2.0;
+    return _pick[2];
 }
 
 #endregion
