@@ -840,10 +840,9 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
             map_buffer: ___map_buffer,
             map_width: ___map_width,
             map_height: ___map_height,
-            cell_size: 2048, 
+            map_cell_size: 2048,
             warp_scale: 0.0015,
             warp_power: 384,
-            seed_offset: 12345 
         });
     }
     
