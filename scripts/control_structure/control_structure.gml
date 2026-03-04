@@ -94,18 +94,15 @@ function control_structure(_x, _y)
                     /* resolve relevant biome for this tile */
                     var _target_data = _data;
                     
-                    if (_is_cave)
+                    var _cave_biome_id = worldgen_get_biome_cave(i, j, _surface_height, _world_seed, _world_data);
+                    
+                    if (_cave_biome_id != undefined)
                     {
-                        var _cave_biome_id = worldgen_get_biome_cave(i, j, _surface_height, _world_seed, _world_data);
-                        
-                        if (_cave_biome_id != undefined)
-                        {
-                            _target_data = _biome_data[$ worldgen_resolve_id(_cave_biome_id)];
-                        }
-                        else
-                        {
-                            continue;
-                        }
+                        _target_data = _biome_data[$ worldgen_resolve_id(_cave_biome_id)];
+                    }
+                    else if (_is_cave)
+                    {
+                        continue;
                     }
                     
                     if (_target_data == undefined) continue;
