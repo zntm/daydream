@@ -44,7 +44,7 @@
 #region Physics
 
 // Gravity
-#macro PHYSICS_GRAVITY_DEFAULT 3.7
+#macro PHYSICS_GRAVITY_DEFAULT 0.85
 
 // Movement Speed
 #macro PHYSICS_MOVE_SPEED_GROUND 3.1

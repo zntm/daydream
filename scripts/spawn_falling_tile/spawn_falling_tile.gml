@@ -17,8 +17,8 @@ function spawn_falling_tile(_world_x, _world_y, _tile_z, _tile)
         return noone;
     }
 
-    var _pixel_x = _world_x * TILE_SIZE;
-    var _pixel_y = _world_y * TILE_SIZE;
+    var _pixel_x = (_world_x + 0.5) * TILE_SIZE;
+    var _pixel_y = (_world_y + 1) * TILE_SIZE;
 
     var _inst = instance_create_layer(_pixel_x, _pixel_y, "Instances", obj_Falling_Tile);
 

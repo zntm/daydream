@@ -31,14 +31,14 @@ function control_falling_tile()
     /* check for landing */
     if (physics_body.collision.ground) || (physics_body.collision.wall_left) || (physics_body.collision.wall_right)
     {
-        var _world_x = floor(x / TILE_SIZE);
-        var _world_y = floor(y / TILE_SIZE);
+        var _world_x = round(x / TILE_SIZE);
+        var _world_y = floor((y - 2) / TILE_SIZE);
         
         /* if we hit a wall but not ground, we might need to nudge to find the landing tile */
         if (!physics_body.collision.ground)
         {
             /* nudge down slightly to see if we're actually above a tile */
-            var _check_y = floor((y + 1) / TILE_SIZE);
+            var _check_y = round((y + TILE_SIZE / 2) / TILE_SIZE);
             
             if (_check_y > _world_y)
             {

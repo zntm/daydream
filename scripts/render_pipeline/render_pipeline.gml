@@ -113,7 +113,10 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                         var _tx = lerp(x_previous, x, global.tick_accumulator);
                         var _ty = lerp(y_previous, y, global.tick_accumulator);
 
-                        draw_sprite_ext(_sprite.get_sprite(), tile_index, _tx, _ty, entity_xscale, entity_yscale, 0, c_white, 1);
+                        var _draw_x = _tx - (TILE_SIZE / 2) * entity_xscale;
+                        var _draw_y = _ty - TILE_SIZE * entity_yscale;
+
+                        draw_sprite_ext(_sprite.get_sprite(), tile_index, _draw_x, _draw_y, entity_xscale, entity_yscale, 0, c_white, 1);
                     }
                 }
             }
