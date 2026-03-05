@@ -66,7 +66,7 @@ function player_harvest(_dt, _x, _y)
         {
             var _harvest_condition_id = _condition.get_id();
             
-            if (_harvest_condition_id != undefined) && (!array_contains(_harvest_condition_id, _id)) exit;
+            if (_harvest_condition_id != undefined) && ((is_array(_harvest_condition_id)) ? !array_contains(_harvest_condition_id, _id) : (_harvest_condition_id != _id)) exit;
         }
     }
     
