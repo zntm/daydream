@@ -121,12 +121,38 @@ function worldgen_get_music(_target)
     return undefined;
 }
 
+/// @desc Safely get ambience data from a biome/ID/region object
+function worldgen_get_ambience(_target)
+{
+    if (_target == undefined) return undefined;
+    
+    if (is_string(_target))
+    {
+        var _id = worldgen_resolve_id(_target);
+        var _biome = global.biome_data[$ _id];
+        if (_biome != undefined) return _biome.get_ambience();
+        
+        var _region = global.region_data[$ _id];
+        if (_region != undefined) && (struct_exists(_region, "get_ambience")) return _region.get_ambience();
+        
+        return undefined;
+    }
+    
+    if (struct_exists(_target, "get_ambience"))
+    {
+        return _target.get_ambience();
+    }
+    
+    return undefined;
+}
+
 function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
 {
     ___background = undefined;
     ___sky_colour_points = [];
     ___light_colour_points = [];
     ___music = [];
+    ___ambience = [];
     ___sky_script = undefined;
     
     ___tile_top_layer_base = { entries: [], total_weight: 0 }
@@ -334,6 +360,34 @@ function BiomeData(_namespace, _id) : ParentData(_namespace, _id) constructor
     static get_music = function(_music)
     {
         return self[$ "___music"];
+    }
+    
+    static set_ambience = function(_ambience_list)
+    {
+        if (_ambience_list == undefined) return self;
+        
+        ___ambience = [];
+        var _length = array_length(_ambience_list);
+        
+        for (var i = 0; i < _length; ++i)
+        {
+            var _entry = _ambience_list[i];
+            
+            array_push(___ambience, {
+                id: _entry.id,
+                chance: _entry.chance,
+                gain: _entry[$ "gain"] ?? 0.4,
+                radius_min: (_entry[$ "radius_min"] ?? 3) * TILE_SIZE,
+                radius_max: (_entry[$ "radius_max"] ?? 16) * TILE_SIZE
+            });
+        }
+        
+        return self;
+    }
+    
+    static get_ambience = function()
+    {
+        return self[$ "___ambience"];
     }
     
     /// @desc Parse tile array data into weighted entry format

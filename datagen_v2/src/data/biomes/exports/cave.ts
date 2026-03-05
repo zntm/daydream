@@ -9,6 +9,7 @@ import {
 
 import {
     Biome,
+    BiomeAmbience,
     BiomeBackground,
     BiomeTile,
     BiomeFoliage,
@@ -115,6 +116,9 @@ export default [
                 new Sound("phantasia:music/12_hours_at_ease", 0.6),
                 new Sound("phantasia:music/behind", 0.5),
             ])
+            .setAmbience([
+                new BiomeAmbience("phantasia:sfx/ambience/cave/default", 0.001, 0.4),
+            ])
             .setFoliage([
                 new BiomeFoliage("phantasia:rock", 0.07).setGenerateOn([
                     "phantasia:stone",
@@ -157,6 +161,9 @@ export default [
             .setMusic([
                 new Sound("phantasia:music/12_hours_at_ease", 0.7),
                 new Sound("phantasia:music/behind", 0.6),
+            ])
+            .setAmbience([
+                new BiomeAmbience("phantasia:sfx/ambience/cave/default", 0.001, 0.4),
             ])
             .setFoliage([
                 new BiomeFoliage("phantasia:rock", 0.07).setGenerateOn([
@@ -201,6 +208,9 @@ export default [
             .setMusic([
                 new Sound("phantasia:music/12_hours_at_ease", 0.7),
                 new Sound("phantasia:music/behind", 0.6),
+            ])
+            .setAmbience([
+                new BiomeAmbience("phantasia:sfx/ambience/cave/default", 0.001, 0.4),
             ])
             .setFoliage([
                 new BiomeFoliage("phantasia:lumin_sprouts", 0.3).setGenerateOn([

@@ -76,6 +76,13 @@ function init_biome_recursive(_directory, _namespace = "phantasia", _id = undefi
                 
                 _biome_data.set_sky_script(_json[$ "sky_script"]);
                 
+                var _ambience = _json[$ "ambience"];
+                
+                if (_ambience != undefined)
+                {
+                    _biome_data.set_ambience(_ambience);
+                }
+                
                 var _name2 = string_delete(_name, string_length(_name) - 4, 5);
                 
                 global.biome_data[$ $"{_namespace}:{_name2}"] = _biome_data;

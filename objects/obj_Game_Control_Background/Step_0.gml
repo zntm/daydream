@@ -114,3 +114,35 @@ if (timer_refresh >= 1) || (in_biome_transition_value > 0)
 }
 
 update_background_clouds(_delta_time, global.camera_width);
+
+/* biome ambience */
+ambience_timer += _delta_time;
+
+if (ambience_timer >= 1 / GAME_TICK)
+{
+    ambience_timer -= 1 / GAME_TICK;
+    
+    var _ambience = worldgen_get_ambience(in_biome);
+    
+    if (_ambience != undefined)
+    {
+        var _px = obj_Player.x;
+        var _py = obj_Player.y;
+        
+        for (var i = array_length(_ambience) - 1; i >= 0; --i)
+        {
+            var _a = _ambience[i];
+            
+            if (random(1) < _a.chance)
+            {
+                var _angle = random(360);
+                var _dist  = _a.radius_min + random(_a.radius_max - _a.radius_min);
+                
+                var _ax = _px + lengthdir_x(_dist, _angle);
+                var _ay = _py + lengthdir_y(_dist, _angle);
+                
+                sfx_diegetic_play(undefined, _ax, _ay, _a.id, _a.gain * global.settings.audio_sfx);
+            }
+        }
+    }
+}

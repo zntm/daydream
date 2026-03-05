@@ -1,4 +1,13 @@
 {
+    "ambience": [
+        {
+            "id": "phantasia:sfx/ambience/cave/default",
+            "chance": 0.001,
+            "gain": 0.4,
+            "radius_min": 3,
+            "radius_max": 16
+        }
+    ],
     "background": {
         "blend": 0.7,
         "id": "phantasia:background/depths"

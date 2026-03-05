@@ -12,6 +12,7 @@ sky_colour_gradient = c_black;
 light_colour = c_black;
 
 timer_refresh = 0;
+ambience_timer = 0;
 
 var _in_biome_data = global.biome_data[$ in_biome];
 if (_in_biome_data == undefined) exit;

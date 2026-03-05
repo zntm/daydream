@@ -14,6 +14,7 @@ export class Biome {
         [key: string]: BiomeTile;
     };
     private music?: Sound[];
+    private ambience?: BiomeAmbience[];
     private creatures?: BiomeCreature[];
     private foliage?: BiomeFoliage[];
     private structures?: BiomeStructure[];
@@ -42,6 +43,12 @@ export class Biome {
 
     setMusic(music: Sound[]) {
         this.music = music;
+
+        return this;
+    }
+
+    setAmbience(ambience: BiomeAmbience[]) {
+        this.ambience = ambience;
 
         return this;
     }
@@ -98,6 +105,28 @@ export class Biome {
         this.sky_script = script;
 
         return this;
+    }
+}
+
+export class BiomeAmbience {
+    private id: string;
+    private chance: number;
+    private gain: number;
+    private radius_min: number;
+    private radius_max: number;
+
+    constructor(
+        id: string,
+        chance: number,
+        gain: number = 0.4,
+        radiusMin: number = 3,
+        radiusMax: number = 16,
+    ) {
+        this.id = id;
+        this.chance = chance;
+        this.gain = gain;
+        this.radius_min = radiusMin;
+        this.radius_max = radiusMax;
     }
 }
 
