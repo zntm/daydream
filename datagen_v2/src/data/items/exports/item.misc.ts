@@ -63,7 +63,8 @@ export default [
                 ),
             )
             .setTileSFX("#phantasia:tile/sfx/sand")
-            .setTileAudioProperties(new TileItemAudioProperties(0.2, 0.0)),
+            .setTileAudioProperties(new TileItemAudioProperties(0.2, 0.0))
+            .setTileFalling(0),
     ),
     new DatagenReturnData(
         "anvil.json",

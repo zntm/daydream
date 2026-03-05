@@ -6,11 +6,13 @@ tile_index = 0;
 tile_z = CHUNK_DEPTH_DEFAULT;
 tile_components = undefined;
 
-// Physics
-xvelocity = 0;
-yvelocity = 0;
-gravity_value = PHYSICS_GRAVITY;
-fall_delay = 2;
+// Physics Body & Input
+physics_body = undefined;
+input_state = new InputState();
+
+// Interpolation
+x_previous = x;
+y_previous = y;
 
 // Origin tracking
 origin_x = 0;

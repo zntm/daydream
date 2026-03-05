@@ -110,7 +110,10 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                     
                     if (_sprite != undefined)
                     {
-                        draw_sprite_ext(_sprite.get_sprite(), tile_index, x, y, entity_xscale, entity_yscale, 0, c_white, 1);
+                        var _tx = lerp(x_previous, x, global.tick_accumulator);
+                        var _ty = lerp(y_previous, y, global.tick_accumulator);
+
+                        draw_sprite_ext(_sprite.get_sprite(), tile_index, _tx, _ty, entity_xscale, entity_yscale, 0, c_white, 1);
                     }
                 }
             }

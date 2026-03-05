@@ -149,6 +149,7 @@ export class TileItem extends Item {
         tile?: {
             components?: { [key: string]: ItemComponentData };
             drops?: string | TileItemDrop[];
+            falling?: { enabled?: boolean; delay?: number; gravity?: number };
             harvest?: string | TileItemHarvest;
             placement?: string | TileItemPlacement;
             sfx?: string | ItemSFX;
@@ -228,6 +229,21 @@ export class TileItem extends Item {
     setTileLight(color: string) {
         this.item.tile ??= {};
         this.item.tile.light = color;
+
+        return this;
+    }
+
+    setTileFalling(delay?: number, gravity?: number) {
+        this.item.tile ??= {};
+        this.item.tile.falling = { enabled: true };
+
+        if (delay !== undefined) {
+            this.item.tile.falling.delay = delay;
+        }
+
+        if (gravity !== undefined) {
+            this.item.tile.falling.gravity = gravity;
+        }
 
         return this;
     }

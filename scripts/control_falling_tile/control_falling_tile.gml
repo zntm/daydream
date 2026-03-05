@@ -1,147 +1,155 @@
-/// @desc Control logic for falling tile entities
-/// @function control_falling_tile(_dt)
-/// @param {real} _dt Delta time
+#macro FALLING_TILE_INITIAL_X_SPREAD  0.15
+#macro FALLING_TILE_X_FRICTION        0.92
+#macro FALLING_TILE_X_TERMINAL        3.0
 
+/// @desc Control logic for falling tile entities.
+/// @function control_falling_tile()
 function control_falling_tile()
 {
-    // Handle fall delay
-    if (fall_delay > 0)
+    /* update previous position for interpolation */
+    x_previous = x;
+    y_previous = y;
+
+    /* apply friction to x velocity manually as it's not a standard input-driven entity */
+    physics_body.vel_x *= FALLING_TILE_X_FRICTION;
+
+    if (abs(physics_body.vel_x) < 0.01)
     {
-        fall_delay -= 1 / GAME_TICK;
-        exit;
+        physics_body.vel_x = 0;
     }
+
+    /* clamp x velocity */
+    physics_body.vel_x = clamp(physics_body.vel_x, -FALLING_TILE_X_TERMINAL, FALLING_TILE_X_TERMINAL);
+
+    /* step physics system */
+    physics_body.sync_from_instance(id);
     
-    // Apply gravity
-    yvelocity += gravity_value;
+    physics_step(physics_body, input_state);
     
-    // Cap at terminal velocity
-    if (yvelocity > PHYSICS_TERMINAL_VELOCITY)
+    physics_body.sync_to_instance(id);
+
+    /* check for landing */
+    if (physics_body.collision.ground) || (physics_body.collision.wall_left) || (physics_body.collision.wall_right)
     {
-        yvelocity = PHYSICS_TERMINAL_VELOCITY;
-    }
-    
-    // Calculate new position
-    var _new_y = y + yvelocity;
-    
-    // Check for collision with solid tiles below
-    var _world_x = floor(x / TILE_SIZE);
-    var _world_y_current = floor(y / TILE_SIZE);
-    var _world_y_new = floor(_new_y / TILE_SIZE);
-    
-    var _landed = false;
-    var _land_y = _world_y_new;
-    
-    // Check each tile position we're passing through
-    for (var _check_y = _world_y_current; _check_y <= _world_y_new; _check_y++)
-    {
-        // Check for solid tile at this position
-        var _has_solid = false;
+        var _world_x = floor(x / TILE_SIZE);
+        var _world_y = floor(y / TILE_SIZE);
         
-        for (var z = 0; z < CHUNK_DEPTH; z++)
+        /* if we hit a wall but not ground, we might need to nudge to find the landing tile */
+        if (!physics_body.collision.ground)
         {
-            var _tile_below = tile_get(_world_x, _check_y + 1, z);
+            /* nudge down slightly to see if we're actually above a tile */
+            var _check_y = floor((y + 1) / TILE_SIZE);
             
-            if (_tile_below != TILE_EMPTY)
+            if (_check_y > _world_y)
             {
-                var _data = global.item_data[$ _tile_below.get_id()];
-                
-                if (_data.get_type() & (ITEM_TYPE_BIT.SOLID | ITEM_TYPE_BIT.PLATFORM))
-                {
-                    _has_solid = true;
-                    break;
-                }
+                _world_y = _check_y;
             }
         }
-        
-        if (_has_solid)
-        {
-            _landed = true;
-            _land_y = _check_y;
-            break;
-        }
-    }
-    
-    if (_landed)
-    {
-        // Check if the landing position is valid (not occupied)
-        var _existing = tile_get(_world_x, _land_y, tile_z);
-        
+
+        /* check if the landing position is available */
+        var _existing = tile_get(_world_x, _world_y, tile_z);
+
         if (_existing == TILE_EMPTY)
         {
-            // Place the tile at landing position
             var _new_tile = new Tile(tile_id);
+
             _new_tile.set_index(tile_index);
-            
-            // Copy components if they existed
+
+            /* copy components if they existed */
             if (tile_components != undefined)
             {
                 var _comp_names = struct_get_names(tile_components);
-                for (var i = 0; i < array_length(_comp_names); i++)
+
+                for (var i = array_length(_comp_names) - 1; i >= 0; --i)
                 {
                     var _name = _comp_names[i];
-                    if (string_char_at(_name, 1) != "_")  // Skip private fields
+
+                    if (string_char_at(_name, 1) != "_")
                     {
                         _new_tile.set_component(_name, tile_components.get_component(_name));
                     }
                 }
             }
-            
-            tile_place(_world_x, _land_y, tile_z, _new_tile);
-            
-            // Emit event
-            event_emit(new EventDataTileFallingLand(_world_x, _land_y, tile_z, _new_tile));
-            
-            // Play landing sound
-            var _data = global.item_data[$ tile_id];
-            var _sfx = _data.get_sfx();
+
+            tile_place(_world_x, _world_y, tile_z, _new_tile);
+
+            event_emit(new EventDataTileFallingLand(_world_x, _world_y, tile_z, _new_tile));
+
+            /* play landing sound */
+            var _item_data = global.item_data[$ tile_id];
+            var _sfx       = _item_data.get_tile_sfx();
+
             if (_sfx != undefined)
             {
-                sfx_diegetic_play(undefined, x, y, _sfx.get_id(), _sfx.get_gain(), global.settings.audio_sfx);
+                var _harvest_sfx = _sfx.get_harvest();
+
+                if (_harvest_sfx != undefined)
+                {
+                    sfx_diegetic_play(undefined, x, y, _harvest_sfx.get_id(), global.settings.audio_sfx);
+                }
             }
-            
-            // Spawn landing particles
-            var _harvest = _data.get_harvest();
+
+            /* spawn landing particles */
+            var _harvest = _item_data.get_tile_harvest();
+
             if (_harvest != undefined)
             {
                 var _particle = _harvest.get_particle();
+
                 if (_particle != undefined)
                 {
-                    for (var p = 0; p < 4; p++)
+                    var _particle_colour = _particle.get_colours();
+
+                    repeat (4)
                     {
                         spawn_particle(
-                            x + random_range(-4, 4),
-                            y + random_range(-2, 2),
+                            _world_x * TILE_SIZE + random_range(-4, 4),
+                            _world_y * TILE_SIZE + random_range(-2, 2),
                             "phantasia:particle/debris",
-                            _particle.get_colour()
+                            is_array_choose(_particle_colour)
                         );
                     }
                 }
             }
-            
-            // Check if tile above should also fall
+
+            /* rebuild vertex buffer for the landing chunk */
+            var _chunk = chunk_map_get(_world_x * TILE_SIZE, _world_y * TILE_SIZE);
+
+            if (_chunk != undefined)
+            {
+                var _vertex_buffer = _chunk.chunk_vertex_buffer[tile_z];
+
+                if (vertex_buffer_exists(_vertex_buffer))
+                {
+                    vertex_delete_buffer(_vertex_buffer);
+                }
+            }
+
+            /* check if tile above the original position should also fall */
             falling_tile_check(_world_x, origin_y - 1, tile_z);
+
+            /* update surrounding tiles for connectivity */
+            tile_update_surrounding(_world_x, _world_y, tile_z, 1, 1);
         }
         else
         {
-            // Position is blocked - drop as item instead
-            spawn_item_drop(x, y, tile_id, 1);
+            /* position is blocked - drop as item instead */
+            spawn_item_drop(x, y, new Inventory(tile_id, 1));
         }
-        
+
         instance_destroy();
+
         exit;
     }
-    
-    // Check world bounds
-    var _world_data = global.world_data[$ global.current_world.dimension];
+
+    /* check world bounds */
+    var _world_data   = global.world_data[$ global.current_world.dimension];
     var _world_height = _world_data.get_world_height();
-    
-    if (_world_y_new >= _world_height)
+
+    if (y >= _world_height * TILE_SIZE)
     {
-        // Fell out of world - just destroy
         instance_destroy();
+
         exit;
     }
-    
-    // Move to new position
-    y = _new_y;
 }

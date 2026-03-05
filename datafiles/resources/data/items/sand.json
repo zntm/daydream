@@ -15,6 +15,10 @@
                     }
                 }
             ],
+            "falling": {
+                "delay": 0,
+                "enabled": true
+            },
             "harvest": {
                 "hardness": 0.36,
                 "level": 0,
