@@ -22,7 +22,7 @@
                     "parameters": {
                         "bucket_id": "phantasia:bucket",
                         "filled_bucket_id": "phantasia:lava_bucket",
-                        "tick_delay": 24
+                        "tick_delay": 1
                     }
                 }
             ]

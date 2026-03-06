@@ -15,41 +15,19 @@
                 "hardness": 0.38,
                 "level": 0,
                 "particle": {
-                    "colour": "#phantasia:tile/particle_colour/plant",
-                    "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
+                    "frequency": "#phantasia:tile/generic/harvest_particle_frequency",
+                    "id": "#phantasia:tile/particle_colour/plant"
                 }
             },
             "placement": {
-                "condition": {
-                    "type": "every",
-                    "values": [
-                        {
-                            "condition": {
-                                "type": "some",
-                                "values": [
-                                    {
-                                        "xoffset": 0,
-                                        "yoffset": 1,
-                                        "z": "default",
-                                        "id": "#phantasia:tile/placement/plant_on"
-                                    },
-                                    {
-                                        "xoffset": 0,
-                                        "yoffset": 1,
-                                        "z": "z",
-                                        "id": "$ID"
-                                    }
-                                ]
-                            }
-                        }
-                    ]
-                }
+                "condition": "#phantasia:tile/placement/condition_plant"
             },
             "sfx": "#phantasia:tile/sfx/foliage"
         }
     },
     "properties": [
-        "phantasia:can_mirror"
+        "phantasia:can_mirror",
+        "phantasia:is_foliage"
     ],
     "sprite": "phantasia:item/bamboo",
     "type": "untouchable"

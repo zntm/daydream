@@ -62,6 +62,36 @@ const TILES_STONE = {
     ]),
 };
 
+const TILES_GRIMSTONE = {
+    top_layer: new BiomeTile("phantasia:grimstone", [
+        new TileEntry("phantasia:grimstone_wall", 4),
+        new TileEntry("$EMPTY", 1),
+    ]),
+    middle_layer: new BiomeTile("phantasia:grimstone", [
+        new TileEntry("phantasia:grimstone_wall", 4),
+        new TileEntry("$EMPTY", 1),
+    ]),
+    bottom_layer: new BiomeTile("phantasia:grimstone", [
+        new TileEntry("phantasia:grimstone_wall", 4),
+        new TileEntry("$EMPTY", 1),
+    ]),
+};
+
+const TILES_WILDROOTS = {
+    top_layer: new BiomeTile("phantasia:moss", [
+        new TileEntry("phantasia:dirt_wall", 4),
+        new TileEntry("$EMPTY", 1),
+    ]),
+    middle_layer: new BiomeTile("phantasia:dirt", [
+        new TileEntry("phantasia:dirt_wall", 4),
+        new TileEntry("$EMPTY", 1),
+    ]),
+    bottom_layer: new BiomeTile("phantasia:dirt", [
+        new TileEntry("phantasia:dirt_wall", 4),
+        new TileEntry("$EMPTY", 1),
+    ]),
+};
+
 const MOONFALL_LAYER = (base: TileEntry[], wall: TileEntry[]) =>
     new BiomeTile(base, wall).setNoiseScale(0.15);
 
@@ -226,6 +256,78 @@ export default [
                     "phantasia:tall_foliage/lumin_vine",
                     0.05,
                 ),
+            ]),
+    ),
+    // Wiltens (Mausoline cave region)
+    new DatagenReturnData(
+        "cave/wiltens.json",
+        new Biome(
+            // Use same bg / lighting as chasm for now, can be adjusted later if needed
+            new BiomeBackground("phantasia:background/chasm", 0.7),
+            "#1a1625", // A dark grimstone-esque color
+            CAVE_SKY,
+            CAVE_LIGHT,
+            TILES_GRIMSTONE,
+        )
+            .setMusic([
+                new Sound("phantasia:music/12_hours_at_ease", 0.6),
+                new Sound("phantasia:music/behind", 0.5),
+            ])
+            .setAmbience([
+                new BiomeAmbience("phantasia:sfx/ambience/cave/default", 0.001, 0.4),
+            ])
+            .setFoliage([
+                new BiomeFoliage("phantasia:rock", 0.07).setGenerateOn([
+                    "phantasia:grimstone",
+                ]),
+                new BiomeFoliage("phantasia:twig", 0.0007).setGenerateOn([
+                    "phantasia:grimstone",
+                ]),
+            ])
+            .setStructures([
+                new BiomeStructure("phantasia:tall_foliage/vine", 0.01),
+                new BiomeStructure("phantasia:ore/coal", 0.003).setRange(0, 768),
+                new BiomeStructure("phantasia:ore/copper", 0.003).setRange(0, 768),
+                new BiomeStructure("phantasia:ore/iron", 0.003).setRange(640, 768),
+                new BiomeStructure("phantasia:ore/iron", 0.003).setRange(712, 768),
+            ]),
+    ),
+    // Wildroots (Verdance cave region)
+    new DatagenReturnData(
+        "cave/wildroots.json",
+        new Biome(
+            new BiomeBackground("phantasia:background/chasm", 0.7),
+            "#2A3C24", // A dirt/mossy color
+            CAVE_SKY,
+            CAVE_LIGHT,
+            TILES_WILDROOTS,
+        )
+            .setMusic([
+                new Sound("phantasia:music/12_hours_at_ease", 0.6),
+                new Sound("phantasia:music/behind", 0.5),
+            ])
+            .setAmbience([
+                new BiomeAmbience("phantasia:sfx/ambience/cave/default", 0.001, 0.4),
+            ])
+            .setFoliage([
+                new BiomeFoliage("phantasia:rock", 0.04).setGenerateOn([
+                    "phantasia:dirt",
+                    "phantasia:moss",
+                ]),
+                new BiomeFoliage("phantasia:twig", 0.001).setGenerateOn([
+                    "phantasia:dirt",
+                    "phantasia:moss",
+                ]),
+                new BiomeFoliage("phantasia:bush", 0.05).setGenerateOn([
+                    "phantasia:moss",
+                ]),
+            ])
+            .setStructures([
+                new BiomeStructure("phantasia:tall_foliage/vine", 0.15), // Ton of regular vines
+                new BiomeStructure("phantasia:ore/coal", 0.003).setRange(0, 768),
+                new BiomeStructure("phantasia:ore/copper", 0.003).setRange(0, 768),
+                new BiomeStructure("phantasia:ore/iron", 0.003).setRange(640, 768),
+                new BiomeStructure("phantasia:ore/iron", 0.003).setRange(712, 768),
             ]),
     ),
 ];

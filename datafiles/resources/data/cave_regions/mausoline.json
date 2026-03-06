@@ -1,0 +1,12 @@
+{
+    "biomes": [
+        {
+            "id": "phantasia:cave/wiltens",
+            "weight": 1
+        }
+    ],
+    "noise_scale": 0.008,
+    "noise_threshold": 0.33,
+    "min_depth": 20,
+    "salt": 31295
+}

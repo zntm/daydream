@@ -108,6 +108,32 @@ export default [
                 }),
                 mapColor: "#E0FFFF",
             }),
+
+            // Mausoline - Dark themed region
+            new Region("mausoline", {
+                category: "temperate",
+                biomes: [
+                    new RegionBiome("phantasia:surface/emeraldine/greenia", 3, "any"),
+                ],
+                caveBiomeDefault: "phantasia:cave/chasm",
+                caveBiomes: [
+                    new RegionCaveBiome("phantasia:cave/wiltens", { minDepth: 0, noiseThreshold: 0.33, noiseScale: 0.008 })
+                ],
+                mapColor: "#3B2D46",
+            }),
+
+            // Verdance - Highly overgrown region
+            new Region("verdance", {
+                category: "humid",
+                biomes: [
+                    new RegionBiome("phantasia:surface/rotfens/boggins", 3, "any"),
+                ],
+                caveBiomeDefault: "phantasia:cave/chasm",
+                caveBiomes: [
+                    new RegionCaveBiome("phantasia:cave/wildroots", { minDepth: 0, noiseThreshold: 0.33, noiseScale: 0.008 })
+                ],
+                mapColor: "#2F5128",
+            }),
         ]
     )
 ];

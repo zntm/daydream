@@ -18,11 +18,11 @@
                 "hardness": 0.56,
                 "level": 1,
                 "particle": {
-                    "colour": [
+                    "frequency": "#phantasia:tile/generic/harvest_particle_frequency",
+                    "id": [
                         "#3B160A",
                         "#2D0B04"
-                    ],
-                    "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
+                    ]
                 }
             },
             "sfx": "#phantasia:tile/sfx/wood"

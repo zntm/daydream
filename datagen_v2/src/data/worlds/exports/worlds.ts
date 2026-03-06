@@ -109,7 +109,7 @@ export default [
                 ]),
             ),
             0.5,
-            ["emeraldine", "rotfens", "dustbunny", "borea", "glacien"],
+            ["emeraldine", "rotfens", "dustbunny", "borea", "glacien", "mausoline", "verdance"],
             new WorldBackground(
                 "@phantasia:sky/playground_clouds",
                 [

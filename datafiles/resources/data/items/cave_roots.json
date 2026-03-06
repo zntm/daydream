@@ -6,12 +6,17 @@
                 "lowpass": 0.05,
                 "reverb": 0
             },
+            "drops": [
+                {
+                    "id": "phantasia:cave_roots"
+                }
+            ],
             "harvest": {
                 "hardness": 0.38,
                 "level": 0,
                 "particle": {
-                    "colour": "#phantasia:tile/particle_colour/plant",
-                    "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
+                    "frequency": "#phantasia:tile/generic/harvest_particle_frequency",
+                    "id": "#phantasia:tile/particle_colour/plant"
                 }
             },
             "placement": {

@@ -1156,6 +1156,8 @@
     {"$GMIncludedFile":"","%Name":"swamp.json","CopyToMask":-1,"filePath":"datafiles/resources/data/biomes/surface","name":"swamp.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"taiga.json","CopyToMask":-1,"filePath":"datafiles/resources/data/biomes/surface","name":"taiga.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"lumin.json","CopyToMask":-1,"filePath":"datafiles/resources/data/cave_regions","name":"lumin.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"mausoline.json","CopyToMask":-1,"filePath":"datafiles/resources/data/cave_regions","name":"mausoline.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
+    {"$GMIncludedFile":"","%Name":"verdance.json","CopyToMask":-1,"filePath":"datafiles/resources/data/cave_regions","name":"verdance.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":".keep","CopyToMask":-1,"filePath":"datafiles/resources/data/craftingRecipes","name":".keep","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"crafting_recipes.json","CopyToMask":-1,"filePath":"datafiles/resources/data/craftingRecipes","name":"crafting_recipes.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},
     {"$GMIncludedFile":"","%Name":"chicken.json","CopyToMask":-1,"filePath":"datafiles/resources/data/creatures","name":"chicken.json","resourceType":"GMIncludedFile","resourceVersion":"2.0",},

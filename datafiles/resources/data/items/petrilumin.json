@@ -18,8 +18,8 @@
                 "hardness": 0.36,
                 "level": 0,
                 "particle": {
-                    "colour": "#phantasia:tile/particle_colour/lumin_moss",
-                    "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
+                    "frequency": "#phantasia:tile/generic/harvest_particle_frequency",
+                    "id": "#phantasia:tile/particle_colour/lumin_moss"
                 }
             },
             "sfx": "#phantasia:tile/sfx/stone"

@@ -1,0 +1,12 @@
+{
+    "biomes": [
+        {
+            "id": "phantasia:cave/wildroots",
+            "weight": 1
+        }
+    ],
+    "noise_scale": 0.008,
+    "noise_threshold": 0.0,
+    "min_depth": 20,
+    "salt": 31295
+}

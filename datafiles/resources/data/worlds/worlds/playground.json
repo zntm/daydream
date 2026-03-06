@@ -216,7 +216,9 @@
         "rotfens",
         "dustbunny",
         "borea",
-        "glacien"
+        "glacien",
+        "mausoline",
+        "verdance"
     ],
     "spawn_interval": 14,
     "surface": {

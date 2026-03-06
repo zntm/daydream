@@ -1,7 +1,12 @@
 {
-    "biome": "phantasia:cave/moonfall",
+    "biomes": [
+        {
+            "id": "phantasia:cave/moonfall",
+            "weight": 1
+        }
+    ],
     "noise_scale": 0.008,
-    "noise_threshold": 0.2,
+    "noise_threshold": 0.66,
     "min_depth": 20,
     "salt": 31295
 }

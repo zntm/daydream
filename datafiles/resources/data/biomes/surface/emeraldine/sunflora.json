@@ -68,7 +68,7 @@
             },
             {
                 "position": 0.9,
-                "color": "#2B243F"
+                "color": "#2b243f"
             }
         ]
     },
@@ -123,7 +123,7 @@
         "top_layer": {
             "base": [
                 {
-                    "id": "phantasia:sand"
+                    "id": "phantasia:grass_block"
                 }
             ],
             "wall": [

@@ -1,5 +1,5 @@
-global.cave_region_data = [];
-global.cave_region_data_length = 0;
+global.cave_region_data = {}
+global.cave_region_list = []
 
 /// @desc Initialize special cave regions from data files.
 function init_cave_region(_directory, _namespace = "phantasia", _id = undefined)
@@ -31,16 +31,19 @@ function init_cave_region(_directory, _namespace = "phantasia", _id = undefined)
             {
                 var _name_clean = string_delete(_name, string_length(_name) - 4, 5);
 
-                var _region = new CaveRegionData(_name_clean, _json);
+                var _internal_id = _json[$ "id"] ?? _name_clean;
+                var _full_id = (string_pos(":", _internal_id) > 0) ? _internal_id : $"{_namespace}:{_internal_id}";
 
-                array_push(global.cave_region_data, _region);
+                var _region = new CaveRegionData(_full_id, _json);
 
-                dbg_timer("init_cave_region", $"[Init] Loaded Cave Region: \'{_name_clean}\'");
+                global.cave_region_data[$ _full_id] = _region;
+
+                array_push(global.cave_region_list, _region);
+
+                dbg_timer("init_cave_region", $"[Init] Loaded Cave Region: \'{_full_id}\'");
+
+                delete _json;
             }
-
-            delete _json;
         }
     }
-
-    global.cave_region_data_length = array_length(global.cave_region_data);
 }

@@ -1,13 +1,4 @@
 {
-    "ambience": [
-        {
-            "id": "phantasia:sfx/ambience/cave/default",
-            "chance": 0.001,
-            "gain": 0.4,
-            "radius_min": 3,
-            "radius_max": 16
-        }
-    ],
     "background": {
         "blend": 0.7,
         "id": "phantasia:background/chasm"
@@ -81,20 +72,13 @@
             }
         ]
     },
-    "structures": [
-        {
-            "id": "phantasia:tall_foliage/lumin_vine",
-            "chance": 0.05
-        }
-    ],
     "tile": {
         "bottom_layer": {
-            "noise_scale": 0.15,
             "base": [
                 {
                     "id": "phantasia:petrilumin",
                     "noise_min": 0,
-                    "noise_max": 128
+                    "noise_max": 60
                 },
                 {
                     "id": {
@@ -111,7 +95,7 @@
                         "type": "smart_value:choose_weighted"
                     },
                     "weight": 4,
-                    "noise_min": 128,
+                    "noise_min": 60,
                     "noise_max": 256
                 }
             ],
@@ -119,12 +103,12 @@
                 {
                     "id": "phantasia:petrilumin_wall",
                     "noise_min": 0,
-                    "noise_max": 128
+                    "noise_max": 60
                 },
                 {
                     "id": "phantasia:lumin_moss_wall",
                     "weight": 4,
-                    "noise_min": 128,
+                    "noise_min": 60,
                     "noise_max": 252
                 },
                 {
@@ -135,12 +119,11 @@
             ]
         },
         "middle_layer": {
-            "noise_scale": 0.15,
             "base": [
                 {
                     "id": "phantasia:petrilumin",
                     "noise_min": 0,
-                    "noise_max": 128
+                    "noise_max": 60
                 },
                 {
                     "id": {
@@ -157,7 +140,7 @@
                         "type": "smart_value:choose_weighted"
                     },
                     "weight": 4,
-                    "noise_min": 128,
+                    "noise_min": 60,
                     "noise_max": 256
                 }
             ],
@@ -165,12 +148,12 @@
                 {
                     "id": "phantasia:petrilumin_wall",
                     "noise_min": 0,
-                    "noise_max": 128
+                    "noise_max": 60
                 },
                 {
                     "id": "phantasia:lumin_moss_wall",
                     "weight": 4,
-                    "noise_min": 128,
+                    "noise_min": 60,
                     "noise_max": 252
                 },
                 {
@@ -181,12 +164,11 @@
             ]
         },
         "top_layer": {
-            "noise_scale": 0.15,
             "base": [
                 {
                     "id": "phantasia:petrilumin",
                     "noise_min": 0,
-                    "noise_max": 128
+                    "noise_max": 60
                 },
                 {
                     "id": {
@@ -203,7 +185,7 @@
                         "type": "smart_value:choose_weighted"
                     },
                     "weight": 4,
-                    "noise_min": 128,
+                    "noise_min": 60,
                     "noise_max": 256
                 }
             ],
@@ -211,12 +193,12 @@
                 {
                     "id": "phantasia:petrilumin_wall",
                     "noise_min": 0,
-                    "noise_max": 128
+                    "noise_max": 60
                 },
                 {
                     "id": "phantasia:lumin_moss_wall",
                     "weight": 4,
-                    "noise_min": 128,
+                    "noise_min": 60,
                     "noise_max": 252
                 },
                 {

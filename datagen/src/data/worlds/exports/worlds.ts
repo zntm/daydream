@@ -91,7 +91,9 @@ export default [
                 "rotfens",
                 "dustbunny",
                 "borea",
-                "glacien"
+                "glacien",
+                "mausoline",
+                "verdance"
             ],
             new WorldBackground(
                 "@phantasia:sky/playground_clouds",

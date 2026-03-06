@@ -164,7 +164,6 @@ export default [
         }),
     ),
 
-    // Glacien - Frozen tundra region
     new DatagenReturnData(
         "glacien.json",
         new Region("glacien", {
@@ -195,6 +194,63 @@ export default [
                 amplitudeMax: 45,
             }),
             mapColor: "#E0FFFF",
+        }),
+    ),
+
+    // Mausoline - Dark themed region
+    new DatagenReturnData(
+        "mausoline.json",
+        new Region("mausoline", {
+            category: "temperate",
+            biomes: [
+                // Surface biomes left minimal for now, or just some placeholder
+                new RegionBiome("phantasia:surface/emeraldine/greenia", 3, "any"),
+            ],
+            caveBiomeDefault: "phantasia:cave/chasm",
+            caveBiomes: [
+                new RegionCaveBiome("phantasia:cave/wiltens", {
+                    minDepth: 0,
+                    // The request asked for generation size to be 1/3 lumin, 1/3 mausoline, 1/3 verdance.
+                    // Assuming we generate them alongside each other. We use a somewhat large noiseScale
+                    // so it forms large chunks. Z-layers and thresholds distinguish them.
+                    noiseThreshold: 0.33,
+                    noiseScale: 0.05,
+                    weight: 10,
+                }),
+                new RegionCaveBiome("phantasia:cave/depths", {
+                    minDepth: 150,
+                    noiseThreshold: 0.7,
+                    noiseScale: 0.015,
+                }),
+            ],
+            mapColor: "#3B2D46",
+        }),
+    ),
+
+    // Verdance - Highly overgrown region
+    new DatagenReturnData(
+        "verdance.json",
+        new Region("verdance", {
+            category: "humid",
+            biomes: [
+                // Surface biomes left minimal for now
+                new RegionBiome("phantasia:surface/rotfens/boggins", 3, "any"),
+            ],
+            caveBiomeDefault: "phantasia:cave/chasm",
+            caveBiomes: [
+                new RegionCaveBiome("phantasia:cave/wildroots", {
+                    minDepth: 0,
+                    noiseThreshold: 0.33,
+                    noiseScale: 0.05,
+                    weight: 10,
+                }),
+                new RegionCaveBiome("phantasia:cave/depths", {
+                    minDepth: 150,
+                    noiseThreshold: 0.7,
+                    noiseScale: 0.015,
+                }),
+            ],
+            mapColor: "#2F5128",
         }),
     ),
 ];
