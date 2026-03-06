@@ -36,7 +36,7 @@ function region_gen_create(_config = {})
     {
         if (_map_buffer != undefined) && (_map_width > 0) && (_map_height > 0)
         {
-            /* build from the painted region sprite — heat = row, humidity = column */
+            /* build from the painted region sprite - heat = row, humidity = column */
             for (var _h = REGION_MAP_SIZE - 1; _h >= 0; --_h)
             {
                 var _py = clamp(floor(_h / (REGION_MAP_SIZE - 1) * (_map_height - 1)), 0, _map_height - 1);

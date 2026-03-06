@@ -1,7 +1,7 @@
 #macro LIQUID_LEVEL_MAX 8
 #macro LIQUID_FLOW_TICK_DELAY 8
 
-/* complete liquid flow simulation — replaces flow.daydream */
+/* complete liquid flow simulation - replaces flow.daydream */
 function liquid_flow(_x, _y, _z, _parameter = {})
 {
     var _tile = tile_get(_x, _y, _z);
@@ -30,7 +30,7 @@ function liquid_flow(_x, _y, _z, _parameter = {})
         _parameter[$ "tick_delay"] = _tick_delay;
     }
     
-    /* empty tile — remove */
+    /* empty tile - remove */
     if (_level <= 0)
     {
         tile_place(_x, _y, _z, TILE_EMPTY);
@@ -50,7 +50,7 @@ function liquid_flow(_x, _y, _z, _parameter = {})
         
         if (_tile_down == TILE_EMPTY)
         {
-            /* empty below — move entire tile down */
+            /* empty below - move entire tile down */
             var _new_tile = new Tile(_id);
             _new_tile.set_component("level", _level);
             _new_tile.set_component("flow_direction", _flow_dir);
@@ -62,7 +62,7 @@ function liquid_flow(_x, _y, _z, _parameter = {})
         }
         else if (_tile_down.get_id() == _id)
         {
-            /* same liquid below — transfer level */
+            /* same liquid below - transfer level */
             var _level_down = _tile_down.get_component("level") ?? 0;
             var _space_down = LIQUID_LEVEL_MAX - _level_down;
             
@@ -83,7 +83,7 @@ function liquid_flow(_x, _y, _z, _parameter = {})
         }
         else
         {
-            /* different liquid below — check fluid collision */
+            /* different liquid below - check fluid collision */
             var _interaction = liquid_flow_check_collision(_fluid_collisions, _tile_down.get_id());
             
             if (_interaction != undefined)
@@ -114,7 +114,7 @@ function liquid_flow(_x, _y, _z, _parameter = {})
             
             if (_tile_diag == TILE_EMPTY)
             {
-                /* empty diagonal — move entire tile */
+                /* empty diagonal - move entire tile */
                 var _new_tile = new Tile(_id);
                 _new_tile.set_component("level", _level);
                 _new_tile.set_component("flow_direction", _dx);
@@ -127,7 +127,7 @@ function liquid_flow(_x, _y, _z, _parameter = {})
             }
             else if (_tile_diag.get_id() == _id)
             {
-                /* same liquid diagonal — transfer */
+                /* same liquid diagonal - transfer */
                 var _level_diag = _tile_diag.get_component("level") ?? 0;
                 var _space_diag = LIQUID_LEVEL_MAX - _level_diag;
                 
@@ -257,7 +257,7 @@ function liquid_flow(_x, _y, _z, _parameter = {})
     }
 }
 
-/* check fluid collision table — returns result tile id or undefined */
+/* check fluid collision table - returns result tile id or undefined */
 function liquid_flow_check_collision(_collisions, _other_id)
 {
     for (var i = array_length(_collisions) - 1; i >= 0; --i)

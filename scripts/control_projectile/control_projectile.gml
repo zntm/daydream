@@ -1,4 +1,4 @@
-/// @desc Projectile step — physics, collisions, particles, and script hooks.
+/// @desc Projectile step - physics, collisions, particles, and script hooks.
 /// @param {Real} [_dt] Delta time (defaults to 1.0).
 function control_projectile(_dt = 1.0)
 {

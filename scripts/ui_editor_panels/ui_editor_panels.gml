@@ -1,4 +1,4 @@
-/* ui editor panels — file browser, element tree, and property panel */
+/* ui editor panels - file browser, element tree, and property panel */
 /* drawn on top of the game via draw_gui, uses raw draw calls */
 
 

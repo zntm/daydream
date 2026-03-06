@@ -1,0 +1,46 @@
+{
+    "id": "emeraldine",
+    "category": "temperate",
+    "biomes": [
+        {
+            "id": "phantasia:surface/emeraldine/greenia",
+            "weight": 3,
+            "terrain_preference": "flat"
+        },
+        {
+            "id": "phantasia:surface/emeraldine/birchwoods",
+            "weight": 2,
+            "terrain_preference": "flat"
+        },
+        {
+            "id": "phantasia:surface/emeraldine/sakurai",
+            "weight": 1,
+            "terrain_preference": "flat"
+        },
+        {
+            "id": "phantasia:surface/emeraldine/sunflora",
+            "weight": 2,
+            "terrain_preference": "flat"
+        },
+        {
+            "id": "phantasia:surface/emeraldine/honeygrove",
+            "weight": 1,
+            "terrain_preference": "flat"
+        }
+    ],
+    "cave_biome_default": "phantasia:cave/chasm",
+    "cave_biomes": [
+        {
+            "biome": "phantasia:cave/depths",
+            "min_depth": 150,
+            "noise_threshold": 0.7,
+            "noise_scale": 0.015
+        }
+    ],
+    "terrain": {
+        "height_offset": 0,
+        "amplitude_min": 30,
+        "amplitude_max": 60
+    },
+    "map_color": "#2D5A27"
+}

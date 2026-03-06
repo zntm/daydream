@@ -1,5 +1,5 @@
 //
-// Lighting fragment shader — outputs full RGB color for multiplicative tinting
+// Lighting fragment shader - outputs full RGB color for multiplicative tinting
 //
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;

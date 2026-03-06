@@ -855,7 +855,7 @@ function ui_apply_property(_element, _prop, _link, _variables)
             {
                 _element.add_binding(_key, _value_node.name);
             }
-            /* array-indexed binding: *name[index] — register as a callable resolver */
+            /* array-indexed binding: *name[index] - register as a callable resolver */
             else if (_value_node.type == UI_AST.ARRAY_INDEX)
             {
                 var _arr_name = _value_node.name;

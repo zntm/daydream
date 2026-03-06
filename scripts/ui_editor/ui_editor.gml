@@ -1,4 +1,4 @@
-/* in-game ui editor — dev tool for visually editing .ui files */
+/* in-game ui editor - dev tool for visually editing .ui files */
 /* toggled with f4, guarded by IS_DEVELOPER_MODE */
 
 
@@ -72,7 +72,7 @@ function ui_editor_toggle()
 }
 
 
-/* open the editor — auto-loads current menu's .ui file if in a menu room */
+/* open the editor - auto-loads current menu's .ui file if in a menu room */
 function ui_editor_open()
 {
     var _editor = global.ui_editor;
@@ -93,7 +93,7 @@ function ui_editor_open()
     }
     else
     {
-        /* no match — show file browser */
+        /* no match - show file browser */
         _editor.show_file_browser = true;
 
         PRINT("[UI Editor] opened (file browser)");
@@ -284,7 +284,7 @@ function ui_editor_save()
 
 
 /* =============================================================================
-   per-frame step — drag, selection, input
+   per-frame step - drag, selection, input
    ============================================================================= */
 
 function ui_editor_step()
@@ -313,7 +313,7 @@ function ui_editor_step()
         exit;
     }
 
-    /* mouse press — check handles, then body, then hit test */
+    /* mouse press - check handles, then body, then hit test */
     if (_editor.preview_instance != undefined) && (mouse_check_button_pressed(mb_left))
     {
         var _gui_w     = global.gui_width;
@@ -389,7 +389,7 @@ function ui_editor_step()
 
 
 /* =============================================================================
-   drag system — move and resize
+   drag system - move and resize
    ============================================================================= */
 
 /* begin a drag operation on the selected element */
@@ -478,7 +478,7 @@ function ui_editor_drag_update(_editor, _mx, _my)
 }
 
 
-/* finalize a drag — compute deltas and write to ast */
+/* finalize a drag - compute deltas and write to ast */
 function ui_editor_drag_end(_editor)
 {
     var _element = _editor.selected_element;
@@ -605,7 +605,7 @@ function ui_editor_hit_handle(_element, _mx, _my)
 
 
 /* =============================================================================
-   drawing — overlays, handles, outlines
+   drawing - overlays, handles, outlines
    ============================================================================= */
 
 /* draw the editor overlay */
@@ -760,7 +760,7 @@ function ui_editor_ast_set_property(_node, _key, _ast_value)
         }
     }
 
-    /* not found — add new property */
+    /* not found - add new property */
     array_push(_node.properties, new UIASTProperty(_key, _ast_value));
 }
 

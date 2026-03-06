@@ -2,7 +2,7 @@ function RegionData(_id, _config = {}) constructor
 {
     ___id = _id;
     
-    // Parse biomes array — each entry has { id, weight, terrain_preference }
+    // Parse biomes array - each entry has { id, weight, terrain_preference }
     var _biomes_raw = _config[$ "biomes"] ?? [];
     ___biomes = [];
     ___biome_count = array_length(_biomes_raw);
@@ -124,7 +124,7 @@ function RegionData(_id, _config = {}) constructor
         }
         
         // Use noise to pick a biome coherently across horizontal space
-        // NOTE: Only use _x for coherence — using _y (surface height) caused rapid
+        // NOTE: Only use _x for coherence - using _y (surface height) caused rapid
         // biome alternation because surface height varies per column at high frequency.
         var _noise = open_simplex_noise(
             _x * ___biome_noise_scale,

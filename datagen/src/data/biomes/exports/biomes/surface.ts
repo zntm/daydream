@@ -152,10 +152,10 @@ const TILES_STONE = {
 
 export default [
     // ========================================================================
-    // EMERALDINE — Lush temperate biomes
+    // EMERALDINE - Lush temperate biomes
     // ========================================================================
 
-    // Greenia — Classic green forest
+    // Greenia - Classic green forest
     new DatagenReturnData(
         "surface/emeraldine/greenia.json",
         new Biome(
@@ -187,7 +187,7 @@ export default [
             ]),
     ),
 
-    // Birchwoods — White birch forest
+    // Birchwoods - White birch forest
     new DatagenReturnData(
         "surface/emeraldine/birchwoods.json",
         new Biome(
@@ -215,7 +215,7 @@ export default [
             ]),
     ),
 
-    // Sakurai — Cherry blossom themed
+    // Sakurai - Cherry blossom themed
     new DatagenReturnData(
         "surface/emeraldine/sakurai.json",
         new Biome(
@@ -242,7 +242,7 @@ export default [
             ]),
     ),
 
-    // Sunflora — Sunflower fields
+    // Sunflora - Sunflower fields
     new DatagenReturnData(
         "surface/emeraldine/sunflora.json",
         new Biome(
@@ -269,7 +269,7 @@ export default [
             ]),
     ),
 
-    // Honeygrove — Sweet meadow
+    // Honeygrove - Sweet meadow
     new DatagenReturnData(
         "surface/emeraldine/honeygrove.json",
         new Biome(
@@ -297,10 +297,10 @@ export default [
     ),
 
     // ========================================================================
-    // ROTFENS — Humid swampy biomes
+    // ROTFENS - Humid swampy biomes
     // ========================================================================
 
-    // Mangroots — Mangrove roots and murky water
+    // Mangroots - Mangrove roots and murky water
     new DatagenReturnData(
         "surface/rotfens/mangroots.json",
         new Biome(
@@ -329,7 +329,7 @@ export default [
             ]),
     ),
 
-    // Boggins — Boggy wetlands
+    // Boggins - Boggy wetlands
     new DatagenReturnData(
         "surface/rotfens/boggins.json",
         new Biome(
@@ -358,10 +358,10 @@ export default [
     ),
 
     // ========================================================================
-    // DUSTBUNNY — Arid desert biomes
+    // DUSTBUNNY - Arid desert biomes
     // ========================================================================
 
-    // Dune — Sandy desert
+    // Dune - Sandy desert
     new DatagenReturnData(
         "surface/dustbunny/dune.json",
         new Biome(
@@ -388,7 +388,7 @@ export default [
             ]),
     ),
 
-    // Redwaste — Red desert
+    // Redwaste - Red desert
     new DatagenReturnData(
         "surface/dustbunny/redwaste.json",
         new Biome(
@@ -412,7 +412,7 @@ export default [
             .setStructures([]),
     ),
 
-    // Badlands — Hilly rocky desert
+    // Badlands - Hilly rocky desert
     new DatagenReturnData(
         "surface/dustbunny/badlands.json",
         new Biome(
@@ -435,7 +435,7 @@ export default [
             .setStructures([]),
     ),
 
-    // Oasin — Desert oasis
+    // Oasin - Desert oasis
     new DatagenReturnData(
         "surface/dustbunny/oasin.json",
         new Biome(
@@ -458,7 +458,7 @@ export default [
             .setStructures([]),
     ),
 
-    // Goldgrass — Golden steppe
+    // Goldgrass - Golden steppe
     new DatagenReturnData(
         "surface/dustbunny/goldgrass.json",
         new Biome(
@@ -483,10 +483,10 @@ export default [
     ),
 
     // ========================================================================
-    // BOREA — Cold boreal biomes
+    // BOREA - Cold boreal biomes
     // ========================================================================
 
-    // Pineling — Dense pine forest
+    // Pineling - Dense pine forest
     new DatagenReturnData(
         "surface/borea/pineling.json",
         new Biome(
@@ -516,7 +516,7 @@ export default [
             ]),
     ),
 
-    // Silversteep — High-altitude rocky taiga
+    // Silversteep - High-altitude rocky taiga
     new DatagenReturnData(
         "surface/borea/silversteep.json",
         new Biome(
@@ -542,7 +542,7 @@ export default [
             ]),
     ),
 
-    // Needlefall — Sparse coniferous forest
+    // Needlefall - Sparse coniferous forest
     new DatagenReturnData(
         "surface/borea/needlefall.json",
         new Biome(
@@ -571,7 +571,7 @@ export default [
             ]),
     ),
 
-    // Aurospring — Aurora meadow with flowers
+    // Aurospring - Aurora meadow with flowers
     new DatagenReturnData(
         "surface/borea/aurospring.json",
         new Biome(
@@ -598,10 +598,10 @@ export default [
     ),
 
     // ========================================================================
-    // GLACIEN — Frozen tundra biomes
+    // GLACIEN - Frozen tundra biomes
     // ========================================================================
 
-    // Tundrune — Flat tundra  
+    // Tundrune - Flat tundra  
     new DatagenReturnData(
         "surface/glacien/tundrune.json",
         new Biome(
@@ -625,7 +625,7 @@ export default [
             .setStructures([]),
     ),
 
-    // Flakerocks — Rocky frozen peaks
+    // Flakerocks - Rocky frozen peaks
     new DatagenReturnData(
         "surface/glacien/flakerocks.json",
         new Biome(
@@ -648,7 +648,7 @@ export default [
             .setStructures([]),
     ),
 
-    // Frostenisle — Flat frozen plain
+    // Frostenisle - Flat frozen plain
     new DatagenReturnData(
         "surface/glacien/frostenisle.json",
         new Biome(
@@ -673,7 +673,7 @@ export default [
     ),
 
     // ========================================================================
-    // OCEAN — Shared between regions (kept as standalone)
+    // OCEAN - Shared between regions (kept as standalone)
     // ========================================================================
     new DatagenReturnData(
         "surface/ocean.json",

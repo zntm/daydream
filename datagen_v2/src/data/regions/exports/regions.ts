@@ -7,8 +7,9 @@ import {
 } from "../lib/Region";
 
 export default [
-    new DatagenReturnData("regions.json", [
-        // Emeraldine — Lush temperate region
+    // Emeraldine - Lush temperate region
+    new DatagenReturnData(
+        "emeraldine.json",
         new Region("emeraldine", {
             category: "temperate",
             biomes: [
@@ -53,8 +54,11 @@ export default [
             }),
             mapColor: "#2D5A27",
         }),
+    ),
 
-        // Rotfens — Humid swampy region
+    // Rotfens - Humid swampy region
+    new DatagenReturnData(
+        "rotfens.json",
         new Region("rotfens", {
             category: "humid",
             biomes: [
@@ -79,8 +83,11 @@ export default [
             }),
             mapColor: "#3D3D2D",
         }),
+    ),
 
-        // Dustbunny — Arid desert region
+    // Dustbunny - Arid desert region
+    new DatagenReturnData(
+        "dustbunny.json",
         new Region("dustbunny", {
             category: "arid",
             biomes: [
@@ -116,8 +123,11 @@ export default [
             }),
             mapColor: "#C2B280",
         }),
+    ),
 
-        // Borea — Cold boreal region
+    // Borea - Cold boreal region
+    new DatagenReturnData(
+        "borea.json",
         new Region("borea", {
             category: "cold",
             biomes: [
@@ -152,8 +162,11 @@ export default [
             }),
             mapColor: "#7BA1C7",
         }),
+    ),
 
-        // Glacien — Frozen tundra region
+    // Glacien - Frozen tundra region
+    new DatagenReturnData(
+        "glacien.json",
         new Region("glacien", {
             category: "frozen",
             biomes: [
@@ -183,5 +196,5 @@ export default [
             }),
             mapColor: "#E0FFFF",
         }),
-    ]),
+    ),
 ];

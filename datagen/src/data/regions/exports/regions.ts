@@ -5,7 +5,7 @@ export default [
     new DatagenReturnData(
         "regions/regions.json",
         [
-            // Emeraldine — Lush temperate region
+            // Emeraldine - Lush temperate region
             new Region("emeraldine", {
                 category: "temperate",
                 biomes: [
@@ -27,7 +27,7 @@ export default [
                 mapColor: "#2D5A27",
             }),
 
-            // Rotfens — Humid swampy region
+            // Rotfens - Humid swampy region
             new Region("rotfens", {
                 category: "humid",
                 biomes: [
@@ -46,7 +46,7 @@ export default [
                 mapColor: "#3D3D2D",
             }),
 
-            // Dustbunny — Arid desert region
+            // Dustbunny - Arid desert region
             new Region("dustbunny", {
                 category: "arid",
                 biomes: [
@@ -68,7 +68,7 @@ export default [
                 mapColor: "#C2B280",
             }),
 
-            // Borea — Cold boreal region
+            // Borea - Cold boreal region
             new Region("borea", {
                 category: "cold",
                 biomes: [
@@ -89,7 +89,7 @@ export default [
                 mapColor: "#7BA1C7",
             }),
 
-            // Glacien — Frozen tundra region
+            // Glacien - Frozen tundra region
             new Region("glacien", {
                 category: "frozen",
                 biomes: [

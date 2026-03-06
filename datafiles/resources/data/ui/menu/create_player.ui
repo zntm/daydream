@@ -44,7 +44,7 @@ var COL_W = 440
             position = ORIGIN_TOP_LEFT + (COL_W + 1, 0)
             size = (880 - COL_W - 1, 360)
 
-            /* type tabs — Hair, Skin, Outfit etc. injected via GML */
+            /* type tabs - Hair, Skin, Outfit etc. injected via GML */
             @area(type_tabs) {
                 position = ORIGIN_TOP_LEFT + (16, 8)
                 size = (408, 28)
@@ -110,7 +110,7 @@ var COL_W = 440
         }
     }
 
-    /* name / voice / pitch — flat horizontal row at bottom-left */
+    /* name / voice / pitch - flat horizontal row at bottom-left */
     @area(bottom_fields) {
         position = ORIGIN_BOTTOM_LEFT + (40, -36)
         size = (COL_W - 40, 24)

@@ -139,7 +139,7 @@ function PostProcess() constructor
         }
         
         /* draw final result back into application_surface
-         * we are already inside the Draw event which targets application_surface —
+         * we are already inside the Draw event which targets application_surface -
          * surface_set_target(application_surface) keeps world matrices active so
          * draw_surface at (0,0) lands at world origin, not the viewport.
          * instead: draw directly in camera-world space so the result fills the view.
