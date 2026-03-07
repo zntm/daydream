@@ -14,6 +14,16 @@ function control_update_gui_size()
         obj_Menu_Control_Render.yscale = _gui_scale;
     }
 
+    /* update camera dimensions based on aspect ratio (base height = 540) */
+    var _aspect_ratio = _width / _height;
+    var _cam_h = 540;
+    var _cam_w = _cam_h * _aspect_ratio;
+
+    global.camera_width  = _cam_w;
+    global.camera_height = _cam_h;
+
+    camera_set_view_size(view_camera[0], _cam_w, _cam_h);
+
     /* update gui_root to use logical dimensions (Width = WindowWidth / Scale, Height = 540) */
     if (variable_global_exists("gui_root")) && (global.gui_root != undefined)
     {

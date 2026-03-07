@@ -202,10 +202,9 @@ global.chat_command_hint = undefined;
 global.gui_deferred_text = [];
 
 /* init declarative UI system */
-var _design_w = 960;
-
-var _logical_width  = _design_w / global.gui_scale;
-var _logical_height = global.window_height / (global.window_width / _logical_width);
+var _aspect_ratio = global.window_width / global.window_height;
+var _logical_height = 540;
+var _logical_width  = _logical_height * _aspect_ratio;
 
 global.gui_root = new UIElement(0, 0, _logical_width, _logical_height);
 

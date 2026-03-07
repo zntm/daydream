@@ -185,7 +185,8 @@ if (is_opened & (WORLD_OPENED_BOOL.PAUSE | WORLD_OPENED_BOOL.EXIT))
 }
 
 var _gui_scale = global.gui_scale;
-var _gui_w = 960 * _gui_scale;
+var _aspect_ratio = global.window_width / global.window_height;
+var _gui_w = (_aspect_ratio * 540) * _gui_scale;
 var _gui_h = 540 * _gui_scale;
 
 /* uniform scale based on height */

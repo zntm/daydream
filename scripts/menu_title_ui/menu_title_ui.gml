@@ -12,7 +12,7 @@ function menu_title_ui_load()
 	/* ensure gui_root exists */
 	if (!variable_global_exists("gui_root")) || (global.gui_root == undefined)
 	{
-		global.gui_root = new UIElement(0, 0, 960, 540);
+		global.gui_root = ui_create_root();
 		global.gui_root.element_name = "gui_root";
 	}
 	
@@ -140,14 +140,16 @@ function menu_title_ui_init()
 }
 
 
+
 function menu_title_ui_popup_exit()
 {
 	/* create popup container */
-	var _popup_root = new UIElement(0, 0, 960, 540);
+	var _popup_root = ui_create_root();
 
-	var _bg = new UIElement(300, 196, 360, 148);
+	var _bg = new UIElement(0, 0, 360, 148);
 	_bg.background_color = #1e1e2e;
 	_bg.border_color = #3a3a4a;
+    _bg.set_anchor("center", "middle");
 	_bg.parent = _popup_root;
 	array_push(_popup_root.children, _bg);
 

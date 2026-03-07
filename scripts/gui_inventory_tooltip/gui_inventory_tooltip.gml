@@ -85,7 +85,7 @@ function gui_inventory_tooltip(_gui_multiplier_x, _gui_multiplier_y)
     
     var _inventory_scale = _data.get_inventory_scale();
     
-    var _sprite_xscale = _gui_multiplier_x * _inventory_scale;
+    var _sprite_xscale = _gui_multiplier_y * _inventory_scale;
     var _sprite_yscale = _gui_multiplier_y * _inventory_scale;
     
     var _sprite_width  = _sprite.get_width();
@@ -97,7 +97,7 @@ function gui_inventory_tooltip(_gui_multiplier_x, _gui_multiplier_y)
     var _surface_width  = (_inventory_scale * _sprite_width) + string_width(_item_name) + GUI_INVENTORY_TOOLTIP_PADDING_NAME;
     var _surface_height = (_inventory_scale * _sprite_height);
     
-    var _sprite_x = _gui_multiplier_x * _sprite_xoffset;
+    var _sprite_x = _gui_multiplier_y * _sprite_xoffset;
     var _sprite_y = _gui_multiplier_y * _sprite_yoffset;
     
     if (_sprite_xoffset < TILE_SIZE / 2)
@@ -122,7 +122,7 @@ function gui_inventory_tooltip(_gui_multiplier_x, _gui_multiplier_y)
         _sprite_y -= _sprite_yoffset - (TILE_SIZE / 2);
     }
     
-    var _name_x = (_sprite_xscale * _sprite_width) + (_gui_multiplier_x * (GUI_INVENTORY_TOOLTIP_TEXT_XOFFSET + GUI_INVENTORY_TOOLTIP_PADDING_NAME));
+    var _name_x = (_sprite_xscale * _sprite_width) + (_gui_multiplier_y * (GUI_INVENTORY_TOOLTIP_TEXT_XOFFSET + GUI_INVENTORY_TOOLTIP_PADDING_NAME));
     var _name_y = _sprite_y - (_sprite_yscale / 2);
     
     if (_item_description != undefined)
@@ -135,13 +135,13 @@ function gui_inventory_tooltip(_gui_multiplier_x, _gui_multiplier_y)
     
     if (!surface_exists(_surface))
     {
-        _surface = surface_create(ceil(_surface_width * _gui_multiplier_x), ceil(_surface_height * _gui_multiplier_y));
+        _surface = surface_create(ceil(_surface_width * _gui_multiplier_y), ceil(_surface_height * _gui_multiplier_y));
         
         surface_inventory.tooltip.surface = _surface;
     }
     else
     {
-        surface_resize(_surface, ceil(_surface_width * _gui_multiplier_x), ceil(_surface_height * _gui_multiplier_y));
+        surface_resize(_surface, ceil(_surface_width * _gui_multiplier_y), ceil(_surface_height * _gui_multiplier_y));
     }
     
     surface_set_target(_surface);
@@ -171,7 +171,7 @@ function gui_inventory_tooltip(_gui_multiplier_x, _gui_multiplier_y)
         var _description_x = 0;
         var _description_y = ((GUI_INVENTORY_TOOLTIP_TEXT_YOFFSET + GUI_INVENTORY_TOOLTIP_PADDING_DESCRIPTION + max(_inventory_scale * _sprite_height, string_height(_item_name))) * _gui_multiplier_y);
         
-        var _description_xscale = _gui_multiplier_x * GUI_INVENTORY_STRING_SCALE;
+        var _description_xscale = _gui_multiplier_y * GUI_INVENTORY_STRING_SCALE;
         var _description_yscale = _gui_multiplier_y * GUI_INVENTORY_STRING_SCALE;
         
         render_text(_description_x, _description_y, _item_description, _description_xscale, _description_yscale);

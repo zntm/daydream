@@ -1590,3 +1590,13 @@ function ui_instance_destroy(_instance)
     /* remove from registry */
     struct_remove(global.ui_instances, string(_instance.id));
 }
+
+/* create a root UI element matching current window aspect ratio (base height 540) */
+function ui_create_root()
+{
+    var _aspect_ratio = global.window_width / global.window_height;
+    var _h = 540;
+    var _w = _h * _aspect_ratio;
+    
+    return new UIElement(0, 0, _w, _h);
+}

@@ -10,7 +10,7 @@ function menu_credits_ui_load()
 	/* ensure gui_root exists */
 	if (!variable_global_exists("gui_root")) || (global.gui_root == undefined)
 	{
-		global.gui_root = new UIElement(0, 0, 960, 540);
+		global.gui_root = ui_create_root();
 		global.gui_root.element_name = "gui_root";
 	}
 	

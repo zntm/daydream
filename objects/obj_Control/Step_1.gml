@@ -22,6 +22,8 @@ if (_old_window_width != _window_width) || (_old_window_height != _window_height
             surface_resize(application_surface, _window_width, _window_height);
         }
         
+        control_update_gui_size();
+        
         if (on_window_resize != undefined)
         {
             on_window_resize();
