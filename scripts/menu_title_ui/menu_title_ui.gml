@@ -139,8 +139,6 @@ function menu_title_ui_init()
 	}
 }
 
-
-
 function menu_title_ui_popup_exit()
 {
 	/* create popup container */

@@ -17,6 +17,9 @@ if (_old_window_width != _window_width) || (_old_window_height != _window_height
     {
         room_set_viewport(room, 0, true, 0, 0, _window_width, _window_height);
         
+        view_set_wport(0, _window_width);
+        view_set_hport(0, _window_height);
+        
         if (_window_width != surface_get_width(application_surface)) || (_window_height != surface_get_height(application_surface))
         {
             surface_resize(application_surface, _window_width, _window_height);

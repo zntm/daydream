@@ -239,52 +239,46 @@ function UIElement(_x, _y, _width, _height) constructor
     /* recalculate position based on anchors */
     static recalculate_layout = function()
     {
-        if (parent == undefined)
+        if (parent != undefined)
         {
-             exit;
-        }
-        
-        
-        if (anchor_x != undefined)
-        {
-            switch (anchor_x)
+            if (anchor_x != undefined)
             {
-                case "left":
-                    x = offset_x;
-                    break;
-                    
-                case "center":
-                    x = (parent.width / 2) - (width / 2) + offset_x;
-                    break;
-                    
-                case "right":
-                    x = parent.width - width + offset_x;
-                    break;
+                switch (anchor_x)
+                {
+                    case "left":
+                        x = offset_x;
+                        break;
+                        
+                    case "center":
+                        x = (parent.width / 2) - (width / 2) + offset_x;
+                        break;
+                        
+                    case "right":
+                        x = parent.width - width + offset_x;
+                        break;
+                }
+            }
+            
+            if (anchor_y != undefined)
+            {
+                switch (anchor_y)
+                {
+                    case "top":
+                        y = offset_y;
+                        break;
+                        
+                    case "middle":
+                        y = (parent.height / 2) - (height / 2) + offset_y;
+                        break;
+                        
+                    case "bottom":
+                        y = parent.height - height + offset_y;
+                        break;
+                }
             }
         }
-        
-        
-        if (anchor_y != undefined)
-        {
-            switch (anchor_y)
-            {
-                case "top":
-                    y = offset_y;
-                    break;
-                    
-                case "middle":
-                    y = (parent.height / 2) - (height / 2) + offset_y;
-                    break;
-                    
-                case "bottom":
-                    y = parent.height - height + offset_y;
-                    break;
-            }
-        }
-        
         
         var _length = array_length(children);
-        
         
         for (var i = _length - 1; i >= 0; --i)
         {

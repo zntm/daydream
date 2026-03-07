@@ -22,6 +22,9 @@ function control_update_gui_size()
     global.camera_width  = _cam_w;
     global.camera_height = _cam_h;
 
+    global.camera_width_base  = _cam_w;
+    global.camera_height_base = _cam_h;
+
     camera_set_view_size(view_camera[0], _cam_w, _cam_h);
 
     /* update gui_root to use logical dimensions (Width = WindowWidth / Scale, Height = 540) */

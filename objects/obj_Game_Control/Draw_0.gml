@@ -209,9 +209,12 @@ if (is_opened & WORLD_OPENED_BOOL.GUI)
 
 matrix_set(matrix_world, _matrix_saved);
 
-/* draw declarative UI outside world matrix - UI already scales correctly to pixels */
+/* draw declarative UI relative to camera - UI handles its own design-to-pixel scaling */
 if (is_opened & WORLD_OPENED_BOOL.GUI)
 {
+    var _matrix_ui = matrix_build(_camera_x, _camera_y, 0, 0, 0, 0, 1, 1, 1);
+    matrix_set(matrix_world, _matrix_ui);
+
     if (global.gui_root != undefined)
     {
         global.gui_root.draw();
@@ -237,6 +240,8 @@ if (is_opened & WORLD_OPENED_BOOL.GUI)
             }
         }
     }
+
+    matrix_set(matrix_world, _matrix_saved);
 
     /* draw deferred text */
     var _deferred_text_length = array_length(global.gui_deferred_text);
