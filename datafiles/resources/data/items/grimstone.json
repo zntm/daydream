@@ -1,0 +1,35 @@
+{
+    "inventory": "#phantasia:item/generic/inventory_tile",
+    "item": {
+        "tile": {
+            "audio_properties": {
+                "lowpass": 0.7,
+                "reverb": 0.6
+            },
+            "drops": [
+                {
+                    "id": "phantasia:grimstone"
+                }
+            ],
+            "harvest": {
+                "condition": {
+                    "id": "#phantasia:item/type/pickaxe"
+                },
+                "hardness": 0.52,
+                "level": 0,
+                "particle": {
+                    "colour": "#352a4a",
+                    "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
+                }
+            },
+            "sfx": "#phantasia:tile/sfx/stone"
+        }
+    },
+    "properties": [
+        "phantasia:can_flip",
+        "phantasia:can_mirror",
+        "phantasia:is_tile"
+    ],
+    "sprite": "phantasia:item/grimstone",
+    "type": "solid"
+}

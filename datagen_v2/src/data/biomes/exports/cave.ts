@@ -35,60 +35,48 @@ const CAVE_LIGHT = new ColorGradient([
 const TILES_NIGHTROCK = {
     top_layer: new BiomeTile("phantasia:nightrock", [
         new TileEntry("phantasia:nightrock_wall", 4),
-        new TileEntry("$EMPTY", 1),
     ]),
     middle_layer: new BiomeTile("phantasia:nightrock", [
         new TileEntry("phantasia:nightrock_wall", 4),
-        new TileEntry("$EMPTY", 1),
     ]),
     bottom_layer: new BiomeTile("phantasia:nightrock", [
         new TileEntry("phantasia:nightrock_wall", 4),
-        new TileEntry("$EMPTY", 1),
     ]),
 };
 
 const TILES_STONE = {
     top_layer: new BiomeTile("phantasia:stone", [
         new TileEntry("phantasia:stone_wall", 4),
-        new TileEntry("$EMPTY", 1),
     ]),
     middle_layer: new BiomeTile("phantasia:stone", [
         new TileEntry("phantasia:stone_wall", 4),
-        new TileEntry("$EMPTY", 1),
     ]),
     bottom_layer: new BiomeTile("phantasia:stone", [
         new TileEntry("phantasia:stone_wall", 4),
-        new TileEntry("$EMPTY", 1),
     ]),
 };
 
 const TILES_GRIMSTONE = {
     top_layer: new BiomeTile("phantasia:grimstone", [
         new TileEntry("phantasia:grimstone_wall", 4),
-        new TileEntry("$EMPTY", 1),
     ]),
     middle_layer: new BiomeTile("phantasia:grimstone", [
         new TileEntry("phantasia:grimstone_wall", 4),
-        new TileEntry("$EMPTY", 1),
     ]),
     bottom_layer: new BiomeTile("phantasia:grimstone", [
         new TileEntry("phantasia:grimstone_wall", 4),
-        new TileEntry("$EMPTY", 1),
     ]),
 };
 
 const TILES_WILDROOTS = {
     top_layer: new BiomeTile("phantasia:moss", [
         new TileEntry("phantasia:dirt_wall", 4),
-        new TileEntry("$EMPTY", 1),
     ]),
     middle_layer: new BiomeTile("phantasia:dirt", [
         new TileEntry("phantasia:dirt_wall", 4),
-        new TileEntry("$EMPTY", 1),
     ]),
     bottom_layer: new BiomeTile("phantasia:dirt", [
         new TileEntry("phantasia:dirt_wall", 4),
-        new TileEntry("$EMPTY", 1),
     ]),
 };
 
@@ -108,8 +96,7 @@ const MOONFALL_BASE = [
 
 const MOONFALL_WALL = [
     new TileEntry("phantasia:petrilumin_wall", 1).setNoiseRange(0, 128),
-    new TileEntry("phantasia:lumin_moss_wall", 4).setNoiseRange(128, 252),
-    new TileEntry("$EMPTY", 1).setNoiseRange(252, 256),
+    new TileEntry("phantasia:lumin_moss_wall", 4).setNoiseRange(128, 256),
 ];
 
 const TILES_MOONFALL = {

@@ -7,7 +7,7 @@
     ],
     "id": "lumin",
     "min_depth": 20,
-    "noise_scale": 0.008,
-    "noise_threshold": 0.66,
+    "noise_scale": 0.025,
+    "noise_threshold": 0.5,
     "salt": 31295
 }

@@ -83,7 +83,6 @@ const LIGHT_ARID = new ColorGradient([
 const TILES_GRASS = {
     top_layer: new BiomeTile("phantasia:grass_block", [
         new TileEntry("phantasia:dirt_wall", 4),
-        new TileEntry("$EMPTY", 1),
     ]),
     middle_layer: new BiomeTile("phantasia:dirt", [
         new TileEntry("phantasia:dirt_wall", 4),
@@ -98,22 +97,18 @@ const TILES_GRASS = {
 const TILES_SAND = {
     top_layer: new BiomeTile("phantasia:sand", [
         new TileEntry("phantasia:sandstone_wall", 4),
-        new TileEntry("$EMPTY", 1),
     ]),
     middle_layer: new BiomeTile("phantasia:sand", [
         new TileEntry("phantasia:sandstone_wall", 4),
-        new TileEntry("$EMPTY", 1),
     ]),
     bottom_layer: new BiomeTile("phantasia:sandstone", [
-        new TileEntry("phantasia:sandstone_wall", 3),
-        new TileEntry("$EMPTY", 2),
+        new TileEntry("phantasia:sandstone_wall", 1),
     ]),
 };
 
 const TILES_TAIGA = {
     top_layer: new BiomeTile("phantasia:grass_block_taiga", [
         new TileEntry("phantasia:dirt_wall", 4),
-        new TileEntry("$EMPTY", 1),
     ]),
     middle_layer: new BiomeTile("phantasia:dirt", [
         new TileEntry("phantasia:dirt_wall", 4),
@@ -128,7 +123,6 @@ const TILES_TAIGA = {
 const TILES_SWAMP = {
     top_layer: new BiomeTile("phantasia:grass_block_swamp", [
         new TileEntry("phantasia:dirt_wall", 4),
-        new TileEntry("$EMPTY", 1),
     ]),
     middle_layer: new BiomeTile("phantasia:dirt", [
         new TileEntry("phantasia:dirt_wall", 4),
@@ -143,11 +137,9 @@ const TILES_SWAMP = {
 const TILES_STONE = {
     top_layer: new BiomeTile("phantasia:stone", [
         new TileEntry("phantasia:stone_wall", 4),
-        new TileEntry("$EMPTY", 1),
     ]),
     middle_layer: new BiomeTile("phantasia:stone", [
         new TileEntry("phantasia:stone_wall", 4),
-        new TileEntry("$EMPTY", 1),
     ]),
     bottom_layer: new BiomeTile("phantasia:stone", [
         new TileEntry("phantasia:stone_wall", 4),
@@ -880,15 +872,12 @@ export default [
             {
                 top_layer: new BiomeTile("phantasia:sand", [
                     new TileEntry("phantasia:sandstone_wall", 4),
-                    new TileEntry("$EMPTY", 1),
                 ]),
                 middle_layer: new BiomeTile("phantasia:gravel", [
                     new TileEntry("phantasia:stone_wall", 4),
-                    new TileEntry("$EMPTY", 1),
                 ]),
                 bottom_layer: new BiomeTile("phantasia:stone", [
                     new TileEntry("phantasia:stone_wall", 4),
-                    new TileEntry("$EMPTY", 1),
                 ]),
             },
         )

@@ -73,9 +73,6 @@
                 {
                     "id": "phantasia:stone_wall",
                     "weight": 4
-                },
-                {
-                    "id": "$EMPTY"
                 }
             ]
         },
@@ -89,9 +86,6 @@
                 {
                     "id": "phantasia:stone_wall",
                     "weight": 4
-                },
-                {
-                    "id": "$EMPTY"
                 }
             ]
         },
@@ -105,9 +99,6 @@
                 {
                     "id": "phantasia:sandstone_wall",
                     "weight": 4
-                },
-                {
-                    "id": "$EMPTY"
                 }
             ]
         }

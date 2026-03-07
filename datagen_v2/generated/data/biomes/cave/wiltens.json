@@ -120,9 +120,6 @@
                 {
                     "id": "phantasia:grimstone_wall",
                     "weight": 4
-                },
-                {
-                    "id": "$EMPTY"
                 }
             ]
         },
@@ -136,9 +133,6 @@
                 {
                     "id": "phantasia:grimstone_wall",
                     "weight": 4
-                },
-                {
-                    "id": "$EMPTY"
                 }
             ]
         },
@@ -152,9 +146,6 @@
                 {
                     "id": "phantasia:grimstone_wall",
                     "weight": 4
-                },
-                {
-                    "id": "$EMPTY"
                 }
             ]
         }

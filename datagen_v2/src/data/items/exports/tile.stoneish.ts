@@ -53,6 +53,21 @@ export default [
         sfx: "#phantasia:tile/sfx/stone",
         audioProperties: new TileItemAudioProperties(0.65, 0.5),
     },
+    {
+        namespace: "phantasia",
+        id: "grimstone",
+        harvest: new TileItemHarvest(
+            0.52,
+            0,
+            new ItemParticle(
+                "#352a4a",
+                "#phantasia:tile/generic/harvest_particle_frequency",
+            ),
+            new TileItemCondition("#phantasia:item/type/pickaxe"),
+        ),
+        sfx: "#phantasia:tile/sfx/stone",
+        audioProperties: new TileItemAudioProperties(0.7, 0.6),
+    },
 ].map(({ namespace, id, harvest, sfx, audioProperties }) => [
     tileBlockWallItems(
         namespace,

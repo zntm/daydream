@@ -39,15 +39,12 @@ export default [
             {
                 top_layer: new BiomeTile("phantasia:grass_block", [
                     new TileEntry("phantasia:dirt_wall", 4),
-                    new TileEntry("$EMPTY", 1),
                 ]),
                 middle_layer: new BiomeTile("phantasia:dirt", [
                     new TileEntry("phantasia:dirt_wall", 4),
-                    new TileEntry("$EMPTY", 1),
                 ]),
                 bottom_layer: new BiomeTile("phantasia:stone", [
                     new TileEntry("phantasia:stone_wall", 4),
-                    new TileEntry("$EMPTY", 1),
                 ]),
             },
         )

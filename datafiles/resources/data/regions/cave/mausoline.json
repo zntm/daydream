@@ -7,7 +7,7 @@
     ],
     "id": "mausoline",
     "min_depth": 20,
-    "noise_scale": 0.008,
-    "noise_threshold": 0.33,
-    "salt": 31295
+    "noise_scale": 0.025,
+    "noise_threshold": 0.5,
+    "salt": 31296
 }

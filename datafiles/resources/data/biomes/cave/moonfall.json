@@ -125,11 +125,6 @@
                     "id": "phantasia:lumin_moss_wall",
                     "weight": 4,
                     "noise_min": 128,
-                    "noise_max": 252
-                },
-                {
-                    "id": "$EMPTY",
-                    "noise_min": 252,
                     "noise_max": 256
                 }
             ]
@@ -171,11 +166,6 @@
                     "id": "phantasia:lumin_moss_wall",
                     "weight": 4,
                     "noise_min": 128,
-                    "noise_max": 252
-                },
-                {
-                    "id": "$EMPTY",
-                    "noise_min": 252,
                     "noise_max": 256
                 }
             ]
@@ -217,11 +207,6 @@
                     "id": "phantasia:lumin_moss_wall",
                     "weight": 4,
                     "noise_min": 128,
-                    "noise_max": 252
-                },
-                {
-                    "id": "$EMPTY",
-                    "noise_min": 252,
                     "noise_max": 256
                 }
             ]

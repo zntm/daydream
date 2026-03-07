@@ -37,7 +37,9 @@ function worldgen_get_tile_base(_x, _y, _surface_biome, _cave_biome, _surface_he
                 _noise = open_simplex_noise(_x * _custom_scale, _y * _custom_scale + (_seed / 1_000_000 * 100), 255, 2);
             }
             
-            return _cb.get_tile_middle_layer_base(_noise);
+            return (_cave_above) 
+                ? _cb.get_tile_top_layer_base(_noise)
+                : _cb.get_tile_middle_layer_base(_noise);
         }
     }
     
