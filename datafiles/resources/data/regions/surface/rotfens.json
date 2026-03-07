@@ -1,0 +1,30 @@
+{
+    "biomes": [
+        {
+            "id": "phantasia:surface/rotfens/mangroots",
+            "weight": 2,
+            "terrain_preference": "any"
+        },
+        {
+            "id": "phantasia:surface/rotfens/boggins",
+            "weight": 3,
+            "terrain_preference": "flat"
+        }
+    ],
+    "category": "humid",
+    "cave_biome_default": "phantasia:cave/chasm",
+    "cave_biomes": [
+        {
+            "biome": "phantasia:cave/depths",
+            "min_depth": 200,
+            "noise_threshold": 0.6
+        }
+    ],
+    "id": "rotfens",
+    "map_color": "#3D3D2D",
+    "terrain": {
+        "amplitude_max": 30,
+        "amplitude_min": 15,
+        "height_offset": -12
+    }
+}

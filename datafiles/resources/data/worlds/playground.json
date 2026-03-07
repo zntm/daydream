@@ -212,11 +212,13 @@
         }
     ],
     "regions": [
-        "emeraldine",
-        "rotfens",
-        "dustbunny",
-        "borea",
-        "glacien"
+        "phantasia:surface/emeraldine",
+        "phantasia:surface/rotfens",
+        "phantasia:surface/dustbunny",
+        "phantasia:surface/borea",
+        "phantasia:surface/glacien",
+        "phantasia:cave/mausoline",
+        "phantasia:cave/verdance"
     ],
     "spawn_interval": 14,
     "surface": {

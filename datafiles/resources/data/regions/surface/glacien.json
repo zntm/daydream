@@ -1,0 +1,35 @@
+{
+    "biomes": [
+        {
+            "id": "phantasia:surface/glacien/tundrune",
+            "weight": 3,
+            "terrain_preference": "any"
+        },
+        {
+            "id": "phantasia:surface/glacien/flakerocks",
+            "weight": 2,
+            "terrain_preference": "hilly"
+        },
+        {
+            "id": "phantasia:surface/glacien/frostenisle",
+            "weight": 2,
+            "terrain_preference": "flat"
+        }
+    ],
+    "category": "frozen",
+    "cave_biome_default": "phantasia:cave/chasm",
+    "cave_biomes": [
+        {
+            "biome": "phantasia:cave/depths",
+            "min_depth": 80,
+            "noise_threshold": 0.4
+        }
+    ],
+    "id": "glacien",
+    "map_color": "#E0FFFF",
+    "terrain": {
+        "amplitude_max": 45,
+        "amplitude_min": 20,
+        "height_offset": -4
+    }
+}

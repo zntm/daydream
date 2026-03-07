@@ -1,0 +1,13 @@
+{
+    "biomes": [
+        {
+            "id": "phantasia:cave/wiltens",
+            "weight": 1
+        }
+    ],
+    "id": "mausoline",
+    "min_depth": 20,
+    "noise_scale": 0.008,
+    "noise_threshold": 0.33,
+    "salt": 31295
+}

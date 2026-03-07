@@ -781,6 +781,7 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
             {
                 var _id = worldgen_resolve_id(___regions_ids[i]);
                 var _obj = global.region_data[$ _id];
+                
                 if (_obj != undefined)
                 {
                     array_push(___regions_objects, _obj);

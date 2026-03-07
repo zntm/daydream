@@ -7,8 +7,8 @@
             "bar": "#phantasia:item/generic/durability_bar"
         },
         "harvest": {
-            "hardness": 1.19,
-            "level": 3
+            "hardness": 1.12,
+            "level": 2
         }
     },
     "sprite": "phantasia:item/iron_axe",

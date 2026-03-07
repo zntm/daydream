@@ -13,11 +13,11 @@
                 "hardness": 0.44,
                 "level": 1,
                 "particle": {
-                    "frequency": "#phantasia:tile/generic/harvest_particle_frequency",
-                    "id": [
+                    "colour": [
                         "#122D2B",
                         "#0B2021"
-                    ]
+                    ],
+                    "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
                 }
             },
             "on_random_tick": [

@@ -1,6 +1,4 @@
 {
-    "id": "rotfens",
-    "category": "humid",
     "biomes": [
         {
             "id": "phantasia:surface/rotfens/mangroots",
@@ -13,6 +11,7 @@
             "terrain_preference": "flat"
         }
     ],
+    "category": "humid",
     "cave_biome_default": "phantasia:cave/chasm",
     "cave_biomes": [
         {
@@ -21,10 +20,11 @@
             "noise_threshold": 0.6
         }
     ],
+    "id": "rotfens",
+    "map_color": "#3D3D2D",
     "terrain": {
-        "height_offset": -12,
+        "amplitude_max": 30,
         "amplitude_min": 15,
-        "amplitude_max": 30
-    },
-    "map_color": "#3D3D2D"
+        "height_offset": -12
+    }
 }

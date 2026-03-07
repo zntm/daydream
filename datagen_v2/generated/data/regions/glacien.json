@@ -1,6 +1,4 @@
 {
-    "id": "glacien",
-    "category": "frozen",
     "biomes": [
         {
             "id": "phantasia:surface/glacien/tundrune",
@@ -18,6 +16,7 @@
             "terrain_preference": "flat"
         }
     ],
+    "category": "frozen",
     "cave_biome_default": "phantasia:cave/chasm",
     "cave_biomes": [
         {
@@ -26,10 +25,11 @@
             "noise_threshold": 0.4
         }
     ],
+    "id": "glacien",
+    "map_color": "#E0FFFF",
     "terrain": {
-        "height_offset": -4,
+        "amplitude_max": 45,
         "amplitude_min": 20,
-        "amplitude_max": 45
-    },
-    "map_color": "#E0FFFF"
+        "height_offset": -4
+    }
 }

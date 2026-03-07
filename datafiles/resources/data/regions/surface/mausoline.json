@@ -1,0 +1,28 @@
+{
+    "biomes": [
+        {
+            "id": "phantasia:surface/emeraldine/greenia",
+            "weight": 3,
+            "terrain_preference": "any"
+        }
+    ],
+    "category": "temperate",
+    "cave_biome_default": "phantasia:cave/chasm",
+    "cave_biomes": [
+        {
+            "biome": "phantasia:cave/wiltens",
+            "min_depth": 0,
+            "noise_threshold": 0.33,
+            "noise_scale": 0.05,
+            "weight": 10
+        },
+        {
+            "biome": "phantasia:cave/depths",
+            "min_depth": 150,
+            "noise_threshold": 0.7,
+            "noise_scale": 0.015
+        }
+    ],
+    "id": "mausoline",
+    "map_color": "#3B2D46"
+}

@@ -35,8 +35,6 @@ function init(_namespace)
     
     init_biome_recursive($"{PROGRAM_DIRECTORY_RESOURCES}/data/biomes", _namespace);
     
-    init_cave_region($"{PROGRAM_DIRECTORY_RESOURCES}/data/cave_regions", _namespace);
-    
     init_world($"{PROGRAM_DIRECTORY_RESOURCES}/data/worlds", _namespace);
     
     init_menu($"{PROGRAM_DIRECTORY_RESOURCES}/data/json/menu/music.json");

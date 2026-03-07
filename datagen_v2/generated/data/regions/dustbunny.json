@@ -1,6 +1,4 @@
 {
-    "id": "dustbunny",
-    "category": "arid",
     "biomes": [
         {
             "id": "phantasia:surface/dustbunny/dune",
@@ -28,6 +26,7 @@
             "terrain_preference": "any"
         }
     ],
+    "category": "arid",
     "cave_biome_default": "phantasia:cave/chasm",
     "cave_biomes": [
         {
@@ -36,10 +35,11 @@
             "noise_threshold": 0.6
         }
     ],
+    "id": "dustbunny",
+    "map_color": "#C2B280",
     "terrain": {
-        "height_offset": 8,
+        "amplitude_max": 50,
         "amplitude_min": 20,
-        "amplitude_max": 50
-    },
-    "map_color": "#C2B280"
+        "height_offset": 8
+    }
 }

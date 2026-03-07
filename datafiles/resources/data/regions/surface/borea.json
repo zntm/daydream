@@ -1,0 +1,40 @@
+{
+    "biomes": [
+        {
+            "id": "phantasia:surface/borea/pineling",
+            "weight": 3,
+            "terrain_preference": "any"
+        },
+        {
+            "id": "phantasia:surface/borea/silversteep",
+            "weight": 2,
+            "terrain_preference": "hilly"
+        },
+        {
+            "id": "phantasia:surface/borea/needlefall",
+            "weight": 2,
+            "terrain_preference": "flat"
+        },
+        {
+            "id": "phantasia:surface/borea/aurospring",
+            "weight": 1,
+            "terrain_preference": "flat"
+        }
+    ],
+    "category": "cold",
+    "cave_biome_default": "phantasia:cave/chasm",
+    "cave_biomes": [
+        {
+            "biome": "phantasia:cave/depths",
+            "min_depth": 100,
+            "noise_threshold": 0.5
+        }
+    ],
+    "id": "borea",
+    "map_color": "#7BA1C7",
+    "terrain": {
+        "amplitude_max": 65,
+        "amplitude_min": 30,
+        "height_offset": 4
+    }
+}

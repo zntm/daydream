@@ -5,8 +5,9 @@
             "weight": 1
         }
     ],
-    "noise_scale": 0.008,
-    "noise_threshold": 0.0,
+    "id": "verdance",
     "min_depth": 20,
+    "noise_scale": 0.008,
+    "noise_threshold": 0,
     "salt": 31295
 }

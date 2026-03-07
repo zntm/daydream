@@ -1,6 +1,4 @@
 {
-    "id": "borea",
-    "category": "cold",
     "biomes": [
         {
             "id": "phantasia:surface/borea/pineling",
@@ -23,6 +21,7 @@
             "terrain_preference": "flat"
         }
     ],
+    "category": "cold",
     "cave_biome_default": "phantasia:cave/chasm",
     "cave_biomes": [
         {
@@ -31,10 +30,11 @@
             "noise_threshold": 0.5
         }
     ],
+    "id": "borea",
+    "map_color": "#7BA1C7",
     "terrain": {
-        "height_offset": 4,
+        "amplitude_max": 65,
         "amplitude_min": 30,
-        "amplitude_max": 65
-    },
-    "map_color": "#7BA1C7"
+        "height_offset": 4
+    }
 }

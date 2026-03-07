@@ -1,0 +1,45 @@
+{
+    "biomes": [
+        {
+            "id": "phantasia:surface/dustbunny/dune",
+            "weight": 3,
+            "terrain_preference": "flat"
+        },
+        {
+            "id": "phantasia:surface/dustbunny/redwaste",
+            "weight": 2,
+            "terrain_preference": "flat"
+        },
+        {
+            "id": "phantasia:surface/dustbunny/badlands",
+            "weight": 2,
+            "terrain_preference": "hilly"
+        },
+        {
+            "id": "phantasia:surface/dustbunny/oasin",
+            "weight": 1,
+            "terrain_preference": "flat"
+        },
+        {
+            "id": "phantasia:surface/dustbunny/goldgrass",
+            "weight": 2,
+            "terrain_preference": "any"
+        }
+    ],
+    "category": "arid",
+    "cave_biome_default": "phantasia:cave/chasm",
+    "cave_biomes": [
+        {
+            "biome": "phantasia:cave/depths",
+            "min_depth": 250,
+            "noise_threshold": 0.6
+        }
+    ],
+    "id": "dustbunny",
+    "map_color": "#C2B280",
+    "terrain": {
+        "amplitude_max": 50,
+        "amplitude_min": 20,
+        "height_offset": 8
+    }
+}
