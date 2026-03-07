@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"control_game_world_generate",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"control_game_world_generate",
+  "parent":{
+    "name":"Control",
+    "path":"folders/Scripts/Control.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

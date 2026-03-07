@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"control_game_debug_network",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"control_game_debug_network",
+  "parent":{
+    "name":"Control",
+    "path":"folders/Scripts/Control.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

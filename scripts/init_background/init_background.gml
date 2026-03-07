@@ -1,8 +1,8 @@
 global.background_data = {}
 
-function init_background(_directory, _namespace = "phantasia", _type = 0)
+function init_background(_namespace = "phantasia", _directory)
 {
-    var _files = file_read_directory(_directory);
+    var _files = file_read_directory(_directory, true);
     var _files_length = array_length(_files);
     
     for (var i = 0; i < _files_length; ++i)

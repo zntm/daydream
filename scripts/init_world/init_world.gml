@@ -10,9 +10,9 @@ global.world_data = {}
 /// @param {String} _directory Directory to search
 /// @param {String} _namespace Namespace for IDs (default "phantasia")
 /// @param {String} [_path_id] Internal tracking for nested folder IDs
-function init_world(_directory, _namespace = "phantasia", _path_id = undefined)
+function init_world(_namespace = "phantasia", _directory)
 {
-    var _files = file_read_directory(_directory);
+    var _files = file_read_directory(_directory, true);
     var _files_length = array_length(_files);
     
     for (var i = 0; i < _files_length; ++i)
@@ -20,14 +20,7 @@ function init_world(_directory, _namespace = "phantasia", _path_id = undefined)
         var _file = _files[i];
         var _sub_path = $"{_directory}/{_file}";
         
-        var _name = ((_path_id == undefined) ? _file : $"{_path_id}/{_file}");
-        
-        if (directory_exists(_sub_path))
-        {
-            init_world(_sub_path, _namespace, _name);
-            
-            continue;
-        }
+        if (directory_exists(_sub_path)) continue;
         
         if (string_ends_with(_file, ".json"))
         {
@@ -37,7 +30,7 @@ function init_world(_directory, _namespace = "phantasia", _path_id = undefined)
             
             if (is_struct(_json))
             {
-                var _name_clean = string_delete(_name, string_length(_name) - 4, 5);
+                var _name_clean = string_delete(_file, string_length(_file) - 4, 5);
                 
                 // Use internal ID if provided, otherwise fallback to namespaced filename
                 // Example: "playground" -> "phantasia:playground"

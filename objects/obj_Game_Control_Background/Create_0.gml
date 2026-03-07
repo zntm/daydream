@@ -18,7 +18,8 @@ var _in_biome_data = global.biome_data[$ in_biome];
 if (_in_biome_data == undefined) exit;
 
 var _music = _in_biome_data.get_music();
-if (_music != undefined)
+
+if (_music != undefined) && (array_length(_music) > 0)
 {
     bg_play_music(array_choose(_music));
 }

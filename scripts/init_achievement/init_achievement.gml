@@ -1,11 +1,11 @@
 global.achievement_data = {}
 
-function init_achievement(_directory, _namespace)
+function init_achievement(_namespace, _directory)
 {
-    var _files = file_read_directory(_directory);
+    var _files = file_read_directory(_directory, true);
     var _files_length = array_length(_files);
     
-    for (var i = 0; i < _files_length; ++i)
+    for (var i = _files_length - 1; i >= 0; --i)
     {
         var _file = _files[i];
         

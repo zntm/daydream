@@ -125,35 +125,3 @@ function projectile_parse_properties(_properties)
     
     return _bits;
 }
-
-/// @desc Parse a particle array from JSON into runtime format with mode enums.
-/// @param {Array} _particles_json
-/// @returns {Array|Undefined}
-function projectile_parse_particles(_particles_json)
-{
-    if (_particles_json == undefined) return undefined;
-    
-    var _len = array_length(_particles_json);
-    
-    if (_len == 0) return undefined;
-    
-    var _out = array_create(_len);
-    
-    for (var i = 0; i < _len; ++i)
-    {
-        var _p    = _particles_json[i];
-        var _mode = _p[$ "mode"] ?? "tick";
-        
-        _out[i] = {
-            id:        _p[$ "id"],
-            mode: (_mode == "shoot") ? PROJECTILE_PARTICLE_MODE.SHOOT
-                : ((_mode == "land") ? PROJECTILE_PARTICLE_MODE.LAND
-                    : PROJECTILE_PARTICLE_MODE.TICK),
-            frequency: _p[$ "frequency"] ?? 0.1,
-            offset_x:  _p[$ "offset_x"]  ?? 0,
-            offset_y:  _p[$ "offset_y"]  ?? 0
-        }
-    }
-    
-    return _out;
-}

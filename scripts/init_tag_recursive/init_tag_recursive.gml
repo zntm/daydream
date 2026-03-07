@@ -1,31 +1,23 @@
 global.tag_data = {}
 
-function init_tag_recursive(_directory, _namespace, _id)
+function init_tag_recursive(_namespace, _directory)
 {
-    var _files = file_read_directory(_directory);
+    var _files = file_read_directory(_directory, true);
     var _files_length = array_length(_files);
     
     for (var i = 0; i < _files_length; ++i)
     {
         var _file = _files[i];
-        var _subdirectory = $"{_directory}/{_file}";
+
+        if (directory_exists($"{_directory}/{_file}")) continue;
         
-        var _name = ((_id == undefined) ? _file : $"{_id}/{_file}");
-        
-        if (directory_exists(_subdirectory))
-        {
-            init_tag_recursive(_subdirectory, _namespace, _name);
-            
-            continue;
-        }
-        
-        if (string_ends_with(_subdirectory, ".json"))
+        if (string_ends_with(_file, ".json"))
         {
             dbg_timer("init_tag");
             
-            var _id2 = string_delete($"{_name}", string_length($"{_name}") - 4, 5);
+            var _id2 = string_delete(_file, string_length(_file) - 4, 5);
             
-            var _json = buffer_load_json(_subdirectory);
+            var _json = buffer_load_json($"{_directory}/{_file}");
             
             var _names  = struct_get_names(_json);
             var _length = array_length(_names);

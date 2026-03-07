@@ -1,6 +1,6 @@
 global.rarity_data = {}
 
-function init_rarity(_directory, _namespace = "phantasia", _type = 0)
+function init_rarity(_namespace = "phantasia", _directory)
 {
     var _data = buffer_load_json(_directory);
     

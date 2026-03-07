@@ -198,13 +198,7 @@ function StructureData(_width, _height, _placement, _is_persistent, _is_natural)
 
 global.structure_data = {}
 
-function init_structure(_directory, _namespace = "phantasia", _type = 0)
+function init_structure(_namespace = "phantasia", _directory)
 {
-    /*
-    if (_type & INIT_TYPE.RESET)
-    {
-        init_data_reset("structure_data");
-    }
-    */
-    init_structure_recursive(_directory, _namespace, undefined);
+    init_structure_recursive(_namespace, _directory, undefined);
 }

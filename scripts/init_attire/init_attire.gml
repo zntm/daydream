@@ -8,7 +8,7 @@
 global.attire_data = {}
 global.attire_colour_data = [];
 
-function init_attire(_directory, _namespace = "phantasia", _type = 0)
+function init_attire(_namespace = "phantasia", _directory)
 {
     /*
     if (_type & INIT_TYPE.RESET)
@@ -179,7 +179,7 @@ function init_attire(_directory, _namespace = "phantasia", _type = 0)
     surface_free(_surface);
     buffer_delete(_buffer);*/
     
-    var _files = file_read_directory(_directory);
+    var _files        = file_read_directory(_directory, true);
     var _files_length = array_length(_files);
     
     for (var i = 0; i < _files_length; ++i)

@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"init_sfx",
+  "%Name":"init_parser",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"init_sfx",
+  "name":"init_parser",
   "parent":{
-    "name":"SFX Data",
-    "path":"folders/Data/SFX Data.yy",
+    "name":"Data",
+    "path":"folders/Data.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

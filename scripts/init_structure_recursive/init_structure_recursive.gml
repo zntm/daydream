@@ -1,38 +1,32 @@
-function init_structure_recursive(_directory, _namespace, _id)
+function init_structure_recursive(_namespace, _directory)
 {
     var _natural_structure_data = global.natural_structure_data;
+    var _item_data              = global.item_data;
     
-    var _item_data = global.item_data;
-    // var fixer = global.datafixer.item;
-    
-    var _files = file_read_directory(_directory);
+    var _files        = file_read_directory(_directory, true);
     var _files_length = array_length(_files);
     
     for (var i = 0; i < _files_length; ++i)
     {
-        var _file = _files[i];
+        var _file         = _files[i];
         var _subdirectory = $"{_directory}/{_file}";
+
+        if (directory_exists(_subdirectory)) continue;
         
-        var _name = ((_id == undefined) ? _file : $"{_id}/{_file}");
-        
-        if (directory_exists(_subdirectory))
+        if (string_ends_with(_file, ".json"))
         {
-            init_structure_recursive(_subdirectory, _namespace, _name);
-            
-            continue;
-        }
-        
-        if (string_ends_with(_subdirectory, ".json"))
-        {
-            if (!string_ends_with(_subdirectory, ".dat.json"))
+            if (!string_ends_with(_file, ".dat.json"))
             {
                 dbg_timer("init_structure");
                 
-                if (_id != undefined)
+                var _id = filename_dir(_file);
+                if (_id != "")
                 {
+                    /* flip backslash to forward slash if on windows */
+                    _id = string_replace_all(_id, "\\", "/");
+
                     global.structure_data[$ _id] ??= [];
-                    
-                    array_push(global.structure_data[$ _id], _name);
+                    array_push(global.structure_data[$ _id], _file);
                 }
                 
                 var _json = buffer_load_json(_subdirectory);
@@ -48,11 +42,11 @@ function init_structure_recursive(_directory, _namespace, _id)
                         var _width  = smart_value_parse(_json.width);
                         var _height = smart_value_parse(_json.height);
                         
-                        global.structure_data[$ $"{_namespace}:{string_delete(_name, string_length(_name) - 4, 5)}"] = new StructureData(_width, _height, _json.placement, false, true)
+                        global.structure_data[$ $"{_namespace}:{string_delete(_file, string_length(_file) - 4, 5)}"] = new StructureData(_width, _height, _json.placement, false, true)
                             .set_function(_function_id, (_natural_structure_data[$ _function_id].get_parser())(_function[$ "parameters"]))
                             .set_terrain_modifier(_json[$ "terrain_modifier"]);
                         
-                        dbg_timer("init_structure", $"[Init] Loaded Natural Structure: \'{string_delete(_name, string_length(_name) - 4, 5)}\'");
+                        dbg_timer("init_structure", $"[Init] Loaded Natural Structure: \'{string_delete(_file, string_length(_file) - 4, 5)}\'");
                     }
                     
                     delete _json;
@@ -62,15 +56,18 @@ function init_structure_recursive(_directory, _namespace, _id)
             continue;
         }
         
-        if (string_ends_with(_subdirectory, ".dat"))
+        if (string_ends_with(_file, ".dat"))
         {
             dbg_timer("init_structure");
             
-            if (_id != undefined)
+            var _id = filename_dir(_file);
+            if (_id != "")
             {
+                /* flip backslash to forward slash if on windows */
+                _id = string_replace_all(_id, "\\", "/");
+
                 global.structure_data[$ $"{_namespace}:{_id}"] ??= [];
-                
-                array_push(global.structure_data[$ $"{_namespace}:{_id}"], $"{_namespace}:{string_delete(_name, string_length(_name) - 3, 4)}");
+                array_push(global.structure_data[$ $"{_namespace}:{_id}"], $"{_namespace}:{string_delete(_file, string_length(_file) - 3, 4)}");
             }
             
             var _json = buffer_load_json($"{_subdirectory}.json");
@@ -127,13 +124,13 @@ function init_structure_recursive(_directory, _namespace, _id)
                 
                 buffer_delete(_buffer);
                 
-                global.structure_data[$ $"{_namespace}:{string_delete(_name, string_length(_name) - 3, 4)}"] = new StructureData(_width, _height, _json.placement, false, true)
+                global.structure_data[$ $"{_namespace}:{string_delete(_file, string_length(_file) - 3, 4)}"] = new StructureData(_width, _height, _json.placement, false, true)
                     .set_data(_data)
                     .set_terrain_modifier(_json[$ "terrain_modifier"]);
                 
                 delete _json;
                 
-                dbg_timer("init_structure", $"[Init] Loaded Structure: \'{string_delete(_name, string_length(_name) - 3, 4)}\'");
+                dbg_timer("init_structure", $"[Init] Loaded Structure: \'{string_delete(_file, string_length(_file) - 3, 4)}\'");
             }
             
             continue;

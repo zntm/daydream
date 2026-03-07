@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"SFXData",
+  "%Name":"control_game_exit",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"SFXData",
+  "name":"control_game_exit",
   "parent":{
-    "name":"SFX Data",
-    "path":"folders/Data/SFX Data.yy",
+    "name":"Control",
+    "path":"folders/Scripts/Control.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

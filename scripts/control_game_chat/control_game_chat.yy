@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"MusicData",
+  "%Name":"control_game_chat",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"MusicData",
+  "name":"control_game_chat",
   "parent":{
-    "name":"Music Data",
-    "path":"folders/Data/Music Data.yy",
+    "name":"Control",
+    "path":"folders/Scripts/Control.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

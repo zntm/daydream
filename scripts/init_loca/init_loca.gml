@@ -5,7 +5,7 @@ global.loca_data = {}
 
 init_loca_effect();
 
-function init_loca(_directory, _namespace)
+function init_loca(_namespace, _directory)
 {
     if (global.loca_font != fnt_Default)
     {
@@ -15,9 +15,14 @@ function init_loca(_directory, _namespace)
     var _names  = struct_get_names(global.loca_data);
     var _length = array_length(_names);
     
-    for (var i = 0; i < _length; ++i)
+    for (var i = _length - 1; i >= 0; --i)
     {
-        struct_remove(global.loca_data, _names[i]);
+        var _name = _names[i];
+        
+        if (_name != "name") && (_name != "locale_code")
+        {
+            struct_remove(global.loca_data, _name);
+        }
     }
     
     if (file_exists($"{_directory}/font.ttf"))
@@ -46,24 +51,27 @@ function init_loca(_directory, _namespace)
     
     var _json = buffer_load_json($"{_directory}/data.json");
     
-    var _names2  = struct_get_names(_json);
-    var _length2 = array_length(_names2);
-    
-    for (var i = 0; i < _length2; ++i)
+    if (is_struct(_json))
     {
-        var _name = _names2[i];
+        var _names2  = struct_get_names(_json);
+        var _length2 = array_length(_names2);
         
-        if (_name != "name") && (_name != "locale_code")
+        for (var i = _length2 - 1; i >= 0; --i)
         {
-            global.loca_data[$ $"{_namespace}:{_name}"] = _json[$ _name];
+            var _name = _names2[i];
+            
+            if (_name != "name") && (_name != "locale_code")
+            {
+                global.loca_data[$ $"{_namespace}:{_name}"] = _json[$ _name];
+            }
+            else
+            {
+                global.loca_data[$ _name] = _json[$ _name];
+            }
         }
-        else
-        {
-            global.loca_data[$ _name] = _json[$ _name];
-        }
+        
+        delete _json;
     }
-    
-    delete _json;
     
     draw_set_font(global.loca_font);
     

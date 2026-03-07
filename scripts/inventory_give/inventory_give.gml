@@ -8,6 +8,14 @@ function inventory_give(_x, _y, _item, _inventory_target = global.inventory, _te
     var _pickup_amount = 0;
     
     var _data = global.item_data[$ _id];
+    
+    if (_data == undefined)
+    {
+        PRINT($"[inventory_give] Failed to give item '{_id}': item data not found.");
+
+        return _item;
+    }
+
     var _inventory_max = _data.get_inventory_max();
     
     var _length = global.inventory_length.base;

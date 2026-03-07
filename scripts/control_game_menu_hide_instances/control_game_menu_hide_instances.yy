@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"control_game_menu_hide_instances",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"control_game_menu_hide_instances",
+  "parent":{
+    "name":"Control",
+    "path":"folders/Scripts/Control.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

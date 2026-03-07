@@ -3,34 +3,26 @@ global.region_list      = []
 global.cave_region_data = {}
 global.cave_region_list = []
 
-function init_region_recursive(_directory, _namespace = "phantasia", _id = undefined)
+function init_region_recursive(_namespace = "phantasia", _directory)
 {
-    var _files = file_read_directory(_directory);
+    var _files = file_read_directory(_directory, true);
     var _files_length = array_length(_files);
     
     for (var i = 0; i < _files_length; ++i)
     {
         var _file = _files[i];
-        var _subdirectory = $"{_directory}/{_file}";
-        
-        var _name = ((_id == undefined) ? _file : $"{_id}/{_file}");
-        
-        if (directory_exists(_subdirectory))
-        {
-            init_region_recursive(_subdirectory, _namespace, _name);
-            
-            continue;
-        }
+
+        if (directory_exists($"{_directory}/{_file}")) continue;
         
         if (string_ends_with(_file, ".json"))
         {
             dbg_timer("init_region");
             
-            var _json = tag_value_parse(buffer_load_json(_subdirectory));
+            var _json = tag_value_parse(buffer_load_json($"{_directory}/{_file}"));
             
             if (is_struct(_json))
             {
-                var _name_clean = string_delete(_name, string_length(_name) - 4, 5);
+                var _name_clean = string_delete(_file, string_length(_file) - 4, 5);
                 
                 // Use internal ID if provided, otherwise fallback to namespaced filename
                 // Example: "emeraldine" -> "phantasia:surface/emeraldine"

@@ -46,7 +46,7 @@ init_setting("accessibility", "global_localization", new SettingsData(SETTINGS_T
     }))
     .set_on_update(function(_name, _value)
     {
-        init_loca($"{PROGRAM_DIRECTORY_RESOURCES}/loca/{global.loca_directories[_value]}", "phantasia");
+        init_loca("phantasia", $"{PROGRAM_DIRECTORY_RESOURCES}/loca/{global.loca_directories[_value]}");
     }));
 
 #endregion
@@ -184,4 +184,4 @@ if (file_exists("settings.dat"))
 
 audio_set_master_gain(0, global.settings.audio_master);
 
-init_loca($"{PROGRAM_DIRECTORY_RESOURCES}/loca/{global.loca_directories[global.settings.global_localization]}", "phantasia");
+init_loca("phantasia", $"{PROGRAM_DIRECTORY_RESOURCES}/loca/{global.loca_directories[global.settings.global_localization]}");

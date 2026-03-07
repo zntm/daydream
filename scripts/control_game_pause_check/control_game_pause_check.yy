@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"init_music",
+  "%Name":"control_game_pause_check",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"init_music",
+  "name":"control_game_pause_check",
   "parent":{
-    "name":"Music Data",
-    "path":"folders/Data/Music Data.yy",
+    "name":"Control",
+    "path":"folders/Scripts/Control.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

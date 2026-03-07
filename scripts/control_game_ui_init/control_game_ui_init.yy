@@ -1,12 +1,12 @@
 {
   "$GMScript":"v1",
-  "%Name":"init_sfx_asset",
+  "%Name":"control_game_ui_init",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"init_sfx_asset",
+  "name":"control_game_ui_init",
   "parent":{
-    "name":"SFX Data",
-    "path":"folders/Data/SFX Data.yy",
+    "name":"Control",
+    "path":"folders/Scripts/Control.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

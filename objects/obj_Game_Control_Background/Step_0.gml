@@ -43,7 +43,7 @@ if !(obj_Game_Control.is_opened & WORLD_OPENED_BOOL.PAUSE)
             
             var _music = worldgen_get_music(in_biome_transition);
             
-            if (_music != undefined) && (!array_contains(_music, music_current_id))
+            if (_music != undefined) && (array_length(_music) > 0) && (!array_contains(_music, music_current_id))
             {
                 bg_play_music(array_choose(_music));
             }
