@@ -27,6 +27,6 @@ if (room == rm_World)
     // (Off + 480) * 1 * 0.5 = 480 -> Off + 480 = 960 -> Off = 480
     xscale = 1;
     yscale = 1;
-    xoffset = 480;
-    yoffset = 270;
+    xoffset = 0;
+    yoffset = 0;
 }

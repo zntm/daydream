@@ -108,20 +108,18 @@ function UISlot(_x, _y) : UIElement(_x, _y, 16, 16) constructor
         if !(visible) exit;
         
         
-        var _base_scale = ui_get_base_scale();
         var _abs_x = get_absolute_x();
         var _abs_y = get_absolute_y();
         
-        
-        var _x1 = _abs_x * _base_scale.x;
-        var _y1 = _abs_y * _base_scale.y;
-        var _w  = width  * _base_scale.x;
-        var _h  = height * _base_scale.y;
+        var _x1 = _abs_x;
+        var _y1 = _abs_y;
+        var _w  = width;
+        var _h  = height;
         
         
         /* mouse hit test */
-        var _mx = device_mouse_x_to_gui(0);
-        var _my = device_mouse_y_to_gui(0);
+        var _mx = global.gui_mouse_x;
+        var _my = global.gui_mouse_y;
         
         
         if !(global.ui_input_consumed) && (_mx >= _x1 && _mx <= _x1 + _w && _my >= _y1 && _my <= _y1 + _h) && !(global.ui_hover_consumed ?? false) 

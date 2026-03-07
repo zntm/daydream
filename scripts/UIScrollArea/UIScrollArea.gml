@@ -144,8 +144,8 @@ function UIScrollArea(_x, _y, _width, _height) : UIElement(_x, _y, _width, _heig
         var _abs_y = get_interaction_y();
         
         
-        var _mx = (window_mouse_get_x() / global.window_width) * global.gui_width;
-        var _my = (window_mouse_get_y() / global.window_height) * global.gui_height;
+        var _mx = window_mouse_get_x();
+        var _my = window_mouse_get_y();
         
         
         var _left = _abs_x * _base_scale.x;
@@ -289,7 +289,7 @@ function UIScrollArea(_x, _y, _width, _height) : UIElement(_x, _y, _width, _heig
         
         
         /* restore scissor */
-        gpu_set_scissor(0, 0, global.gui_width, global.gui_height);
+        gpu_set_scissor(0, 0, global.window_width, global.window_height);
         
         
         /* draw scrollbar if content overflows */

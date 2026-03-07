@@ -89,8 +89,8 @@ function menu_refresh_instance_statistics()
     }
     
     obj_Menu_Control_Render.surface_index_boundary[@ _fade_layer] = {
-        y_min: global.gui_height * 0.45,
-        y_max: global.gui_height * 0.85
+        y_min: global.window_height * 0.45,
+        y_max: global.window_height * 0.85
     }
     
     for (var i = 0; i < _count; ++i)

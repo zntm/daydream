@@ -110,8 +110,8 @@ function UIDropdown(_x, _y, _width, _height) : UIElement(_x, _y, _width, _height
         var _abs_y = get_absolute_y();
         
         
-        var _mx = (window_mouse_get_x() / global.window_width) * global.gui_width;
-        var _my = (window_mouse_get_y() / global.window_height) * global.gui_height;
+        var _mx = window_mouse_get_x();
+        var _my = window_mouse_get_y();
         
         
         var _left = _abs_x * _base_scale.x;

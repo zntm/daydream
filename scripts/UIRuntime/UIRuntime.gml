@@ -1376,16 +1376,12 @@ function ui_resolve_percentage(_value, _reference)
 /* get the base gui scale for ui elements */
 function ui_get_base_scale()
 {
-    var _lw = (global.gui_root != undefined) ? global.gui_root.width : 960;
-    var _lh = (global.gui_root != undefined) ? global.gui_root.height : 540;
-    
-    var _w = variable_global_exists("gui_width") ? global.gui_width : _lw;
-    var _h = variable_global_exists("gui_height") ? global.gui_height : _lh;
-    
+    var _h = variable_global_exists("window_height") ? global.window_height : 540;
+    var _s = _h / 540;
     
     return {
-        x: _w / _lw,
-        y: _h / _lh
+        x: _s,
+        y: _s
     }
 }
 

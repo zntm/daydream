@@ -61,8 +61,8 @@ function UIWindow(_x, _y, _width, _height, _title = "") : UIElement(_x, _y, _wid
         var _base_scale_y = _base_scale.y;
         
         
-        var _mx = (window_mouse_get_x() / global.window_width) * global.gui_width;
-        var _my = (window_mouse_get_y() / global.window_height) * global.gui_height;
+        var _mx = window_mouse_get_x();
+        var _my = window_mouse_get_y();
         
         
         /* handle dragging */

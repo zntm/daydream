@@ -73,14 +73,12 @@ function GUIChoicePanel(_x, _y, _width = 200) : UIElement(_x, _y, _width, 0) con
         
         var _window_width = global.window_width;
         var _window_height = global.window_height;
-        var _gui_width = global.gui_width;
-        var _gui_height = global.gui_height;
+        var _gui_width = global.window_width;
+        var _gui_height = global.window_height;
         
         // Convert mouse to logical GUI coordinates
-        var _base_scale = ui_get_base_scale();
-        var _gui_scale = _base_scale.x; 
-        var _mouse_x = (window_mouse_get_x() / _window_width) * _gui_width / _gui_scale;
-        var _mouse_y = (window_mouse_get_y() / _window_height) * _gui_height / _gui_scale;
+        var _mouse_x = global.gui_mouse_x;
+        var _mouse_y = global.gui_mouse_y;
         
         // Only update selection if mouse moved
         var _mouse_moved = (_mouse_x != last_mouse_x) || (_mouse_y != last_mouse_y);

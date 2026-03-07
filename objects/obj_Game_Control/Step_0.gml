@@ -1,4 +1,8 @@
-var _item_data = global.item_data;
+var _sh = global.window_height;
+var _s  = _sh / 540;
+
+global.gui_mouse_x = window_mouse_get_x() / _s;
+global.gui_mouse_y = window_mouse_get_y() / _s;
 
 if (obj_Game_Control.is_opened & WORLD_OPENED_BOOL.GENERATING_WORLD)
 {

@@ -2,14 +2,7 @@ on_window_resize = function()
 {
     atla_repair_all();
     
-    var _gui_scale = global.gui_scale;
-    
-    var _gui_width  = round(_gui_scale * global.window_width);
-    var _gui_height = round(_gui_scale * global.window_height);
-    
-    global.gui_scale = _gui_scale;
-    
-    control_update_gui_size(_gui_width, _gui_height);
+    control_update_gui_size();
     
     if (!instance_exists(obj_Game_Control)) exit;
     

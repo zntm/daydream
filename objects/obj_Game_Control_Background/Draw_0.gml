@@ -1,10 +1,10 @@
 if (global.window_width <= 0) || (global.window_height <= 0) exit;
 
-var _camera_x = global.camera_x;
-var _camera_y = global.camera_y;
+var _camera_x = variable_global_exists("camera_x") ? global.camera_x : 0;
+var _camera_y = variable_global_exists("camera_y") ? global.camera_y : 0;
 
-var _camera_width  = global.camera_width;
-var _camera_height = global.camera_height;
+var _camera_width  = variable_global_exists("camera_width") ? global.camera_width : 960;
+var _camera_height = variable_global_exists("camera_height") ? global.camera_height : 540;
 
 draw_sprite_ext(spr_Square, 0, _camera_x, _camera_y, _camera_width, _camera_height, 0, sky_colour_base, 1);
 draw_sprite_general(spr_Glow_Corner, 0, 0, 0, 128, 1, _camera_x, _camera_y + _camera_height, _camera_height / 128, _camera_width, 90, sky_colour_gradient, sky_colour_gradient, sky_colour_gradient, sky_colour_gradient, 1);

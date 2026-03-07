@@ -316,7 +316,7 @@ function ui_editor_step()
     /* mouse press - check handles, then body, then hit test */
     if (_editor.preview_instance != undefined) && (mouse_check_button_pressed(mb_left))
     {
-        var _gui_w     = global.gui_width;
+        var _gui_w     = global.window_width;
         var _tree_w    = 200;
         var _prop_w    = 220;
         var _toolbar_h = 32;
@@ -618,8 +618,8 @@ function ui_editor_draw()
     if (!(global.ui_editor.active)) exit;
 
     var _editor = global.ui_editor;
-    var _gui_w  = global.gui_width;
-    var _gui_h  = global.gui_height;
+    var _gui_w  = global.window_width;
+    var _gui_h  = global.window_height;
 
     var _tree_w    = 200;
     var _prop_w    = 220;

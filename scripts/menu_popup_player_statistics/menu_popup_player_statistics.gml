@@ -208,8 +208,8 @@ function menu_popup_player_statistics(_data)
         no_dim: true // No extra dim for the text layer, keeps it bright
     }
     
-    var _gui_y_start = (_inst_slider.ystart / room_height) * global.gui_height; 
-    var _gui_y_end = ((_inst_slider.ystart + 300) / room_height) * global.gui_height;
+    var _gui_y_start = (_inst_slider.ystart / room_height) * global.window_height; 
+    var _gui_y_end = ((_inst_slider.ystart + 300) / room_height) * global.window_height;
     
     obj_Menu_Control_Render.surface_index_boundary[@ _popup_scroll_layer] = {
         y_min: _gui_y_start,

@@ -122,9 +122,6 @@ var _camera_y = 0 - (_camera_height / 2);
 
 var _gui_scale = 1;
 
-var _gui_width  = global.window_width;
-var _gui_height = global.window_height;
-
 global.camera_width  = _camera_width;
 global.camera_height = _camera_height;
 
@@ -138,7 +135,7 @@ global.camera_y_real = _camera_y;
 
 global.gui_scale = _gui_scale;
 
-control_update_gui_size(_gui_width, _gui_height);
+control_update_gui_size();
 control_camera_pos(_camera_x, _camera_y);
 
 camera_set_view_size(view_camera[0], _camera_width, _camera_height);
@@ -168,7 +165,7 @@ chunk_in_view_length = 0;
 
 chunk_queue_init();
 
-/* skip on clients — seed is received via WELCOME packet */
+/* skip on clients - seed is received via WELCOME packet */
 if (global.network_role != RELAY_ROLE.CLIENT)
 {
     open_simplex_noise_seed(global.current_world.seed);
@@ -208,7 +205,7 @@ global.gui_deferred_text = [];
 var _design_w = 960;
 
 var _logical_width  = _design_w / global.gui_scale;
-var _logical_height = global.gui_height / (global.gui_width / _logical_width);
+var _logical_height = global.window_height / (global.window_width / _logical_width);
 
 global.gui_root = new UIElement(0, 0, _logical_width, _logical_height);
 

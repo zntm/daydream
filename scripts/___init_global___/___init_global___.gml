@@ -218,4 +218,4 @@ global.crafting_pull_from_chests = false;
 
 global.gui_deferred_text = [];
 
-global.gui_scale = 2;
+global.gui_scale = 1;

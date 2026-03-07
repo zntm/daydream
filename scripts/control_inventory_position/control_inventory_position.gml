@@ -1,8 +1,8 @@
 function control_inventory_position()
 {
     var _gui_scale = global.gui_scale;
-    var _scale_x = _gui_scale * (global.gui_width / 960);
-    var _scale_y = _gui_scale * (global.gui_height / 540);
+    var _scale_x = _gui_scale * (global.window_width / 960);
+    var _scale_y = _gui_scale * (global.window_height / 540);
     
     var _inventory_instance = global.inventory_instance;
     

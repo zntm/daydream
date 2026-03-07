@@ -1,15 +1,26 @@
-function control_update_gui_size(_width, _height)
+function control_update_gui_size()
 {
-    global.gui_width  = _width;
-    global.gui_height = _height;
-    
+    var _width  = global.window_width;
+    var _height = global.window_height;
+
     display_set_gui_size(_width, _height);
-    
-    /* account for gui_scale since menus are rendered on the GUI layer which is already scaled */
+
+    /* scale menu elements individually via render controller */
     var _gui_scale = global.gui_scale;
-    var _cam_w = variable_global_exists("camera_width") ? global.camera_width : 960;
-    var _cam_h = variable_global_exists("camera_height") ? global.camera_height : 540;
-    
-    obj_Menu_Control_Render.xscale = _gui_scale * (global.window_width  / _cam_w);
-    obj_Menu_Control_Render.yscale = _gui_scale * (global.window_height / _cam_h);
+
+    if (instance_exists(obj_Menu_Control_Render))
+    {
+        obj_Menu_Control_Render.xscale = _gui_scale;
+        obj_Menu_Control_Render.yscale = _gui_scale;
+    }
+
+    /* update gui_root to use logical dimensions (Width = WindowWidth / Scale, Height = 540) */
+    if (variable_global_exists("gui_root")) && (global.gui_root != undefined)
+    {
+        var _s = _height / 540;
+
+        global.gui_root.width  = _width / _s;
+        global.gui_root.height = 540;
+        global.gui_root.recalculate_layout();
+    }
 }

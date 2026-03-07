@@ -187,8 +187,8 @@ global.gui_inventory = {
 
 function init_inventory_instance()
 {
-    var _gui_width  = global.gui_width;
-    var _gui_height = global.gui_height;
+    var _gui_width  = global.window_width;
+    var _gui_height = global.window_height;
     
     var _inventory = global.inventory;
     var _inventory_instance = global.inventory_instance;

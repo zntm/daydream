@@ -100,11 +100,11 @@ function GUIEffectIcon(_x, _y, _effect_id) : UIElement(_x, _y, 16, 16) construct
         
         // As per request, copying inventory tooltip placement logic (manual scaling)
         var _base_scale = ui_get_base_scale();
-        var _gui_width = global.gui_width;
-        var _gui_height = global.gui_height;
+        var _gui_width = global.window_width;
+        var _gui_height = global.window_height;
         
-        var _gui_mouse_x = (window_mouse_get_x() / _window_width)  * _gui_width;
-        var _gui_mouse_y = (window_mouse_get_y() / _window_height) * _gui_height;
+        var _gui_mouse_x = window_mouse_get_x();
+        var _gui_mouse_y = window_mouse_get_y();
         
         // Check hover
         var _draw_x = _abs_x * _base_scale_x;

@@ -41,11 +41,8 @@ function render_hud(_gui_width, _gui_height)
                         var _window_width  = global.window_width;
                         var _window_height = global.window_height;
                         
-                        var _gui_mouse_x = (window_mouse_get_x() / _window_width)  * _gui_width;
-                        var _gui_mouse_y = (window_mouse_get_y() / _window_height) * _gui_height;
-                        
-                        var _tooltip_x = _gui_mouse_x + (GUI_TOOLTIP_XOFFSET * _gui_scale_width);
-                        var _tooltip_y = _gui_mouse_y + (GUI_TOOLTIP_YOFFSET * _gui_scale_height);
+                        var _tooltip_x = global.gui_mouse_x + (GUI_TOOLTIP_XOFFSET * _gui_scale_width);
+                        var _tooltip_y = global.gui_mouse_y + (GUI_TOOLTIP_YOFFSET * _gui_scale_height);
                         
                         draw_sprite_ext(
                             spr_Inventory_Tooltip,

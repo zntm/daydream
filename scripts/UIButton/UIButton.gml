@@ -124,23 +124,14 @@ function UIButton(_x, _y, _width, _height, _text = "") : UIElement(_x, _y, _widt
         var _abs_x = get_absolute_x();
         var _abs_y = get_interaction_y();
         
+        var _mx = global.gui_mouse_x;
+        var _my = global.gui_mouse_y;
         
-        var _base_scale = ui_get_base_scale();
+        var _left = _abs_x;
+        var _top = _abs_y;
         
-        var _base_scale_x = _base_scale.x;
-        var _base_scale_y = _base_scale.y;
-        
-        
-        var _mx = (window_mouse_get_x() / global.window_width) * global.gui_width;
-        var _my = (window_mouse_get_y() / global.window_height) * global.gui_height;
-        
-        
-        var _left = _abs_x * _base_scale_x;
-        var _top = _abs_y * _base_scale_y;
-        
-        var _right = _left + (width * _base_scale_x);
-        var _bottom = _top + (height * _base_scale_y);
-        
+        var _right = _left + width;
+        var _bottom = _top + height;
         
         var _is_hovered = (_mx >= _left && _mx <= _right && _my >= _top && _my <= _bottom);
         
@@ -150,18 +141,19 @@ function UIButton(_x, _y, _width, _height, _text = "") : UIElement(_x, _y, _widt
         {
             if (instanceof(_p) == "UIScrollArea")
             {
-                var _p_base = ui_get_base_scale();
-                var _p_left = _p.get_absolute_x() * _p_base.x;
-                var _p_top = _p.get_absolute_y() * _p_base.y;
-                var _p_right = _p_left + (_p.width * _p_base.x);
-                var _p_bottom = _p_top + (_p.height * _p_base.y);
+                var _p_left = _p.get_absolute_x();
+                var _p_top = _p.get_absolute_y();
+                var _p_right = _p_left + _p.width;
+                var _p_bottom = _p_top + _p.height;
                 
                 if (_mx < _p_left || _mx > _p_right || _my < _p_top || _my > _p_bottom)
                 {
                     _is_hovered = false;
+                    
                     break;
                 }
             }
+            
             _p = _p.parent;
         }
         

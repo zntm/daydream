@@ -47,11 +47,16 @@ function control_game_ui_init(_logical_width, _logical_height)
 
     global.gui_panel_crafting_modular = global.ui_crafting.root_elements[0];
 
-    global.gui_panel_chat = new GUIChatHistory(8, _logical_height - 160, 300, 128, 8);
+    global.gui_panel_chat = new GUIChatHistory(8, -8, 300, 128, 8);
+    global.gui_panel_chat.offset_x = 8;
+    global.gui_panel_chat.offset_y = -8;
+    global.gui_panel_chat.set_anchor("left", "bottom");
     global.gui_root.add_child(global.gui_panel_chat);
 
-    global.gui_panel_choices = new GUIChoicePanel((_logical_width - 300) / 2, _logical_height / 2 - 50, 300);
+    global.gui_panel_choices = new GUIChoicePanel(0, 0, 300);
+    global.gui_panel_choices.offset_y = -50;
     global.gui_panel_choices.visible = false;
+    global.gui_panel_choices.set_anchor("center", "middle");
     global.gui_root.add_child(global.gui_panel_choices);
 
     global.gui_panel_effects = new GUIEffectPanel(0, 0);
