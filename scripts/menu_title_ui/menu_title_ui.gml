@@ -59,23 +59,38 @@ function menu_title_ui_init()
 		var _splash_current_date = _splash_data[$ $"{current_month}_{current_day}"];
 		var _splash_text = array_choose(((chance(0.1)) && (_splash_current_date != undefined)) ? _splash_current_date : _splash_data.generic);
 		
-		_title_graphic.on_draw = method(
-			{ _text: _splash_text },
-			function(_x, _y, _xscale, _yscale)
+		_title_graphic.on_draw = method(_title_graphic, function(_x, _y, _xscale, _yscale)
+		{
+			var _title_spr = spr_Menu_Title;
+			var _asset     = global.sprite_asset[$ "phantasia:ui/title"];
+			
+			if (_asset != undefined)
 			{
-			    draw_sprite_ext(spr_Menu_Title, 0, _x, _y + 4, 2, 2, 0, c_black, 0.25);
-			    draw_sprite_ext(spr_Menu_Title, 0, _x, _y,     2, 2, 0, c_white, 1);
-			    
-			    var _halign = draw_get_halign();
-			    var _valign = draw_get_valign();
-			    
-			    draw_set_align(fa_middle, fa_center);
-			    
-			    render_text(_x + (sprite_get_width(spr_Menu_Title) * 2 / 2), _y + (sprite_get_height(spr_Menu_Title) * 2), _text, 1, 1, 12, MENU_TITLE_SPLASH_COLOUR);
-			    
-			    draw_set_align(_halign, _valign);
+				_title_spr = _asset.get_sprite();
 			}
-		);
+			
+			var _s  = 2;
+			var _sw = sprite_get_width(_title_spr) * _s;
+			var _sh = sprite_get_height(_title_spr) * _s;
+			var _ox = sprite_get_xoffset(_title_spr) * _s;
+			var _oy = sprite_get_yoffset(_title_spr) * _s;
+			
+			/* align top-center of sprite visual bounds to (_x, _y) */
+			var _draw_x = _x - (_sw / 2) + _ox;
+			var _draw_y = _y + _oy;
+			
+			draw_sprite_ext(_title_spr, 0, _draw_x, _draw_y + 4, _s, _s, 0, c_black, 0.25);
+			draw_sprite_ext(_title_spr, 0, _draw_x, _draw_y,     _s, _s, 0, c_white, 1);
+			
+			var _halign = draw_get_halign();
+			var _valign = draw_get_valign();
+			
+			draw_set_align(fa_middle, fa_center);
+			
+			render_text(_x, _draw_y + _sh - _oy + 24, _splash_text, 1, 1, 12, MENU_TITLE_SPLASH_COLOUR);
+			
+			draw_set_align(_halign, _valign);
+		});
 	}
 	
 	
@@ -84,20 +99,17 @@ function menu_title_ui_init()
 	
 	if (_version_graphic != undefined)
 	{
-		_version_graphic.on_draw = method(
-			{},
-			function(_x, _y, _xscale, _yscale)
-			{
-			    var _halign = draw_get_halign();
-			    var _valign = draw_get_valign();
-			    
-			    draw_set_align(fa_right, fa_bottom);
-			    
-			    render_text(_x, _y, program_get_version());
-			    
-			    draw_set_align(_halign, _valign);
-			}
-		);
+		_version_graphic.on_draw = method(_version_graphic, function(_x, _y, _xscale, _yscale)
+		{
+			var _halign = draw_get_halign();
+			var _valign = draw_get_valign();
+			
+			draw_set_align(fa_right, fa_bottom);
+			
+			render_text(_x, _y, "v" + program_get_version(), 0.7, 0.7, 0, c_white, 0.5);
+			
+			draw_set_align(_halign, _valign);
+		});
 	}
 	
 	
@@ -135,6 +147,67 @@ function menu_title_ui_init()
 		_btn_exit.text = loca_translate("phantasia:menu.title.exit");
 		_btn_exit.add_event_handler("on_select_release", function() {
 			menu_title_ui_popup_exit();
+		});
+	}
+	
+	/* socials */
+	var _btn_twitter = _elements[$ "btn_twitter"];
+	if (_btn_twitter != undefined)
+	{
+		_btn_twitter.boolean = 0;
+		_btn_twitter.on_draw = method(_btn_twitter, function(_x, _y, _xscale, _yscale) {
+			var _asset = global.sprite_asset[$ "phantasia:ui/site_twitter"];
+			if (_asset != undefined)
+			{
+				var _cx = _x + (self.width * _xscale / 2);
+				var _cy = _y + (self.height * _yscale / 2);
+				var _s = ((struct_exists(self, "is_hovered")) && (self.is_hovered)) ? 2.2 : 2.0;
+				draw_sprite_ext(_asset.get_sprite(), 0, _cx, _cy, _s, _s, 0, c_white, 1);
+			}
+		});
+		
+		_btn_twitter.add_event_handler("on_select_release", function() {
+			url_open(SITE_TWITTER);
+		});
+	}
+	
+	var _btn_bluesky = _elements[$ "btn_bluesky"];
+	if (_btn_bluesky != undefined)
+	{
+		_btn_bluesky.boolean = 0;
+		_btn_bluesky.on_draw = method(_btn_bluesky, function(_x, _y, _xscale, _yscale) {
+			var _asset = global.sprite_asset[$ "phantasia:ui/site_bluesky"];
+			if (_asset != undefined)
+			{
+				var _cx = _x + (self.width * _xscale / 2);
+				var _cy = _y + (self.height * _yscale / 2);
+				var _s = ((struct_exists(self, "is_hovered")) && (self.is_hovered)) ? 2.2 : 2.0;
+				draw_sprite_ext(_asset.get_sprite(), 0, _cx, _cy, _s, _s, 0, c_white, 1);
+			}
+		});
+		
+		_btn_bluesky.add_event_handler("on_select_release", function() {
+			url_open(SITE_BLUESKY);
+		});
+	}
+	
+	var _btn_discord = _elements[$ "btn_discord"];
+	if (_btn_discord != undefined)
+	{
+		_btn_discord.boolean = 0;
+		_btn_discord.on_draw = method(_btn_discord, function(_x, _y, _xscale, _yscale) {
+			var _asset = global.sprite_asset[$ "phantasia:ui/site_discord"];
+			if (_asset != undefined)
+			{
+				var _cx = _x + (self.width * _xscale / 2);
+				var _cy = _y + (self.height * _yscale / 2);
+				var _s = ((struct_exists(self, "is_hovered")) && (self.is_hovered)) ? 2.2 : 2.0;
+				draw_sprite_ext(_asset.get_sprite(), 0, _cx, _cy, _s, _s, 0, c_white, 1);
+			}
+		});
+		
+		_btn_discord.add_event_handler("on_select_release", function() {
+			url_open(SITE_DISCORD);
 		});
 	}
 }

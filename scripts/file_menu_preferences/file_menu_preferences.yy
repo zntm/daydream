@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"file_menu_preferences",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"file_menu_preferences",
+  "parent":{
+    "name":"daydream",
+    "path":"daydream.yyp",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

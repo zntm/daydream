@@ -57,4 +57,6 @@ function file_load_players()
     }
     
     array_sort(global.file_players, __sort);
+
+    file_apply_pinned_players();
 }

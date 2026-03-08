@@ -56,4 +56,6 @@ function file_load_worlds()
     }
     
     array_sort(global.file_worlds, __sort);
+
+    file_apply_pinned_worlds();
 }

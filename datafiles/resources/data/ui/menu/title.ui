@@ -42,6 +42,25 @@
 		}
     }
 
+    @area(socials) {
+        position = ORIGIN_BOTTOM_LEFT + (32, -32)
+        size = (112, 32)
+        layout = LAYOUT_HORIZONTAL
+        spacing = 8
+        
+        @button(btn_twitter) {
+            size = (32, 32)
+        }
+
+        @button(btn_bluesky) {
+            size = (32, 32)
+        }
+
+        @button(btn_discord) {
+            size = (32, 32)
+        }
+    }
+
     @area(version_anchor) {
         position = ORIGIN_BOTTOM_RIGHT + (-24, -24)
         size = (0, 0)

@@ -38,11 +38,8 @@ function menu_worlds_ui_load()
 	
 	global.ui_worlds_menu = _instance;
 	
-	/* default view mode */
-	if (!variable_global_exists("worlds_view_mode"))
-	{
-		global.worlds_view_mode = "grid";
-	}
+	/* restore view mode from preferences */
+	global.worlds_view_mode = global.menu_preferences.worlds_view_mode;
 	
 	menu_worlds_ui_init();
 }
@@ -81,25 +78,63 @@ function menu_worlds_ui_init()
 	
 	if (_btn_view_toggle != undefined)
 	{
-		_btn_view_toggle.text = (global.worlds_view_mode == "grid") ? "Grid" : "List";
+		_btn_view_toggle.text = "";
+		
+		_btn_view_toggle.on_draw = method(_btn_view_toggle, function(_x, _y, _xscale, _yscale) {
+			var _alpha  = global.menu_transition_alpha ?? 1;
+			var _spr_id = (global.worlds_view_mode == "grid")
+				? "phantasia:ui/view_grid"
+				: "phantasia:ui/view_list";
+			var _asset = global.sprite_asset[$ _spr_id];
+
+			if (_asset != undefined)
+			{
+				var _cx = _x + (self.width * _xscale / 2);
+				var _cy = _y + (self.height * _yscale / 2);
+
+				draw_sprite_ext(_asset.get_sprite(), 0, _cx, _cy, 2, 2, 0, c_white, _alpha);
+			}
+		});
 		
 		_btn_view_toggle.add_event_handler("on_select_release", function() {
 			global.worlds_view_mode = (global.worlds_view_mode == "grid") ? "list" : "grid";
 
+			global.menu_preferences.worlds_view_mode = global.worlds_view_mode;
+
+			file_save_menu_preferences();
 			menu_worlds_ui_populate();
 		});
 	}
 	
-	/* check worlds directory */
-	var _a = file_read_directory(PROGRAM_DIRECTORY_WORLDS);
-    var _b = global.file_worlds_uuid;
-    
-    if (!array_equals(_a, _b))
-    {
-        file_load_worlds();
-    }
-	
-	menu_worlds_ui_populate();
+	/* show loading placeholder, then defer data load */
+	var _container = _elements[$ "worlds_container"];
+
+	if (_container != undefined)
+	{
+		_container.children = [];
+
+		var _loading = new UIText(8, 8, "");
+		_loading.text       = "Loading...";
+		_loading.halign     = fa_left;
+		_loading.valign     = fa_top;
+		_loading.text_scale = 0.8;
+		_loading.colour     = c_ltgray;
+		_loading.parent     = _container;
+
+		array_push(_container.children, _loading);
+	}
+
+	call_later(1, time_source_units_frames, function() {
+		var _a = file_read_directory(PROGRAM_DIRECTORY_WORLDS);
+		var _b = global.file_worlds_uuid;
+
+		if (!array_equals(_a, _b))
+		{
+			file_load_worlds();
+		}
+
+		menu_worlds_ui_populate();
+	});
 }
 
 function menu_worlds_ui_populate()
@@ -109,14 +144,6 @@ function menu_worlds_ui_populate()
 	var _container = _elements[$ "worlds_container"];
 	
 	if (_container == undefined) exit;
-	
-	/* update toggle button text */
-	var _btn_view_toggle = _elements[$ "btn_view_toggle"];
-	
-	if (_btn_view_toggle != undefined)
-	{
-		_btn_view_toggle.text = (global.worlds_view_mode == "grid") ? "Grid" : "List";
-	}
 	
 	/* clear previous */
 	_container.children = [];
@@ -149,12 +176,12 @@ function menu_worlds_ui_populate()
 	if (array_length(_pinned) > 0)
 	{
 		var _label_pinned = new UIText(8, _ypos, "");
-		_label_pinned.text = "Pinned";
-		_label_pinned.halign = fa_left;
-		_label_pinned.valign = fa_top;
+		_label_pinned.text       = "Pinned";
+		_label_pinned.halign     = fa_left;
+		_label_pinned.valign     = fa_top;
 		_label_pinned.text_scale = 0.8;
-		_label_pinned.colour = c_ltgray;
-		_label_pinned.parent = _container;
+		_label_pinned.colour     = c_ltgray;
+		_label_pinned.parent     = _container;
 
 		array_push(_container.children, _label_pinned);
 
@@ -175,12 +202,12 @@ function menu_worlds_ui_populate()
 	if (array_length(_normal) > 0)
 	{
 		var _label_normal = new UIText(8, _ypos, "");
-		_label_normal.text = (array_length(_pinned) > 0) ? "Worlds" : "";
-		_label_normal.halign = fa_left;
-		_label_normal.valign = fa_top;
+		_label_normal.text       = (array_length(_pinned) > 0) ? "Worlds" : "";
+		_label_normal.halign     = fa_left;
+		_label_normal.valign     = fa_top;
 		_label_normal.text_scale = 0.8;
-		_label_normal.colour = c_ltgray;
-		_label_normal.parent = _container;
+		_label_normal.colour     = c_ltgray;
+		_label_normal.parent     = _container;
 
 		array_push(_container.children, _label_normal);
 
@@ -282,68 +309,72 @@ function menu_worlds_ui_build_cards(_container, _worlds, _ystart, _is_grid, _ins
 			draw_set_align(_halign, _valign);
 		});
 		
-		/* pin icon */
-		var _pin_w  = 24;
-		var _pin_h  = 20;
-		var _pin_x  = _card_w - _pin_w - 4;
-		var _pin_y  = _card_h - _pin_h - 4;
-		var _btn_pin = new UIButton(_pin_x, _pin_y, _pin_w, _pin_h, "");
+		/* icon button dimensions */
+		var _icon_w = 20;
+		var _icon_h = 20;
+		
+		/* option icon (rightmost) */
+		var _option_x  = _card_w - _icon_w - 4;
+		var _option_y  = _card_h - _icon_h - 4;
+		var _btn_option = new UIButton(_option_x, _option_y, _icon_w, _icon_h, "");
 
+		_btn_option.boolean   = 0;
+		_btn_option.world_ref = _world;
+		_btn_option.parent    = _entry;
+
+		_btn_option.on_draw = method(_btn_option, function(_x, _y, _xscale, _yscale) {
+			var _alpha = global.menu_transition_alpha ?? 1;
+			var _asset = global.sprite_asset[$ "phantasia:ui/option"];
+
+			if (_asset != undefined)
+			{
+				var _cx = _x + (self.width * _xscale / 2);
+				var _cy = _y + (self.height * _yscale / 2);
+
+				draw_sprite_ext(_asset.get_sprite(), 0, _cx, _cy, 2, 2, 0, c_white, _alpha);
+			}
+		});
+
+		_btn_option.add_event_handler("on_select_release", method(_btn_option, function() {
+			PRINT("World options: " + string(self.world_ref.get_name()));
+			global.ui_input_consumed = true;
+		}));
+		
+		/* pin icon (left of option) */
+		var _pin_x   = _option_x - _icon_w - 2;
+		var _btn_pin = new UIButton(_pin_x, _option_y, _icon_w, _icon_h, "");
+
+		_btn_pin.boolean   = 0;
 		_btn_pin.world_ref = _world;
 		_btn_pin.parent    = _entry;
 
 		_btn_pin.on_draw = method(_btn_pin, function(_x, _y, _xscale, _yscale) {
-			var _halign = draw_get_halign();
-			var _valign = draw_get_valign();
 			var _alpha = global.menu_transition_alpha ?? 1;
+			var _is_pinned = (self.world_ref[$ "pinned"] == true);
+			var _spr_key   = _is_pinned ? "phantasia:ui/pin_active" : "phantasia:ui/pin";
+			var _asset     = global.sprite_asset[$ _spr_key];
 
-			draw_set_align(fa_center, fa_middle);
+			if (_asset != undefined)
+			{
+				var _cx = _x + (self.width * _xscale / 2);
+				var _cy = _y + (self.height * _yscale / 2);
 
-			var _cx = _x + (self.width * _xscale / 2);
-			var _cy = _y + (self.height * _yscale / 2);
-
-			render_text(_cx, _cy, "I", 0.8, 0.8, 0, c_white, _alpha);
-
-			draw_set_align(_halign, _valign);
+				draw_sprite_ext(_asset.get_sprite(), 0, _cx, _cy, 2, 2, 0, c_white, _alpha);
+			}
 		});
 
 		_btn_pin.add_event_handler("on_select_release", method(_btn_pin, function() {
-			var _w = self.world_ref;
-			_w[$ "pinned"] = !(_w[$ "pinned"] == true);
+			var _w    = self.world_ref;
+			var _uuid = _w.get_uuid();
+
+			_w[$ "pinned"] = file_toggle_pinned_world(_uuid);
 
 			menu_worlds_ui_populate();
 			
 			global.ui_input_consumed = true;
 		}));
 		
-		/* gear icon */
-		var _gear_x = _pin_x - _pin_w - 2;
-		var _btn_gear = new UIButton(_gear_x, _pin_y, _pin_w, _pin_h, "");
-
-		_btn_gear.world_ref = _world;
-		_btn_gear.parent    = _entry;
-
-		_btn_gear.on_draw = method(_btn_gear, function(_x, _y, _xscale, _yscale) {
-			var _halign = draw_get_halign();
-			var _valign = draw_get_valign();
-			var _alpha = global.menu_transition_alpha ?? 1;
-
-			draw_set_align(fa_center, fa_middle);
-
-			var _cx = _x + (self.width * _xscale / 2);
-			var _cy = _y + (self.height * _yscale / 2);
-
-			render_text(_cx, _cy, "O", 0.8, 0.8, 0, c_white, _alpha);
-
-			draw_set_align(_halign, _valign);
-		});
-
-		_btn_gear.add_event_handler("on_select_release", method(_btn_gear, function() {
-			PRINT("World options: " + string(self.world_ref.get_name()));
-			global.ui_input_consumed = true;
-		}));
-		
-		array_push(_entry.children, _btn_pin, _btn_gear);
+		array_push(_entry.children, _btn_pin, _btn_option);
 		
 		/* select world */
 		_entry.add_event_handler("on_select_release", method(_entry, function() {
