@@ -84,4 +84,40 @@ export default [
             ),
         ),
     ),
+    // Pine
+    new DatagenReturnData(
+        "tree/silver_pine.json",
+        new Structure(
+            9,
+            SmartValue.IntRandom(9, 14),
+            new StructurePlacement(
+                StructurePlacementType.Floor,
+                -4,
+                "-height",
+                [
+                    new StructurePlacementClearanceCondition(
+                        -4,
+                        "-height",
+                        "width",
+                        8,
+                    ),
+                ],
+                true,
+            ),
+            new StructureFunction(
+                "phantasia:tree/coniferous",
+                new StructureParameter(
+                    new StructureParameterTile("phantasia:pine"),
+                    new StructureParameterTile("phantasia:silver_pine_leaves"),
+                    1,
+                    2,
+                    3,
+                    SmartValue.FloatRandom(0.1, 0.3),
+                    SmartValue.FloatRandom(1, 3),
+                    1,
+                    SmartValue.FloatRandom(-0.2, 0),
+                ),
+            ),
+        ),
+    ),
 ];

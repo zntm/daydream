@@ -22,6 +22,7 @@ function init(_namespace)
     init_effect(_namespace, $"{PROGRAM_DIRECTORY_RESOURCES}/data/effects");
 
     init_item(_namespace, $"{PROGRAM_DIRECTORY_RESOURCES}/data/items");
+    init_item_resolve_drops();
 
     init_crafting(_namespace, $"{PROGRAM_DIRECTORY_RESOURCES}/data/json/crafting_recipes.json");
 

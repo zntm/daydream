@@ -88,6 +88,44 @@ export default [
             ),
         ),
     ),
+    // Cherry
+    new DatagenReturnData(
+        "tree/cherry.json",
+        new Structure(
+            7,
+            SmartValue.IntRandom(9, 12),
+            new StructurePlacement(
+                StructurePlacementType.Floor,
+                -3,
+                "-height",
+                [
+                    new StructurePlacementClearanceCondition(
+                        -3,
+                        "-height",
+                        "width",
+                        4,
+                    ),
+                ],
+                true,
+            ),
+            new StructureFunction(
+                "phantasia:tree/generic",
+                new StructureParameter(
+                    new StructureParameterTile("phantasia:cherry"),
+                    new StructureParameterTile("phantasia:cherry_leaves"),
+                    1,
+                    2,
+                    3,
+                    [
+                        { width: 3, index_offset: 0 },
+                        { width: 3, yscale: 1, index_offset: 5 },
+                        { width: 5, index_offset: 0 },
+                        { width: 5, yscale: 1, index_offset: 5 },
+                    ],
+                ),
+            ),
+        ),
+    ),
     // Mangrove
     new DatagenReturnData(
         "tree/mangrove.json",

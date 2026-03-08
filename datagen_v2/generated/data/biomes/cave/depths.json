@@ -22,7 +22,7 @@
         },
         {
             "id": "phantasia:twig",
-            "chance": 0.0007,
+            "chance": 0.01,
             "generate_on": [
                 "phantasia:stone"
             ]

@@ -137,10 +137,10 @@ export default [
                 new BiomeAmbience("phantasia:sfx/ambience/cave/default", 0.001, 0.4),
             ])
             .setFoliage([
-                new BiomeFoliage("phantasia:rock", 0.07).setGenerateOn([
+                new BiomeFoliage("phantasia:rock", 0.08).setGenerateOn([
                     "phantasia:stone",
                 ]),
-                new BiomeFoliage("phantasia:twig", 0.0007).setGenerateOn([
+                new BiomeFoliage("phantasia:twig", 0.01).setGenerateOn([
                     "phantasia:stone",
                 ]),
                 new BiomeFoliage("phantasia:cave_roots", 0.04).setGenerateOn([
@@ -186,7 +186,7 @@ export default [
                 new BiomeFoliage("phantasia:rock", 0.07).setGenerateOn([
                     "phantasia:stone",
                 ]),
-                new BiomeFoliage("phantasia:twig", 0.0007).setGenerateOn([
+                new BiomeFoliage("phantasia:twig", 0.01).setGenerateOn([
                     "phantasia:stone",
                 ]),
                 new BiomeFoliage("phantasia:cave_roots", 0.04).setGenerateOn([
@@ -237,6 +237,8 @@ export default [
                 new BiomeFoliage("phantasia:lumin_blossom", 0.08).setGenerateOn(
                     ["phantasia:lumin_moss", "phantasia:petrilumin"],
                 ),
+                new BiomeFoliage("phantasia:rock", 0.03),
+                new BiomeFoliage("phantasia:twig", 0.01),
             ])
             .setStructures([
                 new BiomeStructure(
@@ -264,12 +266,9 @@ export default [
                 new BiomeAmbience("phantasia:sfx/ambience/cave/default", 0.001, 0.4),
             ])
             .setFoliage([
-                new BiomeFoliage("phantasia:rock", 0.07).setGenerateOn([
-                    "phantasia:grimstone",
-                ]),
-                new BiomeFoliage("phantasia:twig", 0.0007).setGenerateOn([
-                    "phantasia:grimstone",
-                ]),
+                new BiomeFoliage("phantasia:rock", 0.12),
+                new BiomeFoliage("phantasia:twig", 0.04),
+                new BiomeFoliage("phantasia:cave_roots", 0.06),
             ])
             .setStructures([
                 new BiomeStructure("phantasia:tall_foliage/vine", 0.01),
@@ -305,8 +304,11 @@ export default [
                     "phantasia:dirt",
                     "phantasia:moss",
                 ]),
-                new BiomeFoliage("phantasia:bush", 0.05).setGenerateOn([
+                new BiomeFoliage("phantasia:short_grass", 0.09).setGenerateOn([
                     "phantasia:moss",
+                ]),
+                new BiomeFoliage("phantasia:tall_grass", 0.05).setGenerateOn([
+                    "phantasia:dirt",
                 ]),
             ])
             .setStructures([

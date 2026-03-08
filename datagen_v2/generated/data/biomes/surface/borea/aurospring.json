@@ -78,7 +78,13 @@
         ]
     },
     "sky_script": "phantasia:sky/borea_aurora",
-    "structures": [],
+    "structures": [
+        {
+            "id": "phantasia:clump/moss",
+            "chance": 0.006,
+            "generate_on": "#phantasia:tile/placement/plant_on"
+        }
+    ],
     "terrain_modifier": {
         "height_offset": -2
     },

@@ -15,14 +15,21 @@
     "foliage": [
         {
             "id": "phantasia:rock",
-            "chance": 0.07,
+            "chance": 0.12,
             "generate_on": [
                 "phantasia:grimstone"
             ]
         },
         {
             "id": "phantasia:twig",
-            "chance": 0.0007,
+            "chance": 0.04,
+            "generate_on": [
+                "phantasia:grimstone"
+            ]
+        },
+        {
+            "id": "phantasia:cave_roots",
+            "chance": 0.06,
             "generate_on": [
                 "phantasia:grimstone"
             ]

@@ -28,6 +28,14 @@
                 "phantasia:lumin_moss",
                 "phantasia:petrilumin"
             ]
+        },
+        {
+            "id": "phantasia:rock",
+            "chance": 0.03
+        },
+        {
+            "id": "phantasia:twig",
+            "chance": 0.01
         }
     ],
     "light_colour": {

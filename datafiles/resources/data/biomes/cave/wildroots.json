@@ -30,10 +30,17 @@
             ]
         },
         {
-            "id": "phantasia:bush",
-            "chance": 0.05,
+            "id": "phantasia:short_grass",
+            "chance": 0.09,
             "generate_on": [
                 "phantasia:moss"
+            ]
+        },
+        {
+            "id": "phantasia:tall_grass",
+            "chance": 0.05,
+            "generate_on": [
+                "phantasia:dirt"
             ]
         }
     ],

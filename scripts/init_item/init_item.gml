@@ -1,5 +1,8 @@
 global.item_data = {}
 
+/* pending drop resolution entries: array of { namespace, id, drops } */
+global.__item_drops_pending = [];
+
 function init_item(_namespace, _directory)
 {
     var _files        = file_read_directory(_directory, true);
@@ -67,7 +70,7 @@ function init_item(_namespace, _directory)
 
             _item_data.set_item(_item);
 
-            /* filter tile references */
+            /* defer tile drop resolution until all items are loaded */
             var _tile = _item[$ "tile"];
 
             if (_tile != undefined)
@@ -76,26 +79,26 @@ function init_item(_namespace, _directory)
 
                 if (is_array(_drops))
                 {
-                    var _drops_parsed = [];
+                    /* store raw drops for pass 2 — resolve ids against namespace */
+                    var _drops_raw = [];
 
                     for (var j = array_length(_drops) - 1; j >= 0; --j)
                     {
-                        var _drop    = _drops[j];
-                        var _drop_id = init_asset_resolve(_namespace, _drop.id);
+                        var _drop        = _drops[j];
+                        var _drop_copy   = variable_clone(_drop);
 
-                        if (init_asset_item_exists(_drop_id))
-                        {
-                            _drop.id = _drop_id;
+                        _drop_copy.id = init_asset_resolve(_namespace, _drop.id);
 
-                            array_push(_drops_parsed, _drop);
-                        }
-                        else
-                        {
-                             PRINT($"[init_item] '{_id}': tile drop '{_drop_id}' not loaded, skipping");
-                        }
+                        array_push(_drops_raw, _drop_copy);
                     }
 
-                    _tile.drops = _drops_parsed;
+                    array_push(global.__item_drops_pending, {
+                        full_id:   $"{_namespace}:{_id}",
+                        drops_raw: _drops_raw
+                    });
+
+                    /* clear drops for now — filled in pass 2 */
+                    _tile.drops = [];
                 }
 
                 _item_data.set_tile(_tile);
@@ -138,4 +141,42 @@ function init_item(_namespace, _directory)
 
         dbg_timer("init_item", $"[Init] Loaded Item: '{_id}'");
     }
+}
+
+/// @desc Pass 2 — resolves all deferred tile drops now that every item is registered.
+/// Call this once after all init_item() calls have finished.
+function init_item_resolve_drops()
+{
+    var _pending        = global.__item_drops_pending;
+    var _pending_length = array_length(_pending);
+
+    for (var i = _pending_length - 1; i >= 0; --i)
+    {
+        var _entry   = _pending[i];
+        var _data    = global.item_data[$ _entry.full_id];
+        var _drops   = _entry.drops_raw;
+
+        if (_data == undefined) continue;
+
+        var _drops_parsed = [];
+
+        for (var j = array_length(_drops) - 1; j >= 0; --j)
+        {
+            var _drop    = _drops[j];
+            var _drop_id = _drop.id;
+
+            if (init_asset_item_exists(_drop_id))
+            {
+                array_push(_drops_parsed, _drop);
+            }
+            else
+            {
+                PRINT($"[init_item] '{_entry.full_id}': tile drop '{_drop_id}' not found after full load");
+            }
+        }
+
+        _data.set_tile_drops(_drops_parsed);
+    }
+
+    global.__item_drops_pending = [];
 }

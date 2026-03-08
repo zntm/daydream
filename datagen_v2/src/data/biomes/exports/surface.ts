@@ -12,7 +12,6 @@ import {
     BiomeFoliage,
     BiomeStructure,
     BiomeTerrainModifier,
-    BiomeCreature,
     TileEntry,
 } from "../lib/Biome";
 
@@ -264,6 +263,9 @@ export default [
                 ),
             ])
             .setStructures([
+                new BiomeStructure("phantasia:tree/cherry", 0.14).setGenerateOn(
+                    "#phantasia:tile/placement/plant_on",
+                ),
                 new BiomeStructure("phantasia:tree/oak", 0.06).setGenerateOn(
                     "#phantasia:tile/placement/plant_on",
                 ),
@@ -343,6 +345,12 @@ export default [
                 ),
             ])
             .setStructures([
+                new BiomeStructure("phantasia:tree/birch", 0.04).setGenerateOn(
+                    "#phantasia:tile/placement/plant_on",
+                ),
+                new BiomeStructure("phantasia:tree/cherry", 0.08).setGenerateOn(
+                    "#phantasia:tile/placement/plant_on",
+                ),
                 new BiomeStructure("phantasia:tree/oak", 0.06).setGenerateOn(
                     "#phantasia:tile/placement/plant_on",
                 ),
@@ -646,6 +654,9 @@ export default [
                 new BiomeStructure("phantasia:tree/pine", 0.14).setGenerateOn(
                     "#phantasia:tile/placement/plant_on",
                 ),
+                new BiomeStructure("phantasia:tree/silver_pine", 0.04).setGenerateOn(
+                    "#phantasia:tile/placement/plant_on",
+                ),
             ]),
     ),
 
@@ -678,7 +689,10 @@ export default [
                 ),
             ])
             .setStructures([
-                new BiomeStructure("phantasia:tree/pine", 0.08).setGenerateOn(
+                new BiomeStructure("phantasia:tree/pine", 0.02).setGenerateOn(
+                    "#phantasia:tile/placement/plant_on",
+                ),
+                new BiomeStructure("phantasia:tree/silver_pine", 0.16).setGenerateOn(
                     "#phantasia:tile/placement/plant_on",
                 ),
             ]),
@@ -761,7 +775,11 @@ export default [
                     "#phantasia:tile/placement/plant_on",
                 ),
             ])
-            .setStructures([])
+            .setStructures([
+                new BiomeStructure("phantasia:clump/moss", 0.006).setGenerateOn(
+                    "#phantasia:tile/placement/plant_on",
+                ),
+            ])
             .setSkyScript("phantasia:sky/borea_aurora"),
     ),
 
@@ -797,7 +815,14 @@ export default [
                     "#phantasia:tile/placement/plant_on",
                 ),
             ])
-            .setStructures([]),
+            .setStructures([
+                new BiomeStructure("phantasia:clump/moss", 0.006).setGenerateOn(
+                    "#phantasia:tile/placement/plant_on",
+                ),
+                new BiomeStructure("phantasia:tree/pine", 0.01).setGenerateOn(
+                    "#phantasia:tile/placement/plant_on",
+                ),
+            ]),
     ),
 
     // Flakerocks - Rocky frozen peaks

@@ -79,6 +79,16 @@
     },
     "structures": [
         {
+            "id": "phantasia:tree/birch",
+            "chance": 0.04,
+            "generate_on": "#phantasia:tile/placement/plant_on"
+        },
+        {
+            "id": "phantasia:tree/cherry",
+            "chance": 0.08,
+            "generate_on": "#phantasia:tile/placement/plant_on"
+        },
+        {
             "id": "phantasia:tree/oak",
             "chance": 0.06,
             "generate_on": "#phantasia:tile/placement/plant_on"

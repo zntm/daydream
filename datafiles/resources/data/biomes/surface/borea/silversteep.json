@@ -75,7 +75,12 @@
     "structures": [
         {
             "id": "phantasia:tree/pine",
-            "chance": 0.08,
+            "chance": 0.02,
+            "generate_on": "#phantasia:tile/placement/plant_on"
+        },
+        {
+            "id": "phantasia:tree/silver_pine",
+            "chance": 0.16,
             "generate_on": "#phantasia:tile/placement/plant_on"
         }
     ],

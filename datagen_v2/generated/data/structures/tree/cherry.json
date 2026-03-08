@@ -1,0 +1,58 @@
+{
+    "function": {
+        "id": "phantasia:tree/generic",
+        "parameters": {
+            "index": 1,
+            "index_bottom": 3,
+            "index_top": 2,
+            "layers": [
+                {
+                    "width": 3,
+                    "index_offset": 0
+                },
+                {
+                    "width": 3,
+                    "yscale": 1,
+                    "index_offset": 5
+                },
+                {
+                    "width": 5,
+                    "index_offset": 0
+                },
+                {
+                    "width": 5,
+                    "yscale": 1,
+                    "index_offset": 5
+                }
+            ],
+            "tile_leaves": {
+                "id": "phantasia:cherry_leaves"
+            },
+            "tile_wood": {
+                "id": "phantasia:cherry"
+            }
+        }
+    },
+    "height": {
+        "type": "smart_value:irandom",
+        "values": {
+            "max": 12,
+            "min": 9
+        }
+    },
+    "placement": {
+        "clearance_condition": [
+            {
+                "xoffset": -3,
+                "yoffset": "-height",
+                "width": "width",
+                "height": 4
+            }
+        ],
+        "if_clear": true,
+        "type": "floor",
+        "xoffset": -3,
+        "yoffset": "-height"
+    },
+    "width": 7
+}
