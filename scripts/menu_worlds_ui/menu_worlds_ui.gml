@@ -294,6 +294,7 @@ function menu_worlds_ui_build_cards(_container, _worlds, _ystart, _is_grid, _ins
 
 				render_text(_cx, _y + _thumb_h + 16, _data.get_name(), 0.9, 0.9, 0, c_white, _alpha);
 				render_text(_cx, _y + _eh - 20, date_datetime_string(_data.get_last_opened()), 0.6, 0.6, 0, c_white, _alpha);
+				render_text(_cx, _y + _eh - 10, file_format_size(_data.get_size()), 0.55, 0.55, 0, c_ltgray, _alpha);
 			}
 			else
 			{
@@ -304,6 +305,10 @@ function menu_worlds_ui_build_cards(_container, _worlds, _ystart, _is_grid, _ins
 				
 				render_text(_x + 56, _y + 8, _data.get_name(), 1, 1, 0, c_white, _alpha);
 				render_text(_x + 56, _y + 28, date_datetime_string(_data.get_last_opened()), 0.7, 0.7, 0, c_white, _alpha);
+				
+				draw_set_align(fa_right, fa_top);
+				
+				render_text(_x + _ew - 52, _y + 20, file_format_size(_data.get_size()), 0.65, 0.65, 0, c_ltgray, _alpha);
 			}
 			
 			draw_set_align(_halign, _valign);

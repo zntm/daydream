@@ -50,7 +50,8 @@ function file_load_worlds()
                    .set_dimension(_dimension)
                    .set_time(_time, _day)
                    .set_weather(_wind, _storm)
-                   .set_difficulty(_difficulty);
+                   .set_difficulty(_difficulty)
+                   .set_size(file_get_directory_size($"{PROGRAM_DIRECTORY_WORLDS}/{_file}"));
                    
         array_push(global.file_worlds, _file_world);
     }

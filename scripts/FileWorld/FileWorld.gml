@@ -111,4 +111,16 @@ function FileWorld(_uuid, _name, _seed, _last_opened) constructor
     {
         return self[$ "___difficulty"] ?? 1.0;
     }
+    
+    static set_size = function(_size)
+    {
+        ___size = _size;
+        
+        return self;
+    }
+    
+    static get_size = function()
+    {
+        return self[$ "___size"] ?? 0;
+    }
 }

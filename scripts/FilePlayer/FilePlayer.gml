@@ -99,6 +99,18 @@ function FilePlayer(_uuid, _name, _last_opened) constructor
         return self[$ "___achievements"];
     }
     
+    static set_size = function(_size)
+    {
+        ___size = _size;
+        
+        return self;
+    }
+    
+    static get_size = function()
+    {
+        return self[$ "___size"] ?? 0;
+    }
+    
     static save = function()
     {
         var _player_info = {

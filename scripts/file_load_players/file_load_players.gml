@@ -51,7 +51,8 @@ function file_load_players()
                .set_hp(_hp, _hp_max)
                .set_statistics(_statistics)
                .set_achievements(_achievements)
-               .set_effects(_extra[$ "effects"] ?? {});
+               .set_effects(_extra[$ "effects"] ?? {})
+               .set_size(file_get_directory_size($"{PROGRAM_DIRECTORY_PLAYERS}/{_file}"));
                
         array_push(global.file_players, _player);
     }
