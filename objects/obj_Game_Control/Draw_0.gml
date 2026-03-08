@@ -212,7 +212,7 @@ matrix_set(matrix_world, _matrix_saved);
 /* draw declarative UI relative to camera - UI handles its own design-to-pixel scaling */
 if (is_opened & WORLD_OPENED_BOOL.GUI)
 {
-    var _matrix_ui = matrix_build(_camera_x, _camera_y, 0, 0, 0, 0, 1, 1, 1);
+    var _matrix_ui = matrix_build(camera_get_view_x(view_camera[0]), camera_get_view_y(view_camera[0]), 0, 0, 0, 0, 1, 1, 1);
     matrix_set(matrix_world, _matrix_ui);
 
     if (global.gui_root != undefined)

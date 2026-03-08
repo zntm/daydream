@@ -1,8 +1,8 @@
 function control_inventory_position()
 {
-    var _gui_scale = global.gui_scale;
-    var _scale_x = _gui_scale * (global.window_width / 960);
-    var _scale_y = _gui_scale * (global.window_height / 540);
+    var _s = global.window_height / 540;
+    var _scale_x = _s;
+    var _scale_y = _s;
     
     var _inventory_instance = global.inventory_instance;
     
@@ -49,10 +49,8 @@ function control_inventory_position()
             if (!instance_exists(_inst)) continue;
             
             if (_panel.visible) {
-                var _abs_x = _slot.get_absolute_x();
-                var _abs_y = _slot.get_absolute_y();
-                _inst.x = _abs_x * _scale_x;
-                _inst.y = _abs_y * _scale_y;
+                _inst.x = global.camera_x + (_abs_x * _scale_x);
+                _inst.y = global.camera_y + (_abs_y * _scale_y);
                 var _slot_scale = _slot.scale;
                 _inst.image_xscale = _scale_x * _slot_scale;
                 _inst.image_yscale = _scale_y * _slot_scale;
@@ -89,10 +87,8 @@ function control_inventory_position()
             if (!instance_exists(_inst)) continue;
             
             if (_is_visible) {
-                var _abs_x = _slot.get_absolute_x();
-                var _abs_y = _slot.get_absolute_y();
-                _inst.x = _abs_x * _scale_x;
-                _inst.y = _abs_y * _scale_y;
+                _inst.x = global.camera_x + (_abs_x * _scale_x);
+                _inst.y = global.camera_y + (_abs_y * _scale_y);
                 _inst.image_xscale = _scale_x;
                 _inst.image_yscale = _scale_y;
             } else {

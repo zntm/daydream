@@ -129,8 +129,10 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
             surface_reset_target();
         }
         
-        if (!surface_exists(surface_lighting))
+        if (!surface_exists(surface_lighting)) || (surface_get_width(surface_lighting) != _surface_lighting_width) || (surface_get_height(surface_lighting) != _surface_lighting_height)
         {
+            if (surface_exists(surface_lighting)) surface_free(surface_lighting);
+
             surface_lighting = surface_create(_surface_lighting_width, _surface_lighting_height);
         }
         
@@ -212,8 +214,10 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
         
         gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_src_alpha, bm_one);
         
-        if (!surface_exists(surface_lighting_colour))
+        if (!surface_exists(surface_lighting_colour)) || (surface_get_width(surface_lighting_colour) != _surface_lighting_width) || (surface_get_height(surface_lighting_colour) != _surface_lighting_height)
         {
+            if (surface_exists(surface_lighting_colour)) surface_free(surface_lighting_colour);
+
             surface_lighting_colour = surface_create(_surface_lighting_width, _surface_lighting_height);
         }
         

@@ -1,6 +1,7 @@
 function control_entity_suffocation(_entity)
 {
     if (!instance_exists(_entity) || _entity.hp <= 0) exit;
+    if (_entity.physics_body.mode == MOVEMENT_MODE.FLY) exit;
     
     var _attribute = _entity.attribute;
     

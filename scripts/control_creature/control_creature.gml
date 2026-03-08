@@ -405,6 +405,13 @@ function creature_pathfinding(_target, _move_x, _wants_jump)
 
 function creature_handle_fall_damage()
 {
+    if (physics_body.mode == MOVEMENT_MODE.FLY)
+    {
+        y_last = y;
+
+        exit;
+    }
+
     if (y > y_last)
     {
         if (physics_body.collision.ground)
