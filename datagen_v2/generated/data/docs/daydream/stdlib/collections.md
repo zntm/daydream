@@ -5,8 +5,8 @@
 Returns the length of an array.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
+| Name    | Type  | Description |
+| ------- | ----- | ----------- |
 | `array` | array | Input array |
 
 **Returns:** number
@@ -18,10 +18,10 @@ Returns the length of an array.
 Adds elements to the end of an array.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `array` | array | Target array |
-| `val` | any | Value(s) to push (Optional) |
+| Name    | Type  | Description                 |
+| ------- | ----- | --------------------------- |
+| `array` | array | Target array                |
+| `val`   | any   | Value(s) to push (Optional) |
 
 **Returns:** void
 
@@ -32,8 +32,8 @@ Adds elements to the end of an array.
 Removes and returns the last element of an array.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
+| Name    | Type  | Description  |
+| ------- | ----- | ------------ |
 | `array` | array | Target array |
 
 **Returns:** any
@@ -45,10 +45,10 @@ Removes and returns the last element of an array.
 Resizes an array.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `array` | array | Target array |
-| `new_size` | number | New size |
+| Name       | Type   | Description  |
+| ---------- | ------ | ------------ |
+| `array`    | array  | Target array |
+| `new_size` | number | New size     |
 
 **Returns:** void
 
@@ -59,13 +59,13 @@ Resizes an array.
 Copies part of an array into another.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `dest` | array | Destination array |
+| Name         | Type   | Description                |
+| ------------ | ------ | -------------------------- |
+| `dest`       | array  | Destination array          |
 | `dest_index` | number | Start index in destination |
-| `src` | array | Source array |
-| `src_index` | number | Start index in source |
-| `length` | number | Number of elements to copy |
+| `src`        | array  | Source array               |
+| `src_index`  | number | Start index in source      |
+| `length`     | number | Number of elements to copy |
 
 **Returns:** void
 
@@ -76,8 +76,8 @@ Copies part of an array into another.
 Returns an array of property names in a struct.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
+| Name     | Type   | Description  |
+| -------- | ------ | ------------ |
 | `struct` | struct | Input struct |
 
 **Returns:** array
@@ -89,8 +89,8 @@ Returns an array of property names in a struct.
 Returns the number of variables in a struct.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
+| Name     | Type   | Description  |
+| -------- | ------ | ------------ |
 | `struct` | struct | Input struct |
 
 **Returns:** number
@@ -102,9 +102,9 @@ Returns the number of variables in a struct.
 Converts a struct/array to a JSON string.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `val` | any | Value to stringify |
+| Name  | Type | Description        |
+| ----- | ---- | ------------------ |
+| `val` | any  | Value to stringify |
 
 **Returns:** string
 
@@ -115,11 +115,10 @@ Converts a struct/array to a JSON string.
 Parses a JSON string into a struct/array.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
+| Name   | Type   | Description |
+| ------ | ------ | ----------- |
 | `json` | string | JSON string |
 
 **Returns:** any
 
 ---
-

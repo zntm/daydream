@@ -5,9 +5,9 @@
 Converts any value to its string representation.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `val` | any | Value to convert |
+| Name  | Type | Description      |
+| ----- | ---- | ---------------- |
+| `val` | any  | Value to convert |
 
 **Returns:** string
 
@@ -22,8 +22,8 @@ string(123); // "123"
 Converts a string to a number.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
+| Name  | Type   | Description                |
+| ----- | ------ | -------------------------- |
 | `val` | string | String containing a number |
 
 **Returns:** number
@@ -39,8 +39,8 @@ real("42"); // 42
 Returns the length of a string.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
+| Name  | Type   | Description  |
+| ----- | ------ | ------------ |
 | `str` | string | Input string |
 
 **Returns:** number
@@ -56,10 +56,10 @@ string_length("Hello"); // 5
 Finds the position of a substring within a string.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `substr` | string | Substring to find |
-| `str` | string | String to search in |
+| Name     | Type   | Description         |
+| -------- | ------ | ------------------- |
+| `substr` | string | Substring to find   |
+| `str`    | string | String to search in |
 
 **Returns:** number
 
@@ -74,10 +74,10 @@ string_pos("lo", "Hello"); // 4
 Removes a part of a string.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `str` | string | Input string |
-| `index` | number | Start position (1-indexed) |
+| Name    | Type   | Description                    |
+| ------- | ------ | ------------------------------ |
+| `str`   | string | Input string                   |
+| `index` | number | Start position (1-indexed)     |
 | `count` | number | Number of characters to delete |
 
 **Returns:** string
@@ -93,11 +93,11 @@ string_delete("Hello World", 6, 6); // "Hello"
 Inserts a substring into a string.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `str` | string | Base string |
-| `substr` | string | String to insert |
-| `index` | number | Insertion position (1-indexed) |
+| Name     | Type   | Description                    |
+| -------- | ------ | ------------------------------ |
+| `str`    | string | Base string                    |
+| `substr` | string | String to insert               |
+| `index`  | number | Insertion position (1-indexed) |
 
 **Returns:** string
 
@@ -112,11 +112,11 @@ string_insert("World", "Hello ", 1); // "Hello World"
 Replaces the first occurrence of a substring.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `str` | string | Original string |
+| Name  | Type   | Description          |
+| ----- | ------ | -------------------- |
+| `str` | string | Original string      |
 | `old` | string | Substring to replace |
-| `new` | string | Replacement text |
+| `new` | string | Replacement text     |
 
 **Returns:** string
 
@@ -131,11 +131,11 @@ string_replace("Hello World", "World", "Daydream"); // "Hello Daydream"
 Replaces all occurrences of a substring.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `str` | string | Original string |
+| Name  | Type   | Description          |
+| ----- | ------ | -------------------- |
+| `str` | string | Original string      |
 | `old` | string | Substring to replace |
-| `new` | string | Replacement text |
+| `new` | string | Replacement text     |
 
 **Returns:** string
 
@@ -150,8 +150,8 @@ string_replace_all("ho ho ho", "ho", "he"); // "he he he"
 Converts a string to uppercase.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
+| Name  | Type   | Description  |
+| ----- | ------ | ------------ |
 | `str` | string | Input string |
 
 **Returns:** string
@@ -167,8 +167,8 @@ string_upper("hello"); // "HELLO"
 Converts a string to lowercase.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
+| Name  | Type   | Description  |
+| ----- | ------ | ------------ |
 | `str` | string | Input string |
 
 **Returns:** string
@@ -184,8 +184,8 @@ string_lower("HELLO"); // "hello"
 Returns the width of the string in pixels based on current font.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
+| Name  | Type   | Description  |
+| ----- | ------ | ------------ |
 | `str` | string | Input string |
 
 **Returns:** number
@@ -197,8 +197,8 @@ Returns the width of the string in pixels based on current font.
 Returns the height of the string in pixels based on current font.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
+| Name  | Type   | Description  |
+| ----- | ------ | ------------ |
 | `str` | string | Input string |
 
 **Returns:** number
@@ -210,8 +210,8 @@ Returns the height of the string in pixels based on current font.
 Converts an ASCII/Unicode value to a character.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
+| Name   | Type   | Description    |
+| ------ | ------ | -------------- |
 | `code` | number | Character code |
 
 **Returns:** string
@@ -227,8 +227,8 @@ chr(65); // "A"
 Converts a character to its ASCII/Unicode value.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
+| Name   | Type   | Description      |
+| ------ | ------ | ---------------- |
 | `char` | string | Single character |
 
 **Returns:** number
@@ -244,9 +244,9 @@ ord("A"); // 65
 Returns true if the value is a string.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `val` | any | Value to check |
+| Name  | Type | Description    |
+| ----- | ---- | -------------- |
+| `val` | any  | Value to check |
 
 **Returns:** boolean
 
@@ -257,9 +257,9 @@ Returns true if the value is a string.
 Returns true if the value is a number.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `val` | any | Value to check |
+| Name  | Type | Description    |
+| ----- | ---- | -------------- |
+| `val` | any  | Value to check |
 
 **Returns:** boolean
 
@@ -270,9 +270,9 @@ Returns true if the value is a number.
 Returns true if the value is numeric (real or int64).
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `val` | any | Value to check |
+| Name  | Type | Description    |
+| ----- | ---- | -------------- |
+| `val` | any  | Value to check |
 
 **Returns:** boolean
 
@@ -283,9 +283,9 @@ Returns true if the value is numeric (real or int64).
 Returns true if the value is a boolean.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `val` | any | Value to check |
+| Name  | Type | Description    |
+| ----- | ---- | -------------- |
+| `val` | any  | Value to check |
 
 **Returns:** boolean
 
@@ -296,9 +296,9 @@ Returns true if the value is a boolean.
 Returns true if the value is an array.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `val` | any | Value to check |
+| Name  | Type | Description    |
+| ----- | ---- | -------------- |
+| `val` | any  | Value to check |
 
 **Returns:** boolean
 
@@ -309,9 +309,9 @@ Returns true if the value is an array.
 Returns true if the value is a struct.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `val` | any | Value to check |
+| Name  | Type | Description    |
+| ----- | ---- | -------------- |
+| `val` | any  | Value to check |
 
 **Returns:** boolean
 
@@ -322,9 +322,9 @@ Returns true if the value is a struct.
 Returns true if the value is undefined.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `val` | any | Value to check |
+| Name  | Type | Description    |
+| ----- | ---- | -------------- |
+| `val` | any  | Value to check |
 
 **Returns:** boolean
 
@@ -335,9 +335,9 @@ Returns true if the value is undefined.
 Returns true if the value is a regex object.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `val` | any | Value to check |
+| Name  | Type | Description    |
+| ----- | ---- | -------------- |
+| `val` | any  | Value to check |
 
 **Returns:** boolean
 
@@ -348,9 +348,9 @@ Returns true if the value is a regex object.
 Returns a string describing the type of the value.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `val` | any | Value to check |
+| Name  | Type | Description    |
+| ----- | ---- | -------------- |
+| `val` | any  | Value to check |
 
 **Returns:** string
 
@@ -359,4 +359,3 @@ typeof(123); // "number"
 ```
 
 ---
-

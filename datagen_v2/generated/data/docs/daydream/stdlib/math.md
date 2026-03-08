@@ -5,9 +5,9 @@
 Rounds down to the nearest integer.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `n` | number | Value to round down |
+| Name | Type   | Description         |
+| ---- | ------ | ------------------- |
+| `n`  | number | Value to round down |
 
 **Returns:** number
 
@@ -22,9 +22,9 @@ floor(3.9); // 3
 Rounds up to the nearest integer.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `n` | number | Value to round up |
+| Name | Type   | Description       |
+| ---- | ------ | ----------------- |
+| `n`  | number | Value to round up |
 
 **Returns:** number
 
@@ -39,9 +39,9 @@ ceil(3.1); // 4
 Rounds to the nearest integer.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `n` | number | Value to round |
+| Name | Type   | Description    |
+| ---- | ------ | -------------- |
+| `n`  | number | Value to round |
 
 **Returns:** number
 
@@ -56,9 +56,9 @@ round(3.6); // 4
 Returns the absolute value.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `n` | number | Input value |
+| Name | Type   | Description |
+| ---- | ------ | ----------- |
+| `n`  | number | Input value |
 
 **Returns:** number
 
@@ -73,9 +73,9 @@ abs(-5); // 5
 Returns the sign of a number.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `n` | number | Input value |
+| Name | Type   | Description |
+| ---- | ------ | ----------- |
+| `n`  | number | Input value |
 
 **Returns:** number
 
@@ -90,10 +90,10 @@ sign(-50); // -1
 Returns the smaller of two values.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `a` | number | First value |
-| `b` | number | Second value |
+| Name | Type   | Description  |
+| ---- | ------ | ------------ |
+| `a`  | number | First value  |
+| `b`  | number | Second value |
 
 **Returns:** number
 
@@ -108,10 +108,10 @@ min(10, 5); // 5
 Returns the larger of two values.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `a` | number | First value |
-| `b` | number | Second value |
+| Name | Type   | Description  |
+| ---- | ------ | ------------ |
+| `a`  | number | First value  |
+| `b`  | number | Second value |
 
 **Returns:** number
 
@@ -126,11 +126,11 @@ max(10, 5); // 10
 Constrains a value between min and max.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
+| Name  | Type   | Description        |
+| ----- | ------ | ------------------ |
 | `val` | number | Value to constrain |
-| `min` | number | Minimum bound |
-| `max` | number | Maximum bound |
+| `min` | number | Minimum bound      |
+| `max` | number | Maximum bound      |
 
 **Returns:** number
 
@@ -145,11 +145,11 @@ clamp(15, 0, 10); // 10
 Linearly interpolates between two values.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `a` | number | Start value |
-| `b` | number | End value |
-| `t` | number | Interpolation factor (0-1) |
+| Name | Type   | Description                |
+| ---- | ------ | -------------------------- |
+| `a`  | number | Start value                |
+| `b`  | number | End value                  |
+| `t`  | number | Interpolation factor (0-1) |
 
 **Returns:** number
 
@@ -164,10 +164,10 @@ lerp(0, 100, 0.5); // 50
 Returns base raised to the power of exp.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `base` | number | The base |
-| `exp` | number | The exponent |
+| Name   | Type   | Description  |
+| ------ | ------ | ------------ |
+| `base` | number | The base     |
+| `exp`  | number | The exponent |
 
 **Returns:** number
 
@@ -182,9 +182,9 @@ power(2, 3); // 8
 Returns the square root.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `n` | number | Value (must be >= 0) |
+| Name | Type   | Description          |
+| ---- | ------ | -------------------- |
+| `n`  | number | Value (must be >= 0) |
 
 **Returns:** number
 
@@ -199,9 +199,9 @@ sqrt(16); // 4
 Returns the square of a number.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `n` | number | Value to square |
+| Name | Type   | Description     |
+| ---- | ------ | --------------- |
+| `n`  | number | Value to square |
 
 **Returns:** number
 
@@ -216,9 +216,9 @@ sqr(5); // 25
 Returns the fractional part of a number.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `n` | number | Input value |
+| Name | Type   | Description |
+| ---- | ------ | ----------- |
+| `n`  | number | Input value |
 
 **Returns:** number
 
@@ -233,9 +233,9 @@ frac(3.75); // 0.75
 Returns sine of x in radians.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `x` | number | Angle in radians |
+| Name | Type   | Description      |
+| ---- | ------ | ---------------- |
+| `x`  | number | Angle in radians |
 
 **Returns:** number
 
@@ -246,9 +246,9 @@ Returns sine of x in radians.
 Returns cosine of x in radians.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `x` | number | Angle in radians |
+| Name | Type   | Description      |
+| ---- | ------ | ---------------- |
+| `x`  | number | Angle in radians |
 
 **Returns:** number
 
@@ -259,9 +259,9 @@ Returns cosine of x in radians.
 Returns tangent of x in radians.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `x` | number | Angle in radians |
+| Name | Type   | Description      |
+| ---- | ------ | ---------------- |
+| `x`  | number | Angle in radians |
 
 **Returns:** number
 
@@ -272,9 +272,9 @@ Returns tangent of x in radians.
 Returns sine of x in degrees.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `x` | number | Angle in degrees |
+| Name | Type   | Description      |
+| ---- | ------ | ---------------- |
+| `x`  | number | Angle in degrees |
 
 **Returns:** number
 
@@ -285,9 +285,9 @@ Returns sine of x in degrees.
 Returns cosine of x in degrees.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `x` | number | Angle in degrees |
+| Name | Type   | Description      |
+| ---- | ------ | ---------------- |
+| `x`  | number | Angle in degrees |
 
 **Returns:** number
 
@@ -298,9 +298,9 @@ Returns cosine of x in degrees.
 Returns tangent of x in degrees.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `x` | number | Angle in degrees |
+| Name | Type   | Description      |
+| ---- | ------ | ---------------- |
+| `x`  | number | Angle in degrees |
 
 **Returns:** number
 
@@ -311,9 +311,9 @@ Returns tangent of x in degrees.
 Converts degrees to radians.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `deg` | number | Degrees |
+| Name  | Type   | Description |
+| ----- | ------ | ----------- |
+| `deg` | number | Degrees     |
 
 **Returns:** number
 
@@ -324,9 +324,9 @@ Converts degrees to radians.
 Converts radians to degrees.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `rad` | number | Radians |
+| Name  | Type   | Description |
+| ----- | ------ | ----------- |
+| `rad` | number | Radians     |
 
 **Returns:** number
 
@@ -337,9 +337,9 @@ Converts radians to degrees.
 Returns the horizontal component of a vector.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `len` | number | Vector length |
+| Name  | Type   | Description          |
+| ----- | ------ | -------------------- |
+| `len` | number | Vector length        |
 | `dir` | number | Direction in degrees |
 
 **Returns:** number
@@ -351,9 +351,9 @@ Returns the horizontal component of a vector.
 Returns the vertical component of a vector.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `len` | number | Vector length |
+| Name  | Type   | Description          |
+| ----- | ------ | -------------------- |
+| `len` | number | Vector length        |
 | `dir` | number | Direction in degrees |
 
 **Returns:** number
@@ -365,8 +365,8 @@ Returns the vertical component of a vector.
 Returns the distance between two points.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
+| Name | Type   | Description  |
+| ---- | ------ | ------------ |
 | `x1` | number | X of point 1 |
 | `y1` | number | Y of point 1 |
 | `x2` | number | X of point 2 |
@@ -381,8 +381,8 @@ Returns the distance between two points.
 Returns the direction from point 1 to point 2.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
+| Name | Type   | Description  |
+| ---- | ------ | ------------ |
 | `x1` | number | X of point 1 |
 | `y1` | number | Y of point 1 |
 | `x2` | number | X of point 2 |
@@ -397,9 +397,9 @@ Returns the direction from point 1 to point 2.
 Returns e^n.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `n` | number | Exponent |
+| Name | Type   | Description |
+| ---- | ------ | ----------- |
+| `n`  | number | Exponent    |
 
 **Returns:** number
 
@@ -410,9 +410,9 @@ Returns e^n.
 Returns the natural logarithm function of x.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `x` | number | Input value |
+| Name | Type   | Description |
+| ---- | ------ | ----------- |
+| `x`  | number | Input value |
 
 **Returns:** number
 
@@ -423,9 +423,9 @@ Returns the natural logarithm function of x.
 Returns the base-2 logarithm.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `n` | number | Input value |
+| Name | Type   | Description |
+| ---- | ------ | ----------- |
+| `n`  | number | Input value |
 
 **Returns:** number
 
@@ -436,9 +436,9 @@ Returns the base-2 logarithm.
 Returns the base-10 logarithm.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `n` | number | Input value |
+| Name | Type   | Description |
+| ---- | ------ | ----------- |
+| `n`  | number | Input value |
 
 **Returns:** number
 
@@ -449,9 +449,9 @@ Returns the base-10 logarithm.
 Returns the arcsine in radians.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `x` | number | Input value |
+| Name | Type   | Description |
+| ---- | ------ | ----------- |
+| `x`  | number | Input value |
 
 **Returns:** number
 
@@ -462,9 +462,9 @@ Returns the arcsine in radians.
 Returns the arccosine in radians.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `x` | number | Input value |
+| Name | Type   | Description |
+| ---- | ------ | ----------- |
+| `x`  | number | Input value |
 
 **Returns:** number
 
@@ -475,9 +475,9 @@ Returns the arccosine in radians.
 Returns the arctangent in radians.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `x` | number | Input value |
+| Name | Type   | Description |
+| ---- | ------ | ----------- |
+| `x`  | number | Input value |
 
 **Returns:** number
 
@@ -488,12 +488,11 @@ Returns the arctangent in radians.
 Returns the angle from origin to (x, y) in radians.
 
 **Arguments:**
-| Name | Type | Description |
-|------|------|-------------|
-| `y` | number | Y coordinate |
-| `x` | number | X coordinate |
+| Name | Type   | Description  |
+| ---- | ------ | ------------ |
+| `y`  | number | Y coordinate |
+| `x`  | number | X coordinate |
 
 **Returns:** number
 
 ---
-

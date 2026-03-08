@@ -56,9 +56,11 @@ const run = async () => {
                             fs.mkdirSync(destDir, { recursive: true });
                         }
 
+                        const isRaw = typeof d.data === "string" || d.destination.endsWith(".md") || d.destination.endsWith(".txt");
+
                         await Bun.write(
                             destination,
-                            JSON.stringify(d.data, null, "    "),
+                            isRaw ? String(d.data) : JSON.stringify(d.data, null, "    "),
                             { mode: 0o644 },
                         );
                     }

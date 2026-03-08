@@ -15,6 +15,8 @@ import {
 import { Sound } from "./Sound";
 import { Spline, SplinePoint, SplineEasing } from "./Spline";
 import { Sprite } from "./Sprite";
+import { Table } from "./Table";
+import { Doc } from "./Doc";
 
 export {
     Attribute,
@@ -34,4 +36,6 @@ export {
     SplinePoint,
     SplineEasing,
     Sprite,
+    Table,
+    Doc,
 };
