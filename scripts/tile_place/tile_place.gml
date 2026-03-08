@@ -4,7 +4,7 @@ function tile_place(_x, _y, _z, _tile)
 {
     if (_y < 0) || (_y >= global.world_data[$ global.current_world.dimension].get_world_height()) exit;
     
-    // --- NETWORKING INTERCEPTION ---
+    // NETWORKING INTERCEPTION
     // Handle Client Requests and Host Broadcasts
     var _applying_packet = global.network_applying_packet ?? false;
     

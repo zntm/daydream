@@ -5,7 +5,7 @@ function statistics_get_list(_stats, _category)
     // Helper to get value safely
     var _get_val = function(_s, _k) { return _s[$ _k] ?? 0; }
     
-    // --- GENERAL ---
+    // GENERAL
     if (_category == "general")
     {
         var _keys = [
@@ -46,7 +46,7 @@ function statistics_get_list(_stats, _category)
             array_push(_list, { name: _name, value: _val_str });
         }
     }
-    // --- BLOCKS ---
+    // BLOCKS
     else if (_category == "blocks")
     {
         var _keys = struct_get_names(_stats);
@@ -118,7 +118,7 @@ function statistics_get_list(_stats, _category)
             array_push(_list, { name: _d.name, value: _str });
         }
     }
-    // --- ITEMS ---
+    // ITEMS
     else if (_category == "items")
     {
         var _keys = struct_get_names(_stats);
@@ -189,7 +189,7 @@ function statistics_get_list(_stats, _category)
             array_push(_list, { name: _d.name, value: _str });
         }
     }
-    // --- MOBS ---
+    // MOBS
     else if (_category == "mobs")
     {
         var _keys = struct_get_names(_stats);

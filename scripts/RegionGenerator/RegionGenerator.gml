@@ -95,7 +95,7 @@ function region_gen_create(_config = {})
     }
 }
 
-#region --- Domain Warping ---
+#region Domain Warping
 
 /// @desc Apply domain warping to a position
 /// @returns {Array<Real>} [warped_x, warped_y]
@@ -112,7 +112,7 @@ function region_gen_warp(_gen, _x, _y)
 
 #endregion
 
-#region --- Climate Sampling ---
+#region Climate Sampling
 
 /// @desc Sample region-level heat at a position
 ///       Per-world variation is handled by open_simplex_noise_seed().
@@ -205,7 +205,7 @@ function region_gen_climate_pick_two(_gen, _heat, _humid)
 
 #endregion
 
-#region --- Main Lookup Functions ---
+#region Main Lookup Functions
 
 /// @desc Get region at world position
 /// @param {Struct} _gen Generator config

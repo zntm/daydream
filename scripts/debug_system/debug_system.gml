@@ -9,11 +9,6 @@ function debug_init()
     debug_text = "";
     global.debug_overlay_hint = "F3 to toggle overlay";
     
-    global.debug_reload = {}
-    
-    // Initialize settings if they don't exist, otherwise keep existing values
-    // (This allows settings to persist if we ever reload while keeping global state, 
-    // though typically this is called on fresh obj_Game_Control create)
     if (!variable_global_exists("dbg_settings"))
     {
         global.dbg_settings = {
@@ -32,16 +27,18 @@ function debug_init()
             camera_size: 1,
             fly_speed: 1,
             time_speed: 1,
-            noclip: false,
-            // render_texture_page: false,
-        }
+            noclip: false
+        };
     }
     
-    // Create the debug view
-    // Store it in a global variable so we can delete it later
+    /* destroy existing debug view on restart to prevent duplicates */
+    if (variable_global_exists("debug_view")) && (global.debug_view != undefined)
+    {
+        dbg_view_delete(global.debug_view);
+    }
+    
     global.debug_view = dbg_view("Debug", true, -1, -1, 400, 600);
     
-    // --- General Section ---
     dbg_section("General");
     
     global.debug_overlay_hint = "F3 to toggle overlay";
@@ -49,25 +46,23 @@ function debug_init()
     
     dbg_button("Reload Data", function()
     {
-        // Placeholder for data reload logic
         PRINT("Reloading data...");
     });
     
     dbg_same_line();
+    
     dbg_button("Restart Game", function()
     {
         game_restart();
     });
     
-    // --- Stats Section ---
     dbg_section("Stats");
+    
     dbg_watch(ref_create(global.dbg_settings, "fps_real"), "FPS Real");
     dbg_watch(ref_create(global.dbg_settings, "fps"), "FPS");
-
     
     dbg_checkbox(ref_create(global.dbg_settings, "delta_time"), "Use Delta Time");
     
-    // --- Rendering Section ---
     dbg_section("Rendering");
     
     dbg_checkbox(ref_create(global.dbg_settings, "display_background_celestial"), "Celestial Background");
@@ -78,9 +73,6 @@ function debug_init()
     dbg_checkbox(ref_create(global.dbg_settings, "display_chunk_information"), "Chunk Info");
     dbg_checkbox(ref_create(global.dbg_settings, "display_instances"), "Show Instances");
     
-    // dbg_checkbox(ref_create(global.dbg_settings, "render_texture_page"), "Show Texture Page");
-    
-    // --- Gameplay Section ---
     dbg_section("Gameplay");
     
     dbg_checkbox(ref_create(global.dbg_settings, "enable_physics"), "Enable Physics");
@@ -89,22 +81,23 @@ function debug_init()
     dbg_slider(ref_create(global.dbg_settings, "time_speed"), 0, 24, "Time Speed", 0.25);
     dbg_slider(ref_create(global.dbg_settings, "fly_speed"), 0.5, 64, "Fly Speed");
     
-    // Camera
     dbg_slider(ref_create(global.dbg_settings, "camera_size"), 0.25, 4.0, "Camera Zoom");
     
-    // --- Inventory Section ---
     dbg_section("Inventory");
     
     dbg_button("Randomize", function()
     {
         var _item_data = global.item_data;
-        var _names  = struct_get_names(_item_data);
-        var _length = array_length(_names) - 1;
+        var _names     = struct_get_names(_item_data);
+        var _length    = array_length(_names) - 1;
         
-        for (var i = 0; i < global.inventory_length.base; ++i)
+        for (var i = INVENTORY_LENGTH.BASE - 1; i >= 0; --i)
         {
             var _item_id = _names[irandom(_length)];
-            var _data = _item_data[$ _item_id];
+            var _data    = _item_data[$ _item_id];
+            
+            if (_data == undefined) continue;
+            
             var _item = new Inventory(_item_id, _data.get_inventory_max());
             
             var _item_durability = _data.get_item_durability();
@@ -128,35 +121,35 @@ function debug_init()
     
     dbg_button("Clear", function()
     {
-        global.inventory.base = array_create(global.inventory_length.base, INVENTORY_EMPTY);
+        global.inventory.base = array_create(INVENTORY_LENGTH.BASE, INVENTORY_EMPTY);
+        
         if (instance_exists(obj_Game_Control))
         {
             obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOL.INVENTORY_HOTBAR | SURFACE_REFRESH_BOOL.INVENTORY_BACKPACK;
         }
     });
 
-    // --- Information Section ---
     dbg_section("Information");
     dbg_text(ref_create(self, "debug_text"));
     
-    // System Information Cache
     global.debug_sysinfo = {
-        username: "",
-        hostname: "",
-        cpu_name: "",
-        core_count: 0,
-        cpu_frequency: 0,
-        gpu_name: "",
-        gpu_vram: 0,
-        sys_memory_used: 0,
-        memory_max: 0,
+        username:         "",
+        hostname:         "",
+        cpu_name:         "",
+        core_count:       0,
+        cpu_frequency:    0,
+        gpu_name:         "",
+        gpu_vram:         0,
+        sys_memory_used:  0,
+        memory_max:       0,
         proc_memory_used: 0,
-        sys_cpu_usage: 0,
-        proc_cpu_usage: 0,
-        gpu_usage: 0
-    }
+        sys_cpu_usage:    0,
+        proc_cpu_usage:   0,
+        gpu_usage:        0
+    };
+    
     global.debug_sysinfo_index = 0;
-    global.debug_sysinfo_text = "";
+    global.debug_sysinfo_text  = "";
     global.debug_sysinfo_timer = 0;
     
     ui_editor_init();
@@ -179,14 +172,13 @@ function debug_step()
 {
     if (!IS_DEVELOPER_MODE) exit;
     
-    // Toggle overlay with F3
     if (keyboard_check_pressed(vk_f3))
     {
         var _is_enabled = is_debug_overlay_open();
+        
         show_debug_overlay(!_is_enabled);
     }
     
-    /* toggle ui editor with F4 */
     if (keyboard_check_pressed(vk_f4))
     {
         ui_editor_toggle();
@@ -194,57 +186,98 @@ function debug_step()
     
     ui_editor_step();
     
-    // Only update text if overlay is visible
     if (is_debug_overlay_open())
     {
         var _player_exists = instance_exists(obj_Player);
         var _xplayer = (_player_exists ? obj_Player.x : 0);
         var _yplayer = (_player_exists ? obj_Player.y : 0);
         
-        var _camera_x = global.camera_x;
-        var _camera_y = global.camera_y;
-        var _camera_width = global.camera_width;
+        var _camera_x      = global.camera_x;
+        var _camera_y      = global.camera_y;
+        var _camera_width  = global.camera_width;
         var _camera_height = global.camera_height;
         
         var _semver = program_get_version();
         
-        /* climate and region info */
-        var _world_data  = global.world_data[$ global.current_world.dimension];
-        var _heat        = 0;
-        var _humid       = 0;
-        var _region_id   = "N/A";
+        var _world_data = global.world_data[$ global.current_world.dimension];
+        var _heat       = 0;
+        var _humid      = 0;
+        var _region_id  = "N/A";
         
         if (_world_data != undefined)
         {
             var _climate = _world_data.get_climate_at(_xplayer, _yplayer);
+            
             _heat  = _climate.heat;
             _humid = _climate.humidity;
             
             var _region = _world_data.get_region_at(_xplayer, _yplayer, global.current_world.seed);
-            if (_region != undefined) _region_id = _region.get_id();
+            
+            if (_region != undefined)
+            {
+                _region_id = _region.get_id();
+            }
         }
         
-        // Staggered Refresh: Update ONE stat per frame
         var _info = global.debug_sysinfo;
+        
         switch (global.debug_sysinfo_index)
         {
-            case 0: _info.username = sysinfo_get_username(); break;
-            case 1: _info.hostname = sysinfo_get_hostname(); break;
-            case 2: _info.cpu_name = sysinfo_get_cpu_name(); break;
-            case 3: _info.core_count = sysinfo_get_core_count(); break;
-            case 4: _info.cpu_frequency = sysinfo_get_cpu_frequency(); break;
-            case 5: _info.gpu_name = sysinfo_get_gpu_name(); break;
-            case 6: _info.gpu_vram = sysinfo_get_gpu_vram(); break;
-            case 7: _info.sys_memory_used = sysinfo_sys_memory_used(); break;
-            case 8: _info.memory_max = sysinfo_get_memory_max(); break;
-            case 9: _info.proc_memory_used = sysinfo_proc_memory_used(); break;
-            case 10: _info.sys_cpu_usage = sysinfo_sys_cpu_usage(); break;
-            case 11: _info.proc_cpu_usage = sysinfo_proc_cpu_usage(); break;
-            case 12: _info.gpu_usage = sysinfo_get_gpu_usage(); break;
+            case 0:
+                _info.username = sysinfo_get_username();
+                break;
+            
+            case 1:
+                _info.hostname = sysinfo_get_hostname();
+                break;
+            
+            case 2:
+                _info.cpu_name = sysinfo_get_cpu_name();
+                break;
+            
+            case 3:
+                _info.core_count = sysinfo_get_core_count();
+                break;
+            
+            case 4:
+                _info.cpu_frequency = sysinfo_get_cpu_frequency();
+                break;
+            
+            case 5:
+                _info.gpu_name = sysinfo_get_gpu_name();
+                break;
+            
+            case 6:
+                _info.gpu_vram = sysinfo_get_gpu_vram();
+                break;
+            
+            case 7:
+                _info.sys_memory_used = sysinfo_sys_memory_used();
+                break;
+            
+            case 8:
+                _info.memory_max = sysinfo_get_memory_max();
+                break;
+            
+            case 9:
+                _info.proc_memory_used = sysinfo_proc_memory_used();
+                break;
+            
+            case 10:
+                _info.sys_cpu_usage = sysinfo_sys_cpu_usage();
+                break;
+            
+            case 11:
+                _info.proc_cpu_usage = sysinfo_proc_cpu_usage();
+                break;
+            
+            case 12:
+                _info.gpu_usage = sysinfo_get_gpu_usage();
+                break;
         }
+        
         global.debug_sysinfo_index = (global.debug_sysinfo_index + 1) % 13;
         
-        // Re-assemble text every 1 second
         if (global.debug_sysinfo_timer > 0)
         {
             global.debug_sysinfo_timer--;

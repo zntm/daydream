@@ -326,7 +326,7 @@ function ui_editor_draw_properties(_x, _y, _w, _h)
     /* ast properties (editable) */
     _py += 8;
 
-    render_text(_x + 8, _py, "--- ast properties ---", 1, 1, 0, UI_EDITOR_PANEL_TEXT_DIM);
+    render_text(_x + 8, _py, "--- ast properties", 1, 1, 0, UI_EDITOR_PANEL_TEXT_DIM);
 
     _py += _line_h;
 

@@ -2,7 +2,7 @@
 /// @param {Real} [_dt] Delta time (defaults to 1.0).
 function control_projectile(_dt = 1.0)
 {
-    /* --- client interpolation (networking) --- */
+    /* client interpolation (networking) */
     if (global.network_role == RELAY_ROLE.CLIENT)
     {
         if (variable_instance_exists(self, "interp_start_x"))
@@ -21,7 +21,7 @@ function control_projectile(_dt = 1.0)
         exit;
     }
     
-    /* --- lifetime --- */
+    /* lifetime */
     timer_life -= _dt / GAME_TICK;
     
     if (timer_life <= 0)
@@ -34,7 +34,7 @@ function control_projectile(_dt = 1.0)
     var _boolean = _data.get_boolean();
     var _gravity = (attribute != undefined) ? attribute.get_gravity() : 0;
     
-    /* --- tick particles (mode == TICK) --- */
+    /* tick particles (mode == TICK) */
     var _particles = _data.get_particles();
     
     if (_particles != undefined)
@@ -50,7 +50,7 @@ function control_projectile(_dt = 1.0)
         }
     }
     
-    /* --- tick proglang hooks --- */
+    /* tick proglang hooks */
     var _on_tick = _data.get_on_tick();
     
     if (_on_tick != undefined)
@@ -61,7 +61,7 @@ function control_projectile(_dt = 1.0)
         }
     }
     
-    /* --- entity collision --- */
+    /* entity collision */
     if (damage > 0)
     {
         var _inst = instance_place(x, y, obj_Creature);
@@ -105,7 +105,7 @@ function control_projectile(_dt = 1.0)
         }
     }
     
-    /* --- physics --- */
+    /* physics */
     if (physics_body != undefined && attribute != undefined)
     {
         physics_body.sync_from_instance(id);
@@ -177,7 +177,7 @@ function control_projectile(_dt = 1.0)
         }
     }
     
-    /* --- rotation --- */
+    /* rotation */
     if (rotation_increment != 0)
     {
         image_angle += rotation_increment * _dt;

@@ -50,10 +50,7 @@ function file_save_world_chunk(_current_world, _chunk, _sync = false)
             }
         }
     }
-
-    /* ========================================================================================== */
-    /* 1. prepare data & context */
-    /* ========================================================================================== */
+    
     var _creature_data = global.creature_data;
     var _item_data     = global.item_data;
     var _world_data    = global.world_data[$ _current_world.dimension];
@@ -68,10 +65,6 @@ function file_save_world_chunk(_current_world, _chunk, _sync = false)
 
     /* start by writing the *current* chunk to a temporary buffer so we know its exact size. */
     var _current_chunk_buffer = buffer_create(1024, buffer_grow, 1);
-    
-    /* ------------------------------------------------------------------------------------------ */
-    /* write chunk header (internal versioning/metadata for the chunk itself) */
-    /* ------------------------------------------------------------------------------------------ */
     buffer_write(_current_chunk_buffer, buffer_u32, PROGRAM_VERSION_NUMBER);
     buffer_write(_current_chunk_buffer, buffer_f64, datetime_to_unix());
     
@@ -81,16 +74,13 @@ function file_save_world_chunk(_current_world, _chunk, _sync = false)
     buffer_write(_current_chunk_buffer, buffer_bool, _is_generated);
     buffer_write(_current_chunk_buffer, buffer_u16,  _chunk_display);
     
-    /* ------------------------------------------------------------------------------------------ */
-    /* 2. build master palette */
-    /* ------------------------------------------------------------------------------------------ */
     var _palette_map   = {}
     var _palette_array = [];
     var _palette_index = 0;
     
     var _index_ref = [_palette_index];
     
-    /* --- collect from tiles --- */
+    /* collect from tiles */
     if (_chunk_display)
     {
         var _chunk2 = _chunk.chunk;
@@ -133,7 +123,7 @@ function file_save_world_chunk(_current_world, _chunk, _sync = false)
         }
     }
 
-    /* --- collect from items --- */
+    /* collect from items */
     var _xcenter = _chunk.xcenter;
     var _ycenter = _chunk.ycenter;
     var _bbox_l  = _xcenter - (CHUNK_SIZE_DIMENSION / 2);
@@ -184,7 +174,7 @@ function file_save_world_chunk(_current_world, _chunk, _sync = false)
         }
     }
 
-    /* --- collect from creatures --- */
+    /* collect from creatures */
     var _inst_creature   = [];
     var _length_creature = 0;
     
@@ -218,10 +208,6 @@ function file_save_world_chunk(_current_world, _chunk, _sync = false)
     }
     
     _palette_index = _index_ref[0];
-    
-    /* ------------------------------------------------------------------------------------------ */
-    /* 3. write to buffer */
-    /* ------------------------------------------------------------------------------------------ */
     
     /* -- palette -- */
     buffer_write(_current_chunk_buffer, buffer_u16, _palette_index);
@@ -326,10 +312,6 @@ function file_save_world_chunk(_current_world, _chunk, _sync = false)
         
         buffer_poke(_current_chunk_buffer, _pos_start, buffer_u32, _pos_end);
     }
-
-    /* ========================================================================================== */
-    /* 2. rebuild region file */
-    /* ========================================================================================== */
     
     var _old_region_buffer = -1;
     
@@ -401,9 +383,6 @@ function file_save_world_chunk(_current_world, _chunk, _sync = false)
         }
     }
     
-    /* ------------------------------------------------------------------------------------------ */
-    /* 3. flush to disk */
-    /* ------------------------------------------------------------------------------------------ */
     if (_sync)
     {
         buffer_save_ext(_new_region_buffer, _directory, 0, _write_offset);

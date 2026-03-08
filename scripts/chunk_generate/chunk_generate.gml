@@ -201,7 +201,7 @@ function chunk_generate(_chunk, _context = undefined)
             var _world_y = _chunk.chunk_ystart + j;
             var _skip_z = __skip_z_array[i + (j * CHUNK_SIZE)];
             
-            // --- SKY BIOME (Optimized via __sky_bit) ---
+            // SKY BIOME (Optimized via __sky_bit)
             if !(_skip_z & (1 << CHUNK_DEPTH_DEFAULT)) && (_world_y <= _sky_threshold) && _sky_enabled
             {
                 if ((_sky_bit_stream >> (j + 1)) & 1)
@@ -233,7 +233,7 @@ function chunk_generate(_chunk, _context = undefined)
                 }
             }
             
-            // --- OCEAN WATER ---
+            // OCEAN WATER
             if (_surface_biome_data != undefined) && (_world_y < _surface_height) && (_world_y >= _world_surface_start) && (_surface_biome_data.is_ocean())
             {
                 if !(_skip_z & (1 << CHUNK_DEPTH_LIQUID))
@@ -292,7 +292,7 @@ function chunk_generate(_chunk, _context = undefined)
                     }
                 }
                 
-                // --- AQUIFERS ---
+                // AQUIFERS
                 if !(_skip_z & (1 << CHUNK_DEPTH_LIQUID)) && _is_cave
                 {
                     var _aquifer = worldgen_get_aquifer(_world_x, _world_y, _surface_height, _world_seed, _world_data);
@@ -320,7 +320,7 @@ function chunk_generate(_chunk, _context = undefined)
                 }
             }
             
-            // --- FOLIAGE ---
+            // FOLIAGE
             var _foliage_layer = ((_xorshift_val & (1 << j)) ? CHUNK_DEPTH_FOLIAGE_FRONT : CHUNK_DEPTH_FOLIAGE_BACK);
             if !(_skip_z & (1 << _foliage_layer)) && (_world_y >= _surface_height - 1)
             {

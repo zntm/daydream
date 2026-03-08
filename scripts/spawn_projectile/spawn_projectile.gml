@@ -102,7 +102,7 @@ function spawn_projectile(_x, _y, _id, _damage, _xscale = 1, _yscale = 1, _owner
         interp_timer    = 0;
         interp_duration = 0.05;
         
-        /* --- on-shoot particles --- */
+        /* on-shoot particles */
         var _particles = _data.get_particles();
         
         if (_particles != undefined)
@@ -118,7 +118,7 @@ function spawn_projectile(_x, _y, _id, _damage, _xscale = 1, _yscale = 1, _owner
             }
         }
         
-        /* --- on-shoot proglang hooks --- */
+        /* on-shoot proglang hooks */
         var _on_shoot = _data.get_on_shoot();
         
         if (_on_shoot != undefined)

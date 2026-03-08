@@ -9,7 +9,7 @@ function control_client()
         exit;
     }
     
-    // --- CLIENT SIDE: REMOTES (INTERPOLATION) ---
+    // CLIENT SIDE: REMOTES (INTERPOLATION)
     if (global.network_role == RELAY_ROLE.CLIENT)
     {
         interp_timer += 1 / GAME_TICK;
@@ -96,7 +96,7 @@ function control_client()
         exit; // End client logic
     }
     
-    // --- HOST SIDE: PHYSICS ---
+    // HOST SIDE: PHYSICS
     if (global.network_role == RELAY_ROLE.HOST)
     {
         var _x_prev = x;

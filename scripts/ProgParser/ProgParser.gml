@@ -80,10 +80,6 @@ function ProgParser(_tokens) constructor
         error = $"[Line {_token.line}] Error at '{_token.lexeme}': {_message}";
     }
     
-    /* ----------------------------------------------------------------------------
-       Entry Point
-       ---------------------------------------------------------------------------- */
-    
     static parse = function()
     {
         var _statements = [];
@@ -104,10 +100,6 @@ function ProgParser(_tokens) constructor
         
         return new ProgASTBlock(_statements);
     }
-    
-    /* ----------------------------------------------------------------------------
-       Statements
-       ---------------------------------------------------------------------------- */
     
     static parse_statement = function()
     {
@@ -1121,10 +1113,6 @@ function ProgParser(_tokens) constructor
         
         return _expression;
     }
-    
-    // ----------------------------------------------------------------------------
-    // Expressions
-    // ----------------------------------------------------------------------------
     
     static parse_expression = function()
     {

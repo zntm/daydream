@@ -208,7 +208,7 @@ function Attribute() constructor
         return self[$ "___movement_speed"] ?? 3.1;
     }
     
-    // --- Movement Mode Speeds ---
+    // Movement Mode Speeds
     
     static set_fly_speed = function(_speed)
     {
@@ -252,7 +252,7 @@ function Attribute() constructor
         return self[$ "___climb_speed"] ?? get_movement_speed() * 0.5;
     }
     
-    // --- Movement Capabilities ---
+    // Movement Capabilities
     
     static set_can_fly = function(_can)
     {

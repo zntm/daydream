@@ -29,7 +29,7 @@ function control_entity_shoot(_entity, _item_id, _x, _y, _angle, _inventory_targ
         }
     }
     
-    /* --- ammo consumption (player only) --- */
+    /* ammo consumption (player only) */
     if (_ammo_type != undefined) && (_entity.object_index == obj_Player)
     {
         var _ammo_found_index = -1;
@@ -66,7 +66,7 @@ function control_entity_shoot(_entity, _item_id, _x, _y, _angle, _inventory_targ
         inventory_item_decrement("base", _ammo_found_index, _inventory_target, _out_changed_slots);
     }
     
-    /* --- spawn projectile --- */
+    /* spawn projectile */
     if (_projectile_id != undefined)
     {
         var _p_data    = global.projectile_data[$ _projectile_id];

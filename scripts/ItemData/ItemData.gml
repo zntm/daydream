@@ -991,7 +991,7 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
         }
     }
     
-    // --- Crop System ---
+    // Crop System
     
     static set_crop = function(_crop)
     {

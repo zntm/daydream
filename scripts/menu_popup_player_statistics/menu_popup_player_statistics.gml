@@ -1,6 +1,6 @@
 function menu_popup_player_statistics(_data)
 {
-    // --- LAYOUT CONSTANTS ---
+    // LAYOUT CONSTANTS
     // We need to be above the Player List which is on Surface 1.
     // So we'll use Surface 2 for static popup elements (Header, Background Dim).
     // And Surface 3 for the scrolling list (with Shader).
@@ -91,7 +91,7 @@ function menu_popup_player_statistics(_data)
         array_push(_popup_instances, id);
     }
     
-    // --- SLIDER ---
+    // SLIDER
     var _inst_slider = instance_create_layer(_popup_x + _popup_width - 32, _popup_y + 100, "Instances", obj_Menu_Button);
     with (_inst_slider)
     {
@@ -160,7 +160,7 @@ function menu_popup_player_statistics(_data)
     global.statistics_popup_inst_slider = _inst_slider;
     array_push(_popup_instances, _inst_slider);
     
-    // --- CONTENT GENERATION ---
+    // CONTENT GENERATION
     var _stats = _data.get_statistics() ?? {}
     var _full_list = [];
     
@@ -175,7 +175,7 @@ function menu_popup_player_statistics(_data)
             var _header_name = loca_translate($"phantasia:statistics.category.{_cats[c]}"); 
             if (_header_name == $"phantasia:statistics.category.{_cats[c]}") _header_name = string_upper(string_char_at(_cats[c], 1)) + string_copy(_cats[c], 2, string_length(_cats[c]));
             
-            array_push(_full_list, { is_header: true, name: $"--- {_header_name} ---" });
+            array_push(_full_list, { is_header: true, name: $"--- {_header_name}" });
             
             for (var k = 0; k < array_length(_cat_items); ++k)
             {
@@ -184,7 +184,7 @@ function menu_popup_player_statistics(_data)
         }
     }
     
-    // --- SCROLL SETUP ---
+    // SCROLL SETUP
     var _count = array_length(_full_list);
     var _item_height = 48; 
     var _view_height = 300; 
@@ -199,7 +199,7 @@ function menu_popup_player_statistics(_data)
         _inst_slider.x = -100; // Hide
     }
     
-    // --- CREATE ITEMS ---
+    // CREATE ITEMS
     // Configure Shader for Scroll Layer
     obj_Menu_Control_Render.surface_index_shader[@ _popup_scroll_layer] = {
         id: shd_Menu_Settings_Fade, 

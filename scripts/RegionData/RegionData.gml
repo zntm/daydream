@@ -253,7 +253,7 @@ function RegionData(_id, _config = {}) constructor
         return self[$ "___particles"];
     }
     
-    // --- Cave Sub-Biome System ---
+    // Cave Sub-Biome System
     
     /// @desc Get cave sub-biome ID based on position and depth
     /// @param {Real} _x World X position
@@ -335,7 +335,7 @@ function RegionData(_id, _config = {}) constructor
         return true;
     }
     
-    // --- Setters (fluent API) ---
+    // Setters (fluent API)
     
     static set_cave_biome_default = function(_biome_id)
     {

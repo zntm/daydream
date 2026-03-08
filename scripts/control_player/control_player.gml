@@ -21,7 +21,7 @@ function control_player()
     var _x_prev = x;
     var _y_prev = y;
     
-    // --- INPUT ---
+    // INPUT
     if (is_local)
     {
         input_state.poll_player();
@@ -36,7 +36,7 @@ function control_player()
     }
     // Note: Physics should ALWAYS run even with no input (gravity, friction, etc.)
     
-    // --- STAMINA & COMBO ---
+    // STAMINA & COMBO
     if (is_local)
     {
         // Stamina
@@ -81,7 +81,7 @@ function control_player()
         }
     }
     
-    // --- DOUBLE INPUT ---
+    // DOUBLE INPUT
     if !(obj_Game_Control.is_opened & WORLD_OPENED_BOOL.MENU)
     {
         var _inv_target = global.inventory;
@@ -151,7 +151,7 @@ function control_player()
             }
         }
         
-        // --- ARMOR ON_DOUBLE_HORIZONTAL_MOVE ---
+        // ARMOR ON_DOUBLE_HORIZONTAL_MOVE
         if (input_state.move_left_double_pressed || input_state.move_right_double_pressed)
         {
             // Determine dash direction from input
@@ -181,7 +181,7 @@ function control_player()
             }
         }
         
-        // --- ARMOR ON_DOUBLE_VERTICAL_MOVE ---
+        // ARMOR ON_DOUBLE_VERTICAL_MOVE
         if (input_state.move_up_double_pressed || input_state.move_down_double_pressed)
         {
             // Determine vertical dash direction from input
@@ -213,7 +213,7 @@ function control_player()
         }
     }
     
-    // --- DAMAGE CHECK ---
+    // DAMAGE CHECK
     if (timer_immunity <= 0)
     {
         var _inst = instance_place(x, y, obj_Creature);
@@ -244,10 +244,10 @@ function control_player()
         timer_immunity = max(0, timer_immunity - (1 / GAME_TICK));
     }
     
-    // --- AUDIO ---
+    // AUDIO
     audio_listener_position(x, y, 0);
     
-    // --- PHYSICS ---
+    // PHYSICS
     physics_body.sync_from_instance(id);
     global.spatial_grid.update(physics_body);
     entity_update_collision(physics_body);
@@ -256,31 +256,48 @@ function control_player()
     if (IS_DEVELOPER_MODE && is_local)
     {
         var _enable_physics = global.dbg_settings[$ "enable_physics"];
-        var _noclip = global.dbg_settings[$ "noclip"] ?? false;
+        var _noclip         = global.dbg_settings[$ "noclip"] ?? false;
         
         if (_noclip)
         {
-             // Noclip: Move directly and skip physics step
-             var _fly_speed = global.dbg_settings[$ "fly_speed"] ?? 8.65;
-             var _dt_scaled = (1 / GAME_TICK) * (global.dbg_settings[$ "time_speed"] ?? 1.0);
-             
-             x += input_state.move_x * _fly_speed * GAME_TICK * _dt_scaled;
-             y += input_state.move_y * _fly_speed * GAME_TICK * _dt_scaled;
-             
-             physics_body.vel_x = 0;
-             physics_body.vel_y = 0;
-             physics_body.sync_to_instance(id);
-             
-             // Update camera/visibility
-             // control_camera_pos(x - (global.camera_width / 2), y - (global.camera_height / 2), false);
-             
-             // Update scale for visuals
-             if (input_state.move_x != 0) image_xscale = abs(image_xscale) * sign(input_state.move_x);
+            /* Noclip: Move directly and skip physics step */
+            var _fly_speed = global.dbg_settings[$ "fly_speed"] ?? 8.65;
+            var _dt_scaled = (1 / GAME_TICK) * (global.dbg_settings[$ "time_speed"] ?? 1.0);
+            
+            physics_body.pos_x += input_state.move_x * _fly_speed * GAME_TICK * _dt_scaled;
+            physics_body.pos_y += input_state.move_y * _fly_speed * GAME_TICK * _dt_scaled;
+            
+            physics_body.vel_x = 0;
+            physics_body.vel_y = 0;
+            
+            /* Update scale for visuals */
+            if (input_state.move_x != 0)
+            {
+                image_xscale = abs(image_xscale) * sign(input_state.move_x);
+            }
         }
         else if (!_enable_physics)
         {
-            // Creative flight mode (no gravity)
-            physics_body.mode = MOVEMENT_MODE.FLY;
+            /* Creative flight mode (no gravity) */
+            physics_body.attribute[$ "___can_fly"]   = true;
+            physics_body.attribute[$ "___fly_speed"] = global.dbg_settings[$ "fly_speed"] ?? 8.65;
+            physics_body.mode                        = MOVEMENT_MODE.FLY;
+        }
+        else
+        {
+            /* Revert fly properties if physics enabled back */
+            if (physics_body.attribute != undefined)
+            {
+                if (struct_exists(physics_body.attribute, "___can_fly"))
+                {
+                    struct_remove(physics_body.attribute, "___can_fly");
+                }
+                
+                if (struct_exists(physics_body.attribute, "___fly_speed"))
+                {
+                    struct_remove(physics_body.attribute, "___fly_speed");
+                }
+            }
         }
     }
     
@@ -301,7 +318,7 @@ function control_player()
         PRINT($"[NET-PHYS] Player {uuid} post-step: VelX={physics_body.vel_x}, NewPosX={x}, Grounded={physics_body.collision.ground}");
     }
     
-    // --- COMBAT & SKILLS ---
+    // COMBAT & SKILLS
     var _item = _inv_target.base[_hotbar_index];
     var _skill = undefined;
     var _id = "";
@@ -337,7 +354,7 @@ function control_player()
                 spawn_particle(x + random_range(-12, 12), y - 20 + random_range(-12, 12), "phantasia:entity/glow_ready");
             }
             
-            // --- Launcher Charge UI ---
+            // Launcher Charge UI
             if (_data.get_hold_type() == ITEM_HOLD_TYPE.LAUNCHER)
             {
                 // Spawn charge UI if not yet created
@@ -465,7 +482,7 @@ function control_player()
             charge_time += 1 / GAME_TICK;
             charge_threshold = 0.5; // Default threshold
             
-            // --- Launcher Charge UI (non-skill fallback) ---
+            // Launcher Charge UI (non-skill fallback)
             if (charge_ui == undefined)
             {
                 var _charge_def = ui_load("ui/launcher_charge.ui");
@@ -650,7 +667,7 @@ function control_player()
         }
     }
     
-    // --- CONSUMABLES (Eating) ---
+    // CONSUMABLES (Eating)
     if (input_state.use_held)
     {
         var _item = _inv_target.base[_hotbar_index];
@@ -842,7 +859,7 @@ function control_player()
         }
     }
     
-    // --- FALL DAMAGE ---
+    // FALL DAMAGE
     /*
     if (y > y_last)
     {
@@ -879,7 +896,7 @@ function control_player()
     */
     creature_handle_fall_damage();
     
-    // --- POST-PHYSICS ---
+    // POST-PHYSICS
     control_entity_sfx();
     
     // Camera

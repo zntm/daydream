@@ -36,7 +36,7 @@ function tile_predict(_x, _y, _z)
     var _sky_threshold = _world_data.get_sky_biome_threshold();
     var _sky_enabled = _world_data.is_sky_biome_enabled();
     
-    // --- SKY BIOME ---
+    // SKY BIOME
     if (_y <= _sky_threshold && _sky_enabled)
     {
         if (worldgen_get_sky_island(_x, _y, _world_seed, _world_data))
@@ -86,7 +86,7 @@ function tile_predict(_x, _y, _z)
     var _surface_biome = worldgen_get_biome_surface(_x, _surface_height, _surface_height, _world_seed, _world_data, _slope);
     var _surface_biome_data = _global_biome_data[$ worldgen_resolve_id(_surface_biome)];
     
-    // --- OCEAN WATER ---
+    // OCEAN WATER
     if (_z == CHUNK_DEPTH_LIQUID)
     {
         if (_y < _surface_height) && (_y >= _world_data.get_surface_start()) && (_surface_biome_data != undefined) && (_surface_biome_data.is_ocean())
@@ -95,7 +95,7 @@ function tile_predict(_x, _y, _z)
         }
     }
     
-    // --- CAVES AND SOLID TERRAIN ---
+    // CAVES AND SOLID TERRAIN
     if (_y >= _surface_height - 1)
     {
         var _cave_biome = worldgen_get_biome_cave(_x, _y, _surface_height, _world_seed, _world_data);
@@ -127,7 +127,7 @@ function tile_predict(_x, _y, _z)
             }
         }
         
-        // --- AQUIFERS ---
+        // AQUIFERS
         if (_z == CHUNK_DEPTH_LIQUID && _is_cave)
         {
             var _aquifer = worldgen_get_aquifer(_x, _y, _surface_height, _world_seed, _world_data);
@@ -142,7 +142,7 @@ function tile_predict(_x, _y, _z)
         }
     }
     
-    // --- FOLIAGE ---
+    // FOLIAGE
     var _xorshift_val = xorshift(_world_seed ^ (_x * (_y + _surface_height)));
     var _foliage_layer = ((_xorshift_val & 1) ? CHUNK_DEPTH_FOLIAGE_FRONT : CHUNK_DEPTH_FOLIAGE_BACK);
     

@@ -16,7 +16,7 @@ function control_weather_tick(_dt, _camera_x, _camera_y, _camera_w, _camera_h)
 
     var _strength = global.settings.display_strength_weather;
 
-    /* --- sparse background rain --- */
+    /* sparse background rain */
     var _bg_rain_count = ceil(2 * _storm * _strength);
 
     repeat (_bg_rain_count)
@@ -29,7 +29,7 @@ function control_weather_tick(_dt, _camera_x, _camera_y, _camera_w, _camera_h)
         spawn_particle(_px, _py, "phantasia:weather/raindrop");
     }
 
-    /* --- rain particles near entities --- */
+    /* rain particles near entities */
     var _player_rain_count   = ceil(2 * _storm * _strength);
     var _creature_rain_count = ceil(1 * _storm * _strength);
     var _item_rain_count     = ceil(1 * _storm * _strength);
@@ -82,7 +82,7 @@ function control_weather_tick(_dt, _camera_x, _camera_y, _camera_w, _camera_h)
         }
     }
 
-    /* --- rain particles near light sources --- */
+    /* rain particles near light sources */
     var _rain_count = ceil(WEATHER_RAIN_PARTICLES_PER_LIGHT * _storm * _strength);
 
     for (var i = chunk_in_view_length - 1; i >= 0; --i)
@@ -114,7 +114,7 @@ function control_weather_tick(_dt, _camera_x, _camera_y, _camera_w, _camera_h)
         }
     }
 
-    /* --- lightning spawning --- */
+    /* lightning spawning */
     static __timer_lightning = 0;
 
     __timer_lightning -= _dt;

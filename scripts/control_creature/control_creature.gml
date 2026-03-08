@@ -26,7 +26,7 @@ enum CREATURE_AI_STATE {
 
 function control_creature()
 {
-    // --- REMOTE CREATURES ON CLIENT (INTERPOLATION) ---
+    // REMOTE CREATURES ON CLIENT (INTERPOLATION)
     if (global.network_role == RELAY_ROLE.CLIENT)
     {
         if (variable_instance_exists(self, "interp_start_x"))
@@ -49,13 +49,13 @@ function control_creature()
     var _data = global.creature_data[$ _id];
     var _dt_normalized = 1 / GAME_TICK;
     
-    // --- TIMERS ---
+    // TIMERS
     ai_decision_timer -= _dt_normalized;
     ai_state_timer -= _dt_normalized;
     ai_stuck_timer -= _dt_normalized;
     if (attack_cooldown > 0) attack_cooldown -= _dt_normalized;
     
-    // --- DAMAGE CHECK ---
+    // DAMAGE CHECK
     if (timer_immunity <= 0)
     {
         var _inst = instance_place(x, y, obj_Tool);
@@ -89,7 +89,7 @@ function control_creature()
         if (timer_immunity <= 0) inst_predator = noone;
     }
     
-    // --- SENSORS ---
+    // SENSORS
     physics_body.sync_from_instance(id);
     global.spatial_grid.update(physics_body);
     entity_update_collision(physics_body);
@@ -98,7 +98,7 @@ function control_creature()
     var _distance_to_target = instance_exists(_target) ? point_distance(x, y, _target.x, _target.y) : infinity;
     var _hostility_type = _data.get_hostility_type();
     
-    // --- AI DECISION ---
+    // AI DECISION
     if (ai_state == CREATURE_AI_STATE.STUNNED)
     {
         if (ai_state_timer <= 0)
@@ -114,7 +114,7 @@ function control_creature()
         creature_evaluate_state(_hostility_type, _target, _distance_to_target, _data);
     }
     
-    // --- PREY SCANNING ---
+    // PREY SCANNING
     if (ai_state != CREATURE_AI_STATE.STUNNED) && (ai_state != CREATURE_AI_STATE.FLEE && ai_decision_timer == AI_DECISION_INTERVAL)
     {
         creature_scan_for_prey(_data, _dt_normalized);
@@ -131,7 +131,7 @@ function control_creature()
         }
     }
     
-    // --- GENERATE AI INPUT ---
+    // GENERATE AI INPUT
     var _move_x = 0;
     var _move_y = 0;
     var _wants_jump = false;
@@ -186,7 +186,7 @@ function control_creature()
         input_state.clear();
     }
     
-    // --- PHYSICS ---
+    // PHYSICS
     // Set movement mode based on creature type
     var _movement_type = _data.get_movement_type();
     if (_movement_type == CREATURE_MOVEMENT_TYPE.FLY)
@@ -205,10 +205,10 @@ function control_creature()
     physics_step(physics_body, input_state);
     physics_body.sync_to_instance(id);
     
-    // --- FALL DAMAGE ---
+    // FALL DAMAGE
     creature_handle_fall_damage();
     
-    // --- POST-PHYSICS ---
+    // POST-PHYSICS
     control_entity_sfx();
     control_entity_suffocation(id);
     
@@ -220,7 +220,7 @@ function control_creature()
     control_entity_effect();
 }
 
-// --- AI HELPER FUNCTIONS ---
+// AI HELPER FUNCTIONS
 
 function creature_evaluate_state(_hostility_type, _target, _distance_to_target, _data)
 {

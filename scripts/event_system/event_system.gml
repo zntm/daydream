@@ -191,7 +191,7 @@ function EventData(_type, _data = {}) constructor
     data = _data;
 }
 
-// --- Entity Movement Events ---
+// Entity Movement Events
 
 /// @function EventDataEntityStep(_entity, _x, _y)
 function EventDataEntityStep(_entity, _x, _y) : EventData(GAME_EVENT.ENTITY_STEP) constructor
@@ -217,7 +217,7 @@ function EventDataEntitySplash(_entity, _x, _y) : EventData(GAME_EVENT.ENTITY_SP
     data = { entity: _entity, x: _x, y: _y }
 }
 
-// --- Entity Action Events ---
+// Entity Action Events
 
 /// @function EventDataEntityConsume(_entity, _item)
 function EventDataEntityConsume(_entity, _item) : EventData(GAME_EVENT.ENTITY_CONSUME) constructor
@@ -267,7 +267,7 @@ function EventDataEntityTeleport(_entity, _from_x, _from_y, _to_x, _to_y) : Even
     data = { entity: _entity, from_x: _from_x, from_y: _from_y, to_x: _to_x, to_y: _to_y }
 }
 
-// --- Entity Item Events ---
+// Entity Item Events
 
 /// @function EventDataEntityItemCollect(_entity, _item, _amount)
 function EventDataEntityItemCollect(_entity, _item, _amount = 1) : EventData(GAME_EVENT.ENTITY_ITEM_COLLECT) constructor
@@ -281,7 +281,7 @@ function EventDataEntityItemDrop(_entity, _item, _amount = 1) : EventData(GAME_E
     data = { entity: _entity, item: _item, amount: _amount }
 }
 
-// --- Item Events (non-entity) ---
+// Item Events (non-entity)
 
 /// @function EventDataItemCollect(_item, _collector, _amount)
 function EventDataItemCollect(_item, _collector, _amount = 1) : EventData(GAME_EVENT.ITEM_COLLECT) constructor
@@ -295,7 +295,7 @@ function EventDataItemDrop(_item, _dropper, _amount = 1) : EventData(GAME_EVENT.
     data = { item: _item, dropper: _dropper, amount: _amount }
 }
 
-// --- Tile Item Events ---
+// Tile Item Events
 
 /// @function EventDataTileItemCollect(_x, _y, _z, _item, _amount)
 function EventDataTileItemCollect(_x, _y, _z, _item, _amount = 1) : EventData(GAME_EVENT.TILE_ITEM_COLLECT) constructor
@@ -309,7 +309,7 @@ function EventDataTileItemDrop(_x, _y, _z, _item, _amount = 1) : EventData(GAME_
     data = { x: _x, y: _y, z: _z, item: _item, amount: _amount }
 }
 
-// --- Projectile Events ---
+// Projectile Events
 
 /// @function EventDataProjectileShoot(_entity, _projectile, _x, _y, _angle, _damage)
 function EventDataProjectileShoot(_entity, _projectile, _x, _y, _angle, _damage = 0) : EventData(GAME_EVENT.PROJECTILE_SHOOT) constructor
@@ -323,7 +323,7 @@ function EventDataProjectileLand(_projectile, _x, _y, _target = undefined, _land
     data = { projectile: _projectile, x: _x, y: _y, target: _target, land_type: _land_type }
 }
 
-// --- Item Use Events ---
+// Item Use Events
 
 /// @function EventDataItemUse(_item, _user, _x, _y)
 function EventDataItemUse(_item, _user, _x, _y) : EventData(GAME_EVENT.ITEM_USE) constructor
@@ -349,7 +349,7 @@ function EventDataItemCraft(_recipe, _crafter, _result = undefined) : EventData(
     data = { recipe: _recipe, crafter: _crafter, result: _result }
 }
 
-// --- Tile Use Events ---
+// Tile Use Events
 
 /// @function EventDataTileUse(_x, _y, _z, _user)
 function EventDataTileUse(_x, _y, _z, _user) : EventData(GAME_EVENT.TILE_USE) constructor
@@ -369,7 +369,7 @@ function EventDataTileUseFinish(_x, _y, _z, _user) : EventData(GAME_EVENT.TILE_U
     data = { x: _x, y: _y, z: _z, user: _user }
 }
 
-// --- Tile Placement Events ---
+// Tile Placement Events
 
 /// @function EventDataTilePlace(_x, _y, _z, _tile)
 function EventDataTilePlace(_x, _y, _z, _tile) : EventData(GAME_EVENT.TILE_PLACE) constructor
@@ -383,7 +383,7 @@ function EventDataTileUpdate(_x, _y, _z, _tile = undefined) : EventData(GAME_EVE
     data = { x: _x, y: _y, z: _z, tile: _tile }
 }
 
-// --- Container Events ---
+// Container Events
 
 /// @function EventDataTileContainerOpen(_x, _y, _z, _player)
 function EventDataTileContainerOpen(_x, _y, _z, _player) : EventData(GAME_EVENT.TILE_CONTAINER_OPEN) constructor
@@ -397,7 +397,7 @@ function EventDataTileContainerClose(_x, _y, _z) : EventData(GAME_EVENT.TILE_CON
     data = { x: _x, y: _y, z: _z }
 }
 
-// --- Explosive Events ---
+// Explosive Events
 
 /// @function EventDataExplosivePrime(_x, _y, _z, _fuse_time)
 function EventDataExplosivePrime(_x, _y, _z, _fuse_time = 0) : EventData(GAME_EVENT.EXPLOSIVE_PRIME) constructor
@@ -411,7 +411,7 @@ function EventDataExplosiveExplode(_x, _y, _z, _radius, _damage = 0) : EventData
     data = { x: _x, y: _y, z: _z, radius: _radius, damage: _damage }
 }
 
-// --- Miscellaneous Events ---
+// Miscellaneous Events
 
 /// @function EventDataTileFallingLand(_x, _y, _z, _tile)
 function EventDataTileFallingLand(_x, _y, _z, _tile) : EventData(GAME_EVENT.TILE_FALLING_LAND) constructor

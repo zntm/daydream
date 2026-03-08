@@ -40,7 +40,7 @@ function liquid_flow(_x, _y, _z, _parameter = {})
     var _flowed = false;
     var _new_positions = [];
     
-    /* --- phase 1: gravity (flow down) --- */
+    /* phase 1: gravity (flow down) */
     
     var _solid_down = tile_get(_x, _y + 1, CHUNK_DEPTH_DEFAULT);
     
@@ -93,7 +93,7 @@ function liquid_flow(_x, _y, _z, _parameter = {})
         }
     }
     
-    /* --- phase 2: diagonal flow (down-left / down-right) --- */
+    /* phase 2: diagonal flow (down-left / down-right) */
     
     if (!_flowed && _level > 0)
     {
@@ -156,7 +156,7 @@ function liquid_flow(_x, _y, _z, _parameter = {})
         }
     }
     
-    /* --- phase 3: horizontal spreading --- */
+    /* phase 3: horizontal spreading */
     
     if (!_flowed && _level > 0)
     {
@@ -243,7 +243,7 @@ function liquid_flow(_x, _y, _z, _parameter = {})
         }
     }
     
-    /* --- schedule follow-up ticks --- */
+    /* schedule follow-up ticks */
     
     for (var i = array_length(_new_positions) - 1; i >= 0; --i)
     {
