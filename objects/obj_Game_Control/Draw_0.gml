@@ -241,8 +241,6 @@ if (is_opened & WORLD_OPENED_BOOL.GUI)
         }
     }
 
-    matrix_set(matrix_world, _matrix_saved);
-
     /* draw deferred text */
     var _deferred_text_length = array_length(global.gui_deferred_text);
 
@@ -269,6 +267,8 @@ if (is_opened & WORLD_OPENED_BOOL.GUI)
 
         array_resize(global.gui_deferred_text, 0);
     }
+
+    matrix_set(matrix_world, _matrix_saved);
 
     /* display held item name */
     if !(is_opened & WORLD_OPENED_BOOL.INVENTORY)

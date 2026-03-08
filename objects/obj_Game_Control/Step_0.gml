@@ -209,6 +209,8 @@ if !(is_opened & (WORLD_OPENED_BOOL.MENU | WORLD_OPENED_BOOL.CHAT)) && (_lp.hp >
 {
     if (mouse_check_button_pressed(mb_right))
     {
+        var _item_data = global.item_data;
+
         for (var i = CHUNK_DEPTH - 1; i >= 0; --i)
         {
             var _tile = tile_get(_tile_x, _tile_y, i);
