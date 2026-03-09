@@ -4,43 +4,26 @@
 function file_get_directory_size(_directory)
 {
     var _total = 0;
-    var _files = [];
-    var _dirs  = [];
+    var _list  = file_read_directory(_directory, true);
 
-    /* collect files (fa_none excludes directories) */
-    for (var _f = file_find_first($"{_directory}/*", fa_none); _f != ""; _f = file_find_next())
+    for (var i = array_length(_list) - 1; i >= 0; --i)
     {
-        array_push(_files, _f);
-    }
+        var _path = $"{_directory}/{_list[i]}";
 
-    file_find_close();
+        /* skip directories as we only want to sum file sizes */
+        if (directory_exists(_path)) continue;
 
-    /* collect subdirectories separately so iterator is never nested */
-    for (var _d = file_find_first($"{_directory}/*", fa_directory); _d != ""; _d = file_find_next())
-    {
-        array_push(_dirs, _d);
-    }
+        var _handle = file_bin_open(_path, 0);
 
-    file_find_close();
-
-    /* sum file sizes using binary file API */
-    for (var i = array_length(_files) - 1; i >= 0; --i)
-    {
-        var _handle = file_bin_open($"{_directory}/{_files[i]}", 0);
-        _total += file_bin_size(_handle);
-
-        file_bin_close(_handle);
-    }
-
-    /* recurse into subdirectories */
-    for (var i = array_length(_dirs) - 1; i >= 0; --i)
-    {
-        _total += file_get_directory_size($"{_directory}/{_dirs[i]}");
+        if (_handle != -1)
+        {
+            _total += file_bin_size(_handle);
+            file_bin_close(_handle);
+        }
     }
 
     return _total;
 }
-
 
 /// @desc Formats a byte count into a human-readable string like "2.32 MB" or "188.12 KB".
 /// @param {Real} _bytes The number of bytes.

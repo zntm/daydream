@@ -59,6 +59,8 @@ function menu_title_ui_init()
 		var _splash_current_date = _splash_data[$ $"{current_month}_{current_day}"];
 		var _splash_text = array_choose(((chance(0.1)) && (_splash_current_date != undefined)) ? _splash_current_date : _splash_data.generic);
 		
+		_title_graphic.splash_text = _splash_text;
+		
 		_title_graphic.on_draw = method(_title_graphic, function(_x, _y, _xscale, _yscale)
 		{
 			var _title_spr = spr_Menu_Title;
@@ -87,7 +89,7 @@ function menu_title_ui_init()
 			
 			draw_set_align(fa_middle, fa_center);
 			
-			render_text(_x, _draw_y + _sh - _oy + 24, _splash_text, 1, 1, 12, MENU_TITLE_SPLASH_COLOUR);
+			render_text(_x, _draw_y + _sh - _oy + 24, splash_text, 1, 1, 12, MENU_TITLE_SPLASH_COLOUR);
 			
 			draw_set_align(_halign, _valign);
 		});

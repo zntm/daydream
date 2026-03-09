@@ -107,6 +107,13 @@ function UIArea(_x, _y, _width, _height) : UIElement(_x, _y, _width, _height) co
         draw_content();
         
         
+        /* execute custom draw callback if set */
+        if (on_draw != undefined)
+        {
+            on_draw(_x1, _y1, _base_scale.x, _base_scale.y);
+        }
+        
+        
         /* draw children */
         var _child_count = array_length(children);
         

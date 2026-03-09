@@ -35,7 +35,22 @@ function UIPage(_x, _y, _width, _height, _page_name) : UIElement(_x, _y, _width,
         if (page_name != active_page) exit;
         
         
+        var _base_scale = ui_get_base_scale();
+        var _abs_x      = get_absolute_x();
+        var _abs_y      = get_absolute_y();
+        
+        var _x1 = _abs_x * _base_scale.x;
+        var _y1 = _abs_y * _base_scale.y;
+        
+        
         draw_content();
+        
+        
+        /* execute custom draw callback if set */
+        if (on_draw != undefined)
+        {
+            on_draw(_x1, _y1, _base_scale.x, _base_scale.y);
+        }
         
         
         var _child_count = array_length(children);

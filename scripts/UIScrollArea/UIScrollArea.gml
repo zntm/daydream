@@ -265,6 +265,13 @@ function UIScrollArea(_x, _y, _width, _height) : UIElement(_x, _y, _width, _heig
         draw_content();
         
         
+        /* execute custom draw callback if set */
+        if (on_draw != undefined)
+        {
+            on_draw(_x1, _y1, _base_scale.x, _base_scale.y);
+        }
+        
+        
         /* set scissor clipping to area bounds */
         gpu_set_scissor(_x1, _y1, _x2 - _x1, _y2 - _y1);
         
