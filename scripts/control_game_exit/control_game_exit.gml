@@ -49,6 +49,9 @@ function control_game_exit()
 
         world_cleanup();
 
+        /* reset camera to (0, 0) for menu background alignment */
+        control_camera_pos(0, 0, true);
+
         room_goto(rm_Menu_Title);
 
         exit;
@@ -60,6 +63,9 @@ function control_game_exit()
     {
         window_progress(window_progress_normal, chunk_saved_count, chunk_saved_count_max);
     }
+    
+    global.menu_blur_alpha   = 0;
+    global.menu_capture_blur = false;
 
     var _chunks = chunk_map_get_all();
 

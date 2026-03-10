@@ -1,5 +1,7 @@
 function render_menu_background(_id, _colour)
 {
+    draw_clear(c_black);
+    
     gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_src_alpha, bm_one);
     
     static __u_colour = shader_get_uniform(shd_Background, "u_colour");
