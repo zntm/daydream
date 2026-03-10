@@ -121,9 +121,10 @@ function tile_place(_x, _y, _z, _tile)
     
     var _occluded = 0;
     var _has_opaque_above = false;
+    var _is_covered = false;
     var _item_data = global.item_data;
     
-    for (var _zz = CHUNK_DEPTH_DEFAULT; _zz >= CHUNK_DEPTH_WALL; --_zz)
+    for (var _zz = CHUNK_DEPTH - 1; _zz >= 0; --_zz)
     {
         if (_has_opaque_above)
         {
@@ -131,16 +132,36 @@ function tile_place(_x, _y, _z, _tile)
         }
         
         var _tile_check = _chunk.chunk[tile_index_xyz(_local_x, _local_y, _zz)];
+
         if (_tile_check != TILE_EMPTY)
         {
             var _data = _item_data[$ _tile_check.get_id()];
-            if (_data != undefined && !_data.is_transparent() && _data.has_type(ITEM_TYPE_BIT.SOLID))
+            if (_data != undefined) && (!_data.is_transparent()) && (_data.has_type(ITEM_TYPE_BIT.SOLID | ITEM_TYPE_BIT.UNTOUCHABLE))
             {
                 _has_opaque_above = true;
+                
+                if ((1 << _zz) & ((1 << CHUNK_DEPTH_DEFAULT) | (1 << CHUNK_DEPTH_WALL)))
+                {
+                    _is_covered = true;
+                }
             }
         }
     }
+
     _chunk.chunk_occluded[@ tile_index_xy(_local_x, _local_y)] = _occluded;
+    
+    // Update coverage for lighting
+    if (_is_covered)
+    {
+        _chunk.chunk_covered[@ _local_x] |= (1 << _local_y);
+    }
+    else
+    {
+        _chunk.chunk_covered[@ _local_x] &= ~(1 << _local_y);
+    }
+    
+    _chunk.boolean |= CHUNK_BOOL.SURFACE_LIGHTING_REFRESH;
+    obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOL.LIGHTING;
     
     // Invalidate vertex buffers for all layers from WALL to _z
     for (var _zz = CHUNK_DEPTH_WALL; _zz <= _z; ++_zz)

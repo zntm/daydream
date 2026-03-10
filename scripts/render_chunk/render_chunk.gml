@@ -33,31 +33,92 @@ function render_chunk(_page, _position, _texel_width, _texel_height, _inst, _z)
             var _index_xy = tile_index_xy(_x, _y);
             var _flags = _inst.chunk_occluded[_index_xy];
             
-            // Check neighbors. If a neighbor is outside chunk bounds, we assume '0' (Visible/Not Occluded) for safety
-            // which effectively disables culling at chunk borders to prevent gaps.
             if (_flags != 0)
             {
                 // Left
-                if (_x > 0) _flags &= _chunk_occluded[_index_xy - 1];
-                else _flags = 0;
+                if (_x > 0)
+                {
+                    _flags &= _chunk_occluded[_index_xy - 1];
+                }
+                else
+                {
+                    var _neighbor = chunk_map_get_by_tile((_xstart >> TILE_SIZE_BIT) - 1, (_ystart >> TILE_SIZE_BIT) + _y);
+                    
+                    if (_neighbor != undefined)
+                    {
+                        _flags &= _neighbor.chunk_occluded[tile_index_xy(CHUNK_SIZE - 1, _y)];
+                    }
+                    else
+                    {
+                        _flags = 0;
+                    }
+                }
             }
+
             if (_flags != 0)
             {
                 // Right
-                if (_x < CHUNK_SIZE - 1) _flags &= _chunk_occluded[_index_xy + 1];
-                else _flags = 0;
+                if (_x < CHUNK_SIZE - 1)
+                {
+                    _flags &= _chunk_occluded[_index_xy + 1];
+                }
+                else
+                {
+                    var _neighbor = chunk_map_get_by_tile((_xstart >> TILE_SIZE_BIT) + CHUNK_SIZE, (_ystart >> TILE_SIZE_BIT) + _y);
+                    
+                    if (_neighbor != undefined)
+                    {
+                        _flags &= _neighbor.chunk_occluded[tile_index_xy(0, _y)];
+                    }
+                    else
+                    {
+                        _flags = 0;
+                    }
+                }
             }
+
             if (_flags != 0)
             {
                 // Up
-                if (_y > 0) _flags &= _chunk_occluded[_index_xy - CHUNK_SIZE];
-                else _flags = 0;
+                if (_y > 0)
+                {
+                    _flags &= _chunk_occluded[_index_xy - CHUNK_SIZE];
+                }
+                else
+                {
+                    var _neighbor = chunk_map_get_by_tile((_xstart >> TILE_SIZE_BIT) + _x, (_ystart >> TILE_SIZE_BIT) - 1);
+                    
+                    if (_neighbor != undefined)
+                    {
+                        _flags &= _neighbor.chunk_occluded[tile_index_xy(_x, CHUNK_SIZE - 1)];
+                    }
+                    else
+                    {
+                        _flags = 0;
+                    }
+                }
             }
+
             if (_flags != 0)
             {
                 // Down
-                if (_y < CHUNK_SIZE - 1) _flags &= _chunk_occluded[_index_xy + CHUNK_SIZE];
-                else _flags = 0;
+                if (_y < CHUNK_SIZE - 1)
+                {
+                    _flags &= _chunk_occluded[_index_xy + CHUNK_SIZE];
+                }
+                else
+                {
+                    var _neighbor = chunk_map_get_by_tile((_xstart >> TILE_SIZE_BIT) + _x, (_ystart >> TILE_SIZE_BIT) + CHUNK_SIZE);
+                    
+                    if (_neighbor != undefined)
+                    {
+                        _flags &= _neighbor.chunk_occluded[tile_index_xy(_x, 0)];
+                    }
+                    else
+                    {
+                        _flags = 0;
+                    }
+                }
             }
             
             if (_flags & (1 << _z)) continue;

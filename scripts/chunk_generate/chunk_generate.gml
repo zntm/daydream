@@ -348,5 +348,36 @@ function chunk_generate(_chunk, _context = undefined)
             }
         }
     }
+    // PASS 3: Calculate Occlusion
+    for (var i = CHUNK_SIZE - 1; i >= 0; --i)
+    {
+        for (var j = CHUNK_SIZE - 1; j >= 0; --j)
+        {
+            var _occluded = 0;
+            var _has_opaque_above = false;
+            
+            for (var _zz = CHUNK_DEPTH - 1; _zz >= 0; --_zz)
+            {
+                if (_has_opaque_above)
+                {
+                    _occluded |= (1 << _zz);
+                }
+                
+                var _tile_check = _chunk.chunk[(_zz << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i];
+                
+                if (_tile_check != TILE_EMPTY)
+                {
+                    var _d = _item_data[$ _tile_check.get_id()];
+                    if (_d != undefined) && (!_d.is_transparent()) && (_d.has_type(ITEM_TYPE_BIT.SOLID | ITEM_TYPE_BIT.UNTOUCHABLE))
+                    {
+                        _has_opaque_above = true;
+                    }
+                }
+            }
+            
+            _chunk.chunk_occluded[@ (j << CHUNK_SIZE_BIT) | i] = _occluded;
+        }
+    }
+    
     obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOL.LIGHTING;
 }
