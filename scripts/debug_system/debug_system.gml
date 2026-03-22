@@ -27,7 +27,8 @@ function debug_init()
             camera_size: 1,
             fly_speed: 1,
             time_speed: 1,
-            noclip: false
+            noclip: false,
+            auto_reload_data: false
         };
     }
     
@@ -46,7 +47,9 @@ function debug_init()
     
     dbg_button("Reload Data", function()
     {
-        PRINT("Reloading data...");
+        PRINT("[data_reload] reloading data...");
+
+        data_reload();
     });
     
     dbg_same_line();
@@ -55,6 +58,8 @@ function debug_init()
     {
         game_restart();
     });
+    
+    dbg_checkbox(ref_create(global.dbg_settings, "auto_reload_data"), "Auto Reload Data");
     
     dbg_section("Stats");
     
@@ -185,6 +190,11 @@ function debug_step()
     }
     
     ui_editor_step();
+    
+    if (variable_global_exists("__data_watch")) && (global.dbg_settings.auto_reload_data)
+    {
+        data_reload_watch_step();
+    }
     
     if (is_debug_overlay_open())
     {

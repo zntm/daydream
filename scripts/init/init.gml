@@ -45,6 +45,11 @@ function init(_namespace)
     init_achievement(_namespace, $"{PROGRAM_DIRECTORY_RESOURCES}/data/achievements");
 
     init_loot(_namespace, $"{PROGRAM_DIRECTORY_RESOURCES}/data/loot");
+
+    if (IS_DEVELOPER_MODE)
+    {
+        data_reload_watch_init();
+    }
 }
 
 call_later(8, time_source_units_frames, function()

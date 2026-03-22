@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"data_reload",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"data_reload",
+  "parent":{
+    "name":"Debug",
+    "path":"folders/Scripts/Debug.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
