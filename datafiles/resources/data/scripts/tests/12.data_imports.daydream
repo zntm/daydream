@@ -1,0 +1,33 @@
+test_group("data imports", [
+    test("json imports expose parsed data and named fields", fn() {
+        import data, player_name, stats from "./modules/sample.json"
+
+        test_expect(player_name, "Ada")
+        test_expect(stats.hp, 100)
+        test_expect(data.stats.energy, 7)
+    }),
+
+    test("named imports allow optional braces", fn() {
+        import { add as sum, get_secret } from "./modules/math_module.daydream"
+
+        test_expect(sum(4, 5), 9)
+        test_expect(get_secret(), 42)
+    }),
+
+    test("csv imports expose rows, header, and records", fn() {
+        import header, rows, records from "./modules/sample.csv"
+
+        test_expect(header[0], "id")
+        test_expect(rows[1][1], "Ada")
+        test_expect(records[1].hp, 150)
+    }),
+
+    test("ini imports expose sections and typed values", fn() {
+        import data, player, flags from "./modules/sample.ini"
+
+        test_expect(player.name, "Ada")
+        test_expect(player.level, 12)
+        test_expect(flags.hardcore, true)
+        test_expect(data.player.name, "Ada")
+    }),
+])

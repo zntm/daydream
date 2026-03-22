@@ -21,6 +21,7 @@ enum UI_AST
     NUMBER,       /* numeric literal */
     STRING,       /* string literal */
     BOOL,         /* true/false */
+    UNDEFINED,    /* undefined literal */
     TUPLE,        /* (x, y) or (x, y, z, w) */
     COLOR,        /* #RRGGBB or #RRGGBBAA */
     IDENTIFIER,   /* variable reference (e.g. _padding) */
@@ -170,6 +171,13 @@ function UIASTBool(_value) constructor
     type = UI_AST.BOOL;
     
     value = _value;
+}
+
+
+/* undefined literal */
+function UIASTUndefined() constructor
+{
+    type = UI_AST.UNDEFINED;
 }
 
 

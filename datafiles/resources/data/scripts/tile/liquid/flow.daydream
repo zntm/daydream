@@ -212,7 +212,7 @@ export fn flow(parameter, x, y, z) {
     }
   }
 
-  import schedule from "./flow_schedule"
+  import schedule from "./flow_schedule.daydream"
   for (var i = 0; i < array_length(new_positions); i++) {
     var pos = new_positions[i]
     schedule(parameter, pos.x, pos.y, pos.z)

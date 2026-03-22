@@ -20,6 +20,15 @@ global.ui_pending_events = {}
 global.ui_input_consumed = false;
 
 
+/* detect whether an array is a proglang closure instead of plain UI data */
+function ui_is_proglang_closure(_value)
+{
+    return is_array(_value)
+        && array_length(_value) >= PROG_CLOSURE.SIZE
+        && _value[PROG_CLOSURE.TYPE] == "closure";
+}
+
+
 /* =============================================================================
    loading and parsing
    ============================================================================= */
@@ -169,6 +178,14 @@ function ui_load(_path)
 /* @returns {struct} ui instance with spawned elements */
 function ui_spawn(_definitions, _config = {}, _events = undefined)
 {
+    var _document_variables = {}
+
+    if (is_struct(_definitions) && struct_exists(_definitions, "variables"))
+    {
+        _document_variables = _definitions.variables;
+    }
+
+
     /* handle ui_load() result struct (has .document property) */
     if (is_struct(_definitions) && struct_exists(_definitions, "document"))
     {
@@ -221,7 +238,7 @@ function ui_spawn(_definitions, _config = {}, _events = undefined)
     
     
     /* get variables from definition if available */
-    var _variables = {}
+    var _variables = _document_variables
     
     if (is_struct(_definitions) && struct_exists(_definitions, "variables"))
     {
@@ -880,7 +897,7 @@ function ui_apply_property(_element, _prop, _link, _variables)
                         {
                             _arr = _arr();
                         }
-                        else if (is_array(_arr) && array_length(_arr) > 0 && is_array(_arr[0]))
+                        else if (ui_is_proglang_closure(_arr))
                         {
                             _arr = proglang_runtime_call(_arr);
                         }
@@ -972,6 +989,9 @@ function ui_resolve_value(_node, _link, _variables)
         case UI_AST.BOOL:
             return _node.value;
             
+        case UI_AST.UNDEFINED:
+            return undefined;
+
         case UI_AST.COLOR:
             return { color: _node.color, alpha: _node.alpha }
             
@@ -1031,11 +1051,7 @@ function ui_resolve_value(_node, _link, _variables)
                 {
                     _arr = _arr();
                 }
-                else if (is_array(_arr) && !is_array(_arr[0]))
-                {
-                    /* plain array */
-                }
-                else if (is_array(_arr))
+                else if (ui_is_proglang_closure(_arr))
                 {
                     _arr = proglang_runtime_call(_arr);
                 }
@@ -1184,6 +1200,7 @@ function ui_resolve_origin(_name)
         case "ORIGIN_TOP_CENTER":    return [{ is_percent: true, value: 50 }, 0];
         case "ORIGIN_TOP_RIGHT":     return [{ is_percent: true, value: 100 }, 0];
         case "ORIGIN_MIDDLE_LEFT":   return [0, { is_percent: true, value: 50 }];
+        case "ORIGIN_MIDDLE_CENTER":
         case "ORIGIN_CENTER":        return [{ is_percent: true, value: 50 }, { is_percent: true, value: 50 }];
         case "ORIGIN_MIDDLE_RIGHT":  return [{ is_percent: true, value: 100 }, { is_percent: true, value: 50 }];
         case "ORIGIN_BOTTOM_LEFT":   return [0, { is_percent: true, value: 100 }];
@@ -1482,6 +1499,30 @@ function ui_should_render(_instance)
 }
 
 
+/* refresh bindings on an element tree without running interactive update logic */
+function ui_refresh_element(_element)
+{
+    if (_element == undefined) exit;
+
+    if (struct_exists(_element, "update_bindings"))
+    {
+        _element.update_bindings();
+    }
+
+
+    if (struct_exists(_element, "children"))
+    {
+        var _child_count = array_length(_element.children);
+
+
+        for (var i = _child_count - 1; i >= 0; --i)
+        {
+            ui_refresh_element(_element.children[i]);
+        }
+    }
+}
+
+
 /* refresh all bindings in a ui instance */
 function ui_refresh(_instance)
 {
@@ -1495,10 +1536,7 @@ function ui_refresh(_instance)
     
     for (var i = _count - 1; i >= 0; --i)
     {
-        if (struct_exists(_instance.root_elements[i], "update_bindings"))
-        {
-            _instance.root_elements[i].update_bindings();
-        }
+        ui_refresh_element(_instance.root_elements[i]);
     }
 }
 

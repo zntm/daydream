@@ -76,6 +76,11 @@ width = 50%
 inventory_name = "base"
 \`\`\`
 
+### Undefined
+\`\`\`
+text = undefined
+\`\`\`
+
 ### Vectors
 Tuples are written with parentheses:
 \`\`\`
@@ -93,6 +98,7 @@ slices = (1, 0, 4, 0)
 | \`ORIGIN_TOP_RIGHT\` | Top-right corner |
 | \`ORIGIN_MIDDLE_LEFT\` | Middle-left edge |
 | \`ORIGIN_MIDDLE_CENTER\` | Center |
+| \`ORIGIN_CENTER\` | Center (alias of \`ORIGIN_MIDDLE_CENTER\`) |
 | \`ORIGIN_MIDDLE_RIGHT\` | Middle-right edge |
 | \`ORIGIN_BOTTOM_LEFT\` | Bottom-left corner |
 | \`ORIGIN_BOTTOM_CENTER\` | Bottom-center edge |
@@ -102,7 +108,9 @@ slices = (1, 0, 4, 0)
 | Constant | Description |
 |----------|-------------|
 | \`LAYOUT_HORIZONTAL\` | Arrange children left-to-right |
-| \`LAYOUT_VERTICAL\` | Arrange children top-to-bottom |`
+| \`LAYOUT_VERTICAL\` | Arrange children top-to-bottom |
+| \`LAYOUT_GRID\` | Arrange children in a grid using \`grid_columns\` |
+| \`LAYOUT_NONE\` | Disable automatic layout |`
     },
     {
         title: "Math Expressions",
@@ -145,7 +153,34 @@ var bar_empty = $sprite(spr_GUI_Stat_Bar_Empty) {
 }
 \`\`\`
 
-Bound values are resolved at runtime from the UI link context.`
+Bound values are resolved at runtime from the UI link context.
+
+Array indexing is also supported:
+
+\`\`\`
+choices = *dropdown_choices
+text = *names[index]
+\`\`\`
+
+Plain arrays are treated as data, while proglang closures are executed and their return value is bound.`
+    },
+    {
+        title: "Events",
+        content: `Event handlers use \`on_* = @"namespace:script/path"\` syntax:
+
+\`\`\`
+@button(confirm) {
+    text = "Confirm"
+    on_select_release = @"phantasia:menu/confirm"
+}
+\`\`\`
+
+When an event fires, the handler receives a context containing:
+
+- \`element\`: the UI element instance
+- \`element_name\`: the element name from the \`.ui\` file
+- \`event\`: the fired event name
+- \`data\`: event payload, when provided by the element`
     },
     {
         title: "Repeat",

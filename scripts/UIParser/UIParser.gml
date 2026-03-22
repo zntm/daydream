@@ -541,6 +541,12 @@ function UIParser(_tokens) constructor
         }
         
         
+        if (match(UI_TOKEN.UNDEFINED))
+        {
+            return new UIASTUndefined();
+        }
+
+
         /* layout enums */
         if (match(UI_TOKEN.LAYOUT_VERTICAL)) 
         {

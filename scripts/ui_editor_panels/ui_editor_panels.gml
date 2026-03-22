@@ -410,54 +410,39 @@ function ui_editor_edit_property(_prop)
 /* @returns {struct|undefined} ast value node */
 function ui_editor_parse_value(_text)
 {
-    /* try as number */
-    var _num = real_try(_text);
+    var _lexer = new UILexer(_text);
+    var _tokens = _lexer.tokenize();
 
-    if (_num != undefined)
+
+    if (_lexer.had_error)
     {
-        return { type: UI_AST.NUMBER, value: _num };
-    }
+        PRINT($"[UI Editor] value lexer error: {_lexer.error}");
 
-    /* colour literal (starts with #) */
-    if (string_char_at(_text, 1) == "#")
-    {
-        return { type: UI_AST.COLOR, value: _text };
-    }
-
-    /* boolean */
-    if (_text == "true")
-    {
-        return { type: UI_AST.IDENTIFIER, name: "true" };
-    }
-
-    if (_text == "false")
-    {
-        return { type: UI_AST.IDENTIFIER, name: "false" };
-    }
-
-    /* treat as string (strip quotes if provided) */
-    if (string_char_at(_text, 1) == "\"") && (string_char_at(_text, string_length(_text)) == "\"")
-    {
-        _text = string_copy(_text, 2, string_length(_text) - 2);
-    }
-
-    return { type: UI_AST.STRING, value: _text };
-}
-
-
-/* helper: try to parse string as real, returns undefined on failure */
-function real_try(_text)
-{
-    try
-    {
-        var _val = real(_text);
-
-        return _val;
-    }
-    catch (_e)
-    {
         return undefined;
     }
+
+
+    var _parser = new UIParser(_tokens);
+    var _node = _parser.parse_value();
+
+
+    if (_parser.had_error)
+    {
+        PRINT($"[UI Editor] value parser error: {_parser.error}");
+
+        return undefined;
+    }
+
+
+    if (_parser.peek().type != UI_TOKEN.EOF)
+    {
+        PRINT($"[UI Editor] value parser error: unexpected trailing token '{_parser.peek().lexeme}'.");
+
+        return undefined;
+    }
+
+
+    return _node;
 }
 
 

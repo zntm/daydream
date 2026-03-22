@@ -12,26 +12,6 @@ function ui_editor_serialize(_document, _variables)
     var _defs   = _document.definitions;
     var _count  = array_length(_defs);
 
-    /* serialize variable declarations first */
-    if (is_struct(_variables))
-    {
-        var _var_names = struct_get_names(_variables);
-        var _var_count = array_length(_var_names);
-
-        for (var i = 0; i < _var_count; ++i)
-        {
-            var _name  = _var_names[i];
-            var _value = _variables[$ _name];
-
-            _output += $"var {_name} = {ui_editor_serialize_value_raw(_value)}\n";
-        }
-
-        if (_var_count > 0)
-        {
-            _output += "\n";
-        }
-    }
-
     /* serialize each top-level definition */
     for (var i = 0; i < _count; ++i)
     {
@@ -144,6 +124,9 @@ function ui_editor_serialize_ast_value(_node)
 
         case UI_AST.BOOL:
             return _node.value ? "true" : "false";
+
+        case UI_AST.UNDEFINED:
+            return "undefined";
 
         case UI_AST.COLOR:
             return ui_editor_color_to_hex(_node.color, _node.alpha);

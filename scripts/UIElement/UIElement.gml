@@ -130,9 +130,9 @@ function UIElement(_x, _y, _width, _height) constructor
                 {
                     _value = _resolver();
                 }
-                else if (is_array(_resolver))
+                else if (ui_is_proglang_closure(_resolver))
                 {
-                    /* it might be a proglang closure/function */
+                    /* call proglang closures, but leave plain arrays untouched */
                     _value = proglang_runtime_call(_resolver);
                 }
                 else
@@ -167,19 +167,6 @@ function UIElement(_x, _y, _width, _height) constructor
                 {
                     self[$ _property] = _value;
                 }
-            }
-        }
-        
-        
-        /* propagate to children */
-        var _child_count = array_length(children);
-        
-        
-        for (var i = _child_count - 1; i >= 0; --i)
-        {
-            if (struct_exists(children[i], "update_bindings"))
-            {
-                children[i].update_bindings();
             }
         }
     }

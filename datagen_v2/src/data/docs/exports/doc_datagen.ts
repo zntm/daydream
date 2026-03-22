@@ -1,8 +1,16 @@
 import { DatagenReturnData } from "../../../lib";
+import * as daydream from "../daydream";
 import * as stdlib from "../stdlib";
 import * as ui from "../ui";
 
 const results: DatagenReturnData[] = [];
+
+// Daydream language docs
+for (const [name, content] of Object.entries(daydream)) {
+    if (typeof content !== "string") continue;
+
+    results.push(new DatagenReturnData(`daydream/${name}.md`, content));
+}
 
 // Stdlib docs
 for (const [name, content] of Object.entries(stdlib)) {

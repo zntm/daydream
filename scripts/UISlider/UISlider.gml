@@ -74,6 +74,7 @@ function UISlider(_x, _y, _width, _min, _max, _value) : UIElement(_x, _y, _width
                 is_dragging = false;
                 
                 emit_event("on_change", { value: value });
+                emit_event("on_value_change", value);
             }
         }
         

@@ -1,0 +1,11 @@
+{
+  "player_name": "Ada",
+  "stats": {
+    "hp": 100,
+    "energy": 7
+  },
+  "inventory": [
+    "apple",
+    "torch"
+  ]
+}
