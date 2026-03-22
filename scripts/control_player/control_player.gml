@@ -25,6 +25,7 @@ function control_player()
     if (is_local)
     {
         input_state.poll_player();
+        selected_hotbar = global.inventory_selected_hotbar;
     }
     
     // Apply aim
@@ -33,6 +34,26 @@ function control_player()
         input_state.aim_x = input_state.move_x;
         input_state.aim_y = input_state.move_y;
         input_state.aim_angle = point_direction(0, 0, input_state.aim_x, input_state.aim_y);
+    }
+
+    if ((is_local) && (global.network_role == RELAY_ROLE.CLIENT))
+    {
+        relay_send_player_input({
+            tick: current_time,
+            move_x: input_state.move_x,
+            move_y: input_state.move_y,
+            aim_x: input_state.aim_x,
+            aim_y: input_state.aim_y,
+            jump_held: input_state.jump_held,
+            jump_pressed: input_state.jump_pressed,
+            attack_held: input_state.attack_held,
+            attack_pressed: input_state.attack_pressed,
+            use_held: input_state.use_held,
+            use_pressed: input_state.use_pressed,
+            sprint_held: input_state.sprint_held,
+            sprint_pressed: input_state.sprint_pressed,
+            selected_hotbar: selected_hotbar
+        });
     }
     // Note: Physics should ALWAYS run even with no input (gravity, friction, etc.)
     

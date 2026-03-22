@@ -155,12 +155,14 @@ function relay_read_hello(_buffer)
 /// @desc Write WELCOME packet data
 /// @param {Id.Buffer} _buffer
 /// @param {String} _assigned_peer_id Peer ID assigned by host (may differ from requested)
+/// @param {String} _host_peer_id Host peer ID for direct client->host routing
 /// @param {Array} _peer_list Array of { peer_id, uuid, attire }
 /// @param {Real} _world_seed World generation seed
 /// @param {Real} _world_time Current world time
-function relay_write_welcome(_buffer, _assigned_peer_id, _peer_list, _world_seed, _world_time)
+function relay_write_welcome(_buffer, _assigned_peer_id, _host_peer_id, _peer_list, _world_seed, _world_time)
 {
     buffer_write(_buffer, buffer_string, _assigned_peer_id);
+    buffer_write(_buffer, buffer_string, _host_peer_id);
     buffer_write(_buffer, buffer_f64, _world_seed);
     buffer_write(_buffer, buffer_f32, _world_time);
     buffer_write(_buffer, buffer_u16, array_length(_peer_list));
@@ -180,6 +182,7 @@ function relay_write_welcome(_buffer, _assigned_peer_id, _peer_list, _world_seed
 function relay_read_welcome(_buffer)
 {
     var _peer_id = buffer_read(_buffer, buffer_string);
+    var _host_peer_id = buffer_read(_buffer, buffer_string);
     var _world_seed = buffer_read(_buffer, buffer_f64);
     var _world_time = buffer_read(_buffer, buffer_f32);
     var _count = buffer_read(_buffer, buffer_u16);
@@ -203,6 +206,7 @@ function relay_read_welcome(_buffer)
     
     return {
         peer_id: _peer_id,
+        host_peer_id: _host_peer_id,
         world_seed: _world_seed,
         world_time: _world_time,
         peers: _peers

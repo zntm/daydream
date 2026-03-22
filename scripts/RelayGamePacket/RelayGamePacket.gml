@@ -18,6 +18,22 @@ function relay_send_game_packet(_peer_id, _packet_type, _game_buffer)
     buffer_delete(_wrapper);
 }
 
+/// @desc Send a game packet through the relay to the host authority
+/// @param {Enum.PACKET_TYPE} _packet_type The game packet type
+/// @param {Id.Buffer} _game_buffer The game packet buffer (with data, no size header)
+function relay_send_game_packet_to_host(_packet_type, _game_buffer)
+{
+    var _wrapper = relay_packet_create(RELAY_PACKET.GAME_PACKET);
+    buffer_write(_wrapper, buffer_u8, _packet_type);
+
+    var _game_size = buffer_tell(_game_buffer);
+    buffer_write(_wrapper, buffer_u16, _game_size);
+    relay_buffer_copy(_wrapper, _game_buffer);
+
+    global.relay.send_to_host(_wrapper);
+    buffer_delete(_wrapper);
+}
+
 /// @desc Broadcast a game packet through the relay to all peers
 /// @param {Enum.PACKET_TYPE} _packet_type The game packet type
 /// @param {Id.Buffer} _game_buffer The game packet buffer
@@ -66,6 +82,8 @@ function relay_write_input(_buffer, _input)
     buffer_write(_buffer, buffer_u32, _input.tick);
     buffer_write(_buffer, buffer_f32, _input.move_x);
     buffer_write(_buffer, buffer_f32, _input.move_y);
+    buffer_write(_buffer, buffer_f32, _input.aim_x ?? 0);
+    buffer_write(_buffer, buffer_f32, _input.aim_y ?? 0);
     
     var _flags = 0;
     if (_input.jump_held)      _flags |= 1 << 0;
@@ -74,6 +92,8 @@ function relay_write_input(_buffer, _input)
     if (_input.attack_pressed) _flags |= 1 << 3;
     if (_input.use_held)       _flags |= 1 << 4;
     if (_input.use_pressed)    _flags |= 1 << 5;
+    if (_input.sprint_held)    _flags |= 1 << 6;
+    if (_input.sprint_pressed) _flags |= 1 << 7;
     
     buffer_write(_buffer, buffer_u16, _flags);
     buffer_write(_buffer, buffer_u8, _input.selected_hotbar);
@@ -86,6 +106,8 @@ function relay_read_input(_buffer)
         tick:            buffer_read(_buffer, buffer_u32),
         move_x:          buffer_read(_buffer, buffer_f32),
         move_y:          buffer_read(_buffer, buffer_f32),
+        aim_x:           buffer_read(_buffer, buffer_f32),
+        aim_y:           buffer_read(_buffer, buffer_f32),
     }
     
     var _flags = buffer_read(_buffer, buffer_u16);
@@ -95,8 +117,11 @@ function relay_read_input(_buffer)
     _data.attack_pressed = !!(_flags & (1 << 3));
     _data.use_held       = !!(_flags & (1 << 4));
     _data.use_pressed    = !!(_flags & (1 << 5));
+    _data.sprint_held    = !!(_flags & (1 << 6));
+    _data.sprint_pressed = !!(_flags & (1 << 7));
     
     _data.selected_hotbar = buffer_read(_buffer, buffer_u8);
+    _data.aim_angle = point_direction(0, 0, _data.aim_x, _data.aim_y);
     
     return _data;
 }
@@ -365,7 +390,7 @@ function relay_send_player_input(_input)
     var _buf = buffer_create(64, buffer_grow, 1);
     relay_write_input(_buf, _input);
     
-    relay_broadcast_game_packet(PACKET_TYPE.PLAYER_INPUT, _buf);
+    relay_send_game_packet_to_host(PACKET_TYPE.PLAYER_INPUT, _buf);
     buffer_delete(_buf);
 }
 
@@ -429,14 +454,17 @@ function relay_send_inventory_update(_peer_id, _inv_name, _index, _item)
 }
 
 /// @desc Send time update to all peers
-function relay_send_time_update(_time)
+function relay_send_time_update(_time, _target_peer_id = undefined)
 {
     if (global.relay == undefined || global.relay.role == RELAY_ROLE.NONE) exit;
     
     var _buf = buffer_create(8, buffer_grow, 1);
     relay_write_time_update(_buf, _time);
     
-    relay_broadcast_game_packet(PACKET_TYPE.TIME_UPDATE, _buf);
+    if (_target_peer_id != undefined)
+        relay_send_game_packet(_target_peer_id, PACKET_TYPE.TIME_UPDATE, _buf);
+    else
+        relay_broadcast_game_packet(PACKET_TYPE.TIME_UPDATE, _buf);
     buffer_delete(_buf);
 }
 
@@ -515,7 +543,7 @@ function relay_send_inventory_action(_action, _from_inv, _from_idx, _to_inv, _to
     var _buf = buffer_create(128, buffer_grow, 1);
     relay_write_inventory_action(_buf, _action, _from_inv, _from_idx, _to_inv, _to_idx, _amount);
     
-    relay_broadcast_game_packet(PACKET_TYPE.INVENTORY_ACTION, _buf);
+    relay_send_game_packet_to_host(PACKET_TYPE.INVENTORY_ACTION, _buf);
     buffer_delete(_buf);
 }
 
@@ -529,7 +557,7 @@ function relay_send_container_open(_x, _y, _z)
     buffer_write(_buf, buffer_s32, _y);
     buffer_write(_buf, buffer_s32, _z);
     
-    relay_broadcast_game_packet(PACKET_TYPE.CONTAINER_OPEN, _buf);
+    relay_send_game_packet_to_host(PACKET_TYPE.CONTAINER_OPEN, _buf);
     buffer_delete(_buf);
 }
 
@@ -539,6 +567,6 @@ function relay_send_container_close()
     if (global.relay == undefined || global.relay.role == RELAY_ROLE.NONE) exit;
     
     var _buf = buffer_create(1, buffer_grow, 1);
-    relay_broadcast_game_packet(PACKET_TYPE.CONTAINER_CLOSE, _buf);
+    relay_send_game_packet_to_host(PACKET_TYPE.CONTAINER_CLOSE, _buf);
     buffer_delete(_buf);
 }

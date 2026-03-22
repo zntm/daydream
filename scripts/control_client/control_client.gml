@@ -125,13 +125,21 @@ function control_client()
             input_state.attack_pressed = network_input.attack_pressed;
             input_state.use_held       = network_input.use_held;
             input_state.use_pressed    = network_input.use_pressed;
+            input_state.sprint_held    = network_input.sprint_held ?? false;
+            input_state.sprint_pressed = network_input.sprint_pressed ?? false;
+            input_state.aim_x          = network_input.aim_x ?? input_state.move_x;
+            input_state.aim_y          = network_input.aim_y ?? input_state.move_y;
+            input_state.aim_angle      = network_input.aim_angle ?? point_direction(0, 0, input_state.aim_x, input_state.aim_y);
             
             // Aim direction
             if (input_state.move_x != 0 || input_state.move_y != 0)
             {
-                input_state.aim_x = input_state.move_x;
-                input_state.aim_y = input_state.move_y;
-                input_state.aim_angle = point_direction(0, 0, input_state.aim_x, input_state.aim_y);
+                if (input_state.aim_x == 0 && input_state.aim_y == 0)
+                {
+                    input_state.aim_x = input_state.move_x;
+                    input_state.aim_y = input_state.move_y;
+                    input_state.aim_angle = point_direction(0, 0, input_state.aim_x, input_state.aim_y);
+                }
             }
         }
         else

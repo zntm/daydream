@@ -412,7 +412,7 @@ function RelayNetworkManager() constructor
         if (_peer != undefined && instance_exists(_peer.player_instance))
         {
             _peer.player_instance.network_input = _input;
-            _peer.player_instance.selected_hotbar = clamp(_input.selected_hotbar ?? 0, 0, 9);
+            _peer.player_instance.selected_hotbar = clamp(_input.selected_hotbar ?? 0, 0, INVENTORY_LENGTH.ROW - 1);
         }
     }
     
@@ -800,7 +800,7 @@ function RelayNetworkManager() constructor
     static _send_world_state_to_peer = function(_peer_id)
     {
         // Send time
-        relay_send_time_update(global.current_world.time);
+        relay_send_time_update(global.current_world.time, _peer_id);
         
         // Send existing entities (Creatures, Items, Projectiles)
         // Note: Players are handled by PEER_JOINED and WELCOME

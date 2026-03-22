@@ -22,6 +22,7 @@ function RelayNetwork() constructor
     role = RELAY_ROLE.NONE;
     global.network_role = role;
     local_peer_id = "";
+    host_peer_id = "";
     room_code = "";
     
     // Peer tracking: peer_id -> { socket, uuid, player_instance, attire }
@@ -68,6 +69,7 @@ function RelayNetwork() constructor
         role = RELAY_ROLE.HOST;
         global.network_role = role;
         local_peer_id = uuid_generate(irandom(0xffffffff));
+        host_peer_id = local_peer_id;
         
         // Generate room code from local IP
         var _local_ip = _get_local_ip();
@@ -132,6 +134,7 @@ function RelayNetwork() constructor
         role = RELAY_ROLE.CLIENT;
         global.network_role = role;
         local_peer_id = uuid_generate(irandom(0xffffffff));
+        host_peer_id = "";
         room_code = _clean_code;
         _host_socket = _socket;
         
@@ -180,6 +183,27 @@ function RelayNetwork() constructor
             
             relay_packet_send(_host_socket, _route_buf);
             buffer_delete(_route_buf);
+        }
+    }
+
+    /// @desc Send a packet directly to the host authority
+    /// @param {Id.Buffer} _buffer Packet to send
+    static send_to_host = function(_buffer)
+    {
+        if (role == RELAY_ROLE.HOST)
+        {
+            if (on_game_packet != undefined)
+            {
+                buffer_seek(_buffer, buffer_seek_start, 2);
+                var _type = buffer_read(_buffer, buffer_u8);
+                on_game_packet(local_peer_id, _type, _buffer);
+            }
+            exit;
+        }
+
+        if ((role == RELAY_ROLE.CLIENT) && (host_peer_id != ""))
+        {
+            send_to_peer(host_peer_id, _buffer);
         }
     }
     
@@ -287,6 +311,7 @@ function RelayNetwork() constructor
         peers = {}
         ds_map_clear(_socket_to_peer);
         local_peer_id = "";
+        host_peer_id = "";
         room_code = "";
         
         if (on_disconnected != undefined)
@@ -403,6 +428,7 @@ function RelayNetwork() constructor
             global.network_role = role;
             peers = {}
             _host_socket = undefined;
+            host_peer_id = "";
             
             if (on_disconnected != undefined)
             {
@@ -548,7 +574,7 @@ function RelayNetwork() constructor
         
         // Send WELCOME to new peer
         var _welcome_buf = relay_packet_create(RELAY_PACKET.WELCOME);
-        relay_write_welcome(_welcome_buf, _peer_id, _peer_list, 
+        relay_write_welcome(_welcome_buf, _peer_id, local_peer_id, _peer_list,
             global.current_world.seed, 
             global.current_world.time);
         relay_packet_send(_socket, _welcome_buf);
@@ -696,18 +722,7 @@ function RelayNetwork() constructor
                 // Direct from host
                 if (on_game_packet != undefined)
                 {
-                    // Find host peer_id
-                    var _host_peer_id = "";
-                    var _pids = struct_get_names(peers);
-                    for (var i = 0; i < array_length(_pids); ++i)
-                    {
-                        if (_pids[i] != local_peer_id)
-                        {
-                            _host_peer_id = _pids[i];
-                            break;
-                        }
-                    }
-                    on_game_packet(_host_peer_id, _type, _buffer);
+                    on_game_packet(host_peer_id, _type, _buffer);
                 }
                 break;
         }
@@ -724,6 +739,7 @@ function RelayNetwork() constructor
         
         // Update our peer_id if host assigned a different one
         local_peer_id = _data.peer_id;
+        host_peer_id = _data.host_peer_id;
         
         // Register all peers
         for (var i = 0; i < array_length(_data.peers); ++i)
@@ -743,6 +759,7 @@ function RelayNetwork() constructor
         {
             on_connected({
                 peer_id: _data.peer_id,
+                host_peer_id: _data.host_peer_id,
                 world_seed: _data.world_seed,
                 world_time: _data.world_time,
                 peers: _data.peers
