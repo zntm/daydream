@@ -131,16 +131,16 @@ function tile_place(_x, _y, _z, _tile)
             _occluded |= (1 << _zz);
         }
         
-        var _tile_check = _chunk.chunk[tile_index_xyz(_local_x, _local_y, _zz)];
-
         if (_tile_check != TILE_EMPTY)
         {
             var _data = _item_data[$ _tile_check.get_id()];
+            
             if (_data != undefined) && (!_data.is_transparent()) && (_data.has_type(ITEM_TYPE_BIT.SOLID | ITEM_TYPE_BIT.UNTOUCHABLE))
             {
                 _has_opaque_above = true;
                 
-                if ((1 << _zz) & ((1 << CHUNK_DEPTH_DEFAULT) | (1 << CHUNK_DEPTH_WALL)))
+                /* sunlight only blocked by layers 3 and up (interactive plane) */
+                if (_zz >= 3)
                 {
                     _is_covered = true;
                 }
@@ -171,8 +171,43 @@ function tile_place(_x, _y, _z, _tile)
         if (vertex_buffer_exists(_vertex_buffer))
         {
             vertex_delete_buffer(_vertex_buffer);
+        }
+        
+        _chunk.chunk_vertex_buffer[@ _zz] = -1;
+    }
+    
+    // Invalidate neighbors if on boundary
+    if (_local_x == 0) || (_local_x == CHUNK_SIZE - 1)
+        || (_local_y == 0) || (_local_y == CHUNK_SIZE - 1)
+    {
+        var _tx = _chunk.chunk_xstart;
+        var _ty = _chunk.chunk_ystart;
+        
+        var _n_left  = (_local_x == 0) ? chunk_map_get_by_tile(_tx - 1, _ty) : undefined;
+        var _n_right = (_local_x == CHUNK_SIZE - 1) ? chunk_map_get_by_tile(_tx + 1, _ty) : undefined;
+        var _n_up    = (_local_y == 0) ? chunk_map_get_by_tile(_tx,     _ty - 1) : undefined;
+        var _n_down  = (_local_y == CHUNK_SIZE - 1) ? chunk_map_get_by_tile(_tx,     _ty + 1) : undefined;
+        
+        var _neighbor_list = [_n_left, _n_right, _n_up, _n_down];
+        
+        for (var i = array_length(_neighbor_list) - 1; i >= 0; --i)
+        {
+            var _n = _neighbor_list[i];
             
-            _chunk.chunk_vertex_buffer[@ _zz] = -1;
+            if (_n != undefined)
+            {
+                for (var _zz = CHUNK_DEPTH - 1; _zz >= 0; --_zz)
+                {
+                    var _vertex_buffer = _n.chunk_vertex_buffer[_zz];
+                    
+                    if (vertex_buffer_exists(_vertex_buffer))
+                    {
+                        vertex_delete_buffer(_vertex_buffer);
+                    }
+                    
+                    _n.chunk_vertex_buffer[@ _zz] = -1;
+                }
+            }
         }
     }
     

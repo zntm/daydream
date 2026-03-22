@@ -11,8 +11,15 @@ function render_chunk(_page, _position, _texel_width, _texel_height, _inst, _z)
     var _xstart = _inst.x;
     var _ystart = _inst.y;
     
-    var _chunk = _inst.chunk;
-    var _chunk_occluded = _inst.chunk_occluded;
+    // Cache neighbors to avoid map lookups in the inner loop
+    static __neighbors = array_create(8);
+    var _tx = _xstart >> TILE_SIZE_BIT;
+    var _ty = _ystart >> TILE_SIZE_BIT;
+    
+    __neighbors[@ 0] = chunk_map_get_by_tile(_tx - 1, _ty);     // Left
+    __neighbors[@ 1] = chunk_map_get_by_tile(_tx + 1, _ty);     // Right
+    __neighbors[@ 2] = chunk_map_get_by_tile(_tx,     _ty - 1); // Up
+    __neighbors[@ 3] = chunk_map_get_by_tile(_tx,     _ty + 1); // Down
     
     for (var _x = 0; _x < CHUNK_SIZE; ++_x)
     {
@@ -42,7 +49,7 @@ function render_chunk(_page, _position, _texel_width, _texel_height, _inst, _z)
                 }
                 else
                 {
-                    var _neighbor = chunk_map_get_by_tile((_xstart >> TILE_SIZE_BIT) - 1, (_ystart >> TILE_SIZE_BIT) + _y);
+                    var _neighbor = __neighbors[0];
                     
                     if (_neighbor != undefined)
                     {
@@ -64,7 +71,7 @@ function render_chunk(_page, _position, _texel_width, _texel_height, _inst, _z)
                 }
                 else
                 {
-                    var _neighbor = chunk_map_get_by_tile((_xstart >> TILE_SIZE_BIT) + CHUNK_SIZE, (_ystart >> TILE_SIZE_BIT) + _y);
+                    var _neighbor = __neighbors[1];
                     
                     if (_neighbor != undefined)
                     {
@@ -86,7 +93,7 @@ function render_chunk(_page, _position, _texel_width, _texel_height, _inst, _z)
                 }
                 else
                 {
-                    var _neighbor = chunk_map_get_by_tile((_xstart >> TILE_SIZE_BIT) + _x, (_ystart >> TILE_SIZE_BIT) - 1);
+                    var _neighbor = __neighbors[2];
                     
                     if (_neighbor != undefined)
                     {
@@ -108,7 +115,7 @@ function render_chunk(_page, _position, _texel_width, _texel_height, _inst, _z)
                 }
                 else
                 {
-                    var _neighbor = chunk_map_get_by_tile((_xstart >> TILE_SIZE_BIT) + _x, (_ystart >> TILE_SIZE_BIT) + CHUNK_SIZE);
+                    var _neighbor = __neighbors[3];
                     
                     if (_neighbor != undefined)
                     {

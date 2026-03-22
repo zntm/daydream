@@ -40,3 +40,7 @@ interp_duration = 0.05;
 entity_xscale = 1;
 entity_yscale = 1;
 physics_body = undefined; // Will be set by init_entity
+
+// Creature inventory (will be set by spawn_creature if creature has a default_item)
+creature_inventory = undefined;
+creature_hotbar_index = -1;

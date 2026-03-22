@@ -61,6 +61,22 @@ function spawn_creature(_x, _y, _id, _variant)
         image_xscale *= _scale_var;
         image_yscale *= _scale_var;
 
+        /* creature inventory and item action state */
+        var _default_item = _data.get_default_item();
+
+        if (_default_item != undefined) && (global.item_data[$ _default_item] != undefined)
+        {
+            creature_inventory = {
+                base: [new Inventory(_default_item, 1)]
+            };
+            creature_hotbar_index = 0;
+        }
+        else
+        {
+            creature_inventory = undefined;
+            creature_hotbar_index = -1;
+        }
+
         // Interpolation state (for remote creatures on client)
         interp_start_x = x;
         interp_start_y = y;

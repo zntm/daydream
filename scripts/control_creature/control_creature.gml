@@ -178,8 +178,23 @@ function control_creature()
             }
         }
         
+        /* attack when in range and creature has an item */
+        var _wants_attack = false;
+
+        if (creature_inventory != undefined) && (attack_cooldown <= 0)
+        {
+            if (ai_state == CREATURE_AI_STATE.CHASE) && (instance_exists(_target)) && (_distance_to_target <= AI_ATTACK_RANGE)
+            {
+                _wants_attack = true;
+            }
+            else if (instance_exists(ai_prey_target)) && (point_distance(x, y, ai_prey_target.x, ai_prey_target.y) <= AI_ATTACK_RANGE)
+            {
+                _wants_attack = true;
+            }
+        }
+
         // Set AI input
-        input_state.from_ai(_move_x, _move_y, _wants_jump, false);
+        input_state.from_ai(_move_x, _move_y, _wants_jump, _wants_attack);
     }
     else
     {
@@ -207,6 +222,12 @@ function control_creature()
     
     // FALL DAMAGE
     creature_handle_fall_damage();
+
+    /* creature item action (swing equipped weapon) */
+    if (creature_inventory != undefined)
+    {
+        control_entity_action(id, creature_inventory, creature_hotbar_index);
+    }
     
     // POST-PHYSICS
     control_entity_sfx();

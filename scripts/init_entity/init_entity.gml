@@ -46,6 +46,7 @@ function init_entity(_hp, _hp_max, _attribute, _uuid = uuid_generate(irandom(0xf
     
     // Combat
     inst_item = noone;
+    timer_attack = 0;
     
     // Effects
     effects = {}

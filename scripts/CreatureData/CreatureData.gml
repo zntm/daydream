@@ -340,4 +340,16 @@ function CreatureData(_namespace, _id, _hp, _hostility_type, _movement_type) : P
     {
         return self[$ "___stun_duration"] ?? 0.25;
     }
+
+    static set_default_item = function(_item)
+    {
+        ___default_item = _item;
+
+        return self;
+    }
+
+    static get_default_item = function()
+    {
+        return self[$ "___default_item"];
+    }
 }

@@ -89,6 +89,7 @@ function init_creature(_namespace = "phantasia", _directory)
         _data.set_properties(_json[$ "properties"]);
         _data.set_contact_damage(_json[$ "contact_damage"]);
         _data.set_predators(_json[$ "predators"]);
+        _data.set_default_item(_json[$ "default_item"]);
 
         global.creature_data[$ $"{_namespace}:{_id}"] = _data;
 

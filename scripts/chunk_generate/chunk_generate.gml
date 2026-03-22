@@ -157,10 +157,18 @@ function chunk_generate(_chunk, _context = undefined)
                             _chunk.chunk_display |= 1 << m;
                         }
                         
-                        var _item = _item_data[$ _tile.get_id()];
-                        if ((1 << m) & ((1 << CHUNK_DEPTH_DEFAULT) | (1 << CHUNK_DEPTH_WALL))) && (_item.has_type(ITEM_TYPE_BIT.SOLID | ITEM_TYPE_BIT.UNTOUCHABLE)) && (!_item.is_transparent())
+                        if (_tile != TILE_EMPTY)
                         {
-                            _chunk.chunk_covered[@ _chunk_x] |= 1 << _chunk_y;
+                            var _item = _item_data[$ _tile.get_id()];
+                            
+                            if ((_item != undefined) && (_item.has_type(ITEM_TYPE_BIT.SOLID | ITEM_TYPE_BIT.UNTOUCHABLE)) && (!_item.is_transparent()))
+                            {
+                                /* sunlight only blocked by layers 3 and up (interactive plane) */
+                                if (m >= 3)
+                                {
+                                    _chunk.chunk_covered[@ _chunk_x] |= 1 << _chunk_y;
+                                }
+                            }
                         }
                     }
                 }
@@ -226,7 +234,14 @@ function chunk_generate(_chunk, _context = undefined)
                                     .set_index(smart_value(_d.get_placement_index()))
                                     .set_index_offset(smart_value(_d.get_placement_index_offset()));
                                 _chunk.chunk_display |= 1 << CHUNK_DEPTH_DEFAULT;
-                                if (_d.has_type(ITEM_TYPE_BIT.SOLID | ITEM_TYPE_BIT.UNTOUCHABLE)) && (!_d.is_transparent()) _chunk.chunk_covered[@ i] |= 1 << j;
+                                if (_d.has_type(ITEM_TYPE_BIT.SOLID | ITEM_TYPE_BIT.UNTOUCHABLE)) && (!_d.is_transparent())
+                                {
+                                    /* sunlight only blocked by layers 3 and up (interactive plane) */
+                                    if (CHUNK_DEPTH_DEFAULT >= 3)
+                                    {
+                                        _chunk.chunk_covered[@ i] |= 1 << j;
+                                    }
+                                }
                             }
                         }
                     }
@@ -269,7 +284,14 @@ function chunk_generate(_chunk, _context = undefined)
                                 .set_index(smart_value(_d.get_placement_index()))
                                 .set_index_offset(smart_value(_d.get_placement_index_offset()));
                             _chunk.chunk_display |= 1 << CHUNK_DEPTH_DEFAULT;
-                            if (_d.has_type(ITEM_TYPE_BIT.SOLID | ITEM_TYPE_BIT.UNTOUCHABLE)) && (!_d.is_transparent()) _chunk.chunk_covered[@ i] |= 1 << j;
+                            if (_d.has_type(ITEM_TYPE_BIT.SOLID | ITEM_TYPE_BIT.UNTOUCHABLE)) && (!_d.is_transparent())
+                            {
+                                /* sunlight only blocked by layers 3 and up (interactive plane) */
+                                if (CHUNK_DEPTH_DEFAULT >= 3)
+                                {
+                                    _chunk.chunk_covered[@ i] |= 1 << j;
+                                }
+                            }
                         }
                     }
                 }
@@ -287,7 +309,14 @@ function chunk_generate(_chunk, _context = undefined)
                                 .set_index(smart_value(_d.get_placement_index()))
                                 .set_index_offset(smart_value(_d.get_placement_index_offset()));
                             _chunk.chunk_display |= 1 << CHUNK_DEPTH_WALL;
-                            if (_d.has_type(ITEM_TYPE_BIT.SOLID | ITEM_TYPE_BIT.UNTOUCHABLE)) && (!_d.is_transparent()) _chunk.chunk_covered[@ i] |= 1 << j;
+                            if (_d.has_type(ITEM_TYPE_BIT.SOLID | ITEM_TYPE_BIT.UNTOUCHABLE)) && (!_d.is_transparent())
+                            {
+                                /* sunlight only blocked by layers 3 and up (interactive plane) */
+                                if (CHUNK_DEPTH_WALL >= 3)
+                                {
+                                    _chunk.chunk_covered[@ i] |= 1 << j;
+                                }
+                            }
                         }
                     }
                 }
