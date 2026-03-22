@@ -94,7 +94,7 @@ function control_structure(_x, _y)
                     /* resolve relevant biome for this tile */
                     var _target_data = _data;
                     
-                    var _cave_biome_id = worldgen_get_biome_cave(i, j, _surface_height, _world_seed, _world_data);
+                    var _cave_biome_id = worldgen_get_biome_cave(i, j, _surface_height, _world_seed, _world_data, _blend_data);
                     
                     if (_cave_biome_id != undefined)
                     {

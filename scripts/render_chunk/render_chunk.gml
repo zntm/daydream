@@ -3,6 +3,9 @@
 function render_chunk(_page, _position, _texel_width, _texel_height, _inst, _z)
 {
     var _item_data = global.item_data;
+    var _chunk = _inst.chunk;
+    var _chunk_occluded = _inst.chunk_occluded;
+    var _has_vertices = false;
     
     var _buffer = vertex_create_buffer();
     
@@ -38,7 +41,7 @@ function render_chunk(_page, _position, _texel_width, _texel_height, _inst, _z)
             // Precalculated Occlusion Culling: Skip if this tile AND all 4 neighbors are marked as occluded
             // We "erode" the occlusion mask by ANDing with neighbors.
             var _index_xy = tile_index_xy(_x, _y);
-            var _flags = _inst.chunk_occluded[_index_xy];
+            var _flags = _chunk_occluded[_index_xy];
             
             if (_flags != 0)
             {
@@ -162,6 +165,7 @@ function render_chunk(_page, _position, _texel_width, _texel_height, _inst, _z)
                     _yscale,
                     _rotation
                 );
+                _has_vertices = true;
                 
                 continue;
             }
@@ -183,6 +187,7 @@ function render_chunk(_page, _position, _texel_width, _texel_height, _inst, _z)
                     _yscale,
                     _rotation
                 );
+                _has_vertices = true;
                 
                 continue;
             }
@@ -248,6 +253,7 @@ function render_chunk(_page, _position, _texel_width, _texel_height, _inst, _z)
                     _right_level,
                     _has_liquid_below
                 );
+                _has_vertices = true;
                 
                 continue;
             }
@@ -266,10 +272,18 @@ function render_chunk(_page, _position, _texel_width, _texel_height, _inst, _z)
                 _yscale,
                 _rotation
             );
+            _has_vertices = true;
         }
     }
     
     vertex_end(_buffer);
+
+    if (!_has_vertices)
+    {
+        vertex_delete_buffer(_buffer);
+        _inst.chunk_vertex_buffer[@ _z] = -1;
+        return -1;
+    }
     
     _inst.chunk_vertex_buffer[@ _z] = _buffer;
     

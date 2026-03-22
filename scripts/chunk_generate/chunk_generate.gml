@@ -266,10 +266,8 @@ function chunk_generate(_chunk, _context = undefined)
             
             if (_world_y >= _surface_height - 1)
             {
-                var _cave_biome = worldgen_get_biome_cave(_world_x, _world_y, _surface_height, _world_seed, _world_data);
+                var _cave_biome = worldgen_get_biome_cave(_world_x, _world_y, _surface_height, _world_seed, _world_data, _blend_data);
                 var _is_cave = (_cave_bit_stream >> (j + 1)) & 1;
-                
-                var _cave_biome_id = worldgen_resolve_id(_cave_biome);
                 
                 if !(_skip_z & (1 << CHUNK_DEPTH_DEFAULT)) && !_is_cave && _world_y >= _surface_height
                 {

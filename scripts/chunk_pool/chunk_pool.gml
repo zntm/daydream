@@ -9,6 +9,36 @@ function array_fill(_array, _index, _count, _value)
     }
 }
 
+function worldgen_context_ensure()
+{
+    if (variable_global_exists("worldgen_context")) && (global.worldgen_context != undefined)
+    {
+        return global.worldgen_context;
+    }
+
+    var _current_world = global.current_world;
+    var _wd = global.world_data[$ _current_world.dimension];
+    var _sky_id = _wd.get_sky_biome_id();
+
+    global.worldgen_context = {
+        item_data: global.item_data,
+        natural_structure_data: global.natural_structure_data,
+        structure_data: global.structure_data,
+        current_world: _current_world,
+        world_data: _wd,
+        biome_data: global.biome_data,
+        world_height: _wd.get_world_height(),
+        world_seed: _current_world.seed,
+        sky_threshold: _wd.get_sky_biome_threshold(),
+        sky_enabled: _wd.is_sky_biome_enabled(),
+        sky_biome_id: _sky_id,
+        sky_biome_data: global.biome_data[$ _sky_id],
+        surface_start: _wd.get_surface_start()
+    };
+
+    return global.worldgen_context;
+}
+
 /// Chunk state flags
 enum CHUNK_BOOL {
     GENERATED                = 1 << 0,
@@ -81,9 +111,9 @@ function ChunkPool() : Pool() constructor
         return new Chunk(0, 0);
     }
     
-    /// @function reset(_chunk, _x, _y)
+    /// @function reset(_chunk, _x, _y, _defer_generation = false)
     /// @desc Reset and reinitialize a chunk at new position
-    static reset = function(_chunk, _x, _y)
+    static reset = function(_chunk, _x, _y, _defer_generation = false)
     {
         // Reset position
         _chunk.x = _x;
@@ -131,53 +161,33 @@ function ChunkPool() : Pool() constructor
         
         if (!_is_loaded)
         {
-            // Regenerate structures and generate chunk
-            control_structure(_chunk.chunk_xstart, _chunk.chunk_ystart);
-            
-            // Cache worldgen context for performance (hoisted lookups)
-            if (variable_global_exists("worldgen_context") == false)
+            if (!_defer_generation)
             {
-                var _current_world = global.current_world;
-                var _wd = global.world_data[$ _current_world.dimension];
-                var _sky_id = _wd.get_sky_biome_id();
-                global.worldgen_context = {
-                    item_data: global.item_data,
-                    natural_structure_data: global.natural_structure_data,
-                    structure_data: global.structure_data,
-                    current_world: _current_world,
-                    world_data: _wd,
-                    biome_data: global.biome_data,
-                    world_height: _wd.get_world_height(),
-                    world_seed: _current_world.seed,
-                    sky_threshold: _wd.get_sky_biome_threshold(),
-                    sky_enabled: _wd.is_sky_biome_enabled(),
-                    sky_biome_id: _sky_id,
-                    sky_biome_data: global.biome_data[$ _sky_id],
-                    surface_start: _wd.get_surface_start()
-                }
+                control_structure(_chunk.chunk_xstart, _chunk.chunk_ystart);
+                chunk_generate(_chunk, worldgen_context_ensure());
+                _chunk.boolean |= CHUNK_BOOL.GENERATED;
+                array_push(global.chunk_tile_process_queue, _chunk);
             }
-            
-            chunk_generate(_chunk, global.worldgen_context);
-            _chunk.boolean |= CHUNK_BOOL.GENERATED;
         }
         else
         {
             _chunk.boolean |= CHUNK_BOOL.GENERATED;
+            array_push(global.chunk_tile_process_queue, _chunk);
         }
         
-        // Trigger lighting refresh
-        obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOL.LIGHTING;
-        
-        // Defer tile processing to the queue for smooth loading
-        array_push(global.chunk_tile_process_queue, _chunk);
+        if (_chunk.boolean & CHUNK_BOOL.GENERATED)
+        {
+            // Trigger lighting refresh only when a chunk has actual tile data ready.
+            obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOL.LIGHTING;
+        }
     }
 
-    static acquire = function(_x, _y)
+    static acquire = function(_x, _y, _defer_generation = false)
     {
         var _chunk = get_free_item();
         
         // Reset the chunk at new position
-        reset(_chunk, _x, _y);
+        reset(_chunk, _x, _y, _defer_generation);
         
         return _chunk;
     }

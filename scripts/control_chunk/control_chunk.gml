@@ -28,7 +28,7 @@ function control_chunk(_player_x, _player_y, _camera_x, _camera_y, _camera_width
             
             if (!chunk_map_exists(_x, _y))
             {
-                global.chunk_pool.acquire(_x, _y);
+                global.chunk_pool.acquire(_x, _y, true);
                 
                 _refresh = true;
             }

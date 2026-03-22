@@ -1,4 +1,4 @@
-/// @desc Handles one frame of world generation: acquires chunks, finalises generated chunks, manages loading UI.
+/// @desc Handles one frame of world generation: acquires chunks, advances queued generation, manages loading UI.
 function control_game_world_generate()
 {
     var _camera_x = global.camera_x_real;
@@ -15,6 +15,7 @@ function control_game_world_generate()
 
     var _world_data   = global.world_data[$ global.current_world.dimension];
     var _world_height = _world_data.get_world_height();
+    var _acquired_one = false;
 
     for (var i = -_a; i <= _a; ++i)
     {
@@ -28,51 +29,43 @@ function control_game_world_generate()
 
             if (!chunk_map_exists(_x, _y))
             {
-                global.chunk_pool.acquire(_x, _y);
-
-                exit;
+                global.chunk_pool.acquire(_x, _y, true);
+                _acquired_one = true;
+                break;
             }
         }
+
+        if (_acquired_one) break;
     }
 
     control_update_chunk_in_view();
+
+    var _focus_x = _camera_x + (_camera_width / 2);
+    var _focus_y = _camera_y + (_camera_height / 2);
+
+    for (var i = chunk_in_view_length - 1; i >= 0; --i)
+    {
+        var _c = chunk_in_view[i];
+
+        if (_c == undefined) || (_c.boolean & (CHUNK_BOOL.GENERATED | CHUNK_BOOL.QUEUED)) continue;
+
+        chunk_queue_add(_c, point_distance(_focus_x, _focus_y, _c.xcenter, _c.ycenter));
+    }
+
+    chunk_queue_process(_focus_x, _focus_y);
 
     for (var i = 0; i < chunk_in_view_length; ++i)
     {
         var _c = chunk_in_view[i];
 
-        if (_c == undefined) || (_c.boolean & CHUNK_BOOL.GENERATED) continue;
-
-        _c.boolean |= CHUNK_BOOL.GENERATED | CHUNK_BOOL.SURFACE_LIGHTING_REFRESH;
-
-        surface_refresh |= SURFACE_REFRESH_BOOL.LIGHTING;
-
-        var _chunk_xstart = _c.chunk_xstart;
-        var _chunk_ystart = _c.chunk_ystart;
-
-        var _chunk         = _c.chunk;
-        var _chunk_display = _c.chunk_display;
-
-        for (var _tz = CHUNK_DEPTH - 1; _tz >= 0; --_tz)
+        if (_c == undefined)
         {
-            if !(_chunk_display & (1 << _tz)) continue;
+            exit;
+        }
 
-            for (var _ty = CHUNK_SIZE - 1; _ty >= 0; --_ty)
-            {
-                for (var _tx = CHUNK_SIZE - 1; _tx >= 0; --_tx)
-                {
-                    var _x = _chunk_xstart + _tx;
-                    var _y = _chunk_ystart + _ty;
-
-                    var _tile = _chunk[tile_index_xyz(_x, _y, _tz)];
-
-                    if (_tile == TILE_EMPTY) continue;
-
-                    tile_instance_create(_x, _y, _tz, _tile);
-
-                    tile_connect(_x, _y, _tz, _tile);
-                }
-            }
+        if ((_c.boolean & (CHUNK_BOOL.GENERATED | CHUNK_BOOL.TILE_PROCESSED)) != (CHUNK_BOOL.GENERATED | CHUNK_BOOL.TILE_PROCESSED))
+        {
+            exit;
         }
     }
 

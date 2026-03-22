@@ -6,6 +6,7 @@
 
 // Queue for deferred tile processing (tile_connect calls)
 global.chunk_tile_process_queue = [];
+global.chunk_tile_process_queue_head = 0;
 #macro CHUNK_TILE_PROCESS_BUDGET_MS 2  // Time budget for tile processing
 
 /// @function chunk_queue_init()
@@ -15,6 +16,7 @@ function chunk_queue_init()
     global.chunk_gen_queue = ds_priority_create();
     global.chunk_gen_processing = false;
     global.chunk_tile_process_queue = [];
+    global.chunk_tile_process_queue_head = 0;
 }
 
 /// @function chunk_queue_add(_chunk, _priority)
@@ -46,6 +48,7 @@ function chunk_queue_process(_player_x, _player_y)
     var _start_time = get_timer();
     var _budget_us = CHUNK_GEN_BUDGET_MS * 1000; // Convert ms to microseconds
     var _chunks_generated = 0;
+    var _context = worldgen_context_ensure();
     
     while (!ds_priority_empty(_queue))
     {
@@ -64,9 +67,12 @@ function chunk_queue_process(_player_x, _player_y)
         
         // Skip if already generated
         if (_chunk.boolean & CHUNK_BOOL.GENERATED) continue;
+
+        // Ensure any nearby structures exist before terrain samples them.
+        control_structure(_chunk.chunk_xstart, _chunk.chunk_ystart);
         
         // Generate the chunk (just creates tile data, doesn't connect)
-        chunk_generate(_chunk, global[$ "worldgen_context"]);
+        chunk_generate(_chunk, _context);
         
         _chunk.boolean |= CHUNK_BOOL.GENERATED | CHUNK_BOOL.SURFACE_LIGHTING_REFRESH;
         
@@ -85,23 +91,28 @@ function chunk_queue_process(_player_x, _player_y)
 function chunk_tile_process_queue_process()
 {
     var _queue = global.chunk_tile_process_queue;
-    
-    if (array_length(_queue) == 0) exit;
+    var _head = global.chunk_tile_process_queue_head;
+    var _queue_length = array_length(_queue);
+
+    if (_head >= _queue_length)
+    {
+        global.chunk_tile_process_queue = [];
+        global.chunk_tile_process_queue_head = 0;
+        exit;
+    }
     
     var _start_time = get_timer();
     var _budget_us = CHUNK_TILE_PROCESS_BUDGET_MS * 1000;
-    var _item_data = global.item_data;
     
-    while (array_length(_queue) > 0)
+    while (_head < _queue_length)
     {
         // Check time budget
         if ((get_timer() - _start_time) > _budget_us) break;
         
-        var _chunk = _queue[0];
+        var _chunk = _queue[_head++];
         
         if (_chunk == undefined)
         {
-            array_delete(_queue, 0, 1);
             continue;
         }
         
@@ -134,9 +145,24 @@ function chunk_tile_process_queue_process()
         
         // Mark chunk as ready for rendering
         _chunk.boolean |= CHUNK_BOOL.TILE_PROCESSED;
-        
-        array_delete(_queue, 0, 1);
     }
+
+    if (_head >= _queue_length)
+    {
+        global.chunk_tile_process_queue = [];
+        global.chunk_tile_process_queue_head = 0;
+        exit;
+    }
+
+    if (_head >= 16) && ((_head * 2) >= _queue_length)
+    {
+        array_delete(_queue, 0, _head);
+        global.chunk_tile_process_queue = _queue;
+        global.chunk_tile_process_queue_head = 0;
+        exit;
+    }
+
+    global.chunk_tile_process_queue_head = _head;
 }
 
 /// @function chunk_queue_clear()

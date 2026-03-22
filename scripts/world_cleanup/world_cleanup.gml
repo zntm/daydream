@@ -19,6 +19,7 @@ function world_cleanup(_async = false)
         chunk_queue_clear();
     }
     global.chunk_tile_process_queue = [];
+    global.chunk_tile_process_queue_head = 0;
     
     // 3. Clear all chunks - this releases vertex buffers and surfaces
     var _chunks = chunk_map_get_all();

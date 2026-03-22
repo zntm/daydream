@@ -130,6 +130,8 @@ function tile_place(_x, _y, _z, _tile)
         {
             _occluded |= (1 << _zz);
         }
+
+        var _tile_check = _chunk.chunk[tile_index_xyz(_local_x, _local_y, _zz)];
         
         if (_tile_check != TILE_EMPTY)
         {

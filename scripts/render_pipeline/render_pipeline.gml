@@ -62,6 +62,8 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
             {
                 _buffer = render_chunk(_page, _position, _texel_width, _texel_height, _chunk, _z);
             }
+
+            if (!vertex_buffer_exists(_buffer)) continue;
             
             if (vertex_get_number(_buffer) <= 0) continue;
             
