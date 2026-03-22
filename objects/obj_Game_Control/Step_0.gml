@@ -73,59 +73,72 @@ if (global.relay != undefined) && (global.relay.role == RELAY_ROLE.HOST)
 /* auto backup */
 if (IS_ENABLED_BACKUP)
 {
-    timer_auto_backup -= _delta_time;
+    var _auto_backup_interval = file_backup_get_interval_seconds(global.current_world);
 
-    if (timer_auto_backup <= 0)
+    if (_auto_backup_interval > 0)
     {
-        timer_auto_backup = BACKUP_INTERVAL_SECONDS;
+        timer_auto_backup -= _delta_time;
 
-        var _current_player = global.current_player;
-        var _backup_lp      = noone;
-        with (obj_Player) { if (is_local) { _backup_lp = id; break; } }
-
-        if (_backup_lp != noone)
+        if (timer_auto_backup <= 0)
         {
-            file_backup_player(_current_player, _backup_lp);
-        }
+            timer_auto_backup = _auto_backup_interval;
 
-        var _current_world = global.current_world;
+            var _current_player = global.current_player;
+            var _backup_lp      = noone;
+            with (obj_Player) { if (is_local) { _backup_lp = id; break; } }
 
-        file_backup_world_global(_current_world);
-
-        var _chunks = chunk_map_get_all();
-
-        for (var i = array_length(_chunks) - 1; i >= 0; --i)
-        {
-            file_backup_world_chunk(_current_world, _chunks[i]);
-        }
-
-        chat_system_push("Auto-backup complete!");
-
-        /* show saving indicator */
-        if (!variable_instance_exists(id, "ui_saving")) || (ui_saving == undefined)
-        {
-            var _saving_def = ui_load("ui/menu/saving.ui");
-
-            if (_saving_def != undefined)
+            if (_backup_lp != noone)
             {
-                ui_saving_link = {
-                    is_visible: true
-                };
-
-                ui_saving = ui_spawn(_saving_def, {
-                    link:   ui_saving_link,
-                    parent: global.gui_root
-                });
+                file_backup_player(_current_player, _backup_lp);
             }
-        }
-        else
-        {
-            ui_saving_link.is_visible = true;
 
-            ui_mark_dirty(ui_saving);
-        }
+            var _current_world = global.current_world;
 
-        timer_saving_ui = 2.0;
+            file_backup_world_global(_current_world);
+
+            var _chunks = chunk_map_get_all();
+
+            for (var i = array_length(_chunks) - 1; i >= 0; --i)
+            {
+                file_backup_world_chunk(_current_world, _chunks[i]);
+            }
+
+            var _backup_slots = file_backup_get_slots(_current_world);
+
+            if (_backup_slots > 0)
+            {
+                file_backup_prune_slots($"{PROGRAM_DIRECTORY_PLAYERS}/{_current_player.uuid}/backups", _backup_slots);
+                file_backup_prune_slots($"{PROGRAM_DIRECTORY_WORLDS}/{_current_world.uuid}/backups", _backup_slots);
+            }
+
+            chat_system_push("Auto-backup complete!");
+
+            /* show saving indicator */
+            if (!variable_instance_exists(id, "ui_saving")) || (ui_saving == undefined)
+            {
+                var _saving_def = ui_load("ui/menu/saving.ui");
+
+                if (_saving_def != undefined)
+                {
+                    ui_saving_link = {
+                        is_visible: true
+                    };
+
+                    ui_saving = ui_spawn(_saving_def, {
+                        link:   ui_saving_link,
+                        parent: global.gui_root
+                    });
+                }
+            }
+            else
+            {
+                ui_saving_link.is_visible = true;
+
+                ui_mark_dirty(ui_saving);
+            }
+
+            timer_saving_ui = 2.0;
+        }
     }
 
     /* hide saving indicator after timeout */

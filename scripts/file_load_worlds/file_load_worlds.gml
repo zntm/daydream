@@ -7,27 +7,27 @@ function file_load_worlds()
     {
         return _a.get_last_opened() - _b.get_last_opened();
     }
-    
+
     array_resize(global.file_worlds, 0);
     array_resize(global.file_worlds_uuid, 0);
-    
+
     var _files        = file_read_directory(PROGRAM_DIRECTORY_WORLDS);
     var _files_length = array_length(_files);
-    
+
     for (var i = 0; i < _files_length; ++i)
     {
         var _file = _files[i];
-        
+
         if (!directory_exists($"{PROGRAM_DIRECTORY_WORLDS}/{_file}")) continue;
-        
+
         var _world_data_path = $"{PROGRAM_DIRECTORY_WORLDS}/{_file}/global.dat";
-        
+
         if (!file_exists(_world_data_path)) continue;
-        
+
         var _buffer = buffer_load_decompressed(_world_data_path);
-        
+
         if (_buffer == -1) continue;
-        
+
         var _uuid        = buffer_read(_buffer, buffer_string);
         var _name        = buffer_read(_buffer, buffer_string);
         var _seed        = buffer_read(_buffer, buffer_f64);
@@ -39,23 +39,38 @@ function file_load_worlds()
         var _dimension   = buffer_read(_buffer, buffer_string);
         var _last_opened = buffer_read(_buffer, buffer_string);
         var _version     = buffer_read(_buffer, buffer_string);
-        
+        var _backup      = {
+            interval_minutes: round(BACKUP_INTERVAL_SECONDS / 60),
+            slots: 0
+        };
+
+        if (buffer_tell(_buffer) < buffer_get_size(_buffer))
+        {
+            _backup.interval_minutes = max(0, buffer_read(_buffer, buffer_u16));
+
+            if (buffer_tell(_buffer) < buffer_get_size(_buffer))
+            {
+                _backup.slots = max(0, buffer_read(_buffer, buffer_u8));
+            }
+        }
+
         buffer_delete(_buffer);
-        
+
         array_push(global.file_worlds_uuid, _file);
-        
+
         var _file_world = new FileWorld(_file, _name, _seed, unix_to_datetime(datetime_to_unix()));
-        
+
         _file_world.set_version(_version)
                    .set_dimension(_dimension)
                    .set_time(_time, _day)
                    .set_weather(_wind, _storm)
                    .set_difficulty(_difficulty)
+                   .set_backup(_backup)
                    .set_size(file_get_directory_size($"{PROGRAM_DIRECTORY_WORLDS}/{_file}"));
-                   
+
         array_push(global.file_worlds, _file_world);
     }
-    
+
     array_sort(global.file_worlds, __sort);
 
     file_apply_pinned_worlds();

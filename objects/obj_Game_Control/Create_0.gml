@@ -218,7 +218,7 @@ if (global.relay == undefined) || (global.relay.role == RELAY_ROLE.NONE)
 }
 
 timer_network_sync = 0;
-timer_auto_backup  = BACKUP_INTERVAL_SECONDS;
+timer_auto_backup  = file_backup_get_interval_seconds(global.current_world);
 
 global.async_save_map = {};
 

@@ -3,68 +3,68 @@ function menu_refresh_instance_worlds()
     static __on_draw = function(_x, _y)
     {
         var _data = global.file_worlds[index];
-        
+
         var _halign = draw_get_halign();
         var _valign = draw_get_valign();
-        
+
         draw_set_align(fa_left, fa_top);
-        
+
         render_text(_x, _y - 64, _data.get_name());
         render_text(_x, _y - 32, date_datetime_string(_data.get_last_opened()));
-        
+
         render_text(_x, _y, date_datetime_string(_data.get_last_opened()));
-        
+
         draw_set_align(_halign, _valign);
     }
-    
+
     static __on_select_release = function()
     {
         var _data = global.file_worlds[index];
-        
+
         var _uuid = _data.get_uuid();
-        
+
         if (!directory_exists($"{PROGRAM_DIRECTORY_WORLDS}/{_uuid}"))
         {
             var _inst_header = instance_create_layer(480, 224, "Instances", obj_Menu_Anchor);
-            
+
             with (_inst_header)
             {
                 text = loca_translate("phantasia:menu.worlds.error.not_existing");
-                
+
                 menu_layer = 1;
-                
+
                 on_draw = function(_x, _y, _xscale, _yscale)
                 {
                     var _x2 = x * _xscale;
                     var _y2 = y * _yscale;
-                    
+
                     var _halign = draw_get_halign();
                     var _valign = draw_get_valign();
-                    
+
                     draw_set_align(fa_center, fa_middle);
-                    
+
                     render_text(_x2, _y2, text, _xscale, _yscale);
-                    
+
                     draw_set_align(_halign, _valign);
                 }
             }
-            
+
             var _inst_close = instance_create_layer(480, 300, "Instances", obj_Menu_Button);
-            
+
             with (_inst_close)
             {
                 text = loca_translate("phantasia:menu.generic.close");
-                
+
                 image_xscale = 17;
                 image_yscale = 3;
-                
+
                 menu_layer = 1;
-                
+
                 on_select_release = function()
                 {
                     menu_popup_destroy();
                     file_load_worlds();
-                    
+
                     with (obj_Menu_Button)
                     {
                         if (id[$ "is_option"])
@@ -72,63 +72,67 @@ function menu_refresh_instance_worlds()
                             instance_destroy();
                         }
                     }
-                    
+
                     menu_refresh_instance_worlds();
                 }
             }
-            
+
             menu_popup_create([
                 _inst_header,
                 _inst_close
             ]);
-            
+
             exit;
         }
-        
+
         global.current_world.name = _data.get_name();
         global.current_world.seed = _data.get_seed();
-        
+
         global.current_world.dimension = _data.get_dimension();
-        
+
         global.current_world.time = _data.get_time();
         global.current_world.day  = _data.get_day();
-        
+
         global.current_world.weather.wind  = _data.get_weather_wind();
         global.current_world.weather.storm = _data.get_weather_storm();
-        
+
         global.current_world.uuid = _uuid;
-        
+
         global.current_world.difficulty = _data.get_difficulty();
-        
+
+        var _backup = _data.get_backup();
+        global.current_world.backup.interval_minutes = _backup.interval_minutes;
+        global.current_world.backup.slots = _backup.slots;
+
         global.world_statistics = _data.get_statistics() ?? {}
-        
+
         room_goto(rm_World);
     }
-    
+
     var _a = file_read_directory(PROGRAM_DIRECTORY_WORLDS);
     var _b = global.file_worlds_uuid;
-    
+
     if (!array_equals(_a, _b))
     {
         file_load_worlds();
     }
-    
+
     var _base_layer = obj_Menu_Control_Button.menu_layer;
     var _fade_layer = _base_layer + 1;
-    
+
     obj_Menu_Control_Render.surface_index_length = _fade_layer + 1;
     obj_Menu_Control_Render.surface_index_shader[@ _fade_layer] = {
         id: shd_Menu_Settings_Fade,
-        u_FadeStart: 0.3, 
+        u_FadeStart: 0.3,
         u_FadeEnd: 0.6,
         no_dim: true
     }
-    
+
     obj_Menu_Control_Render.surface_index_boundary[@ _fade_layer] = {
         y_min: global.window_height * 0.15,
         y_max: global.window_height * 0.85
     }
-    
+
     var _worlds = global.file_worlds;
     var _worlds_length = array_length(_worlds);
 
@@ -153,26 +157,26 @@ function menu_refresh_instance_worlds()
         _inst_slider.x = _inst_slider.xstart;
         _inst_slider.y = _inst_slider.ystart;
     }
-    
+
     for (var i = 0; i < _worlds_length; ++i)
     {
         var _world = _worlds[i];
-        
+
         var _xoffset = floor(i % 4) * 208;
         var _yoffset = floor(i / 4) * 160;
-        
+
         with (instance_create_layer(176 + _xoffset, 184 + _yoffset, "Instances", obj_Menu_Button))
         {
             image_xscale = 12;
             image_yscale = 9;
-            
+
             is_option = true;
-            
+
             surface_index = _fade_layer;
             menu_layer = 0;
-            
+
             index = i;
-            
+
             on_draw = method(id, __on_draw);
             on_select_release = method(id, __on_select_release);
         }

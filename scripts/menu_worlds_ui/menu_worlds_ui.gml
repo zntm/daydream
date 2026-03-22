@@ -1,18 +1,18 @@
 function menu_worlds_ui_load()
 {
 	menu_ui_clear_all();
-	
+
 	/* clean up legacy */
 	instance_destroy(obj_Menu_Button);
 	instance_destroy(obj_Menu_Anchor);
-	
+
 	/* ensure gui_root exists */
 	if (!variable_global_exists("gui_root")) || (global.gui_root == undefined)
 	{
 		global.gui_root = ui_create_root();
 		global.gui_root.element_name = "gui_root";
 	}
-	
+
 	/* cache reload */
 	if (variable_global_exists("ui_definitions"))
 	{
@@ -22,25 +22,25 @@ function menu_worlds_ui_load()
 			struct_remove(global.ui_definitions, _full_path);
 		}
 	}
-	
+
 	var _def = ui_load("ui/menu/worlds.ui");
-	
+
 	if (_def == undefined)
 	{
 		PRINT("[Menu Worlds] failed to load ui/menu/worlds.ui");
 		exit;
 	}
-	
+
 	var _instance = ui_spawn(_def, {
 		link: {},
 		parent: global.gui_root
 	});
-	
+
 	global.ui_worlds_menu = _instance;
-	
+
 	/* restore view mode from preferences */
 	global.worlds_view_mode = global.menu_preferences.worlds_view_mode;
-	
+
 	menu_worlds_ui_init();
 }
 
@@ -48,38 +48,38 @@ function menu_worlds_ui_init()
 {
 	var _instance = global.ui_worlds_menu;
 	var _elements = _instance.elements;
-	
+
 	/* back button */
 	var _btn_back = _elements[$ "btn_back"];
-	
+
 	if (_btn_back != undefined)
 	{
 		_btn_back.text = loca_translate("phantasia:menu.generic.back");
-		
+
 		_btn_back.add_event_handler("on_select_release", function() {
 			menu_transition_goto(rm_Menu_Title);
 		});
 	}
-	
+
 	/* create world button */
 	var _btn_create_world = _elements[$ "btn_create_world"];
-	
+
 	if (_btn_create_world != undefined)
 	{
 		_btn_create_world.text = loca_translate("phantasia:menu.worlds.create");
-		
+
 		_btn_create_world.add_event_handler("on_select_release", function() {
 			menu_transition_goto(rm_Menu_Create_World);
 		});
 	}
-	
+
 	/* grid/list view toggle */
 	var _btn_view_toggle = _elements[$ "btn_view_toggle"];
-	
+
 	if (_btn_view_toggle != undefined)
 	{
 		_btn_view_toggle.text = "";
-		
+
 		_btn_view_toggle.on_draw = method(_btn_view_toggle, function(_x, _y, _xscale, _yscale) {
 			var _alpha  = global.menu_transition_alpha ?? 1;
 			var _spr_id = (global.worlds_view_mode == "grid")
@@ -95,7 +95,7 @@ function menu_worlds_ui_init()
 				draw_sprite_ext(_asset.get_sprite(), 0, _cx, _cy, 2, 2, 0, c_white, _alpha);
 			}
 		});
-		
+
 		_btn_view_toggle.add_event_handler("on_select_release", function() {
 			global.worlds_view_mode = (global.worlds_view_mode == "grid") ? "list" : "grid";
 
@@ -105,7 +105,7 @@ function menu_worlds_ui_init()
 			menu_worlds_ui_populate();
 		});
 	}
-	
+
 	/* show loading placeholder, then defer data load */
 	var _container = _elements[$ "worlds_container"];
 
@@ -142,24 +142,24 @@ function menu_worlds_ui_populate()
 	var _instance = global.ui_worlds_menu;
 	var _elements = _instance.elements;
 	var _container = _elements[$ "worlds_container"];
-	
+
 	if (_container == undefined) exit;
-	
+
 	/* clear previous */
 	_container.children = [];
-	
+
 	var _worlds     = global.file_worlds;
 	var _worlds_len = array_length(_worlds);
 	var _is_grid    = (global.worlds_view_mode == "grid");
-	
+
 	/* separate pinned from normal */
 	var _pinned = [];
 	var _normal = [];
-	
+
 	for (var i = 0; i < _worlds_len; ++i)
 	{
 		var _w = _worlds[i];
-		
+
 		if (_w[$ "pinned"] == true)
 		{
 			array_push(_pinned, _w);
@@ -169,9 +169,9 @@ function menu_worlds_ui_populate()
 			array_push(_normal, _w);
 		}
 	}
-	
+
 	var _ypos = 0;
-	
+
 	/* pinned section */
 	if (array_length(_pinned) > 0)
 	{
@@ -187,7 +187,7 @@ function menu_worlds_ui_populate()
 
 		_ypos += 20;
 		_ypos = menu_worlds_ui_build_cards(_container, _pinned, _ypos, _is_grid, _instance);
-		
+
 		/* divider */
 		var _divider = new UILine(0, _ypos + 4, 920, 1);
 		_divider.colour = #3a3a4a;
@@ -197,7 +197,7 @@ function menu_worlds_ui_populate()
 
 		_ypos += 12;
 	}
-	
+
 	/* normal section */
 	if (array_length(_normal) > 0)
 	{
@@ -214,7 +214,7 @@ function menu_worlds_ui_populate()
 		_ypos += 20;
 		_ypos = menu_worlds_ui_build_cards(_container, _normal, _ypos, _is_grid, _instance);
 	}
-	
+
 	_container.height = max(100, _ypos + 16);
 }
 
@@ -224,13 +224,13 @@ function menu_worlds_ui_build_cards(_container, _worlds, _ystart, _is_grid, _ins
 {
 	var _len = array_length(_worlds);
 	var _ypos = _ystart;
-	
+
 	for (var i = 0; i < _len; ++i)
 	{
 		var _world = _worlds[i];
-		
+
 		var _card_w, _card_h, _xoffset, _yoffset;
-		
+
 		if (_is_grid)
 		{
 			_card_w  = 140;
@@ -245,7 +245,7 @@ function menu_worlds_ui_build_cards(_container, _worlds, _ystart, _is_grid, _ins
 			_xoffset = 0;
 			_yoffset = _ystart + i * (_card_h + 4);
 		}
-		
+
 		var _entry = new UIButton(
 			_xoffset,
 			_yoffset,
@@ -253,31 +253,31 @@ function menu_worlds_ui_build_cards(_container, _worlds, _ystart, _is_grid, _ins
 			_card_h,
 			""
 		);
-		
+
 		_entry.parent       = _container;
 		_entry.link_context = _instance.link_context;
 		_entry.world_ref    = _world;
 		_entry.is_grid_mode = _is_grid;
-		
+
 		_entry.on_draw = method(_entry, function(_x, _y, _xscale, _yscale) {
 			var _data = self.world_ref;
-			
+
 			var _ew = self.width * _xscale;
 			var _eh = self.height * _yscale;
 			var _alpha = global.menu_transition_alpha ?? 1;
-			
+
 			/* background */
 			draw_set_alpha(0.5 * _alpha);
 			draw_rectangle_colour(_x, _y, _x + _ew, _y + _eh, c_black, c_black, c_black, c_black, false);
 			draw_set_alpha(_alpha);
 			draw_rectangle_colour(_x, _y, _x + _ew, _y + _eh, #3a3a4a, #3a3a4a, #3a3a4a, #3a3a4a, true);
 			draw_set_alpha(1);
-			
+
 			var _halign = draw_get_halign();
 			var _valign = draw_get_valign();
-			
+
 			draw_set_align(fa_left, fa_top);
-			
+
 			if (self.is_grid_mode)
 			{
 				/* grid: thumbnail at top, name + date below */
@@ -287,7 +287,7 @@ function menu_worlds_ui_build_cards(_container, _worlds, _ystart, _is_grid, _ins
 				draw_set_alpha(_alpha);
 				draw_rectangle_colour(_x + 8, _y + 8, _x + 8 + _thumb_w, _y + 8 + _thumb_h, c_dkgray, c_dkgray, c_dkgray, c_dkgray, false);
 				draw_set_alpha(1);
-				
+
 				draw_set_align(fa_center, fa_top);
 
 				var _cx = _x + (_ew / 2);
@@ -302,22 +302,22 @@ function menu_worlds_ui_build_cards(_container, _worlds, _ystart, _is_grid, _ins
 				draw_set_alpha(_alpha);
 				draw_rectangle_colour(_x + 8, _y + 8, _x + 48, _y + _eh - 8, c_dkgray, c_dkgray, c_dkgray, c_dkgray, false);
 				draw_set_alpha(1);
-				
+
 				render_text(_x + 56, _y + 8, _data.get_name(), 1, 1, 0, c_white, _alpha);
 				render_text(_x + 56, _y + 28, date_datetime_string(_data.get_last_opened()), 0.7, 0.7, 0, c_white, _alpha);
-				
+
 				draw_set_align(fa_right, fa_top);
-				
+
 				render_text(_x + _ew - 52, _y + 20, file_format_size(_data.get_size()), 0.65, 0.65, 0, c_ltgray, _alpha);
 			}
-			
+
 			draw_set_align(_halign, _valign);
 		});
-		
+
 		/* icon button dimensions */
 		var _icon_w = 20;
 		var _icon_h = 20;
-		
+
 		/* option icon (rightmost) */
 		var _option_x  = _card_w - _icon_w - 4;
 		var _option_y  = _card_h - _icon_h - 4;
@@ -344,7 +344,7 @@ function menu_worlds_ui_build_cards(_container, _worlds, _ystart, _is_grid, _ins
 			PRINT("World options: " + string(self.world_ref.get_name()));
 			global.ui_input_consumed = true;
 		}));
-		
+
 		/* pin icon (left of option) */
 		var _pin_x   = _option_x - _icon_w - 2;
 		var _btn_pin = new UIButton(_pin_x, _option_y, _icon_w, _icon_h, "");
@@ -375,56 +375,60 @@ function menu_worlds_ui_build_cards(_container, _worlds, _ystart, _is_grid, _ins
 			_w[$ "pinned"] = file_toggle_pinned_world(_uuid);
 
 			menu_worlds_ui_populate();
-			
+
 			global.ui_input_consumed = true;
 		}));
-		
+
 		array_push(_entry.children, _btn_pin, _btn_option);
-		
+
 		/* select world */
 		_entry.add_event_handler("on_select_release", method(_entry, function() {
 			if (global.ui_input_consumed) exit;
-			
+
 			var _data = self.world_ref;
 			var _uuid = _data.get_uuid();
-			
+
 			if (!directory_exists(PROGRAM_DIRECTORY_WORLDS + "\\" + _uuid))
 			{
 				PRINT("World folder not found: " + string(_uuid));
 
 				exit;
 			}
-			
+
 			global.current_world.name = _data.get_name();
 			global.current_world.seed = _data.get_seed();
-			
+
 			global.current_world.dimension = _data.get_dimension();
-			
+
 			global.current_world.time = _data.get_time();
 			global.current_world.day  = _data.get_day();
-			
+
 			global.current_world.weather.wind  = _data.get_weather_wind();
 			global.current_world.weather.storm = _data.get_weather_storm();
-			
+
 			global.current_world.uuid = _uuid;
-			
+
 			global.current_world.difficulty = _data.get_difficulty();
-			
+
+			var _backup = _data.get_backup();
+			global.current_world.backup.interval_minutes = _backup.interval_minutes;
+			global.current_world.backup.slots = _backup.slots;
+
 			global.world_statistics = _data.get_statistics() ?? {}
-			
+
 			menu_transition_goto(rm_World);
 		}));
-		
+
 		array_push(_container.children, _entry);
 	}
-	
+
 	/* calculate final y position */
 	if (_is_grid)
 	{
 		var _rows = ceil(_len / 6);
-		
+
 		return _ystart + _rows * 128;
 	}
-	
+
 	return _ystart + _len * 60;
 }
