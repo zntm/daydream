@@ -82,7 +82,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 shader_set_uniform_f_array(__u_wave, _chunk.chunk_wave);
             }
             
-            vertex_submit(_buffer, pr_trianglelist, _texture);
+            vertex_submit(_buffer, pr_trianglestrip, _texture);
         }
         
         shader_reset();
