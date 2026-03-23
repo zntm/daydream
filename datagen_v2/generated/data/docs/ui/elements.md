@@ -75,6 +75,7 @@ A movable container with a title bar.
 | `position`  | tuple  | Position                          |
 | `movable`   | bool   | Whether the window can be dragged |
 | `closeable` | bool   | Whether a close button appears    |
+| `background` | color | Background fill |
 
 ## @slider(name)
 
@@ -83,8 +84,8 @@ A draggable value slider.
 | Property    | Type   | Description                  |
 | ----------- | ------ | ---------------------------- |
 | `size`      | tuple  | `(width, height)` in pixels  |
-| `min_value` | number | Minimum value                |
-| `max_value` | number | Maximum value                |
+| `min` / `min_value` | number | Minimum value |
+| `max` / `max_value` | number | Maximum value |
 | `value`     | number | Initial value                |
 | `step`      | number | Step size (0 = continuous)   |
 | `on_change` | script | Event: drag released `@"id"` |
@@ -108,6 +109,10 @@ A single-line text input field.
 | Property    | Type   | Description                  |
 | ----------- | ------ | ---------------------------- |
 | `size`      | tuple  | `(width, height)`            |
+| `placeholder` | string | Placeholder text |
+| `mode` | string | Input mode (`string`, `integer`, `numeric`, etc.) |
+| `text_length` | number | Maximum input length |
+| `on_input` | script | Event: text changed while focused `@"id"` |
 | `on_change` | script | Event: text changed `@"id"`  |
 | `on_submit` | script | Event: enter pressed `@"id"` |
 
@@ -122,13 +127,16 @@ An inventory slot that displays an item icon.
 
 ## @radio_button(name)
 
-A toggle button, part of a mutually exclusive group.
+A toggle or grouped radio control.
 
 | Property    | Type   | Description       |
 | ----------- | ------ | ----------------- |
 | `text`      | string | Label text        |
 | `size`      | tuple  | `(width, height)` |
+| `selected` | bool | Initial selected state |
+| `group` | string | Optional group name |
 | `on_select` | script | Event: selected   |
+| `on_select_release` | script | Event: toggled |
 
 ## @dropdown(name)
 
@@ -137,6 +145,8 @@ A dropdown select control.
 | Property    | Type   | Description              |
 | ----------- | ------ | ------------------------ |
 | `size`      | tuple  | `(width, height)`        |
+| `choices` / `options` | tuple | Available options |
+| `choice_index` / `selected` | number | Current selected index |
 | `on_change` | script | Event: selection changed |
 
 ## @scroll_area(name)
@@ -157,6 +167,17 @@ A floating overlay panel.
 | ---------- | ----- | ----------------- |
 | `size`     | tuple | `(width, height)` |
 | `position` | tuple | Position          |
+
+## @line(name)
+
+A straight line primitive.
+
+| Property | Type | Description |
+| -------- | ---- | ----------- |
+| `start` | tuple | Start point |
+| `end` | tuple | End point |
+| `thickness` | number | Line thickness |
+| `colour` | color | Line color |
 
 ## @page(name)
 

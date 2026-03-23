@@ -58,15 +58,15 @@ function UITextbox(_x, _y, _width, _height) : UIElement(_x, _y, _width, _height)
         var _base_scale_y = _base_scale.y;
         
         
-        var _mx = window_mouse_get_x();
-        var _my = window_mouse_get_y();
+        var _mx = ui_get_mouse_x();
+        var _my = ui_get_mouse_y();
         
         
-        var _left = _abs_x * _base_scale_x;
-        var _top = _abs_y * _base_scale_y;
+        var _left = _abs_x;
+        var _top = _abs_y;
         
-        var _right = _left + (width * _base_scale_x);
-        var _bottom = _top + (height * _base_scale_y);
+        var _right = _left + width;
+        var _bottom = _top + height;
         
         
         var _is_hovered = (_mx >= _left && _mx <= _right && _my >= _top && _my <= _bottom);

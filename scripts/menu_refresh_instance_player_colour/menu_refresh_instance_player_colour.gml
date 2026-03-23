@@ -1,3 +1,4 @@
+/* legacy room-instance create-player colour UI; retained for reference only */
 function menu_refresh_instance_player_colour()
 {
     static __inst = [

@@ -33,22 +33,17 @@ function UIRadioButton(_x, _y, _text = "") : UIElement(_x, _y, 100, 20) construc
         
         
         var _abs_x = get_absolute_x();
-        var _abs_y = get_absolute_y();
+        var _abs_y = get_interaction_y();
         
         
-        var _base_scale = ui_get_base_scale();
-        var _base_scale_x = _base_scale.x;
-        var _base_scale_y = _base_scale.y;
+        var _mx = ui_get_mouse_x();
+        var _my = ui_get_mouse_y();
         
         
-        var _mx = window_mouse_get_x();
-        var _my = window_mouse_get_y();
-        
-        
-        var _left = _abs_x * _base_scale_x;
-        var _top = _abs_y * _base_scale_y;
-        var _right = _left + (width * _base_scale_x);
-        var _bottom = _top + (height * _base_scale_y);
+        var _left = _abs_x;
+        var _top = _abs_y;
+        var _right = _left + width;
+        var _bottom = _top + height;
         
         
         is_hovered = (_mx >= _left && _mx <= _right && _my >= _top && _my <= _bottom);
@@ -56,16 +51,49 @@ function UIRadioButton(_x, _y, _text = "") : UIElement(_x, _y, 100, 20) construc
         
         if (is_hovered) && !(global.ui_input_consumed) && (mouse_check_button_pressed(mb_left)) 
         {
-            if !(selected) 
+            var _next_selected = !selected;
+
+            if (group != "")
             {
-                selected = true;
-                
-                global.ui_input_consumed = true;
-                
-                emit_event("on_select", { value: value, group: group });
-                
-                sfx_play("phantasia:sfx/menu/button/select");
+                _next_selected = true;
+
+                if (parent != undefined)
+                {
+                    var _child_count = array_length(parent.children);
+
+                    for (var i = _child_count - 1; i >= 0; --i)
+                    {
+                        var _child = parent.children[i];
+
+                        if (_child == self) continue;
+
+                        if (instanceof(_child) != "UIRadioButton") continue;
+
+                        if (_child.group == group)
+                        {
+                            _child.deselect();
+                        }
+                    }
+                }
             }
+
+            set_selected(_next_selected);
+
+            global.ui_input_consumed = true;
+
+            if (selected)
+            {
+                emit_event("on_select", { value: value, group: group, selected: selected });
+            }
+            else
+            {
+                emit_event("on_deselect", { value: value, group: group, selected: selected });
+            }
+
+            emit_event("on_change", { value: value, group: group, selected: selected });
+            emit_event("on_select_release", { value: value, group: group, selected: selected });
+
+            sfx_play("phantasia:sfx/menu/button/select");
         }
         
         
@@ -82,11 +110,31 @@ function UIRadioButton(_x, _y, _text = "") : UIElement(_x, _y, 100, 20) construc
         var _base_scale = ui_get_base_scale();
         var _base_scale_x = _base_scale.x;
         var _base_scale_y = _base_scale.y;
+
+
+        if (text == "")
+        {
+            var _x1 = _abs_x * _base_scale_x;
+            var _y1 = _abs_y * _base_scale_y;
+            var _x2 = _x1 + (width * _base_scale_x);
+            var _y2 = _y1 + (height * _base_scale_y);
+            var _cy = (_y1 + _y2) * 0.5;
+            var _radius = max(1, (_y2 - _y1) * 0.5);
+            var _track_color = selected ? selected_color : circle_color;
+            var _handle_x = selected ? (_x2 - _radius) : (_x1 + _radius);
+
+            draw_rectangle_colour(_x1 + _radius, _y1, _x2 - _radius, _y2, _track_color, _track_color, _track_color, _track_color, false);
+            draw_circle_colour(_x1 + _radius, _cy, _radius, _track_color, _track_color, false);
+            draw_circle_colour(_x2 - _radius, _cy, _radius, _track_color, _track_color, false);
+            draw_circle_colour(_handle_x, _cy, max(1, _radius - (_base_scale_x * 2)), c_white, c_white, false);
+
+            exit;
+        }
         
         
         var _circle_x = (_abs_x + circle_size) * _base_scale_x;
         var _circle_y = (_abs_y + height / 2) * _base_scale_y;
-        var _radius = circle_size * _base_scale_x;
+        var _radius = min(circle_size * _base_scale_x, (height * _base_scale_y) * 0.5);
         
         
         /* draw outer circle */
@@ -101,30 +149,27 @@ function UIRadioButton(_x, _y, _text = "") : UIElement(_x, _y, 100, 20) construc
         
         
         /* draw text */
-        if (text != "") 
-        {
-            var _text_x = (_abs_x + circle_size * 2 + 8) * _base_scale_x;
-            var _text_y = _circle_y;
-            
-            var _prev_halign = draw_get_halign();
-            var _prev_valign = draw_get_valign();
-            
-            draw_set_align(fa_left, fa_middle);
-            
-            
-            draw_text_cuteify(
-                _text_x, _text_y,
-                text,
-                _base_scale_x * 0.8,
-                _base_scale_y * 0.8,
-                0,
-                text_color,
-                1
-            );
-            
-            
-            draw_set_align(_prev_halign, _prev_valign);
-        }
+        var _text_x = (_abs_x + circle_size * 2 + 8) * _base_scale_x;
+        var _text_y = _circle_y;
+
+        var _prev_halign = draw_get_halign();
+        var _prev_valign = draw_get_valign();
+
+        draw_set_align(fa_left, fa_middle);
+
+
+        draw_text_cuteify(
+            _text_x, _text_y,
+            text,
+            _base_scale_x * 0.8,
+            _base_scale_y * 0.8,
+            0,
+            text_color,
+            1
+        );
+
+
+        draw_set_align(_prev_halign, _prev_valign);
     }
     
     
@@ -132,7 +177,15 @@ function UIRadioButton(_x, _y, _text = "") : UIElement(_x, _y, 100, 20) construc
     static deselect = function() 
     {
         selected = false;
-        
+
+        return self;
+    }
+
+
+    static set_selected = function(_selected)
+    {
+        selected = (_selected == true);
+
         return self;
     }
 }

@@ -1,3 +1,4 @@
+/* legacy room-instance create-player attire UI; retained for reference only */
 function menu_refresh_instance_player_attire()
 {
     static __inst = [

@@ -15,14 +15,7 @@ function menu_credits_ui_load()
 	}
 	
 	/* cache reload */
-	if (variable_global_exists("ui_definitions"))
-	{
-		var _full_path = "resources/data/ui/menu/credits.ui";
-		if (struct_exists(global.ui_definitions, _full_path))
-		{
-			struct_remove(global.ui_definitions, _full_path);
-		}
-	}
+	ui_invalidate_definition("ui/menu/credits.ui");
 	
 	var _def = ui_load("ui/menu/credits.ui");
 	
@@ -72,7 +65,7 @@ function menu_credits_ui_init()
             
             var _header_ui = new UIText(400, _ypos, "");
             _header_ui.text = _header_text;
-            _header_ui.text_halign = "fa_center";
+            _header_ui.halign = fa_center;
             _header_ui.colour = _credits.colour;
             
             _header_ui.parent = _list;
@@ -91,7 +84,7 @@ function menu_credits_ui_init()
                 var _entry_ui = new UIText(400, _ypos, "");
                 _entry_ui.text = _name;
                 _entry_ui.text_scale = 0.8;
-                _entry_ui.text_halign = "fa_center";
+                _entry_ui.halign = fa_center;
                 _entry_ui.colour = _entry[$ "colour"] ?? c_white;
                 
                 _entry_ui.parent = _list;

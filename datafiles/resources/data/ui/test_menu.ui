@@ -36,21 +36,21 @@ var _spacing = 8
         }
         
         @button(play_btn) {
-            text = "$phantasia:menu.button.play"
+            text = $"phantasia:menu.button.play"
             size = (280, 32)
-            on_select_release = "@phantasia:menu/play"
+            on_select_release = @"phantasia:menu/play"
         }
         
         @button(settings_btn) {
-            text = "$phantasia:menu.button.settings"
+            text = $"phantasia:menu.button.settings"
             size = (280, 32)
-            on_select_release = "@phantasia:menu/settings"
+            on_select_release = @"phantasia:menu/settings"
         }
         
         @button(close_btn) {
-            text = "$phantasia:menu.button.close"
+            text = $"phantasia:menu.button.close"
             size = (280, 32)
-            on_select_release = "@phantasia:menu/close"
+            on_select_release = @"phantasia:menu/close"
         }
     }
 }

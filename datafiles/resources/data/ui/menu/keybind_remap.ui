@@ -1,0 +1,24 @@
+// keybind remap popup
+
+@popup(keybind_remap_popup) {
+    size = (420, 180)
+    position = ORIGIN_CENTER
+
+    @text(label_title) {
+        position = ORIGIN_TOP_CENTER + (0, 28)
+        text = "Remapping"
+        text_scale = 1.2
+    }
+
+    @text(label_instruction) {
+        position = ORIGIN_CENTER + (0, -8)
+        text = "Press any key to bind"
+        colour = #cccccc
+    }
+
+    @button(btn_cancel) {
+        position = ORIGIN_BOTTOM_CENTER + (0, -24)
+        size = (120, 32)
+        text = "Back"
+    }
+}

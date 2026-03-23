@@ -45,8 +45,11 @@ function UIPopup(_x, _y, _width, _height) : UIElement(_x, _y, _width, _height) c
         /* center on screen if needed */
         if (center_on_screen) 
         {
-            x = (global.window_width - width) / 2;
-            y = (global.window_height - height) / 2;
+            var _root_w = (variable_global_exists("gui_root") && (global.gui_root != undefined)) ? global.gui_root.width : 960;
+            var _root_h = (variable_global_exists("gui_root") && (global.gui_root != undefined)) ? global.gui_root.height : 540;
+
+            x = (_root_w - width) / 2;
+            y = (_root_h - height) / 2;
         }
         
         
@@ -59,6 +62,24 @@ function UIPopup(_x, _y, _width, _height) : UIElement(_x, _y, _width, _height) c
         for (var i = _child_count - 1; i >= 0; --i) 
         {
             children[i].update();
+        }
+
+        var _mx = ui_get_mouse_x();
+        var _my = ui_get_mouse_y();
+        var _left = get_absolute_x();
+        var _top = get_absolute_y();
+        var _right = _left + width;
+        var _bottom = _top + height;
+        var _inside_popup = (_mx >= _left && _mx <= _right && _my >= _top && _my <= _bottom);
+
+        if !(_inside_popup)
+        {
+            global.ui_hover_consumed = true;
+
+            if !(global.ui_input_consumed) && (mouse_check_button_pressed(mb_left))
+            {
+                global.ui_input_consumed = true;
+            }
         }
     }
     
@@ -76,7 +97,7 @@ function UIPopup(_x, _y, _width, _height) : UIElement(_x, _y, _width, _height) c
         /* draw overlay */
         draw_set_alpha(overlay_alpha * alpha);
         
-        draw_rectangle_colour(0, 0, global.window_width * _base_scale_x, global.window_height * _base_scale_y, overlay_color, overlay_color, overlay_color, overlay_color, false);
+        draw_rectangle_colour(0, 0, global.window_width, global.window_height, overlay_color, overlay_color, overlay_color, overlay_color, false);
         
         draw_set_alpha(1);
         

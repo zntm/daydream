@@ -205,7 +205,8 @@ function UIBar(_x, _y, _width, _height, _min, _max, _value) : UIElement(_x, _y, 
         
         
         /* calculate fill percentage */
-        var _t = (display_value - min_value) / (max_value - min_value);
+        var _range = max_value - min_value;
+        var _t = (_range != 0) ? ((display_value - min_value) / _range) : 0;
         
         _t = clamp(_t, 0, 1);
         
@@ -301,6 +302,21 @@ function UIBar(_x, _y, _width, _height, _min, _max, _value) : UIElement(_x, _y, 
         
         value = clamp(value, min_value, max_value);
         
+        return self;
+    }
+
+
+    /* set the min value */
+    static set_min = function(_min)
+    {
+        if !(is_real(_min)) return self;
+
+
+        min_value = _min;
+
+        value = clamp(value, min_value, max_value);
+        display_value = clamp(display_value, min_value, max_value);
+
         return self;
     }
     

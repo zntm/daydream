@@ -3,6 +3,11 @@ function control_game_pause_check()
 {
     var _gc = obj_Game_Control;
 
+    if (_gc.is_opened & WORLD_OPENED_BOOL.PAUSE)
+    {
+        menu_settings_ui_step_rebind();
+    }
+
     if (global.window_width <= 0) || (global.window_height <= 0)
     {
         _gc.is_opened |= WORLD_OPENED_BOOL.PAUSE;
@@ -26,7 +31,16 @@ function control_game_pause_check()
         exit;
     }
 
-    if !(keyboard_check_pressed(global.settings.input_keyboard_pause)) || (_gc.is_opened & WORLD_OPENED_BOOL.CHAT) exit;
+    var _pause_pressed = keyboard_check_pressed(global.settings.input_keyboard_pause);
+
+    if (_pause_pressed) && (_gc.is_opened & WORLD_OPENED_BOOL.PAUSE) && (variable_instance_exists(_gc, "ui_pause_settings")) && (_gc.ui_pause_settings != undefined)
+    {
+        control_game_pause_close_settings();
+
+        exit;
+    }
+
+    if !_pause_pressed || (_gc.is_opened & WORLD_OPENED_BOOL.CHAT) exit;
 
     control_game_menu_hide_instances();
 
@@ -74,6 +88,8 @@ function control_game_pause_check()
                 {
                     _btn_resume.add_event_handler("on_select_release", function()
                     {
+                        control_game_pause_close_settings();
+
                         obj_Game_Control.is_opened ^= WORLD_OPENED_BOOL.PAUSE;
 
                         control_instance_unpause();
@@ -93,9 +109,7 @@ function control_game_pause_check()
                 {
                     _btn_settings.add_event_handler("on_select_release", function()
                     {
-                        obj_Game_Control.is_opened |= WORLD_OPENED_BOOL.MENU;
-
-                        menu_refresh_instance_settings();
+                        control_game_pause_open_settings();
                     });
                 }
 
@@ -116,10 +130,50 @@ function control_game_pause_check()
 
     control_instance_unpause();
 
+    control_game_pause_close_settings();
+
     if (variable_instance_exists(_gc, "ui_pause")) && (_gc.ui_pause != undefined)
     {
         ui_instance_destroy(_gc.ui_pause);
 
         _gc.ui_pause = undefined;
     }
+}
+
+
+function control_game_pause_open_settings()
+{
+    var _gc = obj_Game_Control;
+
+    if (variable_instance_exists(_gc, "ui_pause_settings")) && (_gc.ui_pause_settings != undefined)
+    {
+        exit;
+    }
+
+    if (variable_instance_exists(_gc, "ui_pause")) && (_gc.ui_pause != undefined)
+    {
+        _gc.ui_pause.visible = false;
+    }
+
+    _gc.ui_pause_settings = menu_settings_ui_spawn(function() {
+        control_game_pause_close_settings();
+    }, false);
+}
+
+
+function control_game_pause_close_settings()
+{
+    var _gc = obj_Game_Control;
+
+    if (global.ui_settings_menu != undefined)
+    {
+        menu_settings_ui_close();
+    }
+
+    if (variable_instance_exists(_gc, "ui_pause")) && (_gc.ui_pause != undefined)
+    {
+        _gc.ui_pause.visible = true;
+    }
+
+    _gc.ui_pause_settings = undefined;
 }

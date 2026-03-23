@@ -139,7 +139,7 @@ text = $"menu.play"
 
 ### `@"script_id"` — Script Reference
 
-References a proglang script by ID:
+References a proglang script by ID. Event handlers use canonical `on_* = @"namespace:script"` syntax:
 
 ```
 on_select = @"my_mod:on_play_pressed"

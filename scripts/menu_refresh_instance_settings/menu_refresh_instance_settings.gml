@@ -1,3 +1,4 @@
+/* legacy room-instance settings UI; retained for reference only */
 global.settings_list_offset = 0;
 global.settings_list_length = 0;
 global.settings_list_size = 0;

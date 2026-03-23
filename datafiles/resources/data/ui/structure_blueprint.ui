@@ -98,13 +98,13 @@ var _spacing = 6
             @button(export_btn) {
                 text = "Export"
                 size = (120, 28)
-                on_select_release = "@phantasia:blueprint/export_structure"
+                on_select_release = @"phantasia:blueprint/export_structure"
             }
             
             @button(cancel_btn) {
                 text = "Cancel"
                 size = (120, 28)
-                on_select_release = "@phantasia:blueprint/cancel"
+                on_select_release = @"phantasia:blueprint/cancel"
             }
         }
     }

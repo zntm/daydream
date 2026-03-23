@@ -15,4 +15,9 @@ function menu_ui_clear_all()
     {
         global.gui_root.children = [];
     }
+
+	if (variable_global_exists("ui_settings_menu")) global.ui_settings_menu = undefined;
+	if (variable_global_exists("ui_settings_rebind")) global.ui_settings_rebind = undefined;
+	if (variable_global_exists("ui_player_statistics_popup")) global.ui_player_statistics_popup = undefined;
+	if (variable_global_exists("ui_warning_screen")) global.ui_warning_screen = undefined;
 }

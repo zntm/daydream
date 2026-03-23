@@ -474,9 +474,9 @@ function ui_editor_reload_preview()
         variables: _editor.ast_variables
     }
 
-    var _full_path = "resources/data/" + _editor.loaded_path;
+    var _cache_key = ui_normalize_path(_editor.loaded_path);
 
-    global.ui_definitions[$ _full_path] = _def;
+    global.ui_definitions[$ _cache_key] = _def;
 
     var _instance = ui_spawn(_def, {
         link:   {},

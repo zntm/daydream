@@ -105,20 +105,19 @@ function UIDropdown(_x, _y, _width, _height) : UIElement(_x, _y, _width, _height
         }
         
         
-        var _base_scale = ui_get_base_scale();
         var _abs_x = get_absolute_x();
-        var _abs_y = get_absolute_y();
+        var _abs_y = get_interaction_y();
         
         
-        var _mx = window_mouse_get_x();
-        var _my = window_mouse_get_y();
+        var _mx = ui_get_mouse_x();
+        var _my = ui_get_mouse_y();
         
         
-        var _left = _abs_x * _base_scale.x;
-        var _top = _abs_y * _base_scale.y;
+        var _left = _abs_x;
+        var _top = _abs_y;
         
-        var _right = _left + (width * _base_scale.x);
-        var _header_bottom = _top + (collapsed_height * _base_scale.y);
+        var _right = _left + width;
+        var _header_bottom = _top + collapsed_height;
         
         
         hovered_option = -1;
@@ -159,8 +158,8 @@ function UIDropdown(_x, _y, _width, _height) : UIElement(_x, _y, _width, _height
                 
                 for (var i = _opt_count - 1; i >= 0; --i)
                 {
-                    var _opt_top = _header_bottom + (i * option_height * _base_scale.y);
-                    var _opt_bottom = _opt_top + (option_height * _base_scale.y);
+                    var _opt_top = _header_bottom + (i * option_height);
+                    var _opt_bottom = _opt_top + option_height;
                     
                     
                     if (_mx >= _left && _mx <= _right && _my >= _opt_top && _my <= _opt_bottom)
@@ -179,7 +178,7 @@ function UIDropdown(_x, _y, _width, _height) : UIElement(_x, _y, _width, _height
                 
                 
                 /* if clicked outside dropdown area entirely, close it */
-                var _full_bottom = _header_bottom + (_opt_count * option_height * _base_scale.y);
+                var _full_bottom = _header_bottom + (_opt_count * option_height);
                 
                 
                 if (_my < _top || _my > _full_bottom || _mx < _left || _mx > _right)
@@ -198,8 +197,8 @@ function UIDropdown(_x, _y, _width, _height) : UIElement(_x, _y, _width, _height
             
             for (var i = _opt_count - 1; i >= 0; --i)
             {
-                var _opt_top = _header_bottom + (i * option_height * _base_scale.y);
-                var _opt_bottom = _opt_top + (option_height * _base_scale.y);
+                var _opt_top = _header_bottom + (i * option_height);
+                var _opt_bottom = _opt_top + option_height;
                 
                 
                 if (_mx >= _left && _mx <= _right && _my >= _opt_top && _my <= _opt_bottom)
@@ -271,7 +270,7 @@ function UIDropdown(_x, _y, _width, _height) : UIElement(_x, _y, _width, _height
         /* draw arrow indicator */
         var _arrow_x = _x2 - (12 * _base_scale.x);
         
-        render_text(_arrow_x, _text_y, (is_open ? "▲" : "▼"), _base_scale.x * 0.8, _base_scale.y * 0.8, 0, arrow_color, 1);
+        render_text(_arrow_x, _text_y, (is_open ? "^" : "v"), _base_scale.x * 0.8, _base_scale.y * 0.8, 0, arrow_color, 1);
         
         
         /* draw expanded options */

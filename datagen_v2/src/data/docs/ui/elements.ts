@@ -60,13 +60,14 @@ const elements = new Doc("UI Elements")
         t.addRow(["`position`", "tuple", "Position"]);
         t.addRow(["`movable`", "bool", "Whether the window can be dragged"]);
         t.addRow(["`closeable`", "bool", "Whether a close button appears"]);
+        t.addRow(["`background`", "color", "Background fill"]);
     })
     .section("@slider(name)")
     .add("A draggable value slider.")
     .table(["Property", "Type", "Description"], (t: Table) => {
         t.addRow(["`size`", "tuple", "`(width, height)` in pixels"]);
-        t.addRow(["`min_value`", "number", "Minimum value"]);
-        t.addRow(["`max_value`", "number", "Maximum value"]);
+        t.addRow(["`min` / `min_value`", "number", "Minimum value"]);
+        t.addRow(["`max` / `max_value`", "number", "Maximum value"]);
         t.addRow(["`value`", "number", "Initial value"]);
         t.addRow(["`step`", "number", "Step size (0 = continuous)"]);
         t.addRow(["`on_change`", "script", 'Event: drag released `@"id"`']);
@@ -84,6 +85,10 @@ const elements = new Doc("UI Elements")
     .add("A single-line text input field.")
     .table(["Property", "Type", "Description"], (t: Table) => {
         t.addRow(["`size`", "tuple", "`(width, height)`"]);
+        t.addRow(["`placeholder`", "string", "Placeholder text"]);
+        t.addRow(["`mode`", "string", "Input mode (`string`, `integer`, `numeric`, etc.)"]);
+        t.addRow(["`text_length`", "number", "Maximum input length"]);
+        t.addRow(["`on_input`", "script", 'Event: text changed while focused `@"id"`']);
         t.addRow(["`on_change`", "script", 'Event: text changed `@"id"`']);
         t.addRow(["`on_submit`", "script", 'Event: enter pressed `@"id"`']);
     })
@@ -94,16 +99,21 @@ const elements = new Doc("UI Elements")
         t.addRow(["`slot_index`", "number", "Index within the inventory"]);
     })
     .section("@radio_button(name)")
-    .add("A toggle button, part of a mutually exclusive group.")
+    .add("A toggle or grouped radio control.")
     .table(["Property", "Type", "Description"], (t: Table) => {
         t.addRow(["`text`", "string", "Label text"]);
         t.addRow(["`size`", "tuple", "`(width, height)`"]);
+        t.addRow(["`selected`", "bool", "Initial selected state"]);
+        t.addRow(["`group`", "string", "Optional group name"]);
         t.addRow(["`on_select`", "script", "Event: selected"]);
+        t.addRow(["`on_select_release`", "script", "Event: toggled"]);
     })
     .section("@dropdown(name)")
     .add("A dropdown select control.")
     .table(["Property", "Type", "Description"], (t: Table) => {
         t.addRow(["`size`", "tuple", "`(width, height)`"]);
+        t.addRow(["`choices` / `options`", "tuple", "Available options"]);
+        t.addRow(["`choice_index` / `selected`", "number", "Current selected index"]);
         t.addRow(["`on_change`", "script", "Event: selection changed"]);
     })
     .section("@scroll_area(name)")
@@ -118,6 +128,14 @@ const elements = new Doc("UI Elements")
     .table(["Property", "Type", "Description"], (t: Table) => {
         t.addRow(["`size`", "tuple", "`(width, height)`"]);
         t.addRow(["`position`", "tuple", "Position"]);
+    })
+    .section("@line(name)")
+    .add("A straight line primitive.")
+    .table(["Property", "Type", "Description"], (t: Table) => {
+        t.addRow(["`start`", "tuple", "Start point"]);
+        t.addRow(["`end`", "tuple", "End point"]);
+        t.addRow(["`thickness`", "number", "Line thickness"]);
+        t.addRow(["`colour`", "color", "Line color"]);
     })
     .section("@page(name)")
     .add("A named page within a tabbed layout.")

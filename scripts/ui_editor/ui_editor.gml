@@ -142,12 +142,10 @@ function ui_editor_load(_path)
     }
 
     /* clear definition cache so we get a fresh parse */
-    var _full_path = "resources/data/" + _path;
+    var _cache_key = ui_normalize_path(_path);
+    var _full_path = ui_get_resource_path(_cache_key);
 
-    if (struct_exists(global.ui_definitions, _full_path))
-    {
-        struct_remove(global.ui_definitions, _full_path);
-    }
+    ui_invalidate_definition(_cache_key);
 
     /* parse the file using existing lexer/parser */
     var _source = undefined;
@@ -216,7 +214,7 @@ function ui_editor_load(_path)
     }
 
     /* cache it so ui_load works */
-    global.ui_definitions[$ _full_path] = _def;
+    global.ui_definitions[$ _cache_key] = _def;
 
     var _instance = ui_spawn(_def, {
         link:   {},

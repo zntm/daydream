@@ -15,14 +15,7 @@ function menu_multiplayer_ui_load()
 	}
 	
 	/* cache reload */
-	if (variable_global_exists("ui_definitions"))
-	{
-		var _full_path = "resources/data/ui/menu/multiplayer.ui";
-		if (struct_exists(global.ui_definitions, _full_path))
-		{
-			struct_remove(global.ui_definitions, _full_path);
-		}
-	}
+	ui_invalidate_definition("ui/menu/multiplayer.ui");
 	
 	var _def = ui_load("ui/menu/multiplayer.ui");
 	

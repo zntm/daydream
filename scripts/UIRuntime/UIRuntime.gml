@@ -29,6 +29,82 @@ function ui_is_proglang_closure(_value)
 }
 
 
+/* normalize a ui path to the relative key expected by ui_load() */
+function ui_normalize_path(_path)
+{
+    if !(is_string(_path)) return _path;
+
+    var _normalized = string_trim(string_replace_all(_path, chr(92), "/"));
+    var _resources = PROGRAM_DIRECTORY_RESOURCES;
+
+    if (_resources != "")
+    {
+        var _resources_prefix = string_replace_all(_resources, chr(92), "/") + "/";
+
+        if (string_pos(_resources_prefix, _normalized) == 1)
+        {
+            _normalized = string_delete(_normalized, 1, string_length(_resources_prefix));
+        }
+    }
+
+    if (string_pos("resources/data/", _normalized) == 1)
+    {
+        _normalized = string_delete(_normalized, 1, string_length("resources/data/"));
+    }
+    else if (string_pos("data/", _normalized) == 1)
+    {
+        _normalized = string_delete(_normalized, 1, string_length("data/"));
+    }
+
+    return _normalized;
+}
+
+
+/* resolve a ui cache key to the full file path on disk */
+function ui_get_resource_path(_path)
+{
+    var _normalized = ui_normalize_path(_path);
+    var _resources = PROGRAM_DIRECTORY_RESOURCES;
+
+    if (_resources != "")
+    {
+        return $"{_resources}/data/{_normalized}";
+    }
+
+    return _normalized;
+}
+
+
+/* remove a cached ui definition by normalized relative key */
+function ui_invalidate_definition(_path)
+{
+    if !(variable_global_exists("ui_definitions")) return false;
+
+    var _cache_key = ui_normalize_path(_path);
+
+    if (struct_exists(global.ui_definitions, _cache_key))
+    {
+        struct_remove(global.ui_definitions, _cache_key);
+
+        return true;
+    }
+
+    return false;
+}
+
+
+/* log a runtime warning and optionally record it during smoke checks */
+function ui_warn(_message)
+{
+    PRINT($"[UI Runtime] warning: {_message}");
+
+    if (variable_global_exists("ui_warning_issues")) && (is_array(global.ui_warning_issues))
+    {
+        array_push(global.ui_warning_issues, _message);
+    }
+}
+
+
 /* =============================================================================
    loading and parsing
    ============================================================================= */
@@ -38,27 +114,22 @@ function ui_is_proglang_closure(_value)
 /* @returns {struct.UIASTDocument} parsed ui document */
 function ui_load(_path)
 {
+    var _cache_key = ui_normalize_path(_path);
+
     /* check cache first */
-    if (struct_exists(global.ui_definitions, _path))
+    if (struct_exists(global.ui_definitions, _cache_key))
     {
-        PRINT($"[UI Runtime] using cached definition for: {_path}");
+        PRINT($"[UI Runtime] using cached definition for: {_cache_key}");
         
-        return global.ui_definitions[$ _path];
+        return global.ui_definitions[$ _cache_key];
     }
     
     
     /* resolve full path - ui files are in resources/data/ui/ */
-    var _full_path = _path;
-    var _resources = PROGRAM_DIRECTORY_RESOURCES;
+    var _full_path = ui_get_resource_path(_cache_key);
     
     
-    if (_resources != "")
-    {
-        _full_path = $"{_resources}/data/{_path}";
-    }
-    
-    
-    PRINT($"[UI Runtime] attempting to load ui file: '{_path}' -> '{_full_path}' (cwd: {working_directory})");
+    PRINT($"[UI Runtime] attempting to load ui file: '{_cache_key}' -> '{_full_path}' (cwd: {working_directory})");
     PRINT($"[UI Runtime] file exists (full): {file_exists(_full_path)}");
     
     
@@ -67,18 +138,18 @@ function ui_load(_path)
     
     
     /* fallback: try relative path directly if full path failed */
-    if (_source == undefined && _full_path != _path)
+    if (_source == undefined && _full_path != _cache_key)
     {
-        PRINT($"[UI Runtime] falling back to relative path: '{_path}'");
-        PRINT($"[UI Runtime] file exists (rel): {file_exists(_path)}");
+        PRINT($"[UI Runtime] falling back to relative path: '{_cache_key}'");
+        PRINT($"[UI Runtime] file exists (rel): {file_exists(_cache_key)}");
         
-        _source = buffer_load_text(_path);
+        _source = buffer_load_text(_cache_key);
     }
     
     
     if (_source == undefined || _source == "")
     {
-        PRINT($"[UI Runtime] ERROR: failed to load ui file content from: {_full_path} OR {_path}");
+        PRINT($"[UI Runtime] ERROR: failed to load ui file content from: {_full_path} OR {_cache_key}");
         
         return undefined;
     }
@@ -91,7 +162,7 @@ function ui_load(_path)
     
     if (_lexer.had_error)
     {
-        PRINT($"[UI Runtime] lexer error in {_path}: {_lexer.error}");
+        PRINT($"[UI Runtime] lexer error in {_cache_key}: {_lexer.error}");
         
         return undefined;
     }
@@ -104,7 +175,7 @@ function ui_load(_path)
     
     if (_parser.had_error)
     {
-        PRINT($"[UI Runtime] parser error in {_path}: {_parser.error}");
+        PRINT($"[UI Runtime] parser error in {_cache_key}: {_parser.error}");
         
         return undefined;
     }
@@ -158,7 +229,7 @@ function ui_load(_path)
     
     _ui_def.exports = _exports;
     
-    global.ui_definitions[$ _path] = _ui_def;
+    global.ui_definitions[$ _cache_key] = _ui_def;
     
     
     PRINT($"[UI Runtime] successfully loaded ui file: {_full_path}");
@@ -616,6 +687,39 @@ function ui_instantiate_element(_node, _link, _variables)
 /* @param {struct} _prop property ast node */
 /* @param {struct} _link link context */
 /* @param {struct} _variables local variables */
+function ui_set_element_property(_element, _key, _value)
+{
+    var _final_value = _value;
+
+    if (is_struct(_value)) && (struct_exists(_value, "color"))
+    {
+        _final_value = _value.color;
+    }
+
+    var _setter_name = "set_" + _key;
+
+    if (struct_exists(_element, _setter_name))
+    {
+        var _setter = _element[$ _setter_name];
+
+        if (is_callable(_setter))
+        {
+            method(_element, _setter)(_final_value);
+
+            return true;
+        }
+    }
+    else if (struct_exists(_element, _key))
+    {
+        _element[$ _key] = _final_value;
+
+        return true;
+    }
+
+    return false;
+}
+
+
 function ui_apply_property(_element, _prop, _link, _variables)
 {
     var _key = _prop.key;
@@ -851,9 +955,31 @@ function ui_apply_property(_element, _prop, _link, _variables)
             
         case "choice_index": /* aligned with renamed property in uidropdown */
         case "selected":
-            if (struct_exists(_element, "set_selected"))
+            if !(ui_set_element_property(_element, "selected", _value))
             {
-                _element.set_selected(_value);
+                ui_warn($"unsupported property '{_key}' on @{_element.element_type}({_element.element_name})");
+            }
+            break;
+
+
+        case "min":
+            if !(ui_set_element_property(_element, "min", _value))
+            {
+                if !(ui_set_element_property(_element, "min_value", _value))
+                {
+                    ui_warn($"unsupported property '{_key}' on @{_element.element_type}({_element.element_name})");
+                }
+            }
+            break;
+
+
+        case "max":
+            if !(ui_set_element_property(_element, "max", _value))
+            {
+                if !(ui_set_element_property(_element, "max_value", _value))
+                {
+                    ui_warn($"unsupported property '{_key}' on @{_element.element_type}({_element.element_name})");
+                }
             }
             break;
         
@@ -865,6 +991,10 @@ function ui_apply_property(_element, _prop, _link, _variables)
                 if (_value_node.type == UI_AST.SCRIPT_REF)
                 {
                     _element.add_event_handler(_key, _value_node.script_id);
+                }
+                else
+                {
+                    ui_warn($"invalid event handler for '{_key}' on @{_element.element_type}({_element.element_name}); use @\"namespace:script\" syntax");
                 }
             }
             /* check for bindings */
@@ -937,33 +1067,9 @@ function ui_apply_property(_element, _prop, _link, _variables)
             /* regular property - try to set via setter or directly */
             else
             {
-                var _final_value = _value;
-                
-                
-                if (is_struct(_value) && struct_exists(_value, "color"))
+                if !(ui_set_element_property(_element, _key, _value))
                 {
-                    _final_value = _value.color;
-                }
-                
-                
-                var _setter_name = "set_" + _key;
-                
-                
-                if (struct_exists(_element, _setter_name))
-                {
-                    var _setter = _element[$ _setter_name];
-                    
-                    
-                    if (is_callable(_setter))
-                    {
-                        var _m = method(_element, _setter);
-                        
-                        _m(_final_value);
-                    }
-                }
-                else if (struct_exists(_element, _key))
-                {
-                    _element[$ _key] = _final_value;
+                    ui_warn($"unknown property '{_key}' on @{_element.element_type}({_element.element_name})");
                 }
             }
             break;
@@ -1523,6 +1629,34 @@ function ui_refresh_element(_element)
 }
 
 
+/* get the current ui mouse x in logical ui coordinates */
+function ui_get_mouse_x()
+{
+    if (variable_global_exists("gui_mouse_x"))
+    {
+        return global.gui_mouse_x;
+    }
+
+    var _scale = ui_get_base_scale();
+
+    return window_mouse_get_x() / max(_scale.x, 0.0001);
+}
+
+
+/* get the current ui mouse y in logical ui coordinates */
+function ui_get_mouse_y()
+{
+    if (variable_global_exists("gui_mouse_y"))
+    {
+        return global.gui_mouse_y;
+    }
+
+    var _scale = ui_get_base_scale();
+
+    return window_mouse_get_y() / max(_scale.y, 0.0001);
+}
+
+
 /* refresh all bindings in a ui instance */
 function ui_refresh(_instance)
 {
@@ -1627,6 +1761,75 @@ function ui_instance_destroy(_instance)
     
     /* remove from registry */
     struct_remove(global.ui_instances, string(_instance.id));
+}
+
+
+/* parse and instantiate a ui file, returning recorded warnings */
+function ui_smoke_file(_path)
+{
+    var _normalized_path = ui_normalize_path(_path);
+    var _previous_issues = variable_global_exists("ui_warning_issues") ? global.ui_warning_issues : undefined;
+
+    global.ui_warning_issues = [];
+
+    ui_invalidate_definition(_normalized_path);
+
+    var _def = ui_load(_normalized_path);
+    var _instance = undefined;
+
+    if (_def != undefined)
+    {
+        if (!variable_global_exists("gui_root")) || (global.gui_root == undefined)
+        {
+            global.gui_root = ui_create_root();
+            global.gui_root.element_name = "gui_root";
+        }
+
+        _instance = ui_spawn(_def, {
+            link: {},
+            parent: global.gui_root
+        });
+
+        if (_instance != undefined)
+        {
+            ui_destroy(_instance);
+        }
+    }
+    else
+    {
+        array_push(global.ui_warning_issues, $"failed to load '{_normalized_path}'");
+    }
+
+    var _issues = global.ui_warning_issues;
+
+    global.ui_warning_issues = _previous_issues;
+
+    return {
+        path: _normalized_path,
+        loaded: (_def != undefined),
+        issues: _issues,
+        issue_count: array_length(_issues)
+    };
+}
+
+
+/* iterate every .ui file in resources/data/ui and report parser/runtime warnings */
+function ui_smoke_all_files()
+{
+    var _files = file_read_directory("resources/data/ui", true);
+    var _results = [];
+    var _file_count = array_length(_files);
+
+    for (var i = 0; i < _file_count; ++i)
+    {
+        var _file = _files[i];
+
+        if !(string_ends_with(_file, ".ui")) continue;
+
+        array_push(_results, ui_smoke_file($"ui/{_file}"));
+    }
+
+    return _results;
 }
 
 /* create a root UI element matching current window aspect ratio (base height 540) */

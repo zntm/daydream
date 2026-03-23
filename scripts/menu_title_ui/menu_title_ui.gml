@@ -17,14 +17,7 @@ function menu_title_ui_load()
 	}
 	
 	/* cache reload */
-	if (variable_global_exists("ui_definitions"))
-	{
-		var _full_path = "resources/data/ui/menu/title.ui";
-		if (struct_exists(global.ui_definitions, _full_path))
-		{
-			struct_remove(global.ui_definitions, _full_path);
-		}
-	}
+	ui_invalidate_definition("ui/menu/title.ui");
 	
 	var _def = ui_load("ui/menu/title.ui");
 	

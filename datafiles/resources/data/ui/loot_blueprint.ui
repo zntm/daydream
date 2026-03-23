@@ -61,13 +61,13 @@ var _spacing = 6
             @button(add_btn) {
                 text = "Add Entry"
                 size = (120, 28)
-                on_select_release = "@phantasia:blueprint/add_loot_entry"
+                on_select_release = @"phantasia:blueprint/add_loot_entry"
             }
             
             @button(export_btn) {
                 text = "Export"
                 size = (120, 28)
-                on_select_release = "@phantasia:blueprint/export_loot"
+                on_select_release = @"phantasia:blueprint/export_loot"
             }
         }
     }

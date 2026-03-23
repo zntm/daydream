@@ -57,6 +57,11 @@ if (variable_global_exists("gui_root")) && (global.gui_root != undefined) && (!_
 	ui_clear_events();
 }
 
+if (variable_global_exists("ui_settings_rebind"))
+{
+	menu_settings_ui_step_rebind();
+}
+
 /* ui editor toggle (dev mode only) */
 if (IS_DEVELOPER_MODE)
 {

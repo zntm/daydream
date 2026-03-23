@@ -27,6 +27,15 @@ Elements are declared with `@type(name)` followed by a block of properties and c
 | `@slot` | Inventory slot with item display |
 | `@text` | Text label |
 | `@button` | Interactive button element |
+| `@textbox` | Single-line text input |
+| `@slider` | Interactive numeric slider |
+| `@dropdown` | Expandable option selector |
+| `@scroll_area` | Scrollable container |
+| `@radio_button` | Toggle/radio control |
+| `@window` | Movable window container |
+| `@popup` | Modal overlay container |
+| `@line` | Straight line primitive |
+| `@line_path` | Multi-point line/path primitive |
 
 ## Properties
 
@@ -51,7 +60,10 @@ Properties are set with `key = value` syntax inside an element block.
 | `slot_index` | number | Index of the inventory slot |
 | `source` | sprite | Image source for `@image` elements |
 | `value` | number/binding | Current value for `@bar` elements |
-| `max` | number/binding | Maximum value for `@bar` elements |
+| `min_value` / `min` | number/binding | Minimum value for bars and sliders |
+| `max_value` / `max` | number/binding | Maximum value for bars and sliders |
+| `selected` | bool/number | Selected state or dropdown index |
+| `choices` | tuple/binding | Dropdown options |
 | `sprite_fill` | sprite | Fill sprite for bars |
 | `sprite_empty` | sprite | Empty/background sprite for bars |
 | `icon_sprite` | string | Sprite name for slot icons |

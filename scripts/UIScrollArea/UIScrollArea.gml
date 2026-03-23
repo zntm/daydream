@@ -87,10 +87,10 @@ function UIScrollArea(_x, _y, _width, _height) : UIElement(_x, _y, _width, _heig
         var _abs_y = get_absolute_y();
         
         
-        var _track_x = (_abs_x + width - scrollbar_width) * _base_scale.x;
-        var _track_y = _abs_y * _base_scale.y;
-        var _track_w = scrollbar_width * _base_scale.x;
-        var _track_h = height * _base_scale.y;
+        var _track_x = _abs_x + width - scrollbar_width;
+        var _track_y = _abs_y;
+        var _track_w = scrollbar_width;
+        var _track_h = height;
         
         
         return { x: _track_x, y: _track_y, w: _track_w, h: _track_h }
@@ -112,7 +112,7 @@ function UIScrollArea(_x, _y, _width, _height) : UIElement(_x, _y, _width, _heig
         
         
         var _thumb_ratio = min(1, height / content_height);
-        var _thumb_h = max(10 * _base_scale.y, _track.h * _thumb_ratio);
+        var _thumb_h = max(10, _track.h * _thumb_ratio);
         
         var _scroll_ratio = (_max_scroll > 0) ? (scroll_offset / _max_scroll) : 0;
         var _thumb_y = _track.y + (_track.h - _thumb_h) * _scroll_ratio;
@@ -144,14 +144,14 @@ function UIScrollArea(_x, _y, _width, _height) : UIElement(_x, _y, _width, _heig
         var _abs_y = get_interaction_y();
         
         
-        var _mx = window_mouse_get_x();
-        var _my = window_mouse_get_y();
+        var _mx = ui_get_mouse_x();
+        var _my = ui_get_mouse_y();
         
         
-        var _left = _abs_x * _base_scale.x;
-        var _top = _abs_y * _base_scale.y;
-        var _right = _left + (width * _base_scale.x);
-        var _bottom = _top + (height * _base_scale.y);
+        var _left = _abs_x;
+        var _top = _abs_y;
+        var _right = _left + width;
+        var _bottom = _top + height;
         
         
         var _is_hovering = (_mx >= _left && _mx <= _right && _my >= _top && _my <= _bottom);
@@ -307,14 +307,14 @@ function UIScrollArea(_x, _y, _width, _height) : UIElement(_x, _y, _width, _heig
             
             
             /* track */
-            draw_rectangle_colour(_track.x, _track.y, _track.x + _track.w, _track.y + _track.h, scrollbar_color, scrollbar_color, scrollbar_color, scrollbar_color, false);
+            draw_rectangle_colour(_track.x * _base_scale.x, _track.y * _base_scale.y, (_track.x + _track.w) * _base_scale.x, (_track.y + _track.h) * _base_scale.y, scrollbar_color, scrollbar_color, scrollbar_color, scrollbar_color, false);
             
             
             /* thumb */
             var _handle_col = (is_scrollbar_hovered || is_scrollbar_dragging) ? scrollbar_handle_hover_color : scrollbar_handle_color;
             
             
-            draw_rectangle_colour(_thumb.x, _thumb.y, _thumb.x + _thumb.w, _thumb.y + _thumb.h, _handle_col, _handle_col, _handle_col, _handle_col, false);
+            draw_rectangle_colour(_thumb.x * _base_scale.x, _thumb.y * _base_scale.y, (_thumb.x + _thumb.w) * _base_scale.x, (_thumb.y + _thumb.h) * _base_scale.y, _handle_col, _handle_col, _handle_col, _handle_col, false);
         }
     }
 }

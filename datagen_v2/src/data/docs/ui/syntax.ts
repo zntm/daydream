@@ -33,7 +33,7 @@ export const syntax = new Doc("UI Syntax")
     .add("### `$sprite(name)` — Sprite Reference\n\nResolves a sprite asset by name:\n\n```\nsprite_index = $sprite(spr_Menu_Button_Main)\nicon = $sprite(spr_Inventory_Icon) {\n    image_index = 3\n}\n```")
     .add("### `$surface(name)` — Surface Reference\n\nResolves a named surface at runtime:\n\n```\nsource = $surface(surf_world)\n```")
     .add("### `$\"key\"` — Localization Key\n\nLooks up a localized string:\n\n```\ntext = $\"menu.play\"\n```")
-    .add("### `@\"script_id\"` — Script Reference\n\nReferences a proglang script by ID:\n\n```\non_select = @\"my_mod:on_play_pressed\"\n```")
+    .add("### `@\"script_id\"` — Script Reference\n\nReferences a proglang script by ID. Event handlers use canonical `on_* = @\"namespace:script\"` syntax:\n\n```\non_select = @\"my_mod:on_play_pressed\"\n```")
     .add("### `*binding` — Data Binding\n\nBinds to the link context:\n\n```\ntext = *player_name\n```")
     .section("ORIGIN Constants")
     .table(["Constant", "Anchor"], (t: Table) => {

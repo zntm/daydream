@@ -168,13 +168,26 @@ if (is_opened & (WORLD_OPENED_BOOL.PAUSE | WORLD_OPENED_BOOL.EXIT))
         gpu_set_texfilter(false);
     }
 
+    global.ui_hover_consumed = false;
+    global.ui_input_consumed = false;
+
+    if (variable_global_exists("ui_settings_rebind")) && (global.ui_settings_rebind != undefined)
+    {
+        ui_update(global.ui_settings_rebind.instance);
+        ui_draw(global.ui_settings_rebind.instance);
+    }
+
+    if (variable_instance_exists(id, "ui_pause_settings")) && (ui_pause_settings != undefined)
+    {
+        ui_update(ui_pause_settings);
+        ui_draw(ui_pause_settings);
+    }
+
     /* draw pause ui buttons */
     if (variable_instance_exists(id, "ui_pause")) && (ui_pause != undefined)
     {
-        global.ui_hover_consumed = false;
-        global.ui_input_consumed = false;
-
         ui_update(ui_pause);
+        ui_draw(ui_pause);
     }
 
     ui_editor_draw();

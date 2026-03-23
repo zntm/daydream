@@ -56,25 +56,20 @@ function UIWindow(_x, _y, _width, _height, _title = "") : UIElement(_x, _y, _wid
         var _abs_y = get_absolute_y();
         
         
-        var _base_scale = ui_get_base_scale();
-        var _base_scale_x = _base_scale.x;
-        var _base_scale_y = _base_scale.y;
-        
-        
-        var _mx = window_mouse_get_x();
-        var _my = window_mouse_get_y();
+        var _mx = ui_get_mouse_x();
+        var _my = ui_get_mouse_y();
         
         
         /* handle dragging */
         if (movable) 
         {
-            var _title_left = _abs_x * _base_scale_x;
-            var _title_top = _abs_y * _base_scale_y;
-            var _title_right = _title_left + (width * _base_scale_x);
-            var _title_bottom = _title_top + (title_height * _base_scale_y);
+            var _title_left = _abs_x;
+            var _title_top = _abs_y;
+            var _title_right = _title_left + width;
+            var _title_bottom = _title_top + title_height;
             
             
-            if (mouse_check_button_pressed(mb_left)) 
+            if !(global.ui_input_consumed) && (mouse_check_button_pressed(mb_left))
             {
                 if (_mx >= _title_left && _mx <= _title_right && _my >= _title_top && _my <= _title_bottom) 
                 {
@@ -82,6 +77,8 @@ function UIWindow(_x, _y, _width, _height, _title = "") : UIElement(_x, _y, _wid
                     
                     drag_offset_x = _mx - _title_left;
                     drag_offset_y = _my - _title_top;
+
+                    global.ui_input_consumed = true;
                     
                     sfx_play("phantasia:sfx/menu/button/select");
                 }
@@ -96,8 +93,8 @@ function UIWindow(_x, _y, _width, _height, _title = "") : UIElement(_x, _y, _wid
             
             if (is_dragging) 
             {
-                x = (_mx - drag_offset_x) / _base_scale_x;
-                y = (_my - drag_offset_y) / _base_scale_y;
+                x = _mx - drag_offset_x;
+                y = _my - drag_offset_y;
             }
         }
         

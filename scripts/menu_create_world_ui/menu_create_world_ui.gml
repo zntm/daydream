@@ -18,14 +18,7 @@ function menu_create_world_ui_load()
 	
 	
 	/* reload definition if it exists in cache */
-	if (variable_global_exists("ui_definitions"))
-	{
-		var _full_path = "resources/data/ui/menu/create_world.ui";
-		if (struct_exists(global.ui_definitions, _full_path))
-		{
-			struct_remove(global.ui_definitions, _full_path);
-		}
-	}
+	ui_invalidate_definition("ui/menu/create_world.ui");
 	
 	
 	var _def = ui_load("ui/menu/create_world.ui");

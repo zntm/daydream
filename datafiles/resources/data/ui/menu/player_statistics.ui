@@ -1,0 +1,30 @@
+// player statistics popup
+
+@popup(player_statistics_popup) {
+    size = (640, 420)
+    position = ORIGIN_CENTER
+
+    @button(btn_back) {
+        position = ORIGIN_TOP_LEFT + (24, 24)
+        size = (88, 32)
+        text = "Back"
+    }
+
+    @text(label_title) {
+        position = ORIGIN_TOP_CENTER + (0, 36)
+        text = "Statistics"
+        text_scale = 1.35
+    }
+
+    @scroll_area(stats_scroll) {
+        position = ORIGIN_TOP_LEFT + (40, 88)
+        size = (560, 296)
+
+        @area(stats_list) {
+            position = ORIGIN_TOP_LEFT
+            size = (540, 296)
+            layout = LAYOUT_VERTICAL
+            spacing = 8
+        }
+    }
+}
