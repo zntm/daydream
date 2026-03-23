@@ -10,7 +10,7 @@ function tile_get(_x, _y, _z, _world_height = global.world_data[$ global.current
     
     var _chunk = chunk_map_get_by_tile(_x, _y);
     
-    if (_chunk == undefined)
+    if (_chunk == undefined) || !(_chunk.boolean & CHUNK_BOOL.GENERATED)
     {
         return tile_predict(_x, _y, _z);
     }

@@ -142,6 +142,8 @@ function chunk_tile_process_queue_process()
                 }
             }
         }
+
+        chunk_refresh_adjacent_connections(_chunk);
         
         // Mark chunk as ready for rendering
         _chunk.boolean |= CHUNK_BOOL.TILE_PROCESSED;

@@ -25,19 +25,23 @@ function render_chunk(_page, _position, _texel_width, _texel_height, _inst, _z)
     var _last_local = CHUNK_SIZE - 1;
     var _last_row_offset = _last_local << CHUNK_SIZE_BIT;
 
-    var _neighbor = chunk_map_get_by_tile(_chunk_tile_x - 1, _chunk_tile_y);
+    var _neighbor = chunk_map_get_by_tile(_chunk_tile_x - CHUNK_SIZE, _chunk_tile_y);
+    if (_neighbor != undefined) && !(_neighbor.boolean & CHUNK_BOOL.GENERATED) _neighbor = undefined;
     __neighbor_tiles[@ 0] = (_neighbor != undefined) ? _neighbor.chunk : undefined;
     __neighbor_occluded[@ 0] = (_neighbor != undefined) ? _neighbor.chunk_occluded : undefined;
 
-    _neighbor = chunk_map_get_by_tile(_chunk_tile_x + 1, _chunk_tile_y);
+    _neighbor = chunk_map_get_by_tile(_chunk_tile_x + CHUNK_SIZE, _chunk_tile_y);
+    if (_neighbor != undefined) && !(_neighbor.boolean & CHUNK_BOOL.GENERATED) _neighbor = undefined;
     __neighbor_tiles[@ 1] = (_neighbor != undefined) ? _neighbor.chunk : undefined;
     __neighbor_occluded[@ 1] = (_neighbor != undefined) ? _neighbor.chunk_occluded : undefined;
 
-    _neighbor = chunk_map_get_by_tile(_chunk_tile_x, _chunk_tile_y - 1);
+    _neighbor = chunk_map_get_by_tile(_chunk_tile_x, _chunk_tile_y - CHUNK_SIZE);
+    if (_neighbor != undefined) && !(_neighbor.boolean & CHUNK_BOOL.GENERATED) _neighbor = undefined;
     __neighbor_tiles[@ 2] = (_neighbor != undefined) ? _neighbor.chunk : undefined;
     __neighbor_occluded[@ 2] = (_neighbor != undefined) ? _neighbor.chunk_occluded : undefined;
 
-    _neighbor = chunk_map_get_by_tile(_chunk_tile_x, _chunk_tile_y + 1);
+    _neighbor = chunk_map_get_by_tile(_chunk_tile_x, _chunk_tile_y + CHUNK_SIZE);
+    if (_neighbor != undefined) && !(_neighbor.boolean & CHUNK_BOOL.GENERATED) _neighbor = undefined;
     __neighbor_tiles[@ 3] = (_neighbor != undefined) ? _neighbor.chunk : undefined;
     __neighbor_occluded[@ 3] = (_neighbor != undefined) ? _neighbor.chunk_occluded : undefined;
 

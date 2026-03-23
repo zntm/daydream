@@ -185,10 +185,10 @@ function tile_place(_x, _y, _z, _tile)
         var _tx = _chunk.chunk_xstart;
         var _ty = _chunk.chunk_ystart;
         
-        var _n_left  = (_local_x == 0) ? chunk_map_get_by_tile(_tx - 1, _ty) : undefined;
-        var _n_right = (_local_x == CHUNK_SIZE - 1) ? chunk_map_get_by_tile(_tx + 1, _ty) : undefined;
-        var _n_up    = (_local_y == 0) ? chunk_map_get_by_tile(_tx,     _ty - 1) : undefined;
-        var _n_down  = (_local_y == CHUNK_SIZE - 1) ? chunk_map_get_by_tile(_tx,     _ty + 1) : undefined;
+        var _n_left  = (_local_x == 0) ? chunk_map_get_by_tile(_tx - CHUNK_SIZE, _ty) : undefined;
+        var _n_right = (_local_x == CHUNK_SIZE - 1) ? chunk_map_get_by_tile(_tx + CHUNK_SIZE, _ty) : undefined;
+        var _n_up    = (_local_y == 0) ? chunk_map_get_by_tile(_tx,     _ty - CHUNK_SIZE) : undefined;
+        var _n_down  = (_local_y == CHUNK_SIZE - 1) ? chunk_map_get_by_tile(_tx,     _ty + CHUNK_SIZE) : undefined;
         
         var _neighbor_list = [_n_left, _n_right, _n_up, _n_down];
         

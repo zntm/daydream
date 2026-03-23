@@ -12,7 +12,12 @@ function tile_condition_connected(_x, _y, _z, _id, _data, _item_data, _world_hei
 		return true;
 	}
     
-    var _data2 = _item_data[$ _id];
+    var _data2 = _item_data[$ _tile.get_id()];
+
+    if (_data2 == undefined)
+    {
+        return false;
+    }
 	
 	return _data.has_type(_data2.get_type());
 }

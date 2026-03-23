@@ -39,6 +39,123 @@ function worldgen_context_ensure()
     return global.worldgen_context;
 }
 
+function chunk_refresh_connection_range(_chunk, _xstart, _ystart, _xend, _yend)
+{
+    if (_chunk == undefined) exit;
+    if !(_chunk.boolean & CHUNK_BOOL.GENERATED) exit;
+    if (_chunk.chunk_display == 0) exit;
+
+    var _chunk_array = _chunk.chunk;
+    var _chunk_display = _chunk.chunk_display;
+
+    for (var _tile_z = 0; _tile_z < CHUNK_DEPTH; ++_tile_z)
+    {
+        if !(_chunk_display & (1 << _tile_z)) continue;
+
+        var _updated = false;
+
+        for (var _world_y = _ystart; _world_y <= _yend; ++_world_y)
+        {
+            for (var _world_x = _xstart; _world_x <= _xend; ++_world_x)
+            {
+                var _tile = _chunk_array[tile_index_xyz(_world_x, _world_y, _tile_z)];
+
+                if (_tile == TILE_EMPTY) continue;
+
+                tile_connect(_world_x, _world_y, _tile_z, _tile);
+                _updated = true;
+            }
+        }
+
+        if (_updated)
+        {
+            var _vertex_buffer = _chunk.chunk_vertex_buffer[_tile_z];
+
+            if (vertex_buffer_exists(_vertex_buffer))
+            {
+                vertex_delete_buffer(_vertex_buffer);
+            }
+
+            _chunk.chunk_vertex_buffer[@ _tile_z] = -1;
+        }
+    }
+}
+
+function chunk_refresh_adjacent_connections(_chunk)
+{
+    if (_chunk == undefined) exit;
+
+    var _chunk_xstart = _chunk.chunk_xstart;
+    var _chunk_ystart = _chunk.chunk_ystart;
+    var _chunk_xleft = _chunk_xstart - CHUNK_SIZE;
+    var _chunk_xright = _chunk_xstart + CHUNK_SIZE;
+    var _chunk_yup = _chunk_ystart - CHUNK_SIZE;
+    var _chunk_ydown = _chunk_ystart + CHUNK_SIZE;
+    var _neighbor = undefined;
+    var _neighbor_x = 0;
+    var _neighbor_y = 0;
+
+    _neighbor = chunk_map_get_by_tile(_chunk_xleft, _chunk_ystart);
+    if (_neighbor != undefined)
+    {
+        _neighbor_x = _neighbor.chunk_xstart + CHUNK_SIZE - 1;
+        chunk_refresh_connection_range(_neighbor, _neighbor_x, _neighbor.chunk_ystart, _neighbor_x, _neighbor.chunk_ystart + CHUNK_SIZE - 1);
+    }
+
+    _neighbor = chunk_map_get_by_tile(_chunk_xright, _chunk_ystart);
+    if (_neighbor != undefined)
+    {
+        _neighbor_x = _neighbor.chunk_xstart;
+        chunk_refresh_connection_range(_neighbor, _neighbor_x, _neighbor.chunk_ystart, _neighbor_x, _neighbor.chunk_ystart + CHUNK_SIZE - 1);
+    }
+
+    _neighbor = chunk_map_get_by_tile(_chunk_xstart, _chunk_yup);
+    if (_neighbor != undefined)
+    {
+        _neighbor_y = _neighbor.chunk_ystart + CHUNK_SIZE - 1;
+        chunk_refresh_connection_range(_neighbor, _neighbor.chunk_xstart, _neighbor_y, _neighbor.chunk_xstart + CHUNK_SIZE - 1, _neighbor_y);
+    }
+
+    _neighbor = chunk_map_get_by_tile(_chunk_xstart, _chunk_ydown);
+    if (_neighbor != undefined)
+    {
+        _neighbor_y = _neighbor.chunk_ystart;
+        chunk_refresh_connection_range(_neighbor, _neighbor.chunk_xstart, _neighbor_y, _neighbor.chunk_xstart + CHUNK_SIZE - 1, _neighbor_y);
+    }
+
+    _neighbor = chunk_map_get_by_tile(_chunk_xleft, _chunk_yup);
+    if (_neighbor != undefined)
+    {
+        _neighbor_x = _neighbor.chunk_xstart + CHUNK_SIZE - 1;
+        _neighbor_y = _neighbor.chunk_ystart + CHUNK_SIZE - 1;
+        chunk_refresh_connection_range(_neighbor, _neighbor_x, _neighbor_y, _neighbor_x, _neighbor_y);
+    }
+
+    _neighbor = chunk_map_get_by_tile(_chunk_xright, _chunk_yup);
+    if (_neighbor != undefined)
+    {
+        _neighbor_x = _neighbor.chunk_xstart;
+        _neighbor_y = _neighbor.chunk_ystart + CHUNK_SIZE - 1;
+        chunk_refresh_connection_range(_neighbor, _neighbor_x, _neighbor_y, _neighbor_x, _neighbor_y);
+    }
+
+    _neighbor = chunk_map_get_by_tile(_chunk_xleft, _chunk_ydown);
+    if (_neighbor != undefined)
+    {
+        _neighbor_x = _neighbor.chunk_xstart + CHUNK_SIZE - 1;
+        _neighbor_y = _neighbor.chunk_ystart;
+        chunk_refresh_connection_range(_neighbor, _neighbor_x, _neighbor_y, _neighbor_x, _neighbor_y);
+    }
+
+    _neighbor = chunk_map_get_by_tile(_chunk_xright, _chunk_ydown);
+    if (_neighbor != undefined)
+    {
+        _neighbor_x = _neighbor.chunk_xstart;
+        _neighbor_y = _neighbor.chunk_ystart;
+        chunk_refresh_connection_range(_neighbor, _neighbor_x, _neighbor_y, _neighbor_x, _neighbor_y);
+    }
+}
+
 /// Chunk state flags
 enum CHUNK_BOOL {
     GENERATED                = 1 << 0,
@@ -196,6 +313,7 @@ function ChunkPool() : Pool() constructor
     {
         // Unregister from map
         chunk_map_unregister(_chunk);
+        chunk_refresh_adjacent_connections(_chunk);
         
         // Clear tile array refs efficiently to prevent "GC bombs" on chunk collection
         array_fill(_chunk.chunk, 0, array_length(_chunk.chunk), TILE_EMPTY);
