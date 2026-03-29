@@ -5,27 +5,22 @@
 /// @returns {Constant.colour|Real} The last colour found, or current draw colour if none
 function cuteify_get_colour(_string, _asset_prefix = "")
 {
-    var _parsed = cuteify_parse(_string, _asset_prefix);
-    var _data = _parsed.data;
-    var _index2 = _parsed.line_count;
+    var _ast = cuteify_get(_string, _asset_prefix);
     
     var _colour = draw_get_colour();
     
-    for (var i = 0; i <= _index2; ++i)
+    for (var i = 0; i <= _ast.line_count; ++i)
     {
-        var _data_current = _data[i];
-        var _length = array_length(_data_current);
+        var _line_nodes = _ast.lines[i];
+        var _node_count = array_length(_line_nodes);
         
-        for (var j = 0; j < _length; ++j)
+        for (var j = 0; j < _node_count; ++j)
         {
-            var _ = _data_current[j];
+            var _node = _line_nodes[j];
             
-            var _text = _[0];
-            var _type = _[1];
-            
-            if (_type == CUTEIFY_TYPE.COLOUR)
+            if (_node.type == CUTEIFY_NODE.COLOUR)
             {
-                _colour = _text;
+                _colour = _node.value;
             }
         }
     }

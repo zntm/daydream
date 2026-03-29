@@ -29,7 +29,7 @@ function debug_init()
             time_speed: 1,
             noclip: false,
             auto_reload_data: false
-        };
+        }
     }
     
     /* destroy existing debug view on restart to prevent duplicates */
@@ -151,7 +151,7 @@ function debug_init()
         sys_cpu_usage:    0,
         proc_cpu_usage:   0,
         gpu_usage:        0
-    };
+    }
     
     global.debug_sysinfo_index = 0;
     global.debug_sysinfo_text  = "";

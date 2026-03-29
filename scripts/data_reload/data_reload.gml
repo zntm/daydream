@@ -6,18 +6,18 @@ function data_reload()
     var _namespace = "phantasia";
     var _res       = PROGRAM_DIRECTORY_RESOURCES;
 
-    global.item_data       = {};
-    global.creature_data   = {};
-    global.biome_data      = {};
-    global.world_data      = {};
+    global.item_data       = {}
+    global.creature_data   = {}
+    global.biome_data      = {}
+    global.world_data      = {}
     global.crafting_data   = [];
     global.crafting_stations = [];
-    global.region_data     = {};
-    global.tag_data        = {};
-    global.effect_data     = {};
-    global.projectile_data = {};
-    global.particle_data   = {};
-    global.loot_data       = {};
+    global.region_data     = {}
+    global.tag_data        = {}
+    global.effect_data     = {}
+    global.projectile_data = {}
+    global.particle_data   = {}
+    global.loot_data       = {}
 
     /* NOTE: drops pending list must be cleared before re-running init_item */
     global.__item_drops_pending = [];
@@ -81,7 +81,7 @@ function data_reload_watch_init(_extra_directories = [])
         array_push(_dirs, _extra_directories[i]);
     }
 
-    global.__data_watch       = {};
+    global.__data_watch       = {}
     global.__data_watch_dirs  = _dirs;
     global.__data_watch_timer = 0;
 
@@ -140,7 +140,7 @@ function data_reload_watch_step()
 /// and stores MD5 hashes in global.__data_watch.
 function __data_reload_watch_hash_all()
 {
-    global.__data_watch = {};
+    global.__data_watch = {}
 
     var _dirs = global.__data_watch_dirs;
 

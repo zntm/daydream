@@ -61,7 +61,7 @@ global.inventory_selected_hotbar  = 0;
 global.inventory_selected_backpack = {
     index: -1,
     type:  undefined
-};
+}
 global.inventory_selected_hover = noone;
 
 surface_lighting   = -1;
@@ -109,7 +109,7 @@ surface_inventory = {
         surface_item: -1,
         surface_slot: -1
     }
-};
+}
 
 chunk_saved_count     = 0;
 chunk_saved_count_max = 0;
@@ -171,7 +171,7 @@ if (global.network_role != RELAY_ROLE.CLIENT)
     open_simplex_noise_seed(global.current_world.seed);
 }
 
-item_cooldown  = {};
+item_cooldown  = {}
 menu_instance  = [];
 
 control_game_menu_hide_instances();
@@ -181,7 +181,7 @@ if (IS_DEVELOPER_MODE)
     debug_init();
 }
 
-global.command_value = {};
+global.command_value = {}
 
 chat_message               = "";
 chat_message_history_index = 0;
@@ -220,7 +220,7 @@ if (global.relay == undefined) || (global.relay.role == RELAY_ROLE.NONE)
 timer_network_sync = 0;
 timer_auto_backup  = file_backup_get_interval_seconds(global.current_world);
 
-global.async_save_map = {};
+global.async_save_map = {}
 
 inventory_give(obj_Player.x, obj_Player.y, new Inventory("phantasia:copper_bow", 1));
 inventory_give(obj_Player.x, obj_Player.y, new Inventory("phantasia:arrow", 999));

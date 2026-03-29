@@ -1,4 +1,4 @@
-global.loot_data = {};
+global.loot_data = {}
 
 function init_loot(_namespace = "phantasia", _directory)
 {
@@ -37,7 +37,7 @@ function init_loot(_namespace = "phantasia", _directory)
                     var _entry  = _entries[k];
                     var _parsed = {
                         weight: _entry[$ "weight"] ?? 1
-                    };
+                    }
 
                     if (struct_exists(_entry, "item"))
                     {
@@ -49,7 +49,7 @@ function init_loot(_namespace = "phantasia", _directory)
                             _parsed.item = {
                                 id:     _item_id,
                                 amount: smart_value_parse(_item[$ "amount"])
-                            };
+                            }
 
                             array_push(_entries_parsed, _parsed);
                         }

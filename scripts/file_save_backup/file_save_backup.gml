@@ -4,7 +4,7 @@ function file_backup_get_interval_seconds(_world)
 {
     if (_world == undefined) return 0;
 
-    var _backup = _world[$ "backup"] ?? {};
+    var _backup = _world[$ "backup"] ?? {}
     var _minutes = max(0, round(_backup[$ "interval_minutes"] ?? 0));
 
     return _minutes * 60;
@@ -14,7 +14,7 @@ function file_backup_get_slots(_world)
 {
     if (_world == undefined) return 0;
 
-    var _backup = _world[$ "backup"] ?? {};
+    var _backup = _world[$ "backup"] ?? {}
 
     return max(0, round(_backup[$ "slots"] ?? 0));
 }

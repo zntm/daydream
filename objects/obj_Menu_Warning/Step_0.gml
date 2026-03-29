@@ -24,7 +24,7 @@ if (!variable_instance_exists(id, "ui_warning")) || (ui_warning == undefined)
         var _warning_link = {
             header: method(id, function() { return text_header; }),
             description: method(id, function() { return text_description; })
-        };
+        }
 
         ui_warning = ui_spawn(_warning_def, {
             link: _warning_link,

@@ -68,7 +68,7 @@ function spawn_creature(_x, _y, _id, _variant)
         {
             creature_inventory = {
                 base: [new Inventory(_default_item, 1)]
-            };
+            }
             creature_hotbar_index = 0;
         }
         else

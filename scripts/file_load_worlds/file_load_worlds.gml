@@ -42,7 +42,7 @@ function file_load_worlds()
         var _backup      = {
             interval_minutes: round(BACKUP_INTERVAL_SECONDS / 60),
             slots: 0
-        };
+        }
 
         if (buffer_tell(_buffer) < buffer_get_size(_buffer))
         {

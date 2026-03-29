@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"cuteify_cache",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"cuteify_cache",
+  "parent":{
+    "name":"Cuteify",
+    "path":"folders/Scripts/Cuteify.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -1809,7 +1809,7 @@ function ui_smoke_file(_path)
         loaded: (_def != undefined),
         issues: _issues,
         issue_count: array_length(_issues)
-    };
+    }
 }
 
 

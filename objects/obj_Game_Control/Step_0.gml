@@ -122,7 +122,7 @@ if (IS_ENABLED_BACKUP)
                 {
                     ui_saving_link = {
                         is_visible: true
-                    };
+                    }
 
                     ui_saving = ui_spawn(_saving_def, {
                         link:   ui_saving_link,

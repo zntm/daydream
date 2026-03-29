@@ -43,7 +43,7 @@ function control_gametick(_delta_time)
                     }
                     
                     hp     = hp_max;
-                    effects = {};
+                    effects = {}
                     
                     timer_immunity = 3;
                     

@@ -868,7 +868,7 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
             return {
                 heat: 0,
                 humidity: 0
-            };
+            }
         }
         
         var _gen    = ___region_generator;
@@ -877,7 +877,7 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
         return {
             heat: region_gen_sample_heat(_warped[0], _warped[1], _gen.climate_scale),
             humidity: region_gen_sample_humidity(_warped[0], _warped[1], _gen.climate_scale)
-        };
+        }
     }
     
     static get_region_at = function(_x, _y, _seed)

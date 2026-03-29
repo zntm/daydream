@@ -43,7 +43,7 @@ function menu_popup_player_statistics(_data)
         _scroll.scroll_offset = 0;
     }
 
-    var _stats = _data.get_statistics() ?? {};
+    var _stats = _data.get_statistics() ?? {}
     var _categories = ["general", "blocks", "items", "mobs"];
     var _total_height = 0;
 

@@ -287,7 +287,7 @@ function menu_settings_ui_open_rebind(_setting_name, _button, _is_gamepad)
 		setting_name: _setting_name,
 		button: _button,
 		is_gamepad: _is_gamepad
-	};
+	}
 
 	var _title = ui_get(_instance, "label_title");
 	var _instruction = ui_get(_instance, "label_instruction");

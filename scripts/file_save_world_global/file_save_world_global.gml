@@ -1,6 +1,6 @@
 function file_write_world_global_data(_buffer, _current_world)
 {
-    var _backup = _current_world[$ "backup"] ?? {};
+    var _backup = _current_world[$ "backup"] ?? {}
 
     buffer_write(_buffer, buffer_string, _current_world.uuid);
     buffer_write(_buffer, buffer_string, _current_world.name);

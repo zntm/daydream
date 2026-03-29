@@ -35,7 +35,7 @@ function init_proglang_recursive(_directory, _namespace = "")
         if (_bytecode == undefined) continue;
 
         var _has_functions = false;
-        var _file_scope    = {};
+        var _file_scope    = {}
         var _constants     = _bytecode.constants;
 
         for (var j = array_length(_constants) - 1; j >= 0; --j)
@@ -413,7 +413,7 @@ function proglang_import_csv_records(_rows)
 
     for (var i = 1; i < _row_count; ++i)
     {
-        var _record = {};
+        var _record = {}
         var _row = _rows[i];
 
         for (var j = 0; j < _header_count; ++j)
@@ -431,7 +431,7 @@ function proglang_import_parse_ini(_text)
 {
     var _normalized = string_replace_all(string_replace_all(_text, "\r\n", "\n"), "\r", "\n");
     var _lines = string_split(_normalized, "\n");
-    var _root = {};
+    var _root = {}
     var _current = _root;
     var _line_count = array_length(_lines);
 
@@ -449,7 +449,7 @@ function proglang_import_parse_ini(_text)
 
             if (!struct_exists(_root, _section))
             {
-                _root[$ _section] = {};
+                _root[$ _section] = {}
             }
 
             _current = _root[$ _section];
@@ -543,7 +543,7 @@ function proglang_resolve_module_target(_module_path, _importer_path = "")
         resolved: _resolved,
         full_path: _full_path,
         extension: _extension
-    };
+    }
 }
 
 function proglang_load_data_module(_resolved, _full_path, _extension)
@@ -569,7 +569,7 @@ function proglang_load_data_module(_resolved, _full_path, _extension)
         path: _full_path,
         extension: _extension,
         text: _text
-    };
+    }
 
     switch (_extension)
     {

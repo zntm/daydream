@@ -34,7 +34,7 @@ function worldgen_context_ensure()
         sky_biome_id: _sky_id,
         sky_biome_data: global.biome_data[$ _sky_id],
         surface_start: _wd.get_surface_start()
-    };
+    }
 
     return global.worldgen_context;
 }

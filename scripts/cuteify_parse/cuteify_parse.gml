@@ -3,259 +3,267 @@ global.cuteify_data = {
     sad: spr_Null
 }
 
-/// @function cuteify_parse(_string, _asset_prefix)
-/// @desc Parses a cuteify-formatted string into structured data
-/// @param {String} _string The input string with formatting tags
-/// @param {String} _asset_prefix Prefix for asset lookups
+enum CUTEIFY_NODE {
+    TEXT,
+    COLOUR,
+    SPRITE,
+    FONT,
+    OBSTRUCT,
+    OBSTRUCT_END,
+    UNDERLINE,
+    UNDERLINE_END,
+    SHAKE,
+    SHAKE_END,
+    WAVE,
+    WAVE_END,
+    BOLD,
+    BOLD_END,
+    ITALIC,
+    ITALIC_END,
+    STRIKETHROUGH,
+    STRIKETHROUGH_END
+}
+
+/// @desc Parses a cuteify string into an AST with line width/height info
+/// @param {String} _string Input string
+/// @param {String} _asset_prefix Prefix for assets
 /// @returns {Struct}
 function cuteify_parse(_string, _asset_prefix = "")
 {
-    var _cuteify_data = global.cuteify_data;
+    var _tokens = cuteify_lex(_string);
+    var _token_count = array_length(_tokens);
     
-    static _bracket_open_width = undefined;
-    static _bracket_close_width = undefined;
+    var _lines = [[]]; // Array of arrays of nodes
+    var _curr_line = 0;
     
-    if (_bracket_open_width == undefined)
+    var _bold = false;
+    var _italic = false;
+    var _strikethrough = false;
+    var _underline = false;
+    var _obstruct = false;
+    
+    var _push_node = function(_lines_arr, _line_idx, _node)
     {
-        _bracket_open_width = string_width(CUTEIFY_BRACKET_OPEN);
-        _bracket_close_width = string_width(CUTEIFY_BRACKET_CLOSE);
+        array_push(_lines_arr[_line_idx], _node);
     }
     
-    static __data = function(_text, _type = CUTEIFY_TYPE.STRING)
+    var _i = 0;
+    while (_i < _token_count)
     {
-        return [ _text, _type ];
-    }
-    
-    var _string_width = [ 0 ];
-    var _data = [[]];
-    
-    var _index  = 0;
-    var _index2 = 0;
-    
-    var _string_length = string_length(_string);
-    var _slice_start = 1;
-    var _opened = false;
-    
-    for (var i = 1; i <= _string_length; ++i)
-    {
-        var _char = string_char_at(_string, i);
+        var _tok = _tokens[_i];
         
-        if (_char == CUTEIFY_BRACKET_OPEN)
+        switch (_tok.type)
         {
-            var _char_back_is_brace = (i > 1) && ((string_char_at(_string, i - 1) == CUTEIFY_BRACKET_OPEN) || (string_char_at(_string, i - 1) == CUTEIFY_BRACKET_CLOSE));
-            var _char_front_is_brace = (i < _string_length) && ((string_char_at(_string, i + 1) == CUTEIFY_BRACKET_OPEN) || (string_char_at(_string, i + 1) == CUTEIFY_BRACKET_CLOSE));
-            
-            if (i > _slice_start)
-            {
-                var _part = string_copy(_string, _slice_start, i - _slice_start);
+            case CUTEIFY_TOKEN.TEXT:
+                _push_node(_lines, _curr_line, { type: CUTEIFY_NODE.TEXT, value: _tok.value });
+                break;
                 
-                _data[@ _index2][@ _index] = __data(_part);
-                _string_width[@ _index2] += string_width(_part);
+            case CUTEIFY_TOKEN.NEWLINE:
+                _curr_line++;
+                _lines[@ _curr_line] = [];
+                break;
                 
-                ++_index;
-            }
-            
-            _slice_start = i + 1;
-            
-            var _is_text = false;
-            
-            _data[@ _index2][@ _index] = __data(CUTEIFY_BRACKET_OPEN);
-            _string_width[@ _index2] += _bracket_open_width;
-            
-            ++_index;
-            
-            continue;
-        }
-        
-        if (_char == "\n")
-        {
-            if (i > _slice_start)
-            {
-                var _part = string_copy(_string, _slice_start, i - _slice_start);
-                _data[@ _index2][@ _index] = __data(_part);
-                _string_width[@ _index2] += string_width(_part);
-                ++_index;
-            }
-            
-            _slice_start = i + 1;
-            
-            _index = 0;
-            _string_width[@ ++_index2] = 0;
-            _data[@ _index2] = [];
-            
-            continue;
-        }
-        
-        if (_char == ":") && (i < _string_length)
-        {
-            var _next_colon = 0;
-            for (var j = i + 1; j <= _string_length; ++j)
-            {
-                var _c = string_char_at(_string, j);
-                if (_c == ":") { _next_colon = j; break; }
-                if (_c == " ") || (_c == "\n") || (_c == CUTEIFY_BRACKET_OPEN) || (_c == CUTEIFY_BRACKET_CLOSE) break;
-            }
-            
-            if (_next_colon > i + 1)
-            {
-                var _tag_content = string_copy(_string, i + 1, _next_colon - i - 1);
+            case CUTEIFY_TOKEN.BOLD_DELIM:
+                _bold = !_bold;
+                _push_node(_lines, _curr_line, { type: _bold ? CUTEIFY_NODE.BOLD : CUTEIFY_NODE.BOLD_END, value: "**" });
+                break;
+                
+            case CUTEIFY_TOKEN.ITALIC_DELIM:
+                _italic = !_italic;
+                _push_node(_lines, _curr_line, { type: _italic ? CUTEIFY_NODE.ITALIC : CUTEIFY_NODE.ITALIC_END, value: "*" });
+                break;
+                
+            case CUTEIFY_TOKEN.UNDERLINE_DELIM:
+                _underline = !_underline;
+                _push_node(_lines, _curr_line, { type: _underline ? CUTEIFY_NODE.UNDERLINE : CUTEIFY_NODE.UNDERLINE_END, value: "__" });
+                break;
+                
+            case CUTEIFY_TOKEN.STRIKETHROUGH_DELIM:
+                _strikethrough = !_strikethrough;
+                _push_node(_lines, _curr_line, { type: _strikethrough ? CUTEIFY_NODE.STRIKETHROUGH : CUTEIFY_NODE.STRIKETHROUGH_END, value: "~~" });
+                break;
+                
+            case CUTEIFY_TOKEN.EMOTE:
+                var _emote_name = _tok.value;
                 var _emote = undefined;
                 
-                if (_cuteify_data != undefined)
+                if (variable_global_exists("cuteify_data"))
                 {
-                    _emote = _cuteify_data[$ $"{_asset_prefix}{_tag_content}"];
-                }
-                
-                if (_emote != undefined)
-                {
-                    if (i > _slice_start)
-                    {
-                        var _part = string_copy(_string, _slice_start, i - _slice_start);
-                        _data[@ _index2][@ _index] = __data(_part);
-                        _string_width[@ _index2] += string_width(_part);
-                        ++_index;
-                    }
-                    
-                    _data[@ _index2][@ _index] = __data(_emote, CUTEIFY_TYPE.SPRITE);
-                    
-                    var _norm = (string_height("I")) / sprite_get_height(_emote);
-                    _string_width[@ _index2] += sprite_get_width(_emote) * _norm;
-                    ++_index;
-                    
-                    i = _next_colon;
-                    _slice_start = i + 1;
-                    continue;
-                }
-            }
-        }
-        
-        if (_char == CUTEIFY_BRACKET_CLOSE) && (_index >= 1) && (string_ends_with(_data[_index2][_index - 1][0], CUTEIFY_BRACKET_OPEN))
-        {
-            var _tag_content = "";
-            
-            if (i > _slice_start)
-            {
-                _tag_content = string_copy(_string, _slice_start, i - _slice_start);
-            }
-            
-            _slice_start = i + 1;
-            
-            if (string_length(_tag_content) > 0)
-            {
-                var _type = CUTEIFY_TYPE.STRING;
-                var _string_colour = hex_parse(_tag_content, false);
-                var _processed_content = _tag_content;
-                
-                if (_string_colour != undefined)
-                {
-                    _processed_content = _string_colour;
-                    _type = CUTEIFY_TYPE.COLOUR;
-                }
-                else
-                {
-                    var _emote = undefined;
+                    var _cuteify_data = global.cuteify_data;
                     
                     if (_cuteify_data != undefined)
                     {
-                        _emote = _cuteify_data[$ $"{_asset_prefix}{_tag_content}"];
+                        _emote = _cuteify_data[$ $"{_asset_prefix}{_emote_name}"];
                     }
-                    else if (variable_global_exists("emote_data"))
-                    {
-                        _emote = global.emote_data[$ $"{_asset_prefix}{_tag_content}"];
-                    }
+                }
+                
+                if (_emote == undefined) && (variable_global_exists("emote_data"))
+                {
+                    _emote = global.emote_data[$ $"{_asset_prefix}{_emote_name}"];
+                }
+                
+                var _asset = asset_get_index($"{_asset_prefix}{_emote_name}");
+                
+                if (_emote != undefined)
+                {
+                    _push_node(_lines, _curr_line, { type: CUTEIFY_NODE.SPRITE, value: _emote });
+                }
+                else if (sprite_exists(_asset))
+                {
+                    _push_node(_lines, _curr_line, { type: CUTEIFY_NODE.SPRITE, value: _asset });
+                }
+                else
+                {
+                    _push_node(_lines, _curr_line, { type: CUTEIFY_NODE.TEXT, value: $":{_emote_name}:" });
+                }
+                break;
+                
+            case CUTEIFY_TOKEN.TAG_OPEN:
+                if (_i + 2 < _token_count) && (_tokens[_i+1].type == CUTEIFY_TOKEN.TAG_CONTENT) && (_tokens[_i+2].type == CUTEIFY_TOKEN.TAG_CLOSE)
+                {
+                    var _tag_content = _tokens[_i+1].value;
+                    var _processed = false;
                     
-                    var _asset = asset_get_index($"{_asset_prefix}{_tag_content}");
+                    var _string_colour = hex_parse(_tag_content, false);
                     
-                     if (_emote != undefined)
+                    if (_string_colour != undefined)
                     {
-                        _processed_content = _emote;
-                        _type = CUTEIFY_TYPE.SPRITE;
-                    }
-                    else if (font_exists(_asset))
-                    {
-                        _processed_content = _asset;
-                        _type = CUTEIFY_TYPE.FONT;
-                    }
-                    else if (_tag_content == CUTEIFY_BRACKET_OBSTRUCT)
-                    {
-                        _processed_content = "";
-                        _type = CUTEIFY_TYPE.OBSTRUCT;
-                    }
-                    else if (_tag_content == CUTEIFY_BRACKET_UNDERLINE)
-                    {
-                        _processed_content = "";
-                        _type = CUTEIFY_TYPE.UNDERLINE;
-                    }
-                    else if (string_starts_with(_tag_content, CUTEIFY_BRACKET_SHAKE + ":"))
-                    {
-                        // Shake tag: {*s:N}
-                        var _param_str = string_delete(_tag_content, 1, string_length(CUTEIFY_BRACKET_SHAKE) + 1);
-                        _processed_content = real(_param_str);
-                        _type = CUTEIFY_TYPE.SHAKE;
-                    }
-                    else if (string_starts_with(_tag_content, CUTEIFY_BRACKET_WAVE + ":"))
-                    {
-                        // Wave tag: {*w:N}
-                        var _param_str = string_delete(_tag_content, 1, string_length(CUTEIFY_BRACKET_WAVE) + 1);
-                        _processed_content = real(_param_str);
-                        _type = CUTEIFY_TYPE.WAVE;
+                        _push_node(_lines, _curr_line, { type: CUTEIFY_NODE.COLOUR, value: _string_colour });
+                        _processed = true;
                     }
                     else
                     {
-                        _processed_content = _tag_content + CUTEIFY_BRACKET_CLOSE;
-                        _type = CUTEIFY_TYPE.STRING;
+                        var _emote = undefined;
+                        
+                        if (variable_global_exists("cuteify_data"))
+                        {
+                            var _cuteify_data = global.cuteify_data;
+                            
+                            if (_cuteify_data != undefined)
+                            {
+                                _emote = _cuteify_data[$ $"{_asset_prefix}{_tag_content}"];
+                            }
+                        }
+                        
+                        if (_emote == undefined) && (variable_global_exists("emote_data"))
+                        {
+                            _emote = global.emote_data[$ $"{_asset_prefix}{_tag_content}"];
+                        }
+                        
+                        var _asset = asset_get_index($"{_asset_prefix}{_tag_content}");
+                        
+                        if (_emote != undefined)
+                        {
+                            _push_node(_lines, _curr_line, { type: CUTEIFY_NODE.SPRITE, value: _emote });
+                            _processed = true;
+                        }
+                        else if (font_exists(_asset))
+                        {
+                            _push_node(_lines, _curr_line, { type: CUTEIFY_NODE.FONT, value: _asset });
+                            _processed = true;
+                        }
+                        else if (_tag_content == "*o")
+                        {
+                            _obstruct = !_obstruct;
+                            _push_node(_lines, _curr_line, { type: _obstruct ? CUTEIFY_NODE.OBSTRUCT : CUTEIFY_NODE.OBSTRUCT_END, value: "*o" });
+                            _processed = true;
+                        }
+                        else if (_tag_content == "*u")
+                        {
+                            _underline = !_underline;
+                            _push_node(_lines, _curr_line, { type: _underline ? CUTEIFY_NODE.UNDERLINE : CUTEIFY_NODE.UNDERLINE_END, value: "*u" });
+                            _processed = true;
+                        }
+                        else if (string_starts_with(_tag_content, "*s:"))
+                        {
+                            var _param_str = string_delete(_tag_content, 1, 3);
+                            _push_node(_lines, _curr_line, { type: CUTEIFY_NODE.SHAKE, value: real(_param_str) });
+                            _processed = true;
+                        }
+                        else if (string_starts_with(_tag_content, "*w:"))
+                        {
+                            var _param_str = string_delete(_tag_content, 1, 3);
+                            _push_node(_lines, _curr_line, { type: CUTEIFY_NODE.WAVE, value: real(_param_str) });
+                            _processed = true;
+                        }
                     }
-                }
-                
-                if (_type != CUTEIFY_TYPE.STRING)
-                {
-                    var _prev_token_str = _data[_index2][_index - 1][CUTEIFY_INDEX.DATA];
                     
-                    _data[@ _index2][@ _index - 1][@ CUTEIFY_INDEX.DATA] = string_delete(_prev_token_str, string_length(_prev_token_str), 1);
+                    if (!_processed)
+                    {
+                        _push_node(_lines, _curr_line, { type: CUTEIFY_NODE.TEXT, value: "{" + _tag_content + "}" });
+                    }
+                    
+                    _i += 2;
                 }
-                
-                _data[@ _index2][@ _index] = __data(_processed_content, _type);
-                
-                if (_type == CUTEIFY_TYPE.SPRITE)
+                else if (_i + 1 < _token_count) && (_tokens[_i+1].type == CUTEIFY_TOKEN.TAG_CLOSE)
                 {
-                    _string_width[@ _index2] += sprite_get_width(_processed_content);
+                    _push_node(_lines, _curr_line, { type: CUTEIFY_NODE.TEXT, value: "{}" });
+                    _i += 1;
                 }
-                else if (_type == CUTEIFY_TYPE.STRING)
+                else
                 {
-                    _string_width[@ _index2] += string_width(_processed_content);
+                    _push_node(_lines, _curr_line, { type: CUTEIFY_NODE.TEXT, value: "{" });
                 }
+                break;
                 
-                ++_index;
-            }
-            else
-            {
-                _data[@ _index2][@ _index] = __data(CUTEIFY_BRACKET_CLOSE);
-                _string_width[@ _index2] += _bracket_close_width;
+            case CUTEIFY_TOKEN.TAG_CLOSE:
+                _push_node(_lines, _curr_line, { type: CUTEIFY_NODE.TEXT, value: "}" });
+                break;
                 
-                ++_index;
-            }
-            
-            continue;
+            case CUTEIFY_TOKEN.TAG_CONTENT:
+                _push_node(_lines, _curr_line, { type: CUTEIFY_NODE.TEXT, value: _tok.value });
+                break;
         }
+        
+        _i++;
     }
     
-    if (string_length(_string) >= _slice_start)
+    /* calculate line metrics */
+    var _string_width = [];
+    var _string_height = [];
+    var _line_count = array_length(_lines);
+    var _current_font = draw_get_font();
+    var _base_line_height = (_current_font == -1) ? 16 : string_height("I");
+    
+    for (var j = 0; j < _line_count; ++j)
     {
-        var _part = string_copy(_string, _slice_start, string_length(_string) - _slice_start + 1);
+        var _line_nodes = _lines[j];
+        var _node_count = array_length(_line_nodes);
         
-        if (string_length(_part) > 0)
+        var _w = 0;
+        var _max_h = _base_line_height;
+        
+        for (var k = 0; k < _node_count; ++k)
         {
-             _data[@ _index2][@ _index] = __data(_part);
-            _string_width[@ _index2] += string_width(_part);
+            var _node = _line_nodes[k];
             
-            ++_index;
+            if (_node.type == CUTEIFY_NODE.FONT)
+            {
+                draw_set_font(_node.value);
+                _max_h = max(_max_h, string_height("I"));
+            }
+            else if (_node.type == CUTEIFY_NODE.TEXT)
+            {
+                _w += string_width(_node.value);
+            }
+            else if (_node.type == CUTEIFY_NODE.SPRITE)
+            {
+                var _norm = (string_height("I")) / sprite_get_height(_node.value);
+                _w += sprite_get_width(_node.value) * _norm;
+                _max_h = max(_max_h, string_height("I")); /* sprites fit the font height */
+            }
         }
+        
+        _string_width[@ j] = _w;
+        _string_height[@ j] = _max_h;
     }
+    
+    draw_set_font(_current_font);
     
     return {
-        data: _data,
+        lines: _lines,
         widths: _string_width,
-        line_count: _index2,
-        last_index: _index
+        heights: _string_height,
+        line_count: _line_count - 1
     }
 }
