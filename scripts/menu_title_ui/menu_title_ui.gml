@@ -113,6 +113,7 @@ function menu_title_ui_init()
 	if (_btn_play != undefined)
 	{
 		_btn_play.text = loca_translate("phantasia:menu.title.play");
+		_btn_play.set_sprite_index(spr_Menu_Button_Success);
 		_btn_play.add_event_handler("on_select_release", function() {
 			menu_transition_goto(rm_Menu_Players);
 		});
@@ -122,6 +123,7 @@ function menu_title_ui_init()
 	if (_btn_settings != undefined)
 	{
 		_btn_settings.text = loca_translate("phantasia:menu.settings.title");
+		_btn_settings.set_sprite_index(spr_Menu_Button_Main);
 		_btn_settings.add_event_handler("on_select_release", function() {
 			menu_transition_goto(rm_Menu_Settings);
 		});
@@ -131,6 +133,7 @@ function menu_title_ui_init()
 	if (_btn_credits != undefined)
 	{
 		_btn_credits.text = loca_translate("phantasia:menu.title.credits");
+		_btn_credits.set_sprite_index(spr_Menu_Button_Secondary);
 		_btn_credits.add_event_handler("on_select_release", function() {
 			menu_transition_goto(rm_Menu_Credits);
 		});
@@ -140,6 +143,7 @@ function menu_title_ui_init()
 	if (_btn_exit != undefined)
 	{
 		_btn_exit.text = loca_translate("phantasia:menu.title.exit");
+		_btn_exit.set_sprite_index(spr_Menu_Button_Warning);
 		_btn_exit.add_event_handler("on_select_release", function() {
 			menu_title_ui_popup_exit();
 		});

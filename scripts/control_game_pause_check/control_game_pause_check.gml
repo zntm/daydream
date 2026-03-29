@@ -69,75 +69,11 @@ function control_game_pause_check()
             _gc.surface_refresh ^= SURFACE_REFRESH_BOOL.PAUSE;
         }
 
-        if (!variable_instance_exists(_gc, "ui_pause")) || (_gc.ui_pause == undefined)
-        {
-            var _pause_def = ui_load("ui/menu/pause.ui");
-
-            if (_pause_def != undefined)
-            {
-                _gc.ui_pause = ui_spawn(_pause_def, {
-                    link:   {},
-                    parent: global.gui_root
-                });
-
-                var _elements = _gc.ui_pause.elements;
-
-                var _btn_resume = _elements[$ "btn_resume"];
-
-                if (_btn_resume != undefined)
-                {
-                    _btn_resume.add_event_handler("on_select_release", function()
-                    {
-                        control_game_pause_close_settings();
-
-                        obj_Game_Control.is_opened ^= WORLD_OPENED_BOOL.PAUSE;
-
-                        control_instance_unpause();
-
-                        if (variable_instance_exists(obj_Game_Control, "ui_pause")) && (obj_Game_Control.ui_pause != undefined)
-                        {
-                            ui_instance_destroy(obj_Game_Control.ui_pause);
-
-                            obj_Game_Control.ui_pause = undefined;
-                        }
-                    });
-                }
-
-                var _btn_settings = _elements[$ "btn_settings"];
-
-                if (_btn_settings != undefined)
-                {
-                    _btn_settings.add_event_handler("on_select_release", function()
-                    {
-                        control_game_pause_open_settings();
-                    });
-                }
-
-                var _btn_save_quit = _elements[$ "btn_save_quit"];
-
-                if (_btn_save_quit != undefined)
-                {
-                    _btn_save_quit.add_event_handler("on_select_release", function()
-                    {
-                        obj_Game_Control.is_opened |= WORLD_OPENED_BOOL.EXIT;
-                    });
-                }
-            }
-        }
-
         exit;
     }
 
-    control_instance_unpause();
-
     control_game_pause_close_settings();
-
-    if (variable_instance_exists(_gc, "ui_pause")) && (_gc.ui_pause != undefined)
-    {
-        ui_instance_destroy(_gc.ui_pause);
-
-        _gc.ui_pause = undefined;
-    }
+    control_instance_unpause();
 }
 
 
