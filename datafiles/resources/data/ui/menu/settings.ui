@@ -6,65 +6,65 @@
 
     @button(btn_back) {
         position = ORIGIN_TOP_LEFT + (24, 24)
-        size = (64, 32)
+        size = (88, 32)
         text = "Back"
     }
 
     @text(title) {
-        position = ORIGIN_TOP_CENTER + (0, 32)
+        position = ORIGIN_TOP_CENTER + (0, 36)
         text = "Settings"
         text_scale = 1.5
     }
 
     @area(main_content) {
-        position = ORIGIN_CENTER + (0, 16)
-        size = (880, 420)
+        position = ORIGIN_CENTER + (0, 24)
+        size = (896, 404)
 
         @area(left_column) {
             position = ORIGIN_TOP_LEFT
-            size = (200, 420)
+            size = (208, 404)
             layout = LAYOUT_VERTICAL
-            spacing = 4
+            spacing = 8
             
             @button(btn_cat_general) {
-                size = (200, 36)
+                size = (208, 40)
                 text = "General"
             }
             
             @button(btn_cat_graphics) {
-                size = (200, 36)
+                size = (208, 40)
                 text = "Graphics"
             }
             
             @button(btn_cat_controls) {
-                size = (200, 36)
+                size = (208, 40)
                 text = "Controls"
             }
             
             @button(btn_cat_audio) {
-                size = (200, 36)
+                size = (208, 40)
                 text = "Audio"
             }
             
             @button(btn_cat_accessibility) {
-                size = (200, 36)
+                size = (208, 40)
                 text = "Accessibility"
             }
         }
 
         @area(right_column) {
             position = ORIGIN_TOP_RIGHT
-            size = (660, 420)
+            size = (656, 404)
 
             @scroll_area(settings_scroll) {
                 position = ORIGIN_TOP_LEFT
-                size = (660, 420)
+                size = (656, 404)
 
                 @area(settings_list) {
-                    position = ORIGIN_TOP_LEFT
-                    size = (660, 420)
+                    position = ORIGIN_TOP_LEFT + (8, 0)
+                    size = (640, 404)
                     layout = LAYOUT_VERTICAL
-                    spacing = 8
+                    spacing = 10
                 }
             }
         }

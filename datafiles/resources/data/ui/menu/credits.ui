@@ -1,25 +1,25 @@
 @area(credits_menu) {
     size = (960, 540)
-    position = ORIGIN_TOP_LEFT
+    position = ORIGIN_CENTER
     
     @text(title) {
-        position = ORIGIN_TOP_CENTER + (0, 32)
+        position = ORIGIN_TOP_CENTER + (0, 36)
         text = "Credits"
         text_scale = 2
     }
     
     @area(content) {
-        position = ORIGIN_CENTER
-        size = (800, 380)
+        position = ORIGIN_CENTER + (0, 18)
+        size = (820, 392)
         background = #000000
         
         @scroll_area(credits_scroll) {
             position = ORIGIN_TOP_LEFT
-            size = (800, 380)
+            size = (820, 392)
             
             @area(credits_list) {
                 position = ORIGIN_TOP_LEFT
-                size = (800, 380)
+                size = (820, 392)
                 layout = LAYOUT_VERTICAL
                 spacing = 16
             }
@@ -27,8 +27,8 @@
     }
     
     @button(btn_back) {
-        position = ORIGIN_BOTTOM_LEFT + (32, -32)
-        size = (64, 32)
+        position = ORIGIN_TOP_LEFT + (24, 24)
+        size = (88, 32)
         text = "Back"
     }
 }

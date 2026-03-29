@@ -17,14 +17,14 @@
     }
 
     @scroll_area(stats_scroll) {
-        position = ORIGIN_TOP_LEFT + (40, 88)
-        size = (560, 296)
+        position = ORIGIN_TOP_LEFT + (32, 88)
+        size = (576, 296)
 
         @area(stats_list) {
             position = ORIGIN_TOP_LEFT
-            size = (540, 296)
+            size = (576, 296)
             layout = LAYOUT_VERTICAL
-            spacing = 8
+            spacing = 10
         }
     }
 }

@@ -5,30 +5,30 @@
     position = ORIGIN_CENTER
 
     @text(title) {
-        position = ORIGIN_CENTER + (0, -64)
+        position = ORIGIN_CENTER + (0, -88)
         text = "Paused"
         text_scale = 2
     }
 
     @area(menu_options) {
-        position = ORIGIN_CENTER + (0, 16)
-        size = (160, 140)
+        position = ORIGIN_CENTER + (0, 12)
+        size = (240, 168)
         layout = LAYOUT_VERTICAL
-        spacing = 12
+        spacing = 16
 
         @button(btn_resume) {
             text = "Resume"
-            size = (160, 32)
+            size = (240, 40)
         }
 
         @button(btn_settings) {
             text = "Settings"
-            size = (160, 32)
+            size = (240, 40)
         }
 
         @button(btn_save_quit) {
             text = "Save & Quit"
-            size = (160, 32)
+            size = (240, 40)
         }
     }
 }

@@ -63,8 +63,7 @@ function control_instance_pause()
     if (_btn_resume != undefined)
     {
         _btn_resume.text = loca_translate("phantasia:menu.pause.resume");
-        _btn_resume.set_sprite_index(spr_Menu_Button_Success);
-
+        
         _btn_resume.add_event_handler("on_select_release", function()
         {
             control_game_pause_close_settings();
@@ -83,8 +82,7 @@ function control_instance_pause()
     if (_btn_settings != undefined)
     {
         _btn_settings.text = loca_translate("phantasia:menu.settings.title");
-        _btn_settings.set_sprite_index(spr_Menu_Button_Secondary);
-
+        
         _btn_settings.add_event_handler("on_select_release", function()
         {
             control_game_pause_open_settings();
@@ -96,8 +94,7 @@ function control_instance_pause()
     if (_btn_save_quit != undefined)
     {
         _btn_save_quit.text = loca_translate("phantasia:menu.pause.exit");
-        _btn_save_quit.set_sprite_index(spr_Menu_Button_Warning);
-
+        
         _btn_save_quit.add_event_handler("on_select_release", function()
         {
             obj_Game_Control.is_opened |= WORLD_OPENED_BOOL.EXIT;

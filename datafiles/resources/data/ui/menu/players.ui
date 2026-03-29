@@ -18,23 +18,23 @@
 
     @button(btn_view_toggle) {
         position = ORIGIN_TOP_RIGHT + (-24, 24)
-        size = (48, 32)
+        size = (56, 32)
         text = "Grid"
     }
 
     @area(content_area) {
-        position = ORIGIN_CENTER + (0, 16)
-        size = (880, 400)
+        position = ORIGIN_CENTER + (0, 18)
+        size = (888, 392)
 
         @scroll_area(players_scroll) {
             position = ORIGIN_TOP_LEFT
-            size = (880, 400)
+            size = (888, 392)
 
             @area(players_container) {
                 position = ORIGIN_TOP_LEFT
-                size = (880, 400)
+                size = (888, 392)
                 layout = LAYOUT_VERTICAL
-                spacing = 4
+                spacing = 8
 
                 // pinned section label injected via GML
                 // pinned cards injected via GML
@@ -46,8 +46,8 @@
     }
 
     @button(btn_create_player) {
-        position = ORIGIN_BOTTOM_CENTER + (0, -40)
+        position = ORIGIN_BOTTOM_CENTER + (0, -28)
         text = "Create Player"
-        size = (180, 32)
+        size = (200, 36)
     }
 }

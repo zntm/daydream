@@ -136,6 +136,10 @@ function menu_settings_ui_populate_list()
 	var _elements = _instance.elements;
 	var _list = _elements[$ "settings_list"];
 	var _scroll = _elements[$ "settings_scroll"];
+	var _list_width = (_list != undefined) ? _list.width : 640;
+	var _row_width = max(400, _list_width - 24);
+	var _value_width = 184;
+	var _value_x = _row_width - _value_width - 16;
 	
 	if (_list == undefined) exit;
 	
@@ -164,7 +168,7 @@ function menu_settings_ui_populate_list()
 	/* input toggle for controls */
     if (_actual_category == "controls") || (_actual_category == "controls_gamepad") || (_actual_category == "controls_touch")
 	{
-		var _toggle_btn = new UIButton(0, _ypos, 400, 48, "");
+		var _toggle_btn = new UIButton(0, _ypos, _row_width, 40, "");
 		var _type = global.controls_input_type;
         var _mode_text = string_upper(string_char_at(_type, 1)) + string_copy(_type, 2, string_length(_type) - 1);
 		_toggle_btn.text = $"Mode: {_mode_text}";
@@ -180,7 +184,7 @@ function menu_settings_ui_populate_list()
 		});
 		
 		_list.add_child(_toggle_btn);
-		_ypos += 56;
+		_ypos += 52;
 	}
 	
 	for (var i = 0; i < _length; ++i)
@@ -190,7 +194,7 @@ function menu_settings_ui_populate_list()
         var _value = global.settings[$ _name];
         var _type  = _data.get_type();
 		
-		var _container = new UIArea(0, _ypos, 400, 64);
+		var _container = new UIArea(0, _ypos, _row_width, 72);
 		
 		/* setting label */
 		var _label = new UIText(16, 16, loca_translate($"phantasia:settings.{_name}.name"));
@@ -206,7 +210,7 @@ function menu_settings_ui_populate_list()
 		
 		if (_type == SETTINGS_TYPE.SLIDER)
 		{
-			var _slider = new UISlider(200, 24, 180, _data.get_range_min(), _data.get_range_max(), _value);
+			var _slider = new UISlider(_value_x, 24, _value_width, _data.get_range_min(), _data.get_range_max(), _value);
 			_slider.setting_name = _name;
 			
 			_slider.add_event_handler("on_value_change", method(_slider, function(_new_value) {
@@ -223,7 +227,7 @@ function menu_settings_ui_populate_list()
 		}
 		else if (_type == SETTINGS_TYPE.SWITCH)
 		{
-			var _switch = new UIRadioButton(348, 24, "");
+			var _switch = new UIRadioButton(_row_width - 48, 28, "");
 			_switch.width = 32;
 			_switch.height = 16;
 			_switch.set_selected(_value);
@@ -248,7 +252,7 @@ function menu_settings_ui_populate_list()
 			var _is_gamepad = string_pos("gamepad", _name) > 0;
             var _key_name = _is_gamepad ? input_get_gamepad_name(_value) : input_get_name(_value);
 			
-			var _btn = new UIButton(200, 16, 180, 32, _key_name);
+			var _btn = new UIButton(_value_x, 20, _value_width, 32, _key_name);
 			_btn.setting_name = _name;
 			_btn.is_gamepad_setting = _is_gamepad;
 			
@@ -260,7 +264,7 @@ function menu_settings_ui_populate_list()
 		}
 		
 		_list.add_child(_container);
-		_ypos += 72;
+		_ypos += 80;
 	}
 	
 	_list.height = _ypos + 16;

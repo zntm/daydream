@@ -5,45 +5,45 @@
     position = ORIGIN_CENTER
 
     @area(title_graphic) {
-        position = ORIGIN_TOP_CENTER + (0, 64)
+        position = ORIGIN_TOP_CENTER + (0, 52)
         size = (0, 0)
     }
 
     @area(menu_options) {
-        position = ORIGIN_CENTER + (0, 48)
-        size = (160, 160)
+        position = ORIGIN_CENTER + (0, 92)
+        size = (224, 168)
         layout = LAYOUT_VERTICAL
-        spacing = 12
+        spacing = 16
 
         @button(btn_play) {
             text = "Play"
-            size = (160, 32)
+            size = (224, 40)
         }
 
         @button(btn_settings) {
             text = "Settings"
-            size = (160, 32)
+            size = (224, 40)
         }
 
 		@area(bottom_buttons) {
-			size = (160, 32)
+			size = (224, 40)
 			layout = LAYOUT_HORIZONTAL
-			spacing = 12
+			spacing = 16
 
 			@button(btn_credits) {
 				text = "Credits"
-				size = (76, 32)
+				size = (104, 40)
 			}
 
 			@button(btn_exit) {
 				text = "Exit"
-				size = (76, 32)
+				size = (104, 40)
 			}
 		}
     }
 
     @area(socials) {
-        position = ORIGIN_BOTTOM_LEFT + (32, -32)
+        position = ORIGIN_BOTTOM_LEFT + (24, -24)
         size = (112, 32)
         layout = LAYOUT_HORIZONTAL
         spacing = 8

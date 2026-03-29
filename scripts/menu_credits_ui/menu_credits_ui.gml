@@ -55,6 +55,7 @@ function menu_credits_ui_init()
 	if (_list != undefined)
 	{
 		var _credit_data = global.credit_data;
+        var _center_x = _list.width / 2;
         var _length = array_length(_credit_data);
         var _ypos = 16;
         
@@ -63,7 +64,7 @@ function menu_credits_ui_init()
             var _credits = _credit_data[i];
             var _header_text = loca_translate($"menu.credits.header.{_credits.header}");
             
-            var _header_ui = new UIText(400, _ypos, "");
+            var _header_ui = new UIText(_center_x, _ypos, "");
             _header_ui.text = _header_text;
             _header_ui.halign = fa_center;
             _header_ui.colour = _credits.colour;
@@ -81,7 +82,7 @@ function menu_credits_ui_init()
                 var _entry = _entries[j];
                 var _name = _entry.name;
                 
-                var _entry_ui = new UIText(400, _ypos, "");
+                var _entry_ui = new UIText(_center_x, _ypos, "");
                 _entry_ui.text = _name;
                 _entry_ui.text_scale = 0.8;
                 _entry_ui.halign = fa_center;

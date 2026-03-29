@@ -5,7 +5,7 @@
     position = ORIGIN_CENTER
 
     @text(loading_text) {
-        position = ORIGIN_CENTER
+        position = ORIGIN_CENTER + (0, -4)
         text = *loading_text
         text_scale = 2
     }

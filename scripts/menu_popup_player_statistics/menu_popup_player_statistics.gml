@@ -46,6 +46,9 @@ function menu_popup_player_statistics(_data)
     var _stats = _data.get_statistics() ?? {}
     var _categories = ["general", "blocks", "items", "mobs"];
     var _total_height = 0;
+    var _list_width = _list.width;
+    var _center_x = _list_width / 2;
+    var _row_width = _list_width - 24;
 
     for (var c = 0; c < array_length(_categories); ++c)
     {
@@ -54,7 +57,7 @@ function menu_popup_player_statistics(_data)
 
         if (array_length(_entries) == 0) continue;
 
-        var _header = new UIText(270, 0, menu_popup_player_statistics_get_category_label(_category));
+        var _header = new UIText(_center_x, 0, menu_popup_player_statistics_get_category_label(_category));
         _header.text_scale = 1.05;
         _header.colour = c_yellow;
         _list.add_child(_header);
@@ -63,13 +66,13 @@ function menu_popup_player_statistics(_data)
         for (var i = 0; i < array_length(_entries); ++i)
         {
             var _entry = _entries[i];
-            var _row = new UIArea(0, 0, 520, 36);
+            var _row = new UIArea(0, 0, _row_width, 36);
 
             var _name = new UIText(0, 18, _entry.name);
             _name.halign = fa_left;
             _row.add_child(_name);
 
-            var _value = new UIText(520, 18, _entry.value);
+            var _value = new UIText(_row_width, 18, _entry.value);
             _value.halign = fa_right;
             _value.colour = c_ltgray;
             _row.add_child(_value);
@@ -81,7 +84,7 @@ function menu_popup_player_statistics(_data)
 
     if (_total_height <= 0)
     {
-        var _empty = new UIText(270, 18, "No statistics yet.");
+        var _empty = new UIText(_center_x, 18, "No statistics yet.");
         _empty.colour = c_ltgray;
         _list.add_child(_empty);
         _total_height = 36;

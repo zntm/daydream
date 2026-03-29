@@ -140,6 +140,7 @@ function menu_worlds_ui_populate()
 
 	/* clear previous */
 	_container.children = [];
+	var _container_width = _container.width;
 
 	var _worlds     = global.file_worlds;
 	var _worlds_len = array_length(_worlds);
@@ -179,10 +180,10 @@ function menu_worlds_ui_populate()
 		array_push(_container.children, _label_pinned);
 
 		_ypos += 20;
-		_ypos = menu_worlds_ui_build_cards(_container, _pinned, _ypos, _is_grid, _instance);
+		_ypos = menu_worlds_ui_build_cards(_container, _pinned, _ypos, _is_grid, _instance, _container_width);
 
 		/* divider */
-		var _divider = new UILine(0, _ypos + 4, 920, 1);
+		var _divider = new UILine(0, _ypos + 4, _container_width, 1);
 		_divider.colour = #3a3a4a;
 		_divider.parent = _container;
 
@@ -205,7 +206,7 @@ function menu_worlds_ui_populate()
 		array_push(_container.children, _label_normal);
 
 		_ypos += 20;
-		_ypos = menu_worlds_ui_build_cards(_container, _normal, _ypos, _is_grid, _instance);
+		_ypos = menu_worlds_ui_build_cards(_container, _normal, _ypos, _is_grid, _instance, _container_width);
 	}
 
 	_container.height = max(100, _ypos + 16);
@@ -213,10 +214,12 @@ function menu_worlds_ui_populate()
 
 
 /// @desc Builds world cards into the container and returns the new y position.
-function menu_worlds_ui_build_cards(_container, _worlds, _ystart, _is_grid, _instance)
+function menu_worlds_ui_build_cards(_container, _worlds, _ystart, _is_grid, _instance, _container_width)
 {
 	var _len = array_length(_worlds);
 	var _ypos = _ystart;
+	var _card_gap = 8;
+	var _grid_columns = max(1, floor((_container_width + _card_gap) / (140 + _card_gap)));
 
 	for (var i = 0; i < _len; ++i)
 	{
@@ -228,12 +231,12 @@ function menu_worlds_ui_build_cards(_container, _worlds, _ystart, _is_grid, _ins
 		{
 			_card_w  = 140;
 			_card_h  = 120;
-			_xoffset = floor(i % 6) * (_card_w + 8);
-			_yoffset = _ystart + floor(i / 6) * (_card_h + 8);
+			_xoffset = floor(i % _grid_columns) * (_card_w + _card_gap);
+			_yoffset = _ystart + floor(i / _grid_columns) * (_card_h + _card_gap);
 		}
 		else
 		{
-			_card_w  = 900;
+			_card_w  = _container_width;
 			_card_h  = 56;
 			_xoffset = 0;
 			_yoffset = _ystart + i * (_card_h + 4);
@@ -418,7 +421,7 @@ function menu_worlds_ui_build_cards(_container, _worlds, _ystart, _is_grid, _ins
 	/* calculate final y position */
 	if (_is_grid)
 	{
-		var _rows = ceil(_len / 6);
+		var _rows = ceil(_len / _grid_columns);
 
 		return _ystart + _rows * 128;
 	}

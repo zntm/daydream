@@ -1,43 +1,43 @@
 @area(multiplayer_menu) {
-    size = (440, 340)
+    size = (520, 300)
     position = ORIGIN_CENTER
 	background = #0e0e1a
     
     @text(title) {
-        position = ORIGIN_TOP_CENTER + (0, 32)
+        position = ORIGIN_TOP_CENTER + (0, 28)
         text = "Join Multiplayer"
         text_scale = 2
     }
     
     @area(content) {
-        position = ORIGIN_CENTER
-        size = (400, 200)
+        position = ORIGIN_CENTER + (0, 8)
+        size = (456, 152)
         
         @text(label_invite) {
-            position = ORIGIN_TOP_CENTER + (0, 32)
+            position = ORIGIN_TOP_CENTER + (0, 20)
             text = "Enter Invite Code"
             text_scale = 1
         }
         
         @textbox(input_invite_code) {
-            position = ORIGIN_CENTER + (0, -16)
-            size = (256, 32)
+            position = ORIGIN_CENTER + (0, -4)
+            size = (320, 32)
             placeholder = "enter invite code..."
         }
         
         @button(btn_connect) {
-            position = ORIGIN_CENTER + (0, 32)
-            size = (160, 32)
+            position = ORIGIN_CENTER + (0, 40)
+            size = (180, 36)
             text = "Connect"
         }
     }
     
     @area(bottom_buttons) {
-        position = ORIGIN_BOTTOM_CENTER + (0, -16)
-        size = (400, 32)
+        position = ORIGIN_BOTTOM_LEFT + (24, -24)
+        size = (120, 32)
 
         @button(btn_back) {
-            position = ORIGIN_MIDDLE_LEFT
+            position = ORIGIN_TOP_LEFT
             size = (96, 32)
             text = "Back"
         }
