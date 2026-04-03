@@ -94,7 +94,7 @@ function gui_inventory_tooltip(_gui_multiplier_x, _gui_multiplier_y)
     var _sprite_xoffset = _sprite_width  / 2;
     var _sprite_yoffset = _sprite_height / 2;
     
-    var _surface_width  = (_inventory_scale * _sprite_width) + string_width(_item_name) + GUI_INVENTORY_TOOLTIP_PADDING_NAME;
+    var _surface_width  = (_inventory_scale * _sprite_width) + cuteify_get_width(_item_name) + GUI_INVENTORY_TOOLTIP_PADDING_NAME;
     var _surface_height = (_inventory_scale * _sprite_height);
     
     var _sprite_x = _gui_multiplier_y * _sprite_xoffset;
@@ -127,8 +127,8 @@ function gui_inventory_tooltip(_gui_multiplier_x, _gui_multiplier_y)
     
     if (_item_description != undefined)
     {
-        _surface_width  = max(_surface_width, GUI_INVENTORY_STRING_SCALE * string_width(_item_description));
-        _surface_height += GUI_INVENTORY_TOOLTIP_PADDING_DESCRIPTION + (GUI_INVENTORY_STRING_SCALE * (string_height(_item_description) - GUI_INVENTORY_TOOLTIP_TEXT_YOFFSET));
+        _surface_width  = max(_surface_width, GUI_INVENTORY_STRING_SCALE * cuteify_get_width(_item_description));
+        _surface_height += GUI_INVENTORY_TOOLTIP_PADDING_DESCRIPTION + (GUI_INVENTORY_STRING_SCALE * (cuteify_get_height(_item_description) - GUI_INVENTORY_TOOLTIP_TEXT_YOFFSET));
     }
     
     var _surface = surface_inventory.tooltip.surface;
@@ -169,7 +169,7 @@ function gui_inventory_tooltip(_gui_multiplier_x, _gui_multiplier_y)
     if (_item_description != undefined)
     {
         var _description_x = 0;
-        var _description_y = ((GUI_INVENTORY_TOOLTIP_TEXT_YOFFSET + GUI_INVENTORY_TOOLTIP_PADDING_DESCRIPTION + max(_inventory_scale * _sprite_height, string_height(_item_name))) * _gui_multiplier_y);
+        var _description_y = ((GUI_INVENTORY_TOOLTIP_TEXT_YOFFSET + GUI_INVENTORY_TOOLTIP_PADDING_DESCRIPTION + max(_inventory_scale * _sprite_height, cuteify_get_height(_item_name))) * _gui_multiplier_y);
         
         var _description_xscale = _gui_multiplier_y * GUI_INVENTORY_STRING_SCALE;
         var _description_yscale = _gui_multiplier_y * GUI_INVENTORY_STRING_SCALE;

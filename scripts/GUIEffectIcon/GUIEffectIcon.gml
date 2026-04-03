@@ -122,8 +122,8 @@ function GUIEffectIcon(_x, _y, _effect_id) : UIElement(_x, _y, 16, 16) construct
             var _text_scale = 0.5; // Tooltip text size
             
             // draw_set_font(fnt_Default);
-            var _text_w = string_width(_text) * _text_scale * _scale_x;
-            var _text_h = string_height(_text) * _text_scale * _scale_y;
+            var _text_w = cuteify_get_width(_text) * _text_scale * _scale_x;
+            var _text_h = cuteify_get_height(_text) * _text_scale * _scale_y;
             
             // Anchor TOP-LEFT (Grow Down-Right)
             // As requested by user ("move anchor to top left")

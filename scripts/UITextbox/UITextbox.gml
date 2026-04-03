@@ -293,7 +293,7 @@ function UITextbox(_x, _y, _width, _height) : UIElement(_x, _y, _width, _height)
         
         if (_is_focused) && (cursor_blink < 30)
         {
-            var _cursor_x = _text_x + string_width(text) * _base_scale_x * 0.4;
+            var _cursor_x = _text_x + cuteify_get_width(text) * _base_scale_x * 0.4;
             
             draw_line_colour(_cursor_x, _y1 + 4, _cursor_x, _y2 - 4, text_color, text_color);
         }

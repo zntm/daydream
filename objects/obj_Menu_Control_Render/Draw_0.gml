@@ -194,11 +194,11 @@ for (var j = 0; j <= _max_layer; ++j)
 
             if (boolean & (MENU_BUTTON_BOOL.IS_SELECTED | MENU_BUTTON_BOOL.IS_HOLDING))
             {
-                draw_sprite_ext(icon, icon_index, _x - (string_width(text) * _loca_font_scale / 2), _y + _asset_offset, _render_xscale * icon_xscale, _render_yscale * icon_yscale, 0, c_ltgray, 1);
+                draw_sprite_ext(icon, icon_index, _x - (cuteify_get_width(text) * _loca_font_scale / 2), _y + _asset_offset, _render_xscale * icon_xscale, _render_yscale * icon_yscale, 0, c_ltgray, 1);
             }
             else
             {
-                draw_sprite_ext(icon, icon_index, _x - (string_width(text) * _loca_font_scale / 2), _y, _render_xscale * icon_xscale, _render_yscale * icon_yscale, 0, c_white, 1);
+                draw_sprite_ext(icon, icon_index, _x - (cuteify_get_width(text) * _loca_font_scale / 2), _y, _render_xscale * icon_xscale, _render_yscale * icon_yscale, 0, c_white, 1);
             }
 
             if (_icon_shader != undefined) shader_reset();

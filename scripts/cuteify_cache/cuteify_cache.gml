@@ -7,7 +7,7 @@ global.__cuteify_cache = {}
 /// @returns {Struct} Evaluated AST
 function cuteify_get(_string, _asset_prefix = "")
 {
-    var _key = _asset_prefix + ":" + _string;
+    var _key = string(draw_get_font()) + ":" + _asset_prefix + ":" + _string;
     
     if (struct_exists(global.__cuteify_cache, _key))
     {

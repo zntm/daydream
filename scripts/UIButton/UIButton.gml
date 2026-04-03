@@ -305,7 +305,7 @@ function UIButton(_x, _y, _width, _height, _text = "") : UIElement(_x, _y, _widt
         if (text != "") && (icon != undefined)
         {
             var _tx = _draw_x + (sprite_get_width(icon) * icon_xscale * _base_scale_x / 2);
-            var _ix = _draw_x - (string_width(text) * _loca_scale / 2);
+            var _ix = _draw_x - (cuteify_get_width(text) * _loca_scale / 2);
             
             
             draw_sprite_ext(icon, icon_index, _ix, _draw_y + _offset, _base_scale_x * icon_xscale, _base_scale_y * icon_yscale, 0, _color, 1);

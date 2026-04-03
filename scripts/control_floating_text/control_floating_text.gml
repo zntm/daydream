@@ -34,8 +34,8 @@ function control_floating_text(_dt)
             
             yvelocity = clamp(yvelocity + _acceleration, -PHYSICS_TERMINAL_VELOCITY, PHYSICS_TERMINAL_VELOCITY);
             
-            var _string_width  = string_width(text) / 2;
-            var _string_height = string_height(text);
+            var _string_width  = cuteify_get_width(text) / 2;
+            var _string_height = cuteify_get_height(text);
             
             if (!rectangle_in_rectangle(x - _string_width, y - _string_height, x + _string_width, y + _string_height, _camera_x, _camera_y, _camera_x + _camera_width, _camera_y + _camera_height))
             {

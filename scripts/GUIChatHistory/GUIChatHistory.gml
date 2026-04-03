@@ -96,7 +96,7 @@ function GUIChatHistory(_x, _y, _width, _height, _max_messages = 8) : UIElement(
             if (_hint != undefined) && (is_array(_hint))
             {
                 // Calculate X offset after the input text
-                var _input_width = string_width(_display_text) * _scale_x * 0.2;
+                var _input_width = cuteify_get_width(_display_text) * _scale_x * 0.2;
                 
                 var _hint_x = (_abs_x + 4) * _base_scale_x + _input_width + (4 * _scale_x);
                 var _hint_len = array_length(_hint);
@@ -119,7 +119,7 @@ function GUIChatHistory(_x, _y, _width, _height, _max_messages = 8) : UIElement(
                     );
                     
                     // Move X for next hint part
-                    _hint_x += string_width(_hint_text + " ") * _scale_x * 0.2;
+                    _hint_x += cuteify_get_width(_hint_text + " ") * _scale_x * 0.2;
                 }
             }
         }
