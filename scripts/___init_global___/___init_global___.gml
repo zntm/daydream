@@ -135,9 +135,12 @@ for (var i = 0; i < AUDIO_EFFECT_SIZE; ++i)
 }
 
 global.audio_bus = {}
+global.audio_bus_grid = array_create(AUDIO_EFFECT_SIZE);
 
 for (var i = 0; i < AUDIO_EFFECT_SIZE; ++i)
 {
+    global.audio_bus_grid[@ i] = array_create(AUDIO_EFFECT_SIZE, audio_bus_main);
+    
     for (var j = 0; j < AUDIO_EFFECT_SIZE; ++j)
     {
         var _audio_bus = audio_bus_create();
@@ -146,6 +149,7 @@ for (var i = 0; i < AUDIO_EFFECT_SIZE; ++i)
         _audio_bus.effects[@ 1] = global.audio_effect_reverb[j];
         
         global.audio_bus[$ $"{i}_{j}"] = _audio_bus;
+        global.audio_bus_grid[i][@ j] = _audio_bus;
     }
 }
 

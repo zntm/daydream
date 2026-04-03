@@ -42,6 +42,9 @@ function init_entity(_hp, _hp_max, _attribute, _uuid = uuid_generate(irandom(0xf
     audio_effect_reverb = 0;
     audio_effect_lowpass_to = 0;
     audio_effect_reverb_to = 0;
+    audio_effect_lowpass_index = 0;
+    audio_effect_reverb_index = 0;
+    audio_effect_bus = global.audio_bus_grid[0][0];
     timer_sfx_step = 0;
     
     // Combat

@@ -54,7 +54,11 @@ function control_entity_sfx()
         timer_audio_effect = 0.1; // Recalculate every ~0.1 seconds
     }
     
-    audio_emitter_bus(audio_emitter, global.audio_bus[$ $"{round(audio_effect_lowpass * (AUDIO_EFFECT_SIZE - 1))}_{round(audio_effect_reverb * (AUDIO_EFFECT_SIZE - 1))}"]);
+    audio_effect_lowpass_index = sfx_environment_get_effect_index(audio_effect_lowpass);
+    audio_effect_reverb_index = sfx_environment_get_effect_index(audio_effect_reverb);
+    audio_effect_bus = sfx_environment_get_bus_from_indices(audio_effect_lowpass_index, audio_effect_reverb_index);
+    
+    sfx_environment_apply_bus(audio_emitter, audio_effect_lowpass, audio_effect_reverb);
     
     if (input_state.move_x != 0) && (physics_body.collision.ground)
     {

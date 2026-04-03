@@ -441,7 +441,7 @@ function control_player()
                     if (charge_time >= _threshold)
                     {
                         global.camera_shake = 5;
-                        sfx_play("phantasia:sfx/event/lightning", 0.7); 
+                        sfx_environmental_play("phantasia:sfx/event/lightning", 0.7, x, y, obj_Player); 
                     }
                     
                     var _on_trigger = _skill.on_trigger ?? _data.get_on_item_double_attack();
@@ -666,7 +666,7 @@ function control_player()
                         
                         // Visual feedback for finisher
                         global.camera_shake = 5;
-                        sfx_play("phantasia:sfx/event/lightning", 0.7); 
+                        sfx_environmental_play("phantasia:sfx/event/lightning", 0.7, x, y, obj_Player); 
                         
                         // MULTISHOT SPECIAL (Projectiles)
                         if (control_entity_shoot(id, _id, x, y - 20, _angle - 15, _inv_target, _changed_slots)) {}
