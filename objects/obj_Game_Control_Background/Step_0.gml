@@ -30,23 +30,7 @@ if !(obj_Game_Control.is_opened & WORLD_OPENED_BOOL.PAUSE)
         if (in_biome_transition_value >= 1)
         {
             in_biome_transition_value = 0;
-            
-            if (music_current != undefined)
-            {
-                audio_sound_gain(music_current, 0, BACKGROUND_MUSIC_FADE_TIME);
-                
-                if (!array_contains(music_pool, music_current))
-                {
-                    music_pool[@ music_pool_length++] = music_current;
-                }
-            }
-            
-            var _music = worldgen_get_music(in_biome_transition);
-            
-            if (_music != undefined) && (array_length(_music) > 0) && (!array_contains(_music, music_current_id))
-            {
-                bg_play_music(array_choose(_music));
-            }
+            bg_sync_biome_music(in_biome_transition);
             
             in_biome = in_biome_transition;
         }
@@ -97,17 +81,8 @@ if (timer_refresh >= 1) || (in_biome_transition_value > 0)
     
     if (music_current == undefined || !audio_is_playing(music_current))
     {
-        music_current_id = "";
-        
-        if (music_current != undefined)
-        {
-            var _music = (in_biome_transition_value <= 0) ? worldgen_get_music(in_biome) : worldgen_get_music(in_biome_transition);
-            
-            if (_music != undefined)
-            {
-                bg_play_music(array_choose(_music));
-            }
-        }
+        var _music_target = (in_biome_transition_value <= 0) ? in_biome : in_biome_transition;
+        bg_sync_biome_music(_music_target);
     }
     
     bg_sky_colour(in_biome, in_biome_transition);

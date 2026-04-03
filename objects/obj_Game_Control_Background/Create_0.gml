@@ -4,6 +4,7 @@ in_biome_transition_value = 0;
 
 music_current = undefined;
 music_current_id = "";
+music_current_gain = 0;
 music_pool = [];
 music_pool_length = 0;
 
@@ -17,12 +18,7 @@ ambience_timer = 0;
 var _in_biome_data = global.biome_data[$ in_biome];
 if (_in_biome_data == undefined) exit;
 
-var _music = _in_biome_data.get_music();
-
-if (_music != undefined) && (array_length(_music) > 0)
-{
-    bg_play_music(array_choose(_music));
-}
+bg_sync_biome_music(in_biome);
 
 bg_sky_colour(_in_biome_data, _in_biome_data);
 

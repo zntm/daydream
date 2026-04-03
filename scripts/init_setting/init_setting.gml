@@ -150,6 +150,17 @@ init_setting("audio", "audio_music", new SettingsData(SETTINGS_TYPE.SLIDER, 1)
         {
             audio_sound_gain(_music, global.menu_music_gain * _value, 0);
         }
+        
+        if (instance_exists(obj_Game_Control_Background))
+        {
+            with (obj_Game_Control_Background)
+            {
+                if (music_current != undefined) && audio_is_playing(music_current)
+                {
+                    audio_sound_gain(music_current, music_current_gain * _value, 0);
+                }
+            }
+        }
     }));
 
 init_setting("audio", "audio_sfx", new SettingsData(SETTINGS_TYPE.SLIDER, 1));
