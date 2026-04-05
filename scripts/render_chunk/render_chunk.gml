@@ -194,9 +194,9 @@ function render_chunk(_page, _position, _texel_width, _texel_height, _inst, _z)
                 var _level = _tile.get_component(__level_key) ?? 8;
                 var _left_level = 0;
                 var _right_level = 0;
-                // Keep each visible liquid top as one flat surface segment so it
-                // bobs vertically instead of shearing between corners.
-                var _wave_index_left = _index_xy;
+                /* left corner samples the left neighbor's wave so adjacent tiles
+                   share the same edge displacement, forming a continuous surface */
+                var _wave_index_left = (_x > 0) ? (_index_xy - 1) : _index_xy;
                 var _wave_index_right = _index_xy;
                 var _has_liquid_above = false;
                 var _has_liquid_below = false;
