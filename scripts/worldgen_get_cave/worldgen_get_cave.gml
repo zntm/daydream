@@ -37,6 +37,19 @@ function worldgen_get_cave(_x, _y, _surface_height, _cave_start, _seed, _world_d
     {
         return false;
     }
+
+    // Keep aquifer roofs open, but stop cave carving through the retaining shell
+    // around the filled portion so the water has solid sides and bottom.
+    var _aquifer_region = worldgen_get_aquifer(_x, _y, _surface_height, _seed, _world_data, true);
+    if (_aquifer_region != undefined)
+    {
+        if (_aquifer_region.is_containment_shell)
+        {
+            return false;
+        }
+
+        return true;
+    }
     
     var _system = _world_data.get_cave_system();
     var _system_length = _world_data.get_cave_system_length();

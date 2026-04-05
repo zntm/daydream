@@ -4,8 +4,9 @@
 /// @param {Real} _surface_height Surface height at this X
 /// @param {Real} _seed World seed
 /// @param {Struct} _world_data World data struct
+/// @param {Bool} _include_shell Whether to include the containment shell around the aquifer body
 /// @returns {Struct|Undefined} Aquifer config or undefined
-function worldgen_get_aquifer(_x, _y, _surface_height, _seed, _world_data = global.world_data[$ global.current_world.dimension])
+function worldgen_get_aquifer(_x, _y, _surface_height, _seed, _world_data = global.world_data[$ global.current_world.dimension], _include_shell = false)
 {
     static __aquifer_hash_01 = function(_x, _y, _salt)
     {
@@ -48,6 +49,8 @@ function worldgen_get_aquifer(_x, _y, _surface_height, _seed, _world_data = glob
             var _activation_chance = _aq.activation_chance;
             var _cell_radius = _aq.cell_radius;
             var _cell_radius_sq = _cell_radius * _cell_radius;
+            var _shell_radius = _cell_radius + (_aq.containment_thickness ?? 0.18);
+            var _shell_radius_sq = _shell_radius * _shell_radius;
             var _salt_base = (_seed & 0x7fff_ffff) + ((i + 1) * 8191);
 
             for (var _yy = -1; _yy <= 1; ++_yy)
@@ -69,7 +72,7 @@ function worldgen_get_aquifer(_x, _y, _surface_height, _seed, _world_data = glob
                     var _dy = (_y - _center_y) / _cell_height;
                     var _distance = (_dx * _dx) + (_dy * _dy);
 
-                    if (_distance <= _cell_radius_sq) && (_distance < _best_distance)
+                    if (_distance <= _shell_radius_sq) && (_distance < _best_distance)
                     {
                         _best_distance = _distance;
                         _best_center_x = _center_x;
@@ -91,9 +94,21 @@ function worldgen_get_aquifer(_x, _y, _surface_height, _seed, _world_data = glob
             var _level_noise = __aquifer_hash_01(_level_cell_x, _level_cell_y, _salt_base + 47);
             var _fluid_level = round(lerp(_level_min, _level_max, _level_noise));
 
-            if (_depth >= _fluid_level)
+            if (_depth < _fluid_level)
             {
-                return _aq;
+                continue;
+            }
+
+            var _is_inside_body = (_best_distance <= _cell_radius_sq);
+            if (_is_inside_body || (_include_shell && (_best_distance <= _shell_radius_sq)))
+            {
+                var _result = variable_clone(_aq);
+                _result.fluid_level = _fluid_level;
+                _result.distance = _best_distance;
+                _result.is_fluid_body = _is_inside_body;
+                _result.is_containment_shell = !_is_inside_body;
+
+                return _result;
             }
         }
     }

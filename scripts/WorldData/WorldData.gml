@@ -439,6 +439,7 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
                 if !variable_struct_exists(_aquifer, "level_cell_height") _aquifer.level_cell_height = _aquifer.cell_height * 2;
                 if !variable_struct_exists(_aquifer, "cell_jitter") _aquifer.cell_jitter = 0.35;
                 if !variable_struct_exists(_aquifer, "cell_radius") _aquifer.cell_radius = 0.95;
+                if !variable_struct_exists(_aquifer, "containment_thickness") _aquifer.containment_thickness = 0.18;
                 if !variable_struct_exists(_aquifer, "fluid_level_padding") _aquifer.fluid_level_padding = 6;
                 if !variable_struct_exists(_aquifer, "activation_chance")
                 {
