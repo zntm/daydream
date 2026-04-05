@@ -212,6 +212,31 @@ function tile_place(_x, _y, _z, _tile)
             }
         }
     }
+
+    if (_z == CHUNK_DEPTH_LIQUID)
+    {
+        chunk_rebuild_liquid_surface_cache(_chunk);
+
+        if (_local_y == 0)
+        {
+            var _n_liquid_up = chunk_map_get_by_tile(_chunk.chunk_xstart, _chunk.chunk_ystart - CHUNK_SIZE);
+
+            if (_n_liquid_up != undefined)
+            {
+                chunk_rebuild_liquid_surface_cache(_n_liquid_up);
+            }
+        }
+
+        if (_local_y == CHUNK_SIZE - 1)
+        {
+            var _n_liquid_down = chunk_map_get_by_tile(_chunk.chunk_xstart, _chunk.chunk_ystart + CHUNK_SIZE);
+
+            if (_n_liquid_down != undefined)
+            {
+                chunk_rebuild_liquid_surface_cache(_n_liquid_down);
+            }
+        }
+    }
     
     // Emit tile changed event
     if (_tile != TILE_EMPTY)

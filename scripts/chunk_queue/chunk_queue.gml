@@ -73,6 +73,14 @@ function chunk_queue_process(_player_x, _player_y)
         
         // Generate the chunk (just creates tile data, doesn't connect)
         chunk_generate(_chunk, _context);
+        chunk_rebuild_liquid_surface_cache(_chunk);
+
+        var _liquid_neighbor_down = chunk_map_get_by_tile(_chunk.chunk_xstart, _chunk.chunk_ystart + CHUNK_SIZE);
+
+        if (_liquid_neighbor_down != undefined)
+        {
+            chunk_rebuild_liquid_surface_cache(_liquid_neighbor_down);
+        }
         
         _chunk.boolean |= CHUNK_BOOL.GENERATED | CHUNK_BOOL.SURFACE_LIGHTING_REFRESH;
         

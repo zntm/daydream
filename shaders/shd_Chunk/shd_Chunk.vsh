@@ -63,19 +63,14 @@ void main()
         
         gl_Position = gm_Matrices[MATRIX_WORLD_VIEW_PROJECTION] * vec4(in_Position.x + u_skew[skew_index], in_Position.y, 0.0, 1.0);
     }
-    // Wave (animation_type 5) - liquid bobbing with time-based sine + force array
+    // Wave (animation_type 5) - liquid surface bobbing straight up/down
     else
     {
         int wave_index = int(mod(floor(in_TextureData.x / 65536.0), 256.0));
-        
-        // Time-based sine wave for gentle bobbing effect
-        float base_bob = sin(u_time * 2.0 + in_Position.x * 0.3) * 0.8;
-        
-        // Add force from array (for splash effects)
         float force_bob = u_wave[wave_index];
-        
+
         v_vTexcoord.x += frame_index * uv_offset;
-        
-        gl_Position = gm_Matrices[MATRIX_WORLD_VIEW_PROJECTION] * vec4(in_Position.x, in_Position.y + base_bob + force_bob, 0.0, 1.0);
+
+        gl_Position = gm_Matrices[MATRIX_WORLD_VIEW_PROJECTION] * vec4(in_Position.x, in_Position.y + force_bob, 0.0, 1.0);
     }
 }

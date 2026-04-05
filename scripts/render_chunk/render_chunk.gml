@@ -189,9 +189,16 @@ function render_chunk(_page, _position, _texel_width, _texel_height, _inst, _z)
 
             if (_data.is_liquid())
             {
+                _animation_type = TILE_ANIMATION_TYPE.WAVE;
+
                 var _level = _tile.get_component(__level_key) ?? 8;
                 var _left_level = 0;
                 var _right_level = 0;
+                // Keep each visible liquid top as one flat surface segment so it
+                // bobs vertically instead of shearing between corners.
+                var _wave_index_left = _index_xy;
+                var _wave_index_right = _index_xy;
+                var _has_liquid_above = false;
                 var _has_liquid_below = false;
 
                 var _left_tile = TILE_EMPTY;
@@ -240,6 +247,25 @@ function render_chunk(_page, _position, _texel_width, _texel_height, _inst, _z)
                     }
                 }
 
+                var _above_tile = TILE_EMPTY;
+                if (_y > 0)
+                {
+                    _above_tile = _chunk[_z_offset | (_index_xy - CHUNK_SIZE)];
+                }
+                else if (__neighbor_tiles[2] != undefined)
+                {
+                    _above_tile = __neighbor_tiles[2][_z_offset | (_last_row_offset | _x)];
+                }
+                else if ((_world_y - 1) >= 0)
+                {
+                    _above_tile = tile_predict(_world_x, _world_y - 1, _z);
+                }
+
+                if (_above_tile != TILE_EMPTY) && (_above_tile.get_id() == _id)
+                {
+                    _has_liquid_above = true;
+                }
+
                 var _below_tile = TILE_EMPTY;
                 if (_y < _last_local)
                 {
@@ -266,6 +292,8 @@ function render_chunk(_page, _position, _texel_width, _texel_height, _inst, _z)
                     _animation_type,
                     _atla,
                     _atla_sprite,
+                    _wave_index_left,
+                    _wave_index_right,
                     _frame_index,
                     _draw_x,
                     _draw_y,
@@ -275,6 +303,7 @@ function render_chunk(_page, _position, _texel_width, _texel_height, _inst, _z)
                     _level,
                     _left_level,
                     _right_level,
+                    _has_liquid_above,
                     _has_liquid_below,
                     _has_vertices
                 );

@@ -45,7 +45,9 @@ function PhysicsBody(_attribute = undefined) constructor
         wall_left: false,
         wall_right: false,
         in_liquid: false,
-        liquid_type: ""
+        liquid_type: "",
+        liquid_tile_x: 0,
+        liquid_tile_y: 0
     }
     
     // Mount system

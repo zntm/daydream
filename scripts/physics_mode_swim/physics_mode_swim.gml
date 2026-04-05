@@ -27,11 +27,11 @@ function physics_mode_swim(_body, _input)
     // Then lerp towards target
     _body.vel_x = lerp_delta(_body.vel_x, _target_vx, _accel);
     _body.vel_y = lerp_delta(_body.vel_y, _target_vy, _accel);
-    
-    // Subtle buoyancy (float upward when not moving)
-    if (_input.move_y == 0)
+
+    // If you're not actively swimming upward, you should slowly sink.
+    if (!_input.jump_held) && (_input.move_y == 0)
     {
-        _body.vel_y -= PHYSICS_BUOYANCY;
+        _body.vel_y = lerp_delta(_body.vel_y, _speed * 0.35, _accel);
     }
     
     // Jump input makes you swim upward faster

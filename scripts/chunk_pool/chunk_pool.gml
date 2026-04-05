@@ -39,6 +39,72 @@ function worldgen_context_ensure()
     return global.worldgen_context;
 }
 
+function chunk_rebuild_liquid_surface_cache(_chunk)
+{
+    if (_chunk == undefined) exit;
+
+    var _surface = _chunk.chunk_liquid_surface;
+    var _surface_length = 0;
+    var _chunk_array = _chunk.chunk;
+    var _chunk_display = _chunk.chunk_display;
+    var _liquid_bit = 1 << CHUNK_DEPTH_LIQUID;
+    var _tile_count = CHUNK_SIZE * CHUNK_SIZE;
+
+    array_fill(_chunk.chunk_wave, 0, _tile_count, 0);
+    array_fill(_chunk.chunk_wave_vel, 0, _tile_count, 0);
+
+    if !(_chunk_display & _liquid_bit)
+    {
+        _chunk.chunk_liquid_surface_length = 0;
+        exit;
+    }
+
+    var _item_data = global.item_data;
+    var _z_offset = CHUNK_DEPTH_LIQUID << (CHUNK_SIZE_BIT * 2);
+    var _chunk_xstart = _chunk.chunk_xstart;
+    var _chunk_ystart = _chunk.chunk_ystart;
+    var _up_chunk = chunk_map_get_by_tile(_chunk_xstart, _chunk_ystart - CHUNK_SIZE);
+    var _up_chunk_array = ((_up_chunk != undefined) && (_up_chunk.boolean & CHUNK_BOOL.GENERATED))
+        ? _up_chunk.chunk
+        : undefined;
+    var _last_row_offset = (CHUNK_SIZE - 1) << CHUNK_SIZE_BIT;
+
+    for (var _y = 0; _y < CHUNK_SIZE; ++_y)
+    {
+        var _row_offset = _y << CHUNK_SIZE_BIT;
+
+        for (var _x = 0; _x < CHUNK_SIZE; ++_x)
+        {
+            var _index_xy = _row_offset | _x;
+            var _tile = _chunk_array[_z_offset | _index_xy];
+
+            if (_tile == TILE_EMPTY) continue;
+
+            var _data = _item_data[$ _tile.get_id()];
+
+            if (_data == undefined) || !_data.is_liquid() continue;
+
+            var _above_tile = TILE_EMPTY;
+
+            if (_y > 0)
+            {
+                _above_tile = _chunk_array[_z_offset | (_index_xy - CHUNK_SIZE)];
+            }
+            else if (_up_chunk_array != undefined)
+            {
+                _above_tile = _up_chunk_array[_z_offset | (_last_row_offset | _x)];
+            }
+
+            if (_above_tile == TILE_EMPTY) || (_above_tile.get_id() != _tile.get_id())
+            {
+                _surface[@ _surface_length++] = _index_xy;
+            }
+        }
+    }
+
+    _chunk.chunk_liquid_surface_length = _surface_length;
+}
+
 function chunk_refresh_connection_range(_chunk, _xstart, _ystart, _xend, _yend)
 {
     if (_chunk == undefined) exit;
@@ -199,7 +265,9 @@ function Chunk(_x, _y) constructor
     
     // Liquid wave arrays
     chunk_wave = array_create(CHUNK_SIZE * CHUNK_SIZE, 0);
-    chunk_wave_to = array_create(CHUNK_SIZE * CHUNK_SIZE, 0);
+    chunk_wave_vel = array_create(CHUNK_SIZE * CHUNK_SIZE, 0);
+    chunk_liquid_surface = array_create(CHUNK_SIZE * CHUNK_SIZE, 0);
+    chunk_liquid_surface_length = 0;
     
     // Rendering
     chunk_vertex_buffer = array_create(CHUNK_DEPTH, -1);
@@ -256,7 +324,8 @@ function ChunkPool() : Pool() constructor
         array_fill(_chunk.chunk_skew, 0, CHUNK_SIZE * CHUNK_SIZE, 0);
         array_fill(_chunk.chunk_skew_to, 0, CHUNK_SIZE * CHUNK_SIZE, 0);
         array_fill(_chunk.chunk_wave, 0, CHUNK_SIZE * CHUNK_SIZE, 0);
-        array_fill(_chunk.chunk_wave_to, 0, CHUNK_SIZE * CHUNK_SIZE, 0);
+        array_fill(_chunk.chunk_wave_vel, 0, CHUNK_SIZE * CHUNK_SIZE, 0);
+        _chunk.chunk_liquid_surface_length = 0;
         
         _chunk.chunk_display = 0;
         _chunk.boolean = CHUNK_BOOL.SURFACE_LIGHTING_REFRESH;
@@ -296,6 +365,15 @@ function ChunkPool() : Pool() constructor
         
         if (_chunk.boolean & CHUNK_BOOL.GENERATED)
         {
+            chunk_rebuild_liquid_surface_cache(_chunk);
+
+            var _liquid_neighbor_down = chunk_map_get_by_tile(_chunk.chunk_xstart, _chunk.chunk_ystart + CHUNK_SIZE);
+
+            if (_liquid_neighbor_down != undefined)
+            {
+                chunk_rebuild_liquid_surface_cache(_liquid_neighbor_down);
+            }
+
             // Trigger lighting refresh only when a chunk has actual tile data ready.
             obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOL.LIGHTING;
         }

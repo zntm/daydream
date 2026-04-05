@@ -30,20 +30,50 @@ function entity_update_collision(_body)
     _body.collision.wall_right = tile_meeting(x + _w/2 + 1, y) != false;
     
     // Liquid check
-    var _tile_at = tile_get(floor(x / TILE_SIZE), floor((y - 8) / TILE_SIZE), CHUNK_DEPTH_DEFAULT);
+    var _tile_x = floor(x / TILE_SIZE);
+    var _tile_y = floor((y - 8) / TILE_SIZE);
+    var _tile_at = tile_get(_tile_x, _tile_y, CHUNK_DEPTH_LIQUID);
     if (_tile_at != TILE_EMPTY)
     {
         var _data = global.item_data[$ _tile_at.get_id()];
         if (_data.is_liquid())
         {
+            var _was_in_liquid = _body.collision.in_liquid;
+            var _tile_changed = !_was_in_liquid
+                || (_body.collision.liquid_tile_x != _tile_x)
+                || (_body.collision.liquid_tile_y != _tile_y);
+
             _body.collision.in_liquid = true;
             _body.collision.liquid_type = _tile_at.get_id();
+            _body.collision.liquid_tile_x = _tile_x;
+            _body.collision.liquid_tile_y = _tile_y;
+
+            if (_tile_changed)
+            {
+                var _speed = abs(_body.vel_x) + abs(_body.vel_y);
+                var _disturb = clamp(0.45 + (_speed * 0.12) + (!_was_in_liquid ? 0.5 : 0), 0.45, 1.8);
+                control_chunk_liquid_disturb(_tile_x, _tile_y, _disturb, 1, _tile_at.get_id());
+            }
+
             exit;
         }
+    }
+
+    if (_body.collision.in_liquid)
+    {
+        control_chunk_liquid_disturb(
+            _body.collision.liquid_tile_x,
+            _body.collision.liquid_tile_y,
+            0.7,
+            1,
+            _body.collision.liquid_type
+        );
     }
     
     _body.collision.in_liquid = false;
     _body.collision.liquid_type = "";
+    _body.collision.liquid_tile_x = 0;
+    _body.collision.liquid_tile_y = 0;
     
     // Trigger on_stay events
     var _w = attribute.get_collision_box_width();
