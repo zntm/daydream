@@ -11,7 +11,13 @@ function init_loot(_namespace = "phantasia", _directory)
         if (!string_ends_with(_file, ".json")) continue;
 
         var _json_path = $"{_directory}/{_file}";
-        var _array     = buffer_load_json(_json_path);
+        var _json_root = buffer_load_json(_json_path);
+        var _array     = _json_root;
+
+        if (is_struct(_json_root))
+        {
+            _array = _json_root[$ "pools"];
+        }
 
         if (!is_array(_array)) continue;
 
@@ -37,6 +43,15 @@ function init_loot(_namespace = "phantasia", _directory)
                     var _entry  = _entries[k];
                     var _parsed = {
                         weight: _entry[$ "weight"] ?? 1
+                    }
+
+                    if (struct_exists(_entry, "item")) && is_string(_entry.item)
+                    {
+                        _parsed.value = _entry.item;
+
+                        array_push(_entries_parsed, _parsed);
+
+                        continue;
                     }
 
                     if (struct_exists(_entry, "item"))

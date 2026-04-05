@@ -117,129 +117,15 @@ function cuteify_format_discord_timestamp(_tag_content)
     }
 }
 
-function cuteify_markdown_preprocess(_string)
+function cuteify_markdown_preprocess_inline(_string)
 {
     var _result = "";
     var _len = string_length(_string);
     var _pos = 1;
-    var _line_start = true;
-    var _quote_block = false;
 
     while (_pos <= _len)
     {
         var _char = string_char_at(_string, _pos);
-
-        if (_line_start)
-        {
-            var _line_end = _pos;
-            while (_line_end <= _len) && (string_char_at(_string, _line_end) != "\n")
-            {
-                ++_line_end;
-            }
-
-            var _line = string_copy(_string, _pos, _line_end - _pos);
-            var _line_len = string_length(_line);
-            var _line_cursor = 1;
-
-            while (_line_cursor <= _line_len)
-            {
-                var _indent_char = string_char_at(_line, _line_cursor);
-                if (_indent_char != " ") && (_indent_char != chr(9)) break;
-                ++_line_cursor;
-            }
-
-            var _indent = string_copy(_line, 1, _line_cursor - 1);
-            var _content = string_delete(_line, 1, _line_cursor - 1);
-            var _content_len = string_length(_content);
-            var _consumed_line_prefix = false;
-            var _line_prefix = _indent;
-
-            if (_quote_block)
-            {
-                _line_prefix += "{#9AA3B2}*";
-                _content += "*{#}";
-            }
-            else if (string_copy(_content, 1, 4) == ">>> ")
-            {
-                _quote_block = true;
-                _line_prefix += "{#9AA3B2}*";
-                _content = string_delete(_content, 1, 4) + "*{#}";
-                _consumed_line_prefix = true;
-            }
-            else if (string_copy(_content, 1, 2) == "> ")
-            {
-                _line_prefix += "{#9AA3B2}*";
-                _content = string_delete(_content, 1, 2) + "*{#}";
-                _consumed_line_prefix = true;
-            }
-
-            if (!_consumed_line_prefix)
-            {
-                var _header_level = 0;
-                while ((_header_level < _content_len) && (_header_level < 6) && (string_char_at(_content, _header_level + 1) == "#"))
-                {
-                    ++_header_level;
-                }
-
-                if ((_header_level > 0) && (_header_level < _content_len) && (string_char_at(_content, _header_level + 1) == " "))
-                {
-                    var _header_text = string_delete(_content, 1, _header_level + 1);
-
-                    switch (_header_level)
-                    {
-                        case 1:
-                            _content = "{#F4E7B2}__**" + _header_text + "**__{#}";
-                            break;
-
-                        case 2:
-                            _content = "{#F4D7A1}**" + _header_text + "**{#}";
-                            break;
-
-                        case 3:
-                            _content = "{#C9D4FF}**" + _header_text + "**{#}";
-                            break;
-
-                        default:
-                            _content = "{#C9D4FF}*" + _header_text + "*{#}";
-                            break;
-                    }
-
-                    _consumed_line_prefix = true;
-                }
-            }
-
-            if (!_consumed_line_prefix)
-            {
-                var _list_char = string_char_at(_content, 1);
-                if ((_list_char == "*") || (_list_char == "+") || (_list_char == "-"))
-                {
-                    if ((_content_len >= 2) && (string_char_at(_content, 2) == " "))
-                    {
-                        _content = "- " + string_delete(_content, 1, 2);
-                        _consumed_line_prefix = true;
-                    }
-                }
-                else
-                {
-                    var _number_end = 1;
-                    while ((_number_end <= _content_len) && (string_char_at(_content, _number_end) >= "0") && (string_char_at(_content, _number_end) <= "9"))
-                    {
-                        ++_number_end;
-                    }
-
-                    if ((_number_end > 1) && (_number_end + 1 <= _content_len) && (string_char_at(_content, _number_end) == ".") && (string_char_at(_content, _number_end + 1) == " "))
-                    {
-                        _content = string_copy(_content, 1, _number_end) + " " + string_delete(_content, 1, _number_end + 1);
-                        _consumed_line_prefix = true;
-                    }
-                }
-            }
-
-            _result += _line_prefix + _content;
-            _pos = _line_end;
-            _line_start = false;
-            continue;
-        }
 
         if (_char == "\\")
         {
@@ -247,7 +133,6 @@ function cuteify_markdown_preprocess(_string)
             {
                 var _escaped = string_char_at(_string, _pos + 1);
                 _result += _escaped;
-                _line_start = (_escaped == "\n");
                 _pos += 2;
                 continue;
             }
@@ -270,7 +155,6 @@ function cuteify_markdown_preprocess(_string)
                 var _spoiler_text = string_copy(_string, _pos + 2, _spoiler_end - _pos - 2);
                 _result += "{*o}" + _spoiler_text + "{*o}";
                 _pos = _spoiler_end + 2;
-                _line_start = false;
                 continue;
             }
         }
@@ -284,7 +168,6 @@ function cuteify_markdown_preprocess(_string)
                 {
                     _result += "{#}";
                     _pos += _close_colour_end + 3;
-                    _line_start = false;
                     continue;
                 }
             }
@@ -301,7 +184,6 @@ function cuteify_markdown_preprocess(_string)
                     }
                     _result += "{#" + _colour_content + "}";
                     _pos = _absolute_colour_end + 1;
-                    _line_start = false;
                     continue;
                 }
             }
@@ -315,7 +197,6 @@ function cuteify_markdown_preprocess(_string)
                     var _obstruct_text = string_copy(_string, _pos + 3, _absolute_end - _pos - 3);
                     _result += "{*o}" + _obstruct_text + "{*o}";
                     _pos = _absolute_end + 1;
-                    _line_start = false;
                     continue;
                 }
             }
@@ -328,7 +209,6 @@ function cuteify_markdown_preprocess(_string)
                     var _timestamp_content = string_copy(_string, _pos + 3, _absolute_timestamp_end - _pos - 3);
                     _result += cuteify_format_discord_timestamp(_timestamp_content);
                     _pos = _absolute_timestamp_end + 1;
-                    _line_start = false;
                     continue;
                 }
             }
@@ -371,7 +251,6 @@ function cuteify_markdown_preprocess(_string)
                     {
                         _result += "{#6FA8FF}__" + _label + "__{#}";
                         _pos = _url_close + 1;
-                        _line_start = false;
                         continue;
                     }
                 }
@@ -379,11 +258,144 @@ function cuteify_markdown_preprocess(_string)
         }
 
         _result += _char;
-        if (_char == "\n")
-        {
-            _line_start = true;
-        }
         ++_pos;
+    }
+
+    return _result;
+}
+
+function cuteify_markdown_preprocess(_string)
+{
+    var _result = "";
+    var _len = string_length(_string);
+    var _pos = 1;
+    var _quote_block = false;
+
+    while (_pos <= _len)
+    {
+        var _line_end = _pos;
+        while (_line_end <= _len) && (string_char_at(_string, _line_end) != "\n")
+        {
+            ++_line_end;
+        }
+
+        var _line = string_copy(_string, _pos, _line_end - _pos);
+        var _line_len = string_length(_line);
+        var _line_cursor = 1;
+
+        while (_line_cursor <= _line_len)
+        {
+            var _indent_char = string_char_at(_line, _line_cursor);
+            if (_indent_char != " ") && (_indent_char != chr(9)) break;
+            ++_line_cursor;
+        }
+
+        var _indent = string_copy(_line, 1, _line_cursor - 1);
+        var _content = string_delete(_line, 1, _line_cursor - 1);
+        var _content_len = string_length(_content);
+        var _line_prefix = _indent;
+
+        if (_quote_block) && (_content == "")
+        {
+            _quote_block = false;
+        }
+
+        if (_quote_block)
+        {
+            _line_prefix += "{#9AA3B2}*";
+            _content = cuteify_markdown_preprocess_inline(_content) + "*{#}";
+        }
+        else if (string_copy(_content, 1, 4) == ">>> ")
+        {
+            _quote_block = true;
+            _line_prefix += "{#9AA3B2}*";
+            _content = cuteify_markdown_preprocess_inline(string_delete(_content, 1, 4)) + "*{#}";
+        }
+        else if (string_copy(_content, 1, 2) == "> ")
+        {
+            _line_prefix += "{#9AA3B2}*";
+            _content = cuteify_markdown_preprocess_inline(string_delete(_content, 1, 2)) + "*{#}";
+        }
+        else
+        {
+            var _handled_line = false;
+            var _header_level = 0;
+
+            while ((_header_level < _content_len) && (_header_level < 6) && (string_char_at(_content, _header_level + 1) == "#"))
+            {
+                ++_header_level;
+            }
+
+            if ((_header_level > 0) && (_header_level < _content_len) && (string_char_at(_content, _header_level + 1) == " "))
+            {
+                var _header_text = cuteify_markdown_preprocess_inline(string_delete(_content, 1, _header_level + 1));
+
+                switch (_header_level)
+                {
+                    case 1:
+                        _content = "{#F4E7B2}__**" + _header_text + "**__{#}";
+                        break;
+
+                    case 2:
+                        _content = "{#F4D7A1}**" + _header_text + "**{#}";
+                        break;
+
+                    case 3:
+                        _content = "{#C9D4FF}**" + _header_text + "**{#}";
+                        break;
+
+                    default:
+                        _content = "{#C9D4FF}*" + _header_text + "*{#}";
+                        break;
+                }
+
+                _handled_line = true;
+            }
+
+            if (!_handled_line)
+            {
+                var _list_char = string_char_at(_content, 1);
+                if ((_list_char == "*") || (_list_char == "+") || (_list_char == "-"))
+                {
+                    if ((_content_len >= 2) && (string_char_at(_content, 2) == " "))
+                    {
+                        _content = "- " + cuteify_markdown_preprocess_inline(string_delete(_content, 1, 2));
+                        _handled_line = true;
+                    }
+                }
+                else
+                {
+                    var _number_end = 1;
+                    while ((_number_end <= _content_len) && (string_char_at(_content, _number_end) >= "0") && (string_char_at(_content, _number_end) <= "9"))
+                    {
+                        ++_number_end;
+                    }
+
+                    if ((_number_end > 1) && (_number_end + 1 <= _content_len) && (string_char_at(_content, _number_end) == ".") && (string_char_at(_content, _number_end + 1) == " "))
+                    {
+                        _content = string_copy(_content, 1, _number_end) + " " + cuteify_markdown_preprocess_inline(string_delete(_content, 1, _number_end + 1));
+                        _handled_line = true;
+                    }
+                }
+            }
+
+            if (!_handled_line)
+            {
+                _content = cuteify_markdown_preprocess_inline(_content);
+            }
+        }
+
+        _result += _line_prefix + _content;
+
+        if (_line_end <= _len)
+        {
+            _result += "\n";
+            _pos = _line_end + 1;
+        }
+        else
+        {
+            _pos = _line_end + 1;
+        }
     }
 
     return _result;

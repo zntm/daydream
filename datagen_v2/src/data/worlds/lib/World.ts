@@ -251,6 +251,14 @@ export class WorldAquifer {
     private fill_level: number;
     private noise_scale: number;
     private range?: number;
+    private activation_chance?: number;
+    private cell_width?: number;
+    private cell_height?: number;
+    private level_cell_width?: number;
+    private level_cell_height?: number;
+    private cell_jitter?: number;
+    private cell_radius?: number;
+    private fluid_level_padding?: number;
 
     constructor(
         type: string,
@@ -261,6 +269,14 @@ export class WorldAquifer {
         fillLevel: number = 8,
         noiseScale: number = 0.02,
         range: number = 255,
+        activationChance?: number,
+        cellWidth?: number,
+        cellHeight?: number,
+        levelCellWidth?: number,
+        levelCellHeight?: number,
+        cellJitter?: number,
+        cellRadius?: number,
+        fluidLevelPadding?: number,
     ) {
         this.type = type;
         this.depth_min = depthMin;
@@ -270,6 +286,14 @@ export class WorldAquifer {
         this.fill_level = fillLevel;
         this.noise_scale = noiseScale;
         this.range = range;
+        this.activation_chance = activationChance;
+        this.cell_width = cellWidth;
+        this.cell_height = cellHeight;
+        this.level_cell_width = levelCellWidth;
+        this.level_cell_height = levelCellHeight;
+        this.cell_jitter = cellJitter;
+        this.cell_radius = cellRadius;
+        this.fluid_level_padding = fluidLevelPadding;
     }
 }
 

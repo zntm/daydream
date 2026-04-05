@@ -1,21 +1,55 @@
-import { structure_blueprint } from "ui/structure_blueprint.ui"
-
-// tile is provided in the context
-var t = tile
-
-// This logic is adapted from the old export_structure.daydream
-// but integrated with the new declarative UI context
-
-var structure_id = t.get_component("id")
-if (structure_id == undefined || structure_id == "") {
-    show_debug_message("Error: Structure ID is empty");
+if (element == undefined || element.instance == undefined) {
     return;
 }
 
-// Perform export logic...
-show_debug_message("Exporting structure: " + structure_id);
+var instance = element.instance
+var t = tile
 
-// After success, close the UI
-if (element != undefined && element.instance != undefined) {
-    ui_destroy(element.instance);
+var structure_id = string_trim(string(ui_get(instance, "id_input").text))
+
+if (structure_id == "") {
+    print("[Blueprint] Structure ID is empty.")
+    return;
 }
+
+var xoffset_text = string_trim(string(ui_get(instance, "xoffset_input").text))
+var yoffset_text = string_trim(string(ui_get(instance, "yoffset_input").text))
+var xscale_text = string_trim(string(ui_get(instance, "xscale_input").text))
+var yscale_text = string_trim(string(ui_get(instance, "yscale_input").text))
+var turns_into = string_trim(string(ui_get(instance, "turns_into_input").text))
+
+if (xoffset_text == "") xoffset_text = "0"
+if (yoffset_text == "") yoffset_text = "0"
+if (xscale_text == "") xscale_text = "1"
+if (yscale_text == "") yscale_text = "1"
+
+var xoffset = real(xoffset_text)
+var yoffset = real(yoffset_text)
+var xscale = max(1, real(xscale_text))
+var yscale = max(1, real(yscale_text))
+
+t.set_component("id", structure_id)
+t.set_component("xoffset", xoffset)
+t.set_component("yoffset", yoffset)
+t.set_component("xscale", xscale)
+t.set_component("yscale", yscale)
+t.set_component("turns_into", turns_into)
+
+var result = blueprint_export_structure(
+    x,
+    y,
+    structure_id,
+    xoffset,
+    yoffset,
+    xscale,
+    yscale,
+    turns_into
+)
+
+if (!result.ok) {
+    print("[Blueprint]", result.error)
+    return;
+}
+
+print("[Blueprint] Exported structure:", result.dat_path)
+ui_destroy(instance)

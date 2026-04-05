@@ -36,14 +36,19 @@ function control_chunk_liquid(_dt, _player_x, _player_y, _camera_x, _camera_y, _
                 
                 var _wave    = _chunk_wave[_idx];
                 var _wave_to = _chunk_wave_to[_idx];
+
+                if (_wave == 0) && (_wave_to == 0)
+                {
+                    continue;
+                }
                 
                 /* lerp current wave towards target */
                 if (_wave != _wave_to)
                 {
-                    _c.chunk_wave[@ _idx] = lerp_delta(_wave, _wave_to, CHUNK_LIQUID_WAVE_LERP_V, _dt);
+                    _chunk_wave[@ _idx] = lerp_delta(_wave, _wave_to, CHUNK_LIQUID_WAVE_LERP_V, _dt);
                 }
                 
-                _c.chunk_wave_to[@ _idx] = (abs(_wave_to) > CHUNK_LIQUID_WAVE_EPSILON)
+                _chunk_wave_to[@ _idx] = (abs(_wave_to) > CHUNK_LIQUID_WAVE_EPSILON)
                     /* decay target towards zero */
                     ? lerp_delta(_wave_to, 0, CHUNK_LIQUID_WAVE_DECAY_V, _dt)
                     : 0;

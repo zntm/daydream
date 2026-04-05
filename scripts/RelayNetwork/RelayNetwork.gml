@@ -6,6 +6,63 @@ global.relay = undefined;
 global.network_role = RELAY_ROLE.NONE;
 global.network_applying_packet = false;
 
+function relay_session_config_normalize(_config = undefined)
+{
+    var _source = _config;
+    
+    if (is_real(_source))
+    {
+        _source = { port: floor(_source) }
+    }
+    
+    if (!is_struct(_source))
+    {
+        _source = {};
+    }
+    
+    return {
+        port: clamp(floor(_source[$ "port"] ?? 6510), 1024, 65535),
+        password: string(_source[$ "password"] ?? ""),
+        max_players: clamp(floor(_source[$ "max_players"] ?? 4), 2, 8),
+        default_permission_level: clamp(floor(_source[$ "default_permission_level"] ?? SETTINGS_LEVEL.MIN), SETTINGS_LEVEL.NONE, SETTINGS_LEVEL.MAX),
+        allow_build: !!(_source[$ "allow_build"] ?? true),
+        allow_containers: !!(_source[$ "allow_containers"] ?? true),
+        auto_forward: !!(_source[$ "auto_forward"] ?? false),
+        advertise_public_ip: !!(_source[$ "advertise_public_ip"] ?? true),
+        local_ip: string(_source[$ "local_ip"] ?? ""),
+        public_ip: string(_source[$ "public_ip"] ?? "")
+    }
+}
+
+function relay_session_config_public(_config)
+{
+    var _normalized = relay_session_config_normalize(_config);
+    
+    return {
+        port: _normalized.port,
+        max_players: _normalized.max_players,
+        default_permission_level: _normalized.default_permission_level,
+        allow_build: _normalized.allow_build,
+        allow_containers: _normalized.allow_containers,
+        auto_forward: _normalized.auto_forward,
+        advertise_public_ip: _normalized.advertise_public_ip,
+        local_ip: _normalized.local_ip,
+        public_ip: _normalized.public_ip
+    }
+}
+
+function relay_permission_label(_level)
+{
+    switch (_level)
+    {
+        case SETTINGS_LEVEL.NONE: return "Host Only";
+        case SETTINGS_LEVEL.MIN:  return "Shared";
+        case SETTINGS_LEVEL.MAX:  return "Full";
+    }
+    
+    return "Unknown";
+}
+
 /// @desc Initialize the relay network system
 function relay_init()
 {
@@ -24,6 +81,17 @@ function RelayNetwork() constructor
     local_peer_id = "";
     host_peer_id = "";
     room_code = "";
+    session_config = relay_session_config_normalize();
+    session_config_public = relay_session_config_public(session_config);
+    last_disconnect_reason = "";
+    network_assist = {
+        status: "idle",
+        forwarded: false,
+        public_ip: "",
+        result_file: "",
+        launch_code: 0,
+        message: ""
+    }
     
     // Peer tracking: peer_id -> { socket, uuid, player_instance, attire }
     peers = {}
@@ -50,7 +118,7 @@ function RelayNetwork() constructor
     /// @desc Host a new game session
     /// @param {Real} _port Port to listen on (default: 6510)
     /// @returns {String} Room code to share, or "" on failure
-    static host = function(_port = 6510)
+    static host = function(_config = 6510)
     {
         if (role != RELAY_ROLE.NONE)
         {
@@ -58,11 +126,16 @@ function RelayNetwork() constructor
             return "";
         }
         
-        _server_socket = network_create_server_raw(network_socket_tcp, _port, 8);
+        session_config = relay_session_config_normalize(_config);
+        session_config.local_ip = _get_local_ip();
+        session_config.public_ip = "";
+        session_config_public = relay_session_config_public(session_config);
+        
+        _server_socket = network_create_server_raw(network_socket_tcp, session_config.port, session_config.max_players);
         
         if (_server_socket < 0)
         {
-            PRINT($"[RELAY] Failed to create server on port {_port}");
+            PRINT($"[RELAY] Failed to create server on port {session_config.port}");
             return "";
         }
         
@@ -70,22 +143,24 @@ function RelayNetwork() constructor
         global.network_role = role;
         local_peer_id = uuid_generate(irandom(0xffffffff));
         host_peer_id = local_peer_id;
+        last_disconnect_reason = "";
         
         // Generate room code from local IP
-        var _local_ip = _get_local_ip();
-        room_code = invite_code_generate(_local_ip, _port);
+        room_code = invite_code_generate(session_config.local_ip, session_config.port);
+        _network_assist_begin();
         
         // Add self as first peer
         peers[$ local_peer_id] = {
             socket: undefined,  // Host has no socket to self
             uuid: global.current_player.uuid,
             player_instance: noone,
-            attire: global.current_player.attire ?? {},
+            attire: global.current_player[$ "attire"] ?? {},
             inventory: global.inventory,
-            is_local: true
+            is_local: true,
+            permission_level: SETTINGS_LEVEL.MAX
         }
         
-        PRINT($"[RELAY] Hosting on port {_port}");
+        PRINT($"[RELAY] Hosting on port {session_config.port}");
         PRINT($"[RELAY] Room code: {room_code}");
         PRINT($"[RELAY] Formatted: {invite_code_format(room_code)}");
         
@@ -95,7 +170,7 @@ function RelayNetwork() constructor
     /// @desc Join an existing game session
     /// @param {String} _code Room/invite code
     /// @returns {Bool} True if connection initiated
-    static join = function(_code)
+    static join = function(_code, _password = "")
     {
         if (role != RELAY_ROLE.NONE)
         {
@@ -137,12 +212,16 @@ function RelayNetwork() constructor
         host_peer_id = "";
         room_code = _clean_code;
         _host_socket = _socket;
+        last_disconnect_reason = "";
+        session_config = relay_session_config_normalize({ password: _password });
+        session_config_public = relay_session_config_public(session_config);
         
         // Send HELLO to host
         var _buf = relay_packet_create(RELAY_PACKET.HELLO);
         relay_write_hello(_buf, local_peer_id, 
             global.current_player.uuid, 
-            global.current_player.attire ?? {});
+            global.current_player[$ "attire"] ?? {},
+            _password);
         relay_packet_send(_host_socket, _buf);
         buffer_delete(_buf);
         
@@ -273,6 +352,8 @@ function RelayNetwork() constructor
     {
         if (role == RELAY_ROLE.HOST)
         {
+            _network_assist_end();
+            
             // Notify all clients that session is ending
             var _end_buf = relay_packet_create(RELAY_PACKET.SESSION_END);
             broadcast(_end_buf);
@@ -313,6 +394,8 @@ function RelayNetwork() constructor
         local_peer_id = "";
         host_peer_id = "";
         room_code = "";
+        session_config = relay_session_config_normalize();
+        session_config_public = relay_session_config_public(session_config);
         
         if (on_disconnected != undefined)
         {
@@ -353,6 +436,12 @@ function RelayNetwork() constructor
                 _on_data();
                 break;
         }
+    }
+    
+    /// @desc Update the relay system (poll background network assist)
+    static update = function()
+    {
+        _network_assist_update();
     }
     
     /// @desc Handle new connection
@@ -518,6 +607,28 @@ function RelayNetwork() constructor
         
         PRINT($"[RELAY] HELLO from {_data.peer_id} (uuid: {_data.uuid})");
         
+        if (session_config.password != "" && _data.password != session_config.password)
+        {
+            var _kick_buf = relay_packet_create(RELAY_PACKET.KICK);
+            relay_write_kick(_kick_buf, "Incorrect password");
+            relay_packet_send(_socket, _kick_buf);
+            buffer_delete(_kick_buf);
+            network_destroy(_socket);
+            PRINT("[RELAY] Rejected peer: incorrect password");
+            exit;
+        }
+        
+        if (get_peer_count() >= session_config.max_players)
+        {
+            var _full_buf = relay_packet_create(RELAY_PACKET.KICK);
+            relay_write_kick(_full_buf, "Session is full");
+            relay_packet_send(_socket, _full_buf);
+            buffer_delete(_full_buf);
+            network_destroy(_socket);
+            PRINT("[RELAY] Rejected peer: session full");
+            exit;
+        }
+        
         // Check for UUID collision
         var _uuid = _data.uuid;
         var _collision = false;
@@ -554,7 +665,8 @@ function RelayNetwork() constructor
             player_instance: noone,
             attire: _data.attire,
             inventory: undefined, // Set by RelayNetworkManager on join
-            is_local: false
+            is_local: false,
+            permission_level: session_config.default_permission_level
         }
         ds_map_add(_socket_to_peer, _socket, _peer_id);
         
@@ -576,7 +688,8 @@ function RelayNetwork() constructor
         var _welcome_buf = relay_packet_create(RELAY_PACKET.WELCOME);
         relay_write_welcome(_welcome_buf, _peer_id, local_peer_id, _peer_list,
             global.current_world.seed, 
-            global.current_world.time);
+            global.current_world.time,
+            relay_session_config_public(session_config));
         relay_packet_send(_socket, _welcome_buf);
         buffer_delete(_welcome_buf);
         
@@ -710,6 +823,10 @@ function RelayNetwork() constructor
                 _client_handle_routed(_buffer);
                 break;
                 
+            case RELAY_PACKET.KICK:
+                _client_handle_kick(_buffer);
+                break;
+                
             case RELAY_PACKET.SESSION_END:
                 PRINT("[RELAY] Host ended the session");
                 disconnect();
@@ -740,6 +857,8 @@ function RelayNetwork() constructor
         // Update our peer_id if host assigned a different one
         local_peer_id = _data.peer_id;
         host_peer_id = _data.host_peer_id;
+        session_config_public = relay_session_config_public(_data.session_config_public);
+        session_config = relay_session_config_normalize(_data.session_config_public);
         
         // Register all peers
         for (var i = 0; i < array_length(_data.peers); ++i)
@@ -750,7 +869,8 @@ function RelayNetwork() constructor
                 uuid: _p.uuid,
                 player_instance: noone,
                 attire: _p.attire,
-                is_local: (_p.peer_id == local_peer_id)
+                is_local: (_p.peer_id == local_peer_id),
+                permission_level: (_p.peer_id == host_peer_id) ? SETTINGS_LEVEL.MAX : session_config_public.default_permission_level
             }
         }
         
@@ -762,7 +882,8 @@ function RelayNetwork() constructor
                 host_peer_id: _data.host_peer_id,
                 world_seed: _data.world_seed,
                 world_time: _data.world_time,
-                peers: _data.peers
+                peers: _data.peers,
+                session_config_public: _data.session_config_public
             });
         }
     }
@@ -779,7 +900,8 @@ function RelayNetwork() constructor
             uuid: _data.uuid,
             player_instance: noone,
             attire: _data.attire,
-            is_local: false
+            is_local: false,
+            permission_level: session_config_public.default_permission_level
         }
         
         if (on_peer_joined != undefined)
@@ -825,6 +947,19 @@ function RelayNetwork() constructor
         buffer_delete(_data.payload);
     }
     
+    /// @desc Client handles KICK packet from host
+    static _client_handle_kick = function(_buffer)
+    {
+        var _reason = relay_read_kick(_buffer);
+        last_disconnect_reason = _reason;
+        PRINT($"[RELAY] Kicked by host: {_reason}");
+        
+        if (_host_socket != undefined)
+        {
+            network_destroy(_host_socket);
+        }
+    }
+    
     // ========================================================================
     // UTILITY
     // ========================================================================
@@ -849,5 +984,126 @@ function RelayNetwork() constructor
         
         // Fallback
         return "127.0.0.1";
+    }
+    
+    static _network_assist_begin = function()
+    {
+        network_assist = {
+            status: "local",
+            forwarded: false,
+            public_ip: "",
+            result_file: "",
+            launch_code: 0,
+            message: ""
+        }
+        
+        if (!session_config.advertise_public_ip && !session_config.auto_forward) exit;
+        if (os_type != os_windows) exit;
+        
+        if (!directory_exists(PROGRAM_DIRECTORY_APPDATA))
+        {
+            directory_create(PROGRAM_DIRECTORY_APPDATA);
+        }
+        
+        var _result_file = string_replace_all($"{PROGRAM_DIRECTORY_APPDATA}/relay_network_assist.json", "\\", "/");
+        if (file_exists(_result_file))
+        {
+            file_delete(_result_file);
+        }
+        
+        var _ps_file = string_replace_all(_result_file, "/", "\\");
+        _ps_file = string_replace_all(_ps_file, "'", "''");
+        
+        var _ps_local_ip = string_replace_all(session_config.local_ip, "'", "''");
+        var _should_forward = session_config.auto_forward ? "$true" : "$false";
+        var _script =
+            "$ErrorActionPreference='SilentlyContinue';" +
+            $"$port={session_config.port};" +
+            $"$localIp='{_ps_local_ip}';" +
+            "$result=[ordered]@{public_ip='';forwarded=$false;message='ok'};" +
+            "try {$result.public_ip=((Invoke-RestMethod -Uri 'https://api.ipify.org?format=text' -TimeoutSec 5).ToString()).Trim()} catch {};" +
+            $"if ({_should_forward}) " +
+            "{try {$upnp=New-Object -ComObject HNetCfg.NATUPnP; $maps=$upnp.StaticPortMappingCollection; if ($maps -ne $null -and $localIp -ne '') {" +
+            "try {$maps.Remove($port,'TCP')} catch {}; try {$maps.Remove($port,'UDP')} catch {};" +
+            "$tcp=$false; $udp=$false;" +
+            "try {$null=$maps.Add($port,'TCP',$port,$localIp,$true,'Phantasia Daydream'); $tcp=$true} catch {};" +
+            "try {$null=$maps.Add($port,'UDP',$port,$localIp,$true,'Phantasia Daydream'); $udp=$true} catch {};" +
+            "$result.forwarded=($tcp -or $udp);" +
+            "if (-not $result.forwarded) {$result.message='upnp unavailable'}" +
+            "} else {$result.message='upnp unavailable'}} catch {$result.message='upnp unavailable'}};" +
+            $"($result | ConvertTo-Json -Compress) | Set-Content -Path '{_ps_file}' -Encoding ascii";
+        
+        var _args = "-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -Command \"" +
+            string_replace_all(_script, "\"", "\\\"") + "\"";
+        
+        network_assist.result_file = _result_file;
+        network_assist.status = "pending";
+        network_assist.launch_code = execute_shell_simple("powershell.exe", _args, "open", 0);
+        
+        if (network_assist.launch_code <= 32)
+        {
+            network_assist.status = "local";
+            network_assist.message = "Network assist unavailable";
+        }
+    }
+    
+    static _network_assist_update = function()
+    {
+        if (role != RELAY_ROLE.HOST) exit;
+        if (network_assist.status != "pending") exit;
+        if (network_assist.result_file == "" || !file_exists(network_assist.result_file)) exit;
+        
+        var _json = buffer_load_text(network_assist.result_file);
+        var _data = undefined;
+        try { _data = json_parse(_json); } catch(_e) {}
+        
+        if (_data != undefined)
+        {
+            network_assist.public_ip = string(_data[$ "public_ip"] ?? "");
+            network_assist.forwarded = !!(_data[$ "forwarded"] ?? false);
+            network_assist.message = string(_data[$ "message"] ?? "");
+            
+            if (network_assist.public_ip != "")
+            {
+                session_config.public_ip = network_assist.public_ip;
+                
+                if (session_config.advertise_public_ip)
+                {
+                    room_code = invite_code_generate(session_config.public_ip, session_config.port);
+                }
+            }
+            
+            session_config_public = relay_session_config_public(session_config);
+            network_assist.status = "ready";
+        }
+        else
+        {
+            network_assist.status = "local";
+            network_assist.message = "Network assist failed";
+        }
+        
+        file_delete(network_assist.result_file);
+        network_assist.result_file = "";
+    }
+    
+    static _network_assist_end = function()
+    {
+        if (os_type != os_windows) exit;
+        if (!network_assist.forwarded) exit;
+        if (session_config.local_ip == "") exit;
+        
+        var _ps_local_ip = string_replace_all(session_config.local_ip, "'", "''");
+        var _script =
+            "$ErrorActionPreference='SilentlyContinue';" +
+            $"$port={session_config.port};" +
+            $"$localIp='{_ps_local_ip}';" +
+            "try {$upnp=New-Object -ComObject HNetCfg.NATUPnP; $maps=$upnp.StaticPortMappingCollection; " +
+            "if ($maps -ne $null) { try {$maps.Remove($port,'TCP')} catch {}; try {$maps.Remove($port,'UDP')} catch {} }} catch {}";
+        
+        var _args = "-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -Command \"" +
+            string_replace_all(_script, "\"", "\\\"") + "\"";
+        
+        execute_shell_simple("powershell.exe", _args, "open", 0);
+        network_assist.forwarded = false;
     }
 }

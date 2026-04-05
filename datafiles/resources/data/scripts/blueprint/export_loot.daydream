@@ -1,15 +1,96 @@
-var t = tile
-var loot_id = t.get_component("loot_id")
-
-if (loot_id == undefined || loot_id == "") {
-    show_debug_message("Error: Loot ID is empty");
+if (element == undefined || element.instance == undefined) {
     return;
 }
 
-show_debug_message("Exporting loot table: " + loot_id);
+var instance = element.instance
+var t = tile
+var state = instance.link_context.state
 
-// Perform export...
-
-if (element != undefined && element.instance != undefined) {
-    ui_destroy(element.instance);
+if (state == undefined) {
+    print("[Blueprint] Loot editor state is missing.")
+    return;
 }
+
+var loot_id = string_trim(string(ui_get(instance, "id_input").text))
+
+if (loot_id == "") {
+    print("[Blueprint] Loot ID is empty.")
+    return;
+}
+
+if (array_length(state.entries) == 0) {
+    print("[Blueprint] Add at least one loot entry before exporting.")
+    return;
+}
+
+var rolls_min_text = string_trim(string(ui_get(instance, "rolls_min_input").text))
+var rolls_max_text = string_trim(string(ui_get(instance, "rolls_max_input").text))
+
+if (rolls_min_text == "") {
+    rolls_min_text = "1"
+}
+
+if (rolls_max_text == "") {
+    rolls_max_text = rolls_min_text
+}
+
+var rolls_min = max(1, real(rolls_min_text))
+var rolls_max = max(rolls_min, real(rolls_max_text))
+
+var entries = []
+
+for (var i = 0; i < array_length(state.entries); ++i) {
+    var entry = state.entries[i]
+    var amount = (entry.amount_min == entry.amount_max)
+        ? entry.amount_min
+        : {
+            type: "smart_value:irandom",
+            values: {
+                min: entry.amount_min,
+                max: entry.amount_max
+            }
+        }
+
+    var item = (entry.item_id == "$EMPTY")
+        ? "$EMPTY"
+        : {
+            id: entry.item_id,
+            amount: amount
+        }
+
+    array_push(entries, {
+        item: item,
+        weight: entry.weight
+    })
+}
+
+var rolls = (rolls_min == rolls_max)
+    ? rolls_min
+    : {
+        type: "smart_value:irandom",
+        values: {
+            min: rolls_min,
+            max: rolls_max
+        }
+    }
+
+var payload = {
+    pools: [
+        {
+            rolls: rolls,
+            entries: entries
+        }
+    ]
+}
+
+t.set_component("id", loot_id)
+
+var result = blueprint_export_loot(loot_id, struct_stringify(payload))
+
+if (!result.ok) {
+    print("[Blueprint]", result.error)
+    return;
+}
+
+print("[Blueprint] Exported loot table:", result.path)
+ui_destroy(instance)

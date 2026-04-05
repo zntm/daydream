@@ -1,125 +1,24 @@
 var tile_obj = tile_get(x, y, z)
-var id = tile_obj.variable.id
 
-if (file_exists(FS.STRUCTURES + "/" + id + ".dat")) {
-    var camera_x = CAMERA_X
-    var camera_y = CAMERA_Y
-
-    var inst_header = instance_create_layer(480, 224, "Instances", obj_Menu_Anchor)
-    inst_header.text = loca_translate("phantasia:menu.create_player.error.empty_name")
-    inst_header.menu_layer = 1
-    inst_header.on_draw = callback(fn(draw_x, draw_y, draw_xscale, draw_yscale) {
-        var x2 = draw_x * draw_xscale
-        var y2 = draw_y * draw_yscale
-        var halign = draw_get_halign()
-        var valign = draw_get_valign()
-        draw_set_halign(1)
-        draw_set_valign(1)
-        render_text(x2, y2, text, draw_xscale, draw_yscale)
-        draw_set_halign(halign)
-        draw_set_valign(valign)
-    })
-
-    var inst_close = instance_create_layer(camera_x + 480, camera_y + 300, "Instances", obj_Menu_Button)
-    inst_close.text = loca_translate("phantasia:menu.generic.close")
-    inst_close.image_xscale = 17
-    inst_close.image_yscale = 3
-    inst_close.menu_layer = 1
-    inst_close.on_select_release = callback(fn() {
-        menu_popup_destroy()
-    })
-
-    menu_popup_create([inst_header, inst_close])
+if (tile_obj == undefined) {
+    print("[Blueprint] No structure blueprint tile found.")
     return
 }
 
-var xoffset = tile_obj.get_component("xoffset") ?? 0
-var yoffset = tile_obj.get_component("yoffset") ?? 0
-var xscale = tile_obj.get_component("xscale") ?? 1
-var yscale = tile_obj.get_component("yscale") ?? 1
+var result = blueprint_export_structure(
+    x,
+    y,
+    tile_obj.get_component("id"),
+    tile_obj.get_component("xoffset") ?? 0,
+    tile_obj.get_component("yoffset") ?? 0,
+    tile_obj.get_component("xscale") ?? 1,
+    tile_obj.get_component("yscale") ?? 1,
+    tile_obj.get_component("turns_into") ?? ""
+)
 
-var x1 = x + xoffset
-var y1 = y + yoffset
-var x2 = x + xscale - 1
-var y2 = y + yscale - 1
-
-var buffer = buffer_create(0xffff, BUFFER.GROW, 1)
-buffer_write(buffer, BUFFER.U32, PROGRAM_VERSION_NUMBER)
-buffer_write(buffer, BUFFER.U8, xscale)
-buffer_write(buffer, BUFFER.U8, yscale)
-
-var palette_map = {}
-var palette_array = []
-var palette_index = 0
-
-fn collect_inventory_ids(inventory, length, map, array, idx_ref) {
-    for (var k = 0; k < length; k++) {
-        var item = inventory[k]
-        if (item == undefined) continue
-        
-        var iid = item.id
-        if (map[iid] == undefined) {
-            map[iid] = idx_ref.value++
-            array.push(iid)
-        }
-        
-        var idata = get_item(iid)
-        var ilen = idata.get_item_inventory_length()
-        if (ilen > 0) {
-            collect_inventory_ids(item.get_inventory(), ilen, map, array, idx_ref)
-        }
-    }
+if (!result.ok) {
+    print("[Blueprint]", result.error)
+    return
 }
 
-var idx_ref = { value: 0 }
-
-for (var tx = x1; tx <= x2; tx++) {
-    for (var ty = y1; ty <= y2; ty++) {
-        var tile_default = tile_get(tx, ty, 3)
-        if (tile_default != undefined && tile_default.id == "phantasia:void_blueprint") continue
-        
-        for (var tz = 0; tz < 8; tz++) {
-            var t = (tz == 3) ? tile_default : tile_get(tx, ty, tz)
-            if (t != undefined) {
-                var tid = t.id
-                if (palette_map[tid] == undefined) {
-                    palette_map[tid] = idx_ref.value++
-                    palette_array.push(tid)
-                }
-                
-                var tdata = get_item(tid)
-                var tlen = tdata.get_tile_inventory_length()
-                if (tlen > 0) {
-                    var inv = t.get_inventory()
-                    if (typeof(inv) != "string") {
-                        collect_inventory_ids(inv, tlen, palette_map, palette_array, idx_ref)
-                    }
-                }
-            }
-        }
-    }
-}
-
-buffer_write(buffer, BUFFER.U16, idx_ref.value)
-for (var i = 0; i < idx_ref.value; i++) {
-    buffer_write(buffer, BUFFER.STRING, palette_array[i])
-}
-
-for (var tx = x1; tx <= x2; tx++) {
-    for (var ty = y1; ty <= y2; ty++) {
-        var tile_default = tile_get(tx, ty, 3)
-        if (tile_default != undefined && tile_default.id == "phantasia:void_blueprint") {
-            buffer_write(buffer, BUFFER.BOOL, true)
-            continue
-        }
-        
-        buffer_write(buffer, BUFFER.BOOL, false)
-        for (var tz = 0; tz < 8; tz++) {
-            var t = (tz == 3) ? tile_default : tile_get(tx, ty, tz)
-            file_save_snippet_tile(buffer, t, palette_map)
-        }
-    }
-}
-
-buffer_save_compressed(buffer, FS.STRUCTURES + "/" + id + ".dat")
-buffer_delete(buffer)
+print("[Blueprint] Exported structure:", result.dat_path)

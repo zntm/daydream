@@ -6,6 +6,364 @@ function proglang_function_register(_name, _func)
     }
 }
 
+function blueprint_normalize_resource_id(_raw_id)
+{
+    var _id = string_trim(string_replace_all(string(_raw_id ?? ""), "\\", "/"));
+
+    while (string_pos("//", _id) > 0)
+    {
+        _id = string_replace_all(_id, "//", "/");
+    }
+
+    if (string_pos(":", _id) > 0)
+    {
+        var _colon = string_pos(":", _id);
+        var _tail = string_delete(_id, 1, _colon);
+
+        if (_tail != "")
+        {
+            _id = _tail;
+        }
+    }
+
+    if (string_starts_with(_id, "/"))
+    {
+        _id = string_delete(_id, 1, 1);
+    }
+
+    if (string_ends_with(_id, ".json"))
+    {
+        _id = string_delete(_id, string_length(_id) - 4, 5);
+    }
+
+    if (string_ends_with(_id, ".dat"))
+    {
+        _id = string_delete(_id, string_length(_id) - 3, 4);
+    }
+
+    return _id;
+}
+
+function blueprint_split_path(_path)
+{
+    var _normalized = string_replace_all(string(_path), "\\", "/");
+    var _parts = [];
+    var _current = "";
+    var _length = string_length(_normalized);
+
+    for (var i = 1; i <= _length; ++i)
+    {
+        var _char = string_char_at(_normalized, i);
+
+        if (_char == "/")
+        {
+            if (_current != "")
+            {
+                array_push(_parts, _current);
+                _current = "";
+            }
+
+            continue;
+        }
+
+        _current += _char;
+    }
+
+    if (_current != "")
+    {
+        array_push(_parts, _current);
+    }
+
+    return _parts;
+}
+
+function blueprint_ensure_directory_recursive(_directory)
+{
+    var _normalized = string_replace_all(string(_directory), "\\", "/");
+
+    if (_normalized == "" || directory_exists(_normalized))
+    {
+        return;
+    }
+
+    var _parts = blueprint_split_path(_normalized);
+    var _count = array_length(_parts);
+
+    if (_count == 0)
+    {
+        return;
+    }
+
+    var _path = "";
+    var _start = 0;
+
+    if (string_pos(":", _parts[0]) == 2)
+    {
+        _path = _parts[0];
+        _start = 1;
+    }
+
+    for (var i = _start; i < _count; ++i)
+    {
+        if (_path == "")
+        {
+            _path = _parts[i];
+        }
+        else
+        {
+            _path += "/" + _parts[i];
+        }
+
+        if (!directory_exists(_path))
+        {
+            directory_create(_path);
+        }
+    }
+}
+
+function blueprint_write_text_file(_path, _text)
+{
+    var _file = file_text_open_write(_path);
+
+    file_text_write_string(_file, string(_text));
+    file_text_close(_file);
+}
+
+function blueprint_collect_inventory_ids(_inventory, _length, _map, _array, _idx_ref)
+{
+    for (var k = 0; k < _length; ++k)
+    {
+        var _item = _inventory[k];
+
+        if (_item == undefined) continue;
+
+        var _item_id = _item.id;
+
+        if (_map[$ _item_id] == undefined)
+        {
+            _map[$ _item_id] = _idx_ref.value++;
+            array_push(_array, _item_id);
+        }
+
+        var _item_data = get_item(_item_id);
+        var _inv_length = _item_data.get_item_inventory_length();
+
+        if (_inv_length > 0)
+        {
+            blueprint_collect_inventory_ids(_item.get_inventory(), _inv_length, _map, _array, _idx_ref);
+        }
+    }
+}
+
+function blueprint_clone_tile_for_export(_tile, _replacement_id)
+{
+    var _item_data = global.item_data;
+    var _clone = new Tile(_replacement_id, _item_data)
+        .set_offset(_tile.get_xoffset(), _tile.get_yoffset())
+        .set_scale(_tile.get_xscale(), _tile.get_yscale())
+        .set_index(_tile.get_index())
+        .set_index_offset(_tile.get_index_offset())
+        .set_rotation(_tile.get_rotation());
+
+    return _clone;
+}
+
+function blueprint_export_loot_file(_raw_id, _json_text, _overwrite = false)
+{
+    var _id = blueprint_normalize_resource_id(_raw_id);
+
+    if (_id == "")
+    {
+        return {
+            ok: false,
+            error: "Loot ID is empty."
+        }
+    }
+
+    var _path = $"{PROGRAM_DIRECTORY_RESOURCES}/data/loot/{_id}.json";
+
+    if (!_overwrite && file_exists(_path))
+    {
+        return {
+            ok: false,
+            error: $"Loot file already exists: {_path}"
+        }
+    }
+
+    blueprint_ensure_directory_recursive(filename_dir(_path));
+    blueprint_write_text_file(_path, _json_text);
+
+    return {
+        ok: true,
+        id: _id,
+        path: _path
+    }
+}
+
+function blueprint_export_structure_file(_tile_x, _tile_y, _structure_id, _xoffset, _yoffset, _width, _height, _turns_into = "", _overwrite = false)
+{
+    var _id = blueprint_normalize_resource_id(_structure_id);
+
+    if (_id == "")
+    {
+        return {
+            ok: false,
+            error: "Structure ID is empty."
+        }
+    }
+
+    if (_width <= 0 || _height <= 0)
+    {
+        return {
+            ok: false,
+            error: "Structure width and height must be greater than zero."
+        }
+    }
+
+    var _dat_path = $"{PROGRAM_DIRECTORY_RESOURCES}/data/structures/{_id}.dat";
+    var _json_path = $"{_dat_path}.json";
+
+    if (!_overwrite && (file_exists(_dat_path) || file_exists(_json_path)))
+    {
+        return {
+            ok: false,
+            error: $"Structure file already exists: {_dat_path}"
+        }
+    }
+
+    var _x1 = _tile_x + _xoffset;
+    var _y1 = _tile_y + _yoffset;
+    var _x2 = _x1 + _width - 1;
+    var _y2 = _y1 + _height - 1;
+
+    var _buffer = buffer_create(0xffff, buffer_grow, 1);
+
+    buffer_write(_buffer, buffer_u32, PROGRAM_VERSION_NUMBER);
+    buffer_write(_buffer, buffer_s32, _width);
+    buffer_write(_buffer, buffer_s32, _height);
+
+    var _palette_map = {}
+    var _palette_array = []
+    var _idx_ref = { value: 0 }
+    var _turns_into_id = string_trim(string(_turns_into ?? ""));
+
+    for (var _tx = _x1; _tx <= _x2; ++_tx)
+    {
+        for (var _ty = _y1; _ty <= _y2; ++_ty)
+        {
+            var _tile_default = tile_get(_tx, _ty, 3);
+
+            if (_tile_default != undefined && _tile_default.id == "phantasia:void_blueprint")
+            {
+                continue;
+            }
+
+            for (var _tz = 0; _tz < 8; ++_tz)
+            {
+                var _tile = (_tz == 3) ? _tile_default : tile_get(_tx, _ty, _tz);
+
+                if (_tile == undefined)
+                {
+                    continue;
+                }
+
+                var _export_tile = _tile;
+
+                if (_tile.id == "phantasia:structure_blueprint")
+                {
+                    if (_turns_into_id == "")
+                    {
+                        buffer_delete(_buffer);
+
+                        return {
+                            ok: false,
+                            error: "Structure export found a blueprint tile inside the selection, but 'Turns Into' is empty."
+                        }
+                    }
+
+                    _export_tile = blueprint_clone_tile_for_export(_tile, _turns_into_id);
+                }
+
+                var _tile_id = _export_tile.id;
+
+                if (_palette_map[$ _tile_id] == undefined)
+                {
+                    _palette_map[$ _tile_id] = _idx_ref.value++;
+                    array_push(_palette_array, _tile_id);
+                }
+
+                var _tile_data = get_item(_tile_id);
+                var _tile_inv_length = _tile_data.get_tile_inventory_length();
+
+                if (_tile_inv_length > 0)
+                {
+                    var _inventory = _export_tile.get_inventory();
+
+                    if (typeof(_inventory) != "string")
+                    {
+                        blueprint_collect_inventory_ids(_inventory, _tile_inv_length, _palette_map, _palette_array, _idx_ref);
+                    }
+                }
+            }
+        }
+    }
+
+    buffer_write(_buffer, buffer_u16, _idx_ref.value);
+
+    for (var i = 0; i < _idx_ref.value; ++i)
+    {
+        buffer_write(_buffer, buffer_string, _palette_array[i]);
+    }
+
+    for (var _tx = _x1; _tx <= _x2; ++_tx)
+    {
+        for (var _ty = _y1; _ty <= _y2; ++_ty)
+        {
+            var _tile_default = tile_get(_tx, _ty, 3);
+
+            if (_tile_default != undefined && _tile_default.id == "phantasia:void_blueprint")
+            {
+                buffer_write(_buffer, buffer_bool, true);
+                continue;
+            }
+
+            buffer_write(_buffer, buffer_bool, false);
+
+            for (var _tz = 0; _tz < 8; ++_tz)
+            {
+                var _tile = (_tz == 3) ? _tile_default : tile_get(_tx, _ty, _tz);
+                var _export_tile = _tile;
+
+                if (_tile != undefined && _tile.id == "phantasia:structure_blueprint")
+                {
+                    _export_tile = blueprint_clone_tile_for_export(_tile, _turns_into_id);
+                }
+
+                file_save_snippet_tile(_buffer, _export_tile, global.item_data, _palette_map);
+            }
+        }
+    }
+
+    blueprint_ensure_directory_recursive(filename_dir(_dat_path));
+    blueprint_write_text_file(_json_path, json_stringify({
+        placement: {
+            type: "floor",
+            xoffset: _xoffset,
+            yoffset: _yoffset
+        },
+        turns_into: _turns_into_id
+    }));
+    buffer_save_compressed(_buffer, _dat_path);
+    buffer_delete(_buffer);
+
+    return {
+        ok: true,
+        id: _id,
+        dat_path: _dat_path,
+        json_path: _json_path
+    }
+}
+
 #region Game API
 // Events
 proglang_function_register("event_emit", function(_args)
@@ -659,6 +1017,27 @@ proglang_function_register("entity_set_dash_timer", function(_args) {
 
 proglang_function_register("file_exists", function(_args) {
     return file_exists(_args[0]);
+});
+
+proglang_function_register("blueprint_export_loot", function(_args) {
+    var _overwrite = (array_length(_args) > 2) ? _args[2] : false;
+    return blueprint_export_loot_file(_args[0], _args[1], _overwrite);
+});
+
+proglang_function_register("blueprint_export_structure", function(_args) {
+    var _overwrite = (array_length(_args) > 8) ? _args[8] : false;
+
+    return blueprint_export_structure_file(
+        _args[0],
+        _args[1],
+        _args[2],
+        _args[3],
+        _args[4],
+        _args[5],
+        _args[6],
+        (array_length(_args) > 7) ? _args[7] : "",
+        _overwrite
+    );
 });
 
 proglang_function_register("callback", function(_args) {

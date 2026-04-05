@@ -300,9 +300,51 @@ function P2PValidator() constructor
         return _valid;
     }
     
+    static _get_peer_permission_level = function(_peer_id)
+    {
+        if (global.relay == undefined)
+        {
+            return SETTINGS_LEVEL.MAX;
+        }
+        
+        if (_peer_id == global.relay.host_peer_id || (_peer_id == global.relay.local_peer_id && global.relay.role == RELAY_ROLE.HOST))
+        {
+            return SETTINGS_LEVEL.MAX;
+        }
+        
+        var _peer = global.relay.peers[$ _peer_id];
+        if (_peer != undefined && _peer.permission_level != undefined)
+        {
+            return _peer.permission_level;
+        }
+        
+        return global.relay.session_config_public.default_permission_level ?? SETTINGS_LEVEL.MIN;
+    }
+    
+    static _can_peer_modify_world = function(_peer_id)
+    {
+        if (!(global.relay.session_config_public.allow_build ?? true))
+        {
+            return false;
+        }
+        
+        return _get_peer_permission_level(_peer_id) >= SETTINGS_LEVEL.MAX;
+    }
+    
+    static _can_peer_manage_items = function(_peer_id)
+    {
+        return _get_peer_permission_level(_peer_id) >= SETTINGS_LEVEL.MIN;
+    }
+    
     /// @desc Validate tile placement/breaking (reach check)
     static _validate_tile_action = function(_data, _peer_id)
     {
+        if (!_can_peer_modify_world(_peer_id))
+        {
+            PRINT($"[VALIDATOR] Tile action rejected: insufficient permissions for {_peer_id}");
+            return false;
+        }
+        
         // Get peer's player instance
         var _peer = global.relay.peers[$ _peer_id];
         if (_peer == undefined || !instance_exists(_peer.player_instance))
@@ -346,6 +388,12 @@ function P2PValidator() constructor
     /// @desc Validate item actions
     static _validate_item_action = function(_data, _peer_id)
     {
+        if (!_can_peer_manage_items(_peer_id))
+        {
+            PRINT($"[VALIDATOR] Item action rejected: insufficient permissions for {_peer_id}");
+            return false;
+        }
+        
         // Basic validation - items must exist, player must be in range
         var _peer = global.relay.peers[$ _peer_id];
         if (_peer == undefined || !instance_exists(_peer.player_instance))

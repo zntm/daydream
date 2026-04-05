@@ -3,6 +3,7 @@
         {
             "entries": [
                 {
+                    "weight": 3,
                     "item": {
                         "id": "phantasia:twig",
                         "amount": {
@@ -12,10 +13,10 @@
                             },
                             "type": "smart_value:irandom"
                         }
-                    },
-                    "weight": 3
+                    }
                 },
                 {
+                    "weight": 3,
                     "item": {
                         "id": "phantasia:rock",
                         "amount": {
@@ -25,10 +26,10 @@
                             },
                             "type": "smart_value:irandom"
                         }
-                    },
-                    "weight": 3
+                    }
                 },
                 {
+                    "weight": 1,
                     "item": {
                         "id": "phantasia:coal",
                         "amount": {
@@ -38,8 +39,7 @@
                             },
                             "type": "smart_value:irandom"
                         }
-                    },
-                    "weight": 1
+                    }
                 }
             ],
             "rolls": 1

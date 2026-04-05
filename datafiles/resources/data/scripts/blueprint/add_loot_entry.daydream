@@ -1,19 +1,52 @@
-var t = tile
-
-var loot_id = t.get_component("loot_id")
-var item_id = t.get_component("item_id")
-var weight = t.get_component("weight")
-
-if (loot_id == undefined || loot_id == "") {
-    show_debug_message("Error: Loot ID is empty");
+if (element == undefined || element.instance == undefined) {
     return;
 }
 
-if (item_id == undefined || item_id == "") {
-    show_debug_message("Error: Item ID is empty");
+var instance = element.instance
+var state = instance.link_context.state
+
+if (state == undefined) {
+    print("[Blueprint] Loot editor state is missing.")
     return;
 }
 
-show_debug_message("Adding loot entry: " + item_id + " (weight: " + string(weight) + ") to table: " + loot_id);
+var item_id = string_trim(string(ui_get(instance, "item_input").text))
+var weight_text = string_trim(string(ui_get(instance, "weight_input").text))
+var amount_min_text = string_trim(string(ui_get(instance, "amount_min_input").text))
+var amount_max_text = string_trim(string(ui_get(instance, "amount_max_input").text))
 
-// logic to add entry to tile memory...
+if (item_id == "") {
+    print("[Blueprint] Item ID is empty.")
+    return;
+}
+
+if (weight_text == "") {
+    weight_text = "1"
+}
+
+if (amount_min_text == "") {
+    amount_min_text = "1"
+}
+
+if (amount_max_text == "") {
+    amount_max_text = amount_min_text
+}
+
+var weight = max(1, real(weight_text))
+var amount_min = max(1, real(amount_min_text))
+var amount_max = max(amount_min, real(amount_max_text))
+
+array_push(state.entries, {
+    item_id: item_id,
+    weight: weight,
+    amount_min: amount_min,
+    amount_max: amount_max
+})
+
+ui_set(instance, "item_input", "text", "")
+ui_set(instance, "amount_min_input", "text", "1")
+ui_set(instance, "amount_max_input", "text", "1")
+ui_set(instance, "weight_input", "text", "1")
+ui_mark_dirty(instance)
+
+print("[Blueprint] Added loot entry:", item_id)

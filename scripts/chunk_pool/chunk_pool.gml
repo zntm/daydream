@@ -255,6 +255,8 @@ function ChunkPool() : Pool() constructor
         // Clear skew arrays (16x16 = 256)
         array_fill(_chunk.chunk_skew, 0, CHUNK_SIZE * CHUNK_SIZE, 0);
         array_fill(_chunk.chunk_skew_to, 0, CHUNK_SIZE * CHUNK_SIZE, 0);
+        array_fill(_chunk.chunk_wave, 0, CHUNK_SIZE * CHUNK_SIZE, 0);
+        array_fill(_chunk.chunk_wave_to, 0, CHUNK_SIZE * CHUNK_SIZE, 0);
         
         _chunk.chunk_display = 0;
         _chunk.boolean = CHUNK_BOOL.SURFACE_LIGHTING_REFRESH;

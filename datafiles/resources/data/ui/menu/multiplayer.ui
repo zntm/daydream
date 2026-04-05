@@ -1,45 +1,206 @@
 @area(multiplayer_menu) {
-    size = (520, 300)
+    size = (860, 500)
     position = ORIGIN_CENTER
-	background = #0e0e1a
+    background = #0e0e1a
     
     @text(title) {
         position = ORIGIN_TOP_CENTER + (0, 28)
-        text = "Join Multiplayer"
+        text = "Multiplayer"
         text_scale = 2
     }
     
-    @area(content) {
-        position = ORIGIN_CENTER + (0, 8)
-        size = (456, 152)
+    @area(join_panel) {
+        position = ORIGIN_TOP_LEFT + (40, 84)
+        size = (360, 320)
+        
+        @text(label_join_title) {
+            position = ORIGIN_TOP_LEFT
+            text = "Join Session"
+            text_scale = 1.25
+        }
         
         @text(label_invite) {
-            position = ORIGIN_TOP_CENTER + (0, 20)
+            position = ORIGIN_TOP_LEFT + (0, 40)
             text = "Enter Invite Code"
             text_scale = 1
         }
         
         @textbox(input_invite_code) {
-            position = ORIGIN_CENTER + (0, -4)
+            position = ORIGIN_TOP_LEFT + (0, 64)
             size = (320, 32)
             placeholder = "enter invite code..."
+            text_length = 64
+            mode = "uppercase"
+        }
+        
+        @text(label_join_password) {
+            position = ORIGIN_TOP_LEFT + (0, 116)
+            text = "Password"
+            text_scale = 1
+        }
+        
+        @textbox(input_join_password) {
+            position = ORIGIN_TOP_LEFT + (0, 140)
+            size = (320, 32)
+            placeholder = "optional password..."
+            text_length = 48
         }
         
         @button(btn_connect) {
-            position = ORIGIN_CENTER + (0, 40)
+            position = ORIGIN_TOP_LEFT + (0, 192)
             size = (180, 36)
             text = "Connect"
+        }
+        
+        @text(label_join_hint) {
+            position = ORIGIN_TOP_LEFT + (0, 244)
+            text = "Use the invite code from the host."
+            text_scale = 0.8
+            colour = #aaaaaa
+        }
+    }
+    
+    @line(divider) {
+        position = ORIGIN_TOP_CENTER + (0, 84)
+        start = (0, 0)
+        end = (0, 320)
+        thickness = 1
+        colour = #323248
+    }
+    
+    @area(host_panel) {
+        position = ORIGIN_TOP_RIGHT + (-400, 84)
+        size = (360, 320)
+        
+        @text(label_host_title) {
+            position = ORIGIN_TOP_LEFT
+            text = "Host Session"
+            text_scale = 1.25
+        }
+        
+        @text(label_host_port) {
+            position = ORIGIN_TOP_LEFT + (0, 40)
+            text = "Port"
+            text_scale = 1
+        }
+        
+        @textbox(input_host_port) {
+            position = ORIGIN_TOP_LEFT + (0, 64)
+            size = (144, 32)
+            placeholder = "6510"
+            text_length = 5
+            mode = "integer"
+        }
+        
+        @text(label_host_players) {
+            position = ORIGIN_TOP_LEFT + (184, 40)
+            text = "Max Players"
+            text_scale = 1
+        }
+        
+        @textbox(input_host_max_players) {
+            position = ORIGIN_TOP_LEFT + (184, 64)
+            size = (136, 32)
+            placeholder = "4"
+            text_length = 2
+            mode = "integer"
+        }
+        
+        @text(label_host_password) {
+            position = ORIGIN_TOP_LEFT + (0, 116)
+            text = "Password"
+            text_scale = 1
+        }
+        
+        @textbox(input_host_password) {
+            position = ORIGIN_TOP_LEFT + (0, 140)
+            size = (320, 32)
+            placeholder = "optional password..."
+            text_length = 48
+        }
+        
+        @text(label_host_permissions) {
+            position = ORIGIN_TOP_LEFT + (0, 192)
+            text = "Guest Permissions"
+            text_scale = 1
+        }
+        
+        @dropdown(drop_guest_permission) {
+            position = ORIGIN_TOP_LEFT + (0, 216)
+            size = (160, 24)
+            choices = ("host only", "shared", "full")
+            choice_index = 1
+        }
+        
+        @button(btn_toggle_auto_forward) {
+            position = ORIGIN_TOP_LEFT + (184, 216)
+            size = (136, 24)
+            text = "Auto Forward: On"
+        }
+        
+        @button(btn_toggle_public_ip) {
+            position = ORIGIN_TOP_LEFT + (0, 256)
+            size = (160, 24)
+            text = "Public Invite: On"
+        }
+        
+        @button(btn_toggle_build) {
+            position = ORIGIN_TOP_LEFT + (184, 256)
+            size = (136, 24)
+            text = "Building: On"
+        }
+        
+        @button(btn_toggle_containers) {
+            position = ORIGIN_TOP_LEFT + (0, 288)
+            size = (160, 24)
+            text = "Containers: On"
+        }
+        
+        @button(btn_host) {
+            position = ORIGIN_TOP_LEFT + (184, 288)
+            size = (136, 24)
+            text = "Start Host"
+        }
+    }
+    
+    @area(session_info) {
+        position = ORIGIN_BOTTOM_LEFT + (40, -78)
+        size = (780, 56)
+        
+        @text(label_status) {
+            position = ORIGIN_TOP_LEFT
+            text = "Configure your session and start hosting."
+            text_scale = 0.9
+        }
+        
+        @text(label_room_code) {
+            position = ORIGIN_TOP_LEFT + (0, 26)
+            text = "Invite Code: not hosting"
+            text_scale = 0.9
+            colour = #aaaaaa
         }
     }
     
     @area(bottom_buttons) {
         position = ORIGIN_BOTTOM_LEFT + (24, -24)
-        size = (120, 32)
-
+        size = (360, 32)
+        
         @button(btn_back) {
             position = ORIGIN_TOP_LEFT
             size = (96, 32)
             text = "Back"
+        }
+        
+        @button(btn_copy_code) {
+            position = ORIGIN_TOP_LEFT + (120, 0)
+            size = (112, 32)
+            text = "Copy Code"
+        }
+        
+        @button(btn_leave_session) {
+            position = ORIGIN_TOP_LEFT + (252, 0)
+            size = (96, 32)
+            text = "Leave"
         }
     }
 }

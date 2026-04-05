@@ -126,6 +126,13 @@
     "cave": {
         "aquifers": [
             {
+                "activation_chance": 0.4,
+                "cell_height": 18,
+                "cell_radius": 1.05,
+                "cell_width": 30,
+                "fluid_level_padding": 10,
+                "level_cell_height": 54,
+                "level_cell_width": 90,
                 "type": "phantasia:water",
                 "depth_min": 20,
                 "depth_max": 200,
@@ -136,6 +143,13 @@
                 "range": 255
             },
             {
+                "activation_chance": 0.24,
+                "cell_height": 14,
+                "cell_radius": 0.9,
+                "cell_width": 22,
+                "fluid_level_padding": 8,
+                "level_cell_height": 42,
+                "level_cell_width": 66,
                 "type": "phantasia:lava",
                 "depth_min": 350,
                 "depth_max": 450,

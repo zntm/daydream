@@ -126,11 +126,12 @@ function relay_buffer_copy_range(_dest, _src, _offset, _length)
 /// @param {String} _peer_id Our generated peer ID
 /// @param {String} _uuid Player UUID
 /// @param {Struct} _attire Player attire
-function relay_write_hello(_buffer, _peer_id, _uuid, _attire)
+function relay_write_hello(_buffer, _peer_id, _uuid, _attire, _password = "")
 {
     buffer_write(_buffer, buffer_string, _peer_id);
     buffer_write(_buffer, buffer_string, _uuid);
     buffer_write(_buffer, buffer_string, json_stringify(_attire ?? {}));
+    buffer_write(_buffer, buffer_string, _password ?? "");
 }
 
 /// @desc Read HELLO packet data
@@ -141,6 +142,7 @@ function relay_read_hello(_buffer)
     var _peer_id = buffer_read(_buffer, buffer_string);
     var _uuid = buffer_read(_buffer, buffer_string);
     var _attire_json = buffer_read(_buffer, buffer_string);
+    var _password = buffer_read(_buffer, buffer_string);
     
     var _attire = {}
     try { _attire = json_parse(_attire_json); } catch(_e) {}
@@ -148,7 +150,8 @@ function relay_read_hello(_buffer)
     return {
         peer_id: _peer_id,
         uuid: _uuid,
-        attire: _attire
+        attire: _attire,
+        password: _password
     }
 }
 
@@ -159,7 +162,7 @@ function relay_read_hello(_buffer)
 /// @param {Array} _peer_list Array of { peer_id, uuid, attire }
 /// @param {Real} _world_seed World generation seed
 /// @param {Real} _world_time Current world time
-function relay_write_welcome(_buffer, _assigned_peer_id, _host_peer_id, _peer_list, _world_seed, _world_time)
+function relay_write_welcome(_buffer, _assigned_peer_id, _host_peer_id, _peer_list, _world_seed, _world_time, _session_config_public = {})
 {
     buffer_write(_buffer, buffer_string, _assigned_peer_id);
     buffer_write(_buffer, buffer_string, _host_peer_id);
@@ -174,6 +177,8 @@ function relay_write_welcome(_buffer, _assigned_peer_id, _host_peer_id, _peer_li
         buffer_write(_buffer, buffer_string, _peer.uuid);
         buffer_write(_buffer, buffer_string, json_stringify(_peer.attire ?? {}));
     }
+    
+    buffer_write(_buffer, buffer_string, json_stringify(_session_config_public ?? {}));
 }
 
 /// @desc Read WELCOME packet data
@@ -204,13 +209,34 @@ function relay_read_welcome(_buffer)
         });
     }
     
+    var _session_config_public_json = buffer_read(_buffer, buffer_string);
+    var _session_config_public = {}
+    try { _session_config_public = json_parse(_session_config_public_json); } catch(_e) {}
+    
     return {
         peer_id: _peer_id,
         host_peer_id: _host_peer_id,
         world_seed: _world_seed,
         world_time: _world_time,
-        peers: _peers
+        peers: _peers,
+        session_config_public: _session_config_public
     }
+}
+
+/// @desc Write KICK packet data
+/// @param {Id.Buffer} _buffer
+/// @param {String} _reason
+function relay_write_kick(_buffer, _reason)
+{
+    buffer_write(_buffer, buffer_string, _reason ?? "");
+}
+
+/// @desc Read KICK packet data
+/// @param {Id.Buffer} _buffer
+/// @returns {String}
+function relay_read_kick(_buffer)
+{
+    return buffer_read(_buffer, buffer_string);
 }
 
 /// @desc Write PEER_JOINED packet data

@@ -175,6 +175,27 @@ init_setting("audio", "audio_creature_hostile", new SettingsData(SETTINGS_TYPE.S
 
 #endregion
 
+#region Multiplayer
+
+init_setting("multiplayer", "mp_host_port", new SettingsData(SETTINGS_TYPE.SLIDER, 6510)
+    .set_range(1024, 65535));
+
+init_setting("multiplayer", "mp_host_max_players", new SettingsData(SETTINGS_TYPE.SLIDER, 4)
+    .set_range(2, 8));
+
+init_setting("multiplayer", "mp_host_default_permission", new SettingsData(SETTINGS_TYPE.ARROW, SETTINGS_LEVEL.MIN)
+    .add_values(SETTINGS_LEVEL.NONE, SETTINGS_LEVEL.MIN, SETTINGS_LEVEL.MAX));
+
+init_setting("multiplayer", "mp_host_auto_forward", new SettingsData(SETTINGS_TYPE.SWITCH, true));
+
+init_setting("multiplayer", "mp_host_advertise_public_ip", new SettingsData(SETTINGS_TYPE.SWITCH, true));
+
+init_setting("multiplayer", "mp_host_allow_build", new SettingsData(SETTINGS_TYPE.SWITCH, true));
+
+init_setting("multiplayer", "mp_host_allow_containers", new SettingsData(SETTINGS_TYPE.SWITCH, true));
+
+#endregion
+
 if (file_exists("settings.dat"))
 {
     var _buffer = buffer_load_decompressed("settings.dat");

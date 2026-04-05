@@ -428,8 +428,22 @@ function WorldData(_namespace, _id, _world_height) : ParentData(_namespace, _id)
             // Inject defaults
             for (var i = 0; i < ___aquifers_length; ++i)
             {
-                ___aquifers[i].noise_scale ??= 0.02;
-                ___aquifers[i].range ??= 255;
+                var _aquifer = ___aquifers[i];
+
+                if !variable_struct_exists(_aquifer, "noise_scale") _aquifer.noise_scale = 0.02;
+                if !variable_struct_exists(_aquifer, "range") _aquifer.range = 255;
+                if !variable_struct_exists(_aquifer, "fill_level") _aquifer.fill_level = 8;
+                if !variable_struct_exists(_aquifer, "cell_width") _aquifer.cell_width = 24;
+                if !variable_struct_exists(_aquifer, "cell_height") _aquifer.cell_height = 16;
+                if !variable_struct_exists(_aquifer, "level_cell_width") _aquifer.level_cell_width = _aquifer.cell_width * 3;
+                if !variable_struct_exists(_aquifer, "level_cell_height") _aquifer.level_cell_height = _aquifer.cell_height * 2;
+                if !variable_struct_exists(_aquifer, "cell_jitter") _aquifer.cell_jitter = 0.35;
+                if !variable_struct_exists(_aquifer, "cell_radius") _aquifer.cell_radius = 0.95;
+                if !variable_struct_exists(_aquifer, "fluid_level_padding") _aquifer.fluid_level_padding = 6;
+                if !variable_struct_exists(_aquifer, "activation_chance")
+                {
+                    _aquifer.activation_chance = clamp((1 - (_aquifer.threshold / max(1, _aquifer.range))) + 0.12, 0.08, 0.92);
+                }
             }
         }
         else

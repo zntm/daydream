@@ -60,6 +60,11 @@ function chunk_generate(_chunk, _context = undefined)
         _sky_enabled = _world_data.is_sky_biome_enabled();
     }
     
+    var _water_id = "phantasia:water";
+    var _water_data = _item_data[$ _water_id];
+    var _lava_id = "phantasia:lava";
+    var _lava_data = _item_data[$ _lava_id];
+
     // PASS 1: Calculate heights and bitmasks (Caves + Sky)
     for (var i = 0; i < CHUNK_SIZE; ++i)
     {
@@ -253,8 +258,6 @@ function chunk_generate(_chunk, _context = undefined)
             {
                 if !(_skip_z & (1 << CHUNK_DEPTH_LIQUID))
                 {
-                    var _water_id = "phantasia:water";
-                    var _water_data = _item_data[$ _water_id];
                     if (_water_data != undefined)
                     {
                         ++_chunk.chunk_count[@ CHUNK_DEPTH_LIQUID];
@@ -335,9 +338,7 @@ function chunk_generate(_chunk, _context = undefined)
                     }
                     else if (_world_height - _world_y <= 32 && _world_height - _world_y > 3)
                     {
-                        var _lava_id = "phantasia:lava";
-                        var _lava_d = _item_data[$ _lava_id];
-                        if (_lava_d != undefined)
+                        if (_lava_data != undefined)
                         {
                             ++_chunk.chunk_count[@ CHUNK_DEPTH_LIQUID];
                             _chunk.chunk[@ (CHUNK_DEPTH_LIQUID << (CHUNK_SIZE_BIT * 2)) | (j << CHUNK_SIZE_BIT) | i] = new Tile(_lava_id).set_component("level", 8);

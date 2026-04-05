@@ -3,11 +3,14 @@
 /// @desc Schedule liquid flow with proper delay
 function liquid_flow_schedule(_x, _y, _z, _parameter = {})
 {
+    static __liquid_flow_tick = function(_x, _y, _z, _parameter)
+    {
+        liquid_flow(_x, _y, _z, _parameter);
+    }
+
     var _tick_delay = _parameter[$ "tick_delay"] ?? LIQUID_FLOW_TICK_DELAY;
 
-    tick_delay_add(_tick_delay, function(_chain) {
-        liquid_flow(_chain.x, _chain.y, _chain.z, _chain.parameter);
-    }, [{ x: _x, y: _y, z: _z, parameter: _parameter }]);
+    tick_delay_add(_tick_delay, __liquid_flow_tick, [_x, _y, _z, _parameter]);
 }
 
 /// @desc Helper to start liquid flow cycle when water is placed
@@ -22,41 +25,36 @@ event_subscribe(GAME_EVENT.TILE_UPDATE, function(_data) {
 
     var _x = _data.x;
     var _y = _data.y;
+    var _z = CHUNK_DEPTH_LIQUID;
+    var _item_data = global.item_data;
 
-    // Check for water above the broken block
-    for (var _z = 0; _z < CHUNK_DEPTH; ++_z)
+    var _tile_above = tile_get(_x, _y - 1, _z);
+    if (_tile_above != TILE_EMPTY)
     {
-        // Check above
-        var _tile_above = tile_get(_x, _y - 1, _z);
-        if (_tile_above != TILE_EMPTY)
+        var _data_above = _item_data[$ _tile_above.get_id()];
+        if (_data_above.is_liquid())
         {
-            var _data_above = global.item_data[$ _tile_above.get_id()];
-            if (_data_above.is_liquid())
-            {
-                liquid_flow_start(_x, _y - 1, _z);
-            }
+            liquid_flow_start(_x, _y - 1, _z);
         }
+    }
 
-        // Check left
-        var _tile_left = tile_get(_x - 1, _y, _z);
-        if (_tile_left != TILE_EMPTY)
+    var _tile_left = tile_get(_x - 1, _y, _z);
+    if (_tile_left != TILE_EMPTY)
+    {
+        var _data_left = _item_data[$ _tile_left.get_id()];
+        if (_data_left.is_liquid())
         {
-            var _data_left = global.item_data[$ _tile_left.get_id()];
-            if (_data_left.is_liquid())
-            {
-                liquid_flow_start(_x - 1, _y, _z);
-            }
+            liquid_flow_start(_x - 1, _y, _z);
         }
+    }
 
-        // Check right
-        var _tile_right = tile_get(_x + 1, _y, _z);
-        if (_tile_right != TILE_EMPTY)
+    var _tile_right = tile_get(_x + 1, _y, _z);
+    if (_tile_right != TILE_EMPTY)
+    {
+        var _data_right = _item_data[$ _tile_right.get_id()];
+        if (_data_right.is_liquid())
         {
-            var _data_right = global.item_data[$ _tile_right.get_id()];
-            if (_data_right.is_liquid())
-            {
-                liquid_flow_start(_x + 1, _y, _z);
-            }
+            liquid_flow_start(_x + 1, _y, _z);
         }
     }
 });

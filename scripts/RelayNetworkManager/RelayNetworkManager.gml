@@ -73,11 +73,11 @@ function RelayNetworkManager() constructor
     /// @desc Host a new game session
     /// @param {Real} _port Port to listen on
     /// @returns {String} Room code to share, or "" on failure
-    static host_session = function(_port = 6510)
+    static host_session = function(_config = 6510)
     {
         if (!IS_MULTIPLAYER_ENABLED) return "";
         
-        var _code = global.relay.host(_port);
+        var _code = global.relay.host(_config);
         
         if (_code != "")
         {
@@ -101,11 +101,11 @@ function RelayNetworkManager() constructor
     /// @desc Join an existing session
     /// @param {String} _code Room/invite code
     /// @returns {Bool} True if connection initiated
-    static join_session = function(_code)
+    static join_session = function(_code, _password = "")
     {
         if (!IS_MULTIPLAYER_ENABLED) return false;
         
-        var _result = global.relay.join(_code);
+        var _result = global.relay.join(_code, _password);
         
         if (_result)
         {
@@ -203,6 +203,11 @@ function RelayNetworkManager() constructor
     {
         if (!is_connected) exit;
         
+        if (global.relay != undefined)
+        {
+            global.relay.update();
+        }
+        
         // Update validator (timeout checks, periodic movement validation)
         if (global.validator != undefined)
         {
@@ -223,6 +228,11 @@ function RelayNetworkManager() constructor
         // Apply world data
         global.current_world.seed = _welcome_data.world_seed;
         global.current_world.time = _welcome_data.world_time;
+        
+        if (_welcome_data.session_config_public != undefined)
+        {
+            global.relay.session_config_public = _welcome_data.session_config_public;
+        }
         
         // Re-seed noise
         open_simplex_noise_seed(_welcome_data.world_seed);
@@ -488,6 +498,8 @@ function RelayNetworkManager() constructor
     /// @desc Handle inventory action packet (host only)
     static _handle_inventory_action = function(_from_peer_id, _buffer)
     {
+        if (!_peer_can_manage_inventory(_from_peer_id)) exit;
+        
         var _data = relay_read_inventory_action(_buffer);
         var _peer = global.relay.peers[$ _from_peer_id];
         if (_peer == undefined) exit;
@@ -554,6 +566,8 @@ function RelayNetworkManager() constructor
     /// @desc Handle container open packet (host only)
     static _handle_container_open = function(_from_peer_id, _buffer)
     {
+        if (!_peer_can_open_containers(_from_peer_id)) exit;
+        
         var _x = buffer_read(_buffer, buffer_s32);
         var _y = buffer_read(_buffer, buffer_s32);
         var _z = buffer_read(_buffer, buffer_s32);
@@ -854,5 +868,36 @@ function RelayNetworkManager() constructor
             if (_peer.player_instance == _inst) return _peer;
         }
         return undefined;
+    }
+    
+    static _get_peer_permission_level = function(_peer_id)
+    {
+        if (_peer_id == global.relay.host_peer_id || (_peer_id == global.relay.local_peer_id && is_host))
+        {
+            return SETTINGS_LEVEL.MAX;
+        }
+        
+        var _peer = global.relay.peers[$ _peer_id];
+        if (_peer != undefined && _peer.permission_level != undefined)
+        {
+            return _peer.permission_level;
+        }
+        
+        return global.relay.session_config_public.default_permission_level ?? SETTINGS_LEVEL.MIN;
+    }
+    
+    static _peer_can_manage_inventory = function(_peer_id)
+    {
+        return _get_peer_permission_level(_peer_id) >= SETTINGS_LEVEL.MIN;
+    }
+    
+    static _peer_can_open_containers = function(_peer_id)
+    {
+        if (!(global.relay.session_config_public.allow_containers ?? true))
+        {
+            return false;
+        }
+        
+        return _get_peer_permission_level(_peer_id) >= SETTINGS_LEVEL.MIN;
     }
 }

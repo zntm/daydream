@@ -133,7 +133,14 @@
                 "octaves": 3,
                 "fill_level": 8,
                 "noise_scale": 0.02,
-                "range": 255
+                "range": 255,
+                "activation_chance": 0.4,
+                "cell_width": 30,
+                "cell_height": 18,
+                "level_cell_width": 90,
+                "level_cell_height": 54,
+                "cell_radius": 1.05,
+                "fluid_level_padding": 10
             },
             {
                 "type": "phantasia:lava",
@@ -143,7 +150,14 @@
                 "octaves": 2,
                 "fill_level": 8,
                 "noise_scale": 0.02,
-                "range": 255
+                "range": 255,
+                "activation_chance": 0.24,
+                "cell_width": 22,
+                "cell_height": 14,
+                "level_cell_width": 66,
+                "level_cell_height": 42,
+                "cell_radius": 0.9,
+                "fluid_level_padding": 8
             }
         ],
         "breach_depth": -8,

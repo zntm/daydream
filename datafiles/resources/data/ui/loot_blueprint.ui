@@ -5,7 +5,7 @@ var _padding = 8
 var _spacing = 6
 
 @window(loot_blueprint) {
-    size = (280, 240)
+    size = (320, 420)
     position = (8, 100)
     movable = true
     resizable = false
@@ -24,34 +24,96 @@ var _spacing = 6
         }
         
         @textbox(id_input) {
-            size = (260, 24)
+            size = (300, 24)
             text = *loot_id
-            placeholder = "namespace:loot/name"
+            placeholder = "loot/path"
+        }
+        
+        @text(rolls_label) {
+            text = "Rolls (min, max):"
+            colour = #aaaaaa
+            text_scale = 0.8
+        }
+        
+        @area(rolls_row) {
+            layout = LAYOUT_HORIZONTAL
+            spacing = 8
+
+            @textbox(rolls_min_input) {
+                size = (146, 24)
+                mode = "integer"
+                text = *rolls_min
+                placeholder = "1"
+            }
+
+            @textbox(rolls_max_input) {
+                size = (146, 24)
+                mode = "integer"
+                text = *rolls_max
+                placeholder = "1"
+            }
         }
         
         @text(item_label) {
-            text = "Item ID:"
+            text = "Entry Item ID:"
             colour = #aaaaaa
             text_scale = 0.8
         }
         
         @textbox(item_input) {
-            size = (260, 24)
+            size = (300, 24)
             text = *item_id
-            placeholder = "namespace:item/name"
+            placeholder = "phantasia:item_name or $EMPTY"
         }
-        
-        @text(weight_label) {
-            text = "Weight:"
+
+        @text(amount_label) {
+            text = "Amount (min, max):"
             colour = #aaaaaa
             text_scale = 0.8
         }
-        
+
+        @area(amount_row) {
+            layout = LAYOUT_HORIZONTAL
+            spacing = 8
+
+            @textbox(amount_min_input) {
+                size = (146, 24)
+                mode = "integer"
+                text = *amount_min
+                placeholder = "1"
+            }
+
+            @textbox(amount_max_input) {
+                size = (146, 24)
+                mode = "integer"
+                text = *amount_max
+                placeholder = "1"
+            }
+        }
+
+        @text(weight_label) {
+            text = "Entry Weight:"
+            colour = #aaaaaa
+            text_scale = 0.8
+        }
+
         @textbox(weight_input) {
-            size = (260, 24)
+            size = (300, 24)
             mode = "integer"
             text = *weight
-            placeholder = "100"
+            placeholder = "1"
+        }
+
+        @text(preview_label) {
+            text = "Queued Entries:"
+            colour = #aaaaaa
+            text_scale = 0.8
+        }
+
+        @text(entries_preview_label) {
+            text = *entries_preview
+            colour = #ffffff
+            text_scale = 0.7
         }
         
         @area(button_row) {
@@ -66,8 +128,14 @@ var _spacing = 6
             
             @button(export_btn) {
                 text = "Export"
-                size = (120, 28)
+                size = (92, 28)
                 on_select_release = @"phantasia:blueprint/export_loot"
+            }
+
+            @button(cancel_btn) {
+                text = "Cancel"
+                size = (92, 28)
+                on_select_release = @"phantasia:blueprint/cancel"
             }
         }
     }

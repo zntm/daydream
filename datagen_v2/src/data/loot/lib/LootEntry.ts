@@ -1,11 +1,17 @@
 import type { LootEntryItem } from "./LootEntryItem";
 
 export class LootEntry {
-    private item: string | LootEntryItem;
     private weight: number;
+    private item?: LootEntryItem;
+    private value?: string;
 
     constructor(item: string | LootEntryItem, weight: number) {
-        this.item = item;
         this.weight = weight;
+
+        if (typeof item === "string") {
+            this.value = item;
+        } else {
+            this.item = item;
+        }
     }
 }
