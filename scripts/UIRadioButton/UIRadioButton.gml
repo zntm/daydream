@@ -6,6 +6,8 @@ function UIRadioButton(_x, _y, _text = "") : UIElement(_x, _y, 100, 20) construc
 {
     text = _text;
     
+    setting_name = undefined;
+    
     value = ""; /* the value this button represents */
     
     group = ""; /* radio group name */
@@ -21,6 +23,16 @@ function UIRadioButton(_x, _y, _text = "") : UIElement(_x, _y, 100, 20) construc
     selected_color = #4a8aff;
     
     text_color = c_white;
+    
+    track_sprite = spr_Menu_Indent;
+    
+    handle_sprite = spr_Menu_Button_Main;
+    
+    handle_select_sprite = spr_Menu_Button_Select;
+    
+    handle_xscale = 1;
+    
+    handle_yscale = 2;
     
     
     /* hover state */
@@ -39,6 +51,16 @@ function UIRadioButton(_x, _y, _text = "") : UIElement(_x, _y, 100, 20) construc
         var _mx = ui_get_mouse_x();
         var _my = ui_get_mouse_y();
         
+        if (setting_name != undefined)
+        {
+            var _setting_value = global.settings[$ setting_name];
+            
+            if (_setting_value != undefined)
+            {
+                selected = (_setting_value == true);
+            }
+        }
+        
         
         var _left = _abs_x;
         var _top = _abs_y;
@@ -47,6 +69,27 @@ function UIRadioButton(_x, _y, _text = "") : UIElement(_x, _y, 100, 20) construc
         
         
         is_hovered = (_mx >= _left && _mx <= _right && _my >= _top && _my <= _bottom);
+        
+        var _p = parent;
+        while (_p != undefined)
+        {
+            if (instanceof(_p) == "UIScrollArea")
+            {
+                var _p_left = _p.get_absolute_x();
+                var _p_top = _p.get_absolute_y();
+                var _p_right = _p_left + _p.width;
+                var _p_bottom = _p_top + _p.height;
+                
+                if (_mx < _p_left || _mx > _p_right || _my < _p_top || _my > _p_bottom)
+                {
+                    is_hovered = false;
+                    
+                    break;
+                }
+            }
+            
+            _p = _p.parent;
+        }
         
         
         if (is_hovered) && !(global.ui_input_consumed) && (mouse_check_button_pressed(mb_left)) 
@@ -117,16 +160,31 @@ function UIRadioButton(_x, _y, _text = "") : UIElement(_x, _y, 100, 20) construc
             var _x1 = _abs_x * _base_scale_x;
             var _y1 = _abs_y * _base_scale_y;
             var _x2 = _x1 + (width * _base_scale_x);
-            var _y2 = _y1 + (height * _base_scale_y);
-            var _cy = (_y1 + _y2) * 0.5;
-            var _radius = max(1, (_y2 - _y1) * 0.5);
-            var _track_color = selected ? selected_color : circle_color;
-            var _handle_x = selected ? (_x2 - _radius) : (_x1 + _radius);
+            var _cy = _y1 + (height * _base_scale_y * 0.5);
+            var _track_mid_x = _x1 + ((_x2 - _x1) * 0.5);
+            var _track_width = width * _base_scale_x;
+            var _handle_x = selected ? _x2 : (_x2 - 32 * _base_scale_x);
+            var _edge_sprite = asset_get_index(sprite_get_name(handle_sprite) + "_Edge");
+            var _has_edge = sprite_exists(_edge_sprite);
+            var _edge_offset = (_has_edge ? sprite_get_height(_edge_sprite) * handle_yscale * _base_scale_y : 0);
+            var _is_active = false;
+            var _handle_w = (sprite_get_width(handle_sprite) * handle_xscale * _base_scale_x) + 2;
+            var _handle_h = (sprite_get_height(handle_sprite) * handle_yscale * _base_scale_y) + 2;
+            var _draw_y = _cy + (_is_active ? _edge_offset : 0);
 
-            draw_rectangle_colour(_x1 + _radius, _y1, _x2 - _radius, _y2, _track_color, _track_color, _track_color, _track_color, false);
-            draw_circle_colour(_x1 + _radius, _cy, _radius, _track_color, _track_color, false);
-            draw_circle_colour(_x2 - _radius, _cy, _radius, _track_color, _track_color, false);
-            draw_circle_colour(_handle_x, _cy, max(1, _radius - (_base_scale_x * 2)), c_white, c_white, false);
+            draw_sprite_ext(track_sprite, 0, _track_mid_x, _cy, _track_width / 8, 16 / 8 * _base_scale_y, 0, c_white, 1);
+            
+            if (is_hovered)
+            {
+                draw_sprite_stretched_ext(handle_select_sprite, 0, _handle_x - (_handle_w / 2), _draw_y - (_handle_h / 2), _handle_w, _handle_h + _edge_offset, c_white, 1);
+            }
+            
+            if (_has_edge)
+            {
+                draw_sprite_ext(_edge_sprite, 0, _handle_x, _cy + ((sprite_get_height(handle_sprite) * handle_yscale * _base_scale_y) / 2), handle_xscale * _base_scale_x, 1, 0, c_white, 1);
+            }
+            
+            draw_sprite_ext(handle_sprite, 0, _handle_x, _draw_y, handle_xscale * _base_scale_x, handle_yscale * _base_scale_y, 0, c_white, 1);
 
             exit;
         }

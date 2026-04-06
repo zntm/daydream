@@ -213,6 +213,18 @@ function menu_settings_ui_populate_list()
 			var _slider = new UISlider(_value_x, 24, _value_width, _data.get_range_min(), _data.get_range_max(), _value);
 			_slider.setting_name = _name;
 			
+			_slider.add_event_handler("on_drag", method(_slider, function(_data) {
+				var _new_value = _data.value;
+				
+				if (global.settings[$ self.setting_name] != _new_value)
+				{
+					var _on_update = global.settings_data[$ self.setting_name].get_on_update();
+					if (_on_update != undefined) _on_update(self.setting_name, _new_value);
+				}
+				
+				global.settings[$ self.setting_name] = _new_value;
+			}));
+			
 			_slider.add_event_handler("on_value_change", method(_slider, function(_new_value) {
 				if (global.settings[$ self.setting_name] != _new_value)
 				{
@@ -221,6 +233,11 @@ function menu_settings_ui_populate_list()
 				}
 
 				global.settings[$ self.setting_name] = _new_value;
+				
+				var _on_release = global.settings_data[$ self.setting_name].get_on_release();
+				if (_on_release != undefined) _on_release(self.setting_name, _new_value);
+				
+				file_save_settings();
 			}));
 			
 			_container.add_child(_slider);
@@ -243,6 +260,7 @@ function menu_settings_ui_populate_list()
                 if (_on_release != undefined) _on_release(self.setting_name, _new_value);
 				
 				global.settings[$ self.setting_name] = _new_value;
+				file_save_settings();
 			}));
 			
 			_container.add_child(_switch);
