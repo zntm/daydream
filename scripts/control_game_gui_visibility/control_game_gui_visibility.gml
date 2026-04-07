@@ -26,7 +26,13 @@ function control_game_gui_visibility()
             && (array_length(global.gui_panel_crafting_modular.children) > 0);
     }
 
+    if (variable_global_exists("gui_panel_effects")) && (global.gui_panel_effects != undefined)
+    {
+        global.gui_panel_effects.visible = !_generating && _gui && !_menu && !_chat;
+    }
+
     global.ui_input_consumed = false;
+    global.ui_hover_consumed = false;
 
     global.gui_root.update();
 

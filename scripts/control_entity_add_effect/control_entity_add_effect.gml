@@ -1,11 +1,12 @@
-/// @function control_entity_add_effect(_target, _effect_id, _duration, _level, _source)
+/// @function control_entity_add_effect(_target, _effect_id, _duration, _level, _source, _particle)
 /// @desc Adds an effect to an entity. Triggers on_effect if the effect is new.
 /// @param {Id.Instance} _target - The entity to receive the effect
 /// @param {String} _effect_id - The ID of the effect to add (e.g. "phantasia:poison")
 /// @param {Real} _duration - Duration in ticks
 /// @param {Real} _level - Effect level (default 1)
 /// @param {Id.Instance} _source - Source of the effect (optional)
-function control_entity_add_effect(_target, _effect_id, _duration, _level = 1, _source = undefined)
+/// @param {Bool} _particle - Whether particle VFX should be enabled (default true)
+function control_entity_add_effect(_target, _effect_id, _duration, _level = 1, _source = undefined, _particle = true)
 {
     // Validate target
     if (!instance_exists(_target)) exit;
@@ -29,19 +30,29 @@ function control_entity_add_effect(_target, _effect_id, _duration, _level = 1, _
         {
             _effect_inst.level = _level;
             _effect_inst.timer = _duration;
+            _effect_inst.duration_max = _duration;
         }
         else if (_level == _effect_inst.level)
         {
-            _effect_inst.timer = max(_effect_inst.timer, _duration);
+            if (_duration >= _effect_inst.timer)
+            {
+                _effect_inst.timer = _duration;
+                _effect_inst.duration_max = _duration;
+            }
         }
+
+        _effect_inst.source = _source;
+        _effect_inst.particle = _particle;
     }
     else
     {
         // Add new effect
         _target.effects[$ _effect_id] = {
             timer: _duration,
+            duration_max: _duration,
             level: _level,
-            source: _source
+            source: _source,
+            particle: _particle
         }
         
         // Trigger on_effect
@@ -59,7 +70,7 @@ function control_entity_add_effect(_target, _effect_id, _duration, _level = 1, _
         }
         
         // Initial particles?
-        if (_effect_data.get_particle() != undefined)
+        if (_particle) && (_effect_data.get_particle() != undefined)
         {
              // Maybe spawn one immediately?
         }

@@ -177,7 +177,14 @@ function EntityState() constructor
             for (var i = 0; i < array_length(_effect_names); ++i)
             {
                 var _name = _effect_names[i];
-                _inst.effects[$ _name] = effects[$ _name];
+                var _effect = effects[$ _name];
+
+                if (_effect != undefined) && (_effect.duration_max == undefined) && (_effect.timer != undefined)
+                {
+                    _effect.duration_max = _effect.timer;
+                }
+
+                _inst.effects[$ _name] = _effect;
             }
         }
         
@@ -251,6 +258,11 @@ function EntityState() constructor
             try
             {
                 effects[$ _name] = json_parse(_effect_data_json);
+
+                if (effects[$ _name].duration_max == undefined) && (effects[$ _name].timer != undefined)
+                {
+                    effects[$ _name].duration_max = effects[$ _name].timer;
+                }
             }
             catch (_e)
             {
@@ -294,6 +306,25 @@ function EntityState() constructor
         timer_immunity = _data.timer_immunity;
         timer_regeneration = _data.timer_regeneration;
         effects = _data.effects;
+
+        if (effects == undefined)
+        {
+            effects = {};
+        }
+        else
+        {
+            var _effect_names = struct_get_names(effects);
+
+            for (var i = 0; i < array_length(_effect_names); ++i)
+            {
+                var _effect = effects[$ _effect_names[i]];
+
+                if (_effect != undefined) && (_effect.duration_max == undefined) && (_effect.timer != undefined)
+                {
+                    _effect.duration_max = _effect.timer;
+                }
+            }
+        }
         mount_uuid = _data.mount_uuid;
         rider_uuid = _data.rider_uuid;
         

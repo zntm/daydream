@@ -27,6 +27,7 @@ function file_load_snippet_effects(_buffer)
         _data[$ _name] = {
             level: _level,
             timer: _timer,
+            duration_max: _timer,
             particle: _particle
         }
     }

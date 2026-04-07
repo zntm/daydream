@@ -22,38 +22,6 @@ function effect_set(_type, _time, _level = 1, _object = id, _particle = true)
     var _effect_immune = _object.effect_immune;
     
     if (_effect_immune != undefined) && (array_contains(_effect_immune, _type)) exit;
-    
-    with (_object)
-    {
-        effects[$ _type] = {
-            timer: _time * GAME_TICK,
-            level: _level,
-            particle: _particle
-        }
-        
-        if (object_index == obj_Creature)
-        {
-            get_buffs(global.creature_data[$ creature_id].attributes);
-        }
-        else if (object_index == obj_Player)
-        {
-            get_buffs(global.attribute_player);
-        }
-    }
-    
-    // Execute on_effect ItemFunction if defined
-    var _on_effect = _data.get_on_effect();
-    
-    if (_on_effect != undefined)
-    {
-    if (_on_effect != undefined)
-    {
-        var _exec = {
-            id: _on_effect.id,
-            parameters: _on_effect[$ "parameters"]
-        }
-        
-        function_execute(_exec, _object.x, _object.y, CHUNK_DEPTH_DEFAULT, 1, 1, _object);
-    }
-    }
+
+    control_entity_add_effect(_object, _type, _time * GAME_TICK, _level, id, _particle);
 }
