@@ -43,3 +43,37 @@ var bar_empty = $sprite(spr_GUI_Stat_Bar_Empty) {
         }
     }
 }
+
+@area(breath_container) {
+    position = ORIGIN_BOTTOM_CENTER + (8, -18)
+    size = (60, 2)
+    visible = *breath_visible
+
+    @bar(breath_fill) {
+        position = (0, 0)
+        size = (60, 2)
+        value = *breath_value
+        max = *breath_max
+
+        background = #143248c0
+        color = #73d8ff
+        smooth = false
+    }
+}
+
+@area(charge_container) {
+    position = ORIGIN_CENTER + (0, 16)
+    size = (60, 2)
+    visible = *charge_visible
+
+    @bar(charge_bar) {
+        position = (0, 0)
+        size = (60, 2)
+        value = *charge_value
+        max = *charge_max
+
+        background = #33333380
+        color = #888888
+        smooth = false
+    }
+}

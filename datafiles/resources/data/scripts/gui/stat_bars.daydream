@@ -1,14 +1,20 @@
-import hp_container, stamina_container from "ui/stat_bars.ui"
+import hp_container, stamina_container, breath_container, charge_container from "ui/stat_bars.ui"
 
 var player = parameter.player
 var parent = parameter.parent
 
-ui_spawn([hp_container, stamina_container], {
+ui_spawn([hp_container, stamina_container, breath_container, charge_container], {
     parent: parent,
     link: {
         hp_value: () -> player.hp,
         hp_max: () -> player.hp_max,
         stamina_value: () -> player.stamina,
         stamina_max: () -> player.stamina_max,
+        breath_value: () -> player.breath,
+        breath_max: () -> player.breath_max,
+        breath_visible: () -> player.breath < player.breath_max || player.timer_drown > 0,
+        charge_value: () -> player.charge_time,
+        charge_max: () -> max(player.charge_threshold, 0.001),
+        charge_visible: () -> player.charge_time > 0,
     }
 })

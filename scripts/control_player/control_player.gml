@@ -375,38 +375,6 @@ function control_player()
                 spawn_particle(x + random_range(-12, 12), y - 20 + random_range(-12, 12), "phantasia:entity/glow_ready");
             }
             
-            // Launcher Charge UI
-            if (_data.get_hold_type() == ITEM_HOLD_TYPE.LAUNCHER)
-            {
-                // Spawn charge UI if not yet created
-                if (charge_ui == undefined)
-                {
-                    var _charge_def = ui_load("ui/launcher_charge.ui");
-                    if (_charge_def != undefined)
-                    {
-                        charge_ui_link = {
-                            is_visible: true,
-                            charge_value: 0,
-                            charge_max: _skill.threshold
-                        }
-                        charge_ui = ui_spawn(_charge_def, {
-                            link: charge_ui_link,
-                            parent: global.gui_root
-                        });
-                        PRINT("[Launcher] Charge UI spawned");
-                    }
-                }
-                
-                // Update charge UI bindings
-                if (charge_ui != undefined)
-                {
-                    charge_ui_link.charge_value = charge_time;
-                    charge_ui_link.charge_max = _skill.threshold;
-                    charge_ui_link.is_visible = true;
-                    ui_mark_dirty(charge_ui);
-                }
-            }
-            
             // Ensure tool visual exists while charging
             if (!instance_exists(inst_item))
             {
@@ -483,15 +451,6 @@ function control_player()
                 }
             }
             charge_time = 0;
-            
-            // Hide charge UI on release
-            if (charge_ui != undefined)
-            {
-                charge_ui_link.is_visible = false;
-                ui_mark_dirty(charge_ui);
-                ui_instance_destroy(charge_ui);
-                charge_ui = undefined;
-            }
         }
     }
     
@@ -503,30 +462,6 @@ function control_player()
             charge_time += 1 / GAME_TICK;
             charge_threshold = 0.5; // Default threshold
             
-            // Launcher Charge UI (non-skill fallback)
-            if (charge_ui == undefined)
-            {
-                var _charge_def = ui_load("ui/launcher_charge.ui");
-                if (_charge_def != undefined)
-                {
-                    charge_ui_link = {
-                        is_visible: true,
-                        charge_value: 0,
-                        charge_max: 0.5
-                    }
-                    charge_ui = ui_spawn(_charge_def, {
-                        link: charge_ui_link,
-                        parent: global.gui_root
-                    });
-                }
-            }
-            if (charge_ui != undefined)
-            {
-                charge_ui_link.charge_value = charge_time;
-                charge_ui_link.charge_max = 0.5;
-                charge_ui_link.is_visible = true;
-                ui_mark_dirty(charge_ui);
-            }
         }
         else if (charge_time > 0)
         {
@@ -540,13 +475,6 @@ function control_player()
                 timer_attack = _data.get_item_cooldown();
             }
             charge_time = 0;
-            
-            // Hide charge UI on release
-            if (charge_ui != undefined)
-            {
-                ui_instance_destroy(charge_ui);
-                charge_ui = undefined;
-            }
         }
     }
 
@@ -988,6 +916,7 @@ function control_player()
         }
     }
 
+    player_update_breath();
     control_entity_suffocation(id);
 }
 
@@ -995,10 +924,50 @@ function control_player()
 function player_reset_charge()
 {
     charge_time = 0;
-    
-    if (charge_ui != undefined)
+}
+
+/// @desc Update player breathing and drowning while underwater.
+function player_update_breath()
+{
+    var _eye_y = y - ((attribute.get_collision_box_height() - attribute.get_eye_level()) * entity_yscale);
+    var _tile_x = floor(x / TILE_SIZE);
+    var _tile_y = floor(_eye_y / TILE_SIZE);
+    var _tile = tile_get(_tile_x, _tile_y, CHUNK_DEPTH_LIQUID);
+    var _underwater = false;
+
+    if (_tile != TILE_EMPTY)
     {
-        ui_instance_destroy(charge_ui);
-        charge_ui = undefined;
+        var _data = global.item_data[$ _tile.get_id()];
+        _underwater = (_data != undefined) && _data.is_liquid();
+    }
+
+    if (_underwater)
+    {
+        breath = max(0, breath - (1 / GAME_TICK));
+
+        if (breath <= 0)
+        {
+            timer_drown += 1 / GAME_TICK;
+
+            if (timer_drown >= 1.0)
+            {
+                timer_drown -= 1.0;
+                control_entity_damage(id, noone, 2, 0, 0, 1);
+
+                if (is_local)
+                {
+                    obj_Game_Control.surface_refresh |= SURFACE_REFRESH_BOOL.HP;
+                }
+            }
+        }
+        else
+        {
+            timer_drown = 0;
+        }
+    }
+    else
+    {
+        breath = min(breath_max, breath + (breath_recovery_rate / GAME_TICK));
+        timer_drown = 0;
     }
 }

@@ -43,6 +43,8 @@ function control_gametick(_delta_time)
                     }
                     
                     hp     = hp_max;
+                    breath = breath_max;
+                    timer_drown = 0;
                     effects = {}
                     
                     timer_immunity = 3;

@@ -31,8 +31,10 @@ stamina_max = 100;
 stamina_regen_timer = 0;
 charge_time = 0;
 charge_threshold = 1.0;
-charge_ui = undefined;
-charge_ui_link = undefined;
+breath_max = 8.0;
+breath = breath_max;
+breath_recovery_rate = 3.0;
+timer_drown = 0;
 
 // Visuals
 attire = undefined;
