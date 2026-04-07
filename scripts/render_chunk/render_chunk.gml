@@ -1,5 +1,5 @@
 
-function render_chunk(_page, _position, _texel_width, _texel_height, _inst, _z)
+function render_chunk(_page, _position, _texel_width, _texel_height, _inst, _z, _emissive_only = false)
 {
     static __level_key = "level";
     static __neighbor_tiles = array_create(4);
@@ -131,8 +131,14 @@ function render_chunk(_page, _position, _texel_width, _texel_height, _inst, _z)
             var _index_offset = _tile.get_index_offset();
             var _frame_index = _index + _index_offset;
             var _animation_type = _data.get_animation_type();
-            var _sprite = _data.get_sprite();
+            var _sprite = _emissive_only ? _data.get_tile_emissive_sprite() : _data.get_sprite();
+
+            if (_sprite == undefined) continue;
+
             var _atla = _page[$ _sprite];
+
+            if (_atla == undefined) continue;
+
             var _atla_sprite = _position[_atla.___sprites_indeces[0]];
 
             var _draw_x = _xstart + (_x << TILE_SIZE_BIT);
@@ -150,6 +156,8 @@ function render_chunk(_page, _position, _texel_width, _texel_height, _inst, _z)
                     _texel_width,
                     _texel_height,
                     _animation_type,
+                    _data.get_animation_fps(),
+                    _data.get_render_mix_frames(),
                     _atla,
                     _atla_sprite,
                     _index,
@@ -316,6 +324,8 @@ function render_chunk(_page, _position, _texel_width, _texel_height, _inst, _z)
                 _texel_width,
                 _texel_height,
                 _animation_type,
+                _data.get_animation_fps(),
+                _data.get_render_mix_frames(),
                 _atla,
                 _atla_sprite,
                 _frame_index,
@@ -334,11 +344,26 @@ function render_chunk(_page, _position, _texel_width, _texel_height, _inst, _z)
     if (!_has_vertices)
     {
         vertex_delete_buffer(_buffer);
-        _inst.chunk_vertex_buffer[@ _z] = -1;
-        return -1;
+        if (_emissive_only)
+        {
+            _inst.chunk_vertex_emissive_buffer[@ _z] = -2;
+        }
+        else
+        {
+            _inst.chunk_vertex_buffer[@ _z] = -2;
+        }
+
+        return -2;
     }
 
-    _inst.chunk_vertex_buffer[@ _z] = _buffer;
+    if (_emissive_only)
+    {
+        _inst.chunk_vertex_emissive_buffer[@ _z] = _buffer;
+    }
+    else
+    {
+        _inst.chunk_vertex_buffer[@ _z] = _buffer;
+    }
 
     vertex_freeze(_buffer);
 

@@ -1,4 +1,4 @@
-function chunk_vertex_tile_connected(_buffer, _texel_width, _texel_height, _animation_type, _atla, _atla_sprite, _index, _index_offset, _x, _y, _xscale, _yscale, _rotation, _has_vertices = false)
+function chunk_vertex_tile_connected(_buffer, _texel_width, _texel_height, _animation_type, _animation_fps, _mix_frames, _atla, _atla_sprite, _index, _index_offset, _x, _y, _xscale, _yscale, _rotation, _has_vertices = false)
 {
     static __corner_index = function(_index, _bit_a, _bit_b, _bit_corner)
     {
@@ -40,6 +40,8 @@ function chunk_vertex_tile_connected(_buffer, _texel_width, _texel_height, _anim
             _texel_width,
             _texel_height,
             _animation_type,
+            _animation_fps,
+            _mix_frames,
             _atla,
             _atla_sprite,
             _index_offset,
@@ -59,6 +61,8 @@ function chunk_vertex_tile_connected(_buffer, _texel_width, _texel_height, _anim
             _texel_width,
             _texel_height,
             _animation_type,
+            _animation_fps,
+            _mix_frames,
             _atla,
             _atla_sprite,
             _index_offset + 3,
@@ -80,6 +84,8 @@ function chunk_vertex_tile_connected(_buffer, _texel_width, _texel_height, _anim
             _texel_width,
             _texel_height,
             _animation_type,
+            _animation_fps,
+            _mix_frames,
             _atla,
             _atla_sprite,
             _index_offset + 4,
@@ -99,6 +105,8 @@ function chunk_vertex_tile_connected(_buffer, _texel_width, _texel_height, _anim
             _texel_width,
             _texel_height,
             _animation_type,
+            _animation_fps,
+            _mix_frames,
             _atla,
             _atla_sprite,
             _index_offset + 1,
@@ -118,6 +126,8 @@ function chunk_vertex_tile_connected(_buffer, _texel_width, _texel_height, _anim
             _texel_width,
             _texel_height,
             _animation_type,
+            _animation_fps,
+            _mix_frames,
             _atla,
             _atla_sprite,
             _index_offset + 2,

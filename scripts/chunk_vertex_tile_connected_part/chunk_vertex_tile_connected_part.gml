@@ -71,7 +71,7 @@ function chunk_vertex_tile_connected_part(_buffer, _x, _y, _w, _h, _cos, _sin, _
     var _dx = _cx + _wx;
     var _dy = _cy + _wy;
 
-    // Pack: float1 = animation_type (DEFAULT = 0), float2 = (index * 256) + width
+    // Pack: float1 = animation metadata, float2 = frame_index | (width << 8) | (frame_count << 16)
     var _packed_index_width = (_index << 8) | _width;
 
     return chunk_vertex_strip_quad(

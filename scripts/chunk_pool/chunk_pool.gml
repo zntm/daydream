@@ -143,6 +143,15 @@ function chunk_refresh_connection_range(_chunk, _xstart, _ystart, _xend, _yend)
             }
 
             _chunk.chunk_vertex_buffer[@ _tile_z] = -1;
+
+            _vertex_buffer = _chunk.chunk_vertex_emissive_buffer[_tile_z];
+
+            if (vertex_buffer_exists(_vertex_buffer))
+            {
+                vertex_delete_buffer(_vertex_buffer);
+            }
+
+            _chunk.chunk_vertex_emissive_buffer[@ _tile_z] = -1;
         }
     }
 }
@@ -271,6 +280,7 @@ function Chunk(_x, _y) constructor
     
     // Rendering
     chunk_vertex_buffer = array_create(CHUNK_DEPTH, -1);
+    chunk_vertex_emissive_buffer = array_create(CHUNK_DEPTH, -1);
     chunk_count = array_create(CHUNK_DEPTH, 0);
     chunk_display = 0;
     surface_lighting = -1;
@@ -417,6 +427,12 @@ function ChunkPool() : Pool() constructor
                 vertex_delete_buffer(_chunk.chunk_vertex_buffer[i]);
             }
             _chunk.chunk_vertex_buffer[@ i] = -1;
+
+            if (vertex_buffer_exists(_chunk.chunk_vertex_emissive_buffer[i]))
+            {
+                vertex_delete_buffer(_chunk.chunk_vertex_emissive_buffer[i]);
+            }
+            _chunk.chunk_vertex_emissive_buffer[@ i] = -1;
         }
         
         // Free surfaces

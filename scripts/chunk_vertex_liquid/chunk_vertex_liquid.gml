@@ -130,6 +130,9 @@ function chunk_vertex_liquid(_buffer, _texel_width, _texel_height, _animation_ty
         _packed_index_width = (_index << 8) | _width;
     }
 
+    var _number = (_atla_value >> 44) & 2047;
+    _packed_index_width |= (_number << 16);
+
     return chunk_vertex_strip_quad(
         _buffer,
         _has_vertices,

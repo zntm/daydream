@@ -176,6 +176,15 @@ function tile_place(_x, _y, _z, _tile)
         }
         
         _chunk.chunk_vertex_buffer[@ _zz] = -1;
+
+        _vertex_buffer = _chunk.chunk_vertex_emissive_buffer[_zz];
+
+        if (vertex_buffer_exists(_vertex_buffer))
+        {
+            vertex_delete_buffer(_vertex_buffer);
+        }
+
+        _chunk.chunk_vertex_emissive_buffer[@ _zz] = -1;
     }
     
     // Invalidate neighbors if on boundary
@@ -208,6 +217,15 @@ function tile_place(_x, _y, _z, _tile)
                     }
                     
                     _n.chunk_vertex_buffer[@ _zz] = -1;
+
+                    _vertex_buffer = _n.chunk_vertex_emissive_buffer[_zz];
+
+                    if (vertex_buffer_exists(_vertex_buffer))
+                    {
+                        vertex_delete_buffer(_vertex_buffer);
+                    }
+
+                    _n.chunk_vertex_emissive_buffer[@ _zz] = -1;
                 }
             }
         }

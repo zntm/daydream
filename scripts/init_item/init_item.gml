@@ -75,6 +75,18 @@ function init_item(_namespace, _directory)
 
             if (_tile != undefined)
             {
+                var _render = _tile[$ "render"];
+
+                if (_render != undefined)
+                {
+                    var _emissive = _render[$ "emissive"];
+
+                    if (_emissive != undefined)
+                    {
+                        _render.emissive = init_asset_resolve(_namespace, _emissive);
+                    }
+                }
+
                 var _drops = _tile[$ "drops"];
 
                 if (is_array(_drops))
@@ -133,6 +145,22 @@ function init_item(_namespace, _directory)
         if (_item_data.get_type() & (ITEM_TYPE_BIT.PLATFORM | ITEM_TYPE_BIT.SOLID | ITEM_TYPE_BIT.UNTOUCHABLE))
         {
             atla_push("item", _sprite_asset_obj.get_sprite(), _sprite_id);
+
+            var _emissive_sprite = _item_data.get_tile_emissive_sprite();
+
+            if (_emissive_sprite != undefined)
+            {
+                var _emissive_asset = global.sprite_asset[$ _emissive_sprite];
+
+                if (_emissive_asset != undefined)
+                {
+                    atla_push("item", _emissive_asset.get_sprite(), _emissive_sprite);
+                }
+                else
+                {
+                    PRINT($"[init_item] '{_namespace}:{_id}': emissive sprite '{_emissive_sprite}' not loaded");
+                }
+            }
         }
 
         global.item_data[$ $"{_namespace}:{_id}"] = _item_data;

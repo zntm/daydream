@@ -57,7 +57,8 @@ enum TILE_ANIMATION_TYPE {
     CONNECTED_TO_SELF,
     INCREMENT,
     FOLIAGE,
-    WAVE
+    WAVE,
+    CROSSFADE
 }
 
 enum TILE_COLLISION_BOX_TYPE {
@@ -216,7 +217,8 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
             "connected_to_self": TILE_ANIMATION_TYPE.CONNECTED_TO_SELF,
             "increment":         TILE_ANIMATION_TYPE.INCREMENT,
             "foliage":           TILE_ANIMATION_TYPE.FOLIAGE,
-            "wave":              TILE_ANIMATION_TYPE.WAVE
+            "wave":              TILE_ANIMATION_TYPE.WAVE,
+            "crossfade":         TILE_ANIMATION_TYPE.CROSSFADE
         }
         
         ___animation_type = __animation_type[$ _type];
@@ -227,6 +229,61 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     static get_animation_type = function()
     {
         return self[$ "___animation_type"] ?? TILE_ANIMATION_TYPE.DEFAULT;
+    }
+
+    static set_animation_fps = function(_fps)
+    {
+        if (_fps != undefined)
+        {
+            ___animation_fps = max(0, _fps);
+        }
+
+        return self;
+    }
+
+    static get_animation_fps = function()
+    {
+        return self[$ "___animation_fps"] ?? 8;
+    }
+
+    static set_render_mix_frames = function(_enabled)
+    {
+        if (_enabled != undefined)
+        {
+            ___render_mix_frames = _enabled;
+        }
+
+        return self;
+    }
+
+    static get_render_mix_frames = function()
+    {
+        if (self[$ "___render_mix_frames"] != undefined)
+        {
+            return ___render_mix_frames;
+        }
+
+        return (get_animation_type() == TILE_ANIMATION_TYPE.CROSSFADE);
+    }
+
+    static set_tile_emissive_sprite = function(_sprite)
+    {
+        if (_sprite != undefined)
+        {
+            ___tile_emissive_sprite = _sprite;
+        }
+
+        return self;
+    }
+
+    static get_tile_emissive_sprite = function()
+    {
+        return self[$ "___tile_emissive_sprite"];
+    }
+
+    static has_tile_emissive_sprite = function()
+    {
+        return (self[$ "___tile_emissive_sprite"] != undefined);
     }
     
     static set_item = function(_data)
@@ -587,6 +644,13 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
             {
                 set_animation_type(_animation_type);
             }
+
+            var _animation_fps = _tile[$ "animation_fps"];
+
+            if (_animation_fps != undefined)
+            {
+                set_animation_fps(_animation_fps);
+            }
             
             var _audio_properties = _tile[$ "audio_properties"];
             
@@ -621,6 +685,25 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
             if (_light != undefined)
             {
                 set_light(_light);
+            }
+
+            var _render = _tile[$ "render"];
+
+            if (_render != undefined)
+            {
+                var _mix_frames = _render[$ "mix_frames"];
+
+                if (_mix_frames != undefined)
+                {
+                    set_render_mix_frames(_mix_frames);
+                }
+
+                var _emissive = _render[$ "emissive"];
+
+                if (_emissive != undefined)
+                {
+                    set_tile_emissive_sprite(_emissive);
+                }
             }
             
             var _on_place = _tile[$ "on_place"];
@@ -718,6 +801,16 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
                     sprite_get_width(_sprite),
                     sprite_get_height(_sprite)
                 );
+            }
+
+            if (!has_tile_emissive_sprite())
+            {
+                var _auto_emissive_sprite = $"{get_sprite()}_emissive";
+
+                if (global.sprite_asset[$ _auto_emissive_sprite] != undefined)
+                {
+                    set_tile_emissive_sprite(_auto_emissive_sprite);
+                }
             }
         }
         

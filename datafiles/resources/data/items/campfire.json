@@ -2,7 +2,8 @@
     "inventory": "#phantasia:item/generic/inventory_default",
     "item": {
         "tile": {
-            "animation_type": "increment",
+            "animation_type": "crossfade",
+            "animation_fps": 12,
             "audio_properties": {
                 "lowpass": 0.1,
                 "reverb": 0

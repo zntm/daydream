@@ -225,6 +225,7 @@ global.async_save_map = {}
 inventory_give(obj_Player.x, obj_Player.y, new Inventory("phantasia:copper_bow", 1));
 inventory_give(obj_Player.x, obj_Player.y, new Inventory("phantasia:arrow", 999));
 inventory_give(obj_Player.x, obj_Player.y, new Inventory("phantasia:oak_chest", 999));
+inventory_give(obj_Player.x, obj_Player.y, new Inventory("phantasia:campfire", 999));
 
 /* register colorgrade pass once */
 __colorgrade_pass_registered = false;

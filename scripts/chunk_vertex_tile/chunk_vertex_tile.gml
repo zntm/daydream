@@ -1,4 +1,4 @@
-function chunk_vertex_tile(_buffer, _texel_width, _texel_height, _animation_type, _atla, _atla_sprite, _index, _x, _y, _xscale, _yscale, _rotation, _has_vertices = false)
+function chunk_vertex_tile(_buffer, _texel_width, _texel_height, _animation_type, _animation_fps, _mix_frames, _atla, _atla_sprite, _index, _x, _y, _xscale, _yscale, _rotation, _has_vertices = false)
 {
     var _atla_value = _atla.___value;
 
@@ -74,7 +74,9 @@ function chunk_vertex_tile(_buffer, _texel_width, _texel_height, _animation_type
 
     var _number = (_atla_value >> 44) & 2047;
 
-    var _packed_anim = (_number << 24) | _animation_type;
+    var _fps_packed = clamp(round(_animation_fps * 8), 0, 127);
+    var _packed_anim = ((_mix_frames ? 1 : 0) << 15) | (_fps_packed << 8) | _animation_type;
+    var _packed_index_width = _packed_index_width | (_number << 16);
 
     return chunk_vertex_strip_quad(
         _buffer,

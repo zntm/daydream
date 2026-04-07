@@ -74,8 +74,9 @@ function chunk_vertex_foliage(_buffer, _texel_width, _texel_height, _animation_t
 
     var _number = (_atla_value >> 44) & 2047;
 
-    var _packed_anim_foliage = (_number << 24) | (_chunk_index << 16) | TILE_ANIMATION_TYPE.FOLIAGE;
-    var _packed_anim_default = (_number << 24) | TILE_ANIMATION_TYPE.DEFAULT;
+    var _packed_anim_foliage = (_chunk_index << 16) | TILE_ANIMATION_TYPE.FOLIAGE;
+    var _packed_anim_default = TILE_ANIMATION_TYPE.DEFAULT;
+    _packed_index_width |= (_number << 16);
 
     return chunk_vertex_strip_quad(
         _buffer,

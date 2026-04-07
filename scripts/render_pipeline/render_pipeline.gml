@@ -28,7 +28,8 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
     var _texel_width  = 1 / _surface_width;
     var _texel_height = 1 / _surface_height;
     
-    var _animation_index = round(global.current_world.time * 8);
+    var _animation_time = global.current_world.time;
+    var _animation_index = round(_animation_time * 8);
     
     var _sprite_asset = global.sprite_asset;
     
@@ -37,7 +38,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
         var _bitmask = 1 << _z;
         
         shader_set(shd_Chunk);
-        shader_set_uniform_f(__u_time, _animation_index);
+        shader_set_uniform_f(__u_time, _animation_time);
         shader_set_uniform_f(__u_texel_width, _texel_width);
         
         // Ensure blending is enabled for fade effect
@@ -57,10 +58,12 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
             if (_chunk == undefined) || !(_chunk.boolean & CHUNK_BOOL.GENERATED) || !(_chunk.boolean & CHUNK_BOOL.TILE_PROCESSED) || !(_chunk.chunk_display & _bitmask) || (_chunk.chunk_count[_z] <= 0) continue;
             
             var _buffer = _chunk.chunk_vertex_buffer[_z];
+
+            if (_buffer == -2) continue;
             
             if (!vertex_buffer_exists(_buffer))
             {
-                _buffer = render_chunk(_page, _position, _texel_width, _texel_height, _chunk, _z);
+                _buffer = render_chunk(_page, _position, _texel_width, _texel_height, _chunk, _z, false);
             }
 
             if (!vertex_buffer_exists(_buffer)) continue;
@@ -368,6 +371,55 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
     {
         render_lighting(_camera_x, _camera_y, _camera_width, _camera_height);
     }
+
+    shader_set(shd_Chunk);
+    shader_set_uniform_f(__u_time, _animation_time);
+    shader_set_uniform_f(__u_texel_width, _texel_width);
+    gpu_set_blendenable(true);
+    gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_one, bm_one, bm_one);
+
+    for (var _z = 0; _z < CHUNK_DEPTH; ++_z)
+    {
+        var _bitmask = 1 << _z;
+
+        for (var i = 0; i < chunk_in_view_length; ++i)
+        {
+            var _chunk = chunk_in_view[i];
+
+            if (_chunk == undefined) || !(_chunk.boolean & CHUNK_BOOL.GENERATED) || !(_chunk.boolean & CHUNK_BOOL.TILE_PROCESSED) || !(_chunk.chunk_display & _bitmask) continue;
+
+            var _buffer = _chunk.chunk_vertex_emissive_buffer[_z];
+
+            if (_buffer == -2) continue;
+
+            if (!vertex_buffer_exists(_buffer))
+            {
+                _buffer = render_chunk(_page, _position, _texel_width, _texel_height, _chunk, _z, true);
+            }
+
+            if (!vertex_buffer_exists(_buffer)) continue;
+            if (vertex_get_number(_buffer) <= 0) continue;
+
+            var _t = _chunk.timer_fade;
+            shader_set_uniform_f(__u_fade, _t * _t * (3 - 2 * _t));
+
+            var _chunk_count_arr = _chunk.chunk_count;
+
+            if ((_z == CHUNK_DEPTH_FOLIAGE_BACK) || (_z == CHUNK_DEPTH_FOLIAGE_FRONT)) && ((_chunk_count_arr[CHUNK_DEPTH_FOLIAGE_BACK] > 0) || (_chunk_count_arr[CHUNK_DEPTH_FOLIAGE_FRONT] > 0))
+            {
+                shader_set_uniform_f_array(__u_skew, _chunk.chunk_skew);
+            }
+            else if (_z == CHUNK_DEPTH_LIQUID) && (_chunk_count_arr[CHUNK_DEPTH_LIQUID] > 0)
+            {
+                shader_set_uniform_f_array(__u_wave, _chunk.chunk_wave);
+            }
+
+            vertex_submit(_buffer, pr_trianglestrip, _texture);
+        }
+    }
+
+    shader_reset();
+    gpu_set_blendmode(bm_normal);
     
     var _render_state = global.render_state;
     
