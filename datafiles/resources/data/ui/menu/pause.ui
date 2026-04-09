@@ -2,16 +2,16 @@
 
 @area(pause_menu) {
     size = (960, 540)
-    position = ORIGIN_CENTER
+    position = ORIGIN_MIDDLE_CENTER
 
     @text(title) {
-        position = ORIGIN_CENTER + (0, -88)
+        position = ORIGIN_MIDDLE_CENTER + (0, -88)
         text = "Paused"
         text_scale = 2
     }
 
     @area(menu_options) {
-        position = ORIGIN_CENTER + (0, 12)
+        position = ORIGIN_MIDDLE_CENTER + (0, 12)
         size = (240, 168)
         layout = LAYOUT_VERTICAL
         spacing = 16

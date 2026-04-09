@@ -1,6 +1,6 @@
 @area(multiplayer_menu) {
     size = (860, 500)
-    position = ORIGIN_CENTER
+    position = ORIGIN_MIDDLE_CENTER
     background = #0e0e1a
     
     @text(title) {

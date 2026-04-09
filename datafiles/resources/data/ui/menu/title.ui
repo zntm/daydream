@@ -9,10 +9,10 @@ var STACK_GAP = 12
 
 @area(title_menu) {
     size = (960, 540)
-    position = ORIGIN_CENTER
+    position = ORIGIN_MIDDLE_CENTER
 
     @area(screen_frame) {
-        position = ORIGIN_CENTER + (0, 6)
+        position = ORIGIN_MIDDLE_CENTER + (0, 6)
         size = (PANEL_W, PANEL_H)
         border_color = #3a3a4a
 
@@ -59,7 +59,7 @@ var STACK_GAP = 12
             size = (0, 0)
 
             @area(version_graphic) {
-                position = ORIGIN_CENTER
+                position = ORIGIN_MIDDLE_CENTER
                 size = (0, 0)
             }
         }

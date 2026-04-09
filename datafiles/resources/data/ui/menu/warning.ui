@@ -2,16 +2,16 @@
 
 @area(warning_screen) {
     size = (960, 540)
-    position = ORIGIN_CENTER
+    position = ORIGIN_MIDDLE_CENTER
 
     @text(label_header) {
-        position = ORIGIN_CENTER + (0, -48)
+        position = ORIGIN_MIDDLE_CENTER + (0, -48)
         text = *header
         text_scale = 4
     }
 
     @text(label_description) {
-        position = ORIGIN_CENTER + (0, 28)
+        position = ORIGIN_MIDDLE_CENTER + (0, 28)
         text = *description
     }
 }

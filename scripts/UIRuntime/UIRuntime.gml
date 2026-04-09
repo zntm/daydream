@@ -1309,26 +1309,24 @@ function ui_resolve_value(_node, _link, _variables)
     return undefined;
 }
 
+global.ui_origin = {
+    ORIGIN_TOP_LEFT:      [0, 0],
+    ORIGIN_TOP_CENTER:    [{ is_percent: true, value: 50 }, 0],
+    ORIGIN_TOP_RIGHT:     [{ is_percent: true, value: 100 }, 0],
+    ORIGIN_MIDDLE_LEFT:   [0, { is_percent: true, value: 50 }],
+    ORIGIN_MIDDLE_CENTER: [{ is_percent: true, value: 50 }, { is_percent: true, value: 50 }],
+    ORIGIN_MIDDLE_RIGHT:  [{ is_percent: true, value: 100 }, { is_percent: true, value: 50 }],
+    ORIGIN_BOTTOM_LEFT:   [0, { is_percent: true, value: 100 }],
+    ORIGIN_BOTTOM_CENTER: [{ is_percent: true, value: 50 }, { is_percent: true, value: 100 }],
+    ORIGIN_BOTTOM_RIGHT:  [{ is_percent: true, value: 100 }, { is_percent: true, value: 100 }],
+}
 
-/* resolve an ORIGIN_* macro name to a percentage-based coordinate tuple */
+/* resolve an ORIGIN_* m[0, { is_percent: true, value: 50 }]dinate tuple */
 /* @param {string} _name origin name (e.g. "ORIGIN_BOTTOM_CENTER") */
 /* @returns {array|undefined} [x%, y%] percentage tuple or undefined if not an origin */
 function ui_resolve_origin(_name)
 {
-    switch (_name)
-    {
-        case "ORIGIN_TOP_LEFT":      return [0, 0];
-        case "ORIGIN_TOP_CENTER":    return [{ is_percent: true, value: 50 }, 0];
-        case "ORIGIN_TOP_RIGHT":     return [{ is_percent: true, value: 100 }, 0];
-        case "ORIGIN_MIDDLE_LEFT":   return [0, { is_percent: true, value: 50 }];
-        case "ORIGIN_MIDDLE_CENTER":
-        case "ORIGIN_CENTER":        return [{ is_percent: true, value: 50 }, { is_percent: true, value: 50 }];
-        case "ORIGIN_MIDDLE_RIGHT":  return [{ is_percent: true, value: 100 }, { is_percent: true, value: 50 }];
-        case "ORIGIN_BOTTOM_LEFT":   return [0, { is_percent: true, value: 100 }];
-        case "ORIGIN_BOTTOM_CENTER": return [{ is_percent: true, value: 50 }, { is_percent: true, value: 100 }];
-        case "ORIGIN_BOTTOM_RIGHT":  return [{ is_percent: true, value: 100 }, { is_percent: true, value: 100 }];
-        default: return undefined;
-    }
+    return global.ui_origin[$ _name];
 }
 
 

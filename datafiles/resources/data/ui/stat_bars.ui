@@ -62,7 +62,7 @@ var bar_empty = $sprite(spr_GUI_Stat_Bar_Empty) {
 }
 
 @area(charge_container) {
-    position = ORIGIN_CENTER + (0, 16)
+    position = ORIGIN_MIDDLE_CENTER + (0, 16)
     size = (60, 2)
     visible = *charge_visible
 

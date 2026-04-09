@@ -2,7 +2,7 @@
 
 @popup(keybind_remap_popup) {
     size = (420, 180)
-    position = ORIGIN_CENTER
+    position = ORIGIN_MIDDLE_CENTER
 
     @text(label_title) {
         position = ORIGIN_TOP_CENTER + (0, 24)
@@ -11,7 +11,7 @@
     }
 
     @text(label_instruction) {
-        position = ORIGIN_CENTER + (0, -4)
+        position = ORIGIN_MIDDLE_CENTER + (0, -4)
         text = "Press any key to bind"
         colour = #cccccc
     }

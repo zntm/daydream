@@ -109,7 +109,7 @@ slices = (1, 0, 4, 0)
 | `ORIGIN_TOP_RIGHT` | Top-right corner |
 | `ORIGIN_MIDDLE_LEFT` | Middle-left edge |
 | `ORIGIN_MIDDLE_CENTER` | Center |
-| `ORIGIN_CENTER` | Center (alias of `ORIGIN_MIDDLE_CENTER`) |
+| `ORIGIN_MIDDLE_CENTER` | Center (alias of `ORIGIN_MIDDLE_CENTER`) |
 | `ORIGIN_MIDDLE_RIGHT` | Middle-right edge |
 | `ORIGIN_BOTTOM_LEFT` | Bottom-left corner |
 | `ORIGIN_BOTTOM_CENTER` | Bottom-center edge |

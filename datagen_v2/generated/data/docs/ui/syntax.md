@@ -89,9 +89,9 @@ These are shorthands for specific percentage tuples:
 | `ORIGIN_TOP_LEFT`      | `(0, 0)`         |
 | `ORIGIN_TOP_CENTER`    | `(50%, 0)`       |
 | `ORIGIN_TOP_RIGHT`     | `(100%, 0)`      |
-| `ORIGIN_CENTER_LEFT`   | `(0, 50%)`       |
-| `ORIGIN_CENTER`        | `(50%, 50%)`     |
-| `ORIGIN_CENTER_RIGHT`  | `(100%, 50%)`    |
+| `ORIGIN_MIDDLE_CENTER_LEFT`   | `(0, 50%)`       |
+| `ORIGIN_MIDDLE_CENTER`        | `(50%, 50%)`     |
+| `ORIGIN_MIDDLE_CENTER_RIGHT`  | `(100%, 50%)`    |
 | `ORIGIN_BOTTOM_LEFT`   | `(0, 100%)`      |
 | `ORIGIN_BOTTOM_CENTER` | `(50%, 100%)`    |
 | `ORIGIN_BOTTOM_RIGHT`  | `(100%, 100%)`   |
@@ -102,7 +102,7 @@ You can perform arithmetic on `(x, y)` tuples and ORIGIN constants:
 
 ```
 // Center the element but move it 16 pixels up
-position = ORIGIN_CENTER + (0, -16)
+position = ORIGIN_MIDDLE_CENTER + (0, -16)
 
 // Position relative to a percentage with a fixed pixel offset
 position = (100%, 0) + (-8, 8)
@@ -160,9 +160,9 @@ text = *player_name
 | `ORIGIN_TOP_LEFT`      | Top-left corner  |
 | `ORIGIN_TOP_CENTER`    | Top-center       |
 | `ORIGIN_TOP_RIGHT`     | Top-right corner |
-| `ORIGIN_CENTER_LEFT`   | Middle-left      |
-| `ORIGIN_CENTER`        | Center           |
-| `ORIGIN_CENTER_RIGHT`  | Middle-right     |
+| `ORIGIN_MIDDLE_CENTER_LEFT`   | Middle-left      |
+| `ORIGIN_MIDDLE_CENTER`        | Center           |
+| `ORIGIN_MIDDLE_CENTER_RIGHT`  | Middle-right     |
 | `ORIGIN_BOTTOM_LEFT`   | Bottom-left      |
 | `ORIGIN_BOTTOM_CENTER` | Bottom-center    |
 | `ORIGIN_BOTTOM_RIGHT`  | Bottom-right     |

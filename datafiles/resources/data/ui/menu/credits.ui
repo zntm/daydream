@@ -1,6 +1,6 @@
 @area(credits_menu) {
     size = (960, 540)
-    position = ORIGIN_CENTER
+    position = ORIGIN_MIDDLE_CENTER
     
     @text(title) {
         position = ORIGIN_TOP_CENTER + (0, 36)
@@ -9,7 +9,7 @@
     }
     
     @area(content) {
-        position = ORIGIN_CENTER + (0, 18)
+        position = ORIGIN_MIDDLE_CENTER + (0, 18)
         size = (820, 392)
         background = #000000
         

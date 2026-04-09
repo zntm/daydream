@@ -20,15 +20,15 @@ export const syntax = new Doc("UI Syntax")
         t.addRow(["`ORIGIN_TOP_LEFT`", "`(0, 0)`"]);
         t.addRow(["`ORIGIN_TOP_CENTER`", "`(50%, 0)`"]);
         t.addRow(["`ORIGIN_TOP_RIGHT`", "`(100%, 0)`"]);
-        t.addRow(["`ORIGIN_CENTER_LEFT`", "`(0, 50%)`"]);
-        t.addRow(["`ORIGIN_CENTER`", "`(50%, 50%)`"]);
-        t.addRow(["`ORIGIN_CENTER_RIGHT`", "`(100%, 50%)`"]);
+        t.addRow(["`ORIGIN_MIDDLE_CENTER_LEFT`", "`(0, 50%)`"]);
+        t.addRow(["`ORIGIN_MIDDLE_CENTER`", "`(50%, 50%)`"]);
+        t.addRow(["`ORIGIN_MIDDLE_CENTER_RIGHT`", "`(100%, 50%)`"]);
         t.addRow(["`ORIGIN_BOTTOM_LEFT`", "`(0, 100%)`"]);
         t.addRow(["`ORIGIN_BOTTOM_CENTER`", "`(50%, 100%)`"]);
         t.addRow(["`ORIGIN_BOTTOM_RIGHT`", "`(100%, 100%)`"]);
     })
     .add("### Tuple Math\n\nYou can perform arithmetic on `(x, y)` tuples and ORIGIN constants:")
-    .add("```\n// Center the element but move it 16 pixels up\nposition = ORIGIN_CENTER + (0, -16)\n\n// Position relative to a percentage with a fixed pixel offset\nposition = (100%, 0) + (-8, 8)\n```")
+    .add("```\n// Center the element but move it 16 pixels up\nposition = ORIGIN_MIDDLE_CENTER + (0, -16)\n\n// Position relative to a percentage with a fixed pixel offset\nposition = (100%, 0) + (-8, 8)\n```")
     .section("Special Value Prefixes")
     .add("### `$sprite(name)` — Sprite Reference\n\nResolves a sprite asset by name:\n\n```\nsprite_index = $sprite(spr_Menu_Button_Main)\nicon = $sprite(spr_Inventory_Icon) {\n    image_index = 3\n}\n```")
     .add("### `$surface(name)` — Surface Reference\n\nResolves a named surface at runtime:\n\n```\nsource = $surface(surf_world)\n```")
@@ -40,9 +40,9 @@ export const syntax = new Doc("UI Syntax")
         t.addRow(["`ORIGIN_TOP_LEFT`", "Top-left corner"]);
         t.addRow(["`ORIGIN_TOP_CENTER`", "Top-center"]);
         t.addRow(["`ORIGIN_TOP_RIGHT`", "Top-right corner"]);
-        t.addRow(["`ORIGIN_CENTER_LEFT`", "Middle-left"]);
-        t.addRow(["`ORIGIN_CENTER`", "Center"]);
-        t.addRow(["`ORIGIN_CENTER_RIGHT`", "Middle-right"]);
+        t.addRow(["`ORIGIN_MIDDLE_CENTER_LEFT`", "Middle-left"]);
+        t.addRow(["`ORIGIN_MIDDLE_CENTER`", "Center"]);
+        t.addRow(["`ORIGIN_MIDDLE_CENTER_RIGHT`", "Middle-right"]);
         t.addRow(["`ORIGIN_BOTTOM_LEFT`", "Bottom-left"]);
         t.addRow(["`ORIGIN_BOTTOM_CENTER`", "Bottom-center"]);
         t.addRow(["`ORIGIN_BOTTOM_RIGHT`", "Bottom-right"]);

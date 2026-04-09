@@ -257,8 +257,8 @@ function UIButton(_x, _y, _width, _height, _text = "") : UIElement(_x, _y, _widt
             /* draw hover selection frame */
             if (boolean & MENU_BUTTON_BOOL.IS_HOVER) || (_is_active)
             {
-                var _sw = (width * _base_scale_x) + 2;
-                var _sh = (height * _base_scale_y) + 2;
+                var _sw = (_button_width * _base_scale_x) + 2;
+                var _sh = (_button_height * _base_scale_y) + 2;
                 
                 draw_sprite_stretched_ext(spr_Menu_Button_Select, 0, _x - 1, _y - 1 + _offset, _sw, _sh, c_white, 1);
             }

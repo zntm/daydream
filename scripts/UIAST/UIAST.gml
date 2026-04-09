@@ -31,7 +31,7 @@ enum UI_AST
     
     
     /* math expressions */
-    BINARY_OP,    /* left op right (e.g. ORIGIN_CENTER + (10, 20)) */
+    BINARY_OP,    /* left op right (e.g. ORIGIN_MIDDLE_CENTER + (10, 20)) */
     UNARY_OP,     /* -expr (negation) */
     PERCENTAGE,   /* 50% (percentage value) */
     

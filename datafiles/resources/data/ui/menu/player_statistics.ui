@@ -2,7 +2,7 @@
 
 @popup(player_statistics_popup) {
     size = (640, 420)
-    position = ORIGIN_CENTER
+    position = ORIGIN_MIDDLE_CENTER
 
     @button(btn_back) {
         position = ORIGIN_TOP_LEFT + (24, 24)

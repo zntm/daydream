@@ -317,7 +317,7 @@ function UIParser(_tokens) constructor
        this allows expressions like:
          ORIGIN_BOTTOM_CENTER + (0, -10)
          (100 * 2, 50%)
-         ORIGIN_CENTER + (-25%, 0)
+         ORIGIN_MIDDLE_CENTER + (-25%, 0)
     */
     
     static parse_value = function() 

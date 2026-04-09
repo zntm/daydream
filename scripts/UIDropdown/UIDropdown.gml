@@ -121,7 +121,7 @@ function UIDropdown(_x, _y, _width, _height) : UIElement(_x, _y, _width, _height
         var _left = _abs_x;
         var _top = _abs_y;
         
-        var _right = _left + width;
+        var _right = _left + get_width();
         var _header_bottom = _top + collapsed_height;
         
         
@@ -231,7 +231,7 @@ function UIDropdown(_x, _y, _width, _height) : UIElement(_x, _y, _width, _height
         var _x1 = _abs_x * _base_scale.x;
         var _y1 = _abs_y * _base_scale.y;
         
-        var _x2 = _x1 + (width * _base_scale.x);
+        var _x2 = _x1 + (get_width() * _base_scale.x);
         var _header_y2 = _y1 + (collapsed_height * _base_scale.y);
         
         

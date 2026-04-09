@@ -12,10 +12,10 @@ var MAIN_H = FRAME_H - (PAD * 2) - HEADER_H - SECTION_GAP - PINNED_H - SECTION_G
 
 @area(worlds_menu) {
     size = (960, 540)
-    position = ORIGIN_CENTER
+    position = ORIGIN_MIDDLE_CENTER
 
     @area(screen_frame) {
-        position = ORIGIN_CENTER
+        position = ORIGIN_MIDDLE_CENTER
         size = (FRAME_W, FRAME_H)
         border_color = #3a3a4a
 

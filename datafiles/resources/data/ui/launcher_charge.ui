@@ -1,5 +1,5 @@
 @area(launcher_charge_container) {
-    position = ORIGIN_CENTER + (0, 16)
+    position = ORIGIN_MIDDLE_CENTER + (0, 16)
     size = (60, 2)
     visible = *is_visible
     

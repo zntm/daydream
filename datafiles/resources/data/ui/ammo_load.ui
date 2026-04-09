@@ -1,12 +1,12 @@
 // ammo load dot indicator layout
 
 @area(ammo_load_container) {
-    position = ORIGIN_CENTER + (0, 24)
+    position = ORIGIN_MIDDLE_CENTER + (0, 24)
     size = (80, 8)
     visible = *is_visible
 
     @bar(ammo_dots) {
-        position = ORIGIN_CENTER
+        position = ORIGIN_MIDDLE_CENTER
         size = (80, 8)
         value = *ammo_count
         max = *ammo_max

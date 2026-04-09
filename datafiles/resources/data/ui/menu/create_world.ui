@@ -14,10 +14,10 @@ var INPUT_H = 24
 
 @area(create_world) {
     size = (960, 540)
-    position = ORIGIN_CENTER
+    position = ORIGIN_MIDDLE_CENTER
 
     @area(screen_frame) {
-        position = ORIGIN_CENTER
+        position = ORIGIN_MIDDLE_CENTER
         size = (FRAME_W, FRAME_H)
         border_color = #3a3a4a
 
@@ -101,11 +101,6 @@ var INPUT_H = 24
                 }
             }
 
-            @button(btn_advanced) {
-                position = ORIGIN_TOP_LEFT + (12, 320)
-                text = "Advanced Options"
-                size = (FIELD_W, 28)
-            }
         }
 
         @area(right_panel) {
@@ -220,6 +215,11 @@ var INPUT_H = 24
                             value = 0
                             step = 1
                         }
+                    }
+
+                    @button(btn_advanced) {
+                        text = "Advanced Options"
+                        size = (RIGHT_W - 36, 28)
                     }
 
                     @area(advanced_content) {

@@ -6,7 +6,7 @@
     visible = *is_visible
 
     @text(saving_text) {
-        position = ORIGIN_CENTER
+        position = ORIGIN_MIDDLE_CENTER
         text = "Saving..."
         text_scale = 0.8
         colour = #aaaaaa
