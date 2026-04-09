@@ -48,7 +48,7 @@ function UITextbox(_x, _y, _width, _height) : UIElement(_x, _y, _width, _height)
         }
         
         
-        var _abs_x = get_absolute_x();
+        var _abs_x = get_interaction_x();
         var _abs_y = get_interaction_y();
         
         

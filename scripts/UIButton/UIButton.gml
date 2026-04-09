@@ -121,7 +121,7 @@ function UIButton(_x, _y, _width, _height, _text = "") : UIElement(_x, _y, _widt
         }
         
         
-        var _abs_x = get_absolute_x();
+        var _abs_x = get_interaction_x();
         var _abs_y = get_interaction_y();
         
         var _mx = global.gui_mouse_x;

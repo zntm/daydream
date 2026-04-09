@@ -1,3 +1,6 @@
+global.ui_players_menu = undefined;
+
+
 function menu_players_ui_load()
 {
 	menu_ui_clear_all();
@@ -30,25 +33,34 @@ function menu_players_ui_load()
 	});
 	
 	global.ui_players_menu = _instance;
-	
-	/* restore view mode from preferences */
-	global.players_view_mode = global.menu_preferences.players_view_mode;
+	global.players_view_mode = global.menu_preferences.players_view_mode ?? "grid";
 	
 	menu_players_ui_init();
 }
+
 
 function menu_players_ui_init()
 {
 	var _instance = global.ui_players_menu;
 	var _elements = _instance.elements;
 	
+	var _title = _elements[$ "title"];
+	if (_title != undefined)
+	{
+		_title.text = menu_ui_localize_or_default("phantasia:menu.players.title", "Players");
+	}
+	
+	var _label_pinned = _elements[$ "label_pinned"];
+	if (_label_pinned != undefined) _label_pinned.text = "Pinned";
+	
+	var _label_all = _elements[$ "label_all"];
+	if (_label_all != undefined) _label_all.text = "All Players";
+	
 	/* back button */
 	var _btn_back = _elements[$ "btn_back"];
-	
 	if (_btn_back != undefined)
 	{
-		_btn_back.text = loca_translate("phantasia:menu.generic.back");
-		
+		_btn_back.text = menu_ui_localize_or_default("phantasia:menu.generic.back", "Back");
 		_btn_back.add_event_handler("on_select_release", function() {
 			menu_transition_goto(rm_Menu_Title);
 		});
@@ -56,72 +68,27 @@ function menu_players_ui_init()
 	
 	/* create player button */
 	var _btn_create_player = _elements[$ "btn_create_player"];
-	
 	if (_btn_create_player != undefined)
 	{
-		_btn_create_player.text = loca_translate("phantasia:menu.players.create");
-		
+		_btn_create_player.text = menu_ui_localize_or_default("phantasia:menu.players.create", "Create Player");
 		_btn_create_player.add_event_handler("on_select_release", function() {
 			menu_transition_goto(rm_Menu_Create_Player);
 		});
 	}
 	
 	/* grid/list view toggle */
-	var _btn_view_toggle = _elements[$ "btn_view_toggle"];
-	
-	if (_btn_view_toggle != undefined)
-	{
-		_btn_view_toggle.text = "";
-		
-		_btn_view_toggle.on_draw = method(_btn_view_toggle, function(_x, _y, _xscale, _yscale) {
-			var _alpha  = global.menu_transition_alpha ?? 1;
-			var _spr_id = (global.players_view_mode == "grid")
-				? "phantasia:ui/view_grid"
-				: "phantasia:ui/view_list";
-			var _asset = global.sprite_asset[$ _spr_id];
-
-			if (_asset != undefined)
-			{
-				var _cx = _x + (self.width * _xscale / 2);
-				var _cy = _y + (self.height * _yscale / 2);
-
-				draw_sprite_ext(_asset.get_sprite(), 0, _cx, _cy, 2, 2, 0, c_white, _alpha);
-			}
-		});
-		
-		_btn_view_toggle.add_event_handler("on_select_release", function() {
-			global.players_view_mode = (global.players_view_mode == "grid") ? "list" : "grid";
-
-			global.menu_preferences.players_view_mode = global.players_view_mode;
-
-			file_save_menu_preferences();
-			menu_players_ui_populate();
-		});
-	}
+	menu_players_ui_configure_view_button(_elements[$ "btn_view_grid"], "grid", "phantasia:ui/view_grid");
+	menu_players_ui_configure_view_button(_elements[$ "btn_view_list"], "list", "phantasia:ui/view_list");
+	menu_players_ui_refresh_view_buttons();
 	
 	/* show loading placeholder, then defer data load */
-	var _container = _elements[$ "players_container"];
-
-	if (_container != undefined)
-	{
-		_container.children = [];
-
-		var _loading = new UIText(8, 8, "");
-		_loading.text       = "Loading...";
-		_loading.halign     = fa_left;
-		_loading.valign     = fa_top;
-		_loading.text_scale = 0.8;
-		_loading.colour     = c_ltgray;
-		_loading.parent     = _container;
-
-		array_push(_container.children, _loading);
-	}
+	menu_players_ui_set_loading_state();
 
 	call_later(1, time_source_units_frames, function() {
-		var _a = file_read_directory(PROGRAM_DIRECTORY_PLAYERS);
-		var _b = global.file_players_uuid;
+		var _directory_listing = file_read_directory(PROGRAM_DIRECTORY_PLAYERS);
+		var _known_listing = global.file_players_uuid;
 
-		if (!array_equals(_a, _b))
+		if (!array_equals(_directory_listing, _known_listing))
 		{
 			file_load_players();
 		}
@@ -130,311 +97,406 @@ function menu_players_ui_init()
 	});
 }
 
-function menu_players_ui_populate()
+
+function menu_players_ui_configure_view_button(_button, _mode, _asset_key)
 {
-	var _instance = global.ui_players_menu;
-	var _elements = _instance.elements;
-	var _container = _elements[$ "players_container"];
+	if (_button == undefined) exit;
 	
-	if (_container == undefined) exit;
-	
-	/* clear previous */
-	_container.children = [];
-	var _container_width = _container.width;
-	
-	var _players     = global.file_players;
-	var _players_len = array_length(_players);
-	var _is_grid     = (global.players_view_mode == "grid");
-	
-	/* separate pinned from normal */
-	var _pinned = [];
-	var _normal = [];
-	
-	for (var i = 0; i < _players_len; ++i)
-	{
-		var _p = _players[i];
+	_button.text = "";
+	_button.view_mode = _mode;
+	_button.icon_asset_key = _asset_key;
+	_button.on_draw = method(_button, function(_x, _y, _xscale, _yscale) {
+		var _alpha = global.menu_transition_alpha ?? 1;
+		var _cx = _x + (self.width * _xscale * 0.5);
+		var _cy = _y + (self.height * _yscale * 0.5);
+		var _scale = ((self.boolean & MENU_BUTTON_BOOL.IS_HOVER) != 0) ? 2.15 : 2.0;
 		
-		if (_p[$ "pinned"] == true)
-		{
-			array_push(_pinned, _p);
-		}
-		else
-		{
-			array_push(_normal, _p);
-		}
-	}
+		menu_ui_draw_icon(self.icon_asset_key, _cx, _cy, _alpha, _scale);
+	});
 	
-	var _ypos = 0;
-	
-	/* pinned section */
-	if (array_length(_pinned) > 0)
-	{
-		var _label_pinned = new UIText(8, _ypos, "");
-		_label_pinned.text       = "Pinned";
-		_label_pinned.halign     = fa_left;
-		_label_pinned.valign     = fa_top;
-		_label_pinned.text_scale = 0.8;
-		_label_pinned.colour     = c_ltgray;
-		_label_pinned.parent     = _container;
-
-		array_push(_container.children, _label_pinned);
-
-		_ypos += 20;
-		_ypos = menu_players_ui_build_cards(_container, _pinned, _ypos, _is_grid, _instance, _container_width);
+	_button.add_event_handler("on_select_release", method(_button, function() {
+		if (global.players_view_mode == self.view_mode) exit;
 		
-		/* divider */
-		var _divider = new UILine(0, _ypos + 4, _container_width, 1);
-		_divider.colour = #3a3a4a;
-		_divider.parent = _container;
-
-		array_push(_container.children, _divider);
-
-		_ypos += 12;
-	}
-	
-	/* normal section */
-	if (array_length(_normal) > 0)
-	{
-		var _label_normal = new UIText(8, _ypos, "");
-		_label_normal.text       = (array_length(_pinned) > 0) ? "Players" : "";
-		_label_normal.halign     = fa_left;
-		_label_normal.valign     = fa_top;
-		_label_normal.text_scale = 0.8;
-		_label_normal.colour     = c_ltgray;
-		_label_normal.parent     = _container;
-
-		array_push(_container.children, _label_normal);
-
-		_ypos += 20;
-		_ypos = menu_players_ui_build_cards(_container, _normal, _ypos, _is_grid, _instance, _container_width);
-	}
-	
-	_container.height = max(100, _ypos + 16);
+		global.players_view_mode = self.view_mode;
+		global.menu_preferences.players_view_mode = self.view_mode;
+		
+		file_save_menu_preferences();
+		menu_players_ui_refresh_view_buttons();
+		menu_players_ui_populate();
+	}));
 }
 
 
-/// @desc Builds player cards into the container and returns the new y position.
-function menu_players_ui_build_cards(_container, _players, _ystart, _is_grid, _instance, _container_width)
+function menu_players_ui_refresh_view_buttons()
 {
+	var _instance = global.ui_players_menu;
+	if (_instance == undefined) exit;
+
+	var _btn_grid = ui_get(_instance, "btn_view_grid");
+	if (_btn_grid != undefined)
+	{
+		_btn_grid.sprite_index = (global.players_view_mode == "grid") ? spr_Menu_Button_Secondary : spr_Menu_Button_Main;
+	}
+
+	var _btn_list = ui_get(_instance, "btn_view_list");
+	if (_btn_list != undefined)
+	{
+		_btn_list.sprite_index = (global.players_view_mode == "list") ? spr_Menu_Button_Secondary : spr_Menu_Button_Main;
+	}
+}
+
+
+function menu_players_ui_set_loading_state()
+{
+	var _instance = global.ui_players_menu;
+	if (_instance == undefined) exit;
+
+	var _pinned = ui_get(_instance, "pinned_container");
+	if (_pinned != undefined)
+	{
+		_pinned.children = [];
+		
+		var _hint = new UIText(0, 18, "Loading pinned profiles...");
+		_hint.halign = fa_left;
+		_hint.valign = fa_middle;
+		_hint.text_scale = 0.7;
+		_hint.colour = menu_ui_get_metrics().text_dim;
+		_hint.parent = _pinned;
+		
+		array_push(_pinned.children, _hint);
+	}
+
+	var _container = ui_get(_instance, "players_container");
+	if (_container != undefined)
+	{
+		_container.children = [];
+		
+		var _loading = new UIText(0, 12, "Loading players...");
+		_loading.halign = fa_left;
+		_loading.valign = fa_top;
+		_loading.text_scale = 0.8;
+		_loading.colour = menu_ui_get_metrics().text_dim;
+		_loading.parent = _container;
+
+		array_push(_container.children, _loading);
+	}
+}
+
+
+function menu_players_ui_populate()
+{
+	var _instance = global.ui_players_menu;
+	if (_instance == undefined) exit;
+
+	var _pinned_container = ui_get(_instance, "pinned_container");
+	var _main_container = ui_get(_instance, "players_container");
+	
+	if (_pinned_container == undefined || _main_container == undefined) exit;
+	
+	_pinned_container.children = [];
+	_main_container.children = [];
+	
+	var _players = global.file_players;
+	var _players_len = array_length(_players);
+	var _pinned = [];
+	var _ordered = [];
+	
+	for (var i = 0; i < _players_len; ++i)
+	{
+		var _player = _players[i];
+		if (_player[$ "pinned"] == true)
+		{
+			array_push(_pinned, _player);
+		}
+	}
+	
+	for (var i = 0; i < array_length(_pinned); ++i)
+	{
+		array_push(_ordered, _pinned[i]);
+	}
+	
+	for (var i = 0; i < _players_len; ++i)
+	{
+		var _player = _players[i];
+		if (_player[$ "pinned"] != true)
+		{
+			array_push(_ordered, _player);
+		}
+	}
+	
+	menu_players_ui_refresh_view_buttons();
+	menu_players_ui_build_pinned_strip(_pinned_container, _pinned, _instance);
+	menu_players_ui_build_cards(_main_container, _ordered, (global.players_view_mode == "grid"), _instance, ui_layout_resolve_scalar(_main_container.width, 0));
+}
+
+
+function menu_players_ui_build_pinned_strip(_container, _players, _instance)
+{
+	var _metrics = menu_ui_get_metrics();
 	var _len = array_length(_players);
-	var _ypos = _ystart;
-	var _card_gap = 8;
-	var _grid_columns = max(1, floor((_container_width + _card_gap) / (140 + _card_gap)));
+	
+	if (_len <= 0)
+	{
+		var _empty = new UIText(0, 20, "Pin profiles here for quick access.");
+		_empty.halign = fa_left;
+		_empty.valign = fa_middle;
+		_empty.text_scale = 0.7;
+		_empty.colour = _metrics.text_dim;
+		_empty.parent = _container;
+		
+		array_push(_container.children, _empty);
+		_container.width = max(ui_layout_resolve_scalar(_container.width, 0), 240);
+		_container.height = 60;
+		
+		exit;
+	}
+	
+	var _card_w = 248;
+	var _card_h = 64;
+	var _gap = _metrics.card_gap;
+	var _container_width = ui_layout_resolve_scalar(_container.width, 0);
 	
 	for (var i = 0; i < _len; ++i)
 	{
-		var _player = _players[i];
+		var _x = i * (_card_w + _gap);
+		menu_players_ui_create_card(_container, _players[i], _x, 0, _card_w, _card_h, "pinned", _instance);
+	}
+	
+	_container.width = max(_container_width, (_len * (_card_w + _gap)) - _gap);
+	_container.height = _card_h;
+}
+
+
+function menu_players_ui_build_cards(_container, _players, _is_grid, _instance, _container_width)
+{
+	var _metrics = menu_ui_get_metrics();
+	var _len = array_length(_players);
+	
+	if (_len <= 0)
+	{
+		var _empty = new UIText(0, 12, "No player profiles found.");
+		_empty.halign = fa_left;
+		_empty.valign = fa_top;
+		_empty.text_scale = 0.8;
+		_empty.colour = _metrics.text_dim;
+		_empty.parent = _container;
 		
-		var _card_w, _card_h, _xoffset, _yoffset;
+		array_push(_container.children, _empty);
+		_container.height = 48;
+		
+		exit;
+	}
+	
+	var _gap = _metrics.card_gap;
+	var _card_w = _is_grid ? 196 : _container_width;
+	var _card_h = _is_grid ? 122 : 78;
+	var _columns = max(1, floor((_container_width + _gap) / (_card_w + _gap)));
+	var _total_width = (_columns * _card_w) + ((_columns - 1) * _gap);
+	var _start_x = _is_grid ? floor(max(0, (_container_width - _total_width) * 0.5)) : 0;
+	var _bottom = 0;
+	
+	for (var i = 0; i < _len; ++i)
+	{
+		var _x;
+		var _y;
 		
 		if (_is_grid)
 		{
-			_card_w  = 140;
-			_card_h  = 120;
-			_xoffset = floor(i % _grid_columns) * (_card_w + _card_gap);
-			_yoffset = _ystart + floor(i / _grid_columns) * (_card_h + _card_gap);
+			_x = _start_x + ((i mod _columns) * (_card_w + _gap));
+			_y = floor(i / _columns) * (_card_h + _gap);
 		}
 		else
 		{
-			_card_w  = _container_width;
-			_card_h  = 56;
-			_xoffset = 0;
-			_yoffset = _ystart + i * (_card_h + 4);
+			_x = 0;
+			_y = i * (_card_h + 8);
 		}
 		
-		var _entry = new UIButton(
-			_xoffset,
-			_yoffset,
-			_card_w,
-			_card_h,
-			""
-		);
-		
-		_entry.parent       = _container;
-		_entry.link_context = _instance.link_context;
-		_entry.player_ref   = _player;
-		_entry.is_grid_mode = _is_grid;
-		
-		_entry.on_draw = method(_entry, function(_x, _y, _xscale, _yscale) {
-			var _data = self.player_ref;
-			
-			var _ew = self.width * _xscale;
-			var _eh = self.height * _yscale;
-			var _alpha = global.menu_transition_alpha ?? 1;
-			
-			/* background */
-			draw_set_alpha(0.5 * _alpha);
-			draw_rectangle_colour(_x, _y, _x + _ew, _y + _eh, c_black, c_black, c_black, c_black, false);
-			draw_set_alpha(_alpha);
-			draw_rectangle_colour(_x, _y, _x + _ew, _y + _eh, #3a3a4a, #3a3a4a, #3a3a4a, #3a3a4a, true);
-			draw_set_alpha(1);
-			
-			var _halign = draw_get_halign();
-			var _valign = draw_get_valign();
-			
-			draw_set_align(fa_left, fa_top);
-			
-			if (self.is_grid_mode)
-			{
-				/* grid: avatar centered, name below, date below that */
-				var _cx = _x + (_ew / 2);
-				var _cy = _y + 8;
-				
-				draw_set_alpha(_alpha);
-				render_attire(_data.get_attire(), 0, _cx, _cy + 40, 2, 2);
-				draw_set_alpha(1);
-				
-				draw_set_align(fa_center, fa_top);
-
-				render_text(_cx, _y + _eh - 40, _data.get_name(), 0.9, 0.9, 0, c_white, _alpha);
-				render_text(_cx, _y + _eh - 24, date_datetime_string(_data.get_last_opened()), 0.6, 0.6, 0, c_white, _alpha);
-				render_text(_cx, _y + _eh - 14, file_format_size(_data.get_size()), 0.55, 0.55, 0, c_ltgray, _alpha);
-			}
-			else
-			{
-				/* list: avatar left, name + date right */
-				var _cx = _x + 24;
-				var _cy = _y + (_eh / 2);
-				
-				draw_set_alpha(_alpha);
-				render_attire(_data.get_attire(), 0, _cx, _cy + 8, 1.5, 1.5);
-				draw_set_alpha(1);
-				
-				render_text(_x + 56, _y + 8, _data.get_name(), 1, 1, 0, c_white, _alpha);
-				render_text(_x + 56, _y + 28, date_datetime_string(_data.get_last_opened()), 0.7, 0.7, 0, c_white, _alpha);
-				
-				draw_set_align(fa_right, fa_top);
-				
-				render_text(_x + _ew - 52, _y + 20, file_format_size(_data.get_size()), 0.65, 0.65, 0, c_ltgray, _alpha);
-			}
-			
-			draw_set_align(_halign, _valign);
-		});
-		
-		/* icon button dimensions */
-		var _icon_w = 20;
-		var _icon_h = 20;
-		
-		/* option icon (rightmost) */
-		var _option_x  = _card_w - _icon_w - 4;
-		var _option_y  = _card_h - _icon_h - 4;
-		var _btn_option = new UIButton(_option_x, _option_y, _icon_w, _icon_h, "");
-
-		_btn_option.boolean    = 0;
-		_btn_option.player_ref = _player;
-		_btn_option.parent     = _entry;
-
-		_btn_option.on_draw = method(_btn_option, function(_x, _y, _xscale, _yscale) {
-			var _alpha = global.menu_transition_alpha ?? 1;
-			var _asset = global.sprite_asset[$ "phantasia:ui/option"];
-
-			if (_asset != undefined)
-			{
-				var _cx = _x + (self.width * _xscale / 2);
-				var _cy = _y + (self.height * _yscale / 2);
-
-				draw_sprite_ext(_asset.get_sprite(), 0, _cx, _cy, 2, 2, 0, c_white, _alpha);
-			}
-		});
-
-		_btn_option.add_event_handler("on_select_release", method(_btn_option, function() {
-			PRINT("Player options: " + string(self.player_ref.get_name()));
-			global.ui_input_consumed = true;
-		}));
-		
-		/* pin icon (left of option) */
-		var _pin_x   = _option_x - _icon_w - 2;
-		var _btn_pin = new UIButton(_pin_x, _option_y, _icon_w, _icon_h, "");
-
-		_btn_pin.boolean    = 0;
-		_btn_pin.player_ref = _player;
-		_btn_pin.parent     = _entry;
-
-		_btn_pin.on_draw = method(_btn_pin, function(_x, _y, _xscale, _yscale) {
-			var _alpha = global.menu_transition_alpha ?? 1;
-			var _is_pinned = (self.player_ref[$ "pinned"] == true);
-			var _spr_key   = _is_pinned ? "phantasia:ui/pin_active" : "phantasia:ui/pin";
-			var _asset     = global.sprite_asset[$ _spr_key];
-
-			if (_asset != undefined)
-			{
-				var _cx = _x + (self.width * _xscale / 2);
-				var _cy = _y + (self.height * _yscale / 2);
-
-				draw_sprite_ext(_asset.get_sprite(), 0, _cx, _cy, 2, 2, 0, c_white, _alpha);
-			}
-		});
-
-		_btn_pin.add_event_handler("on_select_release", method(_btn_pin, function() {
-			var _p    = self.player_ref;
-			var _uuid = _p.get_uuid();
-
-			_p[$ "pinned"] = file_toggle_pinned_player(_uuid);
-
-			menu_players_ui_populate();
-			
-			global.ui_input_consumed = true;
-		}));
-		
-		/* statistics icon (left of pin) */
-		var _stats_x    = _pin_x - _icon_w - 2;
-		var _btn_stats = new UIButton(_stats_x, _option_y, _icon_w, _icon_h, "");
-
-		_btn_stats.boolean    = 0;
-		_btn_stats.player_ref = _player;
-		_btn_stats.parent     = _entry;
-
-		_btn_stats.on_draw = method(_btn_stats, function(_x, _y, _xscale, _yscale) {
-			var _alpha = global.menu_transition_alpha ?? 1;
-			var _asset = global.sprite_asset[$ "phantasia:ui/statistics"];
-
-			if (_asset != undefined)
-			{
-				var _cx = _x + (self.width * _xscale / 2);
-				var _cy = _y + (self.height * _yscale / 2);
-
-				draw_sprite_ext(_asset.get_sprite(), 0, _cx, _cy, 2, 2, 0, c_white, _alpha);
-			}
-		});
-
-		_btn_stats.add_event_handler("on_select_release", method(_btn_stats, function() {
-			menu_popup_player_statistics(self.player_ref);
-			global.ui_input_consumed = true;
-		}));
-		
-		array_push(_entry.children, _btn_stats, _btn_pin, _btn_option);
-		
-		/* select player */
-		_entry.add_event_handler("on_select_release", method(_entry, function() {
-			if (global.ui_input_consumed) exit;
-			
-			var _data = self.player_ref;
-			var _uuid = _data.get_uuid();
-			
-			if (!directory_exists(PROGRAM_DIRECTORY_PLAYERS + "/" + _uuid))
-			{
-				PRINT("Player folder not found: " + string(_uuid));
-
-				exit;
-			}
-			
-			global.current_player.name   = _data.get_name();
-			global.current_player.uuid   = _uuid;
-			global.current_player.attire = _data.get_attire();
-			
-			menu_transition_goto(rm_Menu_Worlds);
-		}));
-		
-		array_push(_container.children, _entry);
+		menu_players_ui_create_card(_container, _players[i], _x, _y, _card_w, _card_h, (_is_grid ? "grid" : "list"), _instance);
+		_bottom = max(_bottom, _y + _card_h);
 	}
 	
-	/* calculate final y position */
-	if (_is_grid)
+	_container.height = _bottom;
+}
+
+
+function menu_players_ui_create_card(_container, _player, _x, _y, _w, _h, _layout, _instance)
+{
+	var _entry = new UIButton(_x, _y, _w, _h, "");
+	_entry.parent = _container;
+	_entry.link_context = _instance.link_context;
+	_entry.player_ref = _player;
+	_entry.card_layout = _layout;
+	_entry.on_draw = method(_entry, function(_x1, _y1, _xscale, _yscale) {
+		menu_players_ui_draw_card(self, _x1, _y1, _xscale, _yscale);
+	});
+	
+	menu_players_ui_attach_card_actions(_entry, _player);
+	
+	_entry.add_event_handler("on_select_release", method(_entry, function() {
+		if (global.ui_input_consumed) exit;
+		
+		var _data = self.player_ref;
+		var _uuid = _data.get_uuid();
+		
+		if (!directory_exists(PROGRAM_DIRECTORY_PLAYERS + "/" + _uuid))
+		{
+			PRINT("Player folder not found: " + string(_uuid));
+			exit;
+		}
+		
+		global.current_player.name   = _data.get_name();
+		global.current_player.hp     = _data.get_hp();
+		global.current_player.hp_max = _data.get_hp_max();
+		global.current_player.uuid   = _uuid;
+		global.current_player.attire = _data.get_attire();
+		
+		global.player_statistics   = _data.get_statistics() ?? {};
+		global.player_achievements = _data.get_achievements() ?? {};
+		
+		menu_refresh_value_world_save();
+		menu_transition_goto(rm_Menu_Worlds);
+	}));
+	
+	array_push(_container.children, _entry);
+	
+	return _entry;
+}
+
+
+function menu_players_ui_attach_card_actions(_entry, _player)
+{
+	var _metrics = menu_ui_get_metrics();
+	var _icon = _metrics.icon_button;
+	
+	var _btn_pin = menu_players_ui_create_icon_button(_entry, 4, 4, _icon, _icon, function() {
+		var _p = self.player_ref;
+		var _uuid = _p.get_uuid();
+		
+		_p[$ "pinned"] = file_toggle_pinned_player(_uuid);
+		menu_players_ui_populate();
+		global.ui_input_consumed = true;
+	});
+	_btn_pin.player_ref = _player;
+	_btn_pin.icon_asset_key = (_player[$ "pinned"] == true) ? "phantasia:ui/pin_active" : "phantasia:ui/pin";
+	_btn_pin.on_draw = method(_btn_pin, function(_x, _y, _xscale, _yscale) {
+		var _alpha = global.menu_transition_alpha ?? 1;
+		var _cx = _x + (self.width * _xscale * 0.5);
+		var _cy = _y + (self.height * _yscale * 0.5);
+		var _key = (self.player_ref[$ "pinned"] == true) ? "phantasia:ui/pin_active" : "phantasia:ui/pin";
+		menu_ui_draw_icon(_key, _cx, _cy, _alpha, 2);
+	});
+	
+	var _btn_stats = menu_players_ui_create_icon_button(_entry, _entry.width - _icon - 4, 4, _icon, _icon, function() {
+		menu_popup_player_statistics(self.player_ref);
+		global.ui_input_consumed = true;
+	});
+	_btn_stats.player_ref = _player;
+	_btn_stats.on_draw = method(_btn_stats, function(_x, _y, _xscale, _yscale) {
+		var _alpha = global.menu_transition_alpha ?? 1;
+		var _cx = _x + (self.width * _xscale * 0.5);
+		var _cy = _y + (self.height * _yscale * 0.5);
+		menu_ui_draw_icon("phantasia:ui/statistics", _cx, _cy, _alpha, 2);
+	});
+	
+	var _btn_option = menu_players_ui_create_icon_button(_entry, _entry.width - _icon - 4, _entry.height - _icon - 4, _icon, _icon, function() {
+		PRINT("Player options: " + string(self.player_ref.get_name()));
+		global.ui_input_consumed = true;
+	});
+	_btn_option.player_ref = _player;
+	_btn_option.on_draw = method(_btn_option, function(_x, _y, _xscale, _yscale) {
+		var _alpha = global.menu_transition_alpha ?? 1;
+		var _cx = _x + (self.width * _xscale * 0.5);
+		var _cy = _y + (self.height * _yscale * 0.5);
+		menu_ui_draw_icon("phantasia:ui/option", _cx, _cy, _alpha, 2);
+	});
+	
+	array_push(_entry.children, _btn_pin, _btn_stats, _btn_option);
+}
+
+
+function menu_players_ui_create_icon_button(_parent, _x, _y, _w, _h, _handler)
+{
+	var _button = new UIButton(_x, _y, _w, _h, "");
+	_button.boolean = 0;
+	_button.parent = _parent;
+	_button.add_event_handler("on_select_release", method(_button, _handler));
+	
+	return _button;
+}
+
+
+function menu_players_ui_draw_card(_self, _x, _y, _xscale, _yscale)
+{
+	var _metrics = menu_ui_get_metrics();
+	var _data = _self.player_ref;
+	var _layout = _self.card_layout;
+	var _w = _self.width * _xscale;
+	var _h = _self.height * _yscale;
+	var _hovered = ((_self.boolean & MENU_BUTTON_BOOL.IS_HOVER) != 0);
+	var _alpha = global.menu_transition_alpha ?? 1;
+	var _hp = _data.get_hp();
+	var _hp_max = max(1, _data.get_hp_max());
+	var _hp_ratio = clamp(_hp / _hp_max, 0, 1);
+	var _halign = draw_get_halign();
+	var _valign = draw_get_valign();
+	
+	draw_set_alpha(_alpha);
+	menu_ui_draw_panel(_x, _y, _w, _h, _hovered, false);
+	draw_set_alpha(1);
+	
+	draw_set_align(fa_left, fa_top);
+	
+	switch (_layout)
 	{
-		var _rows = ceil(_len / _grid_columns);
+		case "pinned":
+			draw_set_alpha(_alpha * 0.18);
+			draw_rectangle_colour(_x + 12, _y + 10, _x + 62, _y + _h - 10, _metrics.placeholder_fill, _metrics.placeholder_fill, _metrics.placeholder_fill, _metrics.placeholder_fill, false);
+			draw_set_alpha(1);
+			render_attire(_data.get_attire(), 0, _x + 37, _y + (_h * 0.5) + 10, 2, 2);
+			render_text(_x + 74, _y + 10, menu_ui_trim_text(_data.get_name(), 18), 0.8, 0.8, 0, c_white, _alpha);
+			render_text(_x + 74, _y + 26, $"{_hp}/{_hp_max} HP", 0.6, 0.6, 0, _metrics.text_muted, _alpha);
+			menu_players_ui_draw_hp_bar(_x + 74, _y + 42, _w - 108, 8, _hp_ratio, _alpha);
+			render_text(_x + 74, _y + 54, date_datetime_string(_data.get_last_opened()), 0.55, 0.55, 0, _metrics.text_dim, _alpha);
+			break;
 		
-		return _ystart + _rows * 128;
+		case "list":
+			draw_set_alpha(_alpha * 0.18);
+			draw_rectangle_colour(_x + 12, _y + 11, _x + 64, _y + _h - 11, _metrics.placeholder_fill, _metrics.placeholder_fill, _metrics.placeholder_fill, _metrics.placeholder_fill, false);
+			draw_set_alpha(1);
+			render_attire(_data.get_attire(), 0, _x + 38, _y + (_h * 0.5) + 12, 2.1, 2.1);
+			render_text(_x + 80, _y + 12, menu_ui_trim_text(_data.get_name(), 28), 0.9, 0.9, 0, c_white, _alpha);
+			render_text(_x + 80, _y + 30, $"{_hp}/{_hp_max} HP", 0.65, 0.65, 0, _metrics.text_muted, _alpha);
+			menu_players_ui_draw_hp_bar(_x + 80, _y + 46, min(220, _w - 156), 8, _hp_ratio, _alpha);
+			render_text(_x + 80, _y + 58, date_datetime_string(_data.get_last_opened()), 0.6, 0.6, 0, _metrics.text_dim, _alpha);
+			break;
+		
+		default:
+			draw_set_alpha(_alpha * 0.18);
+			draw_rectangle_colour(_x + 14, _y + 16, _x + 74, _y + _h - 14, _metrics.placeholder_fill, _metrics.placeholder_fill, _metrics.placeholder_fill, _metrics.placeholder_fill, false);
+			draw_set_alpha(1);
+			render_attire(_data.get_attire(), 0, _x + 44, _y + (_h * 0.5) + 8, 2.4, 2.4);
+			render_text(_x + 88, _y + 14, menu_ui_trim_text(_data.get_name(), 18), 0.85, 0.85, 0, c_white, _alpha);
+			render_text(_x + 88, _y + 36, $"{_hp}/{_hp_max} HP", 0.65, 0.65, 0, _metrics.text_muted, _alpha);
+			menu_players_ui_draw_hp_bar(_x + 88, _y + 54, _w - 118, 8, _hp_ratio, _alpha);
+			render_text(_x + 88, _y + 70, date_datetime_string(_data.get_last_opened()), 0.58, 0.58, 0, _metrics.text_dim, _alpha);
+			break;
 	}
 	
-	return _ystart + _len * 60;
+	draw_set_align(_halign, _valign);
+}
+
+
+function menu_players_ui_draw_hp_bar(_x, _y, _w, _h, _ratio, _alpha)
+{
+	var _fill = clamp(_ratio, 0, 1);
+	
+	draw_set_alpha(_alpha * 0.18);
+	draw_rectangle_colour(_x, _y, _x + _w, _y + _h, c_black, c_black, c_black, c_black, false);
+	
+	draw_set_alpha(_alpha * 0.82);
+	draw_rectangle_colour(_x + 1, _y + 1, _x + 1 + max(0, (_w - 2) * _fill), _y + _h - 1, c_white, c_white, c_white, c_white, false);
+	
+	draw_set_alpha(_alpha);
+	draw_rectangle_colour(_x, _y, _x + _w, _y + _h, menu_ui_get_metrics().card_border, menu_ui_get_metrics().card_border, menu_ui_get_metrics().card_border, menu_ui_get_metrics().card_border, true);
+	draw_set_alpha(1);
 }

@@ -1,73 +1,67 @@
 // title screen layout
 
+var PANEL_W = 404
+var PANEL_H = 390
+var PANEL_PAD = 20
+var STACK_W = 240
+var STACK_H = 220
+var STACK_GAP = 12
+
 @area(title_menu) {
     size = (960, 540)
     position = ORIGIN_CENTER
 
-    @area(title_graphic) {
-        position = ORIGIN_TOP_CENTER + (0, 52)
-        size = (0, 0)
-    }
+    @area(screen_frame) {
+        position = ORIGIN_CENTER + (0, 6)
+        size = (PANEL_W, PANEL_H)
+        border_color = #3a3a4a
 
-    @area(menu_options) {
-        position = ORIGIN_CENTER + (0, 92)
-        size = (224, 168)
-        layout = LAYOUT_VERTICAL
-        spacing = 16
+        @area(title_block) {
+            position = ORIGIN_TOP_LEFT + (PANEL_PAD, PANEL_PAD)
+            size = (PANEL_W - (PANEL_PAD * 2), 140)
+            border_color = #3a3a4a
 
-        @button(btn_play) {
-            text = "Play"
-            size = (224, 40)
+            @area(title_graphic) {
+                position = ORIGIN_TOP_CENTER + (0, 20)
+                size = (0, 0)
+            }
         }
 
-        @button(btn_settings) {
-            text = "Settings"
-            size = (224, 40)
+        @area(menu_options) {
+            position = ORIGIN_TOP_CENTER + (0, 156)
+            size = (STACK_W, STACK_H)
+            layout = LAYOUT_VERTICAL
+            spacing = STACK_GAP
+
+            @button(btn_play) {
+                text = "Play"
+                size = (STACK_W, 40)
+            }
+
+            @button(btn_settings) {
+                text = "Settings"
+                size = (STACK_W, 40)
+            }
+
+            @button(btn_credits) {
+                text = "Credits"
+                size = (STACK_W, 40)
+            }
+
+            @button(btn_exit) {
+                text = "Exit"
+                size = (STACK_W, 40)
+            }
         }
 
-		@area(bottom_buttons) {
-			size = (224, 40)
-			layout = LAYOUT_HORIZONTAL
-			spacing = 16
-
-			@button(btn_credits) {
-				text = "Credits"
-				size = (104, 40)
-			}
-
-			@button(btn_exit) {
-				text = "Exit"
-				size = (104, 40)
-			}
-		}
-    }
-
-    @area(socials) {
-        position = ORIGIN_BOTTOM_LEFT + (24, -24)
-        size = (112, 32)
-        layout = LAYOUT_HORIZONTAL
-        spacing = 8
-        
-        @button(btn_twitter) {
-            size = (32, 32)
-        }
-
-        @button(btn_bluesky) {
-            size = (32, 32)
-        }
-
-        @button(btn_discord) {
-            size = (32, 32)
-        }
-    }
-
-    @area(version_anchor) {
-        position = ORIGIN_BOTTOM_RIGHT + (-24, -24)
-        size = (0, 0)
-        
-        @area(version_graphic) {
-            position = ORIGIN_CENTER
+        @area(version_anchor) {
+            position = ORIGIN_BOTTOM_RIGHT + (-18, -14)
             size = (0, 0)
+
+            @area(version_graphic) {
+                position = ORIGIN_CENTER
+                size = (0, 0)
+            }
         }
     }
 }

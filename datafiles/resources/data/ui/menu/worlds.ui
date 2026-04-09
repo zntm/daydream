@@ -1,49 +1,122 @@
 // worlds screen layout
 
+var FRAME_W = 920
+var FRAME_H = 500
+var PAD = 12
+var HEADER_H = 44
+var SECTION_GAP = 12
+var PINNED_H = 118
+var FOOTER_H = 52
+var INNER_W = FRAME_W - (PAD * 2)
+var MAIN_H = FRAME_H - (PAD * 2) - HEADER_H - SECTION_GAP - PINNED_H - SECTION_GAP - FOOTER_H
+
 @area(worlds_menu) {
     size = (960, 540)
     position = ORIGIN_CENTER
 
-    @button(btn_back) {
-        position = ORIGIN_TOP_LEFT + (24, 24)
-        size = (64, 32)
-        text = "Back"
-    }
+    @area(screen_frame) {
+        position = ORIGIN_CENTER
+        size = (FRAME_W, FRAME_H)
+        border_color = #3a3a4a
 
-    @text(title) {
-        position = ORIGIN_TOP_CENTER + (0, 32)
-        text = "Worlds"
-        text_scale = 1.5
-    }
+        @area(header_bar) {
+            position = ORIGIN_TOP_LEFT + (PAD, PAD)
+            size = (INNER_W, HEADER_H)
+            border_color = #3a3a4a
 
-    @button(btn_view_toggle) {
-        position = ORIGIN_TOP_RIGHT + (-24, 24)
-        size = (56, 32)
-        text = "Grid"
-    }
+            @button(btn_back) {
+                position = ORIGIN_TOP_LEFT + (8, 6)
+                size = (64, 32)
+                text = "Back"
+            }
 
-    @area(content_area) {
-        position = ORIGIN_CENTER + (0, 18)
-        size = (888, 392)
+            @text(title) {
+                position = ORIGIN_TOP_LEFT + (84, 22)
+                text = "Worlds"
+                text_scale = 1.2
+                halign = fa_left
+                valign = fa_middle
+            }
 
-        @scroll_area(worlds_scroll) {
-            position = ORIGIN_TOP_LEFT
-            size = (888, 392)
+            @area(view_toggle_group) {
+                position = ORIGIN_TOP_RIGHT + (-92, 6)
+                size = (84, 32)
+                border_color = #3a3a4a
 
-            @area(worlds_container) {
-                position = ORIGIN_TOP_LEFT
-                size = (888, 392)
-                layout = LAYOUT_VERTICAL
-                spacing = 8
+                @button(btn_view_grid) {
+                    position = ORIGIN_TOP_LEFT
+                    size = (40, 32)
+                    text = ""
+                }
 
-                // pinned section, divider, normal section injected via GML
+                @button(btn_view_list) {
+                    position = ORIGIN_TOP_LEFT + (44, 0)
+                    size = (40, 32)
+                    text = ""
+                }
             }
         }
-    }
 
-    @button(btn_create_world) {
-        position = ORIGIN_BOTTOM_CENTER + (0, -28)
-        text = "Create World"
-        size = (200, 36)
+        @area(pinned_panel) {
+            position = ORIGIN_TOP_LEFT + (PAD, PAD + HEADER_H + SECTION_GAP)
+            size = (INNER_W, PINNED_H)
+            border_color = #3a3a4a
+
+            @text(label_pinned) {
+                position = ORIGIN_TOP_LEFT + (12, 14)
+                text = "Pinned"
+                text_scale = 0.9
+                halign = fa_left
+                valign = fa_middle
+            }
+
+            @scroll_area(pinned_scroll) {
+                position = ORIGIN_TOP_LEFT + (12, 34)
+                size = (INNER_W - 24, 72)
+                scroll_axis = "horizontal"
+                scrollbar_width = 6
+
+                @area(pinned_container) {
+                    position = ORIGIN_TOP_LEFT
+                    size = (INNER_W - 24, 66)
+                }
+            }
+        }
+
+        @area(main_panel) {
+            position = ORIGIN_TOP_LEFT + (PAD, PAD + HEADER_H + SECTION_GAP + PINNED_H + SECTION_GAP)
+            size = (INNER_W, MAIN_H)
+            border_color = #3a3a4a
+
+            @text(label_all) {
+                position = ORIGIN_TOP_LEFT + (12, 14)
+                text = "All Worlds"
+                text_scale = 0.9
+                halign = fa_left
+                valign = fa_middle
+            }
+
+            @scroll_area(worlds_scroll) {
+                position = ORIGIN_TOP_LEFT + (12, 34)
+                size = (INNER_W - 24, MAIN_H - 46)
+
+                @area(worlds_container) {
+                    position = ORIGIN_TOP_LEFT
+                    size = (INNER_W - 36, MAIN_H - 46)
+                }
+            }
+        }
+
+        @area(action_dock) {
+            position = ORIGIN_BOTTOM_LEFT + (PAD, -PAD - FOOTER_H)
+            size = (INNER_W, FOOTER_H)
+            border_color = #3a3a4a
+
+            @button(btn_create_world) {
+                position = ORIGIN_TOP_CENTER + (0, 8)
+                size = (220, 36)
+                text = "Create World"
+            }
+        }
     }
 }

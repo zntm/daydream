@@ -1,70 +1,97 @@
 // settings screen layout
 
+var FRAME_W = 920
+var FRAME_H = 500
+var PAD = 12
+var HEADER_H = 44
+var GAP = 12
+var CONTENT_H = FRAME_H - (PAD * 2) - HEADER_H - GAP
+var TAB_W = 216
+var RIGHT_W = FRAME_W - (PAD * 2) - TAB_W - GAP
+
 @area(settings_menu) {
     size = (960, 540)
     position = ORIGIN_CENTER
 
-    @button(btn_back) {
-        position = ORIGIN_TOP_LEFT + (24, 24)
-        size = (88, 32)
-        text = "Back"
-    }
+    @area(screen_frame) {
+        position = ORIGIN_CENTER
+        size = (FRAME_W, FRAME_H)
+        border_color = #3a3a4a
 
-    @text(title) {
-        position = ORIGIN_TOP_CENTER + (0, 36)
-        text = "Settings"
-        text_scale = 1.5
-    }
+        @area(header_bar) {
+            position = ORIGIN_TOP_LEFT + (PAD, PAD)
+            size = (FRAME_W - (PAD * 2), HEADER_H)
+            border_color = #3a3a4a
 
-    @area(main_content) {
-        position = ORIGIN_CENTER + (0, 24)
-        size = (896, 404)
+            @button(btn_back) {
+                position = ORIGIN_TOP_LEFT + (8, 6)
+                size = (64, 32)
+                text = "Back"
+            }
+
+            @text(title) {
+                position = ORIGIN_TOP_LEFT + (84, 22)
+                text = "Settings"
+                text_scale = 1.2
+                halign = fa_left
+                valign = fa_middle
+            }
+        }
 
         @area(left_column) {
-            position = ORIGIN_TOP_LEFT
-            size = (208, 404)
+            position = ORIGIN_TOP_LEFT + (PAD, PAD + HEADER_H + GAP)
+            size = (TAB_W, CONTENT_H)
+            border_color = #3a3a4a
+            padding = 10
             layout = LAYOUT_VERTICAL
             spacing = 8
-            
+
             @button(btn_cat_general) {
-                size = (208, 40)
+                size = (TAB_W - 20, 40)
                 text = "General"
             }
-            
+
             @button(btn_cat_graphics) {
-                size = (208, 40)
+                size = (TAB_W - 20, 40)
                 text = "Graphics"
             }
-            
+
             @button(btn_cat_controls) {
-                size = (208, 40)
+                size = (TAB_W - 20, 40)
                 text = "Controls"
             }
-            
+
             @button(btn_cat_audio) {
-                size = (208, 40)
+                size = (TAB_W - 20, 40)
                 text = "Audio"
             }
-            
+
             @button(btn_cat_accessibility) {
-                size = (208, 40)
+                size = (TAB_W - 20, 40)
                 text = "Accessibility"
             }
         }
 
         @area(right_column) {
-            position = ORIGIN_TOP_RIGHT
-            size = (656, 404)
+            position = ORIGIN_TOP_LEFT + (PAD + TAB_W + GAP, PAD + HEADER_H + GAP)
+            size = (RIGHT_W, CONTENT_H)
+            border_color = #3a3a4a
+
+            @text(category_title) {
+                position = ORIGIN_TOP_LEFT + (12, 16)
+                text = "General"
+                text_scale = 0.95
+                halign = fa_left
+                valign = fa_middle
+            }
 
             @scroll_area(settings_scroll) {
-                position = ORIGIN_TOP_LEFT
-                size = (656, 404)
+                position = ORIGIN_TOP_LEFT + (12, 36)
+                size = (RIGHT_W - 24, CONTENT_H - 48)
 
                 @area(settings_list) {
-                    position = ORIGIN_TOP_LEFT + (8, 0)
-                    size = (640, 404)
-                    layout = LAYOUT_VERTICAL
-                    spacing = 10
+                    position = ORIGIN_TOP_LEFT
+                    size = (RIGHT_W - 36, CONTENT_H - 48)
                 }
             }
         }

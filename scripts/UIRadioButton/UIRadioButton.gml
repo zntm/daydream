@@ -44,7 +44,7 @@ function UIRadioButton(_x, _y, _text = "") : UIElement(_x, _y, 100, 20) construc
         if !(visible) exit;
         
         
-        var _abs_x = get_absolute_x();
+        var _abs_x = get_interaction_x();
         var _abs_y = get_interaction_y();
         
         

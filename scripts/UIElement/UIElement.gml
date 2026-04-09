@@ -8,6 +8,47 @@ enum UI_LAYOUT
 }
 
 
+function ui_layout_resolve_scalar(_value, _fallback = 0)
+{
+    if (is_array(_value))
+    {
+        var _len = array_length(_value);
+
+        for (var i = 0; i < _len; ++i)
+        {
+            var _resolved = ui_layout_resolve_scalar(_value[i], _fallback);
+
+            if (is_numeric(_resolved))
+            {
+                return _resolved;
+            }
+        }
+
+        return _fallback;
+    }
+
+    if (is_struct(_value))
+    {
+        if (_value[$ "is_calc"] == true)
+        {
+            return _value.absolute_offset ?? _fallback;
+        }
+
+        if (_value[$ "is_percent"] == true)
+        {
+            return _fallback;
+        }
+    }
+
+    if (is_numeric(_value))
+    {
+        return _value;
+    }
+
+    return _fallback;
+}
+
+
 /* base UI element - extends GUIComponent with declarative features */
 /* all declarative UI elements inherit from this */
 /* @param {real} _x x position */
@@ -228,20 +269,27 @@ function UIElement(_x, _y, _width, _height) constructor
     {
         if (parent != undefined)
         {
+            var _parent_width = ui_layout_resolve_scalar(parent.width, 0);
+            var _parent_height = ui_layout_resolve_scalar(parent.height, 0);
+            var _self_width = ui_layout_resolve_scalar(width, 0);
+            var _self_height = ui_layout_resolve_scalar(height, 0);
+            var _offset_resolved_x = ui_layout_resolve_scalar(offset_x, 0);
+            var _offset_resolved_y = ui_layout_resolve_scalar(offset_y, 0);
+
             if (anchor_x != undefined)
             {
                 switch (anchor_x)
                 {
                     case "left":
-                        x = offset_x;
+                        x = _offset_resolved_x;
                         break;
                         
                     case "center":
-                        x = (parent.width / 2) - (width / 2) + offset_x;
+                        x = (_parent_width / 2) - (_self_width / 2) + _offset_resolved_x;
                         break;
                         
                     case "right":
-                        x = parent.width - width + offset_x;
+                        x = _parent_width - _self_width + _offset_resolved_x;
                         break;
                 }
             }
@@ -251,15 +299,15 @@ function UIElement(_x, _y, _width, _height) constructor
                 switch (anchor_y)
                 {
                     case "top":
-                        y = offset_y;
+                        y = _offset_resolved_y;
                         break;
                         
                     case "middle":
-                        y = (parent.height / 2) - (height / 2) + offset_y;
+                        y = (_parent_height / 2) - (_self_height / 2) + _offset_resolved_y;
                         break;
                         
                     case "bottom":
-                        y = parent.height - height + offset_y;
+                        y = _parent_height - _self_height + _offset_resolved_y;
                         break;
                 }
             }
@@ -505,6 +553,28 @@ function UIElement(_x, _y, _width, _height) constructor
         
         return x;
     }
+
+
+    /* get physics/interaction x position, factoring in scroll offsets */
+    static get_interaction_x = function()
+    {
+        var _scroll_offset = 0;
+
+        if (parent != undefined)
+        {
+            if (instanceof(parent) == "UIScrollArea")
+            {
+                if ((parent.scroll_axis ?? "vertical") == "horizontal")
+                {
+                    _scroll_offset = parent.scroll_offset;
+                }
+            }
+
+            return parent.get_interaction_x() + x - _scroll_offset;
+        }
+
+        return x - _scroll_offset;
+    }
     
     
     /* get absolute y position in logical units (960-based) */
@@ -528,7 +598,10 @@ function UIElement(_x, _y, _width, _height) constructor
         {
             if (instanceof(parent) == "UIScrollArea")
             {
-                _scroll_offset = parent.scroll_offset;
+                if ((parent.scroll_axis ?? "vertical") != "horizontal")
+                {
+                    _scroll_offset = parent.scroll_offset;
+                }
             }
             
             return parent.get_interaction_y() + y - _scroll_offset;
@@ -572,13 +645,15 @@ function UIElement(_x, _y, _width, _height) constructor
         var _base_scale = ui_get_base_scale();
         var _abs_x = get_absolute_x();
         var _abs_y = get_absolute_y();
+        var _draw_width = ui_layout_resolve_scalar(width, 0);
+        var _draw_height = ui_layout_resolve_scalar(height, 0);
         
         
         var _x1 = _abs_x * _base_scale.x;
         var _y1 = _abs_y * _base_scale.y;
         
-        var _x2 = _x1 + (width * _base_scale.x);
-        var _y2 = _y1 + (height * _base_scale.y);
+        var _x2 = _x1 + (_draw_width * _base_scale.x);
+        var _y2 = _y1 + (_draw_height * _base_scale.y);
 
 
         /* draw background if set */

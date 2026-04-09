@@ -81,8 +81,11 @@ function menu_title_ui_init()
 			var _valign = draw_get_valign();
 			
 			draw_set_align(fa_middle, fa_center);
-			
-			render_text(_x, _draw_y + _sh - _oy + 24, splash_text, 1, 1, 12, MENU_TITLE_SPLASH_COLOUR);
+
+			var _splash_x = _draw_x + _sw - _ox - 38;
+			var _splash_y = _draw_y + _sh - _oy - 10;
+			render_text(_splash_x + 2, _splash_y + 2, splash_text, 0.85, 0.85, -14, c_black, 0.25);
+			render_text(_splash_x, _splash_y, splash_text, 0.85, 0.85, -14, MENU_TITLE_SPLASH_COLOUR);
 			
 			draw_set_align(_halign, _valign);
 		});

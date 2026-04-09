@@ -41,7 +41,7 @@ function UISlider(_x, _y, _width, _min, _max, _value) : UIElement(_x, _y, _width
         if !(visible) exit;
         
         
-        var _abs_x = get_absolute_x();
+        var _abs_x = get_interaction_x();
         var _abs_y = get_interaction_y();
         
         

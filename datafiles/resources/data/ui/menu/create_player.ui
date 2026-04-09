@@ -1,143 +1,196 @@
 // create player screen layout
 
-var COL_W = 440
+var FRAME_W = 920
+var FRAME_H = 500
+var PAD = 12
+var HEADER_H = 44
+var FOOTER_H = 52
+var GAP = 12
+var CONTENT_H = FRAME_H - (PAD * 2) - HEADER_H - GAP - FOOTER_H
+var LEFT_W = 360
+var RIGHT_W = FRAME_W - (PAD * 2) - LEFT_W - GAP
+var FIELD_W = LEFT_W - 24
 
 @area(create_player_menu) {
     size = (960, 540)
     position = ORIGIN_CENTER
 
-    @button(btn_back) {
-        position = ORIGIN_TOP_LEFT + (24, 24)
-        size = (64, 32)
-        text = "Back"
-    }
+    @area(screen_frame) {
+        position = ORIGIN_CENTER
+        size = (FRAME_W, FRAME_H)
+        border_color = #3a3a4a
 
-    @text(title) {
-        position = ORIGIN_TOP_CENTER + (0, 32)
-        text = "Create Player"
-        text_scale = 1.5
-    }
+        @area(header_bar) {
+            position = ORIGIN_TOP_LEFT + (PAD, PAD)
+            size = (FRAME_W - (PAD * 2), HEADER_H)
+            border_color = #3a3a4a
 
-    @area(main_content) {
-        position = ORIGIN_CENTER + (0, -8)
-        size = (880, 360)
+            @button(btn_back) {
+                position = ORIGIN_TOP_LEFT + (8, 6)
+                size = (64, 32)
+                text = "Back"
+            }
 
-        @area(left_column) {
-            position = ORIGIN_TOP_LEFT
-            size = (COL_W, 360)
-
-            @area(preview_renderer) {
-                position = ORIGIN_TOP_CENTER + (0, 16)
-                size = (200, 280)
+            @text(title) {
+                position = ORIGIN_TOP_LEFT + (84, 22)
+                text = "Create Player"
+                text_scale = 1.2
+                halign = fa_left
+                valign = fa_middle
             }
         }
 
-        @line(divider) {
-            position = ORIGIN_TOP_LEFT + (COL_W, 0)
-            start = (0, 0)
-            end = (0, 360)
-            thickness = 1
-            colour = #3a3a4a
-        }
+        @area(left_panel) {
+            position = ORIGIN_TOP_LEFT + (PAD, PAD + HEADER_H + GAP)
+            size = (LEFT_W, CONTENT_H)
+            border_color = #3a3a4a
 
-        @area(right_column) {
-            position = ORIGIN_TOP_LEFT + (COL_W + 1, 0)
-            size = (880 - COL_W - 1, 360)
+            @area(preview_frame) {
+                position = ORIGIN_TOP_LEFT + (12, 12)
+                size = (LEFT_W - 24, 206)
+                border_color = #3a3a4a
 
-            /* type tabs - Hair, Skin, Outfit etc. injected via GML */
-            @area(type_tabs) {
-                position = ORIGIN_TOP_LEFT + (16, 8)
-                size = (408, 28)
-                layout = LAYOUT_HORIZONTAL
-                spacing = 4
-            }
-
-            /* --- style --- */
-            @text(label_style) {
-                position = ORIGIN_TOP_LEFT + (16, 48)
-                text = "Style"
-                text_scale = 0.8
-                colour = #aaaaaa
-            }
-
-            @area(style_row) {
-                position = ORIGIN_TOP_LEFT + (16, 64)
-                size = (408, 44)
-                layout = LAYOUT_GRID
-                grid_columns = 6
-                spacing = 6
-                // injected via GML
-            }
-
-            /* --- design --- */
-            @text(label_design) {
-                position = ORIGIN_TOP_LEFT + (16, 120)
-                text = "Design"
-                text_scale = 0.8
-                colour = #aaaaaa
-            }
-
-            @scroll_area(design_scroll) {
-                position = ORIGIN_TOP_LEFT + (16, 136)
-                size = (408, 100)
-
-                @area(design_list) {
-                    position = ORIGIN_TOP_LEFT
-                    size = (408, 100)
-                    layout = LAYOUT_GRID
-                    grid_columns = 6
-                    spacing = 6
-                    // injected via GML
+                @area(preview_renderer) {
+                    position = ORIGIN_TOP_LEFT + (16, 10)
+                    size = (LEFT_W - 56, 180)
                 }
             }
 
-            /* --- colour --- */
-            @text(label_colour) {
-                position = ORIGIN_TOP_LEFT + (16, 248)
-                text = "Colour"
+            @text(label_name) {
+                position = ORIGIN_TOP_LEFT + (12, 228)
+                text = "Name"
                 text_scale = 0.8
                 colour = #aaaaaa
+                halign = fa_left
+                valign = fa_middle
+            }
+
+            @textbox(input_name) {
+                position = ORIGIN_TOP_LEFT + (12, 242)
+                size = (FIELD_W, 24)
+                placeholder = "name..."
+                text_length = 40
+            }
+
+            @text(label_voice) {
+                position = ORIGIN_TOP_LEFT + (12, 278)
+                text = "Noise"
+                text_scale = 0.8
+                colour = #aaaaaa
+                halign = fa_left
+                valign = fa_middle
+            }
+
+            @dropdown(input_voice) {
+                position = ORIGIN_TOP_LEFT + (12, 292)
+                size = (FIELD_W, 24)
+            }
+
+            @text(label_pitch) {
+                position = ORIGIN_TOP_LEFT + (12, 328)
+                text = "Pitch"
+                text_scale = 0.8
+                colour = #aaaaaa
+                halign = fa_left
+                valign = fa_middle
+            }
+
+            @slider(input_pitch) {
+                position = ORIGIN_TOP_LEFT + (12, 342)
+                size = (FIELD_W, 16)
+                min = -100
+                max = 100
+                value = 0
+            }
+        }
+
+        @area(right_panel) {
+            position = ORIGIN_TOP_LEFT + (PAD + LEFT_W + GAP, PAD + HEADER_H + GAP)
+            size = (RIGHT_W, CONTENT_H)
+            border_color = #3a3a4a
+
+            @text(label_category) {
+                position = ORIGIN_TOP_LEFT + (12, 16)
+                text = "Category"
+                text_scale = 0.8
+                colour = #aaaaaa
+                halign = fa_left
+                valign = fa_middle
+            }
+
+            @area(type_tabs) {
+                position = ORIGIN_TOP_LEFT + (12, 30)
+                size = (RIGHT_W - 24, 28)
+                layout = LAYOUT_HORIZONTAL
+                spacing = 8
+            }
+
+            @text(label_style) {
+                position = ORIGIN_TOP_LEFT + (12, 82)
+                text = "Design"
+                text_scale = 0.8
+                colour = #aaaaaa
+                halign = fa_left
+                valign = fa_middle
+            }
+
+            @area(style_row) {
+                position = ORIGIN_TOP_LEFT + (12, 96)
+                size = (RIGHT_W - 24, 44)
+                layout = LAYOUT_HORIZONTAL
+                spacing = 6
+            }
+
+            @text(label_design) {
+                position = ORIGIN_TOP_LEFT + (12, 158)
+                text = "More Designs"
+                text_scale = 0.8
+                colour = #aaaaaa
+                halign = fa_left
+                valign = fa_middle
+            }
+
+            @scroll_area(design_scroll) {
+                position = ORIGIN_TOP_LEFT + (12, 172)
+                size = (RIGHT_W - 24, 108)
+
+                @area(design_list) {
+                    position = ORIGIN_TOP_LEFT
+                    size = (RIGHT_W - 36, 108)
+                    layout = LAYOUT_GRID
+                    grid_columns = 6
+                    spacing = 6
+                }
+            }
+
+            @text(label_colour) {
+                position = ORIGIN_TOP_LEFT + (12, 298)
+                text = "Palette"
+                text_scale = 0.8
+                colour = #aaaaaa
+                halign = fa_left
+                valign = fa_middle
             }
 
             @area(colour_row) {
-                position = ORIGIN_TOP_LEFT + (16, 264)
-                size = (408, 92)
+                position = ORIGIN_TOP_LEFT + (12, 312)
+                size = (RIGHT_W - 24, 44)
                 layout = LAYOUT_GRID
                 grid_columns = 6
                 spacing = 6
-                // injected via GML
             }
         }
-    }
 
-    /* name / voice / pitch - flat horizontal row at bottom-left */
-    @area(bottom_fields) {
-        position = ORIGIN_BOTTOM_LEFT + (40, -36)
-        size = (COL_W - 40, 24)
-        layout = LAYOUT_HORIZONTAL
-        spacing = 8
+        @area(action_dock) {
+            position = ORIGIN_BOTTOM_LEFT + (PAD, -PAD - FOOTER_H)
+            size = (FRAME_W - (PAD * 2), FOOTER_H)
+            border_color = #3a3a4a
 
-        @textbox(input_name) {
-            size = (180, 24)
-            placeholder = "name..."
-            text_length = 40
+            @button(btn_create_player) {
+                position = ORIGIN_TOP_CENTER + (0, 8)
+                size = (220, 36)
+                text = "Create Player"
+            }
         }
-
-        @dropdown(input_voice) {
-            size = (120, 24)
-        }
-
-        @slider(input_pitch) {
-            size = (100, 24)
-            min = -100
-            max = 100
-            value = 0
-        }
-    }
-
-    @button(btn_create_player) {
-        position = ORIGIN_BOTTOM_RIGHT + (-24, -24)
-        size = (180, 32)
-        text = "Create Player"
     }
 }

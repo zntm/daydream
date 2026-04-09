@@ -84,12 +84,14 @@ function UIArea(_x, _y, _width, _height) : UIElement(_x, _y, _width, _height) co
         var _base_scale = ui_get_base_scale();
         var _abs_x = get_absolute_x();
         var _abs_y = get_absolute_y();
+        var _draw_width = ui_layout_resolve_scalar(width, 0);
+        var _draw_height = ui_layout_resolve_scalar(height, 0);
         
         
         var _x1 = _abs_x * _base_scale.x;
         var _y1 = _abs_y * _base_scale.y;
-        var _x2 = _x1 + (width * _base_scale.x);
-        var _y2 = _y1 + (height * _base_scale.y);
+        var _x2 = _x1 + (_draw_width * _base_scale.x);
+        var _y2 = _y1 + (_draw_height * _base_scale.y);
         
         
         /* draw background if set */

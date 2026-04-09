@@ -90,7 +90,7 @@ function __get_program_directory_mods()
 
 function resource_get_base_namespace()
 {
-    return global.resource_base_namespace ?? "phantasia";
+    return global[$ "resource_base_namespace"] ?? "phantasia";
 }
 
 function resource_mod_format_authors(_authors)

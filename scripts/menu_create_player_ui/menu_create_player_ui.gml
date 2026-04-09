@@ -42,9 +42,8 @@ function menu_create_player_ui_init()
 	var _elements = _instance.elements;
 	
 	/* set initial data for a new player */
-	global.current_player.name = "";
+	menu_refresh_value_player_save();
 	global.current_player.uuid = uuid_generate(irandom(0xffffffff));
-	global.current_player.attire = [33, 1, 0, 1.0, 0];
 	global.menu_create_player_tab = "all";
 	
 	with (obj_Menu_Control)
@@ -56,7 +55,7 @@ function menu_create_player_ui_init()
 
 	if (_title != undefined)
 	{
-		_title.text = loca_translate("phantasia:menu.players.create");
+		_title.text = menu_ui_localize_or_default("phantasia:menu.players.create", "Create Player");
 	}
 	
 	/* back button */
@@ -64,7 +63,7 @@ function menu_create_player_ui_init()
 	
 	if (_btn_back != undefined)
 	{
-		_btn_back.text = loca_translate("phantasia:menu.generic.back");
+		_btn_back.text = menu_ui_localize_or_default("phantasia:menu.generic.back", "Back");
 		
 		_btn_back.add_event_handler("on_select_release", function() {
 			menu_transition_goto(rm_Menu_Players);
@@ -76,7 +75,7 @@ function menu_create_player_ui_init()
 	
 	if (_btn_create_player != undefined)
 	{
-		_btn_create_player.text = loca_translate("phantasia:menu.players.create");
+		_btn_create_player.text = menu_ui_localize_or_default("phantasia:menu.players.create", "Create Player");
 		
 		_btn_create_player.add_event_handler("on_select_release", function() {
 			var _index = array_length(global.file_players);
@@ -104,7 +103,7 @@ function menu_create_player_ui_init()
 	
 	if (_input_name != undefined)
 	{
-		_input_name.placeholder = loca_translate("phantasia:menu.players.name");
+		_input_name.placeholder = menu_ui_localize_or_default("phantasia:menu.players.name", "Name");
 		_input_name.set_value(global.current_player.name);
 
 		_input_name.add_event_handler("on_input", method(_input_name, function(_data) {
@@ -161,10 +160,10 @@ function menu_create_player_ui_init()
 	if (_renderer != undefined)
 	{
 		_renderer.on_draw = method(_renderer, function(_x, _y, _xscale, _yscale) {
-			var _rx = _x + (self.width * _xscale / 2);
-			var _ry = _y + (self.height * _yscale / 2) + (32 * _yscale);
+			var _rx = _x + (self.width * _xscale * 0.5);
+			var _ry = _y + (self.height * _yscale * 0.5) + (18 * _yscale);
 			
-			render_attire(global.current_player.attire, 0, _rx, _ry, 8 * _xscale, 8 * _yscale);
+			render_attire(global.current_player.attire, 0, _rx, _ry, 6.5 * _xscale, 6.5 * _yscale);
 		});
 	}
 
@@ -191,7 +190,7 @@ function menu_create_player_ui_build_tabs()
 	for (var i = 0; i < array_length(_definitions); ++i)
 	{
 		var _definition = _definitions[i];
-		var _btn = new UIButton(0, 0, 133, 28, _definition.text);
+		var _btn = new UIButton(0, 0, 156, 28, _definition.text);
 
 		_btn.tab_id = _definition.id;
 		_btn.sprite_index = (global.menu_create_player_tab == _definition.id) ? spr_Menu_Button_Secondary : spr_Menu_Button_Main;
@@ -269,7 +268,7 @@ function menu_create_player_ui_refresh_options()
 
 	if (_label_style != undefined) _label_style.text = _style_label;
 	if (_label_design != undefined) _label_design.text = _design_label;
-	if (_label_colour != undefined) _label_colour.text = "Colour";
+	if (_label_colour != undefined) _label_colour.text = "Palette";
 
 	menu_create_player_ui_build_attire_buttons(_style_row, _style_kind, _style_start, 6);
 
