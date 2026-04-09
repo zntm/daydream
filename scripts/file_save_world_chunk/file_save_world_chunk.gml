@@ -5,6 +5,8 @@
 /// @param {bool} [_sync=false] Optional flag to force synchronous saving
 function file_save_world_chunk(_current_world, _chunk, _sync = false)
 {
+    static CHUNK_PALETTE_FORMAT_SPLIT = 65535;
+
     static _collect_id = function(_id, _map, _array, _index_ref)
     {
         if (!struct_exists(_map, _id))
@@ -12,6 +14,18 @@ function file_save_world_chunk(_current_world, _chunk, _sync = false)
             _map[$ _id] = _index_ref[0]++;
             
             array_push(_array, _id);
+        }
+    }
+
+    static _collect_palette_write = function(_buffer, _array)
+    {
+        var _length = array_length(_array);
+
+        buffer_write(_buffer, buffer_u16, _length);
+
+        for (var i = 0; i < _length; ++i)
+        {
+            buffer_write(_buffer, buffer_string, _array[i]);
         }
     }
     
@@ -73,12 +87,22 @@ function file_save_world_chunk(_current_world, _chunk, _sync = false)
     
     buffer_write(_current_chunk_buffer, buffer_bool, _is_generated);
     buffer_write(_current_chunk_buffer, buffer_u16,  _chunk_display);
-    
-    var _palette_map   = {}
-    var _palette_array = [];
-    var _palette_index = 0;
-    
-    var _index_ref = [_palette_index];
+
+    var _palette_tile_map             = {}
+    var _palette_tile_array           = [];
+    var _palette_tile_index_ref       = [0];
+    var _palette_tile_inventory_map   = {}
+    var _palette_tile_inventory_array = [];
+    var _palette_tile_inventory_ref   = [0];
+    var _palette_item_drop_map        = {}
+    var _palette_item_drop_array      = [];
+    var _palette_item_drop_ref        = [0];
+    var _palette_creature_map         = {}
+    var _palette_creature_array       = [];
+    var _palette_creature_ref         = [0];
+    var _palette_creature_inv_map     = {}
+    var _palette_creature_inv_array   = [];
+    var _palette_creature_inv_ref     = [0];
     
     /* collect from tiles */
     if (_chunk_display)
@@ -99,7 +123,7 @@ function file_save_world_chunk(_current_world, _chunk, _sync = false)
                     {
                         var _id = _tile.get_id();
                         
-                        _collect_id(_id, _palette_map, _palette_array, _index_ref);
+                        _collect_id(_id, _palette_tile_map, _palette_tile_array, _palette_tile_index_ref);
                         
                         var _tdata = _item_data[$ _id];
                         
@@ -113,7 +137,7 @@ function file_save_world_chunk(_current_world, _chunk, _sync = false)
                                 
                                 if (!is_string(_inventory))
                                 {
-                                    _collect_inventory_ids(_inventory, _tlen, _item_data, _palette_map, _palette_array, _index_ref);
+                                    _collect_inventory_ids(_inventory, _tlen, _item_data, _palette_tile_inventory_map, _palette_tile_inventory_array, _palette_tile_inventory_ref);
                                 }
                             }
                         }
@@ -152,7 +176,7 @@ function file_save_world_chunk(_current_world, _chunk, _sync = false)
         {
             var _iid = _item.get_id();
             
-            _collect_id(_iid, _palette_map, _palette_array, _index_ref);
+            _collect_id(_iid, _palette_item_drop_map, _palette_item_drop_array, _palette_item_drop_ref);
             
             /* and check their contents */
             var _idata = _item_data[$ _iid];
@@ -167,7 +191,7 @@ function file_save_world_chunk(_current_world, _chunk, _sync = false)
                     
                     if (is_array(_inv_sub))
                     {
-                        _collect_inventory_ids(_inv_sub, _ilen, _item_data, _palette_map, _palette_array, _index_ref);
+                        _collect_inventory_ids(_inv_sub, _ilen, _item_data, _palette_item_drop_map, _palette_item_drop_array, _palette_item_drop_ref);
                     }
                 }
             }
@@ -191,7 +215,7 @@ function file_save_world_chunk(_current_world, _chunk, _sync = false)
         var _inst = _inst_creature[i];
         
         /* creature id */
-        _collect_id(_inst._id, _palette_map, _palette_array, _index_ref);
+        _collect_id(_inst._id, _palette_creature_map, _palette_creature_array, _palette_creature_ref);
         
         /* creature inventory */
         var _inventory = _inst[$ "inventory"];
@@ -202,20 +226,18 @@ function file_save_world_chunk(_current_world, _chunk, _sync = false)
             
             if (_ilen > 0)
             {
-                _collect_inventory_ids(_inventory, _ilen, _item_data, _palette_map, _palette_array, _index_ref);
+                _collect_inventory_ids(_inventory, _ilen, _item_data, _palette_creature_inv_map, _palette_creature_inv_array, _palette_creature_inv_ref);
             }
         }
     }
-    
-    _palette_index = _index_ref[0];
-    
-    /* -- palette -- */
-    buffer_write(_current_chunk_buffer, buffer_u16, _palette_index);
-    
-    for (var i = 0; i < _palette_index; ++i)
-    {
-        buffer_write(_current_chunk_buffer, buffer_string, _palette_array[i]);
-    }
+
+    /* -- palettes -- */
+    buffer_write(_current_chunk_buffer, buffer_u16, CHUNK_PALETTE_FORMAT_SPLIT);
+    _collect_palette_write(_current_chunk_buffer, _palette_tile_array);
+    _collect_palette_write(_current_chunk_buffer, _palette_tile_inventory_array);
+    _collect_palette_write(_current_chunk_buffer, _palette_item_drop_array);
+    _collect_palette_write(_current_chunk_buffer, _palette_creature_array);
+    _collect_palette_write(_current_chunk_buffer, _palette_creature_inv_array);
 
     /* -- tiles -- */
     var _chunk_covered = _chunk.chunk_covered;
@@ -238,7 +260,7 @@ function file_save_world_chunk(_current_world, _chunk, _sync = false)
             {
                 var _tile = _chunk.chunk[tile_index_xyz(l, j, i)];
                 
-                file_save_snippet_tile(_current_chunk_buffer, _tile, _item_data, _palette_map);
+                file_save_snippet_tile(_current_chunk_buffer, _tile, _item_data, _palette_tile_map, _palette_tile_inventory_map);
             }
         }
     }
@@ -256,7 +278,7 @@ function file_save_world_chunk(_current_world, _chunk, _sync = false)
         buffer_write(_current_chunk_buffer, buffer_f64, _.timer_pickup);
         buffer_write(_current_chunk_buffer, buffer_f64, _.timer_life);
         
-        file_save_snippet_item(_current_chunk_buffer, _.item, _item_data, _palette_map);
+        file_save_snippet_item(_current_chunk_buffer, _.item, _item_data, _palette_item_drop_map);
         file_save_snippet_position(_current_chunk_buffer, _);
         
         var _pos_end = buffer_tell(_current_chunk_buffer);
@@ -275,7 +297,7 @@ function file_save_world_chunk(_current_world, _chunk, _sync = false)
         buffer_write(_current_chunk_buffer, buffer_u32, 0); 
         
         /* use palette index for creature id */
-        buffer_write(_current_chunk_buffer, buffer_u16, _palette_map[$ _._id]);
+        buffer_write(_current_chunk_buffer, buffer_u16, _palette_creature_map[$ _._id]);
         
         buffer_write(_current_chunk_buffer, buffer_string, _[$ "variant"] ?? "");
         buffer_write(_current_chunk_buffer, buffer_u16,    _.hp);
@@ -300,7 +322,7 @@ function file_save_world_chunk(_current_world, _chunk, _sync = false)
             
             if (_ilen > 0)
             {
-                file_save_snippet_inventory(_current_chunk_buffer, _inventory, _ilen, _item_data, _palette_map);
+                file_save_snippet_inventory(_current_chunk_buffer, _inventory, _ilen, _item_data, _palette_creature_inv_map);
             }
         }
         else

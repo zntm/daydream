@@ -1,4 +1,4 @@
-function file_load_snippet_tile(_buffer, _item_data, _palette)
+function file_load_snippet_tile(_buffer, _item_data, _palette, _inventory_palette = _palette)
 {
     var _index = buffer_read(_buffer, buffer_u16);
     
@@ -40,7 +40,7 @@ function file_load_snippet_tile(_buffer, _item_data, _palette)
         }
         else
         {
-            _tile.set_inventory(file_load_snippet_inventory(_buffer, _inventory_length, _item_data, _palette));
+            _tile.set_inventory(file_load_snippet_inventory(_buffer, _inventory_length, _item_data, _inventory_palette));
         }
     }
     

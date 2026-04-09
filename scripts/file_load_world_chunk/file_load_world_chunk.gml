@@ -2,6 +2,21 @@
 /// @param {Struct.Chunk} _chunk The chunk struct to load into
 function file_load_world_chunk(_current_world, _chunk)
 {
+    static CHUNK_PALETTE_FORMAT_SPLIT = 65535;
+
+    static _read_palette = function(_buffer)
+    {
+        var _length = buffer_read(_buffer, buffer_u16);
+        var _palette = array_create(_length);
+
+        for (var i = 0; i < _length; ++i)
+        {
+            _palette[@ i] = buffer_read(_buffer, buffer_string);
+        }
+
+        return _palette;
+    }
+
     var _item_data  = global.item_data;
     var _world_data = global.world_data[$ _current_world.dimension];
     
@@ -60,13 +75,36 @@ function file_load_world_chunk(_current_world, _chunk)
     
     _chunk.chunk_display = _chunk_display;
     
-    /* read master palette */
-    var _palette_length = buffer_read(_buffer, buffer_u16);
-    var _palette        = array_create(_palette_length);
-    
-    for (var i = 0; i < _palette_length; ++i)
+    var _palette_marker = buffer_read(_buffer, buffer_u16);
+    var _tile_palette;
+    var _tile_inventory_palette;
+    var _item_drop_palette;
+    var _creature_palette;
+    var _creature_inventory_palette;
+
+    if (_palette_marker == CHUNK_PALETTE_FORMAT_SPLIT)
     {
-        _palette[@ i] = buffer_read(_buffer, buffer_string);
+        _tile_palette               = _read_palette(_buffer);
+        _tile_inventory_palette     = _read_palette(_buffer);
+        _item_drop_palette          = _read_palette(_buffer);
+        _creature_palette           = _read_palette(_buffer);
+        _creature_inventory_palette = _read_palette(_buffer);
+    }
+    else
+    {
+        var _legacy_palette_length = _palette_marker;
+        var _legacy_palette        = array_create(_legacy_palette_length);
+
+        for (var i = 0; i < _legacy_palette_length; ++i)
+        {
+            _legacy_palette[@ i] = buffer_read(_buffer, buffer_string);
+        }
+
+        _tile_palette               = _legacy_palette;
+        _tile_inventory_palette     = _legacy_palette;
+        _item_drop_palette          = _legacy_palette;
+        _creature_palette           = _legacy_palette;
+        _creature_inventory_palette = _legacy_palette;
     }
     
     if (_chunk_display)
@@ -86,7 +124,7 @@ function file_load_world_chunk(_current_world, _chunk)
             {
                 for (var l = 0; l < CHUNK_SIZE; ++l)
                 {
-                    _chunk.chunk[@ tile_index_xyz(l, j, i)] = file_load_snippet_tile(_buffer, _item_data, _palette);
+                    _chunk.chunk[@ tile_index_xyz(l, j, i)] = file_load_snippet_tile(_buffer, _item_data, _tile_palette, _tile_inventory_palette);
                 }
             }
         }
@@ -101,7 +139,7 @@ function file_load_world_chunk(_current_world, _chunk)
         var _timer_pickup = buffer_read(_buffer, buffer_f64);
         var _timer_life   = buffer_read(_buffer, buffer_f64);
         
-        var _item = file_load_snippet_item(_buffer, _item_data, _palette);
+        var _item = file_load_snippet_item(_buffer, _item_data, _item_drop_palette);
         
         var _inst_item = spawn_item_drop(0, 0, _item);
         
@@ -119,7 +157,7 @@ function file_load_world_chunk(_current_world, _chunk)
         
         /* read id from palette */
         var _id_index = buffer_read(_buffer, buffer_u16);
-        var _id       = _palette[_id_index];
+        var _id       = _creature_palette[_id_index];
         
         var _variant = buffer_read(_buffer, buffer_string);
         
@@ -148,7 +186,7 @@ function file_load_world_chunk(_current_world, _chunk)
         
         if (_inventory_length > 0)
         {
-            _inst_creature.inventory = file_load_snippet_inventory(_buffer, _inventory_length, _item_data, _palette);
+            _inst_creature.inventory = file_load_snippet_inventory(_buffer, _inventory_length, _item_data, _creature_inventory_palette);
         }
     }
     

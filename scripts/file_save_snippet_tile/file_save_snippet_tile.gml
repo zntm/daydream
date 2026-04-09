@@ -1,4 +1,4 @@
-function file_save_snippet_tile(_buffer, _tile, _item_data, _palette_map)
+function file_save_snippet_tile(_buffer, _tile, _item_data, _palette_map, _inventory_palette_map = _palette_map)
 {
     if (_tile == TILE_EMPTY)
     {
@@ -48,7 +48,7 @@ function file_save_snippet_tile(_buffer, _tile, _item_data, _palette_map)
         }
         else
         {
-            file_save_snippet_inventory(_buffer, _inventory, _inventory_length, _item_data, _palette_map);
+            file_save_snippet_inventory(_buffer, _inventory, _inventory_length, _item_data, _inventory_palette_map);
         }
     }
     
