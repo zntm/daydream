@@ -23,21 +23,17 @@ function get_buffs(_base_attributes)
         
         if (_attr_name != undefined)
         {
-            // Construct getter/setter names
-            var _getter = $"get_{_attr_name}";
-            var _setter = $"set_{_attr_name}";
-            
-            // Apply modifier if attribute exists
-            if (struct_exists(attribute, _getter) && struct_exists(attribute, _setter))
+            var _current_val = attribute.get_value(_attr_name);
+
+            if (_current_val != undefined)
             {
-                var _current_val = attribute[$ _getter]();
                 var _level = _active_effect.level;
                 
                 // Calculate effect value (base + modifiers)
                 var _effect_val = _effect_data.calculate_value(_level);
                 
                 // Add effect value to current attribute (Additive buff/debuff)
-                attribute[$ _setter](_current_val + _effect_val);
+                attribute.set_value(_attr_name, _current_val + _effect_val);
             }
         }
     }

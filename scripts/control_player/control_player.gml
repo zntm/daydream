@@ -300,24 +300,19 @@ function control_player()
         else if (!_enable_physics)
         {
             /* Creative flight mode (no gravity) */
-            physics_body.attribute[$ "___can_fly"]   = true;
-            physics_body.attribute[$ "___fly_speed"] = global.dbg_settings[$ "fly_speed"] ?? 8.65;
-            physics_body.mode                        = MOVEMENT_MODE.FLY;
+            physics_body.attribute
+                .set_can_fly(true)
+                .set_fly_speed(global.dbg_settings[$ "fly_speed"] ?? 8.65);
+            physics_body.mode = MOVEMENT_MODE.FLY;
         }
         else
         {
             /* Revert fly properties if physics enabled back */
             if (physics_body.attribute != undefined)
             {
-                if (struct_exists(physics_body.attribute, "___can_fly"))
-                {
-                    struct_remove(physics_body.attribute, "___can_fly");
-                }
-                
-                if (struct_exists(physics_body.attribute, "___fly_speed"))
-                {
-                    struct_remove(physics_body.attribute, "___fly_speed");
-                }
+                physics_body.attribute
+                    .clear_value("can_fly")
+                    .clear_value("fly_speed");
             }
         }
     }

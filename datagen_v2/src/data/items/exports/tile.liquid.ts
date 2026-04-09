@@ -22,7 +22,7 @@ export default [
 
     // Liquid items and their buckets
     ...liquidRegistries
-        .map(({ id, namespace, flow_speed, fluidCollisions }) => {
+        .map(({ id, namespace, flow_speed, fluidCollisions, item_drop_modifier }) => {
             return [
                 // Liquid tile
                 new DatagenReturnData(
@@ -33,11 +33,14 @@ export default [
                         "#phantasia:item/generic/inventory_default",
                         [TileItemProperties.IsLiquid],
                     )
+                        .setLiquidFlowSpeed(flow_speed)
+                        .setLiquidCollisions(fluidCollisions)
                         .addTileComponent("level", ItemComponent.u8(8, 1, 8))
                         .addTileComponent(
                             "flow_direction",
                             ItemComponent.s8(0, -1, 1),
                         )
+                        .setItemDropModifier(item_drop_modifier)
                         .addOnUse([
                             new ItemScript("@phantasia:items/bucket_pickup", {
                                 bucket_id: "phantasia:bucket",

@@ -147,6 +147,9 @@ export class TileItem extends Item {
     // @ts-ignore
     private item: {
         tile?: {
+            flow_speed?: number;
+            fluid_collisions?: unknown[];
+            item_drop_modifier?: { despawn?: number };
             components?: { [key: string]: ItemComponentData };
             drops?: string | TileItemDrop[];
             falling?: { enabled?: boolean; delay?: number; gravity?: number };
@@ -222,6 +225,31 @@ export class TileItem extends Item {
         this.item.tile ??= {};
         this.item.tile.components ??= {};
         this.item.tile.components[key] = value;
+
+        return this;
+    }
+
+    setLiquidFlowSpeed(flowSpeed: number) {
+        this.item.tile ??= {};
+        this.item.tile.flow_speed = flowSpeed;
+
+        return this;
+    }
+
+    setLiquidCollisions(collisions: unknown[]) {
+        this.item.tile ??= {};
+        this.item.tile.fluid_collisions = collisions;
+
+        return this;
+    }
+
+    setItemDropModifier(modifier?: { despawn?: number }) {
+        if (modifier === undefined) {
+            return this;
+        }
+
+        this.item.tile ??= {};
+        this.item.tile.item_drop_modifier = modifier;
 
         return this;
     }

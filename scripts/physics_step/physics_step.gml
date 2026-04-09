@@ -78,7 +78,7 @@ function physics_detect_mode(_body)
     // Check for wall cling (climb mode) - requires attribute support
     if (_body.attribute != undefined)
     {
-        var _can_climb = _body.attribute[$ "___can_climb"] ?? false;
+        var _can_climb = _body.attribute.get_can_climb();
         
         if (_can_climb && (_body.collision.wall_left || _body.collision.wall_right))
         {
@@ -87,7 +87,7 @@ function physics_detect_mode(_body)
         }
         
         // Check for flight ability
-        var _can_fly = _body.attribute[$ "___can_fly"] ?? false;
+        var _can_fly = _body.attribute.get_can_fly();
         
         if (_can_fly)
         {

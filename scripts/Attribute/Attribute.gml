@@ -5,8 +5,52 @@ enum ATTRIBUTE_BOOL {
 
 function Attribute() constructor
 {
+    static __defaults = {
+        eye_level: 8,
+        gravity: 0,
+        jump_count_max: 1,
+        jump_falloff: 2.2,
+        jump_height: 28.5,
+        jump_time: 12,
+        movement_speed: 3.1,
+        can_fly: false,
+        can_swim: true,
+        can_climb: false,
+        wall_jump_power: 4.0,
+        regeneration_amount: 0,
+        regeneration_time: 60,
+        hp_max: 100,
+        harvest_reach: ATTRIBUTE_DEFAULT_HARVEST_REACH,
+        build_reach: ATTRIBUTE_DEFAULT_BUILD_REACH
+    }
+
+    static __member_name = function(_name)
+    {
+        return $"___{_name}";
+    }
+
+    static clear_values = function()
+    {
+        var _names = struct_get_names(self);
+        var _length = array_length(_names);
+
+        for (var i = _length - 1; i >= 0; --i)
+        {
+            var _name = _names[i];
+
+            if (string_copy(_name, 1, 3) == "___")
+            {
+                struct_remove(self, _name);
+            }
+        }
+
+        return self;
+    }
+
     static copy_from = function(_source)
     {
+        clear_values();
+
         var _names = struct_get_names(_source);
         var _length = array_length(_names);
         
@@ -21,6 +65,64 @@ function Attribute() constructor
             }
         }
         
+        return self;
+    }
+
+    static set_value = function(_name, _value)
+    {
+        if (_value != undefined)
+        {
+            self[$ __member_name(_name)] = _value;
+        }
+
+        return self;
+    }
+
+    static get_value = function(_name, _default = undefined)
+    {
+        var _member_name = __member_name(_name);
+
+        if (struct_exists(self, _member_name))
+        {
+            return self[$ _member_name];
+        }
+
+        if (_default != undefined)
+        {
+            return _default;
+        }
+
+        switch (_name)
+        {
+            case "fly_speed":   return get_movement_speed() * 2;
+            case "swim_speed":  return get_movement_speed() * 0.7;
+            case "climb_speed": return get_movement_speed() * 0.5;
+        }
+
+        return __defaults[$ _name];
+    }
+
+    static add_value = function(_name, _amount, _default = undefined)
+    {
+        set_value(_name, get_value(_name, _default) + _amount);
+
+        return self;
+    }
+
+    static has_value = function(_name)
+    {
+        return struct_exists(self, __member_name(_name));
+    }
+
+    static clear_value = function(_name)
+    {
+        var _member_name = __member_name(_name);
+
+        if (struct_exists(self, _member_name))
+        {
+            struct_remove(self, _member_name);
+        }
+
         return self;
     }
 

@@ -561,6 +561,63 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     {
         return self[$ "___item_armor"];
     }
+
+    static set_item_drop_modifier = function(_modifier)
+    {
+        if (_modifier != undefined)
+        {
+            ___item_drop_modifier = _modifier;
+        }
+
+        return self;
+    }
+
+    static get_item_drop_modifier = function()
+    {
+        return self[$ "___item_drop_modifier"];
+    }
+
+    static get_item_drop_despawn_modifier = function()
+    {
+        var _modifier = get_item_drop_modifier();
+
+        if (_modifier == undefined)
+        {
+            return 1;
+        }
+
+        return max(0, _modifier[$ "despawn"] ?? 1);
+    }
+
+    static set_liquid_flow_tick_delay = function(_tick_delay)
+    {
+        if (_tick_delay != undefined)
+        {
+            ___liquid_flow_tick_delay = _tick_delay;
+        }
+
+        return self;
+    }
+
+    static get_liquid_flow_tick_delay = function()
+    {
+        return self[$ "___liquid_flow_tick_delay"] ?? LIQUID_FLOW_TICK_DELAY;
+    }
+
+    static set_liquid_collisions = function(_collisions)
+    {
+        if (_collisions != undefined)
+        {
+            ___liquid_collisions = _collisions;
+        }
+
+        return self;
+    }
+
+    static get_liquid_collisions = function()
+    {
+        return self[$ "___liquid_collisions"] ?? [];
+    }
     
     static get_item_ammo_type = function()
     {
@@ -664,6 +721,27 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
             if (_components != undefined)
             {
                 set_tile_components(_components);
+            }
+
+            var _flow_speed = _tile[$ "flow_speed"];
+
+            if (_flow_speed != undefined)
+            {
+                set_liquid_flow_tick_delay(_flow_speed);
+            }
+
+            var _fluid_collisions = _tile[$ "fluid_collisions"];
+
+            if (_fluid_collisions != undefined)
+            {
+                set_liquid_collisions(_fluid_collisions);
+            }
+
+            var _item_drop_modifier = _tile[$ "item_drop_modifier"];
+
+            if (_item_drop_modifier != undefined)
+            {
+                set_item_drop_modifier(_item_drop_modifier);
             }
             
             var _drops = _tile[$ "drops"];

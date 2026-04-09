@@ -7,8 +7,9 @@
 /// @param {Real} [_yvelocity] Initial Y velocity
 /// @param {Real} [_timer_pickup] Pickup delay
 /// @param {Real} [_timer_life] Lifetime
+/// @param {Real} [_despawn_speed_modifier] Base despawn speed modifier
 
-function spawn_item_drop(_x, _y, _item, _direction = 0, _xvelocity = 0, _yvelocity = 0, _timer_pickup = 0.85, _timer_life = 60 * 15)
+function spawn_item_drop(_x, _y, _item, _direction = 0, _xvelocity = 0, _yvelocity = 0, _timer_pickup = 0.85, _timer_life = 60 * 15, _despawn_speed_modifier = 1)
 {
     if (_item == INVENTORY_EMPTY) exit;
     
@@ -44,6 +45,8 @@ function spawn_item_drop(_x, _y, _item, _direction = 0, _xvelocity = 0, _yveloci
         
         timer_pickup = _timer_pickup;
         timer_life = _timer_life;
+        despawn_speed_modifier = _despawn_speed_modifier;
+        liquid_id = "";
         
         // Interpolation state
         interp_start_x = x;

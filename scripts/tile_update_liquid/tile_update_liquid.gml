@@ -11,24 +11,11 @@ function liquid_flow(_x, _y, _z, _parameter = {})
     var _id    = _tile.get_id();
     var _level = _tile.get_component("level") ?? LIQUID_LEVEL_MAX;
     var _flow_dir = _tile.get_component("flow_direction") ?? 0;
-    
+
+    _parameter = liquid_get_flow_parameter(_id, _parameter);
+
     var _tick_delay = _parameter[$ "tick_delay"] ?? LIQUID_FLOW_TICK_DELAY;
-    
-    /* resolve fluid collision table (water+lava=stone etc.) */
-    var _fluid_collisions = _parameter[$ "fluid_collisions"];
-    
-    if (_fluid_collisions == undefined)
-    {
-        if (_id == "phantasia:water")
-            _fluid_collisions = [{ result_id: "phantasia:stone", liquid_id: "phantasia:lava" }];
-        else if (_id == "phantasia:lava")
-            _fluid_collisions = [{ result_id: "phantasia:stone", liquid_id: "phantasia:water" }];
-        else
-            _fluid_collisions = [];
-        
-        _parameter[$ "fluid_collisions"] = _fluid_collisions;
-        _parameter[$ "tick_delay"] = _tick_delay;
-    }
+    var _fluid_collisions = _parameter[$ "fluid_collisions"] ?? [];
     
     /* empty tile - remove */
     if (_level <= 0)
@@ -257,13 +244,77 @@ function liquid_flow(_x, _y, _z, _parameter = {})
     }
 }
 
+function liquid_get_flow_parameter(_liquid_id, _parameter = {})
+{
+    var _item_data = global.item_data;
+    var _data = _item_data[$ _liquid_id];
+
+    if (_data == undefined)
+    {
+        if (_parameter[$ "tick_delay"] == undefined)
+        {
+            _parameter[$ "tick_delay"] = LIQUID_FLOW_TICK_DELAY;
+        }
+
+        if (_parameter[$ "fluid_collisions"] == undefined)
+        {
+            _parameter[$ "fluid_collisions"] = [];
+        }
+
+        return _parameter;
+    }
+
+    if (_parameter[$ "tick_delay"] == undefined)
+    {
+        _parameter[$ "tick_delay"] = _data.get_liquid_flow_tick_delay();
+    }
+
+    if (_parameter[$ "fluid_collisions"] == undefined)
+    {
+        _parameter[$ "fluid_collisions"] = _data.get_liquid_collisions();
+    }
+
+    if (_parameter[$ "item_drop_modifier"] == undefined)
+    {
+        _parameter[$ "item_drop_modifier"] = _data.get_item_drop_modifier();
+    }
+
+    return _parameter;
+}
+
+function liquid_get_item_drop_modifier(_liquid_id)
+{
+    var _item_data = global.item_data;
+    var _data = _item_data[$ _liquid_id];
+
+    if (_data == undefined)
+    {
+        return undefined;
+    }
+
+    return _data.get_item_drop_modifier();
+}
+
+function liquid_get_item_drop_despawn_modifier(_liquid_id)
+{
+    var _item_data = global.item_data;
+    var _data = _item_data[$ _liquid_id];
+
+    if (_data == undefined)
+    {
+        return 1;
+    }
+
+    return _data.get_item_drop_despawn_modifier();
+}
+
 /* check fluid collision table - returns result tile id or undefined */
 function liquid_flow_check_collision(_collisions, _other_id)
 {
     for (var i = array_length(_collisions) - 1; i >= 0; --i)
     {
         if (_collisions[i].liquid_id == _other_id)
-            return _collisions[i].result_id;
+            return _collisions[i].result_id ?? _collisions[i].id;
     }
     
     return undefined;

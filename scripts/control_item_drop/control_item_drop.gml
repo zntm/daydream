@@ -17,7 +17,26 @@ function control_item_drop()
         exit;
     }
     
-    timer_life -= 1 / GAME_TICK;
+    var _despawn_modifier = max(0, despawn_speed_modifier ?? 1);
+    liquid_id = "";
+
+    var _tile_x = floor(x / TILE_SIZE);
+    var _tile_y = floor(y / TILE_SIZE);
+    var _liquid_tile = tile_get(_tile_x, _tile_y, CHUNK_DEPTH_LIQUID);
+
+    if (_liquid_tile != TILE_EMPTY)
+    {
+        var _liquid_id = _liquid_tile.get_id();
+        var _liquid_data = global.item_data[$ _liquid_id];
+
+        if (_liquid_data != undefined) && (_liquid_data.is_liquid())
+        {
+            liquid_id = _liquid_id;
+            _despawn_modifier = max(_despawn_modifier, liquid_get_item_drop_despawn_modifier(_liquid_id));
+        }
+    }
+
+    timer_life -= (1 / GAME_TICK) * _despawn_modifier;
     
     if (timer_life <= 0)
     {

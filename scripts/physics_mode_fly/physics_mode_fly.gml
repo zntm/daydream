@@ -11,7 +11,7 @@ function physics_mode_fly(_body, _input)
     var _speed = PHYSICS_MOVE_SPEED_FLY;  // Default creative mode speed
     if (_attr != undefined)
     {
-        _speed = _attr[$ "___fly_speed"] ?? _attr.get_movement_speed() * 2;
+        _speed = _attr.get_fly_speed();
     }
     
     var _accel = PHYSICS_MOVE_ACCEL_FLY;

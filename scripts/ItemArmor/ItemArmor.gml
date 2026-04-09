@@ -101,11 +101,7 @@ function ItemArmor(_type, _defense) constructor
         // Let's assume 1 Defense = 10 HP.
         if (___defense > 0)
         {
-            if (struct_exists(_base_attributes, "get_hp_max") && struct_exists(_base_attributes, "set_hp_max"))
-            {
-                var _current_max = _base_attributes.get_hp_max();
-                _base_attributes.set_hp_max(_current_max + (___defense * 10));
-            }
+            _base_attributes.add_value("hp_max", ___defense * 10, 100);
         }
         
         if (___modifiers == undefined) exit;
@@ -115,20 +111,14 @@ function ItemArmor(_type, _defense) constructor
             var _mod = ___modifiers[i];
             var _attr = _mod.attribute;
             var _modifier = _mod.modifier;
-            
-            // Get current value using getter pattern
-            var _getter = $"get_{_attr}";
-            var _setter = $"set_{_attr}";
-            
-            if (struct_exists(_base_attributes, _getter))
+
+            var _current = _base_attributes.get_value(_attr);
+
+            if (_current != undefined)
             {
-                var _current = _base_attributes[$ _getter]();
                 var _new_value = _modifier.calculate(_current, 1);
-                
-                if (struct_exists(_base_attributes, _setter))
-                {
-                    _base_attributes[$ _setter](_new_value);
-                }
+
+                _base_attributes.set_value(_attr, _new_value);
             }
         }
     }

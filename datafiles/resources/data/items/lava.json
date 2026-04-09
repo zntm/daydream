@@ -2,6 +2,16 @@
     "inventory": "#phantasia:item/generic/inventory_default",
     "item": {
         "tile": {
+            "flow_speed": 24,
+            "fluid_collisions": [
+                {
+                    "id": "phantasia:stone",
+                    "liquid_id": "phantasia:water"
+                }
+            ],
+            "item_drop_modifier": {
+                "despawn": 4
+            },
             "components": {
                 "flow_direction": {
                     "default": 0,
