@@ -14,7 +14,7 @@ function inventory_transfer(_source_name, _source_index, _target_name, _amount =
     var _item_id_src = _item.get_id();
     var _item_max_stack = 64; // Default, should get from item data
     var _item_data = global.item_data[$ _item_id_src];
-    if (_item_data != undefined) _item_max_stack = _item_data.get_max_stack();
+    if (_item_data != undefined) _item_max_stack = _item_data.get_inventory_max();
     
     // Logic:
     // 1. Try to stack with existing items in target
@@ -29,7 +29,7 @@ function inventory_transfer(_source_name, _source_index, _target_name, _amount =
         var _target_item = _target_list[i];
         if (_target_item == INVENTORY_EMPTY) continue;
         
-        if (_target_item.get_id() == _item_id_src)
+        if (inventory_item_can_stack(_target_item, _item))
         {
             var _current_amount = _target_item.get_amount();
             if (_current_amount < _item_max_stack)

@@ -127,6 +127,12 @@ function UISlot(_x, _y) : UIElement(_x, _y, 16, 16) constructor
             is_hovered = true;
             
             global.ui_hover_consumed = true;
+            global.inventory_ui_hover = {
+                inventory_type: inventory_name,
+                inventory_index: slot_index,
+                slot_type: (inventory_name == "_craftable") ? INVENTORY_SLOT_TYPE.CRAFTABLE : INVENTORY_SLOT_TYPE.BASE,
+                element: self
+            };
             
             
             if (mouse_check_button_pressed(mb_left)) 
@@ -319,18 +325,68 @@ function UISlot(_x, _y) : UIElement(_x, _y, 16, 16) constructor
         
         if (_amount > 1) 
         {
-            var _text_x = (_abs_x + INVENTORY_AMOUNT_TEXT_X_OFFSET) * _sx;
-            var _text_y = (_abs_y + INVENTORY_AMOUNT_TEXT_Y_OFFSET) * _sy;
+            var _text_x = (_abs_x + width - 4) * _sx;
+            var _text_y = (_abs_y + height - 5) * _sy;
             
+            
+            array_push(global.gui_deferred_text, {
+                x: _text_x - 1,
+                y: _text_y,
+                text: string(_amount),
+                xscale: _sx * 0.8,
+                yscale: _sy * 0.8,
+                colour: c_black,
+                alpha: 0.9,
+                halign: fa_right,
+                valign: fa_bottom
+            });
+            
+            array_push(global.gui_deferred_text, {
+                x: _text_x + 1,
+                y: _text_y,
+                text: string(_amount),
+                xscale: _sx * 0.8,
+                yscale: _sy * 0.8,
+                colour: c_black,
+                alpha: 0.9,
+                halign: fa_right,
+                valign: fa_bottom
+            });
+            
+            array_push(global.gui_deferred_text, {
+                x: _text_x,
+                y: _text_y - 1,
+                text: string(_amount),
+                xscale: _sx * 0.8,
+                yscale: _sy * 0.8,
+                colour: c_black,
+                alpha: 0.9,
+                halign: fa_right,
+                valign: fa_bottom
+            });
+            
+            array_push(global.gui_deferred_text, {
+                x: _text_x,
+                y: _text_y + 1,
+                text: string(_amount),
+                xscale: _sx * 0.8,
+                yscale: _sy * 0.8,
+                colour: c_black,
+                alpha: 0.9,
+                halign: fa_right,
+                valign: fa_bottom
+            });
             
             array_push(global.gui_deferred_text, {
                 x: _text_x,
                 y: _text_y,
                 text: string(_amount),
-                xscale: _sx * 0.5,
-                yscale: _sy * 0.5,
+                xscale: _sx * 0.8,
+                yscale: _sy * 0.8,
                 colour: c_white,
-                alpha: 1
+                alpha: 1,
+                halign: fa_right,
+                valign: fa_bottom
             });
         }
     }

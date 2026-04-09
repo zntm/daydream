@@ -20,7 +20,7 @@
 /* @returns {array<string>} list of .ui file paths */
 function ui_editor_get_file_list()
 {
-    var _files = file_read_directory("resources/data/ui", true);
+    var _files = resource_collect_data_files("ui", ".ui");
     var _ui_files = [];
 
     for (var i = array_length(_files) - 1; i >= 0; --i)

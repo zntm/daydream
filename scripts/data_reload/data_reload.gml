@@ -1,53 +1,13 @@
 /// @desc Clears and reloads all JSON-driven data in the same order as init().
-/// Does NOT reload assets (sprites/atlas) or localisation — those require restart.
+/// Does NOT reload assets (sprites/atlas) or localisation - those require restart.
 /// Designed for developer hot reload only.
 function data_reload()
 {
-    var _namespace = "phantasia";
-    var _res       = PROGRAM_DIRECTORY_RESOURCES;
-
-    global.item_data       = {}
-    global.creature_data   = {}
-    global.biome_data      = {}
-    global.world_data      = {}
-    global.crafting_data   = [];
-    global.crafting_stations = [];
-    global.region_data     = {}
-    global.tag_data        = {}
-    global.effect_data     = {}
-    global.projectile_data = {}
-    global.particle_data   = {}
-    global.loot_data       = {}
-
     /* NOTE: drops pending list must be cleared before re-running init_item */
     global.__item_drops_pending = [];
 
-    init_tag_recursive(_namespace, $"{_res}/data/tags");
-
-    init_particle_recursive(_namespace, $"{_res}/data/particles");
-
-    init_projectile(_namespace, $"{_res}/data/projectiles");
-
-    init_effect(_namespace, $"{_res}/data/effects");
-
-    init_item(_namespace, $"{_res}/data/items");
-    init_item_resolve_drops();
-
-    init_crafting(_namespace, $"{_res}/data/json/crafting_recipes.json");
-
-    init_structure(_namespace, $"{_res}/data/structures");
-
-    init_region_recursive(_namespace, $"{_res}/data/regions");
-
-    init_biome_recursive(_namespace, $"{_res}/data/biomes");
-
-    init_world(_namespace, $"{_res}/data/worlds");
-
-    init_creature(_namespace, $"{_res}/data/creatures");
-
-    init_achievement(_namespace, $"{_res}/data/achievements");
-
-    init_loot(_namespace, $"{_res}/data/loot");
+    resource_rebuild_registry(resource_get_base_namespace());
+    resource_load_data();
 
     PRINT("[data_reload] data reloaded.");
 }
@@ -58,22 +18,34 @@ function data_reload()
 /// @param {Array<String>} [_extra_directories] OPTIONAL: additional directories to watch (for future mod support)
 function data_reload_watch_init(_extra_directories = [])
 {
-    var _res   = PROGRAM_DIRECTORY_RESOURCES;
-    var _dirs  = [
-        $"{_res}/data/tags",
-        $"{_res}/data/particles",
-        $"{_res}/data/projectiles",
-        $"{_res}/data/effects",
-        $"{_res}/data/items",
-        $"{_res}/data/json/crafting_recipes.json",
-        $"{_res}/data/structures",
-        $"{_res}/data/regions",
-        $"{_res}/data/biomes",
-        $"{_res}/data/worlds",
-        $"{_res}/data/creatures",
-        $"{_res}/data/achievements",
-        $"{_res}/data/loot",
-    ];
+    resource_rebuild_registry(resource_get_base_namespace());
+
+    var _dirs = [];
+    var _roots = resource_get_roots();
+    var _length = array_length(_roots);
+
+    for (var i = 0; i < _length; ++i)
+    {
+        var _res = _roots[i].root;
+
+        array_push(_dirs, $"{_res}/data/tags");
+        array_push(_dirs, $"{_res}/data/particles");
+        array_push(_dirs, $"{_res}/data/projectiles");
+        array_push(_dirs, $"{_res}/data/effects");
+        array_push(_dirs, $"{_res}/data/items");
+        array_push(_dirs, $"{_res}/data/json/crafting_recipes.json");
+        array_push(_dirs, $"{_res}/data/structures");
+        array_push(_dirs, $"{_res}/data/regions");
+        array_push(_dirs, $"{_res}/data/biomes");
+        array_push(_dirs, $"{_res}/data/worlds");
+        array_push(_dirs, $"{_res}/data/creatures");
+        array_push(_dirs, $"{_res}/data/achievements");
+        array_push(_dirs, $"{_res}/data/loot");
+        array_push(_dirs, $"{_res}/data/json/menu/music.json");
+        array_push(_dirs, $"{_res}/data/json/menu/biomes.json");
+        array_push(_dirs, $"{_res}/data/json/menu/splash_texts.json");
+        array_push(_dirs, $"{_res}/credit/data.json");
+    }
 
     /* append extra directories (reserved for future mod support) */
     for (var i = array_length(_extra_directories) - 1; i >= 0; --i)
@@ -128,7 +100,7 @@ function data_reload_watch_step()
 
     if (!_changed) exit;
 
-    PRINT("[data_reload] change detected — reloading data...");
+    PRINT("[data_reload] change detected - reloading data...");
 
     data_reload();
 
@@ -156,7 +128,7 @@ function __data_reload_watch_hash_all()
             continue;
         }
 
-        /* directory — recurse */
+        /* directory - recurse */
         __data_reload_watch_hash_dir(_path);
     }
 }

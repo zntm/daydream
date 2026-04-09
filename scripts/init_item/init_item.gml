@@ -91,7 +91,7 @@ function init_item(_namespace, _directory)
 
                 if (is_array(_drops))
                 {
-                    /* store raw drops for pass 2 — resolve ids against namespace */
+                    /* store raw drops for pass 2 - resolve ids against namespace */
                     var _drops_raw = [];
 
                     for (var j = array_length(_drops) - 1; j >= 0; --j)
@@ -109,7 +109,7 @@ function init_item(_namespace, _directory)
                         drops_raw: _drops_raw
                     });
 
-                    /* clear drops for now — filled in pass 2 */
+                    /* clear drops for now - filled in pass 2 */
                     _tile.drops = [];
                 }
 
@@ -171,7 +171,7 @@ function init_item(_namespace, _directory)
     }
 }
 
-/// @desc Pass 2 — resolves all deferred tile drops now that every item is registered.
+/// @desc Pass 2 - resolves all deferred tile drops now that every item is registered.
 /// Call this once after all init_item() calls have finished.
 function init_item_resolve_drops()
 {

@@ -12,53 +12,175 @@
 #macro GUI_INVENTORY_TOOLTIP_PADDING_NAME 8
 #macro GUI_INVENTORY_TOOLTIP_PADDING_DESCRIPTION 4
 
+
+function gui_inventory_tooltip_resolve_target()
+{
+    var _inventory_mouse = global.inventory.mouse;
+    
+    if ((_inventory_mouse.index ?? -1) != -1) || (_inventory_mouse.item != INVENTORY_EMPTY)
+    {
+        return {
+            type: _inventory_mouse.type,
+            index: _inventory_mouse.index,
+            item: _inventory_mouse.item,
+            slot_type: INVENTORY_SLOT_TYPE.BASE
+        };
+    }
+    
+    var _hover = global.inventory_ui_hover;
+    
+    if (is_struct(_hover))
+    {
+        var _type = _hover.inventory_type;
+        var _index = _hover.inventory_index;
+        var _list = global.inventory[$ _type];
+        
+        if (_list != undefined) && (_index >= 0) && (_index < array_length(_list))
+        {
+            return {
+                type: _type,
+                index: _index,
+                item: _list[_index],
+                slot_type: _hover.slot_type ?? INVENTORY_SLOT_TYPE.BASE
+            };
+        }
+    }
+    
+    var _inst = global.inventory_selected_hover;
+    
+    if (instance_exists(_inst))
+    {
+        return {
+            type: _inst.inventory_type,
+            index: _inst.inventory_index,
+            item: global.inventory[$ _inst.inventory_type][_inst.inventory_index],
+            slot_type: _inst.slot_type
+        };
+    }
+    
+    return undefined;
+}
+
+
+function gui_inventory_tooltip_get_loca(_data, _suffix)
+{
+    var _key = $"{_data.get_namespace()}:item.{_data.get_id()}.{_suffix}";
+    var _value = loca_translate(_key);
+    
+    return (_value == _key) ? undefined : _value;
+}
+
+
+function gui_inventory_tooltip_build_slot_string(_filled, _slots)
+{
+    var _text = "";
+    
+    for (var i = 0; i < _slots; ++i)
+    {
+        _text += (i < _filled) ? "[x]" : "[ ]";
+    }
+    
+    return _text;
+}
+
+
+function gui_inventory_tooltip_build_lines(_item, _data)
+{
+    var _lines = [];
+    var _item_damage = _data.get_item_damage();
+    var _hold_type = _data.get_hold_type();
+    var _item_armor = _data.get_item_armor();
+    
+    if (_item_armor != undefined)
+    {
+        array_push(_lines, {
+            text: $"{_item_armor.get_defense()} Defense",
+            colour: c_aqua,
+            scale: GUI_INVENTORY_STRING_SCALE
+        });
+    }
+    else if ((_data.get_type() & ITEM_TYPE_BIT.TOOL) && (_item_damage > 0))
+    {
+        var _damage_type = (_hold_type == ITEM_HOLD_TYPE.LAUNCHER) ? "Ranged" : "Melee";
+        
+        array_push(_lines, {
+            text: $"{_item_damage} {_damage_type} Damage",
+            colour: c_yellow,
+            scale: GUI_INVENTORY_STRING_SCALE
+        });
+    }
+    
+    var _durability_def = _data.get_item_durability();
+    
+    if (_durability_def != undefined)
+    {
+        array_push(_lines, {
+            text: $"Durability {_item.get_item_durability() ?? 0}/{_durability_def.get_amount()}",
+            colour: c_lime,
+            scale: GUI_INVENTORY_STRING_SCALE
+        });
+    }
+    
+    if (inventory_item_has_nested_inventory(_item))
+    {
+        var _nested_inventory = _item.get_inventory();
+        var _used_slots = 0;
+        
+        for (var i = 0; i < array_length(_nested_inventory); ++i)
+        {
+            if (_nested_inventory[i] != INVENTORY_EMPTY)
+            {
+                ++_used_slots;
+            }
+        }
+        
+        array_push(_lines, {
+            text: $"Stores {_used_slots}/{array_length(_nested_inventory)} items",
+            colour: c_silver,
+            scale: GUI_INVENTORY_STRING_SCALE
+        });
+    }
+    
+    var _enchantment_slots = _data.get_item_enchantment_slots();
+    
+    if (_enchantment_slots > 0)
+    {
+        var _enchantments = _item.get_enchantments();
+        var _filled = min(array_length(_enchantments), _enchantment_slots);
+        
+        array_push(_lines, {
+            text: $"Enchantment Slots {gui_inventory_tooltip_build_slot_string(_filled, _enchantment_slots)}",
+            colour: make_colour_rgb(180, 220, 255),
+            scale: GUI_INVENTORY_STRING_SCALE
+        });
+        
+        for (var i = 0; i < array_length(_enchantments); ++i)
+        {
+            var _entry = _enchantments[i];
+            var _name = is_struct(_entry) ? (_entry.name ?? _entry.id ?? "Enchantment") : string(_entry);
+            var _level = is_struct(_entry) ? (_entry.level ?? 1) : 1;
+            
+            array_push(_lines, {
+                text: $"+ {_name} {_level}",
+                colour: make_colour_rgb(160, 200, 255),
+                scale: GUI_INVENTORY_STRING_SCALE
+            });
+        }
+    }
+    
+    return _lines;
+}
+
 function gui_inventory_tooltip(_gui_multiplier_x, _gui_multiplier_y)
 {
     var _surface_data = surface_inventory.tooltip;
-    /*
-    var _inst = global.inventory_selected_hover;
+    var _target = gui_inventory_tooltip_resolve_target();
     
-    var _item;
+    if (_target == undefined) exit;
     
-    if (!instance_exists(_inst))
-    {
-        var _inventory_selected_backpack = global.inventory_selected_backpack;
-        
-        _type  = _inventory_selected_backpack.type;
-        _index = _inventory_selected_backpack.index;
-    }
-    else
-    {
-        _type  = _inst.inventory_type;
-        _index = _inst.inventory_index;
-    }
-    */
-    var _item = INVENTORY_EMPTY;
-    var _type, _index;
-    
-    var _inventory_mouse = global.inventory.mouse;
-    
-    var _mouse_type  = _inventory_mouse.type;
-    var _mouse_index = _inventory_mouse.index;
-    
-    if (_mouse_index == -1)
-    {
-        var _inst = global.inventory_selected_hover;
-        
-        if (!instance_exists(_inst)) exit;
-        
-        _type  = _inst.inventory_type;
-        _index = _inst.inventory_index;
-        
-        _item = global.inventory[$ _type][_index];
-    }
-    else
-    {
-        _type  = _mouse_type;
-        _index = _mouse_index;
-        
-        _item = _inventory_mouse.item;
-    }
+    var _item = _target.item;
+    var _type = _target.type;
+    var _index = _target.index;
     
     // if (_index == -1) || ((_surface_data.type == _index) && (_surface_data.index == _index)) exit;
     
@@ -78,8 +200,9 @@ function gui_inventory_tooltip(_gui_multiplier_x, _gui_multiplier_y)
     
     var _data = global.item_data[$ _item.get_id()];
     
-    var _item_name = _item.get_id()//loca_item_name(_item);
-    var _item_description = _item.get_id()//loca_item_description(_item);
+    var _item_name = gui_inventory_tooltip_get_loca(_data, "name") ?? _item.get_id();
+    var _item_description = gui_inventory_tooltip_get_loca(_data, "description");
+    var _lines = gui_inventory_tooltip_build_lines(_item, _data);
     
     var _sprite = global.sprite_asset[$ _data.get_sprite()];
     
@@ -131,6 +254,20 @@ function gui_inventory_tooltip(_gui_multiplier_x, _gui_multiplier_y)
         _surface_height += GUI_INVENTORY_TOOLTIP_PADDING_DESCRIPTION + (GUI_INVENTORY_STRING_SCALE * (cuteify_get_height(_item_description) - GUI_INVENTORY_TOOLTIP_TEXT_YOFFSET));
     }
     
+    var _line_count = array_length(_lines);
+    
+    if (_line_count > 0)
+    {
+        for (var i = 0; i < _line_count; ++i)
+        {
+            var _line = _lines[i];
+            var _line_scale = _line.scale ?? GUI_INVENTORY_STRING_SCALE;
+            
+            _surface_width = max(_surface_width, _line_scale * cuteify_get_width(_line.text));
+            _surface_height += (_line_scale * cuteify_get_height(_line.text)) + 2;
+        }
+    }
+    
     var _surface = surface_inventory.tooltip.surface;
     
     if (!surface_exists(_surface))
@@ -175,6 +312,36 @@ function gui_inventory_tooltip(_gui_multiplier_x, _gui_multiplier_y)
         var _description_yscale = _gui_multiplier_y * GUI_INVENTORY_STRING_SCALE;
         
         render_text(_description_x, _description_y, _item_description, _description_xscale, _description_yscale);
+        
+        var _line_y = _description_y + (_description_yscale * cuteify_get_height(_item_description)) + (_gui_multiplier_y * 4);
+        
+        for (var i = 0; i < _line_count; ++i)
+        {
+            var _line = _lines[i];
+            var _line_scale = _line.scale ?? GUI_INVENTORY_STRING_SCALE;
+            var _draw_scale_x = _gui_multiplier_x * _line_scale;
+            var _draw_scale_y = _gui_multiplier_y * _line_scale;
+            
+            render_text(0, _line_y, _line.text, _draw_scale_x, _draw_scale_y, 0, _line.colour ?? c_white);
+            
+            _line_y += (_draw_scale_y * cuteify_get_height(_line.text)) + (_gui_multiplier_y * 2);
+        }
+    }
+    else
+    {
+        var _line_y = ((max(_inventory_scale * _sprite_height, cuteify_get_height(_item_name)) + GUI_INVENTORY_TOOLTIP_PADDING_DESCRIPTION) * _gui_multiplier_y);
+        
+        for (var i = 0; i < _line_count; ++i)
+        {
+            var _line = _lines[i];
+            var _line_scale = _line.scale ?? GUI_INVENTORY_STRING_SCALE;
+            var _draw_scale_x = _gui_multiplier_x * _line_scale;
+            var _draw_scale_y = _gui_multiplier_y * _line_scale;
+            
+            render_text(0, _line_y, _line.text, _draw_scale_x, _draw_scale_y, 0, _line.colour ?? c_white);
+            
+            _line_y += (_draw_scale_y * cuteify_get_height(_line.text)) + (_gui_multiplier_y * 2);
+        }
     }
     
     surface_reset_target();

@@ -24,11 +24,11 @@ function render_hud(_gui_width, _gui_height)
             // Craftable panel rendering handled by declarative UI
             
             // Tooltip rendering
-            var _inst = global.inventory_selected_hover;
+            var _target = gui_inventory_tooltip_resolve_target();
             
-            if (instance_exists(_inst)) && !(is_opened & WORLD_OPENED_BOOL.CHAT)
+            if (_target != undefined) && !(is_opened & WORLD_OPENED_BOOL.CHAT)
             {
-                if (_inst.slot_type != INVENTORY_SLOT_TYPE.CRAFTABLE)
+                if ((_target.slot_type ?? INVENTORY_SLOT_TYPE.BASE) != INVENTORY_SLOT_TYPE.CRAFTABLE)
                 {
                     gui_inventory_tooltip(_gui_scale_width, _gui_scale_height);
                     
@@ -42,7 +42,13 @@ function render_hud(_gui_width, _gui_height)
                         var _window_height = global.window_height;
                         
                         var _tooltip_x = global.gui_mouse_x + (GUI_TOOLTIP_XOFFSET * _gui_scale_width);
-                        var _tooltip_y = global.gui_mouse_y + (GUI_TOOLTIP_YOFFSET * _gui_scale_height);
+                        var _tooltip_total_height = (_tooltip.surface_height + (GUI_INVENTORY_TOOLTIP_BG_PADDING * 2)) * _gui_scale_height;
+                        var _tooltip_y = global.gui_mouse_y - _tooltip_total_height - (GUI_TOOLTIP_YOFFSET * _gui_scale_height);
+                        
+                        if (_tooltip_y < 0)
+                        {
+                            _tooltip_y = global.gui_mouse_y + (GUI_TOOLTIP_YOFFSET * _gui_scale_height);
+                        }
                         
                         draw_sprite_ext(
                             spr_Inventory_Tooltip,

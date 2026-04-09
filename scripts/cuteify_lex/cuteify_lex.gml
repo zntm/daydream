@@ -116,7 +116,7 @@ function cuteify_lex(_string)
             continue;
         }
 
-        /* :emote: — scan for closing colon */
+        /* :emote: - scan for closing colon */
         if (_char == ":")
         {
             var _found_end = 0;
@@ -192,7 +192,7 @@ function cuteify_lex(_string)
             }
             else
             {
-                /* no closing brace found — treat { as plain text */
+                /* no closing brace found - treat { as plain text */
                 if (string_length(_buf) == 0)
                 {
                     _buf_start = _pos;
@@ -207,7 +207,7 @@ function cuteify_lex(_string)
             continue;
         }
 
-        /* plain character — accumulate into buffer */
+        /* plain character - accumulate into buffer */
         if (string_length(_buf) == 0)
         {
             _buf_start = _pos;

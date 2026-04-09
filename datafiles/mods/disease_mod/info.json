@@ -1,0 +1,7 @@
+{
+  "name": "Disease Mod",
+  "author": [
+    "Example Author"
+  ],
+  "description": "Example mod metadata. Content loaded from this folder uses the 'disease_mod' namespace, so ids resolve like disease_mod:germ."
+}

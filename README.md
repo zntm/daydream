@@ -44,4 +44,12 @@ Phantasia © 2025 by Zhen is licensed under Phantasia's Daydream - see the LICEN
 - [Voice Acted Sound Effects](https://www.youtube.com/@voicedsoundeffects)
 - [window_taskbar for GameMaker](https://yellowafterlife.itch.io/gamemaker-window-taskbar)
 
+## Mods
+
+- Base content still lives under `datafiles/resources/`.
+- Mods now load from `datafiles/mods/<namespace>/`.
+- Each mod can provide `assets/`, `data/`, `loca/`, `icon.png`, and `info.json`.
+- The folder name is the namespace. Example: `datafiles/mods/disease_mod/data/items/germ.json` resolves bare references like `germ` to `disease_mod:germ`.
+- `info.json` supports `name`, `author` as either a string or an array of strings, and `description`.
+
 ###### Last Updated @ August 12, 2025

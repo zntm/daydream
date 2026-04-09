@@ -1,5 +1,7 @@
 input_bindings_init();
 
+resource_rebuild_registry("phantasia");
+
 global.settings = {}
 
 global.settings_data = {}
@@ -8,15 +10,20 @@ global.settings_data_category = {}
 function init_setting(_category, _type, _data)
 {
     global.settings_data[$ _type] = _data;
-    
+
     global.settings_data_category[$ _category] ??= [];
-    
+
     array_push(global.settings_data_category[$ _category], _type);
-    
+
     global.settings[$ _type] = _data.get_default_value();
 }
 
-global.loca_directories = file_read_directory($"{PROGRAM_DIRECTORY_RESOURCES}/loca");
+global.loca_directories = resource_collect_loca_directories();
+
+if (array_length(global.loca_directories) <= 0)
+{
+    global.loca_directories = [ "1. English (American)" ];
+}
 var _loca = global.loca_directories;
 
 #region General
@@ -46,7 +53,7 @@ init_setting("accessibility", "global_localization", new SettingsData(SETTINGS_T
     }))
     .set_on_update(function(_name, _value)
     {
-        init_loca("phantasia", $"{PROGRAM_DIRECTORY_RESOURCES}/loca/{global.loca_directories[_value]}");
+        resource_reload_loca(global.loca_directories[_value]);
     }));
 
 #endregion
@@ -70,13 +77,13 @@ init_setting("graphics", "window_fullscreen", new SettingsData(SETTINGS_TYPE.SWI
     {
         window_set_fullscreen(_value);
     }));
-    
+
 init_setting("graphics", "graphics_chunk_fade_time", new SettingsData(SETTINGS_TYPE.SLIDER, 0.5)
     .set_range(0, 3));
 
 init_setting("graphics", "graphics_background_transition_speed", new SettingsData(SETTINGS_TYPE.SLIDER, 3)
     .set_range(0, 5));
-    
+
 init_setting("graphics", "graphics_menu_transition_fade_speed", new SettingsData(SETTINGS_TYPE.SLIDER, 0.35)
     .set_range(0, 5));
 
@@ -145,12 +152,12 @@ init_setting("audio", "audio_music", new SettingsData(SETTINGS_TYPE.SLIDER, 1)
     .set_on_update(function(_name, _value)
     {
         var _music = global.menu_music;
-        
+
         if (audio_is_playing(_music))
         {
             audio_sound_gain(_music, global.menu_music_gain * _value, 0);
         }
-        
+
         if (instance_exists(obj_Game_Control_Background))
         {
             with (obj_Game_Control_Background)
@@ -199,21 +206,26 @@ init_setting("multiplayer", "mp_host_allow_containers", new SettingsData(SETTING
 if (file_exists("settings.dat"))
 {
     var _buffer = buffer_load_decompressed("settings.dat");
-    
+
     var _version = buffer_read(_buffer, buffer_u32);
-    
+
     var _length = buffer_read(_buffer, buffer_u16);
-    
+
     repeat (_length)
     {
         var _name = buffer_read(_buffer, buffer_string);
-        
+
         global.settings[$ _name] = buffer_read(_buffer, buffer_f32);
     }
-    
+
     buffer_delete(_buffer);
 }
 
 audio_set_master_gain(0, global.settings.audio_master);
 
-init_loca("phantasia", $"{PROGRAM_DIRECTORY_RESOURCES}/loca/{global.loca_directories[global.settings.global_localization]}");
+if (global.settings.global_localization >= array_length(global.loca_directories))
+{
+    global.settings.global_localization = 0;
+}
+
+resource_reload_loca(global.loca_directories[global.settings.global_localization]);

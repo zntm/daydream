@@ -403,6 +403,13 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
             {
                 set_hold_type(_hold_type);
             }
+            
+            var _enchantments = _data[$ "enchantments"] ?? _data[$ "enchantment_slots"];
+            
+            if (_enchantments != undefined)
+            {
+                set_item_enchantments(_enchantments);
+            }
         }
         
         /*
@@ -689,6 +696,52 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     static get_item_durability_bar_length = function()
     {
         return self[$ "___item_durability_bar_length"] ?? 0;
+    }
+    
+    static set_item_enchantments = function(_data)
+    {
+        if (_data == undefined) return self;
+        
+        if (is_real(_data))
+        {
+            ___item_enchantments = {
+                slots: _data,
+                types: []
+            }
+            
+            return self;
+        }
+        
+        ___item_enchantments = {
+            slots: max(0, _data[$ "slots"] ?? _data[$ "count"] ?? 0),
+            types: _data[$ "types"] ?? _data[$ "tags"] ?? []
+        }
+        
+        return self;
+    }
+    
+    static get_item_enchantments = function()
+    {
+        return self[$ "___item_enchantments"];
+    }
+    
+    static get_item_enchantment_slots = function()
+    {
+        var _data = get_item_enchantments();
+        
+        return (_data != undefined) ? (_data.slots ?? 0) : 0;
+    }
+    
+    static get_item_enchantment_types = function()
+    {
+        var _data = get_item_enchantments();
+        
+        return (_data != undefined) ? (_data.types ?? []) : [];
+    }
+    
+    static can_item_use_enchantments = function()
+    {
+        return get_item_enchantment_slots() > 0;
     }
     
     static set_tile = function(_tile)
@@ -1907,12 +1960,17 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     
     static get_item_components_names = function()
     {
-        return self[$ "___components_names"];
+        return self[$ "___item_components_names"];
     }
     
     static get_item_components_length = function()
     {
-        return self[$ "___components_length"] ?? 0;
+        return self[$ "___item_components_length"] ?? 0;
+    }
+    
+    static get_item_components = function()
+    {
+        return self[$ "___item_components"];
     }
     
     static set_tile_components = function(_components)
@@ -1955,11 +2013,21 @@ function ItemData(_namespace, _id) : ParentData(_namespace, _id) constructor
     
     static get_tile_components_names = function()
     {
-        return self[$ "___components_names"];
+        return self[$ "___tile_components_names"];
     }
     
     static get_tile_components_length = function()
     {
-        return self[$ "___components_length"] ?? 0;
+        return self[$ "___tile_components_length"] ?? 0;
+    }
+    
+    static get_tile_components = function()
+    {
+        return self[$ "___tile_components"];
+    }
+    
+    static get_max_stack = function()
+    {
+        return get_inventory_max();
     }
 }

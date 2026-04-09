@@ -49,6 +49,9 @@ function control_inventory_position()
             if (!instance_exists(_inst)) continue;
             
             if (_panel.visible) {
+                var _abs_x = struct_exists(_slot, "get_absolute_x") ? _slot.get_absolute_x() : _slot.x;
+                var _abs_y = struct_exists(_slot, "get_absolute_y") ? _slot.get_absolute_y() : _slot.y;
+                
                 _inst.x = global.camera_x + (_abs_x * _scale_x);
                 _inst.y = global.camera_y + (_abs_y * _scale_y);
                 var _slot_scale = _slot.scale;
@@ -87,6 +90,9 @@ function control_inventory_position()
             if (!instance_exists(_inst)) continue;
             
             if (_is_visible) {
+                var _abs_x = _slot.get_absolute_x();
+                var _abs_y = _slot.get_absolute_y();
+                
                 _inst.x = global.camera_x + (_abs_x * _scale_x);
                 _inst.y = global.camera_y + (_abs_y * _scale_y);
                 _inst.image_xscale = _scale_x;

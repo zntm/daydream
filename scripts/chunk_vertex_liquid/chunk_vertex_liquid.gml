@@ -113,7 +113,7 @@ function chunk_vertex_liquid(_buffer, _texel_width, _texel_height, _animation_ty
     var _dx = _k - _h_right;
     var _dy = _l + _g_right;
 
-    /* _number omitted from wave packing — only used by INCREMENT shader branch,
+    /* _number omitted from wave packing - only used by INCREMENT shader branch,
        including it pushes the value past 2^24 where float32 loses precision
        on the low bits, corrupting animation_type (5 → 4 = FOLIAGE) */
     var _packed_anim_wave_left = (_wave_index_left << 16) | _animation_type;

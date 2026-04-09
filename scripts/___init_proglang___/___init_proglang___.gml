@@ -13,31 +13,31 @@ global.proglang_shape_map = {} // Map of JSON.stringify(sorted_fields) -> shape_
 function proglang_get_shape_id(_fields_array)
 {
     array_sort(_fields_array, true);
-    
+
     var _key = string(_fields_array);
-    
+
     if (struct_exists(global.proglang_shape_map, _key))
     {
         return global.proglang_shape_map[$ _key];
     }
-    
+
     var _id = array_length(global.proglang_shapes);
-    
+
     var _fields_struct = {}
-    
+
     for (var i = array_length(_fields_array) - 1; i >= 0; --i)
     {
         _fields_struct[$ _fields_array[i]] = i + 1; // Index 0 is reserved for shape_id
     }
-    
+
     var _shape = {
         fields: _fields_struct,
         size: _len + 1
     }
-    
+
     array_push(global.proglang_shapes, _shape);
     global.proglang_shape_map[$ _key] = _id;
-    
+
     return _id;
 }
 
@@ -356,7 +356,7 @@ global.proglang_macros[$ "EVENT_TYPE"] = {
     ENTITY_SWIM: GAME_EVENT.ENTITY_SWIM,
     ENTITY_LAND: GAME_EVENT.ENTITY_LAND,
     ENTITY_SPLASH: GAME_EVENT.ENTITY_SPLASH,
-    
+
     // Entity Actions
     ENTITY_CONSUME: GAME_EVENT.ENTITY_CONSUME,
     ENTITY_HEAL: GAME_EVENT.ENTITY_HEAL,
@@ -366,45 +366,45 @@ global.proglang_macros[$ "EVENT_TYPE"] = {
     ENTITY_MOUNT: GAME_EVENT.ENTITY_MOUNT,
     ENTITY_DISMOUNT: GAME_EVENT.ENTITY_DISMOUNT,
     ENTITY_TELEPORT: GAME_EVENT.ENTITY_TELEPORT,
-    
+
     // Entity Item Interactions
     ENTITY_ITEM_COLLECT: GAME_EVENT.ENTITY_ITEM_COLLECT,
     ENTITY_ITEM_DROP: GAME_EVENT.ENTITY_ITEM_DROP,
-    
+
     // Item Events
     ITEM_COLLECT: GAME_EVENT.ITEM_COLLECT,
     ITEM_DROP: GAME_EVENT.ITEM_DROP,
-    
+
     // Tile Item Interactions
     TILE_ITEM_COLLECT: GAME_EVENT.TILE_ITEM_COLLECT,
     TILE_ITEM_DROP: GAME_EVENT.TILE_ITEM_DROP,
-    
+
     // Projectile Events
     PROJECTILE_SHOOT: GAME_EVENT.PROJECTILE_SHOOT,
     PROJECTILE_LAND: GAME_EVENT.PROJECTILE_LAND,
-    
+
     // Item Use Events
     ITEM_USE: GAME_EVENT.ITEM_USE,
     ITEM_USE_START: GAME_EVENT.ITEM_USE_START,
     ITEM_USE_FINISH: GAME_EVENT.ITEM_USE_FINISH,
-    
+
     // Tile Use Events
     TILE_USE: GAME_EVENT.TILE_USE,
     TILE_USE_START: GAME_EVENT.TILE_USE_START,
     TILE_USE_FINISH: GAME_EVENT.TILE_USE_FINISH,
-    
+
     // Tile Placement Events
     TILE_PLACE: GAME_EVENT.TILE_PLACE,
     TILE_UPDATE: GAME_EVENT.TILE_UPDATE,
-    
+
     // Container Events
     TILE_CONTAINER_OPEN: GAME_EVENT.TILE_CONTAINER_OPEN,
     TILE_CONTAINER_CLOSE: GAME_EVENT.TILE_CONTAINER_CLOSE,
-    
+
     // Explosive Events
     EXPLOSIVE_PRIME: GAME_EVENT.EXPLOSIVE_PRIME,
     EXPLOSIVE_EXPLODE: GAME_EVENT.EXPLOSIVE_EXPLODE,
-    
+
     // Miscellaneous
     TILE_FALLING_LAND: GAME_EVENT.TILE_FALLING_LAND,
     ITEM_CRAFT: GAME_EVENT.ITEM_CRAFT
@@ -479,24 +479,37 @@ global.proglang_classes[$ "Inventory"] = Inventory;
 global.proglang_classes[$ "BiomeData"] = BiomeData;
 global.proglang_classes[$ "WorldData"] = WorldData;
 
-// Pre-load all scripts
-init_proglang_recursive(PROGLANG_BASE_DIR, "phantasia");
+// Pre-load all scripts from the base game and every mounted mod
+resource_rebuild_registry(resource_get_base_namespace());
+
+var _proglang_roots = resource_get_roots();
+var _proglang_root_count = array_length(_proglang_roots);
+
+for (var i = 0; i < _proglang_root_count; ++i)
+{
+    var _root = _proglang_roots[i];
+    var _script_dir = $"{_root.root}/data/scripts";
+
+    if (!directory_exists(_script_dir)) continue;
+
+    init_proglang_recursive(_script_dir, _root.namespace);
+}
 
 /// @desc Recursively convert Proglang array-based objects back to GML structs for interop
-function proglang_to_gml(_val) 
+function proglang_to_gml(_val)
 {
     if (_val == undefined) return undefined;
-    
-    if (is_array(_val)) 
+
+    if (is_array(_val))
     {
         // Check if it's a Proglang array-based object/instance
-        if (array_length(_val) > 0 && is_real(_val[0]) && _val[0] < array_length(global.proglang_shapes)) 
+        if (array_length(_val) > 0 && is_real(_val[0]) && _val[0] < array_length(global.proglang_shapes))
         {
             var _shape_id = _val[0];
             var _shape = global.proglang_shapes[_shape_id];
             var _struct = {}
             var _fields = struct_get_names(_shape.fields);
-            for (var i = 0; i < array_length(_fields); i++) 
+            for (var i = 0; i < array_length(_fields); i++)
             {
                 var _name = _fields[i];
                 var _idx = _shape.fields[$ _name];
@@ -504,27 +517,27 @@ function proglang_to_gml(_val)
             }
             return _struct;
         }
-        
+
         // Regular array
         var _new_arr = array_create(array_length(_val));
-        for (var i = 0; i < array_length(_val); i++) 
+        for (var i = 0; i < array_length(_val); i++)
         {
             _new_arr[i] = proglang_to_gml(_val[i]);
         }
         return _new_arr;
     }
-    
-    if (is_struct(_val)) 
+
+    if (is_struct(_val))
     {
         var _names = struct_get_names(_val);
         var _new_struct = {}
-        for (var i = 0; i < array_length(_names); i++) 
+        for (var i = 0; i < array_length(_names); i++)
         {
             var _name = _names[i];
             _new_struct[$ _name] = proglang_to_gml(_val[$ _name]);
         }
         return _new_struct;
     }
-    
+
     return _val;
 }

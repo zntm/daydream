@@ -63,6 +63,7 @@ global.inventory_selected_backpack = {
     type:  undefined
 }
 global.inventory_selected_hover = noone;
+global.inventory_ui_hover = undefined;
 
 surface_lighting   = -1;
 surface_lighting_colour = -1;

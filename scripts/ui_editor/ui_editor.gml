@@ -116,7 +116,7 @@ function ui_editor_resolve_room_ui()
 
         var _path = $"ui/menu/{_suffix}.ui";
 
-        if (file_exists($"resources/data/{_path}"))
+        if (file_exists(ui_get_resource_path(_path)))
         {
             return _path;
         }
@@ -149,10 +149,11 @@ function ui_editor_load(_path)
 
     /* parse the file using existing lexer/parser */
     var _source = undefined;
+    var _resolved_path = ui_get_resource_path(_cache_key);
 
-    if (file_exists(_full_path))
+    if (file_exists(_resolved_path))
     {
-        var _buf = buffer_load(_full_path);
+        var _buf = buffer_load(_resolved_path);
 
         _source = buffer_read(_buf, buffer_text);
 
@@ -267,7 +268,7 @@ function ui_editor_save()
     if (_editor.ast_document == undefined) || (_editor.loaded_path == "") exit;
 
     var _source    = ui_editor_serialize(_editor.ast_document, _editor.ast_variables);
-    var _full_path = "resources/data/" + _editor.loaded_path;
+    var _full_path = ui_get_resource_write_path(_editor.loaded_path);
 
     /* write to file */
     var _file = file_text_open_write(_full_path);

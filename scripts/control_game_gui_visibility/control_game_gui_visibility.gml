@@ -33,6 +33,7 @@ function control_game_gui_visibility()
 
     global.ui_input_consumed = false;
     global.ui_hover_consumed = false;
+    global.inventory_ui_hover = undefined;
 
     global.gui_root.update();
 
