@@ -64,21 +64,21 @@ function UIRadioButton(_x, _y, _text = "") : UIElement(_x, _y, 100, 20) construc
         
         var _left = _abs_x;
         var _top = _abs_y;
-        var _right = _left + width;
-        var _bottom = _top + height;
+        var _right = _left + get_width();
+        var _bottom = _top + get_height();
         
         
         is_hovered = (_mx >= _left && _mx <= _right && _my >= _top && _my <= _bottom);
         
         var _p = parent;
-        while (_p != undefined)
+        while (ui_element_is_valid_parent(_p))
         {
             if (instanceof(_p) == "UIScrollArea")
             {
                 var _p_left = _p.get_absolute_x();
                 var _p_top = _p.get_absolute_y();
-                var _p_right = _p_left + _p.width;
-                var _p_bottom = _p_top + _p.height;
+                var _p_right = _p_left + ui_layout_resolve_scalar(_p.width, 0);
+                var _p_bottom = _p_top + ui_layout_resolve_scalar(_p.height, 0);
                 
                 if (_mx < _p_left || _mx > _p_right || _my < _p_top || _my > _p_bottom)
                 {
@@ -159,10 +159,12 @@ function UIRadioButton(_x, _y, _text = "") : UIElement(_x, _y, 100, 20) construc
         {
             var _x1 = _abs_x * _base_scale_x;
             var _y1 = _abs_y * _base_scale_y;
-            var _x2 = _x1 + (width * _base_scale_x);
-            var _cy = _y1 + (height * _base_scale_y * 0.5);
+            var _radio_width = get_width();
+            var _radio_height = get_height();
+            var _x2 = _x1 + (_radio_width * _base_scale_x);
+            var _cy = _y1 + (_radio_height * _base_scale_y * 0.5);
             var _track_mid_x = _x1 + ((_x2 - _x1) * 0.5);
-            var _track_width = width * _base_scale_x;
+            var _track_width = _radio_width * _base_scale_x;
             var _handle_x = selected ? _x2 : (_x2 - 32 * _base_scale_x);
             var _edge_sprite = asset_get_index(sprite_get_name(handle_sprite) + "_Edge");
             var _has_edge = sprite_exists(_edge_sprite);

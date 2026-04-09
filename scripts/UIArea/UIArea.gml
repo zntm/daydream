@@ -119,9 +119,14 @@ function UIArea(_x, _y, _width, _height) : UIElement(_x, _y, _width, _height) co
         /* draw children */
         var _child_count = array_length(children);
         
-        for (var i = _child_count - 1; i >= 0; --i) 
+        for (var i = _child_count - 1; i >= 0; --i)
         {
-            children[i].draw();
+            var _child = children[i];
+
+            if (is_struct(_child)) && struct_exists(_child, "draw")
+            {
+                _child.draw();
+            }
         }
         
         

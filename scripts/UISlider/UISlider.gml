@@ -58,11 +58,13 @@ function UISlider(_x, _y, _width, _min, _max, _value) : UIElement(_x, _y, _width
         
         
         var _left = _abs_x;
-        var _hit_pad_x = max(0, (sprite_get_width(handle_sprite) * handle_xscale - width) * 0.5);
-        var _hit_pad_y = max(0, ((sprite_get_height(handle_sprite) * handle_yscale) - height) * 0.5);
+        var _slider_width = get_width();
+        var _slider_height = get_height();
+        var _hit_pad_x = max(0, (sprite_get_width(handle_sprite) * handle_xscale - _slider_width) * 0.5);
+        var _hit_pad_y = max(0, ((sprite_get_height(handle_sprite) * handle_yscale) - _slider_height) * 0.5);
         var _top = _abs_y - _hit_pad_y;
-        var _right = _left + width;
-        var _bottom = _abs_y + height + _hit_pad_y;
+        var _right = _left + _slider_width;
+        var _bottom = _abs_y + _slider_height + _hit_pad_y;
         _left -= _hit_pad_x;
         _right += _hit_pad_x;
         
@@ -70,14 +72,14 @@ function UISlider(_x, _y, _width, _min, _max, _value) : UIElement(_x, _y, _width
         
         /* disable hover if the mouse is outside a parent scroll area clip */
         var _p = parent;
-        while (_p != undefined)
+        while (ui_element_is_valid_parent(_p))
         {
             if (instanceof(_p) == "UIScrollArea")
             {
                 var _p_left = _p.get_absolute_x();
                 var _p_top = _p.get_absolute_y();
-                var _p_right = _p_left + _p.width;
-                var _p_bottom = _p_top + _p.height;
+                var _p_right = _p_left + ui_layout_resolve_scalar(_p.width, 0);
+                var _p_bottom = _p_top + ui_layout_resolve_scalar(_p.height, 0);
                 
                 if (_mx < _p_left || _mx > _p_right || _my < _p_top || _my > _p_bottom)
                 {
@@ -162,15 +164,17 @@ function UISlider(_x, _y, _width, _min, _max, _value) : UIElement(_x, _y, _width
         
         var _x1 = _abs_x * _base_scale_x;
         var _y1 = _abs_y * _base_scale_y;
-        var _x2 = _x1 + (width * _base_scale_x);
-        var _cy = _y1 + (height * _base_scale_y / 2);
+        var _slider_width = get_width();
+        var _slider_height = get_height();
+        var _x2 = _x1 + (_slider_width * _base_scale_x);
+        var _cy = _y1 + (_slider_height * _base_scale_y / 2);
         
         var _range = max_value - min_value;
         var _t = (_range != 0) ? ((value - min_value) / _range) : 0;
         var _handle_x = lerp(_x1, _x2, _t);
         
         /* legacy slider track */
-        draw_sprite_ext(track_sprite, 0, _x1 + ((_x2 - _x1) / 2), _cy, width / 8 * _base_scale_x, 16 / 8 * _base_scale_y, 0, c_white, 1);
+        draw_sprite_ext(track_sprite, 0, _x1 + ((_x2 - _x1) / 2), _cy, _slider_width / 8 * _base_scale_x, 16 / 8 * _base_scale_y, 0, c_white, 1);
         
         
         /* legacy slider handle */

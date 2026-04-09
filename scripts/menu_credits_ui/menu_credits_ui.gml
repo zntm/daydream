@@ -69,8 +69,7 @@ function menu_credits_ui_init()
             _header_ui.halign = fa_center;
             _header_ui.colour = _credits.colour;
             
-            _header_ui.parent = _list;
-            array_push(_list.children, _header_ui);
+            _list.add_child(_header_ui);
             
             _ypos += 24;
             
@@ -88,8 +87,7 @@ function menu_credits_ui_init()
                 _entry_ui.halign = fa_center;
                 _entry_ui.colour = _entry[$ "colour"] ?? c_white;
                 
-                _entry_ui.parent = _list;
-                array_push(_list.children, _entry_ui);
+                _list.add_child(_entry_ui);
                 
                 _ypos += 24;
             }

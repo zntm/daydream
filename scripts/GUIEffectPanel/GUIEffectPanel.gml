@@ -92,7 +92,12 @@ function GUIEffectPanel(_x, _y) : UIElement(_x, _y, 0, 16) constructor
         var _child_count = array_length(children);
         for (var i = 0; i < _child_count; i++)
         {
-            children[i].update();
+            var _child = children[i];
+
+            if (is_struct(_child)) && struct_exists(_child, "update")
+            {
+                _child.update();
+            }
         }
         
         update_bindings();

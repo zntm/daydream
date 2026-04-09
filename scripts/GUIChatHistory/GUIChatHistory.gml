@@ -151,7 +151,12 @@ function GUIChatHistory(_x, _y, _width, _height, _max_messages = 8) : UIElement(
         // Update children
         var _child_count = array_length(children);
         for (var i = 0; i < _child_count; i++) {
-            children[i].update();
+            var _child = children[i];
+
+            if (is_struct(_child)) && struct_exists(_child, "update")
+            {
+                _child.update();
+            }
         }
 
         update_bindings();

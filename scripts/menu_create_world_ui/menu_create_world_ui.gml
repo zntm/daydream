@@ -433,7 +433,7 @@ function menu_create_world_ui_refresh_flow_height(_element)
 			if (_child == undefined || !(_child.visible)) continue;
 
 			menu_create_world_ui_refresh_flow_height(_child);
-			_max_bottom = max(_max_bottom, _child.y + _child.height);
+			_max_bottom = max(_max_bottom, ui_layout_resolve_scalar(_child.y, 0) + ui_element_get_height(_child));
 		}
 
 		if (_element.element_name == "options_content"

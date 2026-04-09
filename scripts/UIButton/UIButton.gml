@@ -14,7 +14,6 @@ function UIButton(_x, _y, _width, _height, _text = "") : UIElement(_x, _y, _widt
     
     boolean = MENU_BUTTON_BOOL.IS_VISIBLE;
     
-    
     /* visual properties */
     icon = undefined;
     
@@ -23,14 +22,11 @@ function UIButton(_x, _y, _width, _height, _text = "") : UIElement(_x, _y, _widt
     icon_xscale = 1;
     icon_yscale = 1;
     
-    
     sprite_index = spr_Menu_Button_Main;
-    
     
     /* =============================================================================
        setters
        ============================================================================= */
-    
     /* set the button sprite */
     /* @param {asset.gmsprite|string|struct} _sprite new sprite */
     static set_sprite_index = function(_sprite)
@@ -39,7 +35,6 @@ function UIButton(_x, _y, _width, _height, _text = "") : UIElement(_x, _y, _widt
     	{
     		var _name = _sprite.sprite_name;
     		var _asset = asset_get_index(_name);
-    		
     		
     		if (_asset != -1 && asset_get_type(_name) == asset_sprite)
     		{
@@ -68,7 +63,6 @@ function UIButton(_x, _y, _width, _height, _text = "") : UIElement(_x, _y, _widt
     	return self;
     }
     
-    
     /* set the button icon */
     /* @param {asset.gmsprite|string|struct} _icon new icon */
     static set_icon = function(_icon)
@@ -77,7 +71,6 @@ function UIButton(_x, _y, _width, _height, _text = "") : UIElement(_x, _y, _widt
     	{
     		var _name = _icon.sprite_name;
     		var _asset = asset_get_index(_name);
-    		
     		
     		if (_asset != -1 && asset_get_type(_name) == asset_sprite)
     		{
@@ -111,15 +104,18 @@ function UIButton(_x, _y, _width, _height, _text = "") : UIElement(_x, _y, _widt
     {
         if !(visible) exit;
         
-        
         /* update children */
         var _child_count = array_length(children);
         
         for (var i = _child_count - 1; i >= 0; --i)
         {
-            children[i].update();
+            var _child = children[i];
+
+            if (is_struct(_child)) && struct_exists(_child, "update")
+            {
+                _child.update();
+            }
         }
-        
         
         var _abs_x = get_interaction_x();
         var _abs_y = get_interaction_y();
@@ -130,21 +126,21 @@ function UIButton(_x, _y, _width, _height, _text = "") : UIElement(_x, _y, _widt
         var _left = _abs_x;
         var _top = _abs_y;
         
-        var _right = _left + width;
-        var _bottom = _top + height;
+        var _right = _left + get_width();
+        var _bottom = _top + get_height();
         
         var _is_hovered = (_mx >= _left && _mx <= _right && _my >= _top && _my <= _bottom);
         
         /* check if clipped by a parent scroll area's scissor */
         var _p = parent;
-        while (_p != undefined)
+        while (ui_element_is_valid_parent(_p))
         {
             if (instanceof(_p) == "UIScrollArea")
             {
                 var _p_left = _p.get_absolute_x();
                 var _p_top = _p.get_absolute_y();
-                var _p_right = _p_left + _p.width;
-                var _p_bottom = _p_top + _p.height;
+                var _p_right = _p_left + ui_layout_resolve_scalar(_p.width, 0);
+                var _p_bottom = _p_top + ui_layout_resolve_scalar(_p.height, 0);
                 
                 if (_mx < _p_left || _mx > _p_right || _my < _p_top || _my > _p_bottom)
                 {
@@ -169,14 +165,11 @@ function UIButton(_x, _y, _width, _height, _text = "") : UIElement(_x, _y, _widt
                 
                 global.ui_input_consumed = true;
                 
-                
                 if !(boolean & MENU_BUTTON_BOOL.IS_SELECTED)
                 {
                     boolean |= MENU_BUTTON_BOOL.IS_SELECTED;
                     
-                    
                     sfx_play("phantasia:sfx/menu/button/select", global.settings.audio_ui);
-                    
                     
                     emit_event("on_select");
                 }
@@ -189,22 +182,18 @@ function UIButton(_x, _y, _width, _height, _text = "") : UIElement(_x, _y, _widt
                 boolean ^= MENU_BUTTON_BOOL.IS_HOVER;
             }
             
-            
             if (boolean & MENU_BUTTON_BOOL.IS_SELECTED)
             {
                 sfx_play("phantasia:sfx/menu/button/deselect", global.settings.audio_ui);
-                
                 
                 boolean ^= MENU_BUTTON_BOOL.IS_SELECTED;
             }
         }
         
-        
         if (boolean & MENU_BUTTON_BOOL.IS_HOLDING)
         {
             emit_event("on_select_hold");
         }
-        
         
         if (mouse_check_button_released(mb_left))
         {
@@ -212,9 +201,7 @@ function UIButton(_x, _y, _width, _height, _text = "") : UIElement(_x, _y, _widt
             {
                 sfx_play("phantasia:sfx/menu/button/deselect", global.settings.audio_ui);
                 
-                
                 boolean ^= MENU_BUTTON_BOOL.IS_SELECTED;
-                
                 
                 if (_is_hovered)
                 {
@@ -222,38 +209,33 @@ function UIButton(_x, _y, _width, _height, _text = "") : UIElement(_x, _y, _widt
                 }
             }
             
-            
             if (boolean & MENU_BUTTON_BOOL.IS_HOLDING)
             {
                 boolean ^= MENU_BUTTON_BOOL.IS_HOLDING;
             }
         }
         
-        
         /* update bindings */
         update_bindings();
     }
-    
     
     static draw_content = function()
     {
         var _abs_x = get_absolute_x();
         var _abs_y = get_absolute_y();
         
-        
         var _base_scale = ui_get_base_scale();
         
         var _base_scale_x = _base_scale.x;
         var _base_scale_y = _base_scale.y;
         
-        
         var _x = _abs_x * _base_scale_x;
         var _y = _abs_y * _base_scale_y;
         
-        
-        var _xscale = (width / 16) * _base_scale_x;
-        var _yscale = (height / 16) * _base_scale_y;
-        
+        var _button_width = get_width();
+        var _button_height = get_height();
+        var _xscale = (_button_width / 16) * _base_scale_x;
+        var _yscale = (_button_height / 16) * _base_scale_y;
         
         var _asset_name = sprite_get_name(sprite_index);
         var _asset_edge = asset_get_index(_asset_name + "_Edge");
@@ -261,17 +243,14 @@ function UIButton(_x, _y, _width, _height, _text = "") : UIElement(_x, _y, _widt
         var _asset_exists = sprite_exists(_asset_edge);
         var _asset_offset = (_asset_exists ? sprite_get_height(_asset_edge) * _yscale : 0);
         
-        
-        var _draw_x = _x + (width * _base_scale_x / 2);
-        var _draw_y = _y + (height * _base_scale_y / 2);
-        
+        var _draw_x = _x + (_button_width * _base_scale_x / 2);
+        var _draw_y = _y + (_button_height * _base_scale_y / 2);
         
         /* determine if selected/holding for visual offset */
         var _is_active = (boolean & (MENU_BUTTON_BOOL.IS_SELECTED | MENU_BUTTON_BOOL.IS_HOLDING));
         
         var _color = (_is_active ? c_ltgray : c_white);
         var _offset = (_is_active ? _asset_offset : 0);
-        
         
         if (boolean & MENU_BUTTON_BOOL.IS_VISIBLE)
         {
@@ -281,10 +260,8 @@ function UIButton(_x, _y, _width, _height, _text = "") : UIElement(_x, _y, _widt
                 var _sw = (width * _base_scale_x) + 2;
                 var _sh = (height * _base_scale_y) + 2;
                 
-                
                 draw_sprite_stretched_ext(spr_Menu_Button_Select, 0, _x - 1, _y - 1 + _offset, _sw, _sh, c_white, 1);
             }
-            
             
             /* draw bottom edge if not pressed */
             if !(_is_active) && (_asset_exists)
@@ -292,24 +269,19 @@ function UIButton(_x, _y, _width, _height, _text = "") : UIElement(_x, _y, _widt
                 draw_sprite_ext(_asset_edge, 0, _draw_x, _draw_y + _asset_offset, _xscale, _yscale, 0, c_white, 1);
             }
             
-            
             /* draw main button sprite */
             draw_sprite_ext(sprite_index, (_is_active ? 1 : 0), _draw_x, _draw_y + _offset, _xscale, _yscale, 0, _color, 1);
         }
         
-        
         /* draw icon and text */
         var _loca_scale = global.loca_font_scale * _base_scale_x;
-        
         
         if (text != "") && (icon != undefined)
         {
             var _tx = _draw_x + (sprite_get_width(icon) * icon_xscale * _base_scale_x / 2);
             var _ix = _draw_x - (cuteify_get_width(text) * _loca_scale / 2);
             
-            
             draw_sprite_ext(icon, icon_index, _ix, _draw_y + _offset, _base_scale_x * icon_xscale, _base_scale_y * icon_yscale, 0, _color, 1);
-            
             
             render_text(_tx, _draw_y + _offset, text, _base_scale_x, _base_scale_y, 0, _color, 1);
         }

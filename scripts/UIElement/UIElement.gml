@@ -49,6 +49,69 @@ function ui_layout_resolve_scalar(_value, _fallback = 0)
 }
 
 
+function ui_element_is_valid_parent(_value)
+{
+    if !(is_struct(_value))
+    {
+        return false;
+    }
+
+    return struct_exists(_value, "get_absolute_x")
+        && struct_exists(_value, "get_absolute_y")
+        && struct_exists(_value, "get_interaction_x")
+        && struct_exists(_value, "get_interaction_y")
+        && struct_exists(_value, "get_width")
+        && struct_exists(_value, "get_height")
+        && struct_exists(_value, "parent");
+}
+
+
+function ui_element_clear_children(_element)
+{
+    if !(is_struct(_element)) exit;
+
+    if !(struct_exists(_element, "clear_children"))
+    {
+        _element.children = [];
+        exit;
+    }
+
+    _element.clear_children();
+}
+
+
+function ui_element_get_width(_element)
+{
+    if (is_struct(_element)) && struct_exists(_element, "get_width")
+    {
+        return _element.get_width();
+    }
+
+    if (is_struct(_element))
+    {
+        return ui_layout_resolve_scalar(_element.width ?? 0, 0);
+    }
+
+    return ui_layout_resolve_scalar(_element, 0);
+}
+
+
+function ui_element_get_height(_element)
+{
+    if (is_struct(_element)) && struct_exists(_element, "get_height")
+    {
+        return _element.get_height();
+    }
+
+    if (is_struct(_element))
+    {
+        return ui_layout_resolve_scalar(_element.height ?? 0, 0);
+    }
+
+    return ui_layout_resolve_scalar(_element, 0);
+}
+
+
 /* base UI element - extends GUIComponent with declarative features */
 /* all declarative UI elements inherit from this */
 /* @param {real} _x x position */
@@ -217,6 +280,38 @@ function UIElement(_x, _y, _width, _height) constructor
     /* @param {struct.UIElement} _child child element to add */
     static add_child = function(_child)
     {
+        if !(is_struct(_child))
+        {
+            return undefined;
+        }
+
+        if (_child == self)
+        {
+            return self;
+        }
+
+        if (ui_element_is_valid_parent(_child.parent))
+        {
+            if (_child.parent == self)
+            {
+                var _existing_count = array_length(children);
+
+                for (var i = _existing_count - 1; i >= 0; --i)
+                {
+                    if (children[i] == _child)
+                    {
+                        _child.recalculate_layout();
+
+                        return _child;
+                    }
+                }
+            }
+            else
+            {
+                _child.parent.remove_child(_child);
+            }
+        }
+
         _child.parent = self;
         
         array_push(children, _child);
@@ -231,6 +326,11 @@ function UIElement(_x, _y, _width, _height) constructor
     /* @param {struct.UIElement} _child child element to remove */
     static remove_child = function(_child)
     {
+        if !(is_struct(_child))
+        {
+            return false;
+        }
+
         var _count = array_length(children);
         
         
@@ -250,6 +350,28 @@ function UIElement(_x, _y, _width, _height) constructor
         
         return false;
     }
+
+
+    static clear_children = function()
+    {
+        var _count = array_length(children);
+
+        for (var i = _count - 1; i >= 0; --i)
+        {
+            var _child = children[i];
+
+            if (is_struct(_child))
+            {
+                _child.parent = undefined;
+            }
+        }
+
+        children = [];
+
+        recalculate_layout();
+
+        return self;
+    }
     
     
     /* set anchors and update layout */
@@ -267,12 +389,12 @@ function UIElement(_x, _y, _width, _height) constructor
     /* recalculate position based on anchors */
     static recalculate_layout = function()
     {
-        if (parent != undefined)
+        if (ui_element_is_valid_parent(parent))
         {
-            var _parent_width = ui_layout_resolve_scalar(parent.width, 0);
-            var _parent_height = ui_layout_resolve_scalar(parent.height, 0);
-            var _self_width = ui_layout_resolve_scalar(width, 0);
-            var _self_height = ui_layout_resolve_scalar(height, 0);
+            var _parent_width = ui_element_get_width(parent);
+            var _parent_height = ui_element_get_height(parent);
+            var _self_width = get_width();
+            var _self_height = get_height();
             var _offset_resolved_x = ui_layout_resolve_scalar(offset_x, 0);
             var _offset_resolved_y = ui_layout_resolve_scalar(offset_y, 0);
 
@@ -317,7 +439,12 @@ function UIElement(_x, _y, _width, _height) constructor
         
         for (var i = _length - 1; i >= 0; --i)
         {
-            children[i].recalculate_layout();
+            var _child = children[i];
+
+            if (is_struct(_child)) && struct_exists(_child, "recalculate_layout")
+            {
+                _child.recalculate_layout();
+            }
         }
     }
 
@@ -335,9 +462,11 @@ function UIElement(_x, _y, _width, _height) constructor
         
         for (var i = _child_count - 1; i >= 0; --i)
         {
-            if (struct_exists(children[i], "set_link_context"))
+            var _child = children[i];
+
+            if (is_struct(_child)) && struct_exists(_child, "set_link_context")
             {
-                children[i].set_link_context(_context);
+                _child.set_link_context(_context);
             }
         }
         
@@ -472,6 +601,8 @@ function UIElement(_x, _y, _width, _height) constructor
         {
             var _child = children[i];
             
+            if !(is_struct(_child)) continue;
+            
             
             if !(_child.visible) continue;
             
@@ -480,7 +611,7 @@ function UIElement(_x, _y, _width, _height) constructor
             _child.y = _y;
             
             
-            _y += _child.height + spacing;
+            _y += ui_element_get_height(_child) + spacing;
         }
     }
     
@@ -495,6 +626,8 @@ function UIElement(_x, _y, _width, _height) constructor
         {
             var _child = children[i];
             
+            if !(is_struct(_child)) continue;
+            
             
             if !(_child.visible) continue;
             
@@ -503,7 +636,7 @@ function UIElement(_x, _y, _width, _height) constructor
             _child.y = padding_top;
             
             
-            _x += _child.width + spacing;
+            _x += ui_element_get_width(_child) + spacing;
         }
     }
     
@@ -519,12 +652,17 @@ function UIElement(_x, _y, _width, _height) constructor
         {
             var _child = children[i];
             
+            if !(is_struct(_child)) continue;
+            
             
             if !(_child.visible) continue;
             
             
-            _child.x = padding_left + (_col * (_child.width + spacing));
-            _child.y = padding_top + (_row * (_child.height + spacing));
+            var _child_width = ui_element_get_width(_child);
+            var _child_height = ui_element_get_height(_child);
+
+            _child.x = padding_left + (_col * (_child_width + spacing));
+            _child.y = padding_top + (_row * (_child_height + spacing));
             
             
             ++_col;
@@ -542,11 +680,22 @@ function UIElement(_x, _y, _width, _height) constructor
     /* =============================================================================
        override GUIComponent methods
        ============================================================================= */
+
+    static get_width = function()
+    {
+        return ui_layout_resolve_scalar(width, 0);
+    }
+
+
+    static get_height = function()
+    {
+        return ui_layout_resolve_scalar(height, 0);
+    }
     
     /* get absolute x position in logical units (960-based) */
     static get_absolute_x = function()
     {
-        if (parent != undefined)
+        if (ui_element_is_valid_parent(parent))
         {
             return parent.get_absolute_x() + x;
         }
@@ -560,7 +709,7 @@ function UIElement(_x, _y, _width, _height) constructor
     {
         var _scroll_offset = 0;
 
-        if (parent != undefined)
+        if (ui_element_is_valid_parent(parent))
         {
             if (instanceof(parent) == "UIScrollArea")
             {
@@ -580,7 +729,7 @@ function UIElement(_x, _y, _width, _height) constructor
     /* get absolute y position in logical units (960-based) */
     static get_absolute_y = function()
     {
-        if (parent != undefined)
+        if (ui_element_is_valid_parent(parent))
         {
             return parent.get_absolute_y() + y;
         }
@@ -594,7 +743,7 @@ function UIElement(_x, _y, _width, _height) constructor
     {
         var _scroll_offset = 0;
         
-        if (parent != undefined)
+        if (ui_element_is_valid_parent(parent))
         {
             if (instanceof(parent) == "UIScrollArea")
             {
@@ -621,7 +770,12 @@ function UIElement(_x, _y, _width, _height) constructor
         
         for (var i = _child_count - 1; i >= 0; --i)
         {
-            children[i].update();
+            var _child = children[i];
+
+            if (is_struct(_child)) && struct_exists(_child, "update")
+            {
+                _child.update();
+            }
         }
         
         
@@ -645,8 +799,8 @@ function UIElement(_x, _y, _width, _height) constructor
         var _base_scale = ui_get_base_scale();
         var _abs_x = get_absolute_x();
         var _abs_y = get_absolute_y();
-        var _draw_width = ui_layout_resolve_scalar(width, 0);
-        var _draw_height = ui_layout_resolve_scalar(height, 0);
+        var _draw_width = get_width();
+        var _draw_height = get_height();
         
         
         var _x1 = _abs_x * _base_scale.x;
@@ -691,7 +845,12 @@ function UIElement(_x, _y, _width, _height) constructor
         
         for (var i = _child_count - 1; i >= 0; --i)
         {
-            children[i].draw();
+            var _child = children[i];
+
+            if (is_struct(_child)) && struct_exists(_child, "draw")
+            {
+                _child.draw();
+            }
         }
     }
 }

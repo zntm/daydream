@@ -1149,6 +1149,14 @@ function ui_resolve_value(_node, _link, _variables)
                 return _var_value;
             }
 
+            /* resolve GML built-in constants */
+            var _builtin = ui_resolve_builtin_constant(_node.name);
+
+            if (_builtin != undefined)
+            {
+                return _builtin;
+            }
+
             return _node.name;
 
         case UI_AST.BINDING:
@@ -1319,6 +1327,43 @@ function ui_resolve_origin(_name)
         case "ORIGIN_BOTTOM_LEFT":   return [0, { is_percent: true, value: 100 }];
         case "ORIGIN_BOTTOM_CENTER": return [{ is_percent: true, value: 50 }, { is_percent: true, value: 100 }];
         case "ORIGIN_BOTTOM_RIGHT":  return [{ is_percent: true, value: 100 }, { is_percent: true, value: 100 }];
+        default: return undefined;
+    }
+}
+
+
+/* resolve GML built-in constant names to their numeric values */
+/* @param {string} _name constant name (e.g. "fa_left", "c_white") */
+/* @returns {real|undefined} numeric value or undefined if not a known constant */
+function ui_resolve_builtin_constant(_name)
+{
+    switch (_name)
+    {
+        /* font alignment */
+        case "fa_left":   return fa_left;
+        case "fa_center": return fa_center;
+        case "fa_right":  return fa_right;
+        case "fa_top":    return fa_top;
+        case "fa_middle": return fa_middle;
+        case "fa_bottom": return fa_bottom;
+
+        /* common colors */
+        case "c_white":   return c_white;
+        case "c_black":   return c_black;
+        case "c_red":     return c_red;
+        case "c_green":   return c_green;
+        case "c_blue":    return c_blue;
+        case "c_yellow":  return c_yellow;
+        case "c_orange":  return c_orange;
+        case "c_grey":
+        case "c_gray":    return c_grey;
+
+        /* layout enum */
+        case "LAYOUT_NONE":       return UI_LAYOUT.NONE;
+        case "LAYOUT_VERTICAL":   return UI_LAYOUT.VERTICAL;
+        case "LAYOUT_HORIZONTAL": return UI_LAYOUT.HORIZONTAL;
+        case "LAYOUT_GRID":       return UI_LAYOUT.GRID;
+
         default: return undefined;
     }
 }

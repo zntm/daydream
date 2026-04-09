@@ -22,9 +22,14 @@ function UIPage(_x, _y, _width, _height, _page_name) : UIElement(_x, _y, _width,
         
         var _child_count = array_length(children);
         
-        for (var i = _child_count - 1; i >= 0; --i) 
+        for (var i = _child_count - 1; i >= 0; --i)
         {
-            children[i].update();
+            var _child = children[i];
+
+            if (is_struct(_child)) && struct_exists(_child, "update")
+            {
+                _child.update();
+            }
         }
     }
     
@@ -55,9 +60,14 @@ function UIPage(_x, _y, _width, _height, _page_name) : UIElement(_x, _y, _width,
         
         var _child_count = array_length(children);
         
-        for (var i = _child_count - 1; i >= 0; --i) 
+        for (var i = _child_count - 1; i >= 0; --i)
         {
-            children[i].draw();
+            var _child = children[i];
+
+            if (is_struct(_child)) && struct_exists(_child, "draw")
+            {
+                _child.draw();
+            }
         }
     }
     

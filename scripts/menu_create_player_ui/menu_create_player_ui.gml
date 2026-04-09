@@ -179,7 +179,7 @@ function menu_create_player_ui_build_tabs()
 
 	if (_tabs == undefined) exit;
 
-	_tabs.children = [];
+	_tabs.clear_children();
 
 	var _definitions = [
 		{ id: "all", text: "All" },
@@ -222,8 +222,8 @@ function menu_create_player_ui_refresh_options()
 
 	if (_style_row == undefined) || (_design_list == undefined) || (_design_scroll == undefined) exit;
 
-	_style_row.children = [];
-	_design_list.children = [];
+	_style_row.clear_children();
+	_design_list.clear_children();
 	_design_list.height = 0;
 	_design_scroll.scroll_offset = 0;
 
@@ -329,18 +329,24 @@ function menu_create_player_ui_build_attire_buttons(_parent, _kind, _start, _cou
 			if (self.option_kind == "hair")
 			{
 				var _ha = global.attire_data.hair[self.option_value];
-				var _sprite_asset = _ha.get_sprite_colour();
-				var _sprite = is_array(_sprite_asset) ? _sprite_asset[0].get_sprite() : _sprite_asset.get_sprite();
+				if (_ha != undefined)
+				{
+				    var _sprite_asset = _ha.get_sprite_colour();
+				    var _sprite = is_array(_sprite_asset) ? _sprite_asset[0].get_sprite() : _sprite_asset.get_sprite();
 
-				draw_sprite_ext(_sprite, 0, _cx, _cy, 2 * _xs, 2 * _ys, 0, c_white, 1);
+				    draw_sprite_ext(_sprite, 0, _cx, _cy, 2 * _xs, 2 * _ys, 0, c_white, 1);
+				}
 			}
 			else
 			{
 				var _sa = global.attire_data.shirt[self.option_value];
-				var _shirt_asset = _sa.get_sprite_colour();
-				var _shirt_sprite = is_array(_shirt_asset) ? _shirt_asset[0].get_sprite() : _shirt_asset.get_sprite();
+				if (_sa != undefined)
+				{
+				    var _shirt_asset = _sa.get_sprite_colour();
+				    var _shirt_sprite = is_array(_shirt_asset) ? _shirt_asset[0].get_sprite() : _shirt_asset.get_sprite();
 
-				draw_sprite_ext(_shirt_sprite, 0, _cx, _cy, 2 * _xs, 2 * _ys, 0, c_white, 1);
+				    draw_sprite_ext(_shirt_sprite, 0, _cx, _cy, 2 * _xs, 2 * _ys, 0, c_white, 1);
+				}
 			}
 		});
 
@@ -358,7 +364,7 @@ function menu_create_player_ui_build_colour_row(_parent, _attire_index, _max_opt
 {
 	if (_parent == undefined) exit;
 
-	_parent.children = [];
+	_parent.clear_children();
 	
 	for (var i = 0; i < _max_options; ++i)
 	{

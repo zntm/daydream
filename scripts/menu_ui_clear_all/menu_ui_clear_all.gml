@@ -13,7 +13,7 @@ function menu_ui_clear_all()
 	/* Explicitly clear gui_root children just in case */
     if (variable_global_exists("gui_root") && global.gui_root != undefined)
     {
-        global.gui_root.children = [];
+        global.gui_root.clear_children();
     }
 
 	if (variable_global_exists("ui_settings_menu")) global.ui_settings_menu = undefined;

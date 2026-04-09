@@ -70,8 +70,8 @@ function UIScrollArea(_x, _y, _width, _height) : UIElement(_x, _y, _width, _heig
             if !(_child.visible) continue;
             
             
-            var _child_right = _child.x + _child.width;
-            var _child_bottom = _child.y + _child.height;
+            var _child_right = ui_layout_resolve_scalar(_child.x, 0) + ui_element_get_width(_child);
+            var _child_bottom = ui_layout_resolve_scalar(_child.y, 0) + ui_element_get_height(_child);
             
             _max_x = max(_max_x, _child_right);
             _max_y = max(_max_y, _child_bottom);
@@ -87,10 +87,10 @@ function UIScrollArea(_x, _y, _width, _height) : UIElement(_x, _y, _width, _heig
     {
         if (scroll_axis == "horizontal")
         {
-            return max(0, content_width - width);
+            return max(0, content_width - get_width());
         }
 
-        return max(0, content_height - height);
+        return max(0, content_height - get_height());
     }
     
     
@@ -99,23 +99,24 @@ function UIScrollArea(_x, _y, _width, _height) : UIElement(_x, _y, _width, _heig
     {
         var _abs_x = get_absolute_x();
         var _abs_y = get_absolute_y();
-        
+        var _w = get_width();
+        var _h = get_height();
 
         if (scroll_axis == "horizontal")
         {
             return {
                 x: _abs_x,
-                y: _abs_y + height - scrollbar_width,
-                w: width,
+                y: _abs_y + _h - scrollbar_width,
+                w: _w,
                 h: scrollbar_width
             }
         }
 
         return {
-            x: _abs_x + width - scrollbar_width,
+            x: _abs_x + _w - scrollbar_width,
             y: _abs_y,
             w: scrollbar_width,
-            h: height
+            h: _h
         }
     }
     
@@ -128,7 +129,7 @@ function UIScrollArea(_x, _y, _width, _height) : UIElement(_x, _y, _width, _heig
         
         
         var _content_size = (scroll_axis == "horizontal") ? content_width : content_height;
-        var _viewport_size = (scroll_axis == "horizontal") ? width : height;
+        var _viewport_size = (scroll_axis == "horizontal") ? get_width() : get_height();
 
         if (_content_size <= 0 || _content_size <= _viewport_size) 
         {
@@ -166,7 +167,12 @@ function UIScrollArea(_x, _y, _width, _height) : UIElement(_x, _y, _width, _heig
         
         for (var i = _child_count - 1; i >= 0; --i) 
         {
-            children[i].update();
+            var _child = children[i];
+
+            if (is_struct(_child)) && struct_exists(_child, "update")
+            {
+                _child.update();
+            }
         }
         
         
@@ -184,8 +190,8 @@ function UIScrollArea(_x, _y, _width, _height) : UIElement(_x, _y, _width, _heig
         
         var _left = _abs_x;
         var _top = _abs_y;
-        var _right = _left + width;
-        var _bottom = _top + height;
+        var _right = _left + get_width();
+        var _bottom = _top + get_height();
         
         
         var _is_hovering = (_mx >= _left && _mx <= _right && _my >= _top && _my <= _bottom);
@@ -296,8 +302,8 @@ function UIScrollArea(_x, _y, _width, _height) : UIElement(_x, _y, _width, _heig
         
         var _x1 = _abs_x * _base_scale.x;
         var _y1 = _abs_y * _base_scale.y;
-        var _x2 = _x1 + (width * _base_scale.x);
-        var _y2 = _y1 + (height * _base_scale.y);
+        var _x2 = _x1 + (get_width() * _base_scale.x);
+        var _y2 = _y1 + (get_height() * _base_scale.y);
         
         
         /* draw background if set */
@@ -359,7 +365,7 @@ function UIScrollArea(_x, _y, _width, _height) : UIElement(_x, _y, _width, _heig
         
         
         /* draw scrollbar if content overflows */
-        var _overflow = (scroll_axis == "horizontal") ? (content_width > width) : (content_height > height);
+        var _overflow = (scroll_axis == "horizontal") ? (content_width > get_width()) : (content_height > get_height());
         
         if (_overflow) 
         {

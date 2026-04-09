@@ -154,31 +154,27 @@ function menu_players_ui_set_loading_state()
 	var _pinned = ui_get(_instance, "pinned_container");
 	if (_pinned != undefined)
 	{
-		_pinned.children = [];
+		_pinned.clear_children();
 		
 		var _hint = new UIText(0, 18, "Loading pinned profiles...");
 		_hint.halign = fa_left;
 		_hint.valign = fa_middle;
 		_hint.text_scale = 0.7;
 		_hint.colour = menu_ui_get_metrics().text_dim;
-		_hint.parent = _pinned;
-		
-		array_push(_pinned.children, _hint);
+		_pinned.add_child(_hint);
 	}
 
 	var _container = ui_get(_instance, "players_container");
 	if (_container != undefined)
 	{
-		_container.children = [];
+		_container.clear_children();
 		
 		var _loading = new UIText(0, 12, "Loading players...");
 		_loading.halign = fa_left;
 		_loading.valign = fa_top;
 		_loading.text_scale = 0.8;
 		_loading.colour = menu_ui_get_metrics().text_dim;
-		_loading.parent = _container;
-
-		array_push(_container.children, _loading);
+		_container.add_child(_loading);
 	}
 }
 
@@ -193,8 +189,8 @@ function menu_players_ui_populate()
 	
 	if (_pinned_container == undefined || _main_container == undefined) exit;
 	
-	_pinned_container.children = [];
-	_main_container.children = [];
+	_pinned_container.clear_children();
+	_main_container.clear_children();
 	
 	var _players = global.file_players;
 	var _players_len = array_length(_players);
@@ -242,9 +238,7 @@ function menu_players_ui_build_pinned_strip(_container, _players, _instance)
 		_empty.valign = fa_middle;
 		_empty.text_scale = 0.7;
 		_empty.colour = _metrics.text_dim;
-		_empty.parent = _container;
-		
-		array_push(_container.children, _empty);
+		_container.add_child(_empty);
 		_container.width = max(ui_layout_resolve_scalar(_container.width, 0), 240);
 		_container.height = 60;
 		
@@ -279,9 +273,7 @@ function menu_players_ui_build_cards(_container, _players, _is_grid, _instance, 
 		_empty.valign = fa_top;
 		_empty.text_scale = 0.8;
 		_empty.colour = _metrics.text_dim;
-		_empty.parent = _container;
-		
-		array_push(_container.children, _empty);
+		_container.add_child(_empty);
 		_container.height = 48;
 		
 		exit;
@@ -322,7 +314,7 @@ function menu_players_ui_build_cards(_container, _players, _is_grid, _instance, 
 function menu_players_ui_create_card(_container, _player, _x, _y, _w, _h, _layout, _instance)
 {
 	var _entry = new UIButton(_x, _y, _w, _h, "");
-	_entry.parent = _container;
+	_container.add_child(_entry);
 	_entry.link_context = _instance.link_context;
 	_entry.player_ref = _player;
 	_entry.card_layout = _layout;
@@ -356,8 +348,6 @@ function menu_players_ui_create_card(_container, _player, _x, _y, _w, _h, _layou
 		menu_refresh_value_world_save();
 		menu_transition_goto(rm_Menu_Worlds);
 	}));
-	
-	array_push(_container.children, _entry);
 	
 	return _entry;
 }
@@ -410,7 +400,9 @@ function menu_players_ui_attach_card_actions(_entry, _player)
 		menu_ui_draw_icon("phantasia:ui/option", _cx, _cy, _alpha, 2);
 	});
 	
-	array_push(_entry.children, _btn_pin, _btn_stats, _btn_option);
+	_entry.add_child(_btn_pin);
+	_entry.add_child(_btn_stats);
+	_entry.add_child(_btn_option);
 }
 
 
@@ -418,7 +410,7 @@ function menu_players_ui_create_icon_button(_parent, _x, _y, _w, _h, _handler)
 {
 	var _button = new UIButton(_x, _y, _w, _h, "");
 	_button.boolean = 0;
-	_button.parent = _parent;
+	_parent.add_child(_button);
 	_button.add_event_handler("on_select_release", method(_button, _handler));
 	
 	return _button;

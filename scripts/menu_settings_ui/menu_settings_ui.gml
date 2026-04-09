@@ -156,11 +156,11 @@ function menu_settings_ui_populate_list()
 
 	if (_list == undefined || _scroll == undefined) exit;
 
-	_list.children = [];
+	_list.clear_children();
 	_scroll.scroll_offset = 0;
 
 	var _resolved_category = menu_settings_ui_resolve_category(global.settings_current_category);
-	var _row_width = _list.width;
+	var _row_width = ui_element_get_width(_list);
 	var _y = 0;
 	var _sections = menu_settings_ui_get_sections(_resolved_category);
 
@@ -298,15 +298,14 @@ function menu_settings_ui_get_sections(_resolved_category)
 function menu_settings_ui_add_section_header(_list, _row_width, _y, _title)
 {
 	var _header = new UIArea(0, _y, _row_width, 28);
-	_header.parent = _list;
+	_list.add_child(_header);
 
 	var _label = new UIText(0, 10, _title);
 	_label.halign = fa_left;
 	_label.valign = fa_middle;
 	_label.text_scale = 0.88;
 	_label.colour = c_white;
-	_label.parent = _header;
-	array_push(_header.children, _label);
+	_header.add_child(_label);
 
 	var _line = new UILine(0, 0);
 	_line.start_x = 124;
@@ -315,10 +314,7 @@ function menu_settings_ui_add_section_header(_list, _row_width, _y, _title)
 	_line.end_y = 11;
 	_line.thickness = 1;
 	_line.colour = menu_ui_get_metrics().card_border;
-	_line.parent = _header;
-	array_push(_header.children, _line);
-
-	array_push(_list.children, _header);
+	_header.add_child(_line);
 
 	return _y + 34;
 }
@@ -330,34 +326,28 @@ function menu_settings_ui_add_input_mode_row(_list, _row_width, _y)
 	var _container = new UIArea(0, _y, _row_width, 76);
 	_container.background_color = _metrics.card_background;
 	_container.border_color = _metrics.card_border;
-	_container.parent = _list;
+	_list.add_child(_container);
 
 	var _label = new UIText(12, 16, "Input Mode");
 	_label.halign = fa_left;
 	_label.valign = fa_top;
-	_label.parent = _container;
-	array_push(_container.children, _label);
+	_container.add_child(_label);
 
 	var _desc = new UIText(12, 38, "Choose which control profile to edit.");
 	_desc.halign = fa_left;
 	_desc.valign = fa_top;
 	_desc.text_scale = 0.72;
 	_desc.colour = _metrics.text_dim;
-	_desc.parent = _container;
-	array_push(_container.children, _desc);
+	_container.add_child(_desc);
 
 	var _dropdown = new UIDropdown(_row_width - 196, 24, 184, 24);
-	_dropdown.parent = _container;
+	_container.add_child(_dropdown);
 	_dropdown.set_choices(["Keyboard", "Gamepad"]);
 	_dropdown.set_selected((global.controls_input_type == "gamepad") ? 1 : 0);
 	_dropdown.add_event_handler("on_change", method(_dropdown, function(_data) {
 		global.controls_input_type = (self.choice_index == 1) ? "gamepad" : "keyboard";
 		menu_settings_ui_populate_list();
 	}));
-	array_push(_container.children, _dropdown);
-
-	array_push(_list.children, _container);
-
 	return _y + 88;
 }
 
@@ -375,21 +365,19 @@ function menu_settings_ui_add_setting_row(_list, _row_width, _y, _name)
 	var _container = new UIArea(0, _y, _row_width, 76);
 	_container.background_color = _metrics.card_background;
 	_container.border_color = _metrics.card_border;
-	_container.parent = _list;
+	_list.add_child(_container);
 
 	var _label = new UIText(12, 16, loca_translate($"phantasia:settings.{_name}.name"));
 	_label.halign = fa_left;
 	_label.valign = fa_top;
-	_label.parent = _container;
-	array_push(_container.children, _label);
+	_container.add_child(_label);
 
 	var _desc = new UIText(12, 38, loca_translate($"phantasia:settings.{_name}.description"));
 	_desc.halign = fa_left;
 	_desc.valign = fa_top;
 	_desc.text_scale = 0.72;
 	_desc.colour = _metrics.text_dim;
-	_desc.parent = _container;
-	array_push(_container.children, _desc);
+	_container.add_child(_desc);
 
 	switch (_type)
 	{
@@ -397,7 +385,7 @@ function menu_settings_ui_add_setting_row(_list, _row_width, _y, _name)
 			var _slider = new UISlider(_control_x, 30, _control_width, _data.get_range_min(), max(_data.get_range_max(), 1), _value);
 			_slider.setting_name = _name;
 			if (_data.get_step() != undefined) _slider.step = _data.get_step();
-			_slider.parent = _container;
+			_container.add_child(_slider);
 			_slider.add_event_handler("on_drag", method(_slider, function(_payload) {
 				var _new_value = _payload.value;
 				var _on_update = global.settings_data[$ self.setting_name].get_on_update();
@@ -414,7 +402,6 @@ function menu_settings_ui_add_setting_row(_list, _row_width, _y, _name)
 				
 				file_save_settings();
 			}));
-			array_push(_container.children, _slider);
 			break;
 
 		case SETTINGS_TYPE.SWITCH:
@@ -423,7 +410,7 @@ function menu_settings_ui_add_setting_row(_list, _row_width, _y, _name)
 			_switch.height = 16;
 			_switch.set_selected(_value);
 			_switch.setting_name = _name;
-			_switch.parent = _container;
+			_container.add_child(_switch);
 			_switch.add_event_handler("on_select_release", method(_switch, function() {
 				var _new_value = self.selected;
 				var _on_update = global.settings_data[$ self.setting_name].get_on_update();
@@ -435,7 +422,6 @@ function menu_settings_ui_add_setting_row(_list, _row_width, _y, _name)
 				global.settings[$ self.setting_name] = _new_value;
 				file_save_settings();
 			}));
-			array_push(_container.children, _switch);
 			break;
 
 		case SETTINGS_TYPE.HOTKEY:
@@ -444,17 +430,16 @@ function menu_settings_ui_add_setting_row(_list, _row_width, _y, _name)
 			var _button = new UIButton(_control_x, 22, _control_width, 32, _key_name);
 			_button.setting_name = _name;
 			_button.is_gamepad_setting = _is_gamepad;
-			_button.parent = _container;
+			_container.add_child(_button);
 			_button.add_event_handler("on_select_release", method(_button, function() {
 				menu_settings_ui_open_rebind(self.setting_name, self, self.is_gamepad_setting);
 			}));
-			array_push(_container.children, _button);
 			break;
 
 		case SETTINGS_TYPE.ARROW:
 			var _dropdown = new UIDropdown(_control_x, 22, _control_width, 24);
 			_dropdown.setting_name = _name;
-			_dropdown.parent = _container;
+			_container.add_child(_dropdown);
 			_dropdown.set_choices(menu_settings_ui_get_choice_labels(_name));
 			_dropdown.set_selected(_value);
 			_dropdown.add_event_handler("on_change", method(_dropdown, function(_payload) {
@@ -468,7 +453,6 @@ function menu_settings_ui_add_setting_row(_list, _row_width, _y, _name)
 
 				file_save_settings();
 			}));
-			array_push(_container.children, _dropdown);
 			break;
 	}
 

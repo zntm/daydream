@@ -101,7 +101,12 @@ function UIDropdown(_x, _y, _width, _height) : UIElement(_x, _y, _width, _height
         
         for (var i = _child_count - 1; i >= 0; --i)
         {
-            children[i].update();
+            var _child = children[i];
+
+            if (is_struct(_child)) && struct_exists(_child, "update")
+            {
+                _child.update();
+            }
         }
         
         
