@@ -16,12 +16,10 @@ var RIGHT_W = FRAME_W - (PAD * 2) - TAB_W - GAP
     @area(screen_frame) {
         position = ORIGIN_MIDDLE_CENTER
         size = (FRAME_W, FRAME_H)
-        border_color = #3a3a4a
 
         @area(header_bar) {
             position = ORIGIN_TOP_LEFT + (PAD, PAD)
             size = (FRAME_W - (PAD * 2), HEADER_H)
-            border_color = #3a3a4a
 
             @button(btn_back) {
                 position = ORIGIN_TOP_LEFT + (8, 6)
@@ -41,7 +39,6 @@ var RIGHT_W = FRAME_W - (PAD * 2) - TAB_W - GAP
         @area(left_column) {
             position = ORIGIN_TOP_LEFT + (PAD, PAD + HEADER_H + GAP)
             size = (TAB_W, CONTENT_H)
-            border_color = #3a3a4a
             padding = 10
             layout = LAYOUT_VERTICAL
             spacing = 8
@@ -75,7 +72,6 @@ var RIGHT_W = FRAME_W - (PAD * 2) - TAB_W - GAP
         @area(right_column) {
             position = ORIGIN_TOP_LEFT + (PAD + TAB_W + GAP, PAD + HEADER_H + GAP)
             size = (RIGHT_W, CONTENT_H)
-            border_color = #3a3a4a
 
             @text(category_title) {
                 position = ORIGIN_TOP_LEFT + (12, 16)

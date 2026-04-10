@@ -19,12 +19,10 @@ var INPUT_H = 24
     @area(screen_frame) {
         position = ORIGIN_MIDDLE_CENTER
         size = (FRAME_W, FRAME_H)
-        border_color = #3a3a4a
 
         @area(header_bar) {
             position = ORIGIN_TOP_LEFT + (PAD, PAD)
             size = (FRAME_W - (PAD * 2), HEADER_H)
-            border_color = #3a3a4a
 
             @button(btn_back) {
                 position = ORIGIN_TOP_LEFT + (8, 6)
@@ -44,12 +42,10 @@ var INPUT_H = 24
         @area(left_panel) {
             position = ORIGIN_TOP_LEFT + (PAD, PAD + HEADER_H + GAP)
             size = (LEFT_W, CONTENT_H)
-            border_color = #3a3a4a
 
             @area(preview_frame) {
                 position = ORIGIN_TOP_LEFT + (12, 12)
                 size = (LEFT_W - 24, 190)
-                border_color = #3a3a4a
 
                 @area(preview_renderer) {
                     position = ORIGIN_TOP_LEFT + (12, 12)
@@ -106,7 +102,6 @@ var INPUT_H = 24
         @area(right_panel) {
             position = ORIGIN_TOP_LEFT + (PAD + LEFT_W + GAP, PAD + HEADER_H + GAP)
             size = (RIGHT_W, CONTENT_H)
-            border_color = #3a3a4a
 
             @scroll_area(options_scroll) {
                 position = ORIGIN_TOP_LEFT + (12, 12)
@@ -327,7 +322,6 @@ var INPUT_H = 24
         @area(action_dock) {
             position = ORIGIN_BOTTOM_LEFT + (PAD, -PAD - FOOTER_H)
             size = (FRAME_W - (PAD * 2), FOOTER_H)
-            border_color = #3a3a4a
 
             @button(btn_create_world) {
                 position = ORIGIN_TOP_CENTER + (0, 8)

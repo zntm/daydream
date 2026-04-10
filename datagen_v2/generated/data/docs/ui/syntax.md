@@ -84,17 +84,17 @@ Percentages allow for responsive layouts. They are resolved relative to the pare
 
 These are shorthands for specific percentage tuples:
 
-| Constant               | Equivalent Tuple |
-| ---------------------- | ---------------- |
-| `ORIGIN_TOP_LEFT`      | `(0, 0)`         |
-| `ORIGIN_TOP_CENTER`    | `(50%, 0)`       |
-| `ORIGIN_TOP_RIGHT`     | `(100%, 0)`      |
-| `ORIGIN_MIDDLE_CENTER_LEFT`   | `(0, 50%)`       |
-| `ORIGIN_MIDDLE_CENTER`        | `(50%, 50%)`     |
-| `ORIGIN_MIDDLE_CENTER_RIGHT`  | `(100%, 50%)`    |
-| `ORIGIN_BOTTOM_LEFT`   | `(0, 100%)`      |
-| `ORIGIN_BOTTOM_CENTER` | `(50%, 100%)`    |
-| `ORIGIN_BOTTOM_RIGHT`  | `(100%, 100%)`   |
+| Constant                     | Equivalent Tuple |
+| ---------------------------- | ---------------- |
+| `ORIGIN_TOP_LEFT`            | `(0, 0)`         |
+| `ORIGIN_TOP_CENTER`          | `(50%, 0)`       |
+| `ORIGIN_TOP_RIGHT`           | `(100%, 0)`      |
+| `ORIGIN_MIDDLE_CENTER_LEFT`  | `(0, 50%)`       |
+| `ORIGIN_MIDDLE_CENTER`       | `(50%, 50%)`     |
+| `ORIGIN_MIDDLE_CENTER_RIGHT` | `(100%, 50%)`    |
+| `ORIGIN_BOTTOM_LEFT`         | `(0, 100%)`      |
+| `ORIGIN_BOTTOM_CENTER`       | `(50%, 100%)`    |
+| `ORIGIN_BOTTOM_RIGHT`        | `(100%, 100%)`   |
 
 ### Tuple Math
 
@@ -155,14 +155,14 @@ text = *player_name
 
 ## ORIGIN Constants
 
-| Constant               | Anchor           |
-| ---------------------- | ---------------- |
-| `ORIGIN_TOP_LEFT`      | Top-left corner  |
-| `ORIGIN_TOP_CENTER`    | Top-center       |
-| `ORIGIN_TOP_RIGHT`     | Top-right corner |
-| `ORIGIN_MIDDLE_CENTER_LEFT`   | Middle-left      |
-| `ORIGIN_MIDDLE_CENTER`        | Center           |
-| `ORIGIN_MIDDLE_CENTER_RIGHT`  | Middle-right     |
-| `ORIGIN_BOTTOM_LEFT`   | Bottom-left      |
-| `ORIGIN_BOTTOM_CENTER` | Bottom-center    |
-| `ORIGIN_BOTTOM_RIGHT`  | Bottom-right     |
+| Constant                     | Anchor           |
+| ---------------------------- | ---------------- |
+| `ORIGIN_TOP_LEFT`            | Top-left corner  |
+| `ORIGIN_TOP_CENTER`          | Top-center       |
+| `ORIGIN_TOP_RIGHT`           | Top-right corner |
+| `ORIGIN_MIDDLE_CENTER_LEFT`  | Middle-left      |
+| `ORIGIN_MIDDLE_CENTER`       | Center           |
+| `ORIGIN_MIDDLE_CENTER_RIGHT` | Middle-right     |
+| `ORIGIN_BOTTOM_LEFT`         | Bottom-left      |
+| `ORIGIN_BOTTOM_CENTER`       | Bottom-center    |
+| `ORIGIN_BOTTOM_RIGHT`        | Bottom-right     |

@@ -17,12 +17,10 @@ var MAIN_H = FRAME_H - (PAD * 2) - HEADER_H - SECTION_GAP - PINNED_H - SECTION_G
     @area(screen_frame) {
         position = ORIGIN_MIDDLE_CENTER
         size = (FRAME_W, FRAME_H)
-        border_color = #3a3a4a
 
         @area(header_bar) {
             position = ORIGIN_TOP_LEFT + (PAD, PAD)
             size = (INNER_W, HEADER_H)
-            border_color = #3a3a4a
 
             @button(btn_back) {
                 position = ORIGIN_TOP_LEFT + (8, 6)
@@ -41,7 +39,6 @@ var MAIN_H = FRAME_H - (PAD * 2) - HEADER_H - SECTION_GAP - PINNED_H - SECTION_G
             @area(view_toggle_group) {
                 position = ORIGIN_TOP_RIGHT + (-92, 6)
                 size = (84, 32)
-                border_color = #3a3a4a
 
                 @button(btn_view_grid) {
                     position = ORIGIN_TOP_LEFT
@@ -60,7 +57,6 @@ var MAIN_H = FRAME_H - (PAD * 2) - HEADER_H - SECTION_GAP - PINNED_H - SECTION_G
         @area(pinned_panel) {
             position = ORIGIN_TOP_LEFT + (PAD, PAD + HEADER_H + SECTION_GAP)
             size = (INNER_W, PINNED_H)
-            border_color = #3a3a4a
 
             @text(label_pinned) {
                 position = ORIGIN_TOP_LEFT + (12, 14)
@@ -86,7 +82,6 @@ var MAIN_H = FRAME_H - (PAD * 2) - HEADER_H - SECTION_GAP - PINNED_H - SECTION_G
         @area(main_panel) {
             position = ORIGIN_TOP_LEFT + (PAD, PAD + HEADER_H + SECTION_GAP + PINNED_H + SECTION_GAP)
             size = (INNER_W, MAIN_H)
-            border_color = #3a3a4a
 
             @text(label_all) {
                 position = ORIGIN_TOP_LEFT + (12, 14)
@@ -110,7 +105,6 @@ var MAIN_H = FRAME_H - (PAD * 2) - HEADER_H - SECTION_GAP - PINNED_H - SECTION_G
         @area(action_dock) {
             position = ORIGIN_BOTTOM_LEFT + (PAD, -PAD - FOOTER_H)
             size = (INNER_W, FOOTER_H)
-            border_color = #3a3a4a
 
             @button(btn_create_player) {
                 position = ORIGIN_TOP_CENTER + (0, 8)

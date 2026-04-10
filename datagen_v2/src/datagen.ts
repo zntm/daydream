@@ -41,7 +41,17 @@ const run = async () => {
                         : [datagen]) {
                         if (!d || !d.destination) continue;
 
-                        d.data = recursiveSort(d.data);
+                        const serializableData =
+                            typeof d.getSerializableData === "function"
+                                ? d.getSerializableData()
+                                : d.data;
+
+                        const normalizedData =
+                            typeof serializableData === "string" ||
+                            d.destination.endsWith(".md") ||
+                            d.destination.endsWith(".txt")
+                                ? serializableData
+                                : recursiveSort(serializableData);
 
                         const destination = join(
                             __dirname,
@@ -56,11 +66,16 @@ const run = async () => {
                             fs.mkdirSync(destDir, { recursive: true });
                         }
 
-                        const isRaw = typeof d.data === "string" || d.destination.endsWith(".md") || d.destination.endsWith(".txt");
+                        const isRaw =
+                            typeof normalizedData === "string" ||
+                            d.destination.endsWith(".md") ||
+                            d.destination.endsWith(".txt");
 
                         await Bun.write(
                             destination,
-                            isRaw ? String(d.data) : JSON.stringify(d.data, null, "    "),
+                            isRaw
+                                ? String(normalizedData)
+                                : JSON.stringify(normalizedData, null, "    "),
                             { mode: 0o644 },
                         );
                     }

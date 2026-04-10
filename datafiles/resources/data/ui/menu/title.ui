@@ -14,12 +14,10 @@ var STACK_GAP = 12
     @area(screen_frame) {
         position = ORIGIN_MIDDLE_CENTER + (0, 6)
         size = (PANEL_W, PANEL_H)
-        border_color = #3a3a4a
 
         @area(title_block) {
             position = ORIGIN_TOP_LEFT + (PANEL_PAD, PANEL_PAD)
             size = (PANEL_W - (PANEL_PAD * 2), 140)
-            border_color = #3a3a4a
 
             @area(title_graphic) {
                 position = ORIGIN_TOP_CENTER + (0, 20)
