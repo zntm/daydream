@@ -13,6 +13,7 @@ function init_achievement(_namespace, _directory)
         if (!string_ends_with(_file, ".json")) continue;
         
         var _json = buffer_load_json($"{_directory}/{_file}");
+        if (!init_data_namespace_allowed(_json, _file)) continue;
         
         if (is_struct(_json))
         {

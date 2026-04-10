@@ -12,6 +12,7 @@ function init_background(_namespace = "phantasia", _directory)
         var _file = _files[i];
         
         var _json = buffer_load_json($"{_directory}/{_file}/data.json");
+        if (!init_data_namespace_allowed(_json, $"{_file}/data.json")) continue;
         
         var _layers = _json.layers;
         

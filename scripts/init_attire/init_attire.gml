@@ -195,6 +195,7 @@ function init_attire(_namespace = "phantasia", _directory)
             dbg_timer("init_attire");
             
             var _json = buffer_load_json($"{_directory}/{_file}/{j}.json");
+            if (!init_data_namespace_allowed(_json, $"{_file}/{j}.json")) continue;
             
             global.attire_data[$ _file][@ j] = new AttireData(_json.icon, _json.colour, _json[$ "white"]);
             /*

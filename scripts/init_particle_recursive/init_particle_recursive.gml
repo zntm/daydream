@@ -13,6 +13,11 @@ function init_particle_recursive(_namespace, _directory)
         
         dbg_timer("init_particle");
 
+        var _json = buffer_load_json($"{_directory}/{_file}");
+        if (!init_data_namespace_allowed(_json, _file)) continue;
+
+        if (!is_struct(_json)) continue;
+
         /* build folder-based group id if applicable */
         if (filename_dir(_file) != "")
         {
@@ -23,10 +28,6 @@ function init_particle_recursive(_namespace, _directory)
             global.particle_data[$ $"{_namespace}:{_id}"] ??= [];
             array_push(global.particle_data[$ $"{_namespace}:{_id}"], $"{_namespace}:{string_delete(_file, string_length(_file) - 4, 5)}");
         }
-
-        var _json = buffer_load_json($"{_directory}/{_file}");
-
-        if (!is_struct(_json)) continue;
 
         var _sprite    = _json[$ "sprite"];
         var _sprite_id = (_sprite != undefined) ? init_asset_resolve(_namespace, _sprite) : undefined;

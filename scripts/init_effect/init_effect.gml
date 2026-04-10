@@ -18,6 +18,7 @@ function init_effect(_namespace, _directory)
         dbg_timer("init_effect0");
 
         var _json = tag_value_parse(buffer_load_json($"{_directory}/{_file}"));
+        if (!init_data_namespace_allowed(_json, _file)) continue;
 
         if (!is_struct(_json)) continue;
 

@@ -25,6 +25,7 @@ function init_creature(_namespace = "phantasia", _directory)
         dbg_timer("init_creature");
 
         var _json = buffer_load_json($"{_directory}/{_file}");
+        if (!init_data_namespace_allowed(_json, _file)) continue;
 
         if (!is_struct(_json)) continue;
 

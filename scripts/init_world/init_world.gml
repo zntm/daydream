@@ -27,6 +27,7 @@ function init_world(_namespace = "phantasia", _directory)
             dbg_timer("init_world");
             
             var _json = tag_value_parse(buffer_load_json(_sub_path));
+            if (!init_data_namespace_allowed(_json, _file)) continue;
             
             if (is_struct(_json))
             {

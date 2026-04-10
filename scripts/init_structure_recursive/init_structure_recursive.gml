@@ -18,21 +18,28 @@ function init_structure_recursive(_namespace, _directory)
             if (!string_ends_with(_file, ".dat.json"))
             {
                 dbg_timer("init_structure");
-                
-                var _id = filename_dir(_file);
-                if (_id != "")
-                {
-                    /* flip backslash to forward slash if on windows */
-                    _id = string_replace_all(_id, "\\", "/");
 
-                    global.structure_data[$ _id] ??= [];
-                    array_push(global.structure_data[$ _id], _file);
-                }
-                
                 var _json = buffer_load_json(_subdirectory);
                 
+                if (!init_data_namespace_allowed(_json, _file))
+                {
+                    delete _json;
+
+                    continue;
+                }
+
                 if (is_struct(_json))
                 {
+                    var _id = filename_dir(_file);
+                    if (_id != "")
+                    {
+                        /* flip backslash to forward slash if on windows */
+                        _id = string_replace_all(_id, "\\", "/");
+
+                        global.structure_data[$ _id] ??= [];
+                        array_push(global.structure_data[$ _id], _file);
+                    }
+
                     var _function = _json[$ "function"];
                     
                     if (_function != undefined)
@@ -59,21 +66,28 @@ function init_structure_recursive(_namespace, _directory)
         if (string_ends_with(_file, ".dat"))
         {
             dbg_timer("init_structure");
-            
-            var _id = filename_dir(_file);
-            if (_id != "")
-            {
-                /* flip backslash to forward slash if on windows */
-                _id = string_replace_all(_id, "\\", "/");
 
-                global.structure_data[$ $"{_namespace}:{_id}"] ??= [];
-                array_push(global.structure_data[$ $"{_namespace}:{_id}"], $"{_namespace}:{string_delete(_file, string_length(_file) - 3, 4)}");
-            }
-            
             var _json = buffer_load_json($"{_subdirectory}.json");
             
+            if (!init_data_namespace_allowed(_json, _file))
+            {
+                delete _json;
+
+                continue;
+            }
+
             if (is_struct(_json))
             {
+                var _id = filename_dir(_file);
+                if (_id != "")
+                {
+                    /* flip backslash to forward slash if on windows */
+                    _id = string_replace_all(_id, "\\", "/");
+
+                    global.structure_data[$ $"{_namespace}:{_id}"] ??= [];
+                    array_push(global.structure_data[$ $"{_namespace}:{_id}"], $"{_namespace}:{string_delete(_file, string_length(_file) - 3, 4)}");
+                }
+
                 var _buffer = buffer_load_decompressed(_subdirectory);
                 
                 var _version = buffer_read(_buffer, buffer_u32);

@@ -95,6 +95,7 @@ function init_assets(_namespace, _directory)
         if (string_ends_with(_file, ".ogg.json"))
         {
             var _json = buffer_load_json($"{_directory}/{_file}");
+            if (!init_data_namespace_allowed(_json, _file)) continue;
             /* magic numbers are from string length of '.ogg.json' */
             var _id = string_delete(_file, string_length(_file) - 8, 9);
             
@@ -131,6 +132,7 @@ function init_assets(_namespace, _directory)
         else if (string_ends_with(_file, ".png.json"))
         {
             var _json = buffer_load_json($"{_directory}/{_file}");
+            if (!init_data_namespace_allowed(_json, _file)) continue;
             /* magic numbers are from string length of '.png.json' */
             var _id = string_delete(_file, string_length(_file) - 8, 9);
             

@@ -18,6 +18,7 @@ function init_tag_recursive(_namespace, _directory)
             var _id2 = string_delete(_file, string_length(_file) - 4, 5);
             
             var _json = buffer_load_json($"{_directory}/{_file}");
+            if (!init_data_namespace_allowed(_json, _file)) continue;
             
             var _names  = struct_get_names(_json);
             var _length = array_length(_names);

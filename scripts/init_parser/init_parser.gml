@@ -8,6 +8,63 @@ function init_asset_resolve(_namespace, _id)
     return _namespace + ":" + _id;
 }
 
+/// @desc Returns true if a namespace/mod is currently loaded.
+/// @param {String} _namespace Namespace ID, e.g. "phantasia" or "disease_mod".
+function init_namespace_exists(_namespace)
+{
+    var _roots = resource_get_roots();
+    var _length = array_length(_roots);
+
+    for (var i = 0; i < _length; ++i)
+    {
+        if (_roots[i].namespace == _namespace) return true;
+    }
+
+    return false;
+}
+
+/// @desc Returns true when all namespace dependencies are satisfied.
+/// @param {Any} _requirements String or array of strings from "$NAMESPACE_EXISTS".
+function init_namespace_requirements_met(_requirements)
+{
+    if (_requirements == undefined) return true;
+
+    if (is_string(_requirements))
+    {
+        return init_namespace_exists(_requirements);
+    }
+
+    if (!is_array(_requirements)) return false;
+
+    var _length = array_length(_requirements);
+
+    for (var i = 0; i < _length; ++i)
+    {
+        if (!init_namespace_exists(string(_requirements[i])))
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+/// @desc Returns true if a parsed JSON root should be loaded for the current runtime.
+/// @param {Any} _json Parsed JSON root.
+/// @param {String} _context Short identifier for debug logging.
+function init_data_namespace_allowed(_json, _context = "")
+{
+    if (!is_struct(_json)) return true;
+
+    var _requirements = _json[$ "$NAMESPACE_EXISTS"];
+
+    if (init_namespace_requirements_met(_requirements)) return true;
+
+    PRINT($"[init] Skipping '{_context}': missing required namespace dependency");
+
+    return false;
+}
+
 /// @desc Returns true if the given namespaced sprite ID exists in the loaded sprite asset registry.
 /// @param {String} _id  Full namespaced sprite ID, e.g. "phantasia:tiles/stone".
 function init_asset_sprite_exists(_id)

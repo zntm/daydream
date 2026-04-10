@@ -12,6 +12,7 @@ function init_loot(_namespace = "phantasia", _directory)
 
         var _json_path = $"{_directory}/{_file}";
         var _json_root = buffer_load_json(_json_path);
+        if (!init_data_namespace_allowed(_json_root, _file)) continue;
         var _array     = _json_root;
 
         if (is_struct(_json_root))
