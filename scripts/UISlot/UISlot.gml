@@ -327,67 +327,20 @@ function UISlot(_x, _y) : UIElement(_x, _y, 16, 16) constructor
         {
             var _text_x = (_abs_x + width - 4) * _sx;
             var _text_y = (_abs_y + height - 5) * _sy;
-            
-            
-            array_push(global.gui_deferred_text, {
-                x: _text_x - 1,
-                y: _text_y,
-                text: string(_amount),
-                xscale: _sx * 0.8,
-                yscale: _sy * 0.8,
-                colour: c_black,
-                alpha: 0.9,
-                halign: fa_right,
-                valign: fa_bottom
-            });
-            
-            array_push(global.gui_deferred_text, {
-                x: _text_x + 1,
-                y: _text_y,
-                text: string(_amount),
-                xscale: _sx * 0.8,
-                yscale: _sy * 0.8,
-                colour: c_black,
-                alpha: 0.9,
-                halign: fa_right,
-                valign: fa_bottom
-            });
-            
-            array_push(global.gui_deferred_text, {
-                x: _text_x,
-                y: _text_y - 1,
-                text: string(_amount),
-                xscale: _sx * 0.8,
-                yscale: _sy * 0.8,
-                colour: c_black,
-                alpha: 0.9,
-                halign: fa_right,
-                valign: fa_bottom
-            });
-            
-            array_push(global.gui_deferred_text, {
-                x: _text_x,
-                y: _text_y + 1,
-                text: string(_amount),
-                xscale: _sx * 0.8,
-                yscale: _sy * 0.8,
-                colour: c_black,
-                alpha: 0.9,
-                halign: fa_right,
-                valign: fa_bottom
-            });
-            
-            array_push(global.gui_deferred_text, {
-                x: _text_x,
-                y: _text_y,
-                text: string(_amount),
-                xscale: _sx * 0.8,
-                yscale: _sy * 0.8,
-                colour: c_white,
-                alpha: 1,
-                halign: fa_right,
-                valign: fa_bottom
-            });
+
+            ui_draw_text_stroked(
+                _text_x,
+                _text_y,
+                string(_amount),
+                _sx * 0.8,
+                _sy * 0.8,
+                c_white,
+                1,
+                c_black,
+                0.9,
+                fa_right,
+                fa_bottom
+            );
         }
     }
 }

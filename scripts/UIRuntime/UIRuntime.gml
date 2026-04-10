@@ -1559,6 +1559,70 @@ function ui_get_base_scale()
 }
 
 
+/* check whether a ui instance is attached to a parent element tree */
+function ui_instance_is_parented(_instance)
+{
+    if (_instance == undefined) return false;
+
+    if !(struct_exists(_instance, "root_elements")) return false;
+    if (array_length(_instance.root_elements) <= 0) return false;
+
+    return (_instance.root_elements[0].parent != undefined);
+}
+
+
+/* draw outlined text using the project's text renderer */
+function ui_draw_text_stroked(_x, _y, _text, _xscale = 1, _yscale = 1, _colour = c_white, _alpha = 1, _outline_colour = c_black, _outline_alpha = 0.9, _halign = fa_left, _valign = fa_top)
+{
+    var _previous_halign = draw_get_halign();
+    var _previous_valign = draw_get_valign();
+
+    draw_set_halign(_halign);
+    draw_set_valign(_valign);
+
+    render_text(_x - 1, _y, _text, _xscale, _yscale, 0, _outline_colour, _outline_alpha);
+    render_text(_x + 1, _y, _text, _xscale, _yscale, 0, _outline_colour, _outline_alpha);
+    render_text(_x, _y - 1, _text, _xscale, _yscale, 0, _outline_colour, _outline_alpha);
+    render_text(_x, _y + 1, _text, _xscale, _yscale, 0, _outline_colour, _outline_alpha);
+    render_text(_x, _y, _text, _xscale, _yscale, 0, _colour, _alpha);
+
+    draw_set_halign(_previous_halign);
+    draw_set_valign(_previous_valign);
+}
+
+
+/* flush deferred ui text that was queued during draw passes */
+function ui_draw_deferred_text()
+{
+    if !(variable_global_exists("gui_deferred_text")) exit;
+
+    var _deferred_text_length = array_length(global.gui_deferred_text);
+
+    if (_deferred_text_length <= 0) exit;
+
+    draw_set_halign(fa_right);
+    draw_set_valign(fa_bottom);
+
+    for (var i = _deferred_text_length - 1; i >= 0; --i)
+    {
+        var _ = global.gui_deferred_text[i];
+
+        if (struct_exists(_, "halign")) draw_set_halign(_.halign);
+        else draw_set_halign(fa_right);
+
+        if (struct_exists(_, "valign")) draw_set_valign(_.valign);
+        else draw_set_valign(fa_bottom);
+
+        render_text(_.x, _.y, _.text, _.xscale, _.yscale, 0, _.colour, _.alpha);
+    }
+
+    draw_set_halign(fa_left);
+    draw_set_valign(fa_top);
+
+    array_resize(global.gui_deferred_text, 0);
+}
+
+
 /* =============================================================================
    management
    ============================================================================= */

@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"file_menu_preferences",
   "parent":{
-    "name":"daydream",
-    "path":"daydream.yyp",
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

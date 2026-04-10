@@ -214,12 +214,6 @@ matrix_set(matrix_world, _matrix_scale);
 
 render_gui_vignette(_player_y, _gui_w, _gui_h);
 
-/* only draw HUD elements when GUI is toggled on */
-if (is_opened & WORLD_OPENED_BOOL.GUI)
-{
-    render_hud(_gui_w, _gui_h);
-}
-
 matrix_set(matrix_world, _matrix_saved);
 
 /* draw declarative UI relative to camera - UI handles its own design-to-pixel scaling */
@@ -228,83 +222,10 @@ if (is_opened & WORLD_OPENED_BOOL.GUI)
     var _matrix_ui = matrix_build(camera_get_view_x(view_camera[0]), camera_get_view_y(view_camera[0]), 0, 0, 0, 0, 1, 1, 1);
     matrix_set(matrix_world, _matrix_ui);
 
-    if (global.gui_root != undefined)
-    {
-        global.gui_root.draw();
-    }
-
-    /* draw dynamically spawned UI instances (blueprints, etc.) */
-    if (variable_global_exists("ui_instances"))
-    {
-        var _ui_keys  = struct_get_names(global.ui_instances);
-        var _ui_count = array_length(_ui_keys);
-
-        for (var i = _ui_count - 1; i >= 0; --i)
-        {
-            var _ui_inst = global.ui_instances[$ _ui_keys[i]];
-
-            if (_ui_inst != undefined)
-            {
-                /* only draw if the instance's root elements are not parented */
-                if (array_length(_ui_inst.root_elements) > 0) && (_ui_inst.root_elements[0].parent == undefined)
-                {
-                    ui_draw(_ui_inst);
-                }
-            }
-        }
-    }
-
-    /* draw deferred text */
-    var _deferred_text_length = array_length(global.gui_deferred_text);
-
-    if (_deferred_text_length > 0)
-    {
-        draw_set_halign(fa_right);
-        draw_set_valign(fa_bottom);
-
-        for (var i = _deferred_text_length - 1; i >= 0; --i)
-        {
-            var _ = global.gui_deferred_text[i];
-
-            if (struct_exists(_, "halign")) draw_set_halign(_.halign);
-            else draw_set_halign(fa_right);
-
-            if (struct_exists(_, "valign")) draw_set_valign(_.valign);
-            else draw_set_valign(fa_bottom);
-
-            render_text(_.x, _.y, _.text, _.xscale, _.yscale, 0, _.colour, _.alpha);
-        }
-
-        draw_set_halign(fa_left);
-        draw_set_valign(fa_top);
-
-        array_resize(global.gui_deferred_text, 0);
-    }
+    control_game_ui_draw();
+    control_game_ui_draw_overlay();
 
     matrix_set(matrix_world, _matrix_saved);
-
-    /* display held item name */
-    if !(is_opened & WORLD_OPENED_BOOL.INVENTORY)
-    {
-        var _item = global.inventory.base[global.inventory_selected_hotbar];
-
-        if (_item != INVENTORY_EMPTY)
-        {
-            var _gui_scale = global.gui_scale;
-            var _data      = global.item_data[$ _item.get_id()];
-
-            var _text_x = _gui_w / 2;
-            var _text_y = _gui_h - (INVENTORY_SLOT_DIMENSION_SCALED + (96 * _gui_scale));
-
-            draw_set_halign(fa_center);
-            draw_set_valign(fa_bottom);
-
-            render_text(_text_x, _text_y, loca_translate($"{_data.get_namespace()}:item.{_data.get_id()}.name"), 1.5 * _gui_scale, 1.5 * _gui_scale);
-
-            draw_set_halign(fa_left);
-            draw_set_valign(fa_top);
-        }
-    }
 }
 
 /* screenshot */

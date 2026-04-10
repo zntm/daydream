@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"tile_connected_index",
   "parent":{
-    "name":"daydream",
-    "path":"daydream.yyp",
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

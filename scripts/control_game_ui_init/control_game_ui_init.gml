@@ -32,6 +32,13 @@ function control_game_ui_init(_logical_width, _logical_height)
 
     global.ui_crafting.visible = false;
 
+    var _stat_bars_def = ui_load("ui/stat_bars.ui");
+
+    global.ui_stat_bars = ui_spawn(_stat_bars_def, {
+        link:   control_game_ui_create_stat_link(),
+        parent: global.gui_root
+    });
+
     var _chest_pull_btn = global.ui_crafting.elements[$ "btn_chest_pull"];
 
     if (_chest_pull_btn != undefined)
@@ -64,4 +71,274 @@ function control_game_ui_init(_logical_width, _logical_height)
     global.gui_panel_effects.offset_y = 16;
     global.gui_panel_effects.set_anchor("right", "bottom");
     global.gui_root.add_child(global.gui_panel_effects);
+}
+
+
+function control_game_ui_get_local_player()
+{
+    var _lp = noone;
+
+    with (obj_Player)
+    {
+        if (is_local)
+        {
+            _lp = id;
+            break;
+        }
+    }
+
+    return _lp;
+}
+
+
+function control_game_ui_create_stat_link()
+{
+    return {
+        hp_value: function()
+        {
+            var _lp = control_game_ui_get_local_player();
+            return instance_exists(_lp) ? _lp.hp : 0;
+        },
+        hp_max: function()
+        {
+            var _lp = control_game_ui_get_local_player();
+            return instance_exists(_lp) ? max(_lp.hp_max, 1) : 1;
+        },
+        stamina_value: function()
+        {
+            var _lp = control_game_ui_get_local_player();
+            return instance_exists(_lp) ? _lp.stamina : 0;
+        },
+        stamina_max: function()
+        {
+            var _lp = control_game_ui_get_local_player();
+            return instance_exists(_lp) ? max(_lp.stamina_max, 1) : 1;
+        },
+        breath_visible: function()
+        {
+            var _lp = control_game_ui_get_local_player();
+            return instance_exists(_lp) && (_lp.breath < _lp.breath_max);
+        },
+        breath_value: function()
+        {
+            var _lp = control_game_ui_get_local_player();
+            return instance_exists(_lp) ? _lp.breath : 0;
+        },
+        breath_max: function()
+        {
+            var _lp = control_game_ui_get_local_player();
+            return instance_exists(_lp) ? max(_lp.breath_max, 1) : 1;
+        },
+        charge_visible: function()
+        {
+            var _lp = control_game_ui_get_local_player();
+            return instance_exists(_lp) && ((_lp.charge_time ?? 0) > 0);
+        },
+        charge_value: function()
+        {
+            var _lp = control_game_ui_get_local_player();
+            return instance_exists(_lp) ? (_lp.charge_time ?? 0) : 0;
+        },
+        charge_max: function()
+        {
+            var _lp = control_game_ui_get_local_player();
+            return instance_exists(_lp) ? max((_lp.charge_threshold ?? 1), 0.001) : 1;
+        }
+    };
+}
+
+
+function control_game_ui_sync_visibility()
+{
+    var _is_open = obj_Game_Control.is_opened;
+
+    var _generating = !!(_is_open & WORLD_OPENED_BOOL.GENERATING_WORLD);
+    var _inventory  = !!(_is_open & WORLD_OPENED_BOOL.INVENTORY);
+    var _gui        = !!(_is_open & WORLD_OPENED_BOOL.GUI);
+    var _menu       = !!(_is_open & WORLD_OPENED_BOOL.MENU);
+    var _chat       = !!(_is_open & WORLD_OPENED_BOOL.CHAT);
+
+    if (global.ui_hotbar != undefined)
+    {
+        global.ui_hotbar.visible = !_generating
+            && ((_gui && !_menu && !_chat) || (_inventory && !_chat));
+    }
+
+    if (global.ui_inventory != undefined)
+    {
+        global.ui_inventory.visible = !_generating && _inventory && !_chat;
+    }
+
+    if (variable_global_exists("ui_crafting")) && (global.ui_crafting != undefined)
+    {
+        global.ui_crafting.visible = !_generating && _inventory && !_chat;
+    }
+
+    if (variable_global_exists("ui_stat_bars")) && (global.ui_stat_bars != undefined)
+    {
+        global.ui_stat_bars.visible = !_generating && _gui && !_menu && !_chat;
+    }
+
+    if (variable_global_exists("gui_panel_crafting_modular")) && (global.gui_panel_crafting_modular != undefined)
+    {
+        global.gui_panel_crafting_modular.visible = !_generating && _inventory && !_chat
+            && (array_length(global.gui_panel_crafting_modular.children) > 0);
+    }
+
+    if (variable_global_exists("gui_panel_effects")) && (global.gui_panel_effects != undefined)
+    {
+        global.gui_panel_effects.visible = !_generating && _gui && !_menu && !_chat;
+    }
+
+    if (variable_global_exists("gui_panel_chat")) && (global.gui_panel_chat != undefined)
+    {
+        global.gui_panel_chat.visible = _gui && !_menu;
+    }
+}
+
+
+function control_game_ui_update()
+{
+    control_game_ui_sync_visibility();
+
+    global.ui_input_consumed = false;
+    global.ui_hover_consumed = false;
+    global.inventory_ui_hover = undefined;
+
+    if (global.gui_root != undefined)
+    {
+        global.gui_root.update();
+    }
+
+    if (variable_global_exists("ui_instances"))
+    {
+        var _ui_keys  = struct_get_names(global.ui_instances);
+        var _ui_count = array_length(_ui_keys);
+
+        for (var i = _ui_count - 1; i >= 0; --i)
+        {
+            var _ui_inst = global.ui_instances[$ _ui_keys[i]];
+
+            if ((_ui_inst != undefined) && !ui_instance_is_parented(_ui_inst))
+            {
+                ui_update(_ui_inst);
+            }
+        }
+    }
+
+    ui_clear_events();
+}
+
+
+function control_game_ui_draw()
+{
+    if (global.gui_root != undefined)
+    {
+        global.gui_root.draw();
+    }
+
+    if (variable_global_exists("ui_instances"))
+    {
+        var _ui_keys  = struct_get_names(global.ui_instances);
+        var _ui_count = array_length(_ui_keys);
+
+        for (var i = _ui_count - 1; i >= 0; --i)
+        {
+            var _ui_inst = global.ui_instances[$ _ui_keys[i]];
+
+            if ((_ui_inst != undefined) && !ui_instance_is_parented(_ui_inst))
+            {
+                ui_draw(_ui_inst);
+            }
+        }
+    }
+
+    ui_draw_deferred_text();
+}
+
+
+function control_game_ui_draw_overlay()
+{
+    var _is_open = obj_Game_Control.is_opened;
+
+    if !(_is_open & WORLD_OPENED_BOOL.GUI) exit;
+
+    var _lp = control_game_ui_get_local_player();
+
+    if (_lp == noone) exit;
+    if (_lp.hp <= 0) exit;
+
+    var _base_scale = ui_get_base_scale();
+
+    if (_is_open & WORLD_OPENED_BOOL.INVENTORY)
+    {
+        var _target = gui_inventory_tooltip_resolve_target();
+
+        if (_target != undefined) && !(_is_open & WORLD_OPENED_BOOL.CHAT)
+        {
+            if ((_target.slot_type ?? INVENTORY_SLOT_TYPE.BASE) != INVENTORY_SLOT_TYPE.CRAFTABLE)
+            {
+                gui_inventory_tooltip(_base_scale.x, _base_scale.y);
+
+                var _tooltip = surface_inventory.tooltip;
+                var _surface_tooltip = _tooltip.surface;
+
+                if (surface_exists(_surface_tooltip))
+                {
+                    var _tooltip_x = (global.gui_mouse_x + GUI_TOOLTIP_XOFFSET) * _base_scale.x;
+                    var _tooltip_total_height = (_tooltip.surface_height + (GUI_INVENTORY_TOOLTIP_BG_PADDING * 2)) * _base_scale.y;
+                    var _tooltip_y = (global.gui_mouse_y * _base_scale.y) - _tooltip_total_height - (GUI_TOOLTIP_YOFFSET * _base_scale.y);
+
+                    if (_tooltip_y < 0)
+                    {
+                        _tooltip_y = (global.gui_mouse_y + GUI_TOOLTIP_YOFFSET) * _base_scale.y;
+                    }
+
+                    draw_sprite_ext(
+                        spr_Inventory_Tooltip,
+                        0,
+                        _tooltip_x - (GUI_INVENTORY_TOOLTIP_BG_PADDING * _base_scale.x),
+                        _tooltip_y - (GUI_INVENTORY_TOOLTIP_BG_PADDING * _base_scale.y),
+                        ((_tooltip.surface_width + GUI_INVENTORY_TOOLTIP_BG_PADDING) / 14) * _base_scale.x,
+                        ((_tooltip.surface_height + GUI_INVENTORY_TOOLTIP_BG_PADDING) / 14) * _base_scale.y,
+                        0,
+                        c_white,
+                        1
+                    );
+
+                    draw_surface(_surface_tooltip, _tooltip_x, _tooltip_y);
+                }
+            }
+        }
+    }
+
+    if !(_is_open & WORLD_OPENED_BOOL.INVENTORY)
+    {
+        var _item = global.inventory.base[global.inventory_selected_hotbar];
+
+        if (_item != INVENTORY_EMPTY)
+        {
+            var _data = global.item_data[$ _item.get_id()];
+
+            if (_data != undefined)
+            {
+                var _root_width = global.gui_root.get_width();
+                var _root_height = global.gui_root.get_height();
+
+                ui_draw_text_stroked(
+                    (_root_width / 2) * _base_scale.x,
+                    (_root_height - (INVENTORY_SLOT_DIMENSION + 96)) * _base_scale.y,
+                    loca_translate($"{_data.get_namespace()}:item.{_data.get_id()}.name"),
+                    1.5 * _base_scale.x,
+                    1.5 * _base_scale.y,
+                    c_white,
+                    1,
+                    c_black,
+                    0.9,
+                    fa_center,
+                    fa_bottom
+                );
+            }
+        }
+    }
 }
