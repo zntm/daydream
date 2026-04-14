@@ -43,6 +43,7 @@ function file_load_worlds()
             interval_minutes: round(BACKUP_INTERVAL_SECONDS / 60),
             slots: 0
         }
+        var _enabled_mods = world_get_default_enabled_mods();
 
         if (buffer_tell(_buffer) < buffer_get_size(_buffer))
         {
@@ -51,6 +52,20 @@ function file_load_worlds()
             if (buffer_tell(_buffer) < buffer_get_size(_buffer))
             {
                 _backup.slots = max(0, buffer_read(_buffer, buffer_u8));
+            }
+
+            if (buffer_tell(_buffer) < buffer_get_size(_buffer))
+            {
+                _enabled_mods = [];
+
+                var _enabled_mod_count = max(0, buffer_read(_buffer, buffer_u8));
+
+                for (var j = 0; j < _enabled_mod_count; ++j)
+                {
+                    if (buffer_tell(_buffer) >= buffer_get_size(_buffer)) break;
+
+                    array_push(_enabled_mods, buffer_read(_buffer, buffer_string));
+                }
             }
         }
 
@@ -66,6 +81,7 @@ function file_load_worlds()
                    .set_weather(_wind, _storm)
                    .set_difficulty(_difficulty)
                    .set_backup(_backup)
+                   .set_enabled_mods(_enabled_mods)
                    .set_size(file_get_directory_size($"{PROGRAM_DIRECTORY_WORLDS}/{_file}"));
 
         array_push(global.file_worlds, _file_world);

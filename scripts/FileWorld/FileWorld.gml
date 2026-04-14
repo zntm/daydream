@@ -138,4 +138,16 @@ function FileWorld(_uuid, _name, _seed, _last_opened) constructor
             slots: 0
         });
     }
+
+    static set_enabled_mods = function(_enabled_mods)
+    {
+        ___enabled_mods = variable_clone(_enabled_mods);
+
+        return self;
+    }
+
+    static get_enabled_mods = function()
+    {
+        return variable_clone(self[$ "___enabled_mods"] ?? world_get_default_enabled_mods());
+    }
 }

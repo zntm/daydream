@@ -103,6 +103,7 @@ function menu_refresh_instance_worlds()
         var _backup = _data.get_backup();
         global.current_world.backup.interval_minutes = _backup.interval_minutes;
         global.current_world.backup.slots = _backup.slots;
+        global.current_world.enabled_mods = _data.get_enabled_mods();
 
         global.world_statistics = _data.get_statistics() ?? {}
 

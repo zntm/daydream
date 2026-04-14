@@ -1,6 +1,234 @@
 global.ui_create_world = undefined;
 
 
+function menu_create_world_ui_dimension_label(_dimension_id)
+{
+	var _dimension_name = _dimension_id;
+	var _namespace = resource_get_base_namespace();
+	var _separator = string_pos(":", _dimension_id);
+
+	if (_separator > 0)
+	{
+		_namespace = string_copy(_dimension_id, 1, _separator - 1);
+		_dimension_name = string_delete(_dimension_id, 1, _separator);
+	}
+
+	_dimension_name = string_replace_all(_dimension_name, "_", " ");
+	_dimension_name = string_replace_all(_dimension_name, "/", " - ");
+
+	if (string_length(_dimension_name) > 0)
+	{
+		_dimension_name = string_upper(string_char_at(_dimension_name, 1)) + string_delete(_dimension_name, 1, 1);
+	}
+
+	if (_namespace == resource_get_base_namespace())
+	{
+		return _dimension_name;
+	}
+
+	var _mod_name = _namespace;
+
+	if (variable_global_exists("mod_data"))
+	{
+		var _mod_info = global.mod_data[$ _namespace];
+		if (_mod_info != undefined)
+		{
+			_mod_name = _mod_info.name ?? _mod_name;
+		}
+	}
+
+	return $"{_dimension_name} ({_mod_name})";
+}
+
+
+function menu_create_world_ui_dimension_index(_dimension_ids, _target_id)
+{
+	var _count = array_length(_dimension_ids);
+
+	for (var i = 0; i < _count; ++i)
+	{
+		if (_dimension_ids[i] == _target_id) return i;
+	}
+
+	return 0;
+}
+
+
+function menu_create_world_ui_get_enabled_mods()
+{
+	var _enabled_mods = global.current_world[$ "enabled_mods"];
+
+	if (!is_array(_enabled_mods))
+	{
+		_enabled_mods = world_get_default_enabled_mods();
+		global.current_world.enabled_mods = _enabled_mods;
+	}
+
+	return _enabled_mods;
+}
+
+
+function menu_create_world_ui_has_enabled_mod(_namespace)
+{
+	var _enabled_mods = menu_create_world_ui_get_enabled_mods();
+	var _count = array_length(_enabled_mods);
+
+	for (var i = 0; i < _count; ++i)
+	{
+		if (_enabled_mods[i] == _namespace) return true;
+	}
+
+	return false;
+}
+
+
+function menu_create_world_ui_set_mod_enabled(_namespace, _enabled)
+{
+	var _enabled_mods = menu_create_world_ui_get_enabled_mods();
+	var _count = array_length(_enabled_mods);
+	var _index = -1;
+
+	for (var i = 0; i < _count; ++i)
+	{
+		if (_enabled_mods[i] == _namespace)
+		{
+			_index = i;
+			break;
+		}
+	}
+
+	if (_enabled)
+	{
+		if (_index < 0) array_push(_enabled_mods, _namespace);
+	}
+	else if (_index >= 0)
+	{
+		array_delete(_enabled_mods, _index, 1);
+	}
+
+	global.current_world.enabled_mods = _enabled_mods;
+
+	return _enabled;
+}
+
+
+function menu_create_world_ui_get_dimension_namespace(_dimension_id)
+{
+	var _dimension = string(_dimension_id);
+	var _separator = string_pos(":", _dimension);
+
+	if (_separator <= 0)
+	{
+		return resource_get_base_namespace();
+	}
+
+	return string_copy(_dimension, 1, _separator - 1);
+}
+
+
+function menu_create_world_ui_sync_required_mods()
+{
+	var _dimension_namespace = menu_create_world_ui_get_dimension_namespace(global.current_world.dimension ?? "");
+
+	if (_dimension_namespace != resource_get_base_namespace())
+	{
+		if (variable_global_exists("mod_data")) && (global.mod_data[$ _dimension_namespace] != undefined)
+		{
+			menu_create_world_ui_set_mod_enabled(_dimension_namespace, true);
+		}
+	}
+}
+
+
+function menu_create_world_ui_populate_mod_list(_elements)
+{
+	var _mods_content = _elements[$ "mods_content"];
+
+	if (_mods_content == undefined) exit;
+
+	_mods_content.clear_children();
+
+	var _metrics = menu_ui_get_metrics();
+	var _row_width = ui_layout_resolve_scalar(_mods_content.width, 0);
+	var _mods = (variable_global_exists("mod_list") && is_array(global.mod_list)) ? global.mod_list : [];
+	var _mod_count = array_length(_mods);
+
+	if (_mod_count <= 0)
+	{
+		var _empty = new UIText(0, 4, "No installed mods found.");
+		_empty.halign = fa_left;
+		_empty.valign = fa_top;
+		_empty.text_scale = 0.72;
+		_empty.colour = _metrics.text_dim;
+		_mods_content.add_child(_empty);
+		menu_create_world_ui_refresh_layout_tree(_mods_content);
+		exit;
+	}
+
+	var _hint = new UIText(0, 4, "Choose which installed mods this world should use.");
+	_hint.halign = fa_left;
+	_hint.valign = fa_top;
+	_hint.text_scale = 0.72;
+	_hint.colour = _metrics.text_dim;
+	_mods_content.add_child(_hint);
+
+	var _required_namespace = menu_create_world_ui_get_dimension_namespace(global.current_world.dimension ?? "");
+
+	for (var i = 0; i < _mod_count; ++i)
+	{
+		var _mod_info = _mods[i];
+		if (_mod_info == undefined) continue;
+
+		var _namespace = _mod_info.namespace ?? "";
+		if (_namespace == "") continue;
+
+		var _row = new UIArea(0, 0, _row_width, 48);
+		_row.background_color = _metrics.card_background;
+		_row.border_color = _metrics.card_border;
+		_mods_content.add_child(_row);
+
+		var _name = new UIText(12, 14, _mod_info.name ?? _namespace);
+		_name.halign = fa_left;
+		_name.valign = fa_top;
+		_row.add_child(_name);
+
+		var _description_text = _mod_info.description ?? "";
+		if (_namespace == _required_namespace)
+		{
+			_description_text = (_description_text == "") ? "Required by the selected dimension." : _description_text + " Required by the selected dimension.";
+		}
+
+		var _description = new UIText(12, 32, _description_text);
+		_description.halign = fa_left;
+		_description.valign = fa_top;
+		_description.text_scale = 0.68;
+		_description.colour = _metrics.text_dim;
+		_row.add_child(_description);
+
+		var _switch = new UIRadioButton(_row_width - 44, 16, "");
+		_switch.width = 32;
+		_switch.height = 16;
+		_switch.mod_namespace = _namespace;
+		_switch.required_by_dimension = (_namespace == _required_namespace);
+		_switch.set_selected(menu_create_world_ui_has_enabled_mod(_namespace) || _switch.required_by_dimension);
+		_row.add_child(_switch);
+
+		_switch.add_event_handler("on_select_release", method(_switch, function() {
+			if (self.required_by_dimension) 
+			{
+				self.set_selected(true);
+				menu_create_world_ui_set_mod_enabled(self.mod_namespace, true);
+				return;
+			}
+
+			menu_create_world_ui_set_mod_enabled(self.mod_namespace, self.selected);
+		}));
+	}
+
+	menu_create_world_ui_refresh_layout_tree(_mods_content);
+}
+
+
 function menu_create_world_ui_load()
 {
 	menu_ui_clear_all();
@@ -122,6 +350,51 @@ function menu_create_world_ui_init()
 		
 		_seed_box.add_event_handler("on_change", method(_seed_box, function(_data) {
 			global.current_world.seed = self.get_value();
+		}));
+	}
+
+	/* dimension */
+	var _dimension = _elements[$ "dimension"];
+
+	if (_dimension != undefined)
+	{
+		var _dimension_ids = struct_get_names(global.world_data);
+		array_sort(_dimension_ids, true);
+
+		var _choices = [];
+		var _dimension_count = array_length(_dimension_ids);
+
+		for (var i = 0; i < _dimension_count; ++i)
+		{
+			_choices[@ i] = menu_create_world_ui_dimension_label(_dimension_ids[i]);
+		}
+
+		if (_dimension_count <= 0)
+		{
+			_dimension_ids = [resource_get_base_namespace() + ":playground"];
+			_choices = ["Playground"];
+			_dimension_count = 1;
+		}
+
+		_dimension.dimension_ids = _dimension_ids;
+		_dimension.set_choices(_choices);
+
+		var _selected_dimension = _world.dimension;
+		if (_selected_dimension == undefined || _selected_dimension == "")
+		{
+			_selected_dimension = _dimension_ids[0];
+		}
+
+		var _selected_index = menu_create_world_ui_dimension_index(_dimension_ids, _selected_dimension);
+		_dimension.set_selected(_selected_index);
+		_world.dimension = _dimension_ids[_selected_index];
+		menu_create_world_ui_sync_required_mods();
+
+		_dimension.add_event_handler("on_change", method(_dimension, function(_data) {
+			var _index = clamp(self.choice_index, 0, array_length(self.dimension_ids) - 1);
+			global.current_world.dimension = self.dimension_ids[_index];
+			menu_create_world_ui_sync_required_mods();
+			menu_create_world_ui_populate_mod_list(global.ui_create_world.elements);
 		}));
 	}
 	
@@ -280,12 +553,15 @@ function menu_create_world_ui_init()
 			menu_create_world_ui_draw_preview(_x, _y, self.width * _xscale, self.height * _yscale);
 		});
 	}
+
+	menu_create_world_ui_populate_mod_list(_elements);
 	
 	
 	/* expand/collapse buttons */
 	menu_create_world_ui_bind_toggle(_elements, "btn_death_penalty", "death_penalty_content");
 	menu_create_world_ui_bind_toggle(_elements, "btn_advanced", "advanced_content");
 	menu_create_world_ui_bind_toggle(_elements, "btn_backup", "backup_content");
+	menu_create_world_ui_bind_toggle(_elements, "btn_mods", "mods_content");
 	menu_create_world_ui_bind_toggle(_elements, "btn_game_rules", "game_rules_content");
 	menu_create_world_ui_bind_toggle(_elements, "btn_item_drops", "item_drops_content");
 	
@@ -330,6 +606,7 @@ function menu_create_world_ui_draw_preview(_x, _y, _w, _h)
 	var _metrics = menu_ui_get_metrics();
 	var _name = menu_ui_trim_text(global.current_world.name, 22);
 	var _seed = string(global.current_world.seed);
+	var _dimension = menu_create_world_ui_dimension_label(global.current_world.dimension ?? (resource_get_base_namespace() + ":playground"));
 	var _difficulty = global.current_world.difficulty ?? 1;
 	var _drop_ratio = clamp((global.current_world.death_penalty.item_drop_percentage ?? 0) / 100, 0, 1);
 	var _backup_ratio = clamp((global.current_world.backup.slots ?? 0) / 10, 0, 1);
@@ -365,6 +642,7 @@ function menu_create_world_ui_draw_preview(_x, _y, _w, _h)
 	var _halign = draw_get_halign();
 	var _valign = draw_get_valign();
 	draw_set_align(fa_left, fa_top);
+	render_text(_x + 16, _y + 14, menu_ui_trim_text(_dimension, 26), 0.55, 0.55, 0, _metrics.text_dim, 1);
 	render_text(_x + 16, _y + _h - 40, (_name == "" ? "Untitled World" : _name), 0.8, 0.8, 0, c_white, 1);
 	render_text(_x + 16, _y + _h - 22, "Seed: " + menu_ui_trim_text(_seed, 18), 0.55, 0.55, 0, _metrics.text_dim, 1);
 	draw_set_align(_halign, _valign);
@@ -440,6 +718,7 @@ function menu_create_world_ui_refresh_flow_height(_element)
 		|| _element.element_name == "advanced_content"
 		|| _element.element_name == "death_penalty_content"
 		|| _element.element_name == "backup_content"
+		|| _element.element_name == "mods_content"
 		|| _element.element_name == "game_rules_content"
 		|| _element.element_name == "item_drops_content")
 		{
@@ -496,9 +775,14 @@ function menu_create_world_ui_submit(_instance)
 	
 	/* read difficulty */
 	var _difficulty = _elements[$ "difficulty"];
+	var _dimension = _elements[$ "dimension"];
 	
 	global.current_world.name = _name;
 	global.current_world.seed = _seed;
+	if ((_dimension != undefined) && is_array(_dimension.dimension_ids))
+	{
+		global.current_world.dimension = _dimension.dimension_ids[clamp(_dimension.choice_index, 0, array_length(_dimension.dimension_ids) - 1)];
+	}
 	global.current_world.difficulty = (_difficulty != undefined) ? _difficulty.value : 1;
 	
 	

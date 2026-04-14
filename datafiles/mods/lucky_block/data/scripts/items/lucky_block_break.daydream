@@ -1,0 +1,45 @@
+fn irange(min_value, max_value) {
+  return min_value + irandom(max_value - min_value)
+}
+
+fn spawn_drop(item_id, amount) {
+  var item = inventory_item_create(item_id, amount)
+  spawn_item_drop(x, y, item)
+}
+
+fn place_gold_ring() {
+  spawn_drop("phantasia:gold_block", 4)
+}
+
+var roll = irange(0, 5)
+
+switch (roll) {
+  case 0:
+    spawn_drop("phantasia:gold", irange(2, 4))
+    spawn_drop("phantasia:apple", irange(1, 2))
+    spawn_drop("phantasia:torch", irange(2, 5))
+    break
+
+  case 1:
+    spawn_drop("phantasia:raw_chicken", irange(1, 2))
+    spawn_drop("phantasia:raw_rabbit", 1)
+    break
+
+  case 2:
+    spawn_drop("phantasia:coal", irange(3, 6))
+    spawn_drop("phantasia:torch", irange(2, 4))
+    break
+
+  case 3:
+    spawn_drop("phantasia:bucket_lava", 1)
+    break
+
+  case 4:
+    place_gold_ring()
+    break
+
+  default:
+    spawn_drop("phantasia:gold_block", 1)
+    spawn_drop("phantasia:raw_gold", irange(2, 5))
+    break
+}

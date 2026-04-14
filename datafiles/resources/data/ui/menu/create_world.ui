@@ -97,6 +97,22 @@ var INPUT_H = 24
                 }
             }
 
+            @text(label_dimension) {
+                position = ORIGIN_TOP_LEFT + (12, 320)
+                text = "Dimension"
+                text_scale = 0.8
+                colour = #aaaaaa
+                halign = fa_left
+                valign = fa_middle
+            }
+
+            @dropdown(dimension) {
+                position = ORIGIN_TOP_LEFT + (12, 334)
+                size = (FIELD_W, INPUT_H)
+                choices = ("Playground")
+                choice_index = 0
+            }
+
         }
 
         @area(right_panel) {
@@ -218,7 +234,7 @@ var INPUT_H = 24
                     }
 
                     @area(advanced_content) {
-                        size = (RIGHT_W - 36, 280)
+                        size = (RIGHT_W - 36, 420)
                         layout = LAYOUT_VERTICAL
                         spacing = 10
                         visible = false
@@ -234,6 +250,18 @@ var INPUT_H = 24
                             size = (RIGHT_W - 36, 16)
                             choices = ("none", "min", "max")
                             choice_index = 0
+                        }
+
+                        @button(btn_mods) {
+                            text = "Mods"
+                            size = (RIGHT_W - 36, 28)
+                        }
+
+                        @area(mods_content) {
+                            size = (RIGHT_W - 36, 120)
+                            layout = LAYOUT_VERTICAL
+                            spacing = 6
+                            visible = false
                         }
 
                         @button(btn_game_rules) {

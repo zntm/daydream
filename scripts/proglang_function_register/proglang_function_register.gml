@@ -604,6 +604,10 @@ proglang_function_register("random_range", function(_args) {
     return random_range(_args[0], _args[1]);
 });
 
+proglang_function_register("irandom_range", function(_args) {
+    return irandom_range(_args[0], _args[1]);
+});
+
 proglang_function_register("chance", function(_args) {
     return chance(_args[0]);
 });

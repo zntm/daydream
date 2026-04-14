@@ -1,0 +1,31 @@
+{
+  "inventory": "#phantasia:item/generic/inventory_default",
+  "item": {
+    "tile": {
+      "audio_properties": {
+        "lowpass": 0.65,
+        "reverb": 0.5
+      },
+      "drops": [],
+      "harvest": {
+        "hardness": 0.45,
+        "level": 0,
+        "particle": {
+          "colour": "#phantasia:tile/particle_colour/stone",
+          "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
+        }
+      },
+      "on_harvest": [
+        {
+          "id": "@lucky_block:items/lucky_block_break"
+        }
+      ],
+      "sfx": "#phantasia:tile/sfx/stone"
+    }
+  },
+  "properties": [
+    "phantasia:is_tile"
+  ],
+  "sprite": "phantasia:item/gold_block",
+  "type": "solid"
+}

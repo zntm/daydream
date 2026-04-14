@@ -1,0 +1,26 @@
+{
+  "id": "hell_surface",
+  "category": "infernal",
+  "map_color": "#8F2A17",
+  "terrain": {
+    "amplitude_min": 22,
+    "amplitude_max": 44,
+    "height_offset": -6
+  },
+  "biomes": [
+    {
+      "id": "hell_dimension:hell_surface",
+      "weight": 1,
+      "terrain_preference": "flat"
+    }
+  ],
+  "cave_biome_default": "hell_dimension:hell_cave",
+  "cave_biomes": [
+    {
+      "biome": "hell_dimension:hell_cave",
+      "min_depth": 80,
+      "noise_threshold": 0.55,
+      "noise_scale": 0.02
+    }
+  ]
+}
