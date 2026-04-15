@@ -2,7 +2,21 @@ function spawn_creature(_x, _y, _id, _variant)
 {
     randomize();
     
+    if (_id == undefined) exit;
+    
+    if (is_string(_id)) && (global.creature_data[$ _id] == undefined) && (string_pos(":", _id) <= 0)
+    {
+        _id = $"phantasia:{_id}";
+    }
+    
     var _data = global.creature_data[$ _id];
+    
+    if (!is_struct(_data))
+    {
+        PRINT($"[spawn_creature] Invalid creature id: '{_id}'");
+        
+        return noone;
+    }
     
     var _hp = _data.get_hp();
     

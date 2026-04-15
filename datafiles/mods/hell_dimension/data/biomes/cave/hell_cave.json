@@ -1,120 +1,118 @@
 {
-  "ambience": [
-    {
-      "id": "phantasia:sfx/ambience/cave/default",
-      "chance": 0.001,
-      "gain": 0.35,
-      "radius_min": 3,
-      "radius_max": 16
-    }
-  ],
-  "background": {
-    "blend": 0.72,
-    "id": "phantasia:background/chasm"
-  },
-  "foliage": [
-    {
-      "id": "phantasia:rock",
-      "chance": 0.06,
-      "generate_on": [
-        "phantasia:stone"
-      ]
-    }
-  ],
-  "light_colour": {
-    "points": [
-      {
-        "position": 0.15,
-        "color": "#6E1C10"
-      },
-      {
-        "position": 0.45,
-        "color": "#E99A54"
-      },
-      {
-        "position": 0.72,
-        "color": "#A92C1C"
-      },
-      {
-        "position": 0.9,
-        "color": "#120303"
-      }
-    ]
-  },
-  "map_colour": "#5A160D",
-  "music": [
-    {
-      "id": "phantasia:music/tense",
-      "gain": 0.5
-    }
-  ],
-  "sky_colour": {
-    "points": [
-      {
-        "position": 0.15,
-        "color": "#4A120C"
-      },
-      {
-        "position": 0.45,
-        "color": "#A92C1C"
-      },
-      {
-        "position": 0.72,
-        "color": "#E99A54"
-      },
-      {
-        "position": 0.9,
-        "color": "#120303"
-      }
-    ]
-  },
-  "structures": [
-    {
-      "id": "phantasia:ore/gold",
-      "chance": 0.003,
-      "range_min": 96,
-      "range_max": 640
-    }
-  ],
-  "tile": {
-    "bottom_layer": {
-      "base": [
+    "ambience": [
         {
-          "id": "phantasia:stone"
+            "id": "phantasia:sfx/ambience/cave/default",
+            "chance": 0.001,
+            "gain": 0.35,
+            "radius_min": 3,
+            "radius_max": 16
         }
-      ],
-      "wall": [
-        {
-          "id": "phantasia:stone_wall",
-          "weight": 4
-        }
-      ]
+    ],
+    "background": {
+        "blend": 0.72,
+        "id": "phantasia:background/chasm"
     },
-    "middle_layer": {
-      "base": [
+    "foliage": [
         {
-          "id": "phantasia:stone"
+            "id": "phantasia:rock",
+            "chance": 0.06,
+            "generate_on": ["phantasia:stone"]
         }
-      ],
-      "wall": [
-        {
-          "id": "phantasia:stone_wall",
-          "weight": 4
-        }
-      ]
+    ],
+    "light_colour": {
+        "points": [
+            {
+                "position": 0.15,
+                "color": "#6E1C10"
+            },
+            {
+                "position": 0.45,
+                "color": "#E99A54"
+            },
+            {
+                "position": 0.72,
+                "color": "#A92C1C"
+            },
+            {
+                "position": 0.9,
+                "color": "#120303"
+            }
+        ]
     },
-    "top_layer": {
-      "base": [
+    "map_colour": "#5A160D",
+    "music": [
         {
-          "id": "phantasia:stone"
+            "id": "phantasia:music/tense",
+            "gain": 0.5
         }
-      ],
-      "wall": [
+    ],
+    "sky_colour": {
+        "points": [
+            {
+                "position": 0.15,
+                "color": "#4A120C"
+            },
+            {
+                "position": 0.45,
+                "color": "#A92C1C"
+            },
+            {
+                "position": 0.72,
+                "color": "#E99A54"
+            },
+            {
+                "position": 0.9,
+                "color": "#120303"
+            }
+        ]
+    },
+    "structures": [
         {
-          "id": "phantasia:stone_wall",
-          "weight": 4
+            "id": "phantasia:ore/gold",
+            "chance": 0.003,
+            "range_min": 96,
+            "range_max": 640
         }
-      ]
+    ],
+    "tile": {
+        "bottom_layer": {
+            "base": [
+                {
+                    "id": "phantasia:stone"
+                }
+            ],
+            "wall": [
+                {
+                    "id": "phantasia:stone_wall",
+                    "weight": 4
+                }
+            ]
+        },
+        "middle_layer": {
+            "base": [
+                {
+                    "id": "phantasia:stone"
+                }
+            ],
+            "wall": [
+                {
+                    "id": "phantasia:stone_wall",
+                    "weight": 4
+                }
+            ]
+        },
+        "top_layer": {
+            "base": [
+                {
+                    "id": "phantasia:stone"
+                }
+            ],
+            "wall": [
+                {
+                    "id": "phantasia:stone_wall",
+                    "weight": 4
+                }
+            ]
+        }
     }
-  }
 }

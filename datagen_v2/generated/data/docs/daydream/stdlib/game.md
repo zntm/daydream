@@ -46,6 +46,22 @@ Spawns a particle at the specified position.
 
 ---
 
+### `spawn_creature(x, y, creature_id, variant?)`: Creature?
+
+Spawns a creature at the specified tile position.
+
+**Arguments:**
+| Name          | Type   | Description               |
+| ------------- | ------ | ------------------------- |
+| `x`           | number | X position in tiles       |
+| `y`           | number | Y position in tiles       |
+| `creature_id` | string | Creature ID or bare name  |
+| `variant`     | string | Optional creature variant |
+
+**Returns:** Creature?
+
+---
+
 ### `tag_get(tag_name)`: any
 
 Gets tag data.

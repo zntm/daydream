@@ -1,13 +1,13 @@
 {
-  "id": "hell",
-  "min_depth": 20,
-  "noise_scale": 0.025,
-  "noise_threshold": 0.45,
-  "salt": 64013,
-  "biomes": [
-    {
-      "id": "hell_dimension:cave/hellscape",
-      "weight": 1
-    }
-  ]
+    "id": "hell",
+    "min_depth": 20,
+    "noise_scale": 0.025,
+    "noise_threshold": 0.45,
+    "salt": 64013,
+    "biomes": [
+        {
+            "id": "hell_dimension:cave/hellscape",
+            "weight": 1
+        }
+    ]
 }

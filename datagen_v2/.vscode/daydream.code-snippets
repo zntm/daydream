@@ -413,6 +413,12 @@
         "prefix": "sin",
         "scope": "daydream"
     },
+    "spawn_creature": {
+        "body": "spawn_creature(${1:x}, ${2:y}, ${3:creature_id}, ${4:variant})",
+        "description": "Spawns a creature at the specified tile position.\n\n**Parameters:**\n- `x` (number): X position in tiles\n- `y` (number): Y position in tiles\n- `creature_id` (string): Creature ID or bare name\n- `variant` (string): Optional creature variant (Optional)\n\n**Returns:** Creature?\n\n**Example:**\n```\nspawn_creature(x, y, \"phantasia:chicken\");\nspawn_creature(x + 1, y, \"rabbit\", \"white\");\n```",
+        "prefix": "spawn_creature",
+        "scope": "daydream"
+    },
     "spawn_particle": {
         "body": "spawn_particle(${1:particle}, ${2:x}, ${3:y})",
         "description": "Spawns a particle at the specified position.\n\n**Parameters:**\n- `particle` (string): Particle name\n- `x` (number): X position in tiles\n- `y` (number): Y position in tiles\n\n**Returns:** void\n\n",

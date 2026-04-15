@@ -1115,6 +1115,38 @@
         "returnType": "void"
     },
     {
+        "name": "spawn_creature",
+        "description": "Spawns a creature at the specified tile position.",
+        "example": [
+            "spawn_creature(x, y, \"phantasia:chicken\");",
+            "spawn_creature(x + 1, y, \"rabbit\", \"white\");"
+        ],
+        "parameters": [
+            {
+                "name": "x",
+                "type": "number",
+                "description": "X position in tiles"
+            },
+            {
+                "name": "y",
+                "type": "number",
+                "description": "Y position in tiles"
+            },
+            {
+                "name": "creature_id",
+                "type": "string",
+                "description": "Creature ID or bare name"
+            },
+            {
+                "name": "variant",
+                "type": "string",
+                "description": "Optional creature variant",
+                "optional": true
+            }
+        ],
+        "returnType": "Creature?"
+    },
+    {
         "name": "tag_get",
         "description": "Gets tag data.",
         "parameters": [

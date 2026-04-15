@@ -932,6 +932,15 @@ proglang_function_register("spawn_item_drop", function(_args) {
     spawn_item_drop(_x, _y, _item);
 });
 
+proglang_function_register("spawn_creature", function(_args) {
+    var _x = _args[0] * TILE_SIZE;
+    var _y = _args[1] * TILE_SIZE;
+    var _id = _args[2];
+    var _variant = (array_length(_args) > 3) ? _args[3] : undefined;
+    
+    return spawn_creature(_x, _y, _id, _variant);
+});
+
 proglang_function_register("menu_popup_create", function(_args) {
     return menu_popup_create(_args[0]);
 });

@@ -1,45 +1,61 @@
-fn irange(min_value, max_value) {
-  return min_value + irandom(max_value - min_value)
-}
-
 fn spawn_drop(item_id, amount) {
-  var item = inventory_item_create(item_id, amount)
-  spawn_item_drop(x, y, item)
+    var item = inventory_item_create(item_id, amount)
+    spawn_item_drop(x, y, item)
 }
 
 fn place_gold_ring() {
-  spawn_drop("phantasia:gold_block", 4)
+    spawn_drop("phantasia:gold_block", 4)
 }
 
-var roll = irange(0, 5)
+fn spawn_mob(creature_id, amount) {
+    for (var i = 0; i < amount; i += 1) {
+        var spawn_x = x + irandom_range(-1, 1)
+        var spawn_y = y - irandom_range(0, 1)
+        spawn_creature(spawn_x, spawn_y, creature_id)
+    }
+}
+
+var roll = irandom_range(0, 7)
 
 switch (roll) {
-  case 0:
-    spawn_drop("phantasia:gold", irange(2, 4))
-    spawn_drop("phantasia:apple", irange(1, 2))
-    spawn_drop("phantasia:torch", irange(2, 5))
-    break
+    case 0:
+        spawn_drop("phantasia:gold", irandom_range(2, 4))
+        spawn_drop("phantasia:apple", irandom_range(1, 2))
+        spawn_drop("phantasia:torch", irandom_range(2, 5))
+        break
 
-  case 1:
-    spawn_drop("phantasia:raw_chicken", irange(1, 2))
-    spawn_drop("phantasia:raw_rabbit", 1)
-    break
+    case 1:
+        spawn_drop("phantasia:raw_chicken", irandom_range(1, 2))
+        spawn_drop("phantasia:raw_rabbit", 1)
+        break
 
-  case 2:
-    spawn_drop("phantasia:coal", irange(3, 6))
-    spawn_drop("phantasia:torch", irange(2, 4))
-    break
+    case 2:
+        spawn_drop("phantasia:coal", irandom_range(3, 6))
+        spawn_drop("phantasia:torch", irandom_range(2, 4))
+        break
 
-  case 3:
-    spawn_drop("phantasia:bucket_lava", 1)
-    break
+    case 3:
+        spawn_drop("phantasia:bucket_lava", 1)
+        break
 
-  case 4:
-    place_gold_ring()
-    break
+    case 4:
+        place_gold_ring()
+        break
 
-  default:
-    spawn_drop("phantasia:gold_block", 1)
-    spawn_drop("phantasia:raw_gold", irange(2, 5))
-    break
+    case 5:
+        spawn_mob("phantasia:chicken", irandom_range(2, 3))
+        break
+
+    case 6:
+        spawn_mob("phantasia:rabbit", irandom_range(1, 2))
+        break
+
+    case 7:
+        spawn_mob("phantasia:fox", 1)
+        break
+
+    default:
+        spawn_drop("phantasia:gold_block", 1)
+        spawn_drop("phantasia:raw_gold", irandom_range(2, 5))
+        break
 }

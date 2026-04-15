@@ -1,94 +1,94 @@
 {
-  "background": {
-    "blend": 0.72,
-    "id": "phantasia:background/desert"
-  },
-  "light_colour": {
-    "dawn": "#C8602A",
-    "day": "#F0B26B",
-    "dusk": "#B43A28",
-    "night": "#2A0907"
-  },
-  "map_colour": "#8F2A17",
-  "music": [
-    {
-      "id": "phantasia:music/tense",
-      "gain": 0.55
+    "background": {
+        "blend": 0.72,
+        "id": "phantasia:background/desert"
     },
-    {
-      "id": "phantasia:music/phantasia",
-      "gain": 0.35
+    "light_colour": {
+        "dawn": "#C8602A",
+        "day": "#F0B26B",
+        "dusk": "#B43A28",
+        "night": "#2A0907"
+    },
+    "map_colour": "#8F2A17",
+    "music": [
+        {
+            "id": "phantasia:music/tense",
+            "gain": 0.55
+        },
+        {
+            "id": "phantasia:music/phantasia",
+            "gain": 0.35
+        }
+    ],
+    "sky_colour": {
+        "dawn": {
+            "base": "#5C140D",
+            "gradient": "#3A0B08"
+        },
+        "day": {
+            "base": "#B43A28",
+            "gradient": "#5C140D"
+        },
+        "dusk": {
+            "base": "#7A1C12",
+            "gradient": "#2A0907"
+        },
+        "night": {
+            "base": "#1A0605",
+            "gradient": "#0B0202"
+        }
+    },
+    "structures": [
+        {
+            "id": "phantasia:ore/gold",
+            "chance": 0.002,
+            "range_min": 0,
+            "range_max": 512
+        }
+    ],
+    "terrain_modifier": {
+        "amplitude_scale": 0.72,
+        "height_offset": -8
+    },
+    "tile": {
+        "bottom_layer": {
+            "base": [
+                {
+                    "id": "phantasia:stone"
+                }
+            ],
+            "wall": [
+                {
+                    "id": "phantasia:stone_wall",
+                    "weight": 4
+                }
+            ]
+        },
+        "middle_layer": {
+            "base": [
+                {
+                    "id": "phantasia:stone"
+                }
+            ],
+            "wall": [
+                {
+                    "id": "phantasia:stone_wall",
+                    "weight": 4
+                }
+            ]
+        },
+        "top_layer": {
+            "base": [
+                {
+                    "id": "phantasia:stone"
+                }
+            ],
+            "wall": [
+                {
+                    "id": "phantasia:stone_wall",
+                    "weight": 4
+                }
+            ]
+        }
     }
-  ],
-  "sky_colour": {
-    "dawn": {
-      "base": "#5C140D",
-      "gradient": "#3A0B08"
-    },
-    "day": {
-      "base": "#B43A28",
-      "gradient": "#5C140D"
-    },
-    "dusk": {
-      "base": "#7A1C12",
-      "gradient": "#2A0907"
-    },
-    "night": {
-      "base": "#1A0605",
-      "gradient": "#0B0202"
-    }
-  },
-  "structures": [
-    {
-      "id": "phantasia:ore/gold",
-      "chance": 0.002,
-      "range_min": 0,
-      "range_max": 512
-    }
-  ],
-  "terrain_modifier": {
-    "amplitude_scale": 0.72,
-    "height_offset": -8
-  },
-  "tile": {
-    "bottom_layer": {
-      "base": [
-        {
-          "id": "phantasia:stone"
-        }
-      ],
-      "wall": [
-        {
-          "id": "phantasia:stone_wall",
-          "weight": 4
-        }
-      ]
-    },
-    "middle_layer": {
-      "base": [
-        {
-          "id": "phantasia:stone"
-        }
-      ],
-      "wall": [
-        {
-          "id": "phantasia:stone_wall",
-          "weight": 4
-        }
-      ]
-    },
-    "top_layer": {
-      "base": [
-        {
-          "id": "phantasia:stone"
-        }
-      ],
-      "wall": [
-        {
-          "id": "phantasia:stone_wall",
-          "weight": 4
-        }
-      ]
-    }
-  }
 }

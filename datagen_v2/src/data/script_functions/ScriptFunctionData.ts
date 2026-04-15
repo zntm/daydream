@@ -193,6 +193,11 @@ export const gameFunctions = [
     new ScriptFunction("tile_get", "Gets the tile ID at the specified position.", "Tile?", [{ name: "x", type: "number", description: "X position" }, { name: "y", type: "number", description: "Y position" }, { name: "z", type: "number", description: "Z position (layer)" }]),
     new ScriptFunction("tile_place", "Places a tile at the specified position.", "void", [{ name: "tile_id", type: "any", description: "Tile ID or name" }, { name: "x", type: "number", description: "X position" }, { name: "y", type: "number", description: "Y position" }, { name: "z", type: "number", description: "Z position (layer)" }]),
     new ScriptFunction("spawn_particle", "Spawns a particle at the specified position.", "void", [{ name: "particle", type: "string", description: "Particle name" }, { name: "x", type: "number", description: "X position in tiles" }, { name: "y", type: "number", description: "Y position in tiles" }]),
+    new ScriptFunction("spawn_creature", "Spawns a creature at the specified tile position.", "Creature?", [{ name: "x", type: "number", description: "X position in tiles" }, { name: "y", type: "number", description: "Y position in tiles" }, { name: "creature_id", type: "string", description: "Creature ID or bare name" }, { name: "variant", type: "string", description: "Optional creature variant", optional: true }])
+        .setExample([
+            'spawn_creature(x, y, "phantasia:chicken");',
+            'spawn_creature(x + 1, y, "rabbit", "white");'
+        ]),
     new ScriptFunction("tag_get", "Gets tag data.", "any", [{ name: "tag_name", type: "string", description: "Name of the tag (without #)" }]),
 ];
 

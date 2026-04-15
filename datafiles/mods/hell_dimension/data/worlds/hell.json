@@ -1,160 +1,157 @@
 {
-  "id": "hell",
-  "world_height": 768,
-  "spawn_interval": 10,
-  "biome_transition_smoothing": 0.3,
-  "regions": [
-    "hell_dimension:hell_surface",
-    "hell_dimension:hell_cave"
-  ],
-  "biome": {
+    "id": "hell",
+    "world_height": 768,
+    "spawn_interval": 10,
+    "biome_transition_smoothing": 0.3,
+    "regions": ["hell_dimension:hell_surface", "hell_dimension:hell_cave"],
+    "biome": {
+        "surface": {
+            "heat": {
+                "octaves": 4,
+                "scale": 0.006
+            },
+            "humidity": {
+                "octaves": 2,
+                "scale": 0.004
+            }
+        },
+        "cave": {
+            "default": [
+                {
+                    "id": "hell_dimension:hell_cave",
+                    "start": 0,
+                    "end": 768,
+                    "transition": {
+                        "type": "random",
+                        "octaves": 0,
+                        "min": 2,
+                        "max": 18
+                    }
+                }
+            ],
+            "heat": {
+                "octaves": 4
+            },
+            "humidity": {
+                "octaves": 2
+            },
+            "noise": {
+                "octaves": 4,
+                "scale": 0.006,
+                "spline_y": {
+                    "type": "spline",
+                    "points": [
+                        {
+                            "position": 0,
+                            "value": -1,
+                            "easing": "linear"
+                        },
+                        {
+                            "position": 768,
+                            "value": 1,
+                            "easing": "linear"
+                        }
+                    ]
+                }
+            },
+            "options": []
+        },
+        "sky": {
+            "enabled": false,
+            "id": "phantasia:sky/floating_islands",
+            "threshold": 9999
+        }
+    },
     "surface": {
-      "heat": {
-        "octaves": 4,
-        "scale": 0.006
-      },
-      "humidity": {
-        "octaves": 2,
-        "scale": 0.004
-      }
+        "start": 320,
+        "min_depth": 18,
+        "noise_scale": 0.0125,
+        "seed_offset": -120,
+        "noise_offset": {
+            "min": 18,
+            "max": 42,
+            "octaves": 3
+        },
+        "smoothing": {
+            "range": 24,
+            "factor": 0.48
+        },
+        "bedrock_depth": 4,
+        "bedrock_noise_scale": 0.35,
+        "tile_variation_noise_scale": 0.05,
+        "biome_blend_range": 18,
+        "biome_blend_noise_scale": 0.06
     },
     "cave": {
-      "default": [
-        {
-          "id": "hell_dimension:hell_cave",
-          "start": 0,
-          "end": 768,
-          "transition": {
-            "type": "random",
-            "octaves": 0,
-            "min": 2,
-            "max": 18
-          }
-        }
-      ],
-      "heat": {
-        "octaves": 4
-      },
-      "humidity": {
-        "octaves": 2
-      },
-      "noise": {
-        "octaves": 4,
-        "scale": 0.006,
-        "spline_y": {
-          "type": "spline",
-          "points": [
+        "noise_scale": 0.0175,
+        "breach_threshold": 236,
+        "breach_depth": -16,
+        "transition_threshold": 210,
+        "start": {
+            "min": 6,
+            "max": 18,
+            "octaves": 1,
+            "noise_scale": 0.015625,
+            "offset": -8
+        },
+        "system": [
             {
-              "position": 0,
-              "value": -1,
-              "easing": "linear"
+                "range_min": 52,
+                "range_max": 78,
+                "threshold": {
+                    "octaves": 4
+                }
             },
             {
-              "position": 768,
-              "value": 1,
-              "easing": "linear"
+                "range_min": 116,
+                "range_max": 146,
+                "threshold": {
+                    "octaves": 4
+                }
             }
-          ]
-        }
-      },
-      "options": []
+        ],
+        "aquifers": [
+            {
+                "type": "phantasia:lava",
+                "depth_min": 16,
+                "depth_max": 420,
+                "threshold": 188,
+                "octaves": 3,
+                "fill_level": 8,
+                "noise_scale": 0.02,
+                "range": 255,
+                "activation_chance": 0.7,
+                "cell_width": 30,
+                "cell_height": 18
+            }
+        ]
     },
-    "sky": {
-      "enabled": false,
-      "id": "phantasia:sky/floating_islands",
-      "threshold": 9999
+    "background": {
+        "cloud_alpha_max": 0.15,
+        "cloud_alpha_min": 0.05,
+        "cloud_count": 10,
+        "cloud_scale_max": 1.4,
+        "cloud_scale_min": 0.8,
+        "cloud_speed_max": 1.5,
+        "cloud_speed_min": 0.4,
+        "cloud_wind_factor": 0.2,
+        "cloud_y_max": 96,
+        "cloud_y_min": 0,
+        "parallax_factor": 0.002,
+        "parallax_scale": 0.7
+    },
+    "time": {
+        "start": 880,
+        "length": 1200
+    },
+    "vignette": {
+        "ystart": 288,
+        "yend": 768,
+        "colour": "#140000"
+    },
+    "colorgrade": {
+        "saturation": 0.82,
+        "tint": "#C74B2A",
+        "tint_strength": 0.22
     }
-  },
-  "surface": {
-    "start": 320,
-    "min_depth": 18,
-    "noise_scale": 0.0125,
-    "seed_offset": -120,
-    "noise_offset": {
-      "min": 18,
-      "max": 42,
-      "octaves": 3
-    },
-    "smoothing": {
-      "range": 24,
-      "factor": 0.48
-    },
-    "bedrock_depth": 4,
-    "bedrock_noise_scale": 0.35,
-    "tile_variation_noise_scale": 0.05,
-    "biome_blend_range": 18,
-    "biome_blend_noise_scale": 0.06
-  },
-  "cave": {
-    "noise_scale": 0.0175,
-    "breach_threshold": 236,
-    "breach_depth": -16,
-    "transition_threshold": 210,
-    "start": {
-      "min": 6,
-      "max": 18,
-      "octaves": 1,
-      "noise_scale": 0.015625,
-      "offset": -8
-    },
-    "system": [
-      {
-        "range_min": 52,
-        "range_max": 78,
-        "threshold": {
-          "octaves": 4
-        }
-      },
-      {
-        "range_min": 116,
-        "range_max": 146,
-        "threshold": {
-          "octaves": 4
-        }
-      }
-    ],
-    "aquifers": [
-      {
-        "type": "phantasia:lava",
-        "depth_min": 16,
-        "depth_max": 420,
-        "threshold": 188,
-        "octaves": 3,
-        "fill_level": 8,
-        "noise_scale": 0.02,
-        "range": 255,
-        "activation_chance": 0.7,
-        "cell_width": 30,
-        "cell_height": 18
-      }
-    ]
-  },
-  "background": {
-    "cloud_alpha_max": 0.15,
-    "cloud_alpha_min": 0.05,
-    "cloud_count": 10,
-    "cloud_scale_max": 1.4,
-    "cloud_scale_min": 0.8,
-    "cloud_speed_max": 1.5,
-    "cloud_speed_min": 0.4,
-    "cloud_wind_factor": 0.2,
-    "cloud_y_max": 96,
-    "cloud_y_min": 0,
-    "parallax_factor": 0.002,
-    "parallax_scale": 0.7
-  },
-  "time": {
-    "start": 880,
-    "length": 1200
-  },
-  "vignette": {
-    "ystart": 288,
-    "yend": 768,
-    "colour": "#140000"
-  },
-  "colorgrade": {
-    "saturation": 0.82,
-    "tint": "#C74B2A",
-    "tint_strength": 0.22
-  }
 }
