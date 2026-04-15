@@ -18,13 +18,20 @@ function init_item(_namespace, _directory)
 
         dbg_timer("init_item0");
 
-        var _json = tag_value_parse(buffer_load_json($"{_directory}/{_file}"));
+        var _json_root = buffer_load_json($"{_directory}/{_file}");
+        var _prepared = init_data_prepare_json("items", _namespace, _id, _json_root, _file);
+        if (_prepared == undefined) continue;
+
+        var _data_namespace = _prepared.namespace;
+        var _data_id = _prepared.id;
+        var _full_id = _prepared.full_id;
+        var _json = tag_value_parse(_prepared.json);
         if (!init_data_namespace_allowed(_json, _file)) continue;
 
         if (!is_struct(_json)) continue;
 
         var _sprite    = _json.sprite;
-        var _sprite_id = init_asset_resolve(_namespace, _sprite);
+        var _sprite_id = init_asset_resolve(_data_namespace, _sprite);
 
         if (!init_asset_sprite_exists(_sprite_id))
         {
@@ -36,7 +43,7 @@ function init_item(_namespace, _directory)
         }
 
         var _item      = _json[$ "item"];
-        var _item_data = new ItemData(_namespace, _id);
+        var _item_data = new ItemData(_data_namespace, _data_id);
 
         _item_data.set_sprite(_sprite);
         _item_data.set_inventory(_json.inventory);
@@ -48,7 +55,7 @@ function init_item(_namespace, _directory)
 
             if (_projectile != undefined)
             {
-                var _projectile_id = init_asset_resolve(_namespace, _projectile);
+                var _projectile_id = init_asset_resolve(_data_namespace, _projectile);
 
                 if (!init_asset_projectile_exists(_projectile_id))
                 {
@@ -66,7 +73,7 @@ function init_item(_namespace, _directory)
 
             if (_ammo_type != undefined)
             {
-                _item.ammo_type = init_asset_resolve(_namespace, _ammo_type);
+                _item.ammo_type = init_asset_resolve(_data_namespace, _ammo_type);
             }
 
             _item_data.set_item(_item);
@@ -84,7 +91,7 @@ function init_item(_namespace, _directory)
 
                     if (_emissive != undefined)
                     {
-                        _render.emissive = init_asset_resolve(_namespace, _emissive);
+                        _render.emissive = init_asset_resolve(_data_namespace, _emissive);
                     }
                 }
 
@@ -100,13 +107,13 @@ function init_item(_namespace, _directory)
                         var _drop        = _drops[j];
                         var _drop_copy   = variable_clone(_drop);
 
-                        _drop_copy.id = init_asset_resolve(_namespace, _drop.id);
+                        _drop_copy.id = init_asset_resolve(_data_namespace, _drop.id);
 
                         array_push(_drops_raw, _drop_copy);
                     }
 
                     array_push(global.__item_drops_pending, {
-                        full_id:   $"{_namespace}:{_id}",
+                        full_id:   _full_id,
                         drops_raw: _drops_raw
                     });
 
@@ -164,7 +171,8 @@ function init_item(_namespace, _directory)
             }
         }
 
-        global.item_data[$ $"{_namespace}:{_id}"] = _item_data;
+        global.item_data[$ _full_id] = _item_data;
+        init_data_finalize_json("items", _full_id, _prepared.json);
 
         delete _json;
 

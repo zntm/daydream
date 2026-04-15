@@ -51,5 +51,6 @@ Phantasia © 2025 by Zhen is licensed under Phantasia's Daydream - see the LICEN
 - Each mod can provide `assets/`, `data/`, `loca/`, `icon.png`, and `info.json`.
 - The folder name is the namespace. Example: `datafiles/mods/disease_mod/data/items/germ.json` resolves bare references like `germ` to `disease_mod:germ`.
 - `info.json` supports `name`, `author` as either a string or an array of strings, and `description`.
+- The bundled `torchmaster_lite` mod includes real `$MIXIN` examples at [torch.json](/D:/GitHub/daydream/datafiles/mods/torchmaster_lite/data/items/torch.json:1) and [campfire.json](/D:/GitHub/daydream/datafiles/mods/torchmaster_lite/data/items/campfire.json:1), which patch the base `phantasia:torch` and `phantasia:campfire` items so standing on them applies the base-game `phantasia:burning` effect.
 
 ###### Last Updated @ August 12, 2025

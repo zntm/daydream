@@ -65,6 +65,141 @@ function init_data_namespace_allowed(_json, _context = "")
     return false;
 }
 
+/// @desc Clears cached JSON roots used for `$MIXIN` resolution during init.
+function init_data_mixin_reset()
+{
+    global.__data_mixin_roots = {};
+}
+
+/// @desc Returns the mixin registry bucket for a given data type.
+function init_data_mixin_registry(_type)
+{
+    if ((!variable_global_exists("__data_mixin_roots")) || (!is_struct(global.__data_mixin_roots)))
+    {
+        global.__data_mixin_roots = {};
+    }
+
+    if (!struct_exists(global.__data_mixin_roots, _type))
+    {
+        global.__data_mixin_roots[$ _type] = {};
+    }
+
+    return global.__data_mixin_roots[$ _type];
+}
+
+/// @desc Deep-merges two JSON-like values for `$MIXIN` support. Struct fields merge recursively, arrays replace.
+function init_data_mixin_merge(_base, _patch)
+{
+    if ((is_struct(_base)) && (is_struct(_patch)))
+    {
+        var _merged = variable_clone(_base);
+        var _names = struct_get_names(_patch);
+        var _length = array_length(_names);
+
+        for (var i = 0; i < _length; ++i)
+        {
+            var _name = _names[i];
+
+            if (_name == "$MIXIN") continue;
+
+            if ((struct_exists(_merged, _name)) && (is_struct(_merged[$ _name])) && (is_struct(_patch[$ _name])))
+            {
+                _merged[$ _name] = init_data_mixin_merge(_merged[$ _name], _patch[$ _name]);
+            }
+            else
+            {
+                _merged[$ _name] = variable_clone(_patch[$ _name]);
+            }
+        }
+
+        return _merged;
+    }
+
+    return variable_clone(_patch);
+}
+
+/// @desc Splits a namespaced id into `{ namespace, id }`.
+function init_data_split_full_id(_full_id)
+{
+    var _separator = string_pos(":", _full_id);
+
+    if (_separator <= 0)
+    {
+        return {
+            namespace: "",
+            id: _full_id
+        };
+    }
+
+    return {
+        namespace: string_copy(_full_id, 1, _separator - 1),
+        id: string_delete(_full_id, 1, _separator)
+    };
+}
+
+/// @desc Resolves a raw JSON root into its final target id and merged payload.
+function init_data_prepare_json(_type, _namespace, _id, _json, _context = "")
+{
+    var _full_id = (_namespace == "") ? _id : $"{_namespace}:{_id}";
+
+    if (!is_struct(_json))
+    {
+        return {
+            namespace: _namespace,
+            id: _id,
+            full_id: _full_id,
+            json: _json,
+            is_mixin: false
+        };
+    }
+
+    var _mixin = _json[$ "$MIXIN"];
+
+    if (_mixin == undefined)
+    {
+        return {
+            namespace: _namespace,
+            id: _id,
+            full_id: _full_id,
+            json: _json,
+            is_mixin: false
+        };
+    }
+
+    var _target_full_id = (_namespace == "") ? string(_mixin) : init_asset_resolve(_namespace, string(_mixin));
+    var _registry = init_data_mixin_registry(_type);
+
+    if (!struct_exists(_registry, _target_full_id))
+    {
+        PRINT($"[init] Skipping '{_context}': mixin target '{_target_full_id}' not loaded for type '{_type}'");
+
+        return undefined;
+    }
+
+    var _merged = init_data_mixin_merge(_registry[$ _target_full_id], _json);
+
+    delete _merged[$ "$MIXIN"];
+
+    var _parts = init_data_split_full_id(_target_full_id);
+
+    return {
+        namespace: _parts.namespace,
+        id: _parts.id,
+        full_id: _target_full_id,
+        json: _merged,
+        is_mixin: true
+    };
+}
+
+/// @desc Stores the final raw JSON root for future `$MIXIN` resolution.
+function init_data_finalize_json(_type, _full_id, _json)
+{
+    if (!is_struct(_json)) return;
+
+    var _registry = init_data_mixin_registry(_type);
+    _registry[$ _full_id] = variable_clone(_json);
+}
+
 /// @desc Returns true if the given namespaced sprite ID exists in the loaded sprite asset registry.
 /// @param {String} _id  Full namespaced sprite ID, e.g. "phantasia:tiles/stone".
 function init_asset_sprite_exists(_id)

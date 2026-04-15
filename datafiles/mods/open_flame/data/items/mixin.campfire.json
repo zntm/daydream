@@ -1,0 +1,21 @@
+{
+    "$MIXIN": "phantasia:campfire",
+    "item": {
+        "tile": {
+            "on_random_tick": [
+                {
+                    "id": "@phantasia:items/sfx_play",
+                    "parameters": {
+                        "id": "phantasia:sfx/tile/fire/ambient"
+                    },
+                    "chance": 0.36
+                }
+            ],
+            "on_stay": [
+                {
+                    "id": "@phantasia:tile/fire/stay"
+                }
+            ]
+        }
+    }
+}

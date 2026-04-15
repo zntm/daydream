@@ -17,14 +17,20 @@ function init_effect(_namespace, _directory)
 
         dbg_timer("init_effect0");
 
-        var _json = tag_value_parse(buffer_load_json($"{_directory}/{_file}"));
+        var _id   = string_delete(_file, string_length(_file) - 4, 5);
+        var _json_root = buffer_load_json($"{_directory}/{_file}");
+        var _prepared = init_data_prepare_json("effects", _namespace, _id, _json_root, _file);
+        if (_prepared == undefined) continue;
+
+        var _data_namespace = _prepared.namespace;
+        var _full_id = _prepared.full_id;
+        var _json = tag_value_parse(_prepared.json);
         if (!init_data_namespace_allowed(_json, _file)) continue;
 
         if (!is_struct(_json)) continue;
 
-        var _id   = string_delete(_file, string_length(_file) - 4, 5);
         var _icon = _json[$ "icon"];
-        var _icon_id = (_icon != undefined) ? init_asset_resolve(_namespace, _icon) : undefined;
+        var _icon_id = (_icon != undefined) ? init_asset_resolve(_data_namespace, _icon) : undefined;
 
         if (_icon_id != undefined) && (!init_asset_sprite_exists(_icon_id))
         {
@@ -35,7 +41,7 @@ function init_effect(_namespace, _directory)
             continue;
         }
 
-        var _effect_data = new EffectData(_namespace, _id);
+        var _effect_data = new EffectData(_data_namespace, _prepared.id);
 
         _effect_data
             .set_icon(_icon_id)
@@ -55,10 +61,9 @@ function init_effect(_namespace, _directory)
             .set_on_chance(_json[$ "on_chance"])
             .set_on_end(_json[$ "on_end"]);
 
-        var _full_id = $"{_namespace}:{_id}";
-
         global.effect_data[$ _full_id] = _effect_data;
         array_push(global.effect_data_names, _full_id);
+        init_data_finalize_json("effects", _full_id, _prepared.json);
 
         delete _json;
 

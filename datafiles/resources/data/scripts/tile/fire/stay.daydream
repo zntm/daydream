@@ -1,0 +1,3 @@
+if (caller == undefined) return
+
+entity_add_effect(caller, "phantasia:burning", 2, 1)

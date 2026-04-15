@@ -30,6 +30,8 @@ function resource_load_assets()
 
 function resource_load_data()
 {
+    init_data_mixin_reset();
+
     global.credit_data = [];
     global.menu_data = {};
 

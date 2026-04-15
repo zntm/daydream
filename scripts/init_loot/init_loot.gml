@@ -11,7 +11,14 @@ function init_loot(_namespace = "phantasia", _directory)
         if (!string_ends_with(_file, ".json")) continue;
 
         var _json_path = $"{_directory}/{_file}";
+        var _id = string_delete(_file, string_length(_file) - 4, 5);
         var _json_root = buffer_load_json(_json_path);
+        var _prepared = init_data_prepare_json("loot", _namespace, _id, _json_root, _file);
+        if (_prepared == undefined) continue;
+
+        var _data_namespace = _prepared.namespace;
+        var _full_id = _prepared.full_id;
+        _json_root = _prepared.json;
         if (!init_data_namespace_allowed(_json_root, _file)) continue;
         var _array     = _json_root;
 
@@ -27,8 +34,7 @@ function init_loot(_namespace = "phantasia", _directory)
         if (_length == 0) continue;
 
         /* strip '.json' from the filename to get the id */
-        var _id        = string_delete(_file, string_length(_file) - 4, 5);
-        var _loot_data = new LootData(_namespace, _id);
+        var _loot_data = new LootData(_data_namespace, _prepared.id);
 
         for (var j = _length - 1; j >= 0; --j)
         {
@@ -58,7 +64,7 @@ function init_loot(_namespace = "phantasia", _directory)
                     if (struct_exists(_entry, "item"))
                     {
                         var _item      = _entry.item;
-                        var _item_id   = init_asset_resolve(_namespace, _item.id);
+                        var _item_id   = init_asset_resolve(_data_namespace, _item.id);
 
                         if (init_asset_item_exists(_item_id))
                         {
@@ -88,7 +94,8 @@ function init_loot(_namespace = "phantasia", _directory)
             _loot_data.set_rolls(j, _data[$ "rolls"]);
         }
 
-        global.loot_data[$ $"{_namespace}:{_id}"] = _loot_data;
+        global.loot_data[$ _full_id] = _loot_data;
+        init_data_finalize_json("loot", _full_id, _prepared.json);
     }
 }
 

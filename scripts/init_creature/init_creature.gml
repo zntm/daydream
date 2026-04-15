@@ -24,14 +24,20 @@ function init_creature(_namespace = "phantasia", _directory)
 
         dbg_timer("init_creature");
 
-        var _json = buffer_load_json($"{_directory}/{_file}");
+        var _id = string_delete(_file, string_length(_file) - 4, 5);
+        var _json_root = buffer_load_json($"{_directory}/{_file}");
+        var _prepared = init_data_prepare_json("creatures", _namespace, _id, _json_root, _file);
+        if (_prepared == undefined) continue;
+
+        var _data_namespace = _prepared.namespace;
+        var _full_id = _prepared.full_id;
+        var _json = _prepared.json;
         if (!init_data_namespace_allowed(_json, _file)) continue;
 
         if (!is_struct(_json)) continue;
 
-        var _id        = string_delete(_file, string_length(_file) - 4, 5);
         var _sprite    = _json.sprite;
-        var _sprite_id = init_asset_resolve(_namespace, _sprite);
+        var _sprite_id = init_asset_resolve(_data_namespace, _sprite);
 
         if (!init_asset_sprite_exists(_sprite_id))
         {
@@ -44,7 +50,7 @@ function init_creature(_namespace = "phantasia", _directory)
 
         var _attribute = _json.attribute;
 
-        var _data = new CreatureData(_namespace, _id, _json.hp, __hostility_type[$ _json.hostility_type], __movement_type[$ _json.movement_type]);
+        var _data = new CreatureData(_data_namespace, _prepared.id, _json.hp, __hostility_type[$ _json.hostility_type], __movement_type[$ _json.movement_type]);
 
         _data.set_sprite(_sprite);
         _data.set_attribute(new Attribute()
@@ -71,7 +77,7 @@ function init_creature(_namespace = "phantasia", _directory)
             for (var j = array_length(_drops) - 1; j >= 0; --j)
             {
                 var _drop    = _drops[j];
-                var _drop_id = init_asset_resolve(_namespace, _drop.id);
+                var _drop_id = init_asset_resolve(_data_namespace, _drop.id);
 
                 if (init_asset_item_exists(_drop_id))
                 {
@@ -92,7 +98,8 @@ function init_creature(_namespace = "phantasia", _directory)
         _data.set_predators(_json[$ "predators"]);
         _data.set_default_item(_json[$ "default_item"]);
 
-        global.creature_data[$ $"{_namespace}:{_id}"] = _data;
+        global.creature_data[$ _full_id] = _data;
+        init_data_finalize_json("creatures", _full_id, _prepared.json);
 
         dbg_timer("init_creature", $"[Init] Loaded Creature: '{_file}'");
 

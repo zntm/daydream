@@ -17,13 +17,20 @@ function init_projectile(_namespace = "phantasia", _directory)
 
         dbg_timer("init_projectile");
 
-        var _json = buffer_load_json($"{_directory}/{_file}");
+        var _data_id = string_delete(_file, string_length(_file) - 4, 5);
+        var _json_root = buffer_load_json($"{_directory}/{_file}");
+        var _prepared = init_data_prepare_json("projectiles", _namespace, _data_id, _json_root, _file);
+        if (_prepared == undefined) continue;
+
+        var _data_namespace = _prepared.namespace;
+        var _full_id = _prepared.full_id;
+        var _json = _prepared.json;
         if (!init_data_namespace_allowed(_json, _file)) continue;
 
         if (!is_struct(_json)) continue;
 
         var _sprite    = _json[$ "sprite"];
-        var _sprite_id = (_sprite != undefined) ? init_asset_resolve(_namespace, _sprite) : undefined;
+        var _sprite_id = (_sprite != undefined) ? init_asset_resolve(_data_namespace, _sprite) : undefined;
 
         if (_sprite_id != undefined) && (!init_asset_sprite_exists(_sprite_id))
         {
@@ -34,10 +41,7 @@ function init_projectile(_namespace = "phantasia", _directory)
             continue;
         }
 
-        /* strip '.json' from name to get the id */
-        var _data_id = string_delete(_file, string_length(_file) - 4, 5);
-
-        var _data = new ProjectileData(_namespace, _data_id, _sprite);
+        var _data = new ProjectileData(_data_namespace, _prepared.id, _sprite);
 
         /* boolean properties */
         _data.set_boolean(projectile_parse_properties(_json[$ "properties"]));
@@ -101,7 +105,7 @@ function init_projectile(_namespace = "phantasia", _directory)
             for (var j = array_length(_particles_json) - 1; j >= 0; --j)
             {
                 var _p           = _particles_json[j];
-                var _particle_id = init_asset_resolve(_namespace, _p.id);
+                var _particle_id = init_asset_resolve(_data_namespace, _p.id);
 
                 if (init_asset_particle_exists(_particle_id))
                 {
@@ -132,7 +136,8 @@ function init_projectile(_namespace = "phantasia", _directory)
         _data.set_on_hit_tile(_json[$ "on_hit_tile"]);
         _data.set_on_land(_json[$ "on_land"]);
 
-        global.projectile_data[$ $"{_namespace}:{_data_id}"] = _data;
+        global.projectile_data[$ _full_id] = _data;
+        init_data_finalize_json("projectiles", _full_id, _prepared.json);
 
         dbg_timer("init_projectile", $"[Init] Loaded Projectile: '{_data_id}'");
 

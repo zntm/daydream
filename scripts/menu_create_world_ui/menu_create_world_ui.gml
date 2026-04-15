@@ -27,6 +27,7 @@ function menu_create_world_ui_dimension_label(_dimension_id)
 	}
 
 	var _mod_name = _namespace;
+	var _mod_version = "";
 
 	if (variable_global_exists("mod_data"))
 	{
@@ -34,7 +35,13 @@ function menu_create_world_ui_dimension_label(_dimension_id)
 		if (_mod_info != undefined)
 		{
 			_mod_name = _mod_info.name ?? _mod_name;
+			_mod_version = _mod_info.version_display ?? "";
 		}
+	}
+
+	if (_mod_version != "")
+	{
+		return $"{_dimension_name} ({_mod_name} {_mod_version})";
 	}
 
 	return $"{_dimension_name} ({_mod_name})";
@@ -187,7 +194,14 @@ function menu_create_world_ui_populate_mod_list(_elements)
 		_row.border_color = _metrics.card_border;
 		_mods_content.add_child(_row);
 
-		var _name = new UIText(12, 14, _mod_info.name ?? _namespace);
+		var _version_text = _mod_info.version_display ?? "";
+		var _name_text = _mod_info.name ?? _namespace;
+		if (_version_text != "")
+		{
+			_name_text += $" {_version_text}";
+		}
+
+		var _name = new UIText(12, 14, _name_text);
 		_name.halign = fa_left;
 		_name.valign = fa_top;
 		_row.add_child(_name);

@@ -15,13 +15,20 @@ function init_biome_recursive(_namespace = "phantasia", _directory)
 
         dbg_timer("init_biome");
 
-        var _json = tag_value_parse(buffer_load_json($"{_directory}/{_file}"));
+        var _id2 = string_delete(_file, string_length(_file) - 4, 5);
+        var _json_root = buffer_load_json($"{_directory}/{_file}");
+        var _prepared = init_data_prepare_json("biomes", _namespace, _id2, _json_root, _file);
+        if (_prepared == undefined) continue;
+
+        var _data_namespace = _prepared.namespace;
+        var _data_id = _prepared.id;
+        var _full_id = _prepared.full_id;
+        var _json = tag_value_parse(_prepared.json);
         if (!init_data_namespace_allowed(_json, _file)) continue;
 
         if (!is_struct(_json)) continue;
 
-        var _id2        = string_delete(_file, string_length(_file) - 4, 5);
-        var _biome_data = new BiomeData(_namespace, _file);
+        var _biome_data = new BiomeData(_data_namespace, _data_id);
 
         if (_json[$ "background"] != undefined)
         {
@@ -41,7 +48,7 @@ function init_biome_recursive(_namespace = "phantasia", _directory)
             {
                 var _music_entry = _music[j];
                 var _id_raw      = _music_entry[$ "id"] ?? _music_entry;
-                var _music_id    = init_asset_resolve(_namespace, _id_raw);
+                var _music_id    = init_asset_resolve(_data_namespace, _id_raw);
 
                 if (init_asset_music_exists(_music_id))
                 {
@@ -64,7 +71,7 @@ function init_biome_recursive(_namespace = "phantasia", _directory)
         }
         else if (_music != undefined)
         {
-            var _music_id = init_asset_resolve(_namespace, _music);
+            var _music_id = init_asset_resolve(_data_namespace, _music);
 
             if (init_asset_music_exists(_music_id))
             {
@@ -97,7 +104,7 @@ function init_biome_recursive(_namespace = "phantasia", _directory)
             {
                 var _foliage_entry = _foliage[j];
                 var _id_raw        = _foliage_entry[$ "id"] ?? _foliage_entry;
-                var _foliage_id    = init_asset_resolve(_namespace, _id_raw);
+                var _foliage_id    = init_asset_resolve(_data_namespace, _id_raw);
 
                 /* foliage can be tiles, but traditionally they are checked via tile exists? */
                 /* actually foliage refers to tiles usually */
@@ -133,7 +140,7 @@ function init_biome_recursive(_namespace = "phantasia", _directory)
             {
                 var _creature_entry = _creatures[j];
                 var _id_raw         = _creature_entry[$ "id"] ?? _creature_entry;
-                var _creature_id    = init_asset_resolve(_namespace, _id_raw);
+                var _creature_id    = init_asset_resolve(_data_namespace, _id_raw);
 
                 if (init_asset_creature_exists(_creature_id))
                 {
@@ -160,7 +167,7 @@ function init_biome_recursive(_namespace = "phantasia", _directory)
             {
                 var _structure_entry = _structures[j];
                 var _id_raw          = _structure_entry[$ "id"] ?? _structure_entry;
-                var _structure_id    = init_asset_resolve(_namespace, _id_raw);
+                var _structure_id    = init_asset_resolve(_data_namespace, _id_raw);
 
                 if (init_asset_structure_exists(_structure_id))
                 {
@@ -197,7 +204,8 @@ function init_biome_recursive(_namespace = "phantasia", _directory)
             _biome_data.set_ambience(_ambience);
         }
 
-        global.biome_data[$ $"{_namespace}:{_id2}"] = _biome_data;
+        global.biome_data[$ _full_id] = _biome_data;
+        init_data_finalize_json("biomes", _full_id, _prepared.json);
 
         delete _json;
 

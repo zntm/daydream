@@ -1,5 +1,6 @@
 {
     "name": "Hell Dimension",
     "author": ["Codex"],
+    "version": "0.1.0",
     "description": "Example mod that adds a placeholder hell dimension using existing stone and lava content."
 }

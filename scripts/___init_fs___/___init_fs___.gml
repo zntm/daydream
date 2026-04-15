@@ -104,10 +104,23 @@ function resource_mod_format_authors(_authors)
     return $"{_authors[0]}, {_authors[1]}, and {_count - 2} more";
 }
 
+function resource_mod_format_version(_version)
+{
+    if (_version == undefined) return "";
+
+    var _text = string(_version);
+
+    if (_text == "") return "";
+    if (string_pos("v", string_lower(_text)) == 1) return _text;
+
+    return $"v{_text}";
+}
+
 function resource_mod_normalize_info(_namespace, _root, _json)
 {
     var _authors = [];
     var _author = _json[$ "author"];
+    var _version = _json[$ "version"];
 
     if (is_array(_author))
     {
@@ -130,6 +143,8 @@ function resource_mod_normalize_info(_namespace, _root, _json)
         author: _author,
         authors: _authors,
         author_display: resource_mod_format_authors(_authors),
+        version: _version,
+        version_display: resource_mod_format_version(_version),
         description: _json[$ "description"] ?? "",
         icon_path: file_exists($"{_root}/icon.png") ? $"{_root}/icon.png" : undefined,
         info_path: file_exists($"{_root}/info.json") ? $"{_root}/info.json" : undefined
@@ -151,6 +166,8 @@ function resource_rebuild_registry(_base_namespace = "phantasia")
         author: "Phantasia",
         authors: [ "Phantasia" ],
         author_display: "Phantasia",
+        version: undefined,
+        version_display: "",
         description: "Built-in game resources.",
         icon_path: undefined,
         info_path: undefined

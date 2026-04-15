@@ -26,19 +26,29 @@ function init_world(_namespace = "phantasia", _directory)
         {
             dbg_timer("init_world");
             
-            var _json = tag_value_parse(buffer_load_json(_sub_path));
+            var _name_clean = string_delete(_file, string_length(_file) - 4, 5);
+            var _json_root = buffer_load_json(_sub_path);
+            var _prepared = init_data_prepare_json("worlds", _namespace, _name_clean, _json_root, _file);
+            if (_prepared == undefined) continue;
+
+            var _json = tag_value_parse(_prepared.json);
             if (!init_data_namespace_allowed(_json, _file)) continue;
             
             if (is_struct(_json))
             {
-                var _name_clean = string_delete(_file, string_length(_file) - 4, 5);
-                
-                // Use internal ID if provided, otherwise fallback to namespaced filename
-                // Example: "playground" -> "phantasia:playground"
-                var _internal_id = _json[$ "id"] ?? _name_clean;
-                var _full_id = (string_pos(":", _internal_id) > 0) ? _internal_id : $"{_namespace}:{_internal_id}";
-                
-                var _world_data = new WorldData(_namespace, _full_id, _json[$ "world_height"]);
+                var _full_id = _prepared.full_id;
+                var _data_namespace = _prepared.namespace;
+
+                if (!_prepared.is_mixin)
+                {
+                    var _internal_id = _json[$ "id"] ?? _name_clean;
+                    _full_id = (string_pos(":", _internal_id) > 0) ? _internal_id : $"{_namespace}:{_internal_id}";
+
+                    var _parts = init_data_split_full_id(_full_id);
+                    _data_namespace = _parts.namespace;
+                }
+
+                var _world_data = new WorldData(_data_namespace, _full_id, _json[$ "world_height"]);
                 
                 _world_data.set_spawn_interval(_json[$ "spawn_interval"]);
                 _world_data.set_biome_transition_smoothing(_json[$ "biome_transition_smoothing"] ?? 0.5);
@@ -118,6 +128,7 @@ function init_world(_namespace = "phantasia", _directory)
                 }
                 
                 global.world_data[$ _full_id] = _world_data;
+                init_data_finalize_json("worlds", _full_id, _prepared.json);
                 
                 dbg_timer("init_world", $"[Init] Loaded World: \'{_full_id}\'");
                 

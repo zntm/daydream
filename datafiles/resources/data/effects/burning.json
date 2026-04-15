@@ -1,0 +1,14 @@
+{
+    "icon": "phantasia:item/lava",
+    "is_negative": true,
+    "on_interval": {
+        "id": "@phantasia:effects/burning_tick",
+        "tick": 20
+    },
+    "particle": {
+        "chance": 0.16,
+        "colour": "#FF8F52",
+        "id": "phantasia:particle/entity/effect"
+    },
+    "type": "timed"
+}

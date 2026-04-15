@@ -12,16 +12,18 @@ function init_achievement(_namespace, _directory)
         // Skip non-json
         if (!string_ends_with(_file, ".json")) continue;
         
-        var _json = buffer_load_json($"{_directory}/{_file}");
+        var _name = string_replace(_file, ".json", "");
+        var _json_root = buffer_load_json($"{_directory}/{_file}");
+        var _prepared = init_data_prepare_json("achievements", _namespace, $"achievement/{_name}", _json_root, _file);
+        if (_prepared == undefined) continue;
+
+        var _json = _prepared.json;
         if (!init_data_namespace_allowed(_json, _file)) continue;
         
         if (is_struct(_json))
         {
-            // Derive ID from filename: "first_wood.json" -> "first_wood"
-            var _name = string_replace(_file, ".json", "");
-            var _id = $"{_namespace}:achievement/{_name}";
-            
-            global.achievement_data[$ _id] = _json;
+            global.achievement_data[$ _prepared.full_id] = _json;
+            init_data_finalize_json("achievements", _prepared.full_id, _prepared.json);
         }
     }
 }

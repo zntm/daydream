@@ -1,0 +1,6 @@
+{
+    "name": "Open Flame",
+    "author": ["Zhen"],
+    "version": "0.1.0",
+    "description": "Example mixin-based mod that patches the base torch and campfire so standing on open flames applies Burning."
+}

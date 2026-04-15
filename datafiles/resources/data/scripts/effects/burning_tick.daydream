@@ -1,0 +1,3 @@
+if (caller == undefined) return
+
+control_entity_damage(caller, noone, 1, 0, 0, 1)

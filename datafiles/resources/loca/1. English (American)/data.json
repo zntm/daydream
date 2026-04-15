@@ -145,6 +145,8 @@
     "item.water_bucket.name": "Water Bucket",
     "item.water.name": "Water",
     "item.wheat_seeds.name": "Wheat Seeds",
+    "effect.burning.name": "Burning",
+    "effect.burning.description": "Taking fire damage over time.",
     "creature.chicken.name": "Chicken",
     "creature.fox.name": "Fox",
     "creature.rabbit.name": "Rabbit",
