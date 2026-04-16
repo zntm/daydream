@@ -1,19 +1,20 @@
 var bar_empty = $sprite(spr_GUI_Stat_Bar_Empty) {
     slices = (1, 0, 4, 0)
 }
-
 @area(hp_container) {
-    position = ORIGIN_BOTTOM_CENTER + (8, -36)
-    size = (160, 7)
+    position = ORIGIN_BOTTOM_CENTER + (16, -72)
+    size = (320, 14)
     
     @image(hp_icon) {
-        position = ORIGIN_TOP_LEFT + (0, -1)
+        position = ORIGIN_TOP_LEFT + (0, -2)
         source = $sprite(spr_GUI_Stat_Icon_HP)
+        image_xscale = 2
+        image_yscale = 2
     }
     
     @bar(hp_fill) {
-        position = ORIGIN_TOP_LEFT + (7, 0)
-        size = (153, 5)
+        position = ORIGIN_TOP_LEFT + (14, 0)
+        size = (306, 10)
         value = *hp_value
         max = *hp_max
         sprite_empty = bar_empty
@@ -22,19 +23,20 @@ var bar_empty = $sprite(spr_GUI_Stat_Bar_Empty) {
         }
     }
 }
-
 @area(stamina_container) {
-    position = ORIGIN_BOTTOM_CENTER + (8, -28)
-    size = (160, 7)
+    position = ORIGIN_BOTTOM_CENTER + (16, -56)
+    size = (320, 14)
     
     @image(stamina_icon) {
         position = ORIGIN_TOP_LEFT + (0, 0)
         source = $sprite(spr_GUI_Stat_Icon_Stamina)
+        image_xscale = 2
+        image_yscale = 2
     }
     
     @bar(stamina_fill) {
-        position = ORIGIN_TOP_LEFT + (7, 1)
-        size = (153, 5)
+        position = ORIGIN_TOP_LEFT + (14, 2)
+        size = (306, 10)
         value = *stamina_value
         max = *stamina_max
         sprite_empty = bar_empty
@@ -43,15 +45,14 @@ var bar_empty = $sprite(spr_GUI_Stat_Bar_Empty) {
         }
     }
 }
-
 @area(breath_container) {
-    position = ORIGIN_BOTTOM_CENTER + (8, -18)
-    size = (60, 2)
+    position = ORIGIN_BOTTOM_CENTER + (16, -36)
+    size = (120, 4)
     visible = *breath_visible
 
     @bar(breath_fill) {
         position = (0, 0)
-        size = (60, 2)
+        size = (120, 4)
         value = *breath_value
         max = *breath_max
 
@@ -61,19 +62,3 @@ var bar_empty = $sprite(spr_GUI_Stat_Bar_Empty) {
     }
 }
 
-@area(charge_container) {
-    position = ORIGIN_MIDDLE_CENTER + (0, 16)
-    size = (60, 2)
-    visible = *charge_visible
-
-    @bar(charge_bar) {
-        position = (0, 0)
-        size = (60, 2)
-        value = *charge_value
-        max = *charge_max
-
-        background = #33333380
-        color = #888888
-        smooth = false
-    }
-}

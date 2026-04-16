@@ -8,10 +8,11 @@ function GUIEffectPanel(_x, _y) : UIElement(_x, _y, 0, 16) constructor
 
     static get_player_effects = function()
     {
-        if (!instance_exists(obj_Player)) return undefined;
-        if (!variable_instance_exists(obj_Player, "effects")) return undefined;
+        var _player = control_game_ui_get_local_player();
+        if (!instance_exists(_player)) return undefined;
+        if (!variable_instance_exists(_player, "effects")) return undefined;
 
-        return obj_Player.effects;
+        return _player.effects;
     }
     
     static update = function()

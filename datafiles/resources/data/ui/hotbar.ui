@@ -1,10 +1,11 @@
 @area(hotbar_row) {
-    position = ORIGIN_BOTTOM_CENTER + (8, -8)
-    size = (160, 16)
+    position = ORIGIN_BOTTOM_CENTER + (16, -16)
+    size = (320, 32)
     layout = LAYOUT_HORIZONTAL
 
     @slot(hotbar_slots) repeat(10, i) {
         inventory_name = "base"
         slot_index = i
+        size = (32, 32)
     }
 }

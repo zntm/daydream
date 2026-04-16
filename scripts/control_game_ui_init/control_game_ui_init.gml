@@ -3,6 +3,8 @@
 /// @param {Real} _logical_height Logical design height in UI units.
 function control_game_ui_init(_logical_width, _logical_height)
 {
+    control_game_ui_cleanup_existing();
+
     var _hotbar_def = ui_load("ui/hotbar.ui");
 
     global.ui_hotbar = ui_spawn(_hotbar_def, {
@@ -20,7 +22,7 @@ function control_game_ui_init(_logical_width, _logical_height)
     }, ["inventory_changed"]);
 
     global.gui_panel_inventory_modular = global.ui_inventory;
-    global.ui_inventory.visible        = false;
+    control_game_ui_set_instance_visible(global.ui_inventory, false);
 
     global.ui_crafting_def      = ui_load("ui/crafting.ui");
     global.ui_crafting_slot_def = ui_load("ui/crafting_slot.ui");
@@ -30,7 +32,7 @@ function control_game_ui_init(_logical_width, _logical_height)
         parent: global.gui_root
     });
 
-    global.ui_crafting.visible = false;
+    control_game_ui_set_instance_visible(global.ui_crafting, false);
 
     var _stat_bars_def = ui_load("ui/stat_bars.ui");
 
@@ -67,10 +69,108 @@ function control_game_ui_init(_logical_width, _logical_height)
     global.gui_root.add_child(global.gui_panel_choices);
 
     global.gui_panel_effects = new GUIEffectPanel(0, 0);
-    global.gui_panel_effects.offset_x = 16;
-    global.gui_panel_effects.offset_y = 16;
+    global.gui_panel_effects.offset_x = -16;
+    global.gui_panel_effects.offset_y = -16;
     global.gui_panel_effects.set_anchor("right", "bottom");
     global.gui_root.add_child(global.gui_panel_effects);
+}
+
+
+function control_game_ui_cleanup_existing()
+{
+    var _ui_keys = [
+        "ui_hotbar",
+        "ui_inventory",
+        "ui_crafting",
+        "ui_stat_bars"
+    ];
+
+    for (var i = array_length(_ui_keys) - 1; i >= 0; --i)
+    {
+        var _key = _ui_keys[i];
+
+        if (variable_global_exists(_key))
+        {
+            var _instance = global[$ _key];
+
+            if (_instance != undefined)
+            {
+                ui_instance_destroy(_instance);
+            }
+
+            global[$ _key] = undefined;
+        }
+    }
+
+    var _panel_keys = [
+        "gui_panel_chat",
+        "gui_panel_choices",
+        "gui_panel_effects"
+    ];
+
+    for (var j = array_length(_panel_keys) - 1; j >= 0; --j)
+    {
+        var _panel_key = _panel_keys[j];
+
+        if (variable_global_exists(_panel_key))
+        {
+            var _panel = global[$ _panel_key];
+
+            if ((_panel != undefined) && (global.gui_root != undefined) && struct_exists(global.gui_root, "remove_child"))
+            {
+                global.gui_root.remove_child(_panel);
+            }
+
+            global[$ _panel_key] = undefined;
+        }
+    }
+
+    if (variable_global_exists("ui_crafting_slots"))
+    {
+        while (array_length(global.ui_crafting_slots) > 0)
+        {
+            var _slot_inst = array_pop(global.ui_crafting_slots);
+
+            if (_slot_inst != undefined)
+            {
+                ui_instance_destroy(_slot_inst);
+            }
+        }
+    }
+
+    if (variable_global_exists("ui_inventory_container")) && (global.ui_inventory_container != undefined)
+    {
+        var _container = global.ui_inventory_container;
+
+        if (struct_exists(_container, "parent") && (_container.parent != undefined))
+        {
+            _container.parent.remove_child(_container);
+        }
+
+        global.ui_inventory_container = undefined;
+    }
+}
+
+
+function control_game_ui_set_instance_visible(_instance, _visible)
+{
+    if (_instance == undefined) exit;
+
+    _instance.visible = _visible;
+
+    if !(struct_exists(_instance, "root_elements")) exit;
+
+    var _root_count = array_length(_instance.root_elements);
+
+    for (var i = _root_count - 1; i >= 0; --i)
+    {
+        var _root = _instance.root_elements[i];
+
+        if (_root != undefined)
+        {
+            _root.visible = _visible;
+        }
+    }
 }
 
 
@@ -160,23 +260,25 @@ function control_game_ui_sync_visibility()
 
     if (global.ui_hotbar != undefined)
     {
-        global.ui_hotbar.visible = !_generating
-            && ((_gui && !_menu && !_chat) || (_inventory && !_chat));
+        control_game_ui_set_instance_visible(
+            global.ui_hotbar,
+            !_generating && ((_gui && !_menu && !_chat) || (_inventory && !_chat))
+        );
     }
 
     if (global.ui_inventory != undefined)
     {
-        global.ui_inventory.visible = !_generating && _inventory && !_chat;
+        control_game_ui_set_instance_visible(global.ui_inventory, !_generating && _inventory && !_chat);
     }
 
     if (variable_global_exists("ui_crafting")) && (global.ui_crafting != undefined)
     {
-        global.ui_crafting.visible = !_generating && _inventory && !_chat;
+        control_game_ui_set_instance_visible(global.ui_crafting, !_generating && _inventory && !_chat);
     }
 
     if (variable_global_exists("ui_stat_bars")) && (global.ui_stat_bars != undefined)
     {
-        global.ui_stat_bars.visible = !_generating && _gui && !_menu && !_chat;
+        control_game_ui_set_instance_visible(global.ui_stat_bars, !_generating && _gui && !_menu && !_chat);
     }
 
     if (variable_global_exists("gui_panel_crafting_modular")) && (global.gui_panel_crafting_modular != undefined)
@@ -339,6 +441,48 @@ function control_game_ui_draw_overlay()
                     fa_bottom
                 );
             }
+        }
+    }
+
+    var _charge_time = _lp.charge_time ?? 0;
+    var _charge_max = max(_lp.charge_threshold ?? 1, 0.001);
+
+    if (_charge_time > 0)
+    {
+        var _camera = view_camera[0];
+        var _camera_x = camera_get_view_x(_camera);
+        var _camera_y = camera_get_view_y(_camera);
+        var _bar_w = 48;
+        var _bar_h = 3;
+        var _bar_x = ((_lp.x - _camera_x) / _base_scale.x) - (_bar_w / 2);
+        var _bar_y = ((_lp.y + 12 - _camera_y) / _base_scale.y);
+        var _ratio = clamp(_charge_time / _charge_max, 0, 1);
+
+        draw_sprite_ext(
+            spr_Square,
+            0,
+            _bar_x * _base_scale.x,
+            _bar_y * _base_scale.y,
+            _bar_w * _base_scale.x,
+            _bar_h * _base_scale.y,
+            0,
+            #1a1a1a,
+            0.7
+        );
+
+        if (_ratio > 0)
+        {
+            draw_sprite_ext(
+                spr_Square,
+                0,
+                _bar_x * _base_scale.x,
+                _bar_y * _base_scale.y,
+                (_bar_w * _ratio) * _base_scale.x,
+                _bar_h * _base_scale.y,
+                0,
+                #676767,
+                1
+            );
         }
     }
 }

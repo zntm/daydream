@@ -10,10 +10,11 @@ function GUIEffectIcon(_x, _y, _effect_id) : UIElement(_x, _y, 16, 16) construct
     
     static get_effect_state = function()
     {
-        if (!instance_exists(obj_Player)) return undefined;
-        if (!variable_instance_exists(obj_Player, "effects")) return undefined;
+        var _player = control_game_ui_get_local_player();
+        if (!instance_exists(_player)) return undefined;
+        if (!variable_instance_exists(_player, "effects")) return undefined;
 
-        return obj_Player.effects[$ effect_id];
+        return _player.effects[$ effect_id];
     }
 
     static update = function()

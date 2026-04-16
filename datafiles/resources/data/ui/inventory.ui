@@ -1,24 +1,26 @@
 @area(inventory_container) {
-    position = ORIGIN_BOTTOM_CENTER + (8, -47)
-    size = (216, 64)
+    position = ORIGIN_BOTTOM_CENTER + (16, -94)
+    size = (432, 128)
 
     @area(inventory_grid) {
         position = ORIGIN_MIDDLE_RIGHT
-        size = (160, 64)
+        size = (320, 128)
 
         @slot(inventory_slots) repeat(40, index) {
             inventory_name = "base"
             slot_index = index + 10
-            position = (index % 10 * 16, floor(index / 10) * 16)
+            position = (index % 10 * 32, floor(index / 10) * 32)
+            size = (32, 32)
         }
     }
 
     @area(armor_column) {
-        position = ORIGIN_MIDDLE_LEFT + (8, 0)
-        size = (16, 48)
+        position = ORIGIN_MIDDLE_LEFT + (16, 0)
+        size = (32, 96)
 
         @slot(armor_helmet) {
             position = (0, 0)
+            size = (32, 32)
             inventory_name = "armor_helmet"
             slot_index = 0
             icon_sprite = "spr_Inventory_Slot_Icon"
@@ -26,7 +28,8 @@
         }
 
         @slot(armor_breastplate) {
-            position = (0, 16)
+            position = (0, 32)
+            size = (32, 32)
             inventory_name = "armor_breastplate"
             slot_index = 0
             icon_sprite = "spr_Inventory_Slot_Icon"
@@ -34,7 +37,8 @@
         }
 
         @slot(armor_leggings) {
-            position = (0, 32)
+            position = (0, 64)
+            size = (32, 32)
             inventory_name = "armor_leggings"
             slot_index = 0
             icon_sprite = "spr_Inventory_Slot_Icon"
@@ -43,11 +47,12 @@
     }
 
     @area(accessory_grid) {
-        position = ORIGIN_MIDDLE_LEFT + (32, 0)
-        size = (32, 48)
+        position = ORIGIN_MIDDLE_LEFT + (64, 0)
+        size = (64, 96)
 
         @slot(acc) repeat(6, i) {
-            position = (i % 2 * 16, floor(i / 2) * 16)
+            position = (i % 2 * 32, floor(i / 2) * 32)
+            size = (32, 32)
             inventory_name = "accessory"
             slot_index = i
             icon_sprite = "spr_Inventory_Slot_Icon"

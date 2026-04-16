@@ -205,12 +205,16 @@ function UISlot(_x, _y) : UIElement(_x, _y, 16, 16) constructor
         var _base_scale = ui_get_base_scale();
         var _abs_x = get_absolute_x();
         var _abs_y = get_absolute_y();
+        var _slot_width = max(width, 1);
+        var _slot_height = max(height, 1);
+        var _slot_scale_x = (_slot_width / 16) * _base_scale.x;
+        var _slot_scale_y = (_slot_height / 16) * _base_scale.y;
         
         
         var _x1 = _abs_x * _base_scale.x;
         var _y1 = _abs_y * _base_scale.y;
-        var _sx = _base_scale.x;
-        var _sy = _base_scale.y;
+        var _sx = _slot_scale_x;
+        var _sy = _slot_scale_y;
         
         
         /* draw slot background */
@@ -283,8 +287,8 @@ function UISlot(_x, _y) : UIElement(_x, _y, 16, 16) constructor
         
         
         /* center the item in the slot */
-        var _item_x = (_abs_x + 8) * _sx;
-        var _item_y = (_abs_y + 8) * _sy;
+        var _item_x = (_abs_x + (_slot_width / 2)) * _base_scale.x;
+        var _item_y = (_abs_y + (_slot_height / 2)) * _base_scale.y;
         
         
         draw_sprite_ext(_sprite, _index, _item_x, _item_y, _sx * _inv_scale * INVENTORY_ITEM_SCALE_MODIFIER, _sy * _inv_scale * INVENTORY_ITEM_SCALE_MODIFIER, 0, c_white, 1);
@@ -302,20 +306,20 @@ function UISlot(_x, _y) : UIElement(_x, _y, 16, 16) constructor
             if (_cur_dur != undefined && _max_dur > 0) 
             {
                 var _ratio = _cur_dur / _max_dur;
-                var _bar_w = 12;
-                var _bar_h = 2;
-                var _bar_x = (_abs_x + 2) * _sx;
-                var _bar_y = (_abs_y + 13) * _sy;
+                var _bar_w = max(_slot_width - 4, 1);
+                var _bar_h = max(round(_slot_height / 8), 2);
+                var _bar_x = (_abs_x + 2) * _base_scale.x;
+                var _bar_y = (_abs_y + _slot_height - (_bar_h + 1)) * _base_scale.y;
                 
                 
                 /* background */
-                draw_sprite_ext(spr_Square, 0, _bar_x, _bar_y, _bar_w * _sx, _bar_h * _sy, 0, c_black, 0.5);
+                draw_sprite_ext(spr_Square, 0, _bar_x, _bar_y, _bar_w * _base_scale.x, _bar_h * _base_scale.y, 0, c_black, 0.5);
                 
                 
                 /* fill (red to green gradient) */
                 var _colour = make_colour_rgb(lerp(255, 0, _ratio), lerp(0, 255, _ratio), 0);
                 
-                draw_sprite_ext(spr_Square, 0, _bar_x, _bar_y, _bar_w * _ratio * _sx, _bar_h * _sy, 0, _colour, 1);
+                draw_sprite_ext(spr_Square, 0, _bar_x, _bar_y, _bar_w * _ratio * _base_scale.x, _bar_h * _base_scale.y, 0, _colour, 1);
             }
         }
         
@@ -325,8 +329,8 @@ function UISlot(_x, _y) : UIElement(_x, _y, 16, 16) constructor
         
         if (_amount > 1) 
         {
-            var _text_x = (_abs_x + width - 4) * _sx;
-            var _text_y = (_abs_y + height - 5) * _sy;
+            var _text_x = (_abs_x + _slot_width - 4) * _base_scale.x;
+            var _text_y = (_abs_y + _slot_height - 5) * _base_scale.y;
 
             ui_draw_text_stroked(
                 _text_x,
