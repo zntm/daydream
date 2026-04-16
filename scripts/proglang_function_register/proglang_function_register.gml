@@ -902,10 +902,6 @@ proglang_function_register("wait", function(_args, _vm)
     }
 });
 
-proglang_function_register("tile_audio_emitter", function(_args) {
-    return tile_audio_emitter(_args[0], _args[1]);
-});
-
 proglang_function_register("loca_translate", function(_args) {
     return loca_translate(_args[0]);
 });

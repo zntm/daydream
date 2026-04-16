@@ -21,7 +21,6 @@ var _t_oy     = (_sh / 2) * (1 - _t_scale);
 global.gui_mouse_x = (window_mouse_get_x() - _t_ox) / (_t_scale * _s);
 global.gui_mouse_y = (window_mouse_get_y() - _t_oy) / (_t_scale * _s);
 
-// Update menu transition animation
 menu_transition_update();
 
 /* update proglang ui system (skip when editor is active to block input) */
@@ -33,7 +32,6 @@ if (variable_global_exists("gui_root")) && (global.gui_root != undefined) && (!_
 	global.ui_hover_consumed = false;
 	
 	global.gui_root.update();
-	
 	
 	/* update dynamically spawned UI instances (unparented ones) */
 	if (variable_global_exists("ui_instances"))
@@ -69,11 +67,11 @@ if (IS_DEVELOPER_MODE)
     {
         ui_editor_init();
     }
-
+    
     if (keyboard_check_pressed(vk_f4))
     {
         ui_editor_toggle();
     }
-
+    
     ui_editor_step();
 }

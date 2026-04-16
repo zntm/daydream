@@ -488,55 +488,51 @@ function proglang_import_merge_named_exports(_exports, _data)
     }
 }
 
-function proglang_import_load_json_root(_resolved, _full_path, _seen = undefined)
+function proglang_import_load_json_root(_resolved, _full_path, _seen = {})
 {
-    if (_seen == undefined)
-    {
-        _seen = {};
-    }
-
     if (struct_exists(_seen, _resolved))
     {
         throw { type: PROGLANG_ERROR_TYPE.IMPORT, message: $"Circular JSON mixin detected: '{_resolved}'" }
     }
-
+    
     _seen[$ _resolved] = true;
-
+    
     var _text = buffer_load_text(_full_path);
-
+    
     if (_text == undefined)
     {
         delete _seen[$ _resolved];
-
+        
         throw { type: PROGLANG_ERROR_TYPE.IMPORT, message: $"Failed to load JSON module: '{_full_path}'" }
     }
-
+    
     var _json = json_parse(_text);
-
+    
     if (is_struct(_json))
     {
         var _mixin = _json[$ "$MIXIN"];
-
+        
         if (_mixin != undefined)
         {
             var _target = proglang_resolve_module_target(string(_mixin), _resolved);
-
+            
             if (_target.extension != ".json")
             {
                 delete _seen[$ _resolved];
-
+                
                 throw { type: PROGLANG_ERROR_TYPE.IMPORT, message: $"JSON mixin target must also be a '.json' module: '{_mixin}'" }
             }
-
+            
             var _base_json = proglang_import_load_json_root(_target.resolved, _target.full_path, _seen);
+            
             _json = init_data_mixin_merge(_base_json, _json);
-
+            
             delete _json[$ "$MIXIN"];
         }
     }
-
+    
     delete _seen[$ _resolved];
-
+    
     return _json;
 }
 
@@ -545,7 +541,7 @@ function proglang_resolve_module_target(_module_path, _importer_path = "")
     var _importer_dir = proglang_get_directory(_importer_path);
     var _is_relative = (string_pos("./", _module_path) == 1 || string_pos("../", _module_path) == 1);
     var _resolved;
-
+    
     if (_is_relative && _importer_dir != "")
     {
         _resolved = proglang_resolve_path(_module_path, _importer_dir);

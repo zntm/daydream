@@ -1,4 +1,4 @@
-control_update_gui_size(window_get_width(), window_get_height());
+control_update_gui_size();
 
 if (!instance_exists(obj_Game_Control))
 {

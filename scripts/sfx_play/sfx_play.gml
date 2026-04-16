@@ -69,8 +69,8 @@ function sfx_environmental_play(_id, _gain = global.settings.audio_sfx, _x = und
         _listener_y = _listener.y;
     }
     
-    if (_x == undefined) _x = _listener_x;
-    if (_y == undefined) _y = _listener_y;
+    _x ??= _listener_x;
+    _y ??= _listener_y;
     
     var _distance = point_distance(_listener_x, _listener_y, _x, _y);
     var _falloff_reference = _data.get_falloff_reference();

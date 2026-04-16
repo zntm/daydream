@@ -151,16 +151,15 @@ function UILexer(_source) constructor
     
     static match = function(_expected) 
     {
-        if (is_at_end()) return false;
-        
-        if (string_char_at(source, current) != _expected) return false;
-        
+        if (is_at_end()) || (string_char_at(source, current) != _expected)
+        {
+            return false;
+        }
         
         ++current;
         
         return true;
     }
-    
     
     static add_token = function(_type, _literal = undefined) 
     {
@@ -169,11 +168,9 @@ function UILexer(_source) constructor
         array_push(tokens, { type: _type, lexeme: _text, literal: _literal, line: line });
     }
     
-    
     static scan_token = function() 
     {
         var _c = advance();
-        
         
         switch (_c) 
         {
@@ -321,35 +318,29 @@ function UILexer(_source) constructor
         }
     }
     
-    
     static is_digit = function(_c) 
     {
         return (_c >= "0" && _c <= "9");
     }
-    
     
     static is_alpha = function(_c) 
     {
         return (_c >= "a" && _c <= "z") || (_c >= "A" && _c <= "Z") || _c == "_";
     }
     
-    
     static is_alphanumeric = function(_c) 
     {
         return is_alpha(_c) || is_digit(_c);
     }
-    
     
     static is_hex = function(_c) 
     {
         return is_digit(_c) || (_c >= "a" && _c <= "f") || (_c >= "A" && _c <= "F");
     }
     
-    
     static scan_string = function() 
     {
         var _value = "";
-        
         
         while (peek() != "\"" && !(is_at_end())) 
         {
@@ -358,13 +349,11 @@ function UILexer(_source) constructor
                 ++line;
             }
             
-            
             if (peek() == "\\") 
             {
                 advance();
                 
                 var _escaped = advance();
-                
                 
                 switch (_escaped) 
                 {
@@ -382,7 +371,6 @@ function UILexer(_source) constructor
             }
         }
         
-        
         if (is_at_end()) 
         {
             had_error = true;
@@ -391,7 +379,6 @@ function UILexer(_source) constructor
             
             exit;
         }
-        
         
         advance(); /* closing " */
         
@@ -404,7 +391,6 @@ function UILexer(_source) constructor
         /* support underscores in numbers (e.g., 10_000) */
         while (is_digit(peek()) || peek() == "_") advance();
         
-        
         /* look for decimal */
         if (peek() == "." && is_digit(peek_next())) 
         {
@@ -413,14 +399,12 @@ function UILexer(_source) constructor
             while (is_digit(peek()) || peek() == "_") advance();
         }
         
-        
         /* remove underscores before parsing */
         var _text = string_copy(source, start, current - start);
         
         _text = string_replace_all(_text, "_", "");
         
         var _value = real(_text);
-        
         
         /* check for percentage suffix: 50% (no space before %) */
         if (peek() == "%") 
@@ -435,7 +419,6 @@ function UILexer(_source) constructor
         }
     }
     
-    
     static scan_color = function() 
     {
         /* already consumed # */
@@ -447,9 +430,7 @@ function UILexer(_source) constructor
             _hex += advance();
         }
         
-        
         var _len = string_length(_hex);
-        
         
         if (_len == 6 || _len == 8) 
         {
@@ -459,7 +440,6 @@ function UILexer(_source) constructor
             var _b = hex_parse_byte(string_copy(_hex, 5, 2));
             
             var _a = (_len == 8) ? hex_parse_byte(string_copy(_hex, 7, 2)) / 255 : 1;
-            
             
             var _color = make_colour_rgb(_r, _g, _b);
             
@@ -471,7 +451,6 @@ function UILexer(_source) constructor
             var _r = hex_parse_byte(string_repeat(string_char_at(_hex, 1), 2));
             var _g = hex_parse_byte(string_repeat(string_char_at(_hex, 2), 2));
             var _b = hex_parse_byte(string_repeat(string_char_at(_hex, 3), 2));
-            
             
             var _color = make_colour_rgb(_r, _g, _b);
             
@@ -491,12 +470,10 @@ function UILexer(_source) constructor
         var _result = 0;
         var _len = string_length(_hex);
         
-        
         for (var i = 1; i <= _len; ++i) 
         {
             var _c = string_char_at(_hex, i);
             var _val = 0;
-            
             
             if (_c >= "0" && _c <= "9") 
             {
@@ -511,28 +488,21 @@ function UILexer(_source) constructor
                 _val = ord(_c) - ord("A") + 10;
             }
             
-            
             _result = _result * 16 + _val;
         }
         
         return _result;
     }
     
-    
     static scan_identifier = function() 
     {
-        while (is_alphanumeric(peek())) advance();
-        
-        
-        var _text = string_copy(source, start, current - start);
-        var _type = keywords[$ _text];
-        
-        
-        if (_type == undefined) 
+        while (is_alphanumeric(peek()))
         {
-            _type = UI_TOKEN.IDENTIFIER;
+            advance();
         }
         
+        var _text = string_copy(source, start, current - start);
+        var _type = keywords[$ _text] ?? UI_TOKEN.IDENTIFIER;
         
         add_token(_type, _text);
     }
