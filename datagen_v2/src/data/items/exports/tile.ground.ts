@@ -27,6 +27,19 @@ export default [
             audio: new TileItemAudioProperties(0.15, 0.05),
         },
         {
+            id: "mud",
+            harvest: new TileItemHarvest(
+                0.36,
+                0,
+                new ItemParticle(
+                    "#phantasia:tile/particle_colour/dirt",
+                    "#phantasia:tile/generic/harvest_particle_frequency",
+                ),
+            ),
+            sfx: "#phantasia:tile/sfx/dirt",
+            audio: new TileItemAudioProperties(0.15, 0.05),
+        },
+        {
             id: "lumin_moss",
             harvest: new TileItemHarvest(
                 0.26,

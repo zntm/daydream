@@ -13,9 +13,8 @@ function file_load_players()
     
     var _files        = file_read_directory(PROGRAM_DIRECTORY_PLAYERS);
     var _files_length = array_length(_files);
-    var _length       = array_length(global.attire_elements);
     
-    for (var i = 0; i < _files_length; ++i)
+    for (var i = _files_length - 1; i >= 0; --i)
     {
         var _file = _files[i];
         
@@ -44,7 +43,7 @@ function file_load_players()
         
         array_push(global.file_players_uuid, _file);
         
-        var _player = new FilePlayer(_file, _name, unix_to_datetime(datetime_to_unix()));
+        var _player = new FilePlayer(_uuid, _name, _last_opened);
         
         _player.set_version(_version)
                .set_attire(_attire)
@@ -53,11 +52,11 @@ function file_load_players()
                .set_achievements(_achievements)
                .set_effects(_extra[$ "effects"] ?? {})
                .set_size(file_get_directory_size($"{PROGRAM_DIRECTORY_PLAYERS}/{_file}"));
-               
+        
         array_push(global.file_players, _player);
     }
     
     array_sort(global.file_players, __sort);
-
+    
     file_apply_pinned_players();
 }

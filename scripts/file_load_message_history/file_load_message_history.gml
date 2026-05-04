@@ -14,9 +14,9 @@ function file_load_message_history()
         
         global.message_history = array_create(_length);
         
-        for (var i = 0; i < _length; ++i)
+        for (var i = _length - 1; i >= 0; --i)
         {
-            global.message_history[i] = buffer_read(_buffer, buffer_string);
+            global.message_history[@ i] = buffer_read(_buffer, buffer_string);
         }
         
         /* reset navigation index */

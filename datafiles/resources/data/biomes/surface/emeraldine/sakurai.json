@@ -68,16 +68,11 @@
             },
             {
                 "position": 0.9,
-                "color": "#2B243F"
+                "color": "#2b243f"
             }
         ]
     },
     "structures": [
-        {
-            "id": "phantasia:tree/cherry",
-            "chance": 0.14,
-            "generate_on": "#phantasia:tile/placement/plant_on"
-        },
         {
             "id": "phantasia:tree/oak",
             "chance": 0.06,
@@ -135,6 +130,9 @@
                 {
                     "id": "phantasia:dirt_wall",
                     "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
                 }
             ]
         }

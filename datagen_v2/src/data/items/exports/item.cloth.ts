@@ -9,30 +9,30 @@ import {
 } from "../lib";
 
 const CLOTH_COLORS = [
-    "black_cloth",
-    "blue_cloth",
-    "brown_cloth",
-    "cyan_cloth",
-    "gray_cloth",
-    "green_cloth",
-    "light_blue_cloth",
-    "light_gray_cloth",
-    "lime_cloth",
-    "orange_cloth",
-    "pink_cloth",
-    "purple_cloth",
-    "red_cloth",
-    "white_cloth",
-    "yellow_cloth",
+    "black",
+    "blue",
+    "brown",
+    "cyan",
+    "gray",
+    "green",
+    "light_blue",
+    "light_gray",
+    "lime",
+    "orange",
+    "pink",
+    "purple",
+    "red",
+    "white",
+    "yellow",
 ];
 
 export default CLOTH_COLORS.map(
     (color) =>
         new DatagenReturnData(
-            `${color}.json`,
+            `${color}_cloth.json`,
             new TileItem(
                 ItemType.Solid,
-                `phantasia:item/${color}`,
+                `phantasia:item/${color}_cloth`,
                 "#phantasia:item/generic/inventory_tile",
                 [
                     TileItemProperties.CanFlip,

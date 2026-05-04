@@ -10,7 +10,7 @@
         "typescript": "^5.9.3"
     },
     "scripts": {
-        "datagen": "bun run datagen/index.ts"
+        "datagen": "bun run datagen_v2/src/datagen.ts"
     },
     "dependencies": {
         "exifreader": "^4.36.1",

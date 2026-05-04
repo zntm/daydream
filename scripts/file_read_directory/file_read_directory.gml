@@ -24,18 +24,14 @@ function file_read_directory(_directory, _recursive = false)
             
             var _subfiles = file_read_directory($"{_directory}/{_dir}", true);
             
-            array_concat(_dirs, _subfiles);
-            
             for (var j = array_length(_subfiles) - 1; j >= 0; --j)
             {
-                /* concat _dir to subfile to add the filepath */
+                /* prepend the directory name to keep the relative path */
                 array_push(_files, $"{_dir}/{_subfiles[j]}");
             }
         }
         
         array_sort(_files, sort_alphabetical_descending);
-        
-        PRINT($"{_directory}: {_files} {_dirs}")
     }
     
     return _files;

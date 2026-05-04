@@ -132,7 +132,7 @@ function UISlot(_x, _y) : UIElement(_x, _y, 16, 16) constructor
                 inventory_index: slot_index,
                 slot_type: (inventory_name == "_craftable") ? INVENTORY_SLOT_TYPE.CRAFTABLE : INVENTORY_SLOT_TYPE.BASE,
                 element: self
-            };
+            }
             
             
             if (mouse_check_button_pressed(mb_left)) 

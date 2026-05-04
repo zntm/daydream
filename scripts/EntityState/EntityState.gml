@@ -309,7 +309,7 @@ function EntityState() constructor
 
         if (effects == undefined)
         {
-            effects = {};
+            effects = {}
         }
         else
         {

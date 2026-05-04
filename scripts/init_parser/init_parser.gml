@@ -68,7 +68,7 @@ function init_data_namespace_allowed(_json, _context = "")
 /// @desc Clears cached JSON roots used for `$MIXIN` resolution during init.
 function init_data_mixin_reset()
 {
-    global.__data_mixin_roots = {};
+    global.__data_mixin_roots = {}
 }
 
 /// @desc Returns the mixin registry bucket for a given data type.
@@ -76,12 +76,12 @@ function init_data_mixin_registry(_type)
 {
     if ((!variable_global_exists("__data_mixin_roots")) || (!is_struct(global.__data_mixin_roots)))
     {
-        global.__data_mixin_roots = {};
+        global.__data_mixin_roots = {}
     }
 
     if (!struct_exists(global.__data_mixin_roots, _type))
     {
-        global.__data_mixin_roots[$ _type] = {};
+        global.__data_mixin_roots[$ _type] = {}
     }
 
     return global.__data_mixin_roots[$ _type];
@@ -128,13 +128,13 @@ function init_data_split_full_id(_full_id)
         return {
             namespace: "",
             id: _full_id
-        };
+        }
     }
 
     return {
         namespace: string_copy(_full_id, 1, _separator - 1),
         id: string_delete(_full_id, 1, _separator)
-    };
+    }
 }
 
 /// @desc Resolves a raw JSON root into its final target id and merged payload.
@@ -150,7 +150,7 @@ function init_data_prepare_json(_type, _namespace, _id, _json, _context = "")
             full_id: _full_id,
             json: _json,
             is_mixin: false
-        };
+        }
     }
 
     var _mixin = _json[$ "$MIXIN"];
@@ -163,7 +163,7 @@ function init_data_prepare_json(_type, _namespace, _id, _json, _context = "")
             full_id: _full_id,
             json: _json,
             is_mixin: false
-        };
+        }
     }
 
     var _target_full_id = (_namespace == "") ? string(_mixin) : init_asset_resolve(_namespace, string(_mixin));
@@ -188,7 +188,7 @@ function init_data_prepare_json(_type, _namespace, _id, _json, _context = "")
         full_id: _target_full_id,
         json: _merged,
         is_mixin: true
-    };
+    }
 }
 
 /// @desc Stores the final raw JSON root for future `$MIXIN` resolution.

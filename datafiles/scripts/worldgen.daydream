@@ -1,0 +1,42 @@
+/* Phantasia World Generation Script (.daydream) */
+
+fn get_tile_type(world_x, world_y)
+{
+    var surf_y = surface_y(world_x);
+
+    if (world_y < surf_y)
+    {
+        return 0; /* TILE_EMPTY */
+    }
+
+    if (world_y == surf_y)
+    {
+        return 1; /* TILE_GRASS_BLOCK */
+    }
+
+    if (world_y < surf_y + 8)
+    {
+        return 2; /* TILE_DIRT */
+    }
+
+    return 3; /* TILE_STONE */
+}
+
+/* Entry point called by Bevy for each chunk */
+fn generate_chunk_script(cx, cy)
+{
+    var tx0 = cx * 16;
+    var ty0 = cy * 16;
+
+    for (var lx = 0; lx < 16; ++lx)
+    {
+        for (var ly = 0; ly < 16; ++ly)
+        {
+            var tx = tx0 + lx;
+            var ty = ty0 + ly;
+            var tile = get_tile_type(tx, ty);
+            
+            set_chunk_tile(lx, ly, tile);
+        }
+    }
+}

@@ -24,7 +24,7 @@ function gui_inventory_tooltip_resolve_target()
             index: _inventory_mouse.index,
             item: _inventory_mouse.item,
             slot_type: INVENTORY_SLOT_TYPE.BASE
-        };
+        }
     }
     
     var _hover = global.inventory_ui_hover;
@@ -42,7 +42,7 @@ function gui_inventory_tooltip_resolve_target()
                 index: _index,
                 item: _list[_index],
                 slot_type: _hover.slot_type ?? INVENTORY_SLOT_TYPE.BASE
-            };
+            }
         }
     }
     
@@ -55,7 +55,7 @@ function gui_inventory_tooltip_resolve_target()
             index: _inst.inventory_index,
             item: global.inventory[$ _inst.inventory_type][_inst.inventory_index],
             slot_type: _inst.slot_type
-        };
+        }
     }
     
     return undefined;

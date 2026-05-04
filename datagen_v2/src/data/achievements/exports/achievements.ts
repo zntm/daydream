@@ -28,7 +28,6 @@ export default [
                 .setCount(1)
         )
     ),
-
     new DatagenReturnData(
         "mine_stone.json",
         new Achievement(
@@ -39,7 +38,6 @@ export default [
                 .setCount(1)
         )
     ),
-
     new DatagenReturnData(
         "craft_pickaxe.json",
         new Achievement(
@@ -54,7 +52,6 @@ export default [
                 .setCount(1)
         )
     ),
-
     new DatagenReturnData(
         "copper_tools.json",
         new Achievement(
@@ -65,7 +62,6 @@ export default [
                 .setCount(1)
         )
     ),
-
     // Combat achievements  
     new DatagenReturnData(
         "first_kill.json",

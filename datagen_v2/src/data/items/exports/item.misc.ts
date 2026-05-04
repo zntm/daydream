@@ -14,6 +14,22 @@ import {
 
 export default [
     new DatagenReturnData(
+        "bone.json",
+        new Item(
+            ItemType.Default,
+            "phantasia:item/bone",
+            "#phantasia:item/generic/inventory_default",
+        ),
+    ),
+    new DatagenReturnData(
+        "egg.json",
+        new Item(
+            ItemType.Default,
+            "phantasia:item/egg",
+            "#phantasia:item/generic/inventory_default",
+        ),
+    ),
+    new DatagenReturnData(
         "feather.json",
         new Item(
             ItemType.Default,

@@ -40,7 +40,7 @@ function menu_ui_get_metrics()
         text_muted: #aaaaaa,
         text_dim: c_ltgray,
         placeholder_fill: c_dkgray
-    };
+    }
 
     return __metrics;
 }

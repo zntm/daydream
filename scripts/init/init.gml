@@ -33,7 +33,7 @@ function resource_load_data()
     init_data_mixin_reset();
 
     global.credit_data = [];
-    global.menu_data = {};
+    global.menu_data = {}
 
     global.item_data = {}
     global.creature_data = {}

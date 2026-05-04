@@ -32,7 +32,7 @@ function GUIEffectPanel(_x, _y) : UIElement(_x, _y, 0, 16) constructor
 
         var _effect_names = global.effect_data_names;
         var _effect_length = array_length(_effect_names);
-        var _active_ids = {};
+        var _active_ids = {}
         var _active_count = 0;
         
         for (var i = 0; i < _effect_length; ++i)

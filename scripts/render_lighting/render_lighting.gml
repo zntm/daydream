@@ -11,7 +11,6 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
     var _surface_x = round(_camera_x / RENDER_LIGHTING_RESIZE) * RENDER_LIGHTING_RESIZE;
     var _surface_y = round(_camera_y / RENDER_LIGHTING_RESIZE) * RENDER_LIGHTING_RESIZE;
     
-    // Check if any chunks need lighting refresh (new/loaded chunks)
     for (var i = 0; i < chunk_in_view_length; ++i)
     {
         var _chunk = chunk_in_view[i];
@@ -35,20 +34,16 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
         obj_Game_Control.surface_lighting_x = _surface_x;
         obj_Game_Control.surface_lighting_y = _surface_y;
         
-        // Cache padding offset once
         var _padding_offset = RENDER_LIGHTING_PADDING / 2;
         
-        // Create/update lighting surfaces ONLY when needed
         for (var i = 0; i < chunk_in_view_length; ++i)
         {
             var _chunk = chunk_in_view[i];
             
             if (_chunk == undefined) || !(_chunk.boolean & CHUNK_BOOL.GENERATED) continue;
             
-            // Check if surface needs updating
             var _needs_update = false;
             
-            // Create surface if it doesn't exist
             if (!surface_exists(_chunk.surface_lighting))
             {
                 _chunk.surface_lighting = surface_create(CHUNK_SIZE + RENDER_LIGHTING_PADDING, CHUNK_SIZE + RENDER_LIGHTING_PADDING, surface_r8unorm);
@@ -56,7 +51,6 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
                 _needs_update = true;
             }
             
-            // Check refresh flag
             if (_chunk.boolean & CHUNK_BOOL.SURFACE_LIGHTING_REFRESH)
             {
                 _chunk.boolean ^= CHUNK_BOOL.SURFACE_LIGHTING_REFRESH;
@@ -64,16 +58,13 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
                 _needs_update = true;
             }
             
-            // Only redraw if needed
             if (!_needs_update) continue;
             
-            // Batch all draw operations for this surface
             surface_set_target(_chunk.surface_lighting);
             draw_clear_alpha(c_black, 1);
             
             var _chunk_covered = _chunk.chunk_covered;
             
-            // Optimize inner loop - check full bytes first
             var l = 0;
             
             while (l < CHUNK_SIZE)
@@ -158,7 +149,7 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
             
             if (_chunk == undefined) || !(_chunk.boolean & CHUNK_BOOL.GENERATED) continue;
             
-            var _lights = _chunk.chunk_lights;
+            var _lights        = _chunk.chunk_lights;
             var _lights_length = array_length(_lights);
             
             for (var j = 0; j < _lights_length; ++j)
@@ -192,7 +183,7 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
         if (!surface_exists(surface_lighting_colour)) || (surface_get_width(surface_lighting_colour) != _surface_lighting_width) || (surface_get_height(surface_lighting_colour) != _surface_lighting_height)
         {
             if (surface_exists(surface_lighting_colour)) surface_free(surface_lighting_colour);
-
+            
             surface_lighting_colour = surface_create(_surface_lighting_width, _surface_lighting_height);
         }
         
@@ -228,7 +219,7 @@ function render_lighting(_camera_x, _camera_y, _camera_width, _camera_height)
             
             if (_chunk == undefined) || !(_chunk.boolean & CHUNK_BOOL.GENERATED) continue;
             
-            var _lights = _chunk.chunk_lights;
+            var _lights        = _chunk.chunk_lights;
             var _lights_length = array_length(_lights);
             
             for (var j = 0; j < _lights_length; ++j)

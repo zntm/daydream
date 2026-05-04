@@ -3,20 +3,20 @@
 function file_load_world_chunk(_current_world, _chunk)
 {
     static CHUNK_PALETTE_FORMAT_SPLIT = 65535;
-
+    
     static _read_palette = function(_buffer)
     {
-        var _length = buffer_read(_buffer, buffer_u16);
+        var _length  = buffer_read(_buffer, buffer_u16);
         var _palette = array_create(_length);
-
+        
         for (var i = 0; i < _length; ++i)
         {
             _palette[@ i] = buffer_read(_buffer, buffer_string);
         }
-
+        
         return _palette;
     }
-
+    
     var _item_data  = global.item_data;
     var _world_data = global.world_data[$ _current_world.dimension];
     
@@ -33,14 +33,15 @@ function file_load_world_chunk(_current_world, _chunk)
         return false;
     }
     
-    var _buffer = buffer_load_decompressed(_directory);
+    var _buffer      = buffer_load_decompressed(_directory);
+    var _buffer_size = buffer_get_size(_buffer);
     
-    /* validate file size (must accommodate at least the 512 byte header) */
-    if (buffer_get_size(_buffer) < 512)
+    /* validate file size */
+    if (_buffer_size < 512)
     {
         buffer_delete(_buffer);
         
-        return false; 
+        return false;
     }
     
     var _chunk_relative_x = ((_chunk_x % CHUNK_REGION_SIZE) + CHUNK_REGION_SIZE) % CHUNK_REGION_SIZE;
@@ -52,7 +53,7 @@ function file_load_world_chunk(_current_world, _chunk)
     var _length = buffer_peek(_buffer, _chunk_index * 8 + 4, buffer_u32);
     
     /* validate chunk entry */
-    if (_length == 0) || (_offset < 512) || (_offset + _length > buffer_get_size(_buffer))
+    if (_length == 0) || (_offset < 512) || (_offset + _length > _buffer_size)
     {
         buffer_delete(_buffer);
         
@@ -81,7 +82,7 @@ function file_load_world_chunk(_current_world, _chunk)
     var _item_drop_palette;
     var _creature_palette;
     var _creature_inventory_palette;
-
+    
     if (_palette_marker == CHUNK_PALETTE_FORMAT_SPLIT)
     {
         _tile_palette               = _read_palette(_buffer);
@@ -94,12 +95,12 @@ function file_load_world_chunk(_current_world, _chunk)
     {
         var _legacy_palette_length = _palette_marker;
         var _legacy_palette        = array_create(_legacy_palette_length);
-
+        
         for (var i = 0; i < _legacy_palette_length; ++i)
         {
             _legacy_palette[@ i] = buffer_read(_buffer, buffer_string);
         }
-
+        
         _tile_palette               = _legacy_palette;
         _tile_inventory_palette     = _legacy_palette;
         _item_drop_palette          = _legacy_palette;
@@ -134,8 +135,7 @@ function file_load_world_chunk(_current_world, _chunk)
     
     for (var i = 0; i < _length_item; ++i)
     {
-        var _next = buffer_read(_buffer, buffer_u32); /* skip next ptr */
-        
+        var _next         = buffer_read(_buffer, buffer_u32);
         var _timer_pickup = buffer_read(_buffer, buffer_f64);
         var _timer_life   = buffer_read(_buffer, buffer_f64);
         
@@ -153,7 +153,7 @@ function file_load_world_chunk(_current_world, _chunk)
     
     for (var i = 0; i < _length_creature; ++i)
     {
-        var _next = buffer_read(_buffer, buffer_u32); /* skip next ptr */
+        var _next = buffer_read(_buffer, buffer_u32);
         
         /* read id from palette */
         var _id_index = buffer_read(_buffer, buffer_u16);
@@ -180,7 +180,7 @@ function file_load_world_chunk(_current_world, _chunk)
         
         _inst_creature.y_last = buffer_read(_buffer, buffer_f64);
         
-        file_load_snippet_effects(_buffer, _inst_creature);
+        _inst_creature.effects = file_load_snippet_effects(_buffer);
         
         var _inventory_length = buffer_read(_buffer, buffer_u8);
         

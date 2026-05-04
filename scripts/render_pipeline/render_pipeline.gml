@@ -1,25 +1,24 @@
 function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
 {
-    static __u_offset = shader_get_uniform(shd_Chunk, "u_offset");
+    static __u_offset       = shader_get_uniform(shd_Chunk, "u_offset");
     static __u_texture_size = shader_get_uniform(shd_Chunk, "u_texture_size");
-    static __u_time = shader_get_uniform(shd_Chunk, "u_time");
-    static __u_skew = shader_get_uniform(shd_Chunk, "u_skew");
-    static __u_wave = shader_get_uniform(shd_Chunk, "u_wave");
-    static __u_texel_width = shader_get_uniform(shd_Chunk, "u_texel_width");
-    static __u_fade = shader_get_uniform(shd_Chunk, "u_fade");
+    static __u_time         = shader_get_uniform(shd_Chunk, "u_time");
+    static __u_skew         = shader_get_uniform(shd_Chunk, "u_skew");
+    static __u_wave         = shader_get_uniform(shd_Chunk, "u_wave");
+    static __u_texel_width  = shader_get_uniform(shd_Chunk, "u_texel_width");
+    static __u_fade         = shader_get_uniform(shd_Chunk, "u_fade");
     
-    var _creature_data = global.creature_data;
-    var _item_data = global.item_data;
-    var _particle_data = global.particle_data;
+    var _creature_data   = global.creature_data;
+    var _item_data       = global.item_data;
+    var _particle_data   = global.particle_data;
     var _projectile_data = global.projectile_data;
     
     atla_repair("item");
     
-    var _page = global.___atla_page[$ "item"];
+    var _page     = global.___atla_page[$ "item"];
     var _position = global.___atla_page_position[$ "item"];
     
-    var _texture = global.___atla_surface_texture[$ "item"];
-    
+    var _texture      = global.___atla_surface_texture[$ "item"];
     var _surface_size = global.___atla_surface_size[$ "item"];
     
     var _surface_width  = (_surface_size >> 0)  & 0xffff;
@@ -28,7 +27,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
     var _texel_width  = 1 / _surface_width;
     var _texel_height = 1 / _surface_height;
     
-    var _animation_time = global.current_world.time;
+    var _animation_time  = global.current_world.time;
     var _animation_index = round(_animation_time * 8);
     
     var _sprite_asset = global.sprite_asset;
@@ -41,15 +40,8 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
         shader_set_uniform_f(__u_time, _animation_time);
         shader_set_uniform_f(__u_texel_width, _texel_width);
         
-        // Ensure blending is enabled for fade effect
         gpu_set_blendenable(true);
         gpu_set_blendmode(bm_normal);
-        
-        // properties
-        if (array_length(global.chunk_pool.fading_chunks) > 0)
-        {
-             // dbg_log($"Fading chunks: {array_length(global.chunk_pool.fading_chunks)}");
-        }
         
         for (var i = 0; i < chunk_in_view_length; ++i)
         {
@@ -58,21 +50,20 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
             if (_chunk == undefined) || !(_chunk.boolean & CHUNK_BOOL.GENERATED) || !(_chunk.boolean & CHUNK_BOOL.TILE_PROCESSED) || !(_chunk.chunk_display & _bitmask) || (_chunk.chunk_count[_z] <= 0) continue;
             
             var _buffer = _chunk.chunk_vertex_buffer[_z];
-
+            
             if (_buffer == -2) continue;
             
             if (!vertex_buffer_exists(_buffer))
             {
                 _buffer = render_chunk(_page, _position, _texel_width, _texel_height, _chunk, _z, false);
             }
-
+            
             if (!vertex_buffer_exists(_buffer)) continue;
             
             if (vertex_get_number(_buffer) <= 0) continue;
             
-            // Set fade uniform
             var _t = _chunk.timer_fade;
-            shader_set_uniform_f(__u_fade, _t * _t * (3 - 2 * _t)); // Smoothstep
+            shader_set_uniform_f(__u_fade, _t * _t * (3 - 2 * _t));
             
             var _chunk_count_arr = _chunk.chunk_count;
             
@@ -117,10 +108,10 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                     {
                         var _tx = lerp(x_previous, x, global.tick_accumulator);
                         var _ty = lerp(y_previous, y, global.tick_accumulator);
-
+                        
                         var _draw_x = _tx - (TILE_SIZE / 2) * entity_xscale;
                         var _draw_y = _ty - TILE_SIZE * entity_yscale;
-
+                        
                         draw_sprite_ext(_sprite.get_sprite(), tile_index, _draw_x, _draw_y, entity_xscale, entity_yscale, 0, c_white, 1);
                     }
                 }
@@ -167,7 +158,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 if (physics_body.vel_y == 0) && (input_state.move_x != 0)
                 {
                     var _index_body = (_animation_index * 2) % 8;
-                    var _index_arm = (timer_attack > 0) ? round(lerp(13, 8, timer_attack / 0.3)) : _index_body;
+                    var _index_arm  = (timer_attack > 0) ? round(lerp(13, 8, timer_attack / 0.3)) : _index_body;
                     
                     if (attire != undefined)
                     {
@@ -193,7 +184,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 if (variable_instance_exists(self, "input_state") && input_state.move_x != 0)
                 {
                     var _index_body = (_animation_index * 2) % 8;
-                    var _index_arm = ((timer_attack > 0) ? round(lerp(13, 8, timer_attack / 0.3)) : _index_body);
+                    var _index_arm  = ((timer_attack > 0) ? round(lerp(13, 8, timer_attack / 0.3)) : _index_body);
                     
                     if (attire != undefined)
                     {
@@ -216,7 +207,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                 if (variable_instance_exists(id, "hold_type") && hold_type == ITEM_HOLD_TYPE.WHIP)
                 {
                     var _segments = variable_instance_exists(id, "whip_segments") ? whip_segments : undefined;
-                    var _sprite = sprite_index;
+                    var _sprite   = sprite_index;
                     
                     if (_segments != undefined)
                     {
@@ -226,30 +217,25 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                         
                         if (instance_exists(inst_owner))
                         {
-                            var _x_start = x;
-                            var _y_start = y;
+                            var _x_start   = x;
+                            var _y_start   = y;
                             var _aim_angle = inst_owner.input_state.aim_angle;
                             
-                            // Animation Progress
-                            var _timer = inst_owner.timer_attack;
+                            var _timer    = inst_owner.timer_attack;
                             var _duration = 0.3; // Matches control_player attack timer
                             var _progress = clamp((_duration - _timer) / _duration, 0, 1);
                             
-                            // Length calculation (Extend and Retract)
-                            var _max_range = 64; 
-                             // Use sine wave for smooth extend-retract
-                            var _extension = sin(_progress * pi); 
-                            
-                            var _len = _max_range * _extension;
+                            /* use a sine wave for smooth extend-retract */
+                            var _max_range = 64;
+                            var _extension = sin(_progress * pi);
+                            var _len       = _max_range * _extension;
                             
                             var _x_end = _x_start + lengthdir_x(_len, _aim_angle);
                             var _y_end = _y_start + lengthdir_y(_len, _aim_angle);
                             
-                            // Curve Control Point (P1)
                             var _mid_x = (_x_start + _x_end) / 2;
                             var _mid_y = (_y_start + _y_end) / 2;
                             
-                            // Wave/Snap Effect: Offset P1 perpendicular to aim
                             var _wave_mag = 32 * sin(_progress * pi);
                             var _wave_dir = (_progress < 0.5) ? 1 : -1;
                             
@@ -261,24 +247,18 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
                             if (_dist > 4)
                             {
                                 var _segment_count = 8;
-                                var _last_x = _x_start;
-                                var _last_y = _y_start;
+                                var _last_x        = _x_start;
+                                var _last_y        = _y_start;
                                 
                                 for (var i = 1; i <= _segment_count; ++i)
                                 {
                                     var _t = i / _segment_count;
                                     
-                                    // Quadratic Bezier Formula
-                                    // B(t) = (1-t)^2 * P0 + 2(1-t)t * P1 + t^2 * P2
                                     var _one_minus_t = 1 - _t;
-                                    var _bx = (_one_minus_t * _one_minus_t * _x_start) + (2 * _one_minus_t * _t * _p1_x) + (_t * _t * _x_end);
-                                    var _by = (_one_minus_t * _one_minus_t * _y_start) + (2 * _one_minus_t * _t * _p1_y) + (_t * _t * _y_end);
-                                    
-                                    // Angle from last segment
-                                    var _seg_angle = point_direction(_last_x, _last_y, _bx, _by);
-                                    
-                                    // Determine sprite frame
-                                    var _frame = (i == _segment_count) ? _segments.tip : smart_value(_segments.mid);
+                                    var _bx          = (_one_minus_t * _one_minus_t * _x_start) + (2 * _one_minus_t * _t * _p1_x) + (_t * _t * _x_end);
+                                    var _by          = (_one_minus_t * _one_minus_t * _y_start) + (2 * _one_minus_t * _t * _p1_y) + (_t * _t * _y_end);
+                                    var _seg_angle   = point_direction(_last_x, _last_y, _bx, _by);
+                                    var _frame       = (i == _segment_count) ? _segments.tip : smart_value(_segments.mid);
                                     
                                     draw_sprite_ext(_sprite, _frame, _bx, _by, 1, 1, _seg_angle, c_white, 1);
                                     
@@ -347,7 +327,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
     
     render_particles_batch();
     
-    var _floating_text_active = global.floating_text_active;
+    var _floating_text_active        = global.floating_text_active;
     var _floating_text_active_length = array_length(_floating_text_active);
     
     if (_floating_text_active_length > 0)
@@ -371,40 +351,40 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
     {
         render_lighting(_camera_x, _camera_y, _camera_width, _camera_height);
     }
-
+    
     shader_set(shd_Chunk);
     shader_set_uniform_f(__u_time, _animation_time);
     shader_set_uniform_f(__u_texel_width, _texel_width);
     gpu_set_blendenable(true);
     gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_one, bm_one, bm_one);
-
+    
     for (var _z = 0; _z < CHUNK_DEPTH; ++_z)
     {
         var _bitmask = 1 << _z;
-
+        
         for (var i = 0; i < chunk_in_view_length; ++i)
         {
             var _chunk = chunk_in_view[i];
-
+            
             if (_chunk == undefined) || !(_chunk.boolean & CHUNK_BOOL.GENERATED) || !(_chunk.boolean & CHUNK_BOOL.TILE_PROCESSED) || !(_chunk.chunk_display & _bitmask) continue;
-
+            
             var _buffer = _chunk.chunk_vertex_emissive_buffer[_z];
-
+            
             if (_buffer == -2) continue;
-
+            
             if (!vertex_buffer_exists(_buffer))
             {
                 _buffer = render_chunk(_page, _position, _texel_width, _texel_height, _chunk, _z, true);
             }
-
+            
             if (!vertex_buffer_exists(_buffer)) continue;
             if (vertex_get_number(_buffer) <= 0) continue;
-
+            
             var _t = _chunk.timer_fade;
             shader_set_uniform_f(__u_fade, _t * _t * (3 - 2 * _t));
-
+            
             var _chunk_count_arr = _chunk.chunk_count;
-
+            
             if ((_z == CHUNK_DEPTH_FOLIAGE_BACK) || (_z == CHUNK_DEPTH_FOLIAGE_FRONT)) && ((_chunk_count_arr[CHUNK_DEPTH_FOLIAGE_BACK] > 0) || (_chunk_count_arr[CHUNK_DEPTH_FOLIAGE_FRONT] > 0))
             {
                 shader_set_uniform_f_array(__u_skew, _chunk.chunk_skew);
@@ -413,24 +393,24 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
             {
                 shader_set_uniform_f_array(__u_wave, _chunk.chunk_wave);
             }
-
+            
             vertex_submit(_buffer, pr_trianglestrip, _texture);
         }
     }
-
+    
     shader_reset();
     gpu_set_blendmode(bm_normal);
     
     var _render_state = global.render_state;
     
-    var _all_chunks = chunk_map_get_all();
+    var _all_chunks        = chunk_map_get_all();
     var _all_chunks_length = array_length(_all_chunks);
     
     for (var c = 0; c < _all_chunks_length; ++c)
     {
-        var _chunk = _all_chunks[c];
+        var _chunk              = _all_chunks[c];
         var _chunk_render_state = _chunk.chunk_render_state;
-        var _length = array_length(_chunk_render_state);
+        var _length             = array_length(_chunk_render_state);
         
         for (var i = 0; i < _length; ++i)
         {
@@ -440,7 +420,7 @@ function render_pipeline(_camera_x, _camera_y, _camera_width, _camera_height)
             var _y = _.y;
             var _z = _.z;
             
-            var _data = _.data;
+            var _data        = _.data;
             var _data_length = array_length(_data);
             
             for (var j = 0; j < _data_length; ++j)

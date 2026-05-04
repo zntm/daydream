@@ -68,7 +68,7 @@
             },
             {
                 "position": 0.9,
-                "color": "#2B243F"
+                "color": "#2b243f"
             }
         ]
     },
@@ -130,6 +130,9 @@
                 {
                     "id": "phantasia:dirt_wall",
                     "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
                 }
             ]
         }

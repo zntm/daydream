@@ -17,7 +17,7 @@ function relay_session_config_normalize(_config = undefined)
     
     if (!is_struct(_source))
     {
-        _source = {};
+        _source = {}
     }
     
     return {
@@ -1018,19 +1018,19 @@ function RelayNetwork() constructor
         var _should_forward = session_config.auto_forward ? "$true" : "$false";
         var _script =
             "$ErrorActionPreference='SilentlyContinue';" +
-            $"$port={session_config.port};" +
+            $"$port={session_config.port}" +
             $"$localIp='{_ps_local_ip}';" +
-            "$result=[ordered]@{public_ip='';forwarded=$false;message='ok'};" +
-            "try {$result.public_ip=((Invoke-RestMethod -Uri 'https://api.ipify.org?format=text' -TimeoutSec 5).ToString()).Trim()} catch {};" +
+            "$result=[ordered]@{public_ip='';forwarded=$false;message='ok'}" +
+            "try {$result.public_ip=((Invoke-RestMethod -Uri 'https://api.ipify.org?format=text' -TimeoutSec 5).ToString()).Trim()} catch {}" +
             $"if ({_should_forward}) " +
             "{try {$upnp=New-Object -ComObject HNetCfg.NATUPnP; $maps=$upnp.StaticPortMappingCollection; if ($maps -ne $null -and $localIp -ne '') {" +
-            "try {$maps.Remove($port,'TCP')} catch {}; try {$maps.Remove($port,'UDP')} catch {};" +
+            "try {$maps.Remove($port,'TCP')} catch {} try {$maps.Remove($port,'UDP')} catch {}" +
             "$tcp=$false; $udp=$false;" +
-            "try {$null=$maps.Add($port,'TCP',$port,$localIp,$true,'Phantasia Daydream'); $tcp=$true} catch {};" +
-            "try {$null=$maps.Add($port,'UDP',$port,$localIp,$true,'Phantasia Daydream'); $udp=$true} catch {};" +
+            "try {$null=$maps.Add($port,'TCP',$port,$localIp,$true,'Phantasia Daydream'); $tcp=$true} catch {}" +
+            "try {$null=$maps.Add($port,'UDP',$port,$localIp,$true,'Phantasia Daydream'); $udp=$true} catch {}" +
             "$result.forwarded=($tcp -or $udp);" +
             "if (-not $result.forwarded) {$result.message='upnp unavailable'}" +
-            "} else {$result.message='upnp unavailable'}} catch {$result.message='upnp unavailable'}};" +
+            "} else {$result.message='upnp unavailable'}} catch {$result.message='upnp unavailable'}}" +
             $"($result | ConvertTo-Json -Compress) | Set-Content -Path '{_ps_file}' -Encoding ascii";
         
         var _args = "-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -Command \"" +
@@ -1095,10 +1095,10 @@ function RelayNetwork() constructor
         var _ps_local_ip = string_replace_all(session_config.local_ip, "'", "''");
         var _script =
             "$ErrorActionPreference='SilentlyContinue';" +
-            $"$port={session_config.port};" +
+            $"$port={session_config.port}" +
             $"$localIp='{_ps_local_ip}';" +
             "try {$upnp=New-Object -ComObject HNetCfg.NATUPnP; $maps=$upnp.StaticPortMappingCollection; " +
-            "if ($maps -ne $null) { try {$maps.Remove($port,'TCP')} catch {}; try {$maps.Remove($port,'UDP')} catch {} }} catch {}";
+            "if ($maps -ne $null) { try {$maps.Remove($port,'TCP')} catch {} try {$maps.Remove($port,'UDP')} catch {} }} catch {}";
         
         var _args = "-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -Command \"" +
             string_replace_all(_script, "\"", "\\\"") + "\"";

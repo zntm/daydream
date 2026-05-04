@@ -48,8 +48,8 @@ const run = async () => {
 
                         const normalizedData =
                             typeof serializableData === "string" ||
-                            d.destination.endsWith(".md") ||
-                            d.destination.endsWith(".txt")
+                                d.destination.endsWith(".md") ||
+                                d.destination.endsWith(".txt")
                                 ? serializableData
                                 : recursiveSort(serializableData);
 

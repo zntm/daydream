@@ -15,8 +15,8 @@
                 "hardness": 0.24,
                 "level": 0,
                 "particle": {
-                    "colour": "#8B5A2B",
-                    "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
+                    "frequency": "#phantasia:tile/generic/harvest_particle_frequency",
+                    "id": "#8B5A2B"
                 }
             },
             "sfx": "#phantasia:tile/sfx/foliage"

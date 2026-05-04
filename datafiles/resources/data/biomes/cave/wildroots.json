@@ -1,13 +1,4 @@
 {
-    "ambience": [
-        {
-            "id": "phantasia:sfx/ambience/cave/default",
-            "chance": 0.001,
-            "gain": 0.4,
-            "radius_min": 3,
-            "radius_max": 16
-        }
-    ],
     "background": {
         "blend": 0.7,
         "id": "phantasia:background/chasm"
@@ -30,17 +21,10 @@
             ]
         },
         {
-            "id": "phantasia:short_grass",
-            "chance": 0.09,
-            "generate_on": [
-                "phantasia:moss"
-            ]
-        },
-        {
-            "id": "phantasia:tall_grass",
+            "id": "phantasia:bush",
             "chance": 0.05,
             "generate_on": [
-                "phantasia:dirt"
+                "phantasia:moss"
             ]
         }
     ],
@@ -136,6 +120,9 @@
                 {
                     "id": "phantasia:dirt_wall",
                     "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
                 }
             ]
         },
@@ -149,6 +136,9 @@
                 {
                     "id": "phantasia:dirt_wall",
                     "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
                 }
             ]
         },
@@ -162,6 +152,9 @@
                 {
                     "id": "phantasia:dirt_wall",
                     "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
                 }
             ]
         }

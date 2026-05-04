@@ -1,7 +1,7 @@
 global.ui_settings_menu = undefined;
 global.menu_settings_back_handler = undefined;
 global.ui_settings_rebind = undefined;
-global.menu_settings_scroll_offsets = {};
+global.menu_settings_scroll_offsets = {}
 
 
 function menu_settings_ui_load()
@@ -54,7 +54,7 @@ function menu_settings_ui_spawn(_back_handler = undefined, _clear_all = true)
 	global.ui_settings_menu = _instance;
 	global.menu_settings_back_handler = _back_handler;
 	global.settings_current_category = "general";
-	global.menu_settings_scroll_offsets = {};
+	global.menu_settings_scroll_offsets = {}
 	
 	menu_settings_ui_init();
 

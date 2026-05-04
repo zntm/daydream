@@ -120,6 +120,9 @@
                 {
                     "id": "phantasia:dirt_wall",
                     "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
                 }
             ]
         }

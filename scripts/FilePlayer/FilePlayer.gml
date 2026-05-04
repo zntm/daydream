@@ -30,7 +30,7 @@ function FilePlayer(_uuid, _name, _last_opened) constructor
     
     static get_version = function()
     {
-        return ___Version;
+        return self[$ "___version"];
     }
     
     static set_attire = function(_attire)
@@ -47,7 +47,7 @@ function FilePlayer(_uuid, _name, _last_opened) constructor
     
     static set_hp = function(_hp, _hp_max)
     {
-        ___hp = _hp;
+        ___hp     = _hp;
         ___hp_max = _hp_max;
         
         return self;

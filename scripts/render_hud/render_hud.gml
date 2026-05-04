@@ -10,20 +10,10 @@ function render_hud(_gui_width, _gui_height)
     
     if (_hp > 0) && (is_opened & WORLD_OPENED_BOOL.GUI) && !(is_opened & WORLD_OPENED_BOOL.MENU)
     {
-        // Note: Hotbar and inventory rendering now handled by declarative UI system
-        // (UIElement objects in global.gui_root)
-        
-        // Craftable panel now handled by declarative UI system
-        
-        // HP bar rendering now handled by declarative UI (see stat_bars.ui)
-        
         var _gui_inventory = global.gui_inventory;
         
         if (is_opened & WORLD_OPENED_BOOL.INVENTORY)
         {
-            // Craftable panel rendering handled by declarative UI
-            
-            // Tooltip rendering
             var _target = gui_inventory_tooltip_resolve_target();
             
             if (_target != undefined) && !(is_opened & WORLD_OPENED_BOOL.CHAT)
@@ -32,8 +22,7 @@ function render_hud(_gui_width, _gui_height)
                 {
                     gui_inventory_tooltip(_gui_scale_width, _gui_scale_height);
                     
-                    var _tooltip = surface_inventory.tooltip;
-                    
+                    var _tooltip         = surface_inventory.tooltip;
                     var _surface_tooltip = _tooltip.surface;
                     
                     if (surface_exists(_surface_tooltip))
@@ -41,9 +30,9 @@ function render_hud(_gui_width, _gui_height)
                         var _window_width  = global.window_width;
                         var _window_height = global.window_height;
                         
-                        var _tooltip_x = global.gui_mouse_x + (GUI_TOOLTIP_XOFFSET * _gui_scale_width);
+                        var _tooltip_x            = global.gui_mouse_x + (GUI_TOOLTIP_XOFFSET * _gui_scale_width);
                         var _tooltip_total_height = (_tooltip.surface_height + (GUI_INVENTORY_TOOLTIP_BG_PADDING * 2)) * _gui_scale_height;
-                        var _tooltip_y = global.gui_mouse_y - _tooltip_total_height - (GUI_TOOLTIP_YOFFSET * _gui_scale_height);
+                        var _tooltip_y            = global.gui_mouse_y - _tooltip_total_height - (GUI_TOOLTIP_YOFFSET * _gui_scale_height);
                         
                         if (_tooltip_y < 0)
                         {
@@ -67,6 +56,5 @@ function render_hud(_gui_width, _gui_height)
                 }
             }
         }
-        // Note: Hotbar rendering when inventory is closed is now handled by declarative UI
     }
 }

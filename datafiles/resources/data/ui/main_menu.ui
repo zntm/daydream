@@ -1,0 +1,26 @@
+@window(main_window) {
+    size = (400, 300)
+    position = (50%, 50%)
+    color = #333333
+
+    @text(title) {
+        text = "PHANTASIA"
+        size = (200, 40)
+        position = (50%, 20%)
+        color = #FFFFFF
+    }
+
+    @button(play_button) {
+        text = "PLAY"
+        size = (120, 30)
+        position = (50%, 50%)
+        color = #44AA44
+    }
+
+    @button(quit_button) {
+        text = "QUIT"
+        size = (120, 30)
+        position = (50%, 70%)
+        color = #AA4444
+    }
+}

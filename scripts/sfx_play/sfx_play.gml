@@ -21,7 +21,7 @@ function sfx_environment_get_listener_effects(_listener = obj_Player)
             lowpass_index: 0,
             reverb_index: 0,
             bus: audio_bus_main
-        };
+        }
     }
     
     var _lowpass = clamp(_listener.audio_effect_lowpass_to ?? _listener.audio_effect_lowpass ?? 0, 0, 1);
@@ -35,7 +35,7 @@ function sfx_environment_get_listener_effects(_listener = obj_Player)
         lowpass_index: _lowpass_index,
         reverb_index: _reverb_index,
         bus: _listener.audio_effect_bus ?? sfx_environment_get_bus_from_indices(_lowpass_index, _reverb_index)
-    };
+    }
 }
 
 function sfx_environment_get_bus(_lowpass = 0, _reverb = 0)

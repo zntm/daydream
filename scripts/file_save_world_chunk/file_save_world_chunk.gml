@@ -6,7 +6,7 @@
 function file_save_world_chunk(_current_world, _chunk, _sync = false)
 {
     static CHUNK_PALETTE_FORMAT_SPLIT = 65535;
-
+    
     static _collect_id = function(_id, _map, _array, _index_ref)
     {
         if (!struct_exists(_map, _id))
@@ -16,13 +16,13 @@ function file_save_world_chunk(_current_world, _chunk, _sync = false)
             array_push(_array, _id);
         }
     }
-
+    
     static _collect_palette_write = function(_buffer, _array)
     {
         var _length = array_length(_array);
-
+        
         buffer_write(_buffer, buffer_u16, _length);
-
+        
         for (var i = 0; i < _length; ++i)
         {
             buffer_write(_buffer, buffer_string, _array[i]);
@@ -76,7 +76,7 @@ function file_save_world_chunk(_current_world, _chunk, _sync = false)
     var _region_y = floor(_chunk_y / CHUNK_REGION_SIZE);
     
     var _directory = $"{PROGRAM_DIRECTORY_WORLDS}/{_current_world.uuid}/dim/{_world_data.get_namespace()}/{_world_data.get_id()}/r{_region_x}_{_region_y}.dat";
-
+    
     /* start by writing the *current* chunk to a temporary buffer so we know its exact size. */
     var _current_chunk_buffer = buffer_create(1024, buffer_grow, 1);
     buffer_write(_current_chunk_buffer, buffer_u32, PROGRAM_VERSION_NUMBER);
@@ -87,7 +87,7 @@ function file_save_world_chunk(_current_world, _chunk, _sync = false)
     
     buffer_write(_current_chunk_buffer, buffer_bool, _is_generated);
     buffer_write(_current_chunk_buffer, buffer_u16,  _chunk_display);
-
+    
     var _palette_tile_map             = {}
     var _palette_tile_array           = [];
     var _palette_tile_index_ref       = [0];
@@ -146,7 +146,7 @@ function file_save_world_chunk(_current_world, _chunk, _sync = false)
             }
         }
     }
-
+    
     /* collect from items */
     var _xcenter = _chunk.xcenter;
     var _ycenter = _chunk.ycenter;
@@ -154,7 +154,7 @@ function file_save_world_chunk(_current_world, _chunk, _sync = false)
     var _bbox_t  = _ycenter - (CHUNK_SIZE_DIMENSION / 2);
     var _bbox_r  = _xcenter + (CHUNK_SIZE_DIMENSION / 2);
     var _bbox_b  = _ycenter + (CHUNK_SIZE_DIMENSION / 2);
-
+    
     var _inst_item   = [];
     var _length_item = 0;
     
@@ -165,7 +165,7 @@ function file_save_world_chunk(_current_world, _chunk, _sync = false)
             _inst_item[@ _length_item++] = id;
         }
     }
-
+    
     for (var i = 0; i < _length_item; ++i)
     {
         var _inst = _inst_item[i];
@@ -197,7 +197,7 @@ function file_save_world_chunk(_current_world, _chunk, _sync = false)
             }
         }
     }
-
+    
     /* collect from creatures */
     var _inst_creature   = [];
     var _length_creature = 0;
@@ -209,7 +209,7 @@ function file_save_world_chunk(_current_world, _chunk, _sync = false)
             _inst_creature[@ _length_creature++] = id;
         }
     }
-
+    
     for (var i = 0; i < _length_creature; ++i)
     {
         var _inst = _inst_creature[i];
@@ -230,7 +230,7 @@ function file_save_world_chunk(_current_world, _chunk, _sync = false)
             }
         }
     }
-
+    
     /* -- palettes -- */
     buffer_write(_current_chunk_buffer, buffer_u16, CHUNK_PALETTE_FORMAT_SPLIT);
     _collect_palette_write(_current_chunk_buffer, _palette_tile_array);
@@ -238,7 +238,7 @@ function file_save_world_chunk(_current_world, _chunk, _sync = false)
     _collect_palette_write(_current_chunk_buffer, _palette_item_drop_array);
     _collect_palette_write(_current_chunk_buffer, _palette_creature_array);
     _collect_palette_write(_current_chunk_buffer, _palette_creature_inv_array);
-
+    
     /* -- tiles -- */
     var _chunk_covered = _chunk.chunk_covered;
     var _chunk_count   = _chunk.chunk_count;
@@ -264,7 +264,7 @@ function file_save_world_chunk(_current_world, _chunk, _sync = false)
             }
         }
     }
-
+    
     /* -- items -- */
     buffer_write(_current_chunk_buffer, buffer_u32, _length_item);
     
@@ -285,7 +285,7 @@ function file_save_world_chunk(_current_world, _chunk, _sync = false)
         
         buffer_poke(_current_chunk_buffer, _pos_start, buffer_u32, _pos_end); 
     }
-
+    
     /* -- creatures -- */
     buffer_write(_current_chunk_buffer, buffer_u32, _length_creature);
     
@@ -415,7 +415,10 @@ function file_save_world_chunk(_current_world, _chunk, _sync = false)
     {
         var _id = buffer_save_async(_new_region_buffer, _directory, 0, _write_offset);
         
-        if (!variable_global_exists("async_chunk_save_map")) global.async_chunk_save_map = {}
+        if (!variable_global_exists("async_chunk_save_map"))
+        {
+            global.async_chunk_save_map = {}
+        }
         
         global.async_chunk_save_map[$ string(_id)] = _chunk;
     }

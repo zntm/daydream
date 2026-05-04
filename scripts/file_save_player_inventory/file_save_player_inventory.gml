@@ -9,7 +9,7 @@ function file_save_player_inventory(_current_player)
     
     static collect_palette = function(_inventory, _length, _item_data, _map, _list)
     {
-        for (var i = 0; i < _length; ++i)
+        for (var i = _length - 1; i >= 0; --i)
         {
             var _item = _inventory[i];
             
@@ -42,7 +42,7 @@ function file_save_player_inventory(_current_player)
         }
     }
     
-    for (var i = 0; i < _names_length; ++i)
+    for (var i = _names_length - 1; i >= 0; --i)
     {
         var _name = _names[i];
         
@@ -79,6 +79,7 @@ function file_save_player_inventory(_current_player)
         file_save_snippet_inventory(_buffer, _v, _length, _item_data, _palette_map);
         
         buffer_save_compressed(_buffer, $"{PROGRAM_DIRECTORY_PLAYERS}/{_uuid}/inventory/{_name}.dat");
+        
         buffer_delete(_buffer);
     }
 }

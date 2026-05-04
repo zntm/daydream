@@ -7,9 +7,8 @@ function file_load_snippet_item(_buffer, _item_data, _palette)
         return INVENTORY_EMPTY;
     }
     
-    var _id   = _palette[_index];
-    var _seek = buffer_read(_buffer, buffer_u32);
-    
+    var _id     = _palette[_index];
+    var _offset = buffer_read(_buffer, buffer_u32);
     var _amount = buffer_read(_buffer, buffer_u16);
     var _item   = new Inventory(_id, _amount);
     

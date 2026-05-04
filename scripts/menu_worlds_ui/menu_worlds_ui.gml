@@ -348,7 +348,7 @@ function menu_worlds_ui_create_card(_container, _world, _x, _y, _w, _h, _layout,
         global.current_world.backup.slots = _backup.slots;
         global.current_world.enabled_mods = _data.get_enabled_mods();
 
-        global.world_statistics = _data.get_statistics() ?? {};
+        global.world_statistics = _data.get_statistics() ?? {}
 
         menu_transition_goto(rm_World);
     }));

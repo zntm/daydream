@@ -2,15 +2,8 @@ function file_save_settings()
 {
     var _buffer = buffer_create(1024, buffer_grow, 1);
     
-    buffer_write(_buffer, buffer_u32, 1); /* version */
+    buffer_write(_buffer, buffer_u32, 1);
     
-    var _names  = struct_get_names(global.settings);
-    var _length = array_length(_names);
-    
-    var _valid_settings = 0;
-    
-    /* calculate valid settings count first (or just filter them) */
-    /* actually, we should only save settings that are in our known categories to avoid garbage */
     var _categories       = struct_get_names(global.settings_data_category);
     var _settings_to_save = [];
     
@@ -28,7 +21,7 @@ function file_save_settings()
     
     buffer_write(_buffer, buffer_u16, _settings_length);
     
-    for (var i = 0; i < _settings_length; ++i)
+    for (var i = _settings_length - 1; i >= 0; --i)
     {
         var _name = _settings_to_save[i];
         var _val  = global.settings[$ _name];
@@ -38,5 +31,6 @@ function file_save_settings()
     }
     
     buffer_save_compressed(_buffer, "settings.dat");
+    
     buffer_delete(_buffer);
 }

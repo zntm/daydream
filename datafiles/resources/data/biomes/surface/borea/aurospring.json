@@ -73,18 +73,12 @@
             },
             {
                 "position": 0.9,
-                "color": "#2B243F"
+                "color": "#2b243f"
             }
         ]
     },
     "sky_script": "phantasia:sky/borea_aurora",
-    "structures": [
-        {
-            "id": "phantasia:clump/moss",
-            "chance": 0.006,
-            "generate_on": "#phantasia:tile/placement/plant_on"
-        }
-    ],
+    "structures": [],
     "terrain_modifier": {
         "height_offset": -2
     },
@@ -131,6 +125,9 @@
                 {
                     "id": "phantasia:dirt_wall",
                     "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
                 }
             ]
         }

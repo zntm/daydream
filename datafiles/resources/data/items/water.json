@@ -2,13 +2,6 @@
     "inventory": "#phantasia:item/generic/inventory_default",
     "item": {
         "tile": {
-            "flow_speed": 8,
-            "fluid_collisions": [
-                {
-                    "id": "phantasia:obsidian",
-                    "liquid_id": "phantasia:lava"
-                }
-            ],
             "components": {
                 "flow_direction": {
                     "default": 0,
@@ -29,7 +22,7 @@
                     "parameters": {
                         "bucket_id": "phantasia:bucket",
                         "filled_bucket_id": "phantasia:water_bucket",
-                        "tick_delay": 8
+                        "tick_delay": 5
                     }
                 }
             ]

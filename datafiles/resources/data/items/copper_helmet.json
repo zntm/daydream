@@ -1,17 +1,15 @@
 {
     "inventory": "#phantasia:item/generic/inventory_tool",
     "item": {
-        "accessory": {
-            "attribute": {
-                "defense": 2
-            },
+        "armor": {
+            "defense": 2,
             "type": "helmet"
         },
         "durability": {
             "amount": 100,
-            "bar": "#phantasia:item/generic/durability_bar"
+            "bar": "#phantasia:item/generic/inventory_armor"
         }
     },
     "sprite": "phantasia:item/copper_helmet",
-    "type": "accessory"
+    "type": "tool"
 }

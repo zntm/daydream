@@ -1,7 +1,7 @@
 /// @function file_save_snippet_effects(_buffer, _effects)
-/// @desc Save effect data to a buffer using the new format
-/// @param {Id.Buffer} _buffer - The buffer to write to
-/// @param {Struct} _effects - Effect instances to save
+/// @desc Save effect data to a buffer using the new format.
+/// @param {Id.Buffer} _buffer The buffer to write to.
+/// @param {Struct} _effects Effect instances to save.
 function file_save_snippet_effects(_buffer, _effects)
 {
     if (_effects == undefined)
@@ -16,7 +16,7 @@ function file_save_snippet_effects(_buffer, _effects)
     
     buffer_write(_buffer, buffer_u16, _effects_length);
     
-    for (var i = 0; i < _effects_length; ++i)
+    for (var i = _effects_length - 1; i >= 0; --i)
     {
         var _name = _effects_names[i];
         

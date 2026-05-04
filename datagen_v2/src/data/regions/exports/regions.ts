@@ -55,7 +55,6 @@ export default [
             mapColor: "#2D5A27",
         }),
     ),
-
     // Rotfens - Humid swampy region
     new DatagenReturnData(
         "rotfens.json",

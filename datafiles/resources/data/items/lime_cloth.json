@@ -10,8 +10,8 @@
                 "hardness": 0.2,
                 "level": 0,
                 "particle": {
-                    "colour": "#phantasia:tile/particle_colour/white",
-                    "frequency": "#phantasia:tile/generic/harvest_particle_frequency"
+                    "frequency": "#phantasia:tile/generic/harvest_particle_frequency",
+                    "id": "#phantasia:tile/particle_colour/white"
                 }
             },
             "sfx": "#phantasia:tile/sfx/flesh"

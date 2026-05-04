@@ -148,14 +148,14 @@ function resource_mod_normalize_info(_namespace, _root, _json)
         description: _json[$ "description"] ?? "",
         icon_path: file_exists($"{_root}/icon.png") ? $"{_root}/icon.png" : undefined,
         info_path: file_exists($"{_root}/info.json") ? $"{_root}/info.json" : undefined
-    };
+    }
 }
 
 function resource_rebuild_registry(_base_namespace = "phantasia")
 {
     global.resource_base_namespace = _base_namespace;
     global.resource_roots = [];
-    global.mod_data = {};
+    global.mod_data = {}
     global.mod_list = [];
 
     var _base_root = PROGRAM_DIRECTORY_RESOURCES;
@@ -171,7 +171,7 @@ function resource_rebuild_registry(_base_namespace = "phantasia")
         description: "Built-in game resources.",
         icon_path: undefined,
         info_path: undefined
-    };
+    }
 
     array_push(global.resource_roots, {
         namespace: _base_namespace,
@@ -196,7 +196,7 @@ function resource_rebuild_registry(_base_namespace = "phantasia")
 
         if (!directory_exists(_root)) continue;
 
-        var _info = {};
+        var _info = {}
         var _info_path = $"{_root}/info.json";
 
         if (file_exists(_info_path))
@@ -269,7 +269,7 @@ function resource_resolve_path(_relative_path, _prefer_overrides = true)
 function resource_collect_data_files(_relative_directory, _extension = "")
 {
     var _result = [];
-    var _seen = {};
+    var _seen = {}
     var _paths = resource_collect_paths($"data/{_relative_directory}");
     var _length = array_length(_paths);
 
@@ -299,7 +299,7 @@ function resource_collect_data_files(_relative_directory, _extension = "")
 function resource_collect_loca_directories()
 {
     var _directories = [];
-    var _seen = {};
+    var _seen = {}
     var _roots = resource_get_roots();
     var _length = array_length(_roots);
 

@@ -86,7 +86,12 @@
             ],
             "wall": [
                 {
-                    "id": "phantasia:sandstone_wall"
+                    "id": "phantasia:sandstone_wall",
+                    "weight": 3
+                },
+                {
+                    "id": "$EMPTY",
+                    "weight": 2
                 }
             ]
         },
@@ -100,6 +105,9 @@
                 {
                     "id": "phantasia:sandstone_wall",
                     "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
                 }
             ]
         },
@@ -113,6 +121,9 @@
                 {
                     "id": "phantasia:sandstone_wall",
                     "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
                 }
             ]
         }

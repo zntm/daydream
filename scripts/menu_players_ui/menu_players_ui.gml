@@ -342,8 +342,8 @@ function menu_players_ui_create_card(_container, _player, _x, _y, _w, _h, _layou
 		global.current_player.uuid   = _uuid;
 		global.current_player.attire = _data.get_attire();
 		
-		global.player_statistics   = _data.get_statistics() ?? {};
-		global.player_achievements = _data.get_achievements() ?? {};
+		global.player_statistics   = _data.get_statistics() ?? {}
+		global.player_achievements = _data.get_achievements() ?? {}
 		
 		menu_refresh_value_world_save();
 		menu_transition_goto(rm_Menu_Worlds);

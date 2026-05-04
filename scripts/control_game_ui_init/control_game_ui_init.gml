@@ -244,7 +244,7 @@ function control_game_ui_create_stat_link()
             var _lp = control_game_ui_get_local_player();
             return instance_exists(_lp) ? max((_lp.charge_threshold ?? 1), 0.001) : 1;
         }
-    };
+    }
 }
 
 

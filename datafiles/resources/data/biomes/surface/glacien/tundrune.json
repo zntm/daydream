@@ -72,18 +72,7 @@
             }
         ]
     },
-    "structures": [
-        {
-            "id": "phantasia:clump/moss",
-            "chance": 0.006,
-            "generate_on": "#phantasia:tile/placement/plant_on"
-        },
-        {
-            "id": "phantasia:tree/pine",
-            "chance": 0.01,
-            "generate_on": "#phantasia:tile/placement/plant_on"
-        }
-    ],
+    "structures": [],
     "terrain_modifier": {
         "amplitude_scale": 0.8,
         "height_offset": -4
@@ -131,6 +120,9 @@
                 {
                     "id": "phantasia:dirt_wall",
                     "weight": 4
+                },
+                {
+                    "id": "$EMPTY"
                 }
             ]
         }

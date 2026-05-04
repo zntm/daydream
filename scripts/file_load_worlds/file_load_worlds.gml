@@ -7,27 +7,27 @@ function file_load_worlds()
     {
         return _a.get_last_opened() - _b.get_last_opened();
     }
-
+    
     array_resize(global.file_worlds, 0);
     array_resize(global.file_worlds_uuid, 0);
-
+    
     var _files        = file_read_directory(PROGRAM_DIRECTORY_WORLDS);
     var _files_length = array_length(_files);
-
-    for (var i = 0; i < _files_length; ++i)
+    
+    for (var i = _files_length - 1; i >= 0; --i)
     {
         var _file = _files[i];
-
+        
         if (!directory_exists($"{PROGRAM_DIRECTORY_WORLDS}/{_file}")) continue;
-
+        
         var _world_data_path = $"{PROGRAM_DIRECTORY_WORLDS}/{_file}/global.dat";
-
+        
         if (!file_exists(_world_data_path)) continue;
-
+        
         var _buffer = buffer_load_decompressed(_world_data_path);
-
+        
         if (_buffer == -1) continue;
-
+        
         var _uuid        = buffer_read(_buffer, buffer_string);
         var _name        = buffer_read(_buffer, buffer_string);
         var _seed        = buffer_read(_buffer, buffer_f64);
@@ -44,37 +44,37 @@ function file_load_worlds()
             slots: 0
         }
         var _enabled_mods = world_get_default_enabled_mods();
-
+        
         if (buffer_tell(_buffer) < buffer_get_size(_buffer))
         {
             _backup.interval_minutes = max(0, buffer_read(_buffer, buffer_u16));
-
+            
             if (buffer_tell(_buffer) < buffer_get_size(_buffer))
             {
                 _backup.slots = max(0, buffer_read(_buffer, buffer_u8));
             }
-
+            
             if (buffer_tell(_buffer) < buffer_get_size(_buffer))
             {
                 _enabled_mods = [];
-
+                
                 var _enabled_mod_count = max(0, buffer_read(_buffer, buffer_u8));
-
+                
                 for (var j = 0; j < _enabled_mod_count; ++j)
                 {
                     if (buffer_tell(_buffer) >= buffer_get_size(_buffer)) break;
-
+                    
                     array_push(_enabled_mods, buffer_read(_buffer, buffer_string));
                 }
             }
         }
-
+        
         buffer_delete(_buffer);
-
+        
         array_push(global.file_worlds_uuid, _file);
-
-        var _file_world = new FileWorld(_file, _name, _seed, unix_to_datetime(datetime_to_unix()));
-
+        
+        var _file_world = new FileWorld(_uuid, _name, _seed, _last_opened);
+        
         _file_world.set_version(_version)
                    .set_dimension(_dimension)
                    .set_time(_time, _day)
@@ -83,11 +83,11 @@ function file_load_worlds()
                    .set_backup(_backup)
                    .set_enabled_mods(_enabled_mods)
                    .set_size(file_get_directory_size($"{PROGRAM_DIRECTORY_WORLDS}/{_file}"));
-
+        
         array_push(global.file_worlds, _file_world);
     }
-
+    
     array_sort(global.file_worlds, __sort);
-
+    
     file_apply_pinned_worlds();
 }
